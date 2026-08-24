@@ -139,6 +139,7 @@ func applyCommon(_ v: UIView, _ j: SceneJSON, name: String) {
         v.layer.shadowOffset = CGSize(width: off[0], height: off[1])
     }
     if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
+    if let e = j["userInteractionEnabled"]?.boolValue { v.isUserInteractionEnabled = e }
     if let m = j["autoresizingMask"]?.arrayValue {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -374,6 +375,7 @@ func makeButton(_ j: SceneJSON) -> UIButton {
     b.tintColor = b.tintColor.resolvedColor(with: UITraitCollection.current)
     if let c = colorOrDie(j["titleColor"], "UIButton") { b.setTitleColor(c, for: .normal) }
     if j["enabled"]?.boolValue == false { b.isEnabled = false }
+    if j["highlighted"]?.boolValue == true { b.isHighlighted = true }
     return b
 }
 
@@ -425,6 +427,55 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
         v.transform = CGAffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], tx: t[4], ty: t[5])
     }
     return v
+}
+
+// MARK: - Hit tests (scene spec v4, mirror oracle's runHitTests)
+
+/// Scene-defined views (built from the JSON) -> dot-joined subview-index
+/// path. Private implementation subviews (UIButtonLabel, ...) stay out of
+/// the registry; hit results normalize to the nearest scene-defined
+/// ancestor — identical rule to the oracle.
+func sceneViewRegistry(_ v: UIView, _ j: SceneJSON, path: String,
+                       into out: inout [ObjectIdentifier: String]) {
+    out[ObjectIdentifier(v)] = path
+    let subs = j["subviews"]?.arrayValue ?? []
+    for (i, sub) in subs.enumerated() {
+        guard i < v.subviews.count, let subJ = sub.objectValue else { break }
+        sceneViewRegistry(v.subviews[i], subJ,
+                          path: path.isEmpty ? "\(i)" : "\(path).\(i)", into: &out)
+    }
+}
+
+/// Mirror of the oracle's hit-test driver: the degenerate 0x0 root is
+/// bypassed by running UIKit's hit-test recursion step at the root
+/// (reverse subview order, converted point, first hit wins), so the root
+/// itself is never a hit result.
+func runHitTests(_ points: [CGPoint], container: UIView,
+                 rootJSON: SceneJSON) -> [JSONValue] {
+    var registry: [ObjectIdentifier: String] = [:]
+    sceneViewRegistry(container, rootJSON, path: "", into: &registry)
+    var out: [JSONValue] = []
+    for p in points {
+        var hit: UIView? = nil
+        for sub in container.subviews.reversed() {
+            if let h = sub.hitTest(sub.convert(p, from: container), with: nil) {
+                hit = h
+                break
+            }
+        }
+        var norm = hit
+        while let v = norm, registry[ObjectIdentifier(v)] == nil { norm = v.superview }
+        var entry: [String: JSONValue] = [
+            "point": .array([.number(round3(p.x)), .number(round3(p.y))]),
+        ]
+        if let path = norm.flatMap({ registry[ObjectIdentifier($0)] }) {
+            entry["path"] = .string(path)
+        } else {
+            entry["path"] = .null
+        }
+        out.append(.object(entry))
+    }
+    return out
 }
 
 // MARK: - Animations (scene spec v3, mirror oracle's parseAnimations)
@@ -617,7 +668,19 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
 
     var views: [JSONValue] = []
     dumpLayout(container, path: "", into: &views)
-    let layout = JSONValue.object(["name": .string(name), "views": .array(views)])
+    var layoutObj: [String: JSONValue] = ["name": .string(name), "views": .array(views)]
+    // Scene spec v4: hit-test probes (root coordinates) -> "hitTests".
+    if let probes = scene["hitTests"]?.arrayValue, !probes.isEmpty {
+        let points: [CGPoint] = probes.map {
+            guard let a = numArray($0), a.count == 2 else {
+                fatalError("scene \(name): bad hitTests entry (need [x, y])")
+            }
+            return CGPoint(x: a[0], y: a[1])
+        }
+        layoutObj["hitTests"] = .array(runHitTests(points, container: container,
+                                                   rootJSON: rootJ))
+    }
+    let layout = JSONValue.object(layoutObj)
 
     // The canvas must be the scene size even though the root view is 0x0
     // (oracle renders into a sz-sized context). Host wrapper draws nothing

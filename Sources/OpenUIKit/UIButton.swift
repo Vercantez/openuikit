@@ -38,31 +38,31 @@
 /// dynamic class name, so the oracle's "UIButtonLabel" entries match.
 public final class UIButtonLabel: UILabel {}
 
-open class UIButton: UIView {
+extension UIColor {
+    /// The color with its alpha multiplied by `factor` (dynamic-safe).
+    func withMultipliedAlpha(_ factor: CGFloat) -> UIColor {
+        UIColor(.dynamic { t in
+            var c = self.resolvedCGColor(with: t)
+            c.alpha *= factor
+            return c
+        })
+    }
+}
+
+open class UIButton: UIControl {
     public enum ButtonType: Sendable {
         case custom, system
     }
 
-    /// Minimal UIControl.State stand-in (OpenUIKit has no UIControl).
-    public struct State: OptionSet, Hashable, Sendable {
-        public let rawValue: UInt
-        public init(rawValue: UInt) { self.rawValue = rawValue }
-        public static let normal = State([])
-        public static let highlighted = State(rawValue: 1 << 0)
-        public static let disabled = State(rawValue: 1 << 1)
-    }
+    /// UIButton.State is UIControl.State (nested types are not inherited
+    /// in Swift, so re-export the name).
+    public typealias State = UIControl.State
 
     public let buttonType: ButtonType
     private let _titleLabel: UIButtonLabel
 
     /// Real UIKit exposes `titleLabel` as optional UILabel.
     public var titleLabel: UILabel? { _titleLabel }
-
-    public var isEnabled: Bool = true {
-        didSet { setNeedsLayout() }
-    }
-
-    public var state: State { isEnabled ? .normal : .disabled }
 
     private var titles: [UInt: String] = [:]
     private var titleColors: [UInt: UIColor] = [:]
@@ -116,16 +116,41 @@ open class UIButton: UIView {
     }
 
     public var currentTitleColor: UIColor {
+        // Explicit color for the exact highlighted state wins outright.
+        if state.contains(.highlighted),
+           let c = titleColors[State.highlighted.rawValue] {
+            return c
+        }
         // Explicit color (any-state fallback to .normal) wins even when
         // disabled; otherwise tint when enabled, system gray when disabled.
-        if let c = titleColor(for: state) { return c }
-        if !isEnabled { return UIButton.systemDisabledTitleColor }
-        return tintColor
+        let base: UIColor
+        if let c = titleColor(for: state) {
+            base = c
+        } else if !isEnabled {
+            base = UIButton.systemDisabledTitleColor
+        } else {
+            base = tintColor
+        }
+        if state.contains(.highlighted), isEnabled {
+            // Plain .system buttons dim the title while highlighted
+            // (alpha fitted against golden/button_highlighted).
+            return base.withMultipliedAlpha(UIButton.systemHighlightedTitleAlpha)
+        }
+        return base
     }
+
+    /// Highlight dim factor of a plain .system button's title (measured
+    /// from golden/button_highlighted — see the calibration note there).
+    static let systemHighlightedTitleAlpha: CGFloat = 0.2
 
     private func updateTitleView() {
         _titleLabel.text = currentTitle
         _titleLabel.textColor = currentTitleColor
+    }
+
+    open override func stateDidChange() {
+        super.stateDidChange()
+        updateTitleView()
     }
 
     // MARK: - Sizing

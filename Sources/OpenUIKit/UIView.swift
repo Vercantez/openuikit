@@ -112,6 +112,9 @@ open class UIView {
     }
     public var isHidden = false
     public var isOpaque = true
+    /// Hit-testing / touch delivery opt-out. UIKit defaults: true for
+    /// UIView/controls, false for UILabel and UIImageView.
+    public var isUserInteractionEnabled = true
     public var clipsToBounds: Bool {
         get { layer.masksToBounds }
         set { layer.masksToBounds = newValue }
@@ -273,6 +276,100 @@ open class UIView {
         let origin = frame.origin
         frame = CGRect(origin: origin, size: s)
     }
+
+    // MARK: Coordinate conversion (event module, M7)
+
+    /// Transform mapping this view's bounds coordinates to its superview's
+    /// bounds coordinates: p_super = center + transform · (p − boundsMid).
+    /// (Anchor point (0.5, 0.5): the middle of the bounds rect maps to
+    /// `center`; bounds.origin shifts the content, hence the mid offset.)
+    var _toSuperview: CGAffineTransform {
+        CGAffineTransform(translationX: -bounds.midX, y: -bounds.midY)
+            .concatenating(transform)
+            .concatenating(CGAffineTransform(translationX: center.x, y: center.y))
+    }
+
+    /// Accumulated transform from this view's coordinates to the coordinates
+    /// of the hierarchy's root (the view with no superview), plus that root.
+    func _transformToRoot() -> (CGAffineTransform, UIView) {
+        var t = CGAffineTransform.identity
+        var v: UIView = self
+        while let sv = v.superview {
+            t = t.concatenating(v._toSuperview)
+            v = sv
+        }
+        return (t, v)
+    }
+
+    /// Convert a point from this view's coordinate system to `view`'s.
+    /// nil = the root of this view's hierarchy (window/root coordinates),
+    /// matching UIKit's nil-window behavior.
+    public func convert(_ point: CGPoint, to view: UIView?) -> CGPoint {
+        let (t, _) = _transformToRoot()
+        let inRoot = point.applying(t)
+        guard let view else { return inRoot }
+        let (t2, _) = view._transformToRoot()
+        return inRoot.applying(t2.inverted())
+    }
+
+    /// Convert a point from `view`'s coordinate system to this view's.
+    public func convert(_ point: CGPoint, from view: UIView?) -> CGPoint {
+        if let view { return view.convert(point, to: self) }
+        let (t, _) = _transformToRoot()
+        return point.applying(t.inverted())
+    }
+
+    // MARK: Hit testing (event module, M7 — exact UIKit semantics)
+
+    /// CGRectContainsPoint(bounds, point): min-edge inclusive, max-edge
+    /// exclusive.
+    open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        bounds.contains(point)
+    }
+
+    /// UIKit recursion: a view is only reachable if EVERY ancestor on the
+    /// path passes its own point(inside:) — subviews outside the parent's
+    /// bounds are unreachable regardless of clipsToBounds (clipping is
+    /// visual only, oracle-verified). Skips hidden views, alpha < 0.01 and
+    /// disabled interaction (each prunes its whole subtree); subviews are
+    /// tested front-to-back (reverse array order).
+    open func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, alpha >= 0.01 else { return nil }
+        guard self.point(inside: point, with: event) else { return nil }
+        for sub in subviews.reversed() {
+            if let hit = sub.hitTest(sub.convert(point, from: self), with: event) {
+                return hit
+            }
+        }
+        return self
+    }
+
+    // MARK: Touch handling (UIResponder subset — event module, M7)
+
+    /// Gesture recognizers attached to this view (nil when none, like UIKit).
+    public var gestureRecognizers: [UIGestureRecognizer]? {
+        _gestureRecognizers.isEmpty ? nil : _gestureRecognizers
+    }
+    var _gestureRecognizers: [UIGestureRecognizer] = []
+
+    public func addGestureRecognizer(_ recognizer: UIGestureRecognizer) {
+        recognizer.view?.removeGestureRecognizer(recognizer)
+        recognizer.view = self
+        _gestureRecognizers.append(recognizer)
+    }
+
+    public func removeGestureRecognizer(_ recognizer: UIGestureRecognizer) {
+        guard recognizer.view === self else { return }
+        _gestureRecognizers.removeAll { $0 === recognizer }
+        recognizer.view = nil
+    }
+
+    /// UIResponder touch entry points. Default implementations do nothing
+    /// (UIResponder would forward up the chain; controls override).
+    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
 
     // MARK: Rendering (view module: RenderPass.swift implements)
     /// Draw this view's own content (background is handled by the render

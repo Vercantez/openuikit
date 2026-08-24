@@ -93,7 +93,7 @@ final class Renderer {
         let container = buildContainer(spec)
 
         // Layout dump EXACTLY like v1: same code, same moment (pre-attach).
-        try writeLayoutDump(container, name: spec.name, outdir: outdir)
+        try writeLayoutDump(container, spec: spec, outdir: outdir)
 
         // The container keeps frame (0,0,0,0) (see the quirk note in
         // SceneKit.buildContainer) — its subviews still composite because

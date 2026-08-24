@@ -23,10 +23,13 @@ open class UIImageView: UIView {
     public init(image: UIImage?) {
         super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))
         self.image = image
+        // UIKit: image views do not receive touches by default.
+        isUserInteractionEnabled = false
     }
 
     public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
+        isUserInteractionEnabled = false
     }
 
     open override var intrinsicContentSize: CGSize {

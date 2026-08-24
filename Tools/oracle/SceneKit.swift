@@ -179,6 +179,7 @@ func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection
         v.layer.shadowOffset = CGSize(width: off[0], height: off[1])
     }
     if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
+    if let e = j["userInteractionEnabled"] as? Bool { v.isUserInteractionEnabled = e }
     if let m = j["autoresizingMask"] as? [String] {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -259,6 +260,7 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
         b.tintColor = b.tintColor.resolvedColor(with: traits)
         if let c = colorOrDie(j["titleColor"], cls, traits) { b.setTitleColor(c, for: .normal) }
         if j["enabled"] as? Bool == false { b.isEnabled = false }
+        if j["highlighted"] as? Bool == true { b.isHighlighted = true }
         v = b
     case "UISwitch":
         let s = UISwitch()
@@ -355,6 +357,60 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     for (i, sub) in v.subviews.enumerated() {
         dumpLayout(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)", into: &out)
     }
+}
+
+// MARK: - Hit tests (scene spec v4)
+
+/// Map every SCENE-DEFINED view (the ones buildView created from the JSON)
+/// to its dot-joined subview-index path. Private UIKit implementation
+/// subviews (UIButtonLabel, UISwitch internals, ...) are NOT in the
+/// registry — hit results are normalized to the nearest scene-defined
+/// ancestor so both renderers report comparable paths. Scene children are
+/// always added before UIKit inserts private siblings, so scene child i ==
+/// subviews[i] (the same invariant the layout-dump path comparison relies
+/// on).
+func sceneViewRegistry(_ v: UIView, _ j: JSON, path: String,
+                       into out: inout [ObjectIdentifier: String]) {
+    out[ObjectIdentifier(v)] = path
+    let subs = j["subviews"] as? [JSON] ?? []
+    for (i, subJ) in subs.enumerated() {
+        guard i < v.subviews.count else { break }
+        sceneViewRegistry(v.subviews[i], subJ,
+                          path: path.isEmpty ? "\(i)" : "\(path).\(i)", into: &out)
+    }
+}
+
+/// Run the scene's top-level "hitTests" probe points (root coordinates)
+/// against REAL UIKit hit testing and dump [{"point": [x, y],
+/// "path": "0.2.1" | null}, ...].
+///
+/// The root container keeps the degenerate (0,0,0,0) frame (root-frame
+/// quirk), so `container.hitTest` would always fail the root's own
+/// point(inside:). The driver instead performs UIKit's hit-test recursion
+/// step at the root itself — reverse subview order, per-subview converted
+/// point, first non-nil hitTest wins — exactly what UIView.hitTest does for
+/// its children. Consequence: the root view itself is never a hit result
+/// (misses dump null).
+func runHitTests(_ points: [CGPoint], container: UIView, rootJSON: JSON) -> [JSON] {
+    var registry: [ObjectIdentifier: String] = [:]
+    sceneViewRegistry(container, rootJSON, path: "", into: &registry)
+    var out: [JSON] = []
+    for p in points {
+        var hit: UIView? = nil
+        for sub in container.subviews.reversed() {
+            if let h = sub.hitTest(sub.convert(p, from: container), with: nil) {
+                hit = h
+                break
+            }
+        }
+        // Normalize to the nearest scene-defined ancestor.
+        var norm = hit
+        while let v = norm, registry[ObjectIdentifier(v)] == nil { norm = v.superview }
+        var entry: JSON = ["point": [round3(p.x), round3(p.y)]]
+        entry["path"] = norm.flatMap { registry[ObjectIdentifier($0)] } ?? NSNull()
+        out.append(entry)
+    }
+    return out
 }
 
 // MARK: - Animations (scene spec v3)
@@ -515,6 +571,9 @@ struct SceneSpec {
     /// context, so the offscreen v1 path cannot capture them).
     let animations: [AnimationSpec]
     let captureTimes: [TimeInterval]
+    /// Scene spec v4: hit-test probe points (root coordinates); results are
+    /// appended to the layout dump as "hitTests".
+    let hitTests: [CGPoint]
 }
 
 func loadScene(file: String) throws -> SceneSpec {
@@ -529,11 +588,18 @@ func loadScene(file: String) throws -> SceneSpec {
     if !animations.isEmpty && captureTimes.isEmpty {
         fatalError("scene \(name): \"animations\" requires \"captureTimes\"")
     }
+    let hitTests: [CGPoint] = (scene["hitTests"] as? [Any] ?? []).map {
+        guard let a = numArray($0), a.count == 2 else {
+            fatalError("scene \(name): bad hitTests entry (need [x, y])")
+        }
+        return CGPoint(x: a[0], y: a[1])
+    }
     return SceneSpec(name: name, width: sz[0], height: sz[1], scale: scale, style: style,
                      traits: UITraitCollection(userInterfaceStyle: style),
                      windowRequired: scene["window"] as? Bool == true,
                      rootJSON: scene["root"] as! JSON,
-                     animations: animations, captureTimes: captureTimes)
+                     animations: animations, captureTimes: captureTimes,
+                     hitTests: hitTests)
 }
 
 func buildContainer(_ spec: SceneSpec) -> UIView {
@@ -556,10 +622,14 @@ func buildContainer(_ spec: SceneSpec) -> UIView {
     return container
 }
 
-func writeLayoutDump(_ container: UIView, name: String, outdir: String) throws {
+func writeLayoutDump(_ container: UIView, spec: SceneSpec, outdir: String) throws {
     var views: [JSON] = []
     dumpLayout(container, path: "", into: &views)
-    let layout: JSON = ["name": name, "views": views]
+    var layout: JSON = ["name": spec.name, "views": views]
+    if !spec.hitTests.isEmpty {
+        layout["hitTests"] = runHitTests(spec.hitTests, container: container,
+                                         rootJSON: spec.rootJSON)
+    }
     let layoutData = try JSONSerialization.data(withJSONObject: layout, options: [.prettyPrinted, .sortedKeys])
-    try layoutData.write(to: URL(fileURLWithPath: "\(outdir)/\(name).layout.json"))
+    try layoutData.write(to: URL(fileURLWithPath: "\(outdir)/\(spec.name).layout.json"))
 }

@@ -93,6 +93,21 @@ def compare_layout(g, o):
             for i, (x, y) in enumerate(zip(a[key], b[key])):
                 if abs(x - y) > LAYOUT_TOL:
                     problems.append(f"path='{path}' {key}[{i}]: golden={x} ours={y}")
+    # Hit tests (spec v4): exact path equality, probe by probe.
+    gh, oh = g.get("hitTests"), o.get("hitTests")
+    if gh is not None or oh is not None:
+        gh, oh = gh or [], oh or []
+        if len(gh) != len(oh):
+            problems.append(f"hitTests count: golden={len(gh)} ours={len(oh)}")
+        else:
+            for i, (a, b) in enumerate(zip(gh, oh)):
+                if a.get("point") != b.get("point"):
+                    problems.append(
+                        f"hitTests[{i}] point: golden={a.get('point')} ours={b.get('point')}")
+                elif a.get("path") != b.get("path"):
+                    problems.append(
+                        f"hitTests[{i}] at {a.get('point')}: "
+                        f"golden path={a.get('path')!r} ours={b.get('path')!r}")
     return problems
 
 def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False):

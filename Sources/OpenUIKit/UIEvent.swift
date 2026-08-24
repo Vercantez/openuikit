@@ -1,0 +1,243 @@
+// UIEvent + UIWindow touch routing. Owner: event module (M7).
+//
+// The portable core has no run loop and reads no wall clock: the HOST turns
+// its native input stream (SDL, wasm, test harness) into calls on UIWindow:
+//
+//   window.sendTouch(.began, at: p, timestamp: t, touchID: 0)
+//   window.sendTouch(.moved, at: p2, timestamp: t + 0.016, touchID: 0)
+//   window.sendTouch(.ended, at: p2, timestamp: t + 0.1, touchID: 0)
+//   window.tick(timestamp: now)   // time-only advance (long-press firing)
+//
+// Delivery per event (UIKit order):
+//   1. Gesture recognizers on the hit-test view's superview chain observe
+//      the touches first.
+//   2. Recognition side effects: a recognizer entering .began (continuous)
+//      or .ended-from-.possible (discrete) with cancelsTouchesInView sends
+//      touchesCancelled to the views of its touches; those touches deliver
+//      nothing further to their view.
+//   3. The hit-test view receives touchesBegan/Moved/Ended/Cancelled.
+//   4. Sequence cleanup: recognizers whose touches have all ended are reset
+//      to .possible.
+
+public final class UIEvent {
+    public enum EventType: Sendable {
+        case touches
+    }
+
+    public let type: EventType = .touches
+    public internal(set) var timestamp: TimeInterval
+
+    var eventTouches: Set<UITouch> = []
+
+    public var allTouches: Set<UITouch>? {
+        eventTouches.isEmpty ? nil : eventTouches
+    }
+
+    public func touches(for view: UIView) -> Set<UITouch>? {
+        let s = eventTouches.filter { $0.view === view }
+        return s.isEmpty ? nil : s
+    }
+
+    public func touches(for gesture: UIGestureRecognizer) -> Set<UITouch>? {
+        let s = eventTouches.filter {
+            ($0.gestureRecognizers ?? []).contains { $0 === gesture }
+        }
+        return s.isEmpty ? nil : s
+    }
+
+    init(timestamp: TimeInterval) {
+        self.timestamp = timestamp
+    }
+}
+
+// MARK: - UIWindow
+
+open class UIWindow: UIView {
+    /// Multi-tap sequence rules (UITouch.tapCount): a touch that begins
+    /// within `multiTapInterval` seconds of the previous touch's end and
+    /// within `multiTapSlop` points of its position continues the tap
+    /// sequence. Host-tunable.
+    public static var multiTapInterval: TimeInterval = 0.35
+    public static var multiTapSlop: CGFloat = 30
+
+    /// Active touches by host-provided touch identifier.
+    var activeTouches: [Int: UITouch] = [:]
+    /// Previous tap-sequence terminus (for tapCount).
+    var lastTapEnd: (timestamp: TimeInterval, location: CGPoint, tapCount: Int)?
+
+    // MARK: Host-facing touch injection
+
+    /// Feed one touch-phase change from the host's input stream. Returns the
+    /// (persistent) UITouch, or nil for phase updates of unknown touchIDs.
+    /// Timestamps are host-provided seconds — any monotonic clock; all
+    /// gesture timing derives from them, never from a wall clock.
+    @discardableResult
+    public func sendTouch(_ phase: UITouch.Phase, at point: CGPoint,
+                          timestamp: TimeInterval, touchID: Int = 0) -> UITouch? {
+        let touch: UITouch
+        switch phase {
+        case .began:
+            let t = UITouch(touchID: touchID)
+            t.window = self
+            t.locationInWindow = point
+            t.previousLocationInWindow = point
+            t.timestamp = timestamp
+            t.phase = .began
+            if let last = lastTapEnd,
+               timestamp - last.timestamp <= UIWindow.multiTapInterval,
+               (point.x - last.location.x).magnitude <= UIWindow.multiTapSlop,
+               (point.y - last.location.y).magnitude <= UIWindow.multiTapSlop {
+                t.tapCount = last.tapCount + 1
+            } else {
+                t.tapCount = 1
+            }
+            // Hit-test from the window; the view (and the recognizers on its
+            // superview chain) stay fixed for the touch's lifetime.
+            t.view = hitTest(point, with: nil)
+            var recs: [UIGestureRecognizer] = []
+            var v: UIView? = t.view
+            while let cur = v {
+                recs.append(contentsOf: cur._gestureRecognizers)
+                v = cur.superview
+            }
+            t.gestureRecognizers = recs.isEmpty ? nil : recs
+            activeTouches[touchID] = t
+            touch = t
+        case .moved, .stationary, .ended, .cancelled:
+            guard let t = activeTouches[touchID] else { return nil }
+            t.previousLocationInWindow = t.locationInWindow
+            t.locationInWindow = point
+            t.timestamp = timestamp
+            t.phase = phase
+            touch = t
+        }
+
+        let event = UIEvent(timestamp: timestamp)
+        event.eventTouches = [touch]
+        sendEvent(event)
+
+        if phase == .ended {
+            lastTapEnd = (timestamp, point, touch.tapCount)
+        }
+        if phase == .ended || phase == .cancelled {
+            activeTouches[touchID] = nil
+        }
+        return touch
+    }
+
+    /// Advance event time without any touch change: gives time-based
+    /// recognizers (long press) a chance to fire while a touch is held
+    /// stationary. Call from the host's frame loop while touches are down.
+    public func tick(timestamp: TimeInterval) {
+        guard !activeTouches.isEmpty else { return }
+        let event = UIEvent(timestamp: timestamp)
+        event.eventTouches = Set(activeTouches.values)
+        let recognizers = involvedRecognizers(event.eventTouches)
+        for r in recognizers where r.isEnabled {
+            r.timeAdvanced(to: timestamp, with: event)
+        }
+        processRecognitions(recognizers, event: event)
+        finishSequences(event.eventTouches)
+    }
+
+    // MARK: Event dispatch
+
+    /// Route a touches event: recognizers first, then the hit-test views,
+    /// then recognition cancellation + sequence cleanup.
+    public func sendEvent(_ event: UIEvent) {
+        guard let touches = event.allTouches else { return }
+
+        // 1. Gesture recognizers observe first.
+        let recognizers = involvedRecognizers(touches)
+        for r in recognizers where r.isEnabled {
+            let mine = touches.filter { ($0.gestureRecognizers ?? []).contains { $0 === r } }
+            for phase in [UITouch.Phase.began, .moved, .stationary, .ended, .cancelled] {
+                let ts = mine.filter { $0.phase == phase }
+                guard !ts.isEmpty else { continue }
+                switch phase {
+                case .began: r._touchesBegan(Set(ts), with: event)
+                case .moved: r._touchesMoved(Set(ts), with: event)
+                case .stationary: r.timeAdvanced(to: event.timestamp, with: event)
+                case .ended: r._touchesEnded(Set(ts), with: event)
+                case .cancelled: r._touchesCancelled(Set(ts), with: event)
+                }
+            }
+        }
+
+        // 2. Recognition side effects (cancel touches in view).
+        processRecognitions(recognizers, event: event)
+
+        // 3. Views. Group by (view, phase); skip touches a recognizer
+        // already cancelled.
+        var groups: [(view: UIView, phase: UITouch.Phase, touches: Set<UITouch>)] = []
+        for t in touches.sorted(by: { $0.touchID < $1.touchID }) {
+            guard let v = t.view, !t.deliveryCancelled else { continue }
+            if let i = groups.firstIndex(where: { $0.view === v && $0.phase == t.phase }) {
+                groups[i].touches.insert(t)
+            } else {
+                groups.append((v, t.phase, [t]))
+            }
+        }
+        for g in groups {
+            switch g.phase {
+            case .began: g.view.touchesBegan(g.touches, with: event)
+            case .moved: g.view.touchesMoved(g.touches, with: event)
+            case .stationary: break
+            case .ended: g.view.touchesEnded(g.touches, with: event)
+            case .cancelled: g.view.touchesCancelled(g.touches, with: event)
+            }
+        }
+
+        // 4. Sequence cleanup.
+        finishSequences(touches)
+    }
+
+    // MARK: Internals
+
+    func involvedRecognizers(_ touches: Set<UITouch>) -> [UIGestureRecognizer] {
+        var recs: [UIGestureRecognizer] = []
+        for t in touches.sorted(by: { $0.touchID < $1.touchID }) {
+            for r in t.gestureRecognizers ?? [] where !recs.contains(where: { $0 === r }) {
+                recs.append(r)
+            }
+        }
+        return recs
+    }
+
+    /// A recognizer that just recognized (entered .began, or .ended straight
+    /// from .possible) with cancelsTouchesInView cancels its touches'
+    /// delivery to their views: the views get touchesCancelled once, and
+    /// those touches deliver nothing further.
+    func processRecognitions(_ recognizers: [UIGestureRecognizer], event: UIEvent) {
+        for r in recognizers where r.pendingCancelTouches {
+            r.pendingCancelTouches = false
+            guard r.cancelsTouchesInView else { continue }
+            var byView: [(view: UIView, touches: Set<UITouch>)] = []
+            for t in r.trackedTouches {
+                guard let v = t.view, !t.deliveryCancelled,
+                      t.phase != .ended, t.phase != .cancelled else { continue }
+                t.deliveryCancelled = true
+                if let i = byView.firstIndex(where: { $0.view === v }) {
+                    byView[i].touches.insert(t)
+                } else {
+                    byView.append((v, [t]))
+                }
+            }
+            for g in byView {
+                g.view.touchesCancelled(g.touches, with: event)
+            }
+        }
+    }
+
+    /// Reset recognizers whose touch sequence has fully ended.
+    func finishSequences(_ touches: Set<UITouch>) {
+        for r in involvedRecognizers(touches) {
+            let allDone = r.trackedTouches.allSatisfy {
+                $0.phase == .ended || $0.phase == .cancelled
+            }
+            if allDone, !r.trackedTouches.isEmpty {
+                r._sequenceEnded()
+            }
+        }
+    }
+}

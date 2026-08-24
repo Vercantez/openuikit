@@ -22,6 +22,8 @@ open class UILabel: UIView {
     public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         isOpaque = false
+        // UIKit: labels do not receive touches by default.
+        isUserInteractionEnabled = false
     }
 
     var layoutScale: CGFloat {

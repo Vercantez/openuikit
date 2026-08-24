@@ -19,7 +19,7 @@ func renderScene(file: String, outdir: String) throws {
     }
     let container = buildContainer(spec)
 
-    try writeLayoutDump(container, name: spec.name, outdir: outdir)
+    try writeLayoutDump(container, spec: spec, outdir: outdir)
 
     let fmt = UIGraphicsImageRendererFormat()
     fmt.scale = spec.scale

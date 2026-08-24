@@ -1,4 +1,4 @@
-# Scene Specification v3
+# Scene Specification v4
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -71,6 +71,7 @@ the note in `Tools/oracle/SceneKit.swift`), so shadow scenes that want a
 visible backdrop must add an explicit full-size background subview.
 | `autoresizingMask` | array of strings | any of `"flexibleWidth"`, `"flexibleHeight"`, `"flexibleLeftMargin"`, `"flexibleRightMargin"`, `"flexibleTopMargin"`, `"flexibleBottomMargin"`. |
 | `sizeToFit` | bool | call `sizeToFit()` after properties are set (origin preserved). |
+| `userInteractionEnabled` | bool | `isUserInteractionEnabled` (v4). Default: UIKit's (true; false for UILabel/UIImageView). |
 | `subviews` | array | child view objects, in order. |
 
 ### `UIView`
@@ -120,6 +121,7 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 | `fontSize`, `fontWeight` | applied to `titleLabel!.font` |
 | `titleColor` | color; default = tintColor (systemBlue) |
 | `enabled` | bool |
+| `highlighted` | bool (v4). Sets `isHighlighted = true` — a plain .system button renders its title dimmed. |
 
 ### `UISwitch`
 | key | notes |
@@ -263,6 +265,44 @@ layout passes and **all** frames pass; the report lists per-frame scores and
 the scene's headline score is the worst frame. Diff heatmaps land in
 `out/diffs/<name>.t<ms>.diff.png`. As `"window": true` scenes, animation
 goldens are decoded as premultiplied (the oracle2 rule above).
+
+## Hit tests (v4)
+
+An optional top-level `"hitTests": [[x, y], ...]` array of probe points in
+ROOT coordinates. Each point is hit-tested against real UIKit's
+`UIView.hitTest(_:with:)` semantics and the results are appended to the
+layout dump:
+
+```json
+"hitTests": [
+  { "point": [310, 275], "path": "3.0.2" },
+  { "point": [30, 75],   "path": null }
+]
+```
+
+- `path` is the dot-joined subview-index path (layout-dump addressing) of
+  the hit view, or `null` on a miss.
+- Results are NORMALIZED to the nearest scene-defined ancestor: when UIKit
+  returns a private implementation subview (UISwitch internals,
+  `UIButtonLabel`, ...), the dumped path is the nearest view that exists in
+  the scene JSON, so both renderers report comparable paths.
+- The root container keeps the degenerate `(0,0,0,0)` frame (root-frame
+  quirk), so the driver runs UIKit's hit-test recursion step at the root
+  itself (reverse subview order, converted point, first hit wins);
+  consequence: the ROOT view is never a hit result — probes that hit
+  nothing dump `null`. Keep probe points within the scene size.
+- compare.py checks probe-by-probe EXACT path equality (a mismatch is a
+  layout failure).
+
+Oracle-verified semantics reproduced by OpenUIKit (fixtures/scenes/
+hit_testing.json): reverse-subview-order (front-to-back) search; transforms
+applied about the view center; `isHidden`, `alpha < 0.01` and
+`isUserInteractionEnabled == false` each prune their whole subtree;
+`point(inside:)` is min-edge inclusive / max-edge exclusive; a subview
+region OUTSIDE its parent's bounds is unreachable regardless of
+`clipsToBounds` (the recursion tests `point(inside:)` on every ancestor);
+UILabel / UIImageView default to interaction disabled (touches fall
+through to their superview).
 
 ## Colors
 
