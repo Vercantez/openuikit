@@ -196,4 +196,65 @@ final class GlyphInkTableTests: XCTestCase {
             }
         }
     }
+
+    private func tags(forSize size: Int) -> [String] {
+        if size < 12 { return ["0", "P1", "P2", "P3"] }
+        if size < 16 { return ["0", "T", "H", "P2"] }
+        if size < 29 { return ["0", "P1"] }
+        return ["0"]
+    }
+
+    private func assertCoverage(_ family: String, _ size: Int, _ text: String,
+                                dark: Bool = false, file: StaticString = #filePath,
+                                line: UInt = #line) {
+        for ch in text.unicodeScalars where ch != " " {
+            for tag in tags(forSize: size) {
+                XCTAssertNotNil(GlyphInkTable.mask(familyKey: family, sizeKey: size,
+                                                   dark: dark, tag: tag, scalar: ch),
+                                "missing \(family)-\(size)\(dark ? " dark" : "") mask '\(ch)' tag \(tag)",
+                                file: file, line: line)
+            }
+        }
+    }
+
+    /// Offscreen harvest coverage for every button_states title (all phase
+    /// tags per char, so advance tweaks that shift pen phases stay covered).
+    func testOffscreenCoverageForButtonStates() throws {
+        try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
+        assertCoverage("system-regular", 11, "Tiny 11")
+        assertCoverage("system-regular", 13, "Small 13")
+        assertCoverage("system-regular", 17, "Regular 17Green")
+        assertCoverage("system-regular", 24, "Large 24")
+        assertCoverage("system-regular", 20, "Disabled 20")
+        assertCoverage("system-regular", 14, "Very long button title that fills the frame width")
+        assertCoverage("system-light", 17, "Light")
+        assertCoverage("system-medium", 17, "Medium")
+        assertCoverage("system-heavy", 17, "Heavy")
+        assertCoverage("system-bold", 17, "Disabled Bold")
+    }
+
+    /// Window-table coverage for every demo_settings string (34pt title,
+    /// 17pt rows, 17pt semibold chevrons/name, 13pt captions incl. the em
+    /// dash, and the default 15pt button titles).
+    func testWindowCoverageForDemoSettings() throws {
+        try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
+        GlyphInkTable.windowCompositing = true
+        defer { GlyphInkTable.windowCompositing = false }
+        assertCoverage("system-bold", 34, "Settings")
+        assertCoverage("system-regular", 17,
+                       "SearchHomeNetOnAirplane ModeWi-FiBluetoothGeneraliPhone Storage" +
+                       "Critical AlertsMessagesPromotions")
+        assertCoverage("system-semibold", 17, "Miguel Salinas\u{203A}")
+        assertCoverage("system-regular", 13,
+                       "Account, iCloud, and more72%NOTIFY ME ABOUT" +
+                       "OpenUIKit demo \u{2014} rendered without UIKit")
+        assertCoverage("system-regular", 15, "Sign OutHelp")
+    }
+
+    /// Dark-mode offscreen coverage for button_dark's titles.
+    func testOffscreenDarkCoverageForButtonDark() throws {
+        try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
+        assertCoverage("system-regular", 15, "Plain DarkDisabled DarkOrange Title", dark: true)
+        assertCoverage("system-semibold", 17, "Semibold Dark", dark: true)
+    }
 }

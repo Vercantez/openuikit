@@ -41,6 +41,9 @@ public enum FontEngine {
         var leading: CGFloat = 0
         /// Advance per printable ASCII char (index = ascii - 32); 95 entries.
         var advances: [CGFloat] = []
+        /// Advances for non-ASCII chars vendored in the table (harvested from
+        /// the oracle like the ASCII ones; e.g. U+203A "›", U+2014 "—").
+        var extAdvances: [UInt32: CGFloat] = [:]
     }
 
     struct Tables {
@@ -75,9 +78,12 @@ public enum FontEngine {
                 if let adv = obj["advances"]?.objectValue {
                     for (k, v) in adv {
                         let u = Array(k.unicodeScalars)
-                        guard u.count == 1, u[0].value >= 32, u[0].value <= 126,
-                              let d = v.doubleValue else { continue }
-                        e.advances[Int(u[0].value) - 32] = d
+                        guard u.count == 1, let d = v.doubleValue else { continue }
+                        if u[0].value >= 32, u[0].value <= 126 {
+                            e.advances[Int(u[0].value) - 32] = d
+                        } else if u[0].value > 126 {
+                            e.extAdvances[u[0].value] = d
+                        }
                     }
                 }
                 // id = "<family>-<weight>-<size>"; family key strips the size.
@@ -164,6 +170,7 @@ public enum FontEngine {
         e.ascender *= f; e.descender *= f; e.lineHeight *= f
         e.capHeight *= f; e.xHeight *= f; e.leading *= f
         e.advances = nearest.advances.map { $0 * f }
+        e.extAdvances = nearest.extAdvances.mapValues { $0 * f }
         return (e, e, 0)
     }
 
@@ -198,6 +205,12 @@ public enum FontEngine {
         // other non-ASCII falls back to the font file's default instance.
         if scalar.value == 0x2026 {
             return ellipsisAdvance(for: font)
+        }
+        // Vendored non-ASCII advances (interpolated like the ASCII ones).
+        if let (a, b, f) = neighbors(for: font),
+           let av = a.extAdvances[scalar.value] {
+            let bv = b.extAdvances[scalar.value] ?? av
+            return av + (bv - av) * f
         }
         if let gf = GlyphRasterizer.font(for: font) {
             return gf.advancePoints(of: scalar, pointSize: font.pointSize)

@@ -122,4 +122,34 @@ final class FontEngineTests: XCTestCase {
                            accuracy: 1e-9, "size \(size)")
         }
     }
+
+    /// Non-ASCII advances vendored in font_metrics.json (harvested from the
+    /// oracle with the same NSString measurement as the ASCII ones). The
+    /// U+203A chevron drove demo_settings' 14 layout failures: the fallback
+    /// estimate gave 7pt-wide labels where real UIKit gives 8pt.
+    func testVendoredNonASCIIAdvances() throws {
+        let chevron = Unicode.Scalar(0x203A)!
+        let emDash = Unicode.Scalar(0x2014)!
+        // Oracle values (advprobe, NSString.size(withAttributes:)).
+        XCTAssertEqual(FontEngine.advance(of: chevron,
+                                          font: .systemFont(ofSize: 17, weight: .semibold)),
+                       7.569337725639343, accuracy: 1e-9)
+        XCTAssertEqual(FontEngine.advance(of: emDash, font: .systemFont(ofSize: 13)),
+                       11.54638671875, accuracy: 1e-9)
+        // demo_settings chevron labels: intrinsic width must ceil to 8pt.
+        XCTAssertEqual(FontEngine.ceilToPixel(
+            FontEngine.measure("\u{203A}", font: .systemFont(ofSize: 17, weight: .semibold)),
+            scale: 2), 8.0, accuracy: 1e-9)
+        // Fractional sizes interpolate the ext advances like ASCII ones.
+        let lo = FontEngine.advance(of: chevron, font: .systemFont(ofSize: 16))
+        let hi = FontEngine.advance(of: chevron, font: .systemFont(ofSize: 17))
+        XCTAssertEqual(FontEngine.advance(of: chevron, font: .systemFont(ofSize: 16.5)),
+                       lo + 0.5 * (hi - lo), accuracy: 1e-9)
+        // U+2026 keeps the exact label-context (tight-table) advance, which
+        // the ext table must not override.
+        XCTAssertEqual(FontEngine.advance(of: Unicode.Scalar(0x2026)!,
+                                          font: .systemFont(ofSize: 17)),
+                       FontEngine.ellipsisAdvance(for: .systemFont(ofSize: 17)),
+                       accuracy: 1e-9)
+    }
 }

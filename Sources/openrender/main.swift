@@ -26,6 +26,11 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_BACKEND"] {
     }
 }
 
+// Glyph-ink harvest diagnostics: OPENUIKIT_INK_LOG=<path> writes every ink
+// table miss ("W|<key>" / "O|<key>", one per line) after rendering.
+let inkLogPath = ProcessInfo.processInfo.environment["OPENUIKIT_INK_LOG"]
+if inkLogPath != nil { GlyphInkTable.logMisses = true }
+
 let args = CommandLine.arguments
 guard args.count >= 3 else {
     print("usage: openrender render <outdir> <scene.json>...")
@@ -39,6 +44,10 @@ case "render":
     for file in args.dropFirst(3) {
         do { try renderScene(file: file, outdir: outdir) }
         catch { print("FAIL \(file): \(error)"); failures += 1 }
+    }
+    if let inkLogPath {
+        let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
+        try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
     }
     exit(failures == 0 ? 0 : 1)
 default:

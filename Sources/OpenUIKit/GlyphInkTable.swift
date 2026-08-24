@@ -61,6 +61,14 @@ public enum GlyphInkTable {
     /// variant masks and fall back to the offscreen table per glyph.
     public static var windowCompositing = false
 
+    /// Harvest-coverage diagnostics: when enabled, every table lookup that
+    /// misses is recorded ("W|<key>" window-table miss, "O|<key>" offscreen
+    /// miss). openrender dumps this when OPENUIKIT_INK_LOG is set, so a
+    /// harvest run knows exactly which (family,size,style,phase,char) cells
+    /// the current scenes need.
+    public static var logMisses = false
+    public private(set) static var missedKeys: Set<String> = []
+
     public static var isAvailable: Bool { entries != nil }
 
     /// Phase tag + device-pixel anchor (floor(2 * quantized phase)) for a
@@ -172,12 +180,19 @@ public enum GlyphInkTable {
     public static func mask(familyKey: String, sizeKey: Int, dark: Bool,
                             tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
         let key = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
-        if windowCompositing, let w = windowEntries,
-           let m = decode(w[key]?.objectValue, cacheKey: "W|" + key) {
-            return m
+        if windowCompositing {
+            if let w = windowEntries,
+               let m = decode(w[key]?.objectValue, cacheKey: "W|" + key) {
+                return m
+            }
+            if logMisses { missedKeys.insert("W|" + key) }
         }
-        guard let entries else { return nil }
-        return decode(entries[key]?.objectValue, cacheKey: key)
+        guard let entries,
+              let m = decode(entries[key]?.objectValue, cacheKey: key) else {
+            if logMisses { missedKeys.insert("O|" + key) }
+            return nil
+        }
+        return m
     }
 
     private static func decode(_ e: [String: JSONValue]?, cacheKey: String) -> GlyphInkMask? {
