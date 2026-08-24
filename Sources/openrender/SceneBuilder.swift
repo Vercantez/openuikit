@@ -181,12 +181,19 @@ func makeLabel(_ j: SceneJSON) -> UILabel {
     return l
 }
 
+func makeSwitch(_ j: SceneJSON) -> UISwitch {
+    let s = UISwitch()
+    s.isOn = j["on"]?.boolValue ?? false
+    if let c = colorOrDie(j["onTintColor"], "UISwitch") { s.onTintColor = c }
+    return s
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
 /// owning modules land. Adding a real class later = one `case` line below.
 let notYetImplementedClasses: Set<String> = [
-    "UIButton", "UISwitch", "UIProgressView", "UIStackView", "UIImageView",
+    "UIButton", "UIProgressView", "UIStackView", "UIImageView",
 ]
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
@@ -195,10 +202,10 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     switch cls {
     case "UIView": v = UIView()
     case "UILabel": v = makeLabel(j)
+    case "UISwitch": v = makeSwitch(j)
     // Future phases — one line each as OpenUIKit grows the class:
     // case "UIImageView":    v = makeImageView(j, scale: scale)
     // case "UIButton":       v = makeButton(j)
-    // case "UISwitch":       v = makeSwitch(j)
     // case "UIProgressView": v = makeProgressView(j)
     // case "UIStackView":    v = makeStackView(j)
     case _ where notYetImplementedClasses.contains(cls):
@@ -243,7 +250,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     ]
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
-    if v is UILabel {
+    if v is UILabel || v is UISwitch {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),
