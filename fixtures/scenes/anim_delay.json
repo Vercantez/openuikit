@@ -1,0 +1,34 @@
+{
+ "name": "anim_delay",
+ "size": [200, 200],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 200, 200],
+    "backgroundColor": "#FFFFFF"
+   },
+   {
+    "class": "UIView",
+    "frame": [20, 80, 40, 40],
+    "backgroundColor": "#0C8599",
+    "cornerRadius": 6
+   }
+  ]
+ },
+ "animations": [
+  {
+   "target": "1",
+   "kind": "uiview-animate",
+   "duration": 0.4,
+   "delay": 0.2,
+   "curve": "easeInOut",
+   "changes": { "center": [160, 100] }
+  }
+ ],
+ "captureTimes": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+}

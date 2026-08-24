@@ -107,13 +107,56 @@ final class Renderer {
         host.addSubview(wrapper)
         wrapper.layoutIfNeeded()
 
-        // afterScreenUpdates: true flushes pending CA transactions so the
-        // just-attached hierarchy is rendered by the server before capture.
-        let img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
-        wrapper.removeFromSuperview()
+        if spec.animations.isEmpty {
+            // afterScreenUpdates: true flushes pending CA transactions so the
+            // just-attached hierarchy is rendered by the server before capture.
+            let img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
+            wrapper.removeFromSuperview()
+            try img.pngData()!.write(to: URL(fileURLWithPath: "\(outdir)/\(spec.name).png"))
+            print("rendered \(spec.name)")
+            return
+        }
 
-        try img.pngData()!.write(to: URL(fileURLWithPath: "\(outdir)/\(spec.name).png"))
-        print("rendered \(spec.name)")
+        // Animation capture (scene spec v3) — deterministic, no wall clock:
+        // 1. FREEZE the scene's animation clock before anything is committed:
+        //    wrapper.layer.speed = 0 pins every descendant's local time to
+        //    wrapper.layer.timeOffset (convertTime: local = (parent - begin)
+        //    * speed + timeOffset = timeOffset, inherited by children with
+        //    speed 1 / beginTime 0). CACurrentMediaTime() cancels out of the
+        //    math entirely, so two runs are byte-identical.
+        // 2. Start REAL UIView.animate with the JSON's changes. At commit CA
+        //    resolves each animation's beginTime against the frozen local
+        //    timeline: beginTime = frozen-now (0) + delay. UIKit applies
+        //    fillMode backwards for delayed animations, so t < delay shows
+        //    the FROM state; t >= delay + duration shows the model (TO) state
+        //    because with speed = 0 the completion/removal never fires and
+        //    the ended animation no longer contributes (fillMode removed).
+        // 3. For each capture time t: seek wrapper.layer.timeOffset = t and
+        //    drawHierarchy(afterScreenUpdates: true) — that commits the seek
+        //    and makes the render server composite the presentation tree at
+        //    frozen time t before capturing.
+        wrapper.layer.speed = 0
+        wrapper.layer.timeOffset = 0
+        startAnimations(spec.animations, container: container, traits: spec.traits)
+        CATransaction.flush()
+        if ProcessInfo.processInfo.environment["ORACLE2_ANIM_DEBUG"] != nil {
+            for a in spec.animations {
+                let layer = viewAtPath(container, a.target).layer
+                print("target '\(a.target)' local time:", layer.convertTime(CACurrentMediaTime(), from: nil))
+                for k in layer.animationKeys() ?? [] {
+                    let an = layer.animation(forKey: k)!
+                    print("  [\(k)] \(type(of: an)) beginTime=\(an.beginTime) duration=\(an.duration) fillMode=\(an.fillMode.rawValue) removed=\(an.isRemovedOnCompletion) tf=\(String(describing: (an as? CABasicAnimation)?.timingFunction))")
+                }
+            }
+        }
+        for t in spec.captureTimes {
+            wrapper.layer.timeOffset = t
+            let img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
+            try img.pngData()!.write(
+                to: URL(fileURLWithPath: "\(outdir)/\(spec.name).\(captureSuffix(t)).png"))
+        }
+        wrapper.removeFromSuperview()
+        print("rendered \(spec.name) (\(spec.captureTimes.count) frames)")
     }
 }
 

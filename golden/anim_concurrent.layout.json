@@ -1,0 +1,45 @@
+{
+  "name" : "anim_concurrent",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        200,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        30,
+        40,
+        40
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        130,
+        40,
+        40
+      ],
+      "path" : "2"
+    }
+  ]
+}

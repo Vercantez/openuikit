@@ -1,0 +1,32 @@
+{
+ "name": "anim_fade",
+ "size": [200, 200],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 200, 200],
+    "backgroundColor": "#FFFFFF"
+   },
+   {
+    "class": "UIView",
+    "frame": [50, 50, 100, 100],
+    "backgroundColor": "#E03131"
+   }
+  ]
+ },
+ "animations": [
+  {
+   "target": "1",
+   "kind": "uiview-animate",
+   "duration": 1.0,
+   "curve": "linear",
+   "changes": { "alpha": 0.0 }
+  }
+ ],
+ "captureTimes": [0.0, 0.25, 0.5, 0.75, 1.0]
+}

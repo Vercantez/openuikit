@@ -11,6 +11,12 @@ import UIKit
 
 func renderScene(file: String, outdir: String) throws {
     let spec = try loadScene(file: file)
+    guard spec.animations.isEmpty else {
+        // CA discards animations on layers with no render context at commit
+        // (verified: animationKeys() empties on CATransaction.flush() and
+        // presentation() stays nil offscreen), so v1 cannot capture them.
+        fatalError("scene \(spec.name) has \"animations\" — render it with Tools/oracle2 (mark it \"window\": true)")
+    }
     let container = buildContainer(spec)
 
     try writeLayoutDump(container, name: spec.name, outdir: outdir)

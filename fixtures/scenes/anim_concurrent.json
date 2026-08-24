@@ -1,0 +1,44 @@
+{
+ "name": "anim_concurrent",
+ "size": [200, 200],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 200, 200],
+    "backgroundColor": "#FFFFFF"
+   },
+   {
+    "class": "UIView",
+    "frame": [10, 30, 40, 40],
+    "backgroundColor": "#1971C2"
+   },
+   {
+    "class": "UIView",
+    "frame": [10, 130, 40, 40],
+    "backgroundColor": "#E03131"
+   }
+  ]
+ },
+ "animations": [
+  {
+   "target": "1",
+   "kind": "uiview-animate",
+   "duration": 0.6,
+   "curve": "easeIn",
+   "changes": { "center": [170, 50] }
+  },
+  {
+   "target": "2",
+   "kind": "uiview-animate",
+   "duration": 0.4,
+   "curve": "easeOut",
+   "changes": { "center": [170, 150], "alpha": 0.3 }
+  }
+ ],
+ "captureTimes": [0.0, 0.1, 0.2, 0.3, 0.45, 0.6]
+}

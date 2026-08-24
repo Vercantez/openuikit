@@ -3,6 +3,11 @@
 
 Usage: compare.py [--golden golden] [--out out] [--scenes fixtures/scenes] [--json report.json] [scene ...]
 Exit 0 if all compared scenes pass, 1 otherwise.
+
+Animation scenes (spec v3, top-level "animations" + "captureTimes"): every
+captured frame <name>.t<ms>.png is compared with the scene's category
+threshold; layout (<name>.layout.json, the t=0 model state) is compared once.
+The scene passes iff layout passes and EVERY frame passes.
 """
 import argparse, json, os, sys
 import numpy as np
@@ -41,6 +46,11 @@ def classify(scene):
     return cat, layout_only
 
 THRESHOLDS = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0}
+
+def capture_suffix(t):
+    """Frame-file suffix for a capture time: ms, zero-padded to >= 3 digits
+    (0.08 -> 't080', 1.0 -> 't1000'). Mirrors captureSuffix in SceneKit.swift."""
+    return "t%03d" % round(t * 1000)
 
 # Only these classes are compared structurally; private UIKit implementation
 # subviews (UISwitchModernVisualElement, UIButtonLabel, ...) are skipped —
@@ -152,14 +162,47 @@ def main():
         entry["layout_problems"] = problems
         layout_ok = not problems
 
+        # oracle2 ("window" scenes) goldens are premultiplied
+        premul = bool(scene.get("window", False))
         pixel_ok = True
-        if not layout_only:
+        if layout_only:
+            entry["pixel"] = "skipped (layoutOnly)"
+        elif scene.get("animations"):
+            # Multi-frame comparison: every captured frame must pass the
+            # scene's category threshold.
+            entry["threshold"] = THRESHOLDS[cat]
+            frames = []
+            for t in scene["captureTimes"]:
+                suffix = capture_suffix(t)
+                frame = {"t": t}
+                opath = os.path.join(args.out, f"{name}.{suffix}.png")
+                if not os.path.exists(opath):
+                    frame["error"] = "missing frame"
+                    pixel_ok = False
+                else:
+                    res, err = compare_pixels(
+                        os.path.join(args.golden, f"{name}.{suffix}.png"), opath,
+                        os.path.join(diffdir, f"{name}.{suffix}.diff.png"),
+                        golden_premultiplied=premul)
+                    if err:
+                        frame["error"] = err
+                        pixel_ok = False
+                    else:
+                        frame.update(res)
+                        if res["score"] < THRESHOLDS[cat]:
+                            pixel_ok = False
+                frames.append(frame)
+            entry["frames"] = frames
+            scores = [f["score"] for f in frames if "score" in f]
+            if scores:
+                entry["score"] = min(scores)   # worst frame headlines the scene
+                entry["mae"] = max(f["mae"] for f in frames if "mae" in f)
+        else:
             res, err = compare_pixels(
                 os.path.join(args.golden, name + ".png"),
                 os.path.join(args.out, name + ".png"),
                 os.path.join(diffdir, name + ".diff.png"),
-                # oracle2 ("window" scenes) goldens are premultiplied
-                golden_premultiplied=bool(scene.get("window", False)))
+                golden_premultiplied=premul)
             if err:
                 entry["pixel_error"] = err
                 pixel_ok = False
@@ -167,8 +210,6 @@ def main():
                 entry.update(res)
                 entry["threshold"] = THRESHOLDS[cat]
                 pixel_ok = res["score"] >= THRESHOLDS[cat]
-        else:
-            entry["pixel"] = "skipped (layoutOnly)"
 
         entry["status"] = "PASS" if (layout_ok and pixel_ok) else "FAIL"
         if entry["status"] == "FAIL":
@@ -180,6 +221,11 @@ def main():
         score = f"{r.get('score', '—'):>8}" if isinstance(r.get("score"), float) else f"{'—':>8}"
         nl = len(r.get("layout_problems", []))
         print(f"{r['status']:7} {r['scene']:{w}} [{r['category']:8}] pixels={score}  layout_issues={nl}")
+        if "frames" in r:
+            details = "  ".join(
+                f"t{f['t']:g}={f['score']}" if "score" in f else f"t{f['t']:g}=({f['error']})"
+                for f in r["frames"])
+            print(f"        frames: {details}")
         for p in r.get("layout_problems", [])[:5]:
             print(f"        · {p}")
         if nl > 5:

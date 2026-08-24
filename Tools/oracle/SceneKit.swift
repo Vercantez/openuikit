@@ -357,6 +357,146 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     }
 }
 
+// MARK: - Animations (scene spec v3)
+
+/// One entry of the top-level `"animations"` array. See docs/SCENE_SPEC.md.
+struct AnimationSpec {
+    let target: String            // view path, e.g. "0.1" ("" = root)
+    let duration: TimeInterval
+    let delay: TimeInterval
+    /// nil when `spring` is set. One of linear|easeIn|easeOut|easeInOut.
+    let curve: UIView.AnimationOptions?
+    let springDamping: CGFloat?   // non-nil => spring animation
+    let springVelocity: CGFloat
+    let changes: JSON             // property -> target value (scene-spec encodings)
+}
+
+func parseAnimations(_ scene: JSON) -> [AnimationSpec] {
+    guard let arr = scene["animations"] as? [JSON] else { return [] }
+    return arr.map { j in
+        let kind = j["kind"] as? String ?? "uiview-animate"
+        guard kind == "uiview-animate" else { fatalError("bad animation kind '\(kind)'") }
+        var curve: UIView.AnimationOptions? = nil
+        var damping: CGFloat? = nil
+        var velocity: CGFloat = 0
+        if let s = j["spring"] as? JSON {
+            damping = num(s["damping"]) ?? 1
+            velocity = num(s["initialVelocity"]) ?? 0
+        } else {
+            switch j["curve"] as? String ?? "easeInOut" {
+            case "linear": curve = .curveLinear
+            case "easeIn": curve = .curveEaseIn
+            case "easeOut": curve = .curveEaseOut
+            case "easeInOut": curve = .curveEaseInOut
+            case let c: fatalError("bad animation curve '\(c)'")
+            }
+        }
+        guard let changes = j["changes"] as? JSON, !changes.isEmpty else {
+            fatalError("animation needs non-empty \"changes\"")
+        }
+        return AnimationSpec(target: j["target"] as? String ?? "",
+                             duration: Double(num(j["duration"]) ?? 0.25),
+                             delay: Double(num(j["delay"]) ?? 0),
+                             curve: curve, springDamping: damping, springVelocity: velocity,
+                             changes: changes)
+    }
+}
+
+/// Resolve a dot-joined subview-index path ("" = root) against the built tree.
+func viewAtPath(_ root: UIView, _ path: String) -> UIView {
+    var v = root
+    guard !path.isEmpty else { return v }
+    for comp in path.split(separator: ".") {
+        guard let i = Int(comp), i >= 0, i < v.subviews.count else {
+            fatalError("bad animation target path '\(path)'")
+        }
+        v = v.subviews[i]
+    }
+    return v
+}
+
+/// Apply one animation entry's `changes` to the target view. Called INSIDE the
+/// UIView.animate block. Property encodings match the scene spec (colors are
+/// resolved eagerly against the scene traits, like all scene colors).
+func applyAnimationChanges(_ v: UIView, _ changes: JSON, traits: UITraitCollection) {
+    for (key, value) in changes {
+        switch key {
+        case "frame":
+            let f = numArray(value)!
+            v.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
+        case "center":
+            let c = numArray(value)!
+            v.center = CGPoint(x: c[0], y: c[1])
+        case "bounds":
+            let b = numArray(value)!
+            v.bounds = CGRect(x: b[0], y: b[1], width: b[2], height: b[3])
+        case "alpha":
+            v.alpha = num(value)!
+        case "backgroundColor":
+            v.backgroundColor = colorOrDie(value, "animation changes", traits)
+        case "transform":
+            let t = numArray(value)!
+            v.transform = CGAffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], tx: t[4], ty: t[5])
+        case "cornerRadius":
+            v.layer.cornerRadius = num(value)!
+        default:
+            fatalError("unsupported animated property '\(key)'")
+        }
+    }
+}
+
+/// Kick off every animation entry with real UIView.animate. The caller is
+/// responsible for having FROZEN the clock first (ancestor layer speed = 0,
+/// timeOffset = 0) so the animations' beginTimes land on the frozen local
+/// timeline and captures are deterministic.
+///
+/// Delay handling: UIKit computes the CAAnimation's beginTime as
+/// convertTime(CACurrentMediaTime() + delay, to: layer) — under a frozen
+/// ancestor EVERY media time converts to the frozen constant, so the delay is
+/// annihilated at commit (verified: beginTime lands at exactly 0, animation
+/// runs [0, duration]). We reintroduce it deterministically by shifting the
+/// TARGET LAYER's own timeline: layer.beginTime = delay makes the layer's
+/// local time = parentLocal - delay, so the animation (active [0, duration]
+/// in layer-local time) is active [delay, delay + duration] on the seek
+/// timeline, and UIKit's fillMode .both shows the FROM state during the
+/// delay — same as real delayed playback. Constraint: this shifts the whole
+/// layer, so multiple animation entries targeting the SAME view must share
+/// one delay (enforced here; use different views otherwise).
+func startAnimations(_ anims: [AnimationSpec], container: UIView, traits: UITraitCollection) {
+    var delayByTarget: [String: TimeInterval] = [:]
+    for a in anims {
+        if let existing = delayByTarget[a.target], existing != a.delay {
+            fatalError("animations targeting the same view ('\(a.target)') must share one delay")
+        }
+        delayByTarget[a.target] = a.delay
+        let target = viewAtPath(container, a.target)
+        let block = { applyAnimationChanges(target, a.changes, traits: traits) }
+        if let damping = a.springDamping {
+            UIView.animate(withDuration: a.duration, delay: a.delay,
+                           usingSpringWithDamping: damping,
+                           initialSpringVelocity: a.springVelocity,
+                           options: [], animations: block)
+        } else {
+            UIView.animate(withDuration: a.duration, delay: a.delay,
+                           options: [a.curve!], animations: block)
+        }
+        if a.delay > 0 {
+            target.layer.beginTime = a.delay
+            // Before its own beginTime a layer with default fillMode
+            // "removed" is not displayed at all; .both makes it present its
+            // local-time-0 state (= the animation's backwards-filled FROM
+            // value) during the delay, matching real delayed playback.
+            target.layer.fillMode = .both
+        }
+    }
+}
+
+/// Frame-file suffix for a capture time: milliseconds, >= 3 digits
+/// (0.08 -> "t080", 1.0 -> "t1000").
+func captureSuffix(_ t: TimeInterval) -> String {
+    String(format: "t%03d", Int((t * 1000).rounded()))
+}
+
 // MARK: - Scene loading / building (shared driver pieces)
 
 struct SceneSpec {
@@ -370,6 +510,11 @@ struct SceneSpec {
     /// (real window + drawHierarchy); its controls do not draw offscreen.
     let windowRequired: Bool
     let rootJSON: JSON
+    /// Scene spec v3: animations + capture times. Non-empty `animations`
+    /// requires oracle2 (CA discards animations on layers with no render
+    /// context, so the offscreen v1 path cannot capture them).
+    let animations: [AnimationSpec]
+    let captureTimes: [TimeInterval]
 }
 
 func loadScene(file: String) throws -> SceneSpec {
@@ -379,10 +524,16 @@ func loadScene(file: String) throws -> SceneSpec {
     let sz = numArray(scene["size"])!
     let scale = num(scene["scale"]) ?? 2
     let style: UIUserInterfaceStyle = (scene["style"] as? String) == "dark" ? .dark : .light
+    let animations = parseAnimations(scene)
+    let captureTimes = (numArray(scene["captureTimes"]) ?? []).map { Double($0) }
+    if !animations.isEmpty && captureTimes.isEmpty {
+        fatalError("scene \(name): \"animations\" requires \"captureTimes\"")
+    }
     return SceneSpec(name: name, width: sz[0], height: sz[1], scale: scale, style: style,
                      traits: UITraitCollection(userInterfaceStyle: style),
                      windowRequired: scene["window"] as? Bool == true,
-                     rootJSON: scene["root"] as! JSON)
+                     rootJSON: scene["root"] as! JSON,
+                     animations: animations, captureTimes: captureTimes)
 }
 
 func buildContainer(_ spec: SceneSpec) -> UIView {

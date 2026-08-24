@@ -1,13 +1,16 @@
-# Scene Specification v2
+# Scene Specification v3
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
 - `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below.
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
-Each renderer produces, for scene `<name>`:
+Each renderer produces, for a **static** scene `<name>`:
 - `<name>.png` — RGBA PNG of the root view rendered at `scale` (pixel size = size × scale).
 - `<name>.layout.json` — post-layout geometry dump (see below).
+
+A scene with top-level `"animations"` (v3) instead produces one PNG **per
+capture time** plus one shared layout dump — see “Animations (v3)”.
 
 `Tools/compare/compare.py` diffs the two directories and emits a per-scene report.
 
@@ -139,6 +142,127 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 | `stackDistribution` | `fill, fillEqually, fillProportionally, equalSpacing, equalCentering` |
 | `stackAlignment` | `fill, leading, trailing, center, top, bottom, firstBaseline, lastBaseline` |
 Children are `arrangedSubviews` (added in order). The stack view itself gets an explicit `frame`.
+
+## Animations (v3)
+
+Two additional top-level keys turn a scene into a multi-frame **animation
+scene**:
+
+```json
+{
+  "name": "anim_fade",
+  "size": [200, 200],
+  "scale": 2,
+  "window": true,
+  "root": { ... },
+  "animations": [
+    {
+      "target": "1",
+      "kind": "uiview-animate",
+      "duration": 1.0,
+      "delay": 0.0,
+      "curve": "linear",
+      "changes": { "alpha": 0.0 }
+    }
+  ],
+  "captureTimes": [0.0, 0.25, 0.5, 0.75, 1.0]
+}
+```
+
+### `animations` — array of animation entries
+
+Each entry describes ONE `UIView.animate` call:
+
+| key | type | notes |
+|---|---|---|
+| `target` | string | required. Dot-joined subview-index path from root (`"0.1"`; `""` = root), same addressing as layout-dump `path`. |
+| `kind` | string | `"uiview-animate"` (the only kind for now; default). |
+| `duration` | number | seconds. Default 0.25. |
+| `delay` | number | seconds before the animation starts. Default 0. During the delay the view shows the FROM state (UIKit fills backwards). |
+| `curve` | string | `linear`, `easeIn`, `easeOut`, `easeInOut` (default `easeInOut`). Mutually exclusive with `spring`. |
+| `spring` | object | `{"damping": d, "initialVelocity": v}` → `UIView.animate(withDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:)`. `damping` is the UIKit damping ratio (1 = no overshoot), `initialVelocity` in UIKit's normalized units. |
+| `changes` | object | required, non-empty. Property → target value, applied INSIDE the animation block. |
+
+Animatable properties in `changes` (all use the normal scene-spec value
+encodings; colors are resolved eagerly against the scene `style`):
+
+| property | value | applied as |
+|---|---|---|
+| `frame` | `[x,y,w,h]` | `view.frame = …` |
+| `center` | `[x,y]` | `view.center = …` |
+| `bounds` | `[x,y,w,h]` | `view.bounds = …` |
+| `alpha` | number | `view.alpha = …` |
+| `backgroundColor` | color | `view.backgroundColor = …` |
+| `transform` | `[a,b,c,d,tx,ty]` | `view.transform = …` |
+| `cornerRadius` | number | `view.layer.cornerRadius = …` (UIView-animatable since iOS 11) |
+
+Multiple entries are allowed and run CONCURRENTLY (all started before the
+first capture). Entries targeting the **same** view must share one `delay`
+(the oracle realizes delay by shifting that layer's timeline — see below);
+put differently-delayed animations on different views.
+
+### `captureTimes` — array of seconds
+
+Absolute times measured from animation start (t = 0 is the moment the
+`UIView.animate` calls commit — i.e. the FROM state for every non-delayed
+animation). Times at or beyond `delay + duration` show the settled TO state.
+Required when `animations` is present. Keep values at whole milliseconds.
+
+### Outputs
+
+For each capture time `t` the renderer writes
+`<name>.t<ms>.png` where `<ms>` is `round(t*1000)` zero-padded to at least
+3 digits: `0.08 → anim_x.t080.png`, `0.5 → anim_x.t500.png`,
+`1.0 → anim_x.t1000.png`. There is **one** shared `<name>.layout.json` —
+the pre-animation (t = 0 model) layout; layout comparison happens only there.
+No plain `<name>.png` is written for animation scenes.
+
+### Oracle capture mechanism (deterministic — no wall-clock sampling)
+
+Animation scenes MUST set `"window": true`: Core Animation **discards**
+animations attached to layers that have no render context (verified:
+`animationKeys()` empties on `CATransaction.flush()` and `presentation()`
+stays nil offscreen), so the offscreen v1 oracle cannot capture them —
+`Tools/oracle` refuses such scenes. `Tools/oracle2` renders them:
+
+1. The scene wrapper's layer clock is FROZEN before anything commits:
+   `wrapper.layer.speed = 0; wrapper.layer.timeOffset = 0`. Every
+   descendant's local time is then pinned to `wrapper.layer.timeOffset`
+   (`local = (parent − begin) × speed + timeOffset`), so
+   `CACurrentMediaTime()` cancels out of all timing math entirely — two runs
+   produce byte-identical frames.
+2. The real `UIView.animate(withDuration:delay:…)` /
+   `usingSpringWithDamping:` call is made with the JSON's `changes`. At
+   commit, UIKit resolves the CAAnimation's `beginTime` via
+   `convertTime(now + delay)`; under the frozen ancestor every media time
+   converts to the frozen constant 0, which lands the animation exactly on
+   the seek timeline `[0, duration]` — but also annihilates `delay`. The
+   oracle reintroduces the delay deterministically by shifting the TARGET
+   layer's own timeline (`layer.beginTime = delay`, `layer.fillMode = .both`
+   so the layer still displays its FROM state before its begin time). Net:
+   the animation is active over `[delay, delay + duration]` on the seek
+   timeline with real UIKit fill semantics.
+3. For each capture time `t` (in order): `wrapper.layer.timeOffset = t`,
+   then `drawHierarchy(afterScreenUpdates: true)` — the seek is committed
+   and the render server composites the presentation tree at frozen time
+   `t` before capture. With `speed = 0` the completion/removal never fires,
+   so `t ≥ delay + duration` renders the model (TO) values.
+
+Validated: a 1 s linear alpha fade samples exactly 0.75/0.5/0.25 at
+t = 0.25/0.5/0.75; easeIn starts slow, easeOut fast; spring
+(damping 0.35/0.6) visibly overshoots the target and settles; delayed
+animations hold the FROM state through the delay. Byte-identical across
+runs for the full 10-scene fixture set.
+
+### Comparison (compare.py)
+
+An animation scene compares EVERY captured frame with the scene's normal
+category threshold (an animating label scene is still `text`, plain boxes
+are `geometry`, …). Layout is compared once (t = 0). The scene passes iff
+layout passes and **all** frames pass; the report lists per-frame scores and
+the scene's headline score is the worst frame. Diff heatmaps land in
+`out/diffs/<name>.t<ms>.diff.png`. As `"window": true` scenes, animation
+goldens are decoded as premultiplied (the oracle2 rule above).
 
 ## Colors
 
