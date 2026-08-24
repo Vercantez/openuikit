@@ -68,10 +68,15 @@ func parseColor(_ s: String) -> UIColor? {
     return nil
 }
 
-func colorOrDie(_ v: Any?, _ context: String) -> UIColor? {
+// IMPORTANT: colors must be resolved eagerly against the scene's trait
+// collection. The offscreen view hierarchy is never attached to a UIWindow,
+// so neither `overrideUserInterfaceStyle` nor `UITraitCollection.performAsCurrent`
+// affects the traitCollection views use when dynamic colors are pushed to
+// their layers — without this, dark scenes render with LIGHT-mode colors.
+func colorOrDie(_ v: Any?, _ context: String, _ traits: UITraitCollection) -> UIColor? {
     guard let s = v as? String else { return nil }
     guard let c = parseColor(s) else { fatalError("bad color '\(s)' in \(context)") }
-    return c
+    return c.resolvedColor(with: traits)
 }
 
 // MARK: - Fonts
@@ -145,17 +150,17 @@ func makeImage(_ j: JSON, scale: CGFloat) -> UIImage {
 
 // MARK: - View building
 
-func applyCommon(_ v: UIView, _ j: JSON, name: String) {
+func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection) {
     if let f = numArray(j["frame"]), f.count == 4 {
         v.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
     }
-    if let c = colorOrDie(j["backgroundColor"], name) { v.backgroundColor = c }
+    if let c = colorOrDie(j["backgroundColor"], name, traits) { v.backgroundColor = c }
     if let a = num(j["alpha"]) { v.alpha = a }
     if j["hidden"] as? Bool == true { v.isHidden = true }
     if j["clipsToBounds"] as? Bool == true { v.clipsToBounds = true }
     if let r = num(j["cornerRadius"]) { v.layer.cornerRadius = r }
     if let w = num(j["borderWidth"]) { v.layer.borderWidth = w }
-    if let c = colorOrDie(j["borderColor"], name) { v.layer.borderColor = c.cgColor }
+    if let c = colorOrDie(j["borderColor"], name, traits) { v.layer.borderColor = c.cgColor }
     if let m = j["autoresizingMask"] as? [String] {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -196,7 +201,7 @@ func lineBreakMode(_ s: String?) -> NSLineBreakMode {
     }
 }
 
-func buildView(_ j: JSON, scale: CGFloat) -> UIView {
+func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
     let cls = j["class"] as? String ?? "UIView"
     let v: UIView
     switch cls {
@@ -206,7 +211,9 @@ func buildView(_ j: JSON, scale: CGFloat) -> UIView {
         let l = UILabel()
         l.text = j["text"] as? String
         l.font = fontFrom(j)
-        if let c = colorOrDie(j["textColor"], cls) { l.textColor = c }
+        if let c = colorOrDie(j["textColor"], cls, traits) { l.textColor = c }
+        // Default .label is dynamic and would resolve light offscreen (no window).
+        else { l.textColor = UIColor.label.resolvedColor(with: traits) }
         l.textAlignment = textAlignment(j["textAlignment"] as? String)
         if let n = j["numberOfLines"] as? Int { l.numberOfLines = n }
         l.lineBreakMode = lineBreakMode(j["lineBreakMode"] as? String)
@@ -229,19 +236,22 @@ func buildView(_ j: JSON, scale: CGFloat) -> UIView {
         let b = UIButton(type: .system)
         b.setTitle(j["title"] as? String, for: .normal)
         if j["fontSize"] != nil || j["fontWeight"] != nil { b.titleLabel!.font = fontFrom(j) }
-        if let c = colorOrDie(j["titleColor"], cls) { b.setTitleColor(c, for: .normal) }
+        // Default title color comes from the dynamic tint; pin it to the
+        // scene style (offscreen views never see trait changes).
+        b.tintColor = b.tintColor.resolvedColor(with: traits)
+        if let c = colorOrDie(j["titleColor"], cls, traits) { b.setTitleColor(c, for: .normal) }
         if j["enabled"] as? Bool == false { b.isEnabled = false }
         v = b
     case "UISwitch":
         let s = UISwitch()
         s.isOn = j["on"] as? Bool ?? false
-        if let c = colorOrDie(j["onTintColor"], cls) { s.onTintColor = c }
+        if let c = colorOrDie(j["onTintColor"], cls, traits) { s.onTintColor = c }
         v = s
     case "UIProgressView":
         let p = UIProgressView(progressViewStyle: .default)
         p.progress = Float(num(j["progress"]) ?? 0)
-        if let c = colorOrDie(j["progressTintColor"], cls) { p.progressTintColor = c }
-        if let c = colorOrDie(j["trackTintColor"], cls) { p.trackTintColor = c }
+        if let c = colorOrDie(j["progressTintColor"], cls, traits) { p.progressTintColor = c }
+        if let c = colorOrDie(j["trackTintColor"], cls, traits) { p.trackTintColor = c }
         v = p
     case "UIStackView":
         let s = UIStackView()
@@ -262,11 +272,11 @@ func buildView(_ j: JSON, scale: CGFloat) -> UIView {
         fatalError("unsupported class \(cls)")
     }
 
-    applyCommon(v, j, name: cls)
+    applyCommon(v, j, name: cls, traits: traits)
 
     if let subs = j["subviews"] as? [JSON] {
         for sub in subs {
-            let child = buildView(sub, scale: scale)
+            let child = buildView(sub, scale: scale, traits: traits)
             if let stack = v as? UIStackView { stack.addArrangedSubview(child) }
             else { v.addSubview(child) }
         }
@@ -323,8 +333,15 @@ func renderScene(file: String, outdir: String) throws {
     var container: UIView!
     traits.performAsCurrent {
         var rootJ = scene["root"] as! JSON
+        // NOTE (long-standing quirk, kept intentionally): this frame array mixes
+        // Int and CGFloat elements, and numArray() fails to cast the CGFloats,
+        // so the root view actually KEEPS frame (0,0,0,0) — its background is
+        // never drawn and every golden layout dump has root frame [0,0,0,0].
+        // openrender replicates this on purpose (see SceneBuilder.swift).
+        // Changing it would invalidate every golden; coordinate across modules
+        // before "fixing" it.
         rootJ["frame"] = [0, 0, sz[0], sz[1]]
-        container = buildView(rootJ, scale: scale)
+        container = buildView(rootJ, scale: scale, traits: traits)
         container.overrideUserInterfaceStyle = style
         container.setNeedsLayout()
         container.layoutIfNeeded()
