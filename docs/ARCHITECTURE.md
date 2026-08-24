@@ -115,6 +115,39 @@ frozen-clock captures). Details incl. the exactly reverse-engineered UIKit
 spring duration fit: `docs/QUARTZ_NOTES.md` "M6: animation engine";
 scope notes in `docs/KNOWN_GAPS.md`.
 
+## Events (M7)
+
+Hit testing (`UIView.point(inside:with:)` / `hitTest(_:with:)` /
+`convert(_:to:/from:)`) implements exact UIKit semantics, verified probe-by-
+probe against real UIKit via scene-spec-v4 `"hitTests"` (see
+docs/SCENE_SPEC.md "Hit tests"). Touch delivery is host-driven and
+wall-clock-free — the host feeds its input stream into a `UIWindow`:
+
+```swift
+let window = UIWindow(frame: screenBounds)   // host sizes it
+window.addSubview(rootView)
+// one call per pointer/touch phase change; timestamps from any monotonic clock
+window.sendTouch(.began, at: p, timestamp: t, touchID: 0)
+window.sendTouch(.moved, at: p2, timestamp: t2, touchID: 0)
+window.sendTouch(.ended, at: p2, timestamp: t3, touchID: 0)
+window.tick(timestamp: now)   // per-frame while touches are down (long press)
+```
+
+`sendTouch` maintains `UITouch` identity/tapCount, lays out + hit-tests on
+began, and routes UIEvents: gesture recognizers on the hit-test view's
+superview chain observe first, recognition applies cancelsTouchesInView
+(the view gets `touchesCancelled` — even for a lift-recognized tap), then
+the view's `touchesBegan/Moved/Ended/Cancelled` run. `UIControl` implements
+UIKit's tracking (begin/continue/endTracking, highlight, drag enter/exit,
+touchUpInside/Outside) with closure targets
+(`addTarget(for:) { control, event in }` — no ObjC selectors);
+`UIButton` dims its title to alpha 0.2 while highlighted (golden-exact);
+`UISwitch` toggles + fires `.valueChanged` on inside release with the
+golden-fitted thumb-slide animation. Gesture recognizers: tap (multi-tap
+via UITouch.tapCount), pan (10 pt slop, translation/velocity), long press
+(0.5 s via event timestamps or `tick`). All timing comes in through the
+API — synthetic sequences are fully deterministic (EventSystemTests).
+
 ## Module ownership map
 
 | Path | Owner module | Status |
@@ -133,7 +166,8 @@ scope notes in `docs/KNOWN_GAPS.md`.
 | `Sources/OpenUIKit/CALayer.swift`, `UIView.swift`, `RenderPass.swift` | **view** | to create |
 | `Sources/OpenUIKit/UIFont.swift`, `FontEngine.swift`, `TextLayout.swift`, `UILabel.swift` | **text** | to create |
 | `Sources/OpenUIKit/UIImage.swift`, `UIImageView.swift` | **image** | to create |
-| `Sources/OpenUIKit/UIButton.swift`, `UISwitch.swift`, `UIProgressView.swift` | **controls** | to create |
+| `Sources/OpenUIKit/UIButton.swift`, `UISwitch.swift`, `UIProgressView.swift` | **controls** | done (M7: UIControl-based) |
+| `Sources/OpenUIKit/UITouch.swift`, `UIEvent.swift`, `UIGestureRecognizer.swift`, `UIControl.swift` | **event** | done (M7) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |

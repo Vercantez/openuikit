@@ -92,7 +92,11 @@ open class UIWindow: UIView {
                 t.tapCount = 1
             }
             // Hit-test from the window; the view (and the recognizers on its
-            // superview chain) stay fixed for the touch's lifetime.
+            // superview chain) stay fixed for the touch's lifetime. UIKit
+            // lays out before event delivery — do the same so controls that
+            // assert geometry in layoutSubviews (UISwitch's forced size)
+            // hit-test correctly.
+            layoutIfNeeded()
             t.view = hitTest(point, with: nil)
             var recs: [UIGestureRecognizer] = []
             var v: UIView? = t.view
@@ -183,7 +187,9 @@ open class UIWindow: UIView {
             case .began: g.view.touchesBegan(g.touches, with: event)
             case .moved: g.view.touchesMoved(g.touches, with: event)
             case .stationary: break
-            case .ended: g.view.touchesEnded(g.touches, with: event)
+            case .ended:
+                g.view.touchesEnded(g.touches, with: event)
+                for t in g.touches { t.endDelivered = true }
             case .cancelled: g.view.touchesCancelled(g.touches, with: event)
             }
         }
@@ -213,9 +219,13 @@ open class UIWindow: UIView {
             r.pendingCancelTouches = false
             guard r.cancelsTouchesInView else { continue }
             var byView: [(view: UIView, touches: Set<UITouch>)] = []
+            // Note: touches ENDING in this very event are still cancelled —
+            // UIKit sends touchesCancelled (not Ended) to the view when the
+            // recognizer recognizes on the lift; only touches whose end was
+            // already delivered in an earlier event escape.
             for t in r.trackedTouches {
                 guard let v = t.view, !t.deliveryCancelled,
-                      t.phase != .ended, t.phase != .cancelled else { continue }
+                      !t.endDelivered, t.phase != .cancelled else { continue }
                 t.deliveryCancelled = true
                 if let i = byView.firstIndex(where: { $0.view === v }) {
                     byView[i].touches.insert(t)

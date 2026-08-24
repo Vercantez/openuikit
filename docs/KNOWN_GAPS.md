@@ -90,6 +90,26 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
 - Light saturated-color glyphs: small mask-shape differences beyond the gamma
   model.
 
+## Event system (M7, 2026-08-24): scope notes
+
+- switch_toggle_anim goldens are WALL-CLOCK captures (the modern UISwitch
+  thumb is display-link driven and ignores frozen-clock seeks; see the
+  switch-setOn section of docs/SCENE_SPEC.md). Frames carry a few ms of
+  scheduling jitter — regenerating that golden produces near- but not
+  byte-identical frames. Our fitted model currently scores ≥ 98.3 per
+  frame (threshold 96), leaving ~2 points of jitter headroom.
+- UISwitch drag-to-toggle (thumb tracking during a pan on the switch) is
+  not implemented — tap-to-toggle only. UIControl uses plain
+  point(inside:) for isTouchInside (UIKit uses a ~70 pt outset during
+  drags on some controls).
+- Gesture recognizer dependencies (require(toFail:), delegate methods,
+  simultaneous recognition) are not implemented; recognizers observe
+  independently. UITouch.tapCount timing constants (0.35 s / 30 pt) are
+  host-tunable statics on UIWindow, not oracle-derived.
+- Long press with no intervening events fires on the NEXT event/tick at
+  or after minimumPressDuration (no run loop in the core — the host's
+  `tick(timestamp:)` provides time-only advance).
+
 ## Animation engine (M6, 2026-08-24): scope notes
 
 - Presentation sampling requires the DEFAULT pipeline (quartz backend +

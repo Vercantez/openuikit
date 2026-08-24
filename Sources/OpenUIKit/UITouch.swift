@@ -33,6 +33,9 @@ public final class UITouch: Hashable {
     /// to `view` (cancelsTouchesInView): the view got touchesCancelled and
     /// receives nothing further for this touch.
     var deliveryCancelled = false
+    /// The view has received touchesEnded for this touch (recognition after
+    /// that point must not retro-cancel it).
+    var endDelivered = false
 
     /// Locations in the window's coordinate space.
     var locationInWindow: CGPoint = .zero
