@@ -86,21 +86,65 @@ public enum UIRenderer {
 
         c.save()
         let grouped = alpha < 1
-        if grouped { c.beginTransparencyLayer(alpha: alpha) }
 
         let bounds = v.bounds
         let radius = v.layer.cornerRadius
         let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
+        let shadow = shadowParams(of: v)
+
+        // Group opacity + shadow: CoreAnimation composites the shadow onto
+        // the destination BENEATH the whole group (it is not occluded by the
+        // layer's own content) with the group alpha baked into its strength
+        // — verified against golden/alpha_shadow_group (shadow shows through
+        // the translucent card at shadowOpacity × alpha). Draw it before the
+        // transparency layer opens.
+        if grouped, let sh = shadow, let sil = shadowSilhouette(of: v) {
+            c.save()
+            c.setShadow(color: sh.color.withAlpha(alpha),
+                        offset: sh.offset, blur: sh.blur)
+            c.drawShadow(of: sil.path, evenOdd: sil.evenOdd)
+            c.restore()
+        }
+
+        if grouped { c.beginTransparencyLayer(alpha: alpha) }
 
         // masksToBounds clips background, content AND subviews — apply first.
         if v.clipsToBounds { c.clip(to: layerRoundedRect(bounds, cornerRadius: radius)) }
 
+        // Layer shadow (spec v2), non-grouped case: CoreAnimation derives
+        // the shadow from the layer's content alpha (background + border
+        // silhouette — the outer rounded rect) and composites it beneath
+        // everything. Setting the Canvas shadow state around the
+        // silhouette-defining fill makes both backends draw the blurred,
+        // offset silhouette beneath that fill in one op. blur = 2 ×
+        // shadowRadius renders a Gaussian sigma of shadowRadius points —
+        // matches golden/shadows_radii (sigma fits 0.93·r·scale px against
+        // the same 3x-box-blur family both backends use).
+        let shadowHere = grouped ? nil : shadow
+
+        var backgroundDrawn = false
         if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)
             if color.alpha > 0, !bounds.isEmpty {
+                if let sh = shadowHere {
+                    c.save()
+                    c.setShadow(color: sh.color, offset: sh.offset, blur: sh.blur)
+                }
                 c.fill(layerRoundedRect(bounds, cornerRadius: radius), color: color,
                        hardEdges: hardEdges)
+                if shadowHere != nil { c.restore() }
+                backgroundDrawn = true
             }
+        }
+        // No background to cast the shadow: the silhouette is the border
+        // ring alone (if any). Pre-draw it with the shadow active; the
+        // regular border pass repaints the identical ring on top later.
+        if !backgroundDrawn, let sh = shadowHere {
+            c.save()
+            c.setShadow(color: sh.color, offset: sh.offset, blur: sh.blur)
+            renderBorder(of: v, bounds: bounds, radius: radius,
+                         hardEdges: hardEdges, into: c)
+            c.restore()
         }
 
         v.drawContent(in: c, bounds: bounds)
@@ -123,6 +167,44 @@ public enum UIRenderer {
 
         if grouped { c.endTransparencyLayer() }
         c.restore()
+    }
+
+    /// Effective shadow parameters for `v`, or nil when no shadow is
+    /// visible. `color` carries shadowColor.alpha × shadowOpacity; `blur`
+    /// is the Canvas blur (2 × shadowRadius → sigma = shadowRadius points).
+    static func shadowParams(of v: UIView)
+        -> (color: CGColor, offset: CGSize, blur: CGFloat)? {
+        let l = v.layer
+        guard l.shadowOpacity > 0, !l.masksToBounds, !v.bounds.isEmpty,
+              let sc = l.shadowColor else { return nil }
+        let opacity = CGFloat(min(max(l.shadowOpacity, 0), 1))
+        let color = sc.withAlpha(opacity)
+        guard color.alpha > 0 else { return nil }
+        return (color, l.shadowOffset, 2 * l.shadowRadius)
+    }
+
+    /// The shadow-casting silhouette of `v`'s layer: the outer rounded rect
+    /// when the background is visible, else the border ring, else nil.
+    static func shadowSilhouette(of v: UIView) -> (path: Path, evenOdd: Bool)? {
+        let bounds = v.bounds
+        guard !bounds.isEmpty else { return nil }
+        let radius = v.layer.cornerRadius
+        if let bg = v.backgroundColor,
+           bg.resolvedCGColor(with: v.traitCollection).alpha > 0 {
+            return (layerRoundedRect(bounds, cornerRadius: radius), false)
+        }
+        let bw = v.layer.borderWidth
+        if bw > 0, let bc = v.layer.borderColor, bc.alpha > 0 {
+            let innerRect = bounds.insetBy(dx: bw, dy: bw)
+            if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
+                var ring = layerRoundedRect(bounds, cornerRadius: radius)
+                ring.elements += layerRoundedRect(
+                    innerRect, cornerRadius: Swift.max(0, radius - bw)).elements
+                return (ring, true)
+            }
+            return (layerRoundedRect(bounds, cornerRadius: radius), false)
+        }
+        return nil
     }
 
     static func renderBorder(of v: UIView, bounds: CGRect, radius: CGFloat,

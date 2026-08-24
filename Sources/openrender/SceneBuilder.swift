@@ -130,6 +130,15 @@ func applyCommon(_ v: UIView, _ j: SceneJSON, name: String) {
     if let r = num(j["cornerRadius"]) { v.layer.cornerRadius = r }
     if let w = num(j["borderWidth"]) { v.layer.borderWidth = w }
     if let c = colorOrDie(j["borderColor"], name) { v.layer.borderColor = c.cgColor }
+    // Shadows (spec v2), mirroring the oracle's applyCommon order. Colors
+    // resolve against the scene style via UITraitCollection.current, exactly
+    // like the oracle's colorOrDie(_:_:traits).cgColor.
+    if let c = colorOrDie(j["shadowColor"], name) { v.layer.shadowColor = c.cgColor }
+    if let o = num(j["shadowOpacity"]) { v.layer.shadowOpacity = Float(o) }
+    if let off = numArray(j["shadowOffset"]), off.count == 2 {
+        v.layer.shadowOffset = CGSize(width: off[0], height: off[1])
+    }
+    if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
     if let m = j["autoresizingMask"]?.arrayValue {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -323,6 +332,31 @@ func makeStackView(_ j: SceneJSON) -> UIStackView {
     return s
 }
 
+func makeGradientView(_ j: SceneJSON) -> UIGradientView {
+    let g = UIGradientView()
+    guard let colorStrings = j["colors"]?.arrayValue?.compactMap({ $0.stringValue }),
+          colorStrings.count >= 2 else {
+        fatalError("UIGradientView needs \"colors\" with >= 2 entries")
+    }
+    // Mirror the oracle: colors resolved against the scene traits at build
+    // time (UITraitCollection.current carries the scene style here).
+    g.colors = colorStrings.map { s -> UIColor in
+        guard let c = parseColor(s) else { fatalError("bad color '\(s)' in UIGradientView") }
+        return c.resolvedColor(with: UITraitCollection.current)
+    }
+    if let locs = numArray(j["locations"]) { g.locations = locs }
+    if let p = numArray(j["startPoint"]), p.count == 2 {
+        g.startPoint = CGPoint(x: p[0], y: p[1])
+    }
+    if let p = numArray(j["endPoint"]), p.count == 2 {
+        g.endPoint = CGPoint(x: p[0], y: p[1])
+    }
+    if let t = j["gradientType"]?.stringValue {
+        guard t == "axial" else { fatalError("gradientType '\(t)' unsupported (axial only)") }
+    }
+    return g
+}
+
 func makeSwitch(_ j: SceneJSON) -> UISwitch {
     let s = UISwitch()
     s.isOn = j["on"]?.boolValue ?? false
@@ -360,6 +394,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIStackView": v = makeStackView(j)
     case "UISwitch": v = makeSwitch(j)
     case "UIButton": v = makeButton(j)
+    case "UIGradientView": v = makeGradientView(j)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()

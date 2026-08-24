@@ -82,6 +82,32 @@ of rounded clips/corners differ by a few counts on a handful of pixels
   Under quartz the clip is computed twice (mirror + QZ) — clip ops are rare
   (one per clipsToBounds view / truncating label), cost is negligible.
 
+## v2 ops: shadows + gradients (2026-08)
+
+- **Shadows** — `Canvas.setShadow` state maps to
+  `QZContextSetShadowWithColor` inside a Save/RestoreGState bracket around
+  the casting fill (QZ composites shadow-then-fill in one op, CG order). QZ
+  transforms the offset by the CTM — with the flip CTM, Canvas's top-down
+  +y-down offsets pass through unchanged. QZ's blur parameter is in DEVICE
+  pixels (sigma = blur/2), so the adapter scales the point-space blur by
+  sqrt(|det CTM|). `drawShadowOnly` (group-opacity layers) fills the path
+  with a zero-alpha color while the shadow is set: QZ derives the shadow
+  from geometry coverage independent of the fill color, and the zero-alpha
+  fill blends nothing. The Swift backend ports QZ's exact 3x box-blur
+  construction (RasterizerEffects.swift), so backend shadow outputs agree
+  to ≤ 1 count on pixel-aligned shapes.
+- **Gradients** — `Canvas.drawLinearGradient` maps to `QZGradientCreate` +
+  `QZContextDrawLinearGradient` with both draws-before/after options, inside
+  a saved clip to the target rect. QZ lerps stops per-channel in straight
+  sRGB — identical semantics to the Swift backend's per-pixel projection
+  loop, so outputs match to rounding. CAGradientLayer's gamma-1.8
+  interpolation space is handled ABOVE this API (UIGradientView densifies
+  stops; see ARCHITECTURE.md).
+- Suite (2026-08-24): all 9 shadow/gradient scenes pass BOTH backends;
+  quartz: shadows_basic 99.99, shadows_radii/dark 100, shadow_with_corner
+  100, alpha_shadow_group 100, gradient_basic 100, gradient_multi 99.77,
+  gradient_dark 99.89, gradient_in_stack 99.96 (swift within ±0.02).
+
 ## Vendoring / build integration
 
 - `scripts/sync_quartz.sh` mirrors `~/quartz` → `Sources/CQuartz`

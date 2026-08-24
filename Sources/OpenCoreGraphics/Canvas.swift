@@ -207,6 +207,10 @@ struct CanvasState {
     var ctm: CGAffineTransform
     /// Clip as an 8-bit coverage mask in device space; nil = no clip.
     var clipMask: [UInt8]? = nil
+    /// Layer shadow applied to subsequent fills; nil = none. Part of the
+    /// saved graphics state (save/restore), like CG shadows.
+    /// (Additive v2 state — see CanvasEffects.swift for the public API.)
+    var shadow: CanvasShadow? = nil
 }
 
 struct TransparencyLayer {

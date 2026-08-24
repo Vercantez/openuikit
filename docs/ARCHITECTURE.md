@@ -100,6 +100,18 @@ Dual-backend suite comparison (2026-08): quartz ≥ swift on every scene
 
 ### Render pass (order matters — matches CALayer compositing)
 For a view with alpha `a`, cornerRadius `r`:
+0. Layer shadow (spec v2, `shadowOpacity > 0 && !masksToBounds`): the
+   blurred, offset silhouette of the layer's shape (outer rounded rect when
+   the background is visible, else the border ring) composites BENEATH
+   everything and is never occluded by the layer's own content. With `a < 1`
+   the shadow is drawn BEFORE the transparency layer at strength
+   `shadowColor.alpha × shadowOpacity × a` (verified vs
+   golden/alpha_shadow_group — the shadow shows through a translucent
+   layer); otherwise it rides the background/border fill via the Canvas
+   shadow state (CanvasEffects.swift). Blur: `Canvas.setShadow(blur:
+   2×shadowRadius)` renders Gaussian sigma = shadowRadius points (both
+   backends share the same 3× box-blur construction; sigma fitted
+   0.93·r·scale px against golden/shadows_radii). Offset +y is DOWN.
 1. If `a < 1`: `beginTransparencyLayer(alpha: a)` — alpha groups the WHOLE
    subtree (background + content + subviews + border composite first, then
    fade as a unit).
@@ -139,6 +151,19 @@ is `.circular`.
   (round coverage to 0/1) while still AA-ing rounded corners/text. Simplest
   approach matching goldens: when a view has a non-identity, non-translation
   transform, fill its background with hard (threshold 0.5) coverage.
+
+### Gradients (UIGradientView / CAGradientLayer, spec v2)
+- `startPoint`/`endPoint` are in the layer's UNIT space (top-left geometry);
+  pixels project onto the axis in unit space (a (0,0)→(1,1) gradient on a
+  non-square layer follows the unit diagonal — golden/gradient_basic).
+- CA does NOT interpolate in gamma-sRGB (CGGradient-style) or linear light.
+  Fitting the golden ramps: interpolation is linear in a gamma-1.8 encoded
+  space whose linear primaries are a small matrix away from linear sRGB
+  (Generic-RGB-profile-like; `_CAGradientColorSpace` in UIGradientView.swift,
+  least-squares calibrated on gradient_basic/multi, validated on
+  gradient_dark with < 3 counts max error). UIGradientView densifies each
+  stop segment into 24 sRGB sub-stops; both backends then draw the same
+  piecewise-linear sRGB gradient (`Canvas.drawLinearGradient`).
 
 ### Colors
 - `UIColor` is dynamic: semantic colors (`.label`, `.systemBackground`, …)

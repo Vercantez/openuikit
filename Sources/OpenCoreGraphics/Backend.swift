@@ -46,6 +46,13 @@ protocol CanvasBackend: AnyObject {
     func drawImage(_ image: Bitmap, in rect: CGRect, interpolate: Bool)
     func drawMask(_ mask: [UInt8], width: Int, height: Int,
                   atPixelX x: Int, pixelY y: Int, color: CGColor)
+
+    // Additive v2 ops (CanvasEffects.swift). Shadow state lives in
+    // Canvas.state.shadow and is honored by `fill`; drawShadowOnly renders
+    // the shadow without the casting fill (for group-opacity layers).
+    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+                            start: CGPoint, end: CGPoint, in rect: CGRect)
+    func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow)
 }
 
 /// The existing pure-Swift rasterizer (Rasterizer.swift), reached through the
@@ -66,6 +73,11 @@ final class SwiftRasterizerBackend: CanvasBackend {
     func endTransparencyLayer() { canvas._endLayer() }
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {
+        // Shadow first: a blurred, offset silhouette of the shape beneath the
+        // fill (CG semantics; see CanvasEffects.swift / RasterizerEffects.swift).
+        if let sh = canvas.state.shadow, sh.color.alpha > 0 {
+            canvas._drawShadow(path, evenOdd: evenOdd, sh)
+        }
         if hardEdges {
             canvas._fillHardEdged(path, color, evenOdd)
         } else {
@@ -81,5 +93,12 @@ final class SwiftRasterizerBackend: CanvasBackend {
     func drawMask(_ mask: [UInt8], width: Int, height: Int,
                   atPixelX x: Int, pixelY y: Int, color: CGColor) {
         canvas._drawMask(mask, width, height, x, y, color)
+    }
+    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+                            start: CGPoint, end: CGPoint, in rect: CGRect) {
+        canvas._drawLinearGradient(colors, locations, start, end, rect)
+    }
+    func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow) {
+        canvas._drawShadow(path, evenOdd: evenOdd, shadow)
     }
 }

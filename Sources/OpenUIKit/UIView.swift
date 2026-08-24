@@ -19,6 +19,13 @@ public final class CALayer {
     public var borderWidth: CGFloat = 0
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
+    // Shadow (spec v2) — CALayer defaults: opaque black, opacity 0 (off),
+    // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
+    // Invisible while masksToBounds is true, like CoreAnimation.
+    public var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    public var shadowOpacity: Float = 0
+    public var shadowOffset: CGSize = CGSize(width: 0, height: -3)
+    public var shadowRadius: CGFloat = 3
     init(owner: UIView) { self.owner = owner }
 }
 

@@ -119,12 +119,78 @@ final class QuartzBackend: CanvasBackend {
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {
         guard color.alpha > 0 else { return }
+        // Layer shadow (Canvas.state.shadow): QZ composites a blurred,
+        // offset silhouette beneath the fill within the same op. The offset
+        // is CTM-transformed by QZ (our flip CTM makes +y = down, matching
+        // Canvas user space); QZ's blur parameter is in DEVICE pixels
+        // (sigma = blur/2), so scale the point-space blur by the CTM.
+        var shadowMargin = 0
+        if let sh = canvas.state.shadow, sh.color.alpha > 0 {
+            let t = canvas.state.ctm
+            let s = ((t.a * t.d - t.b * t.c).magnitude).squareRoot()
+            QZContextSaveGState(ctx)
+            QZContextSetShadowWithColor(
+                ctx, QZSize(width: sh.offset.width, height: sh.offset.height),
+                sh.blur * s, sh.color.red, sh.color.green, sh.color.blue,
+                sh.color.alpha)
+            let off = Swift.max(sh.offset.width.magnitude, sh.offset.height.magnitude)
+            shadowMargin = Int(((off + 2 * sh.blur) * s).rounded(.up)) + 2
+        }
         QZContextSetRGBFillColor(ctx, color.red, color.green, color.blue, color.alpha)
         if hardEdges { QZContextSetShouldAntialias(ctx, false) }
         setPath(path)
         if evenOdd { QZContextEOFillPath(ctx) } else { QZContextFillPath(ctx) }
         if hardEdges { QZContextSetShouldAntialias(ctx, true) }
-        syncRegion(deviceBounds(of: path, margin: 2))
+        if shadowMargin > 0 { QZContextRestoreGState(ctx) }
+        syncRegion(deviceBounds(of: path, margin: 2 + shadowMargin))
+    }
+
+    func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow) {
+        // Fill the path with a fully transparent color while the QZ shadow
+        // is set: QZ composites the shadow from the shape's coverage
+        // independently of the fill color, and a zero-alpha fill blends
+        // nothing — leaving exactly the shadow.
+        let t = canvas.state.ctm
+        let s = ((t.a * t.d - t.b * t.c).magnitude).squareRoot()
+        QZContextSaveGState(ctx)
+        QZContextSetShadowWithColor(
+            ctx, QZSize(width: shadow.offset.width, height: shadow.offset.height),
+            shadow.blur * s, shadow.color.red, shadow.color.green,
+            shadow.color.blue, shadow.color.alpha)
+        QZContextSetRGBFillColor(ctx, 0, 0, 0, 0)
+        setPath(path)
+        if evenOdd { QZContextEOFillPath(ctx) } else { QZContextFillPath(ctx) }
+        QZContextRestoreGState(ctx)
+        let off = Swift.max(shadow.offset.width.magnitude, shadow.offset.height.magnitude)
+        let margin = Int(((off + 2 * shadow.blur) * s).rounded(.up)) + 2
+        syncRegion(deviceBounds(of: path, margin: margin))
+    }
+
+    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+                            start: CGPoint, end: CGPoint, in rect: CGRect) {
+        var locs = [QZFloat]()
+        var comps = [QZFloat]()
+        locs.reserveCapacity(locations.count)
+        comps.reserveCapacity(colors.count * 4)
+        for (c, l) in zip(colors, locations) {
+            locs.append(QZFloat(l))
+            comps.append(QZFloat(c.red)); comps.append(QZFloat(c.green))
+            comps.append(QZFloat(c.blue)); comps.append(QZFloat(c.alpha))
+        }
+        guard let grad = QZGradientCreate(&locs, &comps, locs.count) else { return }
+        QZContextSaveGState(ctx)
+        QZContextClipToRect(ctx, QZRect(origin: QZPoint(x: rect.minX, y: rect.minY),
+                                        size: QZSize(width: rect.width,
+                                                     height: rect.height)))
+        let options = kQZGradientDrawsBeforeStartLocation.rawValue
+                    | kQZGradientDrawsAfterEndLocation.rawValue
+        QZContextDrawLinearGradient(ctx, grad,
+                                    QZPoint(x: start.x, y: start.y),
+                                    QZPoint(x: end.x, y: end.y),
+                                    UInt32(options))
+        QZContextRestoreGState(ctx)
+        QZGradientRelease(grad)
+        syncRegion(deviceBounds(of: .rect(rect), margin: 2))
     }
 
     func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
