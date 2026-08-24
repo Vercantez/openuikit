@@ -16,8 +16,17 @@
 //     width (105.5 -> 106, 138.5 -> 139, integers unchanged).
 //   - Title rect: label frame is (ceil(labelWidth), labelHeight) centered
 //     in the bounds, offsets rounded half-up to the pixel grid. When the
-//     title does not fit, the label width clamps to bounds.width - 4
-//     (2pt each side; oracle: 80pt-wide button -> 76pt label at x = 2).
+//     title does not fit (oracle width sweep, 14pt long title, widths
+//     80..320):
+//       * if the title fits at TIGHT tracking (UILabel squeeze), the
+//         label gets the FULL bounds width at x = 0 and the text draws
+//         squeezed to exactly floor(width) points (oracle: 300pt button,
+//         309.16pt title -> label (0, 6.5, 300, 17), ink 598px @2x);
+//       * otherwise the title truncates in the MIDDLE (real UIButton
+//         titles use byTruncatingMiddle: oracle renders "Very…width")
+//         and the label hugs the truncated line, width ceiled to whole
+//         points, centered (oracle sweep: W=80 -> 75, 150 -> 146,
+//         200 -> 199, 280 -> 276, 284..286 -> 283).
 //   - Title color: explicit .normal color wins in EVERY state (oracle:
 //     a disabled button with explicit titleColor renders that color).
 //     Default enabled = tintColor; default disabled = a private gray,
@@ -72,6 +81,8 @@ open class UIButton: UIView {
         super.init(frame: .zero)
         isOpaque = false
         _titleLabel.font = .systemFont(ofSize: 15)
+        // Real UIButton titles truncate in the middle (oracle-verified).
+        _titleLabel.lineBreakMode = .byTruncatingMiddle
         addSubview(_titleLabel)
         updateTitleView()
     }
@@ -139,11 +150,27 @@ open class UIButton: UIView {
         let scale = _titleLabel.layoutScale
         let intr = _titleLabel.intrinsicContentSize
         var w = intr.width.rounded(.up)
-        // The 2pt-per-side horizontal inset only bites when the title does
-        // NOT fit: oracle probes show an 80pt button with a long title gets
-        // a 76pt label, but a sizeToFit button (title width == bounds width)
-        // keeps the full-width label.
-        if w > bounds.width { w = Swift.max(0, bounds.width - 4) }
+        // Overflowing titles (see file header): squeeze case gets the full
+        // bounds width; true truncation hugs the truncated middle line.
+        if w > bounds.width {
+            let title = _titleLabel.text ?? ""
+            let font = _titleLabel.font
+            if FontEngine.measureTight(title, font: font)
+                <= bounds.width.rounded(.down) + 1e-6 {
+                w = bounds.width
+            } else {
+                let t = TextLayout.truncate(title, font: font,
+                                            maxWidth: bounds.width,
+                                            mode: .byTruncatingMiddle)
+                // Drawn advance: tight delta applies to every glyph except
+                // the ellipsis (same rule as UILabel's glyph run).
+                var count = 0
+                for u in t.text.unicodeScalars where u.value != 0x2026 { count += 1 }
+                let drawn = FontEngine.measure(t.text, font: font)
+                    + t.delta * CGFloat(count)
+                w = Swift.min(bounds.width, Swift.max(0, drawn.rounded(.up)))
+            }
+        }
         let h = Swift.min(intr.height, bounds.height)
         // Center, offsets rounded half-up to the pixel grid (same rounding
         // the label uses for its text block).

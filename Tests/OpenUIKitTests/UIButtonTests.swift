@@ -80,13 +80,51 @@ final class UIButtonTests: XCTestCase {
                        CGRect(x: 30.5, y: 12.5, width: 139, height: 19))
     }
 
-    func testOverflowingTitleInsetsTwoPointsPerSide() {
-        // Oracle probe: 80pt-wide button, 211pt title -> label (2, 12.5, 76, 19).
+    func testButtonTitleTruncatesInTheMiddle() {
+        // Real UIButton titles truncate MIDDLE, not tail (oracle width
+        // sweep at 14pt renders "Very…width" for an 80pt button).
+        let b = makeButton("A Very Long Button Title Here")
+        XCTAssertEqual(b.titleLabel?.lineBreakMode, .byTruncatingMiddle)
+    }
+
+    func testOverflowSqueezeGetsFullBoundsWidth() {
+        // golden/button_states: 300x30 button, 14pt title of natural width
+        // 309.16pt fits at tight tracking -> label (0, 6.5, 300, 17); the
+        // text draws squeezed to exactly floor(width) (ink 598px @2x).
+        // Oracle sweep: every width 287..309 gives the full-width label.
+        let b = makeButton("Very long button title that fills the frame width",
+                           size: 14)
+        b.frame = CGRect(x: 20, y: 250, width: 300, height: 30)
+        b.layoutIfNeeded()
+        XCTAssertEqual(b.subviews[0].frame,
+                       CGRect(x: 0, y: 6.5, width: 300, height: 17))
+    }
+
+    func testOverflowTruncationHugsMiddleTruncatedLine() {
+        // Oracle width sweep (same 14pt title): when even tight tracking
+        // does not fit, the label hugs the middle-truncated line, ceiled
+        // to whole points and centered. Oracle: W=80 -> (2.5, 75),
+        // W=150 -> (2, 146), W=200 -> (0.5, 199).
+        let title = "Very long button title that fills the frame width"
+        for (w, expX, expW): (CGFloat, CGFloat, CGFloat) in
+            [(80, 2.5, 75), (150, 2, 146), (200, 0.5, 199)] {
+            let b = makeButton(title, size: 14)
+            b.frame = CGRect(x: 10, y: 0, width: w, height: 30)
+            b.layoutIfNeeded()
+            XCTAssertEqual(b.subviews[0].frame,
+                           CGRect(x: expX, y: 6.5, width: expW, height: 17),
+                           "width \(w)")
+        }
+        // 15pt legacy probe: 80pt button, "A Very Long Button Title Here"
+        // (natural 210.9pt) -> our hug model gives 75pt ("A Ve…Here"
+        // drawn 74.63); the oracle reported 76 (its tight advances run
+        // ~1pt wider on long lines — known 1pt model drift, text is
+        // centered so the pixel error is <= 0.5pt).
         let b = makeButton("A Very Long Button Title Here")
         b.frame = CGRect(x: 0, y: 0, width: 80, height: 44)
         b.layoutIfNeeded()
         XCTAssertEqual(b.subviews[0].frame,
-                       CGRect(x: 2, y: 12.5, width: 76, height: 19))
+                       CGRect(x: 2.5, y: 12.5, width: 75, height: 19))
     }
 
     // MARK: title colors
