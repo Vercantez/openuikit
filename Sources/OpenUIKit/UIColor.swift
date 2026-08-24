@@ -1,6 +1,6 @@
 // UIColor + UITraitCollection. Owner: color module.
-// SKELETON — semantic color resolution must become data-driven from
-// Resources/system_colors.json (see SystemColors.swift).
+// Semantic color resolution is data-driven from Resources/system_colors.json
+// (see SystemColors.swift).
 
 public enum UIUserInterfaceStyle: Sendable {
     case unspecified, light, dark
@@ -125,14 +125,4 @@ public class UIColor: Equatable {
     public static let tertiarySystemFill = UIColor(semantic: "tertiarySystemFill")
     public static let quaternarySystemFill = UIColor(semantic: "quaternarySystemFill")
     public static let tintColor = UIColor(semantic: "tintColor")
-}
-
-/// Data-driven system color table. Owner: color module.
-/// Must load Resources/system_colors.json (ground truth from the oracle).
-public enum SystemColors {
-    static func resolve(_ name: String, traits: UITraitCollection) -> CGColor {
-        // SKELETON: replace with table lookup. Magenta = "not implemented".
-        _ = name; _ = traits
-        return CGColor(red: 1, green: 0, blue: 1, alpha: 1)
-    }
 }
