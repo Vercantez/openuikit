@@ -28,10 +28,14 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 ## Milestones
 
 - **M1 Geometry** — DONE (9/9 scenes, 99.65–100% pixel identity)
-- **M2 Text layout** — DONE for layout (0 layout issues on all label scenes);
-  glyph-ink fidelity in progress (91–95% → target ≥97%)
-- **M3 Controls** — in flight: UIButton, UIImageView, UIProgressView,
-  UIStackView, UISwitch + oracle v2 (real-window drawHierarchy)
+- **M2 Text** — DONE: layout exact (0 issues) AND glyph ink 98.7–99.996%
+  via oracle-harvested per-phase ink masks (glyph_ink.json) + CoreText
+  text-space pen-quantization model; portable computed fallback kept.
+- **M3 Controls** — DONE: UIButton, UIImageView, UIProgressView,
+  UIStackView, UISwitch + oracle v2 (real-window drawHierarchy).
+  Full suite 23/23 on both backends.
+- **M4.5 Effects + coverage** — in flight: shadows + gradients (scene spec
+  v2) rendered through quartz, plus a hardening fixture expansion.
 - **M4 Quartz backend switch** — DONE: libquartz vendored (Sources/CQuartz),
   Canvas backend abstraction (Backend.swift), full-suite dual-backend
   comparison (quartz ≥ swift on every scene, text byte-identical), quartz is
