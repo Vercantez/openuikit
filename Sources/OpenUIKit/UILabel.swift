@@ -133,7 +133,10 @@ open class UILabel: UIView {
             case .left, .natural, .justified:
                 penX = 0
             case .center:
-                penX = FontEngine.roundToPixel((bounds.width - line.width) / 2, scale: scale)
+                // Real UIKit does NOT snap the centered pen: the exact
+                // fractional origin feeds the per-glyph text-space phase
+                // quantization (verified against golden/label_align.png).
+                penX = (bounds.width - line.width) / 2
             case .right:
                 penX = bounds.width - line.width
             }
