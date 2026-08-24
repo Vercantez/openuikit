@@ -194,8 +194,11 @@ public enum FontEngine {
             let i = Int(scalar.value) - 32
             return a.advances[i] + (b.advances[i] - a.advances[i]) * f
         }
-        // Not in the table (non-ASCII, e.g. U+2026 ellipsis): fall back to the
-        // glyph rasterizer's em-mapped advance when a font file is available.
+        // Not in the table: U+2026 gets the exact label-context advance;
+        // other non-ASCII falls back to the font file's default instance.
+        if scalar.value == 0x2026 {
+            return ellipsisAdvance(for: font)
+        }
         if let gf = GlyphRasterizer.font(for: font) {
             return gf.advancePoints(of: scalar, pointSize: font.pointSize)
         }
@@ -253,6 +256,91 @@ public enum FontEngine {
         let bonus: CGFloat =
             ((s >= 10 && s < 12) || (s >= 15 && s < 17) || (s >= 19 && s < 22)) ? 1 : 0
         return lh + bonus
+    }
+
+    // MARK: - Truncation ("tight") metrics — system font, from SFNS.ttf
+    //
+    // When a label truncates, real UIKit lays the line out with the font's
+    // TIGHT tracking (trak table track -1) instead of the standard label
+    // tracking. Verified against Catalyst UILabel renders: the truncated
+    // line's per-glyph advance is tableAdvance + dTight(size), spaces
+    // included, and the ellipsis advance in label context is
+    // ellipsisUnits(size) (raw advance at opsz(size) + label tracking).
+    // Values are font units (upem 2048) per point size; generated offline
+    // from SFNS.ttf (hmtx+HVAR+trak) against the vendored metrics table.
+
+    static let tightTable: [(size: CGFloat, ellUnits: CGFloat, dTightUnits: CGFloat)] = [
+        (8, 1750, -77.33), (9, 1736, -78), (10, 1722, -78), (11, 1706, -74),
+        (11.5, 1699, -73), (12, 1692, -72), (13, 1677, -69), (13.5, 1672, -69),
+        (14, 1666, -68), (15, 1654, -66), (16, 1645, -65), (17, 1633, -65),
+        (17.5, 1618.1, -59.33), (18, 1603.19, -53.66), (19, 1572.38, -41.33),
+        (20, 1498.96, -30), (21, 1446.53, -32), (22, 1394.11, -34),
+        (23, 1345.69, -37), (24, 1297.27, -40), (25, 1282.45, -36.5),
+        (26, 1268.63, -34), (27, 1253.82, -30.5), (28, 1240, -28),
+        (29, 1239, -27.5), (30, 1239, -28), (31, 1238, -27.5), (32, 1238, -28),
+        (33, 1236, -27.25), (34, 1235, -27.5), (35, 1234, -27.75),
+        (36, 1233, -28), (37, 1232, -27.5), (38, 1232, -28), (39, 1231, -27.5),
+        (40, 1231, -28),
+    ]
+
+    static func tightEntry(at size: CGFloat) -> (ell: CGFloat, dTight: CGFloat) {
+        let t = tightTable
+        if size <= t[0].size { return (t[0].ellUnits, t[0].dTightUnits) }
+        if size >= t[t.count - 1].size {
+            return (t[t.count - 1].ellUnits, t[t.count - 1].dTightUnits)
+        }
+        for i in 1..<t.count where t[i].size >= size {
+            let a = t[i - 1], b = t[i]
+            let f = (size - a.size) / (b.size - a.size)
+            return (a.ellUnits + (b.ellUnits - a.ellUnits) * f,
+                    a.dTightUnits + (b.dTightUnits - a.dTightUnits) * f)
+        }
+        return (t[t.count - 1].ellUnits, t[t.count - 1].dTightUnits)
+    }
+
+    static func unitsToPoints(_ u: CGFloat, size: CGFloat) -> CGFloat {
+        u * size / 2048
+    }
+
+    /// Ellipsis (U+2026) advance in label context. Exact for the system
+    /// design (from the tight table); falls back to the font file's default
+    /// instance advance otherwise.
+    public static func ellipsisAdvance(for font: UIFont) -> CGFloat {
+        if font.design == .default {
+            return unitsToPoints(tightEntry(at: font.pointSize).ell, size: font.pointSize)
+        }
+        if let gf = GlyphRasterizer.font(for: font) {
+            return gf.advancePoints(of: Unicode.Scalar(0x2026)!, pointSize: font.pointSize)
+        }
+        return 0
+    }
+
+    /// Per-glyph advance adjustment for tight (truncated) lines.
+    public static func tightDelta(for font: UIFont) -> CGFloat {
+        guard font.design == .default else { return 0 }
+        return unitsToPoints(tightEntry(at: font.pointSize).dTight, size: font.pointSize)
+    }
+
+    /// Ellipsis width used by the truncation DECISION (empirically smaller
+    /// than the drawn advance; fitted against Catalyst threshold sweeps).
+    public static func ellipsisDecisionWidth(for font: UIFont, head: Bool) -> CGFloat {
+        guard font.design == .default else { return ellipsisAdvance(for: font) }
+        let e = tightEntry(at: font.pointSize)
+        let u = e.ell - (head ? 55 : 123.5)
+        return unitsToPoints(u, size: font.pointSize)
+    }
+
+    /// Width of `text` at tight tracking (advances + kerning + dTight/char).
+    public static func measureTight(_ text: String, font: UIFont) -> CGFloat {
+        let d = tightDelta(for: font)
+        var total: CGFloat = 0
+        var prev: Unicode.Scalar? = nil
+        for ch in text.unicodeScalars {
+            if let p = prev { total += kerning(p, ch, font: font) }
+            total += advance(of: ch, font: font) + d
+            prev = ch
+        }
+        return total
     }
 
     // MARK: - Pixel rounding helpers

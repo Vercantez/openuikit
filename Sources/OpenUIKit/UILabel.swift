@@ -69,18 +69,21 @@ open class UILabel: UIView {
         let metrics = FontEngine.metrics(for: font)
 
         // Lay out lines for drawing.
-        struct DrawLine { var text: String; var width: CGFloat }
+        struct DrawLine { var text: String; var width: CGFloat; var delta: CGFloat }
         var drawLines: [DrawLine] = []
         var needsClip = false
+        func measureWith(_ s: String, delta: CGFloat) -> CGFloat {
+            FontEngine.measure(s, font: font) + delta * CGFloat(s.unicodeScalars.count)
+        }
         if numberOfLines == 1 {
             let full = FontEngine.measure(text, font: font)
             if full <= bounds.width + 1e-6 {
-                drawLines = [DrawLine(text: text, width: full)]
+                drawLines = [DrawLine(text: text, width: full, delta: 0)]
             } else {
                 let t = TextLayout.truncate(text, font: font, maxWidth: bounds.width,
                                             mode: lineBreakMode)
-                let w = FontEngine.measure(t, font: font)
-                drawLines = [DrawLine(text: t, width: w)]
+                let w = measureWith(t.text, delta: t.delta)
+                drawLines = [DrawLine(text: t.text, width: w, delta: t.delta)]
                 needsClip = w > bounds.width + 1e-6
             }
         } else {
@@ -94,9 +97,12 @@ open class UILabel: UIView {
                     let t = TextLayout.truncate(remainder, font: font,
                                                 maxWidth: bounds.width,
                                                 mode: .byTruncatingTail)
-                    drawLines.append(DrawLine(text: t, width: FontEngine.measure(t, font: font)))
+                    drawLines.append(DrawLine(text: t.text,
+                                              width: measureWith(t.text, delta: t.delta),
+                                              delta: t.delta))
                 } else {
-                    drawLines.append(DrawLine(text: String(l.text), width: l.drawWidth))
+                    drawLines.append(DrawLine(text: String(l.text), width: l.drawWidth,
+                                              delta: 0))
                 }
             }
         }
@@ -107,9 +113,12 @@ open class UILabel: UIView {
         if needsClip { canvas.save(); canvas.clip(to: bounds) }
         defer { if needsClip { canvas.restore() } }
 
-        // Vertical centering of the text block, block origin snapped to pixels.
-        let y0 = FontEngine.roundToPixel((bounds.height - blockH) / 2, scale: scale)
-        let baselineInLine = FontEngine.roundToPixel(metrics.ascender, scale: scale)
+        // Vertical layout (validated against Catalyst pixel probes):
+        // the text block is centered with the offset rounded HALF-UP to
+        // whole POINTS, and the first baseline sits at the ascender
+        // rounded half-up to whole points below the block origin.
+        let y0 = ((bounds.height - blockH) / 2 + 0.5).rounded(.down)
+        let baselineInLine = (metrics.ascender + 0.5).rounded(.down)
         let color = textColor.resolvedCGColor(with: traitCollection)
         guard color.alpha > 0 else { return }
         let glyphFont = GlyphRasterizer.font(for: font)
@@ -126,12 +135,14 @@ open class UILabel: UIView {
             }
             let baselineY = y0 + CGFloat(i) * lineH + baselineInLine
             drawLineGlyphs(line.text, at: CGPoint(x: penX, y: baselineY),
-                           in: canvas, color: color, glyphFont: glyphFont)
+                           in: canvas, color: color, glyphFont: glyphFont,
+                           extraAdvance: line.delta)
         }
     }
 
     private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
-                                color: CGColor, glyphFont: GlyphFont?) {
+                                color: CGColor, glyphFont: InstancedGlyphFont?,
+                                extraAdvance: CGFloat = 0) {
         guard let gf = glyphFont else { return }
         let scale = canvas.scale
         var penX = origin.x
@@ -139,18 +150,41 @@ open class UILabel: UIView {
         for ch in line.unicodeScalars {
             if let p = prev { penX += FontEngine.kerning(p, ch, font: font) }
             prev = ch
-            let adv = FontEngine.advance(of: ch, font: font)
+            let adv = FontEngine.advance(of: ch, font: font) + extraAdvance
             defer { penX += adv }
             if ch == " " { continue }
             let g = gf.glyphIndex(of: ch)
             if g == 0 { continue }
-            // Device-space pen position (CTM maps view points → device px).
-            let dev = CGPoint(x: penX, y: origin.y).applying(canvas.ctm)
-            let ix = dev.x.rounded(.down)
-            let shift = dev.x - ix
-            let iy = dev.y.rounded(.toNearestOrAwayFromZero)
+            // CoreText quantizes each glyph's pen position to quarter POINTS
+            // with a +1/16pt bias (measured from Catalyst UILabel renders:
+            // pos = floor(4x + 0.25)/4 in points), then CoreGraphics
+            // quantizes the device-space origin to quarter device pixels
+            // (floor). With integer view offsets and scale 2 the CT step
+            // dominates; both are modeled here.
+            let penQ = (penX * 4 + 0.25).rounded(.down) / 4
+            let dev = CGPoint(x: penQ, y: origin.y).applying(canvas.ctm)
+            let q = 8 / scale
+            let qx = (dev.x * q).rounded(.down) / q
+            let qy = (dev.y * q).rounded(.down) / q
+            let ix = qx.rounded(.down)
+            let iy = qy.rounded(.down)
+            let phaseX = Int(((qx - ix) * 4).rounded())
+            let phaseY = qy - iy
+            if phaseY == 0 {
+                // Common case (label baselines land on whole device pixels):
+                // CG-smoothed rendering via the fitted per-phase kernels.
+                if let bmp = gf.rasterizeSmoothed(glyph: g,
+                                                  devicePixelSize: font.pointSize * scale,
+                                                  phaseX: phaseX) {
+                    canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
+                                    atPixelX: Int(ix) + bmp.offsetX,
+                                    pixelY: Int(iy) + bmp.offsetY,
+                                    color: color)
+                    continue
+                }
+            }
             guard let bmp = gf.rasterize(glyph: g, pixelSize: font.pointSize * scale,
-                                         shiftX: shift) else { continue }
+                                         shiftX: qx - ix, shiftY: phaseY) else { continue }
             canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
                             atPixelX: Int(ix) + bmp.offsetX,
                             pixelY: Int(iy) + bmp.offsetY,

@@ -107,55 +107,98 @@ public enum TextLayout {
         return (s[s.startIndex..<lineEnd], s[remStart...])
     }
 
-    /// Truncate a single line to `maxWidth` with the given mode, returning the
-    /// string to draw (with U+2026 inserted for the truncating modes).
+    /// Result of truncating a single line. `tight` = the drawn line uses
+    /// tight tracking (UIKit condenses truncated lines with the font's
+    /// tight trak track); `delta` = the per-glyph advance adjustment to
+    /// apply when drawing (0 for natural lines).
+    public struct Truncated {
+        public var text: String
+        public var delta: CGFloat
+    }
+
+    /// Truncate a single line to `maxWidth` with the given mode, matching
+    /// real UIKit (validated against Catalyst threshold sweeps at 17pt):
+    /// - The available width is floor(maxWidth) in points.
+    /// - Candidate widths are measured at TIGHT tracking (advance + dTight
+    ///   per glyph, spaces included, kerning kept).
+    /// - The ellipsis contributes a decision width slightly smaller than
+    ///   its drawn advance (FontEngine.ellipsisDecisionWidth).
+    /// - If the whole text fits at tight tracking, UIKit draws it squeezed
+    ///   to exactly the available width instead of truncating.
     public static func truncate(_ text: String, font: UIFont, maxWidth: CGFloat,
-                                mode: NSLineBreakMode) -> String {
+                                mode: NSLineBreakMode) -> Truncated {
         let eps: CGFloat = 1e-6
-        if FontEngine.measure(text, font: font) <= maxWidth + eps { return text }
-        let ell = String(Character(ellipsis))
-        let ellW = FontEngine.measure(ell, font: font)
-        let scalars = Array(text.unicodeScalars)
-        func width(_ slice: ArraySlice<Unicode.Scalar>) -> CGFloat {
-            var s = ""
-            s.unicodeScalars.append(contentsOf: slice)
-            return FontEngine.measure(s, font: font)
-        }
+        let natural = FontEngine.measure(text, font: font)
+        if natural <= maxWidth + eps { return Truncated(text: text, delta: 0) }
         switch mode {
         case .byClipping, .byWordWrapping, .byCharWrapping:
-            return text  // drawn clipped by the caller
+            return Truncated(text: text, delta: 0)  // drawn clipped by the caller
+        default:
+            break
+        }
+        let B = maxWidth.rounded(.down)
+        let d = FontEngine.tightDelta(for: font)
+        let scalars = Array(text.unicodeScalars)
+        let n = scalars.count
+        func str(_ slice: ArraySlice<Unicode.Scalar>) -> String {
+            var s = ""
+            s.unicodeScalars.append(contentsOf: slice)
+            return s
+        }
+        func tightW(_ s: String) -> CGFloat { FontEngine.measureTight(s, font: font) }
+
+        // Whole text fits when tightened: squeeze to exactly B, no ellipsis.
+        let tightFull = tightW(text)
+        if tightFull <= B + eps {
+            let delta = n > 0 ? (B - natural) / CGFloat(n) : 0
+            return Truncated(text: text, delta: Swift.max(delta, d))
+        }
+
+        let ell = String(Character(ellipsis))
+        let ellTail = FontEngine.ellipsisDecisionWidth(for: font, head: false)
+        let ellHead = FontEngine.ellipsisDecisionWidth(for: font, head: true)
+
+        switch mode {
         case .byTruncatingTail:
-            var n = scalars.count - 1
-            while n > 0 && width(scalars[0..<n]) + ellW > maxWidth + eps { n -= 1 }
-            var out = ""
-            out.unicodeScalars.append(contentsOf: scalars[0..<n])
-            // UIKit drops a bare trailing space before the ellipsis.
-            while out.hasSuffix(" ") { out.removeLast() }
-            return out + ell
-        case .byTruncatingHead:
-            var start = 1
-            while start < scalars.count && ellW + width(scalars[start...]) > maxWidth + eps { start += 1 }
-            var out = ell
-            out.unicodeScalars.append(contentsOf: scalars[start...])
-            return out
-        case .byTruncatingMiddle:
-            // Keep a balanced head and tail.
-            var head = 0, tail = 0
-            var takeHead = true
-            while head + tail < scalars.count {
-                let h = takeHead ? head + 1 : head
-                let t = takeHead ? tail : tail + 1
-                if h + t >= scalars.count { break }
-                let w = width(scalars[0..<h]) + ellW + width(scalars[(scalars.count - t)...])
-                if w > maxWidth + eps { break }
-                head = h; tail = t
-                takeHead.toggle()
+            var kept = 0
+            for k in stride(from: n - 1, through: 1, by: -1) {
+                var s = str(scalars[0..<k])
+                while s.hasSuffix(" ") { s.removeLast() }
+                if tightW(s) + ellTail <= B + eps { kept = k; break }
             }
-            var out = ""
-            out.unicodeScalars.append(contentsOf: scalars[0..<head])
-            out += ell
-            out.unicodeScalars.append(contentsOf: scalars[(scalars.count - tail)...])
-            return out
+            var out = str(scalars[0..<kept])
+            while out.hasSuffix(" ") { out.removeLast() }
+            return Truncated(text: out + ell, delta: d)
+        case .byTruncatingHead:
+            var kept = 0
+            for k in stride(from: n - 1, through: 1, by: -1) {
+                var s = str(scalars[(n - k)...])
+                while s.hasPrefix(" ") { s.removeFirst() }
+                if ellHead + tightW(s) <= B + eps { kept = k; break }
+            }
+            var out = str(scalars[(n - kept)...])
+            while out.hasPrefix(" ") { out.removeFirst() }
+            return Truncated(text: ell + out, delta: d)
+        case .byTruncatingMiddle:
+            // Head: largest prefix whose tight width + half the ellipsis
+            // fits in half the available width (unstripped). Tail: largest
+            // suffix fitting the remainder.
+            var head = 0
+            for h in stride(from: n - 1, through: 0, by: -1) {
+                if tightW(str(scalars[0..<h])) + ellTail / 2 <= B / 2 + eps { head = h; break }
+            }
+            let headW = tightW(str(scalars[0..<head]))
+            var tail = 0
+            for t in stride(from: n - head - 1, through: 0, by: -1) {
+                if headW + ellTail + tightW(str(scalars[(n - t)...])) <= B + eps { tail = t; break }
+            }
+            var pre = str(scalars[0..<head])
+            while pre.hasSuffix(" ") { pre.removeLast() }
+            var suf = str(scalars[(n - tail)...])
+            while suf.hasPrefix(" ") { suf.removeFirst() }
+            return Truncated(text: pre + ell + suf, delta: d)
+        default:
+            return Truncated(text: text, delta: 0)
         }
     }
 }
