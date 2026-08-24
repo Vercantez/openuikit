@@ -86,6 +86,68 @@ public enum GlyphInkTable {
         return out
     }
 
+    /// Text blend exponent (normalized sRGB; fitted against oracle renders
+    /// of colored text — see CanvasTextBlend.swift).
+    public static let blendGamma: CGFloat = 0.79
+
+    /// x^p for x in [0,1] (pure Swift; small series, table-quality precision).
+    static func powNorm(_ x: CGFloat, _ p: CGFloat) -> CGFloat {
+        if x <= 0 { return 0 }
+        if x >= 1 { return 1 }
+        var m = x
+        var k = 0
+        while m < 0.5 { m *= 2; k -= 1 }
+        let z = (m - 1) / (m + 1)
+        let z2 = z * z
+        var term = z
+        var lnsum: CGFloat = 0
+        var n: CGFloat = 1
+        for _ in 0..<12 { lnsum += term / n; term *= z2; n += 2 }
+        let lnx = 2 * lnsum + CGFloat(k) * 0.6931471805599453
+        let e = p * lnx
+        let kk = (e * 1.4426950408889634).rounded()
+        let r = e - kk * 0.6931471805599453
+        var t: CGFloat = 1
+        var s: CGFloat = 1
+        for i in 1...14 { t *= r / CGFloat(i); s += t }
+        var out = s
+        var ki = Int(kk)
+        while ki > 0 { out *= 2; ki -= 1 }
+        while ki < 0 { out /= 2; ki += 1 }
+        return out
+    }
+
+    /// Harvested masks store the EFFECTIVE sRGB coverage of the calibration
+    /// text color (system label, alpha 0.847) — the gamma blend is baked
+    /// in. This returns the mask converted to TRUE glyph coverage for use
+    /// with `Canvas.drawMask(..., blendGamma:)` (exact for the calibration
+    /// color, correct for any other color).
+    public static func maskLinear(familyKey: String, sizeKey: Int, dark: Bool,
+                                  tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
+        let key = "L|\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
+        if let hit = cache[key] { return hit }
+        guard var m = mask(familyKey: familyKey, sizeKey: sizeKey, dark: dark,
+                           tag: tag, scalar: scalar) else { return nil }
+        let g = blendGamma
+        let full: CGFloat = 216.0 / 255.0          // calibration ink over contrast bg
+        let fullG = powNorm(1 - full, g)           // (39/255)^g
+        let fullDarkG = powNorm(full, g)           // (216/255)^g
+        var lut = [UInt8](repeating: 0, count: 256)
+        for v in 1...255 {
+            let c = CGFloat(v) / 255
+            let cTrue: CGFloat
+            if dark {
+                cTrue = powNorm(full * c, g) / fullDarkG
+            } else {
+                cTrue = (1 - powNorm(1 - full * c, g)) / (1 - fullG)
+            }
+            lut[v] = UInt8((cTrue * 255).rounded())
+        }
+        for i in 0..<m.mask.count { m.mask[i] = lut[Int(m.mask[i])] }
+        cache[key] = m
+        return m
+    }
+
     /// Look up the harvested mask for one glyph occurrence.
     public static func mask(familyKey: String, sizeKey: Int, dark: Bool,
                             tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
