@@ -147,8 +147,21 @@ open class UILabel: UIView {
     private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
                                 color: CGColor, glyphFont: InstancedGlyphFont?,
                                 extraAdvance: CGFloat = 0) {
-        guard let gf = glyphFont else { return }
         let scale = canvas.scale
+        // Harvested-ink fast path: exact real-UIKit glyph masks, valid for
+        // scale-2 translation-only canvases and integer point sizes (see
+        // GlyphInkTable). Falls through per-glyph when a mask is missing.
+        let ctm = canvas.ctm
+        let inkEligible = GlyphInkTable.isAvailable && scale == 2
+            && ctm.a == 2 && ctm.b == 0 && ctm.c == 0 && ctm.d == 2
+            && font.pointSize == font.pointSize.rounded(.down)
+        let famKey = FontEngine.familyKey(for: font)
+        let sizeKey = Int(font.pointSize)
+        let dark = traitCollection.userInterfaceStyle == .dark
+        // Device-pixel anchor of the text-space origin (x: pen 0).
+        let devOX = Int((ctm.tx).rounded())
+        let devBaseY = Int((origin.y * 2 + ctm.ty).rounded())
+
         var penX = origin.x
         var prev: Unicode.Scalar? = nil
         for ch in line.unicodeScalars {
@@ -157,6 +170,21 @@ open class UILabel: UIView {
             let adv = FontEngine.advance(of: ch, font: font) + extraAdvance
             defer { penX += adv }
             if ch == " " { continue }
+            if inkEligible {
+                let penFloor = penX.rounded(.down)
+                let frac = penX - penFloor
+                let tag = GlyphInkTable.phaseTag(size: font.pointSize, frac: frac)
+                if let m = GlyphInkTable.mask(familyKey: famKey, sizeKey: sizeKey,
+                                              dark: dark, tag: tag, scalar: ch) {
+                    let anchor = Int((2 * frac).rounded(.down))
+                    canvas.drawMask(m.mask, width: m.width, height: m.height,
+                                    atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,
+                                    pixelY: devBaseY + m.oy,
+                                    color: color)
+                    continue
+                }
+            }
+            guard let gf = glyphFont else { continue }
             let g = gf.glyphIndex(of: ch)
             if g == 0 { continue }
             // CoreText quantizes each glyph's pen position to quarter POINTS
