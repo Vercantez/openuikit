@@ -1,0 +1,1295 @@
+{
+  "name" : "demo_settings",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        58,
+        133,
+        40
+      ],
+      "intrinsic" : [
+        133,
+        40
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        133,
+        40
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        110,
+        350,
+        36
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        12,
+        7.5,
+        55,
+        20
+      ],
+      "intrinsic" : [
+        55,
+        20
+      ],
+      "path" : "1.0",
+      "sizeThatFits200" : [
+        55,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        162,
+        350,
+        76
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        12,
+        8,
+        60,
+        60
+      ],
+      "intrinsic" : [
+        60,
+        60
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        84,
+        16,
+        118.5,
+        20
+      ],
+      "intrinsic" : [
+        118.5,
+        20
+      ],
+      "path" : "2.1",
+      "sizeThatFits200" : [
+        118.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        84,
+        41,
+        167,
+        16
+      ],
+      "intrinsic" : [
+        167,
+        16
+      ],
+      "path" : "2.2",
+      "sizeThatFits200" : [
+        167,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        336,
+        11,
+        8,
+        20
+      ],
+      "intrinsic" : [
+        8,
+        20
+      ],
+      "path" : "2.3",
+      "sizeThatFits200" : [
+        8,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        254,
+        350,
+        132.5
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        350,
+        44
+      ],
+      "path" : "3.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        114.5,
+        20
+      ],
+      "intrinsic" : [
+        114.5,
+        20
+      ],
+      "path" : "3.0.1",
+      "sizeThatFits200" : [
+        114.5,
+        20
+      ]
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        275,
+        8,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "3.0.2"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.2.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "3.0.2.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "3.0.2.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "3.0.2.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "3.0.2.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "3.0.2.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.2.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.2.0.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        54,
+        44,
+        296,
+        0.5
+      ],
+      "path" : "3.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        44.5,
+        350,
+        44
+      ],
+      "path" : "3.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "3.2.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        42,
+        20
+      ],
+      "intrinsic" : [
+        42,
+        20
+      ],
+      "path" : "3.2.1",
+      "sizeThatFits200" : [
+        42,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        262,
+        12,
+        75,
+        20
+      ],
+      "intrinsic" : [
+        75,
+        20
+      ],
+      "path" : "3.2.2",
+      "sizeThatFits200" : [
+        75,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        336,
+        11,
+        8,
+        20
+      ],
+      "intrinsic" : [
+        8,
+        20
+      ],
+      "path" : "3.2.3",
+      "sizeThatFits200" : [
+        8,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        54,
+        88.5,
+        296,
+        0.5
+      ],
+      "path" : "3.3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        89,
+        350,
+        44
+      ],
+      "path" : "3.4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "3.4.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        76.5,
+        20
+      ],
+      "intrinsic" : [
+        76.5,
+        20
+      ],
+      "path" : "3.4.1",
+      "sizeThatFits200" : [
+        76.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        302,
+        12,
+        23,
+        20
+      ],
+      "intrinsic" : [
+        23,
+        20
+      ],
+      "path" : "3.4.2",
+      "sizeThatFits200" : [
+        23,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        336,
+        11,
+        8,
+        20
+      ],
+      "intrinsic" : [
+        8,
+        20
+      ],
+      "path" : "3.4.3",
+      "sizeThatFits200" : [
+        8,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        402.5,
+        350,
+        88.5
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        350,
+        44
+      ],
+      "path" : "4.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        61.5,
+        20
+      ],
+      "intrinsic" : [
+        61.5,
+        20
+      ],
+      "path" : "4.0.1",
+      "sizeThatFits200" : [
+        61.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        336,
+        11,
+        8,
+        20
+      ],
+      "intrinsic" : [
+        8,
+        20
+      ],
+      "path" : "4.0.2",
+      "sizeThatFits200" : [
+        8,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        54,
+        44,
+        296,
+        0.5
+      ],
+      "path" : "4.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        44.5,
+        350,
+        44
+      ],
+      "path" : "4.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "4.2.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        6,
+        121,
+        20
+      ],
+      "intrinsic" : [
+        121,
+        20
+      ],
+      "path" : "4.2.1",
+      "sizeThatFits200" : [
+        121,
+        20
+      ]
+    },
+    {
+      "class" : "UIProgressView",
+      "frame" : [
+        54,
+        32,
+        240,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "4.2.2"
+    },
+    {
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        240,
+        4
+      ],
+      "path" : "4.2.2.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        240,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "4.2.2.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        173,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "4.2.2.0.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        300,
+        26,
+        28,
+        16
+      ],
+      "intrinsic" : [
+        28,
+        16
+      ],
+      "path" : "4.2.3",
+      "sizeThatFits200" : [
+        28,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        36,
+        507,
+        121.5,
+        16
+      ],
+      "intrinsic" : [
+        121.5,
+        16
+      ],
+      "path" : "5",
+      "sizeThatFits200" : [
+        121.5,
+        16
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        530,
+        350,
+        132.5
+      ],
+      "path" : "6"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        350,
+        44
+      ],
+      "path" : "6.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "6.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        106.5,
+        20
+      ],
+      "intrinsic" : [
+        106.5,
+        20
+      ],
+      "path" : "6.0.1",
+      "sizeThatFits200" : [
+        106.5,
+        20
+      ]
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        275,
+        8,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "6.0.2"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.0.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.0.2.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "6.0.2.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.0.2.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.0.2.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.0.2.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "6.0.2.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.0.2.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.0.2.0.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        54,
+        44,
+        296,
+        0.5
+      ],
+      "path" : "6.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        44.5,
+        350,
+        44
+      ],
+      "path" : "6.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "6.2.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        80,
+        20
+      ],
+      "intrinsic" : [
+        80,
+        20
+      ],
+      "path" : "6.2.1",
+      "sizeThatFits200" : [
+        80,
+        20
+      ]
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        275,
+        8,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "6.2.2"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.2.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.2.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.2.2.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "6.2.2.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.2.2.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.2.2.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.2.2.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "6.2.2.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.2.2.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.2.2.0.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        54,
+        88.5,
+        296,
+        0.5
+      ],
+      "path" : "6.3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        89,
+        350,
+        44
+      ],
+      "path" : "6.4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        7.5,
+        29,
+        29
+      ],
+      "path" : "6.4.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        54,
+        11,
+        90,
+        20
+      ],
+      "intrinsic" : [
+        90,
+        20
+      ],
+      "path" : "6.4.1",
+      "sizeThatFits200" : [
+        90,
+        20
+      ]
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        275,
+        8,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "6.4.2"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.4.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.4.2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.4.2.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        -567,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "6.4.2.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "6.4.2.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.4.2.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "6.4.2.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        2,
+        2,
+        37,
+        24
+      ],
+      "path" : "6.4.2.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.4.2.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "6.4.2.0.2.0.0"
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        686,
+        62,
+        31
+      ],
+      "intrinsic" : [
+        62,
+        31
+      ],
+      "path" : "7",
+      "sizeThatFits200" : [
+        62,
+        31
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        62,
+        19
+      ],
+      "intrinsic" : [
+        62,
+        19
+      ],
+      "path" : "7.0",
+      "sizeThatFits200" : [
+        62,
+        19
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        290,
+        686,
+        33,
+        31
+      ],
+      "intrinsic" : [
+        33,
+        31
+      ],
+      "path" : "8",
+      "sizeThatFits200" : [
+        33,
+        31
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        33,
+        19
+      ],
+      "intrinsic" : [
+        33,
+        19
+      ],
+      "path" : "8.0",
+      "sizeThatFits200" : [
+        33,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        740,
+        390,
+        18
+      ],
+      "intrinsic" : [
+        264.5,
+        16
+      ],
+      "path" : "9",
+      "sizeThatFits200" : [
+        264.5,
+        16
+      ]
+    }
+  ]
+}

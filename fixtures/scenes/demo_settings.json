@@ -1,0 +1,693 @@
+{
+ "name": "demo_settings",
+ "size": [
+  390,
+  780
+ ],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemGroupedBackground",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     58,
+     0,
+     0
+    ],
+    "text": "Settings",
+    "fontSize": 34,
+    "fontWeight": "bold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     110,
+     350,
+     36
+    ],
+    "backgroundColor": "tertiarySystemFill",
+    "cornerRadius": 10,
+    "subviews": [
+     {
+      "class": "UILabel",
+      "frame": [
+       12,
+       7.5,
+       0,
+       0
+      ],
+      "text": "Search",
+      "fontSize": 17,
+      "textColor": "secondaryLabel",
+      "sizeToFit": true
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     162,
+     350,
+     76
+    ],
+    "backgroundColor": "secondarySystemGroupedBackground",
+    "cornerRadius": 10,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIImageView",
+      "frame": [
+       12,
+       8,
+       60,
+       60
+      ],
+      "cornerRadius": 30,
+      "clipsToBounds": true,
+      "contentMode": "scaleToFill",
+      "image": {
+       "kind": "gradient",
+       "size": [
+        60,
+        60
+       ],
+       "colors": [
+        "#8E8E93",
+        "#48484A"
+       ],
+       "direction": "vertical"
+      }
+     },
+     {
+      "class": "UILabel",
+      "frame": [
+       84,
+       16,
+       0,
+       0
+      ],
+      "text": "Miguel Salinas",
+      "fontSize": 17,
+      "fontWeight": "semibold",
+      "sizeToFit": true
+     },
+     {
+      "class": "UILabel",
+      "frame": [
+       84,
+       41,
+       0,
+       0
+      ],
+      "text": "Account, iCloud, and more",
+      "fontSize": 13,
+      "textColor": "secondaryLabel",
+      "sizeToFit": true
+     },
+     {
+      "class": "UILabel",
+      "frame": [
+       336,
+       11,
+       0,
+       0
+      ],
+      "text": "\u203a",
+      "fontSize": 17,
+      "fontWeight": "semibold",
+      "textColor": "tertiaryLabel",
+      "sizeToFit": true
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     254,
+     350,
+     132.5
+    ],
+    "backgroundColor": "secondarySystemGroupedBackground",
+    "cornerRadius": 10,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       0,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemOrange",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Airplane Mode",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UISwitch",
+        "frame": [
+         275,
+         8,
+         0,
+         0
+        ],
+        "on": true
+       }
+      ]
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       54,
+       44,
+       296,
+       0.5
+      ],
+      "backgroundColor": "separator"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       44.5,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemBlue",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Wi-Fi",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         262,
+         12,
+         0,
+         0
+        ],
+        "text": "HomeNet",
+        "fontSize": 17,
+        "textColor": "secondaryLabel",
+        "sizeToFit": true
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         336,
+         11,
+         0,
+         0
+        ],
+        "text": "\u203a",
+        "fontSize": 17,
+        "fontWeight": "semibold",
+        "textColor": "tertiaryLabel",
+        "sizeToFit": true
+       }
+      ]
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       54,
+       88.5,
+       296,
+       0.5
+      ],
+      "backgroundColor": "separator"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       89,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemIndigo",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Bluetooth",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         302,
+         12,
+         0,
+         0
+        ],
+        "text": "On",
+        "fontSize": 17,
+        "textColor": "secondaryLabel",
+        "sizeToFit": true
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         336,
+         11,
+         0,
+         0
+        ],
+        "text": "\u203a",
+        "fontSize": 17,
+        "fontWeight": "semibold",
+        "textColor": "tertiaryLabel",
+        "sizeToFit": true
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     402.5,
+     350,
+     88.5
+    ],
+    "backgroundColor": "secondarySystemGroupedBackground",
+    "cornerRadius": 10,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       0,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemGray",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "General",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         336,
+         11,
+         0,
+         0
+        ],
+        "text": "\u203a",
+        "fontSize": 17,
+        "fontWeight": "semibold",
+        "textColor": "tertiaryLabel",
+        "sizeToFit": true
+       }
+      ]
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       54,
+       44,
+       296,
+       0.5
+      ],
+      "backgroundColor": "separator"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       44.5,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemPurple",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         6,
+         0,
+         0
+        ],
+        "text": "iPhone Storage",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UIProgressView",
+        "frame": [
+         54,
+         32,
+         240,
+         4
+        ],
+        "progress": 0.72
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         300,
+         26,
+         0,
+         0
+        ],
+        "text": "72%",
+        "fontSize": 13,
+        "textColor": "secondaryLabel",
+        "sizeToFit": true
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     36,
+     507,
+     0,
+     0
+    ],
+    "text": "NOTIFY ME ABOUT",
+    "fontSize": 13,
+    "textColor": "secondaryLabel",
+    "sizeToFit": true
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     530,
+     350,
+     132.5
+    ],
+    "backgroundColor": "secondarySystemGroupedBackground",
+    "cornerRadius": 10,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       0,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemRed",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Critical Alerts",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UISwitch",
+        "frame": [
+         275,
+         8,
+         0,
+         0
+        ],
+        "on": true,
+        "onTintColor": "systemRed"
+       }
+      ]
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       54,
+       44,
+       296,
+       0.5
+      ],
+      "backgroundColor": "separator"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       44.5,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemGreen",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Messages",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UISwitch",
+        "frame": [
+         275,
+         8,
+         0,
+         0
+        ],
+        "on": true
+       }
+      ]
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       54,
+       88.5,
+       296,
+       0.5
+      ],
+      "backgroundColor": "separator"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       0,
+       89,
+       350,
+       44
+      ],
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         12,
+         7.5,
+         29,
+         29
+        ],
+        "backgroundColor": "systemGray2",
+        "cornerRadius": 6.5
+       },
+       {
+        "class": "UILabel",
+        "frame": [
+         54,
+         11,
+         0,
+         0
+        ],
+        "text": "Promotions",
+        "fontSize": 17,
+        "fontWeight": "regular",
+        "textColor": "label",
+        "sizeToFit": true
+       },
+       {
+        "class": "UISwitch",
+        "frame": [
+         275,
+         8,
+         0,
+         0
+        ],
+        "on": false
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "class": "UIButton",
+    "frame": [
+     20,
+     686,
+     0,
+     0
+    ],
+    "title": "Sign Out",
+    "sizeToFit": true
+   },
+   {
+    "class": "UIButton",
+    "frame": [
+     290,
+     686,
+     0,
+     0
+    ],
+    "title": "Help",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     0,
+     740,
+     390,
+     18
+    ],
+    "text": "OpenUIKit demo \u2014 rendered without UIKit",
+    "fontSize": 13,
+    "textColor": "tertiaryLabel",
+    "textAlignment": "center"
+   }
+  ]
+ }
+}
