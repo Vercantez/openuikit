@@ -1,0 +1,65 @@
+{
+  "name" : "stack_horizontal",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        10,
+        320,
+        100
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        74,
+        100
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        82,
+        0,
+        74,
+        100
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        164,
+        0,
+        74,
+        100
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        246,
+        0,
+        74,
+        100
+      ],
+      "path" : "0.3"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name" : "label_multiline",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        20,
+        193,
+        60
+      ],
+      "intrinsic" : [
+        505,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        193,
+        60
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        140,
+        180,
+        60
+      ],
+      "intrinsic" : [
+        505.5,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        192,
+        40
+      ]
+    }
+  ]
+}

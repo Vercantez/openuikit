@@ -1,0 +1,123 @@
+{
+  "name" : "imageview_aspect_edge",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        340,
+        260
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        20,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        37,
+        53
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        140,
+        20,
+        100,
+        60
+      ],
+      "intrinsic" : [
+        121,
+        37
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        260,
+        20,
+        60,
+        90
+      ],
+      "intrinsic" : [
+        33,
+        77
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        100,
+        75,
+        33
+      ],
+      "intrinsic" : [
+        50,
+        50
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        140,
+        100,
+        100,
+        61
+      ],
+      "intrinsic" : [
+        41,
+        29
+      ],
+      "path" : "5"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        20,
+        160,
+        95,
+        80
+      ],
+      "intrinsic" : [
+        13,
+        90
+      ],
+      "path" : "6"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        140,
+        180,
+        180,
+        60
+      ],
+      "intrinsic" : [
+        200,
+        23
+      ],
+      "path" : "7"
+    }
+  ]
+}

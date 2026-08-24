@@ -1,0 +1,55 @@
+{
+  "name" : "gradient_basic",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        140
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIGradientView",
+      "frame" : [
+        20,
+        20,
+        80,
+        100
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIGradientView",
+      "frame" : [
+        120,
+        20,
+        80,
+        100
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIGradientView",
+      "frame" : [
+        220,
+        20,
+        80,
+        100
+      ],
+      "path" : "3"
+    }
+  ]
+}

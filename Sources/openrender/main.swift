@@ -26,6 +26,18 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_BACKEND"] {
     }
 }
 
+// Compositor override: OPENUIKIT_COMPOSITOR=layers|renderpass (default:
+// library default; layers requires the quartz backend).
+if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
+    switch v {
+    case "layers": OpenUIKitRuntime.compositor = .layers
+    case "renderpass": OpenUIKitRuntime.compositor = .renderPass
+    default:
+        FileHandle.standardError.write(
+            Data("warning: ignoring unknown OPENUIKIT_COMPOSITOR=\(v) (use layers|renderpass)\n".utf8))
+    }
+}
+
 // Glyph-ink harvest diagnostics: OPENUIKIT_INK_LOG=<path> writes every ink
 // table miss ("W|<key>" / "O|<key>", one per line) after rendering.
 let inkLogPath = ProcessInfo.processInfo.environment["OPENUIKIT_INK_LOG"]

@@ -115,7 +115,10 @@ of rounded clips/corners differ by a few counts on a handful of pixels
   local (not upstream): quartz's package headers are designed to be included
   via `quartz.h` in dependency order, so the module uses `quartz.h` as its
   sole entry point instead of SPM's whole-directory umbrella.
-- Vendored sources are UNMODIFIED. Two build-level accommodations in
+- Vendored sources are an exact upstream mirror PLUS the minimal M5
+  layer-compositor patches in `patches/quartz/` (reapplied by
+  sync_quartz.sh after every rsync; see docs/QUARTZ_PATCHES.md — each has
+  an upstream-suggested fix). Two build-level accommodations in
   Package.swift (not source patches):
   - `STBTT_STATIC` + target-wide `STB_TRUETYPE_IMPLEMENTATION` so quartz's
     private stb_truetype copy has internal linkage and cannot collide with

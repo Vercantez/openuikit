@@ -42,10 +42,20 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   Canvas backend abstraction (Backend.swift), full-suite dual-backend
   comparison (quartz ≥ swift on every scene, text byte-identical), quartz is
   the default backend. See docs/QUARTZ_NOTES.md.
-- **M5 CALayer adoption** — replace the RenderPass traversal with quartz's
-  real layer tree (QZLayer): UIView owns a QZLayer; compositing, masks,
-  shadows, opacity groups handled by the compositor. Unlocks layer features
-  UIKit users expect: shadowPath, masks, rasterization.
+- **M5 CALayer adoption** — DONE: `LayerBridge.swift` builds a real QZLayer
+  tree and quartz's layer compositor (`QZLayerRenderInContext`) replaces
+  the RenderPass traversal as the default
+  (`OpenUIKitRuntime.compositor = .layers`; renderpass kept as fallback +
+  pure-Swift-backend path). View content (glyph ink, image resampling,
+  control chrome) renders via the existing drawContent path into contents
+  images composited by the layer tree. Three surgical patches to vendored
+  quartz reproduce the goldened CA quirks (unclamped cornerRadius,
+  hard-edged transformed layers, CA shadow semantics) —
+  `patches/quartz/`, reapplied by sync_quartz.sh, documented with
+  upstream-suggested fixes in docs/QUARTZ_PATCHES.md. Full suite 42/42
+  under BOTH compositors (layers ≥ renderpass within 0.003 everywhere,
+  up to +1.5 on button/gradient scenes); 224 tests green incl.
+  LayerBridgeTests.
 - **M6 Animation** — UIView.animate(withDuration:) on quartz's animation/
   timing engine; CADisplayLink-style driver; presentation vs model layer.
   Oracle: frame-by-frame comparison against real UIKit animations captured

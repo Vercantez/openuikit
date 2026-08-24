@@ -23,4 +23,21 @@ public enum OpenUIKitRuntime {
         get { CanvasBackendSelection.current }
         set { CanvasBackendSelection.current = newValue }
     }
+    /// Compositor for UIRenderer.render (M5): `.layers` builds a QZLayer
+    /// tree and lets quartz's CALayer compositor composite the hierarchy
+    /// (LayerBridge.swift); `.renderPass` is the hand-written traversal
+    /// (RenderPass.swift). `.layers` requires the quartz backend — with
+    /// `renderBackend == .swift` the render pass is used regardless, so the
+    /// pure-Swift zero-dependency path stays fully Swift.
+    /// Hosts may override (openrender honors
+    /// OPENUIKIT_COMPOSITOR=layers|renderpass); the library never reads
+    /// env vars.
+    public static var compositor: RenderCompositor = .layers
+}
+
+/// Compositing strategy for view-hierarchy rendering (see
+/// `OpenUIKitRuntime.compositor`).
+public enum RenderCompositor: Sendable {
+    case renderPass
+    case layers
 }

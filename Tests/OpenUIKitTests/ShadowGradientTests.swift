@@ -224,6 +224,10 @@ final class ShadowGradientTests: XCTestCase {
     }
 
     /// Gradient backends agree (both consume the same densified stops).
+    /// Canvas-backend parity is a render-pass property: under the layers
+    /// compositor the quartz side goes through QZGradientLayer's own CA
+    /// interpolation instead of the densified Canvas stops, so pin the
+    /// compositor for the comparison.
     func testGradientBackendParity() {
         let root = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 40))
         let g = UIGradientView(frame: root.frame)
@@ -232,6 +236,9 @@ final class ShadowGradientTests: XCTestCase {
         g.startPoint = CGPoint(x: 0, y: 0.5)
         g.endPoint = CGPoint(x: 1, y: 0.5)
         root.addSubview(g)
+        let savedCompositor = OpenUIKitRuntime.compositor
+        OpenUIKitRuntime.compositor = .renderPass
+        defer { OpenUIKitRuntime.compositor = savedCompositor }
         CanvasBackendSelection.current = .swift
         let a = UIRenderer.render(root, scale: 2)
         CanvasBackendSelection.current = .quartz

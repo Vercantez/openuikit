@@ -61,7 +61,23 @@ public enum UIRenderer {
     }
 
     /// Render a laid-out view hierarchy into a fresh bitmap.
+    ///
+    /// Dispatches on `OpenUIKitRuntime.compositor`: `.layers` composites
+    /// through quartz's QZLayer tree (LayerBridge, M5); `.renderPass` runs
+    /// the traversal below. The layers compositor requires the quartz
+    /// backend — under `.swift` the render pass is always used so that
+    /// path stays pure Swift.
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
+        if OpenUIKitRuntime.compositor == .layers,
+           OpenUIKitRuntime.renderBackend == .quartz {
+            return LayerBridge.render(root, scale: scale)
+        }
+        return renderPassRender(root, scale: scale)
+    }
+
+    /// The hand-written render-pass traversal (always available; the
+    /// fallback compositor).
+    public static func renderPassRender(_ root: UIView, scale: CGFloat) -> Bitmap {
         let w = Int((root.bounds.width * scale).rounded())
         let h = Int((root.bounds.height * scale).rounded())
         let bitmap = Bitmap(width: w, height: h)

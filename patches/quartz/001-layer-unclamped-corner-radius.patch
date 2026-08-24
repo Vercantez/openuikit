@@ -1,0 +1,46 @@
+diff --git a/Sources/CQuartz/qz_layer.cpp b/Sources/CQuartz/qz_layer.cpp
+index 80d318b..fb91f1e 100644
+--- a/Sources/CQuartz/qz_layer.cpp
++++ b/Sources/CQuartz/qz_layer.cpp
+@@ -127,8 +127,39 @@ void QZGradientLayerSetRadial(QZLayerRef layer, bool radial) {
+ }
+ 
+ static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius) {
+-    if (radius > 0.5) QZContextAddRoundedRect(ctx, r, radius);
+-    else QZContextAddRect(ctx, r);
++    if (radius <= 0.5) {
++        QZContextAddRect(ctx, r);
++        return;
++    }
++    double half = std::min(std::fabs(r.size.width), std::fabs(r.size.height)) * 0.5;
++    if (radius <= half) {
++        QZContextAddRoundedRect(ctx, r, radius);
++        return;
++    }
++    /* CoreAnimation does NOT clamp layer cornerRadius to half the smaller
++     * side (iOS 26): an oversized radius produces the classic
++     * self-intersecting kappa rounded-rect (spikes past the corners, a
++     * four-pointed star hole under non-zero winding) drawn outside the
++     * bounds. Build the unclamped kappa construction directly; for
++     * radius <= min(w,h)/2 this is identical to QZContextAddRoundedRect. */
++    const double k = 0.5522847498307936;
++    double kr = k * radius;
++    double x0 = r.origin.x, y0 = r.origin.y;
++    double x1 = x0 + r.size.width, y1 = y0 + r.size.height;
++    QZContextMoveToPoint(ctx, x0 + radius, y0);
++    QZContextAddLineToPoint(ctx, x1 - radius, y0);
++    QZContextAddCurveToPoint(ctx, x1 - radius + kr, y0, x1, y0 + radius - kr,
++                             x1, y0 + radius);
++    QZContextAddLineToPoint(ctx, x1, y1 - radius);
++    QZContextAddCurveToPoint(ctx, x1, y1 - radius + kr, x1 - radius + kr, y1,
++                             x1 - radius, y1);
++    QZContextAddLineToPoint(ctx, x0 + radius, y1);
++    QZContextAddCurveToPoint(ctx, x0 + radius - kr, y1, x0, y1 - radius + kr,
++                             x0, y1 - radius);
++    QZContextAddLineToPoint(ctx, x0, y0 + radius);
++    QZContextAddCurveToPoint(ctx, x0, y0 + radius - kr, x0 + radius - kr, y0,
++                             x0 + radius, y0);
++    QZContextClosePath(ctx);
+ }
+ 
+ /* CAGradientLayer interpolates in Apple Generic RGB (ICC gamma 461/256,

@@ -33,7 +33,7 @@ let package = Package(
         // Apple frameworks.
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. No Foundation, no Apple frameworks.
-        .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO"]),
+        .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
         .executableTarget(name: "openrender", dependencies: ["OpenUIKit"]),

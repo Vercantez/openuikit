@@ -92,6 +92,9 @@ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
     layer->layer_shadow_color = {r, g, b, 1};
     layer->layer_shadow_opacity = qz::clampd(opacity, 0, 1);
 }
+void QZLayerSetEdgeAntialias(QZLayerRef layer, bool antialias) {
+    if (layer) layer->edge_antialias = antialias;
+}
 QZPoint QZLayerConvertPointToLayer(QZLayerRef from, QZPoint p, QZLayerRef to) {
     if (!from || from == to) return p;
     QZLayer *anc = common_ancestor(from, to);

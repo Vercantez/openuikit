@@ -1,0 +1,409 @@
+{
+  "name" : "stack_alignment",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        380,
+        400
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        10,
+        360,
+        70
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        114.5,
+        16
+      ],
+      "intrinsic" : [
+        16.5,
+        16
+      ],
+      "path" : "1.0",
+      "sizeThatFits200" : [
+        16.5,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        123,
+        0,
+        114.5,
+        26
+      ],
+      "intrinsic" : [
+        25.5,
+        26
+      ],
+      "path" : "1.1",
+      "sizeThatFits200" : [
+        25.5,
+        26
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        245,
+        0,
+        114.5,
+        40
+      ],
+      "intrinsic" : [
+        39.5,
+        40
+      ],
+      "path" : "1.2",
+      "sizeThatFits200" : [
+        39.5,
+        40
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        90,
+        360,
+        70
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        27,
+        114.5,
+        16
+      ],
+      "intrinsic" : [
+        16.5,
+        16
+      ],
+      "path" : "2.0",
+      "sizeThatFits200" : [
+        16.5,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        123,
+        22,
+        114.5,
+        26
+      ],
+      "intrinsic" : [
+        25.5,
+        26
+      ],
+      "path" : "2.1",
+      "sizeThatFits200" : [
+        25.5,
+        26
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        245,
+        15,
+        114.5,
+        40
+      ],
+      "intrinsic" : [
+        39.5,
+        40
+      ],
+      "path" : "2.2",
+      "sizeThatFits200" : [
+        39.5,
+        40
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        170,
+        360,
+        70
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        54,
+        114.5,
+        16
+      ],
+      "intrinsic" : [
+        16.5,
+        16
+      ],
+      "path" : "3.0",
+      "sizeThatFits200" : [
+        16.5,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        123,
+        44,
+        114.5,
+        26
+      ],
+      "intrinsic" : [
+        25.5,
+        26
+      ],
+      "path" : "3.1",
+      "sizeThatFits200" : [
+        25.5,
+        26
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        245,
+        30,
+        114.5,
+        40
+      ],
+      "intrinsic" : [
+        39.5,
+        40
+      ],
+      "path" : "3.2",
+      "sizeThatFits200" : [
+        39.5,
+        40
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        260,
+        115,
+        130
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        15,
+        39.5
+      ],
+      "intrinsic" : [
+        15,
+        19
+      ],
+      "path" : "4.0",
+      "sizeThatFits200" : [
+        15,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        45,
+        36.5,
+        39.5
+      ],
+      "intrinsic" : [
+        36.5,
+        19
+      ],
+      "path" : "4.1",
+      "sizeThatFits200" : [
+        36.5,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        91,
+        69.5,
+        39.5
+      ],
+      "intrinsic" : [
+        69.5,
+        19
+      ],
+      "path" : "4.2",
+      "sizeThatFits200" : [
+        69.5,
+        19
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        135,
+        260,
+        115,
+        130
+      ],
+      "path" : "5"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        50,
+        0,
+        15,
+        39.5
+      ],
+      "intrinsic" : [
+        15,
+        19
+      ],
+      "path" : "5.0",
+      "sizeThatFits200" : [
+        15,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        39,
+        45,
+        36.5,
+        39.5
+      ],
+      "intrinsic" : [
+        36.5,
+        19
+      ],
+      "path" : "5.1",
+      "sizeThatFits200" : [
+        36.5,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        23,
+        91,
+        69.5,
+        39.5
+      ],
+      "intrinsic" : [
+        69.5,
+        19
+      ],
+      "path" : "5.2",
+      "sizeThatFits200" : [
+        69.5,
+        19
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        260,
+        260,
+        115,
+        130
+      ],
+      "path" : "6"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        100,
+        0,
+        15,
+        39.5
+      ],
+      "intrinsic" : [
+        15,
+        19
+      ],
+      "path" : "6.0",
+      "sizeThatFits200" : [
+        15,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        79,
+        45,
+        36.5,
+        39.5
+      ],
+      "intrinsic" : [
+        36.5,
+        19
+      ],
+      "path" : "6.1",
+      "sizeThatFits200" : [
+        36.5,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        46,
+        91,
+        69.5,
+        39.5
+      ],
+      "intrinsic" : [
+        69.5,
+        19
+      ],
+      "path" : "6.2",
+      "sizeThatFits200" : [
+        69.5,
+        19
+      ]
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name" : "label_truncate",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        20,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        273.5,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        273.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        60,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        273.5,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        273.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        100,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        273.5,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        273.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        140,
+        150,
+        22
+      ],
+      "intrinsic" : [
+        273.5,
+        20
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        273.5,
+        20
+      ]
+    }
+  ]
+}

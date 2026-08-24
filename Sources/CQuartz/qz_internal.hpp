@@ -203,6 +203,10 @@ struct QZLayer {
     qz::Color border_color{0, 0, 0, 1};
     bool masks_to_bounds = false;
     bool hidden = false;
+    /* CALayer.allowsEdgeAntialiasing: iOS composites transformed layers
+     * with hard (non-anti-aliased) background/border edges by default.
+     * true (= AA on) preserves historical QZ behavior. */
+    bool edge_antialias = true;
     QZImageRef contents = nullptr;
     QZLayer *superlayer = nullptr;
     QZLayer *mask = nullptr;

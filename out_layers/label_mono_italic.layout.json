@@ -1,0 +1,69 @@
+{
+  "name" : "label_mono_italic",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        20,
+        158,
+        20
+      ],
+      "intrinsic" : [
+        158,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        158,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        50,
+        158,
+        20
+      ],
+      "intrinsic" : [
+        158,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        158,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        80,
+        134.5,
+        20
+      ],
+      "intrinsic" : [
+        134.5,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        134.5,
+        20
+      ]
+    }
+  ]
+}

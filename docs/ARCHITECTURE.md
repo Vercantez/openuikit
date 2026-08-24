@@ -67,6 +67,37 @@ Dual-backend suite comparison (2026-08): quartz ≥ swift on every scene
 (deltas +0.00 to +0.09), text scenes byte-identical. See
 `docs/QUARTZ_NOTES.md` for details and known divergences.
 
+## Compositors (M5)
+
+`UIRenderer.render` dispatches on `OpenUIKitRuntime.compositor`
+(openrender honors `OPENUIKIT_COMPOSITOR=layers|renderpass`):
+
+- **`.layers` (default)** — `LayerBridge.swift` builds a real **QZLayer
+  tree** from the laid-out view hierarchy and lets quartz's CALayer
+  compositor (`QZLayerRenderInContext`) do all compositing: background /
+  cornerRadius / border / masksToBounds / opacity groups / shadows /
+  transforms, UIGradientView → QZGradientLayer (quartz interpolates in
+  CA's Generic-RGB space itself). View custom content (label glyphs,
+  image pixels, control chrome) still renders through the EXISTING
+  drawContent path into a transparent offscreen Canvas at device scale
+  and is attached as a contents-image sublayer at index 0, its frame
+  snapped out to the device grid so compositing is a 1:1 blit (glyph ink
+  tables and CG-profile image resampling are unchanged). The UIKit quirks
+  below (unclamped cornerRadius, hard transformed edges, border above
+  sublayers, group-opacity shadow ordering, CA shadowRadius blur) are
+  reproduced by three surgical patches to the vendored quartz —
+  `patches/quartz/`, applied by `scripts/sync_quartz.sh`, documented in
+  `docs/QUARTZ_PATCHES.md`. Requires the quartz backend; under
+  `renderBackend == .swift` the render pass is used regardless so the
+  pure-Swift path stays dependency-free.
+- **`.renderPass`** — the hand-written traversal below
+  (`UIRenderer.renderPassRender`), kept fully intact as the fallback and
+  as the pure-Swift-backend compositor.
+
+Both compositors pass the full 42-scene suite on the quartz backend
+(layers ≥ renderpass on every scene except deltas ≤ 0.003; button/gradient
+scenes score up to +1.5 higher under layers).
+
 ## Module ownership map
 
 | Path | Owner module | Status |
@@ -76,7 +107,8 @@ Dual-backend suite comparison (2026-08): quartz ≥ swift on every scene
 | `Sources/OpenCoreGraphics/PNG.swift` | core (done) | frozen |
 | `Sources/OpenCoreGraphics/Rasterizer.swift` | **rasterizer** | stub — implement |
 | `Sources/OpenCoreGraphics/Backend.swift`, `QuartzBackend.swift` | **quartz-backend** | done |
-| `Sources/CQuartz/` | vendored (scripts/sync_quartz.sh) | do not edit by hand |
+| `Sources/CQuartz/` | vendored (scripts/sync_quartz.sh) | do not edit by hand — mirror of ~/quartz + `patches/quartz/*` (docs/QUARTZ_PATCHES.md) |
+| `Sources/OpenUIKit/LayerBridge.swift` | **view** | done (M5 layers compositor) |
 | `Sources/OpenUIKit/MiniJSON.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/ResourceIO.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/UIColor.swift`, `SystemColors.swift`, `UITraitCollection.swift` | **color** | to create |
@@ -99,6 +131,8 @@ Dual-backend suite comparison (2026-08): quartz ≥ swift on every scene
 - `isHidden` skips the entire subtree.
 
 ### Render pass (order matters — matches CALayer compositing)
+(The contract below is what BOTH compositors implement: RenderPass.swift
+directly, LayerBridge via the patched quartz layer compositor.)
 For a view with alpha `a`, cornerRadius `r`:
 0. Layer shadow (spec v2, `shadowOpacity > 0 && !masksToBounds`): the
    blurred, offset silhouette of the layer's shape (outer rounded rect when

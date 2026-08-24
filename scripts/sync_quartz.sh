@@ -39,4 +39,19 @@ for h in stb_image.h stb_image_write.h stb_truetype.h; do
     rsync -a "$QUARTZ/third_party/$h" "$DEST/$h"
 done
 
+# Local patches (CA-parity behaviors not yet upstreamed — see
+# docs/QUARTZ_PATCHES.md). Applied in lexical order; each patch is generated
+# against the tree with all previous patches applied. A patch that fails to
+# apply means upstream adopted (or conflicts with) it — reconcile and either
+# delete the patch or regenerate it.
+for p in "$REPO"/patches/quartz/*.patch; do
+    [ -e "$p" ] || continue
+    if git -C "$REPO" apply "$p"; then
+        echo "applied $(basename "$p")"
+    else
+        echo "error: patch failed: $p (upstream change? see docs/QUARTZ_PATCHES.md)" >&2
+        exit 1
+    fi
+done
+
 echo "synced quartz -> $DEST"
