@@ -30,10 +30,30 @@ def classify(scene):
 
 THRESHOLDS = {"geometry": 99.5, "text": 97.0, "control": 96.0}
 
+# Only these classes are compared structurally; private UIKit implementation
+# subviews (UISwitchModernVisualElement, UIButtonLabel, ...) are skipped —
+# the pixel comparison is what holds their visual placement to account.
+PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
+                  "UIProgressView", "UIStackView"}
+
+def visible_views(dump):
+    """Public-class views, excluding entire subtrees rooted at private views."""
+    private_prefixes = []
+    out = {}
+    for v in dump["views"]:  # dumps are in DFS order, parents first
+        path = v["path"]
+        if any(path == p or path.startswith(p + ".") for p in private_prefixes):
+            continue
+        if v["class"] not in PUBLIC_CLASSES:
+            private_prefixes.append(path)
+            continue
+        out[path] = v
+    return out
+
 def compare_layout(g, o):
     problems = []
-    gv = {v["path"]: v for v in g["views"]}
-    ov = {v["path"]: v for v in o["views"]}
+    gv = visible_views(g)
+    ov = visible_views(o)
     for path in sorted(set(gv) | set(ov)):
         if path not in ov:
             problems.append(f"missing view path='{path}' ({gv[path]['class']})")
