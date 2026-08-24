@@ -218,8 +218,10 @@ open class UIView {
     }
     public static let noIntrinsicMetric: CGFloat = -1
     public func sizeToFit() {
-        let s = sizeThatFits(CGSize(width: .greatestFiniteMagnitude,
-                                    height: .greatestFiniteMagnitude))
+        // Real UIKit passes the CURRENT bounds size to sizeThatFits (a
+        // multiline label with frame width 200 wraps at 200 — verified
+        // against golden label_multiline). Contract fix by the text module.
+        let s = sizeThatFits(bounds.size)
         let origin = frame.origin
         frame = CGRect(origin: origin, size: s)
     }
