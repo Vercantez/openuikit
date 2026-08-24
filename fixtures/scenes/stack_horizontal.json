@@ -1,0 +1,45 @@
+{
+ "name": "stack_horizontal",
+ "size": [
+  340,
+  120
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIStackView",
+    "frame": [
+     10,
+     10,
+     320,
+     100
+    ],
+    "axis": "horizontal",
+    "spacing": 8,
+    "stackDistribution": "fillEqually",
+    "subviews": [
+     {
+      "class": "UIView",
+      "backgroundColor": "#E03131"
+     },
+     {
+      "class": "UIView",
+      "backgroundColor": "#1971C2"
+     },
+     {
+      "class": "UIView",
+      "backgroundColor": "#2F9E44"
+     },
+     {
+      "class": "UIView",
+      "backgroundColor": "#FFD43B"
+     }
+    ]
+   }
+  ]
+ }
+}

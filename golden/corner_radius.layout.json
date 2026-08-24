@@ -1,0 +1,75 @@
+{
+  "name" : "corner_radius",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        16,
+        80,
+        60
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        112,
+        16,
+        80,
+        60
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        208,
+        16,
+        80,
+        60
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        96,
+        80,
+        80
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        112,
+        96,
+        80,
+        40
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        208,
+        96,
+        80,
+        60
+      ],
+      "path" : "5"
+    }
+  ]
+}

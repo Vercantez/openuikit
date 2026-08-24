@@ -1,0 +1,61 @@
+{
+ "name": "button_basic",
+ "size": [
+  320,
+  220
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UIButton",
+    "frame": [
+     20,
+     20,
+     0,
+     0
+    ],
+    "title": "Plain Button",
+    "sizeToFit": true
+   },
+   {
+    "class": "UIButton",
+    "frame": [
+     20,
+     70,
+     0,
+     0
+    ],
+    "title": "Bold Button",
+    "fontSize": 17,
+    "fontWeight": "semibold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UIButton",
+    "frame": [
+     20,
+     120,
+     200,
+     44
+    ],
+    "title": "Fixed Frame Button"
+   },
+   {
+    "class": "UIButton",
+    "frame": [
+     20,
+     170,
+     0,
+     0
+    ],
+    "title": "Disabled",
+    "enabled": false,
+    "sizeToFit": true
+   }
+  ]
+ }
+}

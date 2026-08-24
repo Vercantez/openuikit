@@ -1,0 +1,42 @@
+{
+ "name": "stack_vertical",
+ "size": [
+  200,
+  320
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIStackView",
+    "frame": [
+     10,
+     10,
+     180,
+     300
+    ],
+    "axis": "vertical",
+    "spacing": 10,
+    "stackDistribution": "fillEqually",
+    "stackAlignment": "fill",
+    "subviews": [
+     {
+      "class": "UIView",
+      "backgroundColor": "#E03131"
+     },
+     {
+      "class": "UIView",
+      "backgroundColor": "#1971C2"
+     },
+     {
+      "class": "UIView",
+      "backgroundColor": "#2F9E44"
+     }
+    ]
+   }
+  ]
+ }
+}

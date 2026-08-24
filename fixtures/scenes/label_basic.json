@@ -1,0 +1,75 @@
+{
+ "name": "label_basic",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     20,
+     0,
+     0
+    ],
+    "text": "Hello UIKit",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     50,
+     0,
+     0
+    ],
+    "text": "The quick brown fox",
+    "fontSize": 13,
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     80,
+     0,
+     0
+    ],
+    "text": "Large Title",
+    "fontSize": 34,
+    "fontWeight": "bold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     130,
+     280,
+     22
+    ],
+    "text": "Fixed frame label",
+    "textColor": "systemBlue"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     160,
+     0,
+     0
+    ],
+    "text": "0123456789 !@#$%",
+    "fontSize": 15,
+    "textColor": "secondaryLabel",
+    "sizeToFit": true
+   }
+  ]
+ }
+}

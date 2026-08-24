@@ -1,0 +1,47 @@
+{
+ "name": "switch_onoff",
+ "size": [
+  320,
+  160
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UISwitch",
+    "frame": [
+     20,
+     20,
+     0,
+     0
+    ],
+    "on": true
+   },
+   {
+    "class": "UISwitch",
+    "frame": [
+     100,
+     20,
+     0,
+     0
+    ],
+    "on": false
+   },
+   {
+    "class": "UISwitch",
+    "frame": [
+     180,
+     20,
+     0,
+     0
+    ],
+    "on": true,
+    "onTintColor": "systemOrange"
+   }
+  ]
+ },
+ "layoutOnly": true
+}

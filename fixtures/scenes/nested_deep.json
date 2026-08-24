@@ -1,0 +1,67 @@
+{
+ "name": "nested_deep",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemGroupedBackground",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     10,
+     10,
+     300,
+     220
+    ],
+    "backgroundColor": "secondarySystemGroupedBackground",
+    "cornerRadius": 10,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       10,
+       10,
+       280,
+       200
+      ],
+      "backgroundColor": "systemGray5",
+      "cornerRadius": 8,
+      "subviews": [
+       {
+        "class": "UIView",
+        "frame": [
+         10,
+         10,
+         260,
+         180
+        ],
+        "backgroundColor": "systemGray4",
+        "cornerRadius": 6,
+        "subviews": [
+         {
+          "class": "UIView",
+          "frame": [
+           10,
+           10,
+           240,
+           160
+          ],
+          "backgroundColor": "systemBlue",
+          "cornerRadius": 4,
+          "alpha": 0.8
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

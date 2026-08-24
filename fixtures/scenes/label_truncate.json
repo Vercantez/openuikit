@@ -1,0 +1,63 @@
+{
+ "name": "label_truncate",
+ "size": [
+  320,
+  200
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     20,
+     150,
+     22
+    ],
+    "text": "This text is definitely too long to fit",
+    "lineBreakMode": "truncateTail",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     60,
+     150,
+     22
+    ],
+    "text": "This text is definitely too long to fit",
+    "lineBreakMode": "truncateHead",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     100,
+     150,
+     22
+    ],
+    "text": "This text is definitely too long to fit",
+    "lineBreakMode": "truncateMiddle",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     140,
+     150,
+     22
+    ],
+    "text": "This text is definitely too long to fit",
+    "lineBreakMode": "clip",
+    "backgroundColor": "#F1F3F5"
+   }
+  ]
+ }
+}

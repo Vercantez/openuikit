@@ -1,0 +1,81 @@
+{
+ "name": "corner_radius",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     16,
+     80,
+     60
+    ],
+    "backgroundColor": "#1971C2",
+    "cornerRadius": 4
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     112,
+     16,
+     80,
+     60
+    ],
+    "backgroundColor": "#1971C2",
+    "cornerRadius": 12
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     208,
+     16,
+     80,
+     60
+    ],
+    "backgroundColor": "#1971C2",
+    "cornerRadius": 30
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     96,
+     80,
+     80
+    ],
+    "backgroundColor": "#E03131",
+    "cornerRadius": 40
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     112,
+     96,
+     80,
+     40
+    ],
+    "backgroundColor": "#E03131",
+    "cornerRadius": 20
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     208,
+     96,
+     80,
+     60
+    ],
+    "backgroundColor": "#2F9E44",
+    "cornerRadius": 100
+   }
+  ]
+ }
+}

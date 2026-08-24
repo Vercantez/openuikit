@@ -1,0 +1,40 @@
+{
+ "name": "label_multiline",
+ "size": [
+  320,
+  280
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     20,
+     200,
+     0
+    ],
+    "text": "The quick brown fox jumps over the lazy dog near the river bank",
+    "numberOfLines": 0,
+    "lineBreakMode": "wordWrap",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     140,
+     180,
+     60
+    ],
+    "text": "Two line maximum label that should truncate the rest of this text",
+    "numberOfLines": 2,
+    "backgroundColor": "#F1F3F5"
+   }
+  ]
+ }
+}

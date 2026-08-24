@@ -1,0 +1,88 @@
+{
+ "name": "borders",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#F8F9FA",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     16,
+     80,
+     60
+    ],
+    "backgroundColor": "#FFFFFF",
+    "borderWidth": 1,
+    "borderColor": "#000000"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     112,
+     16,
+     80,
+     60
+    ],
+    "backgroundColor": "#FFFFFF",
+    "borderWidth": 4,
+    "borderColor": "#E03131"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     208,
+     16,
+     80,
+     60
+    ],
+    "borderWidth": 2,
+    "borderColor": "#1971C2"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     96,
+     80,
+     60
+    ],
+    "backgroundColor": "#FFD43B",
+    "borderWidth": 3,
+    "borderColor": "#000000",
+    "cornerRadius": 12
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     112,
+     96,
+     80,
+     60
+    ],
+    "backgroundColor": "#FFFFFF",
+    "borderWidth": 0.5,
+    "borderColor": "#495057"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     208,
+     96,
+     80,
+     60
+    ],
+    "backgroundColor": "#2F9E44",
+    "borderWidth": 8,
+    "borderColor": "rgba(0,0,0,0.5)",
+    "cornerRadius": 20
+   }
+  ]
+ }
+}

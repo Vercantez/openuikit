@@ -1,0 +1,62 @@
+{
+ "name": "label_align",
+ "size": [
+  320,
+  200
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     10,
+     20,
+     300,
+     22
+    ],
+    "text": "Left aligned",
+    "textAlignment": "left",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     10,
+     60,
+     300,
+     22
+    ],
+    "text": "Center aligned",
+    "textAlignment": "center",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     10,
+     100,
+     300,
+     22
+    ],
+    "text": "Right aligned",
+    "textAlignment": "right",
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     10,
+     140,
+     300,
+     30
+    ],
+    "text": "Tall frame vertical centering",
+    "backgroundColor": "#F1F3F5"
+   }
+  ]
+ }
+}

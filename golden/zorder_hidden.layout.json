@@ -1,0 +1,55 @@
+{
+  "name" : "zorder_hidden",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        20,
+        100,
+        100
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        60,
+        60,
+        100,
+        100
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        100,
+        100,
+        100,
+        100
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        160,
+        20,
+        100,
+        100
+      ],
+      "path" : "3"
+    }
+  ]
+}

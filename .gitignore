@@ -1,0 +1,4 @@
+.build/
+out/
+Tools/oracle/oracle
+.DS_Store

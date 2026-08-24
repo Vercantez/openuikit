@@ -1,0 +1,52 @@
+{
+ "name": "label_mono_italic",
+ "size": [
+  320,
+  160
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     20,
+     0,
+     0
+    ],
+    "text": "Monospaced 0123",
+    "monospaced": true,
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     50,
+     0,
+     0
+    ],
+    "text": "Monospaced bold",
+    "monospaced": true,
+    "fontWeight": "bold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     80,
+     0,
+     0
+    ],
+    "text": "Italic system font",
+    "italic": true,
+    "sizeToFit": true
+   }
+  ]
+ }
+}

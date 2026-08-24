@@ -1,0 +1,55 @@
+{
+ "name": "boxes_dark",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "dark",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     16,
+     120,
+     60
+    ],
+    "backgroundColor": "secondarySystemBackground"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     16,
+     92,
+     120,
+     60
+    ],
+    "backgroundColor": "systemBlue"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     152,
+     16,
+     120,
+     60
+    ],
+    "backgroundColor": "systemFill"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     152,
+     92,
+     120,
+     60
+    ],
+    "backgroundColor": "systemGray4"
+   }
+  ]
+ }
+}

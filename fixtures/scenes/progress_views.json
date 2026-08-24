@@ -1,0 +1,48 @@
+{
+ "name": "progress_views",
+ "size": [
+  320,
+  140
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UIProgressView",
+    "frame": [
+     20,
+     20,
+     280,
+     4
+    ],
+    "progress": 0.3
+   },
+   {
+    "class": "UIProgressView",
+    "frame": [
+     20,
+     60,
+     280,
+     4
+    ],
+    "progress": 0.75,
+    "progressTintColor": "systemGreen"
+   },
+   {
+    "class": "UIProgressView",
+    "frame": [
+     20,
+     100,
+     280,
+     4
+    ],
+    "progress": 1.0,
+    "progressTintColor": "systemRed",
+    "trackTintColor": "systemGray4"
+   }
+  ]
+ }
+}
