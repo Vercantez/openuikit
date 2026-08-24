@@ -108,10 +108,14 @@ open class UILabel: UIView {
         }
         guard !drawLines.isEmpty else { return }
 
+        // Real UIKit always clips label text to the label bounds (verified
+        // against the oracle: an italic 'l' overhanging its advance is cut
+        // exactly at the label's right edge).
+        _ = needsClip
         let blockH = CGFloat(drawLines.count) * lineH
-        if blockH > bounds.height + 1e-6 { needsClip = true }
-        if needsClip { canvas.save(); canvas.clip(to: bounds) }
-        defer { if needsClip { canvas.restore() } }
+        canvas.save()
+        canvas.clip(to: bounds)
+        defer { canvas.restore() }
 
         // Vertical layout (validated against Catalyst pixel probes):
         // the text block is centered with the offset rounded HALF-UP to
