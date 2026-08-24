@@ -471,6 +471,10 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     guard let sz = numArray(scene["size"]), sz.count == 2 else { fatalError("scene missing size") }
     let scale = num(scene["scale"]) ?? 2
     let style: UIUserInterfaceStyle = scene["style"]?.stringValue == "dark" ? .dark : .light
+    // Window scenes ("window": true, rendered by oracle2 via drawHierarchy
+    // in a real UIWindow) get the render server's darker glyph rasterization
+    // — select the window-variant ink masks for text (text module).
+    GlyphInkTable.windowCompositing = scene["window"]?.boolValue ?? false
 
     // Mirror oracle's traits.performAsCurrent { build } — semantic colors
     // resolved at build time (e.g. layer.borderColor via .cgColor) must use

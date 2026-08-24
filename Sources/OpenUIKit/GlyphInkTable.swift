@@ -42,7 +42,24 @@ public enum GlyphInkTable {
               let e = json["entries"]?.objectValue else { return nil }
         return e
     }()
+
+    /// Window-server variant masks (glyph_ink_window.json): real UIKit
+    /// rasterizes label text darker/crisper when the layer is composited by
+    /// the render server (scenes captured via `drawHierarchy` in a real
+    /// `UIWindow`, oracle2) than in offscreen `layer.render` captures.
+    /// Harvested with the same probe methodology as `glyph_ink.json`, from
+    /// the same scene files, rendered by oracle2 instead of oracle1.
+    private static var windowEntries: [String: JSONValue]? = {
+        guard let json = ResourceIO.loadJSONResource("glyph_ink_window.json"),
+              let e = json["entries"]?.objectValue else { return nil }
+        return e
+    }()
     private static var cache: [String: GlyphInkMask] = [:]
+
+    /// When true (host renders a window-server-composited hierarchy, e.g. a
+    /// scene marked `"window": true`), glyph lookups prefer the window-
+    /// variant masks and fall back to the offscreen table per glyph.
+    public static var windowCompositing = false
 
     public static var isAvailable: Bool { entries != nil }
 
@@ -124,7 +141,8 @@ public enum GlyphInkTable {
     /// color, correct for any other color).
     public static func maskLinear(familyKey: String, sizeKey: Int, dark: Bool,
                                   tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
-        let key = "L|\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
+        let win = windowCompositing && windowEntries != nil
+        let key = "\(win ? "WL" : "L")|\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
         if let hit = cache[key] { return hit }
         guard var m = mask(familyKey: familyKey, sizeKey: sizeKey, dark: dark,
                            tag: tag, scalar: scalar) else { return nil }
@@ -148,20 +166,30 @@ public enum GlyphInkTable {
         return m
     }
 
-    /// Look up the harvested mask for one glyph occurrence.
+    /// Look up the harvested mask for one glyph occurrence. When
+    /// `windowCompositing` is set, the window-variant table is preferred and
+    /// the offscreen table is the per-glyph fallback.
     public static func mask(familyKey: String, sizeKey: Int, dark: Bool,
                             tag: String, scalar: Unicode.Scalar) -> GlyphInkMask? {
-        guard let entries else { return nil }
         let key = "\(familyKey)|\(sizeKey)|\(dark ? "dark" : "light")|\(tag)|\(scalar.value)"
-        if let hit = cache[key] { return hit }
-        guard let e = entries[key]?.objectValue,
+        if windowCompositing, let w = windowEntries,
+           let m = decode(w[key]?.objectValue, cacheKey: "W|" + key) {
+            return m
+        }
+        guard let entries else { return nil }
+        return decode(entries[key]?.objectValue, cacheKey: key)
+    }
+
+    private static func decode(_ e: [String: JSONValue]?, cacheKey: String) -> GlyphInkMask? {
+        if let hit = cache[cacheKey] { return hit }
+        guard let e,
               let w = e["w"]?.doubleValue, let h = e["h"]?.doubleValue,
               let ox = e["ox"]?.doubleValue, let oy = e["oy"]?.doubleValue,
               let hex = e["m"]?.stringValue,
               let bytes = hexDecode(hex), bytes.count == Int(w) * Int(h) else { return nil }
         let m = GlyphInkMask(width: Int(w), height: Int(h), ox: Int(ox), oy: Int(oy),
                              mask: bytes)
-        cache[key] = m
+        cache[cacheKey] = m
         return m
     }
 }

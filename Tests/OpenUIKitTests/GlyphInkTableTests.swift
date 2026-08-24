@@ -136,4 +136,64 @@ final class GlyphInkTableTests: XCTestCase {
         }
         XCTAssertLessThanOrEqual(maxDelta, 2, "rendered glyph should equal harvested ink")
     }
+
+    // MARK: Window-server ink variants (glyph_ink_window.json)
+
+    func testWindowMaskSelectionAndFallback() throws {
+        try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
+        let i = Unicode.Scalar(UInt8(105))  // 'i', harvested in both tables
+        let off = try XCTUnwrap(GlyphInkTable.mask(familyKey: "system-regular", sizeKey: 17,
+                                                   dark: false, tag: "0", scalar: i))
+        GlyphInkTable.windowCompositing = true
+        defer { GlyphInkTable.windowCompositing = false }
+        let win = try XCTUnwrap(GlyphInkTable.mask(familyKey: "system-regular", sizeKey: 17,
+                                                   dark: false, tag: "0", scalar: i))
+        // The render server rasterizes darker/crisper — masks must differ.
+        let winPixels: [UInt8] = win.mask
+        let offPixels: [UInt8] = off.mask
+        let samePixels: Bool = winPixels.elementsEqual(offPixels)
+        var sameGeom = true
+        if win.width != off.width { sameGeom = false }
+        if win.ox != off.ox { sameGeom = false }
+        if win.oy != off.oy { sameGeom = false }
+        XCTAssertFalse(samePixels && sameGeom,
+                       "window-variant mask should differ from the offscreen mask")
+        // Window text is stem-darkened: peak coverage at least as high.
+        XCTAssertGreaterThanOrEqual(win.mask.max() ?? 0, off.mask.max() ?? 0)
+        // A glyph absent from the window table falls back to the offscreen
+        // table (mono-regular has no window harvest).
+        let monoOff = GlyphInkTable.windowCompositing
+            ? GlyphInkTable.mask(familyKey: "mono-regular", sizeKey: 17,
+                                 dark: false, tag: "0", scalar: Unicode.Scalar(UInt8(101)))
+            : nil
+        GlyphInkTable.windowCompositing = false
+        let monoPlain = GlyphInkTable.mask(familyKey: "mono-regular", sizeKey: 17,
+                                           dark: false, tag: "0", scalar: Unicode.Scalar(UInt8(101)))
+        GlyphInkTable.windowCompositing = true
+        XCTAssertEqual(monoOff?.mask, monoPlain?.mask,
+                       "missing window entry must fall back to the offscreen mask")
+    }
+
+    func testWindowTablePhaseCoverageForDeepMixed() throws {
+        // Every (size, phase, char) combo deep_mixed's labels hit must be in
+        // the window table: 17pt tags {0,P1} for the row labels, 12pt tags
+        // {0,T,H,P2} for the footer.
+        try XCTSkipUnless(GlyphInkTable.isAvailable, "glyph_ink.json not present")
+        GlyphInkTable.windowCompositing = true
+        defer { GlyphInkTable.windowCompositing = false }
+        for ch in "Wi-FiBluetoothStorageBattery".unicodeScalars {
+            for tag in ["0", "P1"] {
+                XCTAssertNotNil(GlyphInkTable.mask(familyKey: "system-regular", sizeKey: 17,
+                                                   dark: false, tag: tag, scalar: ch),
+                                "missing 17pt window mask \(ch) tag \(tag)")
+            }
+        }
+        for ch in "Settingsfooterexplanationtext".unicodeScalars {
+            for tag in ["0", "T", "H", "P2"] {
+                XCTAssertNotNil(GlyphInkTable.mask(familyKey: "system-regular", sizeKey: 12,
+                                                   dark: false, tag: tag, scalar: ch),
+                                "missing 12pt window mask \(ch) tag \(tag)")
+            }
+        }
+    }
 }

@@ -1,5 +1,24 @@
 # Known gaps (living document — fixers: read this)
 
+## Text in window scenes: SOLVED mechanism, extend coverage as needed
+
+Window scenes (`"window": true`, oracle2/drawHierarchy goldens) rasterize
+label glyphs darker/crisper than offscreen `layer.render` — real UIKit's
+own offscreen render of deep_mixed mismatches the window golden by the same
+~5% the old renderer did, and no pointwise coverage transfer reproduces it
+(it is a spatial re-rendering). Fix (text module): window-variant ink masks
+in `Sources/OpenUIKit/Resources/glyph_ink_window.json`, harvested with the
+SAME probe methodology as glyph_ink.json but rendered through oracle2
+(space-prefixed single-glyph labels at integer x; extraction validated
+byte-exact against the offscreen table first). Selected via
+`GlyphInkTable.windowCompositing`, set by openrender from the scene's
+`window` flag; per-glyph fallback to the offscreen table. Coverage today:
+system-regular 17pt light tags {0,P1} and 12pt light tags {0,T,H,P2} for
+the deep_mixed strings (fixed deep_mixed 95.95 → 99.64; demo_settings
+91.8 → 93.1 as a side effect). Extend the harvest (same tooling,
+`wharvest/` in the text-fixer scratchpad) for other window-scene text —
+e.g. demo_settings' remaining chars/sizes, dark mode.
+
 ## Text module: glyph_ink.json harvest coverage (HIGH VALUE, well-diagnosed)
 
 Diagnosis from the button-module fixer (commit 0d4da17, oracle A/B probes in its
