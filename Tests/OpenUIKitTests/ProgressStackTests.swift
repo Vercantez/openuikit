@@ -134,6 +134,143 @@ final class StackViewTests: XCTestCase {
         XCTAssertEqual(c[3].frame, CGRect(x: 219, y: 0, width: 101.5, height: 100))
     }
 
+    /// Stand-in for a UILabel-like view with a fixed intrinsic size, so the
+    /// .fill tests don't depend on font rendering.
+    private final class IntrinsicView: UIView {
+        let size: CGSize
+        init(_ w: CGFloat, _ h: CGFloat) {
+            size = CGSize(width: w, height: h)
+            super.init(frame: .zero)
+        }
+        override var intrinsicContentSize: CGSize { size }
+        override func sizeThatFits(_ s: CGSize) -> CGSize { size }
+    }
+
+    private func makeFillStack(frame: CGRect, spacing: CGFloat,
+                               alignment: UIStackView.Alignment = .fill) -> UIStackView {
+        let s = UIStackView(frame: frame)
+        s.axis = .horizontal
+        s.spacing = spacing
+        s.distribution = .fill
+        s.alignment = alignment
+        return s
+    }
+
+    func testFillSlackGoesToNoIntrinsicSpacerNotLastView() {
+        // golden/stack_mixed path 1: [Left 28x19, plain UIView, Right 37.5x19]
+        // in 300x30, spacing 8, alignment center -> the spacer stretches to
+        // 218.5 and the trailing label keeps its intrinsic width at x 263
+        // (262.5 rounded), y 6, NOT the last view absorbing the slack.
+        let s = makeFillStack(frame: CGRect(x: 10, y: 10, width: 300, height: 30),
+                              spacing: 8, alignment: .center)
+        let left = IntrinsicView(28, 19), spacer = UIView(), right = IntrinsicView(37.5, 19)
+        [left, spacer, right].forEach { s.addArrangedSubview($0) }
+        s.layoutSubviews()
+        XCTAssertEqual(left.frame, CGRect(x: 0, y: 6, width: 28, height: 19))
+        XCTAssertEqual(spacer.frame, CGRect(x: 36, y: 15, width: 218.5, height: 0))
+        XCTAssertEqual(right.frame, CGRect(x: 263, y: 6, width: 37.5, height: 19))
+        // Second layout pass must be identical (measurement never reads the
+        // spacer's stretched frame back as its content size).
+        s.layoutSubviews()
+        XCTAssertEqual(spacer.frame.width, 218.5)
+        XCTAssertEqual(right.frame.origin.x, 263)
+    }
+
+    func testFillAllIntrinsicStretchesFirstView() {
+        // Oracle probe probe_fill_labels: 29.5/29/41.5 in 300, spacing 8 ->
+        // FIRST view stretched to 213.5; others at x 222 and 259.
+        let s = makeFillStack(frame: CGRect(x: 10, y: 10, width: 300, height: 30),
+                              spacing: 8)
+        let a = IntrinsicView(29.5, 19), b = IntrinsicView(29, 19), c = IntrinsicView(41.5, 19)
+        [a, b, c].forEach { s.addArrangedSubview($0) }
+        s.layoutSubviews()
+        XCTAssertEqual([a, b, c].map { $0.frame.origin.x }, [0, 222, 259])
+        XCTAssertEqual([a, b, c].map { $0.frame.width }, [213.5, 29, 41.5])
+    }
+
+    func testFillAllIntrinsicCompressesFirstView() {
+        // Oracle probe probe_fill_compress: 76.5/94 in 120, spacing 8 ->
+        // FIRST view compressed to 18, second keeps 94 at x 26.
+        let s = makeFillStack(frame: CGRect(x: 10, y: 10, width: 120, height: 30),
+                              spacing: 8)
+        let a = IntrinsicView(76.5, 19), b = IntrinsicView(94, 19)
+        [a, b].forEach { s.addArrangedSubview($0) }
+        s.layoutSubviews()
+        XCTAssertEqual([a, b].map { $0.frame.origin.x }, [0, 26])
+        XCTAssertEqual([a, b].map { $0.frame.width }, [18, 94])
+    }
+
+    func testFillTwoSpacersLastOneTakesAllSlack() {
+        // Oracle probe probe_fill_twospacers: 29.5/spacer/29/spacer/41.5 in
+        // 300, spacing 8 -> first spacer collapses to 0 at x 38, second
+        // takes the whole 168pt slack at x 83.
+        let s = makeFillStack(frame: CGRect(x: 10, y: 10, width: 300, height: 30),
+                              spacing: 8)
+        let a = IntrinsicView(29.5, 19), s1 = UIView(), b = IntrinsicView(29, 19)
+        let s2 = UIView(), c = IntrinsicView(41.5, 19)
+        [a, s1, b, s2, c].forEach { s.addArrangedSubview($0) }
+        s.layoutSubviews()
+        XCTAssertEqual([a, s1, b, s2, c].map { $0.frame.origin.x }, [0, 38, 46, 83, 259])
+        XCTAssertEqual([a, s1, b, s2, c].map { $0.frame.width }, [29.5, 0, 29, 168, 41.5])
+    }
+
+    func testNestedStackFittingSizeAndTopAlignment() {
+        // golden/label_stack_mix path 2.0: outer horizontal fillEqually
+        // alignment-top stack (266x111, spacing 10) of two vertical .fill
+        // stacks (spacing 3, children 39x19 / 34.5x16 / 28.5x16 like the
+        // Col A labels) -> inner stacks measure a 57pt fitting height and
+        // get frames [0,0,128,57] / [138,0,128,57].
+        func innerStack() -> UIStackView {
+            let v = UIStackView()
+            v.axis = .vertical
+            v.spacing = 3
+            v.distribution = .fill
+            v.alignment = .leading
+            v.addArrangedSubview(IntrinsicView(39, 19))
+            v.addArrangedSubview(IntrinsicView(34.5, 16))
+            v.addArrangedSubview(IntrinsicView(28.5, 16))
+            return v
+        }
+        let inner1 = innerStack(), inner2 = innerStack()
+        XCTAssertEqual(inner1.sizeThatFits(CGSize(width: 266, height: 111)),
+                       CGSize(width: 39, height: 57))
+        let outer = UIStackView(frame: CGRect(x: 12, y: 12, width: 266, height: 111))
+        outer.axis = .horizontal
+        outer.spacing = 10
+        outer.distribution = .fillEqually
+        outer.alignment = .top
+        outer.addArrangedSubview(inner1)
+        outer.addArrangedSubview(inner2)
+        outer.layoutSubviews()
+        XCTAssertEqual(inner1.frame, CGRect(x: 0, y: 0, width: 128, height: 57))
+        XCTAssertEqual(inner2.frame, CGRect(x: 138, y: 0, width: 128, height: 57))
+        // And the inner stack lays its children out inside that 57pt with
+        // zero slack: 19/16/16 at y 0/22/41 (golden paths 2.0.0.*).
+        inner1.layoutSubviews()
+        XCTAssertEqual(inner1.subviews.map { $0.frame.origin.y }, [0, 22, 41])
+        XCTAssertEqual(inner1.subviews.map { $0.frame.height }, [19, 16, 16])
+    }
+
+    func testFillNestedStackIsFlexible() {
+        // Oracle probe probe_fill_nested: [label 34.5x19, vertical stack of
+        // 22.5x16 / 41x16] in 300x60, spacing 8, alignment top -> the nested
+        // stack (not the label) absorbs the slack: frame [43, 0, 257.5, 35].
+        let s = makeFillStack(frame: CGRect(x: 10, y: 10, width: 300, height: 60),
+                              spacing: 8, alignment: .top)
+        let label = IntrinsicView(34.5, 19)
+        let nested = UIStackView()
+        nested.axis = .vertical
+        nested.spacing = 3
+        nested.alignment = .leading
+        nested.addArrangedSubview(IntrinsicView(22.5, 16))
+        nested.addArrangedSubview(IntrinsicView(41, 16))
+        s.addArrangedSubview(label)
+        s.addArrangedSubview(nested)
+        s.layoutSubviews()
+        XCTAssertEqual(label.frame, CGRect(x: 0, y: 0, width: 34.5, height: 19))
+        XCTAssertEqual(nested.frame, CGRect(x: 43, y: 0, width: 257.5, height: 35))
+    }
+
     func testArrangedSubviewBookkeeping() {
         let s = UIStackView()
         let a = UIView(), b = UIView()

@@ -90,13 +90,61 @@ public class UIStackView: UIView {
 
     /// Preferred size of an arranged view: intrinsicContentSize where
     /// provided, else sizeThatFits of the stack bounds (plain UIViews
-    /// report their current size).
+    /// report their current size; nested stacks their fitting size).
     private func contentSize(of view: UIView) -> CGSize {
         let intrinsic = view.intrinsicContentSize
         var s = view.sizeThatFits(bounds.size)
         if intrinsic.width != UIView.noIntrinsicMetric { s.width = intrinsic.width }
         if intrinsic.height != UIView.noIntrinsicMetric { s.height = intrinsic.height }
         return s
+    }
+
+    /// True when `view` has no intrinsic metric along our axis, so real
+    /// UIKit generates no content-hugging/compression constraint for it on
+    /// that axis: plain UIViews, nested stacks, UIProgressView width, ...
+    /// Under .fill these views soak up the slack before any intrinsic-sized
+    /// sibling is stretched or compressed (oracle probes probe_fill_nested,
+    /// probe_fill_twospacers; golden stack_mixed).
+    private func isAxisFlexible(_ view: UIView) -> Bool {
+        let i = view.intrinsicContentSize
+        return (axis == .horizontal ? i.width : i.height) == UIView.noIntrinsicMetric
+    }
+
+    /// Natural size a child contributes to this stack's own fitting size:
+    /// intrinsic metrics where present, a nested stack's fitting size, else
+    /// zero — under Auto Layout a plain view's current frame is meaningless,
+    /// so unlike contentSize(of:) this never reads the child's frame.
+    private func naturalFittingSize(of view: UIView) -> CGSize {
+        var s = (view as? UIStackView)?.sizeThatFits(bounds.size) ?? .zero
+        let intrinsic = view.intrinsicContentSize
+        if intrinsic.width != UIView.noIntrinsicMetric { s.width = intrinsic.width }
+        if intrinsic.height != UIView.noIntrinsicMetric { s.height = intrinsic.height }
+        return s
+    }
+
+    /// Fitting ("natural") size, the analogue of systemLayoutSizeFitting
+    /// (compressed): along the axis the arranged natural lengths (their
+    /// maximum times the count for fillEqually) plus spacing; across it the
+    /// largest natural cross length. Oracle: golden label_stack_mix inner
+    /// vertical stacks report height 19+3+16+3+16 = 57 when measured by the
+    /// outer alignment-top stack.
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let visible = arrangedSubviews.filter { $0.superview === self && !$0.isHidden }
+        guard !visible.isEmpty else { return .zero }
+        var axisSum: CGFloat = 0
+        var axisMax: CGFloat = 0
+        var crossMax: CGFloat = 0
+        for view in visible {
+            let natural = naturalFittingSize(of: view)
+            axisSum += axisLength(natural)
+            axisMax = max(axisMax, axisLength(natural))
+            crossMax = max(crossMax, crossLength(natural))
+        }
+        let spacingTotal = spacing * CGFloat(visible.count - 1)
+        let along = (distribution == .fillEqually
+                     ? axisMax * CGFloat(visible.count) : axisSum) + spacingTotal
+        return axis == .horizontal ? CGSize(width: along, height: crossMax)
+                                   : CGSize(width: crossMax, height: along)
     }
 
     private func axisLength(_ s: CGSize) -> CGFloat { axis == .horizontal ? s.width : s.height }
@@ -147,9 +195,8 @@ public class UIStackView: UIView {
                                total: CGFloat, visibleCount n: CGFloat,
                                spacingTotal: CGFloat) -> [(CGFloat, CGFloat)] {
         let available = total - spacingTotal
-        let visibleContents = zip(arranged, contents)
-            .filter { !$0.0.isHidden }
-            .map { axisLength($0.1) }
+        let visiblePairs = zip(arranged, contents).filter { !$0.0.isHidden }
+        let visibleContents = visiblePairs.map { axisLength($0.1) }
         let contentTotal = visibleContents.reduce(0, +)
 
         // Length of each VISIBLE view (in arranged order), exact.
@@ -164,10 +211,27 @@ public class UIStackView: UIView {
                 lengths = visibleContents.map { _ in available / n }
             }
         case .fill:
-            // Content sizes; the LAST view absorbs the leftover delta.
+            // Views with no intrinsic axis metric are unconstrained in real
+            // UIKit and soak up the slack; intrinsic-sized views keep their
+            // natural length. Oracle probes:
+            //  - one/two spacers: the LAST flexible view takes all the
+            //    slack, earlier ones collapse to 0 (probe_fill_twospacers,
+            //    golden stack_mixed);
+            //  - no flexible view: the FIRST view is stretched — or, when
+            //    the content overflows, compressed (probe_fill_labels
+            //    213.5/29/41.5 in 300; probe_fill_compress 18/94 in 120).
             lengths = visibleContents
-            if !lengths.isEmpty {
-                lengths[lengths.count - 1] += available - contentTotal
+            let flexible = visiblePairs.indices.filter { isAxisFlexible(visiblePairs[$0].0) }
+            if let lastFlexible = flexible.last {
+                for i in flexible { lengths[i] = 0 }
+                let slack = available - lengths.reduce(0, +)
+                if slack >= 0 {
+                    lengths[lastFlexible] = slack
+                } else if let firstRigid = lengths.indices.first(where: { !flexible.contains($0) }) {
+                    lengths[firstRigid] += slack
+                }
+            } else if !lengths.isEmpty {
+                lengths[0] += available - contentTotal
             }
         case .equalSpacing, .equalCentering:
             lengths = visibleContents
