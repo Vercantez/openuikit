@@ -89,3 +89,35 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
 - truncateHead/Middle per-char tight-advance quantization subtlety (≤+0.11pt).
 - Light saturated-color glyphs: small mask-shape differences beyond the gamma
   model.
+
+## Animation engine (M6, 2026-08-24): scope notes
+
+- Presentation sampling requires the DEFAULT pipeline (quartz backend +
+  layers compositor). Under `OPENUIKIT_COMPOSITOR=renderpass` or
+  `OPENUIKIT_BACKEND=swift` animation scenes render MODEL values only
+  (every frame = final state). Owner: view module, only if a host ever
+  needs animated rendering on the pure-Swift path.
+- `UIView.animate` completion handlers run synchronously with
+  `finished == true` (no run loop in the portable core; the host drives
+  time via `OpenUIKitRuntime.animationTime`). Real UIKit delivers them
+  after `delay + duration` of wall time.
+- Spring initialVelocity: UIKit's internal duration-fit solver picks a
+  much softer spring (a different root of the same settling equation —
+  see docs/QUARTZ_NOTES.md) once the velocity crosses a threshold
+  (measured: between v=1.65 and v=1.7 at ζ=0.5, D=1, scaling roughly with
+  1/D; near the crossover UIKit emits unconverged garbage parameters,
+  e.g. ζ=0.5 D=2 v=0.9 → stiffness 354.6 with settlingDuration < D). We
+  always take the settled (largest) root, which matches UIKit for
+  moderate velocities (probed: exact for v ∈ [−2, 1.65] at ζ=0.5 D=1)
+  and diverges deliberately in the garbage regime. All fixtures use v=0,
+  where the model is exact to 8+ digits.
+- Transform interpolation implements CA's decomposition for the 2D affine
+  subset (translation/scale/shear/rotation lerp, rotation shortest-path).
+  Degenerate (rank-deficient) matrices fall back to componentwise lerp;
+  180° rotations are ambiguous (CA's quaternion slerp has the same
+  ambiguity). backgroundColor nil endpoints lerp as transparent black
+  (CA snaps); no fixture covers either.
+- A `bounds`/frame resize animates the layer rect only — a view's CONTENT
+  image (glyph ink, image resampling, control chrome) is not re-stretched
+  per frame the way CA scales `contents` with the presentation bounds.
+  No fixture resizes a content-bearing view; revisit if one does.

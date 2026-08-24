@@ -146,6 +146,9 @@ final class Renderer {
                 for k in layer.animationKeys() ?? [] {
                     let an = layer.animation(forKey: k)!
                     print("  [\(k)] \(type(of: an)) beginTime=\(an.beginTime) duration=\(an.duration) fillMode=\(an.fillMode.rawValue) removed=\(an.isRemovedOnCompletion) tf=\(String(describing: (an as? CABasicAnimation)?.timingFunction))")
+                    if let sp = an as? CASpringAnimation {
+                        print("    spring mass=\(sp.mass) stiffness=\(sp.stiffness) damping=\(sp.damping) initialVelocity=\(sp.initialVelocity) settlingDuration=\(sp.settlingDuration)")
+                    }
                 }
             }
         }

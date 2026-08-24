@@ -108,6 +108,62 @@ of rounded clips/corners differ by a few counts on a handful of pixels
   100, alpha_shadow_group 100, gradient_basic 100, gradient_multi 99.77,
   gradient_dark 99.89, gradient_in_stack 99.96 (swift within ±0.02).
 
+## M6: animation engine (2026-08-24)
+
+`UIView.animate(withDuration:delay:options:animations:completion:)` and the
+spring variant live in `Sources/OpenUIKit/UIViewAnimation.swift`. Inside the
+block, property setters (center/bounds/alpha/backgroundColor/transform/
+layer.cornerRadius, frame = position + bounds) RECORD from→to animations on
+the view and update the model immediately (UIKit semantics: model = final).
+`OpenUIKitRuntime.animationTime` is the settable presentation clock;
+LayerBridge overwrites each animated layer field with the value sampled at
+that time (`applyPresentation`). openrender sets the clock per capture time
+and writes `<name>.t<ms>.png` frames (scene spec v3).
+
+Quartz/Swift split (who evaluates what):
+
+- All TIMING evaluation is quartz's animation/timing engine:
+  - cubic beziers through `QZMediaTimingFunctionCreateWithControlPoints` +
+    `QZMediaTimingFunctionSolve` (the same Newton+bisection x(t) solve CA
+    uses; verified against golden frame positions to < 0.1 pt at every
+    capture time of anim_move/anim_delay/anim_resize);
+  - springs through a scratch `QZSpringAnimation` (opacity 1→0, so the
+    sampled opacity IS the remaining-fraction envelope) evaluated with
+    `QZLayerCopyPresentation` at the local time.
+- VALUE application stays in Swift (LayerBridge) because CA semantics
+  quartz's animation value model lacks are needed: per-animation delay with
+  backwards fill (FROM before `delay`), exact model snap at
+  `delay + duration` (CA removes completed animations — verified in the
+  frozen-clock goldens), extended-sRGB componentwise color lerp (verified
+  against anim_color: golden pixels match gamma-space lerp exactly), and
+  affine interpolation via CA-style decomposition (translation/scale/shear/
+  rotation each lerp, rotation shortest-path; anim_transform_rotate goldens
+  confirm constant area = pure angle lerp, bbox exact at every frame).
+  The edge-antialias rule (transformed layers composite hard-edged) follows
+  the PRESENTATION transform.
+
+UIView spring model (reverse-engineered EXACTLY, not fitted): probing the
+CASpringAnimation UIKit emits (oracle2 `ORACLE2_ANIM_DEBUG=1`, 30 (ζ, D, v)
+combinations) shows mass = 1, damping ratio preserved, and the natural
+frequency duration-fit solving, for ζ < 1:
+
+    |(β − v)/ω_d| · e^(−β·D) = 0.001        β = ζ·ω_n, ω_d = ω_n·√(1−ζ²)
+
+(v = normalized initialSpringVelocity; the |…| factor is the sin
+coefficient of the underdamped envelope). For v = 0 this closes to
+ω_n = ln(1000·ζ/√(1−ζ²)) / (ζ·D) and reproduces UIKit's stiffness/damping
+to 8+ significant digits on every probe (ζ ∈ [0.1, 0.99], D ∈ [0.3, 2]).
+ζ = 1 solves (1 + (ω−v)·D)·e^(−ω·D) = 0.001 (probe: ω·D = 9.23341).
+Residual vs goldens: ≤ 0.16 pt at every spring capture point except the
+fastest overshoot frame of the ζ=0.35 spring (+0.64 pt) — the offset
+remains when the formula is driven by UIKit's own probed stiffness/damping,
+i.e. CA's evaluator deviates from the ideal damped-spring solution there,
+not our fit. See AnimationTests + KNOWN_GAPS (large-velocity branch).
+
+Suite: all 10 animation scenes pass compare (worst frame 99.08 % on the
+text scene anim_label_move vs 97 % required; worst geometry frame 99.72 %
+vs 99.5 %); every frame of anim_fade is 100 %.
+
 ## Vendoring / build integration
 
 - `scripts/sync_quartz.sh` mirrors `~/quartz` → `Sources/CQuartz`

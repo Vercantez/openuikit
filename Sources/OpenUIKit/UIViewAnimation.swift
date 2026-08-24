@@ -1,0 +1,341 @@
+// UIView animation engine (M6). Owner: animation module.
+//
+// UIKit semantics reproduced here (validated against Tools/oracle2 goldens +
+// direct CAAnimation parameter probes, see docs/QUARTZ_NOTES.md "Animation"):
+//   - Inside a `UIView.animate` block, animatable property setters RECORD a
+//     from->to animation on the view and update the model value immediately
+//     (model = final value; the presentation interpolates).
+//   - Presentation sampling is driven by `OpenUIKitRuntime.animationTime`
+//     (a settable clock — the host seeks, nothing runs on wall time).
+//     LayerBridge builds the QZLayer tree from presentation values at that
+//     time; quartz's animation/timing engine evaluates the curves
+//     (LayerBridge.swift, applyPresentation).
+//   - Curves are Core Animation's standard cubic beziers:
+//       linear (0,0,1,1), easeIn (0.42,0,1,1), easeOut (0,0,0.58,1),
+//       easeInOut (0.42,0,0.58,1)
+//     solved numerically for x(t) like CA does (quartz's solver — verified
+//     against golden animation frames to < 0.1 pt).
+//   - UIView springs are physical damped springs (CASpringAnimation with
+//     mass 1) whose natural frequency is DURATION-FIT. Probing the real
+//     CASpringAnimation UIKit emits (17 (ζ, D) combinations) shows UIKit
+//     solves, for damping ratio ζ < 1 and initial velocity v = 0:
+//         (β/ω_d)·e^(−β·D) = 0.001,  β = ζ·ω_n,  ω_d = ω_n·√(1−ζ²)
+//     which closes to  ω_n = ln(1000·ζ/√(1−ζ²)) / (ζ·D).
+//     This matches UIKit's generated stiffness/damping to 8+ significant
+//     digits on every probe. ζ = 1 solves (1 + ω·D)·e^(−ω·D) = 0.001
+//     (probe: ω·D = 9.23341, ours 9.2334134764). With velocity the probed
+//     equation generalizes to |(β−v)/ω_d|·e^(−β·D) = 0.001; we take the
+//     settled (largest) root — see KNOWN_GAPS for the large-velocity branch
+//     UIKit's internal solver jumps to.
+//   - Animation is complete at t ≥ delay + duration: the presentation shows
+//     the MODEL value exactly (CA removes the animation on completion);
+//     before `delay` the FROM value shows (UIKit fills backwards).
+//
+// This file is pure Swift (no Foundation, no CQuartz): the API surface,
+// recording, the spring duration fit and affine interpolation. Quartz-
+// evaluated sampling lives in LayerBridge.swift.
+
+// MARK: - Recorded animation
+
+/// One recorded property animation (the unit UIView.animate produces per
+/// changed property).
+struct UIViewAnimation {
+    enum Property {
+        case position        // view.center            -> layer position
+        case bounds          // view.bounds            -> layer bounds
+        case alpha           // view.alpha             -> layer opacity
+        case backgroundColor // view.backgroundColor   -> layer background
+        case transform       // view.transform         -> layer affine transform
+        case cornerRadius    // view.layer.cornerRadius
+    }
+
+    enum Value {
+        case scalar(CGFloat)
+        case point(CGPoint)
+        case rect(CGRect)
+        case color(UIColor?)
+        case transform(CGAffineTransform)
+    }
+
+    enum Timing {
+        /// Cubic bezier timing function (CA control points).
+        case curve(c1x: CGFloat, c1y: CGFloat, c2x: CGFloat, c2y: CGFloat)
+        /// UIView spring (damping ratio + normalized initial velocity).
+        case spring(dampingRatio: CGFloat, initialVelocity: CGFloat)
+    }
+
+    let property: Property
+    var from: Value
+    var to: Value
+    let delay: Double
+    let duration: Double
+    let timing: Timing
+}
+
+// MARK: - Animation block context
+
+/// Set while a `UIView.animate` animations block runs; property setters
+/// consult it to record animations.
+enum UIViewAnimationContext {
+    struct Params {
+        var duration: Double
+        var delay: Double
+        var timing: UIViewAnimation.Timing
+    }
+    static var current: Params?
+}
+
+// MARK: - UIView.animate API
+
+extension UIView {
+    /// Animation options. Raw values mirror UIKit's UIViewAnimationOptions
+    /// (curve occupies bits 16..19; 0 = easeInOut is the default).
+    public struct AnimationOptions: OptionSet, Sendable {
+        public let rawValue: UInt
+        public init(rawValue: UInt) { self.rawValue = rawValue }
+
+        public static let curveEaseInOut = AnimationOptions(rawValue: 0 << 16)
+        public static let curveEaseIn = AnimationOptions(rawValue: 1 << 16)
+        public static let curveEaseOut = AnimationOptions(rawValue: 2 << 16)
+        public static let curveLinear = AnimationOptions(rawValue: 3 << 16)
+
+        var timingCurve: UIViewAnimation.Timing {
+            switch (rawValue >> 16) & 0xF {
+            case 1: return .curve(c1x: 0.42, c1y: 0, c2x: 1, c2y: 1)      // easeIn
+            case 2: return .curve(c1x: 0, c1y: 0, c2x: 0.58, c2y: 1)      // easeOut
+            case 3: return .curve(c1x: 0, c1y: 0, c2x: 1, c2y: 1)         // linear
+            default: return .curve(c1x: 0.42, c1y: 0, c2x: 0.58, c2y: 1)  // easeInOut
+            }
+        }
+    }
+
+    public static func animate(withDuration duration: Double,
+                               delay: Double,
+                               options: AnimationOptions = [],
+                               animations: () -> Void,
+                               completion: ((Bool) -> Void)? = nil) {
+        runAnimationBlock(UIViewAnimationContext.Params(
+            duration: duration, delay: delay, timing: options.timingCurve),
+            animations: animations, completion: completion)
+    }
+
+    public static func animate(withDuration duration: Double,
+                               animations: () -> Void,
+                               completion: ((Bool) -> Void)? = nil) {
+        animate(withDuration: duration, delay: 0, options: [],
+                animations: animations, completion: completion)
+    }
+
+    public static func animate(withDuration duration: Double,
+                               delay: Double,
+                               usingSpringWithDamping dampingRatio: CGFloat,
+                               initialSpringVelocity velocity: CGFloat,
+                               options: AnimationOptions = [],
+                               animations: () -> Void,
+                               completion: ((Bool) -> Void)? = nil) {
+        runAnimationBlock(UIViewAnimationContext.Params(
+            duration: duration, delay: delay,
+            timing: .spring(dampingRatio: dampingRatio, initialVelocity: velocity)),
+            animations: animations, completion: completion)
+    }
+
+    static func runAnimationBlock(_ params: UIViewAnimationContext.Params,
+                                  animations: () -> Void,
+                                  completion: ((Bool) -> Void)?) {
+        let saved = UIViewAnimationContext.current
+        UIViewAnimationContext.current = params
+        animations()
+        UIViewAnimationContext.current = saved
+        // No run loop in the portable core: the host drives time via
+        // OpenUIKitRuntime.animationTime. The completion runs synchronously
+        // with finished == true (documented divergence from real UIKit,
+        // which delivers it after `delay + duration` of wall time).
+        completion?(true)
+    }
+
+    // MARK: Recording
+
+    /// Record `property` going from `from` to `to` if an animation block is
+    /// active. Called from property didSet observers. Model values are
+    /// already updated by the time this runs (UIKit semantics).
+    func recordAnimation(_ property: UIViewAnimation.Property,
+                         from: UIViewAnimation.Value,
+                         to: UIViewAnimation.Value) {
+        guard let ctx = UIViewAnimationContext.current else { return }
+        let anim = UIViewAnimation(property: property, from: from, to: to,
+                                   delay: ctx.delay, duration: ctx.duration,
+                                   timing: ctx.timing)
+        // Re-animating the same property replaces the previous animation
+        // (CA: same key on the layer).
+        if let i = animations.firstIndex(where: { $0.property == property }) {
+            animations[i] = anim
+        } else {
+            animations.append(anim)
+        }
+    }
+
+    /// Drop all recorded animations (the presentation snaps to the model).
+    public func removeAllAnimations() { animations.removeAll() }
+}
+
+// MARK: - Spring duration fit (UIKit model)
+
+enum UIViewSpring {
+    /// Natural (undamped) angular frequency ω_n of the spring UIKit builds
+    /// for `animate(withDuration:usingSpringWithDamping:...)`. mass = 1,
+    /// stiffness = ω_n², damping coefficient = 2·ζ·ω_n. See file header for
+    /// the probed settling equation this solves.
+    static func naturalFrequency(dampingRatio: CGFloat, initialVelocity: CGFloat,
+                                 duration: Double) -> Double {
+        let D = Swift.max(1e-9, duration)
+        let z = Double(Swift.min(Swift.max(dampingRatio, 1e-6), 1))
+        let v = Double(initialVelocity)
+        if z >= 1 {
+            // Critical damping: (1 + (ω − v)·D)·e^(−ω·D) = 0.001.
+            // Fixed point on x = ω·D: x = ln((1 + x − v·D)/0.001).
+            var x = 9.2334134764515865 // v = 0 solution
+            for _ in 0..<64 {
+                let arg = Swift.max(1e-12, 1 + x - v * D)
+                let next = _ln(arg / 0.001)
+                if (next - x).magnitude < 1e-14 { x = next; break }
+                x = next
+            }
+            return x / D
+        }
+        let r = (1 - z * z).squareRoot()
+        if v == 0 {
+            // Closed form of (β/ω_d)·e^(−β·D) = 0.001.
+            return _ln(1000 * z / r) / (z * D)
+        }
+        // |(β − v)/ω_d|·e^(−β·D) = 0.001, settled (largest) root.
+        // Fixed point: β = ln(|β − v|·z / (β·r·0.001)) / D.
+        var beta = _ln(1000 * z / r) / D
+        for _ in 0..<256 {
+            let num = (beta - v).magnitude * z
+            let den = beta * r * 0.001
+            guard num > 0, den > 0 else { break }
+            let next = _ln(num / den) / D
+            guard next > 0 else { break }
+            if (next - beta).magnitude < 1e-13 { beta = next; break }
+            beta = next
+        }
+        return Swift.max(beta, 1e-6) / z
+    }
+}
+
+// MARK: - Affine transform interpolation (CA decomposition model)
+
+enum UIViewTransformInterpolation {
+    /// Decomposition M = Scale · Shear · Rotation (row-vector convention,
+    /// matching CG). Mirrors CA's unmatrix-style component interpolation
+    /// restricted to 2D: translation, scales, shear and rotation angle each
+    /// lerp; rotation takes the shortest path (quaternion slerp equivalent
+    /// for z-rotations). Validated against the anim_transform_rotate goldens
+    /// (constant area, exact bbox at every capture time).
+    struct Decomposed {
+        var scaleX: CGFloat
+        var scaleY: CGFloat
+        var shear: CGFloat
+        var rotation: CGFloat
+        var tx: CGFloat
+        var ty: CGFloat
+    }
+
+    static func decompose(_ m: CGAffineTransform) -> Decomposed? {
+        let sx = (m.a * m.a + m.b * m.b).squareRoot()
+        guard sx > 1e-12 else { return nil } // degenerate x basis
+        let rot = _atan2(m.b, m.a)
+        let cosR = m.a / sx, sinR = m.b / sx
+        // Row 2 in the rotated frame: parallel component = shear·sy,
+        // perpendicular component = sy (signed, handles flips).
+        let par = m.c * cosR + m.d * sinR
+        let perp = -m.c * sinR + m.d * cosR
+        guard perp.magnitude > 1e-12 else { return nil } // degenerate y basis
+        return Decomposed(scaleX: sx, scaleY: perp, shear: par / perp,
+                          rotation: rot, tx: m.tx, ty: m.ty)
+    }
+
+    static func compose(_ d: Decomposed) -> CGAffineTransform {
+        let r = CGAffineTransform(rotationAngle: d.rotation)
+        let cosR = r.a, sinR = r.b
+        return CGAffineTransform(
+            a: d.scaleX * cosR,
+            b: d.scaleX * sinR,
+            c: d.shear * d.scaleY * cosR - d.scaleY * sinR,
+            d: d.shear * d.scaleY * sinR + d.scaleY * cosR,
+            tx: d.tx, ty: d.ty)
+    }
+
+    static func interpolate(_ m0: CGAffineTransform, _ m1: CGAffineTransform,
+                            _ u: CGFloat) -> CGAffineTransform {
+        if u <= 0 { return m0 }
+        if u >= 1 { return m1 }
+        guard let d0 = decompose(m0), let d1 = decompose(m1) else {
+            // Degenerate matrix: componentwise lerp (CA also degrades here).
+            return CGAffineTransform(a: m0.a + (m1.a - m0.a) * u,
+                                     b: m0.b + (m1.b - m0.b) * u,
+                                     c: m0.c + (m1.c - m0.c) * u,
+                                     d: m0.d + (m1.d - m0.d) * u,
+                                     tx: m0.tx + (m1.tx - m0.tx) * u,
+                                     ty: m0.ty + (m1.ty - m0.ty) * u)
+        }
+        var dr = d1.rotation - d0.rotation
+        while dr > .pi { dr -= 2 * .pi }
+        while dr < -.pi { dr += 2 * .pi }
+        return compose(Decomposed(
+            scaleX: d0.scaleX + (d1.scaleX - d0.scaleX) * u,
+            scaleY: d0.scaleY + (d1.scaleY - d0.scaleY) * u,
+            shear: d0.shear + (d1.shear - d0.shear) * u,
+            rotation: d0.rotation + dr * u,
+            tx: d0.tx + (d1.tx - d0.tx) * u,
+            ty: d0.ty + (d1.ty - d0.ty) * u))
+    }
+}
+
+// MARK: - Transcendental helpers (no Foundation)
+
+/// Natural log; range-reduced via the binary exponent, then the atanh
+/// series ln(s) = 2·(t + t³/3 + t⁵/5 + …), t = (s−1)/(s+1). |t| ≤ 0.2 after
+/// reduction, so the series reaches double precision in ≤ 9 terms.
+func _ln(_ x: Double) -> Double {
+    precondition(x > 0, "_ln domain")
+    let ln2 = 0.6931471805599453094
+    var e = Double(x.exponent)
+    var s = x.significand            // s ∈ [1, 2)
+    if s > 1.5 { s /= 2; e += 1 }    // s ∈ [0.75, 1.5]
+    let t = (s - 1) / (s + 1)
+    let t2 = t * t
+    var term = t
+    var sum = t
+    for k in 1...9 {
+        term *= t2
+        sum += term / Double(2 * k + 1)
+    }
+    return e * ln2 + 2 * sum
+}
+
+/// atan via repeated half-angle reduction + Taylor series (~1e-15).
+func _atan(_ x: CGFloat) -> CGFloat {
+    var v = x
+    var mult: CGFloat = 1
+    for _ in 0..<4 {
+        v = v / (1 + (1 + v * v).squareRoot())
+        mult *= 2
+    }
+    let v2 = v * v
+    var term = v
+    var sum = v
+    for k in 1...7 {
+        term *= -v2
+        sum += term / CGFloat(2 * k + 1)
+    }
+    return mult * sum
+}
+
+func _atan2(_ y: CGFloat, _ x: CGFloat) -> CGFloat {
+    if x > 0 { return _atan(y / x) }
+    if x < 0 { return y >= 0 ? _atan(y / x) + .pi : _atan(y / x) - .pi }
+    if y > 0 { return .pi / 2 }
+    if y < 0 { return -.pi / 2 }
+    return 0
+}

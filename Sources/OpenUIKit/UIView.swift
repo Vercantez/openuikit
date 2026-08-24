@@ -15,7 +15,14 @@ public enum UIViewContentMode: Sendable {
 /// Minimal CALayer facade: UIKit-visible layer properties live here.
 public final class CALayer {
     public weak var owner: UIView?
-    public var cornerRadius: CGFloat = 0
+    public var cornerRadius: CGFloat = 0 {
+        didSet {
+            if cornerRadius != oldValue {
+                owner?.recordAnimation(.cornerRadius, from: .scalar(oldValue),
+                                       to: .scalar(cornerRadius))
+            }
+        }
+    }
     public var borderWidth: CGFloat = 0
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
@@ -31,16 +38,37 @@ public final class CALayer {
 
 open class UIView {
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
-    public var center: CGPoint = .zero
+    public var center: CGPoint = .zero {
+        didSet {
+            if center != oldValue {
+                recordAnimation(.position, from: .point(oldValue), to: .point(center))
+            }
+        }
+    }
     public var bounds: CGRect = .zero {
         didSet {
+            if bounds != oldValue {
+                recordAnimation(.bounds, from: .rect(oldValue), to: .rect(bounds))
+            }
             if oldValue.size != bounds.size {
                 setNeedsLayout()
                 _autoresizeChildren(oldSize: oldValue.size)
             }
         }
     }
-    public var transform: CGAffineTransform = .identity
+    public var transform: CGAffineTransform = .identity {
+        didSet {
+            if transform != oldValue {
+                recordAnimation(.transform, from: .transform(oldValue),
+                                to: .transform(transform))
+            }
+        }
+    }
+
+    /// Animations recorded by UIView.animate blocks (M6). LayerBridge
+    /// samples these at OpenUIKitRuntime.animationTime to build the
+    /// presentation layer tree; the stored properties above are the MODEL.
+    var animations: [UIViewAnimation] = []
 
     public var frame: CGRect {
         get {
@@ -67,8 +95,21 @@ open class UIView {
     public internal(set) var subviews: [UIView] = []
     public private(set) lazy var layer = CALayer(owner: self)
 
-    public var backgroundColor: UIColor?
-    public var alpha: CGFloat = 1
+    public var backgroundColor: UIColor? {
+        didSet {
+            if backgroundColor != oldValue {
+                recordAnimation(.backgroundColor, from: .color(oldValue),
+                                to: .color(backgroundColor))
+            }
+        }
+    }
+    public var alpha: CGFloat = 1 {
+        didSet {
+            if alpha != oldValue {
+                recordAnimation(.alpha, from: .scalar(oldValue), to: .scalar(alpha))
+            }
+        }
+    }
     public var isHidden = false
     public var isOpaque = true
     public var clipsToBounds: Bool {

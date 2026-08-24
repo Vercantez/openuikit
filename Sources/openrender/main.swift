@@ -11,8 +11,14 @@ func renderScene(file: String, outdir: String) throws {
     let scene = try loadSceneFile(file)
     let result = runScene(scene, warn: warnToStderr)
     try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
-    try writeBinaryFile(result.png, path: "\(outdir)/\(result.name).png")
-    print("rendered \(result.name)")
+    for (file, data) in result.pngs {
+        try writeBinaryFile(data, path: "\(outdir)/\(file)")
+    }
+    if result.pngs.count == 1 {
+        print("rendered \(result.name)")
+    } else {
+        print("rendered \(result.name) (\(result.pngs.count) frames)")
+    }
 }
 
 // Backend override: OPENUIKIT_BACKEND=swift|quartz (default: library default).

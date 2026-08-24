@@ -125,9 +125,19 @@ public enum LayerBridge {
                                   QZFloat(bc.blue), QZFloat(bc.alpha))
         }
 
+        // M6: presentation override — sample the view's recorded animations
+        // at the animation clock and overwrite the animated fields
+        // (position/bounds/opacity/cornerRadius/backgroundColor/transform).
+        var eff = t
+        if !v.animations.isEmpty {
+            eff = applyPresentation(to: l, view: v, traits: traits,
+                                    at: OpenUIKitRuntime.animationTime)
+        }
+
         // UIKit does not anti-alias the edges of transformed (rotated /
         // scaled) layers — same rule as RenderPass.isAxisAlignedTranslationOnly.
-        if !(t.a == 1 && t.b == 0 && t.c == 0 && t.d == 1) {
+        // During animations the PRESENTATION transform decides.
+        if !(eff.a == 1 && eff.b == 0 && eff.c == 0 && eff.d == 1) {
             QZLayerSetEdgeAntialias(l, false)
         }
 
@@ -181,6 +191,114 @@ public enum LayerBridge {
                                                 y: view.startPoint.y))
         QZGradientLayerSetEndPoint(l, QZPoint(x: view.endPoint.x,
                                               y: view.endPoint.y))
+    }
+
+    // MARK: Presentation sampling (M6 animations)
+
+    static func lerp(_ a: CGFloat, _ b: CGFloat, _ u: CGFloat) -> CGFloat {
+        a + (b - a) * u
+    }
+
+    /// Eased progress (springs may overshoot past 1) of `a` at animation-
+    /// clock time `t`. Quartz's animation/timing engine evaluates the
+    /// timing math: cubic beziers through QZMediaTimingFunctionSolve (the
+    /// same Newton+bisection x(t) solve Core Animation uses) and springs
+    /// through a scratch QZSpringAnimation sampled with
+    /// QZLayerCopyPresentation, parameterized with the UIKit duration-fit
+    /// model (UIViewSpring.naturalFrequency). Delay uses UIKit's frozen-
+    /// clock fill semantics: FROM before `delay`, MODEL at
+    /// `delay + duration` and later (CA removes completed animations).
+    static func animationProgress(_ a: UIViewAnimation, at t: Double) -> CGFloat {
+        let local = t - a.delay
+        if local <= 0 { return 0 }
+        if local >= a.duration - 1e-9 { return 1 }
+        switch a.timing {
+        case .curve(let c1x, let c1y, let c2x, let c2y):
+            guard let fn = QZMediaTimingFunctionCreateWithControlPoints(
+                QZFloat(c1x), QZFloat(c1y), QZFloat(c2x), QZFloat(c2y))
+            else { return 1 }
+            defer { QZMediaTimingFunctionRelease(fn) }
+            return CGFloat(QZMediaTimingFunctionSolve(fn, QZFloat(local / a.duration)))
+        case .spring(let damping, let velocity):
+            let z = Swift.min(Swift.max(Double(damping), 1e-6), 1)
+            let wn = UIViewSpring.naturalFrequency(dampingRatio: damping,
+                                                   initialVelocity: velocity,
+                                                   duration: a.duration)
+            guard let scratch = QZLayerCreate(),
+                  let anim = QZSpringAnimationCreate("opacity") else { return 1 }
+            defer { QZLayerRelease(scratch) }
+            // Normalized 1 -> 0: the sampled opacity IS the remaining-
+            // fraction envelope e(local); progress = 1 - e.
+            var from: [QZFloat] = [1]
+            var to: [QZFloat] = [0]
+            QZBasicAnimationSetFromValue(anim, &from, 1)
+            QZBasicAnimationSetToValue(anim, &to, 1)
+            QZAnimationSetDuration(anim, QZFloat(a.duration))
+            QZSpringAnimationSetMass(anim, 1)
+            QZSpringAnimationSetStiffness(anim, QZFloat(wn * wn))
+            QZSpringAnimationSetDamping(anim, QZFloat(2 * z * wn))
+            // quartz normalizes v0 by (from - to) = 1 here; UIKit's
+            // initialVelocity v means e'(0) = -v.
+            QZSpringAnimationSetInitialVelocity(anim, QZFloat(-Double(velocity)))
+            QZLayerAddAnimation(scratch, anim, "progress")
+            QZAnimationRelease(anim)
+            guard let pres = QZLayerCopyPresentation(scratch, QZFloat(local))
+            else { return 1 }
+            defer { QZLayerRelease(pres) }
+            return 1 - CGFloat(QZLayerGetOpacity(pres))
+        }
+    }
+
+    /// Overwrite `l`'s animated fields with presentation values sampled at
+    /// animation-clock time `t`. Returns the effective (presentation)
+    /// transform for the edge-antialias rule. Value application: geometry /
+    /// opacity / cornerRadius lerp componentwise; backgroundColor lerps in
+    /// extended-sRGB component space (unclamped, nil = transparent);
+    /// transform interpolates via CA-style decomposition
+    /// (UIViewTransformInterpolation). Split rationale: quartz's animation
+    /// engine owns all TIMING evaluation (above), while value application
+    /// stays here because CA semantics quartz's value model lacks are
+    /// needed: per-animation delay fill, exact model snap at completion,
+    /// color-space lerp and affine decomposition.
+    static func applyPresentation(to l: QZLayerRef, view v: UIView,
+                                  traits: UITraitCollection,
+                                  at t: Double) -> CGAffineTransform {
+        var eff = v.transform
+        for a in v.animations {
+            let u = animationProgress(a, at: t)
+            switch (a.property, a.from, a.to) {
+            case (.position, .point(let p0), .point(let p1)):
+                QZLayerSetPosition(l, QZPoint(x: lerp(p0.x, p1.x, u),
+                                              y: lerp(p0.y, p1.y, u)))
+            case (.bounds, .rect(let r0), .rect(let r1)):
+                QZLayerSetBounds(l, QZRect(
+                    origin: QZPoint(x: lerp(r0.minX, r1.minX, u),
+                                    y: lerp(r0.minY, r1.minY, u)),
+                    size: QZSize(width: lerp(r0.width, r1.width, u),
+                                 height: lerp(r0.height, r1.height, u))))
+            case (.alpha, .scalar(let a0), .scalar(let a1)):
+                let val = lerp(a0, a1, u)
+                QZLayerSetOpacity(l, QZFloat(Swift.min(Swift.max(val, 0), 1)))
+            case (.cornerRadius, .scalar(let r0), .scalar(let r1)):
+                QZLayerSetCornerRadius(l, QZFloat(lerp(r0, r1, u)))
+            case (.backgroundColor, .color(let c0), .color(let c1)):
+                let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+                let f = c0?.resolvedCGColor(with: traits) ?? clear
+                let g = c1?.resolvedCGColor(with: traits) ?? clear
+                QZLayerSetBackgroundColor(l, QZFloat(lerp(f.red, g.red, u)),
+                                          QZFloat(lerp(f.green, g.green, u)),
+                                          QZFloat(lerp(f.blue, g.blue, u)),
+                                          QZFloat(lerp(f.alpha, g.alpha, u)))
+            case (.transform, .transform(let m0), .transform(let m1)):
+                eff = UIViewTransformInterpolation.interpolate(m0, m1, u)
+                QZLayerSetAffineTransform(l, QZAffineTransform(
+                    a: eff.a, b: eff.b, c: eff.c, d: eff.d,
+                    tx: eff.tx, ty: eff.ty))
+            default:
+                break // mismatched value shape: ignore (cannot happen)
+            }
+        }
+        return eff
     }
 
     // MARK: Content (drawContent -> contents image sublayer)

@@ -56,10 +56,20 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   under BOTH compositors (layers ≥ renderpass within 0.003 everywhere,
   up to +1.5 on button/gradient scenes); 224 tests green incl.
   LayerBridgeTests.
-- **M6 Animation** — UIView.animate(withDuration:) on quartz's animation/
-  timing engine; CADisplayLink-style driver; presentation vs model layer.
-  Oracle: frame-by-frame comparison against real UIKit animations captured
-  at fixed timestamps.
+- **M6 Animation** — DONE: `UIView.animate(withDuration:delay:options:)` +
+  spring variant (UIViewAnimation.swift); animation blocks record from→to
+  per property, model = final value, presentation sampled at the settable
+  clock `OpenUIKitRuntime.animationTime` (host-driven seek — the portable
+  stand-in for a CADisplayLink driver). Quartz's animation/timing engine
+  evaluates all timing (bezier x(t) solve, spring envelope via a scratch
+  QZSpringAnimation); LayerBridge applies values with CA's fill/removal,
+  color-space and transform-decomposition semantics. UIKit's spring
+  duration-fit reverse-engineered EXACTLY (settling equation
+  |(β−v)/ω_d|·e^(−βD) = 0.001, verified to 8+ digits against probed
+  CASpringAnimation parameters). Oracle2 captures frozen-clock frames;
+  scene spec v3 (`animations` + `captureTimes`). Full suite 52/52 (10
+  animation scenes, every frame ≥ 99.08 %, static 42 untouched);
+  244 tests green. See docs/QUARTZ_NOTES.md "M6: animation engine".
 - **M7 Interactive host** — SDL2 (or bare-metal per-platform) window backend:
   UIWindow/UIScreen, run loop, touch/mouse event delivery, hit testing,
   UIGestureRecognizer (tap/pan/long-press).

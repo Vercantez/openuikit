@@ -427,6 +427,124 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     return v
 }
 
+// MARK: - Animations (scene spec v3, mirror oracle's parseAnimations)
+
+struct SceneAnimation {
+    let target: String            // dot-joined subview-index path ("" = root)
+    let duration: Double
+    let delay: Double
+    /// nil when spring is set.
+    let curve: UIView.AnimationOptions?
+    let springDamping: CGFloat?   // non-nil => spring animation
+    let springVelocity: CGFloat
+    let changes: SceneJSON
+}
+
+func parseAnimations(_ scene: JSONValue) -> [SceneAnimation] {
+    guard let arr = scene["animations"]?.arrayValue else { return [] }
+    return arr.map { entry in
+        guard let j = entry.objectValue else { fatalError("bad animation entry") }
+        let kind = j["kind"]?.stringValue ?? "uiview-animate"
+        guard kind == "uiview-animate" else { fatalError("bad animation kind '\(kind)'") }
+        var curve: UIView.AnimationOptions? = nil
+        var damping: CGFloat? = nil
+        var velocity: CGFloat = 0
+        if let s = j["spring"]?.objectValue {
+            damping = num(s["damping"]) ?? 1
+            velocity = num(s["initialVelocity"]) ?? 0
+        } else {
+            switch j["curve"]?.stringValue ?? "easeInOut" {
+            case "linear": curve = .curveLinear
+            case "easeIn": curve = .curveEaseIn
+            case "easeOut": curve = .curveEaseOut
+            case "easeInOut": curve = .curveEaseInOut
+            case let c: fatalError("bad animation curve '\(c)'")
+            }
+        }
+        guard let changes = j["changes"]?.objectValue, !changes.isEmpty else {
+            fatalError("animation needs non-empty \"changes\"")
+        }
+        return SceneAnimation(target: j["target"]?.stringValue ?? "",
+                              duration: Double(num(j["duration"]) ?? 0.25),
+                              delay: Double(num(j["delay"]) ?? 0),
+                              curve: curve, springDamping: damping,
+                              springVelocity: velocity, changes: changes)
+    }
+}
+
+/// Resolve a dot-joined subview-index path ("" = root) against the built tree.
+func viewAtPath(_ root: UIView, _ path: String) -> UIView {
+    var v = root
+    guard !path.isEmpty else { return v }
+    for comp in path.split(separator: ".") {
+        guard let i = Int(comp), i >= 0, i < v.subviews.count else {
+            fatalError("bad animation target path '\(path)'")
+        }
+        v = v.subviews[i]
+    }
+    return v
+}
+
+/// Apply one animation entry's `changes` to the target view. Called INSIDE
+/// the UIView.animate block. Mirrors the oracle's applyAnimationChanges.
+func applyAnimationChanges(_ v: UIView, _ changes: SceneJSON) {
+    for (key, value) in changes {
+        switch key {
+        case "frame":
+            let f = numArray(value)!
+            v.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
+        case "center":
+            let c = numArray(value)!
+            v.center = CGPoint(x: c[0], y: c[1])
+        case "bounds":
+            let b = numArray(value)!
+            v.bounds = CGRect(x: b[0], y: b[1], width: b[2], height: b[3])
+        case "alpha":
+            v.alpha = num(value)!
+        case "backgroundColor":
+            v.backgroundColor = colorOrDie(value, "animation changes")
+        case "transform":
+            let t = numArray(value)!
+            v.transform = CGAffineTransform(a: t[0], b: t[1], c: t[2], d: t[3],
+                                            tx: t[4], ty: t[5])
+        case "cornerRadius":
+            v.layer.cornerRadius = num(value)!
+        default:
+            fatalError("unsupported animated property '\(key)'")
+        }
+    }
+}
+
+/// Kick off every animation entry with UIView.animate. Unlike the oracle
+/// (which must shift layer timelines under a frozen CA clock), the engine
+/// handles per-animation delay natively, so this is a direct translation.
+func startAnimations(_ anims: [SceneAnimation], container: UIView) {
+    for a in anims {
+        let target = viewAtPath(container, a.target)
+        if let damping = a.springDamping {
+            UIView.animate(withDuration: a.duration, delay: a.delay,
+                           usingSpringWithDamping: damping,
+                           initialSpringVelocity: a.springVelocity,
+                           options: []) {
+                applyAnimationChanges(target, a.changes)
+            }
+        } else {
+            UIView.animate(withDuration: a.duration, delay: a.delay,
+                           options: [a.curve!]) {
+                applyAnimationChanges(target, a.changes)
+            }
+        }
+    }
+}
+
+/// Frame-file suffix for a capture time: milliseconds, >= 3 digits
+/// (0.08 -> "t080", 1.0 -> "t1000"). Mirrors the oracle's captureSuffix.
+func captureSuffix(_ t: Double) -> String {
+    var ms = "\(Int((t * 1000).rounded()))"
+    while ms.count < 3 { ms = "0" + ms }
+    return "t" + ms
+}
+
 // MARK: - Layout dump (mirror oracle keys + rounding exactly)
 
 func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
@@ -462,7 +580,10 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
 
 struct SceneResult {
     var name: String
-    var png: [UInt8]
+    /// One entry per output PNG: filename (without directory) -> bytes.
+    /// Static scenes produce ["<name>.png"]; animation scenes (spec v3)
+    /// produce one "<name>.t<ms>.png" per capture time.
+    var pngs: [(file: String, data: [UInt8])]
     var layout: JSONValue
 }
 
@@ -503,6 +624,29 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // itself; it only gives UIRenderer the right bitmap size.
     let host = UIView(frame: CGRect(x: 0, y: 0, width: sz[0], height: sz[1]))
     host.addSubview(container)
+
+    // Scene spec v3: animation scenes render one frame per capture time
+    // (and no plain <name>.png). Animations are started AFTER the layout
+    // dump — the dump is the pre-animation (t = 0) model layout.
+    let animations = parseAnimations(scene)
+    if !animations.isEmpty {
+        let captureTimes = (scene["captureTimes"]?.arrayValue ?? [])
+            .compactMap { $0.doubleValue }
+        guard !captureTimes.isEmpty else {
+            fatalError("scene \(name): \"animations\" requires \"captureTimes\"")
+        }
+        startAnimations(animations, container: container)
+        var pngs: [(file: String, data: [UInt8])] = []
+        for t in captureTimes {
+            OpenUIKitRuntime.animationTime = t
+            let bmp = UIRenderer.render(host, scale: scale)
+            pngs.append(("\(name).\(captureSuffix(t)).png", bmp.pngData()))
+        }
+        OpenUIKitRuntime.animationTime = 0
+        return SceneResult(name: name, pngs: pngs, layout: layout)
+    }
+
     let bmp = UIRenderer.render(host, scale: scale)
-    return SceneResult(name: name, png: bmp.pngData(), layout: layout)
+    return SceneResult(name: name, pngs: [("\(name).png", bmp.pngData())],
+                       layout: layout)
 }

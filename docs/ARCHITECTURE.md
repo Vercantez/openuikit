@@ -98,6 +98,23 @@ Both compositors pass the full 42-scene suite on the quartz backend
 (layers ≥ renderpass on every scene except deltas ≤ 0.003; button/gradient
 scenes score up to +1.5 higher under layers).
 
+## Animation (M6)
+
+`Sources/OpenUIKit/UIViewAnimation.swift` implements
+`UIView.animate(withDuration:delay:options:animations:completion:)` and the
+`usingSpringWithDamping:` variant. Property setters inside the block record
+from→to animations on the view (model updates immediately — UIKit
+semantics); `OpenUIKitRuntime.animationTime` is the settable presentation
+clock; LayerBridge samples the recorded animations at that time and builds
+the QZLayer tree from PRESENTATION values (quartz's animation/timing engine
+evaluates beziers and spring envelopes; Swift applies values with CA's
+delay-fill/removal, color-space and transform-decomposition semantics).
+openrender renders scene-spec-v3 animation scenes one frame per
+`captureTimes` entry (`<name>.t<ms>.png`, same naming as oracle2's
+frozen-clock captures). Details incl. the exactly reverse-engineered UIKit
+spring duration fit: `docs/QUARTZ_NOTES.md` "M6: animation engine";
+scope notes in `docs/KNOWN_GAPS.md`.
+
 ## Module ownership map
 
 | Path | Owner module | Status |
@@ -108,7 +125,8 @@ scenes score up to +1.5 higher under layers).
 | `Sources/OpenCoreGraphics/Rasterizer.swift` | **rasterizer** | stub — implement |
 | `Sources/OpenCoreGraphics/Backend.swift`, `QuartzBackend.swift` | **quartz-backend** | done |
 | `Sources/CQuartz/` | vendored (scripts/sync_quartz.sh) | do not edit by hand — mirror of ~/quartz + `patches/quartz/*` (docs/QUARTZ_PATCHES.md) |
-| `Sources/OpenUIKit/LayerBridge.swift` | **view** | done (M5 layers compositor) |
+| `Sources/OpenUIKit/LayerBridge.swift` | **view** | done (M5 layers compositor + M6 presentation sampling) |
+| `Sources/OpenUIKit/UIViewAnimation.swift` | **animation** | done (M6 engine) |
 | `Sources/OpenUIKit/MiniJSON.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/ResourceIO.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/UIColor.swift`, `SystemColors.swift`, `UITraitCollection.swift` | **color** | to create |

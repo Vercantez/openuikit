@@ -33,6 +33,14 @@ public enum OpenUIKitRuntime {
     /// OPENUIKIT_COMPOSITOR=layers|renderpass); the library never reads
     /// env vars.
     public static var compositor: RenderCompositor = .layers
+    /// Presentation clock for UIView animations (M6), in seconds since the
+    /// animations were committed (t = 0 shows every non-delayed animation's
+    /// FROM state). The host sets it, then renders: LayerBridge builds the
+    /// layer tree from presentation values sampled at this time. Static
+    /// hierarchies (no recorded animations) are unaffected by the clock.
+    /// Requires the quartz backend + layers compositor (the render pass
+    /// draws model values only — see docs/KNOWN_GAPS.md).
+    public static var animationTime: Double = 0
 }
 
 /// Compositing strategy for view-hierarchy rendering (see
