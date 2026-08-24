@@ -1,5 +1,34 @@
 # Known gaps (living document — fixers: read this)
 
+## UIScrollView (M7.5, 2026-08-24): scope notes
+
+- Physics constants are APP_FEEL's documented UIKit values (0.998/ms,
+  c=0.55, ~0.5 s critically damped bounce via the ωT=9.2334 settle
+  equation, 0.1 pt/s stop, ~100 ms velocity window, ~150 ms content-touch
+  delay). Static scrolled RENDERING is oracle-verified (scroll_static,
+  100.0 incl. hit tests); the dynamic curves are unit-tested against the
+  closed forms only — oracle time-sampled traces come with M8
+  (drive a real UIScrollView pan in oracle2 and diff position series).
+- Deceleration/bounce is stepped by UIWindow.tick(timestamp:), which
+  openhost calls every frame/script step. A host that renders without
+  ticking sees a frozen scroll (call tick, or
+  UIScrollView._stepScrollAnimations(to:), before rendering).
+  `UIScrollView._hasActiveScrollAnimations` is the redraw hint.
+- Indicator visuals (35 % black/white bar, 36 pt min length, both-axis
+  bars flash whenever either axis scrolls) are feel-approximations, not
+  oracle-fitted; they are lazily created so static scenes/layout dumps
+  never see them. Fade is UIView.animate alpha (model alpha drops to 0
+  at settle; presentation fades 0.4 s).
+- touchesShouldCancel(in:) defaults to true for ALL views including
+  UIControls (modern-UIKit behavior — scrolling cancels button/row
+  tracking); the pre-iOS-8 documented control exception is not
+  reproduced. directionalLockEnabled, paging, zooming, scrollsToTop,
+  contentInsetAdjustmentBehavior and scroll-to-top/flash APIs are not
+  implemented. setContentOffset(animated:) uses 0.25 s easeInOut.
+- A touch-down that catches a decelerating scroll consumes the whole
+  touch (content never sees it) — matches UIKit's stop-scroll tap.
+  Nested scroll views are untested (single scroll view per touch path).
+
 ## demo_settings: remaining FAIL is window-capture ALPHA ENCODING, not text
 
 After the text fixes below (2026-08-24), demo_settings measures 95.42 against

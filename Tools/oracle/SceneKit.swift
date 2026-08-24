@@ -293,6 +293,22 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
             gl.type = .axial
         }
         v = g
+    case "UIScrollView":
+        let s = UIScrollView()
+        // No VC hierarchy offscreen: keep UIKit from shifting the offset
+        // by safe-area adjustments, and no indicator subviews (they would
+        // pollute the layout dump; OpenUIKit creates its lazily on scroll).
+        s.contentInsetAdjustmentBehavior = .never
+        s.showsVerticalScrollIndicator = false
+        s.showsHorizontalScrollIndicator = false
+        if let cs = numArray(j["contentSize"]), cs.count == 2 {
+            s.contentSize = CGSize(width: cs[0], height: cs[1])
+        }
+        if let ci = numArray(j["contentInset"]), ci.count == 4 {
+            s.contentInset = UIEdgeInsets(top: ci[0], left: ci[1],
+                                          bottom: ci[2], right: ci[3])
+        }
+        v = s
     case "UIStackView":
         let s = UIStackView()
         s.axis = (j["axis"] as? String) == "vertical" ? .vertical : .horizontal
@@ -326,6 +342,12 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
         let origin = v.frame.origin
         v.sizeToFit()
         v.frame.origin = origin
+    }
+    // Scroll position after frame/children exist (UIKit may re-clamp an
+    // offset applied to a zero-sized scroll view).
+    if let sv = v as? UIScrollView, let co = numArray(j["contentOffset"]),
+       co.count == 2 {
+        sv.contentOffset = CGPoint(x: co[0], y: co[1])
     }
     if let t = numArray(j["transform"]), t.count == 6 {
         v.transform = CGAffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], tx: t[4], ty: t[5])

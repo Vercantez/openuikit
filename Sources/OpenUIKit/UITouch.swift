@@ -33,6 +33,15 @@ public final class UITouch: Hashable {
     /// to `view` (cancelsTouchesInView): the view got touchesCancelled and
     /// receives nothing further for this touch.
     var deliveryCancelled = false
+    /// delaysContentTouches (M7.5): the touch-down landed on a scroll view's
+    /// content subview and its touchesBegan delivery is being HELD until the
+    /// content-touch delay elapses (or the scroll pan claims/fails the
+    /// gesture). While set, no touches* callbacks have reached `view` yet.
+    var beganPending = false
+    /// Deadline (event-clock seconds) at which a held touch-down flushes.
+    var delayDeadline: TimeInterval = 0
+    /// The scroll view whose delaysContentTouches is holding this touch.
+    weak var delayingScrollView: UIScrollView?
     /// The view has received touchesEnded for this touch (recognition after
     /// that point must not retro-cancel it).
     var endDelivered = false

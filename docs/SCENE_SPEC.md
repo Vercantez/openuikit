@@ -136,6 +136,25 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 | `progress` | 0–1 |
 | `progressTintColor`, `trackTintColor` | color |
 
+### `UIScrollView` (v4.1 — M7.5)
+A real scroll view; `contentOffset` IS the layer's bounds origin, so a static
+scene verifies scrolled rendering (children shifted by −offset, clipped by the
+scroll view's bounds) against real UIKit. All common view keys apply
+(`clipsToBounds` defaults to **true** for scroll views in both renderers).
+| key | type | notes |
+|---|---|---|
+| `contentSize` | `[w,h]` | `contentSize`. Default `[0,0]`. |
+| `contentOffset` | `[x,y]` | applied AFTER frame/children (both renderers). May be out of range (renders the overscrolled state). |
+| `contentInset` | `[top,left,bottom,right]` | `contentInset`. No visual effect on a static scene (it only changes the legal offset range). |
+
+The oracle pins `contentInsetAdjustmentBehavior = .never` (no VC/safe-area
+offscreen) and disables both indicators, so the layout dump carries no
+private indicator subviews; OpenUIKit creates its indicator bars lazily on
+first scroll, so static scenes match. Scroll physics (deceleration,
+rubber-band, bounce) are unit-tested against the closed forms in
+`UIScrollPhysics` and exercised live via openhost scripted captures —
+oracle time-sampled traces come with M8.
+
 ### `UIStackView`
 | key | notes |
 |---|---|

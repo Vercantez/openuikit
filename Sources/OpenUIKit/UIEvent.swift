@@ -105,6 +105,22 @@ open class UIWindow: UIView {
                 v = cur.superview
             }
             t.gestureRecognizers = recs.isEmpty ? nil : recs
+            // UIScrollView content-touch semantics (M7.5): a touch-down
+            // inside a scroll view stops any deceleration (finger catch —
+            // the touch is consumed, content never sees it), and
+            // delaysContentTouches holds touchesBegan delivery to content
+            // subviews for ~150 ms (or until the scroll pan claims/fails).
+            if let sv = UIScrollView.enclosingScrollView(of: t.view),
+               sv.isScrollEnabled {
+                let caught = sv.touchBeganInContent()
+                if caught {
+                    t.deliveryCancelled = true // scroll-catch tap: consumed
+                } else if sv.delaysContentTouches, t.view !== sv {
+                    t.beganPending = true
+                    t.delayDeadline = timestamp + UIScrollView.contentTouchDelay
+                    t.delayingScrollView = sv
+                }
+            }
             activeTouches[touchID] = t
             touch = t
         case .moved, .stationary, .ended, .cancelled:
@@ -124,6 +140,7 @@ open class UIWindow: UIView {
             lastTapEnd = (timestamp, point, touch.tapCount)
         }
         if phase == .ended || phase == .cancelled {
+            UIScrollView.enclosingScrollView(of: touch.view)?.touchSequenceEnded()
             activeTouches[touchID] = nil
         }
         return touch
@@ -133,6 +150,11 @@ open class UIWindow: UIView {
     /// recognizers (long press) a chance to fire while a touch is held
     /// stationary. Call from the host's frame loop while touches are down.
     public func tick(timestamp: TimeInterval) {
+        // Scroll deceleration/bounce advances on the SAME host clock as
+        // everything else (openhost feeds OpenUIKitRuntime.animationTime
+        // here) — scripted captures stay deterministic.
+        UIScrollView._stepScrollAnimations(to: timestamp)
+        flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)
         event.eventTouches = Set(activeTouches.values)
@@ -172,10 +194,32 @@ open class UIWindow: UIView {
         processRecognitions(recognizers, event: event)
 
         // 3. Views. Group by (view, phase); skip touches a recognizer
-        // already cancelled.
+        // already cancelled. delaysContentTouches (M7.5): a held touch-down
+        // delivers nothing until it flushes — the delay deadline passing,
+        // the scroll pan failing (drag along a non-scrollable axis), or the
+        // touch ending (quick tap: began + ended arrive back to back). A
+        // held touch the scroll pan claims is dropped silently (the view
+        // never saw touchesBegan, so it gets no touchesCancelled either).
         var groups: [(view: UIView, phase: UITouch.Phase, touches: Set<UITouch>)] = []
         for t in touches.sorted(by: { $0.touchID < $1.touchID }) {
             guard let v = t.view, !t.deliveryCancelled else { continue }
+            if t.beganPending {
+                switch t.phase {
+                case .began, .stationary:
+                    continue // held
+                case .moved:
+                    let panFailed = t.delayingScrollView?.panGestureRecognizer._state == .failed
+                    guard panFailed || event.timestamp >= t.delayDeadline else { continue }
+                    t.beganPending = false
+                    v.touchesBegan([t], with: event)
+                case .ended:
+                    t.beganPending = false
+                    v.touchesBegan([t], with: event)
+                case .cancelled:
+                    t.beganPending = false
+                    continue // never delivered — nothing to cancel
+                }
+            }
             if let i = groups.firstIndex(where: { $0.view === v && $0.phase == t.phase }) {
                 groups[i].touches.insert(t)
             } else {
@@ -199,6 +243,20 @@ open class UIWindow: UIView {
     }
 
     // MARK: Internals
+
+    /// delaysContentTouches: deliver the held touchesBegan of every active
+    /// touch whose content-touch delay has elapsed (finger resting on a row
+    /// long enough — the row highlights while the finger is still down).
+    func flushDelayedContentTouches(at timestamp: TimeInterval) {
+        for t in activeTouches.values
+        where t.beganPending && !t.deliveryCancelled && timestamp >= t.delayDeadline {
+            t.beganPending = false
+            guard let v = t.view else { continue }
+            let event = UIEvent(timestamp: timestamp)
+            event.eventTouches = [t]
+            v.touchesBegan([t], with: event)
+        }
+    }
 
     func involvedRecognizers(_ touches: Set<UITouch>) -> [UIGestureRecognizer] {
         var recs: [UIGestureRecognizer] = []
@@ -227,6 +285,12 @@ open class UIWindow: UIView {
                 guard let v = t.view, !t.deliveryCancelled,
                       !t.endDelivered, t.phase != .cancelled else { continue }
                 t.deliveryCancelled = true
+                // A touch still held by delaysContentTouches never reached
+                // its view — drop it without a touchesCancelled callback.
+                if t.beganPending {
+                    t.beganPending = false
+                    continue
+                }
                 if let i = byView.firstIndex(where: { $0.view === v }) {
                     byView[i].touches.insert(t)
                 } else {

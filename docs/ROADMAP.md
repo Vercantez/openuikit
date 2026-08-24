@@ -74,6 +74,15 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   UIWindow/UIScreen, run loop, touch/mouse event delivery, hit testing,
   UIGestureRecognizer (tap/pan/long-press).
 - **M7.5 App Feel** — USER PRIORITY: real multi-screen demo app on OpenUIKit (Sources/DemoApp via openhost --app): UIScrollView with UIKit-exact physics (0.998/ms deceleration, 0.55 rubber-band, bounce springs), nav push/pop parallax transitions, row highlight feel. Spec: docs/APP_FEEL.md.
+  - UIScrollView DONE (2026-08-24): contentOffset = bounds.origin through both
+    compositors (scroll_static oracle golden 100.0), closed-form physics per
+    APP_FEEL (UIScrollPhysics: 0.998/ms deceleration, c=0.55 rubber-band,
+    critically damped ~0.5 s bounce carrying release velocity, exact
+    deceleration→edge handoff), ~100 ms release-velocity window,
+    delaysContentTouches/touchesShouldCancel in the window pipeline,
+    2.5 pt indicators with 0.4 s fade on the UIView.animate clock, physics
+    stepped from UIWindow.tick (host clock — deterministic scripted
+    captures, scripts/scroll_flick.json). 20 tests (UIScrollViewTests).
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,

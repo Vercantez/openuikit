@@ -1,0 +1,202 @@
+{
+  "hitTests" : [
+    {
+      "path" : "1.3",
+      "point" : [
+        110,
+        105
+      ]
+    },
+    {
+      "path" : "1.9",
+      "point" : [
+        32,
+        175
+      ]
+    },
+    {
+      "path" : "1",
+      "point" : [
+        110,
+        75
+      ]
+    },
+    {
+      "path" : "2.0",
+      "point" : [
+        40,
+        335
+      ]
+    },
+    {
+      "path" : "0",
+      "point" : [
+        5,
+        5
+      ]
+    }
+  ],
+  "name" : "scroll_static",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        240,
+        360
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        20,
+        30,
+        200,
+        280
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        0,
+        240,
+        50
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        70,
+        240,
+        50
+      ],
+      "path" : "1.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        140,
+        240,
+        50
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        8,
+        8,
+        34,
+        34
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        210,
+        240,
+        50
+      ],
+      "path" : "1.3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        280,
+        240,
+        50
+      ],
+      "path" : "1.4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        350,
+        240,
+        50
+      ],
+      "path" : "1.5"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        420,
+        240,
+        50
+      ],
+      "path" : "1.6"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        490,
+        240,
+        50
+      ],
+      "path" : "1.7"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        560,
+        240,
+        50
+      ],
+      "path" : "1.8"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        40,
+        0,
+        4,
+        630
+      ],
+      "path" : "1.9"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        20,
+        320,
+        90,
+        30
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        30,
+        30
+      ],
+      "path" : "2.0"
+    }
+  ]
+}

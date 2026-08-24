@@ -56,7 +56,8 @@ def capture_suffix(t):
 # subviews (UISwitchModernVisualElement, UIButtonLabel, ...) are skipped —
 # the pixel comparison is what holds their visual placement to account.
 PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
-                  "UIProgressView", "UIStackView", "UIGradientView"}
+                  "UIProgressView", "UIStackView", "UIGradientView",
+                  "UIScrollView"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

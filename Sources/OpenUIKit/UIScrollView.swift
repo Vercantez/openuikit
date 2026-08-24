@@ -1,0 +1,718 @@
+// UIScrollView with UIKit-exact physics. Owner: scroll module (M7.5).
+//
+// Scrolling model (real UIKit / CoreAnimation semantics):
+//   contentOffset IS bounds.origin — sublayers keep their frames and the
+//   layer scrolls by shifting its own bounds origin. Both compositors honor
+//   it: quartz's layer compositor translates by -(bounds.origin + anchor)
+//   (qz_layer.cpp render_layer) and the RenderPass traversal translates
+//   subview contexts by -bounds.mid. Hit testing / convert already run
+//   through bounds.mid as well, so scrolled content hit-tests correctly.
+//
+// Physics per docs/APP_FEEL.md (implemented EXACTLY, closed-form):
+//   - Tracking 1:1 while dragging (per-axis, enabled by content overflow
+//     or alwaysBounce*).
+//   - Release velocity from the last ~100 ms of touch samples.
+//   - Deceleration: UIKit decelerationRate .normal = 0.998 per MILLISECOND:
+//       v(t)  = v0 · 0.998^(1000·t)         (t seconds)
+//       x(t)  = x0 + v0 · (0.998^(1000·t) − 1) / (1000·ln 0.998)
+//     stops below 0.1 pt/s.
+//   - Rubber-band overscroll (Apple's formula, c = 0.55):
+//       banded = (1 − 1/(c·|d|/dim + 1)) · dim · sign(d)
+//     applied to the raw overshoot d while dragging past an edge.
+//   - Bounce-back: critically damped spring to the boundary, settling in
+//     ~0.5 s (UIKit's settle equation (1 + ωT)·e^(−ωT) = 0.001 with
+//     T = 0.5 → ω = 18.4668…), carrying the release velocity. Deceleration
+//     that reaches an edge switches to the same spring with the velocity at
+//     the exact (closed-form) crossing time.
+//   - Scroll indicators: 2.5 pt rounded bars inset 3 pt from the edges,
+//     visible while dragging/decelerating/bouncing, fading out over 0.4 s
+//     (UIView.animate — same presentation clock) after the scroll settles.
+//
+// All time comes in through the API: dragging uses UIEvent timestamps,
+// deceleration/bounce are stepped by UIWindow.tick(timestamp:) via
+// `UIScrollView._stepScrollAnimations(to:)` — the same host-driven clock
+// that drives UIView.animate (OpenUIKitRuntime.animationTime in openhost),
+// so scripted captures are fully deterministic.
+//
+// Content-touch delay (delaysContentTouches, UIKit ~150 ms): implemented in
+// the window's delivery pipeline (UIEvent.swift) with the hooks at the
+// bottom of this file. touchesShouldCancel(in:)/canCancelContentTouches
+// gate whether a recognized scroll pan cancels an already-delivered content
+// touch (modern UIKit cancels control touches too — buttons/rows inside
+// scroll views stop tracking when the scroll starts).
+
+// MARK: - UIEdgeInsets
+
+public struct UIEdgeInsets: Equatable, Sendable {
+    public var top: CGFloat
+    public var left: CGFloat
+    public var bottom: CGFloat
+    public var right: CGFloat
+    public init(top: CGFloat = 0, left: CGFloat = 0,
+                bottom: CGFloat = 0, right: CGFloat = 0) {
+        self.top = top
+        self.left = left
+        self.bottom = bottom
+        self.right = right
+    }
+    public static let zero = UIEdgeInsets()
+}
+
+// MARK: - Delegate
+
+public protocol UIScrollViewDelegate: AnyObject {
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool)
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView)
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+}
+
+public extension UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {}
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool) {}
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {}
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
+}
+
+// MARK: - Closed-form physics (unit-testable, no state)
+
+public enum UIScrollPhysics {
+    /// UIKit `UIScrollView.DecelerationRate.normal` — per-millisecond decay.
+    public static let decelerationRateNormal: CGFloat = 0.998
+    /// Per-second exponential rate constant: k = 1000·ln(0.998) (negative).
+    public static let decelK: Double = 1000 * _ln(0.998)
+    /// Deceleration stops when |v| drops below this (pt/s).
+    public static let decelStopVelocity: CGFloat = 0.1
+
+    /// v(t) = v0 · e^(k·t) = v0 · 0.998^(1000 t).
+    public static func decelVelocity(v0: CGFloat, at t: Double) -> CGFloat {
+        guard t > 0 else { return v0 }
+        return v0 * CGFloat(_scrollExp(decelK * t))
+    }
+
+    /// x(t) = x0 + v0 · (e^(k·t) − 1)/k.
+    public static func decelOffset(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
+        guard t > 0 else { return x0 }
+        return x0 + v0 * CGFloat((_scrollExp(decelK * t) - 1) / decelK)
+    }
+
+    /// Time until |v| decays to `decelStopVelocity` (0 for tiny v0).
+    public static func decelDuration(v0: CGFloat) -> Double {
+        let mag = Double(v0.magnitude)
+        guard mag > Double(decelStopVelocity) else { return 0 }
+        return _ln(Double(decelStopVelocity) / mag) / decelK
+    }
+
+    /// Where the deceleration would naturally come to rest.
+    public static func decelTargetOffset(x0: CGFloat, v0: CGFloat) -> CGFloat {
+        decelOffset(x0: x0, v0: v0, at: decelDuration(v0: v0))
+    }
+
+    /// Exact time at which x(t) crosses `boundary`, or nil if it never does
+    /// before stopping. (Solve x0 + v0·(e^(kt) − 1)/k = boundary for t.)
+    public static func decelCrossingTime(x0: CGFloat, v0: CGFloat,
+                                         boundary: CGFloat) -> Double? {
+        guard v0 != 0 else { return nil }
+        let arg = 1 + decelK * Double(boundary - x0) / Double(v0)
+        guard arg > 0 else { return nil }
+        let t = _ln(arg) / decelK
+        guard t >= 0, t <= decelDuration(v0: v0) else { return nil }
+        return t
+    }
+
+    /// Apple's rubber-band coefficient.
+    public static let rubberBandCoefficient: CGFloat = 0.55
+
+    /// Banded displacement for a raw overshoot `d` past the edge of a
+    /// scroll view of size `dimension`:
+    ///   (1 − 1/(c·|d|/dim + 1)) · dim · sign(d)  ==  c·d·dim/(c·|d| + dim)
+    public static func rubberBand(_ d: CGFloat, dimension: CGFloat,
+                                  coefficient c: CGFloat = rubberBandCoefficient) -> CGFloat {
+        guard dimension > 0, d != 0 else { return 0 }
+        return c * d * dimension / (c * d.magnitude + dimension)
+    }
+
+    /// Bounce spring: critically damped, settling in ~0.5 s per UIKit's
+    /// settle equation (1 + ω·T)·e^(−ω·T) = 0.001, T = 0.5.
+    public static let bounceOmega: Double = 9.2334134764515865 / 0.5
+
+    /// Displacement from the target at time t for a critically damped
+    /// spring released at displacement x0 with velocity v0:
+    ///   x(t) = (x0 + (v0 + ω·x0)·t) · e^(−ω·t)
+    public static func springDisplacement(x0: CGFloat, v0: CGFloat, at t: Double,
+                                          omega: Double = bounceOmega) -> CGFloat {
+        guard t > 0 else { return x0 }
+        let b = Double(v0) + omega * Double(x0)
+        return CGFloat((Double(x0) + b * t) * _scrollExp(-omega * t))
+    }
+
+    /// d/dt of springDisplacement.
+    public static func springVelocity(x0: CGFloat, v0: CGFloat, at t: Double,
+                                      omega: Double = bounceOmega) -> CGFloat {
+        guard t > 0 else { return v0 }
+        let b = Double(v0) + omega * Double(x0)
+        return CGFloat((b - omega * (Double(x0) + b * t)) * _scrollExp(-omega * t))
+    }
+}
+
+// MARK: - UIScrollView
+
+open class UIScrollView: UIView {
+    // MARK: Content geometry
+
+    /// The scroll position — literally the layer's bounds origin (UIKit/CA).
+    public var contentOffset: CGPoint {
+        get { bounds.origin }
+        set { bounds.origin = newValue }
+    }
+
+    public func setContentOffset(_ offset: CGPoint, animated: Bool) {
+        stopScrollAnimation()
+        if animated {
+            UIView.animate(withDuration: 0.25, delay: 0, options: [],
+                           animations: { self.contentOffset = offset })
+        } else {
+            contentOffset = offset
+        }
+    }
+
+    public var contentSize: CGSize = .zero {
+        didSet { if contentSize != oldValue { setNeedsLayout() } }
+    }
+    public var contentInset: UIEdgeInsets = .zero {
+        didSet { if contentInset != oldValue { setNeedsLayout() } }
+    }
+
+    // MARK: Behavior flags (UIKit defaults)
+
+    public var isScrollEnabled = true {
+        didSet { panGestureRecognizer.isEnabled = isScrollEnabled }
+    }
+    public var bounces = true
+    public var alwaysBounceVertical = false
+    public var alwaysBounceHorizontal = false
+    public var showsVerticalScrollIndicator = true
+    public var showsHorizontalScrollIndicator = true
+    /// Wait ~150 ms (or until the scroll pan claims the gesture) before
+    /// delivering touch-down to content subviews.
+    public var delaysContentTouches = true
+    public var canCancelContentTouches = true
+    /// Per-millisecond deceleration factor (UIKit .normal).
+    public var decelerationRate: CGFloat = UIScrollPhysics.decelerationRateNormal
+
+    public weak var delegate: UIScrollViewDelegate?
+
+    /// The content-touch delay (UIKit's is ~150 ms). Static + tunable for
+    /// tests, like UIWindow.multiTapInterval.
+    public static var contentTouchDelay: TimeInterval = 0.15
+
+    // MARK: State
+
+    /// A touch has landed and the pan may still claim it.
+    public private(set) var isTracking = false
+    /// The pan is actively moving the content.
+    public private(set) var isDragging = false
+    public private(set) var isDecelerating = false
+
+    public let panGestureRecognizer: UIPanGestureRecognizer
+
+    public override init(frame: CGRect = .zero) {
+        let pan = UIScrollViewPanGestureRecognizer()
+        panGestureRecognizer = pan
+        super.init(frame: frame)
+        clipsToBounds = true // UIKit default for scroll views
+        pan.scrollView = self
+        pan.addTarget { [weak self] r in
+            guard let self, let p = r as? UIScrollViewPanGestureRecognizer else { return }
+            self.handlePan(p)
+        }
+        addGestureRecognizer(pan)
+    }
+
+    // MARK: Scrollable range
+
+    /// Legal contentOffset range per axis (inset-adjusted, UIKit rules).
+    public var minContentOffset: CGPoint {
+        CGPoint(x: -contentInset.left, y: -contentInset.top)
+    }
+    public var maxContentOffset: CGPoint {
+        CGPoint(x: max(-contentInset.left,
+                       contentSize.width + contentInset.right - bounds.width),
+                y: max(-contentInset.top,
+                       contentSize.height + contentInset.bottom - bounds.height))
+    }
+
+    var canScrollX: Bool { maxContentOffset.x > minContentOffset.x }
+    var canScrollY: Bool { maxContentOffset.y > minContentOffset.y }
+    /// Axis participates in dragging at all.
+    var dragsX: Bool { canScrollX || (bounces && alwaysBounceHorizontal) }
+    var dragsY: Bool { canScrollY || (bounces && alwaysBounceVertical) }
+    /// Axis rubber-bands/bounces past its edges.
+    var bouncesX: Bool { bounces && (canScrollX || alwaysBounceHorizontal) }
+    var bouncesY: Bool { bounces && (canScrollY || alwaysBounceVertical) }
+
+    // MARK: Content-touch semantics
+
+    /// Whether a recognized scroll pan may cancel touches already delivered
+    /// to `view`. Modern UIKit cancels control touches too (rows/buttons in
+    /// scroll views stop tracking when the scroll starts); override to
+    /// protect a control from cancellation.
+    open func touchesShouldCancel(in view: UIView) -> Bool { true }
+
+    // MARK: Offset application (single funnel)
+
+    /// All scrolling goes through bounds — catch every path (drag, physics,
+    /// setContentOffset, user code) to keep indicators + delegate in sync.
+    open override var bounds: CGRect {
+        didSet {
+            if bounds.origin != oldValue.origin {
+                updateIndicators()
+                delegate?.scrollViewDidScroll(self)
+            }
+        }
+    }
+
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        updateIndicators()
+    }
+
+    // MARK: Drag handling
+
+    /// Baseline offset at pan recognition.
+    private var dragStartOffset: CGPoint = .zero
+    /// (timestamp, applied offset) samples from the last ~100 ms of drag.
+    private var dragSamples: [(t: TimeInterval, offset: CGPoint)] = []
+    /// Release-velocity window (UIKit uses the trailing ~100 ms of samples).
+    static let velocityWindow: TimeInterval = 0.1
+
+    func handlePan(_ pan: UIScrollViewPanGestureRecognizer) {
+        switch pan.state {
+        case .began:
+            stopScrollAnimation()
+            isDragging = true
+            dragStartOffset = contentOffset
+            // Track 1:1 from the recognition point (the ~10 pt activation
+            // slop is absorbed, like UIKit).
+            pan.setTranslation(.zero, in: nil)
+            dragSamples = [(pan.lastTimestamp, contentOffset)]
+            delegate?.scrollViewWillBeginDragging(self)
+            flashIndicators()
+        case .changed:
+            let tr = pan.translation(in: nil)
+            var raw = CGPoint(x: dragsX ? dragStartOffset.x - tr.x : contentOffset.x,
+                              y: dragsY ? dragStartOffset.y - tr.y : contentOffset.y)
+            raw = appliedDragOffset(raw)
+            contentOffset = raw
+            recordDragSample(t: pan.lastTimestamp, offset: raw)
+        case .ended, .cancelled:
+            recordDragSample(t: pan.lastTimestamp, offset: contentOffset)
+            isDragging = false
+            let v = pan.state == .cancelled ? .zero : releaseVelocity()
+            endDragging(velocity: v)
+        default:
+            break
+        }
+    }
+
+    /// Clamp + rubber-band the raw (finger-tracking) offset per axis.
+    func appliedDragOffset(_ raw: CGPoint) -> CGPoint {
+        let lo = minContentOffset, hi = maxContentOffset
+        func axis(_ x: CGFloat, _ lo: CGFloat, _ hi: CGFloat,
+                  bounces: Bool, dim: CGFloat) -> CGFloat {
+            let clamped = min(max(x, lo), hi)
+            let overshoot = x - clamped
+            guard overshoot != 0, bounces else { return clamped }
+            return clamped + UIScrollPhysics.rubberBand(overshoot, dimension: dim)
+        }
+        return CGPoint(x: axis(raw.x, lo.x, hi.x, bounces: bouncesX, dim: bounds.width),
+                       y: axis(raw.y, lo.y, hi.y, bounces: bouncesY, dim: bounds.height))
+    }
+
+    func recordDragSample(t: TimeInterval, offset: CGPoint) {
+        dragSamples.append((t, offset))
+        let cutoff = t - UIScrollView.velocityWindow - 0.02
+        while dragSamples.count > 2, dragSamples[0].t < cutoff {
+            dragSamples.removeFirst()
+        }
+    }
+
+    /// Offset velocity (pt/s) over the trailing ~100 ms of samples.
+    func releaseVelocity() -> CGPoint {
+        guard let last = dragSamples.last else { return .zero }
+        // Oldest sample still inside the window.
+        var first = dragSamples[0]
+        for s in dragSamples where last.t - s.t <= UIScrollView.velocityWindow {
+            first = s
+            break
+        }
+        let dt = last.t - first.t
+        guard dt > 0 else { return .zero }
+        return CGPoint(x: (last.offset.x - first.offset.x) / CGFloat(dt),
+                       y: (last.offset.y - first.offset.y) / CGFloat(dt))
+    }
+
+    func endDragging(velocity v: CGPoint) {
+        let now = dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
+        dragSamples.removeAll()
+        let lo = minContentOffset, hi = maxContentOffset
+        let off = contentOffset
+
+        xAnim = makeReleaseAxisAnim(x: off.x, v: v.x, lo: lo.x, hi: hi.x,
+                                    scrolls: dragsX, bouncesAxis: bouncesX, at: now)
+        yAnim = makeReleaseAxisAnim(x: off.y, v: v.y, lo: lo.y, hi: hi.y,
+                                    scrolls: dragsY, bouncesAxis: bouncesY, at: now)
+
+        let decelerates = xAnim != nil || yAnim != nil
+        delegate?.scrollViewDidEndDragging(self, willDecelerate: decelerates)
+        if decelerates {
+            isDecelerating = true
+            delegate?.scrollViewWillBeginDecelerating(self)
+            UIScrollView.registerAnimating(self)
+        } else {
+            settle()
+        }
+    }
+
+    func makeReleaseAxisAnim(x: CGFloat, v: CGFloat, lo: CGFloat, hi: CGFloat,
+                             scrolls: Bool, bouncesAxis: Bool,
+                             at now: TimeInterval) -> AxisAnim? {
+        guard scrolls else { return nil }
+        if x < lo || x > hi {
+            // Released while overscrolled: spring back to the near boundary,
+            // carrying the release velocity.
+            let target = x < lo ? lo : hi
+            return AxisAnim(mode: .bounce, start: now, x0: x - target, v0: v,
+                            target: target, lo: lo, hi: hi, bounces: bouncesAxis)
+        }
+        guard v.magnitude > UIScrollPhysics.decelStopVelocity else { return nil }
+        return AxisAnim(mode: .decelerate, start: now, x0: x, v0: v,
+                        target: 0, lo: lo, hi: hi, bounces: bouncesAxis)
+    }
+
+    // MARK: Momentum / bounce animation
+
+    struct AxisAnim {
+        enum Mode { case decelerate, bounce }
+        var mode: Mode
+        var start: TimeInterval
+        /// decelerate: offset at start. bounce: displacement from target.
+        var x0: CGFloat
+        var v0: CGFloat
+        /// bounce: the boundary offset being sprung to.
+        var target: CGFloat
+        var lo: CGFloat
+        var hi: CGFloat
+        var bounces: Bool
+    }
+
+    var xAnim: AxisAnim?
+    var yAnim: AxisAnim?
+
+    /// Deceleration/bounce is over when the spring displacement AND velocity
+    /// are visually zero.
+    static let springSettleDisplacement: CGFloat = 0.05
+    static let springSettleVelocity: CGFloat = 0.5
+
+    /// Advance one axis to time `t`. Returns (offset, finished).
+    static func stepAxis(_ a: inout AxisAnim, to t: TimeInterval) -> (CGFloat, Bool) {
+        let dt = max(0, t - a.start)
+        switch a.mode {
+        case .decelerate:
+            // Edge crossing: switch to the bounce spring at the EXACT
+            // crossing time (closed form, tick-cadence independent).
+            let boundary: CGFloat? = a.v0 < 0 ? (a.x0 >= a.lo ? a.lo : nil)
+                                             : (a.x0 <= a.hi ? a.hi : nil)
+            if let b = boundary,
+               let tc = UIScrollPhysics.decelCrossingTime(x0: a.x0, v0: a.v0, boundary: b),
+               dt >= tc {
+                if a.bounces {
+                    // Hand off at the EXACT crossing time with the carried
+                    // velocity (start shifts by tc — tick-cadence free).
+                    let vc = UIScrollPhysics.decelVelocity(v0: a.v0, at: tc)
+                    a = AxisAnim(mode: .bounce, start: a.start + tc, x0: 0, v0: vc,
+                                 target: b, lo: a.lo, hi: a.hi, bounces: a.bounces)
+                    return stepAxis(&a, to: t)
+                }
+                return (b, true) // no bounce: clamp dead at the edge
+            }
+            let dur = UIScrollPhysics.decelDuration(v0: a.v0)
+            if dt >= dur {
+                return (UIScrollPhysics.decelOffset(x0: a.x0, v0: a.v0, at: dur), true)
+            }
+            return (UIScrollPhysics.decelOffset(x0: a.x0, v0: a.v0, at: dt), false)
+        case .bounce:
+            let d = UIScrollPhysics.springDisplacement(x0: a.x0, v0: a.v0, at: dt)
+            let v = UIScrollPhysics.springVelocity(x0: a.x0, v0: a.v0, at: dt)
+            if d.magnitude < springSettleDisplacement,
+               v.magnitude < springSettleVelocity {
+                return (a.target, true)
+            }
+            return (a.target + d, false)
+        }
+    }
+
+    /// Advance the scroll animation to `time` (host clock — the same clock
+    /// as UIView.animate). Called from UIWindow.tick via _stepScrollAnimations.
+    func stepScrollAnimation(to time: TimeInterval) {
+        guard xAnim != nil || yAnim != nil else { return }
+        var off = contentOffset
+        if var a = xAnim {
+            let (x, done) = UIScrollView.stepAxis(&a, to: time)
+            off.x = x
+            xAnim = done ? nil : a
+        }
+        if var a = yAnim {
+            let (y, done) = UIScrollView.stepAxis(&a, to: time)
+            off.y = y
+            yAnim = done ? nil : a
+        }
+        contentOffset = off
+        if xAnim == nil && yAnim == nil {
+            isDecelerating = false
+            delegate?.scrollViewDidEndDecelerating(self)
+            settle()
+        }
+    }
+
+    /// Cancel any momentum/bounce, freezing the offset where it is.
+    public func stopScrollAnimation() {
+        if xAnim != nil || yAnim != nil {
+            xAnim = nil
+            yAnim = nil
+            isDecelerating = false
+        }
+    }
+
+    func settle() {
+        fadeIndicators()
+    }
+
+    // MARK: Global animation registry (host clock stepping)
+
+    private struct WeakScrollView { weak var view: UIScrollView? }
+    private static var animating: [WeakScrollView] = []
+
+    static func registerAnimating(_ sv: UIScrollView) {
+        animating.removeAll { $0.view == nil }
+        if !animating.contains(where: { $0.view === sv }) {
+            animating.append(WeakScrollView(view: sv))
+        }
+    }
+
+    /// Advance every decelerating/bouncing scroll view to `time`. The
+    /// window calls this from tick(timestamp:) — the host's frame clock.
+    public static func _stepScrollAnimations(to time: TimeInterval) {
+        guard !animating.isEmpty else { return }
+        let live = animating.compactMap { $0.view }
+        for sv in live { sv.stepScrollAnimation(to: time) }
+        animating.removeAll { $0.view == nil || ($0.view!.xAnim == nil && $0.view!.yAnim == nil) }
+    }
+
+    /// Any scroll view is still decelerating/bouncing (host redraw hint).
+    public static var _hasActiveScrollAnimations: Bool {
+        animating.contains { $0.view != nil && ($0.view!.xAnim != nil || $0.view!.yAnim != nil) }
+    }
+
+    // MARK: Touch-pipeline hooks (called by UIWindow — see UIEvent.swift)
+
+    /// Nearest enclosing scroll view of `view` (including itself).
+    static func enclosingScrollView(of view: UIView?) -> UIScrollView? {
+        var v = view
+        while let cur = v {
+            if let sv = cur as? UIScrollView { return sv }
+            v = cur.superview
+        }
+        return nil
+    }
+
+    /// A touch landed inside the scroll view (on it or a descendant).
+    /// Returns true when the touch was a scroll-catch (finger stopping a
+    /// deceleration) — such touches are consumed and never reach content.
+    func touchBeganInContent() -> Bool {
+        isTracking = true
+        let wasAnimating = xAnim != nil || yAnim != nil
+        if wasAnimating {
+            stopScrollAnimation()
+            flashIndicators() // stay visible; drag likely follows
+        }
+        return wasAnimating
+    }
+
+    func touchSequenceEnded() {
+        isTracking = false
+    }
+
+    // MARK: Scroll indicators
+
+    /// 2.5 pt bar, 3 pt inset from the trailing/bottom edge and 3 pt from
+    /// the track ends (APP_FEEL).
+    static let indicatorThickness: CGFloat = 2.5
+    static let indicatorInset: CGFloat = 3
+    static let indicatorMinLength: CGFloat = 36
+    /// Indicator fade-out duration after the scroll settles.
+    static let indicatorFadeDuration: Double = 0.4
+
+    var verticalIndicator: UIView?
+    var horizontalIndicator: UIView?
+    /// True between flashIndicators() and fadeIndicators().
+    var indicatorsVisible = false
+
+    /// Lazily create an indicator bar (lazy so static scenes never gain
+    /// extra subviews — layout dumps stay clean, like UIKit's lazy ones).
+    func makeIndicator() -> UIView {
+        let bar = UIView()
+        bar.isUserInteractionEnabled = false
+        bar.layer.cornerRadius = UIScrollView.indicatorThickness / 2
+        let dark = traitCollection.userInterfaceStyle == .dark
+        bar.backgroundColor = dark
+            ? UIColor(red: 1, green: 1, blue: 1, alpha: 0.35)
+            : UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
+        bar.alpha = 0
+        addSubview(bar)
+        return bar
+    }
+
+    func flashIndicators() {
+        indicatorsVisible = true
+        if showsVerticalScrollIndicator, canScrollY, verticalIndicator == nil {
+            verticalIndicator = makeIndicator()
+        }
+        if showsHorizontalScrollIndicator, canScrollX, horizontalIndicator == nil {
+            horizontalIndicator = makeIndicator()
+        }
+        for bar in [verticalIndicator, horizontalIndicator] {
+            guard let bar else { continue }
+            bar.removeAllAnimations()
+            bar.alpha = 1
+        }
+        updateIndicators()
+    }
+
+    func fadeIndicators() {
+        guard indicatorsVisible else { return }
+        indicatorsVisible = false
+        for bar in [verticalIndicator, horizontalIndicator] {
+            guard let bar, bar.alpha > 0 else { continue }
+            UIView.animate(withDuration: UIScrollView.indicatorFadeDuration,
+                           delay: 0, options: .curveLinear,
+                           animations: { bar.alpha = 0 })
+        }
+    }
+
+    /// Position the bars for the current offset. Bars are subviews living in
+    /// the scrolled coordinate space, so their frames are pinned to the
+    /// VISIBLE rect (bounds.origin + viewport-relative position).
+    func updateIndicators() {
+        let inset = UIScrollView.indicatorInset
+        let thick = UIScrollView.indicatorThickness
+        let off = contentOffset
+        let lo = minContentOffset, hi = maxContentOffset
+
+        if let bar = verticalIndicator {
+            let range = hi.y - lo.y
+            let contentLen = contentSize.height + contentInset.top + contentInset.bottom
+            let track = bounds.height - 2 * inset
+            if range > 0, contentLen > 0, track > 0 {
+                var len = max(UIScrollView.indicatorMinLength,
+                              track * min(1, bounds.height / contentLen))
+                // Overscroll: the bar compresses by the overshoot, pinned to
+                // its end of the track (UIKit behavior).
+                let overshoot = off.y < lo.y ? lo.y - off.y
+                              : off.y > hi.y ? off.y - hi.y : 0
+                len = max(thick * 2, len - overshoot)
+                let p = min(1, max(0, (off.y - lo.y) / range))
+                let y = inset + (track - len) * p
+                bar.frame = CGRect(x: off.x + bounds.width - inset - thick,
+                                   y: off.y + y, width: thick, height: len)
+                bar.isHidden = false
+            } else {
+                bar.isHidden = true
+            }
+        }
+        if let bar = horizontalIndicator {
+            let range = hi.x - lo.x
+            let contentLen = contentSize.width + contentInset.left + contentInset.right
+            let track = bounds.width - 2 * inset
+            if range > 0, contentLen > 0, track > 0 {
+                var len = max(UIScrollView.indicatorMinLength,
+                              track * min(1, bounds.width / contentLen))
+                let overshoot = off.x < lo.x ? lo.x - off.x
+                              : off.x > hi.x ? off.x - hi.x : 0
+                len = max(thick * 2, len - overshoot)
+                let p = min(1, max(0, (off.x - lo.x) / range))
+                let x = inset + (track - len) * p
+                bar.frame = CGRect(x: off.x + x,
+                                   y: off.y + bounds.height - inset - thick,
+                                   width: len, height: thick)
+                bar.isHidden = false
+            } else {
+                bar.isHidden = true
+            }
+        }
+    }
+}
+
+// MARK: - Scroll pan recognizer
+
+/// UIScrollView's pan: standard pan slop/velocity behavior, plus the
+/// scroll-specific begin gates — axis eligibility (the drag must move along
+/// a scrollable/bounceable axis) and content-touch cancellation policy
+/// (canCancelContentTouches / touchesShouldCancel(in:)).
+public final class UIScrollViewPanGestureRecognizer: UIPanGestureRecognizer {
+    weak var scrollView: UIScrollView?
+
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        if _state == .possible, let sv = scrollView {
+            let p = location(in: nil)
+            let dx = p.x - startLocation.x, dy = p.y - startLocation.y
+            if (dx * dx + dy * dy).squareRoot() > activationDistance,
+               !allowBegin(sv, dx: dx, dy: dy) {
+                state = .failed
+            }
+        }
+        super.touchesMoved(touches, with: event)
+    }
+
+    func allowBegin(_ sv: UIScrollView, dx: CGFloat, dy: CGFloat) -> Bool {
+        // Axis gate: the dominant movement direction must be scrollable.
+        let allowX = sv.dragsX, allowY = sv.dragsY
+        if !allowX && !allowY { return false }
+        if dx.magnitude > dy.magnitude { if !allowX { return false } }
+        else { if !allowY { return false } }
+        // Content-touch cancellation gate: a touch whose touch-down was
+        // already DELIVERED to a content subview may only be stolen when
+        // canCancelContentTouches and touchesShouldCancel(in:) allow it.
+        // (Touches still held by the delaysContentTouches window were never
+        // delivered — nothing to cancel, the pan is free to begin.)
+        for t in trackedTouches {
+            guard let v = t.view, v !== sv, !t.beganPending,
+                  UIScrollView.enclosingScrollView(of: v) === sv else { continue }
+            if !sv.canCancelContentTouches || !sv.touchesShouldCancel(in: v) {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+// MARK: - exp helper (no Foundation)
+
+/// e^x for any x (range-reduced Taylor, ~1e-12 over the physics ranges).
+func _scrollExp(_ x: Double) -> Double {
+    if x == 0 { return 1 }
+    let neg = x < 0
+    var y = x.magnitude
+    var k = 0
+    while y > 0.5 { y /= 2; k += 1 }
+    var term = 1.0
+    var sum = 1.0
+    for i in 1...16 {
+        term *= y / Double(i)
+        sum += term
+    }
+    for _ in 0..<k { sum *= sum }
+    return neg ? 1 / sum : sum
+}

@@ -358,6 +358,18 @@ func makeGradientView(_ j: SceneJSON) -> UIGradientView {
     return g
 }
 
+func makeScrollView(_ j: SceneJSON) -> UIScrollView {
+    let s = UIScrollView()
+    if let cs = numArray(j["contentSize"]), cs.count == 2 {
+        s.contentSize = CGSize(width: cs[0], height: cs[1])
+    }
+    if let ci = numArray(j["contentInset"]), ci.count == 4 {
+        s.contentInset = UIEdgeInsets(top: ci[0], left: ci[1],
+                                      bottom: ci[2], right: ci[3])
+    }
+    return s
+}
+
 func makeSwitch(_ j: SceneJSON) -> UISwitch {
     let s = UISwitch()
     s.isOn = j["on"]?.boolValue ?? false
@@ -397,6 +409,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UISwitch": v = makeSwitch(j)
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
+    case "UIScrollView": v = makeScrollView(j)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -422,6 +435,13 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
         let origin = v.frame.origin
         v.sizeToFit()
         v.frame.origin = origin
+    }
+    // Scroll position applies AFTER the frame and children exist (mirrors
+    // the oracle; setting it earlier is fine for OpenUIKit but real UIKit
+    // can re-clamp an offset set on a zero-sized scroll view).
+    if let sv = v as? UIScrollView, let co = numArray(j["contentOffset"]),
+       co.count == 2 {
+        sv.contentOffset = CGPoint(x: co[0], y: co[1])
     }
     if let t = numArray(j["transform"]), t.count == 6 {
         v.transform = CGAffineTransform(a: t[0], b: t[1], c: t[2], d: t[3], tx: t[4], ty: t[5])

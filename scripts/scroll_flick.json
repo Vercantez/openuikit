@@ -1,0 +1,13 @@
+{
+  "comment": "Scripted flick for fixtures/scenes/scroll_static.json (openhost --script). The scroll view is subview 1 at root frame (20,30,200,280), contentOffset starts (30,155), max offset y = 630-280 = 350. Down at t=0.05, five -20pt moves every 20ms (1000 pt/s), lift at 0.16. Pan recognizes on the first move (t=0.07, baseline offset 155); the remaining 80pt track 1:1 -> offset 235 at release with v = 1000 pt/s. Deceleration (0.998/ms) crosses the 350 edge at tc = ln(0.7698)/k = 0.1307s carrying 770 pt/s -> bounce overshoot peaks ~15.3pt past the edge at ~t=0.335, spring settles at exactly 350 by ~0.78, indicator fades 0.4s. Captures: initial, drag end (1:1), mid-momentum, bounce peak, spring return, settled + fading indicator, fully settled.",
+  "events": [
+    { "t": 0.05, "kind": "down", "x": 120, "y": 250 },
+    { "t": 0.07, "kind": "move", "x": 120, "y": 230 },
+    { "t": 0.09, "kind": "move", "x": 120, "y": 210 },
+    { "t": 0.11, "kind": "move", "x": 120, "y": 190 },
+    { "t": 0.13, "kind": "move", "x": 120, "y": 170 },
+    { "t": 0.15, "kind": "move", "x": 120, "y": 150 },
+    { "t": 0.16, "kind": "up",   "x": 120, "y": 150 }
+  ],
+  "captures": [0.04, 0.15, 0.25, 0.34, 0.5, 0.9, 1.5]
+}
