@@ -330,13 +330,24 @@ func makeSwitch(_ j: SceneJSON) -> UISwitch {
     return s
 }
 
+func makeButton(_ j: SceneJSON) -> UIButton {
+    let b = UIButton(type: .system)
+    b.setTitle(j["title"]?.stringValue, for: .normal)
+    if j["fontSize"] != nil || j["fontWeight"] != nil { b.titleLabel?.font = fontFrom(j) }
+    // Mirror the oracle: pin the dynamic tint to the scene style (it sets
+    // b.tintColor = b.tintColor.resolvedColor(with: traits) at build time;
+    // UITraitCollection.current carries the scene traits here).
+    b.tintColor = b.tintColor.resolvedColor(with: UITraitCollection.current)
+    if let c = colorOrDie(j["titleColor"], "UIButton") { b.setTitleColor(c, for: .normal) }
+    if j["enabled"]?.boolValue == false { b.isEnabled = false }
+    return b
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
 /// owning modules land. Adding a real class later = one `case` line below.
-let notYetImplementedClasses: Set<String> = [
-    "UIButton",
-]
+let notYetImplementedClasses: Set<String> = []
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
     let cls = j["class"]?.stringValue ?? "UIView"
@@ -348,8 +359,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIProgressView": v = makeProgressView(j)
     case "UIStackView": v = makeStackView(j)
     case "UISwitch": v = makeSwitch(j)
-    // Future phases — one line each as OpenUIKit grows the class:
-    // case "UIButton":       v = makeButton(j)
+    case "UIButton": v = makeButton(j)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -395,7 +405,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     ]
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
-    if v is UILabel || v is UIImageView || v is UIProgressView || v is UISwitch {
+    if v is UILabel || v is UIButton || v is UIImageView || v is UIProgressView || v is UISwitch {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),
@@ -403,7 +413,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
         ])
     }
     // Oracle: sizeThatFits200 for UILabel/UIButton.
-    if v is UILabel {
+    if v is UILabel || v is UIButton {
         let s = v.sizeThatFits(CGSize(width: 200, height: CGFloat.greatestFiniteMagnitude))
         entry["sizeThatFits200"] = .array([.number(round3(s.width)), .number(round3(s.height))])
     }

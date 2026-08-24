@@ -149,7 +149,10 @@ final class RenderCLITests: XCTestCase {
         XCTAssertGreaterThan(f[2], 0, "sizeToFit should have grown the label")
     }
 
-    func testUnsupportedClassWarnsAndSubstitutesUIView() throws {
+    // Every scene-spec class is now implemented (notYetImplementedClasses is
+    // empty); UIButton — the last holdout this test used to exercise the
+    // warn-and-substitute path — renders for real, with the oracle's dump keys.
+    func testButtonClassIsFullySupported() throws {
         let dir = try makeTempDir()
         let scene: [String: Any] = [
             "name": "t_button",
@@ -164,13 +167,16 @@ final class RenderCLITests: XCTestCase {
         let sceneFile = try writeScene(scene, name: "t_button", in: dir)
         let res = try runCLI(["render", dir.path, sceneFile.path])
         XCTAssertEqual(res.exitCode, 0)
-        XCTAssertTrue(res.stderr.contains("UIButton"), "stderr should warn about UIButton: \(res.stderr)")
+        XCTAssertFalse(res.stderr.contains("not implemented"), "stderr: \(res.stderr)")
 
         let byPath = try loadLayout(dir, "t_button")
-        // Substituted view keeps common props but reports as UIView, no intrinsic.
-        XCTAssertEqual(byPath["0"]?["class"] as? String, "UIView")
+        XCTAssertEqual(byPath["0"]?["class"] as? String, "UIButton")
         XCTAssertEqual(try frame(byPath["0"]), [1, 2, 30, 20])
-        XCTAssertNil(byPath["0"]?["intrinsic"])
+        // Oracle dump contract: buttons report intrinsic + sizeThatFits200,
+        // and carry a UIButtonLabel subview.
+        XCTAssertEqual((byPath["0"]?["intrinsic"] as? [Double])?.count, 2)
+        XCTAssertEqual((byPath["0"]?["sizeThatFits200"] as? [Double])?.count, 2)
+        XCTAssertEqual(byPath["0.0"]?["class"] as? String, "UIButtonLabel")
     }
 
     func testMissingSceneFileFailsWithExit1() throws {
