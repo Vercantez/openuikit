@@ -1,8 +1,21 @@
 // View-hierarchy render traversal. Owner: view module.
-// SKELETON with working basic traversal — view module must verify/complete:
-// autoresizing, transform-about-center correctness, border ring geometry,
-// hard-edge (non-AA) fills for rotated layers (see ARCHITECTURE.md),
-// pixel-boundary behaviors validated against goldens.
+//
+// Order matches CALayer compositing (docs/ARCHITECTURE.md):
+//   1. transparency layer if alpha < 1 (groups the WHOLE subtree)
+//   2. masksToBounds clip (rounded by cornerRadius) — applied BEFORE
+//      background/content, and it also clips subviews
+//   3. background rounded fill
+//   4. drawContent (text / images / control chrome)
+//   5. subviews in array order (translate to center, concat transform,
+//      translate by -bounds.mid)
+//   6. border ring ABOVE sublayers (even-odd ring fill; inner radius
+//      = max(0, cornerRadius - borderWidth))
+//   7. end transparency layer
+//
+// Hard-edge rule: UIKit does not anti-alias the edges of transformed
+// (rotated/scaled) layers — see golden/transforms.png. When a view's own
+// transform is non-identity and not a pure translation, its background and
+// border fills use hard (0/1 threshold at 0.5 coverage) edges.
 
 public enum UIRenderer {
     /// Render a laid-out view hierarchy into a fresh bitmap.
@@ -11,29 +24,50 @@ public enum UIRenderer {
         let h = Int((root.bounds.height * scale).rounded())
         let bitmap = Bitmap(width: w, height: h)
         let canvas = Canvas(bitmap: bitmap, scale: scale)
+        // Note: like CALayer.render(in:), the root's OWN transform is not
+        // applied — a layer's transform is applied by its superlayer.
         renderView(root, into: canvas)
         return bitmap
     }
 
+    /// True when `t` scales/rotates/skews (anything beyond translation).
+    /// Such views composite with hard (non-anti-aliased) edges, matching
+    /// UIKit's edge behavior for transformed layers.
+    static func isAxisAlignedTranslationOnly(_ t: CGAffineTransform) -> Bool {
+        t.a == 1 && t.b == 0 && t.c == 0 && t.d == 1
+    }
+
     static func renderView(_ v: UIView, into c: Canvas) {
-        if v.isHidden || v.alpha <= 0 { return }
+        if v.isHidden { return }
+        let alpha = min(v.alpha, 1)
+        if alpha <= 0 { return }
+
         c.save()
-        if v.alpha < 1 { c.beginTransparencyLayer(alpha: v.alpha) }
+        let grouped = alpha < 1
+        if grouped { c.beginTransparencyLayer(alpha: alpha) }
 
         let bounds = v.bounds
         let radius = v.layer.cornerRadius
+        let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
+
+        // masksToBounds clips background, content AND subviews — apply first.
         if v.clipsToBounds { c.clip(to: bounds, cornerRadius: radius) }
 
         if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)
-            if color.alpha > 0 {
-                c.fill(.roundedRect(bounds, cornerRadius: radius), color: color)
+            if color.alpha > 0, !bounds.isEmpty {
+                c.fill(.roundedRect(bounds, cornerRadius: radius), color: color,
+                       hardEdges: hardEdges)
             }
         }
+
         v.drawContent(in: c, bounds: bounds)
 
         for sub in v.subviews {
             c.save()
+            // Position the subview: its center (in our bounds coordinates),
+            // then its transform about that center (anchor 0.5/0.5), then
+            // shift so the subview's own bounds coordinates line up.
             c.translate(x: sub.center.x, y: sub.center.y)
             c.concatenate(sub.transform)
             c.translate(x: -sub.bounds.midX, y: -sub.bounds.midY)
@@ -41,21 +75,31 @@ public enum UIRenderer {
             c.restore()
         }
 
-        // CALayer draws its border ABOVE sublayers.
-        if v.layer.borderWidth > 0, let bc = v.layer.borderColor, bc.alpha > 0 {
-            let bw = v.layer.borderWidth
-            var ring = Path.roundedRect(bounds, cornerRadius: radius)
-            let innerRect = bounds.insetBy(dx: bw, dy: bw)
-            if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
-                let innerRadius = Swift.max(0, radius - bw)
-                ring.elements += Path.roundedRect(innerRect, cornerRadius: innerRadius).elements
-                c.fill(ring, color: bc, evenOdd: true)
-            } else {
-                c.fill(ring, color: bc)
-            }
-        }
+        // CALayer draws its border ABOVE its contents and sublayers.
+        renderBorder(of: v, bounds: bounds, radius: radius,
+                     hardEdges: hardEdges, into: c)
 
-        if v.alpha < 1 { c.endTransparencyLayer() }
+        if grouped { c.endTransparencyLayer() }
         c.restore()
+    }
+
+    static func renderBorder(of v: UIView, bounds: CGRect, radius: CGFloat,
+                             hardEdges: Bool, into c: Canvas) {
+        let bw = v.layer.borderWidth
+        guard bw > 0, !bounds.isEmpty, let bc = v.layer.borderColor, bc.alpha > 0
+        else { return }
+        let outer = Path.roundedRect(bounds, cornerRadius: radius)
+        let innerRect = bounds.insetBy(dx: bw, dy: bw)
+        if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
+            // Even-odd ring between the outer rounded rect and the inner one
+            // (inner corner radius shrinks by the border width, floored at 0).
+            let innerRadius = Swift.max(0, radius - bw)
+            var ring = outer
+            ring.elements += Path.roundedRect(innerRect, cornerRadius: innerRadius).elements
+            c.fill(ring, color: bc, evenOdd: true, hardEdges: hardEdges)
+        } else {
+            // Border consumes the whole bounds.
+            c.fill(outer, color: bc, hardEdges: hardEdges)
+        }
     }
 }
