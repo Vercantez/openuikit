@@ -181,12 +181,104 @@ func makeLabel(_ j: SceneJSON) -> UILabel {
     return l
 }
 
+// MARK: - Image synthesis (mirror oracle's makeImage)
+
+/// Synthesize a UIImage per docs/SCENE_SPEC.md by filling Bitmap pixels
+/// procedurally at the scene scale (the oracle does the equivalent through
+/// UIGraphicsImageRenderer with format.scale = scene scale).
+func makeImage(_ j: SceneJSON, scale: CGFloat) -> UIImage {
+    guard let sz = numArray(j["size"]), sz.count == 2 else { fatalError("image needs size") }
+    let pw = Int((sz[0] * scale).rounded())
+    let ph = Int((sz[1] * scale).rounded())
+    let colorStrings = j["colors"]?.arrayValue?.compactMap { $0.stringValue } ?? ["#FF00FF"]
+    let colors: [CGColor] = colorStrings.map {
+        guard let c = parseColor($0) else { fatalError("bad color '\($0)' in image") }
+        return c.cgColor
+    }
+    let kind = j["kind"]?.stringValue ?? "solid"
+    let bmp = Bitmap(width: pw, height: ph)
+
+    func bytes(_ c: CGColor) -> (UInt8, UInt8, UInt8, UInt8) {
+        func b(_ v: CGFloat) -> UInt8 { UInt8(max(0, min(255, (v * 255).rounded()))) }
+        return (b(c.red), b(c.green), b(c.blue), b(c.alpha))
+    }
+
+    switch kind {
+    case "solid":
+        let (r, g, b, a) = bytes(colors[0])
+        for i in stride(from: 0, to: bmp.pixels.count, by: 4) {
+            bmp.pixels[i] = r; bmp.pixels[i + 1] = g
+            bmp.pixels[i + 2] = b; bmp.pixels[i + 3] = a
+        }
+    case "checker":
+        // Oracle fills tile rects on a point grid; tile*scale is the pixel
+        // pitch (integral for all fixture scenes, so fills are pixel-exact).
+        let tile = (num(j["tile"]) ?? 8) * scale
+        let c0 = bytes(colors[0])
+        let c1 = bytes(colors.count > 1 ? colors[1] : colors[0])
+        for y in 0..<ph {
+            let row = Int(CGFloat(y) / tile)
+            for x in 0..<pw {
+                let col = Int(CGFloat(x) / tile)
+                let (r, g, b, a) = (row + col) % 2 == 1 ? c1 : c0
+                let o = (y * pw + x) * 4
+                bmp.pixels[o] = r; bmp.pixels[o + 1] = g
+                bmp.pixels[o + 2] = b; bmp.pixels[o + 3] = a
+            }
+        }
+    case "gradient":
+        // CG linear gradient over an sRGB stop space: per-pixel lerp of the
+        // gamma-encoded components, sampled at pixel centers.
+        let c0 = colors[0]
+        let c1 = colors.count > 1 ? colors[1] : colors[0]
+        let horizontal = j["direction"]?.stringValue == "horizontal"
+        let n = horizontal ? pw : ph
+        var stops: [(UInt8, UInt8, UInt8, UInt8)] = []
+        stops.reserveCapacity(n)
+        for i in 0..<n {
+            let t = (CGFloat(i) + 0.5) / CGFloat(n)
+            stops.append(bytes(CGColor(red: c0.red + (c1.red - c0.red) * t,
+                                       green: c0.green + (c1.green - c0.green) * t,
+                                       blue: c0.blue + (c1.blue - c0.blue) * t,
+                                       alpha: c0.alpha + (c1.alpha - c0.alpha) * t)))
+        }
+        for y in 0..<ph {
+            for x in 0..<pw {
+                let (r, g, b, a) = stops[horizontal ? x : y]
+                let o = (y * pw + x) * 4
+                bmp.pixels[o] = r; bmp.pixels[o + 1] = g
+                bmp.pixels[o + 2] = b; bmp.pixels[o + 3] = a
+            }
+        }
+    default:
+        fatalError("bad image kind \(kind)")
+    }
+    return UIImage(bitmap: bmp, scale: scale)
+}
+
+func makeImageView(_ j: SceneJSON, scale: CGFloat) -> UIImageView {
+    let iv = UIImageView()
+    if let ij = j["image"]?.objectValue { iv.image = makeImage(ij, scale: scale) }
+    if let cm = j["contentMode"]?.stringValue {
+        let modes: [String: UIViewContentMode] = [
+            "scaleToFill": .scaleToFill, "scaleAspectFit": .scaleAspectFit,
+            "scaleAspectFill": .scaleAspectFill, "center": .center, "top": .top,
+            "bottom": .bottom, "left": .left, "right": .right, "topLeft": .topLeft,
+            "topRight": .topRight, "bottomLeft": .bottomLeft, "bottomRight": .bottomRight,
+            "redraw": .redraw,
+        ]
+        guard let mode = modes[cm] else { fatalError("bad contentMode \(cm)") }
+        iv.contentMode = mode
+    }
+    return iv
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
 /// owning modules land. Adding a real class later = one `case` line below.
 let notYetImplementedClasses: Set<String> = [
-    "UIButton", "UISwitch", "UIProgressView", "UIStackView", "UIImageView",
+    "UIButton", "UISwitch", "UIProgressView", "UIStackView",
 ]
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
@@ -195,8 +287,8 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     switch cls {
     case "UIView": v = UIView()
     case "UILabel": v = makeLabel(j)
+    case "UIImageView": v = makeImageView(j, scale: scale)
     // Future phases — one line each as OpenUIKit grows the class:
-    // case "UIImageView":    v = makeImageView(j, scale: scale)
     // case "UIButton":       v = makeButton(j)
     // case "UISwitch":       v = makeSwitch(j)
     // case "UIProgressView": v = makeProgressView(j)
@@ -243,7 +335,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     ]
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
-    if v is UILabel {
+    if v is UILabel || v is UIImageView {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),
