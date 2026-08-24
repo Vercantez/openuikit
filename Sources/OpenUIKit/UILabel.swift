@@ -173,10 +173,9 @@ open class UILabel: UIView {
             if inkEligible {
                 let penFloor = penX.rounded(.down)
                 let frac = penX - penFloor
-                let tag = GlyphInkTable.phaseTag(size: font.pointSize, frac: frac)
+                let (tag, anchor) = GlyphInkTable.phase(size: font.pointSize, frac: frac)
                 if let m = GlyphInkTable.mask(familyKey: famKey, sizeKey: sizeKey,
                                               dark: dark, tag: tag, scalar: ch) {
-                    let anchor = Int((2 * frac).rounded(.down))
                     canvas.drawMask(m.mask, width: m.width, height: m.height,
                                     atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,
                                     pixelY: devBaseY + m.oy,

@@ -46,25 +46,25 @@ public enum GlyphInkTable {
 
     public static var isAvailable: Bool { entries != nil }
 
-    /// Phase tag for a pen fraction at `size`; nil when the size has no
-    /// entry in the phase model (fractional sizes use the fallback path).
-    static func phaseTag(size: CGFloat, frac: CGFloat) -> String {
+    /// Phase tag + device-pixel anchor (floor(2 * quantized phase)) for a
+    /// pen fraction at `size`.
+    static func phase(size: CGFloat, frac: CGFloat) -> (tag: String, anchor: Int) {
         if size < 12 {
             switch Int(frac * 4) {
-            case 0: return "0"
-            case 1: return "P1"
-            case 2: return "P2"
-            default: return "P3"
+            case 0: return ("0", 0)
+            case 1: return ("P1", 0)   // phase 1/4
+            case 2: return ("P2", 1)   // phase 1/2
+            default: return ("P3", 1)  // phase 3/4
             }
         } else if size < 16 {
-            if frac < 1.0 / 3.0 { return "0" }
-            if frac < 0.5 { return "T" }
-            if frac < 2.0 / 3.0 { return "H" }
-            return "P2"
+            if frac < 1.0 / 3.0 { return ("0", 0) }
+            if frac < 0.5 { return ("T", 0) }      // phase 1/3
+            if frac < 2.0 / 3.0 { return ("H", 1) } // phase 1/2
+            return ("P2", 1)                        // phase 2/3
         } else if size < 29 {
-            return frac < 0.5 ? "0" : "P1"
+            return frac < 0.5 ? ("0", 0) : ("P1", 1)  // phases {0, 1/2}
         }
-        return "0"
+        return ("0", 0)  // whole-point positions only
     }
 
     static func hexDecode(_ s: String) -> [UInt8]? {
