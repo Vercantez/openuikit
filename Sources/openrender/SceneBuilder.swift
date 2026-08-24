@@ -481,6 +481,7 @@ func runHitTests(_ points: [CGPoint], container: UIView,
 // MARK: - Animations (scene spec v3, mirror oracle's parseAnimations)
 
 struct SceneAnimation {
+    let kind: String              // "uiview-animate" | "switch-setOn"
     let target: String            // dot-joined subview-index path ("" = root)
     let duration: Double
     let delay: Double
@@ -489,6 +490,7 @@ struct SceneAnimation {
     let springDamping: CGFloat?   // non-nil => spring animation
     let springVelocity: CGFloat
     let changes: SceneJSON
+    let on: Bool                  // switch-setOn only
 }
 
 func parseAnimations(_ scene: JSONValue) -> [SceneAnimation] {
@@ -496,30 +498,43 @@ func parseAnimations(_ scene: JSONValue) -> [SceneAnimation] {
     return arr.map { entry in
         guard let j = entry.objectValue else { fatalError("bad animation entry") }
         let kind = j["kind"]?.stringValue ?? "uiview-animate"
-        guard kind == "uiview-animate" else { fatalError("bad animation kind '\(kind)'") }
-        var curve: UIView.AnimationOptions? = nil
-        var damping: CGFloat? = nil
-        var velocity: CGFloat = 0
-        if let s = j["spring"]?.objectValue {
-            damping = num(s["damping"]) ?? 1
-            velocity = num(s["initialVelocity"]) ?? 0
-        } else {
-            switch j["curve"]?.stringValue ?? "easeInOut" {
-            case "linear": curve = .curveLinear
-            case "easeIn": curve = .curveEaseIn
-            case "easeOut": curve = .curveEaseOut
-            case "easeInOut": curve = .curveEaseInOut
-            case let c: fatalError("bad animation curve '\(c)'")
+        switch kind {
+        case "uiview-animate":
+            var curve: UIView.AnimationOptions? = nil
+            var damping: CGFloat? = nil
+            var velocity: CGFloat = 0
+            if let s = j["spring"]?.objectValue {
+                damping = num(s["damping"]) ?? 1
+                velocity = num(s["initialVelocity"]) ?? 0
+            } else {
+                switch j["curve"]?.stringValue ?? "easeInOut" {
+                case "linear": curve = .curveLinear
+                case "easeIn": curve = .curveEaseIn
+                case "easeOut": curve = .curveEaseOut
+                case "easeInOut": curve = .curveEaseInOut
+                case let c: fatalError("bad animation curve '\(c)'")
+                }
             }
+            guard let changes = j["changes"]?.objectValue, !changes.isEmpty else {
+                fatalError("animation needs non-empty \"changes\"")
+            }
+            return SceneAnimation(kind: kind, target: j["target"]?.stringValue ?? "",
+                                  duration: Double(num(j["duration"]) ?? 0.25),
+                                  delay: Double(num(j["delay"]) ?? 0),
+                                  curve: curve, springDamping: damping,
+                                  springVelocity: velocity, changes: changes,
+                                  on: false)
+        case "switch-setOn":
+            guard let on = j["on"]?.boolValue else {
+                fatalError("switch-setOn needs \"on\": true|false")
+            }
+            return SceneAnimation(kind: kind, target: j["target"]?.stringValue ?? "",
+                                  duration: 0, delay: 0, curve: nil,
+                                  springDamping: nil, springVelocity: 0,
+                                  changes: [:], on: on)
+        default:
+            fatalError("bad animation kind '\(kind)'")
         }
-        guard let changes = j["changes"]?.objectValue, !changes.isEmpty else {
-            fatalError("animation needs non-empty \"changes\"")
-        }
-        return SceneAnimation(target: j["target"]?.stringValue ?? "",
-                              duration: Double(num(j["duration"]) ?? 0.25),
-                              delay: Double(num(j["delay"]) ?? 0),
-                              curve: curve, springDamping: damping,
-                              springVelocity: velocity, changes: changes)
     }
 }
 
@@ -572,6 +587,13 @@ func applyAnimationChanges(_ v: UIView, _ changes: SceneJSON) {
 func startAnimations(_ anims: [SceneAnimation], container: UIView) {
     for a in anims {
         let target = viewAtPath(container, a.target)
+        if a.kind == "switch-setOn" {
+            guard let sw = target as? UISwitch else {
+                fatalError("switch-setOn target '\(a.target)' is not a UISwitch")
+            }
+            sw.setOn(a.on, animated: true)
+            continue
+        }
         if let damping = a.springDamping {
             UIView.animate(withDuration: a.duration, delay: a.delay,
                            usingSpringWithDamping: damping,

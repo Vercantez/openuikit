@@ -1,0 +1,277 @@
+{
+  "name" : "switch_toggle_anim",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        200,
+        120
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        20,
+        20,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        -567,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "1.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        2,
+        2,
+        37,
+        24
+      ],
+      "path" : "1.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.2.0.0"
+    },
+    {
+      "class" : "UISwitch",
+      "frame" : [
+        20,
+        70,
+        63,
+        28
+      ],
+      "intrinsic" : [
+        61,
+        28
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UISwitchModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        630,
+        31
+      ],
+      "intrinsic" : [
+        630,
+        1
+      ],
+      "path" : "2.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        63,
+        28
+      ],
+      "path" : "2.0.1.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        48,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.0.1.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        15,
+        14,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.0.1.1.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        24,
+        2,
+        37,
+        24
+      ],
+      "path" : "2.0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.2.0.0"
+    }
+  ]
+}

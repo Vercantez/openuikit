@@ -173,12 +173,14 @@ scene**:
 
 ### `animations` — array of animation entries
 
-Each entry describes ONE `UIView.animate` call:
+Each entry describes ONE `UIView.animate` call (kind `"uiview-animate"`) or
+one `UISwitch.setOn(_:animated: true)` call (kind `"switch-setOn"`, v4 —
+see below):
 
 | key | type | notes |
 |---|---|---|
 | `target` | string | required. Dot-joined subview-index path from root (`"0.1"`; `""` = root), same addressing as layout-dump `path`. |
-| `kind` | string | `"uiview-animate"` (the only kind for now; default). |
+| `kind` | string | `"uiview-animate"` (default) or `"switch-setOn"`. |
 | `duration` | number | seconds. Default 0.25. |
 | `delay` | number | seconds before the animation starts. Default 0. During the delay the view shows the FROM state (UIKit fills backwards). |
 | `curve` | string | `linear`, `easeIn`, `easeOut`, `easeInOut` (default `easeInOut`). Mutually exclusive with `spring`. |
@@ -255,6 +257,41 @@ t = 0.25/0.5/0.75; easeIn starts slow, easeOut fast; spring
 (damping 0.35/0.6) visibly overshoots the target and settles; delayed
 animations hold the FROM state through the delay. Byte-identical across
 runs for the full 10-scene fixture set.
+
+### `switch-setOn` animation kind (v4)
+
+```json
+"animations": [ { "kind": "switch-setOn", "target": "1", "on": true } ]
+```
+
+The oracle calls the REAL `UISwitch.setOn(_:animated: true)`; openrender
+calls OpenUIKit's. `on` (bool) is required; `duration`/`delay`/`curve`
+keys are not accepted (the switch supplies its own timing). Cannot be
+mixed with `uiview-animate` entries in one scene, and `t = 0` must not be
+a capture time (the first wall-clock frame races the animation commit).
+
+Capture mechanism differs from uiview-animate — the frozen seek CANNOT
+capture this control (probed on Catalyst iOS 26.1):
+
+- The blue "well" slide is a real CASpringAnimation — critically damped,
+  duration-fit satisfying UIKit's ω·D = 9.2334 settling equation
+  (off→on ωn = 9.2400 / D = 0.99947; on→off ωn = 15.7080 / D = 0.58792) —
+  but its beginTime comes from `CACurrentMediaTime()` unconverted, and
+- the THUMB is a display-link-driven `_UILiquidLensView` with no
+  CAAnimation at all: under a frozen layer clock it crawls on wall time
+  and ignores the seek,
+- and UIKit applies `setOn(animated: true)` WITHOUT animation for a
+  hierarchy that has never been displayed.
+
+oracle2 therefore renders these scenes on the WALL clock: settle the
+window 0.3 s, call setOn, snapshot as the elapsed media time crosses each
+capture time. Frames carry a few ms of scheduling jitter (NOT
+byte-deterministic like the frozen path); the control threshold absorbs
+it. OpenUIKit reproduces the toggle with the probed well springs (local
+coverage linear in spring progress, per-side offsets — blue enters at the
+left end first turning on, leaves the right end first turning off) and a
+golden-fitted thumb bezier (0.160, 0.004)-(0.406, 1.192) over 0.336 s
+(see UISwitch.swift).
 
 ### Comparison (compare.py)
 

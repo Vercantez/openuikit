@@ -135,12 +135,71 @@ final class Renderer {
         //    drawHierarchy(afterScreenUpdates: true) — that commits the seek
         //    and makes the render server composite the presentation tree at
         //    frozen time t before capturing.
+        // switch-setOn scenes (spec v4) CANNOT be captured by the frozen
+        // seek: probing shows the modern (iOS 26 liquid-glass) UISwitch is
+        // a hybrid —
+        //   * the blue "well" slide is a real CASpringAnimation (critical,
+        //     duration-fit: off→on ωn=9.24/D≈1.0, on→off ωn=15.71/D≈0.588,
+        //     both satisfying the ωD=9.2334 settling equation),
+        //   * the on/off glyphs crossfade over 0.2 s,
+        //   * but the THUMB is a `_UILiquidLensView` driven by a DISPLAY
+        //     LINK: under a frozen layer clock it crawls on wall time and
+        //     ignores the seek entirely.
+        // Also, UIKit applies setOn(animated: true) WITHOUT any animation
+        // for a hierarchy that has never been displayed — the window must
+        // settle on screen for a few frames first (verified both ways).
+        // So these scenes are sampled on the WALL clock: settle 0.3 s,
+        // call the real setOn(animated: true), then snapshot when the
+        // elapsed media time crosses each capture time. Frames carry a few
+        // ms of scheduling jitter (unlike the byte-deterministic frozen
+        // path) — the control pixel threshold absorbs it.
+        if spec.animations.contains(where: { $0.kind == "switch-setOn" }) {
+            guard spec.animations.allSatisfy({ $0.kind == "switch-setOn" }) else {
+                fatalError("scene \(spec.name): switch-setOn cannot be mixed with uiview-animate entries")
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+            let t0 = CACurrentMediaTime()
+            startAnimations(spec.animations, container: container, traits: spec.traits)
+            for t in spec.captureTimes {
+                while CACurrentMediaTime() - t0 < t {
+                    RunLoop.current.run(until: Date().addingTimeInterval(0.002))
+                }
+                let img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
+                try img.pngData()!.write(
+                    to: URL(fileURLWithPath: "\(outdir)/\(spec.name).\(captureSuffix(t)).png"))
+            }
+            wrapper.removeFromSuperview()
+            print("rendered \(spec.name) (\(spec.captureTimes.count) frames, wall clock)")
+            return
+        }
+
         wrapper.layer.speed = 0
         wrapper.layer.timeOffset = 0
         startAnimations(spec.animations, container: container, traits: spec.traits)
         CATransaction.flush()
         if ProcessInfo.processInfo.environment["ORACLE2_ANIM_DEBUG"] != nil {
-            for a in spec.animations {
+            func walk(_ l: CALayer, _ depth: Int) {
+                let keys = l.animationKeys() ?? []
+                let cls = NSStringFromClass(type(of: l))
+                let delegateCls = l.delegate.map { NSStringFromClass(type(of: $0)) } ?? "-"
+                print(String(repeating: "  ", count: depth) + "\(cls) [\(delegateCls)] pos=\(l.position) anims=\(keys)")
+                for k in keys {
+                    let an = l.animation(forKey: k)!
+                    print(String(repeating: "  ", count: depth) + "  * [\(k)] \(type(of: an)) beginTime=\(an.beginTime) dur=\(an.duration) fill=\(an.fillMode.rawValue) removed=\(an.isRemovedOnCompletion)")
+                    if let ba = an as? CABasicAnimation {
+                        print(String(repeating: "  ", count: depth) + "    from=\(String(describing: ba.fromValue)) to=\(String(describing: ba.toValue)) keyPath=\(String(describing: ba.keyPath)) additive=\(ba.isAdditive)")
+                    }
+                    if let sp = an as? CASpringAnimation {
+                        print(String(repeating: "  ", count: depth) + "    spring mass=\(sp.mass) k=\(sp.stiffness) c=\(sp.damping) v0=\(sp.initialVelocity)")
+                    }
+                }
+                for s in l.sublayers ?? [] { walk(s, depth + 1) }
+            }
+            for a in spec.animations where a.kind == "switch-setOn" {
+                print("=== switch '\(a.target)' layer tree after flush ===")
+                walk(viewAtPath(container, a.target).layer, 0)
+            }
+            for a in spec.animations where a.kind != "switch-setOn" {
                 let layer = viewAtPath(container, a.target).layer
                 print("target '\(a.target)' local time:", layer.convertTime(CACurrentMediaTime(), from: nil))
                 for k in layer.animationKeys() ?? [] {

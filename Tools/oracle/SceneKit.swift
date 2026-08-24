@@ -417,6 +417,7 @@ func runHitTests(_ points: [CGPoint], container: UIView, rootJSON: JSON) -> [JSO
 
 /// One entry of the top-level `"animations"` array. See docs/SCENE_SPEC.md.
 struct AnimationSpec {
+    let kind: String              // "uiview-animate" | "switch-setOn"
     let target: String            // view path, e.g. "0.1" ("" = root)
     let duration: TimeInterval
     let delay: TimeInterval
@@ -425,36 +426,52 @@ struct AnimationSpec {
     let springDamping: CGFloat?   // non-nil => spring animation
     let springVelocity: CGFloat
     let changes: JSON             // property -> target value (scene-spec encodings)
+    let on: Bool                  // switch-setOn only
 }
 
 func parseAnimations(_ scene: JSON) -> [AnimationSpec] {
     guard let arr = scene["animations"] as? [JSON] else { return [] }
     return arr.map { j in
         let kind = j["kind"] as? String ?? "uiview-animate"
-        guard kind == "uiview-animate" else { fatalError("bad animation kind '\(kind)'") }
-        var curve: UIView.AnimationOptions? = nil
-        var damping: CGFloat? = nil
-        var velocity: CGFloat = 0
-        if let s = j["spring"] as? JSON {
-            damping = num(s["damping"]) ?? 1
-            velocity = num(s["initialVelocity"]) ?? 0
-        } else {
-            switch j["curve"] as? String ?? "easeInOut" {
-            case "linear": curve = .curveLinear
-            case "easeIn": curve = .curveEaseIn
-            case "easeOut": curve = .curveEaseOut
-            case "easeInOut": curve = .curveEaseInOut
-            case let c: fatalError("bad animation curve '\(c)'")
+        switch kind {
+        case "uiview-animate":
+            var curve: UIView.AnimationOptions? = nil
+            var damping: CGFloat? = nil
+            var velocity: CGFloat = 0
+            if let s = j["spring"] as? JSON {
+                damping = num(s["damping"]) ?? 1
+                velocity = num(s["initialVelocity"]) ?? 0
+            } else {
+                switch j["curve"] as? String ?? "easeInOut" {
+                case "linear": curve = .curveLinear
+                case "easeIn": curve = .curveEaseIn
+                case "easeOut": curve = .curveEaseOut
+                case "easeInOut": curve = .curveEaseInOut
+                case let c: fatalError("bad animation curve '\(c)'")
+                }
             }
+            guard let changes = j["changes"] as? JSON, !changes.isEmpty else {
+                fatalError("animation needs non-empty \"changes\"")
+            }
+            return AnimationSpec(kind: kind, target: j["target"] as? String ?? "",
+                                 duration: Double(num(j["duration"]) ?? 0.25),
+                                 delay: Double(num(j["delay"]) ?? 0),
+                                 curve: curve, springDamping: damping, springVelocity: velocity,
+                                 changes: changes, on: false)
+        case "switch-setOn":
+            // Real UISwitch.setOn(_:animated: true) under the frozen clock;
+            // the switch supplies its own timing (duration/curve keys are
+            // not accepted).
+            guard let on = j["on"] as? Bool else {
+                fatalError("switch-setOn needs \"on\": true|false")
+            }
+            return AnimationSpec(kind: kind, target: j["target"] as? String ?? "",
+                                 duration: 0, delay: 0, curve: nil,
+                                 springDamping: nil, springVelocity: 0,
+                                 changes: [:], on: on)
+        default:
+            fatalError("bad animation kind '\(kind)'")
         }
-        guard let changes = j["changes"] as? JSON, !changes.isEmpty else {
-            fatalError("animation needs non-empty \"changes\"")
-        }
-        return AnimationSpec(target: j["target"] as? String ?? "",
-                             duration: Double(num(j["duration"]) ?? 0.25),
-                             delay: Double(num(j["delay"]) ?? 0),
-                             curve: curve, springDamping: damping, springVelocity: velocity,
-                             changes: changes)
     }
 }
 
@@ -521,6 +538,13 @@ func applyAnimationChanges(_ v: UIView, _ changes: JSON, traits: UITraitCollecti
 func startAnimations(_ anims: [AnimationSpec], container: UIView, traits: UITraitCollection) {
     var delayByTarget: [String: TimeInterval] = [:]
     for a in anims {
+        if a.kind == "switch-setOn" {
+            guard let sw = viewAtPath(container, a.target) as? UISwitch else {
+                fatalError("switch-setOn target '\(a.target)' is not a UISwitch")
+            }
+            sw.setOn(a.on, animated: true)
+            continue
+        }
         if let existing = delayByTarget[a.target], existing != a.delay {
             fatalError("animations targeting the same view ('\(a.target)') must share one delay")
         }
