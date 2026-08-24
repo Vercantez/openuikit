@@ -18,6 +18,48 @@
 // border fills use hard (0/1 threshold at 0.5 coverage) edges.
 
 public enum UIRenderer {
+    /// CALayer's cornerRadius path, WITHOUT clamping the radius.
+    ///
+    /// iOS 26 CoreAnimation does not clamp `cornerRadius` to half the
+    /// smaller side when compositing a layer: a radius larger than
+    /// min(w,h)/2 produces the classic self-intersecting kappa rounded-rect
+    /// (spikes past the corners, a four-pointed star hole in the middle
+    /// under the non-zero winding rule) drawn well outside the bounds —
+    /// see golden/corner_radius.png, the 80x60 view with cornerRadius 100.
+    /// `Path.roundedRect` (frozen Canvas contract) clamps, so the render
+    /// pass builds the layer path itself. For radius <= min(w,h)/2 this is
+    /// numerically identical to `Path.roundedRect`.
+    static func layerRoundedRect(_ r: CGRect, cornerRadius radius: CGFloat) -> Path {
+        if radius <= 0 { return .rect(r) }
+        if radius <= Swift.min(r.width, r.height) / 2 {
+            return .roundedRect(r, cornerRadius: radius)
+        }
+        // Unclamped kappa construction (same control-point math as
+        // Path.roundedRect, radius NOT limited to half the smaller side).
+        let k: CGFloat = 0.5522847498307936
+        let kr = k * radius
+        var p = Path()
+        p.move(to: CGPoint(x: r.minX + radius, y: r.minY))
+        p.addLine(to: CGPoint(x: r.maxX - radius, y: r.minY))
+        p.addCurve(to: CGPoint(x: r.maxX, y: r.minY + radius),
+                   control1: CGPoint(x: r.maxX - radius + kr, y: r.minY),
+                   control2: CGPoint(x: r.maxX, y: r.minY + radius - kr))
+        p.addLine(to: CGPoint(x: r.maxX, y: r.maxY - radius))
+        p.addCurve(to: CGPoint(x: r.maxX - radius, y: r.maxY),
+                   control1: CGPoint(x: r.maxX, y: r.maxY - radius + kr),
+                   control2: CGPoint(x: r.maxX - radius + kr, y: r.maxY))
+        p.addLine(to: CGPoint(x: r.minX + radius, y: r.maxY))
+        p.addCurve(to: CGPoint(x: r.minX, y: r.maxY - radius),
+                   control1: CGPoint(x: r.minX + radius - kr, y: r.maxY),
+                   control2: CGPoint(x: r.minX, y: r.maxY - radius + kr))
+        p.addLine(to: CGPoint(x: r.minX, y: r.minY + radius))
+        p.addCurve(to: CGPoint(x: r.minX + radius, y: r.minY),
+                   control1: CGPoint(x: r.minX, y: r.minY + radius - kr),
+                   control2: CGPoint(x: r.minX + radius - kr, y: r.minY))
+        p.close()
+        return p
+    }
+
     /// Render a laid-out view hierarchy into a fresh bitmap.
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
         let w = Int((root.bounds.width * scale).rounded())
@@ -51,12 +93,12 @@ public enum UIRenderer {
         let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
 
         // masksToBounds clips background, content AND subviews — apply first.
-        if v.clipsToBounds { c.clip(to: bounds, cornerRadius: radius) }
+        if v.clipsToBounds { c.clip(to: layerRoundedRect(bounds, cornerRadius: radius)) }
 
         if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)
             if color.alpha > 0, !bounds.isEmpty {
-                c.fill(.roundedRect(bounds, cornerRadius: radius), color: color,
+                c.fill(layerRoundedRect(bounds, cornerRadius: radius), color: color,
                        hardEdges: hardEdges)
             }
         }
@@ -88,14 +130,14 @@ public enum UIRenderer {
         let bw = v.layer.borderWidth
         guard bw > 0, !bounds.isEmpty, let bc = v.layer.borderColor, bc.alpha > 0
         else { return }
-        let outer = Path.roundedRect(bounds, cornerRadius: radius)
+        let outer = layerRoundedRect(bounds, cornerRadius: radius)
         let innerRect = bounds.insetBy(dx: bw, dy: bw)
         if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
             // Even-odd ring between the outer rounded rect and the inner one
             // (inner corner radius shrinks by the border width, floored at 0).
             let innerRadius = Swift.max(0, radius - bw)
             var ring = outer
-            ring.elements += Path.roundedRect(innerRect, cornerRadius: innerRadius).elements
+            ring.elements += layerRoundedRect(innerRect, cornerRadius: innerRadius).elements
             c.fill(ring, color: bc, evenOdd: true, hardEdges: hardEdges)
         } else {
             // Border consumes the whole bounds.

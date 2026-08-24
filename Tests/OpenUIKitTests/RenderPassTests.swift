@@ -172,6 +172,37 @@ final class RenderPassTests: XCTestCase {
         assertPixel(bmp, 12, 12, (0, 0, 255, 255))     // center
     }
 
+    // iOS 26 CA does NOT clamp cornerRadius: r=100 on an 80x60 layer yields
+    // the self-intersecting kappa path — spikes painted OUTSIDE the bounds
+    // near the corners and a four-pointed star HOLE inside (non-zero winding
+    // cancels), with the very center covered again. Probe points derived from
+    // golden/corner_radius.png (view-local pts; rendered at scale 2 below).
+    func testUnclampedCornerRadiusMatchesCoreAnimation() {
+        let root = makeRoot(160, 140, bg: nil)
+        let v = UIView(frame: CGRect(x: 40, y: 40, width: 80, height: 60))
+        v.backgroundColor = green
+        v.layer.cornerRadius = 100
+        root.addSubview(v)
+        let bmp = UIRenderer.render(root, scale: 2)
+        func dev(_ lx: CGFloat, _ ly: CGFloat) -> (Int, Int) {
+            (Int((40 + lx) * 2), Int((40 + ly) * 2))
+        }
+        let g = (0, 255, 0, 255)
+        let clear = (0, 0, 0, 0)
+        // Center diamond and ring interior are covered.
+        var p = dev(40, 30); assertPixel(bmp, p.0, p.1, g)
+        p = dev(10, 10); assertPixel(bmp, p.0, p.1, g)
+        // Spikes extend well outside the top edge near the corners.
+        p = dev(1, -15); assertPixel(bmp, p.0, p.1, g)
+        p = dev(78, -13); assertPixel(bmp, p.0, p.1, g)
+        // Star arms inside the bounds are HOLES (winding cancels to zero).
+        p = dev(29, 33); assertPixel(bmp, p.0, p.1, clear)
+        p = dev(64, 8); assertPixel(bmp, p.0, p.1, clear)
+        // Far outside the shape stays empty.
+        p = dev(40, -20); assertPixel(bmp, p.0, p.1, clear)
+        p = dev(-10, 30); assertPixel(bmp, p.0, p.1, clear)
+    }
+
     // MARK: border
 
     func testBorderDrawsAboveSubviews() {
