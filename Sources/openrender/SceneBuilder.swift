@@ -273,12 +273,62 @@ func makeImageView(_ j: SceneJSON, scale: CGFloat) -> UIImageView {
     return iv
 }
 
+func makeProgressView(_ j: SceneJSON) -> UIProgressView {
+    let p = UIProgressView()
+    if let v = num(j["progress"]) { p.progress = Float(v) }
+    if let c = colorOrDie(j["progressTintColor"], "UIProgressView") { p.progressTintColor = c }
+    if let c = colorOrDie(j["trackTintColor"], "UIProgressView") { p.trackTintColor = c }
+    return p
+}
+
+func stackAxis(_ s: String?) -> NSLayoutConstraint.Axis {
+    switch s ?? "horizontal" {
+    case "horizontal": return .horizontal
+    case "vertical": return .vertical
+    default: fatalError("bad axis")
+    }
+}
+
+func stackDistribution(_ s: String?) -> UIStackView.Distribution {
+    switch s ?? "fill" {
+    case "fill": return .fill
+    case "fillEqually": return .fillEqually
+    case "fillProportionally": return .fillProportionally
+    case "equalSpacing": return .equalSpacing
+    case "equalCentering": return .equalCentering
+    default: fatalError("bad stackDistribution")
+    }
+}
+
+func stackAlignment(_ s: String?) -> UIStackView.Alignment {
+    switch s ?? "fill" {
+    case "fill": return .fill
+    case "leading": return .leading
+    case "trailing": return .trailing
+    case "center": return .center
+    case "top": return .top
+    case "bottom": return .bottom
+    case "firstBaseline": return .firstBaseline
+    case "lastBaseline": return .lastBaseline
+    default: fatalError("bad stackAlignment")
+    }
+}
+
+func makeStackView(_ j: SceneJSON) -> UIStackView {
+    let s = UIStackView()
+    s.axis = stackAxis(j["axis"]?.stringValue)
+    if let sp = num(j["spacing"]) { s.spacing = sp }
+    s.distribution = stackDistribution(j["stackDistribution"]?.stringValue)
+    s.alignment = stackAlignment(j["stackAlignment"]?.stringValue)
+    return s
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
 /// owning modules land. Adding a real class later = one `case` line below.
 let notYetImplementedClasses: Set<String> = [
-    "UIButton", "UISwitch", "UIProgressView", "UIStackView",
+    "UIButton", "UISwitch",
 ]
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
@@ -288,11 +338,11 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIView": v = UIView()
     case "UILabel": v = makeLabel(j)
     case "UIImageView": v = makeImageView(j, scale: scale)
+    case "UIProgressView": v = makeProgressView(j)
+    case "UIStackView": v = makeStackView(j)
     // Future phases — one line each as OpenUIKit grows the class:
     // case "UIButton":       v = makeButton(j)
     // case "UISwitch":       v = makeSwitch(j)
-    // case "UIProgressView": v = makeProgressView(j)
-    // case "UIStackView":    v = makeStackView(j)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -306,8 +356,11 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
         for sub in subs {
             guard let subJ = sub.objectValue else { fatalError("bad subview in \(cls)") }
             let child = buildView(subJ, scale: scale, warn: warn)
-            // Once UIStackView exists: add as arrangedSubview when v is a stack.
-            v.addSubview(child)
+            if let stack = v as? UIStackView {
+                stack.addArrangedSubview(child)
+            } else {
+                v.addSubview(child)
+            }
         }
     }
 
@@ -335,7 +388,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     ]
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
-    if v is UILabel || v is UIImageView {
+    if v is UILabel || v is UIImageView || v is UIProgressView {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),
