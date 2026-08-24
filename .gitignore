@@ -1,5 +1,7 @@
 .build/
 out/
+out_swift/
+out_quartz/
 Tools/oracle/oracle
 .DS_Store
 Tools/oracle2/Oracle2.app/

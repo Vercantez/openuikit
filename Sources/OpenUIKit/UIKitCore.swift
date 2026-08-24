@@ -15,4 +15,12 @@ public enum OpenUIKitRuntime {
     /// When empty, the font engine falls back to platform-known locations
     /// (e.g. /System/Library/Fonts/SFNS.ttf on macOS).
     public static var fontPaths: [String: String] = [:]
+    /// Rendering backend for newly created Canvases: `.quartz` (vendored
+    /// libquartz, the default) or `.swift` (pure-Swift rasterizer fallback).
+    /// Hosts may override before rendering (openrender honors
+    /// OPENUIKIT_BACKEND=swift|quartz); the library never reads env vars.
+    public static var renderBackend: RenderBackend {
+        get { CanvasBackendSelection.current }
+        set { CanvasBackendSelection.current = newValue }
+    }
 }

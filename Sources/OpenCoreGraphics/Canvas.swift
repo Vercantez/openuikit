@@ -130,31 +130,45 @@ public final class Canvas {
     public let scale: CGFloat
 
     // Rasterizer-owned state (Rasterizer.swift may add fields via extension
-    // storage here if needed).
+    // storage here if needed). Canvas maintains this mirror state for BOTH
+    // backends: it serves the public `ctm`, the Swift rasterizer's whole
+    // graphics state, and the clip mask QuartzBackend.drawMask consumes.
     var state: CanvasState
     var stateStack: [CanvasState] = []
     var layerStack: [TransparencyLayer] = []
+
+    /// Rendering backend (Backend.swift), chosen at creation from
+    /// `CanvasBackendSelection.current`. All drawing ops dispatch through it.
+    var backend: CanvasBackend!
 
     public init(bitmap: Bitmap, scale: CGFloat) {
         self.bitmap = bitmap
         self.scale = scale
         self.state = CanvasState(ctm: CGAffineTransform(scaleX: scale, y: scale))
+        switch CanvasBackendSelection.current {
+        case .quartz:
+            // Falls back to the Swift rasterizer for degenerate (empty)
+            // surfaces that a QZBitmapContext cannot represent.
+            self.backend = QuartzBackend(canvas: self) ?? SwiftRasterizerBackend(canvas: self)
+        case .swift:
+            self.backend = SwiftRasterizerBackend(canvas: self)
+        }
     }
 
-    public func save() { _save() }
-    public func restore() { _restore() }
+    public func save() { _save(); backend.saveState() }
+    public func restore() { _restore(); backend.restoreState() }
     /// Concatenate t onto the CTM (new user space = t applied before current CTM).
-    public func concatenate(_ t: CGAffineTransform) { _concatenate(t) }
+    public func concatenate(_ t: CGAffineTransform) { _concatenate(t); backend.concatenate(t) }
     public func translate(x: CGFloat, y: CGFloat) { concatenate(CGAffineTransform(translationX: x, y: y)) }
 
     /// Intersect the clip with a (possibly rounded) rect in current user space.
     public func clip(to rect: CGRect, cornerRadius: CGFloat = 0) {
         clip(to: cornerRadius > 0 ? .roundedRect(rect, cornerRadius: cornerRadius) : .rect(rect))
     }
-    public func clip(to path: Path) { _clip(path) }
+    public func clip(to path: Path) { _clip(path); backend.clip(path) }
 
-    public func beginTransparencyLayer(alpha: CGFloat) { _beginLayer(alpha) }
-    public func endTransparencyLayer() { _endLayer() }
+    public func beginTransparencyLayer(alpha: CGFloat) { backend.beginTransparencyLayer(alpha: alpha) }
+    public func endTransparencyLayer() { backend.endTransparencyLayer() }
 
     /// Fill a path. `hardEdges: true` disables edge anti-aliasing: coverage is
     /// thresholded to 0/1 by sampling at the pixel center (i.e. threshold at
@@ -164,18 +178,16 @@ public final class Canvas {
     /// value, so all previous call sites are unchanged.
     public func fill(_ path: Path, color: CGColor, evenOdd: Bool = false,
                      hardEdges: Bool = false) {
-        if hardEdges {
-            _fillHardEdged(path, color, evenOdd)
-        } else {
-            _fill(path, color, evenOdd)
-        }
+        backend.fill(path, color: color, evenOdd: evenOdd, hardEdges: hardEdges)
     }
     public func fill(rect: CGRect, color: CGColor) { fill(.rect(rect), color: color) }
-    public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) { _stroke(path, color, lineWidth) }
+    public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
+        backend.stroke(path, color: color, lineWidth: lineWidth)
+    }
 
     /// Draw a bitmap into `rect` (user space). `interpolate` = bilinear.
     public func draw(_ image: Bitmap, in rect: CGRect, interpolate: Bool = true) {
-        _drawImage(image, rect, interpolate)
+        backend.drawImage(image, in: rect, interpolate: interpolate)
     }
 
     /// Draw an 8-bit coverage mask (e.g. a rasterized glyph) tinted with
@@ -183,7 +195,8 @@ public final class Canvas {
     /// the text engine); mask is width×height bytes.
     public func drawMask(_ mask: [UInt8], width: Int, height: Int,
                          atPixelX x: Int, pixelY y: Int, color: CGColor) {
-        _drawMask(mask, width, height, x, y, color)
+        backend.drawMask(mask, width: width, height: height,
+                         atPixelX: x, pixelY: y, color: color)
     }
 
     /// Current CTM (points → device pixels).

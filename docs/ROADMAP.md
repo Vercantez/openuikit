@@ -32,8 +32,10 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   glyph-ink fidelity in progress (91–95% → target ≥97%)
 - **M3 Controls** — in flight: UIButton, UIImageView, UIProgressView,
   UIStackView, UISwitch + oracle v2 (real-window drawHierarchy)
-- **M4 Quartz backend switch** — vendor libquartz, Canvas backend abstraction,
-  full suite dual-backend comparison, adopt quartz as default
+- **M4 Quartz backend switch** — DONE: libquartz vendored (Sources/CQuartz),
+  Canvas backend abstraction (Backend.swift), full-suite dual-backend
+  comparison (quartz ≥ swift on every scene, text byte-identical), quartz is
+  the default backend. See docs/QUARTZ_NOTES.md.
 - **M5 CALayer adoption** — replace the RenderPass traversal with quartz's
   real layer tree (QZLayer): UIView owns a QZLayer; compositing, masks,
   shadows, opacity groups handled by the compositor. Unlocks layer features

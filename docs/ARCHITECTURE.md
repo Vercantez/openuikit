@@ -6,9 +6,10 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
 ## Hard rules
 
 1. `Sources/OpenCoreGraphics` and `Sources/OpenUIKit` must **never** import
-   Foundation or any Apple framework. Pure Swift stdlib + the two C shims
-   (`CPortableIO` for file reads, `CSTBTrueType` for glyph rasterization).
-   `Sources/openrender` (the CLI) MAY use Foundation.
+   Foundation or any Apple framework. Pure Swift stdlib + the C shims
+   (`CPortableIO` for file reads, `CSTBTrueType` for glyph rasterization,
+   `CQuartz` — the vendored portable quartz library — for the default
+   rendering backend). `Sources/openrender` (the CLI) MAY use Foundation.
 2. Real UIKit behavior wins every argument. `golden/system_colors.json`,
    `golden/font_metrics.json`, and `golden/*.png|.layout.json` are ground truth.
 3. Do not change files another module owns (see map below). The Canvas API in
@@ -29,14 +30,53 @@ python3 Tools/compare/compare.py              # pass/fail per scene
 `compare.py` thresholds are in `docs/SCENE_SPEC.md`. A scene passes when layout
 matches within 0.5pt and pixels match at the category threshold.
 
+## Rendering backends (M4)
+
+`Canvas` (the frozen drawing contract) dispatches every drawing op through a
+backend chosen at Canvas creation — callers (RenderPass, UILabel, …) are
+backend-agnostic:
+
+- **`.quartz` (default)** — `QuartzBackend` renders through the vendored
+  **libquartz** (`Sources/CQuartz`, synced from `~/quartz` by
+  `scripts/sync_quartz.sh`): the portable C++17 Quartz 2D + CoreAnimation
+  reimplementation with the `QZ*` C API, oracle-validated at 97.5/100 vs
+  Apple. Adapter notes:
+  - QZ user space is y-up/bottom-left (CGBitmapContext-style); a flip CTM
+    (`translate 0,H_px; scale s,-s`) applied at context creation makes QZ
+    user space identical to Canvas's top-down point space.
+  - The QZ backing is premultiplied RGBA8888; after every op the affected
+    device region is converted premultiplied→straight into `bitmap.pixels`,
+    so the Bitmap is always current (no explicit flush; RGB of fully
+    transparent pixels is lost — that is inherent to premultiplied storage).
+  - Glyph coverage masks (`drawMask`) are blended CPU-side straight into the
+    QZ backing with the same math as the Swift rasterizer, so label output
+    is byte-identical between backends (glyph-smoothing tuning preserved).
+  - `hardEdges` fills map to `QZContextSetShouldAntialias(false)` (both
+    backends threshold at pixel centers); transparency layers map to
+    `QZContextSetAlpha` + `Begin/EndTransparencyLayer` (group alpha applied
+    at End, CG semantics).
+- **`.swift`** — `SwiftRasterizerBackend`: the pure-Swift analytic-coverage
+  rasterizer (`Rasterizer.swift`), zero dependencies, unchanged behavior.
+  Canvas always keeps the mirror graphics state (CTM + clip mask) itself; it
+  serves the public `ctm`, the Swift rasterizer, and quartz's `drawMask` clip.
+
+Selection: `OpenUIKitRuntime.renderBackend` (alias of
+`CanvasBackendSelection.current` in OpenCoreGraphics). The library never
+reads env vars; **openrender** honors `OPENUIKIT_BACKEND=swift|quartz`.
+Dual-backend suite comparison (2026-08): quartz ≥ swift on every scene
+(deltas +0.00 to +0.09), text scenes byte-identical. See
+`docs/QUARTZ_NOTES.md` for details and known divergences.
+
 ## Module ownership map
 
 | Path | Owner module | Status |
 |---|---|---|
 | `Sources/OpenCoreGraphics/Geometry.swift` | core (done) | frozen |
-| `Sources/OpenCoreGraphics/Canvas.swift` | core (done) | frozen contract |
+| `Sources/OpenCoreGraphics/Canvas.swift` | core (done) | frozen contract (dispatches via Backend.swift) |
 | `Sources/OpenCoreGraphics/PNG.swift` | core (done) | frozen |
 | `Sources/OpenCoreGraphics/Rasterizer.swift` | **rasterizer** | stub — implement |
+| `Sources/OpenCoreGraphics/Backend.swift`, `QuartzBackend.swift` | **quartz-backend** | done |
+| `Sources/CQuartz/` | vendored (scripts/sync_quartz.sh) | do not edit by hand |
 | `Sources/OpenUIKit/MiniJSON.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/ResourceIO.swift` | **runtime-util** | to create |
 | `Sources/OpenUIKit/UIColor.swift`, `SystemColors.swift`, `UITraitCollection.swift` | **color** | to create |

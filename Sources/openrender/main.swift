@@ -5,6 +5,7 @@
 // exit codes, messages) but renders with OpenUIKit instead of real UIKit.
 
 import Foundation
+import OpenUIKit
 
 func renderScene(file: String, outdir: String) throws {
     let scene = try loadSceneFile(file)
@@ -12,6 +13,17 @@ func renderScene(file: String, outdir: String) throws {
     try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
     try writeBinaryFile(result.png, path: "\(outdir)/\(result.name).png")
     print("rendered \(result.name)")
+}
+
+// Backend override: OPENUIKIT_BACKEND=swift|quartz (default: library default).
+if let v = ProcessInfo.processInfo.environment["OPENUIKIT_BACKEND"] {
+    switch v {
+    case "swift": OpenUIKitRuntime.renderBackend = .swift
+    case "quartz": OpenUIKitRuntime.renderBackend = .quartz
+    default:
+        FileHandle.standardError.write(
+            Data("warning: ignoring unknown OPENUIKIT_BACKEND=\(v) (use swift|quartz)\n".utf8))
+    }
 }
 
 let args = CommandLine.arguments
