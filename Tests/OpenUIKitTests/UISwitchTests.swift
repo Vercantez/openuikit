@@ -56,8 +56,9 @@ final class UISwitchTests: XCTestCase {
 
     // MARK: chrome (golden pixels, light style, scale 2)
 
-    private func renderSwitch(on: Bool, onTint: UIColor? = nil) -> Bitmap {
-        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light, displayScale: 2)
+    private func renderSwitch(on: Bool, onTint: UIColor? = nil,
+                              style: UIUserInterfaceStyle = .light) -> Bitmap {
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: style, displayScale: 2)
         let host = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 40))
         let s = UISwitch(frame: CGRect(x: 5, y: 5, width: 0, height: 0))
         s.isOn = on
@@ -93,6 +94,18 @@ final class UISwitchTests: XCTestCase {
         let thumb = px(b, 30, 40)
         XCTAssertEqual(thumb.r, 255)
         XCTAssertEqual(thumb.a, 255)
+    }
+
+    func testOffTrackDarkIsTranslucentWhite() {
+        // Oracle probe (off switch over pure black / pure white, dark style):
+        // un-composited dark off-track is white at alpha 63/255.
+        let b = renderSwitch(on: false, style: .dark)
+        defer { UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light, displayScale: 2) }
+        let track = px(b, 110, 40)
+        XCTAssertEqual(track.r, 255)
+        XCTAssertEqual(track.g, 255)
+        XCTAssertEqual(track.b, 255)
+        XCTAssertEqual(track.a, 63)
     }
 
     func testOnTintColorIsUsed() {

@@ -12,9 +12,9 @@
 //   - On fill: onTintColor, default = tintColor (systemBlue; golden's default
 //     track is exactly systemBlue light (0,136,255), NOT systemGreen on this
 //     runtime).
-//   - Off fill: black at alpha 66/255 (~0.259). The golden background is
-//     transparent there and the un-composited track pixels are exactly
-//     (0, 0, 0, 66).
+//   - Off fill (light): black at alpha 66/255 (~0.259). The golden background
+//     is transparent there and the un-composited track pixels are exactly
+//     (0, 0, 0, 66). Dark mode uses white at alpha 63/255 (see offTrackColor).
 //   - Thumb: white circular capsule, 37x24, inset 2pt from the track edge
 //     (off: x=2, on: x=63-2-37=24; y=2). Golden thumb outline matches a
 //     circular corner radius of 12 (height/2) within ~0.1px; no visible
@@ -25,8 +25,16 @@ public class UISwitch: UIView {
     static let intrinsicSize = CGSize(width: 61, height: 28)
     static let thumbSize = CGSize(width: 37, height: 24)
     static let thumbInset: CGFloat = 2
-    /// Off-state track fill, measured from golden/switch_onoff.png.
-    static let offTrackColor = CGColor(red: 0, green: 0, blue: 0, alpha: 66.0 / 255.0)
+    /// Off-state track fill. Dynamic: measured by probing the real-window
+    /// oracle (Tools/oracle2) with an off switch over pure black and pure
+    /// white backgrounds and solving the composite per channel:
+    ///   light: over black -> (0,0,0), over white -> 189/255  => black @ 66/255
+    ///   dark:  over black -> 63/255,  over white -> 255/255  => white @ 63/255
+    static let offTrackColor = UIColor(dynamicProvider: { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(white: 1, alpha: 63.0 / 255.0)
+            : UIColor(white: 0, alpha: 66.0 / 255.0)
+    })
 
     public var isOn: Bool = false
     public var onTintColor: UIColor?
@@ -70,7 +78,7 @@ public class UISwitch: UIView {
         // Track: full-bounds capsule.
         let trackColor: CGColor = isOn
             ? (onTintColor ?? tintColor).resolvedCGColor(with: traits)
-            : UISwitch.offTrackColor
+            : UISwitch.offTrackColor.resolvedCGColor(with: traits)
         canvas.fill(Path.roundedRect(bounds, cornerRadius: bounds.height / 2),
                     color: trackColor)
 
