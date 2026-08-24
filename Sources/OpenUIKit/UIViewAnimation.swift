@@ -67,6 +67,13 @@ struct UIViewAnimation {
     let property: Property
     var from: Value
     var to: Value
+    /// `OpenUIKitRuntime.animationTime` when the animation was recorded
+    /// (CA: the commit time). 0 for scene-driven animations (openrender
+    /// commits at clock 0); a live host advancing the clock gets runtime
+    /// `UIView.animate` calls (control interactions) starting NOW, not at
+    /// the host's t = 0. (var with default so the memberwise init keeps
+    /// accepting begin-less calls — scene/test animations commit at 0.)
+    var begin: Double = 0
     let delay: Double
     let duration: Double
     let timing: Timing
@@ -163,6 +170,7 @@ extension UIView {
                          to: UIViewAnimation.Value) {
         guard let ctx = UIViewAnimationContext.current else { return }
         let anim = UIViewAnimation(property: property, from: from, to: to,
+                                   begin: OpenUIKitRuntime.animationTime,
                                    delay: ctx.delay, duration: ctx.duration,
                                    timing: ctx.timing)
         // Re-animating the same property replaces the previous animation

@@ -7,6 +7,7 @@ let package = Package(
         .library(name: "OpenUIKit", targets: ["OpenUIKit"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
         .executable(name: "openrender", targets: ["openrender"]),
+        .executable(name: "openhost", targets: ["openhost"]),
     ],
     targets: [
         // Vendored stb_truetype (single-header C library, public domain).
@@ -37,6 +38,20 @@ let package = Package(
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
         .executableTarget(name: "openrender", dependencies: ["OpenUIKit"]),
+        // SDL2 via pkg-config (brew install sdl2 on macOS, apt install
+        // libsdl2-dev on Linux). System library — nothing vendored.
+        .systemLibrary(
+            name: "CSDL2",
+            pkgConfig: "sdl2",
+            providers: [.brew(["sdl2"]), .apt(["libsdl2-dev"])]
+        ),
+        // SDL2 live host: real-time interactive window + scripted-event
+        // recorder for a scene JSON. Shares openrender's scene-building
+        // code via symlinked sources (SceneBuilder.swift / SceneIO.swift,
+        // see Sources/openhost/main.swift header); openrender itself stays
+        // byte-identical.
+        // May use Foundation (it is a host, like openrender).
+        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2"]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
     ],
     cxxLanguageStandard: .cxx17

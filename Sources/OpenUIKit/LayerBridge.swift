@@ -209,7 +209,7 @@ public enum LayerBridge {
     /// clock fill semantics: FROM before `delay`, MODEL at
     /// `delay + duration` and later (CA removes completed animations).
     static func animationProgress(_ a: UIViewAnimation, at t: Double) -> CGFloat {
-        let local = t - a.delay
+        let local = t - a.begin - a.delay
         if local <= 0 { return 0 }
         if local >= a.duration - 1e-9 { return 1 }
         switch a.timing {
