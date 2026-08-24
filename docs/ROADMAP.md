@@ -34,8 +34,10 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 - **M3 Controls** — DONE: UIButton, UIImageView, UIProgressView,
   UIStackView, UISwitch + oracle v2 (real-window drawHierarchy).
   Full suite 23/23 on both backends.
-- **M4.5 Effects + coverage** — in flight: shadows + gradients (scene spec
-  v2) rendered through quartz, plus a hardening fixture expansion.
+- **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
+  19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
+  window-server glyph-ink variants, non-ASCII advances, alpha-encoding
+  normalization in compare.
 - **M4 Quartz backend switch** — DONE: libquartz vendored (Sources/CQuartz),
   Canvas backend abstraction (Backend.swift), full-suite dual-backend
   comparison (quartz ≥ swift on every scene, text byte-identical), quartz is
