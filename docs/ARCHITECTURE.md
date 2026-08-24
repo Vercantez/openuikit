@@ -139,9 +139,18 @@ The scene runner sets the root trait environment; views inherit.
 `overrideUserInterfaceStyle` on UIView overrides for the subtree.
 
 ## Oracle notes / known gaps
-- `UISwitch` thumb does not draw via offscreen `layer.render` — scene
-  `switch_onoff` is `layoutOnly` until the oracle hosts a real window
-  (planned: full Catalyst app with `drawHierarchy`).
+- `UISwitch` thumb does not draw via offscreen `layer.render` — such scenes
+  carry a top-level `"window": true` and are rendered by **`Tools/oracle2`**,
+  a Mac Catalyst APP (`scripts/build_oracle2.sh`, run via
+  `Tools/oracle2/run.sh render <outdir> <scene.json>...`) that hosts the
+  hierarchy in a real `UIWindow` attached to a `UIWindowScene`, activates the
+  app (inactive Catalyst windows desaturate control tints), waits until the
+  render server composites (probe poll), then captures with
+  `drawHierarchy(afterScreenUpdates: true)`. Scene building/layout dumping is
+  shared with v1 via `Tools/oracle/SceneKit.swift`, so layout dumps are
+  byte-identical; pixels differ from v1 by ≤2 counts in flat regions (≤5 max,
+  display color-space round trip) — do not regenerate normal scenes with v2.
+  `scripts/regen_goldens.sh` routes each scene to the right oracle.
 - Oracle is Mac Catalyst iOS 26.1 UIKit. That version's metrics/colors are
   canon.
 

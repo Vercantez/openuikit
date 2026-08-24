@@ -2,7 +2,7 @@
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
-- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen). Output goes to `golden/`.
+- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below.
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
 Each renderer produces, for scene `<name>`:
@@ -26,6 +26,18 @@ Each renderer produces, for scene `<name>`:
 - `size`: logical point size of the root view. Root frame is `(0, 0, w, h)`.
 - `scale`: render scale (default 2). PNG pixels = points × scale.
 - `style`: `"light"` (default) or `"dark"`. Applied via `overrideUserInterfaceStyle`.
+- `window` (optional, bool): `true` means the scene's golden **must be rendered
+  by `Tools/oracle2`** — a Mac Catalyst app that hosts the hierarchy in a real
+  `UIWindow` (scene lifecycle, app activated) and captures it with
+  `drawHierarchy(afterScreenUpdates: true)`. Required for controls whose layers
+  are drawn only by the render server and produce nothing through offscreen
+  `layer.render(in:)` (e.g. the `UISwitch` thumb). Regenerate with
+  `Tools/oracle2/run.sh render golden <scene.json>` (or `scripts/regen_goldens.sh`,
+  which routes scenes to the right oracle automatically). Note the oracle2 app
+  window flashes briefly on screen while rendering. openrender treats the key
+  as documentation only — it renders every scene the same way. v2's compositing
+  path shifts flat colors by 1–2 counts (max seen: 5) vs v1, well inside the
+  pixel tolerance, but do not regenerate normal scenes with v2.
 
 ## View objects
 

@@ -7,5 +7,5 @@ swiftc -O -target arm64-apple-ios26.1-macabi -sdk "$SDK" \
   -Fsystem "$SDK/System/iOSSupport/System/Library/Frameworks" \
   -I "$SDK/System/iOSSupport/usr/lib/swift" \
   -L "$SDK/System/iOSSupport/usr/lib/swift" \
-  Tools/oracle/main.swift -o Tools/oracle/oracle
+  Tools/oracle/main.swift Tools/oracle/SceneKit.swift -o Tools/oracle/oracle
 echo "built Tools/oracle/oracle"
