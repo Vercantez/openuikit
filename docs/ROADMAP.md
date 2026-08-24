@@ -73,6 +73,7 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 - **M7 Interactive host** — SDL2 (or bare-metal per-platform) window backend:
   UIWindow/UIScreen, run loop, touch/mouse event delivery, hit testing,
   UIGestureRecognizer (tap/pan/long-press).
+- **M7.5 App Feel** — USER PRIORITY: real multi-screen demo app on OpenUIKit (Sources/DemoApp via openhost --app): UIScrollView with UIKit-exact physics (0.998/ms deceleration, 0.55 rubber-band, bounce springs), nav push/pop parallax transitions, row highlight feel. Spec: docs/APP_FEEL.md.
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,
