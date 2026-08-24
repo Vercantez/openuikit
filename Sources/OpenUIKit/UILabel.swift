@@ -170,7 +170,10 @@ open class UILabel: UIView {
         for ch in line.unicodeScalars {
             if let p = prev { penX += FontEngine.kerning(p, ch, font: font) }
             prev = ch
-            let adv = FontEngine.advance(of: ch, font: font) + extraAdvance
+            // Tight (truncated-line) tracking applies to every glyph except
+            // the ellipsis (verified against golden truncate pen positions).
+            let adv = FontEngine.advance(of: ch, font: font)
+                + (ch.value == 0x2026 ? 0 : extraAdvance)
             defer { penX += adv }
             if ch == " " { continue }
             if inkEligible {
