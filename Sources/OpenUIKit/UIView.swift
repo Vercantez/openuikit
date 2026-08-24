@@ -151,7 +151,64 @@ open class UIView {
     open func layoutSubviews() {}
 
     func _autoresizeChildren(oldSize: CGSize) {
-        // view module: implement UIKit autoresizing-mask distribution.
+        // UIKit autoresizing-mask distribution. For each axis the frame is
+        // split into three components (leading margin, size, trailing margin).
+        // The size delta of the superview is distributed among the FLEXIBLE
+        // components proportionally to their current magnitudes; fixed
+        // components never change. If every flexible component is zero, the
+        // delta is split equally between them. No flexible components => the
+        // child's frame is left untouched.
+        guard autoresizesSubviews else { return }
+        let newSize = bounds.size
+        let dw = newSize.width - oldSize.width
+        let dh = newSize.height - oldSize.height
+        if dw == 0 && dh == 0 { return }
+        for sub in subviews {
+            let mask = sub.autoresizingMask
+            if mask.isEmpty { continue }
+            var f = sub.frame
+            (f.origin.x, f.size.width) = UIView._autoresizeAxis(
+                origin: f.origin.x, length: f.size.width,
+                oldParent: oldSize.width, delta: dw,
+                flexLead: mask.contains(.flexibleLeftMargin),
+                flexSize: mask.contains(.flexibleWidth),
+                flexTrail: mask.contains(.flexibleRightMargin))
+            (f.origin.y, f.size.height) = UIView._autoresizeAxis(
+                origin: f.origin.y, length: f.size.height,
+                oldParent: oldSize.height, delta: dh,
+                flexLead: mask.contains(.flexibleTopMargin),
+                flexSize: mask.contains(.flexibleHeight),
+                flexTrail: mask.contains(.flexibleBottomMargin))
+            sub.frame = f
+        }
+    }
+
+    /// One-axis autoresizing distribution. Returns (newOrigin, newLength).
+    static func _autoresizeAxis(origin: CGFloat, length: CGFloat,
+                                oldParent: CGFloat, delta: CGFloat,
+                                flexLead: Bool, flexSize: Bool,
+                                flexTrail: Bool) -> (CGFloat, CGFloat) {
+        if delta == 0 { return (origin, length) }
+        if !flexLead && !flexSize && !flexTrail { return (origin, length) }
+        let lead = origin
+        let trail = oldParent - origin - length
+        var total: CGFloat = 0
+        var count = 0
+        if flexLead { total += lead; count += 1 }
+        if flexSize { total += length; count += 1 }
+        if flexTrail { total += trail; count += 1 }
+        var dLead: CGFloat = 0
+        var dSize: CGFloat = 0
+        if total == 0 {
+            // All flexible components are zero: split the delta equally.
+            let each = delta / CGFloat(count)
+            if flexLead { dLead = each }
+            if flexSize { dSize = each }
+        } else {
+            if flexLead { dLead = delta * lead / total }
+            if flexSize { dSize = delta * length / total }
+        }
+        return (origin + dLead, length + dSize)
     }
 
     // MARK: Sizing

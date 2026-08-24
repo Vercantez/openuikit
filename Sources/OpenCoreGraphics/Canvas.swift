@@ -156,7 +156,20 @@ public final class Canvas {
     public func beginTransparencyLayer(alpha: CGFloat) { _beginLayer(alpha) }
     public func endTransparencyLayer() { _endLayer() }
 
-    public func fill(_ path: Path, color: CGColor, evenOdd: Bool = false) { _fill(path, color, evenOdd) }
+    /// Fill a path. `hardEdges: true` disables edge anti-aliasing: coverage is
+    /// thresholded to 0/1 by sampling at the pixel center (i.e. threshold at
+    /// 0.5 coverage). Used by the render pass for rotated/scaled layers, whose
+    /// edges real UIKit does NOT anti-alias (see docs/ARCHITECTURE.md).
+    /// ADDITIVE extension of the frozen contract: `hardEdges` has a default
+    /// value, so all previous call sites are unchanged.
+    public func fill(_ path: Path, color: CGColor, evenOdd: Bool = false,
+                     hardEdges: Bool = false) {
+        if hardEdges {
+            _fillHardEdged(path, color, evenOdd)
+        } else {
+            _fill(path, color, evenOdd)
+        }
+    }
     public func fill(rect: CGRect, color: CGColor) { fill(.rect(rect), color: color) }
     public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) { _stroke(path, color, lineWidth) }
 
@@ -187,4 +200,114 @@ struct TransparencyLayer {
     var savedPixels: [UInt8]
     var alpha: CGFloat
     var savedStateStackDepth: Int
+}
+
+// MARK: - Hard-edged (non-anti-aliased) fill
+//
+// Self-contained implementation (depends only on state declared in this file,
+// not on Rasterizer.swift internals) so the rasterizer module can freely
+// rewrite its analytic-AA pipeline without touching this.
+extension Canvas {
+    func _fillHardEdged(_ path: Path, _ color: CGColor, _ evenOdd: Bool) {
+        guard color.alpha > 0 else { return }
+        let dev = path.applying(state.ctm)
+
+        // Flatten to line segments in device space.
+        var segs: [(CGPoint, CGPoint)] = []
+        var start = CGPoint.zero, cur = CGPoint.zero
+        func flatten(_ f: (CGFloat) -> CGPoint) {
+            let steps = 24
+            var prev = cur
+            for i in 1...steps {
+                let p = f(CGFloat(i) / CGFloat(steps))
+                segs.append((prev, p))
+                prev = p
+            }
+            cur = prev
+        }
+        for e in dev.elements {
+            switch e {
+            case .move(let p): start = p; cur = p
+            case .line(let p): segs.append((cur, p)); cur = p
+            case .quad(let c, let p):
+                let from = cur
+                flatten { t in
+                    let mt = 1 - t
+                    return CGPoint(x: mt * mt * from.x + 2 * mt * t * c.x + t * t * p.x,
+                                   y: mt * mt * from.y + 2 * mt * t * c.y + t * t * p.y)
+                }
+            case .cubic(let c1, let c2, let p):
+                let from = cur
+                flatten { t in
+                    let mt = 1 - t
+                    let x = mt * mt * mt * from.x + 3 * mt * mt * t * c1.x
+                          + 3 * mt * t * t * c2.x + t * t * t * p.x
+                    let y = mt * mt * mt * from.y + 3 * mt * mt * t * c1.y
+                          + 3 * mt * t * t * c2.y + t * t * t * p.y
+                    return CGPoint(x: x, y: y)
+                }
+            case .close:
+                segs.append((cur, start)); cur = start
+            }
+        }
+        guard !segs.isEmpty else { return }
+
+        var minX = CGFloat.infinity, minY = CGFloat.infinity
+        var maxX = -CGFloat.infinity, maxY = -CGFloat.infinity
+        for s in segs {
+            minX = Swift.min(minX, s.0.x, s.1.x); maxX = Swift.max(maxX, s.0.x, s.1.x)
+            minY = Swift.min(minY, s.0.y, s.1.y); maxY = Swift.max(maxY, s.0.y, s.1.y)
+        }
+        let x0 = Swift.max(0, Int(minX.rounded(.down)))
+        let x1 = Swift.min(bitmap.width - 1, Int(maxX.rounded(.up)))
+        let y0 = Swift.max(0, Int(minY.rounded(.down)))
+        let y1 = Swift.min(bitmap.height - 1, Int(maxY.rounded(.up)))
+        guard x0 <= x1, y0 <= y1 else { return }
+
+        for y in y0...y1 {
+            let py = CGFloat(y) + 0.5
+            for x in x0...x1 {
+                let px = CGFloat(x) + 0.5
+                // Single sample at the pixel center == 0/1 threshold at 0.5
+                // coverage for straight edges.
+                var winding = 0
+                for (a, b) in segs {
+                    if (a.y <= py && b.y > py) || (b.y <= py && a.y > py) {
+                        let t = (py - a.y) / (b.y - a.y)
+                        if a.x + t * (b.x - a.x) > px { winding += b.y > a.y ? 1 : -1 }
+                    }
+                }
+                let inside = evenOdd ? (winding % 2 != 0) : (winding != 0)
+                if !inside { continue }
+                var a = color.alpha
+                if let m = state.clipMask { a *= CGFloat(m[y * bitmap.width + x]) / 255 }
+                if a <= 0 { continue }
+                _hardBlend(at: (y * bitmap.width + x) * 4,
+                           r: color.red, g: color.green, b: color.blue, a: a)
+            }
+        }
+    }
+
+    /// Straight-alpha source-over blend on gamma-encoded sRGB values
+    /// (same semantics documented on Canvas).
+    @inline(__always)
+    private func _hardBlend(at o: Int, r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
+        let da = CGFloat(bitmap.pixels[o + 3]) / 255
+        let outA = a + da * (1 - a)
+        guard outA > 0 else {
+            bitmap.pixels[o] = 0; bitmap.pixels[o + 1] = 0
+            bitmap.pixels[o + 2] = 0; bitmap.pixels[o + 3] = 0
+            return
+        }
+        let dr = CGFloat(bitmap.pixels[o]) / 255
+        let dg = CGFloat(bitmap.pixels[o + 1]) / 255
+        let db = CGFloat(bitmap.pixels[o + 2]) / 255
+        func b8(_ v: CGFloat) -> UInt8 {
+            UInt8(Swift.min(255, Swift.max(0, (v * 255).rounded())))
+        }
+        bitmap.pixels[o] = b8((r * a + dr * da * (1 - a)) / outA)
+        bitmap.pixels[o + 1] = b8((g * a + dg * da * (1 - a)) / outA)
+        bitmap.pixels[o + 2] = b8((b * a + db * da * (1 - a)) / outA)
+        bitmap.pixels[o + 3] = b8(outA)
+    }
 }
