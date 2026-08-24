@@ -1,0 +1,313 @@
+{
+  "name" : "button_highlighted",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        340,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        15,
+        83,
+        32
+      ],
+      "intrinsic" : [
+        83,
+        32
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        83,
+        32
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        83,
+        20
+      ],
+      "intrinsic" : [
+        82.5,
+        20
+      ],
+      "path" : "1.0",
+      "sizeThatFits200" : [
+        82.5,
+        20
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        180,
+        15,
+        83,
+        32
+      ],
+      "intrinsic" : [
+        83,
+        32
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        83,
+        32
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        83,
+        20
+      ],
+      "intrinsic" : [
+        82.5,
+        20
+      ],
+      "path" : "2.0",
+      "sizeThatFits200" : [
+        82.5,
+        20
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        60,
+        43,
+        31
+      ],
+      "intrinsic" : [
+        43,
+        31
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        43,
+        31
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        43,
+        19
+      ],
+      "intrinsic" : [
+        43,
+        19
+      ],
+      "path" : "3.0",
+      "sizeThatFits200" : [
+        43,
+        19
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        180,
+        60,
+        43,
+        31
+      ],
+      "intrinsic" : [
+        43,
+        31
+      ],
+      "path" : "4",
+      "sizeThatFits200" : [
+        43,
+        31
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        43,
+        19
+      ],
+      "intrinsic" : [
+        43,
+        19
+      ],
+      "path" : "4.0",
+      "sizeThatFits200" : [
+        43,
+        19
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        105,
+        65,
+        32
+      ],
+      "intrinsic" : [
+        65,
+        32
+      ],
+      "path" : "5",
+      "sizeThatFits200" : [
+        65,
+        32
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        65,
+        20
+      ],
+      "intrinsic" : [
+        65,
+        20
+      ],
+      "path" : "5.0",
+      "sizeThatFits200" : [
+        65,
+        20
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        180,
+        105,
+        65,
+        32
+      ],
+      "intrinsic" : [
+        65,
+        32
+      ],
+      "path" : "6",
+      "sizeThatFits200" : [
+        65,
+        32
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        65,
+        20
+      ],
+      "intrinsic" : [
+        65,
+        20
+      ],
+      "path" : "6.0",
+      "sizeThatFits200" : [
+        65,
+        20
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        150,
+        53,
+        28
+      ],
+      "intrinsic" : [
+        53,
+        28
+      ],
+      "path" : "7",
+      "sizeThatFits200" : [
+        53,
+        28
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        53,
+        16
+      ],
+      "intrinsic" : [
+        53,
+        16
+      ],
+      "path" : "7.0",
+      "sizeThatFits200" : [
+        53,
+        16
+      ]
+    },
+    {
+      "class" : "UIButton",
+      "frame" : [
+        180,
+        150,
+        53,
+        28
+      ],
+      "intrinsic" : [
+        53,
+        28
+      ],
+      "path" : "8",
+      "sizeThatFits200" : [
+        53,
+        28
+      ]
+    },
+    {
+      "class" : "UIButtonLabel",
+      "frame" : [
+        0,
+        6,
+        53,
+        16
+      ],
+      "intrinsic" : [
+        53,
+        16
+      ],
+      "path" : "8.0",
+      "sizeThatFits200" : [
+        53,
+        16
+      ]
+    }
+  ]
+}

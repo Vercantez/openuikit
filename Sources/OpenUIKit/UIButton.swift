@@ -139,8 +139,12 @@ open class UIButton: UIControl {
         return base
     }
 
-    /// Highlight dim factor of a plain .system button's title (measured
-    /// from golden/button_highlighted — see the calibration note there).
+    /// Highlight dim factor of a plain .system button's title. Measured
+    /// from golden/button_highlighted: over white, the highlighted title
+    /// ink is EXACTLY base·0.2 + white·0.8 per channel (tint (0,136,255) →
+    /// (204,231,255); explicit systemGreen (52,199,89) → (214,243,222)) —
+    /// i.e. the base title color at alpha 0.2, for default AND explicit
+    /// .normal colors alike.
     static let systemHighlightedTitleAlpha: CGFloat = 0.2
 
     private func updateTitleView() {
