@@ -1,10 +1,13 @@
-// OpenUIKit Playground — edit a scene, watch OpenUIKit vs REAL UIKit live.
+// OpenUIKit Playground v2 — progress dashboard + live scene lab.
 //
 // Build & run:  ./scripts/playground.sh   (from the repo root)
 //
-// Left: fixture scenes. Middle: live JSON editor (docs/SCENE_SPEC.md).
-// Right: OpenUIKit render | real-UIKit oracle render | diff heatmap + score.
-// Renders by invoking the repo's openrender and oracle binaries.
+// - "Run Suite": renders ALL fixture scenes with OpenUIKit and scores them
+//   against the real-UIKit goldens; the sidebar becomes a scoreboard.
+// - Select a scene: live JSON editor; renders OpenUIKit vs real-UIKit oracle
+//   vs diff heatmap. Animation scenes get a frame slider (capture times).
+// - "Interactive": launches the SDL2 live host (openhost) on the current
+//   scene, once that binary exists (M7).
 
 import AppKit
 
@@ -52,24 +55,28 @@ func pixelData(_ path: String) -> (w: Int, h: Int, bytes: [UInt8])? {
     return (w, h, out)
 }
 
-/// compare.py semantics: match = per-channel delta <= 6 (on straight RGBA).
+/// compare.py semantics: composite over white, match = per-channel delta <= 6.
 func diffImages(_ a: String, _ b: String) -> (score: Double, heatmap: NSImage)? {
     guard let ga = pixelData(a), let gb = pixelData(b), ga.w == gb.w, ga.h == gb.h,
           ga.w > 0 else { return nil }
     let w = ga.w, h = ga.h
     var match = 0
     var heat = [UInt8](repeating: 0, count: w * h * 4)
+    func overWhite(_ bytes: [UInt8], _ i: Int, _ c: Int) -> Int {
+        let a = Int(bytes[i * 4 + 3])
+        return (Int(bytes[i * 4 + c]) * a + 255 * (255 - a)) / 255
+    }
     for i in 0..<(w * h) {
         var d = 0
-        for c in 0..<4 {
-            d = max(d, abs(Int(ga.bytes[i * 4 + c]) - Int(gb.bytes[i * 4 + c])))
+        for c in 0..<3 {
+            d = max(d, abs(overWhite(ga.bytes, i, c) - overWhite(gb.bytes, i, c)))
         }
         let o = i * 4
         if d <= 6 {
             match += 1
-            heat[o + 1] = 60  // dim green where matching
+            heat[o + 1] = 60
         } else {
-            heat[o] = UInt8(min(255, d * 4))  // red = diff magnitude
+            heat[o] = UInt8(min(255, d * 4))
         }
         heat[o + 3] = 255
     }
@@ -83,6 +90,13 @@ func diffImages(_ a: String, _ b: String) -> (score: Double, heatmap: NSImage)? 
     return (100.0 * Double(match) / Double(w * h), img)
 }
 
+struct SceneRow {
+    var name: String
+    var status: String? = nil   // PASS / FAIL from suite run
+    var score: Double? = nil
+    var category: String? = nil
+}
+
 final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDelegate,
                                   NSTextViewDelegate {
     var window: NSWindow!
@@ -92,31 +106,33 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
     var goldenView = NSImageView()
     var diffView = NSImageView()
     var status = NSTextField(labelWithString: "")
+    var suiteSummary = NSTextField(labelWithString: "suite not run yet")
     var backendPopup = NSPopUpButton()
     var autoRender = NSButton(checkboxWithTitle: "Auto-render", target: nil, action: nil)
-    var scenes: [String] = []
+    var frameSlider = NSSlider(value: 0, minValue: 0, maxValue: 0, target: nil, action: nil)
+    var frameLabel = NSTextField(labelWithString: "")
+    var interactiveBtn: NSButton!
+    var rows: [SceneRow] = []
     var debounce: Timer?
     var rendering = false
     var pendingRender = false
+    var frames: [(time: String, ours: String, golden: String)] = []
 
-    let openrender = findBinary([".build/release/openrender", ".build/debug/openrender",
-                                 ".build/arm64-apple-macosx/release/openrender",
-                                 ".build/arm64-apple-macosx/debug/openrender"])
+    let openrender = findBinary([".build/release/openrender", ".build/debug/openrender"])
     let oracle = findBinary(["Tools/oracle/oracle"])
     let oracle2 = findBinary(["Tools/oracle2/run.sh"])
+    var openhost: String? { findBinary([".build/release/openhost", ".build/debug/openhost"]) }
 
     func setUp() {
         try? FileManager.default.createDirectory(atPath: scratch, withIntermediateDirectories: true)
-        scenes = ((try? FileManager.default.contentsOfDirectory(atPath: repoRoot + "/fixtures/scenes")) ?? [])
-            .filter { $0.hasSuffix(".json") }.sorted()
+        reloadSceneList()
 
-        window = NSWindow(contentRect: NSRect(x: 80, y: 80, width: 1440, height: 900),
+        window = NSWindow(contentRect: NSRect(x: 60, y: 60, width: 1520, height: 940),
                           styleMask: [.titled, .closable, .resizable, .miniaturizable],
                           backing: .buffered, defer: false)
-        window.title = "OpenUIKit Playground — vs real UIKit"
-        window.minSize = NSSize(width: 1000, height: 600)
+        window.title = "OpenUIKit Playground — progress dashboard"
+        window.minSize = NSSize(width: 1100, height: 620)
 
-        // Sidebar
         sceneList = NSTableView()
         let col = NSTableColumn(identifier: .init("scene"))
         col.title = "Scenes"
@@ -124,11 +140,11 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         sceneList.dataSource = self
         sceneList.delegate = self
         sceneList.headerView = nil
+        sceneList.rowHeight = 22
         let sideScroll = NSScrollView()
         sideScroll.documentView = sceneList
         sideScroll.hasVerticalScroller = true
 
-        // Editor
         let editorScroll = NSScrollView()
         editor = NSTextView()
         editor.isRichText = false
@@ -136,7 +152,6 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         editor.isAutomaticQuoteSubstitutionEnabled = false
         editor.delegate = self
         editor.autoresizingMask = [.width]
-        editor.minSize = NSSize(width: 0, height: 0)
         editor.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude,
                                 height: CGFloat.greatestFiniteMagnitude)
         editor.isVerticallyResizable = true
@@ -144,13 +159,10 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         editorScroll.documentView = editor
         editorScroll.hasVerticalScroller = true
 
-        // Render panels
-        for (v, title) in [(oursView, "OpenUIKit"), (goldenView, "Real UIKit (oracle)"),
-                           (diffView, "Diff (red = mismatch)")] {
+        for v in [oursView, goldenView, diffView] {
             v.imageScaling = .scaleProportionallyDown
             v.wantsLayer = true
             v.layer?.backgroundColor = NSColor(white: 0.93, alpha: 1).cgColor
-            v.toolTip = title
         }
         func labeled(_ v: NSView, _ text: String) -> NSStackView {
             let l = NSTextField(labelWithString: text)
@@ -161,23 +173,35 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
             s.spacing = 2
             return s
         }
-        let renders = NSStackView(views: [labeled(oursView, "OpenUIKit"),
+        frameSlider.target = self
+        frameSlider.action = #selector(frameChanged)
+        frameSlider.isHidden = true
+        frameLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        let frameRow = NSStackView(views: [frameSlider, frameLabel])
+        frameRow.orientation = .horizontal
+        let renders = NSStackView(views: [frameRow,
+                                          labeled(oursView, "OpenUIKit"),
                                           labeled(goldenView, "Real UIKit (oracle)"),
                                           labeled(diffView, "Diff (red = mismatch)")])
         renders.orientation = .vertical
-        renders.distribution = .fillEqually
+        renders.distribution = .fill
         renders.spacing = 8
+        oursView.heightAnchor.constraint(equalTo: goldenView.heightAnchor).isActive = true
+        diffView.heightAnchor.constraint(equalTo: goldenView.heightAnchor).isActive = true
 
-        // Toolbar row
         backendPopup.addItems(withTitles: ["quartz", "swift"])
         autoRender.state = .on
+        let suiteBtn = NSButton(title: "Run Suite", target: self, action: #selector(runSuite))
         let renderBtn = NSButton(title: "Render ⌘R", target: self, action: #selector(renderNow))
         renderBtn.keyEquivalent = "r"
         renderBtn.keyEquivalentModifierMask = .command
         let saveBtn = NSButton(title: "Save to fixture", target: self, action: #selector(saveFixture))
+        interactiveBtn = NSButton(title: "▶ Interactive", target: self, action: #selector(launchInteractive))
         status.lineBreakMode = .byTruncatingTail
-        let bar = NSStackView(views: [NSTextField(labelWithString: "Backend:"), backendPopup,
-                                      renderBtn, saveBtn, autoRender, status])
+        suiteSummary.font = NSFont.boldSystemFont(ofSize: 12)
+        let bar = NSStackView(views: [suiteBtn, suiteSummary,
+                                      NSTextField(labelWithString: "Backend:"), backendPopup,
+                                      renderBtn, saveBtn, interactiveBtn, autoRender, status])
         bar.orientation = .horizontal
         bar.spacing = 8
         status.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -193,38 +217,111 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         content.orientation = .vertical
         content.spacing = 6
         content.edgeInsets = NSEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        split.translatesAutoresizingMaskIntoConstraints = false
         window.contentView = content
-        NSLayoutConstraint.activate([
-            split.heightAnchor.constraint(greaterThanOrEqualToConstant: 500),
-        ])
         window.makeKeyAndOrderFront(nil)
         DispatchQueue.main.async {
-            split.setPosition(230, ofDividerAt: 0)
-            split.setPosition(760, ofDividerAt: 1)
+            split.setPosition(280, ofDividerAt: 0)
+            split.setPosition(800, ofDividerAt: 1)
         }
 
+        updateInteractiveButton()
         if openrender == nil {
-            status.stringValue = "⚠️ openrender binary not found — run: swift build -c release"
-        } else if oracle == nil {
-            status.stringValue = "⚠️ oracle not found — run: ./scripts/build_oracle.sh"
+            status.stringValue = "⚠️ openrender not found — run: swift build -c release"
         }
-        if !scenes.isEmpty {
-            sceneList.selectRowIndexes([0], byExtendingSelection: false)
+        if !rows.isEmpty { sceneList.selectRowIndexes([0], byExtendingSelection: false) }
+    }
+
+    func reloadSceneList() {
+        let names = ((try? FileManager.default.contentsOfDirectory(atPath: repoRoot + "/fixtures/scenes")) ?? [])
+            .filter { $0.hasSuffix(".json") }.map { String($0.dropLast(5)) }.sorted()
+        let old = Dictionary(uniqueKeysWithValues: rows.map { ($0.name, $0) })
+        rows = names.map { old[$0] ?? SceneRow(name: $0) }
+    }
+
+    func updateInteractiveButton() {
+        interactiveBtn.isEnabled = openhost != nil
+        interactiveBtn.toolTip = openhost == nil
+            ? "openhost not built yet (lands with milestone M7)"
+            : "Launch the live SDL2 host with this scene — click switches, press buttons"
+    }
+
+    // MARK: suite dashboard
+    @objc func runSuite() {
+        guard let openrender else { return }
+        status.stringValue = "running full suite…"
+        let backend = backendPopup.titleOfSelectedItem ?? "quartz"
+        DispatchQueue.global().async { [weak self] in
+            let outdir = scratch + "/suite_out"
+            try? FileManager.default.removeItem(atPath: outdir)
+            let scenes = ((try? FileManager.default.contentsOfDirectory(atPath: repoRoot + "/fixtures/scenes")) ?? [])
+                .filter { $0.hasSuffix(".json") }.sorted().map { repoRoot + "/fixtures/scenes/" + $0 }
+            let t0 = Date()
+            let (rc, out) = run(openrender, ["render", outdir] + scenes,
+                                env: ["OPENUIKIT_BACKEND": backend])
+            let reportPath = scratch + "/suite_report.json"
+            let (_, _) = run("/usr/bin/python3", ["Tools/compare/compare.py", "--out", outdir,
+                                                  "--json", reportPath])
+            let ms = Int(Date().timeIntervalSince(t0) * 1000)
+            var parsed: [[String: Any]] = []
+            if let data = FileManager.default.contents(atPath: reportPath),
+               let arr = (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]] {
+                parsed = arr
+            }
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if rc != 0 && parsed.isEmpty {
+                    self.status.stringValue = "⚠️ suite render failed: " + String(out.suffix(140))
+                    return
+                }
+                var byName: [String: (String, Double?, String?)] = [:]
+                for e in parsed {
+                    guard let n = e["scene"] as? String else { continue }
+                    byName[n] = (e["status"] as? String ?? "?",
+                                 e["score"] as? Double,
+                                 e["category"] as? String)
+                }
+                self.reloadSceneList()
+                for i in self.rows.indices {
+                    if let (st, sc, cat) = byName[self.rows[i].name] {
+                        self.rows[i].status = st
+                        self.rows[i].score = sc
+                        self.rows[i].category = cat
+                    }
+                }
+                let pass = parsed.filter { ($0["status"] as? String) == "PASS" }.count
+                self.suiteSummary.stringValue = "✅ \(pass)/\(parsed.count) scenes pass"
+                if pass < parsed.count {
+                    self.suiteSummary.stringValue = "⚠️ \(pass)/\(parsed.count) scenes pass"
+                }
+                self.status.stringValue = "suite done in \(ms)ms (\(backend) backend)"
+                self.sceneList.reloadData()
+                self.updateInteractiveButton()
+            }
         }
     }
 
     // MARK: table
-    func numberOfRows(in tableView: NSTableView) -> Int { scenes.count }
+    func numberOfRows(in tableView: NSTableView) -> Int { rows.count }
     func tableView(_ t: NSTableView, viewFor c: NSTableColumn?, row: Int) -> NSView? {
-        let text = NSTextField(labelWithString: scenes[row].replacingOccurrences(of: ".json", with: ""))
-        text.font = NSFont.systemFont(ofSize: 12)
-        return text
+        let r = rows[row]
+        var text = r.name
+        var color = NSColor.labelColor
+        if let st = r.status {
+            let dot = st == "PASS" ? "🟢" : "🔴"
+            let score = r.score.map { String(format: " %.1f", $0) } ?? ""
+            text = "\(dot) \(r.name)\(score)"
+            color = st == "PASS" ? .labelColor : .systemRed
+        }
+        let tf = NSTextField(labelWithString: text)
+        tf.font = NSFont.monospacedSystemFont(ofSize: 11, weight: .regular)
+        tf.textColor = color
+        tf.lineBreakMode = .byTruncatingTail
+        return tf
     }
     func tableViewSelectionDidChange(_ notification: Notification) {
         let row = sceneList.selectedRow
-        guard row >= 0, row < scenes.count else { return }
-        let path = repoRoot + "/fixtures/scenes/" + scenes[row]
+        guard row >= 0, row < rows.count else { return }
+        let path = repoRoot + "/fixtures/scenes/" + rows[row].name + ".json"
         editor.string = (try? String(contentsOfFile: path, encoding: .utf8)) ?? "{}"
         renderNow()
     }
@@ -241,12 +338,40 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
     @objc func saveFixture() {
         let row = sceneList.selectedRow
         guard row >= 0 else { return }
-        let path = repoRoot + "/fixtures/scenes/" + scenes[row]
+        let path = repoRoot + "/fixtures/scenes/" + rows[row].name + ".json"
         try? editor.string.write(toFile: path, atomically: true, encoding: .utf8)
-        status.stringValue = "saved \(scenes[row])"
+        status.stringValue = "saved \(rows[row].name).json"
+    }
+
+    // MARK: interactive host
+    @objc func launchInteractive() {
+        guard let openhost, sceneList.selectedRow >= 0 else { return }
+        let scenePath = repoRoot + "/fixtures/scenes/" + rows[sceneList.selectedRow].name + ".json"
+        let p = Process()
+        p.launchPath = openhost
+        p.arguments = [scenePath]
+        p.currentDirectoryPath = repoRoot
+        try? p.run()
+        status.stringValue = "launched interactive host — click around in the new window"
     }
 
     // MARK: rendering
+    @objc func frameChanged() {
+        showFrame(Int(frameSlider.doubleValue.rounded()))
+    }
+
+    func showFrame(_ idx: Int) {
+        guard idx >= 0, idx < frames.count else { return }
+        let f = frames[idx]
+        frameLabel.stringValue = "t=\(f.time)s  (\(idx + 1)/\(frames.count))"
+        oursView.image = NSImage(contentsOfFile: f.ours)
+        goldenView.image = NSImage(contentsOfFile: f.golden)
+        if let (score, heat) = diffImages(f.golden, f.ours) {
+            diffView.image = heat
+            status.stringValue = String(format: "frame t=%@: pixel match %.2f%%", f.time, score)
+        }
+    }
+
     @objc func renderNow() {
         if rendering { pendingRender = true; return }
         guard let openrender, let oracle else { return }
@@ -265,30 +390,50 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         status.stringValue = "rendering…"
         let oracle2 = self.oracle2
         DispatchQueue.global().async { [weak self] in
+            let oursDir = scratch + "/ours", goldenDir = scratch + "/golden"
+            try? FileManager.default.removeItem(atPath: oursDir)
+            try? FileManager.default.removeItem(atPath: goldenDir)
             let t0 = Date()
-            let (rc1, out1) = run(openrender, ["render", scratch + "/ours", scenePath],
+            let (rc1, out1) = run(openrender, ["render", oursDir, scenePath],
                                   env: ["OPENUIKIT_BACKEND": backend])
             let oracleBin = isWindowScene && oracle2 != nil ? oracle2! : oracle
-            let (rc2, out2) = run(oracleBin, ["render", scratch + "/golden", scenePath])
+            let (rc2, out2) = run(oracleBin, ["render", goldenDir, scenePath])
             let ms = Int(Date().timeIntervalSince(t0) * 1000)
+            // collect frames: playground.png or playground.t###.png
+            let oursFiles = ((try? FileManager.default.contentsOfDirectory(atPath: oursDir)) ?? [])
+                .filter { $0.hasPrefix("playground") && $0.hasSuffix(".png") }.sorted()
+            var newFrames: [(String, String, String)] = []
+            for f in oursFiles {
+                let g = goldenDir + "/" + f
+                guard FileManager.default.fileExists(atPath: g) else { continue }
+                var t = "0"
+                if let r = f.range(of: ".t"), let dot = f.range(of: ".png") {
+                    let ms = String(f[r.upperBound..<dot.lowerBound])
+                    t = String(format: "%.3f", (Double(ms) ?? 0) / 1000)
+                }
+                newFrames.append((t, oursDir + "/" + f, g))
+            }
             DispatchQueue.main.async {
                 guard let self else { return }
                 self.rendering = false
+                self.updateInteractiveButton()
                 if rc1 != 0 || rc2 != 0 {
                     let err = (rc1 != 0 ? "openrender: " + out1 : "oracle: " + out2)
                     let lastLine = err.split(separator: "\n").last.map(String.init) ?? err
                     self.status.stringValue = "⚠️ " + String(lastLine.prefix(160))
                 } else {
-                    let ours = scratch + "/ours/playground.png"
-                    let golden = scratch + "/golden/playground.png"
-                    self.oursView.image = NSImage(contentsOfFile: ours)
-                    self.goldenView.image = NSImage(contentsOfFile: golden)
-                    if let (score, heat) = diffImages(golden, ours) {
-                        self.diffView.image = heat
-                        self.status.stringValue = String(format: "pixel match: %.2f%%  (%dms, %@ backend)",
-                                                         score, ms, backend)
-                    } else {
-                        self.status.stringValue = "rendered (\(ms)ms) — diff unavailable"
+                    self.frames = newFrames
+                    let animated = newFrames.count > 1
+                    self.frameSlider.isHidden = !animated
+                    self.frameLabel.isHidden = !animated
+                    if animated {
+                        self.frameSlider.maxValue = Double(newFrames.count - 1)
+                        self.frameSlider.numberOfTickMarks = newFrames.count
+                        self.frameSlider.doubleValue = 0
+                    }
+                    self.showFrame(0)
+                    if !animated {
+                        self.status.stringValue += String(format: "  (%dms, %@)", ms, backend)
                     }
                 }
                 if self.pendingRender {
@@ -299,7 +444,6 @@ final class PlaygroundController: NSObject, NSTableViewDataSource, NSTableViewDe
         }
     }
 }
-
 
 let app = NSApplication.shared
 app.setActivationPolicy(.regular)
