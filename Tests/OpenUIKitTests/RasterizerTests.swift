@@ -12,6 +12,20 @@ private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
 final class RasterizerTests: XCTestCase {
 
+    // These tests assert the pure-Swift rasterizer's exact analytic-coverage
+    // and bilinear-sampling semantics — pin the swift backend regardless of
+    // the process-wide default (which may be .quartz).
+    private var savedBackend: RenderBackend = CanvasBackendSelection.current
+    override func setUp() {
+        super.setUp()
+        savedBackend = CanvasBackendSelection.current
+        CanvasBackendSelection.current = .swift
+    }
+    override func tearDown() {
+        CanvasBackendSelection.current = savedBackend
+        super.tearDown()
+    }
+
     // MARK: helpers
 
     private func makeCanvas(width: Int, height: Int, scale: CGFloat = 1) -> Canvas {
