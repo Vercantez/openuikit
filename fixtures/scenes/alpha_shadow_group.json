@@ -1,0 +1,32 @@
+{
+  "name": "alpha_shadow_group",
+  "size": [320, 180],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 180], "backgroundColor": "#F2F2F7" },
+      { "class": "UIView", "frame": [0, 60, 320, 40], "backgroundColor": "#74C0FC" },
+      { "class": "UIView", "frame": [25, 35, 120, 110], "backgroundColor": "#FFFFFF",
+        "alpha": 0.6, "cornerRadius": 12,
+        "shadowOpacity": 0.6, "shadowRadius": 6, "shadowOffset": [0, 4],
+        "subviews": [
+          { "class": "UIView", "frame": [15, 15, 40, 40], "backgroundColor": "#E03131" },
+          { "class": "UIView", "frame": [40, 40, 40, 40], "backgroundColor": "#2F9E44" },
+          { "class": "UIView", "frame": [65, 65, 40, 40], "backgroundColor": "#1971C2" }
+        ]
+      },
+      { "class": "UIView", "frame": [175, 35, 120, 110], "backgroundColor": "#FFFFFF",
+        "cornerRadius": 12,
+        "shadowOpacity": 0.6, "shadowRadius": 6, "shadowOffset": [0, 4],
+        "subviews": [
+          { "class": "UIView", "frame": [15, 15, 40, 40], "backgroundColor": "#E03131" },
+          { "class": "UIView", "frame": [40, 40, 40, 40], "backgroundColor": "#2F9E44" },
+          { "class": "UIView", "frame": [65, 65, 40, 40], "backgroundColor": "#1971C2" }
+        ]
+      }
+    ]
+  }
+}

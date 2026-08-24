@@ -12,10 +12,20 @@ PIXEL_TOL = 6          # per-channel delta counted as "matching"
 LAYOUT_TOL = 0.5       # points
 
 def classify(scene):
-    """geometry | text | control, plus layoutOnly flag."""
+    """geometry | effects | text | control, plus layoutOnly flag.
+
+    Shadows/gradients (spec v2) do not change a scene's category by
+    themselves: if the scene also has text/controls its existing category
+    (and threshold) applies. A gradient-only scene stays "geometry";
+    a shadow scene with no text/controls becomes "effects" (looser
+    threshold — shadow blur covers many pixels).
+    """
     kinds = set()
+    has_shadow = [False]
     def walk(v):
         kinds.add(v.get("class", "UIView"))
+        if v.get("shadowOpacity", 0):
+            has_shadow[0] = True
         for s in v.get("subviews", []):
             walk(s)
     walk(scene["root"])
@@ -24,17 +34,19 @@ def classify(scene):
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"
+    elif has_shadow[0]:
+        cat = "effects"
     else:
         cat = "geometry"
     return cat, layout_only
 
-THRESHOLDS = {"geometry": 99.5, "text": 97.0, "control": 96.0}
+THRESHOLDS = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0}
 
 # Only these classes are compared structurally; private UIKit implementation
 # subviews (UISwitchModernVisualElement, UIButtonLabel, ...) are skipped —
 # the pixel comparison is what holds their visual placement to account.
 PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
-                  "UIProgressView", "UIStackView"}
+                  "UIProgressView", "UIStackView", "UIGradientView"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

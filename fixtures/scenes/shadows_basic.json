@@ -1,0 +1,25 @@
+{
+  "name": "shadows_basic",
+  "size": [320, 240],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 240], "backgroundColor": "#F2F2F7" },
+      { "class": "UIView", "frame": [30, 40, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 0.3 },
+      { "class": "UIView", "frame": [130, 40, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 0.6 },
+      { "class": "UIView", "frame": [230, 40, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 1.0 },
+      { "class": "UIView", "frame": [30, 140, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 0.5, "shadowColor": "#1971C2" },
+      { "class": "UIView", "frame": [130, 140, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 0.5, "shadowColor": "systemRed" },
+      { "class": "UIView", "frame": [230, 140, 60, 60], "backgroundColor": "#FFFFFF",
+        "shadowOpacity": 0.8, "shadowOffset": [4, 4] }
+    ]
+  }
+}

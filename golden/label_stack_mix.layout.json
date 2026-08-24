@@ -1,0 +1,247 @@
+{
+  "name" : "label_stack_mix",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        300
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        15,
+        15,
+        290,
+        120
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        12,
+        12,
+        266,
+        96
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        71.5,
+        29.5
+      ],
+      "intrinsic" : [
+        71.5,
+        20
+      ],
+      "path" : "1.0.0",
+      "sizeThatFits200" : [
+        71.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        33,
+        167,
+        29.5
+      ],
+      "intrinsic" : [
+        167,
+        17
+      ],
+      "path" : "1.0.1",
+      "sizeThatFits200" : [
+        167,
+        17
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        67,
+        97.5,
+        29.5
+      ],
+      "intrinsic" : [
+        97.5,
+        14
+      ],
+      "path" : "1.0.2",
+      "sizeThatFits200" : [
+        97.5,
+        14
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        15,
+        150,
+        290,
+        135
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        12,
+        12,
+        266,
+        111
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        0,
+        0,
+        128,
+        57
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        39,
+        19
+      ],
+      "intrinsic" : [
+        39,
+        19
+      ],
+      "path" : "2.0.0.0",
+      "sizeThatFits200" : [
+        39,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        22,
+        34.5,
+        16
+      ],
+      "intrinsic" : [
+        34.5,
+        16
+      ],
+      "path" : "2.0.0.1",
+      "sizeThatFits200" : [
+        34.5,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        41,
+        28.5,
+        16
+      ],
+      "intrinsic" : [
+        28.5,
+        16
+      ],
+      "path" : "2.0.0.2",
+      "sizeThatFits200" : [
+        28.5,
+        16
+      ]
+    },
+    {
+      "class" : "UIStackView",
+      "frame" : [
+        138,
+        0,
+        128,
+        57
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        90,
+        0,
+        38.5,
+        19
+      ],
+      "intrinsic" : [
+        38.5,
+        19
+      ],
+      "path" : "2.0.1.0",
+      "sizeThatFits200" : [
+        38.5,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        82,
+        22,
+        46,
+        16
+      ],
+      "intrinsic" : [
+        46,
+        16
+      ],
+      "path" : "2.0.1.1",
+      "sizeThatFits200" : [
+        46,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        47,
+        41,
+        81,
+        16
+      ],
+      "intrinsic" : [
+        81,
+        16
+      ],
+      "path" : "2.0.1.2",
+      "sizeThatFits200" : [
+        81,
+        16
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "button_dark",
+  "size": [320, 220],
+  "scale": 2,
+  "style": "dark",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 220], "backgroundColor": "systemBackground" },
+      { "class": "UIButton", "frame": [20, 20, 0, 0], "title": "Plain Dark", "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 70, 0, 0], "title": "Semibold Dark", "fontSize": 17, "fontWeight": "semibold", "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 120, 0, 0], "title": "Disabled Dark", "enabled": false, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 170, 200, 40], "title": "Orange Title", "titleColor": "systemOrange" }
+    ]
+  }
+}

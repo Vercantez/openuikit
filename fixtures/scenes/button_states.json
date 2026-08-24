@@ -1,0 +1,24 @@
+{
+  "name": "button_states",
+  "size": [340, 300],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 340, 300], "backgroundColor": "#FFFFFF" },
+      { "class": "UIButton", "frame": [20, 15, 0, 0], "title": "Tiny 11", "fontSize": 11, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 55, 0, 0], "title": "Small 13", "fontSize": 13, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 95, 0, 0], "title": "Regular 17", "fontSize": 17, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 140, 0, 0], "title": "Large 24", "fontSize": 24, "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 15, 0, 0], "title": "Light", "fontSize": 17, "fontWeight": "light", "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 55, 0, 0], "title": "Medium", "fontSize": 17, "fontWeight": "medium", "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 95, 0, 0], "title": "Heavy", "fontSize": 17, "fontWeight": "heavy", "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 140, 0, 0], "title": "Disabled Bold", "fontSize": 17, "fontWeight": "bold", "enabled": false, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 195, 140, 44], "title": "Green", "titleColor": "systemGreen" },
+      { "class": "UIButton", "frame": [180, 195, 140, 44], "title": "Disabled 20", "fontSize": 20, "enabled": false },
+      { "class": "UIButton", "frame": [20, 250, 300, 30], "title": "Very long button title that fills the frame width", "fontSize": 14 }
+    ]
+  }
+}

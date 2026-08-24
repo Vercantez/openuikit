@@ -1,4 +1,4 @@
-# Scene Specification v1
+# Scene Specification v2
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -55,6 +55,17 @@ Common keys (all optional unless noted):
 | `borderWidth` | number | `layer.borderWidth`. |
 | `borderColor` | color | `layer.borderColor`. |
 | `transform` | `[a,b,c,d,tx,ty]` | `CGAffineTransform`. Applied after frame is set (set frame first, then transform). |
+| `shadowColor` | color | `layer.shadowColor`. Default black. |
+| `shadowOpacity` | number | 0–1, `layer.shadowOpacity`. Default 0 (no shadow). |
+| `shadowOffset` | `[w,h]` | `layer.shadowOffset`. Default `[0,-3]` (CALayer default). |
+| `shadowRadius` | number | `layer.shadowRadius` (blur). Default 3. |
+
+Shadow note: `masksToBounds` must be `false` for a shadow to be visible — do
+not combine `clipsToBounds: true` with shadow keys on the same view (put the
+clipping on a child instead). Also remember the root view's background is never
+drawn (long-standing root-frame quirk — the root keeps frame `[0,0,0,0]`, see
+the note in `Tools/oracle/SceneKit.swift`), so shadow scenes that want a
+visible backdrop must add an explicit full-size background subview.
 | `autoresizingMask` | array of strings | any of `"flexibleWidth"`, `"flexibleHeight"`, `"flexibleLeftMargin"`, `"flexibleRightMargin"`, `"flexibleTopMargin"`, `"flexibleBottomMargin"`. |
 | `sizeToFit` | bool | call `sizeToFit()` after properties are set (origin preserved). |
 | `subviews` | array | child view objects, in order. |
@@ -85,6 +96,18 @@ Images are synthesized (no asset files) from an `image` object:
 | key | notes |
 |---|---|
 | `contentMode` | `scaleToFill, scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight, redraw` |
+
+### `UIGradientView` (v2)
+A `UIView` whose backing layer is a `CAGradientLayer` (the oracle implements it
+as a tiny UIView subclass overriding `layerClass`, named exactly
+`UIGradientView` so layout dumps agree). All common view keys apply.
+| key | type | notes |
+|---|---|---|
+| `colors` | `[color, ...]` | required, ≥ 2 entries. Resolved against the scene style, then set as `CAGradientLayer.colors`. |
+| `locations` | `[number, ...]` | optional, 0–1 each, one per color. Default nil (evenly spaced). |
+| `startPoint` | `[x,y]` | unit coordinates. Default `[0.5, 0]`. |
+| `endPoint` | `[x,y]` | unit coordinates. Default `[0.5, 1]`. |
+| `gradientType` | string | only `"axial"` for now (the default). |
 
 ### `UIButton`
 Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguration):
@@ -152,6 +175,12 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
 - **Layout**: every frame component must match within **0.5 pt** (hard fail otherwise). Intrinsic sizes within 0.5 pt.
 - **Pixels**: per-pixel max channel delta ≤ 6 counts as matching. Score = % matching pixels.
   - Geometry-only scenes (no text/controls): pass ≥ 99.5%
+  - Effects scenes (geometry-only scenes that use shadows): pass ≥ 98% —
+    shadows are large blurry regions, so small blur differences touch many pixels.
   - Text scenes: pass ≥ 97%
   - Control scenes (button/switch/progress): pass ≥ 96%
+  - Category rule for v2 features: shadows and gradients do **not** change a
+    scene's category by themselves — a gradient-only scene is `geometry`, a
+    shadow scene with no text/controls is `effects`, and a scene that also
+    contains text or controls keeps its `text`/`control` category (and threshold).
 - Report also includes mean absolute error and a diff heatmap PNG per failing scene in `out/diffs/`.

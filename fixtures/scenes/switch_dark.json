@@ -1,0 +1,19 @@
+{
+  "name": "switch_dark",
+  "size": [320, 120],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 120], "backgroundColor": "systemBackground" },
+      { "class": "UISwitch", "frame": [20, 20, 0, 0], "on": true },
+      { "class": "UISwitch", "frame": [100, 20, 0, 0], "on": false },
+      { "class": "UISwitch", "frame": [180, 20, 0, 0], "on": true, "onTintColor": "systemPurple" },
+      { "class": "UISwitch", "frame": [20, 70, 0, 0], "on": true, "onTintColor": "#FA5252" },
+      { "class": "UISwitch", "frame": [100, 70, 0, 0], "on": false, "onTintColor": "systemOrange" }
+    ]
+  }
+}

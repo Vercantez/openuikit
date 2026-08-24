@@ -1,0 +1,23 @@
+{
+  "name": "gradient_multi",
+  "size": [320, 160],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 160], "backgroundColor": "#FFFFFF" },
+      { "class": "UIGradientView", "frame": [20, 20, 80, 120],
+        "colors": ["#E03131", "#FFD43B", "#2F9E44", "#1971C2"],
+        "gradientType": "axial" },
+      { "class": "UIGradientView", "frame": [120, 20, 80, 120],
+        "colors": ["#000000", "#FFFFFF", "#000000"],
+        "locations": [0, 0.2, 1] },
+      { "class": "UIGradientView", "frame": [220, 20, 80, 120],
+        "colors": ["#F76707", "#845EF7", "#0CA678", "#E64980", "#1971C2"],
+        "locations": [0, 0.1, 0.5, 0.9, 1],
+        "startPoint": [0, 0.5], "endPoint": [1, 0.5] }
+    ]
+  }
+}

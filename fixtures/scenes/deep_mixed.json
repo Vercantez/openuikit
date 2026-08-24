@@ -1,0 +1,55 @@
+{
+  "name": "deep_mixed",
+  "size": [320, 240],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemGroupedBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 240], "backgroundColor": "systemGroupedBackground" },
+      { "class": "UIView", "frame": [10, 20, 300, 176], "backgroundColor": "secondarySystemGroupedBackground",
+        "cornerRadius": 10, "clipsToBounds": true,
+        "subviews": [
+          { "class": "UIStackView", "frame": [0, 0, 300, 176],
+            "axis": "vertical", "spacing": 0,
+            "stackDistribution": "fillEqually", "stackAlignment": "fill",
+            "subviews": [
+              { "class": "UIView",
+                "subviews": [
+                  { "class": "UILabel", "frame": [16, 11, 150, 22], "text": "Wi-Fi", "fontSize": 17 },
+                  { "class": "UISwitch", "frame": [233, 6.5, 0, 0], "on": true },
+                  { "class": "UIView", "frame": [16, 43.5, 284, 0.5], "backgroundColor": "separator" }
+                ]
+              },
+              { "class": "UIView",
+                "subviews": [
+                  { "class": "UILabel", "frame": [16, 11, 150, 22], "text": "Bluetooth", "fontSize": 17 },
+                  { "class": "UISwitch", "frame": [233, 6.5, 0, 0], "on": false },
+                  { "class": "UIView", "frame": [16, 43.5, 284, 0.5], "backgroundColor": "separator" }
+                ]
+              },
+              { "class": "UIView",
+                "subviews": [
+                  { "class": "UILabel", "frame": [16, 11, 120, 22], "text": "Storage", "fontSize": 17 },
+                  { "class": "UIProgressView", "frame": [150, 20, 134, 4], "progress": 0.72 },
+                  { "class": "UIView", "frame": [16, 43.5, 284, 0.5], "backgroundColor": "separator" }
+                ]
+              },
+              { "class": "UIView",
+                "subviews": [
+                  { "class": "UILabel", "frame": [16, 11, 120, 22], "text": "Battery", "fontSize": 17 },
+                  { "class": "UIProgressView", "frame": [150, 20, 134, 4], "progress": 0.31,
+                    "progressTintColor": "systemGreen" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      { "class": "UILabel", "frame": [26, 202, 268, 16], "text": "Settings footer explanation text",
+        "fontSize": 12, "textColor": "secondaryLabel" }
+    ]
+  }
+}

@@ -150,6 +150,14 @@ func makeImage(_ j: JSON, scale: CGFloat) -> UIImage {
     }
 }
 
+// MARK: - Gradient view (spec v2)
+
+/// A UIView backed by CAGradientLayer. Named exactly "UIGradientView" so the
+/// layout dump class matches the scene-spec class name.
+final class UIGradientView: UIView {
+    override class var layerClass: AnyClass { CAGradientLayer.self }
+}
+
 // MARK: - View building
 
 func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection) {
@@ -163,6 +171,14 @@ func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection
     if let r = num(j["cornerRadius"]) { v.layer.cornerRadius = r }
     if let w = num(j["borderWidth"]) { v.layer.borderWidth = w }
     if let c = colorOrDie(j["borderColor"], name, traits) { v.layer.borderColor = c.cgColor }
+    // Shadows (spec v2). layer.shadow* — note masksToBounds must stay false
+    // (i.e. no clipsToBounds on the same view) or the shadow is clipped away.
+    if let c = colorOrDie(j["shadowColor"], name, traits) { v.layer.shadowColor = c.cgColor }
+    if let o = num(j["shadowOpacity"]) { v.layer.shadowOpacity = Float(o) }
+    if let off = numArray(j["shadowOffset"]), off.count == 2 {
+        v.layer.shadowOffset = CGSize(width: off[0], height: off[1])
+    }
+    if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
     if let m = j["autoresizingMask"] as? [String] {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -255,6 +271,26 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
         if let c = colorOrDie(j["progressTintColor"], cls, traits) { p.progressTintColor = c }
         if let c = colorOrDie(j["trackTintColor"], cls, traits) { p.trackTintColor = c }
         v = p
+    case "UIGradientView":
+        let g = UIGradientView()
+        let gl = g.layer as! CAGradientLayer
+        guard let colorStrings = j["colors"] as? [String], colorStrings.count >= 2 else {
+            fatalError("UIGradientView needs \"colors\" with >= 2 entries")
+        }
+        gl.colors = colorStrings.map { s -> CGColor in
+            guard let c = parseColor(s) else { fatalError("bad color '\(s)' in UIGradientView") }
+            return c.resolvedColor(with: traits).cgColor
+        }
+        if let locs = numArray(j["locations"]) {
+            gl.locations = locs.map { NSNumber(value: Double($0)) }
+        }
+        if let p = numArray(j["startPoint"]), p.count == 2 { gl.startPoint = CGPoint(x: p[0], y: p[1]) }
+        if let p = numArray(j["endPoint"]), p.count == 2 { gl.endPoint = CGPoint(x: p[0], y: p[1]) }
+        if let t = j["gradientType"] as? String {
+            guard t == "axial" else { fatalError("gradientType '\(t)' unsupported (axial only)") }
+            gl.type = .axial
+        }
+        v = g
     case "UIStackView":
         let s = UIStackView()
         s.axis = (j["axis"] as? String) == "vertical" ? .vertical : .horizontal
