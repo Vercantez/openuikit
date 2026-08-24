@@ -173,7 +173,17 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
 ## Comparison thresholds (compare.py)
 
 - **Layout**: every frame component must match within **0.5 pt** (hard fail otherwise). Intrinsic sizes within 0.5 pt.
-- **Pixels**: per-pixel max channel delta ≤ 6 counts as matching. Score = % matching pixels.
+- **Pixels**: both images are composited over white (each decoded with its own
+  alpha encoding) and the per-pixel delta is the max over the composited RGB
+  channels and the raw alpha channel; delta ≤ 6 counts as matching. Score =
+  % matching pixels.
+  - Alpha encodings: openrender and `Tools/oracle` goldens use straight
+    (unassociated) alpha — the PNG norm. `Tools/oracle2` goldens
+    (`"window": true` scenes; `drawHierarchy` → `UIImage.pngData`) carry
+    **premultiplied** RGB in semi-transparent regions, so compare.py decodes
+    a golden as premultiplied exactly when the scene sets `"window": true`.
+    Comparing raw channels would report huge RGB deltas at low alpha even
+    when the renders agree (regression test: `Tools/compare/test_compare.py`).
   - Geometry-only scenes (no text/controls): pass ≥ 99.5%
   - Effects scenes (geometry-only scenes that use shadows): pass ≥ 98% —
     shadows are large blurry regions, so small blur differences touch many pixels.

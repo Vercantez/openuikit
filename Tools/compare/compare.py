@@ -85,19 +85,37 @@ def compare_layout(g, o):
                     problems.append(f"path='{path}' {key}[{i}]: golden={x} ours={y}")
     return problems
 
-def compare_pixels(gpath, opath, diff_path):
-    gi = np.asarray(Image.open(gpath).convert("RGBA"), dtype=np.int16)
-    oi = np.asarray(Image.open(opath).convert("RGBA"), dtype=np.int16)
+def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False):
+    """Composite both images over white (each with its own alpha encoding)
+    and compare the result plus the raw alpha channel.
+
+    openrender always writes straight (unassociated) alpha, the PNG norm.
+    Goldens from Tools/oracle (offscreen layer.render) are straight too, but
+    goldens from Tools/oracle2 ("window": true scenes; drawHierarchy →
+    UIImage.pngData) carry PREMULTIPLIED RGB in semi-transparent regions —
+    golden RGB == straight RGB * alpha exactly. Comparing raw channels there
+    flags huge RGB deltas at low alpha even when the renders agree, so the
+    caller tells us the golden's encoding and we compare what a viewer sees.
+    """
+    gi = np.asarray(Image.open(gpath).convert("RGBA"), dtype=np.float64)
+    oi = np.asarray(Image.open(opath).convert("RGBA"), dtype=np.float64)
     if gi.shape != oi.shape:
         return None, f"size mismatch golden={gi.shape} ours={oi.shape}"
-    # compare over white and composite alpha (both RGBA already)
-    delta = np.abs(gi - oi).max(axis=2)
+    ga, oa = gi[..., 3:], oi[..., 3:]
+    if golden_premultiplied:
+        gw = gi[..., :3] + (255.0 - ga)                # RGB already * alpha
+    else:
+        gw = gi[..., :3] * ga / 255.0 + (255.0 - ga)
+    ow = oi[..., :3] * oa / 255.0 + (255.0 - oa)
+    # max over composited RGB delta and alpha delta (alpha itself is encoded
+    # identically on both sides, so it is still compared directly)
+    delta = np.maximum(np.abs(gw - ow).max(axis=2), np.abs(ga - oa)[..., 0])
     match = (delta <= PIXEL_TOL)
     score = 100.0 * match.mean()
-    mae = float(np.abs(gi - oi).mean())
+    mae = float(delta.mean())
     if score < 100.0 and diff_path:
         heat = np.zeros((*delta.shape, 3), dtype=np.uint8)
-        heat[..., 0] = np.clip(delta * 4, 0, 255)          # red = diff magnitude
+        heat[..., 0] = np.clip(delta * 4, 0, 255).astype(np.uint8)  # red = diff magnitude
         heat[..., 1] = np.where(match, 60, 0)              # dim green where matching
         Image.fromarray(heat).save(diff_path)
     return {"score": round(score, 3), "mae": round(mae, 3)}, None
@@ -139,7 +157,9 @@ def main():
             res, err = compare_pixels(
                 os.path.join(args.golden, name + ".png"),
                 os.path.join(args.out, name + ".png"),
-                os.path.join(diffdir, name + ".diff.png"))
+                os.path.join(diffdir, name + ".diff.png"),
+                # oracle2 ("window" scenes) goldens are premultiplied
+                golden_premultiplied=bool(scene.get("window", False)))
             if err:
                 entry["pixel_error"] = err
                 pixel_ok = False
@@ -171,4 +191,5 @@ def main():
         json.dump(report, open(args.json, "w"), indent=1)
     sys.exit(0 if all_pass else 1)
 
-main()
+if __name__ == "__main__":
+    main()
