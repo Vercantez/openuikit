@@ -96,6 +96,27 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     (NavigationControllerTests incl. a rendered mid-transition pixel probe);
     scripted capture: `openhost --nav-demo --script scripts/nav_push.json`.
     Scope notes in docs/KNOWN_GAPS.md.
+  - Demo app + app hosting DONE (2026-08-24) — M7.5 COMPLETE: Sources/DemoApp
+    (library target, no Foundation — reference for idiomatic OpenUIKit app
+    code) with three screens per APP_FEEL: Settings root (profile card +
+    16 icon-tile rows in grouped cards inside a UIScrollView, disclosure
+    pushes, switch rows, systemGray4 highlight flash with 0.3 s
+    UIView.animate fade), Display & Brightness (switch group + pan-driven
+    UISlider-style brightness slider with live footnote), About (value rows
+    + long scrollable colophon). Icon tiles are hand-drawn Canvas paths (16
+    glyphs, no SF Symbols). `openhost --app demo` boots the
+    UIApplication-lite (390x780 window, default --scale 1); hosts now run
+    layout-before-draw (window.layoutIfNeeded() per frame) and dirty-flag
+    rendering — a frame renders only on input, active scroll/nav animation,
+    or before OpenUIKitRuntime.animationWorkDeadline; idle costs zero.
+    Acceptance: scripts/appfeel_demo.json scripted run (flick → momentum →
+    rubber-band → settle, row highlight, push mid-transition, switch
+    toggle, slider drag, pop) — every frame visually verified;
+    scripts/appfeel_demo.gif. PERF (Apple M3 Max, release): full-frame render of
+    the root screen ≈ 144 ms at scale 2, ≈ 39 ms at scale 1 → sustained
+    scroll ≈ 7 fps / ≈ 25 fps; 60 fps needs per-layer contents caching /
+    partial redraw in the compositor (M8 candidate, see APP_FEEL
+    "Performance"). Suite 56/56, swift test 305 green.
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,

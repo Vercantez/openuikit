@@ -1,5 +1,20 @@
 # M7.5 — "Real UIKit feel" demo app (USER PRIORITY)
 
+> **STATUS (2026-08-24): SHIPPED.** Everything below is implemented,
+> including the back-swipe stretch goal. Launch:
+>
+>     swift run -c release openhost --app demo
+>
+> (from the repo root; `OPENUIKIT_BACKEND=quartz` optional — quartz is the
+> default. `--scale 2` for crisp HiDPI at lower frame rates, see
+> "Performance" at the bottom.) Scripted acceptance capture:
+>
+>     swift run -c release openhost --app demo --scale 2 \
+>         --script scripts/appfeel_demo.json --record out_host
+>
+> Result GIF: scripts/appfeel_demo.gif. What shipped vs the spec, plus
+> measured performance, is summarized at the end of this file.
+
 The user's goal: an app built ON OpenUIKit that feels like a genuine iOS app.
 Feel-first milestone; oracle fidelity for these behaviors follows where
 measurable. Prerequisite: M7 host + events (openhost, hit testing, controls).
@@ -74,3 +89,69 @@ if feasible) → pop.
 - A scripted-event capture (openhost --script) records a GIF of: scroll flick
   with bounce, row tap → push, toggle a switch, pop back. Frames verified.
 - Static/animation suite (52+ scenes) stays green throughout.
+
+## What shipped (2026-08-24)
+
+Everything in this spec, plus:
+
+- **Sources/DemoApp** is its own library target under the same
+  no-Foundation rules as OpenUIKit — it doubles as the reference for what
+  idiomatic OpenUIKit app code looks like (UIViewController subclasses,
+  addTarget closures, UIView.animate for every state change).
+- Settings root: profile card + 16 rows in 4 inset-grouped cards
+  (row-component helper `SettingsRow`: 29pt icon tile / title / accessory
+  = chevron | value+chevron | static detail | UISwitch), content ≈ 910pt
+  vs a 716pt viewport so flick physics always engage.
+- Icon tiles are hand-drawn Canvas paths (airplane, wifi, bluetooth,
+  cellular, battery, bell, speaker, moon, hourglass, gear, toggles, sun,
+  grid, person, shield, info) — there are no SF Symbols in the portable
+  stack.
+- Display & Brightness: True Tone / Night Shift / Raise to Wake switch
+  rows + a UISlider-look brightness slider (4pt track, tint fill, 28pt
+  shadowed thumb) dragged by a UIPanGestureRecognizer, with a live
+  percentage footnote.
+- About: static value rows + a 7-paragraph scrollable colophon.
+- Row highlight ships exactly as specced: systemGray4 on touch-down
+  (post-delaysContentTouches; a quick tap gets it on the touch-up flush,
+  like UIKit), 0.3s UIView.animate fade after up/cancel, tap action firing
+  after touchesBegan has painted the highlight.
+- Interactive back-swipe (the stretch goal) shipped in the navigation
+  milestone and works on every pushed screen of the demo.
+- Host improvements that came out of this milestone: `openhost --app demo`
+  (UIApplication-lite boot), layout-before-draw (window.layoutIfNeeded()
+  before every rendered frame, matching UIKit's commit), and dirty-flag
+  rendering (below).
+
+Not done (honest list): no large-title nav bar (fixed 64pt bar), no status
+bar content, no blur behind the bar, row press states don't cancel on
+significant vertical finger travel within the slop window (UIKit is
+slightly stricter), slider has no tap-to-jump (drag only, as specced),
+About value rows use a plain static style rather than UIKit's exact
+About-table metrics.
+
+## Performance (measured 2026-08-24, Apple M3 Max, release build)
+
+Dirty-flag rendering: the live loop renders ONLY when an input event
+arrived, a finger is down, a scroll is decelerating/bouncing, a navigation
+transition is in flight, or the host clock is before
+`OpenUIKitRuntime.animationWorkDeadline` (a new runtime hint fed by
+UIView.animate recording and UISwitch.setOn). An idle app renders zero
+frames.
+
+But during a sustained scroll every frame is dirty, and a full-frame
+re-render of the Settings root costs (60-frame scripted average):
+
+| scale | avg render | sustained  |
+|-------|-----------|-------------|
+| 2     | ≈ 144 ms  | ≈ 7 fps     |
+| 1     | ≈ 39 ms   | ≈ 25 fps    |
+
+That is far from 60 fps, so **--app mode defaults to --scale 1** (pass
+--scale 2 for crisp stills/captures). Profiling (`sample`) shows the time
+goes to quartz path rasterization — mostly re-rasterizing every label's
+glyph ink and every icon's vector paths from scratch each frame — plus the
+per-frame offscreen allocations for drawContent layers. Sustained 60 fps
+needs per-layer contents caching (CA-style: re-render a layer's content
+only on setNeedsDisplay, reuse the bitmap otherwise) and/or dirty-rect
+partial redraw in the compositor. That is compositor-side work — flagged
+as an M8 candidate for the quartz backend.
