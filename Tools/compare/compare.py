@@ -82,7 +82,10 @@ STRUCT_ABSENCE_RATIO = 0.12       # ...both absolutely and relative to the golde
 
 # Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
 # scenes (bar materials / edge effects, cell chrome, sheet presentation).
-CHROME_CLASSES = {"UITableView", "UINavigationStack", "UITabBarStack"}
+# v5.3 (M13) adds UIToolbar: a bar of iOS 26 glass platters, the same
+# system-drawn material every other chrome class carries.
+CHROME_CLASSES = {"UITableView", "UINavigationStack", "UITabBarStack",
+                  "UIToolbar"}
 
 def classify(scene):
     """geometry | effects | text | control | chrome, plus layoutOnly flag.
@@ -94,7 +97,7 @@ def classify(scene):
     threshold — shadow blur covers many pixels).
 
     Chrome (spec v5) outranks everything: any UITableView /
-    UINavigationStack / UITabBarStack in the tree, or a top-level "modal"
+    UINavigationStack / UITabBarStack / UIToolbar in the tree, or a "modal"
     or "alert" (spec v5.2 — M12), makes the scene "chrome" — large regions
     of system-drawn material (glass platters, edge-effect gradients, sheet
     shadows, the alert card's blurred platter) warrant the loosest
@@ -150,6 +153,13 @@ PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   # container views) are private on both sides — only the
                   # chrome view's own frame is compared structurally; pixels
                   # hold the chrome itself to account.
+                  #
+                  # UIToolbar (v5.3) is deliberately NOT here: real UIKit's
+                  # toolbar subtree exposes PUBLIC-class internals (the glass
+                  # platters' UIViews), so including it would compare two
+                  # unrelated private trees. Its whole subtree is skipped and
+                  # the pixels hold it to account — the same rule
+                  # UISegmentedControl follows.
                   "UITableView", "UINavigationStack", "UITabBarStack"}
 
 def visible_views(dump):

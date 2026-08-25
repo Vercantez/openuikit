@@ -29,8 +29,12 @@ long-tail.
 - **No `UIVisualEffectView`, so nothing in the framework blurs** — see the
   alerts section below for the fitted flat model and exactly where it is
   wrong. This is now a cross-cutting divergence, not an alert detail: it
-  covers the alert card and pills, the sheet grabber, the tab-bar platter and
-  the `UIPageControl` background.
+  covers the alert card and pills, the sheet grabber, the tab-bar platter,
+  the `UIPageControl` background and (M13) every **bar-button platter** in a
+  navigation bar or toolbar.
+- **No SF Symbols.** `UIBarButtonItem(barButtonSystemItem:)` draws one for
+  most of its cases on iOS 26; OpenUIKit substitutes hand-fitted vectors of
+  the measured size. See the bars section below.
 - **No Dynamic Type.** `UIFontMetrics` (66 uses), `UIFont.preferredFont` (21)
   and `UITraitPreferredContentSizeCategory` (55) are all missing; text sizes
   are absolute.
@@ -283,6 +287,80 @@ unharvested on purpose: every scene passes with margin anyway
 severe blob 17.8 pt² against an 80 pt² gate). Harvesting those cells is the
 next fidelity step if a future fixture in these sizes runs tight; the recipe
 is the "Glyph ink harvest" section below.
+## Bars & appearance (M13, 2026-08-25)
+
+`UIBarButtonItem` (270 uses), `UINavigationItem`, `UIToolbar` and the
+`UIBarAppearance` family are measured from real iOS 26.1 (iPhone 16, compact)
+through `Tools/oracle2/simscene` — the fixtures `navitem_buttons`,
+`navitem_titleview`, `navitem_dark`, `navbar_appearance` and `toolbar_basic`.
+Re-probe any of it with
+
+    SIMCTL_CHILD_SIMSCENE_DEBUG=1 scripts/render_sim_scenes.sh <outdir> <scene.json>
+
+which prints the full private view tree (frames, fonts, colors) for every
+scene it renders. What is NOT faithful:
+
+- **The platters are glass; ours are flat.** iOS 26 puts every bar button in
+  its own capsule that samples, blurs and refracts the backdrop. We draw the
+  measured flat equivalent (white in light mode, (25, 25, 25) in dark) plus a
+  shadow whose (opacity 0.075, sigma 10, offset (0, 4)) are a least-squares
+  fit to the golden's own falloff — `python3 Tools/compare/fit_bar_shadow.py`,
+  rms 2.3 counts. Over a flat neutral backdrop that is what the golden shows
+  (over white the platter is literally invisible apart from its shadow). Over
+  a **saturated** backdrop it is wrong in hue exactly like the alert card:
+  probed over #FF0000 the real platter renders pink and the labels lose their
+  tint entirely, and probed over a #FFCC00 opaque bar the whole bar reads
+  (247, 206, 70) rather than the (255, 204, 0) that was set — the edge effect
+  and the glass both recolor it. **A fixture must not put bar items over a
+  saturated backdrop**; the shipped ones use white, black and #F2F2F7.
+- **The refractive band is a fitted approximation.** Measured on two goldens,
+  the top **14.5 pt** of a 44 pt navigation-bar platter shows the backdrop
+  unchanged instead of the frosted fill. We reproduce it by washing that band
+  back to the bar's own background color, which only works when the bar HAS a
+  flat background; over a transparent bar the band stays frosted. A
+  standalone `UIToolbar` platter probed over a saturated backdrop shows a
+  UNIFORM fill with no band at all, so toolbars do not apply it — the reason
+  for that difference is not understood, it is simply what both probes show.
+- **No SF Symbols, so most system items are approximations.** Measured:
+  exactly `.edit` and `.save` render as TEXT ("Edit" / "Save") on iOS 26 and
+  are therefore exact; `.done` is the PROMINENT style (a tint-filled capsule
+  with a white checkmark, and `UIBarButtonItem.Style.done` was literally
+  renamed `.prominent`); everything else is an SF Symbol. `_BarSymbol` draws
+  a hand-fitted vector of the MEASURED bounding box and stroke weight for
+  each one — recognizable, correctly sized and correctly colored, but not the
+  same outline. **No golden gates them and no fixture uses one**; the
+  fixtures use `.edit`/`.save`, custom titles and synthesized template images.
+- **Untinted bar buttons render `label`-colored, not tinted.** This surprises
+  people, so it is worth restating: it is MEASURED, twice. Setting
+  `navigationBar.tintColor = .systemBlue` still produces black glyphs on
+  iOS 26; only an item's OWN `tintColor` is honored. Apps that expect blue
+  bar buttons will see black — and so will they on real iOS 26.
+- **No item cross-fade during push/pop.** The title and back button animate
+  (M7.5), the item platters swap instantly.
+- **Toolbars do not merge adjacent image items.** A run of image-only items
+  in a real toolbar sometimes shares ONE long platter (measured: six symbol
+  items did, a mixed text/symbol row did not, and two symbol items in a
+  navigation bar did not). The rule was not pinned down; OpenUIKit always
+  gives each item its own platter, which is what every measured *navigation
+  bar* does. `toolbar_basic` therefore uses title items only.
+- **`isTranslucent` is stored and ignored** (no blur to be translucent with),
+  and `UIBarAppearance.backgroundEffect` is accepted and ignored.
+- **`configureWithDefaultBackground()` == transparent for a static bar.**
+  iOS 26's default bar is transparent at rest and gets its material from the
+  scroll-edge effect once content passes under it; that effect is modelled
+  only in the large-title path (`UINavigationBar.updatePocket`).
+- **`UINavigationBar`'s default appearance is OPAQUE, not iOS 26's default.**
+  A deliberate compatibility choice: it keeps the inline bar looking like it
+  did before M13 for hosts and demos. Set `standardAppearance` explicitly for
+  the iOS 26 look. No golden covers the default.
+
+One guessed constant was **replaced** by measurement in M13: the inline
+navigation bar's zone split was a 20 pt "status inset" + a 44 pt content bar
+(title centre 42). Real iOS 26 is 10 + 54 with the title centre at **32**,
+which is the same 64 pt total M10 already measured for the large-title bar's
+inline zone. `UINavigationBar.barHeight` is unchanged, so nothing below the
+bar moved.
+
 ## Alerts + custom transitions (M12, 2026-08-25)
 
 Everything in `Sources/OpenUIKit/UIAlertController.swift` is measured from

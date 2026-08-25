@@ -22,7 +22,10 @@ s = json.load(open(sys.argv[1]))
 # an AppKit sheet window whose chrome UIKit cannot capture (spec v5).
 # "alert" scenes (spec v5.2) for the same reason: Catalyst bridges
 # UIAlertController into an AppKit alert panel.
-print("sim" if (s.get("modal") or s.get("alert")) else ("window" if s.get("window") is True else "normal"))' "$f")
+# "ios": true (spec v5.3) asks for real iOS chrome explicitly -- the bars
+# cluster, whose iOS 26 glass platters Catalyst is not ground truth for.
+print("sim" if (s.get("modal") or s.get("alert") or s.get("ios") is True)
+      else ("window" if s.get("window") is True else "normal"))' "$f")
   case $route in
     sim) simulated+=("$f") ;;
     window) windowed+=("$f") ;;

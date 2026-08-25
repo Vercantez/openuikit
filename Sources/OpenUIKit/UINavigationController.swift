@@ -106,6 +106,21 @@ open class UINavigationController: UIViewController {
     public var topViewController: UIViewController? { viewControllers.last }
 
     public let navigationBar = UINavigationBar()
+    /// The controller's toolbar (M13). Hidden by default, exactly like
+    /// UIKit; shown by `setToolbarHidden(false, animated:)` and filled from
+    /// the top controller's `toolbarItems`.
+    public let toolbar = UIToolbar()
+    public var isToolbarHidden: Bool = true {
+        didSet {
+            guard isToolbarHidden != oldValue else { return }
+            toolbar.isHidden = isToolbarHidden
+            updateContainerLayout()
+            updateToolbar()
+        }
+    }
+    public func setToolbarHidden(_ hidden: Bool, animated: Bool) {
+        isToolbarHidden = hidden
+    }
     /// Clipped area below the bar that hosts child VC views.
     let contentView = UIView()
     public private(set) var interactivePopGestureRecognizer: UIGestureRecognizer?
@@ -139,6 +154,10 @@ open class UINavigationController: UIViewController {
             self?.popViewController(animated: true)
         }
         v.addSubview(navigationBar)
+
+        toolbar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        toolbar.isHidden = isToolbarHidden
+        v.addSubview(toolbar)
         updateContainerLayout()
 
         let edge = UIScreenEdgePanGestureRecognizer { [weak self] r in
@@ -155,8 +174,7 @@ open class UINavigationController: UIViewController {
             top.beginAppearanceTransition(true, animated: false)
             installTopView(top)
             top.endAppearanceTransition()
-            navigationBar.setState(title: top.title,
-                                   backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+            updateBarState()
         }
     }
 
@@ -185,10 +203,27 @@ open class UINavigationController: UIViewController {
         } else {
             let barH = UINavigationBar.barHeight
             contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
-                                       height: v.bounds.height - barH)
+                                       height: v.bounds.height - barH - toolbarHeight)
             navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
                                          height: barH)
         }
+        toolbar.frame = CGRect(x: 0, y: v.bounds.height - toolbarHeight,
+                               width: v.bounds.width, height: UIToolbar.defaultHeight)
+    }
+
+    /// Height the toolbar takes out of the content area (0 when hidden).
+    var toolbarHeight: CGFloat { isToolbarHidden ? 0 : UIToolbar.defaultHeight }
+
+    /// Fill the toolbar from the top controller's `toolbarItems` (M13).
+    func updateToolbar() {
+        guard isViewLoaded else { return }
+        toolbar.items = topViewController?.toolbarItems
+    }
+
+    /// A child's `toolbarItems` changed while it is on screen.
+    func _toolbarItemsDidChange(_ vc: UIViewController) {
+        guard vc === topViewController else { return }
+        updateToolbar()
     }
 
     /// navigationBar.prefersLargeTitles flipped: re-frame the container and
@@ -247,17 +282,34 @@ open class UINavigationController: UIViewController {
     }
 
     /// Back-button label for the stack position `index` on top: the previous
-    /// VC's title, "Back" when it has none, nil at the root (no button).
+    /// VC's `backBarButtonItem` / `backButtonTitle` if it set one, otherwise
+    /// its title, "Back" when it has none, nil at the root (no button).
     func backTitle(forTopIndex index: Int) -> String? {
         guard index > 0 else { return nil }
-        return viewControllers[index - 1].title ?? "Back"
+        let previous = viewControllers[index - 1]
+        if viewControllers[index]._navigationItem?.hidesBackButton == true { return nil }
+        if let item = previous._navigationItem {
+            if let custom = item.backBarButtonItem?.title { return custom }
+            if let t = item.backButtonTitle { return t }
+        }
+        return previous.title ?? "Back"
+    }
+
+    /// Push the whole navigation-item stack + the title/back state onto the
+    /// bar (M13). `setState` still owns the title label and back button
+    /// (they take part in the push/pop cross-fade); the item stack drives
+    /// the bar-button platters, title view, prompt and per-item appearance.
+    func updateBarState() {
+        navigationBar.setState(title: topViewController?.title,
+                               backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+        navigationBar.setItems(viewControllers.map { $0.navigationItem })
+        updateToolbar()
     }
 
     func _titleDidChange(_ vc: UIViewController) {
         guard isViewLoaded, activeTransition == nil else { return }
         if vc === topViewController {
-            navigationBar.setState(title: vc.title,
-                                   backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+            updateBarState()
         }
     }
 
@@ -302,8 +354,7 @@ open class UINavigationController: UIViewController {
             vc.beginAppearanceTransition(true, animated: false)
             installTopView(vc)
             vc.endAppearanceTransition()
-            navigationBar.setState(title: vc.title,
-                                   backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+            updateBarState()
             vc.didMove(toParent: self)
             return
         }
@@ -319,8 +370,7 @@ open class UINavigationController: UIViewController {
             from.view.removeFromSuperview()
             from.endAppearanceTransition()
             vc.endAppearanceTransition()
-            navigationBar.setState(title: vc.title,
-                                   backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+            updateBarState()
             vc.didMove(toParent: self)
             return
         }
@@ -351,8 +401,7 @@ open class UINavigationController: UIViewController {
             from.view.removeFromSuperview()
             from.endAppearanceTransition()
             to.endAppearanceTransition()
-            navigationBar.setState(title: to.title,
-                                   backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+            updateBarState()
             detachFromParent(from)
             return from
         }
@@ -398,8 +447,7 @@ open class UINavigationController: UIViewController {
             toView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             contentView.insertSubview(toView, at: 0)
         }
-        navigationBar.setState(title: to.title,
-                               backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+        updateBarState()
         ctx.onComplete = { [weak self] _ in
             self?._finishCustomTransition(push: push, from: from, to: to)
         }

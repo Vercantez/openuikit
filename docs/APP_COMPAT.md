@@ -174,7 +174,7 @@ needs it.
 | # | cluster | uses | apps | notes |
 |---|---|---|---|---|
 | 1 | **Collection view** (23 types) | 498 | 4 | `UICollectionView` 222, `UICollectionViewCell` 78, `UICollectionViewLayout` 41, `UICollectionViewFlowLayout` 30, data source/delegate 51. Reuse machinery exists inside `UITableView` and must be lifted into a shared layer first (docs/KNOWN_GAPS.md). Compositional layout + diffable data source are in the tail of this cluster. |
-| 2 | **Bars & appearance** (6 types) | 322 | 4 | `UIBarButtonItem` 270 — the single largest missing type after Foundation and nibs, and the one that makes `UINavigationItem` real. Then `UINavigationBarAppearance` 33, `UIToolbar` 12, `UITabBarAppearance`. Today the nav bar shows `vc.title` and a back button and nothing else. |
+| 2 | ~~**Bars & appearance** (6 types)~~ | ~~322~~ | 4 | **SHIPPED (M13)** — `UIBarButtonItem`, `UINavigationItem`, `UIToolbar`, `UIBarAppearance` + the navigation-bar / toolbar / tab-bar subclasses, and `UIBarTitleTextAttributes`. See "What M13 shipped" below. |
 | 3 | **Menus & actions** (9 types) | 252 | 2 | `UIKeyCommand` 81, `UIAction` 69, `UIMenu` 49, `UIContextMenuConfiguration` 23. Concentrated in two apps but dense there, and `UIAction` is how modern code-based UI wires buttons at all. |
 | 4 | **Delegate protocols** (14 types) | 144 | 4 | `UITextFieldDelegate` 20, `UITextViewDelegate` 15, `UIGestureRecognizerDelegate` 14, the collection-view trio 51, the presentation-controller delegates 23. Mostly *declarations that do not exist yet* — an app fails to compile on the conformance before any behaviour is missing. Cheapest points on the list. |
 | 5 | **Share / system UI** (5 types) | 130 | 3 | `UIActivityViewController` 84, `UIImagePickerController` 17, `NSItemProvider` 16. System UI we cannot reproduce; the honest shape is a compiling stub that reports "unavailable". |
@@ -231,6 +231,44 @@ on Linux. Everything implemented on the way keeps its oracle fixtures, so
 "runs real apps" never trades away "matches real UIKit."
 
 Not reached yet: no corpus app compiles end to end. The blockers, in the order
-they bite, are exactly items 4, 2 and 1 above — missing delegate protocols
-(compile errors before anything runs), `UIBarButtonItem` (every screen's
-chrome), and `UICollectionView`.
+they bite, are now items 4 and 1 above — missing delegate protocols (compile
+errors before anything runs) and `UICollectionView`. Item 2,
+`UIBarButtonItem` and every screen's chrome, shipped in M13.
+
+## What M13 shipped — bars & appearance (2026-08-25)
+
+The whole #2 cluster, oracle-backed. **8 new exported types** (111 → 119
+public `UI`/`NS`/`CA` names in `Sources/OpenUIKit`) and **5 new fixture
+scenes** (96 → **101**):
+
+| type | corpus uses | notes |
+|---|---|---|
+| `UIBarButtonItem` | 270 | all five UIKit initializers (`title:style:target:action:`, `barButtonSystemItem:target:action:`, `image:style:target:action:`, `customView:`, plain), `isEnabled`, `tintColor`, `width`, `style`. Target-action goes through the M12 selector machinery, and the sender UIKit hands the action is the ITEM. |
+| `UINavigationBarAppearance` | 33 | plus `UIBarAppearance`, `UIToolbarAppearance`, `UITabBarAppearance`, `UIBarTitleTextAttributes`. `configureWith{Default,Opaque,Transparent}Background`, `backgroundColor`, `shadowColor`, `titleTextAttributes`, `largeTitleTextAttributes`; wired to `standardAppearance` / `scrollEdgeAppearance` / `compactAppearance` on the bar AND per-item on `UINavigationItem`. |
+| `UIToolbar` | 12 | `items`, `setItems(_:animated:)`, `barTintColor`, `tintColor`, `isTranslucent`, appearance objects; plus `UINavigationController.toolbar` / `isToolbarHidden` / `setToolbarHidden(_:animated:)` driven by the top controller's `toolbarItems`. |
+| `UINavigationItem` | — | `title`, `titleView`, `prompt`, `left`/`rightBarButtonItem(s)` (+ the animated setters), `backBarButtonItem`, `backButtonTitle`, `hidesBackButton`, `largeTitleDisplayMode`, per-item appearances. Reachable as `UIViewController.navigationItem`, created lazily and seeded from `title` exactly like UIKit — which is how every real app configures a bar. |
+
+Fixtures (all routed to real iOS in the Simulator through the new `"ios": true`
+scene key — Mac Catalyst is not ground truth for iOS 26's glass bars):
+`navitem_buttons` (leading + trailing items, a system item, a disabled item),
+`navitem_titleview` (custom title view over a transparent bar),
+`navitem_dark` (dark mode, a template-image item, a per-item tint),
+`navbar_appearance` (opaque background + shadow hairline + custom title text
+attributes), `toolbar_basic` (flexible and fixed spaces, two bars).
+
+Two divergences are worth surfacing here because they change what an app sees
+(full detail in docs/KNOWN_GAPS.md "Bars & appearance"):
+
+- **Bar buttons are glass platters, and ours are flat.** Correct over a flat
+  neutral backdrop (over white the platter is invisible apart from its
+  measured shadow), wrong in hue over a saturated one — the same
+  `UIVisualEffectView` gap the alert card and tab-bar platter already carry.
+- **No SF Symbols.** Measured, only `.edit` and `.save` render as text on
+  iOS 26 and are exact; `.done` is the prominent (tint-filled) checkmark and
+  every other system item is a hand-fitted vector of the measured size. No
+  golden gates those vectors.
+
+One guessed constant was replaced by measurement: the inline navigation bar's
+zone split was 20 + 44 with the title centred at y 42; real iOS 26 is 10 + 54
+with the centre at **32**. `barHeight` stays 64, so nothing below the bar
+moved.

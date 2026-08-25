@@ -261,6 +261,128 @@ final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelega
 final class UINavigationStack: UIView {}
 final class UITabBarStack: UIView {}
 
+// MARK: - Debug tree dump (metric probing)
+
+/// Recursive view-tree dump used to PROBE real UIKit metrics (bar button
+/// frames, fonts, colors). Enabled by an env var in the hosts:
+/// `ORACLE2_CHROME_DEBUG` (Catalyst) / `SIMSCENE_DEBUG` (Simulator).
+func debugWalk(_ v: UIView, _ depth: Int = 0) {
+    let cls = NSStringFromClass(type(of: v))
+    var extra = ""
+    if let l = v as? UILabel {
+        extra = " text=\"\(l.text ?? "")\" font=\(l.font.pointSize)/\(l.font.fontName)"
+            + " color=\(rgbaString(l.textColor))"
+    }
+    if let b = v as? UIButton {
+        extra = " btnTitle=\"\(b.title(for: .normal) ?? "")\""
+            + " font=\(b.titleLabel?.font.pointSize ?? -1)/\(b.titleLabel?.font.fontName ?? "-")"
+            + " titleColor=\(rgbaString(b.titleColor(for: .normal)))"
+            + " enabled=\(b.isEnabled) img=\(String(describing: b.image(for: .normal)?.size))"
+    }
+    if let i = v as? UIImageView {
+        extra = " imgSize=\(String(describing: i.image?.size)) tint=\(rgbaString(i.tintColor))"
+    }
+    let bg = v.backgroundColor.map { rgbaString($0) } ?? "-"
+    print(String(repeating: "  ", count: depth)
+          + "\(cls) frame=\(v.frame) alpha=\(v.alpha) hidden=\(v.isHidden) bg=\(bg)"
+          + " radius=\(v.layer.cornerRadius)\(extra)")
+    for s in v.subviews { debugWalk(s, depth + 1) }
+}
+
+func rgbaString(_ c: UIColor?) -> String {
+    guard let c else { return "-" }
+    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+    c.getRed(&r, green: &g, blue: &b, alpha: &a)
+    return "(\(Int((r * 255).rounded())),\(Int((g * 255).rounded())),\(Int((b * 255).rounded())),\(String(format: "%.4f", a)))"
+}
+
+// MARK: - Bar button items / bar appearance (scene spec v5.3 — M13)
+
+/// The `barButtonSystemItem` names the scene spec accepts. Only the ones a
+/// portable renderer can reproduce are listed; see docs/SCENE_SPEC.md and
+/// docs/KNOWN_GAPS.md ("SF Symbol bar items").
+let barSystemItems: [String: UIBarButtonItem.SystemItem] = [
+    "done": .done, "cancel": .cancel, "edit": .edit, "save": .save,
+    "add": .add, "close": .close, "trash": .trash, "action": .action,
+    "refresh": .refresh, "reply": .reply, "compose": .compose,
+    "organize": .organize, "bookmarks": .bookmarks, "search": .search,
+    "camera": .camera, "undo": .undo, "redo": .redo,
+    "flexibleSpace": .flexibleSpace, "fixedSpace": .fixedSpace,
+]
+
+func makeBarButtonItem(_ j: JSON, scale: CGFloat,
+                       traits: UITraitCollection) -> UIBarButtonItem {
+    let style: UIBarButtonItem.Style =
+        (j["style"] as? String) == "done" ? .done : .plain
+    let item: UIBarButtonItem
+    if let sys = j["systemItem"] as? String {
+        guard let s = barSystemItems[sys] else {
+            fatalError("bad barButtonSystemItem '\(sys)'")
+        }
+        item = UIBarButtonItem(barButtonSystemItem: s, target: nil, action: nil)
+    } else if let cv = j["customView"] as? JSON {
+        item = UIBarButtonItem(customView: buildView(cv, scale: scale, traits: traits))
+    } else if let ij = j["image"] as? JSON {
+        let img = makeImage(ij, scale: scale).withRenderingMode(.alwaysTemplate)
+        item = UIBarButtonItem(image: img, style: style, target: nil, action: nil)
+    } else {
+        item = UIBarButtonItem(title: j["title"] as? String ?? "", style: style,
+                               target: nil, action: nil)
+    }
+    if let w = num(j["width"]) { item.width = w }
+    if let e = j["enabled"] as? Bool { item.isEnabled = e }
+    if let c = colorOrDie(j["tintColor"], "UIBarButtonItem", traits) { item.tintColor = c }
+    return item
+}
+
+func makeBarItems(_ v: Any?, scale: CGFloat,
+                  traits: UITraitCollection) -> [UIBarButtonItem]? {
+    guard let arr = v as? [JSON] else { return nil }
+    return arr.map { makeBarButtonItem($0, scale: scale, traits: traits) }
+}
+
+/// Build a `UINavigationBarAppearance` / `UITabBarAppearance` / plain
+/// `UIToolbarAppearance` from an appearance JSON object (spec v5.3).
+func makeBarAppearance<A: UIBarAppearance>(_ j: JSON, kind: A.Type,
+                                           traits: UITraitCollection) -> A {
+    let a = A()
+    switch j["configuration"] as? String ?? "default" {
+    case "default": a.configureWithDefaultBackground()
+    case "opaque": a.configureWithOpaqueBackground()
+    case "transparent": a.configureWithTransparentBackground()
+    case let c: fatalError("bad appearance configuration '\(c)'")
+    }
+    if let c = colorOrDie(j["backgroundColor"], "appearance", traits) {
+        a.backgroundColor = c
+    }
+    if j["shadowColor"] is NSNull {
+        a.shadowColor = nil
+    } else if let c = colorOrDie(j["shadowColor"], "appearance", traits) {
+        a.shadowColor = c
+    }
+    if let nav = a as? UINavigationBarAppearance {
+        if let t = j["titleTextAttributes"] as? JSON {
+            nav.titleTextAttributes = textAttributes(t, traits: traits)
+        }
+        if let t = j["largeTitleTextAttributes"] as? JSON {
+            nav.largeTitleTextAttributes = textAttributes(t, traits: traits)
+        }
+    }
+    return a
+}
+
+func textAttributes(_ j: JSON, traits: UITraitCollection) -> [NSAttributedString.Key: Any] {
+    var attrs: [NSAttributedString.Key: Any] = [:]
+    if let c = colorOrDie(j["color"], "titleTextAttributes", traits) {
+        attrs[.foregroundColor] = c
+    }
+    if j["fontSize"] != nil || j["fontWeight"] != nil
+        || j["italic"] != nil || j["monospaced"] != nil {
+        attrs[.font] = fontFrom(j)
+    }
+    return attrs
+}
+
 // MARK: - View building
 
 func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection) {
@@ -627,8 +749,25 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         let stack = UINavigationStack()
         stack.traitOverrides.horizontalSizeClass = .compact  // iPhone bar metrics
         let contentVC = UIViewController()
-        contentVC.view.backgroundColor = UIColor.systemBackground.resolvedColor(with: traits)
+        // Spec v5.3: an explicit "backgroundColor" pins the content VC's
+        // background. Sim-rendered scenes MUST use it in dark mode — the
+        // vendored system_colors.json is harvested from Catalyst, whose dark
+        // systemBackground is 0.1176 while real iOS uses pure black (the same
+        // trap alert_dark documents).
+        contentVC.view.backgroundColor =
+            colorOrDie(j["backgroundColor"], cls, traits)
+            ?? UIColor.systemBackground.resolvedColor(with: traits)
+        j["backgroundColor"] = nil   // consumed (not the wrapper's background)
         contentVC.navigationItem.title = j["title"] as? String
+        // Bar button items / title view / prompt (spec v5.3).
+        contentVC.navigationItem.leftBarButtonItems =
+            makeBarItems(j["leftItems"], scale: scale, traits: traits)
+        contentVC.navigationItem.rightBarButtonItems =
+            makeBarItems(j["rightItems"], scale: scale, traits: traits)
+        if let tv = j["titleView"] as? JSON {
+            contentVC.navigationItem.titleView = buildView(tv, scale: scale, traits: traits)
+        }
+        contentVC.navigationItem.prompt = j["prompt"] as? String
         let scroll = UIScrollView(frame: contentVC.view.bounds)
         scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         // .automatic is REQUIRED here: the large-title expansion/collapse is
@@ -652,6 +791,32 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         nav.navigationBar.prefersLargeTitles = j["largeTitle"] as? Bool == true
         if j["largeTitle"] as? Bool == true {
             contentVC.navigationItem.largeTitleDisplayMode = .always
+        }
+        // Bar tint (item color) + appearance objects (spec v5.3).
+        if let c = colorOrDie(j["tintColor"], cls, traits) { nav.navigationBar.tintColor = c }
+        if let aj = j["appearance"] as? JSON {
+            let a = makeBarAppearance(aj, kind: UINavigationBarAppearance.self, traits: traits)
+            nav.navigationBar.standardAppearance = a
+            nav.navigationBar.scrollEdgeAppearance = a
+            nav.navigationBar.compactAppearance = a
+        }
+        if let aj = j["scrollEdgeAppearance"] as? JSON {
+            nav.navigationBar.scrollEdgeAppearance =
+                makeBarAppearance(aj, kind: UINavigationBarAppearance.self, traits: traits)
+        }
+        // Toolbar (spec v5.3): a real UINavigationController toolbar driven
+        // by the content VC's toolbarItems.
+        if let ti = makeBarItems(j["toolbarItems"], scale: scale, traits: traits) {
+            contentVC.toolbarItems = ti
+            nav.isToolbarHidden = false
+            if let c = colorOrDie(j["toolbarTintColor"], cls, traits) {
+                nav.toolbar.tintColor = c
+            }
+            if let aj = j["toolbarAppearance"] as? JSON {
+                let a = makeBarAppearance(aj, kind: UIToolbarAppearance.self, traits: traits)
+                nav.toolbar.standardAppearance = a
+                nav.toolbar.scrollEdgeAppearance = a
+            }
         }
         host.addChild(nav)
         nav.view.frame = stack.bounds
@@ -711,6 +876,11 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         tab.viewControllers = vcs
         if let idx = j["selectedIndex"] as? Int { tab.selectedIndex = idx }
         if let c = colorOrDie(j["tintColor"], cls, traits) { tab.tabBar.tintColor = c }
+        if let aj = j["appearance"] as? JSON {
+            let a = makeBarAppearance(aj, kind: UITabBarAppearance.self, traits: traits)
+            tab.tabBar.standardAppearance = a
+            tab.tabBar.scrollEdgeAppearance = a
+        }
         host.addChild(tab)
         tab.view.frame = stack.bounds
         tab.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -726,6 +896,28 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
             tab?.tabBar.alpha = 1
         }
         v = stack
+    case "UIToolbar":
+        // Standalone toolbar (spec v5.3). Frame-positioned like any view;
+        // items come from the scene's "items" array.
+        let t = UIToolbar()
+        t.traitOverrides.horizontalSizeClass = .compact
+        if let items = makeBarItems(j["items"], scale: scale, traits: traits) {
+            t.items = items
+        }
+        if let c = colorOrDie(j["barTintColor"], cls, traits) { t.barTintColor = c }
+        if let c = colorOrDie(j["tintColor"], cls, traits) { t.tintColor = c }
+        if let tr = j["translucent"] as? Bool { t.isTranslucent = tr }
+        switch j["barPosition"] as? String ?? "bottom" {
+        case "bottom": t.barStyle = .default
+        case "top": t.barStyle = .default
+        case let p: fatalError("bad barPosition '\(p)'")
+        }
+        if let aj = j["appearance"] as? JSON {
+            let a = makeBarAppearance(aj, kind: UIToolbarAppearance.self, traits: traits)
+            t.standardAppearance = a
+            t.scrollEdgeAppearance = a
+        }
+        v = t
     case "UIStackView":
         let s = UIStackView()
         s.axis = (j["axis"] as? String) == "vertical" ? .vertical : .horizontal
@@ -1190,6 +1382,14 @@ func loadScene(file: String) throws -> SceneSpec {
         }
         guard scene["window"] as? Bool == true else {
             fatalError("scene \(name): \"modal\" requires \"window\": true (oracle2)")
+        }
+    }
+    if scene["ios"] as? Bool == true {
+        // Spec v5.3 (M13): explicit "render me with real iOS UIKit in the
+        // Simulator" — the bars cluster. scripts/regen_goldens.sh routes on
+        // this key; openrender mirrors it when picking the system-font cut.
+        guard scene["window"] as? Bool == true else {
+            fatalError("scene \(name): \"ios\": true requires \"window\": true (SimScene)")
         }
     }
     if let alert = scene["alert"] as? JSON {

@@ -420,7 +420,11 @@ final class LargeTitleNavigationTests: XCTestCase {
         XCTAssertNotNil(bar.hitTest(inBack, with: nil))
     }
 
-    func testClassicModeUnchanged() {
+    /// M13: the inline (non-large-title) bar now uses the MEASURED iOS 26
+    /// zone split — 10 pt top padding + a 54 pt content bar, title centre 32
+    /// — instead of M7.5's guessed 20 + 44 (title centre 42). The total bar
+    /// height is unchanged at 64, so the content area is where it was.
+    func testClassicModeUsesMeasuredBarZone() {
         let vc = UIViewController()
         vc.title = "Plain"
         let nav = UINavigationController(rootViewController: vc)
@@ -431,6 +435,6 @@ final class LargeTitleNavigationTests: XCTestCase {
                        CGRect(x: 0, y: 0, width: 375, height: 64))
         XCTAssertNotNil(nav.navigationBar.backgroundColor)
         XCTAssertEqual(vc.view.frame.height, 480 - 64)
-        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 42, accuracy: 1e-9)
+        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 32, accuracy: 1e-9)
     }
 }

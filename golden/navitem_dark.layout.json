@@ -1,0 +1,115 @@
+{
+  "name" : "navitem_dark",
+  "views" : [
+    {
+      "class" : "UINavigationStack",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILayoutContainerView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UINavigationTransitionView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIViewControllerWrapperView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.0.0.0"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.0.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        8,
+        361,
+        60
+      ],
+      "path" : "0.0.0.0.0.0"
+    },
+    {
+      "class" : "UINavigationBar",
+      "frame" : [
+        0,
+        10,
+        393,
+        44
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "FloatingBarContainerView",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "FloatingBarHostingView<FloatingBarContainer>",
+      "frame" : [
+        0,
+        0,
+        393,
+        260
+      ],
+      "path" : "0.2.0"
+    },
+    {
+      "class" : "_UIPointerInteractionAssistantEffectContainerView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "0.2.1"
+    }
+  ]
+}

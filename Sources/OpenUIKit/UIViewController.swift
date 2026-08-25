@@ -92,7 +92,28 @@ open class UIViewController: UIResponder {
     /// Shown by UINavigationController in the navigation bar (and as the
     /// next VC's back-button label).
     public var title: String? {
-        didSet { navigationController?._titleDidChange(self) }
+        didSet {
+            _navigationItem?.title = title
+            navigationController?._titleDidChange(self)
+        }
+    }
+
+    // MARK: Navigation item (M13 — bars & appearance)
+
+    var _navigationItem: UINavigationItem?
+    /// The bar configuration a parent `UINavigationController` displays for
+    /// this controller. Created on first access, like UIKit, and seeded from
+    /// `title`.
+    public var navigationItem: UINavigationItem {
+        if let item = _navigationItem { return item }
+        let item = UINavigationItem(title: title)
+        _navigationItem = item
+        return item
+    }
+
+    /// Items for the parent navigation controller's toolbar.
+    public var toolbarItems: [UIBarButtonItem]? {
+        didSet { navigationController?._toolbarItemsDidChange(self) }
     }
 
     // MARK: Modal presentation (M10 — see UIPresentation.swift)

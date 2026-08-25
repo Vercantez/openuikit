@@ -1,0 +1,23 @@
+{
+  "name": "navitem_buttons",
+  "size": [393, 300],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "ios": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Inbox",
+    "backgroundColor": "#FFFFFF",
+    "appearance": { "configuration": "opaque", "backgroundColor": "#FFFFFF" },
+    "contentSize": [393, 900],
+    "leftItems": [ { "title": "Back" } ],
+    "rightItems": [ { "systemItem": "edit" }, { "title": "Add", "enabled": false } ],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 361, 60], "backgroundColor": "#E5E5EA", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 27, 240, 22], "text": "First message", "fontSize": 17, "textColor": "#000000" },
+      { "class": "UIView", "frame": [16, 80, 361, 60], "backgroundColor": "#E5E5EA", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 99, 240, 22], "text": "Second message", "fontSize": 17, "textColor": "#000000" }
+    ]
+  }
+}

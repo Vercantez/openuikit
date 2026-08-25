@@ -453,16 +453,52 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   therefore reachable without a compiler fork; nothing was adopted this
   milestone, but the assessment that ruled it out is retracted.
 
+## M13 — bars & appearance (2026-08-25)
+
+Punch-list cluster #2, **322 corpus uses across all four apps**, closed:
+`UIBarButtonItem` (270 — the largest missing type after Foundation and nibs),
+`UINavigationItem`, `UIToolbar`, `UIBarAppearance` +
+`UINavigationBarAppearance` / `UIToolbarAppearance` / `UITabBarAppearance`,
+and `UIBarTitleTextAttributes`. `UIViewController.navigationItem` and
+`toolbarItems` now drive the bars, which is how every real code-based app
+configures them. 8 new exported types (111 → 119), 5 new fixtures
+(96 → **101**).
+
+The measurement drove three findings that a guess would have missed, all of
+them iOS-26-specific:
+
+1. **Bar buttons are capsule glass platters**, one per item — 44 pt tall in a
+   navigation bar and **48** in a toolbar (measured separately), top-aligned
+   at the bar's own y = 0, side margin 16, width = content + 2 x 16, with a
+   12 pt gap that is skipped after a space item.
+2. **An untinted bar button renders `label`-colored, not tinted** — probed
+   both ways, including with `navigationBar.tintColor` explicitly set. Only an
+   item's OWN tint is honored. And of the system items, exactly `.edit` and
+   `.save` are text; `.done` is the PROMINENT style (`UIBarButtonItem.Style`
+   `.done` was renamed `.prominent` in iOS 26).
+3. **The inline bar's zone split was wrong since M7.5.** It was a guessed
+   20 pt "status inset" + 44 pt content bar with the title centred at y 42;
+   real iOS 26 is 10 + 54 with the centre at **32** — the same split M10 had
+   already measured for the large-title bar's inline zone. `barHeight` is
+   still 64, so nothing below the bar moved. The guess is gone.
+
+Goldens for this cluster come from **real iOS in the headless Simulator**
+(new `"ios": true` scene key, scene spec v5.3) rather than Mac Catalyst,
+which is not ground truth for iOS 26's glass bars. Divergences — flat
+platters instead of glass, hand-fitted vectors instead of SF Symbols — are in
+docs/KNOWN_GAPS.md "Bars & appearance", with an explicit warning that a
+fixture must not put bar items over a saturated backdrop.
+
 ## Next — where the census points (docs/APP_COMPAT.md)
 
-The four clusters closed 2,139 of the corpus's references. The remaining
-1,856 re-rank to: **collection view** (498, all 4 apps), **bars & appearance**
-(322, led by `UIBarButtonItem` at 270), **menus & actions** (252),
-**delegate protocols** (144 — mostly declarations that do not exist yet, so an
-app fails to compile on the conformance before any behaviour is missing), and
-**share/system UI** (130, honestly a stub). No corpus app compiles end to end
-yet; the blockers, in the order they bite, are the delegate protocols, then
-`UIBarButtonItem`, then `UICollectionView`.
+The M12 clusters closed 2,139 of the corpus's references and M13 closed
+another 322. The remainder re-ranks to: **collection view** (498, all 4
+apps), **menus & actions** (252), **delegate protocols** (144 — mostly
+declarations that do not exist yet, so an app fails to compile on the
+conformance before any behaviour is missing), and **share/system UI** (130,
+honestly a stub). No corpus app compiles end to end yet; the blockers, in the
+order they bite, are now the delegate protocols and then
+`UICollectionView`.
 
 ## Verification principle (unchanged, applies to every milestone)
 

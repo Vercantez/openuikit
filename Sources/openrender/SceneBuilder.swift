@@ -694,6 +694,99 @@ final class UITabBarStack: UIView {}
 
 let chromeRootClasses: Set<String> = ["UINavigationStack", "UITabBarStack"]
 
+// MARK: - Bar button items / bar appearance (scene spec v5.3 — M13)
+
+let barSystemItems: [String: UIBarButtonItem.SystemItem] = [
+    "done": .done, "cancel": .cancel, "edit": .edit, "save": .save,
+    "add": .add, "close": .close, "trash": .trash, "action": .action,
+    "refresh": .refresh, "reply": .reply, "compose": .compose,
+    "organize": .organize, "bookmarks": .bookmarks, "search": .search,
+    "camera": .camera, "undo": .undo, "redo": .redo,
+    "flexibleSpace": .flexibleSpace, "fixedSpace": .fixedSpace,
+]
+
+func makeBarButtonItem(_ j: SceneJSON, scale: CGFloat,
+                       warn: (String) -> Void) -> UIBarButtonItem {
+    let style: UIBarButtonItem.Style =
+        j["style"]?.stringValue == "done" ? .done : .plain
+    let item: UIBarButtonItem
+    if let sys = j["systemItem"]?.stringValue {
+        guard let s = barSystemItems[sys] else {
+            fatalError("bad barButtonSystemItem '\(sys)'")
+        }
+        item = UIBarButtonItem(barButtonSystemItem: s)
+    } else if let cv = j["customView"]?.objectValue {
+        item = UIBarButtonItem(customView: buildView(cv, scale: scale, warn: warn))
+    } else if let ij = j["image"]?.objectValue {
+        item = UIBarButtonItem(image: makeImage(ij, scale: scale), style: style)
+    } else {
+        item = UIBarButtonItem(title: j["title"]?.stringValue ?? "", style: style)
+    }
+    if let w = num(j["width"]) { item.width = w }
+    if let e = j["enabled"]?.boolValue { item.isEnabled = e }
+    if let c = colorOrDie(j["tintColor"], "UIBarButtonItem") { item.tintColor = c }
+    return item
+}
+
+func makeBarItems(_ v: JSONValue?, scale: CGFloat,
+                  warn: (String) -> Void) -> [UIBarButtonItem]? {
+    guard let arr = v?.arrayValue else { return nil }
+    return arr.map { entry in
+        guard let o = entry.objectValue else { fatalError("bad bar item entry") }
+        return makeBarButtonItem(o, scale: scale, warn: warn)
+    }
+}
+
+func applyBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, to a: A) {
+    switch j["configuration"]?.stringValue ?? "default" {
+    case "default": a.configureWithDefaultBackground()
+    case "opaque": a.configureWithOpaqueBackground()
+    case "transparent": a.configureWithTransparentBackground()
+    case let c: fatalError("bad appearance configuration '\(c)'")
+    }
+    if let c = colorOrDie(j["backgroundColor"], "appearance") { a.backgroundColor = c }
+    if let sc = j["shadowColor"] {
+        if case .null = sc { a.shadowColor = nil }
+        else if let c = colorOrDie(sc, "appearance") { a.shadowColor = c }
+    }
+    if let nav = a as? UINavigationBarAppearance {
+        if let t = j["titleTextAttributes"]?.objectValue {
+            nav.titleTextAttributes = barTitleAttributes(t)
+        }
+        if let t = j["largeTitleTextAttributes"]?.objectValue {
+            nav.largeTitleTextAttributes = barTitleAttributes(t)
+        }
+    }
+}
+
+func makeBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, _ kind: A.Type) -> A {
+    let a = A()
+    applyBarAppearance(j, to: a)
+    return a
+}
+
+func barTitleAttributes(_ j: SceneJSON) -> UIBarTitleTextAttributes {
+    var attrs = UIBarTitleTextAttributes()
+    attrs.foregroundColor = colorOrDie(j["color"], "titleTextAttributes")
+    if j["fontSize"] != nil || j["fontWeight"] != nil
+        || j["italic"] != nil || j["monospaced"] != nil {
+        attrs.font = fontFrom(j)
+    }
+    return attrs
+}
+
+func makeToolbar(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIToolbar {
+    let t = UIToolbar()
+    t.items = makeBarItems(j["items"], scale: scale, warn: warn)
+    if let c = colorOrDie(j["barTintColor"], "UIToolbar") { t.barTintColor = c }
+    if let c = colorOrDie(j["tintColor"], "UIToolbar") { t.tintColor = c }
+    if let tr = j["translucent"]?.boolValue { t.isTranslucent = tr }
+    if let aj = j["appearance"]?.objectValue {
+        t.standardAppearance = makeBarAppearance(aj, UIToolbarAppearance.self)
+    }
+    return t
+}
+
 /// Controllers built for the current scene must outlive the JSON walk
 /// (views do not retain their controllers). Lives for the process — same
 /// pattern as the oracle's sceneTableDrivers.
@@ -708,8 +801,18 @@ func makeNavigationStack(_ j: SceneJSON, scale: CGFloat,
                          warn: (String) -> Void) -> UIView {
     let stack = UINavigationStack()
     let contentVC = UIViewController()
-    contentVC.view.backgroundColor = .systemBackground
+    contentVC.view.backgroundColor =
+        colorOrDie(j["backgroundColor"], "UINavigationStack") ?? .systemBackground
     contentVC.title = j["title"]?.stringValue
+    // Bar button items / title view / prompt (spec v5.3).
+    contentVC.navigationItem.leftBarButtonItems =
+        makeBarItems(j["leftItems"], scale: scale, warn: warn)
+    contentVC.navigationItem.rightBarButtonItems =
+        makeBarItems(j["rightItems"], scale: scale, warn: warn)
+    if let tv = j["titleView"]?.objectValue {
+        contentVC.navigationItem.titleView = buildView(tv, scale: scale, warn: warn)
+    }
+    contentVC.navigationItem.prompt = j["prompt"]?.stringValue
     let scroll = UIScrollView(frame: contentVC.view.bounds)
     scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     scroll.showsVerticalScrollIndicator = false
@@ -723,8 +826,33 @@ func makeNavigationStack(_ j: SceneJSON, scale: CGFloat,
     }
     contentVC.view.addSubview(scroll)
     contentVC.setContentScrollView(scroll)
+    if let ti = makeBarItems(j["toolbarItems"], scale: scale, warn: warn) {
+        contentVC.toolbarItems = ti
+    }
     let nav = UINavigationController(rootViewController: contentVC)
     nav.navigationBar.prefersLargeTitles = j["largeTitle"]?.boolValue == true
+    if let c = colorOrDie(j["tintColor"], "UINavigationStack") {
+        nav.navigationBar.tintColor = c
+    }
+    if let aj = j["appearance"]?.objectValue {
+        let a = makeBarAppearance(aj, UINavigationBarAppearance.self)
+        nav.navigationBar.standardAppearance = a
+        nav.navigationBar.scrollEdgeAppearance = a
+        nav.navigationBar.compactAppearance = a
+    }
+    if let aj = j["scrollEdgeAppearance"]?.objectValue {
+        nav.navigationBar.scrollEdgeAppearance =
+            makeBarAppearance(aj, UINavigationBarAppearance.self)
+    }
+    if contentVC.toolbarItems != nil {
+        nav.isToolbarHidden = false
+        if let c = colorOrDie(j["toolbarTintColor"], "UINavigationStack") {
+            nav.toolbar.tintColor = c
+        }
+        if let aj = j["toolbarAppearance"]?.objectValue {
+            nav.toolbar.standardAppearance = makeBarAppearance(aj, UIToolbarAppearance.self)
+        }
+    }
     nav.view.frame = stack.bounds
     nav.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     stack.addSubview(nav.view)
@@ -782,8 +910,13 @@ func makeTabBarStack(_ j: SceneJSON, scale: CGFloat,
     return stack
 }
 
-func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
+func buildView(_ input: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
+    var j = input
     let cls = j["class"]?.stringValue ?? "UIView"
+    // Spec v5.3: a nav stack's "backgroundColor" belongs to the hosted
+    // content view controller, not to the wrapper (mirrors the oracle, which
+    // nils the key out for the same reason).
+    if cls == "UINavigationStack" { j["backgroundColor"] = nil }
     let v: UIView
     switch cls {
     case "UIView": v = UIView()
@@ -802,8 +935,9 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UITableView": v = makeTableView(j)
     case "UITextField": v = makeTextField(j)
     case "UITextView": v = makeTextView(j)
-    case "UINavigationStack": v = makeNavigationStack(j, scale: scale, warn: warn)
+    case "UINavigationStack": v = makeNavigationStack(input, scale: scale, warn: warn)
     case "UITabBarStack": v = makeTabBarStack(j, scale: scale, warn: warn)
+    case "UIToolbar": v = makeToolbar(j, scale: scale, warn: warn)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -1158,8 +1292,12 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // 20 pt — so those goldens must be laid out with the iOS advances. The
     // routing rule is duplicated here on purpose; ScenePipelineProbeTests
     // asserts the two stay in sync. See FontEngine.SystemFontCut.
+    // v5.3 (M13) adds a THIRD route to the Simulator: a scene may ask for
+    // real iOS chrome explicitly with `"ios": true` (the bars cluster —
+    // Catalyst is not the ground truth for iOS 26 bar platters).
     OpenUIKitRuntime.systemFontCut =
-        (scene["alert"] != nil || scene["modal"] != nil) ? .iOS : .macOS
+        (scene["alert"] != nil || scene["modal"] != nil
+         || scene["ios"]?.boolValue == true) ? .iOS : .macOS
 
     // Mirror oracle's traits.performAsCurrent { build } — semantic colors
     // resolved at build time (e.g. layer.borderColor via .cgColor) must use
