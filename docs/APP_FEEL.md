@@ -267,6 +267,62 @@ Two findings, one fixed and one not:
   quartz (patch 004 only covers axis-aligned rects) would buy the same win
   with no fidelity question, and is the better fix. Owner: perf/quartz.
 
+## Measured sheet interaction (M11, 2026-08-25)
+
+The M10 modal presentation shipped the sheet's *mechanics* (slide-up, dim,
+geometry) but none of its *behaviour*. That behaviour is now implemented, and
+like the scroll physics before it, **every constant is measured from real iOS
+UIKit rather than guessed**.
+
+Ground truth: `Tools/oracle2/sheetprobe`, run by
+`scripts/sheet_probe_sim.sh <outdir>`. It is the sibling of SimProbe (scroll):
+a real iOS app in a headless iPhone 16 / iOS 26.1 simulator that presents a
+live `UISheetPresentationController`, drives it with synthetic UITouch drags
+(the same KIF-style delivery as the scroll traces, `scrollshared.swift`), and
+samples the sheet's frame and the dimming view's presentation opacity every
+display-link frame. Mac Catalyst cannot do this at all — it bridges a
+pageSheet into an AppKit sheet window (see `Tools/oracle2/simscene/main.swift`).
+
+Implementation: `UISheetPhysics` in Sources/OpenUIKit/UIPresentation.swift.
+Regression gate: `Tests/OpenUIKitTests/SheetInteractionTests.swift` (15 tests,
+each asserting a measured number).
+
+### Measured values (iOS 26.1, iPhone 16, 393 x 852)
+
+| quantity | MEASURED | evidence |
+|---|---|---|
+| sheet rest frame | **(0, 59, 393, 793)** | live frame read off the presentation; the M10 golden fit said 59.5, and switching to 59 improved `modal_sheet` 99.233 → 99.324 |
+| dim | `UIDimmingView`, black at **alpha 0.2** exactly | view-hierarchy dump |
+| drag tracking | **1:1 after exactly 10 pt of slop** | 180/240/320/360/380 pt of finger travel → 170/230/310/350/370 pt of sheet, at every distance. Same rule as UIScrollView's pan |
+| upward drag | **nothing happens — no rubber band** | 180 pt of upward drag on a large-detent sheet: frame unchanged, dim unchanged. This contradicts the natural guess; iOS simply refuses to move a sheet above its detent |
+| dim vs. drag | **alpha = 0.2·(1 − offset/height)**, linear | residual vs. that model ≤ 0.0025 over four full drags (display-link sampling lag) |
+| dismiss distance | **> 50 % of the sheet's height** | 370 pt springs back, 398/402 pt dismiss on a 793 pt sheet (50 % = 396.5) |
+| ...and it is PROPORTIONAL | **yes, not a fixed distance** | a 400 pt custom detent springs back from 170 pt and dismisses from 210 pt — a fixed ~396 pt rule would never dismiss it |
+| dismiss velocity | **≥ 1000 pt/s** downward | at 64 pt of travel (8 % — far under the distance rule): 875/900/925/950/975 pt/s all spring back, 1000 pt/s dismisses |
+| release spring | **critically damped, ω = √(1000/3) = 18.2574** | free fits of three independent releases: 18.251 / 18.256 / 18.258, rms error **0.02–0.05 pt** over the whole curve. Both outcomes — spring-back and completing dismissal — use the same spring, seeded with the release velocity |
+| grabber | **36 × 5 pt, corner radius 2.5, 5 pt below the sheet top, centred at x 178.5 (no rounding)** | agreed by two independent routes: the live hierarchy reports `_UIGrabber [178.5, 64.0, 36.0, 5.0] r=2.5`, and the rendered golden's ink spans exactly x 178.5…214.5, y 64.0…69.0 |
+| grabber colour | **(197, 197, 200)** over white = systemFill's base gray (120, 120, 128) at **alpha 0.4295** | solved per channel from `golden/modal_sheet_grabber`; the blue channel independently confirms it (predicted 200.4, measured 200.0) |
+| grabber default | **hidden** (`prefersGrabberVisible` defaults to false) | which is why `golden/modal_sheet` has none and `golden/modal_sheet_grabber` does |
+| sheet ↔ inner scroll view | at contentOffset.top, a **downward** drag moves the SHEET (contentOffset stays 0); otherwise the CONTENT scrolls and the sheet stays put | two mirrored traces, each showing the other party unmoved |
+
+### Notes
+
+- The two recognizers gate themselves on that hand-off condition from
+  opposite sides. OpenUIKit has no `require(toFail:)` dependency system
+  (docs/KNOWN_GAPS.md), so the rule is written twice — once in
+  `_UISheetPanGestureRecognizer.allowBegin`, once in
+  `UIScrollViewPanGestureRecognizer.allowBegin` — rather than expressed once.
+- ω = √(1000/3) is a mass-3 / stiffness-1000 critically damped spring. The
+  closed form is evaluated directly (like UIScrollView's bounce) rather than
+  routed through `UIView.animate`'s duration-fit solver, which cannot express
+  a fixed ω once the release carries velocity.
+- The release velocity uses UIScrollView's measured 100 ms trailing window.
+  That window is **not** separately measured for sheets: the probe's drags run
+  at constant velocity, so every estimator agrees and the traces cannot
+  distinguish them.
+- Detents were measured but **not implemented** — see docs/KNOWN_GAPS.md for
+  what the probe found and why it was deferred.
+
 ## Measured scroll physics (M8, 2026-08-24)
 
 The UIScrollView constants were originally "documented/well-established"

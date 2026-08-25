@@ -105,6 +105,12 @@ final class SimSceneRenderer {
             vc.view.addSubview(content)
             vc.modalPresentationStyle = .pageSheet
             vc.overrideUserInterfaceStyle = spec.style
+            // Spec v5.1: "grabber": true -> prefersGrabberVisible. UIKit's
+            // default is false, which is why the original modal_sheet golden
+            // carries no grabber.
+            if (modal["grabber"] as? Bool) == true {
+                vc.sheetPresentationController?.prefersGrabberVisible = true
+            }
             hostVC.present(vc, animated: false)
             RunLoop.current.run(until: Date().addingTimeInterval(0.5))
             img = snapshot(window, size: sceneSize, scale: spec.scale)
