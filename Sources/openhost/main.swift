@@ -13,9 +13,9 @@
 //       times into outdir, then exit (the window still opens; frames are
 //       identical run-to-run).
 //
-// Environment: OPENUIKIT_BACKEND / OPENUIKIT_COMPOSITOR (same as
-// openrender). Run from the repo root (OpenUIKit resources are found via
-// the default relative resourceRoot) — scripts/host.sh does this for you.
+// Environment: OPENUIKIT_BACKEND / OPENUIKIT_COMPOSITOR / OPENUIKIT_FONT_DIR
+// (same as openrender). Run from the repo root (OpenUIKit resources are found
+// via the default relative resourceRoot) — scripts/host.sh does this for you.
 //
 // Sharing: SceneBuilder.swift and SceneIO.swift are symlinks to
 // ../openrender/ — one scene-building implementation for both executables.
@@ -53,6 +53,25 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
             Data("warning: ignoring unknown OPENUIKIT_LAYER_CACHE=\(v) (use on|off)\n".utf8))
     }
 }
+// Font directory override: OPENUIKIT_FONT_DIR=<dir>. Same contract as
+// openrender's (see its main.swift): the library's built-in search list points
+// at macOS system paths, so off Darwin glyphs missing from the harvested ink
+// table would not draw at all. openhost needs this too now that it builds and
+// runs on Linux (scripts/linux_selector_verify.sh).
+if let dir = ProcessInfo.processInfo.environment["OPENUIKIT_FONT_DIR"] {
+    let base = dir.hasSuffix("/") ? String(dir.dropLast()) : dir
+    for (key, file) in [("system", "SFNS.ttf"), ("mono", "SFNSMono.ttf"),
+                        ("italic", "SFNSItalic.ttf")] {
+        let path = base + "/" + file
+        if FileManager.default.isReadableFile(atPath: path) {
+            OpenUIKitRuntime.fontPaths[key] = path
+        }
+    }
+    if OpenUIKitRuntime.fontPaths.isEmpty {
+        FileHandle.standardError.write(
+            Data("warning: OPENUIKIT_FONT_DIR=\(dir) has no SFNS*.ttf\n".utf8))
+    }
+}
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
@@ -65,6 +84,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   textdemo  the text-input form (UITextField/UITextView, M8)
   showcase  all three in a UITabBarController — large titles, table,
             modal profile sheet (M10)
+  selectors target-action demo wired entirely with addTarget(_:action:for:)
+            and UITapGestureRecognizer(target:action:) — no closures
+            (docs/OBJC_RUNTIME.md). Script: scripts/selector_interaction.json
 """
 
 var scenePath: String? = nil

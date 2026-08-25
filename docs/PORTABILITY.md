@@ -3,7 +3,9 @@
 OpenUIKit claims to be a *portable* UIKit. This document records what was
 actually tested, on 2026-08-25, rather than what the architecture intends.
 
-Reproduce any time with `scripts/linux_verify.sh` (needs Docker).
+Reproduce any time with `scripts/linux_verify.sh` (renderer) and
+`scripts/linux_selector_verify.sh` (the app-facing selector API). Both need
+Docker.
 
 ## Result
 
@@ -36,11 +38,76 @@ Byte-identical output across two operating systems and two C++ standard
 libraries is the strongest form of the claim: the renderer is deterministic
 and carries no host dependency.
 
+## Selector target-action, verified on Linux (M12)
+
+`scripts/linux_selector_verify.sh` proves the app-facing API of
+docs/OBJC_RUNTIME.md is portable, not just the renderer. Inside the same
+`swift:6.2-noble` container (plus `libsdl2-dev`):
+
+| check | result |
+|---|---|
+| library + `openrender` + **`openhost`** build | **clean** |
+| selector dispatch tests (the portable 23 of the 27) | **23/23 pass** |
+| `openhost --app selectors --script …` replayed headlessly | **10 frames** |
+| those frames vs the macOS frames, SHA-256 | **10/10 byte-identical** |
+
+The replayed screen (`Sources/DemoApp/SelectorApp.swift`) is wired *entirely*
+with `addTarget(_:action:for:)` and `UITapGestureRecognizer(target:action:)`
+— no closures — and it renders a live counter, so a selector that failed to
+fire would change the pixels. Byte-identical frames therefore prove the
+actions dispatched identically on both operating systems.
+
+This also closes the "`openhost` was not built on Linux" gap below. Building it
+there took two fixes, both real portability bugs that only a Linux host run
+could expose:
+
+1. **`SDLHost` demanded an accelerated renderer**, which the headless dummy
+   video driver cannot provide, so `openhost` died in `SDL_CreateRenderer`.
+   It now falls back to a software renderer. Captured frames come from the
+   `Bitmap`, not from SDL, so the fallback cannot change output.
+2. **`openhost` never read `OPENUIKIT_FONT_DIR`** — only `openrender` did.
+   That went unnoticed while `openhost` was a macOS-only tool with the system
+   SF available. On Linux the first run dropped every glyph outside the
+   harvested ink table: "Target-Action" rendered as "Target tion",
+   "Increment" as "n re ent", and the counter digits vanished entirely. The
+   same env-var block openrender has now lives in `openhost` too.
+
+The second one is worth dwelling on: it is the "fonts are the one host
+dependency" gap below, in a new place, and it was invisible until something
+other than `openrender` ran off Darwin.
+
+### Two Linux XCTest quirks found on the way — neither is ours
+
+Both matter to anyone wiring `swift test` into Linux CI, and both were
+confirmed against **untouched** suites, so neither is a property of the
+selector work:
+
+1. **`swift test` hangs outright** in this container. Its harness blocks in
+   `poll()` with no TTY while the XCTest child sits idle — indefinitely
+   (killed after 27 minutes; the same tests run in 5 ms when invoked
+   directly). The script therefore does `swift build --build-tests` and runs
+   the `OpenUIKitPackageTests.xctest` bundle itself.
+2. **The bundle hangs mid-run roughly one launch in five**, at a different
+   test each time, sleeping in `poll()` with a second thread in
+   `epoll_wait`. Measured over 10 launches each: `UIControlTests` 3/10 hung,
+   `GeometryTests`+`ColorTests` — *purely computational, no window, no
+   touches, no selectors* — 2/10 hung. So it is the Swift 6.2.4 Linux XCTest
+   runtime in this image, not the library. The script runs the bundle under
+   `timeout` and retries, and requires a real
+   "Executed N tests, with 0 failures" line before passing.
+
+Neither reproduces on macOS, where the full 427-test suite runs green every
+time.
+
 ## What made it work
 
 - The library targets (`OpenUIKit`, `OpenCoreGraphics`) import **no**
   Foundation and no Apple framework — a rule enforced since day one. The
-  audit finds zero violations and zero `#if os(...)` conditionals.
+  audit finds zero violations and zero `#if os(...)` conditionals. There is
+  now exactly **one** `#if canImport(ObjectiveC)`, in `UISelector.swift`: on
+  Darwin `Selector` is the platform's real ObjC selector, elsewhere it is
+  OpenUIKit's own name-carrying struct. That conditional is the seam the
+  whole selector feature rests on, and nothing above it is conditional.
 - `CQuartz` (the vendored Quartz 2D + CoreAnimation implementation) is
   portable C++17 and compiled unmodified on Linux.
 - Text **metrics** come from a vendored data table (`font_metrics.json` —
@@ -120,8 +187,11 @@ and carries no host dependency.
   over all 96 passing scenes is **20.0 pt²** (`stack_alignment`,
   `anim_concurrent`), so the cap could be tightened considerably — the calibration
   comment in compare.py is stale (docs/KNOWN_GAPS.md).
-- **`openhost` was not built on Linux** — it needs `libsdl2-dev` in the
-  image. The SDL2 target is standard and expected to work; it is simply not
-  yet proven. Extend `linux_verify.sh` to install SDL2 and build it.
+- ~~**`openhost` was not built on Linux**~~ **FIXED 2026-08-25.**
+  `scripts/linux_selector_verify.sh` installs `libsdl2-dev`, builds `openhost`
+  on Linux and runs a scripted capture headlessly under
+  `SDL_VIDEODRIVER=dummy`; the frames match macOS byte for byte. Only the
+  `--app selectors` script is replayed there so far — extending it to the
+  other apps and to `--nav-demo` is mechanical.
 - x86-64 Linux is untested (this ran on arm64). No reason to expect trouble;
   no evidence either.

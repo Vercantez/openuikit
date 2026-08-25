@@ -5,9 +5,18 @@
 // cancelTracking) driven by the UIResponder touch entry points UIWindow
 // delivers to the hit-test view.
 //
-// No ObjC runtime: targets are closures. `addTarget(for:_:)` returns a
-// token for removal; `sendActions(for:)` invokes every handler whose
-// registered event set intersects the sent events (UIKit semantics).
+// Two registration forms, both UIKit-shaped:
+//
+//   addTarget(for: .touchUpInside) { control, event in ... }   // closures
+//   addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+//
+// The closure form returns a token for removal and is the better Swift API.
+// The selector form is real UIKit's, and reaches the method through the
+// target's `SelectorDispatching` table (see UISelector.swift) rather than
+// through `objc_msgSend`. Targets are held **weakly**, as in UIKit.
+//
+// `sendActions(for:)` invokes every registration whose event set intersects
+// the sent events (UIKit semantics).
 
 open class UIControl: UIView {
     // MARK: State
@@ -75,14 +84,19 @@ open class UIControl: UIView {
     public internal(set) var isTracking = false
     public internal(set) var isTouchInside = false
 
-    // MARK: Target-action (closure based)
+    // MARK: Target-action
 
     public typealias ActionHandler = (UIControl, UIEvent?) -> Void
 
     struct Target {
         let token: Int
-        let events: Event
-        let handler: ActionHandler
+        var events: Event
+        /// Closure registration (`addTarget(for:_:)`).
+        let handler: ActionHandler?
+        /// Selector registration (`addTarget(_:action:for:)`). Weak, as in
+        /// UIKit: a control never keeps its target alive.
+        weak var target: AnyObject?
+        let action: Selector?
     }
     var targets: [Target] = []
     private var nextToken = 0
@@ -94,21 +108,66 @@ open class UIControl: UIView {
                           _ handler: @escaping ActionHandler) -> Int {
         nextToken += 1
         targets.append(Target(token: nextToken, events: controlEvents,
-                              handler: handler))
+                              handler: handler, target: nil, action: nil))
         return nextToken
     }
 
+    /// Remove a closure registration by the token `addTarget(for:_:)` returned.
     public func removeTarget(_ token: Int) {
         targets.removeAll { $0.token == token }
     }
 
+    // MARK: Target-action (selector based -- UIKit's own signatures)
+
+    /// UIKit's `addTarget(_:action:for:)`. `target` is held weakly and must
+    /// conform to ``SelectorDispatching``; `action` is a selector whose name
+    /// that conformance knows.
+    ///
+    ///     button.addTarget(self, action: #selector(buttonTapped),
+    ///                      for: .touchUpInside)
+    public func addTarget(_ target: AnyObject, action: Selector,
+                          for controlEvents: Event) {
+        nextToken += 1
+        targets.append(Target(token: nextToken, events: controlEvents,
+                              handler: nil, target: target, action: action))
+    }
+
+    /// UIKit's `removeTarget(_:action:for:)`. `nil` matches any target /
+    /// any action; only the named event bits are unregistered, and a
+    /// registration keeps any bits that were not named.
+    public func removeTarget(_ target: AnyObject?, action: Selector?,
+                             for controlEvents: Event) {
+        for i in targets.indices.reversed() {
+            let t = targets[i]
+            guard t.handler == nil else { continue }   // closures unaffected
+            if let target, t.target !== target { continue }
+            if let action, t.action != action { continue }
+            let remaining = t.events.subtracting(controlEvents)
+            if remaining.isEmpty { targets.remove(at: i) }
+            else { targets[i].events = remaining }
+        }
+    }
+
+    /// Drop selector registrations whose weak target has deallocated (UIKit
+    /// does this implicitly; we do it lazily, before each send).
+    func pruneDeadTargets() {
+        targets.removeAll { $0.handler == nil && $0.target == nil }
+    }
+
     public var allControlEvents: Event {
-        targets.reduce(Event()) { $0.union($1.events) }
+        pruneDeadTargets()
+        return targets.reduce(Event()) { $0.union($1.events) }
     }
 
     public func sendActions(for controlEvents: Event, with event: UIEvent? = nil) {
+        pruneDeadTargets()
         for t in targets where !t.events.intersection(controlEvents).isEmpty {
-            t.handler(self, event)
+            if let handler = t.handler {
+                handler(self, event)
+            } else if let action = t.action {
+                SelectorDispatch.send(action, to: t.target, sender: self,
+                                      event: event)
+            }
         }
     }
 

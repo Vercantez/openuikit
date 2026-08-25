@@ -45,6 +45,7 @@ let appRegistry: [String: (size: CGSize, makeRoot: () -> UIViewController)] = [
     "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
     "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
     "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
+    "selectors": (SelectorApp.windowSize, SelectorApp.makeRootViewController),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and
