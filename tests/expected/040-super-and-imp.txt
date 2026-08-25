@@ -1,0 +1,15 @@
+c.v=111
+b.v=11
+super2.from.C=B
+super2.from.B=A
+super2.from.A.reaches.root=yes
+super1.at.B=B
+super1.at.A=A
+method_invoke=A
+cached.before=C
+cached.after.addMethod=C
+dispatch.after.addMethod=C
+replaced.dispatch=A
+old.imp.still.callable=C
+restored.dispatch=C
+hot.loop.total=122000

@@ -1,0 +1,10 @@
+ev[0]=LoadA.load
+ev[1]=LoadB.load
+ev[2]=LoadC.load
+ev[3]=LoadIndependent.load
+ev[4]=LoadA(Cat1).load
+ev[5]=LoadA(Cat2).load
+ev[6]=c-constructor
+ev[7]=main
+ev.count=8
+silent.has.own.load=no

@@ -1,0 +1,50 @@
+enc.void=v
+enc.char=c
+enc.unsigned char=C
+enc.signed char=c
+enc.short=s
+enc.unsigned short=S
+enc.int=i
+enc.unsigned int=I
+enc.long=q
+enc.unsigned long=Q
+enc.long long=q
+enc.unsigned long long=Q
+enc.float=f
+enc.double=d
+enc.long double=D
+enc._Bool=B
+enc.BOOL=B
+enc.char *=*
+enc.const char *=r*
+enc.void *=^v
+enc.const void *=r^v
+enc.int *=^i
+enc.int **=^^i
+enc.id=@
+enc.Class=#
+enc.SEL=:
+enc.Enc *=@
+enc.id<T4LEncProto>=@
+enc.Point={Point=ii}
+enc.Nested={Nested={Point=ii}dc}
+enc.Uni=(Uni=if)
+enc.Bits={Bits=b3b5}
+enc.OpaqueRef=^{Opaque=}
+enc.int[4]=[4i]
+enc.int[2][3]=[2[3i]]
+enc.Point[3]=[3{Point=ii}]
+enc.void (*)(void)=^?
+enc.int (*)(int, double)=^?
+enc.const int=i
+enc.volatile int=i
+sizeof.Point=8
+sizeof.Nested=24
+sizeof.Bits=4
+sizeof.long=8
+sizeof.longdouble=8
+sizeof.id=8
+sizeof.BOOL=1
+init.types=@16@0:8
+init.ret=@
+init.ret.matches.encode.id=yes
