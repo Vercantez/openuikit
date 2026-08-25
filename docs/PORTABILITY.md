@@ -3,9 +3,29 @@
 OpenUIKit claims to be a *portable* UIKit. This document records what was
 actually tested, on 2026-08-25, rather than what the architecture intends.
 
-Reproduce any time with `scripts/linux_verify.sh` (renderer) and
-`scripts/linux_selector_verify.sh` (the app-facing selector API). Both need
+Reproduce any time with `scripts/linux_verify.sh` (renderer),
+`scripts/linux_selector_verify.sh` (the app-facing selector API) and
+`scripts/linux_realapp_verify.sh` (a REAL app's screen — M14). All need
 Docker.
+
+## M14: a real app's source compiles and renders identically on Linux
+
+The strongest portability statement to date, because the source under test is
+not ours. `scripts/linux_realapp_verify.sh` builds the library, `openrender`,
+`openhost` **and `Sources/RealAppProbe`** — four UNMODIFIED source files from
+Automattic/pocket-casts-ios (docs/REAL_APP_TEST.md) — inside the same stock
+container, then renders and replays them:
+
+| check | result |
+|---|---|
+| `swift build -c release` with the vendored app source | **clean** — the app's own code compiles off Darwin |
+| `openrender realapp` (3 headless configurations) | **3/3 byte-identical** to the macOS render |
+| `openhost --app pocketcasts --script …` (10 recorded frames, SDL dummy driver) | **10/10 byte-identical** |
+
+Run 2026-08-25: `REAL-APP SCREEN VERIFIED ON LINUX`, 13/13. The live replay
+matters as much as the headless one: it drives real touches through the app's
+`touchesBegan`, its `UISwitch` target-action and its tap-to-dismiss, so
+identical bytes mean identical *behaviour*, not just identical drawing.
 
 ## Result
 

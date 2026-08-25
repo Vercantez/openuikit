@@ -18,6 +18,15 @@ A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers cons
   wiring). See `FontEngine.swift` "System font CUT" and docs/KNOWN_GAPS.md.
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
+**Not everything renderable is a scene.** `openrender realapp` (M14,
+docs/REAL_APP_TEST.md) renders a real app's screen built by the app's own
+Swift in `Sources/RealAppProbe`; there is no JSON description of it and no
+golden, because there is no way to render it with real UIKit without building
+the app. It deliberately bypasses this spec. Anything the *harness* needed
+that has measurable geometry was measured separately
+(`Tools/oracle2/dyntypeprobe`, `Tools/oracle2/detentprobe`) and is gated by
+`Tests/OpenUIKitTests/DynamicTypeTests.swift`.
+
 Each renderer produces, for a **static** scene `<name>`:
 - `<name>.png` — RGBA PNG of the root view rendered at `scale` (pixel size = size × scale).
 - `<name>.layout.json` — post-layout geometry dump (see below).

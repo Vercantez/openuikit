@@ -183,6 +183,11 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/OpenUIKit/UIMenu.swift`, `UIContextMenu.swift` | **menus** | done (M13: UIAction/UIMenu/UIKeyCommand + responder-chain routing; platter measured by `Tools/oracle2/menuprobe`, NO fixture — docs/KNOWN_GAPS.md explains why) |
 | `Sources/OpenUIKit/UIAdaptivePresentation.swift`, `UIActivityViewController.swift` | **viewcontroller** / **text-input** | done (M13: the delegate-protocol cluster; the share sheet is a documented stub) |
+| `Sources/OpenUIKit/UIFontMetrics.swift` | **text** | done (M14: Dynamic Type — `UIFont.TextStyle`, `UIContentSizeCategory`, `preferredFont(forTextStyle:)`, `UIFontMetrics`; every number from `Tools/oracle2/dyntypeprobe` on real iOS, shipped as `Resources/dynamic_type.json`) |
+| `Sources/OpenUIKit/UIViewCompat.swift` | **view** | done (M14: members of already-exported types that a real app needed — identity `Equatable`/`Hashable`, `systemLayoutSizeFitting`, `registerForTraitChanges`, accessibility storage) |
+| `Sources/UIKitShim/UIKit.swift` (module `UIKit`) | **realapp-harness** | done (M14: `@_exported import OpenUIKit` so vendored app source keeps `import UIKit` verbatim — a shim, nothing else) |
+| `Sources/RealAppProbe/` | **realapp-harness** | done (M14: UNMODIFIED source from Automattic/pocket-casts-ios in `Vendored/`, its app-infrastructure shims in `Shims.swift`, harness in `RealAppScreen.swift`. Report: docs/REAL_APP_TEST.md. **Nothing in `Shims.swift` may stand in for a UIKit symbol** — that would make the measurement circular) |
+| `Sources/openrender/RealApp.swift` | **rendercli** | done (M14: `openrender realapp` — NOT a scene; the screen is built by the app's own Swift, so there is nothing to describe in JSON) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
 

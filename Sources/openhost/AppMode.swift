@@ -29,6 +29,7 @@
 
 import OpenUIKit
 import DemoApp
+import RealAppProbe
 
 /// Keeps the app delegate (and through it the window + root controller)
 /// alive: UIApplication.delegate is weak, like UIKit's.
@@ -46,6 +47,11 @@ let appRegistry: [String: (size: CGSize, makeRoot: () -> UIViewController)] = [
     "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
     "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
     "selectors": (SelectorApp.windowSize, SelectorApp.makeRootViewController),
+    // M14: NOT a DemoApp screen — UNMODIFIED source from Automattic/
+    // pocket-casts-ios, compiled against OpenUIKit (Sources/RealAppProbe,
+    // docs/REAL_APP_TEST.md). Live so the sheet's present animation, the
+    // row tap highlight and the switch can be driven by hand.
+    "pocketcasts": (RealAppScreen.windowSize, RealAppScreen.makeRootViewController),
 ]
 
 /// The host's app delegate: builds the key window in didFinishLaunching and
@@ -124,6 +130,14 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
     }
     window.setNeedsLayout()
     window.layoutIfNeeded()
+    // M14 real-app screen: OpenUIKit's UIWindow does not run an appearance
+    // transition when it becomes key (real UIKit does), so the app's
+    // `viewDidAppear`-time presentation has to be kicked here. Recorded as a
+    // gap in docs/REAL_APP_TEST.md.
+    if let backdrop = root as? BackdropViewController {
+        backdrop.presentPickerNow()
+        window.layoutIfNeeded()
+    }
     return HostScene(name: "\(appName)_app", sizePt: size, scale: scale,
                      window: window, container: root.view,
                      sceneAnimationDeadline: 0)

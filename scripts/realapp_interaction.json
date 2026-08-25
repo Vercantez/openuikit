@@ -1,0 +1,41 @@
+{
+  "comment": "Scripted interaction for `openhost --app pocketcasts` \u2014 the REAL pocket-casts options-picker sheet (Sources/RealAppProbe, docs/REAL_APP_TEST.md). Window 393x852; the sheet rests at y 509 and is 343 pt tall. Rows in window coordinates: title 509-549, Play 549-621, Download 622-694, Up Next Swipe 695-767 (its UISwitch centred at 343,731), Remove Download 768-840. Sequence: the sheet's own present animation (the app calls present(animated: true)); a tap on the switch, which runs the app's Selector.named(\"switchToggled:\") action and leaves the sheet up; then a press-and-hold on the Play row (SimpleActionView.touchesBegan animates its background to primaryUi01Active) whose release fires the app's actionTapped, which calls animateOut and dismisses the sheet \u2014 all of it the app's own code.",
+  "events": [
+    {
+      "t": 0.9,
+      "kind": "down",
+      "x": 343,
+      "y": 731
+    },
+    {
+      "t": 0.96,
+      "kind": "up",
+      "x": 343,
+      "y": 731
+    },
+    {
+      "t": 1.5,
+      "kind": "down",
+      "x": 120,
+      "y": 585
+    },
+    {
+      "t": 2.0,
+      "kind": "up",
+      "x": 120,
+      "y": 585
+    }
+  ],
+  "captures": [
+    0.02,
+    0.1,
+    0.2,
+    0.4,
+    0.85,
+    1.3,
+    1.7,
+    1.95,
+    2.3,
+    2.6
+  ]
+}

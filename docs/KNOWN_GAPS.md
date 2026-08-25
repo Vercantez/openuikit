@@ -849,6 +849,81 @@ animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
   window insets — the portable core still has no safe-area model, and the
   page sheet's 59 pt top inset is the same constant. On a window that is not
   an iPhone 16 the card is centred as if it were.
+## Real-app harness (M14, 2026-08-25): scope notes
+
+Full report: docs/REAL_APP_TEST.md. What follows is the divergence list the
+harness produced — every one of these is something a real app's source
+exercised and OpenUIKit does not fully honour.
+
+- **Dynamic Type is EXACT only at the default content size category.**
+  `UIFontMetrics` / `UIFont.preferredFont(forTextStyle:)` /
+  `UIFontDescriptor.preferredFontDescriptor(withTextStyle:)` are driven by
+  `Resources/dynamic_type.json`, dumped from real iOS 26 by
+  `Tools/oracle2/dyntypeprobe`. At `.large` (a device's default, and what
+  every fixture renders) `scaledValue(for:)` measures as the identity and the
+  table reproduces it exactly. At the other 11 categories the 19 PROBED base
+  values are exact table hits; values between them are linearly interpolated,
+  where real UIKit's curve is piecewise with 1/3-pt quantization and slope
+  changes the probe does not resolve — worst observed gap ~2/3 pt at
+  accessibility sizes. Widening `baseValues` in the probe closes it. Nothing
+  is hand-fitted.
+- **Nothing changes the content size category.** There is no Settings app, so
+  `UILabel.adjustsFontForContentSizeCategory` is inert unless a host changes
+  `UITraitCollection.current.preferredContentSizeCategory` itself, and
+  `registerForTraitChanges` handlers only fire when a host calls
+  `UIView._traitsDidChange(previous:)`.
+- **A non-large sheet detent is drawn EDGE TO EDGE; iOS 26 draws a floating
+  card.** `UISheetPresentationController.detents` is measured
+  (`Tools/oracle2/detentprobe`, 13 cases, raw dump at
+  `fixtures/realapp/detents_ios.json`): `context.maximumDetentValue` is
+  exactly `containerHeight - 59 - bottomSafeArea` (759 on a 393x852 window),
+  `.large()` is the frame OpenUIKit already drew, and a value above the
+  maximum collapses to that frame — all reproduced. But below the maximum,
+  real iOS 26 insets the card 8 pt on each side and 8 pt off the bottom and
+  scales it by 377/393; the measured numbers do not decompose into an inset
+  plus a height without modelling that transform, so OpenUIKit draws the sheet
+  at the right HEIGHT with the wrong SHAPE. `.medium()` is implemented as half
+  the container height plus the bottom safe area; measured is 425 on an 852 pt
+  container, so the residual is 1 pt.
+- **`UIStackView` composes with Auto Layout but does not generate its
+  constraints.** M14 made `addArrangedSubview` clear
+  `translatesAutoresizingMaskIntoConstraints` (as UIKit does), made a row's
+  own unary size constraint count as content
+  (`UIView._explicitSizeConstraint`), and made the solver leave arranged
+  subviews' frames to the stack. That is enough for the common shape — a
+  stack of constraint-sized rows inside a scroll view — but a stack whose
+  arranged subviews are positioned by constraints RELATIVE TO EACH OTHER
+  still will not lay out, because the stack is a frame layout, not a
+  constraint generator.
+- **`UIScrollView.contentLayoutGuide` drives `contentSize`, one-way.** The
+  guide's origin is pinned to the content origin and its size is solved;
+  `layoutSubviews` then adopts the solved size as `contentSize`. Setting
+  `contentSize` directly while the guide is also constrained is undefined
+  (UIKit calls it a conflict; OpenUIKit lets the guide win).
+- **Accessibility is STORAGE ONLY.** `isAccessibilityElement`,
+  `accessibilityLabel/Value/Hint/Identifier`, `accessibilityTraits` round-trip
+  and nothing consults them. There is no accessibility tree to query and no
+  assistive technology to drive, so there is also no oracle for them.
+- **`UIWindow.makeKeyAndVisible()` runs no appearance transition.** Real UIKit
+  sends `viewWillAppear`/`viewDidAppear` to the root controller; OpenUIKit
+  does not, so app code that starts work in `viewDidAppear` never runs. Both
+  `openrender realapp` and `openhost --app pocketcasts` work around it with an
+  explicit call. This is a small fix and is the first item to take from the
+  report's blocked list.
+- **`UIImage(named:)` reads loose files, not asset catalogs.** No `.xcassets`
+  or `.car` reader, and therefore no template-rendering-intent flag from the
+  catalog — an app that relies on the catalog to mark an icon as a template
+  gets an untinted image unless it tints explicitly.
+- **A target that links OpenUIKit still cannot `import Foundation`.**
+  Foundation's `CGRect`/`CGSize`/`CGPoint` collide with OpenUIKit's own. This
+  is why `NSCoder` (and therefore `required init?(coder:)`, present in 344 of
+  the corpus's 5,099 files) cannot be satisfied, and it is ranked as the
+  single biggest structural obstacle in docs/REAL_APP_TEST.md.
+- **OpenUIKit's classes carry no `@MainActor` isolation.** App source that
+  annotates closures or methods `@MainActor` — 641 uses across 270 corpus
+  files, and the Swift 6 default expectation — fails to type-check against
+  them.
+
 ## App-compat cluster: image loading, drawing, controls (2026-08-25)
 
 What shipped (all oracle-backed): PNG/JPEG decode+encode and

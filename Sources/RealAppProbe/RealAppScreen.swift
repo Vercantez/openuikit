@@ -67,8 +67,16 @@ public enum RealAppScreen {
     /// controller whose view is the full screen, with the picker presented as
     /// a sheet on top.
     public static func makeRootViewController() -> UIViewController {
-        makeRoot(picker: makeListeningHistoryPicker(theme: .light), theme: .light)
+        // `openhost --app pocketcasts` has no place to pass an assets path.
+        configureAssets(directory: defaultAssetsDirectory)
+        let theme: Theme.ThemeType =
+            UITraitCollection.current.userInterfaceStyle == .dark ? .dark : .light
+        return makeRoot(picker: makeSettingsPicker(theme: theme), theme: theme)
     }
+
+    /// Repo-relative default for `UIImage(named:)`.
+    public static let defaultAssetsDirectory = "fixtures/realapp/assets"
+
 
     public static func makeRoot(picker: OptionsPicker,
                                 theme: Theme.ThemeType) -> UIViewController {

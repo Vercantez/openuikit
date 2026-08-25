@@ -378,22 +378,48 @@ extensions leaves ~477 uses of genuinely missing members, led by
   can still be the reason an app does not launch. Read the punch list with
   the "apps" column, not only the "uses" column.
 
-## Definition of done for this phase
+## Definition of done for this phase — REACHED at the screen level (M14)
 
 A real, code-based open-source app compiles against OpenUIKit and renders its
 first screen — headless via `openrender`, live via `openhost`, and identically
 on Linux. Everything implemented on the way keeps its oracle fixtures, so
 "runs real apps" never trades away "matches real UIKit."
 
-Not reached yet: no corpus app compiles end to end. The blockers, in the order
-they bite, were items 4, 2 and 1 above — missing delegate protocols (compile
-errors before anything runs), `UIBarButtonItem` (every screen's chrome), and
-`UICollectionView`. **Items 1 and 2 are both closed as of M13**:
-`UICollectionView` + `UICollectionViewFlowLayout` + the three collection
-protocols (oracle-backed by the `collection_*` fixtures), and the whole bars
-& appearance cluster (oracle-backed by the `navitem_*` / `navbar_*` /
-`toolbar_*` fixtures). The remaining blocker in this list is the delegate
-protocols.
+**Outcome (2026-08-25). Full write-up: docs/REAL_APP_TEST.md.**
+
+A screen from **Automattic/pocket-casts-ios** — its options-picker sheet,
+four files, 605 lines — was vendored into `Sources/RealAppProbe` and compiled
+against OpenUIKit. It renders headlessly (`openrender realapp`, three
+configurations), live (`openhost --app pocketcasts`, with the app's own touch
+handling, switch action and tap-to-dismiss driven by real touches), and
+**byte-identically on Linux** (`scripts/linux_realapp_verify.sh`: 13/13 frames
+across the headless renders and the scripted live replay).
+
+**14 of the 605 lines had to change — 97.7 % unmodified**, and the 258-line
+view controller (all of the Auto Layout) compiles byte-for-byte. The ledger by
+reason: `NSCoder`/Foundation collision 5, `@MainActor` isolation 4,
+`#selector`/`@objc` 4, harness access level 1. **None of the 14 is a missing
+UIKit member** — every one is a language or runtime incompatibility.
+
+The cost that does not show up in that ratio is the 246 lines of scaffolding
+(the app's theme system re-expressed, a `SelectorDispatching` table, a `UIKit`
+module alias) — see the report.
+
+So the honest statement of where this stands:
+
+- **rendering a real code-based screen: done**, for this class of screen;
+- **compiling a whole app: not close**, and the five reasons are now specific
+  and ranked (docs/REAL_APP_TEST.md "Blocked on"): Foundation
+  interoperability (`NSCoder` alone appears in 344 of the corpus's 5,099
+  files), selector dispatch, `@MainActor`, asset catalogs, xibs. Only the last
+  is out of scope by choice.
+
+The next milestone this suggests is **not** more UIKit types. It is
+`import Foundation` alongside OpenUIKit, which would let an app's model layer,
+theme system and string tables compile untouched.
+
+Earlier blockers in the punch-list ordering — items 4, 2 and 1 (delegate
+protocols, `UIBarButtonItem`, `UICollectionView`) — are all closed as of M13.
 
 ## What M13 shipped — bars & appearance (2026-08-25)
 

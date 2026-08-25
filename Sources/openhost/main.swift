@@ -87,6 +87,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
   selectors target-action demo wired entirely with addTarget(_:action:for:)
             and UITapGestureRecognizer(target:action:) — no closures
             (docs/OBJC_RUNTIME.md). Script: scripts/selector_interaction.json
+  pocketcasts a REAL app screen — UNMODIFIED source from
+            Automattic/pocket-casts-ios (the options-picker sheet), compiled
+            against OpenUIKit (docs/REAL_APP_TEST.md)
 """
 
 var scenePath: String? = nil

@@ -489,6 +489,48 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     reload-and-complete fallback), sticky headers, self-sizing cells,
     decoration views. All in docs/KNOWN_GAPS.md "UICollectionView".
 
+- **M14 Real-app harness — DONE 2026-08-25.** The definition-of-done test for
+  the whole app-compat effort (docs/APP_COMPAT.md). Full report:
+  **docs/REAL_APP_TEST.md**.
+  - **A shipping app's screen renders.** Four UNMODIFIED source files from
+    Automattic/pocket-casts-ios (the options-picker sheet: 605 lines,
+    `UIScrollView` + `UIStackView` + anchors + a self-sizing sheet) live in
+    `Sources/RealAppProbe/Vendored/`. `openrender realapp` renders three
+    configurations; `openhost --app pocketcasts` runs it live with the app's
+    own touch handling; `scripts/linux_realapp_verify.sh` builds and replays
+    the whole thing on Linux, **13/13 frames byte-identical**.
+  - **97.7 % of the app source is unmodified** — 14 of 605 lines changed, and
+    the 258-line view controller with all the Auto Layout in it compiles
+    byte-for-byte. Every one of the 14 is a language/runtime incompatibility
+    (`NSCoder`/Foundation 5, `@MainActor` 4, `#selector`/`@objc` 4, an access
+    level 1); **none is a missing UIKit member**.
+  - **Dynamic Type shipped, oracle-backed.** `UIFont.TextStyle`,
+    `UIContentSizeCategory`, `UIFont.preferredFont(forTextStyle:)`,
+    `UIFontDescriptor.preferredFontDescriptor(withTextStyle:)` and
+    `UIFontMetrics`, driven by `Resources/dynamic_type.json` — the verbatim
+    dump of `Tools/oracle2/dyntypeprobe` on real iOS 26 (11 styles x 12
+    categories x 19 base values). The census's largest remaining cluster.
+  - **Sheet detents shipped, measured.** `UISheetPresentationController
+    .detents` with `.large()`/`.medium()`/`.custom(resolver:)` and
+    `UIModalPresentationStyle.formSheet`, from `Tools/oracle2/detentprobe`
+    (13 cases). `maximumDetentValue` and the over-maximum collapse are exact;
+    the iOS-26 floating-card shape is a stated divergence.
+  - **UIStackView now composes with Auto Layout** and `UIScrollView` gained
+    `contentLayoutGuide`/`frameLayoutGuide` wired into the cassowary solver,
+    so constraints against the content guide drive `contentSize` — the recipe
+    every modern scrolling screen uses.
+  - Also: `UIView` identity `Equatable`/`Hashable`,
+    `systemLayoutSizeFitting`, `registerForTraitChanges`, accessibility
+    storage, `UIImage.draw(in:)`, and nine classes made `open` so app code can
+    subclass them.
+  - Gates: 108/108 fixture scenes, 9/9 scroll traces, **732 tests**, 0
+    failures.
+  - **The verdict is in docs/REAL_APP_TEST.md and it is not "done":**
+    rendering a real code-based screen works; compiling a whole app does not,
+    and the ranked reasons are Foundation interoperability, selector
+    dispatch, `@MainActor`, asset catalogs and xibs — none of them about
+    UIKit's API surface.
+
 ## M13 — bars & appearance (2026-08-25)
 
 Punch-list cluster #2, **322 corpus uses across all four apps**, closed:

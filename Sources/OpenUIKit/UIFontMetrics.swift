@@ -93,12 +93,15 @@ enum DynamicTypeTable {
         var scaledFont: [CGFloat]
     }
 
-    /// The base values the probe measured, ascending.
+    /// The base values the probe measured, ascending. Populated by `load()`,
+    /// which `loaded` forces exactly once.
     private(set) static var bases: [CGFloat] = []
     /// style raw value -> category raw value -> entry.
     private(set) static var table: [String: [String: Entry]] = [:]
 
-    static let isAvailable: Bool = load()
+    /// Forcing this runs `load()` once (Swift's `static let` is lazy).
+    private static let loaded: Bool = load()
+    static var isAvailable: Bool { loaded }
 
     private static func load() -> Bool {
         guard let json = ResourceIO.loadJSONResource("dynamic_type.json"),
@@ -126,7 +129,7 @@ enum DynamicTypeTable {
 
     static func entry(style: UIFont.TextStyle,
                       category: UIContentSizeCategory) -> Entry? {
-        guard let byCat = table[style.rawValue] else { return nil }
+        guard loaded, let byCat = table[style.rawValue] else { return nil }
         return byCat[category.rawValue] ?? byCat[UIContentSizeCategory.large.rawValue]
     }
 
@@ -134,7 +137,7 @@ enum DynamicTypeTable {
     /// probed range the nearest segment's slope is extended, which is what
     /// real UIKit does for the linear part of its own curve.
     static func interpolate(_ curve: [CGFloat], at v: CGFloat) -> CGFloat? {
-        guard curve.count == bases.count, !bases.isEmpty else { return nil }
+        guard loaded, curve.count == bases.count, !bases.isEmpty else { return nil }
         if v <= bases[0] {
             guard bases.count >= 2 else { return curve[0] }
             let t = (v - bases[0]) / (bases[1] - bases[0])
