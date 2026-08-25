@@ -1,0 +1,13 @@
+{
+  "comment": "Interactive back-swipe for `openhost --nav-demo`. Tap 'General' (0.10/0.18) -> push runs 0.18..0.53 (capture 0.70 = settled detail screen). Left-edge pan from x=10: recognizes after 10pt of horizontal travel, then scrubs the pop 1:1 -- at the 0.90 capture the finger is at x=140, progress p=(140-10)/390=0.333, so the detail view's leading edge sits at 130pt with the scrim at 8%*(1-p). Release at x=220 with ~2000pt/s forward velocity -> completes: a 0.35s critically-damped spring finishes the pop (0.94..1.29); capture 1.50 shows the restored root.",
+  "events": [
+    { "t": 0.10, "kind": "down", "x": 195, "y": 100 },
+    { "t": 0.18, "kind": "up",   "x": 195, "y": 100 },
+    { "t": 0.80, "kind": "down", "x": 10,  "y": 300 },
+    { "t": 0.84, "kind": "move", "x": 60,  "y": 300 },
+    { "t": 0.88, "kind": "move", "x": 140, "y": 300 },
+    { "t": 0.92, "kind": "move", "x": 220, "y": 300 },
+    { "t": 0.94, "kind": "up",   "x": 220, "y": 300 }
+  ],
+  "captures": [0.70, 0.90, 1.10, 1.50]
+}

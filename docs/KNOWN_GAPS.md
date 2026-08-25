@@ -1,5 +1,42 @@
 # Known gaps (living document — fixers: read this)
 
+## Navigation / view controllers (M7.5, 2026-08-24): scope notes
+
+- Transition geometry/timing implements APP_FEEL exactly (0.35 s easeInOut,
+  +width→0 slide, −0.3·width parallax, black 0→8 % scrim, soft edge shadow
+  sigma 4.5 pt / opacity 0.15) and is verified against the closed forms in
+  ViewControllerLifecycleTests (incl. a rendered mid-transition pixel
+  probe). Not oracle-captured yet — oracle2 time-sampling of a real
+  UINavigationController push (per APP_FEEL "Oracle strategy") is still
+  open; the bar title/back crossfade-and-slide parameters (0.35·W title
+  slide, fast 40 %-duration back-label fade) are feel approximations.
+- Completion model: UIView.animate completions are synchronous (M6 note),
+  so transition CLEANUP + viewDidAppear/viewDidDisappear fire from the
+  host clock — UIWindow.tick calls UINavigationController._stepTransitions
+  (same pattern as the scroll hook; one additive line in UIEvent.swift,
+  coordinated with the event module). A host that renders without ticking
+  shows the settled final frame but never completes the stack/lifecycle;
+  `UINavigationController._hasActiveTransition` is the redraw hint.
+- Appearance callbacks fire on nav-container install/push/pop only; there
+  is no window-attachment notion in the portable core (the root VC gets
+  willAppear/didAppear when the nav view loads, not when it joins a
+  window). beginAppearanceTransition/endAppearanceTransition are public
+  and UIKit-shaped, including the cancelled-interactive-pop reversal.
+- Interactive back-swipe: left-edge (< 20 pt) pan scrubs the pop 1:1;
+  release completes at > 50 % progress or ≥ 300 pt/s forward fling
+  (≤ −300 pt/s always cancels), tail animated with a critically-damped
+  0.35 s spring. The 300 pt/s threshold is feel-tuned, not measured. No
+  recognizer dependency system exists (M7 note): the edge pan coexists
+  with content recognizers and relies on its direction gate (leads
+  horizontally away from the edge) — a horizontally scrollable view under
+  the edge would fight it; require(toFail:) is the eventual fix.
+- No UINavigationItem: the bar shows vc.title and "‹ previous-title"
+  ("Back" fallback) only; no rightBarButtonItems, prompts, large titles,
+  bar button customization, or bar blur (APP_FEEL allows the hairline
+  bar). setViewControllers, hidesBarsOnSwipe, toolbars: not implemented.
+  popToRootViewController collapses the middle of the stack instantly and
+  animates only the top pop.
+
 ## UIScrollView (M7.5, 2026-08-24): scope notes
 
 - Physics constants are APP_FEEL's documented UIKit values (0.998/ms,

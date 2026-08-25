@@ -5,6 +5,9 @@
 #   scripts/host.sh fixtures/scenes/foo.json # any scene
 #   scripts/host.sh --demo                   # scripted demo run (records
 #                                            # frames to out_host/)
+#   scripts/host.sh --nav-demo               # navigation demo (push/pop,
+#                                            # back-swipe), interactive
+#   scripts/host.sh --nav-demo --script scripts/nav_push.json --record out_host
 #
 # Extra arguments pass through to openhost (--scale N, --script/--record).
 # Requires SDL2: brew install sdl2 (macOS) / apt install libsdl2-dev (Linux).

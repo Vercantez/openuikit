@@ -154,6 +154,10 @@ open class UIWindow: UIView {
         // everything else (openhost feeds OpenUIKitRuntime.animationTime
         // here) — scripted captures stay deterministic.
         UIScrollView._stepScrollAnimations(to: timestamp)
+        // Navigation push/pop cleanup + viewDidAppear/DidDisappear fire when
+        // the host clock passes the transition end (same pattern; see
+        // UINavigationController).
+        UINavigationController._stepTransitions(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

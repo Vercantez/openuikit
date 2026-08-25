@@ -1,0 +1,153 @@
+// UIViewController. Owner: viewcontroller module (M7.5 navigation).
+//
+// UIKit semantics implemented here:
+//   - `view` loads lazily: first access runs loadView() then viewDidLoad()
+//     (loadView's default creates a plain UIView with nil background, like a
+//     programmatic UIViewController without a nib).
+//   - Appearance callbacks are driven through begin/endAppearanceTransition
+//     (the same primitives UIKit exposes for container view controllers).
+//     UINavigationController produces real UIKit's push/pop order with them:
+//       push A -> B:  B.viewDidLoad, A.viewWillDisappear, B.viewWillAppear,
+//                     ...transition..., A.viewDidDisappear, B.viewDidAppear
+//       pop  B -> A:  B.viewWillDisappear, A.viewWillAppear,
+//                     ...transition..., B.viewDidDisappear, A.viewDidAppear
+//     A cancelled interactive pop replays the reversed pair on both sides
+//     (willAppear/didAppear on the still-top VC), matching UIKit.
+//   - Containment: addChild/removeFromParent with the documented automatic
+//     willMove/didMove calls (addChild calls child.willMove(toParent:);
+//     removeFromParent calls child.didMove(toParent: nil)).
+//
+// No run loop exists in the portable core: appearance "did" callbacks around
+// animated transitions fire when the host's clock reaches the transition end
+// (UIWindow.tick -> UINavigationController._stepTransitions).
+
+open class UIViewController {
+    public init() {}
+
+    // MARK: View loading (lazy loadView/viewDidLoad)
+
+    var _view: UIView?
+
+    /// The controller's view. First access loads it (loadView + viewDidLoad).
+    public var view: UIView! {
+        get {
+            loadViewIfNeeded()
+            return _view
+        }
+        set { _view = newValue }
+    }
+
+    public var isViewLoaded: Bool { _view != nil }
+    public var viewIfLoaded: UIView? { _view }
+
+    public func loadViewIfNeeded() {
+        guard _view == nil else { return }
+        loadView()
+        if _view == nil { _view = UIView() } // loadView() that set nothing
+        viewDidLoad()
+    }
+
+    /// Create `self.view`. Default: a plain UIView with a portrait-phone
+    /// frame and nil (transparent) background — the same as a programmatic
+    /// UIViewController without a nib. Containers re-frame the view anyway.
+    open func loadView() {
+        view = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+    }
+
+    /// Called exactly once, right after loadView().
+    open func viewDidLoad() {}
+
+    // MARK: Title
+
+    /// Shown by UINavigationController in the navigation bar (and as the
+    /// next VC's back-button label).
+    public var title: String? {
+        didSet { navigationController?._titleDidChange(self) }
+    }
+
+    // MARK: Appearance callbacks
+
+    open func viewWillAppear(_ animated: Bool) {}
+    open func viewDidAppear(_ animated: Bool) {}
+    open func viewWillDisappear(_ animated: Bool) {}
+    open func viewDidDisappear(_ animated: Bool) {}
+
+    enum AppearanceState { case disappeared, appearing, appeared, disappearing }
+    var _appearanceState: AppearanceState = .disappeared
+    var _appearanceAnimated = false
+
+    /// Container-VC primitive (public in UIKit): start an appearance
+    /// transition. Loads the view and calls viewWillAppear/viewWillDisappear.
+    /// Idempotent while a transition in the same direction is in flight;
+    /// reversing an in-flight transition (interactive-pop cancel) issues the
+    /// opposite "will" callback, like UIKit.
+    public func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+        if isAppearing {
+            guard _appearanceState != .appeared, _appearanceState != .appearing
+            else { return }
+            _appearanceState = .appearing
+            _appearanceAnimated = animated
+            loadViewIfNeeded()
+            viewWillAppear(animated)
+        } else {
+            guard _appearanceState != .disappeared,
+                  _appearanceState != .disappearing else { return }
+            _appearanceState = .disappearing
+            _appearanceAnimated = animated
+            viewWillDisappear(animated)
+        }
+    }
+
+    /// Finish the in-flight appearance transition: calls viewDidAppear /
+    /// viewDidDisappear to match the pending "will" callback.
+    public func endAppearanceTransition() {
+        switch _appearanceState {
+        case .appearing:
+            _appearanceState = .appeared
+            viewDidAppear(_appearanceAnimated)
+        case .disappearing:
+            _appearanceState = .disappeared
+            viewDidDisappear(_appearanceAnimated)
+        case .appeared, .disappeared:
+            break
+        }
+    }
+
+    // MARK: Containment
+
+    public private(set) var children: [UIViewController] = []
+    public internal(set) weak var parent: UIViewController?
+
+    /// UIKit: automatically calls child.willMove(toParent: self). The caller
+    /// (container) calls child.didMove(toParent:) once the child's view is
+    /// installed.
+    public func addChild(_ child: UIViewController) {
+        guard child.parent !== self else { return }
+        child.removeFromParent()
+        child.willMove(toParent: self)
+        children.append(child)
+        child.parent = self
+    }
+
+    /// UIKit: the container calls willMove(toParent: nil) first; this method
+    /// then automatically calls didMove(toParent: nil).
+    public func removeFromParent() {
+        guard let p = parent else { return }
+        p.children.removeAll { $0 === self }
+        parent = nil
+        didMove(toParent: nil)
+    }
+
+    open func willMove(toParent parent: UIViewController?) {}
+    open func didMove(toParent parent: UIViewController?) {}
+
+    /// Nearest ancestor navigation controller (UIKit semantics).
+    public var navigationController: UINavigationController? {
+        var p = parent
+        while let cur = p {
+            if let nav = cur as? UINavigationController { return nav }
+            p = cur.parent
+        }
+        return nil
+    }
+}

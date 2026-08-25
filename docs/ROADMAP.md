@@ -83,6 +83,19 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     2.5 pt indicators with 0.4 s fade on the UIView.animate clock, physics
     stepped from UIWindow.tick (host clock — deterministic scripted
     captures, scripts/scroll_flick.json). 20 tests (UIScrollViewTests).
+  - Navigation DONE (2026-08-24): UIViewController (lazy loadView/viewDidLoad,
+    UIKit-ordered appearance callbacks via begin/endAppearanceTransition,
+    containment), UINavigationController (44 pt bar + 20 pt status inset over
+    a clipped content area; push/pop = 0.35 s easeInOut slide with −0.3·width
+    parallax, 0→8 % scrim, soft leading-edge shadow, driven by UIView.animate;
+    completion on the host clock via UIWindow.tick → _stepTransitions) and
+    UINavigationBar (semibold-17 centered title, "‹ previous-title" back
+    button with the 0.2-alpha pressed dim, 0.5 pt hairline, title crossfade/
+    slide with the transition). Interactive left-edge back-swipe scrubs the
+    pop, completes > 50 % / ≥ 300 pt/s, cancels with a spring. 13 tests
+    (NavigationControllerTests incl. a rendered mid-transition pixel probe);
+    scripted capture: `openhost --nav-demo --script scripts/nav_push.json`.
+    Scope notes in docs/KNOWN_GAPS.md.
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,

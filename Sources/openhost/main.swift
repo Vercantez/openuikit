@@ -45,16 +45,20 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
+       openhost --nav-demo   [--scale N] [--script events.json --record outdir]
 """
 
 var scenePath: String? = nil
 var scaleOverride: Double? = nil
 var scriptPath: String? = nil
 var recordDir: String? = nil
+var navDemo = false
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
 while let arg = it.next() {
     switch arg {
+    case "--nav-demo":
+        navDemo = true
     case "--scale":
         guard let v = it.next(), let s = Double(v), s > 0 else {
             print(usage); exit(1)
@@ -74,14 +78,19 @@ while let arg = it.next() {
     }
 }
 
-guard let scenePath else { print(usage); exit(1) }
+guard navDemo != (scenePath != nil) else { print(usage); exit(1) }
 guard (scriptPath == nil) == (recordDir == nil) else {
     print("--script and --record must be used together\n\(usage)"); exit(1)
 }
 
-let sceneJSON = try loadSceneFile(scenePath)
-let scene = buildHostScene(sceneJSON, scaleOverride: scaleOverride.map { CGFloat($0) },
+let scene: HostScene
+if navDemo {
+    scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
+} else {
+    let sceneJSON = try loadSceneFile(scenePath!)
+    scene = buildHostScene(sceneJSON, scaleOverride: scaleOverride.map { CGFloat($0) },
                            warn: warnToStderr)
+}
 
 if let scriptPath, let recordDir {
     let (events, captures) = parseScript(try loadSceneFile(scriptPath))

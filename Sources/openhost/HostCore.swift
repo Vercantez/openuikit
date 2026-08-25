@@ -119,6 +119,122 @@ func fmt3(_ t: Double) -> String {
     return "\(neg ? "-" : "")\(ms / 1000).\(frac)"
 }
 
+// MARK: - Nav demo (M7.5 navigation): a UINavigationController-hosted app
+
+/// Keeps the navigation controller alive (HostScene only holds views).
+var _navDemoNav: UINavigationController?
+
+/// A Settings-style disclosure row: label + "›" chevron + hairline,
+/// highlight flash on touch, pushes a detail VC on tap.
+final class NavDemoRow: UIControl {
+    let titleLabel = UILabel()
+    let chevron = UILabel()
+    let hairline = UIView()
+
+    init(title: String) {
+        super.init(frame: .zero)
+        backgroundColor = .secondarySystemGroupedBackground
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 17)
+        titleLabel.textColor = .label
+        chevron.text = "\u{203A}" // ›
+        chevron.font = .systemFont(ofSize: 17, weight: .semibold)
+        chevron.textColor = .systemGray2
+        hairline.backgroundColor = .separator
+        addSubview(titleLabel)
+        addSubview(chevron)
+        addSubview(hairline)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let t = titleLabel.intrinsicContentSize
+        titleLabel.frame = CGRect(x: 16, y: (bounds.height - t.height) / 2,
+                                  width: t.width, height: t.height)
+        let c = chevron.intrinsicContentSize
+        chevron.frame = CGRect(x: bounds.width - c.width - 16,
+                               y: (bounds.height - c.height) / 2,
+                               width: c.width, height: c.height)
+        hairline.frame = CGRect(x: 16, y: bounds.height - 0.5,
+                                width: bounds.width - 16, height: 0.5)
+    }
+
+    override func stateDidChange() {
+        super.stateDidChange()
+        backgroundColor = isHighlighted ? .systemGray4
+                                        : .secondarySystemGroupedBackground
+    }
+}
+
+final class NavDemoDetailVC: UIViewController {
+    override func viewDidLoad() {
+        view.backgroundColor = .systemGroupedBackground
+        let card = UIView(frame: CGRect(x: 16, y: 20,
+                                        width: view.bounds.width - 32, height: 120))
+        card.backgroundColor = .secondarySystemGroupedBackground
+        card.layer.cornerRadius = 10
+        card.autoresizingMask = [.flexibleWidth]
+        view.addSubview(card)
+        let heading = UILabel()
+        heading.text = title
+        heading.font = .systemFont(ofSize: 20, weight: .semibold)
+        heading.frame = CGRect(x: 16, y: 16, width: card.bounds.width - 32,
+                               height: 24)
+        card.addSubview(heading)
+        let body = UILabel()
+        body.text = "Pushed with the iOS slide transition."
+        body.font = .systemFont(ofSize: 15)
+        body.textColor = .secondaryLabel
+        body.frame = CGRect(x: 16, y: 48, width: card.bounds.width - 32,
+                            height: 20)
+        card.addSubview(body)
+    }
+}
+
+final class NavDemoRootVC: UIViewController {
+    override func viewDidLoad() {
+        title = "Settings"
+        view.backgroundColor = .systemGroupedBackground
+        let titles = ["General", "Display & Brightness", "About"]
+        for (i, t) in titles.enumerated() {
+            let row = NavDemoRow(title: t)
+            row.frame = CGRect(x: 0, y: 20 + CGFloat(i) * 44,
+                               width: view.bounds.width, height: 44)
+            row.autoresizingMask = [.flexibleWidth]
+            row.addTarget(for: .touchUpInside) { [weak self] control, _ in
+                guard let self, let row = control as? NavDemoRow else { return }
+                print("action: push           t=\(fmt3(OpenUIKitRuntime.animationTime)) row=\"\(row.titleLabel.text ?? "")\"")
+                let detail = NavDemoDetailVC()
+                detail.title = row.titleLabel.text
+                self.navigationController?.pushViewController(detail, animated: true)
+            }
+            view.addSubview(row)
+        }
+    }
+}
+
+/// Build the navigation demo (openhost --nav-demo): a UINavigationController
+/// with a Settings-style root, hosted in a live UIWindow. Push/pop run the
+/// APP_FEEL transition (slide + parallax + scrim + edge shadow); the back
+/// button and the left-edge swipe both pop.
+func buildNavDemoScene(scaleOverride: CGFloat?) -> HostScene {
+    let scale = scaleOverride ?? 2
+    let size = CGSize(width: 390, height: 700)
+    GlyphInkTable.windowCompositing = false
+    UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                  displayScale: scale)
+    let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+    let nav = UINavigationController(rootViewController: NavDemoRootVC())
+    _navDemoNav = nav
+    nav.view.frame = window.bounds
+    window.addSubview(nav.view)
+    window.setNeedsLayout()
+    window.layoutIfNeeded()
+    return HostScene(name: "nav_demo", sizePt: size, scale: scale,
+                     window: window, container: nav.view,
+                     sceneAnimationDeadline: 0)
+}
+
 // MARK: - SDL host window
 
 final class SDLHost {
