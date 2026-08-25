@@ -21,26 +21,15 @@ enum SceneIOError: Error, CustomStringConvertible {
 
 func loadSceneFile(_ path: String) throws -> JSONValue {
     let data = try Data(contentsOf: URL(fileURLWithPath: path))
-    let obj = try JSONSerialization.jsonObject(with: data)
-    let value = toJSONValue(obj)
+    // Parsed with OpenUIKit's own MiniJSON rather than JSONSerialization:
+    // it yields JSONValue directly (no NSNumber round-trip, which cannot
+    // distinguish `true` from `1` without CoreFoundation, unavailable off
+    // Darwin).
+    guard let value = JSONValue.parse([UInt8](data)) else {
+        throw SceneIOError.notJSONObject(path)
+    }
     guard value.objectValue != nil else { throw SceneIOError.notJSONObject(path) }
     return value
-}
-
-private func toJSONValue(_ v: Any) -> JSONValue {
-    switch v {
-    case let d as [String: Any]:
-        return .object(d.mapValues(toJSONValue))
-    case let a as [Any]:
-        return .array(a.map(toJSONValue))
-    case let n as NSNumber:
-        if CFGetTypeID(n) == CFBooleanGetTypeID() { return .bool(n.boolValue) }
-        return .number(n.doubleValue)
-    case let s as String:
-        return .string(s)
-    default:
-        return .null
-    }
 }
 
 private func toFoundation(_ v: JSONValue) -> Any {

@@ -60,6 +60,27 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
 let inkLogPath = ProcessInfo.processInfo.environment["OPENUIKIT_INK_LOG"]
 if inkLogPath != nil { GlyphInkTable.logMisses = true }
 
+// Font directory override: OPENUIKIT_FONT_DIR=<dir>. The library's built-in
+// search list points at macOS system paths; off Darwin there is no system SF
+// to fall back to, so glyphs missing from the harvested ink table would not
+// draw at all. Point this at a directory holding SFNS.ttf / SFNSMono.ttf /
+// SFNSItalic.ttf (user-supplied — Apple's fonts are not redistributable) to
+// get identical output on any platform.
+if let dir = ProcessInfo.processInfo.environment["OPENUIKIT_FONT_DIR"] {
+    let base = dir.hasSuffix("/") ? String(dir.dropLast()) : dir
+    for (key, file) in [("system", "SFNS.ttf"), ("mono", "SFNSMono.ttf"),
+                        ("italic", "SFNSItalic.ttf")] {
+        let path = base + "/" + file
+        if FileManager.default.isReadableFile(atPath: path) {
+            OpenUIKitRuntime.fontPaths[key] = path
+        }
+    }
+    if OpenUIKitRuntime.fontPaths.isEmpty {
+        FileHandle.standardError.write(
+            Data("warning: OPENUIKIT_FONT_DIR=\(dir) has no SFNS*.ttf\n".utf8))
+    }
+}
+
 let args = CommandLine.arguments
 guard args.count >= 3 else {
     print("usage: openrender render <outdir> <scene.json>...")
