@@ -44,7 +44,14 @@ int main(void) {
     say("sizeof.Nested=%zu", sizeof(Nested));
     say("sizeof.Bits=%zu", sizeof(Bits));
     say("sizeof.long=%zu", sizeof(long));
-    say("sizeof.longdouble=%zu", sizeof(long double));
+    // long double is the one C ABI difference the corpus cannot pin away:
+    // Darwin/arm64 makes it a synonym for double (8 bytes), AArch64 Linux
+    // uses IEEE binary128 (16 bytes). Both encode as 'D', which is what this
+    // test is actually for -- the runtime never sees the width. The two
+    // measured sizes are recorded in docs/ABI_DIVERGENCE.md rather than
+    // diffed here, because a fixed number would report a compiler fact as a
+    // runtime failure forever.
+    say("sizeof.longdouble.ge.double=%s", YN(sizeof(long double) >= sizeof(double)));
     say("sizeof.id=%zu", sizeof(id));
     say("sizeof.BOOL=%zu", sizeof(BOOL));
 

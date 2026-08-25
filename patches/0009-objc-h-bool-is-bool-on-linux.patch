@@ -1,0 +1,27 @@
+# objc.h: BOOL is bool on Linux, as on every modern Apple target, overriding clang's __OBJC_BOOL_IS_BOOL=0 default for non-Apple triples
+--- a/runtime/objc.h
++++ b/runtime/objc.h
+@@ -65,7 +65,22 @@
+ 
+ /// Type to represent a boolean value.
+ 
+-#if defined(__OBJC_BOOL_IS_BOOL)
++#if TARGET_OS_LINUX
++    // objc4-linux: BOOL is `bool`, not `signed char`.
++    //
++    // clang predefines __OBJC_BOOL_IS_BOOL=0 for a Linux triple (measured:
++    // `clang -dM -E -x objective-c -` on aarch64-linux-gnu), because it has
++    // no opinion about a runtime it does not ship with. We do: this IS
++    // Apple's runtime, and every modern Apple target -- arm64 macOS, iOS,
++    // tvOS, watchOS -- uses `bool`. Only 32-bit and x86_64 macOS keep the
++    // historical `signed char`, for binary compatibility we do not have.
++    //
++    // Consequences, all of them wanted: @encode(BOOL) is "B" not "c",
++    // property attributes read "TB", and BOOL is one byte with values
++    // restricted to 0/1 -- which is what Swift's ObjCBool bridging assumes on
++    // arm64 and therefore what the interop goal needs.
++#   define OBJC_BOOL_IS_BOOL 1
++#elif defined(__OBJC_BOOL_IS_BOOL)
+     // Honor __OBJC_BOOL_IS_BOOL when available.
+ #   if __OBJC_BOOL_IS_BOOL
+ #       define OBJC_BOOL_IS_BOOL 1

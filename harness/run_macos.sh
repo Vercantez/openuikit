@@ -38,7 +38,16 @@ fi
 # Optimisation is left OFF and fixed: -O changes ARC/msgSend codegen (e.g.
 #   objc_retainAutoreleasedReturnValue elision) and that must not vary between
 #   the two sides of the diff.
+# -fsigned-char: PINNED ON BOTH SIDES, for the same reason as -O0. Plain `char`
+#   is signed in the Darwin arm64 ABI and unsigned in the AArch64 Linux ABI
+#   (measured: clang predefines __CHAR_UNSIGNED__=1 for aarch64-linux-gnu and
+#   not for arm64-apple-macos). That changes @encode(char) from "c" to "C" in
+#   every ivar, property and method type string -- a COMPILER difference that
+#   would swamp the runtime differences this corpus exists to find. It is a
+#   no-op here (Darwin is already signed) and is stated explicitly so the two
+#   runners are visibly the same compile. See docs/ABI_DIVERGENCE.md.
 CFLAGS="-isysroot $SDK -target arm64-apple-macos13 -O0 -g0
+        -fsigned-char
         -fno-objc-arc -fobjc-exceptions
         -Wno-objc-root-class -Wno-unused-function -Wno-deprecated-declarations
         -I$REPO/tests"

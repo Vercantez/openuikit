@@ -76,6 +76,12 @@ mkdir -p "$OUT"
 # metadata and objc_classlist sections on ELF. Without it clang emits the
 # GNUstep ABI and none of this corpus means anything.
 #
+# -fsigned-char pins plain `char` to Darwin's signedness. AArch64 Linux has
+# unsigned char (clang predefines __CHAR_UNSIGNED__=1), which flips
+# @encode(char) from "c" to "C" in every type string. That is a compiler ABI
+# difference, not a runtime one; pinning it on BOTH sides keeps the diff
+# measuring the runtime. docs/ABI_DIVERGENCE.md records the unpinned values.
+#
 # The rest mirrors run_macos.sh exactly, including -O0, so the only difference
 # between the two sides of the diff is the runtime.
 # A marker file, not an exit code, distinguishes "compile failed" from "the test
@@ -89,7 +95,7 @@ docker run --rm $MOUNTS -w /src \
     -e "RELTEST=${TEST#$REPO/}" \
     "$IMAGE" /bin/sh -c '
         mkdir -p /src/build/linux-tests
-        if ! clang -target "$TARGET" -O0 -g0 \
+        if ! clang -target "$TARGET" -O0 -g0 -fsigned-char \
             -fobjc-runtime=macosx-10.15 -fno-objc-arc -fobjc-exceptions \
             -Wno-objc-root-class -Wno-unused-function -Wno-deprecated-declarations \
             -I/src/tests -I"$C_INCLUDE" \
