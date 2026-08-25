@@ -330,11 +330,11 @@ open class UITableView: UIScrollView {
     }
 
     public func indexPath(for cell: UITableViewCell) -> IndexPath? {
-        visibleCellsByPath.first { $0.value === cell }?.key
+        visibleCellsByPath.first { $1 === cell }?.key
     }
 
     public var visibleCells: [UITableViewCell] {
-        visibleCellsByPath.sorted { $0.key < $1.key }.map(\.value)
+        visibleCellsByPath.views.sorted { $0.key < $1.key }.map(\.value)
     }
 
     public var indexPathsForVisibleRows: [IndexPath]? {
@@ -348,17 +348,13 @@ open class UITableView: UIScrollView {
     // MARK: Reload
 
     public func reloadData() {
-        for (_, cell) in visibleCellsByPath {
+        visibleCellsByPath.removeAll { _, cell in
             cell.removeFromSuperview()
             recycle(cell)
         }
-        visibleCellsByPath.removeAll()
-        for v in headerViews.values { v.removeFromSuperview() }
-        headerViews.removeAll()
-        for v in footerViews.values { v.removeFromSuperview() }
-        footerViews.removeAll()
-        for v in cardViews.values { v.removeFromSuperview() }
-        cardViews.removeAll()
+        headerViews.removeAll { $1.removeFromSuperview() }
+        footerViews.removeAll { $1.removeFromSuperview() }
+        cardViews.removeAll { $1.removeFromSuperview() }
         indexPathForSelectedRow = nil
         setNeedsMetrics()
     }
@@ -402,15 +398,15 @@ open class UITableView: UIScrollView {
         var oldCells: [AnyHashable: UITableViewCell] = [:]
         var oldFrames: [AnyHashable: CGRect] = [:]
         var oldSections: [AnyHashable: Int] = [:]
-        for (path, cell) in visibleCellsByPath {
+        for (path, cell) in visibleCellsByPath.views {
             let id = identity(path)
             oldCells[id] = cell
             oldFrames[id] = cell.frame
             oldSections[id] = path.section
         }
-        let oldCards = cardViews.mapValues { $0.frame }
-        let oldHeaders = headerViews.mapValues { $0.frame }
-        let oldFooters = footerViews.mapValues { $0.frame }
+        let oldCards = cardViews.views.mapValues { $0.frame }
+        let oldHeaders = headerViews.views.mapValues { $0.frame }
+        let oldFooters = footerViews.views.mapValues { $0.frame }
         let selectedID = indexPathForSelectedRow.map(identity)
 
         // Apply the model change and re-key the live cells onto their new
@@ -435,12 +431,12 @@ open class UITableView: UIScrollView {
             kept.insert(ObjectIdentifier(cell))
             if oldSections[id] != path.section { movedBetweenSections.append(cell) }
         }
-        for (_, cell) in visibleCellsByPath
+        for (_, cell) in visibleCellsByPath.views
         where !kept.contains(ObjectIdentifier(cell)) {
             cell.removeFromSuperview()
             recycle(cell)
         }
-        visibleCellsByPath = rekeyed
+        visibleCellsByPath.replaceAll(with: rekeyed)
         if let selectedID {
             indexPathForSelectedRow = needed.first { identity($0) == selectedID }
         }
@@ -456,7 +452,7 @@ open class UITableView: UIScrollView {
         // either way.
         var moves: [(view: UIView, target: CGRect)] = []
         var fadeIns: [UIView] = []
-        for (path, cell) in visibleCellsByPath {
+        for (path, cell) in visibleCellsByPath.views {
             let target = cell.frame
             if let old = oldFrames[identity(path)], old != target {
                 cell.frame = old
@@ -466,8 +462,8 @@ open class UITableView: UIScrollView {
                 fadeIns.append(cell)
             }
         }
-        func rewindChrome<V: UIView>(_ views: [Int: V], _ old: [Int: CGRect]) {
-            for (s, v) in views {
+        func rewindChrome<V: UIView>(_ views: VisibleViewMap<Int, V>, _ old: [Int: CGRect]) {
+            for (s, v) in views.views {
                 guard let o = old[s], o != v.frame else { continue }
                 let target = v.frame
                 v.frame = o
@@ -523,31 +519,25 @@ open class UITableView: UIScrollView {
     }
 
     // MARK: Cell reuse
+    //
+    // The pools/factories live in the shared ReuseRegistry (UIReuse.swift) —
+    // the same component UICollectionView drives for its cells and
+    // supplementary views.
 
-    private var cellPool: [String: [UITableViewCell]] = [:]
-    private var registeredCellTypes: [String: UITableViewCell.Type] = [:]
-    /// Recycled cells kept per identifier. Must hold at least a screenful:
-    /// a far setContentOffset jump retires EVERY visible cell and re-tiles
-    /// the same count from the pool (a smaller cap would allocate on every
-    /// jump; steady scrolling only ever pools one or two).
-    static let poolCapacityPerIdentifier = 64
+    private let cellRegistry = ReuseRegistry<UITableViewCell>()
+
+    /// Recycled cells kept per identifier (shared cap — see UIReuse.swift).
+    static var poolCapacityPerIdentifier: Int { reusePoolCapacityPerIdentifier }
 
     public func register(_ cellClass: UITableViewCell.Type,
                          forCellReuseIdentifier identifier: String) {
-        registeredCellTypes[identifier] = cellClass
+        cellRegistry.register(identifier: identifier) { id in
+            cellClass.init(style: .default, reuseIdentifier: id)
+        }
     }
 
     public func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
-        if var pool = cellPool[identifier], !pool.isEmpty {
-            let cell = pool.removeLast()
-            cellPool[identifier] = pool
-            cell.prepareForReuse()
-            return cell
-        }
-        if let type = registeredCellTypes[identifier] {
-            return type.init(style: .default, reuseIdentifier: identifier)
-        }
-        return nil
+        cellRegistry.dequeue(identifier)
     }
 
     public func dequeueReusableCell(withIdentifier identifier: String,
@@ -560,19 +550,16 @@ open class UITableView: UIScrollView {
 
     private func recycle(_ cell: UITableViewCell) {
         cell.tableView = nil
-        guard let id = cell.reuseIdentifier else { return }
-        var pool = cellPool[id] ?? []
-        guard pool.count < UITableView.poolCapacityPerIdentifier else { return }
-        pool.append(cell)
-        cellPool[id] = pool
+        cellRegistry.recycle(cell)
     }
 
     // MARK: Tiling
 
-    var visibleCellsByPath: [IndexPath: UITableViewCell] = [:]
-    var headerViews: [Int: UITableViewHeaderFooterView] = [:]
-    var footerViews: [Int: UITableViewHeaderFooterView] = [:]
-    var cardViews: [Int: UITableViewCardView] = [:]
+    // Slot -> live view bookkeeping (shared component, UIReuse.swift).
+    var visibleCellsByPath = VisibleViewMap<IndexPath, UITableViewCell>()
+    var headerViews = VisibleViewMap<Int, UITableViewHeaderFooterView>()
+    var footerViews = VisibleViewMap<Int, UITableViewHeaderFooterView>()
+    var cardViews = VisibleViewMap<Int, UITableViewCardView>()
 
     open override var bounds: CGRect {
         didSet {
@@ -641,25 +628,14 @@ open class UITableView: UIScrollView {
         let visTop = contentOffset.y
 
         // Retire views that scrolled out.
-        let neededCellSet = Set(neededCells)
-        for (path, cell) in visibleCellsByPath where !neededCellSet.contains(path) {
-            visibleCellsByPath[path] = nil
+        visibleCellsByPath.retire(keeping: Set(neededCells)) { _, cell in
             cell.removeFromSuperview()
             recycle(cell)
         }
         let sectionSet = Set(neededSections)
-        for (s, v) in headerViews where !sectionSet.contains(s) {
-            headerViews[s] = nil
-            v.removeFromSuperview()
-        }
-        for (s, v) in footerViews where !sectionSet.contains(s) {
-            footerViews[s] = nil
-            v.removeFromSuperview()
-        }
-        for (s, v) in cardViews where !sectionSet.contains(s) {
-            cardViews[s] = nil
-            v.removeFromSuperview()
-        }
+        headerViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
+        footerViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
+        cardViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
 
         // Section chrome.
         for s in neededSections {
@@ -772,7 +748,7 @@ open class UITableView: UIScrollView {
     /// no separator on an inset-grouped section's last row, none on a
     /// selected/highlighted row, none on the row directly above one.
     func updateSeparators() {
-        for (path, cell) in visibleCellsByPath {
+        for (path, cell) in visibleCellsByPath.views {
             var hidden = separatorStyle == .none
             if style != .plain,
                path.row == metrics[path.section].rowEnds.count - 1 {

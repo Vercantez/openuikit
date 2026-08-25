@@ -120,7 +120,7 @@ final class UITableCellAccessoryView: UIView {
 
 // MARK: - UITableViewCell
 
-open class UITableViewCell: UIView {
+open class UITableViewCell: UIView, ReusableView {
     public enum CellStyle: Sendable {
         case `default`, subtitle, value1, value2
     }

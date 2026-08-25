@@ -9,18 +9,20 @@ long-tail.
 
 - **Delegate protocols that do not exist stop compilation before behaviour
   does.** `UITextFieldDelegate`, `UITextViewDelegate`,
-  `UIGestureRecognizerDelegate`, the `UICollectionView` trio and the
-  presentation-controller delegates are all referenced by the corpus (144
-  uses, some in all four apps) and are simply absent — a `class Foo: UIView,
+  `UIGestureRecognizerDelegate` and the presentation-controller delegates are
+  all referenced by the corpus (144 uses, some in all four apps) and are
+  simply absent (the `UICollectionView` trio — data source, delegate,
+  delegate-flow-layout — landed with M13) — a `class Foo: UIView,
   UITextFieldDelegate` fails on the conformance name. These are the cheapest
   points on the whole punch list and the first thing a fixer should take.
 - **No `UIBarButtonItem`, therefore no real `UINavigationItem`.** 270 uses,
   every app. The nav bar shows `vc.title` plus a back button and nothing else;
   there is no way to put a button in a bar.
-- **No `UICollectionView`** (498 uses across 23 types, every app). The reuse
-  machinery — per-identifier pools, `dequeueReusableCell`, tiled visible-rect
-  layout — exists only inside `UITableView` and has to be lifted into a shared
-  layer first.
+- ~~**No `UICollectionView`**~~ **SHIPPED (M13)** — see the collection-view
+  section below for what landed and what is still missing inside it. The
+  reuse machinery was lifted out of `UITableView` into `Sources/OpenUIKit/
+  UIReuse.swift` (`ReuseRegistry` + `VisibleViewMap`) and both containers now
+  drive that one implementation.
 - **No notifications, anywhere.** `NotificationCenter` is Foundation, which
   the library may not import, so `UIApplication.didBecomeActiveNotification`,
   the keyboard notifications and `UIDevice.orientationDidChangeNotification`
@@ -43,6 +45,62 @@ long-tail.
   with a ~10-line shim (`Tools/objcshim/verify.sh`). It simply was not
   adopted. `UIApplication.sendAction`'s nil-target chain walk is faithful; the
   spelling is not.
+
+## UICollectionView (M13, 2026-08-25): what shipped and what did not
+
+Shipped: `UICollectionView` (a `UIScrollView` subclass that tiles whatever
+its layout describes), `UICollectionViewCell`, `UICollectionReusableView`,
+`UICollectionViewLayout` (abstract) + `UICollectionViewFlowLayout`,
+`UICollectionViewLayoutAttributes`, the data-source / delegate /
+delegate-flow-layout protocols, register + `dequeueReusableCell(
+withReuseIdentifier:for:)` + `dequeueReusableSupplementaryView(...)`,
+IndexPath `item` spelling, single and multiple selection, `reloadData`, and
+five oracle fixtures (`collection_flow_grid`, `_flow_lines`, `_sections`,
+`_horizontal`, `_dark`). Flow-layout geometry is measured, not guessed:
+`scripts/flow_probe.sh` dumps real UIKit's frames for 20 configurations and
+`FlowLayoutMeasuredTests` reproduces every one of them.
+
+What is NOT there:
+
+- **`performBatchUpdates(_:completion:)` does not animate.** It runs the
+  block, does a full `reloadData()` and calls `completion(true)`
+  synchronously — the end state is right, the transition is a hard cut. So
+  do `insertItems`/`deleteItems`/`moveItem`/`reloadItems`/`reloadSections`:
+  every one of them is a `reloadData()`. UITableView's animated portable
+  spelling (`performUpdates(withDuration:identity:updates:)`, which matches
+  rows by identity so a moving row keeps its cell) has no collection
+  counterpart yet; that is the obvious next step and the machinery it needs
+  is already generic.
+- **No `UICollectionViewCompositionalLayout` and no
+  `UICollectionViewDiffableDataSource`** — the tail of the census cluster.
+  The abstract `UICollectionViewLayout` is the seam they would plug into: a
+  compositional layout only has to answer `prepare` /
+  `collectionViewContentSize` / `layoutAttributesForElements(in:)`.
+- **No `sectionHeadersPinToVisibleBounds`** (UIKit's default is false, so a
+  stock flow layout matches). Sticky headers exist for `UITableView.plain`
+  only.
+- **No self-sizing cells** (`estimatedItemSize` /
+  `UICollectionViewFlowLayout.automaticSize`), same scope call as the table's
+  row heights: a delegate supplies sizes or the layout's `itemSize` is used.
+- **No decoration views**, no drag/drop, no `UICollectionViewController`, no
+  focus/hover, no interactive reordering, no prefetching (`isPrefetchingEnabled`
+  and `UICollectionViewDataSourcePrefetching` do not exist — tiling is
+  synchronous, which is what the reuse test measures).
+- **Delegate-method fallbacks are protocol defaults, not `respondsToSelector`.**
+  `UICollectionViewDelegateFlowLayout`'s default implementations return the
+  layout's own property, which is what UIKit falls back to. The consequence
+  is that an app CANNOT distinguish "not implemented" from "implemented and
+  returned the layout's value" — harmless here, but the same portability
+  limit documented in docs/OBJC_RUNTIME.md.
+- **A cell shows no selection by default**, exactly like UIKit: `isSelected`
+  flips and `selectedBackgroundView` (nil unless the app sets it) is
+  unhidden. Nothing is drawn otherwise, and there is no fade.
+- **`UICollectionView.backgroundView` is pinned to the visible rect** rather
+  than the content rect (it tracks `contentOffset` on every tile), which is
+  UIKit's behaviour for a background view but is not separately measured.
+- The collection view's default `backgroundColor` is `.systemBackground`
+  (what the Catalyst probe dumps). Older UIKit used clear/white; an app that
+  relied on that sees a different default.
 
 ## Two cuts of San Francisco (2026-08-25): the fixture suite has two oracles
 
@@ -516,10 +574,11 @@ scroll view hand-off. Not shipped:
 
 ## Showcase app / M10 completion (2026-08-25): scope notes
 
-- **No UICollectionView.** M10's brief named it; nothing was built. The
-  reuse machinery (per-identifier pools, `dequeueReusableCell`, tiled
-  visible-rect layout) is all inside UITableView and would have to be
-  lifted into a shared layer first.
+- ~~**No UICollectionView.**~~ M10's brief named it and nothing was built;
+  it landed in M13, and the reuse machinery it needed (per-identifier
+  pools, `dequeueReusableCell`, tiled visible-rect layout) was lifted out of
+  UITableView into the shared `UIReuse.swift` at the same time. The
+  showcase app itself still does not USE a collection view.
 - **The floating tab bar reserves nothing.** There is no safe-area /
   `additionalSafeAreaInsets` model in the portable core, so every screen
   under a UITabBarController has to be told how much bottom chrome sits

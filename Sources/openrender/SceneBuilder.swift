@@ -673,6 +673,170 @@ func makeTableView(_ j: SceneJSON) -> UITableView {
     return t
 }
 
+// MARK: - UICollectionView (spec v5.3 — M13 collection module)
+
+/// In-scene UICollectionView data source/delegate built from the scene JSON's
+/// "sections" (mirrors the oracle's SceneCollectionDriver exactly). Retained
+/// for the process lifetime because UICollectionView holds its
+/// dataSource/delegate weakly, like real UIKit.
+var sceneCollectionDrivers: [SceneCollectionDriver] = []
+
+/// Scene cell: a colored, optionally rounded content view with one centered
+/// label filling it (identical to the oracle's SceneCollectionCell).
+final class SceneCollectionCell: UICollectionViewCell {
+    let label = UILabel()
+    required init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 17)
+        contentView.addSubview(label)
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = contentView.bounds
+    }
+}
+
+/// Scene supplementary view: one 13 pt semibold label, inset 16 pt, filling
+/// the height (so it centers vertically).
+final class SceneCollectionSupplementary: UICollectionReusableView {
+    let label = UILabel()
+    required init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        label.font = .systemFont(ofSize: 13, weight: .semibold)
+        label.textColor = .secondaryLabel
+        addSubview(label)
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = CGRect(x: 16, y: 0, width: max(0, bounds.width - 32),
+                             height: bounds.height)
+    }
+}
+
+final class SceneCollectionDriver: UICollectionViewDataSource,
+                                   UICollectionViewDelegateFlowLayout {
+    struct Item {
+        let text: String
+        let color: UIColor?
+        let textColor: UIColor?
+        let size: CGSize?
+    }
+    struct Section {
+        let header: String?
+        let footer: String?
+        let items: [Item]
+    }
+    let sections: [Section]
+    let cornerRadius: CGFloat
+
+    init(sectionsJSON: [JSONValue], cornerRadius: CGFloat) {
+        self.cornerRadius = cornerRadius
+        sections = sectionsJSON.map { sv in
+            guard let s = sv.objectValue else { fatalError("bad collection section") }
+            let items = (s["items"]?.arrayValue ?? []).map { iv -> Item in
+                guard let i = iv.objectValue else { fatalError("bad collection item") }
+                let size = numArray(i["size"]).flatMap {
+                    $0.count == 2 ? CGSize(width: $0[0], height: $0[1]) : nil
+                }
+                return Item(text: i["text"]?.stringValue ?? "",
+                            color: colorOrDie(i["color"], "collection item"),
+                            textColor: colorOrDie(i["textColor"], "collection item"),
+                            size: size)
+            }
+            return Section(header: s["header"]?.stringValue,
+                           footer: s["footer"]?.stringValue, items: items)
+        }
+    }
+
+    func numberOfSections(in cv: UICollectionView) -> Int { sections.count }
+
+    func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int {
+        sections[s].items.count
+    }
+
+    func collectionView(_ cv: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let item = sections[indexPath.section].items[indexPath.item]
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+            as! SceneCollectionCell
+        cell.contentView.backgroundColor = item.color
+        cell.contentView.layer.cornerRadius = cornerRadius
+        cell.label.text = item.text
+        cell.label.textColor = item.textColor ?? .label
+        return cell
+    }
+
+    func collectionView(_ cv: UICollectionView, viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = cv.dequeueReusableSupplementaryView(ofKind: kind,
+                                                       withReuseIdentifier: "supp",
+                                                       for: indexPath)
+            as! SceneCollectionSupplementary
+        view.label.text = kind == UICollectionView.elementKindSectionHeader
+            ? sections[indexPath.section].header : sections[indexPath.section].footer
+        return view
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        sections[indexPath.section].items[indexPath.item].size
+            ?? (layout as! UICollectionViewFlowLayout).itemSize
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection s: Int) -> CGSize {
+        sections[s].header == nil
+            ? .zero : (layout as! UICollectionViewFlowLayout).headerReferenceSize
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        referenceSizeForFooterInSection s: Int) -> CGSize {
+        sections[s].footer == nil
+            ? .zero : (layout as! UICollectionViewFlowLayout).footerReferenceSize
+    }
+}
+
+func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
+    let layout = UICollectionViewFlowLayout()
+    switch j["scrollDirection"]?.stringValue ?? "vertical" {
+    case "vertical": layout.scrollDirection = .vertical
+    case "horizontal": layout.scrollDirection = .horizontal
+    case let s: fatalError("bad scrollDirection '\(s)'")
+    }
+    if let sz = numArray(j["itemSize"]), sz.count == 2 {
+        layout.itemSize = CGSize(width: sz[0], height: sz[1])
+    }
+    if let n = num(j["minimumLineSpacing"]) { layout.minimumLineSpacing = n }
+    if let n = num(j["minimumInteritemSpacing"]) { layout.minimumInteritemSpacing = n }
+    if let ins = numArray(j["sectionInset"]), ins.count == 4 {
+        layout.sectionInset = UIEdgeInsets(top: ins[0], left: ins[1],
+                                           bottom: ins[2], right: ins[3])
+    }
+    if let sz = numArray(j["headerSize"]), sz.count == 2 {
+        layout.headerReferenceSize = CGSize(width: sz[0], height: sz[1])
+    }
+    if let sz = numArray(j["footerSize"]), sz.count == 2 {
+        layout.footerReferenceSize = CGSize(width: sz[0], height: sz[1])
+    }
+    let c = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    // Mirror the oracle's pinning: no indicator subviews in static scenes.
+    c.showsVerticalScrollIndicator = false
+    c.showsHorizontalScrollIndicator = false
+    c.register(SceneCollectionCell.self, forCellWithReuseIdentifier: "cell")
+    for kind in [UICollectionView.elementKindSectionHeader,
+                 UICollectionView.elementKindSectionFooter] {
+        c.register(SceneCollectionSupplementary.self, forSupplementaryViewOfKind: kind,
+                   withReuseIdentifier: "supp")
+    }
+    let driver = SceneCollectionDriver(sectionsJSON: j["sections"]?.arrayValue ?? [],
+                                       cornerRadius: num(j["itemCornerRadius"]) ?? 0)
+    sceneCollectionDrivers.append(driver)   // dataSource/delegate are weak
+    c.dataSource = driver
+    c.delegate = driver
+    return c
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
@@ -800,6 +964,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
     case "UITableView": v = makeTableView(j)
+    case "UICollectionView": v = makeCollectionView(j)
     case "UITextField": v = makeTextField(j)
     case "UITextView": v = makeTextView(j)
     case "UINavigationStack": v = makeNavigationStack(j, scale: scale, warn: warn)

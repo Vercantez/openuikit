@@ -82,7 +82,8 @@ STRUCT_ABSENCE_RATIO = 0.12       # ...both absolutely and relative to the golde
 
 # Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
 # scenes (bar materials / edge effects, cell chrome, sheet presentation).
-CHROME_CLASSES = {"UITableView", "UINavigationStack", "UITabBarStack"}
+CHROME_CLASSES = {"UITableView", "UICollectionView", "UINavigationStack",
+                  "UITabBarStack"}
 
 def classify(scene):
     """geometry | effects | text | control | chrome, plus layoutOnly flag.
@@ -94,11 +95,11 @@ def classify(scene):
     threshold — shadow blur covers many pixels).
 
     Chrome (spec v5) outranks everything: any UITableView /
-    UINavigationStack / UITabBarStack in the tree, or a top-level "modal"
-    or "alert" (spec v5.2 — M12), makes the scene "chrome" — large regions
-    of system-drawn material (glass platters, edge-effect gradients, sheet
-    shadows, the alert card's blurred platter) warrant the loosest
-    threshold.
+    UICollectionView / UINavigationStack / UITabBarStack in the tree, or a
+    top-level "modal" or "alert" (spec v5.2 — M12), makes the scene
+    "chrome" — large regions of system-drawn material (glass platters,
+    edge-effect gradients, sheet shadows, the alert card's blurred platter)
+    plus tiled cell content warrant the loosest threshold.
     """
     kinds = set()
     has_shadow = [False]
@@ -149,8 +150,13 @@ PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   # spec v5 chrome. Their INTERNALS (cells, bars, controller
                   # container views) are private on both sides — only the
                   # chrome view's own frame is compared structurally; pixels
-                  # hold the chrome itself to account.
-                  "UITableView", "UINavigationStack", "UITabBarStack"}
+                  # hold the chrome itself to account. (A collection view's
+                  # cells dump as the scene's own cell class on both sides,
+                  # and real UIKit's contentView is a bare "UIView" where
+                  # ours is a private forwarding subclass — so the cell
+                  # subtree must stay private, exactly like a table's.)
+                  "UITableView", "UICollectionView",
+                  "UINavigationStack", "UITabBarStack"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

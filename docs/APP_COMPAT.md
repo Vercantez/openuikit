@@ -165,6 +165,32 @@ contains no decoding code of its own), `UIBezierPath`, and app-side drawing
 (`UIView.draw(_:)`, `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()`,
 `UIColor.setFill()/setStroke()`).
 
+## What M13 shipped
+
+One cluster, the census's #1: **collection view** (498 uses across 23 types,
+all four apps). `UICollectionView`, `UICollectionViewCell`,
+`UICollectionReusableView`, `UICollectionViewLayout` +
+`UICollectionViewFlowLayout`, `UICollectionViewLayoutAttributes` and the
+`UICollectionViewDataSource` / `UICollectionViewDelegate` /
+`UICollectionViewDelegateFlowLayout` trio — the last of which also clears
+three of the "delegate protocols" cluster's 51 collection-view uses.
+
+5 new fixture scenes (96 → **101**): `collection_flow_grid`,
+`collection_flow_lines`, `collection_sections`, `collection_horizontal`,
+`collection_dark`. The flow layout's geometry was PROBED rather than guessed
+(`scripts/flow_probe.sh`, 20 configurations against real UIKit) because two
+of its rules are not derivable from the documentation — see docs/ROADMAP.md
+(M13) and docs/KNOWN_GAPS.md.
+
+The prerequisite the punch list called out was done first: the reuse
+machinery moved out of `UITableView` into `Sources/OpenUIKit/UIReuse.swift`
+and both containers now drive one implementation, with every `tableview_*`
+fixture and table test unchanged as the regression bar.
+
+Still open inside the cluster: `UICollectionViewCompositionalLayout`,
+`NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus
+animated batch updates.
+
 ## The punch list, re-ranked on the four-app census
 
 Clustered from the 150 missing types (1,856 uses). "apps" is the largest
@@ -173,7 +199,7 @@ needs it.
 
 | # | cluster | uses | apps | notes |
 |---|---|---|---|---|
-| 1 | **Collection view** (23 types) | 498 | 4 | `UICollectionView` 222, `UICollectionViewCell` 78, `UICollectionViewLayout` 41, `UICollectionViewFlowLayout` 30, data source/delegate 51. Reuse machinery exists inside `UITableView` and must be lifted into a shared layer first (docs/KNOWN_GAPS.md). Compositional layout + diffable data source are in the tail of this cluster. |
+| 1 | ~~**Collection view**~~ **SHIPPED (M13)** | 498 | 4 | `UICollectionView` 222, `UICollectionViewCell` 78, `UICollectionViewLayout` 41, `UICollectionViewFlowLayout` 30, data source/delegate 51 — all of that now exists. The reuse machinery was lifted out of `UITableView` into `Sources/OpenUIKit/UIReuse.swift` first, and both containers drive it. Still open in the TAIL of this cluster: `UICollectionViewCompositionalLayout`, `NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus animated batch updates (docs/KNOWN_GAPS.md "UICollectionView"). |
 | 2 | **Bars & appearance** (6 types) | 322 | 4 | `UIBarButtonItem` 270 — the single largest missing type after Foundation and nibs, and the one that makes `UINavigationItem` real. Then `UINavigationBarAppearance` 33, `UIToolbar` 12, `UITabBarAppearance`. Today the nav bar shows `vc.title` and a back button and nothing else. |
 | 3 | **Menus & actions** (9 types) | 252 | 2 | `UIKeyCommand` 81, `UIAction` 69, `UIMenu` 49, `UIContextMenuConfiguration` 23. Concentrated in two apps but dense there, and `UIAction` is how modern code-based UI wires buttons at all. |
 | 4 | **Delegate protocols** (14 types) | 144 | 4 | `UITextFieldDelegate` 20, `UITextViewDelegate` 15, `UIGestureRecognizerDelegate` 14, the collection-view trio 51, the presentation-controller delegates 23. Mostly *declarations that do not exist yet* — an app fails to compile on the conformance before any behaviour is missing. Cheapest points on the list. |
@@ -231,6 +257,9 @@ on Linux. Everything implemented on the way keeps its oracle fixtures, so
 "runs real apps" never trades away "matches real UIKit."
 
 Not reached yet: no corpus app compiles end to end. The blockers, in the order
-they bite, are exactly items 4, 2 and 1 above — missing delegate protocols
-(compile errors before anything runs), `UIBarButtonItem` (every screen's
-chrome), and `UICollectionView`.
+they bite, were items 4, 2 and 1 above — missing delegate protocols (compile
+errors before anything runs), `UIBarButtonItem` (every screen's chrome), and
+`UICollectionView`. **Item 1 is closed as of M13** (`UICollectionView` +
+`UICollectionViewFlowLayout` + the three collection protocols, oracle-backed
+by the `collection_*` fixtures); the remaining blockers are the other
+delegate protocols and `UIBarButtonItem`.

@@ -172,6 +172,8 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UITouch.swift`, `UIEvent.swift`, `UIGestureRecognizer.swift`, `UIControl.swift` | **event** | done (M7) |
 | `Sources/OpenUIKit/UIResponder.swift`, `UIApplication.swift`, `UIScreen.swift`, `UIDevice.swift` | **lifecycle** | done (M12: responder chain + app lifecycle + host-driven environment) |
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |
+| `Sources/OpenUIKit/UITableView.swift`, `UITableViewCell.swift`, `UITableViewController.swift` | **tableview** | done (M10: tiled rows, measured chrome, `performUpdates`) |
+| `Sources/OpenUIKit/UIReuse.swift`, `UICollectionView.swift`, `UICollectionViewCell.swift`, `UICollectionViewLayout.swift`, `UICollectionViewFlowLayout.swift` | **collection** | done (M13: the reuse machinery lifted out of UITableView into `ReuseRegistry`/`VisibleViewMap` and shared; flow-layout geometry measured by `scripts/flow_probe.sh`, fixtures `collection_*`) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
