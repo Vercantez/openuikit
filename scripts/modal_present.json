@@ -1,0 +1,8 @@
+{
+  "comment": "Scripted pageSheet slide-up for fixtures/scenes/modal_sheet.json (M10 modal presentation). In the live host the sheet presents ANIMATED at t=0 (0.4s critically damped spring): capture 0.05/0.15/0.25 are mid-transition frames (sheet rising from the bottom edge, dim fading toward 20%), 0.45 is the settled state (should match the golden look). The tap at 0.60/0.65 lands on the dimmed area above the sheet and must do NOTHING (dim swallows touches; no tap-to-dismiss) — 0.80 re-captures to prove it.",
+  "events": [
+    { "t": 0.60, "kind": "down", "x": 196, "y": 30 },
+    { "t": 0.65, "kind": "up",   "x": 196, "y": 30 }
+  ],
+  "captures": [0.05, 0.15, 0.25, 0.45, 0.80]
+}

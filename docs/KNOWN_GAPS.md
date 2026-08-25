@@ -1,5 +1,33 @@
 # Known gaps (living document — fixers: read this)
 
+## Modal / tab bar / large-title chrome (M10, 2026-08-25): scope notes
+
+- Modal presentation implements `.pageSheet` (default) and `.fullScreen`
+  only — no popover/formSheet/custom transitioning delegates, no
+  interactive drag-to-dismiss, no detents, and no tap-outside-to-dismiss
+  (the dim swallows touches; `isModalInPresentation` is stored but always
+  behaves as `true`). The presenting view is NOT pushed back/scaled — the
+  golden shows a flat 20% dim over the base (indistinguishable in the
+  fixture); revisit if a fixture ever exposes the scaled base edge.
+  Sheet metrics (top inset 59.5 pt, corner radii 37.7/58.2 pt circular
+  fits of iOS 26's continuous corners) are the iPhone-16 measurements and
+  are used at every window size.
+- UITabBar: light-mode platter/capsule/shadow constants only (the M10
+  goldens are light); dark-mode glass is unmeasured. No badges, no
+  `moreNavigationController` (> 5 items just shrinks the pitch), no
+  selection animation (the capsule jumps — real iOS 26 slides it).
+- Large titles: the bar tracks ONE explicitly bound scroll view
+  (`UIViewController.setContentScrollView(_:)`); there is no automatic
+  detection of the topmost scroll view, and `contentInset.top` is owned
+  by the binding (an app that sets its own top inset on the tracked
+  scroll view will fight it). The scroll-edge pocket is a tuned
+  approximation (Gaussian sigma 8 pt + background wash + vertical fade
+  vs. iOS's progressive material blur), recomputed per observed offset —
+  fine for scripted/interactive rates, unmeasured at sustained 60 fps
+  with heavy content. Bar transitions (push/pop title morph) fall back
+  to the inline-title choreography in large-title mode — a pushed child
+  currently keeps the large-title container layout of its nav controller.
+
 ## Auto Layout (M9, 2026-08-24): scope notes
 
 - Priorities minimize a WEIGHTED SUM of violations (weight = priority), not

@@ -69,6 +69,24 @@ func buildHostScene(_ scene: JSONValue, scaleOverride: CGFloat?,
     window.setNeedsLayout()
     window.layoutIfNeeded()
 
+    // Chrome scenes (spec v5 — M10, viewcontroller module): live offsets
+    // after the real frames exist, then a top-level "modal" presents
+    // ANIMATED at t = 0 in the live host so scripted captures can grab the
+    // slide-up (openrender presents settled for golden parity).
+    applyPendingChromeActions()
+    if let modalJ = scene["modal"]?.objectValue {
+        guard let contentJ = modalJ["content"]?.objectValue else {
+            fatalError("scene \(name): \"modal\" needs a \"content\" view object")
+        }
+        let baseVC = UIViewController()
+        baseVC.view = container
+        let sheetVC = UIViewController()
+        sheetVC.view = buildView(contentJ, scale: scale, warn: warn)
+        baseVC.present(sheetVC, animated: true)
+        sceneRetainedControllers.append(baseVC)
+        sceneRetainedControllers.append(sheetVC)
+    }
+
     // Action logging: every scene-defined UIControl reports touchDown /
     // touchUpInside / valueChanged to stdout with its subview-index path.
     var registry: [ObjectIdentifier: String] = [:]
