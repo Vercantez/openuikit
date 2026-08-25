@@ -1,5 +1,65 @@
 # Known gaps (living document — fixers: read this)
 
+## Showcase app / M10 completion (2026-08-25): scope notes
+
+- **No UICollectionView.** M10's brief named it; nothing was built. The
+  reuse machinery (per-identifier pools, `dequeueReusableCell`, tiled
+  visible-rect layout) is all inside UITableView and would have to be
+  lifted into a shared layer first.
+- **The floating tab bar reserves nothing.** There is no safe-area /
+  `additionalSafeAreaInsets` model in the portable core, so every screen
+  under a UITabBarController has to be told how much bottom chrome sits
+  over it (`BottomInsetAdjustable` in DemoApp, set from
+  `UITabBar.barHeight`). A screen that forgets draws under the platter.
+  Same for `hidesBottomBarWhenPushed`: not implemented, so the tab bar
+  stays over pushed detail screens (which is UIKit's DEFAULT, but real
+  apps usually opt out).
+- **Sustained scroll is under 60 fps at scale 2** in this app: ≈ 22 ms per
+  frame on the Tasks table, ≈ 18 ms on the large-title Settings list
+  (60 fps at scale 1). Cause, measurements and the parked fix:
+  docs/APP_FEEL.md "Inset-grouped table scroll cost". The large-title
+  pocket blur is recomputed per observed offset and is a large part of the
+  Settings number — the KNOWN GAP noted below ("unmeasured at sustained
+  60 fps with heavy content") is now measured, and it is real.
+- The profile sheet has no grabber, no drag-to-dismiss and no detents
+  (none of those exist — see the modal notes below), so it can only be
+  dismissed with its own Done button.
+- Tab selection still jumps rather than sliding the capsule, and switching
+  tabs is instantaneous (real iOS crossfades the content). Both are
+  UITabBar/UITabBarController gaps listed below, now visible in an app.
+- **`OPENUIKIT_APP_STYLE=dark --app showcase` shows a LIGHT tab bar** over a
+  correctly dark app: the platter (#FDFDFE), capsule and unselected-item
+  colours are hard-coded light constants because the M10 tab-bar goldens
+  are light. Every other surface in the three tabs resolves its dynamic
+  colours correctly. This is the most visible unmeasured-chrome gap left.
+
+## UITableView animated updates (M10, 2026-08-25): scope notes
+
+- `performUpdates(withDuration:delay:options:identity:updates:completion:)`
+  is NOT UIKit's API. UIKit takes an explicit list of moves/inserts/deletes
+  (`moveRow(at:to:)`, `insertRows(at:with:)`, `deleteRows(at:with:)` inside
+  `performBatchUpdates`); this takes a stable per-index-path identity and
+  diffs. It covers moves and inserts; **deletes do not animate** — a row
+  whose identity vanishes is retired immediately, because the cell would
+  have to be kept alive outside the visible set to fade it out. There is
+  no `UITableView.RowAnimation` vocabulary (`.fade`/`.top`/`.left`…);
+  inserts always fade in.
+- Scrolling DURING an update is not handled: the animation's recorded
+  endpoints are the frames computed at update time, so a re-tile triggered
+  by a contentOffset change mid-flight assigns model frames the in-flight
+  animation still overrides. Nothing in the app can do this today (the
+  update is started by a tap, and a tap cancels scrolling).
+- A row that moves between sections in a grouped table borrows
+  `secondarySystemGroupedBackground` for the flight and dissolves it over
+  the last 0.12 s. Until that dissolve finishes the cell is an opaque
+  RECTANGLE, so for the two or three frames it spends landing on a card's
+  first/last row it covers that card's 26 pt corners. Measured composited
+  output is white-on-white in light mode (invisible); in dark mode, or on
+  a tinted card, it would show.
+- `indexPathForSelectedRow` is re-derived from the identity map and is
+  CLEARED if the selected row is not visible after the update (UIKit keeps
+  off-screen selection).
+
 ## UITableView (M10, 2026-08-25): scope notes
 
 - No real self-sizing: row height resolves delegate `heightForRowAt` →
@@ -14,8 +74,9 @@
   scenes. Apps targeting device feel should set 16.
 - Selection overlay is a full-bleed rect; on an inset-grouped section's
   first/last row it is NOT clipped to the card's 26 pt corners.
-- No editing mode (delete/reorder), no row insert/delete animations
-  (`reloadData` only), no `UITableViewHeaderFooterView` reuse pool
+- No editing mode (delete/reorder); animated moves/inserts arrived with
+  `performUpdates` (see above) but there is no delete animation and no
+  `UITableView.RowAnimation`, no `UITableViewHeaderFooterView` reuse pool
   (headers/footers are rebuilt per section entering the viewport —
   cheap, they're one label), no index titles, no multi-selection.
 - `.grouped` style renders with the `.insetGrouped` chrome (no legacy

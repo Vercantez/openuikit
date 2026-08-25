@@ -229,6 +229,44 @@ push (still open, see KNOWN_GAPS) could settle which one is correct.
 Either way the first frame's ~35 ms of fresh rasterization is irreducible
 work, not redundant work — pre-warming can only move it.
 
+### Inset-grouped table scroll cost, measured 2026-08-25
+
+The M10 showcase app (`--app showcase`, scripts/perf_showcase_table.json)
+does NOT hold 60 fps at scale 2:
+
+| screen (scale 2, M3 Max) | ms/frame | notes |
+|---|---|---|
+| demo Settings (M8 baseline) | 7.0 | 5 composite hits / 6 direct layers |
+| showcase Settings (large title + tab bar) | 17.9 | the scroll-edge pocket is a Gaussian blur recomputed per observed offset |
+| showcase Tasks table | 22.5 (6.2 at scale 1) | 15 hits / 9 direct |
+
+Two findings, one fixed and one not:
+
+- **FIXED — a scaled-down subview poisons its whole cell.** The Tasks
+  checkbox used to rest its "unchecked" fill at `scale(0.01)`. A
+  non-translation transform anywhere in a subtree makes that subtree
+  ineligible for the layer composite cache, so every visible row
+  re-rasterized from scratch on every scrolled frame (74 direct layers,
+  28.9 ms). The rest state now HIDES the fill instead (hidden subtrees are
+  skipped outright): 12 direct layers, 21.5 ms. This is a general trap for
+  app code — animate a scale, but do not *rest* at one.
+- **NOT FIXED — an empty section card is a single view, and single views
+  never flatten.** `compositeLayer` requires `viewCount >= 2`, so the
+  inset-grouped section backgrounds (358 pt wide, up to 412 pt tall,
+  26 pt corner radius) are re-rasterized as antialiased rounded rects every
+  frame. The demo Settings screen is fast precisely because its cards
+  CONTAIN their rows, so each card is a cached composite. Relaxing the
+  guard to `viewCount >= 2 || v.layer.cornerRadius > 0` was measured: the
+  table drops from 20.0 to 9.2 ms/frame (2.2x, comfortably 60 fps) and the
+  golden suite still passes 80/80. It is **parked on byte-stability**, the
+  same gate that parked the M7.6 push pre-warm: 11 animation-golden frames
+  (anim_delay, anim_spring_bounce, anim_spring_move) stop being
+  bit-identical with `OPENUIKIT_LAYER_CACHE=off`, because a flattened leaf
+  blits snapped to the device pixel grid while a direct render rasterizes
+  at the fractional presentation position. A rounded-rect fill fast path in
+  quartz (patch 004 only covers axis-aligned rects) would buy the same win
+  with no fidelity question, and is the better fix. Owner: perf/quartz.
+
 ## Measured scroll physics (M8, 2026-08-24)
 
 The UIScrollView constants were originally "documented/well-established"

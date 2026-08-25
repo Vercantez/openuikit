@@ -192,9 +192,11 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   layout delta + pixel pass (70/70 suite), 9/9 scroll traces, 353 tests.
   UIStackView still lays out by direct frame computation (works; refit onto
   the solver is future work).
-- **M10 App framework** — UIViewController lifecycle, UINavigationController,
-  UITabBarController, UITableView/UICollectionView with cell reuse; demo app
-  (settings-style screen) running identically on macOS host and Linux.
+- **M10 App framework — DONE (2026-08-25)**: UIViewController lifecycle,
+  UINavigationController, UITabBarController, UITableView with cell reuse,
+  modal presentation and iOS 26 large titles, all exercised together by a
+  real three-tab app (`openhost --app showcase`). UICollectionView was NOT
+  attempted (see docs/KNOWN_GAPS.md).
   - UITableView DONE (2026-08-25): UIScrollView subclass with REAL cell
     reuse (only visible rows instantiated — proven by a 10k-row sweep
     test; per-identifier pools + dequeueReusableCell/register), plain +
@@ -210,6 +212,56 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     scroll of a 96-row table at 3.5–4.5 ms/frame scale 2 with cells
     compositing from cached rasters (scripts/perf_table.json — cache
     hit/build ≈ 14/0 per steady frame).
+  - Showcase app DONE (2026-08-25) — M10 COMPLETE:
+    `swift run -c release openhost --app showcase` boots a
+    UITabBarController over three independent UINavigationController
+    stacks (Settings / Tasks / Text), each keeping its own stack, scroll
+    position and control state across tab switches. What this milestone
+    added on top of the framework pieces:
+    - **Tasks rebuilt on a real UITableView** (`.insetGrouped`, 16 pt side
+      inset, `register`/`dequeueReusableCell`, dataSource + delegate,
+      `TaskCell`/`IconCell`/`PlaceholderCell`). It keeps the pre-table
+      feel: checkbox spring pop, the animated move of a row between
+      TODAY and COMPLETED, row highlight (now UITableViewCell's own
+      measured #DCDCDC flash + 0.3 s fade, and the UIKit
+      select-on-push / deselect-on-return convention).
+    - **`UITableView.performUpdates(withDuration:delay:options:identity:
+      updates:completion:)`** — the portable stand-in for UIKit's
+      `moveRow`/`insertRows` batch updates. Rows are matched across the
+      update by a caller-supplied stable identity, so a row that moves
+      (even between sections) KEEPS ITS CELL and any animation running
+      inside it, while cards, headers and every other visible row animate
+      into place around it in the same block. New rows fade in; a row
+      crossing the gap between two cards borrows the card fill for the
+      flight and dissolves it over the last 0.12 s (a hard restore would
+      square off the card's 26 pt corners as it lands). Finished
+      animations are dropped on completion — `UIView`'s new internal
+      `_removeFinishedAnimations(at:)`, because a completed animation
+      still pins the layer to its recorded end value and would override
+      the frames the next tiling pass assigns. 4 tests
+      (TableViewAnimatedUpdateTests).
+    - **Settings runs with `prefersLargeTitles`**: the root binds its
+      scroll view with `setContentScrollView(_:)`, so the 34 pt title
+      collapses into the inline title over the scroll-edge pocket.
+    - **Profile sheet**: the Settings profile card presents a
+      `.pageSheet` profile editor (two UITextFields + Done) with the M10
+      presentation API; typing goes to the sheet's fields and Done writes
+      the name back to the card.
+    - `BottomInsetAdjustable` (DemoApp): the floating tab bar owns the
+      bottom 72 pt of EVERY screen and nothing reserves it automatically
+      (no safe-area model in the portable core), so the container hands
+      the inset down to roots and pushed screens.
+    - Acceptance: `scripts/showcase_demo.json` — 116 captured frames over
+      one 10.9 s timeline (tab switching, table flick with momentum, row
+      select highlight, modal present mid-transition + typing + dismiss,
+      large-title collapse mid-scroll, cross-section row move, push/pop),
+      every frame visually verified; `scripts/showcase_demo.gif`.
+    - Perf (scripts/perf_showcase_table.json, scale 2, M3 Max): Tasks
+      table flick ≈ 22 ms/frame (≈ 45 fps, 6.2 ms / 60 fps at scale 1),
+      Settings large-title scroll ≈ 18 ms/frame. Both are over the 16.6 ms
+      budget at scale 2; the diagnosis and the rejected fix are in
+      docs/APP_FEEL.md "Inset-grouped table scroll cost".
+    - Gates: 80/80 scenes, 9/9 scroll traces, 385 tests.
 
 ## Verification principle (unchanged, applies to every milestone)
 
