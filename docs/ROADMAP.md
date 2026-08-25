@@ -121,6 +121,36 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   at scale 1 (60 fps both; --app defaults to scale 2 again). Settled frames
   bit-identical with caching off; suite unaffected. See APP_FEEL
   "Performance".
+- **M7.6 (app feel, second pass) — DONE (2026-08-24)**: three fixes on top of
+  the M8 caching merge, plus a re-recorded acceptance GIF.
+  - `UIView.animate` completions now fire ON THE HOST CLOCK instead of
+    synchronously (the M6 divergence in KNOWN_GAPS): queued at
+    `begin + delay + duration`, delivered by
+    `UIView._stepAnimationCompletions(to:)` from `UIWindow.tick` after the
+    scroll/transition steppers. Blocks that record no animation still
+    complete immediately (UIKit creates no CAAnimation); handlers due in one
+    tick run as one batch, so a completion that starts a new animation is
+    served on a later tick. `_hasPendingAnimationCompletions` joins openhost's
+    dirty check. Residual: `finished` is always true (no cancellation path).
+  - Row highlight now cancels the moment the finger drags: the scroll pan
+    claims its content touches at 5 pt of travel along a scrollable axis
+    (`UIScrollView.contentTouchCancelDistance`), ahead of its own 10 pt
+    recognition slop, so the row is already fading when the content starts
+    to move. Gated by the same axis/`touchesShouldCancel` rules as the begin
+    gate. This closes the last "not done" item in APP_FEEL's row-feel list.
+  - Push pre-warm measured and REJECTED — the incoming screen's first frame
+    is irreducible rasterization, and both variants tried either made the
+    first live frame worse or perturbed a capture frame. The probe
+    (scripts/perf_push.json) instead found the real cost: the tapped row's
+    0.3 s highlight fade invalidates its whole ancestor chain, so the
+    OUTGOING screen re-composites at ≈ 24 ms/frame for the entire 0.35 s
+    transition. Partial subtree composites are the follow-up. Numbers in
+    APP_FEEL "Push transition cost".
+  - scripts/appfeel_demo.gif re-recorded through the M8 caching pipeline at
+    scale 2 — the same 14-state acceptance timeline, now captured on the
+    60 fps path (sustained scroll 145.3 → 8.7 ms/frame at scale 2, 39.0 →
+    3.0 ms at scale 1; scripts/perf_scroll.json). All 14 frames visually
+    verified. Suite 56/56, swift test 317 green.
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,
