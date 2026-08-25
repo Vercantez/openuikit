@@ -1,0 +1,34 @@
+{
+  "name": "constraints_mixed_frames",
+  "size": [320, 240],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [20, 20, 120, 50], "backgroundColor": "systemBlue" },
+      { "class": "UIView", "frame": [199.5, 20, 80, 80], "backgroundColor": "systemGray4", "cornerRadius": 8,
+        "subviews": [
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemIndigo" }
+        ] },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemRed" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" }
+    ]
+  },
+  "constraints": [
+    { "item": "1.0", "attribute": "leading", "toItem": "1", "constant": 10 },
+    { "item": "1.0", "attribute": "top",     "toItem": "1", "constant": 10 },
+    { "item": "1.0", "attribute": "width",  "toItem": null, "constant": 25 },
+    { "item": "1.0", "attribute": "height", "toItem": null, "constant": 25 },
+
+    { "item": "2", "attribute": "top",     "toItem": "0", "toAttribute": "bottom", "constant": 12 },
+    { "item": "2", "attribute": "leading", "toItem": "0" },
+    { "item": "2", "attribute": "width",   "toItem": "0" },
+    { "item": "2", "attribute": "height",  "toItem": null, "constant": 50 },
+
+    { "item": "3", "attribute": "top",      "toItem": "1", "toAttribute": "bottom", "constant": 12 },
+    { "item": "3", "attribute": "trailing", "toItem": "1", "toAttribute": "trailing" },
+    { "item": "3", "attribute": "width",    "toItem": "1", "multiplier": 0.75 },
+    { "item": "3", "attribute": "bottom",   "toItem": "", "constant": -20 }
+  ]
+}

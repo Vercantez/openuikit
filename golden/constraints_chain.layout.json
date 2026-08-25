@@ -1,0 +1,65 @@
+{
+  "name" : "constraints_chain",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        20,
+        93.5,
+        60
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        113,
+        20,
+        93.5,
+        60
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        215,
+        20,
+        93.5,
+        60
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        12,
+        104,
+        95.5,
+        48
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        117,
+        104,
+        190.5,
+        48
+      ],
+      "path" : "4"
+    }
+  ]
+}

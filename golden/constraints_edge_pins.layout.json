@@ -1,0 +1,45 @@
+{
+  "name" : "constraints_edge_pins",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        16,
+        288,
+        44
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        192,
+        120,
+        32
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        148,
+        72,
+        156,
+        152
+      ],
+      "path" : "2"
+    }
+  ]
+}

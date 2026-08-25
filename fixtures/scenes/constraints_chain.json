@@ -1,0 +1,39 @@
+{
+  "name": "constraints_chain",
+  "size": [320, 240],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemRed" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemPurple" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemYellow" }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "leading",  "toItem": "", "constant": 12 },
+    { "item": "1", "attribute": "leading",  "toItem": "0", "toAttribute": "trailing", "constant": 8 },
+    { "item": "2", "attribute": "leading",  "toItem": "1", "toAttribute": "trailing", "constant": 8 },
+    { "item": "2", "attribute": "trailing", "toItem": "", "constant": -12 },
+    { "item": "1", "attribute": "width", "toItem": "0" },
+    { "item": "2", "attribute": "width", "toItem": "0" },
+    { "item": "0", "attribute": "top", "toItem": "", "constant": 20 },
+    { "item": "1", "attribute": "top", "toItem": "", "constant": 20 },
+    { "item": "2", "attribute": "top", "toItem": "", "constant": 20 },
+    { "item": "0", "attribute": "height", "toItem": null, "constant": 60 },
+    { "item": "1", "attribute": "height", "toItem": "0" },
+    { "item": "2", "attribute": "height", "toItem": "0" },
+
+    { "item": "3", "attribute": "leading",  "toItem": "", "constant": 12 },
+    { "item": "4", "attribute": "leading",  "toItem": "3", "toAttribute": "trailing", "constant": 10 },
+    { "item": "4", "attribute": "trailing", "toItem": "", "constant": -12 },
+    { "item": "4", "attribute": "width", "toItem": "3", "multiplier": 2 },
+    { "item": "3", "attribute": "top", "toItem": "0", "toAttribute": "bottom", "constant": 24 },
+    { "item": "4", "attribute": "top", "toItem": "3" },
+    { "item": "3", "attribute": "height", "toItem": null, "constant": 48 },
+    { "item": "4", "attribute": "height", "toItem": "3" }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name" : "constraints_baseline",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        160
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        24,
+        103.5,
+        33
+      ],
+      "intrinsic" : [
+        103.5,
+        33
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        103.5,
+        33
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        128,
+        38,
+        51.5,
+        16
+      ],
+      "intrinsic" : [
+        51.5,
+        16
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        51.5,
+        16
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        96,
+        71,
+        26
+      ],
+      "intrinsic" : [
+        71,
+        26
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        71,
+        26
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        95,
+        106,
+        34.5,
+        14
+      ],
+      "intrinsic" : [
+        34.5,
+        14
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        34.5,
+        14
+      ]
+    }
+  ]
+}

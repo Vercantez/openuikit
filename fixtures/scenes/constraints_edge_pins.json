@@ -1,0 +1,30 @@
+{
+  "name": "constraints_edge_pins",
+  "size": [320, 240],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemOrange" }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "left",   "toItem": "", "constant": 16 },
+    { "item": "0", "attribute": "top",    "toItem": "", "constant": 16 },
+    { "item": "0", "attribute": "right",  "toItem": "", "constant": -16 },
+    { "item": "0", "attribute": "height", "toItem": null, "constant": 44 },
+
+    { "item": "1", "attribute": "leading", "toItem": "", "constant": 16 },
+    { "item": "1", "attribute": "bottom",  "toItem": "", "constant": -16 },
+    { "item": "1", "attribute": "width",   "toItem": null, "constant": 120 },
+    { "item": "1", "attribute": "height",  "toItem": null, "constant": 32 },
+
+    { "item": "2", "attribute": "top",    "toItem": "0", "toAttribute": "bottom", "constant": 12 },
+    { "item": "2", "attribute": "left",   "toItem": "1", "toAttribute": "right",  "constant": 12 },
+    { "item": "2", "attribute": "right",  "toItem": "", "constant": -16 },
+    { "item": "2", "attribute": "bottom", "toItem": "", "constant": -16 }
+  ]
+}

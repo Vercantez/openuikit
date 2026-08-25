@@ -1,0 +1,32 @@
+{
+  "name": "constraints_hugging",
+  "size": [320, 100],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UILabel", "useConstraints": true, "text": "Name", "fontSize": 17,
+        "backgroundColor": "systemYellow", "huggingH": 251 },
+      { "class": "UILabel", "useConstraints": true, "text": "stretches", "fontSize": 17,
+        "backgroundColor": "systemGreen", "huggingH": 250 },
+      { "class": "UILabel", "useConstraints": true, "text": "wide one", "fontSize": 17,
+        "backgroundColor": "systemTeal", "huggingH": 250 },
+      { "class": "UILabel", "useConstraints": true, "text": "hugs", "fontSize": 17,
+        "backgroundColor": "systemPink", "huggingH": 251 }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "leading",  "toItem": "", "constant": 12 },
+    { "item": "1", "attribute": "leading",  "toItem": "0", "toAttribute": "trailing", "constant": 8 },
+    { "item": "1", "attribute": "trailing", "toItem": "", "constant": -12 },
+    { "item": "0", "attribute": "centerY",  "toItem": "", "multiplier": 0.5 },
+    { "item": "1", "attribute": "centerY",  "toItem": "", "multiplier": 0.5 },
+
+    { "item": "2", "attribute": "leading",  "toItem": "", "constant": 12 },
+    { "item": "3", "attribute": "leading",  "toItem": "2", "toAttribute": "trailing", "constant": 8 },
+    { "item": "3", "attribute": "trailing", "toItem": "", "constant": -12 },
+    { "item": "2", "attribute": "centerY",  "toItem": "", "multiplier": 1.5 },
+    { "item": "3", "attribute": "centerY",  "toItem": "", "multiplier": 1.5 }
+  ]
+}

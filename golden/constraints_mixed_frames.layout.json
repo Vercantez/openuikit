@@ -1,0 +1,65 @@
+{
+  "name" : "constraints_mixed_frames",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        20,
+        120,
+        50
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        199.5,
+        20,
+        80,
+        80
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        10,
+        10,
+        25,
+        25
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        20,
+        82,
+        120,
+        50
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        220,
+        112,
+        60,
+        108
+      ],
+      "path" : "3"
+    }
+  ]
+}

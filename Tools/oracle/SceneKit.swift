@@ -180,6 +180,25 @@ func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection
     }
     if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
     if let e = j["userInteractionEnabled"] as? Bool { v.isUserInteractionEnabled = e }
+    // Auto Layout (spec v4.3 — M9). A view that participates in constraints
+    // opts out of the autoresizing-mask translation; such views may omit
+    // "frame" entirely (constraints from the top-level "constraints" array
+    // position them).
+    if j["useConstraints"] as? Bool == true {
+        v.translatesAutoresizingMaskIntoConstraints = false
+    }
+    if let p = num(j["huggingH"]) {
+        v.setContentHuggingPriority(UILayoutPriority(Float(p)), for: .horizontal)
+    }
+    if let p = num(j["huggingV"]) {
+        v.setContentHuggingPriority(UILayoutPriority(Float(p)), for: .vertical)
+    }
+    if let p = num(j["compressionH"]) {
+        v.setContentCompressionResistancePriority(UILayoutPriority(Float(p)), for: .horizontal)
+    }
+    if let p = num(j["compressionV"]) {
+        v.setContentCompressionResistancePriority(UILayoutPriority(Float(p)), for: .vertical)
+    }
     if let m = j["autoresizingMask"] as? [String] {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -531,16 +550,78 @@ func parseAnimations(_ scene: JSON) -> [AnimationSpec] {
 }
 
 /// Resolve a dot-joined subview-index path ("" = root) against the built tree.
+/// Used by animation targets AND constraint items (spec v4.3).
 func viewAtPath(_ root: UIView, _ path: String) -> UIView {
     var v = root
     guard !path.isEmpty else { return v }
     for comp in path.split(separator: ".") {
         guard let i = Int(comp), i >= 0, i < v.subviews.count else {
-            fatalError("bad animation target path '\(path)'")
+            fatalError("bad view path '\(path)'")
         }
         v = v.subviews[i]
     }
     return v
+}
+
+// MARK: - Constraints (scene spec v4.3 — M9)
+
+func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
+    switch s {
+    case "left": return .left
+    case "right": return .right
+    case "top": return .top
+    case "bottom": return .bottom
+    case "leading": return .leading
+    case "trailing": return .trailing
+    case "width": return .width
+    case "height": return .height
+    case "centerX": return .centerX
+    case "centerY": return .centerY
+    case "firstBaseline": return .firstBaseline
+    case "lastBaseline": return .lastBaseline
+    default: fatalError("bad constraint attribute '\(s)'")
+    }
+}
+
+/// Build and activate REAL NSLayoutConstraints from the scene's top-level
+/// "constraints" array. Item paths use layout-dump addressing ("" = root).
+/// Must run after the tree is built and BEFORE layoutIfNeeded; priorities are
+/// set pre-activation (required<->optional flips post-activation would throw).
+func activateConstraints(_ specs: [JSON], container: UIView) {
+    var built: [NSLayoutConstraint] = []
+    for j in specs {
+        guard let itemPath = j["item"] as? String else {
+            fatalError("constraint needs \"item\" (view path, \"\" = root)")
+        }
+        guard let attrName = j["attribute"] as? String else {
+            fatalError("constraint needs \"attribute\"")
+        }
+        let item = viewAtPath(container, itemPath)
+        let relation: NSLayoutConstraint.Relation
+        switch j["relation"] as? String ?? "eq" {
+        case "eq": relation = .equal
+        case "le": relation = .lessThanOrEqual
+        case "ge": relation = .greaterThanOrEqual
+        case let r: fatalError("bad constraint relation '\(r)'")
+        }
+        var toView: UIView? = nil
+        var toAttr: NSLayoutConstraint.Attribute = .notAnAttribute
+        if let tp = j["toItem"] as? String {   // JSON null decodes as NSNull, not String
+            toView = viewAtPath(container, tp)
+            // toAttribute defaults to the first attribute (the common case:
+            // pinning like to like).
+            toAttr = layoutAttribute(j["toAttribute"] as? String ?? attrName)
+        } else if j["toAttribute"] is String {
+            fatalError("constraint has \"toAttribute\" but no \"toItem\"")
+        }
+        let c = NSLayoutConstraint(item: item, attribute: layoutAttribute(attrName),
+                                   relatedBy: relation, toItem: toView, attribute: toAttr,
+                                   multiplier: num(j["multiplier"]) ?? 1,
+                                   constant: num(j["constant"]) ?? 0)
+        if let p = num(j["priority"]) { c.priority = UILayoutPriority(Float(p)) }
+        built.append(c)
+    }
+    NSLayoutConstraint.activate(built)
 }
 
 /// Apply one animation entry's `changes` to the target view. Called INSIDE the
@@ -653,6 +734,12 @@ struct SceneSpec {
     /// Scene spec v4: hit-test probe points (root coordinates); results are
     /// appended to the layout dump as "hitTests".
     let hitTests: [CGPoint]
+    /// Scene spec v4.3 (M9): top-level "constraints" array (raw JSON entries;
+    /// nil when the key is absent). PRESENCE of the key — even as [] — exempts
+    /// the scene from the root-frame quirk: the root gets its REAL frame
+    /// [0, 0, w, h] so constraints against the root resolve correctly (and the
+    /// root's backgroundColor draws). openrender must mirror both behaviors.
+    let constraints: [JSON]?
 }
 
 func loadScene(file: String) throws -> SceneSpec {
@@ -667,6 +754,9 @@ func loadScene(file: String) throws -> SceneSpec {
     if !animations.isEmpty && captureTimes.isEmpty {
         fatalError("scene \(name): \"animations\" requires \"captureTimes\"")
     }
+    if scene["constraints"] != nil && !(scene["constraints"] is [JSON]) {
+        fatalError("scene \(name): \"constraints\" must be an array of objects")
+    }
     let hitTests: [CGPoint] = (scene["hitTests"] as? [Any] ?? []).map {
         guard let a = numArray($0), a.count == 2 else {
             fatalError("scene \(name): bad hitTests entry (need [x, y])")
@@ -678,7 +768,8 @@ func loadScene(file: String) throws -> SceneSpec {
                      windowRequired: scene["window"] as? Bool == true,
                      rootJSON: scene["root"] as! JSON,
                      animations: animations, captureTimes: captureTimes,
-                     hitTests: hitTests)
+                     hitTests: hitTests,
+                     constraints: scene["constraints"] as? [JSON])
 }
 
 func buildContainer(_ spec: SceneSpec) -> UIView {
@@ -692,8 +783,20 @@ func buildContainer(_ spec: SceneSpec) -> UIView {
         // openrender replicates this on purpose (see SceneBuilder.swift).
         // Changing it would invalidate every golden; coordinate across modules
         // before "fixing" it.
-        rootJ["frame"] = [0, 0, spec.width, spec.height]
+        //
+        // EXCEPTION (spec v4.3): constraint scenes (top-level "constraints"
+        // present) get the REAL root frame — constraints pinning to a
+        // 0-sized root would be useless, and no pre-v4.3 golden has the key,
+        // so nothing old is invalidated. Consequence: the root background
+        // DRAWS in constraint scenes and their dumps have root frame
+        // [0, 0, w, h]. openrender must mirror this.
+        if spec.constraints != nil {
+            rootJ["frame"] = [0.0, 0.0, Double(spec.width), Double(spec.height)]
+        } else {
+            rootJ["frame"] = [0, 0, spec.width, spec.height]
+        }
         container = buildView(rootJ, scale: spec.scale, traits: spec.traits)
+        if let cs = spec.constraints { activateConstraints(cs, container: container) }
         container.overrideUserInterfaceStyle = spec.style
         container.setNeedsLayout()
         container.layoutIfNeeded()

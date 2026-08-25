@@ -1,0 +1,45 @@
+{
+  "name" : "constraints_inequalities",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        16,
+        200,
+        40
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        76,
+        60,
+        40
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        136,
+        90,
+        40
+      ],
+      "path" : "2"
+    }
+  ]
+}

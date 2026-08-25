@@ -388,6 +388,92 @@ region OUTSIDE its parent's bounds is unreachable regardless of
 UILabel / UIImageView default to interaction disabled (touches fall
 through to their superview).
 
+## Constraints (v4.3 — M9 Auto Layout)
+
+An optional top-level `"constraints"` array activates REAL
+`NSLayoutConstraint`s in the oracle (OpenUIKit must solve to the same frames).
+Golden = real UIKit's solver output via the normal layout dump; constraint
+solving works offscreen (proved for stack views in M3, re-verified for plain
+constraints — no window needed for `layoutIfNeeded`).
+
+```json
+"constraints": [
+  { "item": "0", "attribute": "leading", "toItem": "", "constant": 16 },
+  { "item": "0", "attribute": "width", "relation": "ge", "toItem": null, "constant": 80 },
+  { "item": "1", "attribute": "top", "toItem": "0", "toAttribute": "bottom",
+    "multiplier": 1, "constant": 12, "priority": 750 }
+]
+```
+
+Constraint entry keys:
+
+| key | type | notes |
+|---|---|---|
+| `item` | string | required. Dot-joined subview-index path (layout-dump addressing); `""` = root. |
+| `attribute` | string | required. One of `left, right, top, bottom, leading, trailing, width, height, centerX, centerY, firstBaseline, lastBaseline`. |
+| `relation` | string | `eq` (default), `le`, `ge`. |
+| `toItem` | string or null | second item's path; null/omitted = unary (sizes). |
+| `toAttribute` | string | second attribute. Defaults to `attribute` when `toItem` is present; invalid without `toItem`. |
+| `multiplier` | number | default 1. |
+| `constant` | number | default 0. |
+| `priority` | number | default 1000 (required). Set BEFORE activation. |
+
+Per-view keys (any view class):
+
+| key | type | notes |
+|---|---|---|
+| `useConstraints` | bool | `true` sets `translatesAutoresizingMaskIntoConstraints = false`. Such views may omit `frame` entirely. |
+| `huggingH` / `huggingV` | number | `setContentHuggingPriority(_:for:)` horizontal / vertical (UIKit default 250 for most views, 251 label vertical). |
+| `compressionH` / `compressionV` | number | `setContentCompressionResistancePriority(_:for:)` (default 750). |
+
+Frame-based siblings mix freely with constraint views: a view without
+`useConstraints` keeps `translates... = true`, its frame becomes autoresizing
+constraints, and constraint views may reference its edges (see
+`constraints_mixed_frames.json`). Constraint views may also be children of a
+frame-based parent.
+
+**Root-frame quirk exemption**: the PRESENCE of the top-level `"constraints"`
+key (even `[]`) gives the root its REAL frame `[0, 0, w, h]` — constraints
+pinning to a 0-sized root would be useless. Consequences, which openrender
+must mirror: constraint-scene layout dumps have root frame `[0, 0, w, h]`
+(not `[0,0,0,0]`), and the root's `backgroundColor` DRAWS. All pre-v4.3
+scenes lack the key, so no old golden changes.
+
+**Solver rounding (oracle-observed, offscreen Catalyst iOS 26.1, scale 2)** —
+UIKit does NOT dump raw solver reals; each constraint-positioned view's frame
+is rounded, and OpenUIKit must reproduce this to hold the 0.5 pt layout
+tolerance on adversarial fixtures:
+
+- **Origin components round to the nearest integer POINT**, ties away from
+  zero — not to the pixel (0.5) grid, despite scale 2: exact x 113.333 → 113,
+  214.667 → 215, 47.5 → 48, 117.5 → 118, 219.5 → 220.
+- **Size components round to the nearest 0.5 pt (pixel at 2x)**: exact width
+  93.333 → 93.5, 190.667 → 190.5, 106.656 → 106.5. Sub-point constants
+  survive when on-grid (a 0.5-pt separator height stays 0.5).
+- Rounding is per-view in LOCAL (superview) coordinates, not window space: a
+  constraint child of a frame-based parent at x = 199.5 keeps its exact local
+  frame.
+- Rounding happens per view AFTER solving, so required relations can end up
+  visibly off-grid: in `constraints_chain` the trailing pin lands at
+  308.5 with constant −12 on a 320-wide root (exact 308), and equal-width
+  chains keep EQUAL rounded widths (3 × 93.5) rather than distributing the
+  error.
+- A hairline pinned flush to the bottom edge (exact y 55.5) rounds to y 56 —
+  pushed entirely OUT of the scene. Fixtures that want a visible hairline
+  must keep the exact origin on the integer grid (`constraints_form_row`
+  pins `bottom` at −0.5 with height 0.5 → y 55).
+- Views with intrinsic-size text keep their pixel-grid intrinsic widths
+  (…​.5 values) — those are already on the size grid.
+
+Fixture family `constraints_*` (12 scenes): edge pins, center+size,
+leading/trailing chains (equal + 2× multiplied widths), aspect multipliers,
+inequalities with competing priorities, hugging battle (251 vs 250, both
+orders), compression battle (750 vs 749, both orders, plus a `le` width
+squeeze), mixed frame/constraint siblings + constraint child in frame parent,
+centerX/centerY with multiplier ≠ 1, first/last baseline alignment across
+font sizes, nested constraint containers (3 levels), realistic form row
+(fixed icon, flexible label, hugging value, 0.5-pt separator).
+
 ## Colors
 
 A color is a JSON string, one of:
