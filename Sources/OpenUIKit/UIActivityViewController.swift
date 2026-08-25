@@ -24,6 +24,7 @@
 
 /// UIKit's `UIActivity` — the app-supplied activity. Subclass it and
 /// override `activityTitle` / `perform()`.
+@MainActor
 open class UIActivity {
     public struct ActivityType: Hashable, Sendable, ExpressibleByStringLiteral {
         public let rawValue: String
@@ -52,6 +53,7 @@ open class UIActivity {
     open var activityType: ActivityType? { nil }
     open var activityTitle: String? { nil }
     open var activityImage: UIImage? { nil }
+    @MainActor
     open class var activityCategory: Category { .action }
 
     open func canPerform(withActivityItems activityItems: [Any]) -> Bool { true }
@@ -70,6 +72,7 @@ open class UIActivity {
 /// UIKit's protocol for items that describe themselves to activities.
 /// Declared for source compatibility (16 census uses of `NSItemProvider`
 /// sit next to it); nothing consumes it, because nothing shares.
+@MainActor
 public protocol UIActivityItemSource: AnyObject {
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any
     func activityViewController(_ activityViewController: UIActivityViewController,
@@ -83,6 +86,7 @@ public extension UIActivityItemSource {
                                 subjectForActivityType activityType: UIActivity.ActivityType?) -> String { "" }
 }
 
+@MainActor
 open class UIActivityViewController: UIViewController,
                                      UITableViewDataSource, UITableViewDelegate {
     public typealias CompletionWithItemsHandler =

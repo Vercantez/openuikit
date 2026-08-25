@@ -23,6 +23,7 @@
 //   (UIProgressViewModernVisualElement + image views) is excluded from
 //   layout comparison, so no internal subviews are needed.
 
+@MainActor
 open class UIProgressView: UIView {
     /// Default-style track height in points (iOS 26 modern visual element).
     static let barHeight: CGFloat = 4

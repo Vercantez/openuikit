@@ -17,6 +17,12 @@ import PackageDescription
 
 let package = Package(
     name: "OpenUIKit",
+    // Swift concurrency (`@MainActor`, which the UI classes now carry the
+    // way real UIKit does) needs a 10.15+ deployment target on Darwin;
+    // SwiftPM was already linking these products for macOS 11. Declaring
+    // it makes that explicit instead of leaving it to the default.
+    // Apple-only: it has no effect on the Linux build.
+    platforms: [.macOS(.v11)],
     products: [
         .library(name: "OpenUIKit", targets: ["OpenUIKit"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),

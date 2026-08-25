@@ -47,6 +47,7 @@
 /// HID stack — the host synthesizes presses from its own key events, the
 /// same way it synthesizes touches (see `UIWindow.sendKey`, which stays the
 /// text-input path and is deliberately NOT routed through presses).
+@MainActor
 public final class UIPress {
     public enum Phase: Sendable { case began, changed, ended, cancelled }
     public let phase: Phase
@@ -65,14 +66,17 @@ public final class UIPress {
     }
 }
 
+// `nonisolated` for the same reason as UIView's below: identity only, and
+// Hashable is a nonisolated protocol (see UIViewCompat.swift).
 extension UIPress: Hashable {
-    public static func == (a: UIPress, b: UIPress) -> Bool { a === b }
-    public func hash(into hasher: inout Hasher) {
+    nonisolated public static func == (a: UIPress, b: UIPress) -> Bool { a === b }
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }
 
 /// Event carrying a set of `UIPress`es (UIKit's UIPressesEvent).
+@MainActor
 public final class UIPressesEvent {
     public let timestamp: TimeInterval
     public let allPresses: Set<UIPress>
@@ -87,6 +91,7 @@ public final class UIPressesEvent {
 
 // MARK: - UIResponder
 
+@MainActor
 open class UIResponder {
     public init() {}
 

@@ -11,6 +11,7 @@ private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+@MainActor
 final class AnimationTests: XCTestCase {
 
     private var savedBackend: RenderBackend!

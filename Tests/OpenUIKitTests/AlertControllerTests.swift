@@ -16,6 +16,7 @@ private typealias CGRect = OpenUIKit.CGRect
 
 // MARK: - Actions
 
+@MainActor
 final class UIAlertActionModelTests: XCTestCase {
     func testActionsKeepAddOrder() {
         let ac = UIAlertController(title: "T", message: "M", preferredStyle: .alert)
@@ -123,6 +124,7 @@ final class UIAlertActionModelTests: XCTestCase {
 
 // MARK: - Measured layout
 
+@MainActor
 final class UIAlertLayoutTests: XCTestCase {
     private func card(_ title: String?, _ message: String?,
                       _ actions: [(String, UIAlertAction.Style)],

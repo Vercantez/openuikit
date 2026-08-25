@@ -13,6 +13,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 private func makeNav(width: CGFloat = 393, height: CGFloat = 300)
     -> (UINavigationController, UIViewController) {
     let vc = UIViewController()
@@ -23,6 +24,7 @@ private func makeNav(width: CGFloat = 393, height: CGFloat = 300)
     return (nav, vc)
 }
 
+@MainActor
 final class BarButtonItemTests: XCTestCase {
 
     // MARK: Sizing (measured: platter = content + 2 x 16, never < 44)
@@ -112,6 +114,7 @@ final class BarButtonItemTests: XCTestCase {
     }
 }
 
+@MainActor
 final class BarItemLayoutTests: XCTestCase {
 
     private func toolbar(_ items: [UIBarButtonItem], width: CGFloat = 393) -> UIToolbar {
@@ -160,6 +163,7 @@ final class BarItemLayoutTests: XCTestCase {
     }
 }
 
+@MainActor
 final class NavigationItemTests: XCTestCase {
 
     func testNavigationItemIsLazyAndSeededFromTitle() {
@@ -285,6 +289,7 @@ final class NavigationItemTests: XCTestCase {
 
 // MARK: - Target-action through the M12 selector machinery
 
+@MainActor
 private final class BarActionTarget: SelectorDispatching {
     var taps = 0
     var lastSender: AnyObject?
@@ -299,6 +304,7 @@ private final class BarActionTarget: SelectorDispatching {
     }
 }
 
+@MainActor
 final class BarButtonActionTests: XCTestCase {
     func testTapFiresTheItemsSelector() {
         let target = BarActionTarget()
@@ -334,6 +340,7 @@ final class BarButtonActionTests: XCTestCase {
     }
 }
 
+@MainActor
 final class BarAppearanceTests: XCTestCase {
 
     func testConfigurationsSetTheMeasuredDefaults() {
@@ -431,6 +438,7 @@ final class BarAppearanceTests: XCTestCase {
     }
 }
 
+@MainActor
 final class NavigationToolbarTests: XCTestCase {
     func testToolbarIsHiddenUntilAsked() {
         let (nav, vc) = makeNav()

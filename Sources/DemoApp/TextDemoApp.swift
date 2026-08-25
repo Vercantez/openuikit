@@ -9,6 +9,7 @@
 
 import OpenUIKit
 
+@MainActor
 public enum TextDemoApp {
     public static let windowSize = CGSize(width: 390, height: 560)
 

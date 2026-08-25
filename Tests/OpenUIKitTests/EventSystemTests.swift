@@ -14,6 +14,7 @@ private typealias CGRect = OpenUIKit.CGRect
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
 /// Records every UIResponder touch entry point it receives.
+@MainActor
 private final class TouchRecorder: UIView {
     var log: [String] = []
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -30,6 +31,7 @@ private final class TouchRecorder: UIView {
     }
 }
 
+@MainActor
 final class HitTestConvertTests: XCTestCase {
     func testConvertRoundTripThroughNestedViews() {
         let root = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -123,6 +125,7 @@ final class HitTestConvertTests: XCTestCase {
     }
 }
 
+@MainActor
 final class WindowTouchRoutingTests: XCTestCase {
     func testTouchDeliveryAndLocations() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -160,6 +163,7 @@ final class WindowTouchRoutingTests: XCTestCase {
     }
 }
 
+@MainActor
 final class UIControlTests: XCTestCase {
     func testTapFiresTouchDownAndUpInsideWithHighlight() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -265,6 +269,7 @@ final class UIControlTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TapGestureTests: XCTestCase {
     func testSingleTapRecognizes() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -337,6 +342,7 @@ final class TapGestureTests: XCTestCase {
     }
 }
 
+@MainActor
 final class PanGestureTests: XCTestCase {
     private func makePan() -> (UIWindow, UIView, UIPanGestureRecognizer,
                                () -> [UIGestureRecognizer.State]) {
@@ -417,6 +423,7 @@ final class PanGestureTests: XCTestCase {
     }
 }
 
+@MainActor
 final class LongPressGestureTests: XCTestCase {
     func testLongPressFiresAfterMinimumDuration() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -490,6 +497,7 @@ final class LongPressGestureTests: XCTestCase {
     }
 }
 
+@MainActor
 final class SwitchToggleModelTests: XCTestCase {
     /// The fitted thumb curve must interpolate the golden capture points.
     func testThumbCurveMatchesGoldenSamples() {

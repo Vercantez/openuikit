@@ -52,6 +52,7 @@
 //     label at (10, 48.5, width−20, 0) under the spinner — height ZERO and
 //     alpha 0 with no title, i.e. the fixture cannot see it either.
 
+@MainActor
 open class UIRefreshControl: UIControl {
     /// Measured: the control is always 60 pt tall.
     public static let controlHeight: CGFloat = 60

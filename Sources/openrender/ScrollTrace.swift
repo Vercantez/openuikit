@@ -21,6 +21,7 @@ private struct TraceInputEvent {
     let phase: String
 }
 
+@MainActor
 func runScrollTrace(traceFile: String, outFile: String) throws {
     let data = try Data(contentsOf: URL(fileURLWithPath: traceFile))
     guard let dict = try JSONSerialization.jsonObject(with: data) as? [String: Any],

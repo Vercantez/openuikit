@@ -19,6 +19,7 @@ private typealias CGRect = OpenUIKit.CGRect
 
 // MARK: - A target written the way an app writes one
 
+@MainActor
 final class Recorder: SelectorDispatching {
     var log: [String] = []
     var lastSender: AnyObject?
@@ -54,6 +55,7 @@ final class Recorder: SelectorDispatching {
 
 // MARK: - The name -> method layer
 
+@MainActor
 final class SelectorNameTests: XCTestCase {
     func testActionNameAndArity() {
         XCTAssertEqual(Selector.named("tapped").actionName, "tapped")
@@ -69,6 +71,7 @@ final class SelectorNameTests: XCTestCase {
     }
 }
 
+@MainActor
 final class ActionTableTests: XCTestCase {
     func testDispatchesByArity() {
         let r = Recorder()
@@ -106,6 +109,7 @@ final class ActionTableTests: XCTestCase {
     }
 }
 
+@MainActor
 final class SelectorDispatchDeliveryTests: XCTestCase {
     override func tearDown() {
         SelectorDispatch.onUnresolved = nil
@@ -140,6 +144,7 @@ final class SelectorDispatchDeliveryTests: XCTestCase {
 
 // MARK: - UIControl
 
+@MainActor
 final class ControlSelectorTargetTests: XCTestCase {
     override func tearDown() {
         SelectorDispatch.onUnresolved = nil
@@ -269,6 +274,7 @@ final class ControlSelectorTargetTests: XCTestCase {
 
 // MARK: - UIGestureRecognizer
 
+@MainActor
 final class GestureSelectorTargetTests: XCTestCase {
     func testTapRecognizerInitTargetActionFires() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
@@ -319,10 +325,12 @@ final class GestureSelectorTargetTests: XCTestCase {
 
 // MARK: - The demo screen, wired entirely with selectors
 
+@MainActor
 final class SelectorDemoAppTests: XCTestCase {
     /// The demo app lives in the DemoApp target, which the test target does
     /// not link; this reproduces its wiring against the same machinery so the
     /// scripted `openhost --app selectors` run has a unit-test twin.
+    @MainActor
     final class Screen: SelectorDispatching {
         let button = UIButton(type: .system)
         let toggle = UISwitch()
@@ -393,7 +401,9 @@ final class SelectorDemoAppTests: XCTestCase {
 /// `#selector(...)` expressions are the real thing -- the same expressions a
 /// UIKit app writes. Off Darwin neither `@objc` nor `#selector` compiles at
 /// all (docs/OBJC_RUNTIME.md), which is why this block is conditional.
+@MainActor
 final class GenuineObjCSelectorTests: XCTestCase {
+    @MainActor
     final class Target: SelectorDispatching {
         var log: [String] = []
         @objc func buttonTapped() { log.append("buttonTapped") }

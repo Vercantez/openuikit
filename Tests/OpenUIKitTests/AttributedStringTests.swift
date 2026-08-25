@@ -16,6 +16,7 @@ private typealias NSMutableParagraphStyle = OpenUIKit.NSMutableParagraphStyle
 private typealias NSUnderlineStyle = OpenUIKit.NSUnderlineStyle
 private typealias CGFloat = OpenUIKit.CGFloat
 
+@MainActor
 final class AttributedStringTests: XCTestCase {
     override func setUp() {
         super.setUp()

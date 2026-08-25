@@ -14,6 +14,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class SafeAreaPropagationTests: XCTestCase {
 
     /// Parent 320x480 with insets (44, 10, 34, 12); nine child frames, and
@@ -79,6 +80,7 @@ final class SafeAreaPropagationTests: XCTestCase {
     }
 
     func testSafeAreaInsetsDidChangeFires() {
+        @MainActor
         final class Watcher: UIView {
             var log: [String] = []
             override func safeAreaInsetsDidChange() { log.append("safe") }
@@ -111,6 +113,7 @@ final class SafeAreaPropagationTests: XCTestCase {
     }
 }
 
+@MainActor
 final class LayoutMarginsTests: XCTestCase {
 
     func testDefaultMarginsAreEightAllRound() {
@@ -176,6 +179,7 @@ final class LayoutMarginsTests: XCTestCase {
     }
 }
 
+@MainActor
 final class UILayoutGuideTests: XCTestCase {
 
     /// A custom guide is a first-class solver item: it is positioned by the

@@ -11,6 +11,7 @@ private typealias CGRect = OpenUIKit.CGRect
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 private typealias CGColor = OpenUIKit.CGColor
 
+@MainActor
 final class LayerBridgeTests: XCTestCase {
 
     private var savedCompositor: RenderCompositor!

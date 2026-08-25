@@ -49,6 +49,7 @@ public enum UIDeviceBatteryState: Int, Sendable {
     case unknown = 0, unplugged = 1, charging = 2, full = 3
 }
 
+@MainActor
 public final class UIDevice {
     public static let current = UIDevice()
 

@@ -26,6 +26,7 @@
 //   clipped by cornerRadius only via masksToBounds (the render pass
 //   applies that clip before drawContent).
 
+@MainActor
 public final class UIGradientView: UIView {
     /// Gradient stop colors (≥ 2 for a visible ramp). Resolved against the
     /// view's traitCollection at draw time, like CAGradientLayer.colors

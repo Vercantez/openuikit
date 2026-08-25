@@ -60,6 +60,7 @@ public enum UICollectionViewScrollDirection: Sendable {
     case vertical, horizontal
 }
 
+@MainActor
 open class UICollectionViewFlowLayout: UICollectionViewLayout {
     public typealias ScrollDirection = UICollectionViewScrollDirection
 

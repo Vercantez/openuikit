@@ -19,6 +19,7 @@
 //   4. Sequence cleanup: recognizers whose touches have all ended are reset
 //      to .possible.
 
+@MainActor
 public final class UIEvent {
     public enum EventType: Sendable {
         case touches
@@ -52,6 +53,7 @@ public final class UIEvent {
 
 // MARK: - UIWindow
 
+@MainActor
 open class UIWindow: UIView {
     /// Multi-tap sequence rules (UITouch.tapCount): a touch that begins
     /// within `multiTapInterval` seconds of the previous touch's end and

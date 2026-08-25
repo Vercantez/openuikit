@@ -30,6 +30,7 @@
 
 /// Content canvas (private name — layout dumps stay comparable; real
 /// UIKit's counterpart is _UITextContainerView/_UITextLayoutCanvasView).
+@MainActor
 final class UITextViewCanvasView: UIView {
     weak var owner: UITextView?
 
@@ -56,6 +57,7 @@ final class UITextViewCanvasView: UIView {
 ///   - `textView(_:shouldChangeTextIn:replacementText:)`
 /// `textView(_:shouldInteractWith:in:interaction:)` is NOT declared: it takes
 /// `NSTextAttachment` / `URL`, neither of which exists off Foundation here.
+@MainActor
 public protocol UITextViewDelegate: UIScrollViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool
@@ -78,6 +80,7 @@ public extension UITextViewDelegate {
     func textViewDidChangeSelection(_ textView: UITextView) {}
 }
 
+@MainActor
 open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
 
     /// UIKit's `delegate` on a text view is the text-view delegate; because

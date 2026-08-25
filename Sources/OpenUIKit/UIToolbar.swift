@@ -16,6 +16,7 @@
 // it is stored, and a translucent bar simply keeps whatever flat background
 // its appearance supplies — the measured flat equivalent.
 
+@MainActor
 public final class UIToolbar: UIView, _UIBarItemContainer {
     /// Measured intrinsic bar height (the platter plus its vertical margins).
     public static let defaultHeight: CGFloat = 54

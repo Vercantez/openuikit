@@ -10,6 +10,7 @@ private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 private typealias CGColor = OpenUIKit.CGColor
 
+@MainActor
 final class ShadowGradientTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

@@ -11,6 +11,10 @@
 
 import OpenUIKit
 
+// Harness, not app source: the whole builder runs on the main actor because
+// everything it builds (view controllers, the picker) is main-actor isolated,
+// exactly as it would be in the app's own code.
+@MainActor
 public enum RealAppScreen {
     /// iPhone 15 Pro points — the picker is a bottom sheet over a full screen.
     public static let windowSize = CGSize(width: 393, height: 852)

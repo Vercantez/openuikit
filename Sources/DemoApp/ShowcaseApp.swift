@@ -32,10 +32,12 @@ import OpenUIKit
 /// space automatically (there is no safe-area model in the portable core).
 /// Controllers that anchor content to the bottom, or that scroll, adopt this
 /// so a container can hand the inset down.
+@MainActor
 public protocol BottomInsetAdjustable: AnyObject {
     var extraBottomInset: CGFloat { get set }
 }
 
+@MainActor
 public enum ShowcaseApp {
     /// iPhone-16-ish portrait: tall enough for the large title to have room
     /// to collapse above a scrollable list AND for the floating tab bar.

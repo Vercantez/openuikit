@@ -27,6 +27,7 @@
 // docs/KNOWN_GAPS.md.
 
 /// Shared base of the three bar appearance objects.
+@MainActor
 public class UIBarAppearance {
     /// How the background was configured.
     public enum _Configuration: Sendable { case `default`, opaque, transparent }
@@ -106,6 +107,7 @@ public struct UIBarTitleTextAttributes {
     }
 }
 
+@MainActor
 public final class UINavigationBarAppearance: UIBarAppearance {
     public var titleTextAttributes = UIBarTitleTextAttributes()
     public var largeTitleTextAttributes = UIBarTitleTextAttributes()
@@ -120,10 +122,12 @@ public final class UINavigationBarAppearance: UIBarAppearance {
     }
 }
 
+@MainActor
 public final class UIToolbarAppearance: UIBarAppearance {
     public required init() { super.init() }
 }
 
+@MainActor
 public final class UITabBarAppearance: UIBarAppearance {
     public required init() { super.init() }
 }

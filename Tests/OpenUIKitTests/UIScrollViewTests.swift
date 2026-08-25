@@ -15,6 +15,7 @@ private typealias CGRect = OpenUIKit.CGRect
 
 // MARK: - Closed-form physics
 
+@MainActor
 final class ScrollPhysicsTests: XCTestCase {
 
     /// v(t) = v0·0.998^t_ms; x(t) uses the MEASURED per-millisecond
@@ -137,6 +138,7 @@ final class ScrollPhysicsTests: XCTestCase {
 
 // MARK: - Interaction (window-driven, deterministic timestamps)
 
+@MainActor
 final class UIScrollViewInteractionTests: XCTestCase {
 
     override func setUp() {
@@ -337,6 +339,7 @@ final class UIScrollViewInteractionTests: XCTestCase {
         return (window, sv, button, log)
     }
 
+    @MainActor
     final class Log { var events: [String] = [] }
 
     func testQuickTapDeliversDelayedTouchOnLift() {
@@ -478,6 +481,7 @@ final class UIScrollViewInteractionTests: XCTestCase {
         XCTAssertTrue(button.isTracking)
     }
 
+    @MainActor
     final class NoCancelScrollView: UIScrollView {
         override func touchesShouldCancel(in view: UIView) -> Bool { false }
     }

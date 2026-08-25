@@ -23,6 +23,7 @@ private typealias CGRect = OpenUIKit.CGRect
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGPoint = OpenUIKit.CGPoint
 
+@MainActor
 final class DynamicTypeTests: XCTestCase {
 
     override func setUp() {
@@ -128,6 +129,7 @@ final class DynamicTypeTests: XCTestCase {
     }
 }
 
+@MainActor
 final class SheetDetentTests: XCTestCase {
 
     /// Present a sheet on a 393x852 container with the measured window safe
@@ -207,6 +209,7 @@ final class SheetDetentTests: XCTestCase {
     }
 }
 
+@MainActor
 final class ScrollViewLayoutGuideTests: XCTestCase {
 
     /// Constraints against `contentLayoutGuide` are what drive `contentSize`
@@ -277,6 +280,7 @@ final class ScrollViewLayoutGuideTests: XCTestCase {
     }
 }
 
+@MainActor
 final class ViewCompatTests: XCTestCase {
 
     /// Real UIKit's views are NSObjects, so app code writes `a != b` freely.

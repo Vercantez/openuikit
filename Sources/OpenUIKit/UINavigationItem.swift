@@ -23,6 +23,7 @@
 //  * `backBarButtonItem` set on a controller supplies the back button the
 //    NEXT controller shows.
 
+@MainActor
 public class UINavigationItem {
     public var title: String? {
         didSet { if title != oldValue { _bar?._navigationItemChanged(self) } }

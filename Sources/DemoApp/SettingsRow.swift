@@ -210,6 +210,7 @@ public final class GroupCard: UIView {
 
 /// A grouped-table section header ("GENERAL" style: 13pt, secondaryLabel,
 /// uppercase supplied by the caller).
+@MainActor
 public func makeSectionHeader(_ text: String) -> UILabel {
     let l = UILabel()
     l.text = text
@@ -219,6 +220,7 @@ public func makeSectionHeader(_ text: String) -> UILabel {
 }
 
 /// A grouped-table footer/footnote label (13pt, secondaryLabel, wrapping).
+@MainActor
 public func makeFootnote(_ text: String) -> UILabel {
     let l = UILabel()
     l.text = text

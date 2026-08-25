@@ -10,6 +10,7 @@ private typealias CGRect = OpenCoreGraphics.CGRect
 private typealias CGColor = OpenCoreGraphics.CGColor
 private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
+@MainActor
 final class BackendParityTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

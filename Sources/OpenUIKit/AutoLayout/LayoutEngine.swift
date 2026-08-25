@@ -22,6 +22,7 @@
 //   POINT (ties away from zero) and its size to the nearest 0.5 pt (ties
 //   away from zero), applied AFTER solving with no error redistribution.
 
+@MainActor
 enum LayoutEngine {
     /// Global count of active constraints — fast bail-out so hierarchies
     /// without Auto Layout pay one integer compare per layoutIfNeeded.
@@ -52,6 +53,7 @@ enum LayoutEngine {
     /// only differences are that its "superview" is its `owningView` and that
     /// the solution is written to `layoutFrame` rather than to a frame
     /// (AutoLayout/UILayoutGuide.swift).
+    @MainActor
     private final class ViewVars {
         let view: UIView?
         let guide: UILayoutGuide?

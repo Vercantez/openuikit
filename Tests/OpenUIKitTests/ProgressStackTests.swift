@@ -12,6 +12,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class ProgressViewTests: XCTestCase {
     func testIntrinsicSize() {
         let p = UIProgressView()
@@ -51,6 +52,7 @@ final class ProgressViewTests: XCTestCase {
     }
 }
 
+@MainActor
 final class StackViewTests: XCTestCase {
     // Disambiguate from AppKit/Foundation NSLayoutConstraint on Darwin.
     private typealias Axis = OpenUIKit.NSLayoutConstraint.Axis
@@ -136,6 +138,7 @@ final class StackViewTests: XCTestCase {
 
     /// Stand-in for a UILabel-like view with a fixed intrinsic size, so the
     /// .fill tests don't depend on font rendering.
+    @MainActor
     private final class IntrinsicView: UIView {
         let size: CGSize
         init(_ w: CGFloat, _ h: CGFloat) {

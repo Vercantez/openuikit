@@ -24,8 +24,10 @@
 /// Container-controller view class (same name real UIKit dumps for
 /// UINavigationController / UITabBarController — compare.py treats it as
 /// private and prunes the subtree on both sides).
+@MainActor
 final class UILayoutContainerView: UIView {}
 
+@MainActor
 open class UIViewController: UIResponder {
     public override init() { super.init() }
 

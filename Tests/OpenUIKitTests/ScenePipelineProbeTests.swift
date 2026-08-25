@@ -3,6 +3,7 @@ import XCTest
 
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class ScenePipelineProbeTests: XCTestCase {
     func testHRender() throws {
         guard GlyphFont(path: "/System/Library/Fonts/SFNS.ttf") != nil else {

@@ -17,6 +17,7 @@
 //     unscaled placements land source pixels exactly on destination pixels,
 //     where bilinear degenerates to a lossless copy.
 
+@MainActor
 open class UIImageView: UIView {
     open var image: UIImage?
 

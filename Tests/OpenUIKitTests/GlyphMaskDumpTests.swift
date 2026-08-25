@@ -5,6 +5,7 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class GlyphMaskDumpTests: XCTestCase {
 
     func testDumpMasks() throws {

@@ -1,5 +1,15 @@
 import UIKit
 
+// ADAPTED(harness plumbing): the ONE changed line in this 83-line file.
+// Upstream is `class OptionsPicker`; `public` lets `openrender` reach it
+// across the module boundary, which an in-app target would not need.
+// `@MainActor` is not a divergence in the other direction: this class
+// creates and drives a UIViewController, which real UIKit isolates to the
+// main actor, so the app's own build cannot compile it without isolation
+// either (verified: a nonisolated class touching a @MainActor class is an
+// error in Swift 5 language mode, not a warning). Before this milestone
+// OpenUIKit had no isolation at all and the annotation was simply absent.
+@MainActor
 public class OptionsPicker {
     private var title: String?
     private var optionsController: OptionsPickerRootController?

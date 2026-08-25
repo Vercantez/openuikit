@@ -16,6 +16,7 @@ private typealias Timer = OpenUIKit.Timer
 private let testName = Notification.Name("OpenUIKitTestNotification")
 private let otherName = Notification.Name("OpenUIKitOtherNotification")
 
+@MainActor
 final class NotificationCenterTests: XCTestCase {
 
     func testBlockObserverReceivesPostsAndUserInfo() {
@@ -61,6 +62,7 @@ final class NotificationCenterTests: XCTestCase {
     /// The selector form goes through the same portable dispatch
     /// `UIControl.addTarget(_:action:for:)` uses (docs/OBJC_RUNTIME.md).
     func testSelectorObserver() {
+        @MainActor
         final class Watcher: SelectorDispatching {
             var received: [Notification] = []
             static let actions: ActionTable<Watcher> = [
@@ -84,6 +86,7 @@ final class NotificationCenterTests: XCTestCase {
     }
 
     func testDeallocatedSelectorObserverIsReaped() {
+        @MainActor
         final class Watcher: SelectorDispatching {
             func perform(_ name: String, with sender: Any?) -> Bool { true }
         }
@@ -119,6 +122,7 @@ final class NotificationCenterTests: XCTestCase {
     /// The app lifecycle POSTS the UIKit notifications, which is the whole
     /// point of the type existing (docs/APP_COMPAT.md: ~90 uses).
     func testApplicationLifecyclePostsNotifications() {
+        @MainActor
         final class Delegate: UIApplicationDelegate {}
         let app = UIApplication.shared
         var heard: [String] = []
@@ -149,6 +153,7 @@ final class NotificationCenterTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TimerTests: XCTestCase {
 
     override func setUp() {
@@ -214,6 +219,7 @@ final class TimerTests: XCTestCase {
     }
 
     func testSelectorForm() {
+        @MainActor
         final class Ticker: SelectorDispatching {
             var ticks = 0
             var lastUserInfo: Any?

@@ -7,6 +7,7 @@
 import Foundation
 import OpenUIKit
 
+@MainActor
 func renderScene(file: String, outdir: String) throws {
     let scene = try loadSceneFile(file)
     let result = runScene(scene, warn: warnToStderr)
@@ -81,55 +82,65 @@ if let dir = ProcessInfo.processInfo.environment["OPENUIKIT_FONT_DIR"] {
     }
 }
 
-let args = CommandLine.arguments
-guard args.count >= 3 else {
-    print("usage: openrender render <outdir> <scene.json>...")
-    print("       openrender scrolltrace <oracle-trace.json> <out.json>")
-    print("       openrender realapp <outdir> [assets-dir]")
-    exit(1)
-}
-switch args[1] {
-case "scrolltrace":
-    guard args.count == 4 else {
-        print("usage: openrender scrolltrace <oracle-trace.json> <out.json>")
+// Top-level code in `main.swift` is NOT main-actor isolated, but everything
+// below it builds, lays out and renders UIKit objects, and those are
+// `@MainActor` now -- exactly as they are in real UIKit. The tool is
+// single-threaded and this IS the process's main thread, so state that once
+// here and let the compiler check the rest, instead of hopping actors (which
+// would need an async entry point) or disabling the check per site.
+// `assumeIsolated` traps if the assumption is ever violated.
+try MainActor.assumeIsolated {
+    let args = CommandLine.arguments
+    guard args.count >= 3 else {
+        print("usage: openrender render <outdir> <scene.json>...")
+        print("       openrender scrolltrace <oracle-trace.json> <out.json>")
+        print("       openrender realapp <outdir> [assets-dir]")
         exit(1)
     }
-    do {
-        try runScrollTrace(traceFile: args[2], outFile: args[3])
-        exit(0)
-    } catch {
-        print("FAIL \(args[2]): \(error)")
-        exit(1)
-    }
-case "realapp":
-    // The real-app harness (docs/REAL_APP_TEST.md): unmodified pocket-casts
-    // source, rendered headlessly.
-    let outdir = args[2]
-    let assets = args.count >= 4 ? args[3] : "fixtures/realapp/assets"
-    try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
-    for variant in realAppVariants {
-        let result = runRealApp(variant, assets: assets)
-        try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
-        for (file, data) in result.pngs {
-            try writeBinaryFile(data, path: "\(outdir)/\(file)")
+    switch args[1] {
+    case "scrolltrace":
+        guard args.count == 4 else {
+            print("usage: openrender scrolltrace <oracle-trace.json> <out.json>")
+            exit(1)
         }
-        print("rendered \(result.name)")
+        do {
+            try runScrollTrace(traceFile: args[2], outFile: args[3])
+            exit(0)
+        } catch {
+            print("FAIL \(args[2]): \(error)")
+            exit(1)
+        }
+    case "realapp":
+        // The real-app harness (docs/REAL_APP_TEST.md): unmodified pocket-casts
+        // source, rendered headlessly.
+        let outdir = args[2]
+        let assets = args.count >= 4 ? args[3] : "fixtures/realapp/assets"
+        try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
+        for variant in realAppVariants {
+            let result = runRealApp(variant, assets: assets)
+            try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
+            for (file, data) in result.pngs {
+                try writeBinaryFile(data, path: "\(outdir)/\(file)")
+            }
+            print("rendered \(result.name)")
+        }
+        exit(0)
+    case "render":
+        let outdir = args[2]
+        try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
+        var failures = 0
+        for file in args.dropFirst(3) {
+            do { try renderScene(file: file, outdir: outdir) }
+            catch { print("FAIL \(file): \(error)"); failures += 1 }
+        }
+        if let inkLogPath {
+            let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
+            try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
+        }
+        exit(failures == 0 ? 0 : 1)
+    default:
+        print("unknown command \(args[1])")
+        exit(1)
     }
-    exit(0)
-case "render":
-    let outdir = args[2]
-    try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
-    var failures = 0
-    for file in args.dropFirst(3) {
-        do { try renderScene(file: file, outdir: outdir) }
-        catch { print("FAIL \(file): \(error)"); failures += 1 }
-    }
-    if let inkLogPath {
-        let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
-        try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
-    }
-    exit(failures == 0 ? 0 : 1)
-default:
-    print("unknown command \(args[1])")
-    exit(1)
+
 }

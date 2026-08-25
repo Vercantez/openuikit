@@ -9,6 +9,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class UISwitchTests: XCTestCase {
 
     private func px(_ b: Bitmap, _ x: Int, _ y: Int) -> (r: Int, g: Int, b: Int, a: Int) {

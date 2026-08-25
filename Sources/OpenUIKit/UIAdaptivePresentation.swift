@@ -34,6 +34,7 @@
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 
+@MainActor
 public protocol UIAdaptivePresentationControllerDelegate: AnyObject {
     func adaptivePresentationStyle(for controller: UIPresentationController)
         -> UIModalPresentationStyle
@@ -69,6 +70,7 @@ public extension UIAdaptivePresentationControllerDelegate {
 /// UIKit's sheet delegate refines the adaptive one. Detents are not modelled
 /// (the sheet has exactly one, full-height detent — docs/KNOWN_GAPS.md), so
 /// the detent callback is a declaration and never fires.
+@MainActor
 public protocol UISheetPresentationControllerDelegate: UIAdaptivePresentationControllerDelegate {
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(
         _ sheetPresentationController: UISheetPresentationController)
@@ -81,6 +83,7 @@ public extension UISheetPresentationControllerDelegate {
 
 // MARK: - UIPopoverPresentationControllerDelegate
 
+@MainActor
 public protocol UIPopoverPresentationControllerDelegate: UIAdaptivePresentationControllerDelegate {
     func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController)
     func popoverPresentationControllerShouldDismissPopover(
@@ -102,6 +105,7 @@ public extension UIPopoverPresentationControllerDelegate {
 /// The anchor properties exist so that the ubiquitous
 /// `ac.popoverPresentationController?.sourceView = view` line compiles and
 /// carries its information; nothing draws an arrow (see the file header).
+@MainActor
 public final class UIPopoverPresentationController: UIPresentationController {
     public weak var sourceView: UIView?
     public var sourceRect: CGRect = .zero

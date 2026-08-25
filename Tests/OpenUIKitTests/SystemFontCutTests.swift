@@ -10,6 +10,7 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class SystemFontCutTests: XCTestCase {
     override func setUp() {
         super.setUp()

@@ -8,6 +8,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class AutoresizingTests: XCTestCase {
 
     private func makeParent(_ w: CGFloat = 100, _ h: CGFloat = 100) -> UIView {

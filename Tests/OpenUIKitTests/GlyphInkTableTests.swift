@@ -5,6 +5,7 @@ import XCTest
 
 private typealias CGFloat = OpenUIKit.CGFloat
 
+@MainActor
 final class GlyphInkTableTests: XCTestCase {
 
     // MARK: Phase quantization model (measured against oracle probes)

@@ -21,6 +21,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class MenuLayoutTests: XCTestCase {
 
     private func action(_ title: String, subtitle: String? = nil,
@@ -152,6 +153,7 @@ final class MenuLayoutTests: XCTestCase {
 
 // MARK: - Pixels (against the measured device framebuffer)
 
+@MainActor
 final class MenuRenderTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

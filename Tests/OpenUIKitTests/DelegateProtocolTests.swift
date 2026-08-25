@@ -21,17 +21,28 @@ private typealias IndexPath = OpenUIKit.IndexPath
 
 // MARK: - Compile-only conformances (empty on purpose)
 
+@MainActor
 private final class MinimalTextFieldDelegate: UITextFieldDelegate {}
+@MainActor
 private final class MinimalTextViewDelegate: UITextViewDelegate {}
+@MainActor
 private final class MinimalGestureDelegate: UIGestureRecognizerDelegate {}
+@MainActor
 private final class MinimalScrollDelegate: UIScrollViewDelegate {}
+@MainActor
 private final class MinimalAdaptiveDelegate: UIAdaptivePresentationControllerDelegate {}
+@MainActor
 private final class MinimalSheetDelegate: UISheetPresentationControllerDelegate {}
+@MainActor
 private final class MinimalPopoverDelegate: UIPopoverPresentationControllerDelegate {}
+@MainActor
 private final class MinimalSearchBarDelegate: UISearchBarDelegate {}
+@MainActor
 private final class MinimalTabBarControllerDelegate: UITabBarControllerDelegate {}
+@MainActor
 private final class MinimalNavigationDelegate: UINavigationControllerDelegate {}
 
+@MainActor
 final class DelegateDeclarationTests: XCTestCase {
     /// Every protocol in the cluster can be conformed to with NO members —
     /// the portable stand-in for ObjC's `@objc optional`.
@@ -59,6 +70,7 @@ final class DelegateDeclarationTests: XCTestCase {
 
 // MARK: - UITextFieldDelegate gating
 
+@MainActor
 private final class RecordingFieldDelegate: UITextFieldDelegate {
     var log: [String] = []
     var allowBegin = true
@@ -81,6 +93,7 @@ private final class RecordingFieldDelegate: UITextFieldDelegate {
     }
 }
 
+@MainActor
 final class TextFieldDelegateTests: XCTestCase {
 
     private func makeField(_ d: RecordingFieldDelegate) -> (UIWindow, UITextField) {
@@ -170,6 +183,7 @@ final class TextFieldDelegateTests: XCTestCase {
     }
 
     func testClearIsGatedToo() {
+        @MainActor
         final class NoClear: UITextFieldDelegate {
             func textFieldShouldClear(_ textField: UITextField) -> Bool { false }
         }
@@ -184,6 +198,7 @@ final class TextFieldDelegateTests: XCTestCase {
 
 // MARK: - UITextViewDelegate gating
 
+@MainActor
 private final class RecordingTextViewDelegate: UITextViewDelegate {
     var changes = 0
     var allowChange = true
@@ -194,6 +209,7 @@ private final class RecordingTextViewDelegate: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) { changes += 1 }
 }
 
+@MainActor
 final class TextViewDelegateTests: XCTestCase {
     func testTextViewDelegateGatesAndReports() {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -217,6 +233,7 @@ final class TextViewDelegateTests: XCTestCase {
 
 // MARK: - UIGestureRecognizerDelegate gating
 
+@MainActor
 private final class GestureDelegate: UIGestureRecognizerDelegate {
     var allowBegin = true
     var allowSimultaneous = false
@@ -236,6 +253,7 @@ private final class GestureDelegate: UIGestureRecognizerDelegate {
     }
 }
 
+@MainActor
 final class GestureDelegateTests: XCTestCase {
 
     private func makeWindow() -> (UIWindow, UIView) {
@@ -315,6 +333,7 @@ final class GestureDelegateTests: XCTestCase {
 
 // MARK: - Scroll / tab-bar / adaptive presentation wiring
 
+@MainActor
 private final class RetargetingScrollDelegate: UIScrollViewDelegate {
     var target: CGPoint?
     var seenVelocity: CGPoint = .zero
@@ -327,6 +346,7 @@ private final class RetargetingScrollDelegate: UIScrollViewDelegate {
     }
 }
 
+@MainActor
 final class ScrollDelegateWiringTests: XCTestCase {
 
     private func makeScroll() -> UIScrollView {
@@ -362,6 +382,7 @@ final class ScrollDelegateWiringTests: XCTestCase {
     }
 }
 
+@MainActor
 private final class TabDelegate: UITabBarControllerDelegate {
     var allow = true
     var selected: [String] = []
@@ -373,6 +394,7 @@ private final class TabDelegate: UITabBarControllerDelegate {
     }
 }
 
+@MainActor
 final class TabBarControllerDelegateTests: XCTestCase {
     func testShouldSelectGatesAUserTapAndDidSelectReports() {
         let tab = UITabBarController()
@@ -395,6 +417,7 @@ final class TabBarControllerDelegateTests: XCTestCase {
     }
 }
 
+@MainActor
 private final class AdaptiveDelegate: UIAdaptivePresentationControllerDelegate {
     var allowDismiss = true
     var log: [String] = []
@@ -412,6 +435,7 @@ private final class AdaptiveDelegate: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+@MainActor
 final class AdaptivePresentationDelegateTests: XCTestCase {
 
     /// The interactive sheet drag asks the delegate before it commits, and
@@ -468,6 +492,7 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
 
 // MARK: - UISearchBar
 
+@MainActor
 private final class SearchDelegate: UISearchBarDelegate {
     var texts: [String] = []
     var searches = 0
@@ -479,6 +504,7 @@ private final class SearchDelegate: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) { cancels += 1 }
 }
 
+@MainActor
 final class SearchBarTests: XCTestCase {
     func testTypingAndSearchingReachTheDelegate() {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -501,6 +527,7 @@ final class SearchBarTests: XCTestCase {
 
 // MARK: - UIActivityViewController (the honest stub)
 
+@MainActor
 private final class TestActivity: UIActivity {
     let title: String
     var performed = 0
@@ -510,6 +537,7 @@ private final class TestActivity: UIActivity {
     override func perform() { performed += 1; activityDidFinish(true) }
 }
 
+@MainActor
 final class ActivityViewControllerTests: XCTestCase {
 
     func testDismissWithoutPickingReportsNotCompleted() {

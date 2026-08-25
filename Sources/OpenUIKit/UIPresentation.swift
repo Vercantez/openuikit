@@ -60,10 +60,12 @@ public enum UIModalPresentationStyle {
 /// Container for one modal presentation: dimming + sheet, sized to the
 /// presentation root. Class name is private to compare.py (never part of
 /// scene dumps anyway — layout dumps run before presentation).
+@MainActor
 final class UIPresentationContainerView: UIView {}
 
 /// The dim behind a sheet: swallows every touch (tap-to-dismiss is NOT the
 /// default; minimal isModalInPresentation semantics).
+@MainActor
 final class _UIDimmingView: UIView {
     /// MEASURED: real iOS 26.1 installs a `UIDimmingView` with
     /// backgroundColor black at exactly alpha 0.2 behind a pageSheet.
@@ -137,6 +139,7 @@ public enum UISheetPhysics {
 /// `_UIGrabber [178.5, 64.0, 36.0, 5.0] cornerRadius 2.5` on a 393 pt window
 /// whose sheet starts at y 59, and the rendered golden's ink spans exactly
 /// x 178.5…214.5, y 64.0…69.0 with a half-pixel antialias fringe.
+@MainActor
 public final class _UISheetGrabber: UIView {
     public static let width: CGFloat = 36
     public static let height: CGFloat = 5
@@ -180,6 +183,7 @@ public final class _UISheetGrabber: UIView {
 /// inline. The geometry, colours and interaction are byte-for-byte the M11
 /// ones (same measured constants, same `installInteraction` call), so every
 /// sheet scene, capture and test is unchanged.
+@MainActor
 public final class UISheetPresentationController: UIPresentationController {
     /// Show the grabber. UIKit's default is `false`.
     public var prefersGrabberVisible: Bool = false {
@@ -390,6 +394,7 @@ public final class UISheetPresentationController: UIPresentationController {
 /// code, moved behind `UIViewControllerAnimatedTransitioning` so an app's
 /// `transitioningDelegate` can replace it (docs/APP_COMPAT.md "Custom
 /// transitions").
+@MainActor
 final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     init(presenting: Bool) { self.presenting = presenting }
@@ -430,6 +435,7 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
 /// The sheet platter: fills its bounds with the measured rounded-corner
 /// shape. The presented view sits on top with a clear background — the
 /// platter provides the background color so the corners stay rounded.
+@MainActor
 final class _UIPageSheetView: UIView {
     static let topInset: CGFloat = 59.0
     static let topCornerRadius: CGFloat = 37.7
@@ -711,6 +717,7 @@ extension UIViewController {
 /// condition from opposite sides — OpenUIKit has no require(toFail:)
 /// dependency system (docs/KNOWN_GAPS.md), so the rule is written twice
 /// rather than expressed once.
+@MainActor
 public final class _UISheetPanGestureRecognizer: UIPanGestureRecognizer {
     weak var sheet: _UIPageSheetView?
 

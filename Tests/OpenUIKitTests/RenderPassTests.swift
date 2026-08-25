@@ -11,6 +11,7 @@ private typealias CGRect = OpenUIKit.CGRect
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 private typealias CGColor = OpenUIKit.CGColor
 
+@MainActor
 final class RenderPassTests: XCTestCase {
 
     // MARK: helpers
@@ -289,6 +290,7 @@ final class RenderPassTests: XCTestCase {
 
     // MARK: drawContent ordering
 
+    @MainActor
     private final class ContentView: UIView {
         override func drawContent(in canvas: Canvas, bounds: CGRect) {
             // Deliberately larger than bounds to verify masksToBounds clips

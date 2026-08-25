@@ -6,6 +6,7 @@
 import Foundation
 import XCTest
 
+@MainActor
 final class RenderCLITests: XCTestCase {
     /// Directory containing the built products (the openrender binary).
     private var productsDirectory: URL {

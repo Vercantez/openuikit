@@ -39,6 +39,7 @@ public enum UIActivityIndicatorViewStyle: Sendable {
     case medium, large
 }
 
+@MainActor
 open class UIActivityIndicatorView: UIView {
     public typealias Style = UIActivityIndicatorViewStyle
 

@@ -19,6 +19,7 @@ struct RealAppVariant {
     let makeRoot: () -> UIViewController
 }
 
+@MainActor
 let realAppVariants: [RealAppVariant] = [
     RealAppVariant(name: "realapp_history_light", style: .light, makeRoot: {
         RealAppScreen.makeRoot(picker: RealAppScreen.makeListeningHistoryPicker(theme: .light),
@@ -34,6 +35,7 @@ let realAppVariants: [RealAppVariant] = [
     }),
 ]
 
+@MainActor
 func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     let size = RealAppScreen.windowSize
     let scale: CGFloat = 2

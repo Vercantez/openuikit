@@ -7,6 +7,7 @@ import XCTest
 
 @testable import OpenUIKit
 
+@MainActor
 final class ColorTests: XCTestCase {
     /// Repo root derived from this file's path: Tests/OpenUIKitTests/ColorTests.swift
     static let repoRoot = URL(fileURLWithPath: #filePath)

@@ -10,6 +10,7 @@ private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
 
+@MainActor
 final class UIButtonTests: XCTestCase {
 
     override func setUp() {

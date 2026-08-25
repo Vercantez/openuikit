@@ -1,6 +1,7 @@
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class SmoothProbeTests: XCTestCase {
     func testSmoothedHRow() throws {
         guard let inst = GlyphRasterizer.font(for: .systemFont(ofSize: 17)) else {

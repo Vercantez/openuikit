@@ -1,6 +1,7 @@
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class GeometryTests: XCTestCase {
     func testRectIntersection() {
         let a = CGRect(x: 0, y: 0, width: 10, height: 10)

@@ -42,6 +42,7 @@ extension UIRectEdge {
 /// recognition additionally requires the touch to start within
 /// `edgeActivationWidth` of the configured edge and the drag to be
 /// predominantly horizontal, away from that edge.
+@MainActor
 public final class UIScreenEdgePanGestureRecognizer: UIPanGestureRecognizer {
     public var edges: UIRectEdge = []
     /// iOS accepts edge pans starting within ~20pt of the edge.
@@ -83,6 +84,7 @@ public final class UIScreenEdgePanGestureRecognizer: UIPanGestureRecognizer {
     }
 }
 
+@MainActor
 open class UINavigationController: UIViewController {
     // MARK: Constants (docs/APP_FEEL.md "Navigation transitions")
 

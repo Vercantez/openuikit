@@ -13,6 +13,7 @@ private typealias CGRect = OpenUIKit.CGRect
 private typealias CGPoint = OpenUIKit.CGPoint
 
 /// A view controller that vends key commands and records what ran.
+@MainActor
 private final class CommandVC: UIViewController, SelectorDispatching {
     var log: [String] = []
     var commands: [UIKeyCommand] = []
@@ -32,6 +33,7 @@ private final class CommandVC: UIViewController, SelectorDispatching {
 
 /// A responder that implements an action nothing below it knows — the target
 /// of an "up the chain" dispatch.
+@MainActor
 private final class HandlerVC: UIViewController, SelectorDispatching {
     var log: [String] = []
     static let actions: ActionTable<HandlerVC> = [.action("publish", HandlerVC.publish)]
@@ -41,6 +43,7 @@ private final class HandlerVC: UIViewController, SelectorDispatching {
     func publish() { log.append("publish") }
 }
 
+@MainActor
 final class KeyCommandTests: XCTestCase {
 
     private func makeWindow(root: UIViewController) -> UIWindow {
@@ -163,6 +166,7 @@ final class KeyCommandTests: XCTestCase {
 
 // MARK: - UIAction / UIMenu model
 
+@MainActor
 final class ActionModelTests: XCTestCase {
 
     func testActionIdentifierDefaultsToItsTitle() {
@@ -278,6 +282,7 @@ final class ActionModelTests: XCTestCase {
 
 // MARK: - UIContextMenuInteraction
 
+@MainActor
 private final class ContextDelegate: UIContextMenuInteractionDelegate {
     var willDisplay = 0
     var willEnd = 0
@@ -297,6 +302,7 @@ private final class ContextDelegate: UIContextMenuInteractionDelegate {
                                 animator: UIContextMenuInteractionAnimating?) { willEnd += 1 }
 }
 
+@MainActor
 final class ContextMenuInteractionTests: XCTestCase {
 
     func testLongPressPresentsTheConfiguredMenu() {

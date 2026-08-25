@@ -4,6 +4,7 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class LabelGoldenLayoutTests: XCTestCase {
     override func setUp() {
         super.setUp()

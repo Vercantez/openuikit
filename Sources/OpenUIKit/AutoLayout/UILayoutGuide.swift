@@ -99,6 +99,7 @@ public struct NSDirectionalEdgeInsets: Equatable, Sendable {
 /// gives it the same four variables a view gets — the only difference is
 /// that a guide has no frame to write back to, so the solution lands in
 /// ``layoutFrame`` instead.
+@MainActor
 public final class UILayoutGuide {
     /// The view whose coordinate space ``layoutFrame`` is expressed in. Set
     /// by `UIView.addLayoutGuide(_:)`.

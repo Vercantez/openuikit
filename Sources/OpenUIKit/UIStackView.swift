@@ -25,6 +25,7 @@
 // moved into the real NSLayoutConstraint class with M9
 // (AutoLayout/NSLayoutConstraint.swift); UIStackView keeps using it as-is.
 
+@MainActor
 open class UIStackView: UIView {
     public enum Distribution: Sendable {
         case fill, fillEqually, fillProportionally, equalSpacing, equalCentering
