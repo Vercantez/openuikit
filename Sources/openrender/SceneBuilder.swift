@@ -543,6 +543,13 @@ func makeTableView(_ j: SceneJSON) -> UITableView {
     // Mirror the oracle's pinning: no indicator subviews in static scenes.
     t.showsVerticalScrollIndicator = false
     t.showsHorizontalScrollIndicator = false
+    // Window scenes (oracle2, real UIWindow) carry real-device inset-grouped
+    // metrics: the card side margin measures 16 pt there vs 8 pt in the
+    // offscreen Catalyst oracle (see UITableView.insetGroupedSideInset).
+    // runScene has already latched the scene's "window" flag here.
+    if GlyphInkTable.windowCompositing {
+        t.insetGroupedSideInset = 16
+    }
     let driver = SceneTableDriver(sectionsJSON: j["sections"]?.arrayValue ?? [])
     sceneTableDrivers.append(driver)   // dataSource/delegate are weak
     t.dataSource = driver
