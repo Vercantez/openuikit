@@ -1556,3 +1556,36 @@ dump and score each run's ink against its own area rather than the canvas.
 Until then, treat a high percentage on a text-dense scene as weak evidence,
 and prefer adding a tight fixture (small canvas, one feature) over trusting a
 large scene's score.
+
+## `UIView.superview` is STRONG — the hierarchy is a retain cycle (found 2026-08-25, M14+)
+
+Found by the Objective-C facade prototype (docs/OBJC_FACADE.md), whose first
+ownership check fired on every orderly teardown until the cause was understood.
+
+```swift
+// Sources/OpenUIKit/UIView.swift
+public internal(set) var superview: UIView?        // strong  <- UIKit's is not
+public internal(set) var subviews: [UIView] = []   // strong
+```
+
+Both edges of the parent/child relationship are strong, so **a view hierarchy
+is a reference cycle and is never deallocated** — a parent stays allocated
+after its last external owner lets go, and so does everything under it. Nothing
+in the render/oracle path notices: every fixture builds a tree, renders it, and
+exits.
+
+**What it costs.** Nothing for `openrender` (short-lived). For a long-running
+host — `openhost`, and any real app, which is the whole point of M14 — every
+screen ever built is retained forever. A navigation stack that pushes and pops
+100 detail screens holds 100 view trees.
+
+**The fix and its price.** `weak var superview` closes it, but `superview` is
+read on hot paths (`layoutIfNeeded` walks to the root on every call,
+`traitCollection` recurses up, `window` walks up), and a weak read is not free.
+`unowned(unsafe)` would be free and matches UIKit's actual `assign` semantics,
+at the cost of no dangling-pointer trap. Either way it needs a perf run over
+`scripts/perf_*.json` and a pass over the places that assume a parent stays
+alive (`UIPresentation`'s containers, `UIViewController._view`).
+
+Not fixed in the facade branch on purpose: it is a view-module semantics change
+with a measurable cost, and the bridge works without it.

@@ -13,6 +13,17 @@ The short answer is that it configures, would build in tens of minutes, and
 would then have nothing to link against — an interop stdlib needs an
 Objective-C `Foundation` and `CoreFoundation` that do not exist on Linux.
 
+**Update (2026-08-25, M14+): that wall has a door, and it is not `@objc`.**
+Objective-C *apps* can run on OpenUIKit on Linux — not by giving Swift an ObjC
+runtime, but by putting a plain C ABI between the two worlds and writing the
+`UIView`/`UILabel`/`UIButton`/`UIViewController` classes as **real Objective-C**
+compiled against libobjc2 + gnustep-base. An ObjC app that subclasses `UIView`,
+overrides `layoutSubviews` and `drawRect:`, and wires `@selector`
+target-action renders a screen **byte-identical** to the Swift equivalent.
+Design, ownership rule, limits and cost-to-finish: **docs/OBJC_FACADE.md**.
+Nothing in *this* file changes — Swift-side `@objc` is still impossible off
+Darwin, and the facade never uses it.
+
 ```swift
 // macOS: verbatim UIKit.
 button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
