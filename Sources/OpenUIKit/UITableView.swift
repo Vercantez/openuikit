@@ -96,6 +96,15 @@ final class UITableViewCardView: UIView {
     }
 }
 
+extension UIColor {
+    /// The card fill at alpha 0 — the fade-out endpoint for a cell that
+    /// borrowed the fill to cross between sections (see performUpdates).
+    static let clearCardFill = UIColor(dynamicProvider: { traits in
+        let c = UIColor.secondarySystemGroupedBackground.resolvedCGColor(with: traits)
+        return UIColor(red: c.red, green: c.green, blue: c.blue, alpha: 0)
+    })
+}
+
 // MARK: - UITableView
 
 open class UITableView: UIScrollView {
@@ -354,6 +363,165 @@ open class UITableView: UIScrollView {
         setNeedsMetrics()
     }
 
+    // MARK: Animated updates (M10)
+
+    /// Animate a data-source change.
+    ///
+    /// Rows are matched across the update by `identity`, so a row that moves —
+    /// including between sections — KEEPS THE SAME CELL: any animation already
+    /// running inside it (a checkbox spring, a control's press feedback)
+    /// continues uninterrupted while the cell travels from its old slot to its
+    /// new one. Section cards, headers, footers and every other visible row
+    /// animate into place around it in the same block, so the whole relayout
+    /// reads as one coordinated move. Rows with no counterpart before the
+    /// update fade in; a row that moves between sections is raised above its
+    /// neighbours for the flight.
+    ///
+    /// This is the portable stand-in for UIKit's `moveRow(at:to:)` /
+    /// `insertRows(at:with:)` batch updates: instead of enumerating the
+    /// individual moves, the caller mutates its model inside `updates` and
+    /// supplies a stable identity per index path.
+    ///
+    /// `completion` runs on the host clock (`UIView.animate` semantics).
+    public func performUpdates(withDuration duration: Double,
+                               delay: Double = 0,
+                               options: UIView.AnimationOptions = .curveEaseInOut,
+                               identity: (IndexPath) -> AnyHashable,
+                               updates: () -> Void,
+                               completion: (() -> Void)? = nil) {
+        guard dataSource != nil, bounds.width > 0, !inTile else {
+            updates()
+            reloadData()
+            completion?()
+            return
+        }
+        metricsIfNeeded()
+
+        // Snapshot which cell and which frame currently represent each
+        // identity, plus the section chrome.
+        var oldCells: [AnyHashable: UITableViewCell] = [:]
+        var oldFrames: [AnyHashable: CGRect] = [:]
+        var oldSections: [AnyHashable: Int] = [:]
+        for (path, cell) in visibleCellsByPath {
+            let id = identity(path)
+            oldCells[id] = cell
+            oldFrames[id] = cell.frame
+            oldSections[id] = path.section
+        }
+        let oldCards = cardViews.mapValues { $0.frame }
+        let oldHeaders = headerViews.mapValues { $0.frame }
+        let oldFooters = footerViews.mapValues { $0.frame }
+        let selectedID = indexPathForSelectedRow.map(identity)
+
+        // Apply the model change and re-key the live cells onto their new
+        // index paths BEFORE tiling: a moved row must be re-tiled as "already
+        // visible" rather than retired and re-dequeued (which would recycle
+        // it and reset its state). inTile suppresses the retile that a
+        // contentSize-driven offset clamp would otherwise trigger halfway
+        // through the re-key.
+        inTile = true
+        updates()
+        setNeedsMetrics()
+        metricsIfNeeded()
+
+        var rekeyed: [IndexPath: UITableViewCell] = [:]
+        var kept = Set<ObjectIdentifier>()
+        var movedBetweenSections: [UITableViewCell] = []
+        let needed = neededViews().cells
+        for path in needed {
+            let id = identity(path)
+            guard let cell = oldCells[id] else { continue }
+            rekeyed[path] = cell
+            kept.insert(ObjectIdentifier(cell))
+            if oldSections[id] != path.section { movedBetweenSections.append(cell) }
+        }
+        for (_, cell) in visibleCellsByPath
+        where !kept.contains(ObjectIdentifier(cell)) {
+            cell.removeFromSuperview()
+            recycle(cell)
+        }
+        visibleCellsByPath = rekeyed
+        if let selectedID {
+            indexPathForSelectedRow = needed.first { identity($0) == selectedID }
+        }
+        inTile = false
+
+        // Tile: creates the genuinely new cells, re-frames everything to the
+        // post-update geometry, rebuilds the section chrome.
+        retile()
+
+        // Rewind to the pre-update geometry, then animate forward. Assigning
+        // the model frame back and re-assigning it inside the block is exactly
+        // what UIView.animate records (from → to); the model ends up correct
+        // either way.
+        var moves: [(view: UIView, target: CGRect)] = []
+        var fadeIns: [UIView] = []
+        for (path, cell) in visibleCellsByPath {
+            let target = cell.frame
+            if let old = oldFrames[identity(path)], old != target {
+                cell.frame = old
+                moves.append((cell, target))
+            } else if oldFrames[identity(path)] == nil {
+                cell.alpha = 0
+                fadeIns.append(cell)
+            }
+        }
+        func rewindChrome<V: UIView>(_ views: [Int: V], _ old: [Int: CGRect]) {
+            for (s, v) in views {
+                guard let o = old[s], o != v.frame else { continue }
+                let target = v.frame
+                v.frame = o
+                moves.append((v, target))
+            }
+        }
+        rewindChrome(cardViews, oldCards)
+        rewindChrome(headerViews, oldHeaders)
+        rewindChrome(footerViews, oldFooters)
+
+        // A row crossing between sections flies over the gap between two
+        // cards, where nothing is behind it — and in a grouped table the
+        // cell itself is transparent (the card draws the fill). Lend it the
+        // card's fill for the flight, then dissolve it over the last beat,
+        // once the cell is already sitting inside the destination card: a
+        // hard restore would square off the card's 26 pt corners for the few
+        // frames the cell spends landing on them.
+        let travelFadeDuration = Swift.min(0.12, duration)
+        var travellers: [UITableViewCell] = []
+        for cell in movedBetweenSections {
+            bringSubviewToFront(cell)
+            guard style != .plain, cell.backgroundColor == nil else { continue }
+            cell.backgroundColor = .secondarySystemGroupedBackground
+            travellers.append(cell)
+            // Fade to a CLEAR copy of the card fill, not to nil: a nil
+            // endpoint interpolates as transparent BLACK, which drags the
+            // dissolving row through grey. The completion restores nil.
+            UIView.animate(withDuration: travelFadeDuration,
+                           delay: delay + duration - travelFadeDuration,
+                           options: .curveLinear,
+                           animations: { cell.backgroundColor = .clearCardFill })
+        }
+
+        guard !moves.isEmpty || !fadeIns.isEmpty else {
+            completion?()
+            return
+        }
+        let animated = moves.map(\.view) + fadeIns
+        UIView.animate(withDuration: duration, delay: delay, options: options,
+                       animations: {
+            for m in moves { m.view.frame = m.target }
+            for v in fadeIns { v.alpha = 1 }
+        }, completion: { _ in
+            // The portable engine has no run loop to strip finished
+            // animations, and a finished animation still pins the layer to
+            // its recorded end value — which would override the frames the
+            // next tiling pass assigns. Drop them here (see UIView).
+            let now = OpenUIKitRuntime.animationTime
+            for v in animated { v._removeFinishedAnimations(at: now) }
+            for cell in travellers { cell.backgroundColor = nil }
+            completion?()
+        })
+    }
+
     // MARK: Cell reuse
 
     private var cellPool: [String: [UITableViewCell]] = [:]
@@ -427,14 +595,9 @@ open class UITableView: UIScrollView {
     /// clamp offsets; never recurse.
     private var inTile = false
 
-    func retile() {
-        guard !inTile else { return }
-        inTile = true
-        defer { inTile = false }
-
-        guard dataSource != nil, bounds.width > 0 else { return }
-        metricsIfNeeded()
-
+    /// Rows and sections that intersect the visible rect at the current
+    /// offset, in ascending order. Assumes metrics are up to date.
+    func neededViews() -> (cells: [IndexPath], sections: [Int]) {
         let visTop = contentOffset.y
         let visBottom = visTop + bounds.height
 
@@ -463,6 +626,19 @@ open class UITableView: UIScrollView {
                 r += 1
             }
         }
+        return (neededCells, neededSections)
+    }
+
+    func retile() {
+        guard !inTile else { return }
+        inTile = true
+        defer { inTile = false }
+
+        guard dataSource != nil, bounds.width > 0 else { return }
+        metricsIfNeeded()
+
+        let (neededCells, neededSections) = neededViews()
+        let visTop = contentOffset.y
 
         // Retire views that scrolled out.
         let neededCellSet = Set(neededCells)

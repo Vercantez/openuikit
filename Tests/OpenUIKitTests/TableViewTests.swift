@@ -415,3 +415,170 @@ final class TableViewControllerTests: XCTestCase {
         XCTAssertEqual(vc.didSelect, [IndexPath(row: 2, section: 0)])
     }
 }
+
+// MARK: - Animated updates (identity-matched moves)
+
+/// Two sections holding reference-typed items, so an item's identity is
+/// stable while it moves between them (the Tasks app's shape).
+private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+    final class Item { let name: String; init(_ n: String) { name = n } }
+    var sections: [[Item]] = [
+        [Item("a"), Item("b"), Item("c")],
+        [Item("x")],
+    ]
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection s: Int) -> Int {
+        sections[s].count
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection s: Int) -> String? {
+        s == 0 ? "Open" : "Done"
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "row")
+            ?? UITableViewCell(style: .default, reuseIdentifier: "row")
+        cell.textLabel.text = sections[indexPath.section][indexPath.row].name
+        return cell
+    }
+
+    func identity(_ p: IndexPath) -> AnyHashable {
+        ObjectIdentifier(sections[p.section][p.row])
+    }
+}
+
+final class TableViewAnimatedUpdateTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        OpenUIKitRuntime.animationTime = 0
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.animationTime = 0
+        super.tearDown()
+    }
+
+    private func makeTable() -> (UIWindow, UITableView, MovableSource) {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 600))
+        let source = MovableSource()
+        let table = UITableView(frame: window.bounds, style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    /// The whole point of performUpdates: a row that changes section keeps
+    /// its EXACT cell (so animations running inside it survive), and the
+    /// cell animates from the slot it used to occupy to its new one.
+    func testMovedRowKeepsItsCellAndAnimatesFromTheOldSlot() {
+        let (window, table, source) = makeTable()
+        let moving = source.sections[0][1]              // "b"
+        let cell = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        let oldFrame = cell.frame
+
+        table.performUpdates(withDuration: 0.35,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].remove(at: 1)
+            source.sections[1].insert(moving, at: 0)
+        })
+        window.layoutIfNeeded()
+
+        let newPath = IndexPath(row: 0, section: 1)
+        XCTAssertTrue(table.cellForRow(at: newPath) === cell,
+                      "the moved row must keep its cell, not be re-dequeued")
+        XCTAssertEqual(cell.textLabel.text, "b")
+        // Model frame = destination; a position animation carries it there
+        // from where it was.
+        XCTAssertEqual(cell.frame, table.rectForRow(at: newPath))
+        XCTAssertNotEqual(cell.frame, oldFrame)
+        let move = cell.animations.first { $0.property == .position }
+        XCTAssertNotNil(move, "the moved cell should animate its position")
+        if case let .point(from)? = move?.from {
+            XCTAssertEqual(from.y, oldFrame.midY, accuracy: 0.001)
+        } else {
+            XCTFail("expected a point-valued position animation")
+        }
+        // A grouped cell is transparent (the card draws the fill), so it
+        // borrows the card colour for the flight across the gap.
+        XCTAssertNotNil(cell.backgroundColor)
+    }
+
+    /// Rows that stay put still animate into their new slots, and the
+    /// section cards resize with them — one coordinated move.
+    func testNeighboursAndCardsAnimateAroundTheMove() {
+        let (window, table, source) = makeTable()
+        let moving = source.sections[0][0]              // "a", the first row
+        let follower = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        let followerOld = follower.frame
+        let cardOld = table.cardViews[0]!.frame
+
+        table.performUpdates(withDuration: 0.35,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].remove(at: 0)
+            source.sections[1].append(moving)
+        })
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 0, section: 0)) === follower)
+        XCTAssertEqual(follower.frame.minY, followerOld.minY - followerOld.height,
+                       accuracy: 0.001)
+        XCTAssertNotNil(follower.animations.first { $0.property == .position })
+        let card = table.cardViews[0]!
+        XCTAssertEqual(card.frame.height, cardOld.height - followerOld.height,
+                       accuracy: 0.001)
+        XCTAssertNotNil(card.animations.first { $0.property == .bounds })
+    }
+
+    /// A row with no counterpart before the update fades in; everything
+    /// settles on the model values once the clock passes the end (and the
+    /// finished animations are dropped, so later tiling can re-frame).
+    func testInsertedRowFadesInAndAnimationsAreDroppedOnCompletion() {
+        let (window, table, source) = makeTable()
+        table.performUpdates(withDuration: 0.3,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].insert(MovableSource.Item("new"), at: 0)
+        })
+        window.layoutIfNeeded()
+
+        let fresh = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(fresh.textLabel.text, "new")
+        XCTAssertEqual(fresh.alpha, 1, "the model alpha is the final value")
+        let fade = fresh.animations.first { $0.property == .alpha }
+        XCTAssertNotNil(fade)
+        if case let .scalar(from)? = fade?.from { XCTAssertEqual(from, 0) }
+
+        OpenUIKitRuntime.animationTime = 0.4
+        window.tick(timestamp: 0.4)
+        XCTAssertTrue(fresh.animations.isEmpty,
+                      "finished animations must be dropped or they keep "
+                      + "overriding the frames later tiling assigns")
+        let moved = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        XCTAssertTrue(moved.animations.isEmpty)
+        XCTAssertNil(moved.backgroundColor)
+    }
+
+    /// Reuse still holds across an update: nothing leaks, and a row that
+    /// disappears from the visible set goes back to the pool.
+    func testUpdateKeepsRowCountAndGeometryConsistent() {
+        let (window, table, source) = makeTable()
+        table.performUpdates(withDuration: 0.2,
+                             identity: { source.identity($0) },
+                             updates: {
+            let item = source.sections[0].removeLast()
+            source.sections[1].insert(item, at: 0)
+        })
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 2)
+        XCTAssertEqual(table.numberOfRows(inSection: 1), 2)
+        XCTAssertEqual(table.visibleCells.count, 4)
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["a", "b", "c", "x"])
+    }
+}

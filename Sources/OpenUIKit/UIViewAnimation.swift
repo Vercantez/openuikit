@@ -276,6 +276,18 @@ extension UIView {
 
     /// Drop all recorded animations (the presentation snaps to the model).
     public func removeAllAnimations() { animations.removeAll() }
+
+    /// Drop only the animations that have already ENDED at `time`.
+    ///
+    /// CA removes an animation from the layer when it completes; the portable
+    /// engine has no run loop to do that, so a finished animation keeps
+    /// pinning the presentation to its recorded `to` value and would override
+    /// any later model change (a container re-framing the view, say). Code
+    /// that reassigns an animated property after its animation finished calls
+    /// this from the completion handler.
+    func _removeFinishedAnimations(at time: Double) {
+        animations.removeAll { time >= $0.begin + $0.delay + $0.duration }
+    }
 }
 
 // MARK: - Spring duration fit (UIKit model)
