@@ -124,24 +124,22 @@ open class UINavigationController: UIViewController {
     // MARK: Container view
 
     open override func loadView() {
-        let v = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        let v = UILayoutContainerView(frame: CGRect(x: 0, y: 0,
+                                                    width: 390, height: 844))
         v.backgroundColor = .systemBackground
         view = v
 
-        let barH = UINavigationBar.barHeight
-        contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
-                                   height: v.bounds.height - barH)
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentView.clipsToBounds = true
         v.addSubview(contentView)
 
-        navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
-                                     height: barH)
         navigationBar.autoresizingMask = [.flexibleWidth]
+        navigationBar._controller = self
         navigationBar.onBackTapped = { [weak self] in
             self?.popViewController(animated: true)
         }
         v.addSubview(navigationBar)
+        updateContainerLayout()
 
         let edge = UIScreenEdgePanGestureRecognizer { [weak self] r in
             self?.handleEdgePan(r as! UIScreenEdgePanGestureRecognizer)
@@ -167,6 +165,85 @@ open class UINavigationController: UIViewController {
         cv.frame = contentView.bounds
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentView.addSubview(cv)
+        bindContentScrollView(of: vc)
+    }
+
+    // MARK: Large-title container mode (M10)
+
+    /// Frame the bar + content area for the current bar mode. Classic mode:
+    /// opaque bar above a clipped content area. Large-title mode (iOS 26):
+    /// content fills the WHOLE view and underlaps the transparent bar; the
+    /// bar overlays the top `largeTitleExpandedInset` points.
+    func updateContainerLayout() {
+        guard isViewLoaded else { return }
+        let v = view!
+        if navigationBar.prefersLargeTitles {
+            contentView.frame = v.bounds
+            navigationBar.frame = CGRect(
+                x: 0, y: 0, width: v.bounds.width,
+                height: UINavigationBar.largeTitleExpandedInset)
+        } else {
+            let barH = UINavigationBar.barHeight
+            contentView.frame = CGRect(x: 0, y: barH, width: v.bounds.width,
+                                       height: v.bounds.height - barH)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
+                                         height: barH)
+        }
+    }
+
+    /// navigationBar.prefersLargeTitles flipped: re-frame the container and
+    /// re-bind the top controller's content scroll view.
+    func _largeTitlesModeChanged() {
+        updateContainerLayout()
+        if let top = topViewController, top.isViewLoaded,
+           top.view.superview === contentView {
+            bindContentScrollView(of: top)
+        }
+    }
+
+    /// A child's setContentScrollView(_:) changed while it is on screen.
+    func _contentScrollViewDidChange(_ vc: UIViewController) {
+        guard vc === topViewController, isViewLoaded,
+              vc.viewIfLoaded?.superview === contentView else { return }
+        bindContentScrollView(of: vc)
+    }
+
+    /// Bind the bar's large-title tracking to `vc`'s content scroll view:
+    /// reserve the expanded inset, settle at the expanded rest offset when
+    /// the scroll view was still at its default offset, and observe it.
+    func bindContentScrollView(of vc: UIViewController) {
+        guard navigationBar.prefersLargeTitles,
+              let scroll = vc._contentScrollView else {
+            navigationBar.trackedScrollView = nil
+            return
+        }
+        let inset = UINavigationBar.largeTitleExpandedInset
+        if scroll.contentInset.top != inset {
+            let wasAtRest = scroll.contentOffset.y == -scroll.contentInset.top
+            scroll.contentInset.top = inset
+            if wasAtRest {
+                scroll.contentOffset.y = -inset
+            }
+        }
+        scroll.delegate = self
+        navigationBar.trackedScrollView = scroll
+        navigationBar.updateFromScroll()
+    }
+
+    /// Snap a release inside the large-title zone to the nearest rest state
+    /// (fully expanded / fully collapsed), like UIKit.
+    func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
+        guard navigationBar.prefersLargeTitles,
+              scroll === navigationBar.trackedScrollView else { return }
+        let d = scroll.contentOffset.y + UINavigationBar.largeTitleExpandedInset
+        guard d > 0.5, d < UINavigationBar.largeTitleZoneHeight - 0.5 else { return }
+        let target: CGFloat =
+            d < UINavigationBar.largeTitleZoneHeight / 2
+                ? 0 : UINavigationBar.largeTitleZoneHeight
+        scroll.setContentOffset(
+            CGPoint(x: scroll.contentOffset.x,
+                    y: target - UINavigationBar.largeTitleExpandedInset),
+            animated: true)
     }
 
     /// Back-button label for the stack position `index` on top: the previous
@@ -562,6 +639,24 @@ open class UINavigationController: UIViewController {
     /// Any navigation transition still in flight (host redraw hint).
     public static var _hasActiveTransition: Bool {
         transitioning.contains { $0.nav?.activeTransition != nil }
+    }
+}
+
+// MARK: Large-title scroll observation (M10)
+
+extension UINavigationController: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView === navigationBar.trackedScrollView else { return }
+        navigationBar.updateFromScroll()
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView,
+                                         willDecelerate: Bool) {
+        if !willDecelerate { snapLargeTitleIfNeeded(scrollView) }
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        snapLargeTitleIfNeeded(scrollView)
     }
 }
 

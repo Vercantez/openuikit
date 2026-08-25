@@ -70,6 +70,19 @@ open class UIViewController {
         didSet { navigationController?._titleDidChange(self) }
     }
 
+    // MARK: Content scroll view (M10 large titles)
+
+    /// The scroll view a parent UINavigationController's bar tracks for
+    /// large-title expansion/collapse (analog of UIKit's
+    /// `setContentScrollView(_:for:)`). Explicit binding only — there is no
+    /// automatic detection.
+    public internal(set) weak var _contentScrollView: UIScrollView?
+
+    public func setContentScrollView(_ scrollView: UIScrollView?) {
+        _contentScrollView = scrollView
+        navigationController?._contentScrollViewDidChange(self)
+    }
+
     // MARK: Tab bar item (M10)
 
     /// The item representing this controller in a parent UITabBarController.

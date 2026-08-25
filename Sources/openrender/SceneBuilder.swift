@@ -436,6 +436,120 @@ func makeButton(_ j: SceneJSON) -> UIButton {
     return b
 }
 
+// MARK: - UITableView (spec v5 — M10 chrome)
+
+/// In-scene UITableView data source/delegate built from the scene JSON's
+/// "sections" (mirrors the oracle's SceneTableDriver: fresh cells, no
+/// reuse — fully deterministic). Retained for the process lifetime because
+/// UITableView holds dataSource/delegate weakly, like real UIKit.
+var sceneTableDrivers: [SceneTableDriver] = []
+
+final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
+    struct Row {
+        let style: UITableViewCell.CellStyle
+        let text: String
+        let detailText: String?
+        let accessory: UITableViewCell.AccessoryType
+        let selected: Bool
+    }
+    struct Section {
+        let header: String?
+        let footer: String?
+        let rows: [Row]
+    }
+    let sections: [Section]
+
+    init(sectionsJSON: [JSONValue]) {
+        sections = sectionsJSON.map { sv in
+            guard let s = sv.objectValue else { fatalError("bad table section") }
+            let rows = (s["rows"]?.arrayValue ?? []).map { rv -> Row in
+                guard let r = rv.objectValue else { fatalError("bad table row") }
+                let style: UITableViewCell.CellStyle
+                switch r["style"]?.stringValue ?? "default" {
+                case "default": style = .default
+                case "subtitle": style = .subtitle
+                case "value1": style = .value1
+                case let x: fatalError("bad cell style '\(x)'")
+                }
+                let accessory: UITableViewCell.AccessoryType
+                switch r["accessory"]?.stringValue ?? "none" {
+                case "none": accessory = .none
+                case "disclosureIndicator": accessory = .disclosureIndicator
+                case "checkmark": accessory = .checkmark
+                case let x: fatalError("bad accessory '\(x)'")
+                }
+                return Row(style: style, text: r["text"]?.stringValue ?? "",
+                           detailText: r["detailText"]?.stringValue,
+                           accessory: accessory,
+                           selected: r["selected"]?.boolValue == true)
+            }
+            return Section(header: s["header"]?.stringValue,
+                           footer: s["footer"]?.stringValue, rows: rows)
+        }
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].rows.count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let row = sections[indexPath.section].rows[indexPath.row]
+        // Fresh cell every time — no reuse, fully deterministic (the oracle
+        // driver does the same; reuse is exercised by the unit tests).
+        let cell = UITableViewCell(style: row.style, reuseIdentifier: nil)
+        cell.textLabel.text = row.text
+        cell.detailTextLabel?.text = row.detailText
+        cell.accessoryType = row.accessory
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].header
+    }
+
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        sections[section].footer
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        // The real UIKit oracle self-sizes; the measured subtitle cell is
+        // taller than the default (portable self-sizing is out of scope —
+        // docs/KNOWN_GAPS.md).
+        sections[indexPath.section].rows[indexPath.row].style == .subtitle
+            ? UITableViewCell.subtitleRowHeight
+            : UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        // Static scene: a "selected": true row shows the selection highlight.
+        if sections[indexPath.section].rows[indexPath.row].selected {
+            cell.setSelected(true, animated: false)
+        }
+    }
+}
+
+func makeTableView(_ j: SceneJSON) -> UITableView {
+    let style: UITableView.Style
+    switch j["style"]?.stringValue ?? "plain" {
+    case "plain": style = .plain
+    case "insetGrouped": style = .insetGrouped
+    case let s: fatalError("bad table style '\(s)'")
+    }
+    let t = UITableView(frame: .zero, style: style)
+    // Mirror the oracle's pinning: no indicator subviews in static scenes.
+    t.showsVerticalScrollIndicator = false
+    t.showsHorizontalScrollIndicator = false
+    let driver = SceneTableDriver(sectionsJSON: j["sections"]?.arrayValue ?? [])
+    sceneTableDrivers.append(driver)   // dataSource/delegate are weak
+    t.dataSource = driver
+    t.delegate = driver
+    return t
+}
+
 /// Classes the scene spec defines but OpenUIKit does not implement yet.
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
@@ -444,9 +558,7 @@ func makeButton(_ j: SceneJSON) -> UIButton {
 // Substituting a plain UIView keeps `openrender render fixtures/scenes/*`
 // running end-to-end (the scenes FAIL compare until implemented, they just
 // don't abort the batch).
-let notYetImplementedClasses: Set<String> = [
-    "UITableView",
-]
+let notYetImplementedClasses: Set<String> = []
 
 // MARK: - Chrome containers (scene spec v5 — M10, viewcontroller module)
 
@@ -463,6 +575,56 @@ let chromeRootClasses: Set<String> = ["UINavigationStack", "UITabBarStack"]
 /// (views do not retain their controllers). Lives for the process — same
 /// pattern as the oracle's sceneTableDrivers.
 var sceneRetainedControllers: [UIViewController] = []
+
+/// Build the UINavigationStack scene root: a real UINavigationController
+/// (one content VC hosting a full-size scroll view with the scene subviews
+/// as content), mirroring the oracle's construction. `contentOffset` is
+/// applied LIVE after the tree is laid out (the bar tracks observed
+/// offsets) — see applyPendingChromeActions, called from runScene.
+func makeNavigationStack(_ j: SceneJSON, scale: CGFloat,
+                         warn: (String) -> Void) -> UIView {
+    let stack = UINavigationStack()
+    let contentVC = UIViewController()
+    contentVC.view.backgroundColor = .systemBackground
+    contentVC.title = j["title"]?.stringValue
+    let scroll = UIScrollView(frame: contentVC.view.bounds)
+    scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    scroll.showsVerticalScrollIndicator = false
+    scroll.showsHorizontalScrollIndicator = false
+    if let cs = numArray(j["contentSize"]), cs.count == 2 {
+        scroll.contentSize = CGSize(width: cs[0], height: cs[1])
+    }
+    for sub in j["subviews"]?.arrayValue ?? [] {
+        guard let subJ = sub.objectValue else { fatalError("bad subview in UINavigationStack") }
+        scroll.addSubview(buildView(subJ, scale: scale, warn: warn))
+    }
+    contentVC.view.addSubview(scroll)
+    contentVC.setContentScrollView(scroll)
+    let nav = UINavigationController(rootViewController: contentVC)
+    nav.navigationBar.prefersLargeTitles = j["largeTitle"]?.boolValue == true
+    nav.view.frame = stack.bounds
+    nav.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    stack.addSubview(nav.view)
+    sceneRetainedControllers.append(nav)
+    // Offsets only after the real frames exist (mirrors the oracle's
+    // post-attach application; the bar recomputes for observed offsets).
+    if let co = numArray(j["contentOffset"]), co.count == 2 {
+        pendingChromeActions.append {
+            scroll.contentOffset = CGPoint(x: co[0], y: co[1])
+        }
+    }
+    return stack
+}
+
+/// Deferred chrome setup (live offset application) run by runScene after
+/// the initial layout pass.
+var pendingChromeActions: [() -> Void] = []
+
+func applyPendingChromeActions() {
+    let actions = pendingChromeActions
+    pendingChromeActions = []
+    for a in actions { a() }
+}
 
 /// Build the UITabBarStack scene root: a real UITabBarController whose
 /// items get titles + synthesized template images; the selected item's
@@ -510,8 +672,10 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
+    case "UITableView": v = makeTableView(j)
     case "UITextField": v = makeTextField(j)
     case "UITextView": v = makeTextView(j)
+    case "UINavigationStack": v = makeNavigationStack(j, scale: scale, warn: warn)
     case "UITabBarStack": v = makeTabBarStack(j, scale: scale, warn: warn)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
@@ -522,7 +686,10 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
 
     applyCommon(v, j, name: cls)
 
-    if let subs = j["subviews"]?.arrayValue {
+    // Chrome containers consume "subviews" themselves (they live in the
+    // controller's content scroll view, not on the wrapper).
+    if let subs = j["subviews"]?.arrayValue, !(v is UINavigationStack),
+       !(v is UITabBarStack) {
         for sub in subs {
             guard let subJ = sub.objectValue else { fatalError("bad subview in \(cls)") }
             let child = buildView(subJ, scale: scale, warn: warn)
@@ -897,6 +1064,9 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     if let specs = constraintSpecs { activateConstraints(specs, container: container) }
     container.overrideUserInterfaceStyle = style
     container.setNeedsLayout()
+    container.layoutIfNeeded()
+    // Chrome scenes (spec v5): live offsets after the real frames exist.
+    applyPendingChromeActions()
     container.layoutIfNeeded()
 
     var views: [JSONValue] = []

@@ -96,8 +96,52 @@ public final class UINavigationBar: UIView {
     /// Total bar height.
     public static var barHeight: CGFloat { statusBarInset + contentHeight }
 
+    // MARK: Large-title metrics (M10 — measured from golden/navbar_*)
+    //
+    // iOS 26 bars are TRANSPARENT at rest; the expanded state reserves
+    // 116 pt of content inset: 10 (top padding) + 54 (inline bar zone) +
+    // 52 (large-title zone). The 34 pt-bold large title sits at x = 20
+    // (label frame [20, 3, w, 40.5] inside the large-title zone) and
+    // scrolls away 1:1 with the content; the centered 17 pt inline title
+    // (center y = 32) fades in as the large title leaves. Content that
+    // slides under the bar region gets the scroll-edge-effect "pocket":
+    // a blurred, background-washed copy of the content (see updatePocket).
+
+    /// Expanded adjusted content inset (the rest offset is -116).
+    public static let largeTitleExpandedInset: CGFloat = 116
+    static let largeInlineZoneTop: CGFloat = 10
+    static let largeInlineZoneHeight: CGFloat = 54
+    static let largeTitleZoneHeight: CGFloat = 52
+    static let largeTitleX: CGFloat = 20
+    static let largeTitleLabelY: CGFloat = 67       // 10 + 54 + 3
+    static let largeTitleLabelHeight: CGFloat = 40.5
+    static let largeTitleFontSize: CGFloat = 34
+    static let largeInlineTitleCenterY: CGFloat = 32
+
     /// Set by UINavigationController; fired on back-button touchUpInside.
     var onBackTapped: (() -> Void)?
+
+    /// iOS 26 large-title mode: transparent bar, 34 pt large title that
+    /// collapses to the inline title as the tracked scroll view scrolls up.
+    public var prefersLargeTitles: Bool = false {
+        didSet {
+            guard prefersLargeTitles != oldValue else { return }
+            configureLargeTitleAppearance()
+            _controller?._largeTitlesModeChanged()
+        }
+    }
+    weak var _controller: UINavigationController?
+
+    /// The content scroll view driving expansion/collapse (bound by
+    /// UINavigationController from the top VC's setContentScrollView).
+    weak var trackedScrollView: UIScrollView? {
+        didSet { if trackedScrollView !== oldValue { setNeedsLayout() } }
+    }
+
+    var largeTitleLabel: UILabel?
+    let pocketView = UIImageView()
+    /// Fingerprint of the last computed pocket image (offset/size/style).
+    var pocketKey: (offsetY: CGFloat, width: CGFloat, engagement: CGFloat)?
 
     // Current (settled) elements.
     var titleLabel: UILabel
@@ -143,6 +187,10 @@ public final class UINavigationBar: UIView {
         addSubview(titleLabel)
         backButton = makeBackButton(backTitle)
         if let b = backButton { addSubview(b) }
+        if prefersLargeTitles {
+            largeTitleLabel?.text = title
+            largeTitleLabel?.setNeedsDisplay()
+        }
         setNeedsLayout()
         layoutIfNeeded()
     }
@@ -155,10 +203,13 @@ public final class UINavigationBar: UIView {
         guard transition == nil else { return }
         place(title: titleLabel, centerX: bounds.width / 2, alpha: 1)
         if let b = backButton { place(back: b, alpha: 1) }
+        if prefersLargeTitles { updateFromScroll() }
     }
 
     private var contentMidY: CGFloat {
-        UINavigationBar.statusBarInset + UINavigationBar.contentHeight / 2
+        prefersLargeTitles
+            ? UINavigationBar.largeInlineTitleCenterY
+            : UINavigationBar.statusBarInset + UINavigationBar.contentHeight / 2
     }
 
     private func place(title l: UILabel, centerX: CGFloat, alpha: CGFloat) {
@@ -273,4 +324,255 @@ public final class UINavigationBar: UIView {
         setNeedsLayout()
         layoutIfNeeded()
     }
+
+    // MARK: Large titles (M10)
+
+    func configureLargeTitleAppearance() {
+        if prefersLargeTitles {
+            backgroundColor = nil            // iOS 26: transparent at rest
+            hairline.isHidden = true
+            let l = UILabel()
+            l.text = titleLabel.text
+            l.font = .systemFont(ofSize: UINavigationBar.largeTitleFontSize,
+                                 weight: .bold)
+            l.textColor = .label
+            largeTitleLabel?.removeFromSuperview()
+            largeTitleLabel = l
+            addSubview(l)
+            pocketView.isHidden = true
+            insertSubview(pocketView, at: 0)   // beneath both titles
+        } else {
+            backgroundColor = .systemBackground
+            hairline.isHidden = false
+            largeTitleLabel?.removeFromSuperview()
+            largeTitleLabel = nil
+            pocketView.removeFromSuperview()
+            trackedScrollView = nil
+        }
+        setNeedsLayout()
+    }
+
+    /// Collapse progress: how far the tracked offset has moved past the
+    /// expanded rest offset (0 = fully expanded; >= largeTitleZoneHeight =
+    /// collapsed, inline title showing).
+    var collapseDistance: CGFloat {
+        guard let s = trackedScrollView else { return 0 }
+        return s.contentOffset.y + UINavigationBar.largeTitleExpandedInset
+    }
+
+    /// Position/fade the large + inline titles for the current tracked
+    /// offset, and refresh the scroll-edge pocket. Called from
+    /// layoutSubviews and from every observed scroll.
+    func updateFromScroll() {
+        guard prefersLargeTitles else { return }
+        let d = collapseDistance
+        if let l = largeTitleLabel {
+            let s = l.intrinsicContentSize
+            l.frame = CGRect(x: UINavigationBar.largeTitleX,
+                             y: UINavigationBar.largeTitleLabelY - d,
+                             width: min(s.width, bounds.width
+                                        - 2 * UINavigationBar.largeTitleX),
+                             height: UINavigationBar.largeTitleLabelHeight)
+            l.alpha = 1 - smoothstep01((d - 20) / 32)
+        }
+        // Inline title fades in as the large title leaves its zone.
+        titleLabel.alpha = smoothstep01((d - 30) / 26)
+        updatePocket()
+    }
+
+    /// In large-title mode the bar is transparent chrome floating over the
+    /// content — only its interactive elements (back button) take touches;
+    /// everything else falls through to the content below.
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard prefersLargeTitles else { return super.hitTest(point, with: event) }
+        if let b = backButton, !b.isHidden,
+           let hit = b.hitTest(b.convert(point, from: self), with: event) {
+            return hit
+        }
+        return nil
+    }
+
+    // MARK: Scroll-edge-effect pocket (iOS 26)
+    //
+    // When content slides under the bar region, iOS 26 renders it inside a
+    // progressive-blur "pocket": heavily blurred, washed toward the
+    // background color (strongest at the top edge), fading out below the
+    // inline bar zone. Reproduced by snapshotting the content container
+    // (UIRenderer on the scroll view's superview — the bar is NOT part of
+    // that subtree), then blur + wash + vertical alpha ramp, tuned against
+    // golden/navbar_inline.
+
+    /// Pocket region height (bar zone 64 pt + soft falloff).
+    static let pocketHeight: CGFloat = 72
+    /// Gaussian sigma for the pocket blur, in points.
+    static let pocketBlurSigma: CGFloat = 8
+    /// Background wash: plateau strength, plateau end and wash end (pt).
+    static let pocketWashTop: CGFloat = 0.82
+    static let pocketWashPlateau: CGFloat = 24
+    static let pocketWashEnd: CGFloat = 64
+    static let pocketWashBottom: CGFloat = 0.10
+    /// Alpha ramp: fully opaque until `pocketFadeStart`, 0 at pocketHeight.
+    static let pocketFadeStart: CGFloat = 56
+
+    func updatePocket() {
+        guard prefersLargeTitles, let scroll = trackedScrollView,
+              let content = scroll.superview, bounds.width > 0 else {
+            pocketView.isHidden = true
+            pocketKey = nil
+            return
+        }
+        // Engagement: nothing to blur until content actually reaches under
+        // the bar zone (d = 52 puts the content top exactly at the zone's
+        // bottom edge); ramp in over the next 28 pt.
+        let e = clamp01((collapseDistance - UINavigationBar.largeTitleZoneHeight) / 28)
+        guard e > 0 else {
+            pocketView.isHidden = true
+            pocketKey = nil
+            return
+        }
+        let key = (offsetY: scroll.contentOffset.y, width: bounds.width,
+                   engagement: e)
+        if let k = pocketKey, k == key {
+            pocketView.isHidden = false
+            return
+        }
+        pocketKey = key
+        let scale = max(UITraitCollection.current.displayScale, 1)
+        content.layoutIfNeeded()
+        let snapshot = UIRenderer.render(content, scale: scale)
+        let bg = (backgroundColorForPocket ?? .white).cgColor
+        let bitmap = UINavigationBar.pocketBitmap(from: snapshot, scale: scale,
+                                                 background: bg)
+        pocketView.image = UIImage(bitmap: bitmap, scale: scale)
+        pocketView.frame = CGRect(x: 0, y: 0, width: bounds.width,
+                                  height: UINavigationBar.pocketHeight)
+        pocketView.alpha = e
+        pocketView.isHidden = false
+    }
+
+    /// The color the pocket washes toward: the nearest opaque ancestor
+    /// background (the navigation container view), resolved for the
+    /// current style.
+    var backgroundColorForPocket: UIColor? {
+        var v: UIView? = superview
+        while let cur = v {
+            if let c = cur.backgroundColor, c.cgColor.alpha >= 1 {
+                return c.resolvedColor(with: UITraitCollection.current)
+            }
+            v = cur.superview
+        }
+        return nil
+    }
+
+    /// Blur + wash + fade the top of `src` into the pocket bitmap.
+    static func pocketBitmap(from src: Bitmap, scale: CGFloat,
+                             background: CGColor) -> Bitmap {
+        let w = src.width
+        let outH = min(Int((pocketHeight * scale).rounded()), src.height)
+        let sigma = pocketBlurSigma * scale
+        let radius = max(1, Int((sigma * 2.5).rounded()))
+        // Gaussian taps.
+        var taps = [CGFloat](repeating: 0, count: 2 * radius + 1)
+        var sum: CGFloat = 0
+        for i in -radius...radius {
+            let t = CGFloat(i) / sigma
+            let v = CGFloat(_expApprox(-0.5 * Double(t * t)))
+            taps[i + radius] = v
+            sum += v
+        }
+        for i in taps.indices { taps[i] /= sum }
+
+        func b8(_ v: CGFloat) -> CGFloat { max(0, min(255, v)) }
+        let bgR = background.red * 255, bgG = background.green * 255,
+            bgB = background.blue * 255
+
+        // Composite the (straight-alpha) snapshot over the background color
+        // so the blur operates on opaque RGB.
+        let workH = min(outH + radius, src.height)
+        var flat = [CGFloat](repeating: 0, count: w * workH * 3)
+        src.pixels.withUnsafeBufferPointer { px in
+            for y in 0..<workH {
+                for x in 0..<w {
+                    let o = (y * w + x) * 4
+                    let a = CGFloat(px[o + 3]) / 255
+                    let f = (y * w + x) * 3
+                    flat[f] = CGFloat(px[o]) * a + bgR * (1 - a)
+                    flat[f + 1] = CGFloat(px[o + 1]) * a + bgG * (1 - a)
+                    flat[f + 2] = CGFloat(px[o + 2]) * a + bgB * (1 - a)
+                }
+            }
+        }
+        // Horizontal pass (clamped edges).
+        var hpass = [CGFloat](repeating: 0, count: w * workH * 3)
+        for y in 0..<workH {
+            for x in 0..<w {
+                var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+                for i in -radius...radius {
+                    let sx = min(max(x + i, 0), w - 1)
+                    let f = (y * w + sx) * 3
+                    let t = taps[i + radius]
+                    r += flat[f] * t; g += flat[f + 1] * t; b += flat[f + 2] * t
+                }
+                let o = (y * w + x) * 3
+                hpass[o] = r; hpass[o + 1] = g; hpass[o + 2] = b
+            }
+        }
+        // Vertical pass + wash + alpha ramp into the output bitmap.
+        let out = Bitmap(width: w, height: outH)
+        for y in 0..<outH {
+            let yPt = CGFloat(y) / scale
+            // Wash weight: plateau, then linear falloff.
+            let wash: CGFloat
+            if yPt <= pocketWashPlateau {
+                wash = pocketWashTop
+            } else if yPt >= pocketWashEnd {
+                wash = pocketWashBottom
+            } else {
+                let t = (yPt - pocketWashPlateau) / (pocketWashEnd - pocketWashPlateau)
+                wash = pocketWashTop + (pocketWashBottom - pocketWashTop) * t
+            }
+            let alpha = 1 - clamp01((yPt - pocketFadeStart)
+                                    / (pocketHeight - pocketFadeStart))
+            for x in 0..<w {
+                var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+                for i in -radius...radius {
+                    let sy = min(max(y + i, 0), workH - 1)
+                    let f = (sy * w + x) * 3
+                    let t = taps[i + radius]
+                    r += hpass[f] * t; g += hpass[f + 1] * t; b += hpass[f + 2] * t
+                }
+                r += (bgR - r) * wash
+                g += (bgG - g) * wash
+                b += (bgB - b) * wash
+                let o = (y * w + x) * 4
+                out.pixels[o] = UInt8(b8(r).rounded())
+                out.pixels[o + 1] = UInt8(b8(g).rounded())
+                out.pixels[o + 2] = UInt8(b8(b).rounded())
+                out.pixels[o + 3] = UInt8((alpha * 255).rounded())
+            }
+        }
+        return out
+    }
+}
+
+/// exp() without Foundation: e^x via the standard library's power series is
+/// unavailable, so use repeated squaring of e^(x / 2^k) with a short series.
+/// Accurate to ~1e-6 over the pocket-kernel range (x in [-8, 0]).
+func _expApprox(_ x: Double) -> Double {
+    if x < -30 { return 0 }
+    // e^x = (e^(x/16))^16; |x/16| <= ~0.5 -> 7-term Taylor is plenty.
+    let t = x / 16
+    var term = 1.0, sum = 1.0
+    for i in 1...7 {
+        term *= t / Double(i)
+        sum += term
+    }
+    var r = sum
+    for _ in 0..<4 { r *= r }
+    return r
+}
+
+func smoothstep01(_ t: CGFloat) -> CGFloat {
+    let c = clamp01(t)
+    return c * c * (3 - 2 * c)
 }
