@@ -22,6 +22,30 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
    (`CPortableIO` for file reads, `CSTBTrueType` for glyph rasterization,
    `CQuartz` — the vendored portable quartz library — for the default
    rendering backend).
+
+   **What the portability guarantee means now**, stated precisely, because the
+   rule change narrowed it and the narrowing is easy to misread:
+
+   * The old rule was *"import no Foundation"*. It was a **proxy**. What it was
+     protecting was determinism — Foundation is where wall clocks, locales,
+     time zones and RNGs live — and it protected that by banning the whole
+     module, including the parts that are pure value types.
+   * The new rule bans the **property**, not the module: no Darwin-only
+     framework may be imported for its own types, and **nothing in the render
+     or layout path may read a wall clock, a locale or a random source.**
+     corelibs-Foundation exists on Linux and provides `CGRect`, `NSCoder`,
+     `IndexPath`, `NSAttributedString` and `NotificationCenter`, so importing
+     it costs no portability — importing `CoreGraphics`, `AppKit` or
+     `CoreText` for their types still would.
+   * The guarantee is **unchanged in strength and is still checked the same
+     way**: `scripts/linux_verify.sh` renders every fixture inside a stock
+     `swift:6.2-noble` container and requires **162/162 byte-identical**
+     frames against the macOS render, and `scripts/linux_realapp_verify.sh`
+     requires **13/13** for the real-app screen. Byte-identity, not
+     tolerance-identity. A locale or clock leak would break it immediately,
+     which is why the narrower rule is safe to state.
+   * The guarantee has never covered the **tools** (`openrender`, `openhost`,
+     `Tools/`) — they may use Foundation freely, and always could.
 2. Real UIKit behavior wins every argument. `golden/system_colors.json`,
    `golden/font_metrics.json`, and `golden/*.png|.layout.json` are ground truth.
 3. Do not change files another module owns (see map below). The Canvas API in
@@ -217,6 +241,7 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md). `UISearchBar.swift` is SHARED with the menus cluster, which owns its delegate contract — see the note under this table. |
 | `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`). M15 KEPT both — measured reasons in `FoundationTypes.swift` |
 | `Sources/OpenUIKit/FoundationTypes.swift` | **app-compat** | done (M15: `IndexPath`, `NSRange`, `TimeInterval` are Foundation's own, with UIKit's conveniences as extensions — docs/PORTABILITY.md) |
+| `Sources/RealAppProbe/` | **app-compat** | vendored real-app source (docs/REAL_APP_TEST.md). **Built with `-default-isolation MainActor`** (Package.swift) — deliberately, because that is the module-wide default an Xcode 26 / Swift 6.2 app target carries. The probe measures how much *app source* survives, so it must reproduce the app's **build configuration** too; without it, upstream's un-annotated `class OptionsPicker` would need an `@MainActor` written in and would count as a changed line that no real app pays. This flag is scoped to this one target and does not touch the library. |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/OpenUIKit/UIMenu.swift`, `UIContextMenu.swift` | **menus** | done (M13: UIAction/UIMenu/UIKeyCommand + responder-chain routing; platter measured by `Tools/oracle2/menuprobe`, NO fixture — docs/KNOWN_GAPS.md explains why) |

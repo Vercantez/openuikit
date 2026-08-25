@@ -503,8 +503,9 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     the 258-line view controller with all the Auto Layout in it compiles
     byte-for-byte. Every one of the 14 is a language/runtime incompatibility
     (`NSCoder`/Foundation 5, `@MainActor` 4, `#selector`/`@objc` 4, an access
-    level 1); **none is a missing UIKit member**. *(M15 closed the
-    `@MainActor` four: the ledger is now 10 lines / **98.3 %**.)*
+    level 1); **none is a missing UIKit member**. *(M15 closed all of those
+    rows except `#selector`/`@objc`: the ledger is now **4 lines / 99.3 %**,
+    and three of the four vendored files are unmodified end to end.)*
   - **Dynamic Type shipped, oracle-backed.** `UIFont.TextStyle`,
     `UIContentSizeCategory`, `UIFont.preferredFont(forTextStyle:)`,
     `UIFontDescriptor.preferredFontDescriptor(withTextStyle:)` and
@@ -528,9 +529,45 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     failures.
   - **The verdict is in docs/REAL_APP_TEST.md and it is not "done":**
     rendering a real code-based screen works; compiling a whole app does not,
-    and the ranked reasons are Foundation interoperability, selector
-    dispatch, ~~`@MainActor`~~ *(closed in M15)*, asset catalogs and xibs —
-    none of them about UIKit's API surface.
+    and the ranked reasons are ~~Foundation interoperability~~ *(closed in
+    M15)*, selector dispatch, ~~`@MainActor`~~ *(closed in M15)*, asset
+    catalogs and xibs — none of them about UIKit's API surface.
+
+- **M15 real-app re-measurement — DONE 2026-08-25.** The milestone's own
+  yardstick, re-run: every adaptation in the vendored pocket-casts source was
+  reverted to pristine upstream text, one reason-class at a time, and
+  recompiled.
+  - **Ledger: 14 changed lines → 4. 97.7 % → 99.3 % unmodified.** Three of
+    the four vendored files are now unmodified app code end to end, including
+    the 258-line view controller.
+  - **Foundation row (5 lines) closed** — `import Foundation` and
+    `required init?(coder: NSCoder)` compile verbatim.
+  - **`@MainActor` row (4 lines) closed** — `OptionAction`'s isolated closure
+    types and initializers compile verbatim.
+  - **Harness row (1 line) closed**, and it needed two different fixes that
+    had looked like one. The `public` was harness plumbing: the module
+    boundary moved to `RealAppScreen.makeRoot(variant:theme:)` so
+    `OptionsPicker` stays `internal` as upstream declares it. The `@MainActor`
+    was load-bearing (15 isolation errors without it) — but load-bearing in
+    the *app's own build too*, which supplies it via a module-wide default, so
+    `RealAppProbe` is now compiled with `-default-isolation MainActor`, the
+    setting an Xcode 26 app target carries. Mirroring the app's build
+    configuration rather than editing its source.
+  - **`#selector`/`@objc` row (4 lines) confirmed permanently open**, with
+    diagnostics rather than inference: on Linux `@objc` is the compiler error
+    *"Objective-C interoperability is disabled"* and `Selector` is not in
+    corelibs-Foundation; 2 of the 4 fail on macOS too because OpenUIKit's
+    `UISwitch` is not an ObjC-representable parameter type. A library cannot
+    shim a compiler diagnostic. This is now the **entire** ledger.
+  - **The informative number has moved.** At 4 changed lines the adaptation
+    ratio is saturated; the real remaining cost is the **256 lines of
+    scaffolding** the harness writes around the app (theme system, selector
+    table, module alias). Next work is scaffolding reduction — a
+    `SelectorDispatching` macro and an `.xcassets` reader — not type count.
+  - Gates all green and unchanged: 108/108 scenes, 9/9 scroll traces, **765
+    tests**, **162/162** byte-identical Linux frames, **13/13** for the
+    real-app screen. Renders verified byte-identical against a worktree build
+    of the previous commit, so the reverts are behaviour-neutral.
 
 - **M15 `@MainActor` isolation — DONE 2026-08-25.** Punch-list blocker #3
   (`@MainActor`: 641 uses across 270 of the corpus's 5,099 files). Real UIKit
@@ -551,7 +588,9 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     delivery to a `SelectorDispatching` target, and each tool's top-level
     `main.swift`. No `nonisolated(unsafe)` anywhere.
   - **Real-app ledger 14 changed lines → 10, 97.7 % → 98.3 %**: the
-    `@MainActor` category is gone from it entirely.
+    `@MainActor` category is gone from it entirely. *(This is this entry's own
+    contribution; combined with the Foundation and harness rows the M15 tip is
+    **4 lines / 99.3 %** — see "M15 real-app re-measurement" above.)*
   - **No output change and no perf change**: 108/108 scenes, 9/9 traces, **737**
     tests (5 new in `Tests/OpenUIKitTests/ActorIsolationTests.swift`, written
     the way app source is so a regression fails to COMPILE), 162/162 byte-identical macOS-vs-Linux frames, 13/13 for the
@@ -748,13 +787,13 @@ cluster above:
   member by member at this commit (docs/APP_COMPAT.md) and this is what came
   out on top.
 - **The real blocker is not UIKit's API surface at all.** M14 proved a
-  shipping app's screen renders with 98.3% of its source unmodified (97.7%
-  before M15) and **none of the changed lines a missing UIKit member** —
-  every one was a language or runtime incompatibility. The ranked reasons a
-  whole app still does not compile are Foundation interoperability (`NSCoder`
-  alone appears in 344 of the corpus's 5,099 files), selector dispatch,
-  ~~`@MainActor`~~ *(closed in M15)*, asset catalogs and xibs
-  (docs/REAL_APP_TEST.md).
+  shipping app's screen renders with **99.3%** of its source unmodified
+  (97.7% before M15) and **none of the changed lines a missing UIKit member**
+  — every one was a language or runtime incompatibility. After M15 the ranked
+  reasons a whole app still does not compile are selector dispatch (the only
+  hard wall, and a *language* one), asset catalogs, localization and xibs;
+  ~~Foundation interoperability~~ and ~~`@MainActor`~~ are both closed
+  (docs/REAL_APP_TEST.md, docs/APP_COMPAT.md "M15 punch list").
 
 So the milestone this points at is **`import Foundation` alongside
 OpenUIKit** — which would let an app's model layer, theme system and string

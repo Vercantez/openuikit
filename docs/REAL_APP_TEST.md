@@ -4,14 +4,15 @@
 compiled against OpenUIKit *as written* and rendered — headless, live, and
 identically on Linux?
 
-**Answer: yes, for the screen tested, at 99.2 % of its source unmodified.**
-5 of 605 vendored lines had to change, and this file says exactly which 5
+**Answer: yes, for the screen tested, at 99.3 % of its source unmodified.**
+4 of 605 vendored lines had to change, and this file says exactly which 4
 and why. It also says what the experiment did **not** prove, which is more
 interesting than what it did.
 
 > **Updated at the M15 tip.** The first version of this experiment reported
-> **14** changed lines / 97.7 %. Two independent M15 pieces retired nine of
-> them, and this file is the merged ledger:
+> **14** changed lines / 97.7 %. Three M15 pieces retired ten of them, one
+> reason-class at a time, each one reverted to pristine upstream text and
+> recompiled. This file is the merged ledger:
 >
 > * **Foundation coexistence** (docs/APP_COMPAT.md) retired the whole 5-line
 >   "NSCoder / Foundation collision" row — `import Foundation` and
@@ -19,10 +20,17 @@ interesting than what it did.
 > * **`@MainActor` isolation** retired the 4-line row — `OptionAction`'s
 >   `@MainActor` closure types and initializers are back, verbatim, now that
 >   UIView/UIViewController/UIControl carry the isolation real UIKit does.
+> * **The harness access-level line** retired the last non-UIKit entry — see
+>   "The line that came off by moving the boundary" below. `OptionsPicker` is
+>   `class OptionsPicker` again, with no `@MainActor` written into it.
 >
-> So blockers #2 and #3 below are both **closed** and the ledger is 5 lines
-> / 99.2 %. Nothing else about the experiment changed; the renders are still
-> byte-identical, and the Linux gate still reports 13/13 identical frames.
+> Blockers #2, #3 and the harness row are **closed**. The ledger is 4 lines
+> / 99.3 %, and **all 4 are the single `#selector`/`@objc` row** — which the
+> measurement below shows is closed *by the compiler*, not by anything
+> OpenUIKit can add. **Three of the four vendored files are now unmodified
+> app code end to end.** Nothing else about the experiment changed: the
+> renders are byte-identical to the previous commit's (checked against a
+> worktree build of it, 3/3), and the Linux gate still reports 13/13.
 
 ---
 
@@ -123,27 +131,112 @@ comment at the site.
 |---|---|---|---|
 | `OptionsPickerRootController.swift` | 258 | **0** | 100 % |
 | `SimpleActionView.swift` | 228 | 4 | 98.2 % |
-| `OptionsPicker.swift` | 83 | 1 | 98.8 % |
+| `OptionsPicker.swift` | 83 | **0** | 100 % |
 | `OptionAction.swift` | 36 | **0** | 100 % |
-| **total** | **605** | **5** | **99.2 %** |
+| **total** | **605** | **4** | **99.3 %** |
 
-The 258-line view controller — the actual *screen*, and the file with all the
-Auto Layout in it — compiles **byte-identically**.
+**Three of the four files are now unmodified app code**, including the
+258-line view controller — the actual *screen*, and the file with all the Auto
+Layout in it. Every remaining changed line is in one file and belongs to one
+reason.
 
-### The 5 lines, by reason
+### The 4 lines, by reason
 
 | reason | lines | detail |
 |---|---|---|
 | ~~**`NSCoder` / Foundation collision**~~ | ~~5~~ **0** | **CLOSED at M15.** `import Foundation` and the `required init?(coder: NSCoder)` are back, verbatim. What made it possible: OpenUIKit's `CGRect`/`CGSize`/`CGFloat`/`IndexPath` are now Foundation's own types rather than rivals, and `Sources/UIKitShim/UIKit.swift` re-exports Foundation the way real UIKit's swiftinterface does — so a file whose only import line is `import UIKit` can name `NSCoder`. It compiles; it does not *archive*. `UIView` still declares no `init?(coder:)` of its own (making it `required`, as real UIKit does, would force every UIView subclass in the library to write one), so the app's initializer compiles as a new required init rather than an override. It is `@available(*, unavailable)` and never runs, which is exactly its status in the app. |
 | ~~**`@MainActor` isolation**~~ | ~~4~~ **0** | **CLOSED at M15.** `OptionAction`'s `action` and `submenu` closure types and its two initializers are declared `@MainActor` upstream; they used to be deleted, and they are now compiled as written. OpenUIKit annotates `UIView`/`UIViewController`/`UIControl` and the delegate protocols `@MainActor`, exactly as real UIKit does. |
-| **`#selector` / `@objc`** | 4 | Two `#selector(…)` call sites rewritten to `Selector.named(…)`; two `@objc private func` declarations lost their `@objc` and their `private`, and the 1-argument action's sender retyped `UISwitch` → `AnyObject`. Exactly the cost docs/OBJC_RUNTIME.md predicted. |
-| **harness plumbing (not a UIKit gap)** | 1 | `class OptionsPicker` → `public class OptionsPicker`, so `openrender` can reach it across the module boundary. Inside a real app target this would not be needed. (The same line also carries `@MainActor`. That is not a divergence in the other direction: the class creates and drives a `UIViewController`, and a nonisolated class touching a main-actor-isolated one is an **error** in Swift 5 language mode too — verified against the toolchain, not assumed — so the app's own build cannot compile it without isolation either. It was simply absent while OpenUIKit had no isolation to annotate against.) |
+| **`#selector` / `@objc`** | **4** | Two `#selector(…)` call sites rewritten to `Selector.named(…)`; two `@objc private func` declarations lost their `@objc` and their `private`, and the 1-argument action's sender retyped `UISwitch` → `AnyObject`. Exactly the cost docs/OBJC_RUNTIME.md predicted. **This is now the whole ledger.** |
+| ~~**harness plumbing**~~ | ~~1~~ **0** | **CLOSED at M15.** See below — the boundary moved instead of the source. |
 
 Notice what is **not** in that table: no missing method, no renamed property,
-no restructured layout, no removed feature. Every one of the 5 lines is a
+no restructured layout, no removed feature. Every one of the 4 lines is a
 *language/runtime* incompatibility, not an API-surface hole. That is a
 different and better failure mode than the census's "missing type" counting
 suggests — but see "the code that was written *around* it", below.
+
+### Why the `#selector`/`@objc` row cannot be closed — measured, not assumed
+
+The four remaining lines were reverted to pristine upstream text and
+recompiled, so the diagnostics below are what the toolchains actually say
+rather than what docs/OBJC_RUNTIME.md predicts.
+
+**On Linux, `@objc` is a compiler error.** Not a missing symbol — a
+diagnostic, emitted before any library is consulted:
+
+```
+error: Objective-C interoperability is disabled
+    @objc func switchToggled(_ sender: UISwitch?) {}
+     ^
+error: cannot find 'Selector' in scope       // Selector is not in corelibs-Foundation
+```
+
+That fires with or without `import Foundation`, and `#selector` fails behind
+it because its argument must be an `@objc` method. **No library can shim a
+compiler diagnostic**, so this row is closed by the language, not by
+OpenUIKit's surface. It is the same wall docs/OBJC_RUNTIME.md documents for
+Swift ObjC interop generally, reached from the app-source side.
+
+**Two of the four fail on *macOS* too**, which is the more interesting half —
+ObjC interop is fully on there:
+
+```
+error: method cannot be marked '@objc' because the type of the parameter
+       cannot be represented in Objective-C
+    @objc private func switchToggled(_ sender: UISwitch?)
+error: argument of '#selector' refers to instance method 'switchToggled'
+       that is not exposed to Objective-C
+```
+
+OpenUIKit's `UISwitch` is a native Swift class, not an `NSObject`, so it is
+not an ObjC-representable *parameter* type. The zero-argument pair
+(`@objc private func actionTapped()` / `#selector(actionTapped)`) **does**
+compile on macOS — Swift registers native classes with the ObjC runtime there
+— and fails only on Linux. So the row splits 2/2: two lines are blocked on
+both platforms, two on Linux alone. Either way all four must change, because
+one source text has to compile on both.
+
+The only lever left is the one already named in blocker #1: a macro that
+generates the `SelectorDispatching` table. That would delete
+`SelectorTables.swift`, which is the larger cost — but it cannot make
+`#selector` or `@objc` compile, so it would not move this number.
+
+### The line that came off by moving the boundary, not the source
+
+The harness row is worth its own paragraph because closing it required
+distinguishing two things that looked identical in the ledger.
+
+`OptionsPicker.swift` carried `@MainActor public class OptionsPicker` where
+upstream has a bare `class OptionsPicker`. Two separate divergences:
+
+* **`public`** was pure harness plumbing: `RealAppScreen`'s public factories
+  *named* `OptionsPicker` in their signatures, and a public function cannot
+  return an internal type. Fixed by moving the module boundary to the harness
+  side — `RealAppScreen.makeRoot(variant:theme:)` now takes a public `Variant`
+  enum, `OptionsPicker` never appears in a public signature, and it is
+  `internal` again exactly as upstream declares it.
+
+* **`@MainActor`** is load-bearing: deleting it produces **15** actor-isolation
+  errors (`call to main actor-isolated initializer 'init()' in a synchronous
+  nonisolated context`, and so on). The previous version of this file argued
+  from that fact that the annotation was not really a divergence, since the
+  app's own build would need it too. **That argument was wrong**, and the way
+  it was wrong is instructive: pocket-casts ships the bare `class` and it
+  compiles, because an Xcode 26 / Swift 6.2 app target defaults the *whole
+  module* to main-actor isolation ("Approachable Concurrency"). The app never
+  writes `@MainActor` because its build setting supplies it.
+
+  So the fix was to mirror the app's **build configuration** instead of
+  editing its **source**: `RealAppProbe` is now compiled with
+  `-default-isolation MainActor` (Package.swift), and upstream's bare `class
+  OptionsPicker` compiles as written. Verified accepted by both toolchains the
+  gate uses — Apple Swift 6.2.1 and Linux Swift 6.2.4.
+
+The general lesson, and the reason this is recorded rather than just fixed: a
+line can be in the ledger because OpenUIKit is missing something, **or**
+because the harness is not configured the way a real app target is. Those look
+the same in a diff and are not the same result. The second kind should be
+hunted for before any of it is counted against UIKit coverage.
 
 ### The code written around it (this is the real cost)
 
@@ -159,11 +252,15 @@ UIKit build would not need:
 Plus `Sources/RealAppProbe/RealAppScreen.swift` (121) and
 `Sources/openrender/RealApp.swift` (81), which are harness, not app.
 
-So: **605 app lines, 5 changed, 256 lines of scaffolding** (shims + selector
+So: **605 app lines, 4 changed, 256 lines of scaffolding** (shims + selector
 table + module alias). Scaled up, the scaffolding is the thing that would
 hurt: the selector table is ~3 lines per action class, and the theme shim
-would have to become the app's real theme system (which would compile — it is
-plain Swift — once `NSCoder`/Foundation stops being a problem).
+would have to become the app's real theme system (which, since M15 closed
+the Foundation row, would now largely compile as plain Swift). **The
+scaffolding, not the ledger, is where the remaining cost is**: at 4 changed
+lines the adaptation ratio has stopped being the informative number, and the
+256 lines of surrounding infrastructure is what a whole-app attempt would
+actually pay.
 
 ---
 
@@ -197,7 +294,7 @@ of the census.
 
 | # | blocker | corpus reach | what it costs today |
 |---|---|---|---|
-| 1 | **`@objc` / `#selector` and the dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Known and documented (docs/OBJC_RUNTIME.md). Measured here at 4 changed lines + a 23-line table for one class — **all 5 of this ledger's remaining changed lines are this row plus the harness line**. Nothing can close it for *Swift* app source without an ObjC runtime; what *could* shrink it is a macro that generates `SelectorDispatching` from `@objc`-looking declarations. Note that it does not exist at all for *Objective-C* app source: an ObjC app writes `@selector(tapped:)` and the ObjC runtime does the dispatch (M15, docs/OBJC_FACADE.md). |
+| 1 | **`@objc` / `#selector` and the dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Known and documented (docs/OBJC_RUNTIME.md). Measured here at 4 changed lines + a 23-line table for one class — **this row is now the ENTIRE ledger: all 4 remaining changed lines are here.** Confirmed by reverting them: on Linux `@objc` is the hard compiler error "Objective-C interoperability is disabled" and `Selector` is absent from corelibs-Foundation; 2 of the 4 fail on macOS too because OpenUIKit's `UISwitch` is not an ObjC-representable parameter type (see "Why the `#selector`/`@objc` row cannot be closed" above). Nothing can close it for *Swift* app source without an ObjC runtime; what *could* shrink it is a macro that generates `SelectorDispatching` from `@objc`-looking declarations. Note that it does not exist at all for *Objective-C* app source: an ObjC app writes `@selector(tapped:)` and the ObjC runtime does the dispatch (M15, docs/OBJC_FACADE.md). |
 | ~~2~~ | ~~**Foundation cannot be imported alongside OpenUIKit**~~ — **FIXED at M15** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | Was "the single biggest structural obstacle to compiling an app *as a whole*". Closed by the first option listed here: OpenUIKit `typealias`-es its CG types (plus `IndexPath`, `NSRange`, `TimeInterval`) to Foundation's, so there is one declaration rather than two. Cost: 151 disambiguation typealiases deleted from the test suite, Linux still 162/162 byte-identical, and five of this ledger's lines came back. Residue, all measured and documented in docs/PORTABILITY.md: `NSAttributedString`, `Notification`/`NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's, and `CGAffineTransform` still clashes on Darwin only. |
 | ~~3~~ | ~~**No `@MainActor` isolation on OpenUIKit's classes**~~ — **SHIPPED (M15)** | `@MainActor` **641 uses / 270 files** | **Was** 4 of this sample's 14 changed lines; now 0. UIResponder and every subclass, UIControl, UIGestureRecognizer, UIScreen, UIDevice, the touch/event types, the presentation and transitioning types, the bar-item types, the Auto Layout types and every delegate/data-source protocol are `@MainActor`, matching the iOS SDK. The rendering core (OpenCoreGraphics), the text engine's glyph entry points, the Cassowary solver and the value-ish types (`UIColor`, `UIImage`, `UIFont`, `UIBezierPath`) are deliberately **not** isolated — they are legal off the main actor in real UIKit too. See docs/KNOWN_GAPS.md for the two `MainActor.assumeIsolated` boundaries this leaves. |
 | 4 | **No asset catalog** | `UIImage(named:)` **438 / 161** | `UIImage(named:)` resolves loose `@2x`/`@3x` files only. Real apps ship `.xcassets`, which also carry the template-rendering-intent flag the app's tinting depends on. The harness copies three PNGs into `fixtures/realapp/assets/` and renames one (`small-tick` is stored as `tick@2x.png` inside its imageset). A `.xcassets` reader is a small, self-contained project. |
@@ -241,15 +338,26 @@ than the census's 96.3 % "effective coverage" predicted, because the census
 counts *types* and the things that actually broke were *members* and
 *language features*.
 
-*Compiling a whole app*: **not close, and the reasons are now specific rather
-than vague.** In descending order of impact they are Foundation
-interoperability (item 2), selector dispatch (item 1), `@MainActor` (item 3),
-asset catalogs (item 4) and xibs (item 13). None of those is about UIKit's API
-surface. Three of the five are one focused project each; the fifth is out of
-scope on purpose. A useful next milestone is therefore not "more UIKit types"
-— it is **`import Foundation` alongside OpenUIKit**, which would let the app's
-own model layer, theme system and string tables compile untouched, and would
-delete `Shims.swift` entirely.
+*Compiling a whole app*: **closer than at M14, and the remaining reasons are
+now specific, ranked, and mostly not about UIKit.** The two that M14 called
+the biggest structural obstacles — Foundation interoperability and
+`@MainActor` — are both closed, and closing them is what took this ledger from
+14 lines to 4.
+
+What is left, in descending order of impact: selector dispatch (item 1),
+asset catalogs (item 4), localization (item 6) and xibs (item 13). **Only the
+first is a hard wall**, and it is a wall in the *language*, not in OpenUIKit's
+API surface: `@objc` does not compile off Darwin and no library can change
+that. The honest framing is that Swift app source will always pay a
+per-action-method cost on Linux, and the useful work is to make that cost
+mechanical — a macro that generates `SelectorDispatching` — rather than to
+try to remove it. Objective-C app source pays nothing here, because the ObjC
+runtime does the dispatch (docs/OBJC_FACADE.md).
+
+A useful next milestone is therefore not "more UIKit types" and no longer
+"Foundation" either. It is **the scaffolding**: an `.xcassets` reader and the
+selector macro, which together are most of the 256 lines this harness had to
+write around the app.
 
 *Caveat on the whole thing*: one screen, one app. The next screen would find
 different holes. `Sources/RealAppProbe` is set up so adding a second one is
@@ -280,4 +388,5 @@ scripts/detent_probe_sim.sh  <outdir>
 
 The app checkout is not vendored. `git clone https://github.com/Automattic/pocket-casts-ios`
 and compare `Sources/RealAppProbe/Vendored/` against `podcasts/` to audit the
-9-line ledger yourself.
+4-line ledger yourself. Three of the four files should differ only in
+comments.

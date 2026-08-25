@@ -10,15 +10,18 @@ actually use, not by UIKit's alphabet.
 **Where this stands at the M15 tip (2026-08-25):** **97.1% effective
 coverage** of what four real apps reference, 474 uses (2.9%) of
 genuinely-missing types left, and a *screen* from a shipping app rendering
-with **99.2%** of its source unmodified (97.7% at M13; M15's Foundation
-coexistence retired five of the fourteen adapted lines and M15's `@MainActor`
-isolation retired four more). The file is written newest-last within
-each topic; if you want only the current picture, read **"Current measurement
-— M13 wrap-up, at the M14 tip"**, **"The punch list, re-ranked at the M14
-tip"**, **"Missing MEMBERS of types we already export"** and
-**"`@MainActor` isolation: shipped (M15)"**, then
-docs/REAL_APP_TEST.md. Everything else is the record of how the number got
-there, and the superseded sections are marked as such.
+with **99.3%** of its source unmodified — 4 changed lines out of 605, down
+from 14 at M13. M15 retired ten of those fourteen in three passes: Foundation
+coexistence (5 lines), `@MainActor` isolation (4), and the harness
+access-level line (1). **All 4 survivors are the single `#selector`/`@objc`
+row**, which is closed by the Swift compiler rather than by anything OpenUIKit
+can add — see docs/REAL_APP_TEST.md for the diagnostics.
+
+The file is written newest-last within each topic; if you want only the
+current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
+**"Missing MEMBERS of types we already export"**, then docs/REAL_APP_TEST.md.
+Everything else is the record of how the number got there, and the superseded
+sections are marked as such.
 
 ## Baseline measurement (2026-08-25, before M12)
 
@@ -527,14 +530,14 @@ handling, switch action and tap-to-dismiss driven by real touches), and
 **byte-identically on Linux** (`scripts/linux_realapp_verify.sh`: 13/13 frames
 across the headless renders and the scripted live replay).
 
-**14 of the 605 lines had to change — 97.7 % unmodified** *(5 and 99.2 % after
-M15 closed both the Foundation row and the `@MainActor` row — see "M15"
-below)*, and the 258-line view controller (all of the Auto Layout) compiles
-byte-for-byte. The ledger as first measured, by reason:
+**14 of the 605 lines had to change — 97.7 % unmodified** *(4 and 99.3 % after
+M15 closed the Foundation row, the `@MainActor` row and the harness row — see
+"M15" below)*, and the 258-line view controller (all of the Auto Layout)
+compiles byte-for-byte. The ledger as first measured, by reason:
 `NSCoder`/Foundation collision 5, `@MainActor` isolation 4, `#selector`/`@objc`
-4, harness access level 1 — the first two rows are **0** after M15, leaving 5.
-**None of the 14 was a missing UIKit member** — every one is a language or
-runtime incompatibility.
+4, harness access level 1 — every row except `#selector`/`@objc` is **0** after
+M15, leaving 4. **None of the 14 was a missing UIKit member** — every one is a
+language or runtime incompatibility.
 
 The cost that does not show up in that ratio is the 246 lines of scaffolding
 (the app's theme system re-expressed, a `SelectorDispatching` table, a `UIKit`
@@ -676,7 +679,47 @@ docs/KNOWN_GAPS.md "Actor isolation".
 
 **Result for app source:** the harness's real-app ledger goes **14 changed
 lines → 10**, 97.7 % → **98.3 %** unmodified, and the entire `@MainActor`
-category disappears from it. Renders are unchanged: 108/108 scenes, 9/9 scroll
+category disappears from it. *(Combined with the Foundation row and the
+harness row, the M15 tip is 4 lines / 99.3 % — see the M15 punch list at the
+end of this file.)* Renders are unchanged: 108/108 scenes, 9/9 scroll
 traces, 737 tests (5 new, `ActorIsolationTests`), 162/162 byte-identical
 macOS-vs-Linux frames, and 13/13 for
 the real-app screen.
+
+---
+
+## The punch list, re-ranked at the M15 tip (2026-08-25)
+
+> **Supersedes** "The punch list, re-ranked at the M14 tip" for the
+> *app-compatibility* blockers. That section is still the current ranking for
+> the **missing-type clusters** (blur, shortcuts, haptics, TextKit
+> attachments, transition coordinator), which M15 did not touch. What changed
+> is the list of things that stop an app's *source* from compiling at all.
+
+Two entries **drop off entirely**, and this is the milestone's headline:
+
+| dropped | was ranked | why it is gone |
+|---|---|---|
+| ~~**Foundation cannot be imported alongside OpenUIKit**~~ | **#1** — "the single biggest structural obstacle to compiling an app as a whole" | OpenUIKit's `CGRect`/`CGPoint`/`CGSize`/`CGFloat`, `IndexPath`, `NSRange` and `TimeInterval` are now `typealias`-es to Foundation's own types, so there is one declaration rather than two rivals. `import Foundation` next to `import UIKit` compiles; `NSCoder` (379 uses / 344 files), `NSObject` (175), `NSString` (137) resolve. |
+| ~~**No `@MainActor` isolation**~~ | **#3** — 641 uses / 270 files | UIResponder and every subclass, UIControl, the gesture/touch/event types, the presentation types, the Auto Layout types and every delegate protocol are `@MainActor`, matching the iOS SDK. |
+
+### What is actually left, ranked
+
+Ranking rule: **can an app's source compile at all**, then corpus reach.
+
+| # | blocker | corpus reach | status |
+|---|---|---|---|
+| 1 | **`@objc` / `#selector`** | `#selector` 1,138 / 360 files; `@objc` 1,189 / 395 | **Hard wall, and now provably so.** On Linux `@objc` is the compiler error *"Objective-C interoperability is disabled"*, and `Selector` is not in corelibs-Foundation at all. A library cannot shim a diagnostic. This is the *entire* remaining real-app ledger (4 of 4 lines). **Not a wall for Objective-C app source** — an ObjC app writes `@selector(tapped:)` and libobjc2 dispatches it (docs/OBJC_FACADE.md). Best available mitigation: a macro that generates `SelectorDispatching`, which would delete the 23-line hand-written table (the bigger cost) without moving the line count. |
+| 2 | **No asset catalog** | `UIImage(named:)` 438 / 161 | `.xcassets` is unread; only loose `@2x`/`@3x` files resolve, and the template-rendering-intent flag that app tinting depends on lives in the catalog. Self-contained project, no oracle needed. |
+| 3 | **Localization** | `L10n.` 3,400 / 540 | Not UIKit, but unavoidable in a whole-app attempt: three of four corpus apps route every user-visible string through a generated enum over `NSLocalizedString`/`Bundle`. Now *more* tractable than at M14, because Foundation is importable. |
+| 4 | **`UIWindow` runs no appearance transition** | `viewDidAppear` 119 / 105 | `makeKeyAndVisible()` does not drive `viewWillAppear`/`viewDidAppear`, so app code that starts work there never runs. Small fix; the harness works around it with an explicit call. |
+| 5 | **Materials / blur** | 37 / 3 apps | Unchanged from the M14 ranking, and still the largest source of remaining *pixel* error. Not a compile blocker. |
+| 6 | **xibs / storyboards** | `@IBOutlet` 1,678 / 323 files | **Out of scope by choice**, restated because it is why 323 of 5,099 files are unreachable by construction. |
+
+The shape of the list has changed qualitatively. At M14 the top blockers were
+things OpenUIKit was missing. At M15 the top blocker is a **language**
+restriction that no amount of API surface will fix, and everything below it is
+either tooling (asset catalogs, localization) or a known pixel divergence. The
+useful next work is scaffolding reduction, not type count — see the "code
+written around it" section of docs/REAL_APP_TEST.md, where 256 lines of
+harness now dwarf the 4 lines of adaptation.

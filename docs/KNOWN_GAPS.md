@@ -352,9 +352,12 @@ when this section was written (**97.1%** at the M13 wrap-up —
 docs/APP_COMPAT.md). The honest headline is the other one, and it has NOT
 changed: **no corpus app compiles end to end yet**, and the reasons are
 structural rather than long-tail. M14 sharpened it — a real app's *screen*
-renders with 98.3% of its source unmodified (97.7% as first measured; M15's
-actor isolation removed 4 of the 14 changed lines), and none of the changes it
-needed was a missing UIKit member (docs/REAL_APP_TEST.md).
+renders with **99.3%** of its source unmodified (97.7% as first measured; M15
+removed 10 of the 14 changed lines across three passes — Foundation
+coexistence 5, actor isolation 4, harness access level 1), and none of the
+changes it needed was a missing UIKit member. **All 4 survivors are
+`#selector`/`@objc`**, which is a Swift-compiler restriction off Darwin rather
+than an OpenUIKit gap (docs/REAL_APP_TEST.md).
 
 - **Delegate protocols that do not exist stop compilation before behaviour
   does.** *(M13: CLOSED — see "UICollectionView" and "Menus, actions &
@@ -1108,11 +1111,26 @@ exercised and OpenUIKit does not fully honour.
   or `.car` reader, and therefore no template-rendering-intent flag from the
   catalog — an app that relies on the catalog to mark an icon as a template
   gets an untinted image unless it tints explicitly.
-- **A target that links OpenUIKit still cannot `import Foundation`.**
-  Foundation's `CGRect`/`CGSize`/`CGPoint` collide with OpenUIKit's own. This
-  is why `NSCoder` (and therefore `required init?(coder:)`, present in 344 of
-  the corpus's 5,099 files) cannot be satisfied, and it is ranked as the
-  single biggest structural obstacle in docs/REAL_APP_TEST.md.
+- ~~**A target that links OpenUIKit still cannot `import Foundation`.**~~
+  *(M15: CLOSED — see "Foundation coexistence (M15)" above.)* The geometry
+  types, `IndexPath`, `NSRange` and `TimeInterval` are now `typealias`-es to
+  Foundation's own, so there is one declaration rather than two rivals.
+  `NSCoder` and `required init?(coder:)` (344 of the corpus's 5,099 files)
+  resolve, and the real-app harness compiles them verbatim. Residue is
+  narrowed and listed above: `NSAttributedString`, `Notification`/
+  `NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's.
+- **`#selector` and `@objc` do not compile off Darwin — and this is now the
+  ONLY thing left in the real-app ledger.** Measured by reverting the vendored
+  source to pristine upstream text: Linux emits *"error: Objective-C
+  interoperability is disabled"* for `@objc`, and `Selector` is absent from
+  corelibs-Foundation entirely. `#selector` fails behind it because its
+  argument must be an `@objc` method. Two of the four sites fail on **macOS**
+  too, because OpenUIKit's `UISwitch` is a native Swift class and so is not an
+  ObjC-representable *parameter* type. No library can shim a compiler
+  diagnostic, so the portable spelling (`Selector.named(…)` plus a
+  `SelectorDispatching` table, docs/OBJC_RUNTIME.md) is the permanent answer
+  for **Swift** app source. **Objective-C** app source pays nothing — libobjc2
+  dispatches `@selector(tapped:)` natively (docs/OBJC_FACADE.md).
 - ~~**OpenUIKit's classes carry no `@MainActor` isolation.**~~ *(M15: CLOSED
   — see "Actor isolation" below.)* `UIResponder` and every subclass,
   `UIControl`, `UIGestureRecognizer`, `UIScreen`, `UIDevice`, the touch/event
