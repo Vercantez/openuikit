@@ -1,0 +1,55 @@
+== methods: no argument labels ==
+#selector(Probe.zeroArg)                                zeroArg
+#selector(Probe.oneUnlabelled(_:))                      oneUnlabelled:
+#selector(Probe.twoUnlabelled(_:_:))                    twoUnlabelled::
+#selector(P2.y(_:_:_:))                                 y:::
+#selector(Probe.emptyish(_:))                           emptyish:
+#selector(Probe.classMethod(_:))                        classMethod:
+#selector(P2._underscored(_:))                          _underscored:
+#selector(P2.number(_:))                                number:
+#selector(Probe.withPrepositionAt(_:))                  withPrepositionAt:
+#selector(P2.inExtension)                               inExtension
+== methods: first label empty, later labels present ==
+#selector(Probe.twoFirstUnlabelled(_:with:))            twoFirstUnlabelled:with:
+#selector(Probe.threeMixed(_:of:in:))                   threeMixed:of:in:
+#selector(Probe.insertObject(_:at:))                    insertObject:at:
+#selector(Probe.tableView(_:numberOfRowsInSection:))    tableView:numberOfRowsInSection:
+#selector(Probe.x(_:b:_:))                              x:b::
+== methods: FIRST label non-empty -> 'With' + SentenceCase ==
+#selector(Probe.oneLabelled(a:))                        oneLabelledWithA:
+#selector(Probe.twoLabelled(a:b:))                      twoLabelledWithA:b:
+#selector(Probe.handlePan(gesture:))                    handlePanWithGesture:
+#selector(Probe.labelledFirstOnly(sender:_:))           labelledFirstOnlyWithSender::
+#selector(Probe.doubleCap(URLString:))                  doubleCapWithURLString:
+#selector(Probe.aBc(deF:))                              aBcWithDeF:
+#selector(P2.startWith(url:))                           startWithUrl:
+#selector(P2.insert(at:))                               insertAt:
+#selector(P2.move(from:to:))                            moveFrom:to:
+#selector(P2.set(value:))                               setWithValue:
+#selector(P2.trailingClosureLike(completion:))          trailingClosureLikeWithCompletion:
+#selector(P2.multiWordLabel(firstThing:secondThing:))   multiWordLabelWithFirstThing:secondThing:
+#selector(P2.inExtension2(sender:))                     inExtension2WithSender:
+== initialisers ==
+#selector(P2.init(thing:))                              initWithThing:
+#selector(P2.init as () -> P2)                          init
+== @objc(custom) overrides everything ==
+#selector(Probe.custom)                                 customSelName
+#selector(Probe.custom2(_:))                            customWithArg:
+#selector(Probe.custom3(_:_:))                          doThing:with:
+== @IBAction behaves exactly like @objc ==
+#selector(Probe.ibAction(_:))                           ibAction:
+== properties: getter / setter ==
+#selector(getter: Probe.someProperty)                   someProperty
+#selector(setter: Probe.someProperty)                   setSomeProperty:
+#selector(getter: Probe.url)                            url
+#selector(setter: Probe.url)                            setUrl:
+#selector(getter: Probe.isEnabledFlag)                  isEnabledFlag
+#selector(setter: Probe.isEnabledFlag)                  setIsEnabledFlag:
+#selector(getter: Probe.renamed)                        customProp
+#selector(setter: Probe.renamed)                        setCustomProp:
+#selector(getter: P2.xY)                                xY
+#selector(setter: P2.xY)                                setXY:
+#selector(getter: P2._lead)                             _lead
+#selector(setter: P2._lead)                             set_lead:
+#selector(getter: P2.ABC)                               ABC
+#selector(setter: P2.ABC)                               setABC:

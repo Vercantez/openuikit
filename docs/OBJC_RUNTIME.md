@@ -5,8 +5,13 @@ Real UIKit leans on the ObjC runtime for target-action (`#selector`), KVO,
 This file records what we measured when asking whether OpenUIKit should adopt
 one, and what shipped instead.
 
-**Status (2026-08-25, M12).** Selector target-action is implemented, and the
-API works on macOS *and* Linux:
+**Status (2026-08-25, M12; Task B verdict added).** Selector target-action is
+implemented, and the API works on macOS *and* Linux. The question of whether
+Linux could have the *real* thing instead is now closed, with measurements:
+see "[Task B: a custom Linux stdlib with `SWIFT_OBJC_INTEROP=1`](#task-b-a-custom-linux-stdlib-with-swift_objc_interop1)".
+The short answer is that it configures, would build in tens of minutes, and
+would then have nothing to link against — an interop stdlib needs an
+Objective-C `Foundation` and `CoreFoundation` that do not exist on Linux.
 
 ```swift
 // macOS: verbatim UIKit.
@@ -255,14 +260,12 @@ its test program does nothing but read a selector name.
 **This is a Swift standard library mismatch, not an ObjC runtime gap**, which
 kills the "Tier 2" idea outright:
 
-- **GNUstep `libobjc2`** — the right *runtime* (ObjC 2.0, ARC, blocks,
-  non-fragile ivars, portable, packaged). It consumes the class metadata Swift
-  emits, and would give genuine `objc_msgSend`. It does not help: the party
-  that crashes is `libswiftCore.so`, and libobjc2 cannot change how that
-  library reads metadata. Not attempted further, for that reason.
+- **GNUstep `libobjc2`** — a good ObjC 2.0 runtime, and the *wrong* one. An
+  earlier revision of this file claimed it "consumes the class metadata Swift
+  emits". **That was wrong**; it is measured false below, in "Task B".
 - The only fix is a Linux `libswiftCore` built with interop — i.e. a Swift
-  standard-library fork, tracked forever against upstream. That is the same
-  conclusion as the original assessment, now with the exact mechanism.
+  standard-library fork, tracked forever against upstream. **That was tested
+  too, in Task B below. It does not work either**, and the reason is not cost.
 
 Also ruled out, unchanged:
 
@@ -271,6 +274,8 @@ Also ruled out, unchanged:
   project for running *precompiled* iOS apps — a different product.
 - **Apple's `objc4`** — open source but welded to Darwin (Mach, dyld, malloc
   zones). Porting is a research project.
+
+---
 
 ### Macro shadowing: also dead
 
@@ -291,6 +296,232 @@ one-line-per-action table. That remains a clean, optional future step; it is
 deliberately deferred because it would add a `swift-syntax` dependency to a
 package that currently has none, for a boilerplate saving rather than a
 capability. Until then, the manual table above is the documented path.
+
+The obvious next escape — a **source rewriter** that turns `#selector(x)` into
+`Selector.named("x")` before the compiler sees it — was scoped and rejected for
+a separate, sharper reason: getting the selector *string* right means
+reimplementing Swift's ObjC name inference, prepositions and all, and a
+rewriter that gets it wrong produces an action that silently never fires rather
+than a compile error. The measured rule and the exact trap are in
+"[Appendix: the `#selector` mangling oracle](#appendix-the-selector-mangling-oracle)".
+
+## Task B: a custom Linux stdlib with `SWIFT_OBJC_INTEROP=1`
+
+"[Why it cannot be used anyway](#why-it-cannot-be-used-anyway)" ends on *"the
+only fix is a Linux `libswiftCore` built with interop"*. That sentence was an
+**inference**. This section is what happened when it was actually tried, on
+2026-08-25, on a 64-core Graviton4 running Ubuntu 24.04 aarch64 with the stock
+Swift 6.2.4 toolchain — the same version the containers use.
+
+**Verdict: no. Not "expensive" — impossible without also writing an
+Objective-C Foundation for Linux.** Reproduce the whole thing with
+`Tools/objcshim/stdlib_interop_probe.sh` (~8 minutes, mostly download).
+
+### 1. The build system accepts the flag. That is the trap, not the opening.
+
+`SWIFT_STDLIB_ENABLE_OBJC_INTEROP` is an ordinary user-settable CMake cache
+option. Only its *default* is Darwin-derived (`swift/CMakeLists.txt:676-685`),
+so `-DSWIFT_STDLIB_ENABLE_OBJC_INTEROP=TRUE` for a LINUX SDK is not rejected
+anywhere — **configure exits 0**.
+
+But the flag is consumed only in the negative, in exactly two places:
+
+| file | when interop is OFF |
+|---|---|
+| `stdlib/cmake/modules/SwiftSource.cmake:627` | adds `-Xfrontend -disable-objc-interop` (Swift half) |
+| `stdlib/cmake/modules/AddSwiftStdlib.cmake:352` | adds `-DSWIFT_OBJC_INTEROP=0` (C++ half) |
+
+and the C++ default is `__APPLE__`-derived, not flag-derived
+(`include/swift/Runtime/Config.h:92-98`):
+
+```c
+#ifndef SWIFT_OBJC_INTEROP
+#ifdef __APPLE__
+#define SWIFT_OBJC_INTEROP 1
+#else
+#define SWIFT_OBJC_INTEROP 0
+#endif
+#endif
+```
+
+So turning the option ON stops passing `=0` and passes nothing — and on Linux
+`__APPLE__` is undefined. Diffing the two generated `build.ninja` files makes
+this concrete:
+
+```
+baseline: '-DSWIFT_OBJC_INTEROP=0' on 109 C++ compile lines
+interop : '-DSWIFT_OBJC_INTEROP='  on   0 C++ compile lines
+baseline: '-disable-objc-interop'  on  25 Swift compile lines
+interop : '-disable-objc-interop'  on   0 Swift compile lines
+```
+
+The Swift half flips; the C++ half silently does not. **Setting the flag alone
+moves today's metadata mismatch from between two libraries to inside one** —
+strictly worse than the status quo. The minimum honest patch is to make the ON
+branch pass `-DSWIFT_OBJC_INTEROP=1`, plus `-DSWIFT_HAS_ISA_MASKING=0` (Config.h
+derives isa masking from `SWIFT_OBJC_INTEROP && 64-bit`, and would otherwise
+apply Darwin's isa mask on Linux). Two lines. They are not the problem.
+
+### 2. Build scope is *not* the problem either — stdlib-only works
+
+This was the expected cost driver and it evaporated. A **stdlib-only** build
+against the shipped toolchain configures clean (**exit 0**), with no compiler
+bootstrap, no LLVM build, no cmark and no tablegen:
+
+- `SWIFT_INCLUDE_TOOLS=OFF`, `SWIFT_ENABLE_SWIFT_IN_SWIFT=OFF`
+- `SWIFT_NATIVE_SWIFT_TOOLS_PATH` / `SWIFT_NATIVE_CLANG_TOOLS_PATH` →
+  the stock `swift-6.2.4-RELEASE` toolchain
+- cmark and llvm-tblgen are gated on `SWIFT_INCLUDE_TOOLS`
+  (`CMakeLists.txt:912`, `SwiftSharedCMakeConfig.cmake:54-86`)
+
+Four speed bumps, all one-liners: an *installed* LLVMConfig (Ubuntu
+`llvm-18-dev`) does not define `LLVM_BUILD_LIBRARY_DIR` / `LLVM_LIBRARY_DIRS` /
+`LLVM_TOOLS_BINARY_DIR` the way a build-tree one does; `zlib1g-dev`; and
+`SWIFT_PATH_TO_LIBDISPATCH_SOURCE` wants a corelibs-libdispatch checkout.
+
+So "you would have to build a whole Swift toolchain" was never true. Tens of
+minutes, not hours. The kill is cleaner than a cost argument.
+
+### 3. The wall: an interop stdlib needs an Objective-C Foundation
+
+The stdlib contains ten Objective-C / Objective-C++ translation units. They are
+compiled on Linux **today** — they just preprocess to nothing, because their
+entire bodies sit inside `#if SWIFT_OBJC_INTEROP`. Turn interop on and the
+bodies become live. Forcing `-DSWIFT_OBJC_INTEROP=1` onto the C++ half and
+compiling them, **10 of 10 fail immediately**:
+
+```
+SwiftObject.mm                      'objc/NSObject.h' file not found
+ErrorObject.mm                      'objc/objc.h' file not found
+SwiftValue.mm                       'objc/objc.h' file not found
+ReflectionMirrorObjC.mm             'objc/runtime.h' file not found
+ObjCRuntimeGetImageNameFromClass.mm 'objc/runtime.h' file not found
+Reflection.mm                       'objc/runtime.h' file not found
+OptionalBridgingHelper.mm           'objc/runtime.h' file not found
+FoundationHelpers.mm                'CoreFoundation/CoreFoundation.h' file not found
+SwiftNativeNSObject.mm              'Foundation/Foundation.h' file not found
+Availability.mm                     'TargetConditionals.h' file not found
+```
+
+libobjc2 ships `objc/objc.h`, `objc/runtime.h` and `objc/message.h`, so it can
+satisfy six of those includes *textually* (while still being the wrong ABI —
+see §4). It ships **no** `objc/NSObject.h` and no `objc/objc-internal.h`.
+`CoreFoundation/`, `Foundation/` and `TargetConditionals.h` have no Linux
+equivalent at all: swift-corelibs-foundation is written in *Swift*, and the
+only ObjC Foundation on Linux is GNUstep-base, whose `NSString`/`NSNumber`
+internals and CF-bridging are not what these files expect.
+
+And that is only the C++ half. On the Swift side, `stdlib/public/core` carries
+**188 `#if _runtime(_ObjC)` sites across 48 files** — `StringBridge`,
+`DictionaryBridging`, `SetBridging`, `CocoaArray`, `BridgeObjectiveC`,
+`StringStorageBridge` — all of which begin compiling and must then *link*
+against an `NSString`, `NSArray` and `NSDictionary` that do not exist.
+
+**So a successfully-built interop `libswiftCore.so` would still have nothing to
+link against.** Finishing the build is not a thing that can happen, which is why
+this measurement stops at the wall rather than burning hours proving it twice.
+
+### 4. libobjc2 is the wrong ABI — the correction
+
+The claim that libobjc2 "consumes the class metadata Swift emits" is false, and
+this is the evidence:
+
+- **Struct layout.** Swift IRGen emits Apple `objc4` class layout — the
+  interop-ON metadata measured further up this file, `{isa/Kind, Superclass,
+  CacheData[2], Data, Flags, …}`, *is* objc4's `objc_class`. libobjc2's
+  `struct objc_class` (`libobjc2/class.h:46`) is the GNUstep ABI:
+  `{isa, super_class, name, version, info, instance_size, ivars, methods,
+  dtable, subclass_list, sibling_class, protocols, …}`. Different fields,
+  different order, different meaning. This is not a gap to be filled; it is a
+  different data structure.
+- **Swift has never heard of GNUstep.** `grep -rli gnustep lib/IRGen include/swift stdlib`
+  over the 6.2.4 tree returns **zero hits**. Swift's ObjC interop is objc4-only
+  and hardcoded; there is no `-fobjc-runtime=` equivalent.
+- **Discovery mismatch.** IRGen does emit ELF section names
+  (`GenDecl.cpp:1024-1046` maps `__objc_classlist` → ELF `objc_classlist`), but
+  libobjc2 discovers classes through its own GNUstep-v2 sections and an
+  `__objc_init` constructor. Neither side reads the other's.
+- **API surface.** Of the 71 ObjC symbols the Swift runtime references, libobjc2
+  covers the public ObjC-2.0 API fine (msgSend, `class_*`, `sel_*`,
+  `protocol_*`, ARC, weak refs, associated objects, autorelease pools). The
+  **30** it lacks are Apple's *private* `<objc/objc-internal.h>` surface:
+  `_objc_realizeClassFromSwift`, `_objc_supportsLazyRealization`,
+  `_objc_setClassCopyFixupHandler`, `objc_setHook_getClass` /
+  `getImageName` / `lazyClassNamer`, `objc_addLoadImageFunc`,
+  `objc_constructInstance` / `objc_destructInstance`,
+  `objc_isUniquelyReferenced`, `objc_debug_isa_class_mask`,
+  `_objc_empty_cache`, `class_getImageName`, `object_isClass`, and
+  **`objc_readClassPair`**. Most are reached through `SWIFT_RUNTIME_WEAK_CHECK`
+  and degrade gracefully. `objc_readClassPair` does not: `SwiftObject.mm:1418`
+  calls it unconditionally, with an assert, and it is *the* mechanism by which
+  a statically-emitted Swift class gets registered with the runtime.
+
+The only runtime that fits Swift-emitted metadata is Apple's `objc4`, which is
+welded to Darwin (Mach, dyld, malloc zones). Porting it is the Darling problem —
+a research project, explicitly out of scope here.
+
+### 5. What this settles
+
+`Selector.named("...")` plus a registry the target owns is **not a workaround
+for a missing feature**. It is the only viable design on Linux, and that is now
+measured rather than assumed:
+
+| escape route | status |
+|---|---|
+| `#selector` / `@objc` off Darwin | compiler refuses; not a library choice |
+| user macros named `selector` / `objc` | builtins win at every use site (below) |
+| `-enable-objc-interop` on stock Linux | compiles, then segfaults: metadata layout vs shipped libswiftCore |
+| GNUstep libobjc2 | wrong class ABI; Swift has no GNUstep support at all |
+| custom stdlib, `SWIFT_OBJC_INTEROP=1` | configures and would build — with nothing to link against |
+| Apple objc4 on Linux | Darling-scale port; out of scope |
+
+Even in the counterfactual where it all worked, adoption would require every
+Linux user to install a **non-standard Swift toolchain** — a forked
+`libswiftCore.so` tracked forever against upstream, for a source-compatibility
+convenience. Against that, one library-owned `Selector` struct and a generated
+table is not a compromise; it is the better engineering.
+
+### Appendix: the `#selector` mangling oracle
+
+`Tools/objcshim/selector_oracle.swift` (+ `.expected`) asks the real macOS
+compiler what selector 49 different declarations produce, so the string passed
+to `Selector.named(...)` can be checked against truth rather than memory. Run
+it with `swiftc -O Tools/objcshim/selector_oracle.swift -o /tmp/o && /tmp/o`.
+
+The rules it establishes:
+
+1. No parameters → the base name. `zeroArg` → `zeroArg`.
+2. Each parameter contributes one `:`. An empty (`_`) label contributes an
+   empty piece: `x(_:b:_:)` → `x:b::`.
+3. If the **first** argument label is non-empty, it is folded into the first
+   piece, sentence-cased — and `With` is inserted **only if neither** the base
+   name's last word **nor** the label's first word is a preposition:
+
+   | declaration | selector |
+   |---|---|
+   | `func handlePan(gesture:)` | `handlePanWithGesture:` |
+   | `func set(value:)` | `setWithValue:` |
+   | `func insert(at:)` | `insertAt:` — "at" is a preposition |
+   | `func move(from:to:)` | `moveFrom:to:` — "from" is a preposition |
+   | `func startWith(url:)` | `startWithUrl:` — base ends in "with" |
+   | `init(thing:)` | `initWithThing:` |
+
+4. Sentence-casing uppercases the first character only, and leaves the rest:
+   `deF` → `DeF`, `URLString` → `URLString`, `_lead` → `_lead`.
+5. Properties: getter = the ObjC property name; setter = `set` + sentence-cased
+   name + `:`. `url` → `setUrl:` (**not** `setURL:`), `ABC` → `setABC:`,
+   `_lead` → `set_lead:`.
+6. `@objc(custom)` replaces the computed name outright. `@IBAction` behaves
+   exactly like `@objc`.
+
+Rule 3's preposition clause is why a mechanical `#selector` → `Selector.named`
+source rewriter was **not** shipped: a naive transformer emits
+`insertWithAt:` for `insert(at:)`, and the failure mode is a selector that
+silently never fires, not a compile error. Anything doing that transformation
+must consult Swift's preposition list (`PartsOfSpeech.def`), and at that point
+it is reimplementing `AbstractFunctionDecl::getObjCSelector`.
+
+---
 
 ## Packaging: no flags, no poisoned dependency
 
