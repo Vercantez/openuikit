@@ -24,6 +24,20 @@ open class UILabel: UIView {
         isOpaque = false
         // UIKit: labels do not receive touches by default.
         isUserInteractionEnabled = false
+        // UIKit default: label VERTICAL content hugging is 251 (horizontal
+        // stays at the standard 250) — see docs/SCENE_SPEC.md v4.3.
+        setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
+    }
+
+    /// Auto Layout baseline attributes (M9). The first baseline sits at the
+    /// ascender rounded half-up to whole points below the top — the same
+    /// rounding the draw path uses (`baselineInLine` in drawContent); the
+    /// last baseline of a single-line label is measured back from the
+    /// line-box bottom. Verified against golden/constraints_baseline.
+    override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
+        let ascender = FontEngine.metrics(for: font).ascender
+        let first = (ascender + 0.5).rounded(.down)
+        return (first, lineBoxHeight - first)
     }
 
     var layoutScale: CGFloat {

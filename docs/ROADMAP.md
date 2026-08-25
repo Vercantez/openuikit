@@ -176,8 +176,22 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     multiline caret movement; openhost SDL_TEXTINPUT/KEYDOWN wiring +
     scripted text/key events; `--app textdemo` + scripts/textinput_demo.gif.
     Selection is out of scope (docs/KNOWN_GAPS.md "Text input").
-- **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,
-  validated against oracle layout dumps of constraint scenes.
+- **M9 Auto Layout — DONE (2026-08-24)**: pure-Swift Cassowary (kiwi-style
+  incremental simplex, deterministic pivoting) in
+  Sources/OpenUIKit/AutoLayout/; NSLayoutConstraint
+  (item/attribute/relation/multiplier/constant/priority, activate installs on
+  the nearest common ancestor), full anchor API, UILayoutPriority,
+  translatesAutoresizingMaskIntoConstraints (true = frame enters as required
+  edge constraints), intrinsic-size constraints at hugging (<=) /
+  compression-resistance (>=) priorities (defaults 250/750, labels 251
+  vertical hugging), label firstBaseline/lastBaseline from the draw-path
+  ascender rounding. Solving happens in layoutIfNeeded before the
+  layoutSubviews recursion, in root space; oracle-fitted post-solve rounding
+  (origins -> nearest integer point ties-away, sizes -> nearest 0.5 pt, per
+  view in LOCAL coordinates). Gate: all 12 constraints_* scenes at 0.000
+  layout delta + pixel pass (70/70 suite), 9/9 scroll traces, 353 tests.
+  UIStackView still lays out by direct frame computation (works; refit onto
+  the solver is future work).
 - **M10 App framework** — UIViewController lifecycle, UINavigationController,
   UITabBarController, UITableView/UICollectionView with cell reuse; demo app
   (settings-style screen) running identically on macOS host and Linux.

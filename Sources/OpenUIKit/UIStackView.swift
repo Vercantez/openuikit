@@ -21,13 +21,9 @@
 //   [215, 0, 0, 100]: round(218.667 - 8/2) = 215; cross axis still laid
 //   out per alignment).
 
-/// Minimal stand-in for Foundation's NSLayoutConstraint namespace: only the
-/// Axis enum UIStackView needs.
-public enum NSLayoutConstraint {
-    public enum Axis: Sendable {
-        case horizontal, vertical
-    }
-}
+// NSLayoutConstraint.Axis (previously a stand-alone namespace enum here)
+// moved into the real NSLayoutConstraint class with M9
+// (AutoLayout/NSLayoutConstraint.swift); UIStackView keeps using it as-is.
 
 public class UIStackView: UIView {
     public enum Distribution: Sendable {

@@ -1,5 +1,31 @@
 # Known gaps (living document — fixers: read this)
 
+## Auto Layout (M9, 2026-08-24): scope notes
+
+- Priorities minimize a WEIGHTED SUM of violations (weight = priority), not
+  a strict lexicographic hierarchy: pairwise battles (750 vs 749, 251 vs
+  250, 999 vs required) resolve winner-take-all exactly like UIKit (LP
+  vertex optimum, verified by fixtures), but in principle several weaker
+  constraints could jointly outweigh one stronger — no fixture or normal
+  layout depends on this.
+- leading/trailing alias left/right (LTR only; no RTL, no layout margins,
+  no safe-area/layout guides).
+- Constraint attributes map to FRAME edges in the solve space; a superview's
+  bounds.origin (scrolled UIScrollView content) is not modeled, so
+  constraint children of a scrolled view anchor to its frame, not its
+  visible bounds. No constraint fixture scrolls.
+- Baselines: UILabel only (single-line line-box math, offset =
+  floor(ascender + 0.5) from top — same rounding as the draw path). Other
+  views' baseline attributes alias the bottom edge, like plain UIKit views.
+  A label stretched beyond its intrinsic height keeps the top-anchored
+  baseline (real UIKit re-centers; no fixture covers it).
+- An unsatisfiable REQUIRED constraint is dropped at add time (UIKit
+  "breaks" a constraint and logs; the library stays silent).
+- UIStackView still lays out by direct frame computation (pre-M9 code,
+  golden-exact); it does not generate constraints for arranged subviews.
+  Mixing a stack view INSIDE a constraint-sized parent works (the solver
+  sets its frame, then layoutSubviews distributes).
+
 ## Text input (M8, 2026-08-24): scope notes
 
 - SELECTION is not implemented (no range selection, no select-all/copy/

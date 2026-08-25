@@ -170,6 +170,7 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UITouch.swift`, `UIEvent.swift`, `UIGestureRecognizer.swift`, `UIControl.swift` | **event** | done (M7) |
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
+| `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
 

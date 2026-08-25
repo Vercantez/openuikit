@@ -154,6 +154,28 @@ open class UIView {
     public var autoresizingMask: AutoresizingMask = []
     public var autoresizesSubviews = true
 
+    // MARK: Auto Layout (M9 — autolayout module, AutoLayout/*.swift)
+
+    /// UIKit semantics: while true, the view's frame is authoritative and
+    /// enters the solver as required left/top/width/height constraints;
+    /// constraint-positioned views set this to false.
+    public var translatesAutoresizingMaskIntoConstraints = true
+    /// Constraints installed on this view (nearest common ancestor of their
+    /// items). Managed by NSLayoutConstraint.activate/deactivate.
+    var _installedConstraints: [NSLayoutConstraint] = []
+    var _huggingH: UILayoutPriority = .defaultLow
+    var _huggingV: UILayoutPriority = .defaultLow
+    var _compressionH: UILayoutPriority = .defaultHigh
+    var _compressionV: UILayoutPriority = .defaultHigh
+
+    /// Baseline offsets for firstBaseline/lastBaseline constraint attributes:
+    /// (first baseline from the view's top, last baseline from its bottom).
+    /// nil (plain views): both baselines alias the bottom edge, like UIKit.
+    /// UILabel overrides (text module hook).
+    func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
+        nil
+    }
+
     /// Trait override; `.unspecified` inherits from superview / current.
     public var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
     public var tintColor: UIColor! {
@@ -208,6 +230,12 @@ open class UIView {
     var needsLayout = true
     public func setNeedsLayout() { needsLayout = true }
     public func layoutIfNeeded() {
+        // Auto Layout (M9): solve constraints for the whole hierarchy first
+        // (UIKit solves in the window/root space before layoutSubviews).
+        // No-op (one integer compare) when no constraints are installed.
+        var top: UIView = self
+        while let sv = top.superview { top = sv }
+        LayoutEngine.solveIfNeeded(root: top)
         // Layout entire subtree (top-down), like a simplified layout pass.
         _layoutSubtree()
     }

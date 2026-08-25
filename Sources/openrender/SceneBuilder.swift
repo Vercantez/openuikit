@@ -140,6 +140,26 @@ func applyCommon(_ v: UIView, _ j: SceneJSON, name: String) {
     }
     if let r = num(j["shadowRadius"]) { v.layer.shadowRadius = r }
     if let e = j["userInteractionEnabled"]?.boolValue { v.isUserInteractionEnabled = e }
+    // Auto Layout (spec v4.3 — M9), mirroring the oracle's applyCommon: a
+    // view that participates in constraints opts out of the autoresizing-mask
+    // translation (it may omit "frame" entirely).
+    if j["useConstraints"]?.boolValue == true {
+        v.translatesAutoresizingMaskIntoConstraints = false
+    }
+    if let p = num(j["huggingH"]) {
+        v.setContentHuggingPriority(UILayoutPriority(rawValue: Float(p)), for: .horizontal)
+    }
+    if let p = num(j["huggingV"]) {
+        v.setContentHuggingPriority(UILayoutPriority(rawValue: Float(p)), for: .vertical)
+    }
+    if let p = num(j["compressionH"]) {
+        v.setContentCompressionResistancePriority(UILayoutPriority(rawValue: Float(p)),
+                                                  for: .horizontal)
+    }
+    if let p = num(j["compressionV"]) {
+        v.setContentCompressionResistancePriority(UILayoutPriority(rawValue: Float(p)),
+                                                  for: .vertical)
+    }
     if let m = j["autoresizingMask"]?.arrayValue {
         var mask: UIView.AutoresizingMask = []
         for item in m {
@@ -665,6 +685,68 @@ func captureSuffix(_ t: Double) -> String {
     return "t" + ms
 }
 
+// MARK: - Constraints (scene spec v4.3 — M9, mirror oracle's activateConstraints)
+
+func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
+    switch s {
+    case "left": return .left
+    case "right": return .right
+    case "top": return .top
+    case "bottom": return .bottom
+    case "leading": return .leading
+    case "trailing": return .trailing
+    case "width": return .width
+    case "height": return .height
+    case "centerX": return .centerX
+    case "centerY": return .centerY
+    case "firstBaseline": return .firstBaseline
+    case "lastBaseline": return .lastBaseline
+    default: fatalError("bad constraint attribute '\(s)'")
+    }
+}
+
+/// Build and activate NSLayoutConstraints from the scene's top-level
+/// "constraints" array. Item paths use layout-dump addressing ("" = root).
+/// Runs after the tree is built and BEFORE layoutIfNeeded; priorities are
+/// set pre-activation (mirrors Tools/oracle/SceneKit.swift).
+func activateConstraints(_ specs: [JSONValue], container: UIView) {
+    var built: [NSLayoutConstraint] = []
+    for entry in specs {
+        guard let j = entry.objectValue else { fatalError("bad constraint entry") }
+        guard let itemPath = j["item"]?.stringValue else {
+            fatalError("constraint needs \"item\" (view path, \"\" = root)")
+        }
+        guard let attrName = j["attribute"]?.stringValue else {
+            fatalError("constraint needs \"attribute\"")
+        }
+        let item = viewAtPath(container, itemPath)
+        let relation: NSLayoutConstraint.Relation
+        switch j["relation"]?.stringValue ?? "eq" {
+        case "eq": relation = .equal
+        case "le": relation = .lessThanOrEqual
+        case "ge": relation = .greaterThanOrEqual
+        case let r: fatalError("bad constraint relation '\(r)'")
+        }
+        var toView: UIView? = nil
+        var toAttr: NSLayoutConstraint.Attribute = .notAnAttribute
+        if let tp = j["toItem"]?.stringValue {   // JSON null is not a string
+            toView = viewAtPath(container, tp)
+            // toAttribute defaults to the first attribute (the common case:
+            // pinning like to like).
+            toAttr = layoutAttribute(j["toAttribute"]?.stringValue ?? attrName)
+        } else if j["toAttribute"]?.stringValue != nil {
+            fatalError("constraint has \"toAttribute\" but no \"toItem\"")
+        }
+        let c = NSLayoutConstraint(item: item, attribute: layoutAttribute(attrName),
+                                   relatedBy: relation, toItem: toView, attribute: toAttr,
+                                   multiplier: num(j["multiplier"]) ?? 1,
+                                   constant: num(j["constant"]) ?? 0)
+        if let p = num(j["priority"]) { c.priority = UILayoutPriority(rawValue: Float(p)) }
+        built.append(c)
+    }
+    NSLayoutConstraint.activate(built)
+}
+
 // MARK: - Layout dump (mirror oracle keys + rounding exactly)
 
 func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
@@ -729,9 +811,28 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // root view KEEPS frame (0,0,0,0) and its background never draws (see
     // golden/*.layout.json: root frame is [0,0,0,0]; golden PNGs are
     // transparent outside subviews). Drop any root frame to reproduce that.
-    rootJ["frame"] = nil
+    //
+    // EXCEPTION (spec v4.3 — M9): the PRESENCE of a top-level "constraints"
+    // key (even []) gives the root its REAL frame [0, 0, w, h] — constraints
+    // pinning to a 0-sized root would be useless. Consequently the root's
+    // backgroundColor draws and dumps show the real root frame (mirrors
+    // Tools/oracle/SceneKit.swift buildContainer).
+    let constraintSpecs: [JSONValue]? = {
+        guard let cv = scene["constraints"] else { return nil }
+        guard let arr = cv.arrayValue else {
+            fatalError("scene \(name): \"constraints\" must be an array of objects")
+        }
+        return arr
+    }()
+    if constraintSpecs != nil {
+        rootJ["frame"] = .array([.number(0), .number(0),
+                                 .number(Double(sz[0])), .number(Double(sz[1]))])
+    } else {
+        rootJ["frame"] = nil
+    }
 
     let container = buildView(rootJ, scale: scale, warn: warn)
+    if let specs = constraintSpecs { activateConstraints(specs, container: container) }
     container.overrideUserInterfaceStyle = style
     container.setNeedsLayout()
     container.layoutIfNeeded()
