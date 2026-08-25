@@ -2,6 +2,22 @@
 // sizeThatFits / intrinsicContentSize / line breaking / truncation /
 // alignment match real UIKit (validated against golden/label_*).
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 public enum NSTextAlignment: Sendable {
     case left, center, right, justified, natural
 }

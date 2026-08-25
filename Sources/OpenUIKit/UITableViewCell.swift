@@ -26,10 +26,28 @@
 
 // MARK: - Content view (forwards touches to the cell)
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// The cell's content container. Plain-view touches that land on it (or on
 /// non-interactive labels above it) are forwarded to the cell so row
 /// highlighting works while real controls inside keep receiving their own
 /// touches. The class name keeps the subtree private to compare.py.
+
+
 final class UITableViewCellContentView: UIView {
     var cell: UITableViewCell? { superview as? UITableViewCell }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

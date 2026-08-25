@@ -15,7 +15,25 @@
 // arcs are split into <= 90-degree cubic segments with the standard
 // k = 4/3 * tan(sweep/4) control-point rule.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// Corner selection for `UIBezierPath(roundedRect:byRoundingCorners:cornerRadii:)`.
+
+
 public struct UIRectCorner: OptionSet, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }

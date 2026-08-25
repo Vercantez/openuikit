@@ -29,8 +29,26 @@
 // a ~18.5 pt padding that does not fit every probe. The oracle therefore
 // does not dump `intrinsic` for this class (docs/KNOWN_GAPS.md).
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// Private title label class (matches real UIKit's private class name, so
 /// neither renderer's internals enter the structural layout comparison).
+
+
 final class UISegmentLabel: UILabel {}
 
 open class UISegmentedControl: UIControl {

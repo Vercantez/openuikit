@@ -4,6 +4,22 @@
 // etc. Anchors are lightweight (view, attribute) references; the constraints
 // they create are ordinary NSLayoutConstraints.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 public class NSLayoutAnchor {
     /// The anchored object: a `UIView` or a ``UILayoutGuide``. UIKit types
     /// this as `Any` on `NSLayoutConstraint`; both kinds get the same four
