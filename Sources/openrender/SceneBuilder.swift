@@ -445,8 +445,57 @@ func makeButton(_ j: SceneJSON) -> UIButton {
 // running end-to-end (the scenes FAIL compare until implemented, they just
 // don't abort the batch).
 let notYetImplementedClasses: Set<String> = [
-    "UITableView", "UINavigationStack", "UITabBarStack",
+    "UITableView",
 ]
+
+// MARK: - Chrome containers (scene spec v5 — M10, viewcontroller module)
+
+/// Root-only wrapper classes matching the oracle's container naming (the
+/// layout dump compares the wrapper's own frame; the controller tree below
+/// is private on both sides). See docs/SCENE_SPEC.md "UINavigationStack" /
+/// "UITabBarStack".
+final class UINavigationStack: UIView {}
+final class UITabBarStack: UIView {}
+
+let chromeRootClasses: Set<String> = ["UINavigationStack", "UITabBarStack"]
+
+/// Controllers built for the current scene must outlive the JSON walk
+/// (views do not retain their controllers). Lives for the process — same
+/// pattern as the oracle's sceneTableDrivers.
+var sceneRetainedControllers: [UIViewController] = []
+
+/// Build the UITabBarStack scene root: a real UITabBarController whose
+/// items get titles + synthesized template images; the selected item's
+/// "content" view fills that tab's controller view.
+func makeTabBarStack(_ j: SceneJSON, scale: CGFloat,
+                     warn: (String) -> Void) -> UIView {
+    let stack = UITabBarStack()
+    let tab = UITabBarController()
+    var vcs: [UIViewController] = []
+    for (i, itemJSON) in (j["items"]?.arrayValue ?? []).enumerated() {
+        guard let item = itemJSON.objectValue else {
+            fatalError("UITabBarStack: bad items entry")
+        }
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemBackground
+        if let content = item["content"]?.objectValue {
+            vc.view.addSubview(buildView(content, scale: scale, warn: warn))
+        }
+        var img: UIImage? = nil
+        if let ij = item["image"]?.objectValue { img = makeImage(ij, scale: scale) }
+        vc.tabBarItem = UITabBarItem(title: item["title"]?.stringValue,
+                                     image: img, tag: i)
+        vcs.append(vc)
+    }
+    tab.viewControllers = vcs
+    if let idx = intValue(j["selectedIndex"]) { tab.selectedIndex = idx }
+    if let c = colorOrDie(j["tintColor"], "UITabBarStack") { tab.tabBar.tintColor = c }
+    tab.view.frame = stack.bounds
+    tab.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    stack.addSubview(tab.view)
+    sceneRetainedControllers.append(tab)
+    return stack
+}
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
     let cls = j["class"]?.stringValue ?? "UIView"
@@ -463,6 +512,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIScrollView": v = makeScrollView(j)
     case "UITextField": v = makeTextField(j)
     case "UITextView": v = makeTextView(j)
+    case "UITabBarStack": v = makeTabBarStack(j, scale: scale, warn: warn)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -830,7 +880,13 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
         }
         return arr
     }()
-    if constraintSpecs != nil {
+    // SECOND EXCEPTION (spec v5 — M10 chrome): chrome root classes
+    // (UINavigationStack / UITabBarStack) also get the REAL scene frame —
+    // a 0-sized root cannot host the controller view (mirrors the oracle's
+    // buildContainer).
+    let rootIsChrome = chromeRootClasses.contains(
+        rootJ["class"]?.stringValue ?? "UIView")
+    if constraintSpecs != nil || rootIsChrome {
         rootJ["frame"] = .array([.number(0), .number(0),
                                  .number(Double(sz[0])), .number(Double(sz[1]))])
     } else {

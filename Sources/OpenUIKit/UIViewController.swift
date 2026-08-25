@@ -21,6 +21,11 @@
 // animated transitions fire when the host's clock reaches the transition end
 // (UIWindow.tick -> UINavigationController._stepTransitions).
 
+/// Container-controller view class (same name real UIKit dumps for
+/// UINavigationController / UITabBarController — compare.py treats it as
+/// private and prunes the subtree on both sides).
+final class UILayoutContainerView: UIView {}
+
 open class UIViewController {
     public init() {}
 
@@ -63,6 +68,23 @@ open class UIViewController {
     /// next VC's back-button label).
     public var title: String? {
         didSet { navigationController?._titleDidChange(self) }
+    }
+
+    // MARK: Tab bar item (M10)
+
+    /// The item representing this controller in a parent UITabBarController.
+    /// Lazily defaulted from `title` when the controller joins a tab
+    /// controller without one.
+    public var tabBarItem: UITabBarItem?
+
+    /// Nearest ancestor tab bar controller (UIKit semantics).
+    public var tabBarController: UITabBarController? {
+        var p = parent
+        while let cur = p {
+            if let tab = cur as? UITabBarController { return tab }
+            p = cur.parent
+        }
+        return nil
     }
 
     // MARK: Appearance callbacks
