@@ -13,12 +13,19 @@ cd "$(dirname "$0")/.."
 
 normal=()
 windowed=()
+simulated=()
 for f in fixtures/scenes/*.json; do
-  if python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get("window") is True else 1)' "$f"; then
-    windowed+=("$f")
-  else
-    normal+=("$f")
-  fi
+  route=$(python3 -c '
+import json, sys
+s = json.load(open(sys.argv[1]))
+# "modal" scenes need REAL iOS (Simulator): Catalyst bridges pageSheet into
+# an AppKit sheet window whose chrome UIKit cannot capture (spec v5).
+print("sim" if s.get("modal") else ("window" if s.get("window") is True else "normal"))' "$f")
+  case $route in
+    sim) simulated+=("$f") ;;
+    window) windowed+=("$f") ;;
+    *) normal+=("$f") ;;
+  esac
 done
 
 if (( ${#normal} > 0 )); then
@@ -27,4 +34,7 @@ fi
 if (( ${#windowed} > 0 )); then
   ./Tools/oracle2/run.sh render golden "${windowed[@]}"
 fi
-echo "goldens regenerated: ${#normal} via oracle (v1), ${#windowed} via oracle2 (window)"
+if (( ${#simulated} > 0 )); then
+  ./scripts/render_sim_scenes.sh golden "${simulated[@]}"
+fi
+echo "goldens regenerated: ${#normal} via oracle (v1), ${#windowed} via oracle2 (window), ${#simulated} via SimScene (iOS Simulator)"

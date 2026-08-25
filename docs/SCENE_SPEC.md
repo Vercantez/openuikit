@@ -1,8 +1,8 @@
-# Scene Specification v4
+# Scene Specification v5
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
-- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below.
+- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet").
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
 Each renderer produces, for a **static** scene `<name>`:
@@ -182,6 +182,143 @@ indicators (same rule as UIScrollView).
 | `text` | string | |
 | `fontSize`, `fontWeight` | | default system 17 regular (always applied — real UITextView's nil-font 12 pt legacy default is not exercised). |
 | `textColor` | color | default `label`. |
+
+### `UITableView` (v5 — M10 chrome)
+A real `UITableView` with an in-scene data source (no reuse — every cell is
+built fresh; the driver object is retained for the process lifetime). Modern
+cell chrome: cells use `UIListContentConfiguration` via
+`defaultContentConfiguration()` (adapts to the init style). The oracle pins
+`contentInsetAdjustmentBehavior = .never`, hides both indicators (same rule
+as UIScrollView) and pins `traitOverrides.horizontalSizeClass = .compact`
+(iPhone metrics — the Catalyst idiom is .pad). `contentOffset` works (the
+generic UIScrollView post-frame path applies — UITableView is a scroll view).
+
+| key | type | notes |
+|---|---|---|
+| `style` | string | `plain` (default) or `insetGrouped`. |
+| `sections` | array | `[{"header": str?, "footer": str?, "rows": [...]}]` |
+
+Row object keys:
+
+| key | type | notes |
+|---|---|---|
+| `style` | string | `default` (default), `subtitle`, `value1` — the `UITableViewCell.CellStyle` the cell is created with. |
+| `text` | string | primary text. |
+| `detailText` | string | secondary text (subtitle below / value1 right-aligned). |
+| `accessory` | string | `none` (default), `disclosureIndicator`, `checkmark`. |
+| `selected` | bool | `true` renders the row's selection highlight (`setSelected` in `willDisplay`). |
+
+Layout dumps include the private cell tree (`UITableViewCell`,
+`UITableViewHeaderFooterView`, separators, …) — compare.py skips those
+subtrees; only the `UITableView` frame is compared structurally. Light
+scenes render via the offscreen v1 oracle. Dark table scenes MUST be
+`"window": true` (offscreen dynamic-color resolution is light-only), and
+windowed table scenes must NOT touch the scene's top edge — a scroll view
+flush against the window top gets iOS 26's scroll-edge-effect pocket, which
+blurs/swallows the first section header (verified; inset the table ≥ ~40 pt,
+see `tableview_dark`).
+
+Key oracle-measured metrics (Catalyst iOS 26, compact, scale 2 — see the
+`tableview_*` goldens/dumps for the full details):
+- Plain: cell height **51.5 pt**; cell label x=16, y=15.5, 17 pt regular;
+  section header height **40.5 pt** (label 17 pt semibold at x=8, y=10,
+  ~#858585 on white), first header preceded by **22 pt**
+  `sectionHeaderTopPadding`; separator **1 pt** thick, inset 16 left /
+  8 right, #E6E6E6 on white.
+- insetGrouped: card side inset **9 pt** (wrapper 8 + background 1), card
+  corner radius ≈ 26 pt (iOS 26); default/value1 cell height 51.5 pt,
+  subtitle cell height **70.5 pt** (secondary label at y=36, height 19);
+  value1 detail right-aligned to 16 pt margin, secondaryLabel; header
+  40.5 pt / 17 pt semibold (NOT uppercased on iOS 26); footer height 30,
+  13 pt footnote.
+- Selection highlight: full-bleed row **#DCDCDC** (light).
+- Accessories: disclosure chevron 10.5×14 pt at right margin 16 (gray);
+  checkmark 19×18 pt (tint blue, measured (0,136,255) light).
+
+### `UINavigationStack` (v5 — M10 chrome, root-only, requires `"window": true`)
+A real `UINavigationController` (one content VC hosting a full-size
+`UIScrollView` with the scene `subviews` as content), added as a CHILD view
+controller of the oracle2 host VC (`prefersLargeTitles`,
+`largeTitleDisplayMode .always` when `largeTitle`, explicit
+`setContentScrollView(_, for: .top)` binding). The container view is a
+UIView subclass named `UINavigationStack` (dump class matches); the
+controller view below it is private and skipped by compare.py.
+`traitOverrides.horizontalSizeClass = .compact` for iPhone bar metrics.
+
+| key | type | notes |
+|---|---|---|
+| `title` | string | `navigationItem.title`. |
+| `largeTitle` | bool | `prefersLargeTitles` + display mode `.always`. |
+| `contentSize` | `[w,h]` | the content scroll view's contentSize. |
+| `contentOffset` | `[x,y]` | applied LIVE post-attach (the bar only tracks observed offsets). Omit for the expanded rest state — the oracle nudges the offset once to engage the expanded large-title layout (Catalyst never engages it spontaneously), then settles at the new rest offset. |
+| `subviews` | array | children of the content scroll view (NOT of the stack view). |
+
+**Root-frame quirk exemption** (like constraint scenes): a root
+`UINavigationStack`/`UITabBarStack` gets the REAL `[0, 0, w, h]` frame —
+dumps carry it, and openrender must mirror.
+
+Oracle-measured metrics (Catalyst iOS 26, compact width, no safe-area top,
+375 pt wide — `navbar_large`/`navbar_inline`/`navbar_dark` goldens):
+- iOS 26 bars are TRANSPARENT at rest (no material until content scrolls
+  under; then the scroll-edge effect provides a progressive blur).
+- Expanded: `adjustedContentInset.top` = **116 pt** = 10 (top padding) +
+  54 (inline bar zone) + 52 (large-title zone). Large title: 34 pt bold at
+  x=20 (label frame `[20, 3, w, 40.5]` inside the 52 pt zone, i.e. glyphs
+  ~y 67–107.5 in scene space); the inline centered title is alpha 0.
+- Collapsed (`contentOffset` y past the reveal): inline bar zone 10..64
+  (**54 pt** bar at y=10), centered 17 pt semibold title (label height 21 at
+  bar-local y 11.5); large title alpha 0; scroll-edge-effect blur pocket
+  over the content behind the bar region.
+
+### `UITabBarStack` (v5 — M10 chrome, root-only, requires `"window": true`)
+A real `UITabBarController` child VC; items get titles + synthesized
+TEMPLATE images (the standard scene-spec `image` object, rendered
+`.alwaysTemplate` — SF Symbols are not portable). Selected tab's `content`
+view (if any) fills that tab's VC view. Catalyst leaves the fully laid-out
+`UITabBar` hidden+alpha 0 (it expects NSToolbar hosting, which oracle2
+suppresses); the oracle reveals it post-attach (`isHidden = false`,
+`alpha = 1`). Compact width override → bottom (iPhone) bar.
+
+| key | type | notes |
+|---|---|---|
+| `items` | array | `[{"title": str, "image": {…}?, "content": {view}?}]` (≤ 5). |
+| `selectedIndex` | int | default 0. |
+| `tintColor` | color | `tabBar.tintColor` (selected item color). |
+
+Oracle-measured metrics (iOS 26 liquid-glass floating bar, 375×480 scene):
+- Bar group region: bottom **72 pt** (y 408–480); floating platter
+  `[51, 408, 274, 62]` (10 pt bottom margin), near-white glass
+  (≈#FDFDFE) with soft shadow.
+- Selected item: capsule highlight ≈#EBEBEC behind icon+title, tinted
+  (default tint measured (52,124,238); `tintColor` respected — see
+  `tabbar_tinted` systemPink).
+- Unselected items: near-black (≈#191919) icon+title; item titles ~10 pt.
+
+### Modal sheet (v5 — M10 chrome): top-level `"modal"` key
+
+```json
+"modal": { "style": "pageSheet", "content": { ...view object... } }
+```
+
+Presents a REAL `.pageSheet` over the scene root (the base screen) and
+captures the WHOLE WINDOW after presenting without animation. Catalyst
+bridges pageSheet into an AppKit sheet window (`_UIBridgedPresentationWindow`)
+whose Mac chrome is composited outside UIKit — NOT the iOS look — so modal
+scenes are rendered by real iOS UIKit in the headless iOS Simulator
+(`scripts/render_sim_scenes.sh`; `scripts/regen_goldens.sh` routes them
+automatically). Requirements: `"window": true`, scene size = the simulator
+device's portrait size (iPhone 16: **393 × 852**). The capture is the app
+window only — no status bar (SpringBoard overlay). The `content` view fills
+the presented VC's view (autoresized); the sheet content area is NOT part of
+the layout dump (pixels validate it).
+
+Oracle-measured metrics (real iOS 26, iPhone 16): dimming = black at
+**20 %** over the base (white base → #CCCCCC); sheet top edge at
+**59.5 pt** (below the 59 pt safe-area top), full width, continuous rounded
+top corners (left-edge white reach per Δy from the top edge:
+5 pt → 9.25, 10 pt → 6, 15 pt → 3.75, 20 pt → 2.25, 25 pt → 1.25,
+30 pt → 0.75, 35 pt → 0.5 — ≈ 24 pt continuous-corner fit); the base
+view controller is pushed back (scaled) behind the dimming.
 
 ### `UIStackView`
 | key | notes |
@@ -523,6 +660,10 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
     shadows are large blurry regions, so small blur differences touch many pixels.
   - Text scenes: pass ≥ 97%
   - Control scenes (button/switch/progress): pass ≥ 96%
+  - Chrome scenes (v5: any UITableView / UINavigationStack / UITabBarStack,
+    or a top-level "modal"): pass ≥ 95% — system-drawn material (glass
+    platters, edge-effect gradients, sheet shadows) covers large regions.
+    Chrome outranks the other categories.
   - Category rule for v2 features: shadows and gradients do **not** change a
     scene's category by themselves — a gradient-only scene is `geometry`, a
     shadow scene with no text/controls is `effects`, and a scene that also

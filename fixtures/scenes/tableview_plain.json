@@ -1,0 +1,41 @@
+{
+  "name": "tableview_plain",
+  "size": [375, 560],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 560], "backgroundColor": "systemGray3" },
+      {
+        "class": "UITableView",
+        "frame": [0, 40, 375, 480],
+        "style": "plain",
+        "sections": [
+          {
+            "header": "Fruits",
+            "rows": [
+              { "text": "Apple" },
+              { "text": "Banana", "accessory": "disclosureIndicator" },
+              { "text": "Cherry", "accessory": "checkmark" }
+            ]
+          },
+          {
+            "header": "Vegetables",
+            "rows": [
+              { "text": "Asparagus", "accessory": "disclosureIndicator" },
+              { "text": "Beetroot" }
+            ]
+          },
+          {
+            "header": "Grains",
+            "rows": [
+              { "text": "Amaranth" },
+              { "text": "Barley", "accessory": "disclosureIndicator" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

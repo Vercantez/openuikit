@@ -16,14 +16,24 @@ from PIL import Image
 PIXEL_TOL = 6          # per-channel delta counted as "matching"
 LAYOUT_TOL = 0.5       # points
 
+# Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
+# scenes (bar materials / edge effects, cell chrome, sheet presentation).
+CHROME_CLASSES = {"UITableView", "UINavigationStack", "UITabBarStack"}
+
 def classify(scene):
-    """geometry | effects | text | control, plus layoutOnly flag.
+    """geometry | effects | text | control | chrome, plus layoutOnly flag.
 
     Shadows/gradients (spec v2) do not change a scene's category by
     themselves: if the scene also has text/controls its existing category
     (and threshold) applies. A gradient-only scene stays "geometry";
     a shadow scene with no text/controls becomes "effects" (looser
     threshold — shadow blur covers many pixels).
+
+    Chrome (spec v5) outranks everything: any UITableView /
+    UINavigationStack / UITabBarStack in the tree, or a top-level "modal",
+    makes the scene "chrome" — large regions of system-drawn material
+    (glass platters, edge-effect gradients, sheet shadows) warrant the
+    loosest threshold.
     """
     kinds = set()
     has_shadow = [False]
@@ -35,8 +45,10 @@ def classify(scene):
             walk(s)
     walk(scene["root"])
     layout_only = scene.get("layoutOnly", False)
-    if kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
-                "UITextField", "UITextView"}:
+    if scene.get("modal") or (kinds & CHROME_CLASSES):
+        cat = "chrome"
+    elif kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
+                  "UITextField", "UITextView"}:
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"
@@ -46,7 +58,8 @@ def classify(scene):
         cat = "geometry"
     return cat, layout_only
 
-THRESHOLDS = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0}
+THRESHOLDS = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0,
+              "chrome": 95.0}
 
 def capture_suffix(t):
     """Frame-file suffix for a capture time: ms, zero-padded to >= 3 digits
@@ -58,7 +71,12 @@ def capture_suffix(t):
 # the pixel comparison is what holds their visual placement to account.
 PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   "UIProgressView", "UIStackView", "UIGradientView",
-                  "UIScrollView", "UITextField", "UITextView"}
+                  "UIScrollView", "UITextField", "UITextView",
+                  # spec v5 chrome. Their INTERNALS (cells, bars, controller
+                  # container views) are private on both sides — only the
+                  # chrome view's own frame is compared structurally; pixels
+                  # hold the chrome itself to account.
+                  "UITableView", "UINavigationStack", "UITabBarStack"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

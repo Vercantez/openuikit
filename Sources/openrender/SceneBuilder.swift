@@ -440,7 +440,13 @@ func makeButton(_ j: SceneJSON) -> UIButton {
 /// They are instantiated as plain UIView (with common props) so geometry
 /// scenes still run; the compare step fails for these scenes until the
 /// owning modules land. Adding a real class later = one `case` line below.
-let notYetImplementedClasses: Set<String> = []
+// Spec v5 (M10 chrome): goldens exist, OpenUIKit implementations pending.
+// Substituting a plain UIView keeps `openrender render fixtures/scenes/*`
+// running end-to-end (the scenes FAIL compare until implemented, they just
+// don't abort the batch).
+let notYetImplementedClasses: Set<String> = [
+    "UITableView", "UINavigationStack", "UITabBarStack",
+]
 
 func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
     let cls = j["class"]?.stringValue ?? "UIView"

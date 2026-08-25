@@ -1,0 +1,21 @@
+{
+  "name": "navbar_dark",
+  "size": [375, 480],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Library",
+    "largeTitle": true,
+    "contentSize": [375, 1200],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 343, 64], "backgroundColor": "secondarySystemBackground", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 29, 200, 22], "text": "First shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 84, 343, 64], "backgroundColor": "secondarySystemBackground", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 105, 200, 22], "text": "Second shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 160, 343, 64], "backgroundColor": "secondarySystemBackground", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 181, 200, 22], "text": "Third shelf", "fontSize": 17 }
+    ]
+  }
+}

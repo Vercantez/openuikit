@@ -158,6 +158,109 @@ final class UIGradientView: UIView {
     override class var layerClass: AnyClass { CAGradientLayer.self }
 }
 
+// MARK: - Chrome (scene spec v5 — M10)
+
+/// Set by oracle2 (which has a real, appeared root view controller) BEFORE
+/// building a scene. Chrome classes that need real view-controller
+/// containment (UINavigationStack, UITabBarStack) refuse to build without it,
+/// which also keeps them out of the offscreen v1 oracle — their bars use
+/// render-server-only materials, so such scenes must carry `"window": true`.
+var oracleHostViewController: UIViewController? = nil
+/// Child view controllers created while building chrome scenes. oracle2
+/// removes them from the host after capturing each scene.
+var oracleChildControllers: [UIViewController] = []
+/// Actions that must run AFTER the scene is attached to the live window and
+/// has settled (oracle2 only). Used for the large-title collapse: the nav
+/// bar's scroll observation only tracks a contentOffset applied while live.
+var oraclePostAttachActions: [() -> Void] = []
+/// Set while building when the scene contains chrome that needs the window
+/// to settle (appearance callbacks, bar materials) before capture.
+var oracleNeedsSettle = false
+/// Retains table-view data-source drivers for the life of the process
+/// (UITableView holds its dataSource/delegate weakly).
+var sceneTableDrivers: [SceneTableDriver] = []
+
+/// In-scene UITableView data source built from the scene JSON's "sections".
+final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelegate {
+    struct Row {
+        let style: UITableViewCell.CellStyle
+        let text: String
+        let detailText: String?
+        let accessory: UITableViewCell.AccessoryType
+        let selected: Bool
+    }
+    struct Section {
+        let header: String?
+        let footer: String?
+        let rows: [Row]
+    }
+    let sections: [Section]
+
+    init(sectionsJSON: [JSON]) {
+        sections = sectionsJSON.map { s in
+            let rows = (s["rows"] as? [JSON] ?? []).map { r -> Row in
+                let style: UITableViewCell.CellStyle
+                switch r["style"] as? String ?? "default" {
+                case "default": style = .default
+                case "subtitle": style = .subtitle
+                case "value1": style = .value1
+                case let x: fatalError("bad cell style '\(x)'")
+                }
+                let accessory: UITableViewCell.AccessoryType
+                switch r["accessory"] as? String ?? "none" {
+                case "none": accessory = .none
+                case "disclosureIndicator": accessory = .disclosureIndicator
+                case "checkmark": accessory = .checkmark
+                case let x: fatalError("bad accessory '\(x)'")
+                }
+                return Row(style: style, text: r["text"] as? String ?? "",
+                           detailText: r["detailText"] as? String,
+                           accessory: accessory,
+                           selected: r["selected"] as? Bool == true)
+            }
+            return Section(header: s["header"] as? String,
+                           footer: s["footer"] as? String, rows: rows)
+        }
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].rows.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let row = sections[indexPath.section].rows[indexPath.row]
+        // Fresh cell every time — no reuse, fully deterministic.
+        let cell = UITableViewCell(style: row.style, reuseIdentifier: nil)
+        // Modern chrome: content configuration (matches what real apps get);
+        // defaultContentConfiguration() adapts to the cell's init style.
+        var cfg = cell.defaultContentConfiguration()
+        cfg.text = row.text
+        if let d = row.detailText { cfg.secondaryText = d }
+        cell.contentConfiguration = cfg
+        cell.accessoryType = row.accessory
+        return cell
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].header
+    }
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        sections[section].footer
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        // Static scene: a "selected": true row shows the selection highlight.
+        if sections[indexPath.section].rows[indexPath.row].selected {
+            cell.setSelected(true, animated: false)
+        }
+    }
+}
+
+/// Root-only chrome containers (spec v5). Plain UIViews named exactly like
+/// the scene-spec classes so layout dumps agree; the real UIKit controller
+/// view (all-private classes, skipped by compare.py) is their only subview.
+final class UINavigationStack: UIView {}
+final class UITabBarStack: UIView {}
+
 // MARK: - View building
 
 func applyCommon(_ v: UIView, _ j: JSON, name: String, traits: UITraitCollection) {
@@ -239,7 +342,8 @@ func lineBreakMode(_ s: String?) -> NSLineBreakMode {
     }
 }
 
-func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
+func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
+    var j = jIn   // chrome cases consume "subviews" themselves and clear it
     let cls = j["class"] as? String ?? "UIView"
     let v: UIView
     switch cls {
@@ -360,6 +464,135 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
                                           bottom: ci[2], right: ci[3])
         }
         v = s
+    case "UITableView":
+        let style: UITableView.Style
+        switch j["style"] as? String ?? "plain" {
+        case "plain": style = .plain
+        case "insetGrouped": style = .insetGrouped
+        case let s: fatalError("bad table style '\(s)'")
+        }
+        let t = UITableView(frame: .zero, style: style)
+        // Same pinning as UIScrollView (no VC/safe-area shifts offscreen, no
+        // indicator subviews in the dump).
+        t.contentInsetAdjustmentBehavior = .never
+        t.showsVerticalScrollIndicator = false
+        t.showsHorizontalScrollIndicator = false
+        // iPhone metrics: cell margins / inset-grouped insets are size-class
+        // dependent; the Catalyst oracle idiom is .pad, so pin compact width.
+        t.traitOverrides.horizontalSizeClass = .compact
+        let driver = SceneTableDriver(sectionsJSON: j["sections"] as? [JSON] ?? [])
+        sceneTableDrivers.append(driver)   // dataSource/delegate are weak
+        t.dataSource = driver
+        t.delegate = driver
+        v = t
+    case "UINavigationStack":
+        // Root-only (spec v5). Real UINavigationController; requires a live
+        // host VC (oracle2) — bar materials are render-server-only anyway.
+        guard let host = oracleHostViewController else {
+            fatalError("UINavigationStack requires oracle2 (mark the scene \"window\": true)")
+        }
+        let stack = UINavigationStack()
+        stack.traitOverrides.horizontalSizeClass = .compact  // iPhone bar metrics
+        let contentVC = UIViewController()
+        contentVC.view.backgroundColor = UIColor.systemBackground.resolvedColor(with: traits)
+        contentVC.navigationItem.title = j["title"] as? String
+        let scroll = UIScrollView(frame: contentVC.view.bounds)
+        scroll.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        // .automatic is REQUIRED here: the large-title expansion/collapse is
+        // driven by contentOffset relative to the bar-adjusted inset.
+        scroll.contentInsetAdjustmentBehavior = .automatic
+        scroll.showsVerticalScrollIndicator = false
+        scroll.showsHorizontalScrollIndicator = false
+        if let csz = numArray(j["contentSize"]), csz.count == 2 {
+            scroll.contentSize = CGSize(width: csz[0], height: csz[1])
+        }
+        for sub in j["subviews"] as? [JSON] ?? [] {
+            scroll.addSubview(buildView(sub, scale: scale, traits: traits))
+        }
+        j["subviews"] = nil   // consumed (they live in the scroll view)
+        contentVC.view.addSubview(scroll)
+        // Explicitly bind the scroll view to the bar (large-title expansion /
+        // collapse + edge effects) — automatic detection is unreliable for a
+        // hosted (non-root) navigation controller.
+        contentVC.setContentScrollView(scroll, for: .top)
+        let nav = UINavigationController(rootViewController: contentVC)
+        nav.navigationBar.prefersLargeTitles = j["largeTitle"] as? Bool == true
+        if j["largeTitle"] as? Bool == true {
+            contentVC.navigationItem.largeTitleDisplayMode = .always
+        }
+        host.addChild(nav)
+        nav.view.frame = stack.bounds
+        nav.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        stack.addSubview(nav.view)
+        nav.didMove(toParent: host)
+        oracleChildControllers.append(nav)
+        oracleNeedsSettle = true
+        // The bar's large-title expansion/collapse state only updates for
+        // offset changes its scroll observer SEES — apply offsets live,
+        // post-attach. Without an explicit "contentOffset" the scene shows
+        // the rest (expanded) state; the bar still needs one observed change
+        // to leave its initial collapsed layout, so nudge and settle back.
+        let explicitOffset: CGPoint? = (numArray(j["contentOffset"]).flatMap {
+            $0.count == 2 ? CGPoint(x: $0[0], y: $0[1]) : nil
+        })
+        oraclePostAttachActions.append { [weak nav] in
+            if let co = explicitOffset {
+                scroll.setContentOffset(co, animated: false)
+            } else {
+                // Expanded rest state. The bar only engages its expanded
+                // layout for an OBSERVED offset that physically reveals the
+                // large-title region, so: reveal it (inset grows to include
+                // the large title), force the bar layout, then settle at the
+                // new rest offset.
+                scroll.setContentOffset(
+                    CGPoint(x: 0, y: -scroll.adjustedContentInset.top - 52), animated: false)
+                nav?.view.layoutIfNeeded()
+                scroll.setContentOffset(
+                    CGPoint(x: 0, y: -scroll.adjustedContentInset.top), animated: false)
+            }
+        }
+        v = stack
+    case "UITabBarStack":
+        // Root-only (spec v5). Real UITabBarController with template-image
+        // items; requires a live host VC (oracle2).
+        guard let host = oracleHostViewController else {
+            fatalError("UITabBarStack requires oracle2 (mark the scene \"window\": true)")
+        }
+        let stack = UITabBarStack()
+        stack.traitOverrides.horizontalSizeClass = .compact  // bottom (iPhone) tab bar
+        let tab = UITabBarController()
+        var vcs: [UIViewController] = []
+        for (i, item) in (j["items"] as? [JSON] ?? []).enumerated() {
+            let vc = UIViewController()
+            vc.view.backgroundColor = UIColor.systemBackground.resolvedColor(with: traits)
+            if let content = item["content"] as? JSON {
+                vc.view.addSubview(buildView(content, scale: scale, traits: traits))
+            }
+            var img: UIImage? = nil
+            if let ij = item["image"] as? JSON {
+                img = makeImage(ij, scale: scale).withRenderingMode(.alwaysTemplate)
+            }
+            vc.tabBarItem = UITabBarItem(title: item["title"] as? String, image: img, tag: i)
+            vcs.append(vc)
+        }
+        tab.viewControllers = vcs
+        if let idx = j["selectedIndex"] as? Int { tab.selectedIndex = idx }
+        if let c = colorOrDie(j["tintColor"], cls, traits) { tab.tabBar.tintColor = c }
+        host.addChild(tab)
+        tab.view.frame = stack.bounds
+        tab.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        stack.addSubview(tab.view)
+        tab.didMove(toParent: host)
+        oracleChildControllers.append(tab)
+        oracleNeedsSettle = true
+        // Catalyst leaves the (fully laid out) UITabBar hidden with alpha 0
+        // — it expects to host tabs in the NSToolbar titlebar, which oracle2
+        // suppresses. Reveal the real bar once live.
+        oraclePostAttachActions.append { [weak tab] in
+            tab?.tabBar.isHidden = false
+            tab?.tabBar.alpha = 1
+        }
+        v = stack
     case "UIStackView":
         let s = UIStackView()
         s.axis = (j["axis"] as? String) == "vertical" ? .vertical : .horizontal
@@ -740,7 +973,16 @@ struct SceneSpec {
     /// [0, 0, w, h] so constraints against the root resolve correctly (and the
     /// root's backgroundColor draws). openrender must mirror both behaviors.
     let constraints: [JSON]?
+    /// Scene spec v5 (M10): top-level "modal" — a presented pageSheet whose
+    /// STATIC look (dimming, sheet chrome) is captured window-wide by
+    /// oracle2. nil when absent. Requires "window": true; v1 refuses it.
+    let modal: JSON?
 }
+
+/// Root classes exempt from the root-frame quirk (spec v5): a 0-sized root
+/// cannot host a controller view, so these get the REAL [0, 0, w, h] frame
+/// (like constraint scenes). openrender must mirror.
+let chromeRootClasses: Set<String> = ["UINavigationStack", "UITabBarStack"]
 
 func loadScene(file: String) throws -> SceneSpec {
     let data = try Data(contentsOf: URL(fileURLWithPath: file))
@@ -763,13 +1005,25 @@ func loadScene(file: String) throws -> SceneSpec {
         }
         return CGPoint(x: a[0], y: a[1])
     }
+    if let modal = scene["modal"] as? JSON {
+        guard (modal["style"] as? String ?? "pageSheet") == "pageSheet" else {
+            fatalError("scene \(name): modal style must be \"pageSheet\"")
+        }
+        guard modal["content"] is JSON else {
+            fatalError("scene \(name): \"modal\" needs a \"content\" view object")
+        }
+        guard scene["window"] as? Bool == true else {
+            fatalError("scene \(name): \"modal\" requires \"window\": true (oracle2)")
+        }
+    }
     return SceneSpec(name: name, width: sz[0], height: sz[1], scale: scale, style: style,
                      traits: UITraitCollection(userInterfaceStyle: style),
                      windowRequired: scene["window"] as? Bool == true,
                      rootJSON: scene["root"] as! JSON,
                      animations: animations, captureTimes: captureTimes,
                      hitTests: hitTests,
-                     constraints: scene["constraints"] as? [JSON])
+                     constraints: scene["constraints"] as? [JSON],
+                     modal: scene["modal"] as? JSON)
 }
 
 func buildContainer(_ spec: SceneSpec) -> UIView {
@@ -790,7 +1044,13 @@ func buildContainer(_ spec: SceneSpec) -> UIView {
         // so nothing old is invalidated. Consequence: the root background
         // DRAWS in constraint scenes and their dumps have root frame
         // [0, 0, w, h]. openrender must mirror this.
-        if spec.constraints != nil {
+        //
+        // SECOND EXCEPTION (spec v5): chrome root classes (UINavigationStack,
+        // UITabBarStack) — a 0-sized root cannot host the controller view
+        // (its autoresizing would keep it 0-sized), so they too get the real
+        // frame. Their dumps have root frame [0, 0, w, h].
+        if spec.constraints != nil
+            || chromeRootClasses.contains(spec.rootJSON["class"] as? String ?? "UIView") {
             rootJ["frame"] = [0.0, 0.0, Double(spec.width), Double(spec.height)]
         } else {
             rootJ["frame"] = [0, 0, spec.width, spec.height]

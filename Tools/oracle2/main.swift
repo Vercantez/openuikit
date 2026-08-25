@@ -39,10 +39,11 @@ try! FileManager.default.createDirectory(atPath: outdir, withIntermediateDirecto
 // MARK: - Renderer
 
 final class Renderer {
-    let host: UIView          // rootViewController.view — scene containers are attached here
+    let hostVC: UIViewController   // rootViewController — chrome scenes need real containment
+    var host: UIView { hostVC.view }  // scene containers are attached here
     var attempts = 0
 
-    init(host: UIView) { self.host = host }
+    init(hostVC: UIViewController) { self.hostVC = hostVC }
 
     /// drawHierarchy returns a blank image until the window has actually been
     /// composited by the render server. Poll a probe view until it draws.
@@ -94,6 +95,22 @@ final class Renderer {
 
     func renderOne(file: String) throws {
         let spec = try loadScene(file: file)
+        // Chrome scenes (spec v5) build real child view controllers against
+        // the live host VC and may register post-attach actions.
+        oracleHostViewController = hostVC
+        oracleChildControllers = []
+        oraclePostAttachActions = []
+        oracleNeedsSettle = false
+        defer {
+            for c in oracleChildControllers {
+                c.willMove(toParent: nil)
+                c.view.removeFromSuperview()
+                c.removeFromParent()
+            }
+            oracleChildControllers = []
+            oraclePostAttachActions = []
+            oracleNeedsSettle = false
+        }
         let container = buildContainer(spec)
 
         // Layout dump EXACTLY like v1: same code, same moment (pre-attach).
@@ -109,12 +126,94 @@ final class Renderer {
         wrapper.overrideUserInterfaceStyle = spec.style
         wrapper.addSubview(container)
         host.addSubview(wrapper)
+        // Chrome scenes: keep the scene OUT of the Catalyst window's top
+        // safe-area intrusion (~41 pt with the hidden titlebar) — otherwise
+        // the nav/tab bars lay out against Mac window chrome that has no
+        // iOS counterpart. Position only; the snapshot is wrapper-relative.
+        if oracleNeedsSettle {
+            wrapper.frame.origin.y = host.safeAreaInsets.top
+        }
         wrapper.layoutIfNeeded()
 
         if spec.animations.isEmpty {
-            // afterScreenUpdates: true flushes pending CA transactions so the
-            // just-attached hierarchy is rendered by the server before capture.
-            let img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
+            // Chrome scenes (spec v5): let the window settle so child-VC
+            // appearance callbacks fire and bar materials resolve, then run
+            // post-attach actions (e.g. the large-title collapse offset,
+            // which the nav bar only honors while live) and settle again.
+            if oracleNeedsSettle || !oraclePostAttachActions.isEmpty || spec.modal != nil {
+                RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+                for action in oraclePostAttachActions { action() }
+                wrapper.layoutIfNeeded()
+                RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+            }
+            if ProcessInfo.processInfo.environment["ORACLE2_CHROME_DEBUG"] != nil {
+                print("host.safeAreaInsets=\(host.safeAreaInsets) wrapper.frame=\(wrapper.frame)")
+                func walkS(_ v: UIView) {
+                    if let s = v as? UIScrollView {
+                        print("scroll offset=\(s.contentOffset) adjInset=\(s.adjustedContentInset) inset=\(s.contentInset) safe=\(s.safeAreaInsets)")
+                    }
+                    for sub in v.subviews { walkS(sub) }
+                }
+                walkS(wrapper)
+                func walk(_ v: UIView, _ depth: Int) {
+                    let cls = NSStringFromClass(type(of: v))
+                    var extra = ""
+                    if let l = v as? UILabel { extra = " text=\"\(l.text ?? "")\" font=\(l.font.pointSize)/\(l.font.fontName)" }
+                    print(String(repeating: "  ", count: depth) + "\(cls) frame=\(v.frame) alpha=\(v.alpha) hidden=\(v.isHidden)\(extra)")
+                    for s in v.subviews { walk(s, depth + 1) }
+                }
+                walk(wrapper, 0)
+            }
+            let img: UIImage
+            if let modal = spec.modal {
+                // Present a real pageSheet and capture the WHOLE WINDOW —
+                // the presentation (dimming + sheet) lives at window level,
+                // outside the wrapper. Scene size must equal the window size.
+                let win = host.window!
+                if win.bounds.size != sceneSize {
+                    print("warning: modal scene \(spec.name) size \(sceneSize) != window \(win.bounds.size)")
+                }
+                // Catalyst presents pageSheet in a bridged AppKit sheet
+                // window in regular width — force compact so the sheet is an
+                // in-window iOS-style presentation we can capture.
+                win.traitOverrides.horizontalSizeClass = .compact
+                defer { win.traitOverrides.remove(UITraitHorizontalSizeClass.self) }
+                let vc = UIViewController()
+                let content = buildView(modal["content"] as! JSON,
+                                        scale: spec.scale, traits: spec.traits)
+                content.frame = vc.view.bounds
+                content.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                vc.view.backgroundColor = UIColor.systemBackground.resolvedColor(with: spec.traits)
+                vc.view.addSubview(content)
+                vc.modalPresentationStyle = .pageSheet
+                hostVC.present(vc, animated: false)
+                // Settle: presentation transaction + dimming must be composited.
+                RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+                if ProcessInfo.processInfo.environment["ORACLE2_CHROME_DEBUG"] != nil {
+                    print("presented=\(String(describing: hostVC.presentedViewController)) sheetView.window=\(String(describing: vc.viewIfLoaded?.window)) hostWindow=\(win)")
+                    for s in win.subviews { print("win sub: \(NSStringFromClass(type(of: s))) frame=\(s.frame)") }
+                    if let pc = vc.presentationController {
+                        print("presentationController=\(NSStringFromClass(type(of: pc))) containerView=\(String(describing: pc.containerView))")
+                    }
+                    if let bw = vc.viewIfLoaded?.window, bw !== win {
+                        let bimg = Self.snapshot(bw, size: bw.bounds.size, scale: spec.scale)
+                        try? bimg.pngData()!.write(to: URL(fileURLWithPath: "\(outdir)/DEBUG_bridged.png"))
+                        func walk(_ v: UIView, _ d: Int) {
+                            print(String(repeating: "  ", count: d) + "\(NSStringFromClass(type(of: v))) frame=\(v.frame) alpha=\(v.alpha)")
+                            if d < 4 { for s in v.subviews { walk(s, d + 1) } }
+                        }
+                        walk(bw, 0)
+                    }
+                }
+                img = Self.snapshot(win, size: sceneSize, scale: spec.scale)
+                vc.dismiss(animated: false)
+                RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+            } else {
+                // afterScreenUpdates: true flushes pending CA transactions so
+                // the just-attached hierarchy is rendered by the server
+                // before capture.
+                img = Self.snapshot(wrapper, size: sceneSize, scale: spec.scale)
+            }
             wrapper.removeFromSuperview()
             try img.pngData()!.write(to: URL(fileURLWithPath: "\(outdir)/\(spec.name).png"))
             print("rendered \(spec.name)")
@@ -268,7 +367,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 mode: sceneFiles.first ?? "full")
             scrollProbe!.start()
         } else {
-            renderer = Renderer(host: vc.view)
+            renderer = Renderer(hostVC: vc)
             renderer!.start()
         }
     }

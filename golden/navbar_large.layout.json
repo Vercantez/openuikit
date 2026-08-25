@@ -1,0 +1,189 @@
+{
+  "name" : "navbar_large",
+  "views" : [
+    {
+      "class" : "UINavigationStack",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILayoutContainerView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UINavigationTransitionView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIViewControllerWrapperView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0.0"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        8,
+        343,
+        64
+      ],
+      "path" : "0.0.0.0.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        32,
+        29,
+        200,
+        22
+      ],
+      "intrinsic" : [
+        78,
+        20
+      ],
+      "path" : "0.0.0.0.0.1",
+      "sizeThatFits200" : [
+        78,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        84,
+        343,
+        64
+      ],
+      "path" : "0.0.0.0.0.2"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        32,
+        105,
+        200,
+        22
+      ],
+      "intrinsic" : [
+        103,
+        20
+      ],
+      "path" : "0.0.0.0.0.3",
+      "sizeThatFits200" : [
+        103,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        160,
+        343,
+        64
+      ],
+      "path" : "0.0.0.0.0.4"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        32,
+        181,
+        200,
+        22
+      ],
+      "intrinsic" : [
+        84.5,
+        20
+      ],
+      "path" : "0.0.0.0.0.5",
+      "sizeThatFits200" : [
+        84.5,
+        20
+      ]
+    },
+    {
+      "class" : "UINavigationBar",
+      "frame" : [
+        0,
+        10,
+        375,
+        50
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "FloatingBarContainerView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "FloatingBarHostingView<FloatingBarContainer>",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.2.0"
+    },
+    {
+      "class" : "_UIPointerInteractionAssistantEffectContainerView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "0.2.1"
+    }
+  ]
+}

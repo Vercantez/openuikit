@@ -17,6 +17,11 @@ func renderScene(file: String, outdir: String) throws {
         // presentation() stays nil offscreen), so v1 cannot capture them.
         fatalError("scene \(spec.name) has \"animations\" — render it with Tools/oracle2 (mark it \"window\": true)")
     }
+    guard spec.modal == nil else {
+        // Presentation (dimming layer, sheet chrome) exists only in a real
+        // window; loadScene already requires "window": true for modal scenes.
+        fatalError("scene \(spec.name) has \"modal\" — render it with Tools/oracle2")
+    }
     let container = buildContainer(spec)
 
     try writeLayoutDump(container, spec: spec, outdir: outdir)

@@ -1,0 +1,28 @@
+{
+  "name": "tableview_selected",
+  "size": [375, 400],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 400], "backgroundColor": "systemBackground" },
+      {
+        "class": "UITableView",
+        "frame": [0, 0, 375, 400],
+        "style": "plain",
+        "sections": [
+          {
+            "header": "Options",
+            "rows": [
+              { "text": "General" },
+              { "text": "Notifications", "selected": true, "accessory": "disclosureIndicator" },
+              { "text": "Privacy", "accessory": "disclosureIndicator" },
+              { "text": "About" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

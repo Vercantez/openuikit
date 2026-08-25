@@ -1,0 +1,445 @@
+{
+  "name" : "tableview_dark",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        500
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UITableView",
+      "frame" : [
+        0,
+        40,
+        375,
+        460
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UITableViewWrapperView",
+      "frame" : [
+        8,
+        0,
+        359,
+        460
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UITableViewCell",
+      "frame" : [
+        0,
+        143.5,
+        359,
+        70.5
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        359,
+        70.5
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        359,
+        70.5
+      ],
+      "path" : "1.0.0.0.0"
+    },
+    {
+      "class" : "UIListContentView",
+      "frame" : [
+        0,
+        0,
+        359,
+        70.5
+      ],
+      "path" : "1.0.0.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        15.5,
+        55.5,
+        20.5
+      ],
+      "intrinsic" : [
+        55.5,
+        20.5
+      ],
+      "path" : "1.0.0.1.0",
+      "sizeThatFits200" : [
+        55.5,
+        20.5
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        36,
+        106.5,
+        19
+      ],
+      "intrinsic" : [
+        106.5,
+        19
+      ],
+      "path" : "1.0.0.1.1",
+      "sizeThatFits200" : [
+        106.5,
+        19
+      ]
+    },
+    {
+      "class" : "_UITableViewCellSeparatorView",
+      "frame" : [
+        0,
+        69.5,
+        359,
+        1
+      ],
+      "path" : "1.0.0.2"
+    },
+    {
+      "class" : "UITableViewCell",
+      "frame" : [
+        0,
+        92,
+        359,
+        51.5
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        359,
+        51.5
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        359,
+        51.5
+      ],
+      "path" : "1.0.1.0.0"
+    },
+    {
+      "class" : "UIListContentView",
+      "frame" : [
+        0,
+        0,
+        319,
+        51.5
+      ],
+      "path" : "1.0.1.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        15.5,
+        83,
+        20.5
+      ],
+      "intrinsic" : [
+        83,
+        20.5
+      ],
+      "path" : "1.0.1.1.0",
+      "sizeThatFits200" : [
+        83,
+        20.5
+      ]
+    },
+    {
+      "class" : "_UITableCellAccessoryButton",
+      "frame" : [
+        321.5,
+        17,
+        19,
+        18
+      ],
+      "intrinsic" : [
+        19,
+        20
+      ],
+      "path" : "1.0.1.2",
+      "sizeThatFits200" : [
+        19,
+        18
+      ]
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        19,
+        18
+      ],
+      "intrinsic" : [
+        19,
+        20
+      ],
+      "path" : "1.0.1.2.0"
+    },
+    {
+      "class" : "_UITableViewCellSeparatorView",
+      "frame" : [
+        16,
+        50.5,
+        327,
+        1
+      ],
+      "path" : "1.0.1.3"
+    },
+    {
+      "class" : "UITableViewCell",
+      "frame" : [
+        0,
+        40.5,
+        359,
+        51.5
+      ],
+      "path" : "1.0.2"
+    },
+    {
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        359,
+        51.5
+      ],
+      "path" : "1.0.2.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        359,
+        51.5
+      ],
+      "path" : "1.0.2.0.0"
+    },
+    {
+      "class" : "UIListContentView",
+      "frame" : [
+        0,
+        0,
+        332.5,
+        51.5
+      ],
+      "path" : "1.0.2.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        15.5,
+        54.5,
+        20.5
+      ],
+      "intrinsic" : [
+        54.5,
+        20.5
+      ],
+      "path" : "1.0.2.1.0",
+      "sizeThatFits200" : [
+        54.5,
+        20.5
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        287.5,
+        15.5,
+        37,
+        20.5
+      ],
+      "intrinsic" : [
+        37,
+        20.5
+      ],
+      "path" : "1.0.2.1.1",
+      "sizeThatFits200" : [
+        37,
+        20.5
+      ]
+    },
+    {
+      "class" : "_UITableCellAccessoryButton",
+      "frame" : [
+        332.5,
+        19,
+        10.5,
+        14
+      ],
+      "intrinsic" : [
+        10.5,
+        20
+      ],
+      "path" : "1.0.2.2",
+      "sizeThatFits200" : [
+        10.5,
+        14
+      ]
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        10.5,
+        14
+      ],
+      "intrinsic" : [
+        10.5,
+        20
+      ],
+      "path" : "1.0.2.2.0"
+    },
+    {
+      "class" : "_UITableViewCellSeparatorView",
+      "frame" : [
+        16,
+        50.5,
+        327,
+        1
+      ],
+      "path" : "1.0.2.3"
+    },
+    {
+      "class" : "UITableViewHeaderFooterView",
+      "frame" : [
+        0,
+        0,
+        375,
+        40.5
+      ],
+      "path" : "1.1"
+    },
+    {
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        375,
+        40.5
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "class" : "UIListContentView",
+      "frame" : [
+        8,
+        0,
+        359,
+        40.5
+      ],
+      "path" : "1.1.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        10,
+        99.5,
+        20.5
+      ],
+      "intrinsic" : [
+        99.5,
+        20.5
+      ],
+      "path" : "1.1.1.0",
+      "sizeThatFits200" : [
+        99.5,
+        20.5
+      ]
+    },
+    {
+      "class" : "UITableViewHeaderFooterView",
+      "frame" : [
+        0,
+        214,
+        375,
+        30
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "_UISystemBackgroundView",
+      "frame" : [
+        0,
+        0,
+        375,
+        30
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "class" : "UIListContentView",
+      "frame" : [
+        8,
+        0,
+        359,
+        30
+      ],
+      "path" : "1.2.1"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        8,
+        244,
+        16
+      ],
+      "intrinsic" : [
+        244,
+        16
+      ],
+      "path" : "1.2.1.0",
+      "sizeThatFits200" : [
+        151,
+        32
+      ]
+    }
+  ]
+}
