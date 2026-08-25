@@ -63,9 +63,22 @@ if inkLogPath != nil { GlyphInkTable.logMisses = true }
 let args = CommandLine.arguments
 guard args.count >= 3 else {
     print("usage: openrender render <outdir> <scene.json>...")
+    print("       openrender scrolltrace <oracle-trace.json> <out.json>")
     exit(1)
 }
 switch args[1] {
+case "scrolltrace":
+    guard args.count == 4 else {
+        print("usage: openrender scrolltrace <oracle-trace.json> <out.json>")
+        exit(1)
+    }
+    do {
+        try runScrollTrace(traceFile: args[2], outFile: args[3])
+        exit(0)
+    } catch {
+        print("FAIL \(args[2]): \(error)")
+        exit(1)
+    }
 case "render":
     let outdir = args[2]
     try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)

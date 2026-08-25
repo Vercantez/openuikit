@@ -10,7 +10,7 @@ swiftc -O -target arm64-apple-ios26.1-macabi -sdk "$SDK" \
   -Fsystem "$SDK/System/iOSSupport/System/Library/Frameworks" \
   -I "$SDK/System/iOSSupport/usr/lib/swift" \
   -L "$SDK/System/iOSSupport/usr/lib/swift" \
-  Tools/oracle2/main.swift Tools/oracle/SceneKit.swift \
+  Tools/oracle2/main.swift Tools/oracle2/scrollprobe.swift Tools/oracle2/scrollshared.swift Tools/oracle/SceneKit.swift \
   -o "$APP/Contents/MacOS/oracle2"
 cp Tools/oracle2/Info.plist "$APP/Contents/Info.plist"
 echo "built $APP"

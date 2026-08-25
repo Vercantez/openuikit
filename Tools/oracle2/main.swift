@@ -24,10 +24,14 @@ import UIKit
 // MARK: - CLI (parsed before UIApplicationMain; still works under it)
 
 let cliArgs = CommandLine.arguments
-guard cliArgs.count >= 3, cliArgs[1] == "render" else {
+guard cliArgs.count >= 3, cliArgs[1] == "render" || cliArgs[1] == "scroll" else {
     print("usage: oracle2 render <outdir> <scene.json>...")
+    print("       oracle2 scroll <outdir> [discover]   (scroll-physics probe)")
     exit(1)
 }
+/// "scroll" runs the scroll-physics measurement probe (scrollprobe.swift)
+/// instead of the scene renderer.
+let scrollMode = cliArgs[1] == "scroll"
 let outdir = cliArgs[2]
 let sceneFiles = Array(cliArgs.dropFirst(3))
 try! FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
@@ -230,6 +234,7 @@ final class Renderer {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     var renderer: Renderer?
+    var scrollProbe: ScrollProbeRunner?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
@@ -257,8 +262,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             _ = nsApp.perform(NSSelectorFromString("activateIgnoringOtherApps:"), with: true)
         }
 
-        renderer = Renderer(host: vc.view)
-        renderer!.start()
+        if scrollMode {
+            scrollProbe = ScrollProbeRunner(
+                host: vc.view, outdir: outdir,
+                mode: sceneFiles.first ?? "full")
+            scrollProbe!.start()
+        } else {
+            renderer = Renderer(host: vc.view)
+            renderer!.start()
+        }
     }
 }
 
@@ -273,7 +285,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 // Watchdog: never leave a stray window on the user's screen.
-DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+// (The scroll probe runs many real-time gestures — give it longer.)
+DispatchQueue.main.asyncAfter(deadline: .now() + (scrollMode ? 300 : 60)) {
     FileHandle.standardError.write(Data("oracle2: watchdog timeout\n".utf8))
     exit(3)
 }

@@ -17,14 +17,17 @@ private typealias CGRect = OpenUIKit.CGRect
 
 final class ScrollPhysicsTests: XCTestCase {
 
-    /// x(t)/v(t) must match the spec formula v(t) = v0·0.998^t_ms and its
-    /// integral, evaluated independently with Foundation's pow/log.
+    /// v(t) = v0·0.998^t_ms; x(t) uses the MEASURED per-millisecond
+    /// geometric-sum distance factor F = r/(1−r)/1000 = 0.499 (see
+    /// golden/scroll_traces + docs/APP_FEEL.md), evaluated independently
+    /// with Foundation's pow/log.
     func testDecelerationMatchesClosedForm() {
         let v0: CGFloat = 1200
-        let k = 1000.0 * log(0.998)
+        let F = 0.998 / (1000 * (1 - 0.998))
+        XCTAssertEqual(F, 0.499, accuracy: 1e-12)
         for t in stride(from: 0.05, through: 1.5, by: 0.05) {
             let expectedV = 1200 * pow(0.998, 1000 * t)
-            let expectedX = 1200 * (pow(0.998, 1000 * t) - 1) / k
+            let expectedX = 1200 * F * (1 - pow(0.998, 1000 * t))
             XCTAssertEqual(Double(UIScrollPhysics.decelVelocity(v0: v0, at: t)),
                            expectedV, accuracy: 1e-6)
             XCTAssertEqual(Double(UIScrollPhysics.decelOffset(x0: 0, v0: v0, at: t)),
@@ -35,14 +38,13 @@ final class ScrollPhysicsTests: XCTestCase {
     func testDecelerationStopsBelowThreshold() {
         let v0: CGFloat = 1000
         let dur = UIScrollPhysics.decelDuration(v0: v0)
-        // v decays to exactly the 0.1 pt/s stop threshold at `dur`.
+        // v decays to exactly the 10 pt/s stop threshold at `dur`
+        // (MEASURED: UIKit never delivers the sub-10 pt/s tail).
         XCTAssertEqual(Double(UIScrollPhysics.decelVelocity(v0: v0, at: dur)),
-                       0.1, accuracy: 1e-9)
-        // Total travel of a 1000 pt/s flick under 0.998/ms is ~499.7 pt.
+                       10, accuracy: 1e-9)
+        // Total travel of a 1000 pt/s flick: (1000 − 10)·0.499 = 494.01 pt.
         let total = Double(UIScrollPhysics.decelTargetOffset(x0: 0, v0: v0))
-        XCTAssertEqual(total, 1000 * (0.1 / 1000 - 1) / (1000 * log(0.998)),
-                       accuracy: 1e-6)
-        XCTAssertEqual(total, 499.45, accuracy: 0.1)
+        XCTAssertEqual(total, (1000 - 10) * 0.499, accuracy: 1e-6)
     }
 
     func testDecelerationCrossingTimeIsExact() throws {
@@ -77,25 +79,38 @@ final class ScrollPhysicsTests: XCTestCase {
                        0.55 * 60 * 300 / (0.55 * 60 + 300), accuracy: 1e-9)
     }
 
-    /// The bounce spring is critically damped and settles at the boundary
-    /// in ~0.5 s (UIKit settle equation (1 + ωT)·e^(−ωT) = 0.001).
-    func testBounceSpringSettlesInHalfSecond() {
-        // ω satisfies the settle equation at T = 0.5.
-        let w = UIScrollPhysics.bounceOmega
-        XCTAssertEqual((1 + w * 0.5) * exp(-w * 0.5), 0.001, accuracy: 1e-12)
+    /// The bounce has TWO measured regimes (docs/APP_FEEL.md): released
+    /// from rest it is an overdamped spring (λ = 9.0 / 46.0 per second);
+    /// entered with velocity it is critically damped with ω = 11.0.
+    func testBounceSpringRegimes() {
+        XCTAssertEqual(UIScrollPhysics.bounceOmega, 11.0)
+        XCTAssertEqual(UIScrollPhysics.bounceRestLambdaSlow, 9.0)
+        XCTAssertEqual(UIScrollPhysics.bounceRestLambdaFast, 46.0)
 
         let x0: CGFloat = 40
-        // Pure release (v0 = 0): monotonic decay, 0.1% residual at 0.5 s.
+        // Rest release (v0 = 0): overdamped two-exponential, checked against
+        // an independent evaluation; monotonic decay; the tail decays at the
+        // slow rate (settles at ~x0·e^(−9t)·λ2/(λ2−λ1)).
+        let l1 = 9.0, l2 = 46.0
+        let A = Double(x0) * l2 / (l2 - l1)
+        let B = Double(x0) - A
         var prev = Double(x0)
-        for t in stride(from: 0.05, through: 0.5, by: 0.05) {
+        for t in stride(from: 0.02, through: 0.8, by: 0.02) {
+            let expected = A * exp(-l1 * t) + B * exp(-l2 * t)
             let d = Double(UIScrollPhysics.springDisplacement(x0: x0, v0: 0, at: t))
+            XCTAssertEqual(d, expected, accuracy: 1e-9)
             XCTAssertGreaterThan(d, 0)
             XCTAssertLessThan(d, prev)
             prev = d
         }
-        XCTAssertEqual(Double(UIScrollPhysics.springDisplacement(x0: x0, v0: 0, at: 0.5)),
-                       Double(x0) * 0.001, accuracy: 1e-9)
-        // Matches the analytic critically-damped solution with velocity.
+        // The measured zero-velocity bounce-back settles below 1 pt from a
+        // 235 pt overscroll in ~0.63 s (oracle: 0.61 s, gate 10%).
+        let big: CGFloat = 235
+        XCTAssertLessThan(UIScrollPhysics.springDisplacement(x0: big, v0: 0, at: 0.65), 1)
+        XCTAssertGreaterThan(UIScrollPhysics.springDisplacement(x0: big, v0: 0, at: 0.55), 1)
+
+        // With velocity: the analytic critically-damped solution at ω = 11.
+        let w = UIScrollPhysics.bounceOmega
         let v0: CGFloat = -300
         for t in stride(from: 0.02, through: 0.6, by: 0.02) {
             let b = Double(v0) + w * Double(x0)
@@ -180,12 +195,13 @@ final class UIScrollViewInteractionTests: XCTestCase {
         let tEnd = flick(window)  // uniform 500 pt/s upward
         XCTAssertTrue(sv.isDecelerating)
         let x0 = sv.contentOffset.y
-        XCTAssertEqual(Double(x0), 80, accuracy: 1e-9)  // 100 pt travel − 2 slop moves
+        // 100 pt travel − exactly the 10 pt slop (measured UIKit behavior).
+        XCTAssertEqual(Double(x0), 90, accuracy: 1e-9)
 
         // The trailing ~100 ms of samples are exactly 500 pt/s. The
-        // animation clock starts at the last touch sample (tEnd).
+        // animation clock starts at the LIFT event (tEnd + 0.01).
         for dt in [0.05, 0.15, 0.3, 0.6] {
-            window.tick(timestamp: tEnd + dt)
+            window.tick(timestamp: tEnd + 0.01 + dt)
             let expected = UIScrollPhysics.decelOffset(x0: x0, v0: 500, at: dt)
             XCTAssertEqual(Double(sv.contentOffset.y), Double(expected), accuracy: 1e-6,
                            "offset at +\(dt)s")
@@ -215,7 +231,7 @@ final class UIScrollViewInteractionTests: XCTestCase {
         }
         let x0 = sv.contentOffset.y
         window.sendTouch(.ended, at: CGPoint(x: 100, y: y), timestamp: t + 0.005)
-        window.tick(timestamp: t + 0.2)
+        window.tick(timestamp: t + 0.005 + 0.2)  // decel starts at the lift
         let expected = UIScrollPhysics.decelOffset(x0: x0, v0: 1000, at: 0.2)
         XCTAssertEqual(Double(sv.contentOffset.y), Double(expected), accuracy: 1e-6,
                        "trailing-window velocity should be exactly 1000 pt/s")
@@ -226,8 +242,8 @@ final class UIScrollViewInteractionTests: XCTestCase {
         // flick reaches the edge and bounces past it with carried velocity.
         let (window, sv) = makeScrollSetup(contentHeight: 400)
         let tEnd = flick(window)
-        let x0 = sv.contentOffset.y     // 80
-        let t0 = tEnd                   // animation clock starts here
+        let x0 = sv.contentOffset.y     // 90
+        let t0 = tEnd + 0.01            // animation clock starts at the lift
         let tc = try XCTUnwrap(
             UIScrollPhysics.decelCrossingTime(x0: x0, v0: 500, boundary: 100))
         let vc = UIScrollPhysics.decelVelocity(v0: 500, at: tc)
@@ -252,9 +268,10 @@ final class UIScrollViewInteractionTests: XCTestCase {
         window.sendTouch(.began, at: CGPoint(x: 100, y: 100), timestamp: 0)
         window.sendTouch(.moved, at: CGPoint(x: 100, y: 120), timestamp: 0.05)
         window.sendTouch(.moved, at: CGPoint(x: 100, y: 180), timestamp: 0.1)
-        let banded = UIScrollPhysics.rubberBand(-60, dimension: 300)
+        // 80 pt of finger travel − 10 pt slop = 70 pt raw overshoot.
+        let banded = UIScrollPhysics.rubberBand(-70, dimension: 300)
         XCTAssertEqual(Double(sv.contentOffset.y), Double(banded), accuracy: 1e-9)
-        XCTAssertEqual(Double(sv.contentOffset.y), -29.729, accuracy: 0.001)
+        XCTAssertEqual(Double(sv.contentOffset.y), -34.121, accuracy: 0.001)
 
         // Release: critically-damped bounce back to 0, carrying velocity.
         window.sendTouch(.ended, at: CGPoint(x: 100, y: 180), timestamp: 0.12)
@@ -390,12 +407,14 @@ final class UIScrollViewInteractionTests: XCTestCase {
                        "the pan keeps its own slop — nothing scrolls yet")
         XCTAssertEqual(sv.contentOffset.y, 0)
 
-        // The claim does not break the pan: it begins on the next move (which
-        // absorbs the slop) and tracks 1:1 from there.
+        // The claim does not break the pan: it begins on the next move,
+        // which applies its travel minus exactly the 10 pt slop (measured
+        // UIKit behavior), and tracks 1:1 from there.
         window.sendTouch(.moved, at: CGPoint(x: 60, y: 10), timestamp: 0.25)
         XCTAssertEqual(sv.panGestureRecognizer.state, .began)
+        XCTAssertEqual(Double(sv.contentOffset.y), 20, accuracy: 1e-9)
         window.sendTouch(.moved, at: CGPoint(x: 60, y: 0), timestamp: 0.3)
-        XCTAssertEqual(sv.contentOffset.y, 10, accuracy: 1e-9)
+        XCTAssertEqual(Double(sv.contentOffset.y), 30, accuracy: 1e-9)
         window.sendTouch(.ended, at: CGPoint(x: 60, y: 0), timestamp: 0.3)
         XCTAssertEqual(log.events, ["down", "cancel"], "no tap fires")
     }

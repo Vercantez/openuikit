@@ -153,6 +153,18 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     verified. Suite 56/56, swift test 317 green.
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
+  - Scroll physics vs oracle traces DONE (2026-08-24): real-UIKit ground
+    truth measured via synthetic UITouch drags in the iOS 26.1 Simulator
+    (Tools/oracle2/simprobe, scripts/scroll_probe_sim.sh; the Catalyst
+    channel turned out to exercise only the Mac POINTER physics — kept as
+    documentation in golden/scroll_traces/catalyst_pointer/). Constants
+    corrected from the traces: 10 pt/s decel stop + 0.499 per-ms-sum
+    position factor, two-regime bounce spring (ω=11 crit with velocity,
+    λ=9/46 overdamped from rest), exact 10 pt slop absorption; 0.998/ms
+    and c=0.55 confirmed. Gate: Tools/compare/compare_scroll.py replays
+    the trace inputs through OpenUIKit (`openrender scrolltrace`) — 9/9
+    within decel ≤2 pt / rubber-band ≤1 pt / settle ≤10%. Details:
+    APP_FEEL "Measured scroll physics".
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,
   validated against oracle layout dumps of constraint scenes.
 - **M10 App framework** — UIViewController lifecycle, UINavigationController,

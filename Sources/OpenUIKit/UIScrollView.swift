@@ -8,22 +8,27 @@
 //   subview contexts by -bounds.mid. Hit testing / convert already run
 //   through bounds.mid as well, so scrolled content hit-tests correctly.
 //
-// Physics per docs/APP_FEEL.md (implemented EXACTLY, closed-form):
+// Physics MEASURED against real iOS UIKit (iOS 26.1, iPhone 16 simulator,
+// synthetic-touch traces — golden/scroll_traces/, docs/APP_FEEL.md
+// "Measured scroll physics", gated by Tools/compare/compare_scroll.py):
 //   - Tracking 1:1 while dragging (per-axis, enabled by content overflow
-//     or alwaysBounce*).
-//   - Release velocity from the last ~100 ms of touch samples.
+//     or alwaysBounce*); the pan begins after a 10 pt slop and applies
+//     travel − 10 pt on the recognizing event (measured exactly).
+//   - Release velocity from the last ~100 ms of applied-offset samples.
 //   - Deceleration: UIKit decelerationRate .normal = 0.998 per MILLISECOND:
 //       v(t)  = v0 · 0.998^(1000·t)         (t seconds)
-//       x(t)  = x0 + v0 · (0.998^(1000·t) − 1) / (1000·ln 0.998)
-//     stops below 0.1 pt/s.
-//   - Rubber-band overscroll (Apple's formula, c = 0.55):
+//       x(t)  = x0 + v0 · 0.499 · (1 − 0.998^(1000·t))
+//     (0.499 = r/(1−r)/1000, the per-ms geometric sum), stopping dead when
+//     |v| decays to 10 pt/s — landing offset x0 + (v0 ∓ 10)·0.499 matches
+//     UIKit's targetContentOffset within 0.3 pt at 750–4875 pt/s.
+//   - Rubber-band overscroll (Apple's formula, c = 0.55, measured exact):
 //       banded = (1 − 1/(c·|d|/dim + 1)) · dim · sign(d)
 //     applied to the raw overshoot d while dragging past an edge.
-//   - Bounce-back: critically damped spring to the boundary, settling in
-//     ~0.5 s (UIKit's settle equation (1 + ωT)·e^(−ωT) = 0.001 with
-//     T = 0.5 → ω = 18.4668…), carrying the release velocity. Deceleration
-//     that reaches an edge switches to the same spring with the velocity at
-//     the exact (closed-form) crossing time.
+//   - Bounce-back: two measured regimes. Entered WITH velocity (edge impact
+//     or thrown release): critically damped spring, ω = 11.0. Released from
+//     a held overscroll (|v0| < 50 pt/s): overdamped spring, λ = 9.0/46.0.
+//     Deceleration that reaches an edge switches to the spring with the
+//     velocity at the exact (closed-form) crossing time.
 //   - Scroll indicators: 2.5 pt rounded bars inset 3 pt from the edges,
 //     visible while dragging/decelerating/bouncing, fading out over 0.4 s
 //     (UIView.animate — same presentation clock) after the scroll settles.
@@ -79,12 +84,26 @@ public extension UIScrollViewDelegate {
 // MARK: - Closed-form physics (unit-testable, no state)
 
 public enum UIScrollPhysics {
+    // All constants below are MEASURED against real iOS UIKit (iOS 26.1,
+    // iPhone 16 simulator) via synthetic-touch traces — see
+    // golden/scroll_traces/ and docs/APP_FEEL.md "Measured scroll physics".
+
     /// UIKit `UIScrollView.DecelerationRate.normal` — per-millisecond decay.
+    /// MEASURED exact: v(t) fits v0·0.998^t_ms across 750–4875 pt/s flicks.
     public static let decelerationRateNormal: CGFloat = 0.998
     /// Per-second exponential rate constant: k = 1000·ln(0.998) (negative).
     public static let decelK: Double = 1000 * _ln(0.998)
-    /// Deceleration stops when |v| drops below this (pt/s).
-    public static let decelStopVelocity: CGFloat = 0.1
+    /// Total-distance factor: UIKit sums per-MILLISECOND multiplicative
+    /// steps, so distance = v0·r/(1−r)/1000 = v0·0.499 — NOT the continuous
+    /// integral −v0/k = v0·0.49950. MEASURED: all four landing targets match
+    /// (v0 − stop)·0.499 within 0.3 pt; the integral form misses by ~5 pt.
+    public static let decelDistanceFactor: Double =
+        Double(decelerationRateNormal) / (1000 * (1 - Double(decelerationRateNormal)))
+    /// Deceleration stops when |v| drops to this (pt/s). MEASURED: UIKit's
+    /// targetContentOffset equals x0 + (v0 − 10)·0.499 (the ~5 pt tail below
+    /// 10 pt/s is never delivered), and decel duration matches
+    /// ln(v0/10)/|k| within 1.5%.
+    public static let decelStopVelocity: CGFloat = 10
 
     /// v(t) = v0 · e^(k·t) = v0 · 0.998^(1000 t).
     public static func decelVelocity(v0: CGFloat, at t: Double) -> CGFloat {
@@ -92,10 +111,10 @@ public enum UIScrollPhysics {
         return v0 * CGFloat(_scrollExp(decelK * t))
     }
 
-    /// x(t) = x0 + v0 · (e^(k·t) − 1)/k.
+    /// x(t) = x0 + v0 · F · (1 − e^(k·t)), F = r/(1−r)/1000 = 0.499.
     public static func decelOffset(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
         guard t > 0 else { return x0 }
-        return x0 + v0 * CGFloat((_scrollExp(decelK * t) - 1) / decelK)
+        return x0 + v0 * CGFloat(decelDistanceFactor * (1 - _scrollExp(decelK * t)))
     }
 
     /// Time until |v| decays to `decelStopVelocity` (0 for tiny v0).
@@ -105,24 +124,25 @@ public enum UIScrollPhysics {
         return _ln(Double(decelStopVelocity) / mag) / decelK
     }
 
-    /// Where the deceleration would naturally come to rest.
+    /// Where the deceleration comes to rest: x0 + (v0 ∓ stop)·F.
     public static func decelTargetOffset(x0: CGFloat, v0: CGFloat) -> CGFloat {
         decelOffset(x0: x0, v0: v0, at: decelDuration(v0: v0))
     }
 
     /// Exact time at which x(t) crosses `boundary`, or nil if it never does
-    /// before stopping. (Solve x0 + v0·(e^(kt) − 1)/k = boundary for t.)
+    /// before stopping. (Solve x0 + v0·F·(1 − e^(kt)) = boundary for t.)
     public static func decelCrossingTime(x0: CGFloat, v0: CGFloat,
                                          boundary: CGFloat) -> Double? {
         guard v0 != 0 else { return nil }
-        let arg = 1 + decelK * Double(boundary - x0) / Double(v0)
+        let arg = 1 - Double(boundary - x0) / (Double(v0) * decelDistanceFactor)
         guard arg > 0 else { return nil }
         let t = _ln(arg) / decelK
         guard t >= 0, t <= decelDuration(v0: v0) else { return nil }
         return t
     }
 
-    /// Apple's rubber-band coefficient.
+    /// Apple's rubber-band coefficient. MEASURED exact: pointwise fits give
+    /// c → 0.550 (dim = the scroll view's bounds dimension on that axis).
     public static let rubberBandCoefficient: CGFloat = 0.55
 
     /// Banded displacement for a raw overshoot `d` past the edge of a
@@ -134,26 +154,59 @@ public enum UIScrollPhysics {
         return c * d * dimension / (c * d.magnitude + dimension)
     }
 
-    /// Bounce spring: critically damped, settling in ~0.5 s per UIKit's
-    /// settle equation (1 + ω·T)·e^(−ω·T) = 0.001, T = 0.5.
-    public static let bounceOmega: Double = 9.2334134764515865 / 0.5
+    // MARK: Bounce springs (MEASURED — two regimes)
+    //
+    // UIKit's bounce is NOT one spring. Measured (same traces):
+    //  * Entering the bounce WITH velocity (deceleration hitting an edge, or
+    //    a thrown overscroll release): critically damped, ω = 11.0 /s.
+    //    Validated: impact overshoot peak = v/(ω·e) (predicted 100.5 pt vs
+    //    measured 99.7 pt at v = 3005 pt/s) and settle times within 5%.
+    //  * Released from a HELD overscroll (velocity ≈ 0): overdamped, decay
+    //    rates λ = 9.0 /s (dominant tail) and 46.0 /s (initial transient).
+    //    A critically damped spring cannot fit this curve (tail decays at a
+    //    constant 9/s; critical damping would keep accelerating the decay).
+    // The regime is chosen by |v0| at bounce start.
 
-    /// Displacement from the target at time t for a critically damped
-    /// spring released at displacement x0 with velocity v0:
-    ///   x(t) = (x0 + (v0 + ω·x0)·t) · e^(−ω·t)
-    public static func springDisplacement(x0: CGFloat, v0: CGFloat, at t: Double,
-                                          omega: Double = bounceOmega) -> CGFloat {
+    /// Critically damped bounce frequency (used when |v0| ≥ threshold).
+    public static let bounceOmega: Double = 11.0
+    /// Overdamped rest-release decay rates (used when |v0| < threshold).
+    public static let bounceRestLambdaSlow: Double = 9.0
+    public static let bounceRestLambdaFast: Double = 46.0
+    /// |v0| (pt/s) below which the rest-release (overdamped) spring is used.
+    public static let bounceRestVelocityThreshold: CGFloat = 50
+
+    /// Displacement from the target at time t for the bounce spring
+    /// released at displacement x0 with velocity v0 (regime per above).
+    public static func springDisplacement(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
         guard t > 0 else { return x0 }
-        let b = Double(v0) + omega * Double(x0)
-        return CGFloat((Double(x0) + b * t) * _scrollExp(-omega * t))
+        if v0.magnitude < bounceRestVelocityThreshold {
+            let (a, b) = overdampedCoefficients(x0: x0, v0: v0)
+            return CGFloat(a * _scrollExp(-bounceRestLambdaSlow * t)
+                         + b * _scrollExp(-bounceRestLambdaFast * t))
+        }
+        let w = bounceOmega
+        let b = Double(v0) + w * Double(x0)
+        return CGFloat((Double(x0) + b * t) * _scrollExp(-w * t))
     }
 
     /// d/dt of springDisplacement.
-    public static func springVelocity(x0: CGFloat, v0: CGFloat, at t: Double,
-                                      omega: Double = bounceOmega) -> CGFloat {
+    public static func springVelocity(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
         guard t > 0 else { return v0 }
-        let b = Double(v0) + omega * Double(x0)
-        return CGFloat((b - omega * (Double(x0) + b * t)) * _scrollExp(-omega * t))
+        if v0.magnitude < bounceRestVelocityThreshold {
+            let (a, b) = overdampedCoefficients(x0: x0, v0: v0)
+            return CGFloat(-bounceRestLambdaSlow * a * _scrollExp(-bounceRestLambdaSlow * t)
+                           - bounceRestLambdaFast * b * _scrollExp(-bounceRestLambdaFast * t))
+        }
+        let w = bounceOmega
+        let b = Double(v0) + w * Double(x0)
+        return CGFloat((b - w * (Double(x0) + b * t)) * _scrollExp(-w * t))
+    }
+
+    /// x(t) = A·e^(−λ1 t) + B·e^(−λ2 t) with x(0) = x0, x'(0) = v0.
+    static func overdampedCoefficients(x0: CGFloat, v0: CGFloat) -> (Double, Double) {
+        let l1 = bounceRestLambdaSlow, l2 = bounceRestLambdaFast
+        let a = (Double(v0) + l2 * Double(x0)) / (l2 - l1)
+        return (a, Double(x0) - a)
     }
 }
 
@@ -305,12 +358,31 @@ open class UIScrollView: UIView {
             stopScrollAnimation()
             isDragging = true
             dragStartOffset = contentOffset
-            // Track 1:1 from the recognition point (the ~10 pt activation
-            // slop is absorbed, like UIKit).
-            pan.setTranslation(.zero, in: nil)
-            dragSamples = [(pan.lastTimestamp, contentOffset)]
+            // Absorb EXACTLY the 10 pt activation slop along the drag
+            // direction. MEASURED (golden/scroll_traces/touch_calib.json):
+            // UIKit's offset travel = finger travel − 10, even when the
+            // recognizing event lands far past the slop circle (fast
+            // flicks) — so subtract the slop from the touch-down
+            // translation rather than zeroing at the recognition point.
+            let tr = pan.translation(in: nil)
+            let mag = (tr.x * tr.x + tr.y * tr.y).squareRoot()
+            if mag > pan.activationDistance {
+                let s = (mag - pan.activationDistance) / mag
+                pan.setTranslation(CGPoint(x: tr.x * s, y: tr.y * s), in: nil)
+            } else {
+                pan.setTranslation(.zero, in: nil)
+            }
+            // NOTE: dragSamples is seeded by the fallthrough below (the
+            // recognizing event's .changed pass records the post-slop
+            // offset) — seeding it here with the PRE-recognition offset
+            // would fold the slop jump into the release velocity.
+            dragSamples = []
             delegate?.scrollViewWillBeginDragging(self)
             flashIndicators()
+            // The recognizing event itself moves the content (UIKit: the
+            // slop-adjusted translation applies immediately, not on the
+            // next event — MEASURED, see touch_calib/decel traces).
+            fallthrough
         case .changed:
             let tr = pan.translation(in: nil)
             var raw = CGPoint(x: dragsX ? dragStartOffset.x - tr.x : contentOffset.x,
@@ -322,7 +394,12 @@ open class UIScrollView: UIView {
             recordDragSample(t: pan.lastTimestamp, offset: contentOffset)
             isDragging = false
             let v = pan.state == .cancelled ? .zero : releaseVelocity()
-            endDragging(velocity: v)
+            // The momentum/bounce animation starts at the LIFT time (the
+            // ended event's touch timestamp), not the last move's —
+            // pan.lastTimestamp deliberately stays at the last move so the
+            // release-velocity window isn't diluted by the still finger.
+            let tEnd = pan.trackedTouches.map(\.timestamp).max() ?? pan.lastTimestamp
+            endDragging(velocity: v, at: tEnd)
         default:
             break
         }
@@ -365,8 +442,8 @@ open class UIScrollView: UIView {
                        y: (last.offset.y - first.offset.y) / CGFloat(dt))
     }
 
-    func endDragging(velocity v: CGPoint) {
-        let now = dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
+    func endDragging(velocity v: CGPoint, at time: TimeInterval? = nil) {
+        let now = time ?? dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
         dragSamples.removeAll()
         let lo = minContentOffset, hi = maxContentOffset
         let off = contentOffset

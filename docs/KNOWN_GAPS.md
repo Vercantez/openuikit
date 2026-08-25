@@ -40,13 +40,25 @@
 
 ## UIScrollView (M7.5, 2026-08-24): scope notes
 
-- Physics constants are APP_FEEL's documented UIKit values (0.998/ms,
-  c=0.55, ~0.5 s critically damped bounce via the ωT=9.2334 settle
-  equation, 0.1 pt/s stop, ~100 ms velocity window, ~150 ms content-touch
-  delay). Static scrolled RENDERING is oracle-verified (scroll_static,
-  100.0 incl. hit tests); the dynamic curves are unit-tested against the
-  closed forms only — oracle time-sampled traces come with M8
-  (drive a real UIScrollView pan in oracle2 and diff position series).
+- Physics constants are MEASURED against real iOS UIKit (M8, 2026-08-24):
+  0.998/ms deceleration with a 10 pt/s stop and the 0.499 per-ms-sum
+  position factor, c=0.55 rubber band, two-regime bounce spring (ω=11
+  critically damped with velocity, λ=9/46 overdamped from rest), ~100 ms
+  velocity window, exact 10 pt slop absorption. Ground truth + methodology:
+  golden/scroll_traces/SCHEMA.md and docs/APP_FEEL.md "Measured scroll
+  physics"; regression gate: Tools/compare/compare_scroll.py (9/9).
+  Remaining honest gaps within that: (a) the rest-release bounce is an
+  empirical overdamped fit — mid-curve it can deviate up to ~14 pt of a
+  235 pt overscroll from the oracle (settle time is within 3%; whatever
+  UIKit's true integrator is, no single linear spring fits both measured
+  regimes); (b) the ~150 ms content-touch delay and the 50 pt/s regime
+  threshold remain feel-tuned, not measured; (c) UIKit quantizes
+  contentOffset to the device pixel grid — OpenUIKit doesn't (sub-1/3-pt);
+  (d) real UIKit starts the decel animation ~1 frame after the lift;
+  OpenUIKit starts it exactly at the lift timestamp (compare_scroll aligns
+  ±20 ms); (e) Mac Catalyst's POINTER scroll physics (different decay,
+  stiff rubber band — golden/scroll_traces/catalyst_pointer/) are a
+  separate input mode OpenUIKit does not implement.
 - Deceleration/bounce is stepped by UIWindow.tick(timestamp:), which
   openhost calls every frame/script step. A host that renders without
   ticking sees a frozen scroll (call tick, or

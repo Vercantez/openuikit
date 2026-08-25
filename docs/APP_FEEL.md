@@ -38,15 +38,28 @@ if feasible) → pop.
 ## The physics that make it feel real (implement EXACTLY)
 
 ### UIScrollView (the single biggest feel factor)
+
+> **M8 UPDATE (2026-08-24): every constant below is now MEASURED against
+> real iOS UIKit** — see "Measured scroll physics" at the end of this file.
+> Values that survived measurement unchanged: 0.998/ms deceleration rate,
+> rubber-band c = 0.55. Values corrected by measurement: deceleration stop
+> threshold (0.1 → **10 pt/s**), position curve factor (continuous integral
+> 0.4995 → per-ms geometric sum **0.499**), bounce spring (single 0.5 s
+> critically-damped ω = 18.47 → **two regimes: ω = 11 critically damped
+> with velocity; λ = 9/46 overdamped from rest**), and slop handling (the
+> recognizing event applies travel − 10 pt immediately).
+
 - Tracking: content follows the finger 1:1 while dragging.
 - Velocity: from the last ~100ms of touch samples at release.
 - Deceleration: UIKit's `decelerationRate = .normal` = **0.998 per millisecond**
-  (v(t) = v0 * 0.998^t_ms; stop below ~0.1 pt/s). Position integrates that curve.
+  (v(t) = v0 * 0.998^t_ms; stops dead at 10 pt/s). Position:
+  x(t) = x0 + v0·0.499·(1 − 0.998^t_ms).
 - Rubber-band overscroll (Apple's formula):
   `offset' = (1 - 1/(c*|offset|/dim + 1)) * dim * sign(offset)` with c = 0.55,
   dim = scroll view dimension. Applies while dragging past the edge.
-- Bounce-back: spring to the boundary on release, ~0.5s critically-damped
-  (UIKit uses a spring with the current velocity as initial velocity).
+- Bounce-back: spring to the boundary on release — critically damped ω = 11
+  seeded with the release velocity; overdamped λ = 9/46 when released from
+  a held (velocity ≈ 0) overscroll.
 - Deceleration into an edge → bounce with carried velocity.
 - Scroll indicator: 2.5pt rounded bar, appears while scrolling, fades ~0.4s
   after settle, insets 3pt from edge.
@@ -74,10 +87,10 @@ if feasible) → pop.
 - All state changes animate with UIView.animate (already exact vs oracle).
 
 ## Oracle strategy (fidelity second pass, feel first)
-- Scroll deceleration/rubber-band ARE oracle-measurable later (M8): drive a
-  real UIScrollView in oracle2 with `setContentOffset` + pan simulation and
-  time-sample; until then, the constants above are UIKit's documented/
-  well-established values — implement them exactly, no "close enough" easing.
+- Scroll deceleration/rubber-band: **DONE (M8)** — measured for real, from
+  synthetic-touch traces of real iOS UIKit (see "Measured scroll physics"
+  below); the constants above are the measured ones and the trace gates run
+  in Tools/compare/compare_scroll.py.
 - Nav transition curves: capture a real UINavigationController push in oracle2
   with the M6 time-sampling mechanism if feasible; otherwise match the spec
   above and refine later.
@@ -215,3 +228,69 @@ blit is arguably what real CA does mid-transition, so an oracle-sampled
 push (still open, see KNOWN_GAPS) could settle which one is correct.
 Either way the first frame's ~35 ms of fresh rasterization is irreducible
 work, not redundant work — pre-warming can only move it.
+
+## Measured scroll physics (M8, 2026-08-24)
+
+The UIScrollView constants were originally "documented/well-established"
+values. They are now **measured from real UIKit** and corrected where they
+diverged. Ground truth: golden/scroll_traces/*.json (schema + provenance in
+golden/scroll_traces/SCHEMA.md); regression gate:
+
+    python3 Tools/compare/compare_scroll.py        # 9/9 traces pass
+
+which replays each trace's input stream through OpenUIKit headlessly
+(`openrender scrolltrace`) and diffs offset timelines. Gates: drag /
+rubber-band ≤ 1 pt, deceleration ≤ 2 pt over the full trace (after a
+±20 ms alignment — real UIKit starts the decel animation ~1 frame after
+the lift; the one oracle frame straddling the lift is excluded because its
+recorded timestamp lags its animation evaluation by ~0.5 ms, which alone
+reads as ~2.4 pt at 4875 pt/s), bounce settle time within 10%.
+
+### How the measurement works
+
+- **Oracle**: `scripts/scroll_probe_sim.sh` builds
+  Tools/oracle2/simprobe (a tiny iOS app sharing
+  Tools/oracle2/scrollshared.swift), boots a headless iPhone 16 / iOS 26.1
+  simulator — **real iOS UIKit**, not Catalyst — and synthesizes UITouch
+  drags in-process (KIF-style private setters +
+  `UIApplication.sendEvent`). Touch timestamps are stamped on an ideal
+  8 ms grid, so UIKit's velocity estimator sees exactly the scripted
+  velocity (willEndDragging reports it to 7 significant digits).
+  contentOffset is sampled per frame (CADisplayLink + scrollViewDidScroll).
+- **Why not the Mac Catalyst oracle**: measured first and rejected —
+  Catalyst UIScrollView only scrolls via the POINTER path (Mac feel:
+  landing distance ∝ v^1.37, rubber-band factor ~0.07) and never applies
+  touch-pan translation. Those traces are kept in
+  golden/scroll_traces/catalyst_pointer/ as documentation of the
+  divergence. `Tools/oracle2/run.sh scroll <outdir>` reproduces them.
+
+### Measured values (iOS 26.1)
+
+| quantity | old (documented) | MEASURED | evidence |
+|---|---|---|---|
+| pan slop | ~10 pt, zeroed at recognition | 10 pt, recognizing event applies travel − 10 immediately | touch_calib: 180 pt travel → 170 pt offset, every decel release offset |
+| release velocity | trailing ~100 ms of samples | confirmed (offset-space; also seeds the bounce) | bounce_release_vel spring seed ≈ −900 pt/s = trailing-window offset velocity, not the −1750 pt/s finger velocity |
+| deceleration rate | 0.998/ms | **0.998/ms exact** | v(t) fits all four flicks 750–4875 pt/s; duration = ln(v0/10)/\|k\| within 1.5% |
+| decel position curve | v0·(e^{kt}−1)/k (factor 0.49950) | **v0·0.499·(1−e^{kt})** (per-ms geometric sum r/(1−r)/1000) | all four targetContentOffsets match (v0−10)·0.499 within 0.3 pt; integral form misses by ~5 pt |
+| decel stop | below 0.1 pt/s | **at 10 pt/s, tail never delivered** | constant ~4.99 pt shortfall vs full integral across velocities |
+| rubber band | c = 0.55, dim = viewport | **confirmed exact** | pointwise fits converge to c = 0.5522…0.550 out to 590 pt overshoot; both edges identical |
+| bounce (with velocity) | critically damped, ω = 18.47 (0.5 s settle eq.) | **critically damped, ω = 11.0** | edge_impact overshoot peak v/(ωe): predicted 100.5 pt vs measured 99.7 pt at v = 3005 pt/s; settle times within 5% |
+| bounce (from rest) | same spring | **overdamped, λ = 9.0 / 46.0 s⁻¹** | 235 pt rest releases: tail decays at a constant 9.0/s (a critical spring's decay keeps accelerating — cannot fit); rms 4 pt over the full curve, settle within 3% |
+
+Notes:
+- The two bounce regimes are selected at |v₀| = 50 pt/s
+  (`UIScrollPhysics.bounceRestVelocityThreshold`). A single linear spring
+  provably cannot fit both measured curves; whatever UIKit does internally,
+  these two closed forms reproduce it within the gates (rest-release
+  mid-curve is the loosest at ~±14 pt of 235 pt; settle time and both
+  velocity-seeded curves are within a few pt).
+- The oracle quantizes contentOffset to the device pixel grid (1/3 pt at
+  3×); OpenUIKit does not quantize. That bounds several gates (drag err
+  0.16 pt = half a device pixel).
+- willEndDragging velocity is in pt/ms and equals the finger velocity; the
+  deceleration integrates the release velocity measured from the trailing
+  ~100 ms of applied offsets (equal for steady drags).
+
+Implementation: `UIScrollPhysics` in Sources/OpenUIKit/UIScrollView.swift.
+Unit tests assert the measured constants (Tests/OpenUIKitTests/
+UIScrollViewTests.swift); the trace gate is the source of truth.
