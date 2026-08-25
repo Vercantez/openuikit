@@ -82,8 +82,11 @@ STRUCT_ABSENCE_RATIO = 0.12       # ...both absolutely and relative to the golde
 
 # Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
 # scenes (bar materials / edge effects, cell chrome, sheet presentation).
+# v5.3 (M13) adds UICollectionView (tiled cell content over system-drawn
+# material) and UIToolbar (a bar of iOS 26 glass platters, the same
+# system-drawn material every other chrome class carries).
 CHROME_CLASSES = {"UITableView", "UICollectionView", "UINavigationStack",
-                  "UITabBarStack"}
+                  "UITabBarStack", "UIToolbar"}
 
 def classify(scene):
     """geometry | effects | text | control | chrome, plus layoutOnly flag.
@@ -95,11 +98,12 @@ def classify(scene):
     threshold — shadow blur covers many pixels).
 
     Chrome (spec v5) outranks everything: any UITableView /
-    UICollectionView / UINavigationStack / UITabBarStack in the tree, or a
-    top-level "modal" or "alert" (spec v5.2 — M12), makes the scene
-    "chrome" — large regions of system-drawn material (glass platters,
-    edge-effect gradients, sheet shadows, the alert card's blurred platter)
-    plus tiled cell content warrant the loosest threshold.
+    UICollectionView / UINavigationStack / UITabBarStack / UIToolbar in the
+    tree, or a top-level "modal" or "alert" (spec v5.2 — M12), makes the
+    scene "chrome" — large regions of system-drawn material (glass
+    platters, edge-effect gradients, sheet shadows, the alert card's
+    blurred platter) plus tiled cell content warrant the loosest
+    threshold.
     """
     kinds = set()
     has_shadow = [False]
@@ -155,6 +159,13 @@ PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   # and real UIKit's contentView is a bare "UIView" where
                   # ours is a private forwarding subclass — so the cell
                   # subtree must stay private, exactly like a table's.)
+                  #
+                  # UIToolbar (v5.3) is deliberately NOT here: real UIKit's
+                  # toolbar subtree exposes PUBLIC-class internals (the glass
+                  # platters' UIViews), so including it would compare two
+                  # unrelated private trees. Its whole subtree is skipped and
+                  # the pixels hold it to account — the same rule
+                  # UISegmentedControl follows.
                   "UITableView", "UICollectionView",
                   "UINavigationStack", "UITabBarStack"}
 

@@ -88,11 +88,27 @@ final class SimSceneRenderer {
         wrapper.overrideUserInterfaceStyle = spec.style
         wrapper.addSubview(container)
         host.addSubview(wrapper)
+        // Chrome scenes (spec v5.3): keep the scene OUT of the device's top
+        // safe area, exactly like oracle2 does on Catalyst — otherwise a
+        // hosted navigation controller lays its bar out below a 59 pt inset
+        // that has no counterpart in the portable renderer, and the scene
+        // would have to be device-sized. The capture stays wrapper-relative,
+        // so the golden is unaffected apart from the shift.
+        // Window-captured scenes (modal / alert) must NOT move — their
+        // golden IS the window.
+        if oracleNeedsSettle && spec.modal == nil && spec.alert == nil {
+            wrapper.frame.origin.y = window.safeAreaInsets.top
+        }
         wrapper.layoutIfNeeded()
         RunLoop.current.run(until: Date().addingTimeInterval(0.3))
         for action in oraclePostAttachActions { action() }
         wrapper.layoutIfNeeded()
         RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+
+        if ProcessInfo.processInfo.environment["SIMSCENE_DEBUG"] != nil {
+            print("=== \(spec.name) tree (window safeArea \(window.safeAreaInsets)) ===")
+            debugWalk(wrapper)
+        }
 
         let img: UIImage
         if let modal = spec.modal {

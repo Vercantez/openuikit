@@ -2,7 +2,7 @@
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
-- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"` or `"alert"` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet") and bridges `UIAlertController` into an AppKit panel (v5.2, see "Alert").
+- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"`, `"alert"` or `"ios": true` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet"), bridges `UIAlertController` into an AppKit panel (v5.2, see "Alert"), and is not ground truth for iOS 26's glass bar chrome (v5.3, see "Bar button items").
 
   **The two oracles do not agree about the system font, and the renderer has
   to know which one a scene belongs to.** Mac Catalyst resolves
@@ -42,6 +42,19 @@ capture time** plus one shared layout dump — see “Animations (v3)”.
 - `size`: logical point size of the root view. Root frame is `(0, 0, w, h)`.
 - `scale`: render scale (default 2). PNG pixels = points × scale.
 - `style`: `"light"` (default) or `"dark"`. Applied via `overrideUserInterfaceStyle`.
+- `ios` (optional, bool, v5.3): `true` routes the scene's golden to **real
+  iOS UIKit in the headless iOS Simulator** instead of Mac Catalyst. Requires
+  `"window": true`. Use it whenever the scene's subject is iOS-26-specific
+  chrome Catalyst does not reproduce — currently the bar-button platters.
+  `scripts/regen_goldens.sh` routes on this key and `openrender` mirrors it
+  when picking the system-font cut (see above);
+  `RenderCLITests.testSimulatorRoutedScenesUseTheIOSFontCut` and
+  `testShippedFixturesAgreeWithTheGoldenRoutingRule` guard both.
+
+  SimScene positions a chrome scene BELOW the device's top safe area (the
+  same shift `Tools/oracle2` applies on Catalyst), so an `"ios"` chrome scene
+  may be any size — unlike `"modal"` / `"alert"` scenes, whose golden IS the
+  window and which must be device-sized.
 - `window` (optional, bool): `true` means the scene's golden **must be rendered
   by `Tools/oracle2`** — a Mac Catalyst app that hosts the hierarchy in a real
   `UIWindow` (scene lifecycle, app activated) and captures it with
@@ -462,6 +475,15 @@ controller view below it is private and skipped by compare.py.
 |---|---|---|
 | `title` | string | `navigationItem.title`. |
 | `largeTitle` | bool | `prefersLargeTitles` + display mode `.always`. |
+| `backgroundColor` | color | v5.3 — the hosted content view controller's view background (NOT the wrapper's). **Sim-routed dark scenes must set it**: the vendored `system_colors.json` is harvested from Catalyst, whose dark `systemBackground` is 0.1176 while real iOS uses pure black (the trap `alert_dark` already documents). |
+| `leftItems` / `rightItems` | array | v5.3 — bar button item objects (below). `rightItems[0]` is the TRAILING-most item, like UIKit. |
+| `titleView` | view object | v5.3 — `navigationItem.titleView`; replaces the title label. |
+| `prompt` | string | v5.3 — `navigationItem.prompt`. |
+| `tintColor` | color | v5.3 — `navigationBar.tintColor`. Measured: this does NOT color untinted bar buttons on iOS 26 (see docs/KNOWN_GAPS.md). |
+| `appearance` | object | v5.3 — a bar appearance (below), applied to `standardAppearance`, `scrollEdgeAppearance` and `compactAppearance`. |
+| `scrollEdgeAppearance` | object | v5.3 — overrides just the scroll-edge one. |
+| `toolbarItems` | array | v5.3 — bar button items for the controller's toolbar; presence un-hides it. |
+| `toolbarTintColor` / `toolbarAppearance` | color / object | v5.3. |
 | `contentSize` | `[w,h]` | the content scroll view's contentSize. |
 | `contentOffset` | `[x,y]` | applied LIVE post-attach (the bar only tracks observed offsets). Omit for the expanded rest state — the oracle nudges the offset once to engage the expanded large-title layout (Catalyst never engages it spontaneously), then settles at the new rest offset. |
 | `subviews` | array | children of the content scroll view (NOT of the stack view). |
@@ -497,6 +519,7 @@ suppresses); the oracle reveals it post-attach (`isHidden = false`,
 | `items` | array | `[{"title": str, "image": {…}?, "content": {view}?}]` (≤ 5). |
 | `selectedIndex` | int | default 0. |
 | `tintColor` | color | `tabBar.tintColor` (selected item color). |
+| `appearance` | object | v5.3 — a bar appearance (below) applied to `standardAppearance` + `scrollEdgeAppearance`. |
 
 Oracle-measured metrics (iOS 26 liquid-glass floating bar, 375×480 scene):
 - Bar group region: bottom **72 pt** (y 408–480); floating platter
@@ -506,6 +529,96 @@ Oracle-measured metrics (iOS 26 liquid-glass floating bar, 375×480 scene):
   (default tint measured (52,124,238); `tintColor` respected — see
   `tabbar_tinted` systemPink).
 - Unselected items: near-black (≈#191919) icon+title; item titles ~10 pt.
+
+### Bar button items (v5.3 — M13 bars & appearance)
+
+A **bar button item object** appears in `UINavigationStack`'s `leftItems` /
+`rightItems` / `toolbarItems` and in `UIToolbar`'s `items`:
+
+```json
+{ "systemItem": "edit" }
+{ "title": "Add", "style": "plain", "enabled": false }
+{ "title": "Reset", "tintColor": "systemPink" }
+{ "image": { "kind": "solid", "size": [18, 18], "colors": ["#000000"] } }
+{ "systemItem": "fixedSpace", "width": 40 }
+{ "customView": { "class": "UILabel", "frame": [0, 0, 80, 22], "text": "Hi" } }
+```
+
+| key | type | notes |
+|---|---|---|
+| `systemItem` | string | `done, cancel, edit, save, add, close, trash, action, refresh, reply, compose, organize, bookmarks, search, camera, undo, redo, flexibleSpace, fixedSpace`. |
+| `title` | string | title item. |
+| `image` | object | the standard scene-spec `image` object, rendered `.alwaysTemplate` (only its alpha is used; it takes the item's color). |
+| `customView` | view object | `UIBarButtonItem(customView:)` — drawn without a platter. |
+| `style` | string | `plain` (default) or `done`. iOS 26 renamed `.done` to `.prominent`: a tint-filled capsule with white content. |
+| `enabled` | bool | disabled content is `tertiaryLabel` (measured (60, 60, 67) @ 0.298). |
+| `tintColor` | color | per-item tint. The BAR's tint does not color an untinted item on iOS 26 — measured. |
+| `width` | number | `.fixedSpace` width (also pins a normal item's width). |
+
+**Only `.edit` and `.save` render as text on iOS 26 and are exact.** Every
+other symbol-backed system item is a hand-fitted vector approximation — no
+golden gates them, and no fixture uses one. See docs/KNOWN_GAPS.md
+"Bars & appearance".
+
+Oracle-measured metrics (real iOS 26.1, iPhone 16, compact, 393 pt wide —
+`navitem_*` / `toolbar_basic` goldens):
+
+- Bar zone: the bar's own frame is `(0, 10, w, 54)`; an OPAQUE appearance
+  paints the whole 64 pt zone (`_UIBarBackground` = `(0, -10, w, 64)`) and
+  adds a **1/3 pt** hairline at its bottom edge, black at **0.30**.
+- Platters: capsules **44** tall (radius 22) in a navigation bar, **48**
+  (radius 24) in a toolbar, TOP-ALIGNED at the bar's own y = 0 in both.
+  Side margin **16**, platter width = content + **2 x 16**, never narrower
+  than the platter height.
+- Gaps: **12 pt** before each element, skipped when the previous element was
+  a space — so a 40 pt `fixedSpace` reads as 12 + 40 between two items.
+- Item titles: **17 pt system MEDIUM** in `label` (NOT the tint), box height
+  20.333, centred in the platter. Inline bar title: 17 pt semibold, centre
+  y = 32 (bar-zone coordinates).
+- The centred title falls back to LEADING alignment (12 pt past the leading
+  group) when centring would leave it crowded against either group.
+
+### `UIToolbar` (v5.3 — M13, requires `"window": true` + `"ios": true`)
+
+A standalone toolbar, frame-positioned like any view. Its items render as
+render-server glass, so it produces nothing through the offscreen v1 oracle.
+
+| key | type | notes |
+|---|---|---|
+| `items` | array | bar button item objects (above). |
+| `barTintColor` / `tintColor` | color | |
+| `translucent` | bool | `isTranslucent` — stored, no blur exists (KNOWN_GAPS). |
+| `appearance` | object | bar appearance (below). |
+
+Layout dumps skip the toolbar's whole subtree on both sides (real UIKit's
+toolbar internals expose public classes, so comparing them would compare two
+unrelated private trees — the same rule `UISegmentedControl` follows). The
+pixels hold it to account, and `UIToolbar` counts as a **chrome** scene class
+in compare.py.
+
+### Bar appearance objects (v5.3 — M13)
+
+```json
+"appearance": {
+  "configuration": "opaque",
+  "backgroundColor": "#F2F2F7",
+  "shadowColor": "#00000080",
+  "titleTextAttributes": { "color": "#B32222", "fontSize": 20, "fontWeight": "bold" }
+}
+```
+
+| key | type | notes |
+|---|---|---|
+| `configuration` | string | `default` (iOS 26: transparent at rest), `opaque`, `transparent`. |
+| `backgroundColor` | color | |
+| `shadowColor` | color or `null` | the 1/3 pt hairline; `null` removes it. |
+| `titleTextAttributes` | object | `color` + the `UILabel` font keys (`fontSize`, `fontWeight`, `italic`, `monospaced`). Navigation bars only. |
+| `largeTitleTextAttributes` | object | same, for the large title. |
+
+**Do not fixture a bar over a saturated background.** The bar's glass and the
+scroll-edge effect both recolor it — a `#FFCC00` opaque bar measures
+(247, 206, 70), and platters over it go pale yellow. docs/KNOWN_GAPS.md has
+the numbers.
 
 ### Modal sheet (v5 — M10 chrome): top-level `"modal"` key
 

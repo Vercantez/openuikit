@@ -1,0 +1,161 @@
+{
+  "name" : "navitem_buttons",
+  "views" : [
+    {
+      "class" : "UINavigationStack",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILayoutContainerView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UINavigationTransitionView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIViewControllerWrapperView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.0.0.0"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.0.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        8,
+        361,
+        60
+      ],
+      "path" : "0.0.0.0.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        32,
+        27,
+        240,
+        22
+      ],
+      "intrinsic" : [
+        106,
+        20.332999999999998
+      ],
+      "path" : "0.0.0.0.0.1",
+      "sizeThatFits200" : [
+        106,
+        20.332999999999998
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        80,
+        361,
+        60
+      ],
+      "path" : "0.0.0.0.0.2"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        32,
+        99,
+        240,
+        22
+      ],
+      "intrinsic" : [
+        131,
+        20.332999999999998
+      ],
+      "path" : "0.0.0.0.0.3",
+      "sizeThatFits200" : [
+        131,
+        20.332999999999998
+      ]
+    },
+    {
+      "class" : "UINavigationBar",
+      "frame" : [
+        0,
+        10,
+        393,
+        44
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "FloatingBarContainerView",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "FloatingBarHostingView<FloatingBarContainer>",
+      "frame" : [
+        0,
+        0,
+        393,
+        300
+      ],
+      "path" : "0.2.0"
+    },
+    {
+      "class" : "_UIPointerInteractionAssistantEffectContainerView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "0.2.1"
+    }
+  ]
+}

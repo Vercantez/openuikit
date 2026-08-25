@@ -1,9 +1,14 @@
-// UINavigationBar. Owner: viewcontroller module (M7.5 navigation).
+// UINavigationBar. Owner: viewcontroller module (M7.5 navigation,
+// M10 large titles, M13 navigation items + appearance).
 //
-// Visuals per docs/APP_FEEL.md "Navigation transitions":
-//   - 44pt content bar below a 20pt status inset (simple constant; the host
-//     window has no real status bar). Background: systemBackground with a
-//     0.5pt separator hairline at the bottom (blur can wait).
+// Visuals per docs/APP_FEEL.md "Navigation transitions" and the M13
+// measurements in UIBarButtonItem.swift:
+//   - 54pt content bar below a 10pt top padding (MEASURED on real iOS 26.1;
+//     M7.5's guessed 20 + 44 split is gone, the 64pt total is unchanged).
+//     Background + hairline come from `standardAppearance`, whose default is
+//     the opaque configuration.
+//   - `topItem` (a pushed controller's `navigationItem`) drives the title,
+//     title view, prompt and the leading/trailing bar-button platters.
 //   - Title label centered, semibold 17, .label color.
 //   - Back button: "‹" chevron + the previous VC's title, both in tintColor,
 //     dimming to alpha 0.2 while pressed (the same measured highlight factor
@@ -16,8 +21,10 @@
 //     sets inside the animate block record animations) and interactive
 //     back-swipe scrubbing (direct model sets, no animation context).
 //
-// The bar is driven by UINavigationController; it holds no item stack of its
-// own (no UINavigationItem — title/backTitle come from the VC stack).
+// The bar is driven by UINavigationController: it keeps the UIKit item stack
+// (`setItems`/`pushItem`/`popItem`), and the controller additionally pushes
+// title/backTitle through `setState` because those two take part in the
+// push/pop cross-fade.
 
 /// The back control: chevron + previous title, standard pressed dimming.
 final class _UINavigationBarBackButton: UIControl {
@@ -86,15 +93,39 @@ final class _UINavigationBarBackButton: UIControl {
     }
 }
 
-public final class UINavigationBar: UIView {
-    /// Content bar height (below the status inset), like UIKit's compact
-    /// portrait bar.
-    public static let contentHeight: CGFloat = 44
-    /// Simple status inset constant appropriate for the host window (no
-    /// real status bar exists; see docs/APP_FEEL.md).
-    public static let statusBarInset: CGFloat = 20
+public final class UINavigationBar: UIView, _UIBarItemContainer {
+    // MARK: Bar-zone metrics
+    //
+    // MEASURED, real iOS 26.1 / iPhone 16 / compact width, no safe-area top
+    // (Tools/oracle2/simscene; probe recipe in UIBarButtonItem.swift): the
+    // bar's own frame is (0, 10, w, 54) inside its container and its
+    // `_UIBarBackground` covers (0, -10, w, 64) — i.e. an opaque appearance
+    // paints the WHOLE 64 pt zone, top padding included. That is exactly the
+    // 10 + 54 split M10 measured for the large-title bar's inline zone, so
+    // both modes now share one set of constants (and `barHeight` is still
+    // 64, unchanged since M7.5).
+    //
+    // Before M13 the inline bar used a guessed 20 pt "status inset" + a 44 pt
+    // content bar (same 64 pt total, title centre 42). The measured centre is
+    // 32; the guess is gone.
+
+    /// Content bar height (below the top padding).
+    public static let contentHeight: CGFloat = 54
+    /// Padding above the content bar inside the bar zone (measured).
+    public static let barTopPadding: CGFloat = 10
+    /// Deprecated name for `barTopPadding` (M7.5 called it a status inset).
+    public static var statusBarInset: CGFloat { barTopPadding }
     /// Total bar height.
-    public static var barHeight: CGFloat { statusBarInset + contentHeight }
+    public static var barHeight: CGFloat { barTopPadding + contentHeight }
+    /// Bar-local y of the item platters (they top-align in the content bar).
+    public static var platterY: CGFloat { barTopPadding }
+    /// Extra height a `prompt` adds above the bar content (measured).
+    public static let promptHeight: CGFloat = 32
+    public static let promptFontSize: CGFloat = 12
+    /// Minimum clearance the centred title keeps from either item group
+    /// before it falls back to leading alignment (measured: at 3 pt UIKit
+    /// had already given up).
+    public static let titleGroupClearance: CGFloat = 8
 
     // MARK: Large-title metrics (M10 — measured from golden/navbar_*)
     //
@@ -148,14 +179,105 @@ public final class UINavigationBar: UIView {
     var backButton: _UINavigationBarBackButton?
     let hairline: UIView
 
+    // MARK: Navigation items (M13)
+
+    /// The item stack, as in UIKit. `topItem` drives everything the bar
+    /// shows; `backItem` supplies the back button's title.
+    public private(set) var items: [UINavigationItem] = []
+    public var topItem: UINavigationItem? { items.last }
+    public var backItem: UINavigationItem? {
+        items.count > 1 ? items[items.count - 2] : nil
+    }
+
+    var leftItemViews: [_UIBarButtonItemView] = []
+    var rightItemViews: [_UIBarButtonItemView] = []
+    var titleViewHost: UIView?
+    var promptLabel: UILabel?
+
+    // MARK: Appearance (M13)
+
+    /// UIKit's bar appearance objects. The default is the measured OPAQUE
+    /// configuration — that is what OpenUIKit's inline bar has drawn since
+    /// M7.5, and iOS 26's own default (transparent + scroll-edge effect) is
+    /// what `prefersLargeTitles` already models.
+    public var standardAppearance: UINavigationBarAppearance = {
+        let a = UINavigationBarAppearance()
+        a.configureWithOpaqueBackground()
+        return a
+    }() {
+        didSet { applyAppearance() }
+    }
+    public var scrollEdgeAppearance: UINavigationBarAppearance? {
+        didSet { applyAppearance() }
+    }
+    public var compactAppearance: UINavigationBarAppearance? {
+        didSet { applyAppearance() }
+    }
+    /// Legacy `barTintColor`, folded into the standard appearance's
+    /// background color (UIKit's own documented equivalence).
+    public var barTintColor: UIColor? {
+        didSet {
+            if let barTintColor {
+                standardAppearance.configureWithOpaqueBackground()
+                standardAppearance.backgroundColor = barTintColor
+            }
+            applyAppearance()
+        }
+    }
+    public var isTranslucent: Bool = true
+
+    /// The appearance in force right now: `scrollEdgeAppearance` while the
+    /// tracked scroll view sits at (or above) its top edge, otherwise
+    /// `standardAppearance`. Per-item overrides win over both, exactly as in
+    /// UIKit.
+    var effectiveAppearance: UINavigationBarAppearance {
+        let atEdge = trackedScrollView.map {
+            $0.contentOffset.y <= -$0.contentInset.top + 0.5
+        } ?? true
+        if atEdge, let a = topItem?.scrollEdgeAppearance ?? scrollEdgeAppearance {
+            return a
+        }
+        return topItem?.standardAppearance ?? standardAppearance
+    }
+
     public override init(frame: CGRect = .zero) {
         titleLabel = UINavigationBar.makeTitleLabel(nil)
         hairline = UIView()
         super.init(frame: frame)
-        backgroundColor = .systemBackground
-        hairline.backgroundColor = .separator
+        hairline.isUserInteractionEnabled = false
         addSubview(hairline)
         addSubview(titleLabel)
+        applyAppearance()
+    }
+
+    /// Push the appearance's background + hairline onto the bar.
+    func applyAppearance() {
+        // Large-title mode is transparent at rest by measurement (iOS 26);
+        // its material comes from the scroll-edge pocket.
+        guard !prefersLargeTitles else {
+            backgroundColor = nil
+            hairline.isHidden = true
+            return
+        }
+        let a = effectiveAppearance
+        backgroundColor = a._resolvedBackgroundColor
+        hairline.backgroundColor = a.shadowColor
+        hairline.isHidden = a.shadowColor == nil || backgroundColor == nil
+        for v in leftItemViews + rightItemViews { v.backdropColor = backgroundColor }
+        applyTitleAttributes()
+        setNeedsLayout()
+    }
+
+    func applyTitleAttributes() {
+        let a = effectiveAppearance
+        titleLabel.font = a.titleTextAttributes.font
+            ?? .systemFont(ofSize: 17, weight: .semibold)
+        titleLabel.textColor = a.titleTextAttributes.foregroundColor ?? .label
+        if let l = largeTitleLabel {
+            l.font = a.largeTitleTextAttributes.font
+                ?? .systemFont(ofSize: UINavigationBar.largeTitleFontSize, weight: .bold)
+            l.textColor = a.largeTitleTextAttributes.foregroundColor ?? .label
+        }
     }
 
     static func makeTitleLabel(_ text: String?) -> UILabel {
@@ -191,25 +313,189 @@ public final class UINavigationBar: UIView {
             largeTitleLabel?.text = title
             largeTitleLabel?.setNeedsDisplay()
         }
+        applyTitleAttributes()
         setNeedsLayout()
         layoutIfNeeded()
     }
 
+    // MARK: Navigation-item driven state (M13)
+
+    /// Display `item` (a pushed controller's `navigationItem`). This is the
+    /// path every real app takes; `setState(title:backTitle:)` is the
+    /// title-only shorthand the M7.5 controller still uses internally.
+    public func setItems(_ newItems: [UINavigationItem], animated: Bool = false) {
+        for i in items { i._bar = nil }
+        items = newItems
+        for i in items { i._bar = self }
+        _rebuildItemViews()
+    }
+
+    public func pushItem(_ item: UINavigationItem, animated: Bool = false) {
+        setItems(items + [item], animated: animated)
+    }
+
+    @discardableResult
+    public func popItem(animated: Bool = false) -> UINavigationItem? {
+        guard let last = items.last else { return nil }
+        setItems(Array(items.dropLast()), animated: animated)
+        return last
+    }
+
+    /// A displayed `UINavigationItem` mutated.
+    func _navigationItemChanged(_ item: UINavigationItem) {
+        guard item === topItem else { return }
+        _rebuildItemViews()
+    }
+
+    func _barItemsChanged() { setNeedsLayout() }
+
+    /// Rebuild the title + item platter views from `topItem`.
+    func _rebuildItemViews() {
+        for v in leftItemViews + rightItemViews { v.removeFromSuperview() }
+        leftItemViews = []
+        rightItemViews = []
+        titleViewHost?.removeFromSuperview()
+        titleViewHost = nil
+        promptLabel?.removeFromSuperview()
+        promptLabel = nil
+
+        guard let item = topItem else {
+            setNeedsLayout()
+            return
+        }
+        titleLabel.text = item.title
+        largeTitleLabel?.text = item.title
+        largeTitleLabel?.setNeedsDisplay()
+        if let tv = item.titleView {
+            titleViewHost = tv
+            addSubview(tv)
+        }
+        if let prompt = item.prompt {
+            let l = UILabel()
+            l.text = prompt
+            l.font = .systemFont(ofSize: UINavigationBar.promptFontSize)
+            l.textColor = .secondaryLabel
+            l.textAlignment = .center
+            promptLabel = l
+            addSubview(l)
+        }
+        leftItemViews = (item.leftBarButtonItems ?? []).map { makeItemView($0) }
+        rightItemViews = (item.rightBarButtonItems ?? []).map { makeItemView($0) }
+        applyAppearance()
+        setNeedsLayout()
+    }
+
+    func makeItemView(_ item: UIBarButtonItem) -> _UIBarButtonItemView {
+        item._bar = self
+        let v = _UIBarButtonItemView(item: item)
+        v.barTintColor = tintColor ?? .systemBlue
+        v.backdropColor = backgroundColor
+        v.addTarget(for: .touchUpInside) { [weak item] _, event in
+            guard let item, let action = item.action else { return }
+            SelectorDispatch.send(action, to: item.target, sender: item, event: event)
+        }
+        addSubview(v)
+        return v
+    }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
-        hairline.frame = CGRect(x: 0, y: bounds.height - 0.5,
-                                width: bounds.width, height: 0.5)
+        // Measured: the golden's `_UIBarBackgroundShadowView` sits just
+        // BELOW the bar zone (bar-local y 54 inside a background that starts
+        // at -10), i.e. flush against the content, not inside the bar.
+        hairline.frame = CGRect(x: 0, y: bounds.height,
+                                width: bounds.width, height: UIBarAppearance.shadowHeight)
+        layoutBarItems()
         // While a transition drives element centers, keep hands off.
         guard transition == nil else { return }
-        place(title: titleLabel, centerX: bounds.width / 2, alpha: 1)
+        place(title: titleLabel, centerX: titleCenterX, alpha: titleViewHost == nil ? 1 : 0)
+        if let tv = titleViewHost {
+            let s = tv.bounds.size == .zero ? tv.sizeThatFits(bounds.size) : tv.bounds.size
+            tv.bounds = CGRect(x: 0, y: 0, width: s.width, height: s.height)
+            tv.center = CGPoint(x: titleCenterX, y: contentMidY)
+        }
         if let b = backButton { place(back: b, alpha: 1) }
         if prefersLargeTitles { updateFromScroll() }
     }
 
+    /// Lay the leading / trailing platter groups out at the measured
+    /// margins, and place the prompt caption above them.
+    func layoutBarItems() {
+        let h = _UIBarMetrics.platterHeight
+        let y = UINavigationBar.platterY + promptOffset
+        var x = _UIBarMetrics.sideMargin + backButtonWidth
+        for v in leftItemViews where !v.item._isSpace {
+            let w = _UIBarItemLayout.width(of: v)
+            v.frame = CGRect(x: x, y: y, width: w, height: h)
+            x += w + _UIBarMetrics.gap
+        }
+        // UIKit's order: `rightBarButtonItems[0]` is the TRAILING-most item
+        // (measured — a [.edit, "Add"] pair renders "Add" then "Edit").
+        var right = bounds.width - _UIBarMetrics.sideMargin
+        for v in rightItemViews where !v.item._isSpace {
+            let w = _UIBarItemLayout.width(of: v)
+            right -= w
+            v.frame = CGRect(x: right, y: y, width: w, height: h)
+            right -= _UIBarMetrics.gap
+        }
+        if let l = promptLabel {
+            let s = l.intrinsicContentSize
+            l.frame = CGRect(x: (bounds.width - s.width) / 2,
+                             y: UINavigationBar.platterY
+                                + (UINavigationBar.promptHeight - s.height) / 2,
+                             width: s.width, height: s.height)
+        }
+    }
+
+    /// Extra top offset the prompt pushes the bar content down by.
+    var promptOffset: CGFloat { promptLabel == nil ? 0 : UINavigationBar.promptHeight }
+
+    /// Width the back button reserves at the leading edge.
+    var backButtonWidth: CGFloat {
+        guard let b = backButton, !b.isHidden else { return 0 }
+        return b.sizeThatFits(bounds.size).width
+    }
+
+    /// Trailing edge of the leading group (bar coordinates).
+    var leadingGroupMaxX: CGFloat {
+        var x = _UIBarMetrics.sideMargin + backButtonWidth
+        var drawn = 0
+        for v in leftItemViews where !v.item._isSpace {
+            x += _UIBarItemLayout.width(of: v)
+            drawn += 1
+        }
+        return x + CGFloat(max(0, drawn - 1)) * _UIBarMetrics.gap
+    }
+
+    /// Leading edge of the trailing group.
+    var trailingGroupMinX: CGFloat {
+        let w = _UIBarItemLayout.naturalWidth(rightItemViews)
+        return w == 0 ? bounds.width : bounds.width - _UIBarMetrics.sideMargin - w
+    }
+
+    /// Centre x for the title: centred, unless centring it would leave less
+    /// than `titleGroupClearance` next to either group — then it aligns just
+    /// past the leading group (measured; see UINavigationItem.swift).
+    var titleCenterX: CGFloat {
+        let width = titleViewHost.map {
+            $0.bounds.size == .zero ? $0.sizeThatFits(bounds.size).width : $0.bounds.width
+        } ?? titleLabel.intrinsicContentSize.width
+        let centered = bounds.width / 2
+        guard !leftItemViews.isEmpty || !rightItemViews.isEmpty || backButton != nil else {
+            return centered
+        }
+        let lead = leadingGroupMaxX
+        let trail = trailingGroupMinX
+        let clearance = UINavigationBar.titleGroupClearance
+        if centered - width / 2 >= lead + clearance,
+           centered + width / 2 <= trail - clearance {
+            return centered
+        }
+        return lead + _UIBarMetrics.gap + width / 2
+    }
+
     private var contentMidY: CGFloat {
-        prefersLargeTitles
-            ? UINavigationBar.largeInlineTitleCenterY
-            : UINavigationBar.statusBarInset + UINavigationBar.contentHeight / 2
+        UINavigationBar.largeInlineTitleCenterY + promptOffset
     }
 
     private func place(title l: UILabel, centerX: CGFloat, alpha: CGFloat) {
@@ -342,13 +628,12 @@ public final class UINavigationBar: UIView {
             pocketView.isHidden = true
             insertSubview(pocketView, at: 0)   // beneath both titles
         } else {
-            backgroundColor = .systemBackground
-            hairline.isHidden = false
             largeTitleLabel?.removeFromSuperview()
             largeTitleLabel = nil
             pocketView.removeFromSuperview()
             trackedScrollView = nil
         }
+        applyAppearance()
         setNeedsLayout()
     }
 

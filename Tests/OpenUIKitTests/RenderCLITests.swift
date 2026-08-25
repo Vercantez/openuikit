@@ -149,15 +149,16 @@ final class RenderCLITests: XCTestCase {
         XCTAssertGreaterThan(f[2], 0, "sizeToFit should have grown the label")
     }
 
-    /// Scenes with an "alert" or a "modal" key are golden-ed by the iOS
-    /// Simulator (scripts/regen_goldens.sh), whose system font is the `.SFUI`
-    /// cut of San Francisco rather than Catalyst's `.SFNS`; below 20 pt the
-    /// two are spaced differently, so openrender must lay those scenes out
-    /// with the iOS advances (FontEngine.SystemFontCut). Same label, same
-    /// font, one scene with an alert and one without: 96 pt vs 92 pt.
+    /// Scenes with an "alert", a "modal" or (v5.3) an `"ios": true` key are
+    /// golden-ed by the iOS Simulator (scripts/regen_goldens.sh), whose
+    /// system font is the `.SFUI` cut of San Francisco rather than
+    /// Catalyst's `.SFNS`; below 20 pt the two are spaced differently, so
+    /// openrender must lay those scenes out with the iOS advances
+    /// (FontEngine.SystemFontCut). Same label, same font, one scene per
+    /// routing key and one without: 96 pt vs 92 pt.
     func testSimulatorRoutedScenesUseTheIOSFontCut() throws {
         let dir = try makeTempDir()
-        func scene(_ name: String, alert: Bool) -> [String: Any] {
+        func scene(_ name: String, key: String?) -> [String: Any] {
             var s: [String: Any] = [
                 "name": name,
                 "size": [393, 852],
@@ -170,21 +171,62 @@ final class RenderCLITests: XCTestCase {
                     ]],
                 ],
             ]
-            if alert {
+            switch key {
+            case "alert":
                 s["alert"] = ["style": "alert", "title": "T",
                               "actions": [["title": "OK", "style": "default"]]]
+            case "modal":
+                s["window"] = true
+                s["modal"] = ["style": "pageSheet",
+                              "content": ["class": "UIView"]]
+            case "ios":
+                s["window"] = true
+                s["ios"] = true
+            default:
+                break
             }
             return s
         }
-        var widths: [Bool: Double] = [:]
-        for alert in [false, true] {
-            let name = alert ? "t_cut_alert" : "t_cut_plain"
-            let file = try writeScene(scene(name, alert: alert), name: name, in: dir)
+        var widths: [String: Double] = [:]
+        for key in ["plain", "alert", "modal", "ios"] {
+            let name = "t_cut_" + key
+            let routing = key == "plain" ? nil : key
+            let file = try writeScene(scene(name, key: routing), name: name, in: dir)
             XCTAssertEqual(try runCLI(["render", dir.path, file.path]).exitCode, 0)
-            widths[alert] = try frame(try loadLayout(dir, name)["0"])[2]
+            widths[key] = try frame(try loadLayout(dir, name)["0"])[2]
         }
-        XCTAssertEqual(try XCTUnwrap(widths[false]), 96.0, accuracy: 1e-9, "macOS cut (.SFNS)")
-        XCTAssertEqual(try XCTUnwrap(widths[true]), 92.0, accuracy: 1e-9, "iOS cut (.SFUI)")
+        XCTAssertEqual(try XCTUnwrap(widths["plain"]), 96.0, accuracy: 1e-9,
+                       "macOS cut (.SFNS)")
+        for key in ["alert", "modal", "ios"] {
+            XCTAssertEqual(try XCTUnwrap(widths[key]), 92.0, accuracy: 1e-9,
+                           "iOS cut (.SFUI) for a \"\(key)\"-routed scene")
+        }
+    }
+
+    /// The routing rule lives in three places (scripts/regen_goldens.sh,
+    /// Tools/oracle/SceneKit.swift's validation, and `runScene`'s font-cut
+    /// selection). Assert the shipped fixtures agree with the shell script's
+    /// predicate so a new fixture cannot silently take the wrong route.
+    func testShippedFixturesAgreeWithTheGoldenRoutingRule() throws {
+        let fm = FileManager.default
+        let root = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent()
+        let dir = root.appendingPathComponent("fixtures/scenes")
+        let files = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "json" }
+        XCTAssertGreaterThan(files.count, 50, "fixtures not found at \(dir.path)")
+        for f in files {
+            let j = try JSONSerialization.jsonObject(
+                with: Data(contentsOf: f)) as! [String: Any]
+            let simRouted = j["modal"] != nil || j["alert"] != nil
+                || (j["ios"] as? Bool == true)
+            if simRouted {
+                XCTAssertEqual(j["window"] as? Bool, true,
+                               "\(f.lastPathComponent): Simulator-routed scenes "
+                               + "must set \"window\": true")
+            }
+        }
     }
 
     // Every scene-spec class is now implemented (notYetImplementedClasses is

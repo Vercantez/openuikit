@@ -1,0 +1,31 @@
+{
+  "name": "navitem_titleview",
+  "size": [393, 260],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "ios": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Ignored",
+    "backgroundColor": "#FFFFFF",
+    "appearance": { "configuration": "transparent" },
+    "contentSize": [393, 900],
+    "titleView": {
+      "class": "UIView",
+      "frame": [0, 0, 160, 28],
+      "backgroundColor": "#D1D1D6",
+      "cornerRadius": 14,
+      "subviews": [
+        { "class": "UILabel", "frame": [0, 3, 160, 22], "text": "Title view",
+          "fontSize": 15, "fontWeight": "semibold", "textAlignment": "center",
+          "textColor": "#000000" }
+      ]
+    },
+    "leftItems": [ { "systemItem": "edit" } ],
+    "rightItems": [ { "systemItem": "save" } ],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 361, 60], "backgroundColor": "#E5E5EA", "cornerRadius": 12 }
+    ]
+  }
+}
