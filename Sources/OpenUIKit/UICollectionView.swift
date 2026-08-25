@@ -13,19 +13,9 @@
 // whose rules were probed against real UIKit (scripts/flow_probe.sh) and are
 // exercised by the collection_* fixture scenes.
 
-// MARK: - IndexPath item spelling
-
-public extension IndexPath {
-    /// UIKit spells a collection view's index paths `item`/`section` and a
-    /// table's `row`/`section`; both are the same storage.
-    init(item: Int, section: Int) {
-        self.init(row: item, section: section)
-    }
-    var item: Int {
-        get { row }
-        set { row = newValue }
-    }
-}
+// The `item`/`section` spelling of an index path moved to
+// FoundationTypes.swift with M15, alongside `row`/`section` — both are now
+// extensions on Foundation's IndexPath rather than on a type of our own.
 
 // MARK: - Data source / delegate protocols
 

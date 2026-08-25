@@ -10,11 +10,9 @@ import XCTest
 // example of the disambiguation an app has to write.
 private typealias NSAttributedString = OpenUIKit.NSAttributedString
 private typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
-private typealias NSRange = OpenUIKit.NSRange
 private typealias NSParagraphStyle = OpenUIKit.NSParagraphStyle
 private typealias NSMutableParagraphStyle = OpenUIKit.NSMutableParagraphStyle
 private typealias NSUnderlineStyle = OpenUIKit.NSUnderlineStyle
-private typealias CGFloat = OpenUIKit.CGFloat
 
 final class AttributedStringTests: XCTestCase {
     override func setUp() {

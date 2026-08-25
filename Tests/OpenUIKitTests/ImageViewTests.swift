@@ -5,10 +5,6 @@ import XCTest
 @testable import OpenUIKit
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
 
 private func solidBitmap(width: Int, height: Int, r: UInt8, g: UInt8, b: UInt8, a: UInt8 = 255) -> Bitmap {
     let bmp = Bitmap(width: width, height: height)

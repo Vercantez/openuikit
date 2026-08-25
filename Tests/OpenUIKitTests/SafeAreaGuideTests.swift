@@ -9,11 +9,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
-
 final class SafeAreaPropagationTests: XCTestCase {
 
     /// Parent 320x480 with insets (44, 10, 34, 12); nine child frames, and

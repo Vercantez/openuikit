@@ -16,11 +16,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
-
 final class MenuLayoutTests: XCTestCase {
 
     private func action(_ title: String, subtitle: String? = nil,

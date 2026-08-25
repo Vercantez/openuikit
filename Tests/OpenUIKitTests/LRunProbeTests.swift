@@ -1,8 +1,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGRect = OpenUIKit.CGRect
-
 final class LRunProbeTests: XCTestCase {
     func testLRunColumns() throws {
         guard GlyphFont(path: "/System/Library/Fonts/SFNS.ttf") != nil else {

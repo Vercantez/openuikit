@@ -4,10 +4,6 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Apple platforms; pin the
 // geometry types to the OpenCoreGraphics implementations under test.
-private typealias CGFloat = OpenCoreGraphics.CGFloat
-private typealias CGPoint = OpenCoreGraphics.CGPoint
-private typealias CGRect = OpenCoreGraphics.CGRect
-private typealias CGColor = OpenCoreGraphics.CGColor
 private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
 final class RasterizerTests: XCTestCase {

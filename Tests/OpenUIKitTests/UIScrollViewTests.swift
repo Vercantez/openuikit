@@ -8,10 +8,6 @@ import Foundation
 @testable import OpenUIKit
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
 
 // MARK: - Closed-form physics
 

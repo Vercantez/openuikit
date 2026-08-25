@@ -28,8 +28,21 @@ import CoreGraphics
 public typealias CGFloat = Foundation.CGFloat
 public typealias CGPoint = Foundation.CGPoint
 public typealias CGSize = Foundation.CGSize
-public typealias CGVector = Foundation.CGVector
 public typealias CGRect = Foundation.CGRect
+
+// MEASURED: Darwin's Foundation vends CGVector (it comes from CoreGraphics),
+// Linux corelibs-Foundation does NOT. Alias where it exists so there is no
+// duplicate name to collide with; declare it where it does not.
+#if canImport(CoreGraphics)
+public typealias CGVector = Foundation.CGVector
+#else
+public struct CGVector: Equatable, Sendable {
+    public var dx: CGFloat
+    public var dy: CGFloat
+    public init(dx: CGFloat, dy: CGFloat) { self.dx = dx; self.dy = dy }
+    public static let zero = CGVector(dx: 0, dy: 0)
+}
+#endif
 
 #else
 

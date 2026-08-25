@@ -8,11 +8,6 @@
 import XCTest
 @testable import OpenUIKit
 
-fileprivate typealias CGFloat = OpenUIKit.CGFloat
-fileprivate typealias CGPoint = OpenUIKit.CGPoint
-fileprivate typealias CGSize = OpenUIKit.CGSize
-fileprivate typealias CGRect = OpenUIKit.CGRect
-
 final class LayerCacheTests: XCTestCase {
 
     private var savedCaching = true

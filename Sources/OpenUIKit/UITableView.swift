@@ -28,19 +28,9 @@
 // subtitle cells should return UITableViewCell.subtitleRowHeight, real
 // self-sizing is out of scope, see docs/KNOWN_GAPS.md).
 
-// MARK: - IndexPath
-
-public struct IndexPath: Hashable, Comparable, Sendable {
-    public var section: Int
-    public var row: Int
-    public init(row: Int, section: Int) {
-        self.row = row
-        self.section = section
-    }
-    public static func < (a: IndexPath, b: IndexPath) -> Bool {
-        (a.section, a.row) < (b.section, b.row)
-    }
-}
+// `IndexPath` used to be declared here. It is Foundation's now (M15) — see
+// Sources/OpenUIKit/FoundationTypes.swift, which also adds UIKit's
+// `init(row:section:)` / `.row` / `.section` / `.item`.
 
 // MARK: - Data source / delegate protocols
 
