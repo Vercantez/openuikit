@@ -195,6 +195,21 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 - **M10 App framework** — UIViewController lifecycle, UINavigationController,
   UITabBarController, UITableView/UICollectionView with cell reuse; demo app
   (settings-style screen) running identically on macOS host and Linux.
+  - UITableView DONE (2026-08-25): UIScrollView subclass with REAL cell
+    reuse (only visible rows instantiated — proven by a 10k-row sweep
+    test; per-identifier pools + dequeueReusableCell/register), plain +
+    insetGrouped chrome measured off the M10 goldens (51.5/70.5 pt rows,
+    40.5 pt headers, 22 pt plain top padding, sticky plain headers,
+    26 pt-radius cards, measured separator insets + selected-adjacent
+    hiding), UITableViewCell default/subtitle/value1 with vector
+    chevron/checkmark accessories and the #DCDCDC selection flash /
+    0.3 s deselect fade (APP_FEEL row feel through the scroll view's
+    content-touch pipeline), UITableViewController, openrender scene
+    wiring. Gate: tableview_plain/grouped/dark/selected at
+    97.9/98.2/97.7/98.3 (chrome ≥95), 11 new tests, sustained flick
+    scroll of a 96-row table at 3.5–4.5 ms/frame scale 2 with cells
+    compositing from cached rasters (scripts/perf_table.json — cache
+    hit/build ≈ 14/0 per steady frame).
 
 ## Verification principle (unchanged, applies to every milestone)
 

@@ -1,0 +1,79 @@
+{
+  "_comment": [
+    "Perf probe scene: a big plain UITableView (8 sections x 12 rows, mixed",
+    "accessories) filling an iPhone-sized window. Not an oracle fixture —",
+    "openhost-only, used by scripts/perf_table.json (see that file)."
+  ],
+  "name": "perf_table",
+  "size": [375, 667],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      {
+        "class": "UITableView",
+        "frame": [0, 0, 375, 667],
+        "style": "plain",
+        "sections": [
+          {"header": "Section A", "rows": [
+            {"text": "Apple"}, {"text": "Banana", "accessory": "disclosureIndicator"},
+            {"text": "Cherry", "accessory": "checkmark"}, {"text": "Damson"},
+            {"text": "Elderberry", "accessory": "disclosureIndicator"}, {"text": "Fig"},
+            {"text": "Grape"}, {"text": "Honeydew", "accessory": "disclosureIndicator"},
+            {"text": "Iceberg"}, {"text": "Jackfruit", "accessory": "checkmark"},
+            {"text": "Kiwi"}, {"text": "Lemon", "accessory": "disclosureIndicator"}]},
+          {"header": "Section B", "rows": [
+            {"text": "Mango"}, {"text": "Nectarine", "accessory": "disclosureIndicator"},
+            {"text": "Orange"}, {"text": "Papaya", "accessory": "checkmark"},
+            {"text": "Quince"}, {"text": "Raspberry", "accessory": "disclosureIndicator"},
+            {"text": "Strawberry"}, {"text": "Tangerine"},
+            {"text": "Ugli fruit", "accessory": "disclosureIndicator"}, {"text": "Vanilla"},
+            {"text": "Watermelon"}, {"text": "Ximenia", "accessory": "checkmark"}]},
+          {"header": "Section C", "rows": [
+            {"text": "Yam"}, {"text": "Zucchini", "accessory": "disclosureIndicator"},
+            {"text": "Asparagus"}, {"text": "Beetroot", "accessory": "checkmark"},
+            {"text": "Carrot"}, {"text": "Daikon", "accessory": "disclosureIndicator"},
+            {"text": "Endive"}, {"text": "Fennel"},
+            {"text": "Garlic", "accessory": "disclosureIndicator"}, {"text": "Horseradish"},
+            {"text": "Iceplant"}, {"text": "Jicama", "accessory": "checkmark"}]},
+          {"header": "Section D", "rows": [
+            {"text": "Kale"}, {"text": "Leek", "accessory": "disclosureIndicator"},
+            {"text": "Mushroom"}, {"text": "Nori", "accessory": "checkmark"},
+            {"text": "Okra"}, {"text": "Parsnip", "accessory": "disclosureIndicator"},
+            {"text": "Quinoa"}, {"text": "Radish"},
+            {"text": "Spinach", "accessory": "disclosureIndicator"}, {"text": "Turnip"},
+            {"text": "Ube"}, {"text": "Violet", "accessory": "checkmark"}]},
+          {"header": "Section E", "rows": [
+            {"text": "Wasabi"}, {"text": "Yarrow", "accessory": "disclosureIndicator"},
+            {"text": "Amaranth"}, {"text": "Barley", "accessory": "checkmark"},
+            {"text": "Corn"}, {"text": "Durum", "accessory": "disclosureIndicator"},
+            {"text": "Einkorn"}, {"text": "Farro"},
+            {"text": "Groats", "accessory": "disclosureIndicator"}, {"text": "Hominy"},
+            {"text": "Injera"}, {"text": "Job's tears", "accessory": "checkmark"}]},
+          {"header": "Section F", "rows": [
+            {"text": "Kamut"}, {"text": "Lentil", "accessory": "disclosureIndicator"},
+            {"text": "Millet"}, {"text": "Naan", "accessory": "checkmark"},
+            {"text": "Oats"}, {"text": "Polenta", "accessory": "disclosureIndicator"},
+            {"text": "Quark"}, {"text": "Rye"},
+            {"text": "Spelt", "accessory": "disclosureIndicator"}, {"text": "Teff"},
+            {"text": "Udon"}, {"text": "Vermicelli", "accessory": "checkmark"}]},
+          {"header": "Section G", "rows": [
+            {"text": "Wheat"}, {"text": "Yeast", "accessory": "disclosureIndicator"},
+            {"text": "Za'atar"}, {"text": "Anise", "accessory": "checkmark"},
+            {"text": "Basil"}, {"text": "Cumin", "accessory": "disclosureIndicator"},
+            {"text": "Dill"}, {"text": "Epazote"},
+            {"text": "Fenugreek", "accessory": "disclosureIndicator"}, {"text": "Ginger"},
+            {"text": "Hyssop"}, {"text": "Iodized salt", "accessory": "checkmark"}]},
+          {"header": "Section H", "rows": [
+            {"text": "Juniper"}, {"text": "Kaffir lime", "accessory": "disclosureIndicator"},
+            {"text": "Lavender"}, {"text": "Marjoram", "accessory": "checkmark"},
+            {"text": "Nutmeg"}, {"text": "Oregano", "accessory": "disclosureIndicator"},
+            {"text": "Paprika"}, {"text": "Rosemary"},
+            {"text": "Saffron", "accessory": "disclosureIndicator"}, {"text": "Thyme"},
+            {"text": "Urfa biber"}, {"text": "Vanilla bean", "accessory": "checkmark"}]}
+        ]
+      }
+    ]
+  }
+}

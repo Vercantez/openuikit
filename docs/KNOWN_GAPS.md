@@ -1,5 +1,34 @@
 # Known gaps (living document — fixers: read this)
 
+## UITableView (M10, 2026-08-25): scope notes
+
+- No real self-sizing: row height resolves delegate `heightForRowAt` →
+  `rowHeight` → the measured 51.5 pt default. A data source that builds
+  `.subtitle` cells must return `UITableViewCell.subtitleRowHeight`
+  (70.5) from the delegate (openrender's scene driver does; real UIKit
+  self-sizes). Same for multi-line custom cells.
+- Inset-grouped side margin is oracle-dependent:
+  `insetGroupedSideInset` defaults to the offscreen-Catalyst 8 pt (the
+  light goldens); a real UIWindow measures 16 pt (tableview_dark,
+  oracle2) — openrender's SceneBuilder sets 16 for `"window": true`
+  scenes. Apps targeting device feel should set 16.
+- Selection overlay is a full-bleed rect; on an inset-grouped section's
+  first/last row it is NOT clipped to the card's 26 pt corners.
+- No editing mode (delete/reorder), no row insert/delete animations
+  (`reloadData` only), no `UITableViewHeaderFooterView` reuse pool
+  (headers/footers are rebuilt per section entering the viewport —
+  cheap, they're one label), no index titles, no multi-selection.
+- `.grouped` style renders with the `.insetGrouped` chrome (no legacy
+  full-width grouped look; no fixture covers it).
+- Plain footers have no golden: they render with header-like height
+  (40.5) and footer typography; plain headers assume an opaque
+  `systemBackground` (matches the golden over a white table).
+- Dark WINDOW text (e.g. tableview_dark) draws through the smoothed
+  rasterizer fallback: glyph_ink_window.json currently carries only
+  light-mode masks, so dark window glyphs are slightly softer/heavier
+  than the golden (text-module coverage gap, not table-specific;
+  tableview_dark still passes at 97.7).
+
 ## Modal / tab bar / large-title chrome (M10, 2026-08-25): scope notes
 
 - Modal presentation implements `.pageSheet` (default) and `.fullScreen`
