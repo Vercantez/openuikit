@@ -4,10 +4,19 @@
 compiled against OpenUIKit *as written* and rendered — headless, live, and
 identically on Linux?
 
-**Answer: yes, for the screen tested, at 97.7 % of its source unmodified.**
-14 of 605 vendored lines had to change, and this file says exactly which 14
+**Answer: yes, for the screen tested, at 98.3 % of its source unmodified.**
+10 of 605 vendored lines had to change, and this file says exactly which 10
 and why. It also says what the experiment did **not** prove, which is more
 interesting than what it did.
+
+> **Updated at the M15 tip (`@MainActor`).** The first version of this
+> experiment reported **14** changed lines / 97.7 %. Four of them were
+> `@MainActor` annotations in `OptionAction.swift` that had to be deleted
+> because OpenUIKit's classes carried no global-actor isolation. They are
+> back, verbatim, now that UIView/UIViewController/UIControl are
+> `@MainActor` as in real UIKit — so blocker #3 below is **closed** and the
+> ledger is 10 lines / 98.3 %. Nothing else about the experiment changed;
+> the renders are byte-identical.
 
 ---
 
@@ -109,23 +118,23 @@ comment at the site.
 | `OptionsPickerRootController.swift` | 258 | **0** | 100 % |
 | `SimpleActionView.swift` | 228 | 8 | 96.5 % |
 | `OptionsPicker.swift` | 83 | 1 | 98.8 % |
-| `OptionAction.swift` | 36 | 5 | 86.1 % |
-| **total** | **605** | **14** | **97.7 %** |
+| `OptionAction.swift` | 36 | 1 | 97.2 % |
+| **total** | **605** | **10** | **98.3 %** |
 
 The 258-line view controller — the actual *screen*, and the file with all the
 Auto Layout in it — compiles **byte-identically**.
 
-### The 14 lines, by reason
+### The 10 lines, by reason
 
 | reason | lines | detail |
 |---|---|---|
 | **`NSCoder` / Foundation collision** | 5 | `required init?(coder:)` deleted (4 lines) and `import Foundation` dropped (1). `NSCoder` is a Foundation type, and a target that links OpenUIKit cannot `import Foundation` at all without Foundation's `CGRect`/`CGSize` colliding with OpenUIKit's. The initializer is `@available(*, unavailable)` in the original and never runs — but it is *present in essentially every UIKit class*. |
-| **`@MainActor` isolation** | 4 | `OptionAction`'s `action` and `submenu` closure types and its two initializers are declared `@MainActor`. Real UIKit annotates `UIView`/`UIViewController` `@MainActor`, so calling such a closure from a touch handler is legal. OpenUIKit's classes carry no global-actor isolation, so the same call is a concurrency error. Annotation dropped; the library is single-threaded either way. |
+| ~~**`@MainActor` isolation**~~ | ~~4~~ **0** | **Closed in M15.** `OptionAction`'s `action` and `submenu` closure types and its two initializers are declared `@MainActor` upstream; they used to be deleted, and they are now compiled as written. OpenUIKit annotates `UIView`/`UIViewController`/`UIControl` and the delegate protocols `@MainActor`, exactly as real UIKit does. |
 | **`#selector` / `@objc`** | 4 | Two `#selector(…)` call sites rewritten to `Selector.named(…)`; two `@objc private func` declarations lost their `@objc` and their `private`, and the 1-argument action's sender retyped `UISwitch` → `AnyObject`. Exactly the cost docs/OBJC_RUNTIME.md predicted. |
-| **harness plumbing (not a UIKit gap)** | 1 | `class OptionsPicker` → `public class OptionsPicker`, so `openrender` can reach it across the module boundary. Inside a real app target this would not be needed. |
+| **harness plumbing (not a UIKit gap)** | 1 | `class OptionsPicker` → `public class OptionsPicker`, so `openrender` can reach it across the module boundary. Inside a real app target this would not be needed. (The same line also carries `@MainActor`. That is not a divergence in the other direction: the class creates and drives a `UIViewController`, and a nonisolated class touching a main-actor-isolated one is an **error** in Swift 5 language mode too — verified against the toolchain, not assumed — so the app's own build cannot compile it without isolation either. It was simply absent while OpenUIKit had no isolation to annotate against.) |
 
 Notice what is **not** in that table: no missing method, no renamed property,
-no restructured layout, no removed feature. Every one of the 14 lines is a
+no restructured layout, no removed feature. Every one of the 10 lines is a
 *language/runtime* incompatibility, not an API-surface hole. That is a
 different and better failure mode than the census's "missing type" counting
 suggests — but see "the code that was written *around* it", below.
@@ -144,7 +153,7 @@ UIKit build would not need:
 Plus `Sources/RealAppProbe/RealAppScreen.swift` (121) and
 `Sources/openrender/RealApp.swift` (81), which are harness, not app.
 
-So: **605 app lines, 14 changed, 246 lines of scaffolding** (shims + selector
+So: **605 app lines, 10 changed, 246 lines of scaffolding** (shims + selector
 table + module alias). Scaled up, the scaffolding is the thing that would
 hurt: the selector table is ~3 lines per action class, and the theme shim
 would have to become the app's real theme system (which would compile — it is
@@ -184,7 +193,7 @@ of the census.
 |---|---|---|---|
 | 1 | **`@objc` / `#selector` and the dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Known and documented (docs/OBJC_RUNTIME.md). Measured here at 4 changed lines + a 23-line table for one class. Nothing can close it without an ObjC runtime; what *could* shrink it is a macro that generates `SelectorDispatching` from `@objc`-looking declarations. |
 | 2 | **Foundation cannot be imported alongside OpenUIKit** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | The single biggest structural obstacle to compiling an app *as a whole*. `required init?(coder:)` alone is in 344 files. Fixing it means either `typealias`-ing OpenUIKit's CG types to Foundation's on Darwin/`swift-corelibs` (giving up the "no Foundation" property at the app boundary, not in the library), or shipping an `OpenUIKitFoundationCompat` module that re-exports the non-colliding half. |
-| 3 | **No `@MainActor` isolation on OpenUIKit's classes** | `@MainActor` **641 uses / 270 files**, and rising — Swift 6 language mode makes it the default expectation | 4 of this sample's 14 changed lines. Annotating `UIView`/`UIViewController`/`UIControl` `@MainActor` is mechanical but touches the whole library and every host; it is the cheapest large win on this list. |
+| ~~3~~ | ~~**No `@MainActor` isolation on OpenUIKit's classes**~~ — **SHIPPED (M15)** | `@MainActor` **641 uses / 270 files** | **Was** 4 of this sample's 14 changed lines; now 0. UIResponder and every subclass, UIControl, UIGestureRecognizer, UIScreen, UIDevice, the touch/event types, the presentation and transitioning types, the bar-item types, the Auto Layout types and every delegate/data-source protocol are `@MainActor`, matching the iOS SDK. The rendering core (OpenCoreGraphics), the text engine's glyph entry points, the Cassowary solver and the value-ish types (`UIColor`, `UIImage`, `UIFont`, `UIBezierPath`) are deliberately **not** isolated — they are legal off the main actor in real UIKit too. See docs/KNOWN_GAPS.md for the two `MainActor.assumeIsolated` boundaries this leaves. |
 | 4 | **No asset catalog** | `UIImage(named:)` **438 / 161** | `UIImage(named:)` resolves loose `@2x`/`@3x` files only. Real apps ship `.xcassets`, which also carry the template-rendering-intent flag the app's tinting depends on. The harness copies three PNGs into `fixtures/realapp/assets/` and renames one (`small-tick` is stored as `tick@2x.png` inside its imageset). A `.xcassets` reader is a small, self-contained project. |
 | 5 | **`UIWindow` runs no appearance transition** | `viewDidAppear` **119 / 105** | `makeKeyAndVisible()` does not call `viewWillAppear`/`viewDidAppear` on the root controller, so app code that starts work there never runs. The harness works around it with an explicit `presentPickerNow()`; both `openrender` and `openhost` had to do it. This is a small fix and should be one. |
 | 6 | **Localization** | `L10n.` **3,400 / 540** | Not UIKit — but every user-visible string in three of the four corpus apps goes through a generated `L10n` enum backed by `NSLocalizedString`/`Bundle`. Any whole-app attempt hits it immediately. The harness passes literals. |

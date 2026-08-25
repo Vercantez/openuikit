@@ -503,7 +503,8 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     the 258-line view controller with all the Auto Layout in it compiles
     byte-for-byte. Every one of the 14 is a language/runtime incompatibility
     (`NSCoder`/Foundation 5, `@MainActor` 4, `#selector`/`@objc` 4, an access
-    level 1); **none is a missing UIKit member**.
+    level 1); **none is a missing UIKit member**. *(M15 closed the
+    `@MainActor` four: the ledger is now 10 lines / **98.3 %**.)*
   - **Dynamic Type shipped, oracle-backed.** `UIFont.TextStyle`,
     `UIContentSizeCategory`, `UIFont.preferredFont(forTextStyle:)`,
     `UIFontDescriptor.preferredFontDescriptor(withTextStyle:)` and
@@ -528,8 +529,40 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   - **The verdict is in docs/REAL_APP_TEST.md and it is not "done":**
     rendering a real code-based screen works; compiling a whole app does not,
     and the ranked reasons are Foundation interoperability, selector
-    dispatch, `@MainActor`, asset catalogs and xibs — none of them about
-    UIKit's API surface.
+    dispatch, ~~`@MainActor`~~ *(closed in M15)*, asset catalogs and xibs —
+    none of them about UIKit's API surface.
+
+- **M15 `@MainActor` isolation — DONE 2026-08-25.** Punch-list blocker #3
+  (`@MainActor`: 641 uses across 270 of the corpus's 5,099 files). Real UIKit
+  isolates its UI classes to the main actor and app source is written against
+  that; OpenUIKit's classes had no isolation, so that source did not
+  type-check.
+  - `UIResponder` and every subclass, `UIControl`, `UIGestureRecognizer`,
+    `UIScreen`, `UIDevice`, the touch/event types, the presentation and
+    transitioning types, the bar-item and bar-appearance types, the Auto
+    Layout types and **every delegate / data-source protocol** are now
+    `@MainActor`, matching the iOS SDK.
+  - Deliberately NOT isolated: all of `OpenCoreGraphics`, the glyph-run
+    painter (`nonisolated static`), the Cassowary solver, the font engine,
+    and `UIColor`/`UIImage`/`UIFont`/`UIBezierPath`/`UIGraphicsImageRenderer`
+    — legal off the main actor in real UIKit too.
+  - Exactly two boundary crossings, both `MainActor.assumeIsolated` (checked,
+    traps off-main) with the reasoning at the site — timer/notification
+    delivery to a `SelectorDispatching` target, and each tool's top-level
+    `main.swift`. No `nonisolated(unsafe)` anywhere.
+  - **Real-app ledger 14 changed lines → 10, 97.7 % → 98.3 %**: the
+    `@MainActor` category is gone from it entirely.
+  - **No output change and no perf change**: 108/108 scenes, 9/9 traces, **737**
+    tests (5 new in `Tests/OpenUIKitTests/ActorIsolationTests.swift`, written
+    the way app source is so a regression fails to COMPILE), 162/162 byte-identical macOS-vs-Linux frames, 13/13 for the
+    real-app screen; release render of every scene 1.98 s before / 1.97 s
+    after.
+  - Swift 6 strict-concurrency diagnostics **1,420 → 1,032**. The package
+    still does not build in the Swift 6 language mode, and the reason is
+    pre-existing global mutable state (996 of the 1,032 are
+    `#MutableGlobalVariable`, concentrated in `UIColor.swift` and the symbol
+    /metric tables), not isolation. Detail in docs/KNOWN_GAPS.md "Actor
+    isolation".
 
 ## M13 — bars & appearance (2026-08-25)
 
@@ -715,12 +748,13 @@ cluster above:
   member by member at this commit (docs/APP_COMPAT.md) and this is what came
   out on top.
 - **The real blocker is not UIKit's API surface at all.** M14 proved a
-  shipping app's screen renders with 97.7% of its source unmodified and
-  **none of the 14 changed lines a missing UIKit member** — every one was a
-  language or runtime incompatibility. The ranked reasons a whole app still
-  does not compile are Foundation interoperability (`NSCoder` alone appears
-  in 344 of the corpus's 5,099 files), selector dispatch, `@MainActor`, asset
-  catalogs and xibs (docs/REAL_APP_TEST.md).
+  shipping app's screen renders with 98.3% of its source unmodified (97.7%
+  before M15) and **none of the changed lines a missing UIKit member** —
+  every one was a language or runtime incompatibility. The ranked reasons a
+  whole app still does not compile are Foundation interoperability (`NSCoder`
+  alone appears in 344 of the corpus's 5,099 files), selector dispatch,
+  ~~`@MainActor`~~ *(closed in M15)*, asset catalogs and xibs
+  (docs/REAL_APP_TEST.md).
 
 So the milestone this points at is **`import Foundation` alongside
 OpenUIKit** — which would let an app's model layer, theme system and string

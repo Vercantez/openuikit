@@ -7,13 +7,15 @@ real open-source UIKit apps, counts every UIKit symbol they reference, and
 diffs against what OpenUIKit exports — so the roadmap is ordered by what apps
 actually use, not by UIKit's alphabet.
 
-**Where this stands at the M13 wrap-up (2026-08-25):** **97.1% effective
+**Where this stands at the M15 tip (2026-08-25):** **97.1% effective
 coverage** of what four real apps reference, 474 uses (2.9%) of
 genuinely-missing types left, and a *screen* from a shipping app rendering
-with 97.7% of its source unmodified. The file is written newest-last within
+with **98.3%** of its source unmodified (97.7% before M15 closed the
+`@MainActor` blocker). The file is written newest-last within
 each topic; if you want only the current picture, read **"Current measurement
 — M13 wrap-up, at the M14 tip"**, **"The punch list, re-ranked at the M14
-tip"** and **"Missing MEMBERS of types we already export"**, then
+tip"**, **"Missing MEMBERS of types we already export"** and
+**"`@MainActor` isolation: shipped (M15)"**, then
 docs/REAL_APP_TEST.md. Everything else is the record of how the number got
 there, and the superseded sections are marked as such.
 
@@ -511,11 +513,13 @@ handling, switch action and tap-to-dismiss driven by real touches), and
 **byte-identically on Linux** (`scripts/linux_realapp_verify.sh`: 13/13 frames
 across the headless renders and the scripted live replay).
 
-**14 of the 605 lines had to change — 97.7 % unmodified**, and the 258-line
+**10 of the 605 lines had to change — 98.3 % unmodified**, and the 258-line
 view controller (all of the Auto Layout) compiles byte-for-byte. The ledger by
-reason: `NSCoder`/Foundation collision 5, `@MainActor` isolation 4,
-`#selector`/`@objc` 4, harness access level 1. **None of the 14 is a missing
-UIKit member** — every one is a language or runtime incompatibility.
+reason: `NSCoder`/Foundation collision 5, `#selector`/`@objc` 4, harness
+access level 1. **None of the 10 is a missing UIKit member** — every one is a
+language or runtime incompatibility. *(As first measured this was 14 lines /
+97.7 %; the other 4 were `@MainActor` annotations that had to be deleted, and
+M15 put them back — see "`@MainActor` isolation: shipped (M15)".)*
 
 The cost that does not show up in that ratio is the 246 lines of scaffolding
 (the app's theme system re-expressed, a `SelectorDispatching` table, a `UIKit`
@@ -524,11 +528,11 @@ module alias) — see the report.
 So the honest statement of where this stands:
 
 - **rendering a real code-based screen: done**, for this class of screen;
-- **compiling a whole app: not close**, and the five reasons are now specific
+- **compiling a whole app: not close**, and the reasons are now specific
   and ranked (docs/REAL_APP_TEST.md "Blocked on"): Foundation
   interoperability (`NSCoder` alone appears in 344 of the corpus's 5,099
-  files), selector dispatch, `@MainActor`, asset catalogs, xibs. Only the last
-  is out of scope by choice.
+  files), selector dispatch, ~~`@MainActor`~~ *(closed in M15)*, asset
+  catalogs, xibs. Only the last is out of scope by choice.
 
 The next milestone this suggests is **not** more UIKit types. It is
 `import Foundation` alongside OpenUIKit, which would let an app's model layer,
@@ -573,3 +577,52 @@ One guessed constant was replaced by measurement: the inline navigation bar's
 zone split was 20 + 44 with the title centred at y 42; real iOS 26 is 10 + 54
 with the centre at **32**. `barHeight` stays 64, so nothing below the bar
 moved.
+
+## `@MainActor` isolation: shipped (M15, 2026-08-25)
+
+Punch-list blocker **#3** in docs/REAL_APP_TEST.md, and the cheapest large win
+on that list: `@MainActor` appears **641 times across 270** of the corpus's
+5,099 Swift files, and the count only goes up as apps move toward the Swift 6
+language mode, where main-actor isolation is the default expectation.
+
+The problem was not that apps call something OpenUIKit lacks. It is that real
+UIKit annotates its classes `@MainActor`, so an app can write
+
+```swift
+let action: @MainActor () -> Void        // and call it from a touch handler
+@MainActor func reload() { tableView.reloadData() }
+nonisolated func hashValue() -> Int
+```
+
+and have it type-check. Against classes with *no* isolation the same code is a
+concurrency error — which is why 4 of the real-app harness's 14 changed lines
+were annotations that had to be deleted rather than adapted.
+
+**What is annotated now** mirrors the iOS SDK: `UIResponder` and every
+subclass, `UIControl`, `UIGestureRecognizer`, `UIScreen`, `UIDevice`, the
+touch/event types, the presentation and transitioning types, the bar-item and
+bar-appearance types, the Auto Layout types, and **every delegate /
+data-source protocol** (the SDK annotates those too, and it is forced anyway —
+a `@MainActor` witness cannot satisfy a nonisolated requirement).
+
+**What is deliberately left nonisolated** — because it is legal off the main
+actor in real UIKit too, and because isolating it would constrain any future
+threading of the renderer: all of `OpenCoreGraphics`, the glyph-run painter
+(`UILabel.drawGlyphLine`/`drawGlyph`, spelled `nonisolated static`), the
+Cassowary solver, the font engine, `UIColor`/`UIImage`/`UIFont`/
+`UIBezierPath`/`UIGraphicsImageRenderer`, and the Foundation shapes
+(`NSAttributedString`, `Timer`, `NotificationCenter`, …).
+
+Two boundaries are crossed on purpose, both with `MainActor.assumeIsolated`
+(a *checked* assertion that traps off-main) and never `nonisolated(unsafe)`:
+timer/notification delivery to a `SelectorDispatching` target, and the
+top-level code in each tool's `main.swift`. Full reasoning, the
+strict-concurrency numbers and the measured zero perf cost are in
+docs/KNOWN_GAPS.md "Actor isolation".
+
+**Result for app source:** the harness's real-app ledger goes **14 changed
+lines → 10**, 97.7 % → **98.3 %** unmodified, and the entire `@MainActor`
+category disappears from it. Renders are unchanged: 108/108 scenes, 9/9 scroll
+traces, 737 tests (5 new, `ActorIsolationTests`), 162/162 byte-identical
+macOS-vs-Linux frames, and 13/13 for
+the real-app screen.
