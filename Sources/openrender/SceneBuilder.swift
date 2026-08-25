@@ -1112,6 +1112,11 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
         baseVC.view = host
         let sheetVC = UIViewController()
         sheetVC.view = buildView(contentJ, scale: scale, warn: warn)
+        // Spec v5.1: "grabber": true -> prefersGrabberVisible (UIKit's
+        // default is false, hence two goldens).
+        if modalJ["grabber"]?.boolValue == true {
+            sheetVC.sheetPresentationController?.prefersGrabberVisible = true
+        }
         baseVC.present(sheetVC, animated: false)
         host.layoutIfNeeded()
         sceneRetainedControllers.append(baseVC)

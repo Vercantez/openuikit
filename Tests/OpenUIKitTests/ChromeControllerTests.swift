@@ -131,9 +131,12 @@ final class ModalPresentationTests: XCTestCase {
         XCTAssertTrue(container?.superview === window)
         // Dim at the measured 20%.
         XCTAssertEqual(sheet._presentationDim?.alpha ?? 0, 0.2, accuracy: 1e-9)
-        // Sheet at the measured 59.5 pt top inset, full width to the bottom.
+        // Sheet at the measured 59 pt top inset, full width to the bottom.
+        // (M11: sheetprobe reads the live frame off real iOS as
+        // (0, 59, 393, 793); the M10 value of 59.5 was a fit to the golden's
+        // edge profile and scored 0.09 pt worse — see docs/APP_FEEL.md.)
         let sf = sheet._presentationSheet!.frame
-        XCTAssertEqual(sf.minY, 59.5, accuracy: 1e-9)
+        XCTAssertEqual(sf.minY, 59, accuracy: 1e-9)
         XCTAssertEqual(sf.width, 393)
         XCTAssertEqual(sf.maxY, 852)
         // The presented view fills the sheet and lost its own background
@@ -153,10 +156,10 @@ final class ModalPresentationTests: XCTestCase {
         // "will" fires immediately; "did" waits for the transition end.
         XCTAssertEqual(log.entries, ["Sheet.didLoad", "Sheet.willAppear"])
         // The slide-up was recorded from offscreen (y = 852) to rest
-        // (y = 59.5): the model holds the final frame, the recorded
+        // (y = 59): the model holds the final frame, the recorded
         // animation the offscreen start (the presentation interpolates).
         let platter = sheet._presentationSheet!
-        XCTAssertEqual(platter.frame.minY, 59.5, accuracy: 1e-9)
+        XCTAssertEqual(platter.frame.minY, 59, accuracy: 1e-9)
         XCTAssertTrue(platter.animations.contains { $0.property == .position })
         XCTAssertEqual(sheet._presentationDim?.alpha ?? 0, 0.2, accuracy: 1e-9)
         OpenUIKitRuntime.animationTime = UIViewController.presentTransitionDuration + 0.01

@@ -1,4 +1,12 @@
-// Modal presentation. Owner: viewcontroller module (M10 chrome).
+// Modal presentation. Owner: viewcontroller module (M10 chrome, M11 gestures).
+//
+// The INTERACTIVE behaviour (drag-to-dismiss, grabber, dim interpolation) is
+// MEASURED against real iOS 26.1 UIKit, not guessed: Tools/oracle2/sheetprobe
+// drives a live UISheetPresentationController in the iOS Simulator with
+// synthetic UITouch drags and samples the sheet frame and the dim view's
+// presentation opacity per display-link frame
+// (scripts/sheet_probe_sim.sh; results in docs/APP_FEEL.md "Measured sheet
+// interaction"). The constants live in `UISheetPhysics` below.
 //
 // UIViewController.present(_:animated:) / dismiss(animated:) with the iOS 26
 // pageSheet look, measured from golden/modal_sheet (real iOS 26, iPhone 16
@@ -6,8 +14,10 @@
 //   - Dimming: black at 20% over the presenting content (white base →
 //     #CCCCCC). Touches on the dim do nothing (minimal isModalInPresentation
 //     semantics — there is no tap-to-dismiss).
-//   - Sheet: full width, top edge 59.5 pt below the window top, rounded
-//     corners fit from the golden's edge profile (top R ≈ 37.7 pt, bottom
+//   - Sheet: full width, top edge 59 pt below the window top (MEASURED —
+//     sheetprobe reads the live frame as (0, 59, 393, 793); the earlier 59.5
+//     was a fit to the golden's edge profile and scored 0.09 pt worse),
+//     rounded corners fit from the golden's edge profile (top R ≈ 37.7, bottom
 //     R ≈ 58.2 pt — iOS draws continuous corners; a circular fit matches
 //     the measured profile within ~0.4 pt on top, ~1.7 pt on the bottom's
 //     display-concentric curve).
@@ -40,14 +50,127 @@ final class UIPresentationContainerView: UIView {}
 /// The dim behind a sheet: swallows every touch (tap-to-dismiss is NOT the
 /// default; minimal isModalInPresentation semantics).
 final class _UIDimmingView: UIView {
+    /// MEASURED: real iOS 26.1 installs a `UIDimmingView` with
+    /// backgroundColor black at exactly alpha 0.2 behind a pageSheet.
     static let maxAlpha: CGFloat = 0.2
+}
+
+// MARK: - Sheet interaction physics (MEASURED, iOS 26.1 / iPhone 16)
+
+/// Constants for the interactive pageSheet, every one of them measured from
+/// real UIKit by `Tools/oracle2/sheetprobe` (see the file header and
+/// docs/APP_FEEL.md "Measured sheet interaction").
+public enum UISheetPhysics {
+    /// Pan slop absorbed at recognition. MEASURED: the sheet's offset is the
+    /// finger's travel MINUS EXACTLY 10 pt at every distance probed
+    /// (180/240/320/360/380 pt of travel → 170/230/310/350/370 pt of sheet),
+    /// the same rule UIScrollView's pan follows.
+    public static let panSlop: CGFloat = 10
+
+    /// Release past this FRACTION of the sheet's height dismisses.
+    /// MEASURED = 0.5: on a 793 pt sheet, releasing at rest from 370 pt
+    /// springs back and from 398/402 pt dismisses (50 % = 396.5). The rule is
+    /// PROPORTIONAL, not a fixed distance — a 400 pt custom detent springs
+    /// back from 170 pt and dismisses from 210 pt.
+    public static let dismissProgressThreshold: CGFloat = 0.5
+
+    /// ...or release with at least this downward velocity (pt/s), whatever
+    /// the distance. MEASURED = 1000 exactly: at 64 pt of travel, releasing
+    /// at 975 pt/s springs back and 1000 pt/s dismisses.
+    public static let dismissVelocityThreshold: CGFloat = 1000
+
+    /// Both the spring-back and the completing dismissal animate the sheet's
+    /// offset with ONE critically damped spring seeded by the release
+    /// velocity. MEASURED ω = √(1000/3) = 18.2574 rad/s (mass 3, stiffness
+    /// 1000): free fits of three independent releases give 18.251 / 18.256 /
+    /// 18.258 with an rms error of 0.02–0.05 pt over the whole curve.
+    public static let settleOmega: Double = 18.257418583505537
+
+    /// Trailing window for the release velocity. NOT separately measured for
+    /// sheets (the probe's drags run at constant velocity, so every estimator
+    /// agrees); inherited from UIScrollView's measured 100 ms window.
+    public static let velocityWindow: Double = 0.1
+
+    /// Displacement from the target at time `t` for a critically damped
+    /// spring released at displacement `x0` with velocity `v0`.
+    public static func displacement(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
+        guard t > 0 else { return x0 }
+        let w = settleOmega
+        let b = Double(v0) + w * Double(x0)
+        return CGFloat((Double(x0) + b * t) * _scrollExp(-w * t))
+    }
+
+    /// d/dt of `displacement`.
+    public static func velocity(x0: CGFloat, v0: CGFloat, at t: Double) -> CGFloat {
+        guard t > 0 else { return v0 }
+        let w = settleOmega
+        let b = Double(v0) + w * Double(x0)
+        return CGFloat((b - w * (Double(x0) + b * t)) * _scrollExp(-w * t))
+    }
+
+    /// Settle tolerances (below both, the spring snaps to its target).
+    static let settleDisplacement: CGFloat = 0.25
+    static let settleVelocity: CGFloat = 2
+}
+
+/// The small rounded handle at the top of a sheet. Hidden unless the app sets
+/// `sheetPresentationController?.prefersGrabberVisible` — UIKit's default is
+/// false, which is why golden/modal_sheet carries no grabber and
+/// golden/modal_sheet_grabber does.
+///
+/// Geometry MEASURED twice and in agreement: the live view hierarchy reports
+/// `_UIGrabber [178.5, 64.0, 36.0, 5.0] cornerRadius 2.5` on a 393 pt window
+/// whose sheet starts at y 59, and the rendered golden's ink spans exactly
+/// x 178.5…214.5, y 64.0…69.0 with a half-pixel antialias fringe.
+public final class _UISheetGrabber: UIView {
+    public static let width: CGFloat = 36
+    public static let height: CGFloat = 5
+    /// Gap between the sheet's top edge and the grabber's top edge.
+    public static let topInset: CGFloat = 5
+
+    /// MEASURED in light mode: over the white sheet the grabber renders
+    /// (197, 197, 200), which is UIKit's systemFill base gray
+    /// (0.4706, 0.4706, 0.502) at alpha 0.4295 — solved per channel, and the
+    /// blue channel independently confirms it (predicted 200.4, measured
+    /// 200.0). Real UIKit draws it as a luma-tracking UIVisualEffectView;
+    /// this is the flat equivalent over an opaque background.
+    ///
+    /// Dark is NOT measured — `drawHierarchy` renders the dark grabber as
+    /// nothing at all (the same private-material capture limitation that
+    /// blocks the dark textfield border and the dark tab bar, see
+    /// docs/KNOWN_GAPS.md). The dark alpha extrapolates the light:dark ratio
+    /// UIKit uses for the systemFill family itself (0.2 → 0.36, i.e. ×1.8).
+    static let fill = UIColor(dynamicProvider: { traits in
+        let a: CGFloat = traits.userInterfaceStyle == .dark ? 0.7731 : 0.4295
+        return UIColor(red: 0.4706, green: 0.4706, blue: 0.502, alpha: a)
+    })
+
+    public override init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        backgroundColor = _UISheetGrabber.fill
+        layer.cornerRadius = _UISheetGrabber.height / 2
+    }
+}
+
+/// The slice of UIKit's `UISheetPresentationController` that OpenUIKit
+/// implements. Reachable exactly where UIKit puts it
+/// (`vc.sheetPresentationController`) so app code reads the same, but the
+/// detent surface is deliberately absent rather than faked — see
+/// docs/KNOWN_GAPS.md for the measured detent design that was deferred.
+public final class UISheetPresentationController {
+    /// Show the grabber. UIKit's default is `false`.
+    public var prefersGrabberVisible: Bool = false {
+        didSet { onChange?() }
+    }
+    var onChange: (() -> Void)?
 }
 
 /// The sheet platter: fills its bounds with the measured rounded-corner
 /// shape. The presented view sits on top with a clear background — the
 /// platter provides the background color so the corners stay rounded.
 final class _UIPageSheetView: UIView {
-    static let topInset: CGFloat = 59.5
+    static let topInset: CGFloat = 59.0
     static let topCornerRadius: CGFloat = 37.7
     static let bottomCornerRadius: CGFloat = 58.2
 
@@ -56,6 +179,36 @@ final class _UIPageSheetView: UIView {
     var fillColor: UIColor = .systemBackground {
         didSet { setNeedsDisplay() }
     }
+
+    // MARK: Interactive dismissal state
+
+    /// The presented controller this sheet is showing (for the teardown when
+    /// an interactive dismissal completes).
+    weak var presented: UIViewController?
+    weak var dim: _UIDimmingView?
+    /// frame.minY with the sheet fully presented.
+    var restY: CGFloat = 0
+    /// How far the sheet is currently dragged DOWN from `restY` (never
+    /// negative — MEASURED: real iOS does not move a sheet above its detent).
+    var dragOffset: CGFloat = 0
+    var pan: _UISheetPanGestureRecognizer?
+
+    /// Trailing (t, offset) samples for the release velocity.
+    var dragSamples: [(t: TimeInterval, offset: CGFloat)] = []
+    /// Offset at the moment the drag began (non-zero when the finger catches
+    /// a settling sheet).
+    var dragStartOffset: CGFloat = 0
+
+    /// In-flight release spring: displacement `x0` from `target` at `start`.
+    struct Settle {
+        var start: TimeInterval
+        var x0: CGFloat
+        var v0: CGFloat
+        var target: CGFloat
+        /// The sheet is on its way out; tear the presentation down on settle.
+        var dismisses: Bool
+    }
+    var settle: Settle?
 
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -99,6 +252,216 @@ final class _UIPageSheetView: UIView {
                    control2: CGPoint(x: r.minX + rt - k * rt, y: r.minY))
         p.close()
         return p
+    }
+
+    // MARK: Drag to dismiss
+
+    /// Install the pan once the sheet is in the hierarchy.
+    func installInteraction(presented vc: UIViewController, dim: _UIDimmingView?) {
+        self.presented = vc
+        self.dim = dim
+        restY = frame.minY
+        guard pan == nil else { return }
+        let p = _UISheetPanGestureRecognizer()
+        p.sheet = self
+        p.addTarget { [weak self] r in
+            guard let self, let r = r as? _UISheetPanGestureRecognizer else { return }
+            self.handlePan(r)
+        }
+        pan = p
+        addGestureRecognizer(p)
+    }
+
+    /// Move the sheet to `offset` points below its rest position and
+    /// interpolate the dim with it.
+    ///
+    /// MEASURED: the dimming alpha is exactly LINEAR in drag progress —
+    /// alpha = 0.2 · (1 − offset / sheetHeight). Over four full drags the
+    /// residual against that model never exceeds 0.0025 (display-link
+    /// sampling lag), so this is the real relationship, not an approximation.
+    func applyDragOffset(_ offset: CGFloat) {
+        let h = bounds.height
+        let o = min(max(offset, 0), h)
+        dragOffset = o
+        frame.origin.y = restY + o
+        let progress = h > 0 ? o / h : 0
+        dim?.alpha = _UIDimmingView.maxAlpha * (1 - progress)
+    }
+
+    func handlePan(_ pan: _UISheetPanGestureRecognizer) {
+        switch pan.state {
+        case .began:
+            settle = nil
+            dragStartOffset = dragOffset
+            // The finger takes ownership of the sheet's frame and the dim's
+            // alpha. Both may still carry the present/dismiss UIView.animate,
+            // and a recorded animation pins the PRESENTATION to its `to`
+            // value even after it has ended (see
+            // UIView._removeFinishedAnimations) — leaving them in place makes
+            // the drag move the model while the screen stays put.
+            removeAllAnimations()
+            dim?.removeAllAnimations()
+            // Absorb EXACTLY the 10 pt activation slop, the same way (and for
+            // the same measured reason) as UIScrollView's pan.
+            let tr = pan.translation(in: nil)
+            let mag = (tr.x * tr.x + tr.y * tr.y).squareRoot()
+            if mag > pan.activationDistance {
+                let s = (mag - pan.activationDistance) / mag
+                pan.setTranslation(CGPoint(x: tr.x * s, y: tr.y * s), in: nil)
+            } else {
+                pan.setTranslation(.zero, in: nil)
+            }
+            dragSamples = []
+            fallthrough
+        case .changed:
+            applyDragOffset(dragStartOffset + pan.translation(in: nil).y)
+            recordDragSample(t: pan.lastTimestamp, offset: dragOffset)
+        case .ended, .cancelled:
+            recordDragSample(t: pan.lastTimestamp, offset: dragOffset)
+            let v = pan.state == .cancelled ? 0 : releaseVelocity()
+            let tEnd = pan.trackedTouches.map(\.timestamp).max() ?? pan.lastTimestamp
+            endDrag(velocity: v, at: tEnd)
+        default:
+            break
+        }
+    }
+
+    func recordDragSample(t: TimeInterval, offset: CGFloat) {
+        dragSamples.append((t, offset))
+        let cutoff = t - UISheetPhysics.velocityWindow - 0.02
+        while dragSamples.count > 2, dragSamples[0].t < cutoff {
+            dragSamples.removeFirst()
+        }
+    }
+
+    /// Offset velocity (pt/s) over the trailing window.
+    func releaseVelocity() -> CGFloat {
+        guard let first = dragSamples.first, let last = dragSamples.last else { return 0 }
+        let dt = last.t - first.t
+        guard dt > 0 else { return 0 }
+        return (last.offset - first.offset) / CGFloat(dt)
+    }
+
+    /// Decide dismiss vs. spring-back and start the settle spring.
+    func endDrag(velocity: CGFloat, at time: TimeInterval) {
+        let h = bounds.height
+        let progress = h > 0 ? dragOffset / h : 0
+        // MEASURED: dismiss past 50 % of the sheet's height OR at ≥ 1000 pt/s
+        // downward. A firm UPWARD fling always cancels (not separately
+        // measured; mirrors the interactive-pop rule).
+        var dismisses: Bool
+        if velocity >= UISheetPhysics.dismissVelocityThreshold {
+            dismisses = true
+        } else if velocity <= -UISheetPhysics.dismissVelocityThreshold {
+            dismisses = false
+        } else {
+            dismisses = progress > UISheetPhysics.dismissProgressThreshold
+        }
+        // UIKit: a controller that refuses dismissal always springs back.
+        if presented?.isModalInPresentation == true { dismisses = false }
+        let target: CGFloat = dismisses ? h : 0
+        guard dragOffset != target || velocity != 0 else {
+            if dismisses { finishInteractiveDismiss() }
+            return
+        }
+        settle = Settle(start: time, x0: dragOffset - target, v0: velocity,
+                        target: target, dismisses: dismisses)
+        _UIPageSheetView.registerSettling(self)
+    }
+
+    /// Advance the release spring to the host clock.
+    func stepSettle(to time: TimeInterval) {
+        guard let s = settle else { return }
+        let dt = time - s.start
+        let d = UISheetPhysics.displacement(x0: s.x0, v0: s.v0, at: dt)
+        let v = UISheetPhysics.velocity(x0: s.x0, v0: s.v0, at: dt)
+        if d.magnitude < UISheetPhysics.settleDisplacement,
+           v.magnitude < UISheetPhysics.settleVelocity {
+            settle = nil
+            applyDragOffset(s.target)
+            if s.dismisses { finishInteractiveDismiss() }
+            return
+        }
+        applyDragOffset(s.target + d)
+    }
+
+    /// The sheet has flown off the bottom: run the same teardown a
+    /// programmatic dismiss would.
+    func finishInteractiveDismiss() {
+        guard let vc = presented, let presenter = vc.presentingViewController else { return }
+        presented = nil
+        presenter._tearDownPresentation(of: vc, completion: nil)
+    }
+
+    // MARK: Settle registry (host clock stepping)
+
+    private struct WeakSheet { weak var sheet: _UIPageSheetView? }
+    private static var settling: [WeakSheet] = []
+
+    static func registerSettling(_ sheet: _UIPageSheetView) {
+        settling.removeAll { $0.sheet == nil }
+        if !settling.contains(where: { $0.sheet === sheet }) {
+            settling.append(WeakSheet(sheet: sheet))
+        }
+    }
+
+    /// Advance every settling sheet to `time`. UIWindow.tick calls this, the
+    /// same pattern as UIScrollView._stepScrollAnimations.
+    static func _stepSheetInteractions(to time: TimeInterval) {
+        guard !settling.isEmpty else { return }
+        for entry in settling { entry.sheet?.stepSettle(to: time) }
+        settling.removeAll { $0.sheet == nil || $0.sheet!.settle == nil }
+    }
+
+    /// A sheet release spring is still running (host redraw hint).
+    static var _hasActiveSheetInteraction: Bool {
+        settling.contains { $0.sheet?.settle != nil }
+    }
+}
+
+extension UIViewController {
+    /// A released sheet drag is still settling — spring-back or completing
+    /// dismissal (host redraw hint; the sheet view itself stays internal).
+    public static var _hasActiveSheetInteraction: Bool {
+        _UIPageSheetView._hasActiveSheetInteraction
+    }
+}
+
+/// The sheet's pan, with the measured hand-off to a scroll view inside it.
+///
+/// MEASURED: with a UIScrollView filling the sheet, dragging DOWN while it
+/// sits at the top of its content moves the SHEET and leaves contentOffset at
+/// 0; dragging up (or down from anywhere else) scrolls the content and leaves
+/// the sheet still. The two recognizers gate themselves on exactly that
+/// condition from opposite sides — OpenUIKit has no require(toFail:)
+/// dependency system (docs/KNOWN_GAPS.md), so the rule is written twice
+/// rather than expressed once.
+public final class _UISheetPanGestureRecognizer: UIPanGestureRecognizer {
+    weak var sheet: _UIPageSheetView?
+
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        if _state == .possible {
+            let p = location(in: nil)
+            let dx = p.x - startLocation.x, dy = p.y - startLocation.y
+            if (dx * dx + dy * dy).squareRoot() > activationDistance,
+               !allowBegin(dx: dx, dy: dy) {
+                state = .failed
+            }
+        }
+        super.touchesMoved(touches, with: event)
+    }
+
+    /// The sheet takes the drag only when no scroll view under the finger
+    /// wants it: the drag must lead vertically DOWNWARD, and any enclosing
+    /// scroll view must already be at the top of its content.
+    func allowBegin(dx: CGFloat, dy: CGFloat) -> Bool {
+        guard dy > 0, dy.magnitude > dx.magnitude else { return false }
+        for t in trackedTouches {
+            guard let sv = UIScrollView.enclosingScrollView(of: t.view),
+                  sv.dragsY else { continue }
+            if sv.contentOffset.y > sv.minContentOffset.y { return false }
+        }
+        return true
     }
 }
 
@@ -163,6 +526,11 @@ extension UIViewController {
         cv.frame = sheet.bounds
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         sheet.addSubview(cv)
+        if style == .pageSheet {
+            sheet.restY = sheetFrame.minY
+            sheet.installInteraction(presented: vc, dim: dim)
+            vc._installGrabberIfNeeded(in: sheet)
+        }
         container.addSubview(sheet)
         root.addSubview(container)
 
@@ -221,21 +589,15 @@ extension UIViewController {
         let dim = vc._presentationDim
         let presenterReappears = vc._resolvedPresentationStyle == .fullScreen
 
+        // A programmatic dismiss during an interactive one takes over: drop
+        // the release spring and animate from wherever the finger left it.
+        sheet?.settle = nil
+
         vc.beginAppearanceTransition(false, animated: animated)
         if presenterReappears { presenter.beginAppearanceTransition(true, animated: animated) }
 
         let finish = { [weak presenter] in
-            vc.viewIfLoaded?.backgroundColor = vc._savedSheetBackgroundColor
-            vc.viewIfLoaded?.removeFromSuperview()
-            container?.removeFromSuperview()
-            vc.endAppearanceTransition()
-            if presenterReappears { presenter?.endAppearanceTransition() }
-            vc.presentingViewController = nil
-            presenter?.presentedViewController = nil
-            vc._presentationContainer = nil
-            vc._presentationSheet = nil
-            vc._presentationDim = nil
-            completion?()
+            presenter?._tearDownPresentation(of: vc, completion: completion)
         }
         if animated, let sheet, let container {
             UIView.animate(withDuration: UIViewController.presentTransitionDuration,
@@ -248,5 +610,66 @@ extension UIViewController {
         } else {
             finish()
         }
+    }
+
+    /// Remove a presentation's views and reset both controllers. Shared by
+    /// the programmatic dismiss and the interactive one (which reaches its
+    /// end state through the sheet's own release spring rather than a
+    /// UIView.animate completion).
+    func _tearDownPresentation(of vc: UIViewController, completion: (() -> Void)?) {
+        guard vc.presentingViewController === self else { return }
+        let presenterReappears = vc._resolvedPresentationStyle == .fullScreen
+        // The interactive path never called beginAppearanceTransition — do it
+        // now so the will/did pair stays balanced either way.
+        if !vc._isDisappearing {
+            vc.beginAppearanceTransition(false, animated: true)
+            if presenterReappears { beginAppearanceTransition(true, animated: true) }
+        }
+        vc.viewIfLoaded?.backgroundColor = vc._savedSheetBackgroundColor
+        vc.viewIfLoaded?.removeFromSuperview()
+        vc._presentationContainer?.removeFromSuperview()
+        vc.endAppearanceTransition()
+        if presenterReappears { endAppearanceTransition() }
+        vc.presentingViewController = nil
+        presentedViewController = nil
+        vc._presentationContainer = nil
+        vc._presentationSheet = nil
+        vc._presentationDim = nil
+        completion?()
+    }
+
+    // MARK: Sheet presentation controller
+
+    /// UIKit's accessor: non-nil exactly when this controller is (or will be)
+    /// presented as a sheet.
+    public var sheetPresentationController: UISheetPresentationController? {
+        guard _resolvedPresentationStyle == .pageSheet else { return nil }
+        if let existing = _sheetController { return existing }
+        let c = UISheetPresentationController()
+        c.onChange = { [weak self] in
+            guard let self, let sheet = self._presentationSheet else { return }
+            self._installGrabberIfNeeded(in: sheet)
+        }
+        _sheetController = c
+        return c
+    }
+
+    /// Add (or remove) the grabber to match `prefersGrabberVisible`.
+    func _installGrabberIfNeeded(in sheet: _UIPageSheetView) {
+        let wanted = _sheetController?.prefersGrabberVisible ?? false
+        let existing = sheet.subviews.compactMap { $0 as? _UISheetGrabber }.first
+        if !wanted {
+            existing?.removeFromSuperview()
+            return
+        }
+        let grabber = existing ?? _UISheetGrabber()
+        // Centred WITHOUT rounding: on a 393 pt sheet real UIKit reports
+        // x = 178.5, i.e. it keeps the half point.
+        grabber.frame = CGRect(
+            x: (sheet.bounds.width - _UISheetGrabber.width) / 2,
+            y: _UISheetGrabber.topInset,
+            width: _UISheetGrabber.width, height: _UISheetGrabber.height)
+        grabber.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
+        if existing == nil { sheet.addSubview(grabber) }
     }
 }

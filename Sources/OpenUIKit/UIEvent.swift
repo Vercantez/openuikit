@@ -164,6 +164,9 @@ open class UIWindow: UIView {
         // the host clock passes the transition end (same pattern; see
         // UINavigationController).
         UINavigationController._stepTransitions(to: timestamp)
+        // A released sheet drag settles (springs back or completes its
+        // dismissal) on the same clock — same additive pattern.
+        _UIPageSheetView._stepSheetInteractions(to: timestamp)
         // UIView.animate completion handlers fire when their animation ends
         // on this clock, after the steppers above (a completion may start the
         // next animation, and it should see a settled scroll/transition).

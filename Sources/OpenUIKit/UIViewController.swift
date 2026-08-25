@@ -76,8 +76,11 @@ open class UIViewController {
     /// `.automatic` resolves to `.pageSheet` (the iOS default).
     public var modalPresentationStyle: UIModalPresentationStyle = .automatic
 
-    /// Minimal semantics: the dimming view swallows touches either way —
-    /// there is no tap-outside-to-dismiss (stored for API compatibility).
+    /// The dimming view swallows touches either way — there is no
+    /// tap-outside-to-dismiss. Setting it true DOES now suppress the
+    /// interactive drag-to-dismiss (the sheet tracks the finger and always
+    /// springs back), matching UIKit's intent; UIKit additionally stiffens
+    /// the drag itself, which is not measured here.
     public var isModalInPresentation = false
 
     /// The controller this one is currently presenting.
@@ -90,6 +93,12 @@ open class UIViewController {
     var _presentationSheet: _UIPageSheetView?
     var _presentationDim: UIView?
     var _savedSheetBackgroundColor: UIColor?
+    /// Lazily created by `sheetPresentationController` (UIPresentation.swift).
+    var _sheetController: UISheetPresentationController?
+
+    /// True while a disappearance transition is in flight (the interactive
+    /// dismissal teardown uses it to keep will/did appearance calls paired).
+    var _isDisappearing: Bool { _appearanceState == .disappearing }
 
     // MARK: Content scroll view (M10 large titles)
 

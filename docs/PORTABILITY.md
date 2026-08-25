@@ -13,8 +13,11 @@ Swift 6.2.4) — no Apple frameworks present at all:
 | check | result |
 |---|---|
 | `swift build -c release --product openrender` | **clean** (library + quartz + CLI) |
-| All 134 fixture frames rendered on Linux | **80/80 scenes pass** vs the real-UIKit goldens |
-| Linux frames vs the macOS frames, SHA-256 | **134/134 byte-identical** |
+| All 135 fixture frames rendered on Linux | **81/81 scenes pass** vs the real-UIKit goldens |
+| Linux frames vs the macOS frames, SHA-256 | **135/135 byte-identical** |
+
+Re-verified 2026-08-25 after M11 with the new structural diff gate active
+(below) and the `modal_sheet_grabber` fixture added.
 
 Byte-identical output across two operating systems and two C++ standard
 libraries is the strongest form of the claim: the renderer is deterministic
@@ -49,11 +52,27 @@ and carries no host dependency.
 
 ## Honest gaps
 
-- **Fonts are the one host dependency.** Without `OPENUIKIT_FONT_DIR`, a Linux
-  run still passes 80/80 and renders 122/134 frames byte-identically, but
-  glyph combos outside the harvested table are missing. Fixes, in order of
-  preference: extend the harvest (pure data, keeps the zero-dependency
-  property), ship a metrically-compatible libre font, or supply SF.
+- **Fonts are the one host dependency.** Glyphs outside the harvested ink
+  table fall back to rasterizing from a font file, and off Darwin there is no
+  system SF. At M10 a Linux run without `OPENUIKIT_FONT_DIR` rendered
+  122/134 frames byte-identically and **still passed 80/80** while dropping
+  letters — that is the blind spot the structural gate was built for.
+  Re-measured 2026-08-25 with the gate active: the same no-font run now
+  **fails 7 of 81 scenes**, every one of them on the structural gate alone
+  (zero layout issues, percentage scores 97.5–99.4, i.e. all still above
+  their category thresholds):
+
+  | scene | score | largest wrong region |
+  |---|---|---|
+  | `navbar_large` | 99.35 | 260.8 pt² — the missing 34 pt `b` of "Library" |
+  | `navbar_dark` | 98.23 | 258.2 pt² |
+  | `constraints_baseline` | 97.48 | 137.2 pt² |
+  | `modal_sheet` / `modal_sheet_grabber` | 99.40 / 99.39 | 108.0 pt² |
+  | `tabbar_basic` / `tabbar_tinted` | 99.22 / 98.80 | 94.5 / 90.8 pt² |
+
+  Fixes for the underlying dependency, in order of preference: extend the
+  harvest (pure data, keeps the zero-dependency property), ship a
+  metrically-compatible libre font, or supply SF.
 - ~~**The thresholds have a blind spot this exposed.**~~ **FIXED 2026-08-25.**
   `navbar_large` passed at its category threshold while visibly missing two
   letters, because the affected pixels were a small fraction of a large

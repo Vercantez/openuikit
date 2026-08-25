@@ -297,8 +297,13 @@ Oracle-measured metrics (iOS 26 liquid-glass floating bar, 375×480 scene):
 ### Modal sheet (v5 — M10 chrome): top-level `"modal"` key
 
 ```json
-"modal": { "style": "pageSheet", "content": { ...view object... } }
+"modal": { "style": "pageSheet", "grabber": false, "content": { ...view object... } }
 ```
+
+`"grabber"` (v5.1 — M11, optional, default `false`) sets
+`sheetPresentationController.prefersGrabberVisible`. UIKit's own default is
+false, which is why `modal_sheet` carries no grabber and
+`modal_sheet_grabber` does.
 
 Presents a REAL `.pageSheet` over the scene root (the base screen) and
 captures the WHOLE WINDOW after presenting without animation. Catalyst
@@ -314,11 +319,19 @@ the layout dump (pixels validate it).
 
 Oracle-measured metrics (real iOS 26, iPhone 16): dimming = black at
 **20 %** over the base (white base → #CCCCCC); sheet top edge at
-**59.5 pt** (below the 59 pt safe-area top), full width, continuous rounded
-top corners (left-edge white reach per Δy from the top edge:
-5 pt → 9.25, 10 pt → 6, 15 pt → 3.75, 20 pt → 2.25, 25 pt → 1.25,
-30 pt → 0.75, 35 pt → 0.5 — ≈ 24 pt continuous-corner fit); the base
-view controller is pushed back (scaled) behind the dimming.
+**59 pt**, full width, continuous rounded top corners (left-edge white reach
+per Δy from the top edge: 5 pt → 9.25, 10 pt → 6, 15 pt → 3.75,
+20 pt → 2.25, 25 pt → 1.25, 30 pt → 0.75, 35 pt → 0.5 — ≈ 24 pt
+continuous-corner fit); the base view controller is pushed back (scaled)
+behind the dimming.
+
+The top inset was **59.5** in M10 (a fit to the golden's edge profile); M11's
+`sheetprobe` reads the live frame off real iOS as `(0, 59, 393, 793)`, and
+adopting 59 improved both modal scenes by ~0.09 points. The grabber is
+36 × 5 pt with corner radius 2.5, its top edge 5 pt below the sheet's, centred
+at x 178.5 (no rounding), filled with systemFill's base gray at alpha 0.4295 —
+(197, 197, 200) over a white sheet. Full interaction measurements:
+docs/APP_FEEL.md "Measured sheet interaction".
 
 ### `UIStackView`
 | key | notes |

@@ -1,5 +1,67 @@
 # Known gaps (living document — fixers: read this)
 
+## Interactive sheets (M11, 2026-08-25): what shipped and what did not
+
+Shipped, all measured (docs/APP_FEEL.md "Measured sheet interaction"):
+drag-to-dismiss with the 10 pt slop and 1:1 tracking, the linear dim
+interpolation, the 50 %-of-height and 1000 pt/s release rules, the
+ω = √(1000/3) critically damped settle, the grabber, and the sheet ↔ inner
+scroll view hand-off. Not shipped:
+
+- **DETENTS — deferred deliberately, but MEASURED first.** `sheetprobe`
+  established what they actually are on iOS 26, and it is a bigger mechanism
+  than "another rest position":
+  - With `[.medium(), .large()]` the sheet opens at **medium**, not large.
+  - A non-large detent is not just shorter — it **floats**. The medium sheet
+    reports frame (8, 403.687, 377, 440.313) on a 393×852 window: inset 8 pt
+    on the left, right and bottom. Those numbers are one **scale transform of
+    0.9593** applied to the ordinary full-width sheet (393 × 0.9593 = 377.0,
+    36 × 0.9593 = 34.53, 5 × 0.9593 = 4.796 — the grabber scales with it), so
+    the untransformed medium sheet is 393 × 459 and the chrome is a transform
+    about the bottom edge, not a different layout.
+  - Dragging between detents **RESIZES** the sheet: the bottom stays pinned,
+    the top follows the finger and the height grows (measured 459 → 501 → 561
+    → 617 → 677 → 689 as the finger travelled 240 pt up), and the scale
+    transform is released to 1.0 the moment the drag starts. It does not
+    translate the way a dismissal drag does.
+  - The dim stays at a **flat 0.2 for the whole detent drag** — it responds
+    only to dismissal progress, never to detent progress.
+  - Release snaps to the nearest detent (240 pt up from medium landed on
+    large: frame back to (0, 59, 393, 793)).
+  - The dismissal rule stays proportional to the CURRENT detent's height: a
+    400 pt custom detent springs back from 170 pt and dismisses from 210 pt.
+  Implementing this needs a resizing sheet (content re-layout per frame), a
+  transform-based floating chrome, and a snap-target search — three things
+  none of which the dismissal path needed. The measurements above are the
+  spec; nothing was built.
+- **`isModalInPresentation` only suppresses the dismissal.** The sheet still
+  tracks the finger 1:1 and springs back. Real UIKit also stiffens the drag
+  itself (it resists rather than following); that resistance was not measured.
+- **The grabber's DARK colour is extrapolated, not measured.** Light is exact
+  — (197, 197, 200) over white, i.e. systemFill's (120, 120, 128) base at
+  alpha 0.4295. `drawHierarchy` renders the dark grabber as *nothing at all*
+  (the same private-material capture limitation as the dark textfield border
+  and the dark tab bar), so the dark alpha is the light one scaled by the
+  ratio UIKit uses for the systemFill family itself (0.2 → 0.36). No dark
+  sheet fixture exists to check it against.
+- **No tap-outside-to-dismiss** (unchanged from M10 — the dim still swallows
+  every touch), no `UISheetPresentationControllerDelegate`, and
+  `UISheetPresentationController` exposes only `prefersGrabberVisible`. The
+  detent API surface is deliberately ABSENT rather than present-and-fake.
+- **The hand-off rule is written twice.** `_UISheetPanGestureRecognizer` and
+  `UIScrollViewPanGestureRecognizer` each gate themselves on "is the scroll
+  view at the top and is the drag downward", from opposite sides, because
+  there is no `require(toFail:)` (see the event-system notes below). They
+  cannot disagree today, but nothing enforces that. A *horizontally* scrolling
+  view inside a sheet is untested.
+- **A sheet whose content scroll view is not scrollable takes every downward
+  drag**, because `dragsY` is false and the scroll pan never contests it.
+  That is arguably correct (the content cannot move) and matches what the
+  probe saw, but it is not separately measured.
+- Only the top-most sheet is interactive: a sheet presented ON a sheet gets
+  its own pan, but the stack is collapsed non-animated on dismiss (M10
+  behaviour, unchanged).
+
 ## Showcase app / M10 completion (2026-08-25): scope notes
 
 - **No UICollectionView.** M10's brief named it; nothing was built. The
@@ -21,9 +83,12 @@
   pocket blur is recomputed per observed offset and is a large part of the
   Settings number — the KNOWN GAP noted below ("unmeasured at sustained
   60 fps with heavy content") is now measured, and it is real.
-- The profile sheet has no grabber, no drag-to-dismiss and no detents
-  (none of those exist — see the modal notes below), so it can only be
-  dismissed with its own Done button.
+- ~~The profile sheet has no grabber, no drag-to-dismiss and no detents~~
+  **FIXED for grabber + drag-to-dismiss (M11, see the section at the top of
+  this file).** The profile sheet now shows the grabber, drags to dismiss,
+  and its form scrolls, so the sheet/scroll hand-off is live in the app
+  (`scripts/sheet_drag.json` captures all three outcomes). Detents are still
+  absent — measured, deferred, spec recorded above.
 - Tab selection still jumps rather than sliding the capsule, and switching
   tabs is instantaneous (real iOS crossfades the content). Both are
   UITabBar/UITabBarController gaps listed below, now visible in an app.
@@ -93,15 +158,16 @@
 ## Modal / tab bar / large-title chrome (M10, 2026-08-25): scope notes
 
 - Modal presentation implements `.pageSheet` (default) and `.fullScreen`
-  only — no popover/formSheet/custom transitioning delegates, no
-  interactive drag-to-dismiss, no detents, and no tap-outside-to-dismiss
-  (the dim swallows touches; `isModalInPresentation` is stored but always
-  behaves as `true`). The presenting view is NOT pushed back/scaled — the
-  golden shows a flat 20% dim over the base (indistinguishable in the
-  fixture); revisit if a fixture ever exposes the scaled base edge.
-  Sheet metrics (top inset 59.5 pt, corner radii 37.7/58.2 pt circular
-  fits of iOS 26's continuous corners) are the iPhone-16 measurements and
-  are used at every window size.
+  only — no popover/formSheet/custom transitioning delegates and no
+  detents. Drag-to-dismiss, the grabber and `isModalInPresentation` landed
+  in M11 (see the top of this file); tap-outside-to-dismiss still does not
+  exist (the dim swallows touches). The presenting view is NOT pushed
+  back/scaled — the golden shows a flat 20% dim over the base
+  (indistinguishable in the fixture); revisit if a fixture ever exposes the
+  scaled base edge. Sheet metrics (top inset **59 pt — measured off the live
+  frame in M11**, corner radii 37.7/58.2 pt circular fits of iOS 26's
+  continuous corners) are the iPhone-16 measurements and are used at every
+  window size.
 - UITabBar: light-mode platter/capsule/shadow constants only (the M10
   goldens are light); dark-mode glass is unmeasured. No badges, no
   `moreNavigationController` (> 5 items just shrinks the pitch), no

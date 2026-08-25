@@ -263,6 +263,41 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
       docs/APP_FEEL.md "Inset-grouped table scroll cost".
     - Gates: 80/80 scenes, 9/9 scroll traces, 385 tests.
 
+- **M11 Interactive sheets + structural comparison gate — DONE
+  (2026-08-25)**: two things the previous milestones left as known holes.
+  - **Interactive pageSheet.** M10 shipped the sheet's mechanics; M11 ships
+    its behaviour, measured rather than guessed. New oracle
+    `Tools/oracle2/sheetprobe` (`scripts/sheet_probe_sim.sh`) drives a live
+    `UISheetPresentationController` in a headless iOS 26.1 simulator with
+    synthetic UITouch drags and samples the sheet frame + dim opacity per
+    display-link frame — the sibling of M8's scroll SimProbe. What it
+    established, and what now ships: 1:1 tracking after exactly 10 pt of
+    slop; **no upward rubber band at all** (the natural guess was wrong —
+    iOS refuses to move a sheet above its detent); dimming exactly linear in
+    drag progress (`0.2·(1 − offset/height)`, residual ≤ 0.0025); dismissal
+    past **50 % of the sheet's height** (proportional, confirmed against a
+    400 pt custom detent) **or ≥ 1000 pt/s**; one critically damped settle
+    spring at **ω = √(1000/3) = 18.2574** for both outcomes (rms 0.02–0.05 pt
+    over the whole curve); the **grabber** (36 × 5 pt, r 2.5, 5 pt below the
+    top, systemFill base at α 0.4295) behind `prefersGrabberVisible`; and the
+    **sheet ↔ inner scroll view hand-off**. The measured sheet top inset
+    (59 pt, read off the live frame) replaced M10's 59.5 pt golden fit and
+    improved both modal scenes. New golden `modal_sheet_grabber` (81 scenes).
+    Detents were measured in full and **deliberately deferred** — the spec is
+    in docs/KNOWN_GAPS.md, because a non-large detent is a scale transform
+    plus a resizing drag, not another rest position.
+  - **Structural diff gate.** `navbar_large` once passed its 95 % threshold
+    while rendering "Library" as "Li rar" (docs/PORTABILITY.md). compare.py
+    now labels the connected components of the severe-diff mask (delta > 150)
+    and fails any frame with a contiguous wrong region over 80 pt²,
+    independent of the percentage. Calibrated on all 81 scenes: worst
+    legitimate component 33.2 pt², the historical corruption 248.8 pt².
+  - Acceptance: `scripts/sheet_drag.json` — mid-drag, spring-back, completing
+    dismissal and the scroll hand-off, every frame checked against the
+    closed-form spring and read as an image.
+  - Gates: 81/81 scenes (with the structural gate active), 9/9 scroll traces,
+    398 tests, Linux still byte-identical.
+
 ## Verification principle (unchanged, applies to every milestone)
 
 Every feature ships with fixture scenes rendered by BOTH real UIKit (oracle)

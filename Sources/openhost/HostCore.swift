@@ -350,6 +350,7 @@ func runLive(_ scene: HostScene) {
         mouseDown
             || UIScrollView._hasActiveScrollAnimations
             || UINavigationController._hasActiveTransition
+            || UIViewController._hasActiveSheetInteraction   // sheet release spring
             || UIView._hasPendingAnimationCompletions
             || UITextInputState._hasActiveCaret   // caret blink (M8 text input)
             || now <= OpenUIKitRuntime.animationWorkDeadline + 0.1

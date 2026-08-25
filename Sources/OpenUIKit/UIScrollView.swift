@@ -616,6 +616,16 @@ open class UIScrollView: UIView {
         return nil
     }
 
+    /// Nearest enclosing modal page sheet, if this view lives inside one.
+    static func enclosingPageSheet(of view: UIView?) -> _UIPageSheetView? {
+        var v = view
+        while let cur = v {
+            if let sheet = cur as? _UIPageSheetView { return sheet }
+            v = cur.superview
+        }
+        return nil
+    }
+
     /// A touch landed inside the scroll view (on it or a descendant).
     /// Returns true when the touch was a scroll-catch (finger stopping a
     /// deceleration) — such touches are consumed and never reach content.
@@ -803,6 +813,16 @@ public final class UIScrollViewPanGestureRecognizer: UIPanGestureRecognizer {
     }
 
     func allowBegin(_ sv: UIScrollView, dx: CGFloat, dy: CGFloat) -> Bool {
+        // Sheet hand-off (MEASURED, iOS 26.1): a scroll view inside a page
+        // sheet, already at the top of its content, yields a DOWNWARD drag to
+        // the sheet — the sheet moves and contentOffset stays at 0. Mirror of
+        // _UISheetPanGestureRecognizer.allowBegin (no require(toFail:), so
+        // both sides state the rule).
+        if dy > 0, dy.magnitude > dx.magnitude,
+           sv.contentOffset.y <= sv.minContentOffset.y,
+           UIScrollView.enclosingPageSheet(of: sv) != nil {
+            return false
+        }
         // Axis gate: the dominant movement direction must be scrollable.
         let allowX = sv.dragsX, allowY = sv.dragsY
         if !allowX && !allowY { return false }
