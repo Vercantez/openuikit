@@ -131,6 +131,9 @@ open class UIViewController: UIResponder {
 
     /// Lazily created by `sheetPresentationController` (UIPresentation.swift).
     var _sheetController: UISheetPresentationController?
+    /// Lazily created by `popoverPresentationController`
+    /// (UIAdaptivePresentation.swift).
+    var _popoverController: UIPopoverPresentationController?
 
     /// The presentation controller `present(_:animated:)` uses when no
     /// transitioning delegate supplies one. Overridden by UIAlertController.
@@ -140,6 +143,10 @@ open class UIViewController: UIResponder {
             ?? UISheetPresentationController(presentedViewController: self, presenting: nil)
         _sheetController = c
         c.sheetStyle = _resolvedPresentationStyle
+        // A `.popover` presentation adapts to this sheet (see
+        // UIAdaptivePresentation.swift); forward the popover controller's
+        // delegate so the adaptive/dismissal callbacks still reach the app.
+        if c.delegate == nil, let p = _popoverController { c.delegate = p.delegate }
         return c
     }
 

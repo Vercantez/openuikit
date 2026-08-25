@@ -43,6 +43,11 @@ public enum UIModalPresentationStyle {
     /// UIAlertController's own style: a centred card over a dim, never a
     /// sheet. Set by `UIAlertController.init` — apps do not choose it.
     case alert
+    /// M13. On an iPhone-width screen real UIKit ADAPTS a popover instead of
+    /// drawing one, and so does this — `.popover` resolves through
+    /// `UIPopoverPresentationController.adaptedStyle` (default `.pageSheet`).
+    /// See UIAdaptivePresentation.swift.
+    case popover
 }
 
 /// Container for one modal presentation: dimming + sheet, sized to the
@@ -505,8 +510,18 @@ final class _UIPageSheetView: UIView {
         } else {
             dismisses = progress > UISheetPhysics.dismissProgressThreshold
         }
-        // UIKit: a controller that refuses dismissal always springs back.
-        if presented?.isModalInPresentation == true { dismisses = false }
+        // UIKit: a controller that refuses dismissal always springs back —
+        // either through isModalInPresentation or through the presentation
+        // controller's delegate (M13). A refused attempt is reported.
+        let pc = presented?._presentationController
+        let delegateRefuses = pc.map { c in
+            !(c.delegate?.presentationControllerShouldDismiss(c) ?? true)
+        } ?? false
+        if dismisses, presented?.isModalInPresentation == true || delegateRefuses {
+            dismisses = false
+            if let pc { pc.delegate?.presentationControllerDidAttemptToDismiss(pc) }
+        }
+        if dismisses, let pc { pc.delegate?.presentationControllerWillDismiss(pc) }
         let target: CGFloat = dismisses ? h : 0
         guard dragOffset != target || velocity != 0 else {
             if dismisses { finishInteractiveDismiss() }
@@ -538,7 +553,11 @@ final class _UIPageSheetView: UIView {
     func finishInteractiveDismiss() {
         guard let vc = presented, let presenter = vc.presentingViewController else { return }
         presented = nil
+        let pc = vc._presentationController
         presenter._tearDownPresentation(of: vc, completion: nil)
+        // UIKit reports didDismiss for USER-driven dismissals only, which is
+        // why it lives here and not in _tearDownPresentation (M13).
+        if let pc { pc.delegate?.presentationControllerDidDismiss(pc) }
     }
 
     // MARK: Settle registry (host clock stepping)
@@ -620,8 +639,11 @@ extension UIViewController {
     /// The style `modalPresentationStyle` resolves to for this
     /// presentation (.automatic → .pageSheet, the iOS default).
     var _resolvedPresentationStyle: UIModalPresentationStyle {
-        modalPresentationStyle == .automatic ? .pageSheet
-                                             : modalPresentationStyle
+        switch modalPresentationStyle {
+        case .automatic: return .pageSheet
+        case .popover: return _popoverController?.adaptedStyle ?? .pageSheet
+        default: return modalPresentationStyle
+        }
     }
 
     // MARK: Present

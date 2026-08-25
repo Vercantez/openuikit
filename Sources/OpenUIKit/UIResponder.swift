@@ -175,6 +175,14 @@ open class UIResponder {
         next?.touchesCancelled(touches, with: event)
     }
 
+    // MARK: Key commands (M13 — see UIMenu.swift for the routing)
+
+    /// UIKit's `keyCommands`: the key commands this responder contributes
+    /// while it is in the responder chain. Default nil, like UIKit. The
+    /// window walks the chain collecting these in
+    /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
+    open var keyCommands: [UIKeyCommand]? { nil }
+
     // MARK: Press entry points
 
     open func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {

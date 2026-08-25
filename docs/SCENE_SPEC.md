@@ -544,6 +544,24 @@ action titles 17 pt medium in `label`, `.destructive` in systemRed; dimming
 black at **0.2** light / **0.48** dark; the present transition animates only
 the dim, on a critically damped spring of ω = **22.88 rad/s**.
 
+### Menus: no scene class, and why (v5.2 — M13)
+
+There is deliberately **no `"menu"` key and no menu view class**.
+`UIMenu`/`UIAction`/`UIContextMenuInteraction` are implemented and their
+metrics are measured (`Tools/oracle2/menuprobe`), but iOS 26 draws the menu
+platter in the RENDER SERVER: the private view tree dumps at full geometry
+while `drawHierarchy(afterScreenUpdates: true)` — the capture every oracle
+here uses, Catalyst and SimScene alike — comes back with the platter missing.
+The only place it is visible is the device framebuffer
+(`xcrun simctl io screenshot`), which carries SpringBoard's Dynamic Island and
+runs at 3×, so it cannot serve as a golden.
+
+The measurements are gated by `Tests/OpenUIKitTests/MenuTests.swift` instead,
+where every expected number comes from the probe (layout from the view-tree
+dumps, fill/shadow/corner from framebuffer pixels). If a future iOS renders
+menus back into the app process, this is the place to add the scene class.
+See docs/KNOWN_GAPS.md "Menus, actions & delegate protocols".
+
 ### `UIStackView`
 | key | notes |
 |---|---|

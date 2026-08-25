@@ -159,7 +159,12 @@ open class UIWindow: UIView {
             var recs: [UIGestureRecognizer] = []
             var v: UIView? = t.view
             while let cur = v {
-                recs.append(contentsOf: cur._gestureRecognizers)
+                // M13: a delegate can refuse the touch outright, and the
+                // recognizer then never observes it (UIKit's
+                // gestureRecognizer(_:shouldReceive:)).
+                recs.append(contentsOf: cur._gestureRecognizers.filter {
+                    $0.delegate?.gestureRecognizer($0, shouldReceive: t) ?? true
+                })
                 v = cur.superview
             }
             t.gestureRecognizers = recs.isEmpty ? nil : recs

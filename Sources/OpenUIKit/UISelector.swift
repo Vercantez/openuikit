@@ -182,14 +182,20 @@ public enum SelectorDispatch {
     @discardableResult
     public static func send(_ action: Selector, to target: AnyObject?,
                             sender: Any?, event: UIEvent? = nil) -> Bool {
-        let name = action.actionName
         guard let target else { return false }
-        guard let dispatcher = target as? SelectorDispatching else {
-            onUnresolved?(target, name)
-            return false
-        }
-        if dispatcher.perform(name, with: sender, event: event) { return true }
-        onUnresolved?(target, name)
+        if trySend(action, to: target, sender: sender, event: event) { return true }
+        onUnresolved?(target, action.actionName)
         return false
+    }
+
+    /// Like ``send(_:to:sender:event:)`` but SILENT on a miss. Used where a
+    /// miss is expected and meaningful rather than a bug — walking the
+    /// responder chain for a nil-targeted action (UIMenu.swift), where every
+    /// responder but one is supposed to say no.
+    @discardableResult
+    public static func trySend(_ action: Selector, to target: AnyObject?,
+                               sender: Any?, event: UIEvent? = nil) -> Bool {
+        guard let dispatcher = target as? SelectorDispatching else { return false }
+        return dispatcher.perform(action.actionName, with: sender, event: event)
     }
 }

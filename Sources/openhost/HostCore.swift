@@ -329,6 +329,40 @@ final class SDLHost {
     }
 }
 
+// MARK: - Key commands (M13)
+
+/// Translate an SDL key press into UIKit's `(input, modifierFlags)` pair and
+/// offer it to the responder chain's `keyCommands`. Returns true when a
+/// command consumed it, which is the host's signal NOT to fall through to
+/// text input — the same precedence UIKit gives key commands.
+///
+/// SDL keycodes are ASCII for the printable range; the arrows / escape /
+/// return / tab / delete map onto `UIKeyCommand`'s own input constants.
+func hostKeyCommand(sym: Int32, mods: UInt32, window: UIWindow) -> Bool {
+    var flags: UIKeyModifierFlags = []
+    if mods & 0x0003 != 0 { flags.insert(.shift) }       // KMOD_SHIFT
+    if mods & 0x00C0 != 0 { flags.insert(.control) }     // KMOD_CTRL
+    if mods & 0x0300 != 0 { flags.insert(.alternate) }   // KMOD_ALT
+    if mods & 0x0C00 != 0 { flags.insert(.command) }     // KMOD_GUI
+    let input: String
+    switch sym {
+    case 1073741903: input = UIKeyCommand.inputRightArrow
+    case 1073741904: input = UIKeyCommand.inputLeftArrow
+    case 1073741905: input = UIKeyCommand.inputDownArrow
+    case 1073741906: input = UIKeyCommand.inputUpArrow
+    case 27: input = UIKeyCommand.inputEscape
+    case 13: input = UIKeyCommand.inputReturn
+    case 9: input = UIKeyCommand.inputTab
+    case 8: input = UIKeyCommand.inputDelete
+    case 32...126:
+        guard let scalar = Unicode.Scalar(UInt32(sym)) else { return false }
+        input = String(Character(scalar))
+    default:
+        return false
+    }
+    return window.performKeyCommand(input: input, modifierFlags: flags)
+}
+
 // MARK: - Live interactive loop
 
 func runLive(_ scene: HostScene) {
@@ -392,6 +426,13 @@ func runLive(_ scene: HostScene) {
                 let mods = UInt32(ev.key.keysym.mod)
                 let cmdQ = sym == 113 /* q */ && (mods & 0x0C00) != 0 /* KMOD_GUI */
                 if cmdQ || sym == 27 /* escape */ { running = false }
+                // KEY COMMANDS first (M13). UIKit gives the responder chain's
+                // UIKeyCommands the press before anything else sees it; only
+                // an unclaimed press falls through to editing keys / text.
+                if hostKeyCommand(sym: sym, mods: mods, window: scene.window) {
+                    needsRender = true
+                    continue
+                }
                 // Editing keys to the first responder (SDL keycodes).
                 let key: UIKeyEventKey? = switch sym {
                 case 8: .backspace          // SDLK_BACKSPACE

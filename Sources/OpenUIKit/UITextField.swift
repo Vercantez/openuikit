@@ -40,6 +40,52 @@ public enum UITextFieldBorderStyle: Sendable {
     case none, line, bezel, roundedRect
 }
 
+// MARK: - UITextFieldDelegate (M13 delegate-protocols cluster)
+
+/// UIKit's protocol, with UIKit's names and signatures. Every member has a
+/// default implementation so a conformance can implement only what it wants
+/// — the portable stand-in for ObjC's `@objc optional`.
+///
+/// WHICH MEMBERS ACTUALLY GATE BEHAVIOUR HERE (the rest are called at the
+/// UIKit moment but their return value has nowhere to go yet):
+///   - `textFieldShouldBeginEditing` — false blocks `becomeFirstResponder()`
+///   - `textFieldShouldEndEditing`   — false blocks `resignFirstResponder()`
+///   - `textField(_:shouldChangeCharactersIn:replacementString:)` — false
+///     drops the insertion / deletion
+///   - `textFieldShouldClear`        — false blocks `text = nil` via clear
+///   - `textFieldShouldReturn`       — the return key's handler; UIKit does
+///     NOT resign on its own, and neither do we (an app returning true
+///     usually calls `resignFirstResponder()` itself)
+public protocol UITextFieldDelegate: AnyObject {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
+    func textFieldDidBeginEditing(_ textField: UITextField)
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool
+    func textFieldDidEndEditing(_ textField: UITextField)
+    func textFieldDidEndEditing(_ textField: UITextField,
+                                reason: UITextField.DidEndEditingReason)
+    func textFieldDidChangeSelection(_ textField: UITextField)
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool
+    func textFieldShouldClear(_ textField: UITextField) -> Bool
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+}
+
+public extension UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool { true }
+    func textFieldDidBeginEditing(_ textField: UITextField) {}
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool { true }
+    func textFieldDidEndEditing(_ textField: UITextField) {}
+    func textFieldDidEndEditing(_ textField: UITextField,
+                                reason: UITextField.DidEndEditingReason) {}
+    func textFieldDidChangeSelection(_ textField: UITextField) {}
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool { true }
+    func textFieldShouldClear(_ textField: UITextField) -> Bool { true }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool { true }
+}
+
 /// Real UIKit's placeholder-label class name (private in compare.py's
 /// layout diff, like the oracle's).
 final class UITextFieldLabel: UILabel {}
@@ -146,6 +192,15 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
     /// Created lazily on first edit so static scenes/layout dumps never
     /// see it (a plain UIView: background = tint bar).
     var caretView: UIView?
+
+    // MARK: Delegate (M13)
+
+    /// UIKit's reason codes for `textFieldDidEndEditing(_:reason:)`.
+    /// `.cancelled` exists for the iPad keyboard's cancel affordance, which
+    /// has no equivalent here — every end is `.committed`.
+    public enum DidEndEditingReason: Sendable { case committed, cancelled }
+
+    public weak var delegate: UITextFieldDelegate?
 
     // MARK: Editing state
 
@@ -274,8 +329,24 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
 
     open override var canBecomeFirstResponder: Bool { isEnabled }
 
+    /// So a TAP ON ANOTHER responder honours the delegate's refusal too:
+    /// `UIResponder.becomeFirstResponder` consults this before evicting the
+    /// current first responder. (Consequence: a focus transfer asks
+    /// `textFieldShouldEndEditing` twice — once here, once inside
+    /// `resignFirstResponder`. UIKit asks once; the predicate is expected to
+    /// be pure either way.)
+    open override var canResignFirstResponder: Bool {
+        guard isEditing, let d = delegate else { return true }
+        return d.textFieldShouldEndEditing(self)
+    }
+
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
+        // UIKit asks the delegate BEFORE taking focus, and a false answer
+        // fails the whole call (M13).
+        if !isEditing, let d = delegate, !d.textFieldShouldBeginEditing(self) {
+            return false
+        }
         guard super.becomeFirstResponder() else { return false }
         if !isEditing {
             isEditing = true
@@ -285,12 +356,18 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
             revealCaret()
             setNeedsLayout()
             sendActions(for: .editingDidBegin)
+            delegate?.textFieldDidBeginEditing(self)
         }
         return true
     }
 
     @discardableResult
     open override func resignFirstResponder() -> Bool {
+        // UIKit: a delegate that refuses to end editing keeps the field
+        // focused, and resignFirstResponder returns false.
+        if isEditing, let d = delegate, !d.textFieldShouldEndEditing(self) {
+            return false
+        }
         let r = super.resignFirstResponder()
         if isEditing {
             isEditing = false
@@ -299,6 +376,8 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
             caretView?.isHidden = true
             setNeedsLayout()
             sendActions(for: .editingDidEnd)
+            delegate?.textFieldDidEndEditing(self)
+            delegate?.textFieldDidEndEditing(self, reason: .committed)
         }
         return r
     }
@@ -327,6 +406,13 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
 
     public func insertText(_ text: String) {
         guard isEditing else { return }
+        // UIKit asks the delegate first; the range is the (empty) caret
+        // range in unicode-scalar units — UIKit measures it in UTF-16, the
+        // one place this file's scalar-based caret model shows through
+        // (documented in docs/KNOWN_GAPS.md).
+        if let d = delegate,
+           !d.textField(self, shouldChangeCharactersIn: NSRange(location: caretOffset, length: 0),
+                        replacementString: text) { return }
         let i = UITextCaretMath.index(_text, atScalarOffset: caretOffset)
         _text.insert(contentsOf: text, at: i)
         _hasText = true
@@ -335,10 +421,14 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
         refreshContent()
         revealCaret()
         sendActions(for: .editingChanged)
+        delegate?.textFieldDidChangeSelection(self)
     }
 
     public func deleteBackward() {
         guard isEditing, caretOffset > 0 else { return }
+        if let d = delegate,
+           !d.textField(self, shouldChangeCharactersIn: NSRange(location: caretOffset - 1, length: 1),
+                        replacementString: "") { return }
         let end = UITextCaretMath.index(_text, atScalarOffset: caretOffset)
         let start = UITextCaretMath.index(_text, atScalarOffset: caretOffset - 1)
         _text.removeSubrange(start..<end)
@@ -347,6 +437,20 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
         refreshContent()
         revealCaret()
         sendActions(for: .editingChanged)
+        delegate?.textFieldDidChangeSelection(self)
+    }
+
+    /// UIKit's clear-button path, minus the button (no clear-button chrome is
+    /// measured yet — see docs/KNOWN_GAPS.md). Exposed so an app that draws
+    /// its own clear affordance gets the delegate gate UIKit gives it.
+    @discardableResult
+    public func _clear() -> Bool {
+        if let d = delegate, !d.textFieldShouldClear(self) { return false }
+        text = nil
+        caretOffset = 0
+        sendActions(for: .editingChanged)
+        delegate?.textFieldDidChangeSelection(self)
+        return true
     }
 
     func handleKey(_ key: UIKeyEventKey) {
@@ -358,13 +462,19 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
             if caretOffset > 0 { caretOffset -= 1 }
             revealCaret()
             setNeedsLayout()
+            delegate?.textFieldDidChangeSelection(self)
         case .right:
             if caretOffset < UITextCaretMath.scalarCount(_text) { caretOffset += 1 }
             revealCaret()
             setNeedsLayout()
+            delegate?.textFieldDidChangeSelection(self)
         case .up, .down:
             break // single line
         case .return:
+            // UIKit order: the delegate sees the return key first, and a
+            // delegate that answers false suppresses the field's own
+            // response (the action + the resign).
+            if let d = delegate, !d.textFieldShouldReturn(self) { return }
             sendActions(for: .primaryActionTriggered)
             resignFirstResponder()
         }

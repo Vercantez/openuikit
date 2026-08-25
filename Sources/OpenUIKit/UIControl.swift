@@ -171,6 +171,31 @@ open class UIControl: UIView {
         }
     }
 
+    // MARK: UIAction registration (M13 — menus & actions cluster)
+
+    /// UIKit's `addAction(_:for:)`. Modern code-based UIKit wires controls
+    /// this way instead of with a selector, which is why `UIAction` alone is
+    /// worth 69 uses in the census (docs/APP_COMPAT.md).
+    public func addAction(_ action: UIAction, for controlEvents: Event) {
+        let token = addTarget(for: controlEvents) { control, _ in
+            action.performWithSender(control, target: nil)
+        }
+        _actions.append((action, controlEvents, token))
+    }
+
+    public func removeAction(_ action: UIAction, for controlEvents: Event) {
+        for entry in _actions
+        where entry.action === action && entry.events == controlEvents {
+            removeTarget(entry.token)
+        }
+        _actions.removeAll { $0.action === action && $0.events == controlEvents }
+    }
+
+    /// Registered UIActions, in registration order (UIKit exposes
+    /// `enumerateEventHandlers`; this is the honest small version).
+    public var actions: [UIAction] { _actions.map(\.action) }
+    var _actions: [(action: UIAction, events: Event, token: Int)] = []
+
     // MARK: Tracking overrides (subclass API, UIKit signatures)
 
     open func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { true }

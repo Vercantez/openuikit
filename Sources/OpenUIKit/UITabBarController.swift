@@ -61,6 +61,13 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         if isViewLoaded { installSelected() }
     }
 
+    // MARK: Delegate (M13)
+
+    /// UIKit's controller-level delegate. `shouldSelect` gates a USER tap
+    /// (UIKit does not consult it for a programmatic `selectedIndex =`),
+    /// `didSelect` fires for both, as UIKit does.
+    public weak var tabBarControllerDelegate: UITabBarControllerDelegate?
+
     // MARK: Selection
 
     var _selectedIndex = 0
@@ -136,6 +143,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
 
         selectedViewController = incoming
         tabBar.selectedItem = incoming.tabBarItem
+        tabBarControllerDelegate?.tabBarController(self, didSelect: incoming)
     }
 
     /// Remove the current selection's view (used when children are replaced).
@@ -153,6 +161,35 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         guard let vcs = _viewControllers,
               let idx = vcs.firstIndex(where: { $0.tabBarItem === item })
         else { return }
+        if let d = tabBarControllerDelegate,
+           !d.tabBarController(self, shouldSelect: vcs[idx]) { return }
         selectedIndex = idx
     }
+}
+
+// MARK: - UITabBarControllerDelegate (M13)
+
+/// UIKit's protocol with UIKit's names. The two members that mean anything
+/// without an editable "More" tab or custom tab transitions are wired;
+/// `animationControllerForTransitionFrom` and the interactive variant are
+/// declared but never consulted — tab switches here are not animated
+/// (docs/KNOWN_GAPS.md).
+public protocol UITabBarControllerDelegate: AnyObject {
+    func tabBarController(_ tabBarController: UITabBarController,
+                          shouldSelect viewController: UIViewController) -> Bool
+    func tabBarController(_ tabBarController: UITabBarController,
+                          didSelect viewController: UIViewController)
+    func tabBarController(_ tabBarController: UITabBarController,
+                          animationControllerForTransitionFrom fromVC: UIViewController,
+                          to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
+}
+
+public extension UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController,
+                          shouldSelect viewController: UIViewController) -> Bool { true }
+    func tabBarController(_ tabBarController: UITabBarController,
+                          didSelect viewController: UIViewController) {}
+    func tabBarController(_ tabBarController: UITabBarController,
+                          animationControllerForTransitionFrom fromVC: UIViewController,
+                          to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? { nil }
 }

@@ -8,12 +8,15 @@ compiles end to end yet**, and the reasons are structural rather than
 long-tail.
 
 - **Delegate protocols that do not exist stop compilation before behaviour
-  does.** `UITextFieldDelegate`, `UITextViewDelegate`,
-  `UIGestureRecognizerDelegate`, the `UICollectionView` trio and the
-  presentation-controller delegates are all referenced by the corpus (144
-  uses, some in all four apps) and are simply absent — a `class Foo: UIView,
-  UITextFieldDelegate` fails on the conformance name. These are the cheapest
-  points on the whole punch list and the first thing a fixer should take.
+  does.** *(M13: mostly CLOSED — see "Menus, actions & delegate protocols"
+  below. `UITextFieldDelegate`, `UITextViewDelegate`,
+  `UIGestureRecognizerDelegate`, `UITabBarControllerDelegate`,
+  `UISearchBarDelegate` and the three presentation-controller delegates now
+  exist with UIKit's member names and defaulted implementations. The
+  `UICollectionView` trio is still missing and belongs to the collection-view
+  cluster.)* A `class Foo: UIView, UITextFieldDelegate` used to fail on the
+  conformance name; that class of failure is gone for everything but the
+  collection-view delegates.
 - **No `UIBarButtonItem`, therefore no real `UINavigationItem`.** 270 uses,
   every app. The nav bar shows `vc.title` plus a back button and nothing else;
   there is no way to put a button in a bar.
@@ -43,6 +46,132 @@ long-tail.
   with a ~10-line shim (`Tools/objcshim/verify.sh`). It simply was not
   adopted. `UIApplication.sendAction`'s nil-target chain walk is faithful; the
   spelling is not.
+
+## Menus, actions & delegate protocols (M13, 2026-08-25): scope notes
+
+What shipped: `UIMenuElement`/`UIAction`/`UICommand`/`UIKeyCommand`/`UIMenu`/
+`UIDeferredMenuElement`, key-command routing through the M12 responder chain,
+`UIContextMenuConfiguration` + `UIContextMenuInteraction` + `UIInteraction`,
+a measured menu platter, `UIActivityViewController` (an honest stub), and the
+delegate protocols listed above. 439 corpus uses move from `missing` to
+`implemented` at the next census run (docs/APP_COMPAT.md).
+
+### The menu platter has NO fixture, and that is a measured conclusion
+
+**iOS 26 draws the menu in the render server.** The probe
+(`Tools/oracle2/menuprobe`, `scripts/menu_probe_sim.sh`) presents a real
+`UIMenu` from a real `UIButton` in the iPhone-16 simulator; the private view
+tree dumps at full geometry (`_UIContextMenuView` (40, 120, 250, 146) and so
+on), but `drawHierarchy(afterScreenUpdates: true)` — the capture BOTH Mac
+oracles and the SimScene renderer use — returns the platter **blank**
+(verified at three settle times; only the iOS 26 "magic morph" placeholder
+appears). The platter is visible only in the device FRAMEBUFFER
+(`xcrun simctl io screenshot`), which carries SpringBoard's Dynamic Island and
+runs at the device's 3× scale, so it is not a golden any scene renderer can be
+diffed against.
+
+Consequence: `fixtures/scenes/` gains no `menu_*` scene. The substitute gate is
+`Tests/OpenUIKitTests/MenuTests.swift`, where **every expected number is a
+measurement** — layout from the view-tree dumps (platter 250 pt wide, rows
+42 pt, title inset 28/40/60, section gap 21, header 40.333, subtitle row 58…)
+and pixels from the framebuffer (fill 250 over white / 215 over 0.5 grey /
+196 / 176; shadow 243 beside, 247 above, 239 below). A regression fails there
+exactly as a fixture diff would. If a future iOS renders menus back into the
+app process, promote these to a real scene.
+
+### Menu divergences, deliberate
+
+- **No SF Symbols.** The check and chevron columns are reserved at the
+  measured widths (centres 20 pt from the leading edge / 31 pt from the
+  trailing edge; boxes 13.33×12.33 and 9.33×12.67), but the glyphs are drawn
+  as strokes, not `checkmark` / `chevron.right`.
+- **No blur.** The platter fill is the usual flat-colour-at-alpha fit
+  (light: 0.7108 of 0.976 white, max residual 1.1 counts; dark: 0.7202 of
+  0.118, max residual **3.7** counts — the dark blur is the less linear, and
+  the fit is NOT bent to make the black-base point exact).
+- **Corner radius is fitted, not read.** The layer reports 0 because the shape
+  belongs to the glass effect; a circle of R = 32.57 pt fits the framebuffer
+  edge profile with 0.37 pt r.m.s. residual (same method as the page sheet).
+- **Anchoring is measured at ONE anchor.** A 100×44 button at (40, 120)
+  produced a platter at (40, 120), so the platter's top-left goes on the
+  source's top-left, clamped into the window. Real UIKit also flips the
+  platter above/beside the source when it will not fit; the clamp is a
+  stand-in.
+- **No present/dismiss animation, no background blur, no preview.** The
+  long-press menu appears at the moment UIKit's would (the recognizer is a
+  real 0.5 s `UILongPressGestureRecognizer`) but without the morph, and
+  `UIContextMenuConfiguration.previewProvider` /
+  `contextMenuInteraction(_:previewFor…)` are stored and ignored. The animator
+  objects handed to the delegate run their animations and completions
+  IMMEDIATELY, so app side effects still happen in order.
+- **A submenu REPLACES the platter** instead of sliding in, and
+  `.keepsMenuPresented` is not honoured (selection always dismisses).
+- **Mixed image/no-image menus are assumed, not probed.** The `state` probe
+  proved the CHECK column is reserved for the whole menu (one `.on` item moved
+  all three titles to inset 40); the same rule is applied to images, where
+  only an all-image menu was measured.
+
+### Key commands
+
+- Routing is UIKit's — chain from the first responder, first match wins,
+  action to the vending responder then up the chain — with one documented
+  substitution: **with no first responder the walk starts at the window's
+  root view controller**, not at the window. UIKit reaches the root
+  controller through a private default first responder; starting at the
+  window would end the chain at `UIApplication` and no app's global command
+  would ever fire.
+- **No `UIMenuBuilder`, no discoverability HUD**, and
+  `UIKeyCommand.alternates` is accepted and ignored.
+- `openhost` maps SDL key presses to `(input, modifierFlags)` and offers them
+  to `performKeyCommand` BEFORE text input, which is UIKit's precedence. A
+  press no command claims falls through unchanged.
+
+### Gesture-recognizer exclusion (behaviour CHANGE)
+
+Adding `UIGestureRecognizerDelegate` also added UIKit's default exclusion,
+which OpenUIKit did not have before: **the first recognizer to recognize now
+fails the others sharing the touch**, unless either delegate answers
+`shouldRecognizeSimultaneouslyWith` with true. The whole fixture suite, the
+nine scroll traces and the (then) 544 tests stayed green across the change.
+NOT modelled: failure requirements — `require(toFail:)` does not exist and
+`shouldRequireFailureOf` / `shouldBeRequiredToFailBy` are declarations only.
+
+### Other honest limits from this cluster
+
+- **`UISearchBar` has no chrome.** It is a `UITextField` in a container: no
+  magnifier, no clear/cancel/bookmark buttons, no scope bar, no
+  `searchBarStyle`. Its metrics were never probed, so nothing here is
+  oracle-validated and there is deliberately no fixture. The DELEGATE
+  contract is real — text-change, search-button and begin/end editing all
+  reach the app.
+- **`UIActivityViewController` shares nothing.** It presents as the measured
+  page sheet and lists the titles of the app's own `applicationActivities` in
+  a `UITableView`; no system activity exists, so a sheet with nothing to offer
+  says exactly that. `completionWithItemsHandler` fires where UIKit's does.
+- **Popovers always adapt.** `UIPopoverPresentationController` stores
+  `sourceView`/`sourceRect`/`permittedArrowDirections` and presents as a
+  sheet — which is what real UIKit does at iPhone width, but an iPad-sized
+  window would get a sheet where UIKit draws an arrow-anchored popover.
+- **`UIDeferredMenuElement` resolves SYNCHRONOUS providers only.** UIKit's
+  provider may complete later (it shows a spinner meanwhile); there is no run
+  loop to come back to, so a late completion contributes nothing.
+- **`scrollViewWillEndDragging` retargeting matches the LANDING POINT, not
+  the timing.** A delegate that rewrites `targetContentOffset` gets a real
+  UIKit deceleration curve whose initial velocity is solved backwards from
+  the requested offset (`UIScrollPhysics.velocityToLand`); UIKit instead
+  reshapes the curve's duration. Paging lands in the right place, over a
+  slightly different interval.
+- **Text-field/-view `shouldChange…` ranges are in UNICODE SCALARS**, not
+  UTF-16 — the caret model's units. Same numbers for ASCII, different ones
+  for emoji and other non-BMP text.
+- **`textFieldShouldEndEditing` is asked twice on a focus transfer** (once by
+  `canResignFirstResponder`, once inside `resignFirstResponder`). UIKit asks
+  once; the predicate is expected to be pure.
+- Declared-but-never-called, for source compatibility: the zooming members of
+  `UIScrollViewDelegate` (no `zoomScale` exists), `scrollViewShouldScrollToTop`
+  (no status-bar tap), `sheetPresentationControllerDidChangeSelectedDetentIdentifier`
+  (one detent), and `UITabBarControllerDelegate`'s animation-controller
+  members (tab switches are not animated).
 
 ## Two cuts of San Francisco (2026-08-25): the fixture suite has two oracles
 

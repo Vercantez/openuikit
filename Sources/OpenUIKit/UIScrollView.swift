@@ -68,17 +68,52 @@ public struct UIEdgeInsets: Equatable, Sendable {
 public protocol UIScrollViewDelegate: AnyObject {
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
+    /// M13. UIKit hands the delegate the deceleration's natural landing
+    /// point and lets it write a different one back — this is how paging and
+    /// snapping are built. Honoured: see `UIScrollView.endDragging`.
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>)
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool)
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView)
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+    /// Fires when an ANIMATED `setContentOffset` / `scrollRectToVisible`
+    /// finishes (M13).
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView)
+    /// Declared for source compatibility. There is no status-bar tap to
+    /// trigger scroll-to-top here, so neither member is ever called
+    /// (docs/KNOWN_GAPS.md).
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool
+    func scrollViewDidScrollToTop(_ scrollView: UIScrollView)
+    /// Zooming is not implemented (no `zoomScale` on this UIScrollView), so
+    /// these three are declarations only — an app that conforms compiles and
+    /// is never called back.
+    func viewForZooming(in scrollView: UIScrollView) -> UIView?
+    func scrollViewDidZoom(_ scrollView: UIScrollView)
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?)
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?,
+                                 atScale scale: CGFloat)
 }
 
 public extension UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {}
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {}
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool) {}
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {}
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {}
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {}
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool { true }
+    func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {}
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? { nil }
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {}
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {}
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?,
+                                 atScale scale: CGFloat) {}
 }
 
 // MARK: - Closed-form physics (unit-testable, no state)
@@ -127,6 +162,19 @@ public enum UIScrollPhysics {
     /// Where the deceleration comes to rest: x0 + (v0 ∓ stop)·F.
     public static func decelTargetOffset(x0: CGFloat, v0: CGFloat) -> CGFloat {
         decelOffset(x0: x0, v0: v0, at: decelDuration(v0: v0))
+    }
+
+    /// Inverse of `decelTargetOffset`: the release velocity whose
+    /// deceleration comes to rest exactly at `target`. Used to honour a
+    /// `scrollViewWillEndDragging` retarget (M13). Returns 0 when the
+    /// distance is too small for the curve to express (|v0| would fall under
+    /// the stop velocity) — the caller then jumps to the target.
+    public static func velocityToLand(from x0: CGFloat, at target: CGFloat) -> CGFloat {
+        let d = target - x0
+        guard d != 0 else { return 0 }
+        let v = CGFloat(Double(d) / decelDistanceFactor)
+        let signed = v + (d > 0 ? decelStopVelocity : -decelStopVelocity)
+        return signed.magnitude <= decelStopVelocity ? 0 : signed
     }
 
     /// Exact time at which x(t) crosses `boundary`, or nil if it never does
@@ -225,7 +273,11 @@ open class UIScrollView: UIView {
         stopScrollAnimation()
         if animated {
             UIView.animate(withDuration: 0.25, delay: 0, options: [],
-                           animations: { self.contentOffset = offset })
+                           animations: { self.contentOffset = offset },
+                           completion: { [weak self] _ in
+                               guard let self else { return }
+                               self.delegate?.scrollViewDidEndScrollingAnimation(self)
+                           })
         } else {
             contentOffset = offset
         }
@@ -446,7 +498,41 @@ open class UIScrollView: UIView {
         let now = time ?? dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
         dragSamples.removeAll()
         let lo = minContentOffset, hi = maxContentOffset
-        let off = contentOffset
+        var off = contentOffset
+        var v = v
+
+        // M13: scrollViewWillEndDragging. UIKit's velocity here is in
+        // POINTS PER MILLISECOND (the one delegate callback that is not in
+        // pt/s — a documented UIKit quirk), and the target it shows is the
+        // natural landing offset clamped into range.
+        if let d = delegate {
+            var target = CGPoint(
+                x: Swift.min(Swift.max(UIScrollPhysics.decelTargetOffset(x0: off.x, v0: v.x),
+                                       lo.x), hi.x),
+                y: Swift.min(Swift.max(UIScrollPhysics.decelTargetOffset(x0: off.y, v0: v.y),
+                                       lo.y), hi.y))
+            let natural = target
+            withUnsafeMutablePointer(to: &target) {
+                d.scrollViewWillEndDragging(self, withVelocity: CGPoint(x: v.x / 1000,
+                                                                        y: v.y / 1000),
+                                            targetContentOffset: $0)
+            }
+            if target != natural {
+                // Land exactly where the delegate asked by solving UIKit's
+                // own closed-form deceleration for the release velocity:
+                //   target = x0 + (v0 ∓ stop)·F   ->   v0 = (target − x0)/F ± stop
+                // The curve is therefore still UIKit's; only its initial
+                // velocity is retargeted. UIKit instead reshapes the curve's
+                // duration — the landing point matches, the timing does not
+                // (docs/KNOWN_GAPS.md).
+                v = CGPoint(x: UIScrollPhysics.velocityToLand(from: off.x, at: target.x),
+                            y: UIScrollPhysics.velocityToLand(from: off.y, at: target.y))
+                // A retarget to the current offset means "stop here".
+                if v.x == 0 { off.x = target.x }
+                if v.y == 0 { off.y = target.y }
+                contentOffset = off
+            }
+        }
 
         xAnim = makeReleaseAxisAnim(x: off.x, v: v.x, lo: lo.x, hi: hi.x,
                                     scrolls: dragsX, bouncesAxis: bouncesX, at: now)

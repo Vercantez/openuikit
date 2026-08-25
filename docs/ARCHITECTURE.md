@@ -176,6 +176,8 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
+| `Sources/OpenUIKit/UIMenu.swift`, `UIContextMenu.swift` | **menus** | done (M13: UIAction/UIMenu/UIKeyCommand + responder-chain routing; platter measured by `Tools/oracle2/menuprobe`, NO fixture — docs/KNOWN_GAPS.md explains why) |
+| `Sources/OpenUIKit/UIAdaptivePresentation.swift`, `UISearchBar.swift`, `UIActivityViewController.swift` | **viewcontroller** / **text-input** | done (M13: the delegate-protocol cluster; the search bar's chrome and the share sheet are documented stubs) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
 
@@ -364,6 +366,14 @@ environment".
   transition) is measured by dedicated Simulator probes that sample layer
   `presentation()` per display-link frame: `Tools/oracle2/simprobe`,
   `sheetprobe`, `alertprobe`.
+- Some chrome cannot be CAPTURED by either oracle at all, only measured.
+  `Tools/oracle2/menuprobe` (M13) is the first case: iOS 26 draws the UIMenu
+  platter in the render server, so the probe reads the private view tree for
+  geometry and the DEVICE FRAMEBUFFER (`xcrun simctl io screenshot`) for
+  fill/shadow/corner, and the numbers are gated by unit tests instead of a
+  fixture. When you meet chrome like this, measure it and say so — do not
+  invent a golden. See docs/KNOWN_GAPS.md "Menus, actions & delegate
+  protocols".
 
 ## openrender CLI contract (must mirror oracle exactly)
 
