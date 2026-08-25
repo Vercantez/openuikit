@@ -1,0 +1,22 @@
+{
+  "name": "control_slider",
+  "size": [320, 220],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 220], "backgroundColor": "#FFFFFF" },
+      { "class": "UISlider", "frame": [20, 20, 280, 34], "value": 0 },
+      { "class": "UISlider", "frame": [20, 60, 280, 34], "value": 0.35 },
+      { "class": "UISlider", "frame": [20, 100, 280, 34], "value": 1 },
+      { "class": "UISlider", "frame": [20, 140, 280, 40], "value": 0.5,
+        "minimumTrackTintColor": "systemGreen" },
+      { "class": "UISlider", "frame": [20, 180, 200, 34], "value": 3, "minimumValue": 1,
+        "maximumValue": 5, "maximumTrackTintColor": "systemYellow" },
+      { "class": "UIView", "frame": [230, 176, 80, 42], "backgroundColor": "systemGreen" },
+      { "class": "UISlider", "frame": [234, 180, 72, 34], "value": 0.5 }
+    ]
+  }
+}

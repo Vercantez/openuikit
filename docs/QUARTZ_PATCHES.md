@@ -108,3 +108,29 @@ the 56-scene golden suite is byte-stable across the patch.
 Upstream fix: adopt wholesale; the fast paths are self-contained statics
 plus one additive API. Consider also bbox-limiting the generic coverage
 buffers, which would shrink the remaining gap for rounded-rect fills.
+
+## 005-image-io-memory.patch
+
+`src/pkg_image_io.cpp`, `include/quartz/image_io.h` — adds four additive
+entry points that expose the vendored stb_image / stb_image_write with
+STRAIGHT (non-premultiplied) RGBA8 buffers, which is what an image object
+with an unassociated-alpha backing store (UIImage/CGImage, and OpenUIKit's
+`Bitmap`) needs:
+
+```c
+uint8_t *QZImageDecodeRGBA(const uint8_t *data, size_t len, int *w, int *h);
+void     QZImageFreeRGBA(uint8_t *pixels);
+uint8_t *QZImageEncodePNG(const uint8_t *rgba, int w, int h, size_t *len);
+uint8_t *QZImageEncodeJPEG(const uint8_t *rgba, int w, int h, int q, size_t *len);
+```
+
+The existing API can only decode INTO a `QZImage`, whose storage is
+premultiplied — decoding a translucent PNG and reading it back would lose
+color precision, and there is no way to encode to memory at all (only
+`QZImageWritePNGFile`). The new functions reuse the file's own `sniff_kind`
++ `stbi_load_from_memory` and the `*_to_func` writers, so no new decoding
+code exists anywhere in OpenUIKit (`Sources/OpenUIKit/ImageCodec.swift` is
+purely the Swift interop).
+
+Upstream fix: adopt as-is; the functions are self-contained and touch no
+existing behavior.

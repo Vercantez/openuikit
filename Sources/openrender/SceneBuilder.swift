@@ -374,6 +374,57 @@ func makeProgressView(_ j: SceneJSON) -> UIProgressView {
     return p
 }
 
+func makeSlider(_ j: SceneJSON) -> UISlider {
+    let s = UISlider()
+    if let v = num(j["minimumValue"]) { s.minimumValue = Float(v) }
+    if let v = num(j["maximumValue"]) { s.maximumValue = Float(v) }
+    if let v = num(j["value"]) { s.value = Float(v) }
+    if let c = colorOrDie(j["minimumTrackTintColor"], "UISlider") { s.minimumTrackTintColor = c }
+    if let c = colorOrDie(j["maximumTrackTintColor"], "UISlider") { s.maximumTrackTintColor = c }
+    if let c = colorOrDie(j["thumbTintColor"], "UISlider") { s.thumbTintColor = c }
+    if j["enabled"]?.boolValue == false { s.isEnabled = false }
+    return s
+}
+
+func makeSegmentedControl(_ j: SceneJSON) -> UISegmentedControl {
+    let items = (j["segments"]?.arrayValue ?? []).compactMap { $0.stringValue }
+    let s = UISegmentedControl(items: items)
+    if let i = num(j["selectedSegmentIndex"]) { s.selectedSegmentIndex = Int(i) }
+    if let c = colorOrDie(j["selectedSegmentTintColor"], "UISegmentedControl") {
+        s.selectedSegmentTintColor = c
+    }
+    if j["enabled"]?.boolValue == false { s.isEnabled = false }
+    return s
+}
+
+func makeActivityIndicator(_ j: SceneJSON) -> UIActivityIndicatorView {
+    let style: UIActivityIndicatorView.Style
+    switch j["style"]?.stringValue ?? "medium" {
+    case "medium": style = .medium
+    case "large": style = .large
+    case let s: fatalError("bad activity indicator style \(s)")
+    }
+    let a = UIActivityIndicatorView(style: style)
+    if let c = colorOrDie(j["color"], "UIActivityIndicatorView") { a.color = c }
+    a.hidesWhenStopped = j["hidesWhenStopped"]?.boolValue ?? true
+    if j["animating"]?.boolValue ?? true { a.startAnimating() }
+    return a
+}
+
+func makePageControl(_ j: SceneJSON) -> UIPageControl {
+    let p = UIPageControl()
+    p.numberOfPages = Int(num(j["numberOfPages"]) ?? 3)
+    p.currentPage = Int(num(j["currentPage"]) ?? 0)
+    p.hidesForSinglePage = j["hidesForSinglePage"]?.boolValue ?? false
+    if let c = colorOrDie(j["pageIndicatorTintColor"], "UIPageControl") {
+        p.pageIndicatorTintColor = c
+    }
+    if let c = colorOrDie(j["currentPageIndicatorTintColor"], "UIPageControl") {
+        p.currentPageIndicatorTintColor = c
+    }
+    return p
+}
+
 func stackAxis(_ s: String?) -> NSLayoutConstraint.Axis {
     switch s ?? "horizontal" {
     case "horizontal": return .horizontal
@@ -741,6 +792,10 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIProgressView": v = makeProgressView(j)
     case "UIStackView": v = makeStackView(j)
     case "UISwitch": v = makeSwitch(j)
+    case "UISlider": v = makeSlider(j)
+    case "UISegmentedControl": v = makeSegmentedControl(j)
+    case "UIActivityIndicatorView": v = makeActivityIndicator(j)
+    case "UIPageControl": v = makePageControl(j)
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
@@ -1056,7 +1111,7 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
     if v is UILabel || v is UIButton || v is UIImageView || v is UIProgressView || v is UISwitch
-        || v is UITextField || v is UITextView {
+        || v is UITextField || v is UITextView || v is UISlider {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),

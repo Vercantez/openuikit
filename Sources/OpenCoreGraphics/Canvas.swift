@@ -185,6 +185,19 @@ public final class Canvas {
         backend.stroke(path, color: color, lineWidth: lineWidth)
     }
 
+    /// Stroke with explicit cap/join styles (ADDITIVE extension of the
+    /// frozen contract — the 3-argument form above is unchanged and keeps
+    /// its historical butt-cap / round-join behavior). App-side drawing
+    /// (`UIBezierPath.lineCapStyle` / `lineJoinStyle`) needs the styles;
+    /// the quartz backend maps them onto QZ's stroker, the pure-Swift
+    /// rasterizer ignores them (documented in docs/KNOWN_GAPS.md).
+    public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+                       cap: CanvasLineCap, join: CanvasLineJoin,
+                       miterLimit: CGFloat = 10) {
+        backend.stroke(path, color: color, lineWidth: lineWidth, cap: cap,
+                       join: join, miterLimit: miterLimit)
+    }
+
     /// Draw a bitmap into `rect` (user space). `interpolate` = bilinear.
     public func draw(_ image: Bitmap, in rect: CGRect, interpolate: Bool = true) {
         backend.drawImage(image, in: rect, interpolate: interpolate)

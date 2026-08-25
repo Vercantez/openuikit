@@ -1,0 +1,501 @@
+{
+  "name" : "control_dark",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        20,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        14,
+        280,
+        6
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        115.7,
+        6
+      ],
+      "path" : "1.0.0.1"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        97,
+        5,
+        37,
+        24
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0.0"
+    },
+    {
+      "class" : "UISegmentedControl",
+      "frame" : [
+        20,
+        70,
+        280,
+        32
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        26,
+        33
+      ],
+      "path" : "2.1"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.1.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        1,
+        33
+      ],
+      "path" : "2.2"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        93,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.2.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.2.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        186,
+        0,
+        94,
+        32
+      ],
+      "intrinsic" : [
+        26,
+        33
+      ],
+      "path" : "2.3"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        94,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.3.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        0,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.3.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "2.4"
+    },
+    {
+      "class" : "_UILiquidLensView",
+      "frame" : [
+        95,
+        2,
+        89,
+        28
+      ],
+      "path" : "2.4.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        89,
+        28
+      ],
+      "path" : "2.4.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        89,
+        28
+      ],
+      "path" : "2.4.0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        32
+      ],
+      "path" : "2.4.1"
+    },
+    {
+      "class" : "UISegment",
+      "frame" : [
+        0,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.4.1.0"
+    },
+    {
+      "class" : "UISegmentLabel",
+      "frame" : [
+        33.5,
+        8,
+        26,
+        16
+      ],
+      "intrinsic" : [
+        26,
+        16
+      ],
+      "path" : "2.4.1.0.0",
+      "sizeThatFits200" : [
+        26,
+        16
+      ]
+    },
+    {
+      "class" : "UISegment",
+      "frame" : [
+        186,
+        0,
+        94,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.4.1.1"
+    },
+    {
+      "class" : "UISegmentLabel",
+      "frame" : [
+        29,
+        8,
+        36.5,
+        16
+      ],
+      "intrinsic" : [
+        36.5,
+        16
+      ],
+      "path" : "2.4.1.1.0",
+      "sizeThatFits200" : [
+        36.5,
+        16
+      ]
+    },
+    {
+      "class" : "UISegment",
+      "frame" : [
+        93,
+        0,
+        93,
+        32
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2.4.1.2"
+    },
+    {
+      "class" : "UISegmentLabel",
+      "frame" : [
+        33.5,
+        8,
+        26.5,
+        16
+      ],
+      "intrinsic" : [
+        26.5,
+        16
+      ],
+      "path" : "2.4.1.2.0",
+      "sizeThatFits200" : [
+        26.5,
+        16
+      ]
+    },
+    {
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        20,
+        120,
+        20,
+        20
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "3.0"
+    },
+    {
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        60,
+        112,
+        37,
+        37
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        37,
+        37
+      ],
+      "intrinsic" : [
+        37,
+        37
+      ],
+      "path" : "4.0"
+    },
+    {
+      "class" : "UIProgressView",
+      "frame" : [
+        20,
+        170,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "5"
+    },
+    {
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "path" : "5.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        168,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "5.0.1"
+    }
+  ]
+}

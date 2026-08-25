@@ -221,6 +221,76 @@ animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
   window insets — the portable core still has no safe-area model, and the
   page sheet's 59 pt top inset is the same constant. On a window that is not
   an iPhone 16 the card is centred as if it were.
+## App-compat cluster: image loading, drawing, controls (2026-08-25)
+
+What shipped (all oracle-backed): PNG/JPEG decode+encode and
+`UIImage(named:/contentsOfFile:/data:)`, `UIBezierPath`, app-side drawing
+(`UIView.draw(_:)`, `UIGraphicsImageRenderer`), and four controls —
+`UIActivityIndicatorView`, `UISlider`, `UISegmentedControl`,
+`UIPageControl` (fixtures `control_activity`, `control_slider`,
+`control_segmented`, `control_pagecontrol`, `control_dark`).
+
+**Deferred, with the reason:**
+
+- **`UIStepper`** — measurable but not done. Real UIKit draws it through a
+  SwiftUI hosting view (`UICoreHostingView<DesignLibraryStepper>`), so it
+  renders ONLY in the windowed oracle. Probed metrics for whoever picks it
+  up (94 x 32 control over white, Catalyst iOS 26.1): capsule background
+  ≈ (243,243,243) over white (quaternarySystemFill-like), minus bar
+  x 37..50 of a control at x=20 (13 pt long) in near-black (37,37,37), a
+  1 pt divider at the centre (colour ≈ 180), and a matching 13 pt plus bar
+  centred in the right half. Nothing else about the glyph strokes has been
+  fitted.
+- **Operational note**: regenerating a `"window": true` golden needs an
+  ACTIVE, unlocked display session — `Tools/oracle2` composites through the
+  real render server and otherwise fails with "window never became
+  renderable" (this is what stopped `UIStepper` from being finished in this
+  pass; the offscreen v1 oracle keeps working regardless).
+- **`UIRefreshControl`** — needs scroll-view integration (pull-to-refresh
+  offset behavior) that no static scene can validate, plus edits to
+  `UIScrollView.swift`, which this cluster does not own. The visual is the
+  spinner that already ships here.
+- **`UISearchBar` / `UIPickerView`** — not attempted (they were not in this
+  cluster's list).
+
+**Fidelity notes on what did ship:**
+
+- The activity indicator's ROTATION TIMING is not oracle-validated: Core
+  Animation discards the spin offscreen and the windowed oracle can only
+  sample it on the wall clock. The goldens pin the rest pose; the
+  implementation advances one blade (45°) every 1/8 s, i.e. UIKit's
+  classic one-revolution-per-second discrete step.
+- `UISegmentedControl.intrinsicContentSize` is NOT reproduced (the oracle
+  no longer dumps `intrinsic` for it). Real UIKit's per-segment width mixes
+  the widest title, a 32 pt floor and ~18.5 pt of padding in a way that no
+  probe set fit; scenes therefore give segmented controls explicit frames.
+  Segment SPLITTING inside a given width is exact (integer-floor
+  boundaries).
+- `UISegmentedControl` disabled rendering uses a measured 0.5 alpha on the
+  background and the titles (probe: 246 background and 146 ink over white
+  against 238/39 enabled). No fixture covers the disabled state.
+- Track-tap behavior on `UISlider` and tap-to-advance on `UIPageControl`
+  are plausible UIKit behavior, not oracle-measured (no static scene can
+  express them).
+- `UIPageControl`'s glass background (real UIKit puts a
+  `UIVisualEffectView` behind the dots) is not drawn: it composites to
+  nothing in every capture probed, over white, black and red.
+- The pure-Swift rasterizer backend ignores `UIBezierPath.lineCapStyle` /
+  `lineJoinStyle` (it keeps its butt-cap / round-join model); the quartz
+  backend — the default, and the one every golden uses — honors them via
+  the additive `Canvas.stroke(_:color:lineWidth:cap:join:miterLimit:)`.
+- `UIBezierPath.bounds` returns the FLATTENED (drawn) extent, not UIKit's
+  control-point box.
+- A view's custom content is rendered into an offscreen extent of
+  `bounds` inset by −2 pt (LayerBridge.contentExtent), so app drawing —
+  or a control shadow, e.g. the slider thumb's — that spills further than
+  2 pt outside the bounds is clipped. UIKit clips `draw(_:)` to the view
+  too, but its layer shadows are not clipped.
+- `UIImage.withTintColor` recolors pixels immediately (CG `.sourceIn` of a
+  flat color over the silhouette). `renderingMode` is stored and honored by
+  that call, but `.automatic` behaves as `.alwaysOriginal` — there is no
+  asset catalog to carry a template flag.
+
 
 ## Interactive sheets (M11, 2026-08-25): what shipped and what did not
 

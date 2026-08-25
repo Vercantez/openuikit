@@ -11,6 +11,15 @@
 public enum OpenUIKitRuntime {
     /// Directory containing system_colors.json, font_metrics.json, and fonts.
     public static var resourceRoot: String = "Sources/OpenUIKit/Resources"
+    /// Directories searched by `UIImage(named:)`, in order. EMPTY by
+    /// default: the library hardcodes no host paths — an app or host sets
+    /// this to its asset directories (the analogue of a bundle's resource
+    /// path). Call `UIImage.clearNamedCache()` after changing it.
+    public static var imageSearchPaths: [String] = []
+    /// Scale `UIImage(named:)` prefers when several `@Nx` variants exist
+    /// (the analogue of `UIScreen.main.scale`; 2 = retina, matching the
+    /// scene suite's default render scale).
+    public static var imageScreenScale: CGFloat = 2
     /// Optional explicit font file paths (system, bold-face variants, mono, italic).
     /// When empty, the font engine falls back to platform-known locations
     /// (e.g. /System/Library/Fonts/SFNS.ttf on macOS).

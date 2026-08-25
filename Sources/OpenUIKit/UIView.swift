@@ -450,5 +450,23 @@ open class UIView: UIResponder {
     // MARK: Rendering (view module: RenderPass.swift implements)
     /// Draw this view's own content (background is handled by the render
     /// pass; subclasses draw text/images/chrome here).
-    open func drawContent(in canvas: Canvas, bounds: CGRect) {}
+    ///
+    /// The base implementation is the bridge to UIKit's app-facing drawing
+    /// API: it makes `canvas` the current graphics context and calls
+    /// `draw(_ rect:)`, so an app subclass that overrides `draw(_:)` — with
+    /// `UIBezierPath`, `UIColor.setFill()`, `UIGraphicsGetCurrentContext()`
+    /// — renders through the normal content path (and the layer-contents
+    /// cache, invalidated by `setNeedsDisplay()`). OpenUIKit's own content
+    /// views override `drawContent` directly and never pay for this.
+    open func drawContent(in canvas: Canvas, bounds: CGRect) {
+        UIGraphics.pushContext(canvas)
+        draw(bounds)
+        UIGraphics.popContext()
+    }
+
+    /// UIKit's app-side drawing hook. Override to draw the view's content
+    /// with `UIBezierPath` / `UIGraphicsGetCurrentContext()`; call
+    /// `setNeedsDisplay()` when the drawing inputs change. `rect` is the
+    /// view's bounds (OpenUIKit always redraws the whole view).
+    open func draw(_ rect: CGRect) {}
 }

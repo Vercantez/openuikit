@@ -2,8 +2,15 @@
 //
 // A UIImage wraps an RGBA8 Bitmap (the pixel backing store) plus a scale
 // factor, mirroring real UIKit: `size` is in POINTS (pixel size / scale).
-// Images in this project are synthesized procedurally by the scene runner
-// (see docs/SCENE_SPEC.md) — there is no asset/file loading here.
+// Images may be synthesized procedurally (the scene runner does this, see
+// docs/SCENE_SPEC.md) or decoded from PNG/JPEG bytes or files — see the
+// "Loading" section below.
+
+/// How a UIImage's pixels are used when it is drawn: as-is, or as a
+/// silhouette tinted with the destination's tint color.
+public enum UIImageRenderingMode: Sendable {
+    case automatic, alwaysOriginal, alwaysTemplate
+}
 
 public final class UIImage {
     /// Pixel backing store (width/height are in PIXELS at `scale`).
@@ -17,9 +24,158 @@ public final class UIImage {
                height: CGFloat(bitmap.height) / scale)
     }
 
+    /// UIKit's renderingMode. `.automatic` behaves as `.alwaysOriginal`
+    /// here: OpenUIKit has no asset catalog to carry a template flag, so
+    /// template treatment must be requested explicitly with
+    /// `withRenderingMode(.alwaysTemplate)`.
+    public private(set) var renderingMode: UIImageRenderingMode = .automatic
+
     public init(bitmap: Bitmap, scale: CGFloat = 1) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
+    }
+
+    private init(bitmap: Bitmap, scale: CGFloat, renderingMode: UIImageRenderingMode) {
+        self.bitmap = bitmap
+        self.scale = scale > 0 ? scale : 1
+        self.renderingMode = renderingMode
+    }
+
+    // MARK: Rendering mode / tinting
+
+    /// A copy of this image with the given rendering mode. Shares the
+    /// backing store (UIKit does the same — images are immutable).
+    public func withRenderingMode(_ mode: UIImageRenderingMode) -> UIImage {
+        UIImage(bitmap: bitmap, scale: scale, renderingMode: mode)
+    }
+
+    /// A copy whose pixels are recolored with `color`, keeping the original
+    /// per-pixel alpha (CG `.sourceIn` of a flat color over the silhouette —
+    /// what UIKit does for a template image). The result is
+    /// `.alwaysOriginal`, like UIKit's `withTintColor(_:)`.
+    public func withTintColor(_ color: UIColor) -> UIImage {
+        withTintColor(color, renderingMode: .alwaysOriginal)
+    }
+
+    public func withTintColor(_ color: UIColor,
+                              renderingMode mode: UIImageRenderingMode) -> UIImage {
+        let c = color.resolvedCGColor(with: UITraitCollection.current)
+        let out = Bitmap(width: bitmap.width, height: bitmap.height)
+        let r = UInt8(Swift.max(0, Swift.min(255, (c.red * 255).rounded())))
+        let g = UInt8(Swift.max(0, Swift.min(255, (c.green * 255).rounded())))
+        let b = UInt8(Swift.max(0, Swift.min(255, (c.blue * 255).rounded())))
+        bitmap.pixels.withUnsafeBufferPointer { src in
+            out.pixels.withUnsafeMutableBufferPointer { dst in
+                var i = 0
+                while i + 3 < dst.count {
+                    dst[i] = r; dst[i + 1] = g; dst[i + 2] = b
+                    dst[i + 3] = UInt8(CGFloat(src[i + 3]) * c.alpha)
+                    i += 4
+                }
+            }
+        }
+        return UIImage(bitmap: out, scale: scale, renderingMode: mode)
+    }
+
+    // MARK: Loading (PNG / JPEG via ImageCodec)
+
+    /// Decode PNG or JPEG bytes. `scale` defaults to 1, like
+    /// `UIImage(data:)`.
+    public convenience init?(data: [UInt8], scale: CGFloat = 1) {
+        guard let bitmap = ImageCodec.decode(data) else { return nil }
+        self.init(bitmap: bitmap, scale: scale)
+    }
+
+    /// Decode an image file. Like UIKit, an `@2x`/`@3x` suffix on the file
+    /// name (before the extension) sets the image's scale.
+    public convenience init?(contentsOfFile path: String) {
+        guard let bytes = ResourceIO.readFile(path),
+              let bitmap = ImageCodec.decode(bytes) else { return nil }
+        self.init(bitmap: bitmap, scale: UIImage.scaleFromFileName(path))
+    }
+
+    /// UIKit's `UIImage(named:)`, resolved against
+    /// `OpenUIKitRuntime.imageSearchPaths` (empty by default — the library
+    /// hardcodes no host paths). `name` may carry an extension; when it
+    /// does not, `png`, `jpg` and `jpeg` are tried in that order. For each
+    /// candidate the search prefers the `@Nx` variant for
+    /// `OpenUIKitRuntime.imageScreenScale`, then lower scales, then the
+    /// unsuffixed file — the same precedence real UIKit applies to a bundle.
+    /// Results are cached by name (UIKit caches `named:` lookups too).
+    public static func named(_ name: String) -> UIImage? {
+        if let hit = _namedCache[name] { return hit }
+        guard !name.isEmpty else { return nil }
+        let (base, ext) = splitExtension(name)
+        let exts = ext.map { [$0] } ?? ["png", "jpg", "jpeg"]
+        var scales: [Int] = []
+        let want = Int(OpenUIKitRuntime.imageScreenScale.rounded())
+        for s in stride(from: Swift.max(1, Swift.min(3, want)), through: 1, by: -1) {
+            scales.append(s)
+        }
+        for dir in OpenUIKitRuntime.imageSearchPaths {
+            let prefix = dir.isEmpty || dir.hasSuffix("/") ? dir : dir + "/"
+            for e in exts {
+                for s in scales {
+                    let suffix = s > 1 ? "@\(s)x" : ""
+                    let path = prefix + base + suffix + "." + e
+                    if let bytes = ResourceIO.readFile(path),
+                       let bitmap = ImageCodec.decode(bytes) {
+                        let img = UIImage(bitmap: bitmap, scale: CGFloat(s))
+                        _namedCache[name] = img
+                        return img
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    /// UIKit spells this as an initializer; the failable convenience init
+    /// simply forwards to `named(_:)`.
+    public convenience init?(named name: String) {
+        guard let img = UIImage.named(name) else { return nil }
+        self.init(bitmap: img.bitmap, scale: img.scale)
+    }
+
+    /// Drop every cached `named:` lookup (hosts call this after changing
+    /// `imageSearchPaths`).
+    public static func clearNamedCache() { _namedCache.removeAll() }
+    private static var _namedCache: [String: UIImage] = [:]
+
+    /// "…@2x.png" → 2, "…@3x" → 3, anything else → 1.
+    static func scaleFromFileName(_ path: String) -> CGFloat {
+        let (base, _) = splitExtension(path)
+        if base.hasSuffix("@2x") { return 2 }
+        if base.hasSuffix("@3x") { return 3 }
+        return 1
+    }
+
+    /// Split a path into (everything before the last dot of the last path
+    /// component, extension) — nil extension when there is none.
+    static func splitExtension(_ path: String) -> (String, String?) {
+        var lastDot: String.Index? = nil
+        var i = path.startIndex
+        while i < path.endIndex {
+            let c = path[i]
+            if c == "." { lastDot = i }
+            if c == "/" { lastDot = nil }
+            i = path.index(after: i)
+        }
+        guard let dot = lastDot, path.index(after: dot) < path.endIndex else {
+            return (path, nil)
+        }
+        return (String(path[path.startIndex..<dot]),
+                String(path[path.index(after: dot)...]))
+    }
+
+    // MARK: Encoding
+
+    /// PNG representation of the backing store (straight alpha, RGBA8).
+    public func pngData() -> [UInt8]? { ImageCodec.encodePNG(bitmap) }
+
+    /// JPEG representation. `compressionQuality` is UIKit's 0...1.
+    public func jpegData(compressionQuality: CGFloat) -> [UInt8]? {
+        ImageCodec.encodeJPEG(bitmap, quality: compressionQuality)
     }
 
     // MARK: CG-compatible resampling

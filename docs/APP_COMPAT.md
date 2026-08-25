@@ -41,16 +41,30 @@ types, not 737. That is why the punch list is tractable.
 | ~~**Alerts**~~ | ~~332~~ | **DONE (M12)** — `UIAlertController` + `UIAlertAction`, both styles, measured against real iOS 26.1 (`Tools/oracle2/alertprobe`); fixtures `alert_basic` / `alert_destructive` / `alert_actionsheet` / `alert_dark`. |
 | **Collection view** | 212 | `UICollectionView`, cells, `UICollectionViewFlowLayout`, data source/delegate. Reuse machinery can follow `UITableView`'s. |
 | **Bars & appearance** | 181 | `UIBarButtonItem`, `UIToolbar`, `UINavigationBarAppearance`, `UITabBarAppearance`. |
-| **Misc controls** | 106 | `UIActivityIndicatorView`, `UISlider`, `UISegmentedControl`, `UIRefreshControl`, `UISearchBar`, `UIPageControl`, `UIStepper`, `UIPickerView`. |
+| **Misc controls** | 106 | `UIActivityIndicatorView`, `UISlider`, `UISegmentedControl`, `UIPageControl` **done** (oracle fixtures `control_activity` / `control_slider` / `control_segmented` / `control_pagecontrol` / `control_dark`); `UIRefreshControl`, `UISearchBar`, `UIStepper`, `UIPickerView` remain — see docs/KNOWN_GAPS.md for the measured head start on `UIStepper`. |
 | ~~**Custom transitions**~~ | ~~64~~ | **DONE (M12)** — `UIPresentationController`, `UIViewControllerAnimatedTransitioning` + context + transitioning delegate, `UINavigationControllerDelegate`. The sheet presentation and push/pop now run through it (`_UIPageSheetAnimator` / `_UINavigationSlideAnimator`). No interactive transitioning — see docs/KNOWN_GAPS.md. |
 | **Share sheet** | 57 | `UIActivityViewController` — system UI; likely a stub. |
 | **Long tail** | 479 | 84 types: `UIKeyCommand`, `UIAction`, `UIMenu`, `UIPasteboard`, `UIPageViewController`, `UIContextMenuConfiguration`, … |
 
-Also missing and cheap, not in the clusters above: **`UIImage` cannot load a
-file** (`UIImage(named:)`, PNG/JPEG decode). `stb_image` is already vendored
-inside CQuartz, so this is mostly plumbing. **`UIBezierPath`** and app-side
-drawing (`draw(_ rect:)`, `UIGraphicsImageRenderer`) are likewise thin
-wrappers over machinery that already exists in quartz.
+Also missing and cheap, not in the clusters above — **all four now done**
+(2026-08-25):
+
+- **Image loading**: `UIImage(named:)` / `(contentsOfFile:)` / `(data:)` with
+  PNG+JPEG decode, `@2x`/`@3x` scale suffixes, `pngData()` /
+  `jpegData(compressionQuality:)`. The decoder is the `stb_image` copy
+  already vendored inside CQuartz, reached through an additive C API that
+  hands over STRAIGHT (non-premultiplied) RGBA8
+  (`patches/quartz/005-image-io-memory.patch`) — OpenUIKit contains no
+  decoding code of its own. `UIImage(named:)` resolves against
+  `OpenUIKitRuntime.imageSearchPaths`, empty by default: the library
+  hardcodes no host paths.
+- **`UIBezierPath`**: full construction/arcs/transforms plus
+  `fill()`/`stroke()`/`addClip()` on the current context, backed by
+  OpenCoreGraphics `Path`.
+- **App-side drawing**: `UIView.draw(_ rect:)` (rendered through the
+  existing layer-contents path, invalidated by `setNeedsDisplay()`),
+  `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()` returning the
+  `Canvas`, `UIColor.setFill()/setStroke()`.
 
 ## Method notes / caveats
 

@@ -1,0 +1,19 @@
+{
+  "name": "control_dark",
+  "size": [320, 200],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 200], "backgroundColor": "#000000" },
+      { "class": "UISlider", "frame": [20, 20, 280, 34], "value": 0.4 },
+      { "class": "UISegmentedControl", "frame": [20, 70, 280, 32],
+        "segments": ["One", "Two", "Three"], "selectedSegmentIndex": 1 },
+      { "class": "UIActivityIndicatorView", "frame": [20, 120, 20, 20], "style": "medium" },
+      { "class": "UIActivityIndicatorView", "frame": [60, 112, 37, 37], "style": "large" },
+      { "class": "UIProgressView", "frame": [20, 170, 280, 4], "progress": 0.6 }
+    ]
+  }
+}
