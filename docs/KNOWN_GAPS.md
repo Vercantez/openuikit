@@ -57,6 +57,14 @@
   oracle-fitted; they are lazily created so static scenes/layout dumps
   never see them. Fade is UIView.animate alpha (model alpha drops to 0
   at settle; presentation fades 0.4 s).
+- Content-touch claim (M8.1): travel > 5 pt
+  (`UIScrollView.contentTouchCancelDistance`) along a scrollable axis
+  cancels a delivered content touch in the same event, ahead of the pan's
+  10 pt recognition slop, so a row un-highlights the moment the finger
+  starts dragging. The 5 pt is FEEL-TUNED, not oracle-measured (UIKit's
+  own content-touch cancellation threshold is private); the axis test uses
+  the dominant travel component and honors canCancelContentTouches /
+  touchesShouldCancel(in:) exactly like the begin gate.
 - touchesShouldCancel(in:) defaults to true for ALL views including
   UIControls (modern-UIKit behavior — scrolling cancels button/row
   tracking); the pre-iOS-8 documented control exception is not

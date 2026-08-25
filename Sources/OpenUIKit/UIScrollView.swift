@@ -208,6 +208,17 @@ open class UIScrollView: UIView {
     /// tests, like UIWindow.multiTapInterval.
     public static var contentTouchDelay: TimeInterval = 0.15
 
+    /// Finger travel ALONG A SCROLLABLE AXIS (points) after which the scroll
+    /// view claims a content touch away from the subview it was delivered to
+    /// — the row/button gets `touchesCancelled` and its highlight fades.
+    ///
+    /// This is deliberately smaller than the pan's ~10 pt recognition slop:
+    /// in UIKit a table row un-highlights as soon as the finger starts
+    /// travelling, a moment BEFORE the content actually begins to move.
+    /// Feel-tuned (like the interactive-pop velocity threshold), not
+    /// oracle-measured — see docs/KNOWN_GAPS.md.
+    public static var contentTouchCancelDistance: CGFloat = 5
+
     // MARK: State
 
     /// A touch has landed and the pan may still claim it.
@@ -664,6 +675,10 @@ open class UIScrollView: UIView {
 public final class UIScrollViewPanGestureRecognizer: UIPanGestureRecognizer {
     weak var scrollView: UIScrollView?
 
+    /// Set once this pan has taken its touches away from the content
+    /// subviews they were delivered to (see `claimContentTouches`).
+    private var claimedContentTouches = false
+
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         if _state == .possible, let sv = scrollView {
             let p = location(in: nil)
@@ -671,9 +686,43 @@ public final class UIScrollViewPanGestureRecognizer: UIPanGestureRecognizer {
             if (dx * dx + dy * dy).squareRoot() > activationDistance,
                !allowBegin(sv, dx: dx, dy: dy) {
                 state = .failed
+            } else if _state == .possible {
+                claimContentTouches(sv, dx: dx, dy: dy)
             }
         }
         super.touchesMoved(touches, with: event)
+    }
+
+    /// Take the touches away from the content subviews as soon as the finger
+    /// is clearly dragging along a scrollable axis, WITHOUT waiting for the
+    /// pan's own ~10 pt slop: the row/button gets `touchesCancelled` in this
+    /// very event (UIWindow.processRecognitions consumes
+    /// `pendingCancelTouches` right after the recognizers observe), so its
+    /// highlight is already fading when the content starts to move. UIKit
+    /// un-highlights this eagerly; keeping the highlight through the whole
+    /// slop window was the "row press states don't cancel on significant
+    /// vertical finger travel" gap in docs/APP_FEEL.md.
+    ///
+    /// The pan itself keeps its normal threshold — claiming the touch does
+    /// not start the scroll, and a claimed touch still feeds this recognizer.
+    private func claimContentTouches(_ sv: UIScrollView, dx: CGFloat, dy: CGFloat) {
+        guard !claimedContentTouches else { return }
+        // Travel along the dominant axis only: a horizontal wiggle in a
+        // vertical scroll view is not a drag and must keep the highlight.
+        let axisTravel = Swift.max(dx.magnitude, dy.magnitude)
+        guard axisTravel > UIScrollView.contentTouchCancelDistance,
+              allowBegin(sv, dx: dx, dy: dy) else { return }
+        // Nothing to steal unless a touch actually reached a content view.
+        guard trackedTouches.contains(where: {
+            $0.view !== sv && $0.view != nil && !$0.deliveryCancelled
+        }) else { return }
+        claimedContentTouches = true
+        pendingCancelTouches = true
+    }
+
+    public override func reset() {
+        claimedContentTouches = false
+        super.reset()
     }
 
     func allowBegin(_ sv: UIScrollView, dx: CGFloat, dy: CGFloat) -> Bool {

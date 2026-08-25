@@ -371,6 +371,94 @@ final class UIScrollViewInteractionTests: XCTestCase {
         XCTAssertGreaterThan(sv.contentOffset.y, 0)
     }
 
+    // MARK: Early content-touch claim (row highlight vs finger travel)
+
+    /// Vertical travel past `contentTouchCancelDistance` cancels the content
+    /// touch in the SAME event, before the pan crosses its 10 pt slop: the
+    /// highlight is already fading when the content starts to move.
+    func testVerticalTravelCancelsHighlightBeforeThePanBegins() {
+        let (window, sv, button, log) = makeButtonSetup()
+        window.sendTouch(.began, at: CGPoint(x: 60, y: 40), timestamp: 0)
+        window.tick(timestamp: 0.16)
+        XCTAssertTrue(button.isHighlighted)
+
+        // 7 pt: past the 5 pt claim distance, still inside the 10 pt slop.
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 33), timestamp: 0.2)
+        XCTAssertFalse(button.isHighlighted, "highlight must cancel immediately")
+        XCTAssertEqual(log.events, ["down", "cancel"])
+        XCTAssertEqual(sv.panGestureRecognizer.state, .possible,
+                       "the pan keeps its own slop — nothing scrolls yet")
+        XCTAssertEqual(sv.contentOffset.y, 0)
+
+        // The claim does not break the pan: it begins on the next move (which
+        // absorbs the slop) and tracks 1:1 from there.
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 10), timestamp: 0.25)
+        XCTAssertEqual(sv.panGestureRecognizer.state, .began)
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 0), timestamp: 0.3)
+        XCTAssertEqual(sv.contentOffset.y, 10, accuracy: 1e-9)
+        window.sendTouch(.ended, at: CGPoint(x: 60, y: 0), timestamp: 0.3)
+        XCTAssertEqual(log.events, ["down", "cancel"], "no tap fires")
+    }
+
+    /// A finger that barely moves is still a press: the highlight stays and
+    /// the tap fires on lift.
+    func testTinyTravelKeepsTheHighlightAndTaps() {
+        let (window, sv, button, log) = makeButtonSetup()
+        window.sendTouch(.began, at: CGPoint(x: 60, y: 40), timestamp: 0)
+        window.tick(timestamp: 0.16)
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 37), timestamp: 0.2)
+        XCTAssertTrue(button.isHighlighted, "3 pt is inside the claim distance")
+        XCTAssertEqual(sv.contentOffset.y, 0)
+        window.sendTouch(.ended, at: CGPoint(x: 60, y: 37), timestamp: 0.25)
+        XCTAssertEqual(log.events, ["down", "upInside"])
+    }
+
+    /// Travel along a NON-scrollable axis is not a drag: a horizontal wiggle
+    /// in a vertical scroll view keeps the press.
+    func testHorizontalTravelKeepsTheHighlightInAVerticalScrollView() {
+        let (window, sv, button, log) = makeButtonSetup()
+        XCTAssertFalse(sv.dragsX, "fixture scrolls vertically only")
+        window.sendTouch(.began, at: CGPoint(x: 60, y: 40), timestamp: 0)
+        window.tick(timestamp: 0.16)
+        window.sendTouch(.moved, at: CGPoint(x: 68, y: 40), timestamp: 0.2)
+        XCTAssertTrue(button.isHighlighted)
+        XCTAssertEqual(log.events, ["down"])
+    }
+
+    /// The same claim applies while delaysContentTouches still holds the
+    /// touch: the row never highlights at all, and (as before) a dropped
+    /// pending touch gets no touchesCancelled because it was never delivered.
+    func testTravelDuringTheDelayDropsTheHeldTouch() {
+        let (window, sv, button, log) = makeButtonSetup()
+        window.sendTouch(.began, at: CGPoint(x: 60, y: 40), timestamp: 0)
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 33), timestamp: 0.05)
+        XCTAssertEqual(sv.panGestureRecognizer.state, .possible)
+        // Past the content-touch delay the held began must NOT flush.
+        window.tick(timestamp: 0.2)
+        XCTAssertFalse(button.isHighlighted)
+        XCTAssertEqual(log.events, [], "content never saw the touch")
+    }
+
+    /// touchesShouldCancel(in:) == false blocks the early claim too — the
+    /// control keeps tracking through any amount of travel.
+    func testEarlyClaimRespectsTouchesShouldCancel() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 300))
+        let sv = NoCancelScrollView(frame: CGRect(x: 0, y: 0, width: 200, height: 300))
+        sv.contentSize = CGSize(width: 200, height: 900)
+        window.addSubview(sv)
+        let button = UIButton(type: .system)
+        button.setTitle("Tap", for: .normal)
+        button.frame = CGRect(x: 20, y: 20, width: 120, height: 44)
+        sv.addSubview(button)
+        window.layoutIfNeeded()
+
+        window.sendTouch(.began, at: CGPoint(x: 60, y: 40), timestamp: 0)
+        window.tick(timestamp: 0.16)
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 33), timestamp: 0.2)
+        XCTAssertTrue(button.isHighlighted)
+        XCTAssertTrue(button.isTracking)
+    }
+
     final class NoCancelScrollView: UIScrollView {
         override func touchesShouldCancel(in view: UIView) -> Bool { false }
     }

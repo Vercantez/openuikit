@@ -114,7 +114,11 @@ Everything in this spec, plus:
 - Row highlight ships exactly as specced: systemGray4 on touch-down
   (post-delaysContentTouches; a quick tap gets it on the touch-up flush,
   like UIKit), 0.3s UIView.animate fade after up/cancel, tap action firing
-  after touchesBegan has painted the highlight.
+  after touchesBegan has painted the highlight. Finger travel past
+  `UIScrollView.contentTouchCancelDistance` (5pt) along a scrollable axis
+  cancels the press in that very event — before the pan crosses its own
+  10pt slop, so the row is already fading when the content starts to move
+  (M8.1; travel along a non-scrollable axis keeps the press).
 - Interactive back-swipe (the stretch goal) shipped in the navigation
   milestone and works on every pushed screen of the demo.
 - Host improvements that came out of this milestone: `openhost --app demo`
@@ -123,9 +127,8 @@ Everything in this spec, plus:
   rendering (below).
 
 Not done (honest list): no large-title nav bar (fixed 64pt bar), no status
-bar content, no blur behind the bar, row press states don't cancel on
-significant vertical finger travel within the slop window (UIKit is
-slightly stricter), slider has no tap-to-jump (drag only, as specced),
+bar content, no blur behind the bar, slider has no tap-to-jump (drag only,
+as specced),
 About value rows use a plain static style rather than UIKit's exact
 About-table metrics.
 
