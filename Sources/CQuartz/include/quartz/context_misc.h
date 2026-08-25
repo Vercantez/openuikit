@@ -7,6 +7,9 @@ extern "C" {
 
 void QZContextResetClip(QZContextRef ctx);
 QZImageRef QZBitmapContextCreateImage(QZContextRef ctx);
+/* Same snapshot with rows reversed (bottom-up), premultiplied preserved —
+ * the orientation layer-contents need under a top-down flip CTM. */
+QZImageRef QZBitmapContextCreateImageRowsFlipped(QZContextRef ctx);
 void QZContextSetGrayFillColor(QZContextRef ctx, QZFloat gray, QZFloat alpha);
 void QZContextSetGrayStrokeColor(QZContextRef ctx, QZFloat gray, QZFloat alpha);
 QZPoint QZContextConvertPointToDeviceSpace(QZContextRef ctx, QZPoint p);

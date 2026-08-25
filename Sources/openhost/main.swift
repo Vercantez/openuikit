@@ -42,6 +42,17 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
             Data("warning: ignoring unknown OPENUIKIT_COMPOSITOR=\(v) (use layers|renderpass)\n".utf8))
     }
 }
+// Layer-contents caching kill switch (M8 perf): OPENUIKIT_LAYER_CACHE=off
+// renders every frame from scratch (A/B comparison, cache debugging).
+if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
+    switch v {
+    case "off", "0": OpenUIKitRuntime.layerCaching = false
+    case "on", "1": OpenUIKitRuntime.layerCaching = true
+    default:
+        FileHandle.standardError.write(
+            Data("warning: ignoring unknown OPENUIKIT_LAYER_CACHE=\(v) (use on|off)\n".utf8))
+    }
+}
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]

@@ -70,6 +70,25 @@ open class UIView {
     /// presentation layer tree; the stored properties above are the MODEL.
     var animations: [UIViewAnimation] = []
 
+    // MARK: Layer-contents caching (M8 perf — see LayerBridge.swift)
+
+    /// Monotone version of this view's CUSTOM drawn content (drawContent).
+    /// OpenUIKit's own content views (UILabel, UISwitch, …) are fingerprinted
+    /// property-by-property by LayerBridge; a custom view outside OpenUIKit
+    /// that draws state in `drawContent` must call `setNeedsDisplay()` when
+    /// that state changes (the same contract as real UIKit) or cached layer
+    /// contents may go stale.
+    var contentVersion: UInt64 = 0
+
+    /// Mark this view's custom-drawn content as needing a redraw (UIKit
+    /// semantics). Cheap: bumps a version consumed by the render caches.
+    public func setNeedsDisplay() { contentVersion &+= 1 }
+
+    /// LayerBridge's per-view cache storage (content image, subtree
+    /// composite, fingerprint stability). Opaque here to keep the view
+    /// model free of compositor types.
+    var _layerCacheState: AnyObject?
+
     public var frame: CGRect {
         get {
             if transform.isIdentity {

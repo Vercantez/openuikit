@@ -112,11 +112,15 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     Acceptance: scripts/appfeel_demo.json scripted run (flick → momentum →
     rubber-band → settle, row highlight, push mid-transition, switch
     toggle, slider drag, pop) — every frame visually verified;
-    scripts/appfeel_demo.gif. PERF (Apple M3 Max, release): full-frame render of
-    the root screen ≈ 144 ms at scale 2, ≈ 39 ms at scale 1 → sustained
-    scroll ≈ 7 fps / ≈ 25 fps; 60 fps needs per-layer contents caching /
-    partial redraw in the compositor (M8 candidate, see APP_FEEL
-    "Performance"). Suite 56/56, swift test 305 green.
+    scripts/appfeel_demo.gif. Suite 56/56, swift test 305 green.
+- **M8 (perf) Layer-contents caching — DONE**: CA-style content-image +
+  stable-subtree composite caches in LayerBridge (fingerprint-driven, no
+  invalidation wiring; setNeedsDisplay for custom drawContent) + quartz
+  patch 004 (unit-scale blit, rect fill/clip fast paths) + offscreen
+  culling. Sustained scroll: 145 → ≈ 8.7 ms/frame at scale 2, 39 → ≈ 3.0 ms
+  at scale 1 (60 fps both; --app defaults to scale 2 again). Settled frames
+  bit-identical with caching off; suite unaffected. See APP_FEEL
+  "Performance".
 - **M8 Scroll + text input** — UIScrollView (quartz scroll_layer), deceleration
   curves vs oracle traces; UITextField/UITextView basics with caret/selection.
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,

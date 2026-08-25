@@ -138,20 +138,38 @@ transition is in flight, or the host clock is before
 UIView.animate recording and UISwitch.setOn). An idle app renders zero
 frames.
 
-But during a sustained scroll every frame is dirty, and a full-frame
-re-render of the Settings root costs (60-frame scripted average):
+During a sustained scroll every frame is dirty. M8 layer-contents caching
+(LayerBridge.swift + quartz patch 004) makes those frames cheap:
 
-| scale | avg render | sustained  |
-|-------|-----------|-------------|
-| 2     | ≈ 144 ms  | ≈ 7 fps     |
-| 1     | ≈ 39 ms   | ≈ 25 fps    |
+- **Content-image cache**: each view's drawContent offscreen (glyph ink,
+  icon paths, control chrome) is kept on the view and reused while its
+  content fingerprint is unchanged. Custom views must call
+  `setNeedsDisplay()` when their drawContent inputs change (UIKit's own
+  contract); OpenUIKit's views are fingerprinted property-by-property.
+- **Subtree composite cache**: a subtree whose visual fingerprint stays
+  stable for two consecutive frames is flattened once into a premultiplied
+  composite; scrolling then blits cached card/screen bitmaps (snapped to
+  the device grid, 1-tap unit-scale image path). Navigation transitions
+  become two screen-composite blits after their first ~2 frames.
+- **Offscreen culling**: subtrees fully outside the viewport are skipped.
+- **quartz patch 004**: unit-scale (±mirrored) image blit fast path,
+  axis-aligned rect fill/clip fast paths (docs/QUARTZ_PATCHES.md).
 
-That is far from 60 fps, so **--app mode defaults to --scale 1** (pass
---scale 2 for crisp stills/captures). Profiling (`sample`) shows the time
-goes to quartz path rasterization — mostly re-rasterizing every label's
-glyph ink and every icon's vector paths from scratch each frame — plus the
-per-frame offscreen allocations for drawContent layers. Sustained 60 fps
-needs per-layer contents caching (CA-style: re-render a layer's content
-only on setNeedsDisplay, reuse the bitmap otherwise) and/or dirty-rect
-partial redraw in the compositor. That is compositor-side work — flagged
-as an M8 candidate for the quartz backend.
+Sustained-scroll cost, Settings root, 60-frame scripted deceleration
+(scripts/perf_scroll.json; `captured … render X ms` lines):
+
+| scale | before (M7.5) | after (M8 caching) | sustained |
+|-------|---------------|--------------------|-----------|
+| 2     | ≈ 145 ms avg  | ≈ 8.7 avg / 6.9 p50 ms | 60 fps |
+| 1     | ≈ 39 ms avg   | ≈ 3.0 avg / 2.2 p50 ms | 60 fps |
+
+**--app mode now defaults to --scale 2** (crisp) again. Known remaining
+spikes: the first 1–2 frames after a hierarchy change (fresh screen push,
+cold caches) re-render and flatten at full cost (~40–80 ms at scale 2);
+frames whose fingerprints change every frame (slider drag, switch toggle
+row) render direct — both bounded to small subtrees or short bursts.
+Fidelity: settled frames are bit-identical with caching on/off
+(`OPENUIKIT_LAYER_CACHE=off` to A/B); mid-flight scroll frames differ only
+in that cached blits are snapped to the device pixel grid (≤ half-pixel,
+crisper than the resampled uncached path). The 56-scene golden suite is
+unaffected (single-frame renders never reach two stable frames).
