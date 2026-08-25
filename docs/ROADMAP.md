@@ -165,6 +165,17 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     the trace inputs through OpenUIKit (`openrender scrolltrace`) — 9/9
     within decel ≤2 pt / rubber-band ≤1 pt / settle ≤10%. Details:
     APP_FEEL "Measured scroll physics".
+  - Text input DONE (2026-08-24): UITextField (.roundedRect chrome, all
+    metrics measured off real UIKit — Catalyst textprobe) + UITextView
+    (TextKit insets/line heights), oracle-verified static scenes
+    textfield_basic / textview_basic at 99.87 / 99.97; first-responder
+    system (UIView become/resign, UIWindow.firstResponder + sendText/
+    sendKey), caret (2 pt tint bar, deterministic host-clock blink,
+    glyph-advance positioning + tap-to-place), editing model with
+    .editingDidBegin/Changed/DidEnd, horizontal keep-caret-visible scroll,
+    multiline caret movement; openhost SDL_TEXTINPUT/KEYDOWN wiring +
+    scripted text/key events; `--app textdemo` + scripts/textinput_demo.gif.
+    Selection is out of scope (docs/KNOWN_GAPS.md "Text input").
 - **M9 Auto Layout** — cassowary solver, NSLayoutConstraint/anchors API,
   validated against oracle layout dumps of constraint scenes.
 - **M10 App framework** — UIViewController lifecycle, UINavigationController,

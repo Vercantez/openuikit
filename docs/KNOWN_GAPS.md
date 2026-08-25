@@ -1,5 +1,36 @@
 # Known gaps (living document — fixers: read this)
 
+## Text input (M8, 2026-08-24): scope notes
+
+- SELECTION is not implemented (no range selection, no select-all/copy/
+  paste, no selection handles, no shift+arrows). Caret editing only.
+  UIKit's UITextInput/UITextPosition/UITextRange protocol family is not
+  reproduced — UIKeyInput plus internal key routing is the whole surface.
+- Caret geometry is measured (height = lineHeight + 1.5, TF y from the
+  probed caretRect box math, TV y = floor(8 + line·lineH − 0.75)) but the
+  BAR IS DRAWN 2 pt WIDE in tint color per the visible iOS caret; real
+  caretRect(for:) reports width 1. Blink cadence (0.6 s solid hold,
+  0.5 s half-period) is feel-tuned, not measured.
+- Dark-mode .roundedRect chrome: the fill's dynamic resolution was probed
+  (light white / dark black) but the BORDER's dark resolution is not
+  capturable offscreen — implemented as white@20% (light black@20% is
+  measured). No dark textfield fixture exists (the offscreen oracle cannot
+  resolve the private dynamic chrome color in dark — same trait quirk as
+  SceneKit's colorOrDie note).
+- UITextField at 15/19–21 pt: the unfocused text/placeholder use the
+  UILabel line box (labelLineHeight, +1 in those bands) while real TF
+  editing boxes use lineHeight + 2 — baselines can differ by ~0.5 pt at
+  those sizes (fixtures/demo use 13/17 pt, where they coincide).
+- UITextView with font == nil renders 12 pt system; real UIKit's legacy
+  default is Helvetica 12 (lineHeight 14 vs our 15). Always set a font.
+- UITextField shows text from offset 0 when not editing (matches UIKit);
+  ending editing resets the horizontal scroll to 0 without animation.
+- Typing glyphs come from the same UILabel ink-table/stb path as labels;
+  TextKit's slightly different rasterization (≈1 px softer tops, seen in
+  the golden diffs) is inside the 96-threshold by a wide margin
+  (textfield_basic 99.87, textview_basic 99.97) — no TextKit-context
+  glyph harvest needed so far.
+
 ## Navigation / view controllers (M7.5, 2026-08-24): scope notes
 
 - Transition geometry/timing implements APP_FEEL exactly (0.35 s easeInOut,
