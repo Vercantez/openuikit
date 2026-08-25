@@ -798,18 +798,34 @@ body text does the reverse.
   370×100 px text region of `label_sizes` Gaussian-blurred (σ 1.4) scores
   **99.007 % with `blob = 0.0`** and no absence report. It models a real and
   common failure — a run rendered at the wrong weight, wrong hinting, or wrong
-  subpixel phase. Note the entire M2 text milestone was *this* bug class; it
+  subpixel phase. The mechanism is worth stating exactly, because it is not a
+  threshold that could be tuned: blur *redistributes* ink, so the largest
+  per-pixel delta anywhere in that region measures **92** — the severe mask is
+  literally empty, and with no components there is nothing for either check to
+  examine. Note the entire M2 text milestone was *this* bug class; it
   was caught then only because the degradation was **global** and dragged the
   percentage to 91–95 %. Localized on a large canvas, it hides. Closing it
   needs a per-text-run comparison (align runs from the layout dump, then score
   each run's ink independently of canvas area) rather than another whole-frame
   metric.
-- **A single small missing glyph.** The absence check only inspects components
-  above its substantiality floor, so losing *one* letter at body size escapes:
-  erasing a single 13 pt letter from `label_align` scores 99.887 % with
-  `blob = 70.0` and no absence report. Multi-glyph loss at the same size *is*
-  caught (that was the M11.1 fix). Accepted: real renderer faults drop runs or
-  whole strings far more often than exactly one character.
+- **A partially erased glyph** — one whose ink is *mostly* gone but which
+  leaves an antialiased fringe behind. Absence measures whether our region is
+  featureless, and a fringe is not featureless: a 13 pt letter in
+  `label_align` erased down to its `< 128` core (leaving the halo) reports
+  `our std 34.09, ratio 0.497` and passes. Erased *cleanly*, the same letter
+  fails with `golden std 68.61, ours flat (std 0.00)`. This is the intended
+  trade — the check deliberately refuses to fire while we are still drawing
+  something there, because that is what keeps `modal_sheet`'s legitimate
+  residual green — but it does mean a half-drawn glyph reads as "present".
+
+  Note this entry replaces an earlier claim that a *single* small missing
+  glyph escapes because of the substantiality floor. Measured, that was only
+  true below the floor: a full-size single letter was already caught, and the
+  floor has since been lowered from 4.0 to 1.0 pt² (see
+  `STRUCT_MIN_COMPONENT`), which brings punctuation-scale marks in too — an
+  erased 2.5 pt² dot of an "i" in `demo_settings` passed at 4.0 and fails at
+  1.0. The whole 81-scene suite stays clean down to 0.25 pt², so the lower
+  floor costs nothing.
 
 Deliberately-corrupted renders are not checked in; regenerate them from the
 recipes above, or run `Tools/compare/test_compare.py`, whose synthetic

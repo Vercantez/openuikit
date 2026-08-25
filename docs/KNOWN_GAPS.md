@@ -505,7 +505,11 @@ with a slightly wrong ramp, a control drawn with the wrong corner radius.
 Absence cannot fire (both sides have structure), and a soft error's per-pixel
 deltas fall under the 150-count severity floor, so only the percentage sees it
 — and a small region on a large canvas barely moves the percentage. Measured:
-a blurred 370×100 px text region scores 99.007 % and passes everything.
+a blurred 370×100 px text region scores 99.007 % and passes everything. The
+floor is not a tunable here: blur *redistributes* ink rather than removing it,
+so the largest per-pixel delta anywhere in that region is **92** and the severe
+mask is empty — there are no components for either structural check to look at,
+at any threshold above ordinary antialiasing.
 
 This matters because it is exactly the class the M2 text work fought, caught
 then only because the error was global. The fix is not another whole-frame

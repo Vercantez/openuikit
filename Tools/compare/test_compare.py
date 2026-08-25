@@ -23,7 +23,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from compare import (compare_pixels, largest_diff_blob, STRUCT_DELTA,
                      STRUCT_MAX_BLOB, STRUCT_ABSENCE_RATIO,
-                     STRUCT_ABSENCE_OUR_STD)
+                     STRUCT_ABSENCE_OUR_STD, STRUCT_MIN_COMPONENT)
 
 
 def png(tmp, name, arr):
@@ -152,11 +152,27 @@ def absence_tests(tmp):
     assert "missing" not in res, (
         "a shifted solid block is displaced, not absent: %s" % res.get("missing"))
 
-    # 5. The two bounds must stay ordered the way the calibration assumes:
+    # 5. PUNCTUATION SCALE. A missing dot is only a couple of points square,
+    #    so the "substantial component" floor decides whether it is looked at
+    #    at all. A 1 x 1 pt mark (2 x 2 px at 2x = 1.0 pt^2) must still be
+    #    caught: the floor was 4.0 and silently skipped this whole class.
+    golden = np.zeros((H, W, 4)); golden[...] = [255, 255, 255, 255]
+    golden[100:102, 100:102] = [0, 0, 0, 255]      # a 1 x 1 pt dot
+    ours = np.zeros((H, W, 4)); ours[...] = [255, 255, 255, 255]
+    res, err = compare_pixels(png(tmp, "gp.png", golden), png(tmp, "op.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert res["blob"] <= STRUCT_MAX_BLOB, res["blob"]   # far too small to blob
+    assert "missing" in res, "a missing punctuation-scale glyph must be caught"
+    assert res["missing"]["area"] == 1.0, res["missing"]
+
+    # 6. The bounds must stay ordered the way the calibration assumes:
     #    worst corruption (our_std 3.70, ratio 0.036) under them, worst
     #    legitimate frame (14.98, 0.252) over them.
     assert 3.70 < STRUCT_ABSENCE_OUR_STD < 14.98, STRUCT_ABSENCE_OUR_STD
     assert 0.036 < STRUCT_ABSENCE_RATIO < 0.252, STRUCT_ABSENCE_RATIO
+    assert STRUCT_MIN_COMPONENT <= 1.0, (
+        "the floor must stay low enough to see punctuation-scale glyphs")
 
 
 def structural_tests(tmp):

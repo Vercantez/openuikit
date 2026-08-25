@@ -67,7 +67,14 @@ STRUCT_DELTA = 150     # per-pixel delta that counts as "plainly wrong", not
                        # a tolerance residual (25x PIXEL_TOL)
 STRUCT_MAX_BLOB = 80.0 # points^2 of contiguous severe diff allowed
 
-STRUCT_MIN_COMPONENT = 4.0    # pt^2 — smaller components are specks, not content
+STRUCT_MIN_COMPONENT = 1.0    # pt^2 — smaller components are specks, not content.
+                              # Was 4.0, which skipped punctuation-scale glyphs:
+                              # an erased 2.5 pt^2 dot of an "i" in demo_settings
+                              # passed at 4.0 and fails at 1.0. Lowering it is
+                              # free — the whole 81-scene suite stays clean all
+                              # the way down to 0.25 — and 1.0 still demands a
+                              # real cluster (4 device pixels at 2x) rather than
+                              # a lone pixel.
 STRUCT_ABSENCE_PAD = 1.0      # pt of context around a component's bbox
 STRUCT_ABSENCE_GOLDEN_STD = 20.0  # the golden must genuinely have content there
 STRUCT_ABSENCE_OUR_STD = 10.0     # ...and ours must be essentially featureless
