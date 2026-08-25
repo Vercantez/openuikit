@@ -1,4 +1,4 @@
-# arm64-asm.h + objc-msg-arm64.s: named macro parameters instead of Apple-as positional $0, and CFI hooks for ELF unwind
+# arm64-asm.h + objc-msg-arm64.s: named macro parameters instead of Apple-as positional $0, CFI hooks for ELF unwind, and real frame CFI inside SAVE_REGS
 --- a/runtime/arm64-asm.h
 +++ b/runtime/arm64-asm.h
 @@ -26,7 +26,7 @@
@@ -156,7 +156,7 @@
  	.long	0
  .endmacro
  
-@@ -141,35 +141,65 @@
+@@ -141,35 +141,92 @@
  .endmacro
  
  
@@ -173,17 +173,44 @@
 + * return address in x30) is exactly right, so .cfi_startproc alone is
 + * correct and complete.
 + *
-+ * It is NOT complete for the functions that go through SAVE_REGS: those
-+ * subtract from SP and spill x0-x8/q0-q7/fp/lr, and this macro emits no
-+ * .cfi_def_cfa_offset / .cfi_offset for them. Unwinding from inside
-+ * _objc_msgSend_uncached or _method_invoke will therefore compute a wrong
-+ * CFA. See docs/UNIMPLEMENTED.md.
++ * The functions that go through SAVE_REGS -- _objc_msgSend_uncached,
++ * _objc_msgLookup_uncached, _method_invoke -- need more, because they build a
++ * real frame: they push {fp, lr}, set fp = sp, then subtract from SP for the
++ * spill area. Everything reached from there (+initialize, a method resolver,
++ * a class's first realization) runs on top of that frame, and an exception
++ * thrown in any of it has to unwind through it.
++ *
++ * MEASURED without the directives below: `@throw` from +initialize did not
++ * terminate, it HUNG -- the unwinder computed a CFA from the default rule
++ * (CFA = SP), read a return address out of the spill area and walked in a
++ * circle. tests/044-exception-through-uncached.m is that case.
++ *
++ * The frame is:
++ *      stp  fp, lr, [sp, #-16]!     ; CFA is now SP+16, fp at CFA-16, lr at CFA-8
++ *      mov  fp, sp                  ; switch the CFA rule to fp-relative...
++ *      sub  sp, sp, #(spill area)   ; ...so this needs no annotation
++ *
++ * Register numbers rather than names: DWARF 29 = fp, 30 = lr, 31 = sp, and
++ * the numeric spelling is accepted by every assembler.
++ *
++ * EPILOGUE CFI IS DELIBERATELY ABSENT. RESTORE_REGS is followed immediately
++ * by a tail call or a ret, so there is no call site between the frame
++ * teardown and the end of the function and therefore no synchronous throw
++ * point whose CFA would be miscomputed. (An asynchronous unwind -- a profiler
++ * sampling those two instructions -- would still get it wrong.)
 + */
 +#define CFI_START .cfi_startproc
 +#define CFI_END   .cfi_endproc
++#define CFI_PUSH_FRAME                                                  \
++    .cfi_def_cfa_offset 16 ;                                            \
++    .cfi_offset 29, -16 ;                                               \
++    .cfi_offset 30, -8
++#define CFI_FRAME_ESTABLISHED .cfi_def_cfa_register 29
 +#else
 +#define CFI_START
 +#define CFI_END
++#define CFI_PUSH_FRAME
++#define CFI_FRAME_ESTABLISHED
 +#endif
 +
  /********************************************************************
@@ -233,7 +260,7 @@
  .endmacro
  
  
-@@ -177,17 +207,27 @@
+@@ -177,17 +234,27 @@
   * UNWIND name, flags
   * Unwind info generation	
   ********************************************************************/
@@ -266,7 +293,17 @@
  #define NoFrame 0x02000000  // no frame, no SP adjustment
  #define FrameWithNoSaves 0x04000000  // frame, no non-volatile saves
  
-@@ -313,15 +353,15 @@
+@@ -208,7 +275,9 @@
+     // push frame
+     SignLR
+     stp    fp, lr, [sp, #-16]!
++    CFI_PUSH_FRAME
+     mov    fp, sp
++    CFI_FRAME_ESTABLISHED
+ 
+     // save parameter registers: x0..x8, q0..q7
+     sub    sp, sp,  #(10*8 + 8*16)
+@@ -313,15 +382,15 @@
  #define LOOKUP 2
  
  // CacheHit: x17 = cached IMP, x10 = address of buckets, x1 = SEL, x16 = isa
