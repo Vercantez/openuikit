@@ -168,6 +168,43 @@ open class UIView: UIResponder {
     var _compressionH: UILayoutPriority = .defaultHigh
     var _compressionV: UILayoutPriority = .defaultHigh
 
+    // MARK: Layout guides / safe area (app-compat cluster; the measured
+    // model lives in AutoLayout/UILayoutGuide.swift, which owns every rule
+    // and every constant. Only the STORAGE is here — Swift extensions cannot
+    // add stored properties.)
+
+    var _customLayoutGuides: [UILayoutGuide] = []
+    var _safeAreaGuide: UILayoutGuide?
+    var _layoutMarginsGuide: UILayoutGuide?
+    var _readableGuide: UILayoutGuide?
+    /// Derived by propagation from the nearest ancestor that has its own.
+    var _safeAreaInsets: UIEdgeInsets = .zero
+    /// Set by `_setSafeAreaInsets(_:)` — this view is a propagation ROOT.
+    var _ownSafeAreaInsets: UIEdgeInsets?
+    /// `UIViewController.additionalSafeAreaInsets` of the controller managing
+    /// this view, added on top of the inherited insets.
+    var _additionalSafeAreaInsets: UIEdgeInsets = .zero
+    /// UIKit's default base margins: 8 pt on every edge.
+    var _baseLayoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+    /// UIKit default true: `layoutMargins` = base + `safeAreaInsets`.
+    public var insetsLayoutMarginsFromSafeArea = true {
+        didSet { if insetsLayoutMarginsFromSafeArea != oldValue { _notifyLayoutMarginsChanged() } }
+    }
+    /// UIKit default false: inherit the superview's margins where they
+    /// overlap this view.
+    public var preservesSuperviewLayoutMargins = false {
+        didSet { if preservesSuperviewLayoutMargins != oldValue { _notifyLayoutMarginsChanged() } }
+    }
+
+    /// Called after ``safeAreaInsets`` changes. Override to react; the
+    /// default does nothing, like UIKit's. (Declared in the class body, not
+    /// the guide extension: a non-@objc extension method cannot be
+    /// overridden.)
+    open func safeAreaInsetsDidChange() {}
+
+    /// Called after ``layoutMargins`` changes.
+    open func layoutMarginsDidChange() {}
+
     /// Baseline offsets for firstBaseline/lastBaseline constraint attributes:
     /// (first baseline from the view's top, last baseline from its bottom).
     /// nil (plain views): both baselines alias the bottom edge, like UIKit.
@@ -236,7 +273,16 @@ open class UIView: UIResponder {
         // No-op (one integer compare) when no constraints are installed.
         var top: UIView = self
         while let sv = top.superview { top = sv }
+        // Safe area is a layout INPUT (it is derived from frames) and also a
+        // layout OUTPUT (guides move views). UIKit resolves that by treating
+        // the previous pass's safe area as this pass's input; we iterate
+        // twice, which converges for every hierarchy a fixture or an app
+        // builds. See AutoLayout/UILayoutGuide.swift.
+        top._propagateSafeArea()
         LayoutEngine.solveIfNeeded(root: top)
+        if top._propagateSafeArea() {
+            LayoutEngine.solveIfNeeded(root: top)
+        }
         // Layout entire subtree (top-down), like a simplified layout pass.
         _layoutSubtree()
     }

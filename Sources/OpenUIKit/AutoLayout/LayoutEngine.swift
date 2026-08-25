@@ -47,18 +47,35 @@ enum LayoutEngine {
 
     // MARK: - Per-view solver variables
 
+    /// Solver variables for one layout ITEM — a `UIView` or a
+    /// ``UILayoutGuide``. A guide gets exactly the same four variables; the
+    /// only differences are that its "superview" is its `owningView` and that
+    /// the solution is written to `layoutFrame` rather than to a frame
+    /// (AutoLayout/UILayoutGuide.swift).
     private final class ViewVars {
-        let view: UIView
+        let view: UIView?
+        let guide: UILayoutGuide?
         let left: Cassowary.Variable
         let top: Cassowary.Variable
         let width: Cassowary.Variable
         let height: Cassowary.Variable
+        /// The view whose coordinate space this item's origin is measured in.
+        var parent: UIView? { view?.superview ?? guide?.owningView }
         init(_ view: UIView) {
             self.view = view
+            self.guide = nil
             left = Cassowary.Variable("L")
             top = Cassowary.Variable("T")
             width = Cassowary.Variable("W")
             height = Cassowary.Variable("H")
+        }
+        init(_ guide: UILayoutGuide) {
+            self.view = nil
+            self.guide = guide
+            left = Cassowary.Variable("gL")
+            top = Cassowary.Variable("gT")
+            width = Cassowary.Variable("gW")
+            height = Cassowary.Variable("gH")
         }
     }
 
@@ -87,10 +104,20 @@ enum LayoutEngine {
             }
         }
 
+        func involveItem(_ item: AnyObject) {
+            if let v = item as? UIView { involve(v); return }
+            guard let g = item as? UILayoutGuide, let owner = g.owningView else { return }
+            involve(owner)
+            guard vars[ObjectIdentifier(g)] == nil else { return }
+            let vv = ViewVars(g)
+            vars[ObjectIdentifier(g)] = vv
+            ordered.append(vv)
+        }
+
         involve(root)
         for c in constraints {
-            if let f = c.firstItem { involve(f) }
-            if let s = c.secondItem { involve(s) }
+            if let f = c.firstItem { involveItem(f) }
+            if let s = c.secondItem { involveItem(s) }
         }
 
         let solver = Cassowary.Solver()
@@ -99,15 +126,34 @@ enum LayoutEngine {
             try? solver.addConstraint(Cassowary.Constraint(expr, rel))
         }
 
-        // Anchoring constraints per involved view.
+        // Anchoring constraints per involved item.
         for vv in ordered {
-            let v = vv.view
+            if let g = vv.guide {
+                // A SYSTEM guide is pinned to its owning view by required
+                // constraints built from the measured insets; a CUSTOM guide
+                // is free and positioned entirely by the app's constraints.
+                guard let f = g.systemFrame(),
+                      let owner = g.owningView,
+                      let ov = vars[ObjectIdentifier(owner)] else { continue }
+                var ex = Cassowary.Expression(vv.left, constant: -Double(f.origin.x))
+                ex.add(ov.left, -1)
+                addRequired(ex, .equal)
+                var ey = Cassowary.Expression(vv.top, constant: -Double(f.origin.y))
+                ey.add(ov.top, -1)
+                addRequired(ey, .equal)
+                addRequired(Cassowary.Expression(vv.width,
+                                                 constant: -Double(f.width)), .equal)
+                addRequired(Cassowary.Expression(vv.height,
+                                                 constant: -Double(f.height)), .equal)
+                continue
+            }
+            let v = vv.view!
             if v === root || v.translatesAutoresizingMaskIntoConstraints {
                 // Frame-based: required left/top/width/height from the
                 // current frame (relative to the superview's variables when
                 // involved; the root anchors at its bounds space's origin).
                 let f = v.frame
-                let sup = v.superview.flatMap { vars[ObjectIdentifier($0)] }
+                let sup = vv.parent.flatMap { vars[ObjectIdentifier($0)] }
                 if v === root || sup == nil {
                     // Root-space origin: subviews of the root are laid out in
                     // its bounds space.
@@ -175,15 +221,27 @@ enum LayoutEngine {
         }
 
         // Write back solved frames (constraint-based views only), rounding
-        // per-view in LOCAL (superview) coordinates.
+        // per-view in LOCAL (superview) coordinates. Layout guides get the
+        // same treatment into `layoutFrame`; a SYSTEM guide keeps the exact
+        // measured rect it was anchored to (rounding it would move a pinned
+        // view off the safe-area edge by up to half a point).
         for vv in ordered {
-            let v = vv.view
-            guard v !== root, !v.translatesAutoresizingMaskIntoConstraints else { continue }
-            guard let sup = v.superview.flatMap({ vars[ObjectIdentifier($0)] }) else { continue }
+            guard let sup = vv.parent.flatMap({ vars[ObjectIdentifier($0)] }) else { continue }
             let exactX = solver.value(of: vv.left) - solver.value(of: sup.left)
             let exactY = solver.value(of: vv.top) - solver.value(of: sup.top)
             let exactW = solver.value(of: vv.width)
             let exactH = solver.value(of: vv.height)
+            if let g = vv.guide {
+                if g.systemFrame() == nil {
+                    g._solvedFrame = CGRect(x: roundOrigin(CGFloat(exactX)),
+                                            y: roundOrigin(CGFloat(exactY)),
+                                            width: roundSize(CGFloat(exactW)),
+                                            height: roundSize(CGFloat(exactH)))
+                }
+                continue
+            }
+            let v = vv.view!
+            guard v !== root, !v.translatesAutoresizingMaskIntoConstraints else { continue }
             let f = CGRect(x: roundOrigin(CGFloat(exactX)),
                            y: roundOrigin(CGFloat(exactY)),
                            width: roundSize(CGFloat(exactW)),
@@ -233,13 +291,13 @@ enum LayoutEngine {
             case .centerY:
                 e.add(vv.top, 1); e.add(vv.height, 0.5)
             case .firstBaseline:
-                if let b = vv.view._constraintBaselines() {
+                if let b = vv.view?._constraintBaselines() {
                     e.add(vv.top, 1); e.constant = Double(b.firstFromTop)
                 } else {
                     e.add(vv.top, 1); e.add(vv.height, 1)  // plain views: bottom
                 }
             case .lastBaseline:
-                if let b = vv.view._constraintBaselines() {
+                if let b = vv.view?._constraintBaselines() {
                     e.add(vv.top, 1); e.add(vv.height, 1)
                     e.constant = -Double(b.lastFromBottom)
                 } else {

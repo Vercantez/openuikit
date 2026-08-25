@@ -37,10 +37,12 @@ public final class NSLayoutConstraint {
         case horizontal, vertical
     }
 
-    public private(set) weak var firstItem: UIView?
+    /// The constrained object: a `UIView` or a ``UILayoutGuide`` (UIKit types
+    /// it `AnyObject?` for the same reason). Weak, like UIKit's.
+    public private(set) weak var firstItem: AnyObject?
     public let firstAttribute: Attribute
     public let relation: Relation
-    public private(set) weak var secondItem: UIView?
+    public private(set) weak var secondItem: AnyObject?
     public let secondAttribute: Attribute
     public let multiplier: CGFloat
     public var constant: CGFloat {
@@ -55,8 +57,8 @@ public final class NSLayoutConstraint {
     /// (nearest common ancestor of the items).
     weak var _holder: UIView?
 
-    public init(item view1: UIView, attribute attr1: Attribute, relatedBy: Relation,
-                toItem view2: UIView?, attribute attr2: Attribute,
+    public init(item view1: AnyObject, attribute attr1: Attribute, relatedBy: Relation,
+                toItem view2: AnyObject?, attribute attr2: Attribute,
                 multiplier: CGFloat = 1, constant: CGFloat = 0) {
         self.firstItem = view1
         self.firstAttribute = attr1
@@ -72,11 +74,21 @@ public final class NSLayoutConstraint {
         set { newValue ? activate() : deactivate() }
     }
 
+    /// The view an item lives in: itself for a view, `owningView` for a
+    /// layout guide. A guide with no owning view cannot be constrained.
+    static func hostView(of item: AnyObject?) -> UIView? {
+        if let v = item as? UIView { return v }
+        if let g = item as? UILayoutGuide { return g.owningView }
+        return nil
+    }
+
     func activate() {
-        guard _holder == nil, let first = firstItem else { return }
+        guard _holder == nil, let first = NSLayoutConstraint.hostView(of: firstItem)
+        else { return }
         let holder: UIView
-        if let second = secondItem {
-            guard let common = NSLayoutConstraint.commonAncestor(first, second) else {
+        if secondItem != nil {
+            guard let second = NSLayoutConstraint.hostView(of: secondItem),
+                  let common = NSLayoutConstraint.commonAncestor(first, second) else {
                 fatalError("NSLayoutConstraint: items have no common ancestor")
             }
             holder = common

@@ -1,0 +1,39 @@
+{
+  "name": "constraints_safearea",
+  "size": [320, 480],
+  "scale": 2,
+  "style": "light",
+  "constraints": [
+    { "item": "1", "attribute": "leading",  "toItem": "", "toGuide": "safeArea" },
+    { "item": "1", "attribute": "trailing", "toItem": "", "toGuide": "safeArea" },
+    { "item": "1", "attribute": "top",      "toItem": "", "toGuide": "safeArea" },
+    { "item": "1", "attribute": "height",   "constant": 44 },
+
+    { "item": "2", "attribute": "leading",  "toItem": "", "toGuide": "safeArea", "constant": 8 },
+    { "item": "2", "attribute": "trailing", "toItem": "", "toGuide": "safeArea", "constant": -8 },
+    { "item": "2", "attribute": "bottom",   "toItem": "", "toGuide": "safeArea" },
+    { "item": "2", "attribute": "height",   "constant": 30 },
+
+    { "item": "0.0", "attribute": "leading",  "toItem": "0", "toGuide": "layoutMargins" },
+    { "item": "0.0", "attribute": "trailing", "toItem": "0", "toGuide": "layoutMargins" },
+    { "item": "0.0", "attribute": "top",      "toItem": "0", "toGuide": "layoutMargins" },
+    { "item": "0.0", "attribute": "bottom",   "toItem": "0", "toGuide": "layoutMargins" }
+  ],
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemGray5",
+    "safeAreaInsets": [59, 16, 34, 16],
+    "subviews": [
+      {
+        "class": "UIView",
+        "frame": [0, 140, 320, 160],
+        "backgroundColor": "systemBackground",
+        "subviews": [
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemOrange" }
+        ]
+      },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" }
+    ]
+  }
+}

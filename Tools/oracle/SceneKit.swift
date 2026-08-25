@@ -655,13 +655,58 @@ func attributedStringFrom(_ j: JSON, traits: UITraitCollection) -> NSAttributedS
     return out
 }
 
+/// A UIView whose safe area is FORCED (scene key "safeAreaInsets", spec
+/// v5.3). Real UIKit exposes no setter — `safeAreaInsets` comes from the
+/// window server, and an offscreen hierarchy's is always zero, so a fixture
+/// could not exercise the safe area at all. Overriding the GETTER works:
+/// UIKit's propagation to descendants, `safeAreaLayoutGuide`,
+/// `layoutMarginsGuide` and `layoutMargins` all follow the override (probed
+/// over nine child frames; the measured rules are reproduced in
+/// Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift).
+///
+/// `dumpLayout` reports this class as "UIView" so both renderers' layout
+/// dumps agree — openrender uses a plain UIView plus
+/// `_setSafeAreaInsets(_:)`.
+final class SceneSafeAreaView: UIView {
+    var forcedSafeAreaInsets: UIEdgeInsets = .zero
+    override var safeAreaInsets: UIEdgeInsets { forcedSafeAreaInsets }
+}
+
+/// Data source + delegate for a scene's `UIPickerView` (spec v5.3). UIKit
+/// holds both weakly, so the built sources are retained here for the life of
+/// the process.
+final class ScenePickerSource: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
+    let titles: [String]
+    let rowHeight: CGFloat
+    init(titles: [String], rowHeight: CGFloat) {
+        self.titles = titles
+        self.rowHeight = rowHeight
+    }
+    func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        titles.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int,
+                    forComponent component: Int) -> String? { titles[row] }
+    func pickerView(_ pickerView: UIPickerView,
+                    rowHeightForComponent component: Int) -> CGFloat { rowHeight }
+}
+var retainedPickerSources: [ScenePickerSource] = []
+
 func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
     var j = jIn   // chrome cases consume "subviews" themselves and clear it
     let cls = j["class"] as? String ?? "UIView"
     let v: UIView
     switch cls {
     case "UIView":
-        v = UIView()
+        if let i = numArray(j["safeAreaInsets"]), i.count == 4 {
+            let sv = SceneSafeAreaView()
+            sv.forcedSafeAreaInsets = UIEdgeInsets(top: i[0], left: i[1],
+                                                   bottom: i[2], right: i[3])
+            v = sv
+        } else {
+            v = UIView()
+        }
     case "UILabel":
         let l = UILabel()
         l.text = j["text"] as? String
@@ -847,7 +892,36 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
             s.contentInset = UIEdgeInsets(top: ci[0], left: ci[1],
                                           bottom: ci[2], right: ci[3])
         }
+        // Pull-to-refresh (spec v5.3). `"refreshControl": {"refreshing": true}`
+        // installs a UIRefreshControl and starts it. `isHidden` has to be
+        // cleared by hand: offscreen UIKit never runs the reveal animation, so
+        // a refreshing control stays hidden and the fixture would capture an
+        // empty band.
+        if let rj = j["refreshControl"] as? JSON {
+            let rc = UIRefreshControl()
+            s.refreshControl = rc
+            if rj["refreshing"] as? Bool == true { rc.beginRefreshing() }
+            rc.isHidden = false
+        }
         v = s
+    case "UIPickerView":
+        // Spec v5.3. ONE component only — offscreen UIKit centres every
+        // component's table at the same x (probed for 2, 3 and 4
+        // components), so a multi-component picker's column layout is not
+        // measurable and no fixture may depend on it.
+        let p = UIPickerView()
+        let titles = (j["rows"] as? [Any])?.compactMap { $0 as? String } ?? []
+        let src = ScenePickerSource(titles: titles,
+                                    rowHeight: num(j["rowHeight"]) ?? 32)
+        retainedPickerSources.append(src)
+        p.dataSource = src
+        p.delegate = src
+        if let f = numArray(j["frame"]), f.count == 4 {
+            p.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
+        }
+        p.reloadAllComponents()
+        if let r = j["selectedRow"] as? Int { p.selectRow(r, inComponent: 0, animated: false) }
+        v = p
     case "UITableView":
         let style: UITableView.Style
         switch j["style"] as? String ?? "plain" {
@@ -1147,7 +1221,10 @@ func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
 func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     var entry: JSON = [
         "path": path,
-        "class": String(describing: type(of: v)),
+        // A forced-safe-area view is a plain UIView as far as a scene is
+        // concerned (see SceneSafeAreaView) — report it as one so the two
+        // renderers' dumps compare.
+        "class": v is SceneSafeAreaView ? "UIView" : String(describing: type(of: v)),
         "frame": [round3(v.frame.origin.x), round3(v.frame.origin.y),
                   round3(v.frame.width), round3(v.frame.height)],
     ]
@@ -1322,6 +1399,20 @@ func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
     }
 }
 
+/// The constrained object at a scene path: the view itself, or one of its
+/// layout guides when the constraint carries a "guide"/"toGuide" key
+/// (spec v5.3).
+func layoutItem(_ container: UIView, _ path: String, _ guide: String?) -> AnyObject {
+    let v = viewAtPath(container, path)
+    switch guide {
+    case nil: return v
+    case "safeArea": return v.safeAreaLayoutGuide
+    case "layoutMargins": return v.layoutMarginsGuide
+    case "readableContent": return v.readableContentGuide
+    case let g?: fatalError("bad guide '\(g)' (safeArea|layoutMargins|readableContent)")
+    }
+}
+
 /// Build and activate REAL NSLayoutConstraints from the scene's top-level
 /// "constraints" array. Item paths use layout-dump addressing ("" = root).
 /// Must run after the tree is built and BEFORE layoutIfNeeded; priorities are
@@ -1335,7 +1426,7 @@ func activateConstraints(_ specs: [JSON], container: UIView) {
         guard let attrName = j["attribute"] as? String else {
             fatalError("constraint needs \"attribute\"")
         }
-        let item = viewAtPath(container, itemPath)
+        let item = layoutItem(container, itemPath, j["guide"] as? String)
         let relation: NSLayoutConstraint.Relation
         switch j["relation"] as? String ?? "eq" {
         case "eq": relation = .equal
@@ -1343,10 +1434,10 @@ func activateConstraints(_ specs: [JSON], container: UIView) {
         case "ge": relation = .greaterThanOrEqual
         case let r: fatalError("bad constraint relation '\(r)'")
         }
-        var toView: UIView? = nil
+        var toView: AnyObject? = nil
         var toAttr: NSLayoutConstraint.Attribute = .notAnAttribute
         if let tp = j["toItem"] as? String {   // JSON null decodes as NSNull, not String
-            toView = viewAtPath(container, tp)
+            toView = layoutItem(container, tp, j["toGuide"] as? String)
             // toAttribute defaults to the first attribute (the common case:
             // pinning like to like).
             toAttr = layoutAttribute(j["toAttribute"] as? String ?? attrName)

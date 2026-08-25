@@ -1,5 +1,176 @@
 # Known gaps (living document — fixers: read this)
 
+## App-compat cluster "controls2" (2026-08-25): what shipped and what could not
+
+Scope: the remaining controls plus the compile-blockers that are not types —
+`UIRefreshControl`, `UISearchBar`, `UIStepper`, `UIPickerView`,
+`NotificationCenter`, `Timer`, and `UILayoutGuide` / `safeAreaInsets` /
+`safeAreaLayoutGuide`. Two new fixtures (96 -> **98** scenes):
+`constraints_safearea` (100.0 %) and `control_refresh` (99.4 %).
+
+### The three types that SHADOW Foundation, and why they had to
+
+`NotificationCenter` / `Notification` / `Notification.Name` / `OperationQueue`
+and `Timer` / `RunLoop` are declared **in OpenUIKit**, for exactly the reason
+`NSAttributedString` already is: the library imports no Foundation at all
+(docs/PORTABILITY.md), and a UIKit that cannot post
+`UIApplication.didBecomeActiveNotification` is not much of a UIKit — the
+census counted ~90 uses of the notification-name group, the largest missing
+member group after app-local noise. Consequences a caller must know:
+
+- An app or test importing BOTH sees `'Notification' is ambiguous for type
+  lookup in this context`. The fix is a file-scope
+  `private typealias Notification = OpenUIKit.Notification`, the same pattern
+  the repo already uses for `CGRect` and `NSAttributedString`.
+  `Tests/OpenUIKitTests/NotificationTimerTests.swift` is the worked example.
+- There is **no bridging** in either direction. An observer registered on
+  OpenUIKit's `NotificationCenter.default` never hears Foundation's, and a
+  Foundation `Timer` never fires on the host clock.
+- `addObserver(forName:object:queue:using:)` returns a `NotificationToken`,
+  not `any NSObjectProtocol`: portable Swift has no `NSObject`, and *naming*
+  a class `NSObjectProtocol` would collide with the real protocol on Darwin.
+  Porting means changing the declared type of the stored observer and nothing
+  else.
+- **`queue:` is accepted and IGNORED.** There is no run loop and no threads;
+  every notification is delivered inline on the poster's stack.
+  `OperationQueue` exists only so `.main` compiles.
+- **`Timer` runs on the HOST CLOCK**, the timestamp passed to
+  `UIWindow.tick(timestamp:)` — the same clock that drives scroll
+  deceleration, transitions and animation completions. `openhost` ticks every
+  frame so timers behave normally; `openrender` ticks only a scene's scripted
+  capture times, and a STATIC scene never ticks, so no golden can be
+  perturbed by a timer. `fireDate` is a `TimeInterval`, not a `Date`
+  (`Date` is Foundation and there is no wall clock to anchor it to), and
+  `tolerance` and the run-loop `mode` are stored and ignored.
+- Only the app-lifecycle notifications are POSTED (all five transitions, with
+  `UIApplication.shared` as the object, after the delegate method returns).
+  The keyboard names, `UIDevice.orientationDidChangeNotification`,
+  `didReceiveMemoryWarning` and `significantTimeChange` are DECLARED so app
+  code compiles and NOTHING posts them — there is no system keyboard, no
+  device to interrogate and no memory-pressure signal in the portable core.
+
+### Safe area / layout guides: measured, and where the model stops
+
+The propagation rule, the guide rects, the margins arithmetic and the
+readable-width thresholds are all fitted to a Catalyst probe and reproduced
+to the digit; the derivation lives in
+`Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift` and every number is
+replayed by `Tests/OpenUIKitTests/SafeAreaGuideTests.swift`. Not modelled:
+
+- **Transforms.** Propagation reads `frame`, so a transformed child's safe
+  area comes from its transformed frame rather than from UIKit's
+  untransformed layout rect. No fixture transforms a safe-area child.
+- **RTL.** `leading`/`trailing` alias `left`/`right`, as everywhere else in
+  Auto Layout (M9).
+- **Convergence is TWO iterations.** Safe area is both a layout input (it is
+  derived from frames) and a layout output (guides move views), so
+  `layoutIfNeeded` propagates, solves, propagates again and re-solves only if
+  something moved. A hierarchy that needed a third pass would settle one
+  frame late; none that a fixture or an app builds does.
+- **A system guide always reports a frame**, even when no constraint mentions
+  it. Real UIKit leaves `layoutFrame` at `.zero` until the guide takes part
+  in a solve. The value we report is the one UIKit converges to; only the
+  "never asked" case differs.
+- **`readableContentGuide`'s 920 pt cap is the DEFAULT BODY FONT's.** There is
+  no Dynamic Type (still a gap), so it is a constant.
+- **OpenUIKit's own chrome does not set `additionalSafeAreaInsets` yet.** The
+  nav bar and the tab bar still expect a screen to be told its bottom inset
+  explicitly (`BottomInsetAdjustable` in DemoApp) — see the M10 note below.
+  The mechanism now exists; wiring it is a chrome-module change.
+- `UILayoutSupport` / `topLayoutGuide` / `bottomLayoutGuide` (the pre-iOS-11
+  spelling) are not declared.
+
+### UIRefreshControl: goldened visual, UNMEASURED interaction
+
+Everything the fixture pins — the 60 pt height, the offset-tracking frame,
+the eight 3.5 x 10 pt blades on a 10 pt ring with the measured 0.25 pt seed
+offset, the 216/255 label alpha — is measured. What is not:
+
+- **The blade-chase animation.** Real UIKit animates the replicator's
+  `instanceAlphaOffset`; Core Animation discards animations on a layer with
+  no render context, so the offscreen oracle only ever sees the REST pose
+  (eight blades at one uniform alpha), which is what the golden pins and what
+  we draw. **OpenUIKit's refresh spinner therefore does not spin.** Note this
+  is NOT the same situation as `UIActivityIndicatorView`, whose fade ladder
+  lives in the layers themselves and IS reproduced.
+- **The pull threshold and the refreshing inset.** Driving `contentOffset` to
+  −200 pt through the property never fires `.valueChanged` offscreen (UIKit
+  arms the trigger from the pan's end, which an offscreen scroll view never
+  receives). "Trigger at a pull past the control's 60 pt height, then hold
+  `contentInset.top += 60`" is UIKit's DOCUMENTED behaviour, not a
+  measurement. Pinning it needs a synthetic drag in the Simulator — the route
+  `Tools/oracle2/scrollprobe.swift` already established for scroll physics.
+- `attributedTitle` is stored and never drawn.
+
+### UISearchBar and UIStepper: NO FIXTURE, and the reason is the oracle
+
+- **`UISearchBar`'s field pill does not composite.**
+  `searchTextField.backgroundColor` is nil, its layer's `backgroundColor` is
+  nil and `cornerRadius` is 0; the visible rounded fill is a private material
+  that `layer.render(in:)` draws as NOTHING — the capture is transparent
+  everywhere except the magnifier and the placeholder ink. So `fieldFill`
+  (`tertiarySystemFill`) and the 10 pt corner radius are INFERRED, not
+  measured. Everything else IS measured and unit-tested: `sizeThatFits` =
+  (width, 44) at six heights, the field at (8, (H − 44)/2, W − 16, 36) over
+  six heights and three widths, the magnifier's 2 pt ring of outer radius 6.5
+  read off the golden ink at 2x, the placeholder in **system MEDIUM 17** (not
+  regular) at black/white alpha 0.25, and the 39.5 / 14 pt text insets.
+  The CANCEL BUTTON never appears offscreen at all (UIKit builds it lazily in
+  a real window), so its metrics are UIKit's documented shape, unmeasured.
+  Scope bars, bookmark/results buttons, `barTintColor` and the
+  search-results-controller integration are not implemented.
+- **`UIStepper` renders NOTHING offscreen** — 0 of 12032 non-transparent
+  pixels — because real UIKit draws it through
+  `UICoreHostingView<DesignLibraryStepper>`. It is implemented from the
+  windowed probe the previous cluster recorded here (94 x 32 capsule,
+  quaternarySystemFill-like background, 13 pt bars in (37, 37, 37), a 1 pt
+  centre divider at ~180) plus the property defaults read this pass. The bars'
+  THICKNESS, the capsule's corner radius and the pressed/disabled appearances
+  are NOT measured. `autorepeat` is accepted and ignored.
+- Both are blocked on the same operational wall as before: regenerating a
+  `"window": true` golden needs an ACTIVE, unlocked display session, and
+  `Tools/oracle2` fails with "window never became renderable" without one.
+  That is still true in this environment.
+
+### UIPickerView: the wheel is EXACT, the glyph projection is not attempted
+
+The cylinder law — `tableHeight = H + 75`,
+`N = ceil(2·tableHeight/rowHeight)` rows per revolution (an exact integer in
+all thirteen probed configurations), `R = 0.334225372·tableHeight`,
+`centerY = H/2 + R·sin(d·2π/N)`, `height = rowHeight·cos(d·2π/N)` — fits real
+UIKit's own private cell frames to 1e-6 pt on the centres and 1e-13 pt on the
+heights. Derivation and the full probe table:
+`Sources/OpenUIKit/UIPickerView.swift`.
+
+- **Row text is NOT perspective-projected** — the deliberate flat
+  approximation. Each row's RECTANGLE is exact; its text is drawn unsquashed
+  and centred in that rectangle, because OpenUIKit's text engine draws from
+  harvested glyph masks on an axis-aligned baseline and shearing a glyph run
+  would mean a second rasterizer. Error vs the golden: exact at the selected
+  row, ~0.5 pt at |d| = 1, ~4 pt at |d| = 2, worse beyond.
+- **There is no fixture, on purpose.** An offscreen capture of a real picker
+  is a translucent wash, not a picture: a `CAGradientLayer` at
+  (0, 10, W, H − 20) composites over everything (centre pixel (231,231,231)
+  at alpha 204, corners alpha 0) and erases the opaque sibling behind it.
+  `PickerWheelTests` replays UIKit's cell table instead, for |d| up to 4 over
+  thirteen configurations.
+- The SELECTION INDICATOR's corner radius is a PLACEHOLDER: the layer reports
+  `cornerRadius = nan` with `cornerCurve = .continuous` and the fill does not
+  composite, so there is neither a property nor a pixel to read. Its rect
+  (9, (H − rowH − 2)/2, W − 18, rowH + 2) and colour (`quaternarySystemFill`)
+  ARE measured.
+- The top/bottom fade is not drawn, so the wheel has hard edges.
+- MULTI-COMPONENT X POSITIONS are inferred, not measured: offscreen UIKit
+  centres every component's table at the same x, so there is nothing to
+  measure. The component WIDTHS are measured
+  (`floor((W − 18 − 5(n−1))/n)`, checked for n = 1…5).
+- **The wheel does not spin.** `selectRow(_:inComponent:animated:)` jumps;
+  there is no pan, no deceleration and no snap. Same Simulator-drag blocker
+  as the refresh control's threshold.
+- `UIDatePicker` was DEFERRED and nothing was built. It is a formatter and a
+  calendar on top of this wheel, and both are Foundation; the wheel it would
+  sit on is now measured and available.
+
 ## App compatibility (M12, 2026-08-25): what a real app still cannot do
 
 Effective coverage is **88.5%** of what four real open-source apps reference
@@ -25,20 +196,29 @@ long-tail.
   reuse machinery was lifted out of `UITableView` into `Sources/OpenUIKit/
   UIReuse.swift` (`ReuseRegistry` + `VisibleViewMap`) and both containers now
   drive that one implementation.
-- **No notifications, anywhere.** `NotificationCenter` is Foundation, which
-  the library may not import, so `UIApplication.didBecomeActiveNotification`,
-  the keyboard notifications and `UIDevice.orientationDidChangeNotification`
-  do not exist (~90 uses). An app that observes instead of implementing the
-  delegate hears nothing. Closing this needs a portable notification center.
+- ~~**No notifications, anywhere.**~~ **FIXED (controls2, see the top of this
+  file):** OpenUIKit declares a portable `NotificationCenter` and POSTS the
+  five app-lifecycle notifications. The keyboard and device names are
+  declared but nothing posts them.
+- **Safe area: now REAL** (controls2). `UIView.safeAreaInsets`,
+  `safeAreaLayoutGuide`, `layoutMarginsGuide`, `readableContentGuide`,
+  `UILayoutGuide` in the solver and
+  `UIViewController.additionalSafeAreaInsets` all exist and are measured.
+  What is still missing is that OpenUIKit's OWN nav/tab chrome does not use
+  `additionalSafeAreaInsets` yet.
 - **No `UIVisualEffectView`, so nothing in the framework blurs** — see the
   alerts section below for the fitted flat model and exactly where it is
   wrong. This is now a cross-cutting divergence, not an alert detail: it
   covers the alert card and pills, the sheet grabber, the tab-bar platter,
-  the `UIPageControl` background and (M13) every **bar-button platter** in a
-  navigation bar or toolbar.
+  the `UIPageControl` background, the M13 **menu platter** and every M13
+  **bar-button platter** in a navigation bar or toolbar.
 - **No SF Symbols.** `UIBarButtonItem(barButtonSystemItem:)` draws one for
   most of its cases on iOS 26; OpenUIKit substitutes hand-fitted vectors of
-  the measured size. See the bars section below.
+  the measured size. See the bars section below. The menu's check and
+  chevron columns are the same substitution.
+- **No `Timer` before controls2; now on the host clock.** See the top of this
+  file: it fires from `UIWindow.tick(timestamp:)`, never from a wall clock,
+  which is what keeps scripted captures reproducible.
 - **No Dynamic Type.** `UIFontMetrics` (66 uses), `UIFont.preferredFont` (21)
   and `UITraitPreferredContentSizeCategory` (55) are all missing; text sizes
   are absolute.
@@ -366,11 +546,11 @@ why:
   the portable core a run loop and a wall clock, which the architecture
   forbids. The ORDER and the `applicationState` an app observes are UIKit's;
   only the trigger differs.
-- **No notifications.** UIKit posts `UIApplication.didBecomeActiveNotification`
-  and friends. `NotificationCenter` is Foundation, which the library may not
-  import, so the delegate callbacks are the only observation point. An app
-  that observes the notifications instead of implementing the delegate
-  hears nothing. Closing this needs a portable notification center.
+- ~~**No notifications.**~~ **FIXED (controls2):** all five transitions post
+  their UIKit notification on OpenUIKit's own portable
+  `NotificationCenter.default`, with `UIApplication.shared` as the object,
+  right after the delegate method returns. The center SHADOWS Foundation's —
+  see the controls2 section at the top of this file.
 - **`sendAction` takes a closure, not a `Selector`.** Portable Swift has no
   selectors. The nil-target chain walk — the part that actually matters — is
   faithful; the spelling is not.
@@ -653,6 +833,11 @@ What shipped (all oracle-backed): PNG/JPEG decode+encode and
 
 **Deferred, with the reason:**
 
+- ~~**`UIStepper`**~~ / ~~**`UIRefreshControl`**~~ / ~~**`UISearchBar`** /
+  **`UIPickerView`**~~ — **all four shipped in the controls2 cluster; see the
+  section at the top of this file for what is goldened and what is not.** The
+  original deferral notes follow, because their measurements are still the
+  ones the stepper is built from.
 - **`UIStepper`** — measurable but not done. Real UIKit draws it through a
   SwiftUI hosting view (`UICoreHostingView<DesignLibraryStepper>`), so it
   renders ONLY in the windowed oracle. Probed metrics for whoever picks it

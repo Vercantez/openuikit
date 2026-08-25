@@ -26,10 +26,13 @@
 // portable core has no system to hear from. Everything an app sees —
 // `applicationState`, the delegate callbacks, their ORDER — is UIKit's.
 //
-// NOT IMPLEMENTED, deliberately: UIKit posts a Notification for each of
-// these transitions. OpenUIKit has no NotificationCenter (that is
-// Foundation, which the library may not import), so the delegate callbacks
-// are the only observation point. See docs/KNOWN_GAPS.md.
+// Each transition also POSTS the UIKit notification for it
+// (`UIApplication.didBecomeActiveNotification` and friends) on
+// `NotificationCenter.default` with `UIApplication.shared` as the object, so
+// an app that observes instead of implementing the delegate is heard. The
+// center is OpenUIKit's own portable one and SHADOWS Foundation's — see
+// Sources/OpenUIKit/NotificationCenter.swift for the full tradeoff. The
+// delegate method runs first, then the observers.
 
 // MARK: - Application state
 
@@ -261,7 +264,17 @@ open class UIApplication: UIResponder {
         isTerminating = false
         applicationState = .inactive
         _ = delegate.application(self, willFinishLaunchingWithOptions: launchOptions)
-        return delegate.application(self, didFinishLaunchingWithOptions: launchOptions)
+        let ok = delegate.application(self, didFinishLaunchingWithOptions: launchOptions)
+        _post(UIApplication.didFinishLaunchingNotification)
+        return ok
+    }
+
+    /// Posts a lifecycle notification with `self` as the object. UIKit posts
+    /// each of these alongside the delegate callback; the delegate runs
+    /// first here (its hook is a direct call, not an observer registration —
+    /// see Sources/OpenUIKit/NotificationCenter.swift).
+    private func _post(_ name: Notification.Name) {
+        NotificationCenter.default.post(name: name, object: self)
     }
 
     /// The app is on screen and taking input. No-op if already active, like
@@ -272,6 +285,7 @@ open class UIApplication: UIResponder {
         for s in _connectedScenes { s.activationState = .foregroundActive }
         delegate?.applicationDidBecomeActive(self)
         for s in _connectedScenes { s.delegate?.sceneDidBecomeActive(s) }
+        _post(UIApplication.didBecomeActiveNotification)
     }
 
     /// The app is losing input focus but is still on screen.
@@ -281,6 +295,7 @@ open class UIApplication: UIResponder {
         delegate?.applicationWillResignActive(self)
         applicationState = .inactive
         for s in _connectedScenes { s.activationState = .foregroundInactive }
+        _post(UIApplication.willResignActiveNotification)
     }
 
     /// The app left the screen. UIKit always resigns active first; so do we,
@@ -292,6 +307,7 @@ open class UIApplication: UIResponder {
         for s in _connectedScenes { s.activationState = .background }
         delegate?.applicationDidEnterBackground(self)
         for s in _connectedScenes { s.delegate?.sceneDidEnterBackground(s) }
+        _post(UIApplication.didEnterBackgroundNotification)
     }
 
     /// The app is coming back to the screen (still inactive afterwards —
@@ -302,6 +318,7 @@ open class UIApplication: UIResponder {
         for s in _connectedScenes { s.activationState = .foregroundInactive }
         delegate?.applicationWillEnterForeground(self)
         for s in _connectedScenes { s.delegate?.sceneWillEnterForeground(s) }
+        _post(UIApplication.willEnterForegroundNotification)
     }
 
     /// The process is about to exit. Fires exactly once.
@@ -309,6 +326,7 @@ open class UIApplication: UIResponder {
         guard !isTerminating else { return }
         isTerminating = true
         delegate?.applicationWillTerminate(self)
+        _post(UIApplication.willTerminateNotification)
     }
 }
 

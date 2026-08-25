@@ -121,6 +121,16 @@ time.
   `NSParagraphStyle` are OpenUIKit's own types, not Foundation's, precisely
   so the attributed path stays Foundation-free off Darwin. The cost is name
   shadowing for apps that import both — docs/KNOWN_GAPS.md.
+- The controls2 cluster (2026-08-25) extended the same tradeoff to three more
+  families, and for the same reason: **`NotificationCenter` / `Notification`
+  / `Notification.Name` / `OperationQueue`** and **`Timer` / `RunLoop`** are
+  declared in OpenUIKit. Two portability consequences beyond the shadowing:
+  the notification `queue:` argument is accepted and IGNORED (there is no run
+  loop and no threads in the core), and `Timer` fires from
+  `UIWindow.tick(timestamp:)` rather than from a wall clock — the same
+  host-clock discipline that already drives scroll physics, transitions and
+  animation completions, and the reason a timer can never make a golden
+  non-reproducible.
 
 ## Two fixes this exercise required
 

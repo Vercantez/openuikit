@@ -5,17 +5,24 @@
 // they create are ordinary NSLayoutConstraints.
 
 public class NSLayoutAnchor {
-    let view: UIView
+    /// The anchored object: a `UIView` or a ``UILayoutGuide``. UIKit types
+    /// this as `Any` on `NSLayoutConstraint`; both kinds get the same four
+    /// solver variables (AutoLayout/UILayoutGuide.swift).
+    let item: AnyObject
     let attribute: NSLayoutConstraint.Attribute
     init(view: UIView, attribute: NSLayoutConstraint.Attribute) {
-        self.view = view
+        self.item = view
+        self.attribute = attribute
+    }
+    init(guide: UILayoutGuide, attribute: NSLayoutConstraint.Attribute) {
+        self.item = guide
         self.attribute = attribute
     }
 
     func make(_ relation: NSLayoutConstraint.Relation, _ other: NSLayoutAnchor,
               multiplier: CGFloat = 1, constant: CGFloat = 0) -> NSLayoutConstraint {
-        NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation,
-                           toItem: other.view, attribute: other.attribute,
+        NSLayoutConstraint(item: item, attribute: attribute, relatedBy: relation,
+                           toItem: other.item, attribute: other.attribute,
                            multiplier: multiplier, constant: constant)
     }
 }
@@ -70,15 +77,15 @@ public final class NSLayoutDimension: NSLayoutAnchor {
         make(.lessThanOrEqual, anchor, multiplier: multiplier, constant: constant)
     }
     public func constraint(equalToConstant c: CGFloat) -> NSLayoutConstraint {
-        NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal,
+        NSLayoutConstraint(item: item, attribute: attribute, relatedBy: .equal,
                            toItem: nil, attribute: .notAnAttribute, constant: c)
     }
     public func constraint(greaterThanOrEqualToConstant c: CGFloat) -> NSLayoutConstraint {
-        NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .greaterThanOrEqual,
+        NSLayoutConstraint(item: item, attribute: attribute, relatedBy: .greaterThanOrEqual,
                            toItem: nil, attribute: .notAnAttribute, constant: c)
     }
     public func constraint(lessThanOrEqualToConstant c: CGFloat) -> NSLayoutConstraint {
-        NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .lessThanOrEqual,
+        NSLayoutConstraint(item: item, attribute: attribute, relatedBy: .lessThanOrEqual,
                            toItem: nil, attribute: .notAnAttribute, constant: c)
     }
 }
