@@ -933,7 +933,7 @@ smallest corruption it must catch.
 
 ### 2. Content absence — the golden has content and we drew nothing
 
-For every component of at least `STRUCT_MIN_COMPONENT` = 4 pt², take its
+For every component of at least `STRUCT_MIN_COMPONENT` = 1 pt², take its
 bounding box padded by 1 pt and compare the standard deviation of luma in the
 golden and in our render. Fail if the golden has real structure there
 (`STRUCT_ABSENCE_GOLDEN_STD` = 20) **and** ours is featureless — both
