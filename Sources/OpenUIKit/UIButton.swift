@@ -92,6 +92,53 @@ open class UIButton: UIControl {
         self.frame = frame
     }
 
+    // MARK: - Menus & primary action (M13)
+
+    /// UIKit's `UIButton(primaryAction:)`: the action's title becomes the
+    /// button's title and the action runs on `.touchUpInside`.
+    public convenience init(type: ButtonType = .system, primaryAction: UIAction?) {
+        self.init(type: type)
+        if let primaryAction {
+            setTitle(primaryAction.title, for: .normal)
+            addAction(primaryAction, for: .touchUpInside)
+        }
+    }
+
+    /// The menu this button shows. With `showsMenuAsPrimaryAction` true a
+    /// tap presents it instead of firing `.touchUpInside` — UIKit's own
+    /// rule, and the shape the census's `UIMenu` uses are written in.
+    public var menu: UIMenu?
+    public var showsMenuAsPrimaryAction = false
+
+    /// UIKit's `performPrimaryAction()` (iOS 17+): presents the menu when
+    /// `showsMenuAsPrimaryAction` is set, otherwise sends
+    /// `.primaryActionTriggered` + `.touchUpInside`.
+    public func performPrimaryAction() {
+        if showsMenuAsPrimaryAction, let menu {
+            _UIMenuPresentation.present(menu, from: self)
+            return
+        }
+        sendActions(for: [.primaryActionTriggered, .touchUpInside])
+    }
+
+    /// UIKit: when the menu IS the primary action, a tap presents it and no
+    /// `.touchUpInside` is sent — so this replaces UIControl's tap handling
+    /// rather than adding to it.
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard showsMenuAsPrimaryAction, let menu, isTracking,
+              let touch = touches.first,
+              point(inside: touch.location(in: self), with: event)
+        else {
+            super.touchesEnded(touches, with: event)
+            return
+        }
+        endTracking(touch, with: event)
+        isTracking = false
+        isHighlighted = false
+        isTouchInside = false
+        _UIMenuPresentation.present(menu, from: self)
+    }
+
     // MARK: - Title / color state
 
     public func setTitle(_ title: String?, for state: State) {

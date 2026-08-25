@@ -400,6 +400,10 @@ open class UIView: UIResponder {
     }
     var _gestureRecognizers: [UIGestureRecognizer] = []
 
+    /// Interactions attached to this view (M13 — `addInteraction(_:)` and
+    /// the rest live in UIContextMenu.swift, which owns the protocol).
+    var _interactions: [UIInteraction] = []
+
     public func addGestureRecognizer(_ recognizer: UIGestureRecognizer) {
         recognizer.view?.removeGestureRecognizer(recognizer)
         recognizer.view = self

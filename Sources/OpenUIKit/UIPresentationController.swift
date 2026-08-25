@@ -34,6 +34,10 @@ open class UIPresentationController {
     /// `UIViewController.present` before `presentationTransitionWillBegin`.
     public internal(set) var containerView: UIView?
 
+    /// M13: the app's adaptivity / user-dismissal delegate. See
+    /// UIAdaptivePresentation.swift for exactly which members are wired.
+    public weak var delegate: UIAdaptivePresentationControllerDelegate?
+
     public init(presentedViewController: UIViewController,
                 presenting presentingViewController: UIViewController?) {
         self.presentedViewController = presentedViewController

@@ -26,6 +26,53 @@
 //
 // All timing is event-timestamp based — no wall clock (deterministic).
 
+// MARK: - Delegate (M13 delegate-protocols cluster)
+
+/// UIKit's protocol. Three members really gate recognition here — the two
+/// the app-compat census cares about plus the touch filter:
+///
+///   - `gestureRecognizerShouldBegin(_:)` — asked once, at the instant the
+///     recognizer would recognize (entering `.began`, or `.ended` straight
+///     out of `.possible`). False sends it to `.failed` and fires no action.
+///   - `gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)` — asked on
+///     BOTH delegates when two recognizers sharing a touch would both
+///     recognize; either answering true allows it. Without a delegate the
+///     UIKit default holds: the first to recognize FAILS the others.
+///   - `gestureRecognizer(_:shouldReceive:)` (touch) — false keeps the
+///     recognizer from observing that touch at all.
+///
+/// NOT modelled: failure requirements. `shouldRequireFailureOf` /
+/// `shouldBeRequiredToFailBy` are declared so conformances compile, but no
+/// recognizer here waits on another's failure (docs/KNOWN_GAPS.md).
+public protocol UIGestureRecognizerDelegate: AnyObject {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRequireFailureOf other: UIGestureRecognizer) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldBeRequiredToFailBy other: UIGestureRecognizer) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldReceive touch: UITouch) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldReceive press: UIPress) -> Bool
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldReceive event: UIEvent) -> Bool
+}
+
+public extension UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ g: UIGestureRecognizer) -> Bool { true }
+    func gestureRecognizer(_ g: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { false }
+    func gestureRecognizer(_ g: UIGestureRecognizer,
+                           shouldRequireFailureOf other: UIGestureRecognizer) -> Bool { false }
+    func gestureRecognizer(_ g: UIGestureRecognizer,
+                           shouldBeRequiredToFailBy other: UIGestureRecognizer) -> Bool { false }
+    func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool { true }
+    func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool { true }
+    func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool { true }
+}
+
 open class UIGestureRecognizer {
     public enum State: Sendable {
         case possible, began, changed, ended, cancelled, failed
@@ -55,6 +102,8 @@ open class UIGestureRecognizer {
     /// touches it tracks are cancelled in their hit-test view.
     public var cancelsTouchesInView = true
     public var name: String?
+    /// M13: the app's veto on recognition / simultaneity / touch delivery.
+    public weak var delegate: UIGestureRecognizerDelegate?
 
     /// Touches this recognizer is observing (insertion order).
     var trackedTouches: [UITouch] = []
@@ -122,13 +171,27 @@ open class UIGestureRecognizer {
 
     func transition(to newState: State) {
         let old = _state
+        // Recognition happens on .began (continuous) or on .ended straight
+        // out of .possible (discrete). That is the ONE instant UIKit asks
+        // the delegate whether the gesture may begin, and the instant the
+        // exclusion rule against already-recognized peers applies.
+        let recognizing = newState == .began || (newState == .ended && old == .possible)
+        if recognizing {
+            if let d = delegate, !d.gestureRecognizerShouldBegin(self) {
+                _state = .failed
+                return
+            }
+            if _blockedByRecognizedPeer() {
+                _state = .failed
+                return
+            }
+        }
         _state = newState
         switch newState {
         case .began, .changed, .ended, .cancelled:
-            // Recognition happens on .began (continuous) or on .ended
-            // straight out of .possible (discrete).
-            if newState == .began || (newState == .ended && old == .possible) {
+            if recognizing {
                 pendingCancelTouches = true
+                _failConflictingPeers()
             }
             actions.removeAll { $0.handler == nil && $0.target == nil }
             for a in actions {
@@ -146,6 +209,55 @@ open class UIGestureRecognizer {
     /// Called by the window when every tracked touch has ended/cancelled.
     func _sequenceEnded() {
         reset()
+    }
+
+    // MARK: Exclusion (UIKit's default: one gesture at a time)
+
+    /// Every other recognizer observing any touch this one tracks. The
+    /// window stamps that list onto the touch at hit-test time
+    /// (UIWindow.sendTouch), so no back-pointer to the window is needed.
+    var _peers: [UIGestureRecognizer] {
+        var out: [UIGestureRecognizer] = []
+        for t in trackedTouches {
+            for r in t.gestureRecognizers ?? []
+            where r !== self && !out.contains(where: { $0 === r }) {
+                out.append(r)
+            }
+        }
+        return out
+    }
+
+    /// UIKit asks BOTH delegates; either saying yes allows both to run.
+    func _mayRecognizeSimultaneously(with other: UIGestureRecognizer) -> Bool {
+        if let d = delegate, d.gestureRecognizer(self, shouldRecognizeSimultaneouslyWith: other) {
+            return true
+        }
+        if let d = other.delegate, d.gestureRecognizer(other, shouldRecognizeSimultaneouslyWith: self) {
+            return true
+        }
+        return false
+    }
+
+    /// A peer that ALREADY recognized blocks this one unless simultaneous
+    /// recognition is allowed.
+    func _blockedByRecognizedPeer() -> Bool {
+        for p in _peers {
+            switch p._state {
+            case .began, .changed, .ended:
+                if !_mayRecognizeSimultaneously(with: p) { return true }
+            case .possible, .failed, .cancelled:
+                continue
+            }
+        }
+        return false
+    }
+
+    /// Having recognized, fail the still-possible peers that are not allowed
+    /// to run alongside.
+    func _failConflictingPeers() {
+        for p in _peers where p._state == .possible {
+            if !_mayRecognizeSimultaneously(with: p) { p._state = .failed }
+        }
     }
 
     /// Return to .possible and clear per-gesture state. Subclasses override

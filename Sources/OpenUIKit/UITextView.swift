@@ -44,7 +44,50 @@ final class UITextViewCanvasView: UIView {
     }
 }
 
+// MARK: - UITextViewDelegate (M13 delegate-protocols cluster)
+
+/// UIKit's protocol. It REFINES `UIScrollViewDelegate` exactly as UIKit's
+/// does (a text view is a scroll view, and the scroll callbacks are part of
+/// the contract). All members have defaults, so optional members stay
+/// optional without ObjC.
+///
+/// Gating members that really gate here:
+///   - `textViewShouldBeginEditing` / `textViewShouldEndEditing`
+///   - `textView(_:shouldChangeTextIn:replacementText:)`
+/// `textView(_:shouldInteractWith:in:interaction:)` is NOT declared: it takes
+/// `NSTextAttachment` / `URL`, neither of which exists off Foundation here.
+public protocol UITextViewDelegate: UIScrollViewDelegate {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool
+    func textViewDidBeginEditing(_ textView: UITextView)
+    func textViewDidEndEditing(_ textView: UITextView)
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange,
+                  replacementText text: String) -> Bool
+    func textViewDidChange(_ textView: UITextView)
+    func textViewDidChangeSelection(_ textView: UITextView)
+}
+
+public extension UITextViewDelegate {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool { true }
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool { true }
+    func textViewDidBeginEditing(_ textView: UITextView) {}
+    func textViewDidEndEditing(_ textView: UITextView) {}
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange,
+                  replacementText text: String) -> Bool { true }
+    func textViewDidChange(_ textView: UITextView) {}
+    func textViewDidChangeSelection(_ textView: UITextView) {}
+}
+
 open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
+
+    /// UIKit's `delegate` on a text view is the text-view delegate; because
+    /// `UITextViewDelegate` refines `UIScrollViewDelegate`, assigning it also
+    /// satisfies the scroll delegate the superclass calls. The scroll
+    /// callbacks therefore keep working through the SAME object, as in UIKit.
+    public var textViewDelegate: UITextViewDelegate? {
+        get { delegate as? UITextViewDelegate }
+        set { delegate = newValue }
+    }
 
     // MARK: Content properties
 
@@ -245,8 +288,18 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     open override var canBecomeFirstResponder: Bool { isEditable }
 
+    /// See the note on `UITextField.canResignFirstResponder` — same reason,
+    /// same double-ask caveat.
+    open override var canResignFirstResponder: Bool {
+        guard isEditing, let d = textViewDelegate else { return true }
+        return d.textViewShouldEndEditing(self)
+    }
+
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
+        if !isEditing, let d = textViewDelegate, !d.textViewShouldBeginEditing(self) {
+            return false
+        }
         guard super.becomeFirstResponder() else { return false }
         if !isEditing {
             isEditing = true
@@ -255,17 +308,22 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             ensureCaretView()
             caretView?.isHidden = false
             setNeedsLayout()
+            textViewDelegate?.textViewDidBeginEditing(self)
         }
         return true
     }
 
     @discardableResult
     open override func resignFirstResponder() -> Bool {
+        if isEditing, let d = textViewDelegate, !d.textViewShouldEndEditing(self) {
+            return false
+        }
         let r = super.resignFirstResponder()
         if isEditing {
             isEditing = false
             UITextInputState.unfocus(self)
             caretView?.isHidden = true
+            textViewDelegate?.textViewDidEndEditing(self)
         }
         return r
     }
@@ -304,6 +362,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     public func insertText(_ str: String) {
         guard isEditing else { return }
+        if let d = textViewDelegate,
+           !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset, length: 0),
+                       replacementText: str) { return }
         let i = UITextCaretMath.index(text, atScalarOffset: caretOffset)
         text.insert(contentsOf: str, at: i)
         caretOffset += UITextCaretMath.scalarCount(str)
@@ -313,6 +374,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     public func deleteBackward() {
         guard isEditing, caretOffset > 0 else { return }
+        if let d = textViewDelegate,
+           !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset - 1, length: 1),
+                       replacementText: "") { return }
         let end = UITextCaretMath.index(text, atScalarOffset: caretOffset)
         let start = UITextCaretMath.index(text, atScalarOffset: caretOffset - 1)
         text.removeSubrange(start..<end)
@@ -326,6 +390,8 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         caretView?.isHidden = false
         layoutIfNeeded()
         scrollCaretToVisible()
+        textViewDelegate?.textViewDidChange(self)
+        textViewDelegate?.textViewDidChangeSelection(self)
     }
 
     func handleKey(_ key: UIKeyEventKey) {
@@ -350,6 +416,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         setNeedsLayout()
         layoutIfNeeded()
         scrollCaretToVisible()
+        textViewDelegate?.textViewDidChangeSelection(self)
     }
 
     /// Up/down arrows: nearest boundary in the adjacent line, preserving

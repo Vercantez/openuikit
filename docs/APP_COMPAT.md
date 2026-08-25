@@ -165,9 +165,9 @@ contains no decoding code of its own), `UIBezierPath`, and app-side drawing
 (`UIView.draw(_:)`, `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()`,
 `UIColor.setFill()/setStroke()`).
 
-## What M13 shipped
+## What M13 shipped — collection view (2026-08-25)
 
-One cluster, the census's #1: **collection view** (498 uses across 23 types,
+The census's #1 cluster: **collection view** (498 uses across 23 types,
 all four apps). `UICollectionView`, `UICollectionViewCell`,
 `UICollectionReusableView`, `UICollectionViewLayout` +
 `UICollectionViewFlowLayout`, `UICollectionViewLayoutAttributes` and the
@@ -190,6 +190,48 @@ fixture and table test unchanged as the regression bar.
 Still open inside the cluster: `UICollectionViewCompositionalLayout`,
 `NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus
 animated batch updates.
+
+## M13 in progress: menus & actions + delegate protocols (2026-08-25)
+
+Clusters **#3 (menus & actions)** and most of **#4 (delegate protocols)**,
+plus the share-sheet stub from **#5**, are implemented on `appcompat/menus`.
+The census is NOT re-run here (it needs the corpus checkouts), so the tables
+above still show these as missing; what is measurable without the corpus is
+the list of census symbols that move from `missing` to `implemented`, and
+their `uses` column adds to **439** of the four-app corpus's 16,343:
+
+| symbol | uses | symbol | uses |
+|---|---|---|---|
+| `UIActivityViewController` | 84 | `UIMenuElement` | 11 |
+| `UIKeyCommand` | 81 | `UIPopoverPresentationControllerDelegate` | 10 |
+| `UIAction` | 69 | `UIAdaptivePresentationControllerDelegate` | 9 |
+| `UIMenu` | 49 | `UISearchBar` | 9 |
+| `UIContextMenuConfiguration` | 23 | `UIActivityItemSource` | 9 |
+| `UITextFieldDelegate` | 20 | `UITargetedPreview` | 6 |
+| `UITextViewDelegate` | 15 | `UIPopoverPresentationController` | 6 |
+| `UIGestureRecognizerDelegate` | 14 | `UISearchBarDelegate` | 3 |
+| `UISheetPresentationControllerDelegate` | 14 | `UIContextMenuInteraction` (+delegate, +2 animating) | 6 |
+
+Also added, outside the census's type list: `UICommand`,
+`UIDeferredMenuElement`, `UIInteraction`, `UIControl.addAction(_:for:)`,
+`UIButton(primaryAction:)` / `.menu` / `.showsMenuAsPrimaryAction` /
+`performPrimaryAction()`, `UIResponder.keyCommands`,
+`UIWindow.performKeyCommand(input:modifierFlags:)`, `UIActivity`,
+`UIPopoverArrowDirection`, `UIModalPresentationStyle.popover`, and the
+remaining `UIScrollViewDelegate` members (including a HONOURED
+`scrollViewWillEndDragging` retarget).
+
+Oracle status, stated plainly: the menu's geometry and colours are measured
+by a new probe (`Tools/oracle2/menuprobe` + `scripts/menu_probe_sim.sh`,
+17 configurations on real iOS 26.1), but **there is no fixture scene** —
+iOS 26 draws the menu platter in the render server, where neither oracle can
+capture it. The measurements are locked in by
+`Tests/OpenUIKitTests/MenuTests.swift` instead, whose every expected number
+comes from the probe. Full argument and the divergence list:
+docs/KNOWN_GAPS.md "Menus, actions & delegate protocols".
+
+Still missing from cluster #4 after this: the `UICollectionView` delegate /
+data-source trio (owned by the collection-view cluster).
 
 ## The punch list, re-ranked on the four-app census
 
