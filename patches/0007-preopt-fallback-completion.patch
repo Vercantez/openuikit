@@ -1,0 +1,25 @@
+# objc-opt.mm: add the two !SUPPORT_PREOPT definitions Apple never needed (getSharedCachePreoptimizedProtocol, hasSharedCacheDyldInfo)
+--- a/runtime/objc-opt.mm
++++ b/runtime/objc-opt.mm
+@@ -222,6 +222,21 @@
+     return nil;
+ }
+ 
++// objc4-linux: these two have no !SUPPORT_PREOPT definition upstream --
++// Apple never builds that configuration in this vintage -- but they ARE
++// referenced unconditionally (objc-runtime-new.mm:3985 and
++// objc-private.h's header_info::dyldInfo()). Without them libobjc.so does not
++// link. With no shared cache, both answers are trivially "no".
++Protocol *getSharedCachePreoptimizedProtocol(const char *name __unused)
++{
++    return nil;
++}
++
++bool hasSharedCacheDyldInfo()
++{
++    return false;
++}
++
+ void preopt_init(void)
+ {
+     disableSharedCacheProtocolOptimizations();

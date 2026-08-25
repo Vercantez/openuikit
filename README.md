@@ -68,7 +68,25 @@ upstream drops can be re-applied.
 
 ## Status
 
-Bootstrapping. See `docs/PORT_PLAN.md`.
+**It builds.** On Linux/aarch64, all 32 translation units compile, `libobjc.so`
+links with no unresolved symbols outside libc/libstdc++/libBlocksRuntime, and
+it `dlopen`s — exporting 423 symbols including `objc_msgSend` and
+`objc_readClassPair`.
+
+**It does not yet run anything.** Image discovery — finding `objc_classlist`
+and friends in ELF images and calling `map_images`/`load_images` — is not
+implemented, so no class is ever realized. That is the next piece
+(`docs/PORT_PLAN.md` phase 1 step 3).
+
+```
+./scripts/build_linux.sh              # clean checkout -> libobjc.so, in Docker
+./scripts/build_linux.sh inventory    # per-translation-unit PASS/FAIL + link + load
+```
+
+Read `docs/UNIMPLEMENTED.md` before trusting anything: it lists every hole,
+every disabled feature with its cost, and — more importantly — the assumptions
+that could be silently wrong. See also `docs/PORT_MAP.md` and
+`docs/PORT_PLAN.md`.
 
 ## Licence
 
