@@ -1,16 +1,21 @@
 import UIKit
 
-// ADAPTED(harness plumbing): the ONE changed line in this 83-line file.
-// Upstream is `class OptionsPicker`; `public` lets `openrender` reach it
-// across the module boundary, which an in-app target would not need.
-// `@MainActor` is not a divergence in the other direction: this class
-// creates and drives a UIViewController, which real UIKit isolates to the
-// main actor, so the app's own build cannot compile it without isolation
-// either (verified: a nonisolated class touching a @MainActor class is an
-// error in Swift 5 language mode, not a warning). Before this milestone
-// OpenUIKit had no isolation at all and the annotation was simply absent.
-@MainActor
-public class OptionsPicker {
+// M15: RESTORED to the app's original text. The `public` that used to be here
+// was harness plumbing, not a UIKit gap — `openrender` needed to name this
+// type across the module boundary. The boundary moved instead: the harness now
+// exposes `RealAppScreen.makeRoot(variant:theme:)`, so `OptionsPicker` never
+// appears in a `public` signature and stays `internal`, as upstream declares
+// it. `@MainActor` is likewise upstream's own text (pocket-casts compiles this
+// class under main-actor isolation because it creates and drives a
+// UIViewController); OpenUIKit simply had no isolation to annotate against
+// until this milestone. Instead of writing `@MainActor` into the app's source,
+// the RealAppProbe target is now built with `-default-isolation MainActor`
+// (Package.swift) — the same module-wide default an Xcode 26 app target
+// carries — so upstream's bare `class OptionsPicker` compiles as written.
+//
+// Every line of CODE below is now the app's own; this comment block is the
+// only thing the harness adds to the file.
+class OptionsPicker {
     private var title: String?
     private var optionsController: OptionsPickerRootController?
 

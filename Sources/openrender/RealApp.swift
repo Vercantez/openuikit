@@ -22,16 +22,13 @@ struct RealAppVariant {
 @MainActor
 let realAppVariants: [RealAppVariant] = [
     RealAppVariant(name: "realapp_history_light", style: .light, makeRoot: {
-        RealAppScreen.makeRoot(picker: RealAppScreen.makeListeningHistoryPicker(theme: .light),
-                               theme: .light)
+        RealAppScreen.makeRoot(variant: .listeningHistory, theme: .light)
     }),
     RealAppVariant(name: "realapp_settings_light", style: .light, makeRoot: {
-        RealAppScreen.makeRoot(picker: RealAppScreen.makeSettingsPicker(theme: .light),
-                               theme: .light)
+        RealAppScreen.makeRoot(variant: .settings, theme: .light)
     }),
     RealAppVariant(name: "realapp_settings_dark", style: .dark, makeRoot: {
-        RealAppScreen.makeRoot(picker: RealAppScreen.makeSettingsPicker(theme: .dark),
-                               theme: .dark)
+        RealAppScreen.makeRoot(variant: .settings, theme: .dark)
     }),
 ]
 

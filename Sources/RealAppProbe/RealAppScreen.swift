@@ -29,7 +29,18 @@ public enum RealAppScreen {
     /// pocket-casts-ios podcasts/ListeningHistoryViewController.swift:234
     /// `menuTapped(_:)` — the History screen's "..." menu, verbatim apart from
     /// the analytics calls and the `self?` captures into app state.
-    public static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
+    /// Which of the app's real call sites to build. This exists so that
+    /// `OptionsPicker` — vendored app source — never appears in a `public`
+    /// signature, and can therefore stay `internal`, exactly as upstream
+    /// declares it. See docs/REAL_APP_TEST.md: keeping the module boundary on
+    /// the harness side of the line is what retired the last non-UIKit entry
+    /// in the adaptation ledger.
+    public enum Variant {
+        case listeningHistory
+        case settings
+    }
+
+    static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
         let optionsPicker = OptionsPicker(title: nil, themeOverride: theme)
 
@@ -49,7 +60,7 @@ public enum RealAppScreen {
     /// row with the tick (same file, `selected:`), a row with a secondary
     /// label, an on/off row, and a destructive row
     /// (NowPlayingPlayerItemViewController+Shelf.swift:313).
-    public static func makeSettingsPicker(theme: Theme.ThemeType) -> OptionsPicker {
+    static func makeSettingsPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
         let options = OptionsPicker(title: "ROW ACTION", themeOverride: theme)
 
@@ -75,15 +86,20 @@ public enum RealAppScreen {
         configureAssets(directory: defaultAssetsDirectory)
         let theme: Theme.ThemeType =
             UITraitCollection.current.userInterfaceStyle == .dark ? .dark : .light
-        return makeRoot(picker: makeSettingsPicker(theme: theme), theme: theme)
+        return makeRoot(variant: .settings, theme: theme)
     }
 
     /// Repo-relative default for `UIImage(named:)`.
     public static let defaultAssetsDirectory = "fixtures/realapp/assets"
 
 
-    public static func makeRoot(picker: OptionsPicker,
+    public static func makeRoot(variant: Variant,
                                 theme: Theme.ThemeType) -> UIViewController {
+        let picker: OptionsPicker
+        switch variant {
+        case .listeningHistory: picker = makeListeningHistoryPicker(theme: theme)
+        case .settings:         picker = makeSettingsPicker(theme: theme)
+        }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker
         return host

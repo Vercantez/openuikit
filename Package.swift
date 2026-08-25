@@ -95,7 +95,18 @@ let package = Package(
         // what let the app's `import Foundation` and its
         // `required init?(coder: NSCoder)` be restored verbatim, taking the
         // ledger from 14 changed lines to 9 (98.5 % unmodified).
-        .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"]),
+        // M15: built with `-default-isolation MainActor`. This is NOT a
+        // concession — it is the build setting a real iOS app target carries.
+        // Xcode 26 / Swift 6.2 app targets default the whole module to
+        // main-actor isolation ("Approachable Concurrency"), which is how
+        // pocket-casts's own `class OptionsPicker` — no `@MainActor` on it —
+        // legally creates and drives a main-actor-isolated UIViewController.
+        // Mirroring the app's build configuration rather than editing the
+        // app's source is what let the last `@MainActor` come off the vendored
+        // files. Verified accepted by both toolchains in the gate (Apple
+        // 6.2.1 and Linux 6.2.4).
+        .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"],
+                swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
         .executableTarget(name: "openrender", dependencies: ["OpenUIKit", "RealAppProbe"]),
