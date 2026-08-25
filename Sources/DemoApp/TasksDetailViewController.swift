@@ -84,7 +84,8 @@ public final class PriorityOptionButton: UIControl {
 
 // MARK: - Screen
 
-public final class TasksDetailViewController: UIViewController {
+public final class TasksDetailViewController: UIViewController,
+                                              BottomInsetAdjustable {
     static let margin: CGFloat = 16
     static let actionHeight: CGFloat = 50
     static let actionBottomGap: CGFloat = 24
@@ -101,6 +102,11 @@ public final class TasksDetailViewController: UIViewController {
     let statusLabel = UILabel()
     let notesLabel = UILabel()
     var optionButtons: [PriorityOptionButton] = []
+
+    /// Extra bottom inset for chrome the controller does not own (the
+    /// showcase app's floating tab bar keeps overlaying pushed screens).
+    /// Set before the view loads.
+    public var extraBottomInset: CGFloat = 0
 
     public init(task: TaskItem) {
         self.task = task
@@ -168,7 +174,8 @@ public final class TasksDetailViewController: UIViewController {
                                 color: task.isDone ? .systemGray : .systemGreen)
         action.frame = CGRect(
             x: m,
-            y: view.bounds.height - TasksDetailViewController.actionBottomGap
+            y: view.bounds.height - extraBottomInset
+                - TasksDetailViewController.actionBottomGap
                 - TasksDetailViewController.actionHeight,
             width: w, height: TasksDetailViewController.actionHeight)
         action.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]

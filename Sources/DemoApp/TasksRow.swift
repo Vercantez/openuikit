@@ -1,6 +1,7 @@
-// Tasks demo app — row components. Owner: demo app (M7.5 second app).
+// Tasks demo app — cells + shared components. Owner: demo app.
 //
-// The pieces the Tasks list is built from:
+// The Tasks list is a real UITableView (insetGrouped) since M10, so the
+// pieces here are the ones the table cannot provide itself:
 //
 //   - CheckboxView: a 24pt ring in the task's priority color plus a fill
 //     disc that carries a white vector checkmark (Canvas paths — the
@@ -11,13 +12,17 @@
 //     result is composited through the layer's presentation transform, so a
 //     transform animation scales the drawn checkmark for free, while a
 //     bounds animation would not re-draw it.
-//   - TaskRow: checkbox + title + priority dot + chevron, with the standard
-//     table-row highlight flash (systemGray4 on touch-down, 0.3s fade back)
-//     from docs/APP_FEEL.md. Touches that land on the checkbox never reach
-//     the row, so the row's own tap (push detail) and the checkbox's tap
-//     (complete/reopen) do not fight.
-//   - TaskSectionCard: an inset-grouped card that CLIPS, so an inserted row
-//     can slide in from behind its top edge, plus an empty-state label.
+//   - TaskCell: a UITableViewCell dequeued from the table's reuse pool. Its
+//     contentView carries the checkbox and the priority dot; the title is
+//     the cell's own `textLabel` and the chevron is the cell's measured
+//     `.disclosureIndicator` accessory. Row feel comes from the cell itself
+//     (UITableViewCell's measured #DCDCDC selection flash + 0.3s fade),
+//     which is the table's version of docs/APP_FEEL.md's row highlight.
+//     Touches that land on the checkbox never reach the cell, so the row's
+//     tap (push detail) and the checkbox's tap (complete/reopen) do not
+//     fight.
+//   - IconCell / PlaceholderCell: the Settings-style "Statistics" row and
+//     the empty-section placeholder.
 //   - PillButton: the floating "+ New Task" capsule.
 
 import OpenUIKit
@@ -46,10 +51,10 @@ final class CheckmarkFillView: UIView {
     }
 }
 
-/// The tappable checkbox. The view is a generous 40x52 hit area; the 24pt
-/// ring is drawn centered in it.
+/// The tappable checkbox: a generous full-row-height hit area with the 24pt
+/// ring drawn centered in it.
 public final class CheckboxView: UIControl {
-    static let hitSize = CGSize(width: 40, height: TaskRow.height)
+    static let hitWidth: CGFloat = 40
     static let ringDiameter: CGFloat = 24
     static let ringLineWidth: CGFloat = 2
 
@@ -73,7 +78,8 @@ public final class CheckboxView: UIControl {
     public init(priority: TaskPriority, isChecked: Bool) {
         self.priority = priority
         self.isChecked = isChecked
-        super.init(frame: CGRect(origin: .zero, size: CheckboxView.hitSize))
+        super.init(frame: CGRect(x: 0, y: 0, width: CheckboxView.hitWidth,
+                                 height: UITableViewCell.defaultRowHeight))
         isOpaque = false
         backgroundColor = .clear
 
@@ -100,16 +106,30 @@ public final class CheckboxView: UIControl {
 
     private static let collapsed = CGAffineTransform(scaleX: 0.01, y: 0.01)
 
+    /// Settle the fill into its resting state.
+    ///
+    /// The "off" rest state HIDES the fill rather than leaving it scaled to
+    /// 1%: a non-translation transform anywhere in a subtree makes that
+    /// whole subtree ineligible for the layer composite cache, so a shrunken
+    /// fill would force its entire table cell to re-rasterize on every
+    /// scrolled frame (measured: 27 → 8 ms per frame across a visible
+    /// screenful of rows). Hidden subtrees are skipped outright.
+    private func settle() {
+        fill.removeAllAnimations()
+        fill.transform = .identity
+        fill.isHidden = !isChecked
+        fill.alpha = isChecked ? 1 : 0
+    }
+
     private func applyCheckedState(animated: Bool) {
         guard animated else {
-            fill.removeAllAnimations()
-            fill.transform = isChecked ? .identity : CheckboxView.collapsed
-            fill.alpha = isChecked ? 1 : 0
+            settle()
             return
         }
         if isChecked {
             // Start from nothing, then spring the scale up past 1 and back.
             fill.removeAllAnimations()
+            fill.isHidden = false
             fill.transform = CheckboxView.collapsed
             fill.alpha = 1
             UIView.animate(withDuration: CheckboxView.fillSpringDuration,
@@ -123,6 +143,9 @@ public final class CheckboxView: UIControl {
                            delay: 0, options: .curveEaseIn, animations: {
                 self.fill.transform = CheckboxView.collapsed
                 self.fill.alpha = 0
+            }, completion: { [weak self] _ in
+                guard let self, !self.isChecked else { return }
+                self.settle()
             })
         }
     }
@@ -138,171 +161,168 @@ public final class CheckboxView: UIControl {
     }
 }
 
-// MARK: - Row
+// MARK: - Task cell
 
-public final class TaskRow: UIControl {
-    public static let height: CGFloat = 52
+public final class TaskCell: UITableViewCell {
+    public static let identifier = "TaskCell"
+
     static let checkboxLeading: CGFloat = 8
     static let titleLeading: CGFloat = 54
-    static let trailingInset: CGFloat = 16
     static let dotSize: CGFloat = 8
-    static let highlightFadeDuration: Double = 0.3
-    /// Row alpha once completed (docs task spec).
+    /// Gap between the priority dot and the accessory's content edge.
+    static let dotAccessoryGap: CGFloat = 10
+    /// Row content alpha once completed (docs task spec).
     static let completedAlpha: CGFloat = 0.85
 
-    public let task: TaskItem
-    public let checkbox: CheckboxView
-    public let titleLabel = UILabel()
+    public let checkbox = CheckboxView(priority: .low, isChecked: false)
     let dot = UIView()
-    let chevron = UILabel()
-    let separator = UIView()
 
-    /// Checkbox tapped (complete / reopen).
-    public var onToggle: ((TaskRow) -> Void)?
-    /// Row body tapped (push the detail screen).
-    public var onTap: ((TaskRow) -> Void)?
+    public private(set) var task: TaskItem?
 
-    public var showsSeparator: Bool {
-        get { !separator.isHidden }
-        set { separator.isHidden = !newValue }
-    }
+    /// Checkbox tapped (complete / reopen). The data source re-installs this
+    /// on every configure, because cells outlive the row they display.
+    public var onToggle: ((TaskCell) -> Void)?
 
-    public init(task: TaskItem) {
-        self.task = task
-        checkbox = CheckboxView(priority: task.priority, isChecked: task.isDone)
-        super.init(frame: CGRect(x: 0, y: 0, width: 358, height: TaskRow.height))
-        backgroundColor = .secondarySystemGroupedBackground
-
+    public required init(style: CellStyle = .default,
+                         reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        accessoryType = .disclosureIndicator
         checkbox.addTarget(for: .touchUpInside) { [weak self] _, _ in
             guard let self else { return }
             self.onToggle?(self)
         }
-        addSubview(checkbox)
+        contentView.addSubview(checkbox)
 
-        titleLabel.text = task.title
-        titleLabel.font = .systemFont(ofSize: 17)
-        titleLabel.textColor = .label
-        addSubview(titleLabel)
-
-        dot.backgroundColor = task.priority.color
-        dot.layer.cornerRadius = TaskRow.dotSize / 2
+        dot.layer.cornerRadius = TaskCell.dotSize / 2
         dot.isUserInteractionEnabled = false
-        dot.bounds.size = CGSize(width: TaskRow.dotSize, height: TaskRow.dotSize)
-        addSubview(dot)
-
-        chevron.text = "\u{203A}" // ›
-        chevron.font = .systemFont(ofSize: 17, weight: .semibold)
-        chevron.textColor = .systemGray2
-        addSubview(chevron)
-
-        separator.backgroundColor = .separator
-        separator.isUserInteractionEnabled = false
-        addSubview(separator)
-
-        addTarget(for: .touchUpInside) { [weak self] _, _ in
-            guard let self else { return }
-            self.onTap?(self)
-        }
-
-        applyCompletionStyle(animated: false)
+        dot.bounds.size = CGSize(width: TaskCell.dotSize, height: TaskCell.dotSize)
+        contentView.addSubview(dot)
     }
 
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        let h = bounds.height
-        checkbox.frame = CGRect(x: TaskRow.checkboxLeading, y: 0,
-                                width: CheckboxView.hitSize.width, height: h)
-        let c = chevron.intrinsicContentSize
-        chevron.frame = CGRect(x: bounds.width - TaskRow.trailingInset - c.width,
-                               y: (h - c.height) / 2,
-                               width: c.width, height: c.height)
-        let dotX = chevron.frame.minX - 12 - TaskRow.dotSize
-        dot.center = CGPoint(x: dotX + TaskRow.dotSize / 2, y: h / 2)
-        let t = titleLabel.intrinsicContentSize
-        let available = dotX - 12 - TaskRow.titleLeading
-        titleLabel.frame = CGRect(x: TaskRow.titleLeading, y: (h - t.height) / 2,
-                                  width: min(t.width, max(available, 0)),
-                                  height: t.height)
-        separator.frame = CGRect(x: TaskRow.titleLeading, y: h - 0.5,
-                                 width: bounds.width - TaskRow.titleLeading,
-                                 height: 0.5)
+    /// Bind `task`. Called from `cellForRowAt` on both fresh and recycled
+    /// cells, so every piece of visible state is assigned unconditionally.
+    public func configure(_ task: TaskItem) {
+        self.task = task
+        textLabel.text = task.title
+        checkbox.priority = task.priority
+        checkbox.setChecked(task.isDone, animated: false)
+        dot.backgroundColor = task.priority.color
+        applyCompletionStyle(animated: false)
+        setNeedsLayout()
+    }
+
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        onToggle = nil
+        task = nil
+        removeAllAnimations()
+        backgroundColor = nil
+        for v in foreground {
+            v.removeAllAnimations()
+            v.alpha = 1
+        }
     }
 
     /// Reflect `task.priority` (edited on the detail screen) in the ring and
     /// the trailing dot. The dot's backgroundColor is layer-driven, so a
     /// caller can wrap this in UIView.animate and get a color crossfade.
     public func applyPriority() {
+        guard let task else { return }
         checkbox.priority = task.priority
         dot.backgroundColor = task.priority.color
     }
 
-    /// Everything in front of the row's background. Completion dims these
-    /// rather than the row itself: the row travels between sections OVER the
-    /// other rows, and a translucent row would let them show through.
-    var foreground: [UIView] { [checkbox, titleLabel, dot, chevron] }
+    /// Everything in front of the cell's background. Completion dims these
+    /// rather than the cell itself: the cell travels between sections OVER
+    /// the other rows, and a translucent cell would let them show through.
+    var foreground: [UIView] { [checkbox, textLabel, dot] }
 
     /// Reflect `task.isDone`: the title drops to secondaryLabel and the row
-    /// content dims to 0.85. Alpha is layer-driven (animatable); the title
-    /// color is drawn content, so it snaps — which reads fine underneath the
-    /// 0.35s section move that always accompanies it.
+    /// content dims. Alpha is layer-driven (animatable); the title color is
+    /// drawn content, so it snaps — which reads fine underneath the section
+    /// move that always accompanies it.
     public func applyCompletionStyle(animated: Bool) {
-        titleLabel.textColor = task.isDone ? .secondaryLabel : .label
-        titleLabel.setNeedsDisplay()
-        let target: CGFloat = task.isDone ? TaskRow.completedAlpha : 1
+        let done = task?.isDone ?? false
+        textLabel.textColor = done ? .secondaryLabel : .label
+        textLabel.setNeedsDisplay()
+        let target: CGFloat = done ? TaskCell.completedAlpha : 1
         let apply = { for v in self.foreground { v.alpha = target } }
         guard animated else { apply(); return }
         UIView.animate(withDuration: TasksRootViewController.sectionMoveDuration,
                        delay: 0, options: .curveEaseInOut, animations: apply)
     }
 
-    // MARK: Highlight flash (APP_FEEL row feel)
-
-    public override func stateDidChange() {
-        super.stateDidChange()
-        if isHighlighted {
-            removeAllAnimations()
-            backgroundColor = .systemGray4
-        } else {
-            UIView.animate(withDuration: TaskRow.highlightFadeDuration,
-                           delay: 0, options: .curveLinear, animations: {
-                self.backgroundColor = .secondarySystemGroupedBackground
-            })
-        }
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        let h = bounds.height
+        checkbox.frame = CGRect(x: TaskCell.checkboxLeading, y: 0,
+                                width: CheckboxView.hitWidth, height: h)
+        // super sized contentView to the width left by the accessory.
+        let dotX = contentView.bounds.width - TaskCell.dotAccessoryGap
+            - TaskCell.dotSize
+        dot.center = CGPoint(x: dotX + TaskCell.dotSize / 2, y: h / 2)
+        // The measured cell layout puts textLabel at x = 16; the checkbox
+        // occupies that column here, so the title starts after it.
+        let t = textLabel.intrinsicContentSize
+        let available = dotX - 12 - TaskCell.titleLeading
+        textLabel.frame = CGRect(x: TaskCell.titleLeading,
+                                 y: textLabel.frame.minY,
+                                 width: min(t.width, max(available, 0)),
+                                 height: t.height)
     }
 }
 
-// MARK: - Section card
+// MARK: - Supporting cells
 
-/// An inset-grouped card that clips its rows (so an inserted row can slide
-/// in from behind the top edge) and shows a placeholder when it is empty.
-public final class TaskSectionCard: UIView {
-    public static let emptyHeight: CGFloat = 52
-    let emptyLabel = UILabel()
+/// A Settings-style row: 29pt icon tile, title, disclosure chevron.
+public final class IconCell: UITableViewCell {
+    public static let identifier = "IconCell"
+    static let iconLeading: CGFloat = 15
+    static let titleLeading: CGFloat = 58
 
-    public init(emptyText: String) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 358,
-                                 height: TaskSectionCard.emptyHeight))
-        backgroundColor = .secondarySystemGroupedBackground
-        layer.cornerRadius = 10
-        clipsToBounds = true
+    var tile: IconTile?
 
-        emptyLabel.text = emptyText
-        emptyLabel.font = .systemFont(ofSize: 15)
-        emptyLabel.textColor = .tertiaryLabel
-        addSubview(emptyLabel)
+    public required init(style: CellStyle = .default,
+                         reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        accessoryType = .disclosureIndicator
     }
 
-    public var isEmptyStateVisible: Bool {
-        get { !emptyLabel.isHidden }
-        set { emptyLabel.isHidden = !newValue }
+    public func configure(icon: IconGlyph, color: UIColor, title: String) {
+        tile?.removeFromSuperview()
+        let t = IconTile(glyph: icon, color: color)
+        contentView.addSubview(t)
+        tile = t
+        textLabel.text = title
+        setNeedsLayout()
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let s = emptyLabel.intrinsicContentSize
-        emptyLabel.frame = CGRect(x: TaskRow.titleLeading,
-                                  y: (TaskSectionCard.emptyHeight - s.height) / 2,
-                                  width: s.width, height: s.height)
+        if let tile {
+            let s = IconTile.tileSize
+            tile.frame = CGRect(x: IconCell.iconLeading,
+                                y: ((bounds.height - s.height) / 2).rounded(),
+                                width: s.width, height: s.height)
+        }
+        let t = textLabel.intrinsicContentSize
+        textLabel.frame = CGRect(x: IconCell.titleLeading,
+                                 y: textLabel.frame.minY,
+                                 width: min(t.width, bounds.width),
+                                 height: t.height)
+    }
+}
+
+/// The "nothing here yet" row a section shows instead of disappearing.
+public final class PlaceholderCell: UITableViewCell {
+    public static let identifier = "PlaceholderCell"
+
+    public required init(style: CellStyle = .default,
+                         reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        textLabel.font = .systemFont(ofSize: 15)
+        textLabel.textColor = .tertiaryLabel
     }
 }
 

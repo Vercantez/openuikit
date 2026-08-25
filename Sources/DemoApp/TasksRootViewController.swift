@@ -1,37 +1,38 @@
-// Tasks demo app — root list screen. Owner: demo app (M7.5 second app).
+// Tasks demo app — root list screen. Owner: demo app.
 //
-// "Tasks": a scrollable inset-grouped list with a TODAY section (open tasks),
-// a COMPLETED section, and a MORE section holding the Statistics row, plus a
-// floating "+ New Task" pill fixed over the scroll view.
+// "Tasks": an inset-grouped UITableView with a TODAY section (open tasks), a
+// COMPLETED section and a MORE section holding the Statistics row, plus a
+// floating "+ New Task" pill fixed over the table.
 //
-// The interesting part is the section relayout. Every row/card/header frame
-// is computed in one place (`relayout`) and assigned inside a single
-// UIView.animate block, so completing a task animates as one coordinated
-// move: the checkbox springs, the row travels from its Today slot to the top
-// of Completed, and every row after it slides up to close the gap while both
-// cards resize. Nothing jumps.
+// M10 rewrote this screen from hand-placed rows inside a UIScrollView onto a
+// real UITableView: three sections driven by UITableViewDataSource, cells
+// dequeued from the table's reuse pool (only the visible rows exist), the
+// measured inset-grouped chrome (26 pt cards, header typography, separator
+// insets and the #DCDCDC selection flash) instead of hand-drawn cards.
 //
-// Cards CLIP (that is what makes the rounded inset-grouped corners read, and
-// it is what lets an inserted row slide in from behind the top edge), so a
-// row crossing the gap between two cards would be clipped away mid-flight.
-// It is therefore re-parented to the unclipped `contentView` for the
-// duration of the move — keeping its absolute frame — and dropped back into
-// the destination card by the animation's completion handler. That is the
-// same trick UIKit uses when a table cell moves between sections: the cell
-// floats above the section backgrounds while it travels.
+// The feel it had to keep is the section relayout. Completing a task must
+// read as ONE coordinated move: the checkbox springs, the row travels from
+// its Today slot to the top of Completed, every row after it slides up to
+// close the gap and both cards resize — nothing jumps, and the checkbox
+// spring that started on touch-up keeps running while its row is in flight.
+// `UITableView.performUpdates(withDuration:identity:updates:)` does exactly
+// that: rows are matched across the update by identity (here the TaskItem
+// itself), so the moving row keeps its cell — animations and all — while the
+// table re-tiles around it. A plain `reloadData` would recycle that cell and
+// kill the spring mid-pop.
 
 import OpenUIKit
 
-public final class TasksRootViewController: UIViewController {
+public final class TasksRootViewController: UIViewController,
+                                            UITableViewDataSource,
+                                            UITableViewDelegate,
+                                            BottomInsetAdjustable {
 
     // MARK: Metrics
 
     static let margin: CGFloat = 16
-    static let headerLeading: CGFloat = 16
-    static let sectionGap: CGFloat = 24
-    static let topInset: CGFloat = 12
     /// Room under the content for the floating pill.
-    static let bottomInset: CGFloat = 104
+    static let bottomInset: CGFloat = 96
     static let pillHeight: CGFloat = 50
     static let pillBottomGap: CGFloat = 24
 
@@ -39,30 +40,29 @@ public final class TasksRootViewController: UIViewController {
     /// moment to read.
     public static let sectionMoveDuration: Double = 0.35
     static let sectionMoveDelay: Double = 0.18
-    /// Insert: slide down + fade in, no delay (nothing precedes it).
+    /// Insert: the new row fades in while the rest slides down.
     static let insertDuration: Double = 0.35
+
+    enum Section: Int, CaseIterable {
+        case today = 0, completed, more
+    }
 
     // MARK: Views
 
-    let scrollView = UIScrollView()
-    let contentView = UIView()
-    let todayHeader = makeSectionHeader("TODAY")
-    let completedHeader = makeSectionHeader("COMPLETED")
-    let moreHeader = makeSectionHeader("MORE")
-    let todayCard = TaskSectionCard(emptyText: "Nothing left to do.")
-    let completedCard = TaskSectionCard(emptyText: "Nothing finished yet.")
-    var moreCard: GroupCard!
+    public let tableView = UITableView(style: .insetGrouped)
     var addButton: PillButton!
 
     // MARK: State
 
-    var openRows: [TaskRow] = []
-    var doneRows: [TaskRow] = []
+    var openTasks: [TaskItem] = []
+    var doneTasks: [TaskItem] = []
     var nextPoolIndex = 0
 
-    public override init() { super.init() }
+    /// Extra bottom inset for chrome the controller does not own (the
+    /// showcase app's floating tab bar). Set before the view loads.
+    public var extraBottomInset: CGFloat = 0
 
-    var cardWidth: CGFloat { view.bounds.width - 2 * TasksRootViewController.margin }
+    public override init() { super.init() }
 
     // MARK: Load
 
@@ -70,151 +70,145 @@ public final class TasksRootViewController: UIViewController {
         title = "Tasks"
         view.backgroundColor = .systemGroupedBackground
 
-        scrollView.frame = view.bounds
-        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        scrollView.alwaysBounceVertical = true
-        scrollView.clipsToBounds = true
-        view.addSubview(scrollView)
-
-        contentView.backgroundColor = nil
-        scrollView.addSubview(contentView)
-
-        for header in [todayHeader, completedHeader, moreHeader] {
-            contentView.addSubview(header)
-        }
-        contentView.addSubview(todayCard)
-        contentView.addSubview(completedCard)
-
-        let statsRow = SettingsRow(icon: .cellular, iconColor: .systemIndigo,
-                                   title: "Statistics", accessory: .chevron)
-        statsRow.onTap = { [weak self] _ in self?.pushStatistics() }
-        moreCard = GroupCard(rows: [statsRow])
-        contentView.addSubview(moreCard)
-
         let seed = TasksData.seed()
-        for task in seed.open {
-            let row = makeRow(task)
-            todayCard.addSubview(row)
-            openRows.append(row)
-        }
-        for task in seed.done {
-            let row = makeRow(task)
-            completedCard.addSubview(row)
-            doneRows.append(row)
-        }
+        openTasks = seed.open
+        doneTasks = seed.done
+
+        tableView.frame = view.bounds
+        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        // Device metrics: a real UIWindow measures a 16 pt side inset (the
+        // 8 pt default is the offscreen-Catalyst oracle reading).
+        tableView.insetGroupedSideInset = TasksRootViewController.margin
+        tableView.contentInset.bottom = TasksRootViewController.bottomInset
+            + extraBottomInset
+        tableView.register(TaskCell.self,
+                           forCellReuseIdentifier: TaskCell.identifier)
+        tableView.register(IconCell.self,
+                           forCellReuseIdentifier: IconCell.identifier)
+        tableView.register(PlaceholderCell.self,
+                           forCellReuseIdentifier: PlaceholderCell.identifier)
+        tableView.delegate = self
+        tableView.dataSource = self
+        view.addSubview(tableView)
 
         addButton = PillButton(title: "+  New Task", color: .systemBlue)
         addButton.frame = CGRect(
             x: TasksRootViewController.margin,
-            y: view.bounds.height - TasksRootViewController.pillBottomGap
+            y: view.bounds.height - extraBottomInset
+                - TasksRootViewController.pillBottomGap
                 - TasksRootViewController.pillHeight,
-            width: cardWidth, height: TasksRootViewController.pillHeight)
+            width: view.bounds.width - 2 * TasksRootViewController.margin,
+            height: TasksRootViewController.pillHeight)
         addButton.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
         addButton.addTarget(for: .touchUpInside) { [weak self] _, _ in
             self?.addTask()
         }
         view.addSubview(addButton)
-
-        relayout(animated: false)
     }
 
-    func makeRow(_ task: TaskItem) -> TaskRow {
-        let row = TaskRow(task: task)
-        row.onToggle = { [weak self] r in self?.toggleCompletion(of: r) }
-        row.onTap = { [weak self] r in self?.pushDetail(for: r) }
-        return row
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // UIKit convention: a row stays selected while its detail is pushed
+        // and fades back as the list reappears.
+        if let selected = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selected, animated: true)
+        }
     }
 
-    // MARK: Layout
+    // MARK: Model access
 
-    /// Assign every header / card / row frame. When `animated`, the frame
-    /// assignments run inside one UIView.animate block so the whole section
-    /// shift is a single coordinated move; `floating` names a row that is
-    /// currently parented to `contentView` and therefore wants its slot in
-    /// contentView coordinates instead of card-local ones.
-    func relayout(animated: Bool, delay: Double = 0,
-                  floating: TaskRow? = nil,
-                  completion: (() -> Void)? = nil) {
-        let m = TasksRootViewController.margin
-        let w = cardWidth
-        var y = TasksRootViewController.topInset
-
-        func headerFrame(_ label: UILabel) -> CGRect {
-            let s = label.intrinsicContentSize
-            let f = CGRect(x: m + TasksRootViewController.headerLeading, y: y,
-                           width: s.width, height: s.height)
-            y = f.maxY + 6
-            return f
+    func tasks(in section: Section) -> [TaskItem] {
+        switch section {
+        case .today: return openTasks
+        case .completed: return doneTasks
+        case .more: return []
         }
+    }
 
-        let todayHeaderFrame = headerFrame(todayHeader)
-        let todayCardFrame = CGRect(x: m, y: y, width: w,
-                                    height: cardHeight(openRows.count))
-        y = todayCardFrame.maxY + TasksRootViewController.sectionGap
-
-        let completedHeaderFrame = headerFrame(completedHeader)
-        let completedCardFrame = CGRect(x: m, y: y, width: w,
-                                        height: cardHeight(doneRows.count))
-        y = completedCardFrame.maxY + TasksRootViewController.sectionGap
-
-        let moreHeaderFrame = headerFrame(moreHeader)
-        let moreCardFrame = CGRect(x: m, y: y, width: w,
-                                   height: moreCard.bounds.height)
-        y = moreCardFrame.maxY
-
-        // Instant work: nothing here is a visual move, and doing it inside
-        // the animation block would record pointless animations.
-        let contentHeight = y + TasksRootViewController.bottomInset
-        contentView.frame = CGRect(x: 0, y: 0, width: view.bounds.width,
-                                   height: contentHeight)
-        scrollView.contentSize = CGSize(width: view.bounds.width,
-                                        height: contentHeight)
-        todayCard.isEmptyStateVisible = openRows.isEmpty
-        completedCard.isEmptyStateVisible = doneRows.isEmpty
-        for (i, row) in openRows.enumerated() {
-            row.showsSeparator = i < openRows.count - 1
+    /// Stable per-row identity used to match rows across an animated update.
+    /// TaskItem is a reference type shared with the detail screen, so the
+    /// object itself is the identity; the two synthetic rows get names.
+    func identity(_ path: IndexPath) -> AnyHashable {
+        guard let section = Section(rawValue: path.section) else { return "?" }
+        switch section {
+        case .more:
+            return "stats"
+        case .today, .completed:
+            let list = tasks(in: section)
+            guard path.row < list.count else {
+                return "empty.\(path.section)"
+            }
+            return ObjectIdentifier(list[path.row])
         }
-        for (i, row) in doneRows.enumerated() {
-            row.showsSeparator = i < doneRows.count - 1
-        }
+    }
 
-        let place = {
-            self.todayHeader.frame = todayHeaderFrame
-            self.todayCard.frame = todayCardFrame
-            self.completedHeader.frame = completedHeaderFrame
-            self.completedCard.frame = completedCardFrame
-            self.moreHeader.frame = moreHeaderFrame
-            self.moreCard.frame = moreCardFrame
-            self.placeRows(self.openRows, in: todayCardFrame, floating: floating)
-            self.placeRows(self.doneRows, in: completedCardFrame, floating: floating)
-        }
+    // MARK: UITableViewDataSource
 
-        guard animated else {
-            place()
-            completion?()
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        Section.allCases.count
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
+        switch Section(rawValue: section)! {
+        case .more: return 1
+        // An empty section keeps one placeholder row so its card (and the
+        // "nothing here" message) stays on screen.
+        case .today: return max(openTasks.count, 1)
+        case .completed: return max(doneTasks.count, 1)
+        }
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          titleForHeaderInSection section: Int) -> String? {
+        switch Section(rawValue: section)! {
+        case .today: return "Today"
+        case .completed: return "Completed"
+        case .more: return "More"
+        }
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let section = Section(rawValue: indexPath.section)!
+        if section == .more {
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: IconCell.identifier, for: indexPath) as! IconCell
+            cell.configure(icon: .cellular, color: .systemIndigo,
+                           title: "Statistics")
+            return cell
+        }
+        let list = tasks(in: section)
+        guard indexPath.row < list.count else {
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: PlaceholderCell.identifier,
+                for: indexPath) as! PlaceholderCell
+            cell.textLabel.text = section == .today ? "Nothing left to do."
+                                                    : "Nothing finished yet."
+            return cell
+        }
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: TaskCell.identifier, for: indexPath) as! TaskCell
+        cell.configure(list[indexPath.row])
+        cell.onToggle = { [weak self] c in self?.toggleCompletion(of: c) }
+        return cell
+    }
+
+    // MARK: UITableViewDelegate
+
+    public func tableView(_ tableView: UITableView,
+                          didSelectRowAt indexPath: IndexPath) {
+        let section = Section(rawValue: indexPath.section)!
+        if section == .more {
+            pushStatistics()
             return
         }
-        UIView.animate(withDuration: TasksRootViewController.sectionMoveDuration,
-                       delay: delay, options: .curveEaseInOut,
-                       animations: place,
-                       completion: { _ in completion?() })
-    }
-
-    func cardHeight(_ count: Int) -> CGFloat {
-        count == 0 ? TaskSectionCard.emptyHeight
-                   : CGFloat(count) * TaskRow.height
-    }
-
-    /// Slot every row of a section. A floating row is parented to
-    /// `contentView`, so its slot is offset by the card's own origin.
-    func placeRows(_ rows: [TaskRow], in cardFrame: CGRect, floating: TaskRow?) {
-        for (i, row) in rows.enumerated() {
-            let local = CGRect(x: 0, y: CGFloat(i) * TaskRow.height,
-                               width: cardFrame.width, height: TaskRow.height)
-            row.frame = row === floating
-                ? local.offsetBy(dx: cardFrame.minX, dy: cardFrame.minY)
-                : local
+        let list = tasks(in: section)
+        guard indexPath.row < list.count else {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
         }
+        pushDetail(for: list[indexPath.row])
     }
 
     // MARK: Completing / reopening
@@ -222,104 +216,70 @@ public final class TasksRootViewController: UIViewController {
     /// Flip a task's completion: spring the checkbox, restyle the row, and
     /// move it between the two sections with everything else animating out
     /// of its way.
-    public func toggleCompletion(of row: TaskRow) {
-        let nowDone = !row.task.isDone
-        row.task.isDone = nowDone
-        row.checkbox.setChecked(nowDone, animated: true)
-        row.applyCompletionStyle(animated: true)
+    public func toggleCompletion(of cell: TaskCell) {
+        guard let task = cell.task else { return }
+        let nowDone = !task.isDone
+        task.isDone = nowDone
+        cell.checkbox.setChecked(nowDone, animated: true)
+        cell.applyCompletionStyle(animated: true)
 
-        if nowDone {
-            openRows.removeAll { $0 === row }
-            doneRows.insert(row, at: 0)
-        } else {
-            doneRows.removeAll { $0 === row }
-            openRows.insert(row, at: 0)
-        }
-
-        floatRow(row)
-        relayout(animated: true,
-                 delay: TasksRootViewController.sectionMoveDelay,
-                 floating: row) { [weak self] in
-            self?.land(row)
-        }
-    }
-
-    /// Re-parent `row` to the unclipped contentView, preserving its position
-    /// on screen, so it is visible while it crosses between cards.
-    func floatRow(_ row: TaskRow) {
-        guard let parent = row.superview, parent !== contentView else { return }
-        let origin = parent.convert(row.frame.origin, to: contentView)
-        row.removeFromSuperview()
-        contentView.addSubview(row)
-        row.frame = CGRect(origin: origin, size: row.bounds.size)
-    }
-
-    /// Put a finished floating row back into its section card.
-    ///
-    /// The finished move animation must go first. Its recorded from/to
-    /// positions are in contentView coordinates, and a completed animation
-    /// still overrides the model at composite time — so re-parenting without
-    /// dropping it would place the row at contentView coordinates inside the
-    /// card, i.e. far below the card's bounds, where the card's clipping
-    /// swallows it. (CA removes a finished animation from the layer at the
-    /// same point; nothing here does that for us.)
-    func land(_ row: TaskRow) {
-        guard row.superview === contentView else { return }
-        row.removeAllAnimations()
-        let card: UIView = doneRows.contains(where: { $0 === row })
-            ? completedCard : todayCard
-        let origin = contentView.convert(row.frame.origin, to: card)
-        row.removeFromSuperview()
-        card.addSubview(row)
-        row.frame = CGRect(origin: origin, size: row.bounds.size)
-        relayout(animated: false)   // snap to the exact slot
+        tableView.performUpdates(
+            withDuration: TasksRootViewController.sectionMoveDuration,
+            delay: TasksRootViewController.sectionMoveDelay,
+            identity: { [weak self] in self?.identity($0) ?? AnyHashable("?") },
+            updates: {
+                if nowDone {
+                    openTasks.removeAll { $0 === task }
+                    doneTasks.insert(task, at: 0)
+                } else {
+                    doneTasks.removeAll { $0 === task }
+                    openTasks.insert(task, at: 0)
+                }
+            })
     }
 
     // MARK: Inserting
 
     /// "+ New Task": take the next canned task, drop it in at the top of
-    /// TODAY sliding down from behind the card's top edge while it fades in,
-    /// and push everything below it down in the same beat.
+    /// TODAY fading in while everything below it slides down in the same
+    /// beat.
     public func addTask() {
         let task = TasksData.newTask(at: nextPoolIndex)
         nextPoolIndex += 1
-        let row = makeRow(task)
-        todayCard.addSubview(row)
-        openRows.insert(row, at: 0)
-
-        // Start one row-height above its slot, transparent. The card clips,
-        // so it emerges from under the top edge.
-        row.frame = CGRect(x: 0, y: -TaskRow.height,
-                           width: cardWidth, height: TaskRow.height)
-        row.alpha = 0
-        relayout(animated: true)
-        UIView.animate(withDuration: TasksRootViewController.insertDuration,
-                       delay: 0, options: .curveEaseOut, animations: {
-            row.alpha = 1
-        })
+        tableView.performUpdates(
+            withDuration: TasksRootViewController.insertDuration,
+            identity: { [weak self] in self?.identity($0) ?? AnyHashable("?") },
+            updates: { openTasks.insert(task, at: 0) })
     }
 
     // MARK: Navigation
 
-    func pushDetail(for row: TaskRow) {
-        let detail = TasksDetailViewController(task: row.task)
-        detail.onPriorityChanged = { [weak row] in
-            guard let row else { return }
+    func pushDetail(for task: TaskItem) {
+        let detail = TasksDetailViewController(task: task)
+        detail.extraBottomInset = extraBottomInset
+        detail.onPriorityChanged = { [weak self] in
+            guard let self, let cell = self.cell(for: task) else { return }
             UIView.animate(withDuration: 0.25, delay: 0,
                            options: .curveEaseInOut, animations: {
-                row.applyPriority()
+                cell.applyPriority()
             })
         }
-        detail.onCompletionToggled = { [weak self, weak row] in
-            guard let self, let row else { return }
-            self.toggleCompletion(of: row)
+        detail.onCompletionToggled = { [weak self] in
+            guard let self, let cell = self.cell(for: task) else { return }
+            self.toggleCompletion(of: cell)
         }
         navigationController?.pushViewController(detail, animated: true)
     }
 
+    /// The visible cell currently displaying `task`, if any.
+    func cell(for task: TaskItem) -> TaskCell? {
+        tableView.visibleCells.compactMap { $0 as? TaskCell }
+            .first { $0.task === task }
+    }
+
     func pushStatistics() {
-        let all = openRows.map { $0.task } + doneRows.map { $0.task }
         navigationController?.pushViewController(
-            TasksStatsViewController(tasks: all), animated: true)
+            TasksStatsViewController(tasks: openTasks + doneTasks),
+            animated: true)
     }
 }
