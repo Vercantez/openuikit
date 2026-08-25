@@ -13,7 +13,17 @@
 // window calls _sequenceEnded(), which invokes reset() and returns the
 // recognizer to .possible.
 //
-// No ObjC runtime: targets are closures (`addTarget { r in ... }`).
+// Two registration forms, both UIKit-shaped:
+//
+//   UITapGestureRecognizer { r in ... }                       // closures
+//   UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+//
+// The selector form is real UIKit's; it reaches the method through the
+// target's `SelectorDispatching` table (UISelector.swift), not objc_msgSend,
+// and holds the target weakly, as UIKit does. The action's sender is the
+// recognizer: a 1-argument selector ("handleTap:") receives it, a
+// 0-argument one ("handleTap") does not.
+//
 // All timing is event-timestamp based — no wall clock (deterministic).
 
 open class UIGestureRecognizer {
@@ -51,11 +61,28 @@ open class UIGestureRecognizer {
     /// Set on recognition; consumed by UIWindow.processRecognitions.
     var pendingCancelTouches = false
 
-    private var actions: [(token: Int, handler: ActionHandler)] = []
+    struct Action {
+        let token: Int
+        let handler: ActionHandler?
+        /// Selector registration; weak, as in UIKit.
+        weak var target: AnyObject?
+        let selector: Selector?
+    }
+    private var actions: [Action] = []
     private var nextToken = 0
 
     public init(handler: ActionHandler? = nil) {
         if let handler { addTarget(handler) }
+    }
+
+    /// UIKit's `init(target:action:)`.
+    ///
+    ///     view.addGestureRecognizer(
+    ///         UITapGestureRecognizer(target: self,
+    ///                                action: #selector(handleTap(_:))))
+    public convenience init(target: AnyObject, action: Selector) {
+        self.init(handler: nil)
+        addTarget(target, action: action)
     }
 
     // MARK: Targets
@@ -63,12 +90,32 @@ open class UIGestureRecognizer {
     @discardableResult
     public func addTarget(_ handler: @escaping ActionHandler) -> Int {
         nextToken += 1
-        actions.append((nextToken, handler))
+        actions.append(Action(token: nextToken, handler: handler,
+                              target: nil, selector: nil))
         return nextToken
     }
 
+    /// Remove a closure registration by the token `addTarget(_:)` returned.
     public func removeTarget(_ token: Int) {
         actions.removeAll { $0.token == token }
+    }
+
+    /// UIKit's `addTarget(_:action:)`. `target` is held weakly and must
+    /// conform to ``SelectorDispatching``.
+    public func addTarget(_ target: AnyObject, action: Selector) {
+        nextToken += 1
+        actions.append(Action(token: nextToken, handler: nil,
+                              target: target, selector: action))
+    }
+
+    /// UIKit's `removeTarget(_:action:)`. `nil` matches any target / action.
+    public func removeTarget(_ target: AnyObject?, action: Selector?) {
+        actions.removeAll { a in
+            guard a.handler == nil else { return false }   // closures unaffected
+            if let target, a.target !== target { return false }
+            if let action, a.selector != action { return false }
+            return true
+        }
     }
 
     // MARK: State machine
@@ -83,7 +130,14 @@ open class UIGestureRecognizer {
             if newState == .began || (newState == .ended && old == .possible) {
                 pendingCancelTouches = true
             }
-            for a in actions { a.handler(self) }
+            actions.removeAll { $0.handler == nil && $0.target == nil }
+            for a in actions {
+                if let handler = a.handler {
+                    handler(self)
+                } else if let selector = a.selector {
+                    SelectorDispatch.send(selector, to: a.target, sender: self)
+                }
+            }
         case .possible, .failed:
             break
         }

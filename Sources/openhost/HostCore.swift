@@ -281,9 +281,13 @@ final class SDLHost {
             SDL_WINDOW_ALLOW_HIGHDPI.rawValue | SDL_WINDOW_SHOWN.rawValue)
         else { fatalError("SDL_CreateWindow failed: \(String(cString: SDL_GetError()))") }
         sdlWindow = w
+        // Headless CI (SDL_VIDEODRIVER=dummy) has no accelerated renderer;
+        // fall back to whatever SDL offers. Captured frames come from the
+        // Bitmap, not from this renderer, so the fallback cannot change them.
         guard let r = SDL_CreateRenderer(
-            w, -1,
-            SDL_RENDERER_ACCELERATED.rawValue | SDL_RENDERER_PRESENTVSYNC.rawValue)
+                w, -1,
+                SDL_RENDERER_ACCELERATED.rawValue | SDL_RENDERER_PRESENTVSYNC.rawValue)
+            ?? SDL_CreateRenderer(w, -1, SDL_RENDERER_SOFTWARE.rawValue)
         else { fatalError("SDL_CreateRenderer failed: \(String(cString: SDL_GetError()))") }
         renderer = r
         SDL_RenderSetLogicalSize(r, ptW, ptH)

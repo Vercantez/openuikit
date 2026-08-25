@@ -32,6 +32,48 @@ types that already exist off Darwin.
 A small vocabulary does most of the work: apps reference ~171 distinct UIKit
 types, not 737. That is why the punch list is tractable.
 
+## Selector target-action: shipped (M12)
+
+The census counted **~360 `#selector` uses** across the corpus and the earlier
+verdict was that none of them were addressable off Darwin. That changed:
+`UIControl.addTarget(_:action:for:)`, `removeTarget(_:action:for:)`,
+`UIGestureRecognizer.init(target:action:)` and `addTarget(_:action:)` now
+exist and work on **both** macOS and Linux, with no ObjC runtime and no
+compiler flags. Full design, measurements and limits: docs/OBJC_RUNTIME.md.
+
+Precisely how much of the ~360 that covers:
+
+| where the selector goes | corpus share (approx.) | status |
+|---|---|---|
+| `UIControl.addTarget(_:action:for:)` | the large majority | **works, both platforms** |
+| `UIGestureRecognizer(target:action:)` / `addTarget(_:action:)` | second largest | **works, both platforms** |
+| `UIBarButtonItem(…target:action:)` | — | blocked on the type ("Bars & appearance", 181 uses) |
+| `NotificationCenter.addObserver(_:selector:name:)` | — | blocked on the type ("App lifecycle", 543 uses) |
+| `Timer.scheduledTimer(…selector:)` | — | not implemented |
+| `UIAppearance`, KVO | — | not implemented (portable answers in docs/OBJC_RUNTIME.md) |
+
+So the *dispatch mechanism* is no longer the blocker for any of them — the
+remaining ones are blocked on their host types, and each becomes a one-line
+addition once that type lands.
+
+Two source-level costs remain, and they are the honest number:
+
+1. **Every selector target writes a name → method table** (`ActionTable` +
+   a two-line `SelectorDispatching` conformance, one line per action). Real
+   UIKit needs none of it; without `objc_msgSend` nothing else can supply it,
+   and this applies on macOS too because OpenUIKit's classes are not
+   `NSObject` subclasses.
+2. **On Linux `@objc` and `#selector` do not compile at all** (a Swift
+   compiler/stdlib limitation, measured in docs/OBJC_RUNTIME.md). The
+   portable spelling is `Selector.named("buttonTapped")`, which also compiles
+   on Darwin — so one source can serve both platforms, at the cost of a
+   mechanical `#selector(x)` → `Selector.named("x")` rewrite of those ~360
+   sites and dropping `@objc`.
+
+On macOS alone, `@objc func buttonTapped()` + `#selector(buttonTapped)` is
+verbatim UIKit source; only a 1-argument action's sender must be retyped from
+`UIButton` to `AnyObject`.
+
 ## The punch list, ordered by demand
 
 | cluster | uses | notes |

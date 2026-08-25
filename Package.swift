@@ -1,6 +1,20 @@
 // swift-tools-version:5.9
 import PackageDescription
 
+// Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
+// here -- no swiftSettings, no linkerSettings, no `.when(platforms:)`:
+//
+//   * macOS gets `Selector` from `import ObjectiveC`, which is free.
+//   * Linux gets OpenUIKit's own `Selector` struct; the library never emits
+//     ObjC interop code, so there is no `-lobjc`, no shim target and no
+//     frontend flag. (Enabling `-enable-objc-interop` on Linux is not an
+//     option for reasons measured in Tools/objcshim/interop_limits.sh.)
+//
+// That matters for packaging: `.unsafeFlags` anywhere in a manifest makes the
+// whole package unusable as an SPM *dependency*, so needing them would have
+// forced the feature to be opt-in. It does not, and this package stays
+// dependency-clean on both platforms.
+
 let package = Package(
     name: "OpenUIKit",
     products: [
@@ -41,6 +55,11 @@ let package = Package(
         // OpenUIKit itself: no Foundation, no Apple frameworks — it is
         // reference material for what OpenUIKit app code looks like.
         // Hosted by `openhost --app demo` (docs/APP_FEEL.md).
+        // One documented exception to the no-Foundation rule:
+        // SelectorApp.swift's Darwin-only branch does
+        // `import struct Foundation.Data`, which is what makes `@objc` legal
+        // without a compiler flag. The Linux build of this target still
+        // imports nothing but OpenUIKit.
         .target(name: "DemoApp", dependencies: ["OpenUIKit"]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).

@@ -28,6 +28,7 @@ let appRegistry: [String: (size: CGSize, makeRoot: () -> UIViewController)] = [
     "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
     "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
     "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
+    "selectors": (SelectorApp.windowSize, SelectorApp.makeRootViewController),
 ]
 
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,

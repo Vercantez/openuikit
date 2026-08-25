@@ -1,18 +1,28 @@
-# The Objective-C runtime question — tested, 2026-08-25
-
-> **CORRECTION (same day).** The verdict below ("do not adopt an ObjC
-> runtime, the compiler blocks it") was **wrong**, and the evidence for it was
-> self-inflicted. `@objc` and `#selector` *do* compile and run on Linux. The
-> earlier `swift-frontend` crash came from a shim that declared `Selector` as a
-> String-shaped struct where the compiler expects a pointer-shaped one — not
-> from a compiler limitation. See "What actually works" at the end; the
-> analysis of Darling vs libobjc2 still stands, but the conclusion changed.
+# The Objective-C runtime question — tested, then shipped
 
 Real UIKit leans on the ObjC runtime for target-action (`#selector`), KVO,
 `UIAppearance`, and optional-protocol dispatch (`respondsToSelector:`).
-OpenUIKit uses none of it: `UIControl` takes closures, and every protocol is a
-plain Swift protocol. This file records what we measured when asking whether
-we should adopt an ObjC runtime to improve app compatibility.
+This file records what we measured when asking whether OpenUIKit should adopt
+one, and what shipped instead.
+
+**Status (2026-08-25, M12).** Selector target-action is implemented, and the
+API works on macOS *and* Linux:
+
+```swift
+// macOS: verbatim UIKit.
+button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+view.addGestureRecognizer(
+    UITapGestureRecognizer(target: self, action: #selector(handleTap(_:))))
+
+// Both platforms: same call, portable spelling of the selector.
+button.addTarget(self, action: .named("buttonTapped"), for: .touchUpInside)
+```
+
+There is no ObjC runtime under it and no compiler flag on top of it. `#selector`
+itself still does not compile off Darwin — that is a Swift limitation, measured
+below, not one we can lift. What an app author must do differently from real
+UIKit is in "[What an app author must change](#what-an-app-author-must-change)"
+— read that section, it is the number that matters.
 
 ## How much do real apps depend on it?
 
@@ -28,125 +38,283 @@ Counted over the census corpus (eidolon, DuckDuckGo iOS, ios-oss):
 dominant. Most `NSNotificationCenter` observer registrations (ios-oss has
 ~780) need no ObjC runtime; corelibs-foundation covers them on Linux.
 
-## The decisive constraint: it is a *compiler* limitation, not a library one
+---
 
-Tested inside `swift:6.2-noble` (Swift 6.2.4, aarch64-linux):
+## What shipped
 
-1. Plain `@objc` → `error: Objective-C interoperability is disabled`.
-2. With `-Xfrontend -enable-objc-interop` → `@objc` is **accepted**; `#selector`
-   then fails with `error: import the 'ObjectiveC' module to use '#selector'`.
-3. Building a Swift module literally named `ObjectiveC` (declaring `Selector`,
-   `ObjCBool`) and importing it alongside Foundation →
-   **the compiler crashes with signal 11**, in
-   `swift::irgen::…storeAsBytes(…)` inside `GenObjC.cpp`, while emitting IR.
+`Sources/OpenUIKit/UISelector.swift` (+ the new API on `UIControl` and
+`UIGestureRecognizer`). Three pieces:
 
-So ObjC interop off-Darwin is not merely unsupported, it is broken at the
-IRGen level: the frontend expects Apple runtime metadata layouts that do not
-exist. **No library we ship can fix this.** `#selector` cannot compile on
-Linux today, whatever runtime is present.
+### 1. `Selector` — a per-platform type, and the library's only conditional
 
-## Evaluating the candidates
+```swift
+#if canImport(ObjectiveC)
+public typealias Selector = ObjectiveC.Selector      // the platform's real SEL
+#else
+public struct Selector: Hashable, ExpressibleByStringLiteral { … }
+#endif
+```
 
-**GNUstep `libobjc2`** — the right *runtime*: modern ObjC 2.0 (ARC, blocks,
-associated objects, non-fragile ivars), portable, and packaged on Ubuntu
-(`libgnustep-base-dev`; note `libobjc-N-dev` is GCC's older ObjC 1.0 runtime,
-not this). But the runtime is not our blocker — the compiler is. Using it
-would require patching `swiftc` to emit libobjc2-compatible metadata instead
-of Apple's, i.e. maintaining a Swift compiler fork. That is a far larger and
-more fragile commitment than the problem justifies.
+On Darwin `Selector` **is** the ObjC selector, so `#selector(...)` produces
+one and `sel_getName` recovers its name. Off Darwin it is a name-carrying
+struct. Both expose `actionName` ("buttonTapped", "valueChanged:") and
+`actionArity` (the trailing-colon count, ObjC's rule).
 
-**Darling** — the wrong tool for this job. Darling is a Darwin *emulation
-layer* (Mach-O loader, dyld, Mach traps, XNU syscall emulation) for running
-macOS **binaries** on Linux. We do not load macOS binaries; we compile apps
-from source against a portable library. Adopting it would reintroduce exactly
-the Darwin dependencies this project removed, and would make "portable" mean
-"emulated Darwin," which is the opposite of the goal. It is the right project
-if you ever want to run *precompiled* iOS/macOS apps — a different product.
+`Selector.named("buttonTapped")` is the **portable spelling** and compiles on
+both platforms. (`Selector("buttonTapped")` means the same thing, but Darwin's
+compiler warns "no method declared with Objective-C selector" on a string
+literal, since it cannot see a table it does not own; `named` launders the
+string through a variable.)
 
-**Apple's `objc4`** — open source but welded to Darwin (Mach, dyld, malloc
-zones). Porting is a research project.
+This `#if canImport` is the only conditional compilation in `OpenUIKit`, and
+it is deliberate: the *type* is the seam, everything above it is shared.
 
-## What we should build instead
+### 2. `SelectorDispatching` — name → method, supplied by the target
 
-`objc_msgSend` solves **binary** compatibility with precompiled ObjC code —
-something we will never need, since we recompile from source. What apps
-actually need is **source-level selector dispatch**, which is achievable in
-pure Swift:
+Swift has no by-name method dispatch, and OpenUIKit's classes are not
+`NSObject` subclasses, so `perform(_:)` does not exist even on Darwin. The
+target supplies the table:
 
-1. **Closures (today).** `addTarget(for:_:)`. Portable, type-safe, zero
-   runtime. Cost: a mechanical edit per call site.
-2. **A Swift macro.** `@Action func tapped()` generates a name → closure table
-   on the type, plus a `Sel("tapped")` lookup, giving
-   `addTarget(self, action: Sel("tapped"), for:)` — UIKit's shape without ObjC.
-   Macros are pure Swift and work on Linux.
-3. **A source rewriter** mapping `#selector(x)` → `Sel("x")` and `@objc` →
-   `@Action` in the build pipeline. With (2), unmodified app source compiles
-   everywhere. This is the only path to drop-in compatibility on Linux, and
-   notably it is a build-time tool, not a runtime.
+```swift
+final class MyViewController: UIViewController, SelectorDispatching {
+    static let actions: ActionTable<MyViewController> = [
+        .action("buttonTapped",  MyViewController.buttonTapped),
+        .action("switchChanged:", MyViewController.switchChanged),
+    ]
+    func perform(_ name: String, with sender: Any?) -> Bool {
+        Self.actions.perform(name, on: self, with: sender)
+    }
+}
+```
 
-Related runtime-flavoured features and their portable answers: **KVO** →
-explicit observer registry or `didSet` (real KVO isa-swizzles at runtime);
-**`UIAppearance`** → a typed appearance-proxy struct per class (real UIKit
-records setters through `NSInvocation` forwarding); **optional protocol
-methods** → protocol extensions with default implementations.
+`ActionEntry.action(_:_:)` is overloaded on UIKit's three action shapes —
+`()`, `(sender)`, `(sender, event)` — and takes an *unapplied method
+reference*, so each binding is one line and type-checked. A `(sender)` entry
+whose sender is the wrong class is a no-op, as in UIKit.
 
-## Verdict
+A send that finds no method is not a crash (we have no runtime to raise
+`unrecognized selector` from). It is silent, and reported through
+`SelectorDispatch.onUnresolved` — which the tests install.
 
-Do not adopt an ObjC runtime. Build the macro (and, if drop-in source
-compatibility becomes the blocker, the rewriter). Revisit only if the goal
-changes from "run app *source*" to "run app *binaries*" — at which point the
-answer is Darling, and it is a different project.
+### 3. The UIKit API
 
+| UIKit | OpenUIKit |
+|---|---|
+| `UIControl.addTarget(_:action:for:)` | same, target held **weakly** |
+| `UIControl.removeTarget(_:action:for:)` | same; `nil` matches any target/action; unnamed event bits survive |
+| `UIGestureRecognizer.init(target:action:)` | same |
+| `UIGestureRecognizer.addTarget(_:action:)` / `removeTarget(_:action:)` | same |
+| `UIControl.sendActions(for:)` | fires closure *and* selector registrations |
 
-## What actually works (measured, reproducible)
+The closure API (`addTarget(for:_:)`, `UITapGestureRecognizer { … }`) is
+unchanged and remains the better Swift API; DemoApp still uses it. Selector
+registrations whose weak target has deallocated are pruned before each send,
+so a dead target is silent rather than a diagnostic.
 
-`Tools/objcshim/verify.sh` compiles and RUNS this inside stock
-`swift:6.2-noble`, printing the recovered selector names:
+### Proof
+
+- `Tests/OpenUIKitTests/SelectorDispatchTests.swift` — 27 tests (23 of them
+  portable, 4 Darwin-only): the name
+  layer, the table, weak-target semantics, `removeTarget` bit arithmetic,
+  real touches through `UIWindow` into buttons / switches / tap recognizers,
+  and (Darwin only) that genuine `@objc` + `#selector` source drives all of it
+  and that `#selector(Target.valueChanged(_:)) == Selector.named("valueChanged:")`.
+- `Sources/DemoApp/SelectorApp.swift` — a screen wired **entirely** with
+  selectors, no closures: two buttons, a switch on `.valueChanged`, a tap
+  recognizer and a long-press recognizer. `openhost --app selectors`.
+- `scripts/selector_interaction.json` + `scripts/linux_selector_verify.sh` —
+  replays that screen headlessly on both operating systems and diffs the
+  recorded frames byte for byte. A selector that failed to fire would change
+  the rendered counter, so identical bytes prove identical dispatch.
+
+---
+
+## What an app author must change
+
+This is the honest cost. Everything below is a *source* difference from a real
+UIKit app; there are no runtime behaviour differences in what is implemented.
+
+**On macOS — three changes.**
+
+1. **The dispatch table.** The `SelectorDispatching` conformance above: two
+   lines plus one line per action. Real UIKit needs none of it. This is the
+   irreducible cost of not having `objc_msgSend`, and it applies on macOS too
+   because OpenUIKit's classes are not `NSObject` subclasses.
+2. **`@objc` needs the Foundation module loaded.** A *scoped* import —
+   `import struct Foundation.Data` — satisfies the compiler without pulling
+   CoreGraphics' `CGSize`/`CGRect` in to collide with OpenUIKit's. A plain
+   `import Foundation` **does** collide, so a real app ported as-is will hit
+   ambiguity errors on `CGRect(x:y:width:height:)` and friends. (That
+   collision is a general app-compat problem, not a selector one — `Selector`
+   itself is fine either way, since OpenUIKit's is a typealias to the very
+   type Foundation re-exports. Measured.)
+3. **A 1-argument action's sender must be typed `AnyObject`.** `@objc`
+   requires ObjC-representable parameters, and OpenUIKit's controls are pure
+   Swift classes. So real UIKit's
+   `@objc func tapped(_ sender: UIButton)` must be written
+   `@objc func tapped(_ sender: AnyObject)` and downcast. Zero-argument
+   actions — the common case — are verbatim.
+
+So on macOS `#selector(buttonTapped)` and `@objc func buttonTapped()` are
+**literally UIKit source**, and the 1-argument form needs its parameter
+retyped.
+
+**On Linux — one more, and it is the big one.**
+
+`@objc` and `#selector` do not compile at all:
+
+```
+error: Objective-C interoperability is disabled
+error: '#selector' can only be used with the Objective-C runtime
+```
+
+So off Darwin the same selectors are spelled `Selector.named("buttonTapped")`
+and the `@objc` attributes are dropped. `Selector.named` also compiles on
+Darwin, so **an app that wants one source for both platforms writes the string
+form everywhere and never writes `@objc`** — the API shape stays UIKit's, only
+the selector literal changes. `SelectorApp.swift` shows both: genuine
+`#selector` under `#if canImport(ObjectiveC)`, the string form otherwise, and
+the same call sites either way.
+
+**Coverage against the census.** Of the ~360 `#selector` uses in the corpus,
+the *call-site* API (`addTarget(_:action:for:)`, `init(target:action:)`,
+`addTarget(_:action:)`, `removeTarget`) now exists and works on both
+platforms — that is the whole `UIControl`/`UIGestureRecognizer` share of them,
+which is where the large majority sit. What is **not** covered:
+`#selector` uses that feed `NotificationCenter.addObserver(_:selector:name:)`,
+`UIBarButtonItem(title:style:target:action:)`, `Timer.scheduledTimer(…
+selector:)`, and `UIAppearance`/KVO — the first two because those types are
+not implemented yet (see docs/APP_COMPAT.md's "Bars & appearance" and "App
+lifecycle" clusters), the last two for the reasons at the bottom of this file.
+And on Linux, none of those ~360 sites compile *as written*; they compile
+after the mechanical `#selector(x)` → `Selector.named("x")` rewrite plus the
+dispatch table.
+
+---
+
+## Why not a real ObjC runtime: the measurement
+
+`Tools/objcshim/verify.sh` and `Tools/objcshim/interop_limits.sh` reproduce
+everything below inside stock `swift:6.2-noble`.
+
+### What works
+
+`@objc` and `#selector` **do** compile and run on Linux, with (a) a module
+named `ObjectiveC` declaring a **pointer-shaped** `Selector`, (b) a ~110-line
+C stub (`objc_stub.c`) providing `_objc_empty_cache`, `objc_opt_self`,
+`OBJC_CLASS_$__TtCs12_SwiftObject` + metaclass, and the whole
+`swift_unknownObject{Retain,Release,Weak*,Unowned*}` family (absent from Linux
+swiftCore, which is built without interop; for a pure-Swift object graph they
+are their native counterparts), archived as `libobjc.a`, and (c)
+`-Xfrontend -enable-objc-interop -Xfrontend -disable-objc-attr-requires-foundation-module`.
+`verify.sh` prints the recovered names, correctly mangled:
 
 ```
 recovered: tapped
 recovered: valueChanged:
 ```
 
-Note the correct ObjC mangling (the trailing colon on the one-argument
-selector) — the compiler is doing real selector generation, not a fallback.
+### Why it cannot be used anyway
 
-The entire cost is three small pieces, no compiler patch and no ObjC runtime:
+`-enable-objc-interop` also changes the **class metadata layout** the compiler
+emits. Measured (`interop_limits.sh`; the emitted IR for `class Root`, address
+point at field `[3]`, annotated):
 
-1. **`Tools/objcshim/ObjectiveC.swift`** (~10 lines) — a module literally named
-   `ObjectiveC` declaring `Selector` as a **pointer-shaped** struct (this is
-   the part I got wrong the first time) plus `ObjCBool`.
-2. **`Tools/objcshim/objc_stub.c`** (~20 lines) — the handful of runtime
-   symbols Swift's interop codegen references: `_objc_empty_cache`,
-   `objc_opt_self`, `OBJC_CLASS_$__TtCs12_SwiftObject` and its metaclass,
-   plus `swift_unknownObjectRetain/Release` (absent from Linux swiftCore,
-   which is built without interop; identity is correct for a pure-Swift
-   object graph). Archived as `libobjc.a` to satisfy the autolinker's
-   `-lobjc`.
-3. **Two existing flags**: `-Xfrontend -enable-objc-interop` and
-   `-Xfrontend -disable-objc-attr-requires-foundation-module`.
+```
+interop OFF: <{ ptr, ptr, ptr,  i64 Kind, ptr Superclass,
+                i32 Flags, i32, i32, i16, i16, i32, i32, ptr Description, … }>
+interop ON : <{ ptr, ptr, ptr,  i64 Kind, ptr Superclass,
+                ptr CacheData0, ptr CacheData1, i64 Data,
+                i32 Flags, i32, i32, i16, i16, i32, i32, ptr Description, … }>
+```
 
-Crucially, `sel.ptr` resolves to the selector **name string**, because the
-stub's `sel_registerName` returns its argument and the literal lives in the
-binary. So `String(cString:)` recovers `"valueChanged:"` at runtime — which is
-all a source-level dispatch scheme needs.
+Three extra words — the Objective-C class header. The `libswiftCore.so` that
+ships with Swift for Linux is built with `SWIFT_OBJC_INTEROP=0` and reads
+`Flags`/`InstanceSize`/`Description` at the *non*-interop offsets. So it reads
+garbage. A program with **no `@objc` anywhere** — `class Root`, `final class
+Leaf: Root, P` — prints `Leaf / true / true` built without interop and
+**segfaults on the very first line**, `type(of:)`, built with it. A variant
+that reaches the protocol cast first symbolicates as:
 
-### Two tiers now available
+```
+0  swift::TargetMetadata<InProcess>::isCanonicalStaticallySpecializedGenericMetadata()
+1  swift_checkMetadataState
+2  swift_conformsToProtocolMaybeInstantiateSuperclasses
+3  swift_conformsToProtocol
+4  dynamic_cast_existential_1_conditional
+```
 
-- **Tier 1 (proven, ~30 lines):** `#selector` compiles everywhere and yields a
-  name. `UIControl.addTarget(_:action:for:)` can take a real `Selector`, read
-  the name, and dispatch through a registry we own. This gives apps UIKit's
-  actual API shape with no runtime.
-- **Tier 2 (plausible, unproven):** Swift also emits real ObjC class metadata
-  and `...FTo` method thunks on Linux (visible in the link symbols). Linking
-  GNUstep **libobjc2**, which consumes that metadata, would give genuine
-  `objc_msgSend` dispatch, `respondsToSelector:`, and a base for KVO and
-  `UIAppearance`. This is now a much smaller step than previously assessed,
-  because the compiler side is already emitting what a runtime would need.
+— the runtime walking the superclass chain into metadata it cannot parse.
 
-### What this does not change
+Every runtime operation that touches a class descriptor — protocol conformance
+checks (`as? SomeProtocol`), `type(of:)`, reflection, generic instantiation,
+key paths — is undefined behaviour. Only plain class-to-class downcasts, which
+just walk `Superclass` pointers, survive. `verify.sh` passes solely because
+its test program does nothing but read a selector name.
 
-Darling remains the wrong tool for *this* project (it is a Darwin emulation
-layer for running macOS **binaries**; we compile from source). And
-`objc_msgSend` is still not required for Tier 1. What changed is that the
-door to Tier 2 is open, and Tier 1 is nearly free.
+**This is a Swift standard library mismatch, not an ObjC runtime gap**, which
+kills the "Tier 2" idea outright:
+
+- **GNUstep `libobjc2`** — the right *runtime* (ObjC 2.0, ARC, blocks,
+  non-fragile ivars, portable, packaged). It consumes the class metadata Swift
+  emits, and would give genuine `objc_msgSend`. It does not help: the party
+  that crashes is `libswiftCore.so`, and libobjc2 cannot change how that
+  library reads metadata. Not attempted further, for that reason.
+- The only fix is a Linux `libswiftCore` built with interop — i.e. a Swift
+  standard-library fork, tracked forever against upstream. That is the same
+  conclusion as the original assessment, now with the exact mechanism.
+
+Also ruled out, unchanged:
+
+- **Darling** — a Darwin *emulation layer* (Mach-O loader, dyld, Mach traps)
+  for running macOS **binaries**. We compile from source. It is the right
+  project for running *precompiled* iOS apps — a different product.
+- **Apple's `objc4`** — open source but welded to Darwin (Mach, dyld, malloc
+  zones). Porting is a research project.
+
+### Macro shadowing: also dead
+
+An obvious escape is to define user macros named `selector` and `objc` so the
+UIKit spelling compiles off Darwin. **Declaring** them is accepted, but the
+builtins win at every *use* site:
+
+```
+error: '#selector' can only be used with the Objective-C runtime
+error: Objective-C interoperability is disabled
+```
+
+(Measured with a real swift-syntax macro plugin on Linux.) Both names are
+compiler-reserved. This is why no `@UIAction`-style macro was shipped: a macro
+can generate the dispatch table, but it **cannot** make `@objc` or `#selector`
+compile on Linux, so it would not buy source compatibility — only save the
+one-line-per-action table. That remains a clean, optional future step; it is
+deliberately deferred because it would add a `swift-syntax` dependency to a
+package that currently has none, for a boilerplate saving rather than a
+capability. Until then, the manual table above is the documented path.
+
+## Packaging: no flags, no poisoned dependency
+
+The original worry was that `.unsafeFlags` would be required and would make
+OpenUIKit unusable as an SPM dependency (SPM permits `unsafeFlags` in a root
+package but refuses a dependency that uses them). **It is not required.**
+`Package.swift` needs no `swiftSettings`, no `linkerSettings`, and no
+`.when(platforms:)` for this feature:
+
+- macOS gets `Selector` from `import ObjectiveC`, which costs nothing.
+- Linux gets OpenUIKit's own `Selector`; the library never emits ObjC interop
+  code, so no `-lobjc`, no shim target, no frontend flags.
+- An app that wants literal `@objc` on Darwin adds a scoped
+  `import struct Foundation.Data` — a source change in the app, not a build
+  setting.
+
+So the feature is on by default on both platforms and the package remains
+clean for downstream consumers. There is nothing to make opt-in.
+
+## The related runtime-flavoured features
+
+Their portable answers, unchanged: **KVO** → explicit observer registry or
+`didSet` (real KVO isa-swizzles at runtime); **`UIAppearance`** → a typed
+appearance-proxy struct per class (real UIKit records setters through
+`NSInvocation` forwarding); **optional protocol methods** → protocol
+extensions with default implementations. All three are the same shape as the
+selector answer: replace a runtime lookup with a table we own.
