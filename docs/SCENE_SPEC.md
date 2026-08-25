@@ -681,9 +681,11 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
     scene's category by themselves — a gradient-only scene is `geometry`, a
     shadow scene with no text/controls is `effects`, and a scene that also
     contains text or controls keeps its `text`/`control` category (and threshold).
-- **Structural gate** (below): a hard, category-independent cap on how large a
-  single contiguous *wrong* region may be. A scene passes only if layout
-  passes AND the percentage passes AND the structural gate passes.
+- **Structural gates** (below): category-independent checks on the *shape* of
+  the difference — a cap on how large a single contiguous wrong region may be,
+  and a check that we did not simply fail to draw content the golden has. A
+  scene passes only if layout passes AND the percentage passes AND both
+  structural checks pass.
 - Report also includes mean absolute error, the largest severe-diff component
   (`blob`, in pt²) and a diff heatmap PNG per failing scene in `out/diffs/`
   (red = delta magnitude, dim green = matching, blue = the severe mask the
@@ -697,21 +699,23 @@ on a large canvas. This is not hypothetical: during the Linux portability run
 95 % chrome threshold — while visibly rendering "Library" as "Li rar". The two
 missing 34 pt glyphs were 0.3 % of the pixels, so the score never noticed.
 
-The gate closes that hole and is independent of the score:
+Both checks below run on the **severe mask**: pixels whose delta exceeds
+`STRUCT_DELTA` = **150** counts. That is 25× the 6-count match tolerance — far
+above any antialiasing, gamma, blend-calibration or alpha-encoding residual,
+and comfortably below the contrast of real content against its background. The
+mask is labelled into **8-connected components** by union-find over the sparse
+coordinate list (the tool stays on numpy + Pillow, no scipy). Both checks are
+independent of the percentage, and for animation scenes every captured frame
+is gated.
 
-1. Build the **severe mask**: pixels whose delta exceeds `STRUCT_DELTA` = **150**
-   counts. That is 25× the 6-count match tolerance — far above any
-   antialiasing, gamma, blend-calibration or alpha-encoding residual, and
-   comfortably below the contrast of real content against its background.
-2. Label its **8-connected components** (union-find over the sparse
-   coordinate list — the tool stays on numpy + Pillow, no scipy).
-3. Fail the frame if the largest component exceeds `STRUCT_MAX_BLOB` =
-   **80 pt²**, measured in POINTS² (device pixels ÷ scale²), so the gate means
-   the same physical size at 1×, 2× and 3×.
+There are two checks because one signal provably cannot cover both failure
+shapes — see "Why two checks" below.
 
-For animation scenes every captured frame is gated, like the percentage.
+### 1. Blob — a contiguous chunk of the render is wrong
 
-### Calibration (2026-08-25, all 80 scenes / 134 frames)
+Fail if the largest component exceeds `STRUCT_MAX_BLOB` = **80 pt²**, measured
+in POINTS² (device pixels ÷ scale²), so the gate means the same physical size
+at 1×, 2× and 3×.
 
 | case | largest severe component | verdict |
 |---|---|---|
@@ -719,25 +723,78 @@ For animation scenes every captured frame is gated, like the percentage.
 | next legitimate — `stack_alignment` / `constraints_baseline` | 20.0 / 16.5 pt² | passes |
 | **two 34 pt glyphs deleted** from `navbar_large` (the historical bug) | **248.8 pt²** | **FAILS** |
 | a `UISwitch` shifted 3 pt | 268.2 pt² | **FAILS** |
-| a rounded rect shifted 3 pt (`corner_radius`) | 236.0 pt² | **FAILS** |
+| a solid block shifted 6 pt on a contrasting background | 720.0 pt² | **FAILS** |
 | a 17 pt label shifted 3 pt (`demo_settings`) | 90.2 pt² | **FAILS** |
 
 80 pt² sits 2.4× above the worst legitimate residual and 3.1× below the
-smallest corruption it must catch. Deliberately-corrupted renders are not
-checked in; regenerate them from the recipes above, or run the synthetic
-end-to-end assertions in `Tools/compare/test_compare.py`, which build a
-canvas that scores > 99.6 % with one solid 12×12 pt patch wrong and assert
-the gate rejects it.
+smallest corruption it must catch.
+
+### 2. Content absence — the golden has content and we drew nothing
+
+For every component of at least `STRUCT_MIN_COMPONENT` = 4 pt², take its
+bounding box padded by 1 pt and compare the standard deviation of luma in the
+golden and in our render. Fail if the golden has real structure there
+(`STRUCT_ABSENCE_GOLDEN_STD` = 20) **and** ours is featureless — both
+absolutely (`STRUCT_ABSENCE_OUR_STD` = 10) **and** relatively
+(`STRUCT_ABSENCE_RATIO` = 0.12). Both conditions must hold, so the check errs
+toward silence.
+
+| case | our std | ratio | verdict |
+|---|---|---|---|
+| erased 17 pt body text | **0.00** | **0.000** | **FAILS** |
+| two 34 pt glyphs deleted from `navbar_large` | **3.70** | **0.036** | **FAILS** |
+| worst legitimate — `stack_alignment` | 14.98 | 0.252 | passes |
+| next legitimate — `stack_mixed` | 21.52 | 0.334 | passes |
+| `modal_sheet`'s title residual | 64.99 | 0.653 | passes |
+
+The ratio bound sits 3.3× above the worst corruption and 2.1× below the worst
+legitimate frame; the absolute bound 2.7× / 1.5×.
+
+### Why two checks
+
+The blob check **provably cannot** see missing body text, and no tuning of it
+can. At 17 pt a glyph's stems are ~2 device pixels wide at 2×, so an erased
+word yields one small component per stem — 31 pt², numerically
+indistinguishable from `modal_sheet`'s legitimate 33.2 pt² residual. Raising
+or lowering the threshold cannot separate them, and two morphological repairs
+were measured and rejected:
+
+- **Merging fragments** (dilation, or equivalently a link distance before
+  labelling) makes it *worse*: it grows the legitimate residual faster than
+  the corruption. At a 1 pt link `modal_sheet` goes 33 → 73 pt² while the
+  erased word stays at 31; only at 3 pt does the word reach 78, by which point
+  the legitimate residual is already 118.
+- **Eroding** to keep only solid strokes fails the other way: the erased word
+  drops to 5.5 pt², *below* `modal_sheet`'s 6.2.
+
+What separates them is not size but kind. Missing content leaves our region
+blank where the golden has ink; a rasterization residual leaves both regions
+similarly structured. That is what check 2 measures, and it is why the two
+checks catch disjoint things: a displaced solid block trips the blob check and
+correctly does *not* trip absence (it moved, it did not vanish), while missing
+body text does the reverse.
 
 ### What it does NOT catch (honest)
 
-A **small** view shifted a few points inside a scene whose internals are
-private on both sides. `navbar_large` with a 17 pt shelf label moved 3 pt
-scores 99.27 % with a largest component of 17 pt², and the layout dump cannot
-see it either, because `UINavigationStack` internals are excluded from
-`PUBLIC_CLASSES`. Everywhere else a 3 pt shift is a hard layout failure
-(frames must match within 0.5 pt), so the two gates together cover it — but
-inside chrome subtrees there is still a gap. Closing it needs either the
-chrome containers to publish their internal frames, or a per-region score
-(which was measured and rejected: local severe-diff density does not separate
-`modal_sheet`'s legitimate title residual from a genuinely shifted label).
+- **A low-contrast shift.** Both checks start from the 150-count severity
+  floor, so a region whose colour differs from its surroundings by less than
+  that produces *no severe pixels at all*. Measured: a `#CCCCCC` block on
+  `#FFFFFF` (a 51-count edge) shifted 3 pt scores 97.9 % with `blob = 0.0` and
+  no absence report. This is accepted rather than fixed: a shifted *view* is a
+  hard layout failure anyway (frames must match within 0.5 pt), and lowering
+  the floor toward ordinary antialiasing deltas would cost the separation both
+  checks depend on.
+- **A small view shifted inside a chrome subtree**, where the layout dump is
+  also blind because `UINavigationStack` / `UITabBarStack` internals are
+  excluded from `PUBLIC_CLASSES`. `navbar_large` with a 17 pt shelf label
+  moved 3 pt scores 99.27 % with a largest component of 17 pt². This is the
+  one case neither the pixel gates nor layout cover. Closing it needs the
+  chrome containers to publish their internal frames; a per-region density
+  score was measured and rejected (it does not separate `modal_sheet`'s
+  legitimate title residual from a genuinely shifted label).
+
+Deliberately-corrupted renders are not checked in; regenerate them from the
+recipes above, or run `Tools/compare/test_compare.py`, whose synthetic
+end-to-end cases cover both gates — a canvas scoring > 99.6 % with one solid
+12 × 12 pt patch wrong, and a run of 2 px stems erased entirely (which must
+fail *without* forming a blob, or the test is not exercising check 2).

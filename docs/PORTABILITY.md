@@ -57,18 +57,28 @@ and carries no host dependency.
   system SF. At M10 a Linux run without `OPENUIKIT_FONT_DIR` rendered
   122/134 frames byte-identically and **still passed 80/80** while dropping
   letters — that is the blind spot the structural gate was built for.
-  Re-measured 2026-08-25 with the gate active: the same no-font run now
-  **fails 7 of 81 scenes**, every one of them on the structural gate alone
-  (zero layout issues, percentage scores 97.5–99.4, i.e. all still above
-  their category thresholds):
+  Re-measured 2026-08-25 with the structural gates active: the same no-font
+  run now **fails 11 of 81 scenes**, every one of them on the structural
+  gates alone (zero layout issues, percentage scores 97.4–99.4, i.e. all
+  still above their category thresholds):
 
-  | scene | score | largest wrong region |
+  | scene | score | caught by |
   |---|---|---|
-  | `navbar_large` | 99.35 | 260.8 pt² — the missing 34 pt `b` of "Library" |
-  | `navbar_dark` | 98.23 | 258.2 pt² |
-  | `constraints_baseline` | 97.48 | 137.2 pt² |
-  | `modal_sheet` / `modal_sheet_grabber` | 99.40 / 99.39 | 108.0 pt² |
-  | `tabbar_basic` / `tabbar_tinted` | 99.22 / 98.80 | 94.5 / 90.8 pt² |
+  | `navbar_large` | 99.35 | blob 260.8 pt² — the missing 34 pt `b` of "Library" |
+  | `navbar_dark` | 98.23 | blob 258.2 pt² |
+  | `constraints_baseline` | 97.48 | blob 137.2 pt² |
+  | `modal_sheet` / `modal_sheet_grabber` | 99.40 / 99.39 | blob 108.0 pt² |
+  | `tabbar_basic` / `tabbar_tinted` | 99.22 / 98.80 | blob 94.5 / 90.8 pt² |
+  | `tableview_dark` | 97.86 | **content absence** (blob 54.2, under the cap) |
+  | `navbar_inline` | 98.74 | **content absence** (blob 50.2) |
+  | `tableview_grouped` | 98.11 | **content absence** (blob 29.8) |
+  | `constraints_compression` | 97.42 | **content absence** (blob 21.8) |
+
+  The last four are missing **body text** rather than display-size glyphs.
+  Their stems are ~2 device pixels wide, so they never form a blob large
+  enough to trip the size cap — they are caught only by the content-absence
+  check (docs/SCENE_SPEC.md "Why two checks"), which is exactly why that
+  second check exists.
 
   Fixes for the underlying dependency, in order of preference: extend the
   harvest (pure data, keeps the zero-dependency property), ship a

@@ -7,9 +7,12 @@ Two things are guarded here:
    while openrender writes straight alpha; compare_pixels must treat both
    encodings of the same visual result as a perfect match, and must still
    catch real color/alpha mismatches.
-2. The structural gate. A small region being COMPLETELY wrong must fail even
+2. The structural gates. A small region being COMPLETELY wrong must fail even
    when the percentage score is far above the category threshold — the
-   navbar_large "missing two letters at 99.5 %" blind spot.
+   navbar_large "missing two letters at 99.5 %" blind spot — in BOTH of its
+   shapes: one large contiguous blob (a displaced solid region, a big missing
+   glyph) and scattered thin fragments over blank space (missing BODY text,
+   whose stems never form a blob at all).
 
 Run: python3 Tools/compare/test_compare.py
 """
@@ -19,7 +22,8 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from compare import (compare_pixels, largest_diff_blob, STRUCT_DELTA,
-                     STRUCT_MAX_BLOB)
+                     STRUCT_MAX_BLOB, STRUCT_ABSENCE_RATIO,
+                     STRUCT_ABSENCE_OUR_STD)
 
 
 def png(tmp, name, arr):
@@ -70,7 +74,89 @@ def main():
     assert score(tmp, solid, solid, premul=True) == 100.0
 
     structural_tests(tmp)
+    absence_tests(tmp)
     print("test_compare.py: all assertions passed")
+
+
+def text_page(w, h, stroke_xs, top=20, bot=60, bg=255, ink=0):
+    """A canvas of thin vertical strokes — a stand-in for a run of body text.
+
+    17 pt glyph stems are ~2 device pixels wide at 2x, which is the whole
+    reason the blob gate cannot see missing body text: each stem is its own
+    tiny component.
+    """
+    a = np.zeros((h, w, 4))
+    a[...] = [bg, bg, bg, 255]
+    for x in stroke_xs:
+        a[top:bot, x:x + 2] = [ink, ink, ink, 255]
+    return a
+
+
+def absence_tests(tmp):
+    """The content-absence gate: the golden has structure, ours is blank."""
+    W = H = 400                                # mostly background, like a real scene
+    strokes = list(range(40, 100, 6))          # 10 stems, 4 px apart
+
+    # 1. Missing body text. Every stem is a separate ~2x40 px component, so
+    #    the BLOB gate sees nothing (the exact hole the lead found), and the
+    #    percentage sails past every threshold. The absence gate must fail it.
+    golden = text_page(W, H, strokes)
+    ours = text_page(W, H, [])                 # nothing drawn at all
+    res, err = compare_pixels(png(tmp, "gt.png", golden), png(tmp, "ot.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert res["score"] > 99.0, res["score"]         # would pass every threshold
+    assert res["blob"] <= STRUCT_MAX_BLOB, (
+        "precondition: thin stems must NOT form a blob, else this test is "
+        "not exercising the absence gate (blob=%s)" % res["blob"])
+    assert "missing" in res, "missing body text must be caught"
+    assert res["missing"]["our_std"] == 0.0, res["missing"]
+    assert res["missing"]["ratio"] == 0.0, res["missing"]
+
+    # 2. A rasterization RESIDUAL over the same strokes must not fire: the
+    #    strokes are present, just shifted a pixel, so both sides are equally
+    #    structured. This is modal_sheet's legitimate 33 pt^2 residual in
+    #    miniature.
+    ours = text_page(W, H, [x + 1 for x in strokes])
+    res, err = compare_pixels(png(tmp, "gr.png", golden), png(tmp, "or.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert "missing" not in res, (
+        "a shifted-but-present stroke run must not read as missing content: %s"
+        % res.get("missing"))
+
+    # 3. A flat-on-flat colour difference must not fire either — the golden
+    #    has no structure to be missing (this is what keeps scenes like
+    #    stack_alignment, whose severe component sits on plain fills, green).
+    golden = np.zeros((H, W, 4)); golden[...] = [255, 255, 255, 255]
+    golden[80:90, 80:90] = [40, 40, 40, 255]
+    ours = np.zeros((H, W, 4)); ours[...] = [255, 255, 255, 255]
+    ours[80:90, 80:90] = [200, 200, 200, 255]
+    res, err = compare_pixels(png(tmp, "gf.png", golden), png(tmp, "of.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert "missing" not in res, (
+        "a flat region differing in colour is not missing content: %s"
+        % res.get("missing"))
+
+    # 4. A displaced SOLID region stays the blob gate's job, and must not be
+    #    reported as missing content — it moved, it did not vanish.
+    golden = np.zeros((H, W, 4)); golden[...] = [255, 255, 255, 255]
+    golden[40:100, 40:160] = [20, 20, 20, 255]
+    ours = np.zeros((H, W, 4)); ours[...] = [255, 255, 255, 255]
+    ours[52:112, 40:160] = [20, 20, 20, 255]        # 12 px = 6 pt down
+    res, err = compare_pixels(png(tmp, "gs.png", golden), png(tmp, "os.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert res["blob"] > STRUCT_MAX_BLOB, res["blob"]
+    assert "missing" not in res, (
+        "a shifted solid block is displaced, not absent: %s" % res.get("missing"))
+
+    # 5. The two bounds must stay ordered the way the calibration assumes:
+    #    worst corruption (our_std 3.70, ratio 0.036) under them, worst
+    #    legitimate frame (14.98, 0.252) over them.
+    assert 3.70 < STRUCT_ABSENCE_OUR_STD < 14.98, STRUCT_ABSENCE_OUR_STD
+    assert 0.036 < STRUCT_ABSENCE_RATIO < 0.252, STRUCT_ABSENCE_RATIO
 
 
 def structural_tests(tmp):

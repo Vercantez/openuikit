@@ -16,27 +16,62 @@ from PIL import Image
 PIXEL_TOL = 6          # per-channel delta counted as "matching"
 LAYOUT_TOL = 0.5       # points
 
-# Structural gate (see docs/SCENE_SPEC.md "Structural diff gate").
+# Structural gates (see docs/SCENE_SPEC.md "Structural diff gate").
 #
 # The percentage score is blind to a small region being COMPLETELY wrong on a
 # large canvas: navbar_large once passed its 95 % threshold while missing two
 # whole letters of "Library", because the missing glyphs were 0.3 % of the
-# pixels. This gate is independent of the percentage: it labels the
-# 8-connected components of the SEVERE diff mask and fails the frame if any
-# single contiguous region is too large, whatever the global score says.
+# pixels. Two checks run on the SEVERE diff mask, both independent of the
+# percentage, because one signal provably cannot cover both failure shapes.
 #
-# Calibration (2026-08-25, all 80 scenes / 134 frames):
-#   worst legitimate component  33.2 pt^2  (modal_sheet — one stem of the
-#                                           22 pt bold title; window-mode
-#                                           glyph rasterization residual)
-#   two deleted 34 pt glyphs   248.8 pt^2  FAILS
-#   a UISwitch shifted 3 pt    268.2 pt^2  FAILS
-#   a rounded rect shifted 3pt 236.0 pt^2  FAILS
-# 80 pt^2 sits 2.4x above the worst legitimate residual and 3.1x below the
-# smallest corruption it has to catch.
+# 1. BLOB — the largest 8-connected component of the severe mask. Catches a
+#    contiguous chunk of the render being wrong: a displaced solid region, or
+#    a missing glyph big enough to form one blob.
+#
+#    Calibration (2026-08-25, all 81 scenes / 135 frames):
+#      worst legitimate component  33.2 pt^2  (modal_sheet — one stem of the
+#                                              22 pt bold title; window-mode
+#                                              glyph rasterization residual)
+#      two deleted 34 pt glyphs   248.8 pt^2  FAILS
+#      a UISwitch shifted 3 pt    268.2 pt^2  FAILS
+#      a solid block shifted 6 pt 720.0 pt^2  FAILS
+#    80 pt^2 sits 2.4x above the worst legitimate residual and 3.1x below the
+#    smallest corruption it has to catch.
+#
+# 2. CONTENT ABSENCE — the golden has structure here and our render is FLAT.
+#    Catches missing BODY text, which the blob check provably cannot: at 17 pt
+#    a glyph's stems are ~2 px wide, so an erased word yields one small
+#    component per stem (31 pt^2) rather than one large blob — numerically
+#    indistinguishable from modal_sheet's legitimate 33.2 pt^2 residual.
+#    Merging fragments (dilation / a link distance) was measured and does NOT
+#    fix it: it grows the legitimate residual FASTER than the corruption
+#    (at a 1 pt link, modal_sheet 33 -> 73 while the erased word stays at 31).
+#    Eroding to keep only solid strokes fails the other way (the erased word
+#    drops to 5.5, below modal_sheet's 6.2).
+#
+#    What does separate them is not size but KIND: missing content leaves our
+#    region blank where the golden has ink, while a rasterization residual
+#    leaves both regions similarly structured. So for each substantial
+#    component, compare the local standard deviation of luma over its padded
+#    bounding box.
+#
+#    Calibration (same sweep):
+#      erased 17 pt body text     our std  0.00, ratio 0.000  FAILS
+#      two deleted 34 pt glyphs   our std  3.70, ratio 0.036  FAILS
+#      worst legitimate           our std 14.98, ratio 0.252  (stack_alignment)
+#      next legitimate            our std 21.52, ratio 0.334  (stack_mixed)
+#    Both conditions must hold to fire, so the gate errs toward silence: the
+#    ratio bound sits 3.3x above the worst corruption and 2.1x below the worst
+#    legitimate frame, the absolute bound 2.7x / 1.5x.
 STRUCT_DELTA = 150     # per-pixel delta that counts as "plainly wrong", not
                        # a tolerance residual (25x PIXEL_TOL)
 STRUCT_MAX_BLOB = 80.0 # points^2 of contiguous severe diff allowed
+
+STRUCT_MIN_COMPONENT = 4.0    # pt^2 — smaller components are specks, not content
+STRUCT_ABSENCE_PAD = 1.0      # pt of context around a component's bbox
+STRUCT_ABSENCE_GOLDEN_STD = 20.0  # the golden must genuinely have content there
+STRUCT_ABSENCE_OUR_STD = 10.0     # ...and ours must be essentially featureless
+STRUCT_ABSENCE_RATIO = 0.12       # ...both absolutely and relative to the golden
 
 # Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
 # scenes (bar materials / edge effects, cell chrome, sheet presentation).
@@ -152,20 +187,17 @@ def compare_layout(g, o):
                         f"golden path={a.get('path')!r} ours={b.get('path')!r}")
     return problems
 
-def largest_diff_blob(delta, scale):
-    """Largest 8-connected component of the severe diff mask.
+def severe_components(delta):
+    """8-connected components of the severe diff mask, as (ys, xs) arrays.
 
-    Returns (area in points^2, bounding box in points as (x, y, w, h)) — or
-    (0.0, None) when nothing differs severely. Union-find over the sparse
-    coordinate list rather than a dense label pass: severe masks are a few
-    thousand pixels even on a badly wrong frame, and this keeps the tool on
-    numpy + Pillow alone (no scipy).
+    Union-find over the sparse coordinate list rather than a dense label pass:
+    severe masks are a few thousand pixels even on a badly wrong frame, and
+    this keeps the tool on numpy + Pillow alone (no scipy).
     """
-    mask = delta > STRUCT_DELTA
-    ys, xs = np.nonzero(mask)          # raster order (row-major)
+    ys, xs = np.nonzero(delta > STRUCT_DELTA)   # raster order (row-major)
     n = len(ys)
     if n == 0:
-        return 0.0, None
+        return []
     pos = {}
     for i in range(n):
         pos[(int(ys[i]), int(xs[i]))] = i
@@ -188,17 +220,57 @@ def largest_diff_blob(delta, scale):
             if ra != rb:
                 parent[rb] = ra
 
-    counts = {}
+    groups = {}
     for i in range(n):
-        r = find(i)
-        counts[r] = counts.get(r, 0) + 1
-    root = max(counts, key=counts.get)
-    members = [i for i in range(n) if find(i) == root]
-    my, mx = ys[members], xs[members]
+        groups.setdefault(find(i), []).append(i)
+    return [(ys[g], xs[g]) for g in groups.values()]
+
+
+def largest_diff_blob(delta, scale, comps=None):
+    """Largest severe component: (area in points^2, bbox in points as
+    (x, y, w, h)) — or (0.0, None) when nothing differs severely."""
+    comps = severe_components(delta) if comps is None else comps
+    if not comps:
+        return 0.0, None
+    my, mx = max(comps, key=lambda c: len(c[0]))
     bbox = (float(mx.min()) / scale, float(my.min()) / scale,
             float(mx.max() - mx.min() + 1) / scale,
             float(my.max() - my.min() + 1) / scale)
-    return counts[root] / float(scale * scale), bbox
+    return len(my) / float(scale * scale), bbox
+
+
+def missing_content(gluma, oluma, scale, comps):
+    """The most content-absent severe component, or None.
+
+    A component qualifies when the GOLDEN has real structure over its padded
+    bounding box and OUR render is featureless there — content that simply was
+    not drawn, as opposed to content drawn slightly differently. Returns
+    (area pt^2, bbox pt, golden std, our std, ratio).
+    """
+    pad = max(1, int(round(STRUCT_ABSENCE_PAD * scale)))
+    worst = None
+    for cy, cx in comps:
+        area = len(cy) / float(scale * scale)
+        if area < STRUCT_MIN_COMPONENT:
+            continue
+        y0 = max(0, int(cy.min()) - pad)
+        y1 = min(gluma.shape[0], int(cy.max()) + 1 + pad)
+        x0 = max(0, int(cx.min()) - pad)
+        x1 = min(gluma.shape[1], int(cx.max()) + 1 + pad)
+        gstd = float(gluma[y0:y1, x0:x1].std())
+        ostd = float(oluma[y0:y1, x0:x1].std())
+        if gstd < STRUCT_ABSENCE_GOLDEN_STD:
+            continue                      # the golden has nothing to miss
+        ratio = ostd / gstd
+        if ostd > STRUCT_ABSENCE_OUR_STD or ratio > STRUCT_ABSENCE_RATIO:
+            continue                      # we drew something there
+        bbox = (float(cx.min()) / scale, float(cy.min()) / scale,
+                float(cx.max() - cx.min() + 1) / scale,
+                float(cy.max() - cy.min() + 1) / scale)
+        cand = (area, bbox, gstd, ostd, ratio)
+        if worst is None or area > worst[0]:
+            worst = cand
+    return worst
 
 
 def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1):
@@ -229,7 +301,9 @@ def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1)
     match = (delta <= PIXEL_TOL)
     score = 100.0 * match.mean()
     mae = float(delta.mean())
-    blob, bbox = largest_diff_blob(delta, scale)
+    comps = severe_components(delta)
+    blob, bbox = largest_diff_blob(delta, scale, comps)
+    absent = missing_content(gw.mean(axis=2), ow.mean(axis=2), scale, comps)
     if score < 100.0 and diff_path:
         heat = np.zeros((*delta.shape, 3), dtype=np.uint8)
         heat[..., 0] = np.clip(delta * 4, 0, 255).astype(np.uint8)  # red = diff magnitude
@@ -239,6 +313,13 @@ def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1)
     res = {"score": round(score, 3), "mae": round(mae, 3), "blob": round(blob, 1)}
     if bbox:
         res["blob_bbox"] = [round(v, 1) for v in bbox]
+    if absent:
+        area, abox, gstd, ostd, ratio = absent
+        res["missing"] = {"area": round(area, 1),
+                          "bbox": [round(v, 1) for v in abox],
+                          "golden_std": round(gstd, 2),
+                          "our_std": round(ostd, 2),
+                          "ratio": round(ratio, 3)}
     return res, None
 
 def main():
@@ -306,6 +387,9 @@ def main():
                             pixel_ok = False
                         if res["blob"] > STRUCT_MAX_BLOB:
                             struct_ok = False
+                        if "missing" in res:
+                            struct_ok = False
+                            entry.setdefault("missing", res["missing"])
                 frames.append(frame)
             entry["frames"] = frames
             scores = [f["score"] for f in frames if "score" in f]
@@ -326,12 +410,22 @@ def main():
                 entry.update(res)
                 entry["threshold"] = THRESHOLDS[cat]
                 pixel_ok = res["score"] >= THRESHOLDS[cat]
-                struct_ok = res["blob"] <= STRUCT_MAX_BLOB
+                struct_ok = res["blob"] <= STRUCT_MAX_BLOB and "missing" not in res
 
         if not struct_ok:
-            entry["structural"] = (
-                f"contiguous wrong region {entry.get('blob')} pt^2 exceeds "
-                f"{STRUCT_MAX_BLOB} pt^2 (delta > {STRUCT_DELTA})")
+            problems = []
+            if entry.get("blob", 0) > STRUCT_MAX_BLOB:
+                problems.append(
+                    f"contiguous wrong region {entry['blob']} pt^2 exceeds "
+                    f"{STRUCT_MAX_BLOB} pt^2 (delta > {STRUCT_DELTA})"
+                    + (f" at {entry['blob_bbox']}" if "blob_bbox" in entry else ""))
+            if "missing" in entry:
+                m = entry["missing"]
+                problems.append(
+                    f"content missing at {m['bbox']}: the golden has structure "
+                    f"there (std {m['golden_std']}) and ours is flat "
+                    f"(std {m['our_std']}, ratio {m['ratio']})")
+            entry["structural"] = problems
 
         entry["status"] = "PASS" if (layout_ok and pixel_ok and struct_ok) else "FAIL"
         if entry["status"] == "FAIL":
@@ -345,9 +439,8 @@ def main():
         nl = len(r.get("layout_problems", []))
         print(f"{r['status']:7} {r['scene']:{w}} [{r['category']:8}] pixels={score}  "
               f"blob={blob}  layout_issues={nl}")
-        if "structural" in r:
-            print(f"        · STRUCTURAL: {r['structural']}"
-                  + (f" at {r['blob_bbox']}" if "blob_bbox" in r else ""))
+        for p in r.get("structural", []):
+            print(f"        · STRUCTURAL: {p}")
         if "frames" in r:
             details = "  ".join(
                 f"t{f['t']:g}={f['score']}" if "score" in f else f"t{f['t']:g}=({f['error']})"
