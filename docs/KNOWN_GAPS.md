@@ -20,6 +20,11 @@ What shipped (all oracle-backed): PNG/JPEG decode+encode and
   1 pt divider at the centre (colour ≈ 180), and a matching 13 pt plus bar
   centred in the right half. Nothing else about the glyph strokes has been
   fitted.
+- **Operational note**: regenerating a `"window": true` golden needs an
+  ACTIVE, unlocked display session — `Tools/oracle2` composites through the
+  real render server and otherwise fails with "window never became
+  renderable" (this is what stopped `UIStepper` from being finished in this
+  pass; the offscreen v1 oracle keeps working regardless).
 - **`UIRefreshControl`** — needs scroll-view integration (pull-to-refresh
   offset behavior) that no static scene can validate, plus edits to
   `UIScrollView.swift`, which this cluster does not own. The visual is the
