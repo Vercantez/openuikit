@@ -358,9 +358,11 @@ open class UITableView: UIScrollView {
 
     private var cellPool: [String: [UITableViewCell]] = [:]
     private var registeredCellTypes: [String: UITableViewCell.Type] = [:]
-    /// Recycled cells kept per identifier (visible + a couple of spares is
-    /// all a steady scroll needs).
-    static let poolCapacityPerIdentifier = 8
+    /// Recycled cells kept per identifier. Must hold at least a screenful:
+    /// a far setContentOffset jump retires EVERY visible cell and re-tiles
+    /// the same count from the pool (a smaller cap would allocate on every
+    /// jump; steady scrolling only ever pools one or two).
+    static let poolCapacityPerIdentifier = 64
 
     public func register(_ cellClass: UITableViewCell.Type,
                          forCellReuseIdentifier identifier: String) {
