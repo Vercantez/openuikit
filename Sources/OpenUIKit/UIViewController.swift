@@ -70,6 +70,27 @@ open class UIViewController {
         didSet { navigationController?._titleDidChange(self) }
     }
 
+    // MARK: Modal presentation (M10 — see UIPresentation.swift)
+
+    /// Style used the next time this controller is PRESENTED.
+    /// `.automatic` resolves to `.pageSheet` (the iOS default).
+    public var modalPresentationStyle: UIModalPresentationStyle = .automatic
+
+    /// Minimal semantics: the dimming view swallows touches either way —
+    /// there is no tap-outside-to-dismiss (stored for API compatibility).
+    public var isModalInPresentation = false
+
+    /// The controller this one is currently presenting.
+    public internal(set) var presentedViewController: UIViewController?
+    /// The controller that presented this one.
+    public internal(set) weak var presentingViewController: UIViewController?
+
+    // Presentation chrome (UIPresentation.swift), retained while presented.
+    var _presentationContainer: UIView?
+    var _presentationSheet: _UIPageSheetView?
+    var _presentationDim: UIView?
+    var _savedSheetBackgroundColor: UIColor?
+
     // MARK: Content scroll view (M10 large titles)
 
     /// The scroll view a parent UINavigationController's bar tracks for

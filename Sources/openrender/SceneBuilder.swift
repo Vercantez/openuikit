@@ -1091,6 +1091,26 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     let host = UIView(frame: CGRect(x: 0, y: 0, width: sz[0], height: sz[1]))
     host.addSubview(container)
 
+    // Scene spec v5 (M10): top-level "modal" — present a real pageSheet
+    // over the base scene for the PIXEL comparison only (the layout dump
+    // above excludes the sheet, mirroring the oracle/simulator renderer).
+    if let modalJ = scene["modal"]?.objectValue {
+        guard (modalJ["style"]?.stringValue ?? "pageSheet") == "pageSheet" else {
+            fatalError("scene \(name): modal style must be \"pageSheet\"")
+        }
+        guard let contentJ = modalJ["content"]?.objectValue else {
+            fatalError("scene \(name): \"modal\" needs a \"content\" view object")
+        }
+        let baseVC = UIViewController()
+        baseVC.view = host
+        let sheetVC = UIViewController()
+        sheetVC.view = buildView(contentJ, scale: scale, warn: warn)
+        baseVC.present(sheetVC, animated: false)
+        host.layoutIfNeeded()
+        sceneRetainedControllers.append(baseVC)
+        sceneRetainedControllers.append(sheetVC)
+    }
+
     // Scene spec v3: animation scenes render one frame per capture time
     // (and no plain <name>.png). Animations are started AFTER the layout
     // dump — the dump is the pre-animation (t = 0) model layout.
