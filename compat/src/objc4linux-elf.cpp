@@ -68,6 +68,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -403,7 +404,23 @@ void _dyld_objc_register_callbacks(const struct _dyld_objc_callbacks *callbacks)
     gCallbacks = *(const struct _dyld_objc_callbacks_v4 *)callbacks;
     gHaveCallbacks = true;
 
-    objc4linux_scan_images();
+    /*
+     * Deliberately does NOT scan here.
+     *
+     * dyld's contract is that _dyld_objc_notify_register RETURNS, and only
+     * then does dyld deliver map/init callbacks. objc4 depends on that: the
+     * very next statement in _objc_init() is
+     *
+     *     didCallDyldNotifyRegister = true;
+     *
+     * and loadAllCategoriesIfNeeded() -- the function that performs the
+     * initial category attach for every image present at launch -- is a
+     * no-op while that flag is false. Scanning from inside this call left
+     * every category in the program unattached, silently: no +load, no
+     * category methods, and `unrecognized selector` at the first use.
+     *
+     * So the scan is driven by the constructor, after _objc_init() returns.
+     */
 }
 
 /*
@@ -605,6 +622,32 @@ bool objc4linux_image_contains_address(const struct mach_header *mh,
 }
 
 /* ------------------------------------------------------------------ *
+ * malloc_size
+ *
+ * Darwin's malloc_size() returns 0 for a pointer malloc does not own, and
+ * objc4 relies on that in try_free() to distinguish heap-allocated metadata
+ * from metadata that is constant data inside a compiled image. glibc's
+ * malloc_usable_size() has no such contract -- it decodes the chunk header at
+ * ptr-16 unconditionally. See the long note in compat/malloc/malloc.h.
+ *
+ * The ELF image registry answers the real question directly: an address
+ * inside any loaded image's PT_LOAD ranges is not a malloc block.
+ * ------------------------------------------------------------------ */
+
+extern "C"
+size_t malloc_size(const void *ptr)
+{
+    if (!ptr) return 0;
+
+    pthread_mutex_lock(&gRegistryLock);
+    bool inImage = imageContainingAddress(ptr) != nullptr;
+    pthread_mutex_unlock(&gRegistryLock);
+    if (inImage) return 0;
+
+    return malloc_usable_size((void *)ptr);
+}
+
+/* ------------------------------------------------------------------ *
  * Entry point.
  *
  * ORDERING (docs/PORT_PLAN.md "Riskiest unknown"):
@@ -636,5 +679,6 @@ bool objc4linux_image_contains_address(const struct mach_header *mh,
 __attribute__((constructor(101)))
 static void objc4linux_elf_init(void)
 {
-    _objc_init();
+    _objc_init();          // registers our callbacks, sets up the runtime
+    objc4linux_scan_images();   // stands in for dyld delivering them
 }
