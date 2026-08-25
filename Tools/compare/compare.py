@@ -71,7 +71,7 @@ def classify(scene):
         cat = "chrome"
     elif kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
                   "UITextField", "UITextView", "UISlider", "UISegmentedControl",
-                  "UIActivityIndicatorView"}:
+                  "UIActivityIndicatorView", "UIPageControl"}:
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"

@@ -1,0 +1,667 @@
+{
+  "name" : "control_pagecontrol",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        100,
+        320,
+        100
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        10,
+        280,
+        30
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        94,
+        2,
+        92,
+        26
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "class" : "_UIVisualEffectSubview",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "2.0.0.0"
+    },
+    {
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        64,
+        26
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "2.0.1.0.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.1"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "2.0.1.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.2"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "2.0.1.2.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.3"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "2.0.1.3.0"
+    },
+    {
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        55,
+        280,
+        30
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        67,
+        2,
+        146,
+        26
+      ],
+      "path" : "3.0"
+    },
+    {
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        146,
+        26
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "class" : "_UIVisualEffectSubview",
+      "frame" : [
+        0,
+        0,
+        146,
+        26
+      ],
+      "path" : "3.0.0.0"
+    },
+    {
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        118,
+        26
+      ],
+      "path" : "3.0.1"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.0.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.1"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.2"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.2.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.3"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.3.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        72,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.4"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.4.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        90,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.5"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.5.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        108,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.6"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "3.0.1.6.0"
+    },
+    {
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        110,
+        280,
+        30
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        94,
+        2,
+        92,
+        26
+      ],
+      "path" : "4.0"
+    },
+    {
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "class" : "_UIVisualEffectSubview",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "4.0.0.0"
+    },
+    {
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        64,
+        26
+      ],
+      "path" : "4.0.1"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "4.0.1.0.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.1"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "4.0.1.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.2"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "4.0.1.2.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.3"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "4.0.1.3.0"
+    },
+    {
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        155,
+        200,
+        40
+      ],
+      "path" : "5"
+    },
+    {
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        63,
+        7,
+        74,
+        26
+      ],
+      "path" : "5.0"
+    },
+    {
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        74,
+        26
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "class" : "_UIVisualEffectSubview",
+      "frame" : [
+        0,
+        0,
+        74,
+        26
+      ],
+      "path" : "5.0.0.0"
+    },
+    {
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        46,
+        26
+      ],
+      "path" : "5.0.1"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "5.0.1.0.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.1"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "5.0.1.1.0"
+    },
+    {
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.2"
+    },
+    {
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15
+      ],
+      "path" : "5.0.1.2.0"
+    }
+  ]
+}

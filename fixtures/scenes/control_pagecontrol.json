@@ -1,0 +1,24 @@
+{
+  "name": "control_pagecontrol",
+  "size": [320, 200],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 100], "backgroundColor": "#000000" },
+      { "class": "UIView", "frame": [0, 100, 320, 100], "backgroundColor": "#FFFFFF" },
+      { "class": "UIPageControl", "frame": [20, 10, 280, 30], "numberOfPages": 4,
+        "currentPage": 1 },
+      { "class": "UIPageControl", "frame": [20, 55, 280, 30], "numberOfPages": 7,
+        "currentPage": 6 },
+      { "class": "UIPageControl", "frame": [20, 110, 280, 30], "numberOfPages": 4,
+        "currentPage": 2, "pageIndicatorTintColor": "systemGray3",
+        "currentPageIndicatorTintColor": "systemBlue" },
+      { "class": "UIPageControl", "frame": [20, 155, 200, 40], "numberOfPages": 3,
+        "currentPage": 0, "pageIndicatorTintColor": "#FF0000",
+        "currentPageIndicatorTintColor": "#00A000" }
+    ]
+  }
+}

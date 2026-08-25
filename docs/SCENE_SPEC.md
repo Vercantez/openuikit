@@ -1,4 +1,4 @@
-# Scene Specification v5
+# Scene Specification v5.2
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -135,6 +135,75 @@ Plain style (`UIButton(type: .system)` legacy layout — no UIButtonConfiguratio
 |---|---|
 | `progress` | 0–1 |
 | `progressTintColor`, `trackTintColor` | color |
+
+### `UISlider` (v5.2 — app-compat cluster, requires `"window": true`)
+The iOS 26 thumb is a `_UILiquidLensView` the render server draws, so slider
+scenes must be captured by `Tools/oracle2` (the same rule `UISwitch`
+follows); the track and the minimum-track fill would render offscreen.
+| key | type | notes |
+|---|---|---|
+| `value` | number | default 0, clamped into the range. |
+| `minimumValue` / `maximumValue` | number | default 0 / 1. |
+| `minimumTrackTintColor` | color | default = tintColor (systemBlue). |
+| `maximumTrackTintColor` | color | default = the measured translucent neutral. |
+| `thumbTintColor` | color | default white. |
+| `enabled` | bool | |
+
+Measured metrics (Catalyst iOS 26, `control_slider`): `intrinsic` =
+`(-1, 34)`; track 6 pt tall, full width, vertically centred, capsule;
+thumb 37 x 24 capsule at `x = round(fraction × (width − 37))` (the thumb is
+a subview, so its origin lands on UIKit's integer-point frame grid) with a
+soft shadow; the minimum-track fill runs to the UNROUNDED thumb centre.
+
+### `UISegmentedControl` (v5.2 — app-compat cluster, requires `"window": true`)
+The selected pill is a `_UILiquidLensView` (render-server only); the
+background and titles do render offscreen.
+| key | type | notes |
+|---|---|---|
+| `segments` | `[string]` | segment titles, in order. |
+| `selectedSegmentIndex` | int | default none. |
+| `selectedSegmentTintColor` | color | default white (light) / (90,90,96) (dark). |
+| `enabled` | bool | |
+
+Measured metrics (`control_segmented`): capsule background
+`tertiarySystemFill`; segments split the width with integer-floor
+boundaries (280 / 3 → 93, 93, 94); the selected pill is the segment rect
+inset 2 pt on every side, circular capsule; titles are 13 pt system,
+REGULAR unselected and MEDIUM selected, centred with the origin rounded
+half-up to the pixel grid. The layout dump carries NO `intrinsic` for this
+class (see docs/KNOWN_GAPS.md).
+
+### `UIActivityIndicatorView` (v5.2 — app-compat cluster)
+Renders through the offscreen v1 oracle (no `"window"` needed): the spin
+animation is discarded offscreen, so the golden pins the REST pose, which
+is exactly what OpenUIKit draws at `animationTime == 0`.
+| key | type | notes |
+|---|---|---|
+| `style` | string | `medium` (default, 20x20) or `large` (37x37). |
+| `color` | color | default = the measured dynamic neutral gray. |
+| `animating` | bool | default true (`startAnimating()`). |
+| `hidesWhenStopped` | bool | default true. |
+
+Eight capsule blades 45° apart with a fixed opacity ladder — full metrics
+in `Sources/OpenUIKit/UIActivityIndicatorView.swift`.
+
+### `UIPageControl` (v5.2 — app-compat cluster, requires `"window": true`)
+| key | type | notes |
+|---|---|---|
+| `numberOfPages` | int | default 3. |
+| `currentPage` | int | default 0. |
+| `hidesForSinglePage` | bool | default false. |
+| `pageIndicatorTintColor` | color | default white @ 45 %. |
+| `currentPageIndicatorTintColor` | color | default opaque white. |
+
+Careful when re-probing: with DEFAULT colors the control is invisible over a
+white background (white at 45 % on white), which looks exactly like "the
+oracle does not draw it" — probe over black/red instead (that is how the
+defaults above were measured). Metrics: content box `18n + 20` wide, 26 tall,
+centred in the bounds; dot slots are 10 pt wide on an 18 pt pitch starting
+14 pt inside the content box and vertically centred, and the drawn dot is a
+7.59 pt circle 0.19 pt left of / below its slot centre (fitted from the
+golden's ink area and centroid).
 
 ### `UIScrollView` (v4.1 — M7.5)
 A real scroll view; `contentOffset` IS the layer's bounds origin, so a static

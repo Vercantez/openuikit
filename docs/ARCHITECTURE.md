@@ -165,7 +165,9 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIColor.swift`, `SystemColors.swift`, `UITraitCollection.swift` | **color** | to create |
 | `Sources/OpenUIKit/CALayer.swift`, `UIView.swift`, `RenderPass.swift` | **view** | to create |
 | `Sources/OpenUIKit/UIFont.swift`, `FontEngine.swift`, `TextLayout.swift`, `UILabel.swift` | **text** | to create |
-| `Sources/OpenUIKit/UIImage.swift`, `UIImageView.swift` | **image** | to create |
+| `Sources/OpenUIKit/UIImage.swift`, `UIImageView.swift`, `ImageCodec.swift` | **image** | done (app-compat: PNG/JPEG load+encode via the vendored stb_image) |
+| `Sources/OpenUIKit/UIBezierPath.swift`, `UIGraphicsRenderer.swift` | **drawing** | done (app-compat: paths, `UIView.draw(_:)`, `UIGraphicsImageRenderer`) |
+| `Sources/OpenUIKit/UIActivityIndicatorView.swift`, `UISlider.swift`, `UISegmentedControl.swift`, `UIPageControl.swift` | **controls** | done (app-compat, oracle fixtures `control_*`) |
 | `Sources/OpenUIKit/UIButton.swift`, `UISwitch.swift`, `UIProgressView.swift` | **controls** | done (M7: UIControl-based) |
 | `Sources/OpenUIKit/UITouch.swift`, `UIEvent.swift`, `UIGestureRecognizer.swift`, `UIControl.swift` | **event** | done (M7) |
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |

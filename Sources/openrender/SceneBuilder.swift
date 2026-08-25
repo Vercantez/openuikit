@@ -348,6 +348,20 @@ func makeActivityIndicator(_ j: SceneJSON) -> UIActivityIndicatorView {
     return a
 }
 
+func makePageControl(_ j: SceneJSON) -> UIPageControl {
+    let p = UIPageControl()
+    p.numberOfPages = Int(num(j["numberOfPages"]) ?? 3)
+    p.currentPage = Int(num(j["currentPage"]) ?? 0)
+    p.hidesForSinglePage = j["hidesForSinglePage"]?.boolValue ?? false
+    if let c = colorOrDie(j["pageIndicatorTintColor"], "UIPageControl") {
+        p.pageIndicatorTintColor = c
+    }
+    if let c = colorOrDie(j["currentPageIndicatorTintColor"], "UIPageControl") {
+        p.currentPageIndicatorTintColor = c
+    }
+    return p
+}
+
 func stackAxis(_ s: String?) -> NSLayoutConstraint.Axis {
     switch s ?? "horizontal" {
     case "horizontal": return .horizontal
@@ -716,6 +730,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UISlider": v = makeSlider(j)
     case "UISegmentedControl": v = makeSegmentedControl(j)
     case "UIActivityIndicatorView": v = makeActivityIndicator(j)
+    case "UIPageControl": v = makePageControl(j)
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
