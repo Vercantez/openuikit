@@ -53,7 +53,25 @@ CFLAGS="-isysroot $SDK -target arm64-apple-macos13 -O0 -g0
         -I$REPO/tests"
 
 BIN="$OUT/$NAME"
-if ! clang $CFLAGS "$TEST" -o "$BIN" -lobjc 2> "$OUT/$NAME.cc.log"; then
+
+# A test may bring a companion image: tests/<name>.lib.m is built as a shared
+# library and linked in. That is the only way to exercise anything that
+# crosses an image boundary -- cross-image superclasses, categories and +load
+# ordering -- which single-file tests cannot reach.
+LIBSRC="$REPO/tests/$NAME.lib.m"
+EXTRA=""
+if [ -f "$LIBSRC" ]; then
+    if ! clang $CFLAGS -dynamiclib "$LIBSRC" -o "$OUT/lib$NAME.dylib" \
+             -install_name "@rpath/lib$NAME.dylib" -lobjc \
+             2> "$OUT/$NAME.cc.log"; then
+        echo "run_macos.sh: companion library compile failed for $NAME" >&2
+        cat "$OUT/$NAME.cc.log" >&2
+        exit 1
+    fi
+    EXTRA="-L$OUT -l$NAME -Wl,-rpath,@executable_path"
+fi
+
+if ! clang $CFLAGS "$TEST" -o "$BIN" $EXTRA -lobjc 2> "$OUT/$NAME.cc.log"; then
     echo "run_macos.sh: compile failed for $NAME" >&2
     cat "$OUT/$NAME.cc.log" >&2
     exit 1

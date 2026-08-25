@@ -71,6 +71,8 @@ printf -- '---------------------------- --------- --------- ----------------\n'
 
 for test in "$TESTS_DIR"/*.m; do
     [ -e "$test" ] || continue
+    # <name>.lib.m is a companion image built by the runners, not a test.
+    case "$test" in *.lib.m) continue ;; esac
     name=$(basename "$test" .m)
     matches "$name" || continue
     n_total=$((n_total + 1))

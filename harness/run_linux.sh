@@ -94,20 +94,38 @@ docker run --rm $MOUNTS -w /src \
     -e "NAME=$NAME" -e "TARGET=$TARGET" \
     -e "RELTEST=${TEST#$REPO/}" \
     "$IMAGE" /bin/sh -c '
-        mkdir -p /src/build/linux-tests
-        if ! clang -target "$TARGET" -O0 -g0 -fsigned-char \
-            -fobjc-runtime=macosx-10.15 -fno-objc-arc -fobjc-exceptions \
-            -Wno-objc-root-class -Wno-unused-function -Wno-deprecated-declarations \
-            -I/src/tests -I"$C_INCLUDE" \
-            "/src/$RELTEST" -o "/src/build/linux-tests/$NAME" \
-            -L"$C_LIBDIR" -lobjc -ldl -lpthread \
+        set -u
+        O=/src/build/linux-tests
+        mkdir -p "$O"
+        CF="-target $TARGET -O0 -g0 -fsigned-char
+            -fobjc-runtime=macosx-10.15 -fno-objc-arc -fobjc-exceptions
+            -Wno-objc-root-class -Wno-unused-function -Wno-deprecated-declarations
+            -I/src/tests -I$C_INCLUDE"
+
+        # Companion image: tests/<name>.lib.m becomes a shared library the test
+        # links against. See the same block in run_macos.sh.
+        EXTRA=""
+        if [ -f "/src/tests/$NAME.lib.m" ]; then
+            if ! clang $CF -fPIC -shared "/src/tests/$NAME.lib.m" \
+                    -o "$O/lib$NAME.so" \
+                    -L"$C_LIBDIR" -lobjc -Wl,-rpath,"$C_LIBDIR" \
+                    2> "$O/$NAME.cc.log"
+            then
+                : > "$O/$NAME.ccfail"
+                exit 1
+            fi
+            EXTRA="-L$O -l$NAME -Wl,-rpath,$O"
+        fi
+
+        if ! clang $CF "/src/$RELTEST" -o "$O/$NAME" \
+            $EXTRA -L"$C_LIBDIR" -lobjc -ldl -lpthread \
             -Wl,-rpath,"$C_LIBDIR" \
-            2> "/src/build/linux-tests/$NAME.cc.log"
+            2> "$O/$NAME.cc.log"
         then
-            : > "/src/build/linux-tests/$NAME.ccfail"
+            : > "$O/$NAME.ccfail"
             exit 1
         fi
-        exec "/src/build/linux-tests/$NAME"
+        exec "$O/$NAME"
     '
 rc=$?
 
