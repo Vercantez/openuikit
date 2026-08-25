@@ -20,3 +20,21 @@ unsigned char *cpio_read_file(const char *path, size_t *out_size) {
 }
 
 void cpio_free(unsigned char *buf) { free(buf); }
+
+void cpio_log_stderr(const char *msg) {
+    fputs(msg, stderr);
+    fputc('\n', stderr);
+    fflush(stderr);
+}
+
+const char *cpio_getenv(const char *name) { return getenv(name); }
+
+void cpio_exit(int code) { exit(code); }
+
+int cpio_write_file(const char *path, const unsigned char *buf, size_t size) {
+    FILE *f = fopen(path, "wb");
+    if (!f) return 0;
+    size_t n = size ? fwrite(buf, 1, size, f) : 0;
+    if (fclose(f) != 0) return 0;
+    return n == size;
+}

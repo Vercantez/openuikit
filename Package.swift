@@ -28,6 +28,10 @@ let package = Package(
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
+        // The C ABI an Objective-C app links against (docs/OBJC_FACADE.md).
+        // Dynamic on purpose: the ObjC facade is built by clang against
+        // libobjc2/gnustep-base, outside SPM, and links this .so.
+        .library(name: "OpenUIKitC", type: .dynamic, targets: ["OpenUIKitC"]),
     ],
     targets: [
         // Vendored stb_truetype (single-header C library, public domain).
@@ -109,7 +113,29 @@ let package = Package(
         // byte-identical.
         // May use Foundation (it is a host, like openrender).
         .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe"]),
+        // The TYPES half of the C ABI (the ObjC callback vtable), shared by
+        // the Swift side and the ObjC facade so its layout cannot drift.
+        .target(name: "COpenUIKitABI", publicHeadersPath: "include"),
+        // The C ABI half of the Objective-C bridge: @_cdecl entry points over
+        // opaque handles. No @objc anywhere — Swift ObjC interop does not work
+        // off Darwin (docs/OBJC_RUNTIME.md), and this target is how OpenUIKit
+        // sidesteps that. Design + ownership rule: docs/OBJC_FACADE.md.
+        .target(name: "OpenUIKitC",
+                dependencies: ["OpenUIKit", "OpenCoreGraphics", "COpenUIKitABI", "CPortableIO"]),
+        // The Swift twin of ObjCFacade/ProofApp.m: the same screen, built with
+        // the Swift API, rendered through the same entry point. Its PNG is the
+        // thing the ObjC app's PNG is diffed against
+        // (scripts/objc_facade_verify.sh).
+        // linkedLibrary (NOT unsafeFlags) so the package stays usable as an SPM
+        // dependency, per this manifest's header. Needed because objcparity is
+        // Foundation-free: nothing else on its link line drags in libm, which
+        // the rasterizer's math calls need.
+        .executableTarget(name: "objcparity",
+                          dependencies: ["OpenUIKit", "OpenUIKitC", "CPortableIO"],
+                          linkerSettings: [.linkedLibrary("m", .when(platforms: [.linux]))]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
+        .testTarget(name: "OpenUIKitCTests",
+                    dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"]),
     ],
     cxxLanguageStandard: .cxx17
 )

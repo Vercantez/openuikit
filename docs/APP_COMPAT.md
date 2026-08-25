@@ -49,6 +49,19 @@ types that already exist off Darwin.
 A small vocabulary does most of the work: apps reference ~171 distinct UIKit
 types, not 737. That is why the punch list is tractable.
 
+## Objective-C apps: a working facade (prototype)
+
+The census counts Swift call sites, but the goal is "run real UIKit apps", and
+some of them are Objective-C. A prototype facade — real ObjC `@interface`s over
+a `@_cdecl` C ABI, no `@objc` anywhere — puts `UIView`, `UILabel`, `UIButton`
+and `UIViewController` in reach of an Objective-C app on **Linux**, with ObjC
+subclasses overriding `layoutSubviews`/`drawRect:` and dispatching
+`@selector` target-action through the ObjC runtime. Its render is
+byte-identical to the Swift equivalent's. Extrapolated cost of the full
+facade, from this file's ranked type list: ~750 C entry points for the top 20
+types (71% of all uses), ~2,200 for everything OpenUIKit exports — which is
+why the recommendation is to generate it. Full report: **docs/OBJC_FACADE.md**.
+
 ## Selector target-action: shipped (M12)
 
 The census counted **~360 `#selector` uses** across the corpus and the earlier
