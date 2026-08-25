@@ -298,8 +298,23 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   - Gates: 81/81 scenes (with the structural gate active), 9/9 scroll traces,
     398 tests, Linux still byte-identical.
 
-- **M12 Attributed text — DONE 2026-08-25** (first cluster of the app-compat
-  phase, docs/APP_COMPAT.md: 560 uses, #1 on the punch list).
+- **M12 App compatibility — DONE 2026-08-25.** The milestone that turned the
+  question from "does it match UIKit?" into "can a real app be written against
+  it?". Ordered by a measurement, not a guess: `Tools/apicensus/census.py`
+  counts every UIKit symbol reference in four large open-source apps
+  (eidolon, DuckDuckGo iOS, Kickstarter ios-oss, pocket-casts-ios — 5,099
+  Swift files, 16,343 references) and diffs it against what OpenUIKit exports.
+  The top four clusters were then built, each with its own oracle probe.
+  - **Coverage moved 70.2% → 85.4%** frequency-weighted on the shared
+    three-app corpus (38 → 63 of the 171 distinct types those apps touch);
+    **88.5% effective** on the four-app corpus once Foundation types that
+    exist on Linux and the deliberate storyboard/nib non-goal are excluded.
+    Exported UIKit-shaped public types: 63 → 111. Full tables, the re-ranked
+    remaining punch list and the method caveats: docs/APP_COMPAT.md.
+  - **Gates at the M12 tip: 96/96 scenes (150 frames), 9/9 scroll traces,
+    517 tests, Linux 96/96 and 150/150 byte-identical.**
+
+  **Cluster 1 — attributed text** (713 uses closed).
   - **Portable Foundation-shaped types.** `NSAttributedString`,
     `NSMutableAttributedString` (with `attributes(at:effectiveRange:)`,
     `enumerateAttribute(s)`, `addAttribute(s)`, `setAttributes`,
@@ -322,52 +337,132 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   - Scene spec v5.2 adds the `attributedText` run form; six new goldens
     (`attrtext_runs`, `attrtext_paragraph`, `attrtext_kern_baseline`,
     `attrtext_underline_strike`, `attrtext_dark`, `attrtext_fields`).
-  - Gates: 87/87 scenes, 9/9 scroll traces, 434 tests.
+  - Cluster gate on merge: 87/87 scenes, 9/9 scroll traces, 434 tests.
 
-## M12 — app-compat: alerts + the custom-transition API (2026-08-25)
+  **Cluster 2 — app lifecycle / environment** (805 uses closed, the largest).
+  - `UIResponder` becomes the real base class with UIKit's exact chain;
+    first-responder state moved off `UIView` onto `UIResponder`, so a view
+    controller can hold focus. `UIApplication` + `UIApplicationDelegate`, a
+    minimal `UIScene`/`UIWindowScene` layer, host-driven `UIScreen`, and a
+    `UIDevice` whose values are declared rather than measured (there is no
+    device, and it may be Linux).
+  - `openhost --app` now boots through `UIApplicationMain` and a real app
+    delegate. There is **no run loop** in the portable core, so
+    `UIApplicationMain` performs the launch sequence and returns; the host
+    drives the rest through five `_host…` methods. The order and the
+    `applicationState` an app observes are UIKit's — only the trigger differs.
+    No `NotificationCenter` either (it is Foundation): the delegate callbacks
+    are the only observation point. Both in docs/KNOWN_GAPS.md.
 
-Driven by the census in docs/APP_COMPAT.md: `UIAlertController` is the
-third-largest cluster (332 uses) and the custom-transition cluster (64 uses)
-is what lets an app supply its own present/push animations.
+  **Cluster 3 — alerts + the custom-transition API** (514 uses closed).
 
-- **`UIAlertController` / `UIAlertAction`**, both styles, measured — not
-  guessed — from real iOS 26.1 in the headless Simulator by the new
-  `Tools/oracle2/alertprobe` (`scripts/alert_probe_sim.sh`): 20
-  configurations, each dumping the whole private view tree in window
-  coordinates plus a window snapshot, one configuration per app launch
-  (alerts do not tear down fast enough to share a process). Findings that
-  overturned the obvious guesses:
-  - iOS 26's alert is a **320 pt card with 34 pt continuous corners and
-    48 pt PILL buttons**, centred in the window's **safe area** (438.5 on a
-    393 × 852 window, not the window centre 426).
-  - **An action sheet on iPhone is laid out identically to an alert** — the
-    slide-up bottom sheet is gone. (Touching
-    `popoverPresentationController` at all flips it into a popover and
-    silently drops the cancel action.)
-  - Action titles are **`label`, not tint blue**; `.destructive` is
-    systemRed; two actions sit side by side with **cancel on the LEFT
-    whatever order they were added**, three or more stack with cancel last.
-  - The card and pills are blurs; both were solved as flat colour + alpha by
-    rendering the same alert over four known bases per appearance
-    (residual < 1.5 counts). Divergence recorded in docs/KNOWN_GAPS.md.
-  - The **present transition animates only the dimming view**, on a
-    critically damped spring of ω = 22.88 rad/s (converged over 24
-    display-link frames); the card carries no animation on its layer or any
-    ancestor.
-  - Scene spec **v5.2**: a top-level `"alert"` key, routed to the Simulator
-    like `"modal"`. New goldens `alert_basic`, `alert_destructive`,
-    `alert_actionsheet`, `alert_dark` (85 scenes).
-- **The transitioning API** (`UIPresentationController`,
-  `UIViewControllerAnimatedTransitioning` + context + transitioning
-  delegate, `UINavigationControllerDelegate`) and the **refactor**: the sheet
-  presentation's dim/platter moved onto `UISheetPresentationController` and
-  its animation into `_UIPageSheetAnimator`; push/pop dispatches through
-  `_UINavigationSlideAnimator`. Behaviour is unchanged by construction (the
-  code moved, the constants did not) and the whole existing suite proves it.
-  No interactive transitioning — the back swipe and the sheet drag stay
-  clock-scrubbed from measured physics (docs/KNOWN_GAPS.md).
-- Gates: 85/85 scenes, 9/9 scroll traces, 418 tests, Linux still
-  byte-identical (139/139 frames).
+  - **`UIAlertController` / `UIAlertAction`**, both styles, measured — not
+    guessed — from real iOS 26.1 in the headless Simulator by the new
+    `Tools/oracle2/alertprobe` (`scripts/alert_probe_sim.sh`): 20
+    configurations, each dumping the whole private view tree in window
+    coordinates plus a window snapshot, one configuration per app launch
+    (alerts do not tear down fast enough to share a process). Findings that
+    overturned the obvious guesses:
+    - iOS 26's alert is a **320 pt card with 34 pt continuous corners and
+      48 pt PILL buttons**, centred in the window's **safe area** (438.5 on a
+      393 × 852 window, not the window centre 426).
+    - **An action sheet on iPhone is laid out identically to an alert** — the
+      slide-up bottom sheet is gone. (Touching
+      `popoverPresentationController` at all flips it into a popover and
+      silently drops the cancel action.)
+    - Action titles are **`label`, not tint blue**; `.destructive` is
+      systemRed; two actions sit side by side with **cancel on the LEFT
+      whatever order they were added**, three or more stack with cancel last.
+    - The card and pills are blurs; both were solved as flat colour + alpha by
+      rendering the same alert over four known bases per appearance
+      (residual < 1.5 counts). Divergence recorded in docs/KNOWN_GAPS.md.
+    - The **present transition animates only the dimming view**, on a
+      critically damped spring of ω = 22.88 rad/s (converged over 24
+      display-link frames); the card carries no animation on its layer or any
+      ancestor.
+    - Scene spec **v5.2**: a top-level `"alert"` key, routed to the Simulator
+      like `"modal"`. New goldens `alert_basic`, `alert_destructive`,
+      `alert_actionsheet`, `alert_dark` (85 scenes).
+  - **The transitioning API** (`UIPresentationController`,
+    `UIViewControllerAnimatedTransitioning` + context + transitioning
+    delegate, `UINavigationControllerDelegate`) and the **refactor**: the sheet
+    presentation's dim/platter moved onto `UISheetPresentationController` and
+    its animation into `_UIPageSheetAnimator`; push/pop dispatches through
+    `_UINavigationSlideAnimator`. Behaviour is unchanged by construction (the
+    code moved, the constants did not) and the whole existing suite proves it.
+    No interactive transitioning — the back swipe and the sheet drag stay
+    clock-scrubbed from measured physics (docs/KNOWN_GAPS.md).
+  - Cluster gate on merge: 85/85 scenes, 9/9 scroll traces, 418 tests, Linux
+    still byte-identical (139/139 frames).
+
+  **Cluster 4 — image loading, app-side drawing, first controls** (107 uses
+  closed; the cheap items the census kept surfacing under other headings).
+  - **Image codecs.** `UIImage(named:)` / `(contentsOfFile:)` / `(data:)` with
+    PNG+JPEG decode, `@2x`/`@3x` scale suffixes, `pngData()` /
+    `jpegData(compressionQuality:)`. The decoder is the `stb_image` copy
+    already vendored inside CQuartz, reached through an additive C API that
+    hands over STRAIGHT (non-premultiplied) RGBA8
+    (`patches/quartz/005-image-io-memory.patch`, per the vendored-quartz
+    policy) — OpenUIKit contains no decoding code of its own.
+    `UIImage(named:)` resolves against `OpenUIKitRuntime.imageSearchPaths`,
+    empty by default: the library hardcodes no host paths.
+  - **`UIBezierPath`** — construction/arcs/transforms plus `fill()` /
+    `stroke()` / `addClip()` on the current context, backed by
+    OpenCoreGraphics `Path`; `Canvas.stroke` gained cap/join/miter.
+  - **App-side drawing** — `UIView.draw(_ rect:)` through the existing
+    layer-contents path (invalidated by `setNeedsDisplay()`),
+    `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()` returning the
+    `Canvas`, `UIColor.setFill()/setStroke()`.
+  - **Four controls**, oracle-goldened: `UIActivityIndicatorView`,
+    `UISlider`, `UISegmentedControl`, `UIPageControl` (`control_activity`,
+    `control_slider`, `control_segmented`, `control_pagecontrol`,
+    `control_dark`). `UIStepper` was probed and deferred — real UIKit draws
+    it through a SwiftUI hosting view, so it only renders in the windowed
+    oracle, and regenerating a `"window": true` golden needs an active,
+    unlocked display session. Measurements for whoever picks it up are in
+    docs/KNOWN_GAPS.md.
+
+  **Integration + the bug the merge exposed.** Merging the four clusters and
+  re-measuring turned up a defect that had been mis-diagnosed as
+  alert-specific letter tracking: **Apple ships two cuts of San Francisco and
+  UIKit picks one by platform** (`.SFNS` on Mac Catalyst, `.SFUI` on iOS).
+  Only the six Simulator-routed goldens (the `alert_*` and `modal_sheet*`
+  scenes) are set in the iOS cut. Re-taking the whole font-metrics dump on iOS
+  (`Tools/oracle2/fontprobe`, vendored as `golden/font_metrics_ios.json`) and
+  diffing it against the Catalyst one gives an exact per-size law over all 432
+  font entries × 95 glyphs, maximum deviation **0.000000000 pt**:
+  `advance_macOS − advance_iOS = T(size) · size / 2048`, with T zero at every
+  size ≥ 20 pt and for the monospaced family, and pair kerning identical
+  between the cuts. `OpenUIKitRuntime.systemFontCut` selects it; all six scenes
+  improved and `alert_dark` went from FAIL to PASS. Nothing else moved. The
+  residual, the vertical metrics that are still *not* switched, and the fact
+  that outlines still come from `SFNS.ttf` are in docs/KNOWN_GAPS.md.
+
+  Also this milestone: `compare.py` gained a **content-absence check**
+  alongside M11's blob gate, after the same class of failure proved able to
+  hide missing BODY text (stems ~2 device pixels wide never form a blob large
+  enough to trip the size cap). The absence floor is punctuation-scale
+  (1.0 pt²). And the ObjC-selector question was **reversed by measurement**:
+  the earlier verdict ("ObjC interop is broken off-Darwin at the compiler
+  level") turned out to be an artefact of a badly shaped shim — `Selector` was
+  declared String-shaped where the compiler expects pointer-shaped, which
+  crashed swift-frontend. With a correct ~10-line `ObjectiveC` shim plus a
+  ~20-line C stub, `@objc` and `#selector` **compile, link and run on stock
+  `swift:6.2-noble`**, with selector names recoverable at runtime
+  (`Tools/objcshim/verify.sh`). UIKit's real `addTarget(_:action:for:)` is
+  therefore reachable without a compiler fork; nothing was adopted this
+  milestone, but the assessment that ruled it out is retracted.
+
+## Next — where the census points (docs/APP_COMPAT.md)
+
+The four clusters closed 2,139 of the corpus's references. The remaining
+1,856 re-rank to: **collection view** (498, all 4 apps), **bars & appearance**
+(322, led by `UIBarButtonItem` at 270), **menus & actions** (252),
+**delegate protocols** (144 — mostly declarations that do not exist yet, so an
+app fails to compile on the conformance before any behaviour is missing), and
+**share/system UI** (130, honestly a stub). No corpus app compiles end to end
+yet; the blockers, in the order they bite, are the delegate protocols, then
+`UIBarButtonItem`, then `UICollectionView`.
 
 ## Verification principle (unchanged, applies to every milestone)
 

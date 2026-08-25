@@ -1,5 +1,49 @@
 # Known gaps (living document — fixers: read this)
 
+## App compatibility (M12, 2026-08-25): what a real app still cannot do
+
+Effective coverage is **88.5%** of what four real open-source apps reference
+(docs/APP_COMPAT.md). The honest headline is the other one: **no corpus app
+compiles end to end yet**, and the reasons are structural rather than
+long-tail.
+
+- **Delegate protocols that do not exist stop compilation before behaviour
+  does.** `UITextFieldDelegate`, `UITextViewDelegate`,
+  `UIGestureRecognizerDelegate`, the `UICollectionView` trio and the
+  presentation-controller delegates are all referenced by the corpus (144
+  uses, some in all four apps) and are simply absent — a `class Foo: UIView,
+  UITextFieldDelegate` fails on the conformance name. These are the cheapest
+  points on the whole punch list and the first thing a fixer should take.
+- **No `UIBarButtonItem`, therefore no real `UINavigationItem`.** 270 uses,
+  every app. The nav bar shows `vc.title` plus a back button and nothing else;
+  there is no way to put a button in a bar.
+- **No `UICollectionView`** (498 uses across 23 types, every app). The reuse
+  machinery — per-identifier pools, `dequeueReusableCell`, tiled visible-rect
+  layout — exists only inside `UITableView` and has to be lifted into a shared
+  layer first.
+- **No notifications, anywhere.** `NotificationCenter` is Foundation, which
+  the library may not import, so `UIApplication.didBecomeActiveNotification`,
+  the keyboard notifications and `UIDevice.orientationDidChangeNotification`
+  do not exist (~90 uses). An app that observes instead of implementing the
+  delegate hears nothing. Closing this needs a portable notification center.
+- **No `UIVisualEffectView`, so nothing in the framework blurs** — see the
+  alerts section below for the fitted flat model and exactly where it is
+  wrong. This is now a cross-cutting divergence, not an alert detail: it
+  covers the alert card and pills, the sheet grabber, the tab-bar platter and
+  the `UIPageControl` background.
+- **No Dynamic Type.** `UIFontMetrics` (66 uses), `UIFont.preferredFont` (21)
+  and `UITraitPreferredContentSizeCategory` (55) are all missing; text sizes
+  are absolute.
+- **No `UIAppearance` proxies** (`UINavigationBar.appearance()` etc., ~20
+  uses) and no `UIView.setAnimationsEnabled` (92 uses — the single most-used
+  missing member on a type we do implement).
+- **Selectors: `addTarget(_:action:for:)` still takes a closure.** Not because
+  it cannot be otherwise — the M12 measurement retracted the earlier verdict
+  and showed `@objc`/`#selector` compile, link and run on stock Linux Swift
+  with a ~10-line shim (`Tools/objcshim/verify.sh`). It simply was not
+  adopted. `UIApplication.sendAction`'s nil-target chain walk is faithful; the
+  spelling is not.
+
 ## Two cuts of San Francisco (2026-08-25): the fixture suite has two oracles
 
 **RESOLVED** — this section used to read "`alert_dark` fails the absence gate
@@ -61,9 +105,11 @@ improved — nothing else moved:
 Note the third column: `compare.py`'s blob threshold is calibrated against
 "worst legitimate component 33.2 pt^2 (`modal_sheet` — one stem of the 22 pt
 bold title)". That residual was this bug, not a rasterization limit, and it
-is now 3.0. The 80 pt^2 gate could be tightened considerably; that is
-`compare.py`'s call, not the text module's, and the calibration comment is
-now stale.
+is now 3.0. Measured over all 96 passing scenes at the M12 tip, the worst
+legitimate component is now **20.0 pt^2** (`stack_alignment`,
+`anim_concurrent`) against an 80 pt^2 gate, so the gate could be tightened
+considerably; that is `compare.py`'s call, not the text module's, and the
+calibration comment is now stale.
 
 ### What is still NOT modelled
 
