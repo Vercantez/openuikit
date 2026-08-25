@@ -2,6 +2,24 @@
 // sizeThatFits / intrinsicContentSize / line breaking / truncation /
 // alignment match real UIKit (validated against golden/label_*).
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 public enum NSTextAlignment: Sendable {
     case left, center, right, justified, natural
 }
@@ -88,7 +106,7 @@ open class UILabel: UIView {
     /// line-box bottom. Verified against golden/constraints_baseline.
     override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
         let ascender = FontEngine.metrics(for: font).ascender
-        let first = (ascender + 0.5).rounded(.down)
+        let first: CGFloat = (ascender + 0.5).rounded(.down)
         return (first, lineBoxHeight - first)
     }
 
@@ -111,7 +129,8 @@ open class UILabel: UIView {
             let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: font), scale: scale)
             return CGSize(width: w, height: lineH)
         }
-        let unbounded = !(size.width > 0) || size.width >= CGFloat.greatestFiniteMagnitude / 2
+        let halfMax: CGFloat = CGFloat.greatestFiniteMagnitude / CGFloat(2)
+        let unbounded = !(size.width > 0) || size.width >= halfMax
         if unbounded {
             let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: font), scale: scale)
             return CGSize(width: w, height: lineH)
@@ -126,14 +145,19 @@ open class UILabel: UIView {
     }
 
     open override var intrinsicContentSize: CGSize {
-        sizeThatFits(CGSize(width: .greatestFiniteMagnitude, height: .greatestFiniteMagnitude))
+        // Explicit CGFloat: CGSize has Int/Double/CGFloat initialisers, so an
+        // implicit-member `.greatestFiniteMagnitude` is ambiguous now that
+        // CGFloat is a distinct type from Double (M15).
+        sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude,
+                            height: CGFloat.greatestFiniteMagnitude))
     }
 
     // MARK: - Attributed measurement (M12)
 
     func attributedSizeThatFits(_ t: AttributedTextLayout.Text, _ size: CGSize) -> CGSize {
         let scale = layoutScale
-        let unbounded = !(size.width > 0) || size.width >= CGFloat.greatestFiniteMagnitude / 2
+        let halfMax: CGFloat = CGFloat.greatestFiniteMagnitude / CGFloat(2)
+        let unbounded = !(size.width > 0) || size.width >= halfMax
         // A single-line label ignores the width constraint entirely, exactly
         // like the plain path (real UIKit reports the full text width).
         let maxWidth = (numberOfLines == 1 || unbounded)

@@ -28,21 +28,29 @@
 // subtitle cells should return UITableViewCell.subtitleRowHeight, real
 // self-sizing is out of scope, see docs/KNOWN_GAPS.md).
 
-// MARK: - IndexPath
-
-public struct IndexPath: Hashable, Comparable, Sendable {
-    public var section: Int
-    public var row: Int
-    public init(row: Int, section: Int) {
-        self.row = row
-        self.section = section
-    }
-    public static func < (a: IndexPath, b: IndexPath) -> Bool {
-        (a.section, a.row) < (b.section, b.row)
-    }
-}
+// `IndexPath` used to be declared here. It is Foundation's now (M15) — see
+// Sources/OpenUIKit/FoundationTypes.swift, which also adds UIKit's
+// `init(row:section:)` / `.row` / `.section` / `.item`.
 
 // MARK: - Data source / delegate protocols
+
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
 
 public protocol UITableViewDataSource: AnyObject {
     func numberOfSections(in tableView: UITableView) -> Int

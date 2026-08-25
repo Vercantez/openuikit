@@ -8,10 +8,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGRect = OpenUIKit.CGRect
-private typealias CGPoint = OpenUIKit.CGPoint
-
 /// A view controller that vends key commands and records what ran.
 private final class CommandVC: UIViewController, SelectorDispatching {
     var log: [String] = []

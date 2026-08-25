@@ -2,9 +2,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGRect = OpenUIKit.CGRect
-
 final class LabelBaselineProbeTests: XCTestCase {
 
     func testProbeBaseline() throws {

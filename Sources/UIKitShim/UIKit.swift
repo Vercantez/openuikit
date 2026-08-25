@@ -12,5 +12,14 @@
 // no UIKit at all on Linux, so this target is the only `UIKit` in scope.
 //
 // This target is a shim by definition and is labelled as such in the report.
-// It contains no API of its own — one re-export, nothing else.
+// It contains no API of its own — two re-exports, nothing else.
+//
+// M15: it re-exports Foundation as well, because REAL UIKit does
+// (`@_exported import Foundation` is in UIKit's own swiftinterface). That is
+// what makes an app file whose only import line is `import UIKit` able to name
+// `NSCoder` — the corpus's single most common missing type, 344 of 5,099
+// files. It became possible only once OpenUIKit's geometry types were
+// Foundation's own; before M15 this line would have made every `CGRect` in
+// every vendored file ambiguous.
+@_exported import Foundation
 @_exported import OpenUIKit

@@ -16,11 +16,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
-
 /// The tests only need a class to hold the delegate; OpenUIKit has no
 /// NSObject and the protocols are `AnyObject`-bound.
 private class NSObjectStandIn {}

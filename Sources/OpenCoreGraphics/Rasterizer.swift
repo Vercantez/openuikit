@@ -125,7 +125,7 @@ struct _CoverageAccumulator {
         originX = x0; originY = y0
         width = x1 - x0; height = y1 - y0
         stride = width + 2
-        accum = [CGFloat](repeating: 0, count: stride * height)
+        accum = Array<CGFloat>(repeating: 0, count: stride * height)
     }
 
     /// Add one device-space line segment. Geometry outside the window is
@@ -207,7 +207,7 @@ struct _CoverageAccumulator {
     /// Prefix-sum each row and hand a coverage row (length `width`,
     /// values in [0, 1]) to `body`. Row index is window-relative.
     func enumerateRows(evenOdd: Bool, _ body: (_ row: Int, _ coverage: UnsafeBufferPointer<CGFloat>) -> Void) {
-        var cov = [CGFloat](repeating: 0, count: width)
+        var cov = Array<CGFloat>(repeating: 0, count: width)
         accum.withUnsafeBufferPointer { acc in
             cov.withUnsafeMutableBufferPointer { out in
                 for y in 0..<height {
@@ -437,7 +437,7 @@ extension Canvas {
         // draw hard edges (matches UIKit: transformed layers do not AA).
         let axisAligned = t.b.magnitude < 1e-9 && t.c.magnitude < 1e-9
 
-        var covX = [CGFloat](repeating: 1, count: x1 - x0)
+        var covX = Array<CGFloat>(repeating: 1, count: x1 - x0)
         if axisAligned {
             for x in x0..<x1 {
                 covX[x - x0] = Swift.min(CGFloat(x + 1), dev.maxX) - Swift.max(CGFloat(x), dev.minX)
@@ -579,8 +579,12 @@ extension Canvas {
     }
 }
 
-extension CGFloat {
-    @inline(__always) func clamped(_ lo: CGFloat, _ hi: CGFloat) -> CGFloat {
+// M15: this was `extension CGFloat` back when CGFloat was a typealias for
+// Double, so it silently covered both. CGFloat is now Foundation's distinct
+// struct, and the blend paths mix the two -- hence the generic form, which
+// covers Double and CGFloat with one declaration and no overload ambiguity.
+extension FloatingPoint {
+    @inline(__always) func clamped(_ lo: Self, _ hi: Self) -> Self {
         Swift.min(hi, Swift.max(lo, self))
     }
 }

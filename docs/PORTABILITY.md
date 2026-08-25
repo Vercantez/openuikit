@@ -141,9 +141,100 @@ selector work:
 Neither reproduces on macOS, where the full 427-test suite runs green every
 time.
 
+## M15: the library imports Foundation, and there is exactly one `CGRect`
+
+**Superseded below: "the library imports no Foundation" was true through M14
+and is no longer the rule.** What replaced it is narrower and more useful.
+
+The old rule bought portability by *declaring* every Foundation-shaped type
+OpenUIKit needed. docs/APP_COMPAT.md measured the bill: an app that imports
+both OpenUIKit and Foundation — every real app, because its model layer is
+Foundation — saw two types of each name, and the compiler refused to pick.
+`NSCoder` alone appears in 344 of the corpus's 5,099 files, and every test
+file in this repo carried four to six `private typealias CGRect =
+OpenUIKit.CGRect` lines to work around it.
+
+The collision was never missing API. It was duplicate NAMES, and the fix was
+subtraction:
+
+| type | M14 | M15 |
+|---|---|---|
+| `CGFloat`, `CGPoint`, `CGSize`, `CGRect` | declared in `OpenCoreGraphics/Geometry.swift` | `typealias` to Foundation's |
+| `CGVector` | declared | Foundation's where it exists (Darwin); ours on Linux, which has none — **measured** |
+| `IndexPath` | declared in `UITableView.swift` | Foundation's, with UIKit's `init(row:section:)` / `.row` / `.item` / `.section` added as extensions, exactly as real UIKit does |
+| `NSRange`, `NSRangePointer`, `NSMakeRange` | declared in `NSAttributedString.swift` | Foundation's |
+| `TimeInterval` | declared in `UITouch.swift` | Foundation's |
+
+A `typealias` is what makes it safe. Unqualified lookup that finds a typealias
+AND the type it aliases resolves to one declaration, so `import Foundation` +
+`import OpenUIKit` in one file is unambiguous. Aliasing rather than
+`@_exported import Foundation` is also deliberate: it puts the names in
+OpenUIKit's namespace, so the other ~100 source files keep compiling with no
+per-file Foundation import, and `CGColor` / `CGAffineTransform` never have to
+fight CoreGraphics' for the name on Darwin.
+
+**The proof:** 151 `private typealias` lines deleted from 40 test files, and
+`Tests/OpenUIKitTests/FoundationCoexistenceTests.swift` — which imports
+Foundation the way an app does and would not compile before this — is green.
+So is the gate that matters: 108/108 scenes and **162/162 byte-identical**
+frames on Linux.
+
+### What is deliberately NOT aliased, and why
+
+Each of these was measured, not assumed. Full statement in
+`Sources/OpenUIKit/FoundationTypes.swift`.
+
+- **`CGAffineTransform`.** Linux Foundation has none, so there is no collision
+  to remove there — and one shared implementation is what keeps the render
+  byte-identical, because `init(rotationAngle:)` uses the library's own sine
+  series rather than libm, which is not guaranteed bit-identical across two
+  libcs. **The one residual collision:** on Darwin, `import Foundation` does
+  re-export CoreGraphics' `CGAffineTransform`, so a Darwin file that imports
+  both still needs `OpenUIKit.CGAffineTransform`. On Linux — the target
+  platform — there is nothing to disambiguate.
+- **`NSAttributedString` / `NSMutableAttributedString`.** MEASURED on Swift
+  6.2 Linux: `NSMutableAttributedString.addAttribute` **traps** the second
+  time a plain Swift value is stored under a key, because run coalescing calls
+  `isEqual` on the boxed value. Every OpenUIKit attribute value (`UIFont`,
+  `UIColor`, `CGFloat`, `NSParagraphStyle`) is a plain Swift value, so
+  Foundation's attributed string cannot hold UIKit's attributes on the target
+  platform at all.
+- **`Notification` / `NotificationCenter` / `OperationQueue`.** The selector
+  form — `addObserver(_:selector:name:object:)`, the spelling real apps use
+  most — has to dispatch through OpenUIKit's portable `SelectorDispatching`
+  (docs/OBJC_RUNTIME.md), and corelibs-Foundation has no such method at all
+  because Swift ObjC interop does not exist on Linux. Foundation's block form
+  also measurably diverges there: an observer registered with a
+  non-`NSObject` `object:` filter never fires.
+- **`Timer` / `RunLoop`.** They run on the SCRIPTED host clock
+  (`UIWindow.tick(timestamp:)`). Foundation's run on `Date`, which would put
+  wall-clock time in the frame loop and end byte-identical rendering.
+
+### The determinism rule that replaced the no-Foundation rule
+
+Importing Foundation is now allowed. Reading a **wall clock, a locale or a
+random source** from the render or layout path is not, and that is what makes
+the Linux frames byte-identical. It is enforced, not asserted:
+`FoundationCoexistenceTests.testRenderPathReadsNoWallClockLocaleOrRandomSource`
+scans both library targets and fails on `Date(`, `NSDate`, `DateFormatter`,
+`Calendar(`, `Locale(`, `gettimeofday`, `clock_gettime`, `mach_absolute_time`,
+`CFAbsoluteTimeGetCurrent`, `arc4random` or `UUID(` outside a comment.
+
+### One Swift rule worth knowing before you touch this
+
+A **default argument** (`init(frame: CGRect = .zero)`) and an `@inlinable`
+body may only use members whose defining module *that file* imports — the one
+place the geometry types do not ride in on OpenCoreGraphics' typealias. 31
+files therefore carry a **scoped** import (`import struct
+CoreGraphics.CGRect`, …). The scoping is load-bearing, not tidiness: the
+unscoped `import CoreGraphics` breaks 8 files by dragging CoreGraphics'
+`CGColor` and `CGAffineTransform` into scope beside OpenCoreGraphics' own.
+
 ## What made it work
 
-- The library targets (`OpenUIKit`, `OpenCoreGraphics`) import **no**
+- ~~The library targets import **no** Foundation and no Apple framework.~~
+  **Superseded at M15 — see the section above.** Through M14 the rule read:
+  the library targets (`OpenUIKit`, `OpenCoreGraphics`) import **no**
   Foundation and no Apple framework — a rule enforced since day one. The
   audit finds zero violations and zero `#if os(...)` conditionals. There is
   now exactly **one** `#if canImport(ObjectiveC)`, in `UISelector.swift`: on

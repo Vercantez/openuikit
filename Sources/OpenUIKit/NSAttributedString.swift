@@ -16,28 +16,10 @@
 // equal attribute dictionaries (Foundation coalesces the same way, which is
 // what `effectiveRange` reports).
 
-// MARK: - NSRange
-
-public struct NSRange: Equatable, Hashable, Sendable {
-    public var location: Int
-    public var length: Int
-    public init(location: Int, length: Int) {
-        self.location = location
-        self.length = length
-    }
-    public init() { self.init(location: 0, length: 0) }
-    public var upperBound: Int { location + length }
-    public var lowerBound: Int { location }
-    public func contains(_ i: Int) -> Bool { i >= location && i < location + length }
-    /// Foundation's "not found" sentinel.
-    public static let notFound = NSRange(location: Int.max, length: 0)
-}
-
-public typealias NSRangePointer = UnsafeMutablePointer<NSRange>
-
-public func NSMakeRange(_ loc: Int, _ len: Int) -> NSRange {
-    NSRange(location: loc, length: len)
-}
+// `NSRange`, `NSRangePointer` and `NSMakeRange` used to be declared here.
+// They are Foundation's now (M15) — see FoundationTypes.swift. The storage
+// model below is unchanged: run lengths and every public offset are UTF-16
+// code units, which is exactly what Foundation's NSRange means.
 
 // MARK: - Underline / strikethrough style
 

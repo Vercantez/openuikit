@@ -11,11 +11,6 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGRect = OpenUIKit.CGRect
-
 /// UIApplication is a process-wide singleton, so a chain assertion that
 /// ends "at the application" only holds while no responder delegate is
 /// installed. Run such assertions with the delegate detached.

@@ -7,8 +7,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGRect = OpenUIKit.CGRect
 private typealias Notification = OpenUIKit.Notification
 private typealias NotificationCenter = OpenUIKit.NotificationCenter
 private typealias Timer = OpenUIKit.Timer

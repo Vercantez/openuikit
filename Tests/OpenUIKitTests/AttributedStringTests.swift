@@ -10,11 +10,9 @@ import XCTest
 // example of the disambiguation an app has to write.
 private typealias NSAttributedString = OpenUIKit.NSAttributedString
 private typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
-private typealias NSRange = OpenUIKit.NSRange
 private typealias NSParagraphStyle = OpenUIKit.NSParagraphStyle
 private typealias NSMutableParagraphStyle = OpenUIKit.NSMutableParagraphStyle
 private typealias NSUnderlineStyle = OpenUIKit.NSUnderlineStyle
-private typealias CGFloat = OpenUIKit.CGFloat
 
 final class AttributedStringTests: XCTestCase {
     override func setUp() {
@@ -321,7 +319,7 @@ final class AttributedStringTests: XCTestCase {
     fileprivate func lineHeight(_ s: NSAttributedString) -> CGFloat {
         let l = UILabel()
         l.attributedText = s
-        return l.sizeThatFits(CGSize(width: 10000, height: .greatestFiniteMagnitude)).height
+        return l.sizeThatFits(CGSize(width: 10000, height: CGFloat.greatestFiniteMagnitude)).height
     }
 
     func testMixedFontLineBoxIsTheTallestRun() {

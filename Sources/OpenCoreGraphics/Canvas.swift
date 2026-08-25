@@ -4,7 +4,27 @@
 // Bodies marked `rasterizer:` are implemented in Rasterizer.swift by the
 // rasterizer module — keep signatures stable.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// Straight (non-premultiplied) sRGB color with 0–1 components.
+
+
 public struct CGColor: Equatable, Sendable {
     public var red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat
     public init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
@@ -262,18 +282,25 @@ extension Canvas {
             case .quad(let c, let p):
                 let from = cur
                 flatten { t in
-                    let mt = 1 - t
-                    return CGPoint(x: mt * mt * from.x + 2 * mt * t * c.x + t * t * p.x,
-                                   y: mt * mt * from.y + 2 * mt * t * c.y + t * t * p.y)
+                    // The intermediate annotations are load-bearing: without
+                    // them the solver has to consider the CGFloat<->Double
+                    // conversions at every one of these operators and times
+                    // out (M15 — CGFloat stopped being a typealias for Double).
+                    let mt: CGFloat = 1 - t
+                    let a: CGFloat = mt * mt, b: CGFloat = 2 * mt * t, cc: CGFloat = t * t
+                    return CGPoint(x: a * from.x + b * c.x + cc * p.x,
+                                   y: a * from.y + b * c.y + cc * p.y)
                 }
             case .cubic(let c1, let c2, let p):
                 let from = cur
                 flatten { t in
-                    let mt = 1 - t
-                    let x = mt * mt * mt * from.x + 3 * mt * mt * t * c1.x
-                          + 3 * mt * t * t * c2.x + t * t * t * p.x
-                    let y = mt * mt * mt * from.y + 3 * mt * mt * t * c1.y
-                          + 3 * mt * t * t * c2.y + t * t * t * p.y
+                    let mt: CGFloat = 1 - t
+                    let w0: CGFloat = mt * mt * mt
+                    let w1: CGFloat = 3 * mt * mt * t
+                    let w2: CGFloat = 3 * mt * t * t
+                    let w3: CGFloat = t * t * t
+                    let x: CGFloat = w0 * from.x + w1 * c1.x + w2 * c2.x + w3 * p.x
+                    let y: CGFloat = w0 * from.y + w1 * c1.y + w2 * c2.y + w3 * p.y
                     return CGPoint(x: x, y: y)
                 }
             case .close:

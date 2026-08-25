@@ -13,21 +13,29 @@
 // whose rules were probed against real UIKit (scripts/flow_probe.sh) and are
 // exercised by the collection_* fixture scenes.
 
-// MARK: - IndexPath item spelling
-
-public extension IndexPath {
-    /// UIKit spells a collection view's index paths `item`/`section` and a
-    /// table's `row`/`section`; both are the same storage.
-    init(item: Int, section: Int) {
-        self.init(row: item, section: section)
-    }
-    var item: Int {
-        get { row }
-        set { row = newValue }
-    }
-}
+// The `item`/`section` spelling of an index path moved to
+// FoundationTypes.swift with M15, alongside `row`/`section` — both are now
+// extensions on Foundation's IndexPath rather than on a type of our own.
 
 // MARK: - Data source / delegate protocols
+
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
 
 public protocol UICollectionViewDataSource: AnyObject {
     func numberOfSections(in collectionView: UICollectionView) -> Int

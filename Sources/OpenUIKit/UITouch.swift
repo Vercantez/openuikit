@@ -6,7 +6,8 @@
 // nothing in the portable core reads a wall clock, so synthetic touch
 // sequences are fully deterministic.
 
-public typealias TimeInterval = Double
+// `TimeInterval` used to be declared here as `= Double`. It is Foundation's
+// now (M15, FoundationTypes.swift) — same underlying type, one name.
 
 public final class UITouch: Hashable {
     public enum Phase: Sendable {

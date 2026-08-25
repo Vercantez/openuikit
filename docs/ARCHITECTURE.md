@@ -5,17 +5,30 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
 
 ## Hard rules
 
-1. `Sources/OpenCoreGraphics` and `Sources/OpenUIKit` must **never** import
-   Foundation or any Apple framework. Pure Swift stdlib + the C shims
+1. **CHANGED at M15.** `Sources/OpenCoreGraphics` and `Sources/OpenUIKit` MAY
+   import Foundation — and do, so that `CGRect`, `IndexPath`, `NSRange` and
+   `TimeInterval` are Foundation's own types rather than colliding rivals
+   (docs/PORTABILITY.md, docs/APP_COMPAT.md "M15"). What replaced the old
+   blanket rule is narrower and is the property that actually mattered:
+   **nothing in the render or layout path may read a wall clock, a locale or a
+   random source** — time enters only through `UIWindow.tick(timestamp:)`.
+   That is enforced by
+   `FoundationCoexistenceTests.testRenderPathReadsNoWallClockLocaleOrRandomSource`,
+   which scans both targets. No other Apple framework may be imported for its
+   own types; the CoreGraphics/AppKit imports that do exist are scoped, exist
+   only to satisfy Swift's default-argument import rule or to avoid
+   redeclaring AppKit's `IndexPath` members, and each carries a comment saying
+   so. Everything else is still pure Swift stdlib + the C shims
    (`CPortableIO` for file reads, `CSTBTrueType` for glyph rasterization,
    `CQuartz` — the vendored portable quartz library — for the default
-   rendering backend). `Sources/openrender` (the CLI) MAY use Foundation.
+   rendering backend).
 2. Real UIKit behavior wins every argument. `golden/system_colors.json`,
    `golden/font_metrics.json`, and `golden/*.png|.layout.json` are ground truth.
 3. Do not change files another module owns (see map below). The Canvas API in
    `Canvas.swift` is a frozen contract; if it is genuinely insufficient, extend
    it additively.
-4. Never use `Date()`, network, or absolute paths in library code.
+4. Never use `Date()`, network, or absolute paths in library code. Since M15
+   the `Date()` half is a TEST, not a convention — see rule 1.
 
 ## Build & verify loop
 
@@ -178,7 +191,8 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift` | **autolayout** | done (controls2: `UILayoutGuide` in the solver + the measured safe-area / layout-margins / readable-content model; fixture `constraints_safearea`) |
 | `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md). `UISearchBar.swift` is SHARED with the menus cluster, which owns its delegate contract — see the note under this table. |
-| `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`) |
+| `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`). M15 KEPT both — measured reasons in `FoundationTypes.swift` |
+| `Sources/OpenUIKit/FoundationTypes.swift` | **app-compat** | done (M15: `IndexPath`, `NSRange`, `TimeInterval` are Foundation's own, with UIKit's conveniences as extensions — docs/PORTABILITY.md) |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/OpenUIKit/UIMenu.swift`, `UIContextMenu.swift` | **menus** | done (M13: UIAction/UIMenu/UIKeyCommand + responder-chain routing; platter measured by `Tools/oracle2/menuprobe`, NO fixture — docs/KNOWN_GAPS.md explains why) |

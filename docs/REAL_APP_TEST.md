@@ -4,10 +4,16 @@
 compiled against OpenUIKit *as written* and rendered — headless, live, and
 identically on Linux?
 
-**Answer: yes, for the screen tested, at 97.7 % of its source unmodified.**
-14 of 605 vendored lines had to change, and this file says exactly which 14
+**Answer: yes, for the screen tested, at 98.5 % of its source unmodified.**
+9 of 605 vendored lines had to change, and this file says exactly which 9
 and why. It also says what the experiment did **not** prove, which is more
 interesting than what it did.
+
+*(Was 97.7 % / 14 lines at M14. M15 made `import Foundation` work alongside
+OpenUIKit — docs/APP_COMPAT.md — which retired the whole 5-line
+"NSCoder / Foundation collision" row below. The `ADAPTED` comments in
+`Sources/RealAppProbe/Vendored/` were replaced by the restored app text; the
+Linux gate still reports 13/13 byte-identical frames.)*
 
 ---
 
@@ -107,25 +113,25 @@ comment at the site.
 | file | original lines | lines removed or changed | unmodified |
 |---|---|---|---|
 | `OptionsPickerRootController.swift` | 258 | **0** | 100 % |
-| `SimpleActionView.swift` | 228 | 8 | 96.5 % |
+| `SimpleActionView.swift` | 228 | 4 | 98.2 % |
 | `OptionsPicker.swift` | 83 | 1 | 98.8 % |
-| `OptionAction.swift` | 36 | 5 | 86.1 % |
-| **total** | **605** | **14** | **97.7 %** |
+| `OptionAction.swift` | 36 | 4 | 88.9 % |
+| **total** | **605** | **9** | **98.5 %** |
 
 The 258-line view controller — the actual *screen*, and the file with all the
 Auto Layout in it — compiles **byte-identically**.
 
-### The 14 lines, by reason
+### The 9 lines, by reason
 
 | reason | lines | detail |
 |---|---|---|
-| **`NSCoder` / Foundation collision** | 5 | `required init?(coder:)` deleted (4 lines) and `import Foundation` dropped (1). `NSCoder` is a Foundation type, and a target that links OpenUIKit cannot `import Foundation` at all without Foundation's `CGRect`/`CGSize` colliding with OpenUIKit's. The initializer is `@available(*, unavailable)` in the original and never runs — but it is *present in essentially every UIKit class*. |
+| ~~**`NSCoder` / Foundation collision**~~ | ~~5~~ **0** | **CLOSED at M15.** `import Foundation` and the `required init?(coder: NSCoder)` are back, verbatim. What made it possible: OpenUIKit's `CGRect`/`CGSize`/`CGFloat`/`IndexPath` are now Foundation's own types rather than rivals, and `Sources/UIKitShim/UIKit.swift` re-exports Foundation the way real UIKit's swiftinterface does — so a file whose only import line is `import UIKit` can name `NSCoder`. It compiles; it does not *archive*. `UIView` still declares no `init?(coder:)` of its own (making it `required`, as real UIKit does, would force every UIView subclass in the library to write one), so the app's initializer compiles as a new required init rather than an override. It is `@available(*, unavailable)` and never runs, which is exactly its status in the app. |
 | **`@MainActor` isolation** | 4 | `OptionAction`'s `action` and `submenu` closure types and its two initializers are declared `@MainActor`. Real UIKit annotates `UIView`/`UIViewController` `@MainActor`, so calling such a closure from a touch handler is legal. OpenUIKit's classes carry no global-actor isolation, so the same call is a concurrency error. Annotation dropped; the library is single-threaded either way. |
 | **`#selector` / `@objc`** | 4 | Two `#selector(…)` call sites rewritten to `Selector.named(…)`; two `@objc private func` declarations lost their `@objc` and their `private`, and the 1-argument action's sender retyped `UISwitch` → `AnyObject`. Exactly the cost docs/OBJC_RUNTIME.md predicted. |
 | **harness plumbing (not a UIKit gap)** | 1 | `class OptionsPicker` → `public class OptionsPicker`, so `openrender` can reach it across the module boundary. Inside a real app target this would not be needed. |
 
 Notice what is **not** in that table: no missing method, no renamed property,
-no restructured layout, no removed feature. Every one of the 14 lines is a
+no restructured layout, no removed feature. Every one of the 9 lines is a
 *language/runtime* incompatibility, not an API-surface hole. That is a
 different and better failure mode than the census's "missing type" counting
 suggests — but see "the code that was written *around* it", below.
@@ -139,12 +145,12 @@ UIKit build would not need:
 |---|---|---|
 | `Sources/RealAppProbe/Shims.swift` | 207 | the app's own infrastructure: its 11-theme colour system (`Theme`, `ThemeColor`, `AppTheme` — ~2,200 real lines collapsed to two themes, with **the exact hexes from the app's own `scripts/themes/theme.csv`**), its `UIFont.font(ofSize:weight:scalingWith:)` helper, `UIImage.tintedImage`, `UIView.updateSizeConstraints`, a `LiquidGlass` feature flag pinned off, and two empty sibling row classes. **No shim in this file stands in for a UIKit symbol** — that rule is stated at the top of the file, because shimming UIKit would make the measurement circular. |
 | `Sources/RealAppProbe/SelectorTables.swift` | 23 | the `SelectorDispatching` conformance `SimpleActionView` cannot supply for itself. Two lines plus one per action, for **one** class. Real UIKit needs zero. |
-| `Sources/UIKitShim/UIKit.swift` | 16 | a module literally named `UIKit` that does nothing but `@_exported import OpenUIKit`, so the vendored files keep `import UIKit` verbatim. Counted as a shim; it hides four lines of adaptation that say nothing about API coverage. |
+| `Sources/UIKitShim/UIKit.swift` | 26 | a module literally named `UIKit` that does nothing but `@_exported import OpenUIKit` and (M15) `@_exported import Foundation` — the same two re-exports real UIKit's swiftinterface carries — so the vendored files keep `import UIKit` verbatim. Counted as a shim; it hides four lines of adaptation that say nothing about API coverage. |
 
 Plus `Sources/RealAppProbe/RealAppScreen.swift` (121) and
 `Sources/openrender/RealApp.swift` (81), which are harness, not app.
 
-So: **605 app lines, 14 changed, 246 lines of scaffolding** (shims + selector
+So: **605 app lines, 9 changed, 256 lines of scaffolding** (shims + selector
 table + module alias). Scaled up, the scaffolding is the thing that would
 hurt: the selector table is ~3 lines per action class, and the theme shim
 would have to become the app's real theme system (which would compile — it is
@@ -183,8 +189,8 @@ of the census.
 | # | blocker | corpus reach | what it costs today |
 |---|---|---|---|
 | 1 | **`@objc` / `#selector` and the dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Known and documented (docs/OBJC_RUNTIME.md). Measured here at 4 changed lines + a 23-line table for one class. Nothing can close it without an ObjC runtime; what *could* shrink it is a macro that generates `SelectorDispatching` from `@objc`-looking declarations. |
-| 2 | **Foundation cannot be imported alongside OpenUIKit** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | The single biggest structural obstacle to compiling an app *as a whole*. `required init?(coder:)` alone is in 344 files. Fixing it means either `typealias`-ing OpenUIKit's CG types to Foundation's on Darwin/`swift-corelibs` (giving up the "no Foundation" property at the app boundary, not in the library), or shipping an `OpenUIKitFoundationCompat` module that re-exports the non-colliding half. |
-| 3 | **No `@MainActor` isolation on OpenUIKit's classes** | `@MainActor` **641 uses / 270 files**, and rising — Swift 6 language mode makes it the default expectation | 4 of this sample's 14 changed lines. Annotating `UIView`/`UIViewController`/`UIControl` `@MainActor` is mechanical but touches the whole library and every host; it is the cheapest large win on this list. |
+| ~~2~~ | ~~**Foundation cannot be imported alongside OpenUIKit**~~ **FIXED at M15** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | Was "the single biggest structural obstacle to compiling an app *as a whole*". Closed by the first option listed here: OpenUIKit `typealias`-es its CG types (plus `IndexPath`, `NSRange`, `TimeInterval`) to Foundation's, so there is one declaration rather than two. Cost: 151 disambiguation typealiases deleted from the test suite, Linux still 162/162 byte-identical, and five of this ledger's lines came back. Residue, all measured and documented in docs/PORTABILITY.md: `NSAttributedString`, `Notification`/`NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's, and `CGAffineTransform` still clashes on Darwin only. |
+| 3 | **No `@MainActor` isolation on OpenUIKit's classes** | `@MainActor` **641 uses / 270 files**, and rising — Swift 6 language mode makes it the default expectation | 4 of this sample's 9 changed lines — now the LARGEST remaining reason. Annotating `UIView`/`UIViewController`/`UIControl` `@MainActor` is mechanical but touches the whole library and every host; it is the cheapest large win on this list. |
 | 4 | **No asset catalog** | `UIImage(named:)` **438 / 161** | `UIImage(named:)` resolves loose `@2x`/`@3x` files only. Real apps ship `.xcassets`, which also carry the template-rendering-intent flag the app's tinting depends on. The harness copies three PNGs into `fixtures/realapp/assets/` and renames one (`small-tick` is stored as `tick@2x.png` inside its imageset). A `.xcassets` reader is a small, self-contained project. |
 | 5 | **`UIWindow` runs no appearance transition** | `viewDidAppear` **119 / 105** | `makeKeyAndVisible()` does not call `viewWillAppear`/`viewDidAppear` on the root controller, so app code that starts work there never runs. The harness works around it with an explicit `presentPickerNow()`; both `openrender` and `openhost` had to do it. This is a small fix and should be one. |
 | 6 | **Localization** | `L10n.` **3,400 / 540** | Not UIKit — but every user-visible string in three of the four corpus apps goes through a generated `L10n` enum backed by `NSLocalizedString`/`Bundle`. Any whole-app attempt hits it immediately. The harness passes literals. |
@@ -265,4 +271,4 @@ scripts/detent_probe_sim.sh  <outdir>
 
 The app checkout is not vendored. `git clone https://github.com/Automattic/pocket-casts-ios`
 and compare `Sources/RealAppProbe/Vendored/` against `podcasts/` to audit the
-14-line ledger yourself.
+9-line ledger yourself.

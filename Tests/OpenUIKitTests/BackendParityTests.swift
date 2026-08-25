@@ -4,10 +4,6 @@
 import XCTest
 @testable import OpenCoreGraphics
 
-private typealias CGFloat = OpenCoreGraphics.CGFloat
-private typealias CGPoint = OpenCoreGraphics.CGPoint
-private typealias CGRect = OpenCoreGraphics.CGRect
-private typealias CGColor = OpenCoreGraphics.CGColor
 private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
 final class BackendParityTests: XCTestCase {

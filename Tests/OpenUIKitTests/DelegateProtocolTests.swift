@@ -13,12 +13,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGPoint = OpenUIKit.CGPoint
-private typealias CGRect = OpenUIKit.CGRect
-private typealias NSRange = OpenUIKit.NSRange
-private typealias IndexPath = OpenUIKit.IndexPath
-
 // MARK: - Compile-only conformances (empty on purpose)
 
 private final class MinimalTextFieldDelegate: UITextFieldDelegate {}

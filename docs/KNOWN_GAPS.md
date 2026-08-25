@@ -22,7 +22,7 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 | **No fixture for the menu platter, `UISearchBar`, `UIStepper`, `UIPickerView`** | four surfaces are locked in by unit tests replaying real UIKit's numbers instead of by pixels | each is a property of the ORACLE, not a shortcut: iOS 26 draws menus in the render server; a private material draws as nothing; a SwiftUI hosting view draws nothing; a `CAGradientLayer` washes the capture out. Each section names the probe route that would close it | "controls2", "Menus" |
 | **A non-large sheet detent is edge-to-edge; iOS 26 draws a floating card** | right HEIGHT, wrong SHAPE (iOS insets 8 pt per side and scales 377/393) | the measured numbers do not decompose into inset + height without modelling the transform | "Real-app harness (M14)" |
 | **Dynamic Type is exact only at probed base values** | the 19 probed bases are exact table hits at all 12 categories; between them we interpolate linearly where UIKit's curve is piecewise with 1/3-pt quantization — worst observed ~2/3 pt at accessibility sizes | widening `baseValues` in `dyntypeprobe` closes it mechanically; nothing is hand-fitted | "Real-app harness (M14)" |
-| **Three types SHADOW Foundation's** (`NSAttributedString`, `NotificationCenter`, `Notification`, `Timer`) | an app importing both needs a one-line file-scope `typealias`; a Foundation attributed string cannot reach a `UILabel` | the library imports no Foundation, by rule — this is the price of the rule, not a bug | "The three types that SHADOW Foundation" |
+| ~~**Three types SHADOW Foundation's**~~ **NARROWED at M15** — the geometry types, `IndexPath`, `NSRange` and `TimeInterval` are now Foundation's own; what still shadows is `NSAttributedString`, `Notification`/`NotificationCenter`, `Timer`/`RunLoop` | an app importing both needs a one-line file-scope `typealias` for those three families only; a Foundation attributed string still cannot reach a `UILabel` | each survivor now has a MEASURED reason, not a blanket rule: Linux Foundation traps on UIKit's attribute values, has no portable selector-form observer, and has no scripted clock | "Foundation coexistence (M15)" |
 | **Accessibility is storage only** | properties round-trip and nothing consults them | there is no accessibility tree and no assistive technology, hence no oracle | "Real-app harness (M14)" |
 
 Not on this list because they are **open work, not accepted**: compositional
@@ -640,24 +640,63 @@ why:
 - **A DISABLED `UIControl` still swallows touches** instead of forwarding
   them up the chain (UIKit forwards). Pre-existing; the new forwarding
   default made it visible but did not change it.
+## Foundation coexistence (M15, 2026-08-25)
+
+**`import Foundation` next to `import OpenUIKit` now works.** The library
+imports Foundation and re-exports Foundation's own `CGFloat`, `CGPoint`,
+`CGSize`, `CGRect`, `IndexPath`, `NSRange`, `NSRangePointer` and
+`TimeInterval` rather than declaring rivals, so there is exactly ONE of each
+in any program. Design, the full table, and the measured reason each survivor
+survived: docs/PORTABILITY.md "M15: the library imports Foundation, and there
+is exactly one `CGRect`", plus `Sources/OpenUIKit/FoundationTypes.swift`.
+Evidence it worked: 151 `private typealias` lines deleted from 40 test files,
+`Tests/OpenUIKitTests/FoundationCoexistenceTests.swift` green, and Linux still
+162/162 byte-identical.
+
+Three families still shadow Foundation's, each for a measured reason rather
+than a blanket rule — `NSAttributedString` (below), `Notification` /
+`NotificationCenter`, and `Timer` / `RunLoop`. One residual name clash exists
+only on Darwin: `CGAffineTransform`, because Foundation re-exports
+CoreGraphics' there and OpenUIKit must keep its own to hold the render
+byte-identical. On Linux there is nothing to disambiguate.
+
+Two Swift gotchas this uncovered, both worth knowing before touching the
+imports:
+
+- A **default argument** or an `@inlinable` body may only use members whose
+  defining module *that file* imports — which is why 31 library files carry a
+  scoped `import struct CoreGraphics.CGRect`-style block.
+- In a file where the name is visible twice, `[CGFloat](repeating:count:)`
+  array-of-type sugar stops parsing as a type and the compiler reports
+  `cannot call value of non-function type '[CGFloat.Type]'`. Spell it
+  `Array<CGFloat>(repeating:count:)`. This bites app code too.
+
 ## Attributed text (M12, 2026-08-25): shadows Foundation, and what is not modelled
 
-### The types SHADOW Foundation's — a deliberate, documented tradeoff
+### The types SHADOW Foundation's — MEASURED, not a matter of taste
 
 `NSAttributedString`, `NSMutableAttributedString`, `NSAttributedString.Key`,
-`NSRange`, `NSParagraphStyle` and `NSMutableParagraphStyle` are declared **in
-OpenUIKit** (`Sources/OpenUIKit/NSAttributedString.swift`,
-`NSParagraphStyle.swift`). They do **not** bridge to Foundation's types and
-never will: the library target imports no Foundation at all
-(docs/PORTABILITY.md), which is the property that makes it build and behave
-identically on Linux. Consequences a caller must know:
+`NSParagraphStyle` and `NSMutableParagraphStyle` are declared **in OpenUIKit**
+(`Sources/OpenUIKit/NSAttributedString.swift`, `NSParagraphStyle.swift`).
+(`NSRange` is no longer among them — M15 made it Foundation's.)
+
+Through M14 the reason was the no-Foundation rule. M15 removed that rule and
+re-tested the assumption, and the types stayed, because of this:
+
+> On Swift 6.2 Linux, `NSMutableAttributedString.addAttribute` **traps** the
+> second time a plain Swift value is stored under a key — run coalescing calls
+> `isEqual` on the boxed `__SwiftValue`. Every OpenUIKit attribute value
+> (`UIFont`, `UIColor`, `CGFloat`, `NSParagraphStyle`) is a plain Swift value.
+
+So corelibs-Foundation's attributed string cannot hold UIKit's attributes on
+the target platform at all, and adopting it would trade a compile-time name
+clash for a runtime crash. Consequences a caller must know:
 
 - An app (or test) that imports **both** OpenUIKit and Foundation sees two
   types with each of those names and the compiler reports
   `'NSAttributedString' is ambiguous for type lookup in this context`. The fix
   is a file-scope disambiguation, e.g.
-  `private typealias NSAttributedString = OpenUIKit.NSAttributedString`
-  (the same pattern the repo already uses for `CGFloat`/`CGRect`).
+  `private typealias NSAttributedString = OpenUIKit.NSAttributedString`.
   `Tests/OpenUIKitTests/AttributedStringTests.swift` is the worked example.
 - A Foundation `NSAttributedString` cannot be handed to `UILabel`; it has to
   be rebuilt. There is no conversion helper — adding one would require the

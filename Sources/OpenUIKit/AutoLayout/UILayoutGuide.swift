@@ -72,8 +72,28 @@
 //     participates in a solve). The value we report is the one UIKit
 //     converges to; only the "never asked" case differs.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// UIKit's directional (leading/trailing) insets. LTR only, like the rest of
 /// this module, so `leading` == `left`.
+
+
 public struct NSDirectionalEdgeInsets: Equatable, Sendable {
     public var top: CGFloat
     public var leading: CGFloat

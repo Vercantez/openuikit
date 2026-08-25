@@ -26,7 +26,27 @@
 // title/backTitle through `setState` because those two take part in the
 // push/pop cross-fade.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// The back control: chevron + previous title, standard pressed dimming.
+
+
 final class _UINavigationBarBackButton: UIControl {
     let chevron = UILabel()
     let backLabel = UILabel()
@@ -555,8 +575,8 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let slide = UINavigationBar.titleSlide * w
         // Where the old title slides to on push: the new back label's center
         // (the old title visually "becomes" the back button).
-        let backX = t.newBack?.backTitleCenterX
-            ?? t.oldBack?.backTitleCenterX ?? mid - slide
+        let backX: CGFloat = t.newBack?.backTitleCenterX
+            ?? t.oldBack?.backTitleCenterX ?? (mid - slide)
         if t.push {
             // Old title: center -> back position, fading out.
             place(title: t.oldTitle, centerX: mid + (backX - mid) * p,
@@ -757,7 +777,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let sigma = pocketBlurSigma * scale
         let radius = max(1, Int((sigma * 2.5).rounded()))
         // Gaussian taps.
-        var taps = [CGFloat](repeating: 0, count: 2 * radius + 1)
+        var taps = Array<CGFloat>(repeating: 0, count: 2 * radius + 1)
         var sum: CGFloat = 0
         for i in -radius...radius {
             let t = CGFloat(i) / sigma
@@ -774,7 +794,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // Composite the (straight-alpha) snapshot over the background color
         // so the blur operates on opaque RGB.
         let workH = min(outH + radius, src.height)
-        var flat = [CGFloat](repeating: 0, count: w * workH * 3)
+        var flat = Array<CGFloat>(repeating: 0, count: w * workH * 3)
         src.pixels.withUnsafeBufferPointer { px in
             for y in 0..<workH {
                 for x in 0..<w {
@@ -788,7 +808,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             }
         }
         // Horizontal pass (clamped edges).
-        var hpass = [CGFloat](repeating: 0, count: w * workH * 3)
+        var hpass = Array<CGFloat>(repeating: 0, count: w * workH * 3)
         for y in 0..<workH {
             for x in 0..<w {
                 var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0

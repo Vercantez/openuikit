@@ -18,11 +18,6 @@
 import XCTest
 @testable import OpenUIKit
 
-private typealias CGFloat = OpenUIKit.CGFloat
-private typealias CGRect = OpenUIKit.CGRect
-private typealias CGSize = OpenUIKit.CGSize
-private typealias CGPoint = OpenUIKit.CGPoint
-
 final class DynamicTypeTests: XCTestCase {
 
     override func setUp() {

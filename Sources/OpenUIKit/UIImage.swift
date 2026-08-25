@@ -6,8 +6,28 @@
 // docs/SCENE_SPEC.md) or decoded from PNG/JPEG bytes or files — see the
 // "Loading" section below.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 /// How a UIImage's pixels are used when it is drawn: as-is, or as a
 /// silhouette tinted with the destination's tint color.
+
+
 public enum UIImageRenderingMode: Sendable {
     case automatic, alwaysOriginal, alwaysTemplate
 }
@@ -209,7 +229,7 @@ public final class UIImage {
 
         // Per-axis source index pairs + warped weights.
         func axis(_ dst: Int, _ src: Int) -> ([Int], [Int], [CGFloat]) {
-            var i0 = [Int](), i1 = [Int](), w = [CGFloat]()
+            var i0 = [Int](), i1 = [Int](), w = Array<CGFloat>()
             i0.reserveCapacity(dst); i1.reserveCapacity(dst); w.reserveCapacity(dst)
             for d in 0..<dst {
                 let s = (CGFloat(d) + 0.5) * CGFloat(src) / CGFloat(dst) - 0.5

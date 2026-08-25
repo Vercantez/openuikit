@@ -25,6 +25,24 @@
 // moved into the real NSLayoutConstraint class with M9
 // (AutoLayout/NSLayoutConstraint.swift); UIStackView keeps using it as-is.
 
+// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
+// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
+// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
+// SCOPED imports on purpose: they satisfy that rule without pulling in
+// CoreGraphics' CGColor / CGAffineTransform, which would collide with
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+import struct CoreGraphics.CGPoint
+import struct CoreGraphics.CGRect
+import struct CoreGraphics.CGSize
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
+
 open class UIStackView: UIView {
     public enum Distribution: Sendable {
         case fill, fillEqually, fillProportionally, equalSpacing, equalCentering
@@ -265,7 +283,7 @@ open class UIStackView: UIView {
             let flexible = visiblePairs.indices.filter { isAxisFlexible(visiblePairs[$0].0) }
             if let lastFlexible = flexible.last {
                 for i in flexible { lengths[i] = 0 }
-                let slack = available - lengths.reduce(0, +)
+                let slack = available - lengths.reduce(CGFloat(0), +)
                 if slack >= 0 {
                     lengths[lastFlexible] = slack
                 } else if let firstRigid = lengths.indices.first(where: { !flexible.contains($0) }) {
