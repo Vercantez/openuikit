@@ -26,12 +26,14 @@
 /// private and prunes the subtree on both sides).
 final class UILayoutContainerView: UIView {}
 
-open class UIViewController {
-    public init() {}
+open class UIViewController: UIResponder {
+    public override init() { super.init() }
 
     // MARK: View loading (lazy loadView/viewDidLoad)
 
-    var _view: UIView?
+    var _view: UIView? {
+        didSet { _view?._managingViewController = self }
+    }
 
     /// The controller's view. First access loads it (loadView + viewDidLoad).
     public var view: UIView! {
@@ -51,6 +53,29 @@ open class UIViewController {
         if _view == nil { _view = UIView() } // loadView() that set nothing
         viewDidLoad()
     }
+
+    // MARK: Responder chain (lifecycle module, M12)
+
+    /// UIKit: a presented view controller's next responder is the
+    /// controller that PRESENTED it; otherwise it is the controller's view's
+    /// superview — which is the window when this is a window's root
+    /// controller, and the container's view for a child of a container.
+    ///
+    /// (The presented case needs the explicit hop because OpenUIKit installs
+    /// the presentation container in the WINDOW, not inside the presenter's
+    /// view — see UIPresentation.present. Without it a sheet's chain would
+    /// skip the presenter, which UIKit documents that it does not.)
+    open override var next: UIResponder? {
+        if let presenting = presentingViewController, _presentationContainer != nil {
+            return presenting
+        }
+        return viewIfLoaded?.superview
+    }
+
+    /// A controller takes focus in the window its view is installed in
+    /// (UIKit: a controller whose view is not in a window cannot become
+    /// first responder either).
+    override var _firstResponderWindow: UIWindow? { viewIfLoaded?.window }
 
     /// Create `self.view`. Default: a plain UIView with a portrait-phone
     /// frame and nil (transparent) background — the same as a programmatic

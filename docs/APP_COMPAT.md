@@ -37,7 +37,7 @@ types, not 737. That is why the punch list is tractable.
 | cluster | uses | notes |
 |---|---|---|
 | **Attributed text** | 560 | `NSAttributedString` + rendering it: the *type* is Foundation, the *layout and drawing* are ours. Paragraph styles, attachments, `UIFontDescriptor`. Interacts with the text engine's harvested-ink model. |
-| **App lifecycle / environment** | 543 | `UIApplication`, `UIApplicationDelegate`, `UIResponder` (a real base class + responder chain), `UIScreen`, `UIDevice`. Currently the host boots a "UIApplication-lite"; apps expect the real entry point. |
+| ~~**App lifecycle / environment**~~ | 543 | **DONE (M12).** `UIResponder` is the real base class with UIKit's exact chain; `UIApplication` + `UIApplicationDelegate` + a minimal scene layer; host-driven `UIScreen`; documented-fixed `UIDevice`. `openhost --app` boots through `UIApplicationMain` and a real app delegate. No run loop, so the host drives the transitions — docs/KNOWN_GAPS.md "App lifecycle / environment". |
 | **Alerts** | 332 | `UIAlertController` + `UIAlertAction` (alert and action-sheet styles). |
 | **Collection view** | 212 | `UICollectionView`, cells, `UICollectionViewFlowLayout`, data source/delegate. Reuse machinery can follow `UITableView`'s. |
 | **Bars & appearance** | 181 | `UIBarButtonItem`, `UIToolbar`, `UINavigationBarAppearance`, `UITabBarAppearance`. |

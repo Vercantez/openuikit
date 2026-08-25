@@ -3,8 +3,10 @@
 // The M7.5 "real UIKit feel" demo (docs/APP_FEEL.md): a Settings-style
 // multi-screen app written as ordinary UIKit code — UIViewController
 // subclasses, addTarget actions, UIView.animate — against OpenUIKit.
-// Hosted by `openhost --app demo`, which boots a UIApplication-lite around
-// the navigation controller this factory returns.
+// Hosted by `openhost --app demo`, which runs the REAL launch sequence
+// (UIApplicationMain -> its app delegate -> a key UIWindow whose
+// rootViewController is what this factory returns) — see M12 in
+// docs/ARCHITECTURE.md "Application lifecycle".
 
 import OpenUIKit
 

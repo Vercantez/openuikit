@@ -168,6 +168,7 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIImage.swift`, `UIImageView.swift` | **image** | to create |
 | `Sources/OpenUIKit/UIButton.swift`, `UISwitch.swift`, `UIProgressView.swift` | **controls** | done (M7: UIControl-based) |
 | `Sources/OpenUIKit/UITouch.swift`, `UIEvent.swift`, `UIGestureRecognizer.swift`, `UIControl.swift` | **event** | done (M7) |
+| `Sources/OpenUIKit/UIResponder.swift`, `UIApplication.swift`, `UIScreen.swift`, `UIDevice.swift` | **lifecycle** | done (M12: responder chain + app lifecycle + host-driven environment) |
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
@@ -290,6 +291,43 @@ is `.circular`.
 `UITraitCollection(userInterfaceStyle:)` with `.light`/`.dark`.
 The scene runner sets the root trait environment; views inherit.
 `overrideUserInterfaceStyle` on UIView overrides for the subtree.
+
+### Responder chain (M12)
+`UIResponder` is the real base class: `UIView`, `UIViewController`,
+`UIApplication` and `UIScene` all derive from it. `next` implements UIKit's
+documented chain —
+
+| responder | next |
+|---|---|
+| a view | the view controller whose ROOT view it is, else its superview |
+| a view controller | the controller that PRESENTED it, else its view's superview |
+| a window | its `UIWindowScene` if it has one, else `UIApplication.shared` |
+| `UIApplication` | its delegate, when the delegate is a `UIResponder` |
+
+so a control deep inside a pushed screen walks `control -> … -> vc.view ->
+vc -> container view -> container vc -> window -> application -> app
+delegate -> nil`. `touches*`/`presses*` default to forwarding along it
+(UIKit's default); anything that handles a phase overrides WITHOUT calling
+super, which is what `UIControl`, `UITableViewCell` and the scroll pipeline
+already did. Touch DELIVERY is unchanged: `UIWindow` still hit-tests and
+calls the hit view directly (see "Events").
+
+First-responder state lives on `UIWindow.firstResponder`, as in UIKit, and
+is reachable from any responder through `_firstResponderWindow` — which is
+why a detached view cannot take focus and a view controller can.
+
+### Application lifecycle (M12)
+`UIApplicationMain(delegate:)` runs the launch sequence and **returns** —
+the portable core has no run loop (see "Hard rules"). The host owns the
+loop and drives the rest: `_hostDidBecomeActive()` after the first frame,
+`_hostWillResignActive()` / `_hostDidEnterBackground()` /
+`_hostWillEnterForeground()` as the surface changes, `_hostWillTerminate()`
+on quit. `applicationState` and the delegate callback ORDER are UIKit's;
+only the trigger differs. `UIScreen.main` is host-driven
+(`_hostConfigure(bounds:scale:)` — openhost points it at the SDL surface it
+really opens); `UIDevice.current` reports documented FIXED values, not
+measurements. Gaps and the reasoning: docs/KNOWN_GAPS.md "App lifecycle /
+environment".
 
 ## Oracle notes / known gaps
 - `UISwitch` thumb does not draw via offscreen `layer.render` — such scenes

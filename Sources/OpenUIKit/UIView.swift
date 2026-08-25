@@ -36,7 +36,7 @@ public final class CALayer {
     init(owner: UIView) { self.owner = owner }
 }
 
-open class UIView {
+open class UIView: UIResponder {
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
     public var center: CGPoint = .zero {
         didSet {
@@ -185,6 +185,7 @@ open class UIView {
     var _tintColor: UIColor?
 
     public init(frame: CGRect = .zero) {
+        super.init()
         self.frame = frame
     }
 
@@ -411,14 +412,26 @@ open class UIView {
         recognizer.view = nil
     }
 
-    /// UIResponder touch entry points. Default implementations do nothing
-    /// (UIResponder would forward up the chain; controls override).
-    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    // (The UIResponder touch entry points — touchesBegan/Moved/Ended/
+    // Cancelled — now live on UIResponder, where UIKit puts them, and their
+    // default forwards up the responder chain. See UIResponder.swift.)
 
-    // MARK: First responder (text-input module, M8)
+    // MARK: Responder chain (lifecycle module, M12)
+
+    /// The view controller whose ROOT view this is, if any. Set by
+    /// UIViewController when it takes ownership of a view; the one hop that
+    /// makes the responder chain pass through view controllers.
+    weak var _managingViewController: UIViewController?
+
+    /// UIKit: a view's next responder is the view controller it is the root
+    /// view of, otherwise its superview.
+    open override var next: UIResponder? {
+        if let vc = _managingViewController, vc.viewIfLoaded === self { return vc }
+        return superview
+    }
+
+    // MARK: First responder (text-input module, M8; storage moved to
+    // UIResponder in M12 — the become/resign behavior is unchanged)
 
     /// The UIWindow at the root of this view's superview chain, if any.
     public var window: UIWindow? {
@@ -430,32 +443,9 @@ open class UIView {
         return nil
     }
 
-    /// Whether this view can take text-input focus. UIView: false;
-    /// UITextField/UITextView override to true.
-    open var canBecomeFirstResponder: Bool { false }
-
-    public var isFirstResponder: Bool { window?.firstResponder === self }
-
-    /// Take first-responder status in this view's window (UIKit semantics:
-    /// fails without a window or when canBecomeFirstResponder is false).
-    /// The previous first responder resigns first.
-    @discardableResult
-    open func becomeFirstResponder() -> Bool {
-        guard canBecomeFirstResponder, let w = window else { return false }
-        if w.firstResponder === self { return true }
-        w.firstResponder?.resignFirstResponder()
-        w.firstResponder = self
-        return true
-    }
-
-    /// Give up first-responder status. Returns true (UIKit's default).
-    @discardableResult
-    open func resignFirstResponder() -> Bool {
-        if let w = window, w.firstResponder === self {
-            w.firstResponder = nil
-        }
-        return true
-    }
+    /// A view can only hold focus while it is installed in a window — the
+    /// rule that makes `becomeFirstResponder()` fail on a detached view.
+    override var _firstResponderWindow: UIWindow? { window }
 
     // MARK: Rendering (view module: RenderPass.swift implements)
     /// Draw this view's own content (background is handled by the render

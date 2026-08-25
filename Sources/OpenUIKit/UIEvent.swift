@@ -61,10 +61,62 @@ open class UIWindow: UIView {
     public static var multiTapSlop: CGFloat = 30
 
     /// Current first responder (text-input focus). Set through
-    /// UIView.becomeFirstResponder / resignFirstResponder; the host feeds
-    /// keyboard input to it via sendText/sendKey (UITextInput.swift).
-    /// Owner: text-input module (additive, coordinated with event module).
-    public internal(set) weak var firstResponder: UIView?
+    /// UIResponder.becomeFirstResponder / resignFirstResponder; the host
+    /// feeds keyboard input to it via sendText/sendKey (UITextInput.swift).
+    /// UIKit stores the first responder on the window too — which is why a
+    /// responder must be installed in one to take focus.
+    /// Owner: text-input module (additive, coordinated with event module);
+    /// widened from UIView? to UIResponder? by the lifecycle module (M12),
+    /// since a view controller can hold focus as well.
+    public internal(set) weak var firstResponder: UIResponder?
+
+    // MARK: Window role (lifecycle module, M12)
+
+    /// The scene this window belongs to, when the app opted into scenes.
+    /// nil in the pre-scene shape OpenUIKit's hosts boot, which is what
+    /// makes a window's next responder the application itself.
+    public weak var windowScene: UIWindowScene? {
+        didSet {
+            if let s = windowScene { UIApplication.shared._connect(scene: s) }
+        }
+    }
+
+    /// UIKit: window -> its window scene, if any -> UIApplication.
+    open override var next: UIResponder? { windowScene ?? UIApplication.shared }
+
+    override var _firstResponderWindow: UIWindow? { self }
+
+    public var isKeyWindow: Bool { UIApplication.shared.keyWindow === self }
+
+    /// The controller whose view fills the window. Setting it swaps the old
+    /// root view out and installs the new one at the window's bounds — the
+    /// standard `window.rootViewController = vc` app boot.
+    public var rootViewController: UIViewController? {
+        didSet {
+            guard rootViewController !== oldValue else { return }
+            oldValue?.viewIfLoaded?.removeFromSuperview()
+            guard let vc = rootViewController else { return }
+            vc.loadViewIfNeeded()
+            let v = vc.view!
+            v.frame = bounds
+            addSubview(v)
+            setNeedsLayout()
+        }
+    }
+
+    public override init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        UIApplication.shared._register(window: self)
+    }
+
+    /// Make this the key window (UIKit also makes it visible; OpenUIKit has
+    /// no window server, so visibility is the host's business).
+    public func makeKey() { UIApplication.shared._makeKey(window: self) }
+
+    public func makeKeyAndVisible() {
+        isHidden = false
+        makeKey()
+    }
 
     /// Active touches by host-provided touch identifier.
     var activeTouches: [Int: UITouch] = [:]

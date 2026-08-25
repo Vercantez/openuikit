@@ -2,8 +2,9 @@
 //
 // The second app written against OpenUIKit (after the Settings demo): a todo
 // list in a UINavigationController — root list, task detail, statistics.
-// Hosted by `openhost --app tasks`, which boots the same UIApplication-lite
-// around the navigation controller this factory returns.
+// Hosted by `openhost --app tasks`, which runs the same real launch
+// sequence as `--app demo` (UIApplicationMain -> app delegate -> key
+// UIWindow) around the navigation controller this factory returns.
 
 import OpenUIKit
 

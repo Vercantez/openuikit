@@ -7,7 +7,7 @@
 //   window.sendText("héllo", timestamp: t)     // committed characters
 //   window.sendKey(.backspace, timestamp: t)   // editing keys
 //
-// Both route to the window's current first responder (UIView.become/
+// Both route to the window's current first responder (UIResponder.become/
 // resignFirstResponder; UIWindow.firstResponder). Text editors implement
 // UIKeyInput (UIKit's protocol shape) plus the internal UITextInputTraits
 // key handling below.
