@@ -11,14 +11,19 @@ quietly returns a plausible-looking wrong answer.
 
 Status: **it runs.** ELF image discovery is implemented (A1 below is now a
 description of how, not of a hole), and the differential corpus is
-**43/43 PASS** against the real macOS objc4 — classes, selectors, dispatch,
+**44/44 PASS** against the real macOS objc4 — classes, selectors, dispatch,
 categories, protocols, ivars, properties, ARC, weak references, associated
 objects, exceptions, `@synchronized`, multi-image programs, `dlopen`ed
 images, and eight-thread contention.
 
-What is still missing is listed below, ranked. The largest single item is
-`imp_implementationWithBlock` (B2): it aborts loudly and needs trampoline
-assembly that is not even in the vendored tree.
+What is still missing is listed below, ranked. Two items dominate:
+**B0**, tagged pointers, which are compiled on and measurably wrong and which
+no test covers; and **B2**, `imp_implementationWithBlock`, which aborts loudly
+and needs trampoline assembly that is not even in the vendored tree.
+
+The corpus reaches 44% of the runtime's exported surface, so absence from this
+file is not evidence of correctness. `docs/STATUS.md` §4.5 lists what is
+untouched.
 
 ---
 
@@ -95,6 +100,34 @@ alternative is a jump to address 0.
 
 ## B. Disabled features — no abort, but a real cost
 
+### B0. Tagged pointers are ENABLED and BROKEN — no abort, wrong answer, then a crash
+
+This is the one item in this file that violates the no-silent-stubs rule
+above, which is why it is first. Nothing was stubbed deliberately; the feature
+was simply left switched on and never exercised.
+
+MEASURED (`docs/STATUS.md` §4.1). The Linux build selects
+`SUPPORT_TAGGED_POINTERS=1` and `SUPPORT_MSB_TAGGED_POINTERS=1`, so
+`objc_debug_taggedpointer_mask` is `0x8000000000000000` — the same value as
+Darwin/arm64. One source file, both sides,
+`_objc_registerTaggedPointerClass(1, TR)` then `object_getClass` and a send:
+
+| | macOS (real objc4) | this port |
+|---|---|---|
+| `object_getClass` | `TR` | `(nil)` |
+| message send | `42` | **SIGSEGV** |
+
+`objc_debug_taggedpointer_classes` also disagrees on where the registration
+lands — slot 5 on macOS, slot 6 here, for the identical call — which points at
+the slot/obfuscator computation rather than at the table itself. Separately,
+the linker warns that `objc_debug_taggedpointer_classes` carries no type or
+size in our dynamic symbol table; lldb and the Swift runtime read these
+`objc_debug_*` symbols directly.
+
+Nothing in objc4 alone creates a tagged pointer, which is why the corpus never
+hit this. Any Foundation or CoreFoundation layer creates one on the first
+small `NSNumber`. Fix this before anything is built on top of the runtime.
+
 ### B1. Method cache garbage is never freed — this is a LEAK
 
 `patches/0005`, `objc-cache.mm`.
@@ -118,10 +151,25 @@ is the conservative direction — returning `FALSE` would be a use-after-free.
 `collectALot` path, which spins until it is safe, is also short-circuited to
 `return` since the spin would never terminate.
 
-Not measured yet: how large the leak is for a realistic program. Measure it
-before fixing it, so the fix has a number attached.
+**Now measured** (`docs/STATUS.md` §4.2). Workload: a class with a 256-entry
+warm cache, then N rounds of `class_addMethod` (flushes the cache) followed by
+256 sends (refills it).
 
-### B2. `imp_implementationWithBlock` / block trampolines — the largest remaining hole
+| rounds | RSS growth here | peak RSS here | peak RSS macOS |
+|---:|---:|---:|---:|
+| 1,000 | 11.6 MB | 15.3 MB | 2.0 MB |
+| 20,000 | 173.1 MB | 176.8 MB | 4.7 MB |
+
+**~8.7 KB per cache invalidation, linear, unbounded** — exactly one abandoned
+512-bucket array (512 × 16 B), so the mechanism is confirmed along with the
+magnitude. 38× the real runtime's peak RSS at 20,000 rounds.
+
+The shape matters more than the number: the leak scales with cache
+*invalidations*, not with live classes. Realize-and-run programs pay a bounded
+one-off cost of roughly one extra cache. Programs that swizzle, add methods at
+runtime, or `dlopen` categories in a loop grow without bound.
+
+### B2. `imp_implementationWithBlock` / block trampolines — the largest hole by new code
 
 MEASURED failure: `imp_implementationWithBlock()` aborts before it reaches
 any of the memory-mapping code, at

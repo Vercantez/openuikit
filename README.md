@@ -76,10 +76,12 @@ upstream drops can be re-applied.
 
 Every one of those is the same source file compiled twice — once against
 Apple's shipping runtime on macOS 26.1/arm64, once against ours on Ubuntu
-24.04/aarch64 — with the two outputs required to be byte-identical.
+24.04/aarch64 — with the two outputs required to be byte-identical. That
+number has been **independently re-verified from a clean clone**; the audit,
+including what it found outside the corpus, is `docs/STATUS.md`.
 
-What that covers: root classes and metaclass chains, selector registration and
-uniquing, message dispatch and the method cache, `+load` and `+initialize`
+What the 44 cover: root classes and metaclass chains, selector registration
+and uniquing, message dispatch and the method cache, `+load` and `+initialize`
 ordering, categories (including collision precedence), protocols, ivars and
 non-fragile layout, properties, dynamic class creation and disposal, ARC entry
 points, autorelease pools, weak references, associated objects, type
@@ -93,7 +95,9 @@ The mechanism that made it run: `dl_iterate_phdr(3)` plus each image's on-disk
 ELF section header table, feeding objc4's existing `map_images`/`load_images`
 unchanged. Section names are the Mach-O ones with `__` stripped —
 `objc_classlist`, `objc_selrefs`, `objc_catlist` and the rest — and `swiftc
--Xfrontend -enable-objc-interop` emits the same ones, which is the whole point.
+-Xfrontend -enable-objc-interop` emits the same ones (re-measured on swiftc
+6.2.4: `objc_classlist`, `objc_imageinfo`, identical to clang's), which is the
+whole point.
 
 ```
 ./scripts/build_linux.sh              # clean checkout -> libobjc.so, in Docker
@@ -101,13 +105,38 @@ unchanged. Section names are the Mach-O ones with `__` stripped —
 ./scripts/difftest.sh                 # both sides, byte-compare, print the table
 ```
 
-**What does not work yet**, ranked: `imp_implementationWithBlock` (needs
-trampoline assembly that is not in the vendored tree — aborts loudly); the
-method cache never frees garbage (a documented leak); tagged pointers are
-untested; x86-64 is not started. Read `docs/UNIMPLEMENTED.md` before trusting
-anything — it lists every hole, every disabled feature with its cost, and the
-assumptions that could still be silently wrong. See also `docs/PORT_MAP.md`,
-`docs/PORT_PLAN.md`, `docs/ABI_DIVERGENCE.md` and `docs/TESTING.md`.
+**What does not work**, ranked, with measurements rather than adjectives:
+
+* **Tagged pointers are enabled and broken.** `SUPPORT_TAGGED_POINTERS=1` is
+  compiled in, but the same source that prints `class=TR` / `dispatch=42` on
+  macOS prints `class=(nil)` and then segfaults here, and
+  `_objc_registerTaggedPointerClass` lands the class in a different table
+  slot. Nothing in the corpus touches them.
+* **`imp_implementationWithBlock` aborts loudly** — the trampoline assembly is
+  not in the vendored tree and has to be written from scratch.
+* **The method cache never frees garbage.** Now quantified: ~8.7 KB leaked per
+  cache invalidation, unbounded. A swizzling workload that costs macOS 4.7 MB
+  of peak RSS costs this port 177 MB.
+* **x86-64 is not started** — CMake accepts the arch, warns, and builds with
+  no messenger at all.
+* **The corpus reaches 44% of the exported surface.** 175 public entry points
+  are never touched by any test. Full ARC codegen, objc4's own `NSObject`, and
+  ARC return-value elision were all untested; all three were probed during the
+  audit and match macOS byte for byte, but they passed by luck, not by test.
+
+Read `docs/STATUS.md` for the audit and the ranked roadmap, and
+`docs/UNIMPLEMENTED.md` for every hole, every disabled feature with its cost,
+and the assumptions that could still be silently wrong. See also
+`docs/PORT_MAP.md`, `docs/PORT_PLAN.md`, `docs/ABI_DIVERGENCE.md` and
+`docs/TESTING.md`.
+
+On the motivating goal: the ELF section names Clang and Swift emit **do**
+agree, which was the load-bearing bet. But an interop-enabled Swift file will
+not link against this runtime yet — it references
+`OBJC_CLASS_$__TtCs12_SwiftObject`, and the Linux-shipped `libswiftCore.so`
+contains zero ObjC class symbols and zero `objc_*` imports. Swift interop
+needs the standard library rebuilt with interop, which needs a Foundation that
+does not exist. `docs/STATUS.md` §5 has the measurements.
 
 ## Licence
 
