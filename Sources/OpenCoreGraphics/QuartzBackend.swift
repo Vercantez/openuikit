@@ -194,12 +194,27 @@ final class QuartzBackend: CanvasBackend {
     }
 
     func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
+        // Match the Swift rasterizer's stroking model: butt caps, round joins.
+        stroke(path, color: color, lineWidth: lineWidth, cap: .butt, join: .round,
+               miterLimit: 10)
+    }
+
+    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+                cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat) {
         guard color.alpha > 0, lineWidth > 0 else { return }
         QZContextSetRGBStrokeColor(ctx, color.red, color.green, color.blue, color.alpha)
         QZContextSetLineWidth(ctx, lineWidth)
-        // Match the Swift rasterizer's stroking model: butt caps, round joins.
-        QZContextSetLineCap(ctx, kQZLineCapButt)
-        QZContextSetLineJoin(ctx, kQZLineJoinRound)
+        switch cap {
+        case .butt: QZContextSetLineCap(ctx, kQZLineCapButt)
+        case .round: QZContextSetLineCap(ctx, kQZLineCapRound)
+        case .square: QZContextSetLineCap(ctx, kQZLineCapSquare)
+        }
+        switch join {
+        case .miter: QZContextSetLineJoin(ctx, kQZLineJoinMiter)
+        case .round: QZContextSetLineJoin(ctx, kQZLineJoinRound)
+        case .bevel: QZContextSetLineJoin(ctx, kQZLineJoinBevel)
+        }
+        QZContextSetMiterLimit(ctx, miterLimit)
         setPath(path)
         QZContextStrokePath(ctx)
         let t = canvas.state.ctm

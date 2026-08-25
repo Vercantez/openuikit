@@ -43,6 +43,11 @@ protocol CanvasBackend: AnyObject {
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool)
     func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat)
+    /// Additive: stroke honoring cap/join styles. Default implementation
+    /// falls back to the plain stroke (butt caps, round joins), so a
+    /// backend that cannot express the styles needs no change.
+    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+                cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat)
     func drawImage(_ image: Bitmap, in rect: CGRect, interpolate: Bool)
     func drawMask(_ mask: [UInt8], width: Int, height: Int,
                   atPixelX x: Int, pixelY y: Int, color: CGColor)
@@ -53,6 +58,18 @@ protocol CanvasBackend: AnyObject {
     func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
                             start: CGPoint, end: CGPoint, in rect: CGRect)
     func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow)
+}
+
+/// Line cap / join styles for the additive stroke entry point
+/// (CGLineCap / CGLineJoin).
+public enum CanvasLineCap: Sendable { case butt, round, square }
+public enum CanvasLineJoin: Sendable { case miter, round, bevel }
+
+extension CanvasBackend {
+    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+                cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat) {
+        stroke(path, color: color, lineWidth: lineWidth)
+    }
 }
 
 /// The existing pure-Swift rasterizer (Rasterizer.swift), reached through the

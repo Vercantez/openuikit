@@ -70,7 +70,8 @@ def classify(scene):
     if scene.get("modal") or (kinds & CHROME_CLASSES):
         cat = "chrome"
     elif kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
-                  "UITextField", "UITextView"}:
+                  "UITextField", "UITextView", "UISlider", "UISegmentedControl",
+                  "UIActivityIndicatorView"}:
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"
@@ -94,6 +95,14 @@ def capture_suffix(t):
 PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   "UIProgressView", "UIStackView", "UIGradientView",
                   "UIScrollView", "UITextField", "UITextView",
+                  # App-compat controls. UISlider's real subtree is private
+                  # on the golden side (_UISliderGlassVisualElement), so it
+                  # compares cleanly; UISegmentedControl and
+                  # UIActivityIndicatorView expose PUBLIC-class internals
+                  # (UIImageView) in real UIKit's dump and are therefore
+                  # left out — their whole subtree is skipped structurally
+                  # and the pixels hold them to account.
+                  "UISlider",
                   # spec v5 chrome. Their INTERNALS (cells, bars, controller
                   # container views) are private on both sides — only the
                   # chrome view's own frame is compared structurally; pixels

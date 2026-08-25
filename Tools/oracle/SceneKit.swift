@@ -396,6 +396,66 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         if let c = colorOrDie(j["progressTintColor"], cls, traits) { p.progressTintColor = c }
         if let c = colorOrDie(j["trackTintColor"], cls, traits) { p.trackTintColor = c }
         v = p
+    case "UISlider":
+        let s = UISlider()
+        s.minimumValue = Float(num(j["minimumValue"]) ?? 0)
+        s.maximumValue = Float(num(j["maximumValue"]) ?? 1)
+        s.value = Float(num(j["value"]) ?? 0)
+        s.tintColor = s.tintColor.resolvedColor(with: traits)
+        if let c = colorOrDie(j["minimumTrackTintColor"], cls, traits) {
+            s.minimumTrackTintColor = c
+        }
+        if let c = colorOrDie(j["maximumTrackTintColor"], cls, traits) {
+            s.maximumTrackTintColor = c
+        }
+        if let c = colorOrDie(j["thumbTintColor"], cls, traits) { s.thumbTintColor = c }
+        if j["enabled"] as? Bool == false { s.isEnabled = false }
+        v = s
+    case "UISegmentedControl":
+        let titles = j["segments"] as? [String] ?? []
+        let sc = UISegmentedControl(items: titles)
+        if let i = j["selectedSegmentIndex"] as? Int { sc.selectedSegmentIndex = i }
+        sc.tintColor = sc.tintColor.resolvedColor(with: traits)
+        if let c = colorOrDie(j["selectedSegmentTintColor"], cls, traits) {
+            sc.selectedSegmentTintColor = c
+        }
+        if j["enabled"] as? Bool == false { sc.isEnabled = false }
+        v = sc
+    case "UIActivityIndicatorView":
+        let style: UIActivityIndicatorView.Style
+        switch j["style"] as? String ?? "medium" {
+        case "medium": style = .medium
+        case "large": style = .large
+        case let s: fatalError("bad activity indicator style \(s)")
+        }
+        let a = UIActivityIndicatorView(style: style)
+        if let c = colorOrDie(j["color"], cls, traits) { a.color = c }
+        else { a.color = a.color.resolvedColor(with: traits) }
+        a.hidesWhenStopped = j["hidesWhenStopped"] as? Bool ?? true
+        if j["animating"] as? Bool ?? true { a.startAnimating() }
+        v = a
+    case "UIPageControl":
+        let p = UIPageControl()
+        p.numberOfPages = j["numberOfPages"] as? Int ?? 3
+        p.currentPage = j["currentPage"] as? Int ?? 0
+        p.hidesForSinglePage = j["hidesForSinglePage"] as? Bool ?? false
+        p.tintColor = p.tintColor.resolvedColor(with: traits)
+        if let c = colorOrDie(j["pageIndicatorTintColor"], cls, traits) {
+            p.pageIndicatorTintColor = c
+        }
+        if let c = colorOrDie(j["currentPageIndicatorTintColor"], cls, traits) {
+            p.currentPageIndicatorTintColor = c
+        }
+        v = p
+    case "UIStepper":
+        let s = UIStepper()
+        s.minimumValue = num(j["minimumValue"]).map { Double($0) } ?? 0
+        s.maximumValue = num(j["maximumValue"]).map { Double($0) } ?? 100
+        s.stepValue = num(j["stepValue"]).map { Double($0) } ?? 1
+        s.value = num(j["value"]).map { Double($0) } ?? 0
+        s.tintColor = s.tintColor.resolvedColor(with: traits)
+        if j["enabled"] as? Bool == false { s.isEnabled = false }
+        v = s
     case "UIGradientView":
         let g = UIGradientView()
         let gl = g.layer as! CAGradientLayer
@@ -650,8 +710,13 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
         "frame": [round3(v.frame.origin.x), round3(v.frame.origin.y),
                   round3(v.frame.width), round3(v.frame.height)],
     ]
+    // UISlider is the only new (app-compat cluster) control whose intrinsic
+    // size OpenUIKit reproduces exactly; UISegmentedControl's per-segment
+    // intrinsic width does not follow any formula that fits every probe,
+    // and the remaining new controls are not implemented yet
+    // (docs/KNOWN_GAPS.md).
     if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView || v is UIProgressView
-        || v is UITextField || v is UITextView {
+        || v is UITextField || v is UITextView || v is UISlider {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = [i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width),
                               i.height == UIView.noIntrinsicMetric ? -1 : round3(i.height)]
