@@ -38,12 +38,24 @@ Swift 6.2.4) — no Apple frameworks present at all:
 | All 162 fixture frames rendered on Linux | **108/108 scenes pass** vs the real-UIKit goldens |
 | Linux frames vs the macOS frames, SHA-256 | **162/162 byte-identical** |
 
-**Re-verified 2026-08-25 at the M13 merge commit** (`scripts/linux_verify.sh`),
-with all four M13 app-compat clusters merged and 12 new fixtures (96 → 108
-scenes, 150 → 162 frames). Nothing in the milestone cost a point of
-portability: Swift 6.2.4, `aarch64-unknown-linux-gnu`, 23.6 s clean build,
-`PORTABILITY VERIFIED`. Earlier runs: M12 (96/96, 150/150), M11 (81/81,
-135/135), M10 (80/80, 134/135).
+**Re-verified 2026-08-25 at the M13 wrap-up commit on `master`**
+(`scripts/linux_verify.sh`), i.e. at the M14 tip with all four M13
+app-compat clusters *and* M14 merged: Swift 6.2.4,
+`aarch64-unknown-linux-gnu`, **24.73 s** clean build, 162 frames rendered,
+**108/108 scenes pass**, **162/162 byte-identical** to the macOS render,
+`PORTABILITY VERIFIED`. This is the run that clears the wrap-up gate — no
+cluster broke portability and nothing had to be fixed to make it pass.
+
+The M14 additions carried one specific risk worth naming, because it is the
+kind that would show up here and nowhere else: **Dynamic Type is driven by a
+vendored JSON table** (`Resources/dynamic_type.json`, the verbatim
+`Tools/oracle2/dyntypeprobe` dump) rather than by querying a host text system,
+so `UIFontMetrics` and `UIFont.preferredFont(forTextStyle:)` resolve to the
+same numbers off Darwin as on it. Byte-identical output across all 162 frames
+is the proof that no host lookup crept in.
+
+Earlier runs: M13 merge (108/108, 162/162, 23.6 s), M12 (96/96, 150/150),
+M11 (81/81, 135/135), M10 (80/80, 134/135).
 
 The M13 clusters were each verified on their own branch too, but the merge is
 the run that matters: `UICollectionView`, the bar-item platters, the menu

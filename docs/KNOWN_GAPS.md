@@ -1,5 +1,38 @@
 # Known gaps (living document — fixers: read this)
 
+## M13 wrap-up: the accepted-divergence ledger (2026-08-25)
+
+Every section below documents its own cluster's gaps. This one exists because
+by M13 there are thirty of them and a reader needs to know, in one place,
+**which divergences the project has decided to LIVE WITH** rather than fix —
+and what each one costs. Gates at this commit: 108/108 fixture scenes, 9/9
+scroll traces, 732 tests, Linux 162/162 byte-identical.
+
+An "accepted" divergence is one where the fix is understood and deliberately
+not taken. It is not the same as an unmeasured guess — there are none of
+those left in the list, which is the point. The clusters and use counts
+referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
+
+| divergence | what it costs | why accepted | section |
+|---|---|---|---|
+| **No `UIVisualEffectView` / `UIBlurEffect`** | every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background, button pills — is a flat colour FITTED over a neutral base. Residual < 1.5 counts on a flat backdrop; **wrong in hue over a saturated one** | the fix is a real backdrop-sampling blur in the compositor, not a type declaration — the single largest remaining pixel divergence and the #1 punch-list cluster (37 uses, 3 apps) | "App compatibility (M12)", "Alerts", "Bars & appearance" |
+| **`UIPickerView` rows are not perspective-projected** | each row's RECTANGLE is exact (1e-6 pt); its TEXT is drawn flat — exact at the selected row, ~0.5 pt at \|d\|=1, ~4 pt at \|d\|=2 | shearing a glyph run needs a second rasterizer; the text engine draws harvested masks on an axis-aligned baseline | "UIPickerView" |
+| **`UIActivityViewController` shares nothing** | presents as the measured action-sheet shape and reports "unavailable"; no share targets exist | there is no system share service to call, on any platform we target | "Menus, actions & delegate protocols" |
+| **No SF Symbols** | of the bar system items only `.edit` and `.save` are text (exact); `.done` is the prominent checkmark; every other is a hand-fitted vector of the MEASURED size, and no golden gates those vectors | the symbol font is not redistributable and not portable | "Bars & appearance" |
+| **No fixture for the menu platter, `UISearchBar`, `UIStepper`, `UIPickerView`** | four surfaces are locked in by unit tests replaying real UIKit's numbers instead of by pixels | each is a property of the ORACLE, not a shortcut: iOS 26 draws menus in the render server; a private material draws as nothing; a SwiftUI hosting view draws nothing; a `CAGradientLayer` washes the capture out. Each section names the probe route that would close it | "controls2", "Menus" |
+| **A non-large sheet detent is edge-to-edge; iOS 26 draws a floating card** | right HEIGHT, wrong SHAPE (iOS insets 8 pt per side and scales 377/393) | the measured numbers do not decompose into inset + height without modelling the transform | "Real-app harness (M14)" |
+| **Dynamic Type is exact only at probed base values** | the 19 probed bases are exact table hits at all 12 categories; between them we interpolate linearly where UIKit's curve is piecewise with 1/3-pt quantization — worst observed ~2/3 pt at accessibility sizes | widening `baseValues` in `dyntypeprobe` closes it mechanically; nothing is hand-fitted | "Real-app harness (M14)" |
+| **Three types SHADOW Foundation's** (`NSAttributedString`, `NotificationCenter`, `Notification`, `Timer`) | an app importing both needs a one-line file-scope `typealias`; a Foundation attributed string cannot reach a `UILabel` | the library imports no Foundation, by rule — this is the price of the rule, not a bug | "The three types that SHADOW Foundation" |
+| **Accessibility is storage only** | properties round-trip and nothing consults them | there is no accessibility tree and no assistive technology, hence no oracle | "Real-app harness (M14)" |
+
+Not on this list because they are **open work, not accepted**: compositional
+layout / diffable data sources / animated batch updates ("UICollectionView"),
+the picker wheel's spin and the refresh control's pull threshold (both
+blocked on a Simulator drag), `UIWindow.makeKeyAndVisible()`'s missing
+appearance transition (a small fix, first item on the M14 report's list), and
+`import Foundation` alongside OpenUIKit (the largest structural obstacle in
+the project — docs/REAL_APP_TEST.md).
+
 ## M13 integration note (2026-08-25)
 
 All four M13 clusters — collection view, bars & appearance, menus & actions +
@@ -196,10 +229,13 @@ heights. Derivation and the full probe table:
 
 ## App compatibility (M12, 2026-08-25): what a real app still cannot do
 
-Effective coverage is **88.5%** of what four real open-source apps reference
-(docs/APP_COMPAT.md). The honest headline is the other one: **no corpus app
-compiles end to end yet**, and the reasons are structural rather than
-long-tail.
+Effective coverage was **88.5%** of what four real open-source apps reference
+when this section was written (**97.1%** at the M13 wrap-up —
+docs/APP_COMPAT.md). The honest headline is the other one, and it has NOT
+changed: **no corpus app compiles end to end yet**, and the reasons are
+structural rather than long-tail. M14 sharpened it — a real app's *screen*
+renders with 97.7% of its source unmodified, and none of the changes it
+needed was a missing UIKit member (docs/REAL_APP_TEST.md).
 
 - **Delegate protocols that do not exist stop compilation before behaviour
   does.** *(M13: CLOSED — see "UICollectionView" and "Menus, actions &

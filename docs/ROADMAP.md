@@ -641,25 +641,90 @@ KEEPING BOTH intents rather than picking a side:
   stays out of it (its real subtree exposes public-class internals). Each
   branch's justification comment is preserved.
 
+## M13 wrap-up (2026-08-25) — re-measured, re-verified, closed
+
+The milestone is closed on `master` at the M14 tip. Nothing new was built in
+the wrap-up; what it did was re-measure, re-verify and re-rank, so the next
+milestone is chosen on current evidence rather than on M12's.
+
+**Gate, all green at the wrap-up commit:** `swift build` clean, **108/108
+fixture scenes**, **9/9 scroll traces**, **732 tests** (2 skipped, 0
+failures).
+
+**Portability re-verified, and it is the run that clears the gate:**
+`scripts/linux_verify.sh` on stock `swift:6.2-noble`
+(`aarch64-unknown-linux-gnu`, Swift 6.2.4, 24.73 s clean build) renders all
+162 frames, passes **108/108 scenes** against the real-UIKit goldens, and is
+**162/162 byte-identical** to the macOS render — `PORTABILITY VERIFIED`. No
+cluster broke portability and nothing had to be fixed to make it pass. The
+one M14-specific risk was that Dynamic Type might reach for a host text
+system; it does not — it reads the vendored `Resources/dynamic_type.json`,
+and 162 byte-identical frames prove no host lookup crept in
+(docs/PORTABILITY.md).
+
+**Coverage re-measured at HEAD: 91.5% frequency-weighted, 97.1% effective**
+(90.7 / 96.3 at the M13 merge; 83.0 / 88.5 at M12). 116 of the 220 distinct
+UIKit types the corpus references are implemented; **474 uses (2.9%) of
+genuinely-missing types remain**. `Sources/OpenUIKit` declares **180** public
+`UI`/`NS`/`CA` type names, up from 170 at the M13 merge and 63 before M12.
+The corpus is still not vendored here, so only the `--ours` half of the
+census was regenerated and the committed per-type counts were reclassified
+against it — the caveat is stated in full in docs/APP_COMPAT.md.
+
+**The accepted-divergence ledger is now consolidated** at the top of
+docs/KNOWN_GAPS.md: nine divergences the project has decided to live with
+(no `UIVisualEffectView`, the flat picker rows, the `UIActivityViewController`
+stub, no SF Symbols, the four surfaces with no fixture, the edge-to-edge
+sheet detent, Dynamic Type between probed bases, the three Foundation
+shadows, storage-only accessibility), each with what it costs and why. None
+of them is an unmeasured guess, which is the property that matters.
+
 ## Next — where the census points (docs/APP_COMPAT.md)
 
 M13's four clusters closed the whole top five of the M12 punch list except
-its tails. What is actually left, by how many corpus apps need it:
-**materials/blur** (`UIVisualEffectView` 20 + `UIBlurEffect` 12, 3 apps —
-and the single largest source of remaining PIXEL divergence, since every
-platter in the framework is a fitted flat colour), **home-screen shortcuts**
-(18, 3), **haptics** (22 across two generators, 3 apps, trivially
-stubbable), **TextKit attachments** (13, 3), **transition coordinator**
-(7, 3), then **Dynamic Type** (`UIFontMetrics` 66), `UIPasteboard` (32),
-`UIImagePickerController` (17), `NSItemProvider` (16) and pointer/hover (12).
-Inside shipped clusters: compositional layout + diffable data sources,
-animated batch updates, and `UIDatePicker` (deferred — it is a formatter and
-a calendar, and the picker wheel underneath it is already measured exactly).
+its tails, and M14 took Dynamic Type. Re-ranked at the wrap-up on the 96
+missing types / 474 uses that are left, **apps first then uses**:
 
-No corpus app compiles end to end yet, and the delegate-protocol blocker is
-gone, so the next honest step is to TRY one: take the smallest corpus app and
-drive it to a first screen, letting the compile errors re-rank the list from
-evidence instead of from the census's regex.
+1. **Materials / blur** (37 uses, 3 apps) — `UIVisualEffectView` 20,
+   `UIBlurEffect` 12. Still the single largest source of remaining PIXEL
+   divergence, since every platter in the framework is a fitted flat colour.
+   The fix is a backdrop-sampling blur in the compositor, not a declaration.
+2. **Home-screen shortcuts** (31, 3) — value types plus one `UIApplication`
+   property. No pixels, no oracle. The cheapest three-app entry left.
+3. **Haptics** (30, 3) — a recording no-op; compile-blocker removal.
+4. **TextKit attachments** (17, 3) — `NSTextAttachment` is real work (an
+   inline box the text engine must lay out and paint); the rest is TextKit-1
+   plumbing we deliberately do not have.
+5. **Transition coordinator** (13, 3) — the public handle onto the
+   presentation/transitioning API M12 already shipped.
+
+By USES instead, the two-app entries outrank 2–5: drag & drop (62),
+pointer/hover (33), `UIPasteboard` (32), table extras (31 — swipe actions +
+diffable), system pickers (25), `NSItemProvider` (18). Inside shipped
+clusters: compositional layout + diffable data sources, animated batch
+updates, and `UIDatePicker` (deferred — it is a formatter and a calendar, and
+the picker wheel underneath it is already measured exactly).
+
+**But the type census has nearly run out of things to say, and the wrap-up's
+own re-measurement says where to go instead.** Two findings outrank every
+cluster above:
+
+- **`UIView.setAnimationsEnabled` + `performWithoutAnimation` is 100 corpus
+  uses** — larger than any missing *type* cluster on the list, and one global
+  flag plus one wrapper of work. The missing-MEMBER pool was re-checked
+  member by member at this commit (docs/APP_COMPAT.md) and this is what came
+  out on top.
+- **The real blocker is not UIKit's API surface at all.** M14 proved a
+  shipping app's screen renders with 97.7% of its source unmodified and
+  **none of the 14 changed lines a missing UIKit member** — every one was a
+  language or runtime incompatibility. The ranked reasons a whole app still
+  does not compile are Foundation interoperability (`NSCoder` alone appears
+  in 344 of the corpus's 5,099 files), selector dispatch, `@MainActor`, asset
+  catalogs and xibs (docs/REAL_APP_TEST.md).
+
+So the milestone this points at is **`import Foundation` alongside
+OpenUIKit** — which would let an app's model layer, theme system and string
+tables compile untouched — not more UIKit types.
 
 ## Verification principle (unchanged, applies to every milestone)
 

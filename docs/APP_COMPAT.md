@@ -7,6 +7,16 @@ real open-source UIKit apps, counts every UIKit symbol they reference, and
 diffs against what OpenUIKit exports — so the roadmap is ordered by what apps
 actually use, not by UIKit's alphabet.
 
+**Where this stands at the M13 wrap-up (2026-08-25):** **97.1% effective
+coverage** of what four real apps reference, 474 uses (2.9%) of
+genuinely-missing types left, and a *screen* from a shipping app rendering
+with 97.7% of its source unmodified. The file is written newest-last within
+each topic; if you want only the current picture, read **"Current measurement
+— M13 wrap-up, at the M14 tip"**, **"The punch list, re-ranked at the M14
+tip"** and **"Missing MEMBERS of types we already export"**, then
+docs/REAL_APP_TEST.md. Everything else is the record of how the number got
+there, and the superseded sections are marked as such.
+
 ## Baseline measurement (2026-08-25, before M12)
 
 Corpus: three large production apps, all code-based or mostly code-based —
@@ -201,15 +211,103 @@ types and 1,257 uses** from `missing` to `implemented`, led by
 `UIActivityViewController` (84), `UIKeyCommand` (81),
 `UICollectionViewCell` (78) and `UIAction` (69).
 
-What is left, ranked by how many apps need it: `UIVisualEffectView` (20, 3
-apps) + `UIBlurEffect` (12, 3) — the blur divergence this file has carried
-since M12 — `UIApplicationShortcutItem` (18, 3), the haptics generators
-(`UIImpactFeedbackGenerator` 15, `UISelectionFeedbackGenerator` 7, both 3
-apps and both trivially stubbable), `NSTextAttachment` (13, 3),
-`UIViewControllerTransitionCoordinator` (7, 3), then the two-app entries led
-by `UIFontMetrics` (66 — Dynamic Type), `UIPasteboard` (32),
-`UIImagePickerController` (17), `NSItemProvider` (16) and
-`UIPointerInteraction` (12).
+What was left at that commit, ranked by how many apps need it:
+`UIVisualEffectView` (20, 3 apps) + `UIBlurEffect` (12, 3) — the blur
+divergence this file has carried since M12 — `UIApplicationShortcutItem`
+(18, 3), the haptics generators (`UIImpactFeedbackGenerator` 15,
+`UISelectionFeedbackGenerator` 7, both 3 apps and both trivially stubbable),
+`NSTextAttachment` (13, 3), `UIViewControllerTransitionCoordinator` (7, 3),
+then the two-app entries led by `UIFontMetrics` (66 — Dynamic Type),
+`UIPasteboard` (32), `UIImagePickerController` (17), `NSItemProvider` (16)
+and `UIPointerInteraction` (12).
+
+> **Superseded.** `UIFontMetrics` and the Dynamic Type cluster shipped in M14.
+> The current numbers and the current punch list are the next section.
+
+## Current measurement — M13 wrap-up, at the M14 tip (2026-08-25)
+
+Re-measured at `HEAD` on `master` with M13's four clusters *and* M14 merged.
+`Sources/OpenUIKit` now declares **180** public `UI`/`NS`/`CA` type names
+(170 at the M13 merge, 111 at M12, 63 before it).
+
+**Same caveat as the M13 re-measurement, and for the same reason:** the four
+app checkouts are not vendored in this environment, so `census.py` could not
+re-scan them. What was regenerated from source is the `--ours` half — every
+public `UI`/`NS`/`CA` type in `Sources/OpenUIKit` at this commit — and the
+committed per-type use counts in `Tools/apicensus/census-latest.json` were
+reclassified against it. Those counts are a property of the corpus and did
+not change, so this reproduces `census.py`'s arithmetic exactly; only the
+per-app file counts and `missing_members_of_implemented` are stale, and
+`census-latest.json` is left as M12 wrote it.
+
+**Four-app corpus (16,343 uses, 220 distinct UIKit types referenced —
+116 implemented, 104 missing):**
+
+| | uses | share | M13 merge | M12 |
+|---|---|---|---|---|
+| **We implement it** | 14,954 | **91.5%** | 90.7% | 83.0% |
+| Foundation provides free on Linux (`NSCoder` 379, `NSObject` 175, `NSString` 137, `NSValue` 13) | 704 | 4.3% | 4.3% | 4.3% |
+| Out of scope (`UINib` 126, `UIStoryboard` 61, `UIStoryboardSegue` 22, `UIWebView` 2) | 211 | 1.3% | 1.3% | 1.3% |
+| **Actual work remaining** | **474** | **2.9%** | 3.7% | 11.4% |
+
+**Effective coverage: 97.1%** (96.3% at the M13 merge, 88.5% at M12).
+
+The +0.8 is M14's Dynamic Type cluster: four newly exported types are
+referenced by the corpus — `UIFontMetrics` (66 uses, 2 apps),
+`UITraitPreferredContentSizeCategory` (55), `UITraitHorizontalSizeClass` (2)
+and `UITraitUserInterfaceStyle` (2) — **125 uses closed**. Six more
+(`UIContentSizeCategory`, `UIAccessibilityTraits`, `UITraitDefinition`,
+`UITraitChangeRegistration`, `UITraitDisplayScale`,
+`UITraitVerticalSizeClass`) the corpus does not name, so they score zero here
+while still being what makes the other four usable.
+
+## The punch list, re-ranked at the M14 tip
+
+Clustered from the **96 genuinely-missing types (474 uses)** left after
+Foundation and the out-of-scope four are removed. "apps" is the largest
+number of corpus apps any type in the cluster appears in.
+
+The ranking rule is the census's own — **apps first, then uses** — because a
+cluster at 0.2% of uses can still be the reason an app does not launch. Both
+orderings are given, since they disagree sharply at the top now.
+
+| # | cluster | uses | apps | notes |
+|---|---|---|---|---|
+| 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. The oldest open divergence in the project and **the single largest source of remaining pixel error**: every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — is a flat colour fitted over a neutral base. Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a saturated one. Closing it is a real backdrop-sampling blur in the compositor, not a type declaration. |
+| 2 | **Home-screen shortcuts** | 31 | 3 | `UIApplicationShortcutItem` 18, `UIApplicationShortcutIcon` 8, `UIMutableApplicationShortcutItem` 5. Pure value types plus one `UIApplication` property; no pixels, no oracle needed. The cheapest three-app entry on the list. |
+| 3 | **Haptics** | 30 | 3 | `UIImpactFeedbackGenerator` 15, `UINotificationFeedbackGenerator` 8, `UISelectionFeedbackGenerator` 7. No portable hardware to drive, so the honest shape is a no-op that records calls (and is therefore testable). Compile-blocker removal, nothing more. |
+| 4 | **TextKit attachments** | 17 | 3 | `NSTextAttachment` 13, plus one-off `NSTextContainer` / `NSLayoutManager` / `NSTextStorage`. The first one is real work — an inline image box the data-driven text engine must lay out and the run painter must draw. The other three are TextKit-1 plumbing we deliberately do not have. |
+| 5 | **Transition coordinator + interactive transitions** | 13 | 3 | `UIViewControllerTransitionCoordinator` 7, `UIPercentDrivenInteractiveTransition` 3, `UIViewControllerInteractiveTransitioning` 3. Sits directly on M12's presentation/transitioning API and M7.5's interactive back-swipe, both of which already exist; this is the public handle onto them. |
+
+By **uses** instead, the two-app entries outrank items 2–5 and would reorder
+the list: **drag & drop** (62 across 12 types — `UIDropSession` 11,
+`UICollectionViewDropProposal` 11, `UIDragItem` 10, `UIDragSession` 8),
+**pointer / hover** (33 across 4), `UIPasteboard` (32, a single type and no
+system pasteboard to talk to off-device), **table extras** (31 — swipe
+actions 17, diffable data sources 14), **system pickers** (25 —
+`UIImagePickerController` 17, `UIDocumentPickerViewController` 4; system UI
+we cannot reproduce, so a compiling stub that reports "unavailable"), and
+`NSItemProvider` + activity items (18).
+
+One-app clusters, in demand order: **cell content configuration** (26 —
+`UIContentConfiguration` 18), `UIPageViewController` (22), **edit menu /
+`UIMenuController`** (18), **compositional layout** (11 — the tail of the
+shipped collection-view cluster), **search controller** (11 —
+`UISearchController` 8, on top of the `UISearchBar` controls2 already
+shipped), `UIPinchGestureRecognizer` (9), `UIViewPropertyAnimator` (7, 2
+apps), `UISceneConfiguration` (5), `UIImageAsset` (5).
+
+The unclustered tail is **24 types / 29 uses**, and every one of them appears
+in exactly one app: five types at 2 references
+(`UILocalizedIndexedCollation`, `UIPrintInteractionController`,
+`UICollectionViewListCell`, `UIDropProposal`,
+`UIDocumentInteractionControllerDelegate`) and nineteen at 1. At this point
+the type census has very little left to say — which is itself the finding,
+and the reason "Missing MEMBERS of types we already export" below and
+docs/REAL_APP_TEST.md now matter more than anything in this table. The
+largest single item anywhere in this document is not a type at all:
+`UIView.setAnimationsEnabled` + `performWithoutAnimation`, **100 corpus
+uses**, one global flag and one wrapper of work.
 
 ## What M13 shipped — collection view (2026-08-25)
 
@@ -317,7 +415,11 @@ Three of the newly declared types SHADOW Foundation's — `NotificationCenter`,
 An app importing both needs a one-line file-scope `typealias`;
 docs/KNOWN_GAPS.md states the full tradeoff.
 
-## The punch list, re-ranked on the four-app census
+## The punch list as it stood at M12 — HISTORICAL
+
+> **Superseded** by "The punch list, re-ranked at the M14 tip" above. Kept
+> because it is the ranking M13's four clusters were *chosen* from, and the
+> strike-throughs are the record of what closing them cost.
 
 Clustered from the 150 missing types (1,856 uses). "apps" is the largest
 number of corpus apps any type in the cluster appears in — a 4 means every app
@@ -327,9 +429,9 @@ needs it.
 |---|---|---|---|---|
 | 1 | ~~**Collection view**~~ **SHIPPED (M13)** | 498 | 4 | `UICollectionView` 222, `UICollectionViewCell` 78, `UICollectionViewLayout` 41, `UICollectionViewFlowLayout` 30, data source/delegate 51 — all of that now exists. The reuse machinery was lifted out of `UITableView` into `Sources/OpenUIKit/UIReuse.swift` first, and both containers drive it. Still open in the TAIL of this cluster: `UICollectionViewCompositionalLayout`, `NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus animated batch updates (docs/KNOWN_GAPS.md "UICollectionView"). |
 | 2 | ~~**Bars & appearance** (6 types)~~ **SHIPPED (M13)** | ~~322~~ | 4 | `UIBarButtonItem`, `UINavigationItem`, `UIToolbar`, `UIBarAppearance` + the navigation-bar / toolbar / tab-bar subclasses, and `UIBarTitleTextAttributes`. See "What M13 shipped" below. |
-| 3 | **Menus & actions** (9 types) | 252 | 2 | `UIKeyCommand` 81, `UIAction` 69, `UIMenu` 49, `UIContextMenuConfiguration` 23. Concentrated in two apps but dense there, and `UIAction` is how modern code-based UI wires buttons at all. |
-| 4 | **Delegate protocols** (14 types) | 144 | 4 | `UITextFieldDelegate` 20, `UITextViewDelegate` 15, `UIGestureRecognizerDelegate` 14, the collection-view trio 51, the presentation-controller delegates 23. Mostly *declarations that do not exist yet* — an app fails to compile on the conformance before any behaviour is missing. Cheapest points on the list. |
-| 5 | **Share / system UI** (5 types) | 130 | 3 | `UIActivityViewController` 84, `UIImagePickerController` 17, `NSItemProvider` 16. System UI we cannot reproduce; the honest shape is a compiling stub that reports "unavailable". |
+| 3 | ~~**Menus & actions** (9 types)~~ **SHIPPED (M13)** | ~~252~~ | 2 | `UIKeyCommand` 81, `UIAction` 69, `UIMenu` 49, `UIContextMenuConfiguration` 23. Concentrated in two apps but dense there, and `UIAction` is how modern code-based UI wires buttons at all. |
+| 4 | ~~**Delegate protocols** (14 types)~~ **SHIPPED (M13)** | ~~144~~ | 4 | `UITextFieldDelegate` 20, `UITextViewDelegate` 15, `UIGestureRecognizerDelegate` 14, the collection-view trio 51, the presentation-controller delegates 23. Mostly *declarations that do not exist yet* — an app fails to compile on the conformance before any behaviour is missing. Cheapest points on the list. |
+| 5 | **Share / system UI** (5 types) | 130 | 3 | `UIActivityViewController` 84 **SHIPPED (M13, as a stub)**; `UIImagePickerController` 17 and `NSItemProvider` 16 still open. System UI we cannot reproduce; the honest shape is a compiling stub that reports "unavailable". |
 
 Below the top five, in demand order: **Dynamic Type** — `UIFontMetrics` (66)
 plus `UITraitPreferredContentSizeCategory` (55, sitting in the unclustered
@@ -345,16 +447,30 @@ The unclustered tail is 47 types / 199 uses. **`UIStepper` (22), the
 "search" cluster (23), `UIRefreshControl` (12) and `UIPickerView` are now
 IMPLEMENTED** — see "What the controls2 cluster shipped" below.
 
-**Members of types we already have** are a separate 2,930-use pool, and the
-member scanner is noisier than the type scanner: the top entries are
-`UILabel.lens` (297), `UIButton.lens` (217) and `UIFont.ksr_*` — Kickstarter's
-own lens library and font extensions, not UIKit at all. Filtering app-local
-extensions leaves ~477 uses of genuinely missing members, led by
-`UIView.setAnimationsEnabled` (92), the notification-name group (~90),
-`UIFont.preferredFont` (21), `systemLayoutSizeFitting` +
-`UIView.layoutFittingCompressedSize` (24), `UIView.addKeyframe` (12),
-`UIAppearance` proxies (`UINavigationBar.appearance` 11, `UITableView.appearance` 6),
-`UIView.performWithoutAnimation` (8) and `UIFont.monospacedDigitSystemFont` (8).
+## Missing MEMBERS of types we already export — re-checked at the M14 tip
+
+This is a separate 2,930-use pool, and the member scanner is noisier than the
+type scanner: the top entries are `UILabel.lens` (297), `UIButton.lens` (217)
+and `UIFont.ksr_*` — Kickstarter's own lens library and font extensions, not
+UIKit at all. Filtering app-local extensions left ~477 uses of genuinely
+missing members at M12. Each was re-checked against `Sources/OpenUIKit` at
+this commit:
+
+| member | uses | status at HEAD |
+|---|---|---|
+| `UIView.setAnimationsEnabled` | 92 | **still missing** — now the largest single gap in the pool, and a cheap one: a global flag the animation engine consults when opening a transaction |
+| the notification-name group | ~90 | **closed** (controls2) — `NotificationCenter`, `Notification.Name` and the five posted app-lifecycle names |
+| `systemLayoutSizeFitting` + `UIView.layoutFittingCompressedSize` | 24 | **closed** (M14, `UIViewCompat.swift` / `UIStackView.swift`) |
+| `UIFont.preferredFont` | 21 | **closed** (M14, `UIFontMetrics.swift`) |
+| `UIAppearance` proxies (`UINavigationBar.appearance` 11, `UITableView.appearance` 6) | 17 | **still missing** — needs a portable answer, sketched in docs/OBJC_RUNTIME.md |
+| `UIView.addKeyframe` | 12 | **still missing** — keyframe animations |
+| `UIView.performWithoutAnimation` | 8 | **still missing** — falls out of `setAnimationsEnabled` |
+| `UIFont.monospacedDigitSystemFont` | 8 | **still missing** — needs the monospaced-digit metrics harvested |
+
+So the member pool went from ~477 to ~**340** genuinely-missing uses, and
+**`setAnimationsEnabled` + `performWithoutAnimation` (100 uses) is the single
+best-value item left anywhere in this document** — larger than any missing
+*type* cluster, and one flag plus one wrapper of work.
 
 ## Method notes / caveats
 
