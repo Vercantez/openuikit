@@ -32,6 +32,36 @@ types that already exist off Darwin.
 A small vocabulary does most of the work: apps reference ~171 distinct UIKit
 types, not 737. That is why the punch list is tractable.
 
+## Re-measurement after the M12 merge (2026-08-25)
+
+Re-run with all four M12 clusters merged (`Tools/apicensus/census-latest.json`).
+The corpus also grew by one app — **pocket-casts-ios** (1,690 Swift files) —
+so the headline number is reported both ways to keep the comparison honest.
+
+**Like-for-like, same three apps, same 10,162 uses:**
+
+| | before M12 | after M12 |
+|---|---|---|
+| distinct types implemented | 38 / 171 | **63 / 171** |
+| frequency-weighted coverage | 70.2% | **85.4%** |
+
+**+15.2 points** from the four clusters. OpenUIKit now exports 132 public type
+names (was 82).
+
+**Four-app corpus (16,343 uses), the number the command now prints:**
+
+| | uses | share |
+|---|---|---|
+| **We implement it** | 13,572 | **83.0%** |
+| Foundation provides free on Linux (`NSObject`, `NSString`, `NSCoder`, `NSValue`) | 704 | 4.3% |
+| Out of scope (`UIStoryboard`, `UIStoryboardSegue`, `UIWebView`, `UINib`) | 211 | 1.3% |
+| **Actual work remaining** | **1,856** | **11.4%** |
+
+**Effective coverage: 88.5%.** The next cluster is unambiguous: after the
+Foundation and storyboard/nib rows, the top of the punch list is
+`UIBarButtonItem` (270 uses, all 4 apps) and the `UICollectionView` family
+(~423 uses across 7 types, all 4 apps).
+
 ## The punch list, ordered by demand
 
 | cluster | uses | notes |

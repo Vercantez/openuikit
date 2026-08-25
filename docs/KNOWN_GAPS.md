@@ -1,5 +1,52 @@
 # Known gaps (living document — fixers: read this)
 
+## M12 integration (2026-08-25): `alert_dark` fails the absence gate — OWNER: text
+
+The four M12 app-compat clusters (lifecycle, attributed text, alerts,
+image/drawing/controls) are merged. One scene regressed **in integration**,
+not on any branch: `alert_dark` fails the structural **content-absence**
+check. Nothing about the alert code changed in the merge — the alerts branch
+was developed against a `compare.py` that had **no absence check at all**, and
+master had meanwhile lowered `STRUCT_MIN_COMPONENT` from 4.0 to 1.0 pt²
+(`fe32da4`, "punctuation scale"). The stronger gate sees a defect the weaker
+one could not.
+
+```
+FAIL  alert_dark  [chrome]  pixels=98.475  blob=30.8  layout_issues=0
+  · STRUCTURAL: content missing at [152.5, 398.5, 2.5, 2.0]:
+    golden std 91.78, ours flat (std 7.23, ratio 0.079)
+```
+
+**The content is not missing, it is displaced.** Measured column runs of the
+title "Delete File?" (17 pt semibold, dark) — 11 ink runs per side, D e l e t
+e F i l e ?:
+
+| glyph | golden (pt) | ours (pt) | drift |
+|---|---|---|---|
+| "D" (first) | 68.0–78.5 | 67.5–78.5 | ~0 |
+| "F" (7th) | 123.5–130.5 | 125.5–133.0 | +2.0 |
+| "?" (last) | **152.5–158.0** | **156.0–161.0** | **+3.5** |
+
+The flagged 2.5 × 2.0 pt region is exactly the left edge of the golden's "?",
+where our render has nothing because our "?" starts 3.5 pt further right. The
+drift is **cumulative across the string**, i.e. an advance-width error, not a
+positioning error.
+
+**It is not a general font-metrics divergence** — independently re-confirmed
+in the same image: the plain 20 pt semibold `Base screen` label of the same
+scene inks **25.5 → 135.5 pt (110.00 pt) in BOTH renderers**, byte-aligned.
+Only labels *inside the alert card* drift. This is the "real iOS tightens
+alert label advances" finding from the alerts cluster (see "Alerts + custom
+transitions" below), now with a failing gate attached to it.
+
+**Owner: the text module / FontEngine.** It needs a tracking model for the
+tightened alert-label advances; a per-font tight-tracking model already exists
+for single-run labels but has no multi-run/alert form. Do **not** raise
+`STRUCT_MIN_COMPONENT` or loosen the absence thresholds — the gate is right,
+and `alert_destructive` (same title, light) already spends 42.2 pt² of the
+80 pt² blob budget on the same "?" for the same reason. The other 95 scenes
+and all 9 scroll traces pass.
+
 ## App lifecycle / environment (M12, 2026-08-25): scope notes
 
 The cluster is `UIResponder` as a real base class + `UIApplication` /
