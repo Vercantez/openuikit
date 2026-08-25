@@ -1,0 +1,50 @@
+{
+  "name": "collection_sections",
+  "size": [375, 520],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 520], "backgroundColor": "systemGray5" },
+      {
+        "class": "UICollectionView",
+        "frame": [0, 24, 375, 472],
+        "backgroundColor": "systemBackground",
+        "itemSize": [80, 64],
+        "minimumLineSpacing": 10,
+        "minimumInteritemSpacing": 10,
+        "sectionInset": [6, 16, 12, 16],
+        "headerSize": [0, 30],
+        "footerSize": [0, 24],
+        "itemCornerRadius": 8,
+        "sections": [
+          {
+            "header": "Recents",
+            "footer": "Three recent items.",
+            "items": [
+              { "text": "1", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "2", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "3", "color": "systemBlue", "textColor": "systemBackground" }
+            ]
+          },
+          {
+            "header": "Empty",
+            "footer": "Nothing here yet.",
+            "items": []
+          },
+          {
+            "header": "Favorites",
+            "items": [
+              { "text": "4", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "5", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "6", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "7", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "8", "color": "systemGreen", "textColor": "systemBackground" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

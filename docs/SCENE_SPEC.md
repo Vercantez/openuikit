@@ -1,4 +1,4 @@
-# Scene Specification v5.2
+# Scene Specification v5.3
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -386,6 +386,67 @@ Key oracle-measured metrics (Catalyst iOS 26, compact, scale 2 — see the
 - Selection highlight: full-bleed row **#DCDCDC** (light).
 - Accessories: disclosure chevron 10.5×14 pt at right margin 16 (gray);
   checkmark 19×18 pt (tint blue, measured (0,136,255) light).
+
+### `UICollectionView` (v5.3 — M13)
+A real `UICollectionView` driven by a `UICollectionViewFlowLayout` and an
+in-scene data source (the driver object is retained for the process
+lifetime; cells and supplementary views come from the REAL reuse pools on
+both sides — the scene is static, so what is on screen is deterministic
+either way). Both renderers build the identical cell class: a
+`contentView` filled with the item's color, optionally rounded, holding one
+centered 17 pt label. Supplementary (header/footer) views hold one 13 pt
+semibold `secondaryLabel` label inset 16 pt, filling the height. The oracle
+pins `contentInsetAdjustmentBehavior = .never`, hides both indicators and
+pins `traitOverrides.horizontalSizeClass = .compact`, exactly like
+`UITableView`.
+
+| key | type | notes |
+|---|---|---|
+| `scrollDirection` | string | `vertical` (default) or `horizontal`. |
+| `itemSize` | `[w,h]` | `flowLayout.itemSize`. UIKit's default is 50×50. |
+| `minimumLineSpacing` | number | default 10 (UIKit's). |
+| `minimumInteritemSpacing` | number | default 10 (UIKit's). |
+| `sectionInset` | `[t,l,b,r]` | default all zero (UIKit's). |
+| `headerSize` / `footerSize` | `[w,h]` | `headerReferenceSize` / `footerReferenceSize`. Vertical scrolling uses the HEIGHT (the view spans the full width), horizontal scrolling uses the WIDTH. A section whose `header`/`footer` string is absent gets a zero reference size, i.e. no view at all. |
+| `itemCornerRadius` | number | `contentView.layer.cornerRadius` on every cell (default 0). |
+| `sections` | array | `[{"header": str?, "footer": str?, "items": [...]}]` |
+
+Item object keys:
+
+| key | type | notes |
+|---|---|---|
+| `text` | string | centered in the cell. |
+| `color` | color | the content view's fill. |
+| `textColor` | color | default `label`. |
+| `size` | `[w,h]` | per-item size, delivered through `collectionView(_:layout:sizeForItemAt:)` — the delegate path, which lays out differently from a uniform grid (see below). |
+
+Layout dumps include the private cell tree; compare.py skips it (the cell
+class is the same name on both sides and real UIKit's `contentView` dumps as
+a bare `UIView` where ours is a forwarding subclass), and only the
+`UICollectionView`'s own frame is compared structurally. Any
+`UICollectionView` in a scene makes it a **chrome** scene for thresholding.
+
+Dark collection scenes render fine through the OFFSCREEN v1 oracle (unlike
+`UITableView`, which needs `"window": true`): every color the scene draws is
+resolved against the scene traits at build time, including the supplementary
+label's `secondaryLabel`, so nothing is left for UIKit to resolve at draw
+time. See `collection_dark`.
+
+Flow-layout geometry is MEASURED, not assumed — `scripts/flow_probe.sh`
+dumps real UIKit's answers for 20 configurations and
+`FlowLayoutMeasuredTests` reproduces them frame for frame. The rules that
+are easy to get wrong:
+- Items pack into lines greedily, and the leftover space is DISTRIBUTED over
+  the gaps: `minimumInteritemSpacing` is a floor, not the spacing. On a full
+  line the last item ends flush with the content edge.
+- A section's LAST line is spaced as if it were full (phantom items of the
+  same size), so 4 items of 50 pt in 375 pt sit 15 pt apart — but only when
+  every item on that line has the SAME SIZE. Mixed sizes on a last line fall
+  back to the plain minimum spacing.
+- Item origins snap to the device pixel grid; sizes do not.
+- A line's extent is its tallest item and shorter ones center across it.
+- Headers/footers span the full cross extent (section insets do not apply to
+  them), and an EMPTY section still contributes header, insets and footer.
 
 ### `UINavigationStack` (v5 — M10 chrome, root-only, requires `"window": true`)
 A real `UINavigationController` (one content VC hosting a full-size
@@ -885,7 +946,8 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
   - Text scenes: pass ≥ 97%
   - Control scenes (button/switch/progress): pass ≥ 96%
   - Chrome scenes (v5: any UITableView / UINavigationStack / UITabBarStack,
-    or a top-level "modal"; v5.2 adds a top-level "alert"): pass ≥ 95% —
+    or a top-level "modal"; v5.2 adds a top-level "alert"; v5.3 adds any
+    UICollectionView): pass ≥ 95% —
     system-drawn material (glass platters, edge-effect gradients, sheet
     shadows, the alert card's blurred platter) covers large regions.
     Chrome outranks the other categories.

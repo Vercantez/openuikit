@@ -453,16 +453,54 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   therefore reachable without a compiler fork; nothing was adopted this
   milestone, but the assessment that ruled it out is retracted.
 
+- **M13 Collection view — DONE 2026-08-25.** The census's #1 remaining
+  cluster (498 uses across 23 types, all four corpus apps).
+  - **The reuse machinery was lifted first.** Per-identifier pools,
+    registered factories and `prepareForReuse`-on-dequeue moved out of
+    `UITableView` into `Sources/OpenUIKit/UIReuse.swift` (`ReuseRegistry<V>`
+    + `VisibleViewMap<Key, V>` for the tiling bookkeeping). `UITableView`
+    drives that shared component for its cells and its header/footer/card
+    views; `UICollectionView` drives it for cells and, one registry per
+    supplementary KIND, for headers and footers. Regression bar: every
+    `tableview_*` fixture and every table test unchanged.
+  - **`UICollectionViewFlowLayout` is MEASURED, not assumed.**
+    `scripts/flow_probe.sh` builds a Mac Catalyst probe that dumps real
+    UIKit's item and supplementary frames for 20 configurations; the rules it
+    exposed are transcribed at the top of `UICollectionViewFlowLayout.swift`
+    and asserted frame-for-frame by `FlowLayoutMeasuredTests`. Two of them
+    are not guessable: a line's spacing is the leftover DISTRIBUTED over the
+    gaps (the "minimum" is a floor), and a section's LAST line is spaced as
+    if phantom items filled it — but only when every item on that line has
+    the same size, otherwise it falls back to the minimum. Item origins snap
+    to the device pixel grid; sizes do not.
+  - **Five oracle fixtures** (96 → **101** scenes): `collection_flow_grid`,
+    `collection_flow_lines` (wrapping + a delegate-sized second section),
+    `collection_sections` (headers/footers, including an EMPTY section),
+    `collection_horizontal` (columns + horizontal supplementaries clipped at
+    the viewport edge), `collection_dark`. All pass ≥ 98.9 % pixels. Dark
+    works through the OFFSCREEN oracle here because the scene resolves every
+    colour it draws against the scene traits at build time.
+  - **Reuse is real and tested**: a 10 000-item grid swept end to end
+    instantiates ~one screenful of cells (`CollectionViewReuseTests`,
+    mirroring the table's gate), and `layoutAttributesForElements(in:)`
+    binary-searches sections and lines so scrolling stays O(visible).
+  - Deliberately NOT built: compositional layout, diffable data source,
+    animated batch updates (`performBatchUpdates` is a documented
+    reload-and-complete fallback), sticky headers, self-sizing cells,
+    decoration views. All in docs/KNOWN_GAPS.md "UICollectionView".
+
 ## Next — where the census points (docs/APP_COMPAT.md)
 
 The four clusters closed 2,139 of the corpus's references. The remaining
-1,856 re-rank to: **collection view** (498, all 4 apps), **bars & appearance**
+1,856 re-ranked to: **collection view** (498, all 4 apps), **bars & appearance**
 (322, led by `UIBarButtonItem` at 270), **menus & actions** (252),
 **delegate protocols** (144 — mostly declarations that do not exist yet, so an
 app fails to compile on the conformance before any behaviour is missing), and
-**share/system UI** (130, honestly a stub). No corpus app compiles end to end
-yet; the blockers, in the order they bite, are the delegate protocols, then
-`UIBarButtonItem`, then `UICollectionView`.
+**share/system UI** (130, honestly a stub). **M13 closed the collection-view
+cluster** except its compositional-layout / diffable-data-source tail, so the
+head of the list is now `UIBarButtonItem` and the remaining delegate
+protocols — which are also, in that order, what still stops a corpus app from
+compiling end to end.
 
 ## Verification principle (unchanged, applies to every milestone)
 

@@ -255,6 +255,135 @@ final class SceneTableDriver: NSObject, UITableViewDataSource, UITableViewDelega
     }
 }
 
+// MARK: - UICollectionView scene driver (spec v5.3 — M13)
+
+/// Retains collection-view drivers for the life of the process
+/// (UICollectionView holds its dataSource/delegate weakly).
+var sceneCollectionDrivers: [SceneCollectionDriver] = []
+
+/// Scene cell: a colored, optionally rounded content view with one centered
+/// label filling it. Deterministic on both sides — openrender's SceneBuilder
+/// builds the identical thing.
+final class SceneCollectionCell: UICollectionViewCell {
+    let label = UILabel()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 17)
+        contentView.addSubview(label)
+    }
+    required init?(coder: NSCoder) { fatalError() }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = contentView.bounds
+    }
+}
+
+/// Scene supplementary view: one label, 13 pt semibold, inset 16 pt, filling
+/// the height (so it centers vertically).
+final class SceneCollectionSupplementary: UICollectionReusableView {
+    let label = UILabel()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        label.font = .systemFont(ofSize: 13, weight: .semibold)
+        label.textColor = .secondaryLabel
+        addSubview(label)
+    }
+    required init?(coder: NSCoder) { fatalError() }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = CGRect(x: 16, y: 0, width: max(0, bounds.width - 32),
+                             height: bounds.height)
+    }
+}
+
+final class SceneCollectionDriver: NSObject, UICollectionViewDataSource,
+                                   UICollectionViewDelegateFlowLayout {
+    struct Item {
+        let text: String
+        let color: UIColor?
+        let textColor: UIColor?
+        let size: CGSize?
+    }
+    struct Section {
+        let header: String?
+        let footer: String?
+        let items: [Item]
+    }
+    let sections: [Section]
+    let cornerRadius: CGFloat
+    /// Supplementary label color, RESOLVED against the scene traits: the
+    /// offscreen v1 oracle resolves dynamic colors as light, so a dark
+    /// collection scene has to hand it the concrete color (the same reason
+    /// every other color in a scene is resolved at build time).
+    let supplementaryLabelColor: UIColor
+
+    init(sectionsJSON: [JSON], cornerRadius: CGFloat, traits: UITraitCollection) {
+        self.cornerRadius = cornerRadius
+        supplementaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: traits)
+        sections = sectionsJSON.map { s in
+            let items = (s["items"] as? [JSON] ?? []).map { i -> Item in
+                let size = numArray(i["size"]).flatMap {
+                    $0.count == 2 ? CGSize(width: $0[0], height: $0[1]) : nil
+                }
+                return Item(text: i["text"] as? String ?? "",
+                            color: colorOrDie(i["color"], "collection item", traits),
+                            textColor: colorOrDie(i["textColor"], "collection item", traits),
+                            size: size)
+            }
+            return Section(header: s["header"] as? String,
+                           footer: s["footer"] as? String, items: items)
+        }
+    }
+
+    func numberOfSections(in cv: UICollectionView) -> Int { sections.count }
+
+    func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int {
+        sections[s].items.count
+    }
+
+    func collectionView(_ cv: UICollectionView,
+                        cellForItemAt ip: IndexPath) -> UICollectionViewCell {
+        let item = sections[ip.section].items[ip.item]
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: "cell", for: ip)
+            as! SceneCollectionCell
+        cell.contentView.backgroundColor = item.color
+        cell.contentView.layer.cornerRadius = cornerRadius
+        cell.label.text = item.text
+        cell.label.textColor = item.textColor ?? .label
+        return cell
+    }
+
+    func collectionView(_ cv: UICollectionView, viewForSupplementaryElementOfKind kind: String,
+                        at ip: IndexPath) -> UICollectionReusableView {
+        let view = cv.dequeueReusableSupplementaryView(ofKind: kind,
+                                                       withReuseIdentifier: "supp", for: ip)
+            as! SceneCollectionSupplementary
+        view.label.text = kind == UICollectionView.elementKindSectionHeader
+            ? sections[ip.section].header : sections[ip.section].footer
+        view.label.textColor = supplementaryLabelColor
+        return view
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        sizeForItemAt ip: IndexPath) -> CGSize {
+        sections[ip.section].items[ip.item].size
+            ?? (layout as! UICollectionViewFlowLayout).itemSize
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection s: Int) -> CGSize {
+        sections[s].header == nil
+            ? .zero : (layout as! UICollectionViewFlowLayout).headerReferenceSize
+    }
+
+    func collectionView(_ cv: UICollectionView, layout: UICollectionViewLayout,
+                        referenceSizeForFooterInSection s: Int) -> CGSize {
+        sections[s].footer == nil
+            ? .zero : (layout as! UICollectionViewFlowLayout).footerReferenceSize
+    }
+}
+
 /// Root-only chrome containers (spec v5). Plain UIViews named exactly like
 /// the scene-spec classes so layout dumps agree; the real UIKit controller
 /// view (all-private classes, skipped by compare.py) is their only subview.
@@ -618,6 +747,53 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         t.dataSource = driver
         t.delegate = driver
         v = t
+    case "UICollectionView":
+        let layout = UICollectionViewFlowLayout()
+        switch j["scrollDirection"] as? String ?? "vertical" {
+        case "vertical": layout.scrollDirection = .vertical
+        case "horizontal": layout.scrollDirection = .horizontal
+        case let s: fatalError("bad scrollDirection '\(s)'")
+        }
+        if let sz = numArray(j["itemSize"]), sz.count == 2 {
+            layout.itemSize = CGSize(width: sz[0], height: sz[1])
+        }
+        if let n = j["minimumLineSpacing"] as? Double {
+            layout.minimumLineSpacing = CGFloat(n)
+        }
+        if let n = j["minimumInteritemSpacing"] as? Double {
+            layout.minimumInteritemSpacing = CGFloat(n)
+        }
+        if let ins = numArray(j["sectionInset"]), ins.count == 4 {
+            layout.sectionInset = UIEdgeInsets(top: ins[0], left: ins[1],
+                                               bottom: ins[2], right: ins[3])
+        }
+        if let sz = numArray(j["headerSize"]), sz.count == 2 {
+            layout.headerReferenceSize = CGSize(width: sz[0], height: sz[1])
+        }
+        if let sz = numArray(j["footerSize"]), sz.count == 2 {
+            layout.footerReferenceSize = CGSize(width: sz[0], height: sz[1])
+        }
+        let c = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        // Same pinning as UIScrollView/UITableView (no VC/safe-area shifts
+        // offscreen, no indicator subviews in the dump).
+        c.contentInsetAdjustmentBehavior = .never
+        c.showsVerticalScrollIndicator = false
+        c.showsHorizontalScrollIndicator = false
+        c.traitOverrides.horizontalSizeClass = .compact
+        c.register(SceneCollectionCell.self, forCellWithReuseIdentifier: "cell")
+        for kind in [UICollectionView.elementKindSectionHeader,
+                     UICollectionView.elementKindSectionFooter] {
+            c.register(SceneCollectionSupplementary.self, forSupplementaryViewOfKind: kind,
+                       withReuseIdentifier: "supp")
+        }
+        let driver = SceneCollectionDriver(
+            sectionsJSON: j["sections"] as? [JSON] ?? [],
+            cornerRadius: CGFloat(j["itemCornerRadius"] as? Double ?? 0),
+            traits: traits)
+        sceneCollectionDrivers.append(driver)   // dataSource/delegate are weak
+        c.dataSource = driver
+        c.delegate = driver
+        v = c
     case "UINavigationStack":
         // Root-only (spec v5). Real UINavigationController; requires a live
         // host VC (oracle2) — bar materials are render-server-only anyway.

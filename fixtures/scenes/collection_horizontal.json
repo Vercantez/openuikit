@@ -1,0 +1,42 @@
+{
+  "name": "collection_horizontal",
+  "size": [375, 300],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 300], "backgroundColor": "systemGray4" },
+      {
+        "class": "UICollectionView",
+        "frame": [0, 30, 375, 240],
+        "backgroundColor": "systemBackground",
+        "scrollDirection": "horizontal",
+        "itemSize": [96, 72],
+        "minimumLineSpacing": 12,
+        "minimumInteritemSpacing": 10,
+        "sectionInset": [10, 14, 10, 14],
+        "headerSize": [44, 0],
+        "itemCornerRadius": 10,
+        "sections": [
+          {
+            "header": "A",
+            "items": [
+              { "text": "1", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "2", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "3", "color": "systemTeal", "textColor": "systemBackground" },
+              { "text": "4", "color": "systemTeal", "textColor": "systemBackground" }
+            ]
+          },
+          {
+            "header": "B",
+            "items": [
+              { "text": "5", "color": "systemOrange", "textColor": "systemBackground" },
+              { "text": "6", "color": "systemPink", "textColor": "systemBackground" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
