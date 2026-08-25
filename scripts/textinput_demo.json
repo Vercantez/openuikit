@@ -1,0 +1,21 @@
+{
+  "comment": "textdemo acceptance script (M8 text input): tap the name field (caret appears), type 'Hello UIKit' (mirror label follows), backspace x3, move focus to the email field, then type multiline text into the notes UITextView. Tail captures show the caret blink phases on the deterministic clock.",
+  "events": [
+    { "t": 0.20, "kind": "down", "x": 196, "y": 129 },
+    { "t": 0.28, "kind": "up",   "x": 196, "y": 129 },
+    { "t": 0.90, "kind": "text", "string": "Hello" },
+    { "t": 1.10, "kind": "text", "string": " UIKit" },
+    { "t": 1.70, "kind": "key",  "key": "backspace" },
+    { "t": 1.85, "kind": "key",  "key": "backspace" },
+    { "t": 2.00, "kind": "key",  "key": "backspace" },
+    { "t": 2.50, "kind": "down", "x": 196, "y": 199 },
+    { "t": 2.58, "kind": "up",   "x": 196, "y": 199 },
+    { "t": 2.90, "kind": "text", "string": "mail@openuikit.dev" },
+    { "t": 3.30, "kind": "down", "x": 196, "y": 285 },
+    { "t": 3.38, "kind": "up",   "x": 196, "y": 285 },
+    { "t": 3.60, "kind": "text", "string": "Portable UIKit renders" },
+    { "t": 3.75, "kind": "key",  "key": "return" },
+    { "t": 3.90, "kind": "text", "string": "and edits text now" }
+  ],
+  "captures": [0.5, 1.0, 1.4, 2.2, 2.8, 3.1, 3.5, 4.0, 4.6, 5.0]
+}

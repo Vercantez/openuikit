@@ -24,6 +24,7 @@ let appModeDefaultScale: CGFloat = 2
 let appRegistry: [String: (size: CGSize, makeRoot: () -> UINavigationController)] = [
     "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
     "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
+    "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
 ]
 
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,

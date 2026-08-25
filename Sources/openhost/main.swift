@@ -60,8 +60,9 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
 
 --app boots one of the DemoApp apps in a live window (see AppMode.swift):
-  demo   the Settings app (docs/APP_FEEL.md)
-  tasks  the Tasks todo app
+  demo      the Settings app (docs/APP_FEEL.md)
+  tasks     the Tasks todo app
+  textdemo  the text-input form (UITextField/UITextView, M8)
 """
 
 var scenePath: String? = nil

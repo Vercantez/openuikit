@@ -333,8 +333,13 @@ func runLive(_ scene: HostScene) {
             || UIScrollView._hasActiveScrollAnimations
             || UINavigationController._hasActiveTransition
             || UIView._hasPendingAnimationCompletions
+            || UITextInputState._hasActiveCaret   // caret blink (M8 text input)
             || now <= OpenUIKitRuntime.animationWorkDeadline + 0.1
     }
+
+    // Text input (M8): committed characters arrive via SDL_TEXTINPUT
+    // (proper unicode composition); editing keys via SDL_KEYDOWN below.
+    SDL_StartTextInput()
 
     while running {
         var ev = SDL_Event()
@@ -350,6 +355,30 @@ func runLive(_ scene: HostScene) {
                 let mods = UInt32(ev.key.keysym.mod)
                 let cmdQ = sym == 113 /* q */ && (mods & 0x0C00) != 0 /* KMOD_GUI */
                 if cmdQ || sym == 27 /* escape */ { running = false }
+                // Editing keys to the first responder (SDL keycodes).
+                let key: UIKeyEventKey? = switch sym {
+                case 8: .backspace          // SDLK_BACKSPACE
+                case 13: .return            // SDLK_RETURN
+                case 1073741903: .right     // SDLK_RIGHT
+                case 1073741904: .left      // SDLK_LEFT
+                case 1073741905: .down      // SDLK_DOWN
+                case 1073741906: .up        // SDLK_UP
+                default: nil
+                }
+                if let key {
+                    scene.window.sendKey(key, timestamp: now)
+                    needsRender = true
+                }
+            case SDL_TEXTINPUT.rawValue:
+                // ev.text.text: fixed UTF-8 C buffer (composed characters).
+                let str = withUnsafeBytes(of: ev.text.text) { buf -> String in
+                    let bytes = buf.prefix { $0 != 0 }
+                    return String(decoding: bytes, as: UTF8.self)
+                }
+                if !str.isEmpty {
+                    scene.window.sendText(str, timestamp: now)
+                    needsRender = true
+                }
             case SDL_MOUSEBUTTONDOWN.rawValue where ev.button.button == 1:
                 mouseDown = true
                 let p = CGPoint(x: CGFloat(ev.button.x), y: CGFloat(ev.button.y))
@@ -400,23 +429,44 @@ func runLive(_ scene: HostScene) {
 
 struct ScriptEvent {
     let t: Double
-    let kind: String  // "down" | "move" | "up"
-    let point: CGPoint
+    let kind: String  // "down" | "move" | "up" | "text" | "key"
+    let point: CGPoint          // down/move/up
+    let string: String          // text
+    let key: UIKeyEventKey?     // key
 }
 
-/// Parse the --script JSON: {"events": [{t, kind, x, y}...],
-/// "captures": [t...]}.
+/// Parse the --script JSON: {"events": [{t, kind, x, y} |
+/// {t, kind: "text", string} | {t, kind: "key", key: "backspace|left|
+/// right|up|down|return"}...], "captures": [t...]}.
 func parseScript(_ script: JSONValue) -> (events: [ScriptEvent], captures: [Double]) {
     let events: [ScriptEvent] = (script["events"]?.arrayValue ?? []).map { e in
         guard let j = e.objectValue,
               let t = j["t"]?.doubleValue,
-              let kind = j["kind"]?.stringValue,
-              let x = j["x"]?.doubleValue, let y = j["y"]?.doubleValue,
-              ["down", "move", "up"].contains(kind) else {
-            fatalError("bad script event (need {t, kind: down|move|up, x, y})")
+              let kind = j["kind"]?.stringValue else {
+            fatalError("bad script event (need {t, kind, ...})")
         }
-        return ScriptEvent(t: t, kind: kind,
-                           point: CGPoint(x: CGFloat(x), y: CGFloat(y)))
+        switch kind {
+        case "down", "move", "up":
+            guard let x = j["x"]?.doubleValue, let y = j["y"]?.doubleValue else {
+                fatalError("bad script event (\(kind) needs x, y)")
+            }
+            return ScriptEvent(t: t, kind: kind,
+                               point: CGPoint(x: CGFloat(x), y: CGFloat(y)),
+                               string: "", key: nil)
+        case "text":
+            guard let s = j["string"]?.stringValue else {
+                fatalError("bad script event (text needs \"string\")")
+            }
+            return ScriptEvent(t: t, kind: kind, point: .zero, string: s, key: nil)
+        case "key":
+            guard let k = j["key"]?.stringValue,
+                  let key = UIKeyEventKey(rawValue: k) else {
+                fatalError("bad script event (key needs \"key\": backspace|left|right|up|down|return)")
+            }
+            return ScriptEvent(t: t, kind: kind, point: .zero, string: "", key: key)
+        default:
+            fatalError("bad script event kind \"\(kind)\"")
+        }
     }
     let captures = (script["captures"]?.arrayValue ?? []).compactMap { $0.doubleValue }
     guard !captures.isEmpty else { fatalError("script needs non-empty \"captures\"") }
@@ -449,9 +499,16 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
         while SDL_PollEvent(&ev) != 0 {}
         switch entry.step {
         case .event(let e):
-            let phase: UITouch.Phase = e.kind == "down" ? .began
-                                     : e.kind == "move" ? .moved : .ended
-            scene.window.sendTouch(phase, at: e.point, timestamp: e.t)
+            switch e.kind {
+            case "text":
+                scene.window.sendText(e.string, timestamp: e.t)
+            case "key":
+                scene.window.sendKey(e.key!, timestamp: e.t)
+            default:
+                let phase: UITouch.Phase = e.kind == "down" ? .began
+                                         : e.kind == "move" ? .moved : .ended
+                scene.window.sendTouch(phase, at: e.point, timestamp: e.t)
+            }
         case .capture(let t):
             let t0 = SDL_GetPerformanceCounter()
             scene.window.layoutIfNeeded() // layout before draw (as in runLive)
