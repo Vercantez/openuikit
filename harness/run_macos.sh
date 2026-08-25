@@ -71,6 +71,22 @@ if [ -f "$LIBSRC" ]; then
     EXTRA="-L$OUT -l$NAME -Wl,-rpath,@executable_path"
 fi
 
+# A second companion convention: tests/<name>.dlopen.m is built as a shared
+# library but NOT linked. Its path is handed to the test in
+# OBJC4_TEST_DLOPEN_LIB so the test can dlopen it at run time.
+DLSRC="$REPO/tests/$NAME.dlopen.m"
+DLLIB=""
+if [ -f "$DLSRC" ]; then
+    DLLIB="$OUT/lib$NAME-dlopen.dylib"
+    if ! clang $CFLAGS -dynamiclib "$DLSRC" -o "$DLLIB" \
+             -install_name "@rpath/lib$NAME-dlopen.dylib" -lobjc \
+             2> "$OUT/$NAME.cc.log"; then
+        echo "run_macos.sh: dlopen library compile failed for $NAME" >&2
+        cat "$OUT/$NAME.cc.log" >&2
+        exit 1
+    fi
+fi
+
 if ! clang $CFLAGS "$TEST" -o "$BIN" $EXTRA -lobjc 2> "$OUT/$NAME.cc.log"; then
     echo "run_macos.sh: compile failed for $NAME" >&2
     cat "$OUT/$NAME.cc.log" >&2
@@ -82,6 +98,7 @@ fi
 env -u DYLD_INSERT_LIBRARIES -u DYLD_LIBRARY_PATH -u OBJC_DEBUG_POOL_ALLOCATION \
     OBJC_PRINT_LOAD_METHODS=NO OBJC_PRINT_INITIALIZE_METHODS=NO \
     MallocNanoZone=0 \
+    OBJC4_TEST_DLOPEN_LIB="$DLLIB" \
     "$BIN"
 rc=$?
 if [ $rc -ne 0 ]; then

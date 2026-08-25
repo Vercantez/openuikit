@@ -117,6 +117,22 @@ docker run --rm $MOUNTS -w /src \
             EXTRA="-L$O -l$NAME -Wl,-rpath,$O"
         fi
 
+        # tests/<name>.dlopen.m: built, deliberately NOT linked. The path is
+        # passed to the test in OBJC4_TEST_DLOPEN_LIB. See run_macos.sh.
+        OBJC4_TEST_DLOPEN_LIB=""
+        if [ -f "/src/tests/$NAME.dlopen.m" ]; then
+            OBJC4_TEST_DLOPEN_LIB="$O/lib$NAME-dlopen.so"
+            if ! clang $CF -fPIC -shared "/src/tests/$NAME.dlopen.m" \
+                    -o "$OBJC4_TEST_DLOPEN_LIB" \
+                    -L"$C_LIBDIR" -lobjc -Wl,-rpath,"$C_LIBDIR" \
+                    2> "$O/$NAME.cc.log"
+            then
+                : > "$O/$NAME.ccfail"
+                exit 1
+            fi
+        fi
+        export OBJC4_TEST_DLOPEN_LIB
+
         if ! clang $CF "/src/$RELTEST" -o "$O/$NAME" \
             $EXTRA -L"$C_LIBDIR" -lobjc -ldl -lpthread \
             -Wl,-rpath,"$C_LIBDIR" \

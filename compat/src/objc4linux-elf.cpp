@@ -427,7 +427,8 @@ void _dyld_objc_register_callbacks(const struct _dyld_objc_callbacks *callbacks)
  * Register every not-yet-known image and drive map_images/load_images over
  * the ones with Objective-C metadata. Safe to call repeatedly.
  */
-extern "C" void objc4linux_scan_images(void)
+extern "C" __attribute__((visibility("default")))
+void objc4linux_scan_images(void)
 {
     pthread_mutex_lock(&gRegistryLock);
     unsigned count = 0;
@@ -471,6 +472,109 @@ extern "C" void objc4linux_scan_images(void)
 
     free(infos);
     free(imgs);
+}
+
+/*
+ * The other half: images that have gone away. Called after a real dlclose.
+ * Anything in the registry that dl_iterate_phdr no longer reports has been
+ * unmapped, and objc4 has to be told before it dereferences metadata that is
+ * no longer there.
+ */
+struct PruneContext {
+    uintptr_t *live;
+    unsigned   count;
+    unsigned   cap;
+};
+
+static int pruneCallback(struct dl_phdr_info *info, size_t size, void *data)
+{
+    (void)size;
+    PruneContext *ctx = (PruneContext *)data;
+    if (ctx->count < ctx->cap) ctx->live[ctx->count] = (uintptr_t)info->dlpi_addr;
+    ctx->count++;
+    return 0;
+}
+
+static void objc4linux_prune_unloaded_images(void)
+{
+    if (!gHaveCallbacks) return;
+
+    enum { kMaxLive = 512 };
+    uintptr_t live[kMaxLive];
+    PruneContext ctx = { live, 0, kMaxLive };
+    dl_iterate_phdr(pruneCallback, &ctx);
+    if (ctx.count > kMaxLive) return;   /* too many to be sure; do nothing */
+
+    for (;;) {
+        pthread_mutex_lock(&gRegistryLock);
+        ElfImage **link = &gImages;
+        ElfImage *dead = nullptr;
+        for (ElfImage *i = gImages; i; link = &i->next, i = i->next) {
+            bool found = false;
+            for (unsigned n = 0; n < ctx.count; n++)
+                if (live[n] == i->base) { found = true; break; }
+            if (!found) { dead = i; *link = i->next; break; }
+        }
+        if (dead == gMainImage) gMainImage = nullptr;
+        pthread_mutex_unlock(&gRegistryLock);
+
+        if (!dead) return;
+
+        if (dead->hasObjC && gCallbacks.unmapped)
+            gCallbacks.unmapped(dead->path, (const struct mach_header *)&dead->hdr);
+
+        free(dead->path);
+        free(dead);
+    }
+}
+
+/* ------------------------------------------------------------------ *
+ * dlopen / dlclose interposition
+ *
+ * dyld tells objc4 about images loaded after launch. On Linux nothing does:
+ * there is no in-process notification for "an object was just mapped".
+ * dl_iterate_phdr can only be asked, never subscribed to.
+ *
+ * MEASURED before this existed (see docs/UNIMPLEMENTED.md): a program that
+ * dlopen'ed a shared library containing an Objective-C class got
+ * `objc_getClass` == NULL and no +load, where macOS ran +load during dlopen
+ * and returned the class. Same source, same test.
+ *
+ * The mechanism is ELF symbol interposition: libobjc defines `dlopen` and
+ * `dlclose`, forwards to the real ones via RTLD_NEXT, and rescans afterwards.
+ *
+ * WHAT THIS DEPENDS ON, stated plainly: the caller's `dlopen` must resolve to
+ * libobjc's definition, which happens iff libobjc.so precedes libc in the
+ * global symbol lookup order -- i.e. iff the program lists -lobjc before
+ * -lc, which is what a normal `clang ... -lobjc` link does. A program that
+ * arranges otherwise gets the old behaviour, silently. For that case, and for
+ * any other loader that bypasses this path, libobjc exports
+ * `objc4linux_scan_images()`; calling it after a load is always safe and is
+ * idempotent.
+ * ------------------------------------------------------------------ */
+
+extern "C" __attribute__((visibility("default")))
+void *dlopen(const char *path, int mode)
+{
+    static void *(*real)(const char *, int) = nullptr;
+    if (!real) real = (void *(*)(const char *, int))dlsym(RTLD_NEXT, "dlopen");
+    if (!real) return nullptr;
+
+    void *handle = real(path, mode);
+    if (handle) objc4linux_scan_images();
+    return handle;
+}
+
+extern "C" __attribute__((visibility("default")))
+int dlclose(void *handle)
+{
+    static int (*real)(void *) = nullptr;
+    if (!real) real = (int (*)(void *))dlsym(RTLD_NEXT, "dlclose");
+    if (!real) return -1;
+
+    int rc = real(handle);
+    if (rc == 0) objc4linux_prune_unloaded_images();
+    return rc;
 }
 
 /* ------------------------------------------------------------------ *
