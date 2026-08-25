@@ -1,5 +1,57 @@
 # Known gaps (living document — fixers: read this)
 
+## App lifecycle / environment (M12, 2026-08-25): scope notes
+
+The cluster is `UIResponder` as a real base class + `UIApplication` /
+`UIApplicationDelegate` / `UIScreen` / `UIDevice`
+(docs/APP_COMPAT.md, 543 uses). Shipped: the exact UIKit responder chain
+(`UIResponder.swift`), first-responder state moved off UIView onto
+UIResponder (so a view controller can hold focus), touches/presses
+defaulting to forwarding up the chain, `UIWindow.rootViewController` /
+`makeKeyAndVisible`, and openhost booting `--app` through
+`UIApplicationMain` + a real `HostAppDelegate`. What did **not** ship, and
+why:
+
+- **No run loop, therefore no self-driving lifecycle.** `UIApplicationMain`
+  performs the launch sequence and RETURNS; the host drives the rest with
+  five `_host…` methods (`_hostDidBecomeActive`, `_hostWillResignActive`,
+  `_hostDidEnterBackground`, `_hostWillEnterForeground`,
+  `_hostWillTerminate`). This is not a gap that can be closed without giving
+  the portable core a run loop and a wall clock, which the architecture
+  forbids. The ORDER and the `applicationState` an app observes are UIKit's;
+  only the trigger differs.
+- **No notifications.** UIKit posts `UIApplication.didBecomeActiveNotification`
+  and friends. `NotificationCenter` is Foundation, which the library may not
+  import, so the delegate callbacks are the only observation point. An app
+  that observes the notifications instead of implementing the delegate
+  hears nothing. Closing this needs a portable notification center.
+- **`sendAction` takes a closure, not a `Selector`.** Portable Swift has no
+  selectors. The nil-target chain walk — the part that actually matters — is
+  faithful; the spelling is not.
+- **`open(_:)`/`canOpenURL` take a `String`, not a `URL`,** for the same
+  Foundation reason, and do nothing unless a host installs
+  `UIApplication.urlOpenHandler`.
+- **`UIDevice` values are declared, not measured** (`.phone`, "iOS",
+  "26.1", "iPhone"). There is no device to interrogate and the library may
+  be running on Linux; the header of `UIDevice.swift` says so explicitly.
+  `UIScreen`, by contrast, IS driven by the host's real surface.
+- **Scenes are minimal.** `UIScene`/`UIWindowScene`/`UISceneSession`/
+  `UISceneDelegate`/`UIWindowSceneDelegate` exist so scene-shaped app code
+  compiles and receives activation callbacks. There is no session
+  persistence, no state restoration, no multi-window management, and
+  `connectedScenes` is empty unless an app opts in — which is what keeps a
+  window's next responder the application, the pre-scene shape the hosts
+  boot.
+- **`UIApplication.windows` counts every live window, not every VISIBLE
+  one.** There is no window server to ask about visibility.
+- **A first responder removed from its window does not auto-resign.** UIKit
+  resigns it; here `isFirstResponder` simply goes false while the window
+  still holds a weak reference. Pre-existing behavior, carried over
+  unchanged by the migration.
+- **A DISABLED `UIControl` still swallows touches** instead of forwarding
+  them up the chain (UIKit forwards). Pre-existing; the new forwarding
+  default made it visible but did not change it.
+
 ## Interactive sheets (M11, 2026-08-25): what shipped and what did not
 
 Shipped, all measured (docs/APP_FEEL.md "Measured sheet interaction"):

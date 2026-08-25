@@ -55,6 +55,9 @@ func buildHostScene(_ scene: JSONValue, scaleOverride: CGFloat?,
     GlyphInkTable.windowCompositing = scene["window"]?.boolValue ?? false
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
                                                   displayScale: scale)
+    // UIScreen reports the surface this host actually opens (M12).
+    UIScreen.main._hostConfigure(
+        bounds: CGRect(x: 0, y: 0, width: sz[0], height: sz[1]), scale: scale)
 
     guard var rootJ = scene["root"]?.objectValue else { fatalError("scene missing root") }
     rootJ["frame"] = .array([.number(0), .number(0),
@@ -66,6 +69,7 @@ func buildHostScene(_ scene: JSONValue, scaleOverride: CGFloat?,
     let window = UIWindow(frame: CGRect(x: 0, y: 0, width: sz[0], height: sz[1]))
     window.overrideUserInterfaceStyle = style
     window.addSubview(container)
+    window.makeKeyAndVisible()
     window.setNeedsLayout()
     window.layoutIfNeeded()
 
@@ -241,11 +245,13 @@ func buildNavDemoScene(scaleOverride: CGFloat?) -> HostScene {
     GlyphInkTable.windowCompositing = false
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
                                                   displayScale: scale)
-    let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+    UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size),
+                                 scale: scale)
+    let window = UIWindow(frame: UIScreen.main.bounds)
     let nav = UINavigationController(rootViewController: NavDemoRootVC())
     _navDemoNav = nav
-    nav.view.frame = window.bounds
-    window.addSubview(nav.view)
+    window.rootViewController = nav
+    window.makeKeyAndVisible()
     window.setNeedsLayout()
     window.layoutIfNeeded()
     return HostScene(name: "nav_demo", sizePt: size, scale: scale,
@@ -323,7 +329,15 @@ final class SDLHost {
 
 func runLive(_ scene: HostScene) {
     let host = SDLHost(title: scene.name, sizePt: scene.sizePt, scale: scene.scale)
-    defer { host.quit() }
+    // App lifecycle (M12): the app is launched by now (buildAppScene ran
+    // UIApplicationMain); it becomes ACTIVE once the first frame is on
+    // screen, and terminates when the loop exits. Scene mode has no app
+    // delegate, so these are no-ops there.
+    defer {
+        UIApplication.shared._hostWillTerminate()
+        host.quit()
+    }
+    var becameActive = false
 
     let startTicks = SDL_GetTicks()
     var running = true
@@ -433,6 +447,10 @@ func runLive(_ scene: HostScene) {
             renderNanos &+= (SDL_GetPerformanceCounter() &- t0)
             host.present(bmp)  // vsync paces the loop
             renderedFrames += 1
+            if !becameActive {
+                becameActive = true
+                UIApplication.shared._hostDidBecomeActive()
+            }
             if renderedFrames % 120 == 0 {
                 let avgMs = Double(renderNanos) / Double(perfFreq) * 1000
                     / Double(renderedFrames)
@@ -500,7 +518,11 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
                  outdir: String) throws -> [String] {
     let host = SDLHost(title: "\(scene.name) [scripted]",
                        sizePt: scene.sizePt, scale: scene.scale)
-    defer { host.quit() }
+    defer {
+        UIApplication.shared._hostWillTerminate()
+        host.quit()
+    }
+    var becameActive = false
 
     // Merge into one timeline; at equal times events run before captures.
     enum Step { case event(ScriptEvent); case capture(Double) }
@@ -538,6 +560,10 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
             let ms = Double(SDL_GetPerformanceCounter() &- t0)
                 / Double(SDL_GetPerformanceFrequency()) * 1000
             host.present(bmp)
+            if !becameActive {
+                becameActive = true
+                UIApplication.shared._hostDidBecomeActive()
+            }
             let file = "\(scene.name).\(captureSuffix(t)).png"
             try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(file)")
             print("captured \(file) (render \(fmt3(ms)) ms, cache hit/build/direct "
