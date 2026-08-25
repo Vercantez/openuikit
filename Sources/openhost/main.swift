@@ -61,8 +61,10 @@ usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
 
 --app boots one of the DemoApp apps in a live window (see AppMode.swift):
   demo      the Settings app (docs/APP_FEEL.md)
-  tasks     the Tasks todo app
+  tasks     the Tasks todo app (UITableView, M10)
   textdemo  the text-input form (UITextField/UITextView, M8)
+  showcase  all three in a UITabBarController — large titles, table,
+            modal profile sheet (M10)
 """
 
 var scenePath: String? = nil

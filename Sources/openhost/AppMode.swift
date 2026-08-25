@@ -14,17 +14,20 @@
 import OpenUIKit
 import DemoApp
 
-/// Keeps the root navigation controller alive (HostScene only holds views).
-var _appRootNav: UINavigationController?
+/// Keeps the root view controller alive (HostScene only holds views).
+var _appRoot: UIViewController?
 
 /// Default backing scale for `--app` mode (see header).
 let appModeDefaultScale: CGFloat = 2
 
-/// The apps `--app <name>` can boot: window size + root factory.
-let appRegistry: [String: (size: CGSize, makeRoot: () -> UINavigationController)] = [
+/// The apps `--app <name>` can boot: window size + root factory. The root is
+/// a plain UIViewController: most apps hand back a UINavigationController,
+/// `showcase` hands back a UITabBarController wrapping three of them.
+let appRegistry: [String: (size: CGSize, makeRoot: () -> UIViewController)] = [
     "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
     "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
     "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
+    "showcase": (ShowcaseApp.windowSize, ShowcaseApp.makeRootViewController),
 ]
 
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
@@ -39,13 +42,13 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
                                                   displayScale: scale)
     let window = UIWindow(frame: CGRect(origin: .zero, size: size))
-    let nav = app.makeRoot()
-    _appRootNav = nav
-    nav.view.frame = window.bounds
-    window.addSubview(nav.view)
+    let root = app.makeRoot()
+    _appRoot = root
+    root.view.frame = window.bounds
+    window.addSubview(root.view)
     window.setNeedsLayout()
     window.layoutIfNeeded()
     return HostScene(name: "\(appName)_app", sizePt: size, scale: scale,
-                     window: window, container: nav.view,
+                     window: window, container: root.view,
                      sceneAnimationDeadline: 0)
 }

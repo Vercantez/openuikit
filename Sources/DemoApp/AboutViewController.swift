@@ -6,8 +6,10 @@
 
 import OpenUIKit
 
-public final class AboutViewController: UIViewController {
+public final class AboutViewController: UIViewController, BottomInsetAdjustable {
     let scrollView = UIScrollView()
+
+    public var extraBottomInset: CGFloat = 0
 
     public override init() { super.init() }
 
@@ -18,6 +20,7 @@ public final class AboutViewController: UIViewController {
         scrollView.frame = view.bounds
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         scrollView.alwaysBounceVertical = true
+        scrollView.contentInset.bottom = extraBottomInset
         view.addSubview(scrollView)
 
         let margin: CGFloat = 16

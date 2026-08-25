@@ -21,6 +21,15 @@ final class ProfileCard: UIControl {
 
     var onTap: (() -> Void)?
 
+    /// Rebind the card's two lines (the profile sheet edits them).
+    func setProfile(name: String, subtitle: String) {
+        nameLabel.text = name
+        nameLabel.setNeedsDisplay()
+        subtitleLabel.text = subtitle
+        subtitleLabel.setNeedsDisplay()
+        setNeedsLayout()
+    }
+
     init(name: String, subtitle: String, monogram: String) {
         super.init(frame: CGRect(x: 0, y: 0, width: 358,
                                  height: ProfileCard.height))
@@ -125,8 +134,16 @@ final class PlaceholderViewController: UIViewController {
 
 // MARK: - Root
 
-public final class SettingsRootViewController: UIViewController {
-    let scrollView = UIScrollView()
+public final class SettingsRootViewController: UIViewController,
+                                               BottomInsetAdjustable {
+    public let scrollView = UIScrollView()
+    var profileCard: ProfileCard!
+    var profileName = "Miguel Salinas"
+    var profileEmail = "miguel@camelqa.com"
+
+    /// Extra bottom inset for chrome the controller does not own (the
+    /// showcase app's floating tab bar). Set before the view loads.
+    public var extraBottomInset: CGFloat = 0
 
     public override init() { super.init() }
 
@@ -137,22 +154,26 @@ public final class SettingsRootViewController: UIViewController {
         scrollView.frame = view.bounds
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         scrollView.alwaysBounceVertical = true
+        scrollView.contentInset.bottom = extraBottomInset
         view.addSubview(scrollView)
+        // Drive the navigation bar's large title from this scroll view when
+        // the stack asks for large titles (no automatic detection exists —
+        // the binding is explicit, like UIKit's setContentScrollView).
+        setContentScrollView(scrollView)
 
         let margin: CGFloat = 16
         let width = view.bounds.width - 2 * margin
         var y: CGFloat = 18
 
         // Profile card.
-        let profile = ProfileCard(name: "Miguel Salinas",
+        let profile = ProfileCard(name: profileName,
                                   subtitle: "Apple Account, iCloud, and more",
                                   monogram: "MS")
+        profileCard = profile
         profile.frame = CGRect(x: margin, y: y, width: width,
                                height: ProfileCard.height)
         profile.autoresizingMask = [.flexibleWidth]
-        profile.onTap = { [weak self] in
-            self?.push(PlaceholderViewController(), title: "Apple Account")
-        }
+        profile.onTap = { [weak self] in self?.presentProfileEditor() }
         scrollView.addSubview(profile)
         y = profile.frame.maxY + 22
 
@@ -171,7 +192,24 @@ public final class SettingsRootViewController: UIViewController {
 
     func push(_ vc: UIViewController, title: String) {
         vc.title = title
+        (vc as? BottomInsetAdjustable)?.extraBottomInset = extraBottomInset
         navigationController?.pushViewController(vc, animated: true)
+    }
+
+    /// The profile card opens the account editor as a pageSheet — the M10
+    /// modal presentation, over the whole window (navigation bar and tab bar
+    /// included), dimming the base at 20%.
+    func presentProfileEditor() {
+        let editor = ProfileEditorViewController(name: profileName,
+                                                 email: profileEmail)
+        editor.onDone = { [weak self] name, email in
+            guard let self else { return }
+            self.profileName = name
+            self.profileEmail = email
+            self.profileCard.setProfile(name: name,
+                                        subtitle: "Apple Account, iCloud, and more")
+        }
+        present(editor, animated: true)
     }
 
     func disclosureRow(icon: IconGlyph, color: UIColor, title: String,

@@ -72,6 +72,8 @@ public enum IconGlyph {
     case airplane, wifi, bluetooth, cellular, battery
     case bell, speaker, moon, hourglass
     case gear, toggles, sun, grid, person, shield, info
+    /// Tab-bar glyphs (M10 showcase): a checklist and a text block.
+    case checklist, textLines
 }
 
 /// Draw `glyph` in `color` into a 29x29-normalized tile space. `tileColor`
@@ -245,7 +247,46 @@ func drawIconGlyph(_ glyph: IconGlyph, in canvas: Canvas, bounds: CGRect,
         canvas.fill(circlePath(CGPoint(x: 14.5, y: 9.9), 1.5), color: color)
         canvas.fill(.roundedRect(CGRect(x: 13.2, y: 12.6, width: 2.6, height: 8.0),
                                  cornerRadius: 1.3), color: color)
+    case .checklist:
+        // Three lines, each preceded by a check tick.
+        for i in 0..<3 {
+            let y = 7.6 + CGFloat(i) * 7.0
+            canvas.stroke(polylinePath([CGPoint(x: 4.0, y: y),
+                                        CGPoint(x: 6.2, y: y + 2.2),
+                                        CGPoint(x: 10.4, y: y - 2.6)]),
+                          color: color, lineWidth: 2.0)
+            canvas.fill(.roundedRect(CGRect(x: 13.4, y: y - 1.2,
+                                            width: 11.6, height: 2.4),
+                                     cornerRadius: 1.2), color: color)
+        }
+    case .textLines:
+        // A paragraph block with a short last line.
+        let widths: [CGFloat] = [18.4, 18.4, 18.4, 11.0]
+        for (i, w) in widths.enumerated() {
+            canvas.fill(.roundedRect(CGRect(x: 5.3, y: 6.6 + CGFloat(i) * 5.4,
+                                            width: w, height: 2.6),
+                                     cornerRadius: 1.3), color: color)
+        }
     }
+}
+
+// MARK: - Glyph → image
+
+/// Rasterize `glyph` into a square image at `size` points.
+///
+/// UITabBar renders item images as templates (only the alpha channel is
+/// used, flattened to the item's current color), so the ink color here is
+/// irrelevant — the coverage is what matters.
+func iconImage(_ glyph: IconGlyph, size: CGFloat, scale: CGFloat = 2) -> UIImage {
+    let px = Int((size * scale).rounded())
+    let bitmap = Bitmap(width: px, height: px)
+    let canvas = Canvas(bitmap: bitmap, scale: scale)
+    let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+    drawIconGlyph(glyph, in: canvas, bounds: CGRect(x: 0, y: 0, width: size,
+                                                    height: size),
+                  color: white,
+                  tileColor: CGColor(red: 0, green: 0, blue: 0, alpha: 0))
+    return UIImage(bitmap: bitmap, scale: scale)
 }
 
 // MARK: - Icon tile
