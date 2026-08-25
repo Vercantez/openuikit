@@ -44,12 +44,6 @@ final class ReuseRegistry<V: ReusableView> {
         factories[identifier] = factory
     }
 
-    var registeredIdentifiers: [String] { Swift.Array(factories.keys) }
-
-    func isRegistered(_ identifier: String) -> Bool {
-        factories[identifier] != nil
-    }
-
     /// A pooled view (reset via `prepareForReuse`) if one is waiting, else a
     /// freshly built one if the identifier is registered, else nil (UIKit's
     /// `dequeueReusableCell(withIdentifier:)` returns nil the same way).
@@ -73,14 +67,6 @@ final class ReuseRegistry<V: ReusableView> {
         pools[id] = pool
     }
 
-    func drainPools() {
-        pools.removeAll()
-    }
-
-    /// Pooled (not visible) view count — test/diagnostic hook.
-    var pooledCount: Int {
-        pools.values.reduce(0) { $0 + $1.count }
-    }
 }
 
 /// The views a tiling container currently has instantiated, keyed by whatever
@@ -99,7 +85,6 @@ struct VisibleViewMap<Key: Hashable, V: AnyObject> {
     }
 
     var isEmpty: Bool { views.isEmpty }
-    var count: Int { views.count }
     var keys: Dictionary<Key, V>.Keys { views.keys }
 
     /// Drop every view whose key is no longer needed, calling `retire` on

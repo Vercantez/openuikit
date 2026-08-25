@@ -92,6 +92,15 @@ What is NOT there:
   is that an app CANNOT distinguish "not implemented" from "implemented and
   returned the layout's value" — harmless here, but the same portability
   limit documented in docs/OBJC_RUNTIME.md.
+- **A cell subclass that declares its own `init(frame:)` must spell it
+  `required`.** `register(_:forCellWithReuseIdentifier:)` takes a metatype and
+  instantiates it, and Swift only allows that through a `required`
+  initializer — so `UICollectionReusableView.init(frame:)` is `required` and
+  UIKit's usual `override init(frame: CGRect)` becomes
+  `required init(frame: CGRect = .zero)`. Same shape as
+  `UITableViewCell.init(style:reuseIdentifier:)`, and the same kind of
+  source-level cost as the selector `ActionTable` (docs/OBJC_RUNTIME.md): a
+  subclass that adds no custom initializer needs no change at all.
 - **A cell shows no selection by default**, exactly like UIKit: `isSelected`
   flips and `selectedBackgroundView` (nil unless the app sets it) is
   unhidden. Nothing is drawn otherwise, and there is no fade.

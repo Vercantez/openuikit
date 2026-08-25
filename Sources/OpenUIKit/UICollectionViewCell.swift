@@ -103,7 +103,7 @@ open class UICollectionViewCell: UICollectionReusableView {
     /// The collection view currently displaying this cell (set while bound).
     weak var collectionView: UICollectionView?
 
-    public required override init(frame: CGRect = .zero) {
+    public required init(frame: CGRect = .zero) {
         super.init(frame: frame)
         contentView.frame = bounds
         addSubview(contentView)
