@@ -9,10 +9,22 @@ public enum UIUserInterfaceStyle: Sendable {
 public struct UITraitCollection: Equatable, Sendable {
     public var userInterfaceStyle: UIUserInterfaceStyle
     public var displayScale: CGFloat
+    /// Dynamic Type setting (M14). Defaults to `.large`, which is what a
+    /// device ships with and the size at which every `UIFontMetrics` scale
+    /// factor measures 1.0 — see UIFontMetrics.swift.
+    public var preferredContentSizeCategory: UIContentSizeCategory
 
     public init(userInterfaceStyle: UIUserInterfaceStyle = .unspecified, displayScale: CGFloat = 2) {
         self.userInterfaceStyle = userInterfaceStyle
         self.displayScale = displayScale
+        self.preferredContentSizeCategory = .large
+    }
+    /// Real UIKit's `UITraitCollection(preferredContentSizeCategory:)`; the
+    /// other axes take the process-wide current values, as UIKit's does.
+    public init(preferredContentSizeCategory: UIContentSizeCategory) {
+        self.userInterfaceStyle = UITraitCollection.current.userInterfaceStyle
+        self.displayScale = UITraitCollection.current.displayScale
+        self.preferredContentSizeCategory = preferredContentSizeCategory
     }
     /// Process-wide current traits (real UIKit: UITraitCollection.current).
     public static var current = UITraitCollection(userInterfaceStyle: .light)

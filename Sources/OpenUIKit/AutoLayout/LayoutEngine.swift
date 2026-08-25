@@ -132,6 +132,25 @@ enum LayoutEngine {
                 // A SYSTEM guide is pinned to its owning view by required
                 // constraints built from the measured insets; a CUSTOM guide
                 // is free and positioned entirely by the app's constraints.
+                //
+                // `UIScrollView.contentLayoutGuide` is a third case: its
+                // ORIGIN is the scroll view's content origin (0,0 in content
+                // space, i.e. the same point the scroll view's own left/top
+                // variables denote) while its SIZE stays free, because the
+                // app's constraints against it are exactly what determines
+                // `contentSize`.
+                if g.kind == .scrollContent {
+                    if let owner = g.owningView,
+                       let ov = vars[ObjectIdentifier(owner)] {
+                        var ex = Cassowary.Expression(vv.left)
+                        ex.add(ov.left, -1)
+                        addRequired(ex, .equal)
+                        var ey = Cassowary.Expression(vv.top)
+                        ey.add(ov.top, -1)
+                        addRequired(ey, .equal)
+                    }
+                    continue
+                }
                 guard let f = g.systemFrame(),
                       let owner = g.owningView,
                       let ov = vars[ObjectIdentifier(owner)] else { continue }
@@ -242,6 +261,15 @@ enum LayoutEngine {
             }
             let v = vv.view!
             guard v !== root, !v.translatesAutoresizingMaskIntoConstraints else { continue }
+            // A stack's ARRANGED subviews are placed by the stack, not by the
+            // solver: OpenUIKit's UIStackView is a frame-based layout (see
+            // UIStackView.swift) and writing a solved frame here would fight
+            // it — the app's `row.leadingAnchor == stack.leadingAnchor` style
+            // constraints leave the cross-axis position under-determined, so
+            // the solver's answer is arbitrary. The stack still SEES the row's
+            // size constraints, through `_explicitSizeConstraint`. M14.
+            if let stack = v.superview as? UIStackView,
+               stack.arrangedSubviews.contains(where: { $0 === v }) { continue }
             let f = CGRect(x: roundOrigin(CGFloat(exactX)),
                            y: roundOrigin(CGFloat(exactY)),
                            width: roundSize(CGFloat(exactW)),

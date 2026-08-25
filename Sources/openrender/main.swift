@@ -85,6 +85,7 @@ let args = CommandLine.arguments
 guard args.count >= 3 else {
     print("usage: openrender render <outdir> <scene.json>...")
     print("       openrender scrolltrace <oracle-trace.json> <out.json>")
+    print("       openrender realapp <outdir> [assets-dir]")
     exit(1)
 }
 switch args[1] {
@@ -100,6 +101,21 @@ case "scrolltrace":
         print("FAIL \(args[2]): \(error)")
         exit(1)
     }
+case "realapp":
+    // The real-app harness (docs/REAL_APP_TEST.md): unmodified pocket-casts
+    // source, rendered headlessly.
+    let outdir = args[2]
+    let assets = args.count >= 4 ? args[3] : "fixtures/realapp/assets"
+    try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
+    for variant in realAppVariants {
+        let result = runRealApp(variant, assets: assets)
+        try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
+        for (file, data) in result.pngs {
+            try writeBinaryFile(data, path: "\(outdir)/\(file)")
+        }
+        print("rendered \(result.name)")
+    }
+    exit(0)
 case "render":
     let outdir = args[2]
     try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)

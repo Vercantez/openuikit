@@ -22,7 +22,7 @@
 //     centroid, see `dotDiameter`.
 //   - hidesForSinglePage suppresses the whole control at n <= 1.
 
-public class UIPageControl: UIControl {
+open class UIPageControl: UIControl {
     static let contentHeight: CGFloat = 26
     static let slotPitch: CGFloat = 18
     static let contentSidePadding: CGFloat = 14

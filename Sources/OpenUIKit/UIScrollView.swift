@@ -398,8 +398,42 @@ open class UIScrollView: UIView {
         }
     }
 
+    // MARK: Auto Layout guides (M14)
+
+    var _contentLayoutGuide: UILayoutGuide?
+    var _frameLayoutGuide: UILayoutGuide?
+
+    /// UIKit's `contentLayoutGuide`. Constraints from the scroll view's
+    /// subviews to this guide are what size `contentSize` — the modern
+    /// "scroll view with Auto Layout" recipe, and the reason a real app's
+    /// scrolling screen has any content height at all. The guide's origin is
+    /// the content origin and its size is solved; `layoutSubviews` adopts the
+    /// solved size (see AutoLayout/LayoutEngine.swift).
+    public var contentLayoutGuide: UILayoutGuide {
+        if let g = _contentLayoutGuide { return g }
+        let g = UILayoutGuide(kind: .scrollContent, owningView: self)
+        _contentLayoutGuide = g
+        return g
+    }
+
+    /// UIKit's `frameLayoutGuide`: the scroll view's own frame, in content
+    /// coordinates. Pinning a subview's width to it is how apps say "as wide
+    /// as the scroll view, however tall the content is".
+    public var frameLayoutGuide: UILayoutGuide {
+        if let g = _frameLayoutGuide { return g }
+        let g = UILayoutGuide(kind: .scrollFrame, owningView: self)
+        _frameLayoutGuide = g
+        return g
+    }
+
     open override func layoutSubviews() {
         super.layoutSubviews()
+        // A solved content guide owns contentSize (UIKit derives it the same
+        // way). Only when the app actually took the guide out.
+        if let g = _contentLayoutGuide {
+            let solved = g.layoutFrame.size
+            if solved != .zero, solved != contentSize { contentSize = solved }
+        }
         _layoutRefreshControl()
         updateIndicators()
     }

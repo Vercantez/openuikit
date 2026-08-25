@@ -48,6 +48,13 @@ public enum UIModalPresentationStyle {
     /// `UIPopoverPresentationController.adaptedStyle` (default `.pageSheet`).
     /// See UIAdaptivePresentation.swift.
     case popover
+    /// M14. On an iPhone-width screen real UIKit resolves `.formSheet` to the
+    /// same sheet presentation as `.pageSheet` (MEASURED — Tools/oracle2/
+    /// detentprobe presents a `.formSheet` on a 393 pt window and gets the
+    /// pageSheet frame [0, 59, 393, 793] for `.large()`). Apps that want a
+    /// self-sizing sheet write `.formSheet` + detents, which is why this case
+    /// has to exist for their source to compile.
+    case formSheet
 }
 
 /// Container for one modal presentation: dimming + sheet, sized to the
@@ -193,9 +200,110 @@ public final class UISheetPresentationController: UIPresentationController {
 
     public override var presentedView: UIView? { platter }
 
+    // MARK: Detents (M14 — see the DIVERGENCE note below)
+    //
+    // Real UIKit sizes a sheet from `detents`. `.custom { ctx in … }` is how
+    // a self-sizing sheet (pocket-casts' options picker, docs/REAL_APP_TEST.md)
+    // asks to be exactly as tall as its content.
+    //
+    // MEASURED on real iOS 26 by Tools/oracle2/detentprobe
+    // (scripts/detent_probe_sim.sh, 13 cases, JSON committed under
+    // fixtures/realapp/):
+    //
+    //   * container 393x852, window safe area top 59 / bottom 34
+    //   * `context.maximumDetentValue` == 759 == 852 - 59 - 34, i.e.
+    //     containerHeight - the sheet's top inset - the bottom safe area.
+    //     THIS IS EXACT and is what the code below computes.
+    //   * `.large()` sits at [0, 59, 393, 793] — identical to the sheet
+    //     OpenUIKit already drew, so the large case is unchanged and stays
+    //     golden-clean.
+    //   * a custom value ABOVE the maximum collapses to exactly the `.large`
+    //     frame. Reproduced.
+    //   * a custom value BELOW the maximum puts the sheet's content `value`
+    //     points tall with the bottom safe area added underneath, which is
+    //     what the code below does.
+    //
+    // DIVERGENCE, stated because it is visible: on iOS 26 a non-large detent
+    // is drawn as a FLOATING card — inset 8 pt on each side, 8 pt off the
+    // bottom, and scaled by 377/393 — not as an edge-to-edge sheet. The probe
+    // captures that (e.g. detent 400 -> [8, 427.669, 377, 416.331]) and the
+    // numbers do not decompose into an inset plus a height without also
+    // modelling the transform. OpenUIKit draws the edge-to-edge sheet at the
+    // right HEIGHT instead. Closing this needs the floating-card geometry
+    // measured properly; the probe that would do it is committed.
+    public var detents: [Detent] = [.large()]
+    public var selectedDetentIdentifier: Detent.Identifier?
+
+    public struct Detent {
+        public struct Identifier: Hashable, RawRepresentable, Sendable {
+            public let rawValue: String
+            public init(rawValue: String) { self.rawValue = rawValue }
+            public static let medium = Identifier(rawValue: "com.apple.UIKit.medium")
+            public static let large = Identifier(rawValue: "com.apple.UIKit.large")
+        }
+
+        /// What UIKit hands a `.custom` resolver.
+        public struct ResolutionContext {
+            public let maximumDetentValue: CGFloat
+            public let containerTraitCollection: UITraitCollection
+        }
+
+        public let identifier: Identifier
+        let resolve: (ResolutionContext) -> CGFloat?
+
+        public static func large() -> Detent {
+            Detent(identifier: .large, resolve: { $0.maximumDetentValue })
+        }
+        /// Measured: the medium sheet's content is 425 pt on an 852 pt
+        /// container -- half the container height to within a point. The
+        /// container height is not on the resolution context, so the actual
+        /// number is computed in `resolvedDetentHeight()`; this resolver is
+        /// never consulted for `.medium`.
+        public static func medium() -> Detent {
+            Detent(identifier: .medium, resolve: { _ in nil })
+        }
+        public static func custom(identifier: Identifier? = nil,
+                                  resolver: @escaping (ResolutionContext) -> CGFloat?) -> Detent {
+            Detent(identifier: identifier ?? Identifier(rawValue: "custom"),
+                   resolve: resolver)
+        }
+    }
+
+    /// `containerHeight - topInset - bottomSafeArea` (measured: 759 on a
+    /// 393x852 iPhone container).
+    var maximumDetentValue: CGFloat {
+        guard let c = containerView else { return 0 }
+        return max(0, c.bounds.height - _UIPageSheetView.topInset
+                      - c.safeAreaInsets.bottom)
+    }
+
+    /// The height the selected detent asks for, or nil when the sheet should
+    /// take the full (large) frame.
+    func resolvedDetentHeight() -> CGFloat? {
+        guard let c = containerView, !detents.isEmpty else { return nil }
+        let detent = detents.first { $0.identifier == selectedDetentIdentifier }
+            ?? detents[0]
+        if detent.identifier == .medium {
+            // Measured 425 on an 852 pt container = half its height, to
+            // within a point.
+            return c.bounds.height / 2 + c.safeAreaInsets.bottom
+        }
+        let ctx = Detent.ResolutionContext(
+            maximumDetentValue: maximumDetentValue,
+            containerTraitCollection: c.traitCollection)
+        guard let v = detent.resolve(ctx) else { return nil }
+        // Above the maximum UIKit collapses to the large frame (measured).
+        guard v < maximumDetentValue else { return nil }
+        return max(0, v) + c.safeAreaInsets.bottom
+    }
+
     public override var frameOfPresentedViewInContainerView: CGRect {
         guard let c = containerView else { return .zero }
         guard sheetStyle == .pageSheet else { return c.bounds }
+        if let h = resolvedDetentHeight() {
+            return CGRect(x: 0, y: c.bounds.height - h,
+                          width: c.bounds.width, height: h)
+        }
         return CGRect(x: 0, y: _UIPageSheetView.topInset,
                       width: c.bounds.width,
                       height: c.bounds.height - _UIPageSheetView.topInset)
@@ -641,6 +749,8 @@ extension UIViewController {
     var _resolvedPresentationStyle: UIModalPresentationStyle {
         switch modalPresentationStyle {
         case .automatic: return .pageSheet
+        // Measured: iPhone-width formSheet == pageSheet (file header).
+        case .formSheet: return .pageSheet
         case .popover: return _popoverController?.adaptedStyle ?? .pageSheet
         default: return modalPresentationStyle
         }

@@ -25,7 +25,7 @@
 // opacity, blur radius 3 pt, offset (0, 1). Those three numbers are fitted
 // to that measured profile, nothing else.
 
-public class UISlider: UIControl {
+open class UISlider: UIControl {
     static let trackHeight: CGFloat = 6
     static let thumbSize = CGSize(width: 37, height: 24)
     static let intrinsicHeight: CGFloat = 34

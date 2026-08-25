@@ -25,7 +25,7 @@
 // moved into the real NSLayoutConstraint class with M9
 // (AutoLayout/NSLayoutConstraint.swift); UIStackView keeps using it as-is.
 
-public class UIStackView: UIView {
+open class UIStackView: UIView {
     public enum Distribution: Sendable {
         case fill, fillEqually, fillProportionally, equalSpacing, equalCentering
     }
@@ -57,12 +57,20 @@ public class UIStackView: UIView {
             arrangedSubviews.append(view)
         }
         addSubview(view)
+        // UIKit does this too: an arranged view is positioned by the stack,
+        // never by its autoresizing mask. Without it, a real app's
+        // `stackView.addArrangedSubview(v)` followed by
+        // `v.heightAnchor.constraint(...)` puts a REQUIRED frame constraint
+        // and a REQUIRED height constraint into the same solve and one of
+        // them gets dropped. Found by the real-app harness (M14).
+        view.translatesAutoresizingMaskIntoConstraints = false
     }
 
     public func insertArrangedSubview(_ view: UIView, at index: Int) {
         arrangedSubviews.removeAll { $0 === view }
         arrangedSubviews.insert(view, at: index)
         addSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
     }
 
     /// Like UIKit: stops arranging but does NOT remove from subviews.
@@ -92,6 +100,10 @@ public class UIStackView: UIView {
         var s = view.sizeThatFits(bounds.size)
         if intrinsic.width != UIView.noIntrinsicMetric { s.width = intrinsic.width }
         if intrinsic.height != UIView.noIntrinsicMetric { s.height = intrinsic.height }
+        // Explicit size constraints count as content (M14 — see
+        // naturalFittingSize).
+        if let w = view._explicitSizeConstraint(.width) { s.width = Swift.max(s.width, w) }
+        if let h = view._explicitSizeConstraint(.height) { s.height = Swift.max(s.height, h) }
         return s
     }
 
@@ -102,6 +114,20 @@ public class UIStackView: UIView {
     /// sibling is stretched or compressed (oracle probes probe_fill_nested,
     /// probe_fill_twospacers; golden stack_mixed).
     private func isAxisFlexible(_ view: UIView) -> Bool {
+        // A row with its own size constraint on the axis is NOT flexible —
+        // it asked for a length, exactly like an intrinsic one. Without this
+        // a stack of constraint-sized rows collapses every row but the last
+        // (M14, docs/REAL_APP_TEST.md).
+        if view._explicitSizeConstraint(axis == .horizontal ? .width : .height) != nil {
+            return false
+        }
+        // A NESTED stack stays flexible even though M14 gave stacks an
+        // intrinsic content size: oracle probe probe_fill_nested measures the
+        // nested stack, not its intrinsic-sized sibling, absorbing the slack
+        // (Tests/OpenUIKitTests/ProgressStackTests.testFillNestedStackIsFlexible).
+        // Real UIKit gets there through hugging priority; the intrinsic size
+        // must not be read as "inflexible".
+        if view is UIStackView { return true }
         let i = view.intrinsicContentSize
         return (axis == .horizontal ? i.width : i.height) == UIView.noIntrinsicMetric
     }
@@ -115,7 +141,26 @@ public class UIStackView: UIView {
         let intrinsic = view.intrinsicContentSize
         if intrinsic.width != UIView.noIntrinsicMetric { s.width = intrinsic.width }
         if intrinsic.height != UIView.noIntrinsicMetric { s.height = intrinsic.height }
+        // A view with an explicit SIZE CONSTRAINT of its own contributes that
+        // size, exactly as it would through UIKit's solver. Real apps size
+        // stack rows this way (`row.heightAnchor.constraint(...)`) far more
+        // often than by intrinsic content — M14, docs/REAL_APP_TEST.md.
+        if let w = view._explicitSizeConstraint(.width) { s.width = max(s.width, w) }
+        if let h = view._explicitSizeConstraint(.height) { s.height = max(s.height, h) }
         return s
+    }
+
+    /// UIKit's stack reports a content size derived from its arranged views,
+    /// which is what lets a constraint-driven stack size itself (and its
+    /// scroll view's contentSize) from its rows. Reported only when the stack
+    /// itself is constraint-driven, so every frame-based fixture scene keeps
+    /// its measured behaviour unchanged.
+    open override var intrinsicContentSize: CGSize {
+        guard !translatesAutoresizingMaskIntoConstraints,
+              !arrangedSubviews.isEmpty else { return super.intrinsicContentSize }
+        let s = sizeThatFits(bounds.size)
+        return CGSize(width: s.width == 0 ? UIView.noIntrinsicMetric : s.width,
+                      height: s.height == 0 ? UIView.noIntrinsicMetric : s.height)
     }
 
     /// Fitting ("natural") size, the analogue of systemLayoutSizeFitting

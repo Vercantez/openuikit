@@ -179,3 +179,30 @@ extension UIView {
         setNeedsLayout()
     }
 }
+
+extension UIView {
+    /// The constant of this view's own unary size constraint on `attribute`
+    /// (`.width` / `.height`), if it has one — i.e. what
+    /// `view.heightAnchor.constraint(equalToConstant:)` or
+    /// `…(greaterThanOrEqualToConstant:)` asked for. Only `multiplier == 1`
+    /// constraints against no second item count, which is what those
+    /// spellings produce.
+    ///
+    /// UIKit gets this out of the solver; OpenUIKit's UIStackView is a
+    /// frame-based layout that does not take part in one, so it reads the
+    /// number directly (Sources/OpenUIKit/UIStackView.swift, M14).
+    func _explicitSizeConstraint(_ attribute: NSLayoutConstraint.Attribute) -> CGFloat? {
+        var best: CGFloat?
+        for c in _installedConstraints
+        where c.secondItem == nil && c.firstAttribute == attribute
+            && c.firstItem === self && c.multiplier == 1
+            && c.priority.rawValue >= UILayoutPriority.defaultHigh.rawValue {
+            switch c.relation {
+            case .equal: return c.constant
+            case .greaterThanOrEqual: best = Swift.max(best ?? 0, c.constant)
+            case .lessThanOrEqual: break
+            }
+        }
+        return best
+    }
+}

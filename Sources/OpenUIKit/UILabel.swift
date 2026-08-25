@@ -29,6 +29,13 @@ open class UILabel: UIView {
     public var textAlignment: NSTextAlignment = .natural
     public var numberOfLines: Int = 1
     public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
+    /// Dynamic Type opt-in (M14). Stored so real app source compiles and so a
+    /// host that changes `UITraitCollection.current.preferredContentSizeCategory`
+    /// can tell which labels asked to follow it. OpenUIKit never changes the
+    /// category on its own — there is no Settings app — so at the default
+    /// `.large` this flag is inert, which is exactly what real UIKit does at
+    /// the default category too (UIFontMetrics.swift).
+    public var adjustsFontForContentSizeCategory: Bool = false
 
     /// Attributed content (M12). Setting it replaces `text` (the getter still
     /// reports the plain string, like real UIKit) and — matching measured

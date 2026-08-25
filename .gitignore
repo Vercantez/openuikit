@@ -28,3 +28,6 @@ Tools/oracle2/FontProbe.app/
 Tools/oracle2/AlertTextProbe.app/
 Tools/oracle/flowprobe/flowprobe
 Tools/oracle2/MenuProbe.app/
+Tools/oracle2/DynTypeProbe.app/
+Tools/oracle2/DetentProbe.app/
+out_realapp/

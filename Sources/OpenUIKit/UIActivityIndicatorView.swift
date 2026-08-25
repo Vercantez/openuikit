@@ -39,7 +39,7 @@ public enum UIActivityIndicatorViewStyle: Sendable {
     case medium, large
 }
 
-public class UIActivityIndicatorView: UIView {
+open class UIActivityIndicatorView: UIView {
     public typealias Style = UIActivityIndicatorViewStyle
 
     struct Metrics {

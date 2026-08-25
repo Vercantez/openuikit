@@ -374,7 +374,7 @@ public final class UITapGestureRecognizer: UIGestureRecognizer {
 
 // MARK: - Pan
 
-public class UIPanGestureRecognizer: UIGestureRecognizer {
+open class UIPanGestureRecognizer: UIGestureRecognizer {
     public var minimumNumberOfTouches: Int = 1
     public var maximumNumberOfTouches: Int = Int.max
     /// Activation slop: the touch must move this far (points, straight-line)

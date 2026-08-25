@@ -90,6 +90,10 @@ public final class UIPressesEvent {
 open class UIResponder {
     public init() {}
 
+    /// Accessibility attributes (storage only — see UIViewCompat.swift for
+    /// the accessors and for why nothing consults them).
+    var _accessibility = AccessibilityState()
+
     // MARK: The chain
 
     /// The next responder, or nil at the end of the chain. Overridden by

@@ -264,3 +264,21 @@ public final class UIImage {
         return out
     }
 }
+
+// MARK: - Drawing (M14, real-app harness)
+//
+// `UIImage.draw(in:)` / `draw(at:)` are how app code composites an image into
+// the current graphics context (a `UIGraphicsImageRenderer` block, or
+// `UIView.draw(_:)`). Missing entirely before M14 — found by compiling a real
+// app's image helpers (docs/REAL_APP_TEST.md).
+extension UIImage {
+    /// Draw the image scaled into `rect` in the CURRENT context.
+    public func draw(in rect: CGRect) {
+        UIGraphicsGetCurrentContext()?.draw(bitmap, in: rect)
+    }
+
+    /// Draw at natural size with its top-left at `point`.
+    public func draw(at point: CGPoint) {
+        draw(in: CGRect(origin: point, size: size))
+    }
+}

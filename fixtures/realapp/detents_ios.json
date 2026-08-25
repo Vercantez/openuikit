@@ -1,0 +1,453 @@
+{
+  "cases" : [
+    {
+      "case" : "large",
+      "contentFrame" : [
+        0,
+        59,
+        393,
+        793
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "presentedFrame" : [
+        0,
+        59,
+        393,
+        793
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "medium",
+      "contentFrame" : [
+        8,
+        403.6870229007634,
+        377,
+        440.3129770992366
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "presentedFrame" : [
+        8,
+        403.6870229007634,
+        377,
+        440.3129770992366
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-100.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        21.513513513513516,
+        741.4348394195722,
+        349.97297297297291,
+        89.051647066914256
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        11,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        21.513513513513516,
+        741.4348394195722,
+        349.97297297297291,
+        89.051647066914256
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-144.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        9.6216216216216139,
+        705.42933773468121,
+        373.75675675675677,
+        136.94904064369712
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        31.333333333333332,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        9.6216216216216139,
+        705.42933773468121,
+        373.75675675675677,
+        136.94904064369712
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-200.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        619.52671755725191,
+        377,
+        224.47328244274809
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        619.52671755725191,
+        377,
+        224.47328244274809
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-288.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        535.10941475826974,
+        377,
+        308.89058524173026
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        535.10941475826974,
+        377,
+        308.89058524173026
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-300.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        523.59796437659031,
+        377,
+        320.40203562340969
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        523.59796437659031,
+        377,
+        320.40203562340969
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-400.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        427.66921119592877,
+        377,
+        416.33078880407123
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        427.66921119592877,
+        377,
+        416.33078880407123
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-500.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        331.74045801526722,
+        377,
+        512.25954198473278
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        331.74045801526722,
+        377,
+        512.25954198473278
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-600.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        235.81170483460562,
+        377,
+        608.18829516539438
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        235.81170483460562,
+        377,
+        608.18829516539438
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-700.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        8,
+        139.88295165394402,
+        377,
+        704.11704834605598
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        8,
+        139.88295165394402,
+        377,
+        704.11704834605598
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-10000.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        0,
+        59,
+        393,
+        793
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        34,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        0,
+        59,
+        393,
+        793
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    },
+    {
+      "case" : "custom-10.0",
+      "containerHSizeClass" : 1,
+      "containerVSizeClass" : 2,
+      "contentFrame" : [
+        28,
+        815.42493638676842,
+        337,
+        8.5750636132315776
+      ],
+      "contentSafeArea" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "cornerRadius" : 0,
+      "maximumDetentValue" : 759,
+      "presentedFrame" : [
+        28,
+        815.42493638676842,
+        337,
+        8.5750636132315776
+      ],
+      "windowSafeArea" : [
+        59,
+        0,
+        34,
+        0
+      ],
+      "windowSize" : [
+        393,
+        852
+      ]
+    }
+  ]
+}

@@ -128,6 +128,15 @@ public final class UILayoutGuide {
         case safeArea
         case layoutMargins
         case readableContent
+        /// `UIScrollView.frameLayoutGuide` — the scroll view's own frame,
+        /// expressed in its CONTENT coordinate space (so its origin is the
+        /// content offset). System-anchored.
+        case scrollFrame
+        /// `UIScrollView.contentLayoutGuide` — origin pinned to the content
+        /// origin, SIZE left free so the app's constraints determine it. The
+        /// solved size is what `UIScrollView` then adopts as `contentSize`,
+        /// which is the whole point of the guide.
+        case scrollContent
     }
     let kind: Kind
 
@@ -140,6 +149,8 @@ public final class UILayoutGuide {
         case .safeArea: identifier = "UIViewSafeAreaLayoutGuide"
         case .layoutMargins: identifier = "UIViewLayoutMarginsGuide"
         case .readableContent: identifier = "UIViewReadableContentGuide"
+        case .scrollFrame: identifier = "UIScrollViewFrameLayoutGuide"
+        case .scrollContent: identifier = "UIScrollViewContentLayoutGuide"
         }
     }
 
@@ -150,8 +161,10 @@ public final class UILayoutGuide {
         guard let v = owningView else { return nil }
         let b = v.bounds
         switch kind {
-        case .custom:
+        case .custom, .scrollContent:
             return nil
+        case .scrollFrame:
+            return b
         case .safeArea:
             return b.inset(by: v.safeAreaInsets)
         case .layoutMargins:

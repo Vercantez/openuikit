@@ -33,7 +33,7 @@
 /// neither renderer's internals enter the structural layout comparison).
 final class UISegmentLabel: UILabel {}
 
-public class UISegmentedControl: UIControl {
+open class UISegmentedControl: UIControl {
     public static let noSegment = -1
 
     static let titleFontSize: CGFloat = 13

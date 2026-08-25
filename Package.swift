@@ -61,9 +61,21 @@ let package = Package(
         // without a compiler flag. The Linux build of this target still
         // imports nothing but OpenUIKit.
         .target(name: "DemoApp", dependencies: ["OpenUIKit"]),
+        // A module named `UIKit` that does nothing but `@_exported import
+        // OpenUIKit`, so vendored real-app source can keep its `import UIKit`
+        // line verbatim. See Sources/UIKitShim/UIKit.swift.
+        .target(name: "UIKit", dependencies: ["OpenUIKit"], path: "Sources/UIKitShim"),
+        // M14 real-app harness: UNMODIFIED source files lifted out of a
+        // shipping open-source iOS app (Automattic/pocket-casts-ios), compiled
+        // against OpenUIKit to measure how much of a real screen survives.
+        // Everything that is not app source lives in Shims.swift and is
+        // labelled there. Report: docs/REAL_APP_TEST.md.
+        // Same no-Foundation rule as OpenUIKit itself: openrender links this
+        // target, and Foundation's CoreGraphics types would clash with ours.
+        .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
-        .executableTarget(name: "openrender", dependencies: ["OpenUIKit"]),
+        .executableTarget(name: "openrender", dependencies: ["OpenUIKit", "RealAppProbe"]),
         // SDL2 via pkg-config (brew install sdl2 on macOS, apt install
         // libsdl2-dev on Linux). System library — nothing vendored.
         .systemLibrary(
@@ -77,7 +89,7 @@ let package = Package(
         // see Sources/openhost/main.swift header); openrender itself stays
         // byte-identical.
         // May use Foundation (it is a host, like openrender).
-        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp"]),
+        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe"]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
     ],
     cxxLanguageStandard: .cxx17

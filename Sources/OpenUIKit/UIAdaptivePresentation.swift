@@ -119,7 +119,7 @@ public final class UIPopoverPresentationController: UIPresentationController {
         switch style {
         // `.popover` here would mean "stay a popover", which this device
         // class never does — it adapts, like UIKit on a compact width.
-        case .automatic, .fullScreen, .popover: return .pageSheet
+        case .automatic, .fullScreen, .popover, .formSheet: return .pageSheet
         case .pageSheet, .alert: return style
         }
     }

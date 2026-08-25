@@ -173,6 +173,9 @@ open class UIView: UIResponder {
     // and every constant. Only the STORAGE is here — Swift extensions cannot
     // add stored properties.)
 
+    /// `registerForTraitChanges` bookings (UIViewCompat.swift).
+    var _traitRegistrations: [UITraitChangeRegistration] = []
+
     var _customLayoutGuides: [UILayoutGuide] = []
     var _safeAreaGuide: UILayoutGuide?
     var _layoutMarginsGuide: UILayoutGuide?

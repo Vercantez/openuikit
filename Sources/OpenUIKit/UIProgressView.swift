@@ -23,7 +23,7 @@
 //   (UIProgressViewModernVisualElement + image views) is excluded from
 //   layout comparison, so no internal subviews are needed.
 
-public class UIProgressView: UIView {
+open class UIProgressView: UIView {
     /// Default-style track height in points (iOS 26 modern visual element).
     static let barHeight: CGFloat = 4
     /// Minimum fill length: the pill's diameter.
