@@ -579,8 +579,12 @@ extension Canvas {
     }
 }
 
-extension CGFloat {
-    @inline(__always) func clamped(_ lo: CGFloat, _ hi: CGFloat) -> CGFloat {
+// M15: this was `extension CGFloat` back when CGFloat was a typealias for
+// Double, so it silently covered both. CGFloat is now Foundation's distinct
+// struct, and the blend paths mix the two -- hence the generic form, which
+// covers Double and CGFloat with one declaration and no overload ambiguity.
+extension FloatingPoint {
+    @inline(__always) func clamped(_ lo: Self, _ hi: Self) -> Self {
         Swift.min(hi, Swift.max(lo, self))
     }
 }

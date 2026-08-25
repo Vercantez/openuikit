@@ -281,7 +281,8 @@ open class UIGestureRecognizer {
             x += p.x
             y += p.y
         }
-        return CGPoint(x: x / CGFloat(live.count), y: y / CGFloat(live.count))
+        let n = CGFloat(live.count)
+        return CGPoint(x: x / n, y: y / n)
     }
 
     public var numberOfTouches: Int { trackedTouches.count }

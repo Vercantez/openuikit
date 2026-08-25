@@ -321,7 +321,7 @@ final class AttributedStringTests: XCTestCase {
     fileprivate func lineHeight(_ s: NSAttributedString) -> CGFloat {
         let l = UILabel()
         l.attributedText = s
-        return l.sizeThatFits(CGSize(width: 10000, height: .greatestFiniteMagnitude)).height
+        return l.sizeThatFits(CGSize(width: 10000, height: CGFloat.greatestFiniteMagnitude)).height
     }
 
     func testMixedFontLineBoxIsTheTallestRun() {

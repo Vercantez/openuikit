@@ -1,6 +1,41 @@
-// Core geometry types, API-compatible with CoreGraphics where it matters.
-// Pure Swift. No Foundation. Portable.
+// Core geometry types.
+//
+// M15 (docs/APP_COMPAT.md "Foundation coexistence"): where Foundation already
+// declares the type, we no longer declare our own -- we alias to Foundation's,
+// so there is exactly ONE `CGRect` (etc.) in any program that imports both
+// OpenUIKit and Foundation. The collision was never about missing API; it was
+// about duplicate NAMES. See docs/PORTABILITY.md.
+//
+//   * Linux corelibs-Foundation declares CGFloat/CGPoint/CGSize/CGVector/
+//     CGRect *and* the whole geometry API (minX, insetBy, integral, ...).
+//   * Darwin's Foundation re-exports the CoreGraphics structs, but the Swift
+//     members live in the CoreGraphics overlay, hence the `import CoreGraphics`
+//     below. It is a plain (non-`@_exported`) import: it makes the overlay's
+//     extension members visible, and deliberately does NOT re-export
+//     CoreGraphics' own type names, so OpenCoreGraphics' CGColor / CGLineCap /
+//     CGAffineTransform stay ours on both platforms.
+//
+// `CGAffineTransform` is NOT aliased: Foundation has none (measured), so there
+// is no collision to remove, and keeping one implementation for both platforms
+// is what keeps the Linux render byte-identical.
 
+#if canImport(Foundation)
+import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+
+public typealias CGFloat = Foundation.CGFloat
+public typealias CGPoint = Foundation.CGPoint
+public typealias CGSize = Foundation.CGSize
+public typealias CGVector = Foundation.CGVector
+public typealias CGRect = Foundation.CGRect
+
+#else
+
+// Foundation-less build (embedded / freestanding). Keep the original structs;
+// they are the reference semantics the Foundation types are checked against by
+// the oracle suite.
 public typealias CGFloat = Double
 
 public struct CGPoint: Equatable, Hashable, Sendable {
@@ -9,10 +44,6 @@ public struct CGPoint: Equatable, Hashable, Sendable {
     public init(x: CGFloat, y: CGFloat) { self.x = x; self.y = y }
     public init() { self.init(x: 0, y: 0) }
     public static let zero = CGPoint()
-
-    public func applying(_ t: CGAffineTransform) -> CGPoint {
-        CGPoint(x: t.a * x + t.c * y + t.tx, y: t.b * x + t.d * y + t.ty)
-    }
 }
 
 public struct CGSize: Equatable, Hashable, Sendable {
@@ -103,6 +134,22 @@ public struct CGRect: Equatable, Hashable, Sendable {
         let x1 = s.maxX.rounded(.up), y1 = s.maxY.rounded(.up)
         return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
     }
+}
+
+#endif
+
+// MARK: - The geometry Foundation does not have
+
+// `applying(_:)` takes OpenCoreGraphics' CGAffineTransform. On Darwin the
+// CoreGraphics overlay also declares `applying(_:)` taking *its* transform;
+// the two are distinct types, so these are ordinary overloads, not a conflict.
+extension CGPoint {
+    public func applying(_ t: CGAffineTransform) -> CGPoint {
+        CGPoint(x: t.a * x + t.c * y + t.tx, y: t.b * x + t.d * y + t.ty)
+    }
+}
+
+extension CGRect {
     /// Bounding box of the four transformed corners (CGRectApplyAffineTransform semantics).
     public func applying(_ t: CGAffineTransform) -> CGRect {
         if isNull { return self }
@@ -116,6 +163,8 @@ public struct CGRect: Equatable, Hashable, Sendable {
         return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
     }
 }
+
+// MARK: - CGAffineTransform (ours on every platform: Foundation has none)
 
 public struct CGAffineTransform: Equatable, Sendable {
     public var a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat
@@ -161,8 +210,10 @@ public struct CGAffineTransform: Equatable, Sendable {
     }
 }
 
-// Minimal transcendental helpers so we do not need Foundation/Glibc here.
-// Taylor/argument-reduction based; accurate to ~1e-15 over reduced range.
+// Minimal transcendental helpers so we do not need libm here, and -- more to
+// the point -- so both platforms use the SAME series and the Linux render stays
+// byte-identical. Taylor/argument-reduction based; accurate to ~1e-15 over
+// reduced range.
 @inlinable func _sin(_ x: CGFloat) -> CGFloat {
     var x = x.truncatingRemainder(dividingBy: 2 * .pi)
     if x > .pi { x -= 2 * .pi }

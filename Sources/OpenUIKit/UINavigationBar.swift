@@ -555,8 +555,8 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let slide = UINavigationBar.titleSlide * w
         // Where the old title slides to on push: the new back label's center
         // (the old title visually "becomes" the back button).
-        let backX = t.newBack?.backTitleCenterX
-            ?? t.oldBack?.backTitleCenterX ?? mid - slide
+        let backX: CGFloat = t.newBack?.backTitleCenterX
+            ?? t.oldBack?.backTitleCenterX ?? (mid - slide)
         if t.push {
             // Old title: center -> back position, fading out.
             place(title: t.oldTitle, centerX: mid + (backX - mid) * p,

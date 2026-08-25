@@ -265,7 +265,7 @@ open class UIStackView: UIView {
             let flexible = visiblePairs.indices.filter { isAxisFlexible(visiblePairs[$0].0) }
             if let lastFlexible = flexible.last {
                 for i in flexible { lengths[i] = 0 }
-                let slack = available - lengths.reduce(0, +)
+                let slack = available - lengths.reduce(CGFloat(0), +)
                 if slack >= 0 {
                     lengths[lastFlexible] = slack
                 } else if let firstRigid = lengths.indices.first(where: { !flexible.contains($0) }) {

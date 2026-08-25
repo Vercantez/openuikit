@@ -44,7 +44,7 @@ final class LabelGoldenLayoutTests: XCTestCase {
                                "\(name) path \(path) intrinsic.height")
             }
             if let goldSTF = gold["sizeThatFits200"] as? [Double] {
-                let s = label.sizeThatFits(CGSize(width: 200, height: .greatestFiniteMagnitude))
+                let s = label.sizeThatFits(CGSize(width: 200, height: CGFloat.greatestFiniteMagnitude))
                 XCTAssertEqual(s.width, goldSTF[0], accuracy: 0.001,
                                "\(name) path \(path) sizeThatFits200.width")
                 XCTAssertEqual(s.height, goldSTF[1], accuracy: 0.001,
