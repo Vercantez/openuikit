@@ -61,4 +61,14 @@ final class LabelGoldenLayoutTests: XCTestCase {
     func testLabelAlign() throws { try assertScene("label_align") }
     func testLabelMonoItalic() throws { try assertScene("label_mono_italic") }
     func testLabelDark() throws { try assertScene("label_dark") }
+
+    // Attributed text (M12): the same exact-match rule over the attrtext_*
+    // goldens — multi-run widths, per-line boxes with mixed fonts and
+    // baseline offsets, paragraph line spacing, and the wrapped/capped
+    // sizeThatFits200 measurements.
+    func testAttrTextRuns() throws { try assertScene("attrtext_runs") }
+    func testAttrTextParagraph() throws { try assertScene("attrtext_paragraph") }
+    func testAttrTextKernBaseline() throws { try assertScene("attrtext_kern_baseline") }
+    func testAttrTextUnderlineStrike() throws { try assertScene("attrtext_underline_strike") }
+    func testAttrTextDark() throws { try assertScene("attrtext_dark") }
 }

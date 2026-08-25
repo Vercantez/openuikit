@@ -12,12 +12,57 @@ public enum NSLineBreakMode: Sendable {
 }
 
 open class UILabel: UIView {
-    public var text: String? { didSet { setNeedsLayout() } }
+    /// Plain text. Real UIKit keeps one storage: setting `text` drops any
+    /// attributed string, and setting `attributedText` makes `text` report
+    /// the attributed string's characters.
+    public var text: String? {
+        get { _text }
+        set {
+            _text = newValue
+            _attributed = nil
+            setNeedsLayout()
+        }
+    }
+    var _text: String?
     public var font: UIFont = .systemFont(ofSize: 17)
     public var textColor: UIColor = .label
     public var textAlignment: NSTextAlignment = .natural
     public var numberOfLines: Int = 1
     public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
+
+    /// Attributed content (M12). Setting it replaces `text` (the getter still
+    /// reports the plain string, like real UIKit) and — matching measured
+    /// UIKit — ADOPTS the paragraph style's alignment and line-break mode
+    /// into the label's own properties.
+    public var attributedText: NSAttributedString? {
+        get {
+            if let a = _attributed { return a }
+            guard let text else { return nil }
+            return NSAttributedString(string: text,
+                                      attributes: [.font: font, .foregroundColor: textColor])
+        }
+        set {
+            _attributed = newValue
+            _setTextStorageFromAttributed(newValue)
+            setNeedsLayout()
+        }
+    }
+    var _attributed: NSAttributedString?
+
+    func _setTextStorageFromAttributed(_ a: NSAttributedString?) {
+        _text = a?.string
+        guard let a, a.length > 0,
+              let ps = a.attributes(at: 0, effectiveRange: nil)[.paragraphStyle]
+                as? NSParagraphStyle else { return }
+        textAlignment = ps.alignment
+        lineBreakMode = ps.lineBreakMode
+    }
+
+    /// Flattened attributed content, or nil when the label holds plain text.
+    var attributedLayoutText: AttributedTextLayout.Text? {
+        guard let a = _attributed, a.length > 0 else { return nil }
+        return AttributedTextLayout.flatten(a, defaultFont: font, defaultColor: textColor)
+    }
 
     public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -49,6 +94,7 @@ open class UILabel: UIView {
     var lineBoxHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        if let t = attributedLayoutText { return attributedSizeThatFits(t, size) }
         guard let text, !text.isEmpty else { return .zero }
         let scale = layoutScale
         let lineH = lineBoxHeight
@@ -76,11 +122,43 @@ open class UILabel: UIView {
         sizeThatFits(CGSize(width: .greatestFiniteMagnitude, height: .greatestFiniteMagnitude))
     }
 
+    // MARK: - Attributed measurement (M12)
+
+    func attributedSizeThatFits(_ t: AttributedTextLayout.Text, _ size: CGSize) -> CGSize {
+        let scale = layoutScale
+        let unbounded = !(size.width > 0) || size.width >= CGFloat.greatestFiniteMagnitude / 2
+        // A single-line label ignores the width constraint entirely, exactly
+        // like the plain path (real UIKit reports the full text width).
+        let maxWidth = (numberOfLines == 1 || unbounded)
+            ? CGFloat.greatestFiniteMagnitude / 4 : size.width
+        let lines = AttributedTextLayout.wrap(t, maxWidth: maxWidth,
+                                              maxLines: numberOfLines, scale: scale)
+        guard !lines.isEmpty else { return .zero }
+        return AttributedTextLayout.blockSize(lines, scale: scale)
+    }
+
+    /// Line layout used for drawing (bounded by the label's own width).
+    func attributedDrawLines(_ t: AttributedTextLayout.Text,
+                             width: CGFloat) -> [AttributedTextLayout.Line] {
+        AttributedTextLayout.wrap(t, maxWidth: width, maxLines: numberOfLines,
+                                  scale: layoutScale)
+    }
+
     // MARK: - Drawing
 
     open override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        if let t = attributedLayoutText {
+            let lines = attributedDrawLines(t, width: bounds.width)
+            canvas.save()
+            canvas.clip(to: bounds)
+            AttributedTextLayout.draw(t, lines: lines,
+                                      in: AttributedTextLayout.DrawContext(
+                                        canvas: canvas, traits: traitCollection,
+                                        bounds: bounds, alignment: textAlignment))
+            canvas.restore()
+            return
+        }
         guard let text, !text.isEmpty else { return }
-        let scale = canvas.scale
         let lineH = lineBoxHeight
         let metrics = FontEngine.metrics(for: font)
 
@@ -204,59 +282,75 @@ open class UILabel: UIView {
                 + (ch.value == 0x2026 ? 0 : extraAdvance)
             defer { penX += adv }
             if ch == " " { continue }
-            if inkEligible {
-                let penFloor = penX.rounded(.down)
-                let frac = penX - penFloor
-                let (tag, anchor) = GlyphInkTable.phase(size: font.pointSize, frac: frac)
-                if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
-                                                    dark: dark, tag: tag, scalar: ch) {
-                    canvas.drawMask(m.mask, width: m.width, height: m.height,
-                                    atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,
-                                    pixelY: devBaseY + m.oy,
-                                    color: color,
-                                    blendGamma: GlyphInkTable.blendGamma,
-                                    darkCalibration: dark)
-                    continue
-                }
-            }
-            guard let gf = glyphFont else { continue }
-            let g = gf.glyphIndex(of: ch)
-            if g == 0 { continue }
-            // CoreText quantizes each glyph's pen position to quarter POINTS
-            // with a +1/16pt bias (measured from Catalyst UILabel renders:
-            // pos = floor(4x + 0.25)/4 in points), then CoreGraphics
-            // quantizes the device-space origin to quarter device pixels
-            // (floor). With integer view offsets and scale 2 the CT step
-            // dominates; both are modeled here.
-            let penQ = (penX * 4 + 0.25).rounded(.down) / 4
-            let dev = CGPoint(x: penQ, y: origin.y).applying(canvas.ctm)
-            let q = 8 / scale
-            let qx = (dev.x * q).rounded(.down) / q
-            let qy = (dev.y * q).rounded(.down) / q
-            let ix = qx.rounded(.down)
-            let iy = qy.rounded(.down)
-            let phaseX = Int(((qx - ix) * 4).rounded())
-            let phaseY = qy - iy
-            if phaseY == 0 {
-                // Common case (label baselines land on whole device pixels):
-                // CG-smoothed rendering via the fitted per-phase kernels.
-                if let bmp = gf.rasterizeSmoothed(glyph: g,
-                                                  devicePixelSize: font.pointSize * scale,
-                                                  phaseX: phaseX) {
-                    canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
-                                    atPixelX: Int(ix) + bmp.offsetX,
-                                    pixelY: Int(iy) + bmp.offsetY,
-                                    color: color)
-                    continue
-                }
-            }
-            guard let bmp = gf.rasterize(glyph: g, pixelSize: font.pointSize * scale,
-                                         shiftX: qx - ix, shiftY: phaseY) else { continue }
-            canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
-                            atPixelX: Int(ix) + bmp.offsetX,
-                            pixelY: Int(iy) + bmp.offsetY,
-                            color: color)
+            drawGlyph(ch, penX: penX, baselineY: origin.y, in: canvas, font: font,
+                      dark: dark, color: color, glyphFont: glyphFont,
+                      inkEligible: inkEligible, famKey: famKey, sizeKey: sizeKey,
+                      devOX: devOX, devBaseY: devBaseY)
         }
+    }
+
+    /// Draw ONE glyph at pen position `penX` on baseline `baselineY` (both in
+    /// user space). Split out of `drawGlyphLine` unchanged so the attributed
+    /// path (per-run fonts, colors and baseline offsets) produces byte-
+    /// identical ink to the plain path.
+    static func drawGlyph(_ ch: Unicode.Scalar, penX: CGFloat, baselineY: CGFloat,
+                          in canvas: Canvas, font: UIFont, dark: Bool, color: CGColor,
+                          glyphFont: InstancedGlyphFont?,
+                          inkEligible: Bool, famKey: String, sizeKey: Int,
+                          devOX: Int, devBaseY: Int) {
+        let scale = canvas.scale
+        if inkEligible {
+            let penFloor = penX.rounded(.down)
+            let frac = penX - penFloor
+            let (tag, anchor) = GlyphInkTable.phase(size: font.pointSize, frac: frac)
+            if let m = GlyphInkTable.maskLinear(familyKey: famKey, sizeKey: sizeKey,
+                                                dark: dark, tag: tag, scalar: ch) {
+                canvas.drawMask(m.mask, width: m.width, height: m.height,
+                                atPixelX: devOX + 2 * Int(penFloor) + anchor + m.ox,
+                                pixelY: devBaseY + m.oy,
+                                color: color,
+                                blendGamma: GlyphInkTable.blendGamma,
+                                darkCalibration: dark)
+                return
+            }
+        }
+        guard let gf = glyphFont else { return }
+        let g = gf.glyphIndex(of: ch)
+        if g == 0 { return }
+        // CoreText quantizes each glyph's pen position to quarter POINTS
+        // with a +1/16pt bias (measured from Catalyst UILabel renders:
+        // pos = floor(4x + 0.25)/4 in points), then CoreGraphics
+        // quantizes the device-space origin to quarter device pixels
+        // (floor). With integer view offsets and scale 2 the CT step
+        // dominates; both are modeled here.
+        let penQ = (penX * 4 + 0.25).rounded(.down) / 4
+        let dev = CGPoint(x: penQ, y: baselineY).applying(canvas.ctm)
+        let q = 8 / scale
+        let qx = (dev.x * q).rounded(.down) / q
+        let qy = (dev.y * q).rounded(.down) / q
+        let ix = qx.rounded(.down)
+        let iy = qy.rounded(.down)
+        let phaseX = Int(((qx - ix) * 4).rounded())
+        let phaseY = qy - iy
+        if phaseY == 0 {
+            // Common case (label baselines land on whole device pixels):
+            // CG-smoothed rendering via the fitted per-phase kernels.
+            if let bmp = gf.rasterizeSmoothed(glyph: g,
+                                              devicePixelSize: font.pointSize * scale,
+                                              phaseX: phaseX) {
+                canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
+                                atPixelX: Int(ix) + bmp.offsetX,
+                                pixelY: Int(iy) + bmp.offsetY,
+                                color: color)
+                return
+            }
+        }
+        guard let bmp = gf.rasterize(glyph: g, pixelSize: font.pointSize * scale,
+                                     shiftX: qx - ix, shiftY: phaseY) else { return }
+        canvas.drawMask(bmp.mask, width: bmp.width, height: bmp.height,
+                        atPixelX: Int(ix) + bmp.offsetX,
+                        pixelY: Int(iy) + bmp.offsetY,
+                        color: color)
     }
 }
 

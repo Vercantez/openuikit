@@ -1,0 +1,103 @@
+{
+ "name": "attrtext_kern_baseline",
+ "size": [
+  320,
+  170
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     14,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "spacing",
+       "fontSize": 17,
+       "kern": 2
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     46,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "tight",
+       "fontSize": 17,
+       "kern": -0.5
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     78,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "note",
+       "fontSize": 17
+      },
+      {
+       "text": "1",
+       "fontSize": 13,
+       "baselineOffset": 6
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     118,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "H",
+       "fontSize": 17
+      },
+      {
+       "text": "2",
+       "fontSize": 13,
+       "baselineOffset": -4
+      },
+      {
+       "text": "O",
+       "fontSize": 17
+      }
+     ]
+    },
+    "sizeToFit": true
+   }
+  ]
+ }
+}

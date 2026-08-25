@@ -298,6 +298,32 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   - Gates: 81/81 scenes (with the structural gate active), 9/9 scroll traces,
     398 tests, Linux still byte-identical.
 
+- **M12 Attributed text — DONE 2026-08-25** (first cluster of the app-compat
+  phase, docs/APP_COMPAT.md: 560 uses, #1 on the punch list).
+  - **Portable Foundation-shaped types.** `NSAttributedString`,
+    `NSMutableAttributedString` (with `attributes(at:effectiveRange:)`,
+    `enumerateAttribute(s)`, `addAttribute(s)`, `setAttributes`,
+    `removeAttribute`, `append`/`insert`/`replaceCharacters`,
+    `attributedSubstring`), `NSAttributedString.Key`, `NSRange`,
+    `NSParagraphStyle`/`NSMutableParagraphStyle` and `UIFontDescriptor` —
+    declared IN OpenUIKit, no Foundation. They shadow Foundation's names;
+    the tradeoff and the one-line disambiguation are in docs/KNOWN_GAPS.md.
+  - **Layout + drawing.** `AttributedTextLayout` measures, wraps and draws
+    per run: per-run fonts/colors/kern/baseline offsets, mixed-font line
+    boxes, paragraph line spacing/indents/height clamps, underline and
+    strikethrough. `attributedText` on `UILabel`, `UITextField` and
+    `UITextView`; glyph ink goes through the existing harvested-mask
+    pipeline unchanged (`UILabel.drawGlyph` was split out of
+    `drawGlyphLine` so both paths rasterize identically).
+  - **Measured, not guessed.** `Tools/attrprobe/` probes real Catalyst UIKit
+    for the kern/pair-kerning/line-box/baseline-offset rules, and
+    `oracle textdecor` vendors the underline/strikethrough rects
+    (`Resources/text_decorations.json`) — no closed form fit the size sweep.
+  - Scene spec v5.2 adds the `attributedText` run form; six new goldens
+    (`attrtext_runs`, `attrtext_paragraph`, `attrtext_kern_baseline`,
+    `attrtext_underline_strike`, `attrtext_dark`, `attrtext_fields`).
+  - Gates: 87/87 scenes, 9/9 scroll traces, 434 tests.
+
 ## Verification principle (unchanged, applies to every milestone)
 
 Every feature ships with fixture scenes rendered by BOTH real UIKit (oracle)

@@ -1,0 +1,95 @@
+{
+ "name": "attrtext_dark",
+ "size": [
+  320,
+  130
+ ],
+ "scale": 2,
+ "style": "dark",
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     0,
+     0,
+     320,
+     130
+    ],
+    "backgroundColor": "systemBackground"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     16,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "Tokyo ",
+       "fontSize": 17
+      },
+      {
+       "text": "model",
+       "fontSize": 17,
+       "fontWeight": "semibold"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     52,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "market",
+       "fontSize": 17,
+       "underline": "single"
+      },
+      {
+       "text": " rate",
+       "fontSize": 17,
+       "color": "secondaryLabel"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     88,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "credit",
+       "fontSize": 17,
+       "kern": 1.5
+      },
+      {
+       "text": "1",
+       "fontSize": 13,
+       "baselineOffset": 5
+      }
+     ]
+    },
+    "sizeToFit": true
+   }
+  ]
+ }
+}

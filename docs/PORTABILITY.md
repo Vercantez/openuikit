@@ -30,10 +30,15 @@ and carries no host dependency.
   audit finds zero violations and zero `#if os(...)` conditionals.
 - `CQuartz` (the vendored Quartz 2D + CoreAnimation implementation) is
   portable C++17 and compiled unmodified on Linux.
-- Text **metrics** come from a vendored data table (`font_metrics.json`)
-  and text **ink** from harvested masks (`glyph_ink.json`) — both are data,
-  so layout and most glyph rendering need no font files and no system text
-  engine.
+- Text **metrics** come from a vendored data table (`font_metrics.json`),
+  text **ink** from harvested masks (`glyph_ink.json`) and
+  underline/strikethrough **rects** from a measured table
+  (`text_decorations.json`, M12) — all data, so layout and most glyph
+  rendering need no font files and no system text engine.
+- Attributed text (M12) keeps the rule: `NSAttributedString` and
+  `NSParagraphStyle` are OpenUIKit's own types, not Foundation's, precisely
+  so the attributed path stays Foundation-free off Darwin. The cost is name
+  shadowing for apps that import both — docs/KNOWN_GAPS.md.
 
 ## Two fixes this exercise required
 

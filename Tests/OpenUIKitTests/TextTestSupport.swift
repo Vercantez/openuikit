@@ -3,6 +3,10 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+// OpenUIKit's attributed-text types shadow Foundation's, and this file also
+// uses Foundation (JSONSerialization), so they are fully qualified below —
+// see docs/KNOWN_GAPS.md "Attributed text shadows Foundation's types".
+
 enum TextTestSupport {
     /// Absolute repo root, derived from this file's location.
     static let repoRoot: URL = URL(fileURLWithPath: #filePath)
@@ -83,10 +87,82 @@ enum TextTestSupport {
             default: break
             }
         }
+        if let a = j["attributedText"] as? [String: Any] {
+            label.attributedText = attributedString(a)
+        }
         if let f = j["frame"] as? [Double], f.count == 4 {
             label.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
         }
         if (j["sizeToFit"] as? Bool) == true { label.sizeToFit() }
         return label
+    }
+
+    /// Build an NSAttributedString from the scene-spec "attributedText"
+    /// object (docs/SCENE_SPEC.md v5.2) — mirrors openrender's builder.
+    static func attributedString(_ j: [String: Any]) -> OpenUIKit.NSAttributedString {
+        let out = OpenUIKit.NSMutableAttributedString()
+        for r in (j["runs"] as? [[String: Any]]) ?? [] {
+            let text = (r["text"] as? String) ?? ""
+            let size = (r["fontSize"] as? Double) ?? 17
+            let w = weight((r["fontWeight"] as? String) ?? "regular") ?? .regular
+            let f: UIFont
+            if (r["italic"] as? Bool) == true { f = .italicSystemFont(ofSize: size) }
+            else if (r["monospaced"] as? Bool) == true {
+                f = .monospacedSystemFont(ofSize: size, weight: w)
+            } else { f = .systemFont(ofSize: size, weight: w) }
+            var a: [OpenUIKit.NSAttributedString.Key: Any] = [.font: f]
+            if let c = r["color"] as? String, let color = namedColor(c) {
+                a[.foregroundColor] = color
+            }
+            if let v = r["kern"] as? Double { a[.kern] = OpenUIKit.CGFloat(v) }
+            if let v = r["baselineOffset"] as? Double { a[.baselineOffset] = OpenUIKit.CGFloat(v) }
+            if let u = r["underline"] as? String, u != "none" {
+                a[.underlineStyle] = OpenUIKit.NSUnderlineStyle.single.rawValue
+            }
+            if let u = r["strikethrough"] as? String, u != "none" {
+                a[.strikethroughStyle] = OpenUIKit.NSUnderlineStyle.single.rawValue
+            }
+            out.append(OpenUIKit.NSAttributedString(string: text, attributes: a))
+        }
+        if let p = j["paragraph"] as? [String: Any] {
+            let ps = OpenUIKit.NSMutableParagraphStyle()
+            switch (p["alignment"] as? String) ?? "natural" {
+            case "left": ps.alignment = .left
+            case "center": ps.alignment = .center
+            case "right": ps.alignment = .right
+            case "justified": ps.alignment = .justified
+            default: ps.alignment = .natural
+            }
+            if let v = p["lineSpacing"] as? Double { ps.lineSpacing = OpenUIKit.CGFloat(v) }
+            if let v = p["paragraphSpacing"] as? Double { ps.paragraphSpacing = OpenUIKit.CGFloat(v) }
+            if let v = p["lineHeightMultiple"] as? Double { ps.lineHeightMultiple = OpenUIKit.CGFloat(v) }
+            if let v = p["minimumLineHeight"] as? Double { ps.minimumLineHeight = OpenUIKit.CGFloat(v) }
+            if let v = p["maximumLineHeight"] as? Double { ps.maximumLineHeight = OpenUIKit.CGFloat(v) }
+            if let v = p["firstLineHeadIndent"] as? Double {
+                ps.firstLineHeadIndent = OpenUIKit.CGFloat(v)
+            }
+            if let v = p["headIndent"] as? Double { ps.headIndent = OpenUIKit.CGFloat(v) }
+            if let v = p["tailIndent"] as? Double { ps.tailIndent = OpenUIKit.CGFloat(v) }
+            switch (p["lineBreakMode"] as? String) ?? "wordWrap" {
+            case "charWrap": ps.lineBreakMode = .byCharWrapping
+            case "clip": ps.lineBreakMode = .byClipping
+            case "truncateHead": ps.lineBreakMode = .byTruncatingHead
+            case "truncateTail": ps.lineBreakMode = .byTruncatingTail
+            case "truncateMiddle": ps.lineBreakMode = .byTruncatingMiddle
+            default: ps.lineBreakMode = .byWordWrapping
+            }
+            out.addAttribute(.paragraphStyle, value: ps, range: out.fullRange)
+        }
+        return out
+    }
+
+    static func namedColor(_ s: String) -> UIColor? {
+        switch s {
+        case "label": return .label
+        case "secondaryLabel": return .secondaryLabel
+        case "systemBlue": return .systemBlue
+        case "systemRed": return .systemRed
+        default: return nil
+        }
     }
 }

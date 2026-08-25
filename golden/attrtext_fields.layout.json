@@ -1,0 +1,143 @@
+{
+  "name" : "attrtext_fields",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UITextField",
+      "frame" : [
+        16,
+        16,
+        288,
+        34
+      ],
+      "intrinsic" : [
+        108,
+        34
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "frame" : [
+        0,
+        0,
+        288,
+        34
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        274,
+        30
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -11,
+        4,
+        134,
+        22
+      ],
+      "path" : "0.1.0"
+    },
+    {
+      "class" : "UITextView",
+      "frame" : [
+        16,
+        66,
+        288,
+        120
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        288,
+        52
+      ],
+      "path" : "1.1"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        288,
+        52
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        288,
+        52
+      ],
+      "path" : "1.1.0.0"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -6,
+        7,
+        312,
+        38
+      ],
+      "path" : "1.1.0.1"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        0,
+        105,
+        288,
+        15
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        273,
+        0,
+        15,
+        120
+      ],
+      "path" : "1.3"
+    }
+  ]
+}

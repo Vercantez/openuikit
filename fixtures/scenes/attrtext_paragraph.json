@@ -1,0 +1,85 @@
+{
+ "name": "attrtext_paragraph",
+ "size": [
+  320,
+  260
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     16,
+     240,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "The quick brown fox jumps over the lazy dog near the river bank",
+       "fontSize": 17
+      }
+     ],
+     "paragraph": {
+      "lineSpacing": 6,
+      "alignment": "left",
+      "lineBreakMode": "wordWrap"
+     }
+    },
+    "numberOfLines": 0,
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     116,
+     240,
+     74
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "The quick brown fox jumps over the lazy dog near the river bank",
+       "fontSize": 15
+      }
+     ],
+     "paragraph": {
+      "lineSpacing": 3,
+      "alignment": "center",
+      "lineBreakMode": "wordWrap"
+     }
+    },
+    "numberOfLines": 0,
+    "backgroundColor": "#F1F3F5"
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     200,
+     240,
+     46
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "right aligned text that wraps over two lines here",
+       "fontSize": 17
+      }
+     ],
+     "paragraph": {
+      "alignment": "right",
+      "lineBreakMode": "wordWrap"
+     }
+    },
+    "numberOfLines": 2
+   }
+  ]
+ }
+}

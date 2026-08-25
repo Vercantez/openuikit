@@ -1,0 +1,100 @@
+{
+ "name": "attrtext_runs",
+ "size": [
+  320,
+  150
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     16,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "Sales ",
+       "fontSize": 24
+      },
+      {
+       "text": "report ",
+       "fontSize": 17,
+       "color": "systemBlue"
+      },
+      {
+       "text": "notes",
+       "fontSize": 13,
+       "color": "secondaryLabel"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     58,
+     288,
+     24
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "total ",
+       "fontSize": 17
+      },
+      {
+       "text": "open",
+       "fontSize": 17,
+       "fontWeight": "semibold"
+      },
+      {
+       "text": " and ",
+       "fontSize": 17
+      },
+      {
+       "text": "done",
+       "fontSize": 17,
+       "fontWeight": "bold"
+      }
+     ]
+    }
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     94,
+     288,
+     44
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "one ",
+       "fontSize": 13
+      },
+      {
+       "text": "two ",
+       "fontSize": 20
+      },
+      {
+       "text": "three",
+       "fontSize": 34
+      }
+     ]
+    },
+    "backgroundColor": "#F1F3F5"
+   }
+  ]
+ }
+}

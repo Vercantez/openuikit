@@ -342,6 +342,68 @@ func lineBreakMode(_ s: String?) -> NSLineBreakMode {
     }
 }
 
+// MARK: - Attributed text (scene spec v5.2 — M12)
+
+func underlineStyle(_ v: Any?) -> Int? {
+    if let b = v as? Bool { return b ? NSUnderlineStyle.single.rawValue : 0 }
+    guard let s = v as? String else { return nil }
+    switch s {
+    case "none": return 0
+    case "single": return NSUnderlineStyle.single.rawValue
+    case "thick": return NSUnderlineStyle.thick.rawValue
+    case "double": return NSUnderlineStyle.double.rawValue
+    default: fatalError("bad underline style \(s)")
+    }
+}
+
+func paragraphStyleFrom(_ j: JSON) -> NSParagraphStyle {
+    let p = NSMutableParagraphStyle()
+    p.alignment = textAlignment(j["alignment"] as? String)
+    if let v = num(j["lineSpacing"]) { p.lineSpacing = v }
+    if let v = num(j["paragraphSpacing"]) { p.paragraphSpacing = v }
+    if let v = num(j["paragraphSpacingBefore"]) { p.paragraphSpacingBefore = v }
+    if let v = num(j["lineHeightMultiple"]) { p.lineHeightMultiple = v }
+    if let v = num(j["minimumLineHeight"]) { p.minimumLineHeight = v }
+    if let v = num(j["maximumLineHeight"]) { p.maximumLineHeight = v }
+    if let v = num(j["firstLineHeadIndent"]) { p.firstLineHeadIndent = v }
+    if let v = num(j["headIndent"]) { p.headIndent = v }
+    if let v = num(j["tailIndent"]) { p.tailIndent = v }
+    p.lineBreakMode = lineBreakMode(j["lineBreakMode"] as? String)
+    return p
+}
+
+func attributedStringFrom(_ j: JSON, traits: UITraitCollection) -> NSAttributedString {
+    guard let runs = j["runs"] as? [JSON], !runs.isEmpty else {
+        fatalError("attributedText needs a non-empty \"runs\" array")
+    }
+    let out = NSMutableAttributedString()
+    for r in runs {
+        guard let text = r["text"] as? String else { fatalError("run needs \"text\"") }
+        var a: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]
+        a[.foregroundColor] = colorOrDie(r["color"], "attributed run", traits)
+            ?? UIColor.label.resolvedColor(with: traits)
+        if let c = colorOrDie(r["backgroundColor"], "attributed run", traits) {
+            a[.backgroundColor] = c
+        }
+        if let v = num(r["kern"]) { a[.kern] = v }
+        if let v = num(r["baselineOffset"]) { a[.baselineOffset] = v }
+        if let u = underlineStyle(r["underline"]) { a[.underlineStyle] = u }
+        if let u = underlineStyle(r["strikethrough"]) { a[.strikethroughStyle] = u }
+        if let c = colorOrDie(r["underlineColor"], "attributed run", traits) {
+            a[.underlineColor] = c
+        }
+        if let c = colorOrDie(r["strikethroughColor"], "attributed run", traits) {
+            a[.strikethroughColor] = c
+        }
+        out.append(NSAttributedString(string: text, attributes: a))
+    }
+    if let pj = j["paragraph"] as? JSON {
+        out.addAttribute(.paragraphStyle, value: paragraphStyleFrom(pj),
+                         range: NSRange(location: 0, length: out.length))
+    }
+    return out
+}
+
 func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
     var j = jIn   // chrome cases consume "subviews" themselves and clear it
     let cls = j["class"] as? String ?? "UIView"
@@ -359,6 +421,11 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         l.textAlignment = textAlignment(j["textAlignment"] as? String)
         if let n = j["numberOfLines"] as? Int { l.numberOfLines = n }
         l.lineBreakMode = lineBreakMode(j["lineBreakMode"] as? String)
+        // Attributed content last: UILabel adopts the paragraph style's
+        // alignment / line-break mode when the string carries one.
+        if let aj = j["attributedText"] as? JSON {
+            l.attributedText = attributedStringFrom(aj, traits: traits)
+        }
         v = l
     case "UIImageView":
         let iv = UIImageView()
@@ -432,6 +499,9 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         // Default .label is dynamic and would resolve light offscreen.
         else { t.textColor = UIColor.label.resolvedColor(with: traits) }
         t.tintColor = t.tintColor.resolvedColor(with: traits)
+        if let aj = j["attributedText"] as? JSON {
+            t.attributedText = attributedStringFrom(aj, traits: traits)
+        }
         v = t
     case "UITextView":
         let t = UITextView()
@@ -447,6 +517,9 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         // Default background is dynamic systemBackground — pin it to the
         // scene style (an explicit scene backgroundColor overrides below).
         t.backgroundColor = t.backgroundColor?.resolvedColor(with: traits)
+        if let aj = j["attributedText"] as? JSON {
+            t.attributedText = attributedStringFrom(aj, traits: traits)
+        }
         v = t
     case "UIScrollView":
         let s = UIScrollView()

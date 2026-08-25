@@ -50,11 +50,56 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     public var text: String = "" {
         didSet {
+            _attributed = nil
             if caretOffset > UITextCaretMath.scalarCount(text) {
                 caretOffset = UITextCaretMath.scalarCount(text)
             }
             contentDidChange()
         }
+    }
+
+    /// Attributed content (M12). Wrapping and drawing go through
+    /// AttributedTextLayout with `usesFontLineHeight` set, so a single-font
+    /// attributed string lays out exactly like the plain path. Editing
+    /// rewrites `text` and DROPS the attributes (docs/KNOWN_GAPS.md).
+    public var attributedText: NSAttributedString? {
+        get {
+            if let a = _attributed { return a }
+            guard !text.isEmpty else { return nil }
+            return NSAttributedString(string: text,
+                                      attributes: [.font: effectiveFont,
+                                                   .foregroundColor: textColor])
+        }
+        set {
+            let s = newValue?.string ?? ""
+            _attributed = newValue
+            // Assign through the storage directly (the `text` observer would
+            // clear `_attributed` again).
+            _textStorage = s
+            if caretOffset > UITextCaretMath.scalarCount(s) {
+                caretOffset = UITextCaretMath.scalarCount(s)
+            }
+            contentDidChange()
+        }
+    }
+    var _attributed: NSAttributedString?
+    /// Write-through to `text` without tripping its didSet.
+    private var _textStorage: String {
+        get { text }
+        set {
+            let saved = _attributed
+            text = newValue
+            _attributed = saved
+        }
+    }
+
+    /// Flattened attributed content, or nil when the view holds plain text.
+    var attributedLayoutText: AttributedTextLayout.Text? {
+        guard let a = _attributed, a.length > 0 else { return nil }
+        var t = AttributedTextLayout.flatten(a, defaultFont: effectiveFont,
+                                             defaultColor: textColor)
+        t.usesFontLineHeight = true
+        return t
     }
     public var font: UIFont? {
         didSet { contentDidChange() }
@@ -128,6 +173,17 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     }
 
     var contentHeight: CGFloat {
+        if let t = attributedLayoutText {
+            let lines = AttributedTextLayout.wrap(t, maxWidth: wrapWidth, maxLines: 0,
+                                                  scale: traitCollection.displayScale)
+            var h: CGFloat = 0
+            for (i, l) in lines.enumerated() {
+                h += l.height
+                if i < lines.count - 1 { h += l.spacingBelow }
+            }
+            return textContainerInset.top + textContainerInset.bottom
+                + Swift.max(h, lineHeight)
+        }
         let n = Swift.max(1, lineRuns().count)
         return textContainerInset.top + textContainerInset.bottom
             + CGFloat(n) * lineHeight
@@ -144,6 +200,27 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     // MARK: Drawing (called by the content canvas)
 
     func drawText(in canvas: Canvas) {
+        if let t = attributedLayoutText {
+            let lines = AttributedTextLayout.wrap(t, maxWidth: wrapWidth, maxLines: 0,
+                                                  scale: traitCollection.displayScale)
+            var h: CGFloat = 0
+            for (i, l) in lines.enumerated() {
+                h += l.height
+                if i < lines.count - 1 { h += l.spacingBelow }
+            }
+            // The text container is top-aligned, not centered: give
+            // AttributedTextLayout a bounds whose centering lands the block
+            // at the container inset.
+            let x = textContainerInset.left + UITextView.lineFragmentPadding
+            let box = CGRect(x: x, y: textContainerInset.top,
+                             width: Swift.max(0, wrapWidth), height: h)
+            AttributedTextLayout.draw(t, lines: lines,
+                                      in: AttributedTextLayout.DrawContext(
+                                        canvas: canvas, traits: traitCollection,
+                                        bounds: box,
+                                        alignment: t.paragraph.alignment))
+            return
+        }
         guard !text.isEmpty else { return }
         let font = effectiveFont
         let color = textColor.resolvedCGColor(with: traitCollection)
