@@ -20,23 +20,31 @@ var _appRootNav: UINavigationController?
 /// Default backing scale for `--app` mode (see header).
 let appModeDefaultScale: CGFloat = 2
 
-func buildAppScene(_ appName: String, scaleOverride: CGFloat?) -> HostScene {
-    guard appName == "demo" else {
-        fatalError("unknown app \"\(appName)\" (available: demo)")
+/// The apps `--app <name>` can boot: window size + root factory.
+let appRegistry: [String: (size: CGSize, makeRoot: () -> UINavigationController)] = [
+    "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
+    "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
+]
+
+func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
+                   style: UIUserInterfaceStyle = .light) -> HostScene {
+    guard let app = appRegistry[appName] else {
+        let names = appRegistry.keys.sorted().joined(separator: ", ")
+        fatalError("unknown app \"\(appName)\" (available: \(names))")
     }
     let scale = scaleOverride ?? appModeDefaultScale
-    let size = DemoApp.windowSize
+    let size = app.size
     GlyphInkTable.windowCompositing = false
-    UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+    UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
                                                   displayScale: scale)
     let window = UIWindow(frame: CGRect(origin: .zero, size: size))
-    let nav = DemoApp.makeRootViewController()
+    let nav = app.makeRoot()
     _appRootNav = nav
     nav.view.frame = window.bounds
     window.addSubview(nav.view)
     window.setNeedsLayout()
     window.layoutIfNeeded()
-    return HostScene(name: "demo_app", sizePt: size, scale: scale,
+    return HostScene(name: "\(appName)_app", sizePt: size, scale: scale,
                      window: window, container: nav.view,
                      sceneAnimationDeadline: 0)
 }

@@ -1,0 +1,54 @@
+{
+  "_comment": [
+    "Acceptance script for `openhost --app tasks` (the Tasks demo app).",
+    "Deterministic timeline:",
+    "  1. tap the first task's checkbox -> spring fill, then the row moves",
+    "     from TODAY into COMPLETED while the rows below close the gap",
+    "  2. tap '+ New Task' -> a task slides down into the top of TODAY",
+    "  3. tap a row body -> push the detail screen",
+    "  4. tap the 'Low' priority button -> the picker crossfades",
+    "  5. tap 'Mark Completed' -> section move + pop, both in flight",
+    "  6. flick-scroll to the bottom, tap Statistics -> push, staggered bars",
+    "  7. back button -> pop",
+    "Run: OPENUIKIT_BACKEND=quartz .build/release/openhost --app tasks \\",
+    "       --scale 2 --script scripts/tasks_demo.json --record out_host"
+  ],
+  "events": [
+    {"t": 0.40, "kind": "down", "x": 44,  "y": 124},
+    {"t": 0.45, "kind": "up",   "x": 44,  "y": 124},
+
+    {"t": 1.60, "kind": "down", "x": 195, "y": 731},
+    {"t": 1.65, "kind": "up",   "x": 195, "y": 731},
+
+    {"t": 2.60, "kind": "down", "x": 220, "y": 176},
+    {"t": 2.65, "kind": "up",   "x": 220, "y": 176},
+
+    {"t": 3.60, "kind": "down", "x": 72,  "y": 220},
+    {"t": 3.65, "kind": "up",   "x": 72,  "y": 220},
+
+    {"t": 4.40, "kind": "down", "x": 195, "y": 731},
+    {"t": 4.45, "kind": "up",   "x": 195, "y": 731},
+
+    {"t": 5.60, "kind": "down", "x": 195, "y": 600},
+    {"t": 5.65, "kind": "move", "x": 195, "y": 560},
+    {"t": 5.70, "kind": "move", "x": 195, "y": 520},
+    {"t": 5.75, "kind": "move", "x": 195, "y": 480},
+    {"t": 5.75, "kind": "up",   "x": 195, "y": 480},
+
+    {"t": 6.80, "kind": "down", "x": 195, "y": 654},
+    {"t": 6.85, "kind": "up",   "x": 195, "y": 654},
+
+    {"t": 8.80, "kind": "down", "x": 30,  "y": 42},
+    {"t": 8.85, "kind": "up",   "x": 30,  "y": 42}
+  ],
+  "captures": [0.20, 0.30, 0.45, 0.53, 0.61, 0.69, 0.77, 0.85,
+               0.93, 1.01, 1.09, 1.30, 1.62, 1.70, 1.78, 1.86,
+               1.94, 2.02, 2.10, 2.30, 2.66, 2.74, 2.82, 2.90,
+               2.98, 3.06, 3.35, 3.62, 3.70, 3.78, 3.86, 3.94,
+               4.15, 4.46, 4.54, 4.62, 4.70, 4.78, 4.86, 4.94,
+               5.02, 5.10, 5.35, 5.76, 5.84, 5.92, 6.00, 6.08,
+               6.16, 6.24, 6.32, 6.40, 6.48, 6.70, 6.86, 6.94,
+               7.02, 7.10, 7.18, 7.26, 7.34, 7.42, 7.50, 7.58,
+               7.66, 7.74, 7.82, 7.90, 7.98, 8.06, 8.14, 8.22,
+               8.50, 8.86, 8.94, 9.02, 9.10, 9.18, 9.26, 9.55]
+}

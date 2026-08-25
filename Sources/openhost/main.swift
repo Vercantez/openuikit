@@ -56,11 +56,12 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
-       openhost --app demo   [--scale N] [--script events.json --record outdir]
+       openhost --app <name> [--scale N] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
 
---app demo boots the DemoApp Settings app (docs/APP_FEEL.md) in a live
-window (default --scale 1 for sustained 60fps; see AppMode.swift).
+--app boots one of the DemoApp apps in a live window (see AppMode.swift):
+  demo   the Settings app (docs/APP_FEEL.md)
+  tasks  the Tasks todo app
 """
 
 var scenePath: String? = nil
@@ -106,7 +107,20 @@ guard (scriptPath == nil) == (recordDir == nil) else {
 
 let scene: HostScene
 if let appName {
-    scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) })
+    // --app mode has no in-app appearance switch; OPENUIKIT_APP_STYLE=dark
+    // boots it in dark mode so semantic-color coverage can be captured.
+    var style: UIUserInterfaceStyle = .light
+    if let v = ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"] {
+        switch v {
+        case "dark": style = .dark
+        case "light": style = .light
+        default:
+            FileHandle.standardError.write(
+                Data("warning: ignoring unknown OPENUIKIT_APP_STYLE=\(v) (use light|dark)\n".utf8))
+        }
+    }
+    scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) },
+                          style: style)
 } else if navDemo {
     scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
 } else {
