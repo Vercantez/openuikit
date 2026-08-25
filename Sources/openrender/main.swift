@@ -43,6 +43,17 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
             Data("warning: ignoring unknown OPENUIKIT_COMPOSITOR=\(v) (use layers|renderpass)\n".utf8))
     }
 }
+// Layer-contents caching kill switch (M8 perf; only reachable by repeated
+// renders of one tree, e.g. animation frame captures): OPENUIKIT_LAYER_CACHE=off.
+if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
+    switch v {
+    case "off", "0": OpenUIKitRuntime.layerCaching = false
+    case "on", "1": OpenUIKitRuntime.layerCaching = true
+    default:
+        FileHandle.standardError.write(
+            Data("warning: ignoring unknown OPENUIKIT_LAYER_CACHE=\(v) (use on|off)\n".utf8))
+    }
+}
 
 // Glyph-ink harvest diagnostics: OPENUIKIT_INK_LOG=<path> writes every ink
 // table miss ("W|<key>" / "O|<key>", one per line) after rendering.

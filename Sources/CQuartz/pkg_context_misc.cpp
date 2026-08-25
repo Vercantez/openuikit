@@ -26,6 +26,25 @@ QZImageRef QZBitmapContextCreateImage(QZContextRef ctx) {
     return img;
 }
 
+/* Snapshot the backing with rows reversed (bottom-up), pixels kept
+ * premultiplied. QZContextDrawImage maps image row 0 to the dest rect's TOP
+ * in y-up user space, so a top-down backing snapshot composited under a
+ * top-down flip CTM needs this orientation to land upright. Used for
+ * layer-contents caching (composite once, blit thereafter) without a lossy
+ * premul -> straight -> premul round trip. */
+QZImageRef QZBitmapContextCreateImageRowsFlipped(QZContextRef ctx) {
+    if (!ctx || !ctx->pixels) return nullptr;
+    auto *img = new QZImage();
+    img->width = ctx->width;
+    img->height = ctx->height;
+    img->rgba.resize((size_t)ctx->width * (size_t)ctx->height * 4);
+    for (int y = 0; y < ctx->height; y++) {
+        memcpy(img->rgba.data() + (size_t)(ctx->height - 1 - y) * ctx->width * 4,
+               ctx->pixels + (size_t)y * ctx->bpr, (size_t)ctx->width * 4);
+    }
+    return img;
+}
+
 void QZContextSetGrayFillColor(QZContextRef ctx, QZFloat gray, QZFloat alpha) {
     QZContextSetRGBFillColor(ctx, gray, gray, gray, alpha);
 }

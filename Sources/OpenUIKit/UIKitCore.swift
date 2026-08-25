@@ -55,6 +55,17 @@ public enum OpenUIKitRuntime {
     static func noteAnimationWork(until t: Double) {
         if t > animationWorkDeadline { animationWorkDeadline = t }
     }
+
+    /// Layer-contents caching (M8 perf): LayerBridge reuses per-view content
+    /// images and flattens visually-stable subtrees into cached composites,
+    /// so a sustained scroll recomposites cached bitmaps instead of
+    /// re-rasterizing every glyph/path each frame (docs/APP_FEEL.md
+    /// "Performance"). Purely an optimization — single-frame renders (the
+    /// golden pipeline builds a fresh tree per scene) never engage the
+    /// subtree cache. Hosts may disable for A/B or debugging (openhost /
+    /// openrender honor OPENUIKIT_LAYER_CACHE=off); the library never reads
+    /// env vars.
+    public static var layerCaching = true
 }
 
 /// Compositing strategy for view-hierarchy rendering (see

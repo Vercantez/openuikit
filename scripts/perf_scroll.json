@@ -1,0 +1,25 @@
+{
+  "_comment": [
+    "Perf probe: sustained flick-scroll on the demo app root, then 60",
+    "captures at 60fps spacing during the momentum/deceleration phase —",
+    "each capture line prints its full-frame render time. Used to measure",
+    "the sustained-scroll frame cost (docs/APP_FEEL.md Performance).",
+    "Run: swift run -c release openhost --app demo --scale 1 \\",
+    "       --script scripts/perf_scroll.json --record out_perf"
+  ],
+  "events": [
+    {"t": 0.50, "kind": "down", "x": 195, "y": 620},
+    {"t": 0.55, "kind": "move", "x": 195, "y": 570},
+    {"t": 0.60, "kind": "move", "x": 195, "y": 520},
+    {"t": 0.65, "kind": "move", "x": 195, "y": 470},
+    {"t": 0.65, "kind": "up",   "x": 195, "y": 470}
+  ],
+  "captures": [
+    0.667, 0.683, 0.700, 0.717, 0.733, 0.750, 0.767, 0.783, 0.800, 0.817,
+    0.833, 0.850, 0.867, 0.883, 0.900, 0.917, 0.933, 0.950, 0.967, 0.983,
+    1.000, 1.017, 1.033, 1.050, 1.067, 1.083, 1.100, 1.117, 1.133, 1.150,
+    1.167, 1.183, 1.200, 1.217, 1.233, 1.250, 1.267, 1.283, 1.300, 1.317,
+    1.333, 1.350, 1.367, 1.383, 1.400, 1.417, 1.433, 1.450, 1.467, 1.483,
+    1.500, 1.517, 1.533, 1.550, 1.567, 1.583, 1.600, 1.617, 1.633, 1.650
+  ]
+}

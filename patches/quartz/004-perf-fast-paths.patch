@@ -1,0 +1,368 @@
+diff --git a/Sources/CQuartz/include/quartz/context_misc.h b/Sources/CQuartz/include/quartz/context_misc.h
+index 8dbbb32..a4a0749 100644
+--- a/Sources/CQuartz/include/quartz/context_misc.h
++++ b/Sources/CQuartz/include/quartz/context_misc.h
+@@ -7,6 +7,9 @@ extern "C" {
+ 
+ void QZContextResetClip(QZContextRef ctx);
+ QZImageRef QZBitmapContextCreateImage(QZContextRef ctx);
++/* Same snapshot with rows reversed (bottom-up), premultiplied preserved —
++ * the orientation layer-contents need under a top-down flip CTM. */
++QZImageRef QZBitmapContextCreateImageRowsFlipped(QZContextRef ctx);
+ void QZContextSetGrayFillColor(QZContextRef ctx, QZFloat gray, QZFloat alpha);
+ void QZContextSetGrayStrokeColor(QZContextRef ctx, QZFloat gray, QZFloat alpha);
+ QZPoint QZContextConvertPointToDeviceSpace(QZContextRef ctx, QZPoint p);
+diff --git a/Sources/CQuartz/pkg_context_misc.cpp b/Sources/CQuartz/pkg_context_misc.cpp
+index 4ac8841..4a800d6 100644
+--- a/Sources/CQuartz/pkg_context_misc.cpp
++++ b/Sources/CQuartz/pkg_context_misc.cpp
+@@ -26,6 +26,25 @@ QZImageRef QZBitmapContextCreateImage(QZContextRef ctx) {
+     return img;
+ }
+ 
++/* Snapshot the backing with rows reversed (bottom-up), pixels kept
++ * premultiplied. QZContextDrawImage maps image row 0 to the dest rect's TOP
++ * in y-up user space, so a top-down backing snapshot composited under a
++ * top-down flip CTM needs this orientation to land upright. Used for
++ * layer-contents caching (composite once, blit thereafter) without a lossy
++ * premul -> straight -> premul round trip. */
++QZImageRef QZBitmapContextCreateImageRowsFlipped(QZContextRef ctx) {
++    if (!ctx || !ctx->pixels) return nullptr;
++    auto *img = new QZImage();
++    img->width = ctx->width;
++    img->height = ctx->height;
++    img->rgba.resize((size_t)ctx->width * (size_t)ctx->height * 4);
++    for (int y = 0; y < ctx->height; y++) {
++        memcpy(img->rgba.data() + (size_t)(ctx->height - 1 - y) * ctx->width * 4,
++               ctx->pixels + (size_t)y * ctx->bpr, (size_t)ctx->width * 4);
++    }
++    return img;
++}
++
+ void QZContextSetGrayFillColor(QZContextRef ctx, QZFloat gray, QZFloat alpha) {
+     QZContextSetRGBFillColor(ctx, gray, gray, gray, alpha);
+ }
+diff --git a/Sources/CQuartz/qz_context.cpp b/Sources/CQuartz/qz_context.cpp
+index 35738fd..fd26e09 100644
+--- a/Sources/CQuartz/qz_context.cpp
++++ b/Sources/CQuartz/qz_context.cpp
+@@ -83,10 +83,172 @@ static void shadow_blur_approx(std::vector<float> &img, int w, int h, double blu
+     }
+ }
+ 
++/* ---- Axis-aligned rectangle fast paths ------------------------------- */
++/* Layer backgrounds, plain view fills and masksToBounds clips are almost
++ * always axis-aligned rectangles; the generic pipeline pays a full-surface
++ * float coverage buffer plus kAASamples scanline passes for them. These
++ * helpers reproduce the rasterizer's coverage model exactly (vertical
++ * kAASamples subsample quantization, analytic horizontal spans, the same
++ * floor(cov*255) application) without any of that. */
++
++/* Single closed 4-corner polyline forming an axis-aligned rect. */
++static bool polys_as_rect(const std::vector<Polyline> &polys,
++                          double *ox0, double *oy0, double *ox1, double *oy1) {
++    if (polys.size() != 1) return false;
++    const std::vector<Vec2> &p = polys[0].pts;
++    size_t n = p.size();
++    if (n == 5) {
++        if (std::fabs(p[4].x - p[0].x) > 1e-9 ||
++            std::fabs(p[4].y - p[0].y) > 1e-9) return false;
++        n = 4;
++    }
++    if (n != 4) return false;
++    double minx = p[0].x, maxx = p[0].x, miny = p[0].y, maxy = p[0].y;
++    for (size_t i = 1; i < 4; i++) {
++        minx = std::min(minx, p[i].x); maxx = std::max(maxx, p[i].x);
++        miny = std::min(miny, p[i].y); maxy = std::max(maxy, p[i].y);
++    }
++    if (maxx - minx <= 1e-9 || maxy - miny <= 1e-9) return false;
++    unsigned corners = 0;
++    for (size_t i = 0; i < 4; i++) {
++        bool xmin = std::fabs(p[i].x - minx) < 1e-9;
++        bool xmax = std::fabs(p[i].x - maxx) < 1e-9;
++        bool ymin = std::fabs(p[i].y - miny) < 1e-9;
++        bool ymax = std::fabs(p[i].y - maxy) < 1e-9;
++        if ((!xmin && !xmax) || (!ymin && !ymax)) return false;
++        corners |= 1u << ((xmax ? 1 : 0) | (ymax ? 2 : 0));
++    }
++    if (corners != 0xF) return false;
++    *ox0 = minx; *oy0 = miny; *ox1 = maxx; *oy1 = maxy;
++    return true;
++}
++
++/* Vertical coverage of [y0,y1) for pixel row y, matching rasterize():
++ * kAASamples subsample centers (AA) or the pixel-center threshold. */
++static double rect_vcov(double y0, double y1, int y, bool antialias) {
++    if (!antialias) {
++        double yc = y + 0.5;
++        return (yc >= y0 && yc < y1) ? 1.0 : 0.0;
++    }
++    if (y >= y0 && (y + 1) <= y1) return 1.0;
++    int cnt = 0;
++    for (int s = 0; s < kAASamples; s++) {
++        double ys = y + (s + 0.5) / (double)kAASamples;
++        if (ys >= y0 && ys < y1) cnt++;
++    }
++    return cnt / (double)kAASamples;
++}
++
++static bool fill_rect_fast(QZContext *ctx, const std::vector<Polyline> &polys,
++                           Color color) {
++    if (ctx->gs.shadow || ctx->gs.blend != kQZBlendModeNormal) return false;
++    double x0, y0, x1, y1;
++    if (!polys_as_rect(polys, &x0, &y0, &x1, &y1)) return false;
++    ensure_clip(ctx->gs, ctx->width, ctx->height);
++    const int w = ctx->width, h = ctx->height;
++    int ry0 = clampi((int)std::floor(y0), 0, h);
++    int ry1 = clampi((int)std::ceil(y1), 0, h);
++    double cx0 = std::max(x0, 0.0), cx1 = std::min(x1, (double)w);
++    if (cx1 <= cx0 || ry0 >= ry1) return true; /* fully clipped out */
++    int rx0 = clampi((int)std::floor(cx0), 0, w);
++    int rx1 = clampi((int)std::ceil(cx1), 0, w);
++    if (rx0 >= rx1) return true;
++
++    /* Row-invariant horizontal coverage per column (add_span model). */
++    std::vector<float> hcov((size_t)(rx1 - rx0));
++    for (int x = rx0; x < rx1; x++) {
++        double l = std::max((double)x, cx0), r = std::min((double)(x + 1), cx1);
++        hcov[x - rx0] = (float)std::max(0.0, r - l);
++    }
++
++    const bool aa = ctx->gs.antialias;
++    const double galpha = ctx->gs.alpha;
++    /* Constant full-coverage source (cov == 1: floor(255)/255 == 1). */
++    double fullA = clampd(color.a * galpha, 0.0, 1.0);
++    uint8_t fr = u8_from_unit(color.r * fullA), fg = u8_from_unit(color.g * fullA);
++    uint8_t fb = u8_from_unit(color.b * fullA), fa = u8_from_unit(fullA);
++    uint8_t patBytes[4] = {fr, fg, fb, fa};
++    uint32_t pat32;
++    memcpy(&pat32, patBytes, 4);
++    const bool opaque = (fa == 255);
++    const uint8_t *clip = ctx->gs.clip.data();
++
++    for (int y = ry0; y < ry1; y++) {
++        double vc = rect_vcov(y0, y1, y, aa);
++        if (vc <= 0) continue;
++        uint8_t *drow = ctx->pixels + (size_t)y * ctx->bpr;
++        const uint8_t *crow = clip + (size_t)y * w;
++        const bool fullRow = vc >= 1.0;
++        for (int x = rx0; x < rx1; x++) {
++            const float hx = hcov[x - rx0];
++            const uint8_t cl = crow[x];
++            if (cl == 0) continue;
++            if (fullRow && cl == 255 && hx >= 1.0f) {
++                if (opaque) {
++                    /* Opaque interior: run of straight stores. */
++                    int xr = x + 1;
++                    while (xr < rx1 && crow[xr] == 255 && hcov[xr - rx0] >= 1.0f) xr++;
++                    uint32_t *d32 = (uint32_t *)(drow + (size_t)x * 4);
++                    for (int i = x; i < xr; i++) *d32++ = pat32;
++                    x = xr - 1;
++                } else {
++                    blend_pixel(drow + (size_t)x * 4, fr, fg, fb, fa,
++                                kQZBlendModeNormal);
++                }
++                continue;
++            }
++            float cov = (float)vc * hx;
++            if (cl != 255) cov *= cl / 255.0f;
++            if (cov <= 1.0f / 255.0f) continue;
++            /* Same application as blend_coverage. */
++            float c8 = std::floor(cov * 255.0f) / 255.0f;
++            double a = clampd(color.a * galpha * (double)c8, 0.0, 1.0);
++            blend_pixel(drow + (size_t)x * 4,
++                        u8_from_unit(color.r * a), u8_from_unit(color.g * a),
++                        u8_from_unit(color.b * a), u8_from_unit(a),
++                        kQZBlendModeNormal);
++        }
++    }
++    return true;
++}
++
++/* Rect clip: multiply the clip mask analytically (memset outside, exact
++ * edge coverage), matching clip_with_path's rasterize + multiply. */
++static bool clip_rect_fast(QZContext *ctx, const std::vector<Polyline> &polys) {
++    double x0, y0, x1, y1;
++    if (!polys_as_rect(polys, &x0, &y0, &x1, &y1)) return false;
++    ensure_clip(ctx->gs, ctx->width, ctx->height);
++    const int w = ctx->width, h = ctx->height;
++    const bool aa = ctx->gs.antialias;
++    uint8_t *clip = ctx->gs.clip.data();
++    double cx0 = std::max(x0, 0.0), cx1 = std::min(x1, (double)w);
++    int rx0 = clampi((int)std::floor(cx0), 0, w);
++    int rx1 = clampi((int)std::ceil(cx1), 0, w);
++    for (int y = 0; y < h; y++) {
++        uint8_t *crow = clip + (size_t)y * w;
++        double vc = (cx1 > cx0) ? rect_vcov(y0, y1, y, aa) : 0.0;
++        if (vc <= 0) {
++            memset(crow, 0, (size_t)w);
++            continue;
++        }
++        if (rx0 > 0) memset(crow, 0, (size_t)rx0);
++        if (rx1 < w) memset(crow + rx1, 0, (size_t)(w - rx1));
++        for (int x = rx0; x < rx1; x++) {
++            double l = std::max((double)x, cx0), r = std::min((double)(x + 1), cx1);
++            float c = (float)(vc * std::max(0.0, r - l));
++            if (c >= 1.0f) continue; /* multiply by 1 */
++            unsigned v = (unsigned)(c * crow[x] + 0.5f);
++            crow[x] = (uint8_t)(v > 255 ? 255 : v);
++        }
++    }
++    return true;
++}
++
+ static void fill_polylines(QZContext *ctx, const std::vector<Polyline> &polys,
+                            bool even_odd, Color color) {
+     if (polys.empty()) return;
+     if (qz_pkg_try_pattern_fill(ctx, polys, even_odd, color)) return;
++    if (fill_rect_fast(ctx, polys, color)) return;
+     std::vector<Edge> edges;
+     build_edges(polys, edges);
+     std::vector<float> cov((size_t)ctx->width * (size_t)ctx->height);
+@@ -173,6 +335,7 @@ static void clip_with_path(QZContext *ctx, bool even_odd) {
+     std::vector<Polyline> polys;
+     flatten_path(tp, std::max(0.08, std::min(0.25, ctx->gs.flatness * 0.25)), polys);
+     close_open_for_fill(polys);
++    if (clip_rect_fast(ctx, polys)) return;
+     std::vector<Edge> edges;
+     build_edges(polys, edges);
+     std::vector<float> cov((size_t)ctx->width * (size_t)ctx->height);
+@@ -493,6 +656,128 @@ static void sample_image(const QZImage *img, double u, double v,
+     }
+ }
+ 
++/* Fast path for the overwhelmingly common compositing case: the image maps
++ * onto the destination at unit scale with no rotation/skew (layer-contents
++ * blits, cached-composite blits). The generic path pays a per-pixel affine
++ * apply + two pow() interpolation-weight evaluations; at unit scale the
++ * interpolation weights and the in-image bounds are ROW CONSTANTS, so the
++ * inner loop reduces to a 1-tap (integral offset) or 4-tap (fractional
++ * offset) premultiplied source-over blend. Sampling math matches
++ * sample_image exactly (same ease weights, same rounding), so output is
++ * bit-identical to the generic loop for every pixel it handles.
++ * Returns false (nothing drawn) when the mapping/state disqualifies. */
++static bool draw_image_unit_scale(QZContext *ctx, const QZImage *image,
++                                  QZAffineTransform mem_from_img,
++                                  int x0, int y0, int x1, int y1) {
++    if (ctx->gs.blend != kQZBlendModeNormal) return false;
++    if (ctx->gs.interp == kQZInterpolationNone) return false;
++    const double eps = 1.0 / 4096.0;
++    /* Unit scale, no rotation/skew. d may be +1 (direct) or -1 (row-
++     * mirrored — the standard case for layer contents: the top-down flip
++     * CTM and DrawImage's bottom-up image mapping compose to a mirror). */
++    if (std::fabs(mem_from_img.a - 1) > eps ||
++        std::fabs(mem_from_img.b) > eps || std::fabs(mem_from_img.c) > eps)
++        return false;
++    bool yMirror;
++    if (std::fabs(mem_from_img.d - 1) <= eps) yMirror = false;
++    else if (std::fabs(mem_from_img.d + 1) <= eps) yMirror = true;
++    else return false;
++    const int w = image->width, h = image->height;
++    if (w <= 0 || h <= 0) return true; /* nothing to draw */
++    const double ga = ctx->gs.alpha;
++    const double tx = mem_from_img.tx, ty = mem_from_img.ty;
++
++    /* Generic loop inverse-maps dest pixel centers into image space and
++     * rejects samples outside [0,w)x[0,h); the bilinear sampler subtracts
++     * 0.5. At unit scale the sampler's floor/frac decompose into a per-
++     * pixel integer offset plus a CONSTANT fraction:
++     *   x: u = x + gx,             gx = -tx
++     *   y: v = y + gy              (d=+1, gy = -ty)
++     *      v = K - y               (d=-1, K = ty - 1)          */
++    const double gx = -tx;
++    const double fGx = std::floor(gx);
++    const int Gx = (int)fGx;
++    double hx = gx - fGx;
++    /* Snap sub-1/4096 fractions to the integral fast case (positions come
++     * from device-snapped layer geometry; tolerate float noise). */
++    if (hx < eps) hx = 0; else if (hx > 1 - eps) { hx = 0; }
++    const int Gx2 = (gx - fGx > 1 - eps) ? Gx + 1 : Gx;
++
++    const double gy = yMirror ? (ty - 1) : -ty;  /* v = gy ± y */
++    const double fGy = std::floor(gy);
++    const int Gy = (int)fGy;
++    double hy = gy - fGy;
++    if (hy < eps) hy = 0; else if (hy > 1 - eps) { hy = 0; }
++    const int Gy2 = (gy - fGy > 1 - eps) ? Gy + 1 : Gy;
++
++    const double wx = hx > 0 ? ease_inout_pow(hx) : 0;
++    const double wy = hy > 0 ? ease_inout_pow(hy) : 0;
++
++    /* Dest columns whose sample point lies inside the image:
++     * 0 <= x + 0.5 + gx < w  (same test as the generic loop). */
++    int xa = x0, xb = x1;
++    while (xa < xb && (xa + 0.5 + gx < 0 || xa + 0.5 + gx >= w)) xa++;
++    while (xb > xa && ((xb - 1) + 0.5 + gx < 0 || (xb - 1) + 0.5 + gx >= w)) xb--;
++    const uint8_t *src = image->rgba.data();
++    for (int y = y0; y < y1; y++) {
++        const double iy = yMirror ? (ty - (y + 0.5)) : (y + 0.5 - ty);
++        if (iy < 0 || iy >= h) continue;
++        /* Sampler rows: floor/frac of v with the constant fraction hy. */
++        const int vRow = yMirror ? (Gy2 - y) : (y + Gy2);
++        const int ry0 = clampi(vRow, 0, h - 1);
++        const int ry1 = clampi(vRow + (wy > 0 ? 1 : 0), 0, h - 1);
++        const uint8_t *r0 = src + (size_t)ry0 * w * 4;
++        const uint8_t *r1 = src + (size_t)ry1 * w * 4;
++        uint8_t *drow = ctx->pixels + (size_t)y * ctx->bpr;
++        const uint8_t *crow = ctx->gs.clip.data() + (size_t)y * ctx->width;
++        if (wx == 0 && wy == 0 && ga >= 1.0) {
++            /* 1-tap: straight copy/blend of source texels. */
++            for (int x = xa; x < xb; x++) {
++                const uint8_t c = crow[x];
++                if (c == 0) continue;
++                const int ix = clampi(x + Gx2, 0, w - 1);
++                const uint8_t *s = r0 + (size_t)ix * 4;
++                if (s[3] == 0) continue;
++                uint8_t *p = drow + (size_t)x * 4;
++                if (c == 255) {
++                    if (s[3] == 255) { p[0]=s[0]; p[1]=s[1]; p[2]=s[2]; p[3]=255; }
++                    else blend_pixel(p, s[0], s[1], s[2], s[3], kQZBlendModeNormal);
++                } else {
++                    const float cov = c / 255.0f;
++                    blend_pixel(p, (uint8_t)(s[0] * cov), (uint8_t)(s[1] * cov),
++                                (uint8_t)(s[2] * cov), (uint8_t)(s[3] * cov),
++                                kQZBlendModeNormal);
++                }
++            }
++            continue;
++        }
++        for (int x = xa; x < xb; x++) {
++            const uint8_t c = crow[x];
++            if (c == 0) continue;
++            /* Same 4 taps and arithmetic as sample_image (clamped edges). */
++            const int ix0 = clampi(x + Gx2, 0, w - 1);
++            const int ix1 = clampi(x + Gx2 + (wx > 0 ? 1 : 0), 0, w - 1);
++            const uint8_t *p00 = r0 + (size_t)ix0 * 4;
++            const uint8_t *p10 = r0 + (size_t)ix1 * 4;
++            const uint8_t *p01 = r1 + (size_t)ix0 * 4;
++            const uint8_t *p11 = r1 + (size_t)ix1 * 4;
++            uint8_t s[4];
++            for (int i = 0; i < 4; i++) {
++                const double a = p00[i] + (p10[i] - p00[i]) * wx;
++                const double b = p01[i] + (p11[i] - p01[i]) * wx;
++                s[i] = clamp8((int)(a + (b - a) * wy + 0.5));
++            }
++            if (s[3] == 0) continue;
++            const float cov = c / 255.0f;
++            blend_pixel(drow + (size_t)x * 4,
++                        (uint8_t)(s[0] * cov * ga), (uint8_t)(s[1] * cov * ga),
++                        (uint8_t)(s[2] * cov * ga), (uint8_t)(s[3] * cov * ga),
++                        kQZBlendModeNormal);
++        }
++    }
++    return true;
++}
++
+ void QZContextDrawImage(QZContextRef ctx, QZRect rect, QZImageRef image) {
+     if (!ctx || !image) return;
+     /* Inverse-map each pixel center from memory space to image space. */
+@@ -517,6 +802,9 @@ void QZContextDrawImage(QZContextRef ctx, QZRect rect, QZImageRef image) {
+     int x1 = clampi((int)std::ceil(d.origin.x + d.size.width) + 1, 0, ctx->width);
+     int y1 = clampi((int)std::ceil(d.origin.y + d.size.height) + 1, 0, ctx->height);
+ 
++    if (draw_image_unit_scale(ctx, image, mem_from_img, x0, y0, x1, y1))
++        return;
++
+     for (int y = y0; y < y1; y++) {
+         for (int x = x0; x < x1; x++) {
+             Vec2 img = apply(img_from_mem, Vec2{x + 0.5, y + 0.5});

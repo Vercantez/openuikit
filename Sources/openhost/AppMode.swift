@@ -5,10 +5,11 @@
 // animation-clock / render loop as scene mode (runLive / runScripted in
 // HostCore.swift). No Foundation here (same rule as HostCore.swift).
 //
-// Default scale is 1 in app mode: sustained scrolling/transition animation
-// redraws the full frame every vsync, and a full 390x780 frame renders in
-// ~13ms at scale 1 vs ~50ms at scale 2 on the reference machine (see
-// docs/APP_FEEL.md "Performance"). Pass --scale 2 for crisp stills.
+// Default scale is 2 (crisp): with M8 layer-contents caching a sustained
+// scroll recomposites cached card/screen bitmaps instead of re-rasterizing,
+// and a steady scroll frame renders in ~7ms at scale 2 (~2ms at scale 1) on
+// the reference machine — comfortably 60fps either way (see
+// docs/APP_FEEL.md "Performance").
 
 import OpenUIKit
 import DemoApp
@@ -17,7 +18,7 @@ import DemoApp
 var _appRootNav: UINavigationController?
 
 /// Default backing scale for `--app` mode (see header).
-let appModeDefaultScale: CGFloat = 1
+let appModeDefaultScale: CGFloat = 2
 
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?) -> HostScene {
     guard appName == "demo" else {

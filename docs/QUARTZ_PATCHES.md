@@ -70,3 +70,41 @@ CoreAnimation (verified against golden/shadows_*, alpha_shadow_group):
 Upstream fix: adopt wholesale — the old behavior disagrees with CA in all
 four aspects. `set_layer_shadow` / `add_shadow_silhouette` / `draw_border`
 are self-contained statics in qz_layer.cpp.
+
+## 004-perf-fast-paths.patch
+
+`src/qz_context.cpp`, `src/pkg_context_misc.cpp`,
+`include/quartz/context_misc.h` — CPU-compositing fast paths that make the
+M8 layer-contents caching pay off (docs/APP_FEEL.md "Performance"). All are
+output-preserving: each reproduces the generic pipeline's arithmetic
+(coverage model, floor(cov*255) application, premul rounding) for the
+special case it handles, and falls through to the generic code otherwise —
+the 56-scene golden suite is byte-stable across the patch.
+
+- **`draw_image_unit_scale`** (QZContextDrawImage): when the image→memory
+  mapping is unit-scale with no rotation/skew (`a≈1`, `d≈±1`; `d=-1` is the
+  standard layer-contents case — the top-down flip CTM composes with
+  DrawImage's bottom-up image mapping into a row mirror), the per-pixel
+  affine apply and the two per-pixel `pow()` ease-weight evaluations of the
+  interpolator collapse into row constants: a 1-tap blend for integral
+  offsets (straight premul copy for opaque runs) or a constant-weight 4-tap
+  for fractional ones. This is the path every contents blit (cached
+  composites, glyph/content images) takes.
+- **`fill_rect_fast`** (fill_polylines, after the pattern hook): a single
+  axis-aligned rectangle fill (layer backgrounds, plain views) skips the
+  full-surface float coverage buffer + kAASamples scanline passes; vertical
+  coverage uses the same kAASamples subsample quantization, horizontal the
+  same analytic span math, with a 4-byte-store run for opaque interiors.
+  Bails to generic for shadows, patterns, non-Normal blends.
+- **`clip_rect_fast`** (clip_with_path): axis-aligned rect clips (every
+  `masksToBounds` on an untransformed layer) multiply the clip mask
+  analytically — memset outside, exact fractional edges — instead of
+  rasterizing a full-surface coverage buffer.
+- **`QZBitmapContextCreateImageRowsFlipped`**: premultiplied backing
+  snapshot with rows reversed — the orientation layer contents need under a
+  top-down flip CTM. Lets the subtree composite cache reuse a rendered
+  offscreen without a lossy premul→straight→premul round trip.
+
+Upstream fix: adopt wholesale; the fast paths are self-contained statics
+plus one additive API. Consider also bbox-limiting the generic coverage
+buffers, which would shrink the remaining gap for rounded-rect fills.

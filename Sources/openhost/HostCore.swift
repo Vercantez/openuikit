@@ -452,13 +452,17 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
         case .capture(let t):
             let t0 = SDL_GetPerformanceCounter()
             scene.window.layoutIfNeeded() // layout before draw (as in runLive)
+            LayerBridge.debugCompositeHits = 0
+            LayerBridge.debugCompositeBuilds = 0
+            LayerBridge.debugDirectLayers = 0
             let bmp = UIRenderer.render(scene.window, scale: scene.scale)
             let ms = Double(SDL_GetPerformanceCounter() &- t0)
                 / Double(SDL_GetPerformanceFrequency()) * 1000
             host.present(bmp)
             let file = "\(scene.name).\(captureSuffix(t)).png"
             try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(file)")
-            print("captured \(file) (render \(fmt3(ms)) ms)")
+            print("captured \(file) (render \(fmt3(ms)) ms, cache hit/build/direct "
+                  + "\(LayerBridge.debugCompositeHits)/\(LayerBridge.debugCompositeBuilds)/\(LayerBridge.debugDirectLayers))")
             written.append(file)
         }
     }
