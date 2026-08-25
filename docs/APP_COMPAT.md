@@ -36,7 +36,7 @@ types, not 737. That is why the punch list is tractable.
 
 | cluster | uses | notes |
 |---|---|---|
-| **Attributed text** | 560 | `NSAttributedString` + rendering it: the *type* is Foundation, the *layout and drawing* are ours. Paragraph styles, attachments, `UIFontDescriptor`. Interacts with the text engine's harvested-ink model. |
+| ~~**Attributed text**~~ | 560 | **DONE (M12).** `NSAttributedString` / `NSMutableAttributedString` / `NSParagraphStyle` / `UIFontDescriptor` are portable OpenUIKit types (they SHADOW Foundation's rather than bridging — docs/KNOWN_GAPS.md), with per-run layout and drawing in `AttributedTextLayout` and `attributedText` on `UILabel` / `UITextField` / `UITextView`. Six `attrtext_*` oracle fixtures. Still open: attributed truncation, attachments, underline patterns. |
 | ~~**App lifecycle / environment**~~ | 543 | **DONE (M12).** `UIResponder` is the real base class with UIKit's exact chain; `UIApplication` + `UIApplicationDelegate` + a minimal scene layer; host-driven `UIScreen`; documented-fixed `UIDevice`. `openhost --app` boots through `UIApplicationMain` and a real app delegate. No run loop, so the host drives the transitions — docs/KNOWN_GAPS.md "App lifecycle / environment". |
 | **Alerts** | 332 | `UIAlertController` + `UIAlertAction` (alert and action-sheet styles). |
 | **Collection view** | 212 | `UICollectionView`, cells, `UICollectionViewFlowLayout`, data source/delegate. Reuse machinery can follow `UITableView`'s. |

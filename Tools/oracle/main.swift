@@ -115,6 +115,96 @@ func dumpFontMetrics(outfile: String) throws {
     print("wrote \(outfile) (\(fonts.count) font entries)")
 }
 
+// MARK: - Text decoration metrics dump (M12 — attributed text)
+//
+// Real UIKit's underline / strikethrough rects are NOT a simple rounding of
+// CTFontGetUnderlinePosition/Thickness (fits were attempted and failed —
+// see docs/KNOWN_GAPS.md), so like font metrics and system colors they are
+// MEASURED and vendored. Method: render one label sized to exactly one line
+// box (so the text origin is unambiguous), once plain and once decorated,
+// and difference the two. CG smooths the rule with the same 3-tap text
+// filter it uses for glyphs (edge rows land at ~12 % of the plateau), so
+// rows above half the peak are the rule rect's own device rows.
+
+func decorationRect(font: UIFont, key: NSAttributedString.Key) -> (top: CGFloat, thickness: CGFloat)? {
+    let probe = UILabel()
+    probe.font = font
+    probe.text = "nn"
+    let lh = probe.sizeThatFits(CGSize(width: 10000, height: CGFloat.greatestFiniteMagnitude)).height
+    let traits = UITraitCollection(userInterfaceStyle: .light)
+    func rows(_ decorated: Bool) -> [UInt8] {
+        let l = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: lh))
+        l.numberOfLines = 1
+        var attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: UIColor.black]
+        if decorated { attrs[key] = NSUnderlineStyle.single.rawValue }
+        l.attributedText = NSAttributedString(string: "nn", attributes: attrs)
+        let w = 400, h = Int(lh * 2)
+        let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8,
+                            bytesPerRow: w * 4,
+                            space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        ctx.setFillColor(UIColor.white.cgColor)
+        ctx.fill(CGRect(x: 0, y: 0, width: CGFloat(w), height: CGFloat(h)))
+        ctx.translateBy(x: 0, y: CGFloat(h))
+        ctx.scaleBy(x: 2, y: -2)
+        traits.performAsCurrent { l.layer.render(in: ctx) }
+        let d = ctx.data!.bindMemory(to: UInt8.self, capacity: w * h * 4)
+        var out = [UInt8](repeating: 0, count: w * h)
+        for i in 0..<(w * h) { out[i] = d[i * 4] }
+        return out
+    }
+    let plain = rows(false), deco = rows(true)
+    let w = 400, h = Int(lh * 2)
+    var rowSum = [Double](repeating: 0, count: h)
+    for y in 0..<h {
+        for x in 0..<w {
+            let d = Double(plain[y * w + x]) - Double(deco[y * w + x])
+            if d > 2 { rowSum[y] += d / 255 }
+        }
+    }
+    guard let peak = rowSum.max(), peak > 0.5 else { return nil }
+    var first = -1, last = -1
+    for y in 0..<h where rowSum[y] > 0.5 * peak {
+        if first < 0 { first = y }
+        last = y
+    }
+    guard first >= 0 else { return nil }
+    // Text origin: the label is exactly one line box tall, so y0 == 0 and
+    // the baseline is UILabel's `floor(ascender + 0.5)`.
+    let baselinePx = (font.ascender + 0.5).rounded(.down) * 2
+    return (CGFloat(first) / 2 - baselinePx / 2, CGFloat(last - first + 1) / 2)
+}
+
+func dumpTextDecorations(outfile: String) throws {
+    let weights: [(String, UIFont.Weight)] = [
+        ("ultraLight", .ultraLight), ("thin", .thin), ("light", .light), ("regular", .regular),
+        ("medium", .medium), ("semibold", .semibold), ("bold", .bold), ("heavy", .heavy),
+        ("black", .black),
+    ]
+    var families: JSON = [:]
+    func family(_ key: String, _ make: (CGFloat) -> UIFont) {
+        var table: JSON = [:]
+        for s in 8...40 {
+            let f = make(CGFloat(s))
+            guard let u = decorationRect(font: f, key: .underlineStyle),
+                  let k = decorationRect(font: f, key: .strikethroughStyle) else { continue }
+            table["\(s)"] = [Double(u.top), Double(u.thickness),
+                             Double(k.top), Double(k.thickness)]
+        }
+        families[key] = table
+    }
+    for (wn, w) in weights {
+        family("system-\(wn)") { UIFont.systemFont(ofSize: $0, weight: w) }
+    }
+    family("italic-regular") { UIFont.italicSystemFont(ofSize: $0) }
+    family("mono-regular") { UIFont.monospacedSystemFont(ofSize: $0, weight: .regular) }
+    family("mono-bold") { UIFont.monospacedSystemFont(ofSize: $0, weight: .bold) }
+    let data = try JSONSerialization.data(withJSONObject: ["families": families],
+                                          options: [.sortedKeys])
+    try data.write(to: URL(fileURLWithPath: outfile))
+    print("wrote \(outfile)")
+}
+
 // MARK: - Main
 
 let args = CommandLine.arguments
@@ -136,6 +226,8 @@ case "colors":
     try dumpColors(outfile: args[2])
 case "fontmetrics":
     try dumpFontMetrics(outfile: args[2])
+case "textdecor":
+    try dumpTextDecorations(outfile: args[2])
 default:
     print("unknown command \(args[1])")
     exit(1)

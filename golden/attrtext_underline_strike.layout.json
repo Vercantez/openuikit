@@ -1,0 +1,87 @@
+{
+  "name" : "attrtext_underline_strike",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        14,
+        73.5,
+        20
+      ],
+      "intrinsic" : [
+        73.5,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        73.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        46,
+        105.5,
+        20
+      ],
+      "intrinsic" : [
+        105.5,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        105.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        78,
+        126,
+        28
+      ],
+      "intrinsic" : [
+        126,
+        28
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        126,
+        28
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        126,
+        91,
+        20
+      ],
+      "intrinsic" : [
+        91,
+        20
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        91,
+        20
+      ]
+    }
+  ]
+}

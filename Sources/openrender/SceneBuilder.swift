@@ -208,7 +208,70 @@ func makeLabel(_ j: SceneJSON) -> UILabel {
     l.textAlignment = textAlignment(j["textAlignment"]?.stringValue)
     if let n = intValue(j["numberOfLines"]) { l.numberOfLines = n }
     l.lineBreakMode = lineBreakMode(j["lineBreakMode"]?.stringValue)
+    // Attributed content last (it adopts the paragraph alignment / break mode).
+    if let aj = j["attributedText"]?.objectValue {
+        l.attributedText = attributedStringFrom(aj)
+    }
     return l
+}
+
+// MARK: - Attributed text (scene spec v5.2 — M12; mirrors oracle SceneKit)
+
+func underlineStyle(_ v: JSONValue?) -> Int? {
+    if let b = v?.boolValue { return b ? NSUnderlineStyle.single.rawValue : 0 }
+    guard let s = v?.stringValue else { return nil }
+    switch s {
+    case "none": return 0
+    case "single": return NSUnderlineStyle.single.rawValue
+    case "thick": return NSUnderlineStyle.thick.rawValue
+    case "double": return NSUnderlineStyle.double.rawValue
+    default: fatalError("bad underline style \(s)")
+    }
+}
+
+func paragraphStyleFrom(_ j: SceneJSON) -> NSParagraphStyle {
+    let p = NSMutableParagraphStyle()
+    p.alignment = textAlignment(j["alignment"]?.stringValue)
+    if let v = num(j["lineSpacing"]) { p.lineSpacing = v }
+    if let v = num(j["paragraphSpacing"]) { p.paragraphSpacing = v }
+    if let v = num(j["paragraphSpacingBefore"]) { p.paragraphSpacingBefore = v }
+    if let v = num(j["lineHeightMultiple"]) { p.lineHeightMultiple = v }
+    if let v = num(j["minimumLineHeight"]) { p.minimumLineHeight = v }
+    if let v = num(j["maximumLineHeight"]) { p.maximumLineHeight = v }
+    if let v = num(j["firstLineHeadIndent"]) { p.firstLineHeadIndent = v }
+    if let v = num(j["headIndent"]) { p.headIndent = v }
+    if let v = num(j["tailIndent"]) { p.tailIndent = v }
+    p.lineBreakMode = lineBreakMode(j["lineBreakMode"]?.stringValue)
+    return p
+}
+
+func attributedStringFrom(_ j: SceneJSON) -> NSAttributedString {
+    guard let runs = j["runs"]?.arrayValue, !runs.isEmpty else {
+        fatalError("attributedText needs a non-empty \"runs\" array")
+    }
+    let out = NSMutableAttributedString()
+    for rv in runs {
+        guard let r = rv.objectValue, let text = r["text"]?.stringValue else {
+            fatalError("run needs \"text\"")
+        }
+        var a: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]
+        a[.foregroundColor] = colorOrDie(r["color"], "attributed run") ?? UIColor.label
+        if let c = colorOrDie(r["backgroundColor"], "attributed run") { a[.backgroundColor] = c }
+        if let v = num(r["kern"]) { a[.kern] = v }
+        if let v = num(r["baselineOffset"]) { a[.baselineOffset] = v }
+        if let u = underlineStyle(r["underline"]) { a[.underlineStyle] = u }
+        if let u = underlineStyle(r["strikethrough"]) { a[.strikethroughStyle] = u }
+        if let c = colorOrDie(r["underlineColor"], "attributed run") { a[.underlineColor] = c }
+        if let c = colorOrDie(r["strikethroughColor"], "attributed run") {
+            a[.strikethroughColor] = c
+        }
+        out.append(NSAttributedString(string: text, attributes: a))
+    }
+    if let pj = j["paragraph"]?.objectValue {
+        out.addAttribute(.paragraphStyle, value: paragraphStyleFrom(pj),
+                         range: NSRange(location: 0, length: out.length))
+    }
+    return out
 }
 
 // MARK: - Image synthesis (mirror oracle's makeImage)
@@ -404,6 +467,7 @@ func makeTextField(_ j: SceneJSON) -> UITextField {
     if j["fontSize"] != nil || j["fontWeight"] != nil { t.font = fontFrom(j) }
     if let c = colorOrDie(j["textColor"], "UITextField") { t.textColor = c }
     t.tintColor = t.tintColor.resolvedColor(with: UITraitCollection.current)
+    if let aj = j["attributedText"]?.objectValue { t.attributedText = attributedStringFrom(aj) }
     return t
 }
 
@@ -412,6 +476,7 @@ func makeTextView(_ j: SceneJSON) -> UITextView {
     t.text = j["text"]?.stringValue ?? ""
     t.font = fontFrom(j)   // spec: fontSize default 17, always applied
     if let c = colorOrDie(j["textColor"], "UITextView") { t.textColor = c }
+    if let aj = j["attributedText"]?.objectValue { t.attributedText = attributedStringFrom(aj) }
     return t
 }
 

@@ -1,4 +1,4 @@
-# Scene Specification v5
+# Scene Specification v5.2
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -89,6 +89,74 @@ No extra keys.
 | `textAlignment` | string | `left, center, right, natural, justified` |
 | `numberOfLines` | int | default 1; 0 = unlimited |
 | `lineBreakMode` | string | `wordWrap, charWrap, clip, truncateHead, truncateTail, truncateMiddle` |
+| `attributedText` | object | v5.2 — see below. Applied LAST, so it overrides `text` and (via its paragraph style) `textAlignment` / `lineBreakMode`. |
+
+### `attributedText` (v5.2 — M12 attributed text)
+
+Valid on `UILabel`, `UITextField` and `UITextView`. An `NSAttributedString`
+built from an ordered list of runs plus one optional paragraph style applied
+to the whole string:
+
+```json
+"attributedText": {
+  "runs": [
+    { "text": "Sales ", "fontSize": 24 },
+    { "text": "report ", "fontSize": 17, "color": "systemBlue" },
+    { "text": "notes", "fontSize": 13, "color": "secondaryLabel",
+      "kern": 1.5, "baselineOffset": 6, "underline": "single" }
+  ],
+  "paragraph": { "lineSpacing": 6, "alignment": "center",
+                 "lineBreakMode": "wordWrap" }
+}
+```
+
+Run keys:
+
+| key | type | notes |
+|---|---|---|
+| `text` | string | required. |
+| `fontSize` | number | default 17. |
+| `fontWeight` | string | same names as `UILabel.fontWeight`. |
+| `italic` / `monospaced` | bool | same meaning as on `UILabel`. |
+| `color` | color | `.foregroundColor`; default `label`. |
+| `backgroundColor` | color | `.backgroundColor` — fills the run's line-box rect. |
+| `kern` | number | `.kern`, points added to EVERY character of the run (the last one included). `0` explicitly DISABLES the font's pair kerning — CoreText's documented behavior, measured. |
+| `baselineOffset` | number | `.baselineOffset`, points the run is raised above the baseline (negative lowers it). |
+| `underline` | string or bool | `none` (default), `single`, `thick`, `double`; `true` == `single`. |
+| `strikethrough` | string or bool | same values. |
+| `underlineColor` / `strikethroughColor` | color | default: the run's `color`. |
+
+Paragraph keys (all optional, all `NSMutableParagraphStyle` properties):
+`alignment`, `lineSpacing`, `paragraphSpacing`, `paragraphSpacingBefore`,
+`lineHeightMultiple`, `minimumLineHeight`, `maximumLineHeight`,
+`firstLineHeadIndent`, `headIndent`, `tailIndent`, `lineBreakMode`.
+
+Oracle-measured layout rules OpenUIKit reproduces (probe sources in
+`Tools/attrprobe/` (`./Tools/attrprobe/run.sh measure|geometry|decorations`), results in docs/KNOWN_GAPS.md):
+
+- **Width** = Σ advances + Σ pair kerning + Σ `kern`. Pair kerning crosses a
+  run boundary when both sides share a font, and is skipped entirely between
+  different fonts.
+- **Line box** = per run `A = floor(ascender + 0.5)` and
+  `D = labelLineHeight − A`; the line's ascent is `max(A + max(0, bo))` and
+  its descent `max(D + max(0, −bo))`. A run's glyphs sit on
+  `ascent − bo` below the box top.
+- **Paragraph style**: the line height is multiplied by `lineHeightMultiple`,
+  clamped by `minimum`/`maximumLineHeight`, then ceiled to the pixel grid;
+  `lineSpacing` separates line boxes (n−1 gaps); `paragraphSpacing` /
+  `paragraphSpacingBefore` add after / before hard breaks; head and tail
+  indents shrink each line's wrap width.
+- **Underline / strikethrough** rects are whole-point rects relative to the
+  run's baseline, vendored from real UIKit in
+  `Sources/OpenUIKit/Resources/text_decorations.json` (regenerate with
+  `Tools/oracle/oracle textdecor <out.json>`), then drawn through CG's 3-tap
+  text-smoothing filter. Line-final whitespace is not decorated.
+
+Fixture family `attrtext_*` (6 scenes): mixed fonts/weights/colors on one
+line, paragraph line spacing with left/center/right alignment and wrapping,
+kern and super/subscript baseline offsets, underline + strikethrough
+(including a colored rule), dark mode, and attributed `UITextField` /
+`UITextView`.
 
 ### `UIImageView`
 Images are synthesized (no asset files) from an `image` object:
@@ -163,6 +231,7 @@ empty+placeholder and with-text states.
 |---|---|---|
 | `borderStyle` | string | `none` (default), `line`, `bezel`, `roundedRect`. Fixtures use `roundedRect`. |
 | `text` | string | Non-editing overflow truncates the tail with an ellipsis, like UILabel. |
+| `attributedText` | object | v5.2 — see the `attributedText` section under UILabel. Real UIKit folds the string's LEADING font/color into the field's own `font`/`textColor`, and its `intrinsicContentSize` then measures the plain characters with that single font (measured — later runs do not widen it). |
 | `placeholder` | string | drawn in `placeholderText` when `text` is empty. |
 | `fontSize`, `fontWeight` | | default system 17 regular. |
 | `textColor` | color | default `label`. |
@@ -180,6 +249,7 @@ indicators (same rule as UIScrollView).
 | key | type | notes |
 |---|---|---|
 | `text` | string | |
+| `attributedText` | object | v5.2 — see the `attributedText` section under UILabel. Lines use the FONT's line height (not UILabel's sometimes-1-pt-taller box), so a single-font attributed string lays out exactly like the plain path. |
 | `fontSize`, `fontWeight` | | default system 17 regular (always applied — real UITextView's nil-font 12 pt legacy default is not exercised). |
 | `textColor` | color | default `label`. |
 

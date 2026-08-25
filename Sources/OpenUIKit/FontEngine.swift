@@ -356,6 +356,73 @@ public enum FontEngine {
         return total
     }
 
+    // MARK: - Text decoration geometry (M12 — attributed text)
+    //
+    // Underline / strikethrough rects, VENDORED from real UIKit
+    // (Resources/text_decorations.json, `oracle textdecor`). They are not a
+    // rounding of the font's CTFont underline position/thickness — several
+    // closed forms were fitted against the size sweep and all failed — so
+    // this is measured data like font_metrics.json. Values are whole points
+    // relative to the run's baseline: `underlineTop` below it,
+    // `strikeTop` above it (negative), each with its own thickness.
+
+    public struct TextDecorationMetrics {
+        public var underlineTop: CGFloat
+        public var underlineThickness: CGFloat
+        public var strikeTop: CGFloat
+        public var strikeThickness: CGFloat
+    }
+
+    /// family key -> integer point size -> (uTop, uThick, sTop, sThick).
+    static let decorationTable: [String: [Int: [CGFloat]]] = {
+        guard let json = ResourceIO.loadJSONResource("text_decorations.json"),
+              let fams = json["families"]?.objectValue else { return [:] }
+        var out: [String: [Int: [CGFloat]]] = [:]
+        for (fam, sizesV) in fams {
+            guard let sizes = sizesV.objectValue else { continue }
+            var m: [Int: [CGFloat]] = [:]
+            for (sk, v) in sizes {
+                guard let s = Int(sk), let arr = v.arrayValue, arr.count == 4 else { continue }
+                m[s] = arr.map { $0.doubleValue ?? 0 }
+            }
+            out[fam] = m
+        }
+        return out
+    }()
+
+    public static func decorations(for font: UIFont) -> TextDecorationMetrics {
+        let fam = familyKey(for: font)
+        if let table = decorationTable[fam], !table.isEmpty {
+            let want = Int(font.pointSize.rounded())
+            var best = want
+            if table[best] == nil {
+                // Clamp into the vendored range (8...40).
+                var bestDist = Int.max
+                for k in table.keys {
+                    let d = k > want ? k - want : want - k
+                    if d < bestDist { bestDist = d; best = k }
+                }
+            }
+            if let e = table[best] {
+                // Out-of-table sizes scale proportionally (the rects are
+                // linear in point size within a face).
+                let f = best == want ? 1 : font.pointSize / CGFloat(best)
+                return TextDecorationMetrics(
+                    underlineTop: (e[0] * f).rounded(),
+                    underlineThickness: Swift.max(1, (e[1] * f).rounded()),
+                    strikeTop: (e[2] * f).rounded(),
+                    strikeThickness: Swift.max(1, (e[3] * f).rounded()))
+            }
+        }
+        // Table unavailable: analytic fallback fitted to the same sweep.
+        let s = font.pointSize
+        let thick = Swift.max(1, (s * 0.0586).rounded(.up))
+        return TextDecorationMetrics(underlineTop: Swift.max(1, (s * 0.118).rounded(.down)),
+                                     underlineThickness: thick,
+                                     strikeTop: -((s * 0.2929).rounded(.down)),
+                                     strikeThickness: thick)
+    }
+
     // MARK: - Pixel rounding helpers
 
     /// Ceil to the device pixel grid (1/scale points), with an epsilon so

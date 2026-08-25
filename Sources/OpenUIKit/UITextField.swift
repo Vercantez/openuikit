@@ -61,6 +61,7 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
         set {
             _text = newValue ?? ""
             _hasText = newValue != nil
+            _attributed = nil
             if caretOffset > UITextCaretMath.scalarCount(_text) {
                 caretOffset = UITextCaretMath.scalarCount(_text)
             }
@@ -69,6 +70,39 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
     }
     var _text: String = ""
     var _hasText = false
+
+    /// Attributed content (M12). Rendering goes through the same
+    /// UITextFieldLabel the plain path uses, so per-run fonts/colors/kern
+    /// land unchanged. Editing rewrites the plain string and DROPS the
+    /// attributes (documented in docs/KNOWN_GAPS.md — real UIKit keeps
+    /// typing attributes; we do not model them).
+    public var attributedText: NSAttributedString? {
+        get {
+            if let a = _attributed { return a }
+            guard _hasText || !_text.isEmpty else { return nil }
+            return NSAttributedString(string: _text,
+                                      attributes: [.font: font, .foregroundColor: textColor])
+        }
+        set {
+            _attributed = newValue
+            _text = newValue?.string ?? ""
+            _hasText = newValue != nil
+            // Real UIKit folds the string's leading font / color into the
+            // field's own `font` and `textColor` (measured: the field's
+            // intrinsicContentSize then measures the PLAIN characters with
+            // that one font, ignoring later runs — see Tools/attrprobe).
+            if let a = newValue, a.length > 0 {
+                let attrs = a.attributes(at: 0, effectiveRange: nil)
+                if let f = attrs[.font] as? UIFont { font = f }
+                if let c = attrs[.foregroundColor] as? UIColor { textColor = c }
+            }
+            if caretOffset > UITextCaretMath.scalarCount(_text) {
+                caretOffset = UITextCaretMath.scalarCount(_text)
+            }
+            refreshContent()
+        }
+    }
+    var _attributed: NSAttributedString?
 
     public var placeholder: String? {
         didSet { refreshContent() }
@@ -140,7 +174,11 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
     func refreshContent() {
         textLabel.font = font
         textLabel.textColor = textColor
-        textLabel.text = _text
+        if let a = _attributed {
+            textLabel.attributedText = a
+        } else {
+            textLabel.text = _text
+        }
         placeholderLabel.font = font
         placeholderLabel.text = placeholder
         textLabel.isHidden = _text.isEmpty
@@ -173,7 +211,12 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
     open override var intrinsicContentSize: CGSize {
         let scale = textLabel.layoutScale
         let base: CGFloat
-        if !_text.isEmpty {
+        if _attributed != nil, !_text.isEmpty {
+            // Attributed: measured with the field's single `font` (see the
+            // attributedText setter), ceiled to the pixel grid.
+            base = Swift.max(FontEngine.ceilToPixel(FontEngine.measure(_text, font: font),
+                                                    scale: scale), 5)
+        } else if !_text.isEmpty {
             base = Swift.max(FontEngine.measure(_text, font: font).rounded(.up), 5)
         } else if let p = placeholder, !p.isEmpty {
             base = FontEngine.ceilToPixel(FontEngine.measure(p, font: font), scale: scale)
@@ -287,6 +330,7 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
         let i = UITextCaretMath.index(_text, atScalarOffset: caretOffset)
         _text.insert(contentsOf: text, at: i)
         _hasText = true
+        _attributed = nil
         caretOffset += UITextCaretMath.scalarCount(text)
         refreshContent()
         revealCaret()
@@ -298,6 +342,7 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
         let end = UITextCaretMath.index(_text, atScalarOffset: caretOffset)
         let start = UITextCaretMath.index(_text, atScalarOffset: caretOffset - 1)
         _text.removeSubrange(start..<end)
+        _attributed = nil
         caretOffset -= 1
         refreshContent()
         revealCaret()

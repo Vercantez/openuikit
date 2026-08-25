@@ -51,6 +51,91 @@ why:
 - **A DISABLED `UIControl` still swallows touches** instead of forwarding
   them up the chain (UIKit forwards). Pre-existing; the new forwarding
   default made it visible but did not change it.
+## Attributed text (M12, 2026-08-25): shadows Foundation, and what is not modelled
+
+### The types SHADOW Foundation's — a deliberate, documented tradeoff
+
+`NSAttributedString`, `NSMutableAttributedString`, `NSAttributedString.Key`,
+`NSRange`, `NSParagraphStyle` and `NSMutableParagraphStyle` are declared **in
+OpenUIKit** (`Sources/OpenUIKit/NSAttributedString.swift`,
+`NSParagraphStyle.swift`). They do **not** bridge to Foundation's types and
+never will: the library target imports no Foundation at all
+(docs/PORTABILITY.md), which is the property that makes it build and behave
+identically on Linux. Consequences a caller must know:
+
+- An app (or test) that imports **both** OpenUIKit and Foundation sees two
+  types with each of those names and the compiler reports
+  `'NSAttributedString' is ambiguous for type lookup in this context`. The fix
+  is a file-scope disambiguation, e.g.
+  `private typealias NSAttributedString = OpenUIKit.NSAttributedString`
+  (the same pattern the repo already uses for `CGFloat`/`CGRect`).
+  `Tests/OpenUIKitTests/AttributedStringTests.swift` is the worked example.
+- A Foundation `NSAttributedString` cannot be handed to `UILabel`; it has to
+  be rebuilt. There is no conversion helper — adding one would require the
+  library to import Foundation.
+- Attribute values are `Any`, like Foundation's. Run coalescing compares
+  values with `attributeValuesEqual`, which understands `UIFont`, `UIColor`,
+  `CGFloat`/`Double`/`Int`/`Bool`/`String` and `NSParagraphStyle`; any other
+  value type compares as *unequal*, so adjacent runs carrying it never merge.
+  That is conservative (an extra run, never a wrong one), but
+  `effectiveRange` can therefore report a shorter range than Foundation would.
+- `NSMutableAttributedString.mutableString` is a plain `String` accessor, not
+  a live-editing proxy.
+
+### Measured behavior that IS modelled
+
+All of it comes from Catalyst probes (`Tools/attrprobe/run.sh
+measure|geometry|decorations`) and is pinned by the `attrtext_*` goldens:
+per-character `.kern` including the last character, `.kern == 0` disabling
+pair kerning, pair kerning across run boundaries but never across fonts,
+the per-run ascent/descent line box (see AttributedTextLayout's header),
+`lineSpacing`/`paragraphSpacing`/`lineHeightMultiple`/min/max line heights,
+head and tail indents, and the underline/strikethrough rects, which are
+vendored measurements (`Resources/text_decorations.json`) because no closed
+form fit the size sweep: the rect top is weight-dependent at 34 pt but not at
+17 pt, and the thickness steps at sizes CTFontGetUnderlineThickness does not
+predict.
+
+### Not modelled
+
+- **Attributed truncation.** A single-line attributed label that overflows is
+  clipped, not ellipsised: the plain path's tight-tracking truncation model
+  (`TextLayout.truncate`) is per-font and has no multi-run equivalent yet. No
+  fixture overflows; an app that truncates attributed text will see a clipped
+  last glyph instead of "…".
+- **`.backgroundColor` rect.** Drawn as the run's advance width × the line
+  box. Probed once (real UIKit's rect was ~1 pt shorter than the line box at
+  17 pt) but not fitted, and no fixture exercises it.
+- **Underline patterns and `.double`/`.thick`.** Every non-empty style draws
+  the same single rule; `patternDot`/`patternDash`/`byWord` are accepted and
+  ignored. Real UIKit's `.thick` and `.double` were measured (rows
+  73–78 / 73–80 at 17 pt vs 75–78 for `.single`) but are not implemented.
+- **`.strokeColor` / `.strokeWidth` / `.link` / attachments.** The keys exist
+  so app code compiles; nothing reads them (no stroking, no
+  `NSTextAttachment`).
+- **`UITextField` / `UITextView` editing drops attributes.** Typing rewrites
+  the plain string and clears the attributed storage; real UIKit keeps
+  `typingAttributes`, which we do not model.
+- **`hyphenationFactor`, `baseWritingDirection`, tab stops** are absent from
+  `NSParagraphStyle` (or present and ignored, for `hyphenationFactor`).
+- **`lineHeightMultiple` / min / max baselines.** The heights are golden-
+  correct, but the extra space is added entirely above the baseline; only
+  `lineSpacing` (which does not move the baseline) is pixel-validated by a
+  fixture.
+
+### Glyph-ink coverage: 23 misses, NOT harvested (measured decision)
+
+`OPENUIKIT_INK_LOG` over the six `attrtext_*` scenes reports **23** table
+misses — glyphs the harvested-mask fast path does not have, which fall
+through to the computed GlyphSmoothing rasterizer (system-regular 13/15/20/24/34,
+system-semibold 17, system-bold 17, plus one dark 13 pt cell). They were left
+unharvested on purpose: every scene passes with margin anyway
+(`attrtext_runs` 98.6, `attrtext_paragraph` 99.3, `attrtext_underline_strike`
+99.3, `attrtext_kern_baseline` 99.99, `attrtext_dark` 99.9,
+`attrtext_fields` 99.1 against a 97 % text / 96 % control threshold, largest
+severe blob 17.8 pt² against an 80 pt² gate). Harvesting those cells is the
+next fidelity step if a future fixture in these sizes runs tight; the recipe
+is the "Glyph ink harvest" section below.
 
 ## Interactive sheets (M11, 2026-08-25): what shipped and what did not
 

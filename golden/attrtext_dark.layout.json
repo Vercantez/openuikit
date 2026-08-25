@@ -1,0 +1,79 @@
+{
+  "name" : "attrtext_dark",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        130
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        16,
+        102.5,
+        20
+      ],
+      "intrinsic" : [
+        102.5,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        102.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        52,
+        90.5,
+        20
+      ],
+      "intrinsic" : [
+        90.5,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        90.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        88,
+        61,
+        22
+      ],
+      "intrinsic" : [
+        61,
+        22
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        61,
+        22
+      ]
+    }
+  ]
+}
