@@ -453,6 +453,51 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   therefore reachable without a compiler fork; nothing was adopted this
   milestone, but the assessment that ruled it out is retracted.
 
+## App-compat cluster "controls2" (2026-08-25) — the remaining controls, and the compile-blockers that are not types
+
+Two fixtures (96 -> **98** scenes), 594 unit tests, all green.
+
+- **`NotificationCenter`, `Notification`, `Notification.Name`,
+  `OperationQueue`** — portable, declared in OpenUIKit because the library
+  imports no Foundation, and SHADOWING Foundation's exactly like
+  `NSAttributedString`. Both registration forms (closure and selector, the
+  latter through M12's portable dispatch), object filtering by identity,
+  re-entrant-safe delivery. The five **app-lifecycle transitions now POST**
+  their UIKit notifications with `UIApplication.shared` as the object; the
+  keyboard / device names are declared and nothing posts them.
+- **`Timer` + `RunLoop`** on the HOST CLOCK — `UIWindow.tick(timestamp:)` is
+  the run-loop turn, so a scripted capture stays reproducible and a static
+  scene's timers never fire. Closure and selector forms, late-repeat
+  skipping, `fire()`, `invalidate()`.
+- **`UILayoutGuide` in the cassowary solver** plus the whole safe-area model:
+  `safeAreaInsets` with its measured PER-EDGE CLAMPED propagation (nine probe
+  frames, exact), `safeAreaLayoutGuide` / `layoutMarginsGuide` /
+  `readableContentGuide`, `layoutMargins` = base + safe area,
+  `preservesSuperviewLayoutMargins`, `additionalSafeAreaInsets`,
+  `safeAreaInsetsDidChange`. Fixture `constraints_safearea` matches the
+  golden at **100.0 %**. This closes docs/APP_COMPAT.md's own named example
+  of a missing member on a type we export.
+- **`UIRefreshControl`** with scroll-view pull-to-refresh. Fixture
+  `control_refresh` (99.4 %) pins the measured spinner: eight 3.5 x 10 pt
+  blades on a 10 pt ring with the measured 0.25 pt seed offset, at
+  216/255 label alpha. The chase animation and the pull threshold are NOT
+  measurable offscreen and are documented as such.
+- **`UISearchBar`**, **`UIStepper`**, **`UIPickerView`** — implemented from
+  measured geometry, with NO fixture in each case for a reason that is a
+  property of the oracle: a private material that renders as nothing, a
+  SwiftUI hosting view that renders nothing at all, and a `CAGradientLayer`
+  that turns the capture into a translucent wash. Each is covered instead by
+  unit tests that replay real UIKit's own numbers — most notably
+  `PickerWheelTests`, which reproduces UIKit's private picker-cell frames to
+  1e-6 pt over thirteen configurations from a cylinder law fitted this pass
+  (`tableHeight = H + 75`, `N = ceil(2·tableHeight/rowHeight)`,
+  `R = 0.334225372·tableHeight`).
+- `UIDatePicker` DEFERRED, nothing built: it is a formatter and a calendar on
+  top of the picker wheel, and both are Foundation.
+
+Every divergence, and the probe route that would close it, is in
+docs/KNOWN_GAPS.md ("App-compat cluster controls2").
+
 ## Next — where the census points (docs/APP_COMPAT.md)
 
 The four clusters closed 2,139 of the corpus's references. The remaining

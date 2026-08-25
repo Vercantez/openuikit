@@ -238,6 +238,10 @@ open class UIScrollView: UIView {
         didSet { if contentInset != oldValue { setNeedsLayout() } }
     }
 
+    /// Storage for `refreshControl` (the API lives in UIRefreshControl.swift,
+    /// which owns the control's whole measured model).
+    var _refreshControl: UIRefreshControl?
+
     // MARK: Behavior flags (UIKit defaults)
 
     public var isScrollEnabled = true {
@@ -332,6 +336,10 @@ open class UIScrollView: UIView {
     open override var bounds: CGRect {
         didSet {
             if bounds.origin != oldValue.origin {
+                _layoutRefreshControl()
+                if let rc = _refreshControl, isDragging {
+                    rc._scrollDidDrag(to: bounds.origin.y, topEdge: _refreshTopEdge)
+                }
                 updateIndicators()
                 delegate?.scrollViewDidScroll(self)
             }
@@ -340,6 +348,7 @@ open class UIScrollView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
+        _layoutRefreshControl()
         updateIndicators()
     }
 
@@ -445,6 +454,9 @@ open class UIScrollView: UIView {
     func endDragging(velocity v: CGPoint, at time: TimeInterval? = nil) {
         let now = time ?? dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
         dragSamples.removeAll()
+        // Pull-to-refresh arms on the drag and fires on the release
+        // (UIRefreshControl.swift owns the rule and says what is measured).
+        _refreshControl?._scrollDidEndDrag()
         let lo = minContentOffset, hi = maxContentOffset
         let off = contentOffset
 

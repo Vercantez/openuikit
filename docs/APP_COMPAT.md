@@ -153,10 +153,10 @@ because they change what an app sees:
   declared in OpenUIKit because the library imports no Foundation. An app that
   imports both needs a one-line file-scope `typealias` to disambiguate, and a
   Foundation attributed string cannot be handed to a `UILabel`.
-- **No notifications.** `NotificationCenter` is Foundation. Apps that observe
-  `UIApplication.didBecomeActiveNotification` or the keyboard notifications
-  instead of implementing the delegate hear nothing — 90 uses in the corpus,
-  the largest single missing-member group after app-local noise.
+- ~~**No notifications.**~~ **CLOSED by the controls2 cluster** (see the next
+  section): OpenUIKit declares a portable `NotificationCenter` and posts the
+  app-lifecycle notifications. The keyboard names are declared but nothing
+  posts them — there is no system keyboard.
 
 Also landed and cheap, outside the four clusters: `UIImage(named:/
 contentsOfFile:/data:)` with PNG+JPEG decode via the `stb_image` copy already
@@ -164,6 +164,44 @@ inside CQuartz (`patches/quartz/005-image-io-memory.patch` — OpenUIKit
 contains no decoding code of its own), `UIBezierPath`, and app-side drawing
 (`UIView.draw(_:)`, `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()`,
 `UIColor.setFill()/setStroke()`).
+
+## What the "controls2" cluster shipped (2026-08-25, after M12)
+
+The remaining controls plus the compile-blockers that are not types. **The
+census was NOT re-run** (the corpus is not vendored and no checkout was
+available in this environment), so no new coverage percentage is claimed
+here; what follows is the list of punch-list entries this cluster closes,
+with their four-app use counts from the table below.
+
+| shipped | punch-list line it closes | uses |
+|---|---|---|
+| `NotificationCenter` + `Notification` + `Notification.Name` + `OperationQueue`, with the five app-lifecycle notifications actually POSTED | "the notification-name group", the largest genuinely-missing member group | ~90 |
+| `UILayoutGuide` in the cassowary solver, `UIView.safeAreaInsets` / `safeAreaLayoutGuide` / `layoutMarginsGuide` / `readableContentGuide` / `layoutMargins` / `preservesSuperviewLayoutMargins`, `UIViewController.additionalSafeAreaInsets`, `safeAreaInsetsDidChange` | `safeAreaLayoutGuide`, the doc's own named example of "a missing MEMBER of a type we DO export" | in "virtually every modern constraint set" |
+| `Timer` + `RunLoop` on the host clock (both the closure and the selector forms) | the `Timer.scheduledTimer(…selector:)` row of the selector table above — "not implemented" | — |
+| `UIRefreshControl` with pull-to-refresh | tail entry | 12 |
+| `UIStepper` | tail entry (metrics were already probed) | 22 |
+| `UISearchBar` (+ `UISearchTextField`, `UISearchBarDelegate`) | the "search" tail cluster | 23 |
+| `UIPickerView` (+ its data-source / delegate protocols) | tail entry | — |
+
+Two new fixtures (96 -> **98** scenes): `constraints_safearea` (100.0 %) and
+`control_refresh` (99.4 %). Three of the four controls could NOT be goldened,
+and the reasons are properties of the oracle rather than shortcuts — a
+private material that `layer.render(in:)` draws as nothing (`UISearchBar`), a
+SwiftUI hosting view that renders nothing at all (`UIStepper`), and a
+`CAGradientLayer` that turns the whole capture into a translucent wash
+(`UIPickerView`). Each is replaced by unit tests that replay real UIKit's own
+numbers, and each is written up in docs/KNOWN_GAPS.md with the probe route
+that would close it (the windowed oracle, which needs an active display
+session, or a Simulator drag).
+
+`UIDatePicker` was deferred and nothing was built: it is a formatter and a
+calendar on top of the picker wheel, and both are Foundation. The wheel it
+would sit on is now measured exactly.
+
+Three of the newly declared types SHADOW Foundation's — `NotificationCenter`,
+`Notification` and `Timer`, exactly like `NSAttributedString` before them.
+An app importing both needs a one-line file-scope `typealias`;
+docs/KNOWN_GAPS.md states the full tradeoff.
 
 ## The punch list, re-ranked on the four-app census
 
@@ -189,7 +227,9 @@ divergence above), **pointer/hover** (33), `UIPasteboard` (32), **haptics**
 `UIPageViewController` (22), `UIStepper` (22 — metrics already probed,
 docs/KNOWN_GAPS.md), **table extras** (swipe actions/diffable, 21), **TextKit
 attachments** (17), **transition coordinator** (13), `UIRefreshControl` (12).
-The unclustered tail is 47 types / 199 uses.
+The unclustered tail is 47 types / 199 uses. **`UIStepper` (22), the
+"search" cluster (23), `UIRefreshControl` (12) and `UIPickerView` are now
+IMPLEMENTED** — see "What the controls2 cluster shipped" below.
 
 **Members of types we already have** are a separate 2,930-use pool, and the
 member scanner is noisier than the type scanner: the top entries are
@@ -208,7 +248,8 @@ extensions leaves ~477 uses of genuinely missing members, led by
   well and members roughly. It undercounts protocol conformances written
   indirectly and overcounts symbols in dead code.
 - Type coverage ≠ API coverage. We may export `UIView` while missing members
-  a given app needs (`safeAreaLayoutGuide` is a known example). The
+  a given app needs (`safeAreaLayoutGuide` WAS the known example; the
+  controls2 cluster implemented it). The
   `missing_members_of_implemented` section of the census JSON tracks this and
   should be reviewed per cluster as it is implemented.
 - **The member census does not distinguish UIKit members from app-defined

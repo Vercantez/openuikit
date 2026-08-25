@@ -146,6 +146,12 @@ func applyCommon(_ v: UIView, _ j: SceneJSON, name: String) {
     if j["useConstraints"]?.boolValue == true {
         v.translatesAutoresizingMaskIntoConstraints = false
     }
+    // Forced safe area (spec v5.3). The oracle needs a UIView subclass that
+    // overrides the getter (real UIKit has no setter); here it is one call.
+    if let i = numArray(j["safeAreaInsets"]), i.count == 4 {
+        v._setSafeAreaInsets(UIEdgeInsets(top: i[0], left: i[1],
+                                          bottom: i[2], right: i[3]))
+    }
     if let p = num(j["huggingH"]) {
         v.setContentHuggingPriority(UILayoutPriority(rawValue: Float(p)), for: .horizontal)
     }
@@ -501,7 +507,53 @@ func makeScrollView(_ j: SceneJSON) -> UIScrollView {
         s.contentInset = UIEdgeInsets(top: ci[0], left: ci[1],
                                       bottom: ci[2], right: ci[3])
     }
+    // Pull-to-refresh (spec v5.3), mirroring the oracle: install the control,
+    // optionally start it, and clear `isHidden` explicitly (the oracle has to,
+    // because offscreen UIKit never runs the reveal animation).
+    if let rj = j["refreshControl"]?.objectValue {
+        let rc = UIRefreshControl()
+        s.refreshControl = rc
+        if rj["refreshing"]?.boolValue == true { rc.beginRefreshing() }
+        rc.isHidden = false
+    }
     return s
+}
+
+/// Data source + delegate for a scene's `UIPickerView` (spec v5.3), mirroring
+/// the oracle's `ScenePickerSource`. Retained in `retainedPickerSources`
+/// because UIPickerView holds both weakly.
+final class ScenePickerSource: UIPickerViewDataSource, UIPickerViewDelegate {
+    let titles: [String]
+    let rowHeight: CGFloat
+    init(titles: [String], rowHeight: CGFloat) {
+        self.titles = titles
+        self.rowHeight = rowHeight
+    }
+    func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        titles.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int,
+                    forComponent component: Int) -> String? { titles[row] }
+    func pickerView(_ pickerView: UIPickerView,
+                    rowHeightForComponent component: Int) -> CGFloat { rowHeight }
+}
+var retainedPickerSources: [ScenePickerSource] = []
+
+func makePickerView(_ j: SceneJSON) -> UIPickerView {
+    let p = UIPickerView()
+    let titles = j["rows"]?.arrayValue?.compactMap { $0.stringValue } ?? []
+    let src = ScenePickerSource(titles: titles, rowHeight: num(j["rowHeight"]) ?? 32)
+    retainedPickerSources.append(src)
+    p.dataSource = src
+    p.delegate = src
+    if let f = numArray(j["frame"]), f.count == 4 {
+        p.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
+    }
+    if let b = j["showsSelectionIndicator"]?.boolValue { p.showsSelectionIndicator = b }
+    p.reloadAllComponents()
+    if let r = num(j["selectedRow"]) { p.selectRow(Int(r), inComponent: 0, animated: false) }
+    return p
 }
 
 func makeTextField(_ j: SceneJSON) -> UITextField {
@@ -799,6 +851,7 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
+    case "UIPickerView": v = makePickerView(j)
     case "UITableView": v = makeTableView(j)
     case "UITextField": v = makeTextField(j)
     case "UITextView": v = makeTextView(j)
@@ -1055,6 +1108,20 @@ func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
     }
 }
 
+/// The constrained object at a scene path: the view itself, or one of its
+/// layout guides when the constraint carries a "guide"/"toGuide" key
+/// (spec v5.3). Mirrors Tools/oracle/SceneKit.swift's `layoutItem`.
+func layoutItem(_ container: UIView, _ path: String, _ guide: String?) -> AnyObject {
+    let v = viewAtPath(container, path)
+    switch guide {
+    case nil: return v
+    case "safeArea": return v.safeAreaLayoutGuide
+    case "layoutMargins": return v.layoutMarginsGuide
+    case "readableContent": return v.readableContentGuide
+    case let g?: fatalError("bad guide '\(g)' (safeArea|layoutMargins|readableContent)")
+    }
+}
+
 /// Build and activate NSLayoutConstraints from the scene's top-level
 /// "constraints" array. Item paths use layout-dump addressing ("" = root).
 /// Runs after the tree is built and BEFORE layoutIfNeeded; priorities are
@@ -1069,7 +1136,7 @@ func activateConstraints(_ specs: [JSONValue], container: UIView) {
         guard let attrName = j["attribute"]?.stringValue else {
             fatalError("constraint needs \"attribute\"")
         }
-        let item = viewAtPath(container, itemPath)
+        let item = layoutItem(container, itemPath, j["guide"]?.stringValue)
         let relation: NSLayoutConstraint.Relation
         switch j["relation"]?.stringValue ?? "eq" {
         case "eq": relation = .equal
@@ -1077,10 +1144,10 @@ func activateConstraints(_ specs: [JSONValue], container: UIView) {
         case "ge": relation = .greaterThanOrEqual
         case let r: fatalError("bad constraint relation '\(r)'")
         }
-        var toView: UIView? = nil
+        var toView: AnyObject? = nil
         var toAttr: NSLayoutConstraint.Attribute = .notAnAttribute
         if let tp = j["toItem"]?.stringValue {   // JSON null is not a string
-            toView = viewAtPath(container, tp)
+            toView = layoutItem(container, tp, j["toGuide"]?.stringValue)
             // toAttribute defaults to the first attribute (the common case:
             // pinning like to like).
             toAttr = layoutAttribute(j["toAttribute"]?.stringValue ?? attrName)
@@ -1143,6 +1210,10 @@ struct SceneResult {
 func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     guard let name = scene["name"]?.stringValue else { fatalError("scene missing name") }
     guard let sz = numArray(scene["size"]), sz.count == 2 else { fatalError("scene missing size") }
+    // One scene's scheduled Timers must never leak into the next scene's
+    // capture (Sources/OpenUIKit/Timer.swift): the host clock is the only
+    // thing that fires them, and it rewinds per scene.
+    Timer._reset()
     let scale = num(scene["scale"]) ?? 2
     let style: UIUserInterfaceStyle = scene["style"]?.stringValue == "dark" ? .dark : .light
     // Window scenes ("window": true, rendered by oracle2 via drawHierarchy

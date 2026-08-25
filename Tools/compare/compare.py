@@ -104,6 +104,10 @@ def classify(scene):
     has_shadow = [False]
     def walk(v):
         kinds.add(v.get("class", "UIView"))
+        # A scroll view's pull-to-refresh control (spec v5.3) is a CONTROL
+        # even though it is spelled as a key, not as a class.
+        if v.get("refreshControl"):
+            kinds.add("UIRefreshControl")
         if v.get("shadowOpacity", 0):
             has_shadow[0] = True
         for s in v.get("subviews", []):
@@ -114,7 +118,8 @@ def classify(scene):
         cat = "chrome"
     elif kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
                   "UITextField", "UITextView", "UISlider", "UISegmentedControl",
-                  "UIActivityIndicatorView", "UIPageControl"}:
+                  "UIActivityIndicatorView", "UIPageControl",
+                  "UIRefreshControl", "UISearchBar", "UIStepper", "UIPickerView"}:
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"
@@ -150,7 +155,14 @@ PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   # container views) are private on both sides — only the
                   # chrome view's own frame is compared structurally; pixels
                   # hold the chrome itself to account.
-                  "UITableView", "UINavigationStack", "UITabBarStack"}
+                  "UITableView", "UINavigationStack", "UITabBarStack",
+                  # controls2. UIRefreshControl's whole subtree is private on
+                  # the golden side (_UIRefreshControlModernContentView), so
+                  # only its own 60 pt frame is compared structurally and the
+                  # spinner's pixels hold the rest to account. UISearchBar,
+                  # UIStepper and UIPickerView are deliberately absent: no
+                  # fixture renders them (docs/KNOWN_GAPS.md).
+                  "UIRefreshControl"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

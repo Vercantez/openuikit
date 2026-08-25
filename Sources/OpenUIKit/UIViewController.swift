@@ -32,7 +32,10 @@ open class UIViewController: UIResponder {
     // MARK: View loading (lazy loadView/viewDidLoad)
 
     var _view: UIView? {
-        didSet { _view?._managingViewController = self }
+        didSet {
+            _view?._managingViewController = self
+            _view?._additionalSafeAreaInsets = additionalSafeAreaInsets
+        }
     }
 
     /// The controller's view. First access loads it (loadView + viewDidLoad).
@@ -86,6 +89,23 @@ open class UIViewController: UIResponder {
 
     /// Called exactly once, right after loadView().
     open func viewDidLoad() {}
+
+    // MARK: Safe area (app-compat cluster — AutoLayout/UILayoutGuide.swift)
+
+    /// Extra insets added to the view's inherited safe area. UIKit's only
+    /// app-facing lever on the safe area, and how a container reserves room
+    /// for chrome it draws over its child (a nav bar, a tab bar).
+    ///
+    /// Note the divergence documented in docs/KNOWN_GAPS.md: OpenUIKit's own
+    /// nav/tab chrome does NOT set this yet — screens under a
+    /// `UITabBarController` are still told their bottom inset explicitly.
+    public var additionalSafeAreaInsets: UIEdgeInsets = .zero {
+        didSet {
+            guard additionalSafeAreaInsets != oldValue else { return }
+            _view?._additionalSafeAreaInsets = additionalSafeAreaInsets
+            _view?.setNeedsLayout()
+        }
+    }
 
     // MARK: Title
 

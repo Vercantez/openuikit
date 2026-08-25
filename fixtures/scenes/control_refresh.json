@@ -1,0 +1,23 @@
+{
+  "name": "control_refresh",
+  "size": [320, 140],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      {
+        "class": "UIView",
+        "frame": [0, 0, 320, 140],
+        "backgroundColor": "systemBackground"
+      },
+      {
+        "class": "UIScrollView",
+        "frame": [0, 10, 320, 120],
+        "contentSize": [320, 600],
+        "refreshControl": { "refreshing": true },
+        "subviews": []
+      }
+    ]
+  }
+}

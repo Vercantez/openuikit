@@ -1,0 +1,103 @@
+{
+  "name" : "control_refresh",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        140
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIScrollView",
+      "frame" : [
+        0,
+        10,
+        320,
+        120
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIRefreshControl",
+      "frame" : [
+        0,
+        0,
+        320,
+        60
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "_UIRefreshControlModernContentView",
+      "frame" : [
+        0,
+        0,
+        320,
+        60
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        110,
+        -20,
+        100,
+        100
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "class" : "_UIRefreshControlModernReplicatorView",
+      "frame" : [
+        0,
+        0,
+        100,
+        100
+      ],
+      "path" : "1.0.0.0.0"
+    },
+    {
+      "class" : "_UIRefreshControlSeedView",
+      "frame" : [
+        48.5,
+        35,
+        3.5,
+        10
+      ],
+      "path" : "1.0.0.0.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        10,
+        48.5,
+        300,
+        0
+      ],
+      "intrinsic" : [
+        0,
+        0
+      ],
+      "path" : "1.0.0.1",
+      "sizeThatFits200" : [
+        0,
+        0
+      ]
+    }
+  ]
+}

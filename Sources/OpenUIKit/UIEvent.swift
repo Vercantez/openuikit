@@ -226,6 +226,9 @@ open class UIWindow: UIView {
         // Caret blink of the focused text editor advances on the same host
         // clock (text-input module; additive like the steppers above).
         UITextInputState._stepCaretBlink(to: timestamp)
+        // Scheduled `Timer`s fire off the same clock — there is no run loop,
+        // so this tick IS the run-loop turn (Sources/OpenUIKit/Timer.swift).
+        Timer._step(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

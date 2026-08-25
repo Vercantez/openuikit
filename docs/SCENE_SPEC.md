@@ -1,4 +1,4 @@
-# Scene Specification v5.2
+# Scene Specification v5.3
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
@@ -82,6 +82,7 @@ clipping on a child instead). Also remember the root view's background is never
 drawn (long-standing root-frame quirk — the root keeps frame `[0,0,0,0]`, see
 the note in `Tools/oracle/SceneKit.swift`), so shadow scenes that want a
 visible backdrop must add an explicit full-size background subview.
+| `safeAreaInsets` | `[top,left,bottom,right]` | v5.3. FORCES this view's safe area, making it the root of a safe-area propagation. Valid on `UIView` only. Real UIKit exposes no setter (`safeAreaInsets` comes from the window server and is always zero offscreen), so the oracle builds a private `UIView` subclass that overrides the GETTER — UIKit's propagation to descendants, `safeAreaLayoutGuide`, `layoutMarginsGuide` and `layoutMargins` all follow the override, which is what makes the feature measurable at all. `dumpLayout` reports that subclass as `"UIView"` so both renderers' dumps agree; openrender uses a plain `UIView` plus `_setSafeAreaInsets(_:)`. Measured rules: `Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift`. |
 | `autoresizingMask` | array of strings | any of `"flexibleWidth"`, `"flexibleHeight"`, `"flexibleLeftMargin"`, `"flexibleRightMargin"`, `"flexibleTopMargin"`, `"flexibleBottomMargin"`. |
 | `sizeToFit` | bool | call `sizeToFit()` after properties are set (origin preserved). |
 | `userInteractionEnabled` | bool | `isUserInteractionEnabled` (v4). Default: UIKit's (true; false for UILabel/UIImageView). |
@@ -286,6 +287,30 @@ centred in the bounds; dot slots are 10 pt wide on an 18 pt pitch starting
 7.59 pt circle 0.19 pt left of / below its slot centre (fitted from the
 golden's ink area and centroid).
 
+### `UIPickerView` (v5.3 — controls2 cluster)
+
+**Supported by openrender and by the oracle's scene builder, but NO FIXTURE
+USES IT, and none should.** An offscreen `layer.render(in:)` of a real
+`UIPickerView` is not a picture of the control: a `CAGradientLayer` the
+picker composites over its own content turns the whole capture into a
+translucent wash (measured: centre pixel (231, 231, 231) at alpha 204,
+corners alpha 0) and it erases the opaque sibling behind it, while the
+selection band composites to nothing at all. The wheel is instead pinned by
+`PickerWheelTests`, which replays real UIKit's own private cell frames over
+thirteen configurations. The scene keys exist so `openhost` and app code can
+build one:
+
+| key | type | notes |
+|---|---|---|
+| `rows` | `[string, ...]` | titles for the single component. |
+| `selectedRow` | int | default 0. |
+| `rowHeight` | number | default 32. |
+| `showsSelectionIndicator` | bool | openrender only (real UIKit ignores it since iOS 13). `false` suppresses the band. |
+
+ONE component only: offscreen UIKit centres every component's table at the
+same x (probed for 2, 3 and 4 components), so a multi-component picker's
+column layout is not measurable and nothing may depend on it.
+
 ### `UIScrollView` (v4.1 — M7.5)
 A real scroll view; `contentOffset` IS the layer's bounds origin, so a static
 scene verifies scrolled rendering (children shifted by −offset, clipped by the
@@ -296,6 +321,7 @@ scroll view's bounds) against real UIKit. All common view keys apply
 | `contentSize` | `[w,h]` | `contentSize`. Default `[0,0]`. |
 | `contentOffset` | `[x,y]` | applied AFTER frame/children (both renderers). May be out of range (renders the overscrolled state). |
 | `contentInset` | `[top,left,bottom,right]` | `contentInset`. No visual effect on a static scene (it only changes the legal offset range). |
+| `refreshControl` | object | v5.3. `{ "refreshing": true }` installs a `UIRefreshControl` and starts it. BOTH renderers then clear `isHidden` explicitly: offscreen UIKit never runs the reveal animation, so a refreshing control stays hidden and the capture would be an empty band. A programmatic `beginRefreshing()` does NOT move `contentOffset` (UIKit documents that, and the golden confirms it: the control keeps frame `(0, 0, W, 60)`). Fixture: `control_refresh`. |
 
 The oracle pins `contentInsetAdjustmentBehavior = .never` (no VC/safe-area
 offscreen) and disables both indicators, so the layout dump carries no
@@ -773,7 +799,9 @@ Constraint entry keys:
 | `item` | string | required. Dot-joined subview-index path (layout-dump addressing); `""` = root. |
 | `attribute` | string | required. One of `left, right, top, bottom, leading, trailing, width, height, centerX, centerY, firstBaseline, lastBaseline`. |
 | `relation` | string | `eq` (default), `le`, `ge`. |
+| `guide` | string | v5.3. Constrain one of `item`'s LAYOUT GUIDES instead of the view itself: `safeArea`, `layoutMargins` or `readableContent`. |
 | `toItem` | string or null | second item's path; null/omitted = unary (sizes). |
+| `toGuide` | string | v5.3. Same three values, for `toItem`'s guide. |
 | `toAttribute` | string | second attribute. Defaults to `attribute` when `toItem` is present; invalid without `toItem`. |
 | `multiplier` | number | default 1. |
 | `constant` | number | default 0. |
@@ -786,6 +814,13 @@ Per-view keys (any view class):
 | `useConstraints` | bool | `true` sets `translatesAutoresizingMaskIntoConstraints = false`. Such views may omit `frame` entirely. |
 | `huggingH` / `huggingV` | number | `setContentHuggingPriority(_:for:)` horizontal / vertical (UIKit default 250 for most views, 251 label vertical). |
 | `compressionH` / `compressionV` | number | `setContentCompressionResistancePriority(_:for:)` (default 750). |
+
+`UILayoutGuide` participates in the solver exactly as a view does (four
+variables, positioned in its owning view's space); a SYSTEM guide is pinned to
+its owning view by required constraints built from the measured insets, and a
+custom guide is positioned entirely by the scene's constraints. Fixture:
+`constraints_safearea` pins boxes to a forced safe area's guide and to a
+descendant's layout-margins guide, and matches the golden to 100.0 %.
 
 Frame-based siblings mix freely with constraint views: a view without
 `useConstraints` keeps `translates... = true`, its frame becomes autoresizing

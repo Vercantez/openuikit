@@ -174,6 +174,9 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
+| `Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift` | **autolayout** | done (controls2: `UILayoutGuide` in the solver + the measured safe-area / layout-margins / readable-content model; fixture `constraints_safearea`) |
+| `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md) |
+| `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`) |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
