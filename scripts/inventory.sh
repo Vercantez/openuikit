@@ -65,7 +65,9 @@ compile_one "$GEN/asm/objc-msg-arm64-elf.s" asm
 compile_one "$GEN/asm/retain-release-helpers-arm64-elf.s" asm
 
 echo "=== compat/ (our implementations of the Darwin surface) ==="
-compile_one "$WORK/compat/src/objc4linux-compat.cpp" cxx
+for f in "$WORK"/compat/src/*.cpp; do
+    compile_one "$f" cxx
+done
 
 echo
 echo "=== COMPILE: $pass ok, $fail failed ==="
