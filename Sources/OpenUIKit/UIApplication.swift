@@ -73,6 +73,7 @@ extension UIApplication {
 /// UIKit's app delegate protocol. Every method has a default no-op
 /// implementation (UIKit gets that from ObjC `@optional`), so an app
 /// delegate implements only what it cares about.
+@MainActor
 public protocol UIApplicationDelegate: AnyObject {
     func application(_ application: UIApplication,
                      willFinishLaunchingWithOptions
@@ -103,6 +104,7 @@ extension UIApplicationDelegate {
 
 // MARK: - UIApplication
 
+@MainActor
 open class UIApplication: UIResponder {
     /// The application object. Apps use this; constructing another
     /// UIApplication is meaningless (UIKit traps on it — we merely ignore
@@ -124,6 +126,7 @@ open class UIApplication: UIResponder {
 
     // MARK: Windows
 
+    @MainActor
     private final class WeakWindow {
         weak var window: UIWindow?
         init(_ w: UIWindow) { window = w }
@@ -335,6 +338,7 @@ open class UIApplication: UIResponder {
 /// file header). The host then runs its own loop and drives the remaining
 /// lifecycle with `app._hostDidBecomeActive()` / `_hostWillTerminate()`.
 @discardableResult
+@MainActor
 public func UIApplicationMain(delegate: UIApplicationDelegate,
                               launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil)
     -> UIApplication {
@@ -355,6 +359,7 @@ public enum UISceneActivationState: Int, Sendable {
 /// A scene session. OpenUIKit has no state restoration and no session
 /// persistence: the identifier is whatever the creator supplies and the
 /// role is carried for app code that switches on it.
+@MainActor
 public final class UISceneSession {
     public struct Role: Hashable, RawRepresentable, Sendable {
         public let rawValue: String
@@ -376,10 +381,12 @@ public final class UISceneSession {
 
 /// Options passed to `scene(_:willConnectTo:options:)`. Empty here — there
 /// is no launch surface to describe.
+@MainActor
 public final class UISceneConnectionOptions {
     public init() {}
 }
 
+@MainActor
 public protocol UISceneDelegate: AnyObject {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession,
                options connectionOptions: UISceneConnectionOptions)
@@ -400,6 +407,7 @@ extension UISceneDelegate {
     public func sceneDidEnterBackground(_ scene: UIScene) {}
 }
 
+@MainActor
 public protocol UIWindowSceneDelegate: UISceneDelegate {
     var window: UIWindow? { get set }
 }
@@ -407,28 +415,41 @@ public protocol UIWindowSceneDelegate: UISceneDelegate {
 /// A scene. Minimal by design: OpenUIKit's hosts boot a plain UIWindow, and
 /// scenes exist so scene-shaped app code (`class SceneDelegate: UIResponder,
 /// UIWindowSceneDelegate`) compiles and receives its callbacks.
+@MainActor
 open class UIScene: UIResponder {
     public let session: UISceneSession
     public weak var delegate: UISceneDelegate?
     public internal(set) var activationState: UISceneActivationState = .unattached
     public var title: String?
 
-    public init(session: UISceneSession = UISceneSession()) {
+    public init(session: UISceneSession) {
         self.session = session
         super.init()
+    }
+
+    /// Spelled as a second initializer rather than a defaulted parameter:
+    /// default argument expressions are evaluated in the CALLER's isolation,
+    /// so `= UISceneSession()` would be a call to a main-actor initializer
+    /// from wherever the caller happens to be. This overload keeps the
+    /// convenience without the isolation hole.
+    public convenience override init() {
+        self.init(session: UISceneSession())
     }
 
     /// A scene's next responder is the application (UIKit).
     open override var next: UIResponder? { UIApplication.shared }
 }
 
+// `nonisolated`: identity only, and Hashable is a nonisolated protocol
+// (see the note in UIViewCompat.swift).
 extension UIScene: Hashable {
-    public static func == (a: UIScene, b: UIScene) -> Bool { a === b }
-    public func hash(into hasher: inout Hasher) {
+    nonisolated public static func == (a: UIScene, b: UIScene) -> Bool { a === b }
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }
 
+@MainActor
 open class UIWindowScene: UIScene {
     /// Single-display: always `UIScreen.main`.
     public var screen: UIScreen { .main }

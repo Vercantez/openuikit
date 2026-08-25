@@ -312,6 +312,7 @@ struct _BarSymbol {
 }
 
 /// Draws a `_BarSymbol` at its natural size.
+@MainActor
 final class _BarSymbolView: UIView {
     var symbol: _BarSymbol? { didSet { setNeedsDisplay() } }
     var color: UIColor = .label { didSet { setNeedsDisplay() } }

@@ -76,8 +76,7 @@ import Foundation
 
 /// UIKit's protocol, member for member. Everything is defaulted, so a
 /// conformance implements only what it uses.
-
-
+@MainActor
 public protocol UISearchBarDelegate: AnyObject {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange,
@@ -119,6 +118,7 @@ public enum UISearchBarStyle: Int, Sendable {
 /// an ordinary `UITextField` there too; the magnifier is drawn by this
 /// subclass rather than by a separate image view, because OpenUIKit has no
 /// SF Symbols to load one from (the geometry is the measured one).
+@MainActor
 open class UISearchTextField: UITextField {
     /// Measured icon frame inside the field.
     public static let iconFrame = CGRect(x: 12, y: 7.5, width: 20.5, height: 20)
@@ -186,6 +186,7 @@ open class UISearchTextField: UITextField {
     }
 }
 
+@MainActor
 open class UISearchBar: UIView {
     /// Measured: 44 pt tall whatever the frame says.
     public static let standardHeight: CGFloat = 44
@@ -341,6 +342,7 @@ open class UISearchBar: UIView {
     }
 
     /// Translates UITextField's delegate into UISearchBar's.
+    @MainActor
     final class Bridge: UITextFieldDelegate {
         weak var owner: UISearchBar?
 

@@ -45,8 +45,7 @@ import Foundation
 
 
 /// The back control: chevron + previous title, standard pressed dimming.
-
-
+@MainActor
 final class _UINavigationBarBackButton: UIControl {
     let chevron = UILabel()
     let backLabel = UILabel()
@@ -113,6 +112,7 @@ final class _UINavigationBarBackButton: UIControl {
     }
 }
 
+@MainActor
 public final class UINavigationBar: UIView, _UIBarItemContainer {
     // MARK: Bar-zone metrics
     //

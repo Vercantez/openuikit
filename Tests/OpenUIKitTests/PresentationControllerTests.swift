@@ -6,11 +6,13 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
+@MainActor
 private final class Trace {
     var entries: [String] = []
     func add(_ s: String) { entries.append(s) }
 }
 
+@MainActor
 private final class RecordingPresentationController: UIPresentationController {
     let trace: Trace
     init(presented: UIViewController, presenting: UIViewController?, trace: Trace) {
@@ -40,6 +42,7 @@ private final class RecordingPresentationController: UIPresentationController {
 }
 
 /// A custom animator that just cross-fades and reports what it saw.
+@MainActor
 private final class FadeAnimator: UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     let trace: Trace
@@ -78,6 +81,7 @@ private final class FadeAnimator: UIViewControllerAnimatedTransitioning {
     }
 }
 
+@MainActor
 private final class CustomTransitioningDelegate: UIViewControllerTransitioningDelegate {
     let trace: Trace
     var presentation: RecordingPresentationController?
@@ -105,6 +109,7 @@ private final class CustomTransitioningDelegate: UIViewControllerTransitioningDe
         -> UIViewControllerAnimatedTransitioning? { dismissAnimator }
 }
 
+@MainActor
 private final class TraceVC: UIViewController {
     let name: String
     let trace: Trace
@@ -120,6 +125,7 @@ private final class TraceVC: UIViewController {
     override func viewDidDisappear(_ animated: Bool) { trace.add("\(name).didDisappear") }
 }
 
+@MainActor
 final class PresentationControllerTests: XCTestCase {
     override func setUp() { super.setUp(); OpenUIKitRuntime.animationTime = 0 }
     override func tearDown() { OpenUIKitRuntime.animationTime = 0; super.tearDown() }
@@ -259,6 +265,7 @@ final class PresentationControllerTests: XCTestCase {
 /// A hand-built context: no presentation at all, just the protocol. This is
 /// the contract a third-party animator is written against, so it is tested
 /// without any of OpenUIKit's own presentation machinery in the way.
+@MainActor
 private final class FakeContext: UIViewControllerContextTransitioning {
     let containerView: UIView
     let fromVC: UIViewController
@@ -294,6 +301,7 @@ private final class FakeContext: UIViewControllerContextTransitioning {
 }
 
 /// A slide animator written the way an app would write one.
+@MainActor
 private final class SlideInAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval { 0.3 }
     func animateTransition(using ctx: UIViewControllerContextTransitioning) {
@@ -312,6 +320,7 @@ private final class SlideInAnimator: UIViewControllerAnimatedTransitioning {
     }
 }
 
+@MainActor
 final class CustomAnimatorContractTests: XCTestCase {
     override func setUp() { super.setUp(); OpenUIKitRuntime.animationTime = 0 }
     override func tearDown() { OpenUIKitRuntime.animationTime = 0; super.tearDown() }
@@ -352,6 +361,7 @@ final class CustomAnimatorContractTests: XCTestCase {
     /// The navigation controller asks its delegate for an animator and drives
     /// it through the context; the built-in slide is used when it returns nil.
     func testNavigationDelegateAnimatorReplacesTheBuiltInSlide() {
+        @MainActor
         final class NavDelegate: UINavigationControllerDelegate {
             let trace = Trace()
             var animator: FadeAnimator?

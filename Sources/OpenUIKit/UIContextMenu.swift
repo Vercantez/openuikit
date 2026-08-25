@@ -49,6 +49,7 @@
 
 /// Every constant here comes from `Tools/oracle2/menuprobe` dumps unless it
 /// says otherwise. Sizes are points on a 393-pt-wide window.
+@MainActor
 public enum UIMenuMetrics {
     /// Platter width. CONSTANT across every probed configuration — a long
     /// title WRAPS rather than widening the platter (measured).
@@ -181,6 +182,7 @@ public struct UIMenuRowLayout {
     public let showsImage: Bool
 }
 
+@MainActor
 public struct UIMenuLayout {
     public let size: CGSize
     public let headerFrame: CGRect?
@@ -260,6 +262,7 @@ public struct UIMenuLayout {
 
 /// The platter itself: measured fill + corner radius. Private class name, so
 /// compare.py prunes it the way it prunes UIKit's `_UIContextMenuView`.
+@MainActor
 final class _UIContextMenuView: UIView {
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -272,6 +275,7 @@ final class _UIContextMenuView: UIView {
 /// `_UIAlertShadowView` documents: a CALayer shadow shows THROUGH a
 /// semi-transparent platter and would darken its interior, which real iOS
 /// does not do.
+@MainActor
 final class _UIContextMenuShadowView: UIView {
     var platterRect: CGRect = .zero
 
@@ -298,6 +302,7 @@ final class _UIContextMenuShadowView: UIView {
     }
 }
 
+@MainActor
 enum _UIMenuShapes {
     /// `Path.roundedRect` wound the other way, so adding it to an enclosing
     /// rect yields a ring under the non-zero winding rule.
@@ -329,6 +334,7 @@ enum _UIMenuShapes {
 
 /// The check / chevron column glyphs. NOT SF Symbols (see the file header):
 /// strokes inside the measured boxes.
+@MainActor
 final class _UIContextMenuGlyphView: UIView {
     enum Kind { case check, chevron }
     var kind: Kind = .check
@@ -361,6 +367,7 @@ final class _UIContextMenuGlyphView: UIView {
 }
 
 /// One row. A UIControl so a tap runs the element and dismisses the menu.
+@MainActor
 final class _UIContextMenuCell: UIControl {
     let layout: UIMenuRowLayout
     let titleLabel = UILabel()
@@ -444,6 +451,7 @@ final class _UIContextMenuCell: UIControl {
 
 /// The container UIKit calls `_UIContextMenuContainerView`: covers the whole
 /// window, swallows the tap that dismisses, and hosts the platter.
+@MainActor
 final class _UIContextMenuContainerView: UIView {
     /// A touch that lands on the container itself is a touch OUTSIDE the
     /// platter (the platter is a subview and hit-tests first), and UIKit
@@ -459,6 +467,7 @@ final class _UIContextMenuContainerView: UIView {
 /// `UIContextMenuInteraction` and `UIButton.menu`, and so does OpenUIKit;
 /// it is public so a host or a test can drive a menu without synthesising a
 /// long press.
+@MainActor
 public final class _UIMenuPresentation {
     public let menu: UIMenu
     public private(set) weak var sourceView: UIView?
@@ -587,6 +596,7 @@ public final class _UIMenuPresentation {
 // MARK: - UIInteraction
 
 /// UIKit's protocol for objects a view hosts (`addInteraction(_:)`).
+@MainActor
 public protocol UIInteraction: AnyObject {
     var view: UIView? { get }
     func willMove(to view: UIView?)
@@ -618,6 +628,7 @@ extension UIView {
 
 // MARK: - UIContextMenuConfiguration
 
+@MainActor
 public final class UIContextMenuConfiguration {
     public let identifier: AnyHashable?
     public let previewProvider: (() -> UIViewController?)?
@@ -638,6 +649,7 @@ public final class UIContextMenuConfiguration {
 /// UIKit's preview descriptor. Declared for source compatibility; OpenUIKit
 /// draws no preview (docs/KNOWN_GAPS.md), so the parameters are stored and
 /// ignored.
+@MainActor
 public final class UITargetedPreview {
     public let view: UIView
     public init(view: UIView) { self.view = view }
@@ -648,12 +660,14 @@ public final class UITargetedPreview {
 /// completions are run IMMEDIATELY rather than alongside a morph — which
 /// keeps the side effects apps put in them (state updates, navigation)
 /// happening, in order, at the right moment.
+@MainActor
 public protocol UIContextMenuInteractionAnimating: AnyObject {
     var previewViewController: UIViewController? { get }
     func addAnimations(_ animations: @escaping () -> Void)
     func addCompletion(_ completion: @escaping () -> Void)
 }
 
+@MainActor
 public protocol UIContextMenuInteractionCommitAnimating: UIContextMenuInteractionAnimating {
     var preferredCommitStyle: UIContextMenuInteractionCommitStyle { get set }
 }
@@ -662,6 +676,7 @@ public enum UIContextMenuInteractionCommitStyle: Int, Sendable { case dismiss = 
 
 /// The concrete animator handed to the delegate: it runs what it is given,
 /// straight away. See the protocol's note.
+@MainActor
 final class _UIContextMenuAnimator: UIContextMenuInteractionCommitAnimating {
     var previewViewController: UIViewController?
     var preferredCommitStyle: UIContextMenuInteractionCommitStyle = .dismiss
@@ -669,6 +684,7 @@ final class _UIContextMenuAnimator: UIContextMenuInteractionCommitAnimating {
     func addCompletion(_ completion: @escaping () -> Void) { completion() }
 }
 
+@MainActor
 public protocol UIContextMenuInteractionDelegate: AnyObject {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
                                 configurationForMenuAtLocation location: CGPoint)
@@ -710,6 +726,7 @@ public extension UIContextMenuInteractionDelegate {
 /// `UILongPressGestureRecognizer` at UIKit's 0.5 s, so the menu appears at
 /// the same moment UIKit's would; what is missing is UIKit's preview
 /// morph and background blur (see the file header).
+@MainActor
 public final class UIContextMenuInteraction: UIInteraction {
     public weak var delegate: UIContextMenuInteractionDelegate?
     public private(set) weak var view: UIView?

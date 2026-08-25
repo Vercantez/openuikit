@@ -5,6 +5,7 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+@MainActor
 final class UISwitchTests: XCTestCase {
 
     private func px(_ b: Bitmap, _ x: Int, _ y: Int) -> (r: Int, g: Int, b: Int, a: Int) {

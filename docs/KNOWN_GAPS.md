@@ -1,5 +1,96 @@
 # Known gaps (living document — fixers: read this)
 
+## Actor isolation (M15, 2026-08-25): what is `@MainActor` and what is not
+
+Real UIKit marks its UI classes `@MainActor`, and app source is written
+against that: `@MainActor func`, `@MainActor` closure types, `nonisolated`
+overrides. OpenUIKit's classes carried no isolation at all, so that source
+did not type-check (docs/APP_COMPAT.md punch list #3 — 641 uses across 270
+corpus files). It does now.
+
+**Isolated, matching the iOS SDK:** `UIResponder` and every subclass (all of
+`UIView`'s subclasses, all of `UIViewController`'s, `UIApplication`,
+`UIWindow`, `UIScene`/`UIWindowScene`), `UIControl`, `UIGestureRecognizer`,
+`UIScreen`, `UIDevice`, `UITouch`/`UIEvent`/`UIPress`/`UIPressesEvent`,
+`UIPresentationController` and the transitioning protocols, `UIMenuElement`
+and friends, `UIAlertAction`, `UIBarButtonItem`/`UITabBarItem`/
+`UINavigationItem`/`UIBarAppearance`, `NSLayoutConstraint`/`NSLayoutAnchor`/
+`UILayoutGuide`, and **every delegate / data-source protocol** (real UIKit
+annotates those too — and it is forced anyway: a `@MainActor` witness cannot
+satisfy a nonisolated protocol requirement).
+
+**Deliberately NOT isolated** — these are legal off the main actor in real
+UIKit as well, and isolating them would be both wrong and a constraint on
+future threading of the renderer:
+
+| kept nonisolated | why |
+|---|---|
+| all of `OpenCoreGraphics` (`Canvas`, `Bitmap`, rasterizer, PNG) | the rendering core; nothing in it touches UI state |
+| `UILabel.drawGlyphLine` / `drawGlyph` | the shared glyph-run painter, spelled `nonisolated static` explicitly so text rasterization stays off-main-legal even though it lives on a `@MainActor` class |
+| the Cassowary solver (`Solver`, `Row`, `Constraint`, `Variable`) | pure math |
+| `FontVariations`, `GlyphFont`, `UIFontMetrics` | font/text engine |
+| `UIColor`, `UIImage`, `UIFont`, `UIBezierPath`, `UIGraphicsImageRenderer` | value-ish; the SDK does not isolate them either |
+| `NSAttributedString`, `NSParagraphStyle`, `Timer`, `RunLoop`, `NotificationCenter`, `OperationQueue` | Foundation shapes; real Foundation does not isolate them |
+
+Runtime cost is zero: without `-enable-actor-data-race-checks` an
+`@MainActor` annotation on a synchronous method compiles to the same code.
+Measured, release, every fixture scene: **1.98 s before, 1.97 s after** (3
+runs each). Renders are byte-identical — 108/108 scenes, 9/9 traces, 737
+tests (5 new, `Tests/OpenUIKitTests/ActorIsolationTests.swift`, which fail to
+**compile** if the isolation regresses), and `scripts/linux_verify.sh` still 162/162 byte-identical frames.
+
+### The two places the isolation boundary is crossed, and why
+
+Both are `MainActor.assumeIsolated`, never `nonisolated(unsafe)`.
+`assumeIsolated` is a **checked** assertion — it traps if the assumption is
+ever violated — where `nonisolated(unsafe)` only silences the compiler.
+
+1. **`Timer._fire`** and **`NotificationCenter.post`** deliver to a
+   `SelectorDispatching` target, which is `@MainActor` because every
+   UIKit-shaped conformer is a view or a view controller. The two *carriers*
+   stay nonisolated because Foundation's are. OpenUIKit has no threads and no
+   run loop of its own, so both paths are only ever reached from the host's
+   main thread.
+2. **`main.swift` in `openrender` and `openhost`.** Top-level code is not
+   main-actor isolated, so each tool's CLI body is wrapped in a single
+   `assumeIsolated` rather than scattering hops through the scene builders.
+
+### Swift 6 strict concurrency: where the package actually stands
+
+Measured at this tip, `swift build -Xswiftc -strict-concurrency=complete`
+(each of these is an error in the Swift 6 *language* mode):
+
+| | before M15 | after M15 |
+|---|---|---|
+| total diagnostics | 1,420 | **1,032** |
+
+The isolation **removed 388 of them**, because a static on a `@MainActor`
+class is concurrency-safe by construction. What is left is one problem
+wearing three labels — **996 of the 1,032 are `#MutableGlobalVariable`**:
+nonisolated mutable/`let`-of-non-Sendable statics. They are concentrated in
+`UIColor.swift` (371), `UIBarSymbol.swift` (126), `RenderStats.swift` (91),
+`UIAlertController.swift` (77) and `UIKitCore.swift` (75) — palettes, symbol
+tables, metric constants and counters that predate this milestone and have
+nothing to do with actors. Making `UIColor` `Sendable` and the tables `let`
+would take most of it out; that is its own piece of work.
+
+The genuinely NEW diagnostics this milestone introduces are **4 sites**
+(24 emissions), all `#SendingRisksDataRace`, and all of them are the
+`assumeIsolated` boundaries above: `Timer.swift` sending `target` and `self`,
+`NotificationCenter.swift` sending `observer` and `notification` into the
+main-actor closure. They are unavoidable while the carriers stay nonisolated
+Foundation shapes, and they are safe for the reason stated at each site.
+
+**So: the package does NOT build in the Swift 6 language mode**, and the
+reason is pre-existing global mutable state, not isolation. It builds clean —
+zero warnings — in the Swift 5 mode the package ships in, on macOS and on
+Linux (`swift:6.2-noble`), which was not true mid-milestone: `@MainActor`
+surfaced eight `#ConformanceIsolation` warnings on the identity
+`Hashable`/`Equatable` conformances of `UIView`/`UITouch`/`UIPress`/`UIScene`
+and on `BottomInsetAdjustable`. Those are fixed properly, with `nonisolated`
+on the witnesses (they compare `ObjectIdentifier`s and read no isolated
+state), not suppressed.
+
 ## M13 wrap-up: the accepted-divergence ledger (2026-08-25)
 
 Every section below documents its own cluster's gaps. This one exists because
@@ -234,7 +325,8 @@ when this section was written (**97.1%** at the M13 wrap-up —
 docs/APP_COMPAT.md). The honest headline is the other one, and it has NOT
 changed: **no corpus app compiles end to end yet**, and the reasons are
 structural rather than long-tail. M14 sharpened it — a real app's *screen*
-renders with 97.7% of its source unmodified, and none of the changes it
+renders with 98.3% of its source unmodified (97.7% as first measured; M15's
+actor isolation removed 4 of the 14 changed lines), and none of the changes it
 needed was a missing UIKit member (docs/REAL_APP_TEST.md).
 
 - **Delegate protocols that do not exist stop compilation before behaviour
@@ -994,10 +1086,14 @@ exercised and OpenUIKit does not fully honour.
   is why `NSCoder` (and therefore `required init?(coder:)`, present in 344 of
   the corpus's 5,099 files) cannot be satisfied, and it is ranked as the
   single biggest structural obstacle in docs/REAL_APP_TEST.md.
-- **OpenUIKit's classes carry no `@MainActor` isolation.** App source that
-  annotates closures or methods `@MainActor` — 641 uses across 270 corpus
-  files, and the Swift 6 default expectation — fails to type-check against
-  them.
+- ~~**OpenUIKit's classes carry no `@MainActor` isolation.**~~ *(M15: CLOSED
+  — see "Actor isolation" below.)* `UIResponder` and every subclass,
+  `UIControl`, `UIGestureRecognizer`, `UIScreen`, `UIDevice`, the touch/event
+  types, the presentation and transitioning types, the bar-item and bar
+  appearance types, the Auto Layout types and every delegate / data-source
+  protocol are `@MainActor`, matching the iOS SDK. App source that writes
+  `@MainActor func`, `@MainActor` closure types or `nonisolated` against that
+  assumption — 641 uses across 270 corpus files — now type-checks.
 
 ## App-compat cluster: image loading, drawing, controls (2026-08-25)
 

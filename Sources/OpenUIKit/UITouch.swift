@@ -9,6 +9,7 @@
 // `TimeInterval` used to be declared here as `= Double`. It is Foundation's
 // now (M15, FoundationTypes.swift) — same underlying type, one name.
 
+@MainActor
 public final class UITouch: Hashable {
     public enum Phase: Sendable {
         case began, moved, stationary, ended, cancelled
@@ -70,8 +71,10 @@ public final class UITouch: Hashable {
 
     // MARK: Hashable (identity)
 
-    public static func == (lhs: UITouch, rhs: UITouch) -> Bool { lhs === rhs }
-    public func hash(into hasher: inout Hasher) {
+    // `nonisolated`: identity only, and Hashable is a nonisolated protocol
+    // (see the note in UIViewCompat.swift).
+    nonisolated public static func == (lhs: UITouch, rhs: UITouch) -> Bool { lhs === rhs }
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 @testable import OpenUIKit
 
 /// A view that draws through the app-facing `draw(_ rect:)` hook.
+@MainActor
 private final class CustomDrawView: UIView {
     var fillColor: UIColor = .red
     var drawCount = 0
@@ -20,6 +21,7 @@ private final class CustomDrawView: UIView {
     }
 }
 
+@MainActor
 final class AppDrawingTests: XCTestCase {
 
     private var savedSearchPaths: [String] = []

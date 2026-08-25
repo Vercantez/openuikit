@@ -36,6 +36,7 @@ public struct UILayoutPriority: RawRepresentable, Hashable, Comparable, Sendable
     }
 }
 
+@MainActor
 public final class NSLayoutConstraint {
     public enum Attribute: Sendable {
         case left, right, top, bottom, leading, trailing

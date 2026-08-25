@@ -8,6 +8,7 @@
 
 import OpenUIKit
 
+@MainActor
 public enum TasksApp {
     /// Same iPhone-ish portrait window as the Settings demo.
     public static let windowSize = CGSize(width: 390, height: 780)

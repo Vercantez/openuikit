@@ -130,6 +130,7 @@ enum LiquidGlass { static let isEnabled = false }
 // Replaces podcasts/SceneHelper.swift's window lookup. Only reachable from
 // OptionsPicker.present() with no argument, which the harness does not call.
 enum SceneHelper {
+    @MainActor
     static func rootViewController() -> UIViewController? {
         UIApplication.shared.keyWindow?.rootViewController
     }

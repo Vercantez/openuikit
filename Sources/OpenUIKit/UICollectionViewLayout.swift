@@ -9,6 +9,7 @@
 
 /// Geometry (and a little presentation state) for one element of a
 /// collection view: a cell, or a supplementary/decoration view.
+@MainActor
 open class UICollectionViewLayoutAttributes {
     public enum Category: Sendable {
         case cell, supplementaryView, decorationView
@@ -67,6 +68,7 @@ open class UICollectionViewLayoutAttributes {
 
 /// Abstract layout. Subclasses answer for their own geometry; the base class
 /// deliberately returns "nothing", like UIKit's.
+@MainActor
 open class UICollectionViewLayout {
     /// Set by the collection view when the layout is installed.
     public internal(set) weak var collectionView: UICollectionView?

@@ -7,6 +7,7 @@ import Foundation
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+@MainActor
 final class ViewGeometryTests: XCTestCase {
 
     // MARK: identity frame math

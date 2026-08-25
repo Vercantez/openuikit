@@ -79,6 +79,7 @@
 
 import CQuartz
 
+@MainActor
 public enum LayerBridge {
     // MARK: Entry
 

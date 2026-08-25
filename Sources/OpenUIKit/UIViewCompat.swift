@@ -13,12 +13,16 @@
 // and app code writes it freely (`if previousView != label { ... }`).
 // OpenUIKit's UIView is a plain class, so `!=` did not exist at all.
 
+// `nonisolated`: both are pure IDENTITY comparisons that read no isolated
+// state, and Hashable/Equatable are nonisolated protocols. Without it the
+// conformance of a `@MainActor` class "crosses into main-actor-isolated
+// code" -- a warning today and an error in Swift 6 language mode.
 extension UIView: Equatable {
-    public static func == (lhs: UIView, rhs: UIView) -> Bool { lhs === rhs }
+    nonisolated public static func == (lhs: UIView, rhs: UIView) -> Bool { lhs === rhs }
 }
 
 extension UIView: Hashable {
-    public func hash(into hasher: inout Hasher) {
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }
@@ -166,6 +170,7 @@ public enum UITraitHorizontalSizeClass: UITraitDefinition {
 }
 
 /// The opaque token UIKit hands back so a registration can be dropped.
+@MainActor
 public final class UITraitChangeRegistration {
     let traits: [String]
     let fire: (UITraitCollection) -> Void

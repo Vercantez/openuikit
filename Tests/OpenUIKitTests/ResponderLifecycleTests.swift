@@ -14,6 +14,7 @@ import Foundation
 /// UIApplication is a process-wide singleton, so a chain assertion that
 /// ends "at the application" only holds while no responder delegate is
 /// installed. Run such assertions with the delegate detached.
+@MainActor
 private func withoutApplicationDelegate(_ body: () -> Void) {
     let previous = UIApplication.shared.delegate
     UIApplication.shared.delegate = nil
@@ -23,6 +24,7 @@ private func withoutApplicationDelegate(_ body: () -> Void) {
 
 // MARK: - Responder chain
 
+@MainActor
 final class ResponderChainTests: XCTestCase {
     /// A deep view walks superviews, hops through the view controller whose
     /// ROOT view it passes, and ends at the window then the application.
@@ -143,6 +145,7 @@ final class ResponderChainTests: XCTestCase {
     /// a responder — the `class AppDelegate: UIResponder,
     /// UIApplicationDelegate` shape.
     func testApplicationForwardsToResponderDelegate() {
+        @MainActor
         final class D: UIResponder, UIApplicationDelegate {}
         let d = D()
         let previous = UIApplication.shared.delegate
@@ -154,6 +157,7 @@ final class ResponderChainTests: XCTestCase {
 
     func testResponderChainIsCycleGuarded() {
         // A malformed hierarchy must not hang a host.
+        @MainActor
         final class Loop: UIResponder {
             weak var target: UIResponder?
             override var next: UIResponder? { target }
@@ -168,6 +172,7 @@ final class ResponderChainTests: XCTestCase {
 // MARK: - Touch forwarding up the chain
 
 /// Records the responder entry points it receives (and stops the chain).
+@MainActor
 private final class StopRecorder: UIView {
     var log: [String] = []
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -178,6 +183,7 @@ private final class StopRecorder: UIView {
     }
 }
 
+@MainActor
 private final class RecordingApplicationDelegate: UIResponder, UIApplicationDelegate {
     var log: [String] = []
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -212,6 +218,7 @@ private final class RecordingApplicationDelegate: UIResponder, UIApplicationDele
     }
 }
 
+@MainActor
 final class ResponderTouchForwardingTests: XCTestCase {
     /// UIKit's default: an unhandled touch travels up the chain.
     func testUnhandledTouchForwardsToAncestor() {
@@ -259,6 +266,7 @@ final class ResponderTouchForwardingTests: XCTestCase {
     /// to a leaf view climbs the whole chain — through the view controller
     /// and the window — to the app delegate.
     func testPressesForwardUpTheChain() {
+        @MainActor
         final class PressRecorder: UIViewController {
             var log: [String] = []
             override func pressesBegan(_ presses: Set<UIPress>,
@@ -267,6 +275,7 @@ final class ResponderTouchForwardingTests: XCTestCase {
                 super.pressesBegan(presses, with: event)
             }
         }
+        @MainActor
         final class DelegateRecorder: UIResponder, UIApplicationDelegate {
             var log: [String] = []
             override func pressesBegan(_ presses: Set<UIPress>,
@@ -297,9 +306,11 @@ final class ResponderTouchForwardingTests: XCTestCase {
 
 // MARK: - First responder
 
+@MainActor
 final class ResponderFirstResponderTests: XCTestCase {
     /// A responder that opts in takes focus, and the window records it.
     func testBecomeAndResignOnAView() {
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -318,6 +329,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// A view controller can hold focus too, through its view's window.
     func testViewControllerCanBecomeFirstResponder() {
+        @MainActor
         final class FocusableVC: UIViewController {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -335,6 +347,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// Taking focus makes the previous first responder resign first.
     func testTakingFocusResignsThePrevious() {
+        @MainActor
         final class Focusable: UIView {
             var resigned = 0
             override var canBecomeFirstResponder: Bool { true }
@@ -356,10 +369,12 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// canResignFirstResponder == false refuses the handover (UIKit).
     func testStickyFirstResponderBlocksHandover() {
+        @MainActor
         final class Sticky: UIView {
             override var canBecomeFirstResponder: Bool { true }
             override var canResignFirstResponder: Bool { false }
         }
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -374,6 +389,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// Re-taking focus you already hold is a no-op that succeeds.
     func testBecomeFirstResponderIsIdempotent() {
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -387,6 +403,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// Focus is per WINDOW, which is where UIKit stores it.
     func testFirstResponderIsPerWindow() {
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -403,6 +420,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
     /// A plain responder (no window) cannot take focus, even if it opts in.
     func testDetachedResponderCannotTakeFocus() {
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -412,6 +430,7 @@ final class ResponderFirstResponderTests: XCTestCase {
 
 // MARK: - Application lifecycle
 
+@MainActor
 final class ApplicationLifecycleTests: XCTestCase {
     /// Launch -> active -> resign -> background -> foreground -> active ->
     /// terminate, in UIKit's order, with the state observable from inside
@@ -475,6 +494,7 @@ final class ApplicationLifecycleTests: XCTestCase {
     /// Scene activation follows the application's, and the scene delegate
     /// hears about it.
     func testSceneActivationFollowsApplication() {
+        @MainActor
         final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             var window: UIWindow?
             var log: [String] = []
@@ -541,6 +561,7 @@ final class ApplicationLifecycleTests: XCTestCase {
     /// The nil-target action walks the chain from the first responder and
     /// stops at the first responder that handles it.
     func testSendActionWalksTheChain() {
+        @MainActor
         final class Focusable: UIView {
             override var canBecomeFirstResponder: Bool { true }
         }
@@ -585,6 +606,7 @@ final class ApplicationLifecycleTests: XCTestCase {
 
 // MARK: - Environment
 
+@MainActor
 final class ScreenDeviceTests: XCTestCase {
     func testScreenIsHostDrivenAndPixelsFollowScale() {
         let screen = UIScreen.main

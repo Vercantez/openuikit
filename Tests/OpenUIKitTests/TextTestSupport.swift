@@ -7,6 +7,7 @@ import XCTest
 // uses Foundation (JSONSerialization), so they are fully qualified below —
 // see docs/KNOWN_GAPS.md "Attributed text shadows Foundation's types".
 
+@MainActor
 enum TextTestSupport {
     /// Absolute repo root, derived from this file's location.
     static let repoRoot: URL = URL(fileURLWithPath: #filePath)

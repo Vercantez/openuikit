@@ -41,7 +41,11 @@ let appModeDefaultScale: CGFloat = 2
 /// The apps `--app <name>` can boot: window size + root factory. The root is
 /// a plain UIViewController: most apps hand back a UINavigationController,
 /// `showcase` hands back a UITabBarController wrapping three of them.
-let appRegistry: [String: (size: CGSize, makeRoot: () -> UIViewController)] = [
+// `@MainActor`: the factories build view controllers, which are main-actor
+// isolated (as in real UIKit), so the stored closure type must say so too --
+// otherwise the conversion silently drops the isolation.
+@MainActor
+let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewController)] = [
     "demo": (DemoApp.windowSize, DemoApp.makeRootViewController),
     "tasks": (TasksApp.windowSize, TasksApp.makeRootViewController),
     "textdemo": (TextDemoApp.windowSize, TextDemoApp.makeRootViewController),
@@ -105,6 +109,7 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+@MainActor
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
                    style: UIUserInterfaceStyle = .light) -> HostScene {
     guard let app = appRegistry[appName] else {

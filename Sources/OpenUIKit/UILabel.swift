@@ -29,6 +29,7 @@ public enum NSLineBreakMode: Sendable {
     case byTruncatingHead, byTruncatingTail, byTruncatingMiddle
 }
 
+@MainActor
 open class UILabel: UIView {
     /// Plain text. Real UIKit keeps one storage: setting `text` drops any
     /// attributed string, and setting `attributedText` makes `text` report
@@ -284,7 +285,7 @@ open class UILabel: UIView {
     /// Shared single-line glyph run renderer (ink-table fast path + stb
     /// fallback). Used by UILabel and the text-input views (UITextField /
     /// UITextView), so their glyph output is byte-identical to labels.
-    static func drawGlyphLine(_ line: String, at origin: CGPoint, in canvas: Canvas,
+    nonisolated static func drawGlyphLine(_ line: String, at origin: CGPoint, in canvas: Canvas,
                               font: UIFont, dark: Bool,
                               color: CGColor, glyphFont: InstancedGlyphFont?,
                               extraAdvance: CGFloat = 0) {
@@ -324,7 +325,7 @@ open class UILabel: UIView {
     /// user space). Split out of `drawGlyphLine` unchanged so the attributed
     /// path (per-run fonts, colors and baseline offsets) produces byte-
     /// identical ink to the plain path.
-    static func drawGlyph(_ ch: Unicode.Scalar, penX: CGFloat, baselineY: CGFloat,
+    nonisolated static func drawGlyph(_ ch: Unicode.Scalar, penX: CGFloat, baselineY: CGFloat,
                           in canvas: Canvas, font: UIFont, dark: Bool, color: CGColor,
                           glyphFont: InstancedGlyphFont?,
                           inkEligible: Bool, famKey: String, sizeKey: Int,

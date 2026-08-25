@@ -6,6 +6,7 @@ import XCTest
 // geometry types to the OpenCoreGraphics implementations under test.
 private typealias CGAffineTransform = OpenCoreGraphics.CGAffineTransform
 
+@MainActor
 final class RasterizerTests: XCTestCase {
 
     // These tests assert the pure-Swift rasterizer's exact analytic-coverage

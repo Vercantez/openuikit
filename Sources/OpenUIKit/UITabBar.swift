@@ -42,7 +42,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-
+@MainActor
 public class UITabBarItem {
     public var title: String?
     public var image: UIImage?
@@ -55,12 +55,14 @@ public class UITabBarItem {
     }
 }
 
+@MainActor
 public protocol UITabBarDelegate: AnyObject {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem)
 }
 
 /// One item slot: tinted icon + title, tap → selection. All drawing state
 /// (tint) is pushed in by the bar.
+@MainActor
 final class _UITabBarItemView: UIControl {
     let item: UITabBarItem
     let iconView = UIImageView()
@@ -98,6 +100,7 @@ final class _UITabBarItemView: UIControl {
     }
 }
 
+@MainActor
 public final class UITabBar: UIView {
     // MARK: Golden-measured metrics (see file header)
 

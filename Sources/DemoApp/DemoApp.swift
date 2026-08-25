@@ -10,6 +10,7 @@
 
 import OpenUIKit
 
+@MainActor
 public enum DemoApp {
     /// The demo's default window size in points (iPhone-ish portrait).
     public static let windowSize = CGSize(width: 390, height: 780)

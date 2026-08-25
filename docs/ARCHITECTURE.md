@@ -29,6 +29,17 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
    it additively.
 4. Never use `Date()`, network, or absolute paths in library code. Since M15
    the `Date()` half is a TEST, not a convention — see rule 1.
+5. **Actor isolation follows real UIKit, not convenience.** The UI classes
+   (`UIResponder` and every subclass, `UIControl`, `UIGestureRecognizer`,
+   `UIScreen`, the event/touch, presentation, bar-item and Auto Layout
+   types, and every delegate protocol) are `@MainActor`, because the SDK's
+   are and app source is written against that. `OpenCoreGraphics`, the
+   text engine's glyph entry points and the Cassowary solver stay
+   **nonisolated** — they are legal off the main actor and the renderer
+   must stay free to move off it. Crossing the boundary is
+   `MainActor.assumeIsolated` (checked) with the reasoning written at the
+   site; `nonisolated(unsafe)` is not used anywhere. Full ledger:
+   docs/KNOWN_GAPS.md "Actor isolation".
 
 ## Build & verify loop
 

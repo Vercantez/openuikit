@@ -17,6 +17,7 @@ import Foundation
 
 // MARK: - Shared drivers
 
+@MainActor
 private final class FlowSource: UICollectionViewDataSource,
                                UICollectionViewDelegateFlowLayout {
     var counts: [Int]
@@ -49,6 +50,7 @@ private final class FlowSource: UICollectionViewDataSource,
 /// the tests keep them alive here.
 private var keptSources: [FlowSource] = []
 
+@MainActor
 private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
                             sizeFor: ((IndexPath) -> CGSize)? = nil,
                             configure: (UICollectionViewFlowLayout) -> Void)
@@ -74,6 +76,7 @@ private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
 
 // MARK: - 1. Measured flow-layout geometry
 
+@MainActor
 final class FlowLayoutMeasuredTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -484,6 +487,7 @@ final class FlowLayoutMeasuredTests: XCTestCase {
 // MARK: - 2. Reuse
 
 /// Counts instances so reuse can be proven (mirrors TableViewTests).
+@MainActor
 private final class CountingItemCell: UICollectionViewCell {
     static var created = 0
     required init(frame: CGRect = .zero) {
@@ -492,6 +496,7 @@ private final class CountingItemCell: UICollectionViewCell {
     }
 }
 
+@MainActor
 private final class BigGridSource: UICollectionViewDataSource {
     var items = 10_000
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
@@ -504,6 +509,7 @@ private final class BigGridSource: UICollectionViewDataSource {
     }
 }
 
+@MainActor
 final class CollectionViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -605,15 +611,18 @@ final class CollectionViewReuseTests: XCTestCase {
     }
 }
 
+@MainActor
 private final class HeaderView: UICollectionReusableView {
     required init(frame: CGRect = .zero) { super.init(frame: frame) }
 }
+@MainActor
 private final class FooterView: UICollectionReusableView {
     required init(frame: CGRect = .zero) { super.init(frame: frame) }
 }
 
 // MARK: - 3. Behaviour
 
+@MainActor
 private final class RecordingDelegate: UICollectionViewDelegate {
     var selected: [IndexPath] = []
     var deselected: [IndexPath] = []
@@ -630,6 +639,7 @@ private final class RecordingDelegate: UICollectionViewDelegate {
     }
 }
 
+@MainActor
 final class CollectionViewBehaviourTests: XCTestCase {
     override func setUp() {
         super.setUp()

@@ -18,6 +18,7 @@
 // from a wall clock — so scripted captures are deterministic.
 
 /// UIKit's UIKeyInput: minimal text entry.
+@MainActor
 public protocol UIKeyInput: AnyObject {
     var hasText: Bool { get }
     func insertText(_ text: String)
@@ -35,6 +36,7 @@ public enum UIKeyEventKey: String, Sendable {
 }
 
 /// Internal: views that take editing-key input (caret movement, return).
+@MainActor
 protocol UITextKeyHandling: AnyObject {
     func handleKey(_ key: UIKeyEventKey)
 }
@@ -67,6 +69,7 @@ extension UIWindow {
 /// registers itself on focus and gets `caretBlinkChanged` callbacks when
 /// the on/off phase flips, so it can update its caret view (a plain
 /// property change — the next render picks it up).
+@MainActor
 public enum UITextInputState {
     /// Blink half-period (seconds) and the solid hold after focus/typing.
     public static var blinkHalfPeriod: TimeInterval = 0.5
@@ -118,6 +121,7 @@ public enum UITextInputState {
 }
 
 /// Internal: an editor that hosts a blinking caret view.
+@MainActor
 protocol UITextCaretHosting {
     func caretBlinkChanged(visible: Bool)
 }
@@ -127,6 +131,7 @@ protocol UITextCaretHosting {
 /// Pure caret math shared by UITextField and UITextView: glyph-boundary
 /// hit testing and prefix widths from the FontEngine advance/kerning
 /// tables (the same measurement the renderer uses).
+@MainActor
 public enum UITextCaretMath {
     /// Width of the first `count` unicode scalars of `text`.
     public static func prefixWidth(_ text: String, count: Int, font: UIFont) -> CGFloat {

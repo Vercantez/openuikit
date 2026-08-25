@@ -217,12 +217,23 @@ public final class Timer {
     private func _fire() {
         if let block { block(self); return }
         guard let target, let selectorName else { return }
-        guard let dispatcher = target as? SelectorDispatching else {
-            SelectorDispatch.onUnresolved?(target, selectorName)
-            return
-        }
-        if !dispatcher.perform(selectorName, with: self) {
-            SelectorDispatch.onUnresolved?(target, selectorName)
+        // `Timer` itself stays nonisolated, exactly like Foundation's — a
+        // timer is a schedule, not a view. Its TARGET, though, is app code
+        // that is now `@MainActor` (`SelectorDispatching` is main-actor
+        // isolated because every UIKit-shaped conformer is a view or a view
+        // controller). OpenUIKit has no threads and no run loop of its own:
+        // timers only ever fire from `RunLoop.main` / `UIWindow.tick`, both
+        // main-thread entry points. `assumeIsolated` states that precondition
+        // and CHECKS it (it traps off-main) rather than silencing it the way
+        // `nonisolated(unsafe)` would.
+        MainActor.assumeIsolated {
+            guard let dispatcher = target as? SelectorDispatching else {
+                SelectorDispatch.onUnresolved?(target, selectorName)
+                return
+            }
+            if !dispatcher.perform(selectorName, with: self) {
+                SelectorDispatch.onUnresolved?(target, selectorName)
+            }
         }
     }
 

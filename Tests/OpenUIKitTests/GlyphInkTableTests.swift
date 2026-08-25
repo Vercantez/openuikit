@@ -3,6 +3,7 @@
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class GlyphInkTableTests: XCTestCase {
 
     // MARK: Phase quantization model (measured against oracle probes)

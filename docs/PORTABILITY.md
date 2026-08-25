@@ -8,6 +8,32 @@ Reproduce any time with `scripts/linux_verify.sh` (renderer),
 `scripts/linux_realapp_verify.sh` (a REAL app's screen — M14). All need
 Docker.
 
+## M15: `@MainActor` isolation does not cost portability
+
+`@MainActor` is Swift-concurrency, not Foundation and not ObjC, so it works
+identically off Darwin — verified, not assumed. Re-run at the M15 tip in
+`swift:6.2-noble`:
+
+| check | result |
+|---|---|
+| `swift build -c release` of the library + `openrender` on Linux | **clean, zero warnings** |
+| `scripts/linux_verify.sh` | **162/162 frames byte-identical** to the macOS render, 108/108 scenes vs the real-UIKit goldens |
+| `scripts/linux_realapp_verify.sh` | **13/13 byte-identical** (3 headless + 10 live) |
+
+Two notes for anyone porting further:
+
+- **`MainActor.assumeIsolated` is stdlib, and back-deploys.** It needed one
+  manifest change on the Apple side only — `platforms: [.macOS(.v11)]`,
+  because naming `MainActor` requires a 10.15+ deployment target and SwiftPM
+  was already linking these products for macOS 11. Nothing was added for
+  Linux, and still **no `.unsafeFlags`**, so the package remains usable as an
+  SPM dependency (the property Package.swift's header exists to protect).
+- **The Linux toolchain is stricter, and that was useful.** Swift 6.2 on
+  Linux flagged `#ConformanceIsolation` on the identity
+  `Hashable`/`Equatable` conformances of the newly-isolated classes before
+  anything else did. They are fixed with `nonisolated` witnesses, not
+  suppressed.
+
 ## M14: a real app's source compiles and renders identically on Linux
 
 The strongest portability statement to date, because the source under test is

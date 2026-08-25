@@ -3,6 +3,7 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class FontEngineTests: XCTestCase {
     override func setUp() {
         super.setUp()

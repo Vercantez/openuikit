@@ -119,6 +119,7 @@ func fontFrom(_ j: SceneJSON) -> UIFont {
 
 // MARK: - View building (mirror oracle order exactly)
 
+@MainActor
 func applyCommon(_ v: UIView, _ j: SceneJSON, name: String) {
     if let f = numArray(j["frame"]), f.count == 4 {
         v.frame = CGRect(x: f[0], y: f[1], width: f[2], height: f[3])
@@ -206,6 +207,7 @@ func lineBreakMode(_ s: String?) -> NSLineBreakMode {
     }
 }
 
+@MainActor
 func makeLabel(_ j: SceneJSON) -> UILabel {
     let l = UILabel()
     l.text = j["text"]?.stringValue
@@ -355,6 +357,7 @@ func makeImage(_ j: SceneJSON, scale: CGFloat) -> UIImage {
     return UIImage(bitmap: bmp, scale: scale)
 }
 
+@MainActor
 func makeImageView(_ j: SceneJSON, scale: CGFloat) -> UIImageView {
     let iv = UIImageView()
     if let ij = j["image"]?.objectValue { iv.image = makeImage(ij, scale: scale) }
@@ -372,6 +375,7 @@ func makeImageView(_ j: SceneJSON, scale: CGFloat) -> UIImageView {
     return iv
 }
 
+@MainActor
 func makeProgressView(_ j: SceneJSON) -> UIProgressView {
     let p = UIProgressView()
     if let v = num(j["progress"]) { p.progress = Float(v) }
@@ -380,6 +384,7 @@ func makeProgressView(_ j: SceneJSON) -> UIProgressView {
     return p
 }
 
+@MainActor
 func makeSlider(_ j: SceneJSON) -> UISlider {
     let s = UISlider()
     if let v = num(j["minimumValue"]) { s.minimumValue = Float(v) }
@@ -392,6 +397,7 @@ func makeSlider(_ j: SceneJSON) -> UISlider {
     return s
 }
 
+@MainActor
 func makeSegmentedControl(_ j: SceneJSON) -> UISegmentedControl {
     let items = (j["segments"]?.arrayValue ?? []).compactMap { $0.stringValue }
     let s = UISegmentedControl(items: items)
@@ -403,6 +409,7 @@ func makeSegmentedControl(_ j: SceneJSON) -> UISegmentedControl {
     return s
 }
 
+@MainActor
 func makeActivityIndicator(_ j: SceneJSON) -> UIActivityIndicatorView {
     let style: UIActivityIndicatorView.Style
     switch j["style"]?.stringValue ?? "medium" {
@@ -417,6 +424,7 @@ func makeActivityIndicator(_ j: SceneJSON) -> UIActivityIndicatorView {
     return a
 }
 
+@MainActor
 func makePageControl(_ j: SceneJSON) -> UIPageControl {
     let p = UIPageControl()
     p.numberOfPages = Int(num(j["numberOfPages"]) ?? 3)
@@ -464,6 +472,7 @@ func stackAlignment(_ s: String?) -> UIStackView.Alignment {
     }
 }
 
+@MainActor
 func makeStackView(_ j: SceneJSON) -> UIStackView {
     let s = UIStackView()
     s.axis = stackAxis(j["axis"]?.stringValue)
@@ -473,6 +482,7 @@ func makeStackView(_ j: SceneJSON) -> UIStackView {
     return s
 }
 
+@MainActor
 func makeGradientView(_ j: SceneJSON) -> UIGradientView {
     let g = UIGradientView()
     guard let colorStrings = j["colors"]?.arrayValue?.compactMap({ $0.stringValue }),
@@ -498,6 +508,7 @@ func makeGradientView(_ j: SceneJSON) -> UIGradientView {
     return g
 }
 
+@MainActor
 func makeScrollView(_ j: SceneJSON) -> UIScrollView {
     let s = UIScrollView()
     if let cs = numArray(j["contentSize"]), cs.count == 2 {
@@ -540,6 +551,7 @@ final class ScenePickerSource: UIPickerViewDataSource, UIPickerViewDelegate {
 }
 var retainedPickerSources: [ScenePickerSource] = []
 
+@MainActor
 func makePickerView(_ j: SceneJSON) -> UIPickerView {
     let p = UIPickerView()
     let titles = j["rows"]?.arrayValue?.compactMap { $0.stringValue } ?? []
@@ -556,6 +568,7 @@ func makePickerView(_ j: SceneJSON) -> UIPickerView {
     return p
 }
 
+@MainActor
 func makeTextField(_ j: SceneJSON) -> UITextField {
     let t = UITextField()
     switch j["borderStyle"]?.stringValue ?? "none" {
@@ -574,6 +587,7 @@ func makeTextField(_ j: SceneJSON) -> UITextField {
     return t
 }
 
+@MainActor
 func makeTextView(_ j: SceneJSON) -> UITextView {
     let t = UITextView()
     t.text = j["text"]?.stringValue ?? ""
@@ -583,6 +597,7 @@ func makeTextView(_ j: SceneJSON) -> UITextView {
     return t
 }
 
+@MainActor
 func makeSwitch(_ j: SceneJSON) -> UISwitch {
     let s = UISwitch()
     s.isOn = j["on"]?.boolValue ?? false
@@ -590,6 +605,7 @@ func makeSwitch(_ j: SceneJSON) -> UISwitch {
     return s
 }
 
+@MainActor
 func makeButton(_ j: SceneJSON) -> UIButton {
     let b = UIButton(type: .system)
     b.setTitle(j["title"]?.stringValue, for: .normal)
@@ -700,6 +716,7 @@ final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+@MainActor
 func makeTableView(_ j: SceneJSON) -> UITableView {
     let style: UITableView.Style
     switch j["style"]?.stringValue ?? "plain" {
@@ -849,6 +866,7 @@ final class SceneCollectionDriver: UICollectionViewDataSource,
     }
 }
 
+@MainActor
 func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
     let layout = UICollectionViewFlowLayout()
     switch j["scrollDirection"]?.stringValue ?? "vertical" {
@@ -921,6 +939,7 @@ let barSystemItems: [String: UIBarButtonItem.SystemItem] = [
     "flexibleSpace": .flexibleSpace, "fixedSpace": .fixedSpace,
 ]
 
+@MainActor
 func makeBarButtonItem(_ j: SceneJSON, scale: CGFloat,
                        warn: (String) -> Void) -> UIBarButtonItem {
     let style: UIBarButtonItem.Style =
@@ -944,6 +963,7 @@ func makeBarButtonItem(_ j: SceneJSON, scale: CGFloat,
     return item
 }
 
+@MainActor
 func makeBarItems(_ v: JSONValue?, scale: CGFloat,
                   warn: (String) -> Void) -> [UIBarButtonItem]? {
     guard let arr = v?.arrayValue else { return nil }
@@ -953,6 +973,7 @@ func makeBarItems(_ v: JSONValue?, scale: CGFloat,
     }
 }
 
+@MainActor
 func applyBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, to a: A) {
     switch j["configuration"]?.stringValue ?? "default" {
     case "default": a.configureWithDefaultBackground()
@@ -975,6 +996,7 @@ func applyBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, to a: A) {
     }
 }
 
+@MainActor
 func makeBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, _ kind: A.Type) -> A {
     let a = A()
     applyBarAppearance(j, to: a)
@@ -991,6 +1013,7 @@ func barTitleAttributes(_ j: SceneJSON) -> UIBarTitleTextAttributes {
     return attrs
 }
 
+@MainActor
 func makeToolbar(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIToolbar {
     let t = UIToolbar()
     t.items = makeBarItems(j["items"], scale: scale, warn: warn)
@@ -1013,6 +1036,7 @@ var sceneRetainedControllers: [UIViewController] = []
 /// as content), mirroring the oracle's construction. `contentOffset` is
 /// applied LIVE after the tree is laid out (the bar tracks observed
 /// offsets) — see applyPendingChromeActions, called from runScene.
+@MainActor
 func makeNavigationStack(_ j: SceneJSON, scale: CGFloat,
                          warn: (String) -> Void) -> UIView {
     let stack = UINavigationStack()
@@ -1096,6 +1120,7 @@ func applyPendingChromeActions() {
 /// Build the UITabBarStack scene root: a real UITabBarController whose
 /// items get titles + synthesized template images; the selected item's
 /// "content" view fills that tab's controller view.
+@MainActor
 func makeTabBarStack(_ j: SceneJSON, scale: CGFloat,
                      warn: (String) -> Void) -> UIView {
     let stack = UITabBarStack()
@@ -1126,6 +1151,7 @@ func makeTabBarStack(_ j: SceneJSON, scale: CGFloat,
     return stack
 }
 
+@MainActor
 func buildView(_ input: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView {
     var j = input
     let cls = j["class"]?.stringValue ?? "UIView"
@@ -1204,6 +1230,7 @@ func buildView(_ input: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UI
 /// path. Private implementation subviews (UIButtonLabel, ...) stay out of
 /// the registry; hit results normalize to the nearest scene-defined
 /// ancestor — identical rule to the oracle.
+@MainActor
 func sceneViewRegistry(_ v: UIView, _ j: SceneJSON, path: String,
                        into out: inout [ObjectIdentifier: String]) {
     out[ObjectIdentifier(v)] = path
@@ -1219,6 +1246,7 @@ func sceneViewRegistry(_ v: UIView, _ j: SceneJSON, path: String,
 /// bypassed by running UIKit's hit-test recursion step at the root
 /// (reverse subview order, converted point, first hit wins), so the root
 /// itself is never a hit result.
+@MainActor
 func runHitTests(_ points: [CGPoint], container: UIView,
                  rootJSON: SceneJSON) -> [JSONValue] {
     var registry: [ObjectIdentifier: String] = [:]
@@ -1308,6 +1336,7 @@ func parseAnimations(_ scene: JSONValue) -> [SceneAnimation] {
 }
 
 /// Resolve a dot-joined subview-index path ("" = root) against the built tree.
+@MainActor
 func viewAtPath(_ root: UIView, _ path: String) -> UIView {
     var v = root
     guard !path.isEmpty else { return v }
@@ -1322,6 +1351,7 @@ func viewAtPath(_ root: UIView, _ path: String) -> UIView {
 
 /// Apply one animation entry's `changes` to the target view. Called INSIDE
 /// the UIView.animate block. Mirrors the oracle's applyAnimationChanges.
+@MainActor
 func applyAnimationChanges(_ v: UIView, _ changes: SceneJSON) {
     for (key, value) in changes {
         switch key {
@@ -1353,6 +1383,7 @@ func applyAnimationChanges(_ v: UIView, _ changes: SceneJSON) {
 /// Kick off every animation entry with UIView.animate. Unlike the oracle
 /// (which must shift layer timelines under a frozen CA clock), the engine
 /// handles per-animation delay natively, so this is a direct translation.
+@MainActor
 func startAnimations(_ anims: [SceneAnimation], container: UIView) {
     for a in anims {
         let target = viewAtPath(container, a.target)
@@ -1410,6 +1441,7 @@ func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
 /// The constrained object at a scene path: the view itself, or one of its
 /// layout guides when the constraint carries a "guide"/"toGuide" key
 /// (spec v5.3). Mirrors Tools/oracle/SceneKit.swift's `layoutItem`.
+@MainActor
 func layoutItem(_ container: UIView, _ path: String, _ guide: String?) -> AnyObject {
     let v = viewAtPath(container, path)
     switch guide {
@@ -1425,6 +1457,7 @@ func layoutItem(_ container: UIView, _ path: String, _ guide: String?) -> AnyObj
 /// "constraints" array. Item paths use layout-dump addressing ("" = root).
 /// Runs after the tree is built and BEFORE layoutIfNeeded; priorities are
 /// set pre-activation (mirrors Tools/oracle/SceneKit.swift).
+@MainActor
 func activateConstraints(_ specs: [JSONValue], container: UIView) {
     var built: [NSLayoutConstraint] = []
     for entry in specs {
@@ -1467,6 +1500,7 @@ func activateConstraints(_ specs: [JSONValue], container: UIView) {
 
 func round3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
 
+@MainActor
 func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     var entry: [String: JSONValue] = [
         "path": .string(path),
@@ -1506,6 +1540,7 @@ struct SceneResult {
     var layout: JSONValue
 }
 
+@MainActor
 func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     guard let name = scene["name"]?.stringValue else { fatalError("scene missing name") }
     guard let sz = numArray(scene["size"]), sz.count == 2 else { fatalError("scene missing size") }

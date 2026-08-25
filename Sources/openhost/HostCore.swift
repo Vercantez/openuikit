@@ -46,6 +46,7 @@ struct HostScene {
 /// root-frame quirk (root stays 0x0, background never draws) for golden
 /// parity; a live host needs the root hit-testable — UIKit prunes subviews
 /// outside their parent's bounds, so a 0x0 root would swallow every touch.
+@MainActor
 func buildHostScene(_ scene: JSONValue, scaleOverride: CGFloat?,
                     warn: (String) -> Void) -> HostScene {
     guard let name = scene["name"]?.stringValue else { fatalError("scene missing name") }
@@ -109,6 +110,7 @@ func buildHostScene(_ scene: JSONValue, scaleOverride: CGFloat?,
                      sceneAnimationDeadline: deadline)
 }
 
+@MainActor
 func describeControl(_ c: UIControl) -> String {
     if let sw = c as? UISwitch { return "class=UISwitch on=\(sw.isOn)" }
     if let b = c as? UIButton {
@@ -117,6 +119,7 @@ func describeControl(_ c: UIControl) -> String {
     return "class=\(String(describing: type(of: c)))"
 }
 
+@MainActor
 func wireControlLogging(_ v: UIView, registry: [ObjectIdentifier: String]) {
     if let c = v as? UIControl, let path = registry[ObjectIdentifier(c)] {
         c.addTarget(for: .touchDown) { control, _ in
@@ -239,6 +242,7 @@ final class NavDemoRootVC: UIViewController {
 /// with a Settings-style root, hosted in a live UIWindow. Push/pop run the
 /// APP_FEEL transition (slide + parallax + scrim + edge shadow); the back
 /// button and the left-edge swipe both pop.
+@MainActor
 func buildNavDemoScene(scaleOverride: CGFloat?) -> HostScene {
     let scale = scaleOverride ?? 2
     let size = CGSize(width: 390, height: 700)
@@ -338,6 +342,7 @@ final class SDLHost {
 ///
 /// SDL keycodes are ASCII for the printable range; the arrows / escape /
 /// return / tab / delete map onto `UIKeyCommand`'s own input constants.
+@MainActor
 func hostKeyCommand(sym: Int32, mods: UInt32, window: UIWindow) -> Bool {
     var flags: UIKeyModifierFlags = []
     if mods & 0x0003 != 0 { flags.insert(.shift) }       // KMOD_SHIFT
@@ -365,6 +370,7 @@ func hostKeyCommand(sym: Int32, mods: UInt32, window: UIWindow) -> Bool {
 
 // MARK: - Live interactive loop
 
+@MainActor
 func runLive(_ scene: HostScene) {
     let host = SDLHost(title: scene.name, sizePt: scene.sizePt, scale: scene.scale)
     // App lifecycle (M12): the app is launched by now (buildAppScene ran
@@ -559,6 +565,7 @@ func parseScript(_ script: JSONValue) -> (events: [ScriptEvent], captures: [Doub
 /// deterministic clock, capturing PNG frames at the listed times into
 /// `outdir` (as "<scene>.t<ms>.png"). The SDL window still opens and shows
 /// each captured frame. Returns the capture file names in timeline order.
+@MainActor
 func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
                  outdir: String) throws -> [String] {
     let host = SDLHost(title: "\(scene.name) [scripted]",

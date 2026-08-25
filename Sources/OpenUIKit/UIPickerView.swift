@@ -129,11 +129,13 @@
 //     — an offscreen picker receives no gesture — and closing it needs the
 //     Simulator drag route (docs/KNOWN_GAPS.md).
 
+@MainActor
 public protocol UIPickerViewDataSource: AnyObject {
     func numberOfComponents(in pickerView: UIPickerView) -> Int
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
 }
 
+@MainActor
 public protocol UIPickerViewDelegate: AnyObject {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int,
                     forComponent component: Int) -> String?
@@ -157,6 +159,7 @@ extension UIPickerViewDelegate {
                            inComponent component: Int) {}
 }
 
+@MainActor
 open class UIPickerView: UIView {
     // MARK: Measured constants (file header)
 
@@ -165,9 +168,11 @@ open class UIPickerView: UIView {
     /// Default row height.
     public static let defaultRowHeight: CGFloat = 32
     /// The picker's row table is 75 pt taller than the picker itself.
-    static let tableHeightBonus: CGFloat = 75
+    // `nonisolated`: immutable calibration constants, read by the pure-math
+    // `Wheel` struct which has no reason to be main-actor bound.
+    nonisolated static let tableHeightBonus: CGFloat = 75
     /// Wheel radius as a fraction of the table height (7-digit measured fit).
-    static let wheelRadiusRatio: CGFloat = 0.334225372
+    nonisolated static let wheelRadiusRatio: CGFloat = 0.334225372
     /// Side inset of the row area and of the selection indicator.
     static let sideInset: CGFloat = 9
     /// Gap between components (inferred from the measured widths — header).

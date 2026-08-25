@@ -49,10 +49,10 @@ import Foundation
 
 /// Private title label class (matches real UIKit's private class name, so
 /// neither renderer's internals enter the structural layout comparison).
-
-
+@MainActor
 final class UISegmentLabel: UILabel {}
 
+@MainActor
 open class UISegmentedControl: UIControl {
     public static let noSegment = -1
 

@@ -12,6 +12,7 @@ import Foundation
 // MARK: - Helpers
 
 /// Counts live/total instances so reuse can be proven.
+@MainActor
 private final class CountingCell: UITableViewCell {
     static var created = 0
     required init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
@@ -20,6 +21,7 @@ private final class CountingCell: UITableViewCell {
     }
 }
 
+@MainActor
 private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
     var rows = 10_000
     var selected: [IndexPath] = []
@@ -41,6 +43,7 @@ private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
 }
 
 /// The tableview_plain fixture's data (3 sections, 7 rows).
+@MainActor
 private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelegate {
     let sections: [(header: String, rows: [String])] = [
         ("Fruits", ["Apple", "Banana", "Cherry"]),
@@ -62,6 +65,7 @@ private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelega
 }
 
 /// The tableview_grouped fixture's shape (heights only matter here).
+@MainActor
 private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDelegate {
     // (style, header, footer, row styles)
     let sections: [(header: String, footer: String, styles: [UITableViewCell.CellStyle])] = [
@@ -93,6 +97,7 @@ private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDele
     }
 }
 
+@MainActor
 final class TableViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -169,6 +174,7 @@ final class TableViewReuseTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TableViewMetricsTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -271,6 +277,7 @@ final class TableViewMetricsTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TableViewSelectionTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -362,6 +369,7 @@ final class TableViewSelectionTests: XCTestCase {
 
 // MARK: - UITableViewController
 
+@MainActor
 private final class TestTableController: UITableViewController {
     var didSelect: [IndexPath] = []
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -382,6 +390,7 @@ private final class TestTableController: UITableViewController {
     }
 }
 
+@MainActor
 final class TableViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -415,7 +424,9 @@ final class TableViewControllerTests: XCTestCase {
 
 /// Two sections holding reference-typed items, so an item's identity is
 /// stable while it moves between them (the Tasks app's shape).
+@MainActor
 private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+    @MainActor
     final class Item { let name: String; init(_ n: String) { name = n } }
     var sections: [[Item]] = [
         [Item("a"), Item("b"), Item("c")],
@@ -442,6 +453,7 @@ private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+@MainActor
 final class TableViewAnimatedUpdateTests: XCTestCase {
     override func setUp() {
         super.setUp()

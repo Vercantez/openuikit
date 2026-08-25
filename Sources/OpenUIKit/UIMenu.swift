@@ -53,6 +53,7 @@ public struct UIKeyModifierFlags: OptionSet, Hashable, Sendable {
 ///       ├── UICommand ── UIKeyCommand
 ///       ├── UIMenu
 ///       └── UIDeferredMenuElement
+@MainActor
 open class UIMenuElement {
     public internal(set) var title: String
     public internal(set) var subtitle: String?
@@ -95,6 +96,7 @@ open class UIMenuElement {
 
 // MARK: - UIAction
 
+@MainActor
 open class UIAction: UIMenuElement {
     public struct Identifier: Hashable, Sendable, ExpressibleByStringLiteral {
         public let rawValue: String
@@ -140,6 +142,7 @@ open class UIAction: UIMenuElement {
 
 /// A selector-dispatched menu element. UIKit's `UICommand` is the parent of
 /// `UIKeyCommand`; both send `action` through the responder chain.
+@MainActor
 open class UICommand: UIMenuElement {
     public let action: Selector
     /// UIKit's arbitrary payload; passed to the action as the sender's
@@ -181,6 +184,7 @@ open class UICommand: UIMenuElement {
     }
 }
 
+@MainActor
 public final class UIKeyCommand: UICommand {
     /// The characters the key produces ("n", "\r", or one of the
     /// `UIKeyCommand.input*` constants).
@@ -251,6 +255,7 @@ public final class UIKeyCommand: UICommand {
 
 // MARK: - UIMenu
 
+@MainActor
 open class UIMenu: UIMenuElement {
     public struct Identifier: Hashable, Sendable, ExpressibleByStringLiteral {
         public let rawValue: String
@@ -344,6 +349,7 @@ open class UIMenu: UIMenuElement {
 /// run loop here to come back to, so a provider that completes SYNCHRONOUSLY
 /// works exactly like UIKit's and one that does not contributes nothing (no
 /// spinner, no late splice). Recorded in docs/KNOWN_GAPS.md.
+@MainActor
 public final class UIDeferredMenuElement: UIMenuElement {
     private let provider: (@escaping ([UIMenuElement]) -> Void) -> Void
     private var resolved: [UIMenuElement]?

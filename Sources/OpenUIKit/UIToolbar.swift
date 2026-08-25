@@ -33,7 +33,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-
+@MainActor
 public final class UIToolbar: UIView, _UIBarItemContainer {
     /// Measured intrinsic bar height (the platter plus its vertical margins).
     public static let defaultHeight: CGFloat = 54

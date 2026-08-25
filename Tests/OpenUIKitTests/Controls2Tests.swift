@@ -11,6 +11,7 @@
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class UIRefreshControlTests: XCTestCase {
 
     private func makeScrollView() -> (UIScrollView, UIRefreshControl) {
@@ -110,6 +111,7 @@ final class UIRefreshControlTests: XCTestCase {
     }
 }
 
+@MainActor
 final class UISearchBarTests: XCTestCase {
 
     /// Measured: (width, 44) at every height.
@@ -175,6 +177,7 @@ final class UISearchBarTests: XCTestCase {
     }
 
     func testDelegateHearsTextChanges() {
+        @MainActor
         final class D: UISearchBarDelegate {
             var seen: [String] = []
             func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -200,6 +203,7 @@ final class UISearchBarTests: XCTestCase {
     }
 }
 
+@MainActor
 final class UIStepperTests: XCTestCase {
 
     /// Measured intrinsic size and UIKit's documented defaults, both read off

@@ -35,6 +35,13 @@ final class FoundationCoexistenceTests: XCTestCase {
     /// A rect built by Foundation-facing code goes straight into a UIView, and
     /// the rect that comes back out is usable as a Foundation value. This is
     /// the thing that used to be impossible.
+    ///
+    /// `@MainActor` on this one method — not on the class — is the honest
+    /// spelling after M15 merged Foundation coexistence with actor isolation:
+    /// `CGRect`, `NSValue` and `NSCoder` are nonisolated values, `UIView` is
+    /// main-actor-isolated exactly as in the iOS SDK, so only the test that
+    /// touches a view needs the annotation. App source reads the same way.
+    @MainActor
     func testAFoundationRectRoundTripsThroughAView() {
         let coder = NSCoder.self          // the corpus's #1 collision (344 files)
         XCTAssertNotNil(coder)

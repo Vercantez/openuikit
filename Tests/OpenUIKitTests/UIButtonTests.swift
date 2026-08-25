@@ -6,6 +6,7 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+@MainActor
 final class UIButtonTests: XCTestCase {
 
     override func setUp() {

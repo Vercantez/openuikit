@@ -11,6 +11,7 @@ import Foundation
 /// iPhone 16 portrait — the geometry every probe measurement was taken at.
 private let windowSize = CGSize(width: 393, height: 852)
 
+@MainActor
 final class SheetInteractionTests: XCTestCase {
     override func setUp() {
         super.setUp()

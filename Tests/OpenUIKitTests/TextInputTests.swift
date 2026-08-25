@@ -7,6 +7,7 @@ import Foundation
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+@MainActor
 final class CaretMathTests: XCTestCase {
     let font = UIFont.systemFont(ofSize: 17)
 
@@ -53,6 +54,7 @@ final class CaretMathTests: XCTestCase {
     }
 }
 
+@MainActor
 final class FirstResponderTests: XCTestCase {
     func makeWindowWithField() -> (UIWindow, UITextField) {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -113,6 +115,7 @@ final class FirstResponderTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TextFieldEditingTests: XCTestCase {
     var w: UIWindow!
     var tf: UITextField!
@@ -228,6 +231,7 @@ final class TextFieldEditingTests: XCTestCase {
     }
 }
 
+@MainActor
 final class TextViewEditingTests: XCTestCase {
     var w: UIWindow!
     var tv: UITextView!

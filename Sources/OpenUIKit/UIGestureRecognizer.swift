@@ -44,6 +44,7 @@
 /// NOT modelled: failure requirements. `shouldRequireFailureOf` /
 /// `shouldBeRequiredToFailBy` are declared so conformances compile, but no
 /// recognizer here waits on another's failure (docs/KNOWN_GAPS.md).
+@MainActor
 public protocol UIGestureRecognizerDelegate: AnyObject {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
@@ -73,6 +74,7 @@ public extension UIGestureRecognizerDelegate {
     func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool { true }
 }
 
+@MainActor
 open class UIGestureRecognizer {
     public enum State: Sendable {
         case possible, began, changed, ended, cancelled, failed
@@ -325,6 +327,7 @@ open class UIGestureRecognizer {
 
 // MARK: - Tap
 
+@MainActor
 public final class UITapGestureRecognizer: UIGestureRecognizer {
     public var numberOfTapsRequired: Int = 1
     public var numberOfTouchesRequired: Int = 1
@@ -375,6 +378,7 @@ public final class UITapGestureRecognizer: UIGestureRecognizer {
 
 // MARK: - Pan
 
+@MainActor
 open class UIPanGestureRecognizer: UIGestureRecognizer {
     public var minimumNumberOfTouches: Int = 1
     public var maximumNumberOfTouches: Int = Int.max
@@ -478,6 +482,7 @@ open class UIPanGestureRecognizer: UIGestureRecognizer {
 
 // MARK: - Long press
 
+@MainActor
 public final class UILongPressGestureRecognizer: UIGestureRecognizer {
     public var minimumPressDuration: TimeInterval = 0.5
     /// UIKit default: 10 pt of movement allowed before recognition.

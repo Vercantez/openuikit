@@ -18,6 +18,7 @@ import XCTest
 import CoreGraphics
 import ImageIO
 
+@MainActor
 final class GoldenDarkModeTests: XCTestCase {
     static let repoRoot = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()   // OpenUIKitTests

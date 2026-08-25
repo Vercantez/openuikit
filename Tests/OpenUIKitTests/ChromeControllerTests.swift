@@ -10,11 +10,13 @@ import Foundation
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+@MainActor
 private final class Log {
     var entries: [String] = []
     func add(_ s: String) { entries.append(s) }
 }
 
+@MainActor
 private class LifecycleVC: UIViewController {
     let name: String
     let log: Log
@@ -33,6 +35,7 @@ private class LifecycleVC: UIViewController {
 
 // MARK: - Modal presentation
 
+@MainActor
 final class ModalPresentationTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -231,6 +234,7 @@ private func _curvePoint(_ e: Path.Element, from p0: CGPoint,
 
 // MARK: - Tab bar controller
 
+@MainActor
 final class TabBarControllerTests: XCTestCase {
     private func makeTab(_ log: Log, count: Int = 3)
         -> (UITabBarController, [LifecycleVC]) {
@@ -316,6 +320,7 @@ final class TabBarControllerTests: XCTestCase {
 
 // MARK: - Large-title navigation bar
 
+@MainActor
 final class LargeTitleNavigationTests: XCTestCase {
     private func makeLargeNav(offset: CGFloat? = nil)
         -> (UINavigationController, UIScrollView) {

@@ -209,12 +209,21 @@ public final class NotificationCenter {
                 block(notification)
             } else if let selectorName = reg.selectorName {
                 guard let observer = reg.observer else { reap = true; continue }
-                guard let dispatcher = observer as? SelectorDispatching else {
-                    SelectorDispatch.onUnresolved?(observer, selectorName)
-                    continue
-                }
-                if !dispatcher.perform(selectorName, with: notification) {
-                    SelectorDispatch.onUnresolved?(observer, selectorName)
+                // `NotificationCenter` stays nonisolated, like Foundation's —
+                // posting is not a UI operation. The selector OBSERVER is,
+                // though: `SelectorDispatching` is `@MainActor` because every
+                // conformer is a view or a view controller. OpenUIKit is
+                // single-threaded and every `post` reaches here from the main
+                // thread; `assumeIsolated` asserts that (traps off-main)
+                // instead of hiding it behind `nonisolated(unsafe)`.
+                MainActor.assumeIsolated {
+                    guard let dispatcher = observer as? SelectorDispatching else {
+                        SelectorDispatch.onUnresolved?(observer, selectorName)
+                        return
+                    }
+                    if !dispatcher.perform(selectorName, with: notification) {
+                        SelectorDispatch.onUnresolved?(observer, selectorName)
+                    }
                 }
             }
         }

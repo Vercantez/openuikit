@@ -39,6 +39,7 @@ import OpenUIKit
 import struct Foundation.Data     // makes `@objc` legal; see header
 #endif
 
+@MainActor
 public enum SelectorApp {
     /// Same iPhone-ish portrait window as the other demo apps.
     public static let windowSize = CGSize(width: 390, height: 780)

@@ -133,38 +133,48 @@ guard (scriptPath == nil) == (recordDir == nil) else {
     print("--script and --record must be used together\n\(usage)"); exit(1)
 }
 
-let scene: HostScene
-if let appName {
-    // --app mode has no in-app appearance switch; OPENUIKIT_APP_STYLE=dark
-    // boots it in dark mode so semantic-color coverage can be captured.
-    var style: UIUserInterfaceStyle = .light
-    if let v = ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"] {
-        switch v {
-        case "dark": style = .dark
-        case "light": style = .light
-        default:
-            FileHandle.standardError.write(
-                Data("warning: ignoring unknown OPENUIKIT_APP_STYLE=\(v) (use light|dark)\n".utf8))
+// Top-level code in `main.swift` is NOT main-actor isolated, but everything
+// below it builds, lays out and renders UIKit objects, and those are
+// `@MainActor` now -- exactly as they are in real UIKit. The tool is
+// single-threaded and this IS the process's main thread, so state that once
+// here and let the compiler check the rest, instead of hopping actors (which
+// would need an async entry point) or disabling the check per site.
+// `assumeIsolated` traps if the assumption is ever violated.
+try MainActor.assumeIsolated {
+    let scene: HostScene
+    if let appName {
+        // --app mode has no in-app appearance switch; OPENUIKIT_APP_STYLE=dark
+        // boots it in dark mode so semantic-color coverage can be captured.
+        var style: UIUserInterfaceStyle = .light
+        if let v = ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"] {
+            switch v {
+            case "dark": style = .dark
+            case "light": style = .light
+            default:
+                FileHandle.standardError.write(
+                    Data("warning: ignoring unknown OPENUIKIT_APP_STYLE=\(v) (use light|dark)\n".utf8))
+            }
         }
+        scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) },
+                              style: style)
+    } else if navDemo {
+        scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
+    } else {
+        let sceneJSON = try loadSceneFile(scenePath!)
+        scene = buildHostScene(sceneJSON, scaleOverride: scaleOverride.map { CGFloat($0) },
+                               warn: warnToStderr)
     }
-    scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) },
-                          style: style)
-} else if navDemo {
-    scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
-} else {
-    let sceneJSON = try loadSceneFile(scenePath!)
-    scene = buildHostScene(sceneJSON, scaleOverride: scaleOverride.map { CGFloat($0) },
-                           warn: warnToStderr)
-}
 
-if let scriptPath, let recordDir {
-    let (events, captures) = parseScript(try loadSceneFile(scriptPath))
-    try FileManager.default.createDirectory(atPath: recordDir,
-                                            withIntermediateDirectories: true)
-    let written = try runScripted(scene, events: events, captures: captures,
-                                  outdir: recordDir)
-    print("recorded \(written.count) frames to \(recordDir)")
-    exit(0)
-}
+    if let scriptPath, let recordDir {
+        let (events, captures) = parseScript(try loadSceneFile(scriptPath))
+        try FileManager.default.createDirectory(atPath: recordDir,
+                                                withIntermediateDirectories: true)
+        let written = try runScripted(scene, events: events, captures: captures,
+                                      outdir: recordDir)
+        print("recorded \(written.count) frames to \(recordDir)")
+        exit(0)
+    }
 
-runLive(scene)
+    runLive(scene)
+
+}

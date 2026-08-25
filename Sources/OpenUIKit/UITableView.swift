@@ -51,7 +51,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-
+@MainActor
 public protocol UITableViewDataSource: AnyObject {
     func numberOfSections(in tableView: UITableView) -> Int
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -66,6 +66,7 @@ public extension UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? { nil }
 }
 
+@MainActor
 public protocol UITableViewDelegate: UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
@@ -96,6 +97,7 @@ public extension UITableViewDelegate {
 
 /// The rounded card behind an inset-grouped section's rows. Private class
 /// name: compare.py skips the subtree (real UIKit's internals differ).
+@MainActor
 final class UITableViewCardView: UIView {
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -115,6 +117,7 @@ extension UIColor {
 
 // MARK: - UITableView
 
+@MainActor
 open class UITableView: UIScrollView {
     public enum Style: Sendable {
         case plain, grouped, insetGrouped

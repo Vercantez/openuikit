@@ -18,6 +18,7 @@
 // `sendActions(for:)` invokes every registration whose event set intersects
 // the sent events (UIKit semantics).
 
+@MainActor
 open class UIControl: UIView {
     // MARK: State
 

@@ -8,6 +8,7 @@
 import XCTest
 @testable import OpenUIKit
 
+@MainActor
 final class LayerCacheTests: XCTestCase {
 
     private var savedCaching = true
@@ -128,6 +129,7 @@ final class LayerCacheTests: XCTestCase {
 
     /// Custom views must be able to invalidate via setNeedsDisplay (the
     /// UIKit contract for custom drawContent).
+    @MainActor
     final class InkView: UIView {
         var level: OpenUIKit.CGFloat = 0.25
         override func drawContent(in canvas: Canvas, bounds: OpenUIKit.CGRect) {
