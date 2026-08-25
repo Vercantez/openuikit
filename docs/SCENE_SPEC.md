@@ -792,6 +792,24 @@ body text does the reverse.
   chrome containers to publish their internal frames; a per-region density
   score was measured and rejected (it does not separate `modal_sheet`'s
   legitimate title residual from a genuinely shifted label).
+- **Localized degradation — content present but *wrong*.** This is the largest
+  remaining blind spot. Absence cannot fire (both sides have structure) and
+  a soft error spreads its deltas below the severity floor. Measured: a
+  370×100 px text region of `label_sizes` Gaussian-blurred (σ 1.4) scores
+  **99.007 % with `blob = 0.0`** and no absence report. It models a real and
+  common failure — a run rendered at the wrong weight, wrong hinting, or wrong
+  subpixel phase. Note the entire M2 text milestone was *this* bug class; it
+  was caught then only because the degradation was **global** and dragged the
+  percentage to 91–95 %. Localized on a large canvas, it hides. Closing it
+  needs a per-text-run comparison (align runs from the layout dump, then score
+  each run's ink independently of canvas area) rather than another whole-frame
+  metric.
+- **A single small missing glyph.** The absence check only inspects components
+  above its substantiality floor, so losing *one* letter at body size escapes:
+  erasing a single 13 pt letter from `label_align` scores 99.887 % with
+  `blob = 70.0` and no absence report. Multi-glyph loss at the same size *is*
+  caught (that was the M11.1 fix). Accepted: real renderer faults drop runs or
+  whole strings far more often than exactly one character.
 
 Deliberately-corrupted renders are not checked in; regenerate them from the
 recipes above, or run `Tools/compare/test_compare.py`, whose synthetic

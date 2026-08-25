@@ -492,3 +492,26 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
   image (glyph ink, image resampling, control chrome) is not re-stretched
   per frame the way CA scales `contents` with the presentation bounds.
   No fixture resizes a content-bearing view; revisit if one does.
+
+## Verification blind spot: localized degradation (top remaining)
+
+The oracle comparison has three gates — layout (0.5 pt), pixel percentage
+(category thresholds), and the structural gate (contiguous wrong region +
+content absence). Together they catch *missing* and *moved* content well.
+
+They are weakest against content that is **present but subtly wrong in a small
+region**: a text run at the wrong weight/hinting/subpixel phase, a gradient
+with a slightly wrong ramp, a control drawn with the wrong corner radius.
+Absence cannot fire (both sides have structure), and a soft error's per-pixel
+deltas fall under the 150-count severity floor, so only the percentage sees it
+— and a small region on a large canvas barely moves the percentage. Measured:
+a blurred 370×100 px text region scores 99.007 % and passes everything.
+
+This matters because it is exactly the class the M2 text work fought, caught
+then only because the error was global. The fix is not another whole-frame
+metric (two were measured and rejected — see SCENE_SPEC "Structural diff
+gate"): it needs **per-region scoring**, e.g. align text runs via the layout
+dump and score each run's ink against its own area rather than the canvas.
+Until then, treat a high percentage on a text-dense scene as weak evidence,
+and prefer adding a tight fixture (small canvas, one feature) over trusting a
+large scene's score.
