@@ -16,6 +16,9 @@
 //   3. the DIMMING alpha as a function of drag progress
 //   4. the DISMISS thresholds — distance (released at rest) and velocity
 //   5. detent SNAP behaviour between .medium and .large
+//   6. whether a TAP outside the sheet dismisses it (it did not — see the
+//      caveat in docs/KNOWN_GAPS.md; this is the one probe result that is
+//      not confidently separable from a harness limitation)
 //
 // Output: <Documents>/sheet_<name>.json per experiment + probe.log.
 // Build + run end-to-end: scripts/sheet_probe_sim.sh <outdir>
@@ -147,10 +150,14 @@ struct SheetExperiment {
     let startMedium: Bool
     /// "scroll" (tall UIScrollView inside) or "plain" (inert content).
     let content: String
+    /// Set isModalInPresentation on the presented controller.
+    let modalInPresentation: Bool
 
     init(name: String, detents: String = "large", points: [CGPoint],
          interval: Double = 0.008, holdBeforeLift: Double = 0,
-         startMedium: Bool = false, content: String = "plain") {
+         startMedium: Bool = false, content: String = "plain",
+         modalInPresentation: Bool = false) {
+        self.modalInPresentation = modalInPresentation
         self.name = name
         self.detents = detents
         self.points = points
@@ -282,6 +289,7 @@ final class SheetProbeRunner {
         probeLog("== \(spec.name) (detents=\(spec.detents)) ==")
         let vc = makeSheetVC(detents: spec.detents, grabber: true,
                              content: spec.content)
+        vc.isModalInPresentation = spec.modalInPresentation
         hostVC.present(vc, animated: false)
         if spec.startMedium, let sheet = vc.sheetPresentationController {
             sheet.selectedDetentIdentifier = .medium
@@ -422,7 +430,21 @@ final class SheetProbeRunner {
                          interval: 0.008, holdBeforeLift: 0)
         }
 
+        /// A stationary tap (no travel, so no pan ever recognizes).
+        func tap(_ name: String, at p: CGPoint,
+                 modal: Bool = false) -> SheetExperiment {
+            .init(name: name, points: [p], interval: 0.016, holdBeforeLift: 0.12,
+                  modalInPresentation: modal)
+        }
+
         let experiments: [SheetExperiment] = [
+            // Tap OUTSIDE the sheet (on the dim, above y = 59). Does UIKit's
+            // pageSheet dismiss on an outside tap, and does
+            // isModalInPresentation suppress it?
+            tap("tap_outside", at: CGPoint(x: cx, y: 30)),
+            tap("tap_outside_modal", at: CGPoint(x: cx, y: 30), modal: true),
+            // ...and a tap INSIDE the sheet must never dismiss.
+            tap("tap_inside", at: CGPoint(x: cx, y: 400)),
             // 1:1 tracking + dim curve. 180 pt down, held still before the
             // lift so it springs back rather than dismissing.
             .init(name: "drag_track_down", points: drag(from: grab, dy: 3, count: 60),

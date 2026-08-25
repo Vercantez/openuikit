@@ -44,8 +44,20 @@ scroll view hand-off. Not shipped:
   and the dark tab bar), so the dark alpha is the light one scaled by the
   ratio UIKit uses for the systemFill family itself (0.2 → 0.36). No dark
   sheet fixture exists to check it against.
-- **No tap-outside-to-dismiss** (unchanged from M10 — the dim still swallows
-  every touch), no `UISheetPresentationControllerDelegate`, and
+- **No tap-outside-to-dismiss — probed, result INCONCLUSIVE, so nothing
+  changed.** A synthetic tap on the dim above the sheet did NOT dismiss it in
+  the probe (`tap_outside`; `tap_outside_modal` and `tap_inside` likewise),
+  which would say OpenUIKit's existing behaviour is already right. But that is
+  the one probe result not confidently separable from a limitation of the
+  synthetic-touch harness: the same harness demonstrably drives the sheet's
+  own pan and the inner scroll view, yet a tap recognizer installed by UIKit
+  on a private dimming view is a different delivery path, and common
+  understanding of iOS is that a pageSheet DOES dismiss on an outside tap.
+  Rather than ship a behaviour change on an ambiguous measurement, M10's
+  "the dim swallows every touch" stands. Resolving it needs either a
+  non-synthetic tap (a real UI test on a device/simulator) or finding the
+  recognizer in the hierarchy dump and asserting on it directly.
+- No `UISheetPresentationControllerDelegate`, and
   `UISheetPresentationController` exposes only `prefersGrabberVisible`. The
   detent API surface is deliberately ABSENT rather than present-and-fake.
 - **The hand-off rule is written twice.** `_UISheetPanGestureRecognizer` and
