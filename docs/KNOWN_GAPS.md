@@ -1,11 +1,34 @@
 # Known gaps (living document — fixers: read this)
 
+## M13 integration note (2026-08-25)
+
+All four M13 clusters — collection view, bars & appearance, menus & actions +
+delegate protocols, and controls2 — are merged. Merged gates: 108/108 fixture
+scenes, 9/9 scroll traces, 711 tests, 0 failures. Each cluster's own section
+below is unchanged and still accurate about what it measured; two
+cross-cluster facts belong here rather than in any one of them:
+
+- **`UISearchBar` has two owners.** controls2 measured its chrome and menus
+  built its delegate contract; the merged file keeps both (see
+  docs/ARCHITECTURE.md's note under the module table). The consequence for a
+  fixer: the "no chrome at all" claim in the menus section below is now
+  **stale** — the bar does draw a measured magnifier, field and cancel
+  button. What remains true is that the field's PILL is inferred rather than
+  measured (`tertiarySystemFill` at radius 10) and that there is still no
+  fixture, so none of it is golden-gated.
+- **The gesture-recognizer exclusion rule changed the event pipeline for
+  everyone.** The menus cluster added UIKit's default "first recognizer to
+  recognize fails the others sharing the touch" behaviour. Every other
+  cluster's work sits on top of it: the collection view's selection, the
+  refresh control's pull, the bar buttons' taps and all nine scroll traces
+  were re-verified against it at the merge, not just on their own branches.
+
 ## App-compat cluster "controls2" (2026-08-25): what shipped and what could not
 
 Scope: the remaining controls plus the compile-blockers that are not types —
 `UIRefreshControl`, `UISearchBar`, `UIStepper`, `UIPickerView`,
 `NotificationCenter`, `Timer`, and `UILayoutGuide` / `safeAreaInsets` /
-`safeAreaLayoutGuide`. Two new fixtures (96 -> **98** scenes):
+`safeAreaLayoutGuide`. Two new fixtures:
 `constraints_safearea` (100.0 %) and `control_refresh` (99.4 %).
 
 ### The three types that SHADOW Foundation, and why they had to
@@ -388,12 +411,16 @@ NOT modelled: failure requirements — `require(toFail:)` does not exist and
 
 ### Other honest limits from this cluster
 
-- **`UISearchBar` has no chrome.** It is a `UITextField` in a container: no
-  magnifier, no clear/cancel/bookmark buttons, no scope bar, no
-  `searchBarStyle`. Its metrics were never probed, so nothing here is
-  oracle-validated and there is deliberately no fixture. The DELEGATE
-  contract is real — text-change, search-button and begin/end editing all
-  reach the app.
+- **`UISearchBar`'s DELEGATE contract is what this cluster owns** — the full
+  `UISearchBarDelegate` member list plus the `UITextFieldDelegate` bridge, so
+  text-change, the search button (the return key) and begin/end editing all
+  reach the app through the real input pipeline. *(Superseded in part at the
+  M13 merge: this cluster shipped the bar as a bare `UITextField` in a
+  container with no chrome at all, but controls2 independently MEASURED the
+  chrome — bar height, field inset, magnifier, text metrics — and the merged
+  file carries both. See "App-compat cluster controls2" at the top of this
+  file for what is measured and what is still inferred; there is still no
+  fixture, and no scope bar or bookmark/results button in either version.)*
 - **`UIActivityViewController` shares nothing.** It presents as the measured
   page sheet and lists the titles of the app's own `applicationActivities` in
   a `UITableView`; no system activity exists, so a sheet with nothing to offer

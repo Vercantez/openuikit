@@ -165,6 +165,52 @@ contains no decoding code of its own), `UIBezierPath`, and app-side drawing
 (`UIView.draw(_:)`, `UIGraphicsImageRenderer`, `UIGraphicsGetCurrentContext()`,
 `UIColor.setFill()/setStroke()`).
 
+## Current measurement — after M13 (2026-08-25, all four clusters merged)
+
+Four clusters shipped in M13 and are merged here: **collection view**,
+**bars & appearance**, **menus & actions + delegate protocols**, and
+**controls2**. Merged gates: `swift build` clean, **108/108 fixture scenes**
+(96 → 108), **9/9 scroll traces**, **711 tests** (544 → 711), 0 failures.
+`Sources/OpenUIKit` now declares **170** public `UI`/`NS`/`CA` type names
+(111 at the M12 tip).
+
+**Caveat on this re-measurement, stated up front:** the corpus is still not
+vendored in this environment, so `Tools/apicensus/run.sh` could not re-scan
+the apps. What was re-run is the half that does not need them — the `--ours`
+list was regenerated from `Sources/OpenUIKit` at this merge commit and the
+committed per-type use counts in `Tools/apicensus/census-latest.json` were
+reclassified against it. Those counts are a property of the corpus and did
+not change, so this reproduces `census.py`'s arithmetic exactly; only the
+per-app file counts and the `missing_members_of_implemented` list are stale.
+`census-latest.json` is therefore left as M12 wrote it — rerun the full
+script with the checkouts to refresh it.
+
+**Four-app corpus (16,343 uses, 220 distinct UIKit types referenced —
+112 implemented, 108 missing):**
+
+| | uses | share | was (M12) |
+|---|---|---|---|
+| **We implement it** | 14,829 | **90.7%** | 83.0% |
+| Foundation provides free on Linux (`NSCoder` 379, `NSObject` 175, `NSString` 137, `NSValue` 13) | 704 | 4.3% | 4.3% |
+| Out of scope (`UINib` 126, `UIStoryboard` 61, `UIStoryboardSegue` 22, `UIWebView` 2) | 211 | 1.3% | 1.3% |
+| **Actual work remaining** | **599** | **3.7%** | 11.4% |
+
+**Effective coverage: 96.3%** (was 88.5%). M13's four clusters moved **42
+types and 1,257 uses** from `missing` to `implemented`, led by
+`UIBarButtonItem` (270), `UICollectionView` (222),
+`UIActivityViewController` (84), `UIKeyCommand` (81),
+`UICollectionViewCell` (78) and `UIAction` (69).
+
+What is left, ranked by how many apps need it: `UIVisualEffectView` (20, 3
+apps) + `UIBlurEffect` (12, 3) — the blur divergence this file has carried
+since M12 — `UIApplicationShortcutItem` (18, 3), the haptics generators
+(`UIImpactFeedbackGenerator` 15, `UISelectionFeedbackGenerator` 7, both 3
+apps and both trivially stubbable), `NSTextAttachment` (13, 3),
+`UIViewControllerTransitionCoordinator` (7, 3), then the two-app entries led
+by `UIFontMetrics` (66 — Dynamic Type), `UIPasteboard` (32),
+`UIImagePickerController` (17), `NSItemProvider` (16) and
+`UIPointerInteraction` (12).
+
 ## What M13 shipped — collection view (2026-08-25)
 
 The census's #1 cluster: **collection view** (498 uses across 23 types,
@@ -175,7 +221,7 @@ all four apps). `UICollectionView`, `UICollectionViewCell`,
 `UICollectionViewDelegateFlowLayout` trio — the last of which also clears
 three of the "delegate protocols" cluster's 51 collection-view uses.
 
-5 new fixture scenes (96 → **101**): `collection_flow_grid`,
+5 new fixture scenes: `collection_flow_grid`,
 `collection_flow_lines`, `collection_sections`, `collection_horizontal`,
 `collection_dark`. The flow layout's geometry was PROBED rather than guessed
 (`scripts/flow_probe.sh`, 20 configurations against real UIKit) because two
@@ -251,7 +297,7 @@ with their four-app use counts from the table below.
 | `UISearchBar` (+ `UISearchTextField`, `UISearchBarDelegate`) | the "search" tail cluster | 23 |
 | `UIPickerView` (+ its data-source / delegate protocols) | tail entry | — |
 
-Two new fixtures (96 -> **98** scenes): `constraints_safearea` (100.0 %) and
+Two new fixtures: `constraints_safearea` (100.0 %) and
 `control_refresh` (99.4 %). Three of the four controls could NOT be goldened,
 and the reasons are properties of the oracle rather than shortcuts — a
 private material that `layer.render(in:)` draws as nothing (`UISearchBar`), a
@@ -351,9 +397,8 @@ protocols.
 
 ## What M13 shipped — bars & appearance (2026-08-25)
 
-The whole #2 cluster, oracle-backed. **8 new exported types** (111 → 119
-public `UI`/`NS`/`CA` names in `Sources/OpenUIKit`) and **5 new fixture
-scenes** (96 → **101**):
+The whole #2 cluster, oracle-backed. **8 new exported types** and **5 new fixture
+scenes**:
 
 | type | corpus uses | notes |
 |---|---|---|

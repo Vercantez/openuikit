@@ -15,14 +15,24 @@ Swift 6.2.4) — no Apple frameworks present at all:
 | check | result |
 |---|---|
 | `swift build -c release --product openrender` | **clean** (library + quartz + CLI) |
-| All 150 fixture frames rendered on Linux | **96/96 scenes pass** vs the real-UIKit goldens |
-| Linux frames vs the macOS frames, SHA-256 | **150/150 byte-identical** |
+| All 162 fixture frames rendered on Linux | **108/108 scenes pass** vs the real-UIKit goldens |
+| Linux frames vs the macOS frames, SHA-256 | **162/162 byte-identical** |
 
-**Re-verified 2026-08-25 at the M12 tip** (`scripts/linux_verify.sh`), with all
-four app-compat clusters merged and 15 new fixtures (81 → 96 scenes,
-135 → 150 frames). Nothing in the milestone cost a point of portability:
-Swift 6.2.4, `aarch64-unknown-linux-gnu`, 20.3 s clean build, `PORTABILITY
-VERIFIED`. Earlier runs: M11 (81/81, 135/135), M10 (80/80, 134/135).
+**Re-verified 2026-08-25 at the M13 merge commit** (`scripts/linux_verify.sh`),
+with all four M13 app-compat clusters merged and 12 new fixtures (96 → 108
+scenes, 150 → 162 frames). Nothing in the milestone cost a point of
+portability: Swift 6.2.4, `aarch64-unknown-linux-gnu`, 23.6 s clean build,
+`PORTABILITY VERIFIED`. Earlier runs: M12 (96/96, 150/150), M11 (81/81,
+135/135), M10 (80/80, 134/135).
+
+The M13 clusters were each verified on their own branch too, but the merge is
+the run that matters: `UICollectionView`, the bar-item platters, the menu
+machinery and `NotificationCenter`/`Timer` had never been compiled together
+off Darwin before this. The portability risks they each carried —
+`NotificationCenter` and `Timer` SHADOW Foundation types (the library still
+imports no Foundation, so they are declarations, not re-exports), and the
+menu/bar clusters lean on the M12 selector dispatch that already had a Linux
+path — all held.
 
 ### How each M12 cluster kept the property
 

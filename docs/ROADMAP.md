@@ -473,7 +473,7 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     if phantom items filled it — but only when every item on that line has
     the same size, otherwise it falls back to the minimum. Item origins snap
     to the device pixel grid; sizes do not.
-  - **Five oracle fixtures** (96 → **101** scenes): `collection_flow_grid`,
+  - **Five oracle fixtures**: `collection_flow_grid`,
     `collection_flow_lines` (wrapping + a delegate-sized second section),
     `collection_sections` (headers/footers, including an EMPTY section),
     `collection_horizontal` (columns + horizontal supplementaries clipped at
@@ -497,8 +497,7 @@ Punch-list cluster #2, **322 corpus uses across all four apps**, closed:
 `UINavigationBarAppearance` / `UIToolbarAppearance` / `UITabBarAppearance`,
 and `UIBarTitleTextAttributes`. `UIViewController.navigationItem` and
 `toolbarItems` now drive the bars, which is how every real code-based app
-configures them. 8 new exported types (111 → 119), 5 new fixtures
-(96 → **101**).
+configures them. 8 new exported types, 5 new fixtures.
 
 The measurement drove three findings that a guess would have missed, all of
 them iOS-26-specific:
@@ -527,7 +526,7 @@ fixture must not put bar items over a saturated backdrop.
 
 ## App-compat cluster "controls2" (2026-08-25) — the remaining controls, and the compile-blockers that are not types
 
-Two fixtures (96 -> **98** scenes), 594 unit tests, all green.
+Two fixtures, and the cluster's own 50 new unit tests, all green.
 
 - **`NotificationCenter`, `Notification`, `Notification.Name`,
   `OperationQueue`** — portable, declared in OpenUIKit because the library
@@ -570,17 +569,55 @@ Two fixtures (96 -> **98** scenes), 594 unit tests, all green.
 Every divergence, and the probe route that would close it, is in
 docs/KNOWN_GAPS.md ("App-compat cluster controls2").
 
+## M13 integrated (2026-08-25) — all four clusters merged
+
+The four M13 clusters (collection view, bars & appearance, menus & actions +
+delegate protocols, controls2) are merged on `master`. Merged gates:
+`swift build` clean, **108/108 scenes** (96 → 108), **9/9 scroll traces**,
+**711 tests** (544 → 711), 0 failures. `Sources/OpenUIKit` declares **170**
+public `UI`/`NS`/`CA` type names, up from 111.
+
+Coverage re-measured at the merge: **90.7%** frequency-weighted, **96.3%**
+effective (was 83.0 / 88.5). 42 types and 1,257 corpus uses moved from
+`missing` to `implemented`. The corpus is not vendored here, so only the
+`--ours` half of the census was regenerated and the committed per-type counts
+were reclassified against it — see the caveat in docs/APP_COMPAT.md.
+
+Two shared-file merges are worth recording because they were resolved by
+KEEPING BOTH intents rather than picking a side:
+
+- **`UISearchBar` was built twice.** controls2 measured the CHROME (44 pt
+  bar, 8 pt field inset, the magnifier's stroked ring, medium-17 text at
+  x 39.5) and menus built the DELEGATE contract (UIKit's full
+  `UISearchBarDelegate` member list plus a `UITextFieldDelegate` bridge, so
+  typing and the return key actually reach an app). The merged file keeps
+  controls2's geometry and menus' wiring; the cancel button, which controls2
+  drew and menus did not have, now routes through menus' `_cancel()`.
+- **`compare.py`'s class sets took three additions**: `UICollectionView` and
+  `UIToolbar` join `CHROME_CLASSES`, and `UICollectionView` +
+  `UIRefreshControl` join `PUBLIC_CLASSES` while `UIToolbar` deliberately
+  stays out of it (its real subtree exposes public-class internals). Each
+  branch's justification comment is preserved.
+
 ## Next — where the census points (docs/APP_COMPAT.md)
 
-The M12 clusters closed 2,139 of the corpus's references; M13 closed the
-**collection view** (498, all 4 apps) and **bars & appearance** (322, led by
-`UIBarButtonItem` at 270) clusters on top of that. What remains of the
-original ranking: **menus & actions** (252), **delegate protocols** (144 —
-mostly declarations that do not exist yet, so an app fails to compile on the
-conformance before any behaviour is missing), and **share/system UI** (130,
-honestly a stub), plus the collection cluster's compositional-layout /
-diffable-data-source tail. No corpus app compiles end to end yet; the blocker
-that bites first is now the delegate protocols.
+M13's four clusters closed the whole top five of the M12 punch list except
+its tails. What is actually left, by how many corpus apps need it:
+**materials/blur** (`UIVisualEffectView` 20 + `UIBlurEffect` 12, 3 apps —
+and the single largest source of remaining PIXEL divergence, since every
+platter in the framework is a fitted flat colour), **home-screen shortcuts**
+(18, 3), **haptics** (22 across two generators, 3 apps, trivially
+stubbable), **TextKit attachments** (13, 3), **transition coordinator**
+(7, 3), then **Dynamic Type** (`UIFontMetrics` 66), `UIPasteboard` (32),
+`UIImagePickerController` (17), `NSItemProvider` (16) and pointer/hover (12).
+Inside shipped clusters: compositional layout + diffable data sources,
+animated batch updates, and `UIDatePicker` (deferred — it is a formatter and
+a calendar, and the picker wheel underneath it is already measured exactly).
+
+No corpus app compiles end to end yet, and the delegate-protocol blocker is
+gone, so the next honest step is to TRY one: take the smallest corpus app and
+drive it to a first screen, letting the compile errors re-rank the list from
+evidence instead of from the census's regex.
 
 ## Verification principle (unchanged, applies to every milestone)
 

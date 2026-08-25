@@ -177,14 +177,25 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift` | **autolayout** | done (controls2: `UILayoutGuide` in the solver + the measured safe-area / layout-margins / readable-content model; fixture `constraints_safearea`) |
-| `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md) |
+| `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md). `UISearchBar.swift` is SHARED with the menus cluster, which owns its delegate contract — see the note under this table. |
 | `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`) |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
 | `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/OpenUIKit/UIMenu.swift`, `UIContextMenu.swift` | **menus** | done (M13: UIAction/UIMenu/UIKeyCommand + responder-chain routing; platter measured by `Tools/oracle2/menuprobe`, NO fixture — docs/KNOWN_GAPS.md explains why) |
-| `Sources/OpenUIKit/UIAdaptivePresentation.swift`, `UISearchBar.swift`, `UIActivityViewController.swift` | **viewcontroller** / **text-input** | done (M13: the delegate-protocol cluster; the search bar's chrome and the share sheet are documented stubs) |
+| `Sources/OpenUIKit/UIAdaptivePresentation.swift`, `UIActivityViewController.swift` | **viewcontroller** / **text-input** | done (M13: the delegate-protocol cluster; the share sheet is a documented stub) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
+
+**One file has two owners, deliberately.** `UISearchBar.swift` was built
+independently by the **controls** cluster (measured chrome — bar height,
+field inset, the magnifier's stroked ring, the medium-17 text metrics) and by
+the **text-input** cluster (UIKit's full `UISearchBarDelegate` and the
+`UITextFieldDelegate` bridge that makes typing reach an app). The M13
+integration kept both halves rather than picking one, and both clusters'
+test suites (`Controls2Tests.UISearchBarTests`,
+`DelegateProtocolTests.SearchBarTests`) gate the merged file. Change the
+geometry against the measurements in the file header; change the delegate
+behaviour against UIKit's documented callback order.
 
 ## Behavioral contracts (verified against real UIKit)
 
