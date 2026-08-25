@@ -977,6 +977,44 @@ struct SceneSpec {
     /// STATIC look (dimming, sheet chrome) is captured window-wide by
     /// oracle2. nil when absent. Requires "window": true; v1 refuses it.
     let modal: JSON?
+    /// Scene spec v5.2 (M12): top-level "alert" — a presented
+    /// UIAlertController captured window-wide. Same routing rule as "modal"
+    /// (real iOS in the Simulator; Catalyst bridges alerts to AppKit panels).
+    let alert: JSON?
+}
+
+/// Build the real `UIAlertController` a scene's `"alert"` object describes.
+func buildAlert(_ j: JSON, style: UIUserInterfaceStyle) -> UIAlertController {
+    let preferred: UIAlertController.Style =
+        (j["style"] as? String ?? "alert") == "actionSheet" ? .actionSheet : .alert
+    let ac = UIAlertController(title: j["title"] as? String,
+                               message: j["message"] as? String,
+                               preferredStyle: preferred)
+    ac.overrideUserInterfaceStyle = style
+    for ph in (j["textFields"] as? [String] ?? []) {
+        ac.addTextField { $0.placeholder = ph }
+    }
+    var preferredAction: UIAlertAction?
+    for entry in (j["actions"] as? [JSON] ?? []) {
+        let s: UIAlertAction.Style
+        switch entry["style"] as? String ?? "default" {
+        case "cancel": s = .cancel
+        case "destructive": s = .destructive
+        case "default": s = .default
+        default: fatalError("bad alert action style")
+        }
+        let a = UIAlertAction(title: entry["title"] as? String ?? "", style: s, handler: nil)
+        if let enabled = entry["enabled"] as? Bool { a.isEnabled = enabled }
+        ac.addAction(a)
+        if (j["preferredAction"] as? String) == (entry["title"] as? String) {
+            preferredAction = a
+        }
+    }
+    if let p = preferredAction { ac.preferredAction = p }
+    // NOTE: never touch `popoverPresentationController` — reading it flips an
+    // iPhone action sheet into a popover presentation (and drops the cancel
+    // action). Measured; see Sources/OpenUIKit/UIAlertController.swift.
+    return ac
 }
 
 /// Root classes exempt from the root-frame quirk (spec v5): a 0-sized root
@@ -1016,6 +1054,21 @@ func loadScene(file: String) throws -> SceneSpec {
             fatalError("scene \(name): \"modal\" requires \"window\": true (oracle2)")
         }
     }
+    if let alert = scene["alert"] as? JSON {
+        let st = alert["style"] as? String ?? "alert"
+        guard st == "alert" || st == "actionSheet" else {
+            fatalError("scene \(name): alert style must be \"alert\" or \"actionSheet\"")
+        }
+        guard alert["actions"] is [JSON] else {
+            fatalError("scene \(name): \"alert\" needs an \"actions\" array")
+        }
+        guard scene["window"] as? Bool == true else {
+            fatalError("scene \(name): \"alert\" requires \"window\": true (SimScene)")
+        }
+        guard scene["modal"] == nil else {
+            fatalError("scene \(name): \"alert\" and \"modal\" are mutually exclusive")
+        }
+    }
     return SceneSpec(name: name, width: sz[0], height: sz[1], scale: scale, style: style,
                      traits: UITraitCollection(userInterfaceStyle: style),
                      windowRequired: scene["window"] as? Bool == true,
@@ -1023,7 +1076,8 @@ func loadScene(file: String) throws -> SceneSpec {
                      animations: animations, captureTimes: captureTimes,
                      hitTests: hitTests,
                      constraints: scene["constraints"] as? [JSON],
-                     modal: scene["modal"] as? JSON)
+                     modal: scene["modal"] as? JSON,
+                     alert: scene["alert"] as? JSON)
 }
 
 func buildContainer(_ spec: SceneSpec) -> UIView {

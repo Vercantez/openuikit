@@ -171,6 +171,8 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/UIScrollView.swift` | **scroll** | done (M7.5: UIKit-exact physics; delaysContentTouches lives in UIEvent.swift's delivery pipeline) |
 | `Sources/OpenUIKit/UIStackView.swift` | **stack** | to create |
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
+| `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |
+| `Sources/OpenUIKit/UIAlertController.swift`, `UIAlertAction.swift` | **viewcontroller** | done (M12: iOS 26 alert card, measured by `Tools/oracle2/alertprobe`) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
 
@@ -305,7 +307,16 @@ The scene runner sets the root trait environment; views inherit.
   display color-space round trip) — do not regenerate normal scenes with v2.
   `scripts/regen_goldens.sh` routes each scene to the right oracle.
 - Oracle is Mac Catalyst iOS 26.1 UIKit. That version's metrics/colors are
-  canon.
+  canon — EXCEPT for chrome Catalyst cannot host, which is measured on real
+  iOS 26.1 in the headless Simulator instead: the pageSheet (`SimScene`,
+  spec v5) and `UIAlertController` (`SimScene` + `Tools/oracle2/alertprobe`,
+  spec v5.2). The two platforms genuinely disagree on some semantic colours —
+  dark `systemBackground` is 0.1176 on Catalyst and pure black on iOS — so a
+  sim-rendered dark scene must not paint with `systemBackground`.
+- Behaviour that only exists live (scroll physics, sheet drags, the alert
+  transition) is measured by dedicated Simulator probes that sample layer
+  `presentation()` per display-link frame: `Tools/oracle2/simprobe`,
+  `sheetprobe`, `alertprobe`.
 
 ## openrender CLI contract (must mirror oracle exactly)
 

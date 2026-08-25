@@ -22,3 +22,5 @@ out_probe/
 out_probe2/
 Tools/oracle2/SheetProbe.app/
 out_sheet/
+Tools/oracle2/AlertProbe.app/
+out_alert/

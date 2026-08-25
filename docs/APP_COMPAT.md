@@ -38,11 +38,11 @@ types, not 737. That is why the punch list is tractable.
 |---|---|---|
 | **Attributed text** | 560 | `NSAttributedString` + rendering it: the *type* is Foundation, the *layout and drawing* are ours. Paragraph styles, attachments, `UIFontDescriptor`. Interacts with the text engine's harvested-ink model. |
 | **App lifecycle / environment** | 543 | `UIApplication`, `UIApplicationDelegate`, `UIResponder` (a real base class + responder chain), `UIScreen`, `UIDevice`. Currently the host boots a "UIApplication-lite"; apps expect the real entry point. |
-| **Alerts** | 332 | `UIAlertController` + `UIAlertAction` (alert and action-sheet styles). |
+| ~~**Alerts**~~ | ~~332~~ | **DONE (M12)** — `UIAlertController` + `UIAlertAction`, both styles, measured against real iOS 26.1 (`Tools/oracle2/alertprobe`); fixtures `alert_basic` / `alert_destructive` / `alert_actionsheet` / `alert_dark`. |
 | **Collection view** | 212 | `UICollectionView`, cells, `UICollectionViewFlowLayout`, data source/delegate. Reuse machinery can follow `UITableView`'s. |
 | **Bars & appearance** | 181 | `UIBarButtonItem`, `UIToolbar`, `UINavigationBarAppearance`, `UITabBarAppearance`. |
 | **Misc controls** | 106 | `UIActivityIndicatorView`, `UISlider`, `UISegmentedControl`, `UIRefreshControl`, `UISearchBar`, `UIPageControl`, `UIStepper`, `UIPickerView`. |
-| **Custom transitions** | 64 | `UIViewControllerAnimatedTransitioning` + context/delegate, `UIPresentationController`. Our sheet/nav transitions should be re-expressed through this API. |
+| ~~**Custom transitions**~~ | ~~64~~ | **DONE (M12)** — `UIPresentationController`, `UIViewControllerAnimatedTransitioning` + context + transitioning delegate, `UINavigationControllerDelegate`. The sheet presentation and push/pop now run through it (`_UIPageSheetAnimator` / `_UINavigationSlideAnimator`). No interactive transitioning — see docs/KNOWN_GAPS.md. |
 | **Share sheet** | 57 | `UIActivityViewController` — system UI; likely a stub. |
 | **Long tail** | 479 | 84 types: `UIKeyCommand`, `UIAction`, `UIMenu`, `UIPasteboard`, `UIPageViewController`, `UIContextMenuConfiguration`, … |
 

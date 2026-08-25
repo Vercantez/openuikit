@@ -88,13 +88,43 @@ open class UIViewController {
     /// The controller that presented this one.
     public internal(set) weak var presentingViewController: UIViewController?
 
-    // Presentation chrome (UIPresentation.swift), retained while presented.
-    var _presentationContainer: UIView?
-    var _presentationSheet: _UIPageSheetView?
-    var _presentationDim: UIView?
-    var _savedSheetBackgroundColor: UIColor?
+    /// The object that owns this presentation's chrome and geometry while
+    /// this controller is presented (M12 — UIPresentationController.swift).
+    /// UIKit exposes it under the same name.
+    public internal(set) var presentationController: UIPresentationController? {
+        get { _presentationController }
+        set { _presentationController = newValue }
+    }
+    var _presentationController: UIPresentationController?
+    /// The in-flight modal transition's context (kept alive for the duration
+    /// of the animation; a custom animator may hold onto it).
+    var _activeTransitionContext: UIViewControllerContextTransitioning?
+
+    /// App hook for custom present/dismiss animations and a custom
+    /// presentation controller (M12 — UIViewControllerTransitioning.swift).
+    public weak var transitioningDelegate: UIViewControllerTransitioningDelegate?
+
     /// Lazily created by `sheetPresentationController` (UIPresentation.swift).
     var _sheetController: UISheetPresentationController?
+
+    /// The presentation controller `present(_:animated:)` uses when no
+    /// transitioning delegate supplies one. Overridden by UIAlertController.
+    func _makeDefaultPresentationController(presenting: UIViewController)
+        -> UIPresentationController {
+        let c = _sheetController
+            ?? UISheetPresentationController(presentedViewController: self, presenting: nil)
+        _sheetController = c
+        c.sheetStyle = _resolvedPresentationStyle
+        return c
+    }
+
+    /// The built-in modal animators. Overridden by UIAlertController.
+    func _makeDefaultPresentAnimator() -> UIViewControllerAnimatedTransitioning {
+        _UIPageSheetAnimator(presenting: true)
+    }
+    func _makeDefaultDismissAnimator() -> UIViewControllerAnimatedTransitioning {
+        _UIPageSheetAnimator(presenting: false)
+    }
 
     /// True while a disappearance transition is in flight (the interactive
     /// dismissal teardown uses it to keep will/did appearance calls paired).

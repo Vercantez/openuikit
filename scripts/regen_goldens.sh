@@ -20,7 +20,9 @@ import json, sys
 s = json.load(open(sys.argv[1]))
 # "modal" scenes need REAL iOS (Simulator): Catalyst bridges pageSheet into
 # an AppKit sheet window whose chrome UIKit cannot capture (spec v5).
-print("sim" if s.get("modal") else ("window" if s.get("window") is True else "normal"))' "$f")
+# "alert" scenes (spec v5.2) for the same reason: Catalyst bridges
+# UIAlertController into an AppKit alert panel.
+print("sim" if (s.get("modal") or s.get("alert")) else ("window" if s.get("window") is True else "normal"))' "$f")
   case $route in
     sim) simulated+=("$f") ;;
     window) windowed+=("$f") ;;

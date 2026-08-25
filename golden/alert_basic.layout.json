@@ -1,0 +1,53 @@
+{
+  "name" : "alert_basic",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        852
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        24,
+        80,
+        300,
+        24
+      ],
+      "intrinsic" : [
+        112,
+        24
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        112,
+        24
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        24,
+        120,
+        345,
+        60
+      ],
+      "path" : "2"
+    }
+  ]
+}

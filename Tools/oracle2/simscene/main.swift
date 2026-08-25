@@ -116,6 +116,32 @@ final class SimSceneRenderer {
             img = snapshot(window, size: sceneSize, scale: spec.scale)
             vc.dismiss(animated: false)
             RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        } else if let alertJSON = spec.alert {
+            // Spec v5.2 (M12): a real UIAlertController over the base scene.
+            // Same routing reason as "modal" — Catalyst bridges alerts into
+            // AppKit panels, so only real iOS can produce the golden.
+            // The alert's DIM lives outside the alert's own view, so it
+            // resolves against the WINDOW's traits — the scene's style has to
+            // be pushed all the way up or a dark scene gets a light dim
+            // (openrender resolves everything against the scene style, so the
+            // two renderers would disagree by 28 counts of dimming).
+            window.overrideUserInterfaceStyle = spec.style
+            defer { window.overrideUserInterfaceStyle = .unspecified }
+            let ac = buildAlert(alertJSON, style: spec.style)
+            hostVC.present(ac, animated: false)
+            RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+            img = snapshot(window, size: sceneSize, scale: spec.scale)
+            window.endEditing(true)
+            ac.dismiss(animated: false)
+            // A presented alert's views outlive `dismiss` long enough that a
+            // second alert can stack on top of the first in the same process
+            // (measured while building Tools/oracle2/alertprobe), so wait for
+            // the teardown instead of sleeping a fixed amount.
+            let deadline = Date().addingTimeInterval(3)
+            while hostVC.presentedViewController != nil, Date() < deadline {
+                RunLoop.current.run(until: Date().addingTimeInterval(0.05))
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
         } else {
             img = snapshot(wrapper, size: sceneSize, scale: spec.scale)
         }

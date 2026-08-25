@@ -52,10 +52,11 @@ def classify(scene):
     threshold — shadow blur covers many pixels).
 
     Chrome (spec v5) outranks everything: any UITableView /
-    UINavigationStack / UITabBarStack in the tree, or a top-level "modal",
-    makes the scene "chrome" — large regions of system-drawn material
-    (glass platters, edge-effect gradients, sheet shadows) warrant the
-    loosest threshold.
+    UINavigationStack / UITabBarStack in the tree, or a top-level "modal"
+    or "alert" (spec v5.2 — M12), makes the scene "chrome" — large regions
+    of system-drawn material (glass platters, edge-effect gradients, sheet
+    shadows, the alert card's blurred platter) warrant the loosest
+    threshold.
     """
     kinds = set()
     has_shadow = [False]
@@ -67,7 +68,7 @@ def classify(scene):
             walk(s)
     walk(scene["root"])
     layout_only = scene.get("layoutOnly", False)
-    if scene.get("modal") or (kinds & CHROME_CLASSES):
+    if scene.get("modal") or scene.get("alert") or (kinds & CHROME_CLASSES):
         cat = "chrome"
     elif kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
                   "UITextField", "UITextView"}:

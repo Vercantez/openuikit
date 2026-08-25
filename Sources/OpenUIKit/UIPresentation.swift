@@ -40,6 +40,9 @@ public enum UIModalPresentationStyle {
     case automatic
     case pageSheet
     case fullScreen
+    /// UIAlertController's own style: a centred card over a dim, never a
+    /// sheet. Set by `UIAlertController.init` — apps do not choose it.
+    case alert
 }
 
 /// Container for one modal presentation: dimming + sheet, sized to the
@@ -158,12 +161,157 @@ public final class _UISheetGrabber: UIView {
 /// (`vc.sheetPresentationController`) so app code reads the same, but the
 /// detent surface is deliberately absent rather than faked — see
 /// docs/KNOWN_GAPS.md for the measured detent design that was deferred.
-public final class UISheetPresentationController {
+///
+/// M12: it is now a real `UIPresentationController` — it OWNS the dimming
+/// view and the sheet platter and installs/removes them from the four
+/// transition callbacks, instead of `present(_:animated:)` building them
+/// inline. The geometry, colours and interaction are byte-for-byte the M11
+/// ones (same measured constants, same `installInteraction` call), so every
+/// sheet scene, capture and test is unchanged.
+public final class UISheetPresentationController: UIPresentationController {
     /// Show the grabber. UIKit's default is `false`.
     public var prefersGrabberVisible: Bool = false {
-        didSet { onChange?() }
+        didSet { installGrabberIfNeeded() }
     }
-    var onChange: (() -> Void)?
+
+    /// pageSheet (dimmed, inset, interactive) or fullScreen (no dim, full
+    /// bounds). Set by `present` from the presented controller's resolved
+    /// style; the same object serves both, exactly as the M11 inline code
+    /// branched on `style`.
+    var sheetStyle: UIModalPresentationStyle = .pageSheet
+
+    let dim = _UIDimmingView()
+    let platter = _UIPageSheetView()
+    /// The presented view's own background, taken over by the platter so the
+    /// rounded corners survive; restored on dismissal.
+    var savedBackgroundColor: UIColor?
+
+    public override var presentedView: UIView? { platter }
+
+    public override var frameOfPresentedViewInContainerView: CGRect {
+        guard let c = containerView else { return .zero }
+        guard sheetStyle == .pageSheet else { return c.bounds }
+        return CGRect(x: 0, y: _UIPageSheetView.topInset,
+                      width: c.bounds.width,
+                      height: c.bounds.height - _UIPageSheetView.topInset)
+    }
+
+    /// Only a fullScreen presentation covers the presenter (UIKit: a
+    /// pageSheet leaves it on screen, so it gets no disappearance calls).
+    public override var shouldRemovePresentersView: Bool { sheetStyle == .fullScreen }
+
+    public override func presentationTransitionWillBegin() {
+        guard let container = containerView else { return }
+        let vc = presentedViewController
+        dim.frame = container.bounds
+        dim.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        dim.backgroundColor = .black
+        // The FINAL (presented) chrome state. A non-animated present needs
+        // nothing else; the animator winds it back to the start and plays
+        // forward.
+        dim.alpha = _UIDimmingView.maxAlpha
+        if sheetStyle == .pageSheet { container.addSubview(dim) }
+
+        platter.frame = frameOfPresentedViewInContainerView
+        platter.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        vc.loadViewIfNeeded()
+        let cv = vc.view!
+        savedBackgroundColor = cv.backgroundColor
+        if sheetStyle == .pageSheet {
+            if let bg = cv.backgroundColor { platter.fillColor = bg }
+            cv.backgroundColor = nil
+        } else if cv.backgroundColor == nil {
+            platter.fillColor = .systemBackground
+        }
+        cv.frame = platter.bounds
+        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        platter.addSubview(cv)
+        if sheetStyle == .pageSheet {
+            platter.restY = platter.frame.minY
+            platter.installInteraction(presented: vc, dim: dim)
+        }
+        container.addSubview(platter)
+        // AFTER the platter is in the hierarchy: `installGrabberIfNeeded`
+        // refuses to run on a detached platter (app code usually sets
+        // `prefersGrabberVisible` before presenting, when there is no platter
+        // frame yet), so this is the call that actually installs it.
+        installGrabberIfNeeded()
+    }
+
+    public override func dismissalTransitionWillBegin() {
+        // A programmatic dismiss during an interactive one takes over: drop
+        // the release spring and animate from wherever the finger left it.
+        platter.settle = nil
+    }
+
+    public override func dismissalTransitionDidEnd(_ completed: Bool) {
+        guard completed else { return }
+        presentedViewController.viewIfLoaded?.backgroundColor = savedBackgroundColor
+        presentedViewController.viewIfLoaded?.removeFromSuperview()
+        containerView?.removeFromSuperview()
+    }
+
+    /// Add (or remove) the grabber to match `prefersGrabberVisible`.
+    func installGrabberIfNeeded() {
+        guard sheetStyle == .pageSheet, platter.superview != nil else { return }
+        let existing = platter.subviews.compactMap { $0 as? _UISheetGrabber }.first
+        if !prefersGrabberVisible {
+            existing?.removeFromSuperview()
+            return
+        }
+        let grabber = existing ?? _UISheetGrabber()
+        // Centred WITHOUT rounding: on a 393 pt sheet real UIKit reports
+        // x = 178.5, i.e. it keeps the half point.
+        grabber.frame = CGRect(
+            x: (platter.bounds.width - _UISheetGrabber.width) / 2,
+            y: _UISheetGrabber.topInset,
+            width: _UISheetGrabber.width, height: _UISheetGrabber.height)
+        grabber.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
+        if existing == nil { platter.addSubview(grabber) }
+    }
+}
+
+/// The built-in modal animator: the sheet slides up from below the container
+/// while the dim fades in; dismissal is the exact reverse. This is the M11
+/// code, moved behind `UIViewControllerAnimatedTransitioning` so an app's
+/// `transitioningDelegate` can replace it (docs/APP_COMPAT.md "Custom
+/// transitions").
+final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
+    let presenting: Bool
+    init(presenting: Bool) { self.presenting = presenting }
+
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        UIViewController.presentTransitionDuration
+    }
+
+    func animateTransition(using ctx: UIViewControllerContextTransitioning) {
+        let container = ctx.containerView
+        guard let moving = ctx.view(forKey: presenting ? .to : .from) else {
+            ctx.completeTransition(true)
+            return
+        }
+        let dim = (moving.superview?.subviews.first { $0 is _UIDimmingView })
+        let duration = transitionDuration(using: ctx)
+        if presenting {
+            let up = moving.frame
+            moving.frame = up.offsetBy(dx: 0, dy: container.bounds.height - up.minY)
+            let dimTarget = dim?.alpha ?? 0
+            dim?.alpha = 0
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0, options: [], animations: {
+                moving.frame = up
+                dim?.alpha = dimTarget
+            }, completion: { _ in ctx.completeTransition(true) })
+        } else {
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1,
+                           initialSpringVelocity: 0, options: [], animations: {
+                moving.frame = moving.frame.offsetBy(
+                    dx: 0, dy: container.bounds.height - moving.frame.minY)
+                dim?.alpha = 0
+            }, completion: { _ in ctx.completeTransition(true) })
+        }
+    }
 }
 
 /// The sheet platter: fills its bounds with the measured rounded-corner
@@ -477,6 +625,19 @@ extension UIViewController {
     }
 
     // MARK: Present
+    //
+    // M12: the presentation now runs through UIPresentationController +
+    // UIViewControllerAnimatedTransitioning (see
+    // UIViewControllerTransitioning.swift). Order:
+    //   1. pick the presentation controller (transitioningDelegate's, or the
+    //      controller's built-in one)
+    //   2. install the container, wire both controllers up
+    //   3. presentationTransitionWillBegin  (chrome, in its FINAL state)
+    //   4. appearance "will" callbacks
+    //   5. animator (transitioningDelegate's, or the built-in) — it winds the
+    //      chrome back to the start and plays forward; a non-animated present
+    //      skips it entirely, which is why step 3 leaves the final state
+    //   6. presentationTransitionDidEnd(true), appearance "did", completion
 
     public func present(_ vc: UIViewController, animated: Bool,
                         completion: (() -> Void)? = nil) {
@@ -494,74 +655,45 @@ extension UIViewController {
         var root: UIView = view
         while let s = root.superview { root = s }
 
-        let style = vc._resolvedPresentationStyle
         let container = UIPresentationContainerView(frame: root.bounds)
         container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        let dim = _UIDimmingView(frame: container.bounds)
-        dim.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dim.backgroundColor = .black
-        dim.alpha = 0
-        if style == .pageSheet { container.addSubview(dim) }
-
-        let sheetFrame = style == .pageSheet
-            ? CGRect(x: 0, y: _UIPageSheetView.topInset,
-                     width: container.bounds.width,
-                     height: container.bounds.height - _UIPageSheetView.topInset)
-            : container.bounds
-        let sheet = _UIPageSheetView(frame: sheetFrame)
-        sheet.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        vc.loadViewIfNeeded()
-        let cv = vc.view!
-        // The sheet platter draws the (rounded) background; the presented
-        // view's own rectangular background would paint over the corners.
-        vc._savedSheetBackgroundColor = cv.backgroundColor
-        if style == .pageSheet {
-            if let bg = cv.backgroundColor { sheet.fillColor = bg }
-            cv.backgroundColor = nil
-        } else if cv.backgroundColor == nil {
-            sheet.fillColor = .systemBackground
-        }
-        cv.frame = sheet.bounds
-        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        sheet.addSubview(cv)
-        if style == .pageSheet {
-            sheet.restY = sheetFrame.minY
-            sheet.installInteraction(presented: vc, dim: dim)
-            vc._installGrabberIfNeeded(in: sheet)
-        }
-        container.addSubview(sheet)
+        let pc = vc.transitioningDelegate?.presentationController(
+            forPresented: vc, presenting: self, source: self)
+            ?? vc._makeDefaultPresentationController(presenting: self)
+        pc.presentingViewController = self
+        pc.containerView = container
         root.addSubview(container)
 
         presentedViewController = vc
         vc.presentingViewController = self
-        vc._presentationContainer = container
-        vc._presentationSheet = sheet
-        vc._presentationDim = dim
+        vc._presentationController = pc
 
-        let presenterDisappears = style == .fullScreen
+        pc.presentationTransitionWillBegin()
+
+        let presenterDisappears = pc.shouldRemovePresentersView
         if presenterDisappears { beginAppearanceTransition(false, animated: animated) }
         vc.beginAppearanceTransition(true, animated: animated)
 
         let finish = { [weak self, weak vc] in
+            pc.presentationTransitionDidEnd(true)
             vc?.endAppearanceTransition()
             if presenterDisappears { self?.endAppearanceTransition() }
             completion?()
         }
-        if animated {
-            let up = sheet.frame
-            sheet.frame = up.offsetBy(dx: 0, dy: container.bounds.height - up.minY)
-            UIView.animate(withDuration: UIViewController.presentTransitionDuration,
-                           delay: 0, usingSpringWithDamping: 1,
-                           initialSpringVelocity: 0, options: [], animations: {
-                sheet.frame = up
-                dim.alpha = _UIDimmingView.maxAlpha
-            }, completion: { _ in finish() })
-        } else {
-            dim.alpha = _UIDimmingView.maxAlpha
-            finish()
-        }
+        guard animated else { finish(); return }
+
+        let animator = vc.transitioningDelegate?.animationController(
+            forPresented: vc, presenting: self, source: self)
+            ?? vc._makeDefaultPresentAnimator()
+        let ctx = _UIModalTransitionContext(
+            containerView: container, animated: true, presenting: true,
+            from: self, to: vc, fromView: viewIfLoaded, toView: pc.presentedView,
+            startFrame: pc.frameOfPresentedViewInContainerView,
+            endFrame: pc.frameOfPresentedViewInContainerView)
+        ctx.onComplete = { _ in finish() }
+        vc._activeTransitionContext = ctx
+        animator.animateTransition(using: ctx)
     }
 
     // MARK: Dismiss
@@ -584,32 +716,28 @@ extension UIViewController {
         }
 
         let presenter = self
-        let container = vc._presentationContainer
-        let sheet = vc._presentationSheet
-        let dim = vc._presentationDim
-        let presenterReappears = vc._resolvedPresentationStyle == .fullScreen
-
-        // A programmatic dismiss during an interactive one takes over: drop
-        // the release spring and animate from wherever the finger left it.
-        sheet?.settle = nil
+        guard let pc = vc._presentationController else { return }
+        let presenterReappears = pc.shouldRemovePresentersView
 
         vc.beginAppearanceTransition(false, animated: animated)
         if presenterReappears { presenter.beginAppearanceTransition(true, animated: animated) }
+        pc.dismissalTransitionWillBegin()
 
         let finish = { [weak presenter] in
             presenter?._tearDownPresentation(of: vc, completion: completion)
         }
-        if animated, let sheet, let container {
-            UIView.animate(withDuration: UIViewController.presentTransitionDuration,
-                           delay: 0, usingSpringWithDamping: 1,
-                           initialSpringVelocity: 0, options: [], animations: {
-                sheet.frame = sheet.frame.offsetBy(
-                    dx: 0, dy: container.bounds.height - sheet.frame.minY)
-                dim?.alpha = 0
-            }, completion: { _ in finish() })
-        } else {
-            finish()
-        }
+        guard animated, let moving = pc.presentedView else { finish(); return }
+
+        let animator = vc.transitioningDelegate?.animationController(forDismissed: vc)
+            ?? vc._makeDefaultDismissAnimator()
+        let ctx = _UIModalTransitionContext(
+            containerView: pc.containerView ?? moving,
+            animated: true, presenting: false,
+            from: vc, to: presenter, fromView: moving, toView: presenter.viewIfLoaded,
+            startFrame: moving.frame, endFrame: moving.frame)
+        ctx.onComplete = { _ in finish() }
+        vc._activeTransitionContext = ctx
+        animator.animateTransition(using: ctx)
     }
 
     /// Remove a presentation's views and reset both controllers. Shared by
@@ -618,23 +746,23 @@ extension UIViewController {
     /// UIView.animate completion).
     func _tearDownPresentation(of vc: UIViewController, completion: (() -> Void)?) {
         guard vc.presentingViewController === self else { return }
-        let presenterReappears = vc._resolvedPresentationStyle == .fullScreen
+        let pc = vc._presentationController
+        let presenterReappears = pc?.shouldRemovePresentersView ?? false
         // The interactive path never called beginAppearanceTransition — do it
-        // now so the will/did pair stays balanced either way.
+        // now so the will/did pair (and the presentation controller's
+        // will/did pair) stays balanced either way.
         if !vc._isDisappearing {
             vc.beginAppearanceTransition(false, animated: true)
             if presenterReappears { beginAppearanceTransition(true, animated: true) }
+            pc?.dismissalTransitionWillBegin()
         }
-        vc.viewIfLoaded?.backgroundColor = vc._savedSheetBackgroundColor
-        vc.viewIfLoaded?.removeFromSuperview()
-        vc._presentationContainer?.removeFromSuperview()
+        pc?.dismissalTransitionDidEnd(true)
         vc.endAppearanceTransition()
         if presenterReappears { endAppearanceTransition() }
         vc.presentingViewController = nil
         presentedViewController = nil
-        vc._presentationContainer = nil
-        vc._presentationSheet = nil
-        vc._presentationDim = nil
+        vc._presentationController = nil
+        vc._activeTransitionContext = nil
         completion?()
     }
 
@@ -645,31 +773,22 @@ extension UIViewController {
     public var sheetPresentationController: UISheetPresentationController? {
         guard _resolvedPresentationStyle == .pageSheet else { return nil }
         if let existing = _sheetController { return existing }
-        let c = UISheetPresentationController()
-        c.onChange = { [weak self] in
-            guard let self, let sheet = self._presentationSheet else { return }
-            self._installGrabberIfNeeded(in: sheet)
-        }
+        let c = UISheetPresentationController(presentedViewController: self, presenting: nil)
         _sheetController = c
         return c
     }
 
-    /// Add (or remove) the grabber to match `prefersGrabberVisible`.
-    func _installGrabberIfNeeded(in sheet: _UIPageSheetView) {
-        let wanted = _sheetController?.prefersGrabberVisible ?? false
-        let existing = sheet.subviews.compactMap { $0 as? _UISheetGrabber }.first
-        if !wanted {
-            existing?.removeFromSuperview()
-            return
-        }
-        let grabber = existing ?? _UISheetGrabber()
-        // Centred WITHOUT rounding: on a 393 pt sheet real UIKit reports
-        // x = 178.5, i.e. it keeps the half point.
-        grabber.frame = CGRect(
-            x: (sheet.bounds.width - _UISheetGrabber.width) / 2,
-            y: _UISheetGrabber.topInset,
-            width: _UISheetGrabber.width, height: _UISheetGrabber.height)
-        grabber.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
-        if existing == nil { sheet.addSubview(grabber) }
+}
+
+// MARK: - Compatibility accessors for the sheet chrome
+//
+// The sheet's dim/platter/container moved onto the presentation controller in
+// M12; these keep the old names working for the interaction code and tests.
+extension UIViewController {
+    var _presentationController_sheet: UISheetPresentationController? {
+        _presentationController as? UISheetPresentationController
     }
+    var _presentationContainer: UIView? { _presentationController?.containerView }
+    var _presentationSheet: _UIPageSheetView? { _presentationController_sheet?.platter }
+    var _presentationDim: UIView? { _presentationController_sheet?.dim }
 }
