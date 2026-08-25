@@ -16,6 +16,28 @@ from PIL import Image
 PIXEL_TOL = 6          # per-channel delta counted as "matching"
 LAYOUT_TOL = 0.5       # points
 
+# Structural gate (see docs/SCENE_SPEC.md "Structural diff gate").
+#
+# The percentage score is blind to a small region being COMPLETELY wrong on a
+# large canvas: navbar_large once passed its 95 % threshold while missing two
+# whole letters of "Library", because the missing glyphs were 0.3 % of the
+# pixels. This gate is independent of the percentage: it labels the
+# 8-connected components of the SEVERE diff mask and fails the frame if any
+# single contiguous region is too large, whatever the global score says.
+#
+# Calibration (2026-08-25, all 80 scenes / 134 frames):
+#   worst legitimate component  33.2 pt^2  (modal_sheet — one stem of the
+#                                           22 pt bold title; window-mode
+#                                           glyph rasterization residual)
+#   two deleted 34 pt glyphs   248.8 pt^2  FAILS
+#   a UISwitch shifted 3 pt    268.2 pt^2  FAILS
+#   a rounded rect shifted 3pt 236.0 pt^2  FAILS
+# 80 pt^2 sits 2.4x above the worst legitimate residual and 3.1x below the
+# smallest corruption it has to catch.
+STRUCT_DELTA = 150     # per-pixel delta that counts as "plainly wrong", not
+                       # a tolerance residual (25x PIXEL_TOL)
+STRUCT_MAX_BLOB = 80.0 # points^2 of contiguous severe diff allowed
+
 # Chrome scene classes (spec v5 — M10): system-drawn chrome dominates these
 # scenes (bar materials / edge effects, cell chrome, sheet presentation).
 CHROME_CLASSES = {"UITableView", "UINavigationStack", "UITabBarStack"}
@@ -130,7 +152,56 @@ def compare_layout(g, o):
                         f"golden path={a.get('path')!r} ours={b.get('path')!r}")
     return problems
 
-def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False):
+def largest_diff_blob(delta, scale):
+    """Largest 8-connected component of the severe diff mask.
+
+    Returns (area in points^2, bounding box in points as (x, y, w, h)) — or
+    (0.0, None) when nothing differs severely. Union-find over the sparse
+    coordinate list rather than a dense label pass: severe masks are a few
+    thousand pixels even on a badly wrong frame, and this keeps the tool on
+    numpy + Pillow alone (no scipy).
+    """
+    mask = delta > STRUCT_DELTA
+    ys, xs = np.nonzero(mask)          # raster order (row-major)
+    n = len(ys)
+    if n == 0:
+        return 0.0, None
+    pos = {}
+    for i in range(n):
+        pos[(int(ys[i]), int(xs[i]))] = i
+    parent = list(range(n))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    # In raster order only the four already-visited 8-neighbours can exist.
+    for i in range(n):
+        y, x = int(ys[i]), int(xs[i])
+        for dy, dx in ((-1, -1), (-1, 0), (-1, 1), (0, -1)):
+            j = pos.get((y + dy, x + dx))
+            if j is None:
+                continue
+            ra, rb = find(i), find(j)
+            if ra != rb:
+                parent[rb] = ra
+
+    counts = {}
+    for i in range(n):
+        r = find(i)
+        counts[r] = counts.get(r, 0) + 1
+    root = max(counts, key=counts.get)
+    members = [i for i in range(n) if find(i) == root]
+    my, mx = ys[members], xs[members]
+    bbox = (float(mx.min()) / scale, float(my.min()) / scale,
+            float(mx.max() - mx.min() + 1) / scale,
+            float(my.max() - my.min() + 1) / scale)
+    return counts[root] / float(scale * scale), bbox
+
+
+def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1):
     """Composite both images over white (each with its own alpha encoding)
     and compare the result plus the raw alpha channel.
 
@@ -158,12 +229,17 @@ def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False):
     match = (delta <= PIXEL_TOL)
     score = 100.0 * match.mean()
     mae = float(delta.mean())
+    blob, bbox = largest_diff_blob(delta, scale)
     if score < 100.0 and diff_path:
         heat = np.zeros((*delta.shape, 3), dtype=np.uint8)
         heat[..., 0] = np.clip(delta * 4, 0, 255).astype(np.uint8)  # red = diff magnitude
         heat[..., 1] = np.where(match, 60, 0)              # dim green where matching
+        heat[..., 2] = np.where(delta > STRUCT_DELTA, 255, 0)  # blue = severe mask
         Image.fromarray(heat).save(diff_path)
-    return {"score": round(score, 3), "mae": round(mae, 3)}, None
+    res = {"score": round(score, 3), "mae": round(mae, 3), "blob": round(blob, 1)}
+    if bbox:
+        res["blob_bbox"] = [round(v, 1) for v in bbox]
+    return res, None
 
 def main():
     ap = argparse.ArgumentParser()
@@ -199,7 +275,9 @@ def main():
 
         # oracle2 ("window" scenes) goldens are premultiplied
         premul = bool(scene.get("window", False))
+        scale = scene.get("scale", 1)
         pixel_ok = True
+        struct_ok = True
         if layout_only:
             entry["pixel"] = "skipped (layoutOnly)"
         elif scene.get("animations"):
@@ -218,7 +296,7 @@ def main():
                     res, err = compare_pixels(
                         os.path.join(args.golden, f"{name}.{suffix}.png"), opath,
                         os.path.join(diffdir, f"{name}.{suffix}.diff.png"),
-                        golden_premultiplied=premul)
+                        golden_premultiplied=premul, scale=scale)
                     if err:
                         frame["error"] = err
                         pixel_ok = False
@@ -226,18 +304,21 @@ def main():
                         frame.update(res)
                         if res["score"] < THRESHOLDS[cat]:
                             pixel_ok = False
+                        if res["blob"] > STRUCT_MAX_BLOB:
+                            struct_ok = False
                 frames.append(frame)
             entry["frames"] = frames
             scores = [f["score"] for f in frames if "score" in f]
             if scores:
                 entry["score"] = min(scores)   # worst frame headlines the scene
                 entry["mae"] = max(f["mae"] for f in frames if "mae" in f)
+                entry["blob"] = max(f["blob"] for f in frames if "blob" in f)
         else:
             res, err = compare_pixels(
                 os.path.join(args.golden, name + ".png"),
                 os.path.join(args.out, name + ".png"),
                 os.path.join(diffdir, name + ".diff.png"),
-                golden_premultiplied=premul)
+                golden_premultiplied=premul, scale=scale)
             if err:
                 entry["pixel_error"] = err
                 pixel_ok = False
@@ -245,8 +326,14 @@ def main():
                 entry.update(res)
                 entry["threshold"] = THRESHOLDS[cat]
                 pixel_ok = res["score"] >= THRESHOLDS[cat]
+                struct_ok = res["blob"] <= STRUCT_MAX_BLOB
 
-        entry["status"] = "PASS" if (layout_ok and pixel_ok) else "FAIL"
+        if not struct_ok:
+            entry["structural"] = (
+                f"contiguous wrong region {entry.get('blob')} pt^2 exceeds "
+                f"{STRUCT_MAX_BLOB} pt^2 (delta > {STRUCT_DELTA})")
+
+        entry["status"] = "PASS" if (layout_ok and pixel_ok and struct_ok) else "FAIL"
         if entry["status"] == "FAIL":
             all_pass = False
         report.append(entry)
@@ -254,8 +341,13 @@ def main():
     w = max(len(r["scene"]) for r in report)
     for r in report:
         score = f"{r.get('score', '—'):>8}" if isinstance(r.get("score"), float) else f"{'—':>8}"
+        blob = f"{r.get('blob', '—'):>6}" if isinstance(r.get("blob"), float) else f"{'—':>6}"
         nl = len(r.get("layout_problems", []))
-        print(f"{r['status']:7} {r['scene']:{w}} [{r['category']:8}] pixels={score}  layout_issues={nl}")
+        print(f"{r['status']:7} {r['scene']:{w}} [{r['category']:8}] pixels={score}  "
+              f"blob={blob}  layout_issues={nl}")
+        if "structural" in r:
+            print(f"        · STRUCTURAL: {r['structural']}"
+                  + (f" at {r['blob_bbox']}" if "blob_bbox" in r else ""))
         if "frames" in r:
             details = "  ".join(
                 f"t{f['t']:g}={f['score']}" if "score" in f else f"t{f['t']:g}=({f['error']})"

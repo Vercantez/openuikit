@@ -54,11 +54,16 @@ and carries no host dependency.
   glyph combos outside the harvested table are missing. Fixes, in order of
   preference: extend the harvest (pure data, keeps the zero-dependency
   property), ship a metrically-compatible libre font, or supply SF.
-- **The thresholds have a blind spot this exposed.** `navbar_large` passed at
-  its category threshold while visibly missing two letters, because the
-  affected pixels were a small fraction of a large canvas. Worth adding a
-  structural check (e.g. per-region or connected-component diffing) so
-  "small but obviously wrong" cannot pass.
+- ~~**The thresholds have a blind spot this exposed.**~~ **FIXED 2026-08-25.**
+  `navbar_large` passed at its category threshold while visibly missing two
+  letters, because the affected pixels were a small fraction of a large
+  canvas. compare.py now runs a **structural gate** alongside the percentage:
+  connected components of the severe-diff mask (delta > 150 counts), failing
+  any frame with a contiguous wrong region over 80 pt². The exact corruption
+  that slipped through measures 248.8 pt² and now fails, while all 80 scenes
+  still pass (worst legitimate component 33.2 pt²). Design, calibration table
+  and the one case it still cannot see: docs/SCENE_SPEC.md "Structural diff
+  gate".
 - **`openhost` was not built on Linux** — it needs `libsdl2-dev` in the
   image. The SDL2 target is standard and expected to work; it is simply not
   yet proven. Extend `linux_verify.sh` to install SDL2 and build it.

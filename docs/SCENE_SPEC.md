@@ -668,4 +668,63 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
     scene's category by themselves — a gradient-only scene is `geometry`, a
     shadow scene with no text/controls is `effects`, and a scene that also
     contains text or controls keeps its `text`/`control` category (and threshold).
-- Report also includes mean absolute error and a diff heatmap PNG per failing scene in `out/diffs/`.
+- **Structural gate** (below): a hard, category-independent cap on how large a
+  single contiguous *wrong* region may be. A scene passes only if layout
+  passes AND the percentage passes AND the structural gate passes.
+- Report also includes mean absolute error, the largest severe-diff component
+  (`blob`, in pt²) and a diff heatmap PNG per failing scene in `out/diffs/`
+  (red = delta magnitude, dim green = matching, blue = the severe mask the
+  structural gate runs on).
+
+## Structural diff gate (compare.py)
+
+A percentage threshold is blind to a *small* region being *completely* wrong
+on a large canvas. This is not hypothetical: during the Linux portability run
+(docs/PORTABILITY.md) `navbar_large` scored **99.5 %** — comfortably over its
+95 % chrome threshold — while visibly rendering "Library" as "Li rar". The two
+missing 34 pt glyphs were 0.3 % of the pixels, so the score never noticed.
+
+The gate closes that hole and is independent of the score:
+
+1. Build the **severe mask**: pixels whose delta exceeds `STRUCT_DELTA` = **150**
+   counts. That is 25× the 6-count match tolerance — far above any
+   antialiasing, gamma, blend-calibration or alpha-encoding residual, and
+   comfortably below the contrast of real content against its background.
+2. Label its **8-connected components** (union-find over the sparse
+   coordinate list — the tool stays on numpy + Pillow, no scipy).
+3. Fail the frame if the largest component exceeds `STRUCT_MAX_BLOB` =
+   **80 pt²**, measured in POINTS² (device pixels ÷ scale²), so the gate means
+   the same physical size at 1×, 2× and 3×.
+
+For animation scenes every captured frame is gated, like the percentage.
+
+### Calibration (2026-08-25, all 80 scenes / 134 frames)
+
+| case | largest severe component | verdict |
+|---|---|---|
+| worst legitimate residual — `modal_sheet`, one stem of the 22 pt bold title (window-mode glyph rasterization) | **33.2 pt²** | passes, 2.4× under the gate |
+| next legitimate — `stack_alignment` / `constraints_baseline` | 20.0 / 16.5 pt² | passes |
+| **two 34 pt glyphs deleted** from `navbar_large` (the historical bug) | **248.8 pt²** | **FAILS** |
+| a `UISwitch` shifted 3 pt | 268.2 pt² | **FAILS** |
+| a rounded rect shifted 3 pt (`corner_radius`) | 236.0 pt² | **FAILS** |
+| a 17 pt label shifted 3 pt (`demo_settings`) | 90.2 pt² | **FAILS** |
+
+80 pt² sits 2.4× above the worst legitimate residual and 3.1× below the
+smallest corruption it must catch. Deliberately-corrupted renders are not
+checked in; regenerate them from the recipes above, or run the synthetic
+end-to-end assertions in `Tools/compare/test_compare.py`, which build a
+canvas that scores > 99.6 % with one solid 12×12 pt patch wrong and assert
+the gate rejects it.
+
+### What it does NOT catch (honest)
+
+A **small** view shifted a few points inside a scene whose internals are
+private on both sides. `navbar_large` with a 17 pt shelf label moved 3 pt
+scores 99.27 % with a largest component of 17 pt², and the layout dump cannot
+see it either, because `UINavigationStack` internals are excluded from
+`PUBLIC_CLASSES`. Everywhere else a 3 pt shift is a hard layout failure
+(frames must match within 0.5 pt), so the two gates together cover it — but
+inside chrome subtrees there is still a gap. Closing it needs either the
+chrome containers to publish their internal frames, or a per-region score
+(which was measured and rejected: local severe-diff density does not separate
+`modal_sheet`'s legitimate title residual from a genuinely shifted label).

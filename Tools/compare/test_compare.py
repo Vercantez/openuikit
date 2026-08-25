@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
-"""Regression tests for compare.py's alpha-encoding handling.
+"""Regression tests for compare.py's pixel comparison.
 
-oracle2 ("window": true) goldens store PREMULTIPLIED RGB while openrender
-writes straight alpha; compare_pixels must treat both encodings of the same
-visual result as a perfect match, and must still catch real color/alpha
-mismatches. Run: python3 Tools/compare/test_compare.py
+Two things are guarded here:
+
+1. Alpha encoding. oracle2 ("window": true) goldens store PREMULTIPLIED RGB
+   while openrender writes straight alpha; compare_pixels must treat both
+   encodings of the same visual result as a perfect match, and must still
+   catch real color/alpha mismatches.
+2. The structural gate. A small region being COMPLETELY wrong must fail even
+   when the percentage score is far above the category threshold — the
+   navbar_large "missing two letters at 99.5 %" blind spot.
+
+Run: python3 Tools/compare/test_compare.py
 """
 import os, sys, tempfile
 import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from compare import compare_pixels
+from compare import (compare_pixels, largest_diff_blob, STRUCT_DELTA,
+                     STRUCT_MAX_BLOB)
 
 
 def png(tmp, name, arr):
@@ -61,7 +69,54 @@ def main():
     solid = np.zeros((H, W, 4)); solid[...] = [40, 80, 120, 255]
     assert score(tmp, solid, solid, premul=True) == 100.0
 
+    structural_tests(tmp)
     print("test_compare.py: all assertions passed")
+
+
+def structural_tests(tmp):
+    """The gate that closes the navbar_large blind spot."""
+    # Component labelling: area is reported in POINTS^2, so the same physical
+    # blob must measure the same at scale 1 and scale 2, and diagonal
+    # touching must join (8-connectivity).
+    m = np.zeros((40, 40))
+    m[10:20, 10:20] = 255                       # 10x10 = 100 px
+    area, bbox = largest_diff_blob(m, scale=1)
+    assert area == 100.0, area
+    assert bbox == (10.0, 10.0, 10.0, 10.0), bbox
+    area2, _ = largest_diff_blob(m, scale=2)
+    assert area2 == 25.0, area2                 # same blob, 2x device scale
+
+    diag = np.zeros((10, 10))
+    diag[2, 2] = diag[3, 3] = 255               # touch only at a corner
+    assert largest_diff_blob(diag, scale=1)[0] == 2.0, "8-connectivity"
+
+    # Severity floor: a whole-canvas MILD difference is not structural.
+    mild = np.full((40, 40), STRUCT_DELTA - 1.0)
+    assert largest_diff_blob(mild, scale=1)[0] == 0.0
+
+    # End to end: a large canvas that matches everywhere except one solid
+    # 12x12 pt patch — 0.09 % of the pixels, so the percentage score sails
+    # past every category threshold, but the gate must see the patch.
+    big = 400
+    golden = np.zeros((big, big, 4)); golden[...] = [255, 255, 255, 255]
+    ours = golden.copy()
+    ours[100:124, 100:124] = [0, 0, 0, 255]     # 24x24 px = 12x12 pt at 2x
+    res, err = compare_pixels(png(tmp, "gb.png", golden), png(tmp, "ob.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert res["score"] > 99.6, res["score"]    # would pass every threshold
+    assert res["blob"] == 144.0, res["blob"]    # 12 x 12 pt
+    assert res["blob"] > STRUCT_MAX_BLOB, "the blind spot must be closed"
+
+    # ... and a diff of the same total area SCATTERED as single pixels is
+    # not structural (that is what an antialiasing residual looks like).
+    ours = golden.copy()
+    ours[::4, ::4] = [0, 0, 0, 255]
+    res, err = compare_pixels(png(tmp, "gs.png", golden), png(tmp, "os.png", ours),
+                              None, golden_premultiplied=False, scale=2)
+    assert err is None, err
+    assert res["blob"] < 1.0, res["blob"]       # one device pixel at 2x
+    assert res["blob"] <= STRUCT_MAX_BLOB
 
 
 main()
