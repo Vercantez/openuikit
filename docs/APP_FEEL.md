@@ -176,3 +176,42 @@ Fidelity: settled frames are bit-identical with caching on/off
 in that cached blits are snapped to the device pixel grid (≤ half-pixel,
 crisper than the resampled uncached path). The 56-scene golden suite is
 unaffected (single-frame renders never reach two stable frames).
+
+### Push transition cost, measured 2026-08-24 (scripts/perf_push.json)
+
+A fresh push at scale 2 (`--app demo`, tap "Display & Brightness", capture
+every frame at 60 fps) costs, per frame of the 0.35 s transition:
+
+| transition frame | render | what it does |
+|------------------|--------|--------------|
+| 1 (+7 ms)  | ≈ 62 ms | both screens direct; incoming caches cold |
+| 2 (+23 ms) | ≈ 55 ms | incoming re-rendered again to BUILD its composite |
+| 3 … end    | ≈ 24 ms | incoming is one blit; **outgoing still direct** |
+| after the highlight fade ends | ≈ 3 ms | everything cached |
+
+The interesting number is the third row. The steady 24 ms is not the
+incoming screen at all — it is the OUTGOING one: the tapped row runs its
+0.3 s highlight fade, an animating `backgroundColor` salts the row's
+fingerprint every frame, and that invalidates its whole ancestor chain
+(row → GroupCard → UIScrollView → screen root), so the settings screen
+re-composites its 11 cached cards at the fractional parallax offset for
+the entire transition. Fixing that (partial subtree composites, so a card
+can flatten the rows that are NOT animating) is worth more than anything
+left on the incoming side.
+
+**Pre-warming the incoming screen at push time was measured and
+rejected** (2026-08-24). Building its composite inside
+`pushViewController` moves ~53 ms into the event step to save ~37 ms on
+frame 1 and ~34 ms on frame 2 — in a live host, where the push and the
+first frame share one loop iteration, that makes the first displayed
+frame WORSE (62 → 77 ms). The cheaper variant (mark the fresh subtree
+flatten-eligible so frame 1 builds the composite instead of frame 2)
+costs nothing at push time and does take frames 1+2 from 117 ms to 84 ms,
+but it turns the first post-push frame into a composite blit, which moved
+0.9 % of the acceptance capture's mid-transition pixels (mean 1.28, max
+42 of 255, all on AA edges — visually identical, not byte-identical). It
+is parked on the byte-stability gate, not on the numbers; note that a
+blit is arguably what real CA does mid-transition, so an oracle-sampled
+push (still open, see KNOWN_GAPS) could settle which one is correct.
+Either way the first frame's ~35 ms of fresh rasterization is irreducible
+work, not redundant work — pre-warming can only move it.
