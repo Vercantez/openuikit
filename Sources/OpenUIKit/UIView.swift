@@ -390,6 +390,45 @@ open class UIView {
     open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
     open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {}
 
+    // MARK: First responder (text-input module, M8)
+
+    /// The UIWindow at the root of this view's superview chain, if any.
+    public var window: UIWindow? {
+        var v: UIView? = self
+        while let cur = v {
+            if let w = cur as? UIWindow { return w }
+            v = cur.superview
+        }
+        return nil
+    }
+
+    /// Whether this view can take text-input focus. UIView: false;
+    /// UITextField/UITextView override to true.
+    open var canBecomeFirstResponder: Bool { false }
+
+    public var isFirstResponder: Bool { window?.firstResponder === self }
+
+    /// Take first-responder status in this view's window (UIKit semantics:
+    /// fails without a window or when canBecomeFirstResponder is false).
+    /// The previous first responder resigns first.
+    @discardableResult
+    open func becomeFirstResponder() -> Bool {
+        guard canBecomeFirstResponder, let w = window else { return false }
+        if w.firstResponder === self { return true }
+        w.firstResponder?.resignFirstResponder()
+        w.firstResponder = self
+        return true
+    }
+
+    /// Give up first-responder status. Returns true (UIKit's default).
+    @discardableResult
+    open func resignFirstResponder() -> Bool {
+        if let w = window, w.firstResponder === self {
+            w.firstResponder = nil
+        }
+        return true
+    }
+
     // MARK: Rendering (view module: RenderPass.swift implements)
     /// Draw this view's own content (background is handled by the render
     /// pass; subclasses draw text/images/chrome here).

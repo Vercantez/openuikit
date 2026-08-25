@@ -1,0 +1,363 @@
+// UITextView. Owner: text-input module (M8).
+//
+// A UIScrollView subclass (like real UIKit) whose text layout matches the
+// measured Catalyst iOS 26.1 TextKit behavior (scratchpad textprobe;
+// golden/textview_basic.*):
+//
+//   - Default backgroundColor = .systemBackground, clipsToBounds = true.
+//   - textContainerInset = (8, 0, 8, 0), lineFragmentPadding = 5:
+//     text starts at x = 5, first line top at y = 8.
+//   - Line height = font.lineHeight EXACTLY (the metrics-table values are
+//     UIKit's integer UIFont.lineHeight: 16 @ 13 pt, 18 @ 15 pt, 20 @ 17 pt)
+//     — NOT UILabel's line box (labelLineHeight adds +1 in three size
+//     bands; UILabel and UITextView genuinely differ at e.g. 15 pt).
+//   - First baseline at inset.top + floor(ascender + 0.5); the glyph pen
+//     starts exactly at the padding edge (x = 5; fitted 99.97 against
+//     golden/textview_basic — no TextKit pen shift).
+//   - contentSize = (width, inset.top + inset.bottom + lines * lineHeight).
+//   - Caret: height = lineHeight + 1.5, x = 5 + pixel-rounded prefix
+//     width, y = floor(inset.top + line * lineHeight - 0.75) (measured
+//     caretRect probes across sizes 11...24). Rendered 2 pt wide in tint
+//     color (task spec; real caretRect reports 1 pt).
+//   - font is nil by default and renders at 12 pt system (real UIKit's
+//     legacy default is Helvetica 12 — lineHeight differs by 1 pt there;
+//     always set a font, as the fixtures and demo do).
+//
+// Editing: tap focuses (isEditable), caret at nearest glyph boundary;
+// insertText/deleteBackward edit at the caret; left/right/up/down move it;
+// return inserts a newline. The view auto-scrolls to keep the caret
+// visible. Selection is out of scope (docs/KNOWN_GAPS.md).
+
+/// Content canvas (private name — layout dumps stay comparable; real
+/// UIKit's counterpart is _UITextContainerView/_UITextLayoutCanvasView).
+final class UITextViewCanvasView: UIView {
+    weak var owner: UITextView?
+
+    override init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        owner?.drawText(in: canvas)
+    }
+}
+
+open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
+
+    // MARK: Content properties
+
+    public var text: String = "" {
+        didSet {
+            if caretOffset > UITextCaretMath.scalarCount(text) {
+                caretOffset = UITextCaretMath.scalarCount(text)
+            }
+            contentDidChange()
+        }
+    }
+    public var font: UIFont? {
+        didSet { contentDidChange() }
+    }
+    public var textColor: UIColor = .label {
+        didSet { contentDidChange() }
+    }
+    public var textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
+        didSet { contentDidChange() }
+    }
+    public var isEditable = true
+
+    public static let lineFragmentPadding: CGFloat = 5
+
+    var effectiveFont: UIFont { font ?? .systemFont(ofSize: 12) }
+    var lineHeight: CGFloat { FontEngine.metrics(for: effectiveFont).lineHeight }
+
+    // MARK: Internal views / editing state
+
+    let contentView = UITextViewCanvasView()
+    var caretView: UIView?
+    public private(set) var isEditing = false
+    /// Caret position as a unicode-scalar offset into `text`.
+    public internal(set) var caretOffset: Int = 0
+    /// Preferred caret x (text space) preserved across up/down moves.
+    var preferredCaretX: CGFloat?
+
+    public override init(frame: CGRect = .zero) {
+        super.init(frame: frame)
+        isOpaque = true
+        backgroundColor = .systemBackground
+        contentView.owner = self
+        addSubview(contentView)
+    }
+
+    func contentDidChange() {
+        contentView.setNeedsDisplay()
+        setNeedsLayout()
+    }
+
+    // MARK: Line layout
+
+    var wrapWidth: CGFloat {
+        Swift.max(0, bounds.width - textContainerInset.left - textContainerInset.right
+                     - 2 * UITextView.lineFragmentPadding)
+    }
+
+    /// Wrapped lines with their unicode-scalar offset ranges into `text`.
+    struct LineRun {
+        var text: Substring
+        var start: Int   // scalar offset of the first character
+        var end: Int     // scalar offset past the last character
+    }
+
+    func lineRuns() -> [LineRun] {
+        let lines = TextLayout.wrap(text, font: effectiveFont,
+                                    maxWidth: wrapWidth, maxLines: 0)
+        var runs: [LineRun] = []
+        runs.reserveCapacity(Swift.max(lines.count, 1))
+        let scalars = text.unicodeScalars
+        for l in lines {
+            let start = scalars.distance(from: scalars.startIndex,
+                                         to: l.text.startIndex)
+            let count = l.text.unicodeScalars.count
+            runs.append(LineRun(text: l.text, start: start, end: start + count))
+        }
+        if runs.isEmpty {
+            runs.append(LineRun(text: text[text.startIndex...], start: 0, end: 0))
+        }
+        return runs
+    }
+
+    var contentHeight: CGFloat {
+        let n = Swift.max(1, lineRuns().count)
+        return textContainerInset.top + textContainerInset.bottom
+            + CGFloat(n) * lineHeight
+    }
+
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        let h = contentHeight
+        contentView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: h)
+        contentSize = CGSize(width: bounds.width, height: h)
+        layoutCaret()
+    }
+
+    // MARK: Drawing (called by the content canvas)
+
+    func drawText(in canvas: Canvas) {
+        guard !text.isEmpty else { return }
+        let font = effectiveFont
+        let color = textColor.resolvedCGColor(with: traitCollection)
+        guard color.alpha > 0 else { return }
+        let dark = traitCollection.userInterfaceStyle == .dark
+        let glyphFont = GlyphRasterizer.font(for: font)
+        let asc = FontEngine.metrics(for: font).ascender
+        let baseline0 = textContainerInset.top + (asc + 0.5).rounded(.down)
+        let penX = textContainerInset.left + UITextView.lineFragmentPadding
+        let lineH = lineHeight
+        for (i, run) in lineRuns().enumerated() {
+            guard !run.text.isEmpty else { continue }
+            UILabel.drawGlyphLine(String(run.text),
+                                  at: CGPoint(x: penX,
+                                              y: baseline0 + CGFloat(i) * lineH),
+                                  in: canvas, font: font, dark: dark,
+                                  color: color, glyphFont: glyphFont)
+        }
+    }
+
+    // MARK: First responder / editing session
+
+    open override var canBecomeFirstResponder: Bool { isEditable }
+
+    @discardableResult
+    open override func becomeFirstResponder() -> Bool {
+        guard super.becomeFirstResponder() else { return false }
+        if !isEditing {
+            isEditing = true
+            caretOffset = UITextCaretMath.scalarCount(text)
+            UITextInputState.focus(self, at: OpenUIKitRuntime.animationTime)
+            ensureCaretView()
+            caretView?.isHidden = false
+            setNeedsLayout()
+        }
+        return true
+    }
+
+    @discardableResult
+    open override func resignFirstResponder() -> Bool {
+        let r = super.resignFirstResponder()
+        if isEditing {
+            isEditing = false
+            UITextInputState.unfocus(self)
+            caretView?.isHidden = true
+        }
+        return r
+    }
+
+    /// Tap: focus and position the caret (touches the scroll pan let
+    /// through — a drag scrolls, a clean tap edits).
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        guard isEditable, let touch = touches.first else { return }
+        let p = touch.location(in: self)   // bounds coords == content coords
+        becomeFirstResponder()
+        guard isEditing else { return }
+        caretOffset = caretIndex(at: p)
+        preferredCaretX = nil
+        UITextInputState.noteActivity(at: OpenUIKitRuntime.animationTime)
+        caretView?.isHidden = false
+        setNeedsLayout()
+    }
+
+    /// Nearest glyph boundary to a point in content coordinates.
+    func caretIndex(at p: CGPoint) -> Int {
+        let runs = lineRuns()
+        let lineH = lineHeight
+        let rawLine = ((p.y - textContainerInset.top) / lineH).rounded(.down)
+        let line = Swift.min(Swift.max(Int(rawLine), 0), runs.count - 1)
+        let run = runs[line]
+        let x = p.x - textContainerInset.left - UITextView.lineFragmentPadding
+        let within = UITextCaretMath.caretIndex(for: x, text: String(run.text),
+                                                font: effectiveFont)
+        return run.start + within
+    }
+
+    // MARK: UIKeyInput
+
+    public var hasText: Bool { !text.isEmpty }
+
+    public func insertText(_ str: String) {
+        guard isEditing else { return }
+        let i = UITextCaretMath.index(text, atScalarOffset: caretOffset)
+        text.insert(contentsOf: str, at: i)
+        caretOffset += UITextCaretMath.scalarCount(str)
+        preferredCaretX = nil
+        afterEdit()
+    }
+
+    public func deleteBackward() {
+        guard isEditing, caretOffset > 0 else { return }
+        let end = UITextCaretMath.index(text, atScalarOffset: caretOffset)
+        let start = UITextCaretMath.index(text, atScalarOffset: caretOffset - 1)
+        text.removeSubrange(start..<end)
+        caretOffset -= 1
+        preferredCaretX = nil
+        afterEdit()
+    }
+
+    func afterEdit() {
+        contentDidChange()
+        caretView?.isHidden = false
+        layoutIfNeeded()
+        scrollCaretToVisible()
+    }
+
+    func handleKey(_ key: UIKeyEventKey) {
+        guard isEditing else { return }
+        switch key {
+        case .backspace:
+            deleteBackward()
+            return
+        case .left:
+            if caretOffset > 0 { caretOffset -= 1 }
+            preferredCaretX = nil
+        case .right:
+            if caretOffset < UITextCaretMath.scalarCount(text) { caretOffset += 1 }
+            preferredCaretX = nil
+        case .up, .down:
+            moveCaretVertically(by: key == .down ? 1 : -1)
+        case .return:
+            insertText("\n")
+            return
+        }
+        caretView?.isHidden = false
+        setNeedsLayout()
+        layoutIfNeeded()
+        scrollCaretToVisible()
+    }
+
+    /// Up/down arrows: nearest boundary in the adjacent line, preserving
+    /// the caret's x across consecutive vertical moves (UIKit behavior).
+    func moveCaretVertically(by delta: Int) {
+        let runs = lineRuns()
+        guard let (line, within) = caretLine(in: runs) else { return }
+        let target = line + delta
+        guard target >= 0, target < runs.count else { return }
+        let font = effectiveFont
+        let x = preferredCaretX
+            ?? UITextCaretMath.prefixWidth(String(runs[line].text),
+                                           count: within, font: font)
+        preferredCaretX = x
+        let run = runs[target]
+        let within2 = UITextCaretMath.caretIndex(for: x, text: String(run.text),
+                                                 font: font)
+        caretOffset = run.start + within2
+    }
+
+    /// (line index, scalar offset within the line) for the caret.
+    func caretLine(in runs: [LineRun]) -> (Int, Int)? {
+        for (i, r) in runs.enumerated() {
+            if caretOffset < r.end { return (i, Swift.max(0, caretOffset - r.start)) }
+            if caretOffset == r.end {
+                // Boundary shared with the next line's start (char wrap):
+                // prefer the next line's start, else this line's end.
+                if i + 1 < runs.count, runs[i + 1].start == r.end {
+                    return (i + 1, 0)
+                }
+                return (i, caretOffset - r.start)
+            }
+        }
+        guard let last = runs.indices.last else { return nil }
+        return (last, runs[last].end - runs[last].start)
+    }
+
+    // MARK: Caret geometry (measured — see header)
+
+    /// Caret rect in CONTENT coordinates.
+    public func caretRect() -> CGRect {
+        let runs = lineRuns()
+        guard let (line, within) = caretLine(in: runs) else { return .zero }
+        let font = effectiveFont
+        let scale = traitCollection.displayScale > 0 ? traitCollection.displayScale : 2
+        let px = FontEngine.roundToPixel(
+            UITextCaretMath.prefixWidth(String(runs[line].text), count: within,
+                                        font: font), scale: scale)
+        let lineH = lineHeight
+        let x = textContainerInset.left + UITextView.lineFragmentPadding + px
+        let y = (textContainerInset.top + CGFloat(line) * lineH - 0.75).rounded(.down)
+        return CGRect(x: x, y: y, width: 2, height: lineH + 1.5)
+    }
+
+    func ensureCaretView() {
+        if caretView == nil {
+            let v = UIView()   // plain UIView: no dump noise, no content pass
+            v.isUserInteractionEnabled = false
+            contentView.addSubview(v)
+            caretView = v
+        }
+    }
+
+    func layoutCaret() {
+        guard let caret = caretView, isEditing else { return }
+        caret.backgroundColor = tintColor
+        caret.frame = caretRect()
+    }
+
+    func caretBlinkChanged(visible: Bool) {
+        guard isEditing else { return }
+        caretView?.isHidden = !visible
+    }
+
+    /// Keep the caret's line inside the visible rect (vertical only).
+    func scrollCaretToVisible() {
+        let r = caretRect()
+        var off = contentOffset
+        let visibleH = bounds.height
+        if r.maxY + textContainerInset.bottom > off.y + visibleH {
+            off.y = r.maxY + textContainerInset.bottom - visibleH
+        }
+        if r.minY - textContainerInset.top < off.y {
+            off.y = Swift.max(0, r.minY - textContainerInset.top)
+        }
+        if off != contentOffset { contentOffset = off }
+    }
+}

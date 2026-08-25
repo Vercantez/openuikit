@@ -155,6 +155,34 @@ rubber-band, bounce) are unit-tested against the closed forms in
 `UIScrollPhysics` and exercised live via openhost scripted captures —
 oracle time-sampled traces come with M8.
 
+### `UITextField` (v4.2 — M8 text input)
+Static (unfocused) rendering only — no offscreen oracle can capture the
+focused look (first responder requires a window/keyboard). Scenes cover the
+empty+placeholder and with-text states.
+| key | type | notes |
+|---|---|---|
+| `borderStyle` | string | `none` (default), `line`, `bezel`, `roundedRect`. Fixtures use `roundedRect`. |
+| `text` | string | Non-editing overflow truncates the tail with an ellipsis, like UILabel. |
+| `placeholder` | string | drawn in `placeholderText` when `text` is empty. |
+| `fontSize`, `fontWeight` | | default system 17 regular. |
+| `textColor` | color | default `label`. |
+
+The layout dump carries `intrinsic` for text fields (roundedRect =
+`(ceil(textWidth) + 28, 34)`; placeholder widths ceil to the pixel grid).
+Both renderers keep their private internal subviews out of the structural
+comparison (compare.py PUBLIC_CLASSES).
+
+### `UITextView` (v4.2 — M8 text input)
+A UIScrollView subclass. Multiline wrapped text: container inset (8, 0, 8, 0),
+line-fragment padding 5, line height = the font's integer UIFont.lineHeight.
+The oracle pins `contentInsetAdjustmentBehavior = .never` and hides both
+indicators (same rule as UIScrollView).
+| key | type | notes |
+|---|---|---|
+| `text` | string | |
+| `fontSize`, `fontWeight` | | default system 17 regular (always applied — real UITextView's nil-font 12 pt legacy default is not exercised). |
+| `textColor` | color | default `label`. |
+
 ### `UIStackView`
 | key | notes |
 |---|---|

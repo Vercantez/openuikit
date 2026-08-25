@@ -370,6 +370,31 @@ func makeScrollView(_ j: SceneJSON) -> UIScrollView {
     return s
 }
 
+func makeTextField(_ j: SceneJSON) -> UITextField {
+    let t = UITextField()
+    switch j["borderStyle"]?.stringValue ?? "none" {
+    case "none": t.borderStyle = .none
+    case "line": t.borderStyle = .line
+    case "bezel": t.borderStyle = .bezel
+    case "roundedRect": t.borderStyle = .roundedRect
+    case let b: fatalError("bad borderStyle \(b)")
+    }
+    t.text = j["text"]?.stringValue
+    t.placeholder = j["placeholder"]?.stringValue
+    if j["fontSize"] != nil || j["fontWeight"] != nil { t.font = fontFrom(j) }
+    if let c = colorOrDie(j["textColor"], "UITextField") { t.textColor = c }
+    t.tintColor = t.tintColor.resolvedColor(with: UITraitCollection.current)
+    return t
+}
+
+func makeTextView(_ j: SceneJSON) -> UITextView {
+    let t = UITextView()
+    t.text = j["text"]?.stringValue ?? ""
+    t.font = fontFrom(j)   // spec: fontSize default 17, always applied
+    if let c = colorOrDie(j["textColor"], "UITextView") { t.textColor = c }
+    return t
+}
+
 func makeSwitch(_ j: SceneJSON) -> UISwitch {
     let s = UISwitch()
     s.isOn = j["on"]?.boolValue ?? false
@@ -410,6 +435,8 @@ func buildView(_ j: SceneJSON, scale: CGFloat, warn: (String) -> Void) -> UIView
     case "UIButton": v = makeButton(j)
     case "UIGradientView": v = makeGradientView(j)
     case "UIScrollView": v = makeScrollView(j)
+    case "UITextField": v = makeTextField(j)
+    case "UITextView": v = makeTextView(j)
     case _ where notYetImplementedClasses.contains(cls):
         warn("openrender: warning: class '\(cls)' not implemented yet; substituting plain UIView")
         v = UIView()
@@ -651,7 +678,8 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSONValue]) {
     ]
     // Oracle: intrinsic for UILabel/UIButton/UISwitch/UIImageView/UIProgressView.
     // Extend the check as OpenUIKit grows those classes.
-    if v is UILabel || v is UIButton || v is UIImageView || v is UIProgressView || v is UISwitch {
+    if v is UILabel || v is UIButton || v is UIImageView || v is UIProgressView || v is UISwitch
+        || v is UITextField || v is UITextView {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = .array([
             .number(i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width)),

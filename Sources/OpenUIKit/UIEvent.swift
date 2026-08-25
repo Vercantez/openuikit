@@ -60,6 +60,12 @@ open class UIWindow: UIView {
     public static var multiTapInterval: TimeInterval = 0.35
     public static var multiTapSlop: CGFloat = 30
 
+    /// Current first responder (text-input focus). Set through
+    /// UIView.becomeFirstResponder / resignFirstResponder; the host feeds
+    /// keyboard input to it via sendText/sendKey (UITextInput.swift).
+    /// Owner: text-input module (additive, coordinated with event module).
+    public internal(set) weak var firstResponder: UIView?
+
     /// Active touches by host-provided touch identifier.
     var activeTouches: [Int: UITouch] = [:]
     /// Previous tap-sequence terminus (for tapCount).
@@ -162,6 +168,9 @@ open class UIWindow: UIView {
         // on this clock, after the steppers above (a completion may start the
         // next animation, and it should see a settled scroll/transition).
         UIView._stepAnimationCompletions(to: timestamp)
+        // Caret blink of the focused text editor advances on the same host
+        // clock (text-input module; additive like the steppers above).
+        UITextInputState._stepCaretBlink(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

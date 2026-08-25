@@ -293,6 +293,38 @@ func buildView(_ j: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView {
             gl.type = .axial
         }
         v = g
+    case "UITextField":
+        let t = UITextField()
+        switch j["borderStyle"] as? String ?? "none" {
+        case "none": t.borderStyle = .none
+        case "line": t.borderStyle = .line
+        case "bezel": t.borderStyle = .bezel
+        case "roundedRect": t.borderStyle = .roundedRect
+        case let b: fatalError("bad borderStyle \(b)")
+        }
+        t.text = j["text"] as? String
+        t.placeholder = j["placeholder"] as? String
+        if j["fontSize"] != nil || j["fontWeight"] != nil { t.font = fontFrom(j) }
+        if let c = colorOrDie(j["textColor"], cls, traits) { t.textColor = c }
+        // Default .label is dynamic and would resolve light offscreen.
+        else { t.textColor = UIColor.label.resolvedColor(with: traits) }
+        t.tintColor = t.tintColor.resolvedColor(with: traits)
+        v = t
+    case "UITextView":
+        let t = UITextView()
+        // Same pinning as UIScrollView: no safe-area shifts, no indicator
+        // subviews in the layout dump.
+        t.contentInsetAdjustmentBehavior = .never
+        t.showsVerticalScrollIndicator = false
+        t.showsHorizontalScrollIndicator = false
+        t.text = j["text"] as? String ?? ""
+        t.font = fontFrom(j)   // spec: fontSize default 17, always applied
+        if let c = colorOrDie(j["textColor"], cls, traits) { t.textColor = c }
+        else { t.textColor = UIColor.label.resolvedColor(with: traits) }
+        // Default background is dynamic systemBackground — pin it to the
+        // scene style (an explicit scene backgroundColor overrides below).
+        t.backgroundColor = t.backgroundColor?.resolvedColor(with: traits)
+        v = t
     case "UIScrollView":
         let s = UIScrollView()
         // No VC hierarchy offscreen: keep UIKit from shifting the offset
@@ -366,7 +398,8 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
         "frame": [round3(v.frame.origin.x), round3(v.frame.origin.y),
                   round3(v.frame.width), round3(v.frame.height)],
     ]
-    if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView || v is UIProgressView {
+    if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView || v is UIProgressView
+        || v is UITextField || v is UITextView {
         let i = v.intrinsicContentSize
         entry["intrinsic"] = [i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width),
                               i.height == UIView.noIntrinsicMetric ? -1 : round3(i.height)]

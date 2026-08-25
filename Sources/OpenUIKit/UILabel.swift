@@ -152,6 +152,19 @@ open class UILabel: UIView {
     private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
                                 color: CGColor, glyphFont: InstancedGlyphFont?,
                                 extraAdvance: CGFloat = 0) {
+        UILabel.drawGlyphLine(line, at: origin, in: canvas, font: font,
+                              dark: traitCollection.userInterfaceStyle == .dark,
+                              color: color, glyphFont: glyphFont,
+                              extraAdvance: extraAdvance)
+    }
+
+    /// Shared single-line glyph run renderer (ink-table fast path + stb
+    /// fallback). Used by UILabel and the text-input views (UITextField /
+    /// UITextView), so their glyph output is byte-identical to labels.
+    static func drawGlyphLine(_ line: String, at origin: CGPoint, in canvas: Canvas,
+                              font: UIFont, dark: Bool,
+                              color: CGColor, glyphFont: InstancedGlyphFont?,
+                              extraAdvance: CGFloat = 0) {
         let scale = canvas.scale
         // Harvested-ink fast path: exact real-UIKit glyph masks, valid for
         // scale-2 translation-only canvases and integer point sizes (see
@@ -162,7 +175,6 @@ open class UILabel: UIView {
             && font.pointSize == font.pointSize.rounded(.down)
         let famKey = FontEngine.familyKey(for: font)
         let sizeKey = Int(font.pointSize)
-        let dark = traitCollection.userInterfaceStyle == .dark
         // Device-pixel anchor of the text-space origin (x: pen 0).
         let devOX = Int((ctm.tx).rounded())
         let devBaseY = Int((origin.y * 2 + ctm.ty).rounded())

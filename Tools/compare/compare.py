@@ -35,7 +35,8 @@ def classify(scene):
             walk(s)
     walk(scene["root"])
     layout_only = scene.get("layoutOnly", False)
-    if kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView"}:
+    if kinds & {"UISwitch", "UIProgressView", "UIButton", "UIImageView", "UIStackView",
+                "UITextField", "UITextView"}:
         cat = "control"
     elif "UILabel" in kinds:
         cat = "text"
@@ -57,7 +58,7 @@ def capture_suffix(t):
 # the pixel comparison is what holds their visual placement to account.
 PUBLIC_CLASSES = {"UIView", "UILabel", "UIButton", "UIImageView", "UISwitch",
                   "UIProgressView", "UIStackView", "UIGradientView",
-                  "UIScrollView"}
+                  "UIScrollView", "UITextField", "UITextView"}
 
 def visible_views(dump):
     """Public-class views, excluding entire subtrees rooted at private views."""

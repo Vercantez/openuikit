@@ -37,7 +37,13 @@ open class UIControl: UIView {
         public static let touchCancel = Event(rawValue: 1 << 8)
         public static let valueChanged = Event(rawValue: 1 << 12)
         public static let primaryActionTriggered = Event(rawValue: 1 << 13)
+        // Text-field editing events (UIKit raw values; text-input module).
+        public static let editingDidBegin = Event(rawValue: 1 << 16)
+        public static let editingChanged = Event(rawValue: 1 << 17)
+        public static let editingDidEnd = Event(rawValue: 1 << 18)
+        public static let editingDidEndOnExit = Event(rawValue: 1 << 19)
         public static let allTouchEvents = Event(rawValue: 0x0000_0FFF)
+        public static let allEditingEvents = Event(rawValue: 0x000F_0000)
         public static let allEvents = Event(rawValue: 0xFFFF_FFFF)
     }
 

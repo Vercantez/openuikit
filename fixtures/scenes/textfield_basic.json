@@ -1,0 +1,41 @@
+{
+ "name": "textfield_basic",
+ "size": [320, 200],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 320, 200],
+    "backgroundColor": "secondarySystemBackground"
+   },
+   {
+    "class": "UITextField",
+    "frame": [20, 16, 280, 34],
+    "borderStyle": "roundedRect",
+    "placeholder": "Search here"
+   },
+   {
+    "class": "UITextField",
+    "frame": [20, 62, 280, 34],
+    "borderStyle": "roundedRect",
+    "text": "Hello UIKit"
+   },
+   {
+    "class": "UITextField",
+    "frame": [20, 108, 160, 34],
+    "borderStyle": "roundedRect",
+    "text": "The quick brown fox jumps over the lazy dog"
+   },
+   {
+    "class": "UITextField",
+    "frame": [20, 154, 160, 34],
+    "borderStyle": "roundedRect",
+    "fontSize": 13,
+    "text": "Small text field"
+   }
+  ]
+ }
+}
