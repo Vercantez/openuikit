@@ -31,7 +31,9 @@
 // ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
 // SCOPED imports on purpose: they satisfy that rule without pulling in
 // CoreGraphics' CGColor / CGAffineTransform, which would collide with
-// OpenCoreGraphics' own.
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -775,7 +777,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let sigma = pocketBlurSigma * scale
         let radius = max(1, Int((sigma * 2.5).rounded()))
         // Gaussian taps.
-        var taps = [CGFloat](repeating: 0, count: 2 * radius + 1)
+        var taps = Array<CGFloat>(repeating: 0, count: 2 * radius + 1)
         var sum: CGFloat = 0
         for i in -radius...radius {
             let t = CGFloat(i) / sigma
@@ -792,7 +794,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // Composite the (straight-alpha) snapshot over the background color
         // so the blur operates on opaque RGB.
         let workH = min(outH + radius, src.height)
-        var flat = [CGFloat](repeating: 0, count: w * workH * 3)
+        var flat = Array<CGFloat>(repeating: 0, count: w * workH * 3)
         src.pixels.withUnsafeBufferPointer { px in
             for y in 0..<workH {
                 for x in 0..<w {
@@ -806,7 +808,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             }
         }
         // Horizontal pass (clamped edges).
-        var hpass = [CGFloat](repeating: 0, count: w * workH * 3)
+        var hpass = Array<CGFloat>(repeating: 0, count: w * workH * 3)
         for y in 0..<workH {
             for x in 0..<w {
                 var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0

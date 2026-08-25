@@ -39,7 +39,9 @@
 // ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
 // SCOPED imports on purpose: they satisfy that rule without pulling in
 // CoreGraphics' CGColor / CGAffineTransform, which would collide with
-// OpenCoreGraphics' own.
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

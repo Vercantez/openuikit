@@ -10,7 +10,8 @@ actually use, not by UIKit's alphabet.
 **Where this stands at the M13 wrap-up (2026-08-25):** **97.1% effective
 coverage** of what four real apps reference, 474 uses (2.9%) of
 genuinely-missing types left, and a *screen* from a shipping app rendering
-with 97.7% of its source unmodified. The file is written newest-last within
+with 98.5% of its source unmodified (97.7% at M13; M15's Foundation
+coexistence retired five of the fourteen adapted lines). The file is written newest-last within
 each topic; if you want only the current picture, read **"Current measurement
 — M13 wrap-up, at the M14 tip"**, **"The punch list, re-ranked at the M14
 tip"** and **"Missing MEMBERS of types we already export"**, then
@@ -511,10 +512,12 @@ handling, switch action and tap-to-dismiss driven by real touches), and
 **byte-identically on Linux** (`scripts/linux_realapp_verify.sh`: 13/13 frames
 across the headless renders and the scripted live replay).
 
-**14 of the 605 lines had to change — 97.7 % unmodified**, and the 258-line
+**14 of the 605 lines had to change — 97.7 % unmodified** *(9 and 98.5 % after
+M15 closed the Foundation row — see "M15" below)*, and the 258-line
 view controller (all of the Auto Layout) compiles byte-for-byte. The ledger by
 reason: `NSCoder`/Foundation collision 5, `@MainActor` isolation 4,
-`#selector`/`@objc` 4, harness access level 1. **None of the 14 is a missing
+`#selector`/`@objc` 4, harness access level 1 (the Foundation row is 0 after
+M15). **None of the 14 is a missing
 UIKit member** — every one is a language or runtime incompatibility.
 
 The cost that does not show up in that ratio is the 246 lines of scaffolding
@@ -533,6 +536,45 @@ So the honest statement of where this stands:
 The next milestone this suggests is **not** more UIKit types. It is
 `import Foundation` alongside OpenUIKit, which would let an app's model layer,
 theme system and string tables compile untouched.
+
+## M15: Foundation coexistence — done (2026-08-25)
+
+**`import Foundation` next to `import OpenUIKit` now compiles.** That was the
+#1 item above and it is closed for the geometry types, `IndexPath`, `NSRange`
+and `TimeInterval`, which is what unblocks `NSCoder` (344 files), `NSObject`
+(175), `NSString` (137) and `NSValue` (13) — the 704 uses, **4.3 %** of the
+corpus, that this table has been listing as "Foundation provides free on
+Linux". They are free *now*; before M15 the file that wanted them could not
+also mention a `CGRect`.
+
+The insight was that the collision was never missing API — it was duplicate
+NAMES — so the fix was subtraction. OpenUIKit stopped declaring rivals and
+started re-exporting Foundation's own types (`typealias`, so lookup resolves
+to one declaration), keeping UIKit's conveniences as extensions the way real
+UIKit does. Design and the measured reasons: docs/PORTABILITY.md "M15: the
+library imports Foundation, and there is exactly one `CGRect`".
+
+**Evidence, not assertion:**
+
+| | before | after |
+|---|---|---|
+| `private typealias X = OpenUIKit.X` lines in `Tests/` | 178 | **27** (151 deleted, across 40 files) |
+| a test file that imports Foundation *and* uses UIKit geometry unqualified | impossible | `Tests/OpenUIKitTests/FoundationCoexistenceTests.swift` |
+| oracle scenes / scroll traces / unit tests | 108 / 9 / 732 | 108 / 9 / **738** |
+| Linux frames byte-identical to macOS | 162/162 | **162/162** |
+
+**What did not move, and why** (each measured — details in
+`Sources/OpenUIKit/FoundationTypes.swift`): `NSAttributedString`
+(corelibs-Foundation *traps* when a plain Swift value is stored as an
+attribute twice, and every UIKit attribute value is one), `NotificationCenter`
+(no portable selector-form observer exists off Darwin, and that is the
+spelling apps use most), `Timer`/`RunLoop` (they run on the scripted host
+clock; Foundation's run on `Date`, which would end byte-identical rendering),
+and `CGAffineTransform` (Linux Foundation has none, so keeping ours costs
+nothing there — it clashes only on Darwin).
+
+That leaves the remaining four blockers from the real-app ledger: selector
+dispatch, `@MainActor`, asset catalogs, xibs.
 
 Earlier blockers in the punch-list ordering — items 4, 2 and 1 (delegate
 protocols, `UIBarButtonItem`, `UICollectionView`) — are all closed as of M13.

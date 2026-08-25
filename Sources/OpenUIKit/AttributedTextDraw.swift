@@ -162,7 +162,7 @@ extension AttributedTextLayout {
         let w = px1 - px0, h = py1 - py0
         guard w > 0, h > 0, w * h < 1 << 22 else { return }
         // Exact-area coverage of the rect, then a separable 3-tap blur.
-        var cov = [CGFloat](repeating: 0, count: w * h)
+        var cov = Array<CGFloat>(repeating: 0, count: w * h)
         for row in 0..<h {
             let ry0 = CGFloat(py0 + row), ry1 = ry0 + 1
             let cy = Swift.max(0, Swift.min(y1, ry1) - Swift.max(y0, ry0))
@@ -175,7 +175,7 @@ extension AttributedTextLayout {
         }
         let k = smoothingTap
         let mid = 1 - 2 * k
-        var tmp = [CGFloat](repeating: 0, count: w * h)
+        var tmp = Array<CGFloat>(repeating: 0, count: w * h)
         for row in 0..<h {
             for col in 0..<w {
                 let l = col > 0 ? cov[row * w + col - 1] : 0

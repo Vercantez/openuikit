@@ -1,6 +1,8 @@
-// ADAPTED(foundation-collision): `import Foundation` dropped. Nothing in this
-// file needs it, and Foundation's CGRect/CGSize/CGPoint collide with
-// OpenUIKit's own (docs/OBJC_RUNTIME.md measures the same collision).
+// M15: this file's `import Foundation` is BACK — unmodified app source. It was
+// the one adaptation on the "foundation-collision" line of the M14 ledger, and
+// OpenUIKit's geometry types are Foundation's own now, so there is nothing to
+// collide (docs/APP_COMPAT.md "M15").
+import Foundation
 
 class OptionAction {
     let label: String

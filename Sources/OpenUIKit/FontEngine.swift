@@ -74,7 +74,7 @@ public enum FontEngine {
                 e.capHeight = obj["capHeight"]?.doubleValue ?? 0
                 e.xHeight = obj["xHeight"]?.doubleValue ?? 0
                 e.leading = obj["leading"]?.doubleValue ?? 0
-                e.advances = [CGFloat](repeating: 0, count: 95)
+                e.advances = Array<CGFloat>(repeating: 0, count: 95)
                 if let adv = obj["advances"]?.objectValue {
                     for (k, v) in adv {
                         let u = Array(k.unicodeScalars)

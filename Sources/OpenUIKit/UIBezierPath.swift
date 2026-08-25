@@ -20,7 +20,9 @@
 // ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
 // SCOPED imports on purpose: they satisfy that rule without pulling in
 // CoreGraphics' CGColor / CGAffineTransform, which would collide with
-// OpenCoreGraphics' own.
+// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
+// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
+// type; spell it `Array<CGFloat>(...)`.
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -272,18 +274,25 @@ public class UIBezierPath {
             case .quad(let c, let p):
                 let from = cur
                 emitCurve { t in
-                    let mt = 1 - t
-                    return CGPoint(x: mt * mt * from.x + 2 * mt * t * c.x + t * t * p.x,
-                                   y: mt * mt * from.y + 2 * mt * t * c.y + t * t * p.y)
+                    // The annotations are load-bearing: without them the
+                    // solver weighs a CGFloat<->Double conversion at every
+                    // operator and times out (M15 — CGFloat is no longer a
+                    // typealias for Double). Same shape as Canvas.swift.
+                    let mt: CGFloat = 1 - t
+                    let w0: CGFloat = mt * mt, w1: CGFloat = 2 * mt * t, w2: CGFloat = t * t
+                    return CGPoint(x: w0 * from.x + w1 * c.x + w2 * p.x,
+                                   y: w0 * from.y + w1 * c.y + w2 * p.y)
                 }
             case .cubic(let c1, let c2, let p):
                 let from = cur
                 emitCurve { t in
-                    let mt = 1 - t
-                    let x = mt * mt * mt * from.x + 3 * mt * mt * t * c1.x
-                          + 3 * mt * t * t * c2.x + t * t * t * p.x
-                    let y = mt * mt * mt * from.y + 3 * mt * mt * t * c1.y
-                          + 3 * mt * t * t * c2.y + t * t * t * p.y
+                    let mt: CGFloat = 1 - t
+                    let w0: CGFloat = mt * mt * mt
+                    let w1: CGFloat = 3 * mt * mt * t
+                    let w2: CGFloat = 3 * mt * t * t
+                    let w3: CGFloat = t * t * t
+                    let x: CGFloat = w0 * from.x + w1 * c1.x + w2 * c2.x + w3 * p.x
+                    let y: CGFloat = w0 * from.y + w1 * c1.y + w2 * c2.y + w3 * p.y
                     return CGPoint(x: x, y: y)
                 }
             case .close:

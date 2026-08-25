@@ -44,10 +44,20 @@ let package = Package(
             ]
         ),
         // Pure-Swift geometry + software rasterizer + PNG, plus the CQuartz
-        // rendering backend behind the same Canvas API. No Foundation, no
-        // Apple frameworks.
+        // rendering backend behind the same Canvas API.
+        //
+        // M15: these two targets DO import Foundation now, so that CGRect,
+        // CGFloat, IndexPath, NSRange and TimeInterval are Foundation's own
+        // types instead of colliding rivals — that is what lets an app write
+        // `import Foundation` next to `import OpenUIKit`
+        // (docs/APP_COMPAT.md "M15", docs/PORTABILITY.md). The rule that
+        // replaced "no Foundation" is the one that actually earns the
+        // byte-identical Linux render: no wall clock, no locale and no random
+        // source anywhere in the render or layout path, enforced by
+        // Tests/OpenUIKitTests/FoundationCoexistenceTests.swift. No other
+        // Apple framework is imported for its types.
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
-        // The UIKit reimplementation. No Foundation, no Apple frameworks.
+        // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
         // M7.5 demo app: a multi-screen Settings-style app written against
         // OpenUIKit exactly like a normal UIKit app (UIViewController
@@ -70,8 +80,11 @@ let package = Package(
         // against OpenUIKit to measure how much of a real screen survives.
         // Everything that is not app source lives in Shims.swift and is
         // labelled there. Report: docs/REAL_APP_TEST.md.
-        // Same no-Foundation rule as OpenUIKit itself: openrender links this
-        // target, and Foundation's CoreGraphics types would clash with ours.
+        // M15: it imports Foundation now — through the `UIKit` shim, which
+        // re-exports it exactly as real UIKit's swiftinterface does. That is
+        // what let the app's `import Foundation` and its
+        // `required init?(coder: NSCoder)` be restored verbatim, taking the
+        // ledger from 14 changed lines to 9 (98.5 % unmodified).
         .target(name: "RealAppProbe", dependencies: ["OpenUIKit", "UIKit"]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).

@@ -41,7 +41,7 @@ extension Canvas {
         // Full-surface coverage of the shape (pre-clip, like quartz).
         let subpaths = _flattenSubpaths(path, transform: t)
         guard let box = _effectsBounds(of: subpaths) else { return }
-        var cov = [CGFloat](repeating: 0, count: w * h)
+        var cov = Array<CGFloat>(repeating: 0, count: w * h)
         guard var acc = _CoverageAccumulator(clippingBoxMinX: box.0, minY: box.1,
                                              maxX: box.2, maxY: box.3,
                                              limitWidth: w, limitHeight: h) else { return }
@@ -59,7 +59,7 @@ extension Canvas {
         // whole pixels — same as quartz.
         let dx = Int((t.a * sh.offset.width + t.c * sh.offset.height).rounded())
         let dy = Int((t.b * sh.offset.width + t.d * sh.offset.height).rounded())
-        var img = [CGFloat](repeating: 0, count: w * h)
+        var img = Array<CGFloat>(repeating: 0, count: w * h)
         if dx != 0 || dy != 0 {
             for y in 0..<h {
                 let sy = y - dy
@@ -131,7 +131,7 @@ extension Canvas {
     /// Separable box blur with edge clamp (replicate), matching libquartz.
     private func _boxBlur(_ img: inout [CGFloat], _ w: Int, _ h: Int, radius: Int) {
         guard radius >= 1 else { return }
-        var tmp = [CGFloat](repeating: 0, count: img.count)
+        var tmp = Array<CGFloat>(repeating: 0, count: img.count)
         let span = CGFloat(radius * 2 + 1)
         @inline(__always) func clampi(_ v: Int, _ lo: Int, _ hi: Int) -> Int {
             Swift.min(hi, Swift.max(lo, v))

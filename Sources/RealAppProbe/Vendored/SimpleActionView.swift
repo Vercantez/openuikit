@@ -27,11 +27,19 @@ class SimpleActionView: UIView {
         }
     }
 
-    // ADAPTED(missing-type: NSCoder). NSCoder is Foundation's, and this
-    // target may not import Foundation (its CGRect/CGSize would collide with
-    // OpenUIKit's). The initializer is `@available(*, unavailable)` in the
-    // original and is never called; deleted rather than shimmed, because
-    // shimming NSCoder would hide the gap.
+    // M15: RESTORED to the app's original text. `NSCoder` is Foundation's and
+    // the target imports Foundation again, so the type resolves. It is still
+    // `@available(*, unavailable)` in the app and is never called — OpenUIKit
+    // has no archiving, and `UIView` deliberately declares no
+    // `init?(coder:)` of its own (making it `required`, as real UIKit does,
+    // would force every UIView subclass in the library to implement it). That
+    // is why this compiles as a NEW required initializer rather than an
+    // override, and why it is a partial win: the line is unmodified, the
+    // archiving behind it does not exist.
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     func actionWasAdded() {
         let label = UILabel()
