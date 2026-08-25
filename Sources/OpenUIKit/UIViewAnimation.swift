@@ -173,6 +173,9 @@ extension UIView {
                                    begin: OpenUIKitRuntime.animationTime,
                                    delay: ctx.delay, duration: ctx.duration,
                                    timing: ctx.timing)
+        // Host redraw hint: frames keep changing until this animation ends.
+        OpenUIKitRuntime.noteAnimationWork(until: anim.begin + anim.delay
+                                                  + anim.duration)
         // Re-animating the same property replaces the previous animation
         // (CA: same key on the layer).
         if let i = animations.firstIndex(where: { $0.property == property }) {

@@ -45,7 +45,11 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_COMPOSITOR"] {
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
+       openhost --app demo   [--scale N] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
+
+--app demo boots the DemoApp Settings app (docs/APP_FEEL.md) in a live
+window (default --scale 1 for sustained 60fps; see AppMode.swift).
 """
 
 var scenePath: String? = nil
@@ -53,10 +57,14 @@ var scaleOverride: Double? = nil
 var scriptPath: String? = nil
 var recordDir: String? = nil
 var navDemo = false
+var appName: String? = nil
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
 while let arg = it.next() {
     switch arg {
+    case "--app":
+        guard let v = it.next() else { print(usage); exit(1) }
+        appName = v
     case "--nav-demo":
         navDemo = true
     case "--scale":
@@ -78,13 +86,17 @@ while let arg = it.next() {
     }
 }
 
-guard navDemo != (scenePath != nil) else { print(usage); exit(1) }
+let modeCount = (scenePath != nil ? 1 : 0) + (navDemo ? 1 : 0)
+    + (appName != nil ? 1 : 0)
+guard modeCount == 1 else { print(usage); exit(1) }
 guard (scriptPath == nil) == (recordDir == nil) else {
     print("--script and --record must be used together\n\(usage)"); exit(1)
 }
 
 let scene: HostScene
-if navDemo {
+if let appName {
+    scene = buildAppScene(appName, scaleOverride: scaleOverride.map { CGFloat($0) })
+} else if navDemo {
     scene = buildNavDemoScene(scaleOverride: scaleOverride.map { CGFloat($0) })
 } else {
     let sceneJSON = try loadSceneFile(scenePath!)

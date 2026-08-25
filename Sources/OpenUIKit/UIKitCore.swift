@@ -41,6 +41,20 @@ public enum OpenUIKitRuntime {
     /// Requires the quartz backend + layers compositor (the render pass
     /// draws model values only — see docs/KNOWN_GAPS.md).
     public static var animationTime: Double = 0
+
+    /// Host redraw hint (M7.5 dirty-flag rendering): the latest end time —
+    /// on the `animationTime` clock — of any recorded UIView animation or
+    /// control-internal animation (UISwitch toggle). A host needs to keep
+    /// rendering frames while `animationTime <= animationWorkDeadline`;
+    /// past it (and with no active scroll/navigation animation and no input)
+    /// the frame is static and rendering can be skipped. Monotone
+    /// non-decreasing; never reset.
+    public internal(set) static var animationWorkDeadline: Double = -.infinity
+
+    /// Record that presentation-affecting animation work runs until `t`.
+    static func noteAnimationWork(until t: Double) {
+        if t > animationWorkDeadline { animationWorkDeadline = t }
+    }
 }
 
 /// Compositing strategy for view-hierarchy rendering (see

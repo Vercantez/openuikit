@@ -87,6 +87,10 @@ public class UISwitch: UIControl {
         if animated, on != isOn {
             toggleAnim = ToggleAnimation(fromOn: isOn,
                                          start: OpenUIKitRuntime.animationTime)
+            // Host redraw hint: the slowest component (off->on track spring)
+            // settles within ~1.0s of the toggle.
+            OpenUIKitRuntime.noteAnimationWork(
+                until: OpenUIKitRuntime.animationTime + UISwitch.onTrackDuration + 0.05)
         } else if !animated {
             toggleAnim = nil
         }

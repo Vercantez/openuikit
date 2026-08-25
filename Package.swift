@@ -35,6 +35,13 @@ let package = Package(
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. No Foundation, no Apple frameworks.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+        // M7.5 demo app: a multi-screen Settings-style app written against
+        // OpenUIKit exactly like a normal UIKit app (UIViewController
+        // subclasses, addTarget actions, UIView.animate). Same rules as
+        // OpenUIKit itself: no Foundation, no Apple frameworks — it is
+        // reference material for what OpenUIKit app code looks like.
+        // Hosted by `openhost --app demo` (docs/APP_FEEL.md).
+        .target(name: "DemoApp", dependencies: ["OpenUIKit"]),
         // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
         // May use Foundation (it is a tool, not the library).
         .executableTarget(name: "openrender", dependencies: ["OpenUIKit"]),
@@ -51,7 +58,7 @@ let package = Package(
         // see Sources/openhost/main.swift header); openrender itself stays
         // byte-identical.
         // May use Foundation (it is a host, like openrender).
-        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2"]),
+        .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp"]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
     ],
     cxxLanguageStandard: .cxx17

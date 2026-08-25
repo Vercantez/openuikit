@@ -310,17 +310,28 @@ func runLive(_ scene: HostScene) {
     let startTicks = SDL_GetTicks()
     var running = true
     var mouseDown = false
-    // Redraw-until deadline: scene animations first, extended 1.5 s past
-    // every input event (covers the longest control animation — the
-    // UISwitch track spring settles in < 1.0 s). Idle frames skip the
-    // render entirely.
-    var renderUntil = scene.sceneAnimationDeadline + 0.5
     var renderedFrames = 0
     var renderNanos: UInt64 = 0
     let perfFreq = SDL_GetPerformanceFrequency()
 
-    // First frame renders unconditionally.
-    var needsRender = true
+    // Dirty-flag rendering (M7.5): a frame is rendered only when something
+    // can have changed —
+    //   - an input event arrived (needsRender),
+    //   - a finger is down (drag scrub / content-touch-delay highlight),
+    //   - a scroll view is decelerating/bouncing,
+    //   - a navigation transition is in flight,
+    //   - a recorded UIView/UISwitch animation is still running
+    //     (OpenUIKitRuntime.animationWorkDeadline, +0.1s slop so the final
+    //     settled frame is always presented).
+    // Idle frames render nothing and sleep.
+    var needsRender = true // first frame renders unconditionally
+
+    func animationsActive(at now: Double) -> Bool {
+        mouseDown
+            || UIScrollView._hasActiveScrollAnimations
+            || UINavigationController._hasActiveTransition
+            || now <= OpenUIKitRuntime.animationWorkDeadline + 0.1
+    }
 
     while running {
         var ev = SDL_Event()
@@ -340,18 +351,15 @@ func runLive(_ scene: HostScene) {
                 mouseDown = true
                 let p = CGPoint(x: CGFloat(ev.button.x), y: CGFloat(ev.button.y))
                 scene.window.sendTouch(.began, at: p, timestamp: now)
-                renderUntil = now + 1.5
                 needsRender = true
             case SDL_MOUSEMOTION.rawValue where mouseDown:
                 let p = CGPoint(x: CGFloat(ev.motion.x), y: CGFloat(ev.motion.y))
                 scene.window.sendTouch(.moved, at: p, timestamp: now)
-                renderUntil = now + 1.5
                 needsRender = true
             case SDL_MOUSEBUTTONUP.rawValue where ev.button.button == 1:
                 mouseDown = false
                 let p = CGPoint(x: CGFloat(ev.button.x), y: CGFloat(ev.button.y))
                 scene.window.sendTouch(.ended, at: p, timestamp: now)
-                renderUntil = now + 1.5
                 needsRender = true
             default:
                 break
@@ -363,9 +371,13 @@ func runLive(_ scene: HostScene) {
         OpenUIKitRuntime.animationTime = now
         scene.window.tick(timestamp: now)  // long-press style time advance
 
-        if needsRender || now <= renderUntil {
+        if needsRender || animationsActive(at: now) {
             needsRender = false
             let t0 = SDL_GetPerformanceCounter()
+            // Layout before draw, like UIKit's commit: views added since the
+            // last frame (e.g. a freshly pushed VC's screen) get their
+            // layoutSubviews pass before they are first rendered.
+            scene.window.layoutIfNeeded()
             let bmp = UIRenderer.render(scene.window, scale: scene.scale)
             renderNanos &+= (SDL_GetPerformanceCounter() &- t0)
             host.present(bmp)  // vsync paces the loop
@@ -439,6 +451,7 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
             scene.window.sendTouch(phase, at: e.point, timestamp: e.t)
         case .capture(let t):
             let t0 = SDL_GetPerformanceCounter()
+            scene.window.layoutIfNeeded() // layout before draw (as in runLive)
             let bmp = UIRenderer.render(scene.window, scale: scene.scale)
             let ms = Double(SDL_GetPerformanceCounter() &- t0)
                 / Double(SDL_GetPerformanceFrequency()) * 1000
