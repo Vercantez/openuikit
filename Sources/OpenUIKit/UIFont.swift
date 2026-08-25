@@ -43,6 +43,10 @@ public struct UIFont: Equatable {
     public var ascender: CGFloat { FontEngine.metrics(for: self).ascender }
     public var descender: CGFloat { FontEngine.metrics(for: self).descender }
     public var lineHeight: CGFloat { FontEngine.metrics(for: self).lineHeight }
+    /// The height real UIKit gives ONE line of a UILabel in this font (see
+    /// FontEngine.labelLineHeight — it is `lineHeight` plus one point in
+    /// three measured size bands).
+    public var labelLineHeight: CGFloat { FontEngine.labelLineHeight(for: self) }
     public var capHeight: CGFloat { FontEngine.metrics(for: self).capHeight }
     public var xHeight: CGFloat { FontEngine.metrics(for: self).xHeight }
     public var leading: CGFloat { FontEngine.metrics(for: self).leading }

@@ -38,11 +38,11 @@ types, not 737. That is why the punch list is tractable.
 |---|---|---|
 | ~~**Attributed text**~~ | 560 | **DONE (M12).** `NSAttributedString` / `NSMutableAttributedString` / `NSParagraphStyle` / `UIFontDescriptor` are portable OpenUIKit types (they SHADOW Foundation's rather than bridging — docs/KNOWN_GAPS.md), with per-run layout and drawing in `AttributedTextLayout` and `attributedText` on `UILabel` / `UITextField` / `UITextView`. Six `attrtext_*` oracle fixtures. Still open: attributed truncation, attachments, underline patterns. |
 | ~~**App lifecycle / environment**~~ | 543 | **DONE (M12).** `UIResponder` is the real base class with UIKit's exact chain; `UIApplication` + `UIApplicationDelegate` + a minimal scene layer; host-driven `UIScreen`; documented-fixed `UIDevice`. `openhost --app` boots through `UIApplicationMain` and a real app delegate. No run loop, so the host drives the transitions — docs/KNOWN_GAPS.md "App lifecycle / environment". |
-| **Alerts** | 332 | `UIAlertController` + `UIAlertAction` (alert and action-sheet styles). |
+| ~~**Alerts**~~ | ~~332~~ | **DONE (M12)** — `UIAlertController` + `UIAlertAction`, both styles, measured against real iOS 26.1 (`Tools/oracle2/alertprobe`); fixtures `alert_basic` / `alert_destructive` / `alert_actionsheet` / `alert_dark`. |
 | **Collection view** | 212 | `UICollectionView`, cells, `UICollectionViewFlowLayout`, data source/delegate. Reuse machinery can follow `UITableView`'s. |
 | **Bars & appearance** | 181 | `UIBarButtonItem`, `UIToolbar`, `UINavigationBarAppearance`, `UITabBarAppearance`. |
 | **Misc controls** | 106 | `UIActivityIndicatorView`, `UISlider`, `UISegmentedControl`, `UIRefreshControl`, `UISearchBar`, `UIPageControl`, `UIStepper`, `UIPickerView`. |
-| **Custom transitions** | 64 | `UIViewControllerAnimatedTransitioning` + context/delegate, `UIPresentationController`. Our sheet/nav transitions should be re-expressed through this API. |
+| ~~**Custom transitions**~~ | ~~64~~ | **DONE (M12)** — `UIPresentationController`, `UIViewControllerAnimatedTransitioning` + context + transitioning delegate, `UINavigationControllerDelegate`. The sheet presentation and push/pop now run through it (`_UIPageSheetAnimator` / `_UINavigationSlideAnimator`). No interactive transitioning — see docs/KNOWN_GAPS.md. |
 | **Share sheet** | 57 | `UIActivityViewController` — system UI; likely a stub. |
 | **Long tail** | 479 | 84 types: `UIKeyCommand`, `UIAction`, `UIMenu`, `UIPasteboard`, `UIPageViewController`, `UIContextMenuConfiguration`, … |
 

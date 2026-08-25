@@ -324,6 +324,51 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     `attrtext_underline_strike`, `attrtext_dark`, `attrtext_fields`).
   - Gates: 87/87 scenes, 9/9 scroll traces, 434 tests.
 
+## M12 — app-compat: alerts + the custom-transition API (2026-08-25)
+
+Driven by the census in docs/APP_COMPAT.md: `UIAlertController` is the
+third-largest cluster (332 uses) and the custom-transition cluster (64 uses)
+is what lets an app supply its own present/push animations.
+
+- **`UIAlertController` / `UIAlertAction`**, both styles, measured — not
+  guessed — from real iOS 26.1 in the headless Simulator by the new
+  `Tools/oracle2/alertprobe` (`scripts/alert_probe_sim.sh`): 20
+  configurations, each dumping the whole private view tree in window
+  coordinates plus a window snapshot, one configuration per app launch
+  (alerts do not tear down fast enough to share a process). Findings that
+  overturned the obvious guesses:
+  - iOS 26's alert is a **320 pt card with 34 pt continuous corners and
+    48 pt PILL buttons**, centred in the window's **safe area** (438.5 on a
+    393 × 852 window, not the window centre 426).
+  - **An action sheet on iPhone is laid out identically to an alert** — the
+    slide-up bottom sheet is gone. (Touching
+    `popoverPresentationController` at all flips it into a popover and
+    silently drops the cancel action.)
+  - Action titles are **`label`, not tint blue**; `.destructive` is
+    systemRed; two actions sit side by side with **cancel on the LEFT
+    whatever order they were added**, three or more stack with cancel last.
+  - The card and pills are blurs; both were solved as flat colour + alpha by
+    rendering the same alert over four known bases per appearance
+    (residual < 1.5 counts). Divergence recorded in docs/KNOWN_GAPS.md.
+  - The **present transition animates only the dimming view**, on a
+    critically damped spring of ω = 22.88 rad/s (converged over 24
+    display-link frames); the card carries no animation on its layer or any
+    ancestor.
+  - Scene spec **v5.2**: a top-level `"alert"` key, routed to the Simulator
+    like `"modal"`. New goldens `alert_basic`, `alert_destructive`,
+    `alert_actionsheet`, `alert_dark` (85 scenes).
+- **The transitioning API** (`UIPresentationController`,
+  `UIViewControllerAnimatedTransitioning` + context + transitioning
+  delegate, `UINavigationControllerDelegate`) and the **refactor**: the sheet
+  presentation's dim/platter moved onto `UISheetPresentationController` and
+  its animation into `_UIPageSheetAnimator`; push/pop dispatches through
+  `_UINavigationSlideAnimator`. Behaviour is unchanged by construction (the
+  code moved, the constants did not) and the whole existing suite proves it.
+  No interactive transitioning — the back swipe and the sheet drag stay
+  clock-scrubbed from measured physics (docs/KNOWN_GAPS.md).
+- Gates: 85/85 scenes, 9/9 scroll traces, 418 tests, Linux still
+  byte-identical (139/139 frames).
+
 ## Verification principle (unchanged, applies to every milestone)
 
 Every feature ships with fixture scenes rendered by BOTH real UIKit (oracle)

@@ -325,28 +325,7 @@ open class UINavigationController: UIViewController {
             return
         }
 
-        let scrim = makeScrim()
-        contentView.addSubview(scrim)     // above outgoing
-        installTopView(vc)                // above scrim
-        setShadow(on: vc.view, enabled: true)
-        let t = Transition(push: true, frontVC: vc, backVC: from, scrim: scrim,
-                           width: contentView.bounds.width,
-                           endTime: OpenUIKitRuntime.animationTime
-                               + UINavigationController.transitionDuration,
-                           interactive: false)
-        activeTransition = t
-        navigationBar.beginTransition(title: vc.title,
-                                      backTitle: backTitle(forTopIndex: viewControllers.count - 1),
-                                      push: true)
-        applyTransition(t, coverage: 0)
-        UIView.animate(withDuration: UINavigationController.transitionDuration,
-                       delay: 0, options: .curveEaseInOut, animations: {
-            self.applyTransition(t, coverage: 1)
-            self.navigationBar.setTransitionProgress(1)
-        })
-        navigationBar.accelerateOutgoingBackFade(
-            duration: UINavigationController.transitionDuration)
-        UINavigationController.registerTransitioning(self)
+        _runTransition(push: true, from: from, to: vc)
     }
 
     // MARK: Pop
@@ -378,34 +357,77 @@ open class UINavigationController: UIViewController {
             return from
         }
 
-        // Incoming (previous) view goes UNDER the outgoing top view, offset
-        // by the parallax; scrim between them starts at full strength.
-        let toView = to.view!
-        toView.frame = contentView.bounds
-        toView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentView.insertSubview(toView, at: 0)
-        let scrim = makeScrim()
-        contentView.insertSubview(scrim, at: 1) // above incoming, below front
-        setShadow(on: from.view, enabled: true)
-        let t = Transition(push: false, frontVC: from, backVC: to, scrim: scrim,
-                           width: contentView.bounds.width,
-                           endTime: OpenUIKitRuntime.animationTime
-                               + UINavigationController.transitionDuration,
-                           interactive: false)
-        activeTransition = t
-        navigationBar.beginTransition(title: to.title,
-                                      backTitle: backTitle(forTopIndex: viewControllers.count - 1),
-                                      push: false)
-        applyTransition(t, coverage: 1)
-        UIView.animate(withDuration: UINavigationController.transitionDuration,
-                       delay: 0, options: .curveEaseInOut, animations: {
-            self.applyTransition(t, coverage: 0)
-            self.navigationBar.setTransitionProgress(1)
-        })
-        navigationBar.accelerateOutgoingBackFade(
-            duration: UINavigationController.transitionDuration)
-        UINavigationController.registerTransitioning(self)
+        _runTransition(push: false, from: from, to: to)
         return from
+    }
+
+    // MARK: Animator dispatch (M12 — UIViewControllerTransitioning.swift)
+
+    /// UIKit's push/pop direction, handed to the delegate.
+    public enum Operation: Int, Sendable {
+        case none = 0, push = 1, pop = 2
+    }
+
+    /// App hook for custom push/pop animations.
+    public weak var delegate: UINavigationControllerDelegate?
+
+    /// Run one ANIMATED push or pop through the transitioning API. The
+    /// built-in `_UINavigationSlideAnimator` reproduces the M7.5 behaviour
+    /// exactly (and stays scrubbable through `activeTransition`); a delegate
+    /// animator gets the standard context and finishes it through
+    /// `completeTransition(_:)`.
+    func _runTransition(push: Bool, from: UIViewController, to: UIViewController) {
+        let op: Operation = push ? .push : .pop
+        let custom = delegate?.navigationController(self, animationControllerFor: op,
+                                                    from: from, to: to)
+        let ctx = _UINavigationTransitionContext(nav: self, push: push, from: from,
+                                                 to: to, animated: true)
+        delegate?.navigationController(self, willShow: to, animated: true)
+        guard let custom else {
+            _UINavigationSlideAnimator().animateTransition(using: ctx)
+            return
+        }
+        // Custom animator: it owns the container, so only the incoming view
+        // is installed for it; the bar switches without the built-in
+        // cross-fade (docs/KNOWN_GAPS.md).
+        if push {
+            installTopView(to)
+        } else {
+            let toView = to.view!
+            toView.frame = contentView.bounds
+            toView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            contentView.insertSubview(toView, at: 0)
+        }
+        navigationBar.setState(title: to.title,
+                               backTitle: backTitle(forTopIndex: viewControllers.count - 1))
+        ctx.onComplete = { [weak self] _ in
+            self?._finishCustomTransition(push: push, from: from, to: to)
+        }
+        custom.animateTransition(using: ctx)
+    }
+
+    /// Teardown for a delegate-supplied animator: the same bookkeeping
+    /// `completeTransition(_:)` does for the built-in slide, minus the
+    /// scrim/shadow/bar cross-fade the custom animator never created.
+    func _finishCustomTransition(push: Bool, from: UIViewController, to: UIViewController) {
+        // The outgoing controller's view leaves either way (a push covers it,
+        // a pop discards it).
+        from.viewIfLoaded?.removeFromSuperview()
+        for vc in [from, to] {
+            guard let v = vc.viewIfLoaded else { continue }
+            v.removeAllAnimations()
+            v.frame = contentView.bounds
+        }
+        if push {
+            from.endAppearanceTransition()
+            to.endAppearanceTransition()
+            to.didMove(toParent: self)
+        } else {
+            from.endAppearanceTransition()
+            to.endAppearanceTransition()
+            detachFromParent(from)
+        }
+        delegate?.navigationController(self, didShow: to, animated: true)
     }
 
     @discardableResult
@@ -503,6 +525,7 @@ open class UINavigationController: UIViewController {
             t.frontVC.beginAppearanceTransition(true, animated: true)
             t.frontVC.endAppearanceTransition()
             navigationBar.endTransition(cancelled: true)
+            delegate?.navigationController(self, didShow: t.frontVC, animated: true)
             return
         }
 
@@ -512,6 +535,7 @@ open class UINavigationController: UIViewController {
             t.frontVC.endAppearanceTransition()
             navigationBar.endTransition()
             t.frontVC.didMove(toParent: self)
+            delegate?.navigationController(self, didShow: t.frontVC, animated: true)
         } else {
             if t.interactive {
                 // Interactive pop mutates the stack only on completion.
@@ -522,6 +546,7 @@ open class UINavigationController: UIViewController {
             t.backVC.endAppearanceTransition()
             navigationBar.endTransition()
             detachFromParent(t.frontVC)
+            delegate?.navigationController(self, didShow: t.backVC, animated: true)
         }
     }
 

@@ -1188,6 +1188,50 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
         sceneRetainedControllers.append(sheetVC)
     }
 
+    // Scene spec v5.2 (M12): top-level "alert" — a presented
+    // UIAlertController over the base scene, pixels only (its internals are
+    // private on both sides, exactly like the modal sheet's content).
+    if let alertJ = scene["alert"]?.objectValue {
+        let st = alertJ["style"]?.stringValue ?? "alert"
+        guard st == "alert" || st == "actionSheet" else {
+            fatalError("scene \(name): alert style must be \"alert\" or \"actionSheet\"")
+        }
+        guard let actionsJ = alertJ["actions"]?.arrayValue else {
+            fatalError("scene \(name): \"alert\" needs an \"actions\" array")
+        }
+        let baseVC = UIViewController()
+        baseVC.view = host
+        let ac = UIAlertController(title: alertJ["title"]?.stringValue,
+                                   message: alertJ["message"]?.stringValue,
+                                   preferredStyle: st == "actionSheet" ? .actionSheet : .alert)
+        ac.view.overrideUserInterfaceStyle = style
+        for ph in (alertJ["textFields"]?.arrayValue ?? []) {
+            ac.addTextField { $0.placeholder = ph.stringValue }
+        }
+        var preferred: UIAlertAction?
+        for entry in actionsJ {
+            guard let e = entry.objectValue else { fatalError("scene \(name): bad alert action") }
+            let s: UIAlertAction.Style
+            switch e["style"]?.stringValue ?? "default" {
+            case "cancel": s = .cancel
+            case "destructive": s = .destructive
+            case "default": s = .default
+            default: fatalError("scene \(name): bad alert action style")
+            }
+            let a = UIAlertAction(title: e["title"]?.stringValue ?? "", style: s)
+            if let enabled = e["enabled"]?.boolValue { a.isEnabled = enabled }
+            ac.addAction(a)
+            if alertJ["preferredAction"]?.stringValue == e["title"]?.stringValue {
+                preferred = a
+            }
+        }
+        if let p = preferred { ac.preferredAction = p }
+        baseVC.present(ac, animated: false)
+        host.layoutIfNeeded()
+        sceneRetainedControllers.append(baseVC)
+        sceneRetainedControllers.append(ac)
+    }
+
     // Scene spec v3: animation scenes render one frame per capture time
     // (and no plain <name>.png). Animations are started AFTER the layout
     // dump — the dump is the pre-animation (t = 0) model layout.

@@ -136,6 +136,91 @@ unharvested on purpose: every scene passes with margin anyway
 severe blob 17.8 pt² against an 80 pt² gate). Harvesting those cells is the
 next fidelity step if a future fixture in these sizes runs tight; the recipe
 is the "Glyph ink harvest" section below.
+## Alerts + custom transitions (M12, 2026-08-25)
+
+Everything in `Sources/OpenUIKit/UIAlertController.swift` is measured from
+real iOS 26.1 by `Tools/oracle2/alertprobe` (20 configurations, full private
+view-tree dumps + window snapshots + a display-link sampling of the present
+animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
+
+- **No `UIVisualEffectView`, so nothing actually blurs.** The alert card and
+  the button pills are live blurs in real UIKit. Here they are the measured
+  FLAT equivalents: a least-squares fit of `out = k·base + m` over four
+  neutral bases per appearance, giving alpha 0.7143 of 0.9937-white over the
+  backdrop (light) / alpha 0.6506 of 0.0989-black (dark) for the card, and
+  alpha 0.1372 of 0.109-black / alpha 0.1097 of white for the pills, applied
+  over the card. Residual under 1.5 counts over the whole measured range on
+  a FLAT backdrop — but a patterned backdrop shows through unsmeared, and a
+  saturated one is wrong in hue: the real material desaturates (measured: a
+  pure-red base gives (242, 168, 166) under the card where the flat model
+  predicts (234, 193, 189)). Same limitation as the sheet grabber and the
+  tab-bar platter.
+- **The card's corners are CIRCULAR, real UIKit's are `continuous`.** A
+  superellipse fit of the golden's corner profile is r = 41.5 with exponent
+  2.6 (rms 0.36 pt) against 0.81 pt rms for the best circular fit (r = 32.3).
+  We draw `layer.cornerRadius = 34` circular; the four corner regions
+  disagree by up to ~2 pt over a few pt² each — far below the structural
+  gate's 150-count severity threshold, and worth ~0.02 % of the scene.
+- **The card's shadow is drawn as a RING, not as a layer shadow.** Core
+  Animation draws a layer's shadow under the whole layer tree without
+  occluding it (measured — golden/alpha_shadow_group), so a layer shadow on
+  a 71 %-opaque card bleeds 4–7 counts into its interior, unevenly. Real iOS
+  keeps the interior perfectly flat, so `_UIAlertShadowView` clips the
+  blurred silhouette to the outside of the card's shape (non-zero winding
+  ring). Its parameters (blur 22, offset (0, 8), alpha 0.085) are fitted to
+  the measured edge profiles, not to a UIKit API.
+- **The present transition animates ONLY the dim.** Sampling every layer's
+  `presentation()` per display-link frame across an animated present found a
+  critically damped opacity spring on the dimming view (ω = 22.88 rad/s,
+  converged over 24 frames) and NO animation whatsoever on the card's layer
+  or on any ancestor up to the window — no scale, no fade. If UIKit fades the
+  card through a private portal/snapshot layer, this probe cannot see it. The
+  DISMISS animation could not be measured at all (the dim's presentation
+  opacity stayed pinned at 1 for the whole dismissal), so we play the present
+  in reverse.
+- **Alert labels are TIGHTER than plain labels.** Real iOS renders the
+  alert's own title/message with narrower advances than a plain UILabel in
+  the same font: "Delete File?" at 17 pt semibold inks 159.5 pt in the golden
+  and 165.5 pt here (+3.8 %), "This cannot be undone." at 15 pt inks 249.5 vs
+  253.0 (+1.4 %). It is NOT a platform metrics difference — the same golden's
+  plain 20 pt semibold scene label inks 110.00 pt in both renderers — so the
+  alert applies some tightening/tracking we do not model. Consequence: our
+  wrap points can differ (a 260 pt column that UIKit fills with two lines can
+  take three here), and multi-line alert text will drift.
+- **Wrapped alert text uses the wrong line pitch.** Measured pitches are 22 pt
+  for the title and 20 pt for the message (against 20.333/18 for the first
+  line), which the card HEIGHT reproduces exactly — but the labels themselves
+  draw with UILabel's own uniform pitch, so the second and later lines sit a
+  point or two off. Single-line alerts (every alert_* fixture) are exact.
+- **Text fields are laid out but never focused.** `addTextField` builds the
+  measured 48 pt pill and places the field, and real iOS makes the first
+  field first responder on presentation (with a blinking caret), which is why
+  no fixture covers it — the golden would not be deterministic.
+- **`preferredAction` styling is measured but ungoldened.** The filled pill
+  ((55, 126, 239) with a white semibold title) was read off probe pixels; no
+  fixture exercises it.
+- **`UIPresentationController` holds `presentedViewController` `unowned`.**
+  UIKit holds it strongly; here the presented controller owns its
+  presentation controller (`vc.sheetPresentationController` is configured
+  before a presentation exists), so the back reference has to be weak to
+  avoid a cycle.
+- **No `UIViewControllerInteractiveTransitioning`.** The interactive back
+  swipe and the interactive sheet drag are scrubbed against the host clock by
+  the controllers themselves, from measured physics; routing them through a
+  percent-driven interactive protocol would change the feel. A custom
+  animator therefore always runs non-interactively, and the built-in
+  navigation slide stays scrubbable by living in
+  `_UINavigationSlideAnimator` + `UINavigationController.applyTransition`
+  rather than finishing through `context.completeTransition`.
+- **A custom navigation animator gets no bar cross-fade.** `_runTransition`
+  sets the bar's state directly instead of running
+  `beginTransition`/`setTransitionProgress`, because the bar's cross-fade is
+  driven by the same coverage function the built-in slide owns.
+- **The alert centres in a HARD-CODED safe area.** `UIScreenMetrics`
+  (`safeAreaTop` 59, `safeAreaBottom` 34) are the reference device's measured
+  window insets — the portable core still has no safe-area model, and the
+  page sheet's 59 pt top inset is the same constant. On a window that is not
+  an iPhone 16 the card is centred as if it were.
 
 ## Interactive sheets (M11, 2026-08-25): what shipped and what did not
 

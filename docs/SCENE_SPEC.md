@@ -2,7 +2,7 @@
 
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
-- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet").
+- `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"` or `"alert"` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet") and bridges `UIAlertController` into an AppKit panel (v5.2, see "Alert").
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
 Each renderer produces, for a **static** scene `<name>`:
@@ -403,6 +403,65 @@ at x 178.5 (no rounding), filled with systemFill's base gray at alpha 0.4295 —
 (197, 197, 200) over a white sheet. Full interaction measurements:
 docs/APP_FEEL.md "Measured sheet interaction".
 
+### Alert (v5.2 — M12): top-level `"alert"` key
+
+```json
+"alert": {
+  "style": "alert",
+  "title": "Delete File?",
+  "message": "This cannot be undone.",
+  "actions": [
+    { "title": "Cancel", "style": "cancel" },
+    { "title": "Delete", "style": "destructive" }
+  ],
+  "preferredAction": "Delete",
+  "textFields": ["Name"]
+}
+```
+
+Presents a REAL `UIAlertController` over the scene root and captures the whole
+window without animation. Routed to the **iOS Simulator** exactly like
+`"modal"` and for the same reason: Mac Catalyst bridges `UIAlertController`
+into an AppKit alert panel, which is not the iOS look at all. Requirements:
+`"window": true`, scene size = the device's portrait size (iPhone 16:
+**393 × 852**), and `"alert"` and `"modal"` are mutually exclusive.
+
+| key | type | notes |
+|---|---|---|
+| `style` | string | `alert` (default) or `actionSheet`. On iPhone / iOS 26 these render IDENTICALLY — measured. |
+| `title` | string | optional |
+| `message` | string | optional |
+| `actions` | array | required. `[{"title": str, "style": "default"\|"cancel"\|"destructive", "enabled": bool?}]` |
+| `preferredAction` | string | the title of the action to mark preferred |
+| `textFields` | `[string]` | placeholders; `.alert` only. Real iOS focuses the first field, so a fixture using this is NOT deterministic — none does. |
+
+The alert's internals are private on both sides, so the layout dump carries
+only the base scene (same rule as the modal sheet's content); pixels validate
+the card. `SimScene` pushes the scene's `style` onto the WINDOW for these
+scenes — the dim lives outside the alert's own view and would otherwise
+resolve light while the card resolved dark (a 28-count disagreement).
+
+**Sim-rendered dark scenes must not use `systemBackground`.** The vendored
+`system_colors.json` is harvested from Catalyst, where dark `systemBackground`
+is 0.1176; real iOS uses pure black. `alert_dark` therefore paints its base
+with an explicit `#333333`. (Catalyst-rendered dark scenes are unaffected —
+they are compared against Catalyst goldens.)
+
+Oracle-measured metrics (real iOS 26.1, iPhone 16 — `Tools/oracle2/alertprobe`,
+`scripts/alert_probe_sim.sh`; the full list is the header of
+`Sources/OpenUIKit/UIAlertController.swift`): card **320 pt** wide, corner
+radius **34** (continuous), centred horizontally and centred in the window's
+**safe area** (centre y 438.5 for insets 59/34, not the window centre 426);
+title 17 pt semibold `label` / message 15 pt regular `secondaryLabel`, left
+aligned at a 30 pt inset, 22 pt below the card's top with a 7.667 pt gap and
+4.333 pt of slack under the pair; a LONE title or message becomes 17 pt
+regular and centred; action pills 48 pt tall, radius 24, inset 16 pt with 8 pt
+gaps; exactly two actions sit side by side with CANCEL on the LEFT whatever
+order they were added, three or more stack vertically with cancel LAST;
+action titles 17 pt medium in `label`, `.destructive` in systemRed; dimming
+black at **0.2** light / **0.48** dark; the present transition animates only
+the dim, on a critically damped spring of ω = **22.88 rad/s**.
+
 ### `UIStackView`
 | key | notes |
 |---|---|
@@ -744,8 +803,9 @@ Exact resolved sRGB values for both styles are dumped by the oracle into `golden
   - Text scenes: pass ≥ 97%
   - Control scenes (button/switch/progress): pass ≥ 96%
   - Chrome scenes (v5: any UITableView / UINavigationStack / UITabBarStack,
-    or a top-level "modal"): pass ≥ 95% — system-drawn material (glass
-    platters, edge-effect gradients, sheet shadows) covers large regions.
+    or a top-level "modal"; v5.2 adds a top-level "alert"): pass ≥ 95% —
+    system-drawn material (glass platters, edge-effect gradients, sheet
+    shadows, the alert card's blurred platter) covers large regions.
     Chrome outranks the other categories.
   - Category rule for v2 features: shadows and gradients do **not** change a
     scene's category by themselves — a gradient-only scene is `geometry`, a
@@ -787,16 +847,19 @@ Fail if the largest component exceeds `STRUCT_MAX_BLOB` = **80 pt²**, measured
 in POINTS² (device pixels ÷ scale²), so the gate means the same physical size
 at 1×, 2× and 3×.
 
+Calibration (2026-08-25, the whole merged M12 suite):
+
 | case | largest severe component | verdict |
 |---|---|---|
-| worst legitimate residual — `modal_sheet`, one stem of the 22 pt bold title (window-mode glyph rasterization) | **33.2 pt²** | passes, 2.4× under the gate |
+| worst legitimate residual — `alert_destructive`, the "?" of the 17 pt semibold title (real iOS tightens alert labels, see docs/KNOWN_GAPS.md) | **42.2 pt²** | passes, 1.9× under the gate |
+| next legitimate — `modal_sheet`, one stem of the 22 pt bold title (window-mode glyph rasterization) | **33.2 pt²** | passes |
 | next legitimate — `stack_alignment` / `constraints_baseline` | 20.0 / 16.5 pt² | passes |
 | **two 34 pt glyphs deleted** from `navbar_large` (the historical bug) | **248.8 pt²** | **FAILS** |
 | a `UISwitch` shifted 3 pt | 268.2 pt² | **FAILS** |
 | a solid block shifted 6 pt on a contrasting background | 720.0 pt² | **FAILS** |
 | a 17 pt label shifted 3 pt (`demo_settings`) | 90.2 pt² | **FAILS** |
 
-80 pt² sits 2.4× above the worst legitimate residual and 3.1× below the
+80 pt² sits 1.9× above the worst legitimate residual and 3.1× below the
 smallest corruption it must catch.
 
 ### 2. Content absence — the golden has content and we drew nothing
