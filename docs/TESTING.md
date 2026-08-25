@@ -60,12 +60,12 @@ It takes two paths and does not care how they are produced:
 |---|---|---|
 | `OBJC4_LINUX_LIBDIR` | directory containing `libobjc.so` | first of `build/linux`, `build/linux-aarch64`, `build`, `out` that has one |
 | `OBJC4_LINUX_INCLUDE` | directory containing `objc/*.h` | `$LIBDIR/include`, `build/include`, `include` |
-| `OBJC4_DOCKER_IMAGE` | container to build in | `swift:6.2-noble` |
+| `OBJC4_DOCKER_IMAGE` | container to build and run in | `objc4-linux-build:24.04` — the build container, reused, because our `libobjc.so` needs `libBlocksRuntime.so.0` at run time and that image is the one that has it |
 | `OBJC4_LINUX_TARGET` | clang target triple | `aarch64-unknown-linux-gnu` |
 | `OBJC4_SKIP_LINUX=1` | force SKIPPED without touching Docker | unset |
 
 Both sides compile with the *same* flags apart from the target and the runtime:
-`-O0 -g0 -fno-objc-arc -fobjc-exceptions`. The Linux side adds
+`-O0 -g0 -fsigned-char -fno-objc-arc -fobjc-exceptions`. The Linux side adds
 `-fobjc-runtime=macosx-10.15`, which is the flag that makes clang emit
 Apple-ABI class metadata and `objc_classlist` sections on ELF. Without it clang
 emits the GNUstep ABI and none of this corpus means anything.
@@ -73,6 +73,30 @@ emits the GNUstep ABI and none of this corpus means anything.
 `-O0` is not laziness. Optimisation changes ARC and message-send codegen
 (`objc_retainAutoreleasedReturnValue` elision, in particular), and that must not
 be free to vary between the two sides of a diff.
+
+`-fsigned-char` is the same kind of control. Plain `char` is signed in the
+Darwin arm64 ABI and unsigned in the AArch64 Linux one, which flips
+`@encode(char)` from `"c"` to `"C"` in every method type string, ivar type and
+property attribute string. Pinning it on **both** sides removes a compiler
+difference so the diff measures the runtime; it is a no-op on the Darwin side,
+verified by re-recording the whole oracle with the flag added and seeing one
+line change (and that line was an unrelated test edit). The unpinned values
+are in `docs/ABI_DIVERGENCE.md`.
+
+### Companion images
+
+A test may bring extra images. Two conventions, both understood by both
+runners:
+
+| file | built as | linked? | how the test reaches it |
+|---|---|---|---|
+| `tests/<name>.lib.m` | shared library | yes | ordinary symbol references |
+| `tests/<name>.dlopen.m` | shared library | **no** | path in `$OBJC4_TEST_DLOPEN_LIB` |
+
+Neither is picked up by `difftest.sh` as a test of its own. `041-multi-image`
+uses the first, `042-dlopen` the second. Do not `#include "testsupport.h"` in a
+companion: it defines `TestRoot`, which would then exist in two images, and
+that is a different experiment.
 
 ---
 
@@ -209,15 +233,18 @@ Recorded here because each one was a surprise, and each is now pinned:
 
 ### Deliberately not covered yet
 
-- Threads. Nothing in the corpus is multithreaded, because contention order is
-  not deterministic and this harness compares bytes. `+load` under concurrency
-  (`vendor/objc4/test/03-load-parallel.m`) belongs to phase 3.
-- `dlopen` after startup, and multi-image programs generally. Every test is a
-  single executable image; that is exactly the case the phase-1 constructor
-  handles, and it hides the hardest ordering question in the project.
 - Tagged pointers, blocks-as-IMPs (`imp_implementationWithBlock`), and cache
-  garbage collection -- all stubbed in phase 1 by plan, so testing them now
-  would only record that they are stubbed.
+  garbage collection. The first two are unported and the third is a documented
+  leak (`docs/UNIMPLEMENTED.md` B1, B2); testing them now would only record
+  that they are unported.
+- `+load` under concurrency (`vendor/objc4/test/03-load-parallel.m`).
+  `043-threads` races `+initialize`, dispatch, class realization, selector
+  registration and `@synchronized`, but not `+load` itself, which needs a
+  thread to `dlopen` while another is dispatching.
+- `dlclose` unloading an image whose classes are still referenced. The
+  unmap path is wired up (`objc4linux_prune_unloaded_images`) but nothing
+  measures it, and Darwin rarely actually unloads a dylib, so the oracle would
+  be comparing two different situations.
 - `objc_readClassPair` is probed for existence in `025` but never called:
   calling it requires a hand-built `objc_class` + `class_ro_t`, whose layout is
   private, and encoding one objc4 vintage's layout into the corpus would make

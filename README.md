@@ -68,25 +68,46 @@ upstream drops can be re-applied.
 
 ## Status
 
-**It builds.** On Linux/aarch64, all 32 translation units compile, `libobjc.so`
-links with no unresolved symbols outside libc/libstdc++/libBlocksRuntime, and
-it `dlopen`s — exporting 423 symbols including `objc_msgSend` and
-`objc_readClassPair`.
+**It runs.** On Linux/aarch64, with our `libobjc.so` and no Foundation:
 
-**It does not yet run anything.** Image discovery — finding `objc_classlist`
-and friends in ELF images and calling `map_images`/`load_images` — is not
-implemented, so no class is ever realized. That is the next piece
-(`docs/PORT_PLAN.md` phase 1 step 3).
+```
+44 tests: 44 PASS, 0 FAIL, 0 SKIPPED
+```
+
+Every one of those is the same source file compiled twice — once against
+Apple's shipping runtime on macOS 26.1/arm64, once against ours on Ubuntu
+24.04/aarch64 — with the two outputs required to be byte-identical.
+
+What that covers: root classes and metaclass chains, selector registration and
+uniquing, message dispatch and the method cache, `+load` and `+initialize`
+ordering, categories (including collision precedence), protocols, ivars and
+non-fragile layout, properties, dynamic class creation and disposal, ARC entry
+points, autorelease pools, weak references, associated objects, type
+encodings, method resolution and forwarding, `@synchronized`, exceptions —
+including throwing out of `+initialize` and out of a method resolver, which
+unwinds through the hand-written assembly — **multi-image programs**, images
+arriving by **`dlopen` after startup**, and eight threads contending on all of
+the above.
+
+The mechanism that made it run: `dl_iterate_phdr(3)` plus each image's on-disk
+ELF section header table, feeding objc4's existing `map_images`/`load_images`
+unchanged. Section names are the Mach-O ones with `__` stripped —
+`objc_classlist`, `objc_selrefs`, `objc_catlist` and the rest — and `swiftc
+-Xfrontend -enable-objc-interop` emits the same ones, which is the whole point.
 
 ```
 ./scripts/build_linux.sh              # clean checkout -> libobjc.so, in Docker
 ./scripts/build_linux.sh inventory    # per-translation-unit PASS/FAIL + link + load
+./scripts/difftest.sh                 # both sides, byte-compare, print the table
 ```
 
-Read `docs/UNIMPLEMENTED.md` before trusting anything: it lists every hole,
-every disabled feature with its cost, and — more importantly — the assumptions
-that could be silently wrong. See also `docs/PORT_MAP.md` and
-`docs/PORT_PLAN.md`.
+**What does not work yet**, ranked: `imp_implementationWithBlock` (needs
+trampoline assembly that is not in the vendored tree — aborts loudly); the
+method cache never frees garbage (a documented leak); tagged pointers are
+untested; x86-64 is not started. Read `docs/UNIMPLEMENTED.md` before trusting
+anything — it lists every hole, every disabled feature with its cost, and the
+assumptions that could still be silently wrong. See also `docs/PORT_MAP.md`,
+`docs/PORT_PLAN.md`, `docs/ABI_DIVERGENCE.md` and `docs/TESTING.md`.
 
 ## Licence
 
