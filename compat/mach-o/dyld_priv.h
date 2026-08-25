@@ -84,6 +84,19 @@ struct _dyld_objc_notify_mapped_info {
     uint32_t                     dyldCategoriesOptimized : 1;
 };
 
+/* ---- objc4-linux extensions --------------------------------------------
+ * Not part of Apple's SPI. Implemented in compat/src/objc4linux-elf.cpp.
+ */
+
+/* Is `addr` inside one of this image's PT_LOAD ranges? Replaces the Mach-O
+ * getsegmentdata("__DATA") containment test in _headerForAddress(). */
+bool objc4linux_image_contains_address(const struct mach_header *mh,
+                                       const void *addr);
+
+/* Register any not-yet-known loaded images and drive map_images/load_images
+ * over the ones carrying Objective-C metadata. Idempotent. */
+void objc4linux_scan_images(void);
+
 #if __BLOCKS__
 typedef void (^_dyld_objc_mark_image_mutable)(uint32_t objcImageIndex);
 #else

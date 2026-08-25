@@ -282,73 +282,15 @@ bool dyld_program_sdk_at_least(dyld_build_version_t) { return true; }
 uint32_t dyld_get_active_platform(void) { return 1; /* not macOS, not iOS */ }
 
 /* ------------------------------------------------------------------ *
- * dyld: image identity, via dladdr(3)
+ * dyld: image identity and image discovery
  *
- * PARTIAL BUT REAL. dladdr gives us dli_fbase (the image's load address) and
- * dli_fname (its path), which is exactly what the two
- * dyld_image_*_containing_address entry points need. The catch is that objc4
- * expects `dyld_image_header_containing_address` to return the SAME pointer
- * it was handed in map_images -- i.e. our per-image record, not the raw load
- * address. That mapping lives in the image registry, which is NOT YET
- * IMPLEMENTED (runtime/objc-elf.mm, PORT_PLAN phase 1 step 3), so these abort
- * for now rather than returning a pointer of the wrong kind.
+ * MOVED. dyld_image_header_containing_address, dyld_image_path_containing_
+ * address, _dyld_get_prog_image_header, _dyld_get_dlopen_image_header,
+ * _dyld_get_image_uuid, _dyld_is_memory_immutable,
+ * _dyld_objc_register_callbacks and _dyld_lookup_section_info are all
+ * implemented for real in compat/src/objc4linux-elf.cpp, backed by
+ * dl_iterate_phdr(3) and the on-disk ELF section header table.
  * ------------------------------------------------------------------ */
-
-const struct mach_header *dyld_image_header_containing_address(const void *)
-{
-    UNIMPL("dyld_image_header_containing_address: needs the ELF image registry");
-}
-
-const char *dyld_image_path_containing_address(const void *addr)
-{
-    Dl_info info;
-    if (dladdr(addr, &info) && info.dli_fname) return info.dli_fname;
-    return nullptr;
-}
-
-const struct mach_header *_dyld_get_prog_image_header(void)
-{
-    UNIMPL("_dyld_get_prog_image_header: needs the ELF image registry");
-}
-
-const struct mach_header *_dyld_get_dlopen_image_header(void *)
-{
-    UNIMPL("_dyld_get_dlopen_image_header: needs the ELF image registry");
-}
-
-bool _dyld_get_image_uuid(const struct mach_header *, uuid_t)
-{
-    /* The ELF analogue is PT_NOTE/NT_GNU_BUILD_ID, reachable via
-     * dl_iterate_phdr. Only used for duplicate-class diagnostics. */
-    UNIMPL("_dyld_get_image_uuid: ELF build-id not wired up");
-}
-
-bool _dyld_is_memory_immutable(const void *, size_t)
-{
-    /* Conservative: claim nothing is immutable, so strdupIfMutable always
-     * copies. Correct but wasteful. The real answer is an address-range check
-     * against PT_LOAD segments lacking PF_W, cached at registration. */
-    return false;
-}
-
-/* ------------------------------------------------------------------ *
- * dyld: image discovery -- THE central hole in this phase.
- * ------------------------------------------------------------------ */
-
-void _dyld_objc_register_callbacks(const struct _dyld_objc_callbacks *)
-{
-    UNIMPL("_dyld_objc_register_callbacks: ELF image discovery is not "
-           "implemented. See PORT_PLAN phase 1 step 3 (runtime/objc-elf.mm)");
-}
-
-struct _dyld_section_info_result
-_dyld_lookup_section_info(const struct mach_header *,
-                          _dyld_section_location_info_t,
-                          enum _dyld_section_location_kind)
-{
-    UNIMPL("_dyld_lookup_section_info: the per-image ELF section table is not "
-           "built yet. See PORT_MAP 3.3");
-}
 
 /* ------------------------------------------------------------------ *
  * dyld shared cache -- does not exist. SUPPORT_PREOPT is 0, so nothing

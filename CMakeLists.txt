@@ -90,7 +90,9 @@ file(GLOB OBJC4_M   "${OBJC4_RT}/*.m")
 # aarch64 Linux can reach it.
 list(FILTER OBJC4_MM EXCLUDE REGEX "dummy-library-mac-i386")
 
-set(OBJC4_COMPAT_SRC "${CMAKE_SOURCE_DIR}/compat/src/objc4linux-compat.cpp")
+set(OBJC4_COMPAT_SRC
+    "${CMAKE_SOURCE_DIR}/compat/src/objc4linux-compat.cpp"
+    "${CMAKE_SOURCE_DIR}/compat/src/objc4linux-elf.cpp")
 
 if(OBJC4_ARCH STREQUAL aarch64)
     set(OBJC4_ASM
@@ -155,6 +157,14 @@ foreach(f ${OBJC4_ASM})
 endforeach()
 
 target_link_libraries(objc PRIVATE pthread dl BlocksRuntime)
+
+# The client-facing header set: build/<arch>/include/objc/*.h, self-contained.
+# harness/run_linux.sh looks for exactly this next to libobjc.so.
+add_custom_command(TARGET objc POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E env WORK=${CMAKE_SOURCE_DIR}
+            bash ${CMAKE_SOURCE_DIR}/scripts/gen-sdk.sh
+            ${CMAKE_BINARY_DIR}/include
+    COMMENT "assembling client header set in ${CMAKE_BINARY_DIR}/include")
 
 # Building the .so is expected to FAIL at link time in the current phase:
 # image discovery (runtime/objc-elf.mm) does not exist yet, so several symbols

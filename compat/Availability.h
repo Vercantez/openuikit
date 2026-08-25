@@ -58,4 +58,40 @@
 #define __VISIONOS_DEPRECATED(...)
 #define __MAC_OS_VERSION_MIN_REQUIRED 999999
 
+
+/* ---------------------------------------------------------------------
+ * Darwin <sys/cdefs.h> spellings used by objc4's PUBLIC headers.
+ *
+ * The build force-includes compat/objc4linux/darwin-cdefs.h, which covers
+ * these and much more, but a CLIENT compiles with plain `-I<sdk>` and no
+ * prefix header. <objc/objc.h> includes <Availability.h> before anything
+ * else, so this is the one place guaranteed to have been seen by the time
+ * <objc/runtime.h> writes `void *zone __unused`.
+ *
+ * Deliberately minimal: only what the shipped headers actually use.
+ * ------------------------------------------------------------------- */
+#include <sys/cdefs.h>
+
+#ifndef __unused
+#   define __unused     __attribute__((__unused__))
+#endif
+#ifndef __used
+#   define __used       __attribute__((__used__))
+#endif
+#ifndef __deprecated
+#   define __deprecated __attribute__((__deprecated__))
+#endif
+#ifndef __DARWIN_NULL
+#   define __DARWIN_NULL NULL
+#endif
+#ifndef __BEGIN_DECLS
+#   ifdef __cplusplus
+#       define __BEGIN_DECLS extern "C" {
+#       define __END_DECLS   }
+#   else
+#       define __BEGIN_DECLS
+#       define __END_DECLS
+#   endif
+#endif
+
 #endif

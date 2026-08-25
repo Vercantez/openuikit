@@ -17,7 +17,10 @@
 # Both are paths on the HOST; the repo is bind-mounted at /src in the container
 # and the paths are rewritten. Other knobs:
 #
-#   OBJC4_DOCKER_IMAGE   default swift:6.2-noble (already used by harness/probes)
+#   OBJC4_DOCKER_IMAGE   default objc4-linux-build:24.04 (docker/Dockerfile).
+#                        It is the build container, reused: our libobjc.so needs
+#                        libBlocksRuntime.so.0 at run time and that image is the
+#                        one that has it. swift:6.2-noble does not.
 #   OBJC4_LINUX_TARGET   default aarch64-unknown-linux-gnu
 #   OBJC4_SKIP_LINUX=1   force SKIPPED without touching Docker
 
@@ -54,7 +57,7 @@ fi
 command -v docker >/dev/null 2>&1 || skip "docker not installed"
 docker info >/dev/null 2>&1 || skip "docker daemon not reachable"
 
-IMAGE=${OBJC4_DOCKER_IMAGE:-swift:6.2-noble}
+IMAGE=${OBJC4_DOCKER_IMAGE:-objc4-linux-build:24.04}
 TARGET=${OBJC4_LINUX_TARGET:-aarch64-unknown-linux-gnu}
 
 # Rewrite host paths into container paths. Anything outside the repo is mounted
