@@ -39,11 +39,11 @@ runs each). Renders are byte-identical — 108/108 scenes, 9/9 traces, 737
 tests (5 new, `Tests/OpenUIKitTests/ActorIsolationTests.swift`, which fail to
 **compile** if the isolation regresses), and `scripts/linux_verify.sh` still 162/162 byte-identical frames.
 
-### The two places the isolation boundary is crossed, and why
+### The three places the isolation boundary is crossed, and why
 
-Both are `MainActor.assumeIsolated`, never `nonisolated(unsafe)`.
-`assumeIsolated` is a **checked** assertion — it traps if the assumption is
-ever violated — where `nonisolated(unsafe)` only silences the compiler.
+All three are `MainActor.assumeIsolated`. `assumeIsolated` is a **checked**
+assertion — it traps if the assumption is ever violated — where
+`nonisolated(unsafe)` only silences the compiler.
 
 1. **`Timer._fire`** and **`NotificationCenter.post`** deliver to a
    `SelectorDispatching` target, which is `@MainActor` because every
@@ -51,9 +51,36 @@ ever violated — where `nonisolated(unsafe)` only silences the compiler.
    stay nonisolated because Foundation's are. OpenUIKit has no threads and no
    run loop of its own, so both paths are only ever reached from the host's
    main thread.
-2. **`main.swift` in `openrender` and `openhost`.** Top-level code is not
-   main-actor isolated, so each tool's CLI body is wrapped in a single
-   `assumeIsolated` rather than scattering hops through the scene builders.
+2. **`main.swift` in `openrender`, `openhost` and `objcparity`.** Top-level
+   code is not main-actor isolated, so each tool's CLI body is wrapped in a
+   single `assumeIsolated` rather than scattering hops through the scene
+   builders.
+3. **The C ABI — `oukMain` in `Sources/OpenUIKitC/Runtime.swift`.** A
+   `@_cdecl` function is nonisolated by construction: the C ABI has nowhere
+   to put an executor. So every one of the ~64 entry points the Objective-C
+   facade calls (docs/OBJC_FACADE.md) wraps its body in `oukMain`, which is
+   `MainActor.assumeIsolated` under one name. Two alternatives were rejected
+   for the same reason: `@MainActor @_cdecl` compiles, but a C caller has no
+   executor to compare against, so it is *unchecked* — an ObjC app that
+   dispatched a UIKit call off the main thread would corrupt state in
+   silence; `nonisolated(unsafe)` is the same objection plus a false claim.
+   The crossing is a check and a straight call — no `await`, no hop — so an
+   ObjC `[super layoutSubviews]` still reaches the Swift implementation
+   synchronously, which is what keeps the ObjC render byte-identical to the
+   Swift one (`scripts/objc_facade_verify.sh`).
+
+### The one `nonisolated(unsafe)` left in library code
+
+`OUKHooks.table` / `OUKHooks.installed` (`Sources/OpenUIKitC/Runtime.swift`)
+— the six `@convention(c)` pointers Swift calls Objective-C through, written
+once before the first render and only read afterwards. Making them
+`@MainActor` was tried and reverted: `peerOrphaned` is read from `deinit`,
+`deinit` is nonisolated by language rule, and isolating the table therefore
+puts an `assumeIsolated` trap inside four destructors — the worst place to
+add one and the worst place to diagnose one. The only other
+`nonisolated(unsafe)` declarations in the tree are the `@convention(c)`
+callback spies in `Tests/OpenUIKitCTests/ABITests.swift`, which stand in for
+Objective-C functions and so genuinely cannot be isolated.
 
 ### Swift 6 strict concurrency: where the package actually stands
 

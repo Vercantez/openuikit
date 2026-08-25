@@ -62,6 +62,50 @@ installed on the host.
 
 ---
 
+## The actor boundary (added when this branch was integrated)
+
+This prototype was written against a pre-`@MainActor` OpenUIKit. The library
+now isolates its UI classes exactly as the iOS SDK does
+(docs/KNOWN_GAPS.md "Actor isolation"), and a `@_cdecl` function is
+**nonisolated by construction** — the C ABI has nowhere to put an executor.
+So every entry point wraps its body in one helper:
+
+```swift
+@inline(__always)
+func oukMain<T>(_ body: @MainActor () throws -> T) rethrows -> T {
+    try MainActor.assumeIsolated(body)
+}
+```
+
+Three things about that choice are load-bearing:
+
+* **It is true.** UIKit is main-thread-only and always has been. An ObjC app
+  that touches a view off the main thread is broken against Apple's UIKit
+  too. The facade calls in from the app's main thread — where
+  `-layoutSubviews`, `-drawRect:` and target-action already run.
+* **It is checked.** `assumeIsolated` traps off-main. The two obvious
+  alternatives do not: `@MainActor @_cdecl` compiles, but a C caller has no
+  executor for the runtime to compare against, so it is *unchecked*;
+  `nonisolated(unsafe)` is the same silence plus a false claim. A
+  hand-written bridge is already good at hiding threading bugs and does not
+  need help.
+* **It does not hop.** `assumeIsolated` is a check plus a straight call — no
+  `await`, no queue. `[super layoutSubviews]` still reaches the Swift
+  implementation synchronously, which is why the ObjC render is still
+  byte-identical to the Swift twin's after the change.
+
+One exception, at the site and in KNOWN_GAPS: `OUKHooks.table` /
+`OUKHooks.installed` stay `nonisolated(unsafe)`. Isolating them was tried and
+reverted — `peerOrphaned` is read from `deinit`, `deinit` is nonisolated by
+language rule, and isolating the table puts a trap inside four destructors.
+
+The facade also now links Swift's Foundation transitively, because OpenUIKit
+imports it (docs/PORTABILITY.md "M15"). That changed nothing: the verify run
+shows `libFoundation.so` in the ObjC binary's `ldd` output and the two PNGs
+still hash the same.
+
+---
+
 ## The ownership rule
 
 Bridges rot at the ownership boundary, so there is exactly **one** rule, and it

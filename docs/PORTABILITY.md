@@ -4,9 +4,45 @@ OpenUIKit claims to be a *portable* UIKit. This document records what was
 actually tested, on 2026-08-25, rather than what the architecture intends.
 
 Reproduce any time with `scripts/linux_verify.sh` (renderer),
-`scripts/linux_selector_verify.sh` (the app-facing selector API) and
-`scripts/linux_realapp_verify.sh` (a REAL app's screen — M14). All need
-Docker.
+`scripts/linux_selector_verify.sh` (the app-facing selector API),
+`scripts/linux_realapp_verify.sh` (a REAL app's screen — M14) and
+`scripts/objc_facade_verify.sh` (an Objective-C app — M15). All need Docker.
+
+## M15 integrated: the three pieces hold together
+
+M15 landed as three independent branches — Foundation coexistence,
+`@MainActor` isolation, and the Objective-C facade — and each is verified in
+its own section below. What the integration adds is that they hold
+*simultaneously*, on the same tree, with no pixel moving:
+
+| gate | result at the merged tip |
+|---|---|
+| `swift build` (macOS **and** `swift:6.2-noble`) | clean, zero warnings |
+| 108 oracle scenes vs real UIKit | **108/108** |
+| 9 scroll traces | **9/9** |
+| `swift test` | **765** tests, 2 skipped, 0 failures |
+| `scripts/linux_verify.sh` | **162/162 byte-identical** macOS vs Linux; 108/108 vs goldens |
+| `scripts/linux_realapp_verify.sh` | **13/13 byte-identical** |
+| `scripts/objc_facade_verify.sh` | ObjC PNG **== Swift PNG**, same SHA-256 |
+
+Two interactions were real and are worth knowing about, because both are
+places a future change could quietly break:
+
+1. **`@_cdecl` cannot be actor-isolated**, so the C ABI needed an explicit
+   crossing (`oukMain`, docs/OBJC_FACADE.md "The actor boundary"). It is
+   `MainActor.assumeIsolated` — a check plus a straight call, no hop — which
+   is exactly why the ObjC render is still byte-identical to the Swift one.
+   A hop would have serialized differently and an unchecked
+   `@MainActor @_cdecl` would have hidden the question.
+2. **The ObjC facade now links Swift's Foundation transitively**, because
+   OpenUIKit imports it. Visible in the verify run's `ldd` output
+   (`libFoundation.so`, `libFoundationEssentials.so`, `lib_FoundationICU.so`)
+   alongside `libobjc.so.4.6` and `libgnustep-base.so.1.31` — two
+   Foundations, one process, no symbol collision, same bytes out. That is a
+   result, not an assumption: gnustep-base's `<Foundation/NSGeometry.h>`
+   declares `CGFloat`/`CGPoint`/`CGSize`/`CGRect` and corelibs-Foundation
+   declares its own, and they coexist because the ObjC side and the Swift
+   side only ever exchange `double`s across the ABI.
 
 ## M15: `@MainActor` isolation does not cost portability
 

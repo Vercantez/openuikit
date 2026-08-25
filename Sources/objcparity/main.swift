@@ -4,10 +4,12 @@
 // loses anything, the two PNGs stop matching. scripts/objc_facade_verify.sh
 // runs both inside one Linux container and diffs the bytes.
 //
-// Deliberately Foundation-free, like Sources/openrender/SceneBuilder.swift and
-// for the same reason (Foundation's CoreGraphics types would clash with
-// OpenUIKit's on Darwin) — and, here, so that the Swift half of the comparison
-// pulls in exactly what the ObjC half's Swift library pulls in.
+// Imports nothing but OpenUIKit and the C shims, so the Swift half of the
+// comparison pulls in exactly what the ObjC half's Swift library pulls in.
+// (The original reason for the rule — that Foundation's CoreGraphics types
+// would clash with OpenUIKit's — stopped applying at M15, when OpenUIKit's CG
+// types BECAME Foundation's; see docs/PORTABILITY.md. The remaining reason is
+// parity, which is the one that matters here.)
 
 import CPortableIO
 import OpenUIKit

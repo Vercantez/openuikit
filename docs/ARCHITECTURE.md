@@ -38,7 +38,10 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
    **nonisolated** — they are legal off the main actor and the renderer
    must stay free to move off it. Crossing the boundary is
    `MainActor.assumeIsolated` (checked) with the reasoning written at the
-   site; `nonisolated(unsafe)` is not used anywhere. Full ledger:
+   site — including the C ABI, where `@_cdecl` cannot be isolated at all and
+   every entry point goes through `oukMain` (`Sources/OpenUIKitC/`).
+   `nonisolated(unsafe)` is used in exactly one library declaration, the
+   ObjC hook vtable, and the reason is at the site. Full ledger:
    docs/KNOWN_GAPS.md "Actor isolation".
 
 ## Build & verify loop
@@ -53,6 +56,16 @@ python3 Tools/compare/compare.py              # pass/fail per scene
 
 `compare.py` thresholds are in `docs/SCENE_SPEC.md`. A scene passes when layout
 matches within 0.5pt and pixels match at the category threshold.
+
+Four Docker gates back the portability claim, and none of them may go red:
+
+```sh
+python3 Tools/compare/compare_scroll.py   # 9/9 scroll traces
+swift test                                # 765 tests
+scripts/linux_verify.sh                   # 162/162 frames byte-identical macOS vs Linux
+scripts/linux_realapp_verify.sh           # 13/13 — a real app's screen, same bytes
+scripts/objc_facade_verify.sh             # an Objective-C app's PNG == the Swift twin's
+```
 
 ## Rendering backends (M4)
 
@@ -214,6 +227,9 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/RealAppProbe/` | **realapp-harness** | done (M14: UNMODIFIED source from Automattic/pocket-casts-ios in `Vendored/`, its app-infrastructure shims in `Shims.swift`, harness in `RealAppScreen.swift`. Report: docs/REAL_APP_TEST.md. **Nothing in `Shims.swift` may stand in for a UIKit symbol** — that would make the measurement circular) |
 | `Sources/openrender/RealApp.swift` | **rendercli** | done (M14: `openrender realapp` — NOT a scene; the screen is built by the app's own Swift, so there is nothing to describe in JSON) |
 | `Sources/openrender/main.swift` | **rendercli** | to create |
+| `Sources/COpenUIKitABI/`, `Sources/OpenUIKitC/` | **abi** | done (M15: the plain-C ABI an Objective-C app talks to — `@_cdecl` only, never `@objc`, because Swift ObjC interop does not exist on Linux. The CF Create Rule is carried by the function NAMES; every entry point crosses into the main actor through `oukMain`. Report: docs/OBJC_FACADE.md) |
+| `ObjCFacade/` (clang, not SwiftPM) | **abi** | done (M15: the real Objective-C `@interface`s — UIView/UILabel/UIButton/UIViewController — built against libobjc2 + gnustep-base by `scripts/objc_facade_verify.sh`) |
+| `Sources/objcparity/` | **abi** | done (M15: the Swift twin of `ObjCFacade/ProofApp.m`; the two PNGs must be byte-identical) |
 | `Tests/OpenUIKitTests/*` | shared: add tests for YOUR module only | |
 
 **One file has two owners, deliberately.** `UISearchBar.swift` was built
