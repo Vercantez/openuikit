@@ -193,10 +193,82 @@ public enum FontEngine {
                            leading: lerp(a.leading, b.leading))
     }
 
+    // MARK: - System font CUT (.SFNS vs .SFUI)
+    //
+    // Apple ships TWO different builds of San Francisco and UIKit picks one
+    // by platform: Mac Catalyst resolves `UIFont.systemFont` to `.SFNS-*`
+    // (the macOS cut, /System/Library/Fonts/SFNS.ttf) and iOS resolves it to
+    // `.SFUI-*`. Same wght, same clamped opsz, same glyph outlines, same
+    // kerning — but the iOS cut is spaced TIGHTER below 20 pt.
+    //
+    // MEASURED (Tools/oracle2/fontprobe re-takes the whole `oracle
+    // fontmetrics` dump on iOS 26.1; scripts/font_probe_sim.sh): over all
+    // 432 font entries x 95 printable ASCII glyphs,
+    //
+    //     advance_macOS(c, size) - advance_iOS(c, size) = T(size) * size/2048
+    //
+    // holds EXACTLY (max deviation 0.000000000 pt — the difference does not
+    // depend on the glyph or the weight, only on the point size, which is
+    // the signature of a spacing/tracking difference rather than different
+    // outlines). Pair kerning is IDENTICAL between the cuts: subtracting
+    // T(size) per character from the Catalyst `stringWidths` reproduces the
+    // iOS ones with residual 0 over all 432 x 6 sample strings.
+    //
+    // T is zero at every size >= 20 pt — exactly where SF switches from the
+    // Text optical face to Display — and zero for the monospaced family at
+    // every size (SF Mono has no optical-size axis). Italic tracks system.
+    //
+    // Why this matters here: the fixture suite has TWO oracles. Everything
+    // is rendered by Mac Catalyst (Tools/oracle, Tools/oracle2) EXCEPT the
+    // scenes with an "alert" or a "modal" key, which only real iOS can draw
+    // and which scripts/regen_goldens.sh routes through the iOS Simulator
+    // (scripts/render_sim_scenes.sh). Those goldens are set in `.SFUI`, so
+    // laying them out with the vendored `.SFNS` advances accumulates
+    // ~0.31 pt per character at 17 pt. See docs/KNOWN_GAPS.md.
+
+    public enum SystemFontCut: Sendable {
+        /// `.SFNS` — macOS / Mac Catalyst. The vendored font_metrics.json.
+        case macOS
+        /// `.SFUI` — iOS. macOS advances minus the measured per-size delta.
+        case iOS
+    }
+
+    /// T(size) in font units (upem 2048), measured; see the note above.
+    /// Sizes in between are linearly interpolated, sizes >= 20 are 0.
+    static let cutDeltaTable: [(size: CGFloat, units: CGFloat)] = [
+        (8, 50), (9, 50), (10, 50), (11, 46), (11.5, 45), (12, 44),
+        (13, 41), (13.5, 41), (14, 40), (15, 38), (16, 37), (17, 37),
+        (17.5, 31), (18, 25), (19, 12), (20, 0),
+    ]
+
+    /// Points to SUBTRACT from a macOS-cut advance to get the iOS-cut one.
+    /// Zero unless the iOS cut is selected; zero for monospaced; zero at
+    /// 20 pt and above.
+    static func cutDelta(for font: UIFont) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              font.design != .monospaced else { return 0 }
+        let s = font.pointSize
+        let t = cutDeltaTable
+        if s >= t[t.count - 1].size { return 0 }
+        if s <= t[0].size { return unitsToPoints(t[0].units, size: s) }
+        for i in 1..<t.count where t[i].size >= s {
+            let a = t[i - 1], b = t[i]
+            let f = (s - a.size) / (b.size - a.size)
+            return unitsToPoints(a.units + (b.units - a.units) * f, size: s)
+        }
+        return 0
+    }
+
     // MARK: - Measurement
 
-    /// Advance of a single character (kerning-free), interpolated like metrics.
+    /// Advance of a single character (kerning-free), interpolated like
+    /// metrics, in the currently selected system-font cut.
     public static func advance(of scalar: Unicode.Scalar, font: UIFont) -> CGFloat {
+        macAdvance(of: scalar, font: font) - cutDelta(for: font)
+    }
+
+    /// Advance in the macOS (`.SFNS`) cut — what font_metrics.json stores.
+    static func macAdvance(of scalar: Unicode.Scalar, font: UIFont) -> CGFloat {
         if scalar.value >= 32, scalar.value <= 126, let (a, b, f) = neighbors(for: font) {
             let i = Int(scalar.value) - 32
             return a.advances[i] + (b.advances[i] - a.advances[i]) * f
@@ -204,7 +276,7 @@ public enum FontEngine {
         // Not in the table: U+2026 gets the exact label-context advance;
         // other non-ASCII falls back to the font file's default instance.
         if scalar.value == 0x2026 {
-            return ellipsisAdvance(for: font)
+            return macEllipsisAdvance(for: font)
         }
         // Vendored non-ASCII advances (interpolated like the ASCII ones).
         if let (a, b, f) = neighbors(for: font),
@@ -319,6 +391,10 @@ public enum FontEngine {
     /// design (from the tight table); falls back to the font file's default
     /// instance advance otherwise.
     public static func ellipsisAdvance(for font: UIFont) -> CGFloat {
+        macEllipsisAdvance(for: font) - cutDelta(for: font)
+    }
+
+    static func macEllipsisAdvance(for font: UIFont) -> CGFloat {
         if font.design == .default {
             return unitsToPoints(tightEntry(at: font.pointSize).ell, size: font.pointSize)
         }

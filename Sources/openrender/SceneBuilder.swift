@@ -1149,6 +1149,17 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // in a real UIWindow) get the render server's darker glyph rasterization
     // — select the window-variant ink masks for text (text module).
     GlyphInkTable.windowCompositing = scene["window"]?.boolValue ?? false
+    // Scenes with an "alert" or a "modal" key cannot be rendered by either
+    // Mac oracle (Catalyst bridges UIAlertController into an AppKit panel and
+    // a pageSheet into an AppKit sheet window), so scripts/regen_goldens.sh
+    // routes exactly those through the iOS Simulator instead. Real iOS
+    // resolves `UIFont.systemFont` to the `.SFUI` cut of San Francisco, not
+    // the `.SFNS` cut Catalyst uses, and the two are spaced differently below
+    // 20 pt — so those goldens must be laid out with the iOS advances. The
+    // routing rule is duplicated here on purpose; ScenePipelineProbeTests
+    // asserts the two stay in sync. See FontEngine.SystemFontCut.
+    OpenUIKitRuntime.systemFontCut =
+        (scene["alert"] != nil || scene["modal"] != nil) ? .iOS : .macOS
 
     // Mirror oracle's traits.performAsCurrent { build } — semantic colors
     // resolved at build time (e.g. layer.borderColor via .cgColor) must use

@@ -1,51 +1,105 @@
 # Known gaps (living document — fixers: read this)
 
-## M12 integration (2026-08-25): `alert_dark` fails the absence gate — OWNER: text
+## Two cuts of San Francisco (2026-08-25): the fixture suite has two oracles
 
-The four M12 app-compat clusters (lifecycle, attributed text, alerts,
-image/drawing/controls) are merged. One scene regressed **in integration**,
-not on any branch: `alert_dark` fails the structural **content-absence**
-check. Nothing about the alert code changed in the merge — the alerts branch
-was developed against a `compare.py` that had **no absence check at all**, and
-master had meanwhile lowered `STRUCT_MIN_COMPONENT` from 4.0 to 1.0 pt²
-(`fe32da4`, "punctuation scale"). The stronger gate sees a defect the weaker
-one could not.
+**RESOLVED** — this section used to read "`alert_dark` fails the absence gate
+… OWNER: text", diagnosed as real iOS "tightening alert label advances" and
+needing a per-alert tracking model. That diagnosis was wrong. The defect was
+neither alert-specific nor tracking: **Apple ships two different builds of
+San Francisco and UIKit picks one by platform.**
 
-```
-FAIL  alert_dark  [chrome]  pixels=98.475  blob=30.8  layout_issues=0
-  · STRUCTURAL: content missing at [152.5, 398.5, 2.5, 2.0]:
-    golden std 91.78, ours flat (std 7.23, ratio 0.079)
-```
+    Mac Catalyst   UIFont.systemFont -> .SFNS-*   (macOS cut)
+    iOS 26.1       UIFont.systemFont -> .SFUI-*   (iOS cut)
 
-**The content is not missing, it is displaced.** Measured column runs of the
-title "Delete File?" (17 pt semibold, dark) — 11 ink runs per side, D e l e t
-e F i l e ?:
+Same outlines, same `wght`, same clamped `opsz`, same pair kerning — but the
+iOS cut is spaced TIGHTER below 20 pt. Re-taking the whole `oracle
+fontmetrics` dump on iOS (`Tools/oracle2/fontprobe`,
+`scripts/font_probe_sim.sh`, vendored as `golden/font_metrics_ios.json`) and
+diffing it against the Catalyst one (`golden/font_metrics.json`) gives an
+exact law over all 432 font entries x 95 printable ASCII glyphs — maximum
+deviation **0.000000000 pt**:
 
-| glyph | golden (pt) | ours (pt) | drift |
-|---|---|---|---|
-| "D" (first) | 68.0–78.5 | 67.5–78.5 | ~0 |
-| "F" (7th) | 123.5–130.5 | 125.5–133.0 | +2.0 |
-| "?" (last) | **152.5–158.0** | **156.0–161.0** | **+3.5** |
+    advance_macOS(c, size) - advance_iOS(c, size) = T(size) * size / 2048
 
-The flagged 2.5 × 2.0 pt region is exactly the left edge of the golden's "?",
-where our render has nothing because our "?" starts 3.5 pt further right. The
-drift is **cumulative across the string**, i.e. an advance-width error, not a
-positioning error.
+| size | 8 | 9 | 10 | 11 | 11.5 | 12 | 13 | 13.5 | 14 | 15 | 16 | 17 | 17.5 | 18 | 19 | >=20 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| T (font units) | 50 | 50 | 50 | 46 | 45 | 44 | 41 | 41 | 40 | 38 | 37 | 37 | 31 | 25 | 12 | **0** |
 
-**It is not a general font-metrics divergence** — independently re-confirmed
-in the same image: the plain 20 pt semibold `Base screen` label of the same
-scene inks **25.5 → 135.5 pt (110.00 pt) in BOTH renderers**, byte-aligned.
-Only labels *inside the alert card* drift. This is the "real iOS tightens
-alert label advances" finding from the alerts cluster (see "Alerts + custom
-transitions" below), now with a failing gate attached to it.
+T does not depend on the glyph or the weight — only on the point size, the
+signature of a spacing difference rather than different outlines. It is zero
+at every size >= 20 pt (exactly where SF switches from the Text optical face
+to Display) and zero for the monospaced family at every size (SF Mono has no
+optical-size axis). Italic tracks system. Pair kerning is IDENTICAL: feeding
+the Catalyst kerning table the iOS advances reproduces the iOS
+`stringWidths` with residual **0** over all 432 x 6 reference strings.
 
-**Owner: the text module / FontEngine.** It needs a tracking model for the
-tightened alert-label advances; a per-font tight-tracking model already exists
-for single-run labels but has no multi-run/alert form. Do **not** raise
-`STRUCT_MIN_COMPONENT` or loosen the absence thresholds — the gate is right,
-and `alert_destructive` (same title, light) already spends 42.2 pt² of the
-80 pt² blob budget on the same "?" for the same reason. The other 95 scenes
-and all 9 scroll traces pass.
+Why it surfaced as one alert scene: `scripts/regen_goldens.sh` routes scenes
+with an `"alert"` or a `"modal"` key — and only those — through the iOS
+Simulator, because Catalyst bridges `UIAlertController` into an AppKit panel
+and a pageSheet into an AppKit sheet window. Those six goldens are set in
+`.SFUI`; every other golden is set in `.SFNS`, which is what the vendored
+table describes and what the rasterizer's `SFNS.ttf` draws. Laying an
+`.SFUI` golden out with `.SFNS` advances accumulates ~0.31 pt per character
+at 17 pt, so the 12-glyph alert title "Delete File?" ended 3.7 pt wide and
+its "?" left the golden's ink behind — the 2.5 x 2.0 pt hole the absence
+gate reported. The absence gate was right; the metrics were wrong.
+
+Fix: `FontEngine.SystemFontCut` (`OpenUIKitRuntime.systemFontCut`, default
+`.macOS`) subtracts the measured T(size) when the iOS cut is selected, and
+`runScene` selects it for the Simulator-routed scenes. Every one of the six
+improved — nothing else moved:
+
+| scene | pixels | worst blob (pt^2) |
+|---|---|---|
+| `alert_dark` | 98.475 **FAIL** -> 98.569 PASS | 30.8 -> 5.0 |
+| `alert_destructive` | 98.602 -> 98.726 | 42.2 -> 3.0 |
+| `alert_actionsheet` | 98.105 -> 98.228 | 36.8 -> 5.0 |
+| `alert_basic` | 98.917 -> 98.999 | 7.5 -> 11.8 |
+| `modal_sheet` | 99.324 -> 99.347 | 33.0 -> 3.0 |
+| `modal_sheet_grabber` | 99.314 -> 99.338 | 33.0 -> 3.0 |
+
+Note the third column: `compare.py`'s blob threshold is calibrated against
+"worst legitimate component 33.2 pt^2 (`modal_sheet` — one stem of the 22 pt
+bold title)". That residual was this bug, not a rasterization limit, and it
+is now 3.0. The 80 pt^2 gate could be tightened considerably; that is
+`compare.py`'s call, not the text module's, and the calibration comment is
+now stale.
+
+### What is still NOT modelled
+
+- **Vertical metrics also differ between the cuts** and the selector does not
+  switch them. `golden/font_metrics_ios.json` vs `golden/font_metrics.json`:
+  `capHeight`, `xHeight` and `leading` are identical everywhere, but
+  `ascender` / `descender` / `lineHeight` differ at EVERY size, e.g. 17 pt
+  semibold `lineHeight` 20 (Catalyst, a whole number) vs 20.28711 (iOS,
+  unrounded), and 15 pt regular 18 vs 17.90039. iOS then puts a UILabel's
+  line box at `ceil(lineHeight)` on the device's 1/3 pt grid — which is
+  exactly where `UIAlertMetrics.titleLineHeight` = 20.333 and
+  `messageLineHeight` = 18 came from when the alerts cluster measured them
+  off the live view tree. The chrome that needs those numbers therefore
+  already carries them as measured constants, `labelLineHeight`'s
+  Catalyst-fitted bonus bands stay correct for the Catalyst goldens, and no
+  scene currently needs the iOS line box in the general path. Modelling it
+  properly means an iOS-cut branch of `labelLineHeight` with its own
+  oracle-measured band table.
+- **Truncation under the iOS cut is untested.** `tightTable` (the trak-based
+  ellipsis / tight-tracking model) was generated offline from macOS's
+  `SFNS.ttf`; `ellipsisAdvance` and `measureTight` get the cut delta applied
+  on top, but no Simulator-routed fixture truncates a label, so the
+  combination has no golden behind it.
+- **Glyph OUTLINES still come from `SFNS.ttf`** — the rasterizer has no
+  `.SFUI` font file to load (iOS's is inside the Simulator runtime). The
+  residual left in the alert goldens after this fix is mostly that: our
+  17 pt "D" inks about 0.5 pt left of the golden's, and stems land within
+  half a point of the iOS ones rather than on them.
+- The alert card sits at x = 36.5 while iOS puts it at 36.667 (UIKit rounds
+  the card origin onto the 1/3 pt grid); that is 0.167 pt of the remaining
+  horizontal residual and belongs to the alerts cluster, not to text.
+
+Re-derive the iOS dump with `scripts/font_probe_sim.sh <outdir>` (needs a
+booted iOS 26 simulator); `Tools/oracle2/alerttextprobe` is the narrower
+probe that found the split, dumping the alert labels' fonts, attributes and
+CoreText glyph positions.
 
 ## App lifecycle / environment (M12, 2026-08-25): scope notes
 
@@ -225,15 +279,16 @@ animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
   DISMISS animation could not be measured at all (the dim's presentation
   opacity stayed pinned at 1 for the whole dismissal), so we play the present
   in reverse.
-- **Alert labels are TIGHTER than plain labels.** Real iOS renders the
-  alert's own title/message with narrower advances than a plain UILabel in
-  the same font: "Delete File?" at 17 pt semibold inks 159.5 pt in the golden
-  and 165.5 pt here (+3.8 %), "This cannot be undone." at 15 pt inks 249.5 vs
-  253.0 (+1.4 %). It is NOT a platform metrics difference — the same golden's
-  plain 20 pt semibold scene label inks 110.00 pt in both renderers — so the
-  alert applies some tightening/tracking we do not model. Consequence: our
-  wrap points can differ (a 260 pt column that UIKit fills with two lines can
-  take three here), and multi-line alert text will drift.
+- ~~**Alert labels are TIGHTER than plain labels.**~~ **FIXED, and it was
+  not an alert property.** The alert's title/message did render with wider
+  advances than the golden's ("Delete File?" at 17 pt semibold +3.8 %,
+  "This cannot be undone." at 15 pt +1.4 %), and the same golden's plain
+  20 pt semibold label really did match byte for byte — but only because the
+  divergence is ZERO at 20 pt. Mac Catalyst and iOS use different cuts of San
+  Francisco (`.SFNS` vs `.SFUI`) that differ by a measured per-size constant
+  below 20 pt, and the alert goldens are the ones rendered by iOS. See "Two
+  cuts of San Francisco" at the top of this file. Alert wrap points now use
+  the iOS advances like the rest of the alert layout.
 - **Wrapped alert text uses the wrong line pitch.** Measured pitches are 22 pt
   for the title and 20 pt for the message (against 20.333/18 for the first
   line), which the card HEIGHT reproduces exactly — but the labels themselves

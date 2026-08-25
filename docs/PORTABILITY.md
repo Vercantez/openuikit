@@ -30,7 +30,9 @@ and carries no host dependency.
   audit finds zero violations and zero `#if os(...)` conditionals.
 - `CQuartz` (the vendored Quartz 2D + CoreAnimation implementation) is
   portable C++17 and compiled unmodified on Linux.
-- Text **metrics** come from a vendored data table (`font_metrics.json`),
+- Text **metrics** come from a vendored data table (`font_metrics.json` —
+  the macOS `.SFNS` cut of San Francisco; `OpenUIKitRuntime.systemFontCut`
+  switches to the measured iOS `.SFUI` advances, see docs/KNOWN_GAPS.md),
   text **ink** from harvested masks (`glyph_ink.json`) and
   underline/strikethrough **rects** from a measured table
   (`text_decorations.json`, M12) — all data, so layout and most glyph

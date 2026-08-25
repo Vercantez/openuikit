@@ -274,6 +274,13 @@ is `.circular`.
   Note SF switches optical family at 20pt (Text→Display) — the table has
   per-integer-size entries; interpolate linearly between adjacent entries for
   fractional sizes.
+  Two CUTS of that ground truth exist: `golden/font_metrics.json` is the Mac
+  Catalyst dump (`.SFNS`, the default) and `golden/font_metrics_ios.json` the
+  same dump re-taken on iOS 26.1 (`.SFUI`, `Tools/oracle2/fontprobe`). They
+  differ only in advances, by a per-size constant that is zero at 20 pt and
+  above — `FontEngine.SystemFontCut` / `OpenUIKitRuntime.systemFontCut`
+  selects between them, and openrender picks the iOS cut for the scenes the
+  fixture suite renders in the Simulator. docs/KNOWN_GAPS.md has the law.
 - Single-line label width from the table = stringWidth (sum of advances is
   close but the table's `stringWidths` reveal kerning — validate; if sums
   are off by >0.5pt implement pair adjustment from stb_truetype kerning).

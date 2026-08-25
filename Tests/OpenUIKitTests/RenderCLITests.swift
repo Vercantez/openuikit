@@ -149,6 +149,44 @@ final class RenderCLITests: XCTestCase {
         XCTAssertGreaterThan(f[2], 0, "sizeToFit should have grown the label")
     }
 
+    /// Scenes with an "alert" or a "modal" key are golden-ed by the iOS
+    /// Simulator (scripts/regen_goldens.sh), whose system font is the `.SFUI`
+    /// cut of San Francisco rather than Catalyst's `.SFNS`; below 20 pt the
+    /// two are spaced differently, so openrender must lay those scenes out
+    /// with the iOS advances (FontEngine.SystemFontCut). Same label, same
+    /// font, one scene with an alert and one without: 96 pt vs 92 pt.
+    func testSimulatorRoutedScenesUseTheIOSFontCut() throws {
+        let dir = try makeTempDir()
+        func scene(_ name: String, alert: Bool) -> [String: Any] {
+            var s: [String: Any] = [
+                "name": name,
+                "size": [393, 852],
+                "root": [
+                    "class": "UIView",
+                    "subviews": [[
+                        "class": "UILabel", "frame": [10, 10, 0, 0],
+                        "text": "Delete File?", "fontSize": 17,
+                        "fontWeight": "semibold", "sizeToFit": true,
+                    ]],
+                ],
+            ]
+            if alert {
+                s["alert"] = ["style": "alert", "title": "T",
+                              "actions": [["title": "OK", "style": "default"]]]
+            }
+            return s
+        }
+        var widths: [Bool: Double] = [:]
+        for alert in [false, true] {
+            let name = alert ? "t_cut_alert" : "t_cut_plain"
+            let file = try writeScene(scene(name, alert: alert), name: name, in: dir)
+            XCTAssertEqual(try runCLI(["render", dir.path, file.path]).exitCode, 0)
+            widths[alert] = try frame(try loadLayout(dir, name)["0"])[2]
+        }
+        XCTAssertEqual(try XCTUnwrap(widths[false]), 96.0, accuracy: 1e-9, "macOS cut (.SFNS)")
+        XCTAssertEqual(try XCTUnwrap(widths[true]), 92.0, accuracy: 1e-9, "iOS cut (.SFUI)")
+    }
+
     // Every scene-spec class is now implemented (notYetImplementedClasses is
     // empty); UIButton — the last holdout this test used to exercise the
     // warn-and-substitute path — renders for real, with the oracle's dump keys.

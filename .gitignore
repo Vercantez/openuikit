@@ -24,3 +24,5 @@ Tools/oracle2/SheetProbe.app/
 out_sheet/
 Tools/oracle2/AlertProbe.app/
 out_alert/
+Tools/oracle2/FontProbe.app/
+Tools/oracle2/AlertTextProbe.app/

@@ -24,6 +24,13 @@ public enum OpenUIKitRuntime {
     /// When empty, the font engine falls back to platform-known locations
     /// (e.g. /System/Library/Fonts/SFNS.ttf on macOS).
     public static var fontPaths: [String: String] = [:]
+    /// Which CUT of the San Francisco system font the metrics tables should
+    /// describe (see `FontEngine.SystemFontCut`). Apple ships two different
+    /// builds of SF: `.SFNS` on macOS / Mac Catalyst and `.SFUI` on iOS, and
+    /// their advance widths differ by a measured per-size constant below
+    /// 20 pt. Default `.macOS`, which is what the vendored
+    /// font_metrics.json describes and what the rasterizer's SFNS.ttf draws.
+    public static var systemFontCut: FontEngine.SystemFontCut = .macOS
     /// Rendering backend for newly created Canvases: `.quartz` (vendored
     /// libquartz, the default) or `.swift` (pure-Swift rasterizer fallback).
     /// Hosts may override before rendering (openrender honors

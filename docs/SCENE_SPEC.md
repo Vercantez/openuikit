@@ -3,6 +3,19 @@
 A **scene** is a JSON file describing a UIKit view hierarchy. Two renderers consume it:
 
 - `Tools/oracle` — renders with **real UIKit** (Mac Catalyst, offscreen `layer.render`). Output goes to `golden/`. Scenes marked `"window": true` are instead rendered by `Tools/oracle2` (real `UIWindow` + `drawHierarchy`) — see below. Scenes with a top-level `"modal"` or `"alert"` key are rendered by **real iOS UIKit in the headless iOS Simulator** (`scripts/render_sim_scenes.sh`, SimScene app) — Catalyst cannot produce the iOS pageSheet look (v5, see "Modal sheet") and bridges `UIAlertController` into an AppKit panel (v5.2, see "Alert").
+
+  **The two oracles do not agree about the system font, and the renderer has
+  to know which one a scene belongs to.** Mac Catalyst resolves
+  `UIFont.systemFont` to `.SFNS-*` (the macOS cut of San Francisco) and iOS
+  resolves it to `.SFUI-*`; below 20 pt the iOS cut is spaced tighter by a
+  measured per-size constant (identical for every glyph and weight; kerning
+  and outlines are the same). `openrender` therefore selects
+  `FontEngine.SystemFontCut.iOS` for exactly the scenes this routing sends
+  to the Simulator — the ones with an `"alert"` or a `"modal"` key — and the
+  macOS cut for everything else. Changing the routing rule means changing
+  `runScene` in `Sources/openrender/SceneBuilder.swift` too
+  (`RenderCLITests.testSimulatorRoutedScenesUseTheIOSFontCut` guards the
+  wiring). See `FontEngine.swift` "System font CUT" and docs/KNOWN_GAPS.md.
 - `openrender` (this repo's `OpenUIKit`) — the portable reimplementation. Output goes to `out/`.
 
 Each renderer produces, for a **static** scene `<name>`:
