@@ -10,9 +10,10 @@
   UINavigationController push (per APP_FEEL "Oracle strategy") is still
   open; the bar title/back crossfade-and-slide parameters (0.35·W title
   slide, fast 40 %-duration back-label fade) are feel approximations.
-- Completion model: UIView.animate completions are synchronous (M6 note),
-  so transition CLEANUP + viewDidAppear/viewDidDisappear fire from the
-  host clock — UIWindow.tick calls UINavigationController._stepTransitions
+- Completion model: transition CLEANUP + viewDidAppear/viewDidDisappear
+  fire from the host clock via their own registry (they predate the
+  clock-driven UIView.animate completions and do not use them) —
+  UIWindow.tick calls UINavigationController._stepTransitions
   (same pattern as the scroll hook; one additive line in UIEvent.swift,
   coordinated with the event module). A host that renders without ticking
   shows the settled final frame but never completes the stack/lifecycle;
@@ -183,10 +184,21 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
   `OPENUIKIT_BACKEND=swift` animation scenes render MODEL values only
   (every frame = final state). Owner: view module, only if a host ever
   needs animated rendering on the pure-Swift path.
-- `UIView.animate` completion handlers run synchronously with
-  `finished == true` (no run loop in the portable core; the host drives
-  time via `OpenUIKitRuntime.animationTime`). Real UIKit delivers them
-  after `delay + duration` of wall time.
+- `UIView.animate` completion handlers now fire ON THE CLOCK (M8.1, was
+  synchronous): they are queued at `begin + delay + duration` and
+  delivered by `UIView._stepAnimationCompletions(to:)`, which
+  `UIWindow.tick(timestamp:)` calls after the scroll/transition steppers.
+  A host that advances `OpenUIKitRuntime.animationTime` without ticking a
+  window never delivers them (`UIView._hasPendingAnimationCompletions` is
+  the redraw hint; openhost's dirty check includes it). Residual
+  divergences: `finished` is always `true` — there is no cancellation
+  path, so replacing an in-flight animation on the same property does not
+  deliver `false` the way CA's `didStop` does, and `removeAllAnimations()`
+  leaves a queued completion to fire at its original end time. A block
+  that records no animation completes immediately (matching UIKit, which
+  creates no CAAnimation). Handlers due in one tick run as a single batch,
+  so a completion that starts a new animation gets its completion on a
+  later tick — one run-loop turn per batch.
 - Spring initialVelocity: UIKit's internal duration-fit solver picks a
   much softer spring (a different root of the same settling equation —
   see docs/QUARTZ_NOTES.md) once the velocity crosses a threshold

@@ -158,6 +158,10 @@ open class UIWindow: UIView {
         // the host clock passes the transition end (same pattern; see
         // UINavigationController).
         UINavigationController._stepTransitions(to: timestamp)
+        // UIView.animate completion handlers fire when their animation ends
+        // on this clock, after the steppers above (a completion may start the
+        // next animation, and it should see a settled scroll/transition).
+        UIView._stepAnimationCompletions(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

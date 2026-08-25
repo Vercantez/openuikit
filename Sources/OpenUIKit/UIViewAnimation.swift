@@ -30,6 +30,13 @@
 //   - Animation is complete at t ≥ delay + duration: the presentation shows
 //     the MODEL value exactly (CA removes the animation on completion);
 //     before `delay` the FROM value shows (UIKit fills backwards).
+//   - Completion handlers fire when the animation ENDS on that clock, not
+//     when the block returns (M8.1). They are queued at
+//     `begin + delay + duration` and delivered by
+//     `UIView._stepAnimationCompletions(to:)`, which UIWindow.tick calls —
+//     the same host-clock pattern as scroll deceleration and navigation
+//     transitions. A block that records no animation at all completes
+//     immediately (as in UIKit, where no CAAnimation is created).
 //
 // This file is pure Swift (no Foundation, no CQuartz): the API surface,
 // recording, the spring duration fit and affine interpolation. Quartz-
@@ -90,6 +97,57 @@ enum UIViewAnimationContext {
         var timing: UIViewAnimation.Timing
     }
     static var current: Params?
+    /// Animations recorded by the innermost running block (used to decide
+    /// whether its completion has anything to wait for).
+    static var recordedInBlock = 0
+}
+
+// MARK: - Deferred completion handlers
+
+/// Queue of `UIView.animate` completion handlers waiting for the host clock
+/// to reach their animation's end time.
+///
+/// The portable core has no run loop, so — exactly like scroll deceleration
+/// (`UIScrollView._stepScrollAnimations`) and navigation transitions
+/// (`UINavigationController._stepTransitions`) — the host drives delivery:
+/// `UIWindow.tick(timestamp:)` calls `UIView._stepAnimationCompletions(to:)`,
+/// which fires every handler whose end time has passed. A host that advances
+/// `OpenUIKitRuntime.animationTime` without ticking never delivers them.
+enum UIViewAnimationCompletionQueue {
+    struct Entry {
+        let end: Double
+        let seq: Int
+        let body: (Bool) -> Void
+    }
+
+    static var entries: [Entry] = []
+    private static var nextSeq = 0
+
+    /// Queue `body` for delivery once the clock reaches `end`.
+    static func schedule(end: Double, _ body: @escaping (Bool) -> Void) {
+        entries.append(Entry(end: end, seq: nextSeq, body: body))
+        nextSeq &+= 1
+    }
+
+    /// Deliver every handler due at or before `time`, oldest end first
+    /// (ties broken by scheduling order).
+    ///
+    /// Handlers due in this step are taken as one batch BEFORE any of them
+    /// run: a completion that starts a new animation enqueues a completion
+    /// for a later step, never for this one. That mirrors a run loop turn and
+    /// makes an unbounded completion→animation→completion chain impossible.
+    static func step(to time: Double) {
+        guard !entries.isEmpty else { return }
+        var due: [Entry] = []
+        var remaining: [Entry] = []
+        for e in entries {
+            if e.end <= time { due.append(e) } else { remaining.append(e) }
+        }
+        guard !due.isEmpty else { return }
+        entries = remaining
+        due.sort { ($0.end, $0.seq) < ($1.end, $1.seq) }
+        for e in due { e.body(true) }
+    }
 }
 
 // MARK: - UIView.animate API
@@ -149,15 +207,45 @@ extension UIView {
     static func runAnimationBlock(_ params: UIViewAnimationContext.Params,
                                   animations: () -> Void,
                                   completion: ((Bool) -> Void)?) {
-        let saved = UIViewAnimationContext.current
+        let savedParams = UIViewAnimationContext.current
+        let savedCount = UIViewAnimationContext.recordedInBlock
         UIViewAnimationContext.current = params
+        UIViewAnimationContext.recordedInBlock = 0
         animations()
-        UIViewAnimationContext.current = saved
-        // No run loop in the portable core: the host drives time via
-        // OpenUIKitRuntime.animationTime. The completion runs synchronously
-        // with finished == true (documented divergence from real UIKit,
-        // which delivers it after `delay + duration` of wall time).
-        completion?(true)
+        let recorded = UIViewAnimationContext.recordedInBlock
+        UIViewAnimationContext.current = savedParams
+        // An outer block owns everything its nested blocks recorded, so its
+        // own completion still has something to wait for.
+        UIViewAnimationContext.recordedInBlock = savedCount &+ recorded
+
+        guard let completion else { return }
+        let end = OpenUIKitRuntime.animationTime + params.delay + params.duration
+        if recorded == 0 || end <= OpenUIKitRuntime.animationTime {
+            // Nothing to animate (UIKit creates no CAAnimation, so the
+            // handler runs right away), or a zero-length animation that is
+            // already over.
+            completion(true)
+            return
+        }
+        // Real UIKit delivers after `delay + duration` of wall time; we
+        // deliver when the host clock passes that point (UIWindow.tick).
+        OpenUIKitRuntime.noteAnimationWork(until: end)
+        UIViewAnimationCompletionQueue.schedule(end: end, completion)
+    }
+
+    /// Deliver `UIView.animate` completion handlers whose animation has ended
+    /// at or before `time` on the `OpenUIKitRuntime.animationTime` clock.
+    ///
+    /// `UIWindow.tick(timestamp:)` calls this; a host that steps the clock
+    /// without ticking a window must call it itself or completions never run.
+    public static func _stepAnimationCompletions(to time: Double) {
+        UIViewAnimationCompletionQueue.step(to: time)
+    }
+
+    /// Host redraw hint: a completion handler is still queued, so more frames
+    /// (and ticks) are needed — the handler may change the hierarchy.
+    public static var _hasPendingAnimationCompletions: Bool {
+        !UIViewAnimationCompletionQueue.entries.isEmpty
     }
 
     // MARK: Recording
@@ -169,6 +257,7 @@ extension UIView {
                          from: UIViewAnimation.Value,
                          to: UIViewAnimation.Value) {
         guard let ctx = UIViewAnimationContext.current else { return }
+        UIViewAnimationContext.recordedInBlock &+= 1
         let anim = UIViewAnimation(property: property, from: from, to: to,
                                    begin: OpenUIKitRuntime.animationTime,
                                    delay: ctx.delay, duration: ctx.duration,

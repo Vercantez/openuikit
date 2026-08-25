@@ -322,7 +322,9 @@ func runLive(_ scene: HostScene) {
     //   - a navigation transition is in flight,
     //   - a recorded UIView/UISwitch animation is still running
     //     (OpenUIKitRuntime.animationWorkDeadline, +0.1s slop so the final
-    //     settled frame is always presented).
+    //     settled frame is always presented),
+    //   - a UIView.animate completion handler is still queued (it fires on
+    //     the clock and may change the hierarchy).
     // Idle frames render nothing and sleep.
     var needsRender = true // first frame renders unconditionally
 
@@ -330,6 +332,7 @@ func runLive(_ scene: HostScene) {
         mouseDown
             || UIScrollView._hasActiveScrollAnimations
             || UINavigationController._hasActiveTransition
+            || UIView._hasPendingAnimationCompletions
             || now <= OpenUIKitRuntime.animationWorkDeadline + 0.1
     }
 

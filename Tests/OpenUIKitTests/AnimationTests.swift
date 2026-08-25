@@ -23,12 +23,14 @@ final class AnimationTests: XCTestCase {
         OpenUIKitRuntime.renderBackend = .quartz
         OpenUIKitRuntime.compositor = .layers
         OpenUIKitRuntime.animationTime = 0
+        UIViewAnimationCompletionQueue.entries.removeAll()
     }
 
     override func tearDown() {
         OpenUIKitRuntime.renderBackend = savedBackend
         OpenUIKitRuntime.compositor = savedCompositor
         OpenUIKitRuntime.animationTime = 0
+        UIViewAnimationCompletionQueue.entries.removeAll()
         super.tearDown()
     }
 
@@ -78,11 +80,91 @@ final class AnimationTests: XCTestCase {
         XCTAssertEqual(to, 0)
     }
 
-    func testCompletionRunsWithFinishedTrue() {
+    // MARK: Completion handlers (delivered on the host clock)
+
+    /// A block that records no animation has nothing to wait for — UIKit
+    /// creates no CAAnimation and runs the handler right away.
+    func testCompletionWithoutAnimationsRunsImmediately() {
         var finished: Bool?
         UIView.animate(withDuration: 0.1, animations: {},
                        completion: { finished = $0 })
         XCTAssertEqual(finished, true)
+    }
+
+    /// A real animation's completion waits for `delay + duration` on the
+    /// clock and is delivered by the window tick, like UIKit's wall-clock
+    /// delivery.
+    func testCompletionFiresWhenClockPassesAnimationEnd() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let v = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(v)
+        OpenUIKitRuntime.animationTime = 0
+        defer { OpenUIKitRuntime.animationTime = 0 }
+
+        var finished: Bool?
+        UIView.animate(withDuration: 0.5, delay: 0.25, options: [],
+                       animations: { v.alpha = 0 },
+                       completion: { finished = $0 })
+        XCTAssertNil(finished, "completion must not run synchronously")
+        XCTAssertTrue(UIView._hasPendingAnimationCompletions)
+
+        window.tick(timestamp: 0.5)
+        XCTAssertNil(finished, "still before delay + duration")
+
+        window.tick(timestamp: 0.75)
+        XCTAssertEqual(finished, true)
+        XCTAssertFalse(UIView._hasPendingAnimationCompletions)
+    }
+
+    /// The end time is measured from the clock when the block ran, not from
+    /// zero: a host that animates at t = 10 completes at t = 10.3.
+    func testCompletionEndIsRelativeToCommitTime() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let v = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(v)
+        OpenUIKitRuntime.animationTime = 10
+        defer { OpenUIKitRuntime.animationTime = 0 }
+
+        var fired = false
+        UIView.animate(withDuration: 0.3, animations: { v.alpha = 0 },
+                       completion: { _ in fired = true })
+        window.tick(timestamp: 10.2)
+        XCTAssertFalse(fired)
+        window.tick(timestamp: 10.3)
+        XCTAssertTrue(fired)
+    }
+
+    /// Handlers are delivered oldest-end-first, and a completion that starts
+    /// a new animation gets its own completion on a LATER tick (one run-loop
+    /// turn per batch — no unbounded chain inside a single tick).
+    func testCompletionOrderingAndChaining() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let a = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        let b = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(a)
+        window.addSubview(b)
+        OpenUIKitRuntime.animationTime = 0
+        defer { OpenUIKitRuntime.animationTime = 0 }
+
+        var order: [String] = []
+        UIView.animate(withDuration: 0.4, animations: { b.alpha = 0 },
+                       completion: { _ in order.append("long") })
+        UIView.animate(withDuration: 0.2, animations: { a.alpha = 0 },
+                       completion: { _ in
+                           order.append("short")
+                           UIView.animate(withDuration: 0.1,
+                                          animations: { a.alpha = 1 },
+                                          completion: { _ in order.append("chained") })
+                       })
+
+        OpenUIKitRuntime.animationTime = 0.4
+        window.tick(timestamp: 0.4)
+        XCTAssertEqual(order, ["short", "long"])
+
+        // The chained animation was committed at 0.4, so it ends at 0.5.
+        OpenUIKitRuntime.animationTime = 0.5
+        window.tick(timestamp: 0.5)
+        XCTAssertEqual(order, ["short", "long", "chained"])
     }
 
     // MARK: Timing functions (bezier solver vs CA reference values)
