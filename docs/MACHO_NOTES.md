@@ -800,7 +800,7 @@ to do that — the mask is compiled in:
 
 ```
 $ objdump --macho -d libswiftCore.dylib | grep -c 'and.*#0x7ffffffffff8'
-20+          including inside swift_getObjectType, swift_unknownObjectRetain,
+48           including inside swift_getObjectType, swift_unknownObjectRetain,
              swift_unknownObjectRelease and the dynamic-cast machinery
 ```
 

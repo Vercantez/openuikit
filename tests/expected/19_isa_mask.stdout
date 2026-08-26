@@ -3,4 +3,6 @@ cstring    below_2_47=yes mask_preserves=yes
 global     below_2_47=yes mask_preserves=yes
 printf     below_2_47=yes mask_preserves=yes
 strtod     below_2_47=yes mask_preserves=yes
+malloc64   below_2_47=yes mask_preserves=yes
+malloc1M   below_2_47=yes mask_preserves=yes
 worked_example 0xffff8a2c6018 -> 0x7fff8a2c6018 (TRUNCATED)

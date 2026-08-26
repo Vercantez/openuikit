@@ -6,7 +6,7 @@
  * Apple's arm64 runtimes pack flags into the low and high bits of an object's
  * isa field and mask them off before use. The Swift standard library has the
  * 47-bit form -- `and x8, x8, #0x7ffffffffff8` -- INLINED into compiled code at
- * 20+ sites, including inside swift_getObjectType, swift_unknownObjectRetain
+ * 48 sites, including inside swift_getObjectType, swift_unknownObjectRetain
  * and swift_unknownObjectRelease, and then reads class->bits at +0x20. So any
  * class living at or above 2^47 is truncated to an address that is not mapped,
  * and the standard library faults on a pointer it computed itself.
@@ -33,11 +33,32 @@
  *   printf       libSystem (machorun's own dylib; Apple's shared cache)
  *   strtod       libSystem again, to catch a partially-mapped image
  *
- * A stack or heap address would NOT do: under machorun those come from glibc
- * and legitimately sit above 2^47, because nothing masks them.
+ * THE HEAP IS PROBED TOO, and that is the second half of the bug. Not every
+ * class object lives in an image: libswiftCore builds a generic class's
+ * metadata at RUN TIME, and objc4's objc_allocateClassPair does the same for a
+ * class pair. The first 64 KiB of Swift metadata come from a static pool inside
+ * libswiftCore's own __DATA -- so a small program passes no matter how wrong
+ * the policy is, which is exactly how this half stayed hidden -- and past that
+ * the allocator falls through to malloc. On aarch64 Linux a PIE lands at
+ * 2*TASK_SIZE/3 and brk follows the image, so the heap inherited an address
+ * above 2^47 that no mmap policy could move; the loader is therefore linked
+ * non-PIE at 1 TiB. Measured: a guest instantiating 900 distinct generic
+ * classes died 8 runs out of 8 at `libswiftCore+0x332898, fault
+ * 0x2aaaec0e1818` -- an ordinary main-arena address with bit 47 cut -- and
+ * passes 8 out of 8 with the loader linked low.
  *
- * BEFORE the fix this fixture printed `below_2_47=no` for printf and strtod on
- * Linux and `yes` on macOS, so difftest reported FAIL. That is the check.
+ * The STACK is deliberately NOT probed. Nothing masks a stack address, so
+ * requiring it to be low would be inventing a constraint; under machorun it
+ * legitimately sits above 2^47.
+ *
+ * Neither is an allocation above glibc's 32 MiB mmap threshold, which still
+ * comes from mmap and still lands high. That is a real residue, stated in
+ * docs/UNIMPLEMENTED.md#isa-va-width rather than asserted here: no class object
+ * is 32 MiB, and a guest asking for a buffer that size is asking for a buffer.
+ *
+ * BEFORE the image fix this printed `below_2_47=no` for printf and strtod on
+ * Linux and `yes` on macOS; before the heap fix, `no` for the malloc probes.
+ * Either way difftest reports FAIL. That is the check.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,6 +93,21 @@ int main(void)
     probe("global", (const void *)&a_global);
     probe("printf", (const void *)(unsigned long)printf);
     probe("strtod", (const void *)(unsigned long)strtod);
+
+    /* The heap, where a runtime-built class object comes from. Small is the
+     * size that matters -- Swift's metadata pool refills at 64 KiB, objc4's
+     * class pairs are a few hundred bytes -- and 1 MiB is here to catch a
+     * too-eager mmap threshold. Both stay under glibc's 32 MiB threshold on
+     * purpose; see the header. Freed in reverse so nothing is leaked. */
+    {
+        void *small = malloc(64);
+        void *mid   = malloc(1024 * 1024);
+        if (!small || !mid) { fputs("malloc failed\n", stderr); return 1; }
+        probe("malloc64", small);
+        probe("malloc1M", mid);
+        free(mid);
+        free(small);
+    }
 
     /* The arithmetic itself, on a value that is known-bad, so that a reader can
      * see what the failure looks like without having to reproduce it. */

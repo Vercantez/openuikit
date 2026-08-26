@@ -16,3 +16,7 @@ build/sdk-src/
 # and are only ever as true as the last build. sdk/usr/include IS committed --
 # it is assembled from redistributable sources and must work with no network.
 sdk/usr/lib/
+
+# scripts/stress_unfair_lock.sh's scratch capture, written next to the fixtures
+# it runs so the loop does not need a temp dir. Regenerated every run.
+tests/objc44/.stress.stderr

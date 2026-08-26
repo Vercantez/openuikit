@@ -41,7 +41,7 @@ Section
   sectname __text
    segname __TEXT
       addr 0x00000001000004f8
-      size 0x0000000000000154
+      size 0x0000000000000208
     offset 1272
      align 2^2 (4)
     reloff 0
@@ -52,9 +52,9 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x000000010000064c
-      size 0x000000000000000c
-    offset 1612
+      addr 0x0000000100000700
+      size 0x0000000000000030
+    offset 1792
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -64,9 +64,9 @@ Section
 Section
   sectname __cstring
    segname __TEXT
-      addr 0x0000000100000658
-      size 0x0000000000000096
-    offset 1624
+      addr 0x0000000100000730
+      size 0x00000000000000b7
+    offset 1840
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -76,9 +76,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x00000001000006f0
+      addr 0x00000001000007e8
       size 0x0000000000000058
-    offset 1776
+    offset 2024
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -101,13 +101,13 @@ Section
   sectname __got
    segname __DATA_CONST
       addr 0x0000000100004000
-      size 0x0000000000000010
+      size 0x0000000000000030
     offset 16384
      align 2^3 (8)
     reloff 0
     nreloc 0
      flags 0x00000006
- reserved1 1 (index into indirect symbol table)
+ reserved1 4 (index into indirect symbol table)
  reserved2 0
 Load command 3
       cmd LC_SEGMENT_64
@@ -140,7 +140,7 @@ Load command 4
    vmaddr 0x000000010000c000
    vmsize 0x0000000000004000
   fileoff 49152
- filesize 856
+ filesize 1032
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
@@ -149,19 +149,19 @@ Load command 5
       cmd LC_DYLD_CHAINED_FIXUPS
   cmdsize 16
   dataoff 49152
- datasize 112
+ datasize 160
 Load command 6
       cmd LC_DYLD_EXPORTS_TRIE
   cmdsize 16
-  dataoff 49264
+  dataoff 49312
  datasize 48
 Load command 7
      cmd LC_SYMTAB
  cmdsize 24
-  symoff 49320
-   nsyms 5
-  stroff 49416
- strsize 56
+  symoff 49368
+   nsyms 9
+  stroff 49552
+ strsize 88
 Load command 8
             cmd LC_DYSYMTAB
         cmdsize 80
@@ -170,15 +170,15 @@ Load command 8
      iextdefsym 1
      nextdefsym 2
       iundefsym 3
-      nundefsym 2
+      nundefsym 6
          tocoff 0
            ntoc 0
       modtaboff 0
         nmodtab 0
    extrefsymoff 0
     nextrefsyms 0
- indirectsymoff 49400
-  nindirectsyms 3
+ indirectsymoff 49512
+  nindirectsyms 10
       extreloff 0
         nextrel 0
       locreloff 0
@@ -190,7 +190,7 @@ Load command 9
 Load command 10
      cmd LC_UUID
  cmdsize 24
-    uuid 0C4A04CA-6F03-37A6-B912-5864BE089B2E
+    uuid A141AA76-891C-3D43-B109-D7435B55DE63
 Load command 11
       cmd LC_BUILD_VERSION
   cmdsize 32
@@ -219,20 +219,24 @@ compatibility version 1.0.0
 Load command 15
       cmd LC_FUNCTION_STARTS
   cmdsize 16
-  dataoff 49312
+  dataoff 49360
  datasize 8
 Load command 16
       cmd LC_DATA_IN_CODE
   cmdsize 16
-  dataoff 49320
+  dataoff 49368
  datasize 0
 Load command 17
       cmd LC_CODE_SIGNATURE
   cmdsize 16
-  dataoff 49472
+  dataoff 49648
  datasize 536
 
 ### undefined symbols
+___stderrp
+_fputs
+_free
+_malloc
 _printf
 _strtod
 

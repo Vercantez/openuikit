@@ -659,8 +659,8 @@ whose oracle passes for a reason that is a property of the *platform* rather
 than of the program.
 
 libswiftCore has Apple's 47-bit isa mask — `and x8, x8, #0x7ffffffffff8` —
-compiled into `swift_getObjectType`, `swift_unknownObjectRetain` and twenty-odd
-other places, so a class at or above 2^47 is truncated and the runtime faults on
+compiled into `swift_getObjectType`, `swift_unknownObjectRetain` and 45 other
+places, so a class at or above 2^47 is truncated and the runtime faults on
 a pointer it computed itself. aarch64 Linux serves `mmap(NULL, …)` top-down from
 near 2^48, so machorun loaded every dylib at `0xffff…`, and every Swift program
 that touched a class outside its own executable died. macOS cannot reproduce it:
