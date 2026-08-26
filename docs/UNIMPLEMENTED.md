@@ -766,3 +766,20 @@ fixable bug in our Darwin userland. Fix: make the owner token a correct,
 per-thread, non-colliding value and initialise the lock word to the true
 "unlocked" sentinel; add a multi-arch CI gate so this cannot regress silently.
 The loader/codegen/Mach-O path itself is verified working on real Graviton.
+
+
+**UPDATE 2026-08-26, measured on Graviton3 with instrumentation:** the failing
+`os_unfair_lock_lock` always has `me == expect`, both equal `fold(pthread_self())`
+of the *current* thread — the lock word already holds the acquiring thread's own
+token. The fixture source is single-threaded, so objc4 spins up a worker thread
+and the two threads' 32-bit tokens COLLIDE ~50% of runs (intermittent = ASLR of
+the two TCBs). NOT fixed by: (a) gettid — `_glibc_gettid` does not resolve
+through the loader's glibc boundary, returns garbage; (b) `__thread` caching —
+TLV is not wired for our own userland dylibs, so it collapses to one shared slot
+(constant token); (c) xor-folding the full pointer — reduced but did not
+eliminate the collision. Correct fix: a token UNIQUE per thread by construction —
+a real kernel tid via raw arm64 svc (bypassing the broken glibc boundary), or a
+sequential id from an atomic counter stored in the WORKING Darwin TSD
+(objcsupport.c `_pthread_getspecific_direct`, which objc4 already uses). The
+loader/codegen/Mach-O path and the single-threaded drawing path are unaffected
+on Graviton (19/19 fixtures, quartz PNGs byte-identical).
