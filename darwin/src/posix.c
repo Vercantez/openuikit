@@ -330,6 +330,47 @@ EXPORT int     remove(const char *p)
     return MR_ERRNO_CALL(glibc_unlink(p));
 }
 
+/* ------------------------------------------------------ the strtol family
+ *
+ * Measured 2026-08-25, and the fixture 14_utility is what noticed:
+ *
+ *     strtol("zz", NULL, 10)   Darwin: errno = EINVAL (22)   Linux: errno = 0
+ *     strtoul / strtoll / strtoull / atoi: the same
+ *     strtod / strtof:         neither sets it
+ *
+ * "If no conversion could be performed, 0 is returned and errno is set to
+ * EINVAL" is Darwin's documented contract, and a guest that checks it is not
+ * being exotic -- it is following the man page it was written against. glibc
+ * leaves errno untouched, so forwarding loses the signal entirely. */
+#define DARWIN_EINVAL 22
+
+#define STRTO_INT(ret, name, call)                                        \
+    EXPORT ret name(const char *s, char **endp, int base)                 \
+    {                                                                     \
+        char *end = NULL;                                                 \
+        ret v;                                                            \
+        mr_errno_in();                                                    \
+        v = call(s, &end, base);                                          \
+        mr_errno_out();                                                   \
+        if (endp) *endp = end;                                            \
+        if (end == s && *mr_errno_slot() == 0)                            \
+            *mr_errno_slot() = DARWIN_EINVAL;                             \
+        return v;                                                         \
+    }
+
+extern unsigned long long glibc_strtoull(const char *, char **, int) GLIBCSYM(strtoull);
+
+STRTO_INT(long,               strtol,   glibc_strtol)
+STRTO_INT(unsigned long,      strtoul,  glibc_strtoul)
+STRTO_INT(long long,          strtoll,  glibc_strtoll)
+STRTO_INT(unsigned long long, strtoull, glibc_strtoull)
+STRTO_INT(long long,          strtoq,   glibc_strtoll)
+STRTO_INT(unsigned long long, strtouq,  glibc_strtoull)
+
+EXPORT int  atoi(const char *s) { return (int)strtol(s, NULL, 10); }
+EXPORT long atol(const char *s) { return strtol(s, NULL, 10); }
+EXPORT long long atoll(const char *s) { return strtoll(s, NULL, 10); }
+
 /* ------------------------------------------------------------- error text */
 
 EXPORT char *strerror(int e)

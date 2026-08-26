@@ -35,8 +35,9 @@ echo "== darwin: $CLANG $CFLAGS"
 # libsystem.c  process state, the printf family, malloc/str*, exit, pthread
 # posix.c      errno / O_* / struct stat translation and the file surface
 # mach.c       the Mach APIs, on Linux primitives
+# ctype.c      Apple's rune table (a DATA ABI), setlocale, getopt, time
 LIBSYSTEM_OBJ=""
-for f in libsystem posix mach; do
+for f in libsystem posix mach ctype; do
     $CLANG $CFLAGS -c "$ROOT/darwin/src/$f.c" -o "$OBJ/$f.o"
     LIBSYSTEM_OBJ="$LIBSYSTEM_OBJ $OBJ/$f.o"
 done

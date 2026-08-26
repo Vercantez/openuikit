@@ -152,6 +152,7 @@ want 11_varargs          && build 11_varargs          "$CHAINED_TARGET" 11_varar
 want 11c_varargs_classic && build 11c_varargs_classic "$CLASSIC_TARGET" 11c_varargs_classic 11_varargs.c --
 want 12_mach             && build 12_mach             "$CHAINED_TARGET" 12_mach             12_mach.c --
 want 13_errno            && build 13_errno            "$CHAINED_TARGET" 13_errno            13_errno.c --
+want 14_utility          && build 14_utility          "$CHAINED_TARGET" 14_utility          14_utility.c --
 
 # -------------------------------------------------- off-ladder: structure
 # A universal binary. macOS picks the arm64 slice and behaves exactly like

@@ -200,6 +200,33 @@ the corpus enumerates a directory.
 produce Darwin's `"Unknown error: %d"` format. `strerror_l`, `strerror_r`'s
 GNU variant and the `sys_errlist` array are absent.
 
+### `locale-c-only`
+`setlocale` accepts `"C"` and `"POSIX"` and returns NULL for everything else,
+including `""`. That is a documented POSIX failure rather than a stub, and it
+is deliberate: the alternative is to accept `en_US.UTF-8` and then classify
+characters with a C-locale table, which is a lie a program cannot detect.
+`localeconv`, `newlocale`/`uselocale` and the `*_l` function family are absent.
+`_DefaultRuneLocale` is Apple's own C-locale table, recorded by
+`scripts/gen_rune_table.sh`; there is no second table to switch to.
+
+### `wide-chars`
+`mbtowc`, `mbrtowc`, `wcwidth`, `wprintf` and the rest are absent. `wchar_t` is
+4 bytes on both systems and `MB_CUR_MAX` is 1 in the C locale, so this is
+tractable, but nothing in the corpus needs it and an untested implementation
+would be worse than an honest absence.
+
+### `getopt-long`
+`getopt` is implemented (BSD semantics: it does not permute `argv`).
+`getopt_long` and `getopt_long_only` are not — they need `struct option`, whose
+layout is compiled into the guest. Two of the BSD utilities surveyed for rung
+(m) want it.
+
+### `err-warn`
+`err`, `errx`, `warn`, `warnx` and `errc` are absent, and they are the single
+most common gap in the BSD utilities surveyed. They are variadic, so they must
+be written over the Darwin `va_list` like the printf family rather than
+forwarded.
+
 ### `objc-callbacks`
 `_dyld_objc_register_callbacks` / `_dyld_objc_notify_register`. Still the top
 blocker, but the shape of the work changed once `~/objc4-linux` was read

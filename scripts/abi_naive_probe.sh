@@ -7,7 +7,7 @@
 # away from the macOS baseline. If a variant here ever comes out "identical",
 # that translation is dead weight and should go.
 #
-#   scripts/abi_naive_probe.sh            all four variants
+#   scripts/abi_naive_probe.sh            all five variants
 #   scripts/abi_naive_probe.sh errno      just one
 #
 # Runs the builds inside the test-bed container; safe to run from macOS.
@@ -31,7 +31,7 @@ build_variant() {
     rm -rf "$d"; mkdir -p "$d/src" "$d/obj" "$d/darwin/usr/lib"
     cp /work/darwin/src/*.c /work/darwin/src/*.h "$d/src/"
     python3 "$patch" "$d/src" || { echo "  patch failed"; return 1; }
-    for f in libsystem posix mach; do
+    for f in libsystem posix mach ctype; do
         clang $CF -c "$d/src/$f.c" -o "$d/obj/$f.o" || { echo "  compile failed: $f"; return 1; }
     done
     ld64.lld -dylib -arch arm64 -platform_version macos 11.0 11.0 \
@@ -48,7 +48,7 @@ build_variant() {
         echo "    stdout: IDENTICAL to macOS -- this translation is not load-bearing!"
     else
         echo "    stdout diverges from macOS:"
-        diff "/work/tests/expected/$fixture.stdout" "/tmp/out.$name" | head -12 | sed 's/^/      /'
+        diff -a "/work/tests/expected/$fixture.stdout" "/tmp/out.$name" | head -12 | sed 's/^/      /'
     fi
     [ -s "/tmp/err.$name" ] && { echo "    stderr:"; head -4 "/tmp/err.$name" | sed 's/^/      /'; }
     echo
@@ -106,6 +106,18 @@ body = ("static void stat_l2d(const struct linux_stat *l, struct darwin_stat *d)
 open(p, "w").write(s[:i] + body + s[j:])
 PY
 
+# 5. The rune table: keep the symbol, empty the data. Nothing here calls a
+#    function -- the guest INLINED the lookup into its own instructions -- so
+#    this shows who really owns _DefaultRuneLocale.
+mk_patch rune <<'RUNEPATCH'
+import sys
+p = sys.argv[1] + "/ctype.c"
+s = open(p).read()
+for name in ("MR_RUNETYPE_INIT", "MR_MAPLOWER_INIT", "MR_MAPUPPER_INIT"):
+    s = s.replace("{ %s }" % name, "{ 0 }")
+open(p, "w").write(s)
+RUNEPATCH
+
 run() { case "$WANT" in all|"$1") return 0;; *) return 1;; esac; }
 
 echo
@@ -115,4 +127,5 @@ run varargs && build_variant varargs /tmp/patch-varargs.py 03_printf
 run errno   && build_variant errno   /tmp/patch-errno.py   13_errno
 run flags   && build_variant flags   /tmp/patch-flags.py   13_errno
 run stat    && build_variant stat    /tmp/patch-stat.py    13_errno
+run rune    && build_variant rune    /tmp/patch-rune.py    14_utility
 INNER

@@ -497,10 +497,7 @@ EXPORT int putc(int c, void *f) { return glibc_fputc(c, f); }
 EXPORT int fputs_unlocked(const char *s, void *f) { return glibc_fputs(s, f); }
 
 FWD(int, getpid, (void), ())
-FWD(int, atoi, (const char *s), (s))
-FWDE(long, strtol, (const char *s, char **e, int b), (s, e, b))
-FWDE(unsigned long, strtoul, (const char *s, char **e, int b), (s, e, b))
-FWDE(long long, strtoll, (const char *s, char **e, int b), (s, e, b))
+/* the strtol family lives in posix.c: Darwin sets EINVAL where glibc does not */
 FWDE(double, strtod, (const char *s, char **e), (s, e))
 FWD(char *, getenv, (const char *n), (n))
 FWD(time_t, time, (time_t *t), (t))

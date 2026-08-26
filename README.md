@@ -80,12 +80,14 @@ docs/       design, ABI notes, status
 
 ## Status
 
-**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 17 of 18
+**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 18 of 19
 runnable fixtures are byte-identical to the same bytes running natively on
 macOS, covering both fixup formats, initialisers, TLV, dylib graphs with
 `@rpath`, data and reverse imports, pthreads, fat binaries — and the userland
 rungs: the Darwin arm64 variadic ABI, the Mach APIs, and the errno / `O_*` /
-`struct stat` divergences. Objective-C is the one remaining wall.
+`struct stat` divergences, and a representative hand-built utility that uses
+ctype, getopt, qsort, strftime and fgets the way real programs do. Objective-C
+is the one remaining wall.
 
 The bet holds so far, but not for free. Four things about the C ABI genuinely
 differ and had to be measured and translated rather than assumed
@@ -96,7 +98,10 @@ other's numbers; 10 of 13 `O_*` flags differ, and Darwin's `O_CREAT` **is**
 Linux's `O_TRUNC`; and `struct stat` is 144 bytes against 128 with almost every
 field moved. `scripts/abi_naive_probe.sh` disables each translation in turn and
 shows what breaks — starting with a SIGSEGV at fault address `0x4d2`, which is
-1234, the first argument of `printf("int=%d\n", 1234)`.
+1234, the first argument of `printf("int=%d\n", 1234)`. A fifth is not a
+translation at all: Darwin's `<ctype.h>` *inlines* a lookup in a 3208-byte
+`_DefaultRuneLocale` into the guest, so that table's layout and contents are
+part of the ABI and are recorded from Apple rather than reconstructed.
 
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
 for the measured ABI boundary, `docs/PLAN.md` for the design,

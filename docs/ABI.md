@@ -33,6 +33,9 @@ translations one at a time and shows exactly how the output moves.
 | `SEEK_SET/CUR/END` | 0/1/2 | identical | no |
 | `PROT_READ/WRITE/EXEC` | 1/2/4 | identical | no |
 | page size | 16 KiB | 4 or 16 KiB | **yes, latently** |
+| `_DefaultRuneLocale` | a 3208-byte table the guest indexes itself | — | **yes** |
+| `strtol("zz")` on failure | `errno = EINVAL` | `errno` untouched | **yes** |
+| `getopt` | does not permute argv | glibc's does | **yes** |
 
 ---
 
@@ -330,6 +333,76 @@ the *ratio* is 125/3 without asking was already wrong on Intel Macs.
 **`VM_PROT_*` and `PROT_*`** agree (READ 1, WRITE 2, EXECUTE 4), and
 `MAP_PRIVATE`/`MAP_FIXED` agree; only `MAP_ANON` differs (0x1000 Darwin, 0x20
 Linux) and is translated in `mmap`.
+
+---
+
+## 8. `<ctype.h>` is a data ABI, not a function call
+
+This one is not a *difference* between the platforms so much as a difference
+between what a libSystem looks like and what it has to be. Darwin's
+`<ctype.h>` does not call `isdigit()`. It inlines
+
+```c
+#define __isctype(c, f) \
+    ((c < 0 || c >= 256) ? __maskrune(c, f) : (_DefaultRuneLocale.__runetype[c] & (f)))
+```
+
+into the guest's own instructions. So `_DefaultRuneLocale` is a **data symbol**
+whose layout *and contents* were compiled into every program that includes
+`<ctype.h>`, and it is not ours to design:
+
+```
+sizeof 3208   __magic @0   __encoding @8   __invalid_rune @56
+__runetype @60 (256 × uint32)   __maplower @1084   __mapupper @2108
+__runetype_ext @3136   __variable @3184   __ncharclasses @3196
+```
+
+The last two fields are the trap: the SDK's `_RuneLocale` carries an
+`__ncharclasses`/`__charclasses` pair after the documented tail, and a struct
+that stops at `__variable_len` is 3200 bytes — eight short, which is a struct
+whose consumers read past it.
+
+The C locale's table has no pointers set at all (`__sgetrune`, `__sputrune`,
+every `__ranges` and `__variable` are NULL), which is what lets
+`scripts/gen_rune_table.sh` record Apple's actual bytes and re-emit them as
+static data. The flag values (`_CTYPE_A` = 0x100 and the rest) come from
+Apple's headers through the same generator rather than from staring at the
+table and guessing which bit is which.
+
+The negative control is unusually direct — keep the symbol, empty the data:
+
+```
+$ scripts/abi_naive_probe.sh rune
+      < alpha 000...0111111111111111111111111110000001111111111111111111111111100000
+      > alpha 000...000000000000000000000000000000000000000000000000000000000000000
+```
+
+Every character classifies as nothing, and **the guest never called a function
+of ours to get that wrong answer**. `14_utility` prints all twelve classes over
+all 128 ASCII characters, so a single wrong bit shows up as a single wrong
+column.
+
+## 9. Two behaviours that differ without any type differing
+
+**`strtol` on failure.** Measured on both:
+
+```
+strtol("zz", NULL, 10)     Darwin: errno = 22 (EINVAL)    Linux: errno = 0
+strtoul / strtoll / strtoull / atoi        same            same
+strtod / strtof            neither sets it
+strtol("12", NULL, 99)     both set EINVAL (bad base)
+```
+
+Darwin documents "if no conversion could be performed, 0 is returned and errno
+is set to EINVAL"; glibc leaves errno alone. A guest following its own man page
+is not being exotic, so our `strtol` family sets it. `14_utility` is what
+noticed — one line out of thirty-two.
+
+**`getopt` argument order.** Darwin's `getopt` stops at the first non-option
+argument; glibc's permutes `argv` so that options found later still get parsed.
+Forwarding would change *which arguments the program sees*, so `getopt` is
+written out, and `optarg`/`optind`/`opterr`/`optopt`/`optreset` are our globals
+because the guest reads ours.
 
 ---
 

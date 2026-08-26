@@ -1,6 +1,6 @@
 # The fixture ladder
 
-Twenty Mach-O programs (plus two dylibs they load), built once by Apple's
+Twenty-one Mach-O programs (plus two dylibs they load), built once by Apple's
 toolchain on macOS and committed as bytes. Each one is run natively on macOS to record what it does, then run
 under `machorun` on Linux/arm64. Same bytes, both sides. Outputs must match
 exactly — stdout, stderr and exit status.
@@ -419,6 +419,44 @@ translation tables generated from a measurement of both platforms
 (`scripts/gen_errno_table.sh`), `open` flag translation with a loud refusal for
 the unmappable ones, `struct stat` field-by-field translation, and `strerror`
 with Apple's own text.
+
+### (m) `14_utility` — a representative hand-built utility
+`tests/src/14_utility.c` · chained
+
+Every other rung isolates one mechanism. This one deliberately does not: it is
+the shape of program milestone 1 is *for*, and it exists to answer "what would
+the next binary need" by measurement. Written first, run second: it was seven
+symbols short, and those seven became `darwin/src/ctype.c`.
+
+The interesting import is not a function:
+
+```
+__DefaultRuneLocale     ___maskrune
+```
+
+Darwin's `<ctype.h>` does not call `isdigit()`; it inlines
+`_DefaultRuneLocale.__runetype[c] & _CTYPE_D` into the guest's own
+instructions. A 3208-byte data table — layout *and* contents — is therefore
+part of the ABI. `scripts/gen_rune_table.sh` records Apple's actual bytes; the
+fixture prints all twelve classes over all 128 ASCII characters, so one wrong
+bit is one wrong column. `scripts/abi_naive_probe.sh rune` empties the table
+and everything classifies as nothing, with no function of ours ever called.
+
+It also covers `setlocale` (we have exactly one locale and say so, rather than
+pretending a change took), `getopt` over a synthetic `argv` — Darwin's does not
+permute and glibc's does, so forwarding would change which arguments a program
+sees — `qsort` calling back into guest code, `strftime`/`gmtime_r`/`timegm`
+over a `struct tm` that is byte-identical on both systems, `fgets`, and the
+`strtol` idiom. That last one is what caught the divergence in §9 of
+`docs/ABI.md`: `strtol("zz")` sets `EINVAL` on Darwin and leaves `errno` alone
+on Linux.
+
+**libSystem must implement:** Apple's rune table as static data (statically
+initialised, because the guest's own constructors are entitled to call
+`isdigit`), `__maskrune`/`__tolower`/`__toupper` and the out-of-line `is*`
+family, `setlocale` for C and a refusal for anything else, BSD `getopt` with
+our own `optarg`/`optind`, the time surface, and a `strtol` family that sets
+`EINVAL` where Darwin's does.
 
 ---
 
