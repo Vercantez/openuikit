@@ -318,3 +318,127 @@ silently no-op if the constant lives elsewhere in 6.2.4.
 **This makes the artifact machorun-specific**, in the same way and for the same
 reason machorun's objc4 is: it encodes a 48-bit host VA. A libswiftCore for real
 Darwin must keep Apple's mask. Keep both files distinct.
+
+---
+
+## 9. Does the wide mask generalize? Apple already answered this
+
+The architecture question was whether stage-time widening of Apple's shipped
+Swift dylibs is a standing policy, or whether keeping every guest address below
+2^47 is the real fix. **Apple's own shipped binaries settle it**, and no build
+box was needed to find out.
+
+### The measurement
+
+`/Library/Developer/CoreSimulator/.../iOS 26.1.simruntime/.../libswiftCore.dylib`,
+Mach-O arm64, `LC_BUILD_VERSION platform 7` (iOS Simulator):
+
+| | isa-mask sites | value |
+|---|---|---|
+| Apple's shipped arm64 simulator build | **48** | `0x007ffffffffffff8` — **already wide** |
+| ours, built for `arm64-apple-macos` | **48** | `0x00007ffffffffff8` — narrow |
+
+**The same 48 sites, and Apple's are already wide.** objc4 says why, in a
+comment predating all of this:
+
+> ARM64 simulators have a larger address space, so use the ARM64e scheme even
+> when simulators build for ARM64-not-e.
+
+machorun *is* a simulator in the only sense that matters: a Darwin userland
+hosted inside a larger address space. Apple has a supported configuration for
+exactly that, and it widens the mask rather than confining the address space.
+So widening is not a hack we invented; it is the Apple-sanctioned answer for
+hosted runtimes, and machorun's objc4 patch already picked it.
+
+**Consequence: stage-time patching of Apple's Swift dylibs is a non-problem.**
+The binaries we would ever stage are simulator runtimes, and their isa masks are
+already correct. Nothing to rewrite. The narrow mask appears only in device and
+macOS-native builds — which is precisely what we accidentally produced by
+targeting `arm64-apple-macos`.
+
+**So the fix for our own output is the target, not the binary.** Patch 6 is a
+stand-in for "build to the simulator ABI"; `widen_isa_mask.py` is a stand-in for
+patch 6 when there is no build machine. None of the three should become a
+standing policy for other people's binaries.
+
+### The trap, found the same way
+
+The value `0x00007ffffffffff8` is **not only** the isa mask. objc4's
+`DEBUG_DATA_MASK` is the same constant on non-device targets and masks a
+completely different field — `class_data_bits_t` at offset `0x20` of an
+`objc_class`, yielding a `class_rw_t*`. Apple's simulator build has **9** such
+sites, all in `_swift_initClassMetadataImpl` / `_swift_updateClassMetadataImpl`.
+
+An immediate-only rewriter would silently corrupt all nine. `widen_isa_mask.py`
+therefore classifies every candidate by dataflow — scanning back to the start of
+the containing function for the nearest load that defines the masked register —
+and rewrites only `ldr Xs, [Xb]` (offset 0, the isa), refusing `ldr Xs, [Xb, #0x20]`
+(the data bits) and anything it cannot classify:
+
+```
+$ widen_isa_mask.py <apple's shipped libswiftCore> /tmp/out --dry-run
+  narrow candidates : 9
+    DATA_BITS     : 9
+  already wide      : 48
+  !! DATA_BITS at 0x2dc88 src=[x,0x20] in _swift_initClassMetadataImpl
+  ... (9 total)
+  -> ISA sites widened: 0
+```
+
+A fixed instruction window is not sufficient for classification: the runtime
+keeps the isa in a callee-saved register across calls, and
+`-[_TtCs12_SwiftObject hash]` masks a value loaded fourteen instructions
+earlier. Function-scoped backward search handles both that and the tight
+`ldr; and` form the data-bits sites use.
+
+**And those 9 sites are a real, separate incompatibility.** machorun widened
+`FAST_DATA_MASK`/`DEBUG_DATA_MASK` to `0x0000fffffffffff8` while Apple's
+simulator build masks with `0x00007ffffffffff8`, so a `class_rw_t` above 2^47
+loses bit 47 — in `_swift_initClassMetadataImpl`, which is exactly where the
+slice agent observed Apple's shipped simulator libswiftCore crash (`@0x2dce0`,
+inside the `0x2dc88`–`0x2e2d8` range above). Same class of bug, different
+constant, independently confirmed.
+
+That one is cheaper to fix on the loader side: leave `DEBUG_DATA_MASK` at
+Apple's value and keep objc4's own `class_rw_t` allocations below 2^47. That is
+a far narrower requirement than "every guest address below 2^47" — it constrains
+one allocator that machorun already controls, rather than the whole address
+space.
+
+### Verification
+
+| test | result |
+|---|---|
+| our build | 48/48 classified ISA, 0 refused, 48 widened + `_swift_isaMask` |
+| idempotency | re-run on the widened output: 0 candidates, 48 already wide, **byte-identical** |
+| Apple's shipped arm64 build | 48 already wide, 9 correctly refused as `DATA_BITS` |
+
+Manifests (`--manifest`) record sha256 before/after, per-site vmaddr, function
+and classification, so a staged artifact can be told from a stock one without
+disassembling it.
+
+---
+
+## 10. How much of this needed the build box
+
+The lead's instinct was that we reach for big machines where disassembly would
+do. The honest tally, by wall:
+
+| walls | needed the box? |
+|---|---|
+| 1–7 (configure, headers, codegen, link edge) | **Yes.** These are compile and build-system walls; you cannot hit them without building. |
+| 8 (30 undefined symbols) | No — `nm` on the artifact. |
+| 9 (image-registration SIGSEGV) | Diagnosis no (symbolization); fix yes (rebuild). |
+| 10 (swift_release stub / link order) | No — relink only. |
+| 11 (TLS destructors) | No — runtime, loader-side. |
+| 12 (isa mask) + §9 above | **No box at all.** Pure local disassembly, including the answer to the architecture question. |
+
+So the pattern is not "we over-provision" so much as "the box is needed to
+*produce* the artifact, and rarely needed afterwards." Seven walls genuinely
+required a build; everything after the artifact existed was answerable from the
+artifact. Wall 12 and this entire section were found on a laptop after the box
+was already terminated — including the decisive evidence, which was sitting in
+Apple's shipped simulator runtime the whole time.
+
+The cheap habit worth keeping: **before provisioning, check whether the question
+is about a binary we already have.**
