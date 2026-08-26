@@ -31,6 +31,49 @@ Everything below is measured on 2026-08-26. Reproduction commands are in §7.
 
 ---
 
+> ## Corrections, after the SDK was actually built
+>
+> `sdk/` now exists and `sdk/PROVENANCE.md` is its accounting. Three claims
+> above did not survive contact with a compiler. They are corrected here rather
+> than edited in place, because a survey that quietly agrees with itself
+> afterwards is worth nothing.
+>
+> 1. **Category (c) is not empty. `math.h` is in it.** §2.2 put `math.h` in
+>    category (a) on a path match against `apple-oss-distributions/Libm`. Libm's
+>    published `Source/math.h` is a five-line dispatcher to 2002-era
+>    `architecture/{ppc,i386,arm}/math.h`; `__arm64__` is not `__arm__`, so it
+>    reaches its own `#error Unknown architecture`. Libm has shipped no release
+>    since, and the modern 802-line header comes from Apple's closed libm. It is
+>    clean-roomed from ISO C99 §7.12 — the *easiest* possible category-(c)
+>    header, but category (c) all the same. The count is 334 + 21, not 335 + 20.
+>
+> 2. **"Run the scripts" works for one of the two generated `sys/` headers, not
+>    both.** §2.2 is right about `sys/_posix_availability.h`:
+>    `make_posix_availability.sh` runs and its output is **byte-identical** to
+>    Apple's SDK copy. `make_symbol_aliasing.sh` does not run — its first act is
+>    to exec `<sdk>/usr/local/libexec/availability.pl`, which ships only in
+>    Apple's *internal* SDK. The generator is published and its input is not.
+>
+> 3. **§5.2's pipeline was one step short, and the missing step is the
+>    dangerous one.** A published header is not an installed header. Libc marks
+>    build-only regions with `//Begin-Libc` and deletes them at install
+>    (`xcodescripts/strip-header.ed`); skip that and 28 of 32 objc4 TUs fail.
+>    Worse, xnu gates per-product settings on `XNU_PLATFORM_<name>` and resolves
+>    them with `unifdef`: with none selected, `sys/cdefs.h` renames every
+>    `__DARWIN_ALIAS`'d libc function to a `$UNIX2003` variant *and*
+>    `mach/arm/vm_param.h` drops `MACH_VM_MAX_ADDRESS_RAW` from 128 TB to 64 GB
+>    **without a single diagnostic**. §6.1 predicted exactly this class of
+>    problem and it appeared in the first tree staged. `sdk/patches/` carries
+>    both fixes and `scripts/sdk_abi_probe.sh` — §6.1's recommended test, now
+>    built — is what would catch the next one.
+>
+> Everything else held. §2.5's libc++ substitution reproduced exactly (32
+> objects, 41/44, three defines). §3.2's arithmetic was right to the symbol:
+> `libSystem.B.tbd` carries 320 + 22 = **342**. §4.2's `...` terminator is the
+> only format requirement. §4.3's end-to-end result is now a committed test.
+
+---
+
 ## 0. Method, and what it does not cover
 
 **Headers were measured, not read off `#include` lines.** Every compile that

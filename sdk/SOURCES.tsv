@@ -1,0 +1,44 @@
+# sdk/SOURCES.tsv -- the upstream releases sdk/usr/include is assembled from.
+#
+#   <repo>  TAB  <tag>  TAB  <licence>  TAB  <what it supplies here>
+#
+# Tags are PINNED and never tracked as a branch: docs/SDK_SURVEY.md §6.2 found
+# the published trees drift both ahead of and behind any given Xcode SDK, so a
+# silent upstream bump is exactly the failure mode that would produce a mystery
+# six months from now.  Every one of these is a public release at
+# https://github.com/apple-oss-distributions/<repo>/releases/tag/<tag>.
+#
+# All four licences below permit redistribution, which is why sdk/usr/include
+# is committed rather than fetched at build time.
+#
+xnu	xnu-12377.121.6	APSL-2.0	sys/*, mach/*, arm/*, machine/*, mach_debug/*, libkern/*, architecture/, uuid/
+Libc	Libc-1752.120.2	APSL-2.0	the C library surface: stdio/stdlib/string/ctype/time/locale, _types/*, xlocale/*, secure/*
+libpthread	libpthread-539.100.4	APSL-2.0	pthread.h, sched.h, pthread/*, sys/_pthread/*
+libplatform	libplatform-375.120.2	APSL-2.0	os/lock.h, libkern/OSAtomic*.h
+libdispatch	libdispatch-1542.100.32	Apache-2.0	dispatch/*, os/{base,object,workgroup*}.h
+libmalloc	libmalloc-715.140.5	APSL-2.0	malloc/*  -- NOT the newest tag, deliberately; see the note below
+libclosure	libclosure-96	APSL-2.0	Block.h
+dyld	dyld-1378	APSL-2.0	dlfcn.h, mach-o/dyld.h
+cctools	cctools-1035.1.102	APSL-2.0	mach-o/{loader,nlist,fat,getsect,ldsyms}.h
+libunwind	libunwind-201	Apache-2.0-with-LLVM-exception	libunwind.h, __libunwind_config.h
+Libm	Libm-2026	APSL-2.0	math.h
+#
+# The libmalloc pin is the one that is not "newest", and the reason is worth
+# writing down because docs/SDK_SURVEY.md §6.2 predicted exactly this shape of
+# problem. In libmalloc-792 and later, malloc_zone_malloc_options_t moved from
+# Apple-internal SPI into the PUBLIC malloc/malloc.h. vendor/objc4-priv/
+# hand-declares that enum -- it had to, because the SDK objc4 was ported
+# against did not have it -- so staging libmalloc-812 gives objc4 the same
+# enumerators twice and objc-runtime-new.mm stops compiling:
+#
+#   vendor/objc4-priv/malloc_private.h:7:5: error: redefinition of enumerator
+#       'MALLOC_ZONE_MALLOC_OPTION_NONE'
+#
+# libmalloc-715.140.5 is the last release before the move, and is the same
+# generation as the SDK the objc4 port was measured against. Pinning it also
+# closes the survey's other libmalloc note: malloc/_malloc_type.h was 77%
+# line-identical to the 15.4 SDK because the published revision had run ahead.
+#
+# The alternative -- teaching vendor/objc4-priv/malloc_private.h to stand down
+# when the public header already declares the enum -- is not available: it is
+# an enum, so there is no macro to test with #ifdef.

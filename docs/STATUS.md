@@ -40,6 +40,46 @@ no CPU emulation anywhere in this project.
 >
 > The table below is left exactly as that clean-clone run recorded it, because
 > editing a verification record in place would destroy the thing it is for.
+>
+> **Since then (2026-08-26): Xcode is no longer a build input.** `sdk/` is this
+> repository's own header-only, `.tbd`-only SDK — 355 headers, of which 336 are
+> vendored from eleven pinned `apple-oss-distributions` releases (all
+> redistributable) or produced by running xnu's own published generator, and
+> **19 are clean-room headers of ours**. `scripts/build_objc4.sh` now defaults
+> `-isysroot` to it, and `docs/UNIMPLEMENTED.md#objc-sdk-dependency` is closed.
+> Apple's libc++ — 67% of the old header surface — is gone entirely; the build
+> uses stock LLVM 18 libc++ with three `-D` flags, pinned in
+> `harness/Dockerfile`. `sdk/PROVENANCE.md` is the accounting.
+>
+> Re-measured after that switch, in the container, from a rebuild:
+> **32 objects / 0 failures**; `scripts/objc44.sh` → **41/44** with the same
+> three failures; `scripts/difftest.sh` → **19 pass / 0 fail / 1 xfail / 1
+> no-oracle**, unchanged; and a new `scripts/sdk_abi_probe.sh` → **149 lines,
+> byte-identical to the macOS oracle**.
+>
+> That last one is a new kind of test and it earned its place immediately. It
+> prints the *ABI* rather than behaviour — `struct stat`'s size and every field
+> offset, 46 `errno` values, 14 `O_*` values, `sizeof(va_list)`, and the first
+> bytes of `_DefaultRuneLocale` — built twice, by Apple's clang against Apple's
+> SDK on macOS and by clang-18 against `sdk/` alone on Linux, the second linked
+> by `ld64.lld-18` against `.tbd` stubs generated from our own dylibs and run
+> under `build/machorun`. **A guest can now be built end to end on Linux**,
+> which was not previously possible.
+>
+> §5's "156 of 242 exports are compiled and untested" is unchanged in kind, but
+> the numbers moved: `libSystem.B.dylib` now exports 320, and its `.tbd` carries
+> 342 — the extra 22 being symbols the *loader* defines, listed in
+> `darwin/loader-exports.txt` and checked on every build.
+>
+> **One finding worth carrying into §8.** Assembling `sdk/` turned up a failure
+> mode this document's mutation testing could not have found, because it lives
+> in the headers rather than in the code: xnu's published `sys/cdefs.h` and
+> `mach/arm/vm_param.h` gate per-product settings on `XNU_PLATFORM_<name>`,
+> which Apple's header-install step resolves with `unifdef`. With none selected,
+> `MACH_VM_MAX_ADDRESS_RAW` silently becomes the embedded 64 GB value instead of
+> macOS's 128 TB and **nothing fails to compile**. `sdk/patches/` fixes it and
+> `sdk_abi_probe` guards against the next one, but only for what the probe
+> prints. `docs/UNIMPLEMENTED.md#sdk-published-vs-installed` has the detail.
 
 ---
 

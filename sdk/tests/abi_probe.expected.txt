@@ -1,0 +1,149 @@
+== fundamental types
+sizeof void *                       8
+sizeof long                         8
+sizeof long long                    8
+sizeof size_t                       8
+sizeof ptrdiff_t                    8
+sizeof wchar_t                      4
+sizeof time_t                       8
+sizeof off_t                        8
+sizeof ino_t                        8
+sizeof dev_t                        4
+sizeof mode_t                       2
+sizeof nlink_t                      2
+sizeof blkcnt_t                     8
+sizeof blksize_t                    4
+sizeof uid_t                        4
+sizeof gid_t                        4
+sizeof va_list                      8
+
+== struct stat  (docs/ABI.md: 144 bytes on Darwin, 128 on Linux)
+sizeof struct stat                  144
+offset stat.st_dev                  0
+offset stat.st_mode                 4
+offset stat.st_nlink                6
+offset stat.st_ino                  8
+offset stat.st_uid                  16
+offset stat.st_gid                  20
+offset stat.st_rdev                 24
+offset stat.st_size                 96
+offset stat.st_blocks               104
+offset stat.st_blksize              112
+offset stat.st_flags                116
+offset stat.st_gen                  120
+offset stat.st_atimespec            32
+offset stat.st_mtimespec            48
+offset stat.st_ctimespec            64
+offset stat.st_birthtimespec        80
+sizeof struct timespec              16
+offset timespec.tv_sec              0
+offset timespec.tv_nsec             8
+
+== struct tm
+sizeof struct tm                    56
+offset tm.tm_sec                    0
+offset tm.tm_min                    4
+offset tm.tm_hour                   8
+offset tm.tm_mday                   12
+offset tm.tm_mon                    16
+offset tm.tm_year                   20
+offset tm.tm_wday                   24
+offset tm.tm_yday                   28
+offset tm.tm_isdst                  32
+offset tm.tm_gmtoff                 40
+offset tm.tm_zone                   48
+
+== errno  (54 of 87 shared names differ from Linux; EAGAIN and
+==         EDEADLK hold each other's numbers)
+value  EPERM                        1
+value  ENOENT                       2
+value  ESRCH                        3
+value  EINTR                        4
+value  EIO                          5
+value  ENXIO                        6
+value  E2BIG                        7
+value  ENOEXEC                      8
+value  EBADF                        9
+value  ECHILD                       10
+value  EDEADLK                      11
+value  ENOMEM                       12
+value  EACCES                       13
+value  EFAULT                       14
+value  EBUSY                        16
+value  EEXIST                       17
+value  EXDEV                        18
+value  ENODEV                       19
+value  ENOTDIR                      20
+value  EISDIR                       21
+value  EINVAL                       22
+value  ENFILE                       23
+value  EMFILE                       24
+value  ENOTTY                       25
+value  EFBIG                        27
+value  ENOSPC                       28
+value  ESPIPE                       29
+value  EROFS                        30
+value  EMLINK                       31
+value  EPIPE                        32
+value  EDOM                         33
+value  ERANGE                       34
+value  EAGAIN                       35
+value  EWOULDBLOCK                  35
+value  EINPROGRESS                  36
+value  ENOTSOCK                     38
+value  EOPNOTSUPP                   102
+value  ELOOP                        62
+value  ENAMETOOLONG                 63
+value  ENOTEMPTY                    66
+value  EOVERFLOW                    84
+value  ECANCELED                    89
+value  EIDRM                        90
+value  ENOTSUP                      45
+value  ETIMEDOUT                    60
+value  ENOSYS                       78
+
+== open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)
+value  O_RDONLY                     0
+value  O_WRONLY                     1
+value  O_RDWR                       2
+value  O_ACCMODE                    3
+value  O_NONBLOCK                   4
+value  O_APPEND                     8
+value  O_CREAT                      512
+value  O_TRUNC                      1024
+value  O_EXCL                       2048
+value  O_NOCTTY                     131072
+value  O_DIRECTORY                  1048576
+value  O_CLOEXEC                    16777216
+value  O_NOFOLLOW                   256
+value  O_SYNC                       128
+
+== stat mode bits
+value  S_IFMT                       61440
+value  S_IFREG                      32768
+value  S_IFDIR                      16384
+value  S_IFLNK                      40960
+value  S_IFBLK                      24576
+value  S_IFCHR                      8192
+value  S_IFIFO                      4096
+value  S_IFSOCK                     49152
+
+== seek / stdio
+value  SEEK_SET                     0
+value  SEEK_CUR                     1
+value  SEEK_END                     2
+value  EOF                          -1
+value  BUFSIZ                       1024
+value  FOPEN_MAX                    20
+value  FILENAME_MAX                 1024
+
+== _DefaultRuneLocale  (a DATA ABI, resolved through the .tbd)
+sizeof _RuneLocale                  3208
+magic  _DefaultRuneLocale.magic     RuneMagA
+encode _DefaultRuneLocale.encoding  NONE
+runetype[0..15]             00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00024200 00004200 00004200 00004200 00004200 00000200 00000200
+maplower['A'..'F']          97 98 99 100 101 102
+
+== variadic ABI  (Darwin passes EVERY variadic argument on the stack
+==                with an 8-byte va_list; Linux uses x1-x7/v0-v7 and 32)
+1 2 3 4.50 five 6

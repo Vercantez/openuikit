@@ -87,6 +87,7 @@ platform executing the same bytes.
 src/        the loader: Mach-O parsing, mapping, fixups, TLS, entry
 include/    public interface
 darwin/     our Mach-O dylibs (libSystem and friends) built on Linux
+sdk/        our header-only + .tbd-only SDK -- replaces Apple's, see PROVENANCE.md
 vendor/     Apple's objc4 (pristine) + the SDK-private headers it needs
 patches-macho/  the 4 patches objc4 needs to build as Mach-O on Linux
 tests/      Mach-O fixtures + expected macOS output, and the 44-test objc4 corpus
@@ -162,17 +163,52 @@ translation at all: Darwin's `<ctype.h>` *inlines* a lookup in a 3208-byte
 `_DefaultRuneLocale` into the guest, so that table's layout and contents are
 part of the ABI and are recorded from Apple rather than reconstructed.
 
+**Xcode is no longer a build input.** `sdk/` is our own header-only,
+`.tbd`-only SDK: 355 headers, of which 336 come from eleven **pinned**
+`apple-oss-distributions` releases (all redistributable) or from running xnu's
+own published generator, 4 from objc4 itself, and **19 are clean-room headers we
+wrote**. Apple's libc++ — 67% of the old surface — is gone, replaced by stock
+LLVM 18 with three `-D` flags. `scripts/build_objc4.sh` takes `-isysroot sdk/` by
+default, and everything above was re-measured after the switch: **32 objects, 0
+failures; 41/44; 19 pass / 1 xfail / 1 no-oracle.**
+
+That also buys a capability that did not exist before: **a guest can be compiled
+and linked entirely on Linux** — no Apple header, no Apple library — and run
+under machorun. `scripts/sdk_abi_probe.sh` does exactly that with a program that
+prints the *ABI* rather than behaviour (`struct stat`'s field offsets, 46 `errno`
+values, 14 `O_*` values, `sizeof(va_list)`, the first bytes of
+`_DefaultRuneLocale`), and requires it to be **byte-identical** to the same
+source built by Apple's clang against Apple's SDK and run natively on macOS. It
+is: 149 lines, no diff.
+
+The fixtures in `tests/bin/` **stay Apple-built**, and this SDK must not be used
+to change that. They are the precompiled Darwin bytes the whole project exists to
+run; relinking them with `ld64.lld` against our own stubs would prove only that
+our linker agrees with our loader. `sdk/PROVENANCE.md` §6 says so at length.
+
+Assembling the SDK also found a failure mode worth naming, because it is the
+kind a green suite cannot catch: xnu's published headers gate per-product
+settings on `XNU_PLATFORM_<name>`, which Apple's install step resolves with
+`unifdef`. With none selected, `MACH_VM_MAX_ADDRESS_RAW` silently becomes the
+embedded 64 GB value instead of macOS's 128 TB, and **nothing fails to compile**.
+`sdk/patches/` fixes it; the ABI probe exists to catch the next one.
+
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
 for the measured ABI boundary, `docs/OBJC4_MACHO.md` for Apple's objc4 as
 Mach-O (and §9 for what was inherited from the retired ELF port),
-`docs/PLAN.md` for the design, `docs/UNIMPLEMENTED.md` for every stub that
-aborts.
+`sdk/PROVENANCE.md` for where every header came from and what each clean-room
+one omits, `docs/SDK_SURVEY.md` for the measurement that preceded it (and its
+corrections), `docs/PLAN.md` for the design, `docs/UNIMPLEMENTED.md` for every
+stub that aborts.
 
 ```sh
-scripts/build.sh          # loader (ELF PIE) + darwin/*.dylib (Mach-O, on Linux)
-scripts/build_objc4.sh    # Apple's objc4 -> darwin/usr/lib/libobjc.A.dylib (needs a macOS SDK)
-scripts/difftest.sh       # macOS oracle vs machorun-on-Linux, one row per fixture
-scripts/objc44.sh         # the 44-test objc4 differential corpus under machorun
-scripts/abi_naive_probe.sh # what breaks if the userland forwards naively
-build/machorun ./prog     # run one
+scripts/build.sh everything # loader (ELF PIE) + darwin/*.dylib + libobjc + sdk/*.tbd
+scripts/build.sh            # the same minus objc4, which is a minute of C++
+scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sources
+scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
+scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
+scripts/objc44.sh           # the 44-test objc4 differential corpus under machorun
+scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
+scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively
+build/machorun ./prog       # run one
 ```

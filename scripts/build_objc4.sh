@@ -10,15 +10,38 @@
 # applied to a copy at build/objc4-macho-src. patches-macho/ is the honest
 # count of what a Mach-O build still needs.
 #
-#   SDK        Apple's macOS SDK headers (mounted at /sdk/MacOSX.sdk here).
+#   SDK        sdk/ -- OUR header-only, .tbd-only SDK, in this repository. It is
+#              assembled by scripts/sdk_stage.sh from Apple's own open-source
+#              releases plus 18 clean-room headers of ours; sdk/PROVENANCE.md is
+#              the accounting. Xcode is no longer a build input. Point OBJC4_SDK
+#              at a real MacOSX.sdk to build against Apple's instead -- useful as
+#              a differential check, which is now all it is useful for.
+#
 #              Apple builds objc4 against their *internal* SDK; the public one
 #              is missing ~20 private headers, which is what vendor/objc4-priv
 #              supplies. Those are not patches to objc4 -- objc4's source is
 #              unchanged -- they are the parts of the SDK we do not have.
+#
+#   C++        sdk/ deliberately has no usr/include/c++/v1. Apple's libc++ was
+#              67% of the header surface objc4 reached, and docs/SDK_SURVEY.md
+#              §2.5 measured the substitution rather than assuming it: with
+#              stock LLVM 18 libc++, 28/28 TUs compile, 09_objc is byte-identical
+#              to the macOS baseline and the corpus scores the same 41/44 with
+#              the same three failures. The three -D flags below are not taste,
+#              they ARE that measurement:
+#                __STDC_WANT_LIB_EXT1__=0   LLVM's __config sets it to 1; Darwin's
+#                    _string.h then declares memset_s with an rsize_t that a
+#                    non-modules build never pulls in. 22 of 28 TUs fail without
+#                    it, every one on that same line.
+#                _LIBCPP_HARDENING_MODE / _LIBCPP_VERBOSE_ABORT   LLVM 18's
+#                    hardening handler emits a call to
+#                    std::__1::__libcpp_verbose_abort, which nothing here
+#                    defines; Apple's libc++ is configured never to emit it.
 set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-SDK="${OBJC4_SDK:-/sdk/MacOSX.sdk}"
+SDK="${OBJC4_SDK:-$ROOT/sdk}"
+LIBCXX_INC="${LIBCXX_INC:-/usr/lib/llvm-18/include/c++/v1}"
 SRC="$ROOT/build/objc4-macho-src"
 GEN="$ROOT/build/objc4-macho-gen"
 OBJ="$ROOT/build/objc4-macho-obj"
@@ -29,6 +52,14 @@ CLANG="${DARWIN_CLANG:-clang}"
 LD64="${LD64:-ld64.lld-18}"
 
 [ -d "$SDK" ] || { echo "build_objc4: no SDK at $SDK" >&2; exit 1; }
+[ -f "$SDK/usr/include/stdio.h" ] || {
+    echo "build_objc4: $SDK has no usr/include/stdio.h." >&2
+    echo "             If that is our sdk/, stage it: scripts/sdk_stage.sh" >&2
+    exit 1; }
+[ -d "$LIBCXX_INC" ] || {
+    echo "build_objc4: no libc++ headers at $LIBCXX_INC" >&2
+    echo "             apt-get install libc++-18-dev (it is in harness/Dockerfile)." >&2
+    exit 1; }
 
 # ---------------------------------------------------------------- source copy
 rm -rf "$SRC"
@@ -75,7 +106,13 @@ WARN="-Wno-unused-parameter -Wno-unknown-pragmas -Wno-deprecated-declarations
 COMMON="-target $TARGET -isysroot $SDK -fPIC -fno-strict-aliasing -fblocks
         -fno-exceptions -fno-rtti -fvisibility=hidden -funwind-tables -Os -g0"
 
-CXXFLAGS="-std=gnu++20 $COMMON $DEFS $INC $WARN"
+# See the C++ note in this script's header. -nostdinc++ is what makes the
+# absence of sdk/usr/include/c++/v1 a decision rather than an accident.
+CXXLIB="-nostdinc++ -isystem $LIBCXX_INC -D__STDC_WANT_LIB_EXT1__=0
+        -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE
+        -D_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap()"
+
+CXXFLAGS="-std=gnu++20 $COMMON $DEFS $INC $WARN $CXXLIB"
 CFLAGS="-std=gnu11 $COMMON $DEFS $INC $WARN"
 OBJCXX="-x objective-c++ -fobjc-runtime=macosx-10.15 $CXXFLAGS"
 OBJC="-x objective-c -fobjc-runtime=macosx-10.15 $CFLAGS"

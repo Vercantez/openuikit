@@ -1,0 +1,59 @@
+# darwin/loader-exports.txt -- symbols provided by THE LOADER, not by a dylib.
+#
+# On Darwin these live in /usr/lib/system/libdyld.dylib, which Apple's
+# libSystem.B.tbd re-exports (its file names 39 such libraries). Here there is
+# no libdyld.dylib, because the loader IS dyld: build/machorun, a Linux ELF PIE,
+# defines them and binds them into the guest.
+#
+# scripts/gen_tbd.sh merges the non-internal names below into libSystem.B.tbd,
+# because a guest linking -lSystem must be able to resolve them. It also refuses
+# to let this file rot -- see the three checks in that script's header:
+#   * every name here must really be defined by build/machorun
+#   * this list must be exactly the set our dylibs import and none of our
+#     dylibs export, minus the _glibc_* flat-bind boundary
+#
+# Names are MACH-O names: C `foo` is `_foo`, so the loader's ELF symbol is the
+# name here with one leading underscore removed. Two annotations override that:
+#
+#   =<elf-name>   the loader satisfies this Mach-O name under a DIFFERENT ELF
+#                 name. Only dyld_stub_binder needs it: src/resolve.c special-
+#                 cases that name and binds it to mr_stub_binder_trap, which
+#                 aborts -- machorun binds the classic lazy stream eagerly, so
+#                 reaching the binder is a loader bug, and the trap is how that
+#                 "never" stays checkable. There is no symbol literally called
+#                 dyld_stub_binder anywhere, which is correct and is exactly the
+#                 kind of thing CHECK 1 exists to force someone to write down.
+#
+# `#internal` marks a symbol the loader really does export but that the SDK
+# does NOT advertise to guests: it is a seam between the loader and our own
+# dylibs, not API. It is still checked for existence.
+
+# --- dyld's image-notify and introspection surface (src/objc_notify.c) ------
+__dyld_get_dlopen_image_header
+__dyld_get_image_uuid
+__dyld_get_prog_image_header
+__dyld_is_memory_immutable
+__dyld_lookup_section_info
+__dyld_objc_register_callbacks
+_dyld_fall_2018_os_versions
+_dyld_fall_2020_os_versions
+_dyld_get_active_platform
+_dyld_image_header_containing_address
+_dyld_image_path_containing_address
+_dyld_platform_version_bridgeOS_2_0
+_dyld_platform_version_iOS_10_0
+_dyld_platform_version_macOS_10_11
+_dyld_platform_version_macOS_10_12
+_dyld_platform_version_macOS_10_13
+_dyld_platform_version_tvOS_10_0
+_dyld_platform_version_watchOS_3_0
+_dyld_program_sdk_at_least
+_dyld_shared_cache_some_image_overridden
+_getsegmentdata
+
+# --- the lazy-binding stub, referenced by every image the linker produces ---
+dyld_stub_binder    =mr_stub_binder_trap
+
+# --- loader/userland seam, not guest API (src/image.c, src/resolve.c) -------
+_mr_addr_in_image   #internal
+_mr_dlsym_default   #internal

@@ -348,45 +348,80 @@ Note `malloc_size` is **not** `malloc_usable_size` and is implemented
 separately in `darwin/src/libsystem.c`: Darwin returns 0 for a pointer no zone
 owns and callers use that as an ownership test. See `docs/OBJC4_MACHO.md` §5.
 
-### `objc-sdk-dependency`
-`scripts/build_objc4.sh` needs a macOS SDK's `usr/include` (18 MB from
-`MacOSX15.sdk`) and refuses to run without one. It is a *compile-time* input
-only -- nothing Apple ships is linked or redistributed -- but it does mean
-`darwin/usr/lib/libobjc.A.dylib` is reproducible on a machine with Xcode and
-not otherwise. The 25 headers the public SDK lacks are vendored in
-`vendor/objc4-priv/`; they are Apple-internal SPI declarations plus clang's own
-`<ptrauth.h>`, and they change no objc4 source.
+### `objc-sdk-dependency` — **DONE**
+`scripts/build_objc4.sh` used to need a macOS SDK's `usr/include` and refused to
+run without one, which meant `darwin/usr/lib/libobjc.A.dylib` was reproducible
+on a machine with Xcode and not otherwise. **It no longer is.** `OBJC4_SDK`
+defaults to `sdk/` — this repository's own header-only, `.tbd`-only SDK — and
+Xcode is not a build input to anything any more.
 
-There is no scripted container invocation for this, and one practical trap:
-Docker Desktop on macOS does not share `/Applications` or
-`/Library/Developer` by default, so mounting the SDK straight out of Xcode
-fails with `mounts denied`. Stage the headers somewhere under `$HOME` first —
-this is what the 2026-08-26 re-measurement did, and it is a reproducibility
-gap worth closing:
+355 headers: 332 vendored from eleven pinned `apple-oss-distributions` releases
+(all redistributable), 1 produced by running xnu's own published generator,
+4 from `vendor/objc4`, and **19 clean-room headers of ours** in `sdk/local/`.
+Apple's libc++ — 67% of the old surface — is gone entirely: the build uses stock
+LLVM 18 libc++ with three `-D` flags, and `harness/Dockerfile` pins it.
+`sdk/PROVENANCE.md` is the full accounting, including what each clean-room
+header omits versus Apple's.
 
-```sh
-mkdir -p build/sdk/MacOSX.sdk/usr
-cp -R /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/usr/include \
-      build/sdk/MacOSX.sdk/usr/            # 18 MB, and build/ is gitignored
-docker run --rm --platform linux/arm64 -v "$PWD:/work" -w /work \
-    -e OBJC4_SDK=/work/build/sdk/MacOSX.sdk machorun-testbed:24.04 \
-    bash -c 'sh scripts/build.sh all && bash scripts/build_objc4.sh'
-```
+Measured after the switch: **32 objects / 0 failures**, `scripts/objc44.sh`
+**41/44** with the same three failures, `scripts/difftest.sh` unchanged at
+**19 pass / 1 xfail / 1 no-oracle**, and a new `scripts/sdk_abi_probe.sh` whose
+149 lines of struct offsets, `errno` values and `_DefaultRuneLocale` bytes are
+**byte-identical** between Apple's SDK on macOS and ours on Linux.
 
-**Surveyed, 2026-08-26: `docs/SDK_SURVEY.md`.** The dependency is 1,056 SDK
-headers, and it is smaller than it looks. 712 of them are Apple's libc++, and
-objc4 built against stock LLVM 18 libc++ instead scores the same **41/44** with
-a byte-identical `09_objc` (three `-D` flags, no source change). Of the 355
-distinct C/Darwin headers reached across objc4 *and* the fixture corpus, 351
-are obtainable from Apple's own open-source releases — xnu 203, Libc 71,
-libdispatch 20, libpthread 17, cctools 8, libplatform 6, libmalloc 5, libunwind
-2, dyld 2, Libm 1 — and the remaining 4 are pure macro machinery contributing
-**71** macros anything else actually references. Nothing we need is unobtainable.
-The `.tbd` half is also settled: `ld64.lld-18` accepts hand-written tbd-v4
-(one hard requirement, the `...` terminator), and a guest compiled and linked
-entirely on Linux against `.tbd`s generated from our own dylibs runs correctly
-under machorun. This entry stays open until an SDK exists and
-`scripts/build_objc4.sh` stops taking `-isysroot` from Apple.
+Two things the survey got wrong, both found by compiling:
+
+* **`math.h` is a genuine category-(c) header.** The survey headlined that the
+  only-in-Xcode category was empty; it is off by one. Apple's published Libm is
+  a 2002 drop whose `Source/math.h` dispatches to 32-bit `architecture/*/math.h`
+  and `#error`s on `__arm64__`. Clean-roomed from ISO C99 §7.12 instead.
+* **A published header is not an installed header**, and the difference is not
+  always loud. See `sdk-published-vs-installed` below.
+
+### `sdk-published-vs-installed` — a silent-wrongness risk, now guarded
+Apple's header-install step transforms source-release headers, and nothing in a
+published tree does it for us. Two transforms bit while assembling `sdk/`:
+
+1. **`//Begin-Libc` regions.** Libc's own `xcodescripts/headers.sh` deletes
+   them; skip it and `_ctype.h` arrives with `#include "xlocale_private.h"` and
+   28 of 32 objc4 TUs stop dead. `scripts/sdk_stage.sh` reproduces the rule.
+2. **`XNU_PLATFORM_<name>` selection.** xnu's headers carry every Apple
+   product's settings behind `#ifdef`; Apple resolves them with `unifdef`. With
+   none defined, `sys/cdefs.h` leaves `__DARWIN_ONLY_UNIX_CONFORMANCE` undefined
+   and every `__DARWIN_ALIAS`'d libc function gets renamed — 7 `$UNIX2003`
+   symbols nothing exports — **and** `mach/arm/vm_param.h` silently drops
+   `MACH_VM_MAX_ADDRESS_RAW` from 128 TB to the embedded 64 GB value.
+   `sdk/patches/0002-xnu-platform-macosx.patch` selects MacOSX in the header,
+   where it cannot be forgotten on a command line.
+
+The first failed loudly. **The second did not**, and would not have: nothing
+fails to compile, the number is just wrong. That is the risk
+`docs/SDK_SURVEY.md` §6.1 named, and `scripts/sdk_abi_probe.sh` now exists to
+catch its next instance — but the probe only covers what it prints. A field
+offset or constant it does not name can still move silently. Add to it when
+adding to the SDK.
+
+Apple's `unifdef` pass over Libc headers is deliberately *not* reproduced (its
+inputs are build flags we do not have). If that ever stops being harmless, it
+will show up as a compile error or as an `sdk_abi_probe` diff.
+
+### `mach-thread-state`
+`sdk/local/mach/thread_act.h` declares `thread_get_state` and
+`darwin/src/mach.c` does not implement it. objc4's `objc-cache.mm` needs the
+declaration to compile: `_get_pc_for_thread()` reads `ARM_THREAD_STATE64` to
+decide whether a thread is inside a cache-reading function.
+
+Today this costs nothing, and that is measured rather than hoped:
+`_collecting_in_critical()` is unreachable in this configuration, the optimiser
+drops its caller, and the resulting `libobjc.A.dylib` does not import
+`_thread_get_state` at all. `scripts/gen_tbd.sh`'s check 3 re-verifies that on
+every build. A guest that really calls it gets machorun's normal
+undefined-symbol abort naming `_thread_get_state`.
+
+Implementing it means reading another thread's register state, which on Linux is
+`ptrace(PTRACE_GETREGSET)` against a stopped thread — a real capability with
+real permission requirements, not a shim. It stays unimplemented until something
+needs it. `thread_set_state` is not even declared.
 
 ### `isa-va-width` — a silent-corruption risk, not a stub
 *Inherited from `~/objc4-linux/docs/PORT_PLAN.md`'s second-riskiest unknown; see

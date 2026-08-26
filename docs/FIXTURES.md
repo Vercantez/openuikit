@@ -1,7 +1,25 @@
 # The fixture ladder
 
 Twenty-one Mach-O programs (plus two dylibs they load), built once by Apple's
-toolchain on macOS and committed as bytes. Each one is run natively on macOS to record what it does, then run
+toolchain on macOS and committed as bytes.
+
+> **These binaries must keep coming from Xcode, and `sdk/` must never be used to
+> rebuild them.** Since 2026-08-26 this repository can compile and link a Mach-O
+> guest entirely on Linux against its own SDK, which makes rebuilding the corpus
+> *possible* for the first time and no less wrong. The fixtures are the
+> precompiled Darwin binaries the whole project exists to run: their value is
+> that somebody else's linker chose their layout, their fixup format, their
+> import list and their initialiser sections. Relink them with `ld64.lld`
+> against our own `.tbd` stubs and the suite would prove that our linker agrees
+> with our loader, which is not a fact anyone needs.
+> `tests/build_fixtures.sh` refuses to run off Darwin for this reason.
+> `scripts/gen_tbd.sh`'s completeness check depends on it too: the corpus is a
+> meaningful test of whether our stubs are complete only *because* Apple's
+> linker chose those 223 imports.
+>
+> The one program built on both sides is `sdk/tests/abi_probe.c`, and it is
+> deliberately not in `tests/bin` — its entire point is to be compiled twice and
+> diffed. See `sdk/PROVENANCE.md` §5. Each one is run natively on macOS to record what it does, then run
 under `machorun` on Linux/arm64. Same bytes, both sides. Outputs must match
 exactly — stdout, stderr and exit status.
 
