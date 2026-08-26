@@ -52,6 +52,10 @@ scripts/difftest.sh             both of the above, then the scoreboard
 
 scripts/quartz_pixel.sh         the same, for the DRAWING fixtures (n, o, p)
 scripts/quartz_pixel.sh --record  (re-)record their baselines — Darwin only
+
+scripts/stage_swiftcore.sh      stage the cross-built Swift runtime, once
+scripts/swift_gate.sh           the same again, for the SWIFT fixture (q)
+scripts/swift_gate.sh --record  (re-)record its baseline — Darwin only
 ```
 
 ---
@@ -647,6 +651,61 @@ metadata, and `objc_msgSendSuper2`.
 Measured 2026-08-26: all five stage checksums identical, PNG byte-identical
 (11,909 bytes), exit 0 / 0.
 
+### (q) `18_swift_class` — Swift, and the rung that is graded twice
+`tests/src/18_swift_class.swift` · chained · `scripts/swift_gate.sh`
+
+The first fixture whose runtime is the **Swift standard library** rather than
+libSystem, libobjc or libquartz. It is deliberately narrow. Everything in it
+exists to reach the Swift runtime's per-thread context, because that is the
+thing machorun could not do:
+
+| mechanism | why it is here |
+|---|---|
+| a `final class` with stored properties and a method | class metadata is instantiated lazily on first use, and that path goes through `SwiftTLSContext` |
+| a generic function over a user protocol | the witness table for each concrete conformance is built on demand, same path |
+| a generic constrained by `Comparable` | forces a conformance lookup the program did not emit itself |
+| protocol existentials (`[Shape]`) | the boxed form, as opposed to a witness table passed at the call site |
+| a three-level class hierarchy with overrides | vtable dispatch, `Animal` → `Dog` → `Puppy` |
+| `is` downcasts | `swift_dynamicCast` against the metadata built above |
+| an array of class instances, then `removeAll()` | ARC traffic through the path objc4 routes to `swift_retain` / `swift_release` |
+
+**What used to happen.** Every one of those aborted before `main` with
+`tls_init_once() failed to set destructor`. `SwiftTLSContext::get()` adopts
+pthread key **100** — Apple's reserved `__PTK_FRAMEWORK_SWIFT_KEY0` — with
+`pthread_key_init_np`, and libSystem bound-checked that key against 64. Behind
+it sat a second bug that only appeared once the first was fixed: libSystem's
+own `swift_release` diagnostic stub won the flat-namespace lookup against the
+real one. `docs/UNIMPLEMENTED.md#swift-interop` has both.
+
+**It is graded twice, on purpose.** The gate links the same object file in both
+dylib orders — `-lSystem` first and `-lswiftCore` first — and requires both to
+pass. The second bug was invisible in the `-lswiftCore`-first order, which is
+exactly how it survived long enough to be written down as a load-bearing
+workaround. One link order would have graded a fixed loader and a broken one
+the same.
+
+**Determinism.** No time, no random, no locale-dependent formatting, no address
+printed, and nothing iterates a `Set` or `Dictionary` — every collection walked
+is an `Array` in insertion order.
+
+**The one deviation from the corpus rule**, stated because it weakens what a
+pass means. Every other fixture is a committed Mach-O built by Apple's
+toolchain, and both sides run the same bytes. This one cannot be yet: our
+cross-built libswiftCore imports 29 symbols machorun's userland does not carry,
+they live in `libswiftcompat.dylib`, and a guest must link that explicitly — so
+an Apple-built Swift binary fails to load here (measured;
+`docs/UNIMPLEMENTED.md#swift-compat`). Until that closes, the two sides run two
+binaries built from one source, and what is compared is the program's behaviour
+rather than the loader's handling of one specific set of bytes.
+
+**Loader must implement:** everything at (i), plus a Darwin pthread-key
+namespace in which reserved keys are slot indices addressed identically by
+`pthread_getspecific` and `_pthread_getspecific_direct`, `pthread_key_init_np`
+over the full reserved block, and thread-exit destructors for it.
+
+Measured 2026-08-26: stdout byte-identical (318 bytes), stderr empty on both
+sides, exit 0 / 0, in both link orders.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.
@@ -721,6 +780,40 @@ y 137..160` — the ring, and nothing else.
 > `both` mode does not. Re-recorded from the macOS oracle through `--record`;
 > the PNG bytes did not change.
 
+### …and for rung (q), which is graded by behaviour rather than by bytes
+
+`scripts/swift_gate.sh` grades `18_swift_class`. It is a third runner for one
+reason and it is not the artefact: the fixture cannot be a committed
+Apple-built Mach-O, because our libswiftCore's compat gap means an Apple-built
+Swift binary does not load here at all (`docs/UNIMPLEMENTED.md#swift-compat`).
+So the gate BUILDS both sides from one source — Apple's `swiftc` for the
+oracle, the swift.org Linux toolchain cross-targeting `arm64-apple-macos` for
+the machorun side — and compares what the two programs do.
+
+Rules 1, 2 and 4 hold unchanged: `--record` refuses to run off Darwin, the
+oracle is rebuilt and re-executed every run rather than trusted, and an oracle
+that has moved is `BASELINE-DRIFT` and can never be scored `PASS`. Rule 3 holds
+too — `tests/expected` is bind-mounted read-only over `/work`, same as the
+other two runners.
+
+Two things it does that the others do not:
+
+* **It links the fixture twice**, in both dylib orders, and requires both to
+  pass. That is not thoroughness for its own sake: the `swift_release`-shadowing
+  bug was invisible in the `-lswiftCore`-first order, so a single-order gate
+  would have scored a broken loader green. Verified by running the gate against
+  the pre-fix loader: `system-first FAIL exit 71`, `swiftcore-first PASS`.
+* **It suppresses the implicit `_Concurrency` and `_StringProcessing` imports
+  on both sides.** Swift imports those into every file by default; the stdlib
+  we cross-build is core-only and has neither. Suppressing them only on the
+  Linux side would let the oracle quietly use more standard library than the
+  thing it is grading.
+
+Verified 2026-08-26 by building the gate's own failure modes: against the
+pre-fix loader both orders `FAIL exit 134` at `tls_init_once`; against a loader
+with only the TSD fix, `system-first FAIL exit 71` and `swiftcore-first PASS`;
+against the fixed loader, both `PASS`.
+
 ## Rebuilding
 
 ```
@@ -732,6 +825,10 @@ tests/build_fixtures.sh 15_quartz    also builds the macOS oracle libquartz
 tests/build_fixtures.sh 17_objc_shapes   likewise (rungs n, o and p all need it)
 scripts/quartz_pixel.sh --record     re-record ALL the drawing fixtures
 scripts/quartz_pixel.sh --record 17_objc_shapes   just one (macOS only; PNG too)
+
+scripts/stage_swiftcore.sh           stage the cross-built Swift runtime (rung q)
+scripts/swift_gate.sh --record       re-record rung (q)'s baseline (macOS only)
+scripts/swift_gate.sh                run both sides and compare
 ```
 
 Rebuilding produces different bytes (fresh `LC_UUID` and ad-hoc code

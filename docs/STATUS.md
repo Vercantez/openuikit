@@ -810,6 +810,39 @@ one a precompiled Darwin binary carries. Fixing the stdlib would not fix that.
 **So: OpenUIKit is not part of this milestone and cannot be, today.** What runs
 is `~/quartz` — the C++ engine OpenUIKit itself sits on — and nothing above it.
 
+#### Update, 2026-08-26 — the second bullet happened
+
+The option listed above as "**could** be fixed by cross-building the Swift
+standard library and runtime for `arm64-apple-macos` on Linux" was taken, and it
+worked. `~/swiftcore-macho` built `libswiftCore.dylib` — Mach-O arm64, 30,723
+exports — from swift.org 6.2.4 source on a Linux host, with **no Xcode and no
+Apple toolchain**, at a cost of 4 patches, 4 clean-room headers and a 29-symbol
+compatibility dylib. Its `docs/BUILD_LOG.md` is the accounting.
+
+Two things this section got wrong are worth naming, because both are why the
+option looked more expensive than it was:
+
+* **"and then `libswiftCore`'s own demands on … Foundation"** — there are none.
+  `stdlib/public/core/CMakeLists.txt` sets `swift_core_framework_depends` empty;
+  the built dylib's only `LC_LOAD_DYLIB`s are libSystem, libobjc and libc++.
+  Foundation is a *compile-time declarations* problem for the stdlib build, not
+  a link-time dependency, and a ~130-line clean-room umbrella closed it.
+* **"That needs a Darwin SDK, which this repository deliberately does not
+  have"** — `sdk/` turned out to be most of one. The staged sysroot is
+  machorun's own `sdk/usr` plus Apple's *open-source* objc4 and CoreFoundation
+  headers plus LLVM 18's libc++, and §11.6's self-hosting property survives it:
+  no Apple binary, no `.tbd` of Apple's, nothing from `/Applications`.
+
+Rung (q) (`docs/FIXTURES.md`, `scripts/swift_gate.sh`) now runs Swift classes,
+generics, protocol existentials, dynamic casts and ARC under machorun with
+output byte-identical to macOS, after two loader fixes
+(`docs/UNIMPLEMENTED.md#swift-interop`).
+
+**The rest of this section stands.** The `-fobjc-runtime=gnustep-2.2` mismatch
+in OpenUIKit's Objective-C facade is untouched by any of it, and Foundation —
+the thing OpenUIKit actually imports — remains unbuilt. What changed is that the
+Swift *runtime* is no longer on the list of blockers.
+
 ### 11.6 Self-hosting still holds, with quartz in the tree
 
 - The test-bed image was searched: **no `MacOSX*.sdk`, no `.tbd`, no

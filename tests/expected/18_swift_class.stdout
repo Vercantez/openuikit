@@ -1,0 +1,12 @@
+class: clicks=6 step=3
+generic square:   sides=4 area=50
+generic triangle: sides=3 area=36
+generic largest:  17 pear
+existential sides: [4, 3]
+dispatch: thing says ...
+dispatch: rex says woof
+dispatch: bit says yip
+dynamic casts: dogs=2 puppy=true
+arc: ["c1=1", "c2=2", "c3=3", "c4=4"]
+arc: released, remaining=0
+done

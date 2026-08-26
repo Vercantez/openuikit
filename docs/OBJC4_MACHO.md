@@ -417,6 +417,40 @@ own dyld protocol, and it agrees with the real runtime on 41 of 44 measured
 behaviours. What remains is the standard library and Foundation — and those were
 always the larger problem.
 
+### Update, 2026-08-26 — items 1, 2 and 3 are closed
+
+The list above is kept as written, because being wrong about (1) in the
+optimistic direction is part of the record. All three of the first items fell
+within a day of each other.
+
+**(1) is done, and was smaller than billed.** `~/swiftcore-macho` cross-built
+`libswiftCore.dylib` — Mach-O arm64, 30,723 exports — on a Linux host from
+swift.org 6.2.4 source, with no Xcode. What made it tractable is the thing this
+section did not know: `stdlib/public/core/CMakeLists.txt` sets
+`swift_core_framework_depends` empty, so **libswiftCore links no Foundation and
+no CoreFoundation at all**. Its only `LC_LOAD_DYLIB`s are libSystem, libobjc and
+libc++. Item 5 is therefore not on the critical path for the *stdlib* — it is on
+the critical path for Foundation, which is a later rung than this section
+assumed.
+
+**(2) is done**, and the `-delay_init` note turned out to be the whole story.
+The abort could not simply "become the stdlib's": machorun's flat lookup returns
+the first definition in load order and libSystem loads before libswiftCore, so
+the abort shadowed the real implementation and only a `-lswiftCore`-first link
+line worked. The definitions moved into the loader, which is consulted only
+after every image has been searched, so no link order can shadow the real one.
+`docs/UNIMPLEMENTED.md#swift-interop` has the reasoning.
+
+**(3) is done**: `_OBJC_CLASS_$__TtCs12_SwiftObject` and its metaclass are
+exported by the cross-built stdlib.
+
+What items 1–3 named has been replaced by two smaller, precisely-known things:
+the 29-symbol compat gap (`docs/UNIMPLEMENTED.md#swift-compat`), which is why an
+*Apple-built* Swift binary still does not load here; and item 4, compact unwind,
+unchanged. Rung (q) — `scripts/swift_gate.sh` — runs Swift classes, generics,
+protocol existentials, dynamic casts and ARC under the loader with output
+byte-identical to macOS.
+
 ---
 
 ## 9. Inherited from the retired ELF port
