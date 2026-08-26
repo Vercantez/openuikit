@@ -20,3 +20,4 @@ sdk/usr/lib/
 # scripts/stress_unfair_lock.sh's scratch capture, written next to the fixtures
 # it runs so the loop does not need a temp dir. Regenerated every run.
 tests/objc44/.stress.stderr
+tests/bin/.stress.stderr
