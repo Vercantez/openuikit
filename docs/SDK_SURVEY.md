@@ -87,7 +87,7 @@ and the `build/objc4-macho-gen/include/objc/` symlink tree the build script crea
 The two halves of the SDK surface behave completely differently and are treated
 separately from here on:
 
-* **`usr/include/c++/v1/**` — 734 headers, 67% of the surface.** Apple's libc++.
+* **`usr/include/c++/v1/` — 734 headers, 67% of the surface.** Apple's libc++.
   Not Darwin at all. §2.5 measures replacing it.
 * **the other 355.** The actual Darwin C surface. §2.1–§2.4 classify it.
 
