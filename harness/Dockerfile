@@ -7,7 +7,7 @@
 # machorun's harness/Dockerfile makes, and for the same reason.
 FROM swift:6.2-noble
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        lld-18 llvm-18 clang-18 file xxd binutils \
+        lld-18 llvm-18 clang-18 libc++-18-dev file xxd binutils \
     && rm -rf /var/lib/apt/lists/*
 RUN ln -sf /usr/bin/ld64.lld-18 /usr/bin/ld64.lld
 WORKDIR /w
