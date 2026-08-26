@@ -1,0 +1,1 @@
+@objc public class NotAnNSObject { }
