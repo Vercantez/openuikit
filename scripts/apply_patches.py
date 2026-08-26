@@ -160,4 +160,30 @@ edit("stdlib/cmake/modules/SwiftSource.cmake",
     endif()
 """, "prebuilt swiftc when swift-in-swift is off")
 
+# ---------------------------------------------------------------------------
+# 5. Register images through objc_addLoadImageFunc + getsectiondata rather than
+#    objc_addLoadImageFunc2 + _dyld_lookup_section_info.
+#
+# Optional (SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1 in the environment). machorun's
+# objc4 defines OBJC_ADDLOADIMAGEFUNC2_DEFINED, so Swift takes the newer path
+# and asks _dyld_lookup_section_info for each section's location. machorun's
+# libSystem exports that symbol but its answer is not the one Swift's MachO
+# image inspector expects, and the runtime faults inside
+# addImageDynamicReplacementBlockCallback while walking the returned buffer.
+# The older path derives the same sections from the Mach-O header itself with
+# getsectiondata, which needs nothing from the loader beyond a mapped image.
+# ---------------------------------------------------------------------------
+import os
+if os.environ.get("SWIFTCORE_MACHO_LEGACY_IMAGE_REG") == "1":
+    edit("stdlib/public/runtime/ImageInspectionMachO.cpp",
+"""#if __has_include(<objc/objc-internal.h>) && __has_include(<mach-o/dyld_priv.h>)
+#include <mach-o/dyld_priv.h>
+#include <objc/objc-internal.h>""",
+"""#if __has_include(<objc/objc-internal.h>) && __has_include(<mach-o/dyld_priv.h>)
+#include <mach-o/dyld_priv.h>
+#include <objc/objc-internal.h>
+// swiftcore-macho: force the getsectiondata path (see patches rationale #5).
+#undef OBJC_ADDLOADIMAGEFUNC2_DEFINED
+#define OBJC_ADDLOADIMAGEFUNC2_DEFINED 0""", "legacy image registration path")
+
 print("patches applied")

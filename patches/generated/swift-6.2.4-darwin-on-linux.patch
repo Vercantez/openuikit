@@ -1,0 +1,90 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4cbfb84..9f281d47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1204,6 +1204,14 @@ if("${SWIFT_HOST_VARIANT_SDK}" STREQUAL "LINUX")
+   set(SWIFT_PRIMARY_VARIANT_SDK_default  "${SWIFT_HOST_VARIANT_SDK}")
+   set(SWIFT_PRIMARY_VARIANT_ARCH_default "${SWIFT_HOST_VARIANT_ARCH}")
+ 
++  # swiftcore-macho: cross-build the Darwin stdlib from a Linux host.
++  is_sdk_requested(OSX swift_build_osx_from_linux)
++  if(swift_build_osx_from_linux)
++    include(DarwinSDKs)
++    set(SWIFT_PRIMARY_VARIANT_SDK_default  "OSX")
++    list(GET SWIFT_SDK_OSX_ARCHITECTURES 0 SWIFT_PRIMARY_VARIANT_ARCH_default)
++  endif()
++
+ elseif("${SWIFT_HOST_VARIANT_SDK}" STREQUAL "FREEBSD")
+ 
+   set(SWIFT_HOST_VARIANT "freebsd" CACHE STRING
+diff --git a/cmake/modules/SwiftConfigureSDK.cmake b/cmake/modules/SwiftConfigureSDK.cmake
+index c7d40355..112fc3ad 100644
+--- a/cmake/modules/SwiftConfigureSDK.cmake
++++ b/cmake/modules/SwiftConfigureSDK.cmake
+@@ -199,6 +199,16 @@ macro(configure_sdk_darwin
+       OUTPUT_VARIABLE SWIFT_SDK_${prefix}_BUILD_NUMBER
+       OUTPUT_STRIP_TRAILING_WHITESPACE)
+ 
++  # swiftcore-macho: `defaults`/`xcodebuild` do not exist off Darwin. Fall back
++  # to the SDK's own SDKSettings.json rather than proceeding with empty versions.
++  if(NOT SWIFT_SDK_${prefix}_VERSION)
++    file(READ "${SWIFT_SDK_${prefix}_PATH}/SDKSettings.json" _sdksettings)
++    string(JSON SWIFT_SDK_${prefix}_VERSION GET "${_sdksettings}" "Version")
++  endif()
++  if(NOT SWIFT_SDK_${prefix}_BUILD_NUMBER)
++    set(SWIFT_SDK_${prefix}_BUILD_NUMBER "${SWIFT_SDK_${prefix}_VERSION}")
++  endif()
++
+   # Set other variables.
+   set(SWIFT_SDK_${prefix}_NAME "${name}")
+   set(SWIFT_SDK_${prefix}_DEPLOYMENT_VERSION "${deployment_version}")
+diff --git a/stdlib/cmake/modules/SwiftSource.cmake b/stdlib/cmake/modules/SwiftSource.cmake
+index 8ec33e9a..a539b01f 100644
+--- a/stdlib/cmake/modules/SwiftSource.cmake
++++ b/stdlib/cmake/modules/SwiftSource.cmake
+@@ -873,7 +873,13 @@ function(_compile_swift_files
+     # This is only for bootstrapping purposes. The just-built Swift is very
+     # limited and only built for the builder to build the next stages with
+     # hosttools.
+-    set(swift_compiler_tool "${Swift_BINARY_DIR}/bin/swiftc")
++    if(SWIFT_PREBUILT_SWIFT)
++      # swiftcore-macho: not bootstrapping — a complete toolchain was supplied
++      # and no compiler is being built into this tree.
++      set(swift_compiler_tool "${SWIFT_NATIVE_SWIFT_TOOLS_PATH}/swiftc${HOST_EXECUTABLE_SUFFIX}")
++    else()
++      set(swift_compiler_tool "${Swift_BINARY_DIR}/bin/swiftc")
++    endif()
+   elseif(SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER)
+     if(SWIFT_PREBUILT_SWIFT)
+       set(swift_compiler_tool "${SWIFT_NATIVE_SWIFT_TOOLS_PATH}/swiftc${HOST_EXECUTABLE_SUFFIX}")
+diff --git a/stdlib/public/runtime/ImageInspectionMachO.cpp b/stdlib/public/runtime/ImageInspectionMachO.cpp
+index a028585c..80820ba6 100644
+--- a/stdlib/public/runtime/ImageInspectionMachO.cpp
++++ b/stdlib/public/runtime/ImageInspectionMachO.cpp
+@@ -35,6 +35,9 @@
+ #if __has_include(<objc/objc-internal.h>) && __has_include(<mach-o/dyld_priv.h>)
+ #include <mach-o/dyld_priv.h>
+ #include <objc/objc-internal.h>
++// swiftcore-macho: force the getsectiondata path (see patches rationale #5).
++#undef OBJC_ADDLOADIMAGEFUNC2_DEFINED
++#define OBJC_ADDLOADIMAGEFUNC2_DEFINED 0
+ #else
+ 
+ // Bring our own definition of enum _dyld_section_location_kind and some of its
+@@ -67,11 +70,16 @@ enum _dyld_section_location_kind {
+ // still run when it's not present at runtime. Note that we don't have to check
+ // for its presence at runtime, as it's guaranteed to be available if we get
+ // the callbacks from objc_addLoadImageFunc2.
++#ifndef LLVM_ATTRIBUTE_WEAK
++#define LLVM_ATTRIBUTE_WEAK __attribute__((weak))
++#endif
++extern "C" {
+ LLVM_ATTRIBUTE_WEAK
+ struct _dyld_section_info_result
+ _dyld_lookup_section_info(const struct mach_header *mh,
+                           _dyld_section_location_info_t locationHandle,
+                           enum _dyld_section_location_kind kind);
++}
+ #else
+ // If we don't have objc_addLoadImageFunc2, fall back to objc_addLoadImageFunc.
+ // Use a #define so we don't have to conditionalize the calling code below.
