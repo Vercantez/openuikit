@@ -419,6 +419,57 @@ EXPORT void perror(const char *what)
     glibc_fflush(f);
 }
 
+/* __assert_rtn -- what Darwin's <assert.h> expands to when NDEBUG is absent.
+ *
+ * The message text is part of the observable behaviour: a guest's stderr is
+ * compared byte-for-byte against macOS, so this reproduces Libc's exact
+ * wording, including the "(expr)" parentheses, the trailing full stop, and the
+ * two forms (with and without a function name -- Libc omits the clause when
+ * __func__ is unavailable, which is what a non-GNUC assert() does).
+ *
+ * It exists because sdk/usr/include/assert.h is Apple's real header and its
+ * non-NDEBUG branch calls this. Everything in this repository compiles with
+ * -DNDEBUG, so nothing here reaches it; a guest that does not is exactly the
+ * caller this is for. */
+static void assert_puts(const char *s)
+{
+    if (s) glibc_fwrite(s, 1, glibc_strlen(s), glibc_stderr);
+}
+
+static void assert_putint(int v)
+{
+    char buf[16];
+    int n = 0;
+    unsigned u = v < 0 ? 0u - (unsigned)v : (unsigned)v;
+    if (v < 0) glibc_fwrite("-", 1, 1, glibc_stderr);
+    do { buf[n++] = (char)('0' + (u % 10)); u /= 10; } while (u);
+    while (n) { n--; glibc_fwrite(&buf[n], 1, 1, glibc_stderr); }
+}
+
+EXPORT __attribute__((noreturn))
+void __assert_rtn(const char *func, const char *file, int line, const char *expr)
+{
+    assert_puts("Assertion failed: (");
+    assert_puts(expr ? expr : "");
+    assert_puts("), ");
+    if (func) { assert_puts("function "); assert_puts(func); assert_puts(", "); }
+    assert_puts("file ");
+    assert_puts(file ? file : "");
+    assert_puts(", line ");
+    assert_putint(line);
+    assert_puts(".\n");
+    glibc_fflush(glibc_stderr);
+    glibc_abort();
+    __builtin_unreachable();
+}
+
+/* The pre-UNIX03 spelling, still referenced by <assert.h>'s !__GNUC__ branch. */
+EXPORT __attribute__((noreturn))
+void __assert(const char *expr, const char *file, int line)
+{
+    __assert_rtn((const char *)0, file, line, expr);
+}
+
 /* ------------------------------------------------------------ BSD stringery */
 
 EXPORT void  bzero(void *d, size_t n)                  { glibc_memset(d, 0, n); }
@@ -426,6 +477,28 @@ EXPORT void  bcopy(const void *s, void *d, size_t n)   { glibc_memmove(d, s, n);
 EXPORT int   bcmp(const void *a, const void *b, size_t n) { return glibc_memcmp(a, b, n); }
 EXPORT char *index(const char *s, int c)               { return glibc_strchr(s, c); }
 EXPORT char *rindex(const char *s, int c)              { return glibc_strrchr(s, c); }
+
+/* memset_pattern4/8/16 -- Darwin-only, and glibc has no equivalent to forward
+ * to, so this is one of the few places where the userland implements rather
+ * than translates. clang's loop idiom recogniser EMITS calls to these for a
+ * plain `for (i...) dst[i] = c;` over a non-byte type on an Apple target, so a
+ * guest can depend on them without its source ever naming them: vendored
+ * quartz reaches _memset_pattern16 from stb_image_write's row filter.
+ *
+ * Darwin's contract (man memset_pattern): copy the pattern repeatedly over
+ * len bytes, TRUNCATING the final copy if len is not a multiple of the pattern
+ * size. len is a byte count, not a repeat count. */
+static void mr_memset_pattern(void *b, const void *pat, size_t patlen, size_t len)
+{
+    unsigned char *d = (unsigned char *)b;
+    const unsigned char *p = (const unsigned char *)pat;
+    while (len >= patlen) { glibc_memcpy(d, p, patlen); d += patlen; len -= patlen; }
+    if (len) glibc_memcpy(d, p, len);
+}
+
+EXPORT void memset_pattern4(void *b, const void *p, size_t len)  { mr_memset_pattern(b, p, 4, len); }
+EXPORT void memset_pattern8(void *b, const void *p, size_t len)  { mr_memset_pattern(b, p, 8, len); }
+EXPORT void memset_pattern16(void *b, const void *p, size_t len) { mr_memset_pattern(b, p, 16, len); }
 
 /* ------------------------------------------------------------------ clocks */
 

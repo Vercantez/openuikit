@@ -10,6 +10,7 @@ dd744708e8d73f7e8867ec6cb279ac5ff144f749d9a9e556aca730826d5b7406  libunwind:libu
 4f5a5415ad8461fe0add7dc1a4a34ba75718b839697ca6df7766e4008643288a  Libc:include/__wctype.h  __wctype.h
 c5af9f918506bc8ed9eaa3b9e895bacf4566d12086a22fae13308497b9c2054b  Libc:include/__xlocale.h  __xlocale.h
 ad37627745fd324a640fa93c5f9909250c036d577457090a1e72ee939cd7fc7b  Libc:include/_abort.h  _abort.h
+a448dbcce05868865553f523ccfcd059eee4dad6fb2f066addff48c4778d83d6  Libc:include/_assert.h  _assert.h
 3d9f049f5fac54421170fa34a845b244dce7b83a3c68ddd589909df759854700  Libc:include/_bounds.h  _bounds.h
 73ac20b763ff6e1c328563bbd125e3eaa78a367eb92c867626a047ae4ab391b3  Libc:include/_ctermid.h  _ctermid.h
 3fb6599bf0aaaf4cddeb3fa55dc0d55850d0985cc953cc20c1a7d2d82481d596  Libc:include/_ctype.h  _ctype.h

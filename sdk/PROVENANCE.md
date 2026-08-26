@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        355 rows: header path -> where it comes from
+  MANIFEST.tsv        356 rows: header path -> where it comes from
   SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
   local/              19 clean-room headers of ours (4,396 lines)
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        355 headers, 3.1 MB -- COMMITTED
+  usr/include/        356 headers, 3.1 MB -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -30,7 +30,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | source | headers | licence | redistributable |
 |---|---:|---|---|
 | **xnu** | 202 | APSL 2.0 | yes |
-| **Libc** | 70 | APSL 2.0 | yes |
+| **Libc** | 71 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
 | **libpthread** | 17 | APSL 2.0 | yes |
 | **libplatform** | 6 | APSL 2.0 | yes |
@@ -42,10 +42,45 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
 | **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **355** | | |
+| | **356** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
+
+### The 356th header, and the shape of hole it was
+
+`_assert.h` was added on 2026-08-26. It is worth a paragraph because it is an
+example of the closure being measured against **one** consumer and therefore
+being complete only for that consumer.
+
+`sdk/usr/include/assert.h` is Apple's real Libc header, and its `NDEBUG` branch
+reads:
+
+```c
+#ifdef NDEBUG
+#define	assert(e)	((void)0)
+#else
+#include <_assert.h>
+```
+
+`vendor/objc4` is compiled `-DNDEBUG`, so nothing in this repository had ever
+taken the second branch: `assert.h` was staged, its own `#include` dangled, and
+no build noticed. `vendor/quartz` compiles `third_party/stb_*.h`, which include
+`<assert.h>` unconditionally, and three translation units failed with
+`'_assert.h' file not found, did you mean 'assert.h'?`.
+
+Adding the row is the whole fix (`Libc:include/_assert.h`, same pinned tag; the
+restage changed exactly one line of `CHECKSUMS.sha256` and added exactly one
+file). The transferable part is the lesson: **a staged header set is only closed
+over the preprocessor branches its consumers actually take.** A second consumer
+with different `-D` flags is the cheapest way to find the next one, which is an
+argument for hosting more than one library here rather than a cost of doing so.
+
+The header alone would only have moved the failure: the non-`NDEBUG` branch
+calls `__assert_rtn`, which `libSystem.B.dylib` did not export either. It does
+now (`darwin/src/posix.c`), reproducing Libc's exact message text — a guest's
+stderr is compared byte-for-byte against macOS, so "Assertion failed: (e),
+function f, file x.c, line 12." is an ABI string and not a nicety.
 
 **No header in this tree was copied from Apple's Xcode SDK.** A staged copy of
 MacOSX15.4's `usr/include` exists at `build/sdk/` on the machine this was
@@ -372,18 +407,18 @@ failure rather than a mystery six months from now.
 > just written against a second fetch of the same bytes. Measured: poison one
 > row, run `--verify` on a cold cache, and it printed `all upstream files match
 > their pinned tag` while silently deleting the poisoned row — a moved tag would
-> have been recorded as the new truth. It now force-re-fetches all 332 files,
+> have been recorded as the new truth. It now force-re-fetches all 333 files,
 > treats the committed record as read-only, and dies with a diff. Re-tested both
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **332 of 355** files: the 19 clean-room and 4 objc4 headers live in this
+> **333 of 356** files: the 19 clean-room and 4 objc4 headers live in this
 > repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
 > of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 355 headers
+> measured 2026-08-26, a restage of a clean checkout reproduces all 356 headers
 > byte-for-byte.
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on

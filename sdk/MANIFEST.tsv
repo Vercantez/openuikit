@@ -16,7 +16,7 @@
 #                   published source is a stale snapshot).  sdk/PROVENANCE.md
 #                   says what each one omits versus Apple's.
 #
-# The set of 355 paths is the MEASURED dependency closure of everything this
+# The set of 356 paths is the MEASURED dependency closure of everything this
 # project compiles -- see docs/SDK_SURVEY.md §1.  It is a manifest and not a
 # `cp -R` on purpose: whole upstream trees carry kernel-side headers with the
 # same names and different meanings.
@@ -27,6 +27,7 @@ __libunwind_config.h	libunwind:libunwind/include/__libunwind_config.h
 __wctype.h	Libc:include/__wctype.h
 __xlocale.h	Libc:include/__xlocale.h
 _abort.h	Libc:include/_abort.h
+_assert.h	Libc:include/_assert.h
 _bounds.h	Libc:include/_bounds.h
 _ctermid.h	Libc:include/_ctermid.h
 _ctype.h	Libc:include/_ctype.h
