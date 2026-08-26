@@ -187,6 +187,12 @@ ensure_pngdiff() {
     return 1
 }
 
+# bytes_of <path> -- size, or "-" if it is not there. `wc -c < missing` fails in
+# the SHELL, before wc runs, so a 2>/dev/null on wc does not suppress it: the run
+# that most needs a clean report (no PNG was produced) was the one that got a
+# bash error interleaved into the table.
+bytes_of() { [ -f "$1" ] && wc -c < "$1" | tr -d ' ' || printf '%s' '-'; }
+
 show_stdout_diff() { # show_stdout_diff <ref-prefix> <act-prefix>
     if cmp -s "$1.stdout" "$2.stdout"; then
         printf '    %-20s %sidentical%s\n' "stage checksums" "$C_GRN" "$C_RESET"
@@ -233,7 +239,7 @@ both|linux)
         if [ "$MODE" = both ]; then
             printf '    %-20s exit=%s  png=%s bytes\n' "oracle" \
                 "$(cat "$ACT/macos/$id.exit" 2>/dev/null)" \
-                "$(wc -c < "$ACT/macos/$id.png" 2>/dev/null | tr -d ' ')"
+                "$(bytes_of "$ACT/macos/$id.png")"
             # The oracle must still reproduce the committed baseline. This is
             # the check that says "macOS itself has not moved under us", and a
             # fixture whose oracle has moved can never be scored PASS in this
@@ -270,7 +276,7 @@ both|linux)
             continue
         fi
         printf '    %-20s exit=%s  png=%s bytes\n' "linux" "$(cat "$A.exit")" \
-            "$(wc -c < "$A.png" 2>/dev/null | tr -d ' ')"
+            "$(bytes_of "$A.png")"
 
         bad=0
         show_stdout_diff "$REF" "$A" || bad=1
