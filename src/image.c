@@ -1,0 +1,396 @@
+/* image.c -- open, slice, parse and register one Mach-O image.
+ *
+ * Parsing happens over a read-only whole-file mapping (im->raw) so that every
+ * file offset in the load commands can be followed directly, including the
+ * __LINKEDIT blobs. Execution happens over the segment mappings created by
+ * map.c. The two views are deliberately separate: the parse view is bounds
+ * checked, the execution view is not (it is the guest's own memory).
+ */
+#define _GNU_SOURCE
+#include "machorun.h"
+
+#include <fcntl.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+/* ------------------------------------------------------------- accessors */
+
+const void *mr_file_at(const mr_image *im, uint64_t off, uint64_t len, const char *what)
+{
+    uint64_t base = im->slice_off;
+    if (off > im->raw_len || len > im->raw_len - off ||
+        base > im->raw_len || off > im->raw_len - base ||
+        base + off + len > im->raw_len)
+        mr_die("%s: %s at file offset %llu+%llu is outside the file (%zu bytes)",
+               im->path, what, (unsigned long long)off, (unsigned long long)len, im->raw_len);
+    return im->raw + base + off;
+}
+
+const mr_segment *mr_image_segment(const mr_image *im, const char *name)
+{
+    for (int i = 0; i < im->nsegs; i++)
+        if (strcmp(im->segs[i].name, name) == 0) return &im->segs[i];
+    return NULL;
+}
+
+const struct section_64 *mr_image_section(const mr_image *im, const char *seg, const char *sect)
+{
+    for (int i = 0; i < im->nsegs; i++) {
+        const mr_segment *s = &im->segs[i];
+        if (seg && strncmp(s->name, seg, 16) != 0) continue;
+        for (uint32_t j = 0; j < s->nsects; j++)
+            if (strncmp(s->sects[j].sectname, sect, 16) == 0) return &s->sects[j];
+    }
+    return NULL;
+}
+
+mr_image *mr_image_find_loaded(const char *key)
+{
+    for (int i = 0; i < MR.nimages; i++) {
+        mr_image *im = MR.images[i];
+        if (im->install_name && strcmp(im->install_name, key) == 0) return im;
+        if (strcmp(im->path, key) == 0) return im;
+    }
+    return NULL;
+}
+
+/* ---------------------------------------------------------- path search */
+
+/* Expand one @-prefixed or plain path against a loader image. Returns a
+ * malloc'd candidate path, or NULL if the prefix does not apply. */
+static char *expand_at(const char *p, const mr_image *loader)
+{
+    if (strncmp(p, "@executable_path/", 17) == 0)
+        return mr_join(MR.exec_dir, p + 17);
+    if (strncmp(p, "@loader_path/", 13) == 0)
+        return mr_join(loader ? loader->dir : MR.exec_dir, p + 13);
+    if (strcmp(p, "@executable_path") == 0) return mr_xstrdup(MR.exec_dir);
+    if (strcmp(p, "@loader_path") == 0)
+        return mr_xstrdup(loader ? loader->dir : MR.exec_dir);
+    return NULL;
+}
+
+#define MAX_TRIED 32
+
+static char *resolve_dylib_path(const char *want, mr_image *loader,
+                                char **tried, int *ntried, int *is_runtime)
+{
+    char *cand;
+    *is_runtime = 0;
+
+    if (strncmp(want, "@rpath/", 7) == 0) {
+        const char *tail = want + 7;
+        /* LC_RPATHs of the loading image first, then of the main executable. */
+        for (int pass = 0; pass < 2; pass++) {
+            mr_image *src = pass == 0 ? loader : MR.main_image;
+            if (!src || (pass == 1 && src == loader)) continue;
+            for (int i = 0; i < src->nrpaths; i++) {
+                char *rp = expand_at(src->rpaths[i], src);
+                char *base = rp ? rp : mr_xstrdup(src->rpaths[i]);
+                cand = mr_join(base, tail);
+                free(base);
+                if (mr_file_exists(cand)) return cand;
+                if (*ntried < MAX_TRIED) tried[(*ntried)++] = cand; else free(cand);
+            }
+        }
+        return NULL;
+    }
+
+    if ((cand = expand_at(want, loader)) != NULL) {
+        if (mr_file_exists(cand)) return cand;
+        if (*ntried < MAX_TRIED) tried[(*ntried)++] = cand; else free(cand);
+        return NULL;
+    }
+
+    if (want[0] == '/') {
+        /* A Darwin absolute path. The prefix map is the project's core
+         * mechanism: /usr/lib/libSystem.B.dylib is not a file on Linux, and
+         * measured, not a file on macOS either -- it lives in the dyld shared
+         * cache. So there is nothing to fall back to; it is our tree or an
+         * error naming the path. */
+        *is_runtime = 1;
+        if (MR.darwin_root) {
+            cand = mr_join(MR.darwin_root, want);
+            if (mr_file_exists(cand)) return cand;
+            if (*ntried < MAX_TRIED) tried[(*ntried)++] = cand; else free(cand);
+        }
+        *is_runtime = 0;
+        if (mr_file_exists(want)) return mr_xstrdup(want);
+        if (*ntried < MAX_TRIED) tried[(*ntried)++] = mr_xstrdup(want);
+        return NULL;
+    }
+
+    /* Relative: against the loader's directory, then the cwd. */
+    cand = mr_join(loader ? loader->dir : MR.exec_dir, want);
+    if (mr_file_exists(cand)) return cand;
+    if (*ntried < MAX_TRIED) tried[(*ntried)++] = cand; else free(cand);
+    if (mr_file_exists(want)) return mr_xstrdup(want);
+    return NULL;
+}
+
+/* ------------------------------------------------------------- fat slice */
+
+static uint32_t be32(uint32_t v) { return __builtin_bswap32(v); }
+static uint64_t be64(uint64_t v) { return __builtin_bswap64(v); }
+
+static uint64_t select_slice(mr_image *im)
+{
+    const uint32_t *magicp = (const uint32_t *)im->raw;
+    uint32_t magic;
+    if (im->raw_len < 4) mr_die("%s: file is too small to be a Mach-O", im->path);
+    magic = *magicp;
+
+    if (magic == MH_MAGIC_64) return 0;
+    if (magic == MH_CIGAM_64)
+        mr_die("%s: big-endian Mach-O (magic cffaedfe); only little-endian arm64 is supported", im->path);
+    if (magic == MH_MAGIC_32 || magic == 0xcefaedfeu)
+        mr_die("%s: 32-bit Mach-O; only 64-bit arm64 is supported", im->path);
+
+    if (magic == FAT_CIGAM || magic == FAT_CIGAM_64 || magic == FAT_MAGIC || magic == FAT_MAGIC_64) {
+        /* fat headers are always big-endian on disk. FAT_CIGAM is what a
+         * little-endian host sees for a big-endian FAT_MAGIC. */
+        int is64 = (magic == FAT_CIGAM_64 || magic == FAT_MAGIC_64);
+        const struct fat_header *fh = (const struct fat_header *)im->raw;
+        uint32_t n = be32(fh->nfat_arch);
+        const uint8_t *p = im->raw + sizeof(*fh);
+        if (n > 64) mr_die("%s: implausible fat_header.nfat_arch = %u", im->path, n);
+        for (uint32_t i = 0; i < n; i++) {
+            uint32_t ct, cs;
+            uint64_t off, size;
+            if (is64) {
+                const struct fat_arch_64 *a = (const struct fat_arch_64 *)p;
+                ct = be32(a->cputype); cs = be32(a->cpusubtype);
+                off = be64(a->offset); size = be64(a->size);
+                p += sizeof(*a);
+            } else {
+                const struct fat_arch *a = (const struct fat_arch *)p;
+                ct = be32(a->cputype); cs = be32(a->cpusubtype);
+                off = be32(a->offset); size = be32(a->size);
+                p += sizeof(*a);
+            }
+            if (ct != CPU_TYPE_ARM64) continue;
+            if ((cs & ~CPU_SUBTYPE_MASK) == CPU_SUBTYPE_ARM64E) continue;
+            if (off + size > im->raw_len)
+                mr_die("%s: fat slice %u runs past the end of the file", im->path, i);
+            mr_log("%s: fat binary, taking arm64 slice at file offset 0x%llx",
+                   im->path, (unsigned long long)off);
+            return off;
+        }
+        mr_die("%s: fat binary with %u slices but no arm64 (CPU_TYPE_ARM64, non-arm64e) slice",
+               im->path, n);
+    }
+    mr_die("%s: not a Mach-O -- magic is 0x%08x", im->path, magic);
+}
+
+/* ------------------------------------------------------------ parse pass */
+
+static void parse_load_commands(mr_image *im)
+{
+    const struct mach_header_64 *mh = im->mh;
+    const uint8_t *lc = (const uint8_t *)mr_file_at(im, sizeof(*mh), mh->sizeofcmds, "load commands");
+    const uint8_t *end = lc + mh->sizeofcmds;
+    int have_text = 0;
+
+    for (uint32_t i = 0; i < mh->ncmds; i++) {
+        const struct load_command *c = (const struct load_command *)lc;
+        if (lc + sizeof(*c) > end || c->cmdsize < sizeof(*c) || lc + c->cmdsize > end)
+            mr_die("%s: load command %u is malformed (cmdsize %u)", im->path, i,
+                   lc + sizeof(*c) <= end ? c->cmdsize : 0);
+
+        switch (c->cmd) {
+        case LC_SEGMENT_64: {
+            const struct segment_command_64 *s = (const void *)c;
+            mr_segment *g;
+            if (im->nsegs >= MR_MAX_SEGMENTS)
+                mr_die("%s: more than %d segments", im->path, MR_MAX_SEGMENTS);
+            g = &im->segs[im->nsegs++];
+            memcpy(g->name, s->segname, 16);
+            g->name[16] = 0;
+            g->vmaddr = s->vmaddr; g->vmsize = s->vmsize;
+            g->fileoff = s->fileoff; g->filesize = s->filesize;
+            g->maxprot = s->maxprot; g->initprot = s->initprot;
+            g->flags = s->flags; g->nsects = s->nsects;
+            g->sects = (const struct section_64 *)(s + 1);
+            if (c->cmdsize < sizeof(*s) + (uint64_t)s->nsects * sizeof(struct section_64))
+                mr_die("%s: segment %s claims %u sections but cmdsize is %u",
+                       im->path, g->name, s->nsects, c->cmdsize);
+            if (strcmp(g->name, "__TEXT") == 0) { im->preferred_base = g->vmaddr; have_text = 1; }
+            break;
+        }
+        case LC_ID_DYLIB: {
+            const struct dylib_command *d = (const void *)c;
+            im->install_name = mr_xstrdup((const char *)c + d->name_offset);
+            break;
+        }
+        case LC_LOAD_DYLIB:
+        case LC_LOAD_WEAK_DYLIB:
+        case LC_REEXPORT_DYLIB:
+        case LC_LOAD_UPWARD_DYLIB:
+        case LC_LAZY_LOAD_DYLIB: {
+            const struct dylib_command *d = (const void *)c;
+            if (im->ndeps >= MR_MAX_DEPS)
+                mr_die("%s: more than %d dependent dylibs", im->path, MR_MAX_DEPS);
+            im->deps[im->ndeps].path = mr_xstrdup((const char *)c + d->name_offset);
+            im->deps[im->ndeps].weak = (c->cmd == LC_LOAD_WEAK_DYLIB);
+            im->deps[im->ndeps].reexport = (c->cmd == LC_REEXPORT_DYLIB);
+            im->ndeps++;
+            if (c->cmd == LC_REEXPORT_DYLIB)
+                mr_log("%s: LC_REEXPORT_DYLIB %s (re-export chasing is not implemented; "
+                       "flat lookup will still find it)", im->path, (const char *)c + d->name_offset);
+            break;
+        }
+        case LC_RPATH: {
+            const struct rpath_command *r = (const void *)c;
+            if (im->nrpaths >= MR_MAX_RPATHS)
+                mr_die("%s: more than %d LC_RPATHs", im->path, MR_MAX_RPATHS);
+            im->rpaths[im->nrpaths++] = mr_xstrdup((const char *)c + r->path_offset);
+            break;
+        }
+        case LC_MAIN: {
+            const struct entry_point_command *e = (const void *)c;
+            im->has_entry = 1;
+            im->entryoff = e->entryoff;
+            im->stacksize = e->stacksize;
+            break;
+        }
+        case LC_UNIXTHREAD: {
+            /* flavor ARM_THREAD_STATE64 = 6; state is x[29], fp, lr, sp, pc, cpsr */
+            const uint32_t *w = (const uint32_t *)(c + 1);
+            uint32_t flavor = w[0], count = w[1];
+            const uint64_t *st = (const uint64_t *)(w + 2);
+            if (flavor != 6)
+                mr_unimplemented("LC_UNIXTHREAD flavor",
+                                 "%s: thread state flavor %u, only ARM_THREAD_STATE64 (6) is handled",
+                                 im->path, flavor);
+            if (count < 34)
+                mr_die("%s: ARM_THREAD_STATE64 count %u is too small", im->path, count);
+            im->has_unixthread = 1;
+            im->unixthread_pc = st[32];   /* x0..x28, fp, lr, sp, pc */
+            break;
+        }
+        case LC_DYLD_CHAINED_FIXUPS: {
+            const struct linkedit_data_command *l = (const void *)c;
+            im->chained_off = l->dataoff; im->chained_size = l->datasize;
+            break;
+        }
+        case LC_DYLD_EXPORTS_TRIE: {
+            const struct linkedit_data_command *l = (const void *)c;
+            im->trie_off = l->dataoff; im->trie_size = l->datasize;
+            break;
+        }
+        case LC_DYLD_INFO:
+        case LC_DYLD_INFO_ONLY:
+            im->dyld_info = (const void *)c;
+            if (!im->trie_off) {
+                im->trie_off = im->dyld_info->export_off;
+                im->trie_size = im->dyld_info->export_size;
+            }
+            break;
+        case LC_SYMTAB:
+            im->symtab = (const void *)c;
+            break;
+        default:
+            break;    /* LC_UUID, LC_BUILD_VERSION, LC_CODE_SIGNATURE, ... */
+        }
+        lc += c->cmdsize;
+    }
+
+    if (!have_text) mr_die("%s: no __TEXT segment", im->path);
+}
+
+/* --------------------------------------------------------------- loading */
+
+mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_main)
+{
+    char *tried[MAX_TRIED];
+    int   ntried = 0, is_runtime = 0;
+    char *path;
+    mr_image *im;
+    int fd;
+    struct stat st;
+    void *raw;
+
+    if (is_main) {
+        path = mr_file_exists(want) ? mr_xstrdup(want) : NULL;
+        if (!path) mr_die("cannot open %s: no such file", want);
+    } else {
+        mr_image *dup = mr_image_find_loaded(want);
+        if (dup) return dup;
+        path = resolve_dylib_path(want, loader, tried, &ntried, &is_runtime);
+        if (!path) {
+            if (weak) {
+                mr_log("weak dylib %s not found; its binds will resolve to NULL", want);
+                return NULL;
+            }
+            fprintf(stderr, "machorun: cannot find dylib '%s'\n", want);
+            fprintf(stderr, "  required by: %s\n", loader ? loader->path : "(main)");
+            for (int i = 0; i < ntried; i++)
+                fprintf(stderr, "  tried: %s\n", tried[i]);
+            if (want[0] == '/')
+                fprintf(stderr,
+                        "  Darwin absolute paths are redirected into our own tree at %s.\n"
+                        "  Nothing else can satisfy them: %s is not a file on Linux, and\n"
+                        "  (measured) not a file on macOS either -- it lives in the dyld\n"
+                        "  shared cache. Build or add that dylib under darwin/.\n",
+                        MR.darwin_root ? MR.darwin_root : "(no darwin root found)", want);
+            _exit(72);
+        }
+    }
+
+    if ((im = mr_image_find_loaded(path)) != NULL) { free(path); return im; }
+
+    if (MR.nimages >= MR_MAX_IMAGES) mr_die("more than %d images loaded", MR_MAX_IMAGES);
+
+    im = mr_xmalloc(sizeof(*im));
+    im->path = path;
+    im->dir = mr_dirname(path);
+    im->is_main = is_main;
+    im->is_runtime = is_runtime;
+
+    fd = open(path, O_RDONLY | O_CLOEXEC);
+    if (fd < 0) mr_die("cannot open %s: %m", path);
+    im->fd = fd;
+    if (fstat(fd, &st) != 0) mr_die("cannot stat %s: %m", path);
+    im->raw_len = (size_t)st.st_size;
+    raw = mmap(NULL, im->raw_len, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (raw == MAP_FAILED) mr_die("cannot map %s for parsing: %m", path);
+    im->raw = raw;
+
+    im->slice_off = select_slice(im);
+    im->mh = (const struct mach_header_64 *)mr_file_at(im, 0, sizeof(struct mach_header_64), "mach header");
+
+    if (im->mh->cputype != CPU_TYPE_ARM64)
+        mr_die("%s: cputype 0x%x is not CPU_TYPE_ARM64 (0x%x)", path, im->mh->cputype, CPU_TYPE_ARM64);
+    if ((im->mh->cpusubtype & ~CPU_SUBTYPE_MASK) == CPU_SUBTYPE_ARM64E)
+        mr_unimplemented("arm64e",
+                         "%s: cpusubtype 2 means pointer authentication and chained pointer "
+                         "format 1 (DYLD_CHAINED_PTR_ARM64E), whose signing keys are "
+                         "process-scoped on Darwin. Out of scope; build for arm64.", path);
+    im->filetype = im->mh->filetype;
+    im->mh_flags = im->mh->flags;
+
+    parse_load_commands(im);
+
+    /* Registered before dependencies so a cycle terminates. */
+    MR.images[MR.nimages++] = im;
+    if (is_main) MR.main_image = im;
+
+    mr_map_image(im);
+    mr_exports_parse(im);
+    close(fd);
+    im->fd = -1;
+
+    mr_log("loaded %s at 0x%llx (slide 0x%llx, %d segments, %d deps, %zu exports)",
+           im->path, (unsigned long long)im->load_base, (unsigned long long)im->slide,
+           im->nsegs, im->ndeps, im->nexports);
+
+    for (int i = 0; i < im->ndeps; i++)
+        im->deps[i].img = mr_image_load(im->deps[i].path, im, im->deps[i].weak, 0);
+
+    return im;
+}
