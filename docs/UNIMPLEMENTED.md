@@ -743,3 +743,26 @@ value the executable reads, plus a `+load` in that same dylib so the two
 orderings are asserted against each other. That also closes the "One image"
 bullet in `objc-drawing-coverage` and the cross-image half of
 `objc-load-ordering`.
+
+### `os-unfair-lock-owner` — Graviton-exposed concurrency bug (measured 2026-08-26)
+
+`libSystem`'s `os_unfair_lock_lock` intermittently aborts with "recursive
+acquisition by the owning thread" on AWS Graviton3 (Neoverse-V1, Ubuntu 24.04,
+4 KB pages). NONDETERMINISTIC: the same objc4 fixture exits 0/71 in an
+alternating pattern (measured: `0 0 71 0 71 0 71 71` across 8 runs). objc4
+locks heavily during class realization, so the whole differential corpus drops
+to ~24/44 on Graviton vs 41/44 on Apple Silicon; the single-threaded loader
+fixtures are unaffected (19/19 on both).
+
+Root cause (hypothesis, to confirm): the owner token our `os_unfair_lock`
+stores/compares is derived from a thread-identity source (TSD / a
+mach_thread_self-equivalent) that returns a different or colliding value on
+Neoverse than on Apple silicon — so an unowned or other-thread lock reads as
+already-owned by the caller. The Apple-silicon test kernel masked it.
+
+Not a Graviton incompatibility and not isa-va-width (that hypothesis was wrong
+— the address mask holds, the failure is a lock-owner mismatch). A specific,
+fixable bug in our Darwin userland. Fix: make the owner token a correct,
+per-thread, non-colliding value and initialise the lock word to the true
+"unlocked" sentinel; add a multi-arch CI gate so this cannot regress silently.
+The loader/codegen/Mach-O path itself is verified working on real Graviton.
