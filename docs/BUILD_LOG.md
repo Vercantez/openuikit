@@ -280,7 +280,19 @@ first run: `0xfe3de57774bc` = 2^47.99), so the narrower mask strips bit 47:
 ```
 
 which is not a class, and the next instruction (`ldrb w9, [x8, #0x20]`)
-dereferences it. Disassembly of our own artifact, fault site marked:
+dereferences it.
+
+**Correction (from the slice agent's later measurement, ebf123d):** the faulting
+function is `swift_getObjectType` at `+0x331eb4`, not `swift_unknownObjectRelease`.
+Every isa-decoding site has the identical `and`/`ldrb [x, #0x20]` shape, and at
+-Onone existential *construction* calls `swift_getObjectType`, so the trigger is
+any isa decode rather than the release path specifically. The first diagnosis
+inherited an offset second-hand and did not verify it. Relatedly, the truncated
+value was never "a stack address": `0x00007e3d...` merely looks like a stack
+pointer, and reading it as one is what pointed the original investigation at
+refcounting. The mechanism below is unaffected; the attribution was wrong.
+
+Disassembly of our own artifact, showing the shape:
 
 ```
 _swift_unknownObjectRelease:
@@ -360,6 +372,18 @@ targeting `arm64-apple-macos`.
 stand-in for "build to the simulator ABI"; `widen_isa_mask.py` is a stand-in for
 patch 6 when there is no build machine. None of the three should become a
 standing policy for other people's binaries.
+
+**And the loader fix is strictly more general — this is the argument for it.**
+Widening repairs *our* runtime but *cannot* repair Apple's, because Apple's
+residual narrow sites are the 9 data-bits masks below, and widening those is
+corruption, not a fix. `widen_isa_mask.py` refuses them by design. So the
+wide-mask route leaves Apple's shipped runtime permanently broken under
+machorun, while mapping guests below 2^47 repairs both at once. The slice
+agent's 2x2 measured exactly that (ebf123d): ours-stock and Apple's-sim both
+SIGSEGV on machorun master and both pass 9/9 on `fix/map-below-isa-mask`, while
+ours-widened passes on either. Independently sufficient, but only one of them
+is general. **Take the loader fix; keep widening as the fallback for a runtime
+we build and cannot re-target.**
 
 ### The trap, found the same way
 
