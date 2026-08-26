@@ -1,4 +1,4 @@
-# STATUS — 2026-08-25
+# STATUS — 2026-08-25 (§9 2026-08-26, §10 2026-08-26)
 
 **Independent verification.** Everything below was re-measured by an agent that
 did not write the loader, from a **fresh clone into an empty directory**. Where
@@ -539,3 +539,84 @@ Two smaller honesty notes on the provenance record itself:
   here and is clean.
 - `--verify` re-stages `sdk/usr/include` as a side effect, so it is destructive
   on a dirty tree. Measured harmless on a clean one.
+
+---
+
+## 10. A precompiled Darwin binary draws (2026-08-26) — quartz as Mach-O
+
+`docs/QUARTZ_MACHO.md` is the full accounting. The scoreboard entry:
+
+| | |
+|---|---|
+| patches to `~/quartz`'s source | **0** (`patches-quartz/` is empty) |
+| translation units | 37 compiled, 0 failures |
+| `libquartz.dylib` | 507 exports, 65 undefined — 48 libSystem, 16 libc++, 1 `dyld_stub_binder` |
+| fixture | `tests/bin/15_quartz`, plain C, **no Objective-C** |
+| macOS, natively | 26861-byte PNG, sha256 `96aa747a85f6c35f…` |
+| machorun on Linux | 26861-byte PNG, sha256 `96aa747a85f6c35f…` |
+| per-stage checksums (9) | identical |
+| regressions | none: 19 / 1 / 1 and 41/44 unchanged |
+
+### What it cost on our side of the boundary
+
+Zero patches to quartz moved the work into `darwin/` and `sdk/`, which is where
+this project wants it. Three holes, none of which any previous consumer could
+have found:
+
+* **libm did not exist.** Darwin has no `-lm`; `libSystem.B.dylib` re-exports
+  `libsystem_m.dylib`, so a guest that calls `cos()` has an undefined `_cos`
+  against libSystem and nothing else. `darwin/src/math.c` is now 113 forwarded
+  symbols. quartz reaches 13.
+* **`libc++.1.dylib` was 14 symbols.** It is now 83, because LLVM 18's headers
+  carry `extern template` declarations for `std::basic_string<char>`'s
+  non-inline members, `__sort`, `to_string` and `__next_prime`, and on Linux the
+  dylib that holds those copies is an ELF. Nine of the twelve are recovered by
+  *explicit instantiation* rather than reimplementation, so they are LLVM's own
+  code from LLVM's own headers.
+* **`sdk/` was missing `_assert.h`.** `assert.h`'s `#include` of it sits behind
+  `#ifndef NDEBUG`, `vendor/objc4` compiles `-DNDEBUG`, so the dangling include
+  had been invisible since the SDK was assembled.
+
+### The one that belongs in §8's spirit rather than §10's
+
+`RTLD_DEFAULT` searches the **global scope**, so `src/resolve.c` can only reach
+glibc libraries the loader itself has in `DT_NEEDED`. The loader's own C calls
+nothing in libm, `--as-needed` dropped `libm.so.6`, and the first guest to call
+`sin()` failed with a message naming libSystem rather than the loader. Fixed
+with `-Wl,--no-as-needed -lm`; **the general form of this bug will recur for
+every future forwarder**, and the symptom will always name the wrong layer.
+
+### What this does not establish
+
+1. It is **`QZ*`, not `CG*`**. No `CoreGraphics.framework` exists here and a
+   guest linked against Apple's resolves none of its imports.
+2. **34 of 507 exports are exercised.** The Core Animation layer tree, text,
+   image decode, PDF, patterns, shadings, CMYK, P3 and non-normal blend modes
+   are compiled and untested here.
+   (`docs/UNIMPLEMENTED.md#quartz-fixture-coverage`.)
+3. **One libm workload agreed.** IEEE 754 says nothing about `sin`, `cos`,
+   `pow` or `exp`; the fixture is structured so that the stage which would
+   disagree names itself on stdout. (`docs/UNIMPLEMENTED.md#libm-ulp`.)
+
+### Effect on §7
+
+§7 step 7 — "then, and only then, CoreGraphics/CoreAnimation (`~/quartz`)" —
+turns out to have been **in the wrong order**, and cheaply so. The engine
+underneath CoreGraphics runs today, before Foundation, before UIKit, and without
+any Objective-C at all, because it is portable C++ and does not need the ObjC
+runtime to rasterise. What §7 step 7 really describes is the *CoreGraphics
+facade over it*, which is still unwritten and still after steps 5–6.
+
+§7's `~/uikit` bullet is reported to be stronger than "swiftc on Linux emits
+ELF": `swiftc -target arm64-apple-macos11` on Linux is said to fail with
+*"unable to load standard library for target"*, i.e. it cannot emit Mach-O at
+all, for any input. **That is second-hand here and was not re-measured for this
+section** — `harness/Dockerfile`'s testbed has no swiftc, so there was nothing
+to run it on. It should be re-measured and recorded properly before anything is
+planned around it.
+
+If it holds, OpenUIKit cannot be built as a Mach-O dylib by any amount of work
+on this side, and needs either Swift-to-Mach-O to become possible or machorun to
+gain ELF-dylib bridging. Either way it is why this milestone went through
+`~/quartz`, which is C++ and therefore buildable by the same
+`clang -target arm64-apple-macos11` route that objc4 already uses.

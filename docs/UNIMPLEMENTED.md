@@ -94,13 +94,59 @@ frameworks are added, and its frequency is an honest progress metric.
 destructors. `_tlv_atexit` is exported and aborts. Not in the corpus.
 
 ### `libcxx-subset`
-`darwin/usr/lib/libc++.1.dylib` is **not** libc++. It is the operator
-new/delete family, the `__cxa_guard_*` trio, and `std::terminate` — which is
-exactly what `05b_cxx_init` leaves undefined once the headers are inlined
-(measured: its whole libc++ import list is `__ZdlPv`). Any other libc++ symbol
-fails as an undefined symbol naming itself. `__cxa_guard_acquire` is
-single-threaded: it does not block a second thread on an in-progress
-initialisation.
+`darwin/usr/lib/libc++.1.dylib` is **not** libc++. 83 exported symbols against
+the real thing's several thousand. It is:
+
+* the operator `new`/`delete` family, the `__cxa_guard_*` trio and
+  `std::terminate` (`darwin/src/libcxx.c`) — what `05b_cxx_init` leaves
+  undefined once the headers are inlined; measured, its whole libc++ import list
+  is `__ZdlPv`;
+* the out-of-line surface `vendor/quartz` reaches (`darwin/src/libcxx_std.cpp`)
+  — `std::basic_string<char>`'s non-inline members, `__sort` for the arithmetic
+  types, `to_string`, `__next_prime`.
+
+Any other libc++ symbol fails as an undefined symbol naming itself, which is the
+intended failure: it is a name you can look up in LLVM's `libcxx/src/`.
+
+Three specific limits, in the order they are likely to bite:
+
+1. **`__cxa_guard_acquire` is single-threaded.** It does not block a second
+   thread on an in-progress initialisation. Nothing in the corpus initialises a
+   function-local static from two threads.
+2. **No iostreams, no locale, no `std::regex`, no `std::filesystem`, no
+   `std::thread`.** Those are the largest .cpp files in libc++'s `src/` and none
+   is reachable by explicit instantiation of a header template.
+3. **No libc++abi at all**, so no exceptions: `__cxa_throw`,
+   `__cxa_allocate_exception` and the `std::logic_error` family are absent, and
+   `vendor/quartz` is compiled `-fno-exceptions` for that reason. See
+   `unwind-compact`, which is the actual wall.
+
+The general fix is to build LLVM 18's libc++ *sources* as a Mach-O dylib, the
+way `vendor/objc4` is built. That is a real project and has not been attempted;
+until then, growing `libcxx_std.cpp` by explicit instantiation is the cheap path
+and keeps our copies bit-identical to the headers they are compiled against.
+
+### `libm-ulp` — a MEASURED agreement, not a guarantee
+`darwin/src/math.c` forwards 113 math symbols to glibc's libm. Apple's Libm and
+glibc's libm are different implementations, and IEEE 754 pins only `+ - * /` and
+`sqrt` — it says nothing about `sin`, `cos`, `tan`, `pow`, `exp`, `log` or their
+float forms. A guest that computes with any of those may therefore get a
+different last bit under machorun than on macOS, and no amount of loader fidelity
+changes that.
+
+What is measured: `tests/bin/15_quartz` draws through `QZContextRotateCTM`
+(cos/sin, very likely via the `__sincos_stret` aggregate ABI) and its PNG is
+**byte-identical** on both sides, as are all nine per-stage checksums. That is
+one workload agreeing, not a proof of agreement. The fixture is structured so
+that if it ever stops agreeing, stdout names the stage.
+
+Nothing in `math.c` rounds, clamps or "fixes up" a result to make the two agree.
+If they diverge, the divergence must show.
+
+Not forwarded, because clang lowers them to a single arm64 instruction for an
+Apple target and no call is emitted: `sqrt`, `fabs`, `floor`, `ceil`, `round`,
+`trunc`, `rint`, `nearbyint`, `copysign`, `fma`, `fmax`, `fmin`. They are
+exported anyway, for a guest built `-fno-builtin`.
 
 ### `os-unfair-lock` — **DONE**
 Implemented in the four bytes the guest gives us (Darwin stores an owning
@@ -554,3 +600,42 @@ re-recorded baselines together, in one commit, and say why.
 (fixed join order, all printing from `main`). It detects gross breakage in
 `pthread_create`/`join`/`mutex`/`once` and per-thread TLV allocation. It
 cannot detect races. Do not read a PASS there as "threading works".
+
+### `quartz-surface`
+`darwin/usr/lib/libquartz.dylib` exports 507 symbols and **all of them work**
+— it is `vendor/quartz` compiled, not a stub layer, so there is no abort in it
+to document. Two limits are worth recording anyway, because neither is visible
+from the export list:
+
+1. **It is `QZ*`, not `CG*`.** Nothing here answers
+   `CGBitmapContextCreate`, `CGContextFillRect` or any other CoreGraphics
+   symbol, and no `CoreGraphics.framework` exists in `darwin/`. A guest linked
+   against Apple's CoreGraphics will fail to resolve every one of its imports,
+   by name. Bridging `CG*` onto `QZ*` is a separate piece of work with its own
+   ABI questions (`CGFloat` is `double` on arm64 and `QZFloat` already is;
+   `CFTypeRef` retain/release semantics are not; `CGColorSpaceRef` is a real
+   CoreFoundation object and `QZColorSpaceRef` is not).
+2. **`-fno-exceptions`.** Quartz never throws, but libc++'s bounds and
+   allocation checks do, and with this flag they become
+   `_LIBCPP_VERBOSE_ABORT` — a loud trap rather than a `std::length_error` a
+   caller could catch. On macOS, code built the ordinary way would get the
+   exception. Nothing in the drawing paths reaches one; a guest that manages to
+   would crash here and unwind there. See `unwind-compact`.
+
+### `quartz-fixture-coverage`
+`tests/bin/15_quartz` exercises nine drawing stages and calls **34 of
+libquartz's 507 exported symbols** directly (`nm -u tests/bin/15_quartz | grep
+_QZ`). What those 34 reach internally is more than 34, but it is not measured
+and should not be guessed at. Untested and therefore unverified no matter how
+green the PNG diff is: the whole Core Animation layer
+tree (`QZLayer*`, `QZAnimation*`, the replicator and transform layers), text and
+font loading (`stb_truetype`), image decode (`stb_image`), PDF output, patterns,
+shadings, CMYK and Display P3 colour, blend modes other than normal, and
+transparency layers.
+
+Those are not stubs — they are compiled and exported and presumably work, since
+upstream scores 97.46/100 against Apple's frameworks with all of them. They are
+simply not covered *here*, which is a different claim. Adding coverage means
+adding drawing stages to `tests/src/15_quartz.c`, rebuilding the fixture on
+macOS, and re-recording with `scripts/quartz_pixel.sh --record` — not asserting
+that a passing PNG generalises.

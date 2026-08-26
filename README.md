@@ -13,24 +13,39 @@ Three of the hard pieces already exist in sibling projects:
 | piece | where | state |
 |---|---|---|
 | Objective-C runtime | **here**, `darwin/usr/lib/libobjc.A.dylib` | Apple's real objc4 built as **Mach-O on Linux**, 4 patches, **41/44** differential tests vs Apple's shipping runtime |
+| Quartz 2D + CoreAnimation | **here**, `darwin/usr/lib/libquartz.dylib` | `~/quartz` built as **Mach-O on Linux**, **0 patches**; a precompiled C fixture draws a **byte-identical PNG** on both platforms |
 | UIKit | `~/uikit` (OpenUIKit) | pixel-exact vs real UIKit, 108/108 oracle scenes |
-| Quartz 2D + CoreAnimation | `~/quartz` | 97.5/100 vs Apple's frameworks |
 | **Mach-O loader + Darwin userland** | **here** | **the missing piece** |
 
 Each row is true on its own terms. Read downward, the table used to overpromise
-badly, and one of the three reasons is now gone. It said `~/objc4-linux`, a
-44/44 port of Apple's objc4 to **ELF** — a different format and a different
-runtime from the one a precompiled Darwin binary carries. That project is now
-**retired**: the same objc4 drop builds here as a Mach-O dylib with 4 patches
-instead of 9, and `docs/OBJC4_MACHO.md` is the accounting. It is retired rather
-than deleted because it is still the only tree that runs all 44 tests; the two
-gaps are an unwinder over `__TEXT,__unwind_info` and guest `dlopen`, and
-neither is about Objective-C.
+badly, and two of the three reasons are now gone.
 
-The other two rows still do not compose: OpenUIKit is a Swift engine whose
-Objective-C facade targets the **GNUstep** ABI, not Apple's, and swiftc on
-Linux emits ELF. `docs/STATUS.md` §7 sets out what closing that costs — with
-step 1 of its list, a `libobjc.A.dylib` machorun can bind against, now done.
+It said `~/objc4-linux`, a 44/44 port of Apple's objc4 to **ELF** — a different
+format and a different runtime from the one a precompiled Darwin binary carries.
+That project is now **retired**: the same objc4 drop builds here as a Mach-O
+dylib with 4 patches instead of 9, and `docs/OBJC4_MACHO.md` is the accounting.
+It is retired rather than deleted because it is still the only tree that runs
+all 44 tests; the two gaps are an unwinder over `__TEXT,__unwind_info` and guest
+`dlopen`, and neither is about Objective-C.
+
+It also said `~/quartz`, whose 97.5/100 is measured on macOS against Apple's own
+frameworks and said nothing about Linux. That row moved here too:
+`scripts/build_quartz.sh` builds it as `/usr/lib/libquartz.dylib` on Linux with
+**zero patches to its source**, and `tests/bin/15_quartz` — a plain C Mach-O
+compiled by Apple's clang, no Objective-C anywhere in it — writes the **same
+26,861-byte PNG, byte for byte**, run natively on macOS and run under machorun
+on Linux. `docs/QUARTZ_MACHO.md` is the accounting, including the three holes
+that opened in *our* userland to make it work (libm, libc++'s out-of-line
+members, and a header the SDK's `-DNDEBUG`-only closure could not see).
+
+The remaining row does not compose: OpenUIKit is a Swift engine whose
+Objective-C facade targets the **GNUstep** ABI, not Apple's, and swiftc on Linux
+emits ELF. It is *reported* — see `docs/STATUS.md` §10, which flags this as
+second-hand and not re-measured — that `swiftc -target arm64-apple-macos11` on
+Linux cannot emit Mach-O at all, which if true puts OpenUIKit out of reach until
+either Swift-to-Mach-O becomes possible or machorun gains ELF-dylib bridging.
+`docs/STATUS.md` §7 sets out what closing that costs — with step 1 of its list,
+a `libobjc.A.dylib` machorun can bind against, now done.
 
 Verified before starting (2026-08-25): **Linux can produce Mach-O.**
 `clang -target arm64-apple-macos11 -c` emits Mach-O objects (magic
@@ -87,8 +102,10 @@ platform executing the same bytes.
 src/        the loader: Mach-O parsing, mapping, fixups, TLS, entry
 darwin/     our Mach-O dylibs (libSystem and friends) built on Linux
 sdk/        our header-only + .tbd-only SDK -- replaces Apple's, see PROVENANCE.md
-vendor/     Apple's objc4 (pristine) + the SDK-private headers it needs
+vendor/     Apple's objc4 (pristine) + the SDK-private headers it needs,
+            and ~/quartz (pristine) -- see each PROVENANCE.md
 patches-macho/  the 4 patches objc4 needs to build as Mach-O on Linux
+patches-quartz/ the 0 patches quartz needs -- empty, and that is the measurement
 tests/      Mach-O fixtures + expected macOS output, and the 44-test objc4 corpus
 harness/    run-on-macOS / run-on-linux runners and the differ
 scripts/    build + difftest entry points
@@ -116,6 +133,37 @@ dyld's own image-notify protocol rather than a bespoke seam, and scores
 failures are C++ exceptions (×2) and `dlopen` (×1) — pre-existing loader gaps
 that block plain C++ equally, and neither is attributable to objc4.
 `docs/OBJC4_MACHO.md` is the accounting, including what got *harder*.
+
+**And a precompiled Darwin binary now DRAWS.** `~/quartz` — the portable
+Quartz 2D + Core Animation reimplementation, C++17, 507-symbol `QZ*` C API —
+builds as `darwin/usr/lib/libquartz.dylib` on Linux with **zero patches to its
+source**, 37 translation units, 0 failures. `tests/bin/15_quartz` is a plain C
+Mach-O with **no Objective-C in it at all**, compiled by Apple's clang against
+Apple's SDK, that calls `QZBitmapContextCreate`, draws nine stages (fills,
+alpha compositing, cubic Béziers, dashed strokes, linear and radial gradients, a
+rotation, an even-odd clip) and writes a PNG:
+
+```
+macOS, natively:       26861 bytes   sha256 96aa747a85f6c35f...
+machorun on Linux:     26861 bytes   sha256 96aa747a85f6c35f...
+                       cmp: identical
+```
+
+`scripts/quartz_pixel.sh` runs both sides — it re-executes the macOS oracle
+every time rather than trusting the committed baseline — and the fixture prints
+a checksum of the whole framebuffer after every stage, so a divergence would be
+localised to a drawing stage on stdout before the PNG is even compared.
+
+Zero patches to quartz did not mean zero work; it moved the work to our side of
+the boundary, which is where the project wants it. `libSystem.B.dylib` had **no
+libm at all** (Darwin has no `-lm` — libSystem re-exports `libsystem_m.dylib`),
+`libc++.1.dylib` had 14 symbols against the 12 out-of-line `std::string`,
+`__sort`, `to_string` and `__next_prime` entries LLVM's headers declare and
+refuse to inline, and the SDK was missing `_assert.h` because every previous
+consumer compiled `-DNDEBUG`. `docs/QUARTZ_MACHO.md` is the accounting,
+including the two limits a green PNG does not remove: this is `QZ*` and not
+`CG*`, and glibc's libm agreeing with Apple's Libm on one workload is not a
+proof that it always will.
 
 Re-measured from a fresh clone by an agent that did not write the loader, along
 with the things a green suite does not by itself establish (`docs/STATUS.md`):
@@ -163,7 +211,7 @@ translation at all: Darwin's `<ctype.h>` *inlines* a lookup in a 3208-byte
 part of the ABI and are recorded from Apple rather than reconstructed.
 
 **Xcode is no longer a build input.** `sdk/` is our own header-only,
-`.tbd`-only SDK: 355 headers, of which 336 come from eleven **pinned**
+`.tbd`-only SDK: 356 headers, of which 337 come from eleven **pinned**
 `apple-oss-distributions` releases (all redistributable) or from running xnu's
 own published generator, 4 from objc4 itself, and **19 are clean-room headers we
 wrote**. Apple's libc++ — 67% of the old surface — is gone, replaced by stock
@@ -207,11 +255,11 @@ Two more things that verification broke and are now fixed:
 `sdk/CHECKSUMS.sha256` from a fresh fetch and then compared that file against a
 second fetch of the same bytes, so a poisoned row was silently erased and a
 moved upstream tag would have been recorded as the new truth. It now re-fetches
-all 332 files, treats the committed record as read-only, and dies with a diff.
+all 333 files, treats the committed record as read-only, and dies with a diff.
 And `sort -k3` without `LC_ALL=C` made that record non-reproducible: a restage on
 another machine moved 18 rows without changing a single hash.
 
-**What `sdk/` does not cover.** It is 355 headers against Apple's 3,470, three
+**What `sdk/` does not cover.** It is 356 headers against Apple's 3,470, three
 `.tbd` stubs against 529, and **zero** of Apple's 294 frameworks — the set
 `vendor/objc4` and the ABI probe actually reach, and no more. There is no
 `<signal.h>` (only `<sys/signal.h>`), no `<setjmp.h>`, `<dirent.h>`,
@@ -223,19 +271,21 @@ the measured list.
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
 for the measured ABI boundary, `docs/OBJC4_MACHO.md` for Apple's objc4 as
 Mach-O (and §9 for what was inherited from the retired ELF port),
+`docs/QUARTZ_MACHO.md` for `~/quartz` as Mach-O and the pixel differential,
 `sdk/PROVENANCE.md` for where every header came from and what each clean-room
 one omits, `docs/SDK_SURVEY.md` for the measurement that preceded it (and its
 corrections), `docs/PLAN.md` for the design, `docs/UNIMPLEMENTED.md` for every
 stub that aborts.
 
 ```sh
-scripts/build.sh everything # loader (ELF PIE) + darwin/*.dylib + libobjc + sdk/*.tbd
-scripts/build.sh            # the same minus objc4, which is a minute of C++
+scripts/build.sh everything # loader (ELF PIE) + darwin/*.dylib + libobjc + libquartz + sdk/*.tbd
+scripts/build.sh            # the same minus objc4 and quartz, ~2 minutes of C++
 scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sources
-scripts/sdk_stage.sh --verify  # re-fetch all 332 and check the COMMITTED sha256s
+scripts/sdk_stage.sh --verify  # re-fetch all 333 and check the COMMITTED sha256s
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
 scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
 scripts/objc44.sh           # the 44-test objc4 differential corpus under machorun
+scripts/quartz_pixel.sh     # 15_quartz on macOS vs under machorun -- the PNGs must match
 scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
 scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively
 build/machorun ./prog       # run one
@@ -244,8 +294,14 @@ build/machorun ./prog       # run one
 **On a fresh clone, run `scripts/build.sh everything` first** — inside the
 container, since `darwin/`, `libobjc` and the `.tbd`s are Linux Mach-O build
 products. `scripts/difftest.sh` builds the loader and the two small dylibs for
-you but deliberately *not* objc4 (a minute of Objective-C++ on every run), so on
-a tree where `libobjc.A.dylib` has never been built `09_objc` is a red **FAIL**,
-not the documented PASS. That is measured, not theorised: `git clone &&
-scripts/difftest.sh` gives **18 pass / 1 fail**; with `build.sh everything`
-first it gives **19 pass / 0 fail / 1 xfail / 1 no-oracle**.
+you but deliberately *not* objc4 or quartz (a minute of Objective-C++ and
+another of C++ on every run), so on a tree where `libobjc.A.dylib` has never
+been built `09_objc` is a red **FAIL**, not the documented PASS. That is
+measured, not theorised: `git clone && scripts/difftest.sh` gives **18 pass /
+1 fail**; with `build.sh everything` first it gives **19 pass / 0 fail /
+1 xfail / 1 no-oracle**.
+
+`scripts/quartz_pixel.sh` is separate from `difftest.sh` for structural reasons
+(its artefact is a file, and its macOS side needs `DYLD_LIBRARY_PATH`), and it
+runs from the **macOS host**: it executes the oracle natively and drives Docker
+for the Linux half.
