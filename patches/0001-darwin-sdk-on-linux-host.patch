@@ -1,0 +1,39 @@
+Subject: allow a Linux host to configure the OSX target SDK
+
+swift/CMakeLists.txt reaches `include(DarwinSDKs)` only from the
+`elseif(SWIFT_HOST_VARIANT_SDK MATCHES "(OSX|IOS*|...)")` branch — i.e. only
+when the *host* is Darwin. On a Linux host the OSX SDK is therefore never
+configured at all, `SWIFT_SDK_OSX_*` is never set, and requesting
+`-DSWIFT_SDKS=OSX` silently produces a build with no targets rather than an
+error. This is the single structural assumption that blocks the whole
+cross-build; everything downstream of it is data, not control flow.
+
+The patch adds the OSX branch to the LINUX host arm, gated on OSX actually
+being requested, so `SWIFT_SDKS="OSX"` on Linux behaves the way
+`SWIFT_SDKS="OSX"` on macOS does. It deliberately does not touch the Darwin
+host path.
+
+The `xcodebuild -version` banner in the Darwin branch is not reproduced: it is
+a status message, and on Linux there is no Xcode to report.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@
+   is_sdk_requested(FREESTANDING swift_build_freestanding)
+   if(swift_build_freestanding AND (SWIFT_FREESTANDING_FLAVOR STREQUAL "linux"))
+     # TODO
+     # configure_sdk_unix("FREESTANDING" "${SWIFT_HOST_VARIANT_ARCH}")
+   endif()
+
++  # swiftcore-macho: cross-compile the Darwin stdlib from a Linux host.
++  # DarwinSDKs is otherwise reachable only when the host is Darwin.
++  is_sdk_requested(OSX swift_build_osx_from_linux)
++  if(swift_build_osx_from_linux)
++    include(DarwinSDKs)
++    set(SWIFT_PRIMARY_VARIANT_SDK_default  "OSX")
++    set(SWIFT_PRIMARY_VARIANT_ARCH_default "${SWIFT_SDK_OSX_ARCHITECTURES}")
++  endif()
++
+   # Default is Linux SDK for host
+   set(SWIFT_PRIMARY_VARIANT_SDK_default  "${SWIFT_HOST_VARIANT_SDK}")
+   set(SWIFT_PRIMARY_VARIANT_ARCH_default "${SWIFT_HOST_VARIANT_ARCH}")
