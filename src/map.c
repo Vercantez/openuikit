@@ -26,6 +26,85 @@
 
 #define EXEC_PREFERRED_BASE 0x100000000ull
 
+/* ===================================================================== *
+ * WHERE IMAGES GO, and why it is not "wherever mmap feels like".
+ *
+ * Apple's arm64 runtimes do not treat an isa field as a whole pointer. The
+ * Swift standard library has the 47-bit mask INLINED into compiled code --
+ * `and x8, x8, #0x7ffffffffff8` appears at 20+ sites in the libswiftCore we
+ * run, including inside swift_getObjectType, swift_unknownObjectRetain and
+ * swift_unknownObjectRelease -- and then reads class->bits at +0x20.
+ *
+ * aarch64 Linux serves mmap(NULL, ...) top-down from near 2^48, so every dylib
+ * used to land at 0xffff_xxxx_xxxx. Masking that clears bit 47:
+ *
+ *     class                 0xffff8a2c6018
+ *     isa & 0x7ffffffffff8  0x7fff8a2c6018     <- bit 47 gone
+ *     read at +0x20         SIGSEGV
+ *
+ * Measured exactly that way: a Swift program reaching any class that lives in
+ * a DYLIB -- which is every stdlib, Foundation and UIKit class -- died with
+ * SIGSEGV in libswiftCore+0x332898 at fault address 0x7fff8a2c6010, the
+ * truncation of a real class at 0xffff8a2c6010. Programs whose classes are all
+ * in the EXECUTABLE survived by luck, because MH_EXECUTE lands at its
+ * preferred 0x100000000 and that is already below the limit.
+ *
+ * objc4 is fine here only because patches-macho/0001 widens it to the 52-bit
+ * arm64e shiftcls layout. libswiftCore cannot get the same treatment: the mask
+ * is compiled into the library in many places, and a custom mask would fork
+ * the standard library from upstream permanently. So the loader meets Swift
+ * where it is, and places images itself.
+ *
+ * `ulimit -s unlimited` also "fixes" this -- it flips Linux to the legacy
+ * bottom-up mmap layout process-wide -- but that is a property of how machorun
+ * was invoked rather than of machorun, it stops applying the moment something
+ * re-execs, and it moves every unrelated allocation too. A policy here is
+ * checkable; an ambient rlimit is not.
+ * ===================================================================== */
+
+/* The mask keeps bits 3..46, so an image is addressable iff its last byte is
+ * below 2^47. tests/bin/19_isa_mask asserts exactly that, for every image. */
+#define MR_ISA_LIMIT   0x800000000000ull
+
+/* The arena starts at 8 GiB: clear of __PAGEZERO and of a 4 GiB executable at
+ * EXEC_PREFERRED_BASE, and far below anything the kernel hands out itself. */
+#define MR_ARENA_BASE  0x200000000ull
+#define MR_ARENA_STEP  0x200000ull       /* 2 MiB probe step on collision */
+#define MR_ARENA_TRIES 8192              /* 16 GiB of probing before giving up */
+
+static uint64_t arena_cursor = MR_ARENA_BASE;
+
+/* Reserve `span` bytes wholly below MR_ISA_LIMIT. Returns MAP_FAILED if the
+ * arena is exhausted, and the caller treats that as fatal rather than falling
+ * back to mmap(NULL): a fallback would put the image somewhere Swift cannot
+ * address, turning a clear failure here into a SIGSEGV inside the standard
+ * library later, with a fault address that looks like memory corruption. */
+static void *reserve_in_arena(uint64_t span)
+{
+    uint64_t addr = mr_round_up(arena_cursor, MR.page.v);
+
+    for (int i = 0; i < MR_ARENA_TRIES; i++) {
+        void *got;
+        if (addr > MR_ISA_LIMIT || span > MR_ISA_LIMIT - addr) break;
+
+        got = mmap((void *)addr, span, PROT_NONE,
+                   MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE | MAP_FIXED_NOREPLACE, -1, 0);
+        if (got != MAP_FAILED) {
+            if (got == (void *)addr) {
+                arena_cursor = addr + span;
+                return got;
+            }
+            /* A kernel older than 4.17 does not know MAP_FIXED_NOREPLACE and
+             * treats the address as a bare hint, so it may answer anywhere --
+             * including back above 2^47. Hand it back and step past rather
+             * than keep an address we did not choose. */
+            munmap(got, span);
+        }
+        addr += MR_ARENA_STEP;
+    }
+    return MAP_FAILED;
+}
+
 static int prot_of(uint32_t vmprot)
 {
     int p = 0;
@@ -80,18 +159,23 @@ void mr_map_image(mr_image *im)
      * meant" bugs would never fire. Setting it forces every image to slide. */
     want = (im->filetype == MH_EXECUTE && !getenv("MACHORUN_NO_PREFERRED_BASE"))
                ? (void *)lo : NULL;
-    if (want) {
+    got = MAP_FAILED;
+    /* The preferred base is honoured only if it is ALSO addressable through
+     * Swift's isa mask. An executable linked above 2^47 would otherwise load
+     * happily and then fault the first time a class of its own was touched. */
+    if (want && (uint64_t)want <= MR_ISA_LIMIT && span <= MR_ISA_LIMIT - (uint64_t)want) {
         got = mmap(want, span, PROT_NONE,
                    MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE | MAP_FIXED_NOREPLACE, -1, 0);
-        if (got == MAP_FAILED || got != want) {
-            if (got != MAP_FAILED) munmap(got, span);
-            got = mmap(NULL, span, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
-        }
-    } else {
-        got = mmap(NULL, span, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+        if (got != MAP_FAILED && got != want) { munmap(got, span); got = MAP_FAILED; }
     }
-    if (got == MAP_FAILED) mr_die("%s: cannot reserve 0x%llx bytes of address space: %m",
-                                  im->path, (unsigned long long)span);
+    if (got == MAP_FAILED) got = reserve_in_arena(span);
+    if (got == MAP_FAILED)
+        mr_die("%s: cannot reserve 0x%llx bytes below 2^47. Every image has to fit "
+               "there because libswiftCore has the 47-bit isa mask compiled into it "
+               "(see the placement note in src/map.c); the arena [0x%llx, 0x%llx) is "
+               "full or too fragmented: %m",
+               im->path, (unsigned long long)span,
+               (unsigned long long)MR_ARENA_BASE, (unsigned long long)MR_ISA_LIMIT);
 
     im->load_base = (uint64_t)got;
     im->slide = (int64_t)im->load_base - (int64_t)lo;

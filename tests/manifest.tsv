@@ -35,4 +35,5 @@
 12_mach	k	chained	run	pass	mach_task_self, vm_allocate/protect/deallocate, mach_absolute_time, timebase, mach_error_string
 13_errno	l	chained	run	pass	errno numbering, O_* flag values and struct stat layout all differ between Darwin and Linux
 14_utility	m	chained	run	pass	a representative hand-built utility: ctype (a DATA table Darwin inlines into the guest), setlocale, getopt, qsort, strftime, fgets
+19_isa_mask	r	chained	run	pass	every loaded image sits below 2^47, because libswiftCore has the 47-bit isa mask compiled in
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

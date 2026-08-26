@@ -154,6 +154,15 @@ want 12_mach             && build 12_mach             "$CHAINED_TARGET" 12_mach 
 want 13_errno            && build 13_errno            "$CHAINED_TARGET" 13_errno            13_errno.c --
 want 14_utility          && build 14_utility          "$CHAINED_TARGET" 14_utility          14_utility.c --
 
+# ---------------------------------------------------------------- rung (r)
+# Where the loader PUT things, rather than what it ran. libswiftCore has the
+# 47-bit isa mask compiled into it, so an image at or above 2^47 makes the
+# Swift standard library fault on a pointer it computed itself. macOS satisfies
+# this for free -- its user address space is 47 bits, which is why Apple could
+# bake the mask into a compiler at all -- so the two sides agree exactly when
+# machorun's placement policy is doing its job. See src/map.c.
+want 19_isa_mask         && build 19_isa_mask         "$CHAINED_TARGET" 19_isa_mask         19_isa_mask.c --
+
 # ---------------------------------------------------------------- rung (n)
 # The drawing rung. A plain C binary against /usr/lib/libquartz.dylib -- our
 # Mach-O build of ~/quartz. NOT in tests/manifest.tsv and NOT graded by
