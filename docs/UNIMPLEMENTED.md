@@ -606,6 +606,28 @@ pointer `0xffff8a2c6010` with bit 47 stripped, and `0x2aab…` is a heap pointer
 the same way. If a fault address is the real one minus `0x800000000000`, this
 is the bug and not memory corruption. That misread cost real time.
 
+**What aborts, and where.** Three checks, because each covers a case the others
+cannot see:
+
+| check | in | catches |
+|---|---|---|
+| loader text below `MR_ISA_LIMIT` | `check_host()` | a build that lost `-Ttext-segment` |
+| `sbrk(0)` and a `malloc(64)` probe | `mr_constrain_heap()` | the main arena starting high, or either `mallopt` being refused |
+| a `malloc(64)` probe on the first guest thread | `mr_thread_trampoline()` in `darwin/src/libsystem.c` | a **secondary** arena — created lazily in the thread that first needs one, so it cannot exist when the loader's own probe runs |
+
+The third is not belt-and-braces. `M_ARENA_MAX` carries most of the weight here:
+measured on glibc 2.39 with 16 threads x 201 allocations, the two `mallopt`
+calls give **0** allocations at or above 2^47, and removing them with nothing
+else changed gives **3216 of 3216** -- every secondary thread allocates from an
+mmap'd arena at `0xffff_xxxx_xxxx`. A refusal is therefore fatal, not logged.
+
+`mallopt(M_ARENA_MAX, …)` cannot in fact fail on glibc: `__libc_mallopt`
+returns 0 only for an unrecognised parameter, so that abort guards against a
+future libc rather than a live risk. `M_MMAP_THRESHOLD` **can** be refused --
+`do_set_mmap_threshold` rejects anything above `HEAP_MAX_SIZE/2`, which is
+exactly the 32 MiB we ask for. We sit on that boundary deliberately: raising the
+constant would silently turn the knob off rather than widen it.
+
 **Residue, deliberately not fixed.** A single allocation at or above glibc's
 32 MiB `M_MMAP_THRESHOLD` maximum still comes from `mmap` and still lands above
 2^47. No class object is 32 MiB -- the sizes at issue are Swift's 64 KiB

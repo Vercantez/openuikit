@@ -699,14 +699,52 @@ EXPORT int pthread_once(void *once, void (*fn)(void))
     return glibc_pthread_once(adopt(o, DARWIN_ONCE_SIG, 1), fn);
 }
 
+/* The isa-mask heap constraint (src/map.c) is checked on the main thread,
+ * before any guest thread exists -- and that is exactly the case it cannot
+ * see. glibc creates a secondary arena LAZILY, in the thread that first needs
+ * one, and a secondary arena is mmap'd, which on this kernel means
+ * 0xffff_xxxx_xxxx. mr_constrain_heap() sets M_ARENA_MAX=1 so that never
+ * happens; this checks the result once, on the first guest thread, instead of
+ * trusting it. Measured: without M_ARENA_MAX, 3216 of 3216 allocations across
+ * 16 threads landed above 2^47, so the failure this guards is total, not
+ * marginal. One relaxed test-and-set on thread creation is not a hot path. */
+#define MR_GUEST_ISA_LIMIT 0x800000000000ull
+
+struct mr_thread_start { void *(*fn)(void *); void *arg; };
+
+static int mr_heap_probed;
+
+static void *mr_thread_trampoline(void *p)
+{
+    struct mr_thread_start s = *(struct mr_thread_start *)p;
+    glibc_free(p);
+
+    if (!__atomic_test_and_set(&mr_heap_probed, __ATOMIC_RELAXED)) {
+        void *probe = glibc_malloc(64);
+        if ((unsigned long long)(uintptr_t)probe >= MR_GUEST_ISA_LIMIT)
+            mr_bail("a guest thread's malloc answered at or above 2^47, so glibc gave "
+                    "this thread its own arena despite M_ARENA_MAX=1. libswiftCore masks "
+                    "an isa with 0x7ffffffffff8, so a class allocated here would decode "
+                    "to an unmapped address. See mr_constrain_heap() in src/map.c.");
+        glibc_free(probe);
+    }
+    return s.fn(s.arg);
+}
+
 EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), void *arg)
 {
     g_pthread_t t;
+    struct mr_thread_start *s;
     int rc;
     if (attr) mr_bail("pthread_create with a non-NULL pthread_attr_t is not implemented "
                    "(Darwin's attr struct layout differs from glibc's)");
-    rc = glibc_pthread_create(&t, NULL, fn, arg);
+    s = glibc_malloc(sizeof *s);
+    if (!s) return 12 /* Darwin ENOMEM */;
+    s->fn = fn;
+    s->arg = arg;
+    rc = glibc_pthread_create(&t, NULL, mr_thread_trampoline, s);
     if (rc == 0) *thread = (void *)t;
+    else glibc_free(s);
     return rc;
 }
 

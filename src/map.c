@@ -170,12 +170,27 @@ void mr_constrain_heap(void)
     uint64_t brk_now;
 
     /* Before the first guest thread and before the runtimes allocate anything:
-     * M_ARENA_MAX only governs arenas not yet created. */
+     * M_ARENA_MAX only governs arenas not yet created.
+     *
+     * A refusal is fatal rather than logged, because M_ARENA_MAX is doing most
+     * of the work here, not hardening the edges. MEASURED on glibc 2.39 with 16
+     * threads x 201 allocations: with these two calls, 0 allocations landed at
+     * or above 2^47; with them removed and nothing else changed, 3216 of 3216
+     * did -- every secondary thread allocates from an mmap'd arena at
+     * 0xffff_xxxx_xxxx. Continuing past a refusal would mean running a threaded
+     * Swift guest whose class pointers are all truncatable. */
     if (mallopt(M_ARENA_MAX, 1) == 0)
-        mr_log("mallopt(M_ARENA_MAX, 1) refused; a threaded guest may get a "
-               "secondary arena above 2^47");
+        mr_die("mallopt(M_ARENA_MAX, 1) was refused. Without it every guest thread "
+               "after the first allocates from its own mmap'd arena above 2^47, and "
+               "libswiftCore would truncate any class object living there.");
+    /* This one genuinely can be refused: glibc's do_set_mmap_threshold rejects
+     * anything above HEAP_MAX_SIZE/2, which is exactly the 32 MiB we ask for. We
+     * sit on the boundary deliberately -- raising this constant would silently
+     * turn the knob off rather than widen it. */
     if (mallopt(M_MMAP_THRESHOLD, 32 * 1024 * 1024) == 0)
-        mr_log("mallopt(M_MMAP_THRESHOLD) refused; large allocations may land above 2^47");
+        mr_die("mallopt(M_MMAP_THRESHOLD, 32 MiB) was refused. glibc caps it at "
+               "HEAP_MAX_SIZE/2; if that cap has changed, lower the constant in "
+               "mr_constrain_heap() rather than ignoring this.");
 
     /* The link-time base is what actually decides this, so check the result
      * instead of assuming the linker was told. A loader that starts here and
