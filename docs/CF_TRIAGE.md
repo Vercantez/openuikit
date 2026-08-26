@@ -301,3 +301,124 @@ clang -target arm64-apple-macos13.0 -isysroot $SDK -fuse-ld=lld \
 Loader for any load test must be built from machorun
 `fix/map-below-isa-mask` (tip `79b4530`, which includes the heap fix `9659e73`),
 not master.
+
+---
+
+# Part 3 — the census re-run in the real configuration
+
+Part 1 and Part 2 both used a census that was wrong in two ways: it built
+`-DDEPLOYMENT_RUNTIME_SWIFT` (not the mode we chose) and `-Wno-everything` (so
+"pass" meant "codegens"). `scripts/cf_census.sh` is the corrected instrument.
+**These are the numbers to plan against; the earlier ones are superseded.**
+
+```
+PASS=60  FAIL=22  EMPTY=4   (denominator 82, empty TUs excluded)
+warnings across passing files: 11
+```
+
+## 11. Two corrections to Part 1, one of them mine to own
+
+**`CFPlugIn` is NOT false green. I was wrong.** It defines **81 real symbols**
+(`CFPlugInCreate`, `CFPlugInAddInstanceForFactory`, …). I put it on the
+false-green list by pattern-matching its name against the Windows-only files
+instead of checking what it defines. It is a real, functional translation unit
+and belongs in the build.
+
+The genuinely empty set is four, and includes one I had missed:
+
+```
+CFBundle_ResourceFork   CFBundle_Tables   CFTimeZone_WindowsMapping   CFWindowsUtilities
+```
+
+The denominator is still 82, but by coincidence — the membership was wrong in
+both directions.
+
+**The detector needed `--extern-only`.** A TU whose contents are entirely
+`#if`'d out still emits the local assembler temp `ltmp0`, so a plain
+`--defined-only` count is 1 and an empty TU sails through. Measured: without
+`--extern-only` the check reported `EMPTY=0` while four files really were empty.
+An instrument built to catch false green was itself producing false green.
+
+## 12. What `-Wno-everything` was hiding
+
+Dropping it moved five files from pass to fail, and the reason matters: they
+were **calling undeclared functions**, which C99 and later do not permit and
+which older compilers "resolved" as implicit-int. These were being *miscompiled*,
+not merely compiled with warnings:
+
+| file | undeclared call |
+|---|---|
+| `CFString` | `MAX` |
+| `CFRunLoop` | `mach_port_construct` |
+| `CFStream` | `_CFThreadSetName` |
+| `CFUtilities` | `mach_vm_region` |
+| `CFBundle_Binary`, `CFBundle_Grok` | `_NSGetMachExecuteHeader` |
+
+So the earlier "69 passing" included files whose call sites would have passed
+arguments wrongly and truncated return values. The honest count is lower and
+means more.
+
+It also surfaced a real sysroot gap: CF makes `-Wundef-prefix=TARGET_OS` an
+**error**, and machorun's `TargetConditionals.h` defines 16 of the 18
+`TARGET_OS_*` macros CF references — missing `WASI`, `ANDROID`, `BSD`, `CYGWIN`,
+`NANO`. With `-Wno-everything` all 86 files silently passed that check; without
+it, all 86 fail. The census predefines them; **the real fix belongs in
+machorun's `TargetConditionals.h`.**
+
+## 13. Corrected link surface
+
+189 undefined symbols. The shape differs from Part 2 because CFRunLoop and four
+others no longer compile, so their symbols moved from "provided" to "missing":
+
+| category | count |
+|---|---|
+| `CF*` from the 22 failing files | 147 |
+| libc / pthread / locale / dirent | 28 |
+| libdispatch | 5 |
+| OSAtomic | 4 |
+| ICU / NX / vouchers / misc | 4 |
+| dyld | 1 |
+
+The libdispatch count looks smaller only because the heaviest dispatch consumers
+(CFRunLoop, CFStream) are among the 22. §14 measures it properly.
+
+## 14. The RunLoop fork: evidence for the decision
+
+Measured against the build in which CFRunLoop *did* compile:
+
+- **All 9 Mach symbols are in `CFRunLoop` and nowhere else.** Nothing else in
+  CoreFoundation touches Mach ports. Replacing CFRunLoop's implementation
+  removes the entire Mach dependency — a clean cut, not a partial one.
+- **libdispatch is spread across 16 files**: CFRunLoop (13 symbols), CFStream
+  (7), CFSortFunctions (4, `dispatch_apply` for parallel sort), CFBundle,
+  CFURL, CFNumber, CFStorage, CFBasicHash and others (1 each).
+
+**Decision (team lead's call, and the evidence supports it): take corelibs'
+Linux dispatch+epoll RunLoop. Do not build Mach port emulation now.** The Mach
+surface is confined to exactly the file being replaced, so the fork buys out the
+whole unknown-depth item. What must match Apple is CFRunLoop's exported API and
+semantics, not its mechanism — we are building this CoreFoundation, and apps
+call `CFRunLoopRun()`, not `mk_timer_create()`.
+
+**One correction to the reasoning for it:** the fork does **not** avoid
+libdispatch. Only 13 of the dispatch references are CFRunLoop's; 8 other files
+need GCD regardless. libdispatch is unavoidable on either branch of the RunLoop
+decision, so it should be sequenced first on its own merits.
+
+### Deferral trigger for Mach port emulation
+
+Re-open this decision when **any** of these becomes true — not "later":
+
+1. We run **Apple's shipped CoreFoundation or Foundation binary** rather than our
+   own. Their CFRunLoop calls `mk_timer_*` directly and we cannot substitute an
+   implementation we do not compile.
+2. A **guest calls Mach port APIs directly** — `mach_port_allocate`, `mach_msg`
+   on a port it owns, XPC, or anything built on Mach IPC.
+3. A dependency needs `_dispatch_get_main_queue_port_4CF` /
+   `_dispatch_main_queue_callback_4CF` with **real port semantics**, i.e. the
+   libdispatch we port turns out to be the Darwin one rather than the Linux one.
+4. Measured behavioural divergence in timer coalescing or run-loop ordering that
+   an epoll implementation cannot reproduce and something depends on.
+
+Until then the epoll RunLoop is the supported path and Mach emulation stays
+unbuilt.
