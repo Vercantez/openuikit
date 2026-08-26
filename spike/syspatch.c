@@ -273,6 +273,23 @@ size_t mr_pthread_stacksize(void *t)
     return MR_STK_FALLBACK;
 }
 
+/* pthread_main_np: nonzero iff the calling thread is the process main thread.
+ * The Swift MainActor default-isolation executor (swift_task_..MainActor..)
+ * calls this to decide whether it is already running on the main thread.
+ * The machorun guest runs the Swift runtime init and the whole render on its
+ * initial thread; we lazily capture the first caller's pthread identity as
+ * "main" (glibc_pthread_self, already bridged for the stack code) and report 1
+ * for it, 0 for any other. Single-threaded render => always the main thread,
+ * which is the truth. */
+static unsigned long g_main_thread;   /* 0 until first call captures it */
+int mr_pthread_main_np(void) asm("_pthread_main_np");
+int mr_pthread_main_np(void)
+{
+    unsigned long self = glibc_self();
+    if (g_main_thread == 0) g_main_thread = self;   /* first caller is main */
+    return self == g_main_thread ? 1 : 0;
+}
+
 /* ---- reserved-key thread-local storage -----------------------------------
  * The Swift runtime's tls_init_once() claims Darwin RESERVED pthread key 100
  * (__PTK_FRAMEWORK_SWIFT_KEY0) and registers a destructor with
