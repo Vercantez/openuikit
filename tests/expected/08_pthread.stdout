@@ -1,0 +1,7 @@
+thread 1 tls=6
+thread 2 tls=7
+thread 3 tls=8
+thread 4 tls=9
+shared=10
+once_count=1
+main tls=5

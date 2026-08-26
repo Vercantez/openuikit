@@ -1,0 +1,7 @@
+os: Darwin
+release: 25.5.0
+arch: arm64
+product: macOS 26.5.2 (25F84)
+clang: Apple clang version 17.0.0 (clang-1700.4.4.1)
+ld: @(#)PROGRAM:ld PROJECT:ld-1230.1
+recorded: 2026-08-26T02:10:22Z

@@ -1,0 +1,10 @@
+printf fixture
+int=1234
+neg=-7
+uint=4294967295 hex=beef
+long=1234567890123
+str=abc char=Z
+pct=50%
+pad=[   42][42   ][00042]
+dbl=3.142
+mix=s 8 2.5 x
