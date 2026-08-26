@@ -8,4 +8,4 @@ stage 6 linear-gradient    fnv1a=3f7c5fa9121b0df3  171c29ff  403166ff  8053c7ff 
 stage 7 radial-gradient    fnv1a=edb33eafc79b8532  171c29ff  403166ff  8053c7ff  171c29ff  df642cff
 stage 8 rotated            fnv1a=550799e8b5041e36  171c29ff  403166ff  8053c7ff  d1d2daff  df642cff
 stage 9 eo-clip            fnv1a=8b61a189e1bb6db6  171c29ff  403166ff  8053c7ff  d1d2daff  df642cff
-wrote oracle.png
+wrote 15_quartz.png
