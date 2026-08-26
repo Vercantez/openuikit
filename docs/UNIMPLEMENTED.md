@@ -373,6 +373,21 @@ docker run --rm --platform linux/arm64 -v "$PWD:/work" -w /work \
     bash -c 'sh scripts/build.sh all && bash scripts/build_objc4.sh'
 ```
 
+**Surveyed, 2026-08-26: `docs/SDK_SURVEY.md`.** The dependency is 1,056 SDK
+headers, and it is smaller than it looks. 712 of them are Apple's libc++, and
+objc4 built against stock LLVM 18 libc++ instead scores the same **41/44** with
+a byte-identical `09_objc` (three `-D` flags, no source change). Of the 355
+distinct C/Darwin headers reached across objc4 *and* the fixture corpus, 351
+are obtainable from Apple's own open-source releases — xnu 203, Libc 71,
+libdispatch 20, libpthread 17, cctools 8, libplatform 6, libmalloc 5, libunwind
+2, dyld 2, Libm 1 — and the remaining 4 are pure macro machinery contributing
+**71** macros anything else actually references. Nothing we need is unobtainable.
+The `.tbd` half is also settled: `ld64.lld-18` accepts hand-written tbd-v4
+(one hard requirement, the `...` terminator), and a guest compiled and linked
+entirely on Linux against `.tbd`s generated from our own dylibs runs correctly
+under machorun. This entry stays open until an SDK exists and
+`scripts/build_objc4.sh` stops taking `-isysroot` from Apple.
+
 ### `isa-va-width` — a silent-corruption risk, not a stub
 *Inherited from `~/objc4-linux/docs/PORT_PLAN.md`'s second-riskiest unknown; see
 `docs/OBJC4_MACHO.md` §9.3. Nothing aborts, which is the problem.*
