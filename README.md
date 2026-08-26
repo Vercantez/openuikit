@@ -34,6 +34,40 @@ Census the target apps' actual Foundation use to prioritise (like we did for
 UIKit). Honest walls are results.
 
 ## Status
-Bootstrapping. Depends on: the TLS-destructor loader fix in ~/machorun
-(in progress) so Swift classes run; libswiftCore from ~/swiftcore-macho.
-See docs/PLAN.md.
+
+**Decided, and the decisive risk is retired (2026-08-26).**
+
+`String <-> NSString` bridging **works**. A minimal Foundation slice —
+NSString, NSArray, NSMutableArray, NSDictionary, NSSet, NSEnumerator,
+NSNumber, plus a Swift overlay — builds as **Darwin Mach-O arm64 on Linux**
+and passes two differential tests byte-for-byte against real macOS 26.5.2
+Foundation:
+
+```
+$ scripts/run_tests.sh
+PASS      t1_objc      # ObjC API + CFGetTypeID toll-free dispatch
+PASS      t2_bridge    # "hi" as NSString -> 2 ; NSArray(array:[1,2,3]) -> 3
+pass 2  fail 0  no-oracle 0
+```
+
+The reframing that made it tractable: **libswiftCore's dependency on
+Foundation is a runtime contract, not a link-time one** — 128 selectors, 6
+classes found by `objc_lookUpClass`, and 4 CoreFoundation functions found by
+`dlsym`. It links no Foundation and no CoreFoundation at all. All of it is
+ours to satisfy.
+
+**The decision:** our own Foundation (Objective-C `NS*` class clusters + a
+Swift overlay) over swift-corelibs-foundation's CoreFoundation with its
+Objective-C toll-free-bridging macros restored — Apple stripped the *macros*
+when open-sourcing CF but left **294 dispatch call sites intact**. Full
+reasoning, and why corelibs-in-ObjC-mode / corelibs-in-Swift-mode /
+GNUstep-base are each ruled out, in **`docs/DECISION.md`**. Build plan in
+`docs/PLAN.md`.
+
+**Known dependency, not ours:** libswiftCore has Apple's 47-bit arm64
+`ISA_MASK` inlined, while machorun maps images above 2^47 — so Swift
+truncates every class pointer and faults. Worked around here with
+`ulimit -s unlimited`; the fix belongs in machorun. DECISION §3. This
+affects all Swift on machorun, not just Foundation.
+
+The TLS-destructor loader fix is **in** (Swift classes run).
