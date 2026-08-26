@@ -1,0 +1,33 @@
+# machorun fixture manifest -- tab separated, one runnable fixture per line.
+#
+# id            fixture id; tests/bin/<id> is the Mach-O, tests/expected/<id>.*
+#               is the recorded macOS behaviour
+# rung          position on the ladder in docs/FIXTURES.md (a..i)
+# fixups        chained | classic | none
+# oracle        run                 macOS can execute it, so a baseline exists
+#               norun:<reason>      macOS refuses to execute it; no baseline,
+#                                   the fixture is parse-only
+# linux         pass                should eventually match the oracle exactly
+#               xfail:<reason>      known, documented, out-of-scope-for-now
+# what          one-line description
+#
+# Columns are separated by a single TAB. Keep it that way; the harness splits
+# on tabs so descriptions may contain spaces.
+#
+#id	rung	fixups	oracle	linux	what
+01_exit_raw	a	classic	run	xfail:raw Darwin svc syscalls; on Linux svc traps to the Linux kernel with Linux numbering	no libSystem calls at all - write+exit via svc #0x80
+01b_exit_unixthread	a	none	norun:macOS 11+ on arm64 SIGKILLs static executables (no LC_LOAD_DYLINKER)	xfail:no oracle baseline to compare against	fully static, LC_UNIXTHREAD entry, no dyld
+02_main_ret	b	chained	run	pass	LC_MAIN entry, exit status is main's return value
+02c_main_ret_classic	b	classic	run	pass	same, classic LC_DYLD_INFO_ONLY fixups
+03_printf	c	chained	run	pass	first real libSystem dependency: printf/puts + Darwin varargs
+03c_printf_classic	c	classic	run	pass	same, classic fixups and __la_symbol_ptr lazy binding
+04_malloc	d	chained	run	pass	malloc/calloc/realloc/free/strdup/posix_memalign
+05_mod_init	e	chained	run	pass	initialisers via __TEXT,__init_offsets (S_INIT_FUNC_OFFSETS)
+05c_mod_init_classic	e	classic	run	pass	same source, initialisers via __DATA_CONST,__mod_init_func
+05b_cxx_init	e	chained	run	xfail:needs libc++ and libc++abi as Mach-O dylibs	C++ global ctors/dtors, __cxa_atexit, guarded local static
+06_tls	f	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
+07_dylib	g	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
+07c_dylib_classic	g	classic	run	pass	same, classic fixups on both images
+08_pthread	h	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
+09_objc	i	chained	run	xfail:needs libobjc.A.dylib (~/objc4-linux) and the dyld ObjC image-notify hook	Foundation-free Objective-C: classes, selrefs, objc_msgSend
+10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

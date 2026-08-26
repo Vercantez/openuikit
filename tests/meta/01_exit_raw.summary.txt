@@ -1,0 +1,11 @@
+binary: 01_exit_raw
+architectures: arm64
+filetype: EXECUTE
+header-flags: NOUNDEFS DYLDLINK TWOLEVEL PIE
+load-commands: LC_BUILD_VERSION,LC_CODE_SIGNATURE,LC_DATA_IN_CODE,LC_DYLD_INFO_ONLY,LC_DYSYMTAB,LC_FUNCTION_STARTS,LC_LOAD_DYLIB,LC_LOAD_DYLINKER,LC_MAIN,LC_SEGMENT_64,LC_SOURCE_VERSION,LC_SYMTAB,LC_UUID
+fixups: classic (LC_DYLD_INFO_ONLY opcode streams)
+entry: LC_MAIN
+dylibs: /usr/lib/libSystem.B.dylib
+rpaths: 
+loader-relevant sections (segment,section,flags):
+undefined-symbol-count: 1

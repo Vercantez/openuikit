@@ -1,0 +1,112 @@
+### file
+/Users/miguelsalinas/machorun/tests/bin/01b_exit_unixthread: Mach-O 64-bit executable arm64
+
+### mach header
+/Users/miguelsalinas/machorun/tests/bin/01b_exit_unixthread:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           2     7        728 0x00000001
+
+### dependencies
+/Users/miguelsalinas/machorun/tests/bin/01b_exit_unixthread:
+
+### load commands
+/Users/miguelsalinas/machorun/tests/bin/01b_exit_unixthread:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 232
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 2
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100000338
+      size 0x0000000000000028
+    offset 824
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x0000000100000360
+      size 0x0000000000000020
+    offset 864
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 88
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 3
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 16384
+   nsyms 3
+  stroff 16432
+ strsize 40
+Load command 4
+     cmd LC_UUID
+ cmdsize 24
+    uuid F0CE5706-CCCB-3CE8-8519-6CB0FDC6F01D
+Load command 5
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 6
+        cmd LC_UNIXTHREAD
+    cmdsize 288
+     flavor ARM_THREAD_STATE64
+      count ARM_THREAD_STATE64_COUNT
+	    x0  0x0000000000000000 x1  0x0000000000000000 x2  0x0000000000000000
+	    x3  0x0000000000000000 x4  0x0000000000000000 x5  0x0000000000000000
+	    x6  0x0000000000000000 x7  0x0000000000000000 x8  0x0000000000000000
+	    x9  0x0000000000000000 x10 0x0000000000000000 x11 0x0000000000000000
+	    x12 0x0000000000000000 x13 0x0000000000000000 x14 0x0000000000000000
+	    x15 0x0000000000000000 x16 0x0000000000000000 x17 0x0000000000000000
+	    x18 0x0000000000000000 x19 0x0000000000000000 x20 0x0000000000000000
+	    x21 0x0000000000000000 x22 0x0000000000000000 x23 0x0000000000000000
+	    x24 0x0000000000000000 x25 0x0000000000000000 x26 0x0000000000000000
+	    x27 0x0000000000000000 x28 0x0000000000000000  fp 0x0000000000000000
+	     lr 0x0000000000000000 sp  0x0000000000000000  pc 0x0000000100000338
+	   cpsr 0x00000000
+
+### undefined symbols
+
+### defined external symbols
+0000000100000000 A __mh_execute_header
+0000000100000338 T _start
