@@ -1,0 +1,25 @@
+# objc-config.h: there is no dyld shared cache under machorun, so SUPPORT_PREOPT is 0.
+# `#define SUPPORT_PREOPT 1` is unconditional upstream, so -DSUPPORT_PREOPT=0 cannot win;
+# it has to be a patch. objc-opt.mm already carries a complete `#if !SUPPORT_PREOPT`
+# fallback body for almost every entry point (see 0003 for the two exceptions).
+#
+# This is the ONLY hunk that survives from the ELF port's patches/0001, which needed
+# five. The other four -- CACHE_MASK_STORAGE, CONFIG_USE_PREOPT_CACHES, HAVE_ASPRINTF
+# and OBJC_THREADING_PACKAGE -- are all already correct because TARGET_OS_OSX is 1.
+diff -ru a/runtime/objc-config.h b/runtime/objc-config.h
+--- a/runtime/objc-config.h	2026-08-25 22:21:45.996829126 -0500
++++ b/runtime/objc-config.h	2026-08-25 22:21:45.997070084 -0500
+@@ -55,7 +55,13 @@
+ #endif
+ 
+ // Define SUPPORT_PREOPT=1 to enable dyld shared cache optimizations
++#if OBJC_MACHORUN
++    // machorun: there is no dyld shared cache. Every preopt entry point has
++    // a !SUPPORT_PREOPT fallback in objc-opt.mm already.
++#   define SUPPORT_PREOPT 0
++#else
+ #   define SUPPORT_PREOPT 1
++#endif
+ 
+ // Define SUPPORT_TAGGED_POINTERS=1 to enable tagged pointer objects
+ // Be sure to edit tagged pointer SPI in objc-internal.h as well.

@@ -1,0 +1,30 @@
+# objc-opt.mm: add the two !SUPPORT_PREOPT definitions Apple never needed.
+#
+# Apple does not build SUPPORT_PREOPT=0 in this vintage, so the fallback block is
+# incomplete: getSharedCachePreoptimizedProtocol() and hasSharedCacheDyldInfo() are
+# referenced unconditionally (objc-runtime-new.mm and objc-private.h's
+# header_info::dyldInfo()) but defined only in the SUPPORT_PREOPT branch. Without
+# these two, libobjc.A.dylib does not link.
+#
+# Identical in substance to the ELF port's patches/0007 -- this one is a consequence
+# of patch 0002, not of the file format, so it survives unchanged.
+diff -ru a/runtime/objc-opt.mm b/runtime/objc-opt.mm
+--- a/runtime/objc-opt.mm	2026-08-25 22:21:46.001635088 -0500
++++ b/runtime/objc-opt.mm	2026-08-25 22:21:46.001863047 -0500
+@@ -222,6 +222,16 @@
+     return nil;
+ }
+ 
++Protocol *getSharedCachePreoptimizedProtocol(const char *name __unused)
++{
++    return nil;
++}
++
++bool hasSharedCacheDyldInfo()
++{
++    return false;
++}
++
+ void preopt_init(void)
+ {
+     disableSharedCacheProtocolOptimizations();
