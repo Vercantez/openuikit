@@ -28,3 +28,13 @@ module ObjectiveC [system] {
 }
 EOF
 echo "staged objc module: $(ls "$INC/objc" | tr '\n' ' ')"
+
+# Apple's API notes for the ObjectiveC module. objc4's published NSObject.h --
+# and, measured, Apple's SDK copy of the same header -- carries no nullability
+# annotations at all: `- (instancetype)init` is line 66 of both, unaudited.
+# Every bit of the nullability Swift sees comes from this YAML sidecar, which
+# clang picks up as <ModuleName>.apinotes next to the module map. Without it
+# `View()` imports as `View!` and ordinary Swift stops compiling.
+# It is data, not code, and small enough to reimplement clean-room later.
+cp "$(xcrun --show-sdk-path --sdk macosx)/usr/include/ObjectiveC.apinotes" "$INC/ObjectiveC.apinotes"
+echo "staged ObjectiveC.apinotes ($(wc -l < "$INC/ObjectiveC.apinotes") lines)"

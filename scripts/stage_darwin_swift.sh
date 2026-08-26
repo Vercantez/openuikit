@@ -25,3 +25,15 @@ echo "staged from $SDK"
 echo "  usr/lib/swift : $(ls "$SYS/usr/lib/swift" | wc -l | tr -d ' ') entries, $(du -sh "$SYS/usr/lib/swift" | cut -f1)"
 echo "  usr/include   : $(find "$SYS/usr/include" -type f | wc -l | tr -d ' ') headers (from machorun/sdk)"
 echo "  total         : $(du -sh "$SYS" | cut -f1)"
+
+# The back-deployment compatibility archives, arm64-thinned. NOT linked -- see
+# docs/SPIKE.md §2: they reference pthread_mutexattr_init, pthread_rwlock_* and
+# dispatch_once, none of which machorun's libSystem.tbd exports, so the build
+# uses -runtime-compatibility-version none instead. Staged anyway so the next
+# person can see what they cost rather than rediscovering it.
+TC=$(dirname "$(dirname "$(xcrun -f swiftc)")")
+mkdir -p "$SYS/usr/lib/swift/macosx-static"
+for f in libswiftCompatibility56 libswiftCompatibilityConcurrency libswiftCompatibilityPacks; do
+    lipo -thin arm64 "$TC/lib/swift/macosx/$f.a" -output "$SYS/usr/lib/swift/macosx-static/$f.a"
+done
+echo "  compat (unused): $(du -sh "$SYS/usr/lib/swift/macosx-static" | cut -f1)"

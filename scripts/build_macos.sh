@@ -20,3 +20,10 @@ xcrun swiftc -target arm64-apple-macos11 -parse-as-library -emit-library \
 xcrun clang -target arm64-apple-macos11 -O1 -o "$OUT/objc_main" \
     "$ROOT/spike/objc_main.c" "$OUT/libobjcprobe.dylib" -Wl,-rpath,@loader_path
 ls -l "$OUT"
+
+xcrun swiftc -target arm64-apple-macos11 -parse-as-library -emit-library \
+    -module-name Breadth -Xfrontend -disable-objc-attr-requires-foundation-module \
+    -o "$OUT/libbreadth.dylib" "$ROOT/spike/breadth.swift" \
+    -Xlinker -install_name -Xlinker @rpath/libbreadth.dylib
+xcrun clang -target arm64-apple-macos11 -O1 -o "$OUT/breadth_main" \
+    "$ROOT/spike/breadth_main.c" "$OUT/libbreadth.dylib" -Wl,-rpath,@loader_path
