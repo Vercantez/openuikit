@@ -519,29 +519,30 @@ EXPORT const char *_Block_signature(void *b) { (void)b; return NULL; }
 EXPORT int _Block_use_stret(void *b) { (void)b; return 0; }
 
 /* ===================================================================== *
- * Swift refcounting. objc4 refers to swift_retain/swift_release so that a
- * Swift-stable class can be retained without a message send. On Darwin the
- * reference is delay-init: it resolves only if libswiftCore is loaded.
- * ld64.lld does not implement -delay_init, so the reference is a plain
- * undefined and something must define it. These are reachable ONLY for an
- * object whose class isSwiftStable(), which cannot exist without libswiftCore
- * -- so reaching one means something is badly wrong, and we say so.
+ * Swift refcounting is NOT here, and its absence is the point.
+ *
+ * objc4 refers to swift_retain/swift_release so that a Swift-stable class can
+ * be retained without a message send. On Darwin those two references carry
+ * -delay_init: they resolve on first use and only if libswiftCore is in the
+ * process. ld64.lld-18 has no -delay_init, so scripts/build_objc4.sh emits
+ * them as ordinary flat-lookup binds, which must resolve at load time.
+ *
+ * This file used to define them as loud aborts so that the bind had something
+ * to hit. That was fine while no Swift runtime could exist and wrong the
+ * moment one did: machorun's flat lookup returns the FIRST definition in load
+ * order, libSystem.B.dylib loads before libswiftCore.dylib, so objc4's
+ * fast-path refcounting bound to the diagnostic abort with the real
+ * implementation sitting in the very next image. The only way out was to order
+ * -lswiftCore ahead of -lSystem on the guest's link line -- a load-bearing
+ * detail no guest should have to know, and one that silently stops working the
+ * day someone reorders a Makefile.
+ *
+ * The diagnostic now lives in the LOADER (src/resolve.c, listed in
+ * darwin/loader-exports.txt). The loader is only consulted after the flat
+ * lookup has found nothing in any image, so it cannot shadow a real
+ * libswiftCore however the guest was linked, and a guest without one still
+ * fails with a sentence instead of a null jump.
  * ===================================================================== */
-EXPORT void *swift_retain(void *o)
-{
-    (void)o;
-    mr_bail("swift_retain: a Swift-stable object reached objc4's fast-path "
-            "refcounting, but no libswiftCore is loaded under machorun. "
-            "See docs/UNIMPLEMENTED.md#swift-interop.");
-    return 0;
-}
-EXPORT void swift_release(void *o)
-{
-    (void)o;
-    mr_bail("swift_release: a Swift-stable object reached objc4's fast-path "
-            "refcounting, but no libswiftCore is loaded under machorun. "
-            "See docs/UNIMPLEMENTED.md#swift-interop.");
-}
 
 /* ===================================================================== *
  * Restartable ranges. Darwin lets a thread declare a PC range that the kernel
