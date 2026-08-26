@@ -578,15 +578,32 @@ out of scope.
 
 ### `fixture-coverage-gaps`
 Not exercised by any fixture, therefore unverified no matter what the loader
-does: stdin; `argv` beyond `argv[0]`; environment variables; signals;
-`fork`/`exec`; file and socket I/O; `dlopen`/`dlsym`; C++ exceptions;
-`LC_MAIN.stacksize != 0`; `LC_REEXPORT_DYLIB`; weak and weak-defined symbols;
-two-level-namespace *misses*; `__DATA,__objc_catlist` (ld64 merges same-image
-categories into the class, so the corpus never produces one).
+does: stdin; environment variables; signals; `fork`/`exec`; socket I/O;
+`dlopen`/`dlsym`; C++ exceptions; `LC_MAIN.stacksize != 0`;
+`LC_REEXPORT_DYLIB`; weak and weak-defined symbols; two-level-namespace
+*misses*.
 
 Each is a rung that does not exist yet. Adding one means adding a fixture,
 recording it on macOS, and listing it in `tests/manifest.tsv` — not asserting
 it works.
+
+**Two entries left this list on 2026-08-26** and the reason the second one did
+is worth keeping:
+
+* **`argv` beyond `argv[0]`, and file output.** The three drawing fixtures
+  take their output path from `argv[1]` and write a PNG through
+  `fopen`/`fwrite`, so both are now on the critical path to a graded artefact.
+* **`__DATA,__objc_catlist`.** The old text said ld64 merges same-image
+  categories into the class so the corpus never produces one, and for `09_objc`
+  that is exactly what happens — its `Counter (Doubling)` category leaves no
+  `__objc_catlist` at all. `17_objc_shapes` produces one anyway, plus an
+  `__objc_nlcatlist`, both 8 bytes, one entry each. The difference is that its
+  category **implements `+load`**: a category with a `+load` cannot be merged
+  away, because `+load` has to be called as a separate thing at a defined point
+  in the load order. So the correct statement is not "ld64 merges categories"
+  but "ld64 merges categories it is allowed to merge", and `+load` is the lever
+  that stops it. That is now covered, and `docs/FIXTURES.md` rung (p) lists the
+  other four sections no earlier fixture produced.
 
 ### `fixture-nonreproducible`
 Rebuilding a fixture from identical sources yields different bytes (fresh
@@ -623,11 +640,17 @@ from the export list:
    would crash here and unwind there. See `unwind-compact`.
 
 ### `quartz-fixture-coverage`
-`tests/bin/15_quartz` exercises nine drawing stages and calls **34 of
-libquartz's 507 exported symbols** directly (`nm -u tests/bin/15_quartz | grep
-_QZ`). What those 34 reach internally is more than 34, but it is not measured
-and should not be guessed at. Untested and therefore unverified no matter how
-green the PNG diff is: the whole Core Animation layer
+The three drawing fixtures together call **36 of libquartz's 507 exported
+symbols** directly — 34 from `15_quartz`, 8 from `16_objc_quartz`, 18 from
+`17_objc_shapes`, overlapping heavily
+(`nm -u tests/bin/1[567]* | grep _QZ | sort -u | wc -l`). Adding Objective-C on
+top therefore bought exactly **two** further exports
+(`QZContextAddRoundedRect`, `QZContextFillEllipseInRect`) and nothing else, and
+that is worth stating rather than letting a rung count imply otherwise: rungs
+(o) and (p) are a test of *dispatch*, not of drawing coverage. What those 36
+reach internally is more than 36, but it is not measured and should not be
+guessed at. Untested and therefore unverified no matter how green the PNG diff
+is: the whole Core Animation layer
 tree (`QZLayer*`, `QZAnimation*`, the replicator and transform layers), text and
 font loading (`stb_truetype`), image decode (`stb_image`), PDF output, patterns,
 shadings, CMYK and Display P3 colour, blend modes other than normal, and
@@ -639,3 +662,27 @@ simply not covered *here*, which is a different claim. Adding coverage means
 adding drawing stages to `tests/src/15_quartz.c`, rebuilding the fixture on
 macOS, and re-recording with `scripts/quartz_pixel.sh --record` — not asserting
 that a passing PNG generalises.
+
+### `objc-drawing-coverage`
+What rungs (o) and (p) do **not** reach, listed so the next reader does not
+have to infer it from what they do:
+
+* **No ARC, no exceptions, no `NSObject`.** Both fixtures are Foundation-free
+  root-class programs, exactly like `09_objc`. `-retain`/`-release`/
+  `-autorelease`, `@try`/`@throw` and everything that needs a real base class
+  are covered — where they are covered at all — by `tests/objc44/`, and the
+  exception cases there are the two that fail (`unwind-compact`).
+* **No dynamic runtime mutation on the drawing path.**
+  `class_addMethod`/`method_exchangeImplementations`/`objc_allocateClassPair`
+  are `tests/objc44/013`–`024`; no *pixel* depends on one, so a bug that only
+  shows up when an IMP is swizzled mid-render would not be caught here.
+* **One image.** Every class, category and protocol in both fixtures lives in
+  the executable. Categories or `+load` in a *dylib*, and therefore the
+  cross-image half of `objc-load-ordering`, are still untested by anything that
+  draws.
+* **No message to `nil`, no forwarding.** `-forwardInvocation:`/
+  `+resolveInstanceMethod:` are not reached; a `nil` receiver returning a
+  `QZRect` (the HFA-return path stage 4 relies on) is not exercised either.
+* **`+initialize` ordering is asserted for one interleaving.** The printed
+  order is the one this scene's construction sequence produces. A different
+  first-touch order is a different test, and there is only the one.

@@ -1,6 +1,6 @@
 # The fixture ladder
 
-Twenty-one Mach-O programs (plus two dylibs they load), built once by Apple's
+Twenty-four Mach-O programs (plus two dylibs they load), built once by Apple's
 toolchain on macOS and committed as bytes.
 
 > **These binaries must keep coming from Xcode, and `sdk/` must never be used to
@@ -33,11 +33,13 @@ and probe the places where Darwin and Linux disagree about what a C call means.
 The measurements behind them are in `docs/ABI.md`.
 
 ```
-tests/src/         fixture sources
-tests/bin/         the committed Mach-O binaries and dylibs
-tests/expected/    recorded macOS behaviour (+ PROVENANCE stamp)
-tests/meta/        otool -l and a per-binary structural summary
-tests/manifest.tsv the machine-readable index the harness walks
+tests/src/              fixture sources
+tests/bin/              the committed Mach-O binaries and dylibs
+tests/expected/         recorded macOS behaviour (+ PROVENANCE stamp, + PNGs)
+tests/meta/             otool -l and a per-binary structural summary
+tests/manifest.tsv      the machine-readable index the harness walks
+tests/draw_manifest.tsv the same, for the three fixtures whose result is a PNG
+harness/pngdiff.c       says WHERE two PNGs differ, not just that they do
 ```
 
 Run it:
@@ -47,6 +49,9 @@ harness/run_macos.sh            re-verify the oracle on this Mac
 harness/run_macos.sh --record   (re-)record baselines — Darwin only
 harness/run_linux.sh            run the corpus under machorun in Docker
 scripts/difftest.sh             both of the above, then the scoreboard
+
+scripts/quartz_pixel.sh         the same, for the DRAWING fixtures (n, o, p)
+scripts/quartz_pixel.sh --record  (re-)record their baselines — Darwin only
 ```
 
 ---
@@ -554,6 +559,94 @@ Measured 2026-08-26: all nine checksums identical, PNG byte-identical
 (26,861 bytes). `docs/QUARTZ_MACHO.md` §3 states the limit that result does
 *not* remove.
 
+---
+
+### (o) `16_objc_quartz` — the smallest program in which Objective-C draws
+`tests/src/16_objc_quartz.m` · chained · 128×128
+
+`15_quartz` proved the rasteriser under machorun with **no** Objective-C in it.
+`09_objc` proved Objective-C under machorun with **no** drawing in it. Neither
+proved they compose, and this is the fixture that does: one root class, two
+ivars, one `+` constructor, one `-drawInContext:`, two message sends, two
+filled ellipses, one PNG.
+
+It is deliberately trivial because its job is to be a **bisection point** for
+`17_objc_shapes`. If 17 fails and 16 passes, the bug is in what 17 adds. If 16
+fails, nothing about 17's pixel diff is worth reading yet.
+
+Three images, which is one more than anything below rung (n) loads:
+`/usr/lib/libquartz.dylib`, `/usr/lib/libobjc.A.dylib`,
+`/usr/lib/libSystem.B.dylib`. 19 undefined symbols. Foundation-free, like
+`09_objc`: a root class with its own `Class isa`, instances from
+`class_createInstance`.
+
+The second blob is drawn through an explicitly cast `objc_msgSend` rather than
+bracket syntax, and it is a *different colour and size* on purpose — an
+identical second ellipse would leave stage 3's checksum equal to stage 2's, and
+a stage that cannot move is a stage that cannot fail.
+
+**Loader must implement:** nothing structurally new over (i) and (n)
+*together* — which is the point. It is the first fixture that needs both at
+once.
+
+### (p) `17_objc_shapes` — Objective-C in anger, and the milestone
+`tests/src/17_objc_shapes.m` · chained · 256×256
+
+The picture is produced by polymorphic message dispatch. Take any one of these
+away and the image changes:
+
+| mechanism | where it reaches a pixel |
+|---|---|
+| protocol | `<Drawable>`: required methods, an `@optional` one, a `readonly` property. The scene loop is typed `id<Drawable>` and by no class |
+| root class | `Shape` owns its `Class isa`; no NSObject, no CoreFoundation |
+| ivars | declared in the `@interface` braces, plus one the compiler creates for `@property inset` |
+| properties | `tag` over an explicit `_tag`, `inset` over a synthesised `_inset`; the category uses dot syntax, i.e. a real accessor send |
+| inheritance | `Shape` → `Circle` → `Ring`, three levels |
+| `[super …]` | `-[Ring drawInContext:]` — **`objc_msgSendSuper2`, which no other fixture in the corpus imports** |
+| subclass ivars | `Vane` adds `_angle` on top of `Shape`'s layout, so non-fragile-ivar `instanceStart` arithmetic is load bearing |
+| overriding | four `-drawInContext:` implementations, chosen by the isa pointer |
+| category | `Shape (Badge)` adds `-badgeInContext:` to an already-compiled class; every shape gets a badge from it |
+| `+load` | six of them (five classes and the category), printed before `main` |
+| `+initialize` | inherited from `Shape`, fired lazily, so the print order records **when** each class was first touched — `+initialize Vane` appears between stages 4 and 5 |
+| `objc_msgSend` | called through an explicit cast as well as by bracket syntax, including a `QZRect` return |
+
+Sections **no earlier fixture produces**: `__DATA_CONST,__objc_nlclslist`,
+`__objc_nlcatlist` (the `+load` non-lazy lists), `__objc_protolist`,
+`__DATA,__objc_protorefs` and `__DATA,__objc_superrefs`. New undefined symbols:
+`_objc_msgSendSuper2` and `_class_conformsToProtocol`. 36 undefined in total.
+
+Two ABI assertions worth naming, because both are silent when wrong and neither
+is caught by an exit status:
+
+* **`QZRect` through `objc_msgSend`.** Four doubles is a homogeneous float
+  aggregate, so AAPCS64 returns it in `d0`–`d3`, *not* through the `x8`
+  indirect-result register — and arm64 has no `objc_msgSend_stret` to fall back
+  to. Stage 4 fetches every shape's `-insetFrame` that way and strokes it, so a
+  mistake misplaces every outline. `+shapeWithFrame:tag:` passes one the other
+  way, by value.
+* **The transcendental.** Stage 5, `-[Vane drawInContext:]`, is the only code
+  in the fixture that reaches `cos`/`sin` (`QZContextRotateCTM`). Two vanes at
+  two angles, so one lucky argument cannot make it agree by accident. It is in
+  its own stage, last, with its own checksum, for the reason `15_quartz`'s
+  stage 8 is: see `docs/QUARTZ_MACHO.md` §3.
+
+Six probe pixels are printed after every stage, each aimed at the output of a
+*different object* — the plain `Shape`, its category badge, the `Circle`, the
+`RoundedBox`, the `Ring`'s annulus (the `[super]` path) and the first `Vane` —
+so a single wrong dispatch shows up as a colour and not only as a moved hash.
+
+**Determinism.** No time, no random, no locale-dependent formatting, no
+environment, no address is ever printed, and nothing iterates a hash table: the
+collection is a fixed-size C array walked in insertion order. Every coordinate
+and colour is a literal.
+
+**Loader must implement:** everything at (i) and (n), plus category attachment
+and `+load` ordering across classes *and* categories in one image, protocol
+metadata, and `objc_msgSendSuper2`.
+
+Measured 2026-08-26: all five stage checksums identical, PNG byte-identical
+(11,909 bytes), exit 0 / 0.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.
@@ -576,6 +669,58 @@ Verdicts: `PASS` `FAIL` `XFAIL` `XPASS` `SKIPPED` `NO-ORACLE` `BASELINE-DRIFT`.
 `XPASS` matters — it means a documented wall has fallen and the manifest is now
 lying.
 
+### …and the same four, for the drawing fixtures
+
+`scripts/quartz_pixel.sh` grades rungs (n), (o) and (p) from
+`tests/draw_manifest.tsv`. It is a separate runner because those fixtures'
+headline artefact is a **file** and their macOS run needs `DYLD_LIBRARY_PATH`;
+teaching the shared harness either would put a fixture-specific special case
+into the thing that grades every other fixture. It obeys the same four rules,
+and all four were re-verified on 2026-08-26:
+
+1. `--record` dies with *"only runs on macOS: the baseline is the oracle's"* on
+   any non-Darwin host. Verified inside the container: exit 1.
+2. The macOS side is **re-executed every run**; the committed baseline is
+   compared against it, never substituted for it. That comparison now covers
+   `stdout` and the exit status as well as the PNG — see the note below, which
+   is what strengthening it found.
+3. `tests/expected` is bind-mounted into the container **read-only, on top of**
+   the writable `/work` mount (Docker applies binds in destination-path order,
+   so the deeper one wins for that subtree). Verified: create, append and
+   delete all fail with `Read-only file system`.
+4. An oracle that has moved is `BASELINE-DRIFT`, and such a fixture can never
+   be scored `PASS` in that run — even if the Linux side matched it byte for
+   byte, which is exactly the case rule 2 caught.
+
+**The PNG comparison is exact, and a failure is diagnosable.** Bytes must be
+identical; `cmp` alone would then say "differ at byte 4137" and stop, because
+everything after the IHDR is deflate-compressed and one wrong pixel moves every
+byte downstream. So on a mismatch the runner builds `harness/pngdiff.c` (stb,
+already vendored with quartz — nothing is installed on the oracle host) and
+prints: the count of differing pixels, **how many differ by more than one level
+in any channel**, the bounding box in bitmap coordinates, the largest delta per
+channel including alpha, and the first eight differing pixels with both RGBA
+values. Zero differing pixels with differing file bytes is itself a finding and
+is reported as one — the rasteriser agreed and the *encoder* did not.
+
+The split at ±1 is the first question worth asking: a large count that is
+entirely ±1 is a rounding or libm-ulp story, a small count with large deltas is
+a wrong shape. Verified by injecting a fault (`Ring`'s hole factor 0.30 → 0.32,
+rebuilt with Apple's clang, run through the Linux side against the committed
+baseline): `136 of 65536 differing, 132 by >1 level, bounding box x 44..71
+y 137..160` — the ring, and nothing else.
+
+> **One correction this strengthening produced, on the day it was written.**
+> Rule 2 previously compared only the PNG for `15_quartz`, and
+> `tests/expected/15_quartz.stdout` turned out to have been recorded by a hand
+> run that passed `oracle.png` as `argv[1]` rather than by `--record`. Its last
+> line therefore read `wrote oracle.png` where every harness run on both hosts
+> produces `wrote 15_quartz.png`. All nine stage checksums, the exit status and
+> the PNG were and are identical on macOS and under machorun; the stale line
+> was latent because `--linux` mode is the only mode that reads that file, and
+> `both` mode does not. Re-recorded from the macOS oracle through `--record`;
+> the PNG bytes did not change.
+
 ## Rebuilding
 
 ```
@@ -584,7 +729,9 @@ tests/build_fixtures.sh 06_tls       rebuild one
 harness/run_macos.sh --record        re-record after any rebuild
 
 tests/build_fixtures.sh 15_quartz    also builds the macOS oracle libquartz
-scripts/quartz_pixel.sh --record     re-record 15_quartz (macOS only; PNG too)
+tests/build_fixtures.sh 17_objc_shapes   likewise (rungs n, o and p all need it)
+scripts/quartz_pixel.sh --record     re-record ALL the drawing fixtures
+scripts/quartz_pixel.sh --record 17_objc_shapes   just one (macOS only; PNG too)
 ```
 
 Rebuilding produces different bytes (fresh `LC_UUID` and ad-hoc code
