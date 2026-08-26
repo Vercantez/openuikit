@@ -295,7 +295,16 @@ Four results, all re-runnable.
 | `scripts/build_objc4.sh` against `sdk/` | **32 objects, 0 failures** |
 | `scripts/objc44.sh` | **41/44**, same three failures as before (`038-exceptions`, `042-dlopen`, `044-exception-through-uncached` — compact unwind ×2, dlopen ×1) |
 | `scripts/difftest.sh` | **19 pass / 0 fail / 1 xfail / 1 no-oracle**, unchanged |
-| `scripts/sdk_abi_probe.sh` | **149 lines, byte-identical to the macOS oracle** |
+| `scripts/sdk_abi_probe.sh` | **163 lines, byte-identical to the macOS oracle** |
+
+> **Corrected 2026-08-26 by independent verification (`docs/STATUS.md` §9).**
+> The probe was 149 lines and did **not** print `MACH_VM_MAX_ADDRESS_RAW` — so
+> the single failure §3.2 below describes as the reason this SDK needs a probe
+> was the one failure the probe could not see. Forcing that constant back to the
+> embedded 64 GB value passed all four rows of this table. It is printed now,
+> together with `MACH_VM_{MIN,MAX}_ADDRESS`, `VM_{MIN,MAX}_ADDRESS`, the three
+> `__DARWIN_ONLY_*` conformance settings and the two `__DARWIN_SUF_*` suffix
+> strings, and the mutation now fails. Baseline re-recorded on the oracle.
 
 The last one is the new one, and it is the test `docs/SDK_SURVEY.md` §6.1 asked
 this milestone to buy. `sdk/tests/abi_probe.c` prints the ABI rather than
@@ -357,3 +366,26 @@ the 15.4 SDK because the published revision had run ahead).
 **Never track a branch.** `scripts/sdk_stage.sh --verify` re-fetches every
 upstream file and checks it against `CHECKSUMS.sha256`, so a moved tag is a loud
 failure rather than a mystery six months from now.
+
+> **That was not true until 2026-08-26.** `--verify` re-staged the tree and
+> *overwrote* `CHECKSUMS.sha256` before verifying, then compared the file it had
+> just written against a second fetch of the same bytes. Measured: poison one
+> row, run `--verify` on a cold cache, and it printed `all upstream files match
+> their pinned tag` while silently deleting the poisoned row — a moved tag would
+> have been recorded as the new truth. It now force-re-fetches all 332 files,
+> treats the committed record as read-only, and dies with a diff. Re-tested both
+> ways.
+>
+> Two limits remain, and they are limits rather than bugs. `--verify` covers
+> **332 of 355** files: the 19 clean-room and 4 objc4 headers live in this
+> repository and only git vouches for them. And there is no purely-offline check
+> that the committed `sdk/usr/include` matches these sums, because the sums are
+> of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
+> regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
+> work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
+> measured 2026-08-26, a restage of a clean checkout reproduces all 355 headers
+> byte-for-byte.
+>
+> `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on
+> a differently-configured machine moved 18 rows without changing a hash, which
+> makes the record unverifiable by diff.

@@ -4,6 +4,7 @@
 # this repository and git already vouches for them.
 #
 # scripts/sdk_stage.sh --verify re-fetches upstream and checks these.
+c1f75e3d4d3b06d7ffbd50697666c874236d269e30307e303609d71f2269bdd9  libclosure:Block.h  Block.h
 b226c1e20cabb4d18a12b50631ce14a6087deb9442a4a10dda96b8b4a773b667  Libc:include/___wctype.h  ___wctype.h
 dd744708e8d73f7e8867ec6cb279ac5ff144f749d9a9e556aca730826d5b7406  libunwind:libunwind/include/__libunwind_config.h  __libunwind_config.h
 4f5a5415ad8461fe0add7dc1a4a34ba75718b839697ca6df7766e4008643288a  Libc:include/__wctype.h  __wctype.h
@@ -13,8 +14,8 @@ ad37627745fd324a640fa93c5f9909250c036d577457090a1e72ee939cd7fc7b  Libc:include/_
 73ac20b763ff6e1c328563bbd125e3eaa78a367eb92c867626a047ae4ab391b3  Libc:include/_ctermid.h  _ctermid.h
 3fb6599bf0aaaf4cddeb3fa55dc0d55850d0985cc953cc20c1a7d2d82481d596  Libc:include/_ctype.h  _ctype.h
 636d27850c5d995bad2bc1e8ca0bde1ccca16977a81498e8bf71f8acc45ecd5f  Libc:include/_inttypes.h  _inttypes.h
-675f096ecefba423f28f9511bcac525379f29be2d9a3f3c730ab1ac22e024754  Libc:include/_locale_posix2008.h  _locale_posix2008.h
 a673c4db6d2a7113fa9c77cbf225ba14063818b664ed55d3f7e15966dce73d3d  Libc:include/_locale.h  _locale.h
+675f096ecefba423f28f9511bcac525379f29be2d9a3f3c730ab1ac22e024754  Libc:include/_locale_posix2008.h  _locale_posix2008.h
 bfcdbdea8a728e790ca47166549ffc4fd159dd1ff3af6170ad202a1ebb6127dc  Libc:include/_mb_cur_max.h  _mb_cur_max.h
 77f46c611d1782fe2ecc72718401c822a1745287211ce4fd4b7a4938a43405d8  Libc:include/_printf.h  _printf.h
 8b2be61bd4bc65c9ad62a661a98165a34414ce962aff97e563f876ea2efa42c3  Libc:include/_static_assert.h  _static_assert.h
@@ -51,14 +52,13 @@ dea174bb0a2621285e0380e1044283d04d7911c0c0c7507ae370e154b5a2d963  xnu:bsd/arm/_t
 de0bc923b92bd88f3bd8bcd38b20f8123277732d7d3309cb2a5bdc60bb4dd8c6  xnu:bsd/arm/signal.h  arm/signal.h
 4b6d31fc15d19635ae7179647145130a86d0dff5ee9157e632e9bd3828ba3b73  xnu:bsd/arm/types.h  arm/types.h
 e357fa44a55a715cc0dc0bac94569c3fa69e211279561b34347c8e2026267f9f  Libc:include/assert.h  assert.h
-c1f75e3d4d3b06d7ffbd50697666c874236d269e30307e303609d71f2269bdd9  libclosure:Block.h  Block.h
 570c931a6e130e96e023be387885630e5435c902e940eefb9462cb1121cbb9f0  Libc:include/crt_externs.h  crt_externs.h
 5aec0e370e25838b080f9159f2328eb49a2caa24f2e11a88721a2d4aa91882e5  Libc:include/ctype.h  ctype.h
 f10e88955369c100176821a2e4dd6951534c834ad0f8e7fe644b64ba573170bb  libdispatch:dispatch/base.h  dispatch/base.h
 e07296616a4384f3ed67290fa0e935af0fa3da9508bb44239a2d7270dcbd3682  libdispatch:dispatch/block.h  dispatch/block.h
 99df3b84a5066912b37eb495b1236874bcaf86ce44617945e307fdb855dfee0e  libdispatch:dispatch/data.h  dispatch/data.h
-b100859bbbd2e314134145b0c6c96e6bdfa205727b6d22f8955e446c77edf477  libdispatch:dispatch/dispatch_swift_shims.h  dispatch/dispatch_swift_shims.h
 4c0f65a9c27632e72dd75487bc6074a8afa231bc7cfdd6cc4b6f85cb5eb0ab55  libdispatch:dispatch/dispatch.h  dispatch/dispatch.h
+b100859bbbd2e314134145b0c6c96e6bdfa205727b6d22f8955e446c77edf477  libdispatch:dispatch/dispatch_swift_shims.h  dispatch/dispatch_swift_shims.h
 d1542cb13aa2d8b11f4255780438c2be2774a01ed6a94e53d9ded11cf9d754e2  libdispatch:dispatch/group.h  dispatch/group.h
 aaa3e01d7328fdd2b72de321f2b9dbaf2c7840bf1add3b45c36e749146cdc1b3  libdispatch:dispatch/io.h  dispatch/io.h
 065c4e2236cde95bff448cfdceea26c98cb2ca5e855744ebc061f21f2af1999e  libdispatch:dispatch/object.h  dispatch/object.h
@@ -75,25 +75,18 @@ ff95a158e0799dcf0622e83882e64d88f1783b98a91d9b206bcba2a12f8425e6  Libc:include/e
 4f0730fa6a81d7681d4fe190d6971deff3ec294f1fca828e5798f38984159b0f  xnu:libsyscall/wrappers/gethostuuid.h  gethostuuid.h
 546a38b61e290ba12e8ad28a9bccc5eefded09fdcaac8c9be0b7777fa339bb43  Libc:include/getopt.h  getopt.h
 d5fbab3ef6097275a1d35768976eea152fe8fa8b73159d3b49697d6de3cd05d9  Libc:include/inttypes.h  inttypes.h
-f0febaef6f9ec75339ebdd896dab2a6d1a1934628d76098f165f1db1b4b74c14  xnu:libkern/libkern/_OSByteOrder.h  libkern/_OSByteOrder.h
-7c686aa04afa38a20a0163eccca9941aeb8328779884c2603d8a9a773896a677  xnu:libkern/libkern/arm/_OSByteOrder.h  libkern/arm/_OSByteOrder.h
-31573a442ed7264879a7a5830be7f8b654e907628c4c7cc8758ed28927a37871  xnu:libkern/libkern/arm/OSByteOrder.h  libkern/arm/OSByteOrder.h
 c860f1b8b6226fa44df65877877aec5333d3332bf9d9d156a118de078b2aba3f  libplatform:include/libkern/OSAtomic.h  libkern/OSAtomic.h
 84a5e40b675e50678e433c96e9c7ea702a5fa72f908a2967b0d21995326d93ec  libplatform:include/libkern/OSAtomicDeprecated.h  libkern/OSAtomicDeprecated.h
 6161dae9729c819f27ccf4dca8b47ecef374444af9b91ca5d8766bfc58600980  libplatform:include/libkern/OSAtomicQueue.h  libkern/OSAtomicQueue.h
 d17d3304cb999d80a98165490aa38e0a550a8a3fa914b764e906dd68681bd3c9  xnu:libkern/libkern/OSByteOrder.h  libkern/OSByteOrder.h
 1a2c799bcf2286343814dbc910760ee2660dd5baf385a2262fb6986842dede0b  libplatform:include/libkern/OSCacheControl.h  libkern/OSCacheControl.h
 4d6bfdc6eccaa79588e81a3ea11a1338c4b21af2a0d2d9bd7a8e5faf23d024a0  libplatform:include/libkern/OSSpinLockDeprecated.h  libkern/OSSpinLockDeprecated.h
+f0febaef6f9ec75339ebdd896dab2a6d1a1934628d76098f165f1db1b4b74c14  xnu:libkern/libkern/_OSByteOrder.h  libkern/_OSByteOrder.h
+31573a442ed7264879a7a5830be7f8b654e907628c4c7cc8758ed28927a37871  xnu:libkern/libkern/arm/OSByteOrder.h  libkern/arm/OSByteOrder.h
+7c686aa04afa38a20a0163eccca9941aeb8328779884c2603d8a9a773896a677  xnu:libkern/libkern/arm/_OSByteOrder.h  libkern/arm/_OSByteOrder.h
 09e29df5f6d80f0555a0a3839f836052ded9698e4a91607e5cb033bd10401f2e  libunwind:libunwind/include/libunwind.h  libunwind.h
 7f5c6640fb49fc1d6c0d88b94723418ab996a0768b81cbf8c1917ef5d0255088  Libc:include/limits.h  limits.h
 c6b8754c14162db64dd94f6d4f489cb1fa8c4b7504311a83081103dc3b903218  Libc:include/locale.h  locale.h
-43856caea0a9d8c799083e6ff5f2f1806e18ea66fad8e657f83fa4df77e94078  xnu:osfmk/mach_debug/hash_info.h  mach_debug/hash_info.h
-99cc388f6be292feea3ecf344dacb5d0e43f9eae10eb7e3957dee679fc929828  xnu:osfmk/mach_debug/ipc_info.h  mach_debug/ipc_info.h
-a009f5856efa59f9e6010447e4b9f38777ff2c624af23abb5dd028a35e99df2e  xnu:osfmk/mach_debug/lockgroup_info.h  mach_debug/lockgroup_info.h
-40fd2fb8998d29e2dbfaaf4ef8540bdebb3e1ebae749b6e82b1d511c8f5113bd  xnu:osfmk/mach_debug/mach_debug_types.h  mach_debug/mach_debug_types.h
-9c7143b9e06a8b94cc27d98374275699f930ba286e6cbe7193f65d06930d08e6  xnu:osfmk/mach_debug/page_info.h  mach_debug/page_info.h
-6fff640b0422da5f051f6373c053a4bc56b800e79fd58baaab50ad3b76fb8892  xnu:osfmk/mach_debug/vm_info.h  mach_debug/vm_info.h
-1f919b1ca0f8b4f6ea4f767701d50965c2a6d2b3e8bafca8f5ddb05f60c93cb1  xnu:osfmk/mach_debug/zone_info.h  mach_debug/zone_info.h
 7aff76984e97a5313c44ad818920aea7d42b3a40f72bb7091b2e9ea82d0ac7e3  dyld:include/mach-o/dyld.h  mach-o/dyld.h
 19925cdb5fed9b5b7981b05420856f65b99abb54bca34ea95e0e581da8cc580f  cctools:include/mach-o/fat.h  mach-o/fat.h
 7ba0cc5d378f25077950f6e798721d843452c42b78e12bc22b72631abb39b032  cctools:include/mach-o/getsect.h  mach-o/getsect.h
@@ -120,6 +113,7 @@ cd4868e7151b298ae314225d4d53d2e9e01849902e3c098f12947252a7d9fa26  xnu:osfmk/mach
 41fd94666f924c5b9b00e31e0fe7a3d3ec6fc4b89d3c56b58212041f2a197582  xnu:osfmk/mach/host_special_ports.h  mach/host_special_ports.h
 2d4b89f7cf91cf7bffafe457cdba8884c3f2e5596a9ef7d5e4a9ea4b239558d8  xnu:osfmk/mach/kern_return.h  mach/kern_return.h
 a8fcc1de6620c9484ff96f699d20d37e2b1504615f2acfc547e8f0d14198a2f7  xnu:osfmk/mach/kmod.h  mach/kmod.h
+ebffc8f22b8499ae6b098944575f864eea7a483eba1b32759aab0905f1c5ee73  xnu:libsyscall/mach/mach/mach.h  mach/mach.h
 9a59bf63a1d9597cd3b9bf4ac66cb470b22503b4d3206b0e7c252df2b9df610d  xnu:libsyscall/mach/mach/mach_error.h  mach/mach_error.h
 c833855224de5646a449c08eda220a1c10521a36ebdaa184d0e69f5655cba53b  xnu:libsyscall/mach/mach/mach_init.h  mach/mach_init.h
 9e84bb068d3e9e743e43fe7b3325d3e056b1f64532950ffbbb16cc984619db92  xnu:libsyscall/mach/mach/mach_interface.h  mach/mach_interface.h
@@ -127,7 +121,6 @@ c833855224de5646a449c08eda220a1c10521a36ebdaa184d0e69f5655cba53b  xnu:libsyscall
 4aa22252a52de6cbbe53d4925ab2b833a739acdcf38d22315cc171e479eca415  xnu:osfmk/mach/mach_traps.h  mach/mach_traps.h
 0166774797ca719586f60a87da5e3cd44932a18388c5a613fc2c71ae548ad196  xnu:osfmk/mach/mach_types.h  mach/mach_types.h
 4929276adfbc2c80a2df1d62ff0549037536cdf3e9b93b328fb28f70a63ec261  xnu:osfmk/mach/mach_voucher_types.h  mach/mach_voucher_types.h
-ebffc8f22b8499ae6b098944575f864eea7a483eba1b32759aab0905f1c5ee73  xnu:libsyscall/mach/mach/mach.h  mach/mach.h
 75117a186aa6a2683690b487c1ce19b52b3151340dd5301877d46bbe832a11c5  xnu:osfmk/mach/machine.h  mach/machine.h
 410350f04225bf139bd89f1a99418a55734e4ab2101bb93dc301f790a130f59c  xnu:osfmk/mach/machine/_structs.h  mach/machine/_structs.h
 a22e0c8c541b9117a86d85ab4a977eda49917a9867b24576f5972b6fa6554f23  xnu:osfmk/mach/machine/boolean.h  mach/machine/boolean.h
@@ -141,9 +134,9 @@ c3f5251c26e2bd1eaad3d57df544254e8ce4ffadde120c5394badcf24f9d6086  xnu:osfmk/mach
 1c2a4ff4b5843ded602775a447494f353a295015ca8d913a0a13439f4ee28654  xnu:osfmk/mach/machine/vm_types.h  mach/machine/vm_types.h
 36ee8a97db3a6c75bea294e81516c99af2479ef5c21530ea0c76c6a8874d4939  xnu:osfmk/mach/memory_object_types.h  mach/memory_object_types.h
 ce1b7c102909919c8a15e984ab4279c2a54f09301c3641b0a3151dd4d7242465  xnu:osfmk/mach/message.h  mach/message.h
+f28d4093d58f9ea2e8f4b8fdc0a4d34793bbca0f963a15f54b5bb96012fde380  xnu:osfmk/mach/mig.h  mach/mig.h
 5f9b82c31996cb2929d7bca5acb91ff5ffb1959e74da7e47deef1e25033a89c6  xnu:osfmk/mach/mig_errors.h  mach/mig_errors.h
 20937df811221e2b01bed456cd369a326606ff6f020f9346941f4a688a77118e  xnu:osfmk/mach/mig_strncpy_zerofill_support.h  mach/mig_strncpy_zerofill_support.h
-f28d4093d58f9ea2e8f4b8fdc0a4d34793bbca0f963a15f54b5bb96012fde380  xnu:osfmk/mach/mig.h  mach/mig.h
 2fe22ecac00808ca9c927748c58f51844fdb3b70f4d0f95cebe1e7fe15ff400c  xnu:osfmk/mach/ndr.h  mach/ndr.h
 27e62c4585f9b23413df9bf0ce50cf777d619e70d99a63f7132fedaed98b3343  xnu:osfmk/mach/notify.h  mach/notify.h
 a457c6acb170fab0e17c517959c01098c9625960e1d077d232a89a5b288595b8  xnu:osfmk/mach/policy.h  mach/policy.h
@@ -175,6 +168,13 @@ b92939147f96ca880e189829d6f134d88e766070052040fd4b3d22ac8abec4ba  xnu:osfmk/mach
 47bc5404b7d21b27a6a6b30c8f94c9c21bf217bcc8d167f27f3a3f8c85be384f  xnu:osfmk/mach/vm_statistics.h  mach/vm_statistics.h
 8a55361f3fb89f212e4f1c57d29c5e32a9d72e346f989202748b1fe96d09d8f1  xnu:osfmk/mach/vm_sync.h  mach/vm_sync.h
 78229ab12fce5873e9b92618d7762554b17e255bde1e8b51fe72e2c8dd95c0f3  xnu:osfmk/mach/vm_types.h  mach/vm_types.h
+43856caea0a9d8c799083e6ff5f2f1806e18ea66fad8e657f83fa4df77e94078  xnu:osfmk/mach_debug/hash_info.h  mach_debug/hash_info.h
+99cc388f6be292feea3ecf344dacb5d0e43f9eae10eb7e3957dee679fc929828  xnu:osfmk/mach_debug/ipc_info.h  mach_debug/ipc_info.h
+a009f5856efa59f9e6010447e4b9f38777ff2c624af23abb5dd028a35e99df2e  xnu:osfmk/mach_debug/lockgroup_info.h  mach_debug/lockgroup_info.h
+40fd2fb8998d29e2dbfaaf4ef8540bdebb3e1ebae749b6e82b1d511c8f5113bd  xnu:osfmk/mach_debug/mach_debug_types.h  mach_debug/mach_debug_types.h
+9c7143b9e06a8b94cc27d98374275699f930ba286e6cbe7193f65d06930d08e6  xnu:osfmk/mach_debug/page_info.h  mach_debug/page_info.h
+6fff640b0422da5f051f6373c053a4bc56b800e79fd58baaab50ad3b76fb8892  xnu:osfmk/mach_debug/vm_info.h  mach_debug/vm_info.h
+1f919b1ca0f8b4f6ea4f767701d50965c2a6d2b3e8bafca8f5ddb05f60c93cb1  xnu:osfmk/mach_debug/zone_info.h  mach_debug/zone_info.h
 17eb7d38845502ce04aac3ab709dffeb4ec253781051b5d7894703e9786730de  xnu:bsd/machine/_endian.h  machine/_endian.h
 9d3425653d2a1623d785dee4601c3c00e05f4797d7e840b00f17d529f8c6c51e  xnu:bsd/machine/_mcontext.h  machine/_mcontext.h
 f27264f8fdec9f164b4fc2b556f666ed7c5c0e5b88fd9f23db0b731ffa6cf864  xnu:bsd/machine/_types.h  machine/_types.h
@@ -183,8 +183,8 @@ f27264f8fdec9f164b4fc2b556f666ed7c5c0e5b88fd9f23db0b731ffa6cf864  xnu:bsd/machin
 9a03a8edbbe2c4718553013b97dbac07113610350f983994aa53db0db07e0bb5  xnu:bsd/machine/param.h  machine/param.h
 09b1798034cf3b5217df3e415d6053df9c2e16b858036fc11888e63f4493f53f  xnu:bsd/machine/signal.h  machine/signal.h
 76e7c59451d996fe674a6fc7e518366609a95875c9b9aec9fd590a3ac138dddd  xnu:bsd/machine/types.h  machine/types.h
-d761900eeb8cb62610bffa6471461fe706d06d4a5f278af7109673fa80c32b05  libmalloc:include/malloc/_malloc_type.h  malloc/_malloc_type.h
 28b33ab4f20da030c11fd248d8a340c1af80d18d0c331c8248fd4da677760949  libmalloc:include/malloc/_malloc.h  malloc/_malloc.h
+d761900eeb8cb62610bffa6471461fe706d06d4a5f278af7109673fa80c32b05  libmalloc:include/malloc/_malloc_type.h  malloc/_malloc_type.h
 b89b39d9b2e03aaf6e388382117a446c9311df9157871ce65cf2330994f7a556  libmalloc:include/malloc/_platform.h  malloc/_platform.h
 d3c4e809117b24467e9313cc348c0495aad8780cea6bf58177743b9be09c3591  libmalloc:include/malloc/_ptrcheck.h  malloc/_ptrcheck.h
 8055f0655289193f9b6db61f55f13d04dfe44603dc57eb48223e3e098c8b88b6  libmalloc:include/malloc/malloc.h  malloc/malloc.h
@@ -194,11 +194,11 @@ d610780d732a3dcad409f3c1ca9dea0196e6ede483113078e7d8dd28f41851f5  libdispatch:os
 6eca61843ad39ff9220e8c554849ece4c59010689688b07a7f69fffc5d78d778  libplatform:include/os/lock.h  os/lock.h
 28873fba6268b39e1b7c9acfa44d81b180ee9cfcf17fc7b06c9a62bd2a190d99  libdispatch:os/object.h  os/object.h
 776965f5343582b345fbe5c6d6b135cc0628d146105639e9339ba53eb69dc1de  xnu:libkern/os/overflow.h  os/overflow.h
+31c4e7ea926d80e3f9b67c8c576c94366653c31c752ff73c361fba9ba38de913  libdispatch:os/workgroup.h  os/workgroup.h
 3e1166c89aa527cb284a2857c844788d1701404f8f51f8c40aaacf1a8733347f  libdispatch:os/workgroup_base.h  os/workgroup_base.h
 4102942cb27c38de84f3859d6f648d92ff3559804ef2d40f9a68c9975f684b5a  libdispatch:os/workgroup_interval.h  os/workgroup_interval.h
 19e54464470067c61c837c3e3f292b1ecb77bf2bf5892cbe115940aaa3d0c96a  libdispatch:os/workgroup_object.h  os/workgroup_object.h
 e401e04d766fdccfa0cd7130464cc4183cbbdda98edea71c8d66cb8929a3c01a  libdispatch:os/workgroup_parallel.h  os/workgroup_parallel.h
-31c4e7ea926d80e3f9b67c8c576c94366653c31c752ff73c361fba9ba38de913  libdispatch:os/workgroup.h  os/workgroup.h
 c14ac88c6c17f6eaea94ecd5a6fed5bb2a509cc154be43bfea44e6a4430468ca  libpthread:include/pthread/pthread.h  pthread.h
 42896cbc575d9099c53f8c0afbaa04f40b2d11d24f92af5ccd7dacdaf8690231  libpthread:include/pthread/pthread_impl.h  pthread/pthread_impl.h
 bfcfcf23501c328f5aa7f3bb39c0c8167730ab111393063c5b5fb4bd72d074f2  libpthread:include/pthread/qos.h  pthread/qos.h
@@ -254,8 +254,8 @@ e687ad58c03701c132a02ebf20699c8cacfd34c3a67271bd2a415a5a8e4a9ea7  xnu:bsd/sys/_t
 fb7255c9872e2a805c206796326e21d47146e22c93c09752126d7166bdaba5e5  xnu:bsd/sys/_types/_id_t.h  sys/_types/_id_t.h
 8da608117e441ff6e6b108d35334d7cf4b346b838522f97bcc621d925e0ba7fe  xnu:bsd/sys/_types/_in_addr_t.h  sys/_types/_in_addr_t.h
 cf4b90c7af861346ee46c6b9e5d57cfe20bd62a03b1533ee9a369480ace0bac9  xnu:bsd/sys/_types/_in_port_t.h  sys/_types/_in_port_t.h
-1e067108b372f2c81cfcad28413d6c0d2b9ef21d34fab740c3c8af059deadfea  xnu:bsd/sys/_types/_ino_t.h  sys/_types/_ino_t.h
 f143d5c0bfea65489ef89a866e96c9065d7ac28d62c0cec36f79d4dd7269fd13  xnu:bsd/sys/_types/_ino64_t.h  sys/_types/_ino64_t.h
+1e067108b372f2c81cfcad28413d6c0d2b9ef21d34fab740c3c8af059deadfea  xnu:bsd/sys/_types/_ino_t.h  sys/_types/_ino_t.h
 e40d40ad59c6dc98577b2c7cfdba1121ebfee17b29e093cbd10b7936df496d8e  xnu:bsd/sys/_types/_int16_t.h  sys/_types/_int16_t.h
 77127195e57f1690402377ddd72e3dcda684ddf591346f08ef4772dddcbbc281  xnu:bsd/sys/_types/_int32_t.h  sys/_types/_int32_t.h
 a2427b34e5e83996bd28d83cec920cf3b82a366af90e767234557bd11fa33a18  xnu:bsd/sys/_types/_int64_t.h  sys/_types/_int64_t.h
