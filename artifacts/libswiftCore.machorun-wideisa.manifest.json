@@ -1,0 +1,304 @@
+{
+  "tool": "widen_isa_mask.py",
+  "source": "artifacts/swift-macosx/arm64/libswiftCore.dylib",
+  "output": "artifacts/libswiftCore.machorun-wideisa.dylib",
+  "narrow_mask": "0x7ffffffffff8",
+  "wide_mask": "0x7ffffffffffff8",
+  "sha256_before": "9a77c3450809fa449dad78eef22268f01374f78b336fef10320d8e55a20b3bd8",
+  "sha256_after": "5bf411dd38f4519a6497d09713013136d626da9ddea8eb31fdd27c3828f3acc6",
+  "isa_sites_widened": 48,
+  "data_words_widened": 1,
+  "already_wide_sites": 0,
+  "refused": [],
+  "sites": [
+    {
+      "vmaddr": "0x2d2e50",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_dynamicCastClass"
+    },
+    {
+      "vmaddr": "0x2d2e9c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZL26swift_dynamicCastClassImplPKvPKN5swift19TargetClassMetadataINS1_9InProcessENS1_33TargetAnyClassMetadataObjCInteropIS3_EEEE"
+    },
+    {
+      "vmaddr": "0x2d2f24",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZL26swift_dynamicCastClassSlowPKvPKN5swift19TargetClassMetadataINS1_9InProcessENS1_33TargetAnyClassMetadataObjCInteropIS3_EEEERNSt3__16atomicImEEmPFS0_S0_S8_E"
+    },
+    {
+      "vmaddr": "0x2d2f90",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_dynamicCastClassUnconditional"
+    },
+    {
+      "vmaddr": "0x2d305c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZL39swift_dynamicCastClassUnconditionalImplPKvPKN5swift19TargetClassMetadataINS1_9InProcessENS1_33TargetAnyClassMetadataObjCInteropIS3_EEEEPKcjj"
+    },
+    {
+      "vmaddr": "0x2d3170",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZL39swift_dynamicCastClassUnconditionalSlowPKvPKN5swift19TargetClassMetadataINS1_9InProcessENS1_33TargetAnyClassMetadataObjCInteropIS3_EEEEPKcjjRNSt3__16atomicImEEmPFS0_S0_S8_SA_jjE"
+    },
+    {
+      "vmaddr": "0x2d3274",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZL33swift_dynamicCastUnknownClassImplPKvPKN5swift14TargetMetadataINS1_9InProcessEEE"
+    },
+    {
+      "vmaddr": "0x2e3380",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_deallocPartialClassInstance"
+    },
+    {
+      "vmaddr": "0x331df0",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZN5swift15_swift_getClassEPKv"
+    },
+    {
+      "vmaddr": "0x331e20",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_getObjCClassFromObject"
+    },
+    {
+      "vmaddr": "0x331eac",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_getObjectType"
+    },
+    {
+      "vmaddr": "0x331f1c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__swift_classOfObjCHeapObject"
+    },
+    {
+      "vmaddr": "0x331fd0",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject class]"
+    },
+    {
+      "vmaddr": "0x331fe4",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject superclass]"
+    },
+    {
+      "vmaddr": "0x331ff4",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "+[_TtCs12_SwiftObject isMemberOfClass:]"
+    },
+    {
+      "vmaddr": "0x332008",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject isMemberOfClass:]"
+    },
+    {
+      "vmaddr": "0x332060",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject doesNotRecognizeSelector:]"
+    },
+    {
+      "vmaddr": "0x33206c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject doesNotRecognizeSelector:]"
+    },
+    {
+      "vmaddr": "0x3321f8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject isKindOfClass:]"
+    },
+    {
+      "vmaddr": "0x332258",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "+[_TtCs12_SwiftObject respondsToSelector:]"
+    },
+    {
+      "vmaddr": "0x332274",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject respondsToSelector:]"
+    },
+    {
+      "vmaddr": "0x332304",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject conformsToProtocol:]"
+    },
+    {
+      "vmaddr": "0x3323d8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject hash]"
+    },
+    {
+      "vmaddr": "0x3323ec",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject hash]"
+    },
+    {
+      "vmaddr": "0x332404",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject hash]"
+    },
+    {
+      "vmaddr": "0x332528",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject isEqual:]"
+    },
+    {
+      "vmaddr": "0x33253c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject isEqual:]"
+    },
+    {
+      "vmaddr": "0x33254c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject isEqual:]"
+    },
+    {
+      "vmaddr": "0x3325dc",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject description]"
+    },
+    {
+      "vmaddr": "0x33263c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "-[_TtCs12_SwiftObject debugDescription]"
+    },
+    {
+      "vmaddr": "0x3327cc",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectRetain_n"
+    },
+    {
+      "vmaddr": "0x33283c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectRelease_n"
+    },
+    {
+      "vmaddr": "0x332894",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectRetain"
+    },
+    {
+      "vmaddr": "0x3328c0",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectRelease"
+    },
+    {
+      "vmaddr": "0x332900",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_nonatomic_unknownObjectRetain_n"
+    },
+    {
+      "vmaddr": "0x332970",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_nonatomic_unknownObjectRelease_n"
+    },
+    {
+      "vmaddr": "0x3329c8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_nonatomic_unknownObjectRetain"
+    },
+    {
+      "vmaddr": "0x3329f4",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_nonatomic_unknownObjectRelease"
+    },
+    {
+      "vmaddr": "0x333510",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectUnownedInit"
+    },
+    {
+      "vmaddr": "0x3335b0",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectUnownedAssign"
+    },
+    {
+      "vmaddr": "0x333a18",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_unknownObjectWeakInit"
+    },
+    {
+      "vmaddr": "0x333ab8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "__ZN5swift13WeakReference13unknownAssignEPv"
+    },
+    {
+      "vmaddr": "0x3344b4",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferencedNonObjC_nonNull"
+    },
+    {
+      "vmaddr": "0x33451c",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferenced_nonNull"
+    },
+    {
+      "vmaddr": "0x334584",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferencedNonObjC"
+    },
+    {
+      "vmaddr": "0x3345e8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferenced"
+    },
+    {
+      "vmaddr": "0x334658",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferencedNonObjC_nonNull_bridgeObject"
+    },
+    {
+      "vmaddr": "0x3346c8",
+      "kind": "ISA",
+      "src_offset": "0x0",
+      "function": "_swift_isUniquelyReferenced_nonNull_bridgeObject"
+    }
+  ],
+  "note": "Widened binaries encode a 48-bit host VA and are machorun-specific."
+}
