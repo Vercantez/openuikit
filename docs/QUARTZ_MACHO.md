@@ -328,7 +328,9 @@ initialisers in a dylib — runs under our loader against our libSystem.
    linked against Apple's CoreGraphics resolves none of its imports. Bridging is
    separate work with its own ABI questions — `CGColorSpaceRef` is a real
    CoreFoundation object and `QZColorSpaceRef` is not.
-2. **34 of 507 exports are exercised.** The Core Animation layer tree, text and
+2. **34 of 507 exports are exercised** by this fixture, and **36** by all three
+   drawing fixtures together — rungs (o) and (p) added exactly two.
+   The Core Animation layer tree, text and
    font loading, image decode, PDF, patterns, shadings, CMYK, Display P3, blend
    modes and transparency layers are compiled, exported, and *untested here*.
    Upstream scores 97.46/100 against Apple's frameworks with all of them; that is
@@ -341,11 +343,17 @@ initialisers in a dylib — runs under our loader against our libSystem.
    The reason this milestone went through `~/quartz` rather than `~/uikit` is
    that quartz is C++ and therefore buildable by the same
    `clang -target arm64-apple-macos11` route objc4 already uses, whereas
-   OpenUIKit is Swift. The stronger claim in circulation — that
-   `swiftc -target arm64-apple-macos11` on Linux cannot emit Mach-O at all
-   ("unable to load standard library for target") — is **second-hand and was
-   not re-measured here**; the testbed image has no swiftc. `docs/STATUS.md`
-   §10 flags it the same way. Re-measure it before planning around it.
+   OpenUIKit is Swift.
+
+   > **Re-measured 2026-08-26, `docs/STATUS.md` §11.5.** The claim this
+   > paragraph passed on second-hand — that `swiftc -target arm64-apple-macos11`
+   > on Linux "cannot emit Mach-O at all" — is **false**. With `-parse-stdlib`
+   > it emits a valid arm64 Mach-O object (`cf fa ed fe`); the error *"unable to
+   > load standard library for target"* is exactly what it says, and
+   > `/usr/lib/swift/` on Linux has `linux` and `embedded` and no `macosx`. The
+   > wall is a missing Darwin **stdlib**, not a missing backend — which is a
+   > distribution and ABI problem, not something machorun can close from this
+   > side. The conclusion for this repository is unchanged; the reason is not.
 
 ---
 

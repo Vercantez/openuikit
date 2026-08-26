@@ -13,8 +13,8 @@ Three of the hard pieces already exist in sibling projects:
 | piece | where | state |
 |---|---|---|
 | Objective-C runtime | **here**, `darwin/usr/lib/libobjc.A.dylib` | Apple's real objc4 built as **Mach-O on Linux**, 4 patches, **41/44** differential tests vs Apple's shipping runtime |
-| Quartz 2D + CoreAnimation | **here**, `darwin/usr/lib/libquartz.dylib` | `~/quartz` built as **Mach-O on Linux**, **0 patches**; a precompiled C fixture draws a **byte-identical PNG** on both platforms |
-| UIKit | `~/uikit` (OpenUIKit) | pixel-exact vs real UIKit, 108/108 oracle scenes |
+| Quartz 2D + CoreAnimation | **here**, `darwin/usr/lib/libquartz.dylib` | `~/quartz` built as **Mach-O on Linux**, **0 patches**; three precompiled fixtures — one plain C, two Objective-C — draw **byte-identical PNGs** on both platforms |
+| UIKit | `~/uikit` (OpenUIKit) | pixel-exact vs real UIKit, 108/108 oracle scenes — and **not usable here**, see below |
 | **Mach-O loader + Darwin userland** | **here** | **the missing piece** |
 
 Each row is true on its own terms. Read downward, the table used to overpromise
@@ -38,14 +38,30 @@ on Linux. `docs/QUARTZ_MACHO.md` is the accounting, including the three holes
 that opened in *our* userland to make it work (libm, libc++'s out-of-line
 members, and a header the SDK's `-DNDEBUG`-only closure could not see).
 
-The remaining row does not compose: OpenUIKit is a Swift engine whose
-Objective-C facade targets the **GNUstep** ABI, not Apple's, and swiftc on Linux
-emits ELF. It is *reported* — see `docs/STATUS.md` §10, which flags this as
-second-hand and not re-measured — that `swiftc -target arm64-apple-macos11` on
-Linux cannot emit Mach-O at all, which if true puts OpenUIKit out of reach until
-either Swift-to-Mach-O becomes possible or machorun gains ELF-dylib bridging.
-`docs/STATUS.md` §7 sets out what closing that costs — with step 1 of its list,
-a `libobjc.A.dylib` machorun can bind against, now done.
+**The remaining row still does not compose, and the reason has been measured
+rather than repeated.** The claim in circulation was "swiftc on Linux cannot
+emit Mach-O". That is **false**, and `docs/STATUS.md` §11.5 is the measurement:
+on the official `swift:6.2-noble` image, arm64, offline,
+`swiftc -parse-stdlib -target arm64-apple-macos11 -c` produces a perfectly good
+arm64 Mach-O object (`cf fa ed fe`), with an ELF for the Linux triple as a
+control. The Swift **backend is not the wall**.
+
+The wall is the **standard library**. `/usr/lib/swift/` on Linux carries `linux`
+and `embedded` and no `macosx`, so without `-parse-stdlib` the same command dies
+with *"unable to load standard library for target 'arm64-apple-macos11'"* — and
+any source that names `Int`, `String` or `print`, which is all of OpenUIKit,
+cannot be type-checked for a Darwin triple at all. That is a distribution and
+ABI problem, not a code-generation one; it is not something machorun can fix
+from this side; and closing it means either cross-building `libswiftCore` for
+`arm64-apple-macos` on Linux (which needs a Darwin SDK this repository
+deliberately does not have) or giving machorun ELF-dylib bridging. On top of
+which OpenUIKit's Objective-C facade targets the **GNUstep** ABI, not Apple's,
+which is a second, independent wall.
+
+**So OpenUIKit is not part of this and cannot be today.** What runs is
+`~/quartz`, the C++ engine OpenUIKit itself sits on. `docs/STATUS.md` §7 sets
+out what the rest costs — with step 1 of its list, a `libobjc.A.dylib` machorun
+can bind against, now done.
 
 Verified before starting (2026-08-25): **Linux can produce Mach-O.**
 `clang -target arm64-apple-macos11 -c` emits Mach-O objects (magic
@@ -143,16 +159,35 @@ Apple's SDK, that calls `QZBitmapContextCreate`, draws nine stages (fills,
 alpha compositing, cubic Béziers, dashed strokes, linear and radial gradients, a
 rotation, an even-odd clip) and writes a PNG:
 
+**And so does a precompiled *Objective-C* Darwin binary.** `16_objc_quartz` is
+the smoke test — one root class, one ivar, one message, one ellipse — and
+`17_objc_shapes` is the milestone: a protocol, a root class, three levels of
+inheritance with `[super]` (`objc_msgSendSuper2`), a category on an
+already-compiled class, six `+load`s, lazy `+initialize`, an `objc_msgSend` with
+a four-double HFA return, and a **polymorphic draw loop typed by the protocol**,
+so which `-drawInContext:` runs is decided by each object's `isa` and by nothing
+the compiler could have known. Every pixel in it comes out of a message send.
+
 ```
-macOS, natively:       26861 bytes   sha256 96aa747a85f6c35f...
-machorun on Linux:     26861 bytes   sha256 96aa747a85f6c35f...
-                       cmp: identical
+                      macOS, natively            machorun on Linux/arm64
+15_quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
+16_objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
+17_objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
+stage checksums       identical (9 / 3 / 5)      exit 0 / 0 everywhere
 ```
 
 `scripts/quartz_pixel.sh` runs both sides — it re-executes the macOS oracle
-every time rather than trusting the committed baseline — and the fixture prints
-a checksum of the whole framebuffer after every stage, so a divergence would be
-localised to a drawing stage on stdout before the PNG is even compared.
+every time rather than trusting the committed baseline — and each fixture prints
+a checksum of the whole framebuffer after every stage, so a divergence is
+localised to a drawing stage on stdout before the PNG is even compared; if it
+still gets to the PNG, `harness/pngdiff.c` localises it to a rectangle of
+pixels.
+
+The two sides are genuinely two different builds, which is the point: the oracle
+loads an Apple-clang `libquartz.dylib` (388832 bytes) and Apple's own shipping
+`libobjc`, while Linux loads a clang-18 Mach-O `libquartz.dylib` (388480 bytes,
+different sha256) and our Mach-O build of objc4. Same source, two toolchains,
+two operating systems, identical bytes out.
 
 Zero patches to quartz did not mean zero work; it moved the work to our side of
 the boundary, which is where the project wants it. `libSystem.B.dylib` had **no
@@ -176,9 +211,15 @@ with the things a green suite does not by itself establish (`docs/STATUS.md`):
   minutes *before* the loader's first commit, so they cannot have been fitted to
   it; every run re-executes the fixtures natively on macOS before grading; and
   they were re-run by hand outside the harness as well.
-- **Coverage is narrower than the scoreboard suggests.** `libSystem.B.dylib`
-  exports 242 symbols and the fixtures reference 86 of them. The other 156 are
-  compiled and untested.
+- **Coverage is narrower than the scoreboard suggests, and hosting quartz made
+  it narrower still.** `libSystem.B.dylib` exported 242 symbols then and exports
+  **441** now (libm alone is 113 of them); the fixture corpus grew by three in
+  the same period. **89** exports are referenced by at least one fixture, so
+  **352 — 80% — are compiled and never called by any test**, against 64% before.
+  `libobjc.A.dylib` exports 418 and `tests/objc44/` reaches 116;
+  `libquartz.dylib` exports 507 and the drawing fixtures reach 36. This is still
+  the single biggest gap between "the suite is green" and "the userland works",
+  and it got wider, not narrower.
 - **Distance to real software is a number now, not an opinion.** Unmodified
   Homebrew `gsed` — a binary nobody here compiled — parses, maps and resolves
   its dependency graph under `machorun` and stops at the first of **37** libc
@@ -188,9 +229,23 @@ with the things a green suite does not by itself establish (`docs/STATUS.md`):
   `objc4-linux` first, because it was ELF and had *replaced* Mach-O image
   discovery rather than shimming it. That one is now closed the other way
   round: the ELF port is retired and objc4 is built here as Mach-O, which is
-  step 1 of `docs/STATUS.md` §7. OpenUIKit remains a Swift engine whose
-  Objective-C facade targets the GNUstep ABI, not Apple's, and swiftc on Linux
-  emits ELF. §7's steps 5–7 are untouched and are still the larger half.
+  step 1 of `docs/STATUS.md` §7. `~/quartz` composed too, and out of order —
+  §7 put CoreGraphics/CoreAnimation last, at step 7, and the engine underneath
+  it turned out to run today, before Foundation and without any Objective-C at
+  all, because it is portable C++. OpenUIKit did not and cannot: see the Swift
+  measurement above. §7's steps 5–7 are otherwise untouched and are still the
+  larger half.
+
+A third verification (`docs/STATUS.md` §11) attacked the drawing gate rather
+than the loader, and it holds: a **one-pixel, one-channel, one-level** change to
+quartz's rasteriser fails the differential and `pngdiff` names the pixel;
+breaking category attachment in objc4 fails `17_objc_shapes` while
+`16_objc_quartz` stays byte-identical, which is exactly the bisection the smoke
+fixture exists for; and making a class's own method list invisible — so
+overrides fall through to the superclass — moves the **framebuffer checksum**,
+proving the picture really is produced by dynamic dispatch. A baseline with one
+byte flipped is reported as `BASELINE-DRIFT` and cannot be scored PASS even when
+Linux matches the live oracle.
 
 Verification also found and fixed one defect in the harness itself: with a
 loader that failed to compile, `scripts/difftest.sh` printed `skipped 20` and
@@ -211,10 +266,14 @@ translation at all: Darwin's `<ctype.h>` *inlines* a lookup in a 3208-byte
 part of the ABI and are recorded from Apple rather than reconstructed.
 
 **Xcode is no longer a build input.** `sdk/` is our own header-only,
-`.tbd`-only SDK: 356 headers, of which 337 come from eleven **pinned**
-`apple-oss-distributions` releases (all redistributable) or from running xnu's
-own published generator, 4 from objc4 itself, and **19 are clean-room headers we
-wrote**. Apple's libc++ — 67% of the old surface — is gone, replaced by stock
+`.tbd`-only SDK: **356 headers = 332** from eleven **pinned**
+`apple-oss-distributions` releases (all redistributable) **+ 1** produced by
+running xnu's own published generator **+ 4** from objc4 itself **+ 19
+clean-room headers we wrote**. `sdk/CHECKSUMS.sha256` pins 333 of them; the
+other 23 are vouched for by git alone, by design. (Earlier statements of this
+census in this file and in `docs/STATUS.md` §9 did not add up — 337+4+19 is 360,
+and 332+19+4 is 355. The figures above are re-counted from `sdk/MANIFEST.tsv`.)
+Apple's libc++ — 67% of the old surface — is gone, replaced by stock
 LLVM 18 with three `-D` flags. `scripts/build_objc4.sh` takes `-isysroot sdk/` by
 default, and everything above was re-measured after the switch: **32 objects, 0
 failures; 41/44; 19 pass / 1 xfail / 1 no-oracle.**
@@ -267,6 +326,38 @@ another machine moved 18 rows without changing a single hash.
 networking at all; no `<sys/sysctl.h>` or kqueue; no CoreFoundation and no
 Foundation. `usr/include/c++/v1` is absent on purpose. `docs/STATUS.md` §9.4 is
 the measured list.
+
+## What runs end to end today — and what it does not
+
+**Runs.** A precompiled arm64 Mach-O executable, built on macOS by Apple's clang
+against Apple's SDK and **never relinked**, is mapped and fixed up by our loader
+on Linux/arm64; binds against our Mach-O `libSystem.B.dylib`, our Mach-O build of
+Apple's objc4, our Mach-O build of LLVM's libc++ out-of-line members, and
+`~/quartz` built as a Mach-O dylib from **unpatched** sources; registers its
+classes, categories and protocols through dyld's own ObjC image-notify protocol;
+runs `+load` before `main`; dispatches `objc_msgSend` and `objc_msgSendSuper2`
+polymorphically over a heterogeneous collection; rasterises through a CPU
+rasteriser that reaches libm; encodes a PNG; and writes a file whose bytes are
+**identical** to the bytes the same binary writes on macOS.
+
+**Does not cover.** None of this is implied by the green, and all of it is
+measured rather than guessed:
+
+- **`QZ*`, not `CG*`.** There is no `CoreGraphics.framework`, no
+  `CoreFoundation`, no `Foundation`, no `UIKit`. A binary linked against Apple's
+  frameworks resolves none of its imports.
+- **No Swift and no OpenUIKit.** Not a machorun gap and not fixable here — the
+  Linux Swift toolchain ships no Darwin standard library. See the top of this
+  file and `docs/STATUS.md` §11.5.
+- **No C++/ObjC exceptions and no `dlopen`** — the three `objc44` failures. Both
+  are loud aborts, never silent wrong answers.
+- **80% of `libSystem`, 72% of `libobjc` and 93% of `libquartz` are exported,
+  compiled, and untested here.**
+- **No window, no display, no compositor.** "Draws" means "rasterises to a
+  bitmap and writes a PNG". There is no `UIScreen` path and nothing puts a pixel
+  on a screen.
+- **No arm64e/PAC, no FairPlay, no App Store app**, and no unmodified
+  third-party binary yet: `gsed` is still 37 libc symbols away.
 
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
 for the measured ABI boundary, `docs/OBJC4_MACHO.md` for Apple's objc4 as

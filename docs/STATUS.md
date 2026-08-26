@@ -1,4 +1,4 @@
-# STATUS — 2026-08-25 (§9 2026-08-26, §10 2026-08-26)
+# STATUS — 2026-08-25 (§9, §10, §11 all 2026-08-26)
 
 **Independent verification.** Everything below was re-measured by an agent that
 did not write the loader, from a **fresh clone into an empty directory**. Where
@@ -590,7 +590,9 @@ every future forwarder**, and the symptom will always name the wrong layer.
 
 1. It is **`QZ*`, not `CG*`**. No `CoreGraphics.framework` exists here and a
    guest linked against Apple's resolves none of its imports.
-2. **34 of 507 exports are exercised.** The Core Animation layer tree, text,
+2. **34 of 507 exports are exercised** by `15_quartz`, and **36** by all three
+   drawing fixtures together — rungs (o) and (p) added two.
+   The Core Animation layer tree, text,
    image decode, PDF, patterns, shadings, CMYK, P3 and non-normal blend modes
    are compiled and untested here.
    (`docs/UNIMPLEMENTED.md#quartz-fixture-coverage`.)
@@ -615,8 +617,283 @@ section** — `harness/Dockerfile`'s testbed has no swiftc, so there was nothing
 to run it on. It should be re-measured and recorded properly before anything is
 planned around it.
 
+> **Re-measured, and half of it was wrong — see §11.5.** The error message is
+> real and reproduces exactly. The inference drawn from it does not: swiftc on
+> Linux emits perfectly good arm64 **Mach-O** objects when told `-parse-stdlib`.
+> What is missing is a Darwin standard *library* (`/usr/lib/swift/` has `linux`
+> and `embedded`, no `macosx`), not Mach-O code generation. The conclusion for
+> OpenUIKit is unchanged; the cost model is not.
+
 If it holds, OpenUIKit cannot be built as a Mach-O dylib by any amount of work
 on this side, and needs either Swift-to-Mach-O to become possible or machorun to
 gain ELF-dylib bridging. Either way it is why this milestone went through
 `~/quartz`, which is C++ and therefore buildable by the same
 `clang -target arm64-apple-macos11` route that objc4 already uses.
+
+---
+
+## 11. Third independent verification (2026-08-26) — the drawing milestone
+
+Re-measured by a third agent that wrote neither the loader, nor `sdk/`, nor the
+quartz port, from a **fresh `git clone` into an empty directory**, with the
+Linux build run in a container started `--network none` and with only the clone
+mounted. Every number below was produced by that run. §10 is left as its author
+wrote it; where it did not survive contact the correction is here.
+
+The headline: **it reproduces, and the drawing gate can fail.** The one claim
+that did *not* survive is not about the loader at all — it is the Swift scoping
+fact, and it was wrong in a way that matters (§11.5).
+
+### 11.1 The gates reproduce, from a clone
+
+| gate | result | exit |
+|---|---|---|
+| `scripts/build.sh everything`, `--network none`, clone-only mount | loader, 4 dylibs, 4 `.tbd`s; **32 objc4 objects / 0 failures**, **37 quartz objects / 0 failures**, 0 quartz patches, 4 objc4 patches | 0 |
+| `scripts/difftest.sh` after that build | **19 pass / 0 fail / 1 xfail / 0 xpass / 0 skipped / 1 no-oracle / 0 drift** | 0 |
+| `scripts/objc44.sh` (in the container) | **41/44**, failing exactly `038-exceptions`, `042-dlopen`, `044-exception-through-uncached`, each with its documented loud abort | 1 |
+| `scripts/quartz_pixel.sh` (macOS host, drives docker) | **pass 3 / fail 0 / baseline-drift 0** | 0 |
+
+```
+                      macOS, natively            machorun on Linux/arm64
+15_quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
+16_objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
+17_objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
+stage checksums       identical (9 / 3 / 5)      exit 0 / 0 everywhere
+```
+
+Two virgin-clone behaviours, measured on a second clone that had never been
+built:
+
+* `scripts/difftest.sh` alone gives **18 pass / 1 FAIL / 1 xfail / 1 no-oracle**,
+  exit 1, with `09_objc` red for want of a `libobjc.A.dylib` nobody built. That
+  is exactly what §9.1 and the README say, re-confirmed.
+* `scripts/quartz_pixel.sh` alone gives **3/3 PASS, exit 0** on a virgin clone.
+  Unlike `difftest.sh` it *is* self-sufficient: its container script builds the
+  loader, `darwin/`, objc4 and quartz itself before running anything. Worth
+  knowing, and not previously written down.
+
+### 11.2 The two sides are genuinely two different builds
+
+A pixel-identity result is only interesting if the two runs are not secretly the
+same artefact. Measured on the clone:
+
+| | oracle (macOS) | machorun (Linux) |
+|---|---|---|
+| `libquartz.dylib` | `build/quartz-macos/`, Apple clang++ 17 against Apple's SDK | `darwin/usr/lib/`, clang-18 against `sdk/`, linked by `ld64.lld-18` |
+| size / sha256 | 388832 `f88a801dda58af87…` | 388480 `4284f43215b85706…` |
+| ObjC runtime | Apple's shipping `libobjc` in the dyld shared cache | our Mach-O build of Apple's objc4 |
+
+`DYLD_PRINT_LIBRARIES` confirms the oracle loads `build/quartz-macos/libquartz.dylib`
+and not `/usr/lib/...`; nothing is installed on the macOS host. The oracle
+library's own `otool -L` is `libquartz` + `libc++.1` + `libSystem.B` and it has
+**zero** undefined `_CG*`/`_CA*`/`_CF*`/`_NS*` symbols, so no Apple framework is
+in the comparison. (`QuartzCore` shows up in `DYLD_PRINT_LIBRARIES` output — it
+also shows up for `02_main_ret`, which draws nothing. It is dyld's own baseline
+set on this OS, immediately "moved to delayed", and not a dependency of anything
+here.)
+
+### 11.3 Can the drawing gate fail? — four mutations, four kills
+
+The PNG comparison was attacked directly. Each mutation was applied to the
+*Linux* side only and graded with `scripts/quartz_pixel.sh --linux`, i.e.
+against the **committed macOS baseline**, so a mutation that both sides shared
+could not hide.
+
+| # | mutation | where | result |
+|---|---|---|---|
+| M1 | AA scanline sampled one row down (`ys = y + 1 + (s+0.5)/ss`) | `vendor/quartz/src/qz_raster.cpp` | **FAIL**, exit 1. Diverges at stage 2; 4246 of 65536 pixels differ, bbox y 10..255 |
+| M2 | **one pixel, one channel, one level**: `if (x==100 && y==100) p[0]++` | same file | **FAIL**, exit 1. `differing pixels: 1 of 65536 (0.0015%)`, bbox `x 100..100 y 100..100`, `max channel delta: R=1` |
+| M3 | `attachCategories()` returns immediately | `vendor/objc4/runtime/objc-runtime-new.mm` | `16_objc_quartz` **PASS**, `17_objc_shapes` **FAIL** |
+| M4 | a non-root class's own method list is invisible, so every override falls through to the superclass | same file | `16_objc_quartz` **PASS**, `17_objc_shapes` **FAIL** |
+
+M2 is the answer to "would a one-pixel change actually fail?". It fails, and
+`harness/pngdiff.c` localises it to the single pixel and even classifies it
+correctly as a ±1 story rather than a wrong shape. The PNG comparison is real.
+
+M3 and M4 are the answer to "is the ObjC fixture genuinely exercising ObjC?".
+Both are caught, and the bisection `16_objc_quartz` was built to provide works
+exactly as its header claims: the smoke fixture, which has one root class and no
+inheritance and no category, stays byte-identical under both, so the failure is
+localised to what `17` adds before anything is read.
+
+They are caught in the right *place*, too:
+
+* M3 diverges on stdout at `responds Circle.badgeInContext:=0` — before a pixel
+  is drawn — then dies loudly at `-[Shape badgeInContext:]: unrecognized
+  selector`, exit 71 against the oracle's 0.
+* M4 diverges at `stage 2 polymorphic fnv1a=2da484f8…` against the baseline's
+  `5e1180647bb7a073`. That is a **framebuffer** checksum: the picture changed
+  because the override did not dispatch. `item 1 shape` where the baseline says
+  `item 1 circle` confirms it. So yes — the overridden method really is
+  dispatched dynamically, and the pixels really do depend on it.
+
+The tree was restored and re-verified clean after each mutation.
+
+### 11.4 The baselines are Darwin's — and Linux cannot write them
+
+For the drawing fixtures, **the git-ordering argument of §2 does not apply**:
+`tests/expected/15_quartz.png` was committed in `9253385` together with the
+fixture, long after the loader existed, and `16`/`17` in `567dfbc`. What vouches
+for them instead, all re-measured:
+
+1. **The fixtures are Apple's.** `tests/bin/{15,16,17}` carry `LC_BUILD_VERSION
+   platform 1 (macOS), sdk 26.1` — Apple's Xcode SDK, which does not exist on
+   the Linux side of this project at all.
+2. **The oracle is re-executed every run.** `scripts/quartz_pixel.sh` in `both`
+   mode ran the three binaries natively on macOS and compared before grading:
+   `oracle vs baseline matches committed baseline`, three times.
+3. **Re-run by hand, outside the harness.** All three were executed directly on
+   macOS with the harness out of the picture: PNG and stdout byte-identical to
+   the committed baselines.
+4. **A tampered baseline cannot be scored PASS.** One byte of
+   `tests/expected/15_quartz.png` was flipped and the full gate re-run. Verdict
+   `BASELINE-DRIFT`, exit 1, *even though Linux matched the live oracle exactly*
+   — and `pngdiff` correctly reported "pixels IDENTICAL, the file bytes differ
+   but the image does not… that is a PNG ENCODER difference". A mismatch is
+   reported, never absorbed.
+5. **Linux physically cannot record.** In the container: `quartz_pixel.sh
+   --record`, `harness/run_macos.sh --record` and `harness/run_linux.sh
+   --record` all refuse on `uname -s`, and `tests/expected` is bind-mounted
+   read-only *on top of* the writable `/work` mount, so `printf >>`, `touch` and
+   `cp` onto a baseline all fail with `Read-only file system`. The baseline's
+   sha256 is unchanged afterwards. Enforced by the kernel, not by policy.
+
+### 11.5 The correction that matters: **"Swift cannot emit Mach-O on Linux" is false**
+
+§10 and `docs/QUARTZ_MACHO.md` §7.5 both flag the OpenUIKit scoping claim as
+second-hand and ask for it to be re-measured. It was, first-hand, on the
+official `swift:6.2-noble` image, `--platform linux/arm64`, `--network none`:
+
+```
+$ swiftc --version
+Swift version 6.2.4 (swift-6.2.4-RELEASE)   Target: aarch64-unknown-linux-gnu
+
+$ swiftc -target arm64-apple-macos11 -c t.swift
+<unknown>:0: error: unable to load standard library for target 'arm64-apple-macos11'
+
+$ swiftc -parse-stdlib -target arm64-apple-macos11 -c bare.swift -o bare.o
+$ od -t x1 -N 8 bare.o
+ cf fa ed fe 0c 00 00 01           # Mach-O 64-bit object arm64
+$ swiftc -parse-stdlib -target aarch64-unknown-linux-gnu -c bare.swift -o l.o
+ 7f 45 4c 46 02 01 01 03           # ELF, as a control
+```
+
+**The Swift compiler on Linux emits perfectly good arm64 Mach-O objects.** The
+backend is not the wall. The wall is that the Linux toolchain ships no Darwin
+**standard library**: `/usr/lib/swift/` contains `linux` and `embedded` and no
+`macosx`, so any source that names `Int`, `String` or `print` — which is all of
+OpenUIKit — cannot be type-checked for a Darwin triple.
+
+That is a distribution and ABI problem, not a code-generation one, and it
+changes the shape of the work:
+
+* It is **not** fixed by anything machorun does.
+* It **could** be fixed by cross-building the Swift standard library and runtime
+  for `arm64-apple-macos` on Linux. That needs a Darwin SDK (which this
+  repository deliberately does not have — `sdk/` is 356 headers against Apple's
+  3,470 and zero frameworks), a Mach-O link of `libswiftCore` itself, and then
+  `libswiftCore`'s own demands on libSystem, `libobjc` and Foundation, most of
+  which are unimplemented here. `docs/UNIMPLEMENTED.md#swift-interop` is the
+  near end of that list.
+* It could also be sidestepped by copying Apple's `libswiftCore.dylib` and
+  `.swiftinterface`s from macOS, which would end the self-hosting property and
+  is therefore not a route this repository can take.
+* Or by machorun gaining **ELF-dylib bridging**, so a Mach-O guest could bind
+  against an ELF OpenUIKit. That is the option that does not need Apple's bits,
+  and `docs/UNIMPLEMENTED.md#objc-callbacks` already contains a withdrawn design
+  for the mechanism.
+
+And it is not the only wall in front of OpenUIKit: its Objective-C facade is
+compiled `-fobjc-runtime=gnustep-2.2`, a different `struct objc_class` from the
+one a precompiled Darwin binary carries. Fixing the stdlib would not fix that.
+
+**So: OpenUIKit is not part of this milestone and cannot be, today.** What runs
+is `~/quartz` — the C++ engine OpenUIKit itself sits on — and nothing above it.
+
+### 11.6 Self-hosting still holds, with quartz in the tree
+
+- The test-bed image was searched: **no `MacOSX*.sdk`, no `.tbd`, no
+  `/Applications`, no `xcrun`, no `xcodebuild`, no `swiftc`.** Ubuntu clang
+  18.1.3 and Ubuntu LLD 18.1.3.
+- `scripts/build.sh everything` with `--network none` and only the clone
+  mounted: 39 seconds, all four dylibs, all four `.tbd`s, `0 unresolved`.
+  DNS resolution inside that container fails, as it should.
+- `scripts/build_quartz.sh` takes `-isysroot $ROOT/sdk` and nothing else.
+  `vendor/quartz` contains no `__APPLE__` conditional, no Apple header, no
+  absolute host path.
+- Every `xcrun` in the repository is still on the oracle side only:
+  `build_quartz_macos.sh`, `tests/build_fixtures.sh`, `sdk_abi_probe.sh
+  --record`, and the two committed-output table generators. All refuse off
+  Darwin.
+- `scripts/vendor_quartz.sh --verify`: **71 files match `CHECKSUMS.sha256`**.
+  It was attacked the way `sdk_stage.sh --verify` was in §9.3 — poison one byte,
+  re-run — and it fails with a diff, exits 1, and leaves the poison in place
+  rather than recording it as the new truth. `--diff` against `~/quartz` is
+  empty: the vendored tree is byte-identical to upstream, and upstream was not
+  modified.
+
+### 11.7 Numbers in the prose that had drifted
+
+Measured on this build; the docs said otherwise and have been corrected.
+
+| claim | said | measured |
+|---|---|---|
+| `sdk/usr/include` census | README: "356 headers, of which 337 … 4 from objc4 … 19 clean-room" (sums to 360) | **356** = 332 upstream + **1 generated** + 4 objc4 + 19 clean-room; `CHECKSUMS.sha256` covers **333** of them |
+| §9's census | "355 … 332 + 19 + 4" (sums to 355, omits the generated header) | same 356 as above |
+| `libSystem.B.dylib` exports | README §5: 242, of which 86 referenced | **441** exported, **89** referenced by at least one fixture — **352 (80%) compiled and untested** |
+| `libSystem.B.tbd` symbols | README: 342 | **463** (441 exports + 22 loader-defined, `darwin/loader-exports.txt`) |
+| `libobjc.A.dylib` exports | — | **418**, of which **116** are reached by `tests/objc44/` and 13 by the drawing fixtures (a subset) |
+| `libquartz.dylib` exports | 507, 34 exercised | **507**, **36** exercised by the three drawing fixtures together |
+
+The libSystem row is the one to read twice. Hosting quartz nearly doubled the
+export surface (libm alone is 113 symbols) while the fixture corpus grew by
+three, so **the single biggest gap between "green" and "correct" got wider, not
+narrower** — 64% untested became 80% untested. That is the honest cost of the
+milestone and it belongs next to the pixel result, not below it.
+
+### 11.8 Two harness nits, and what this verification did *not* find
+
+Found:
+
+1. When the Linux side produces no PNG, `scripts/quartz_pixel.sh:272` runs
+   `wc -c` on a missing file and lets bash's `No such file or directory` onto
+   stderr before printing the row. Cosmetic — the verdict is still a correct
+   FAIL with the reason printed — but it is noise on exactly the run a reader is
+   trying to diagnose.
+2. `scripts/objc44.sh` exits **1** on 41/44, which is right, but the three
+   failures are its *documented* expected state. There is no XFAIL concept in
+   that runner, so "the corpus is where we left it" and "the corpus regressed"
+   are the same exit code. `difftest.sh` distinguishes these; `objc44.sh` cannot.
+
+Not found, and worth saying explicitly: **no discrepancy in any headline
+number.** Every figure in §10 and in `docs/QUARTZ_MACHO.md` reproduced. The
+mutation survivors of §3 were not re-tested here and are assumed to stand; the
+coverage limits in `docs/UNIMPLEMENTED.md#quartz-fixture-coverage` and
+`#objc-drawing-coverage` were re-measured and are exactly right (36 of 507).
+
+### 11.9 What now runs end to end, and what it does not cover
+
+**Runs.** A precompiled arm64 Mach-O executable, built on macOS by Apple's
+clang against Apple's SDK, never relinked, is mapped and fixed up by our loader
+on Linux/arm64; binds against our Mach-O `libSystem.B.dylib`, our Mach-O build
+of Apple's objc4, our Mach-O build of LLVM's libc++ out-of-line members, and
+`~/quartz` built as a Mach-O dylib from unpatched sources; registers its
+classes, categories and protocols through dyld's ObjC image-notify protocol;
+runs `+load` before `main`; dispatches `objc_msgSend` and `objc_msgSendSuper2`
+polymorphically over a heterogeneous collection; rasterises through a CPU
+rasteriser that reaches libm; encodes a PNG; and writes a file whose bytes are
+**identical** to the bytes the same binary writes on macOS.
+
+**Does not cover**, and none of this is implied by the green:
+
+* **`QZ*`, not `CG*`.** There is no `CoreGraphics.framework`, no
+  `CoreFoundation`, no `Foundation`, no `UIKit`. A binary linked against Apple's
+  frameworks resolves none of its imports.
+* **No Swift, no OpenUIKit** — §11.5.
+* **No exceptions and no `dlopen`** — the three `objc44` failures, both loud.
+* **80% of libSystem, 72% of libobjc and 93% of libquartz are untested here** —
+  §11.7.
+* **No window, no display, no compositor.** "Draws" means "rasterises to a
+  bitmap and writes a PNG". There is no `UIScreen` path and nothing puts a pixel
+  on a screen.
+* **No arm64e, no FairPlay, no App Store app.** Unchanged from §6.
