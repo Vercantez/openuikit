@@ -1,0 +1,13 @@
+replace.existing.returns.old=yes
+replace.existing.returns.nonnull=nonnull
+after.replace=500
+sibling.untouched=7
+replace.fresh.returns=null
+dispatch.fresh=501
+replace.inherited.returns=null
+sub.after=501
+super.after=7
+replace.again.returns.new_imp=yes
+after.second.replace=501
+cache.flushed=yes
+replace.nilclass=null
