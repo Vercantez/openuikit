@@ -128,9 +128,56 @@ distributed notifications). **Deliberately out of scope.** The bounded Mach list
 we *do* implement is in PLAN.md II.2 bucket C; this is everything past it.
 
 ### `objc-callbacks`
-`_dyld_objc_register_callbacks` / `_dyld_objc_notify_register` until the ObjC
-rung (M9). The exact struct shape is version-coupled to whichever `libobjc` we
-ship and must be read out of that source.
+`_dyld_objc_register_callbacks` / `_dyld_objc_notify_register`. Still the top
+blocker, but the shape of the work changed once `~/objc4-linux` was read
+(2026-08-26), and PLAN.md's recommended first move -- "build objc4 as a Mach-O
+dylib on Linux" -- now looks like the *wrong* one.
+
+What is actually there: objc4-linux did not keep Mach-O image discovery and
+shim it. It **replaced** it. `compat/src/objc4linux-elf.cpp` enumerates images
+with `dl_iterate_phdr(3)`, reads the on-disk ELF *section header* table to find
+`objc_classlist` and friends (the Mach-O names with `__` stripped, so they are
+valid C identifiers), and hands objc4 a synthetic per-image record:
+
+```c
+struct ElfImage {
+    struct mach_header_64         hdr;      /* MUST be first: objc4 casts back */
+    _dyld_section_location_info_s sections;
+    uintptr_t                     base;
+    ...
+};
+```
+
+Rebuilding that as Mach-O means undoing the port's central change, so it is the
+expensive path. The cheap path is that the same file already contains the
+*whole* registration seam and it is image-format agnostic:
+`objc4linux_scan_images()` builds `_dyld_objc_notify_mapped_info[]` from those
+records and calls `gCallbacks.mapped(...)` then `gCallbacks.init(...)`, with
+callbacks registered through a v4 `_dyld_objc_register_callbacks`.
+
+So the plausible route is a hybrid, and it needs three pieces, none of which
+exists yet:
+
+1. **An ELF-backed Darwin dylib in machorun.** `/usr/lib/libobjc.A.dylib`
+   resolves to a marker that names a host `.so`; the loader `dlopen`s it and
+   resolves that image's symbols with `dlsym`. This matters more than it
+   sounds: `__objc_empty_cache` is a *data* import that every guest class
+   structure points at, so a forwarding thunk dylib would give the guest a
+   different object than the runtime's own and break cache identity. Binding
+   straight to the ELF symbol is the only correct answer.
+2. **A foreign-image registration entry point in objc4-linux**, e.g.
+   `objc4linux_register_foreign_image(mh, path, sections)`, filling the same
+   `_dyld_section_location_info_s` from a *Mach-O* section table instead of an
+   ELF one, then driving the existing mapped/init path. That is a change to a
+   sibling project, not to this one.
+3. **Ordering**: `mapped` must run before the image's own initialisers,
+   because `+load` is dispatched from inside `map_images`. machorun's
+   `mr_run_initialisers` has the hook point (`mr_objc_note_image`) but nothing
+   to call.
+
+Until all three exist, any image carrying `__objc_imageinfo` aborts naming this
+entry. It does not fault inside an unregistered class, which is the failure
+mode worth having.
 
 ### `unwind-compact`
 `_Unwind_*` over Apple's `__TEXT,__unwind_info` compact-unwind format. Not

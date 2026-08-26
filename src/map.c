@@ -14,6 +14,7 @@
 #include "machorun.h"
 
 #include <errno.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -73,7 +74,12 @@ void mr_map_image(mr_image *im)
 
     /* One reservation for the whole image: makes "did the preferred base
      * collide" a single question and keeps inter-segment gaps unmapped. */
-    want = (im->filetype == MH_EXECUTE) ? (void *)lo : NULL;
+    /* MACHORUN_NO_PREFERRED_BASE exists to exercise the slid path. An
+     * executable normally lands exactly at its preferred base, so slide == 0
+     * and a whole class of "used the preferred base where the load base was
+     * meant" bugs would never fire. Setting it forces every image to slide. */
+    want = (im->filetype == MH_EXECUTE && !getenv("MACHORUN_NO_PREFERRED_BASE"))
+               ? (void *)lo : NULL;
     if (want) {
         got = mmap(want, span, PROT_NONE,
                    MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE | MAP_FIXED_NOREPLACE, -1, 0);

@@ -80,4 +80,17 @@ docs/       design, ABI notes, status
 
 ## Status
 
-Bootstrapping. See `docs/PLAN.md`.
+**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 13 of 14
+runnable fixtures are byte-identical to the same bytes running natively on
+macOS, covering both fixup formats, initialisers, TLV, dylib graphs with
+`@rpath`, data and reverse imports, pthreads, and fat binaries. Objective-C is
+the one remaining wall.
+
+See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/PLAN.md`
+for the design, `docs/UNIMPLEMENTED.md` for every stub that aborts.
+
+```sh
+scripts/build.sh          # loader (ELF PIE) + darwin/*.dylib (Mach-O, on Linux)
+scripts/difftest.sh       # macOS oracle vs machorun-on-Linux, one row per fixture
+build/machorun ./prog     # run one
+```
