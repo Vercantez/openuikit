@@ -1,4 +1,81 @@
-# objc4-linux
+# objc4-linux — RETIRED (2026-08-26)
+
+> **This project is retired. Do not develop it further. Do not delete it yet.**
+>
+> **What replaced it.** `~/machorun` now builds the *same* vendored objc4 drop
+> as a **Mach-O** `/usr/lib/libobjc.A.dylib`, on Linux, and runs it under its
+> own Mach-O loader. See `~/machorun/docs/OBJC4_MACHO.md` for the full
+> accounting and `~/machorun/patches-macho/` for the patch set.
+>
+> **Why.** The user's criterion was *"I'd like to maintain less not more."* On
+> that criterion the Mach-O route wins outright: **4 patches against Apple's
+> source instead of 9.** Four of the nine turned out to be the same bug —
+> Mach-O source compiled by a toolchain that had been told it was building for
+> Linux. Building for `arm64-apple-macos11` deletes them without a line of
+> thought: `__arm64__`/`__arm64` and `__OBJC_BOOL_IS_BOOL` become predefines,
+> `objc-msg-arm64.s` assembles **verbatim** (so the 10 KB named-macro-parameter
+> patch and `scripts/gen-elf-asm.py` are both gone), `__asm__("_objc_release")`
+> becomes the correct spelling rather than the wrong one, and `TARGET_OS_MAC`
+> being 1 makes most of the config patch unnecessary. Deleted outright with
+> them: the 223-line hand-written Linux OS block in `objc-os.h`, the ELF
+> reimplementation of `getSectionData`, the `dl_iterate_phdr` image-discovery
+> layer, and the synthetic `struct mach_header_64` that existed only so objc4
+> could cast it back.
+>
+> The shape of what is left is the real argument. **Every one of the four
+> surviving patches says "this is not a Mac". None says "this is not Mach-O."**
+> That is the irreducible set — nobody can delete those by being cleverer about
+> the file format — and two of the four (the wide-VA isa layout, and taking the
+> conservative `_collecting_in_critical()` branch because there is no
+> `task_restartable_ranges_register`) are **this project's own findings, ported
+> across unchanged**. This port was not wasted; it was the thing that found
+> them.
+>
+> **What is still available ONLY here: a genuine 44/44.** Under machorun the
+> same 44-source corpus, against the same committed macOS baselines, scores
+> **41/44** (re-measured 2026-08-26 from a scratch rebuild). The three that
+> only pass here are:
+>
+> | test | needs |
+> |---|---|
+> | `038-exceptions` | an unwinder over `__TEXT,__unwind_info` |
+> | `044-exception-through-uncached` | the same |
+> | `042-dlopen` | `dlopen` of a guest Mach-O image at run time |
+>
+> On ELF those three were free: glibc's `dlopen` and libgcc's `.eh_frame`
+> unwinder are simply *there*. Neither failure is attributable to objc4, to the
+> Mach-O build, or to the dyld seam — both gaps block plain C++ under machorun
+> just as hard as they block Objective-C, and both were on machorun's ranked
+> blocker list before the Mach-O objc4 work started.
+>
+> **The two gaps that must close before this repo can be deleted outright:**
+>
+> 1. **A compact-unwind unwinder in machorun** — `__TEXT,__unwind_info`, not
+>    `.eh_frame`, so libgcc's unwinder cannot simply be forwarded to.
+>    (`~/machorun/docs/UNIMPLEMENTED.md#unwind-compact`)
+> 2. **`dlopen`/`dlsym` for guest Mach-O images** in machorun.
+>    (`~/machorun/docs/UNIMPLEMENTED.md#dlopen-dlsym`)
+>
+> When machorun's run of this corpus reads 44/44, this directory has no
+> remaining unique content and can go. Until then it is the only place a
+> complete pass exists, and it costs nothing sitting here.
+>
+> **What already transferred, so it is not lost when that day comes.** The
+> 44-test corpus itself (sources and macOS baselines) is committed at
+> `~/machorun/tests/objc44/` and run by `~/machorun/scripts/objc44.sh`.
+> `compat/mach-o/dyld_priv.h` transferred essentially unchanged — it is Apple's
+> declarations, and they are the same declarations in either format. The
+> format-independent findings in `docs/PORT_MAP.md` and `docs/PORT_PLAN.md` —
+> the objc4-vintage analysis, the `+load`/static-initialiser ordering contract,
+> and the packed-isa `shiftcls` versus Linux VA-width risk — are summarised and
+> cited in `~/machorun/docs/OBJC4_MACHO.md` §9, with the two live ones also
+> carried as entries in `~/machorun/docs/UNIMPLEMENTED.md`.
+>
+> Everything below this notice is the state of the ELF port as of its last
+> commit and is left unedited. Its numbers are still true **of this repo**; they
+> are not machorun's numbers, and the two must not be added together.
+
+---
 
 A port of **Apple's Objective-C runtime** (`objc4`) to Linux/ELF.
 
