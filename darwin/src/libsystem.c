@@ -456,7 +456,33 @@ FWDV(free, (void *p), (p))
 FWDE(int, posix_memalign, (void **p, size_t a, size_t n), (p, a, n))
 FWDE(void *, aligned_alloc, (size_t a, size_t n), (a, n))
 EXPORT void *valloc(size_t n) { void *p = NULL; glibc_posix_memalign(&p, 16384, n); return p; }
-EXPORT size_t malloc_size(const void *p) { return glibc_malloc_usable_size((void *)p); }
+/* malloc_size is NOT malloc_usable_size, and the difference is load-bearing.
+ *
+ * Darwin's contract: "returns 0 if p was not allocated by any malloc zone".
+ * Callers use it as an ownership test. objc4 is one: objc-runtime-new.h has
+ *     static inline void try_free(const void *p)
+ *     { if (p && malloc_size(p)) free((void *)p); }
+ * and uses it in free_class() to tell a class_ro_t the compiler emitted into
+ * __DATA_CONST from one the runtime allocated. glibc's malloc_usable_size does
+ * no validation at all -- it reads the chunk header word before the pointer
+ * and returns whatever is there, which for image data is a plausible non-zero
+ * number. MEASURED: objc_disposeClassPair then free()s an address inside
+ * libobjc's own mapping and glibc aborts with "munmap_chunk(): invalid
+ * pointer" (tests/objc44/023-dynamic-class).
+ *
+ * So we answer the ownership question ourselves: anything inside a mapped
+ * guest image is not ours. mr_addr_in_image is the loader's (src/image.c).
+ * This is not an objc4 special case -- it is what the documented Darwin
+ * behaviour is, and any guest that uses malloc_size as an ownership test gets
+ * it right now. */
+extern int mr_addr_in_image(const void *p);   /* -> loader, via host lookup */
+
+EXPORT size_t malloc_size(const void *p)
+{
+    if (!p) return 0;
+    if (mr_addr_in_image(p)) return 0;
+    return glibc_malloc_usable_size((void *)p);
+}
 EXPORT size_t malloc_good_size(size_t n) { return n; }
 
 FWD(size_t, strlen,  (const char *s),                    (s))
