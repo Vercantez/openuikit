@@ -1,0 +1,22 @@
+task_self nonnull=yes
+task_self stable=yes
+thread_self nonnull=yes
+vm_allocate kr=0 ok=yes
+vm_allocate aligned=yes
+vm_allocate zerofilled=yes
+readback=Mach tail=0xa5
+vm_protect ro kr=0 ok=yes
+still readable=yes
+vm_protect rw kr=0
+writable again=yes
+vm_deallocate kr=0 ok=yes
+two allocs distinct=yes disjoint=yes
+timebase kr=0 sane=yes
+abs monotonic=yes
+slept 120ms measured in [100ms,3s]=yes
+continuous monotonic=yes
+kr0=[(os/kern) successful]
+kr1=[(os/kern) invalid address]
+kr2=[(os/kern) protection failure]
+kr4=[(os/kern) invalid argument]
+port_deallocate kr=0

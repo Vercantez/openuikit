@@ -30,4 +30,8 @@
 07c_dylib_classic	g	classic	run	pass	same, classic fixups on both images
 08_pthread	h	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
 09_objc	i	chained	run	xfail:needs libobjc.A.dylib (~/objc4-linux) and the dyld ObjC image-notify hook	Foundation-free Objective-C: classes, selrefs, objc_msgSend
+11_varargs	j	chained	run	pass	Darwin arm64 varargs in anger: >8 args, interleaved int/double, va_copy, guest va_list into vsnprintf
+11c_varargs_classic	j	classic	run	pass	same source, classic fixups -- the varargs ABI is a libSystem property, not a fixup one
+12_mach	k	chained	run	pass	mach_task_self, vm_allocate/protect/deallocate, mach_absolute_time, timebase, mach_error_string
+13_errno	l	chained	run	pass	errno numbering, O_* flag values and struct stat layout all differ between Darwin and Linux
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

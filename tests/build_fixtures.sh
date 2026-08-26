@@ -144,6 +144,15 @@ if want 09_objc; then
     echo "==> 09_objc"; built+=(09_objc)
 fi
 
+# ---------------------------------------------------------------- rung (j)
+# The ABI rungs. Everything above proves the loader; these prove the Darwin
+# userland underneath it -- the places where "forward it to glibc" is not a
+# translation but a different program. See docs/ABI.md for the measurements.
+want 11_varargs          && build 11_varargs          "$CHAINED_TARGET" 11_varargs          11_varargs.c --
+want 11c_varargs_classic && build 11c_varargs_classic "$CLASSIC_TARGET" 11c_varargs_classic 11_varargs.c --
+want 12_mach             && build 12_mach             "$CHAINED_TARGET" 12_mach             12_mach.c --
+want 13_errno            && build 13_errno            "$CHAINED_TARGET" 13_errno            13_errno.c --
+
 # -------------------------------------------------- off-ladder: structure
 # A universal binary. macOS picks the arm64 slice and behaves exactly like
 # 03_printf, so the recorded baseline is identical -- which means any

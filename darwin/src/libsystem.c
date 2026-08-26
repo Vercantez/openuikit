@@ -29,124 +29,37 @@
  * Everything is declared here.
  */
 
-typedef unsigned long size_t;
-typedef long          ssize_t;
-typedef unsigned long uintptr_t;
-typedef __builtin_va_list va_list;
-#define va_start __builtin_va_start
-#define va_end   __builtin_va_end
-#define va_arg   __builtin_va_arg
-#define NULL ((void *)0)
-
-#define GLIBCSYM(n) __asm__("_glibc_" #n)
-#define EXPORT __attribute__((visibility("default")))
-
-/* ------------------------------------------------------- the glibc side */
-extern void  *glibc_malloc(size_t)                       GLIBCSYM(malloc);
-extern void  *glibc_calloc(size_t, size_t)               GLIBCSYM(calloc);
-extern void  *glibc_realloc(void *, size_t)              GLIBCSYM(realloc);
-extern void   glibc_free(void *)                         GLIBCSYM(free);
-extern int    glibc_posix_memalign(void **, size_t, size_t) GLIBCSYM(posix_memalign);
-extern void  *glibc_aligned_alloc(size_t, size_t)        GLIBCSYM(aligned_alloc);
-extern size_t glibc_malloc_usable_size(void *)           GLIBCSYM(malloc_usable_size);
-
-extern size_t glibc_strlen(const char *)                 GLIBCSYM(strlen);
-extern char  *glibc_strcpy(char *, const char *)         GLIBCSYM(strcpy);
-extern char  *glibc_strncpy(char *, const char *, size_t) GLIBCSYM(strncpy);
-extern char  *glibc_strcat(char *, const char *)         GLIBCSYM(strcat);
-extern int    glibc_strcmp(const char *, const char *)   GLIBCSYM(strcmp);
-extern int    glibc_strncmp(const char *, const char *, size_t) GLIBCSYM(strncmp);
-extern char  *glibc_strchr(const char *, int)            GLIBCSYM(strchr);
-extern char  *glibc_strrchr(const char *, int)           GLIBCSYM(strrchr);
-extern char  *glibc_strstr(const char *, const char *)   GLIBCSYM(strstr);
-extern char  *glibc_strdup(const char *)                 GLIBCSYM(strdup);
-extern void  *glibc_memcpy(void *, const void *, size_t) GLIBCSYM(memcpy);
-extern void  *glibc_memmove(void *, const void *, size_t) GLIBCSYM(memmove);
-extern void  *glibc_memset(void *, int, size_t)          GLIBCSYM(memset);
-extern int    glibc_memcmp(const void *, const void *, size_t) GLIBCSYM(memcmp);
-extern void  *glibc_memchr(const void *, int, size_t)    GLIBCSYM(memchr);
-
-extern int    glibc_puts(const char *)                   GLIBCSYM(puts);
-extern int    glibc_putchar(int)                         GLIBCSYM(putchar);
-extern size_t glibc_fwrite(const void *, size_t, size_t, void *) GLIBCSYM(fwrite);
-extern size_t glibc_fread(void *, size_t, size_t, void *) GLIBCSYM(fread);
-extern int    glibc_fflush(void *)                       GLIBCSYM(fflush);
-extern void  *glibc_fopen(const char *, const char *)    GLIBCSYM(fopen);
-extern int    glibc_fclose(void *)                       GLIBCSYM(fclose);
-extern int    glibc_fputs(const char *, void *)          GLIBCSYM(fputs);
-extern int    glibc_fputc(int, void *)                   GLIBCSYM(fputc);
-extern int    glibc_fgetc(void *)                        GLIBCSYM(fgetc);
-extern int    glibc_ferror(void *)                       GLIBCSYM(ferror);
-extern int    glibc_feof(void *)                         GLIBCSYM(feof);
-
-extern ssize_t glibc_write(int, const void *, size_t)    GLIBCSYM(write);
-extern ssize_t glibc_read(int, void *, size_t)           GLIBCSYM(read);
-extern int     glibc_close(int)                          GLIBCSYM(close);
-extern int     glibc_getpid(void)                        GLIBCSYM(getpid);
-extern void    glibc_abort(void)                         GLIBCSYM(abort);
-extern void    glibc_exit(int)                           GLIBCSYM(exit);
-extern void    glibc__exit(int)                          GLIBCSYM(_exit);
-extern int    *glibc___errno_location(void)              GLIBCSYM(__errno_location);
-extern int     glibc_atoi(const char *)                  GLIBCSYM(atoi);
-extern long    glibc_strtol(const char *, char **, int)  GLIBCSYM(strtol);
-extern double  glibc_strtod(const char *, char **)       GLIBCSYM(strtod);
-extern void    glibc_qsort(void *, size_t, size_t, int (*)(const void *, const void *)) GLIBCSYM(qsort);
-extern char   *glibc_getenv(const char *)                GLIBCSYM(getenv);
-extern long    glibc_time(long *)                        GLIBCSYM(time);
-extern int     glibc_clock_gettime(int, void *)          GLIBCSYM(clock_gettime);
-extern int     glibc_usleep(unsigned)                    GLIBCSYM(usleep);
-extern int     glibc_sched_yield(void)                   GLIBCSYM(sched_yield);
-extern long    glibc_sysconf(int)                        GLIBCSYM(sysconf);
-extern void   *glibc_mmap(void *, size_t, int, int, int, long) GLIBCSYM(mmap);
-extern int     glibc_munmap(void *, size_t)              GLIBCSYM(munmap);
-extern int     glibc_mprotect(void *, size_t, int)       GLIBCSYM(mprotect);
+#include "dsys.h"
 
 /* glibc's variadic snprintf, declared NON-variadically with the exact shape we
  * call it with. See the header comment: this is the safe crossing. */
 extern int glibc_snprintf_d(char *, size_t, const char *, double) GLIBCSYM(snprintf);
 
-/* glibc data objects. These are data imports: the GOT slot holds the address
- * of glibc's variable, so this really is glibc's stdout, not a copy. */
-extern void *glibc_stdout GLIBCSYM(stdout);
-extern void *glibc_stderr GLIBCSYM(stderr);
-extern void *glibc_stdin  GLIBCSYM(stdin);
-
-/* pthreads, glibc side. glibc's pthread_t is an unsigned long; Darwin's is an
- * opaque pointer. Both are 8 bytes and both are only ever passed back to us. */
-typedef unsigned long g_pthread_t;
-extern int glibc_pthread_create(g_pthread_t *, const void *, void *(*)(void *), void *) GLIBCSYM(pthread_create);
-extern int glibc_pthread_join(g_pthread_t, void **)      GLIBCSYM(pthread_join);
-extern int glibc_pthread_detach(g_pthread_t)             GLIBCSYM(pthread_detach);
-extern g_pthread_t glibc_pthread_self(void)              GLIBCSYM(pthread_self);
-extern int glibc_pthread_equal(g_pthread_t, g_pthread_t) GLIBCSYM(pthread_equal);
-extern int glibc_pthread_mutex_init(void *, const void *) GLIBCSYM(pthread_mutex_init);
-extern int glibc_pthread_mutex_lock(void *)              GLIBCSYM(pthread_mutex_lock);
-extern int glibc_pthread_mutex_trylock(void *)           GLIBCSYM(pthread_mutex_trylock);
-extern int glibc_pthread_mutex_unlock(void *)            GLIBCSYM(pthread_mutex_unlock);
-extern int glibc_pthread_mutex_destroy(void *)           GLIBCSYM(pthread_mutex_destroy);
-extern int glibc_pthread_cond_init(void *, const void *) GLIBCSYM(pthread_cond_init);
-extern int glibc_pthread_cond_wait(void *, void *)       GLIBCSYM(pthread_cond_wait);
-extern int glibc_pthread_cond_signal(void *)             GLIBCSYM(pthread_cond_signal);
-extern int glibc_pthread_cond_broadcast(void *)          GLIBCSYM(pthread_cond_broadcast);
-extern int glibc_pthread_cond_destroy(void *)            GLIBCSYM(pthread_cond_destroy);
-extern int glibc_pthread_once(void *, void (*)(void))    GLIBCSYM(pthread_once);
-extern int glibc_pthread_key_create(unsigned *, void (*)(void *)) GLIBCSYM(pthread_key_create);
-extern int glibc_pthread_key_delete(unsigned)            GLIBCSYM(pthread_key_delete);
-extern void *glibc_pthread_getspecific(unsigned)         GLIBCSYM(pthread_getspecific);
-extern int glibc_pthread_setspecific(unsigned, const void *) GLIBCSYM(pthread_setspecific);
-
 /* --------------------------------------------------------- loud failure */
 
-static void say(const char *s)
+HIDDEN void mr_say(const char *s)
 {
     glibc_write(2, s, glibc_strlen(s));
 }
 
-__attribute__((noreturn)) static void bail(const char *what)
+HIDDEN __attribute__((noreturn)) void mr_bail(const char *what)
 {
-    say("machorun/libSystem: ");
-    say(what);
-    say("\n");
+    mr_say("machorun/libSystem: ");
+    mr_say(what);
+    mr_say("\n");
+    glibc_fflush(NULL);
+    glibc__exit(71);
+    __builtin_unreachable();
+}
+
+HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *detail)
+{
+    mr_say("machorun/libSystem: ");
+    mr_say(what);
+    mr_say(": ");
+    mr_say(detail);
+    mr_say("\n");
+    glibc_fflush(NULL);
     glibc__exit(71);
     __builtin_unreachable();
 }
@@ -177,8 +90,6 @@ EXPORT int   *_NSGetArgc(void)    { return &mr_argc; }
 EXPORT char ***_NSGetArgv(void)   { return &mr_argv; }
 EXPORT char ***_NSGetEnviron(void) { return &mr_envp; }
 EXPORT char **_NSGetProgname(void) { return (char **)&__progname; }
-
-EXPORT int *__error(void) { return glibc___errno_location(); }
 
 /* ---------------------------------------------------------- the printf */
 
@@ -308,7 +219,7 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
             char sign = 0;
             size_t n;
             unsigned base = 10;
-            int upper = 0, isneg = 0;
+            int upper = 0, isneg = 0, alt_octal = 0;
             unsigned long long uv = 0;
             const char *prefix = "";
 
@@ -340,7 +251,14 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
                 if (conv == 'x') base = 16;
                 else if (conv == 'X') { base = 16; upper = 1; }
                 else if (conv == 'o') base = 8;
-                if ((flags & FLAG_ALT) && uv && base == 16) prefix = upper ? "0X" : "0x";
+                if (flags & FLAG_ALT) {
+                    if (uv && base == 16) prefix = upper ? "0X" : "0x";
+                    /* "#o increases the precision, if and only if necessary,
+                     * to force the first digit of the result to be a zero"
+                     * (C17 7.21.6.1). It is a precision bump, not a prefix --
+                     * which is why %#o of 64 is "0100" and not "00100". */
+                    else if (base == 8) alt_octal = 1;
+                }
             }
 
             if (isneg) sign = '-';
@@ -350,6 +268,7 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
             n = utoa(uv, base, upper, num);
             {
                 long zeros = (prec >= 0 && (long)n < prec) ? prec - (long)n : 0;
+                if (alt_octal && zeros == 0) zeros = 1;
                 long body = (long)n + zeros + (sign ? 1 : 0) + (long)glibc_strlen(prefix);
                 long pad = width - body;
                 if (prec >= 0) flags &= ~FLAG_ZERO;      /* precision beats '0' */
@@ -391,7 +310,7 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
             break;
         }
         case 'n':
-            bail("%n in a format string is not supported");
+            mr_bail("%n in a format string is not supported");
         default:
             /* Unknown conversion: emit it verbatim, as the C library does. */
             sink_put(s, "%", 1);
@@ -522,15 +441,20 @@ EXPORT int __printf_chk(int flag, const char *fmt, ...)
 
 /* ------------------------------------------------------------ forwarders */
 
-#define FWD(ret, name, params, args) EXPORT ret name params { return glibc_##name args; }
-#define FWDV(name, params, args)     EXPORT void name params { glibc_##name args; }
+/* FWD  -- a pure forwarder: same ABI on both sides, no errno in its contract.
+ * FWDE -- a forwarder whose contract INCLUDES errno, so the guest's errno slot
+ *         is pushed to glibc before the call and pulled back after it. See
+ *         darwin/src/posix.c for why both halves are needed. */
+#define FWD(ret, name, params, args)  EXPORT ret name params { return glibc_##name args; }
+#define FWDV(name, params, args)      EXPORT void name params { glibc_##name args; }
+#define FWDE(ret, name, params, args) EXPORT ret name params { return MR_ERRNO_CALL(glibc_##name args); }
 
-FWD(void *, malloc,  (size_t n),               (n))
-FWD(void *, calloc,  (size_t n, size_t m),     (n, m))
-FWD(void *, realloc, (void *p, size_t n),      (p, n))
+FWDE(void *, malloc,  (size_t n),               (n))
+FWDE(void *, calloc,  (size_t n, size_t m),     (n, m))
+FWDE(void *, realloc, (void *p, size_t n),      (p, n))
 FWDV(free, (void *p), (p))
-FWD(int, posix_memalign, (void **p, size_t a, size_t n), (p, a, n))
-FWD(void *, aligned_alloc, (size_t a, size_t n), (a, n))
+FWDE(int, posix_memalign, (void **p, size_t a, size_t n), (p, a, n))
+FWDE(void *, aligned_alloc, (size_t a, size_t n), (a, n))
 EXPORT void *valloc(size_t n) { void *p = NULL; glibc_posix_memalign(&p, 16384, n); return p; }
 EXPORT size_t malloc_size(const void *p) { return glibc_malloc_usable_size((void *)p); }
 EXPORT size_t malloc_good_size(size_t n) { return n; }
@@ -559,33 +483,35 @@ EXPORT void  *__memset_chk(void *d, int c, size_t n, size_t sz) { (void)sz; retu
 
 FWD(int, puts,    (const char *s),  (s))
 FWD(int, putchar, (int c),          (c))
-FWD(int, fflush,  (void *f),        (f))
-FWD(int, fclose,  (void *f),        (f))
+FWDE(int, fflush,  (void *f),        (f))
+FWDE(int, fclose,  (void *f),        (f))
 FWD(int, fputs,   (const char *s, void *f), (s, f))
 FWD(int, fputc,   (int c, void *f), (c, f))
 FWD(int, fgetc,   (void *f),        (f))
 FWD(int, ferror,  (void *f),        (f))
 FWD(int, feof,    (void *f),        (f))
-FWD(void *, fopen, (const char *p, const char *m), (p, m))
-FWD(size_t, fwrite, (const void *p, size_t a, size_t b, void *f), (p, a, b, f))
-FWD(size_t, fread,  (void *p, size_t a, size_t b, void *f),       (p, a, b, f))
+FWDE(void *, fopen, (const char *p, const char *m), (p, m))
+FWDE(size_t, fwrite, (const void *p, size_t a, size_t b, void *f), (p, a, b, f))
+FWDE(size_t, fread,  (void *p, size_t a, size_t b, void *f),       (p, a, b, f))
 EXPORT int putc(int c, void *f) { return glibc_fputc(c, f); }
 EXPORT int fputs_unlocked(const char *s, void *f) { return glibc_fputs(s, f); }
 
-FWD(ssize_t, write, (int fd, const void *b, size_t n), (fd, b, n))
-FWD(ssize_t, read,  (int fd, void *b, size_t n),       (fd, b, n))
-FWD(int, close, (int fd), (fd))
 FWD(int, getpid, (void), ())
 FWD(int, atoi, (const char *s), (s))
-FWD(long, strtol, (const char *s, char **e, int b), (s, e, b))
-FWD(double, strtod, (const char *s, char **e), (s, e))
+FWDE(long, strtol, (const char *s, char **e, int b), (s, e, b))
+FWDE(unsigned long, strtoul, (const char *s, char **e, int b), (s, e, b))
+FWDE(long long, strtoll, (const char *s, char **e, int b), (s, e, b))
+FWDE(double, strtod, (const char *s, char **e), (s, e))
 FWD(char *, getenv, (const char *n), (n))
-FWD(long, time, (long *t), (t))
+FWD(time_t, time, (time_t *t), (t))
+FWD(int, fileno, (void *f), (f))
+FWDE(int, fseek, (void *f, long o, int w), (f, o, w))
+FWDE(long, ftell, (void *f), (f))
 FWD(int, usleep, (unsigned u), (u))
 FWD(int, sched_yield, (void), ())
 FWD(long, sysconf, (int n), (n))
-FWD(int, munmap, (void *a, size_t n), (a, n))
-FWD(int, mprotect, (void *a, size_t n, int p), (a, n, p))
+FWDE(int, munmap, (void *a, size_t n), (a, n))
+FWDE(int, mprotect, (void *a, size_t n, int p), (a, n, p))
 FWDV(qsort, (void *b, size_t n, size_t s, int (*c)(const void *, const void *)), (b, n, s, c))
 EXPORT void *mmap(void *a, size_t n, int prot, int flags, int fd, long off)
 {
@@ -593,7 +519,7 @@ EXPORT void *mmap(void *a, size_t n, int prot, int flags, int fd, long off)
     int lf = flags & 0x0f;
     if (flags & 0x1000) lf |= 0x20;
     if (flags & 0x0010) lf |= 0x10;              /* MAP_FIXED */
-    return glibc_mmap(a, n, prot, lf, fd, off);
+    return MR_ERRNO_CALL(glibc_mmap(a, n, prot, lf, fd, off));
 }
 
 EXPORT void abort(void) { glibc_abort(); }
@@ -607,7 +533,7 @@ static int atexit_n;
 EXPORT int __cxa_atexit(void (*fn)(void *), void *arg, void *dso)
 {
     if (atexit_n >= (int)(sizeof(atexit_list) / sizeof(atexit_list[0])))
-        bail("more than 256 __cxa_atexit registrations");
+        mr_bail("more than 256 __cxa_atexit registrations");
     atexit_list[atexit_n].fn = fn;
     atexit_list[atexit_n].arg = arg;
     atexit_list[atexit_n].dso = dso;
@@ -653,7 +579,7 @@ EXPORT void mr_posix_exit(int code) { glibc__exit(code); }
 
 EXPORT void __stack_chk_fail(void)
 {
-    bail("__stack_chk_fail: the guest detected a stack smash");
+    mr_bail("__stack_chk_fail: the guest detected a stack smash");
 }
 
 /* ------------------------------------------------------------- loader-side */
@@ -661,7 +587,7 @@ EXPORT void __stack_chk_fail(void)
 EXPORT void *_tlv_bootstrap(void *desc)
 {
     (void)desc;
-    bail("__tlv_bootstrap was entered. machorun patches every TLV descriptor's "
+    mr_bail("__tlv_bootstrap was entered. machorun patches every TLV descriptor's "
          "thunk at load time, so reaching the bootstrap means the loader did not "
          "see this image's __thread_vars");
 }
@@ -669,7 +595,7 @@ EXPORT void *_tlv_bootstrap(void *desc)
 EXPORT void _tlv_atexit(void (*fn)(void *), void *arg)
 {
     (void)fn; (void)arg;
-    bail("_tlv_atexit: C++ thread_local destructors are not implemented");
+    mr_bail("_tlv_atexit: C++ thread_local destructors are not implemented");
 }
 
 /* dyld_stub_binder is deliberately NOT defined here. Defining it inside a
@@ -710,7 +636,7 @@ static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
         glibc_pthread_mutex_lock(adopt_lock());
         if (o->sig != MR_ADOPTED_SIG) {
             if (o->sig != expect_sig && o->sig != 0)
-                bail("a pthread object has an unexpected Darwin signature; its layout "
+                mr_bail("a pthread object has an unexpected Darwin signature; its layout "
                      "was compiled into the guest and cannot be renegotiated");
             glibc_memset(o->opaque, 0, sizeof(o->opaque));
             if (!is_once) glibc_pthread_mutex_init(o->opaque, NULL);
@@ -724,7 +650,7 @@ static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
 EXPORT int pthread_mutex_init(void *m, const void *attr)
 {
     struct darwin_opaque *o = m;
-    if (attr) bail("pthread_mutex_init with a non-NULL attribute is not implemented");
+    if (attr) mr_bail("pthread_mutex_init with a non-NULL attribute is not implemented");
     glibc_memset(o->opaque, 0, sizeof(o->opaque));
     glibc_pthread_mutex_init(o->opaque, NULL);
     o->sig = MR_ADOPTED_SIG;
@@ -751,7 +677,7 @@ EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), 
 {
     g_pthread_t t;
     int rc;
-    if (attr) bail("pthread_create with a non-NULL pthread_attr_t is not implemented "
+    if (attr) mr_bail("pthread_create with a non-NULL pthread_attr_t is not implemented "
                    "(Darwin's attr struct layout differs from glibc's)");
     rc = glibc_pthread_create(&t, NULL, fn, arg);
     if (rc == 0) *thread = (void *)t;
@@ -767,15 +693,54 @@ EXPORT int   pthread_key_delete(unsigned k)    { return glibc_pthread_key_delete
 EXPORT void *pthread_getspecific(unsigned k)   { return glibc_pthread_getspecific(k); }
 EXPORT int   pthread_setspecific(unsigned k, const void *v) { return glibc_pthread_setspecific(k, v); }
 
-/* os_unfair_lock is a 4-byte struct in the guest; a global table would be
- * needed to map it onto a real mutex. Nothing in the corpus uses it yet. */
+/* os_unfair_lock is exactly four bytes in the guest -- Darwin stores an owning
+ * thread port in them -- so it cannot hold a glibc pthread_mutex_t and cannot
+ * be widened. We use the same four bytes as the lock word: 0 is unlocked, and
+ * a locked lock holds the owner's Mach-ish thread token. Contention yields
+ * rather than futex-waits; that is a fairness and CPU-burn difference under
+ * heavy contention, not a correctness one, and it is recorded in
+ * docs/UNIMPLEMENTED.md. */
+static unsigned unfair_token(void)
+{
+    unsigned t = (unsigned)(glibc_pthread_self() >> 8);
+    return t ? t : 1u;
+}
+
 EXPORT void os_unfair_lock_lock(void *l)
 {
-    (void)l;
-    bail("os_unfair_lock_lock is not implemented");
+    unsigned *w = l, me = unfair_token(), expect = 0;
+    while (!__atomic_compare_exchange_n(w, &expect, me, 1, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
+        if (expect == me)
+            mr_bail("os_unfair_lock_lock: recursive acquisition by the owning thread "
+                    "(Darwin traps this too, deliberately)");
+        expect = 0;
+        glibc_sched_yield();
+    }
 }
+
+EXPORT int os_unfair_lock_trylock(void *l)
+{
+    unsigned *w = l, me = unfair_token(), expect = 0;
+    return __atomic_compare_exchange_n(w, &expect, me, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);
+}
+
 EXPORT void os_unfair_lock_unlock(void *l)
 {
-    (void)l;
-    bail("os_unfair_lock_unlock is not implemented");
+    unsigned *w = l, me = unfair_token();
+    unsigned owner = __atomic_load_n(w, __ATOMIC_RELAXED);
+    if (owner != me)
+        mr_bail("os_unfair_lock_unlock: this thread does not own the lock");
+    __atomic_store_n(w, 0u, __ATOMIC_RELEASE);
+}
+
+EXPORT void os_unfair_lock_assert_owner(void *l)
+{
+    if (__atomic_load_n((unsigned *)l, __ATOMIC_RELAXED) != unfair_token())
+        mr_bail("os_unfair_lock_assert_owner: this thread does not own the lock");
+}
+
+EXPORT void os_unfair_lock_assert_not_owner(void *l)
+{
+    if (__atomic_load_n((unsigned *)l, __ATOMIC_RELAXED) == unfair_token())
+        mr_bail("os_unfair_lock_assert_not_owner: this thread owns the lock");
 }

@@ -26,18 +26,27 @@ command -v "$LD64"  >/dev/null 2>&1 || {
 mkdir -p "$OUT" "$OBJ"
 
 # -nostdinc: there is no macOS SDK here, and glibc's headers are not
-# compilable for a Darwin target. libsystem.c declares everything it uses.
-CFLAGS="-target $TARGET -nostdinc -fno-stack-protector -fno-builtin -fPIC -O1 -Wall -Wno-unused-function"
+# compilable for a Darwin target. darwin/src/dsys.h declares everything.
+# -std=gnu11: the errno bracket in dsys.h is a statement expression.
+CFLAGS="-target $TARGET -nostdinc -std=gnu11 -fno-stack-protector -fno-builtin -fPIC -O1 -Wall -Wno-unused-function"
 
 echo "== darwin: $CLANG $CFLAGS"
-$CLANG $CFLAGS -c "$ROOT/darwin/src/libsystem.c" -o "$OBJ/libsystem.o"
+
+# libsystem.c  process state, the printf family, malloc/str*, exit, pthread
+# posix.c      errno / O_* / struct stat translation and the file surface
+# mach.c       the Mach APIs, on Linux primitives
+LIBSYSTEM_OBJ=""
+for f in libsystem posix mach; do
+    $CLANG $CFLAGS -c "$ROOT/darwin/src/$f.c" -o "$OBJ/$f.o"
+    LIBSYSTEM_OBJ="$LIBSYSTEM_OBJ $OBJ/$f.o"
+done
 
 # -undefined dynamic_lookup makes every glibc reference a flat-lookup bind,
 # which machorun resolves through dlsym for images out of this tree.
 $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
       -install_name /usr/lib/libSystem.B.dylib \
       -undefined dynamic_lookup \
-      -o "$OUT/libSystem.B.dylib" "$OBJ/libsystem.o"
+      -o "$OUT/libSystem.B.dylib" $LIBSYSTEM_OBJ
 
 echo "   -> $OUT/libSystem.B.dylib"
 

@@ -1,0 +1,24 @@
+open missing rc=-1 errno=2 ENOENT=2 match=yes
+open O_CREAT rc=ok
+rmdir nonempty rc=-1 errno=66 ENOTEMPTY=66 match=yes
+O_EXCL on existing rc=-1 errno=17 EEXIST=17 match=yes
+open dir for write rc=-1 errno=21 EISDIR=21 match=yes
+close bogus rc=-1 errno=9 EBADF=9 match=yes
+errno after success=0
+strtol overflow errno=34 ERANGE=34 match=yes
+guest-set errno persists=yes
+append read 12 bytes=[hello
+world
+]
+stat rc=0 size=12 isreg=yes isdir=no perm=644 nlink=1
+stat dir rc=0 isdir=yes isreg=no
+fstat rc=0 size=12 isreg=yes
+stat missing rc=-1 errno=2 match=yes
+strerror ENOENT=[No such file or directory]
+strerror ENOTEMPTY=[Directory not empty]
+strerror EAGAIN=[Resource temporarily unavailable]
+strerror EDEADLK=[Resource deadlock avoided]
+lseek end=12 cur=12 set3=3
+read after seek 4=[lo
+w]
+after cleanup stat rc=-1 errno=2 match=yes
