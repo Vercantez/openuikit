@@ -537,7 +537,9 @@ needs it. `thread_set_state` is not even declared.
 
 ### `isa-va-width` — a silent-corruption risk, not a stub
 *Inherited from `~/objc4-linux/docs/PORT_PLAN.md`'s second-riskiest unknown; see
-`docs/OBJC4_MACHO.md` §9.3. Nothing aborts, which is the problem.*
+`docs/OBJC4_MACHO.md` §9.3. The 47-bit half of this is now closed by placement
+and checked at startup; the objc4 52-bit-kernel half below still aborts nowhere,
+which is the part that remains a risk.*
 
 objc4 packs the class pointer into the isa word and the `class_rw_t` pointer
 into `class_t::bits`, and Darwin sizes both fields from a *known* Mach VM
@@ -555,10 +557,61 @@ returns `0xffff88f9e000`, `malloc` `0xaaaabf7f82a0`, and an `mmap` hint of
 `0x10000000000000` (2^52) is **ignored**, returning `0xffff88f9d000`. So on
 this kernel no user address exceeds 48 bits and `FAST_DATA_MASK` holds exactly.
 
-What is not guaranteed: on a kernel built for 52-bit VAs, Linux hands out
-addresses above 2^48 only when an `mmap` hint asks for one -- but if a guest
-ever gets a `class_rw_t` up there, `FAST_DATA_MASK` truncates it and every
-object pointing at that class is corrupt, silently.
+**Do not read that paragraph as reassurance.** "No user address exceeds 48
+bits" is true, and it is about the wrong number. objc4's widened masks are 48-
+and 55-bit, so 48 bits is enough for *them*; libswiftCore's inlined mask is
+**47** bits, and `malloc 0xaaaabf7f82a0` -- the very address quoted above as
+evidence that everything is fine -- has bit 47 set. It is the counterexample,
+not the proof. Everything from here down is about that 47-bit mask.
+
+What is not guaranteed for objc4's own masks: on a kernel built for 52-bit VAs,
+Linux hands out addresses above 2^48 only when an `mmap` hint asks for one --
+but if a guest ever gets a `class_rw_t` up there, `FAST_DATA_MASK` truncates it
+and every object pointing at that class is corrupt, silently.
+
+#### The 47-bit mask, and the two places a high address comes from
+
+libswiftCore is compiled with Apple's macOS/arm64 `ISA_MASK`
+(`0x00007ffffffffff8`, bits 3..46) inlined at 48 sites, and it cannot be
+widened without forking the standard library. So machorun places things where
+that mask can address them. There are two independent sources of high
+addresses, and fixing one does nothing for the other:
+
+1. **Mapped images.** `mmap(NULL, ...)` is served top-down from near 2^48, so
+   every dylib landed at `0xffff_xxxx_xxxx`. Fixed by the arena in `src/map.c`,
+   which places every image below 2^47; `tests/bin/19_isa_mask` asserts it.
+
+2. **The heap**, which the image arena does not reach. A generic class's
+   metadata *is* the class its instances point at, and libswiftCore builds it
+   at run time. `nm -u libswiftCore.dylib` lists `_malloc`, `_calloc`,
+   `_posix_memalign` and **no `mmap` at all**, so that metadata comes from
+   glibc. Linux puts a PIE at `2*TASK_SIZE/3` and brk follows the image, so the
+   main arena sat at `0xaaab_xxxx_xxxx` -- above 2^47 -- and no *mmap* policy
+   could move it. Fixed by linking the loader non-PIE at `MR_LOADER_BASE`
+   (1 TiB) so brk starts low, plus `mr_constrain_heap()`'s two `mallopt` calls;
+   `src/main.c` re-checks the result at startup.
+
+The heap half stayed hidden for a long time because libswiftCore's first 64 KiB
+of metadata come from `InitialAllocationPool`, a **static array in its own
+`__DATA`**, which the image arena already places low. Any small Swift program
+therefore passes no matter how wrong the heap policy is. Measured with images
+already mapped low: a guest instantiating 900 distinct generic classes died with
+`SIGSEGV at libswiftCore+0x332898, fault address 0x2aab1d407ec8`, which is the
+ordinary main-arena address `0xaaab1d407ec8` with bit 47 cleared. The same
+binary exits 0 with the loader linked low.
+
+**Reading a fault address here.** A truncated pointer looks like something it
+is not: `0x7fff8a2c6010` reads like a stack address and is actually the image
+pointer `0xffff8a2c6010` with bit 47 stripped, and `0x2aab…` is a heap pointer
+the same way. If a fault address is the real one minus `0x800000000000`, this
+is the bug and not memory corruption. That misread cost real time.
+
+**Residue, deliberately not fixed.** A single allocation at or above glibc's
+32 MiB `M_MMAP_THRESHOLD` maximum still comes from `mmap` and still lands above
+2^47. No class object is 32 MiB -- the sizes at issue are Swift's 64 KiB
+metadata pool refills and objc4's few-hundred-byte class pairs -- so a guest
+asking for a buffer that large is asking for a buffer, not a class. It is
+recorded here rather than asserted in `19_isa_mask`.
 
 objc4's own `STATIC_ASSERT` does **not** cover this. It checks `ISA_MASK`
 against the SDK's `MACH_VM_MAX_ADDRESS` -- a compile-time fact about Darwin --
@@ -566,11 +619,13 @@ and it is what forced `patches-macho/0001` to exist at all. There is no
 equivalent check against the *host kernel's* ceiling, and there cannot be one
 at compile time.
 
-The fix, when it is needed, is a startup assertion in `src/objc_notify.c` that
-every image and heap address fits `FAST_DATA_MASK`, aborting loudly rather than
-corrupting. The ELF port's alternative -- force `SUPPORT_NONPOINTER_ISA 0` --
-is deliberately **not** taken: it costs performance and changes
-`objc_debug_isa_class_mask`, which Swift reads.
+The fix for the remaining `FAST_DATA_MASK` case, when it is needed, is a startup
+assertion in `src/objc_notify.c` that every image and heap address fits it,
+aborting loudly rather than corrupting. `mr_constrain_heap()` and `check_host()`
+already do exactly this shape of check against the tighter 47-bit limit, so the
+pattern is in the tree to copy. The ELF port's alternative -- force
+`SUPPORT_NONPOINTER_ISA 0` -- is deliberately **not** taken: it costs
+performance and changes `objc_debug_isa_class_mask`, which Swift reads.
 
 ### `objc-load-ordering`
 *Also inherited; `docs/OBJC4_MACHO.md` §9.2 has the full account.*

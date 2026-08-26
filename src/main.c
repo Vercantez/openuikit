@@ -2,10 +2,14 @@
  *
  *   machorun [-v] <mach-o> [args...]
  *
- * One process, two object formats. We are a Linux ELF PIE; the guest is a
- * Mach-O mapped into our address space, calling our Mach-O libSystem, which
- * forwards to the same glibc we are linked against. No syscall translation
- * happens anywhere.
+ * One process, two object formats. We are a Linux ELF linked at a fixed base;
+ * the guest is a Mach-O mapped into our address space, calling our Mach-O
+ * libSystem, which forwards to the same glibc we are linked against. No syscall
+ * translation happens anywhere.
+ *
+ * The fixed base is not a stylistic choice -- it is what keeps glibc's heap,
+ * and so every class object the runtimes allocate, inside the 47 bits
+ * libswiftCore's isa mask can address. src/map.c has the account.
  */
 #define _GNU_SOURCE
 #include "machorun.h"
@@ -76,9 +80,20 @@ static void check_host(void)
                "distinct protections. See docs/PLAN.md §I.4 for the copy-in fallback that "
                "would fix it; it is not implemented.", ps);
 
+    /* The loader's own text has to clear the guest's __PAGEZERO below it and
+     * Swift's isa mask above it, and scripts/build.sh links it at
+     * MR_LOADER_BASE to satisfy both at once. Checked rather than assumed,
+     * because the whole point of a link-time address is that a build can lose
+     * it silently. */
     if ((uint64_t)(uintptr_t)&check_host < 0x100000000ull)
         mr_die("machorun itself is loaded below 4 GiB (at %p), which is inside the guest's "
-               "__PAGEZERO. Build it as a PIE.", (void *)&check_host);
+               "__PAGEZERO. It must be linked at MR_LOADER_BASE; see scripts/build.sh.",
+               (void *)&check_host);
+    if ((uint64_t)(uintptr_t)&check_host >= MR_ISA_LIMIT)
+        mr_die("machorun itself is loaded at %p, at or above 2^47. glibc puts the heap "
+               "just past this image, so every class the runtimes allocate would be "
+               "truncated by libswiftCore's isa mask. It must be linked at "
+               "MR_LOADER_BASE; see scripts/build.sh.", (void *)&check_host);
 }
 
 static char **build_apple(const char *argv0)
@@ -145,6 +160,10 @@ int main(int argc, char **argv)
 
     check_host();
     mr_install_crash_reporter();
+    /* Before find_darwin_root and everything after it: M_ARENA_MAX only binds
+     * arenas that do not exist yet, so the knob has to be turned before the
+     * loader's own allocations, let alone the guest's. */
+    mr_constrain_heap();
     find_darwin_root();
     mr_reserve_pagezero();
 

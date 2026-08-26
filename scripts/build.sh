@@ -9,8 +9,27 @@
 #   scripts/build.sh tbd          just sdk/usr/lib/*.tbd, from what is built
 #   scripts/build.sh everything   all of the above, in order
 #
-# The loader is a Linux/aarch64 ELF PIE. PIE is not optional: a non-PIE aarch64
-# ELF links at 0x400000, which is inside the guest's __PAGEZERO.
+# WHERE THE LOADER ITSELF LINKS, which is load-bearing twice over.
+#
+# The loader is a Linux/aarch64 ELF linked NON-PIE at MR_LOADER_BASE (1 TiB).
+# Both halves of that matter, and both obvious alternatives are wrong:
+#
+#   * plain non-PIE is wrong. An aarch64 ELF defaults to 0x400000, which is
+#     inside the guest's __PAGEZERO reservation [0x10000, 0x100000000).
+#   * PIE is also wrong, which is the part that is easy to miss. Linux places a
+#     PIE at 2*TASK_SIZE/3 -- 0xaaaa_xxxx_xxxx, ABOVE 2^47 -- and glibc's main
+#     arena is brk, which starts just past the image and inherits that address.
+#     libswiftCore has the 47-bit isa mask compiled into it, so every class the
+#     Swift or ObjC runtime allocates from that heap decodes to an unmapped
+#     address. Measured: a guest instantiating 900 generic classes died with
+#     SIGSEGV at 0x2aaab6c04ea8, which is a main-arena address with bit 47 cut.
+#     src/map.c has the full account; src/main.c re-checks the result at
+#     startup, so a build that loses this flag stops instead of corrupting.
+#
+# 1 TiB clears __PAGEZERO and a 4 GiB executable at 0x100000000 below it, leaves
+# the image arena (8 GiB upward, src/map.c) ~1 TiB to grow into before it could
+# meet the loader, and leaves brk ~127 TiB before it reaches 2^47. An arena
+# probe that did collide is mapped MAP_FIXED_NOREPLACE and steps past it.
 #
 # --no-as-needed around -lm is not optional either, and the reason is not
 # obvious. The loader resolves every _glibc_<name> bind with
@@ -38,8 +57,11 @@ BUILD="$ROOT/build"
 WHAT="${1:-all}"
 
 CC="${CC:-cc}"
-CFLAGS="${CFLAGS:--O1 -g -std=gnu11 -Wall -Wextra -Wno-unused-parameter -fPIE}"
-LDFLAGS="${LDFLAGS:--pie -rdynamic}"
+# Keep this in step with the MR_ISA_LIMIT check in src/main.c: the loader must
+# land above the guest's __PAGEZERO and below 2^47, and brk grows up from here.
+MR_LOADER_BASE="${MR_LOADER_BASE:-0x10000000000}"
+CFLAGS="${CFLAGS:--O1 -g -std=gnu11 -Wall -Wextra -Wno-unused-parameter}"
+LDFLAGS="${LDFLAGS:--no-pie -rdynamic -Wl,-Ttext-segment=$MR_LOADER_BASE}"
 
 mkdir -p "$BUILD"
 

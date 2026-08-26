@@ -14,6 +14,7 @@
 #include "machorun.h"
 
 #include <errno.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,11 +28,11 @@
 #define EXEC_PREFERRED_BASE 0x100000000ull
 
 /* ===================================================================== *
- * WHERE IMAGES GO, and why it is not "wherever mmap feels like".
+ * WHERE THINGS GO, and why it is not "wherever mmap feels like".
  *
  * Apple's arm64 runtimes do not treat an isa field as a whole pointer. The
  * Swift standard library has the 47-bit mask INLINED into compiled code --
- * `and x8, x8, #0x7ffffffffff8` appears at 20+ sites in the libswiftCore we
+ * `and x8, x8, #0x7ffffffffff8` appears at 48 sites in the libswiftCore we
  * run, including inside swift_getObjectType, swift_unknownObjectRetain and
  * swift_unknownObjectRelease -- and then reads class->bits at +0x20.
  *
@@ -55,16 +56,43 @@
  * the standard library from upstream permanently. So the loader meets Swift
  * where it is, and places images itself.
  *
- * `ulimit -s unlimited` also "fixes" this -- it flips Linux to the legacy
- * bottom-up mmap layout process-wide -- but that is a property of how machorun
- * was invoked rather than of machorun, it stops applying the moment something
- * re-execs, and it moves every unrelated allocation too. A policy here is
- * checkable; an ambient rlimit is not.
+ * `ulimit -s unlimited` also "fixes" the IMAGE half of this -- it flips Linux
+ * to the legacy bottom-up mmap layout process-wide -- but that is a property of
+ * how machorun was invoked rather than of machorun, it stops applying the moment
+ * something re-execs, and it moves every unrelated allocation too. A policy here
+ * is checkable; an ambient rlimit is not. It also never fixed the heap half
+ * below, which is the part that bites second.
+ *
+ * ---------------------------------------------------------------------
+ * THE HEAP IS THE OTHER HALF, and mapping images low does not cover it.
+ *
+ * Not every class object lives in an image. libswiftCore builds the metadata
+ * for a generic class at RUNTIME, and that metadata *is* the class an instance
+ * points at. Its first 64 KiB come from InitialAllocationPool, a static array
+ * in libswiftCore's own __DATA, which the arena below already places low -- so
+ * a small program looks fine and stays fine no matter how wrong the policy is.
+ * Past 64 KiB the allocator falls through to swift_slowAlloc -> malloc, and
+ * glibc answers from wherever it likes.
+ *
+ * Measured, with images already placed low by the arena below: a program that
+ * instantiates 900 distinct generic classes died with
+ *
+ *     SIGSEGV at pc libswiftCore+0x332898, fault address 0x2aaab6c04ea8
+ *
+ * which is 0xaaaab6c04ea8 -- a perfectly ordinary glibc main-arena address --
+ * with bit 47 cleared. Same instruction as the dylib failure above; a different
+ * source of high addresses. objc_allocateClassPair and objc_duplicateClass
+ * reach it the same way.
+ *
+ * On aarch64 the main arena is the problem case and it is NOT an mmap: Linux
+ * puts a PIE at 2*TASK_SIZE/3 (0xaaaa_xxxx_xxxx) and brk follows the image, so
+ * the heap inherits an address above 2^47 that no mmap policy can move. That is
+ * why the fix is a LINK-TIME one -- scripts/build.sh links the loader at
+ * MR_LOADER_BASE, below the limit, so brk starts below it too -- plus the two
+ * mallopt calls in mr_constrain_heap() that keep glibc from going to mmap for
+ * the sizes that matter. mr_constrain_heap() then verifies the result rather
+ * than trusting it.
  * ===================================================================== */
-
-/* The mask keeps bits 3..46, so an image is addressable iff its last byte is
- * below 2^47. tests/bin/19_isa_mask asserts exactly that, for every image. */
-#define MR_ISA_LIMIT   0x800000000000ull
 
 /* The arena starts at 8 GiB: clear of __PAGEZERO and of a 4 GiB executable at
  * EXEC_PREFERRED_BASE, and far below anything the kernel hands out itself. */
@@ -112,6 +140,62 @@ static int prot_of(uint32_t vmprot)
     if (vmprot & VM_PROT_WRITE)   p |= PROT_WRITE;
     if (vmprot & VM_PROT_EXECUTE) p |= PROT_EXEC;
     return p;
+}
+
+/* Keep glibc's answers to the guest's malloc below MR_ISA_LIMIT, and prove it.
+ *
+ * Two knobs, because glibc has two ways of leaving the main arena and both of
+ * them land above 2^47 on this kernel:
+ *
+ *   M_ARENA_MAX 1        a second thread otherwise gets its own arena, which is
+ *                        mmap'd -- measured at 0xffffb4000b70. Every guest
+ *                        thread shares the main arena instead. It costs
+ *                        contention, which is the right trade against handing
+ *                        Swift a class pointer it cannot address.
+ *   M_MMAP_THRESHOLD     a single allocation at or above the threshold is
+ *                        mmap'd rather than taken from brk. 32 MiB is glibc's
+ *                        own DEFAULT_MMAP_THRESHOLD_MAX, so this is the largest
+ *                        the knob goes; setting it also pins the threshold,
+ *                        which otherwise adapts upward on its own.
+ *
+ * What is deliberately NOT claimed: a single allocation larger than 32 MiB
+ * still comes from mmap and still lands high. That is documented rather than
+ * fixed because no class object is 32 MiB -- the sizes at issue are Swift's
+ * 64 KiB metadata pool refills and objc4's few-hundred-byte class pairs -- and
+ * a guest asking for a 32 MiB buffer is asking for a buffer, not a class.
+ * docs/UNIMPLEMENTED.md#isa-va-width states the residue exactly. */
+void mr_constrain_heap(void)
+{
+    void *probe;
+    uint64_t brk_now;
+
+    /* Before the first guest thread and before the runtimes allocate anything:
+     * M_ARENA_MAX only governs arenas not yet created. */
+    if (mallopt(M_ARENA_MAX, 1) == 0)
+        mr_log("mallopt(M_ARENA_MAX, 1) refused; a threaded guest may get a "
+               "secondary arena above 2^47");
+    if (mallopt(M_MMAP_THRESHOLD, 32 * 1024 * 1024) == 0)
+        mr_log("mallopt(M_MMAP_THRESHOLD) refused; large allocations may land above 2^47");
+
+    /* The link-time base is what actually decides this, so check the result
+     * instead of assuming the linker was told. A loader that starts here and
+     * hands Swift a truncatable class later is worse than one that stops. */
+    brk_now = (uint64_t)(uintptr_t)sbrk(0);
+    probe = malloc(64);
+    if (!probe) mr_die("out of memory constraining the heap");
+
+    if (brk_now >= MR_ISA_LIMIT || (uint64_t)(uintptr_t)probe >= MR_ISA_LIMIT)
+        mr_die("the heap starts at 0x%llx and malloc answered 0x%llx, at or above "
+               "2^47 (0x%llx). libswiftCore masks an isa with 0x7ffffffffff8, so a "
+               "class allocated there decodes to an unmapped address and the Swift "
+               "runtime faults on a pointer it computed itself. machorun must be "
+               "linked below the limit: see MR_LOADER_BASE in scripts/build.sh.",
+               (unsigned long long)brk_now, (unsigned long long)(uintptr_t)probe,
+               (unsigned long long)MR_ISA_LIMIT);
+
+    free(probe);
+    mr_log("heap constrained: brk 0x%llx, one arena, mmap threshold 32 MiB (limit 0x%llx)",
+           (unsigned long long)brk_now, (unsigned long long)MR_ISA_LIMIT);
 }
 
 void mr_reserve_pagezero(void)
