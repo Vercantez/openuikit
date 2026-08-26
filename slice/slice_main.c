@@ -8,6 +8,7 @@ extern int slice_probe_pointarr(void);
 extern int slice_probe_pathelem(void);
 extern int slice_probe_unowned(void);
 extern int slice_probe_existential(void);
+extern int slice_probe_unowned_self(void);
 extern int slice_probe_bitmap(void);
 extern int slice_probe_canvas(void);
 extern int slice_probe_fill(void);
@@ -26,6 +27,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "[main] bitmap...\n");   fprintf(stderr, "[main] bitmap = %d\n", slice_probe_bitmap());
     fprintf(stderr, "[main] unowned...\n"); fprintf(stderr, "[main] unowned = %d\n", slice_probe_unowned());
     fprintf(stderr, "[main] existential...\n"); fprintf(stderr, "[main] existential = %d\n", slice_probe_existential());
+    fprintf(stderr, "[main] unowned_self...\n"); fprintf(stderr, "[main] unowned_self = %d\n", slice_probe_unowned_self());
     fprintf(stderr, "[main] canvas_swift (pure-Swift rasterizer fill)...\n"); fprintf(stderr, "[main] canvas_swift = %d\n", slice_probe_canvas_swift());
     fprintf(stderr, "[main] canvas (quartz backend)...\n");   fprintf(stderr, "[main] canvas = %d\n", slice_probe_canvas());
     fprintf(stderr, "[main] render...\n");
