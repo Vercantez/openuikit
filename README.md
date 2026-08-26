@@ -85,7 +85,6 @@ platform executing the same bytes.
 
 ```
 src/        the loader: Mach-O parsing, mapping, fixups, TLS, entry
-include/    public interface
 darwin/     our Mach-O dylibs (libSystem and friends) built on Linux
 sdk/        our header-only + .tbd-only SDK -- replaces Apple's, see PROVENANCE.md
 vendor/     Apple's objc4 (pristine) + the SDK-private headers it needs
@@ -191,7 +190,35 @@ kind a green suite cannot catch: xnu's published headers gate per-product
 settings on `XNU_PLATFORM_<name>`, which Apple's install step resolves with
 `unifdef`. With none selected, `MACH_VM_MAX_ADDRESS_RAW` silently becomes the
 embedded 64 GB value instead of macOS's 128 TB, and **nothing fails to compile**.
-`sdk/patches/` fixes it; the ABI probe exists to catch the next one.
+`sdk/patches/` fixes it.
+
+The sentence that used to end that paragraph — "the ABI probe exists to catch
+the next one" — did not survive independent verification, and the correction is
+the most useful thing in `docs/STATUS.md` §9. The probe did not *print*
+`MACH_VM_MAX_ADDRESS_RAW`, so forcing that constant back to the embedded value
+passed `build_objc4` (32 objects), `gen_tbd` (all three checks), the probe
+itself, **and** the 44-test corpus at 41/44. Nothing in the repository noticed.
+It prints it now, along with the `__DARWIN_ONLY_*` conformance settings and the
+`__DARWIN_SUF_*` suffixes, the baseline was re-recorded on the macOS oracle, and
+the mutation now fails. The probe is **163 lines**, still byte-identical.
+
+Two more things that verification broke and are now fixed:
+`scripts/sdk_stage.sh --verify` *could not fail* — it rewrote
+`sdk/CHECKSUMS.sha256` from a fresh fetch and then compared that file against a
+second fetch of the same bytes, so a poisoned row was silently erased and a
+moved upstream tag would have been recorded as the new truth. It now re-fetches
+all 332 files, treats the committed record as read-only, and dies with a diff.
+And `sort -k3` without `LC_ALL=C` made that record non-reproducible: a restage on
+another machine moved 18 rows without changing a single hash.
+
+**What `sdk/` does not cover.** It is 355 headers against Apple's 3,470, three
+`.tbd` stubs against 529, and **zero** of Apple's 294 frameworks — the set
+`vendor/objc4` and the ABI probe actually reach, and no more. There is no
+`<signal.h>` (only `<sys/signal.h>`), no `<setjmp.h>`, `<dirent.h>`,
+`<complex.h>`, `<semaphore.h>`, `<regex.h>`, `<termios.h>` or `<poll.h>`; no
+networking at all; no `<sys/sysctl.h>` or kqueue; no CoreFoundation and no
+Foundation. `usr/include/c++/v1` is absent on purpose. `docs/STATUS.md` §9.4 is
+the measured list.
 
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
 for the measured ABI boundary, `docs/OBJC4_MACHO.md` for Apple's objc4 as
@@ -205,6 +232,7 @@ stub that aborts.
 scripts/build.sh everything # loader (ELF PIE) + darwin/*.dylib + libobjc + sdk/*.tbd
 scripts/build.sh            # the same minus objc4, which is a minute of C++
 scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sources
+scripts/sdk_stage.sh --verify  # re-fetch all 332 and check the COMMITTED sha256s
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
 scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
 scripts/objc44.sh           # the 44-test objc4 differential corpus under machorun
@@ -212,3 +240,12 @@ scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
 scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively
 build/machorun ./prog       # run one
 ```
+
+**On a fresh clone, run `scripts/build.sh everything` first** — inside the
+container, since `darwin/`, `libobjc` and the `.tbd`s are Linux Mach-O build
+products. `scripts/difftest.sh` builds the loader and the two small dylibs for
+you but deliberately *not* objc4 (a minute of Objective-C++ on every run), so on
+a tree where `libobjc.A.dylib` has never been built `09_objc` is a red **FAIL**,
+not the documented PASS. That is measured, not theorised: `git clone &&
+scripts/difftest.sh` gives **18 pass / 1 fail**; with `build.sh everything`
+first it gives **19 pass / 0 fail / 1 xfail / 1 no-oracle**.

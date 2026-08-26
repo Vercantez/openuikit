@@ -80,6 +80,13 @@ no CPU emulation anywhere in this project.
 > macOS's 128 TB and **nothing fails to compile**. `sdk/patches/` fixes it and
 > `sdk_abi_probe` guards against the next one, but only for what the probe
 > prints. `docs/UNIMPLEMENTED.md#sdk-published-vs-installed` has the detail.
+>
+> **That last sentence was too generous, and §9 is the measurement that
+> corrects it.** The probe did not print `MACH_VM_MAX_ADDRESS_RAW`, so the one
+> failure it was written for was the one failure it could not see. Forcing that
+> constant to the embedded value passed `build_objc4`, `gen_tbd`,
+> `sdk_abi_probe` and the 44-test corpus. It now prints it, and the mutation now
+> fails.
 
 ---
 
@@ -380,3 +387,155 @@ Steps 1–4 are machorun's, are bounded, and are the ones worth costing. Steps
   macOS either — it lives in the dyld shared cache". That is true for
   `/usr/lib/...` and false for the `/opt/homebrew/...` path that `jq` asks for,
   where the dylib is an ordinary file. The message should branch on the prefix.
+
+---
+
+## 9. Second independent verification (2026-08-26) — the SDK
+
+Re-measured by a second agent that wrote neither the loader nor `sdk/`, from a
+**fresh `git clone` into an empty directory**, with the Linux side run in a
+container started `--network none` and with **only the clone mounted**. Every
+number below was produced by that run. Where the previous report did not
+survive contact it is corrected here rather than in place.
+
+### 9.1 The numbers reproduce — with one correction to how you get them
+
+| gate | result | notes |
+|---|---|---|
+| `scripts/difftest.sh`, fresh clone, nothing else run | **18 pass / 1 FAIL / 1 xfail / 1 no-oracle**, exit 1 | see below |
+| `scripts/build.sh everything` first, then `difftest.sh` | **19 pass / 0 fail / 1 xfail / 1 no-oracle**, exit 0 | matches the claim |
+| `scripts/build_objc4.sh` against `sdk/` | **32 objects, 0 failures** | matches |
+| `scripts/objc44.sh` | **41/44**, failing exactly `038-exceptions`, `042-dlopen`, `044-exception-through-uncached` | matches |
+| `scripts/gen_tbd.sh` | 342 + 420 + 14 symbols; **69 binaries import 223 distinct symbols, 0 unresolved** | matches |
+| `scripts/sdk_abi_probe.sh` | byte-identical to the macOS oracle | matches; now **163** lines, not 149 — see §9.4 |
+| `scripts/sdk_stage.sh` restage from upstream | **355 headers reproduce byte-for-byte** | new measurement |
+
+**The one discrepancy, and it is in the instructions rather than in the code.**
+`harness/run_linux.sh` builds the loader by calling `scripts/build_linux.sh`,
+which is `scripts/build.sh all` — and `all` deliberately stops short of objc4,
+because 32 Objective-C++ TUs is about a minute and difftest invokes it on every
+run. So on a tree where `libobjc.A.dylib` has never been built, `09_objc` gets a
+red **FAIL** with `cannot find dylib '/usr/lib/libobjc.A.dylib'`, and difftest
+exits 1. §1's "the clone needs nothing from the host but Docker" is still true;
+"`$ git clone && scripts/difftest.sh`" is not the whole gate. It is
+**`scripts/build.sh everything` and then `scripts/difftest.sh`**, and the README
+now says so.
+
+### 9.2 Is the build genuinely Apple-SDK-free? — yes, and it was attacked
+
+- The test-bed image was rebuilt from the committed `harness/Dockerfile` and
+  searched: **no `MacOSX*.sdk`, no `.tbd` file, no `/Applications`** anywhere in
+  it. Ubuntu clang 18.1.3 and Ubuntu LLD 18.1.3, both from `apt`.
+- `scripts/build.sh everything` was then run with `--network none` and only the
+  clone bind-mounted, and produced the loader, both dylibs, `libobjc.A.dylib`
+  (32 objects, 0 failures) and all three `.tbd`s. No fetch, no host path.
+- The only smuggling vector that exists is `build/sdk/MacOSX.sdk` — a staged
+  copy of Apple's headers that the assembling agent kept as an *oracle*, and
+  which `harness/run_linux.sh` would mount along with the rest of the tree. It
+  is under the gitignored `build/`, so **a clone does not have it**, and this
+  verification ran on a clone that did not.
+- Every `xcrun` in the repository is on the **macOS oracle side** and is
+  unreachable from any Linux build path: `tests/build_fixtures.sh` (which
+  refuses to run off Darwin), `scripts/gen_errno_table.sh` and
+  `scripts/gen_rune_table.sh` (nothing invokes them; their outputs are committed
+  as `darwin/src/{errno_table,rune_table}.h`), and `scripts/sdk_abi_probe.sh
+  --record`, which exits unless `uname -s` is `Darwin`.
+- `scripts/build_objc4.sh` still honours `OBJC4_SDK` pointing at a real
+  `MacOSX.sdk`. That is a documented differential-check escape hatch, it
+  defaults to `sdk/`, and nothing in the repository sets it.
+
+**No header in `sdk/usr/include` comes from Apple's Xcode SDK.** Restaging the
+tree from the eleven pinned `apple-oss-distributions` releases reproduces all
+355 files byte-for-byte: 332 upstream, 19 clean-room from `sdk/local/`, 4 from
+`vendor/objc4`. `sdk/MANIFEST.tsv` has a row for each of the 355 and the census
+in `sdk/PROVENANCE.md` §1 adds up.
+
+**The `.tbd` stubs are generated, not maintained.** They are gitignored,
+`scripts/gen_tbd.sh` re-derives them from `darwin/usr/lib/*.dylib` on every
+build, and its three checks all pass. They cannot drift, because there is
+nothing committed to drift from.
+
+### 9.3 What the suite still cannot catch, and what was fixed
+
+Two mutations were introduced into `sdk/usr/include` and the whole gate was run
+against each.
+
+| mutation | before | after |
+|---|---|---|
+| `sys/errno.h`: `EAGAIN` 35 → 36 | **caught** by `sdk_abi_probe` | caught |
+| `sys/cdefs.h`: un-select `XNU_PLATFORM_MacOSX` (the `$UNIX2003` half) | caught, but only *downstream* — `build_objc4` linked cleanly (`-undefined dynamic_lookup`), then `gen_tbd` check 2 failed and `objc44` went to **0/44** | caught by `sdk_abi_probe` directly |
+| `mach/arm/vm_param.h`: `MACH_VM_MAX_ADDRESS_RAW` 128 TB → 64 GB | **SURVIVED EVERYTHING** — `build_objc4` 32/0, `gen_tbd` all three checks, `sdk_abi_probe` identical, `objc44` 41/44 | caught by `sdk_abi_probe` |
+
+The third row is the headline. It is the *exact* failure `sdk/PROVENANCE.md`
+§3.2 and the README present as the thing this milestone found and fixed, and
+until this verification nothing in the repository could have found it again.
+`sdk/tests/abi_probe.c` now prints `MACH_VM_{MIN,MAX}_ADDRESS{,_RAW}`,
+`VM_{MIN,MAX}_ADDRESS`, `__DARWIN_ONLY_{UNIX_CONFORMANCE,64_BIT_INO_T,VERS_1050}`
+and the two `__DARWIN_SUF_*` strings; the baseline was re-recorded **on the
+macOS oracle** and is **163 lines, byte-identical** from `sdk/` on Linux.
+
+Three more defects were found and fixed:
+
+1. **`scripts/sdk_stage.sh --verify` could not fail.** It re-staged the tree and
+   *overwrote* `sdk/CHECKSUMS.sha256` before verifying, then compared that file
+   against a second fetch of the same bytes. Measured: poison one row, run
+   `--verify` with a cold cache, and it prints `all upstream files match their
+   pinned tag` while silently deleting the poisoned row. A moved upstream tag
+   would have been recorded as the new truth. It now force-re-fetches every one
+   of the 332 files, treats the committed record as **read-only**, and dies with
+   a diff. Re-tested both ways: honest tree passes, poisoned tree fails and the
+   poison is still there afterwards.
+2. **`CHECKSUMS.sha256` was not reproducible.** `sort -k3` used the caller's
+   collation, so a restage on a differently-configured machine produced an
+   18-line diff in which every hash was identical and only the order moved. Now
+   `LC_ALL=C sort`, and the file has been regenerated in that order.
+3. **`scripts/objc44.sh` was not executable** (mode 644) although the README
+   documents it as a command.
+
+### 9.4 What `sdk/` does **not** cover
+
+This is the section the SDK milestone did not have, and a reader will want it
+before trying to build anything real against `sdk/`.
+
+| | Apple's `MacOSX26.1.sdk` | `sdk/` |
+|---|---:|---:|
+| `usr/include` headers | 3,470 | **355** (10%) |
+| `usr/lib/*.tbd` | 529 | **3** (+3 symlinks) |
+| `System/Library/Frameworks` | 294 | **0** |
+
+The 355 are the set `vendor/objc4` and the ABI probe actually reach, plus their
+transitive includes. Concretely, and measured by compiling a one-line TU against
+`sdk/`, these do **not** exist and a guest that includes them will not build:
+
+- `<signal.h>`, `<setjmp.h>`, `<dirent.h>`, `<complex.h>`, `<semaphore.h>`,
+  `<regex.h>`, `<glob.h>`, `<fnmatch.h>`, `<langinfo.h>`, `<termios.h>`,
+  `<poll.h>`, `<grp.h>`, `<pwd.h>`, `<utime.h>`, `<ftw.h>`, `<iconv.h>`.
+  (`<sys/signal.h>` *is* staged; the C-standard spelling `<signal.h>` is not.)
+- All of networking: `<netdb.h>`, `<sys/socket.h>`, `<netinet/*>`, `<arpa/*>`.
+- `<sys/sysctl.h>`, `<sys/event.h>` (kqueue), `<sys/mount.h>`.
+- `usr/include/c++/v1` — **deliberate**, and the one absence that is a decision
+  rather than a gap: stock LLVM 18 libc++ with three `-D` flags substitutes for
+  it, and `harness/Dockerfile` pins it.
+- Every framework. There is no `CoreFoundation`, no `Foundation`, no
+  `Objective-C` above `libobjc` itself. §7's steps 5–7 are unaffected by this
+  milestone.
+- Every `.tbd` except `libSystem.B`, `libobjc.A` and `libc++.1` — because those
+  are the only three dylibs we implement. A guest that links anything else has
+  nothing to link against.
+- The MIG `__Request__*`/`__Reply__*` message structs, every availability
+  *diagnostic*, and the `math.h` extensions listed in `sdk/PROVENANCE.md` §2.
+
+Two smaller honesty notes on the provenance record itself:
+
+- The 19 clean-room and 4 objc4 headers carry **no checksum row**, by design —
+  git is the only thing vouching for them. That is stated in
+  `CHECKSUMS.sha256`'s own header and is fine, but it means `--verify` covers
+  332 of 355 files, not all of them.
+- There is still **no offline check** that the committed `sdk/usr/include`
+  matches `CHECKSUMS.sha256`, and there cannot be a naive one: the sums are of
+  *pristine upstream* files, while 12 staged headers have their `//Begin-Libc`
+  regions removed and 2 are patched. The available offline check is
+  `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`, which was run
+  here and is clean.
+- `--verify` re-stages `sdk/usr/include` as a side effect, so it is destructive
+  on a dirty tree. Measured harmless on a clean one.
