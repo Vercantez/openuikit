@@ -166,4 +166,18 @@ if [ "$n_fail" -gt 0 ] || [ "$n_drift" -gt 0 ]; then
     echo "  cat  tests/actual/linux/<id>.stderr"
     exit 1
 fi
+
+# A run in which nothing executed is not a passing run. Until 2026-08-25 this
+# script exited 0 when the loader failed to compile and every row said SKIPPED,
+# so a CI gate on the exit status went green on a tree that did not build.
+# Measured, not theorised: appending `this is not c;` to src/main.c produced
+# "pass 0 ... skipped 20" and exit 0. Distinct code, because "nothing ran" is a
+# different fact from "something disagreed with macOS".
+if [ "$n_skip" -gt 0 ]; then
+    echo
+    printf '%s%d fixture(s) did not run, so this is not a verdict.%s\n' "$C_RED" "$n_skip" "$C_RESET"
+    [ -n "$LINUX_SKIP_REASON" ] && echo "  reason: $LINUX_SKIP_REASON"
+    echo "  see tests/actual/linux/.build.log"
+    exit 2
+fi
 exit 0

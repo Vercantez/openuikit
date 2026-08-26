@@ -17,6 +17,12 @@ Three of the hard pieces already exist in sibling projects:
 | Quartz 2D + CoreAnimation | `~/quartz` | 97.5/100 vs Apple's frameworks |
 | **Mach-O loader + Darwin userland** | **here** | **the missing piece** |
 
+Each row is true on its own terms. Read downward, the table overpromises: those
+are three *different* runtimes and ABIs — Apple-objc4-on-ELF, Swift-on-ELF, and
+a GNUstep-ABI Objective-C facade — and machorun needs Mach-O with Apple's ObjC
+ABI. Composing them is not the last 10%; `docs/STATUS.md` §7 sets out what it
+actually costs.
+
 Verified before starting (2026-08-25): **Linux can produce Mach-O.**
 `clang -target arm64-apple-macos11 -c` emits Mach-O objects (magic
 `cf fa ed fe`) and stock `ld64.lld-18` links dylibs — and macOS's own `otool`,
@@ -80,14 +86,45 @@ docs/       design, ABI notes, status
 
 ## Status
 
-**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 18 of 19
-runnable fixtures are byte-identical to the same bytes running natively on
-macOS, covering both fixup formats, initialisers, TLV, dylib graphs with
-`@rpath`, data and reverse imports, pthreads, fat binaries — and the userland
-rungs: the Darwin arm64 variadic ABI, the Mach APIs, and the errno / `O_*` /
-`struct stat` divergences, and a representative hand-built utility that uses
-ctype, getopt, qsort, strftime and fgets the way real programs do. Objective-C
-is the one remaining wall.
+**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** Of the
+20 gradeable fixtures, **18 pass and 2 are documented XFAILs** — pass meaning
+stdout, stderr *and* exit status are byte-identical to the same bytes running
+natively on macOS. (A 21st fixture has no baseline because macOS itself refuses
+to execute it.) The corpus covers both fixup formats, both initialiser section
+forms, TLV, dylib graphs with `@rpath`, data and reverse imports, pthreads, fat
+binaries — and the userland rungs: the Darwin arm64 variadic ABI, the Mach
+APIs, the errno / `O_*` / `struct stat` divergences, and a representative
+hand-built utility that uses ctype, getopt, qsort, strftime and fgets the way
+real programs do. Objective-C is the one remaining wall.
+
+Re-measured from a fresh clone by an agent that did not write the loader, along
+with the things a green suite does not by itself establish (`docs/STATUS.md`):
+
+- **The suite can fail.** 19 mutations were introduced one at a time into the
+  loader and the userland; **15 were caught, 4 were not**. The four survivors —
+  bind addends in either fixup format, the weak-bind stream, and the
+  Darwin→Linux `errno` direction — are shipped code that no test executes.
+- **The baselines are Darwin's.** The rungs (a)–(i) baselines were committed 23
+  minutes *before* the loader's first commit, so they cannot have been fitted to
+  it; every run re-executes the fixtures natively on macOS before grading; and
+  they were re-run by hand outside the harness as well.
+- **Coverage is narrower than the scoreboard suggests.** `libSystem.B.dylib`
+  exports 242 symbols and the fixtures reference 86 of them. The other 156 are
+  compiled and untested.
+- **Distance to real software is a number now, not an opinion.** Unmodified
+  Homebrew `gsed` — a binary nobody here compiled — parses, maps and resolves
+  its dependency graph under `machorun` and stops at the first of **37** libc
+  symbols we do not yet export, naming it. Apple's own `/bin/ls` and
+  `/usr/bin/true` are arm64e-only, so PAC blocks them before breadth does.
+- **The siblings above do not yet compose.** `objc4-linux` is ELF and replaced
+  Mach-O image discovery rather than shimming it; OpenUIKit is a Swift engine
+  whose Objective-C facade targets the GNUstep ABI, not Apple's. Loading a
+  precompiled UIKit app needs four bounded things from machorun and three
+  unbuilt ones above it — `docs/STATUS.md` §7 costs them individually.
+
+Verification also found and fixed one defect in the harness itself: with a
+loader that failed to compile, `scripts/difftest.sh` printed `skipped 20` and
+exited **0**. It now exits 2 when anything did not run.
 
 The bet holds so far, but not for free. Four things about the C ABI genuinely
 differ and had to be measured and translated rather than assumed
