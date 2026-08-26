@@ -1,0 +1,73 @@
+# isa.h + objc-object.h + objc-runtime-new.h: the host address space is 48 bits wide (MEASURED), so use the wide shiftcls_and_sig isa and widen FAST_DATA_MASK.
+# This is the ONE fact about Linux that a Mach-O build cannot hide: it is not about
+# the file format at all, it is about the kernel's VA ceiling. The ELF port needed
+# exactly the same three hunks (patches/0003).
+diff -ru a/runtime/isa.h b/runtime/isa.h
+--- a/runtime/isa.h	2026-08-25 22:19:53.245149193 -0500
++++ b/runtime/isa.h	2026-08-25 22:19:53.245991152 -0500
+@@ -57,7 +57,18 @@
+ # if __arm64__
+ // ARM64 simulators have a larger address space, so use the ARM64e
+ // scheme even when simulators build for ARM64-not-e.
+-#   if   __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR
++// machorun: the host is Linux/aarch64, whose user addresses are 48 bits
++// wide (MEASURED in the test container: malloc returns 0xffffb132f010,
++// bit 47 set). The 33-bit `shiftcls` below assumes MACH_VM_MAX_ADDRESS
++// 0x1000000000 and would silently truncate every class pointer. The
++// 52-bit `shiftcls_and_sig` field covers it. This is the SAME layout
++// Apple's shipping arm64e libobjc uses; we take it without the signing,
++// because __has_feature(ptrauth_calls) is false for plain arm64.
++//
++// Without this, objc-runtime-new.mm's own STATIC_ASSERT fires:
++//   (~ISA_MASK & OBJC_VM_MAX_ADDRESS) == 0 || ISA_MASK + 8 == OBJC_VM_MAX_ADDRESS
++// with OBJC_VM_MAX_ADDRESS = MACH_VM_MAX_ADDRESS = 0x00007FFFFE000000.
++#   if   __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || OBJC_MACHORUN
+ #     define ISA_MASK        0x007ffffffffffff8ULL
+ #     define ISA_MAGIC_MASK  0x0000000000000001ULL
+ #     define ISA_MAGIC_VALUE 0x0000000000000001ULL
+@@ -96,7 +107,7 @@
+ #     define RC_HALF              (1ULL<<18)
+ #   endif
+ 
+-#   if TARGET_OS_SIMULATOR
++#   if TARGET_OS_SIMULATOR || OBJC_MACHORUN
+ #     define ISA_MASK_NOSIG ISA_MASK
+ #   elif TARGET_OS_OSX
+ #     define ISA_MASK_NOSIG 0x00007ffffffffff8ULL
+diff -ru a/runtime/objc-object.h b/runtime/objc-object.h
+--- a/runtime/objc-object.h	2026-08-25 22:19:53.245433152 -0500
++++ b/runtime/objc-object.h	2026-08-25 22:19:53.246079944 -0500
+@@ -180,7 +180,10 @@
+ #endif
+ 
+     // Match the conditional in isa.h.
+-#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR
++    // machorun: OBJC_MACHORUN selects the same 52-bit shiftcls_and_sig
++    // layout as arm64e/simulator, so this must match. Apple's own comment
++    // above is the instruction; this is obeying it.
++#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || OBJC_MACHORUN
+ #   if ISA_SIGNING_SIGN_MODE == ISA_SIGNING_SIGN_NONE
+     // No signing, just use the raw pointer.
+     uintptr_t signedCls = (uintptr_t)newCls;
+diff -ru a/runtime/objc-runtime-new.h b/runtime/objc-runtime-new.h
+--- a/runtime/objc-runtime-new.h	2026-08-25 22:19:53.245693527 -0500
++++ b/runtime/objc-runtime-new.h	2026-08-25 22:19:53.246318902 -0500
+@@ -129,7 +129,17 @@
+ //   _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference
+ #define FAST_HAS_DEFAULT_RR     (1UL<<2)
+ // data pointer
+-#if   TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
++#if   OBJC_MACHORUN
++// machorun: Darwin's mask reserves bits 3..46 for the class_rw_t pointer,
++// i.e. it assumes a 2^47 user-VA ceiling. MEASURED on aarch64 Linux, every
++// user address is 48 bits wide (text 0xaaaad2440014, heap/mmap
++// 0xffffb132f010), so bit 47 of a real pointer is significant and Darwin's
++// mask would silently truncate it. Widen the pointer field by one bit.
++// The flag bits (56..59) and FAST_IS_RW_POINTER (63) are untouched;
++// bits 48..55 remain free.
++#define FAST_DATA_MASK          0x0f00fffffffffff8UL
++#define DEBUG_DATA_MASK         0x0000fffffffffff8UL
++#elif TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
+ #define FAST_DATA_MASK          0x0f00007ffffffff8UL
+ #define DEBUG_DATA_MASK         0x0000007ffffffff8UL
+ #else

@@ -1,0 +1,10 @@
+instance.winner=3
+class.winner=22
+onlyFirst=111
+onlySecond=222
+who.entries=4
+getInstanceMethod.agrees.with.dispatch=yes
+ev[0]=First.load
+ev[1]=Second.load
+ev[2]=Third.load
+ev.count=3

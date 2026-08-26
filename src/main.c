@@ -177,6 +177,12 @@ int main(int argc, char **argv)
         mr_log("no ___machorun_libsystem_bootstrap export found in any runtime image");
     }
 
+    /* _objc_init, at the point Darwin's libSystem initializer calls it: after
+     * our own dylibs are usable, before any guest initialiser. libobjc
+     * registers its dyld callbacks from in there and we deliver map_images for
+     * every already-loaded image before returning. See src/objc_notify.c. */
+    mr_objc_run_objc_init();
+
     mr_run_initialisers(im);
 
     if (im->has_entry) {

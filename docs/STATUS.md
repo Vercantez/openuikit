@@ -10,6 +10,21 @@ Oracle host: macOS 26.5.2 (25F84), arm64, Apple clang 17.0.0, ld-1230.1.
 Target: Ubuntu 24.04 aarch64 in Docker, native on the same Apple-silicon host —
 no CPU emulation anywhere in this project.
 
+> **Since this verification (2026-08-26), on branch `experiment/objc4-macho`:
+> Objective-C runs.** Apple's objc4 now builds as a Mach-O
+> `darwin/usr/lib/libobjc.A.dylib` on Linux with **4 patches** (the ELF port in
+> `~/objc4-linux` needs 9), machorun implements dyld's own ObjC image-notify
+> protocol in `src/objc_notify.c`, and `09_objc` **PASSes** byte-identically —
+> so the `XFAIL` on its row below, and "the one real wall" in §"Ranked next
+> blockers", are both superseded. 41 of `~/objc4-linux`'s 44 differential tests
+> pass against the same committed macOS baselines; the 3 that do not are the
+> pre-existing `unwind-compact` and `dlopen` gaps, already ranked #2 and #3
+> below. Full accounting, including what got *harder*, in
+> **`docs/OBJC4_MACHO.md`**.
+>
+> The table below is left exactly as that clean-clone run recorded it, because
+> editing a verification record in place would destroy the thing it is for.
+
 ---
 
 ## 1. Does it reproduce?

@@ -227,57 +227,133 @@ most common gap in the BSD utilities surveyed. They are variadic, so they must
 be written over the Darwin `va_list` like the printf family rather than
 forwarded.
 
-### `objc-callbacks`
-`_dyld_objc_register_callbacks` / `_dyld_objc_notify_register`. Still the top
-blocker, but the shape of the work changed once `~/objc4-linux` was read
-(2026-08-26), and PLAN.md's recommended first move -- "build objc4 as a Mach-O
-dylib on Linux" -- now looks like the *wrong* one.
+### `objc-callbacks` — **DONE**
+`_dyld_objc_register_callbacks`, `_dyld_lookup_section_info` and the image
+identity SPI are implemented in `src/objc_notify.c`, and
+`darwin/usr/lib/libobjc.A.dylib` is Apple's objc4 built as Mach-O on Linux
+(`scripts/build_objc4.sh`, 4 patches). `09_objc` passes byte-identically and 41
+of `~/objc4-linux`'s 44 differential tests pass against the same macOS
+baselines. Full accounting in `docs/OBJC4_MACHO.md`.
 
-What is actually there: objc4-linux did not keep Mach-O image discovery and
-shim it. It **replaced** it. `compat/src/objc4linux-elf.cpp` enumerates images
-with `dl_iterate_phdr(3)`, reads the on-disk ELF *section header* table to find
-`objc_classlist` and friends (the Mach-O names with `__` stripped, so they are
-valid C identifiers), and hands objc4 a synthetic per-image record:
+**The hybrid recommended in the previous version of this entry was wrong, and
+the record of why is worth keeping.** It observed correctly that objc4-linux
+*replaced* Mach-O image discovery rather than shimming it —
+`compat/src/objc4linux-elf.cpp` walks `dl_iterate_phdr(3)` and on-disk ELF
+section headers and hands objc4 a synthetic `struct mach_header_64` to cast
+back. From that it concluded that rebuilding as Mach-O "undoes the port's
+central change, so it is the expensive path", and proposed an ELF-backed Darwin
+dylib plus a `objc4linux_register_foreign_image()` entry point in the sibling
+project.
 
-```c
-struct ElfImage {
-    struct mach_header_64         hdr;      /* MUST be first: objc4 casts back */
-    _dyld_section_location_info_s sections;
-    uintptr_t                     base;
-    ...
-};
-```
+The error was treating that ELF layer as an asset. It was compensation for
+running Mach-O source in the wrong format, and it is exactly what building as
+Mach-O deletes. The three pieces it called for turned out to be:
 
-Rebuilding that as Mach-O means undoing the port's central change, so it is the
-expensive path. The cheap path is that the same file already contains the
-*whole* registration seam and it is image-format agnostic:
-`objc4linux_scan_images()` builds `_dyld_objc_notify_mapped_info[]` from those
-records and calls `gCallbacks.mapped(...)` then `gCallbacks.init(...)`, with
-callbacks registered through a v4 `_dyld_objc_register_callbacks`.
+1. *An ELF-backed Darwin dylib.* Not needed. The dylib is a real Mach-O, so
+   `__objc_empty_cache` — the data import the entry rightly flagged, since every
+   guest class points at it — binds through the ordinary two-level namespace to
+   the runtime's own object. The identity problem it worried about does not
+   arise.
+2. *A foreign-image registration entry point in objc4-linux.* Not needed, and
+   no change to the sibling project was made. objc4's existing
+   `_dyld_objc_register_callbacks` path is the entry point; machorun implements
+   the dyld side of it.
+3. *Ordering.* Correct, and it was the one piece that survived: `mr_objc_note_image`
+   is the hook, and it now calls `init` (load_images/`+load`) immediately before
+   each image's own initialisers, with `mapped` delivered for every loaded image
+   synchronously inside registration, as dyld does.
 
-So the plausible route is a hybrid, and it needs three pieces, none of which
-exists yet:
+Two things the entry could not have predicted, both recorded in
+`docs/OBJC4_MACHO.md`: `mapped`'s third argument is a *block*
+(`void (^)(uint32_t)`) that objc4 calls to regain write access to a
+`__DATA_CONST` we have already protected — passing NULL faults at the block's
+`invoke` slot; and Darwin's `malloc_size` returns 0 for a pointer it does not
+own, which objc4 uses as an ownership test, and glibc's `malloc_usable_size`
+does not.
 
-1. **An ELF-backed Darwin dylib in machorun.** `/usr/lib/libobjc.A.dylib`
-   resolves to a marker that names a host `.so`; the loader `dlopen`s it and
-   resolves that image's symbols with `dlsym`. This matters more than it
-   sounds: `__objc_empty_cache` is a *data* import that every guest class
-   structure points at, so a forwarding thunk dylib would give the guest a
-   different object than the runtime's own and break cache identity. Binding
-   straight to the ELF symbol is the only correct answer.
-2. **A foreign-image registration entry point in objc4-linux**, e.g.
-   `objc4linux_register_foreign_image(mh, path, sections)`, filling the same
-   `_dyld_section_location_info_s` from a *Mach-O* section table instead of an
-   ELF one, then driving the existing mapped/init path. That is a change to a
-   sibling project, not to this one.
-3. **Ordering**: `mapped` must run before the image's own initialisers,
-   because `+load` is dispatched from inside `map_images`. machorun's
-   `mr_run_initialisers` has the hook point (`mr_objc_note_image`) but nothing
-   to call.
+### `dlopen-dlsym`
+`dlsym(RTLD_DEFAULT, name)` **is** implemented (`mr_dlsym_default`,
+`src/resolve.c`): it is the flat search the binder already does, with Darwin's
+leading underscore added for you. It deliberately does not fall back to the
+host, so a guest asking for a symbol we lack gets NULL rather than a same-named
+glibc symbol.
 
-Until all three exist, any image carrying `__objc_imageinfo` aborts naming this
-entry. It does not fault inside an unregistered class, which is the failure
-mode worth having.
+Everything else aborts naming itself: `dlopen`, `dlclose`, `dladdr`, and
+`dlsym` with `RTLD_NEXT` / `RTLD_SELF` / `RTLD_MAIN_ONLY` or a real handle.
+`RTLD_NEXT` and friends need a notion of "the calling image", i.e. walking back
+to the caller's return address. `dladdr` would have to describe *guest* images;
+forwarding it to glibc would describe the loader's own ELF world, which is a
+different program.
+
+`dlopen` is the larger piece and `mr_image_load` was written re-entrant for it.
+Beyond loading, it must also deliver a `mapped` notification for the new image
+before running its initialisers — `src/objc_notify.c` has the machinery but
+only ever delivers the startup batch. Measured cost of not having it:
+`tests/objc44/042-dlopen` and (until `dlsym` landed) `025-internal-symbols`.
+
+### `blocks-byref`
+`darwin/src/objcsupport.c` implements the Blocks runtime — `_Block_copy`,
+`_Block_release` and the `_NSConcrete*Block` class objects — directly rather
+than forwarding to Ubuntu's `libBlocksRuntime`, because `_NSConcreteStackBlock`
+is a *data* symbol: a forwarding copy would be a different object than the one
+clang's codegen compares against.
+
+`_Block_object_assign` handles `BLOCK_FIELD_IS_OBJECT` and
+`BLOCK_FIELD_IS_BLOCK` and **aborts on `BLOCK_FIELD_IS_BYREF`** — a `__block`
+variable capture, whose byref header has a layout nothing here has measured.
+objc4's own blocks never use one, so this is reachable only from a guest block.
+
+`_Block_has_signature` / `_Block_signature` / `_Block_use_stret` return "no
+signature", which makes `imp_implementationWithBlock` take the
+register-return path unconditionally. Nothing in either corpus calls it.
+
+### `swift-interop`
+`swift_retain` / `swift_release` are defined in `darwin/src/objcsupport.c` as
+loud aborts. objc4 refers to them so a Swift-stable class can be retained
+without a message send; on Darwin the reference is delay-init and resolves only
+if `libswiftCore` is loaded, but `ld64.lld-18` does not implement `-delay_init`,
+so the reference is a plain undefined and something has to define it. They are
+reachable only for an object whose class `isSwiftStable()`, which cannot exist
+without a Swift stdlib. `docs/OBJC4_MACHO.md` §8 lists what a Swift binary would
+need.
+
+### `objc-cache-never-collects` — a LEAK, not a stub
+`patches-macho/0004`. `_collecting_in_critical()` returns TRUE unconditionally,
+meaning "a reader may be active, do not free", so `cache_collect()` never
+reclaims and **every method-cache reallocation leaks the old bucket array**.
+
+Both of Darwin's answers to "is a thread inside the cache scan right now?" are
+unavailable: `task_restartable_ranges_synchronize()` needs XNU (Linux's
+`rseq(2)` aborts rather than restarts), and the fallback needs `task_threads()`
++ `thread_get_state()`, which is real Mach IPC. The Linux-native version --
+walk `/proc/self/task`, signal each thread, sample `uc_mcontext.pc` in the
+handler -- is implementable and unwritten.
+
+Returning FALSE instead would be a use-after-free, so the polarity is the safe
+one. `~/objc4-linux` made the identical choice and quantified the cost: ~8.7 KB
+per invalidation, and a swizzling workload costing macOS 4.7 MB peak RSS costs
+177 MB here.
+
+### `malloc-zones-are-one-heap`
+`malloc_default_zone()` returns a token, and every `malloc_zone_*` call routes
+to glibc's single heap. A program that treats a zone as a separate arena --
+mass-free by zone, zone introspection, `malloc_zone_from_ptr` -- would notice;
+objc4 only ever uses the default zone. `malloc_zone_malloc` aborts if handed a
+zone pointer we did not mint, so "someone created a zone" is visible rather
+than silent.
+
+Note `malloc_size` is **not** `malloc_usable_size` and is implemented
+separately in `darwin/src/libsystem.c`: Darwin returns 0 for a pointer no zone
+owns and callers use that as an ownership test. See `docs/OBJC4_MACHO.md` §5.
+
+### `objc-sdk-dependency`
+`scripts/build_objc4.sh` needs a macOS SDK's `usr/include` (18 MB from
+`MacOSX15.sdk`) and refuses to run without one. It is a *compile-time* input
+only -- nothing Apple ships is linked or redistributed -- but it does mean
+`darwin/usr/lib/libobjc.A.dylib` is reproducible on a machine with Xcode and
+not otherwise. The 25 headers the public SDK lacks are vendored in
+`vendor/objc4-priv/`; they are Apple-internal SPI declarations plus clang's own
+`<ptrauth.h>`, and they change no objc4 source.
 
 ### `unwind-compact`
 `_Unwind_*` over Apple's `__TEXT,__unwind_info` compact-unwind format. Not

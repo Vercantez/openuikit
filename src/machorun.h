@@ -93,6 +93,12 @@ struct mr_image {
     int is_main;
     int fixed_up;
     int init_state;      /* 0 none, 1 running, 2 done */
+
+    /* ObjC image-notification state (src/objc_notify.c). Both are set by us,
+     * never by libobjc, and exist to make the map-before-load ordering a
+     * checkable invariant rather than an assumption. */
+    int objc_mapped;     /* included in a _dyld_objc_notify mapped batch */
+    int objc_inited;     /* the init (load_images / +load) callback has run */
 };
 
 /* ---------------------------------------------------------------- state */
@@ -133,12 +139,14 @@ int64_t  mr_sleb(const uint8_t **p, const uint8_t *end);
 /* --------------------------------------------------------------- images */
 mr_image *mr_image_load(const char *path, mr_image *loader, int weak, int is_main);
 mr_image *mr_image_find_loaded(const char *install_name);
+int       mr_addr_in_image(const void *p);
 const mr_segment *mr_image_segment(const mr_image *im, const char *name);
 const struct section_64 *mr_image_section(const mr_image *im, const char *seg, const char *sect);
 /* file offset (within the slice) -> parse-mapping pointer, bounds checked */
 const void *mr_file_at(const mr_image *im, uint64_t off, uint64_t len, const char *what);
 void mr_map_image(mr_image *im);
 void mr_protect_readonly_segments(mr_image *im);
+int  mr_mprotect_rw(void *addr, uint64_t size);
 void mr_reserve_pagezero(void);
 
 /* --------------------------------------------------------------- fixups */
@@ -156,7 +164,8 @@ void     mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
 /* ------------------------------------------------------------ tlv, init */
 void mr_tlv_setup(mr_image *im);
 void mr_run_initialisers(mr_image *im);
-void mr_objc_note_image(mr_image *im);
+void mr_objc_note_image(mr_image *im);      /* -> load_images / +load */
+int  mr_objc_run_objc_init(void);           /* -> _objc_init; 0 if no libobjc */
 void mr_install_crash_reporter(void);
 
 #endif /* MACHORUN_H */
