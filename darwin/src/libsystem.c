@@ -722,15 +722,17 @@ EXPORT int   pthread_setspecific(unsigned k, const void *v) { return glibc_pthre
 /* os_unfair_lock is exactly four bytes in the guest -- Darwin stores an owning
  * thread port in them -- so it cannot hold a glibc pthread_mutex_t and cannot
  * be widened. We use the same four bytes as the lock word: 0 is unlocked, and
- * a locked lock holds the owner's Mach-ish thread token. Contention yields
- * rather than futex-waits; that is a fairness and CPU-burn difference under
- * heavy contention, not a correctness one, and it is recorded in
- * docs/UNIMPLEMENTED.md. */
-static unsigned unfair_token(void)
-{
-    unsigned t = (unsigned)(glibc_pthread_self() >> 8);
-    return t ? t : 1u;
-}
+ * a locked lock holds the owner's thread token. Contention yields rather than
+ * futex-waits; that is a fairness and CPU-burn difference under heavy
+ * contention, not a correctness one, and it is recorded in
+ * docs/UNIMPLEMENTED.md.
+ *
+ * The token comes from mr_thread_token() (objcsupport.c) and is a per-thread
+ * sequential id, NOT a squeeze of pthread_self(). Deriving it from the TCB
+ * pointer is what made this lock corrupt itself on Graviton3; the reasoning is
+ * at mr_thread_token() and the evidence in
+ * docs/UNIMPLEMENTED.md#os-unfair-lock-owner. Do not "simplify" it back. */
+static unsigned unfair_token(void) { return mr_thread_token(); }
 
 EXPORT void os_unfair_lock_lock(void *l)
 {

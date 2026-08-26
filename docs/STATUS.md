@@ -897,3 +897,75 @@ rasteriser that reaches libm; encodes a PNG; and writes a file whose bytes are
   bitmap and writes a PNG". There is no `UIScreen` path and nothing puts a pixel
   on a screen.
 * **No arm64e, no FairPlay, no App Store app.** Unchanged from §6.
+
+## 12. Second machine (2026-08-26) — AWS Graviton3, and the bug it found
+
+Everything above was measured on Apple silicon. Running the same tree on an AWS
+**c7g.2xlarge** (Neoverse-V1, Ubuntu 24.04, 4 KB pages) was meant to be a
+portability check and instead found a real concurrency bug in our userland.
+
+### 12.1 What the second machine actually tested
+
+Not much of the loader, as it turns out — and that is the useful part.
+`scripts/build.sh everything` builds cleanly and natively on the box in 1m27s
+(clang-18 and ld64.lld-18 from Ubuntu's own packages, no macOS anywhere in the
+build), `scripts/difftest.sh` gives the same **19 pass / 0 fail / 1 xfail /
+0 drift**, and `scripts/quartz_pixel.sh --linux` reproduces all three PNGs
+**byte-identically** against baselines recorded on macOS. Mach-O parsing,
+chained fixups, the ObjC image-notify path and the whole single-threaded
+drawing stack are microarchitecture-independent, and are now measured to be
+rather than assumed to be.
+
+What was *not* independent was `os_unfair_lock`. The corpus scored **24/44**
+instead of 41/44, with the failures landing differently from run to run.
+
+### 12.2 The bug
+
+An `os_unfair_lock` is four bytes — Darwin puts an owning thread port there —
+so a locked one identifies its owner by a 32-bit token. Ours was
+`(unsigned)(pthread_self() >> 8)`: half of a 64-bit TCB pointer, discarded. Two
+threads whose TCBs agreed in the surviving bits got the *same* token, and then
+one thread taking a lock the other held read as **recursive acquisition by the
+owner**, which `libSystem` correctly traps. Exit 71, from fixtures with nothing
+wrong with them.
+
+Whether two TCBs collide depends on where glibc's allocator put them, so on
+ASLR, so on the run. Apple silicon essentially never collided; Graviton3
+collided about half the time. The Apple-silicon suite was not lucky once — it
+was structurally unable to see this, because **one green run of a coin-flip bug
+is not evidence**, and the suite only ever did one run.
+
+`docs/UNIMPLEMENTED.md#os-unfair-lock-owner` has the full before/after table and
+the three approaches that did not work (`gettid` through the glibc boundary,
+`__thread` caching, xor-folding the pointer). The fix, `mr_thread_token()`,
+stops deriving the token from anything: each thread gets a sequential id from an
+atomic counter, cached in a private direct-TSD slot. Sequential ids do not
+collide by construction.
+
+On the same box, same build, fix applied by patch between the measurements:
+**24/44 → 41/44**, five consecutive runs with no variance — parity with Apple
+silicon, the three failures being the documented `unwind-compact` pair and
+`dlopen`. `004-dispatch-basic` went from **37/100** to **500/500**.
+
+### 12.3 What this changes about the suite
+
+`scripts/objc44.sh` now ends a full pass with `scripts/stress_unfair_lock.sh`:
+100 runs each of `004-dispatch-basic`, `043-threads` and `037-synchronized`,
+about 1.5 s. It is a loop and not a test case for the reason in §12.2, and it is
+known to *fail* on the bug it guards — pre-fix it reports `37/100 ok` and prints
+the abort line — rather than merely known to pass.
+
+The lesson is narrower than "test on more machines" and worth stating plainly: a
+suite that runs each fixture once cannot distinguish "correct" from "correct on
+this machine's address layout". Two further defects fixed here had also been
+passing on luck — `self_token()` OR'd `0x80000000` into a token that
+`unfair_token()` did not, so the recursive lock's owner check only worked
+because bit 39 of the TCB pointer happened to be set; and the direct-TSD key was
+created without synchronisation. Neither was what we went looking for.
+
+### 12.4 What is still not established on Graviton
+
+The three `objc44` failures are unchanged and unrelated; no
+`CoreFoundation`/`Foundation`/`UIKit`, no Swift, no arm64e — §11.9's list stands
+unaltered. Nothing here ran on a 64 KB-page kernel, which `page-size-64k` still
+refuses at startup.
