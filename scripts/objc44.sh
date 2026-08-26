@@ -25,6 +25,17 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 D="$ROOT/tests/objc44"
 LOADER="${MACHORUN_LOADER:-$ROOT/build/machorun}"
 
+# The loader is a Linux ELF. Run from macOS, all 44 execs fail with "cannot
+# execute binary file" and the script reports 0/44 -- which reads like a
+# catastrophic regression and is really a wrong-host mistake. Say so once, up
+# front, rather than 44 times in a shape that invites re-recording a baseline.
+[ "$(uname -s)" = "Linux" ] || {
+    echo "objc44: this runs the LINUX loader, but \`uname -s\` says $(uname -s)." >&2
+    echo "        Run it inside the test-bed container:" >&2
+    echo "          docker run --rm -i --platform linux/arm64 -v \"$ROOT:/work\" -w /work \\" >&2
+    echo "            \"\${MACHORUN_IMAGE:-machorun-testbed:24.04}\" bash -c 'bash scripts/objc44.sh'" >&2
+    exit 2; }
+
 [ -x "$LOADER" ] || { echo "objc44: no loader at $LOADER (scripts/build.sh loader)" >&2; exit 1; }
 [ -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ] || {
     echo "objc44: darwin/usr/lib/libobjc.A.dylib is missing." >&2

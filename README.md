@@ -284,8 +284,8 @@ scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sour
 scripts/sdk_stage.sh --verify  # re-fetch all 333 and check the COMMITTED sha256s
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
 scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
-scripts/objc44.sh           # the 44-test objc4 differential corpus under machorun
-scripts/quartz_pixel.sh     # 15_quartz on macOS vs under machorun -- the PNGs must match
+scripts/objc44.sh           # the 44-test objc4 differential corpus (run INSIDE the container)
+scripts/quartz_pixel.sh     # the 3 drawing fixtures, macOS vs machorun -- the PNGs must match
 scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
 scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively
 build/machorun ./prog       # run one
