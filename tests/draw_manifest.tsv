@@ -1,0 +1,39 @@
+# machorun DRAWING-fixture manifest -- tab separated, one PNG-producing fixture
+# per line. The sibling of tests/manifest.tsv, and separate from it on purpose.
+#
+# WHY A SECOND MANIFEST. tests/manifest.tsv indexes fixtures whose whole result
+# is stdout/stderr/exit-status, which is what harness/run_macos.sh and
+# harness/run_linux.sh know how to capture and what scripts/difftest.sh knows
+# how to grade. The fixtures below differ from those in two structural ways:
+#
+#   * their headline artefact is a FILE -- a PNG written to argv[1]; and
+#   * their macOS run needs DYLD_LIBRARY_PATH, because their install name for
+#     the drawing engine is the absolute Darwin path /usr/lib/libquartz.dylib,
+#     which is a file on neither host (scripts/build_quartz_macos.sh explains
+#     why that is the right install name and why @rpath would be wrong -- in
+#     short, @rpath resolves the same on both hosts, so both runs would load
+#     the same library and the Linux run would silently test nothing).
+#
+# Teaching the shared harness either of those would put a fixture-specific
+# special case into the thing that grades every other fixture. So these have
+# their own runner, scripts/quartz_pixel.sh, which obeys exactly the same rules:
+# it re-executes the macOS oracle every run rather than trusting the committed
+# baseline, it writes tests/expected/ only under --record and only on Darwin,
+# and a baseline that has moved is reported as BASELINE-DRIFT rather than
+# quietly re-recorded.
+#
+# id      fixture id; tests/bin/<id> is the Mach-O, tests/expected/<id>.{png,
+#         stdout,stderr,exit} is the recorded macOS behaviour
+# rung    position on the ladder in docs/FIXTURES.md
+# needs   dylibs the guest loads beyond libSystem, comma separated. The Linux
+#         side builds exactly these: `objc` costs a minute of Objective-C++, so
+#         a quartz-only run must not pay for it.
+# size    the bitmap the fixture creates, for the reader
+# what    one-line description
+#
+# Columns are separated by a single TAB. Keep it that way.
+#
+#id	rung	needs	size	what
+15_quartz	n	quartz	256x256	nine drawing stages through the QZ* C API; no Objective-C anywhere, so a failure here is never objc4's fault
+16_objc_quartz	o	quartz,objc	128x128	smoke: one root class, two ivars, one message send, one ellipse -- the bisection point for 17
+17_objc_shapes	p	quartz,objc	256x256	protocol, root class, three-level inheritance with [super], a category, +load/+initialize, and a polymorphic draw over a collection

@@ -178,6 +178,39 @@ if want 15_quartz; then
     built+=(15_quartz)
 fi
 
+# --------------------------------------------------- rungs (o) and (p)
+# Objective-C that DRAWS. Three images: libquartz, libobjc and libSystem, which
+# is one more than anything below rung (n) loads. 15_quartz proved the
+# rasteriser with no ObjC in it; 09_objc proved ObjC with no drawing in it;
+# these two are the composition, and the composition is the milestone.
+#
+# Same PNG discipline and the same install-name trick as 15_quartz: not in
+# tests/manifest.tsv, listed in tests/draw_manifest.tsv, graded by
+# scripts/quartz_pixel.sh.
+#
+# 16 first, and it is deliberately trivial -- one root class, two ivars, one
+# shape. It is the bisection point for 17: if 16 fails there is no point
+# reading 17's pixel diff at all.
+#
+# -Wno-objc-root-class because both are Foundation-free by design, exactly like
+# 09_objc: a class with its own `Class isa` and no NSObject anywhere. -lobjc
+# resolves to /usr/lib/libobjc.A.dylib, which machorun's prefix map sends to
+# darwin/usr/lib/libobjc.A.dylib -- our Mach-O build of Apple's objc4.
+build_objc_draw() { # build_objc_draw <id> <source-file>
+    local id="$1" src="$2"
+    echo "==> $id"
+    local qzlib="$ROOT/build/quartz-macos/libquartz.dylib"
+    [ -f "$qzlib" ] || bash "$ROOT/scripts/build_quartz_macos.sh" >/dev/null
+    [ -f "$qzlib" ] || die_msg "$id needs $qzlib (scripts/build_quartz_macos.sh)"
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 \
+        -fobjc-arc-exceptions -Wno-objc-root-class \
+        -I"$ROOT/vendor/quartz/include" \
+        -o "$BIN/$id" "$SRC/$src" "$qzlib" -lobjc
+    built+=("$id")
+}
+want 16_objc_quartz && build_objc_draw 16_objc_quartz 16_objc_quartz.m
+want 17_objc_shapes && build_objc_draw 17_objc_shapes 17_objc_shapes.m
+
 # -------------------------------------------------- off-ladder: structure
 # A universal binary. macOS picks the arm64 slice and behaves exactly like
 # 03_printf, so the recorded baseline is identical -- which means any
