@@ -83,6 +83,8 @@ extern int    glibc_feof(void *)                            GLIBCSYM(feof);
 extern int    glibc_fileno(void *)                          GLIBCSYM(fileno);
 extern int    glibc_fseek(void *, long, int)                GLIBCSYM(fseek);
 extern long   glibc_ftell(void *)                           GLIBCSYM(ftell);
+extern int    glibc_ungetc(int, void *)                     GLIBCSYM(ungetc);
+extern void   glibc_rewind(void *)                          GLIBCSYM(rewind);
 extern void  *glibc_stdout GLIBCSYM(stdout);
 extern void  *glibc_stderr GLIBCSYM(stderr);
 extern void  *glibc_stdin  GLIBCSYM(stdin);

@@ -519,7 +519,10 @@ FWD(int, feof,    (void *f),        (f))
 FWDE(void *, fopen, (const char *p, const char *m), (p, m))
 FWDE(size_t, fwrite, (const void *p, size_t a, size_t b, void *f), (p, a, b, f))
 FWDE(size_t, fread,  (void *p, size_t a, size_t b, void *f),       (p, a, b, f))
+FWD(int, ungetc,  (int c, void *f), (c, f))
+FWDV(rewind, (void *f), (f))
 EXPORT int putc(int c, void *f) { return glibc_fputc(c, f); }
+EXPORT int getc(void *f) { return glibc_fgetc(f); }
 EXPORT int fputs_unlocked(const char *s, void *f) { return glibc_fputs(s, f); }
 
 FWD(int, getpid, (void), ())

@@ -5,20 +5,32 @@
 #   scripts/build.sh loader       just the loader
 #   scripts/build.sh darwin       just darwin/usr/lib/*.dylib
 #   scripts/build.sh objc4        just darwin/usr/lib/libobjc.A.dylib
+#   scripts/build.sh quartz       just darwin/usr/lib/libquartz.dylib
 #   scripts/build.sh tbd          just sdk/usr/lib/*.tbd, from what is built
 #   scripts/build.sh everything   all of the above, in order
 #
 # The loader is a Linux/aarch64 ELF PIE. PIE is not optional: a non-PIE aarch64
 # ELF links at 0x400000, which is inside the guest's __PAGEZERO.
 #
+# --no-as-needed around -lm is not optional either, and the reason is not
+# obvious. The loader resolves every _glibc_<name> bind with
+# dlsym(RTLD_DEFAULT, name) (src/resolve.c), and RTLD_DEFAULT searches the
+# GLOBAL SCOPE -- i.e. only libraries actually loaded into this process. The
+# loader's own C code calls nothing in libm, so Ubuntu's default --as-needed
+# drops libm.so.6 from DT_NEEDED, the global scope has no libm in it, and the
+# first guest that calls sin() dies with
+#     machorun: undefined symbol '_glibc_sin'  wanted by libSystem.B.dylib
+# Measured 2026-08-26 with tests/bin/15_quartz. Forcing the DT_NEEDED entry is
+# what makes libSystem's libm forwarders (darwin/src/math.c) resolvable.
+#
 # XCODE IS NO LONGER A BUILD INPUT. objc4 compiles against sdk/ -- our own
 # header-only, .tbd-only SDK, assembled by scripts/sdk_stage.sh from Apple's
 # open-source releases plus 19 clean-room headers of ours. sdk/PROVENANCE.md is
 # the accounting; docs/SDK_SURVEY.md is the measurement that preceded it.
 #
-# `all` deliberately stops short of objc4: 32 Objective-C++ TUs is about a
-# minute, and harness/run_linux.sh invokes this script on every difftest run.
-# Ask for it by name, or use `everything`.
+# `all` deliberately stops short of objc4 AND quartz: 32 Objective-C++ TUs plus
+# 37 C++ ones is about two minutes, and harness/run_linux.sh invokes this script
+# on every difftest run. Ask for them by name, or use `everything`.
 set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -48,7 +60,7 @@ build_loader() {
         "$ROOT"/src/objc_notify.c \
         "$ROOT"/src/crash.c \
         "$ROOT"/src/main.c \
-        $LDFLAGS -ldl -lpthread -lm
+        $LDFLAGS -ldl -lpthread -Wl,--no-as-needed -lm -Wl,--as-needed
     echo "   -> $BUILD/machorun"
 }
 
@@ -63,11 +75,21 @@ build_tbd() {
     # a libobjc.tbd from. Say so and carry on rather than failing the build --
     # harness/run_linux.sh calls this script on every difftest run, and a
     # difftest that cannot start because a .tbd is missing helps nobody.
-    if [ ! -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ]; then
-        echo "== tbd: skipped -- darwin/usr/lib/libobjc.A.dylib is not built."
-        echo "        Build it with 'scripts/build.sh objc4', then 'scripts/build.sh tbd'."
-        return 0
-    fi
+    #
+    # libquartz.dylib is in the same position for the same reason (37 C++ TUs),
+    # and there is a sharper edge on it: tests/bin/15_quartz imports 34 _QZ*
+    # symbols, so gen_tbd.sh's CHECK 3 -- "every symbol the corpus references is
+    # exported by some stub" -- would fail hard on a tree where libquartz simply
+    # has not been built yet. That is a build-order artefact, not a missing
+    # symbol, and it must not present itself as one.
+    for d in libobjc.A libquartz; do
+        if [ ! -f "$ROOT/darwin/usr/lib/$d.dylib" ]; then
+            echo "== tbd: skipped -- darwin/usr/lib/$d.dylib is not built."
+            echo "        Build everything with 'scripts/build.sh everything',"
+            echo "        or just this one and then 'scripts/build.sh tbd'."
+            return 0
+        fi
+    done
     bash "$ROOT/scripts/gen_tbd.sh"
 }
 
@@ -79,6 +101,7 @@ case "$WHAT" in
     loader) build_loader ;;
     darwin) sh "$ROOT/scripts/build_darwin.sh" ;;
     objc4)  bash "$ROOT/scripts/build_objc4.sh" ;;
+    quartz) bash "$ROOT/scripts/build_quartz.sh" ;;
     tbd)    build_tbd ;;
     all)
         build_loader
@@ -94,10 +117,11 @@ case "$WHAT" in
         if [ "$(uname -s)" = "Linux" ]; then
             sh "$ROOT/scripts/build_darwin.sh"
             bash "$ROOT/scripts/build_objc4.sh"
+            bash "$ROOT/scripts/build_quartz.sh"
             build_tbd
         else
-            not_linux "darwin/ and objc4"
+            not_linux "darwin/, objc4 and quartz"
         fi
         ;;
-    *) echo "usage: build.sh [loader|darwin|objc4|tbd|all|everything]" >&2; exit 64 ;;
+    *) echo "usage: build.sh [loader|darwin|objc4|quartz|tbd|all|everything]" >&2; exit 64 ;;
 esac
