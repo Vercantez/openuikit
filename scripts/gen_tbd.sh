@@ -85,10 +85,23 @@ exports_of() { "$NM" --defined-only --extern-only --format=just-symbols "$1" 2>/
 imports_of() { "$NM" -u "$1" 2>/dev/null | strip_banners | awk '{print $NF}' | sort -u; }
 
 # ------------------------------------------------------------------ inputs
+# libquartz is OPTIONAL and the other three are not, which is a deliberate
+# asymmetry. libSystem/libobjc/libc++ are the Darwin runtime a guest is entitled
+# to assume exists; libquartz is a framework we chose to host, and a tree that
+# has never run scripts/build.sh quartz should still be able to regenerate its
+# stubs. Absent, it is skipped with a line saying so -- never emitted empty,
+# because an empty .tbd is a promise ld64 will believe (see this script's
+# header) and the guest would then fail at run time instead of at link time.
 DYLIBS=(libSystem.B libobjc.A libc++.1)
 for d in "${DYLIBS[@]}"; do
     [ -f "$DYLIB/$d.dylib" ] || die "no $DYLIB/$d.dylib -- build it first (scripts/build.sh all)"
 done
+if [ -f "$DYLIB/libquartz.dylib" ]; then
+    DYLIBS+=(libquartz)
+else
+    echo "   note: no $DYLIB/libquartz.dylib -- skipping libquartz.tbd (scripts/build.sh quartz)"
+    rm -f "$OUT/libquartz.tbd"
+fi
 [ -x "$LOADER" ] || die "no loader at $LOADER -- scripts/build.sh loader"
 [ -f "$LOADER_EXPORTS" ] || die "no $LOADER_EXPORTS"
 
@@ -152,6 +165,7 @@ fi
 sort -u "$TMP/exp.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B"
 cp "$TMP/exp.libobjc.A"  "$TMP/sym.libobjc.A"
 cp "$TMP/exp.libc++.1"   "$TMP/sym.libc++.1"
+[ -f "$TMP/exp.libquartz" ] && cp "$TMP/exp.libquartz" "$TMP/sym.libquartz"
 
 emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     {
@@ -176,8 +190,10 @@ if [ "$MODE" = generate ]; then
     emit_tbd "/usr/lib/libSystem.B.dylib" "$TMP/sym.libSystem.B" "$OUT/libSystem.B.tbd"
     emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$OUT/libobjc.A.tbd"
     emit_tbd "/usr/lib/libc++.1.dylib"    "$TMP/sym.libc++.1"    "$OUT/libc++.1.tbd"
+    [ -f "$TMP/sym.libquartz" ] && \
+        emit_tbd "/usr/lib/libquartz.dylib" "$TMP/sym.libquartz" "$OUT/libquartz.tbd"
     # Apple ships libSystem.tbd and libobjc.tbd as symlinks; -lSystem looks for
-    # the unsuffixed name.
+    # the unsuffixed name. libquartz has no suffixed form, so no symlink.
     ln -sf libSystem.B.tbd "$OUT/libSystem.tbd"
     ln -sf libobjc.A.tbd   "$OUT/libobjc.tbd"
     ln -sf libc++.1.tbd    "$OUT/libc++.tbd"
@@ -195,7 +211,13 @@ fi
 # Every committed Mach-O binary was built by APPLE'S toolchain against APPLE'S
 # SDK -- deliberately, see docs/SDK_SURVEY.md §6.3 -- so this is a real test of
 # whether our stub covers the surface Apple's linker actually emitted.
-cat "$TMP/sym.libSystem.B" "$TMP/sym.libobjc.A" "$TMP/sym.libc++.1" | sort -u > "$TMP/tbd_all"
+# Every stub we just emitted -- driven off DYLIBS rather than a hand-written
+# list, because a hand-written list is how libquartz's 507 exports got written
+# to libquartz.tbd and then ignored two lines later, which made CHECK 3 report
+# 34 phantom missing symbols on a tree where nothing was missing at all.
+: > "$TMP/tbd_all"
+for d in "${DYLIBS[@]}"; do cat "$TMP/sym.$d" >> "$TMP/tbd_all"; done
+sort -u "$TMP/tbd_all" -o "$TMP/tbd_all"
 
 CORPUS=()
 for f in "$ROOT"/tests/bin/* "$ROOT"/tests/objc44/*; do
