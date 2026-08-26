@@ -12,16 +12,25 @@ Three of the hard pieces already exist in sibling projects:
 
 | piece | where | state |
 |---|---|---|
-| Objective-C runtime | `~/objc4-linux` | Apple's real objc4, running on Linux, **44/44 differential tests vs Apple's shipping runtime** |
+| Objective-C runtime | **here**, `darwin/usr/lib/libobjc.A.dylib` | Apple's real objc4 built as **Mach-O on Linux**, 4 patches, **41/44** differential tests vs Apple's shipping runtime |
 | UIKit | `~/uikit` (OpenUIKit) | pixel-exact vs real UIKit, 108/108 oracle scenes |
 | Quartz 2D + CoreAnimation | `~/quartz` | 97.5/100 vs Apple's frameworks |
 | **Mach-O loader + Darwin userland** | **here** | **the missing piece** |
 
-Each row is true on its own terms. Read downward, the table overpromises: those
-are three *different* runtimes and ABIs — Apple-objc4-on-ELF, Swift-on-ELF, and
-a GNUstep-ABI Objective-C facade — and machorun needs Mach-O with Apple's ObjC
-ABI. Composing them is not the last 10%; `docs/STATUS.md` §7 sets out what it
-actually costs.
+Each row is true on its own terms. Read downward, the table used to overpromise
+badly, and one of the three reasons is now gone. It said `~/objc4-linux`, a
+44/44 port of Apple's objc4 to **ELF** — a different format and a different
+runtime from the one a precompiled Darwin binary carries. That project is now
+**retired**: the same objc4 drop builds here as a Mach-O dylib with 4 patches
+instead of 9, and `docs/OBJC4_MACHO.md` is the accounting. It is retired rather
+than deleted because it is still the only tree that runs all 44 tests; the two
+gaps are an unwinder over `__TEXT,__unwind_info` and guest `dlopen`, and
+neither is about Objective-C.
+
+The other two rows still do not compose: OpenUIKit is a Swift engine whose
+Objective-C facade targets the **GNUstep** ABI, not Apple's, and swiftc on
+Linux emits ELF. `docs/STATUS.md` §7 sets out what closing that costs — with
+step 1 of its list, a `libobjc.A.dylib` machorun can bind against, now done.
 
 Verified before starting (2026-08-25): **Linux can produce Mach-O.**
 `clang -target arm64-apple-macos11 -c` emits Mach-O objects (magic
@@ -78,7 +87,9 @@ platform executing the same bytes.
 src/        the loader: Mach-O parsing, mapping, fixups, TLS, entry
 include/    public interface
 darwin/     our Mach-O dylibs (libSystem and friends) built on Linux
-tests/      Mach-O fixtures + expected macOS output
+vendor/     Apple's objc4 (pristine) + the SDK-private headers it needs
+patches-macho/  the 4 patches objc4 needs to build as Mach-O on Linux
+tests/      Mach-O fixtures + expected macOS output, and the 44-test objc4 corpus
 harness/    run-on-macOS / run-on-linux runners and the differ
 scripts/    build + difftest entry points
 docs/       design, ABI notes, status
@@ -87,15 +98,24 @@ docs/       design, ABI notes, status
 ## Status
 
 **Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** Of the
-20 gradeable fixtures, **18 pass and 2 are documented XFAILs** — pass meaning
-stdout, stderr *and* exit status are byte-identical to the same bytes running
-natively on macOS. (A 21st fixture has no baseline because macOS itself refuses
-to execute it.) The corpus covers both fixup formats, both initialiser section
-forms, TLV, dylib graphs with `@rpath`, data and reverse imports, pthreads, fat
-binaries — and the userland rungs: the Darwin arm64 variadic ABI, the Mach
-APIs, the errno / `O_*` / `struct stat` divergences, and a representative
-hand-built utility that uses ctype, getopt, qsort, strftime and fgets the way
-real programs do. Objective-C is the one remaining wall.
+20 gradeable fixtures, **19 pass and 1 is a permanent XFAIL** (`01_exit_raw`,
+raw `svc` — the deliberate boundary of the replace-libSystem bet) — pass
+meaning stdout, stderr *and* exit status are byte-identical to the same bytes
+running natively on macOS. (A 21st fixture has no baseline because macOS itself
+refuses to execute it.) The corpus covers both fixup formats, both initialiser
+section forms, TLV, dylib graphs with `@rpath`, data and reverse imports,
+pthreads, fat binaries — and the userland rungs: the Darwin arm64 variadic ABI,
+the Mach APIs, the errno / `O_*` / `struct stat` divergences, and a
+representative hand-built utility that uses ctype, getopt, qsort, strftime and
+fgets the way real programs do.
+
+**Objective-C is no longer the wall.** Apple's objc4 builds as a Mach-O
+`darwin/usr/lib/libobjc.A.dylib` **on Linux** with 4 patches, driven through
+dyld's own image-notify protocol rather than a bespoke seam, and scores
+**41/44** on a differential corpus run against Apple's shipping runtime. The 3
+failures are C++ exceptions (×2) and `dlopen` (×1) — pre-existing loader gaps
+that block plain C++ equally, and neither is attributable to objc4.
+`docs/OBJC4_MACHO.md` is the accounting, including what got *harder*.
 
 Re-measured from a fresh clone by an agent that did not write the loader, along
 with the things a green suite does not by itself establish (`docs/STATUS.md`):
@@ -116,11 +136,13 @@ with the things a green suite does not by itself establish (`docs/STATUS.md`):
   its dependency graph under `machorun` and stops at the first of **37** libc
   symbols we do not yet export, naming it. Apple's own `/bin/ls` and
   `/usr/bin/true` are arm64e-only, so PAC blocks them before breadth does.
-- **The siblings above do not yet compose.** `objc4-linux` is ELF and replaced
-  Mach-O image discovery rather than shimming it; OpenUIKit is a Swift engine
-  whose Objective-C facade targets the GNUstep ABI, not Apple's. Loading a
-  precompiled UIKit app needs four bounded things from machorun and three
-  unbuilt ones above it — `docs/STATUS.md` §7 costs them individually.
+- **The siblings above do not yet compose.** That verification listed
+  `objc4-linux` first, because it was ELF and had *replaced* Mach-O image
+  discovery rather than shimming it. That one is now closed the other way
+  round: the ELF port is retired and objc4 is built here as Mach-O, which is
+  step 1 of `docs/STATUS.md` §7. OpenUIKit remains a Swift engine whose
+  Objective-C facade targets the GNUstep ABI, not Apple's, and swiftc on Linux
+  emits ELF. §7's steps 5–7 are untouched and are still the larger half.
 
 Verification also found and fixed one defect in the harness itself: with a
 loader that failed to compile, `scripts/difftest.sh` printed `skipped 20` and
@@ -141,12 +163,16 @@ translation at all: Darwin's `<ctype.h>` *inlines* a lookup in a 3208-byte
 part of the ABI and are recorded from Apple rather than reconstructed.
 
 See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
-for the measured ABI boundary, `docs/PLAN.md` for the design,
-`docs/UNIMPLEMENTED.md` for every stub that aborts.
+for the measured ABI boundary, `docs/OBJC4_MACHO.md` for Apple's objc4 as
+Mach-O (and §9 for what was inherited from the retired ELF port),
+`docs/PLAN.md` for the design, `docs/UNIMPLEMENTED.md` for every stub that
+aborts.
 
 ```sh
 scripts/build.sh          # loader (ELF PIE) + darwin/*.dylib (Mach-O, on Linux)
+scripts/build_objc4.sh    # Apple's objc4 -> darwin/usr/lib/libobjc.A.dylib (needs a macOS SDK)
 scripts/difftest.sh       # macOS oracle vs machorun-on-Linux, one row per fixture
+scripts/objc44.sh         # the 44-test objc4 differential corpus under machorun
 scripts/abi_naive_probe.sh # what breaks if the userland forwards naively
 build/machorun ./prog     # run one
 ```

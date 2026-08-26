@@ -290,6 +290,8 @@ Beyond loading, it must also deliver a `mapped` notification for the new image
 before running its initialisers — `src/objc_notify.c` has the machinery but
 only ever delivers the startup batch. Measured cost of not having it:
 `tests/objc44/042-dlopen` and (until `dlsym` landed) `025-internal-symbols`.
+That test is one of the two reasons the retired `~/objc4-linux` is still on
+disk — see `unwind-compact` below for the other.
 
 ### `blocks-byref`
 `darwin/src/objcsupport.c` implements the Blocks runtime — `_Block_copy`,
@@ -355,10 +357,86 @@ not otherwise. The 25 headers the public SDK lacks are vendored in
 `vendor/objc4-priv/`; they are Apple-internal SPI declarations plus clang's own
 `<ptrauth.h>`, and they change no objc4 source.
 
+There is no scripted container invocation for this, and one practical trap:
+Docker Desktop on macOS does not share `/Applications` or
+`/Library/Developer` by default, so mounting the SDK straight out of Xcode
+fails with `mounts denied`. Stage the headers somewhere under `$HOME` first —
+this is what the 2026-08-26 re-measurement did, and it is a reproducibility
+gap worth closing:
+
+```sh
+mkdir -p build/sdk/MacOSX.sdk/usr
+cp -R /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/usr/include \
+      build/sdk/MacOSX.sdk/usr/            # 18 MB, and build/ is gitignored
+docker run --rm --platform linux/arm64 -v "$PWD:/work" -w /work \
+    -e OBJC4_SDK=/work/build/sdk/MacOSX.sdk machorun-testbed:24.04 \
+    bash -c 'sh scripts/build.sh all && bash scripts/build_objc4.sh'
+```
+
+### `isa-va-width` — a silent-corruption risk, not a stub
+*Inherited from `~/objc4-linux/docs/PORT_PLAN.md`'s second-riskiest unknown; see
+`docs/OBJC4_MACHO.md` §9.3. Nothing aborts, which is the problem.*
+
+objc4 packs the class pointer into the isa word and the `class_rw_t` pointer
+into `class_t::bits`, and Darwin sizes both fields from a *known* Mach VM
+ceiling. Linux/aarch64's user VA width is a **kernel configuration**
+(39/42/48/52-bit) and is not fixed across machines. `patches-macho/0001` widens
+both fields against a measured 48-bit host:
+
+| field | our value | pointer bits | headroom |
+|---|---|---|---|
+| `ISA_MASK` | `0x007ffffffffffff8` | 3..54 | 7 bits |
+| `FAST_DATA_MASK` | `0x0f00fffffffffff8` | 3..47 | **none** |
+
+Measured on the test kernel (`6.12.76-linuxkit`, arm64): default `mmap`
+returns `0xffff88f9e000`, `malloc` `0xaaaabf7f82a0`, and an `mmap` hint of
+`0x10000000000000` (2^52) is **ignored**, returning `0xffff88f9d000`. So on
+this kernel no user address exceeds 48 bits and `FAST_DATA_MASK` holds exactly.
+
+What is not guaranteed: on a kernel built for 52-bit VAs, Linux hands out
+addresses above 2^48 only when an `mmap` hint asks for one -- but if a guest
+ever gets a `class_rw_t` up there, `FAST_DATA_MASK` truncates it and every
+object pointing at that class is corrupt, silently.
+
+objc4's own `STATIC_ASSERT` does **not** cover this. It checks `ISA_MASK`
+against the SDK's `MACH_VM_MAX_ADDRESS` -- a compile-time fact about Darwin --
+and it is what forced `patches-macho/0001` to exist at all. There is no
+equivalent check against the *host kernel's* ceiling, and there cannot be one
+at compile time.
+
+The fix, when it is needed, is a startup assertion in `src/objc_notify.c` that
+every image and heap address fits `FAST_DATA_MASK`, aborting loudly rather than
+corrupting. The ELF port's alternative -- force `SUPPORT_NONPOINTER_ISA 0` --
+is deliberately **not** taken: it costs performance and changes
+`objc_debug_isa_class_mask`, which Swift reads.
+
+### `objc-load-ordering`
+*Also inherited; `docs/OBJC4_MACHO.md` §9.2 has the full account.*
+
+The Darwin contract -- `_objc_init()` before any initialiser, `map_images` for
+a batch, then `load_images` -- is **restored** here rather than approximated,
+because we own the loader (`src/main.c`, `src/objc_notify.c`). `+load` precedes
+every initialiser in its own image by construction. That was `~/objc4-linux`'s
+riskiest unknown, and it is the one thing being Mach-O genuinely deletes rather
+than relocates.
+
+What remains untested is ordering *across* images. `docs/STATUS.md` §3 records
+that the mutation "initialiser dependency order reversed" **survived** -- no
+fixture image has more than one dependency, so there is no order to get wrong
+-- and `tests/objc44/041-multi-image` is a two-image program. The contract is
+implemented; the dependency sort is not differentially tested. Closing this is
+a fixture with a diamond dependency graph, not code.
+
 ### `unwind-compact`
 `_Unwind_*` over Apple's `__TEXT,__unwind_info` compact-unwind format. Not
 `.eh_frame`, so glibc/libgcc's unwinder cannot be forwarded to. Blocks C++
 exceptions (M8).
+
+Measured cost: `tests/objc44/038-exceptions` and
+`tests/objc44/044-exception-through-uncached`. With `dlopen-dlsym` these are
+the only 3 of the 44 that machorun does not pass, and therefore the two gates
+on *deleting* the retired `~/objc4-linux` rather than merely leaving it
+retired -- it is the only tree that runs the whole corpus.
 
 ---
 

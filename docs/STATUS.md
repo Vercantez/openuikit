@@ -10,7 +10,7 @@ Oracle host: macOS 26.5.2 (25F84), arm64, Apple clang 17.0.0, ld-1230.1.
 Target: Ubuntu 24.04 aarch64 in Docker, native on the same Apple-silicon host —
 no CPU emulation anywhere in this project.
 
-> **Since this verification (2026-08-26), on branch `experiment/objc4-macho`:
+> **Since this verification (2026-08-26), now merged to `master`:
 > Objective-C runs.** Apple's objc4 now builds as a Mach-O
 > `darwin/usr/lib/libobjc.A.dylib` on Linux with **4 patches** (the ELF port in
 > `~/objc4-linux` needs 9), machorun implements dyld's own ObjC image-notify
@@ -21,6 +21,22 @@ no CPU emulation anywhere in this project.
 > pre-existing `unwind-compact` and `dlopen` gaps, already ranked #2 and #3
 > below. Full accounting, including what got *harder*, in
 > **`docs/OBJC4_MACHO.md`**.
+>
+> **Re-measured on merge (2026-08-26), from `rm -rf build darwin/usr` and a
+> full rebuild of the loader, the Darwin userland and libobjc inside the
+> container:** `scripts/difftest.sh` → `pass 19 fail 0 xfail 1 xpass 0 skipped
+> 0 no-oracle 1 drift 0`, with the oracle re-verified natively on macOS in the
+> same run. `scripts/objc44.sh` → `41/44 PASS`, failing exactly
+> `038-exceptions`, `044-exception-through-uncached` and `042-dlopen`, each
+> with its documented loud abort. Both numbers were produced by this rebuild,
+> not carried over.
+>
+> **`~/objc4-linux` is retired** as of the same date — its README carries the
+> notice. It is not deleted: it is still the only tree that runs all 44, and
+> the two gaps that must close before it can go are `unwind-compact` and
+> `dlopen-dlsym`. The findings of its `PORT_MAP.md` / `PORT_PLAN.md` that hold
+> regardless of file format are carried forward in `docs/OBJC4_MACHO.md` §9 and
+> in `docs/UNIMPLEMENTED.md` (`isa-va-width`, `objc-load-ordering`).
 >
 > The table below is left exactly as that clean-clone run recorded it, because
 > editing a verification record in place would destroy the thing it is for.
@@ -231,6 +247,15 @@ needs FairPlay and dozens of private frameworks, and remains what the README
 says it is — Darling's decade, and not milestone 1.
 
 ## 7. The sibling projects do not currently compose
+
+> **Superseded in part, 2026-08-26.** Steps 1–3 below are **done** and the
+> first bullet's conclusion was **wrong in an interesting way** — see
+> `docs/OBJC4_MACHO.md` §5 and `docs/UNIMPLEMENTED.md#objc-callbacks`, both of
+> which keep the withdrawn recommendation on the record rather than deleting
+> it. Rebuilding objc4 as Mach-O did undo the ELF port's central change, and
+> that turned out to be the *cheap* direction, because the thing being undone
+> was compensation for running in the wrong format. Step 4 (C++ exceptions) and
+> steps 5–7 stand unchanged. The text below is left as written.
 
 The README's front table is true project by project and misleading read
 downward. What follows was established by reading the siblings (not by re-running

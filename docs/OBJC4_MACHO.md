@@ -416,3 +416,119 @@ Apple's own format, with Apple's own dispatch assembly, driven through Apple's
 own dyld protocol, and it agrees with the real runtime on 41 of 44 measured
 behaviours. What remains is the standard library and Foundation — and those were
 always the larger problem.
+
+---
+
+## 9. Inherited from the retired ELF port
+
+**Status of `~/objc4-linux`, as of 2026-08-26: RETIRED, not deleted.** Its
+README carries the notice and the reasons. It stays on disk because it is still
+the only thing that runs the whole corpus — the three tests it passes and we do
+not are `038-exceptions`, `044-exception-through-uncached` and `042-dlopen`,
+i.e. `unwind-compact` and `dlopen-dlsym`. When those two land and
+`scripts/objc44.sh` reads 44/44, that directory has no unique content left.
+
+The rest of it is not deleted either, it is *here*. Three findings in its
+`docs/PORT_MAP.md` and `docs/PORT_PLAN.md` are about objc4 and about Linux, not
+about ELF, so they survived the change of format intact and would otherwise
+have to be rediscovered. Recorded so that nobody does.
+
+### 9.1 Which objc4 this is, and why the newest tree is the easiest to port
+
+`~/objc4-linux/docs/PORT_MAP.md` §"Which objc4 is this" — the vendored tree
+(shared verbatim; `vendor/objc4` here is the same drop) carries no version
+string and is identified by feature markers: a `runtime/Threading/` package
+with `OBJC_THREADING_{NONE,DARWIN,PTHREADS,C11THREADS}` back-ends,
+`objc-malloc-instance.h`, `InitWrappers.h`, `_dyld_objc_callbacks_v4` with
+`_objc_patch_root_of_class`, `_dyld_lookup_section_info`, `class_rx_t` pointer
+signing, TPRO. That is **objc4-9xx, macOS 14/15 vintage** — several years newer
+than the objc4-818.2 that every public "buildable objc4" fork is based on.
+
+The counter-intuitive consequence, and the reason both ports were tractable:
+
+> In this vintage objc4 **no longer parses Mach-O for its own metadata**. dyld
+> pre-computes section locations and hands them over via
+> `_dyld_lookup_section_info` — 17 call sites in `objc-opt.mm` and 4 more in
+> `objc-runtime-new.mm`, all of them funnelling through that one function.
+> Older objc4 called `getsectiondata()` and walked load commands inline at
+> dozens of sites.
+
+Apple's refactor for their own convenience is what makes the seam a seam.
+**There is one function to reimplement, not thirty** — that is exactly why
+`src/objc_notify.c` is 300 lines (§5). If a future drop is *older*, or if Apple
+reverts that refactor, this cost estimate does not transfer.
+
+### 9.2 The `+load` / static-initialiser ordering contract — resolved by being Mach-O
+
+`~/objc4-linux/docs/PORT_PLAN.md` names this its **riskiest unknown**, and it
+is worth reading because it is the clearest case of the Mach-O route removing a
+problem rather than moving it.
+
+The contract on Darwin: `libSystem` calls `_objc_init()` *before any library
+initialiser runs*, dyld then calls `map_images` for a batch of images bottom-up
+and `load_images` after. objc4 depends on that privileged position so hard that
+it hand-rolls its own C++ static-constructor pass (`static_init()`, reading
+`section$start$__TEXT$__init_offsets`) because it is running earlier than its
+own initialisers. The comment at `objc-os.mm:712` says so.
+
+On ELF there is no privileged position: `libobjc.so`'s constructor runs in
+`.init_array` alongside everything else, ordered by the dynamic linker's
+dependency sort, with `constructor(priority)` as the only lever — and
+priorities only order *within* one image. The port could therefore not
+guarantee that `+load` ran before any initialiser in an image that uses ObjC,
+only before initialisers that happened to sort after its own; and its
+`dl_iterate_phdr` scan could produce `map_images` sequences dyld never
+produces, reaching paths only ever exercised by one WINE bug report
+(`objc-os.mm:345`). Its assessment: a **semantics** risk, invisible at compile
+time, surfacing as intermittent ordering-dependent failures in exactly the
+programs that are hardest to reduce.
+
+**Under machorun that risk is structural, not statistical, and it is closed.**
+The privileged position exists again because we own the loader:
+`src/main.c` calls `_objc_init()` at libSystem-initialiser time (verified: the
+dylib we build has neither `__mod_init_func` nor `__TEXT,__init_offsets`, so
+`_objc_init` genuinely is not a constructor), the whole already-loaded batch
+gets `mapped` synchronously inside `_dyld_objc_register_callbacks`, and
+`mr_objc_note_image()` calls `init` for an image immediately before that
+image's own initialisers. `+load` therefore precedes every initialiser in its
+image, by construction.
+
+What is **not** closed is the ordering *across* images, and the honest bound is
+`docs/STATUS.md` §3: the mutation "initialiser dependency order reversed"
+**survived** — no fixture image has more than one dependency, so there is no
+order to get wrong. `tests/objc44/041-multi-image` is the only multi-image
+evidence and it is a two-image program. Do not read "the contract is restored"
+as "the ordering is tested".
+
+### 9.3 The packed-isa `shiftcls` versus Linux's VA width — still live
+
+`~/objc4-linux/docs/PORT_PLAN.md` calls this its second-riskiest unknown and
+states it exactly right:
+
+> Darwin picks the isa bitfield layout from the known Mach VM ceiling. Linux
+> aarch64 VA size is a kernel config (39/42/48/52-bit) and is *not* fixed
+> across machines. Choose too small a `shiftcls` and a class allocated above
+> the assumed ceiling corrupts every object pointing at it — silently, and only
+> on some kernels.
+
+§2 above is the Mach-O half of this story and reports the good news: objc4's
+own `STATIC_ASSERT` catches the *too-small* case at compile time, so
+`patches-macho/0001` had to be written before anything would build. That is a
+compile-time gate on `ISA_MASK` versus the SDK's `MACH_VM_MAX_ADDRESS`.
+
+**It is not a gate on the host kernel, and the ELF port's framing is the one
+that stays true.** The masks we ship were chosen against a *measured* 48-bit
+host (`0xffffb132f010`, bit 47 set):
+
+| field | our value | pointer bits |
+|---|---|---|
+| `ISA_MASK` (`shiftcls_and_sig`) | `0x007ffffffffffff8` | 3..54 |
+| `FAST_DATA_MASK` (`class_rw_t`) | `0x0f00fffffffffff8` | 3..47 |
+
+`FAST_DATA_MASK` has **exactly** the 48 bits that were measured and no margin.
+Nothing checks it at run time and nothing can check it at compile time, because
+the ceiling it depends on is the kernel's, not the SDK's. See
+`docs/UNIMPLEMENTED.md#isa-va-width` for the bound and what would have to
+change. The ELF port's own recommendation — force `SUPPORT_NONPOINTER_ISA 0`
+and revisit with measurement — was **not** taken here, deliberately: it costs
+performance and changes `objc_debug_isa_class_mask`, which Swift reads.
