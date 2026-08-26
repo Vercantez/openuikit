@@ -137,6 +137,20 @@ value  BUFSIZ                       1024
 value  FOPEN_MAX                    20
 value  FILENAME_MAX                 1024
 
+== per-product settings  (xnu gates these on XNU_PLATFORM_<name>;
+==   getting it wrong is silent -- sdk/patches/0002 selects MacOSX)
+value  MACH_VM_MIN_ADDRESS_RAW      0x0000000000000000
+value  MACH_VM_MAX_ADDRESS_RAW      0x00007ffffe000000
+value  MACH_VM_MIN_ADDRESS          0x0000000000000000
+value  MACH_VM_MAX_ADDRESS          0x00007ffffe000000
+value  VM_MIN_ADDRESS               0x0000000000000000
+value  VM_MAX_ADDRESS               0x00000000f0000000
+value  __DARWIN_ONLY_UNIX_CONFORMANCE 1
+value  __DARWIN_ONLY_64_BIT_INO_T   1
+value  __DARWIN_ONLY_VERS_1050      1
+string __DARWIN_SUF_UNIX03          ""
+string __DARWIN_SUF_64_BIT_INO_T    ""
+
 == _DefaultRuneLocale  (a DATA ABI, resolved through the .tbd)
 sizeof _RuneLocale                  3208
 magic  _DefaultRuneLocale.magic     RuneMagA

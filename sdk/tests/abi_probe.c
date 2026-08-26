@@ -38,10 +38,18 @@
 #include <sys/types.h>
 #include <time.h>
 #include <runetype.h>
+#include <sys/cdefs.h>
+#include <mach/vm_param.h>
+#include <mach/machine/vm_param.h>
 
 #define SZ(t)      printf("sizeof %-28s %zu\n", #t, sizeof(t))
 #define OFF(s, f)  printf("offset %-28s %zu\n", #s "." #f, offsetof(struct s, f))
 #define VAL(m)     printf("value  %-28s %lld\n", #m, (long long)(m))
+#define HEX(m)     printf("value  %-28s 0x%016llx\n", #m, (unsigned long long)(m))
+/* The suffix macros expand to NOTHING on macOS/arm64 and to a string literal
+ * when the conformance settings are wrong, so they cannot be passed as an
+ * expression -- "" m is the only spelling that survives both. */
+#define STR(m)     printf("string %-28s \"%s\"\n", #m, "" m)
 
 int main(void)
 {
@@ -100,6 +108,33 @@ int main(void)
     puts("== seek / stdio");
     VAL(SEEK_SET); VAL(SEEK_CUR); VAL(SEEK_END);
     VAL(EOF); VAL(BUFSIZ); VAL(FOPEN_MAX); VAL(FILENAME_MAX);
+
+    /* THE per-product #ifdef check, and the reason this section exists.
+     *
+     * xnu publishes one header for every Apple product and gates the settings
+     * on XNU_PLATFORM_<name>; Apple's install step resolves them with unifdef,
+     * and sdk/patches/0002-xnu-platform-macosx.patch is how we do it instead.
+     * Get that wrong and NOTHING FAILS TO COMPILE -- the numbers are simply the
+     * embedded ones.  Verified 2026-08-26 by mutation: before these five lines
+     * existed, forcing MACH_VM_MAX_ADDRESS_RAW to the 64 GB value passed
+     * build_objc4 (32 objects), gen_tbd (all three checks), this probe and the
+     * 44-test corpus (41/44).  Nothing in the repository noticed.  Now this
+     * does, and it does so against Apple's own SDK rather than against a
+     * number somebody typed in here. */
+    puts("");
+    puts("== per-product settings  (xnu gates these on XNU_PLATFORM_<name>;");
+    puts("==   getting it wrong is silent -- sdk/patches/0002 selects MacOSX)");
+    HEX(MACH_VM_MIN_ADDRESS_RAW);
+    HEX(MACH_VM_MAX_ADDRESS_RAW);   /* macOS 128 TB, embedded 64 GB */
+    HEX(MACH_VM_MIN_ADDRESS);
+    HEX(MACH_VM_MAX_ADDRESS);
+    HEX(VM_MIN_ADDRESS);
+    HEX(VM_MAX_ADDRESS);
+    VAL(__DARWIN_ONLY_UNIX_CONFORMANCE);
+    VAL(__DARWIN_ONLY_64_BIT_INO_T);
+    VAL(__DARWIN_ONLY_VERS_1050);
+    STR(__DARWIN_SUF_UNIX03);       /* "" on macOS/arm64; "$UNIX2003" if unset */
+    STR(__DARWIN_SUF_64_BIT_INO_T);
 
     /* _DefaultRuneLocale is not a compile-time fact: Darwin's <ctype.h> inlines
      * a lookup into this table, so its bytes are bound at LINK time out of
