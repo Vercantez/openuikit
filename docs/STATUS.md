@@ -838,6 +838,30 @@ generics, protocol existentials, dynamic casts and ARC under machorun with
 output byte-identical to macOS, after two loader fixes
 (`docs/UNIMPLEMENTED.md#swift-interop`).
 
+#### Address placement is now a policy, not an accident
+
+libswiftCore has Apple's 47-bit `ISA_MASK` inlined at 48 sites, so anything that
+can end up in an isa has to live below 2^47. Two independent sources of high
+addresses were found and closed, and neither fix helps with the other:
+
+| source | why it was high | fix | asserted by |
+|---|---|---|---|
+| mapped images | `mmap(NULL,…)` is served top-down from near 2^48 | the arena in `src/map.c` places every image from 8 GiB up | `19_isa_mask` image probes |
+| the heap | a PIE lands at `2*TASK_SIZE/3` and brk follows it, so glibc's main arena sat at `0xaaab_…` | the loader links non-PIE at `MR_LOADER_BASE` (1 TiB) so brk starts low, plus `mr_constrain_heap()` | `19_isa_mask` malloc probes |
+
+The heap half is the one that hid: libswiftCore's first 64 KiB of generic-class
+metadata come from a static pool in its own `__DATA`, which the image arena
+already places low, so small Swift programs pass regardless of the heap policy.
+Measured with images already mapped low — a guest instantiating 900 distinct
+generic classes died at `libswiftCore+0x332898, fault 0x2aab1d407ec8`, which is
+the ordinary main-arena address `0xaaab1d407ec8` with bit 47 cleared, and the
+same binary exits 0 with the loader linked low.
+
+The `ulimit -s unlimited` workaround this replaces was never a full fix: it
+flips `mmap` to the legacy bottom-up layout but leaves brk where it was.
+`docs/UNIMPLEMENTED.md#isa-va-width` has the measurements and the one residue
+(single allocations above glibc's 32 MiB `M_MMAP_THRESHOLD` cap).
+
 **The rest of this section stands.** The `-fobjc-runtime=gnustep-2.2` mismatch
 in OpenUIKit's Objective-C facade is untouched by any of it, and Foundation —
 the thing OpenUIKit actually imports — remains unbuilt. What changed is that the

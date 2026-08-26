@@ -98,13 +98,61 @@ for N4 in "${FIXTURES[@]}"; do
     fi
 done
 
+# ------------------------------------------------------------------ and the
+# MAIN corpus's threaded fixture, for a SECOND intermittent bug this same
+# repeat-until-a-distribution-appears method caught.
+#
+# tests/bin/08_pthread aborted about 3% of runs with "The futex facility
+# returned an unexpected error code" -- 10 failures in 300 -- from a fixture
+# with no bug in it. The cause was adopt_lock() in darwin/src/libsystem.c
+# lazily initialising the very mutex that guards lazy initialisation, behind the
+# comment "first use is before any thread exists". Two guest threads racing
+# their first touch of any pthread object both re-ran pthread_mutex_init over
+# storage the other already held. objcsupport.c's dtsd_key_make() had had
+# exactly the same bug behind exactly the same comment, so this is a pattern,
+# not an accident -- which is why it is worth a gate and not just a fix.
+#
+# scripts/difftest.sh runs each fixture ONCE, so 3% reads as green 97% of the
+# time. That is the whole argument for this script, made a second time.
+if [ $# -eq 0 ]; then
+    B="$ROOT/tests/bin"
+    E="$ROOT/tests/expected"
+    for id in 08_pthread; do
+        if [ ! -x "$B/$id" ] || [ ! -f "$E/$id.stdout" ]; then
+            echo "stress: skipping $id (no binary or no recorded baseline)"
+            continue
+        fi
+        want=$(cat "$E/$id.stdout")
+        fails=0; first_rc=""; first_err=""
+        for ((i = 1; i <= N; i++)); do
+            out=$(cd "$B" && timeout -k 2 30 "$LOADER" "./$id" 2>"$B/.stress.stderr")
+            rc=$?
+            if [ $rc -ne 0 ] || [ "$out" != "$want" ]; then
+                fails=$((fails+1))
+                [ -n "$first_rc" ] || { first_rc=$rc; first_err=$(head -3 "$B/.stress.stderr"); }
+            fi
+        done
+        rm -f "$B/.stress.stderr"
+        printf '%-38s %d/%d ok' "$id" $((N - fails)) "$N"
+        if [ $fails -eq 0 ]; then echo; else
+            echo "   <-- $fails FAILED"
+            echo "    first failure exit $first_rc"
+            [ -n "$first_err" ] && echo "$first_err" | sed 's/^/    /'
+            total_fail=$((total_fail+fails))
+        fi
+    done
+fi
+
 echo "----------------------------------------------------------------------"
 if [ $total_fail -eq 0 ]; then
-    echo "os_unfair_lock owner token: ${#FIXTURES[@]} fixture(s) x $N runs, zero failures"
+    echo "threading gates: $N runs each, zero failures"
     exit 0
 fi
-echo "os_unfair_lock owner token: $total_fail FAILED runs -- see"
-echo "docs/UNIMPLEMENTED.md#os-unfair-lock-owner. If the failure says"
-echo "\"recursive acquisition by the owning thread\" on a fixture that does not"
-echo "recurse, the owner token is colliding between threads again."
+echo "threading gates: $total_fail FAILED runs."
+echo "  \"recursive acquisition by the owning thread\" on a fixture that does not"
+echo "  recurse  -> the os_unfair_lock owner token is colliding between threads"
+echo "              again; see docs/UNIMPLEMENTED.md#os-unfair-lock-owner."
+echo "  \"futex facility returned an unexpected error code\""
+echo "              -> something is lazily initialising a lock again; see"
+echo "                 adopt_lock() in darwin/src/libsystem.c."
 exit 1

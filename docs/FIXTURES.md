@@ -1,6 +1,6 @@
 # The fixture ladder
 
-Twenty-four Mach-O programs (plus two dylibs they load), built once by Apple's
+Twenty-five Mach-O programs (plus two dylibs they load), built once by Apple's
 toolchain on macOS and committed as bytes.
 
 > **These binaries must keep coming from Xcode, and `sdk/` must never be used to
@@ -651,6 +651,41 @@ metadata, and `objc_msgSendSuper2`.
 Measured 2026-08-26: all five stage checksums identical, PNG byte-identical
 (11,909 bytes), exit 0 / 0.
 
+### (r) `19_isa_mask` — where the loader PUT things
+`tests/src/19_isa_mask.c` · chained · in `tests/manifest.tsv`, graded by `difftest.sh`
+
+The only fixture that tests an address rather than a behaviour, and the only one
+whose oracle passes for a reason that is a property of the *platform* rather
+than of the program.
+
+libswiftCore has Apple's 47-bit isa mask — `and x8, x8, #0x7ffffffffff8` —
+compiled into `swift_getObjectType`, `swift_unknownObjectRetain` and 45 other
+places, so a class at or above 2^47 is truncated and the runtime faults on
+a pointer it computed itself. aarch64 Linux serves `mmap(NULL, …)` top-down from
+near 2^48, so machorun loaded every dylib at `0xffff…`, and every Swift program
+that touched a class outside its own executable died. macOS cannot reproduce it:
+its user address space is 47 bits, which is exactly why Apple could bake the
+mask into a compiler. `docs/MACHO_NOTES.md` §9a has the measurements.
+
+**It prints predicates, never addresses.** macOS has libSystem in the dyld shared
+cache and machorun has it in an arena at 8 GiB; those addresses are not
+comparable and never will be, but `below_2_47` and `mask_preserves` are. Five
+probes, one per image region — `main`, a `__cstring` literal, a `__DATA` global,
+and `printf` and `strtod` from libSystem — plus a worked example applying the
+mask to a known-bad address, so a reader can see what the failure looks like
+without reproducing it.
+
+Stack and heap addresses are deliberately **not** probed. Under machorun those
+come from glibc and legitimately sit above 2^47; nothing masks them, and
+asserting on them would be inventing a requirement.
+
+**Loader must implement:** a deliberate placement policy, and a loud failure
+rather than a fallback when it cannot honour one — `src/map.c`. Verified against
+the pre-fix loader: `printf` and `strtod` report `below_2_47=no` there, so the
+fixture FAILs, which is the whole reason it exists.
+
+Measured 2026-08-26: stdout byte-identical (285 bytes), exit 0 / 0.
+
 ### (q) `18_swift_class` — Swift, and the rung that is graded twice
 `tests/src/18_swift_class.swift` · chained · `scripts/swift_gate.sh`
 
@@ -668,6 +703,7 @@ thing machorun could not do:
 | a three-level class hierarchy with overrides | vtable dispatch, `Animal` → `Dog` → `Puppy` |
 | `is` downcasts | `swift_dynamicCast` against the metadata built above |
 | an array of class instances, then `removeAll()` | ARC traffic through the path objc4 routes to `swift_retain` / `swift_release` |
+| `as AnyObject` + `type(of:)` on a String and an Array | reaches `__SwiftValue` and the storage classes, which live in **libswiftCore.dylib** rather than in this executable — see rung (r) |
 
 **What used to happen.** Every one of those aborted before `main` with
 `tls_init_once() failed to set destructor`. `SwiftTLSContext::get()` adopts

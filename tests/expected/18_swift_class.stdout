@@ -9,4 +9,6 @@ dispatch: bit says yip
 dynamic casts: dogs=2 puppy=true
 arc: ["c1=1", "c2=2", "c3=3", "c4=4"]
 arc: released, remaining=0
+dylib class: __SwiftValue __SwiftValue
+dylib class: same=true cross=false
 done

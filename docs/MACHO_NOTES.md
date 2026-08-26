@@ -788,6 +788,68 @@ For milestone 1, load at the preferred base and record ASLR as a later
 hardening step — but write every fixup as `load_base + x`, never
 `preferred_base + x`, so slide is correct by construction from day one.
 
+### 9a. Where a slid image may be placed — the 47-bit ceiling
+
+**Added 2026-08-26.** The advice above says nothing about *where* a slid image
+goes, because until Swift ran here nothing cared. Something does now, and it is
+not negotiable.
+
+Apple's arm64 runtimes pack flags into an object's isa field and mask them off
+before dereferencing it. The Swift standard library does **not** call a function
+to do that — the mask is compiled in:
+
+```
+$ objdump --macho -d libswiftCore.dylib | grep -c 'and.*#0x7ffffffffff8'
+48           including inside swift_getObjectType, swift_unknownObjectRetain,
+             swift_unknownObjectRelease and the dynamic-cast machinery
+```
+
+`0x00007ffffffffff8` keeps bits 3..46. An image at or above 2^47 therefore has
+its class pointers **silently truncated**, and the runtime faults on an address
+it computed itself, inside libswiftCore, with a fault address that reads like
+heap corruption.
+
+That is exactly what aarch64 Linux produced. `mmap(NULL, …)` is served top-down
+from near 2^48, so, measured before the fix:
+
+| image | load base | after `& 0x7ffffffffff8` |
+|---|---|---|
+| the executable | `0x100000000` | unchanged — safe, by luck of the preferred base |
+| `libSystem.B.dylib` | `0xffff9413e000` | `0x7fff9413e000` — **bit 47 gone** |
+| `libswiftCore.dylib` | `0xffff92d54000` | `0x7fff92d54000` — **bit 47 gone** |
+
+A Swift program reaching any class in a **dylib** — every stdlib, Foundation and
+UIKit class — died with `SIGSEGV in libswiftCore+0x332898, fault address
+0x7fff8a2c6010`, the truncation of a real class at `0xffff8a2c6010`. Programs
+whose classes were all in the executable ran fine, which is how this survived
+the first Swift fixture.
+
+**macOS never has the problem**: its user address space is 47 bits. That is *why*
+Apple could bake the mask into a compiler.
+
+objc4 is unaffected here only because `patches-macho/0001` widens it to the
+52-bit arm64e `shiftcls` layout. libswiftCore cannot be treated the same way —
+the mask is in compiled code in many places, and a private mask would fork the
+standard library from upstream permanently. So the loader meets Swift where it
+is.
+
+`src/map.c` now places images itself, from an arena at 8 GiB walking up with
+`MAP_FIXED_NOREPLACE`, and **fails loudly** rather than falling back to
+`mmap(NULL, …)`: a fallback would trade a clear error here for a segfault inside
+the standard library later. The preferred base is honoured only when it also
+satisfies the ceiling.
+
+`ulimit -s unlimited` also makes the symptom disappear — it flips Linux to the
+legacy bottom-up mmap layout process-wide — and is worth writing down because it
+is what someone bisecting this will stumble onto. It is not a fix: it is a
+property of how machorun was invoked, it lapses across a re-exec, and it moves
+every unrelated allocation too.
+
+`tests/bin/19_isa_mask` (rung r) asserts the invariant on both hosts, and
+section (4) of `18_swift_class` asserts that Swift survives it — one is *where*,
+the other is *whether*. Verified against the pre-fix loader: `printf` and
+`strtod` report `below_2_47=no` there and `yes` on macOS, so difftest fails.
+
 ---
 
 ## 10. `LC_CODE_SIGNATURE` — what if we ignore it?

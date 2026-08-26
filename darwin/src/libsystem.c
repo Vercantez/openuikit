@@ -644,21 +644,45 @@ EXPORT void _tlv_atexit(void (*fn)(void *), void *arg)
 
 struct darwin_opaque { long sig; unsigned char opaque[56]; };
 
+/* The lock that guards lazy adoption must not itself be lazily initialised,
+ * and it used to be:
+ *
+ *     if (!adopt_lock_ready) {        // "first use is before any thread exists"
+ *         glibc_pthread_mutex_init(adopt_lock_storage, NULL);
+ *         adopt_lock_ready = 1;
+ *     }
+ *
+ * That comment was an assumption, not a fact. Two guest threads whose first
+ * touch of any pthread object races will both see adopt_lock_ready == 0, and
+ * one re-runs pthread_mutex_init over storage the other already holds locked.
+ * glibc then futexes on a re-initialised word and aborts with "The futex
+ * facility returned an unexpected error code" -- out of a fixture that has no
+ * bug in it. MEASURED before this fix: tests/bin/08_pthread aborted 10 times
+ * in 300 runs, about 3%, which is precisely the rate at which a corpus that
+ * runs each fixture ONCE looks green. objcsupport.c's dtsd_key_make() had the
+ * same bug behind the same "nothing is threaded yet" comment; this is the
+ * second instance of it, so the assumption is the pattern, not the accident.
+ *
+ * There is nothing to initialise. glibc's PTHREAD_MUTEX_INITIALIZER is all
+ * zeroes and pthread_mutex_init(&m, NULL) produces an all-zero object --
+ * measured on the test image, sizeof 48, both all-zero. Static storage is
+ * already zero, so this IS an initialised default mutex from the process's
+ * first instruction, with no window to race over. 64 bytes because Darwin's
+ * opaque is 64; glibc needs 48 of them. */
 static unsigned char adopt_lock_storage[64];
-static int adopt_lock_ready;
 
-static void *adopt_lock(void)
-{
-    if (!adopt_lock_ready) {           /* first use is before any thread exists */
-        glibc_pthread_mutex_init(adopt_lock_storage, NULL);
-        adopt_lock_ready = 1;
-    }
-    return adopt_lock_storage;
-}
+static void *adopt_lock(void) { return adopt_lock_storage; }
 
+/* Double-checked locking, so the two accesses to o->sig outside/inside the lock
+ * have to be ordered explicitly. The fast path is an ACQUIRE load and the
+ * publish is a RELEASE store: without that pairing, arm64 is free to let a
+ * second thread observe MR_ADOPTED_SIG before it observes the mutex bytes
+ * glibc_pthread_mutex_init just wrote, and it would then lock uninitialised
+ * memory. That is the same futex abort as the adopt_lock bug above, from the
+ * other end. */
 static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
 {
-    if (o->sig != MR_ADOPTED_SIG) {
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) != MR_ADOPTED_SIG) {
         glibc_pthread_mutex_lock(adopt_lock());
         if (o->sig != MR_ADOPTED_SIG) {
             if (o->sig != expect_sig && o->sig != 0)
@@ -666,7 +690,7 @@ static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
                      "was compiled into the guest and cannot be renegotiated");
             glibc_memset(o->opaque, 0, sizeof(o->opaque));
             if (!is_once) glibc_pthread_mutex_init(o->opaque, NULL);
-            o->sig = MR_ADOPTED_SIG;
+            __atomic_store_n(&o->sig, MR_ADOPTED_SIG, __ATOMIC_RELEASE);
         }
         glibc_pthread_mutex_unlock(adopt_lock());
     }
@@ -699,14 +723,52 @@ EXPORT int pthread_once(void *once, void (*fn)(void))
     return glibc_pthread_once(adopt(o, DARWIN_ONCE_SIG, 1), fn);
 }
 
+/* The isa-mask heap constraint (src/map.c) is checked on the main thread,
+ * before any guest thread exists -- and that is exactly the case it cannot
+ * see. glibc creates a secondary arena LAZILY, in the thread that first needs
+ * one, and a secondary arena is mmap'd, which on this kernel means
+ * 0xffff_xxxx_xxxx. mr_constrain_heap() sets M_ARENA_MAX=1 so that never
+ * happens; this checks the result once, on the first guest thread, instead of
+ * trusting it. Measured: without M_ARENA_MAX, 3216 of 3216 allocations across
+ * 16 threads landed above 2^47, so the failure this guards is total, not
+ * marginal. One relaxed test-and-set on thread creation is not a hot path. */
+#define MR_GUEST_ISA_LIMIT 0x800000000000ull
+
+struct mr_thread_start { void *(*fn)(void *); void *arg; };
+
+static int mr_heap_probed;
+
+static void *mr_thread_trampoline(void *p)
+{
+    struct mr_thread_start s = *(struct mr_thread_start *)p;
+    glibc_free(p);
+
+    if (!__atomic_test_and_set(&mr_heap_probed, __ATOMIC_RELAXED)) {
+        void *probe = glibc_malloc(64);
+        if ((unsigned long long)(uintptr_t)probe >= MR_GUEST_ISA_LIMIT)
+            mr_bail("a guest thread's malloc answered at or above 2^47, so glibc gave "
+                    "this thread its own arena despite M_ARENA_MAX=1. libswiftCore masks "
+                    "an isa with 0x7ffffffffff8, so a class allocated here would decode "
+                    "to an unmapped address. See mr_constrain_heap() in src/map.c.");
+        glibc_free(probe);
+    }
+    return s.fn(s.arg);
+}
+
 EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), void *arg)
 {
     g_pthread_t t;
+    struct mr_thread_start *s;
     int rc;
     if (attr) mr_bail("pthread_create with a non-NULL pthread_attr_t is not implemented "
                    "(Darwin's attr struct layout differs from glibc's)");
-    rc = glibc_pthread_create(&t, NULL, fn, arg);
+    s = glibc_malloc(sizeof *s);
+    if (!s) return 12 /* Darwin ENOMEM */;
+    s->fn = fn;
+    s->arg = arg;
+    rc = glibc_pthread_create(&t, NULL, mr_thread_trampoline, s);
     if (rc == 0) *thread = (void *)t;
+    else glibc_free(s);
     return rc;
 }
 

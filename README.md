@@ -131,10 +131,10 @@ docs/       design, ABI notes, status
 ## Status
 
 **Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** Of the
-20 gradeable fixtures, **19 pass and 1 is a permanent XFAIL** (`01_exit_raw`,
+21 gradeable fixtures, **20 pass and 1 is a permanent XFAIL** (`01_exit_raw`,
 raw `svc` — the deliberate boundary of the replace-libSystem bet) — pass
 meaning stdout, stderr *and* exit status are byte-identical to the same bytes
-running natively on macOS. (A 21st fixture has no baseline because macOS itself
+running natively on macOS. (A 22nd fixture has no baseline because macOS itself
 refuses to execute it.) The corpus covers both fixup formats, both initialiser
 section forms, TLV, dylib graphs with `@rpath`, data and reverse imports,
 pthreads, fat binaries — and the userland rungs: the Darwin arm64 variadic ABI,
@@ -411,8 +411,8 @@ products. `scripts/difftest.sh` builds the loader and the two small dylibs for
 you but deliberately *not* objc4 or quartz (a minute of Objective-C++ and
 another of C++ on every run), so on a tree where `libobjc.A.dylib` has never
 been built `09_objc` is a red **FAIL**, not the documented PASS. That is
-measured, not theorised: `git clone && scripts/difftest.sh` gives **18 pass /
-1 fail**; with `build.sh everything` first it gives **19 pass / 0 fail /
+measured, not theorised: `git clone && scripts/difftest.sh` gives **19 pass /
+1 fail**; with `build.sh everything` first it gives **20 pass / 0 fail /
 1 xfail / 1 no-oracle**.
 
 `scripts/quartz_pixel.sh` is separate from `difftest.sh` for structural reasons

@@ -128,4 +128,25 @@ print("arc: \(live.map { $0.describe() })")
 live.removeAll()
 print("arc: released, remaining=\(live.count)")
 
+// ------------------------------------- (4) classes that live in a DYLIB
+// Everything above is declared in this executable, so its class metadata sits
+// at the executable's load address -- which machorun places at 0x100000000, by
+// accident of the preferred base. That made the rest of this file blind to a
+// loader bug that breaks every realistic Swift program: libswiftCore has the
+// 47-bit isa mask compiled into swift_getObjectType and
+// swift_unknownObjectRetain, and machorun used to load DYLIBS at 0xffff...,
+// where masking truncates the class pointer and the runtime faults on an
+// address it computed itself. 19_isa_mask asserts the placement; this asserts
+// that Swift survives it. Both are wanted: one is WHERE, one is WHETHER.
+//
+// __SwiftValue and the String/Array storage classes all live in
+// libswiftCore.dylib, and `as AnyObject` plus `type(of:)` is the shortest route
+// from Swift source to swift_unknownObjectRetain and swift_getObjectType.
+@inline(never) func opaque(_ x: AnyObject) -> AnyObject { x }
+
+let boxedString = opaque(String(repeating: "xy", count: 64) as AnyObject)
+let boxedArray  = opaque([1, 2, 3, 4] as AnyObject)
+print("dylib class: \(type(of: boxedString)) \(type(of: boxedArray))")
+print("dylib class: same=\(boxedString === boxedString) cross=\(boxedString === boxedArray)")
+
 print("done")

@@ -148,6 +148,12 @@ void mr_map_image(mr_image *im);
 void mr_protect_readonly_segments(mr_image *im);
 int  mr_mprotect_rw(void *addr, uint64_t size);
 void mr_reserve_pagezero(void);
+void mr_constrain_heap(void);
+
+/* libswiftCore has the 47-bit isa mask compiled into it, so anything that can
+ * end up in an isa -- a mapped image, and the heap the runtimes allocate class
+ * objects from -- has to live below this. See the placement note in src/map.c. */
+#define MR_ISA_LIMIT 0x800000000000ull
 
 /* --------------------------------------------------------------- fixups */
 void mr_fixups_apply(mr_image *im);
