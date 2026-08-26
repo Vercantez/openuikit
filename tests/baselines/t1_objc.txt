@@ -1,0 +1,13 @@
+str.length=2
+str.utf8=hi
+str.char0=104
+str.isEqual=1
+str.hash_eq=1
+arr.count=3
+arr.0=1
+arr.2=3
+marr.count=2
+cf.stringTypeID=7
+cf.getTypeID_str=7
+cf.isNSString_str=1
+cf.isNSString_arr=0
