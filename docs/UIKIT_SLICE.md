@@ -98,6 +98,17 @@ the class/generic-metadata wall the machorun TLS fix targeted is **gone**.
    `Canvas` (needed before any draw) releases one. Minimal reproducer in
    `png_probe.swift` (`p_existential`).
 
+**One root cause, several symptoms.** Making `Canvas.backend` a CONCRETE
+`QuartzBackend` (not the existential) moved the wall from Canvas construction to
+an `unowned`-reference operation — which faults at the SAME `libswiftCore`
+offset. ArraySlice, existential release and `unowned` all land in
+`swift_unknownObjectRelease`, the unknown-object (ObjC-compatible) release path
+that existentials, `unowned`/`weak` side-tables and slice storage share. It is
+one runtime bug with several faces. Compiling the slice against the SELF-BUILT
+`Swift.swiftinterface` instead of Xcode's did **not** change it, which rules out
+a compile-time interface/ABI mismatch and confirms the fault is in the runtime's
+release path (or in how machorun's objc handles the release it delegates to).
+
 Link-order note confirming the setup is right: in **system-first** order
 `_swift_release` is undefined at load (the machorun fix removed libSystem's stale
 stub, but the sysroot `libSystem.tbd` still advertises it, so two-level binding

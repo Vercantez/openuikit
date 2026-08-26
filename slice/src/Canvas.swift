@@ -157,22 +157,20 @@ public final class Canvas {
     var stateStack: [CanvasState] = []
     var layerStack: [TransparencyLayer] = []
 
-    /// Rendering backend (Backend.swift), chosen at creation from
-    /// `CanvasBackendSelection.current`. All drawing ops dispatch through it.
-    var backend: CanvasBackend!
+    /// Rendering backend. VENDOR-EDIT (swift-macho-linux slice): the type is
+    /// the CONCRETE `QuartzBackend`, not the `CanvasBackend` existential the
+    /// upstream `Canvas` holds. Reason: releasing a class-bound protocol
+    /// existential SIGSEGVs in the self-built libswiftCore's
+    /// swift_unknownObjectRelease under machorun (docs/UIKIT_SLICE.md sec 4);
+    /// a concrete class reference uses swift_release, which works. The slice
+    /// renders only through quartz, so the SwiftRasterizer fallback is dropped.
+    var backend: QuartzBackend!
 
     public init(bitmap: Bitmap, scale: CGFloat) {
         self.bitmap = bitmap
         self.scale = scale
         self.state = CanvasState(ctm: CGAffineTransform(scaleX: scale, y: scale))
-        switch CanvasBackendSelection.current {
-        case .quartz:
-            // Falls back to the Swift rasterizer for degenerate (empty)
-            // surfaces that a QZBitmapContext cannot represent.
-            self.backend = QuartzBackend(canvas: self) ?? SwiftRasterizerBackend(canvas: self)
-        case .swift:
-            self.backend = SwiftRasterizerBackend(canvas: self)
-        }
+        self.backend = QuartzBackend(canvas: self)
     }
 
     public func save() { _save(); backend.saveState() }
