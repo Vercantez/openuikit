@@ -385,6 +385,43 @@ ours-widened passes on either. Independently sufficient, but only one of them
 is general. **Take the loader fix; keep widening as the fallback for a runtime
 we build and cannot re-target.**
 
+### The premise was false: surveyed, not sampled
+
+Task #42 was assigned on the premise that *"Apple's SHIPPED Swift dylibs all
+have the narrow mask inlined."* Measured across the whole iOS 26.1 simulator
+runtime with `scripts/survey_isa_masks.py` (which reuses the rewriter's own
+decoder and classifier, so survey and tool cannot disagree):
+
+```
+binary                                    wide  narrowISA  narrowDATA  unclass
+libswiftCore.dylib                          48          0           9        0
+libswift_Concurrency.dylib                   0          0           0        0
+libswiftFoundation.dylib                     0          0           0        0
+libswiftUIKit.dylib                          0          0           0        0
+libswiftDarwin.dylib                         0          0           0        0
+libswiftObjectiveC.dylib                     0          0           0        0
+libswiftDispatch.dylib                       0          0           0        0
+UIKit.framework/UIKit                        0          0           0        0
+Foundation.framework/Foundation              1          0           0        0
+libobjc.A.dylib                            256          0           0        0
+--- ours, arm64-apple-macos ---
+libswiftCore.dylib                           0         48           0        0
+libswiftCore.machorun-wideisa.dylib         48          0           0        0
+```
+
+**Not one narrow isa site anywhere in Apple's shipped simulator runtime.**
+libobjc carries 256 wide sites; the Swift overlays inline no isa masking at all
+and delegate to libswiftCore/libobjc. The narrow mask is a *macOS-target*
+property, and the only binary in the world that has it here is the one we built
+by targeting `arm64-apple-macos`.
+
+So stage-time widening as a standing policy is not merely unnecessary — across
+an entire staged runtime **there is nothing to widen**, and the only narrow
+sites that exist are the 9 our tool must refuse. That closes the generality
+question: it cannot be the architecture, because it has no work to do on the
+binaries it was proposed for, and the one thing it *could* touch there is the
+thing it must not.
+
 ### The trap, found the same way
 
 The value `0x00007ffffffffff8` is **not only** the isa mask. objc4's
