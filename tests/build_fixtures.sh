@@ -154,6 +154,30 @@ want 12_mach             && build 12_mach             "$CHAINED_TARGET" 12_mach 
 want 13_errno            && build 13_errno            "$CHAINED_TARGET" 13_errno            13_errno.c --
 want 14_utility          && build 14_utility          "$CHAINED_TARGET" 14_utility          14_utility.c --
 
+# ---------------------------------------------------------------- rung (n)
+# The drawing rung. A plain C binary against /usr/lib/libquartz.dylib -- our
+# Mach-O build of ~/quartz. NOT in tests/manifest.tsv and NOT graded by
+# scripts/difftest.sh, because it is the one fixture whose result is a FILE
+# rather than stdout and whose macOS run needs DYLD_LIBRARY_PATH (the install
+# name is an absolute Darwin path that exists on neither host -- see
+# scripts/build_quartz_macos.sh for why that is the right choice). Its
+# differential lives in scripts/quartz_pixel.sh, which runs both sides and
+# compares the PNG byte for byte.
+#
+# The link is against build/quartz-macos/libquartz.dylib purely so ld64 can see
+# the exported symbols; what gets recorded in the binary is that dylib's
+# INSTALL NAME, /usr/lib/libquartz.dylib, and nothing about where it sat.
+if want 15_quartz; then
+    echo "==> 15_quartz"
+    QZLIB="$ROOT/build/quartz-macos/libquartz.dylib"
+    [ -f "$QZLIB" ] || bash "$ROOT/scripts/build_quartz_macos.sh" >/dev/null
+    [ -f "$QZLIB" ] || die_msg "15_quartz needs $QZLIB (scripts/build_quartz_macos.sh)"
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 \
+        -I"$ROOT/vendor/quartz/include" \
+        -o "$BIN/15_quartz" "$SRC/15_quartz.c" "$QZLIB"
+    built+=(15_quartz)
+fi
+
 # -------------------------------------------------- off-ladder: structure
 # A universal binary. macOS picks the arm64 slice and behaves exactly like
 # 03_printf, so the recorded baseline is identical -- which means any
