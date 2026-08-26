@@ -5,6 +5,11 @@
 # <source> is one of
 #   <repo>:<path>   a file in apple-oss-distributions/<repo> at the tag pinned
 #                   in sdk/SOURCES.tsv.  Redistributable; licence per SOURCES.
+#   gen:<repo>:<path>
+#                   a header that is not a blob upstream but is the OUTPUT of a
+#                   generator upstream publishes.  scripts/sdk_stage.sh runs it.
+#                   One row: sys/_posix_availability.h, whose generated form is
+#                   BYTE-IDENTICAL to Apple's SDK copy.
 #   objc4:<path>    a file in vendor/objc4 (Apple's objc4 drop, APSL 2.0).
 #   local           a clean-room header of ours, in sdk/local/.  It exists
 #                   because the SDK copy has no published source (or the

@@ -58,6 +58,16 @@ build_loader() {
 # symbol no stub exports -- that check is the reason to run it here rather than
 # by hand.
 build_tbd() {
+    # libobjc.A.dylib is not part of `all` (it is a minute of Objective-C++), so
+    # on a tree that has never run `build.sh objc4` there is nothing to project
+    # a libobjc.tbd from. Say so and carry on rather than failing the build --
+    # harness/run_linux.sh calls this script on every difftest run, and a
+    # difftest that cannot start because a .tbd is missing helps nobody.
+    if [ ! -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ]; then
+        echo "== tbd: skipped -- darwin/usr/lib/libobjc.A.dylib is not built."
+        echo "        Build it with 'scripts/build.sh objc4', then 'scripts/build.sh tbd'."
+        return 0
+    fi
     bash "$ROOT/scripts/gen_tbd.sh"
 }
 

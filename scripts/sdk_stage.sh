@@ -10,10 +10,12 @@
 # it is obtained at build time -- the build must work with no network and no
 # Xcode, which is the entire point of the milestone.
 #
-# Three sources, and the manifest says which is which per header:
-#   <repo>:<path>   apple-oss-distributions/<repo> at the tag in sdk/SOURCES.tsv
-#   objc4:<path>    vendor/objc4 (Apple's objc4 drop, already in tree)
-#   local           sdk/local/<same relative path> -- clean-room, ours
+# Four sources, and the manifest says which is which per header:
+#   <repo>:<path>     apple-oss-distributions/<repo> at the tag in sdk/SOURCES.tsv
+#   gen:<repo>:<path> a header that is not a blob upstream but is the OUTPUT of
+#                     a generator upstream publishes -- run it, do not transcribe
+#   objc4:<path>      vendor/objc4 (Apple's objc4 drop, already in tree)
+#   local             sdk/local/<same relative path> -- clean-room, ours
 #
 # Loud aborts, no silent stubs: a header the manifest names and this script
 # cannot produce is a hard failure here, not a confusing compile error 400
@@ -191,7 +193,9 @@ if [ "$MODE" = verify ]; then
     bad=0
     while read -r want src rel; do
         case "$want" in \#*) continue ;; esac
-        repo="${src%%:*}"; path="${src#*:}"
+        # A gen: row records the sha256 of the GENERATOR, not of a header.
+        case "$src" in gen:*) spec="${src#gen:}" ;; *) spec="$src" ;; esac
+        repo="${spec%%:*}"; path="${spec#*:}"
         f="$CACHE/$repo-${TAG[$repo]}/$path"
         rm -f "$f"; fetch_one "$repo" "$path"
         got=$(sha256 "$f")
