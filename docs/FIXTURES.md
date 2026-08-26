@@ -1,6 +1,6 @@
 # The fixture ladder
 
-Sixteen Mach-O programs (plus two dylibs they load), built once by Apple's
+Twenty Mach-O programs (plus two dylibs they load), built once by Apple's
 toolchain on macOS and committed as bytes. Each one is run natively on macOS to record what it does, then run
 under `machorun` on Linux/arm64. Same bytes, both sides. Outputs must match
 exactly — stdout, stderr and exit status.
@@ -8,6 +8,11 @@ exactly — stdout, stderr and exit status.
 The ladder is ordered by what the loader has to support, simplest first, so it
 doubles as the loader's roadmap. Everything below rung *n* must keep passing
 when you start rung *n+1*.
+
+Rungs (a) through (i) are about the **loader**. Rungs (j), (k) and (l) are
+about the **userland**: they hold still while the loader is not the variable,
+and probe the places where Darwin and Linux disagree about what a C call means.
+The measurements behind them are in `docs/ABI.md`.
 
 ```
 tests/src/         fixture sources
@@ -333,6 +338,89 @@ Real dyld calls the runtime's `map_images` / `load_images` callbacks
 but before initialisers. A loader that only maps segments and applies fixups
 crashes here, because no class ever gets registered. Expect this to fail until
 libobjc is ported — that failure is the fixture doing its job.
+
+### (j) `11_varargs` / `11c_varargs_classic` — the Darwin variadic ABI
+`tests/src/11_varargs.c` · chained and classic
+
+`03_printf` proves the easy half of varargs. This is the one that catches a
+`printf` that walks the Darwin `va_list` *almost* right.
+
+The divergence, measured (`docs/ABI.md` §1): Darwin/arm64 passes **every**
+variadic argument on the stack, one 8-byte slot each, in declaration order, and
+`va_list` is a bare `char *` of 8 bytes. Linux/aarch64 passes the first eight
+integer variadics in x1-x7 and the first eight FP variadics in v0-v7, and
+`va_list` is a 32-byte struct over two register save areas. A libSystem that
+hands its `va_list` to glibc's `vprintf` dies with SIGSEGV at fault address
+`0x4d2` — which is 1234, the first argument of `printf("int=%d\n", 1234)`.
+
+So the fixture uses: twelve integer arguments and twelve doubles (past what
+AAPCS64 would have kept in registers), interleaved int/double/pointer in one
+list (the register-file split Darwin does not make), default promotions,
+`long long`/`size_t`/`intmax_t` length modifiers, `*` width and precision,
+`%#o` and the flag set, `%e`/`%g`/`%.10f`, a `long double` (**8 bytes on
+Darwin, 16 on Linux** — a second, independent reason the family cannot be
+forwarded), the guest's own variadic functions consuming with `va_arg`, a
+`va_list` handed from the guest into our `vsnprintf`, `va_copy` walked twice,
+and `snprintf` truncation and sizing semantics.
+
+Built in both fixup formats on purpose: the variadic ABI is a property of
+libSystem, not of the fixup encoding, and the pair says so.
+
+**libSystem must implement:** the whole `printf` family over the Darwin
+`va_list`, with only finished bytes crossing to glibc. This fixture is what
+caught `%#o` dropping its leading zero.
+
+### (k) `12_mach` — the Mach APIs
+`tests/src/12_mach.c` · chained
+
+The README's bet says Mach is "a bounded list, not a kernel ABI". This is the
+bound, for plain C: `mach_task_self` (a *data* symbol, `_mach_task_self_`, not a
+function — `nm -u` says so), `mach_thread_self`, `mach_port_deallocate`,
+`vm_allocate`/`vm_protect`/`vm_deallocate`, `mach_absolute_time`,
+`mach_continuous_time`, `mach_timebase_info` and `mach_error_string`.
+
+Nothing prints a raw port name, address or timestamp — those are legitimately
+different on the two platforms. What must be identical is the *behaviour*:
+success codes, 16 KiB alignment, zero-fill, read-back of memory we own, two
+allocations being disjoint, monotonicity, a 120 ms sleep measuring inside
+[100 ms, 3 s] after conversion through the timebase, and Apple's exact error
+strings.
+
+**libSystem must implement:** `vm_allocate` over `mmap`, over-mapping and
+trimming so the result is 16 KiB-aligned even on a 4 KiB-page kernel;
+`mach_absolute_time` over `clock_gettime`, with `mach_timebase_info` reporting
+the unit it actually returns. Ports are names in our own table — see
+`docs/UNIMPLEMENTED.md#mach-ports-are-fiction`.
+
+### (l) `13_errno` — the numbers that are not the same
+`tests/src/13_errno.c` · chained
+
+Three translations, each of which changes behaviour and not just presentation:
+
+- **errno.** 54 of the 87 errno names common to both systems have different
+  values, and the dangerous ones are *swapped*: `EAGAIN` is 35 on Darwin and 11
+  on Linux, `EDEADLK` is 11 on Darwin and 35 on Linux. The fixture's headline
+  case is `rmdir` on a non-empty directory: `ENOTEMPTY` is 66 to the guest and
+  39 to glibc.
+- **`O_*` flags.** Ten of thirteen differ, and Darwin's `O_CREAT` (0x0200) *is*
+  Linux's `O_TRUNC`. Forwarding the flag word performs a different operation:
+  the fixture's `open(O_WRONLY|O_CREAT|O_TRUNC)` fails `ENOENT`.
+- **`struct stat`.** 144 bytes against 128, `st_mode` and `st_nlink` 16-bit
+  against 32-bit, `st_size` at offset 96 against 48. Copying the bytes gives a
+  12-byte file an `st_size` of 471711007.
+
+It also pins the errno *protocol*: `errno = 0` before a successful call must
+still read 0 afterwards, the `strtol`/`ERANGE` idiom must work, and a value the
+guest writes must persist. Those three are what force errno to be bracketed in
+both directions rather than merely translated on the way out.
+
+**libSystem must implement:** a per-thread Darwin errno slot behind `__error()`,
+translation tables generated from a measurement of both platforms
+(`scripts/gen_errno_table.sh`), `open` flag translation with a loud refusal for
+the unmappable ones, `struct stat` field-by-field translation, and `strerror`
+with Apple's own text.
+
+---
 
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained

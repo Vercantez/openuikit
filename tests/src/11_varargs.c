@@ -140,6 +140,16 @@ int main(void)
 
     /* Strings: precision truncation, NULL, padding. */
     printf("strs=[%.3s][%10s][%-10s]|\n", "abcdef", "right", "left");
+    printf("nullstr=[%s]\n", (const char *)NULL);
+
+    /* long double is EIGHT bytes on Darwin/arm64 and SIXTEEN on Linux/aarch64
+     * (measured; docs/ABI.md). So %Lf consumes one slot here and would consume
+     * two in a glibc that was handed this list -- which is the second reason
+     * the printf family cannot be forwarded, independent of the va_list shape. */
+    {
+        long double ld = 2.5L;
+        printf("ldbl=%.3Lf %Le sizeof=%zu\n", ld, ld, sizeof(long double));
+    }
 
     /* Exponent and shortest forms come from the same slot walk. */
     printf("floats=%e %E %g %G %.0f %.10f\n",

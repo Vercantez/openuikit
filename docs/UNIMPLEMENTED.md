@@ -102,10 +102,15 @@ fails as an undefined symbol naming itself. `__cxa_guard_acquire` is
 single-threaded: it does not block a second thread on an in-progress
 initialisation.
 
-### `os-unfair-lock`
-`os_unfair_lock_lock`/`unlock` abort. The lock is a 4-byte struct compiled into
-the guest, so a side table keyed by address is needed; nothing in the corpus
-uses it.
+### `os-unfair-lock` — **DONE**
+Implemented in the four bytes the guest gives us (Darwin stores an owning
+thread port there, so the struct cannot be widened): 0 is unlocked, a locked
+lock holds the owner's token, and `lock`/`trylock`/`unlock`/`assert_owner`/
+`assert_not_owner` are the atomic operations on it. **Contention yields rather
+than futex-waits**, so under heavy contention this burns CPU and gives no
+fairness guarantee — a performance difference, not a correctness one.
+Recursive acquisition by the owner aborts, which is what Darwin does too.
+No fixture contends on one yet.
 
 ### `pthread-attr`
 `pthread_create` with a non-NULL `pthread_attr_t` aborts: Darwin's attribute
@@ -117,15 +122,83 @@ glibc object inside Darwin's opaque bytes and using the signature word to tell
 
 ### `printf-family-gaps`
 Our formatter implements the `%[flags][width][.prec][length]` grammar for
-`diuxXospcf/e/g` and delegates only float conversion to glibc (through a
-non-variadic prototype). `%n` aborts. The `scanf` family, `syslog`, `err`/
-`warn` and `NSLog` are absent entirely — they are variadic, so they can never
-be forwarders, and none is in the corpus.
+`diuxXospcf/e/g/a` and delegates only float conversion to glibc (through a
+non-variadic prototype). Covered in anger by `11_varargs`, which is what caught
+`%#o` dropping its leading zero. `%n` aborts. The `scanf` family, `syslog`,
+`err`/`warn` and `NSLog` are absent entirely — they are variadic, so they can
+never be forwarders, and none is in the corpus. Wide characters (`%ls`, `wprintf`)
+are absent: `wchar_t` is 4 bytes on both systems, but nothing exercises it.
 
 ### `mach-ipc`
-`mach_msg` and anything requiring real cross-process Mach IPC (XPC, launchd,
-distributed notifications). **Deliberately out of scope.** The bounded Mach list
-we *do* implement is in PLAN.md II.2 bucket C; this is everything past it.
+`mach_msg`, `mach_port_allocate`, `task_for_pid` and `task_info` abort naming
+themselves. Anything requiring real cross-process Mach IPC (XPC, launchd,
+distributed notifications) is **deliberately out of scope**.
+
+What *is* implemented, in `darwin/src/mach.c` and covered by `12_mach`:
+`mach_task_self` / `mach_task_self_` / `mach_host_self` / `mach_thread_self`,
+`mach_port_deallocate` / `mach_port_mod_refs`, `vm_allocate` / `vm_deallocate` /
+`vm_protect` and their `mach_vm_*` twins, `host_page_size` / `getpagesize` /
+`vm_page_size`, `mach_absolute_time` / `mach_continuous_time` /
+`mach_approximate_time` / `mach_timebase_info`, and `mach_error_string` /
+`mach_error`.
+
+### `mach-ports-are-fiction`
+There is no Mach kernel under machorun, so a `mach_port_t` is a name in *our*
+table: `mach_task_self_` is a fixed value, `mach_host_self_` another, and
+`mach_thread_self()` mints one per thread from a counter. Two calls on one
+thread agree and two threads disagree, which is the only property portable code
+relies on. `mach_port_deallocate` validates the name and returns
+`KERN_INVALID_NAME` for one we never handed out, rather than blanket success.
+Anything that treats a port as a capability to *send* to hits `mach_msg`, which
+aborts.
+
+### `mach-timebase-unit`
+`mach_absolute_time` returns nanoseconds and `mach_timebase_info` reports
+`numer = denom = 1`. Real Apple silicon has a 24 MHz counter and reports 125/3.
+The pair is self-consistent, so any program that multiplies by `numer/denom`
+before believing a duration is correct — one that hardcodes the ratio was
+already wrong on Intel Macs. Programs that use the raw counter as a
+*fingerprint* of tick rate will see a difference.
+
+### `vm-protect-max`
+`vm_protect(set_maximum = TRUE)` aborts. Linux has no maximum-protection
+concept, so a ceiling can be neither raised nor lowered, and silently ignoring
+the flag would let a guest believe it had locked memory down.
+
+### `errno-untranslatable`
+54 of the 87 errno names common to both systems have different values
+(`docs/ABI.md` §4); the table in `darwin/src/errno_table.h` is generated from a
+measurement of both platforms by `scripts/gen_errno_table.sh`. A Linux errno
+with **no** Darwin twin is reported to the guest as its negative, so it is
+visibly not a valid Darwin errno instead of silently aliasing one. Nothing in
+the corpus produces such an errno; if one shows up in the wild it will be
+recognisable rather than plausible.
+
+### `open-flags-unmappable`
+`O_SHLOCK`, `O_EXLOCK`, `O_EVTONLY` and `O_SYMLINK` have no Linux equivalent
+and abort. Dropping them would perform a different operation than the caller
+asked for — the same class of bug as forwarding the flag word raw, which turns
+Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
+`scripts/abi_naive_probe.sh flags`).
+
+### `stat-birthtime`
+`struct stat` is translated field by field between Darwin's 144-byte layout and
+Linux's 128-byte one. Linux's `struct stat` has **no** birth time — `statx`
+does — so `st_birthtimespec` is filled from `st_ctim`. That is a lie of
+precision rather than of kind: a zero would date every file to 1970, which is
+worse. Using `statx` when available is the fix and is unwritten.
+
+### `dirent`
+`opendir`/`readdir`/`closedir` are absent. `struct dirent` differs between the
+two systems in both size and field layout, exactly like `struct stat`, so this
+is a translation to be written rather than a forward to be added. Nothing in
+the corpus enumerates a directory.
+
+### `strerror-text`
+`strerror` returns Apple's own strings, recorded from macOS into
+`darwin/src/errno_table.h` by the generator. Numbers past Darwin's `ELAST`
+produce Darwin's `"Unknown error: %d"` format. `strerror_l`, `strerror_r`'s
+GNU variant and the `sys_errlist` array are absent.
 
 ### `objc-callbacks`
 `_dyld_objc_register_callbacks` / `_dyld_objc_notify_register`. Still the top

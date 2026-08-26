@@ -80,17 +80,31 @@ docs/       design, ABI notes, status
 
 ## Status
 
-**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 13 of 14
+**Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** 17 of 18
 runnable fixtures are byte-identical to the same bytes running natively on
 macOS, covering both fixup formats, initialisers, TLV, dylib graphs with
-`@rpath`, data and reverse imports, pthreads, and fat binaries. Objective-C is
-the one remaining wall.
+`@rpath`, data and reverse imports, pthreads, fat binaries — and the userland
+rungs: the Darwin arm64 variadic ABI, the Mach APIs, and the errno / `O_*` /
+`struct stat` divergences. Objective-C is the one remaining wall.
 
-See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/PLAN.md`
-for the design, `docs/UNIMPLEMENTED.md` for every stub that aborts.
+The bet holds so far, but not for free. Four things about the C ABI genuinely
+differ and had to be measured and translated rather than assumed
+(`docs/ABI.md`): Darwin passes **every** variadic argument on the stack with an
+8-byte `va_list` where Linux uses x1-x7/v0-v7 and a 32-byte one; 54 of 87 shared
+`errno` names have different values, with `EAGAIN` and `EDEADLK` holding each
+other's numbers; 10 of 13 `O_*` flags differ, and Darwin's `O_CREAT` **is**
+Linux's `O_TRUNC`; and `struct stat` is 144 bytes against 128 with almost every
+field moved. `scripts/abi_naive_probe.sh` disables each translation in turn and
+shows what breaks — starting with a SIGSEGV at fault address `0x4d2`, which is
+1234, the first argument of `printf("int=%d\n", 1234)`.
+
+See `docs/STATUS.md` for the scoreboard and the ranked blockers, `docs/ABI.md`
+for the measured ABI boundary, `docs/PLAN.md` for the design,
+`docs/UNIMPLEMENTED.md` for every stub that aborts.
 
 ```sh
 scripts/build.sh          # loader (ELF PIE) + darwin/*.dylib (Mach-O, on Linux)
 scripts/difftest.sh       # macOS oracle vs machorun-on-Linux, one row per fixture
+scripts/abi_naive_probe.sh # what breaks if the userland forwards naively
 build/machorun ./prog     # run one
 ```
