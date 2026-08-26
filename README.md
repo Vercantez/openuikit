@@ -150,6 +150,17 @@ failures are C++ exceptions (×2) and `dlopen` (×1) — pre-existing loader gap
 that block plain C++ equally, and neither is attributable to objc4.
 `docs/OBJC4_MACHO.md` is the accounting, including what got *harder*.
 
+**On two different arm64 microarchitectures.** The same 19/1/1, the same 41/44
+and the same three byte-identical PNGs on an AWS **Graviton3** (c7g, Neoverse-V1,
+Ubuntu 24.04, 4 KB pages), building natively there with no macOS in the build.
+Getting there cost one real bug: `os_unfair_lock` identified a lock's owner by
+half of a `pthread_self()` pointer, two threads collided in the surviving bits
+about half the time on Graviton, and a normal acquisition then read as recursive
+acquisition by the owner. Apple silicon had never collided, so a suite that runs
+each fixture once could not see it. `docs/STATUS.md` §12 is the write-up;
+`scripts/stress_unfair_lock.sh` is the gate, and it is verified to fail on the
+bug rather than merely to pass without it.
+
 **And a precompiled Darwin binary now DRAWS.** `~/quartz` — the portable
 Quartz 2D + Core Animation reimplementation, C++17, 507-symbol `QZ*` C API —
 builds as `darwin/usr/lib/libquartz.dylib` on Linux with **zero patches to its
@@ -376,6 +387,7 @@ scripts/sdk_stage.sh --verify  # re-fetch all 333 and check the COMMITTED sha256
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
 scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
 scripts/objc44.sh           # the 44-test objc4 differential corpus (run INSIDE the container)
+scripts/stress_unfair_lock.sh  # the lock-owner regression gate; objc44.sh ends with it
 scripts/quartz_pixel.sh     # the 3 drawing fixtures, macOS vs machorun -- the PNGs must match
 scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
 scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively

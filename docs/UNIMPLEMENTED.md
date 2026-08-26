@@ -158,6 +158,12 @@ fairness guarantee — a performance difference, not a correctness one.
 Recursive acquisition by the owner aborts, which is what Darwin does too.
 No fixture contends on one yet.
 
+The owner token is a per-thread sequential id (`mr_thread_token()`), **not**
+anything derived from `pthread_self()`. Deriving it is what made this lock
+report other threads' acquisitions as its own on Graviton3; see
+`os-unfair-lock-owner` for the measurements and
+`scripts/stress_unfair_lock.sh` for the gate that keeps it fixed.
+
 ### `pthread-attr`
 `pthread_create` with a non-NULL `pthread_attr_t` aborts: Darwin's attribute
 struct is compiled into the guest and its layout is not glibc's. Same for
@@ -744,7 +750,65 @@ orderings are asserted against each other. That also closes the "One image"
 bullet in `objc-drawing-coverage` and the cross-image half of
 `objc-load-ordering`.
 
-### `os-unfair-lock-owner` — Graviton-exposed concurrency bug (measured 2026-08-26)
+### `os-unfair-lock-owner` — **FIXED 2026-08-26**, verified on Graviton3
+
+The owner token is no longer derived from `pthread_self()`. `mr_thread_token()`
+(`darwin/src/objcsupport.c`) hands each thread a sequential id from an atomic
+counter on first use and caches it in a private slot of the direct-TSD array —
+index 64, one past the 64 slots `_pthread_getspecific_direct` and
+`_pthread_setspecific_direct` will address, so no guest can read or clobber it
+and no TSD destructor runs over it. Both `unfair_token()` (`libsystem.c`) and
+`self_token()` (`objcsupport.c`) now call it. Sequential ids cannot collide by
+construction, which is the property no hash of a 64-bit pointer into 32 bits
+can offer.
+
+Two more defects fell out of the fix:
+
+* `self_token()` used to OR in `0x80000000` while `unfair_token()` did not, so
+  the recursive lock's owner check compared against a word `os_unfair_lock_lock`
+  had written in a *different* encoding. The two agreed only when bit 39 of the
+  TCB pointer happened to be set — which it always was on the hosts we ran, so
+  the recursion path appeared to work by luck. They are one function now.
+* `dtsd_slots()` created its glibc key under a plain `if (!ready)`, safe only
+  because objc4 touches TSD from the single-threaded `_objc_init`. Once a lock
+  can be the first thing a brand-new thread touches, that race would hand one
+  thread two slot arrays over its life, hence two tokens. It is a three-state
+  atomic now.
+
+Rejected: a raw `svc` `gettid`. A kernel tid is unique among *live* threads but
+is reused after one exits; a counter is unique over the whole process, and it
+keeps `01_exit_raw` as the project's only raw syscall.
+
+**Measured on a c7g.2xlarge (Neoverse-V1, Ubuntu 24.04, 4 KB pages) — same box,
+same build, the fix applied by patch between the two columns:**
+
+| | before | after |
+|---|---|---|
+| `scripts/objc44.sh` | 24/44 | **41/44** (5 consecutive runs, no variance) |
+| `004-dispatch-basic` ×100 | 37 ok / 63 failed | **500/500 ok** |
+| `043-threads` ×100 | 44 ok / 56 failed | **100/100 ok** |
+| `037-synchronized` ×100 | 61 ok / 39 failed | **100/100 ok** |
+| `scripts/difftest.sh` | 19 pass | 19 pass, 0 fail, 1 xfail, 0 drift |
+| `scripts/quartz_pixel.sh --linux` | 3/3 byte-identical | 3/3 byte-identical |
+
+41/44 is parity with Apple silicon; the three failures are `038-exceptions`,
+`044-exception-through-uncached` (`unwind-compact`) and `042-dlopen`
+(`dlopen-dlsym`), all unrelated to this and all loud.
+
+The regression gate is `scripts/stress_unfair_lock.sh`, which
+`scripts/objc44.sh` now runs at the end of a full corpus pass: 100 runs of each
+of the three threaded fixtures, about 1.5 s, since these fixtures cost ~5 ms
+each. It is a loop rather than a test case because the bug's failure rate was a
+coin flip — a single green run of `004` proved nothing, which is precisely how
+this survived on Apple silicon. Pre-fix the gate reports `37/100 ok` and prints
+the "recursive acquisition by the owning thread" line, so it is known to fail on
+the bug it guards and not merely known to pass.
+
+**The original evidence is kept below as the record of how this was found, and
+of the three approaches that did not work.** Anyone tempted to make the token
+cheaper by deriving it from an address again should read it first.
+
+---
 
 `libSystem`'s `os_unfair_lock_lock` intermittently aborts with "recursive
 acquisition by the owning thread" on AWS Graviton3 (Neoverse-V1, Ubuntu 24.04,
@@ -783,3 +847,6 @@ sequential id from an atomic counter stored in the WORKING Darwin TSD
 (objcsupport.c `_pthread_getspecific_direct`, which objc4 already uses). The
 loader/codegen/Mach-O path and the single-threaded drawing path are unaffected
 on Graviton (19/19 fixtures, quartz PNGs byte-identical).
+
+*(The second option is the one that was built, on the same instance type that
+produced these numbers. See the top of this entry.)*

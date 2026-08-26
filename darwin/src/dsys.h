@@ -173,6 +173,13 @@ HIDDEN void mr_say(const char *s);
 HIDDEN __attribute__((noreturn)) void mr_bail(const char *what);
 HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *detail);
 
+/* The owning-thread token stored in an os_unfair_lock's four bytes. Unique per
+ * live thread BY CONSTRUCTION, never 0, stable for the life of the thread.
+ * Implemented in objcsupport.c on top of the direct-TSD array; see the comment
+ * there and docs/UNIMPLEMENTED.md#os-unfair-lock-owner for why it may not be
+ * derived from pthread_self(). */
+HIDDEN unsigned mr_thread_token(void);
+
 /* errno, in the two directions that matter. See darwin/src/posix.c. */
 HIDDEN int  *mr_errno_slot(void);          /* the guest-visible Darwin errno */
 HIDDEN void  mr_errno_in(void);            /* guest's value  -> glibc's errno */

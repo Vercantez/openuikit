@@ -13,8 +13,9 @@
 # macOS before ever being run here. That check is what makes a Linux-side
 # mismatch mean something.
 #
-#   scripts/objc44.sh                 all 44
-#   scripts/objc44.sh 023 038         only those
+#   scripts/objc44.sh                 all 44, then the concurrency repetition gate
+#   scripts/objc44.sh 023 038         only those, no repetition gate
+#   MACHORUN_NO_STRESS=1 scripts/objc44.sh    all 44, no repetition gate
 #
 # Needs: the loader, darwin/usr/lib/*.dylib and darwin/usr/lib/libobjc.A.dylib.
 # Build libobjc with scripts/build_objc4.sh (which needs a macOS SDK -- see
@@ -82,4 +83,16 @@ if [ ${#FAILED[@]} -gt 0 ]; then
     done
 fi
 rm -f "$D"/.*.stderr
-[ $fail -eq 0 ]
+
+# One pass over the corpus cannot see a concurrency bug whose failure rate is a
+# coin flip -- the os_unfair_lock owner-token collision that took Graviton3 down
+# to 24/44 was green on Apple silicon for exactly that reason. So a full run
+# ends with a repetition gate. It costs about a second and a half (these
+# fixtures run in ~5 ms each); MACHORUN_NO_STRESS=1 opts out.
+stress_rc=0
+if [ $# -eq 0 ] && [ "${MACHORUN_NO_STRESS:-0}" != 1 ]; then
+    echo
+    bash "$ROOT/scripts/stress_unfair_lock.sh" "${MACHORUN_STRESS_RUNS:-100}" || stress_rc=1
+fi
+
+[ $fail -eq 0 ] && [ $stress_rc -eq 0 ]

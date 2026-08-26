@@ -30,12 +30,28 @@ static void note(const char *s)          /* unbuffered stderr, no formatting */
  *
  * Slot numbering is Apple's ABI (<pthread/tsd_private.h>): slot 0 is the
  * pthread itself, and libobjc owns 40..49. We size for 64.
+ *
+ * We allocate ONE slot past that, index DTSD_SLOTS, for the os_unfair_lock
+ * owner token. It is deliberately out of reach of _pthread_getspecific_direct
+ * and _pthread_setspecific_direct, which bound-check against DTSD_SLOTS, so no
+ * guest can read or clobber it, and dtsd_thread_exit never runs a destructor
+ * over it.
  * ===================================================================== */
-#define DTSD_SLOTS 64
+#define DTSD_SLOTS      64
+#define DTSD_TOKEN_SLOT DTSD_SLOTS          /* private; a guest cannot address it */
+#define DTSD_ARRAY_LEN  (DTSD_SLOTS + 1)
 
 static unsigned  dtsd_key;
-static int       dtsd_key_ready;
 static void    (*dtsd_dtor[DTSD_SLOTS])(void *);
+
+/* Key creation used to be a plain `if (!ready)`, safe only because objc4
+ * touches TSD from the single-threaded _objc_init. mr_thread_token() breaks
+ * that assumption -- a lock can now be the first thing a brand-new thread
+ * touches -- and losing that race would give one thread two different slot
+ * arrays over its life, hence two different tokens, which is exactly the
+ * ownership confusion this whole change exists to remove. So: a three-state
+ * atomic, 0 unmade / 1 being made / 2 usable. */
+static int dtsd_key_state;
 
 static void dtsd_thread_exit(void *p)
 {
@@ -49,23 +65,76 @@ static void dtsd_thread_exit(void *p)
     glibc_free(slots);
 }
 
-static void **dtsd_slots(void)
+static void dtsd_key_make(void)
 {
-    if (!dtsd_key_ready) {
-        /* Racy only before the first thread is created; objc4 touches TSD from
-         * _objc_init, which is single-threaded by construction. */
+    int unmade = 0;
+    if (__atomic_compare_exchange_n(&dtsd_key_state, &unmade, 1, 0,
+                                    __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE)) {
         if (glibc_pthread_key_create(&dtsd_key, dtsd_thread_exit) != 0)
             mr_bail("objcsupport: pthread_key_create for the direct-TSD array failed");
-        dtsd_key_ready = 1;
+        __atomic_store_n(&dtsd_key_state, 2, __ATOMIC_RELEASE);
+        return;
     }
+    /* Someone else is making it. This is the one place we spin, it is bounded
+     * by a single pthread_key_create, and it cannot deadlock: the maker never
+     * calls back into here. */
+    while (__atomic_load_n(&dtsd_key_state, __ATOMIC_ACQUIRE) != 2)
+        glibc_sched_yield();
+}
+
+static void **dtsd_slots(void)
+{
+    if (__atomic_load_n(&dtsd_key_state, __ATOMIC_ACQUIRE) != 2) dtsd_key_make();
+
     void **slots = (void **)glibc_pthread_getspecific(dtsd_key);
     if (!slots) {
-        slots = (void **)glibc_calloc(DTSD_SLOTS, sizeof(void *));
+        slots = (void **)glibc_calloc(DTSD_ARRAY_LEN, sizeof(void *));
         if (!slots) mr_bail("objcsupport: out of memory allocating a direct-TSD array");
         slots[0] = (void *)glibc_pthread_self();     /* _PTHREAD_TSD_SLOT_PTHREAD_SELF */
         glibc_pthread_setspecific(dtsd_key, slots);
     }
     return slots;
+}
+
+/* ===================================================================== *
+ * The os_unfair_lock owner token.
+ *
+ * An os_unfair_lock is four bytes and a locked one holds its owner's token, so
+ * the token must be 32 bits, must never be 0 (that is "unlocked"), must be the
+ * same value every time one thread asks, and must differ between any two live
+ * threads. That last property is the one we got wrong: the token used to be
+ * `(unsigned)(pthread_self() >> 8)`, which throws away 32 bits of a 64-bit TCB
+ * pointer. On Apple silicon the surviving bits happened to differ; on Graviton3
+ * glibc lays the TCBs out so that two threads collide roughly half the time,
+ * and a colliding token makes a fresh acquisition read as recursive
+ * acquisition by the owner -- so objc4 aborted, intermittently, with ASLR
+ * deciding. docs/UNIMPLEMENTED.md#os-unfair-lock-owner has the measurements.
+ *
+ * No derivation of a pointer can fix this; hashing 64 bits into 32 always has
+ * collisions and we cannot choose the inputs. So the token is not derived from
+ * anything. It is handed out from a counter, one per thread, on first use, and
+ * kept in the private TSD slot. Sequential ids are unique by construction over
+ * the life of the process, which is stronger than a kernel tid (those get
+ * reused after a thread exits).
+ *
+ * This must be callable from anywhere a lock can be taken, so it must not take
+ * a lock itself. It does not: the counter is a single atomic, and the TSD path
+ * underneath is glibc's, which is independent of ours.
+ * ===================================================================== */
+static unsigned dtsd_token_counter;
+
+HIDDEN unsigned mr_thread_token(void)
+{
+    void **slots = dtsd_slots();
+    unsigned t = (unsigned)(uintptr_t)slots[DTSD_TOKEN_SLOT];
+    if (!t) {
+        /* Skip 0 if the counter ever wraps -- 4 billion threads, but the check
+         * is two instructions and the alternative is a lock that reads
+         * unlocked while held. */
+        do { t = __atomic_add_fetch(&dtsd_token_counter, 1, __ATOMIC_RELAXED); } while (!t);
+        slots[DTSD_TOKEN_SLOT] = (void *)(uintptr_t)t;
+    }
+    return t;
 }
 
 EXPORT int _pthread_has_direct_tsd(void) { return 1; }
@@ -123,10 +192,13 @@ EXPORT void os_unfair_lock_lock_with_options(void *l, unsigned options)
 /* os_unfair_recursive_lock = { os_unfair_lock lock; uint32_t count; } */
 typedef struct { unsigned lock; unsigned count; } recursive_lock;
 
-static unsigned self_token(void)
-{
-    return (unsigned)((unsigned long)glibc_pthread_self() >> 8) | 0x80000000u;
-}
+/* This MUST be the identical value libsystem.c's os_unfair_lock_lock stores,
+ * because the recursion check below compares it against a word that
+ * os_unfair_lock_lock wrote. The old pair did not: this one OR'd in 0x80000000
+ * and the other did not, so the two agreed only when bit 39 of the TCB pointer
+ * happened to be set. It always was on the hosts we ran, which is why the
+ * recursion path appeared to work. Both now call one function. */
+static unsigned self_token(void) { return mr_thread_token(); }
 
 EXPORT void os_unfair_recursive_lock_lock_with_options(void *p, unsigned options)
 {
