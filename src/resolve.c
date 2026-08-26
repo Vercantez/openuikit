@@ -42,6 +42,43 @@ __attribute__((noreturn)) void mr_stub_binder_trap(void)
            "should ever reach the binder. See docs/PLAN.md §I.6.");
 }
 
+/* -delay_init, which ld64.lld-18 does not implement.
+ *
+ * objc4 refers to swift_retain/swift_release so a Swift-stable object can be
+ * retained without a message send. On Darwin those references are -delay_init:
+ * they resolve on first use, and only if libswiftCore is in the process. Our
+ * ld64.lld has no such flag, so they come out as ordinary flat-lookup binds
+ * that have to resolve at load time even when there is no Swift runtime.
+ *
+ * darwin/src/objcsupport.c used to define them, which put a diagnostic abort
+ * in libSystem.B.dylib -- an image that loads BEFORE libswiftCore.dylib, so
+ * the flat lookup (first definition in load order wins) handed objc4 the abort
+ * instead of the real implementation. Defining them here fixes that by
+ * construction: host_lookup runs only after every loaded image has been
+ * searched and come up empty, so a real libswiftCore always wins no matter
+ * what order the guest linked its dylibs in, and a guest with no Swift runtime
+ * still gets a sentence rather than a jump through NULL.
+ *
+ * They are reached through host_lookup's underscore-stripping path, so the ELF
+ * names must be exactly these. darwin/loader-exports.txt lists them #internal:
+ * they are a seam between the loader and libobjc, and must NOT appear in
+ * libSystem.B.tbd, or a guest could link against a promise that only the
+ * loader can keep. */
+#define SWIFT_ABSENT(fn, verb)                                                 \
+    __attribute__((noreturn)) void fn(void *o);                                \
+    __attribute__((noreturn)) void fn(void *o)                                 \
+    {                                                                          \
+        (void)o;                                                               \
+        mr_die(#fn ": objc4's fast-path refcounting tried to " verb " a "       \
+               "Swift-stable object, but no libswiftCore is loaded. On Darwin " \
+               "this reference is -delay_init and would have brought the Swift "\
+               "runtime in; machorun has no delay-init, so link the guest "     \
+               "against libswiftCore -- in any order -- or do not create Swift "\
+               "objects. See docs/UNIMPLEMENTED.md#swift-interop.");            \
+    }
+SWIFT_ABSENT(swift_retain,  "retain")
+SWIFT_ABSENT(swift_release, "release")
+
 static int lookup_in(mr_image *im, const char *name, uint64_t *out, int depth)
 {
     if (!im) return 0;

@@ -361,15 +361,75 @@ objc4's own blocks never use one, so this is reachable only from a guest block.
 signature", which makes `imp_implementationWithBlock` take the
 register-return path unconditionally. Nothing in either corpus calls it.
 
-### `swift-interop`
-`swift_retain` / `swift_release` are defined in `darwin/src/objcsupport.c` as
-loud aborts. objc4 refers to them so a Swift-stable class can be retained
-without a message send; on Darwin the reference is delay-init and resolves only
-if `libswiftCore` is loaded, but `ld64.lld-18` does not implement `-delay_init`,
-so the reference is a plain undefined and something has to define it. They are
-reachable only for an object whose class `isSwiftStable()`, which cannot exist
-without a Swift stdlib. `docs/OBJC4_MACHO.md` §8 lists what a Swift binary would
-need.
+### `swift-interop` — **DONE**, and the fix is where it is for a reason
+`swift_retain` / `swift_release` used to be loud aborts in
+`darwin/src/objcsupport.c`, i.e. exports of `libSystem.B.dylib`. That was
+correct only while no Swift runtime could exist. machorun resolves a
+flat-lookup bind by returning the **first** definition in load order, and
+libSystem loads before `libswiftCore.dylib`, so once a real Swift runtime was
+staged, objc4's fast-path refcounting still bound to the diagnostic abort with
+the real implementation sitting one image away. The only workaround was to put
+`-lswiftCore` ahead of `-lSystem` on the guest's link line.
+
+They now live in **the loader** (`src/resolve.c`, listed `#internal` in
+`darwin/loader-exports.txt`), which `mr_resolve_symbol` reaches only after every
+loaded image has been searched and come up empty. A real libswiftCore therefore
+wins by construction in any link order, and a guest without one still gets a
+sentence rather than a jump through NULL.
+
+Deleting them outright was not an option: `ld64.lld-18` has no `-delay_init`,
+so objc4's two references are ordinary binds that must resolve at load time
+even for a guest with no Swift runtime at all, and every Objective-C fixture
+would have failed to load. `scripts/swift_gate.sh` links its fixture in **both**
+dylib orders and requires both to pass, which is what stops this regressing.
+
+### `swift-compat` — a guest must link `libswiftcompat.dylib` by hand
+The `libswiftCore.dylib` we run (cross-built on Linux by `~/swiftcore-macho`)
+imports 29 symbols machorun's self-hosted Darwin userland does not carry:
+compiler-rt's 128-bit division, `getline` / `flockfile` / `strtod_l` and
+friends, `getsectiondata`, `_NSGetMachExecuteHeader`, the availability checks,
+and four `__cxxabiv1` `type_info` vtables. They are supplied by a separate
+`libswiftcompat.dylib` which **the guest** has to name on its link line —
+libswiftCore carries no `LC_LOAD_DYLIB` for it.
+
+The measured consequence: a Swift binary built by **Apple's own toolchain** does
+not run here, even though its three dependencies (`libSystem.B`, `libobjc.A`,
+`/usr/lib/swift/libswiftCore.dylib`) are exactly the install names machorun's
+prefix map already serves. It fails at load with
+
+```
+machorun: undefined symbol '__ZTVN10__cxxabiv117__class_type_infoE'
+  wanted by:  darwin/usr/lib/swift/libswiftCore.dylib
+```
+
+because nothing pulled the compat dylib in. That is why rung (q) is the one
+fixture whose two sides run two binaries built from one source rather than the
+same committed bytes; `scripts/swift_gate.sh`'s header says so in place.
+
+Two ways to close it, neither done: give libswiftCore an `LC_LOAD_DYLIB` on
+libswiftcompat at link time (a `~/swiftcore-macho` change), or fold the 29 into
+`darwin/src/` so machorun's own libSystem carries them (a machorun change, and
+the one that would make Apple-built Swift binaries simply work).
+
+### `tsd-direct-dynamic-key`
+`_pthread_getspecific_direct` / `_pthread_setspecific_direct` serve the reserved
+key block (0..257) and **abort** for anything above it. On Darwin the reserved
+and dynamic keys are one flat array, so the direct SPI can also read a key that
+came from `pthread_key_create`; here the dynamic half is glibc's and has no slot
+to point at. objc4 uses slot 0 and 40..49 and nothing else, so this has never
+been reached. Closing it means implementing the dynamic half ourselves instead
+of delegating to glibc — see the TSD section header in
+`darwin/src/objcsupport.c` for what that delegation buys and what it costs.
+
+One deliberate divergence in the same area, measured rather than assumed:
+`pthread_getspecific()` on an **out-of-range** key returns garbage on Darwin
+(the fast path is a raw indexed load off the thread struct, and POSIX makes an
+invalid key undefined behaviour) and **NULL** here. A differential probe of the
+whole key ABI — first dynamic key, exhaustion count and code, the `EINVAL`
+boundaries of `pthread_key_init_np` and `pthread_key_delete`, un-adopted
+reserved keys, and destructor re-runs at thread exit — agrees line for line on
+macOS and under machorun apart from that one. Reproducing an out-of-bounds read
+is not parity worth having.
 
 ### `objc-cache-never-collects` — a LEAK, not a stub
 `patches-macho/0004`. `_collecting_in_critical()` returns TRUE unconditionally,

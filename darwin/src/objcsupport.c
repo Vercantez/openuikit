@@ -19,30 +19,83 @@ static void note(const char *s)          /* unbuffered stderr, no formatting */
 }
 
 /* ===================================================================== *
- * Darwin direct thread-specific data
+ * Darwin thread-specific data -- the WHOLE key namespace, not just objc4's.
  *
- * runtime/Threading/darwin.h reaches TSD through _pthread_getspecific_direct,
- * which on Darwin is a load from the `_pthread` struct off TPIDRRO_EL0 at a
- * fixed slot index. We cannot do that: the guest's threads are glibc threads
- * and TPIDRRO_EL0 holds glibc's TLS base. So we keep a real per-thread slot
- * array behind one glibc TSD key. Same observable semantics, one indirection
- * more.
+ * On Darwin a pthread_key_t is not an opaque token, it is an INDEX into a flat
+ * per-thread slot array, and the public and private APIs address the same
+ * array. Slot 0 is the pthread itself, the low slots are carved up between
+ * frameworks by <pthread/tsd_private.h> (libobjc owns 40..49, the Swift
+ * runtime 100..109), and pthread_key_create hands out indices above the
+ * reserved block. `pthread_getspecific(40)` and `_pthread_getspecific_direct(40)`
+ * are the same load.
  *
- * Slot numbering is Apple's ABI (<pthread/tsd_private.h>): slot 0 is the
- * pthread itself, and libobjc owns 40..49. We size for 64.
+ * We cannot use Darwin's mechanism -- it is a load off TPIDRRO_EL0, and under
+ * machorun TPIDRRO_EL0 holds glibc's TLS base -- so we keep a real per-thread
+ * slot array behind one glibc TSD key. Same observable semantics, one
+ * indirection more.
  *
- * We allocate ONE slot past that, index DTSD_SLOTS, for the os_unfair_lock
- * owner token. It is deliberately out of reach of _pthread_getspecific_direct
- * and _pthread_setspecific_direct, which bound-check against DTSD_SLOTS, so no
- * guest can read or clobber it, and dtsd_thread_exit never runs a destructor
- * over it.
+ * WHY THIS OWNS pthread_key_create/getspecific/setspecific TOO, when those
+ * used to be one-line forwarders to glibc in libsystem.c: because forwarding
+ * makes the two halves of one namespace disagree. glibc's keys are opaque
+ * counters starting near 0, so a guest that called pthread_key_create could be
+ * handed key 40 -- libobjc's slot -- and then pthread_setspecific(40) had two
+ * possible meanings. Worse, the Swift runtime never calls pthread_key_create
+ * at all: SwiftTLSContext::get() adopts the RESERVED key 100 with
+ * pthread_key_init_np and then reads it back with plain pthread_getspecific.
+ * Forwarded to glibc that is key 100 in glibc's namespace, which glibc never
+ * allocated, so every setspecific failed silently and every getspecific
+ * returned NULL -- a fresh TLS context allocated on every single call.
+ * One array, one dispatch, no ambiguity.
+ *
+ * THE NUMBERS ARE MEASURED, not guessed. Apple ships <pthread/tsd_private.h>
+ * only in the internal SDK, so a probe on the oracle (macOS 26.5.2, arm64)
+ * reported:
+ *
+ *   pthread_key_create's first key                       258
+ *   keys it will hand out before failing                 510  (last: 767)
+ *   pthread_setspecific(1000) / pthread_key_init_np(1000) EINVAL
+ *   pthread_key_init_np(100, dtor)                       0
+ *   pthread_setspecific(40, v) then direct-read slot 40  same value
+ *   pthread_setspecific(55, v) on a key nobody adopted   0, reads back
+ *   pthread_key_delete(100) on a reserved key            EINVAL
+ *   a destructor that re-sets its own slot               runs again
+ *   pthread_key_create when exhausted                    EAGAIN
+ *
+ * The same probe was then run against THIS implementation under machorun and
+ * agreed line for line, with one deliberate divergence: pthread_getspecific()
+ * on an OUT-OF-RANGE key returns garbage on Darwin -- it is a raw indexed load
+ * off the thread struct with no validation, and POSIX says the behaviour is
+ * undefined -- and NULL here. Reproducing an out-of-bounds read is not parity
+ * worth having.
+ *
+ * So: keys 0..257 are the reserved block and live in our array; 258..767 are
+ * dynamic. The dynamic half is delegated to glibc with a fixed +258 bias
+ * rather than reimplemented, which buys glibc's key reuse, its delete
+ * semantics and its thread-exit destructor pass for free. The bias is what
+ * keeps the two halves from ever naming the same key.
+ *
+ * We allocate ONE slot past the reserved block, index DTSD_TOKEN_SLOT, for the
+ * os_unfair_lock owner token. It is deliberately out of reach of
+ * _pthread_getspecific_direct and _pthread_setspecific_direct, which
+ * bound-check against DTSD_RESERVED, so no guest can read or clobber it, and
+ * dtsd_thread_exit never runs a destructor over it.
  * ===================================================================== */
-#define DTSD_SLOTS      64
-#define DTSD_TOKEN_SLOT DTSD_SLOTS          /* private; a guest cannot address it */
-#define DTSD_ARRAY_LEN  (DTSD_SLOTS + 1)
+#define DTSD_RESERVED    258                 /* keys 0..257: framework-reserved */
+#define DTSD_KEY_MAX     768                 /* Darwin keys are 0..767 */
+#define DTSD_DYNAMIC_MAX (DTSD_KEY_MAX - DTSD_RESERVED)   /* 510, as measured */
+#define DTSD_TOKEN_SLOT  DTSD_RESERVED       /* private; a guest cannot address it */
+#define DTSD_ARRAY_LEN   (DTSD_RESERVED + 1)
+
+/* POSIX's limit on how many times a thread-exit pass will re-run a destructor
+ * that re-sets its own slot. Darwin honours it; the probe above saw a
+ * self-resetting destructor run on every pass. */
+#define DTSD_DESTRUCTOR_ITERATIONS 4
+
+#define DERR_EINVAL 22
+#define DERR_EAGAIN 35
 
 static unsigned  dtsd_key;
-static void    (*dtsd_dtor[DTSD_SLOTS])(void *);
+static void    (*dtsd_dtor[DTSD_RESERVED])(void *);
 
 /* Key creation used to be a plain `if (!ready)`, safe only because objc4
  * touches TSD from the single-threaded _objc_init. mr_thread_token() breaks
@@ -56,11 +109,18 @@ static int dtsd_key_state;
 static void dtsd_thread_exit(void *p)
 {
     void **slots = (void **)p;
-    /* Darwin runs TSD destructors in slot order, repeatedly, like pthreads.
-     * One pass is enough for objc4: its destructors do not re-set their slot. */
-    for (int i = 0; i < DTSD_SLOTS; i++) {
-        void *v = slots[i];
-        if (v && dtsd_dtor[i]) { slots[i] = NULL; dtsd_dtor[i](v); }
+    /* Darwin runs TSD destructors in slot order, and re-runs the pass while a
+     * destructor keeps re-setting its own slot, up to POSIX's iteration limit.
+     * objc4's destructors do not re-set, so one pass used to be enough for it;
+     * now that this array backs every reserved key a guest can adopt, the real
+     * loop is what a guest is entitled to expect. */
+    for (int pass = 0; pass < DTSD_DESTRUCTOR_ITERATIONS; pass++) {
+        int again = 0;
+        for (int i = 0; i < DTSD_RESERVED; i++) {
+            void *v = slots[i];
+            if (v && dtsd_dtor[i]) { slots[i] = NULL; dtsd_dtor[i](v); again = 1; }
+        }
+        if (!again) break;
     }
     glibc_free(slots);
 }
@@ -139,27 +199,80 @@ HIDDEN unsigned mr_thread_token(void)
 
 EXPORT int _pthread_has_direct_tsd(void) { return 1; }
 
+/* The direct SPI addresses the reserved block only. On Darwin it can also
+ * reach a dynamic key's slot, because there the two ranges are one array; here
+ * the dynamic half lives in glibc and has no slot to point at. objc4 uses
+ * slot 0 and 40..49 and nothing else, so this has never been reached -- and if
+ * it is, it says so rather than returning a plausible NULL. */
 EXPORT void *_pthread_getspecific_direct(unsigned long slot)
 {
-    if (slot >= DTSD_SLOTS)
-        mr_bail("_pthread_getspecific_direct: slot out of range (we provide 64)");
+    if (slot >= DTSD_RESERVED)
+        mr_bail("_pthread_getspecific_direct: slot is outside the reserved block "
+                "(0..257). A key from pthread_key_create cannot be read through "
+                "the direct SPI under machorun; use pthread_getspecific.");
     return dtsd_slots()[slot];
 }
 
 EXPORT void _pthread_setspecific_direct(unsigned long slot, void *value)
 {
-    if (slot >= DTSD_SLOTS)
-        mr_bail("_pthread_setspecific_direct: slot out of range (we provide 64)");
+    if (slot >= DTSD_RESERVED)
+        mr_bail("_pthread_setspecific_direct: slot is outside the reserved block "
+                "(0..257). A key from pthread_key_create cannot be written through "
+                "the direct SPI under machorun; use pthread_setspecific.");
     dtsd_slots()[slot] = value;
 }
 
-/* Darwin's "adopt this reserved key and give it a destructor". */
+/* Darwin's "adopt this reserved key and give it a destructor". This is how the
+ * Swift runtime installs the destructor for SwiftTLSContext on key 100; if it
+ * fails, tls_init_once() calls swift::fatal and no Swift class or generic can
+ * be instantiated. */
 EXPORT int pthread_key_init_np(int key, void (*destructor)(void *))
 {
-    if (key < 0 || key >= DTSD_SLOTS) return 22;   /* EINVAL */
+    if (key < 0 || key >= DTSD_RESERVED) return DERR_EINVAL;
     dtsd_dtor[key] = destructor;
     (void)dtsd_slots();          /* force the array to exist on this thread */
     return 0;
+}
+
+/* ------------------------------------------------------- the public API.
+ * Reserved keys are our array; dynamic keys are glibc's, biased by
+ * DTSD_RESERVED so the two ranges can never name the same key. */
+
+EXPORT int pthread_key_create(unsigned *k, void (*d)(void *))
+{
+    unsigned g;
+    int rc = glibc_pthread_key_create(&g, d);
+    if (rc != 0) return rc;
+    if (g >= DTSD_DYNAMIC_MAX) {
+        /* Darwin runs out at 510 dynamic keys; so do we, at the same count,
+         * rather than handing back a key that pthread_getspecific would then
+         * have to reject. */
+        glibc_pthread_key_delete(g);
+        return DERR_EAGAIN;
+    }
+    *k = g + DTSD_RESERVED;
+    return 0;
+}
+
+EXPORT int pthread_key_delete(unsigned k)
+{
+    /* Deleting a framework-reserved key is EINVAL on Darwin -- measured. */
+    if (k < DTSD_RESERVED || k >= DTSD_KEY_MAX) return DERR_EINVAL;
+    return glibc_pthread_key_delete(k - DTSD_RESERVED);
+}
+
+EXPORT void *pthread_getspecific(unsigned k)
+{
+    if (k < DTSD_RESERVED) return dtsd_slots()[k];
+    if (k >= DTSD_KEY_MAX) return NULL;
+    return glibc_pthread_getspecific(k - DTSD_RESERVED);
+}
+
+EXPORT int pthread_setspecific(unsigned k, const void *v)
+{
+    if (k < DTSD_RESERVED) { dtsd_slots()[k] = (void *)v; return 0; }
+    if (k >= DTSD_KEY_MAX) return DERR_EINVAL;
+    return glibc_pthread_setspecific(k - DTSD_RESERVED, v);
 }
 
 /* Has any thread besides the initial one ever been created? objc4 uses it to
@@ -414,29 +527,30 @@ EXPORT const char *_Block_signature(void *b) { (void)b; return NULL; }
 EXPORT int _Block_use_stret(void *b) { (void)b; return 0; }
 
 /* ===================================================================== *
- * Swift refcounting. objc4 refers to swift_retain/swift_release so that a
- * Swift-stable class can be retained without a message send. On Darwin the
- * reference is delay-init: it resolves only if libswiftCore is loaded.
- * ld64.lld does not implement -delay_init, so the reference is a plain
- * undefined and something must define it. These are reachable ONLY for an
- * object whose class isSwiftStable(), which cannot exist without libswiftCore
- * -- so reaching one means something is badly wrong, and we say so.
+ * Swift refcounting is NOT here, and its absence is the point.
+ *
+ * objc4 refers to swift_retain/swift_release so that a Swift-stable class can
+ * be retained without a message send. On Darwin those two references carry
+ * -delay_init: they resolve on first use and only if libswiftCore is in the
+ * process. ld64.lld-18 has no -delay_init, so scripts/build_objc4.sh emits
+ * them as ordinary flat-lookup binds, which must resolve at load time.
+ *
+ * This file used to define them as loud aborts so that the bind had something
+ * to hit. That was fine while no Swift runtime could exist and wrong the
+ * moment one did: machorun's flat lookup returns the FIRST definition in load
+ * order, libSystem.B.dylib loads before libswiftCore.dylib, so objc4's
+ * fast-path refcounting bound to the diagnostic abort with the real
+ * implementation sitting in the very next image. The only way out was to order
+ * -lswiftCore ahead of -lSystem on the guest's link line -- a load-bearing
+ * detail no guest should have to know, and one that silently stops working the
+ * day someone reorders a Makefile.
+ *
+ * The diagnostic now lives in the LOADER (src/resolve.c, listed in
+ * darwin/loader-exports.txt). The loader is only consulted after the flat
+ * lookup has found nothing in any image, so it cannot shadow a real
+ * libswiftCore however the guest was linked, and a guest without one still
+ * fails with a sentence instead of a null jump.
  * ===================================================================== */
-EXPORT void *swift_retain(void *o)
-{
-    (void)o;
-    mr_bail("swift_retain: a Swift-stable object reached objc4's fast-path "
-            "refcounting, but no libswiftCore is loaded under machorun. "
-            "See docs/UNIMPLEMENTED.md#swift-interop.");
-    return 0;
-}
-EXPORT void swift_release(void *o)
-{
-    (void)o;
-    mr_bail("swift_release: a Swift-stable object reached objc4's fast-path "
-            "refcounting, but no libswiftCore is loaded under machorun. "
-            "See docs/UNIMPLEMENTED.md#swift-interop.");
-}
 
 /* ===================================================================== *
  * Restartable ranges. Darwin lets a thread declare a PC range that the kernel

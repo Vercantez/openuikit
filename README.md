@@ -357,9 +357,18 @@ measured rather than guessed:
 - **`QZ*`, not `CG*`.** There is no `CoreGraphics.framework`, no
   `CoreFoundation`, no `Foundation`, no `UIKit`. A binary linked against Apple's
   frameworks resolves none of its imports.
-- **No Swift and no OpenUIKit.** Not a machorun gap and not fixable here — the
-  Linux Swift toolchain ships no Darwin standard library. See the top of this
-  file and `docs/STATUS.md` §11.5.
+- **Swift runs; OpenUIKit does not yet.** This bullet used to read *"No Swift
+  and no OpenUIKit. Not a machorun gap and not fixable here — the Linux Swift
+  toolchain ships no Darwin standard library."* The premise was true of the
+  *shipped* toolchain and wrong as a conclusion: `~/swiftcore-macho` cross-built
+  `libswiftCore.dylib` as a Darwin arm64 Mach-O **on Linux** from swift.org
+  6.2.4 source, and rung (q) — `scripts/swift_gate.sh` — runs Swift classes,
+  generics, protocol existentials, dynamic casts and ARC under machorun with
+  output byte-identical to macOS. What OpenUIKit still lacks is **Foundation**
+  and a `CG*`/`UIKit` surface, not a Swift runtime. Two narrower holes are named
+  in `docs/UNIMPLEMENTED.md`: an *Apple-built* Swift binary still does not load
+  here (`#swift-compat`), and Swift code that unwinds hits the same
+  compact-unwind wall as `objc44`'s three failures.
 - **No C++/ObjC exceptions and no `dlopen`** — the three `objc44` failures. Both
   are loud aborts, never silent wrong answers.
 - **80% of `libSystem`, 72% of `libobjc` and 93% of `libquartz` are exported,
@@ -389,6 +398,8 @@ scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fix
 scripts/objc44.sh           # the 44-test objc4 differential corpus (run INSIDE the container)
 scripts/stress_unfair_lock.sh  # the lock-owner regression gate; objc44.sh ends with it
 scripts/quartz_pixel.sh     # the 3 drawing fixtures, macOS vs machorun -- the PNGs must match
+scripts/stage_swiftcore.sh  # stage the cross-built libswiftCore (external input; once)
+scripts/swift_gate.sh       # rung (q): Swift classes+generics, macOS vs machorun, BOTH link orders
 scripts/sdk_abi_probe.sh    # sdk/ vs Apple's SDK, on the ABI, byte for byte
 scripts/abi_naive_probe.sh  # what breaks if the userland forwards naively
 build/machorun ./prog       # run one

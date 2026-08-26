@@ -57,3 +57,22 @@ dyld_stub_binder    =mr_stub_binder_trap
 # --- loader/userland seam, not guest API (src/image.c, src/resolve.c) -------
 _mr_addr_in_image   #internal
 _mr_dlsym_default   #internal
+
+# --- objc4's -delay_init references to the Swift runtime (src/resolve.c) ----
+#
+# ld64.lld-18 does not implement -delay_init, so objc4's swift_retain and
+# swift_release come out as ordinary flat-lookup binds that must resolve at
+# load time even when there is no Swift runtime. The loader defines them as
+# diagnostic traps, and the loader is the LAST place consulted -- every loaded
+# image is searched first -- so a real libswiftCore.dylib always wins whatever
+# order the guest linked its dylibs in. They used to live in libSystem.B.dylib,
+# where they won that lookup instead, which is what made `-lswiftCore` before
+# `-lSystem` load-bearing on a Swift guest's link line.
+#
+# #internal is deliberate here and load-bearing in its own right: these must
+# NOT be merged into libSystem.B.tbd. A guest that linked against that promise
+# would get an undefined symbol at run time, because the loader satisfies them
+# only for our own dylibs (the is_runtime host-lookup path in src/resolve.c),
+# never for a guest.
+_swift_retain       #internal
+_swift_release      #internal

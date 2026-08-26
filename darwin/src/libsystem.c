@@ -714,10 +714,14 @@ EXPORT int   pthread_join(void *t, void **ret) { return glibc_pthread_join((g_pt
 EXPORT int   pthread_detach(void *t)           { return glibc_pthread_detach((g_pthread_t)t); }
 EXPORT void *pthread_self(void)                { return (void *)glibc_pthread_self(); }
 EXPORT int   pthread_equal(void *a, void *b)   { return glibc_pthread_equal((g_pthread_t)a, (g_pthread_t)b); }
-EXPORT int   pthread_key_create(unsigned *k, void (*d)(void *)) { return glibc_pthread_key_create(k, d); }
-EXPORT int   pthread_key_delete(unsigned k)    { return glibc_pthread_key_delete(k); }
-EXPORT void *pthread_getspecific(unsigned k)   { return glibc_pthread_getspecific(k); }
-EXPORT int   pthread_setspecific(unsigned k, const void *v) { return glibc_pthread_setspecific(k, v); }
+
+/* pthread_key_create/delete/getspecific/setspecific are NOT here any more. A
+ * Darwin pthread_key_t is an INDEX into the same per-thread slot array that
+ * _pthread_getspecific_direct addresses, so the public API and the
+ * reserved-slot SPI have to be one implementation or they disagree about what
+ * key 40 (libobjc) or key 100 (the Swift runtime) means. objcsupport.c owns
+ * that array and therefore owns these four; its TSD section header carries the
+ * measurements taken on the oracle. */
 
 /* os_unfair_lock is exactly four bytes in the guest -- Darwin stores an owning
  * thread port in them -- so it cannot hold a glibc pthread_mutex_t and cannot
