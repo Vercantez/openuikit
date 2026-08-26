@@ -18,29 +18,22 @@ SWIFT_FILTER='_Concurrency|_StringProcessing|SDKSettings'
 mkdir -p "$W/obj"
 pass=0; fail=0; nooracle=0
 
-# LOAD-BEARING, and the single hardest thing found in this scope.
+# REQUIRES a machorun that places every image below 2^47.
 #
 # libswiftCore has Apple's arm64 ISA_MASK (0x00007ffffffffff8 — 47 bits) inlined
-# into swift_unknownObjectRetain, swift_getObjectType and friends. machorun maps
-# images with mmap(NULL), and aarch64 Linux allocates top-down from 2^48, so
-# classes land at 0xffff.... Masking then TRUNCATES every class pointer:
-# measured 0xffff86413cd8 -> 0x7fff86413cd8, and Swift faults reading
-# class->bits at +0x20.
+# into swift_unknownObjectRetain, swift_getObjectType and friends, which then
+# read class->bits at +0x20. A loader that maps dylibs at 0xffff... — which is
+# what mmap(NULL) gives you on aarch64 Linux — makes that mask silently clear
+# bit 47, and Swift faults on the truncated class pointer.
 #
-# objc4 does not hit this because machorun patches it
-# (patches-macho/0001-wide-va-isa-layout.patch) to the wide 52-bit arm64e isa
-# layout. libswiftCore cannot be patched the same way — the mask is baked into
-# compiled code in many places.
+# Fixed in machorun a1718a4 ("place every image below 2^47"), which reserves an
+# arena at 8 GiB, so nothing is needed here any more. This scope previously set
+# `ulimit -s unlimited` to flip Linux to the legacy bottom-up mmap layout; that
+# is deliberately gone. An ambient rlimit is invisible at the point it matters
+# and lapses across a re-exec.
 #
-# `ulimit -s unlimited` switches Linux to the legacy BOTTOM-UP mmap layout, which
-# allocates from TASK_SIZE/3 upward; classes then land at 0x4000.... below 2^47
-# and both runtimes agree. Measured: without it t2_bridge dies with SIGSEGV in
-# swift_unknownObjectRetain; with it, it matches the macOS oracle exactly.
-#
-# This is a workaround, not the fix. The fix belongs in machorun: map images
-# below 2^47. See docs/DECISION.md §5.
-ulimit -s unlimited 2>/dev/null || \
-  echo "WARNING: could not set unlimited stack; expect SIGSEGV in swift_unknownObjectRetain"
+# If these tests start dying with SIGSEGV in swift_unknownObjectRetain, the
+# loader predates a1718a4. See docs/DECISION.md §3.
 
 run_case() {
   local name=$1 out rc base

@@ -64,10 +64,12 @@ reasoning, and why corelibs-in-ObjC-mode / corelibs-in-Swift-mode /
 GNUstep-base are each ruled out, in **`docs/DECISION.md`**. Build plan in
 `docs/PLAN.md`.
 
-**Known dependency, not ours:** libswiftCore has Apple's 47-bit arm64
-`ISA_MASK` inlined, while machorun maps images above 2^47 — so Swift
-truncates every class pointer and faults. Worked around here with
-`ulimit -s unlimited`; the fix belongs in machorun. DECISION §3. This
-affects all Swift on machorun, not just Foundation.
+**A loader bug this scope found, now fixed:** libswiftCore has Apple's
+47-bit arm64 `ISA_MASK` inlined, while machorun mapped images above 2^47 —
+so Swift truncated every class pointer and faulted. Fixed in machorun
+`a1718a4`, which places every image below 2^47; re-verified here with the
+workaround removed. It affected all Swift on machorun, not just Foundation.
+DECISION §3.
 
-The TLS-destructor loader fix is **in** (Swift classes run).
+Requires machorun at or after `a1718a4`. The TLS-destructor fix is also in,
+so Swift classes and generics run.

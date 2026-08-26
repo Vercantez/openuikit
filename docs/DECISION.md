@@ -200,14 +200,17 @@ by `Foundation.framework/Headers/Foundation.apinotes` as `SwiftBridge:
 Swift.String`. The full Foundation should ship an apinotes file rather than
 scatter attributes.
 
-**(d) The address-space wall — see §3.** This one is not ours.
+**(d) The address-space wall — see §3.** Not ours, and now fixed in machorun.
 
 ---
 
-## 3. A dependency on machorun: libswiftCore's inlined `ISA_MASK`
+## 3. libswiftCore's inlined `ISA_MASK` vs machorun's address space — FIXED
 
-**This is the most important cross-cutting finding and it belongs to machorun,
-not to Foundation.**
+**The most important cross-cutting finding of this scope. It belonged to
+machorun, not to Foundation, and it is now fixed there: machorun `a1718a4`,
+"place every image below 2^47" (branch `fix/map-below-isa-mask`, on top of
+master `6413810`).** The reasoning is kept in full because it is what a future
+bisector will need.
 
 libswiftCore has Apple's arm64 `ISA_MASK = 0x00007ffffffffff8` (47 bits) inlined
 into `swift_unknownObjectRetain`, `swift_unknownObjectRelease`,
@@ -232,21 +235,44 @@ layout. **libswiftCore cannot be patched the same way** — the mask is baked in
 compiled code in many places, and rebuilding the stdlib with a custom mask would
 fork it from upstream permanently.
 
-**Workaround in use:** `ulimit -s unlimited` switches Linux to the legacy
-bottom-up mmap layout, which allocates from `TASK_SIZE/3` upward. Classes then
-land at `0x4000…`, below 2^47, and both runtimes agree. Measured: with it, both
-tests pass; without it, `t2_bridge` dies with SIGSEGV. `scripts/run_tests.sh`
-sets it.
+**The fix (machorun `a1718a4`, `src/map.c`):** `mr_map_image` no longer takes
+whatever `mmap(NULL, …)` returns. It reserves from an arena at 8 GiB
+(`0x200000000`) walking up with `MAP_FIXED_NOREPLACE`, honours an image's
+preferred base only when that base *also* fits below 2^47, verifies the returned
+address rather than trusting the flag (a pre-4.17 kernel treats
+`MAP_FIXED_NOREPLACE` as a bare hint), and **dies with a message naming the
+constraint** rather than falling back — a fallback would trade a clear error here
+for a segfault inside libswiftCore later.
 
-**The real fix belongs in machorun:** map images below 2^47 explicitly rather
-than relying on a process-wide `ulimit`. `src/map.c` already reserves
-`[0x10000, 0x100000000)` for `__PAGEZERO` and already prefers `im->preferred_base`
-when free; it needs a deliberate placement policy for the `mmap(NULL)` fallback
-instead of taking whatever the kernel returns. Filed as a dependency, not fixed
-here — `~/machorun` is read-only for this scope.
+Verified against this scope's tests, with the loader rebuilt from that branch and
+an explicitly *limited* 8 MB stack so the legacy mmap layout is definitely not in
+play:
 
-This affects **anything Swift** on machorun, not just Foundation, so it should be
-fixed before the full build starts.
+```
+NSString class      = 0x20000dc88
+isa & ISA_MASK      = 0x20000dcd8     <-- correct, nothing lost
+class fits <2^47    = 1
+
+pass 2  fail 0  no-oracle 0
+```
+
+**The `ulimit -s unlimited` workaround this scope originally used is gone.** It
+worked by flipping Linux to the legacy bottom-up mmap layout process-wide, but it
+is a property of how machorun was *invoked* rather than of machorun, it lapses
+across a re-exec, and it perturbs every unrelated allocation. A placement policy
+is checkable; an ambient rlimit is not.
+
+Two things worth carrying forward:
+
+- **machorun's rung (q) missed this**, because its classes are all declared in
+  the *executable*, which lands at its preferred `0x100000000` and is under the
+  ceiling by luck. **Foundation fixtures must put classes in a dylib** or they
+  test nothing about placement. Ours do, which is why the slice caught it.
+- **Generic class metadata is not in any image** — the Swift runtime builds it at
+  run time from its own allocator — so it was not obvious the fix would cover it.
+  It does: machorun's test with a generic class hierarchy, overrides and 50 heap
+  instances is byte-identical to the macOS oracle. The heap was already below the
+  ceiling; only image placement was wrong.
 
 ---
 
@@ -444,8 +470,10 @@ Two things fall out of this:
 
 ## 9. Open risks
 
-1. **§3 must be fixed properly.** `ulimit -s unlimited` is a workaround that
-   happens to work; a deliberate mapping policy in machorun is the fix.
+1. ~~**§3 must be fixed properly.**~~ **Closed** — machorun `a1718a4` places every
+   image below 2^47 and the workaround is removed. Note for future fixtures: put
+   classes in a **dylib**, not the executable, or they say nothing about
+   placement.
 2. **Lazy NSString→String bridging is not done.** The slice copies eagerly. The
    zero-copy path needs `_bridgeCocoaString`, which is `@usableFromInline
    internal` and returns the internal `_StringGuts` — reachable by `@_silgen_name`

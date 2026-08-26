@@ -38,8 +38,8 @@ scripts/build_overlay.sh  # libFoundation.dylib       (Swift overlay)
 scripts/run_tests.sh      # build tests, run under machorun, diff vs oracle
 ```
 
-`scripts/run_tests.sh` sets `ulimit -s unlimited`. That is load-bearing, not
-hygiene — see DECISION §3.
+Requires a machorun at or after `a1718a4` (image placement below 2^47). Older
+loaders die with SIGSEGV in `swift_unknownObjectRetain` — see DECISION §3.
 
 ---
 
@@ -48,11 +48,16 @@ hygiene — see DECISION §3.
 Order is chosen so the riskiest unknowns land early and ICU never blocks
 anything.
 
-### M1 — machorun address-space fix *(dependency, not ours)*
-Map images below 2^47 so libswiftCore's inlined 47-bit `ISA_MASK` decodes class
-pointers correctly, instead of relying on `ulimit -s unlimited`. DECISION §3.
-**Do this first**: it is small, it is upstream, and it exposes every Swift object
-path, not just Foundation's.
+### M1 — machorun address-space fix *(dependency, not ours)* — **DONE**
+machorun `a1718a4` places every image below 2^47 (arena at 8 GiB), so
+libswiftCore's inlined 47-bit `ISA_MASK` decodes class pointers correctly.
+Verified against this scope's tests with the workaround removed and an explicitly
+limited stack: `pass 2 fail 0`. DECISION §3.
+
+Carry forward when writing Foundation fixtures: **put classes in a dylib.** A
+fixture whose classes live in the executable lands at the preferred
+`0x100000000`, is under the ceiling by luck, and tests nothing about placement —
+that is exactly how machorun's rung (q) missed this.
 
 ### M2 — CoreFoundation as Darwin Mach-O
 corelibs' 88 `.c` files / 98K lines, cross-built `arm64-apple-macos`. Restore the
