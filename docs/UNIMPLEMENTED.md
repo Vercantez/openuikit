@@ -686,3 +686,60 @@ have to infer it from what they do:
 * **`+initialize` ordering is asserted for one interleaving.** The printed
   order is the one this scene's construction sequence produces. A different
   first-touch order is a different test, and there is only the one.
+
+### `cross-image-cxx-init-unpinned` — exercised, but not pinned
+
+The drawing fixtures were expected to be the first thing in the corpus to test
+**C++ static-initialiser ordering across two dylibs**, because `libquartz.dylib`
+is 37 C++ translation units and the guest is a separate image. They do exercise
+it, and they do not pin it. Both halves are measured.
+
+**What runs.** `libquartz.dylib` is the only image in the process that has an
+initialiser section at all — `__DATA_CONST,__mod_init_func`, five entries
+(`machorun -v` prints each one). Disassembling them names the translation units:
+
+    __GLOBAL__sub_I_pkg_anim.cpp        -> __ZL7g_anims
+    __GLOBAL__sub_I_pkg_color_p3.cpp
+    __GLOBAL__sub_I_pkg_pattern.cpp     -> __ZL5g_pat
+    __GLOBAL__sub_I_pkg_pdf.cpp         -> __ZL9g_writers
+    __GLOBAL__sub_I_pkg_timing.cpp      -> __ZL9g_anim_tf
+
+`libSystem.B.dylib`, `libc++.1.dylib`, `libobjc.A.dylib` and each of the three
+fixtures have **no** initialiser section — the loader says so by name rather
+than silently finding nothing. The observed order is dependency-first:
+libquartz's five constructors, then libobjc's `load_images`, then the guest's
+`load_images` (its six `+load` methods), then the guest's own initialisers
+(none). That is dyld's order.
+
+**What is not pinned, and how that was measured.** A mutation was put into
+`src/init.c` behind an environment variable that skips every
+`S_MOD_INIT_FUNC_POINTERS` entry — i.e. *none* of libquartz's five constructors
+run — and the three drawing fixtures were run against the committed macOS
+baselines with the loader and libquartz both rebuilt clean:
+
+| | `15_quartz` | `16_objc_quartz` | `17_objc_shapes` |
+|---|---|---|---|
+| control | PNG identical, stdout identical | identical | identical |
+| all 5 constructors suppressed | **PNG identical, stdout identical** | **identical** | **identical** |
+
+So the mutation **survives**. The reason is that the four named globals are
+file-scope `std::vector`/`std::map` registries for animation, patterns, PDF
+writers and timing functions: zero-initialised `.bss` is already a valid empty
+container, nothing in `quartz-fixture-coverage`'s 36 exports reads them, and
+the constructors are therefore observationally dead in these three programs.
+
+`docs/STATUS.md`'s "cross-image initialiser ordering is UNTESTED" is thus half
+closed: the *discovery and invocation* path is now exercised by a real
+multi-dylib program, but **no pixel and no line of stdout depends on a
+cross-image constructor having run**, and no fixture asserts the *order* of one
+against a `+load` or against another image's constructor. A loader that ran
+dependency initialisers in the wrong order, or not at all, would still score
+19/1/1 and 3/3 here.
+
+Closing it needs a fixture whose output depends on a constructor in a dylib —
+the smallest honest version is a second dylib of our own, alongside
+`lib07greet.dylib`, with a file-scope object whose constructor prints and whose
+value the executable reads, plus a `+load` in that same dylib so the two
+orderings are asserted against each other. That also closes the "One image"
+bullet in `objc-drawing-coverage` and the cross-image half of
+`objc-load-ordering`.
