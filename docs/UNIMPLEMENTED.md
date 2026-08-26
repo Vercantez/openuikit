@@ -421,6 +421,16 @@ been reached. Closing it means implementing the dynamic half ourselves instead
 of delegating to glibc — see the TSD section header in
 `darwin/src/objcsupport.c` for what that delegation buys and what it costs.
 
+One deliberate divergence in the same area, measured rather than assumed:
+`pthread_getspecific()` on an **out-of-range** key returns garbage on Darwin
+(the fast path is a raw indexed load off the thread struct, and POSIX makes an
+invalid key undefined behaviour) and **NULL** here. A differential probe of the
+whole key ABI — first dynamic key, exhaustion count and code, the `EINVAL`
+boundaries of `pthread_key_init_np` and `pthread_key_delete`, un-adopted
+reserved keys, and destructor re-runs at thread exit — agrees line for line on
+macOS and under machorun apart from that one. Reproducing an out-of-bounds read
+is not parity worth having.
+
 ### `objc-cache-never-collects` — a LEAK, not a stub
 `patches-macho/0004`. `_collecting_in_critical()` returns TRUE unconditionally,
 meaning "a reader may be active, do not free", so `cache_collect()` never

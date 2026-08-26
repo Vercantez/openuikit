@@ -59,6 +59,14 @@ static void note(const char *s)          /* unbuffered stderr, no formatting */
  *   pthread_setspecific(55, v) on a key nobody adopted   0, reads back
  *   pthread_key_delete(100) on a reserved key            EINVAL
  *   a destructor that re-sets its own slot               runs again
+ *   pthread_key_create when exhausted                    EAGAIN
+ *
+ * The same probe was then run against THIS implementation under machorun and
+ * agreed line for line, with one deliberate divergence: pthread_getspecific()
+ * on an OUT-OF-RANGE key returns garbage on Darwin -- it is a raw indexed load
+ * off the thread struct with no validation, and POSIX says the behaviour is
+ * undefined -- and NULL here. Reproducing an out-of-bounds read is not parity
+ * worth having.
  *
  * So: keys 0..257 are the reserved block and live in our array; 258..767 are
  * dynamic. The dynamic half is delegated to glibc with a fixed +258 bias
