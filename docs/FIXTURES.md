@@ -503,6 +503,57 @@ is the classic place to get an off-by-`fat_arch.offset` bug.
 
 ---
 
+### (n) `15_quartz` — the drawing rung, and the one fixture off the ladder
+
+Plain C, no Objective-C. Links `/usr/lib/libquartz.dylib` (our Mach-O build of
+`~/quartz`) plus libSystem and nothing else. Creates a 256×256 bitmap context,
+draws nine stages, writes a PNG.
+
+**It is not in `tests/manifest.tsv` and `scripts/difftest.sh` does not grade
+it.** Two structural reasons, neither of which is worth a special case in the
+shared harness:
+
+* its result is a **file**, not stdout; and
+* its macOS run needs `DYLD_LIBRARY_PATH`, because its install name is the
+  absolute Darwin path `/usr/lib/libquartz.dylib`, which exists on neither host.
+
+`scripts/quartz_pixel.sh` is its differential and follows the same rules as
+`difftest.sh` — it re-executes the macOS oracle every run rather than trusting
+the committed baseline, and it writes `tests/expected/` only under `--record`,
+only on macOS.
+
+The absolute install name is deliberate and `@rpath` was rejected: `@rpath`
+resolves against the same repository layout on both hosts, so **both** runs
+would load the same file and the Linux run would silently not be testing the
+Linux build. On Linux, machorun's prefix map turns the absolute path into
+`darwin/usr/lib/libquartz.dylib`; on macOS, `DYLD_LIBRARY_PATH` substitutes the
+leaf name against an Apple-clang build of the same vendored sources.
+
+What each stage is for, and which one matters most:
+
+| stage | exercises |
+|---|---|
+| 1 background | flat fill, premultiplied store |
+| 2 rects | integer-boundary coverage, no AA decisions |
+| 3 alpha-rects | source-over with fractional coverage |
+| 4 bezier-fill | cubic flattening tolerance |
+| 5 dashed-stroke | the stroke converter, round caps and joins |
+| 6 linear-gradient | per-scanline interpolation under a rect clip |
+| 7 radial-gradient | the same through a sqrt, under an ellipse clip |
+| **8 rotated** | **the only stage that reaches a transcendental** |
+| 9 eo-clip | even-odd winding |
+
+Stage 8 is `QZContextRotateCTM`, i.e. `cos`/`sin`, i.e. Apple's Libm on one side
+and glibc's on the other through `darwin/src/math.c` — very likely via the
+`__sincos_stret` aggregate ABI. IEEE 754 pins nothing about either function, so
+that is the stage a divergence would appear in first. The fixture prints an
+FNV-1a of the whole framebuffer after **every** stage precisely so that such a
+divergence is localised on stdout before the PNG is compared.
+
+Measured 2026-08-26: all nine checksums identical, PNG byte-identical
+(26,861 bytes). `docs/QUARTZ_MACHO.md` §3 states the limit that result does
+*not* remove.
+
 ## What the harness guarantees
 
 `tests/expected/` is the oracle's output and nothing else may write it.
@@ -531,6 +582,9 @@ lying.
 tests/build_fixtures.sh              rebuild everything (macOS only)
 tests/build_fixtures.sh 06_tls       rebuild one
 harness/run_macos.sh --record        re-record after any rebuild
+
+tests/build_fixtures.sh 15_quartz    also builds the macOS oracle libquartz
+scripts/quartz_pixel.sh --record     re-record 15_quartz (macOS only; PNG too)
 ```
 
 Rebuilding produces different bytes (fresh `LC_UUID` and ad-hoc code
