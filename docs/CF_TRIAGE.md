@@ -193,3 +193,111 @@ sed -e 's|cfbuild|cfbuild5|' -e 's|-DDISPATCH_APPLY_AUTO|-Dd_fileno=d_ino \
   -include $HOME/work/cfextra/CFShimCarbon.h -DDISPATCH_APPLY_AUTO|' \
   ~/cf_census.sh > ~/cf_census5.sh && bash ~/cf_census5.sh
 ```
+
+---
+
+# Part 2 — the link edge (2026-08-26, later)
+
+The milestone is a **linked** `libCoreFoundation.dylib` that loads under
+machorun, not a higher compile count. This is how far that got and exactly where
+it stops.
+
+## 6. ObjC mode builds — and reaches parity with Swift mode
+
+`docs/DECISION.md` §4A said corelibs' ObjC path is dead code. That is right about
+`DEPLOYMENT_RUNTIME_OBJC` and its stubbed dispatch macros, but it understated
+what is reachable. Building with **`-DDEPLOYMENT_RUNTIME_SWIFT=0`** — "neither
+Swift-runtime nor Apple-internal" — reaches **69 pass / 17 fail, identical to
+Swift mode**, at a cost of four small reconstructions:
+
+| gap | what it is |
+|---|---|
+| `libkern/OSTypes.h` | `CFBase.h:69` takes the Darwin branch when Swift mode is off and wants Apple's libkern header. 8 typedefs. |
+| `_CFThreadRef`, `_CFThreadAttributes`, `_CFThreadSpecificKey` | Defined only in `ForSwiftFoundationOnly.h`, which ObjC mode does not include — yet CF names these types in its own internals regardless. A corelibs **layering bug invisible in the only mode Apple builds**. 3 typedefs. |
+| `AbsoluteTime` | CarbonCore type CFRunLoop still names. 2 lines. |
+| **`__kCFAllocatorTypeID_CONST`** | **Used at `CFRuntime.c:1720`, defined NOWHERE in the open-source tree.** It sits in the `#else` of `#if DEPLOYMENT_RUNTIME_SWIFT` (`CFRuntime.c:1542-1737`) — the branch holding the *real* CF deallocation path. Swift mode never compiles it because `CFRelease` there just forwards to `swift_release`. Reconstructed as `_kCFRuntimeIDCFAllocator` (2). |
+
+That last one is the sharpest evidence yet for the decision: **corelibs' non-Swift
+CF path is not merely unbuilt, it is incomplete by omission.** Each such gap is a
+judgement call, and they must be recorded as reconstructions rather than
+silently defined.
+
+**ObjC mode is the better base for us regardless**, because it drops the Swift
+coupling entirely: 58 `$s15SwiftFoundation…`/`swift_*` references in Swift mode
+→ **0**, once `-fcf-runtime-abi=objc` is also set (see §7).
+
+## 7. A link-level wall that is not a symbol: `__cfstring` alignment
+
+First link attempt failed with **`symbol l__unnamed_cfstring_.N at misaligned
+offset`**, not undefined symbols. Cause: the census inherited
+`-fcf-runtime-abi=swift`, which changes the constant-CFString record layout;
+`ld64.lld` rejects the resulting `__DATA,__cfstring` entries.
+
+`-fcf-runtime-abi=objc` fixes it **and** is the correct flag for our mode — it is
+also what redirects constant strings from `_$s15SwiftFoundation19_NSCFConstantStringCN`
+to `___CFConstantStringClassReference`, an ObjC symbol our Foundation supplies.
+One flag, two problems, and it would have been invisible from a compile census.
+
+## 8. Where it stops: 174 undefined symbols
+
+With all 69 ObjC-mode objects linked against libSystem + libobjc, the link now
+fails **only** on undefined symbols — the tractable kind:
+
+| category | count | note |
+|---|---|---|
+| `CF*` defined by the 17 ICU-blocked files | 77 | free once ICU lands |
+| **libdispatch** | **21** | **new structural dependency — see below** |
+| libc / pthread / dirent / locale | 40 | libSystem gaps; mechanical |
+| dyld / Mach-O introspection | 10 | `_dyld_image_count`, `getsectbynamefromheader_64`, … |
+| **Mach kernel** | **9** | `mach_port_{construct,destruct,extract_member,insert_member,type}`, `mk_timer_{create,arm,cancel,destroy}` |
+| OSAtomic / OSMemoryBarrier | 5 | trivial, real implementations via `__atomic` builtins |
+| misc (`__exp10`, `__udivti3`, personality) | 3 | trivial |
+| ICU direct, NXArchInfo, vouchers | 6 | |
+
+### The new finding: CoreFoundation needs libdispatch
+
+CF depends on GCD structurally — `dispatch_source_create`,
+`dispatch_source_set_timer`, `dispatch_semaphore_*`, `dispatch_async`,
+`dispatch_once`, plus the CF-private `_dispatch_main_queue_callback_4CF` and
+`_dispatch_get_main_queue_port_4CF` that wire GCD into CFRunLoop.
+
+**machorun's libSystem exports exactly one dispatch symbol**
+(`dispatch_queue_get_label`). CF needs 21.
+
+This was not in the M2 estimate and it is not small: it means
+**swift-corelibs-libdispatch has to be built as Darwin Mach-O** before CF can
+link. It also interacts with the RunLoop decision — the `_4CF` entry points exist
+precisely to let CFRunLoop and the dispatch main queue share a thread, so
+"emulate Mach ports" vs "take the Linux RunLoop" is now partly a question about
+which libdispatch we have.
+
+## 9. Revised sequencing for M2
+
+Three hard prerequisites, none of which is CF itself:
+
+1. **libdispatch as Mach-O** (new; blocks the link outright)
+2. **ICU** via `apple/swift-foundation-icu` 0.0.9 (unblocks 17 files and 77 symbols)
+3. **9 Mach symbols** in libSystem, or the Linux-RunLoop fork
+
+then ~40 libc exports and a handful of trivia. The compile side is essentially
+solved; **none of the remaining work is in CF's own code.**
+
+Estimate impact: M2's 3–4 weeks did not account for libdispatch. Treat CF as
+**gated on a libdispatch port** and re-plan accordingly — that is the honest
+read, and it is better to know now than at the link line in week three.
+
+## 10. Reproducing part 2
+
+Private working dir on the build box, `~/fnd-link` (not the shared scratchpad):
+
+```sh
+bash ~/fnd-link/cf_census_objc2.sh          # ObjC mode, -fcf-runtime-abi=objc
+clang -target arm64-apple-macos13.0 -isysroot $SDK -fuse-ld=lld \
+  -B /usr/lib/llvm-18/bin -nostdlib -dynamiclib \
+  -install_name /usr/lib/libCoreFoundation.dylib -Wl,--error-limit=0 \
+  -L$SDK/usr/lib obj2/*.o -lSystem -lobjc -o libCoreFoundation.dylib
+```
+
+Loader for any load test must be built from machorun
+`fix/map-below-isa-mask` (tip `79b4530`, which includes the heap fix `9659e73`),
+not master.
