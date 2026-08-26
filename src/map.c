@@ -161,6 +161,16 @@ void mr_map_image(mr_image *im)
     }
 }
 
+/* The inverse of the SG_READ_ONLY protection below, for the one caller that is
+ * allowed to ask: libobjc, through dyld's makeImageMutable block. Rounds the
+ * same way mr_protect_readonly_segments does so the two agree on page bounds. */
+int mr_mprotect_rw(void *addr, uint64_t size)
+{
+    uintptr_t base = (uintptr_t)mr_round_dn((uint64_t)(uintptr_t)addr, MR.page.v);
+    uint64_t  len  = mr_round_up(size + ((uintptr_t)addr - base), MR.page.v);
+    return mprotect((void *)base, (size_t)len, PROT_READ | PROT_WRITE);
+}
+
 void mr_protect_readonly_segments(mr_image *im)
 {
     for (int i = 0; i < im->nsegs; i++) {

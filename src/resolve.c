@@ -79,6 +79,34 @@ void mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
                 in->path, name);
 }
 
+/* dlsym(3) over GUEST images.
+ *
+ * Darwin's dlsym takes the C name and prepends the underscore itself, so
+ * dlsym(RTLD_DEFAULT, "objc_msgSend") looks up "_objc_msgSend". Only
+ * RTLD_DEFAULT is served here: it is the same flat search, in the same load
+ * order, that BIND_SPECIAL_DYLIB_FLAT_LOOKUP gets below.
+ *
+ * It deliberately does NOT fall back to the host. A guest asking for a symbol
+ * we do not have must get NULL -- as it would on a Mac missing that library --
+ * rather than a same-named glibc symbol. */
+void *mr_dlsym_default(const char *name)
+{
+    char buf[512];
+    uint64_t addr = 0;
+    size_t n = strlen(name);
+
+    if (n + 2 > sizeof buf)
+        mr_die("dlsym: symbol name is %zu bytes, longer than machorun's %zu-byte buffer",
+               n, sizeof buf - 2);
+    buf[0] = '_';
+    memcpy(buf + 1, name, n + 1);
+
+    for (int i = 0; i < MR.nimages; i++)
+        if (mr_exports_lookup(MR.images[i], buf, &addr))
+            return (void *)(uintptr_t)addr;
+    return NULL;
+}
+
 uint64_t mr_resolve_symbol(mr_image *from, int lib_ordinal, const char *name,
                            int weak_import, int *found)
 {

@@ -28,24 +28,9 @@ static void call_init(mr_image *im, uint64_t addr, const char *how, size_t idx)
     fn(MR.argc, MR.argv, MR.envp, MR.apple);
 }
 
-/* Does this image carry ObjC metadata? If so it needs libobjc's map_images to
- * have run before any initialiser, and we do not have that yet -- say so
- * precisely rather than crashing inside a +load. */
-void mr_objc_note_image(mr_image *im)
-{
-    for (int i = 0; i < im->nsegs; i++) {
-        const mr_segment *s = &im->segs[i];
-        for (uint32_t j = 0; j < s->nsects; j++) {
-            if (strncmp(s->sects[j].sectname, "__objc_imageinfo", 16) != 0) continue;
-            mr_unimplemented("ObjC image registration",
-                             "%s carries __objc_imageinfo, so it needs libobjc's map_images / "
-                             "load_images callbacks (registered through "
-                             "_dyld_objc_register_callbacks) to run before its initialisers. "
-                             "No Mach-O libobjc.A.dylib is shipped in darwin/ yet, so classes "
-                             "would never be registered and objc_msgSend would fault.", im->path);
-        }
-    }
-}
+/* mr_objc_note_image lives in src/objc_notify.c now: an image carrying
+ * __objc_imageinfo gets libobjc's load_images (+load) callback here, before
+ * its own initialisers, which is dyld's ordering. */
 
 void mr_run_initialisers(mr_image *im)
 {

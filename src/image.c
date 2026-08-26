@@ -49,6 +49,25 @@ const struct section_64 *mr_image_section(const mr_image *im, const char *seg, c
     return NULL;
 }
 
+/* Is this address inside a mapped guest image (any segment of any image)?
+ *
+ * Exists for one caller with a sharp requirement: Darwin's malloc_size(p)
+ * returns 0 for a pointer no malloc zone owns, and objc4 leans on that --
+ * `try_free(p)` in objc-runtime-new.h is `if (p && malloc_size(p)) free(p)`,
+ * which is how it tells a class_ro_t the compiler put in __DATA_CONST from one
+ * it allocated itself. glibc's malloc_usable_size does no such validation: it
+ * reads the word before the pointer and returns whatever is there. So machorun
+ * has to answer "is this image data?" itself. See darwin/src/libsystem.c. */
+int mr_addr_in_image(const void *p)
+{
+    uint64_t a = (uint64_t)(uintptr_t)p;
+    for (int i = 0; i < MR.nimages; i++) {
+        const mr_image *im = MR.images[i];
+        if (a >= im->span_lo && a < im->span_hi) return 1;
+    }
+    return 0;
+}
+
 mr_image *mr_image_find_loaded(const char *key)
 {
     for (int i = 0; i < MR.nimages; i++) {
