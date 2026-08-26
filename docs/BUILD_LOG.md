@@ -503,3 +503,82 @@ Apple's shipped simulator runtime the whole time.
 
 The cheap habit worth keeping: **before provisioning, check whether the question
 is about a binary we already have.**
+
+---
+
+## 11. Where `class_rw_t` comes from, and why it lands below 2^47
+
+`DEBUG_DATA_MASK` masks `class_data_bits_t` at `objc_class+0x20` to yield a
+`class_rw_t*` — a pointer objc4 **allocates at runtime**. So the sub-2^47
+constraint binds the guest *heap*, not only image placement. Asked whether that
+holds by design or by luck. **By design, and it is already closed in machorun's
+`fix/map-below-isa-mask` (a1718a4).** Recorded here because the question will
+recur and the mechanism is not obvious.
+
+### The allocation path
+
+`objc::zalloc<class_rw_t>()` (`objc-zalloc.h`) dispatches on
+`sizeof(T) % 16 == 0`: either straight `::calloc`, or a slab allocator whose
+refill mallocs. Both bottom out in the guest's `malloc`, and machorun's
+libSystem forwards every one of those to glibc (`glibc_malloc`, via
+`darwin/src/objcsupport.c` and `libcxx.c`). **There is no private objc arena.**
+So `class_rw_t` is a glibc heap pointer, and its address is whatever glibc's
+main arena hands out.
+
+### Why it is low, in three parts
+
+The decisive one is **link-time, not mmap policy**, and `src/map.c` explains
+why: on aarch64 Linux puts a PIE at `2*TASK_SIZE/3` (`0xaaaa_xxxx_xxxx`) and
+**brk follows the image**, so the main arena inherits an address above 2^47 that
+no mmap policy can move. `scripts/build.sh` therefore links the loader
+`-no-pie -Wl,-Ttext-segment=0x10000000000` (2^40) so brk starts below the limit.
+Then `mr_constrain_heap()` adds `mallopt(M_ARENA_MAX, 1)` — a second thread
+would otherwise get an mmap'd arena, measured at `0xffffb4000b70` — and
+`mallopt(M_MMAP_THRESHOLD, 32 MiB)`, glibc's own maximum, keeping ordinary
+allocations in brk.
+
+**machorun-isamask's original concern was correct and was not merely unreached.**
+`src/map.c`'s own comment records the crash it caused: fault address
+`0x2aaab6c04ea8`, which is `0xaaaab6c04ea8` — "a perfectly ordinary glibc
+main-arena address" — with bit 47 cleared. It was hit, diagnosed and fixed.
+
+### Headroom, and the one residue
+
+`MR_LOADER_BASE = 0x10000000000` (2^40), `MR_ISA_LIMIT = 0x800000000000` (2^47):
+brk would have to grow **~139.7 TiB** on a single arena before it could cross.
+Not a realistic exhaustion path.
+
+The honest residue, documented in machorun rather than fixed: **a single
+allocation ≥ 32 MiB still goes to mmap and still lands high.** The argument is
+that no class object is 32 MiB — the sizes at issue are Swift's 64 KiB metadata
+pool refills and objc4's few-hundred-byte class pairs — and a guest asking for
+32 MiB is asking for a buffer, not a class. That holds.
+
+### The assertion already exists
+
+`mr_constrain_heap()` is called from `main.c:166`, before `find_darwin_root()`
+and before any guest allocation (ordering matters: `M_ARENA_MAX` only binds
+arenas that do not exist yet). It calls `sbrk(0)` and `malloc(64)` and
+`mr_die()`s if either is at or above `MR_ISA_LIMIT`, with a message that names
+the mask, the consequence and the fix. It verifies rather than trusts.
+
+**One soft spot worth hardening.** If `mallopt(M_ARENA_MAX, 1)` is *refused*,
+the code logs a warning and continues — and the startup probe runs before any
+guest thread exists, so a secondary arena created later is never checked. With
+zero margin that is the one path where a truncation could still occur silently.
+Cheap fix: re-probe once on the guest's first secondary thread (one
+`malloc`/`free`) and die on a high answer.
+
+**Stale doc:** `machorun/docs/UNIMPLEMENTED.md#isa-va-width` still says
+"Nothing aborts, which is the problem." `mr_constrain_heap()` now does.
+
+### What a wider scan did and did not show
+
+Scanning every `and`/`ands` immediate with a contiguous run of ones from bit 3
+across the simulator and device (`iphoneos`, `appletvos`) Swift runtimes found
+**no pointer-field mask tighter than 2^47**, so `MR_ISA_LIMIT = 2^47` is the
+binding constraint among Apple binaries we might stage. That scan is noisy,
+though — most matches are ordinary alignment masks, and `survey_isa_masks.py`'s
+`kind` label is only meaningful for a mask already known to be a pointer mask.
+The trustworthy result is the targeted one in §9, which matches the two known
+constants exactly.
