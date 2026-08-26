@@ -186,4 +186,28 @@ if os.environ.get("SWIFTCORE_MACHO_LEGACY_IMAGE_REG") == "1":
 #undef OBJC_ADDLOADIMAGEFUNC2_DEFINED
 #define OBJC_ADDLOADIMAGEFUNC2_DEFINED 0""", "legacy image registration path")
 
+# ---------------------------------------------------------------------------
+# 6. Widen the Objective-C isa mask to match machorun's objc4.
+#
+# machorun's patches-macho/0001-wide-va-isa-layout.patch widens objc4's ISA_MASK
+# to 0x007ffffffffffff8 because the host is Linux, whose user addresses are 48
+# bits wide; Apple's arm64 macOS mask (0x00007ffffffffff8, bits 3..46) would
+# truncate every class pointer. Swift hardcodes Apple's value and bakes it into
+# 48 AND/ANDS-immediate instructions in libswiftCore.
+#
+# machorun maps guest images above 2^47, so libswiftCore's narrower mask strips
+# bit 47 from the class pointer (0x0000fe3de57774b8 -> 0x00007e3de57774b8) and
+# the next instruction dereferences a non-class. That is the fault at
+# swift_unknownObjectRelease+0x10. Only the unknownObject retain/release family
+# reads the isa, which is why plain classes work and non-class-bound
+# existentials / AnyObject do not.
+#
+# scripts/widen_isa_mask.py applies the identical change to an already-built
+# dylib, for when no rebuild machine is available.
+# ---------------------------------------------------------------------------
+edit("include/swift/ABI/System.h",
+     "0x00007ffffffffff8ULL",
+     "0x007ffffffffffff8ULL /* swiftcore-macho: machorun wide-VA isa, patch 6 */",
+     "wide-VA objc isa mask")
+
 print("patches applied")

@@ -252,3 +252,69 @@ scripts/run_under_machorun.sh /tmp/hello.swift
 ```
 
 Total wall-clock on 64 cores: configure ~10 s, full stdlib build ~4 min.
+
+---
+
+## 8. Wall 12 (found 2026-08-26, after the box was released): the isa mask
+
+A teammate exercising the OpenUIKit slice against this stdlib reported faults in
+`swift_unknownObjectRetain`/`Release` "on a stack-region isa", with plain classes
+and class-bound existentials passing but non-class-bound existentials failing.
+That is fully explained, and it is our bug, not theirs.
+
+machorun patches objc4's isa layout because the **host** is Linux, whose user
+addresses are 48 bits wide (`machorun/patches-macho/0001-wide-va-isa-layout.patch`):
+
+```
+machorun objc4:  ISA_MASK 0x007ffffffffffff8    bits 3..54
+libswiftCore:    ISA_MASK 0x00007ffffffffff8    bits 3..46   (Apple arm64 macOS)
+```
+
+Swift hardcodes Apple's value — `SWIFT_ABI_ARM64_OBJC_ISA_MASK` in
+`include/swift/ABI/System.h` — and bakes it into **48** AND/ANDS-immediate
+instructions. machorun maps guest images above 2^47 (a crash pc from our own
+first run: `0xfe3de57774bc` = 2^47.99), so the narrower mask strips bit 47:
+
+```
+0x0000fe3de57774b8  ->  0x00007e3de57774b8
+```
+
+which is not a class, and the next instruction (`ldrb w9, [x8, #0x20]`)
+dereferences it. Disassembly of our own artifact, fault site marked:
+
+```
+_swift_unknownObjectRelease:
+  3328bc   ldr   x8, [x0]
+  3328c0   and   x8, x8, #0x7ffffffffff8     <- Apple's 44-bit mask
+  3328c4   ldrb  w9, [x8, #0x20]             <- faults here
+```
+
+`swift_retain`/`swift_release` never read the isa; only the `unknownObject`
+family does. That is exactly why plain classes and (optimizer-devirtualised)
+class-bound existentials pass while `AnyObject` and non-class-bound existentials
+fault — the trigger is the *calling convention*, not the unowned back-reference.
+
+**Fix.** Patch 6 widens the constant for a rebuild. Both masks are contiguous
+runs of ones starting at bit 3, so both encode as AArch64 64-bit logical
+immediates with `N=1, immr=61`, differing only in `imms` (43 vs 51) — six bits
+per instruction, same length. `scripts/widen_isa_mask.py` therefore applies the
+identical change in place:
+
+```
+$ python3 scripts/widen_isa_mask.py \
+      artifacts/swift-macosx/arm64/libswiftCore.dylib \
+      artifacts/libswiftCore.machorun-wideisa.dylib
+  AND-immediate sites widened: 48
+  data words widened:          1      (_swift_isaMask)
+```
+
+Zero narrow sites remain; exports (30,723) and dependencies unchanged.
+
+**Caveat.** Patch 6's anchor string has *not* been verified against the source
+tree — the build box was released before this was found. `apply_patches.py`
+asserts each anchor matches exactly once, so it will fail loudly rather than
+silently no-op if the constant lives elsewhere in 6.2.4.
+
+**This makes the artifact machorun-specific**, in the same way and for the same
+reason machorun's objc4 is: it encodes a 48-bit host VA. A libswiftCore for real
+Darwin must keep Apple's mask. Keep both files distinct.
