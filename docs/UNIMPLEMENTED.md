@@ -10,28 +10,33 @@ Message format:
 machorun: UNIMPLEMENTED: <short name> (<file>:<line>) — see docs/UNIMPLEMENTED.md#<anchor>
 ```
 
-This file is seeded from the design study (`docs/PLAN.md`), before any loader
-code exists. Entries are predictions of where stubs will be needed; each becomes
-real when the corresponding stub is written, and is deleted when it is
-implemented. **Do not delete an entry without deleting the stub.**
+This file was seeded from the design study (`docs/PLAN.md`) before any loader
+code existed, and revised on 2026-08-26 once the loader ran the corpus. Entries
+that turned out to be implemented are marked **DONE** with what was actually
+built rather than deleted, because the prediction is part of the record. Every
+remaining entry corresponds to a live stub that aborts loudly.
+**Do not delete an entry without deleting the stub.**
 
 ---
 
 ## Loader
 
-### `lc-unixthread`
-`LC_UNIXTHREAD` entry points. Measured: the only `LC_UNIXTHREAD` arm64 Mach-O on
-a full macOS 26 install is `/usr/lib/dyld` itself, and the modern toolchain will
-not emit one for userland code. Blocks: nothing we can build. Cost to fix: ~20
-lines (`flavor`, `count`, `arm_thread_state64_t.pc`).
+### `lc-unixthread` — **DONE**
+Parsed (`ARM_THREAD_STATE64` only; any other flavor aborts naming it) and
+entered: `src/main.c` builds Darwin's kernel-style entry stack
+(`[argc][argv][NULL][envp][NULL][apple][NULL]`) and branches to `pc`.
+Ungradeable by construction — macOS SIGKILLs the only fixture — so this is
+verified by inspection, not by the oracle.
 
 ### `lc-main-stacksize`
 `LC_MAIN.stacksize != 0` (set by `-Wl,-stack_size`). Requires running `main` on
 a separately `mmap`ed stack. Measured 0 in every fixture.
 
-### `fat-binary`
-`0xcafebabe` / `0xbebafeca` universal binaries. Needs a slice selector. All
-fixtures are thin arm64. Cost to fix: ~40 lines.
+### `fat-binary` — **DONE**
+`FAT_MAGIC`/`FAT_CIGAM` and their 64-bit forms, big-endian `fat_arch` table,
+`CPU_TYPE_ARM64` non-arm64e slice selected, every file offset taken relative to
+the slice. `10_fat` PASSes with output byte-identical to `03_printf`, which is
+what makes a slice-selection bug detectable.
 
 ### `arm64e`
 `cpusubtype & 0xFF == 2`. Pointer authentication, `DYLD_CHAINED_PTR_ARM64E`
@@ -40,11 +45,14 @@ not expose PAC at all and the signing keys are process-scoped. Reject at the
 front door.
 
 ### `chained-ptr-format`
-Chained pointer formats other than 6 (`64_OFFSET`) and 2 (`64`). Every binary
-measured used format 6 exclusively. Abort naming the format number.
+Formats 6 (`64_OFFSET`) and 2 (`64`) are implemented; every other format aborts
+naming the number **and** the format's name. Still true that every binary in the
+corpus uses 6 exclusively, so format 2 is implemented but untested by the oracle.
 
 ### `chained-import-format`
-`DYLD_CHAINED_IMPORT_ADDEND` (2) and `_ADDEND64` (3). Only format 1 observed.
+Formats 1 (`DYLD_CHAINED_IMPORT`) and 2 (`_ADDEND`) are implemented; 3
+(`_ADDEND64`) aborts. Only format 1 appears in the corpus, so 2 is likewise
+implemented but oracle-untested.
 
 ### `chained-start-multi`
 `DYLD_CHAINED_PTR_START_MULTI` (`page_start & 0x8000`). On arm64 a chain cannot
@@ -52,13 +60,19 @@ cross a 16 KiB page (max reach `4095 * 4 = 16380`), so this should never appear;
 abort if it does, because it means an assumption is wrong.
 
 ### `dyld-stub-binder`
-The `dyld_stub_binder` GOT slot is bound to a stub that aborts. Lazy binding is
-performed eagerly at load time instead (see PLAN.md I.6). If this abort ever
-fires, the eager assumption was wrong for that binary.
+Still true, with one change of location. The stub lives in the **loader**
+(`mr_stub_binder_trap`, `src/resolve.c`), not in libSystem, because ld64.lld-18
+segfaults in `StubHelperSection::writeTo` when the dylib it is linking also
+defines `dyld_stub_binder`. Lazy binding is performed eagerly at load time
+(PLAN.md §I.6); `05c` and `07c` exercise real lazy streams and pass, so the
+eager assumption holds for everything measured. If this abort fires, it did not.
 
 ### `export-trie-reexport`
 `EXPORT_SYMBOL_FLAGS_REEXPORT` (0x08) and `EXPORT_SYMBOL_FLAGS_STUB_AND_RESOLVER`
-(0x10) in an export trie. Not needed while our libSystem is a single flat dylib.
+(0x10) in an export trie: both abort naming the symbol. Not needed while our
+libSystem is a single flat dylib. Note the *load-command* side,
+`LC_REEXPORT_DYLIB`, is handled to the extent of being searched during
+resolution, but a re-exporting dylib's trie entries are not chased.
 
 ### `page-size-64k`
 Host page size > 16384. `__TEXT` (`r-x`) and `__DATA_CONST` (`rw-`) are 16 KiB
@@ -77,7 +91,36 @@ frameworks are added, and its frequency is an honest progress metric.
 
 ### `tlv-thread-atexit`
 `__cxa_thread_atexit` / `_tlv_atexit` — C++ `thread_local` with non-trivial
-destructors. Not in the milestone-1 fixtures.
+destructors. `_tlv_atexit` is exported and aborts. Not in the corpus.
+
+### `libcxx-subset`
+`darwin/usr/lib/libc++.1.dylib` is **not** libc++. It is the operator
+new/delete family, the `__cxa_guard_*` trio, and `std::terminate` — which is
+exactly what `05b_cxx_init` leaves undefined once the headers are inlined
+(measured: its whole libc++ import list is `__ZdlPv`). Any other libc++ symbol
+fails as an undefined symbol naming itself. `__cxa_guard_acquire` is
+single-threaded: it does not block a second thread on an in-progress
+initialisation.
+
+### `os-unfair-lock`
+`os_unfair_lock_lock`/`unlock` abort. The lock is a 4-byte struct compiled into
+the guest, so a side table keyed by address is needed; nothing in the corpus
+uses it.
+
+### `pthread-attr`
+`pthread_create` with a non-NULL `pthread_attr_t` aborts: Darwin's attribute
+struct is compiled into the guest and its layout is not glibc's. Same for
+`pthread_mutex_init` with attributes. The static initialisers
+(`PTHREAD_MUTEX_INITIALIZER`, `PTHREAD_ONCE_INIT`) *are* handled, by keeping a
+glibc object inside Darwin's opaque bytes and using the signature word to tell
+"Apple-initialised" from "adopted".
+
+### `printf-family-gaps`
+Our formatter implements the `%[flags][width][.prec][length]` grammar for
+`diuxXospcf/e/g` and delegates only float conversion to glibc (through a
+non-variadic prototype). `%n` aborts. The `scanf` family, `syslog`, `err`/
+`warn` and `NSLog` are absent entirely — they are variadic, so they can never
+be forwarders, and none is in the corpus.
 
 ### `mach-ipc`
 `mach_msg` and anything requiring real cross-process Mach IPC (XPC, launchd,

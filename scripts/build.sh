@@ -33,6 +33,7 @@ build_loader() {
         "$ROOT"/src/tlv.c \
         "$ROOT"/src/tlv_asm.S \
         "$ROOT"/src/init.c \
+        "$ROOT"/src/crash.c \
         "$ROOT"/src/main.c \
         $LDFLAGS -ldl -lpthread -lm
     echo "   -> $BUILD/machorun"

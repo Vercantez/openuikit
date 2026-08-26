@@ -157,5 +157,6 @@ void     mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
 void mr_tlv_setup(mr_image *im);
 void mr_run_initialisers(mr_image *im);
 void mr_objc_note_image(mr_image *im);
+void mr_install_crash_reporter(void);
 
 #endif /* MACHORUN_H */

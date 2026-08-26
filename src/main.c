@@ -144,6 +144,7 @@ int main(int argc, char **argv)
     guest = argv[i];
 
     check_host();
+    mr_install_crash_reporter();
     find_darwin_root();
     mr_reserve_pagezero();
 

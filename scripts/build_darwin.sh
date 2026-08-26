@@ -40,3 +40,11 @@ $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
       -o "$OUT/libSystem.B.dylib" "$OBJ/libsystem.o"
 
 echo "   -> $OUT/libSystem.B.dylib"
+
+$CLANG $CFLAGS -c "$ROOT/darwin/src/libcxx.c" -o "$OBJ/libcxx.o"
+$LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+      -install_name /usr/lib/libc++.1.dylib \
+      -undefined dynamic_lookup \
+      -o "$OUT/libc++.1.dylib" "$OBJ/libcxx.o"
+
+echo "   -> $OUT/libc++.1.dylib"

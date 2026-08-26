@@ -24,7 +24,7 @@
 04_malloc	d	chained	run	pass	malloc/calloc/realloc/free/strdup/posix_memalign
 05_mod_init	e	chained	run	pass	initialisers via __TEXT,__init_offsets (S_INIT_FUNC_OFFSETS)
 05c_mod_init_classic	e	classic	run	pass	same source, initialisers via __DATA_CONST,__mod_init_func
-05b_cxx_init	e	chained	run	xfail:needs libc++ and libc++abi as Mach-O dylibs	C++ global ctors/dtors, __cxa_atexit, guarded local static
+05b_cxx_init	e	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local static
 06_tls	f	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
 07_dylib	g	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
 07c_dylib_classic	g	classic	run	pass	same, classic fixups on both images
