@@ -32,6 +32,7 @@ SRC="$ROOT/sdk/tests/abi_probe.c"
 EXPECTED="$ROOT/sdk/tests/abi_probe.expected.txt"
 TARGET_OS_SRC="$ROOT/sdk/tests/target_os_probe.c"
 MATH_DECL_SRC="$ROOT/sdk/tests/math_decl_probe.c"
+QOS_SRC="$ROOT/sdk/tests/qos_probe.c"
 BUILD="$ROOT/build/abi_probe"
 SDK="$ROOT/sdk"
 
@@ -71,6 +72,22 @@ math_decl_probe() { # math_decl_probe <clang> <sysroot>
     echo "   math decl probe ok against ${md_sysroot#$ROOT/}"
 }
 
+# sdk/tests/qos_probe.c is the ONE probe that runs on the Linux side only, and
+# the asymmetry is the point rather than an oversight: pthread/qos_private.h,
+# sys/qos_private.h and pthread/priority_private.h are Apple-PRIVATE and absent
+# from the macOS SDK, so there is no oracle to compile it against. It
+# compensates by checking the private headers against the PUBLIC qos.h they
+# extend, by asserting the cross-project invariant between xnu's encoding and
+# libpthread's values, and by pinning the constants a porter would otherwise
+# invent. See its header for why the mask in particular is dangerous to guess.
+qos_probe() { # qos_probe <clang> <sysroot>
+    q_clang="$1"; q_sysroot="$2"
+    "$q_clang" -target arm64-apple-macos11 -isysroot "$q_sysroot" \
+        -Werror -fsyntax-only "$QOS_SRC" \
+        || die "QoS private-header probe failed -- see the header of ${QOS_SRC#$ROOT/}"
+    echo "   QoS private probe ok against ${q_sysroot#$ROOT/}"
+}
+
 if [ "${1:-}" = "--record" ]; then
     [ "$(uname -s)" = "Darwin" ] || die "--record only runs on the macOS oracle"
     command -v xcrun >/dev/null 2>&1 || die "no xcrun"
@@ -104,6 +121,7 @@ echo "== ours: $CLANG -isysroot sdk/ , linked against sdk/usr/lib/*.tbd only"
 # is precisely what it did not do until CoreFoundation tried to compile.
 target_os_probe "$CLANG" "$SDK"
 math_decl_probe "$CLANG" "$SDK"
+qos_probe "$CLANG" "$SDK"
 $CLANG -target arm64-apple-macos11 -isysroot "$SDK" -O1 -Wall \
        -c "$SRC" -o "$BUILD/abi_probe.o" || die "compile against sdk/ failed"
 
