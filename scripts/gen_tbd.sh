@@ -72,6 +72,21 @@ if [ -z "$NM" ]; then
 fi
 [ -n "$NM" ] || die "no nm found (llvm-nm-18, llvm-nm or nm)"
 
+# otool, for reading LC_REEXPORT_DYLIB. Same shape as NM above, and the REFUSAL
+# matters as much as the search: a tool that is absent must stop the script, not
+# return nothing. `otool` does not exist in the test-bed container at all --
+# `llvm-otool-18` does -- and a hardcoded `otool` here would silently find no
+# re-exports and emit .tbd files that are quietly short, which is the bug this
+# is being added to fix. Empty is the answer that most needs its instrument
+# checked.
+OTOOL="${OTOOL:-}"
+if [ -z "$OTOOL" ]; then
+    for c in llvm-otool-18 llvm-otool otool; do
+        command -v "$c" >/dev/null 2>&1 && { OTOOL="$c"; break; }
+    done
+fi
+[ -n "$OTOOL" ] || die "no otool found (llvm-otool-18, llvm-otool or otool)"
+
 # nm interleaves `<file> (for architecture arm64):` banners when handed a fat
 # Mach-O -- tests/bin/10_fat is one -- and `$NF` on such a line yields the
 # literal token `arm64):`. Dropping banner and blank lines is what keeps the fat
@@ -81,6 +96,11 @@ strip_banners() { grep -vE '^$|\(for architecture .*\):$|^[^ ]*:$'; }
 # defined-external symbols of a Mach-O or ELF file, one per line
 exports_of() { "$NM" --defined-only --extern-only --format=just-symbols "$1" 2>/dev/null \
                  | sed 's/[[:space:]]*$//' | strip_banners | sort -u; }
+# The install names a dylib RE-EXPORTS. otool prints `name <path> (offset N)`
+# on the line after the LC_REEXPORT_DYLIB command.
+reexports_of() { "$OTOOL" -l "$1" 2>/dev/null \
+                   | awk '/LC_REEXPORT_DYLIB/{f=1} f&&/^ *name /{print $2; f=0}'; }
+
 # undefined symbols. --format=just-symbols does not filter, so parse the long form.
 imports_of() { "$NM" -u "$1" 2>/dev/null | strip_banners | awk '{print $NF}' | sort -u; }
 
@@ -235,15 +255,79 @@ fi
 
 [ "$fail" = 0 ] || exit 1
 
+# ------------------------------------------- re-exports, merged INLINE
+#
+# A .tbd must vend everything the dylib vends, and a dylib vends what it
+# re-exports. Ours did not, and it was a real defect rather than a cosmetic one:
+# libc++.1.dylib re-exports libc++abi.dylib exactly as on Darwin, but
+# libc++.1.tbd listed only its own 105 symbols and none of libc++abi's 367.
+# ___gxx_personality_v0 was among the missing, so anything built on Linux
+# against this SDK could not bind it two-level and fell through to
+# `-undefined dynamic_lookup` -- A FLAT BIND, decided by load order, which is
+# the exact defect class CHECK 4 above exists to remove. Found by
+# swiftcore-build while trying to relink libswiftCore against these stubs.
+#
+# INLINE, NOT A `reexported-libraries:` STANZA, because that is what Apple does
+# and the linker's behaviour is what matters. Measured on the host SDK:
+# MacOSX.sdk/usr/lib/libc++.tbd has NO reexported-libraries stanza and DOES list
+# __gxx_personality_v0 in its own exports:. That is why `-lc++` on macOS yields
+# a two-level bind naming libc++.
+#
+# Depth-limited for the same reason src/resolve.c's lookup_in is: a re-export
+# cycle would otherwise not terminate, and four is deeper than any real chain.
+# ONE RE-EXPORT IS DELIBERATELY NOT ADVERTISED, and the asymmetry is the point.
+#
+# libSystem.B.dylib re-exports libc++abi.dylib. That is a DEVIATION from Darwin
+# (macOS does not), added so that ~/swiftcore-macho's source-built libswiftCore
+# -- which carries a stale two-level bind for ___gxx_personality_v0 naming
+# libSystem -- still loads. See docs/UNIMPLEMENTED.md#unwind-compact.
+#
+# It must not go in the .tbd. MEASURED: with it advertised, a Linux-built C++
+# guest linking `-lSystem -lobjc -lc++` binds ___cxa_throw and
+# ___gxx_personality_v0 "(from libSystem)", because -lSystem comes first and now
+# vends them. Apple's answer, and the one Apple's own shipped libswiftCore
+# records, is "(from libc++)". So advertising it does not merely describe the
+# deviation -- it PROPAGATES it into every new binary, and each of those becomes
+# another artifact pinning libSystem in place.
+#
+# A .tbd is what we PROMISE, not merely what a dylib happens to contain, and we
+# do not promise to keep re-exporting libc++abi from libSystem. Promising it
+# would make a temporary compatibility shim permanent by making binaries depend
+# on it. The runtime re-export stays until libswiftCore is relinked; the promise
+# never existed. Delete both together.
+tbd_skips_reexport() { # <re-exporter basename> <re-exported basename>
+    [ "$1" = "libSystem.B.dylib" ] && [ "$2" = "libc++abi.dylib" ]
+}
+
+reexport_closure() { # reexport_closure <dylib-path> <depth>
+    local f="$1" d="${2:-0}" name base
+    [ "$d" -lt 4 ] || return 0
+    for name in $(reexports_of "$f"); do
+        tbd_skips_reexport "$(basename "$f")" "$(basename "$name")" && continue
+        base="$DYLIB/$(basename "$name")"
+        [ -f "$base" ] || {
+            echo "   note: $(basename "$f") re-exports $name, which is not in $DYLIB;" >&2
+            echo "         its symbols cannot be merged and guests will not see them." >&2
+            continue
+        }
+        exports_of "$base"
+        reexport_closure "$base" $((d + 1))
+    done
+}
+
 # ------------------------------------------------------------------- emit
 # libSystem carries the loader's exports because on Darwin libSystem.B.tbd
 # re-exports libdyld.dylib and here the loader is dyld. Re-exporting cannot be
 # expressed without a libdyld to point at, so they are merged in.
-sort -u "$TMP/exp.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B"
-cp "$TMP/exp.libobjc.A"  "$TMP/sym.libobjc.A"
-cp "$TMP/exp.libc++.1"   "$TMP/sym.libc++.1"
-cp "$TMP/exp.libc++abi"  "$TMP/sym.libc++abi"
-[ -f "$TMP/exp.libquartz" ] && cp "$TMP/exp.libquartz" "$TMP/sym.libquartz"
+for d in "${DYLIBS[@]}"; do
+    { cat "$TMP/exp.$d"; reexport_closure "$DYLIB/$d.dylib"; } | sort -u > "$TMP/sym.$d"
+done
+# libSystem additionally carries the loader's exports, because on Darwin
+# libSystem.B.tbd re-exports libdyld.dylib and here the loader IS dyld. That one
+# cannot be expressed as an LC_REEXPORT_DYLIB -- there is no libdyld to point at
+# -- so it is merged from the list instead.
+sort -u "$TMP/sym.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B.tmp"
+mv "$TMP/sym.libSystem.B.tmp" "$TMP/sym.libSystem.B"
 
 emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     {

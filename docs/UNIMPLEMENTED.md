@@ -126,6 +126,30 @@ way `vendor/objc4` is built. That is a real project and has not been attempted;
 until then, growing `libcxx_std.cpp` by explicit instantiation is the cheap path
 and keeps our copies bit-identical to the headers they are compiled against.
 
+### `tbd-reexports` — FIXED 2026-08-27; the .tbd used to be short
+A `.tbd` must vend everything the dylib vends, **and a dylib vends what it
+re-exports**. `scripts/gen_tbd.sh` generated from `nm` alone and did not follow
+`LC_REEXPORT_DYLIB`, so `libc++.1.tbd` listed its own 105 symbols and none of
+libc++abi's 367 — even though `libc++.1.dylib` re-exports libc++abi exactly as
+on Darwin.
+
+`___gxx_personality_v0` was among the missing. **Anything built on Linux against
+this SDK therefore could not bind it two-level and fell through to
+`-undefined dynamic_lookup` — a FLAT bind, decided by load order**, which is the
+exact defect class `duplicate-definitions` exists to remove. Found by
+swiftcore-build while trying to relink libswiftCore against these stubs; the
+relink would have silently traded one wrong bind for another.
+
+**Merged INLINE, not as a `reexported-libraries:` stanza, because that is what
+Apple does** — measured on the host SDK: `MacOSX.sdk/usr/lib/libc++.tbd` has no
+such stanza and lists `__gxx_personality_v0` directly in its own `exports:`.
+That is why `-lc++` on macOS yields a two-level bind naming libc++. The closure
+is depth-limited at 4 for the same reason `src/resolve.c`'s `lookup_in` is.
+
+Result, verified on a Linux-built C++ guest that throws: `___cxa_throw` and
+`___gxx_personality_v0` *(from libc++)*, `__Unwind_Resume` *(from libSystem)* —
+identical to what Apple's shipped libswiftCore records, and it runs.
+
 ### `duplicate-definitions` — CHECKED, hard, since 2026-08-27
 Two dylibs defining the same symbol is **not an error** to the linker or the
 loader. It is a coin toss decided by load order, and it has cost this project
@@ -1231,6 +1255,19 @@ relinked — its bind should read *from libc++*, as Apple's does — drop the
 `-reexport_library` from `scripts/build_darwin.sh` and re-run the Swift gate.
 Verify by content, not by intention: `nm -m …/libswiftCore.dylib | grep
 gxx_personality` must not say `libSystem`.
+
+**THE `.tbd` DELIBERATELY DOES NOT ADVERTISE THIS RE-EXPORT**, and the asymmetry
+is the point. Measured: with it advertised, a Linux-built C++ guest linking
+`-lSystem -lobjc -lc++` binds `___cxa_throw` and `___gxx_personality_v0`
+*(from libSystem)*, because `-lSystem` comes first and would now vend them —
+while Apple's answer, and the one Apple's shipped libswiftCore records, is
+*(from libc++)*. Advertising it would not describe the deviation, it would
+PROPAGATE it into every new binary, and each of those becomes another artifact
+pinning libSystem in place. **A `.tbd` is what we PROMISE, not merely what a
+dylib contains**, and we do not promise to keep re-exporting libc++abi from
+libSystem. `scripts/gen_tbd.sh`'s `tbd_skips_reexport` is the single exception
+to an otherwise mechanical re-export merge; delete it and the
+`-reexport_library` together, in one commit.
 
 **What upstream took back, and what it improved.** `operator new`/`delete` and
 the `__cxa_guard_*` trio now come from libc++abi rather than
