@@ -180,6 +180,10 @@ HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *det
  * derived from pthread_self(). */
 HIDDEN unsigned mr_thread_token(void);
 
+/* The loader, not glibc: answers dlopen(RTLD_NOLOAD). Resolved through the
+ * loader-export seam, so no GLIBCSYM label. */
+extern int mr_image_is_loaded(const char *key);
+
 /* errno, in the two directions that matter. See darwin/src/posix.c. */
 HIDDEN int  *mr_errno_slot(void);          /* the guest-visible Darwin errno */
 HIDDEN void  mr_errno_in(void);            /* guest's value  -> glibc's errno */
