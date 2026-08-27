@@ -258,6 +258,14 @@ want 31_fcntl_madvise    && build 31_fcntl_madvise    "$CHAINED_TARGET" 31_fcntl
 # fails loudly. Same for SCHED_OTHER, whose 1 is glibc's SCHED_FIFO.
 want 32_pthread_attr     && build 32_pthread_attr     "$CHAINED_TARGET" 32_pthread_attr     32_pthread_attr.c --
 
+# --------------------------------------------------------------- rung (af)
+# The five sysctl MIBs CoreFoundation needs. sysctl is the only entry in the
+# whole boundary with NOTHING to forward to -- glibc dropped sys/sysctl.h,
+# Linux's sysctl(2) returns ENOSYS, and the symbol survives only as a compat
+# stub -- so every MIB is a translation or a refusal. KERN_PROC_PID gates
+# __CFInitialize itself.
+want 33_sysctl           && build 33_sysctl           "$CHAINED_TARGET" 33_sysctl           33_sysctl.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -78,6 +78,25 @@ int main(void)
     OFF(extern_proc, p_comm); OFF(extern_proc, p_starttime);
     SZ(struct eproc);
     OFF(eproc, e_ppid); OFF(eproc, e_pgid); OFF(eproc, e_ucred);
+    /* THE ONE FIELD CoreFoundation READS OUT OF kinfo_proc, and the reason it
+     * is pinned here rather than trusted: darwin/src/posix.c mirrors this
+     * offset BY HAND (it is compiled -nostdinc and cannot include this
+     * header), which is the linux_stat shape. A wrong constant there writes
+     * the saved set-user-ID into a neighbouring field and the value CF reads
+     * is a zero it was never given.
+     *
+     * It cannot be caught by tests/bin/33_sysctl: the synthesized struct is
+     * zeroed, so on a container running as root every offset reads 0 and the
+     * fixture's uid check passes whatever the constant says. Measured that
+     * directly -- a deliberately wrong offset passed the fixture. This pin and
+     * the static assert below are what actually guard it. */
+    printf("offset %-28s %zu\n", "kinfo_proc.p_svuid",
+           offsetof(struct kinfo_proc, kp_eproc.e_pcred.p_svuid));
+    _Static_assert(offsetof(struct kinfo_proc, kp_eproc.e_pcred.p_svuid) == 396,
+        "kinfo_proc.kp_eproc.e_pcred.p_svuid moved; darwin/src/posix.c hard-codes "
+        "396 in mr_sysctl_kinfo_proc() and cannot include this header to check");
+    _Static_assert(sizeof(struct kinfo_proc) == 648,
+        "struct kinfo_proc changed size; darwin/src/posix.c hard-codes 648");
     SZ(struct tzhead);
     OFF(tzhead, tzh_magic);    OFF(tzhead, tzh_version);
     OFF(tzhead, tzh_ttisgmtcnt); OFF(tzhead, tzh_ttisstdcnt);

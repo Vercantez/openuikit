@@ -642,6 +642,30 @@ nobody reads a crash report and believes it came from a Mac.
 Every other MIB **aborts**. An unimplemented MIB and a nonexistent one are
 different facts, and only one of them should look like a normal failure.
 
+### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
+Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
+the right answer is a design decision rather than a defect to patch quietly.
+
+    getpagesize()            16384   darwin/src/mach.c, hard-coded MR_DARWIN_PAGE
+    sysconf(_SC_PAGESIZE)     4096   translated straight through to the host's
+
+On macOS/arm64 both are 16384 and the question does not arise. Under machorun
+they differ, so **a guest asking the same question through two APIs gets two
+answers**. `getpagesize()` returning Darwin's value is defensible — a guest's
+Mach-O segments are 16K-aligned and 16384 is a multiple of the host's 4096, so
+alignment computed from it is always valid. But anything COUNTING pages with
+it under-counts by four.
+
+`HW_MEMSIZE` is deliberately computed as host-pages × host-page-size, because
+the question it answers is how much memory the machine has; using 16384 would
+over-report by 4×. `tests/src/33_sysctl.c` asserts against the `sysconf` value
+for that reason and says so at the call site.
+
+The fix is to pick one and make the other agree. Not done here because
+`MR_DARWIN_PAGE` is load-bearing for image mapping and `sysconf` has a recorded
+oracle (`tests/bin/22_sysconf`), so changing either is a decision with a blast
+radius rather than a one-line correction.
+
 ### `ioctl-request-encoding` — one namespace in, and why that is not a preference
 Darwin encodes an `ioctl` request as direction|size|group|number (`FIONREAD` is
 `0x4004667f`, `FIONBIO` `0x8004667e`); Linux uses small opaque numbers for the

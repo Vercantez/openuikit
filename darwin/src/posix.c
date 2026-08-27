@@ -1981,10 +1981,28 @@ EXPORT int ioctl(int fd, unsigned long req, ...)
  *
  * Anything else bails, because an unimplemented MIB and a nonexistent one are
  * different facts and only one of them should look like a normal failure. */
-#define MR_CTL_KERN        1
-#define MR_KERN_OSTYPE     1
-#define MR_KERN_OSRELEASE  2
-#define MR_KERN_OSVERSION 65
+#define MR_CTL_KERN              1
+#define MR_CTL_HW                6
+#define MR_KERN_OSTYPE           1
+#define MR_KERN_OSRELEASE        2
+#define MR_KERN_PROC            14
+#define MR_KERN_PROC_PID         1
+#define MR_KERN_MAXFILESPERPROC 29
+#define MR_KERN_OSVERSION       65
+#define MR_HW_NCPU               3
+#define MR_HW_MEMSIZE           24
+#define MR_HW_AVAILCPU          25
+
+/* Darwin _SC_* names. Four of the five MIBs below are questions our own
+ * sysconf already answers, and it already carries the Darwin-to-Linux _SC_
+ * translation (all 128 names differ), so asking it is both less code and one
+ * fewer table to keep honest than reaching for glibc directly. */
+#define MR_SC_OPEN_MAX           5
+#define MR_SC_PAGESIZE          29
+#define MR_SC_NPROCESSORS_CONF  57
+#define MR_SC_NPROCESSORS_ONLN  58
+#define MR_SC_PHYS_PAGES       200
+extern long sysconf(int);                       /* darwin/src/libsystem.c */
 
 static int mr_sysctl_string(const char *val, void *oldp, size_t *oldlenp)
 {
@@ -1997,26 +2015,130 @@ static int mr_sysctl_string(const char *val, void *oldp, size_t *oldlenp)
     return 0;
 }
 
+/* The scalar MIBs. The WIDTH is part of the answer and is not negotiable: a
+ * caller passes a buffer of exactly the size the MIB is documented to return
+ * and checks nothing, so writing 8 bytes where CF expects 4 is a stack smash
+ * rather than a wrong number. HW_MEMSIZE is the uint64 one; the rest are int. */
+static int mr_sysctl_fixed(const void *src, size_t need, void *oldp, size_t *oldlenp)
+{
+    if (!oldlenp) { *mr_errno_slot() = 22; return -1; }
+    if (!oldp) { *oldlenp = need; return 0; }
+    if (*oldlenp < need) { *oldlenp = need; *mr_errno_slot() = 12; return -1; }
+    glibc_memcpy(oldp, src, need);
+    *oldlenp = need;
+    return 0;
+}
+
+/* {CTL_KERN, KERN_PROC, KERN_PROC_PID, pid} -- THE ONE THAT GATES CoreFoundation.
+ *
+ * __CFInitialize reaches this through __CFStringGetUserDefaultEncoding and
+ * _CFGetSVUID, so nothing in CF runs until it answers. On Darwin it returns a
+ * whole `struct kinfo_proc` -- 648 bytes of BSD process table -- and CF reads
+ * EXACTLY ONE FIELD out of it: kp_eproc.e_pcred.p_svuid, the saved
+ * set-user-ID, at offset 396.
+ *
+ * Linux has no kinfo_proc and no equivalent MIB, so there is nothing to
+ * forward to in any form. But it also does not need the struct MODELLED, and
+ * that is the difference between a translating wrapper and porting a BSD
+ * process table for one integer.
+ *
+ * WHY SYNTHESIZING IS RIGHT HERE AND IS NOT A GUESS, which was the open
+ * question when this was handed to me. getresuid(2) returns the process's
+ * ACTUAL saved set-user-ID -- it is not a plausible substitute for the answer,
+ * it IS the answer, obtained through the API Linux uses to give it. Same shape
+ * as SO_NWRITE and ioctl(SIOCOUTQ): one question, two API surfaces.
+ *
+ * That matters because of what CF does with it. The value feeds a setuid check
+ * deciding whether the process may trust its environment, so a WRONG answer is
+ * a security-relevant answer. A true one from getresuid is strictly safer than
+ * either a fabricated uid or a reported failure -- failure is a supported
+ * outcome for CF's caller, but it discards information CF would have had on
+ * macOS, and the goal here is to behave as macOS does.
+ *
+ * Every other byte is ZEROED rather than left uninitialised. A caller reading
+ * a field we did not fill gets a defined 0, not whatever was on the stack --
+ * and a zeroed BSD process entry is obviously empty rather than plausibly
+ * populated. The offset is mirrored by hand and therefore pinned against
+ * Apple's own SDK in sdk/tests/abi_probe.c, which is the linux_stat rule. */
+#define MR_KINFO_PROC_SIZE   648
+#define MR_KINFO_P_SVUID_OFF 396
+
+static int mr_sysctl_kinfo_proc(void *oldp, size_t *oldlenp)
+{
+    unsigned char buf[MR_KINFO_PROC_SIZE];
+    unsigned ruid = 0, euid = 0, suid = 0;
+
+    if (!oldlenp) { *mr_errno_slot() = 22; return -1; }
+    if (!oldp) { *oldlenp = MR_KINFO_PROC_SIZE; return 0; }
+    if (*oldlenp < MR_KINFO_PROC_SIZE) {
+        *oldlenp = MR_KINFO_PROC_SIZE; *mr_errno_slot() = 12; return -1;
+    }
+    if (MR_ERRNO_CALL(glibc_getresuid(&ruid, &euid, &suid)) != 0) return -1;
+
+    glibc_memset(buf, 0, sizeof buf);
+    glibc_memcpy(buf + MR_KINFO_P_SVUID_OFF, &suid, sizeof suid);
+    glibc_memcpy(oldp, buf, MR_KINFO_PROC_SIZE);
+    *oldlenp = MR_KINFO_PROC_SIZE;
+    return 0;
+}
+
 EXPORT int sysctl(int *name, unsigned namelen, void *oldp, size_t *oldlenp,
                   void *newp, size_t newlen)
 {
     if (newp || newlen) { *mr_errno_slot() = 1; return -1; }         /* EPERM */
+    if (!name || namelen < 2) { *mr_errno_slot() = 22; return -1; }  /* EINVAL */
 
-    if (!name || namelen < 2 || name[0] != MR_CTL_KERN)
-        mr_bail("sysctl(): only CTL_KERN OSTYPE/OSRELEASE/OSVERSION are "
-                "implemented. There is nothing to forward to -- glibc dropped "
-                "sys/sysctl.h and Linux's sysctl(2) returns ENOSYS -- so an "
-                "unimplemented MIB must not look like a normal failure. "
-                "See docs/UNIMPLEMENTED.md#sysctl-mibs.");
-
-    switch (name[1]) {
-    case MR_KERN_OSTYPE:    return mr_sysctl_string("Darwin",   oldp, oldlenp);
-    case MR_KERN_OSRELEASE: return mr_sysctl_string("machorun", oldp, oldlenp);
-    case MR_KERN_OSVERSION: return mr_sysctl_string("machorun", oldp, oldlenp);
-    default:
-        mr_bail("sysctl(CTL_KERN, ...): that MIB is not implemented. See "
-                "docs/UNIMPLEMENTED.md#sysctl-mibs.");
+    if (name[0] == MR_CTL_KERN) {
+        switch (name[1]) {
+        case MR_KERN_OSTYPE:    return mr_sysctl_string("Darwin",   oldp, oldlenp);
+        case MR_KERN_OSRELEASE: return mr_sysctl_string("machorun", oldp, oldlenp);
+        case MR_KERN_OSVERSION: return mr_sysctl_string("machorun", oldp, oldlenp);
+        case MR_KERN_MAXFILESPERPROC: {
+            int v = (int)sysconf(MR_SC_OPEN_MAX);
+            return mr_sysctl_fixed(&v, sizeof v, oldp, oldlenp);
+        }
+        case MR_KERN_PROC:
+            /* Only the by-pid form, and only for ourselves -- a process table
+             * walk would need the struct really modelled. */
+            if (namelen >= 3 && name[2] == MR_KERN_PROC_PID)
+                return mr_sysctl_kinfo_proc(oldp, oldlenp);
+            mr_bail("sysctl(CTL_KERN, KERN_PROC, ...): only KERN_PROC_PID is "
+                    "implemented, and only the saved set-user-ID within it. "
+                    "See docs/UNIMPLEMENTED.md#sysctl-mibs.");
+        default:
+            mr_bail("sysctl(CTL_KERN, ...): that MIB is not implemented. See "
+                    "docs/UNIMPLEMENTED.md#sysctl-mibs.");
+        }
     }
+
+    if (name[0] == MR_CTL_HW) {
+        switch (name[1]) {
+        case MR_HW_NCPU: {
+            int v = (int)sysconf(MR_SC_NPROCESSORS_CONF);
+            return mr_sysctl_fixed(&v, sizeof v, oldp, oldlenp);
+        }
+        case MR_HW_AVAILCPU: {
+            int v = (int)sysconf(MR_SC_NPROCESSORS_ONLN);
+            return mr_sysctl_fixed(&v, sizeof v, oldp, oldlenp);
+        }
+        case MR_HW_MEMSIZE: {
+            /* uint64 on Darwin, and Linux answers it as pages x page size --
+             * so the multiplication has to happen in 64 bits or a 32 GiB
+             * machine reports 0 after the product wraps. */
+            unsigned long long v = (unsigned long long)sysconf(MR_SC_PHYS_PAGES)
+                                 * (unsigned long long)sysconf(MR_SC_PAGESIZE);
+            return mr_sysctl_fixed(&v, sizeof v, oldp, oldlenp);
+        }
+        default:
+            mr_bail("sysctl(CTL_HW, ...): that MIB is not implemented. See "
+                    "docs/UNIMPLEMENTED.md#sysctl-mibs.");
+        }
+    }
+
+    mr_bail("sysctl(): only CTL_KERN and CTL_HW are implemented. There is "
+            "nothing to forward to -- glibc dropped sys/sysctl.h and Linux's "
+            "sysctl(2) returns ENOSYS -- so an unimplemented MIB must not look "
+            "like a normal failure. See docs/UNIMPLEMENTED.md#sysctl-mibs.");
 }
 
 /* _simple_asl_log is Apple SPI: the fallback branch of libdispatch's

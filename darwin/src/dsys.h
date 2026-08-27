@@ -164,6 +164,10 @@ extern int     glibc_fsync(int)                             GLIBCSYM(fsync);
 extern int     glibc_dup(int)                               GLIBCSYM(dup);
 extern int     glibc_dup2(int, int)                         GLIBCSYM(dup2);
 extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
+/* getresuid(2) is how Linux answers "what is the SAVED set-user-ID". Darwin
+ * answers the same question through sysctl(KERN_PROC), which is why this is
+ * here -- see the sysctl section in darwin/src/posix.c. */
+extern int     glibc_getresuid(unsigned *, unsigned *, unsigned *) GLIBCSYM(getresuid);
 /* fcntl and ioctl are VARIADIC in glibc and are declared NON-variadic here on
  * purpose. Darwin's arm64 ABI puts variadic arguments on the STACK where
  * AAPCS64 puts the first eight in REGISTERS, so a variadic call from our

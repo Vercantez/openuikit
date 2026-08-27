@@ -30,6 +30,7 @@ sizeof struct eproc                 352
 offset eproc.e_ppid                 264
 offset eproc.e_pgid                 268
 offset eproc.e_ucred                120
+offset kinfo_proc.p_svuid           396
 sizeof struct tzhead                44
 offset tzhead.tzh_magic             0
 offset tzhead.tzh_version           4
