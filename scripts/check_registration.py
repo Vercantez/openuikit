@@ -168,18 +168,36 @@ def defines_constant_string_class(objdir):
     obj = os.path.join(objdir, "CFRuntime.o") if objdir else None
     if not obj or not os.path.exists(obj):
         return None  # not measured; reported as such, never as a pass
-    nm = shlex.split(os.environ.get("NM", "llvm-nm-18"))
-    try:
-        r = subprocess.run(
-            nm + ["--defined-only", obj], capture_output=True, text=True
-        )
-    except FileNotFoundError:
-        return None
-    if r.returncode != 0 or not r.stdout.strip():
+    # llvm-nm-18 is the name inside the build container; the macOS host has
+    # llvm-nm only under xcrun, and its own nm also reads Mach-O. Try in order
+    # rather than hardcoding one and reporting NOT MEASURED everywhere else.
+    if "NM" in os.environ:
+        candidates = [shlex.split(os.environ["NM"])]
+    else:
+        candidates = [["llvm-nm-18"], ["llvm-nm"], ["xcrun", "llvm-nm"], ["nm"]]
+    out = None
+    for nm in candidates:
+        try:
+            r = subprocess.run(
+                nm + ["--defined-only", obj], capture_output=True, text=True
+            )
+        except (FileNotFoundError, OSError):
+            continue
         # An nm that fails, or reports nothing, must not read as "clean".
+        if r.returncode == 0 and r.stdout.strip():
+            out = r.stdout
+            break
+    if out is None:
         return None
-    out = r.stdout
-    return "___CFConstantStringClassReference" in out
+    # MATCH THE WHOLE SYMBOL, NOT A SUBSTRING. This was `in out`, and
+    # ___CFConstantStringClassReferencePtr -- which CF legitimately defines and
+    # must keep defining -- contains ___CFConstantStringClassReference as a
+    # prefix. The substring test could therefore never go clean: it would have
+    # reported the placeholder as still present after a completely correct
+    # patch, and the obvious response to a guard that refuses no matter what
+    # you do is to stop believing the guard.
+    return any(line.split()[-1] == "___CFConstantStringClassReference"
+               for line in out.splitlines() if line.split())
 
 
 def load_table():

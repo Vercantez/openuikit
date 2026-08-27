@@ -219,9 +219,73 @@ void __CFInitialize(void) {
     _CFRuntimeBridgeClasses(_kCFRuntimeIDCFRunLoopTimer, "__NSCFTimer");
 """
 
+# --------------------------------------------------------- the constant string
+#
+# THE OTHER HALF OF src/nscf/NSCFConstantString.m. These two changes are only
+# correct together, which is why they are one commit.
+#
+# With -fconstant-cfstrings the compiler stamps every CFSTR's isa with
+# ___CFConstantStringClassReference. corelibs DEFINES that symbol here, as a
+# zeroed int[24]. So CF_IS_OBJC is already true for every constant string in the
+# process, and restoring CF's dispatch macros armed it: CF would send a message
+# to a zeroed array as though it were a class.
+#
+# It has to be DELETED rather than shadowed. Leaving corelibs' definition while
+# our Foundation also defines the symbol gives two definitions in two dylibs,
+# and -- this is what makes it worth a patch rather than a link-order note --
+# NOTHING COMPLAINS. Every symbol resolves. CF's own constant strings bind to
+# the placeholder inside CF's image, everyone else's bind to the real class, and
+# constant strings are split in half at runtime with no diagnostic anywhere.
+# (The same shape as the signal.h shadowing in #47: the wrong definition wins
+# because of where it sits, not because anything chose it.)
+#
+# __CFConstantStringClassReferencePtr is fixed in the same edit. corelibs sets
+# it to NULL on this path, and _CFIsSwift compares an object's isa against it to
+# recognise constant strings. NULL never matches, which was harmless only while
+# the class reference was a zeroed array nothing could legitimately equal. Once
+# the symbol denotes a real class, leaving the pointer NULL makes _CFIsSwift
+# answer "not a constant string" for every constant string -- a defect that
+# would have gone live precisely when the rest of this started working.
+
+OLD_CONSTSTR = """#ifndef __CONSTANT_CFSTRINGS__
+// Compiler uses this symbol name; must match compiler built-in decl, so we use 'int'
+#if TARGET_RT_64_BIT
+int __CFConstantStringClassReference[24] = {0};
+#else
+int __CFConstantStringClassReference[12] = {0};
+#endif
+#endif
+
+#if TARGET_RT_64_BIT
+int __CFConstantStringClassReference[24] = {0};
+#else
+int __CFConstantStringClassReference[12] = {0};
+#endif
+
+void *__CFConstantStringClassReferencePtr = NULL;"""
+
+NEW_CONSTSTR = """/* PLACEHOLDER DELETED -- our Foundation defines this symbol for real.
+ *
+ * corelibs defined __CFConstantStringClassReference here as a zeroed int[24].
+ * Every CFSTR in the process points its isa at that symbol, so with CF's ObjC
+ * dispatch macros restored, CF would message a zeroed array as a class.
+ *
+ * src/nscf/NSCFConstantString.m aliases the symbol to the __NSCFConstantString
+ * class object. Deleting this definition is what makes that alias the ONLY one:
+ * with both present every symbol still resolves, CF's own constant strings bind
+ * to the placeholder in CF's image and everyone else's to the real class, and
+ * the split is completely silent. */
+extern int __CFConstantStringClassReference[];
+
+/* Was NULL. _CFIsSwift compares an isa against this pointer to recognise a
+ * constant string; NULL never matched, which was invisible while the reference
+ * was a zeroed array and becomes a live wrong answer once it is a real class. */
+void *__CFConstantStringClassReferencePtr = &__CFConstantStringClassReference;"""
+
 ok = True
 print(f"patching {CF}")
 ok &= apply(INTERNAL, OLD_INTERNAL, NEW_INTERNAL, "CFInternal.h  (CF_IS_OBJC + 3)")
 ok &= apply(RUNTIME,  OLD_RUNTIME,  NEW_RUNTIME,  "CFRuntime.c   (CFTYPE_* + 2)")
+ok &= apply(RUNTIME,  OLD_CONSTSTR, NEW_CONSTSTR, "CFRuntime.c   (constant-string placeholder)")
 ok &= apply(RUNTIME,  OLD_INIT,     NEW_INIT,     "CFRuntime.c   (_CFRuntimeBridgeClasses)")
 sys.exit(0 if ok else 1)

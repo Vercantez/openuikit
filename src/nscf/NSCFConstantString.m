@@ -97,10 +97,32 @@ struct __CFConstStrLayout {
  * each __DATA,__cfstring entry. Aliasing it to the class object is what makes a
  * CFSTR a real Objective-C object.
  *
- * NOT DEFINED YET, deliberately. Defining it here while CF still defines its
- * zeroed int[24] would create the split-brain described above -- and CF does
- * still define it, verified by nm on CFRuntime.o. The patch that deletes CF's
- * definition and the definition here have to land together, so this file
- * provides the class and the accessor, and the alias waits.
+ * DEFINED HERE AS AN ALIAS, landing in the same commit as the patch that
+ * deletes CF's zeroed definition (scripts/patch_cf_objc.py, patch_constant_
+ * string). Neither half is correct alone, and the two failures are not
+ * symmetric:
+ *
+ *   alias without the deletion   two definitions of one symbol in two dylibs.
+ *                                Every symbol resolves and nothing complains.
+ *                                CF's own constant strings bind to the zeroed
+ *                                placeholder in its own image and everyone
+ *                                else's bind here -- constant strings split in
+ *                                half, silently.
+ *   deletion without the alias   an undefined symbol in every image holding a
+ *                                CFSTR. Loud, and harmless by comparison,
+ *                                which is the order to prefer if they ever do
+ *                                come apart.
+ *
+ * WHY AN ASM ALIAS AND NOT A C DEFINITION. The compiler emits a reference to
+ * the raw symbol, and what it must point at is the class OBJECT itself -- the
+ * address [__NSCFConstantString class] returns. A C variable holding that
+ * address is one indirection too many: each CFSTR's isa would then point at a
+ * pointer rather than at a class. `.set` makes the two names denote one
+ * address, which is the relationship Darwin's own Foundation establishes for
+ * this symbol.
  */
+__asm__(".globl ___CFConstantStringClassReference\n\t"
+        ".set   ___CFConstantStringClassReference, "
+        "_OBJC_CLASS_$___NSCFConstantString\n");
+
 Class __NSCFConstantStringClass(void) { return [__NSCFConstantString class]; }
