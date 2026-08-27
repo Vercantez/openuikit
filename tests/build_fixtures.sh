@@ -258,6 +258,21 @@ want 31_fcntl_madvise    && build 31_fcntl_madvise    "$CHAINED_TARGET" 31_fcntl
 # fails loudly. Same for SCHED_OTHER, whose 1 is glibc's SCHED_FIFO.
 want 32_pthread_attr     && build 32_pthread_attr     "$CHAINED_TARGET" 32_pthread_attr     32_pthread_attr.c --
 
+# --------------------------------------------------------------- rung (af)
+# Loading a dylib at RUN TIME. The plugin deliberately carries an initialiser,
+# a TLV, an exported function and a call into libSystem, because mapping is the
+# easy part -- those four are what the rest of the dlopen sequence exists for,
+# and a fixture that only checked `dlopen(...) != NULL` would pass with three
+# of them broken. The plugin is NOT linked into the executable: it is found by
+# path at run time, so it must not be on the link line.
+if want 33_dlopen; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+        -o "$BIN/lib33plug.dylib" "$SRC/33plug.c" -install_name "@rpath/lib33plug.dylib"
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/33_dlopen" \
+        "$SRC/33_dlopen.c"
+    echo "==> 33_dlopen"; built+=(33_dlopen)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
