@@ -1,0 +1,54 @@
+{
+ "dateFormat": {
+  "LLLL": 1,
+  "y": 1,
+  "yyyy-MM-dd": 5,
+  "yyyy-MM-dd HH:mm:ss": 3,
+  "yyyy-MM-dd HH:mm:ss.SSS": 1,
+  "yy-MM-dd": 1,
+  "yyyyMMddHHmmss": 2,
+  "yyyy-MM-dd'T'HH:mm:ss'Z'": 1,
+  "MMMM d": 1,
+  "d MMM": 1,
+  "EEE, dd MMM yyyy HH:mm:ss z": 1
+ },
+ "templates": {
+  "dd MMMM": 1,
+  "EEEE": 1,
+  "d MMMM": 1,
+  "MMMM yyyy": 1,
+  "d MMMM yyyy": 1
+ },
+ "locales": {
+  "es": 9,
+  "en_US": 9,
+  "en": 20,
+  "fr": 9,
+  "de": 11,
+  "ja": 8,
+  "jp": 1,
+  "de_DE": 2,
+  "en_GB": 3,
+  "ja_JP": 2,
+  "de_US": 1,
+  "es_US": 1,
+  "fr_US": 1,
+  "ja_US": 1,
+  "de_CA": 1,
+  "en_CA": 1,
+  "es_CA": 1,
+  "fr_CA": 1,
+  "ja_CA": 1,
+  "de_AU": 1,
+  "es_FR": 1,
+  "fr_AT": 1,
+  "ja_CH": 1,
+  "en_US_POSIX": 7
+ },
+ "styles": {
+  "medium": 4,
+  "short": 4,
+  "long": 3,
+  "none": 3
+ }
+}

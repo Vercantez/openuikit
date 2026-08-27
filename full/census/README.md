@@ -72,3 +72,33 @@ reasons above. Obtaining it needs a **semantic index**: build the corpus and
 read the compiler's index store, or use swift-syntax with type resolution.
 Until someone does that, "how much of SwiftUI do apps actually use" is unknown,
 and it is the single number that would most change any estimate.
+
+---
+
+# Date-formatting / ICU demand (`date-icu-demand-2026-08-27.json`)
+
+Harvested while the corpus existed, because it sizes the ICU question (#48)
+from the DEMAND side rather than from ICU's own symbol gaps.
+
+**Precise, because the property name disambiguates:** `.dateFormat = "…"` is
+DateFormatter's and nobody else's.
+
+    11 distinct format patterns across only 18 assignments
+       yyyy-MM-dd (5), yyyy-MM-dd HH:mm:ss (3), yyyyMMddHHmmss (2), …
+     5 distinct setLocalizedDateFormatFromTemplate templates
+    24 distinct Locale identifiers: en 20, de 11, es 9, en_US 9, fr 9, ja 8,
+       en_US_POSIX 7, en_GB 3 — a long tail, but six dominate
+       dateStyle/timeStyle: .medium 4, .short 4, .long 3, .none 3
+
+**WHAT THIS DOES NOT SAY, and the number is small enough that the distinction
+matters.** 18 assignments is the count of ONE IDIOM, not of date-formatting
+demand. It misses formatters configured indirectly, localization libraries, and
+`.formatted()` — the modern `FormatStyle` API, which the member census counts
+43 times and which is a *separate* surface with its own ICU dependency. So read
+this as "explicit `dateFormat` strings are rare and few", **not** as "ICU demand
+is small".
+
+The genuinely ICU-shaped part is not the patterns — it is that
+`.short`/`.medium`/`.long` are *locale-dependent by definition*, across 24
+locales. A format pattern is a string a portable implementation can interpret;
+a *style* requires the locale's own conventions, which is what ICU carries.
