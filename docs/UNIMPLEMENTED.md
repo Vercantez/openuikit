@@ -1306,29 +1306,32 @@ unreachable from the only library allowed to answer. *"Put it where the current
 consumer will find it"* is the reasoning that produced the bug; reproducing
 Darwin's shape is what fixed it.
 
-**ONE DELIBERATE DEVIATION, with an exit condition.** `libSystem.B.dylib` also
-re-exports `libc++abi.dylib`, which macOS does not do. It exists for OUR
-artifacts, not Apple's: machorun's `libSystem.B.tbd` used to promise
-`___gxx_personality_v0` because the aborting stub lived in `objcsupport.c`, and
-`~/swiftcore-macho`'s source-built `libswiftCore.dylib` was linked against that
-promise and carries a two-level bind naming libSystem. Once that binary is
-relinked — its bind should read *from libc++*, as Apple's does — drop the
-`-reexport_library` from `scripts/build_darwin.sh` and re-run the Swift gate.
-Verify by content, not by intention: `nm -m …/libswiftCore.dylib | grep
-gxx_personality` must not say `libSystem`.
+**THE ONE DELIBERATE DEVIATION IS GONE, on its own exit condition.**
+`libSystem.B.dylib` used to also re-export `libc++abi.dylib`, which macOS does
+not do, so that `~/swiftcore-macho`'s source-built `libswiftCore` — which
+carried a stale two-level bind for `___gxx_personality_v0` naming libSystem —
+still loaded. swiftcore-build relinked it (`cc58d4f`) and the bind now reads
+*from libc++*, as Apple's shipped one does, so the `-reexport_library` and
+`gen_tbd.sh`'s `tbd_skips_reexport` exception were deleted together in one
+commit. **machorun's layout now matches Darwin's with no deviations.**
 
-**THE `.tbd` DELIBERATELY DOES NOT ADVERTISE THIS RE-EXPORT**, and the asymmetry
-is the point. Measured: with it advertised, a Linux-built C++ guest linking
-`-lSystem -lobjc -lc++` binds `___cxa_throw` and `___gxx_personality_v0`
-*(from libSystem)*, because `-lSystem` comes first and would now vend them —
-while Apple's answer, and the one Apple's shipped libswiftCore records, is
-*(from libc++)*. Advertising it would not describe the deviation, it would
-PROPAGATE it into every new binary, and each of those becomes another artifact
-pinning libSystem in place. **A `.tbd` is what we PROMISE, not merely what a
-dylib contains**, and we do not promise to keep re-exporting libc++abi from
-libSystem. `scripts/gen_tbd.sh`'s `tbd_skips_reexport` is the single exception
-to an otherwise mechanical re-export merge; delete it and the
-`-reexport_library` together, in one commit.
+Checked by content on the artifact actually staged, not on a successful build:
+
+```
+nm -m darwin/usr/lib/swift/libswiftCore.dylib | grep gxx_personality
+    (undefined) external ___gxx_personality_v0 (from libc++)
+otool -l darwin/usr/lib/libSystem.B.dylib | grep LC_REEXPORT_DYLIB
+    (nothing)
+```
+
+**And the `.tbd` fix turned out to do more than the one symbol.** Six further
+imports in libswiftCore moved off flat binds at the same time — the four
+`__cxxabiv1::*_type_info` vtables, `__ZdlPvmSt11align_val_t` and
+`___cxa_demangle` — which are *exactly* the six that `libswiftcompat` had been
+shadowing (`duplicate-definitions` above). Deleting them from the shim fixed
+the process that exists; making libswiftCore **name the library it wants** means
+it cannot be shadowed on them by load order at all, even by a shim that
+reintroduced them. Two fixes from opposite ends of the same defect.
 
 **What upstream took back, and what it improved.** `operator new`/`delete` and
 the `__cxa_guard_*` trio now come from libc++abi rather than
