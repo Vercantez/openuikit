@@ -582,3 +582,99 @@ though — most matches are ordinary alignment masks, and `survey_isa_masks.py`'
 `kind` label is only meaningful for a mask already known to be a pointer mask.
 The trustworthy result is the targeted one in §9, which matches the two known
 constants exactly.
+
+## 12. The shim was shadowing libc++abi, and one of the shadows was armed
+
+`libswiftcompat.dylib` exists to fill the gap between our cross-built
+libswiftCore and machorun's userland. A gap shrinks. When machorun grew a real
+`/usr/lib/libc++abi.dylib` (LLVM 18.1.8, pristine) and a real `pthread_main_np`,
+ten of our definitions stopped being fills and became **duplicates** — and
+libswiftCore binds most of them flat, so a duplicate is resolved by load order
+rather than by which one is correct.
+
+swift-loader-fixes flagged six by sweeping the *shipped* dylib. Against the
+*source* there were **ten**, because the shipped artifact was stale:
+
+| | exports | has the shadows |
+|---|---|---|
+| `darwin/usr/lib/libswiftcompat.dylib` (staged) | 29 | 6 |
+| `artifacts/concurrency/libswiftcompat.dylib` (built, never staged) | 44 | **10** |
+| source at `sdk/compat/swiftcompat.c` | 44 | 10 |
+
+The second row is the finding. `artifacts/concurrency/` has exactly the layout
+`machorun scripts/stage_swiftcore.sh` expects, so the 44-symbol build was one
+`stage_swiftcore.sh artifacts/concurrency` away from being installed — not a
+hypothetical future regression, a worse artifact already sitting in a staging
+directory.
+
+### The four extra shadows, worst first
+
+- **`pthread_main_np` → `return 1`**, commented "single-threaded executor".
+  machorun's records the main thread at bootstrap and compares `pthread_self`
+  (`darwin/src/posix.c:1482`). A constant 1 makes **every** thread answer "yes,
+  I am the main thread", which silently breaks every `@MainActor` assertion and
+  libdispatch's main-queue check. Never reached only because it was never
+  staged.
+- **`malloc_type_malloc`** — a second copy of the family whose *first* duplicate
+  cost this project a week (machorun's umbrella-shadows-reexport defect).
+- `__cxa_pure_virtual`, and a fifth vtable (`__vmi_class_type_info`) that
+  swift-loader-fixes' sweep could not see because it was not in the stale build.
+
+### The hazard is worse than "resolved by load order"
+
+Linking `libswiftcompat` ahead of `libc++abi` makes **ld64 itself** pick the
+shim and emit a **two-level** bind naming it. Such a guest is wired to the
+zerofill vtables deterministically; it is not a matter of luck at load time.
+
+Measured with machorun's own `tests/src/30_throw.cpp` — whose load-bearing case
+is "catch a `Derived` as a `Base &`", which needs libc++abi's hierarchy walk
+*through* `__si_class_type_info`'s vtable rather than a pointer compare — linked
+shim-first:
+
+```
+shim WITH the vtables:  SIGSEGV, pc 0x0, no output at all
+shim WITHOUT them:      exit 0, all six cases ok, matches the macOS baseline
+```
+
+### Why nothing had failed yet, stated exactly
+
+machorun's `scripts/swift_gate.sh` passes with the shadowing shim and without
+it, in **both** of its link orders. Instantiating Swift classes never dispatches
+through a type_info vtable; only a throw does. The gate was not weak — it was
+measuring something else, which is the harder case to notice.
+
+### What changed
+
+Ten symbols deleted from `sdk/compat/swiftcompat.c` (44 → 34 exports). Deleted,
+not corrected: two definitions of one symbol is the defect, and a corrected
+duplicate is still a duplicate.
+
+Two guards, both with demonstrated teeth:
+
+- `scripts/build_compat.sh` now **refuses to build** a shim whose exports
+  intersect machorun's userland, naming each collision and the library that owns
+  it. It also refuses to grade if it cannot find machorun's dylibs, rather than
+  passing vacuously.
+- `scripts/check_shim_shadowing.sh` builds a mutant with the four vtables
+  restored and requires the real shim to PASS `30_throw` *and* the mutant to
+  DIE. It refuses to grade if the mutant's vtable is not zerofill or if the
+  mutant stops winning the link — either would make the control inert.
+
+### Two side effects worth recording
+
+- The new shim strictly improves `libswift_Concurrency`'s link closure:
+  **5 → 0** unsatisfied symbols (`clock_getres`, `memset_s`, `os_release`,
+  `voucher_adopt`, `voucher_copy`), which the stale 29-symbol build left open.
+- `libswiftCore` has **2** genuinely unsatisfied imports against the current
+  userland, unchanged by any of this and pre-existing:
+  `_dyld_image_path_containing_address` and `_dyld_program_sdk_at_least`, both
+  two-level from libSystem.
+
+### The build no longer needs the AWS box
+
+`scripts/build_compat_docker.sh` builds this artifact locally in
+`machorun-swift:6.2.4` using swift.org's clang and Ubuntu's `ld64.lld-18`, with
+machorun's SDK for headers and `.tbd`s. Still no Xcode and no Apple toolchain.
+It checks `swiftcompat.c` by md5 on the far side of the bind mount, because a
+mount that silently truncates would produce a shim that compiles fine and
+quietly drops whichever symbols fell off the end.

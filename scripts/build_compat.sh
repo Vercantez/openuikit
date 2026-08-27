@@ -83,7 +83,7 @@ if [ -n "$overlap" ]; then
   printf '%s\n' "$overlap" | while read -r s; do
     where=$(for lib in libSystem.B.dylib libobjc.A.dylib libc++.1.dylib libc++abi.dylib; do
               [ -f "$MRLIB/$lib" ] && "$NM" --defined-only --extern-only "$MRLIB/$lib" \
-                | awk -v s="$s" '$NF==s {print FILENAME}' FILENAME="$lib"
+                | awk -v s="$s" -v l="$lib" '$NF==s {print l}'
             done | tr '\n' ' ')
     printf '    %-52s already in: %s\n' "$s" "$where" >&2
   done
