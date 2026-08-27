@@ -21,6 +21,12 @@
  *   Boolean   MacTypes.h:19, `unsigned char`. Checked in the sysroot.
  *   UniChar   CFBase.h:91, `unsigned short`. Checked.
  *   CFRange   CFBase.h:480-483, two CFIndex fields, location then length.
+ *   CFNumberType  CF_ENUM(CFIndex, ...) in CFNumber.h -- EIGHT bytes, not four.
+ *                 Pinned after the mirror got it wrong.
+ *
+ * All of the above are asserted against CF's real headers by
+ * tests/t5_cftypes_pin.c, which is the only place the mirror and CFBase.h meet
+ * in one translation unit. It has already caught one wrong type.
  *
  * If CF's headers ever land on these files' include path, these become
  * redundant rather than wrong -- identical typedefs coexist.
@@ -35,6 +41,13 @@ typedef struct { CFIndex location; CFIndex length; } CFRange;
 
 typedef CFIndex        CFComparisonResult;
 typedef double         CFAbsoluteTime;
-typedef int            CFNumberType;
+/* CFIndex, NOT int. CFNumber.h declares it as CF_ENUM(CFIndex, CFNumberType),
+ * so the underlying type is CFIndex and it is EIGHT bytes. I wrote `int` and
+ * the pin in tests/t5_cftypes_pin.c caught it on its first run -- which would
+ * otherwise have passed a 4-byte value to -_getValue:forType: where CF reads 8,
+ * leaving the upper half whatever happened to be in the register. Exactly the
+ * shape of the nfds_t finding: a scalar argument of the wrong width, invisible
+ * to every check except one that compares against the real declaration. */
+typedef CFIndex        CFNumberType;
 
 #endif /* _NSCF_CFTYPES_MIRROR_H */
