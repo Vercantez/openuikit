@@ -302,5 +302,46 @@ _Static_assert(offsetof(struct pollfd, fd)      == 0, "glibc pollfd.fd moved");
 _Static_assert(offsetof(struct pollfd, events)  == 4, "glibc pollfd.events moved");
 _Static_assert(offsetof(struct pollfd, revents) == 6, "glibc pollfd.revents moved");
 
+/* SIGACTION. The struct is the widest size mismatch in this file -- 152 bytes
+ * against Darwin's 16 -- and `oact` is an OUT parameter, so a forward has
+ * glibc write 152 bytes into 16. darwin/src/posix.c mirrors this layout BY
+ * HAND, which is the linux_stat shape, so the mirror is pinned here against
+ * the real header. A wrong offset does not fail: it writes the flags word into
+ * the middle of a signal mask.
+ *
+ * NOT ONE sa_flags BIT AGREES, and the collisions are with live flags rather
+ * than with unused bits. Darwin SA_RESTART (0x02) is THIS header's
+ * SA_NOCLDWAIT; Darwin SA_ONSTACK (0x01) is its SA_NOCLDSTOP; Darwin
+ * SA_RESETHAND (0x04) is its SA_SIGINFO, which changes the calling convention
+ * the kernel uses to deliver. libdispatch's event_epoll.c installs its handler
+ * with exactly SA_RESTART, so this is the live one rather than the theoretical
+ * one. */
+PIN(struct sigaction, 152);
+_Static_assert(offsetof(struct sigaction, sa_mask)  == 8,
+    "glibc sigaction.sa_mask moved; darwin/src/posix.c mirrors this layout");
+_Static_assert(offsetof(struct sigaction, sa_flags) == 136,
+    "glibc sigaction.sa_flags moved (Darwin's is at 12); "
+    "darwin/src/posix.c mirrors this layout by hand");
+_Static_assert(SA_NOCLDSTOP == 0x00000001, "glibc SA_NOCLDSTOP moved (Darwin's is 0x08)");
+_Static_assert(SA_NOCLDWAIT == 0x00000002, "glibc SA_NOCLDWAIT moved (Darwin's is 0x20, "
+    "and Darwin's SA_RESTART is THIS value -- see mr_sigflags_d2l)");
+_Static_assert(SA_SIGINFO   == 0x00000004, "glibc SA_SIGINFO moved (Darwin's is 0x40, "
+    "and Darwin's SA_RESETHAND is THIS value)");
+_Static_assert(SA_ONSTACK   == 0x08000000, "glibc SA_ONSTACK moved (Darwin's is 0x01)");
+_Static_assert(SA_RESTART   == 0x10000000, "glibc SA_RESTART moved (Darwin's is 0x02)");
+_Static_assert(SA_NODEFER   == 0x40000000, "glibc SA_NODEFER moved (Darwin's is 0x10)");
+_Static_assert(SA_RESETHAND == (int)0x80000000, "glibc SA_RESETHAND moved (Darwin's is 0x04)");
+
+/* The two handler sentinels are the only things in the whole signal surface
+ * that agree, which is why they cross unchanged and a NULL table slot can mean
+ * "not ours" rather than "unset". */
+_Static_assert((long)(SIG_DFL) == 0, "glibc SIG_DFL is no longer 0");
+_Static_assert((long)(SIG_IGN) == 1, "glibc SIG_IGN is no longer 1");
+
+/* siginfo_t is why SA_SIGINFO is refused rather than mapped: honouring the
+ * three-argument handler form means translating this too, and a ucontext_t we
+ * have no mapping for at all. */
+PIN(siginfo_t, 128);
+
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */

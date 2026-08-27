@@ -223,6 +223,14 @@ want 27_unwind           && build 27_unwind           "$CHAINED_TARGET" 27_unwin
 # heap path, byte-for-byte against macOS.
 want 28_poll             && build 28_poll             "$CHAINED_TARGET" 28_poll             28_poll.c --
 
+# --------------------------------------------------------------- rung (ab)
+# sigaction(2): the first thing in the corpus that crosses the boundary in BOTH
+# directions. Every other wrapper is finished when the call returns; this one
+# installs a callback that glibc invokes later, with LINUX's signal number, into
+# guest code that will compare it against Darwin's. SIGUSR1 is 30 here and 10
+# there, and 10 on Darwin is SIGBUS.
+want 29_sigaction        && build 29_sigaction        "$CHAINED_TARGET" 29_sigaction        29_sigaction.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

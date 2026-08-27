@@ -1,0 +1,18 @@
+== a handler for SIGUSR1, whose number differs on the two systems
+  install rc=0  previous handler was default=yes
+  after raise(SIGUSR1):       count=1  handler saw SIGUSR1
+  after pthread_kill(SIGUSR1): count=1  handler saw SIGUSR1
+== the same for SIGUSR2, which differs differently
+  install rc=0  after raise(SIGUSR2): count=1  handler saw SIGUSR2
+== reading the action back through oact
+  query rc=0  handler is the one we installed=yes
+  flags read back            SA_RESTART  stray=no
+== sa_mask crosses inside the struct, not as a pointer
+  install rc=0  SIGUSR2 in the mask we read back=yes  SIGINT=no
+== save, replace with SIG_IGN, restore
+  while ignored:   count=0  (0 is correct)
+  after restore:   count=1  handler saw SIGUSR1
+== back to SIG_DFL
+  rc=0  oact reported our handler=yes
+  now default=yes
+done

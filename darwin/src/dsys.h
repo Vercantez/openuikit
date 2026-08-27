@@ -62,6 +62,14 @@ extern int    glibc_sigismember(const void *, int)          GLIBCSYM(sigismember
 extern int    glibc_pthread_sigmask(int, const void *, void *) GLIBCSYM(pthread_sigmask);
 extern int    glibc_sigprocmask(int, const void *, void *)  GLIBCSYM(sigprocmask);
 extern int    glibc_signalfd(int, const void *, int)        GLIBCSYM(signalfd);
+/* All four take a SIGNAL NUMBER, and ten of the 31 are numbered differently on
+ * the two systems -- so none of these may be reached except through the
+ * translation in darwin/src/posix.c. `struct sigaction` is void* here for the
+ * same reason struct stat is: glibc's is 152 bytes against Darwin's 16. */
+extern int    glibc_sigaction(int, const void *, void *)    GLIBCSYM(sigaction);
+extern int    glibc_pthread_kill(unsigned long, int)        GLIBCSYM(pthread_kill);
+extern int    glibc_kill(int, int)                          GLIBCSYM(kill);
+extern int    glibc_raise(int)                              GLIBCSYM(raise);
 /* poll's second argument is glibc's nfds_t -- unsigned LONG, where Darwin's is
  * unsigned INT.  Spelled out here rather than left to a header so the width
  * conversion happens at the call, in view of the cast. darwin/src/posix.c has

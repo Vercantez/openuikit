@@ -142,6 +142,17 @@ int main(void)
     VAL(SIGWINCH); VAL(SIGUSR1); VAL(SIGUSR2);
     VAL(SIG_BLOCK); VAL(SIG_UNBLOCK); VAL(SIG_SETMASK);
     VAL(SA_RESTART); VAL(SA_SIGINFO); VAL(SA_NOCLDSTOP);
+    /* NOT ONE sa_flags BIT AGREES WITH LINUX, and the low ones collide with
+     * live Linux flags rather than with nothing: Darwin's SA_RESTART (0x02) is
+     * glibc's SA_NOCLDWAIT, and Darwin's SA_ONSTACK (0x01) is its
+     * SA_NOCLDSTOP. darwin/src/posix.c translates all seven. */
+    VAL(SA_ONSTACK); VAL(SA_RESETHAND); VAL(SA_NODEFER); VAL(SA_NOCLDWAIT);
+    VAL(SIG_DFL); VAL(SIG_IGN);
+    /* struct sigaction is 16 bytes here and 152 on Linux, and sa_mask is a
+     * 4-byte sigset_t BY VALUE inside it -- so the whole layout differs, not
+     * one field, and `oact` is an OUT parameter. */
+    SZ(struct sigaction); SZ(siginfo_t);
+    OFF(sigaction, sa_mask); OFF(sigaction, sa_flags);
 
     puts("");
     puts("== clock ids  (darwin/src/posix.c translates these; both tables are hand-written)");

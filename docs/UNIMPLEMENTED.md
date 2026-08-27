@@ -518,6 +518,59 @@ forward: `struct dirent` is 1048 bytes on Darwin and 280 on glibc, and differs
 in field layout as well as size, exactly like `struct stat`. Graded by
 `tests/bin/20_dirent`.
 
+### `sigaction-siginfo` — the three-argument handler form is refused
+`sigaction` translates four things and installs a trampoline
+(`darwin/src/posix.c`): the signal number in **both** directions, the 16-vs-152
+byte struct, the `sigset_t` embedded in it by value, and all seven `sa_flags`
+bits — **not one of which agrees** with Linux, with the low ones colliding with
+live Linux flags rather than with unused bits. Graded by `tests/bin/29_sigaction`
+(rung ab).
+
+`SA_SIGINFO` is the one flag that **aborts instead of mapping**. Honouring it
+changes the handler's signature to `(int, siginfo_t *, void *)`, and Darwin's
+`siginfo_t` is 104 bytes where glibc's is 128, with different fields — so it
+needs a second struct translation, plus a `ucontext_t` for which no mapping
+exists at all (it carries the machine's register file). Mapping the bit and
+handing the guest a Linux `siginfo` would be the dishonest option; nothing has
+asked, because libdispatch installs a one-argument `sa_handler`.
+
+### `sigaction-darwin-only-signals` — `SIGEMT` and `SIGINFO` cannot be installed
+Darwin has 31 signals, Linux has no counterpart for `SIGEMT` (7) or `SIGINFO`
+(29). `sigaction` on either returns `EINVAL` rather than arming the guest for
+something it never asked about — the same choice `mr_sigset_d2l` makes when it
+drops them from a mask.
+
+macOS returns 0 for the same call, so this is a real divergence that no wrapper
+can reconcile, and it is therefore **absent from `29_sigaction`**: a fixture
+that must match its oracle byte for byte cannot contain a case where the two
+systems legitimately differ. Same reason `POLLWRBAND` is absent from `28_poll`.
+
+### `sigaction-sysroot` — there was never a header gap here
+Recorded because it was reported twice as a missing declaration and is not one.
+`struct sigaction` is fully defined at `sdk/usr/include/sys/signal.h:385`, and
+`sigaction()` is prototyped at `sdk/usr/include/signal.h:87`. A translation unit
+that includes only `<sys/signal.h>` sees the struct and not the function —
+**and that is exactly what Apple's own SDK does**, verified by compiling the
+same two-line probe against both. The fix for a consumer hitting this is
+`#include <signal.h>`, not staging a header.
+
+### `signal-surface-remaining` — what is still not exported
+`sigaction`, `pthread_kill`, `kill` and `raise` translate. Still absent, and
+each would need the same signal-number translation rather than a forward:
+`signal(3)` (a `sigaction` wrapper on both systems, so it is cheap), `sigaltstack`
+(`stack_t` is a third struct to compare), `sigqueue`, `killpg`, `psignal`,
+`strsignal` (Apple's own strings, like `strerror`), and `sigwaitinfo`/
+`sigtimedwait` (both return a `siginfo_t`, so they are blocked behind the same
+thing `SA_SIGINFO` is).
+
+**A note for anyone staging declarations for these.** A staged declaration
+carrying a `GLIBCSYM` asm label binds **straight through to glibc and bypasses
+the wrapper entirely** — the symbol resolves, the call succeeds, and the
+translation never runs. That nearly happened to the `sigset_t` wrapper via a
+labelled `signalfd`. The rule: `GLIBCSYM` means "this ABI is identical on both
+sides"; anything listed in this section or translated in `darwin/src/posix.c`
+gets a plain declaration.
+
 ### `poll-band` — a kernel difference, not a mapping we are missing
 `poll` and `ppoll` translate three things (`darwin/src/posix.c`): `nfds_t`'s
 width, the two flags Darwin and Linux number differently, and — for `ppoll` —

@@ -189,6 +189,16 @@ value  SIG_SETMASK                  3
 value  SA_RESTART                   2
 value  SA_SIGINFO                   64
 value  SA_NOCLDSTOP                 8
+value  SA_ONSTACK                   1
+value  SA_RESETHAND                 4
+value  SA_NODEFER                   16
+value  SA_NOCLDWAIT                 32
+value  SIG_DFL                      0
+value  SIG_IGN                      1
+sizeof struct sigaction             16
+sizeof siginfo_t                    104
+offset sigaction.sa_mask            8
+offset sigaction.sa_flags           12
 
 == clock ids  (darwin/src/posix.c translates these; both tables are hand-written)
 value  CLOCK_REALTIME               0

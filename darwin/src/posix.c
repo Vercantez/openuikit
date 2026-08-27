@@ -1013,6 +1013,256 @@ EXPORT int sigwait(const unsigned int *set, int *signo)
     return rc;
 }
 
+/* ----------------------------------------------------------- sigaction(2) */
+
+/* FOUR translations and a TRAMPOLINE, and the trampoline is the part that
+ * makes this different in kind from everything above it. Every other wrapper
+ * in this file translates arguments on the way out and results on the way
+ * back. sigaction installs a CALLBACK, so the boundary has to be crossed again
+ * later, on a thread we did not start, in the other direction.
+ *
+ * Measured on both sides 2026-08-27, and every row differs:
+ *
+ *                       Darwin   glibc
+ *   sizeof(sigaction)       16     152
+ *   offsetof sa_mask         8       8    <- the only thing that agrees
+ *   offsetof sa_flags       12     136
+ *   sizeof(sigset_t)         4     128
+ *
+ *   SA_ONSTACK            0x01   0x08000000
+ *   SA_RESTART            0x02   0x10000000
+ *   SA_RESETHAND          0x04   0x80000000
+ *   SA_NOCLDSTOP          0x08   0x00000001
+ *   SA_NODEFER            0x10   0x40000000
+ *   SA_NOCLDWAIT          0x20   0x00000002
+ *   SA_SIGINFO            0x40   0x00000004
+ *
+ * NOT ONE FLAG AGREES, and the low bits collide with live Linux flags rather
+ * than with nothing, so a forward asks for a real and different thing. The
+ * worst is the one the only caller we have actually uses:
+ * swift-corelibs-libdispatch's event_epoll.c installs its handler with
+ * `.sa_flags = SA_RESTART`, which is Darwin's 0x02, which is glibc's
+ * SA_NOCLDWAIT. The guest asks for restartable syscalls and gets "reap
+ * children automatically" -- two unrelated behaviours, no error, no warning.
+ * Darwin's SA_ONSTACK (0x01) likewise arrives as SA_NOCLDSTOP, and Darwin's
+ * SA_RESETHAND (0x04) as SA_SIGINFO, which changes the calling convention the
+ * kernel uses for the handler.
+ *
+ * THE STRUCT IS THE #49 OVERFLOW CLASS AT ITS WORST: `oact` is an OUT
+ * parameter, so a forward has glibc write 152 bytes into the guest's 16. Our
+ * one caller passes NULL for it, which is a property of that caller and not of
+ * this code -- the same "safe because today's caller does not" that the ppoll
+ * report turned on.
+ *
+ * AND THE SIGNAL NUMBER ITSELF, which is why the trampoline exists. The guest
+ * hands us a Darwin signo; glibc wants Linux's. That direction is just
+ * mr_signo_d2l. But when the signal ARRIVES, glibc calls the handler with
+ * LINUX's number, and the handler is guest code that will compare it against
+ * Darwin's. A guest handler installed for SIGUSR1 would be called with 10,
+ * which on Darwin is SIGBUS. Worse, event_epoll.c's handler passes that number
+ * straight to pthread_kill -- so an untranslated number would not merely be
+ * misread, it would be re-sent, to a different signal, on a different thread.
+ *
+ * So we install OUR function with glibc, keep the guest's in a table indexed
+ * by DARWIN signo, and translate on the way in. The table is the only state
+ * this file keeps that outlives a call. */
+
+#define MR_D_SA_ONSTACK   0x01
+#define MR_D_SA_RESTART   0x02
+#define MR_D_SA_RESETHAND 0x04
+#define MR_D_SA_NOCLDSTOP 0x08
+#define MR_D_SA_NODEFER   0x10
+#define MR_D_SA_NOCLDWAIT 0x20
+#define MR_D_SA_SIGINFO   0x40
+#define MR_D_SA_KNOWN     0x7F
+
+#define MR_L_SA_NOCLDSTOP 0x00000001
+#define MR_L_SA_NOCLDWAIT 0x00000002
+#define MR_L_SA_SIGINFO   0x00000004
+#define MR_L_SA_ONSTACK   0x08000000
+#define MR_L_SA_RESTART   0x10000000
+#define MR_L_SA_NODEFER   0x40000000
+#define MR_L_SA_RESETHAND 0x80000000u
+/* glibc sets this itself on the way in and the kernel hands it back in oact.
+ * It is not part of the guest's vocabulary and must be dropped rather than
+ * bailed on, or reading back any handler we installed would abort. */
+#define MR_L_SA_RESTORER  0x04000000
+
+struct darwin_sigaction {
+    void        *sa_handler_u;   /* the union: sa_handler or sa_sigaction */
+    unsigned int sa_mask;        /* Darwin sigset_t, 4 bytes, by VALUE */
+    int          sa_flags;
+};
+_Static_assert(sizeof(struct darwin_sigaction) == 16, "Darwin struct sigaction is 16 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_sigaction, sa_mask)  == 8,  "sa_mask at 8");
+_Static_assert(__builtin_offsetof(struct darwin_sigaction, sa_flags) == 12, "sa_flags at 12");
+
+/* Our mirror of glibc's. Hand-written, and therefore pinned against the REAL
+ * header by sdk/tests/glibc_abi_probe.c -- a mirror that only pins itself is
+ * the linux_stat mistake, and a wrong offset here writes the flags word into
+ * the middle of a signal mask. */
+struct linux_sigaction {
+    void            *sa_handler_u;
+    mr_linux_sigset  sa_mask;
+    int              sa_flags;
+    void           (*sa_restorer)(void);
+};
+_Static_assert(sizeof(struct linux_sigaction) == 152, "our mirror of glibc's struct sigaction is 152 bytes");
+_Static_assert(__builtin_offsetof(struct linux_sigaction, sa_mask)  == 8,   "mirror sa_mask at 8");
+_Static_assert(__builtin_offsetof(struct linux_sigaction, sa_flags) == 136, "mirror sa_flags at 136");
+
+static int mr_sigflags_d2l(int d)
+{
+    int l = 0;
+    if (d & ~MR_D_SA_KNOWN)
+        mr_bail("sigaction(): an sa_flags bit outside Darwin's vocabulary. "
+                "Forwarding it would name a different Linux flag (see the flag "
+                "table in darwin/src/posix.c).");
+    if (d & MR_D_SA_ONSTACK)   l |= MR_L_SA_ONSTACK;
+    if (d & MR_D_SA_RESTART)   l |= MR_L_SA_RESTART;
+    if (d & MR_D_SA_RESETHAND) l |= MR_L_SA_RESETHAND;
+    if (d & MR_D_SA_NOCLDSTOP) l |= MR_L_SA_NOCLDSTOP;
+    if (d & MR_D_SA_NODEFER)   l |= MR_L_SA_NODEFER;
+    if (d & MR_D_SA_NOCLDWAIT) l |= MR_L_SA_NOCLDWAIT;
+    /* SA_SIGINFO is refused rather than mapped. It changes the handler's
+     * signature to (int, siginfo_t *, void *), and Darwin's siginfo_t is 104
+     * bytes where glibc's is 128, with different fields -- so honouring it
+     * means a second struct translation and a ucontext_t we have no mapping
+     * for at all. Nothing has asked: libdispatch installs a one-argument
+     * sa_handler. Bailing is the honest answer; mapping the bit and handing
+     * the guest a Linux siginfo would be the dishonest one. */
+    if (d & MR_D_SA_SIGINFO)
+        mr_bail("sigaction(SA_SIGINFO): the three-argument handler form is not "
+                "implemented. Darwin's siginfo_t is 104 bytes and glibc's is "
+                "128, with different fields, so the guest would be handed a "
+                "Linux siginfo. See docs/UNIMPLEMENTED.md#sigaction-siginfo.");
+    return l;
+}
+
+static int mr_sigflags_l2d(int l)
+{
+    int d = 0;
+    l &= ~MR_L_SA_RESTORER;
+    if ((unsigned)l & ~(unsigned)(MR_L_SA_NOCLDSTOP | MR_L_SA_NOCLDWAIT |
+                                  MR_L_SA_SIGINFO   | MR_L_SA_ONSTACK   |
+                                  MR_L_SA_RESTART   | MR_L_SA_NODEFER   |
+                                  MR_L_SA_RESETHAND))
+        mr_bail("sigaction(): glibc returned an sa_flags bit with no Darwin meaning.");
+    if (l & MR_L_SA_ONSTACK)   d |= MR_D_SA_ONSTACK;
+    if (l & MR_L_SA_RESTART)   d |= MR_D_SA_RESTART;
+    if (l & MR_L_SA_RESETHAND) d |= MR_D_SA_RESETHAND;
+    if (l & MR_L_SA_NOCLDSTOP) d |= MR_D_SA_NOCLDSTOP;
+    if (l & MR_L_SA_NODEFER)   d |= MR_D_SA_NODEFER;
+    if (l & MR_L_SA_NOCLDWAIT) d |= MR_D_SA_NOCLDWAIT;
+    if (l & MR_L_SA_SIGINFO)   d |= MR_D_SA_SIGINFO;
+    return d;
+}
+
+/* Indexed by DARWIN signo. SIG_DFL and SIG_IGN are not stored here -- they are
+ * 0 and 1 on both systems (pinned both sides) and go to glibc unchanged, so a
+ * NULL slot means "not ours" rather than "not set". */
+static void *mr_guest_sigaction[32];
+
+static void mr_sig_trampoline(int lsig)
+{
+    int d = mr_signo_l2d(lsig);
+    void (*h)(int);
+
+    /* A Linux signal with no Darwin name cannot be reported to the guest: it
+     * has no number the guest would recognise, and picking one would name a
+     * different signal. This cannot happen through sigaction() -- we only ever
+     * register for signals we translated on the way in -- but the handler is
+     * reachable from anything glibc decides to deliver. */
+    if (d < 1 || d > 31) return;
+    h = (void (*)(int))__atomic_load_n(&mr_guest_sigaction[d], __ATOMIC_ACQUIRE);
+    if (h) h(d);
+}
+
+EXPORT int sigaction(int dsig, const struct darwin_sigaction *act,
+                     struct darwin_sigaction *oact)
+{
+    struct linux_sigaction lact, loact;
+    int lsig = mr_signo_d2l(dsig), rc;
+    void *prev_guest;
+
+    /* SIGEMT (7) and SIGINFO (29) exist only on Darwin. There is no Linux
+     * signal to install a handler for, and inventing one would arm the guest
+     * for something it never asked about. */
+    if (lsig == 0) { *mr_errno_slot() = 22; return -1; }   /* EINVAL, Darwin's */
+
+    prev_guest = __atomic_load_n(&mr_guest_sigaction[dsig], __ATOMIC_ACQUIRE);
+
+    if (act) {
+        void *h = act->sa_handler_u;
+        int   real = (h != (void *)0 && h != (void *)1);   /* not SIG_DFL/SIG_IGN */
+
+        glibc_memset(&lact, 0, sizeof lact);
+        lact.sa_flags = mr_sigflags_d2l(act->sa_flags);
+        mr_sigset_d2l(act->sa_mask, &lact.sa_mask);
+        lact.sa_handler_u = real ? (void *)mr_sig_trampoline : h;
+
+        /* Publish the guest's handler BEFORE glibc can deliver anything to the
+         * trampoline. The reverse order has a window in which a signal arrives,
+         * the trampoline loads a NULL slot, and the signal is silently dropped. */
+        __atomic_store_n(&mr_guest_sigaction[dsig], real ? h : (void *)0,
+                         __ATOMIC_RELEASE);
+    }
+
+    rc = MR_ERRNO_CALL(glibc_sigaction(lsig, act ? &lact : 0, oact ? &loact : 0));
+
+    if (rc != 0 && act) {
+        /* glibc refused, so the guest's handler is not installed and the table
+         * must not claim it is. */
+        __atomic_store_n(&mr_guest_sigaction[dsig], prev_guest, __ATOMIC_RELEASE);
+        return rc;
+    }
+
+    if (rc == 0 && oact) {
+        /* Report the guest ITS OWN handler, not our trampoline -- the classic
+         * save-and-restore idiom reinstalls whatever oact came back with, and
+         * handing back the trampoline would work by accident once and then
+         * install a trampoline whose table slot the guest had overwritten. */
+        oact->sa_handler_u = (loact.sa_handler_u == (void *)mr_sig_trampoline)
+                                 ? prev_guest : loact.sa_handler_u;
+        oact->sa_mask  = mr_sigset_l2d(&loact.sa_mask);
+        oact->sa_flags = mr_sigflags_l2d(loact.sa_flags);
+    }
+    return rc;
+}
+
+/* The three ways to SEND one, all of which carry a Darwin signo. pthread_kill
+ * is not optional company for sigaction: event_epoll.c's handler takes the
+ * number it was given and passes it straight to pthread_kill, so leaving this
+ * a plain forward would re-send the signal under a different name on the one
+ * path sigaction exists to serve.
+ *
+ * pthread_t crosses as an opaque value: it is the guest's own, obtained from
+ * our pthread_self, so it is glibc's handle either way. */
+EXPORT int pthread_kill(unsigned long thread, int dsig)
+{
+    int lsig;
+    if (dsig == 0) return glibc_pthread_kill(thread, 0);  /* the "is it alive" probe */
+    lsig = mr_signo_d2l(dsig);
+    if (!lsig) return 22;                                 /* EINVAL, by return value */
+    return glibc_pthread_kill(thread, lsig);
+}
+
+EXPORT int kill(int pid, int dsig)
+{
+    int lsig;
+    if (dsig == 0) return MR_ERRNO_CALL(glibc_kill(pid, 0));
+    lsig = mr_signo_d2l(dsig);
+    if (!lsig) { *mr_errno_slot() = 22; return -1; }
+    return MR_ERRNO_CALL(glibc_kill(pid, lsig));
+}
+
+EXPORT int raise(int dsig)
+{
+    int lsig = mr_signo_d2l(dsig);
+    if (!lsig) { *mr_errno_slot() = 22; return -1; }
+    return MR_ERRNO_CALL(glibc_raise(lsig));
+}
+
 /* ---------------------------------------------------------------- poll(2) */
 
 /* THREE translations, and only the third is the one this section was asked
