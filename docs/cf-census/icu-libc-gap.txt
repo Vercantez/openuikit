@@ -28,6 +28,23 @@
 # table and by `git log -S <name> -- darwin/src/` returning nothing for each, so
 # this is not a build-ordering artifact.
 #
+# ICU DOES NOT CALL pthread_mach_thread_np -- measured 2026-08-27 over all 984
+# ICU source files. Zero references. And the reason is structural rather than
+# incidental: ICU makes ZERO raw pthread calls of any kind (pthread_create 0,
+# pthread_mutex_lock 0) because it uses std::mutex through its own UMutex
+# wrapper. Positive controls on the same tree: u_strlen 131 hits, umtx_lock 77,
+# so the search discriminates and the zeros are real.
+#
+# Our built libc++.1.dylib does not reference it either -- 14 undefined symbols
+# total, none of them pthread, with _glibc_malloc/_glibc_free present as the
+# control that nm is reading the file correctly.
+#
+# STILL UNMEASURED: libc++abi and libunwind. Those artifacts did not survive
+# container recreation, so this check covers ICU and libc++ only. Named rather
+# than assumed -- libunwind in particular has Darwin paths that touch thread
+# state, and "the other two probably don't either" is exactly the reasoning this
+# note exists to avoid.
+#
 # The first two are trivial wide-char forwards. The third is the one this note
 # already warned about, and it has since acquired a SIBLING: CFRunLoop needs
 # pthread_main_thread_np, absent the same way and Darwin-only for the same
