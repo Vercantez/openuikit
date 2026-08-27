@@ -219,4 +219,47 @@ if os.environ.get("SWIFTCORE_MACHO_WIDEN_ISA") == "1":
          "0x007ffffffffffff8ULL /* swiftcore-macho: machorun wide-VA isa, patch 6 */",
          "wide-VA objc isa mask")
 
+# ---------------------------------------------------------------------------
+# 7. A Darwin target must not force the Darwin (dispatch) executor.
+#
+# stdlib/public/Concurrency/CMakeLists.txt compiles ALL PlatformExecutor*.swift
+# unconditionally and lets each guard itself. PlatformExecutorDarwin.swift's
+# guard is `os(macOS) || os(iOS) || ...` -- it never consults
+# SWIFT_CONCURRENCY_GLOBAL_EXECUTOR. PlatformExecutorCooperative.swift has no
+# guard at all. So choosing `singlethreaded` for a Darwin target compiles BOTH,
+# and they both define PlatformExecutorFactory:
+#
+#   error: invalid redeclaration of 'PlatformExecutorFactory'
+#   error: cannot find 'CFMainExecutor' in scope        (Darwin's deps are
+#   error: cannot find 'DispatchMainExecutor' in scope   only built for dispatch)
+#
+# `singlethreaded` on a Darwin target is simply not a configuration upstream
+# tests: Darwin is assumed to imply dispatch. Move the Darwin executor into the
+# dispatch branch, where its dependencies actually exist.
+# ---------------------------------------------------------------------------
+edit("stdlib/public/Concurrency/CMakeLists.txt",
+"""  CooperativeExecutor.swift
+  PlatformExecutorDarwin.swift
+  PlatformExecutorLinux.swift""",
+"""  CooperativeExecutor.swift
+  # swiftcore-macho: PlatformExecutorDarwin guards on os(macOS) alone, so on a
+  # Darwin target it collides with whichever executor the build actually chose.
+  # It belongs with the dispatch sources it depends on. See patch 7.
+  PlatformExecutorLinux.swift""",
+     "Darwin target does not imply the dispatch executor")
+
+edit("stdlib/public/Concurrency/CMakeLists.txt",
+"""  set(SWIFT_RUNTIME_CONCURRENCY_NONEMBEDDED_SWIFT_SOURCES
+    DispatchExecutor.swift
+    CFExecutor.swift
+    ExecutorImpl.swift
+  )""",
+"""  set(SWIFT_RUNTIME_CONCURRENCY_NONEMBEDDED_SWIFT_SOURCES
+    DispatchExecutor.swift
+    CFExecutor.swift
+    PlatformExecutorDarwin.swift
+    ExecutorImpl.swift
+  )""",
+     "Darwin executor moves into the dispatch branch")
+
 print("patches applied")

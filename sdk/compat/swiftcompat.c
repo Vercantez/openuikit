@@ -283,7 +283,63 @@ extern const void *cxxabi_class_type_info[8]        SHIM("__ZTVN10__cxxabiv117__
 extern const void *cxxabi_si_class_type_info[8]     SHIM("__ZTVN10__cxxabiv120__si_class_type_infoE");
 extern const void *cxxabi_pointer_type_info[8]      SHIM("__ZTVN10__cxxabiv119__pointer_type_infoE");
 extern const void *cxxabi_function_type_info[8]     SHIM("__ZTVN10__cxxabiv120__function_type_infoE");
+/* __vmi_class_type_info: virtual/multiple inheritance. Reached by
+ * libswift_Concurrency, which has deeper class hierarchies than libswiftCore. */
+extern const void *cxxabi_vmi_class_type_info[8]    SHIM("__ZTVN10__cxxabiv121__vmi_class_type_infoE");
 CXXABI_VTABLE(cxxabi_class_type_info);
 CXXABI_VTABLE(cxxabi_si_class_type_info);
 CXXABI_VTABLE(cxxabi_pointer_type_info);
 CXXABI_VTABLE(cxxabi_function_type_info);
+CXXABI_VTABLE(cxxabi_vmi_class_type_info);
+
+/* ------------------------------------------------- _Concurrency additions ---
+ * The gap measured against Apple's shipped libswift_Concurrency, minus the 13
+ * dispatch symbols (the cooperative executor references none of them -- which
+ * is itself a check on the build: if a dispatch symbol shows up here, the wrong
+ * executor got compiled in).
+ */
+void __cxa_pure_virtual(void);
+void __cxa_pure_virtual(void) { abort(); }
+
+int pthread_main_np(void);
+int pthread_main_np(void) { return 1; }   /* single-threaded executor */
+
+unsigned qos_class_self(void);
+unsigned qos_class_self(void) { return 0x21; }  /* QOS_CLASS_USER_INITIATED */
+
+int memset_s(void *d, size_t dn, int c, size_t n);
+int memset_s(void *d, size_t dn, int c, size_t n) {
+    if (!d) return 22; if (n > dn) { memset(d, c, dn); return 34; }
+    memset(d, c, n); return 0;
+}
+
+/* clock_getres is already declared by our sysroot's <time.h>; match it exactly
+ * rather than redeclare, and forward to glibc through the loader's boundary. */
+extern int glibc_clock_getres(clockid_t, struct timespec *) __asm__("_glibc_clock_getres");
+int clock_getres(clockid_t id, struct timespec *ts) { return glibc_clock_getres(id, ts); }
+
+void *malloc_type_malloc(size_t n, unsigned long long type);
+void *malloc_type_malloc(size_t n, unsigned long long type) { (void)type; return malloc(n); }
+
+/* os_log / os_signpost: telemetry only. No-ops that keep the shape. */
+void *os_log_create(const char *s, const char *c);
+void *os_log_create(const char *s, const char *c) { (void)s; (void)c; return (void *)1; }
+void os_release(void *p);
+void os_release(void *p) { (void)p; }
+int  os_signpost_enabled(void *l);
+int  os_signpost_enabled(void *l) { (void)l; return 0; }
+unsigned long long os_signpost_id_generate(void *l);
+unsigned long long os_signpost_id_generate(void *l) { (void)l; return 0; }
+unsigned long long os_signpost_id_make_with_pointer(void *l, const void *p);
+unsigned long long os_signpost_id_make_with_pointer(void *l, const void *p) { (void)l; (void)p; return 0; }
+
+/* Mach vouchers: QoS propagation across queues. There are no queues here. */
+void *voucher_copy(void);
+void *voucher_copy(void) { return 0; }
+void *voucher_adopt(void *v);
+void *voucher_adopt(void *v) { (void)v; return 0; }
+
+int csops(int pid, unsigned int ops, void *useraddr, size_t usersize);
+int csops(int pid, unsigned int ops, void *useraddr, size_t usersize) {
+    (void)pid; (void)ops; (void)useraddr; (void)usersize; return -1;
+}

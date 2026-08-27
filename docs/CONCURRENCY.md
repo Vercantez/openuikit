@@ -344,3 +344,70 @@ and nobody should later read a passing `MainActor.assertIsolated()` as evidence
 of correct threading on this configuration.
 
 Configure exits 0 with `Concurrency Support: ON`.
+
+---
+
+## Part 4 — RESULT: `_Concurrency` schedules under machorun, matching macOS exactly
+
+```
+                                   macOS (dispatch)      machorun (cooperative)
+1 suspension is observable         PASS                  PASS
+2 resume happened out of line      PASS                  PASS
+3 Task.sleep waits (50ms request)  PASS  51.06ms         PASS  50.07ms
+4 @MainActor hop, nonisolated      PASS                  PASS
+5 200 tasks all completed          PASS                  PASS
+                                   ALL PASSED, exit 0    ALL PASSED, exit 0
+```
+
+**Differential: identical** — same verdicts, same trace strings, same exit code.
+`tests/expected/concurrency_probe.{macos,machorun}.txt`.
+
+And the negative control fails **on both**: `-D INLINE_MUTANT` resumes the
+continuation inline, and checks 1 and 2 fail with exit 1 under macOS *and* under
+machorun. That second half matters — a test whose teeth were only demonstrated
+on the oracle would not prove anything about the target. Exit codes propagate
+through machorun correctly (verified: mutant returns 1, real returns 0).
+
+### The one real wall, and it is a genuine upstream gap
+
+`singlethreaded` on a Darwin target does not build, because
+`stdlib/public/Concurrency/CMakeLists.txt` compiles **every** `PlatformExecutor*.swift`
+unconditionally and lets each guard itself — but
+`PlatformExecutorDarwin.swift`'s guard is `os(macOS) || os(iOS) || ...` and never
+consults `SWIFT_CONCURRENCY_GLOBAL_EXECUTOR`, while
+`PlatformExecutorCooperative.swift` has no guard at all. Both then define
+`PlatformExecutorFactory`:
+
+```
+error: invalid redeclaration of 'PlatformExecutorFactory'
+error: cannot find 'CFMainExecutor' in scope
+error: cannot find 'DispatchMainExecutor' in scope
+```
+
+Upstream assumes **Darwin implies dispatch**. Patch 7 moves the Darwin executor
+into the dispatch branch where its dependencies actually exist. Two hunks, one
+file, and it says "a Darwin target need not imply the dispatch executor" — not
+"this is not Mach-O".
+
+### Cost
+
+**7 patches total** to swift-6.2.4 (37 inserted lines), of which patch 7 is the
+only concurrency-specific one; patch 6 is opt-in and not policy. Plus 14 symbols
+added to `libswiftcompat.dylib` (44 total): `__cxa_pure_virtual`, a fifth
+`__cxxabiv1` vtable (`__vmi_class_type_info` — _Concurrency has deeper class
+hierarchies than libswiftCore), `pthread_main_np`, `qos_class_self`, `memset_s`,
+`clock_getres`, `malloc_type_malloc`, the os_log/signpost no-ops, the voucher
+no-ops, `csops`.
+
+**Zero dispatch symbols were needed.** That is itself a check on the build: had
+the wrong executor been compiled in, `dispatch_async_swift_job` and friends would
+have appeared in the undefined set. They did not.
+
+### What this does and does not mean
+
+It means `async`/`await`, suspension and resumption, `Task.sleep`, `@MainActor`
+isolation, task groups and 200 concurrent tasks all work, from a Darwin Mach-O
+binary, on Linux, with no libdispatch and no Foundation.
+
+It does **not** mean parallelism. Everything runs on one thread by construction.
+And per Part 3, `@MainActor` assertions cannot detect a wrong thread here.

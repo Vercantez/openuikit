@@ -57,6 +57,29 @@ index 8ec33e9a..a539b01f 100644
    elseif(SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER)
      if(SWIFT_PREBUILT_SWIFT)
        set(swift_compiler_tool "${SWIFT_NATIVE_SWIFT_TOOLS_PATH}/swiftc${HOST_EXECUTABLE_SUFFIX}")
+diff --git a/stdlib/public/Concurrency/CMakeLists.txt b/stdlib/public/Concurrency/CMakeLists.txt
+index d3a50110..f5b14cce 100644
+--- a/stdlib/public/Concurrency/CMakeLists.txt
++++ b/stdlib/public/Concurrency/CMakeLists.txt
+@@ -161,7 +161,9 @@ set(SWIFT_RUNTIME_CONCURRENCY_SWIFT_SOURCES
+   TaskSleepDuration.swift
+   UnimplementedExecutor.swift
+   CooperativeExecutor.swift
+-  PlatformExecutorDarwin.swift
++  # swiftcore-macho: PlatformExecutorDarwin guards on os(macOS) alone, so on a
++  # Darwin target it collides with whichever executor the build actually chose.
++  # It belongs with the dispatch sources it depends on. See patch 7.
+   PlatformExecutorLinux.swift
+   PlatformExecutorWindows.swift
+   PlatformExecutorOpenBSD.swift
+@@ -182,6 +184,7 @@ if("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "dispatch")
+   set(SWIFT_RUNTIME_CONCURRENCY_NONEMBEDDED_SWIFT_SOURCES
+     DispatchExecutor.swift
+     CFExecutor.swift
++    PlatformExecutorDarwin.swift
+     ExecutorImpl.swift
+   )
+ elseif("${SWIFT_CONCURRENCY_GLOBAL_EXECUTOR}" STREQUAL "singlethreaded")
 diff --git a/stdlib/public/runtime/ImageInspectionMachO.cpp b/stdlib/public/runtime/ImageInspectionMachO.cpp
 index a028585c..80820ba6 100644
 --- a/stdlib/public/runtime/ImageInspectionMachO.cpp
