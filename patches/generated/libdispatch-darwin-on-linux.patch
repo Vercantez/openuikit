@@ -1,0 +1,44 @@
+diff --git a/src/event/event_config.h b/src/event/event_config.h
+index 4f4b6e5..70fd813 100644
+--- a/src/event/event_config.h
++++ b/src/event/event_config.h
+@@ -21,7 +21,15 @@
+ #ifndef __DISPATCH_EVENT_EVENT_CONFIG__
+ #define __DISPATCH_EVENT_EVENT_CONFIG__
+ 
+-#if defined(__linux__)
++#if defined(DISPATCH_EVENT_BACKEND_EPOLL) && DISPATCH_EVENT_BACKEND_EPOLL
++/* swiftcore-macho: the build system selected epoll explicitly. We target
++ * Darwin (Mach-O) on a Linux host, so neither __linux__ nor <sys/event.h> is a
++ * correct signal for which event loop the *host kernel* provides -- the guest
++ * runs on Linux whatever its object format says. */
++#	include <sys/eventfd.h>
++#	define DISPATCH_EVENT_BACKEND_KEVENT 0
++#	define DISPATCH_EVENT_BACKEND_WINDOWS 0
++#elif defined(__linux__)
+ #	include <sys/eventfd.h>
+ #	define DISPATCH_EVENT_BACKEND_EPOLL 1
+ #	define DISPATCH_EVENT_BACKEND_KEVENT 0
+diff --git a/src/shims/hw_config.h b/src/shims/hw_config.h
+index 06b8921..8960db2 100644
+--- a/src/shims/hw_config.h
++++ b/src/shims/hw_config.h
+@@ -187,14 +187,10 @@ _dispatch_hw_get_config(_dispatch_hw_config_t c)
+ 	const char *name = NULL;
+ 	int r;
+ #if defined(__APPLE__)
+-	switch (c) {
+-	case _dispatch_hw_config_logical_cpus:
+-		name = "hw.logicalcpu_max"; break;
+-	case _dispatch_hw_config_physical_cpus:
+-		name = "hw.physicalcpu_max"; break;
+-	case _dispatch_hw_config_active_cpus:
+-		name = "hw.activecpu"; break;
+-	}
++	// swiftcore-macho: the host is Linux, which has no sysctlbyname. Leaving
++	// `name` NULL selects the sysconf(_SC_NPROCESSORS_ONLN) branch below --
++	// upstream's own code, and the right answer here.
++	(void)c;
+ #elif defined(__FreeBSD__)
+ 	(void)c; name = "kern.smp.cpus";
+ #elif defined(__OpenBSD__)
