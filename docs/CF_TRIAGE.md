@@ -1475,3 +1475,37 @@ outcome.
 
 Not blocked on anything external: `poll.h` and `malloc.h` are trivial, and the
 scoped patch is understood. Blocked on which of (A) or (B) we are building.
+
+## 38. The census with ICU, measured: 79 / 82
+
+Previously reported as 63 PASS / 19 FAIL with `ICU_INC` empty, with the note
+that 16 of the 19 were nothing but the missing include path — and a refusal to
+report the implied total by arithmetic. Measured now, with ICU's headers on the
+path (a sparse checkout of swift-foundation-icu 0.0.9; the census needs only
+`icuSources/include`, not a built ICU):
+
+```
+PASS=79 FAIL=3 EMPTY=4   (denominator 82, empty TUs excluded)
+warnings across passing files: 37
+```
+
+**Three genuine failures**, unchanged from the ICU-less run and each understood:
+
+| file | first error | owner |
+|---|---|---|
+| `CFRunLoop` | `conflicting types for 'mk_timer_cancel'` | ours — the Mach-branch guard scoped in §37 |
+| `CFSocket` | `expected ')'` | ours — moved *past* `constrained_ctypes.h`, so it is a new, later error |
+| `CFUtilities` | incomplete type `struct proc_bsdshortinfo` | a sysroot gap, newly visible behind the old error |
+
+The 4 EMPTY are unchanged and correctly excluded: `CFBundle_ResourceFork`,
+`CFBundle_Tables`, `CFTimeZone_WindowsMapping`, `CFWindowsUtilities` — all
+`#if`'d out for this platform, which is why the census refuses to score them.
+
+Against the earlier baseline of 75 PASS / 7 FAIL this is **7 genuine failures
+down to 3**, and the reason is not ours: machorun's `9156094` closed the sysroot
+include graph. The three CF files that had been blocked on `constrained_ctypes.h`
+came back for free, exactly as predicted.
+
+Worth recording that the number I declined to state was 79, not the 78 that had
+been predicted — so refusing the arithmetic cost nothing and the estimate was
+conservative rather than optimistic. The habit is cheap either way.
