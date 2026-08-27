@@ -47,6 +47,12 @@ typedef unsigned short unichar;
  * the point of the rename is the contract, not the layout. */
 typedef double NSTimeInterval;
 
+/* NSStreamStatus. MEASURED as a real difference from CFStreamStatus: CF's is
+ * signed, Foundation's unsigned. Same width, so the message send is unchanged;
+ * the rename is the contract, and like NSTimeInterval it must EXIST before a
+ * signature can be reconciled to it. */
+typedef NSUInteger NSStreamStatus;
+
 /* ---- NSRange ------------------------------------------------------------- */
 /* 19 call sites reach NSMakeRange, 4 more name NSRange directly. */
 typedef struct _NSRange {

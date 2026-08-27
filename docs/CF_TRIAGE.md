@@ -995,3 +995,65 @@ suspicious was fine, and the pair that looked like a rename was not. Nine
 selectors have no public reference at all (`invertedSet`, `bytes`,
 `streamError`, `localeIdentifier`, `mutableString`, …) — those are SPI wearing
 public-looking names, and the call site governs them.
+
+## 30. The silent set is closed, and the compile count went DOWN for someone else's reason
+
+**All 52 `PUBLIC, UNREVIEWED` declarations are adjudicated. That count is now
+zero.** Every declaration carries its verdict:
+
+```
+private-adopted      52    call site authoritative; nothing else exists
+public-equivalent    39    measured equivalent; CF's spelling kept
+public-reconciled    16    Foundation's declared type; a real signedness difference
+public-no-reference   9    SPI wearing a public-looking name
+unclassified          7
+```
+
+The silent set was closed before the loud one, because 50 unknown methods
+announce themselves as warnings while a wrong declared type announces nothing —
+and stays invisible for exactly as long as CoreFoundation is the only consumer.
+
+A process note on how the first attempt at this went wrong: the equivalent/
+no-reference sets were first built by hand from a `head -25` of the check output,
+which left 21 selectors still unadjudicated while *reporting* the set as closed.
+Rebuilding them from the full output fixed it. Sampling the output of a tool
+built to be exhaustive is a good way to lose the exhaustiveness.
+
+### Census: 77 → 75, and the drop is not ours
+
+| step | compiling | unknown methods |
+|---|---|---|
+| 2b — derived + reconciled | 77 / 82 | 50 |
+| **3 — adjudicated + machorun master SDK** | **75 / 82** | 50 |
+
+Two files advanced and three regressed:
+
+- **advanced** — CFTimeZone is past `struct tzhead` (now a method-signature
+  error) and CFUtilities is past `struct kinfo_proc` (now `struct
+  proc_bsdshortinfo`). machorun's headers did what they were meant to.
+- **regressed** — CFSocket, CFSocketStream and `uuid` now fail on
+  **`sys/constrained_ctypes.h` file not found**. That header is referenced by
+  `sdk/usr/include/sys/socket.h`, added in machorun `bde36bf` — the same commit
+  that shipped `kinfo_proc` and `tzhead` — and it is **not shipped**.
+
+So the compile count fell for a reason that has nothing to do with the
+declarations, which is precisely the discrimination the paired columns exist to
+provide. Reported without it, "75/82, down from 77" would have looked like the
+adjudication broke something.
+
+### The typedef coupling is now a mechanism, not a note
+
+Reconciling a signature to Foundation's *spelling* requires Foundation's
+*typedef* to exist. That took the census to zero **twice** — `NSTimeInterval`,
+then `NSStreamStatus` — so `scripts/reconcile.py` now refuses to run if any
+target type in its table is undeclared in `CFFoundationTypes.h`:
+
+```
+reconcile: target type(s) not declared in CFFoundationTypes.h: NSNoSuchType
+           add the typedef before reconciling a signature to it.
+```
+
+Verified by negative control — the guard was deliberately fed a bogus type and
+observed to fire, rather than assumed to work. **A note I forgot twice is not a
+safeguard.** That is the same lesson as "a comment asserting an invariant is not
+a mechanism enforcing one", arrived at the expensive way.

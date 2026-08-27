@@ -25,6 +25,62 @@ import re, sys, collections
 
 DERIVED, SPLIT, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 
+# Selectors ADJUDICATED against Apple's headers by scripts/check_public.py and
+# found EQUIVALENT: the spellings differ, the representation does not (measured
+# on macOS: CFIndex/NSInteger both 8B signed; Boolean/BOOL both 1B unsigned;
+# CFComparisonResult/NSComparisonResult both 8B signed; CFStringRef, id,
+# CFTypeRef, void const * all 8B pointers). Left as CF spells them, because
+# rewriting them would churn declarations without changing a single register.
+EQUIVALENT = {
+    "addCharactersInString:",
+    "addObject:",
+    "appendBytes:length:",
+    "appendString:",
+    "boolValue",
+    "calendarIdentifier",
+    "code",
+    "compare:",
+    "data",
+    "domain",
+    "exchangeObjectAtIndex:withObjectAtIndex:",
+    "formIntersectionWithCharacterSet:",
+    "formUnionWithCharacterSet:",
+    "hasMemberInPlane:",
+    "increaseLengthBy:",
+    "insertObject:atIndex:",
+    "insertString:atIndex:",
+    "longCharacterIsMember:",
+    "member:",
+    "name",
+    "objectForKey:",
+    "propertyForKey:",
+    "read:maxLength:",
+    "removeCharactersInString:",
+    "removeObject:",
+    "removeObjectAtIndex:",
+    "removeObjectForKey:",
+    "setObject:atIndex:",
+    "setProperty:forKey:",
+    "setString:",
+    "setTimeZone:",
+    "string",
+    "userInfo",
+    "write:maxLength:",
+}
+
+# Selectors with NO public reference at all -- SPI wearing public-looking names.
+# The call site governs; "it looks like public API" is not evidence that it is.
+NO_REFERENCE = {
+    "baseURL",
+    "bytes",
+    "invertedSet",
+    "localeIdentifier",
+    "mutableBytes",
+    "mutableString",
+    "relativeString",
+    "streamError",
+}
+
 # Foundation's declared return type where it differs from CF's local one.
 # Written from documented Foundation API; verified with scripts/verify_sigs.py.
 RECONCILE = {
@@ -57,6 +113,27 @@ RECONCILE = {
     "timeInterval":                   "NSTimeInterval",
     "tolerance":                      "NSTimeInterval",
 }
+
+# ENFORCED INVARIANT, not a comment. Reconciling a signature to Foundation's
+# SPELLING requires Foundation's TYPEDEF to exist, or every file fails with
+# "expected a type". That took the census to zero TWICE -- NSTimeInterval, then
+# NSStreamStatus -- so it is now checked rather than remembered: every target
+# type in RECONCILE must be declared in CFFoundationTypes.h, or this refuses to
+# run. A note I forget twice is not a safeguard.
+import os as _os
+_types = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                       "..", "include", "CFFoundationTypes.h")
+try:
+    _decls = open(_types).read()
+except OSError:
+    _decls = ""
+_builtin = {"BOOL", "unichar", "NSUInteger", "NSInteger", "id"}
+_missing = sorted({t for t in RECONCILE.values()
+                   if t not in _builtin and f"{t};" not in _decls})
+if _missing:
+    sys.exit(f"reconcile: target type(s) not declared in CFFoundationTypes.h: "
+             f"{', '.join(_missing)}\n"
+             f"           add the typedef before reconciling a signature to it.")
 
 public, private = set(), set()
 cur = None
@@ -92,6 +169,12 @@ for line in open(DERIVED):
         if sel in RECONCILE:
             stats["public-reconciled"] += 1
             out.append(f"    {sign} ({RECONCILE[sel]}){body};  {cite} /* reconciled from ({ret}) */")
+        elif sel in EQUIVALENT:
+            stats["public-equivalent"] += 1
+            out.append(f"    {sign} ({ret}){body};  {cite} /* public; measured equivalent */")
+        elif sel in NO_REFERENCE:
+            stats["public-no-reference"] += 1
+            out.append(f"    {sign} ({ret}){body};  {cite} /* no public reference; SPI */")
         else:
             stats["public-unreviewed"] += 1
             out.append(f"    {sign} ({ret}){body};  {cite} /* PUBLIC, UNREVIEWED */")
