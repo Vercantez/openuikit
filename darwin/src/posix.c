@@ -1756,18 +1756,51 @@ EXPORT int futex(unsigned int *uaddr, int op, unsigned int val,
 #define MR_D_SO_ACCEPTCONN 0x0002
 #define MR_L_SO_ACCEPTCONN 30
 
+/* Linux's legacy socket request numbers. Declared up here rather than beside
+ * ioctl() because getsockopt reaches two of them: SO_NREAD and SO_NWRITE are
+ * answered by an ioctl on Linux, not by a socket option. */
+#define MR_L_FIONREAD      0x541bUL     /* == Linux SIOCINQ */
+#define MR_L_FIONBIO       0x5421UL
+#define MR_L_SIOCOUTQ      0x5411UL
+
+/* SO_NREAD and SO_NWRITE are the pair that CROSS API SURFACES. Darwin answers
+ * "how many bytes are readable / still unsent" through getsockopt; Linux has
+ * neither option and answers through ioctl(SIOCINQ) and ioctl(SIOCOUTQ). So
+ * these two are translated into a DIFFERENT CALL, not a different constant --
+ * which is the only honest mapping, and the reason a bare "speak Darwin above
+ * libSystem" rule needs this wrapper to make it implementable at all. */
+#define MR_D_SO_NREAD  0x1020
+#define MR_D_SO_NWRITE 0x1024
+
 EXPORT int getsockopt(int s, int level, int optname, void *optval, unsigned *optlen)
 {
     if (level != MR_D_SOL_SOCKET)
         mr_bail("getsockopt(): only SOL_SOCKET is translated. A forwarded level "
                 "reads an option at a DIFFERENT level rather than failing "
                 "(Darwin's SOL_SOCKET is 65535, Linux's is 1, and 1 is valid).");
-    if (optname != MR_D_SO_ACCEPTCONN)
-        mr_bail("getsockopt(SOL_SOCKET, ...): only SO_ACCEPTCONN is translated. "
-                "Every SO_* number differs, so a forwarded one names a "
-                "different option.");
-    return MR_ERRNO_CALL(glibc_getsockopt(s, MR_L_SOL_SOCKET,
-                                          MR_L_SO_ACCEPTCONN, optval, optlen));
+
+    switch (optname) {
+    case MR_D_SO_ACCEPTCONN:
+        return MR_ERRNO_CALL(glibc_getsockopt(s, MR_L_SOL_SOCKET,
+                                              MR_L_SO_ACCEPTCONN, optval, optlen));
+    case MR_D_SO_NREAD:
+    case MR_D_SO_NWRITE: {
+        /* Both report an int, which is what Linux's ioctl writes too, so the
+         * caller's buffer needs no reshaping -- only the CALL changes. */
+        unsigned long req = (optname == MR_D_SO_NREAD) ? MR_L_FIONREAD
+                                                       : MR_L_SIOCOUTQ;
+        if (!optval || !optlen || *optlen < sizeof(int)) {
+            *mr_errno_slot() = 22;                       /* EINVAL */
+            return -1;
+        }
+        *optlen = sizeof(int);
+        return MR_ERRNO_CALL(glibc_ioctl(s, req, optval));
+    }
+    default:
+        mr_bail("getsockopt(SOL_SOCKET, ...): only SO_ACCEPTCONN, SO_NREAD and "
+                "SO_NWRITE are translated. Every SO_* number differs between "
+                "the two systems, so a forwarded one names a different option.");
+    }
 }
 
 /* --- fcntl: variadic, and two commands Linux simply does not have --------- */
@@ -1861,25 +1894,48 @@ EXPORT int fcntl(int fd, int cmd, ...)
     }
 }
 
-/* --- ioctl: variadic, and the request codes are encoded differently ------- */
+/* --- ioctl: one namespace in, and here is why that is not a preference ---- */
 
-/* Darwin encodes a request as direction|size|group|number -- FIONREAD is
- * 0x4004667f -- while Linux uses small opaque numbers, FIONREAD being 0x541b.
- * Nothing about the two spaces corresponds, so a forward asks the kernel for
- * an unrelated operation, through a pointer.
+/* Darwin encodes an ioctl request as direction|size|group|number -- FIONREAD is
+ * 0x4004667f, FIONBIO 0x8004667e -- while Linux uses small opaque numbers for
+ * the legacy socket and tty requests, FIONREAD being 0x541b. Nothing about the
+ * two spaces corresponds, so a forward asks the kernel for an unrelated
+ * operation, through a pointer.
  *
- * libdispatch's epoll backend asks for SIOCINQ and SIOCOUTQ, which are
- * LINUX-ONLY names with no Darwin spelling at all -- so, exactly like
- * signalfd, the caller is Linux shim code compiled for a Darwin target and
- * passes LINUX request codes. Those pass through unchanged. Darwin's own
- * FIONREAD is translated onto Linux's. Everything else bails.
+ * THIS WRAPPER TAKES DARWIN REQUEST NUMBERS ONLY. It used to accept both
+ * spellings, on the signalfd precedent -- "this file IS the boundary, and
+ * Linux shim code compiled for a Darwin target speaks Linux". **That precedent
+ * does not extend to ioctl, and the reason is the whole of the argument.**
  *
- * Accepting both spellings is deliberate and is the same judgement as
- * exporting signalfd from a Darwin libSystem: this file IS the boundary, and
- * the boundary is where a Linux-shim guest and a Darwin guest meet. */
-#define MR_D_FIONREAD  0x4004667fUL
-#define MR_L_FIONREAD      0x541bUL     /* == Linux SIOCINQ */
-#define MR_L_SIOCOUTQ      0x5411UL
+ * For signalfd the SYMBOL determines the namespace: signalfd exists only on
+ * Linux, so any call to it is shim code by construction and its sigset_t is
+ * unambiguously Darwin's. ioctl exists on BOTH systems, so the symbol implies
+ * nothing about which namespace the request came from -- and 0x541b is a
+ * perfectly well-formed Darwin request that simply is not allocated. A wrapper
+ * that accepted both could never know which it had received. That is guessing,
+ * and this file's rule is to bail rather than guess.
+ *
+ * It became urgent rather than theoretical when CoreFoundation arrived:
+ * CFSocket.c does `#define ioctlsocket(a,b,c) ioctl(a,b,c)` and passes DARWIN
+ * numbers, while libdispatch's epoll backend passes LINUX ones. Two namespaces,
+ * one symbol, no discriminator.
+ *
+ * WHAT THE LINUX-SIDE CALLER SHOULD DO INSTEAD, and this is the part a bare
+ * "use Darwin numbers" instruction cannot deliver, because I measured it and
+ * one of the two requests has no Darwin ioctl at all:
+ *
+ *     bytes readable    Darwin FIONREAD (ioctl)          Linux SIOCINQ (ioctl)
+ *     bytes unsent      Darwin SO_NWRITE (GETSOCKOPT)    Linux SIOCOUTQ (ioctl)
+ *
+ * Darwin has no FIONWRITE. It answers "how much is still unsent" through
+ * getsockopt, and Linux has no SO_NWRITE and answers it through ioctl. So the
+ * same question sits on DIFFERENT API SURFACES on the two systems -- which is
+ * not a constant mismatch and cannot be fixed by renumbering. SIOCINQ maps onto
+ * FIONREAD here; SIOCOUTQ has to become getsockopt(SOL_SOCKET, SO_NWRITE),
+ * which this file then translates back onto Linux's ioctl. A cross-surface
+ * translation looks exotic and is exactly what a boundary is for. */
+#define MR_D_FIONREAD  0x4004667fUL     /* _IOR('f', 127, int)  */
+#define MR_D_FIONBIO   0x8004667eUL     /* _IOW('f', 126, int)  */
 
 EXPORT int ioctl(int fd, unsigned long req, ...)
 {
@@ -1891,13 +1947,20 @@ EXPORT int ioctl(int fd, unsigned long req, ...)
     arg = va_arg(ap, void *);
     va_end(ap);
 
-    if (req == MR_D_FIONREAD)                              lreq = MR_L_FIONREAD;
-    else if (req == MR_L_FIONREAD || req == MR_L_SIOCOUTQ) lreq = req;
-    else
-        mr_bail("ioctl(): an unrecognised request code. Darwin encodes requests "
-                "as direction|size|group|number and Linux uses small opaque "
-                "numbers, so the two spaces do not correspond and a forward "
-                "asks for an unrelated operation -- through a pointer.");
+    switch (req) {
+    case MR_D_FIONREAD: lreq = MR_L_FIONREAD; break;
+    case MR_D_FIONBIO:  lreq = MR_L_FIONBIO;  break;
+    default:
+        mr_bail("ioctl(): only Darwin request numbers are accepted, and only "
+                "FIONREAD and FIONBIO are mapped. Darwin encodes a request as "
+                "direction|size|group|number and Linux uses small opaque "
+                "numbers for the legacy requests, so the two spaces do not "
+                "correspond -- and because ioctl exists on BOTH systems, the "
+                "symbol cannot tell us which namespace a caller meant. "
+                "Linux-origin code wanting SIOCOUTQ should ask for "
+                "getsockopt(SOL_SOCKET, SO_NWRITE), which is how Darwin spells "
+                "that question. See docs/UNIMPLEMENTED.md#ioctl-request-encoding.");
+    }
 
     return MR_ERRNO_CALL(glibc_ioctl(fd, lreq, arg));
 }
