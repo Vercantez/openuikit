@@ -147,6 +147,14 @@ cat > "$INC/linux/limits.h" <<'EOF'
 #endif
 EOF
 
+# The _Static_asserts inside these headers pin OUR MIRROR, not glibc -- they
+# compile in a Darwin TU against our own declarations. sdk/tests/epoll_abi_probe.c
+# is the check that actually looks at glibc; run it whenever these change.
+if [ "$(uname -s)" = "Linux" ] && [ -f "$(dirname "$0")/run_epoll_abi_probe.sh" ]; then
+  bash "$(dirname "$0")/run_epoll_abi_probe.sh" || {
+    echo "ABORT: staged Linux ABI disagrees with real glibc." >&2; exit 1; }
+fi
+
 echo "staged Linux-ABI headers into $INC"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
    "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" | sed 's/^/  /'
