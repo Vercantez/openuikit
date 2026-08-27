@@ -1,0 +1,16 @@
+icu.version=72.1
+uloc.lang=de
+uloc.display_de_in_en=German
+ucal.year=2009
+ucal.month=1
+ucal.day=13
+ucal.hour=23
+ucal.minute=31
+ucal.dow=6
+udat.en_US=Feb 13, 2009 at 11:31:30 PM
+udat.de_DE_longdate=13. Februar 2009
+unum.en_US=1,234,567.891
+unum.de_DE=1.234.567,891
+unum.currency_en_US=$42.50
+ucol.de_ae_before_z=1
+ustr.tr_lower_I=ı

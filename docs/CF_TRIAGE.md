@@ -525,3 +525,129 @@ Foundation.
 Sequencing that follows: **ICU is the best next use of our own time**, because
 it is fully unblocked, it is the largest single block of the link gap, and it
 does not depend on libdispatch landing.
+
+---
+
+# Part 5 — ICU built as Darwin Mach-O, and where it stops
+
+## 18. The build: 469/469, in 33 seconds
+
+`scripts/build_icu.sh` cross-builds **apple/swift-foundation-icu 0.0.9** —
+corelibs' own dependency, not a substitute — to Darwin Mach-O arm64 on Linux.
+
+```
+sources: 469   jobs: 16
+compiled: 469 / 469
+libicucore.a   40,831,720 bytes
+exported ICU entry points: 658
+```
+
+**456 of the 469 files needed no intervention at all.** The build took 33s on 16
+cores, which is why this was done locally in Docker rather than on a provisioned
+box — a c8g would have been latency and spend for a 33-second compile. That was
+a deviation from the approved plan and is called out rather than buried.
+
+What the other 13 needed, all small:
+
+| gap | files | fix |
+|---|---|---|
+| `os/log.h` | 5 | Apple's os_log diagnostics. Macros expand to nothing — this is diagnostic-only code and we do not want a link dependency for it. |
+| `glob.h`, `langinfo.h`, `tzfile.h`, `NSSystemDirectories.h`, `dirent.h` | 5 | declaration-only shims |
+| **no single-precision math at all** | 1 | see below |
+| `-fno-rtti` (mine) | 22 | see below |
+| `U_TIMEZONE_PACKAGE` quoting (mine) | 1 | see below |
+
+### Three traps, two of them mine
+
+**`-fno-rtti` is not a free size win.** I added it reflexively; 22 files then
+failed on `dynamic_cast`/`typeid` in the calendar, collation and timezone code.
+Upstream's CMakeLists sets neither `-fno-rtti` nor `-fno-exceptions`, and that is
+deliberate.
+
+**`U_TIMEZONE_PACKAGE` must arrive as a string literal.** Passed through a nested
+shell the quotes are stripped and `udata.cpp` fails with *"use of undeclared
+identifier 'icutz44l'"* — which reads like a missing symbol, not a quoting bug.
+
+**machorun's `math.h` declares NO single-precision variants at all** — `expf`,
+`sinf`, `cosf`, `powf`, `sqrtf`, every one absent. libc++'s `<cmath>` imports
+them with `using ::atan2f _LIBCPP_USING_IF_EXISTS`, so the absence is **silent**
+until something references one, and then the error surfaces inside libc++'s
+`<complex>` as *"reference to unresolved using declaration"* rather than at the
+use site. ICU reaches only `expf`. This is a machorun sysroot gap and the fix
+belongs there.
+
+## 19. The oracle: real locale data, on macOS
+
+The differential oracle is a **native macOS build of the same ICU source** (469/469
+in 40s), not Apple's shipped `libicucore` — whose ICU version differs, which
+would make any diff meaningless.
+
+```
+icu.version=72.1
+uloc.display_de_in_en=German
+ucal.year=2009  month=1  day=13  hour=23  minute=31  dow=6
+udat.en_US=Feb 13, 2009 at 11:31:30 PM
+udat.de_DE_longdate=13. Februar 2009
+unum.en_US=1,234,567.891
+unum.de_DE=1.234.567,891
+unum.currency_en_US=$42.50
+ucol.de_ae_before_z=1
+ustr.tr_lower_I=ı
+```
+
+Every line prints a **value**, not a status, because the specific risk in a
+338K-line cross-build with 20 MB of vendored data is that it links and then
+formats wrongly. `13. Februar 2009`, `1.234.567,891` and the Turkish dotless `ı`
+are the load-bearing ones: root-locale fallback would print English months, a
+`.` group separator, and `i`. They prove the vendored data is actually wired up.
+
+One bug found in the test itself: **`udat_open` takes `timeStyle` FIRST**, then
+`dateStyle`. `(UDAT_LONG, UDAT_NONE)` yields a long *time* and no date — still
+deterministic, still diffs clean, and silently stops testing month names, which
+was the entire point of that case.
+
+## 20. Where it stops: 43 symbols, none of them ICU's
+
+`libicucore.a` has 3,997 undefined symbols; **libSystem and libc++ satisfy all
+but 43.**
+
+| bucket | count | note |
+|---|---|---|
+| **C++ ABI / libc++abi** | 14 | `__cxa_pure_virtual`, `__dynamic_cast`, `__cxa_free_exception`, `__dso_handle`, the `__cxxabiv1::*_class_type_info` vtables, `length_error`/`bad_array_new_length` |
+| **libc++ `std::`** | 17 | `mutex`, `condition_variable`, `locale`, `ios_base`, `basic_istream`/`ostream`, `__call_once` |
+| **libc (libSystem gap)** | 11 | `bsearch` `closedir` `div` `dlclose` `getprogname` `opendir` `readdir` `strncat` `strnlen` `timezone` `tzname` |
+
+**So the ICU port is done and the test does not run yet.** The blocker is not
+ICU: machorun's `libc++.1.dylib` exports **83 symbols**, a minimal stub built for
+libswiftCore's `basic_string` needs, with **no libc++abi at all**. ICU is the
+first real C++ consumer on this stack and it needs a genuine C++ runtime.
+
+I did not stub these to manufacture a green run. A `__cxa_pure_virtual` that
+returns instead of aborting, or a `std::mutex` that does not lock, would produce
+a passing differential over a broken library — the exact failure mode this
+project has been bitten by repeatedly.
+
+### New dependency, sized
+
+**A fuller libc++/libc++abi as Darwin Mach-O** — 31 symbols across the two
+buckets. That is a bounded job (libc++abi is ~30 source files) and it sits
+alongside libdispatch as a substrate dependency rather than a Foundation one. It
+is also very likely needed by anything else C++-heavy on this stack, so it
+belongs with machorun's owners rather than here.
+
+The 11 libc symbols are the same libSystem gap already routed; `opendir`,
+`readdir`, `closedir` and `dirent.h` are the **third** consumer of that one gap
+(CFTimeZone, CFLocale, now ICU), which argues for fixing it once, properly, in
+the sysroot.
+
+## 21. Estimate delta
+
+ICU's own cross-build is **done, not 1.5–2.5 weeks** — the vendored data and the
+456/469 clean-compile rate made it a day, not a fortnight. That is a real
+reduction. But it is partly offset by the libc++/libc++abi port it uncovered,
+which was not in any estimate.
+
+Net for M2: unchanged at **5–7 weeks**, with the composition shifted — less ICU,
+more substrate. The pattern from §17 holds and is now three-for-three: **every
+correction to this estimate has moved work out of Foundation and into the things
+Foundation stands on.**
