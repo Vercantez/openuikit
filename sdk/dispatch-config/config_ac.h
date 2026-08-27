@@ -11,6 +11,16 @@
 #define HAVE_MACH_PORT_CONSTRUCT 0
 #define HAVE_OBJC 0
 #define HAVE_PTHREAD_WORKQUEUES 0
+/* 1, and this is what RETIRES patch 6 rather than merely withdrawing it.
+ * src/shims/priority.h guards on HAVE_PTHREAD_QOS_H && __has_include(
+ * <pthread/qos_private.h>), and upstream models only "both present" or
+ * "neither". Leaving this 0 while the sysroot HAS <sys/qos.h> puts us in the
+ * third case Part 8 describes: priority.h takes the no-QoS branch and
+ * re-defines every QOS_CLASS_* enumerator sys/qos.h already defined -- 18
+ * errors, all redefinitions. machorun staged the three private QoS headers
+ * (1ea43ff), so upstream's "both present" case is now simply TRUE and it takes
+ * its own Darwin path. A config line, not a patch, exactly as predicted. */
+#define HAVE_PTHREAD_QOS_H 1
 #define HAVE_PTHREAD_WORKQUEUE_QOS 0
 #define HAVE_PTHREAD_WORKQUEUE_SETDISPATCH_NP 0
 #define HAVE_MALLOC_MALLOC_H 0
