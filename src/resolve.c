@@ -315,6 +315,9 @@ uint64_t mr_resolve_symbol(mr_image *from, int lib_ordinal, const char *name,
 
     if (!*found) {
         if (weak_import) return 0;   /* legitimately absent: optional at run time */
+        /* stdout FIRST: _exit does not flush it, the guest shares it, and a
+         * bind can fail during a dlopen long after the guest has printed. */
+        fflush(stdout);
         mr_resolve_report(from, flat ? NULL : target, name);
         fflush(stderr);
         _exit(73);

@@ -1136,11 +1136,53 @@ turned out to cost one line at the right layer.
 `RTLD_NEXT` starts after the caller. That one-image difference is the whole
 distinction, and a lookup ignoring scope passes every other case.
 
-**Still approximate, and named:** `@loader_path` in a `dlopen` path resolves
-against the **main** image rather than the caller. Real dyld resolves against
-the calling image, and the mechanism to do that now exists — this is a
-follow-through rather than a barrier. For a guest that dlopens a plugin from its
-main executable, which is every case in the corpus, the two are the same answer.
+**`@loader_path` now resolves against the caller, and so does `@rpath`.**
+`libSystem`'s `dlopen` passes `__builtin_return_address(0)` to the loader, which
+turns it into an image with `mr_image_containing` — the same one line that
+answers `dladdr` and the scoped `dlsym` handles. It decides three things, not
+one: `@loader_path/` is the caller's directory, `@rpath/` searches the
+**caller's** `LC_RPATH`s before the main executable's, and a relative path is
+tried against the caller's directory before the cwd. `@executable_path`
+deliberately does **not** move — it means the main executable from every image,
+which is the only reason Darwin has both spellings.
+
+The wrong answer here was never a crash. Resolving against the main executable
+finds *a different file of the same name* and returns a valid handle to it: a
+plugin gets the host app's copy of its own dependency, and nothing looks broken
+until the two copies disagree about something. `tests/bin/loader_path` is
+therefore built as four images in two directories, with two libraries
+deliberately **sharing a basename**, so the correct answer and the old one are
+both non-NULL and different. Teeth: restoring `MR.main_image` fails exactly 3 of
+its 12 checks — the three that depend on the caller, and no others.
+
+**Not covered, and named:** a `dlopen` whose *target* is missing now returns
+`NULL` (below), but one whose target loads and whose **dependency** is missing
+still aborts. Unwinding a partially-loaded graph needs a teardown path the
+loader does not have — it never unmaps anything — so that is a real gap rather
+than an oversight.
+
+#### `dlopen` of an absent library returns NULL rather than aborting
+
+A load command and a `dlopen` disagree about what "not found" means, and
+machorun answered both the same way. An unresolvable `LC_LOAD_DYLIB` is fatal:
+the program was linked against it and cannot run. An unresolvable `dlopen` is an
+**answer** — "is this optional framework present?" is how CoreFoundation picks a
+branch, and it asks about libraries it fully expects to be absent.
+`mr_image_load` printed its tried-list and `_exit(72)`ed, which is right for its
+own callers and wrong for that one.
+
+Found by `tests/bin/loader_path`, whose last case `dlopen`s a library that is in
+neither directory. The `dlopen` fixture never reached it: every path it names
+exists, and `RTLD_NOLOAD` returns before the load.
+
+**And the failure was invisible, which was the second finding.** On its first
+Linux run the fixture reported exit 72 with **no stdout at all**, having already
+passed eleven checks — because `_exit` does not flush and the guest shares the
+loader's `stdout`. `mr_die` has always flushed for exactly this reason; two bare
+`_exit` sites had been missed — `src/image.c`'s missing-dylib report and
+`src/resolve.c`'s undefined-symbol report. Both now flush `stdout` before
+writing to `stderr`. This is not confined to startup: a bind can fail during a
+`dlopen`, long after the guest has printed.
 
 ### `blocks-byref`
 `darwin/src/objcsupport.c` implements the Blocks runtime — `_Block_copy`,

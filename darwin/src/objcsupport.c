@@ -1022,13 +1022,25 @@ EXPORT int dladdr(const void *addr, void *info) { return mr_dladdr(addr, info); 
  * and now it can hand back a real handle instead of stopping. CoreFoundation
  * asks it on the OpenUIKit render path.
  *
+ * THE RETURN ADDRESS IS PASSED, AND IT IS NOT BOOKKEEPING. @loader_path, and
+ * the order in which @rpath searches LC_RPATHs, are both defined relative to
+ * the image that CALLED dlopen. Only this side can say which image that is --
+ * the loader sees its own frames -- and it costs nothing to know, because
+ * libSystem.B.dylib is a Mach-O the guest calls directly, so
+ * __builtin_return_address(0) is the guest's own return address in the guest's
+ * own image. It is the same one line that answers dlsym's RTLD_NEXT and
+ * RTLD_SELF below, for the same reason.
+ *
  * Darwin's RTLD_NOLOAD is 0x10 (sdk/usr/include/dlfcn.h). */
 #define MR_RTLD_NOLOAD 0x10
 
-extern void *mr_dlopen(const char *path, int mode);          /* -> loader */
+extern void *mr_dlopen(const char *path, int mode, const void *caller_ra);
 extern void *mr_dlsym_handle(void *handle, const char *name);/* -> loader */
 
-EXPORT void *dlopen(const char *path, int mode) { return mr_dlopen(path, mode); }
+EXPORT void *dlopen(const char *path, int mode)
+{
+    return mr_dlopen(path, mode, __builtin_return_address(0));
+}
 
 /* Darwin's pseudo-handles, from <dlfcn.h>. */
 #define MR_RTLD_NEXT      ((void *)-1L)
