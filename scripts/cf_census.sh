@@ -34,15 +34,13 @@
 #    cross-build of someone else's code are still silenced by name, so the
 #    count means something.
 #
-#  * The five -DTARGET_OS_* flags are load-bearing, and dropping
-#    -Wno-everything is what exposed them. CF makes -Wundef-prefix=TARGET_OS an
-#    ERROR, and our staged TargetConditionals.h defines 16 of the 18 TARGET_OS_*
-#    macros CF references -- missing WASI, ANDROID, BSD, CYGWIN, NANO.
-#    CoreFoundation_Prefix.h does default most of them, but only AFTER it
-#    includes CFTargetConditionals.h, which is where the error fires, so they
-#    have to be predefined on the command line. With -Wno-everything all 86
-#    files silently "passed" this check; without it, all 86 fail. The real fix
-#    belongs in machorun's TargetConditionals.h.
+#  * The five -DTARGET_OS_* predefines this script used to carry are GONE.
+#    CF compiles with -Wundef-prefix=TARGET_OS promoted to an error, and our
+#    sysroot was missing WASI, ANDROID, BSD, CYGWIN and NANO -- with
+#    -Wno-everything all 86 files silently "passed" that check, without it all
+#    86 failed. Fixed properly in machorun 5d64c3b, so the sysroot now defines
+#    all 18 macros CF references and the workaround is removed rather than
+#    left in place to rot.
 set -uo pipefail
 SDK=${SDK:-$HOME/work/sdk/MacOSX.sdk}
 CF=${CF:-$HOME/scf-full/Sources/CoreFoundation}
@@ -53,14 +51,18 @@ TRIPLE=arm64-apple-macos13.0
 
 rm -rf "$OUT"; mkdir -p "$OUT/obj" "$OUT/log"
 
+# ICU_INC: point at swift-foundation-icu's icuSources/include to unblock the 15
+# ICU-dependent files. Without it they fail on _foundation_unicode/*.h and their
+# 152 CF* symbols show up as undefined, which distorts the link gap.
+ICU_INC=${ICU_INC:-}
 CFLAGS="-target $TRIPLE -isysroot $SDK -I $CF/include -I $CF/internalInclude
+ ${ICU_INC:+-I $ICU_INC}
  -DCF_BUILDING_CF -DDEPLOYMENT_RUNTIME_SWIFT=0 -DHAVE_STRUCT_TIMESPEC
  -fblocks -fconstant-cfstrings -fdollars-in-identifiers -fno-common
  -fcf-runtime-abi=objc -fexceptions -Os
  -include $CF/internalInclude/CoreFoundation_Prefix.h
  -include $X/CFShimCarbon.h -Dd_fileno=d_ino -idirafter $X
- -DTARGET_OS_WASI=0 -DTARGET_OS_ANDROID=0 -DTARGET_OS_BSD=0
- -DTARGET_OS_CYGWIN=0 -DTARGET_OS_NANO=0
+
  -DDISPATCH_APPLY_AUTO=((dispatch_queue_t)0)
  -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function
  -Wno-sign-compare -Wno-deprecated-declarations -Wno-nullability-completeness"

@@ -189,6 +189,250 @@ typedef void *vproc_err_t;
 #endif
 EOF
 
+# Round 4: the remaining sysroot gaps, found once the ICU headers were real.
+# Same status as everything above -- DECLARATION ONLY. dirent.h in particular is
+# reached by CFTimeZone, CFLocale and ICU, so the real fix is one header in
+# machorun's sysroot, not three shims in three projects.
+
+mkdir -p "$X/sys"
+
+cat > "$X/dirent.h" <<'EOF'
+#ifndef _CFSHIM_DIRENT_H
+#define _CFSHIM_DIRENT_H
+#include <stdint.h>
+#include <sys/types.h>
+struct dirent {
+    uint64_t d_ino; uint64_t d_seekoff; uint16_t d_reclen;
+    uint16_t d_namlen; uint8_t d_type; char d_name[1024];
+};
+#define d_fileno d_ino
+#define DT_UNKNOWN 0
+#define DT_DIR 4
+#define DT_REG 8
+#define DT_LNK 10
+#define DT_WHT 14
+/* extern "C" because ICU reaches these from C++ and without it they take C++
+   mangling; the link then fails on __Z7opendirPKc, which reads like a missing
+   function rather than a missing linkage specifier. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+typedef struct __dirstream DIR;
+DIR *opendir(const char *);
+struct dirent *readdir(DIR *);
+int readdir_r(DIR *, struct dirent *, struct dirent **);
+int closedir(DIR *);
+void rewinddir(DIR *);
+#ifdef __cplusplus
+}
+#endif
+#endif
+EOF
+
+cat > "$X/sys/socket.h" <<'EOF'
+#ifndef _CFSHIM_SYS_SOCKET_H
+#define _CFSHIM_SYS_SOCKET_H
+#include <sys/types.h>
+#include <stdint.h>
+typedef uint8_t  sa_family_t;
+typedef uint32_t socklen_t;
+struct sockaddr { uint8_t sa_len; sa_family_t sa_family; char sa_data[14]; };
+struct iovec;
+#define AF_UNSPEC 0
+#define AF_UNIX   1
+#define AF_INET   2
+#define AF_INET6 30
+#define SOCK_STREAM 1
+#define SOCK_DGRAM  2
+#define SHUT_RDWR   2
+int socket(int, int, int);
+int connect(int, const struct sockaddr *, socklen_t);
+int bind(int, const struct sockaddr *, socklen_t);
+int listen(int, int);
+int accept(int, struct sockaddr *, socklen_t *);
+int getsockname(int, struct sockaddr *, socklen_t *);
+int getpeername(int, struct sockaddr *, socklen_t *);
+int getsockopt(int, int, int, void *, socklen_t *);
+int setsockopt(int, int, int, const void *, socklen_t);
+int shutdown(int, int);
+ssize_t send(int, const void *, size_t, int);
+ssize_t recv(int, void *, size_t, int);
+#endif
+EOF
+
+cat > "$X/sys/mount.h" <<'EOF'
+#ifndef _CFSHIM_SYS_MOUNT_H
+#define _CFSHIM_SYS_MOUNT_H
+#include <stdint.h>
+#define MFSTYPENAMELEN 16
+#define MAXPATHLEN 1024
+struct statfs {
+    uint32_t f_bsize; int32_t f_iosize; uint64_t f_blocks; uint64_t f_bfree;
+    uint64_t f_bavail; uint64_t f_files; uint64_t f_ffree; int32_t f_fsid[2];
+    uint32_t f_owner; uint32_t f_type; uint32_t f_flags; uint32_t f_fssubtype;
+    char f_fstypename[MFSTYPENAMELEN];
+    char f_mntonname[MAXPATHLEN];
+    char f_mntfromname[MAXPATHLEN];
+    uint32_t f_reserved[8];
+};
+#define MNT_RDONLY 0x00000001
+int statfs(const char *, struct statfs *);
+int fstatfs(int, struct statfs *);
+int getmntinfo(struct statfs **, int);
+#endif
+EOF
+
+cat > "$X/pwd.h" <<'EOF'
+#ifndef _CFSHIM_PWD_H
+#define _CFSHIM_PWD_H
+#include <sys/types.h>
+struct passwd {
+    char *pw_name; char *pw_passwd; uid_t pw_uid; gid_t pw_gid;
+    __darwin_time_t pw_change; char *pw_class; char *pw_gecos;
+    char *pw_dir; char *pw_shell; __darwin_time_t pw_expire;
+};
+struct passwd *getpwnam(const char *);
+struct passwd *getpwuid(uid_t);
+int getpwuid_r(uid_t, struct passwd *, char *, size_t, struct passwd **);
+int getpwnam_r(const char *, struct passwd *, char *, size_t, struct passwd **);
+#endif
+EOF
+
+# Apple System Log. Deprecated on Darwin and diagnostic-only here, so the
+# macros expand to nothing rather than to calls.
+cat > "$X/asl.h" <<'EOF'
+#ifndef _CFSHIM_ASL_H
+#define _CFSHIM_ASL_H
+typedef void *aslclient;
+typedef void *aslmsg;
+#define ASL_LEVEL_EMERG 0
+#define ASL_LEVEL_ERR   3
+#define ASL_LEVEL_WARNING 4
+#define ASL_LEVEL_NOTICE  5
+#define ASL_LEVEL_INFO    6
+#define ASL_LEVEL_DEBUG   7
+#define asl_log(...)      do { } while (0)
+#define asl_vlog(...)     do { } while (0)
+#endif
+EOF
+
+# <libc.h> is a Darwin umbrella over unistd/stdlib/string.
+cat > "$X/libc.h" <<'EOF'
+#ifndef _CFSHIM_LIBC_H
+#define _CFSHIM_LIBC_H
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#endif
+EOF
+
+# machorun's sysroot crt_externs.h is a WRAPPER: it ends in
+# `#include_next <crt_externs.h>` and expects a real one further down the search
+# path. Landing here on -idirafter is exactly where include_next looks, so this
+# completes the chain rather than shadowing it.
+cat > "$X/crt_externs.h" <<'EOF'
+#ifndef _CFSHIM_CRT_EXTERNS_H
+#define _CFSHIM_CRT_EXTERNS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+int    *_NSGetArgc(void);
+char ***_NSGetArgv(void);
+char ***_NSGetEnviron(void);
+char  **_NSGetProgname(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+EOF
+
+# CFBundle and CFLocale walk directory trees with fts(3).
+cat > "$X/fts.h" <<'EOF'
+#ifndef _CFSHIM_FTS_H
+#define _CFSHIM_FTS_H
+#include <sys/types.h>
+typedef struct _ftsent {
+    struct _ftsent *fts_link; char *fts_accpath; char *fts_path;
+    unsigned short fts_pathlen; unsigned short fts_namelen;
+    unsigned short fts_info; char *fts_name;
+} FTSENT;
+typedef struct { void *opaque; } FTS;
+#define FTS_D      1
+#define FTS_DP     6
+#define FTS_F      8
+#define FTS_SL    12
+#define FTS_NOSTAT 0x0010
+#define FTS_PHYSICAL 0x0010
+#define FTS_XDEV   0x0040
+FTS   *fts_open(char *const *, int, int (*)(const FTSENT **, const FTSENT **));
+FTSENT *fts_read(FTS *);
+int     fts_close(FTS *);
+#endif
+EOF
+
+# CFTimeZone reads the zoneinfo database; same header ICU's putil.cpp wants.
+cat > "$X/tzfile.h" <<'EOF'
+#ifndef _CFSHIM_TZFILE_H
+#define _CFSHIM_TZFILE_H
+#ifndef TZDIR
+#define TZDIR "/usr/share/zoneinfo"
+#endif
+#ifndef TZDEFAULT
+#define TZDEFAULT "/etc/localtime"
+#endif
+#endif
+EOF
+
+# CFString uses MAX(); Darwin declares it in <sys/param.h>.
+cat > "$X/sys/param.h" <<'EOF'
+#ifndef _CFSHIM_SYS_PARAM_H
+#define _CFSHIM_SYS_PARAM_H
+#include <sys/types.h>
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
+#ifndef NBBY
+#define NBBY 8
+#endif
+#endif
+EOF
+
+# The Mach port and VM entry points CFRunLoop and CFUtilities call. Declaring
+# them is honest -- they are real Darwin APIs and the implementations are
+# libSystem's job, not ours. NOTE these are the nine symbols the RunLoop fork
+# is meant to make unnecessary; they are declared here so the census can measure
+# CFRunLoop at all, NOT because we intend to implement them.
+cat > "$X/mach/mach_port_extra.h" <<'EOF'
+#ifndef _CFSHIM_MACH_PORT_EXTRA_H
+#define _CFSHIM_MACH_PORT_EXTRA_H
+#include <mach/mach.h>
+/* mach_port_context_t and mach_port_options_t ALREADY EXIST in the sysroot's
+   mach headers. Redeclaring them is a typedef-redefinition error that takes
+   the whole census from 74 passing to ZERO -- measured. Declare only the
+   functions. */
+kern_return_t mach_port_construct(ipc_space_t, mach_port_options_t *,
+                                  mach_port_context_t, mach_port_name_t *);
+kern_return_t mach_port_destruct(ipc_space_t, mach_port_name_t, mach_port_delta_t,
+                                 mach_port_context_t);
+kern_return_t mach_port_type(ipc_space_t, mach_port_name_t, mach_port_type_t *);
+kern_return_t mach_port_insert_member(ipc_space_t, mach_port_name_t, mach_port_name_t);
+kern_return_t mach_port_extract_member(ipc_space_t, mach_port_name_t, mach_port_name_t);
+mach_port_name_t mk_timer_create(void);
+kern_return_t mk_timer_destroy(mach_port_name_t);
+kern_return_t mk_timer_arm(mach_port_name_t, uint64_t);
+kern_return_t mk_timer_cancel(mach_port_name_t, uint64_t *);
+kern_return_t mach_vm_region(vm_map_t, mach_vm_address_t *, mach_vm_size_t *,
+                             vm_region_flavor_t, vm_region_info_t,
+                             mach_msg_type_number_t *, mach_port_t *);
+#endif
+EOF
+
 # --------------------------------------------------------------- RECONSTRUCTION
 # CFBase.h:69 takes this branch when DEPLOYMENT_RUNTIME_SWIFT is off and wants
 # Apple's libkern header. These are the documented Darwin fixed-width aliases.
@@ -234,6 +478,21 @@ typedef pthread_key_t  _CFThreadSpecificKey;
  * internalInclude/CFRuntime_Internal.h:20. Re-verify against real CF if the
  * deallocation path ever misbehaves. */
 #define __kCFAllocatorTypeID_CONST 2
+
+/* RECONSTRUCTION 4 -- _CFThreadSetName.
+ * Declared only in ForSwiftFoundationOnly.h, like the _CFThread* types, but
+ * CFStream calls it regardless. Same layering bug, same fix. */
+int _CFThreadSetName(pthread_t, const char *);
+
+/* _NSGetMachExecuteHeader is Darwin's accessor for the main executable's
+ * Mach-O header; CFBundle_Binary and CFBundle_Grok use it to find the running
+ * image. Real Darwin API, declared here because our sysroot omits it. */
+struct mach_header;
+const struct mach_header *_NSGetMachExecuteHeader(void);
+
+/* The Mach declarations CFRunLoop/CFUtilities need. See sys/mach_port_extra.h
+ * for why these are declared but must NOT be implemented by us. */
+#include <mach/mach_port_extra.h>
 
 #endif
 EOF
