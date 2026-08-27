@@ -121,6 +121,7 @@ printf '%s\n' "$trees" | while IFS=$'\t' read -r n d; do
     machorun/darwin/usr/lib*) g="check_stale + gen_tbd CHECK 4 + objc44/swift_gate" ;;
     machorun/build/*)         g="(build output, not staged)" ;;
     swiftcore-macho/artifacts*) g="build_compat.sh (the SHIM only; nothing checks libswiftCore)" ;;
+    swift-macho-linux/scratch/mrroot*) g="require_fresh_root.sh, at each consumer" ;;
     *)                        g="*** NONE ***" ;;
   esac
   printf "  %-58s %5s  %s\n" "$rel" "$n" "$g"

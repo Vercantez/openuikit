@@ -978,3 +978,39 @@ rule paying for itself inside the sweep written to apply it.
 
 Worth naming the direction: **all four bad measurements erred toward a smaller,
 tidier, more reassuring number.** None of them ever invented a problem.
+
+### Follow-through (same day)
+
+Team-lead checked references before authorising any deletion and **corrected the
+recommendation**: `mrroot` is referenced by 12 tracked files, `mrroot_full` by 2,
+`mrroot2` by 1. Only `mrroot_isa` and `mrroot_prefix` had none. *"Delete four,
+keep one"* was right about the **category** — leftovers with no consumer — and
+wrong about the **membership**. Same shape as the downward-error rule above, one
+level up: a tidy generalisation that undercounts what is actually in use.
+
+Verified independently before deleting, because deletion is the one action where
+a correct-sounding generalisation is not good enough. Across **23,988 files** in
+five repositories the only references to those two roots were in this document,
+naming them as candidates; a control (`mrroot_full` → 3 references) proved the
+sweep could find things.
+
+**One trap the obvious check would have walked into.** Every dylib in both trees
+had a byte-identical copy elsewhere — but for two of them, *that copy was in the
+other doomed tree*. The right question is not "does a copy exist" but **"does a
+copy survive after both deletions"**, and re-asking it that way is what made the
+deletion safe rather than lucky. (The first attempt at that check was also wrong
+in the other direction: a zsh word-splitting bug fed `shasum` multi-line
+arguments, so every file reported "unique" — a uniform answer, which is a tell.
+Fifth bad measurement of the day, and the **first that erred toward caution**.)
+
+Two deleted, three kept and refreshed; none now carries the malloc_type defect.
+`swift-macho-linux/scripts/require_fresh_root.sh` makes the remaining three
+unable to go **silently** stale — every script that reads a root it does not
+build now refuses, names the drifted files, prints its denominator, and refuses
+to grade a root where it compared zero files. `run_suite.sh` is guarded only on
+its *default* root, because an explicit `MRROOT` is that knob's whole purpose and
+half the reason to use it is that the other root is deliberately not current.
+
+The sweep now reports **16** trees rather than 19, with the three `mrroot`s
+reclassified as covered. `check_stale.sh` grading discovered trees rather than
+six hardcoded paths is routed to machorun-isamask; it is their gate.
