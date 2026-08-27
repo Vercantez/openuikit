@@ -1,0 +1,179 @@
+# CF's Objective-C surface, split by whether Apple documents it
+#
+# Of the 151 selectors CoreFoundation messages (docs/cf-census/cf-objc-methods.txt),
+# 86 appear in Apple's public Foundation headers and 65 do not.
+#
+# This split decides HOW each signature gets reconstructed, and the two halves
+# have different and complementary sources of truth:
+#
+#   PUBLIC (86) -- documented API. We write the declaration clean-room and
+#   VERIFY it against Apple's real header with scripts/verify_sigs.py. Apple's
+#   headers are a reference to check against, never a source to copy: this
+#   project's clean-room standard is stated in ~/swiftcore-macho/sdk/foundation/
+#   Foundation.h and there is no reason to weaken it here.
+#
+#   PRIVATE / SPI (65) -- Apple-internal, absent from every public header,
+#   so there is no reference to verify against. But these are BETTER determined,
+#   not worse: CoreFoundation is the CALLER, and its call sites pass typed
+#   arguments and consume typed returns. CF_OBJC_FUNCDISPATCHV carries the return
+#   type as a macro argument. So for the private half the signature is derivable
+#   from the code that uses it, which is a stronger source than a header would be.
+#
+# A wrong ObjC signature is the posix_spawnattr_t hazard moved from C to
+# Objective-C: the message compiles, the selector matches, and the argument or
+# return register is wrong. Neither half may be guessed.
+
+## PUBLIC -- verify against Apple's headers (86)
+  absoluteURL
+  addAttribute:value:range:
+  addAttributes:range:
+  addCharactersInRange:
+  addCharactersInString:
+  addObject:
+  appendBytes:length:
+  appendString:
+  baseURL
+  boolValue
+  bytes
+  calendarIdentifier
+  characterAtIndex:
+  code
+  compare:
+  containsObject:
+  count
+  countForObject:
+  data
+  deleteCharactersInRange:
+  domain
+  enumerateKeysAndObjectsWithOptions:usingBlock:
+  exchangeObjectAtIndex:withObjectAtIndex:
+  firstWeekday
+  formIntersectionWithCharacterSet:
+  formUnionWithCharacterSet:
+  fragment
+  getBuffer:length:
+  getBytes:range:
+  getCharacters:range:
+  getLineStart:end:contentsEnd:forRange:
+  getObjects:range:
+  getParagraphStart:end:contentsEnd:forRange:
+  hasBytesAvailable
+  hasMemberInPlane:
+  hasSpaceAvailable
+  host
+  increaseLengthBy:
+  insertObject:atIndex:
+  insertString:atIndex:
+  invertedSet
+  isFileReferenceURL
+  length
+  localeIdentifier
+  localizedDescription
+  localizedFailureReason
+  localizedRecoverySuggestion
+  longCharacterIsMember:
+  member:
+  minimumDaysInFirstWeek
+  mutableBytes
+  mutableString
+  name
+  objectForKey:
+  password
+  port
+  propertyForKey:
+  query
+  read:maxLength:
+  relativeString
+  removeAttribute:range:
+  removeCharactersInRange:
+  removeCharactersInString:
+  removeObject:
+  removeObjectAtIndex:
+  removeObjectForKey:
+  replaceBytesInRange:withBytes:length:
+  replaceCharactersInRange:withAttributedString:
+  replaceCharactersInRange:withString:
+  replaceObjectsInRange:withObjects:count:
+  scheme
+  setAttributes:range:
+  setObject:atIndex:
+  setProperty:forKey:
+  setString:
+  setTimeZone:
+  streamError
+  streamStatus
+  string
+  timeInterval
+  timeIntervalSinceDate:
+  timeIntervalSinceReferenceDate
+  tolerance
+  user
+  userInfo
+  write:maxLength:
+
+## PRIVATE / SPI -- derive from CF's call sites (65)
+  __addObject:forKey:
+  __apply:context:
+  __applyValues:context:
+  __getValue:forKey:
+  __getValue:forObj:
+  __setObject:forKey:
+  _addComponents::::
+  _cfAppendCString:length:
+  _cfCapitalize:
+  _cfLowercase:
+  _cfMutableCopy
+  _cfNormalize:
+  _cfNumberType
+  _cfPad:length:padIndex:
+  _cfStreamError
+  _cfTrim:
+  _cfTrimWS
+  _cfTypeID
+  _cfUppercase:
+  _cffireTime
+  _cfurl
+  _composeAbsoluteTime:::
+  _copyDisplayNameForKey:value:
+  _copyGregorianStartDate
+  _copyLocale
+  _copyTimeZone
+  _daylightSavingTimeOffsetForAbsoluteTime:
+  _decomposeAbsoluteTime:::
+  _diffComponents:::::
+  _doesNotRequireSpecialCaseHandling
+  _encodingCantBeStoredInEightBitCFString
+  _expandedCFCharacterSet
+  _fastCStringContents:
+  _fastCharacterContents
+  _fastestEncodingInCFStringEncoding
+  _getCString:maxLength:encoding:
+  _getValue:forType:
+  _nextDaylightSavingTimeTransitionAfterAbsoluteTime:
+  _prefs
+  _retainedBitmapRepresentation
+  _reverseCompare:
+  _setDoesNotRequireSpecialCaseHandling
+  _setGregorianStartDate:
+  _smallestEncodingInCFStringEncoding
+  appendCharacters:length:
+  beginEditing
+  close
+  containsKey:
+  countForKey:
+  endEditing
+  getObjects:
+  getObjects:andKeys:
+  invalidate
+  invert
+  isValid
+  open
+  removeAllObjects
+  replaceObject:
+  replaceObject:forKey:
+  setFirstWeekday:
+  setLength:
+  setLocale:
+  setMinimumDaysInFirstWeek:
+  setObject:
+  setTolerance:

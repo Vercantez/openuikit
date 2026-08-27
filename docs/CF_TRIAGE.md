@@ -782,3 +782,39 @@ retraction:
 The number to report as "CF's selector surface" is the fixed point of that
 loop, not any single measurement along the way. I will say which step produced
 any figure I quote.
+
+## 26. #51 step 2: the surface splits public/private, and that decides the method
+
+Before writing 151 `@interface` declarations, a question worth answering: where
+does each signature's ground truth come from? `scripts/verify_sigs.py` checks
+each selector against Apple's real Foundation headers on this machine.
+
+**86 of 151 are in Apple's public headers. 65 are not.**
+
+That split is not a curiosity — it determines how each half gets reconstructed,
+and the two halves have *different and complementary* sources of truth:
+
+| half | count | source of truth |
+|---|---|---|
+| **public** | 86 | documented API. Write clean-room, then **verify** against Apple's header. |
+| **private / SPI** | 65 | absent from every public header — but CF is the **caller**, so its call sites pass typed arguments and `CF_OBJC_FUNCDISPATCHV` carries the return type as a macro argument. |
+
+The private half is **better** determined than it first appears, not worse. For
+`-_cfTypeID`, `-__addObject:forKey:`, `-_fastCStringContents:`,
+`-_getValue:forType:` there is no header to consult, but there is something
+stronger: the code that calls them, with the types spelled out at the call site.
+
+### On using Apple's headers at all
+
+They are a **reference to verify against, never a source to generate from**.
+This project's clean-room standard is stated in
+`~/swiftcore-macho/sdk/foundation/Foundation.h` ("nothing here is copied from
+Apple headers") and there is no reason to weaken it for convenience — so
+`docs/cf-census/cf-objc-public-private.txt` records *which* selectors are public
+and private, and deliberately does not reproduce Apple's declaration text.
+
+The reason to check at all is the hazard class this project has been cataloguing
+all night: **a wrong Objective-C signature is the `posix_spawnattr_t` bug moved
+from C to ObjC.** The message compiles, the selector matches, `objc_msgSend`
+dispatches — and the argument or return register is wrong. It fails silently and
+at a distance. Neither half may be guessed.
