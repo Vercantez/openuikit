@@ -163,6 +163,13 @@ want 14_utility          && build 14_utility          "$CHAINED_TARGET" 14_utili
 # machorun's placement policy is doing its job. See src/map.c.
 want 19_isa_mask         && build 19_isa_mask         "$CHAINED_TARGET" 19_isa_mask         19_isa_mask.c --
 
+# Condition variables and mutex attributes, which back std::condition_variable
+# and std::recursive_mutex. Graded like any other fixture, but note what it is
+# really checking: that a cond WAITS (with a negative control that must time
+# out) and that PTHREAD_MUTEX_RECURSIVE survives the trip, since Darwin and
+# glibc swap the RECURSIVE and ERRORCHECK constants.
+want 21_pthread_cond     && build 21_pthread_cond     "$CHAINED_TARGET" 21_pthread_cond     21_pthread_cond.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

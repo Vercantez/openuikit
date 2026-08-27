@@ -37,4 +37,5 @@
 14_utility	m	chained	run	pass	a representative hand-built utility: ctype (a DATA table Darwin inlines into the guest), setlocale, getopt, qsort, strftime, fgets
 19_isa_mask	r	chained	run	pass	every loaded image sits below 2^47, because libswiftCore has the 47-bit isa mask compiled in
 20_dirent	s	chained	run	pass	struct dirent is 1048 bytes on Darwin and 280 on glibc, with d_type and d_name at different offsets; readdir translates rather than forwards
+21_pthread_cond	s	chained	run	pass	condition variables that really block, and the RECURSIVE/ERRORCHECK constants Darwin and glibc swap
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

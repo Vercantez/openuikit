@@ -1,20 +1,20 @@
 ### file
-/Users/miguelsalinas/machorun/tests/bin/16_objc_quartz: Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/16_objc_quartz: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun/tests/bin/16_objc_quartz:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/16_objc_quartz:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    20       2280 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun/tests/bin/16_objc_quartz:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/16_objc_quartz:
 	/usr/lib/libquartz.dylib (compatibility version 0.0.0, current version 0.0.0)
 	/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun/tests/bin/16_objc_quartz:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/16_objc_quartz:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
