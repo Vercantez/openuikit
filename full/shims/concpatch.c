@@ -169,3 +169,21 @@ void *dlopen(const char *path, int mode)
     write(2, m, (unsigned long)n);
     return 0;   /* NULL: "could not load", the honest answer */
 }
+
+/* ---- pthread_main_np -----------------------------------------------------
+ * NOT defined here, and the chain of wrong conclusions is the finding.
+ *
+ * The APP path needs it; the render path never does. The link fails with
+ * "undefined symbol: _pthread_main_np", whose obvious reading is "machorun
+ * lacks it". Adding it here then failed with "duplicate symbol" -- because
+ * spike/syspatch.c:285 has provided it all along and the libSystem umbrella
+ * exports it at 0xcbc.
+ *
+ * So the symbol exists in the dylib the guest will actually load, and the link
+ * still fails, because the guest links -lSystem against the SDK's
+ * libSystem.tbd and THAT does not advertise it. A .tbd is a promise about a
+ * dylib, and this one is missing a promise it could keep -- the mirror image of
+ * the stale swift_* entries, which promised symbols the dylib no longer had.
+ *
+ * Worked around in build_full.sh by linking the umbrella dylib directly. The
+ * real fix is one line in machorun's sdk generation. */

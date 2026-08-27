@@ -74,6 +74,12 @@ public extension IndexPath {
     }
 }
 
+// NSCoder is deliberately NOT here. The app path needs it, the render path
+// never does, and it is supplied by full/appshim/Foundation.swift on the
+// app-only include path -- because that is where a real app gets it (real
+// UIKit re-exports Foundation). Declaring it in both places is ambiguous, and
+// the compiler says so.
+
 // MARK: - Time
 
 public typealias TimeInterval = Double

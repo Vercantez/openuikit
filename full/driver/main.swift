@@ -167,7 +167,30 @@ func renderAll(_ args: [String]) {
     cpio_exit(failed == 0 ? 0 : 1)
 }
 
+// `render_full realapp <outdir> [assets]` boots the APP lifecycle instead of a
+// scene: UIScreen configured, UIWindow, rootViewController, makeKeyAndVisible,
+// a modal presentation, and the animation clock run past the transition. That
+// is ~/uikit's Sources/openrender/RealApp.swift, compiled verbatim.
+@MainActor
+func renderRealApp(_ outdir: String, assets: String) {
+    var ok = 0, bad = 0
+    for variant in realAppVariants {
+        let result = runRealApp(variant, assets: assets)
+        var good = writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
+        for (file, data) in result.pngs {
+            if !writeBinaryFile(data, path: "\(outdir)/\(file)") { good = false }
+        }
+        if good { ok += 1; print("rendered \(result.name)") } else { bad += 1 }
+    }
+    warnToStderr("[render_full] realapp rendered=\(ok) failed=\(bad)")
+    cpio_exit(bad == 0 ? 0 : 1)
+}
+
 let args = CommandLine.arguments
+if args.count >= 3, args[1] == "realapp" {
+    let assets = args.count >= 4 ? args[3] : "/uikit/fixtures/realapp/assets"
+    MainActor.assumeIsolated { renderRealApp(args[2], assets: assets) }
+}
 if args.count < 3 {
     warnToStderr("usage: \(args.first ?? "render_full") <outdir> <scene.json>...")
     cpio_exit(2)

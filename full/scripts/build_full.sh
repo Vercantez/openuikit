@@ -208,21 +208,52 @@ echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + Founda
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
 # ---- the renderer: ~/uikit's SceneBuilder verbatim + our main ---------------
-echo "== renderer (SceneBuilder.swift verbatim + full/driver/main.swift)"
-"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -module-name render_full \
+# ---- the app path -----------------------------------------------------------
+# NO Foundation module: see full/appshim/UIKit.swift for why a small one is
+# worse than none. NSCoder rides in OpenUIKit instead.
+# APPINC is deliberately a DIFFERENT directory from OUT: the Foundation probe
+# must be visible to the app modules and invisible to the library, or
+# OpenUIKit/OpenCoreGraphics switch to their Foundation branches and demand the
+# full Darwin geometry contract. See full/appshim/Foundation.swift.
+APPINC=$OUT/appinc; mkdir -p "$APPINC"
+echo "== app path (Foundation probe + UIKit shim + RealAppProbe: UNMODIFIED app source)"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -module-name Foundation \
+    -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
+    -emit-object -o "$OUT/foundation.o" "$W/full/appshim/Foundation.swift"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name UIKit \
+    -emit-module \
+    -emit-module-path "$APPINC/UIKit.swiftmodule" \
+    -emit-object -o "$OUT/uikitshim.o" "$W/full/appshim/UIKit.swift"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -I "$APPINC" -default-isolation MainActor \
+    -module-name RealAppProbe -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \
+    -emit-object -o "$OUT/realappprobe.o" \
+    "$UIKIT"/Sources/RealAppProbe/*.swift "$UIKIT"/Sources/RealAppProbe/Vendored/*.swift
+
+# The renderer sees APPINC too: RealApp.swift imports RealAppProbe, whose
+# interface transitively names UIKit and Foundation.
+echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
+"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
-    "$UIKIT/Sources/openrender/SceneBuilder.swift" "$W/full/driver/main.swift"
+    "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
+    "$W/full/driver/main.swift"
 
 # ---- link ------------------------------------------------------------------
 # swiftcore-FIRST: the staged libSystem.tbd still advertises swift_*, so a
 # system-first link binds _swift_release into libSystem, which no longer
 # defines it, and the guest dies at load (docs/ISA_MASK_VERDICT.md §7).
 echo "== link"
+# -L the guest root's lib dir so the umbrella's LC_REEXPORT_DYLIB of
+# /usr/lib/libSystem.real.dylib resolves. The umbrella is linked directly
+# (rather than via -lSystem) because the SDK .tbd does not advertise
+# pthread_main_np, which the APP path needs and the render path does not.
 "${LD[@]}" -exported_symbol __mh_execute_header -rpath @loader_path \
+    -L"$ROOTDIR/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
+    "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
     -o "$OUT/render_full" \
-    "$OUT/render_full.o" "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
+    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/uikitshim.o" "$OUT/foundation.o" \
+    "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o"
 
 echo "== done"; ls -l "$OUT/render_full"
