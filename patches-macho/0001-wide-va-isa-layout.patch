@@ -1,7 +1,35 @@
-# isa.h + objc-object.h + objc-runtime-new.h: the host address space is 48 bits wide (MEASURED), so use the wide shiftcls_and_sig isa and widen FAST_DATA_MASK.
-# This is the ONE fact about Linux that a Mach-O build cannot hide: it is not about
-# the file format at all, it is about the kernel's VA ceiling. The ELF port needed
-# exactly the same three hunks (patches/0003).
+# isa.h + objc-object.h: select the 52-bit shiftcls_and_sig isa layout, which is the ONLY one objc4 accepts for an arm64 macOS target.
+#
+# THIS IS NOT A LINUX PATCH, despite what it used to say here. The old header
+# claimed "the host address space is 48 bits wide (MEASURED), so use the wide
+# isa", and that is not the reason -- this hunk would be needed on a 39-bit
+# kernel too. The reason is that objc4 rejects the alternative at COMPILE TIME:
+#
+#   objc-runtime-new.mm:260: error: '_static_assert' declared as an array with
+#                            a negative size
+#   STATIC_ASSERT((~ISA_MASK & OBJC_VM_MAX_ADDRESS) == 0 ||
+#                 ISA_MASK + sizeof(void*) == OBJC_VM_MAX_ADDRESS)
+#
+# Without the patch, plain __arm64__ takes isa.h's #else branch: a 33-bit
+# shiftcls with ISA_MASK 0x0000000ffffffff8, whose own comment says
+# /*MACH_VM_MAX_ADDRESS 0x1000000000*/ -- a 64 GiB ceiling. That is the iOS
+# DEVICE layout, and it is incompatible with the 128 TiB OBJC_VM_MAX_ADDRESS a
+# macOS target gets, hence the assert.
+#
+# So this patch does not make our objc4 diverge from Apple's shipping runtime;
+# it makes it MATCH. Apple never ships plain-arm64-non-e on macOS: real macOS
+# arm64 libobjc is arm64e, which takes the very same
+# __has_feature(ptrauth_calls) branch this patch selects, minus the signing.
+# The measured VA width is why the layout WORKS for us, not why it is required.
+#
+# WHAT USED TO BE HERE AND IS NOW GONE: a third hunk widening FAST_DATA_MASK to
+# 0x0f00fffffffffff8 and DEBUG_DATA_MASK to 0x0000fffffffffff8, because
+# class_rw_t pointers are heap addresses and the heap used to sit above 2^47.
+# The loader now confines both images and the heap below 2^47, so stock
+# 0x0f007ffffffffff8 / 0x00007ffffffffff8 hold, and DEBUG_DATA_MASK is once
+# again bit-identical to Apple's. That deleted hunk was the one with zero
+# headroom (docs/UNIMPLEMENTED.md#isa-va-width); it is gone rather than better
+# documented.
 diff -ru a/runtime/isa.h b/runtime/isa.h
 --- a/runtime/isa.h	2026-08-25 22:19:53.245149193 -0500
 +++ b/runtime/isa.h	2026-08-25 22:19:53.245991152 -0500
@@ -49,25 +77,3 @@ diff -ru a/runtime/objc-object.h b/runtime/objc-object.h
  #   if ISA_SIGNING_SIGN_MODE == ISA_SIGNING_SIGN_NONE
      // No signing, just use the raw pointer.
      uintptr_t signedCls = (uintptr_t)newCls;
-diff -ru a/runtime/objc-runtime-new.h b/runtime/objc-runtime-new.h
---- a/runtime/objc-runtime-new.h	2026-08-25 22:19:53.245693527 -0500
-+++ b/runtime/objc-runtime-new.h	2026-08-25 22:19:53.246318902 -0500
-@@ -129,7 +129,17 @@
- //   _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference
- #define FAST_HAS_DEFAULT_RR     (1UL<<2)
- // data pointer
--#if   TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
-+#if   OBJC_MACHORUN
-+// machorun: Darwin's mask reserves bits 3..46 for the class_rw_t pointer,
-+// i.e. it assumes a 2^47 user-VA ceiling. MEASURED on aarch64 Linux, every
-+// user address is 48 bits wide (text 0xaaaad2440014, heap/mmap
-+// 0xffffb132f010), so bit 47 of a real pointer is significant and Darwin's
-+// mask would silently truncate it. Widen the pointer field by one bit.
-+// The flag bits (56..59) and FAST_IS_RW_POINTER (63) are untouched;
-+// bits 48..55 remain free.
-+#define FAST_DATA_MASK          0x0f00fffffffffff8UL
-+#define DEBUG_DATA_MASK         0x0000fffffffffff8UL
-+#elif TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
- #define FAST_DATA_MASK          0x0f00007ffffffff8UL
- #define DEBUG_DATA_MASK         0x0000007ffffffff8UL
- #else

@@ -109,6 +109,27 @@ void mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
             shown++;
         }
     }
+    /* The one symbol whose obvious fix is the wrong one. A two-level bind of
+     * swift_retain/swift_release against libSystem can only come from a
+     * libSystem.B.tbd that still ADVERTISES them -- a stub staged before they
+     * were removed from libSystem (they live in the loader now; see
+     * docs/UNIMPLEMENTED.md#swift-interop). Following the generic advice below
+     * and "adding the symbol back to libSystem" would resolve this error and
+     * silently restore the bug that removal fixed: libSystem loads before
+     * libswiftCore, so its definition wins the flat lookup and every Swift
+     * object release reaches a diagnostic abort instead of the real runtime.
+     * Say so here, because the generic message points the wrong way. */
+    if (in && in->is_runtime &&
+        (strcmp(name, "_swift_release") == 0 || strcmp(name, "_swift_retain") == 0)) {
+        fprintf(stderr,
+                "  This is a STALE SDK, not a missing symbol. Do NOT add %s to\n"
+                "  libSystem: it lives in the loader precisely so a real libswiftCore\n"
+                "  wins the lookup in any link order. Re-stage your sysroot's\n"
+                "  usr/lib/*.tbd from machorun's sdk/usr/lib -- a stub built before\n"
+                "  b9f0e23 still advertises it, so the linker recorded a two-level\n"
+                "  bind to libSystem that nothing can satisfy.\n", name);
+        return;
+    }
     if (in && in->is_runtime)
         fprintf(stderr,
                 "  %s is one of our own dylibs, so this is a gap in our Darwin\n"
