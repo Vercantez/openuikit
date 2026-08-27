@@ -157,5 +157,31 @@
 - (CFTimeInterval)timeInterval;
 @end
 
+/* ---- the collection primitives ------------------------------------------
+ * Declared for the same reason as -length, and the reason is sharper here:
+ * -count returns NSUInteger, and without a declaration the compiler assumes id
+ * and a caster gets "cast to smaller integer type from 'id'" -- or, on a
+ * 64-bit return, no warning at all and a pointer read as a count.
+ *
+ * Spellings match src/nscf/NSCFCollections.m exactly (lines 70, 74, 96, 101,
+ * 142): -objectForKey: returns `const void *` rather than id there, because CF
+ * hands the raw value straight back. A declaration that disagrees with its
+ * implementation silences the warning and keeps the mismatch, which is worse
+ * than having neither. */
+@interface NSArray : NSObject
+- (NSUInteger)count;
+- (id)objectAtIndex:(NSUInteger)index;
+@end
+
+@interface NSDictionary : NSObject
+- (NSUInteger)count;
+- (const void *)objectForKey:(id)key;
+@end
+
+@interface NSSet : NSObject
+- (NSUInteger)count;
+- (const void *)member:(id)object;
+@end
+
 #endif /* __OBJC__ */
 #endif /* _CF_FOUNDATION_INTERFACES_H */

@@ -137,6 +137,14 @@ int main(void)
         printf("     isa -> %s\n", acls ? class_getName(acls) : "(null)"); fflush(stdout);
         ok("array isa is __NSCFArray", acls && !strcmp(class_getName(acls), "__NSCFArray"),
            "collections are bridged too");
+        /* THROUGH THE BRIDGE, not through CF: objc_msgSend -> __NSCFArray ->
+         * CFArrayGetCount. The CF-side count above proves CF works; this proves
+         * the bridge does, and they are different claims. */
+        ok("[array count] through bridge", (NSUInteger)[(id)arr count] == 3,
+           "objc_msgSend -> __NSCFArray -> CFArrayGetCount");
+        ok("[array objectAtIndex:1] through bridge",
+           (const void *)[(id)arr objectAtIndex:1] == (const void *)s,
+           "the same pointer, via the ObjC primitive");
     }
 
     const void *keys[2] = { CFSTR("a"), CFSTR("b") };
@@ -168,6 +176,11 @@ int main(void)
         const void *got = CFDictionaryGetValue(dict, CFSTR("a"));
         ok("CFDictionaryGetValue by CFSTR key", got == (const void *)s,
            "requires CFHash/CFEqual to agree across two distinct CFSTRs");
+        ok("[dict count] through bridge", (NSUInteger)[(id)dict count] == 2,
+           "objc_msgSend -> __NSCFDictionary -> CFDictionaryGetCount");
+        ok("[dict objectForKey:] through bridge",
+           (const void *)[(id)dict objectForKey:(id)CFSTR("b")] == (const void *)s,
+           "keyed lookup through the ObjC primitive");
     }
 
     printf(fails ? "\nT9 FAIL (%d)\n" : "\nT9 PASS\n", fails);

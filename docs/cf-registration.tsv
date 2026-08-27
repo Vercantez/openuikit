@@ -34,7 +34,7 @@
 _kCFRuntimeIDNotAType	NOT_BRIDGED	sentinel for "no type"; never instantiated
 _kCFRuntimeIDCFType	NOT_BRIDGED	the base type; no instances of its own
 _kCFRuntimeIDCFAllocator	NOT_BRIDGED	statics use STATIC_CLASS_REF, which is NULL in our config (measured)
-_kCFRuntimeIDCFBasicHash	NOT_BRIDGED	internal storage for CFDictionary/CFSet/CFBag; never handed out
+_kCFRuntimeIDCFBasicHash	NOT_BRIDGED	no __NSCFBasicHash exists to bridge to. NOT because it is hidden: CFDictionary/CFSet/CFBag instances ARE CFBasicHash instances, allocated with typeID 3 and retyped by _CFRuntimeSetInstanceTypeIDAndIsa. The earlier reason here said 'never handed out', which was FALSE and is what made this row look safe -- see docs/cf-census/t9-bridge-result.md
 _kCFRuntimeIDCFStorage	NOT_BRIDGED	internal storage for CFArray/CFString; never handed out
 _kCFRuntimeIDCFRunArray	NOT_BRIDGED	internal storage for CFAttributedString; never handed out
 

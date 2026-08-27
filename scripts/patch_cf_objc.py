@@ -114,8 +114,30 @@ CF_INLINE Boolean _CFTypeIsObjC(const void *obj) {
 
 
 def apply(path, old, new, label):
+    """Apply exactly once, and decide 'already applied' by the WHOLE replacement.
+
+    TWO BUGS LIVED HERE, and the second was worse than the first.
+
+    Originally this tested `new.split("\n")[0] in src` -- the first LINE of the
+    replacement. False green whenever a patch keeps its first line unchanged,
+    which the SetInstanceTypeIDAndIsa patch does: its replacement opens with
+    `_CFRuntimeSetInstanceTypeID(cf, newTypeID);`, already in the file. The
+    script printed "already patched", changed nothing, and only reading
+    CFRuntime.c afterwards showed the #if still in place.
+
+    The obvious fix -- `old not in src and new in src` -- is WRONG and I shipped
+    it for one run. Several replacements legitimately CONTAIN their own anchor:
+    NEW_INIT keeps `void __CFInitialize(void) {` and inserts before the body, so
+    `old in src` stays true forever and the patch re-applies on every run. That
+    put the whole 19-call registration block into CFRuntime.c TWICE.
+
+    The correct test is the simplest one: THE WHOLE REPLACEMENT IS PRESENT.
+    It is exact, it does not care whether the anchor survives, and a partially
+    applied tree fails the `count(old) == 1` assertion below rather than being
+    silently patched again.
+    """
     src = open(path).read()
-    if new.split("\n")[0] in src:
+    if new in src:
         print(f"  {label}: already patched")
         return True
     if old not in src:
@@ -325,4 +347,67 @@ ok &= apply(INTERNAL, OLD_INTERNAL, NEW_INTERNAL, "CFInternal.h  (CF_IS_OBJC + 3
 ok &= apply(RUNTIME,  OLD_RUNTIME,  NEW_RUNTIME,  "CFRuntime.c   (CFTYPE_* + 2)")
 ok &= apply(RUNTIME,  OLD_CONSTSTR, NEW_CONSTSTR, "CFRuntime.c   (constant-string placeholder)")
 ok &= apply(RUNTIME,  OLD_INIT,     NEW_INIT,     "CFRuntime.c   (_CFRuntimeBridgeClasses)")
+# ------------------------------------------- the isa half of "TypeIDAndIsa"
+#
+# CFRuntime.c:621. The function is called _CFRuntimeSetInstanceTypeIDAndIsa and
+# it sets the type id unconditionally and the isa ONLY under
+# DEPLOYMENT_RUNTIME_SWIFT. We build with DEPLOYMENT_RUNTIME_SWIFT=0, so it does
+# exactly half of what its name says.
+#
+# WHAT THAT COSTS: CFDictionary, CFSet and CFBag are all CFBasicHash instances,
+# allocated with CFBasicHashGetTypeID() -- typeID 3 -- and then retyped to 18,
+# 20 or 21 by this function. Each calls it five times. The retype moves the
+# type id and leaves _cfisa holding slot 3's value, which is 0 because
+# CFBasicHash is correctly NOT_BRIDGED.
+#
+# So every collection ends up with type id 18 and isa 0, and CF_IS_OBJC(18, obj)
+# compares 0 against the __NSCFDictionary registration filled in slot 18, finds
+# them different, concludes the object is FOREIGN, and sends it -count. The isa
+# is 0. objc_msgSend reads the class at offset 0x10 and the process dies.
+#
+# MEASURED AGAINST macOS BEFORE CHANGING ANYTHING, because the fix rests on a
+# claim about what real CF does:
+#
+#     CFDictionaryCreate  isa = __NSDictionaryI          CFGetTypeID 18
+#     CFSetCreate         isa = __NSCFSet
+#     CFArrayCreate       isa = __NSSingleObjectArrayI
+#     [d count] via ObjC  = 1
+#
+# The isa is ALWAYS SET on macOS and messaging works. Note the classes are not
+# uniformly __NSCF*: Apple returns size- and mutability-specialised classes
+# (__NSDictionaryI, __NSSingleObjectArrayI). That is their optimised Foundation,
+# not a contradiction -- the invariant that matters is that isa is never 0 and
+# always agrees with what CF dispatches on. Ours has no specialised classes, so
+# the registered __NSCF* class is the right target for us.
+#
+# The guard becomes unconditional. When newTypeID is unregistered,
+# __CFISAForTypeID returns 0 and this writes 0 over 0 -- which is the
+# self-consistent case t8 case 4 pins, so the unregistered path is unaffected.
+OLD_ISA = """    _CFRuntimeSetInstanceTypeID(cf, newTypeID);
+#if DEPLOYMENT_RUNTIME_SWIFT
+    if (_CFTypeGetClass(cf) != __CFISAForTypeID(newTypeID)) {
+        ((CFSwiftRef)cf)->isa = (uintptr_t)__CFISAForTypeID(newTypeID);
+    }
+#endif"""
+
+NEW_ISA = """    _CFRuntimeSetInstanceTypeID(cf, newTypeID);
+    /* THE ISA HALF, no longer Swift-only. Upstream guards this with
+     * DEPLOYMENT_RUNTIME_SWIFT because Swift is the only runtime it bridges to;
+     * we bridge to Objective-C, and without this every CFDictionary, CFSet and
+     * CFBag carries the type id of its collection and the isa of the
+     * CFBasicHash it was allocated as -- which is 0. CF_IS_OBJC then reads
+     * 0 != __NSCFDictionary, calls its own object foreign, and messages a null
+     * class. Verified on macOS that real CF always sets the isa here.
+     *
+     * Writes through CFRuntimeBase rather than upstream's CFSwiftRef: that
+     * type is only declared under DEPLOYMENT_RUNTIME_SWIFT, so the original
+     * line does not compile once the #if comes off. Same field, same offset --
+     * _cfisa IS the isa -- reached through the type that exists in our
+     * configuration. */
+    if (_CFTypeGetClass(cf) != __CFISAForTypeID(newTypeID)) {
+        ((CFRuntimeBase *)cf)->_cfisa = (uintptr_t)__CFISAForTypeID(newTypeID);
+    }"""
+
+ok &= apply(RUNTIME, OLD_ISA, NEW_ISA, "CFRuntime.c   (SetInstanceTypeIDAndIsa: the isa half)")
+
 sys.exit(0 if ok else 1)

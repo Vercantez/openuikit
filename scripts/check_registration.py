@@ -322,9 +322,20 @@ def main():
     print(f"registration calls present : {len(calls)}")
     print(f"ObjC classes implemented   : {len(have_classes)}")
     if unresolved:
-        print(f"\nunresolvable dispatch sites ({len(unresolved)}) -- first argument is a "
-              f"local variable.\nThese are reported, not ignored; each is a type this tool "
-              f"cannot attribute:")
+        # THIS USED TO BE HEADED "unresolvable dispatch sites ... this tool
+        # cannot attribute", and that framing cost hours. Every collection type
+        # in the CFDictionary/CFSet/CFBag isa crash was on this list, and the
+        # wording invited it to be read as a limitation of the checker rather
+        # than as a list of places worth looking. It was read past three times.
+        #
+        # A "could not determine" bucket is a FINDINGS LIST until proven
+        # otherwise: these are precisely the sites where the type dispatched on
+        # is not the type the object was allocated as, which is the condition
+        # that produced the bug.
+        print(f"\nDISPATCH SITES NEEDING MANUAL REVIEW ({len(unresolved)}) -- the first "
+              f"argument is a local variable, so the\ntype dispatched on cannot be read "
+              f"from the call site. TREAT AS A FINDINGS LIST, not\nas noise: every "
+              f"collection in the 2026-08-27 isa crash appeared here first.")
         for u in unresolved:
             print(f"  {u}")
 
