@@ -1,17 +1,17 @@
 ### file
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/01b_exit_unixthread: Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-sort/tests/bin/01b_exit_unixthread: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/01b_exit_unixthread:
+/Users/miguelsalinas/machorun-wt-sort/tests/bin/01b_exit_unixthread:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2     7        728 0x00000001
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/01b_exit_unixthread:
+/Users/miguelsalinas/machorun-wt-sort/tests/bin/01b_exit_unixthread:
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/01b_exit_unixthread:
+/Users/miguelsalinas/machorun-wt-sort/tests/bin/01b_exit_unixthread:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72

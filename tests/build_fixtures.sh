@@ -181,6 +181,16 @@ want 22_sysconf          && build 22_sysconf          "$CHAINED_TARGET" 22_sysco
 # since usernames and home directories differ per host.
 want 23_passwd           && build 23_passwd           "$CHAINED_TARGET" 23_passwd           23_passwd.c --
 
+# ---------------------------------------------------------------- rung (v)
+# std::sort over the five types libcxx_std.cpp instantiates by hand. It SORTS
+# rather than links, because the symbol resolved perfectly while recursing
+# forever -- a link test would have passed throughout.
+if want 24_cxx_sort; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -std=c++17 -o "$BIN/24_cxx_sort" \
+        "$SRC/24_cxx_sort.cpp" -lc++
+    echo "==> 24_cxx_sort"; built+=(24_cxx_sort)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

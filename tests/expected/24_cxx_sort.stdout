@@ -1,0 +1,35 @@
+double         ascending   sorted
+double         descending  sorted
+double         all-equal   sorted
+double         organ-pipe  sorted
+double         sawtooth    sorted
+double         random      sorted
+float          ascending   sorted
+float          descending  sorted
+float          all-equal   sorted
+float          organ-pipe  sorted
+float          sawtooth    sorted
+float          random      sorted
+int            ascending   sorted
+int            descending  sorted
+int            all-equal   sorted
+int            organ-pipe  sorted
+int            sawtooth    sorted
+int            random      sorted
+long           ascending   sorted
+long           descending  sorted
+long           all-equal   sorted
+long           organ-pipe  sorted
+long           sawtooth    sorted
+long           random      sorted
+unsigned long  ascending   sorted
+unsigned long  descending  sorted
+unsigned long  all-equal   sorted
+unsigned long  organ-pipe  sorted
+unsigned long  sawtooth    sorted
+unsigned long  random      sorted
+empty          -           sorted
+one element    -           sorted
+two elements   -           sorted
+failures=0
+done

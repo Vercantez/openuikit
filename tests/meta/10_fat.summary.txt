@@ -7,7 +7,7 @@ header-flags: NOUNDEFS DYLDLINK TWOLEVEL PIE
 load-commands: LC_BUILD_VERSION,LC_CODE_SIGNATURE,LC_DATA_IN_CODE,LC_DYLD_CHAINED_FIXUPS,LC_DYLD_EXPORTS_TRIE,LC_DYLD_INFO_ONLY,LC_DYSYMTAB,LC_FUNCTION_STARTS,LC_LOAD_DYLIB,LC_LOAD_DYLINKER,LC_MAIN,LC_SEGMENT_64,LC_SOURCE_VERSION,LC_SYMTAB,LC_UUID
 fixups: chained (LC_DYLD_CHAINED_FIXUPS + LC_DYLD_EXPORTS_TRIE)
 entry: LC_MAIN
-dylibs: /usr/lib/libSystem.B.dylib,/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat,/usr/lib/libSystem.B.dylib
+dylibs: /usr/lib/libSystem.B.dylib,/Users/miguelsalinas/machorun-wt-sort/tests/bin/10_fat,/usr/lib/libSystem.B.dylib
 rpaths: 
 loader-relevant sections (segment,section,flags):
   __TEXT,__stubs,0x80000408

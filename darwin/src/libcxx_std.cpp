@@ -62,11 +62,41 @@ template class std::basic_string<char>;
 
 // __sort is the one where the header stops at a DECLARATION (sort.h:891) --
 // libc++ puts the one-line body in src/algorithm.cpp so the specialisations
-// below are the only copies in the shipping dylib. The body is that one line,
-// and it is not a choice: __sort_dispatch is exactly what std::sort() calls
-// inline for every type that has no extern-template specialisation, so
-// forwarding to it makes sort<double*> take the same code path as
-// sort<MyStruct*> instead of an approximation of it.
+// below are the only copies in the shipping dylib.
+//
+// THIS USED TO FORWARD TO __sort_dispatch AND RECURSED FOREVER. The reasoning
+// for doing so was sound and the LOWERING is what bit, which is the third time
+// this project has met that shape (see __exp10). sort.h:960 declares
+//
+//     template <class _AlgPolicy, class _Type, __enable_if_t<
+//               __sort_is_specialized_in_library<_Type>::value, int> = 0>
+//     void __sort_dispatch(_Type* __first, _Type* __last, __less<>&) {
+//       __less<_Type> __comp;
+//       std::__sort<__less<_Type>&, _Type*>(__first, __last, __comp);
+//     }
+//
+// -- so for exactly the arithmetic types instantiated below, handing
+// __sort_dispatch a transparent __less<> routes it straight back into the
+// specialisation being defined. All five compiled to an unconditional
+// self-call with no base case:
+//
+//     __ZNSt3__16__sortIRNS_6__lessIddEEPdEEvT0_S5_T_:
+//       2608  bl  __ZNSt3__16__sortIRNS_6__lessIddEEPdEEvT0_S5_T_   <- itself
+//
+// Any guest std::sorting a double, float, int, long or unsigned long array
+// through this libc++ recursed until the stack died -- and a stack-overflow
+// SIGSEGV leaves the crash handler no stack to run on, so machorun printed
+// nothing at all. Found by existential-fix; the reproducer is a ~50-line C
+// program that renders a gradient layer, dying 3/3 here and exiting 0 on macOS.
+//
+// THE FIX CALLS THE ALGORITHM RATHER THAN ANOTHER DISPATCHER, because
+// re-forwarding is what recursed. std::__introsort is what __sort_dispatch's
+// GENERIC overload (sort.h:922) invokes once it has finished dispatching, so
+// this is the same code libc++ runs for a type with no specialisation -- the
+// property the old comment wanted -- reached without the step that turns back.
+// It terminates by construction: introsort's own base cases are insertion sort
+// below a length threshold and heapsort at the depth limit, and the explicit
+// n < 2 return below makes the smallest case obvious rather than implied.
 _LIBCPP_BEGIN_NAMESPACE_STD
 // The comparator parameter is DELIBERATELY unused. __less<T,T> is an empty
 // struct with no operator() -- comp.h:33 says so in as many words: "The
@@ -78,8 +108,20 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 template <class _Comp, class _RandomAccessIterator>
 void __sort(_RandomAccessIterator __first, _RandomAccessIterator __last, _Comp)
 {
+    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _Diff;
+    _Diff __n = __last - __first;
+    if (__n < 2) return;                       // nothing to do, and a visible base case
+
     __less<> __transparent;
-    std::__sort_dispatch<_ClassicAlgPolicy>(__first, __last, __transparent);
+    // Identical to sort.h:922-931, which is the generic dispatch: the depth
+    // limit past which introsort falls back to heapsort, and the branchless
+    // partitioning flag it picks for arithmetic types.
+    _Diff __depth_limit = 2 * std::__log2i(__n);
+    std::__introsort<_ClassicAlgPolicy,
+                     __less<>&,
+                     _RandomAccessIterator,
+                     __use_branchless_sort<__less<>&, _RandomAccessIterator>::value>(
+        __first, __last, __transparent, __depth_limit);
 }
 
 template void __sort<__less<double>&, double*>(double*, double*, __less<double>&);
