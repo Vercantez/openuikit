@@ -146,3 +146,19 @@ int probe_NSGetExecutablePath(char *buf, unsigned *bufsize)
     memcpy(buf, tmp, need);
     return 0;
 }
+
+/* WALL 6: flsl -- and it is NOT obscure. "find last set bit, long" is on the
+ * MUTABLE COLLECTION path: CFArrayAppendValue reaches it through CFStorage's
+ * capacity rounding, so nothing can be appended to a CFArray without it.
+ *
+ * Genuinely implementable, not fiction, and machorun can take this verbatim.
+ * Darwin's contract: return the one-based index of the most significant set
+ * bit, 0 for an argument of 0. __builtin_clzl is undefined for 0, which is
+ * exactly the case the contract singles out, so the zero test comes first
+ * rather than being an optimisation. */
+int flsl(long mask);
+int flsl(long mask)
+{
+    if (mask == 0) return 0;
+    return (int)(64 - __builtin_clzl((unsigned long)mask));
+}

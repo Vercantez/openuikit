@@ -183,5 +183,23 @@
 - (const void *)member:(id)object;
 @end
 
+/* ---- NSObject lifetime, and NSError's accessors -------------------------
+ * -retain/-release are declared by objc/NSObject.h as part of the NSObject
+ * PROTOCOL, not the root class, so a bare [(id)x retain] is still an
+ * undeclared selector here. Declared for the same reason as every other entry.
+ *
+ * -userInfo returns CFDictionaryRef because src/nscf/NSCFError.m returns
+ * CFErrorCopyUserInfo's result directly -- a +1 object through a non-owning
+ * selector. The signature matches the implementation, defect included; a
+ * declaration that quietly said `id` would hide which side owns it. */
+@interface NSObject (CFBridgeLifetime)
+- (instancetype)retain;
+- (oneway void)release;
+@end
+
+@interface NSError : NSObject
+- (CFDictionaryRef)userInfo;
+@end
+
 #endif /* __OBJC__ */
 #endif /* _CF_FOUNDATION_INTERFACES_H */
