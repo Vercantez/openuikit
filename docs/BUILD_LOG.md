@@ -849,8 +849,16 @@ undefined, 59 outside libswiftCore either way). So substituting it into the
 staging directories cannot change the Swift surface. `18_swift_class` passes
 under machorun in **both** link orders against the macOS baseline.
 
-**Cost: $0.80.** c8g.16xlarge for 16 minutes. Configure ~10 s, 173 objects, the
-stdlib build about four minutes. Two configure flags were missing from §7's
+**Cost: ~$0.63.** c8g.16xlarge for 14 min 59 s (launched 15:03:14Z, terminated
+15:18:13Z, "User initiated" — by the teardown script on completion, not by the
+6 h `shutdown -h` cap, which is a dead-man switch rather than a plan). Configure
+~10 s, 173 objects, the stdlib build about four minutes.
+
+*(This first read "$0.80" because I reused the $2.90/hr constant from
+`build_box.sh`, which was written for a different instance type. c8g.16xlarge is
+about $2.50/hr. Carrying a rate across instance types is the same mistake as
+carrying a symbol list across libraries — corrected rather than left, since the
+wrong number was the one that flattered the decision.)* Two configure flags were missing from §7's
 recipe for a concurrency-enabled build and are recorded here:
 `-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE=$W/libdispatch -DSWIFT_INCLUDE_APINOTES=ON`.
 The errors changed *kind* at each step, which is the tell that each fix landed
