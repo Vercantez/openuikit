@@ -193,6 +193,12 @@ if args.count >= 2, args[1] == "runloop" {
     warnToStderr(ok ? "[render_full] RUN LOOP OK" : "[render_full] RUN LOOP FAILED")
     cpio_exit(ok ? 0 : 1)
 }
+if args.count >= 2, args[1] == "bundle" {
+    warnToStderr("[render_full] bundle self-test (real .app fixtures, both layouts)")
+    let ok = MainActor.assumeIsolated { bundleSelfTest() }
+    warnToStderr(ok ? "[render_full] BUNDLE OK" : "[render_full] BUNDLE FAILED")
+    cpio_exit(ok ? 0 : 1)
+}
 if args.count >= 2, args[1] == "launch" {
     warnToStderr("[render_full] launch-by-name self-test (delegate discovered from a string)")
     let ok = MainActor.assumeIsolated { launchByNameSelfTest() }
