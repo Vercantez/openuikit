@@ -1,0 +1,17 @@
+sizeof(sigset_t)=4
+round trip:
+  SIGUSR1 (30) blocked
+  SIGUSR2 (31) blocked
+  SIGCHLD (20) blocked
+  SIGBUS  (10) blocked
+  SIGURG  (16) blocked
+  SIGIO   (23) blocked
+  SIGSYS  (12) blocked
+  SIGCONT (19) blocked
+  SIGTSTP (18) blocked
+  SIGINT  ( 2) blocked
+  SIGTERM (15) blocked
+  SIGPIPE (13) blocked
+stray=0
+after SIG_UNBLOCK still blocked=0
+done

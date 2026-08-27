@@ -219,6 +219,7 @@ b1d2144ca87b151923029abde3e69b2430f2b39304837e2183b9019fc50a6e96  Libc:include/s
 964683106e28773c6181e519d08d007a4bfa0fcc6768482c32b89068522fb974  Libc:include/secure/_stdio.h  secure/_stdio.h
 b385df81155a073b34179daafd919c3ffdec6266a817bd737238bb3eca5cc099  Libc:include/secure/_string.h  secure/_string.h
 d635b58e48cb88db18226bab8a3588505d07dcae8820d2244902242f9406c65e  Libc:include/secure/_strings.h  secure/_strings.h
+1af28533ef70b80a17b29e2ed489f1103b1750198b5c8fe97c97fa90576426b3  Libc:include/signal.h  signal.h
 912eef3b152d9bd33db48dc6cd7b9dc517a827e0ce563093d3f543dda131591e  xnu:libsyscall/wrappers/spawn/spawn.h  spawn.h
 1e871643e931a1fe9ba76c2cc55dd32aa1a4b4cdf4584901b65b6203db321d2b  Libc:include/stddef.h  stddef.h
 9d070aad02d9f2ba1f2248d093b4194b62cf8d363778c737d1110f4736e5ed3c  Libc:include/stdint.h  stdint.h

@@ -181,6 +181,14 @@ want 22_sysconf          && build 22_sysconf          "$CHAINED_TARGET" 22_sysco
 # since usernames and home directories differ per host.
 want 23_passwd           && build 23_passwd           "$CHAINED_TARGET" 23_passwd           23_passwd.c --
 
+# ---------------------------------------------------------------- rung (w)
+# Blocking signals: sigset_t is 4 bytes on Darwin and 128 on glibc, TEN of the
+# 29 standard signal numbers differ, and SIG_BLOCK/UNBLOCK/SETMASK are off by
+# one. All three need translating or the round trip names different signals --
+# and the off-by-one is silent, since a forwarded SIG_BLOCK reads as
+# SIG_UNBLOCK and returns success. darwin/src/posix.c translates; this grades it.
+want 25_sigmask          && build 25_sigmask          "$CHAINED_TARGET" 25_sigmask          25_sigmask.c --
+
 # ---------------------------------------------------------------- rung (v)
 # std::sort over the five types libcxx_std.cpp instantiates by hand. It SORTS
 # rather than links, because the symbol resolved perfectly while recursing

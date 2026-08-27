@@ -813,3 +813,153 @@ EXPORT int dirfd(void *dirp)
     struct mr_dir *d = dirp;
     return d ? MR_ERRNO_CALL(glibc_dirfd(d->ldir)) : -1;
 }
+
+/* ------------------------------------------------------------- signals */
+
+/* TWO translations, not one, and the second is the easier to miss.
+ *
+ * SIZE:   Darwin's sigset_t is a 32-bit bitmask -- bit (signo-1) -- and
+ *         glibc's is 128 bytes. A naive forward of pthread_sigmask hands
+ *         glibc a 4-byte object to WRITE 128 bytes into, because its third
+ *         argument is an OUT parameter. That is the #49 overflow class with a
+ *         live consumer rather than a theoretical one.
+ *
+ * NUMBER: ten of the 29 standard signals have DIFFERENT numbers on the two
+ *         systems. A wrapper that widened the mask and stopped there would
+ *         compile, link, return 0, and subscribe the guest to the wrong
+ *         signals. Measured on this host, darwin/linux:
+ *
+ *           SIGBUS 10/7    SIGSYS 12/31   SIGURG 16/23   SIGSTOP 17/19
+ *           SIGTSTP 18/20  SIGCONT 19/18  SIGCHLD 20/17  SIGIO 23/29
+ *           SIGUSR1 30/10  SIGUSR2 31/12
+ *
+ *         Both columns are pinned by tests rather than by this comment:
+ *         sdk/tests/abi_probe.c baselines the Darwin numbers against Apple's
+ *         own SDK, and sdk/tests/glibc_abi_probe.c static-asserts the glibc
+ *         ones against real glibc headers with the host compiler.
+ *
+ * The five set manipulators need nothing: Darwin defines them as MACROS over
+ * the guest's own 4-byte word (signal.h:125-128), so they never cross the
+ * boundary. That is the general rule this file follows -- operations on the
+ * guest's OWN object are safe; operations that hand a pointer to that object
+ * ACROSS the boundary need translating.
+ *
+ * glibc's sigset_t is treated as OPAQUE here. We never touch its bits, only
+ * hand it to glibc's own sigemptyset/sigaddset/sigismember, so the only thing
+ * assumed about it is its size -- which glibc_abi_probe pins. */
+
+#define MR_LINUX_SIGSET_BYTES 128
+typedef struct { unsigned char opaque[MR_LINUX_SIGSET_BYTES]; } mr_linux_sigset;
+
+/* Darwin signo (1..31) -> Linux signo. 0 means "no Linux equivalent":
+ * SIGEMT (7) and SIGINFO (29) do not exist on Linux. */
+static const unsigned char mr_signo_d2l_tab[32] = {
+    0,
+     1,  2,  3,  4,  5,  6,  0,  8,   /*  1..8   HUP INT QUIT ILL TRAP ABRT EMT FPE */
+     9,  7, 11, 31, 13, 14, 15, 23,   /*  9..16  KILL BUS SEGV SYS PIPE ALRM TERM URG */
+    19, 20, 18, 17, 21, 22, 29, 24,   /* 17..24  STOP TSTP CONT CHLD TTIN TTOU IO XCPU */
+    25, 26, 27, 28,  0, 10, 12        /* 25..31  XFSZ VTALRM PROF WINCH INFO USR1 USR2 */
+};
+
+static int mr_signo_d2l(int d)
+{
+    if (d < 1 || d > 31) return 0;
+    return (int)mr_signo_d2l_tab[d];
+}
+
+static int mr_signo_l2d(int l)
+{
+    for (int d = 1; d <= 31; d++)
+        if ((int)mr_signo_d2l_tab[d] == l) return d;
+    return 0;
+}
+
+/* Darwin 32-bit mask -> glibc's opaque set, built with glibc's own primitives
+ * so no layout is assumed. A Darwin-only signal (SIGEMT, SIGINFO) has nothing
+ * to map to and is dropped: there is no Linux signal it could mean, and
+ * inventing one would subscribe the guest to something it never asked for. */
+static void mr_sigset_d2l(unsigned int d, mr_linux_sigset *out)
+{
+    glibc_sigemptyset(out);
+    for (int s = 1; s <= 31; s++) {
+        int l;
+        if (!(d & (1u << (s - 1)))) continue;
+        l = mr_signo_d2l(s);
+        if (l) glibc_sigaddset(out, l);
+    }
+}
+
+static unsigned int mr_sigset_l2d(const mr_linux_sigset *l)
+{
+    unsigned int d = 0;
+    for (int s = 1; s <= 31; s++) {
+        int ls = mr_signo_d2l(s);
+        if (ls && glibc_sigismember(l, ls)) d |= 1u << (s - 1);
+    }
+    return d;
+}
+
+/* THE `how` ARGUMENT NEEDS TRANSLATING TOO, and I wrote a comment here first
+ * claiming it did not. Measured, after the round-trip test failed:
+ *
+ *     Darwin  SIG_BLOCK 1  SIG_UNBLOCK 2  SIG_SETMASK 3
+ *     glibc   SIG_BLOCK 0  SIG_UNBLOCK 1  SIG_SETMASK 2
+ *
+ * Off by one, which is the worst possible spacing: a forwarded SIG_BLOCK is
+ * read by glibc as SIG_UNBLOCK and does the OPPOSITE of what the guest asked,
+ * returning 0 for success. Only SIG_SETMASK fails loudly, and only because 3
+ * happens to be out of range -- an API with two values instead of three would
+ * have been silently inverted with nothing to catch it.
+ *
+ * sdk/tests/glibc_abi_probe.c already pinned all three, with a comment saying
+ * exactly this. I asserted the opposite without checking it. */
+static int mr_sigmask_how_d2l(int how)
+{
+    switch (how) {
+    case 1: return 0;   /* SIG_BLOCK   */
+    case 2: return 1;   /* SIG_UNBLOCK */
+    case 3: return 2;   /* SIG_SETMASK */
+    default: return -1; /* let glibc reject it */
+    }
+}
+
+EXPORT int pthread_sigmask(int how, const unsigned int *set, unsigned int *oset)
+{
+    mr_linux_sigset lset, loset;
+    int rc;
+
+    if (set) mr_sigset_d2l(*set, &lset);
+    rc = glibc_pthread_sigmask(mr_sigmask_how_d2l(how), set ? &lset : 0, oset ? &loset : 0);
+    /* pthread_* report errors as the RETURN VALUE, not through errno, so no
+     * errno translation here -- and the value itself is an errno number whose
+     * Darwin and Linux spellings differ for several codes. Only 0 and
+     * "non-zero" are relied on by any caller we have. */
+    if (rc == 0 && oset) *oset = mr_sigset_l2d(&loset);
+    return rc;
+}
+
+EXPORT int sigprocmask(int how, const unsigned int *set, unsigned int *oset)
+{
+    mr_linux_sigset lset, loset;
+    int rc;
+
+    if (set) mr_sigset_d2l(*set, &lset);
+    rc = MR_ERRNO_CALL(glibc_sigprocmask(mr_sigmask_how_d2l(how), set ? &lset : 0, oset ? &loset : 0));
+    if (rc == 0 && oset) *oset = mr_sigset_l2d(&loset);
+    return rc;
+}
+
+/* signalfd(2) is LINUX-ONLY and has no Darwin counterpart, so a Darwin
+ * libSystem exporting it looks wrong at first glance. It is here because this
+ * file IS the Darwin/Linux boundary and it is the only place that holds the
+ * translation above: swift-corelibs-libdispatch's epoll backend is Linux code
+ * compiled for a Darwin target, and it passes a sigset_t it owns -- a 4-byte
+ * Darwin one. Forwarding that directly is the bug this whole section exists to
+ * prevent. */
+EXPORT int signalfd(int fd, const unsigned int *mask, int flags)
+{
+    mr_linux_sigset lmask;
+    if (!mask) return MR_ERRNO_CALL(glibc_signalfd(fd, 0, flags));
+    mr_sigset_d2l(*mask, &lmask);
+    return MR_ERRNO_CALL(glibc_signalfd(fd, &lmask, flags));
+}
