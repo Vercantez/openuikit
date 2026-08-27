@@ -1025,8 +1025,44 @@ static void *mr_thread_trampoline(void *p)
                     "to an unmapped address. See mr_constrain_heap() in src/map.c.");
         glibc_free(probe);
     }
+
+    /* Prime this thread's direct-TSD array BEFORE the guest runs.
+     *
+     * os_unfair_lock_lock -> unfair_token -> mr_thread_token -> dtsd_slots,
+     * and dtsd_slots CALLOCS on a thread's first call. So without this, taking
+     * a lock for the first time on a thread allocates -- and Darwin's
+     * os_unfair_lock_lock never allocates, which callers are entitled to rely
+     * on: it is usable from inside an allocator.
+     *
+     * The concrete hazard is glibc's arena mutex, which is NOT recursive. A
+     * thread already inside glibc malloc that first-touches a lock would
+     * deadlock against a mutex it already holds. mr_thread_token()'s own
+     * comment argues it "must not take a lock itself" and that the TSD path
+     * "is glibc's, which is independent of ours" -- but independent-of-ours is
+     * not none, and calloc takes glibc's.
+     *
+     * Doing it here costs one allocation per thread at a point where the guest
+     * is not yet running and no lock is held, and makes mr_thread_token() a
+     * pure TSD read on every path a lock can reach. */
+    (void)mr_thread_token();
+
     return s.fn(s.arg);
 }
+
+/* Prime the MAIN thread's direct-TSD array, closing the residue the trampoline
+ * cannot reach (the main thread has no trampoline).
+ *
+ * This has to live in the dylib rather than in the loader: mr_constrain_heap()
+ * in src/main.c would be the natural site by ordering, but it runs BEFORE
+ * find_darwin_root(), so libSystem is not even located yet -- the loader cannot
+ * call into a Mach-O image it has not mapped. An image initializer can, and
+ * src/init.c runs both __init_offsets and __mod_init_func forms.
+ *
+ * Runs on the main thread while the process is still single-threaded, so it
+ * cannot contend, and it is idempotent: if something already primed this
+ * thread, mr_thread_token() returns the cached token and allocates nothing. */
+__attribute__((constructor))
+static void mr_prime_main_thread_tsd(void) { (void)mr_thread_token(); }
 
 EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), void *arg)
 {

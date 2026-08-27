@@ -178,8 +178,22 @@ static void **dtsd_slots(void)
  * reused after a thread exits).
  *
  * This must be callable from anywhere a lock can be taken, so it must not take
- * a lock itself. It does not: the counter is a single atomic, and the TSD path
- * underneath is glibc's, which is independent of ours.
+ * a lock itself. The counter is a single atomic, and the TSD read underneath is
+ * glibc's.
+ *
+ * CORRECTION (independent review): this used to claim the TSD path takes no
+ * lock because it "is glibc's, which is independent of ours". That reasons
+ * about WHOSE lock rather than WHETHER THERE IS ONE. dtsd_slots() CALLOCS on a
+ * thread's first call, and glibc's arena mutex is not recursive -- so a thread
+ * already inside malloc that first-touched a lock would deadlock against a
+ * mutex it already holds. Darwin's os_unfair_lock_lock never allocates.
+ *
+ * The allocation is now hoisted: mr_thread_trampoline() primes this array
+ * before the guest runs, so on every guest thread this is a pure TSD read.
+ * The main thread, which has no trampoline, is primed by an image constructor
+ * in libsystem.c (mr_prime_main_thread_tsd). That had to go in the dylib rather
+ * than the loader: mr_constrain_heap() runs before find_darwin_root(), so the
+ * loader cannot call into a Mach-O image it has not mapped yet.
  * ===================================================================== */
 static unsigned dtsd_token_counter;
 
