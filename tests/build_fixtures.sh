@@ -163,6 +163,14 @@ want 14_utility          && build 14_utility          "$CHAINED_TARGET" 14_utili
 # machorun's placement policy is doing its job. See src/map.c.
 want 19_isa_mask         && build 19_isa_mask         "$CHAINED_TARGET" 19_isa_mask         19_isa_mask.c --
 
+# ---------------------------------------------------------------- rung (s)
+# Reading a directory. DIR is opaque so the pointer crosses fine, which is why
+# this needs grading: struct dirent does NOT agree between Darwin and glibc
+# (d_type 20 vs 18, d_name 21 vs 19, 1048 bytes vs 280), so a forwarded record
+# yields truncated names and a wrong d_type with exit 0. darwin/src/posix.c
+# translates; this proves it against macOS.
+want 20_dirent           && build 20_dirent           "$CHAINED_TARGET" 20_dirent           20_dirent.c --
+
 # ---------------------------------------------------------------- rung (n)
 # The drawing rung. A plain C binary against /usr/lib/libquartz.dylib -- our
 # Mach-O build of ~/quartz. NOT in tests/manifest.tsv and NOT graded by

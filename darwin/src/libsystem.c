@@ -76,6 +76,8 @@ static char **mr_argv;
 static char **mr_envp;
 static char **mr_apple;
 
+extern void tzset(void);
+
 EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, char **apple)
 {
     mr_argc = argc; mr_argv = argv; mr_envp = envp; mr_apple = apple;
@@ -84,6 +86,10 @@ EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, c
     __stderrp = glibc_stderr;
     __stdinp  = glibc_stdin;
     __progname = argc > 0 ? argv[0] : "";
+    /* Darwin's time functions populate timezone/daylight/tzname on first use,
+     * so a guest may read them without ever calling tzset(). Establish them
+     * once here rather than leaving zeros that would read as UTC. */
+    tzset();
 }
 
 EXPORT int   *_NSGetArgc(void)    { return &mr_argc; }
@@ -484,6 +490,34 @@ EXPORT size_t malloc_size(const void *p)
     return glibc_malloc_usable_size((void *)p);
 }
 EXPORT size_t malloc_good_size(size_t n) { return n; }
+
+FWD(char *, strncat, (char *d, const char *s, size_t n),  (d, s, n))
+FWD(size_t, strnlen, (const char *s, size_t n),           (s, n))
+FWD(void *, bsearch, (const void *k, const void *b, size_t n, size_t w,
+                      int (*c)(const void *, const void *)),   (k, b, n, w, c))
+
+/* div_t is {int quot; int rem;} on both systems -- 8 bytes, quot at 0, rem at
+ * 4, measured against Apple's SDK -- so this could be a forward. It is written
+ * out instead because the whole function is two divisions and doing it here
+ * removes a struct-by-value return from the glibc boundary for nothing gained.
+ * Darwin's contract is C's: truncation toward zero. */
+typedef struct { int quot; int rem; }   mr_div_t;
+typedef struct { long quot; long rem; } mr_ldiv_t;
+_Static_assert(sizeof(mr_div_t) == 8, "div_t is 8 bytes");
+EXPORT mr_div_t  div(int n, int d)        { mr_div_t r;  r.quot = n / d; r.rem = n % d; return r; }
+EXPORT mr_ldiv_t ldiv(long n, long d)     { mr_ldiv_t r; r.quot = n / d; r.rem = n % d; return r; }
+
+/* BSD, not POSIX: the program's short name, which __progname already holds
+ * because __machorun_libsystem_bootstrap set it from argv[0]. Darwin returns
+ * the basename; argv[0] may carry a path, so trim it here rather than storing
+ * a second copy. */
+EXPORT const char *getprogname(void)
+{
+    const char *p = __progname, *slash;
+    if (!p) return "";
+    for (slash = p; *p; p++) if (*p == '/') slash = p + 1;
+    return slash;
+}
 
 FWD(size_t, strlen,  (const char *s),                    (s))
 FWD(char *, strcpy,  (char *d, const char *s),           (d, s))

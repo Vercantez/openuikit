@@ -556,3 +556,122 @@ EXPORT uint64_t clock_gettime_nsec_np(int clk)
 EXPORT int gettimeofday(void *tv, void *tz) { return MR_ERRNO_CALL(glibc_gettimeofday(tv, tz)); }
 EXPORT int nanosleep(const void *req, void *rem) { return MR_ERRNO_CALL(glibc_nanosleep(req, rem)); }
 EXPORT unsigned sleep(unsigned s) { return glibc_sleep(s); }
+
+/* ---------------------------------------------------------- directories */
+
+/* DIR is opaque on both systems, so the POINTER crosses fine. `struct dirent`
+ * does not, and this is the layout half of the opaque-ABI hazard class rather
+ * than the size half -- nothing is corrupted, the guest simply reads the wrong
+ * bytes and gets wrong filenames.
+ *
+ *                       Darwin/arm64          glibc/aarch64
+ *     sizeof                   1048                     280
+ *     d_ino                   0 (8)                   0 (8)
+ *     d_seekoff / d_off       8 (8)                   8 (8)
+ *     d_reclen               16 (2)                  16 (2)
+ *     d_namlen               18 (2)                       -
+ *     d_type                 20 (1)                  18 (1)
+ *     d_name              21 (1024)                19 (256)
+ *
+ * Both sides of that table are pinned by tests, not by this comment:
+ * sdk/tests/abi_probe.c baselines the Darwin column against Apple's own SDK,
+ * and sdk/tests/glibc_abi_probe.c static-asserts the glibc column against real
+ * glibc headers with the host compiler.
+ *
+ * So returning glibc's pointer would be wrong twice over. The guest would read
+ * d_type from offset 20 -- inside glibc's d_name -- and read a filename from
+ * offset 21, and it would read up to offset 1044 of a 280-byte allocation,
+ * which is an out-of-bounds read on someone else's heap. Hence a per-DIR
+ * wrapper holding one translated Darwin dirent, refilled on each readdir, with
+ * the same lifetime the caller already expects: valid until the next readdir
+ * or closedir on that DIR. */
+
+struct linux_dirent {
+    uint64_t d_ino;             /*  0 */
+    int64_t  d_off;             /*  8 */
+    uint16_t d_reclen;          /* 16 */
+    uint8_t  d_type;            /* 18 */
+    char     d_name[256];       /* 19 */
+};
+
+struct darwin_dirent {
+    uint64_t d_ino;             /*  0 */
+    uint64_t d_seekoff;         /*  8 */
+    uint16_t d_reclen;          /* 16 */
+    uint16_t d_namlen;          /* 18 */
+    uint8_t  d_type;            /* 20 */
+    char     d_name[1024];      /* 21 */
+};
+
+_Static_assert(sizeof(struct linux_dirent) == 280, "glibc struct dirent is 280 bytes");
+_Static_assert(sizeof(struct darwin_dirent) == 1048, "Darwin struct dirent is 1048 bytes");
+_Static_assert(__builtin_offsetof(struct linux_dirent,  d_type) == 18, "glibc d_type at 18");
+_Static_assert(__builtin_offsetof(struct darwin_dirent, d_type) == 20, "Darwin d_type at 20");
+_Static_assert(__builtin_offsetof(struct linux_dirent,  d_name) == 19, "glibc d_name at 19");
+_Static_assert(__builtin_offsetof(struct darwin_dirent, d_name) == 21, "Darwin d_name at 21");
+
+struct mr_dir {
+    void *ldir;                     /* glibc DIR* */
+    struct darwin_dirent ent;       /* refilled per readdir */
+};
+
+EXPORT void *opendir(const char *path)
+{
+    struct mr_dir *d;
+    void *ldir = MR_ERRNO_CALL(glibc_opendir(path));
+    if (!ldir) return 0;
+    d = glibc_calloc(1, sizeof *d);
+    if (!d) { glibc_closedir(ldir); return 0; }
+    d->ldir = ldir;
+    return d;
+}
+
+EXPORT void *readdir(void *dirp)
+{
+    struct mr_dir *d = dirp;
+    const struct linux_dirent *l;
+    size_t n;
+
+    if (!d) return 0;
+    /* glibc signals end-of-directory with NULL and a *preserved* errno, so the
+     * errno dance has to not clobber it. MR_ERRNO_CALL pushes the guest's
+     * errno in and pulls glibc's back out, which is exactly right here. */
+    l = MR_ERRNO_CALL(glibc_readdir(d->ldir));
+    if (!l) return 0;
+
+    n = glibc_strlen(l->d_name);
+    if (n > sizeof d->ent.d_name - 1) n = sizeof d->ent.d_name - 1;
+
+    glibc_memset(&d->ent, 0, sizeof d->ent);
+    d->ent.d_ino     = l->d_ino;
+    d->ent.d_seekoff = (uint64_t)l->d_off;
+    d->ent.d_type    = l->d_type;          /* DT_* agree on both systems */
+    d->ent.d_namlen  = (uint16_t)n;
+    glibc_memcpy(d->ent.d_name, l->d_name, n);
+    /* Darwin's d_reclen is the size of THIS record, which is what a caller
+     * walking a buffer would step by -- not glibc's, whose d_name is shorter. */
+    d->ent.d_reclen  = (uint16_t)(__builtin_offsetof(struct darwin_dirent, d_name) + n + 1);
+    return &d->ent;
+}
+
+EXPORT int closedir(void *dirp)
+{
+    struct mr_dir *d = dirp;
+    int rc;
+    if (!d) return 0;
+    rc = MR_ERRNO_CALL(glibc_closedir(d->ldir));
+    glibc_free(d);
+    return rc;
+}
+
+EXPORT void rewinddir(void *dirp)
+{
+    struct mr_dir *d = dirp;
+    if (d) glibc_rewinddir(d->ldir);
+}
+
+EXPORT int dirfd(void *dirp)
+{
+    struct mr_dir *d = dirp;
+    return d ? MR_ERRNO_CALL(glibc_dirfd(d->ldir)) : -1;
+}

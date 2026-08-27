@@ -241,7 +241,26 @@ EXPORT time_t  mktime(void *tm)                       { return glibc_mktime(tm);
 EXPORT time_t  timegm(void *tm)                       { return glibc_timegm(tm); }
 EXPORT char   *ctime_r(const time_t *t, char *b)      { return glibc_ctime_r(t, b); }
 EXPORT char   *asctime_r(const void *tm, char *b)     { return glibc_asctime_r(tm, b); }
-EXPORT void    tzset(void)                            { glibc_tzset(); }
+/* timezone / daylight / tzname are DATA on Darwin, and our <time.h> declares
+ * all three -- so until now they were declared here and defined nowhere, which
+ * links fine and dies at load. They cannot be aliases of glibc's, because a
+ * Mach-O guest binds to OUR definitions; they have to be copies, refreshed
+ * whenever glibc might have changed them. tzset() is that moment, and Darwin
+ * documents it as the call that establishes them. The bootstrap calls it once
+ * so a guest that reads tzname without calling tzset first -- which works on
+ * Darwin, because its time functions populate them -- sees real values. */
+EXPORT long   timezone;
+EXPORT int    daylight;
+EXPORT char  *tzname[2];
+
+EXPORT void    tzset(void)
+{
+    glibc_tzset();
+    timezone = glibc_tz_timezone;
+    daylight = glibc_tz_daylight;
+    tzname[0] = glibc_tz_tzname[0];
+    tzname[1] = glibc_tz_tzname[1];
+}
 EXPORT double  difftime(time_t a, time_t b)           { return (double)(a - b); }
 
 /* strftime's format language is not variadic, and the C locale's conversions

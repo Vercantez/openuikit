@@ -763,6 +763,11 @@ EXPORT void *dlsym(void *h, const char *name)
             "implement yet (docs/UNIMPLEMENTED.md#dlopen-dlsym).");
     return 0;
 }
+/* glibc declares dlclose __nonnull((1)) and dereferences the handle, so
+ * forwarding NULL straight through SIGSEGVs inside ld.so -- measured. Darwin
+ * is more permissive: dlclose(NULL) returns non-zero and sets no error. Match
+ * Darwin, since that is the ABI a guest was compiled against. */
+EXPORT int   dlclose(void *h) { return h ? glibc_dlclose(h) : 1; }
 EXPORT char *dlerror(void) { return 0; }
 
 /* vasprintf(3).

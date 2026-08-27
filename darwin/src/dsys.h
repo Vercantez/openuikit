@@ -45,6 +45,22 @@ typedef __builtin_va_list  va_list;
 /* ---------------------------------------------------------- memory, string */
 extern void  *glibc_malloc(size_t)                          GLIBCSYM(malloc);
 extern void  *glibc_calloc(size_t, size_t)                  GLIBCSYM(calloc);
+extern void  *glibc_bsearch(const void *, const void *, size_t, size_t,
+                            int (*)(const void *, const void *)) GLIBCSYM(bsearch);
+extern char  *glibc_strncat(char *, const char *, size_t)   GLIBCSYM(strncat);
+extern size_t glibc_strnlen(const char *, size_t)           GLIBCSYM(strnlen);
+extern int    glibc_dlclose(void *)                         GLIBCSYM(dlclose);
+/* DATA, not functions: glibc's tzset() fills these and a guest reads them.
+ * Forwarding a data symbol works the same way -- machorun resolves the
+ * _glibc_ alias with dlsym, which finds objects as well as functions. */
+extern long   glibc_tz_timezone                             GLIBCSYM(timezone);
+extern int    glibc_tz_daylight                             GLIBCSYM(daylight);
+extern char  *glibc_tz_tzname[2]                            GLIBCSYM(tzname);
+extern void  *glibc_opendir(const char *)                   GLIBCSYM(opendir);
+extern void  *glibc_readdir(void *)                         GLIBCSYM(readdir);
+extern int    glibc_closedir(void *)                        GLIBCSYM(closedir);
+extern void   glibc_rewinddir(void *)                       GLIBCSYM(rewinddir);
+extern int    glibc_dirfd(void *)                           GLIBCSYM(dirfd);
 extern void  *glibc_realloc(void *, size_t)                 GLIBCSYM(realloc);
 extern void   glibc_free(void *)                            GLIBCSYM(free);
 extern int    glibc_posix_memalign(void **, size_t, size_t) GLIBCSYM(posix_memalign);
