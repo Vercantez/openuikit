@@ -76,3 +76,41 @@ extracted every identifier and produced 83 "unresolved" names for one gate,
 mostly comment prose and C keywords. **A findings list nobody can act on fails
 the same way a noise bucket does.** Narrowed to calls and address-of, after
 stripping comments.
+
+## Addendum: the allocator gate is measurably unreached, not inferred
+
+`CFBase.c:109`'s Darwin zone allocator and `CFUtilities.c`'s Mach VM paths are
+**latent, not live** — they link against undefined symbols and nothing takes the
+branch on anything exercised so far.
+
+That was originally an inference from T9 and T10 passing without any allocator
+stub printing its name. **An absence is evidence only when the detector is known
+to fire**, so it is now a measurement:
+
+```
+tests/t12_stub_control.m — calls malloc_zone_memalign deliberately
+
+  T12: about to call a stubbed allocator symbol on purpose.
+  STUB CALLED: malloc_zone_memalign
+  exit 134  (SIGABRT)
+```
+
+The three allocator/VM symbols stubbed today are `malloc_zone_memalign`,
+`mach_vm_region` and `vm_purgable_control`. The control exercises the same
+mechanism as the claim it supports, on one of the same three symbols, rather
+than a nearby one.
+
+**Why this needed proving rather than assuming:** a stub that silently returned,
+or whose message was swallowed, produces output identical to an untaken branch.
+That is not hypothetical — the first run of the init-wall probe printed
+**nothing at all**, because `printf` is block-buffered to a pipe and `abort()`
+discards the buffer. The instrument was swallowing the one message the exercise
+existed to collect, and an empty result read as "nothing happened."
+
+So: the stubs are loud, T9/T10 pass, and no allocator stub fires. **The gate is
+unreached.**
+
+**When `CFBase.c:109` is taken up, the question is whether CFAllocator needs the
+zone API at all**, since corelibs runs on Linux without it — there is a working
+portable branch in the same file, and adopting it may be cheaper than supplying
+Darwin's zone surface.
