@@ -120,7 +120,7 @@ printf '%s\n' "$trees" | while IFS=$'\t' read -r n d; do
   case "$rel" in
     machorun/darwin/usr/lib*) g="check_stale + gen_tbd CHECK 4 + objc44/swift_gate" ;;
     machorun/build/*)         g="(build output, not staged)" ;;
-    swiftcore-macho/artifacts*) g="build_compat.sh (the SHIM only; nothing checks libswiftCore)" ;;
+    swiftcore-macho/artifacts*) g="build_compat.sh (shim) + check_artifacts.sh (libswiftCore)" ;;
     swift-macho-linux/scratch/mrroot*) g="require_fresh_root.sh, at each consumer" ;;
     *)                        g="*** NONE ***" ;;
   esac
