@@ -106,6 +106,13 @@
  * id default produced "incompatible pointer to integer conversion". */
 @interface NSString : NSObject
 - (NSUInteger)length;
+/* The second cluster primitive. Declared for the same reason as -length: an
+ * undeclared selector returns id, and t9_bridge.m casting that to a UniChar
+ * produced "cast to smaller integer type from 'id'" -- a warning that IS the
+ * defect, not a lint about it. Spelling matches src/nscf/NSCFString.m:73
+ * exactly, because a declaration that disagrees with its implementation is
+ * worse than none: it silences the warning and keeps the mismatch. */
+- (unichar)characterAtIndex:(NSUInteger)index;
 @end
 
 /* ---- NSTimeZone ----------------------------------------------------------

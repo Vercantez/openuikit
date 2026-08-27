@@ -1,31 +1,20 @@
-/* A PROBE sysctl, to look ahead past __CFInitialize's first wall.
+/* PROBES FOR THE FOUR INIT WALLS MACHORUN HAS NOT YET IMPLEMENTED.
  *
- * NOT AN IMPLEMENTATION AND NOT SHIPPABLE. This exists to answer one question:
- * what does CoreFoundation reach for AFTER the five sysctl MIBs, which cannot
- * be derived from static analysis because those calls are unreachable until
- * something answers the first one. Serially discovering them costs a round trip
- * to machorun per wall; this finds them in one pass, in our own tree, before
- * anything lands there.
+ * WAS ALSO A PROBE sysctl AND __strlcpy_chk. BOTH ARE GONE, deliberately:
+ * machorun landed the five MIBs and __strlcpy_chk (master cc6524e, verified in
+ * the built dylib), so keeping local versions would mean testing MY code
+ * instead of THEIRS -- and link order would silently prefer mine. Removing a
+ * probe the moment the real thing lands is the same rule as deleting a shim
+ * when the sysroot grows one; a probe is a claim that something is absent.
  *
- * IT SATISFIES EXACTLY THE FIVE MIBs CF USES AND ABORTS ON EVERYTHING ELSE,
- * loudly and by name. An unknown MIB answered with zeroes would let CF proceed
- * on a fabricated fact, which is the failure mode this whole exercise exists to
- * avoid -- and it would corrupt the very list we are trying to collect.
+ * What remains, all measured absent from libSystem today:
+ *     pthread_getugid_np    __strlcat_chk    pthread_atfork    _NSGetExecutablePath
  *
- * HOW IT WINS OVER libSystem'S REAL _sysctl: link order, not runtime shadowing.
- * This object is passed to the linker BEFORE -lSystem, so ld64 resolves _sysctl
- * here and never consults libSystem. That is ordinary static resolution. It is
- * deliberately NOT the flat-namespace trick of hoping our copy loads first,
- * which is the shadowing bug this project has now hit five times.
- *
- * THE p_svuid VALUE IS A PROBE VALUE AND IS DOCUMENTED AS ONE. Darwin has no
- * getresuid (measured: libSystem exports geteuid and getuid, not getresuid), so
- * this reports the effective uid as the saved-set uid. That makes svuid == euid,
- * which is the not-setuid case -- the common one, and the safe one to assume
- * while measuring. It is NOT what machorun should ship: there the real saved-set
- * uid is available from Linux's getresuid(2), and the whole point of the
- * objection I raised is that this predicate should be answered from the system
- * rather than assumed. Nothing here should reach machorun.
+ * Two of the four are FICTION and are marked as such at their definitions:
+ * pthread_atfork is a no-op, and _NSGetExecutablePath returns the LOADER's path
+ * rather than the guest's. Any result that depends on bundles is measuring a
+ * lie; results that do not touch bundles are not affected. See
+ * docs/cf-census/cf-init-walls.md.
  */
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -34,83 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-extern int printf(const char *, ...);
-
-/* WRITE(2), NOT printf. The first run of this probe produced NOTHING on either
- * stream: printf is block-buffered when stdout is a file or pipe, and abort()
- * discards the buffer. The instrument was swallowing the one message the whole
- * exercise exists to collect. Unbuffered write to fd 2 cannot be lost. */
-static void probe_say(const char *s)
-{
-    size_t n = 0; while (s[n]) n++;
-    (void)!write(2, s, n);
-}
-
-static void probe_bail(const char *what, int a, int b)
-{
-    char buf[160]; int i = 0;
-    const char *p1 = "PROBE-SYSCTL: unimplemented MIB {";
-    while (*p1) buf[i++] = *p1++;
-    i += snprintf(buf + i, sizeof(buf) - (size_t)i, "%d, %d} (%s)\n", a, b, what);
-    buf[i] = 0;
-    probe_say(buf);
-    probe_say("PROBE-SYSCTL: refusing to answer with zeroes -- a fabricated fact\n"
-              "  in CF would corrupt the very list this run exists to collect.\n");
-    abort();
-}
-
-int sysctl(int *name, unsigned namelen, void *oldp, size_t *oldlenp,
-           void *newp, size_t newlen);
-
-int sysctl(int *name, unsigned namelen, void *oldp, size_t *oldlenp,
-           void *newp, size_t newlen)
-{
-    (void)newp; (void)newlen;
-    if (namelen < 2 || !name) { probe_bail("malformed", -1, -1); }
-
-    if (name[0] == CTL_KERN && name[1] == KERN_PROC &&
-        namelen >= 3 && name[2] == KERN_PROC_PID) {
-        /* CFUtilities.c:624 _CFGetSVUID reads exactly one field out of this:
-         * kp_eproc.e_pcred.p_svuid. Everything else stays zeroed, which is the
-         * shape machorun should implement too -- the struct does not need
-         * modelling, only that one integer needs to be true. */
-        struct kinfo_proc *kp = (struct kinfo_proc *)oldp;
-        if (!kp || !oldlenp || *oldlenp < sizeof(*kp)) return -1;
-        memset(kp, 0, sizeof(*kp));
-        kp->kp_eproc.e_pcred.p_svuid = geteuid();   /* PROBE VALUE -- see header */
-        *oldlenp = sizeof(*kp);
-        return 0;
-    }
-
-    if (name[0] == CTL_KERN && name[1] == KERN_MAXFILESPERPROC) {
-        if (!oldp || !oldlenp || *oldlenp < sizeof(int)) return -1;
-        *(int *)oldp = 10240;                       /* RLIMIT_NOFILE on Linux */
-        *oldlenp = sizeof(int);
-        return 0;
-    }
-
-    if (name[0] == CTL_HW && (name[1] == HW_NCPU || name[1] == HW_AVAILCPU)) {
-        if (!oldp || !oldlenp || *oldlenp < sizeof(int)) return -1;
-        long n = sysconf(_SC_NPROCESSORS_ONLN);
-        *(int *)oldp = (int)(n > 0 ? n : 1);
-        *oldlenp = sizeof(int);
-        return 0;
-    }
-
-    if (name[0] == CTL_HW && name[1] == HW_MEMSIZE) {
-        if (!oldp || !oldlenp || *oldlenp < sizeof(uint64_t)) return -1;
-        long pages = sysconf(_SC_PHYS_PAGES), psz = sysconf(_SC_PAGESIZE);
-        *(uint64_t *)oldp = (pages > 0 && psz > 0)
-                          ? (uint64_t)pages * (uint64_t)psz
-                          : (uint64_t)1 << 31;
-        *oldlenp = sizeof(uint64_t);
-        return 0;
-    }
-
-    probe_bail("not one of CF's five", name[0], name[1]);
-    return -1;
-}
 
 /* ---------------------------------------------------------------------------
  * THE WALLS BEHIND sysctl, satisfied one at a time so the NEXT one becomes
@@ -132,7 +44,7 @@ int pthread_getugid_np(uid_t *uid, gid_t *gid)
     return 0;
 }
 
-/* WALL 2: __strlcat_chk / __strlcpy_chk -- Apple's _FORTIFY_SOURCE variants.
+/* WALL 2: __strlcat_chk (__strlcpy_chk LANDED in libSystem and is gone from here) -- Apple's _FORTIFY_SOURCE variants.
  * The compiler rewrites strlcat/strlcpy into these when the destination size is
  * known, passing it as a fourth argument. REAL implementations, not fiction:
  * the semantics are strlcat/strlcpy plus a check that the declared object size
@@ -142,19 +54,6 @@ int pthread_getugid_np(uid_t *uid, gid_t *gid)
  * Darwin's contract: return the length it TRIED to create, so the caller can
  * detect truncation by comparing against the buffer size. Getting that wrong
  * turns a detectable truncation into a silent one. */
-size_t __strlcpy_chk(char *dst, const char *src, size_t dsize, size_t objsize);
-size_t __strlcpy_chk(char *dst, const char *src, size_t dsize, size_t objsize)
-{
-    if (dsize > objsize) abort();          /* the check the _chk form exists for */
-    size_t slen = strlen(src);
-    if (dsize) {
-        size_t n = slen < dsize - 1 ? slen : dsize - 1;
-        memcpy(dst, src, n);
-        dst[n] = '\0';
-    }
-    return slen;
-}
-
 size_t __strlcat_chk(char *dst, const char *src, size_t dsize, size_t objsize);
 size_t __strlcat_chk(char *dst, const char *src, size_t dsize, size_t objsize)
 {
