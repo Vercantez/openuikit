@@ -156,6 +156,83 @@ if ! diff -q "$TMP/need_from_loader" "$TMP/loader" >/dev/null; then
     fail=1
 fi
 
+# ------------------------- CHECK 4: no two dylibs define the same symbol
+#
+# A duplicate definition is not an error to the linker and not an error to the
+# loader. It is a COIN TOSS resolved by load order, and it has cost this project
+# twice: `swift_retain`/`swift_release` defined in libSystem beat the real
+# libswiftCore (which is why `-lswiftCore` before `-lSystem` was once
+# load-bearing), and syspatch.c's malloc_type shim beat machorun's own for a
+# week. Found by machorun-isamask with an all-pairs sweep; the severity
+# classification below is what turns "duplicate" into "act now" or "note it".
+#
+# THE DANGEROUS CLASS IS ZEROFILL-VERSUS-REAL. A symbol in (__DATA,__common) is
+# a PLACEHOLDER -- "no contents in the file" -- put there to satisfy a link. If
+# a consumer binds FLAT and the placeholder loads first, it wins, and the caller
+# gets zeroed memory where an implementation should be. Two real definitions are
+# a mess; a placeholder shadowing a real one is a jump through NULL waiting for
+# a link order to change.
+#
+# IT SCANS EVERY DYLIB PRESENT, NOT JUST THE ONES WE EMIT STUBS FOR, and that is
+# the whole point. The overlap that prompted this is between libc++abi.dylib and
+# libswiftcompat.dylib -- and libswiftcompat is staged from ~/swiftcore-macho,
+# so it is not in DYLIBS and never will be. A check scoped to DYLIBS would have
+# reported "clean" about the four libraries it knew and said nothing about the
+# fifth, which is exactly how check_stale missed libc++abi. The reassuring
+# output and the correct output are indistinguishable when the scope is wrong.
+#
+# IT IS HARD, and it was deliberately not landed that way first. machorun-isamask
+# scoped this check and did not add it, because at the time the one live overlap
+# was in a tree this repository does not own, and failing everyone's build over
+# someone else's bug is not a trade a script gets to make. That was right. The
+# constraint disappeared when swiftcore-macho deleted the duplicates from
+# libswiftcompat, so it goes in hard rather than as advice nobody reads.
+#
+# A STALE STAGED ARTIFACT CAN TRIP THIS, and the message below says so, because
+# the first person to hit it will otherwise think a fixed bug is back.
+# scripts/stage_swiftcore.sh re-copies libswiftcompat and libswiftCore from
+# ~/swiftcore-macho; a copy predating their fix still carries the duplicates
+# while every git-level check says the tree is current.
+DUP_SOFT=0
+
+# Every dylib under darwin/usr/lib, including the staged runtimes.
+ALL_DYLIBS=$(find "$DYLIB" -name '*.dylib' 2>/dev/null | sort)
+for f in $ALL_DYLIBS; do
+    n=$(basename "$f" .dylib)
+    [ -f "$TMP/dup.$n" ] || exports_of "$f" > "$TMP/dup.$n"
+    # zerofill symbols: (__DATA,__common) and friends carry no bytes in the file
+    "$NM" -m "$f" 2>/dev/null | strip_banners \
+        | awk '/__common|__bss/ && /external/ {print $NF}' | sort -u > "$TMP/zf.$n"
+done
+
+dup_found=0
+for a in $ALL_DYLIBS; do
+    for b in $ALL_DYLIBS; do
+        [ "$a" \< "$b" ] || continue
+        na=$(basename "$a" .dylib); nb=$(basename "$b" .dylib)
+        both=$(comm -12 "$TMP/dup.$na" "$TMP/dup.$nb")
+        [ -n "$both" ] || continue
+        dup_found=1
+        echo "!! $na.dylib and $nb.dylib both define $(echo "$both" | wc -l | tr -d ' ') symbol(s):" >&2
+        for sym in $both; do
+            tag=""
+            grep -qx "$sym" "$TMP/zf.$na" && tag="$tag  [$na is ZEROFILL -- a placeholder, not an implementation]"
+            grep -qx "$sym" "$TMP/zf.$nb" && tag="$tag  [$nb is ZEROFILL -- a placeholder, not an implementation]"
+            echo "     $sym$tag" >&2
+        done
+    done
+done
+if [ "$dup_found" = 1 ]; then
+    echo "   Which one wins is decided by LOAD ORDER, so this passes or fails by luck." >&2
+    echo "   The fix is DELETION, not correction: when a real library grows a real" >&2
+    echo "   implementation, remove the duplicate from the shim rather than maintain two." >&2
+    echo "   If a STAGED artifact is involved (libswiftcompat, libswiftCore), try" >&2
+    echo "   scripts/stage_swiftcore.sh first -- a stale copy carries duplicates that" >&2
+    echo "   the source no longer has, and every git-level check says you are current." >&2
+    [ "$DUP_SOFT" = 1 ] && echo "   (reported, not failed -- see CHECK 4's exit condition)" >&2
+    [ "$DUP_SOFT" = 1 ] || fail=1
+fi
+
 [ "$fail" = 0 ] || exit 1
 
 # ------------------------------------------------------------------- emit
@@ -252,4 +329,4 @@ if [ "$n_missing" != 0 ]; then
     exit 1
 fi
 
-echo "   all three checks passed"
+echo "   all four checks passed"
