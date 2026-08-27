@@ -65,3 +65,43 @@ not a fix for a live failure.
 `malloc_zone_memalign` sat on CF's undefined list for hours with no attribution
 until the `TARGET_OS_MAC` sweep gave it one. It is a symptom of this gate and of
 nothing else.
+
+## What we would lose — enumerated, because "cheaper" is not "equivalent"
+
+Apple had a reason for the zone path. Measured, here is the whole of it:
+
+**1. Visibility to Darwin's heap tools.** A CFAllocator registered as a
+`malloc_zone_t` is enumerable by `malloc_zone_statistics`, `leaks` and `heap`.
+That is the entire purpose of the `__CFAllocatorZoneIntrospect*`,
+`__CFAllocatorCustom{Size,GoodSize}` and `__CFAllocatorNull*` families. **On
+Linux there is nothing to be visible to**, so this is lost in name only.
+
+**2. A debug-only poison-on-free.** `CFBase.c:248-250`, inside `#if
+defined(DEBUG)`:
+
+```c
+size_t size = malloc_size(ptr);
+if (size) memset(ptr, 0xCC, size);
+```
+
+Genuinely useful — it turns some use-after-free into an obvious pattern — and
+genuinely lost, since the portable branch calls `free` and returns. **Worth
+re-adding deliberately if we want it**, over `malloc_usable_size`, rather than
+carrying 146 lines to keep it. Not a reason to keep the zone path.
+
+**3. Nothing else. In particular, NOT aligned allocation.** `malloc_zone_memalign`
+was on CF's undefined list and looks like a real capability, which is what made
+this worth checking rather than assuming. `CFBase.c:554`:
+
+```c
+memory->memalign = NULL;
+```
+
+**Apple's own branch explicitly declines to provide it.** The symbol is
+referenced by the zone struct's shape, not by anything CF calls through. So the
+portable branch loses no allocation capability whatsoever.
+
+That third point is the one I would have got wrong by reasoning from the symbol
+name. `malloc_zone_memalign` appearing on an undefined-symbol list reads as
+"CF needs aligned allocation"; the code says the slot is nulled. **An undefined
+symbol tells you what was referenced, not what was used.**
