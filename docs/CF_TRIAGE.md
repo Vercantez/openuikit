@@ -1162,3 +1162,57 @@ instrument for.
 `155 → 50 → 31`, compile count never moved for a reason inside this work. The
 one drop, 77 → 75, was machorun's `constrained_ctypes.h` regression, and the
 second column is what made that attributable rather than suspicious.
+
+## 33. CORRECTION: the last 31 are tool gaps, not evidence gaps
+
+**§32 is wrong and this supersedes it.** I claimed 27 of the remaining 31 reach
+CF through `CF_OBJC_CALLV`, which "carries no return type — the type lives in
+the caller's assignment target, one scope up", and concluded that mechanising
+further would be "guessing with extra steps". I then recommended stopping the
+tooling on that basis, and that recommendation was accepted.
+
+I never checked the call sites. Classifying all 31 by how they are actually
+invoked:
+
+```
+14  CF_OBJC_CALLV
+13  CF_OBJC_FUNCDISPATCHV
+ 3  CF_SWIFT_FUNCDISPATCHV
+ 1  CFTYPE_OBJC_FUNCDISPATCH0
+```
+
+**Every one has a determinable return type, and none requires looking one scope
+up:**
+
+- The 14 `CF_OBJC_CALLV` sites carry the type **as a cast on the same line** —
+  `scheme = (CFStringRef) CF_OBJC_CALLV((NSURL *)anURL, scheme);`,
+  `(CFNumberRef) ... port`, `(Boolean) ... isFileReferenceURL`. The deriver
+  simply never looked left of the macro.
+- The 13 `CF_OBJC_FUNCDISPATCHV` sites carry it **explicitly as a macro
+  argument**, as they always did. They failed on *unnamed parameter labels*
+  (`_addComponents::::`), which is a regex limitation.
+- The 3 `CF_SWIFT_FUNCDISPATCHV` sites use a macro the tool was never taught.
+- `_cfTypeID` is `CFTYPE_OBJC_FUNCDISPATCH0`, also explicit.
+
+So the residue is **entirely tool gaps** — three small ones — and contains no
+absence of evidence at all.
+
+### What went wrong in the reasoning
+
+I formed the "no return type at the call site" claim from the deriver's own
+failure message, which said `CF_OBJC_CALLV: return type from context`. That
+message was **my own text**, written when I built the tool, encoding an
+assumption I had never verified. I then treated my tool's output as evidence
+about CoreFoundation, and built an architectural recommendation on it.
+
+That is the same shape as the diagnostic that lied in §31 — except that time the
+misleading message cost an afternoon of misdirected implementation, and this
+time it produced a *conclusion* that was accepted and recorded. A tool's
+explanation of why it failed is a claim by its author, not a measurement.
+
+The conclusion "write these 31 by hand" may still be reasonable — 31 is small,
+and hand-written declarations with citations are trustworthy. But it should be
+chosen because it is *cheap*, not because the evidence is missing. It is not
+missing. And the general principle I offered — knowing where to stop
+mechanising — was sound in the abstract and applied here to a case that did not
+warrant it.
