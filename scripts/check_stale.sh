@@ -4,6 +4,28 @@
 #
 #   scripts/check_stale.sh          report and exit non-zero if anything is stale
 #   scripts/check_stale.sh --warn   report, but always exit 0
+#   scripts/check_stale.sh --stamp <artefact>...
+#                                   record what those artefacts were JUST built
+#                                   from. Called by scripts/build.sh after a
+#                                   successful build, never on its own.
+#
+# IT COMPARES CONTENT, AND FALLS BACK TO mtime. A recorded stamp is the hash of
+# the source set an artefact was built from; a mismatch means the sources are
+# not what produced it. mtime can only say "the artefact is not older", which
+# agrees with reality whenever the tree moved SIDEWAYS rather than forwards --
+# a branch switch, a revert, a rebase, or a build run while the working tree
+# still held conflict markers. That last one happened on 2026-08-27 and this
+# script reported "ok 6" about it: correct, and useless.
+#
+# It also removes FALSE stales, which matter because a gate that cries wolf is
+# a gate people stop reading. Restoring a file from a backup gives it a new
+# mtime and identical content: mtime says stale, the hash says ok, and the hash
+# is right.
+#
+# A stamp lives in build/, which is gitignored, so a fresh clone has none and
+# gets the mtime check -- the behaviour that existed before. That is the
+# correct degradation: a clone has no dylibs either, which is MISSING rather
+# than stale.
 #
 # WHY THIS EXISTS, and it is worth reading before deciding it is redundant.
 #
@@ -38,6 +60,12 @@ ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 MODE=fail
 case "${1:---}" in
     --warn) MODE=warn ;;
+    # --stamp records, for each named artefact, the hash of the sources it was
+    # JUST built from. It is called by scripts/build.sh immediately after a
+    # successful build, and never on its own -- a stamp written without a build
+    # is a lie that reads exactly like the truth. build.sh runs `set -eu`, so a
+    # failed sub-build aborts before reaching its stamp.
+    --stamp) MODE=stamp ;;
     --) ;;
     -h|--help) sed -n '2,35p' "$0"; exit 0 ;;
     *) echo "check_stale: unknown option $1" >&2; exit 64 ;;
@@ -54,6 +82,36 @@ else
     mtime()  { stat -f %m "$1"; }                       # BSD / stock macOS
     fmt()    { date -r "$1" '+%Y-%m-%d %H:%M:%S'; }
 fi
+
+# sha256, picked once, the same way mtime/fmt are above and for the same
+# reason: the two systems this runs on spell it differently.
+if command -v sha256sum >/dev/null 2>&1; then
+    sha() { sha256sum "$@"; }                          # GNU coreutils
+else
+    sha() { shasum -a 256 "$@"; }                      # stock macOS
+fi
+
+# THE INPUT SET, HASHED. One definition, used for BOTH stamping and checking --
+# which is the point. A stamp written from one file list and checked against
+# another is a gate that agrees with itself and with nothing else.
+#
+# It hashes CONTENT and PATH, not mtimes: `git checkout` of an older branch,
+# a revert, a rebase, and a build run while the tree held conflict markers all
+# leave mtimes that look newer than the artefact while the CONTENT is not what
+# the artefact was built from. mtime cannot see any of those.
+inputs_hash() {
+    local p f
+    for p in "$@"; do
+        [ -e "$ROOT/$p" ] || continue
+        find "$ROOT/$p" -type f \
+            \( -name '*.c' -o -name '*.h' -o -name '*.cpp' \
+               -o -name '*.mm' -o -name '*.m' -o -name '*.sh' \) 2>/dev/null
+    done | LC_ALL=C sort | while IFS= read -r f; do
+        printf '%s  %s\n' "$(sha "$f" | cut -d' ' -f1)" "${f#$ROOT/}"
+    done | sha | cut -d' ' -f1
+}
+
+STAMPS="$ROOT/build/.input-hashes"
 
 # Newest mtime under a set of paths, as an integer. Missing paths contribute
 # nothing rather than failing: build_quartz.sh's vendor tree is optional.
@@ -109,6 +167,43 @@ for row in "${TARGETS[@]}"; do
     fi
 
     # shellcheck disable=SC2086
+    now_hash=$(inputs_hash $srcs)
+
+    if [ "$MODE" = stamp ]; then
+        [ $# -gt 1 ] && ! printf '%s\n' "$@" | grep -qx -- "$art" && continue
+        mkdir -p "$(dirname "$STAMPS")"
+        [ -f "$STAMPS" ] && grep -v "^$art " "$STAMPS" > "$STAMPS.tmp" 2>/dev/null || : > "$STAMPS.tmp"
+        printf '%s %s\n' "$art" "$now_hash" >> "$STAMPS.tmp"
+        mv "$STAMPS.tmp" "$STAMPS"
+        printf '   %-38s stamped\n' "$art"
+        ok=$((ok + 1))
+        continue
+    fi
+
+    # THE HASH IS THE ANSWER WHEN THERE IS ONE; mtime is the fallback.
+    #
+    # A matching hash says the sources are byte-for-byte what this artefact was
+    # built from. mtime can only say "the artefact is not older", which agrees
+    # with reality in every case where the tree moved sideways rather than
+    # forwards -- a branch switch, a revert, or a build run while the working
+    # tree still held conflict markers. That last one happened on 2026-08-27
+    # and check_stale reported ok 6 about it, correctly and uselessly.
+    was_hash=""
+    [ -f "$STAMPS" ] && was_hash=$(grep "^$art " "$STAMPS" 2>/dev/null | cut -d' ' -f2)
+
+    if [ -n "$was_hash" ] && [ "$was_hash" != "$now_hash" ]; then
+        printf '   %-38s STALE     sources changed since it was built\n' "$art"
+        printf '       built from %s\n' "$was_hash"
+        printf '       sources now %s   (under: %s)\n' "$now_hash" "$srcs"
+        stale=$((stale + 1))
+        continue
+    fi
+    if [ -n "$was_hash" ]; then
+        printf '   %-38s ok        sources unchanged since it was built\n' "$art"
+        ok=$((ok + 1))
+        continue
+    fi
+
     src_t=$(newest $srcs)
     art_t=$(mtime "$ROOT/$art")
 
