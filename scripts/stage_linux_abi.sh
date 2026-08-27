@@ -108,6 +108,30 @@ struct signalfd_siginfo {
 };
 _Static_assert(sizeof(struct signalfd_siginfo) == 128, "signalfd_siginfo is 128 bytes");
 _Static_assert(__builtin_offsetof(struct signalfd_siginfo, ssi_signo) == 0, "ssi_signo");
+/* ARMED HAZARD, made loud rather than silent.
+ *
+ * This is the opaque/sized-type overflow class from the #49 audit, and unlike
+ * the eight types that audit found dormant, THIS ONE IS REACHED: libdispatch's
+ * event_epoll.c calls signalfd(-1, &sigmask, ...) with a sigset_t it owns.
+ *
+ *     Darwin sigset_t   4 bytes   (a uint32 bitmask)
+ *     glibc  sigset_t  128 bytes
+ *
+ * A naive GLIBCSYM forward would hand glibc a 4-byte object and let it read the
+ * 8 bytes it passes to the kernel -- so the guest subscribes to whatever
+ * happens to sit next to its mask on the stack. Silent, plausible, and wrong.
+ * pthread_sigmask is worse: its third argument is an OUT parameter, so a naive
+ * forward WRITES 128 bytes into 4.
+ *
+ * So this declaration refuses to compile rather than forwarding. The fix is a
+ * TRANSLATING wrapper in machorun's libSystem -- widen Darwin's 32-bit mask
+ * into the kernel's, as the directory family is already translated rather than
+ * forwarded -- not a declaration we can stage from here.
+ */
+_Static_assert(sizeof(sigset_t) == 8,
+    "signalfd cannot be forwarded directly: Darwin's sigset_t is 4 bytes and "
+    "glibc's is 128, so glibc would read past the guest's object. Needs a "
+    "translating wrapper in libSystem, not a GLIBCSYM forward.");
 extern int signalfd(int, const sigset_t *, int) GLIBCSYM(signalfd);
 #endif
 EOF
