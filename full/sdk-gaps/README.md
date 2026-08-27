@@ -224,3 +224,53 @@ have sent someone to the wrong repository for one of seven.
 
 **So route (A) needs six headers in machorun and a submodule-aware generator.
 That is bounded, and it is a much smaller number than 305.**
+
+### REFINED: eight of the nine demanded submodules are already fully staged
+
+The 227-header figure is still too coarse. The chain does not demand whole
+modulemaps — it demands **nine named submodules**. Checking each one's headers
+individually against `scratch/sysroot_fe3`:
+
+| submodule | headers | missing |
+|---|---|---|
+| `Darwin.Mach.message` | 1 | — |
+| `_DarwinFoundation1._errno` | 3 | — |
+| `_DarwinFoundation1._math` | 1 | — |
+| `_DarwinFoundation2._stdio` | 8 | — |
+| `_DarwinFoundation2._time` | 4 | — |
+| `_DarwinFoundation2.sys_time` | 1 | — |
+| `_DarwinFoundation3.unistd` | 4 | — |
+| `_DarwinFoundation3.pthread` | 3 | **`pthread/pthread.h`** |
+| `_DarwinFoundation3._signal` | 11 | **`signal.h`** — machorun HAS it |
+
+**Eight of nine are complete today. The blocking set is two headers, one of
+which is not a gap at all.**
+
+So the five other "real machorun gaps" recorded above — `fenv.h`,
+`machine/_limits.h`, `setjmp.h`, `sys/_types/_offsetof.h`, `tgmath.h` — sit in
+modules the chain **never asks for** (`_fenv`, `_limits`, `_setjmp`, and
+`tgmath`'s module). A pruning generator omits those modules entirely and the
+chain does not notice. They remain worth staging eventually — `tgmath.h` in
+particular, since clang's own includes `complex.h` unconditionally — but **they
+do not block this.**
+
+### What route (A) actually costs, then
+
+1. **One new header in machorun**: `pthread/pthread.h`.
+2. **One re-stage**: `signal.h`, which machorun already ships and
+   `scratch/sysroot_*` simply does not copy. Worth fixing at the staging step
+   rather than per-sysroot — the sysroot is 361 headers against machorun's 402
+   and nothing reconciles them.
+3. **A submodule-aware generator.** The right shape is to **prune Apple's
+   modulemaps rather than flatten or copy them**: drop `header` lines whose
+   file is absent, drop modules left empty, keep the structure. That satisfies
+   both constraints in this document at once — never names an absent header,
+   and preserves the submodule names the interfaces import.
+
+**One caveat stated rather than buried: "every header staged" is a necessary
+condition, not a sufficient one.** A submodule whose own headers are present can
+still fail to compile if those headers `#include` something absent — which is
+exactly how `complex.h` and `sys/attr.h` were found. The measurement above bounds
+the work; it does not prove the modules build. The next step is to generate the
+pruned modulemap and compile `import Darwin` against it, which needs no
+swift-foundation checkout and is the cheapest possible test of the whole chain.
