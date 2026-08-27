@@ -1,26 +1,26 @@
 ### file
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64:Mach-O 64-bit executable arm64]
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (for architecture x86_64):	Mach-O 64-bit executable x86_64
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (for architecture arm64):	Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64:Mach-O 64-bit executable arm64]
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (for architecture x86_64):	Mach-O 64-bit executable x86_64
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (for architecture arm64):	Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture x86_64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture x86_64):
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777223          3  0x00           2    16       1448 0x00200085
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture arm64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture arm64):
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture x86_64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture x86_64):
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture arm64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture arm64):
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture x86_64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture x86_64):
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
@@ -273,7 +273,7 @@ Load command 15
   cmdsize 16
   dataoff 12432
  datasize 0
-/Users/miguelsalinas/machorun-wt-master/tests/bin/10_fat (architecture arm64):
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/10_fat (architecture arm64):
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72

@@ -78,6 +78,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <pwd.h>
 #include <signal.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -157,6 +158,19 @@ _Static_assert(offsetof(struct dirent, d_type) == 18,
 _Static_assert(offsetof(struct dirent, d_name) == 19,
     "glibc struct dirent has moved d_name (Darwin puts it at 21).");
 PIN(glob_t, 72);
+
+/* struct passwd: 48 here against Darwin's 72, agreeing for the first four
+ * fields and diverging after -- so posix.c translates rather than forwards.
+ * These pin the LINUX half of that translation, which posix.c's own
+ * `struct linux_passwd` mirror cannot do for itself. pw_dir is the field that
+ * matters: at Darwin's offset 48 it reads past the end of this allocation. */
+PIN(struct passwd, 48);
+_Static_assert(offsetof(struct passwd, pw_gecos) == 24,
+    "glibc struct passwd moved pw_gecos (Darwin puts it at 40)");
+_Static_assert(offsetof(struct passwd, pw_dir)   == 32,
+    "glibc struct passwd moved pw_dir (Darwin puts it at 48 -- past the end of this struct)");
+_Static_assert(offsetof(struct passwd, pw_shell) == 40,
+    "glibc struct passwd moved pw_shell (Darwin puts it at 56)");
 
 /* ------------------------------------------------------------------ CONSTANTS
  * A hazard the size checks above structurally cannot see: same width, symbols

@@ -1,18 +1,18 @@
 ### file
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/04_malloc: Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/23_passwd: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/04_malloc:
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/23_passwd:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/04_malloc:
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/23_passwd:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-pw/tests/bin/04_malloc:
+/Users/miguelsalinas/machorun-wt-pw/tests/bin/23_passwd:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
@@ -41,7 +41,7 @@ Section
   sectname __text
    segname __TEXT
       addr 0x0000000100000460
-      size 0x0000000000000254
+      size 0x00000000000003b8
     offset 1120
      align 2^2 (4)
     reloff 0
@@ -52,9 +52,9 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x00000001000006b4
-      size 0x0000000000000078
-    offset 1716
+      addr 0x0000000100000818
+      size 0x000000000000006c
+    offset 2072
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -64,9 +64,9 @@ Section
 Section
   sectname __cstring
    segname __TEXT
-      addr 0x000000010000072c
-      size 0x0000000000000090
-    offset 1836
+      addr 0x0000000100000884
+      size 0x00000000000001e8
+    offset 2180
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -76,9 +76,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x00000001000007bc
+      addr 0x0000000100000a6c
       size 0x0000000000000058
-    offset 1980
+    offset 2668
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -107,7 +107,7 @@ Section
     reloff 0
     nreloc 0
      flags 0x00000006
- reserved1 10 (index into indirect symbol table)
+ reserved1 9 (index into indirect symbol table)
  reserved2 0
 Load command 3
       cmd LC_SEGMENT_64
@@ -116,7 +116,7 @@ Load command 3
    vmaddr 0x0000000100008000
    vmsize 0x0000000000004000
   fileoff 32768
- filesize 1144
+ filesize 1176
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
@@ -125,19 +125,19 @@ Load command 4
       cmd LC_DYLD_CHAINED_FIXUPS
   cmdsize 16
   dataoff 32768
- datasize 240
+ datasize 256
 Load command 5
       cmd LC_DYLD_EXPORTS_TRIE
   cmdsize 16
-  dataoff 33008
+  dataoff 33024
  datasize 48
 Load command 6
      cmd LC_SYMTAB
  cmdsize 24
-  symoff 33064
+  symoff 33080
    nsyms 13
-  stroff 33360
- strsize 144
+  stroff 33368
+ strsize 160
 Load command 7
             cmd LC_DYSYMTAB
         cmdsize 80
@@ -153,8 +153,8 @@ Load command 7
         nmodtab 0
    extrefsymoff 0
     nextrefsyms 0
- indirectsymoff 33272
-  nindirectsyms 21
+ indirectsymoff 33288
+  nindirectsyms 20
       extreloff 0
         nextrel 0
       locreloff 0
@@ -166,7 +166,7 @@ Load command 8
 Load command 9
      cmd LC_UUID
  cmdsize 24
-    uuid 2C430667-02DB-3EA9-9847-44A5FBFF2541
+    uuid 925C3CBA-6B3F-371F-AF1F-0916852DAB79
 Load command 10
       cmd LC_BUILD_VERSION
   cmdsize 32
@@ -195,31 +195,31 @@ compatibility version 1.0.0
 Load command 14
       cmd LC_FUNCTION_STARTS
   cmdsize 16
-  dataoff 33056
+  dataoff 33072
  datasize 8
 Load command 15
       cmd LC_DATA_IN_CODE
   cmdsize 16
-  dataoff 33064
+  dataoff 33080
  datasize 0
 Load command 16
       cmd LC_CODE_SIGNATURE
   cmdsize 16
-  dataoff 33504
+  dataoff 33536
  datasize 408
 
 ### undefined symbols
+___chkstk_darwin
 ___stack_chk_fail
 ___stack_chk_guard
-_calloc
-_free
-_malloc
-_posix_memalign
+_geteuid
+_getpwnam
+_getpwuid
+_getpwuid_r
 _printf
 _puts
-_realloc
-_strdup
-_strlen
+_snprintf
+_strcmp
 
 ### defined external symbols
 0000000100000000 T __mh_execute_header
