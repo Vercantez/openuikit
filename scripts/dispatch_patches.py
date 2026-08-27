@@ -163,4 +163,30 @@ typedef void *mach_msg_header_t;
 #endif""",
      "defer to real Mach headers for types when present")
 
+# ---------------------------------------------------------------------------
+# GUARD for patch 4 (pthread semaphore backend), checked every run.
+#
+# The pthread backend is safe *because* libdispatch creates every lock and
+# semaphore at runtime. pthread_cond_t is 48 bytes on BOTH Darwin and glibc --
+# a coincidence that makes a forwarder look correct and pass every runtime size
+# check, while being WRONG for a statically-initialised one:
+# PTHREAD_COND_INITIALIZER is a compile-time constant carrying Darwin's field
+# layout, and no runtime check can catch that.
+#
+# Measured today: ZERO PTHREAD_*_INITIALIZER in src/, and no statically
+# initialised semaphore globals. But that is a property of libdispatch as it is
+# now, not a guarantee -- so it is asserted here rather than written in a
+# comment, because if someone adds one the coincidence turns into a silent trap.
+import subprocess as _sp
+_hits = _sp.run(["grep","-rlE","PTHREAD_[A-Z]+_INITIALIZER", str(ROOT / "src")],
+                capture_output=True, text=True).stdout.split()
+assert not _hits, (
+    "libdispatch now statically initialises a pthread primitive (%s).\n"
+    "The pthread semaphore backend assumed runtime creation only. A static\n"
+    "PTHREAD_*_INITIALIZER embeds DARWIN's field layout into a structure glibc\n"
+    "will interpret with its own -- and pthread_cond_t being 48 bytes on both\n"
+    "sides means NO size check will catch it. Re-examine before building."
+    % ", ".join(_hits))
+print("  [ok]   guard: no static PTHREAD_*_INITIALIZER in src/")
+
 print("dispatch patches applied")

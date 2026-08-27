@@ -616,3 +616,34 @@ not a Mac" honestly.
 
 **Not implemented here.** Flagging before building is the point — this is exactly
 the class of thing that compiles, links, returns success and corrupts memory.
+
+### Both conditions on the pthread backend, checked
+
+**Darwin genuinely does not support unnamed POSIX semaphores — confirmed, not
+assumed.** On macOS 26 arm64:
+
+```
+sem_init -> -1, errno=78 (Function not implemented)
+```
+
+So `USE_POSIX_SEM` was never a configuration Darwin builds take, which is why
+libdispatch reaches for Mach semaphores there. Choosing it for a Darwin target
+would emulate a configuration Apple's own platform does not have. **That makes a
+fourth branch the faithful choice rather than a workaround** — we are a Darwin
+target without Mach IPC, a combination upstream does not model.
+
+**No static initialisers — the 48-vs-48 coincidence is not a trap here.**
+`grep -rE 'PTHREAD_[A-Z]+_INITIALIZER' src/` returns **zero**, and there are no
+statically initialised semaphore globals. libdispatch creates every lock and
+semaphore at runtime through `_dispatch_sema4_init`, so a forwarder that
+allocates properly is safe.
+
+That mattered because `pthread_cond_t` is 48 bytes on *both* platforms. The
+equal size makes a forwarder look correct and pass every runtime check, while
+being wrong for a statically initialised one: `PTHREAD_COND_INITIALIZER` is a
+compile-time constant carrying Darwin's field layout, and **no size check can
+catch that** — it is a content problem wearing a size problem's clothes.
+
+Because it is a property of libdispatch as it stands rather than a guarantee,
+`dispatch_patches.py` now **asserts** it on every run instead of noting it in a
+comment.
