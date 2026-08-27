@@ -518,3 +518,77 @@ Apple's shipped `libswift_Concurrency`, so Apple's Darwin layout is what binds.
 Our epoll/no-Mach configuration can produce a different `dispatch_queue_s`, and
 quoting our build's number would have been confidently wrong. When the question
 is what a shipped binary expects, measure the shipped binary.
+
+---
+
+## Part 6 — Mach collision solved; and a live instance of the "closed" ABI hazard
+
+### Patch 3 works: zero Mach collisions
+
+`src/shims/mach.h` says it exists to "stub out defines for some mach types" —
+i.e. for platforms where Mach is *absent*. Our sysroot ships Darwin's real Mach
+headers and they are not separable (`<stdlib.h>` alone reaches two `mach/`
+headers). So the stubs collided with the genuine articles.
+
+Patch 3 makes the shim defer to the real headers when `__has_include(<mach/mach.h>)`
+succeeds, keeping only `dispatch_mach_msg_t` and `firehose_activity_id_t`, which
+are libdispatch's own types rather than Mach's. `HAVE_MACH=0` continues to govern
+whether any Mach IPC code path compiles.
+
+That keeps the two questions apart, which is this port's own lesson inverted:
+**whether the TYPES exist is a header question; whether Mach IPC is USABLE is a
+capability question.** Header presence is not capability — and here it cuts the
+other way, because the types are real even though the IPC is not implemented.
+
+Verified locally against our sysroot: `MACH_PORT` collisions **0**. No box.
+
+### The semaphore backend is a live ABI hazard — do NOT take `USE_POSIX_SEM`
+
+With Mach out of the way, `src/shims/lock.h` reaches its own `#error`:
+
+```
+#error "port has to implement _dispatch_sema4_t"
+```
+
+The chain is `USE_MACH_SEM` / `USE_POSIX_SEM` / `USE_WIN32_SEM`, and none is set.
+`USE_POSIX_SEM` looks like a one-line config fix. **It is a trap, and taking it
+would create the first live instance of the hazard class the opaque-pointer audit
+just closed.**
+
+```
+typedef sem_t _dispatch_sema4_t;     // src/shims/lock.h, USE_POSIX_SEM branch
+```
+
+`_dispatch_sema4_t` is embedded **by value** in libdispatch's own structures. And:
+
+| | size | source |
+|---|---|---|
+| Darwin `sem_t` | **4** | audit table (one of the eight OVERFLOWING types) |
+| glibc `sem_t` | **32** | measured in `machorun-testbed:24.04`, align 8 |
+
+A forwarded `sem_init` writes 32 bytes into 4. Every symbol resolves, the link is
+clean, the call returns 0, and 28 bytes past the object are gone — in exactly the
+path CoreFoundation needs, since `dispatch_semaphore_*` is among CF's 21 symbols.
+
+The audit's "zero live bugs" verdict is correct **and conditional**: it holds
+because the eight overflowing types are not forwarded by libSystem *today*. This
+is the first concrete case where someone would have added a forward. The verdict
+was never "these types are safe" — it was "nobody is using them yet".
+
+Two further facts sharpen it:
+
+* Our sysroot **has no `semaphore.h` at all**, so `USE_POSIX_SEM` fails at the
+  include before the ABI question is even reached. The loud failure precedes the
+  silent one, which is luck rather than design.
+* Darwin's `sem_t` is 4 bytes, so the pointer-handle trick that fixes
+  `posix_spawnattr_t` (Darwin's 8 bytes are already a pointer) **cannot work
+  here** — 4 bytes cannot hold a pointer.
+
+**Recommended backend: pthread mutex + condition variable**, which the audit
+already measured as size-compatible in the safe direction (Darwin
+`pthread_mutex_t` 64 vs glibc 48; `pthread_cond_t` 48 vs 48 — both fit). That is
+a fourth branch in the `#if` chain: a patch, not a config, and it says "this is
+not a Mac" honestly.
+
+**Not implemented here.** Flagging before building is the point — this is exactly
+the class of thing that compiles, links, returns success and corrupts memory.

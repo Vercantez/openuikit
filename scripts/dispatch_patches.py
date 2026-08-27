@@ -87,4 +87,80 @@ edit("src/shims/hw_config.h",
 	(void)c;""",
      "no sysctlbyname on a Linux host")
 
+# ---------------------------------------------------------------------------
+# 3. Don't restub Mach types when the sysroot has the real Mach headers.
+#
+# src/shims/mach.h says "Stub out defines for some mach types" -- it exists for
+# platforms where Mach is ABSENT. Our sysroot ships Darwin's real Mach headers
+# (machorun stages them for objc4, and they are not separable: <stdlib.h> alone
+# reaches two mach/ headers, <dispatch/dispatch.h> reaches fourteen). So the
+# stubs collide with the genuine articles:
+#
+#   error: 'MACH_PORT_NULL' macro redefined
+#   error: 'MACH_PORT_DEAD' macro redefined
+#   error: typedef redefinition with different types
+#           ('uint32_t' vs 'kern_return_t')
+#
+# Unlike the earlier three Mach encounters, this one is NOT a detection result
+# that forcing HAVE_MACH=0 can paper over -- it is two definitions colliding.
+#
+# The fix keeps the two questions separate, which is the whole lesson of this
+# port in reverse: whether the TYPES exist is a header question, and whether
+# Mach IPC is USABLE is a capability question. Defer to the real headers for the
+# types; HAVE_MACH=0 continues to govern whether any Mach code path compiles.
+# dispatch_mach_msg_t and firehose_activity_id_t are libdispatch's own types,
+# not Mach's, so they stay.
+# ---------------------------------------------------------------------------
+edit("src/shims/mach.h",
+"""typedef uint32_t mach_port_t;
+
+#define  MACH_PORT_NULL (0)
+#define  MACH_PORT_DEAD (-1)
+
+typedef uint32_t mach_error_t;
+
+typedef uint32_t mach_msg_return_t;
+
+typedef uint32_t mach_msg_bits_t;
+
+typedef void *dispatch_mach_msg_t;
+
+typedef uint64_t firehose_activity_id_t;
+
+typedef void *mach_msg_header_t;""",
+"""#if __has_include(<mach/mach.h>)
+/* swiftcore-macho: the sysroot has Darwin's real Mach headers, so take the
+ * genuine types rather than restubbing them into a collision. HAVE_MACH=0 still
+ * governs whether any Mach IPC code path compiles -- header presence is not
+ * capability, and here that cuts the other way: the types are real even though
+ * the IPC is not implemented. */
+#include <mach/mach.h>
+#include <mach/message.h>
+#include <mach/error.h>
+
+typedef void *dispatch_mach_msg_t;      /* libdispatch's own, not Mach's */
+typedef uint64_t firehose_activity_id_t;
+
+#else
+
+typedef uint32_t mach_port_t;
+
+#define  MACH_PORT_NULL (0)
+#define  MACH_PORT_DEAD (-1)
+
+typedef uint32_t mach_error_t;
+
+typedef uint32_t mach_msg_return_t;
+
+typedef uint32_t mach_msg_bits_t;
+
+typedef void *dispatch_mach_msg_t;
+
+typedef uint64_t firehose_activity_id_t;
+
+typedef void *mach_msg_header_t;
+
+#endif""",
+     "defer to real Mach headers for types when present")
+
 print("dispatch patches applied")
