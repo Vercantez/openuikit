@@ -949,3 +949,49 @@ The consolation is that the census is a good instrument precisely because it
 fails this loudly: 77 → 0 on a three-line change is a fault report delivered
 immediately, not a slow degradation. That property is worth preserving as the
 header grows.
+
+## 29. Reconciling the public half: 25 differences, only 7 of them real
+
+`scripts/check_public.py` reports, for each `PUBLIC, UNREVIEWED` declaration,
+what Apple's header declares. It is deliberately built to be **incapable of
+generating** — it emits a verdict per selector, never a declaration — because
+the clean-room line is easiest to blur exactly here, while reconciling generated
+output against those headers. The declaration text comes from our generator;
+Apple's header only confirms or corrects the type.
+
+```
+agree 18    differ 25    no-reference 9
+```
+
+The 25 differences all *look* alarming and mostly are not. Rather than eyeball
+them, the types were measured on macOS:
+
+| type pair | measured | verdict |
+|---|---|---|
+| `CFIndex` / `NSInteger` | 8 bytes, both **signed** | equivalent |
+| `CFIndex` / `NSUInteger` | 8 bytes, signed vs **unsigned** | **real difference** |
+| `Boolean` / `BOOL` | 1 byte, both **unsigned** | equivalent |
+| `CFComparisonResult` / `NSComparisonResult` | 8 bytes, both signed | equivalent |
+| `CFStreamStatus` / `NSStreamStatus` | 8 bytes, signed vs **unsigned** | **real difference** |
+| `CFStringRef` / `id` / `CFTypeRef` / `void const *` | 8 bytes | equivalent |
+
+**So 18 of the 25 are equivalent spellings, and only 7 are genuine signedness
+differences**: `count`, `length`, `firstWeekday`, `minimumDaysInFirstWeek`,
+`countForObject:` (`CFIndex` → `NSUInteger`) and `streamStatus` on both stream
+classes (`CFStreamStatus` → `NSStreamStatus`).
+
+### Measuring corrected two of my instincts
+
+- I expected `Boolean` vs `BOOL` to be a problem. It is not — both are one
+  unsigned byte on this platform. Had I "fixed" it I would have churned 8
+  declarations for nothing.
+- I did **not** expect `CFStreamStatus` vs `NSStreamStatus` to be one. It is:
+  CF's is signed, Foundation's unsigned. That is the same class of bug as
+  `count`, and I would have missed it by inspection because the two names look
+  like a straight rename.
+
+Which is the point of measuring rather than reading: the pair that looked
+suspicious was fine, and the pair that looked like a rename was not. Nine
+selectors have no public reference at all (`invertedSet`, `bytes`,
+`streamError`, `localeIdentifier`, `mutableString`, …) — those are SPI wearing
+public-looking names, and the call site governs them.
