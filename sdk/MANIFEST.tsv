@@ -258,6 +258,7 @@ secure/_common.h	Libc:include/secure/_common.h
 secure/_stdio.h	Libc:include/secure/_stdio.h
 secure/_string.h	Libc:include/secure/_string.h
 secure/_strings.h	Libc:include/secure/_strings.h
+signal.h	Libc:include/signal.h
 spawn.h	xnu:libsyscall/wrappers/spawn/spawn.h
 stddef.h	Libc:include/stddef.h
 stdint.h	Libc:include/stdint.h

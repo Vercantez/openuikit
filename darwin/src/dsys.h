@@ -45,6 +45,12 @@ typedef __builtin_va_list  va_list;
 /* ---------------------------------------------------------- memory, string */
 extern void  *glibc_malloc(size_t)                          GLIBCSYM(malloc);
 extern void  *glibc_calloc(size_t, size_t)                  GLIBCSYM(calloc);
+extern int    glibc_sigemptyset(void *)                      GLIBCSYM(sigemptyset);
+extern int    glibc_sigaddset(void *, int)                  GLIBCSYM(sigaddset);
+extern int    glibc_sigismember(const void *, int)          GLIBCSYM(sigismember);
+extern int    glibc_pthread_sigmask(int, const void *, void *) GLIBCSYM(pthread_sigmask);
+extern int    glibc_sigprocmask(int, const void *, void *)  GLIBCSYM(sigprocmask);
+extern int    glibc_signalfd(int, const void *, int)        GLIBCSYM(signalfd);
 extern void  *glibc_bsearch(const void *, const void *, size_t, size_t,
                             int (*)(const void *, const void *)) GLIBCSYM(bsearch);
 extern char  *glibc_strncat(char *, const char *, size_t)   GLIBCSYM(strncat);
