@@ -46,6 +46,9 @@ typedef __builtin_va_list  va_list;
 extern void  *glibc_malloc(size_t)                          GLIBCSYM(malloc);
 extern void  *glibc_calloc(size_t, size_t)                  GLIBCSYM(calloc);
 extern int    glibc_sigemptyset(void *)                      GLIBCSYM(sigemptyset);
+extern int    glibc_sigsuspend(const void *)                GLIBCSYM(sigsuspend);
+extern int    glibc_sigpending(void *)                      GLIBCSYM(sigpending);
+extern int    glibc_sigwait(const void *, int *)            GLIBCSYM(sigwait);
 extern int    glibc_sigaddset(void *, int)                  GLIBCSYM(sigaddset);
 extern int    glibc_sigismember(const void *, int)          GLIBCSYM(sigismember);
 extern int    glibc_pthread_sigmask(int, const void *, void *) GLIBCSYM(pthread_sigmask);
@@ -201,6 +204,7 @@ extern int glibc_pthread_setspecific(unsigned, const void *) GLIBCSYM(pthread_se
 /* ------------------------------------------------------ internal machinery */
 
 HIDDEN void mr_say(const char *s);
+HIDDEN void mr_record_main_thread(void);
 HIDDEN __attribute__((noreturn)) void mr_bail(const char *what);
 HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *detail);
 

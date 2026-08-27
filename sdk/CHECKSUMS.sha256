@@ -87,6 +87,7 @@ d17d3304cb999d80a98165490aa38e0a550a8a3fa914b764e906dd68681bd3c9  xnu:libkern/li
 f0febaef6f9ec75339ebdd896dab2a6d1a1934628d76098f165f1db1b4b74c14  xnu:libkern/libkern/_OSByteOrder.h  libkern/_OSByteOrder.h
 31573a442ed7264879a7a5830be7f8b654e907628c4c7cc8758ed28927a37871  xnu:libkern/libkern/arm/OSByteOrder.h  libkern/arm/OSByteOrder.h
 7c686aa04afa38a20a0163eccca9941aeb8328779884c2603d8a9a773896a677  xnu:libkern/libkern/arm/_OSByteOrder.h  libkern/arm/_OSByteOrder.h
+37c7629819a18c5ef10d19a9bea00eb7e0bd31e0b127ecd2ae108c74f47c39e2  xnu:libsyscall/wrappers/libproc/libproc.h  libproc.h
 09e29df5f6d80f0555a0a3839f836052ded9698e4a91607e5cb033bd10401f2e  libunwind:libunwind/include/libunwind.h  libunwind.h
 7f5c6640fb49fc1d6c0d88b94723418ab996a0768b81cbf8c1917ef5d0255088  Libc:include/limits.h  limits.h
 c6b8754c14162db64dd94f6d4f489cb1fa8c4b7504311a83081103dc3b903218  Libc:include/locale.h  locale.h
@@ -192,8 +193,12 @@ d761900eeb8cb62610bffa6471461fe706d06d4a5f278af7109673fa80c32b05  libmalloc:incl
 b89b39d9b2e03aaf6e388382117a446c9311df9157871ce65cf2330994f7a556  libmalloc:include/malloc/_platform.h  malloc/_platform.h
 d3c4e809117b24467e9313cc348c0495aad8780cea6bf58177743b9be09c3591  libmalloc:include/malloc/_ptrcheck.h  malloc/_ptrcheck.h
 8055f0655289193f9b6db61f55f13d04dfe44603dc57eb48223e3e098c8b88b6  libmalloc:include/malloc/malloc.h  malloc/malloc.h
+87105e9969eea7567abccea30c62d97780751f61dffe439aecdf42ef013393f7  xnu:bsd/net/if.h  net/if.h
+1c82fcf50d45476870dae4c8d0cbe24d950d796c896e56646014f69a4e3e87ea  xnu:bsd/net/if_var.h  net/if_var.h
 fb6f826bd7d3312f373d9493f5ab9fd23d0ceb9659239811b82ef9803038273a  xnu:bsd/net/net_kev.h  net/net_kev.h
+09afde44852124184048dd92b378ef875d2ad725cc6d8fc50087aee83dadc5b7  xnu:bsd/net/route.h  net/route.h
 4556b5c0618eb0b4b286968ee07377aa7d340c1f745d8ea2d5d07acc027ded64  xnu:bsd/netinet/in.h  netinet/in.h
+2477d15b30e04eb7823f485271173232b51ed10ebf75cb96af11fcaf026b433f  xnu:bsd/netinet/tcp.h  netinet/tcp.h
 46a5395540f036a472601adceb7fc2f1cb62b29c3043613edb70011ebdedbd54  xnu:bsd/netinet6/in6.h  netinet6/in6.h
 4361bb97610e7525dfbade6802bb7188c8bd9157f5fb1d873cc20afa7724ca7c  Libc:include/FreeBSD/nl_types.h  nl_types.h
 a671fc6fc89d3b1bf40bb8580fa8fd6be02e422c5a7453cf9c182e463d1bc240  xnu:libkern/os/base.h  os/base.h
@@ -303,6 +308,7 @@ d799ffc16cf29b6559b36d879fc7d5fec80ec3c39502eaef078ae9178eeaf275  xnu:bsd/sys/_t
 c0a28cdc5c9c8cf99abea53556895bd8001a6cb13ae6ca9f366955500678b35a  xnu:bsd/sys/_types/_time_t.h  sys/_types/_time_t.h
 3314f260a6b3ce09c02df185ba2253577b2a268dac05d3cad55f76bb3e8019e8  xnu:bsd/sys/_types/_timespec.h  sys/_types/_timespec.h
 f723018fec267200e915777897515b5d7ed20901bcb294873f94b1d835f9ae45  xnu:bsd/sys/_types/_timeval.h  sys/_types/_timeval.h
+5d80e8bf5f32db57d31158140f8bfe6b57f2720c89591d1bee3e0bb789a75026  xnu:bsd/sys/_types/_timeval32.h  sys/_types/_timeval32.h
 76ac085edf939eac51da6b4a605f42ac3b97e9ea69c6f4935a7c5b3c70721226  xnu:bsd/sys/_types/_timeval64.h  sys/_types/_timeval64.h
 50e11dbb6152079cdefd9eaf854e3182496130b651142e0fc08fcd1456802e81  xnu:bsd/sys/_types/_u_char.h  sys/_types/_u_char.h
 85e9858c13fdc4fb614948fbcadec5f5973dbf6874b97464044a3b4e23486978  xnu:bsd/sys/_types/_u_int.h  sys/_types/_u_int.h
@@ -328,11 +334,13 @@ b5f753cd37068f106abb209d87839a9d1a3ad2bf03d2638b1fc768c605638b7b  xnu:bsd/sys/di
 b16e5eb195f153793b14c3826e6b04db945e9ed6a37c5a9046196555bded6906  xnu:bsd/sys/errno.h  sys/errno.h
 3d706489a4ab1bd529f5c38627f3dcd624a7706d7b9184f6118b9dad788f4f29  xnu:bsd/sys/event.h  sys/event.h
 5d227b5ec649d710a9cc938ff2f9b9b929e1932cdcd24c868a3d74e877c3fbe0  xnu:bsd/sys/fcntl.h  sys/fcntl.h
+a934ad75351315622aa75dca643aee35534daae5b301bb8a2d3f72d983058d32  xnu:bsd/sys/kern_control.h  sys/kern_control.h
 4eb2746b76aa7872a31915b3e0abcda7ab5676dda8f68b20a3ebf6bc9bceab92  xnu:bsd/sys/lock.h  sys/lock.h
 623ba0c15ea17a4c8458ce9b37f3c1d91e9e288c05cb769669734bdc6c5f67bc  xnu:bsd/sys/mman.h  sys/mman.h
 278cf3c858babbe4fa4871818823cff33f122b8a132ef165e6937dbc4db855de  xnu:bsd/sys/mount.h  sys/mount.h
 ee6024c8fee1eb9bcd280203532cba183fb015c5549eebcd8f45f4667529ad4a  xnu:bsd/sys/param.h  sys/param.h
 de7edcc6107af2392ba679b6a0dec480c2e526eaa62e5b9738339e6070351c81  xnu:bsd/sys/proc.h  sys/proc.h
+a4eb26cdfd3721b111f9979455d80a854625b0ef96ba4de1a4e7705f462e0f84  xnu:bsd/sys/proc_info.h  sys/proc_info.h
 3f1e1e9a2b707f22407df44ee8a8b270348d3b4b53313ec52d06a6198716e273  libpthread:include/sys/qos.h  sys/qos.h
 7901abe0601b12570c510cbb0c36a41f74e44bef960f1bb0233310584a9829ab  libpthread:private/sys/qos_private.h  sys/qos_private.h
 d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/queue.h  sys/queue.h
@@ -349,6 +357,7 @@ bff79defba61c84ecae9f96a204d1f147faaef2e8a2651b903b4056b231c3494  xnu:bsd/sys/sy
 863406e0dbf0b08d6bf8558026207496e292c4c3698f0a85da6706316e6a1ba5  xnu:bsd/sys/time.h  sys/time.h
 f8b136bb10d56bb604e7b253f1ec23858d0b4ae21fe85eaede0ccc66afdb554a  xnu:bsd/sys/types.h  sys/types.h
 25b62ef73d2cc2c58c5081e4fea84906d4bffeff428d60f9111ed67c280a6f0b  xnu:bsd/sys/ucred.h  sys/ucred.h
+3a45612e83bd6182ffe78fe7ab40a346bd5ad773cc11590de00b2b7f467b9838  xnu:bsd/sys/un.h  sys/un.h
 5d5dccb886d6ecfd7678949d27859f9d7d4a2094328e4374941b753388c58b69  xnu:bsd/sys/unistd.h  sys/unistd.h
 cdf9b052c7d82ccea3118fa36b1e9b6f9b131ef081392c177cdb66eb9ea35279  xnu:bsd/sys/vm.h  sys/vm.h
 3a82112a1dc8025e7d3a09cb6d9d39bb60c13018052838d3f8ade1b208f83983  xnu:bsd/sys/wait.h  sys/wait.h

@@ -963,3 +963,68 @@ EXPORT int signalfd(int fd, const unsigned int *mask, int flags)
     mr_sigset_d2l(*mask, &lmask);
     return MR_ERRNO_CALL(glibc_signalfd(fd, &lmask, flags));
 }
+
+/* The rest of the sigset_t surface. sigpending is the dangerous one -- its
+ * argument is an OUT parameter, so a forward writes glibc's 128 bytes into the
+ * guest's 4, exactly like pthread_sigmask's third argument.
+ *
+ * sigwait carries a second translation the others do not: it returns a SIGNAL
+ * NUMBER through its out-parameter, and that number is glibc's. Handing it back
+ * unmapped would tell a guest waiting on SIGUSR1 that it received signal 10 --
+ * which on Darwin is SIGBUS. */
+EXPORT int sigsuspend(const unsigned int *mask)
+{
+    mr_linux_sigset lmask;
+    if (!mask) return MR_ERRNO_CALL(glibc_sigsuspend(0));
+    mr_sigset_d2l(*mask, &lmask);
+    return MR_ERRNO_CALL(glibc_sigsuspend(&lmask));
+}
+
+EXPORT int sigpending(unsigned int *out)
+{
+    mr_linux_sigset lset;
+    int rc = MR_ERRNO_CALL(glibc_sigpending(&lset));
+    if (rc == 0 && out) *out = mr_sigset_l2d(&lset);
+    return rc;
+}
+
+EXPORT int sigwait(const unsigned int *set, int *signo)
+{
+    mr_linux_sigset lset;
+    int lsig = 0, rc;
+
+    if (!set) return 22;                      /* EINVAL, Darwin's value */
+    mr_sigset_d2l(*set, &lset);
+    rc = glibc_sigwait(&lset, &lsig);         /* returns an errno, not -1 */
+    if (rc == 0 && signo) {
+        int d = mr_signo_l2d(lsig);
+        if (!d)
+            mr_bail("sigwait woke on a Linux signal with no Darwin equivalent. "
+                    "Handing the raw number back would name a different signal "
+                    "to the guest (see the signal table in darwin/src/posix.c).");
+        *signo = d;
+    }
+    return rc;
+}
+
+/* pthread_main_np(3) is BSD/Darwin-only: "is the calling thread the main
+ * thread?". glibc has no equivalent -- gettid()==getpid() is the usual Linux
+ * idiom but is about the THREAD GROUP LEADER, which is the same thing here
+ * only because machorun never forks. Recording the main thread at bootstrap is
+ * exact and does not depend on that.
+ *
+ * This was reported as "the .tbd fails to advertise a symbol libSystem has".
+ * It did not: nothing in machorun defined it, in any dylib. gen_tbd.sh
+ * generates from `nm` of the built dylibs, so it advertised exactly what
+ * existed -- the mechanism was right and the implementation was absent. */
+static unsigned long mr_main_thread;
+
+HIDDEN void mr_record_main_thread(void)
+{
+    mr_main_thread = (unsigned long)glibc_pthread_self();
+}
+
+EXPORT int pthread_main_np(void)
+{
+    return (unsigned long)glibc_pthread_self() == mr_main_thread ? 1 : 0;
+}

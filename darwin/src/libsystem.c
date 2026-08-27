@@ -90,6 +90,9 @@ EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, c
      * so a guest may read them without ever calling tzset(). Establish them
      * once here rather than leaving zeros that would read as UTC. */
     tzset();
+    /* Before any guest thread exists, so pthread_main_np has a truth to compare
+     * against rather than a zero that would make every thread look like main. */
+    mr_record_main_thread();
 }
 
 EXPORT int   *_NSGetArgc(void)    { return &mr_argc; }
