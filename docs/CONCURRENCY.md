@@ -134,3 +134,85 @@ So the test asserts **happens-before**, not output:
 Interleaving is not compared against macOS directly, because single-threaded
 cooperative and dispatch legitimately interleave differently. The differential
 is on the happens-before assertions, which must hold under both.
+
+---
+
+# Part 2 — libdispatch as Darwin Mach-O (#47)
+
+The question was escalated: CF needs GCD structurally (21 symbols), so dispatch
+is required regardless of what `_Concurrency` chooses. Taking
+`swift-corelibs-libdispatch` (the tree with the completed Linux port), forcing
+the epoll backend, emitting Mach-O.
+
+**Status: configure exits 0; the build is partially through and every wall so
+far has been config or SDK, not a fork. One source patch. Not finished.**
+
+## Walls hit, in order
+
+| # | wall | category | cost |
+|---|---|---|---|
+| 1 | backend chosen by `#if defined(__linux__)` / `#elif __has_include(<sys/event.h>)`, with no override hook | **1 source patch** | build system selects the backend |
+| 2 | glibc's `<sys/epoll.h>` cannot be included against our sysroot | SDK | 6 clean-room headers, 0 patches |
+| 3 | `check_include_files("mach/mach.h" HAVE_MACH)` would turn Mach **on** | config | pre-seed `HAVE_MACH=0` so the check is skipped |
+| 4 | Ninja refuses install-RPATH relink on a non-ELF platform | config | `CMAKE_BUILD_WITH_INSTALL_RPATH` |
+| 5 | `HAVE_OBJC` arrives **defined-but-empty** → `#if ... && HAVE_OBJC` is a syntax error | config | give it a value |
+| 6 | `<firehose/tracepoint_private.h>` — Apple's tracing, no open-source counterpart | config | `OS_VOUCHER_ACTIVITY_SPI=0`, as the Linux build does |
+| 7 | ordinary Darwin headers absent from our minimal SDK: `crt_externs.h`, `netdb.h`, `netinet/in.h`, `spawn.h`, `sys/mount.h` | SDK | **open** — same supply-a-header category as `setjmp.h`/`MacTypes.h` |
+
+Wall 3 is the trap in concrete form: our sysroot *does* carry `mach/mach.h`
+(machorun staged it for objc4), so detection would have enabled Mach silently.
+Wall 6 is the same shape — the firehose include is reached only because
+`__has_include(<mach/mach_time.h>)` succeeds against our sysroot.
+
+**Patch count so far: 1**, and it says "this is not a Mac" (the host kernel's
+event loop is not implied by the target's object format). Nothing yet says
+"this is not Mach-O".
+
+## The Linux-ABI headers, and why they are not patches
+
+glibc's `<sys/epoll.h>` needs glibc's `<sys/cdefs.h>` for `__THROW`; our sysroot
+owns that path with Apple's version, so including glibc's headers produces 20
+syntax errors inside glibc's own declarations. The two libcs cannot share the
+include namespace.
+
+So `scripts/stage_linux_abi.sh` declares the Linux ABI into our sysroot with
+`GLIBCSYM` asm labels (`_glibc_<name>`), the mechanism machorun's loader already
+resolves via `dlsym(RTLD_DEFAULT, name)`. libdispatch's sources are untouched —
+this is an SDK addition, which is the right place for it.
+
+**Every constant and layout was read off the host, not written from memory, and
+is pinned with `_Static_assert`.** That mattered: `struct epoll_event` is packed
+and 12 bytes on x86_64 but **unpacked and 16 bytes on aarch64**, data at offset
+8. Writing the x86 layout would have silently corrupted every event. The
+assertions make a wrong guess a build failure instead.
+
+## Layout decision: ship `libdispatch.dylib` separately
+
+Asked for explicitly, so: **separate dylib, not folded into libSystem.**
+
+1. It needs Linux syscall forwarders (epoll/eventfd/timerfd/signalfd) that
+   Darwin's libSystem does not have and should not pretend to have.
+2. Folding it in means adding those symbols to `libSystem.tbd`. **A `.tbd` is a
+   promise, and an unbacked promise fails at load, not at link** — the trap that
+   already bit this project when a staged `libSystem.tbd` advertised
+   `_swift_release` with nothing behind it. A separate dylib keeps the promise
+   surface equal to the implementation surface by construction.
+3. Darwin re-exports libdispatch *from* libSystem, and we can reproduce that
+   visible contract later with a reexport once implementations exist. Doing it
+   first would be advertising before implementing.
+
+## Not yet answered
+
+The `_4CF` entry points (`_dispatch_main_queue_callback_4CF`,
+`_dispatch_get_main_queue_port_4CF`) exist so CFRunLoop and the dispatch main
+queue can share a thread. Whether the epoll backend can supply a main-queue
+integration CFRunLoop can drive **without Mach ports** is not yet established —
+`_4CF` naming suggests the port variant is Mach-shaped. This is flagged rather
+than resolved, because it feeds back into the RunLoop fork decision.
+
+## Verification still owed
+
+Nothing here is verified to *schedule*. The bar stands and has not been met: a
+semaphore that genuinely blocks and is signalled from another thread, a timer
+source that actually fires, async work completing out of line. Compiling and
+linking proves nothing — which is the whole lesson of the 64 KiB pool.
