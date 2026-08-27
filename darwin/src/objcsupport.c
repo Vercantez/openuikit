@@ -720,22 +720,31 @@ EXPORT int task_restartable_ranges_synchronize(unsigned task)
 { (void)task; return 46; }
 
 /* ===================================================================== *
- * C++ exception ABI and the unwinder.
+ * The C++ exception ABI.
  *
- * objc4's @throw/@catch machinery is compiled in and its symbols must resolve,
- * but machorun has no unwinder for Apple's compact __TEXT,__unwind_info
- * format (docs/UNIMPLEMENTED.md#unwind-compact). glibc's libgcc unwinder reads
- * .eh_frame, which these binaries do not have. So every one of these aborts
- * naming itself: a program that never throws runs correctly, and one that
- * throws stops with a sentence instead of jumping into an unwinder that would
- * walk garbage.
+ * THE UNWINDER IS NO LONGER STUBBED. LLVM 18.1.8's libunwind is compiled into
+ * this dylib unpatched (vendor/libunwind, scripts/build_darwin.sh), so
+ * _Unwind_*, unw_* and the compact __TEXT,__unwind_info reader are the real
+ * ones; the loader supplies _dyld_find_unwind_sections (src/unwind.c), which is
+ * the half only dyld can know. tests/src/27_unwind.c walks a real stack through
+ * it and matches macOS.
+ *
+ * WHAT IS STILL MISSING IS THE LANGUAGE RUNTIME ABOVE IT: libc++abi. Unwinding
+ * a stack and THROWING are different jobs -- __cxa_throw allocates an exception,
+ * calls _Unwind_RaiseException, and __gxx_personality_v0 decides at each frame
+ * whether a handler matches by reading the LSDA and comparing type_info. None
+ * of that is in libunwind. objc4's @throw/@catch machinery is compiled in and
+ * its symbols must resolve, so these still abort naming themselves: a program
+ * that never throws runs correctly, and one that throws stops with a sentence
+ * rather than jumping into a half-built ABI.
  * ===================================================================== */
 #define UNWIND_STUB(name)                                                     \
     EXPORT void name(void) {                                                  \
-        mr_bail(#name ": C++/ObjC exception unwinding is not implemented. "    \
-                "Apple's binaries carry __TEXT,__unwind_info (compact "        \
-                "unwind), not .eh_frame, so libgcc's unwinder cannot be "      \
-                "forwarded to. See docs/UNIMPLEMENTED.md#unwind-compact.");    \
+        mr_bail(#name ": C++/ObjC exceptions need libc++abi, which machorun "  \
+                "does not have yet. The UNWINDER exists now (LLVM libunwind "  \
+                "over Apple's compact __unwind_info); what is absent is the "  \
+                "personality routine and the exception object above it. See "  \
+                "docs/UNIMPLEMENTED.md#unwind-compact.");                      \
     }
 
 UNWIND_STUB(__cxa_allocate_exception)
@@ -745,14 +754,6 @@ UNWIND_STUB(__cxa_end_catch)
 UNWIND_STUB(__cxa_rethrow)
 UNWIND_STUB(__cxa_current_exception_type)
 UNWIND_STUB(__gxx_personality_v0)
-UNWIND_STUB(_Unwind_Resume)
-UNWIND_STUB(_Unwind_GetIP)
-UNWIND_STUB(_Unwind_GetCFA)
-UNWIND_STUB(unw_getcontext)
-UNWIND_STUB(unw_init_local)
-UNWIND_STUB(unw_step)
-UNWIND_STUB(unw_get_reg)
-UNWIND_STUB(unw_get_proc_info)
 
 /* std::terminate / std::set_terminate, mangled. objc-exception.mm installs a
  * terminate handler so that an uncaught ObjC exception prints its class name.

@@ -1089,6 +1089,87 @@ EXPORT int pthread_mutexattr_gettype(void *a, int *type)
     return rc;
 }
 
+/* ===================================================================== *
+ * Read-write locks.
+ *
+ * libunwind takes one around its DWARF FDE cache and around its dynamic
+ * unwind-section registry, so unwinding cannot work without these -- they were
+ * the first thing the link failed on.
+ *
+ * UNLIKE pthread_cond_t, THIS ONE FITS INLINE, and the difference is measured
+ * rather than assumed because the cond case looked identical and was not:
+ *
+ *      type                    Darwin total   Darwin OPAQUE   glibc
+ *      pthread_rwlock_t                 200             192      56   fits, 136 spare
+ *      pthread_rwlockattr_t              24              16       8   fits
+ *
+ * macOS 26.5.2 and the test-bed image, pinned in sdk/tests/glibc_abi_probe.c.
+ * So a rwlock can use adopt()'s scheme directly: glibc's object lives in the
+ * guest's own bytes and no handle or allocation is needed.
+ *
+ * DARWIN HAS TWO SIGNATURES FOR A RWLOCK AND ONLY ONE OF THEM CAN REACH US.
+ * Measured: PTHREAD_RWLOCK_INITIALIZER leaves __sig == 0x2DA8B3B4, and after
+ * Apple's pthread_rwlock_init it is 0x52574C4B ('RWLK'). The second can never
+ * appear here, because OUR pthread_rwlock_init writes MR_ADOPTED_SIG instead --
+ * so the static-initialiser value is the only Darwin signature this code ever
+ * sees. Recorded because "why is only one constant here" is otherwise a
+ * reasonable thing to get wrong later.
+ * ===================================================================== */
+#define DARWIN_RWLOCK_SIG 0x2DA8B3B4L   /* _PTHREAD_RWLOCK_SIG_init */
+
+_Static_assert(sizeof(((struct darwin_opaque *)0)->opaque) >= 56,
+               "glibc's pthread_rwlock_t is 56 bytes and must fit in Darwin's opaque area");
+
+/* Same double-checked adoption as adopt(), with pthread_rwlock_init in place
+ * of pthread_mutex_init. Not a parameter to adopt() because the initialiser is
+ * the only difference and a function pointer there would be harder to read
+ * than fifteen lines. */
+static void *rwlock_g(struct darwin_opaque *o)
+{
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) != MR_ADOPTED_SIG) {
+        glibc_pthread_mutex_lock(adopt_lock());
+        if (o->sig != MR_ADOPTED_SIG) {
+            if (o->sig != DARWIN_RWLOCK_SIG && o->sig != 0)
+                mr_bail("a pthread_rwlock_t has an unexpected Darwin signature; its "
+                        "layout was compiled into the guest and cannot be renegotiated");
+            glibc_memset(o->opaque, 0, sizeof(o->opaque));
+            glibc_pthread_rwlock_init(o->opaque, NULL);
+            __atomic_store_n(&o->sig, MR_ADOPTED_SIG, __ATOMIC_RELEASE);
+        }
+        glibc_pthread_mutex_unlock(adopt_lock());
+    }
+    return o->opaque;
+}
+
+EXPORT int pthread_rwlock_init(void *rw, const void *attr)
+{
+    struct darwin_opaque *o = rw;
+    if (attr) mr_bail("pthread_rwlock_init with a non-NULL attribute is not implemented "
+                      "(Darwin's pthread_rwlockattr_t layout is not glibc's, and the "
+                      "only attribute either platform has is process-shared, which "
+                      "machorun has no second process to share with)");
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) == MR_ADOPTED_SIG)
+        glibc_pthread_rwlock_destroy(o->opaque);
+    glibc_memset(o->opaque, 0, sizeof(o->opaque));
+    glibc_pthread_rwlock_init(o->opaque, NULL);
+    o->sig = MR_ADOPTED_SIG;
+    return 0;
+}
+
+EXPORT int pthread_rwlock_destroy(void *rw)
+{
+    struct darwin_opaque *o = rw;
+    if (o->sig != MR_ADOPTED_SIG) return 0;
+    o->sig = 0;
+    return mr_pthread_rc(glibc_pthread_rwlock_destroy(o->opaque));
+}
+
+EXPORT int pthread_rwlock_rdlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_rdlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_tryrdlock(void *rw) { return mr_pthread_rc(glibc_pthread_rwlock_tryrdlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_wrlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_wrlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_trywrlock(void *rw) { return mr_pthread_rc(glibc_pthread_rwlock_trywrlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_unlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_unlock(rwlock_g(rw))); }
+
 EXPORT int pthread_once(void *once, void (*fn)(void))
 {
     struct darwin_opaque *o = once;

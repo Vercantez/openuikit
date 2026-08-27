@@ -533,6 +533,75 @@ stay empty.
 
 ---
 
+### (z) `27_unwind` — unwinding a real stack through compact `__unwind_info`
+`tests/src/27_unwind.c` · chained
+
+**It WALKS, it does not link.** Every unwind symbol resolved perfectly for as
+long as the unwinder was a set of aborting stubs, so a link test would have
+passed throughout — the same trap that hid the `std::__sort` recursion, where
+the symbol existed and the body was an infinite loop.
+
+Apple's binaries carry no `.eh_frame`. `__TEXT,__unwind_info` is a compressed
+two-level page table whose leaves are 32-bit encodings of a frame's shape. To
+name `level1` as the caller of `level2`, libunwind has to find the right
+second-level page by binary search, decode the encoding, work out where `x29`
+and `x30` were spilled, and restore them. Getting the page lookup or the
+register mask wrong still produces AN answer — just the wrong frame.
+
+**THE macOS ORACLE REJECTED THE FIRST VERSION AND WAS RIGHT**, which is the most
+useful thing this rung has produced. It matched frames by calling
+`_Unwind_FindEnclosingFunction` and comparing against `&level1/&level2/&level3`,
+and it failed on macOS against Apple's own libunwind, naming none of the three.
+**Compact unwind COMPRESSES**: consecutive functions with identical encodings
+share one entry, so the reported `start_ip` is the start of the RUN, not of the
+function — and three adjacent one-line functions are exactly the case that
+merges. `_Unwind_FindEnclosingFunction` is not a function-identity oracle on any
+platform, and a test built on that assumption tests the wrong thing everywhere.
+
+What replaced it is exact and immune to merging: each level records its own
+`__builtin_return_address(0)` on the way down, and the walk must report those
+same addresses on the way out. Comparing the unwinder against the compiler's own
+idea of the return address cannot be passed by accident.
+
+Two smaller traps the fixture had to survive, both measured:
+
+* **`walk()` must be `noinline`.** It is `static` and called once, so at `-O1`
+  clang inlines it into `level3`; then two levels record the SAME return address
+  and the frames under test shift by one. The tell was `ra[0] == ra[1]`, which is
+  impossible unless a frame vanished.
+* **`ip - 1` before any lookup.** `_Unwind_GetIP` returns a return address and
+  the byte after a call can belong to the next function — the same off-by-one
+  `src/crash.c` had.
+
+**Teeth demonstrated by two mutations of `src/unwind.c`**, each with the defect
+confirmed present in the built loader (source marker plus a changed md5) before
+the result was trusted — a mutant that did not take reads exactly like a fixture
+with no teeth:
+
+| mutation | result |
+|---|---|
+| drop the image slide | SIGSEGV at `0x12f74`, an unslid section address |
+| swap the two sections | exit 1, no crash, three named failures |
+
+The second matters more. A wrong answer that does not crash is the failure mode
+this rung exists for. The CFA-monotonic check is labelled in the source as NOT
+the tell: under the second mutation the walk stops at frame 0, so it has nothing
+to compare and reports "yes" on a build where three other checks fail. It is
+kept for the opposite case — a decoder producing plausible pcs while mis-reading
+frame sizes — and the label is there so nobody rediscovers why it never fires.
+
+**Loader must implement:** `_dyld_find_unwind_sections` — given any address,
+the mach header of the containing image and the live addresses and lengths of
+its `__TEXT,__eh_frame` and `__TEXT,__unwind_info`. Live addresses: a section
+header's `addr` is where the linker wanted it and every image here is slid. A
+zero `dwarf_section` is normal rather than a gap — Apple's linker emits compact
+unwind for everything it can express and none of this corpus has an
+`__eh_frame`. Also `_dyld_register_func_for_remove_image`, which is honestly a
+no-op: nothing is ever unmapped here, so the callback would have nothing to
+report.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

@@ -184,6 +184,14 @@ extern void   *glibc_mmap(void *, size_t, int, int, int, long) GLIBCSYM(mmap);
 extern int     glibc_munmap(void *, size_t)                 GLIBCSYM(munmap);
 extern int     glibc_mprotect(void *, size_t, int)          GLIBCSYM(mprotect);
 
+extern int glibc_pthread_rwlock_init(void *, const void *)   GLIBCSYM(pthread_rwlock_init);
+extern int glibc_pthread_rwlock_destroy(void *)             GLIBCSYM(pthread_rwlock_destroy);
+extern int glibc_pthread_rwlock_rdlock(void *)              GLIBCSYM(pthread_rwlock_rdlock);
+extern int glibc_pthread_rwlock_tryrdlock(void *)           GLIBCSYM(pthread_rwlock_tryrdlock);
+extern int glibc_pthread_rwlock_wrlock(void *)              GLIBCSYM(pthread_rwlock_wrlock);
+extern int glibc_pthread_rwlock_trywrlock(void *)           GLIBCSYM(pthread_rwlock_trywrlock);
+extern int glibc_pthread_rwlock_unlock(void *)              GLIBCSYM(pthread_rwlock_unlock);
+
 typedef unsigned long g_pthread_t;
 extern int glibc_pthread_create(g_pthread_t *, const void *, void *(*)(void *), void *) GLIBCSYM(pthread_create);
 extern int glibc_pthread_join(g_pthread_t, void **)         GLIBCSYM(pthread_join);

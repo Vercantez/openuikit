@@ -978,16 +978,48 @@ fixture image has more than one dependency, so there is no order to get wrong
 implemented; the dependency sort is not differentially tested. Closing this is
 a fixture with a diamond dependency graph, not code.
 
-### `unwind-compact`
-`_Unwind_*` over Apple's `__TEXT,__unwind_info` compact-unwind format. Not
-`.eh_frame`, so glibc/libgcc's unwinder cannot be forwarded to. Blocks C++
-exceptions (M8).
+### `unwind-compact` — HALF DONE: the unwinder exists, libc++abi does not
+**The compact-unwind reader works.** LLVM 18.1.8's libunwind is compiled into
+`libSystem.B.dylib` from `vendor/libunwind`, **unpatched**, and the loader
+supplies the half only dyld can know: `_dyld_find_unwind_sections` and
+`_dyld_register_func_for_remove_image` (`src/unwind.c`). `_Unwind_*` and `unw_*`
+are the real implementations — 39 exported symbols — decoding Apple's compact
+`__TEXT,__unwind_info` rather than `.eh_frame`. `tests/src/27_unwind.c` (rung z)
+walks a real four-deep stack through it and matches macOS byte for byte.
 
-Measured cost: `tests/objc44/038-exceptions` and
-`tests/objc44/044-exception-through-uncached`. With `dlopen-dlsym` these are
-the only 3 of the 44 that machorun does not pass, and therefore the two gates
-on *deleting* the retired `~/objc4-linux` rather than merely leaving it
-retired -- it is the only tree that runs the whole corpus.
+Compiling it into libSystem rather than shipping a separate dylib is the Darwin
+arrangement, not a shortcut: on macOS `libunwind.dylib` is a sub-library of the
+libSystem umbrella and libSystem re-exports it, so a guest that links `-lSystem`
+already expects `_Unwind_*` to be there. A separate dylib would need re-export
+chasing, which the loader does not implement.
+
+**WHAT IS STILL MISSING IS THE LANGUAGE RUNTIME ABOVE IT: libc++abi.** Walking a
+stack and THROWING are different jobs. `__cxa_throw` allocates an exception
+object and calls `_Unwind_RaiseException`; `__gxx_personality_v0` decides at
+each frame whether a handler matches, by parsing the LSDA and comparing
+`type_info`. None of that is in libunwind, and `darwin/src/objcsupport.c` still
+aborts by name for `__cxa_allocate_exception`, `__cxa_throw`,
+`__cxa_begin_catch`, `__cxa_end_catch`, `__cxa_rethrow`,
+`__cxa_current_exception_type` and `__gxx_personality_v0`.
+
+So a program that never throws runs correctly, one that throws stops with a
+sentence, and everything in the guest stack is still built `-fno-exceptions`.
+
+**Measured cost, and it is larger than "C++ exceptions (M8)" made it sound:** of
+40 real app main executables surveyed, **25 (63%) import `_Unwind_*` or
+`__cxa_throw`** and 11 import `objc_exception_throw` — before counting the
+frameworks they load. `tests/objc44/038-exceptions` and
+`044-exception-through-uncached` are not two awkward fixtures; they are the wall
+a majority of real apps hit. They remain 2 of the 3 objc44 failures.
+
+**Two things a future implementor should know, both learned the hard way here.**
+First, `_Unwind_FindEnclosingFunction` is *not* a function-identity oracle:
+compact unwind COMPRESSES, so consecutive functions with identical encodings
+share one entry and it reports the start of the RUN. The first version of rung
+z assumed otherwise and failed on macOS against Apple's own libunwind, which was
+right. Second, `_Unwind_GetIP` returns a RETURN address, so any lookup on it
+needs `ip - 1` or it names the following function — the same off-by-one the
+crash reporter had.
 
 ---
 
