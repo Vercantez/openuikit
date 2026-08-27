@@ -83,10 +83,10 @@ Per `scripts/build_icu.sh`, which already carries the measurement:
      (glob.h, langinfo.h, os/log.h, tzfile.h)
 ```
 
-**CAVEAT, stated because of how many stale numbers this project has produced
-today: 456/469 is a RECORDED measurement from when that script was written. I
-did not re-run it in this session.** Re-run before quoting it; the sysroot has
-changed several times since, and every change so far has moved a number.
+**RE-RUN 2026-08-27 15:22 UTC, and the recorded numbers were wrong in both
+the numerator and the denominator: it is 457 of 457, not 456 of 469.** Our
+staged tree carries no `io/`, so the denominator was never 469 here either.
+The archive is 40,767,664 bytes with 604 exported ICU entry points.
 
 And per `docs/cf-census/icu-libc-gap.txt`, once #48's C++ runtime work
 (libc++abi, the omitted libc++ sources, libunwind) is in, **every C++ symbol ICU
@@ -100,12 +100,18 @@ libSystem (13:07 UTC, machorun `559356b`):
 
 ```
 CoreFoundation      81
-ICU                 20
-libdispatch          8
+ICU                  1      __exp10 -- see below, this was 20 and is now 1
+libdispatch          0      libdispatch RUNS; its 8 landed
                    ---
-UNION              108      (sum 109, so exactly ONE symbol is shared:
-                             pthread_mach_thread_np)
+UNION               82
 ```
+
+**ICU's figure was 20 when this was written and that number was quoted from a
+file rather than measured.** Re-linked: ICU has **8** undefined, and only
+**one** of them (`__exp10`) is libSystem's. The other seven are libc++ threading
+symbols -- `mutex`, `condition_variable`, `__call_once` -- present in neither
+machorun's libc++ dylib nor its tbd. **Those are #48's own remaining work, not
+machorun's**, which moves them from one lane to the other.
 
 They are **near-disjoint**, which is the opposite of the usual hope and worth
 knowing: finishing one consumer's list does very little for the others.
