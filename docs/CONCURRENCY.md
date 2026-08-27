@@ -825,3 +825,36 @@ is `((qos_class_t)0x05)` (`libpthread private/sys/qos_private.h:38`), which my
 guess happened to match; the mask is the one that would have cost.
 
 That is the argument for checking before inventing, in one number.
+
+### Patch 6: closed. Headers landed 2026-08-27 (machorun master `2340749`)
+
+All three staged with provenance; `sdk/` is now 379 headers. **Patch 6 stays
+withdrawn permanently** — upstream's `HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)`
+is now simply true, and the third case libdispatch does not model has stopped
+being a case.
+
+**A constraint on our path, found by the probe rather than by us.**
+`priority_private.h:232` uses **`THREAD_QOS_LAST`**, which is defined in *no
+published Apple source* — not `osfmk/mach/thread_policy.h`, not
+`osfmk/kern/kern_types.h`. It is kernel-private. The three `static inline`
+encoders in that header therefore **compile** (nothing instantiates them) but
+**cannot be called** from a guest.
+
+libdispatch does not call them, so nothing here is blocked. But if a future
+patch reaches `_pthread_priority_make_from_thread_qos()` the failure is an
+undeclared-identifier error **at our own call site** — loud, local, and now
+expected rather than surprising. Patch 5 (runloop eventfd handle) does not touch
+the QoS encoders, so it is unaffected.
+
+**`semaphore.h` is deliberately NOT staged**, and that is now a standing
+agreement rather than an accident. Its absence is the only thing making the loud
+failure precede the silent one for `USE_POSIX_SEM` (32 bytes into Darwin's 4,
+clean link, zero return). Anyone needing `semaphore.h` for another consumer must
+flag it to machorun-isamask **before** staging it — staging it silently arms
+that path.
+
+**Also landed and relevant to the eventual link step:** `struct kinfo_proc` /
+`KERN_PROC_PID`, `struct tzhead` and their closure; the directory family with
+real translation (`opendir`/`readdir`/`closedir`/`rewinddir`/`dirfd`) plus
+`bsearch`, `div`, `ldiv`, `strncat`, `strnlen`, `getprogname`, `dlclose`,
+`timezone`/`daylight`/`tzname`.
