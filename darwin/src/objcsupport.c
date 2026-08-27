@@ -713,11 +713,34 @@ EXPORT int dladdr(const void *addr, void *info)
             "Mach-O ones the caller is asking about. See docs/UNIMPLEMENTED.md.");
     return 0;
 }
+/* RTLD_NOLOAD is a QUESTION, not a load request: "if this is already in the
+ * process give me a handle, otherwise tell me so, and do not load it". That is
+ * answerable without implementing dlopen, and CoreFoundation asks it on the
+ * OpenUIKit render path --
+ *     dlopen("/System/.../CoreFoundation.framework/CoreFoundation", RTLD_NOLOAD)
+ * -- where an unconditional bail killed the process over a question we can
+ * answer truthfully.
+ *
+ * Truthfully is the operative word, and it is why this asks the loader instead
+ * of returning NULL flat. NULL means "not loaded". If the image IS loaded, NULL
+ * is a lie, and the caller's next move is to take its framework-is-absent
+ * branch -- a silently wrong answer in place of a loud one, which is the trade
+ * this project keeps refusing. So: not loaded, say so; loaded, admit we have no
+ * handle to give back. Darwin's RTLD_NOLOAD is 0x10 (sdk/usr/include/dlfcn.h). */
+#define MR_RTLD_NOLOAD 0x10
+
 EXPORT void *dlopen(const char *path, int mode)
 {
-    (void)path; (void)mode;
-    mr_bail("dlopen: not implemented for guest Mach-O images "
-            "(see docs/UNIMPLEMENTED.md#dlopen-dlsym).");
+    if ((mode & MR_RTLD_NOLOAD) && path) {
+        if (!mr_image_is_loaded(path)) return 0;      /* the honest "no" */
+        mr_bail2("dlopen(RTLD_NOLOAD) names an image that IS loaded, and machorun "
+                 "has no handle type to hand back for it. Returning NULL would "
+                 "tell the caller it is absent, which is worse than stopping "
+                 "(docs/UNIMPLEMENTED.md#dlopen-dlsym). Image", path);
+    }
+    mr_bail2("dlopen: not implemented for guest Mach-O images "
+             "(docs/UNIMPLEMENTED.md#dlopen-dlsym). Requested",
+             path ? path : "(NULL -- a handle for the main program)");
     return 0;
 }
 /* Darwin's pseudo-handles, from <dlfcn.h>. */

@@ -56,6 +56,7 @@ dyld_stub_binder    =mr_stub_binder_trap
 
 # --- loader/userland seam, not guest API (src/image.c, src/resolve.c) -------
 _mr_addr_in_image   #internal
+_mr_image_is_loaded #internal
 _mr_dlsym_default   #internal
 
 # --- objc4's -delay_init references to the Swift runtime (src/resolve.c) ----

@@ -139,6 +139,7 @@ int64_t  mr_sleb(const uint8_t **p, const uint8_t *end);
 /* --------------------------------------------------------------- images */
 mr_image *mr_image_load(const char *path, mr_image *loader, int weak, int is_main);
 mr_image *mr_image_find_loaded(const char *install_name);
+int       mr_image_is_loaded(const char *install_name_or_path);
 int       mr_addr_in_image(const void *p);
 const mr_segment *mr_image_segment(const mr_image *im, const char *name);
 const struct section_64 *mr_image_section(const mr_image *im, const char *seg, const char *sect);

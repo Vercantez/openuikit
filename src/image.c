@@ -68,6 +68,16 @@ int mr_addr_in_image(const void *p)
     return 0;
 }
 
+/* Answers dlopen(RTLD_NOLOAD) for libSystem, which cannot see MR.images itself.
+ * Deliberately the same matcher mr_image_find_loaded uses -- install name OR
+ * resolved path -- so "is it loaded" and "which image is it" can never
+ * disagree. Exported #internal in darwin/loader-exports.txt: it is a seam
+ * between the loader and our own dylibs, not guest API. */
+int mr_image_is_loaded(const char *key)
+{
+    return key && mr_image_find_loaded(key) != NULL;
+}
+
 mr_image *mr_image_find_loaded(const char *key)
 {
     for (int i = 0; i < MR.nimages; i++) {
