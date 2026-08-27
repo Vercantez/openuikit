@@ -119,5 +119,13 @@ _Static_assert(FIONREAD == 0x541b, "SIOCINQ/FIONREAD (Linux encoding, not Darwin
 _Static_assert(FUTEX_WAIT == 0 && FUTEX_WAKE == 1 && FUTEX_PRIVATE_FLAG == 128,
     "FUTEX_*");
 _Static_assert(SYS_futex == 98, "SYS_futex on aarch64");
+/* The lock-word bits, added when libdispatch's futex lock became reachable.
+ * These are NOT cosmetic: DLOCK_OWNER_MASK is FUTEX_TID_MASK, and the waiters /
+ * failed-trylock bits are FUTEX_WAITERS / FUTEX_OWNER_DIED. A wrong value here
+ * corrupts the lock word at runtime instead of failing to build, so the staged
+ * declarations are a HYPOTHESIS and this is the test. */
+_Static_assert(FUTEX_WAITERS    == 0x80000000, "FUTEX_WAITERS");
+_Static_assert(FUTEX_OWNER_DIED == 0x40000000, "FUTEX_OWNER_DIED");
+_Static_assert(FUTEX_TID_MASK   == 0x3fffffff, "FUTEX_TID_MASK");
 
 /* Compile-only. */

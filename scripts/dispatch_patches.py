@@ -337,6 +337,146 @@ _dispatch_sema4_timedwait(_dispatch_sema4_t *sema, dispatch_time_t timeout)
      "patch 4b: implement the pthread semaphore backend")
 
 # ---------------------------------------------------------------------------
+# 7. Mach TIME without Mach IPC -- the same conflation at three levels.
+#
+# HAVE_MACH means "port-based IPC" to us and we set it 0. Upstream uses it for
+# more, and the overlap is TIME: mach_absolute_time() and mach_continuous_time()
+# are clock functions machorun's libSystem exports and <mach/mach_time.h>
+# declares. They have nothing to do with ports.
+#
+# It bit at three levels, and finding all three meant following the errors as
+# they CHANGED SHAPE rather than trusting the first diagnosis:
+#
+#   1. config -- HAVE_MACH_ABSOLUTE_TIME was 0, so src/shims/time.h fell past
+#      its first branch to `#error platform needs to implement _dispatch_uptime`
+#      (every remaining branch requires __linux__). Fixed in config_ac.h.
+#   2. includes, patched here -- <mach/mach_time.h> sits INSIDE internal.h's
+#      `#if HAVE_MACH` block, so fixing the config turned those #errors into
+#      "call to undeclared function mach_absolute_time": branch now right,
+#      declaration still absent.
+#   3. <time.h> is included by internal.h ONLY under `#if defined(_WIN32)`.
+#      Everyone else gets it transitively -- real Darwin THROUGH mach_time.h.
+#      So dropping the Mach include silently costs a Darwin target <time.h> as
+#      well, which is why clock_gettime_nsec_np and CLOCK_REALTIME read as
+#      undeclared while <time.h> defines both perfectly well.
+#
+# Five errors, one cause. Says "this is not a Mac (IPC)", not "this is not
+# Mach-O", so it is legitimate by this port's own metric.
+# ---------------------------------------------------------------------------
+edit("src/internal.h",
+"""#endif /* HAVE_MACH */""",
+"""#endif /* HAVE_MACH */
+
+/* swiftcore-macho: Mach TIME survives HAVE_MACH=0 -- see dispatch_patches.py.
+ * <mach/mach_time.h> is a clock header, not an IPC header, and libSystem
+ * exports mach_absolute_time/mach_continuous_time. <time.h> is included above
+ * only under _WIN32; on real Darwin it arrives transitively THROUGH
+ * mach_time.h, so a Darwin target with HAVE_MACH=0 loses both at once. */
+#if !HAVE_MACH && HAVE_MACH_ABSOLUTE_TIME
+#include <mach/mach_time.h>
+#endif
+#include <time.h>""",
+     "patch 7: Mach time headers survive HAVE_MACH=0")
+
+# ---------------------------------------------------------------------------
+# 8. The once-generation fast path reads the Darwin COMM PAGE.
+#
+# src/shims/lock.h selects it on `#elif __APPLE__` and then dereferences
+# _COMM_PAGE_CPU_QUIESCENT_COUNTER, a fixed kernel-mapped address. machorun
+# maps no comm page and the constant is not in the sysroot, so that guard asks
+# "is this Apple's compiler target" when it means "is this Apple's KERNEL".
+# HAVE_MACH is the flag that already means the latter. Same shape as CFRunLoop
+# selecting Mach ports on TARGET_OS_MAC.
+# ---------------------------------------------------------------------------
+edit("src/shims/lock.h",
+"""#elif __APPLE__
+#define DISPATCH_ONCE_USE_QUIESCENT_COUNTER 1""",
+"""#elif __APPLE__ && HAVE_MACH
+/* swiftcore-macho: __APPLE__ here is a proxy for Apple's KERNEL, not Apple's
+ * target -- the fast path dereferences _COMM_PAGE_CPU_QUIESCENT_COUNTER at a
+ * kernel-mapped address machorun does not provide. */
+#define DISPATCH_ONCE_USE_QUIESCENT_COUNTER 1""",
+     "patch 8: the once counter needs the comm page, not just __APPLE__")
+
+# ---------------------------------------------------------------------------
+# 9. _dispatch_time_now_cached's Mach fast path.
+#
+# Gated `#if TARGET_OS_MAC`, calls mach_get_times() -- a Darwin SPI machorun's
+# libSystem does NOT export (checked: 0 defined symbols matching). The `#else`
+# branch calls _dispatch_time_now(clock), which is portable and correct; the
+# Mach path is a batching optimisation that fills three clocks in one trap.
+# So this costs a little cache efficiency and nothing semantic.
+# ---------------------------------------------------------------------------
+edit("src/shims/time.h",
+"""#if TARGET_OS_MAC
+	struct timespec ts;
+	mach_get_times(&cache->nows[DISPATCH_CLOCK_UPTIME],
+			&cache->nows[DISPATCH_CLOCK_MONOTONIC], &ts);
+	cache->nows[DISPATCH_CLOCK_WALL] = _dispatch_timespec_to_nano(ts);
+#else""",
+"""#if TARGET_OS_MAC && HAVE_MACH
+	/* swiftcore-macho: mach_get_times is a Darwin SPI libSystem does not
+	 * export. It only BATCHES three clock reads into one trap, so the portable
+	 * branch below is equivalent, just less efficient. */
+	struct timespec ts;
+	mach_get_times(&cache->nows[DISPATCH_CLOCK_UPTIME],
+			&cache->nows[DISPATCH_CLOCK_MONOTONIC], &ts);
+	cache->nows[DISPATCH_CLOCK_WALL] = _dispatch_timespec_to_nano(ts);
+#else""",
+     "patch 9: mach_get_times is an optimisation we cannot take")
+
+# ---------------------------------------------------------------------------
+# 10. The LOCK WORD: Mach thread ports vs futex TIDs.
+#
+# `#if TARGET_OS_MAC` at src/shims/lock.h:37 selects a lock whose owner field is
+# a MACH THREAD PORT: `_dispatch_tid_self()` is `_dispatch_thread_port()`, which
+# tsd.h:335 defines as `pthread_mach_thread_np(_dispatch_thread_self())`. We
+# have no mach thread ports, and the visible symptom is the opaque-pointer ABI
+# class again -- `_dispatch_thread_self()` yields a uintptr_t while Darwin's
+# pthread_t is an opaque POINTER, so it fails to compile rather than silently
+# passing a bad handle. The good failure, and the fourth TARGET_OS_MAC standing
+# in for "has Mach kernel facilities".
+#
+# The futex branch is the intended destination, and the evidence is that
+# swiftcore-macho ALREADY staged what it needs: scripts/stage_linux_abi.sh
+# declares linux/futex.h and sdk/tests/epoll_abi_probe.c pins FUTEX_* and
+# SYS_futex against real glibc. Nothing else in this port wanted those.
+#
+# NOTE THIS IS A SEMANTIC CHANGE, not a header fix: the lock WORD LAYOUT
+# differs between the two branches (DLOCK_OWNER_MASK becomes FUTEX_TID_MASK,
+# and the waiters/failed-trylock bits move to FUTEX_WAITERS/FUTEX_OWNER_DIED).
+# It compiles, which is a real gate but NOT verification -- no lock has been
+# contended under machorun. Do not read a clean build as a working lock.
+# ---------------------------------------------------------------------------
+edit("src/shims/lock.h",
+"""#if TARGET_OS_MAC
+
+typedef mach_port_t dispatch_tid;""",
+"""#if TARGET_OS_MAC && HAVE_MACH
+
+typedef mach_port_t dispatch_tid;""",
+     "patch 10a: the Mach lock needs Mach thread ports, not just TARGET_OS_MAC")
+
+edit("src/shims/lock.h",
+"""#elif defined(__linux__)
+
+#include <linux/futex.h>""",
+"""#elif defined(__linux__) || DISPATCH_LOCK_USE_FUTEX
+
+/* swiftcore-macho: reached by a Darwin target without Mach thread ports. The
+ * futex ABI is declared by scripts/stage_linux_abi.sh and pinned against real
+ * glibc by sdk/tests/epoll_abi_probe.c (FUTEX_*, SYS_futex), which were staged
+ * for exactly this.
+ *
+ * The selector is DISPATCH_LOCK_USE_FUTEX from config_ac.h, NOT lock.h's own
+ * HAVE_FUTEX: that is defined at lock.h:169, AFTER this branch at line 58, so
+ * using it silently evaluated to 0 and fell through to "define _dispatch_lock
+ * encoding scheme for your platform here" -- 4 errors became 20. Measured, not
+ * reasoned; a macro defined later in the same header is not available here. */
+#include <linux/futex.h>""",
+     "patch 10b: let a non-Linux target reach the futex lock")
+
+# ---------------------------------------------------------------------------
 # GUARD for patch 4 (pthread semaphore backend), checked every run.
 #
 # The pthread backend is safe *because* libdispatch creates every lock and

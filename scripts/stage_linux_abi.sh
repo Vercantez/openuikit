@@ -131,6 +131,23 @@ cat > "$INC/linux/futex.h" <<'EOF'
 #define FUTEX_PRIVATE_FLAG  128
 #define FUTEX_WAIT_PRIVATE  (FUTEX_WAIT | FUTEX_PRIVATE_FLAG)
 #define FUTEX_WAKE_PRIVATE  (FUTEX_WAKE | FUTEX_PRIVATE_FLAG)
+/* The lock-word bits. libdispatch's futex lock builds DLOCK_OWNER_MASK,
+ * DLOCK_WAITERS_BIT and DLOCK_FAILED_TRYLOCK_BIT out of these, so getting one
+ * wrong corrupts the lock word rather than failing to compile. Pinned against
+ * real glibc in sdk/tests/epoll_abi_probe.c. */
+#define FUTEX_WAITERS       0x80000000
+#define FUTEX_OWNER_DIED    0x40000000
+#define FUTEX_TID_MASK      0x3fffffff
+#endif
+EOF
+
+# sys/syscall.h -- only SYS_futex, which is all libdispatch's lock needs. The
+# value is pinned on aarch64 by the probe; declaring the whole syscall table
+# would be surface we do not use and cannot check.
+cat > "$INC/sys/syscall.h" <<'EOF'
+#ifndef _SWIFTCORE_MACHO_SYS_SYSCALL_H
+#define _SWIFTCORE_MACHO_SYS_SYSCALL_H
+#define SYS_futex 98   /* aarch64; _Static_assert'd in epoll_abi_probe.c */
 #endif
 EOF
 
@@ -157,4 +174,4 @@ fi
 
 echo "staged Linux-ABI headers into $INC"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
-   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" | sed 's/^/  /'
+   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" | sed 's/^/  /'
