@@ -30,12 +30,10 @@
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
+#import "CFTypesMirror.h"
 
 /* CFBase.h's types, mirrored — see NSCFString.m for why, and for the
  * verification that CFIndex is `long` for our target rather than `long long`. */
-typedef unsigned char Boolean;   /* MacTypes.h:19, verified against the sysroot */
-typedef long    CFIndex;
-typedef struct { CFIndex location; CFIndex length; } CFRange;
 
 typedef const struct __CFArray      *CFArrayRef;
 typedef const struct __CFDictionary *CFDictionaryRef;

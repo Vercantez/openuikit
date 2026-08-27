@@ -32,6 +32,7 @@
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
+#import "CFTypesMirror.h"
 
 /* CoreFoundation's own declarations. This file does not link today — CF itself
  * does not link yet — and that is deliberate: an undefined symbol at the link
@@ -48,9 +49,6 @@
  * VERIFIED for our target rather than reasoned from the ladder: compiling
  * `_Static_assert(__builtin_types_compatible_p(CFIndex, long))` against CF's
  * real CFBase.h with our flags exits 0. So `long` is right here. */
-typedef long                CFIndex;
-typedef unsigned short      UniChar;
-typedef struct { CFIndex location; CFIndex length; } CFRange;
 
 typedef const struct __CFString *CFStringRef;
 extern CFIndex        CFStringGetLength(CFStringRef);
