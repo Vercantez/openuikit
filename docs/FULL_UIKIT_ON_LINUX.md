@@ -747,6 +747,28 @@ Expect this file to grow: swiftc here is 6.2.x and the staged runtime is an
 older Apple build, so anything the newer compiler emits a direct call to may be
 missing.
 
+**CORRECTED 2026-08-27 — this is not general version skew, it is the price of
+running Apple's binary.** machorun's OWN libswiftCore (9.9 MB, zero reexports,
+real code) exports **both** forms natively — the 6-argument one at `0x1d4774`
+and the 3-argument one at `0x28890`. Apple's staged *simulator* libswiftCore
+exports only the 3-argument form. So the shim is needed **specifically because
+this build stages Apple's shipped runtime**, which is the entire point of the
+§9 result; our own source-built runtime would never have hit it. A load failure
+on that symbol therefore means *a different libswiftCore is staged*, not that
+the toolchain drifted.
+
+**And a second copy of this shim was found shadowing a symbol that exists.**
+`spike/swiftcorepatch.c` hardcoded `return 1` for **both** entry points —
+including the 3-argument one both runtimes implement — and its header said it
+was built into an umbrella that reexports the real library. A definition in an
+umbrella silently beats the reexport (§9). It was never staged (verified: zero
+reexports in `scratch/mrroot`, no `libswiftCor.dylib` sibling, and this build's
+own failure on the missing 6-arg symbol proves no umbrella was in place), but
+`build_swiftcore_umbrella.sh` writes into the very directory `build_full.sh`
+copies the guest root from — so running it would have put `return 1` over a
+working implementation underneath the 108-scene suite. Deleted, with the
+umbrella script pointed at the single shared implementation.
+
 ## 9. The 46-scene wall was ours, and the scoreboard that hid it
 
 Re-running the 108-scene suite as a regression gate for §8 scored **59 ok / 47
