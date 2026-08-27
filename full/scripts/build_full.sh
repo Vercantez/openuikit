@@ -54,7 +54,17 @@ CC=(clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O2)
 # before machorun's heap-below-2^47 fix (9659e73) reproduced a bug that had
 # been fixed upstream hours earlier.
 MACHORUN=${MACHORUN:-/machorun}
-if [ ! -d "$ROOTDIR" ]; then
+# RE-STAGED WHENEVER THE LOADER MOVES, not only when the root is missing.
+# Staging on first creation only was not enough, and the gap was not
+# theoretical: the umbrellas below are rebuilt from machorun's CURRENT
+# libSystem.B.dylib on every run, while the loader sat at whatever version was
+# current when the directory was made. On 2026-08-27 that produced a guest root
+# whose libSystem wanted `_mr_report_backtrace` from a loader too old to have
+# it -- and, before it failed loudly, a 108-scene scoreboard of 64 ok / 43
+# crashed taken against a loader predating machorun's malloc_type fix (0f39750,
+# "the 46 scenes it was smashing"). HALF A ROOT FROM ONE VERSION AND HALF FROM
+# ANOTHER READS AS A REAL RESULT.
+if [ ! -d "$ROOTDIR" ] || [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ]; then
     echo "== staging guest root from $MACHORUN"
     mkdir -p "$ROOTDIR/darwin/usr/lib/swift"
     cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
