@@ -87,6 +87,14 @@ static int linux_from_darwin_errno(int e)
     return e;
 }
 
+/* pthread is the one family that returns its error as the RETURN VALUE rather
+ * than through errno, so the errno table has to be reachable from libsystem.c
+ * too. Nothing else needs this. */
+HIDDEN int mr_pthread_rc(int linux_rc)
+{
+    return linux_rc == 0 ? 0 : darwin_from_linux_errno(linux_rc);
+}
+
 HIDDEN void mr_errno_in(void)  { *glibc___errno_location() = linux_from_darwin_errno(*mr_errno_slot()); }
 HIDDEN void mr_errno_out(void) { *mr_errno_slot() = darwin_from_linux_errno(*glibc___errno_location()); }
 

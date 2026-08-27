@@ -1,0 +1,7 @@
+control  timedout=yes waited=yes
+signal   predicate=yes waited=yes
+broadcast woke=3/3
+dyn      init=0 destroy=0
+recursive gettype=RECURSIVE relock=ok
+errcheck relock=refused
+done

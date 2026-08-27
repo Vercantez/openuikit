@@ -1,18 +1,18 @@
 ### file
-/Users/miguelsalinas/machorun/tests/bin/11c_varargs_classic: Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/11c_varargs_classic: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun/tests/bin/11c_varargs_classic:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/11c_varargs_classic:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    17       1384 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun/tests/bin/11c_varargs_classic:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/11c_varargs_classic:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun/tests/bin/11c_varargs_classic:
+/Users/miguelsalinas/machorun-wt-cond/tests/bin/11c_varargs_classic:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72

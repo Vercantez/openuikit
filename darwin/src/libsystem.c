@@ -690,6 +690,26 @@ EXPORT void _tlv_atexit(void (*fn)(void *), void *arg)
 
 /* --------------------------------------------------------------- pthread */
 
+/* EVERY pthread RETURN VALUE HAS TO BE TRANSLATED, and this is not cosmetic.
+ * pthread reports errors as its return value rather than through errno, and
+ * the two platforms disagree about the numbers -- including one pair that is
+ * swapped, which is the worst case because both values are valid on both
+ * sides:
+ *
+ *      name          Darwin   Linux
+ *      ETIMEDOUT         60     110
+ *      EDEADLK           11      35
+ *      EAGAIN            35      11     <- swapped with EDEADLK
+ *      EBUSY             16      16     (happens to agree)
+ *
+ * Found by tests/bin/21_pthread_cond's NEGATIVE CONTROL: a timedwait nobody
+ * signals must report ETIMEDOUT, and it reported "waited=yes timedout=NO"
+ * under machorun -- the wait was correct and the verdict was not. A guest
+ * comparing against Darwin's 60 sees 110 and concludes the wait succeeded,
+ * so it proceeds as though its predicate were true. Nothing aborts.
+ *
+ * mr_pthread_rc() runs each return through the same table errno already uses
+ * (darwin/src/errno_table.h). 0 stays 0. */
 /* Darwin's opaque structs are compiled INTO the guest, so their layout is not
  * ours to choose: pthread_mutex_t is 64 bytes starting with a signature word,
  * pthread_once_t is 16. We keep a glibc object inside the opaque area and use
@@ -757,27 +777,223 @@ static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
 EXPORT int pthread_mutex_init(void *m, const void *attr)
 {
     struct darwin_opaque *o = m;
-    if (attr) mr_bail("pthread_mutex_init with a non-NULL attribute is not implemented");
+    const struct darwin_opaque *ao = attr;
+    /* An attribute is now honoured, which std::recursive_mutex needs. It must
+     * be one WE adopted: a Darwin-initialised pthread_mutexattr_t holds
+     * Apple's bytes, not glibc's, and passing those through would set a type
+     * nobody chose. See the type-swap note above. */
+    if (ao && ao->sig != MR_ADOPTED_SIG)
+        mr_bail("pthread_mutex_init was given a pthread_mutexattr_t this libSystem "
+                "did not initialise; its contents are Darwin's, not glibc's");
     glibc_memset(o->opaque, 0, sizeof(o->opaque));
-    glibc_pthread_mutex_init(o->opaque, NULL);
+    glibc_pthread_mutex_init(o->opaque, ao ? (const void *)ao->opaque : (const void *)0);
     o->sig = MR_ADOPTED_SIG;
     return 0;
 }
-EXPORT int pthread_mutex_lock(void *m)    { return glibc_pthread_mutex_lock(adopt(m, DARWIN_MUTEX_SIG, 0)); }
-EXPORT int pthread_mutex_trylock(void *m) { return glibc_pthread_mutex_trylock(adopt(m, DARWIN_MUTEX_SIG, 0)); }
-EXPORT int pthread_mutex_unlock(void *m)  { return glibc_pthread_mutex_unlock(adopt(m, DARWIN_MUTEX_SIG, 0)); }
+EXPORT int pthread_mutex_lock(void *m)    { return mr_pthread_rc(glibc_pthread_mutex_lock(adopt(m, DARWIN_MUTEX_SIG, 0))); }
+EXPORT int pthread_mutex_trylock(void *m) { return mr_pthread_rc(glibc_pthread_mutex_trylock(adopt(m, DARWIN_MUTEX_SIG, 0))); }
+EXPORT int pthread_mutex_unlock(void *m)  { return mr_pthread_rc(glibc_pthread_mutex_unlock(adopt(m, DARWIN_MUTEX_SIG, 0))); }
 EXPORT int pthread_mutex_destroy(void *m)
 {
     struct darwin_opaque *o = m;
     if (o->sig != MR_ADOPTED_SIG) return 0;
     o->sig = 0;
-    return glibc_pthread_mutex_destroy(o->opaque);
+    return mr_pthread_rc(glibc_pthread_mutex_destroy(o->opaque));
+}
+
+/* ===================================================================== *
+ * Condition variables and mutex attributes.
+ *
+ * These back std::mutex and std::condition_variable in the libc++ we build,
+ * and libdispatch's semaphore shim sits on them, so "it links" is not the bar.
+ * Two things here are wrong in ways no size check can catch.
+ *
+ * ONE: pthread_cond_t CANNOT use adopt(), even though the totals look fine.
+ *
+ *      type                  Darwin total   Darwin OPAQUE   glibc
+ *      pthread_mutex_t                 64              56      48   fits
+ *      pthread_mutexattr_t             16               8       8   fits EXACTLY
+ *      pthread_cond_t                  48              40      48   DOES NOT FIT
+ *
+ * The tempting reading is "48 == 48". But Darwin's first 8 bytes are the __sig
+ * word, and that word is the entire mechanism for telling an Apple-initialised
+ * object from one we adopted -- overwrite it and PTHREAD_COND_INITIALIZER
+ * becomes indistinguishable from an adopted cond. So only 40 bytes are ours,
+ * and a glibc cond is 48. Measured on macOS 26.5.2 and in the test-bed image,
+ * and pinned in sdk/tests/glibc_abi_probe.c.
+ *
+ * So a cond holds a POINTER to a heap-allocated glibc cond -- the "indirect"
+ * remedy in docs/UNIMPLEMENTED.md#opaque-abi-class, the same shape
+ * posix_spawnattr_t needs. 40 bytes is ample for 8. A statically initialised
+ * cond is handled by construction: it arrives with __sig == Darwin's
+ * _PTHREAD_COND_SIG_init, which is exactly the case the signature check
+ * catches, and we allocate on first use. The cost is that a static cond which
+ * is never destroyed leaks one glibc cond -- bounded by the number of distinct
+ * cond objects, not by operations, and far better than a design that cannot
+ * accept a static initialiser at all.
+ *
+ * TWO: the mutex TYPE constants are SWAPPED between the platforms.
+ *
+ *      value   Darwin        glibc
+ *          0   NORMAL        NORMAL
+ *          1   ERRORCHECK    RECURSIVE
+ *          2   RECURSIVE     ERRORCHECK
+ *
+ * Measured on both, because this one is invisible: a forwarded
+ * pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE) passes Darwin's 2,
+ * glibc reads ERRORCHECK, and std::recursive_mutex becomes an error-checking
+ * mutex that returns EDEADLK the first time it is relocked by its owner. Every
+ * symbol resolves, every size matches, and the behaviour inverts. Constants
+ * need translating exactly as layouts do.
+ * ===================================================================== */
+#define DARWIN_COND_SIG  0x3CB0B1BBL   /* _PTHREAD_COND_SIG_init, pthread_impl.h */
+
+/* Darwin's opaque area for a cond is 40 bytes; we use the first 8 as a handle.
+ * Asserted rather than assumed, because the whole design rests on it. */
+_Static_assert(sizeof(struct darwin_opaque) >= 16, "need 8 bytes of opaque for the cond handle");
+
+static int mutex_type_d2g(int darwin_type)
+{
+    switch (darwin_type) {
+    case 0: return 0;    /* NORMAL     -> NORMAL     */
+    case 1: return 2;    /* ERRORCHECK -> ERRORCHECK */
+    case 2: return 1;    /* RECURSIVE  -> RECURSIVE  */
+    default: return -1;
+    }
+}
+static int mutex_type_g2d(int glibc_type)
+{
+    switch (glibc_type) {
+    case 0: return 0;
+    case 2: return 1;
+    case 1: return 2;
+    default: return -1;
+    }
+}
+
+/* A cond's glibc object, allocated on first use. The adopt lock serialises
+ * creation: two threads may reach the same statically-initialised cond at
+ * once, and creating two glibc conds for one guest cond would lose wakeups. */
+static void *cond_glibc(struct darwin_opaque *o)
+{
+    void **slot = (void **)o->opaque;
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) == MR_ADOPTED_SIG) return *slot;
+
+    glibc_pthread_mutex_lock(adopt_lock());
+    if (o->sig != MR_ADOPTED_SIG) {
+        void *c;
+        if (o->sig != DARWIN_COND_SIG && o->sig != 0)
+            mr_bail("a pthread_cond_t has an unexpected Darwin signature; its layout "
+                    "was compiled into the guest and cannot be renegotiated");
+        c = glibc_malloc(64);            /* glibc's cond is 48; 64 is slack, not a guess */
+        if (!c) { glibc_pthread_mutex_unlock(adopt_lock()); return 0; }
+        glibc_memset(c, 0, 64);
+        glibc_pthread_cond_init(c, 0);
+        *slot = c;
+        __atomic_store_n(&o->sig, MR_ADOPTED_SIG, __ATOMIC_RELEASE);
+    }
+    glibc_pthread_mutex_unlock(adopt_lock());
+    return *slot;
+}
+
+EXPORT int pthread_cond_init(void *cond, const void *attr)
+{
+    struct darwin_opaque *o = cond;
+    if (attr) mr_bail("pthread_cond_init with a non-NULL attribute is not implemented "
+                      "(Darwin's pthread_condattr_t layout is not glibc's)");
+    /* Re-initialising an adopted cond reuses its glibc object rather than
+     * leaking the old one. */
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) == MR_ADOPTED_SIG) {
+        void *c = *(void **)o->opaque;
+        glibc_pthread_cond_destroy(c);
+        glibc_memset(c, 0, 64);
+        return mr_pthread_rc(glibc_pthread_cond_init(c, 0));
+    }
+    o->sig = 0;                          /* force a fresh adoption */
+    return cond_glibc(o) ? 0 : 12 /* ENOMEM */;
+}
+
+EXPORT int pthread_cond_destroy(void *cond)
+{
+    struct darwin_opaque *o = cond;
+    void *c;
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) != MR_ADOPTED_SIG) return 0;
+    c = *(void **)o->opaque;
+    o->sig = 0;
+    *(void **)o->opaque = 0;
+    glibc_pthread_cond_destroy(c);
+    glibc_free(c);
+    return 0;
+}
+
+EXPORT int pthread_cond_wait(void *cond, void *mutex)
+{
+    void *c = cond_glibc(cond);
+    if (!c) return 12;
+    return mr_pthread_rc(glibc_pthread_cond_wait(c, adopt(mutex, DARWIN_MUTEX_SIG, 0)));
+}
+
+EXPORT int pthread_cond_timedwait(void *cond, void *mutex, const void *abstime)
+{
+    void *c = cond_glibc(cond);
+    if (!c) return 12;
+    /* struct timespec is 16 bytes with the same field offsets on both -- pinned
+     * in sdk/tests/glibc_abi_probe.c -- so it crosses unchanged. */
+    return mr_pthread_rc(glibc_pthread_cond_timedwait(c, adopt(mutex, DARWIN_MUTEX_SIG, 0), abstime));
+}
+
+EXPORT int pthread_cond_signal(void *cond)
+{
+    void *c = cond_glibc(cond);
+    return c ? mr_pthread_rc(glibc_pthread_cond_signal(c)) : 12;
+}
+
+EXPORT int pthread_cond_broadcast(void *cond)
+{
+    void *c = cond_glibc(cond);
+    return c ? mr_pthread_rc(glibc_pthread_cond_broadcast(c)) : 12;
+}
+
+/* Darwin's pthread_mutexattr_t is 16 bytes: 8 of signature and 8 opaque. glibc
+ * needs exactly 8, so it fits with ZERO MARGIN -- one glibc release from being
+ * an overflow, with nothing to announce it. That is why it is pinned. */
+EXPORT int pthread_mutexattr_init(void *a)
+{
+    struct darwin_opaque *o = a;
+    glibc_memset(o->opaque, 0, 8);
+    glibc_pthread_mutexattr_init(o->opaque);
+    o->sig = MR_ADOPTED_SIG;
+    return 0;
+}
+EXPORT int pthread_mutexattr_destroy(void *a)
+{
+    struct darwin_opaque *o = a;
+    if (o->sig != MR_ADOPTED_SIG) return 0;
+    o->sig = 0;
+    return mr_pthread_rc(glibc_pthread_mutexattr_destroy(o->opaque));
+}
+EXPORT int pthread_mutexattr_settype(void *a, int type)
+{
+    struct darwin_opaque *o = a;
+    int g = mutex_type_d2g(type);
+    if (g < 0) return 22;                /* EINVAL */
+    if (o->sig != MR_ADOPTED_SIG) pthread_mutexattr_init(a);
+    return mr_pthread_rc(glibc_pthread_mutexattr_settype(o->opaque, g));
+}
+EXPORT int pthread_mutexattr_gettype(void *a, int *type)
+{
+    struct darwin_opaque *o = a;
+    int g = 0, rc;
+    if (o->sig != MR_ADOPTED_SIG) return 22;
+    rc = glibc_pthread_mutexattr_gettype(o->opaque, &g);
+    if (rc == 0 && type) *type = mutex_type_g2d(g);
+    return rc;
 }
 
 EXPORT int pthread_once(void *once, void (*fn)(void))
 {
     struct darwin_opaque *o = once;
-    return glibc_pthread_once(adopt(o, DARWIN_ONCE_SIG, 1), fn);
+    return mr_pthread_rc(glibc_pthread_once(adopt(o, DARWIN_ONCE_SIG, 1), fn));
 }
 
 /* The isa-mask heap constraint (src/map.c) is checked on the main thread,
@@ -823,14 +1039,14 @@ EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), 
     if (!s) return 12 /* Darwin ENOMEM */;
     s->fn = fn;
     s->arg = arg;
-    rc = glibc_pthread_create(&t, NULL, mr_thread_trampoline, s);
+    rc = mr_pthread_rc(glibc_pthread_create(&t, NULL, mr_thread_trampoline, s));
     if (rc == 0) *thread = (void *)t;
     else glibc_free(s);
     return rc;
 }
 
-EXPORT int   pthread_join(void *t, void **ret) { return glibc_pthread_join((g_pthread_t)t, ret); }
-EXPORT int   pthread_detach(void *t)           { return glibc_pthread_detach((g_pthread_t)t); }
+EXPORT int   pthread_join(void *t, void **ret) { return mr_pthread_rc(glibc_pthread_join((g_pthread_t)t, ret)); }
+EXPORT int   pthread_detach(void *t)           { return mr_pthread_rc(glibc_pthread_detach((g_pthread_t)t)); }
 EXPORT void *pthread_self(void)                { return (void *)glibc_pthread_self(); }
 EXPORT int   pthread_equal(void *a, void *b)   { return glibc_pthread_equal((g_pthread_t)a, (g_pthread_t)b); }
 

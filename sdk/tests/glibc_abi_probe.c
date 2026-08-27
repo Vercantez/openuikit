@@ -75,6 +75,7 @@
 #include <signal.h>
 #include <spawn.h>
 #include <stddef.h>
+#include <errno.h>
 #include <sys/stat.h>
 #include <ucontext.h>
 
@@ -100,6 +101,37 @@ PIN(pthread_mutexattr_t,   8);
 PIN(pthread_condattr_t,    8);
 PIN(pthread_rwlockattr_t,  8);
 PIN(pthread_attr_t,       64);
+
+/* THE CONSTANTS ARE SWAPPED, and that is not a size problem so nothing above
+ * would catch it. Darwin: NORMAL 0, ERRORCHECK 1, RECURSIVE 2. glibc: NORMAL
+ * 0, RECURSIVE 1, ERRORCHECK 2. A forwarded settype(RECURSIVE) therefore
+ * yields an ERRORCHECK mutex that returns EDEADLK the first time its owner
+ * relocks it -- every symbol resolving, every size matching, the behaviour
+ * inverted. darwin/src/libsystem.c translates; this pins the glibc half so a
+ * change there fails the build instead of silently un-swapping the mapping.
+ * tests/bin/21_pthread_cond case 5 is the behavioural check. */
+_Static_assert(PTHREAD_MUTEX_NORMAL     == 0, "glibc PTHREAD_MUTEX_NORMAL moved");
+_Static_assert(PTHREAD_MUTEX_RECURSIVE  == 1, "glibc PTHREAD_MUTEX_RECURSIVE moved; "
+    "darwin/src/libsystem.c's mutex_type_d2g() maps Darwin's 2 onto this value");
+_Static_assert(PTHREAD_MUTEX_ERRORCHECK == 2, "glibc PTHREAD_MUTEX_ERRORCHECK moved; "
+    "darwin/src/libsystem.c's mutex_type_d2g() maps Darwin's 1 onto this value");
+
+/* pthread_cond_t is the one that does NOT fit: Darwin gives 48 bytes of which
+ * the first 8 are the __sig word, leaving 40, and glibc wants 48. That is why
+ * libsystem.c keeps a POINTER in the opaque area rather than the object. If
+ * this number ever drops to 40 or below the handle indirection could be
+ * dropped -- but check the sig word still survives before doing it. */
+_Static_assert(sizeof(pthread_cond_t) == 48,
+    "glibc pthread_cond_t changed size; darwin/src/libsystem.c stores a handle "
+    "because 48 does not fit in Darwin's 40 opaque bytes. Re-check that reasoning.");
+
+/* And the errno values pthread returns BY VALUE rather than through errno.
+ * ETIMEDOUT differs and EAGAIN/EDEADLK are swapped, which is why every pthread
+ * return goes through mr_pthread_rc(). */
+_Static_assert(ETIMEDOUT == 110, "glibc ETIMEDOUT moved (Darwin's is 60)");
+_Static_assert(EDEADLK   ==  35, "glibc EDEADLK moved (Darwin's is 11)");
+_Static_assert(EAGAIN    ==  11, "glibc EAGAIN moved (Darwin's is 35)");
+_Static_assert(EBUSY     ==  16, "glibc EBUSY moved (Darwin's is 16 too, so far)");
 
 /* Do NOT fit. Forwarding any of these into guest storage corrupts it. */
 PIN(posix_spawnattr_t,          336);

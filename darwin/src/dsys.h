@@ -177,6 +177,11 @@ extern int glibc_pthread_cond_wait(void *, void *)          GLIBCSYM(pthread_con
 extern int glibc_pthread_cond_signal(void *)                GLIBCSYM(pthread_cond_signal);
 extern int glibc_pthread_cond_broadcast(void *)             GLIBCSYM(pthread_cond_broadcast);
 extern int glibc_pthread_cond_destroy(void *)               GLIBCSYM(pthread_cond_destroy);
+extern int glibc_pthread_cond_timedwait(void *, void *, const void *) GLIBCSYM(pthread_cond_timedwait);
+extern int glibc_pthread_mutexattr_init(void *)             GLIBCSYM(pthread_mutexattr_init);
+extern int glibc_pthread_mutexattr_destroy(void *)          GLIBCSYM(pthread_mutexattr_destroy);
+extern int glibc_pthread_mutexattr_settype(void *, int)     GLIBCSYM(pthread_mutexattr_settype);
+extern int glibc_pthread_mutexattr_gettype(void *, int *)   GLIBCSYM(pthread_mutexattr_gettype);
 extern int glibc_pthread_once(void *, void (*)(void))       GLIBCSYM(pthread_once);
 extern int glibc_pthread_key_create(unsigned *, void (*)(void *)) GLIBCSYM(pthread_key_create);
 extern int glibc_pthread_key_delete(unsigned)               GLIBCSYM(pthread_key_delete);
@@ -204,6 +209,7 @@ extern int mr_image_is_loaded(const char *key);
 HIDDEN int  *mr_errno_slot(void);          /* the guest-visible Darwin errno */
 HIDDEN void  mr_errno_in(void);            /* guest's value  -> glibc's errno */
 HIDDEN void  mr_errno_out(void);           /* glibc's errno  -> guest's value */
+HIDDEN int   mr_pthread_rc(int linux_rc);   /* a pthread RETURN value -> Darwin's */
 
 /* Every call that can set errno is bracketed. Doing only the "out" half would
  * resurrect a stale glibc errno through the classic

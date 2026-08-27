@@ -117,7 +117,7 @@ done
 if [ $# -eq 0 ]; then
     B="$ROOT/tests/bin"
     E="$ROOT/tests/expected"
-    for id in 08_pthread; do
+    for id in 08_pthread 21_pthread_cond; do
         if [ ! -x "$B/$id" ] || [ ! -f "$E/$id.stdout" ]; then
             echo "stress: skipping $id (no binary or no recorded baseline)"
             continue
