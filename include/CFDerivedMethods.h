@@ -1,5 +1,4 @@
-/* CFDerivedMethods.h -- machine-derived from CF's call sites, adjudicated.
- * Merged across derivation passes BY METHOD, not by class. Self-contained. */
+/* CFDerivedMethods.h -- machine-derived from CF's call sites, adjudicated. */
 #ifndef _CF_DERIVED_METHODS_H
 #define _CF_DERIVED_METHODS_H
 #if defined(__OBJC__)
@@ -87,6 +86,9 @@
     - (CFDictionaryRef)userInfo;  /* CFError.c:186 */ /* public; measured equivalent */
     - (CFIndex)code;  /* CFError.c:442 */ /* public; measured equivalent */
     - (CFStringRef)domain;  /* CFError.c:436 */ /* public; measured equivalent */
+    - (CFStringRef)localizedDescription;  /* CFError.c:456 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)localizedFailureReason;  /* CFError.c:465 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)localizedRecoverySuggestion;  /* CFError.c:474 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSInputStream (CFDerived)
@@ -97,6 +99,7 @@
     - (NSStreamStatus)streamStatus;  /* CFStream.c:874 */ /* reconciled from (CFStreamStatus) */
     - (CFTypeRef)propertyForKey:(NSString *)a0;  /* CFStream.c:1213 */ /* public; measured equivalent */
     - (void)close;  /* CFStream.c:985 */
+    - (void)open;  /* CFStream.c:970 */
 @end
 
 @interface NSLocale : NSObject
@@ -195,6 +198,7 @@
     - (NSStreamStatus)streamStatus;  /* CFStream.c:879 */ /* reconciled from (CFStreamStatus) */
     - (CFTypeRef)propertyForKey:(NSString *)a0;  /* CFStream.c:1218 */ /* public; measured equivalent */
     - (void)close;  /* CFStream.c:990 */
+    - (void)open;  /* CFStream.c:978 */
 @end
 
 @interface NSSet : NSObject
@@ -236,6 +240,15 @@
     - (CFStringRef)relativeString;  /* CFURL.c:2998 */ /* no public reference; SPI */
     - (CFURLRef)_cfurl;  /* CFURL.c:1673 */
     - (CFURLRef)baseURL;  /* CFURL.c:3044 */ /* no public reference; SPI */
+    - (BOOL)isFileReferenceURL;  /* CFURL.c:5221 */ /* reconciled from (Boolean) */
+    - (CFNumberRef)port;  /* CFURL.c:3386 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)fragment;  /* CFURL.c:3499 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)host;  /* CFURL.c:3359 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)password;  /* CFURL.c:3433 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)query;  /* CFURL.c:3462 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)scheme;  /* CFURL.c:3133 */ /* PUBLIC, UNREVIEWED */
+    - (CFStringRef)user;  /* CFURL.c:3414 */ /* PUBLIC, UNREVIEWED */
+    - (CFURLRef)absoluteURL;  /* CFURL.c:2926 */ /* PUBLIC, UNREVIEWED */
 @end
 
 #endif

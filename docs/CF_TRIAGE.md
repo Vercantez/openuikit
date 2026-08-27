@@ -1216,3 +1216,53 @@ chosen because it is *cheap*, not because the evidence is missing. It is not
 missing. And the general principle I offered — knowing where to stop
 mechanising — was sound in the abstract and applied here to a case that did not
 warrant it.
+
+## 34. The three tool fixes, and the retraction vindicated
+
+§33 said the residue was tool gaps, not evidence gaps. Three fixes tested that:
+
+1. **Look left of `CF_OBJC_CALLV` for the cast** — the return type was on the
+   same line all along.
+2. **Allow empty parameter labels** — `_addComponents::::` is four unnamed
+   arguments; filtering empty labels out silently turned it into a one-argument
+   selector and failed the arity check.
+3. **Recognise `CF_SWIFT_FUNCDISPATCHV`** — a different dispatch mechanism,
+   now reported accurately instead of as "unrecognised macro".
+
+| step | compiling | unknown |
+|---|---|---|
+| 0 — `@class` only | 69 / 82 | — |
+| 1 — types header | 73 / 82 | 151 |
+| 2a — hand-written | 77 / 82 | 155 |
+| 2b — derived + reconciled | 77 / 82 | 50 |
+| 3 — machorun master SDK | 75 / 82 | 50 |
+| 4 — iteration 2 | 75 / 82 | 31 |
+| **5 — three tool fixes** | **75 / 82** | **18** |
+
+**155 → 50 → 31 → 18**, 157 declarations across 24 classes, every one citing its
+call site. Had I acted on §32 the tool would have been put down at 31 with the
+work handed to hand-writing on a false premise.
+
+### A ninth wipeout, from the fix itself
+
+Widening the `CALLV` receiver pattern to accept `id` produced
+`@interface id : NSObject` — redefining objc's `id` and taking the census to
+zero. `CF_OBJC_CALLV((id)other, _cfMutableCopy)` has an **untyped receiver**:
+there is no class to declare the method on, so the right output is a report, not
+a declaration.
+
+The generator now refuses to emit an `@interface` for anything that is not an
+`NS`-prefixed class, in the same spirit as the balanced-paren check: *a
+generator that declines to emit is safe; one that emits garbage is not.* That
+guard has now caught two distinct classes of malformed output.
+
+### `unknown-method set: 0` was the wipeout, not success
+
+The failing run reported **zero** unknown methods — which reads as total
+convergence and was total failure: nothing compiled, so nothing warned.
+
+This is the sharpest vindication of the paired columns in the whole exercise.
+Read alone, "unknown methods: 0" is the number this entire loop was driving
+toward. Only `PASS=0` alongside it says what actually happened. The standing
+rule — treat zero or unchanged as suspect, not only improvements — was written
+for exactly this and still nearly caught me by surprise.

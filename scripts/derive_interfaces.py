@@ -44,9 +44,23 @@ FUNCD = re.compile(
     r'(?P<msg>.*)\)\s*;?\s*$')
 
 # CF_OBJC_CALLV((NSClass *)recv, message...)
+#
+# The return type is a CAST IMMEDIATELY LEFT OF THE MACRO, on the same line:
+#     scheme = (CFStringRef) CF_OBJC_CALLV((NSURL *)anURL, scheme);
+#     (void)CF_OBJC_CALLV((NSInputStream *)stream, open);
+# An earlier version of this tool reported "return type from context", and I
+# believed my own message and concluded the type was a scope away. It is not.
+# A tool's explanation of why it failed is a claim by its author, not a
+# measurement -- so this now LOOKS, and reports honestly when it cannot find one.
 CALLV = re.compile(
-    r'CF_OBJC_CALLV\s*\(\s*\(\s*(?P<cls>NS[A-Za-z]+)\s*\*\s*\)\s*'
+    r'(?:\(\s*(?P<ret>[A-Za-z_][A-Za-z0-9_ \*]*?)\s*\)\s*)?'
+    r'CF_OBJC_CALLV\s*\(\s*\(\s*(?P<cls>NS[A-Za-z]+|id)\s*\*?\s*\)\s*'
     r'(?P<recv>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*(?P<msg>.*?)\)\s*;?\s*$')
+
+# CF_SWIFT_FUNCDISPATCHV is a DIFFERENT dispatch mechanism (Swift, not ObjC) --
+# recognised here only so it is reported accurately rather than lumped in with
+# "unrecognised macro".
+SWIFTD = re.compile(r'CF_SWIFT_FUNCDISPATCHV\s*\(')
 
 
 def balanced_types(msg):
@@ -102,9 +116,14 @@ def infer_expr_type(msg, part):
 
 def parse_message(msg, selector):
     """Turn `sel:(T)a other:(U)b` into a declaration body using SELECTOR order."""
-    parts = [p for p in selector.lstrip('-+').split(':') if p]
-    if ':' not in selector:
-        return selector.lstrip('-+')                      # zero-argument
+    sel = selector.lstrip('-+')
+    if ':' not in sel:
+        return sel                                        # zero-argument
+    # Split on ':' and drop the trailing empty piece. Labels MAY BE EMPTY --
+    # `_addComponents::::` is four unnamed arguments, and filtering empties out
+    # (as this did) silently turned a 4-argument selector into a 1-argument one
+    # and then failed the arity check.
+    parts = sel.split(':')[:-1]
     types = balanced_types(msg)
     if types is None:
         return None
@@ -187,15 +206,40 @@ def main():
                                   "FUNCDISPATCHV with untyped argument(s)"))
                 continue
             if cm:
-                # CALLV has no explicit return type; the caller's context does.
-                undecided.append((cite, cm["cls"], sel, "CF_OBJC_CALLV: return type from context"))
+                body = parse_message(cm["msg"], sel)
+                ret = (cm.groupdict().get("ret") or "").strip()
+                if body and ret and cm["cls"] != "id":
+                    decl = f"{sel[0]} ({ret}){body};"
+                    by_class[cm["cls"]].setdefault(decl, []).append(cite)
+                    continue
+                if cm["cls"] == "id":
+                    # `CF_OBJC_CALLV((id)other, ...)` -- the receiver is untyped,
+                    # so there is no class to declare the method ON. Emitting
+                    # `@interface id` is nonsense and redefines objc's `id`,
+                    # which took the census to zero. No class, no declaration.
+                    undecided.append((cite, "id", sel,
+                                      "receiver is (id) -- no class to attribute it to"))
+                    continue
+                undecided.append((cite, cm["cls"], sel,
+                                  "CF_OBJC_CALLV without a cast on the result"
+                                  if body else "CF_OBJC_CALLV, arguments not typeable"))
+                continue
+            if SWIFTD.search(text):
+                undecided.append((cite, "?", sel,
+                                  "CF_SWIFT_FUNCDISPATCHV -- Swift dispatch, not an ObjC send"))
                 continue
             undecided.append((cite, "?", sel, "call site not a recognised dispatch macro"))
 
     total = sum(len(d) for d in by_class.values())
     print(f"/* Derived from {len(seen)} call sites: {total} declarations across "
           f"{len(by_class)} classes. */\n")
+    BAD = {"id", "Class", "SEL", "IMP", "instancetype"}
     for cls in sorted(by_class):
+        if cls in BAD or not cls.startswith("NS"):
+            # Self-check, same spirit as the balanced-paren one: a generator that
+            # declines to emit is safe; one that emits garbage is not.
+            print(f"/* REFUSED to emit @interface for non-class '{cls}' */")
+            continue
         print(f"@interface {cls} : NSObject")
         for decl, cites in sorted(by_class[cls].items()):
             print(f"    {decl:<70} /* {', '.join(sorted(set(cites))[:3])} */")
