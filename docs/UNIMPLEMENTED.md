@@ -544,18 +544,37 @@ which is the part that remains a risk.*
 objc4 packs the class pointer into the isa word and the `class_rw_t` pointer
 into `class_t::bits`, and Darwin sizes both fields from a *known* Mach VM
 ceiling. Linux/aarch64's user VA width is a **kernel configuration**
-(39/42/48/52-bit) and is not fixed across machines. `patches-macho/0001` widens
-both fields against a measured 48-bit host:
+(39/42/48/52-bit) and is not fixed across machines.
 
-| field | our value | pointer bits | headroom |
-|---|---|---|---|
-| `ISA_MASK` | `0x007ffffffffffff8` | 3..54 | 7 bits |
-| `FAST_DATA_MASK` | `0x0f00fffffffffff8` | 3..47 | **none** |
+| field | our value | pointer bits | headroom | source |
+|---|---|---|---|---|
+| `ISA_MASK` | `0x007ffffffffffff8` | 3..54 | 7 bits | `patches-macho/0001` |
+| `FAST_DATA_MASK` | `0x0f007ffffffffff8` | 3..46 | none needed | **stock objc4** |
+| `DEBUG_DATA_MASK` | `0x00007ffffffffff8` | 3..46 | — | **stock objc4** |
+
+The `FAST_DATA_MASK` row used to read `0x0f00fffffffffff8`, bits 3..47,
+**headroom none** — a widened value from `patches-macho/0001`, and the sharpest
+hazard in this section, because `class_rw_t` is a *heap* pointer and the heap
+sat above 2^47. Both halves of that are gone: the loader now confines images
+**and** the heap below 2^47, so stock objc4 holds and the hunk was deleted
+rather than documented better. `DEBUG_DATA_MASK` is once again bit-identical to
+Apple's.
+
+`ISA_MASK` stays patched, and not for the reason that patch used to give. It is
+not about Linux at all — objc4 rejects the alternative at **compile time**.
+Reverting it selects plain-arm64's 33-bit `shiftcls` (`0x0000000ffffffff8`, a
+64 GiB ceiling: the iOS *device* layout), and `objc-runtime-new.mm:260`'s own
+`STATIC_ASSERT` then fails against a macOS target's 128 TiB
+`OBJC_VM_MAX_ADDRESS`. Apple never ships plain-arm64-non-e on macOS; real macOS
+arm64 libobjc is arm64e and takes the same branch this patch selects. So that
+hunk makes us **match** Apple's shipping runtime rather than diverge from it,
+and the measured VA width is why the layout works for us, not why it is
+required.
 
 Measured on the test kernel (`6.12.76-linuxkit`, arm64): default `mmap`
 returns `0xffff88f9e000`, `malloc` `0xaaaabf7f82a0`, and an `mmap` hint of
 `0x10000000000000` (2^52) is **ignored**, returning `0xffff88f9d000`. So on
-this kernel no user address exceeds 48 bits and `FAST_DATA_MASK` holds exactly.
+this kernel no user address exceeds 48 bits.
 
 **Do not read that paragraph as reassurance.** "No user address exceeds 48
 bits" is true, and it is about the wrong number. objc4's widened masks are 48-
