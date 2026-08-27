@@ -1,0 +1,11 @@
+_SC_PAGESIZE           in range
+_SC_NPROCESSORS_CONF   in range
+_SC_NPROCESSORS_ONLN   in range
+_SC_OPEN_MAX           in range
+_SC_CLK_TCK            in range
+_SC_ARG_MAX            in range
+_SC_LINE_MAX           in range
+_SC_HOST_NAME_MAX      in range
+page is 2^n            yes
+unknown name           refused with EINVAL
+done

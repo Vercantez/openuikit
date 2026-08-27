@@ -51,9 +51,15 @@
 #     detects that and says so rather than rebuilding for two minutes and
 #     leaving you to interpret a SIGILL.
 #
-# The way out for Swift is a valgrind that implements LDAPR (support post-dates
-# 3.22) or a libswiftCore built without RCpc, which is possible for ours and
-# impossible for Apple's. Neither is done here.
+# THE OBVIOUS WAY OUT IS CLOSED. "Use a newer valgrind" was the first thing
+# everyone reached for, including this file. existential-fix built valgrind
+# 3.25.1 from source and tested it against a minimal ELF C program containing a
+# single LDAPR: it SIGILLs under 3.22 AND under 3.25.1. So the instruction is
+# not supported by any valgrind available to us, and no upgrade helps.
+#
+# What remains for Swift is a libswiftCore built without RCpc -- possible for
+# ours, impossible for Apple's, and Apple's is the one that matters if the goal
+# is running precompiled Apple binaries. Not done here.
 #
 # THE BUILD IT PRODUCES IS FOR DEBUGGING AND MUST NOT BE STAGED. It is not the
 # code we ship: different instructions, different timing. It lives in a scratch
@@ -142,7 +148,10 @@ if [ -n "$foreign" ] && [ "$foreign" != "0" ]; then
     echo "   will die with SIGILL somewhere inside the Swift runtime -- which looks" >&2
     echo "   like a crash in your program and is not one." >&2
     echo "   C and Objective-C guests are fine; this is Swift-only." >&2
-    echo "   Fixes: a valgrind newer than 3.22, or a libswiftCore built -rcpc." >&2
+    echo "   A NEWER VALGRIND DOES NOT HELP: 3.25.1 was built from source and" >&2
+    echo "   SIGILLs on a single LDAPR just as 3.22 does. The only route left is a" >&2
+    echo "   libswiftCore compiled without RCpc, which is possible for ours and" >&2
+    echo "   impossible for Apple's." >&2
     exit 2
 fi
 
