@@ -76,12 +76,13 @@ when() { if [ "$1" = 0 ]; then echo "(none)"; else fmt "$1"; fi; }
 # artefact <TAB> the paths it is built from. Deliberately over-approximate:
 # a false "stale" costs one rebuild, a false "fresh" costs an afternoon.
 #
-# The Swift dylibs are absent on purpose. They are STAGED from
+# The Swift dylibs are absent from THIS list on purpose. They are STAGED from
 # ~/swiftcore-macho by scripts/stage_swiftcore.sh rather than built here, so
 # their sources are not in this tree and their mtimes say nothing about
-# whether they are current. That is a real gap and belongs to whoever owns the
-# staging, not to this check -- naming it here with the wrong source set would
-# be worse than leaving it out, because it would read as covered.
+# whether they are current. Naming them here with the wrong source set would be
+# worse than leaving them out, because it would read as covered. They get a
+# different check instead -- see PAIRS below, which asks the question that IS
+# answerable about a staged copy.
 TARGETS=(
     "darwin/usr/lib/libSystem.B.dylib|darwin/src scripts/build_darwin.sh"
     "darwin/usr/lib/libc++.1.dylib|darwin/src scripts/build_darwin.sh"
@@ -118,8 +119,70 @@ for row in "${TARGETS[@]}"; do
     fi
 done
 
+# ------------------------------------------------- staged copies: IDENTITY
+#
+# For an artefact STAGED from another repo, "is it older than its source" is
+# unanswerable here -- the source is not in this tree. But a different question
+# is both answerable and the one that actually bites: **is the file a guest
+# LINKS against the same bytes as the file it LOADS?**
+#
+# Those are two different paths for the Swift runtime. scripts/swift_gate.sh
+# links with `-lswiftCore` resolved from build/swift-res/macosx/arm64, and the
+# loader resolves the install name to darwin/usr/lib/swift at run time. Nothing
+# has ever checked that they are the same file.
+#
+# When they diverge, the failure has a very specific and misleading shape: the
+# LINK SUCCEEDS -- ld64 is satisfied by the copy it was shown -- and the
+# program dies at load, which reads as a loader bug, in the loader, to whoever
+# is least equipped to suspect a staging script. That is the unbacked-promise
+# bug inverted, and a neighbouring project lost time to exactly it.
+#
+# Measured 2026-08-27: both copies are md5 ff9ff833474c7973b180f29ec0c58ea8, so
+# machorun's Swift path is currently clean. This check is what keeps it that
+# way, and it is deliberately about IDENTITY rather than freshness: two copies
+# staged from the same place at different times are wrong even if both are new.
+PAIRS=(
+    "build/swift-res/macosx/arm64/libswiftCore.dylib|darwin/usr/lib/swift/libswiftCore.dylib"
+)
+
+if command -v md5sum >/dev/null 2>&1; then digest() { md5sum "$1" | cut -d' ' -f1; }
+else                                      digest() { md5 -q "$1"; }; fi
+
+mismatch=0
+for row in "${PAIRS[@]}"; do
+    a="${row%%|*}"; b="${row#*|}"
+    # Only meaningful when BOTH exist. One missing is the staging script's
+    # business, and is already reported by --check there.
+    [ -f "$ROOT/$a" ] && [ -f "$ROOT/$b" ] || continue
+    da=$(digest "$ROOT/$a"); db=$(digest "$ROOT/$b")
+    if [ "$da" != "$db" ]; then
+        printf '   %-38s LINK/LOAD MISMATCH\n' "$(basename "$a")"
+        printf '       linked  %s  %s\n' "$da" "$a"
+        printf '       loaded  %s  %s\n' "$db" "$b"
+        mismatch=$((mismatch + 1))
+    else
+        printf '   %-38s ok        link == load (%s)\n' "$(basename "$a")" "${da:0:12}"
+    fi
+done
+
 printf '%s\n' "   ---------------------------------------------------------------"
-printf '   ok %d  stale %d  missing %d\n' "$ok" "$stale" "$missing"
+printf '   ok %d  stale %d  missing %d  link/load mismatch %d\n' \
+       "$ok" "$stale" "$missing" "$mismatch"
+
+if [ "$mismatch" -gt 0 ]; then
+    cat >&2 <<MSG
+
+check_stale: $mismatch staged artefact(s) differ between the LINK copy and the
+LOAD copy.
+
+  A guest will link cleanly against one file and load the other. The failure
+  surfaces at dlopen, looks like a loader bug, and is not one. Re-stage:
+
+      scripts/stage_swiftcore.sh
+
+MSG
+    [ "$MODE" = warn ] || exit 1
+fi
 
 if [ "$stale" -gt 0 ]; then
     # Name what was found rather than just declining: a refusal that reports
