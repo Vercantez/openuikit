@@ -164,6 +164,22 @@ extern int     glibc_fsync(int)                             GLIBCSYM(fsync);
 extern int     glibc_dup(int)                               GLIBCSYM(dup);
 extern int     glibc_dup2(int, int)                         GLIBCSYM(dup2);
 extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
+/* fcntl and ioctl are VARIADIC in glibc and are declared NON-variadic here on
+ * purpose. Darwin's arm64 ABI puts variadic arguments on the STACK where
+ * AAPCS64 puts the first eight in REGISTERS, so a variadic call from our
+ * Darwin-compiled code into glibc would have glibc read a register as the
+ * argument -- silent corruption rather than a wrong value. Both real callers
+ * pass a fixed arity, so a fixed-arity declaration is both correct and the
+ * thing that makes the mismatch impossible to write. */
+extern int     glibc_fcntl(int, int, long)                  GLIBCSYM(fcntl);
+extern int     glibc_ioctl(int, unsigned long, void *)      GLIBCSYM(ioctl);
+extern int     glibc_getsockopt(int, int, int, void *, unsigned *) GLIBCSYM(getsockopt);
+extern int     glibc_madvise(void *, size_t, int)           GLIBCSYM(madvise);
+extern long    glibc_pwrite(int, const void *, size_t, long) GLIBCSYM(pwrite);
+extern int     glibc_pthread_attr_init(void *)              GLIBCSYM(pthread_attr_init);
+extern int     glibc_pthread_attr_destroy(void *)           GLIBCSYM(pthread_attr_destroy);
+extern int     glibc_pthread_attr_setschedparam(void *, const void *)
+                                                            GLIBCSYM(pthread_attr_setschedparam);
 extern int     glibc_isatty(int)                            GLIBCSYM(isatty);
 extern char   *glibc_getcwd(char *, size_t)                 GLIBCSYM(getcwd);
 extern int     glibc_chdir(const char *)                    GLIBCSYM(chdir);

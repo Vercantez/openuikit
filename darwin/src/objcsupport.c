@@ -817,6 +817,23 @@ EXPORT size_t strlcpy(char *dst, const char *src, size_t size)
     return n;
 }
 
+/* The _FORTIFY_SOURCE expansion of strlcpy, which libdispatch's init.c reaches
+ * through <string.h> without ever naming it. There is nothing to forward to --
+ * glibc has neither strlcpy's semantics nor Apple's __*_chk family -- so this
+ * is implemented rather than bound.
+ *
+ * `os` is the compiler's idea of the destination's real size. A requested copy
+ * longer than that is exactly the overflow the fortify wrapper exists to
+ * catch, and aborting is what Apple's does: returning quietly would turn a
+ * diagnosed overflow into an undiagnosed one. */
+EXPORT size_t __strlcpy_chk(char *dst, const char *src, size_t len, size_t os)
+{
+    if (len > os)
+        mr_bail("__strlcpy_chk: buffer overflow detected -- the requested copy "
+                "is longer than the destination the compiler sized.");
+    return strlcpy(dst, src, len);
+}
+
 /* arc4random(3). glibc has getrandom(2); Darwin's contract is "never fails",
  * so a short read is a hard error rather than a silent weakening. */
 EXPORT void arc4random_buf(void *buf, size_t n)

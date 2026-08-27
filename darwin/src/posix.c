@@ -1462,6 +1462,323 @@ EXPORT int ppoll(struct mr_pollfd *fds, unsigned int nfds,
     return mr_poll_common(fds, nfds, ms, &lmask, 1);
 }
 
+/* ------------------------------------- the rest of libdispatch's boundary */
+
+/* Eight symbols swift-corelibs-libdispatch reaches for, measured at the call
+ * sites rather than from the man pages. They are together because they arrived
+ * together, and because three are VARIADIC -- which is what makes this group
+ * different in kind from a list of forwards.
+ *
+ * Darwin's arm64 ABI passes variadic arguments on the STACK; AAPCS64, which
+ * glibc follows, passes the first eight in REGISTERS. A `_glibc_` bind for a
+ * variadic function therefore has glibc read a register the caller never wrote
+ * and -- for ioctl and fcntl -- write through it. That is silent memory
+ * corruption rather than a wrong answer, and it is the same reason printf has
+ * its own formatter in libsystem.c. Every variadic entry below takes its
+ * arguments with va_arg on OUR side and calls a FIXED-ARITY glibc declaration
+ * (dsys.h), so the mismatch cannot be written even by accident. */
+
+/* --- madvise: one advice value, and it is the one libdispatch uses -------- */
+
+/* Measured on both sides 2026-08-27:
+ *
+ *     MADV_NORMAL 0  RANDOM 1  SEQUENTIAL 2  WILLNEED 3  DONTNEED 4   agree
+ *     MADV_FREE   Darwin 5     Linux 8                               differ
+ *
+ * The first five agreeing is what makes this look plain, and I classified it
+ * as plain in an earlier audit on exactly that evidence -- having probed 0..4
+ * and not 5. libdispatch's allocator calls madvise with MADV_FREE and nothing
+ * else, so the single value it uses is the single value that differs. Probing
+ * the common range and generalising is how a census misses the only case its
+ * consumer exercises.
+ *
+ * What Darwin's 5 lands on if forwarded is worth stating exactly, because it
+ * reached me as "Linux's 5 is MADV_REMOVE, which punches a hole in the
+ * object" -- destructive. Measured: Linux's MADV_REMOVE is 9 and 5 is
+ * UNASSIGNED, so a forward returns EINVAL. Loud, not destructive. Real
+ * symptom, mechanism one number off. */
+#define MR_D_MADV_FREE 5
+#define MR_L_MADV_FREE 8
+
+EXPORT int madvise(void *addr, size_t len, int advice)
+{
+    int l;
+    if (advice >= 0 && advice <= 4) l = advice;         /* NORMAL..DONTNEED */
+    else if (advice == MR_D_MADV_FREE) l = MR_L_MADV_FREE;
+    else
+        mr_bail("madvise(): a Darwin advice value with no Linux equivalent "
+                "(MADV_FREE_REUSABLE/REUSE/PAGEOUT and the zero-wired family "
+                "are Darwin-only). See docs/UNIMPLEMENTED.md#not-a-plain-forward.");
+    return MR_ERRNO_CALL(glibc_madvise(addr, len, l));
+}
+
+/* --- pwrite and the two pthread_attr entries ----------------------------- */
+
+/* The only genuinely plain forward in the group: off_t is 8 bytes on both, the
+ * buffer is the caller's, and there are no flags. */
+EXPORT ssize_t pwrite(int fd, const void *buf, size_t n, off_t off)
+{
+    return MR_ERRNO_CALL(glibc_pwrite(fd, buf, n, (long)off));
+}
+
+/* pthread_attr_t is 64 bytes on BOTH -- pinned in glibc_abi_probe.c -- so the
+ * guest's storage holds glibc's object and these need nothing. That is unusual
+ * enough in this file to say out loud: it is why these are forwards where
+ * pthread_cond_t next door needs a handle indirection. */
+EXPORT int pthread_attr_init(void *a)    { return glibc_pthread_attr_init(a); }
+EXPORT int pthread_attr_destroy(void *a) { return glibc_pthread_attr_destroy(a); }
+
+/* struct sched_param is 8 bytes on Darwin and 4 on glibc, which looks like the
+ * overflow class and is not, in this direction: it is an IN parameter, so
+ * glibc READS 4 of the guest's 8 and writes nothing. That is safe only because
+ * sched_priority is the leading field on both -- measured, offset 0 either way
+ * -- so the four bytes glibc reads are the four the guest meant.
+ *
+ * pthread_attr_getschedparam is deliberately absent: it is the OUT direction,
+ * where glibc writes 4 bytes into the guest's 8 and leaves Darwin's trailing
+ * word holding whatever was on the stack.
+ *
+ * pthread_attr_setschedpolicy is absent for a louder reason. SCHED_OTHER is 1
+ * on Darwin and 0 on glibc, and Darwin's 1 IS glibc's SCHED_FIFO -- so a
+ * forwarded "ordinary scheduler" makes the thread real-time. Nothing asks. */
+EXPORT int pthread_attr_setschedparam(void *a, const void *param)
+{
+    return glibc_pthread_attr_setschedparam(a, param);
+}
+
+/* --- getsockopt: the level differs, and 1 is valid on both ---------------- */
+
+/* SOL_SOCKET is 65535 on Darwin and 1 on Linux, and 1 IS a valid level on
+ * Linux -- so a forwarded getsockopt reads an option at the WRONG LEVEL rather
+ * than failing. Every SO_* differs too: libdispatch asks for SO_ACCEPTCONN,
+ * which is 2 on Darwin and 30 on Linux.
+ *
+ * Only the option libdispatch uses is mapped. A table covering options nothing
+ * asks for would be a guess with a plausible face, and this is the file where
+ * that is most expensive. */
+#define MR_D_SOL_SOCKET    0xffff
+#define MR_L_SOL_SOCKET    1
+#define MR_D_SO_ACCEPTCONN 0x0002
+#define MR_L_SO_ACCEPTCONN 30
+
+EXPORT int getsockopt(int s, int level, int optname, void *optval, unsigned *optlen)
+{
+    if (level != MR_D_SOL_SOCKET)
+        mr_bail("getsockopt(): only SOL_SOCKET is translated. A forwarded level "
+                "reads an option at a DIFFERENT level rather than failing "
+                "(Darwin's SOL_SOCKET is 65535, Linux's is 1, and 1 is valid).");
+    if (optname != MR_D_SO_ACCEPTCONN)
+        mr_bail("getsockopt(SOL_SOCKET, ...): only SO_ACCEPTCONN is translated. "
+                "Every SO_* number differs, so a forwarded one names a "
+                "different option.");
+    return MR_ERRNO_CALL(glibc_getsockopt(s, MR_L_SOL_SOCKET,
+                                          MR_L_SO_ACCEPTCONN, optval, optlen));
+}
+
+/* --- fcntl: variadic, and two commands Linux simply does not have --------- */
+
+/* THE DANGEROUS PART OF fcntl IS NOT REACHED BY THIS CONSUMER, and saying that
+ * precisely matters more than repeating the warning. Five of the ten standard
+ * commands are ROTATED into each other -- Darwin's F_GETLK (7) is glibc's
+ * F_SETLKW, so a forwarded "is this lock held?" becomes "take it and block" --
+ * but libdispatch touches none of them. What it uses is:
+ *
+ *     F_GETFL         3 / 3     agree
+ *     F_SETFL         4 / 4     agree
+ *     F_GETNOSIGPIPE  74        DOES NOT EXIST ON LINUX
+ *     F_SETNOSIGPIPE  73        DOES NOT EXIST ON LINUX
+ *
+ * The lock commands still BAIL rather than being left to chance, because the
+ * next consumer is not this one.
+ *
+ * F_GETFL/F_SETFL agreeing as COMMANDS is not the end of it: their argument
+ * and result are an O_* flag word, and ten of thirteen O_* flags differ --
+ * O_NONBLOCK alone is 0x0004 here and 0x0800 there. The command passes through
+ * and the VALUE needs translating in both directions.
+ *
+ * F_*NOSIGPIPE has no Linux counterpart at all: Linux suppresses SIGPIPE
+ * per-send with MSG_NOSIGNAL or process-wide with SIG_IGN, never per-fd.
+ * ENOTSUP is the honest answer -- a silent no-op would leave the guest
+ * believing a write to a closed pipe will not raise SIGPIPE. */
+#define MR_F_GETFL         3
+#define MR_F_SETFL         4
+#define MR_F_GETNOSIGPIPE 74
+#define MR_F_SETNOSIGPIPE 73
+
+/* The reverse of linux_open_flags, for what F_GETFL hands back. Only the
+ * status flags can appear in a F_GETFL result; the creation flags cannot, but
+ * they are mapped anyway so the function is a true inverse. */
+static int darwin_open_flags(int l)
+{
+    int d = l & D_O_ACCMODE;          /* RDONLY/WRONLY/RDWR agree, 0/1/2 */
+    int rest = l & ~3;
+
+#define UNMAP(lbit, dbit) do { if (rest & (lbit)) { d |= (dbit); rest &= ~(lbit); } } while (0)
+    UNMAP(L_O_SYNC,      D_O_SYNC);   /* before DSYNC: L_O_SYNC contains it */
+    UNMAP(L_O_DSYNC,     D_O_DSYNC);
+    UNMAP(L_O_NONBLOCK,  D_O_NONBLOCK);
+    UNMAP(L_O_APPEND,    D_O_APPEND);
+    UNMAP(L_O_ASYNC,     D_O_ASYNC);
+    UNMAP(L_O_NOFOLLOW,  D_O_NOFOLLOW);
+    UNMAP(L_O_CREAT,     D_O_CREAT);
+    UNMAP(L_O_TRUNC,     D_O_TRUNC);
+    UNMAP(L_O_EXCL,      D_O_EXCL);
+    UNMAP(L_O_NOCTTY,    D_O_NOCTTY);
+    UNMAP(L_O_DIRECTORY, D_O_DIRECTORY);
+    UNMAP(L_O_CLOEXEC,   D_O_CLOEXEC);
+#undef UNMAP
+    /* Linux-only status bits (O_PATH, O_TMPFILE, O_NOATIME, O_DIRECT) have no
+     * Darwin spelling. Dropping them is right where forwarding is not: the
+     * guest cannot have asked for them, so they can only have come from
+     * something else on the same descriptor, and inventing a Darwin flag for
+     * them would report a mode the guest never set. */
+    return d;
+}
+
+EXPORT int fcntl(int fd, int cmd, ...)
+{
+    va_list ap;
+    long arg;
+    int rc;
+
+    /* Taken with va_arg on OUR side; glibc_fcntl is declared fixed-arity. */
+    va_start(ap, cmd);
+    arg = va_arg(ap, long);
+    va_end(ap);
+
+    switch (cmd) {
+    case MR_F_GETFL:
+        rc = MR_ERRNO_CALL(glibc_fcntl(fd, MR_F_GETFL, 0));
+        return rc < 0 ? rc : darwin_open_flags(rc);
+    case MR_F_SETFL:
+        return MR_ERRNO_CALL(glibc_fcntl(fd, MR_F_SETFL,
+                                         linux_open_flags((int)arg)));
+    case MR_F_GETNOSIGPIPE:
+    case MR_F_SETNOSIGPIPE:
+        *mr_errno_slot() = 45;                  /* ENOTSUP, Darwin's value */
+        return -1;
+    default:
+        mr_bail("fcntl(): only F_GETFL, F_SETFL and the two F_*NOSIGPIPE "
+                "commands are translated. Five of the ten standard commands are "
+                "ROTATED between the two systems -- Darwin's F_GETLK is glibc's "
+                "F_SETLKW, so a forwarded lock QUERY blocks acquiring the lock. "
+                "See docs/UNIMPLEMENTED.md#not-a-plain-forward.");
+    }
+}
+
+/* --- ioctl: variadic, and the request codes are encoded differently ------- */
+
+/* Darwin encodes a request as direction|size|group|number -- FIONREAD is
+ * 0x4004667f -- while Linux uses small opaque numbers, FIONREAD being 0x541b.
+ * Nothing about the two spaces corresponds, so a forward asks the kernel for
+ * an unrelated operation, through a pointer.
+ *
+ * libdispatch's epoll backend asks for SIOCINQ and SIOCOUTQ, which are
+ * LINUX-ONLY names with no Darwin spelling at all -- so, exactly like
+ * signalfd, the caller is Linux shim code compiled for a Darwin target and
+ * passes LINUX request codes. Those pass through unchanged. Darwin's own
+ * FIONREAD is translated onto Linux's. Everything else bails.
+ *
+ * Accepting both spellings is deliberate and is the same judgement as
+ * exporting signalfd from a Darwin libSystem: this file IS the boundary, and
+ * the boundary is where a Linux-shim guest and a Darwin guest meet. */
+#define MR_D_FIONREAD  0x4004667fUL
+#define MR_L_FIONREAD      0x541bUL     /* == Linux SIOCINQ */
+#define MR_L_SIOCOUTQ      0x5411UL
+
+EXPORT int ioctl(int fd, unsigned long req, ...)
+{
+    va_list ap;
+    void *arg;
+    unsigned long lreq;
+
+    va_start(ap, req);
+    arg = va_arg(ap, void *);
+    va_end(ap);
+
+    if (req == MR_D_FIONREAD)                              lreq = MR_L_FIONREAD;
+    else if (req == MR_L_FIONREAD || req == MR_L_SIOCOUTQ) lreq = req;
+    else
+        mr_bail("ioctl(): an unrecognised request code. Darwin encodes requests "
+                "as direction|size|group|number and Linux uses small opaque "
+                "numbers, so the two spaces do not correspond and a forward "
+                "asks for an unrelated operation -- through a pointer.");
+
+    return MR_ERRNO_CALL(glibc_ioctl(fd, lreq, arg));
+}
+
+/* --- sysctl: nothing to forward to, so it is implemented ----------------- */
+
+/* sysctl CANNOT be forwarded in either direction, which is unusual enough to
+ * record. sys/sysctl.h no longer exists in glibc 2.39, Linux's sysctl(2) was
+ * removed from the kernel and returns ENOSYS, and Darwin's is an unrelated BSD
+ * MIB API. The symbol survives in libc.so.6 only as a compat stub -- exactly
+ * the shape that lets a link succeed and a call quietly do nothing.
+ *
+ * libdispatch's single use is {CTL_KERN, KERN_OSVERSION} into _dispatch_build,
+ * which is introspection: the string reaches crash reports and nowhere else. A
+ * fixed answer is therefore a real answer rather than a stub pretending to be
+ * one -- and it says "machorun" rather than a plausible macOS build number, so
+ * nobody reads a crash report and believes it came from a Mac.
+ *
+ * Anything else bails, because an unimplemented MIB and a nonexistent one are
+ * different facts and only one of them should look like a normal failure. */
+#define MR_CTL_KERN        1
+#define MR_KERN_OSTYPE     1
+#define MR_KERN_OSRELEASE  2
+#define MR_KERN_OSVERSION 65
+
+static int mr_sysctl_string(const char *val, void *oldp, size_t *oldlenp)
+{
+    size_t need = glibc_strlen(val) + 1;
+    if (!oldlenp) { *mr_errno_slot() = 22; return -1; }              /* EINVAL */
+    if (!oldp) { *oldlenp = need; return 0; }                        /* size query */
+    if (*oldlenp < need) { *oldlenp = need; *mr_errno_slot() = 12; return -1; } /* ENOMEM */
+    glibc_memcpy(oldp, val, need);
+    *oldlenp = need;
+    return 0;
+}
+
+EXPORT int sysctl(int *name, unsigned namelen, void *oldp, size_t *oldlenp,
+                  void *newp, size_t newlen)
+{
+    if (newp || newlen) { *mr_errno_slot() = 1; return -1; }         /* EPERM */
+
+    if (!name || namelen < 2 || name[0] != MR_CTL_KERN)
+        mr_bail("sysctl(): only CTL_KERN OSTYPE/OSRELEASE/OSVERSION are "
+                "implemented. There is nothing to forward to -- glibc dropped "
+                "sys/sysctl.h and Linux's sysctl(2) returns ENOSYS -- so an "
+                "unimplemented MIB must not look like a normal failure. "
+                "See docs/UNIMPLEMENTED.md#sysctl-mibs.");
+
+    switch (name[1]) {
+    case MR_KERN_OSTYPE:    return mr_sysctl_string("Darwin",   oldp, oldlenp);
+    case MR_KERN_OSRELEASE: return mr_sysctl_string("machorun", oldp, oldlenp);
+    case MR_KERN_OSVERSION: return mr_sysctl_string("machorun", oldp, oldlenp);
+    default:
+        mr_bail("sysctl(CTL_KERN, ...): that MIB is not implemented. See "
+                "docs/UNIMPLEMENTED.md#sysctl-mibs.");
+    }
+}
+
+/* _simple_asl_log is Apple SPI: the fallback branch of libdispatch's
+ * _dispatch_log when no other destination is configured. It is NOT variadic
+ * (level, facility, message), which is worth stating because the rest of the
+ * _simple_asl family is. Sending it to stderr is what a Darwin process with no
+ * syslog would do, and it keeps a diagnostic the guest chose to emit from
+ * disappearing. */
+EXPORT void _simple_asl_log(int level, const char *facility, const char *message)
+{
+    (void)level;
+    if (!message) return;
+    if (facility) {
+        (void)write(2, facility, glibc_strlen(facility));
+        (void)write(2, ": ", 2);
+    }
+    (void)write(2, message, glibc_strlen(message));
+    (void)write(2, "\n", 1);
+}
+
 /* pthread_main_np(3) is BSD/Darwin-only: "is the calling thread the main
  * thread?". glibc has no equivalent -- gettid()==getpid() is the usual Linux
  * idiom but is about the THREAD GROUP LEADER, which is the same thing here

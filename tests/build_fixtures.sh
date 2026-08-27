@@ -243,6 +243,14 @@ if want 30_throw; then
     echo "==> 30_throw"; built+=(30_throw)
 fi
 
+# --------------------------------------------------------------- rung (ad)
+# The libdispatch boundary. Two of its eleven symbols can be graded against a
+# macOS oracle, and they are the two carrying the subtler mistake: fcntl, where
+# the COMMAND agrees (F_GETFL 3, F_SETFL 4) and the O_* VALUE it carries does
+# not, and madvise, where the four common advice values agree and the fifth --
+# MADV_FREE, the only one libdispatch uses -- does not.
+want 31_fcntl_madvise    && build 31_fcntl_madvise    "$CHAINED_TARGET" 31_fcntl_madvise    31_fcntl_madvise.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -554,6 +554,45 @@ that includes only `<sys/signal.h>` sees the struct and not the function —
 same two-line probe against both. The fix for a consumer hitting this is
 `#include <signal.h>`, not staging a header.
 
+### `fcntl-nosigpipe` — a Darwin facility Linux does not have
+`F_GETNOSIGPIPE` (74) and `F_SETNOSIGPIPE` (73) ask a descriptor not to raise
+`SIGPIPE`. **Linux has no per-fd equivalent** — it suppresses `SIGPIPE` per-send
+with `MSG_NOSIGNAL` or process-wide with `SIG_IGN`, never per-descriptor. Both
+return `ENOTSUP` rather than succeeding as a no-op, because a silent success
+would leave the guest believing a write to a closed pipe cannot raise a signal.
+
+macOS answers both, so this is a real divergence no wrapper can reconcile and it
+is therefore **absent from `31_fcntl_madvise`** — the same reason `POLLWRBAND` is
+absent from `28_poll` and `SIGEMT` from `29_sigaction`.
+
+### `sysctl-mibs` — three MIBs, and nothing to forward to
+`sysctl` is implemented rather than forwarded, which is unusual enough to record
+why: `sys/sysctl.h` no longer exists in glibc 2.39, Linux's `sysctl(2)` was
+removed from the kernel and returns `ENOSYS`, and Darwin's is an unrelated BSD
+MIB API. The symbol survives in `libc.so.6` only as a compat stub — exactly the
+shape that lets a link succeed and a call quietly do nothing.
+
+`CTL_KERN` with `KERN_OSTYPE`, `KERN_OSRELEASE` and `KERN_OSVERSION` answer
+`"Darwin"`, `"machorun"` and `"machorun"`. libdispatch's single use is
+`KERN_OSVERSION` into `_dispatch_build`, which reaches crash reports and nothing
+else, so a fixed answer is a real answer rather than a stub pretending to be one
+— and it deliberately does **not** return a plausible macOS build number, so
+nobody reads a crash report and believes it came from a Mac.
+
+Every other MIB **aborts**. An unimplemented MIB and a nonexistent one are
+different facts, and only one of them should look like a normal failure.
+
+### `ioctl-request-encoding` — two request spaces that do not correspond
+Darwin encodes an `ioctl` request as direction|size|group|number (`FIONREAD` is
+`0x4004667f`); Linux uses small opaque numbers (`FIONREAD` is `0x541b`). Nothing
+about the two spaces corresponds, so a forward asks the kernel for an unrelated
+operation **through a pointer**.
+
+`ioctl` therefore translates Darwin's `FIONREAD` onto Linux's, passes Linux's
+own `SIOCINQ`/`SIOCOUTQ` through unchanged — libdispatch's epoll backend is
+Linux shim code compiled for a Darwin target and has no Darwin spelling for
+them, exactly like `signalfd` — and **aborts on anything else**.
+
 ### `not-a-plain-forward` — six symbols that look like forwards and are not
 Measured 2026-08-27 against Apple's SDK and glibc 2.39, after a consumer's
 census classified all of these as "plain POSIX, present in glibc". Four of that

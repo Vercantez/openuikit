@@ -402,6 +402,46 @@ EXPORT int sprintf(char *dst, const char *fmt, ...)
     return n;
 }
 
+/* dprintf(3) belongs HERE rather than beside write() in posix.c, and the
+ * reason is the whole point of this file having a formatter at all.
+ *
+ * It is VARIADIC. Darwin's arm64 ABI passes variadic arguments on the STACK;
+ * AAPCS64, which glibc follows, passes the first eight in REGISTERS. A
+ * `_glibc_dprintf` bind would have glibc read registers this caller never
+ * wrote -- and for a format with a %s in it, that is a wild pointer being
+ * dereferenced rather than a wrong number printed. So dprintf never reaches
+ * glibc's: it formats with mr_vformat through vsnprintf, entirely on our side,
+ * and hands the finished BYTES to write(2). The variadic convention is then
+ * never crossed at all, which is a stronger property than translating it.
+ *
+ * libdispatch reaches this only on the DISPATCH_LOGFILE debug path, and that
+ * does not make it optional: machorun binds eagerly, so an absent symbol is
+ * fatal at LOAD, not at first call. "Only used when logging is on" is a
+ * different claim from "only needed when logging is on". */
+EXPORT int dprintf(int fd, const char *fmt, ...)
+{
+    char stackbuf[512], *buf = stackbuf;
+    va_list ap;
+    int n;
+
+    va_start(ap, fmt);
+    n = vsnprintf(stackbuf, sizeof stackbuf, fmt, ap);
+    va_end(ap);
+    if (n < 0) return -1;
+
+    if ((size_t)n >= sizeof stackbuf) {      /* snprintf rules: n excludes the NUL */
+        buf = glibc_malloc((size_t)n + 1);
+        if (!buf) return -1;
+        va_start(ap, fmt);
+        vsnprintf(buf, (size_t)n + 1, fmt, ap);
+        va_end(ap);
+    }
+
+    n = (int)MR_ERRNO_CALL(glibc_write(fd, buf, (size_t)n));
+    if (buf != stackbuf) glibc_free(buf);
+    return n;
+}
+
 EXPORT int asprintf(char **out, const char *fmt, ...)
 {
     va_list ap; int n; char *buf;
