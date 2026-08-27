@@ -168,6 +168,175 @@ typedef void *mach_msg_header_t;
      "defer to real Mach headers for types when present")
 
 # ---------------------------------------------------------------------------
+# 4. A fourth _dispatch_sema4_t backend: pthread mutex + condition variable.
+#
+# src/shims/lock.h offers USE_MACH_SEM / USE_POSIX_SEM / USE_WIN32_SEM and then
+# `#error "port has to implement _dispatch_sema4_t"`. We are a Darwin target
+# WITHOUT Mach IPC -- a combination upstream does not model -- so this is the
+# same "this is not a Mac" statement as patches 1-3.
+#
+# USE_POSIX_SEM is the trap that looks like a one-line config fix:
+#
+#   * _dispatch_sema4_t is embedded BY VALUE in libdispatch's structures, so
+#     `typedef sem_t _dispatch_sema4_t` puts Darwin's 4-byte sem_t where glibc's
+#     sem_init writes 32. Clean link, 0 return, 28 bytes past the object gone --
+#     the opaque-pointer audit's first LIVE instance, in exactly the path CF
+#     needs (dispatch_semaphore_* is among CF's 21 symbols).
+#   * Darwin does not implement unnamed POSIX semaphores at all: measured on
+#     macOS 26 arm64, sem_init returns -1/ENOSYS. Selecting USE_POSIX_SEM for a
+#     Darwin target emulates a configuration Apple's platform never has.
+#   * Darwin's sem_t is 4 bytes, so the pointer-handle trick that rescues
+#     posix_spawnattr_t cannot apply here -- 4 bytes cannot hold a pointer.
+#
+# The pair below is safe for reasons that were MEASURED, not assumed:
+#
+#   * No overflow, because machorun adopts both types as HANDLES. cond_glibc()
+#     stores a pointer to a heap glibc cond in the first 8 bytes of Darwin's
+#     opaque area (darwin/src/libsystem.c) and the mutex path does the same via
+#     adopt(), so nothing is written past the guest's allocation regardless of
+#     the size disagreement. sizeof is 120 on both platforms.
+#   * ETIMEDOUT is translated. mr_pthread_rc() wraps glibc_pthread_cond_timedwait
+#     at the call site; a probe under machorun returns rc=60, matching the
+#     compiled Darwin value. Without it a guest sees Linux's 110, compares
+#     against 60, and concludes a wait that EXPIRED had SUCCEEDED -- which is
+#     how 21_pthread_cond found that bug ("waited=yes timedout=NO").
+#   * Attributes are NULL, as they must be: machorun's forwarder bails on a
+#     non-NULL condattr. That costs nothing, because _dispatch_sema4_timedwait
+#     is handed nanoseconds since the EPOCH and the default cond already uses
+#     the realtime clock. NULL mutex attrs also sidestep the swapped mutex TYPE
+#     constants entirely.
+#
+# Verified on both platforms, 4/4, teeth demonstrated by mutation: an inverted
+# timeout return fails the negative-control case ONLY, on macOS and under
+# machorun. See foundation-macho docs/DISPATCH_PATCH4.md and tests/t4_sema4.c.
+# ---------------------------------------------------------------------------
+edit("src/shims/lock.h",
+"""#else
+#error "port has to implement _dispatch_sema4_t"
+#endif""",
+"""#elif USE_PTHREAD_SEM
+
+/* Fourth branch -- see scripts/dispatch_patches.py. A Darwin target without
+ * Mach IPC, which upstream models neither with USE_MACH_SEM (no Mach) nor with
+ * USE_POSIX_SEM (Darwin's 4-byte sem_t would be overwritten by glibc's 32, and
+ * Darwin returns ENOSYS for sem_init anyway). */
+typedef struct _dispatch_sema4_s {
+	pthread_mutex_t dsema_mutex;
+	pthread_cond_t  dsema_cond;
+	long            dsema_value;
+} _dispatch_sema4_t;
+
+/* A condition variable cannot promise wakeup ordering. Upstream's POSIX and
+ * Win32 backends both define these to 0 for the same reason; matching them is
+ * honest rather than claiming a guarantee we do not provide. */
+#define _DSEMA4_POLICY_FIFO 0
+#define _DSEMA4_POLICY_LIFO 0
+#define _DSEMA4_TIMEOUT() ((errno) = ETIMEDOUT, -1)
+
+void _dispatch_sema4_init(_dispatch_sema4_t *sema, int policy);
+/* Creation is eager, as in the POSIX branch: init does the work, so the lazy
+ * create_slow path is a no-op and is_created is always true. */
+#define _dispatch_sema4_is_created(sema) ((void)sema, 1)
+#define _dispatch_sema4_create_slow(sema, policy) ((void)sema, (void)policy)
+
+#else
+#error "port has to implement _dispatch_sema4_t"
+#endif""",
+     "patch 4a: declare the pthread semaphore backend")
+
+edit("src/shims/lock.c",
+"""#elif USE_WIN32_SEM""",
+"""#elif USE_PTHREAD_SEM
+
+/* pthread reports errors through its RETURN VALUE, not errno -- unlike the
+ * POSIX-semaphore branch above, whose macro checks `== -1` and reads errno.
+ * Reusing that macro here would check the wrong thing and never fire. */
+#define DISPATCH_PTHREAD_VERIFY(rc) do { \\
+		int _rc = (rc); \\
+		if (unlikely(_rc != 0)) { \\
+			DISPATCH_INTERNAL_CRASH(_rc, "pthread semaphore API failure"); \\
+		} \\
+	} while (0)
+
+void
+_dispatch_sema4_init(_dispatch_sema4_t *sema, int policy DISPATCH_UNUSED)
+{
+	sema->dsema_value = 0;
+	/* NULL attributes deliberately: machorun's forwarder bails on a non-NULL
+	 * pthread_condattr_t, and the mutex TYPE constants differ between Darwin
+	 * and glibc, so requesting a type would be requesting a different one. */
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_init(&sema->dsema_mutex, NULL));
+	DISPATCH_PTHREAD_VERIFY(pthread_cond_init(&sema->dsema_cond, NULL));
+}
+
+void
+_dispatch_sema4_dispose_slow(_dispatch_sema4_t *sema, int policy DISPATCH_UNUSED)
+{
+	DISPATCH_PTHREAD_VERIFY(pthread_cond_destroy(&sema->dsema_cond));
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_destroy(&sema->dsema_mutex));
+}
+
+void
+_dispatch_sema4_signal(_dispatch_sema4_t *sema, long count)
+{
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_lock(&sema->dsema_mutex));
+	sema->dsema_value += count;
+	/* Signalling under the lock costs a possible extra context switch and
+	 * removes the window where a waiter arrives between bump and wake. */
+	if (count == 1) {
+		DISPATCH_PTHREAD_VERIFY(pthread_cond_signal(&sema->dsema_cond));
+	} else {
+		DISPATCH_PTHREAD_VERIFY(pthread_cond_broadcast(&sema->dsema_cond));
+	}
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_unlock(&sema->dsema_mutex));
+}
+
+void
+_dispatch_sema4_wait(_dispatch_sema4_t *sema)
+{
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_lock(&sema->dsema_mutex));
+	/* while, not if: a broadcast wakes every waiter but only `count` may
+	 * proceed, and pthread_cond_wait may wake spuriously. */
+	while (sema->dsema_value == 0) {
+		DISPATCH_PTHREAD_VERIFY(pthread_cond_wait(&sema->dsema_cond,
+				&sema->dsema_mutex));
+	}
+	sema->dsema_value--;
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_unlock(&sema->dsema_mutex));
+}
+
+bool
+_dispatch_sema4_timedwait(_dispatch_sema4_t *sema, dispatch_time_t timeout)
+{
+	struct timespec ts;
+	uint64_t nsec = _dispatch_time_nanoseconds_since_epoch(timeout);
+	ts.tv_sec  = (__typeof__(ts.tv_sec))(nsec / NSEC_PER_SEC);
+	ts.tv_nsec = (__typeof__(ts.tv_nsec))(nsec % NSEC_PER_SEC);
+
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_lock(&sema->dsema_mutex));
+	while (sema->dsema_value == 0) {
+		int rc = pthread_cond_timedwait(&sema->dsema_cond,
+				&sema->dsema_mutex, &ts);
+		if (rc == ETIMEDOUT) {
+			/* TRUE MEANS TIMED OUT, matching upstream's POSIX branch.
+			 * Inverting this makes every timed wait report success. */
+			DISPATCH_PTHREAD_VERIFY(pthread_mutex_unlock(&sema->dsema_mutex));
+			return true;
+		}
+		if (rc != 0) {
+			DISPATCH_PTHREAD_VERIFY(pthread_mutex_unlock(&sema->dsema_mutex));
+			DISPATCH_INTERNAL_CRASH(rc, "pthread semaphore API failure");
+		}
+	}
+	sema->dsema_value--;
+	DISPATCH_PTHREAD_VERIFY(pthread_mutex_unlock(&sema->dsema_mutex));
+	return false;
+}
+
+#elif USE_WIN32_SEM""",
+     "patch 4b: implement the pthread semaphore backend")
+
+# ---------------------------------------------------------------------------
 # GUARD for patch 4 (pthread semaphore backend), checked every run.
 #
 # The pthread backend is safe *because* libdispatch creates every lock and

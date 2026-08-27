@@ -1,5 +1,49 @@
 # `_Concurrency` for the Mach-O stack — investigation before building
 
+> ## CURRENT STATE — read this before any Part below
+>
+> **The Parts are CHRONOLOGICAL. They are a log, not a status.** A "blocked on
+> X" written in Part 5 stays on the page after Part 6 unblocks it, so anyone
+> reading front-to-back inherits the oldest claim that was true at the time.
+> This has now misled two readers. Anything below is history unless it also
+> appears here.
+>
+> | patch | state |
+> |---|---|
+> | 1 build system selects the event backend | **landed** |
+> | 2 no `sysctlbyname` on a Linux host | **landed** |
+> | 3 defer to real Mach headers for types | **landed** |
+> | 4 pthread semaphore backend | **landed** 2026-08-27, verified both platforms |
+> | 5 runloop eventfd handle | **specified, not written** |
+> | 6 QoS private headers | **withdrawn** — they are in tags we already pin |
+>
+> **Superseded claims, explicitly struck:**
+>
+> * *Part 5, "blocked on making Mach headers opt-in in machorun's sysroot"* —
+>   **NO LONGER TRUE.** Patch 3 superseded it by including the real Mach headers
+>   rather than restubbing them, with `HAVE_MACH 0` still governing whether IPC
+>   compiles. machorun still stages all 67 Mach headers and that is now fine.
+> * *Part 7, "we have `sys/eventfd.h` staged … pinned by
+>   `sdk/tests/epoll_abi_probe.c`"* — **true, but not where it reads.** Those
+>   artifacts live in **this** repo (`sdk/tests/epoll_abi_probe.c`,
+>   `scripts/stage_linux_abi.sh`), which stages the declarations into the BUILD
+>   sysroot at build time. They were never committed to machorun's `sdk/`, and
+>   the proposed merge of the two probes never happened. Checking machorun for
+>   them finds nothing, in any ref — which is exactly what one reader did.
+>
+> **Verified end to end:** the semaphore, and only the semaphore.
+> `_dispatch_sema4_*` blocks and is signalled across threads, its timed wait
+> both expires and acquires correctly, and `signal(3)` releases exactly three —
+> native on macOS and as a Darwin Mach-O under machorun, with teeth shown by
+> mutation. See foundation-macho `docs/DISPATCH_PATCH4.md`.
+>
+> **Not verified:** everything else. No timer source has fired, no async work
+> has completed out of line, and libdispatch does not link. Patch 4's own TU
+> (`src/shims/lock.c`) does not compile yet either — `src/internal.h` pulls
+> `sys/socket.h`, which is broken in the staged sysroot by the
+> `constrained_ctypes.h` / `machine/_param.h` / `sys/_types/*` gap chain that
+> also blocks 3 CoreFoundation files. That gap is machorun's, not this port's.
+
 **Finding: dispatch is not a subsystem here. It is 13 symbols.** And there is a
 supported build configuration that needs none of them and still schedules for
 real. Both routes are viable; they differ in what they cost and what they buy

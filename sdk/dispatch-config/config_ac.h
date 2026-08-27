@@ -24,4 +24,11 @@
 #define VOUCHER_USE_MACH_VOUCHER 0
 #define DISPATCH_USE_INTERNAL_WORKQUEUE 1
 #define USE_OBJC 0
+
+/* Selects patch 4's semaphore backend. NOT USE_POSIX_SEM, deliberately:
+ * _dispatch_sema4_t is embedded by value, so Darwin's 4-byte sem_t would sit
+ * where glibc's sem_init writes 32 -- a clean link, a 0 return, and 28 bytes
+ * gone. Darwin also returns ENOSYS for sem_init, so USE_POSIX_SEM emulates a
+ * configuration Apple's own platform does not have. See dispatch_patches.py. */
+#define USE_PTHREAD_SEM 1
 #endif
