@@ -122,8 +122,17 @@ int clock_getres(int clk_id, struct conc_timespec *res)
  * run, so these cannot be aborts. They are opaque to us; size is generous and
  * alignment is maximal. Nothing on the synchronous render path dereferences
  * them -- the functions that would are the aborting stubs above. */
-__attribute__((aligned(16))) unsigned char _dispatch_main_q[256] = {0};
-__attribute__((aligned(16))) unsigned char _dispatch_source_type_timer[256] = {0};
+/* Size is a GUESS: these are opaque Darwin structs and we have no header for
+ * them. 256 was chosen as "surely enough", which is exactly the reasoning that
+ * produces the opaque-pointer ABI bugs catalogued in machorun's
+ * docs/UNIMPLEMENTED.md -- so it is overridable, and
+ * full/scripts/blobtest.sh runs the suite with a much larger value to prove
+ * the size is not the corruption source. */
+#ifndef CONCPATCH_BLOB
+#define CONCPATCH_BLOB 256
+#endif
+__attribute__((aligned(16))) unsigned char _dispatch_main_q[CONCPATCH_BLOB] = {0};
+__attribute__((aligned(16))) unsigned char _dispatch_source_type_timer[CONCPATCH_BLOB] = {0};
 
 /* Autolink force-load anchor for the _Builtin_float module. Its only job is to
  * exist so the reference resolves. */

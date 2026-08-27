@@ -41,13 +41,24 @@ if [ "$(uname -s)" = Darwin ]; then
 fi
 [ -f "$FONTS/SFNS.ttf" ] || echo "run_suite: WARNING no SFNS.ttf in $FONTS -- text scenes will not draw glyphs" >&2
 
-scenes=("$UIKIT"/fixtures/scenes/*.json)
-echo "run_suite: ${#scenes[@]} scenes -> $OUT"
+# PER-SCENE TIMEOUT. A crash is not the only failure mode: constraints_hugging
+# was measured spinning for 22 minutes with no output, and the same scene
+# CRASHED on the previous run -- so the corruption can produce an infinite loop
+# as readily as a bad pointer. Without a timeout one such scene stalls the whole
+# suite and the run silently never finishes. 120s is ~40x the slowest scene that
+# completes (animation captures, ~3s).
+SCENE_TIMEOUT=${SCENE_TIMEOUT:-120}
 
-pass=0; crash=0
+scenes=("$UIKIT"/fixtures/scenes/*.json)
+echo "run_suite: ${#scenes[@]} scenes -> $OUT (timeout ${SCENE_TIMEOUT}s/scene)"
+
+pass=0; crash=0; hung=0
 for s in "${scenes[@]}"; do
     name=$(basename "$s" .json)
-    out=$(docker run --rm "${STACKOPT[@]}" \
+    # Named, so a timed-out container can be reaped by EXACT name. Killing the
+    # docker CLI does not stop the container it started.
+    cname="mrsuite_${SUITE}_${name}"
+    out=$(timeout --signal=KILL "$SCENE_TIMEOUT" docker run --rm --name "$cname" "${STACKOPT[@]}" \
         -v "$ROOT:/w" -v "$UIKIT:/uikit:ro" -w /w/build/full \
         -e MACHORUN_ROOT=/w/scratch/mrroot_full \
         -e OPENUIKIT_RESOURCE_ROOT=/uikit/Sources/OpenUIKit/Resources \
@@ -58,10 +69,16 @@ for s in "${scenes[@]}"; do
     st=$?
     if [ $st -eq 0 ]; then
         pass=$((pass+1)); printf '%-34s ok\n' "$name"
+    elif [ $st -eq 137 ]; then
+        docker rm -f "$cname" >/dev/null 2>&1 || true
+        # 137 = timeout(1) SIGKILLed it. Reported as HANG rather than folded in
+        # with the crashes: a spin and a bad dereference need different hunting.
+        hung=$((hung+1)); printf '%-34s HANG\n' "$name"
+        { echo "########## $name (HANG, killed after ${SCENE_TIMEOUT}s)"; echo "$out"; } >>"$LOG"
     else
         crash=$((crash+1)); printf '%-34s EXIT=%d\n' "$name" "$st"
         { echo "########## $name (exit $st)"; echo "$out"; } >>"$LOG"
     fi
 done
 echo
-echo "run_suite: rendered_ok=$pass  failed=$crash  (failures logged to $LOG)"
+echo "run_suite: rendered_ok=$pass  crashed=$crash  hung=$hung  (failures logged to $LOG)"
