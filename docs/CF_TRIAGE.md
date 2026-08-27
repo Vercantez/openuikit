@@ -738,3 +738,47 @@ Order that follows:
    prerequisite — see §9 in the false-green record.
 
 I am not writing headers against a number I have already had to correct once.
+
+## 25. #51 step 1: the type header, and a circularity worth naming
+
+`include/CFFoundationTypes.h` supplies the Foundation **types** CF's dispatch
+call sites name — `NSRange`, `NSMakeRange` (19 call sites), `unichar`,
+`NSCalendarUnit`, `NSStringCompareOptions`, `NSTimeZoneNameStyle`. Measured
+effect: **69 → 73 of 82** compiling with live ObjC dispatch.
+
+The 9 that remain split cleanly, and the split is the useful part:
+
+| blocked on | files | owner |
+|---|---|---|
+| **missing method signatures** — `id` cast to a non-pointer | CFCalendar, CFDate, CFStream, CFString | ours, step 3 |
+| Darwin system types (`struct kinfo_proc`, `struct tzhead`) | CFUtilities, CFTimeZone | machorun sysroot |
+| assorted (shim defects, an `NSString` redefinition, a Mach macro) | CFSocket, CFRunLoop, CFURLAccess | mixed |
+
+**The four in the first row are the same defect as the 78 warnings**, surfacing
+where C refuses to look away. `CF_OBJC_FUNCDISPATCHV(typeID, CFTimeInterval,
+obj, msg)` expands to `return (CFTimeInterval)[obj msg];`. With only a `@class`
+declaration the message's return type defaults to `id`, and casting a pointer to
+`double` is a hard error rather than a warning. Same for `CFRange`,
+`CFStreamError`, and CFString's integer assignment.
+
+That is worth stating plainly because it is *evidence for* the design decision
+rather than an obstacle to it: real `@interface` declarations are not a
+nicety, they are what makes eight of these call sites express the right ABI.
+
+### The circularity
+
+Getting the true selector denominator requires all 82 files to compile;
+compiling four of them requires the method declarations; writing the method
+declarations is what the denominator was supposed to size. **This is iterative,
+not one-shot**, and pretending otherwise would produce another number needing
+retraction:
+
+1. types header (done — 73/82)
+2. `@interface` declarations seeded from the 151 warning-harvested selectors,
+   which is a biased lower bound but a fine *starting* set
+3. compile, harvest `__objc_methname` across all 82 — the unbiased number
+4. close the gap between 2 and 3, repeat until the harvest stops growing
+
+The number to report as "CF's selector surface" is the fixed point of that
+loop, not any single measurement along the way. I will say which step produced
+any figure I quote.
