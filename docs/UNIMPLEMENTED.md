@@ -2132,8 +2132,45 @@ structure.**
 **Result:** `import Darwin` and `import Synchronization` both compile against
 the pruned sysroot. Route (A) of the chain walk is closed.
 
-**Still not covered, and named:** the `import` compiles; nothing here links or
-runs a binary that uses those modules. `complex.h`, `sys/attr.h`, `fenv.h`,
+#### It RUNS, and getting there needed one more thing the compile could not reveal
+
+A Swift program that does `import Darwin` and calls `lgamma`, `jn`, `yn`,
+`strlen`, `sqrt` and `OSStatus` now **links and runs under machorun on Linux,
+producing output byte-identical to the same object file on macOS** — 13 checks,
+exit 0, `diff` clean. That is the claim "the module builds" could not make.
+
+**And the compile hid a real hole. `Darwin.C` — the C standard library — was
+pruned away entirely**, because Apple builds it out of 78 `_modules/_darwin_c_*.h`
+shims that we stage none of. `import Darwin` still *compiled*, because the
+overlay chain never asks for `Darwin.C`; the first symptom was user code calling
+`exit(0)` and getting **"cannot find 'exit' in scope"**. The generator now
+**synthesises** those shims instead of dropping the modules: each is a guard, a
+`__building_module` `#error`, and one `#include`, so two identifiers are read out
+of Apple's copy and our own file is written from them. 44 are produced here, and
+`Darwin_C` went from 0 headers to 12.
+
+**A shim is only written when the header it forwards to is actually staged** —
+otherwise it would be a file that exists and cannot compile, which is worse than
+an absent module: an absence is nameable, a broken `#include` is a diagnostic
+400 lines into someone else's build.
+
+**One mis-diagnosis, caught by our own duplicate-symbol gate within the hour.**
+The run failed on `___isPlatformVersionAtLeast`, so a definition was added to
+`libSystem`. `gen_tbd`'s all-pairs check refused the build: **`libswiftcompat`
+already defines it.** The symbol was never missing — the link line was wrong, and
+omitting `libswiftcompat` is also why `___divti3` appeared to be absent. The
+addition was reverted. *A static sweep asking "is this defined anywhere in the
+tree" and a runtime flat lookup asking "is this defined in a LOADED image" are
+different questions, and both answered correctly.*
+
+**Still not covered, and named:** this is a one-off measurement, not a gate.
+`scripts/swift_gate.sh` is the right home — it already runs a Swift program on
+both sides and diffs — but wiring the pruned modulemap into its sysroot is an
+integration rather than an add-on. And any Swift guest needs
+`libswiftcompat.dylib`, whose install name is `/usr/lib/libswiftcompat.dylib`,
+so **a binary that links it cannot serve as its own macOS oracle**: the
+comparison above is two links of one object file, differing only in that
+library. `complex.h`, `sys/attr.h`, `fenv.h`,
 `machine/_limits.h`, `setjmp.h`, `sys/_types/_offsetof.h` and `tgmath.h` remain
 unstaged — they sit in modules this chain never asks for, so they are pruned
 away rather than satisfied.
