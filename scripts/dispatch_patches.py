@@ -518,6 +518,122 @@ _dispatch_firehose_gate_wait(dispatch_gate_t dgl, uint32_t owner,
      "patch 11b: firehose gate wait needs Darwin's ulock SPI")
 
 # ---------------------------------------------------------------------------
+# 12. Workloops need Darwin's pthread-workqueue KERNEL interface.
+#
+# `#if TARGET_OS_MAC` at src/queue.c:4086 calls _pthread_workloop_create /
+# _pthread_workloop_destroy -- Darwin SPIs backed by the kernel workqueue, which
+# is precisely the machinery this port decided to do without
+# (HAVE_PTHREAD_WORKQUEUES 0, DISPATCH_USE_INTERNAL_WORKQUEUE 1). Seventh
+# instance of TARGET_OS_MAC standing in for a kernel facility; gating on the
+# flag that already records the decision.
+# ---------------------------------------------------------------------------
+edit("src/queue.c",
+"""#endif // HAVE_PTHREAD_ATTR_SETCPUPERCENT_NP
+#if TARGET_OS_MAC
+	if (_dispatch_workloop_has_kernel_attributes(dwl)) {""",
+"""#endif // HAVE_PTHREAD_ATTR_SETCPUPERCENT_NP
+/* swiftcore-macho: _pthread_workloop_* are Darwin kernel-workqueue SPIs, and
+ * this port runs on DISPATCH_USE_INTERNAL_WORKQUEUE instead. */
+#if TARGET_OS_MAC && HAVE_PTHREAD_WORKQUEUES
+	if (_dispatch_workloop_has_kernel_attributes(dwl)) {""",
+     "patch 12a: workloop create needs the pthread-workqueue kernel interface")
+
+# The matching destroy site, gated the same way. Two sites, not one -- the
+# create at queue.c:4090 and the destroy at 4152, each in its own
+# `#if TARGET_OS_MAC` block. Patching only the first left the file failing on
+# the second, which is why the census went 22 -> 23 rather than 22 -> 24.
+edit("src/queue.c",
+"""#if TARGET_OS_MAC
+	if (dwl->dwl_attr && (dwl->dwl_attr->dwla_flags &
+			DISPATCH_WORKLOOP_ATTR_NEEDS_DESTROY)) {
+		(void)dispatch_assume_zero(_pthread_workloop_destroy((uint64_t)dwl));
+	}
+#endif // TARGET_OS_MAC""",
+"""#if TARGET_OS_MAC && HAVE_PTHREAD_WORKQUEUES
+	/* swiftcore-macho: pairs with the create site above. */
+	if (dwl->dwl_attr && (dwl->dwl_attr->dwla_flags &
+			DISPATCH_WORKLOOP_ATTR_NEEDS_DESTROY)) {
+		(void)dispatch_assume_zero(_pthread_workloop_destroy((uint64_t)dwl));
+	}
+#endif // TARGET_OS_MAC && HAVE_PTHREAD_WORKQUEUES""",
+     "patch 12b: the matching workloop destroy site")
+
+# ---------------------------------------------------------------------------
+# 5. The runloop handle: a Mach port on Darwin, an eventfd everywhere else.
+#
+# Scoped in docs/CONCURRENCY.md Part 9. Six sites, all the same shape:
+#
+#     #if TARGET_OS_MAC        -> mach_port_construct / MACH_PORT_VALID / ...
+#     #elif defined(__linux__) -> eventfd / fd >= 0 / ...
+#
+# We are TARGET_OS_MAC with no __linux__, so we take the Mach branch and reach
+# mach_port_construct -- one of machorun's four self-naming aborts. Eighth
+# instance of TARGET_OS_MAC standing in for a kernel facility.
+#
+# The added condition is DISPATCH_EVENT_BACKEND_EPOLL, upstream's OWN macro and
+# exactly the right meaning: if the event backend is epoll then a runloop handle
+# is an eventfd. Using a name upstream already has keeps this a configuration
+# rather than a fork -- the same reasoning that replaced an invented
+# DISPATCH_LOCK_USE_FUTEX with HAVE_FUTEX.
+#
+# Confirmed by Part 7: _dispatch_get_main_queue_port_4CF is a one-line forward
+# to the HANDLE entry point, so "port" is a legacy alias and nothing here needs
+# port receive rights. CFRunLoop's integration works on the eventfd.
+# ---------------------------------------------------------------------------
+_RUNLOOP_SITES = [
+    ("private/private.h",
+     "#if TARGET_OS_MAC\ntypedef mach_port_t dispatch_runloop_handle_t;\n"
+     "#elif defined(__linux__) || defined(__FreeBSD__)",
+     "#if TARGET_OS_MAC && HAVE_MACH\ntypedef mach_port_t dispatch_runloop_handle_t;\n"
+     "#elif defined(__linux__) || defined(__FreeBSD__) || DISPATCH_EVENT_BACKEND_EPOLL",
+     "5a: the handle typedef"),
+    ("src/queue.c",
+     "#if TARGET_OS_MAC\n\treturn MACH_PORT_VALID(handle);\n#elif defined(__linux__)",
+     "#if TARGET_OS_MAC && HAVE_MACH\n\treturn MACH_PORT_VALID(handle);\n"
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL",
+     "5b: handle_is_valid"),
+    ("src/queue.c",
+     "#if TARGET_OS_MAC\n\treturn ((dispatch_runloop_handle_t)(uintptr_t)dq->do_ctxt);\n"
+     "#elif defined(__linux__)",
+     "#if TARGET_OS_MAC && HAVE_MACH\n\treturn ((dispatch_runloop_handle_t)(uintptr_t)dq->do_ctxt);\n"
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL",
+     "5c: queue_get_handle"),
+    ("src/queue.c",
+     "#if TARGET_OS_MAC\n\tdq->do_ctxt = (void *)(uintptr_t)handle;\n#elif defined(__linux__)",
+     "#if TARGET_OS_MAC && HAVE_MACH\n\tdq->do_ctxt = (void *)(uintptr_t)handle;\n"
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL",
+     "5d: queue_set_handle"),
+    # The two that actually call into Mach. mach_port_construct is one of
+    # machorun's four self-naming aborts, so without this the failure would have
+    # been a runtime bail inside CFRunLoop's first main-queue wakeup rather than
+    # a build error -- a good argument for naming those aborts.
+    ("src/queue.c",
+     "#if TARGET_OS_MAC\n\tmach_port_options_t opts = {",
+     "#if TARGET_OS_MAC && HAVE_MACH\n\tmach_port_options_t opts = {",
+     "5e: handle_init (mach_port_construct)"),
+    ("src/queue.c",
+     "#if TARGET_OS_MAC\n\tmach_port_t mp = (mach_port_t)handle;",
+     "#if TARGET_OS_MAC && HAVE_MACH\n\tmach_port_t mp = (mach_port_t)handle;",
+     "5f: handle_dispose (mach_port_destruct)"),
+    # Each of those two functions has its OWN `#elif defined(__linux__)`, which
+    # 5a-5d did not touch. Gating the Mach half without opening the eventfd half
+    # just moves the failure to the `#else` -- "runloop support not implemented
+    # on this platform" -- which is a clearer error but not a fix.
+    ("src/queue.c",
+     "#elif defined(__linux__)\n\tint fd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);",
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL\n"
+     "\tint fd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);",
+     "5g: handle_init eventfd branch"),
+    ("src/queue.c",
+     "#elif defined(__linux__)\n\tint rc = close(handle);",
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL\n\tint rc = close(handle);",
+     "5h: handle_dispose close branch"),
+]
+for relpath, old, new_, tag in _RUNLOOP_SITES:
+    edit(relpath, old, new_, "patch " + tag)
+
+
+# ---------------------------------------------------------------------------
 # GUARD for patch 4 (pthread semaphore backend), checked every run.
 #
 # The pthread backend is safe *because* libdispatch creates every lock and

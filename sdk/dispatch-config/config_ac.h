@@ -75,5 +75,12 @@
  * porting gap -- worth saying because it looks like a missing header. */
 #define DISPATCH_USE_DTRACE 0
 
+/* Darwin's malloc "nano zone" -- machorun's malloc is glibc's, which has none.
+ * allocator_internal.h sets this to 1 under `#ifndef` for TARGET_OS_MAC &&
+ * __LP64__, and src/allocator.c then calls malloc_engaged_nano(). At 0 the file
+ * provides its own `#define malloc_engaged_nano() false`, which is the right
+ * answer for us: we are never on a nano zone. Config, not patch. */
+#define DISPATCH_USE_NANOZONE 0
+
 #define USE_PTHREAD_SEM 1
 #endif
