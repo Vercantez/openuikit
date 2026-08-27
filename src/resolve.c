@@ -34,6 +34,25 @@ static uint64_t host_lookup(const char *name)
     return (uint64_t)dlsym(RTLD_DEFAULT, name + 1);
 }
 
+/* One line per distinct symbol, however many images bind it. */
+static void report_weak_null(const mr_image *from, const char *name)
+{
+    static const char *seen[64];
+    static int nseen;
+
+    for (int i = 0; i < nseen; i++)
+        if (strcmp(seen[i], name) == 0) return;
+    if (nseen < (int)(sizeof(seen) / sizeof(seen[0]))) seen[nseen++] = name;
+
+    fprintf(stderr,
+            "machorun: WEAK-DEFINITION GAP: nothing in the process defines '%s',\n"
+            "  which %s binds as a coalesced weak definition. It is now NULL, and a\n"
+            "  call through it will branch to address 0. This is a missing definition\n"
+            "  in our runtime libraries, not an optional symbol -- see\n"
+            "  docs/UNIMPLEMENTED.md#weak-definition-gaps.\n",
+            name, from->path);
+}
+
 __attribute__((noreturn)) void mr_stub_binder_trap(void);
 __attribute__((noreturn)) void mr_stub_binder_trap(void)
 {
@@ -237,8 +256,28 @@ uint64_t mr_resolve_symbol(mr_image *from, int lib_ordinal, const char *name,
         }
     }
 
+    if (!*found && weak_lookup) {
+        /* A weak-def-coalesce bind is NOT an optional symbol. It says "this
+         * symbol has one definition shared across the program, and the linker
+         * does not care which image supplies it" -- which is how C++ inline
+         * functions, template instantiations and the REPLACEABLE operator
+         * new/delete are bound. Real dyld always finds one, because libc++
+         * defines them. Here a miss means our libc++ subset is short a
+         * definition, and binding it to NULL turns that into a branch through
+         * zero at some unpredictable later moment.
+         *
+         * This was silent until 2026-08-27, and it hid a real one: Apple's
+         * shipped libswiftCore imports operator new/delete in Apple's TYPED
+         * form (__ZnwmSt19__type_descriptor_t, the extra argument being a
+         * type descriptor for their typed-memory-operations work). Our libc++
+         * defines only the untyped and sized forms, so both bound to NULL with
+         * no diagnostic anywhere. Say it out loud instead. */
+        report_weak_null(from, name);
+        return 0;
+    }
+
     if (!*found) {
-        if (weak_import || weak_lookup) return 0;   /* legitimately NULL */
+        if (weak_import) return 0;   /* legitimately absent: optional at run time */
         mr_resolve_report(from, flat ? NULL : target, name);
         fflush(stderr);
         _exit(73);
