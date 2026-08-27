@@ -44,4 +44,5 @@
 25_sigmask	w	chained	run	pass	sigset_t is 4 bytes on Darwin and 128 on glibc, ten signal numbers differ, and SIG_BLOCK/UNBLOCK/SETMASK are off by one
 26_malloc_type	y	chained	run	pass	Apple's typed allocator; the size argument sits in a different register in every member of the family
 27_unwind	z	chained	run	pass	walks a real stack through Apple's compact __unwind_info; the symbols resolved the whole time it was stubbed
+28_throw	aa	chained	run	pass	a real C++ throw across frames, caught by type; the case that matters is the handler that must NOT match
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

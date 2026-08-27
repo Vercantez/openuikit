@@ -214,6 +214,18 @@ want 26_malloc_type      && build 26_malloc_type      "$CHAINED_TARGET" 26_mallo
 # was a set of aborting stubs.
 want 27_unwind           && build 27_unwind           "$CHAINED_TARGET" 27_unwind           27_unwind.c --
 
+# --------------------------------------------------------------- rung (aa)
+# A C++ exception that really is thrown, really crosses frames, and really is
+# caught by type. rung (z) proved the UNWINDER works; this proves the language
+# runtime above it does. The case that matters is the handler that must NOT
+# match -- a personality routine that said yes to everything would pass every
+# other case here.
+if want 28_throw; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -std=c++17 -o "$BIN/28_throw" \
+        "$SRC/28_throw.cpp" -lc++
+    echo "==> 28_throw"; built+=(28_throw)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

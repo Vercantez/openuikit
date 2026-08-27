@@ -720,57 +720,30 @@ EXPORT int task_restartable_ranges_synchronize(unsigned task)
 { (void)task; return 46; }
 
 /* ===================================================================== *
- * The C++ exception ABI.
+ * The C++ exception ABI: NOT STUBBED ANY MORE.
  *
- * THE UNWINDER IS NO LONGER STUBBED. LLVM 18.1.8's libunwind is compiled into
- * this dylib unpatched (vendor/libunwind, scripts/build_darwin.sh), so
- * _Unwind_*, unw_* and the compact __TEXT,__unwind_info reader are the real
- * ones; the loader supplies _dyld_find_unwind_sections (src/unwind.c), which is
- * the half only dyld can know. tests/src/27_unwind.c walks a real stack through
- * it and matches macOS.
+ * __cxa_throw, __gxx_personality_v0, std::terminate and the rest are LLVM
+ * 18.1.8's libc++abi, compiled unpatched from vendor/libcxxabi and linked into
+ * this dylib alongside libunwind (scripts/build_darwin.sh). What used to be
+ * here was fourteen functions that aborted naming themselves.
  *
- * WHAT IS STILL MISSING IS THE LANGUAGE RUNTIME ABOVE IT: libc++abi. Unwinding
- * a stack and THROWING are different jobs -- __cxa_throw allocates an exception,
- * calls _Unwind_RaiseException, and __gxx_personality_v0 decides at each frame
- * whether a handler matches by reading the LSDA and comparing type_info. None
- * of that is in libunwind. objc4's @throw/@catch machinery is compiled in and
- * its symbols must resolve, so these still abort naming themselves: a program
- * that never throws runs correctly, and one that throws stops with a sentence
- * rather than jumping into a half-built ABI.
+ * IT IS ITS OWN DYLIB, /usr/lib/libc++abi.dylib, EXACTLY AS ON DARWIN -- and
+ * the first arrangement here was wrong in an instructive way. It put libc++abi
+ * inside libSystem, reasoning that tests/objc44/038-exceptions loads only
+ * libobjc and libSystem (otool -L), so nothing else could be found. That
+ * worked for objc4 and FAILED for C++ guests: a guest linking -lc++ binds
+ * __ZNSt13runtime_errorD1Ev TWO-LEVEL against libc++.1.dylib, because on
+ * Darwin libc++ RE-EXPORTS libc++abi. Ours had nothing to re-export, so the
+ * symbol was present in the process and unreachable from the only library
+ * allowed to answer for it.
+ *
+ * "Put it where the current consumer will find it" is the reasoning that
+ * produced the bug. Reproducing Darwin's shape is what fixed it: libc++abi is
+ * its own dylib, libc++.1.dylib re-exports it, and libobjc LINKS against it
+ * rather than relying on flat lookup. The loader already chases
+ * LC_REEXPORT_DYLIB (src/resolve.c lookup_in, depth 4), so both consumers now
+ * resolve for the same reason they resolve on macOS.
  * ===================================================================== */
-#define UNWIND_STUB(name)                                                     \
-    EXPORT void name(void) {                                                  \
-        mr_bail(#name ": C++/ObjC exceptions need libc++abi, which machorun "  \
-                "does not have yet. The UNWINDER exists now (LLVM libunwind "  \
-                "over Apple's compact __unwind_info); what is absent is the "  \
-                "personality routine and the exception object above it. See "  \
-                "docs/UNIMPLEMENTED.md#unwind-compact.");                      \
-    }
-
-UNWIND_STUB(__cxa_allocate_exception)
-UNWIND_STUB(__cxa_throw)
-UNWIND_STUB(__cxa_begin_catch)
-UNWIND_STUB(__cxa_end_catch)
-UNWIND_STUB(__cxa_rethrow)
-UNWIND_STUB(__cxa_current_exception_type)
-UNWIND_STUB(__gxx_personality_v0)
-
-/* std::terminate / std::set_terminate, mangled. objc-exception.mm installs a
- * terminate handler so that an uncaught ObjC exception prints its class name.
- * Installing one is harmless; calling terminate aborts, which is what
- * std::terminate does. */
-static void (*terminate_handler)(void);
-EXPORT void (*_ZSt13set_terminatePFvvE(void (*h)(void)))(void)
-{
-    void (*old)(void) = terminate_handler;
-    terminate_handler = h;
-    return old;
-}
-EXPORT void _ZSt9terminatev(void)
-{
-    if (terminate_handler) terminate_handler();
-    mr_bail("std::terminate() was called and the handler returned");
-}
 
 /* ===================================================================== *
  * Odds and ends objc4 reaches for that the C corpus never did.

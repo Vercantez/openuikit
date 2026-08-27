@@ -602,6 +602,51 @@ report.
 
 ---
 
+### (aa) `28_throw` — an exception that is really thrown and really caught
+`tests/src/28_throw.cpp` · chained
+
+Rung (z) proved the UNWINDER decodes Apple's compact `__unwind_info`. It says
+nothing about throwing, because walking a stack and unwinding one are different
+jobs: `__cxa_throw` allocates an exception and calls `_Unwind_RaiseException`,
+and `__gxx_personality_v0` then decides AT EACH FRAME whether a handler matches
+by parsing that frame's LSDA and comparing `type_info`. A fixture that links, or
+that throws and catches inside one function, exercises none of it.
+
+So every case throws across at least one frame boundary, and the interesting
+ones are about SELECTION rather than success:
+
+* catch by exact type, with an intermediate frame in between
+* catch by BASE class when a derived is thrown — needs `private_typeinfo`'s
+  hierarchy walk rather than a pointer compare
+* **a handler that must NOT match**, so the exception passes through it and is
+  caught further out. **This is the case that matters**: a personality routine
+  that said "yes" to everything would pass every other case here and fail only
+  this one.
+* destructors running during unwinding, IN ORDER — the cleanup phase rather
+  than the handler phase
+* rethrow from inside a catch, reusing the in-flight exception object
+* `std::runtime_error`'s `what()`, i.e. the vtable survived the trip
+
+**Why the destructor ORDER string is printed and not just a count.** "It did
+not crash" is not evidence: an unwinder that skips cleanup frames still delivers
+the exception to the right handler and looks perfect. The order catches a
+cleanup phase that visits frames in the wrong sequence; the count catches one
+that skips them entirely.
+
+**The corpus check earned its keep here.** The fixture named three symbols our
+libc++ did not have the moment it existed — `std::runtime_error`'s constructor
+and destructor, and `std::current_exception`. Those are what real code throws,
+so the library grew (`vendor/libcxx`'s `exception.cpp` and `stdexcept.cpp`)
+rather than the fixture shrinking. Weakening a test to fit the implementation is
+backwards.
+
+**Loader must implement:** nothing new beyond rung (z)'s
+`_dyld_find_unwind_sections`. What this rung needs is `LC_REEXPORT_DYLIB`
+chasing, which `src/resolve.c`'s `lookup_in` already did — the gap was that our
+`libc++.1.dylib` had nothing to chase.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

@@ -92,7 +92,7 @@ imports_of() { "$NM" -u "$1" 2>/dev/null | strip_banners | awk '{print $NF}' | s
 # stubs. Absent, it is skipped with a line saying so -- never emitted empty,
 # because an empty .tbd is a promise ld64 will believe (see this script's
 # header) and the guest would then fail at run time instead of at link time.
-DYLIBS=(libSystem.B libobjc.A libc++.1)
+DYLIBS=(libSystem.B libobjc.A libc++.1 libc++abi)
 for d in "${DYLIBS[@]}"; do
     [ -f "$DYLIB/$d.dylib" ] || die "no $DYLIB/$d.dylib -- build it first (scripts/build.sh all)"
 done
@@ -165,6 +165,7 @@ fi
 sort -u "$TMP/exp.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B"
 cp "$TMP/exp.libobjc.A"  "$TMP/sym.libobjc.A"
 cp "$TMP/exp.libc++.1"   "$TMP/sym.libc++.1"
+cp "$TMP/exp.libc++abi"  "$TMP/sym.libc++abi"
 [ -f "$TMP/exp.libquartz" ] && cp "$TMP/exp.libquartz" "$TMP/sym.libquartz"
 
 emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
@@ -190,6 +191,7 @@ if [ "$MODE" = generate ]; then
     emit_tbd "/usr/lib/libSystem.B.dylib" "$TMP/sym.libSystem.B" "$OUT/libSystem.B.tbd"
     emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$OUT/libobjc.A.tbd"
     emit_tbd "/usr/lib/libc++.1.dylib"    "$TMP/sym.libc++.1"    "$OUT/libc++.1.tbd"
+    emit_tbd "/usr/lib/libc++abi.dylib"   "$TMP/sym.libc++abi"   "$OUT/libc++abi.tbd"
     [ -f "$TMP/sym.libquartz" ] && \
         emit_tbd "/usr/lib/libquartz.dylib" "$TMP/sym.libquartz" "$OUT/libquartz.tbd"
     # Apple ships libSystem.tbd and libobjc.tbd as symlinks; -lSystem looks for
