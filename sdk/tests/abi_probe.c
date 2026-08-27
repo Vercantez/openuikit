@@ -34,6 +34,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/signal.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
 #include <sys/sysctl.h>
@@ -124,6 +125,27 @@ int main(void)
     VAL(ENOTSOCK); VAL(EOPNOTSUPP); VAL(ELOOP); VAL(ENAMETOOLONG);
     VAL(ENOTEMPTY); VAL(EOVERFLOW); VAL(ECANCELED); VAL(EIDRM);
     VAL(ENOTSUP); VAL(ETIMEDOUT); VAL(ENOSYS);
+
+    puts("");
+    puts("== signals  (9 of 28 shared names differ from Linux, and three form a");
+    puts("==           CYCLE: Darwin SIGCONT 19 / SIGCHLD 20 against Linux 18 / 17,");
+    puts("==           so a forwarded number does not merely miss, it names a");
+    puts("==           different real signal. Nothing forwards one today.)");
+    VAL(SIGHUP); VAL(SIGINT); VAL(SIGQUIT); VAL(SIGILL); VAL(SIGTRAP);
+    VAL(SIGABRT); VAL(SIGFPE); VAL(SIGKILL); VAL(SIGBUS); VAL(SIGSEGV);
+    VAL(SIGSYS); VAL(SIGPIPE); VAL(SIGALRM); VAL(SIGTERM); VAL(SIGURG);
+    VAL(SIGSTOP); VAL(SIGTSTP); VAL(SIGCONT); VAL(SIGCHLD); VAL(SIGTTIN);
+    VAL(SIGTTOU); VAL(SIGXCPU); VAL(SIGXFSZ); VAL(SIGVTALRM); VAL(SIGPROF);
+    VAL(SIGWINCH); VAL(SIGUSR1); VAL(SIGUSR2);
+    VAL(SIG_BLOCK); VAL(SIG_UNBLOCK); VAL(SIG_SETMASK);
+    VAL(SA_RESTART); VAL(SA_SIGINFO); VAL(SA_NOCLDSTOP);
+
+    puts("");
+    puts("== socket constants are NOT here, and that is a finding rather than an");
+    puts("==   omission: sys/socket.h IS staged but includes sys/constrained_ctypes.h,");
+    puts("==   which is not, so nothing can compile against it. The glibc half is");
+    puts("==   pinned in sdk/tests/glibc_abi_probe.c; this half has to wait for the");
+    puts("==   dangling include. SOL_SOCKET is 65535 on Darwin against 1 on Linux.");
 
     puts("");
     puts("== open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)");
