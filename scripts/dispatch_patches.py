@@ -628,6 +628,20 @@ _RUNLOOP_SITES = [
      "#elif defined(__linux__)\n\tint rc = close(handle);",
      "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL\n\tint rc = close(handle);",
      "5h: handle_dispose close branch"),
+    # The sixth site, and the one both of my earlier searches missed. It opens
+    # `#if HAVE_MACH` rather than `#if TARGET_OS_MAC`, and its Darwin branch
+    # calls _dispatch_send_wakeup_runloop_thread rather than any mach_port_*
+    # name -- so grepping for mach_port_* found five, and grepping for
+    # TARGET_OS_MAC also found five. PRECISION IN A SEARCH IS NOT COVERAGE.
+    # Enumerating by the `#error` marker every unhandled chain must contain
+    # found six, which is the enumeration to trust.
+    #
+    # HAVE_MACH is already 0 for us, so only the eventfd half needs opening.
+    ("src/queue.c",
+     "#elif defined(__linux__)\n\tint result;\n\tdo {\n\t\tresult = eventfd_write(handle, 1);",
+     "#elif defined(__linux__) || DISPATCH_EVENT_BACKEND_EPOLL\n"
+     "\tint result;\n\tdo {\n\t\tresult = eventfd_write(handle, 1);",
+     "5i: runloop queue poke (eventfd_write)"),
 ]
 for relpath, old, new_, tag in _RUNLOOP_SITES:
     edit(relpath, old, new_, "patch " + tag)

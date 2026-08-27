@@ -452,3 +452,95 @@ Fonts: `run_suite.sh` copies `SFNS*.ttf` from the host macOS into
 `scratch/fonts` and passes `OPENUIKIT_FONT_DIR`, exactly as `~/uikit`'s own
 `scripts/linux_verify.sh` does — Apple's fonts are not redistributable, and
 without them glyphs missing from the harvested ink table do not draw at all.
+
+---
+
+## 6. From 108 scenes to a real app — a measured inventory
+
+A scene renders one frame from a description. An app has a lifecycle. This
+section is what was measured by taking `~/uikit`'s existing real-app harness —
+**unmodified source files from a shipping iOS app** (Automattic/pocket-casts) —
+and building and running them as Mach-O under machorun.
+
+### The headline: it renders, pixel-identical
+
+```
+realapp_history_light.png    IDENTICAL   (1,339,344 px)
+realapp_settings_light.png   IDENTICAL
+realapp_settings_dark.png    IDENTICAL
+```
+
+Linux/machorun against the macOS-native render of the same source. The lifecycle
+that produced them is the real one: `UIScreen._hostConfigure`, a `UIWindow`, a
+`rootViewController`, `makeKeyAndVisible`, a modal presentation with
+`animated: true`, and the animation clock advanced past the 0.4 s transition.
+
+### Foundation: one name, and a cliff
+
+The sharpest result, because it is counter-intuitive both ways.
+
+**The app source itself needs exactly ONE Foundation name: `NSCoder`** — for the
+`required init?(coder:)` UIKit forces on every `UIView` subclass, which the app
+never calls. `OptionAction.swift` even writes `import Foundation` and uses
+*nothing* from it; with no Foundation module present, that vestigial line is the
+only error in the entire target.
+
+**But a module named `Foundation` cannot be small.** Its mere existence flips
+OpenUIKit's 33 `#if canImport(Foundation)` guards *and* OpenCoreGraphics', which
+then demand Foundation's own `IndexPath`, `NSRange`, `NSRangePointer`,
+`TimeInterval`, `CGFloat`, `CGPoint`, `CGSize`, `CGRect`. A nearly-empty
+Foundation is **worse than none** — it switches the library onto a path it
+cannot satisfy.
+
+So the options are: no Foundation module (library freestanding, app's one import
+unsatisfied), or a real one. Nothing in between. The measurement here used a
+Foundation containing only `NSCoder` on an **app-only include path**, invisible
+to the library — which is not a trick but the real configuration: the library
+builds freestanding, the app builds against Foundation.
+
+### Present and exercised
+
+| | |
+|---|---|
+| `UIApplication`, `UIApplicationMain(delegate:launchOptions:)` | present |
+| `UIApplicationDelegate` | present |
+| `UIScreen` / `UIWindow` / `rootViewController` / `makeKeyAndVisible` | present, exercised |
+| modal presentation + transition animation | present, exercised |
+| `UIWindow.tick(timestamp:)` — the frame driver | present |
+| `UIEvent` / `sendEvent` — event plumbing | present |
+| resource loading | present, but a **search path** (`imageSearchPaths`), not a bundle |
+
+### Absent — measured, zero occurrences in `Sources/OpenUIKit`
+
+- **`NSBundle` / `Bundle`** — no bundle machinery of any kind.
+- **`Info.plist`** — nothing reads one.
+- **`principalClassName` / `delegateClassName`** — `UIApplicationMain` takes a
+  delegate *instance*, so there is no ObjC-runtime discovery of the app delegate
+  by name. A real iOS binary is launched by name from its Info.plist.
+- **A run loop.** `RealApp.swift` says so in its own comment: *"openrender has no
+  run loop, so `viewDidAppear` never fires on its own"*, and it advances
+  `OpenUIKitRuntime.animationTime` by hand. Frames are driven, not awaited.
+
+### One machorun gap found on the way
+
+`pthread_main_np` is needed by the app path and never by the render path. The
+link fails with *undefined symbol*, and the obvious reading — machorun lacks it —
+is **wrong**: `spike/syspatch.c:285` provides it and the libSystem umbrella
+exports it at `0xcbc`. What is missing is the SDK `.tbd` **advertising** it, so a
+guest cannot link a symbol the dylib genuinely has. The mirror image of the stale
+`swift_*` `.tbd` entries, which promised symbols the dylib no longer had. Fix is
+one line in machorun's sdk generation; worked around here by linking the umbrella
+directly.
+
+### Honest unknowns — not measured, do not assume
+
+- **A real app's model layer.** The vendored slice is UI-only. Networking, JSON,
+  dates, file IO and persistence are where a real app would actually exercise
+  Foundation, and none of that was touched. This is the largest unknown.
+- **Event delivery end to end.** `UIEvent`/`sendEvent` exist and were never
+  driven under machorun; the interactive path is the SDL host, which was not
+  built here.
+- **Time-driven animation.** The clock was set by hand. A real run loop
+  advancing frames over wall time was never exercised.
+- **Exceptions.** Everything is built `-fno-exceptions` and machorun has no
+  compact-unwind unwinder; a real app that throws is untested territory.
