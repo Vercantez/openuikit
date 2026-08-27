@@ -99,12 +99,33 @@ Remaining libSystem gaps across all three consumers, measured against today's
 libSystem (13:07 UTC, machorun `559356b`):
 
 ```
-CoreFoundation      81
-ICU                  1      __exp10 -- see below, this was 20 and is now 1
+CoreFoundation      44      was 81 here; see the correction below
+ICU                 12      was 1 here; see the correction below
 libdispatch          0      libdispatch RUNS; its 8 landed
-                   ---
-UNION               82
 ```
+
+**BOTH CF's AND ICU's FIGURES IN THIS TABLE WENT STALE, IN OPPOSITE
+DIRECTIONS, AND THE CORRECTION IS RECORDED HERE RATHER THAN ONLY IN A MESSAGE.**
+A number in a summary is the thing nothing forces anyone to re-read, which is
+the failure this project hit most often; a correction that lives only in a
+thread does not reach the next reader.
+
+**CoreFoundation 81 -> 44**, as machorun shipped through the list
+(via team-lead, 2026-08-27): 90 -> 81 -> 61 (14 shipped, 6 ICU, 9 ours) -> 49
+(the four `_dyld_*` plus eight `OSAtomic`/`OSSpinLock`) -> 44 (`getrlimit`,
+`setrlimit`, `writev`, `pthread_attr_setscope`, `pthread_attr_getscope`).
+**Not re-measured by me** -- quoted, and marked as quoted, which is the
+distinction this file exists to insist on.
+
+**ICU 1 -> 12**, the other direction and for a different reason: supplying the
+seven libc++ threading symbols REVEALED eleven more libSystem gaps that had been
+unreachable behind them. See the entry below -- a count taken before a blocking
+layer is resolved is a lower bound, not an estimate.
+
+**And `libdispatch_init()` has landed** (machorun `cc6524e`, in
+`__machorun_libsystem_bootstrap`), so the initialiser gap named in
+`tests/t7_dispatch.c` is closed; the explicit call there is now a probe of
+something real rather than a stand-in for something missing.
 
 **ICU's figure was 20 when this was written and that number was quoted from a
 file rather than measured.** Re-linked: ICU has **8** undefined, and only
