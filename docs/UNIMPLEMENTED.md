@@ -342,6 +342,28 @@ distributed notifications) is **deliberately out of scope**.
 > the Mach backend on fails **loudly at first call** rather than silently — late,
 > but named. That is why the remedy here is a documented rule rather than a
 > header move.
+>
+> **A narrower split was measured too, and it does not help either.** Of the 85
+> staged `mach/` headers, **56 are reachable from ordinary non-`mach/` headers**
+> and only 29 are pure Mach API. `mach/port.h` — which defines `MACH_PORT_NULL`
+> and `MACH_PORT_DEAD` — is among the required 56: it is reached by
+> `sys/mount.h`, by `<malloc/malloc.h>` via `malloc/_platform.h`, by
+> `bsm/audit.h`, by `os/workgroup_base.h`, and by `dispatch/dispatch.h` itself.
+>
+> **So `MACH_PORT_NULL macro redefined` is not a placement bug here.** Verified
+> against Apple's own MacOSX15.4 SDK: its `dispatch/source.h` includes
+> `<mach/port.h>` and `<mach/message.h>` exactly as ours does, and a program
+> including only `<dispatch/dispatch.h>` gets `MACH_PORT_NULL` defined. **Our
+> sysroot behaves identically to Apple's**, which is the property we want. A
+> build that hits that redefinition is compiling libdispatch's *Linux* no-Mach
+> shim (`src/shims/mach.h`) — placeholders for a platform with no Mach headers
+> at all — against a **Darwin** target that legitimately has them. The
+> conflation to undo belongs to the port: "Mach types exist" and "the Mach IPC
+> backend is available" are different questions, and `HAVE_MACH=0` answers the
+> second by suppressing the first. Guard the shim (`#ifndef MACH_PORT_NULL`), or
+> let the real Mach *types* through and disable the backend features
+> individually. Removing the headers would break `dispatch/dispatch.h` before it
+> fixed anything.
 
 What *is* implemented, in `darwin/src/mach.c` and covered by `12_mach`:
 `mach_task_self` / `mach_task_self_` / `mach_host_self` / `mach_thread_self`,
