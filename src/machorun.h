@@ -187,7 +187,12 @@ void mr_install_crash_reporter(void);
  * rather than included, because the loader is an ELF and does not read the
  * Darwin SDK headers. Pinned in sdk/tests/glibc_abi_probe.c. */
 #define MR_RTLD_NOLOAD 0x10
-void *mr_dlopen(const char *path, int mode);
+/* caller_ra is the return address of the code that called dlopen. It is what
+ * makes @loader_path -- and @rpath's LC_RPATH search order -- resolve against
+ * the CALLING image the way dyld does. NULL means "the main executable" and is
+ * reserved for loader-internal callers; a non-NULL address that is in no image
+ * is a bug and says so. */
+void *mr_dlopen(const char *path, int mode, const void *caller_ra);
 const char *mr_guest_executable_path(void);
 
 /* Darwin's Dl_info, from sdk/usr/include/dlfcn.h. Duplicated rather than

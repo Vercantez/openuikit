@@ -54,4 +54,5 @@ dladdr	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/
 execpath	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the loader -- /proc/self/exe is a real path and the wrong one; plus pthread_atfork, which glibc has no dynamic symbol for
 dyld_images	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
 osatomic	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
+loader_path	chained	run	pass	@loader_path in a dlopen means the CALLER's directory, so two images in two directories asking for the same string must get two different files
 fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

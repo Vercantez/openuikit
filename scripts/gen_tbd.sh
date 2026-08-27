@@ -357,13 +357,19 @@ fi
 for d in "${DYLIBS[@]}"; do cat "$TMP/sym.$d" >> "$TMP/tbd_all"; done
 sort -u "$TMP/tbd_all" -o "$TMP/tbd_all"
 
+# RECURSIVELY, and that is not tidiness. A `*` glob is a sweep over "the
+# artifacts I happen to see", and tests/bin grew a subdirectory the moment a
+# fixture needed two libraries with the SAME BASENAME in different directories
+# (loader_path). The glob then found tests/bin/loader_path importing `_mid_open`
+# and did NOT find loader_path_plugins/libloader_path_mid.dylib exporting it, so
+# it reported a missing symbol about a set that excluded the answer -- which is
+# the exact failure this check exists to catch, pointed at itself.
 CORPUS=()
-for f in "$ROOT"/tests/bin/* "$ROOT"/tests/objc44/*; do
-    [ -f "$f" ] || continue
+while IFS= read -r f; do
     case "$f" in *.txt|*.md|*.sh|*.c|*.m) continue ;; esac
     head -c 4 "$f" | grep -q . || continue
     CORPUS+=("$f")
-done
+done < <(find "$ROOT/tests/bin" "$ROOT/tests/objc44" -type f -not -name '.*' | sort)
 
 : > "$TMP/corpus_imp"
 for f in "${CORPUS[@]}"; do imports_of "$f" >> "$TMP/corpus_imp"; done

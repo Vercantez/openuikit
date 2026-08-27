@@ -335,6 +335,49 @@ want dyld_images         && build dyld_images         "$CHAINED_TARGET" dyld_ima
 # fetch_add. Every assertion is written so a fetch_add implementation fails it.
 want osatomic            && build osatomic            "$CHAINED_TARGET" osatomic            osatomic.c --
 
+# @loader_path in a dlopen, which means the CALLER's directory and not the main
+# executable's. FOUR IMAGES IN TWO DIRECTORIES, because that is the only shape
+# in which the two answers differ:
+#
+#   bin/loader_path                            the executable
+#   bin/libloader_path_leaf.dylib              leaf_where() -> "bin"
+#   bin/loader_path_plugins/..._mid.dylib      the caller, in the OTHER directory
+#   bin/loader_path_plugins/..._leaf.dylib     leaf_where() -> "plugins"
+#
+# The two leaves share a BASENAME and differ only in which directory they are
+# in -- that is deliberate, and it is what makes the wrong answer dangerous:
+# resolving against the main executable returns a valid handle to the wrong
+# library rather than failing. They are given distinct INSTALL NAMES so dyld
+# registers them as two images; with one install name it would be free to hand
+# back the first for both.
+#
+# LC_RPATH order on the executable is load-bearing. @loader_path (= bin) comes
+# FIRST so that the executable's @rpath answer is bin's leaf and differs from
+# the plugin's; @loader_path/loader_path_plugins comes second and is what finds
+# the middle dylib at startup.
+if want loader_path; then
+    LP_DIR="$BIN/loader_path_plugins"
+    mkdir -p "$LP_DIR"
+    for where in bin plugins; do
+        case "$where" in
+            bin)     out="$BIN/libloader_path_leaf.dylib" ;;
+            plugins) out="$LP_DIR/libloader_path_leaf.dylib" ;;
+        esac
+        "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib -o "$out" \
+            "$SRC/loader_path_leaf.c" -DLEAF_WHERE="\"$where\"" \
+            -install_name "@rpath/libloader_path_leaf_$where.dylib"
+    done
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+        -o "$LP_DIR/libloader_path_mid.dylib" "$SRC/loader_path_mid.c" \
+        -install_name "@rpath/libloader_path_mid.dylib" \
+        -Wl,-rpath,@loader_path
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/loader_path" \
+        "$SRC/loader_path.c" "$LP_DIR/libloader_path_mid.dylib" \
+        -Wl,-rpath,@loader_path \
+        -Wl,-rpath,@loader_path/loader_path_plugins
+    echo "==> loader_path"; built+=(loader_path)
+fi
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
@@ -422,8 +465,16 @@ fi
 echo
 echo "recording metadata -> tests/meta/"
 set +e   # otool/nm/grep returning "nothing found" is normal here
-for f in "$BIN"/*; do
-    n="$(basename "$f")"
+#
+# FILES, RECURSIVELY, AND NAMED BY THEIR PATH UNDER tests/bin. The corpus grew
+# a subdirectory when `loader_path` needed two libraries with the SAME BASENAME
+# in different directories -- which is the only shape in which @loader_path's
+# answer is distinguishable from the main executable's. A basename here would
+# make those two collide on one meta file and record whichever came second,
+# which is precisely the collision this directory layout exists to expose.
+# Top-level fixtures contain no slash, so their meta filenames do not move.
+while IFS= read -r f; do
+    n="${f#"$BIN"/}"; n="${n//\//_}"
     LC="$(otool -l "$f")"
 
     # otool/file/nm echo the path they were given, so a recorded baseline
@@ -488,7 +539,9 @@ for f in "$BIN"/*; do
       # `dylibs:` line, because otool -L on a universal binary names the file
       # itself among its own dependencies.
     } | sed "s|$ROOT/|<machorun>/|g" > "$META/$n.summary.txt"
-done
+done < <(find "$BIN" -type f -not -name '.*' | sort)   # -not -name '.*': the glob
+                                          # this replaced skipped dotfiles, and
+                                          # tests/bin/.stress.stderr is one
 set -e
 
 echo
