@@ -298,3 +298,49 @@ sound.
 ### Still owed, unchanged
 
 Nothing is verified to schedule. Compiling and linking prove nothing.
+
+---
+
+## Part 3 — building `singlethreaded`, and what that flag actually costs
+
+`SWIFT_CONCURRENCY_GLOBAL_EXECUTOR=singlethreaded` is rejected on its own:
+
+```
+Cannot enable the single-threaded global executor without enabling
+SWIFT_STDLIB_SINGLE_THREADED_CONCURRENCY
+```
+
+That second flag sounds like it might elide synchronization — which would be
+fatal for us, because machorun guests do use pthreads. **Checked rather than
+assumed.** It is consumed in exactly two places, both in
+`stdlib/public/Concurrency/Actor.cpp`:
+
+```c++
+static bool isExecutingOnMainThread() {
+#if SWIFT_STDLIB_SINGLE_THREADED_CONCURRENCY
+  return true;                     // line 296
+#else
+  return Thread::onMainThread();
+#endif
+}
+
+JobPriority swift::swift_task_getCurrentThreadPriority() {
+#if SWIFT_STDLIB_SINGLE_THREADED_CONCURRENCY
+  return JobPriority::UserInitiated;   // line 344
+#elif ...
+```
+
+**Neither elides synchronization.** No locks removed, no atomics weakened, no
+data-structure changes. The flag only changes main-thread *identity* and
+priority *reporting*.
+
+**The honest limitation to carry forward:** `isExecutingOnMainThread()` returns
+`true` unconditionally, so under this build **`@MainActor` assertions cannot
+detect a wrong thread**. If a raw guest pthread called into the concurrency
+runtime, the runtime would believe it is the main thread. For `@MainActor`-
+saturated UIKit code — where everything is supposed to be on the main actor
+anyway — that is benign and arguably what you want. It is *not* a safety net,
+and nobody should later read a passing `MainActor.assertIsolated()` as evidence
+of correct threading on this configuration.
+
+Configure exits 0 with `Concurrency Support: ON`.
