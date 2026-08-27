@@ -1,0 +1,13 @@
+== readdir_r returns an errno and signals EOF through result
+  final rc=0  result NULL at EOF: yes  errno untouched: yes
+  entries found: 3
+    a
+    a_rather_longer_entry_name_here
+    bb
+== a second pass agrees with the first
+  same count: yes
+== __darwin_check_fd_set_overflow is a pure range check
+  FD_SETSIZE=1024  sizeof(fd_set)=128
+  fd 3 set and readable: yes
+  and cleared: yes
+done

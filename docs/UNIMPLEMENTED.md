@@ -840,6 +840,59 @@ alone passes with two separate environments, because `getenv` and `setenv` were
 always talking to the same one. Proved: reverting to the two-array arrangement
 gives `getenv:ok environ-walk:NO`.
 
+### `gethostuuid-no-identity` — fails in a container, and that is correct
+`gethostuuid(2)` is Darwin-only: a stable per-**host** identifier. Linux's
+nearest equivalent is `/etc/machine-id`, which is the same idea, so reading it
+is the answer rather than a stand-in — the same judgement as `getresuid` for the
+saved set-user-ID.
+
+**It fails in the test-bed image, and that is the correct outcome rather than a
+gap.** Measured: `/etc/machine-id` exists and is **empty**, and
+`/var/lib/dbus/machine-id` is absent — a container has no host identity of its
+own to report. Darwin's own `gethostuuid` can fail too, so callers already have
+a failure path. **Inventing a UUID would be worse than failing in a specific
+way:** a fabricated host identifier is indistinguishable from a real one, and
+anything that persists it carries the fiction forward.
+
+macOS succeeds, so this cannot appear in an oracle-matching fixture.
+
+### `sysdir-empty` — an empty enumeration, and the risk is CF's fallback
+`sysdir_start_search_path_enumeration` returns **0**, which the API already
+defines as "no more results", so every correct caller's loop simply does not
+execute. Linux has no Darwin domains at all — no `~/Library/Caches`, no
+`/System`, no user-versus-local domain.
+
+The three candidates, and why this one:
+
+* **invent XDG paths** — `~/.cache` for Caches and so on. A **guess with a
+  plausible face**: the paths exist, a caller uses them happily, and nothing
+  ever reveals that Darwin meant something else by the domain it asked about.
+* **abort** — loud, but a query whose failure is routine on Darwin (a sandboxed
+  process legitimately has no such directory) should not stop a process.
+* **enumerate nothing** — the only one that cannot be mistaken for a real path.
+
+**What is not known: what CoreFoundation does with an empty enumeration.** That
+is the risk here rather than the mechanism, and it wants someone with CF's
+sources to check rather than rediscover. macOS returns real paths, so this
+cannot be graded against an oracle either.
+
+### `readdir-r-contract` — **DONE**, and the contract inverts easily
+`readdir_r` returns an **errno** — 0 on success, *including at end of
+directory* — and signals end-of-directory by storing NULL through `result`. It
+does **not** return -1 and does **not** set errno. A wrapper returning -1 at EOF
+makes every caller's loop terminate as an error; one that set errno would make a
+correct caller believe the directory was unreadable. Graded by
+`tests/bin/dirent_r`, and proved: returning -1 at EOF fails on the first line.
+
+The `struct dirent` translation it shares with `readdir` now lives in **one**
+helper. Two copies would be free to drift on `d_reclen`, which is the size of
+*this* record and is what a caller walking a buffer steps by — glibc's `d_name`
+is shorter, so its `d_reclen` is not Darwin's.
+
+`fd_set` needs **no** translation, which is the exception worth recording:
+`FD_SETSIZE` is 1024 and `sizeof(fd_set)` is 128 on both, measured. So
+`__darwin_check_fd_set_overflow` is a pure range check.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.

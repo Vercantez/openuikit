@@ -178,6 +178,9 @@ extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
  * answers the same question through sysctl(KERN_PROC), which is why this is
  * here -- see the sysctl section in darwin/src/posix.c. */
 extern int     glibc_getresuid(unsigned *, unsigned *, unsigned *) GLIBCSYM(getresuid);
+extern int     glibc_chown(const char *, unsigned, unsigned) GLIBCSYM(chown);
+extern int     glibc_gethostname(char *, size_t)            GLIBCSYM(gethostname);
+extern int     glibc_readdir_r(void *, void *, void **)     GLIBCSYM(readdir_r);
 extern int     glibc_getrlimit(int, void *)                 GLIBCSYM(getrlimit);
 extern int     glibc_setrlimit(int, const void *)           GLIBCSYM(setrlimit);
 extern long    glibc_writev(int, const void *, int)         GLIBCSYM(writev);

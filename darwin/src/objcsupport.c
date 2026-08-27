@@ -403,6 +403,26 @@ EXPORT void *malloc_zone_realloc(void *zone, void *p, size_t size)
 { (void)zone; return glibc_realloc(p, size); }
 EXPORT void  malloc_zone_free(void *zone, void *p) { (void)zone; glibc_free(p); }
 
+/* malloc_zone_memalign completes the zone family. machorun has exactly one
+ * zone, so the zone argument is checked and discarded the same way the others
+ * do it -- a caller passing a zone we did not hand out is asking for an
+ * allocator that does not exist here, and that is worth saying rather than
+ * quietly using the only one.
+ *
+ * posix_memalign returns an ERRNO and writes through a pointer; memalign
+ * returns the pointer. Getting that inversion wrong would return a small
+ * positive integer as an allocation, which is a plausible-looking non-NULL
+ * value -- so the failure would look like success at the call site. */
+EXPORT void *malloc_zone_memalign(void *zone, size_t alignment, size_t size)
+{
+    void *p = 0;
+    if (zone && zone != malloc_default_zone())
+        mr_bail("malloc_zone_memalign: machorun has exactly one malloc zone "
+                "and this is not it.");
+    if (glibc_posix_memalign(&p, alignment, size) != 0) return 0;
+    return p;
+}
+
 /* malloc_type / "malloc with options" is Darwin's typed-allocator SPI. The
  * options word carries alignment and zeroing requests. */
 EXPORT void *malloc_zone_malloc_with_options_np(void *zone, size_t align,

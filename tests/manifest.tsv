@@ -58,4 +58,5 @@ rlimit	chained	run	pass	RLIMIT_NOFILE is 8 here and 7 there, and Darwin's 8 is L
 loader_path	chained	run	pass	@loader_path in a dlopen means the CALLER's directory, so two images in two directories asking for the same string must get two different files
 environ	chained	run	pass	the environment was two arrays with one name -- environ from the loader's envp, getenv from glibc's -- agreeing until the first write
 exp10_strings	chained	run	pass	__exp10 COMPUTES rather than branching to itself -- the catalogued idiom bug -- plus flsl, which glibc has only as ffsl, one letter and a whole word apart
+dirent_r	chained	run	pass	readdir_r returns an ERRNO and signals EOF through result, not -1 -- a wrapper returning -1 makes every caller's loop terminate as an error
 fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

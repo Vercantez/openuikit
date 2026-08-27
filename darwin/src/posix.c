@@ -770,6 +770,24 @@ EXPORT void *opendir(const char *path)
     return d;
 }
 
+/* THE ONE PLACE THAT TURNS A GLIBC DIRENT INTO A DARWIN ONE. Both readdir and
+ * readdir_r need it, and a second copy would be free to drift -- particularly
+ * on d_reclen, which is the size of THIS record and is what a caller walking a
+ * buffer steps by. glibc's d_name is shorter, so its d_reclen is not Darwin's. */
+static void mr_dirent_l2d(const struct linux_dirent *l, struct darwin_dirent *out)
+{
+    size_t n = glibc_strlen(l->d_name);
+    if (n > sizeof out->d_name - 1) n = sizeof out->d_name - 1;
+
+    glibc_memset(out, 0, sizeof *out);
+    out->d_ino     = l->d_ino;
+    out->d_seekoff = (uint64_t)l->d_off;
+    out->d_type    = l->d_type;            /* DT_* agree on both systems */
+    out->d_namlen  = (uint16_t)n;
+    glibc_memcpy(out->d_name, l->d_name, n);
+    out->d_reclen  = (uint16_t)(__builtin_offsetof(struct darwin_dirent, d_name) + n + 1);
+}
+
 EXPORT void *readdir(void *dirp)
 {
     struct mr_dir *d = dirp;
@@ -783,19 +801,37 @@ EXPORT void *readdir(void *dirp)
     l = MR_ERRNO_CALL(glibc_readdir(d->ldir));
     if (!l) return 0;
 
-    n = glibc_strlen(l->d_name);
-    if (n > sizeof d->ent.d_name - 1) n = sizeof d->ent.d_name - 1;
-
-    glibc_memset(&d->ent, 0, sizeof d->ent);
-    d->ent.d_ino     = l->d_ino;
-    d->ent.d_seekoff = (uint64_t)l->d_off;
-    d->ent.d_type    = l->d_type;          /* DT_* agree on both systems */
-    d->ent.d_namlen  = (uint16_t)n;
-    glibc_memcpy(d->ent.d_name, l->d_name, n);
-    /* Darwin's d_reclen is the size of THIS record, which is what a caller
-     * walking a buffer would step by -- not glibc's, whose d_name is shorter. */
-    d->ent.d_reclen  = (uint16_t)(__builtin_offsetof(struct darwin_dirent, d_name) + n + 1);
+    mr_dirent_l2d(l, &d->ent);
     return &d->ent;
+}
+
+/* readdir_r fills the CALLER's dirent rather than ours, and it exists as a
+ * separate entry point only for that reason -- so the translation itself lives
+ * in one place. There were four copies of "which image is this address in"
+ * before someone merged them; two copies of a struct translation would drift
+ * the same way, and a copy that got d_reclen wrong would corrupt a caller
+ * walking a buffer rather than reading one record.
+ *
+ * The contract differs from readdir in a way that is easy to get backwards:
+ * readdir_r returns an ERRNO (0 on success, including at end of directory) and
+ * signals end-of-directory by storing NULL through `result` -- it does NOT
+ * return -1, and it does not set the guest's errno. A wrapper that returned -1
+ * at EOF would make every caller's loop terminate as an error. */
+EXPORT int readdir_r(void *dirp, struct darwin_dirent *entry,
+                     struct darwin_dirent **result)
+{
+    struct mr_dir *d = dirp;
+    struct linux_dirent lent;
+    void *lres = 0;
+    int rc;
+
+    if (!d || !entry || !result) return 22;      /* EINVAL, Darwin's */
+    rc = glibc_readdir_r(d->ldir, &lent, &lres);
+    if (rc != 0) { *result = 0; return darwin_from_linux_errno(rc); }
+    if (!lres)   { *result = 0; return 0; }      /* end of directory, not an error */
+    mr_dirent_l2d(&lent, entry);
+    *result = entry;
+    return 0;
 }
 
 EXPORT int closedir(void *dirp)
@@ -2378,6 +2414,127 @@ EXPORT int pthread_attr_getscope(const void *a, int *out)
         *out = (l == MR_L_PTHREAD_SCOPE_PROCESS) ? MR_D_PTHREAD_SCOPE_PROCESS
                                                  : MR_D_PTHREAD_SCOPE_SYSTEM;
     return rc;
+}
+
+/* ------------------------------------------- the rest of CF's plain surface */
+
+EXPORT int chown(const char *path, unsigned uid, unsigned gid)
+{
+    return MR_ERRNO_CALL(glibc_chown(path, uid, gid));
+}
+
+EXPORT int gethostname(char *name, size_t len)
+{
+    return MR_ERRNO_CALL(glibc_gethostname(name, len));
+}
+
+/* __darwin_check_fd_set_overflow is Apple's fortify helper: FD_SET and
+ * FD_ISSET expand into a call to it so an out-of-range descriptor is caught
+ * rather than smashing the bitmap. It returns non-zero when the descriptor may
+ * be used.
+ *
+ * fd_set needs NO translation, which is worth recording because it is the
+ * exception: FD_SETSIZE is 1024 and sizeof(fd_set) is 128 on BOTH systems,
+ * measured. So this is a pure range check and not a struct crossing.
+ *
+ * `unlimited` is Apple's escape hatch for callers that have deliberately sized
+ * their own bitmap larger; when it is set the only invalid descriptor is a
+ * negative one. Getting that backwards would either reject every legitimate
+ * large-fd caller or accept a write past the end of a 128-byte object. */
+#define MR_FD_SETSIZE 1024
+
+EXPORT int __darwin_check_fd_set_overflow(int n, const void *set, int unlimited)
+{
+    (void)set;
+    if (n < 0) return 0;
+    return unlimited ? 1 : (n < MR_FD_SETSIZE);
+}
+
+/* gethostuuid(2) is Darwin-only: a stable per-HOST identifier, not per-boot and
+ * not per-process. Linux's nearest equivalent is /etc/machine-id, which is
+ * exactly the same idea -- so reading it is the answer rather than a stand-in,
+ * the same judgement as getresuid for the saved set-user-ID.
+ *
+ * IT WILL FAIL IN A CONTAINER, AND THAT IS THE CORRECT OUTCOME RATHER THAN A
+ * GAP. Measured in the test-bed image: /etc/machine-id exists and is EMPTY,
+ * and /var/lib/dbus/machine-id is absent -- a container has no host identity
+ * of its own to report. Darwin's own gethostuuid can fail too (it returns -1
+ * in sandboxes), so callers must already have a failure path. Inventing a UUID
+ * would be worse than failing in a specific way: a fabricated host identifier
+ * is indistinguishable from a real one, and anything that persists it would
+ * carry the fiction forward.
+ *
+ * The `wait` argument is a timeout for Darwin's underlying call and has nothing
+ * to wait for here. */
+EXPORT int gethostuuid(unsigned char out[16], const void *wait)
+{
+    char buf[64];
+    int fd, i;
+    long n;
+
+    (void)wait;
+    if (!out) { *mr_errno_slot() = 14; return -1; }        /* EFAULT */
+
+    fd = MR_ERRNO_CALL(glibc_open("/etc/machine-id", 0 /* O_RDONLY, same on both */, 0));
+    if (fd < 0) return -1;
+    n = MR_ERRNO_CALL(glibc_read(fd, buf, sizeof buf));
+    (void)MR_ERRNO_CALL(glibc_close(fd));
+    if (n < 32) { *mr_errno_slot() = 2; return -1; }       /* ENOENT: no identity */
+
+    /* 32 hex characters into 16 bytes. Anything that is not hex means the file
+     * is not a machine-id, which is a failure rather than something to salvage. */
+    for (i = 0; i < 16; i++) {
+        int hi = buf[i * 2], lo = buf[i * 2 + 1], v = 0, k;
+        for (k = 0; k < 2; k++) {
+            int c = k ? lo : hi, d;
+            if (c >= '0' && c <= '9')      d = c - '0';
+            else if (c >= 'a' && c <= 'f') d = c - 'a' + 10;
+            else if (c >= 'A' && c <= 'F') d = c - 'A' + 10;
+            else { *mr_errno_slot() = 2; return -1; }
+            v = (v << 4) | d;
+        }
+        out[i] = (unsigned char)v;
+    }
+    return 0;
+}
+
+/* sysdir_*: Darwin's search-path enumeration, behind NSSearchPathForDirectories
+ * InDomains -- "where is the Caches directory", "where is Application Support".
+ *
+ * THIS RETURNS AN EMPTY ENUMERATION, AND THE CHOICE IS THE INTERESTING PART.
+ * Linux has no Darwin domains at all: there is no ~/Library/Caches, no
+ * /System, no notion of a user domain versus a local domain. The three
+ * candidate answers are
+ *
+ *   invent XDG paths          -- ~/.cache for Caches, and so on. This is a
+ *                                GUESS WITH A PLAUSIBLE FACE: the paths exist,
+ *                                a caller would use them happily, and nothing
+ *                                would ever reveal that Darwin means something
+ *                                else by the domain it asked about.
+ *   abort                     -- loud, but a query whose failure is routine on
+ *                                Darwin (a sandboxed process legitimately has
+ *                                no such directory) should not stop a process.
+ *   enumerate nothing         -- what this does. `start` returns 0, which the
+ *                                API already defines as "no more results", so
+ *                                every correct caller's loop simply does not
+ *                                execute.
+ *
+ * I have chosen the third because it is the only one that cannot be mistaken
+ * for a real path. WHAT I DO NOT KNOW is what CoreFoundation does with an empty
+ * enumeration -- I have not read its fallback, and that is the risk here rather
+ * than the mechanism. Recorded in docs/UNIMPLEMENTED.md#sysdir-empty so whoever
+ * has CF's sources can check it rather than rediscover it. */
+EXPORT unsigned sysdir_start_search_path_enumeration(unsigned dir, unsigned domainMask)
+{
+    (void)dir; (void)domainMask;
+    return 0;                                  /* the API's "no more results" */
+}
+
+EXPORT unsigned sysdir_get_next_search_path_enumeration(unsigned state, char *path)
+{
+    (void)state;
+    if (path) path[0] = 0;                     /* never leave the caller's buffer stale */
+    return 0;
 }
 
 /* _simple_asl_log is Apple SPI: the fallback branch of libdispatch's

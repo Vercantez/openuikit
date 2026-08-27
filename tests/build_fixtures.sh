@@ -400,6 +400,14 @@ want environ             && build environ             "$CHAINED_TARGET" environ 
 # reassuring signal that hid it.
 want exp10_strings       && build exp10_strings       "$CHAINED_TARGET" exp10_strings       exp10_strings.c --
 
+# readdir_r, whose contract is easy to get backwards: it returns an ERRNO -- 0
+# at end of directory included -- and signals EOF by storing NULL through
+# `result`. It does not return -1 and does not set errno. The dirent
+# translation it shares with readdir now lives in one helper, because two
+# copies would be free to drift on d_reclen, which is what a caller walking a
+# buffer steps by.
+want dirent_r            && build dirent_r            "$CHAINED_TARGET" dirent_r            dirent_r.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
