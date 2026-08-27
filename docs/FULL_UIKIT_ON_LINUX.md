@@ -981,6 +981,18 @@ larger half.
 Foundation-macho currently emits **20 ObjC classes**: `NSURL` plus 19
 `__NSCF*` CoreFoundation bridge classes.
 
+> **CORRECTION 2026-08-27 — "emits" is weaker than it reads, and my wording
+> caused a wrong inference downstream.** Those 20 names were harvested from
+> **seven object files**; `ns-classes.txt` says so itself ("a name here means
+> the compiler emitted `_OBJC_CLASS_$_<name>` as a DEFINED symbol"). At the
+> time of writing **foundation-macho builds no dylib at all**, and CF waits on
+> libdispatch, which waits on 29 libSystem symbols. So the middle row below is
+> *compiled objects*, not loadable plumbing — and a task brief reasonably read
+> my sentence as "the plumbing already exists" and ranked the bucket as
+> cheapest-first on that basis. **A true statement whose natural reading
+> overstates readiness is the same failure as a number that lies**, and it is
+> the one shape I had not caught in my own output.
+
 | status | uses | share |
 |---|---|---|
 | have, or in flight (#45 `_Concurrency`, #47 libdispatch/CFRunLoop, OpenUIKit's own `NotificationCenter`, `Bundle` from #56) | 5,635 | 31.3% |
