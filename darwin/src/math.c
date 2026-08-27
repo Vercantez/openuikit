@@ -99,6 +99,19 @@ extern int    glibc_ilogb(double)            GLIBCSYM(ilogb);
 extern void   glibc_sincos(double, double *, double *) GLIBCSYM(sincos);
 extern void   glibc_sincosf(float, float *, float *)   GLIBCSYM(sincosf);
 
+/* The BSD-compatibility set, added because Swift's _DarwinFoundation1 overlay
+ * calls it -- see the note in sdk/local/math.h. glibc's libm has every one of
+ * these under the same name, and none of them takes or returns a long double,
+ * so the width hazard below does not apply to this group. */
+extern double glibc_lgamma_r(double, int *)  GLIBCSYM(lgamma_r);
+extern float  glibc_lgammaf_r(float, int *)  GLIBCSYM(lgammaf_r);
+extern double glibc_j0(double)               GLIBCSYM(j0);
+extern double glibc_j1(double)               GLIBCSYM(j1);
+extern double glibc_jn(int, double)          GLIBCSYM(jn);
+extern double glibc_y0(double)               GLIBCSYM(y0);
+extern double glibc_y1(double)               GLIBCSYM(y1);
+extern double glibc_yn(int, double)          GLIBCSYM(yn);
+
 /* __exp10 IS FORWARDED TO GLIBC'S exp10 RATHER THAN COMPUTED, and the reason
  * is a bug this project has already made once.
  *
@@ -168,6 +181,20 @@ FWD1(floor) FWD1(ceil) FWD1(round) FWD1(trunc) FWD1(rint) FWD1(nearbyint)
 
 FWD2(atan2) FWD2(pow) FWD2(fmod) FWD2(hypot) FWD2(copysign)
 FWD2(fdim) FWD2(fmax) FWD2(fmin) FWD2(remainder) FWD2(nextafter)
+
+/* A DECLARATION IN sdk/local/math.h WITHOUT A DEFINITION HERE IS AN UNBACKED
+ * PROMISE -- the sinl() failure recorded above. These are the definitions for
+ * the BSD block that header now declares. lgammal_r takes the double path for
+ * the same width reason as every other `l` form. */
+EXPORT double lgamma_r(double x, int *s)  { return glibc_lgamma_r(x, s); }
+EXPORT float  lgammaf_r(float x, int *s)  { return glibc_lgammaf_r(x, s); }
+EXPORT long double lgammal_r(long double x, int *s) { return glibc_lgamma_r((double)x, s); }
+EXPORT double j0(double x)          { return glibc_j0(x); }
+EXPORT double j1(double x)          { return glibc_j1(x); }
+EXPORT double jn(int n, double x)   { return glibc_jn(n, x); }
+EXPORT double y0(double x)          { return glibc_y0(x); }
+EXPORT double y1(double x)          { return glibc_y1(x); }
+EXPORT double yn(int n, double x)   { return glibc_yn(n, x); }
 
 EXPORT double ldexp(double x, int e)   { return glibc_ldexp(x, e); }
 EXPORT float  ldexpf(float x, int e)   { return glibc_ldexpf(x, e); }

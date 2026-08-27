@@ -115,7 +115,8 @@ libproc.h	xnu:libsyscall/wrappers/libproc/libproc.h
 libunwind.h	libunwind:libunwind/include/libunwind.h
 limits.h	Libc:include/limits.h
 locale.h	Libc:include/locale.h
-mach-o/compact_unwind_encoding.h	vendor/libunwind/include/mach-o/compact_unwind_encoding.h
+_modules/_sys_types.h	local
+mach-o/compact_unwind_encoding.h	vendor:libunwind/include/mach-o/compact_unwind_encoding.h
 mach-o/dyld.h	dyld:include/mach-o/dyld.h
 mach-o/fat.h	cctools:include/mach-o/fat.h
 mach-o/getsect.h	cctools:include/mach-o/getsect.h
@@ -228,6 +229,7 @@ malloc/_malloc_type.h	libmalloc:include/malloc/_malloc_type.h
 malloc/_platform.h	libmalloc:include/malloc/_platform.h
 malloc/_ptrcheck.h	libmalloc:include/malloc/_ptrcheck.h
 malloc/malloc.h	libmalloc:include/malloc/malloc.h
+MacTypes.h	local
 math.h	local
 net/if.h	xnu:bsd/net/if.h
 net/if_var.h	xnu:bsd/net/if_var.h
@@ -252,10 +254,10 @@ os/workgroup_base.h	libdispatch:os/workgroup_base.h
 os/workgroup_interval.h	libdispatch:os/workgroup_interval.h
 os/workgroup_object.h	libdispatch:os/workgroup_object.h
 os/workgroup_parallel.h	libdispatch:os/workgroup_parallel.h
-os/workgroup.h	libdispatch:os/workgroup.h
 poll.h	Libc:include/poll.h
 pthread.h	libpthread:include/pthread/pthread.h
 pthread/priority_private.h	xnu:bsd/pthread/priority_private.h
+pthread/pthread.h	libpthread:include/pthread/pthread.h
 pthread/pthread_impl.h	libpthread:include/pthread/pthread_impl.h
 pthread/qos.h	libpthread:include/pthread/qos.h
 pthread/qos_private.h	libpthread:private/pthread/qos_private.h
@@ -390,6 +392,7 @@ sys/qos.h	libpthread:include/sys/qos.h
 sys/qos_private.h	libpthread:private/sys/qos_private.h
 sys/queue.h	xnu:bsd/sys/queue.h
 sys/resource.h	xnu:bsd/sys/resource.h
+sys/semaphore.h	xnu:bsd/sys/semaphore.h
 sys/select.h	xnu:bsd/sys/select.h
 sys/signal.h	xnu:bsd/sys/signal.h
 sys/socket.h	xnu:bsd/sys/socket.h
@@ -410,8 +413,8 @@ syslog.h	Libc:include/syslog.h
 time.h	Libc:include/time.h
 tzfile.h	Libc:stdtime/FreeBSD/tzfile.h
 unistd.h	Libc:include/unistd.h
-unwind.h	vendor/libunwind/include/unwind.h
-unwind_itanium.h	vendor/libunwind/include/unwind_itanium.h
+unwind.h	vendor:libunwind/include/unwind.h
+unwind_itanium.h	vendor:libunwind/include/unwind_itanium.h
 uuid/uuid.h	xnu:bsd/uuid/uuid.h
 wchar.h	Libc:include/wchar.h
 wctype.h	Libc:include/wctype.h

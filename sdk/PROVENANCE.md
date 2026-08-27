@@ -20,6 +20,13 @@ sdk/
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
+**`scripts/gen_darwin_modulemap.py` is deliberately NOT part of this tree's
+output.** It prunes Apple's Xcode SDK modulemaps down to the headers a given
+sysroot stages, so what it emits is Xcode-derived and belongs in a gitignored
+build sysroot -- never here. It takes the target sysroot as an argument and
+writes only into it, which is what keeps the claim above true.
+See docs/UNIMPLEMENTED.md#darwin-clang-module.
+
 Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 `scripts/gen_tbd.sh`; prove it against Apple's SDK with `scripts/sdk_abi_probe.sh`.
 
