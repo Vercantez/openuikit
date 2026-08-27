@@ -499,6 +499,24 @@ dispatch_static_assert(DLOCK_LOCK_DATA_CONTENTION ==
 		ULF_WAIT_WORKQ_DATA_CONTENTION);""",
      "patch 11: lock.c's ulock block needs Mach, not just TARGET_OS_MAC")
 
+# _dispatch_firehose_gate_wait is the same shape one more time: gated
+# `#if TARGET_OS_MAC`, it calls _dispatch_unfair_lock_wait, which exists only
+# under HAVE_UL_UNFAIR_LOCK (Darwin's __ulock SPI). Firehose is Apple's logging
+# transport and we already build with OS_FIREHOSE_SPI=0, so nothing calls this.
+edit("src/shims/lock.c",
+"""#if TARGET_OS_MAC
+
+void
+_dispatch_firehose_gate_wait(dispatch_gate_t dgl, uint32_t owner,
+		uint32_t flags)""",
+"""#if TARGET_OS_MAC && HAVE_UL_UNFAIR_LOCK
+/* swiftcore-macho: needs Darwin's __ulock SPI, and firehose is Apple's logging
+ * transport -- we build with OS_FIREHOSE_SPI=0, so nothing calls this. */
+void
+_dispatch_firehose_gate_wait(dispatch_gate_t dgl, uint32_t owner,
+		uint32_t flags)""",
+     "patch 11b: firehose gate wait needs Darwin's ulock SPI")
+
 # ---------------------------------------------------------------------------
 # GUARD for patch 4 (pthread semaphore backend), checked every run.
 #
