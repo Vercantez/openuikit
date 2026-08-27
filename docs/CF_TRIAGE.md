@@ -1509,3 +1509,52 @@ came back for free, exactly as predicted.
 Worth recording that the number I declined to state was 79, not the 78 that had
 been predicted — so refusing the arithmetic cost nothing and the estimate was
 conservative rather than optimistic. The habit is cheap either way.
+
+## 39. The Linux fd-wait primitives ARE reachable — but only from a runtime dylib
+
+existential-fix measured that machorun's libSystem exports **none** of
+`timerfd_*`, `eventfd`, `epoll_*`, `ppoll`, `poll`, `select`, `kqueue` — 537
+symbols, zero fd-wait primitives — and concluded CFRunLoop's epoll path has
+nothing to call. The measurement is right. The conclusion is not, and the
+difference is worth stating precisely because it decides whether the RunLoop
+fork works at all.
+
+**They do not come from libSystem. They come from the loader.**
+`machorun/src/resolve.c:31` resolves any `_glibc_<x>` import with
+`dlsym(RTLD_DEFAULT, x)` — straight to glibc, no libSystem involvement. That is
+what `scripts/stage_linux_abi.sh`'s `GLIBCSYM` labels are for, and it is why
+`CFRunLoop.o` imports `_glibc_epoll_wait` rather than `_epoll_wait`.
+
+**But there is a real restriction, and it is not the one anyone named.**
+`resolve.c:251` gates that path on `from->is_runtime`, and `image.c:139-145`
+sets `is_runtime` only for dylibs loaded from a **Darwin absolute path** under
+`MACHORUN_ROOT/darwin`. So the escape hatch is available to runtime dylibs and
+NOT to a guest main executable.
+
+Measured both ways with the same source (`tests/t6_fdwait.c`):
+
+| built as | result |
+|---|---|
+| main executable | `machorun: undefined symbol '_glibc_epoll_wait'` |
+| dylib at `/usr/lib/libfdprobe.dylib` in the guest root | **all five calls succeed** |
+
+```
+epoll_create1  -> fd 5 OK      eventfd     -> fd 6 OK
+timerfd_create -> fd 7 OK      epoll_ctl   -> 0 OK
+epoll_wait     -> 1 event(s), fd 6 OK -- the wait path WORKS
+```
+
+**So CoreFoundation is fine.** Its `install_name` is a Darwin absolute path, it
+loads from the guest root, and it is therefore `is_runtime` — the epoll RunLoop
+has everything it needs and no machorun change is required for it.
+
+**And existential-fix's concern is real for its own case.** UIKit code sitting
+in a guest *executable* cannot reach these. That is a genuine constraint on
+where a frame driver's blocking call may live: it must be inside a runtime
+dylib, or delegate to one — which the pull-shaped seam does naturally, since
+`CFRunLoopRunInMode` is CF's call and CF is a runtime dylib.
+
+Worth noting the first probe FAILED TO LINK before it failed to run, with
+`ld64.lld: undefined symbol: glibc_epoll_wait` — because these are resolved at
+LOAD time, not link time. `-Wl,-undefined,dynamic_lookup` is required, and its
+absence is a different error that reads like the same problem.
