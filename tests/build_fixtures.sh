@@ -251,6 +251,13 @@ fi
 # MADV_FREE, the only one libdispatch uses -- does not.
 want 31_fcntl_madvise    && build 31_fcntl_madvise    "$CHAINED_TARGET" 31_fcntl_madvise    31_fcntl_madvise.c --
 
+# --------------------------------------------------------------- rung (ae)
+# The pthread_attr surface, where the SAFE-LOOKING direction is the broken one:
+# Darwin's PTHREAD_CREATE_JOINABLE is 1 and glibc's 1 is DETACHED, so a forward
+# hands back a thread the guest cannot join and only the DETACHED direction
+# fails loudly. Same for SCHED_OTHER, whose 1 is glibc's SCHED_FIFO.
+want 32_pthread_attr     && build 32_pthread_attr     "$CHAINED_TARGET" 32_pthread_attr     32_pthread_attr.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -180,6 +180,28 @@ extern int     glibc_pthread_attr_init(void *)              GLIBCSYM(pthread_att
 extern int     glibc_pthread_attr_destroy(void *)           GLIBCSYM(pthread_attr_destroy);
 extern int     glibc_pthread_attr_setschedparam(void *, const void *)
                                                             GLIBCSYM(pthread_attr_setschedparam);
+extern int     glibc_pthread_attr_getschedparam(const void *, void *)
+                                                            GLIBCSYM(pthread_attr_getschedparam);
+extern int     glibc_pthread_attr_setschedpolicy(void *, int) GLIBCSYM(pthread_attr_setschedpolicy);
+extern int     glibc_pthread_attr_getschedpolicy(const void *, int *)
+                                                            GLIBCSYM(pthread_attr_getschedpolicy);
+extern int     glibc_pthread_attr_setdetachstate(void *, int) GLIBCSYM(pthread_attr_setdetachstate);
+extern int     glibc_pthread_attr_getdetachstate(const void *, int *)
+                                                            GLIBCSYM(pthread_attr_getdetachstate);
+extern int     glibc_pthread_attr_getstacksize(const void *, size_t *)
+                                                            GLIBCSYM(pthread_attr_getstacksize);
+extern int     glibc_pthread_attr_setstacksize(void *, size_t) GLIBCSYM(pthread_attr_setstacksize);
+extern int     glibc_pthread_setschedparam(unsigned long, int, const void *)
+                                                            GLIBCSYM(pthread_setschedparam);
+extern void    glibc_pthread_exit(void *)                   GLIBCSYM(pthread_exit);
+/* syscall(2) is VARIADIC in its C prototype and is not a variadic FUNCTION on
+ * aarch64: glibc's is hand-written assembly that expects the number in x0 and
+ * six arguments in x1..x6, which is plain AAPCS register passing. Declaring it
+ * FIXED-ARITY here is therefore both correct and the thing that makes the
+ * Darwin-varargs-on-the-stack mismatch impossible to write. It is deliberately
+ * NOT re-exported to guests -- see futex() in darwin/src/posix.c. */
+extern long    glibc_syscall(long, long, long, long, long, long, long)
+                                                            GLIBCSYM(syscall);
 extern int     glibc_isatty(int)                            GLIBCSYM(isatty);
 extern char   *glibc_getcwd(char *, size_t)                 GLIBCSYM(getcwd);
 extern int     glibc_chdir(const char *)                    GLIBCSYM(chdir);

@@ -642,16 +642,51 @@ nobody reads a crash report and believes it came from a Mac.
 Every other MIB **aborts**. An unimplemented MIB and a nonexistent one are
 different facts, and only one of them should look like a normal failure.
 
-### `ioctl-request-encoding` — two request spaces that do not correspond
+### `ioctl-request-encoding` — one namespace in, and why that is not a preference
 Darwin encodes an `ioctl` request as direction|size|group|number (`FIONREAD` is
-`0x4004667f`); Linux uses small opaque numbers (`FIONREAD` is `0x541b`). Nothing
-about the two spaces corresponds, so a forward asks the kernel for an unrelated
-operation **through a pointer**.
+`0x4004667f`, `FIONBIO` `0x8004667e`); Linux uses small opaque numbers for the
+legacy socket and tty requests (`FIONREAD` is `0x541b`). Nothing about the two
+spaces corresponds, so a forward asks the kernel for an unrelated operation
+**through a pointer**.
 
-`ioctl` therefore translates Darwin's `FIONREAD` onto Linux's, passes Linux's
-own `SIOCINQ`/`SIOCOUTQ` through unchanged — libdispatch's epoll backend is
-Linux shim code compiled for a Darwin target and has no Darwin spelling for
-them, exactly like `signalfd` — and **aborts on anything else**.
+**`ioctl` accepts DARWIN request numbers only.** It briefly accepted both, on
+the `signalfd` precedent — *this file is the boundary, and Linux shim code
+compiled for a Darwin target speaks Linux*. **That precedent does not extend,
+and the reason is the whole argument:** for `signalfd` the SYMBOL determines the
+namespace, because `signalfd` exists only on Linux, so any call to it is shim
+code by construction. `ioctl` exists on **both** systems, so the symbol implies
+nothing — and `0x541b` is a perfectly well-formed Darwin request that simply is
+not allocated. A wrapper accepting both could never know which it received.
+That is guessing, and the rule in `darwin/src/posix.c` is to bail rather than
+guess.
+
+It stopped being theoretical when CoreFoundation arrived: `CFSocket.c` does
+`#define ioctlsocket(a,b,c) ioctl(a,b,c)` and passes Darwin numbers, while
+libdispatch's epoll backend passes Linux ones. Two namespaces, one symbol, no
+discriminator.
+
+**What Linux-origin callers must do instead — and one of the two has no Darwin
+`ioctl` at all**, which is why a bare "speak Darwin above libSystem" rule is not
+implementable without the note below:
+
+| question | Darwin | Linux |
+|---|---|---|
+| bytes readable | `FIONREAD` (ioctl) | `SIOCINQ` (ioctl) |
+| bytes unsent | `SO_NWRITE` (**getsockopt**) | `SIOCOUTQ` (ioctl) |
+
+Darwin has no `FIONWRITE`; it answers "how much is still unsent" through
+`getsockopt`, and Linux has no `SO_NWRITE` and answers through `ioctl`. **The
+same question sits on different API surfaces**, which is not a constant mismatch
+and cannot be fixed by renumbering. So `SIOCINQ` becomes `FIONREAD`, and
+`SIOCOUTQ` becomes `getsockopt(SOL_SOCKET, SO_NWRITE)` — which
+`darwin/src/posix.c` then translates *back* onto Linux's `ioctl`. A
+cross-surface translation looks exotic and is exactly what a boundary is for.
+
+**A corollary for anyone staging headers:** under this contract nothing above
+libSystem should define Linux request numbers at all. A `FIONREAD` defined under
+`#ifndef` in an overlay gives a constant whose value depends on which header a
+translation unit reached first — the `nfds_t` two-widths problem again, with a
+nondeterministic selector.
 
 ### `not-a-plain-forward` — six symbols that look like forwards and are not
 Measured 2026-08-27 against Apple's SDK and glibc 2.39, after a consumer's

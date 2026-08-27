@@ -210,6 +210,11 @@ int main(void)
     puts("==              scheduler would be made real-time. Not forwarded.)");
     VAL(SCHED_OTHER); VAL(SCHED_FIFO); VAL(SCHED_RR);
     SZ(struct sched_param); SZ(pthread_attr_t);
+    /* The detach state is OFF BY ONE, the same worst-case spacing as
+     * SIG_BLOCK: Darwin's JOINABLE (1) is glibc's DETACHED, so a forward
+     * yields a thread the guest cannot join, and only the DETACHED direction
+     * fails loudly. darwin/src/posix.c translates. */
+    VAL(PTHREAD_CREATE_JOINABLE); VAL(PTHREAD_CREATE_DETACHED);
 
     puts("");
     puts("== stat mode bits");
