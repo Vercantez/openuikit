@@ -172,6 +172,78 @@ struct is compiled into the guest and its layout is not glibc's. Same for
 glibc object inside Darwin's opaque bytes and using the signature word to tell
 "Apple-initialised" from "adopted".
 
+### `opaque-abi-class` — the whole family `posix-spawn` belongs to
+Darwin and glibc disagree about the size of most "opaque" C library types, and
+the disagreement runs **both ways**. Wherever machorun hands a glibc object to a
+guest — or hands the guest's storage to glibc — the two sizes have to be
+compared first. Measured 2026-08-27: Darwin from Apple's own headers on macOS
+26.5.2, glibc by `sizeof` in the test-bed image. 24 of the 43 values checked
+differ.
+
+| type | Darwin | glibc | forwarded today | if forwarded naively |
+|---|---:|---:|---|---|
+| `struct stat` | 144 | 128 | **yes**, translated | — `stat_l2d()` converts field by field |
+| `pthread_mutex_t` | 64 | 48 | via `adopt()` | fits |
+| `pthread_cond_t` | 48 | 48 | no | fits **by coincidence**, layout still differs |
+| `pthread_rwlock_t` | 200 | 56 | no | fits |
+| `pthread_once_t` | 16 | 4 | via `adopt()` | fits |
+| `pthread_attr_t` | 64 | 64 | no (aborts) | same size, different layout |
+| `struct dirent` | 1048 | 280 | no | **fits and is still wrong** — see below |
+| `glob_t` | 88 | 72 | no | fits, layout differs |
+| `posix_spawnattr_t` | 8 | 336 | no | **overflows by 328** |
+| `posix_spawn_file_actions_t` | 8 | 80 | no | **overflows by 72** |
+| `sem_t` | 4 | 32 | no | **overflows by 28** |
+| `regex_t` | 32 | 64 | no | **overflows by 32** |
+| `jmp_buf` | 192 | 312 | no | **overflows by 120** |
+| `sigjmp_buf` | 196 | 312 | no | **overflows by 116** |
+| `sigset_t` | 4 | 128 | no | **overflows by 124** |
+| `ucontext_t` | 880 | 4560 | no | **overflows by 3680** |
+| `dev_t` / `mode_t` / `nlink_t` | 4 / 2 / 2 | 8 / 4 / 4 | inside `struct stat` | width mismatch, translated |
+
+**Nothing in the overflow block is forwarded today.** `stat`/`fstat`/`lstat` are
+the only members of this class libSystem exports at all, and they are properly
+translated. So this is a landmine map, not a bug list — and the landmines are
+close, because CF's 28 libc symbols and libdispatch's link step are the next
+things to close.
+
+Three distinct failure modes, worth separating because only one of them looks
+like a bug:
+
+1. **Overflow.** The guest reserves Darwin's size, glibc writes its own. Every
+   symbol resolves, the link is clean, the call returns success, and the excess
+   lands on whatever the guest had next. `posix_spawnattr_t` is 8 against 336.
+2. **Layout.** The object fits, and the guest reads the wrong bytes out of it.
+   `struct dirent` is the live example: `d_type` is at 20 on Darwin and 18 in
+   glibc, `d_name` at 21 against 19. A forwarded `readdir()` returns wrong file
+   types and truncated names rather than failing — for CFTimeZone that is wrong
+   or missing zones, with no error anywhere.
+3. **Coincidence.** `pthread_cond_t` is 48 bytes on both. A forwarder would
+   appear to work, and would still be wrong the moment either side changes or a
+   guest passes a statically-initialised one.
+
+**What to do instead**, in the order of preference the tree already demonstrates:
+
+* **Translate**, like `stat_l2d()` in `darwin/src/posix.c`. Correct for anything
+  the guest reads fields out of — `struct stat`, `struct dirent`.
+* **Adopt**, like `adopt()` in `darwin/src/libsystem.c`. Keep a glibc object
+  inside Darwin's larger footprint and use a signature word to tell
+  Apple-initialised from adopted. Only valid when glibc's is smaller.
+* **Indirect**, which is what the `posix_spawn` pair needs: Darwin's 8 bytes are
+  already a pointer to a library-owned allocation, so store the glibc object's
+  address there. Cheaper than either of the above.
+* **Abort**, like `pthread_create` with a non-NULL attr. Always available, and
+  better than any of the above done wrong.
+
+**The tripwire.** `sdk/tests/glibc_abi_probe.c` pins every number in the table
+above with `_Static_assert`, and is the only file in the repository compiled by
+the host compiler against **real glibc headers** — `scripts/build.sh` runs it on
+the Linux branch. That matters more than it sounds: everything under
+`darwin/src/` is built `-nostdinc` for `arm64-apple-macos`, so `posix.c`'s
+`_Static_assert(sizeof(struct linux_stat) == 128)` proves our *mirror* is 128
+bytes and proves nothing about glibc. Had glibc's layout moved, that assertion
+would have kept passing while `stat()` returned nonsense. The probe closes that,
+and fails the build on any movement rather than waiting for someone to remember.
+
 ### `posix-spawn` — absent, and the obvious forwarder would smash the guest's stack
 Not implemented at all: `nm -g darwin/usr/lib/libSystem.B.dylib | grep spawn` is
 empty and `sdk/` ships no `spawn.h`, so nothing here can currently compile
