@@ -38,8 +38,33 @@ fi
   cp -f "$W/machorun-sdk/local/TargetConditionals.h" "$SDK/usr/include/TargetConditionals.h"
 
 # 3b. Clean-room libc headers machorun's SDK does not carry because objc4 never
-#     reached them (setjmp.h, signal.h, MacTypes.h). See sdk/libc/.
-cp -f "$W/libc/"*.h "$SDK/usr/include/"
+#     reached them (setjmp.h, MacTypes.h). See sdk/libc/.
+#
+# THIS USED TO BE A BARE `cp -f` AND IT COST A DAY. The premise -- "machorun's
+# SDK does not carry these" -- is true when written and decays silently. It
+# decayed for signal.h: machorun's SDK carries Apple's real 132-line signal.h,
+# and our 62-line clean-room version overwrote it with a strict SUBSET. The
+# missing declaration was sigaction(), which is the ONLY thing that kept
+# libdispatch's event_epoll.c from compiling. libSystem exported _sigaction the
+# whole time; the symbol was there and the declaration was hidden by us.
+#
+# A shadowing copy cannot fail. It produces a sysroot that is quietly smaller
+# than the one it was built from, and every downstream error points at the
+# consumer instead of at the copy. So the copy now REFUSES rather than
+# overwrites: if machorun's SDK has grown a real version of one of these, that
+# is good news and the right response is to delete ours, not to bury it.
+for h in "$W/libc/"*.h; do
+  b=${h##*/}
+  if [ -e "$SDK/usr/include/$b" ]; then
+    echo "stage_sdk: REFUSING to overwrite $SDK/usr/include/$b" >&2
+    echo "  with the clean-room sdk/libc/$b." >&2
+    echo "  machorun's SDK now carries a real $b ($(wc -l < "$SDK/usr/include/$b") lines," >&2
+    echo "  ours is $(wc -l < "$h")). Ours is almost certainly a subset now." >&2
+    echo "  Compare them, and if the real one covers our surface, delete ours." >&2
+    exit 2
+  fi
+  cp "$h" "$SDK/usr/include/$b"
+done
 
 # 3c. libc++. A real macOS SDK ships Apple's libc++ at usr/include/c++/v1; the
 #     stdlib's C++ half needs <new>, <atomic>, <type_traits>, ... machorun's

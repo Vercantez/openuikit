@@ -733,4 +733,46 @@ print("  [ok]   guard: no static PTHREAD_*_INITIALIZER in src/")
 # Staging is machorun-isamask's (sdk/ provenance + restore-integrity check).
 # Until it lands, the QoS TUs do not build -- which is the correct failure.
 
+# ---------------------------------------------------------------------------
+# 14. The three clock ids handed to timerfd_create must be LINUX values.
+#
+# timerfd_create is a Linux call reached through our sysroot overlay, but the
+# clock ids in scope come from Darwin's <time.h>, and they do not agree:
+#
+#     clock              Darwin   Linux
+#     CLOCK_REALTIME       0        0     agrees
+#     CLOCK_MONOTONIC      6        1     DOES NOT AGREE
+#     CLOCK_BOOTTIME    absent      7     absent on Darwin
+#
+# Only the absent one is a compile error. CLOCK_MONOTONIC is present, wrong and
+# silent -- Darwin's 6 is Linux's CLOCK_REALTIME_ALARM -- so supplying just
+# CLOCK_BOOTTIME makes the file build and leaves every DISPATCH_CLOCK_UPTIME
+# timer asking for a wall-clock alarm it has no capability for. That is why
+# this is a patch and not simply a #define of the missing constant: the fix has
+# to cover the id that DID compile.
+#
+# TFD_CLOCK_* come from our sys/timerfd.h (scripts/stage_linux_abi.sh), where
+# the values are measured and the Darwin side is pinned with a _Static_assert.
+# ---------------------------------------------------------------------------
+edit("src/event/event_epoll.c",
+     "\t\tcase DISPATCH_CLOCK_UPTIME:\n"
+     "\t\t\tclockid = CLOCK_MONOTONIC;\n"
+     "\t\t\tbreak;\n"
+     "\t\tcase DISPATCH_CLOCK_MONOTONIC:\n"
+     "\t\t\tclockid = CLOCK_BOOTTIME;\n"
+     "\t\t\tbreak;\n"
+     "\t\tcase DISPATCH_CLOCK_WALL:\n"
+     "\t\t\tclockid = CLOCK_REALTIME;\n"
+     "\t\t\tbreak;",
+     "\t\tcase DISPATCH_CLOCK_UPTIME:\n"
+     "\t\t\tclockid = TFD_CLOCK_MONOTONIC;\n"
+     "\t\t\tbreak;\n"
+     "\t\tcase DISPATCH_CLOCK_MONOTONIC:\n"
+     "\t\t\tclockid = TFD_CLOCK_BOOTTIME;\n"
+     "\t\t\tbreak;\n"
+     "\t\tcase DISPATCH_CLOCK_WALL:\n"
+     "\t\t\tclockid = TFD_CLOCK_REALTIME;\n"
+     "\t\t\tbreak;",
+     "14: timerfd clock ids are Linux values, not Darwin's")
+
 print("dispatch patches applied")

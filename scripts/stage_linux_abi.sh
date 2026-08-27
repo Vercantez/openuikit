@@ -82,6 +82,34 @@ cat > "$INC/sys/timerfd.h" <<'EOF'
 struct itimerspec { struct timespec it_interval; struct timespec it_value; };
 _Static_assert(sizeof(struct timespec) == 16, "timespec");
 _Static_assert(sizeof(struct itimerspec) == 32, "itimerspec");
+
+/* CLOCK IDS DO NOT AGREE, AND ONLY ONE OF THE THREE ANNOUNCES ITSELF.
+ *
+ * timerfd_create is a Linux call, so its clockid argument must carry a LINUX
+ * value. Measured on both sides rather than recalled:
+ *
+ *     clock              Darwin   Linux
+ *     CLOCK_REALTIME       0        0     agrees
+ *     CLOCK_MONOTONIC      6        1     DOES NOT AGREE
+ *     CLOCK_BOOTTIME    absent      7     absent on Darwin
+ *
+ * Only CLOCK_BOOTTIME is a compile error. CLOCK_MONOTONIC is present, wrong,
+ * and silent: Darwin's 6 is Linux's CLOCK_REALTIME_ALARM, so every
+ * DISPATCH_CLOCK_UPTIME timer would either fail with EPERM (that clock wants
+ * CAP_WAKE_ALARM) or, with the capability, quietly become a wall-clock alarm.
+ * Adding only the constant the compiler asked for would have produced exactly
+ * that. THE COMPILER OBJECTS TO THE ABSENT CONSTANT AND NEVER TO THE
+ * PRESENT-BUT-WRONG ONE, which is the whole hazard in one line.
+ *
+ * So the Linux values get their own names and the call sites are patched to
+ * use them (dispatch_patches.py, the event_epoll clockid patch). Translating
+ * silently inside a macro would repeat the mistake this file exists to avoid. */
+#define TFD_CLOCK_REALTIME  0
+#define TFD_CLOCK_MONOTONIC 1
+#define TFD_CLOCK_BOOTTIME  7
+_Static_assert(CLOCK_REALTIME == 0 && CLOCK_MONOTONIC == 6,
+    "Darwin's clock ids are not what this translation table was measured "
+    "against. Re-measure both sides before trusting TFD_CLOCK_*.");
 extern int timerfd_create(int, int) GLIBCSYM(timerfd_create);
 extern int timerfd_settime(int, int, const struct itimerspec *, struct itimerspec *) GLIBCSYM(timerfd_settime);
 extern int timerfd_gettime(int, struct itimerspec *) GLIBCSYM(timerfd_gettime);
@@ -132,11 +160,43 @@ extern int signalfd(int, const sigset_t *, int);
 #endif
 EOF
 
+cat > "$INC/sys/ioctl.h" <<'EOF'
+#ifndef _SWIFTCORE_MACHO_SYS_IOCTL_H
+#define _SWIFTCORE_MACHO_SYS_IOCTL_H
+/* NOTE THE ABSENT GLIBCSYM. Every other declaration this script stages binds
+ * DIRECT to glibc, because the two ABIs agree once the constants are right.
+ * ioctl is the exception, and the reason is the calling convention rather than
+ * any argument:
+ *
+ *   ioctl is VARIADIC, and Darwin's arm64 ABI passes variadic arguments on the
+ *   STACK where AAPCS64 -- which glibc follows -- passes the first eight in
+ *   registers. A direct bind would put the third argument on the stack and
+ *   glibc would read x2, i.e. it would use whatever was in that register as a
+ *   pointer and write through it. Silent memory corruption, not a wrong value.
+ *
+ * So this is declared plain, with Darwin's own prototype, and resolves against
+ * libSystem -- which owns the translating wrappers and re-emits the varargs in
+ * glibc's convention. libSystem does not export _ioctl yet, so this currently
+ * FAILS AT THE LINK, naming the symbol. That is the intended failure: a link
+ * error is recoverable and the corruption is not. */
+int ioctl(int, unsigned long, ...);
+#endif
+EOF
+
 cat > "$INC/linux/sockios.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_LINUX_SOCKIOS_H
 #define _SWIFTCORE_MACHO_LINUX_SOCKIOS_H
-/* Linux ioctl number; Darwin's FIONREAD is a different encoding entirely. */
-#define SIOCINQ  0x541b
+#include <sys/ioctl.h>
+/* Linux ioctl numbers; Darwin's FIONREAD is a different encoding entirely.
+ *
+ * BOTH HALVES OF THE PAIR, because the first version of this header had only
+ * SIOCINQ and event_epoll.c uses `writer ? SIOCOUTQ : SIOCINQ` -- one
+ * expression, one of the two names defined. Half a family is the recurring
+ * shape of these gaps: the half that is used first gets added, and the other
+ * half surfaces later as a compile error if you are lucky and as a wrong
+ * number if you are not. Measured on the host: */
+#define SIOCINQ  0x541b   /* == Linux FIONREAD */
+#define SIOCOUTQ 0x5411   /* == Linux TIOCOUTQ */
 #ifndef FIONREAD
 #define FIONREAD SIOCINQ
 #endif
@@ -256,4 +316,5 @@ fi
 
 echo "staged Linux-ABI headers into $INC"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
-   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" "$INC/poll.h" | sed 's/^/  /'
+   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" "$INC/poll.h" \
+   "$INC/sys/ioctl.h" | sed 's/^/  /'
