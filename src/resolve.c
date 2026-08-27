@@ -10,6 +10,7 @@
  */
 #define _GNU_SOURCE
 #include "machorun.h"
+#include <stdlib.h>
 
 #include <dlfcn.h>
 #include <stdio.h>
@@ -181,6 +182,42 @@ void mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
  * It deliberately does NOT fall back to the host. A guest asking for a symbol
  * we do not have must get NULL -- as it would on a Mac missing that library --
  * rather than a same-named glibc symbol. */
+/* The path of the MAIN GUEST IMAGE, for _NSGetExecutablePath.
+ *
+ * This has to come from the loader and cannot be synthesised in libSystem,
+ * which is the whole reason it is exported. The obvious Linux implementation
+ * of _NSGetExecutablePath is readlink("/proc/self/exe") -- and under machorun
+ * the process genuinely IS machorun, so that returns the LOADER's path. The
+ * Mach-O is something we mapped, not something the kernel exec'd.
+ *
+ * CoreFoundation uses the answer to locate the main bundle. So /proc/self/exe
+ * would return a real, existing, readable path and point CF at the wrong file,
+ * with every bundle-relative resource lookup then failing a long way from the
+ * cause. A plausible wrong answer, in a place where the wrong answer is a
+ * valid path. */
+const char *mr_guest_executable_path(void)
+{
+    static char resolved[4096];
+    static int  tried;
+
+    if (!MR.main_image) return NULL;
+    if (tried) return resolved[0] ? resolved : MR.main_image->path;
+    tried = 1;
+
+    /* RESOLVED, because dyld hands the guest an absolute path and we are given
+     * whatever was on the command line -- the harness invokes "./35_execpath"
+     * from tests/bin, so the unresolved answer is "./35_execpath". That is a
+     * real path and the wrong shape: CoreFoundation takes the DIRECTORY of this
+     * to find the main bundle, and a relative one resolves against whatever the
+     * process's cwd happens to be later rather than against the executable.
+     *
+     * Falls back to the raw path if realpath fails, because a path we cannot
+     * resolve is still better than none -- and the caller will find out. */
+    if (!realpath(MR.main_image->path, resolved))
+        resolved[0] = 0;
+    return resolved[0] ? resolved : MR.main_image->path;
+}
+
 void *mr_dlsym_default(const char *name)
 {
     char buf[512];

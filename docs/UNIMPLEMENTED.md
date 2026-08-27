@@ -676,6 +676,69 @@ them loads libdispatch.
 Nothing does that today; the honest fix if something ever does is for the loader
 to make the call on load rather than for this to poll.
 
+### `no-dynamic-symbol` — a fifth hazard family: same name, nothing to bind to
+The four ABI-crossing families are struct layout, constant value, scalar-typedef
+width, and variadic convention. `pthread_atfork` is none of them and is not
+forwardable anyway.
+
+Its prototype is identical on both systems — three function pointers, no
+struct, no constant — so it lands squarely on the "safe to forward" pile by
+every check we have. glibc's header declares it, the man page documents it, and
+**glibc does not export it from `libc.so`**: it lives in `libc_nonshared.a` as a
+static wrapper over `__register_atfork`, so `dlsym` finds nothing and a forward
+fails at **runtime**, not at link:
+
+    machorun: undefined symbol '_glibc_pthread_atfork'
+
+Measured with positive controls so an empty answer could not be the instrument:
+`nm -D --defined-only libc.so.6` finds `pthread_atfork` **zero** times and
+`__register_atfork` once, while `malloc`, `getresuid` and `geteuid` are all
+found. `darwin/src/posix.c` builds the door over `__register_atfork` with a
+NULL DSO handle, which means "never unregister" — correct, since libSystem is
+never unloaded.
+
+**The general rule: a header declaration is not evidence that a dynamic symbol
+exists.** Only `nm -D` on the shared object is.
+
+### `nsgetexecutablepath` — **DONE**, and the wrong answer is a valid path
+`_NSGetExecutablePath` must name the **guest**. The obvious Linux
+implementation, `readlink("/proc/self/exe")`, returns **machorun** — under this
+loader the process genuinely is machorun, and the Mach-O is something we mapped
+rather than something the kernel exec'd.
+
+CoreFoundation takes the directory of this answer to locate the main bundle, so
+a `/proc/self/exe` implementation returns a real, existing, readable path and
+points CF at the wrong directory, with every bundle-relative lookup then failing
+a long way from the cause. `src/resolve.c` exports
+`mr_guest_executable_path()`, which is the only place that knows.
+
+It is **`realpath`-resolved**, because dyld hands the guest an absolute path and
+we are given whatever was on the command line — the harness invokes
+`./35_execpath`, and a relative answer resolves against the process's cwd later
+rather than against the executable.
+
+Two contract details measured on the oracle rather than assumed: **`bufsize` is
+not updated on success** (a 4096-byte buffer holding a 112-character path comes
+back still saying 4096; Apple writes it only on the failure path), and the
+failure path *does* write the required size. `tests/bin/35_execpath` grades all
+of it, and catches the `/proc/self/exe` version specifically — with the loader
+patched to use it, the fixture fails on `names this executable`.
+
+### `pthread-getugid-np` — Darwin FAILS here, and so do we
+Recommended as "return `geteuid()`/`getegid()` — Linux has no per-thread ugid
+override, so that literally *is* the correct implementation". That reasons from
+what Linux can supply. Measured on the oracle, macOS 26.5.2, ordinary
+unprivileged thread:
+
+    pthread_getugid_np(&u, &g)  ->  rc = -1, errno = ESRCH, u and g untouched
+
+So on real Darwin this SPI does not answer for an ordinary thread at all, and
+every caller — CoreFoundation included — is already on its failure path there.
+Returning 0 with the effective ids would be **more useful** and would send CF
+down a branch it never takes on a Mac. We return `-1`/`ESRCH` and leave the
+outputs alone, because a caller that ignores the `-1` must see what it would
+have seen.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.

@@ -188,6 +188,7 @@ void mr_install_crash_reporter(void);
  * Darwin SDK headers. Pinned in sdk/tests/glibc_abi_probe.c. */
 #define MR_RTLD_NOLOAD 0x10
 void *mr_dlopen(const char *path, int mode);
+const char *mr_guest_executable_path(void);
 void *mr_dlsym_handle(void *handle, const char *name);
 
 #endif /* MACHORUN_H */

@@ -281,6 +281,14 @@ fi
 # __CFInitialize itself.
 want 34_sysctl           && build 34_sysctl           "$CHAINED_TARGET" 34_sysctl           34_sysctl.c --
 
+# --------------------------------------------------------------- rung (ah)
+# Three of CoreFoundation's initialisation walls. _NSGetExecutablePath is the
+# sharp one: readlink("/proc/self/exe") returns the LOADER under machorun -- a
+# real, existing, readable path that is not the guest -- and CF uses the answer
+# to find the main bundle. pthread_atfork is a third kind of gap: same name,
+# and glibc exports no dynamic symbol for it at all.
+want 35_execpath         && build 35_execpath         "$CHAINED_TARGET" 35_execpath         35_execpath.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

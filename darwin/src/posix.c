@@ -2141,6 +2141,111 @@ EXPORT int sysctl(int *name, unsigned namelen, void *oldp, size_t *oldlenp,
             "like a normal failure. See docs/UNIMPLEMENTED.md#sysctl-mibs.");
 }
 
+/* ------------------------------------- three more of CoreFoundation's walls */
+
+/* pthread_getugid_np(2) FAILS ON DARWIN, and that is what we reproduce.
+ *
+ * It was recommended to me as "geteuid()/getegid(), take it verbatim -- Linux
+ * has no per-thread ugid override, so that literally IS the correct
+ * implementation". That reasons from what Linux can supply, which is a good
+ * argument for a function whose Darwin behaviour nobody had checked. Measured
+ * on the oracle (macOS 26.5.2, ordinary unprivileged thread):
+ *
+ *     pthread_getugid_np(&u, &g)  ->  rc = -1, errno = ESRCH, u and g UNTOUCHED
+ *
+ * So on real Darwin this SPI does not answer for an ordinary thread at all,
+ * and every caller -- CoreFoundation included -- is already on its failure
+ * path there. Returning 0 with the effective ids would be MORE USEFUL and
+ * would send CF down a branch it never takes on a Mac, which is the opposite
+ * of what this boundary is for. The outputs are left untouched because Darwin
+ * leaves them untouched, and a caller that ignores the -1 must see what it
+ * would have seen.
+ *
+ * ESRCH is 3 on both systems, so the number crosses unchanged -- checked
+ * rather than assumed, since a coincidence is exactly what this file distrusts. */
+EXPORT int pthread_getugid_np(unsigned *uid, unsigned *gid)
+{
+    (void)uid; (void)gid;
+    *mr_errno_slot() = 3;                     /* ESRCH, and 3 on both systems */
+    return -1;
+}
+
+/* pthread_atfork: A THIRD KIND OF GAP, and the one that fails latest.
+ *
+ * Everything else in this file is "same name, different ABI" -- a struct that
+ * is a different size, a constant that is a different number, a scalar that is
+ * a different width, a variadic convention that is different. This one is
+ * SAME NAME, NO DYNAMIC SYMBOL AT ALL.
+ *
+ * pthread_atfork has an identical prototype on both systems -- three function
+ * pointers, no struct, no constant -- so it lands squarely on the "safe to
+ * forward" pile by every check we have. glibc's header declares it; the man
+ * page documents it; and glibc does NOT export it from libc.so. It lives in
+ * libc_nonshared.a as a static wrapper over __register_atfork, so there is
+ * nothing for dlsym to find and a forward fails at RUNTIME:
+ *
+ *     machorun: undefined symbol '_glibc_pthread_atfork'
+ *
+ * Measured rather than taken on report, with positive controls so an empty
+ * answer could not be the instrument: `nm -D --defined-only libc.so.6` finds
+ * pthread_atfork ZERO times and __register_atfork once, while malloc,
+ * getresuid and geteuid are all found.
+ *
+ * So this is a door built rather than a call forwarded, the same shape as
+ * futex. The fourth argument is the DSO handle glibc uses to unregister the
+ * handlers if the caller's library is unloaded; NULL means "never unregister",
+ * which is right here because libSystem is never unloaded. */
+EXPORT int pthread_atfork(void (*prepare)(void), void (*parent)(void),
+                          void (*child)(void))
+{
+    return glibc___register_atfork(prepare, parent, child, 0);
+}
+
+/* _NSGetExecutablePath: THE PLAUSIBLE WRONG ANSWER.
+ *
+ * The obvious Linux implementation is readlink("/proc/self/exe"), and it is
+ * wrong in a way that would survive review: under machorun the process
+ * genuinely IS machorun, and the Mach-O is something the loader mapped rather
+ * than something the kernel exec'd. So /proc/self/exe returns the LOADER's
+ * path -- a real, existing, readable file, and not the guest.
+ *
+ * CoreFoundation uses this to locate the main bundle. A wrong answer here does
+ * not fail; it points CF at a different directory and every bundle-relative
+ * resource lookup then fails somewhere far away from the cause. The answer has
+ * to come from the loader's own knowledge of which image it loaded, which is
+ * why src/resolve.c exports mr_guest_executable_path().
+ *
+ * Darwin's contract, and the reason bufsize is in/out: on success return 0; if
+ * the buffer is too small, WRITE THE REQUIRED SIZE back through bufsize and
+ * return -1. A caller that ignores the -1 and reads the buffer gets whatever
+ * was there, so the size must be set on the failure path too. */
+extern const char *mr_guest_executable_path(void);   /* -> loader, resolve.c */
+
+EXPORT int _NSGetExecutablePath(char *buf, unsigned *bufsize)
+{
+    const char *p = mr_guest_executable_path();
+    size_t need;
+
+    if (!bufsize) return -1;
+    if (!p) {
+        /* The loader always has a main image by the time a guest can call
+         * this, so a NULL here means something is wrong with our own state
+         * rather than with the caller's arguments. */
+        mr_bail("_NSGetExecutablePath: the loader has no main image recorded. "
+                "Returning a path would be inventing one.");
+    }
+
+    need = glibc_strlen(p) + 1;
+    if (!buf || *bufsize < need) { *bufsize = (unsigned)need; return -1; }
+    glibc_memcpy(buf, p, need);
+    /* bufsize is DELIBERATELY NOT UPDATED on success. Measured on the oracle:
+     * a 4096-byte buffer holding a 112-character path comes back with bufsize
+     * still 4096, not 113. Apple writes it only on the FAILURE path, where it
+     * is the caller's instruction for how much to allocate. Setting it on
+     * success looks tidier and is a different function. */
+    return 0;
+}
+
 /* _simple_asl_log is Apple SPI: the fallback branch of libdispatch's
  * _dispatch_log when no other destination is configured. It is NOT variadic
  * (level, facility, message), which is worth stating because the rest of the

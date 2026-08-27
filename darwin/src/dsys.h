@@ -168,6 +168,14 @@ extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
  * answers the same question through sysctl(KERN_PROC), which is why this is
  * here -- see the sysctl section in darwin/src/posix.c. */
 extern int     glibc_getresuid(unsigned *, unsigned *, unsigned *) GLIBCSYM(getresuid);
+/* pthread_atfork IS NOT A DYNAMIC SYMBOL IN GLIBC. It lives in
+ * libc_nonshared.a as a static wrapper over __register_atfork, so dlsym finds
+ * nothing and a plain forward fails at RUNTIME with an undefined symbol rather
+ * than at link. See pthread_atfork() in darwin/src/posix.c. */
+extern int     glibc___register_atfork(void (*)(void), void (*)(void),
+                                       void (*)(void), void *) GLIBCSYM(__register_atfork);
+extern int      glibc_geteuid(void)                          GLIBCSYM(geteuid);
+extern int      glibc_getegid(void)                          GLIBCSYM(getegid);
 /* fcntl and ioctl are VARIADIC in glibc and are declared NON-variadic here on
  * purpose. Darwin's arm64 ABI puts variadic arguments on the STACK where
  * AAPCS64 puts the first eight in REGISTERS, so a variadic call from our

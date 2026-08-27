@@ -826,6 +826,32 @@ EXPORT size_t strlcpy(char *dst, const char *src, size_t size)
  * longer than that is exactly the overflow the fortify wrapper exists to
  * catch, and aborting is what Apple's does: returning quietly would turn a
  * diagnosed overflow into an undiagnosed one. */
+/* strlcat(3), BSD-only like strlcpy. Returns the length it TRIED to make --
+ * the initial dst length plus the whole source -- which is how callers detect
+ * truncation. Returning the length WRITTEN would turn a detectable truncation
+ * into a silent one, which is the whole reason the BSD forms exist. */
+EXPORT size_t strlcat(char *dst, const char *src, size_t size)
+{
+    size_t dl = glibc_strnlen(dst, size);
+    size_t sl = glibc_strlen(src);
+    if (dl == size) return size + sl;          /* dst not NUL-terminated in size */
+    if (sl < size - dl) {
+        glibc_memcpy(dst + dl, src, sl + 1);
+    } else {
+        glibc_memcpy(dst + dl, src, size - dl - 1);
+        dst[size - 1] = 0;
+    }
+    return dl + sl;
+}
+
+EXPORT size_t __strlcat_chk(char *dst, const char *src, size_t len, size_t os)
+{
+    if (len > os)
+        mr_bail("__strlcat_chk: buffer overflow detected -- the requested "
+                "concatenation is longer than the destination the compiler sized.");
+    return strlcat(dst, src, len);
+}
+
 EXPORT size_t __strlcpy_chk(char *dst, const char *src, size_t len, size_t os)
 {
     if (len > os)
