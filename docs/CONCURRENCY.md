@@ -981,3 +981,49 @@ The number was wrong and **detectably** so, because a second number in the same
 output contradicted it. Sixth lost-counter zero of the day; the second caught
 only because something adjacent disagreed. **Two numbers that must agree are
 worth more than one number you trust** — the finding stood, the label did not.
+
+## Patch-count correction, 2026-08-27: I was carrying a stale number about my own work
+
+Every report I sent said **"#47: 3 patches landed, 4 specified."** Re-measuring
+`scripts/dispatch_patches.py` by content rather than repeating the count:
+
+```
+1, 2, 3, 4a, 4b, 5, 6, 7, 8, 9, 10a, 10b, 11, 11b, 12a, 12b, 13, 14, 15
+```
+
+**Patch 4 — the pthread semaphore backend, the thing I kept naming as my next
+pickup — is written.** 4a declares it, 4b implements it. Patch 5 is written too.
+14 and 15 landed from foundation-scope, and libdispatch now runs: T7 PASS, a
+semaphore that genuinely blocks and is signalled cross-thread, 25/25 TUs.
+
+The count was a snapshot from before a context compaction, carried forward
+without ever re-reading the file. **It is exactly the defect class this document
+spends pages on — a fact with no version in it — except the stale copy was in my
+own status line rather than in an artifact.** Same shape as the `$2.90/hr`
+constant inherited from a script for a different instance type, and as
+`check_stale.sh`'s six hardcoded paths.
+
+Worth stating plainly because the asymmetry is the lesson: **I applied
+"re-measure, don't inherit" to every binary, tbd, symbol list and staging
+directory today, and never once to my own report.** The things you repeat in
+every message are the least likely to be re-checked, because repeating them
+feels like reporting rather than asserting.
+
+### What that leaves
+
+Nothing in #47 is mine to pick up. The one open item touching this document is
+`libswift_Concurrency`'s **three** flat vtable binds (`__class_`, `__si_class_`,
+`__vmi_class_type_info`), which need a rebuild against the current `.tbd`s.
+
+**Blocked on an environment rather than on work.** The `ninja` dependency
+`stdlib/public/Concurrency/dispatch` is a path in the BUILD tree, which reads
+like a target existing only when libdispatch is part of the same CMake project
+rather than merely pointed at — so the missing piece is probably
+`-DSWIFT_PATH_TO_LIBDISPATCH_BUILD` beside `_SOURCE`, a flag rather than a
+patch. Routed to foundation-scope, who has a box with libdispatch already built;
+provisioning a second box to rebuild what exists is not proportionate.
+
+**If it is rebuilt, the check is by content:** `nm -m … | grep cxxabiv1` must say
+`(from libc++)` on all three, and the sysroot's `libc++.1.tbd` must carry **472**
+symbols rather than 105 — a rebuild against the old stubs would produce flat
+binds and look like progress.
