@@ -2035,3 +2035,92 @@ on Graviton (19/19 fixtures, quartz PNGs byte-identical).
 
 *(The second option is the one that was built, on the same instance type that
 produced these numbers. See the top of this entry.)*
+
+---
+
+### `darwin-clang-module` — what `import Darwin` needed, and the four gaps it named
+
+**A Swift `import Darwin` needs the *Clang* module `Darwin`, and this SDK
+declared exactly one Clang module (`ObjectiveC`).** The failure announced itself
+as a toolchain version skew —
+
+    failed to build module 'Synchronization'; this SDK is not supported by the
+    compiler (the SDK is built with 'Apple Swift version 6.2.1', while this
+    compiler is 'Swift version 6.2.4')
+
+— which is **not the cause**. The inner diagnostic is `underlying Objective-C
+module 'Darwin' not found`. A missing module *declaration*, reported as a
+version problem, is worth remembering on its own: the outer message named a
+component (`Synchronization`), a version pair, and a remedy (downgrade), and all
+three were wrong.
+
+**`scripts/gen_darwin_modulemap.py` PRUNES Apple's modulemaps** — drops `header`
+lines whose file is absent, drops modules left empty, keeps the structure. The
+two obvious alternatives both fail: *copying* Apple's names 305 headers we do
+not stage, and *flattening* into one `module Darwin { header ... }` cannot
+provide the named submodules the interfaces import (`Darwin.Mach.message`,
+`_DarwinFoundation1._errno`, `_DarwinFoundation3.pthread`, …) nor the four
+separate top-level modules.
+
+It is **macOS-only and writes into a target sysroot, never into `sdk/`.** That
+is what keeps `sdk/PROVENANCE.md`'s claim true: its output is derived from
+Apple's Xcode SDK modulemaps, so it belongs in a gitignored build sysroot
+beside the `.swiftinterface` files staged from the same place — not in git.
+
+**FOUR REAL SDK GAPS, EACH FOUND ONLY BY COMPILING, EACH BEHIND THE LAST.**
+
+| gap | how it surfaced | fix |
+|---|---|---|
+| `pthread/pthread.h` | the `_DarwinFoundation3.pthread` submodule | manifest row; Apple's `/usr/include/pthread.h` is a *symlink* to it, and we staged only the top-level path |
+| `lgamma_r`, `lgammaf_r`, `j0`/`j1`/`jn`/`y0`/`y1`/`yn` | `_DarwinFoundation1` overlay | declared in `sdk/local/math.h`, forwarded in `darwin/src/math.c` |
+| `_modules/_sys_types.h` | `Darwin.swiftinterface`: `@_exported import sys_types` | clean-room `sdk/local/` module shim |
+| `MacTypes.h` (`OSStatus`), `sys/semaphore.h` (`sem_t`) | `Darwin.swiftinterface` type references | clean-room; xnu manifest row |
+
+**`jn` is the one to remember.** With the C `jn` undeclared, Swift resolved
+`jn(Int32(n), x)` to the *Swift* function that line sits inside, so the compiler
+reported **"cannot convert Int32 to Int" — a type error inside Apple's own
+interface file**, pointing nowhere near a missing declaration. Only the
+`lgamma_r` error beside it named the real cause. A missing C declaration does
+not always look like one.
+
+**`MacTypes.h` is the SECOND genuine Xcode-only header**, after `math.h`.
+`docs/SDK_SURVEY.md`'s "the genuinely-only-in-the-Xcode-SDK category is empty"
+was corrected to "off by one"; it is off by two. Checked, not assumed — both
+`xnu/EXTERNAL_HEADERS/MacTypes.h` and the Libc path 404.
+
+**And one sizing lesson.** A survey of Apple's modulemaps set the whole
+`_modules/*.h` group aside as "these belong to *other* top-level modules, not to
+the chain". That was true of five of the six and false of `_sys_types.h`,
+because `Darwin` imports `sys_types` directly. **The list of modules a chain
+needs comes from the interfaces' `import` lines, not from a modulemap's
+structure.**
+
+**Result:** `import Darwin` and `import Synchronization` both compile against
+the pruned sysroot. Route (A) of the chain walk is closed.
+
+**Still not covered, and named:** the `import` compiles; nothing here links or
+runs a binary that uses those modules. `complex.h`, `sys/attr.h`, `fenv.h`,
+`machine/_limits.h`, `setjmp.h`, `sys/_types/_offsetof.h` and `tgmath.h` remain
+unstaged — they sit in modules this chain never asks for, so they are pruned
+away rather than satisfied.
+
+### `sdk-stage-validation` — the stager could not stage
+
+**`sdk/usr/include` was unregenerable for a day and every gate stayed green,
+because nothing runs `scripts/sdk_stage.sh`.** Commit `ce9a5cf` added three
+manifest rows sourced `vendor/libunwind/...` — a spelling with no `<kind>:`
+prefix, which no case in the stager matched. There is now a `vendor:` kind, for
+a reason the name makes explicit: `libunwind` **already** names an
+apple-oss-distributions repo in `SOURCES.tsv`, a different project supplying
+different headers. Two libunwinds, one name.
+
+**The stager also `rm -rf`'d first and validated second.** It deleted 300+
+staged headers, reached row 118, died, and left the tree at 93 files with only
+`git checkout` in the way. Every row's kind is now checked **before** anything
+is deleted — a check that needs no network and no cache, so a bad row fails when
+it is written rather than at the next restage.
+
+**And no destination may be staged twice.** `os/workgroup.h` appeared on two
+rows with the same source, which was harmless and invisible; it surfaced only
+because it made the row count and the file count disagree by one. With
+*different* sources the same shape silently picks by row order.

@@ -32,9 +32,10 @@
  *   - every __API_AVAILABLE / __DARWIN_ALIAS annotation.  See
  *     sdk/local/AvailabilityInternal.h for why this SDK carries no
  *     availability diagnostics at all.
- *   - the BSD-compatibility block (j0/j1/jn/y0/y1/yn, gamma, significand,
- *     drem, and the `struct exception` / matherr machinery).  Nothing this
- *     project compiles reaches for them.
+ *   - part of the BSD-compatibility block: `gamma`, `significand`, `drem`,
+ *     `scalb` and the `struct exception` / matherr machinery.  The rest of it
+ *     -- lgamma_r and the Bessel family -- IS declared below, because Swift's
+ *     Darwin overlay reaches for it; see the note there.
  *   - _Float16 and __float128 overloads.
  */
 
@@ -163,6 +164,37 @@ extern long long llroundl(long double);
 extern double      remquo(double, double, int *);
 extern float       remquof(float, float, int *);
 extern long double remquol(long double, long double, int *);
+
+/* ------------------------------------------------- the BSD-compatibility set
+ *
+ * THIS WAS OMITTED WITH THE NOTE "nothing this project compiles reaches for
+ * them", AND MEASUREMENT RETIRED THAT CLAIM. Swift's `_DarwinFoundation1`
+ * overlay -- the module a bare `import Darwin` pulls in -- is written against
+ * it:
+ *
+ *     public func lgamma(_ x: Double) -> (Double, Int)   calls lgamma_r
+ *     public func jn(_ n: Int, _ x: Double) -> Double     calls jn(Int32, Double)
+ *
+ * and the second is the failure worth remembering. With the C `jn` undeclared,
+ * Swift resolved `jn(Int32(n), x)` to the SWIFT function it appears inside, so
+ * the diagnostic read "cannot convert Int32 to Int" -- a type error inside
+ * Apple's own interface file, pointing nowhere near a missing declaration.
+ * Only the `lgamma_r` error beside it named the real cause.
+ *
+ * Signatures are Apple's exactly: the Bessel family is double-only in the SDK
+ * header, so no `j0f`/`jnf` forms are invented here. */
+extern double lgamma_r(double, int *);
+extern float  lgammaf_r(float, int *);
+/* long double is 8 bytes on Darwin arm64 -- darwin/src/math.c static-asserts
+ * exactly that -- so this is the same function under a third name. */
+extern long double lgammal_r(long double, int *);
+
+extern double j0(double);
+extern double j1(double);
+extern double jn(int, double);
+extern double y0(double);
+extern double y1(double);
+extern double yn(int, double);
 
 extern double      nan(const char *);
 extern float       nanf(const char *);

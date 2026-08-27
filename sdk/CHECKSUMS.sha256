@@ -4,15 +4,6 @@
 # this repository and git already vouches for them.
 #
 # scripts/sdk_stage.sh --verify re-fetches upstream and checks these.
-#
-# THREE UNWIND HEADERS ARE DELIBERATELY ABSENT FROM THIS FILE, for the same
-# reason the clean-room and objc4 rows are: unwind.h, unwind_itanium.h and
-# mach-o/compact_unwind_encoding.h come from vendor/libunwind, which lives in
-# this repository, so git already vouches for them. They could NOT have come
-# from the same place as the two rows below -- Apple's libunwind-201
-# distribution ships only libunwind.h and __libunwind_config.h, and does not
-# contain either of the others. Mixing an upstream row with a vendored file
-# would make this list say something untrue about where a header came from.
 c1f75e3d4d3b06d7ffbd50697666c874236d269e30307e303609d71f2269bdd9  libclosure:Block.h  Block.h
 b226c1e20cabb4d18a12b50631ce14a6087deb9442a4a10dda96b8b4a773b667  Libc:include/___wctype.h  ___wctype.h
 dd744708e8d73f7e8867ec6cb279ac5ff144f749d9a9e556aca730826d5b7406  libunwind:libunwind/include/__libunwind_config.h  __libunwind_config.h
@@ -223,6 +214,7 @@ e401e04d766fdccfa0cd7130464cc4183cbbdda98edea71c8d66cb8929a3c01a  libdispatch:os
 dc10a7ff3e8952c80305a099fa247a572f636b5b8f9f6b82f7e6b7d999fc6af3  Libc:include/poll.h  poll.h
 c14ac88c6c17f6eaea94ecd5a6fed5bb2a509cc154be43bfea44e6a4430468ca  libpthread:include/pthread/pthread.h  pthread.h
 7471216f3bcf1c07595e9ee29bcada84bb03f0d863a12a3f320bf290f920658f  xnu:bsd/pthread/priority_private.h  pthread/priority_private.h
+c14ac88c6c17f6eaea94ecd5a6fed5bb2a509cc154be43bfea44e6a4430468ca  libpthread:include/pthread/pthread.h  pthread/pthread.h
 42896cbc575d9099c53f8c0afbaa04f40b2d11d24f92af5ccd7dacdaf8690231  libpthread:include/pthread/pthread_impl.h  pthread/pthread_impl.h
 bfcfcf23501c328f5aa7f3bb39c0c8167730ab111393063c5b5fb4bd72d074f2  libpthread:include/pthread/qos.h  pthread/qos.h
 223a4c216a30c2d98941fa68ec983f2dcb3650bf3adb6cbb8d0a69881f4aeade  libpthread:private/pthread/qos_private.h  pthread/qos_private.h
@@ -357,6 +349,7 @@ a4eb26cdfd3721b111f9979455d80a854625b0ef96ba4de1a4e7705f462e0f84  xnu:bsd/sys/pr
 d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/queue.h  sys/queue.h
 69541c4d1b100294f244724ef58609fb66448574d4ceaffbd87b3284f8ab5613  xnu:bsd/sys/resource.h  sys/resource.h
 e6501f5479116b740fd0099210e63c22a58d24b0ee2554e7135b39a4dd856516  xnu:bsd/sys/select.h  sys/select.h
+e17b25db8625f0aa8d911c12c743707c6155e8d97680ad05fea5f70702cd758a  xnu:bsd/sys/semaphore.h  sys/semaphore.h
 2efb1aca5abdfa6f9e8bad155f2db319fdca1a029400cad1558e4df981d6eeea  xnu:bsd/sys/signal.h  sys/signal.h
 478453ae0823d115e3aa7c7e23589c2a47ef928983d805131f3fc0f1be855d1f  xnu:bsd/sys/socket.h  sys/socket.h
 b34765529855f41b8d3598c1443065c67fcdcb8ad734ba6d60c8d255bc5d4379  xnu:bsd/sys/spawn.h  sys/spawn.h

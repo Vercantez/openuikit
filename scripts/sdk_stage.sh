@@ -8,21 +8,32 @@
 #                                   Writes nothing to CHECKSUMS.  Needs network.
 #   scripts/sdk_stage.sh --offline  stage from the cache only; never touch the net
 #
-# Both staging modes rewrite sdk/usr/include from scratch.  Measured 2026-08-26:
-# a restage of a clean checkout reproduces all 355 committed headers
-# byte-for-byte, so `git status sdk/usr/include` after a restage is the offline
-# integrity check this script does not otherwise have.
+# Both staging modes rewrite sdk/usr/include from scratch, and a restage of a
+# clean checkout reproduces EVERY committed header byte-for-byte -- so `git
+# status sdk/usr/include` after a restage is the offline integrity check this
+# script does not otherwise have.  Re-measured 2026-08-27: adding one manifest
+# row changed exactly one file.  (The figure that used to be here was a header
+# COUNT, which went stale twice while the property it stood for stayed true.
+# State the property; the count is `find sdk/usr/include -type f | wc -l`.)
 #
 # sdk/usr/include is COMMITTED.  This script is how it is regenerated, not how
 # it is obtained at build time -- the build must work with no network and no
 # Xcode, which is the entire point of the milestone.
 #
-# Four sources, and the manifest says which is which per header:
+# Five sources, and the manifest says which is which per header:
 #   <repo>:<path>     apple-oss-distributions/<repo> at the tag in sdk/SOURCES.tsv
 #   gen:<repo>:<path> a header that is not a blob upstream but is the OUTPUT of
 #                     a generator upstream publishes -- run it, do not transcribe
 #   objc4:<path>      vendor/objc4 (Apple's objc4 drop, already in tree)
+#   vendor:<path>     any other vendored tree in this repo -- today only
+#                     vendor/libunwind, which is LLVM's and is NOT the
+#                     apple-oss-distributions `libunwind` that SOURCES.tsv pins.
+#                     Two projects share that name; the prefix keeps them apart.
 #   local             sdk/local/<same relative path> -- clean-room, ours
+#
+# EVERY ROW'S KIND IS VALIDATED BEFORE ANYTHING IS DELETED -- see the note above
+# the check. A kind added here without a case below used to wipe the tree first
+# and fail second.
 #
 # Loud aborts, no silent stubs: a header the manifest names and this script
 # cannot produce is a hard failure here, not a confusing compile error 400
@@ -118,11 +129,55 @@ install_header() { # install_header <src> <dst>
     fi
 }
 
+# ------------------------------------------------- validate BEFORE destroying
+#
+# EVERY ROW IS CHECKED FOR A SOURCE KIND THIS SCRIPT KNOWS, BEFORE THE `rm -rf`.
+# Learned the hard way: `mach-o/compact_unwind_encoding.h` was given the source
+# `vendor/libunwind/include/...` in ce9a5cf -- a spelling with no `<kind>:`
+# prefix, which falls past every case below. The script deleted 300+ staged
+# headers, reached row 118, and died, leaving sdk/usr/include with 93 files and
+# only `git checkout` between that and a lost tree. A row it cannot honour is a
+# failure it can detect without touching anything.
+#
+# It also means the rot was INVISIBLE: nothing in the gates runs this script, so
+# sdk/usr/include had been unregenerable for a day while every build passed.
+# This check needs no network and no cache, so a bad row now fails at the moment
+# it is written rather than the next time someone restages.
+bad=0
+while IFS=$'\t' read -r rel src; do
+    case "$rel" in ''|\#*) continue ;; esac
+    [ -n "$src" ] || { echo "sdk_stage: row for '$rel' has no source" >&2; bad=1; continue; }
+    case "$src" in
+        local|objc4:*|vendor:*|gen:*|*:*) ;;
+        *) echo "sdk_stage: row '$rel': unrecognised source kind '$src'" >&2
+           bad=1 ;;
+    esac
+done < "$MANIFEST"
+
+# AND NO DESTINATION TWICE. The loop below is last-writer-wins and says nothing,
+# so two rows naming one header with DIFFERENT sources would stage one of them
+# and the choice would be row order. `os/workgroup.h` appeared twice with the
+# same source, which is harmless and was invisible -- it only showed up because
+# it made the row count and the file count disagree by one. The harmless version
+# is the warning for the harmful one.
+dupe="$(awk -F'\t' '!/^#/ && NF>=2 {print $1}' "$MANIFEST" | sort | uniq -d)"
+if [ -n "$dupe" ]; then
+    echo "sdk_stage: destination staged by more than one manifest row:" >&2
+    printf '     %s\n' $dupe >&2
+    echo "  Staging is last-writer-wins, so this silently picks by row order." >&2
+    bad=1
+fi
+
+if [ "$bad" != 0 ]; then
+    echo "  known kinds: <repo>:<path>  gen:<repo>:<path>  objc4:<path>  vendor:<path>  local" >&2
+    die "manifest has rows this script cannot honour; nothing was changed"
+fi
+
 # --------------------------------------------------------------- the staging
 rm -rf "$INC"
 mkdir -p "$INC" "$CACHE"
 
-n_up=0 n_local=0 n_objc=0
+n_up=0 n_local=0 n_objc=0 n_vendor=0
 : > "$SUMS.new"
 
 while IFS=$'\t' read -r rel src; do
@@ -139,6 +194,19 @@ while IFS=$'\t' read -r rel src; do
             in="$ROOT/vendor/objc4/${src#objc4:}"
             [ -f "$in" ] || die "manifest says '$rel' comes from $src, but $in does not exist"
             cp "$in" "$out"; n_objc=$((n_objc+1)) ;;
+        vendor:*)
+            # A header from a vendored tree in this repo that is NOT objc4 --
+            # today that is vendor/libunwind (LLVM's), which supplies unwind.h,
+            # unwind_itanium.h and mach-o/compact_unwind_encoding.h.
+            #
+            # It needs its own kind rather than reusing `<repo>:<path>`, because
+            # `libunwind` ALREADY names an apple-oss-distributions repo in
+            # SOURCES.tsv -- a different libunwind, supplying libunwind.h and
+            # __libunwind_config.h. Two projects, one name; the prefix is what
+            # keeps them apart. Provenance is vendor/libunwind/PROVENANCE.md.
+            in="$ROOT/vendor/${src#vendor:}"
+            [ -f "$in" ] || die "manifest says '$rel' comes from $src, but $in does not exist"
+            cp "$in" "$out"; n_vendor=$((n_vendor+1)) ;;
         gen:*)
             # A header that is not a blob upstream but is the OUTPUT of a
             # generator upstream publishes.  Running it beats transcribing it.
@@ -163,7 +231,7 @@ while IFS=$'\t' read -r rel src; do
     esac
 done < "$MANIFEST"
 
-echo "   upstream $n_up   clean-room $n_local   objc4 $n_objc   = $((n_up+n_local+n_objc))"
+echo "   upstream $n_up   clean-room $n_local   objc4 $n_objc   vendored $n_vendor   = $((n_up+n_local+n_objc+n_vendor))"
 echo "   //Begin-Libc regions stripped from $n_stripped header(s), as Libc's own install does"
 
 # ---------------------------------------------------------------- the patches
