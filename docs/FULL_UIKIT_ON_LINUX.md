@@ -5,9 +5,11 @@ scene pixel-identically ([ISA_MASK_VERDICT.md](ISA_MASK_VERDICT.md)). Does the
 **whole** module build and run, and how much of the 108-scene golden suite does
 it actually render?
 
-**Answer: the whole module builds, and every frame it renders is byte-identical
-to the same code running natively on macOS.** What stops the rest is one
-runtime bug, not missing UIKit.
+**Answer: the whole module builds; 62 of 108 scenes render; every one of the
+110 frames is byte-identical to the same code running natively on macOS, and
+all 56 first-attempt scenes pass the project's own gate.** What stops the
+remaining 46 is memory corruption in the runtime substrate — not missing UIKit,
+not fonts, not `_Concurrency`.
 
 ## 1. The build — no vendoring, no VENDOR-EDITs
 
@@ -95,7 +97,62 @@ from the real-UIKit golden either because OpenUIKit is not bit-exact against
 UIKit, or because this stack disagrees with the same code natively. Those have
 different owners, so `full/scripts/score.py` measures them separately.
 
-<!-- SCOREBOARD -->
+### Scenes
+
+```
+total scenes in fixtures/scenes                     108
+rendered on the first attempt                        56   (110 PNG frames)
+rendered within 2 retries                           +6    -> 62 / 108
+fail persistently (3 attempts each)                  46
+```
+
+The retry column is not padding, it is the finding: **the failures are
+nondeterministic**. One scene run five times produced "corrupted double-linked
+list", a SIGSEGV at `0x10024000000`, "corrupted double-linked list", a SIGSEGV
+at `0x10102464c45df`, and "free(): invalid pointer" — five runs, four distinct
+failures. Any single-run number is a sample, so both are quoted.
+
+### Fidelity of what did render
+
+```
+A) Linux/machorun vs macOS-native OpenUIKit    110 / 110  BYTE-IDENTICAL
+B) macOS-native   vs real-UIKit golden          12 / 110  pixel-identical
+C) Linux/machorun vs real-UIKit golden          12 / 110  pixel-identical
+
+Tools/compare/compare.py -- the PROJECT'S OWN gate (tolerances + structural
+blob/geometry checks + layout.json):
+   macOS-native render     56 / 56 scenes pass
+   Linux/machorun render   56 / 56 scenes pass
+```
+
+**A is the number that measures this stack, and it is perfect.** B and C being
+equal is the proof: every deviation from the real-UIKit golden is inherited
+from OpenUIKit-on-macOS, and *none* is introduced by compiling to Mach-O on
+Linux and running under machorun. The bare "12/110 pixel-identical" is
+glyph-rasterisation residue the project already tolerates by design — quoted
+because it is the strictest possible reading, not because it is a defect here.
+
+### The 46 that do not render
+
+Categorised from the first-attempt run, by what the process actually said:
+
+| signature | scenes |
+|---|---|
+| glibc heap-corruption abort (`double free or corruption`, `corrupted double-linked list`, `free(): invalid size`, `malloc_consolidate(): invalid chunk size`, `_int_malloc` assertion) | 22 |
+| SIGSEGV on a wild address (`0xffeea114fffecb2e`, `0x10102464c45df`, …) | 19 |
+| `os_unfair_lock_unlock: this thread does not own the lock` (objc4 lock state corrupted) | 2 |
+| no diagnostic line — flaky, rendered when re-run alone | 9 |
+
+Every one of these is **memory corruption**, detected at different points. Not
+one is a missing UIKit capability, a missing font, or a `_Concurrency` gap:
+`label_basic` and `label_dark` render text and pass the gate, and the
+dispatch/voucher stubs never fired. The persistent 46 cluster on the
+chrome-heavy scenes — `attrtext_*`, `button_*`, `collection_*`, `navbar_*`,
+`navitem_*`, `tabbar_*`, `tableview_*`, `toolbar_*`, `control_*`,
+`constraints_*`, `gradient_*` — i.e. the scenes that build the largest object
+graphs, which is what a corruption bug would be expected to hit first.
+
+
 
 ## 4. What blocks the rest — and a harness bug that cost an evening
 
@@ -157,8 +214,17 @@ was ASLR luck — these faults depend on whether the truncated address happens t
 be mapped, so they are **flaky run to run**, which is itself worth knowing when
 reading any single result.
 
-An attempt to do the measurement properly — a bump allocator over a 64 GiB
-arena in a second libSystem umbrella — also **failed, and is kept as failed**:
+### What remains, and what it is not
+
+With the guest root staged from live `~/machorun`, the `0x2dce0`
+FAST_DATA_MASK crash disappears completely — it accounted for 42 of the 59
+failures before. What replaces it is a **different and unrelated** class of
+failure: nondeterministic heap corruption (see the taxonomy in §3), spread
+across many detection points and many code addresses. That is the next wall,
+and it belongs to the runtime substrate rather than to OpenUIKit.
+
+An earlier attempt to move the heap by hand — a bump allocator over a 64 GiB
+arena in a second libSystem umbrella — **failed, and is kept as failed**:
 overriding `malloc` in the umbrella while machorun's `libSystem.real` keeps
 calling glibc's internally puts two allocators on one heap, and glibc aborts
 with *"malloc(): corrupted top size"*. `full/shims/lowheap.c` retains that
