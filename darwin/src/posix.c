@@ -455,6 +455,12 @@ EXPORT int     ftruncate(int fd, off_t n)             { return MR_ERRNO_CALL(gli
 EXPORT int     fsync(int fd)                          { return MR_ERRNO_CALL(glibc_fsync(fd)); }
 EXPORT int     dup(int fd)                            { return MR_ERRNO_CALL(glibc_dup(fd)); }
 EXPORT int     dup2(int a, int b)                     { return MR_ERRNO_CALL(glibc_dup2(a, b)); }
+/* pipe(2) writes two descriptors into an int[2] the guest owns. int is 4 bytes
+ * on both, the array is the guest's, and there are no flags -- so this is a
+ * plain forward and stays one. pipe2's flags word is NOT, which is why it is
+ * absent: O_NONBLOCK and O_CLOEXEC are among the ten open() flags that differ,
+ * so it would need open()'s translation and nothing has asked for it yet. */
+EXPORT int     pipe(int fds[2])                       { return MR_ERRNO_CALL(glibc_pipe(fds)); }
 EXPORT int     isatty(int fd)                         { return MR_ERRNO_CALL(glibc_isatty(fd)); }
 EXPORT char   *getcwd(char *b, size_t n)              { return MR_ERRNO_CALL(glibc_getcwd(b, n)); }
 EXPORT int     chdir(const char *p)                   { return MR_ERRNO_CALL(glibc_chdir(p)); }
@@ -1005,6 +1011,205 @@ EXPORT int sigwait(const unsigned int *set, int *signo)
         *signo = d;
     }
     return rc;
+}
+
+/* ---------------------------------------------------------------- poll(2) */
+
+/* THREE translations, and only the third is the one this section was asked
+ * for. poll looks like the safest possible forward -- an array of 8-byte
+ * structs, a count, and a millisecond timeout -- and each of those three
+ * arguments is wrong in a different way.
+ *
+ * 1. nfds_t IS A DIFFERENT WIDTH. Darwin's is `unsigned int`, glibc's is
+ *    `unsigned long`. Measured on both sides 2026-08-27: 4 against 8. Under
+ *    AAPCS a 32-bit argument is passed in w1 and the upper half of x1 is
+ *    UNSPECIFIED, so glibc -- which reads the whole 64-bit register -- gets
+ *    the guest's count with whatever the guest last left in the top word. A
+ *    guest asking to poll 3 descriptors can hand glibc a count in the
+ *    billions, and poll will walk off the end of the array reading it. This
+ *    is the opaque-size hazard (docs/ABI.md, #49) appearing in a SCALAR
+ *    argument rather than in a struct, which is a shape we had not seen: the
+ *    two types have the same NAME and the same signedness and differ only in
+ *    width, so nothing at the call site looks wrong. The cast below is the
+ *    fix, and it only works because it is written here rather than left to a
+ *    header to do implicitly.
+ *
+ * 2. TWO OF THE TEN FLAGS ARE NUMBERED DIFFERENTLY. Both columns measured,
+ *    and both pinned by test (sdk/tests/abi_probe.c against Apple's SDK,
+ *    glibc_abi_probe.c against real glibc) rather than by this comment:
+ *
+ *                      Darwin   glibc
+ *        POLLIN        0x0001   0x0001      POLLERR    0x0008   0x0008
+ *        POLLPRI       0x0002   0x0002      POLLHUP    0x0010   0x0010
+ *        POLLOUT       0x0004   0x0004      POLLNVAL   0x0020   0x0020
+ *        POLLRDNORM    0x0040   0x0040      POLLRDBAND 0x0080   0x0080
+ *        POLLWRNORM    0x0004   0x0100   <-- differ
+ *        POLLWRBAND    0x0100   0x0200   <-- differ
+ *
+ *    Darwin spells POLLWRNORM as a plain alias for POLLOUT ("no write type
+ *    differentiation", sys/poll.h:72), so its two write flags sit one
+ *    position below glibc's, and Darwin's POLLWRBAND is bit-identical to
+ *    glibc's POLLWRNORM.
+ *
+ *    HOW MUCH THAT COSTS IS SMALLER THAN IT LOOKS, and the first draft of
+ *    this comment got it wrong in the direction that flattered the fix. I
+ *    wrote that a forward would grow an extra flag on the way back, because
+ *    Linux's pipe_poll computes EPOLLOUT|EPOLLWRNORM for a writable pipe. It
+ *    does compute that -- but poll(2) MASKS revents by the events that were
+ *    requested, so glibc can only return POLLWRNORM to a caller that asked
+ *    for 0x0100, and a Darwin guest asking for 0x0100 is asking for
+ *    POLLWRBAND. Measured on a writable pipe under Linux: events=POLLOUT
+ *    yields revents=0x0004, not 0x0104. A negative control caught the claim
+ *    before it shipped -- tests/src/27_poll.c passed with the translation
+ *    deliberately removed, which is what sent me back to measure.
+ *
+ * 3. ppoll's sigset_t, which is the 4-against-128 crossing the rest of this
+ *    section exists for.
+ *
+ * So of the three, the load-bearing pair is the WIDTH and the SIGSET. The
+ * flag mapping earns its place on the request direction and on the four
+ * Darwin-only flags below, not on the round trip.
+ *
+ * The four Darwin-only flags (POLLEXTEND 0x0200, POLLATTRIB 0x0400,
+ * POLLNLINK 0x0800, POLLWRITE 0x1000) are file-modification notifications
+ * from Darwin's kqueue-backed poll with no Linux counterpart, and they are
+ * where forwarding is unambiguously wrong rather than merely inexact: those
+ * four bits are four DIFFERENT live Linux flags -- POLLWRBAND, POLLMSG,
+ * POLLREMOVE, POLLRDHUP -- so a forward does not ask for nothing, it asks for
+ * something else. They are DROPPED, for the same reason SIGEMT and SIGINFO
+ * are dropped from a sigset: there is no Linux flag they could mean. Anything
+ * outside the union of the two vocabularies is a bail rather than a guess.
+ *
+ * ONE DIFFERENCE NO MAPPING REACHES, recorded here because the flag table
+ * looks like it should. Darwin's poll is kqueue-backed and treats POLLWRBAND
+ * on an ordinary pipe as satisfied by plain writability, answering 0x0100;
+ * Linux answers 0, because a pipe has no write band. Measured on both. That
+ * is a kernel semantic difference rather than a numbering one, so we report
+ * Linux's answer under Darwin's name and say so in docs/UNIMPLEMENTED.md.
+ * It is the same shape as Darwin answering POLLNVAL for /dev/null where Linux
+ * answers POLLOUT, which cost this fixture its first baseline. */
+
+#define MR_D_POLLWRNORM 0x0004   /* == Darwin POLLOUT, deliberately */
+#define MR_D_POLLWRBAND 0x0100
+#define MR_L_POLLOUT    0x0004
+#define MR_L_POLLWRNORM 0x0100
+#define MR_L_POLLWRBAND 0x0200
+
+/* The eight that are already equal, plus Darwin's own POLLWRBAND, plus the
+ * four Darwin extensions, is the whole Darwin vocabulary. */
+#define MR_D_POLL_SAME  0x00FF   /* IN PRI OUT ERR HUP NVAL RDNORM RDBAND */
+#define MR_D_POLL_DROP  0x1E00   /* EXTEND ATTRIB NLINK WRITE */
+#define MR_D_POLL_KNOWN (MR_D_POLL_SAME | MR_D_POLLWRBAND | MR_D_POLL_DROP)
+#define MR_L_POLL_KNOWN (0x00FF | MR_L_POLLWRNORM | MR_L_POLLWRBAND)
+
+struct mr_pollfd { int fd; short events; short revents; };
+
+static short mr_pollev_d2l(short d)
+{
+    short l;
+    if ((unsigned)(unsigned short)d & ~(unsigned)MR_D_POLL_KNOWN)
+        mr_bail("poll(): an event bit that is in neither system's vocabulary. "
+                "Forwarding it would name a different Linux flag (see the flag "
+                "table in darwin/src/posix.c).");
+    l = (short)(d & MR_D_POLL_SAME);
+    /* POLLWRNORM and POLLOUT are the same bit on Darwin, so a guest that set
+     * it meant both; glibc separates them, and setting both is how we say so. */
+    if (d & MR_D_POLLWRNORM) l |= MR_L_POLLOUT | MR_L_POLLWRNORM;
+    if (d & MR_D_POLLWRBAND) l |= MR_L_POLLWRBAND;
+    return l;
+}
+
+static short mr_pollev_l2d(short l)
+{
+    short d;
+    if ((unsigned)(unsigned short)l & ~(unsigned)MR_L_POLL_KNOWN)
+        mr_bail("poll(): glibc returned a revents bit with no Darwin meaning.");
+    d = (short)(l & MR_D_POLL_SAME);
+    if (l & MR_L_POLLWRNORM) d |= MR_D_POLLWRNORM;  /* folds onto POLLOUT */
+    if (l & MR_L_POLLWRBAND) d |= MR_D_POLLWRBAND;
+    return d;
+}
+
+/* The guest owns its array and poll(2) promises not to disturb .events, so the
+ * translated copy goes in scratch rather than in place. Small counts -- every
+ * run loop we have -- stay on the stack. */
+#define MR_POLL_STACK_FDS 32
+
+static int mr_poll_common(struct mr_pollfd *fds, unsigned int nfds,
+                          int timeout_ms, const void *lsig, int use_ppoll)
+{
+    struct mr_pollfd stackbuf[MR_POLL_STACK_FDS], *scratch = stackbuf;
+    long tsbuf[2];
+    unsigned int i;
+    int rc;
+
+    if (nfds > MR_POLL_STACK_FDS) {
+        scratch = glibc_malloc((size_t)nfds * sizeof *scratch);
+        if (!scratch) { *mr_errno_slot() = 12; return -1; }   /* ENOMEM */
+    }
+    for (i = 0; i < nfds; i++) {
+        scratch[i].fd      = fds[i].fd;
+        scratch[i].events  = mr_pollev_d2l(fds[i].events);
+        scratch[i].revents = 0;
+    }
+
+    if (use_ppoll) {
+        /* struct timespec is 16 bytes with identical field offsets on both --
+         * pinned by sdk/tests/abi_probe.c -- so it needs no translation, only
+         * building. A NULL tmo_p is how ppoll spells "block", so the shared
+         * body's negative timeout maps to a NULL pointer rather than to -1. */
+        const void *ts = 0;
+        if (timeout_ms >= 0) {
+            tsbuf[0] = timeout_ms / 1000;
+            tsbuf[1] = (long)(timeout_ms % 1000) * 1000000L;
+            ts = tsbuf;
+        }
+        rc = MR_ERRNO_CALL(glibc_ppoll(scratch, (unsigned long)nfds, ts, lsig));
+    } else {
+        rc = MR_ERRNO_CALL(glibc_poll(scratch, (unsigned long)nfds, timeout_ms));
+    }
+
+    /* revents is written for every descriptor whenever the call did not fail,
+     * including the zero-return timeout case, so translate back on any rc >= 0. */
+    if (rc >= 0)
+        for (i = 0; i < nfds; i++)
+            fds[i].revents = mr_pollev_l2d(scratch[i].revents);
+
+    if (scratch != stackbuf) glibc_free(scratch);
+    return rc;
+}
+
+EXPORT int poll(struct mr_pollfd *fds, unsigned int nfds, int timeout)
+{
+    return mr_poll_common(fds, nfds, timeout, 0, 0);
+}
+
+/* ppoll(2) is LINUX-ONLY -- Apple's published sys/poll.h at xnu-12377.121.6
+ * declares poll and nothing else -- so a Darwin libSystem exporting it looks
+ * wrong for exactly the reason signalfd does, and it is here for exactly the
+ * same reason: this file IS the Darwin/Linux boundary, and the Linux code that
+ * swift-corelibs compiles for a Darwin target passes a sigset_t it owns, which
+ * is a 4-byte Darwin one.
+ *
+ * Its timeout is a struct timespec rather than milliseconds, and that Linux
+ * signature is kept, since a caller reaching for ppoll wants the Linux one. */
+EXPORT int ppoll(struct mr_pollfd *fds, unsigned int nfds,
+                 const long *tmo_p, const unsigned int *sigmask)
+{
+    mr_linux_sigset lmask;
+    int ms = -1;
+
+    if (tmo_p) {
+        long long m = (long long)tmo_p[0] * 1000 + tmo_p[1] / 1000000;
+        /* Clamping is not a rounding choice, it is the only honest one: the
+         * shared body carries milliseconds in an int, and a timeout beyond 24
+         * days would otherwise wrap to a short wait or to "block forever". */
+        ms = m > 2147483647LL ? 2147483647 : (int)m;
+        if (ms < 0) ms = 0;
+    }
+    if (!sigmask) return mr_poll_common(fds, nfds, ms, 0, 1);
+    mr_sigset_d2l(*sigmask, &lmask);
+    return mr_poll_common(fds, nfds, ms, &lmask, 1);
 }
 
 /* pthread_main_np(3) is BSD/Darwin-only: "is the calling thread the main

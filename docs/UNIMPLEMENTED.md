@@ -454,11 +454,36 @@ does — so `st_birthtimespec` is filled from `st_ctim`. That is a lie of
 precision rather than of kind: a zero would date every file to 1970, which is
 worse. Using `statx` when available is the fix and is unwritten.
 
-### `dirent`
-`opendir`/`readdir`/`closedir` are absent. `struct dirent` differs between the
-two systems in both size and field layout, exactly like `struct stat`, so this
-is a translation to be written rather than a forward to be added. Nothing in
-the corpus enumerates a directory.
+### `dirent` — **DONE**
+`opendir`/`readdir`/`closedir`/`rewinddir`/`dirfd` translate rather than
+forward: `struct dirent` is 1048 bytes on Darwin and 280 on glibc, and differs
+in field layout as well as size, exactly like `struct stat`. Graded by
+`tests/bin/20_dirent`.
+
+### `poll-band` — a kernel difference, not a mapping we are missing
+`poll` and `ppoll` translate three things (`darwin/src/posix.c`): `nfds_t`'s
+width, the two flags Darwin and Linux number differently, and — for `ppoll` —
+the `sigset_t`. One difference sits underneath all of that and no mapping
+reaches it.
+
+Darwin's `poll` is kqueue-backed and treats `POLLWRBAND` on an ordinary pipe as
+satisfied by plain writability, answering `0x0100`. Linux answers `0`, because a
+pipe has no write band. Measured on both, 2026-08-27. We report Linux's answer
+under Darwin's name, because the alternative is inventing a readiness the
+kernel never reported.
+
+The same shape shows up on character devices in the other direction: Darwin
+answers `POLLNVAL` for `/dev/null` and `/dev/zero`, where Linux answers
+`POLLOUT`. That one cost `tests/src/27_poll.c` its first baseline, which is why
+the fixture polls pipes.
+
+Neither is reachable from an oracle-matching fixture, so both are recorded here
+instead. `POLLRDHUP` is Linux-only and has no Darwin spelling; it is rejected
+rather than passed through, since `0x2000` is outside Darwin's vocabulary.
+
+`pipe2` is also absent: its flags word carries `O_NONBLOCK` and `O_CLOEXEC`,
+which are among the ten `open` flags that differ, so it needs `open`'s
+translation rather than a forward. Nothing has asked for it.
 
 ### `strerror-text`
 `strerror` returns Apple's own strings, recorded from macOS into

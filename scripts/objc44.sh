@@ -43,6 +43,13 @@ LOADER="${MACHORUN_LOADER:-$ROOT/build/machorun}"
     echo "        Build it with scripts/build_objc4.sh (needs a macOS SDK)." >&2
     exit 1; }
 
+# This gate RUNS the shipped dylibs and never rebuilds them, so a dylib older
+# than its own source turns every verdict below into a verdict about the
+# PREVIOUS build -- passing, in detail, about the wrong bytes. difftest does
+# not need this because run_linux.sh rebuilds first; this gate and swift_gate
+# do. See scripts/check_stale.sh for the run where that bit.
+bash "$ROOT/scripts/check_stale.sh" >&2 || exit 1
+
 export LC_ALL=C LANG=C TZ=UTC
 pass=0; fail=0
 FAILED=()

@@ -42,6 +42,7 @@
 #include <sys/sysctl.h>
 #include <tzfile.h>
 #include <dirent.h>
+#include <poll.h>
 #include <sys/types.h>
 #include <time.h>
 #include <runetype.h>
@@ -147,6 +148,19 @@ int main(void)
     VAL(CLOCK_REALTIME); VAL(CLOCK_MONOTONIC); VAL(CLOCK_MONOTONIC_RAW);
     VAL(CLOCK_MONOTONIC_RAW_APPROX); VAL(CLOCK_UPTIME_RAW); VAL(CLOCK_UPTIME_RAW_APPROX);
     VAL(CLOCK_PROCESS_CPUTIME_ID); VAL(CLOCK_THREAD_CPUTIME_ID);
+
+    puts("");
+    puts("== poll  (POLLWRNORM and POLLWRBAND differ from Linux, and Darwin's");
+    puts("==        POLLWRBAND 0x0100 IS Linux's POLLWRNORM, so a forwarded");
+    puts("==        events word subscribes to a real but different condition.");
+    puts("==        nfds_t is the other half: 4 here, 8 on Linux, in a 64-bit");
+    puts("==        argument slot. darwin/src/posix.c translates both.)");
+    VAL(POLLIN); VAL(POLLPRI); VAL(POLLOUT); VAL(POLLERR); VAL(POLLHUP);
+    VAL(POLLNVAL); VAL(POLLRDNORM); VAL(POLLRDBAND); VAL(POLLWRNORM);
+    VAL(POLLWRBAND); VAL(POLLEXTEND); VAL(POLLATTRIB); VAL(POLLNLINK);
+    VAL(POLLWRITE);
+    SZ(nfds_t); SZ(struct pollfd);
+    OFF(pollfd, fd); OFF(pollfd, events); OFF(pollfd, revents);
 
     puts("");
     puts("== socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --");

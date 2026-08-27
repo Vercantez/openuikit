@@ -57,6 +57,13 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 . "$ROOT/harness/common.sh"
 
+# Like objc44 and unlike difftest, this gate links against and RUNS the shipped
+# dylibs without rebuilding them, so a dylib older than its own source makes
+# both link orders pass or fail about the previous build. Warn rather than
+# refuse: this gate skips cleanly when the Swift runtime is not staged, and a
+# hard stop would block a run that is still worth something.
+bash "$ROOT/scripts/check_stale.sh" --warn >&2
+
 ID=18_swift_class
 SRC="$ROOT/tests/src/$ID.swift"
 EXP="$ROOT/tests/expected"

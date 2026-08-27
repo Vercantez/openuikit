@@ -54,6 +54,13 @@ extern int    glibc_sigismember(const void *, int)          GLIBCSYM(sigismember
 extern int    glibc_pthread_sigmask(int, const void *, void *) GLIBCSYM(pthread_sigmask);
 extern int    glibc_sigprocmask(int, const void *, void *)  GLIBCSYM(sigprocmask);
 extern int    glibc_signalfd(int, const void *, int)        GLIBCSYM(signalfd);
+/* poll's second argument is glibc's nfds_t -- unsigned LONG, where Darwin's is
+ * unsigned INT.  Spelled out here rather than left to a header so the width
+ * conversion happens at the call, in view of the cast. darwin/src/posix.c has
+ * the account of why a 4-byte value in a 64-bit argument slot is not benign. */
+extern int    glibc_poll(void *, unsigned long, int)        GLIBCSYM(poll);
+extern int    glibc_ppoll(void *, unsigned long, const void *,
+                          const void *)                     GLIBCSYM(ppoll);
 extern void  *glibc_bsearch(const void *, const void *, size_t, size_t,
                             int (*)(const void *, const void *)) GLIBCSYM(bsearch);
 extern char  *glibc_strncat(char *, const char *, size_t)   GLIBCSYM(strncat);
@@ -140,6 +147,7 @@ extern int     glibc_ftruncate(int, off_t)                  GLIBCSYM(ftruncate);
 extern int     glibc_fsync(int)                             GLIBCSYM(fsync);
 extern int     glibc_dup(int)                               GLIBCSYM(dup);
 extern int     glibc_dup2(int, int)                         GLIBCSYM(dup2);
+extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
 extern int     glibc_isatty(int)                            GLIBCSYM(isatty);
 extern char   *glibc_getcwd(char *, size_t)                 GLIBCSYM(getcwd);
 extern int     glibc_chdir(const char *)                    GLIBCSYM(chdir);

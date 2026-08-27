@@ -250,6 +250,7 @@ os/workgroup_interval.h	libdispatch:os/workgroup_interval.h
 os/workgroup_object.h	libdispatch:os/workgroup_object.h
 os/workgroup_parallel.h	libdispatch:os/workgroup_parallel.h
 os/workgroup.h	libdispatch:os/workgroup.h
+poll.h	Libc:include/poll.h
 pthread.h	libpthread:include/pthread/pthread.h
 pthread/priority_private.h	xnu:bsd/pthread/priority_private.h
 pthread/pthread_impl.h	libpthread:include/pthread/pthread_impl.h
@@ -379,6 +380,7 @@ sys/lock.h	xnu:bsd/sys/lock.h
 sys/mman.h	xnu:bsd/sys/mman.h
 sys/mount.h	xnu:bsd/sys/mount.h
 sys/param.h	xnu:bsd/sys/param.h
+sys/poll.h	xnu:bsd/sys/poll.h
 sys/proc_info.h	xnu:bsd/sys/proc_info.h
 sys/proc.h	xnu:bsd/sys/proc.h
 sys/qos_private.h	libpthread:private/sys/qos_private.h

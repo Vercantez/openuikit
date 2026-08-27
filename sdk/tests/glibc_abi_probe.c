@@ -83,6 +83,7 @@
 #include <signal.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <poll.h>
 #include <ucontext.h>
 
 #define PIN(type, bytes) \
@@ -269,6 +270,37 @@ _Static_assert(CLOCK_PROCESS_CPUTIME_ID == 2, "glibc CLOCK_PROCESS_CPUTIME_ID mo
 _Static_assert(CLOCK_THREAD_CPUTIME_ID  == 3, "glibc CLOCK_THREAD_CPUTIME_ID moved (Darwin's is 16)");
 _Static_assert(CLOCK_MONOTONIC_RAW      == 4, "glibc CLOCK_MONOTONIC_RAW moved (Darwin's is 4 too)");
 _Static_assert(CLOCK_BOOTTIME           == 7, "glibc CLOCK_BOOTTIME moved");
+
+/* POLL. Two of the ten flags differ, and the pair is the worst possible
+ * arrangement: Darwin's POLLWRBAND (0x0100) is bit-identical to glibc's
+ * POLLWRNORM, so a forwarded events word does not fail and does not land on an
+ * unused bit -- it asks for a real, different, adjacent condition. Darwin
+ * spells POLLWRNORM as an alias for POLLOUT, which is why its two write flags
+ * sit one position below glibc's. darwin/src/posix.c's mr_pollev_d2l/l2d
+ * translate; this pins the glibc half so a change there fails the build rather
+ * than quietly un-mapping the pair.
+ *
+ * nfds_t is the other half of the same call and is not a flag problem at all:
+ * 8 bytes here against Darwin's 4, in an argument slot whose upper word AAPCS
+ * leaves unspecified. This PIN is what makes the cast in mr_poll_common()
+ * necessary rather than merely defensive. */
+_Static_assert(POLLIN     == 0x0001, "glibc POLLIN moved (Darwin's is 0x0001 too)");
+_Static_assert(POLLPRI    == 0x0002, "glibc POLLPRI moved (Darwin's is 0x0002 too)");
+_Static_assert(POLLOUT    == 0x0004, "glibc POLLOUT moved (Darwin's is 0x0004 too)");
+_Static_assert(POLLERR    == 0x0008, "glibc POLLERR moved (Darwin's is 0x0008 too)");
+_Static_assert(POLLHUP    == 0x0010, "glibc POLLHUP moved (Darwin's is 0x0010 too)");
+_Static_assert(POLLNVAL   == 0x0020, "glibc POLLNVAL moved (Darwin's is 0x0020 too)");
+_Static_assert(POLLRDNORM == 0x0040, "glibc POLLRDNORM moved (Darwin's is 0x0040 too)");
+_Static_assert(POLLRDBAND == 0x0080, "glibc POLLRDBAND moved (Darwin's is 0x0080 too)");
+_Static_assert(POLLWRNORM == 0x0100, "glibc POLLWRNORM moved (Darwin's is 0x0004, "
+    "an alias for POLLOUT); darwin/src/posix.c maps Darwin's POLLOUT onto both");
+_Static_assert(POLLWRBAND == 0x0200, "glibc POLLWRBAND moved (Darwin's is 0x0100, "
+    "which is THIS header's POLLWRNORM -- see mr_pollev_d2l in darwin/src/posix.c)");
+PIN(nfds_t, 8);
+PIN(struct pollfd, 8);
+_Static_assert(offsetof(struct pollfd, fd)      == 0, "glibc pollfd.fd moved");
+_Static_assert(offsetof(struct pollfd, events)  == 4, "glibc pollfd.events moved");
+_Static_assert(offsetof(struct pollfd, revents) == 6, "glibc pollfd.revents moved");
 
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */
