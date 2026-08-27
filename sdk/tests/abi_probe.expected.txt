@@ -190,11 +190,30 @@ value  SA_RESTART                   2
 value  SA_SIGINFO                   64
 value  SA_NOCLDSTOP                 8
 
-== socket constants are NOT here, and that is a finding rather than an
-==   omission: sys/socket.h IS staged but includes sys/constrained_ctypes.h,
-==   which is not, so nothing can compile against it. The glibc half is
-==   pinned in sdk/tests/glibc_abi_probe.c; this half has to wait for the
-==   dangling include. SOL_SOCKET is 65535 on Darwin against 1 on Linux.
+== socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --
+==                    and 1 IS a valid level on Linux, so a forwarded
+==                    setsockopt would set an option at the wrong level
+==                    rather than failing. Every SO_* differs too.)
+value  AF_UNIX                      1
+value  AF_INET                      2
+value  AF_INET6                     30
+value  SOCK_STREAM                  1
+value  SOCK_DGRAM                   2
+value  SOL_SOCKET                   65535
+value  SO_REUSEADDR                 4
+value  SO_KEEPALIVE                 8
+value  SO_BROADCAST                 32
+value  SO_SNDBUF                    4097
+value  SO_RCVBUF                    4098
+value  SO_ERROR                     4103
+value  SO_LINGER                    128
+value  SHUT_RD                      0
+value  SHUT_WR                      1
+value  SHUT_RDWR                    2
+value  MSG_PEEK                     2
+value  MSG_OOB                      1
+value  IPPROTO_TCP                  6
+value  IPPROTO_UDP                  17
 
 == open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)
 value  O_RDONLY                     0
