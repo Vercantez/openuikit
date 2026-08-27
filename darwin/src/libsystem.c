@@ -505,12 +505,61 @@ extern int mr_addr_in_glibc_heap(const void *p); /* -> loader, via host lookup *
  * not corrupts the heap. src/map.c records the one case that costs us (an
  * allocation at or above glibc's 32 MiB mmap threshold lives outside brk and
  * so reports "not ours"). */
+/* THE BRK CHECK ALONE UNDER-REPORTS, and existential-fix measured it: of ten
+ * allocations from 32 MiB upward, four came back 0 from malloc_size for memory
+ * malloc had just returned. Everything at or above glibc's 32 MiB
+ * M_MMAP_THRESHOLD is served by mmap rather than brk, so it sits outside the
+ * main arena and "not in brk" wrongly concluded "not ours". The first version
+ * of this fix predicted that case and accepted it as a leak; it should not
+ * have, because objc4's try_free is `if (p && malloc_size(p)) free(p)`, which
+ * means a block of 32 MiB or more was never freed at all -- and any caller
+ * using malloc_size to SIZE a buffer got 0 instead of its length.
+ *
+ * glibc's mmap-backed chunks are identifiable structurally, and cheaply.
+ * Measured in the test-bed image across 32 MiB..256 MiB:
+ *
+ *     ptr=0xffff9235f010  offset-in-page 16  header 0x02001002  IS_MMAPPED=1
+ *     ptr=0xffff8435f010  offset-in-page 16  header 0x10001002  IS_MMAPPED=1
+ *     a small brk block   offset-in-page 688 header 0x51        IS_MMAPPED=0
+ *
+ * The chunk is page-aligned and the pointer is 16 bytes into it, the
+ * IS_MMAPPED bit (0x2) is set, and PREV_INUSE (0x1) is clear -- mmap'd chunks
+ * have no predecessor. Requiring all four, plus a page-aligned size, makes a
+ * false positive need a pointer at exactly page+16 whose preceding word
+ * happens to carry that bit pattern.
+ *
+ * The alignment test comes FIRST and is one AND: the header read only happens
+ * for pointers that already look like a chunk base, so an arbitrary pointer is
+ * never dereferenced on the strength of a guess. */
+#define MR_MMAP_CHUNK_OFFSET 16
+#define MR_IS_MMAPPED        0x2ULL
+#define MR_PREV_INUSE        0x1ULL
+
+static int in_glibc_mmap_chunk(const void *p)
+{
+    unsigned long a = (unsigned long)p;
+    unsigned long long hdr, sz;
+
+    /* 4096 rather than the real page size: a pointer 16 bytes into a 16 KiB
+     * page is 16 bytes into a 4 KiB one too, so this is the looser gate and
+     * the three checks below carry the weight. */
+    if ((a & 0xfffUL) != MR_MMAP_CHUNK_OFFSET) return 0;
+
+    hdr = *(const unsigned long long *)(a - 8);
+    if (!(hdr & MR_IS_MMAPPED)) return 0;
+    if (hdr & MR_PREV_INUSE)    return 0;
+    sz = hdr & ~7ULL;
+    if (sz < 0x1000ULL || (sz & 0xfffULL)) return 0;
+    return 1;
+}
+
 EXPORT size_t malloc_size(const void *p)
 {
     if (!p) return 0;
     if (mr_addr_in_image(p)) return 0;
-    if (!mr_addr_in_glibc_heap(p)) return 0;
-    return glibc_malloc_usable_size((void *)p);
+    if (mr_addr_in_glibc_heap(p) || in_glibc_mmap_chunk(p))
+        return glibc_malloc_usable_size((void *)p);
+    return 0;
 }
 EXPORT size_t malloc_good_size(size_t n) { return n; }
 

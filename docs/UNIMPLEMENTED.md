@@ -172,6 +172,41 @@ struct is compiled into the guest and its layout is not glibc's. Same for
 glibc object inside Darwin's opaque bytes and using the signature word to tell
 "Apple-initialised" from "adopted".
 
+### `large-allocations-above-2^47` — a hole in the heap guarantee, not in malloc_size
+`mr_constrain_heap()` puts glibc's main arena below 2^47 and VERIFIES it, which
+is what makes Swift's 47-bit isa mask safe (see `#isa-va-width`). The
+verification checks `brk`. Allocations at or above glibc's 32 MiB
+`M_MMAP_THRESHOLD` are **not** brk: they come from `mmap`, and on this kernel
+they land at `0xffff_xxxx_xxxx` — back above the ceiling the whole heap fix
+exists to stay under. Measured, by existential-fix:
+
+```
+req=  32505856  ptr=0x10032e02180   brk,  below the limit
+req=  33554432  ptr=0xffffbbe7f010  mmap, ABOVE it
+req= 268435456  ptr=0xffffade7f010  mmap, ABOVE it
+```
+
+**The check cannot see the case it does not cover**, which is the part worth
+naming: `mr_constrain_heap()` probes a 64-byte allocation, that allocation is
+necessarily brk, so the probe passes and says nothing about the mmap path. A
+verification whose blind spot is exactly the uncovered case reads as
+reassurance.
+
+Not a live bug today: nothing on the render path allocates 32 MiB in one block,
+and the isa mask applies to CLASS pointers, which are metadata (64 KiB pool
+refills) and objc4 class pairs (a few hundred bytes) — never buffers. It
+becomes one the first time a guest puts something the runtimes mask into a
+large allocation.
+
+Why it is not simply fixed: `M_MMAP_THRESHOLD` cannot be raised past glibc's
+`HEAP_MAX_SIZE/2`, which is the 32 MiB we already request — we sit on the cap,
+so there is no headroom to buy. Closing it properly means intercepting large
+allocations, which is the guest-malloc arena that was considered and rejected
+(it changes pointer ownership, and `malloc_size`, `realloc` and objc4's
+`try_free` all depend on that not changing). Recorded rather than fixed, and
+the honest statement of the guarantee is: **the main arena is below 2^47;
+single allocations at or above 32 MiB are not.**
+
 ### `opaque-abi-class` — the whole family `posix-spawn` belongs to
 Darwin and glibc disagree about the size of most "opaque" C library types, and
 the disagreement runs **both ways**. Wherever machorun hands a glibc object to a
