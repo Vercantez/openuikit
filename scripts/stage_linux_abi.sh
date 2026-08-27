@@ -205,6 +205,29 @@ extern int gettid(void) GLIBCSYM(gettid);
 #endif
 EOF
 
+# <poll.h>. CoreFoundation's epoll run loop reaches it (CFRunLoop.c:131).
+# struct pollfd happens to agree between Darwin and glibc -- three fields, same
+# order, same widths -- which is exactly the coincidence that makes a forward
+# look safe without being checked, so the layout AND the event bits are pinned
+# in sdk/tests/epoll_abi_probe.c rather than trusted.
+cat > "$INC/poll.h" <<'EOF'
+#ifndef _SWIFTCORE_MACHO_POLL_H
+#define _SWIFTCORE_MACHO_POLL_H
+#ifndef GLIBCSYM
+#define GLIBCSYM(n) __asm__("_glibc_" #n)
+#endif
+struct pollfd { int fd; short events; short revents; };
+typedef unsigned long nfds_t;
+#define POLLIN   0x001
+#define POLLPRI  0x002
+#define POLLOUT  0x004
+#define POLLERR  0x008
+#define POLLHUP  0x010
+#define POLLNVAL 0x020
+extern int poll(struct pollfd *, nfds_t, int) GLIBCSYM(poll);
+#endif
+EOF
+
 cat > "$INC/linux/limits.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_LINUX_LIMITS_H
 #define _SWIFTCORE_MACHO_LINUX_LIMITS_H
@@ -228,4 +251,4 @@ fi
 
 echo "staged Linux-ABI headers into $INC"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
-   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" | sed 's/^/  /'
+   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" "$INC/poll.h" | sed 's/^/  /'

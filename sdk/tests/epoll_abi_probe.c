@@ -48,6 +48,7 @@
 #include <stdint.h>
 #include <sys/epoll.h>
 #include <sys/eventfd.h>
+#include <poll.h>
 #include <sys/timerfd.h>
 #include <sys/signalfd.h>
 #include <sys/syscall.h>
@@ -120,6 +121,20 @@ _Static_assert(FUTEX_WAIT == 0 && FUTEX_WAKE == 1 && FUTEX_PRIVATE_FLAG == 128,
     "FUTEX_*");
 _Static_assert(SYS_futex == 98, "SYS_futex on aarch64");
 _Static_assert(SYS_gettid == 178, "SYS_gettid on aarch64");
+
+/* ------------------------------------------------------------------ poll ---
+ * struct pollfd AGREES between Darwin and glibc, which is why it needs pinning
+ * rather than why it does not: an agreeing layout is the case where a forward
+ * looks correct and nobody checks. */
+_Static_assert(sizeof(struct pollfd) == 8, "pollfd size");
+_Static_assert(__builtin_offsetof(struct pollfd, fd) == 0, "pollfd.fd");
+_Static_assert(__builtin_offsetof(struct pollfd, events) == 4, "pollfd.events");
+_Static_assert(__builtin_offsetof(struct pollfd, revents) == 6, "pollfd.revents");
+_Static_assert(POLLIN == 0x001 && POLLPRI == 0x002 && POLLOUT == 0x004,
+    "poll input/output bits");
+_Static_assert(POLLERR == 0x008 && POLLHUP == 0x010 && POLLNVAL == 0x020,
+    "poll error bits");
+_Static_assert(sizeof(nfds_t) == 8, "nfds_t");
 /* The lock-word bits, added when libdispatch's futex lock became reachable.
  * These are NOT cosmetic: DLOCK_OWNER_MASK is FUTEX_TID_MASK, and the waiters /
  * failed-trylock bits are FUTEX_WAITERS / FUTEX_OWNER_DIED. A wrong value here

@@ -544,3 +544,60 @@ directly.
   advancing frames over wall time was never exercised.
 - **Exceptions.** Everything is built `-fno-exceptions` and machorun has no
   compact-unwind unwinder; a real app that throws is untested territory.
+
+## 7. The run loop — "renders a frame" becomes "runs"
+
+The first of §6's three missing process-layer pieces. Built and verified;
+launch-by-name and bundle are not done.
+
+### OpenUIKit already had the seam
+
+`UIWindow.tick(timestamp:)` says it in its own comment — *"there is no run
+loop, so this tick IS the run-loop turn"* — and one call advances scroll
+deceleration, navigation transitions (**which is what fires
+`viewDidAppear`**), sheet settling, `UIView.animate` completions, caret blink,
+scheduled `Timer`s and time-based gesture recognisers. None of that was
+reimplemented. What was added is a host that feeds the seam **real** time
+instead of a value set by hand.
+
+### Built so CFRunLoop can drive it, not compete with it
+
+On iOS, UIKit's main loop sits *on* CFRunLoop rather than replacing it, and
+foundation-scope is building CFRunLoop's epoll path now. So the only two things
+a host must supply — *what time is it* and *wait until* — sit behind a
+`HostFrameSource` protocol. `MonotonicFrameSource` answers with
+`clock_gettime(CLOCK_MONOTONIC)` and `nanosleep`. A CFRunLoop-backed source
+would answer `wait` by blocking in `CFRunLoopRunInMode`; nothing else changes,
+and the loop body stays one line: `tick`.
+
+### Verified over wall time, with teeth on both sides (3/3 runs)
+
+```
+monotonic : fired=yes turns=30  animation-clock=0.500s  WALL=0.500s   PASS
+synthetic : fired=yes turns=31  animation-clock=0.517s  WALL=0.000s   detected
+both completed the animation; wall times differ by 15613x             PASS
+viewDidAppear: before-loop=not fired  after=FIRED  animated=true
+               turns=21  WALL=0.355s                                  PASS
+```
+
+**The negative control is not a strawman.** `SyntheticFrameSource` is precisely
+what `openrender` does today: advance the clock by hand, never wait. The
+animation *completes* under it — so a test that only asked "did the completion
+handler fire" would pass while measuring nothing. Only elapsed real seconds
+separate the two, and the wall clock is read **directly** rather than through
+the frame source, so a source that lies about time cannot also fake the
+measurement. 30 turns for 0.5 s is 60 Hz, the rate UIKit's display link runs at.
+
+And `viewDidAppear` now fires **because the lifecycle reaches it**: a
+`pushViewController(animated: true)` with nothing nudged afterwards, the
+callback arriving mid-loop after 0.355 s of real time. `RealApp.swift` currently
+works around its absence by calling `presentPickerNow()` by hand.
+
+### Still open in §6
+
+- **Launch by name.** `UIApplicationMain` takes a delegate *instance*; real iOS
+  discovers it by name through the ObjC runtime, which we have.
+- **Bundle.** No `NSBundle`, nothing reads `Info.plist`. This is the piece most
+  likely to want Foundation — and per §6, a nearly-empty Foundation is worse
+  than none, so if bundle mechanics genuinely need it, that is a finding and the
+  work waits on the real thing rather than a fake one.
