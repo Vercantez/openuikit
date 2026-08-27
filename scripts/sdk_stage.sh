@@ -237,4 +237,48 @@ else
     rm -f "$SUMS.new"
 fi
 
+# ---------------------------------------------------------------- closure
+# EVERY STAGED HEADER MUST BE ABLE TO INCLUDE WHAT IT INCLUDES.
+#
+# A header that includes a file we do not ship is an unbacked promise in the
+# most literal form, and it has a nasty property: it costs the person who
+# STAGED it nothing -- their own compile never took that branch -- and fails
+# for the NEXT consumer, who has no idea why. That is exactly how staging
+# sys/socket.h and spawn.h for one consumer silently blocked CFSocket,
+# CFSocketStream and uuid for another.
+#
+# This is deliberately a COMPILE and not a grep. A grep over #include lines
+# cannot see #ifdef guards or clang's own builtin headers (stdarg.h, stddef.h
+# and friends live in the compiler's resource dir, not here), and reports 106
+# edges of which 103 are noise. Preprocessing each header answers the real
+# question -- "does this resolve for the target we build?" -- with no false
+# positives. Measured: 3 real edges, 2 distinct missing files, both regressions
+# introduced by a staging commit that nobody's own build noticed.
+#
+# Skipped when no Darwin-targeting clang is present, because a restage must
+# still work on a host that only fetches.
+CLOSURE_CLANG="${DARWIN_CLANG:-clang}"
+if command -v "$CLOSURE_CLANG" >/dev/null 2>&1; then
+    nf="$(mktemp)"
+    ( cd "$INC" && find . -name '*.h' | sed 's|^\./||' | sort ) | while read -r h; do
+        printf '#include <%s>\n' "$h" > "$nf.c"
+        "$CLOSURE_CLANG" -target arm64-apple-macos11 -isysroot "$SDK" \
+            -fsyntax-only "$nf.c" 2>&1 \
+          | sed -nE "s/.*'([A-Za-z0-9_/.-]+\.h)' file not found.*/$(printf '%s' "$h" | sed 's|/|\\/|g') -> \1/p"
+    done | sort -u > "$nf.out"
+    if [ -s "$nf.out" ]; then
+        echo "!! staged headers include files this sysroot does not ship:" >&2
+        sed 's/^/   /' "$nf.out" >&2
+        echo >&2
+        echo "   Each is a compile error waiting for the next consumer. Add the missing" >&2
+        echo "   header to sdk/MANIFEST.tsv, or find why the including header is reached." >&2
+        rm -f "$nf" "$nf.c" "$nf.out"
+        die "include closure is not closed"
+    fi
+    echo "   include closure: every staged header resolves what it includes"
+    rm -f "$nf" "$nf.c" "$nf.out"
+else
+    echo "   include closure: SKIPPED (no $CLOSURE_CLANG on this host)"
+fi
+
 echo "   -> $INC"
