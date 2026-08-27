@@ -29,7 +29,18 @@ cat > "$X/sys/uio.h" <<'EOF'
 #ifndef _CFSHIM_SYS_UIO_H
 #define _CFSHIM_SYS_UIO_H
 #include <sys/types.h>
-struct iovec { void *iov_base; size_t iov_len; };
+/* struct iovec COMES FROM THE SDK; it is deliberately not restated here.
+ *
+ * This shim used to define it, and the definition collided the moment anything
+ * pulled in <sys/socket.h>, which includes <sys/_types/_iovec_t.h> -- present
+ * in machorun's SDK -- producing "redefinition of 'iovec'". The SDK has no
+ * sys/uio.h, so this file is still needed for writev/readv; it simply must not
+ * re-declare a type the sysroot already owns.
+ *
+ * A SHIM IS A CLAIM THAT THE SYSROOT LACKS SOMETHING, and the claim decays as
+ * the sysroot grows. Define only what is genuinely missing, and reach for the
+ * real definition wherever there is one. */
+#include <sys/_types/_iovec_t.h>
 ssize_t writev(int, const struct iovec *, int);
 ssize_t readv(int, const struct iovec *, int);
 #endif
@@ -113,6 +124,32 @@ cat > "$X/mach/mach_vm.h" <<'EOF'
 #ifndef _CFSHIM_MACH_VM_H
 #define _CFSHIM_MACH_VM_H
 #include <mach/mach.h>
+/* mach_vm_allocate/deallocate are REAL here -- machorun's libSystem exports
+ * both (verified with nm on the built dylib, not assumed from the fixture
+ * list), and 12_mach exercises the vm_* family against a macOS oracle. Only
+ * the DECLARATIONS were missing, which is why CFUtilities.c:1188 failed with
+ * "call to undeclared function" rather than an unresolved symbol.
+ *
+ * mach_vm_address_t and mach_vm_size_t are both 64-bit regardless of the
+ * pointer width, which is the whole reason the mach_vm_* family exists
+ * alongside vm_*; declaring them with the narrower vm_* types would be a
+ * silent truncation on the address OUT parameter. */
+extern kern_return_t mach_vm_allocate(vm_map_t target, mach_vm_address_t *address,
+                                      mach_vm_size_t size, int flags);
+extern kern_return_t mach_vm_deallocate(vm_map_t target, mach_vm_address_t address,
+                                        mach_vm_size_t size);
+
+/* vm_purgable_control is a GENUINE GAP, unlike the two above: machorun's
+ * libSystem does not export it (measured 0 with nm on the built dylib).
+ *
+ * Declared anyway, deliberately. CFUtilities.c:1216,1225 use it only on the
+ * purgeable-memory path, so this turns a compile error that blocks the whole
+ * TU into ONE unresolved symbol at the link -- where it joins the enumerated
+ * gap list instead of hiding an entire file's worth of other symbols from the
+ * count. Making a gap visible at the layer that can list them all is the same
+ * reason the ioctl declaration carries no GLIBCSYM. */
+extern kern_return_t vm_purgable_control(vm_map_t task, vm_address_t address,
+                                         int control, int *state);
 #endif
 EOF
 
@@ -158,13 +195,62 @@ cat > "$X/net/if_types.h" <<'EOF'
 #endif
 EOF
 
+cat > "$X/sys/ioctl_darwin_requests.h" <<'EOF'
+#ifndef _CFSHIM_IOCTL_DARWIN_REQUESTS_H
+#define _CFSHIM_IOCTL_DARWIN_REQUESTS_H
+/* Darwin ioctl request numbers, MEASURED ON A REAL macOS HOST rather than
+ * written from memory or reconstructed from the _IOW encoding (machorun's SDK
+ * carries no sys/ioccom.h, so the encoding is not available to derive from):
+ *
+ *     darwin FIONBIO   0x8004667e        linux FIONBIO   0x5421
+ *     darwin FIONREAD  0x4004667f        linux FIONREAD  0x541b
+ *
+ * CFSocket.c:206 does `#define ioctlsocket(a,b,c) ioctl((a),(b),(c))`, and our
+ * ioctl is declared with DARWIN's prototype (sdk sys/ioctl.h, deliberately
+ * unlabelled) precisely so libSystem can translate it. Darwin request numbers
+ * are therefore the right ones to hand it.
+ *
+ * ############ AN UNRESOLVED CONTRACT QUESTION, FLAGGED NOT BURIED ###########
+ * Two namespaces currently funnel into one `ioctl` symbol. CF is Darwin code
+ * and passes Darwin request numbers. libdispatch's event_epoll.c is LINUX
+ * backend code and passes SIOCINQ/SIOCOUTQ, which our Linux-ABI overlay defines
+ * with LINUX values. A single translating wrapper cannot serve both unless it
+ * is told which namespace a request belongs to, and the two encodings do not
+ * overlap in a way that lets it guess safely.
+ *
+ * This is machorun's contract to settle, not something to decide silently here.
+ * Raised with machorun-isamask. Until it is settled, note that our overlay's
+ * linux/sockios.h defines FIONREAD under an #ifndef, so which value a TU sees
+ * depends on include ORDER -- exactly the kind of silent, order-dependent
+ * divergence the rest of this work has been removing.
+ * ########################################################################## */
+#ifndef FIONBIO
+#define FIONBIO  0x8004667e
+#endif
+#ifndef FIONREAD
+#define FIONREAD 0x4004667f
+#endif
+#endif
+EOF
+
 cat > "$X/arpa/inet.h" <<'EOF'
 #ifndef _CFSHIM_ARPA_INET_H
 #define _CFSHIM_ARPA_INET_H
 #include <sys/socket.h>
+#include <sys/ioctl_darwin_requests.h>
 #include <stdint.h>
+/* htonl/htons/ntohl/ntohs ARE MACROS IN THE SDK, not functions.
+ *
+ * <sys/_endian.h>:138 defines them, so declaring them as functions expands the
+ * macro mid-declaration and fails with "expected ')'" -- which is what CFSocket
+ * hit. Same decay as struct iovec above: the sysroot grew the real thing and
+ * this stand-in kept asserting it was absent. Guarded rather than deleted,
+ * because the guard is what makes the claim explicit and self-correcting. */
+#include <sys/_endian.h>
+#ifndef htonl
 uint32_t htonl(uint32_t); uint16_t htons(uint16_t);
 uint32_t ntohl(uint32_t); uint16_t ntohs(uint16_t);
+#endif
 const char *inet_ntop(int, const void *, char *, socklen_t);
 int inet_pton(int, const char *, void *);
 #endif
@@ -313,6 +399,22 @@ typedef void *aslmsg;
 #define ASL_LEVEL_DEBUG   7
 #define asl_log(...)      do { } while (0)
 #define asl_vlog(...)     do { } while (0)
+/* CFUtilities.c:1033-1040 builds a real ASL message. ASL is Apple's old
+ * syslog client; there is no counterpart to forward to and CFLog's output
+ * already goes to stderr on the path we take, so these are no-ops that keep
+ * the call sites compiling rather than a logging implementation.
+ *
+ * asl_new/asl_open return NULL and the rest ignore it -- which is exactly how
+ * CF already behaves when ASL is unavailable, since it null-checks before use.
+ * Stated so nobody later reads the silence as "logging works". */
+#define ASL_OPT_NO_DELAY  0
+#define ASL_TYPE_MSG      0
+#define asl_open(a,b,c)   ((aslclient)0)
+#define asl_new(t)        ((aslmsg)0)
+#define asl_set(m,k,v)    do { } while (0)
+#define asl_send(c,m)     do { } while (0)
+#define asl_free(m)       do { } while (0)
+#define asl_close(c)      do { } while (0)
 #endif
 EOF
 

@@ -282,8 +282,45 @@ extern int __CFConstantStringClassReference[];
  * was a zeroed array and becomes a live wrong answer once it is a real class. */
 void *__CFConstantStringClassReferencePtr = &__CFConstantStringClassReference;"""
 
+# ------------------------------------------------ corelibs' own Darwin stand-ins
+#
+# Two unguarded lines where corelibs declares a stand-in for something real
+# Darwin provides. Correct for a Linux/Swift build, wrong for ours, and both
+# surface only once CF is compiled as OBJECTIVE-C -- which is how it is actually
+# built here and is not how the census was measuring it.
+#
+# This is the shadowing theme from the other side. Three of our OWN shims
+# collide with the sysroot the same way (sys/uio.h's struct iovec and
+# arpa/inet.h's htonl, both fixed in cf_shims.sh); these two are corelibs
+# shadowing Darwin rather than us shadowing machorun. The rule generalises:
+# A STAND-IN IS A CLAIM THAT THE REAL THING IS ABSENT, so it has to be guarded
+# on that claim rather than stated unconditionally.
+
+OLD_URLSTR = "typedef struct __NSString__ *NSString;"
+NEW_URLSTR = """/* GUARDED: our Foundation supplies a real @interface NSString, and this
+ * opaque typedef collides with it -- "redefinition of 'NSString' as a different
+ * kind of symbol". corelibs needs the stand-in only where no Objective-C
+ * NSString exists. */
+#if !defined(__OBJC__)
+typedef struct __NSString__ *NSString;
+#endif"""
+
+OLD_OSREL = "extern void os_release(void *object);"
+NEW_OSREL = """/* GUARDED: <os/object.h> is in our SDK and, in an Objective-C TU, defines
+ * os_release as a MACRO -- `#define os_release(object) [object release]`
+ * (os/object.h:324). This forward declaration then expands mid-line and fails
+ * with "expected expression". corelibs declares it because a Linux build has no
+ * os/object.h at all. */
+#if !defined(__OBJC__)
+extern void os_release(void *object);
+#endif"""
+
 ok = True
 print(f"patching {CF}")
+ok &= apply(os.path.join(CF, "CFURLAccess.c"), OLD_URLSTR, NEW_URLSTR,
+            "CFURLAccess.c (NSString stand-in)")
+ok &= apply(os.path.join(CF, "CFRunLoop.c"), OLD_OSREL, NEW_OSREL,
+            "CFRunLoop.c   (os_release stand-in)")
 ok &= apply(INTERNAL, OLD_INTERNAL, NEW_INTERNAL, "CFInternal.h  (CF_IS_OBJC + 3)")
 ok &= apply(RUNTIME,  OLD_RUNTIME,  NEW_RUNTIME,  "CFRuntime.c   (CFTYPE_* + 2)")
 ok &= apply(RUNTIME,  OLD_CONSTSTR, NEW_CONSTSTR, "CFRuntime.c   (constant-string placeholder)")

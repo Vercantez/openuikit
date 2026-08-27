@@ -108,5 +108,47 @@
 - (NSUInteger)length;
 @end
 
+/* ---- NSTimeZone ----------------------------------------------------------
+ * PRIVATE, both of them -- no header exists, and none is needed, because CF is
+ * the caller and its call sites carry the whole signature. Read from
+ * CFTimeZone.c rather than invented:
+ *
+ *   1596  CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(
+ *                            CFTimeZoneRef tz, CFAbsoluteTime at)
+ *   1597    CF_OBJC_FUNCDISPATCHV(..., CFTimeInterval, (NSTimeZone *)tz,
+ *                                 _daylightSavingTimeOffsetForAbsoluteTime:at)
+ *
+ * The macro's second argument IS the return type and `at` IS the parameter, so
+ * both are established by the code that has to agree with them -- a stronger
+ * source than a header would be.
+ *
+ * CFTimeInterval and CFAbsoluteTime are both double; they are spelled as the CF
+ * types to keep the correspondence with the call site visible.
+ *
+ * The other three NSTimeZone dispatch sites (name, data, localizedName:locale:)
+ * return pointer types, so the id default is already right for them, and
+ * declaring them would add risk without removing any. */
+@interface NSTimeZone : NSObject
+- (CFTimeInterval)_daylightSavingTimeOffsetForAbsoluteTime:(CFAbsoluteTime)at;
+- (CFTimeInterval)_nextDaylightSavingTimeTransitionAfterAbsoluteTime:(CFAbsoluteTime)at;
+@end
+
+/* ---- NSTimer -------------------------------------------------------------
+ * PRIVATE. Read from CFRunLoop.c:4599,
+ *   CF_OBJC_FUNCDISPATCHV(CFRunLoopTimerGetTypeID(), CFAbsoluteTime,
+ *                         (NSTimer *)rlt, _cffireTime)
+ * The underscore-prefixed name is Foundation's own bridge accessor -- it exists
+ * so CFRunLoopTimerGetNextFireDate can ask an NSTimer for its fire date, and it
+ * appears in no public header. The call site is the specification.
+ *
+ * -timeInterval is the PUBLIC one, verified against Apple's NSTimer.h,
+ *   @property (readonly) NSTimeInterval timeInterval;
+ * reached from CFRunLoop.c:4679 with the same CFTimeInterval return type.
+ * NSTimeInterval and CFTimeInterval are both double. */
+@interface NSTimer : NSObject
+- (CFAbsoluteTime)_cffireTime;
+- (CFTimeInterval)timeInterval;
+@end
+
 #endif /* __OBJC__ */
 #endif /* _CF_FOUNDATION_INTERFACES_H */
