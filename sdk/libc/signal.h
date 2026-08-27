@@ -39,5 +39,35 @@ static __inline int sigdelset(sigset_t *set, int signo)
 static __inline int sigismember(const sigset_t *set, int signo)
 { return (*set & __sigbits(signo)) != 0; }
 #endif /* _SWIFTCORE_MACHO_SIGSET_OPS */
+
+/* THE UNSAFE HALF, declared so the failure explains itself.
+ *
+ * sigsuspend takes a sigset_t* that CROSSES to glibc, and glibc's sigset_t is
+ * 128 bytes against Darwin's 4 -- the same hazard as signalfd (see
+ * scripts/stage_linux_abi.sh). libdispatch reaches it: src/queue.c's
+ * _dispatch_sigsuspend parks a thread with `static const sigset_t mask;` and
+ * loops on sigsuspend(&mask). A naive forward reads 8 bytes out of a 4-byte
+ * static, and because that static is zeroed and its neighbours in .bss usually
+ * are too, it would very likely APPEAR to work -- which is the worst version of
+ * this bug, not the mildest.
+ *
+ * Left undeclared, the compiler says only "call to undeclared function", which
+ * invites someone to declare it and move on. This says why not. The fix is a
+ * translating wrapper in libSystem, the same shape signalfd needs. */
+/* __attribute__((unavailable)) rather than a _Static_assert, and the first
+ * attempt got this wrong in an instructive way: an assert here fires in EVERY
+ * translation unit that includes <signal.h>, which took the libdispatch census
+ * from 23 passing to 3. signalfd's assert is safe only because <sys/signalfd.h>
+ * is included by the one file that needs it. `unavailable` is call-site scoped
+ * -- the diagnostic appears exactly where someone tries to use it, and nowhere
+ * else. A guard that is right about the hazard and wrong about the blast radius
+ * is still wrong. */
+int sigsuspend(const sigset_t *)
+    __attribute__((unavailable(
+        "sigsuspend cannot be forwarded to glibc: Darwin's sigset_t is 4 bytes "
+        "and glibc's is 128, so glibc reads past the caller's object -- and "
+        "because the mask is usually zeroed .bss it would APPEAR to work. "
+        "Needs a translating wrapper in libSystem, the same shape signalfd "
+        "needs.")));
 __END_DECLS
 #endif /* _SIGNAL_H_ */

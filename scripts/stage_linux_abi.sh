@@ -185,7 +185,23 @@ EOF
 cat > "$INC/sys/syscall.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_SYS_SYSCALL_H
 #define _SWIFTCORE_MACHO_SYS_SYSCALL_H
-#define SYS_futex 98   /* aarch64; _Static_assert'd in epoll_abi_probe.c */
+#ifndef GLIBCSYM
+#define GLIBCSYM(n) __asm__("_glibc_" #n)
+#endif
+#define SYS_futex 98    /* aarch64; _Static_assert'd in epoll_abi_probe.c */
+#define SYS_gettid 178  /* aarch64; likewise */
+
+/* gettid() as a DIRECT declaration, deliberately, rather than leaving callers
+ * to reach it through syscall(SYS_gettid).
+ *
+ * syscall() is VARIADIC, and Darwin's arm64 variadic ABI is not AAPCS64 -- a
+ * Darwin-compiled caller puts varargs on the stack while glibc expects them in
+ * registers. That is the same reason machorun owns the printf formatter rather
+ * than forwarding it, and it makes a GLIBCSYM forward of syscall() a live ABI
+ * mismatch rather than a convenience. gettid() is non-variadic, is a real
+ * exported glibc symbol (verified: `W gettid@@GLIBC_2.30`), and takes no
+ * arguments at all, so it crosses cleanly. */
+extern int gettid(void) GLIBCSYM(gettid);
 #endif
 EOF
 

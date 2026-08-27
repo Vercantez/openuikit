@@ -643,6 +643,49 @@ _RUNLOOP_SITES = [
      "\tint result;\n\tdo {\n\t\tresult = eventfd_write(handle, 1);",
      "5i: runloop queue poke (eventfd_write)"),
 ]
+
+# ---------------------------------------------------------------------------
+# 13. _gettid without the variadic syscall().
+#
+# Upstream's `#ifdef SYS_gettid` branch is `(pid_t)syscall(SYS_gettid)`. We do
+# stage SYS_gettid (pinned at 178 for aarch64), but routing through syscall() is
+# the wrong way to reach it: syscall() is VARIADIC, and Darwin's arm64 variadic
+# ABI is not AAPCS64 -- a Darwin-compiled caller passes varargs on the stack
+# while glibc reads them from registers. That is precisely why machorun owns the
+# printf formatter instead of forwarding it.
+#
+# gettid() is non-variadic, takes no arguments, and is a real exported glibc
+# symbol (`W gettid@@GLIBC_2.30`), so it crosses cleanly. Declared with a
+# GLIBCSYM label in stage_linux_abi.sh. Adding a branch here is idiomatic --
+# upstream already has one for FreeBSD calling pthread_getthreadid_np() -- so
+# this says "this platform provides gettid directly", not "this is not Mach-O".
+# ---------------------------------------------------------------------------
+edit("src/queue.c",
+"""#ifdef SYS_gettid
+DISPATCH_ALWAYS_INLINE
+static inline pid_t
+_gettid(void)
+{
+	return (pid_t)syscall(SYS_gettid);
+}""",
+"""#if defined(__APPLE__) && defined(SYS_gettid)
+/* swiftcore-macho: gettid() directly, NOT syscall(SYS_gettid) -- syscall() is
+ * variadic and Darwin's arm64 variadic ABI is not AAPCS64, so a forwarded
+ * variadic call would put arguments where glibc does not look for them. */
+DISPATCH_ALWAYS_INLINE
+static inline pid_t
+_gettid(void)
+{
+	return (pid_t)gettid();
+}
+#elif defined(SYS_gettid)
+DISPATCH_ALWAYS_INLINE
+static inline pid_t
+_gettid(void)
+{
+	return (pid_t)syscall(SYS_gettid);
+}""",
+     "patch 13: _gettid without the variadic syscall()")
 for relpath, old, new_, tag in _RUNLOOP_SITES:
     edit(relpath, old, new_, "patch " + tag)
 
