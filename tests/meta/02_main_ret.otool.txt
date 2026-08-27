@@ -1,18 +1,18 @@
 ### file
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/02_main_ret: Mach-O 64-bit executable arm64
+<machorun>/tests/bin/02_main_ret: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/02_main_ret:
+<machorun>/tests/bin/02_main_ret:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    16        744 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/02_main_ret:
+<machorun>/tests/bin/02_main_ret:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/02_main_ret:
+<machorun>/tests/bin/02_main_ret:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72

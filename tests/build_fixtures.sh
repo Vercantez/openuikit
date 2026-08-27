@@ -191,6 +191,15 @@ if want 24_cxx_sort; then
     echo "==> 24_cxx_sort"; built+=(24_cxx_sort)
 fi
 
+# ---------------------------------------------------------------- rung (w)
+# Apple's TYPED allocator. Every request asks for a size and an alignment that
+# differ, and neither is 16, because a wrong-argument bug in this family is
+# invisible whenever the two coincide -- and 16 is both the usual alignment and
+# a plausible size. Checked with malloc_size BEFORE anything is written: the
+# broken version returned a valid pointer every time and the damage surfaced
+# elsewhere, later, as somebody else's crash.
+want 25_malloc_type      && build 25_malloc_type      "$CHAINED_TARGET" 25_malloc_type      25_malloc_type.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
@@ -282,13 +291,18 @@ for f in "$BIN"/*; do
     n="$(basename "$f")"
     LC="$(otool -l "$f")"
 
+    # otool/file/nm echo the path they were given, so a recorded baseline
+    # otherwise embeds whichever directory built it. That made every agent
+    # working in a git worktree dirty all 34 meta files and collide with every
+    # other agent, for no change in content. Rewrite the repository root to a
+    # fixed marker so these files describe the BINARY and nothing else.
     { echo "### file";           file "$f"
       echo; echo "### mach header";   otool -h "$f"
       echo; echo "### dependencies";  otool -L "$f"
       echo; echo "### load commands"; printf '%s\n' "$LC"
       echo; echo "### undefined symbols";        nm -u  "$f" 2>/dev/null
       echo; echo "### defined external symbols"; nm -gU "$f" 2>/dev/null
-    } > "$META/$n.otool.txt"
+    } | sed "s|$ROOT/|<machorun>/|g" > "$META/$n.otool.txt"
 
     # Every section, with its segment and its S_* type nibble. The section
     # TYPE (flags & 0xff) is what tells the loader that a __DATA section is

@@ -422,6 +422,147 @@ EXPORT void *malloc_zone_malloc_with_options_np(void *zone, size_t align,
 }
 
 /* ===================================================================== *
+ * malloc_type: Apple's TYPED allocator (macOS 14 / iOS 17), the surface
+ * Apple's SHIPPED libswiftCore uses and nothing else in this project does.
+ * Our own Linux-built libswiftCore imports plain malloc/calloc/realloc/
+ * posix_memalign; Apple's imports _malloc_type_malloc, _malloc_type_calloc,
+ * _malloc_type_realloc, _malloc_type_posix_memalign and
+ * _malloc_type_zone_malloc_with_options_internal, and nothing else.
+ *
+ * The type id is a compiler-generated token describing the allocated type. It
+ * steers a per-type heap for diagnostics and carries no semantics we have to
+ * honour, so forwarding to the untyped allocator is exact rather than
+ * approximate. Ignoring the token is the ONLY thing about this family that is
+ * safe to do casually.
+ *
+ * READ THE ARGUMENT ORDER OFF THE HEADER, EVERY TIME. This family mixes three
+ * orders and they are not guessable:
+ *
+ *     malloc_type_malloc            (size, type)
+ *     malloc_type_calloc            (count, size, type)
+ *     malloc_type_realloc           (ptr, size, type)
+ *     malloc_type_aligned_alloc     (ALIGN, size, type)
+ *     malloc_type_posix_memalign    (out, ALIGN, size, type)
+ *     malloc_type_zone_malloc       (zone, size, type)          <- no align
+ *     malloc_type_zone_memalign     (zone, ALIGN, size, type)
+ *     ..._zone_malloc_with_options_ (zone, ALIGN, size, options, type)
+ *
+ * sdk/usr/include/malloc/_malloc_type.h and malloc/malloc.h:192 are the
+ * authority and are vendored precisely so nobody has to guess.
+ *
+ * THIS FAMILY DID NOT EXIST IN MACHORUN UNTIL 2026-08-27, AND THAT COST THE
+ * PROJECT ITS LONGEST BUG. A libSystem hole gets filled by whoever hits it
+ * first: ~/swift-macho-linux/spike/syspatch.c supplied its own
+ * malloc_type_zone_malloc_with_options_internal with FOUR parameters instead
+ * of five, so the argument it forwarded to malloc as the size was the
+ * ALIGNMENT. It compiled to `mov x0, x1; b _malloc` -- every allocation
+ * through that entry point got a block the size of its own alignment, sixteen
+ * bytes whatever was asked for, and the caller wrote the whole object over its
+ * neighbours. That was the entirety of the "46 UIKit scenes fail with
+ * nondeterministic memory corruption" wall: 22 glibc heap aborts, 19 SIGSEGVs
+ * on wild addresses and 9 silent failures, all one wrong register. It looked
+ * like many bugs because a heap overflow of arbitrary size onto arbitrary
+ * neighbours fails differently every time.
+ *
+ * Two lessons are worth more than the fix. A missing libSystem symbol is not
+ * neutral -- someone WILL define it, somewhere we do not test. And the wrong
+ * definition was never detectable from its own behaviour: it returned a valid
+ * pointer every time, and the damage surfaced elsewhere, later, as somebody
+ * else's crash. tests/src/25_malloc_type.c exists to make the size a checked
+ * property at the point of allocation instead.
+ * ===================================================================== */
+#define MT_ALIGN_TRIVIAL (sizeof(void *) * 2)   /* what plain malloc already gives */
+
+/* OUR sysconf (libsystem.c), so the argument is DARWIN's _SC_PAGESIZE. */
+extern long sysconf(int);
+
+static void *mt_aligned(size_t align, size_t size)
+{
+    void *p = NULL;
+    if (align <= MT_ALIGN_TRIVIAL) return glibc_malloc(size);
+    if (glibc_posix_memalign(&p, align, size) != 0) return NULL;
+    return p;
+}
+
+/* WHICH MEMBERS REQUIRE size TO BE A MULTIPLE OF align, MEASURED AGAINST
+ * APPLE'S LIBMALLOC because no header states it:
+ *
+ *     aligned_alloc(64, 3000)                -> NULL     (C11 requires it)
+ *     aligned_alloc(64, 3008)                -> ok
+ *     zone_memalign(64, 3000)                -> ok       (no such rule)
+ *     posix_memalign(128, 4400)              -> rc 0     (no such rule)
+ *     valloc(6000) / zone_valloc(6000)       -> ok       (no such rule)
+ *     ..._with_options_internal(32, 6000, 0) -> NULL
+ *     ..._with_options_internal(32, 6144, 0) -> ok
+ *     ..._with_options_internal(16, 6000, 0) -> ok       (align <= 16 exempt)
+ *
+ * So the rule holds for aligned_alloc and for the with-options entry point,
+ * and only once the alignment exceeds what plain malloc already guarantees.
+ * Returning a block where macOS returns NULL would be a silent divergence in
+ * the permissive direction, which is the harder kind to notice. */
+static int mt_size_ok_for_align(size_t align, size_t size)
+{
+    return align <= MT_ALIGN_TRIVIAL || (size % align) == 0;
+}
+
+EXPORT void *malloc_type_malloc(size_t size, unsigned long long type)
+{ (void)type; return glibc_malloc(size); }
+
+EXPORT void *malloc_type_calloc(size_t count, size_t size, unsigned long long type)
+{ (void)type; return glibc_calloc(count, size); }
+
+EXPORT void malloc_type_free(void *p, unsigned long long type)
+{ (void)type; glibc_free(p); }
+
+EXPORT void *malloc_type_realloc(void *p, size_t size, unsigned long long type)
+{ (void)type; return glibc_realloc(p, size); }
+
+EXPORT void *malloc_type_valloc(size_t size, unsigned long long type)
+{ (void)type; return mt_aligned((size_t)sysconf(29 /* _SC_PAGESIZE, Darwin */), size); }
+
+EXPORT void *malloc_type_aligned_alloc(size_t align, size_t size, unsigned long long type)
+{ (void)type; return mt_size_ok_for_align(align, size) ? mt_aligned(align, size) : NULL; }
+
+EXPORT int malloc_type_posix_memalign(void **out, size_t align, size_t size,
+                                      unsigned long long type)
+{ (void)type; return glibc_posix_memalign(out, align, size); }
+
+EXPORT void *malloc_type_zone_malloc(void *zone, size_t size, unsigned long long type)
+{ (void)type; return malloc_zone_malloc(zone, size); }
+
+EXPORT void *malloc_type_zone_calloc(void *zone, size_t count, size_t size,
+                                     unsigned long long type)
+{ (void)type; return malloc_zone_calloc(zone, count, size); }
+
+EXPORT void malloc_type_zone_free(void *zone, void *p, unsigned long long type)
+{ (void)type; malloc_zone_free(zone, p); }
+
+EXPORT void *malloc_type_zone_realloc(void *zone, void *p, size_t size,
+                                      unsigned long long type)
+{ (void)type; return malloc_zone_realloc(zone, p, size); }
+
+EXPORT void *malloc_type_zone_valloc(void *zone, size_t size, unsigned long long type)
+{ (void)zone; (void)type; return mt_aligned((size_t)sysconf(29), size); }
+
+EXPORT void *malloc_type_zone_memalign(void *zone, size_t align, size_t size,
+                                       unsigned long long type)
+{ (void)zone; (void)type; return mt_aligned(align, size); }
+
+/* FIVE parameters, and `size` is the THIRD. See malloc/malloc.h:192. */
+EXPORT void *malloc_type_zone_malloc_with_options_internal(void *zone, size_t align,
+                                                           size_t size,
+                                                           unsigned long long options,
+                                                           unsigned long long type)
+{
+    void *p;
+    (void)zone; (void)type;
+    if (!mt_size_ok_for_align(align, size)) return NULL;
+    p = mt_aligned(align, size);
+    if (p && (options & 1u)) glibc_memset(p, 0, size);   /* MALLOC_NP_OPTION_CLEAR */
+    return p;
+}
+
+/* ===================================================================== *
  * Structured abort. On Darwin this hands ReportCrash a namespace, a code and
  * a string. There is no ReportCrash here, so the reason goes to stderr where
  * a differential test can see it, and then we abort.

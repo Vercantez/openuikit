@@ -487,6 +487,52 @@ our own `optarg`/`optind`, the time surface, and a `strtol` family that sets
 
 ---
 
+### (w) `25_malloc_type` — Apple's typed allocator, and the size argument
+`tests/src/25_malloc_type.c` · chained
+
+**This rung exists because its absence cost the project its longest bug.**
+machorun's libSystem had no `malloc_type_*` family at all, so a sibling repo
+supplied its own `malloc_type_zone_malloc_with_options_internal` with four
+parameters instead of five. The real signature is
+`(zone, align, size, options, type_id)`, so the argument it forwarded to
+`malloc` as the size was the **alignment** — it compiled to `mov x0, x1;
+b _malloc`, sixteen bytes whatever was asked for, and every caller wrote its
+whole object over the neighbours. One wrong register was the entirety of the
+"46 UIKit scenes fail with nondeterministic memory corruption" wall.
+
+Three design decisions, each of which the bug would have defeated otherwise:
+
+* **Every request uses a size and an alignment that differ, and neither is 16.**
+  A wrong-argument bug in this family is invisible whenever the two coincide,
+  and 16 is both the usual alignment and a plausible size — the one value that
+  hides the bug rather than showing it. No requested size here can be produced
+  by accident from the alignment, the count, the options word or the zone
+  pointer.
+* **`malloc_size` is checked BEFORE anything is written.** The broken version
+  returned a perfectly valid pointer every single time; the damage surfaced
+  somewhere else, later, as somebody else's crash. A fixture that only wrote and
+  looked for a crash would be testing the heap's luck. The guard blocks and the
+  full-size fill are a second layer, for a block that is honestly reported and
+  still too small.
+* **The negative cases are checked too**, because an implementation that
+  succeeds where macOS returns NULL diverges in the permissive direction, which
+  nothing downstream notices. Those rules are **measured, not read** — no header
+  states them: `aligned_alloc` and `..._zone_malloc_with_options_internal`
+  return NULL when the alignment exceeds 16 and the size is not a multiple of
+  it, while `zone_memalign`, `posix_memalign` and `valloc` have no such rule.
+
+Teeth demonstrated rather than predicted: rebuilding `darwin/src/objcsupport.c`
+with the four-parameter form reproduces `mov x0, x1; b _malloc` exactly
+(confirmed with `otool`, not assumed), and the fixture reports
+`wanted 6144, got 40` — 40 being what glibc makes of a 32-byte request — plus
+the negative case, for five failures against a clean oracle.
+
+**Loader must implement:** nothing. This is entirely a `darwin/src/` rung; it is
+here because the family is libSystem surface and a hole in libSystem does not
+stay empty.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

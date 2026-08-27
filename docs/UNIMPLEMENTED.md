@@ -126,6 +126,64 @@ way `vendor/objc4` is built. That is a real project and has not been attempted;
 until then, growing `libcxx_std.cpp` by explicit instantiation is the cheap path
 and keeps our copies bit-identical to the headers they are compiled against.
 
+### `weak-definition-gaps` — a missing symbol that binds to NULL instead of failing
+A `<weak-def-coalesce>` bind is **not** an optional symbol. It says "one
+definition of this is shared across the program and the linker does not care
+which image supplies it" — the mechanism behind C++ inline functions, template
+instantiations and the *replaceable* `operator new`/`delete`. Real dyld always
+finds one, because libc++ defines them. Here a miss means our libc++ subset is
+short a definition, and until 2026-08-27 the loader bound it to NULL in
+silence: no report, no entry here, and a branch through zero at some
+unpredictable later moment.
+
+`src/resolve.c` now prints a `WEAK-DEFINITION GAP` line, once per distinct
+symbol, naming the image that wanted it. **A line of that output is a bug
+report, not a warning** — find the definition and add it to `darwin/src/`.
+
+The one this was found by: Apple's shipped `libswiftCore` binds
+`__ZnwmSt19__type_descriptor_t` and `__ZdlPvSt19__type_descriptor_t` — Apple's
+*typed* `operator new`/`delete`, whose extra argument is a type descriptor for
+their typed-memory-operations work — and imports **no untyped form at all**. Our
+own Linux-built libswiftCore imports `__Znwm` and `__ZdlPvm` instead, so the gap
+existed only for Apple's binaries, which is exactly the case the project exists
+to support. Both are now defined in `darwin/src/libcxx.c`. The array and aligned
+typed forms are deliberately still absent: nothing we run imports them, and the
+new report means the first binary that does will say so.
+
+### `malloc-type-zones` — one heap, one zone, and the type token is ignored
+`darwin/src/objcsupport.c` implements Apple's `malloc_type_*` family by
+forwarding to glibc and discarding the `malloc_type_id_t`. That is exact rather
+than approximate — the token steers a per-type heap for diagnostics and carries
+no allocation semantics — but two things about the family are genuinely absent:
+
+* **there is one zone.** `malloc_default_zone()` returns a token and every
+  `malloc_type_zone_*` call routes to the same glibc heap. A program that
+  treats a zone as a separate arena (mass-free by zone, introspection,
+  `malloc_zone_batch_malloc`) would notice. objc4 and libswiftCore do not: they
+  only ever use the default zone.
+* **`malloc_type_free` does not check the token.** Apple's can detect a free
+  through the wrong type; ours cannot.
+
+The **size rules were measured against Apple's libmalloc**, because no header
+states them, and `tests/src/25_malloc_type.c` pins every one of them:
+`aligned_alloc` and `..._zone_malloc_with_options_internal` return NULL when the
+alignment exceeds 16 and the size is not a multiple of it; `zone_memalign`,
+`posix_memalign` and `valloc` have no such rule.
+
+**This family did not exist here until 2026-08-27, and its absence cost the
+project its longest bug.** A missing libSystem symbol is not neutral — someone
+fills it, somewhere nobody tests. `~/swift-macho-linux/spike/syspatch.c`
+supplied its own `malloc_type_zone_malloc_with_options_internal` with four
+parameters instead of five, so the argument it forwarded to `malloc` as the size
+was the **alignment**: `mov x0, x1; b _malloc`, sixteen bytes whatever was
+asked for, and every caller wrote its whole object over the neighbours. That was
+the entirety of "46 UIKit scenes fail with nondeterministic memory corruption" —
+22 glibc heap aborts, 19 SIGSEGVs on wild addresses, 9 silent failures, no two
+alike, because a heap overflow of arbitrary size onto arbitrary neighbours never
+fails the same way twice. It was invisible from its own behaviour: it returned a
+valid pointer every time and the damage surfaced elsewhere, later, as somebody
+else's crash.
+
 ### `libm-ulp` — a MEASURED agreement, not a guarantee
 `darwin/src/math.c` forwards 113 math symbols to glibc's libm. Apple's Libm and
 glibc's libm are different implementations, and IEEE 754 pins only `+ - * /` and

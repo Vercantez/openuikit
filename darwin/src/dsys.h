@@ -39,6 +39,14 @@ typedef __builtin_va_list  va_list;
 #define NULL ((void *)0)
 
 #define GLIBCSYM(n) __asm__("_glibc_" #n)
+
+/* Defined by build/machorun, not by glibc and not by a dylib -- src/resolve.c
+ * strips the leading underscore and dlsyms it out of the loader, the same path
+ * the _dyld_* surface takes. Registered in darwin/loader-exports.txt. */
+extern void mr_report_backtrace(const char *why);
+extern void mr_report_memory(const void *addr, unsigned before, unsigned after);
+extern void mr_guard_arm(const void *word);
+extern void mr_guard_disarm(const void *word);
 #define EXPORT __attribute__((visibility("default")))
 #define HIDDEN __attribute__((visibility("hidden")))
 

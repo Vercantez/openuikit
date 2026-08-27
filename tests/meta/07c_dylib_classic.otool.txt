@@ -1,19 +1,19 @@
 ### file
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/07c_dylib_classic: Mach-O 64-bit executable arm64
+<machorun>/tests/bin/07c_dylib_classic: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/07c_dylib_classic:
+<machorun>/tests/bin/07c_dylib_classic:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
  0xfeedfacf 16777228          0  0x00           2    19       1552 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/07c_dylib_classic:
+<machorun>/tests/bin/07c_dylib_classic:
 	@rpath/lib07greet_classic.dylib (compatibility version 0.0.0, current version 0.0.0)
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-sort/tests/bin/07c_dylib_classic:
+<machorun>/tests/bin/07c_dylib_classic:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
