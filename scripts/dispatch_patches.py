@@ -775,4 +775,38 @@ edit("src/event/event_epoll.c",
      "\t\t\tbreak;",
      "14: timerfd clock ids are Linux values, not Darwin's")
 
+# ---------------------------------------------------------------------------
+# 15. The futex goes through a NON-VARIADIC door, not through syscall(2).
+#
+# src/shims/lock.c reaches the futex as
+#     syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
+# -- SEVEN arguments through the variadic multiplexer, on the core locking path:
+# every lock, every thread event. Darwin's arm64 ABI passes variadic arguments
+# on the STACK and AAPCS64 passes the first eight in REGISTERS, so a forwarded
+# syscall(2) hands glibc six garbage values, one of which it writes through.
+#
+# HAVE_FUTEX=0 IS NOT THE ESCAPE, and I checked rather than assumed. The #else
+# branches fall through to _dispatch_sema4_*, our own pthread backend from patch
+# 4 -- already built and verified 4/4 on both platforms -- but building it fails
+# 6 TUs with "define _dispatch_lock encoding scheme for your platform": lock.h
+# couples the lock-WORD ENCODING to the same flag as the futex SYSCALL. It is a
+# platform port, not a config switch.
+#
+# So machorun grew a non-variadic six-argument futex() (posix.c, 242d5f2) and
+# this points lock.c at it. Fixed arguments sit in the same registers under both
+# ABIs, so there is nothing left to translate. Exactly the same shape as the
+# gettid patch above, and for the same reason.
+#
+# The wrapper is not a pass-through: it converts ETIMEDOUT, which is 60 on
+# Darwin and 110 on Linux. lock.c compares against the number it was compiled
+# with, so an untranslated return would make every timed wait look like a
+# spurious wake, forever, with no error anywhere.
+# ---------------------------------------------------------------------------
+edit("src/shims/lock.c",
+     "\treturn (int)syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3);",
+     "\t/* swiftcore-macho: the non-variadic door -- see dispatch_patches.py #15.\n"
+     "\t * syscall(2) is variadic and Darwin's arm64 varargs are not AAPCS64. */\n"
+     "\treturn futex(uaddr, op | opflags, val, timeout, uaddr2, val3);",
+     "15: futex through a non-variadic entry point, not syscall(2)")
+
 print("dispatch patches applied")

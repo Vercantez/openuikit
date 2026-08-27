@@ -182,10 +182,13 @@ cat > "$INC/sys/ioctl.h" <<'EOF'
  *   pointer and write through it. Silent memory corruption, not a wrong value.
  *
  * So this is declared plain, with Darwin's own prototype, and resolves against
- * libSystem -- which owns the translating wrappers and re-emits the varargs in
- * glibc's convention. libSystem does not export _ioctl yet, so this currently
- * FAILS AT THE LINK, naming the symbol. That is the intended failure: a link
- * error is recoverable and the corruption is not. */
+ * libSystem -- which owns the translating wrapper and re-emits the varargs in
+ * glibc's convention. It LANDED (machorun b6ac4ee) and accepts both request
+ * namespaces: Darwin's FIONREAD/FIONBIO are translated, and Linux's
+ * SIOCINQ/SIOCOUTQ pass through, because our epoll backend is Linux shim code
+ * compiled for a Darwin target and has no Darwin spelling for those. Anything
+ * else aborts rather than guessing -- the contract question raised from
+ * cf_shims.sh, settled there rather than at a call site. */
 int ioctl(int, unsigned long, ...);
 #endif
 EOF
@@ -213,6 +216,34 @@ EOF
 cat > "$INC/linux/futex.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_LINUX_FUTEX_H
 #define _SWIFTCORE_MACHO_LINUX_FUTEX_H
+
+/* THE FUTEX DOOR, and note it carries NO GLIBCSYM LABEL.
+ *
+ * libdispatch's core lock path reaches the futex through
+ *   syscall(SYS_futex, uaddr, op|opflags, val, timeout, uaddr2, val3)
+ * -- seven arguments through the VARIADIC multiplexer. Darwin's arm64 ABI puts
+ * variadic arguments on the stack and AAPCS64 puts the first eight in
+ * registers, so forwarding syscall(2) would hand glibc six garbage values, one
+ * of which it writes through. That is every lock and every thread event in the
+ * process, so it is not a corner.
+ *
+ * machorun's answer (posix.c, commit 242d5f2) is a NON-VARIADIC six-argument
+ * futex(). Fixed arguments occupy the same registers under both ABIs, so there
+ * is nothing left to translate -- a stronger property than translating it.
+ *
+ * PLAIN, not labelled, and the reason is not the calling convention this time:
+ * the wrapper has real work to do. A futex wait that times out reports
+ * ETIMEDOUT, which is 60 on Darwin and 110 on Linux, and lock.c compares
+ * against the number it was compiled with. A direct bind would return 110 into
+ * code testing for 60, so the wait would look like a spurious wake forever.
+ *
+ * The op values are passed through untranslated, deliberately: FUTEX_WAIT and
+ * friends are Linux constants with no Darwin counterpart, so this caller is
+ * Linux shim code compiled for a Darwin target and is already speaking Linux --
+ * the same judgement as signalfd and as ioctl's SIOCINQ. */
+int futex(unsigned int *uaddr, int op, unsigned int val,
+          const void *timeout, unsigned int *uaddr2, unsigned int val3);
+
 #define FUTEX_WAIT          0
 #define FUTEX_WAKE          1
 #define FUTEX_PRIVATE_FLAG  128
