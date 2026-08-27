@@ -30,17 +30,43 @@ set -uo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 SRC="$ROOT/sdk/tests/abi_probe.c"
 EXPECTED="$ROOT/sdk/tests/abi_probe.expected.txt"
+TARGET_OS_SRC="$ROOT/sdk/tests/target_os_probe.c"
 BUILD="$ROOT/build/abi_probe"
 SDK="$ROOT/sdk"
 
 die() { echo "sdk_abi_probe: $*" >&2; exit 1; }
 mkdir -p "$BUILD"
 
+# sdk/tests/target_os_probe.c is compile-only: there is no output to diff, it
+# either builds or it does not. It lives here rather than in its own script
+# because it needs exactly what this file already arranges -- a clang aimed at
+# a Darwin target -- and because it makes the same kind of claim: that sdk/
+# agrees with Apple's SDK about something a compiler decides.
+#
+# It is invoked on both sides, and the two sides ask different questions. On
+# macOS it compiles against APPLE's SDK, so a value we assert that Apple
+# disagrees with fails the build there; the four macros that are corelibs'
+# rather than Apple's are passed on the command line, as corelibs passes them.
+# On Linux it compiles against sdk/, where the question is whether our own
+# header defines them at all -- which is how CoreFoundation found this gap.
+target_os_probe() { # target_os_probe <clang> <sysroot> [extra flags...]
+    tp_clang="$1"; tp_sysroot="$2"; shift 2
+    "$tp_clang" -target arm64-apple-macos11 -isysroot "$tp_sysroot" \
+        -Wundef-prefix=TARGET_OS -Werror -fsyntax-only "$@" "$TARGET_OS_SRC" \
+        || die "TARGET_OS_* probe failed against $tp_sysroot -- see the header of ${TARGET_OS_SRC#$ROOT/}"
+    echo "   TARGET_OS_* probe ok against ${tp_sysroot#$ROOT/}"
+}
+
 if [ "${1:-}" = "--record" ]; then
     [ "$(uname -s)" = "Darwin" ] || die "--record only runs on the macOS oracle"
     command -v xcrun >/dev/null 2>&1 || die "no xcrun"
     APPLE_SDK=$(xcrun --sdk macosx --show-sdk-path) || die "no macOS SDK"
     echo "== oracle: $(xcrun -f clang), $APPLE_SDK"
+    # Against Apple's own headers, so this is the differential half: every
+    # TARGET_OS_* value sdk/local/TargetConditionals.h asserts has to be a
+    # value Apple's header produces too.
+    target_os_probe "$(xcrun -f clang)" "$APPLE_SDK" \
+        -DTARGET_OS_WASI=0 -DTARGET_OS_ANDROID=0 -DTARGET_OS_BSD=0 -DTARGET_OS_CYGWIN=0
     xcrun clang -target arm64-apple-macos11 -isysroot "$APPLE_SDK" -O1 -Wall \
         -o "$BUILD/abi_probe_macos" "$SRC" || die "oracle build failed"
     ( cd "$BUILD" && LC_ALL=C LANG=C TZ=UTC ./abi_probe_macos ) > "$EXPECTED" \
@@ -59,6 +85,9 @@ LD64="${LD64:-ld64.lld-18}"
 command -v "$LD64" >/dev/null 2>&1 || LD64=ld64.lld
 
 echo "== ours: $CLANG -isysroot sdk/ , linked against sdk/usr/lib/*.tbd only"
+# No -D here on purpose: sdk/ has to supply every TARGET_OS_* by itself, which
+# is precisely what it did not do until CoreFoundation tried to compile.
+target_os_probe "$CLANG" "$SDK"
 $CLANG -target arm64-apple-macos11 -isysroot "$SDK" -O1 -Wall \
        -c "$SRC" -o "$BUILD/abi_probe.o" || die "compile against sdk/ failed"
 

@@ -143,8 +143,34 @@ bridgeOS patch releases and DriverKit 20+, none referenced by anything here.
 `API_*_BEGIN/_END` scoped forms are accepted and ignored rather than applied to a
 region; the Swift-availability plumbing is accepted and ignored;
 `TargetConditionals.h` drops the pre-clang-3 fallback ladder (we require
-`__is_target_os`) and the internal-platform flags (`TARGET_OS_NANO`,
-`TARGET_OS_RTKIT`, `TARGET_OS_EXCLAVEKIT`).
+`__is_target_os`) and the remaining internal-platform flags (`TARGET_OS_RTKIT`,
+`TARGET_OS_EXCLAVEKIT`, `TARGET_OS_UIKITFORMAC`).
+
+**`TARGET_OS_*`: five macros added, and where their values come from.**
+CoreFoundation is the third consumer of this sysroot, and it found a gap the
+first two could not: it compiles with `-Wundef-prefix=TARGET_OS` promoted to an
+**error** and tests platform macros with `#if`, so a macro we omit fails all 86
+CF translation units rather than quietly evaluating to 0.
+
+- `TARGET_OS_NANO` **is** Apple's, and was wrongly on the omit-list above. It is
+  not an internal-platform flag but a deprecated alias: Apple's header documents
+  it as *"DEPRECATED: Same as `TARGET_OS_WATCH`"* and defines it as exactly that,
+  behind the same `#ifndef` we now use.
+- `TARGET_OS_WASI`, `TARGET_OS_ANDROID`, `TARGET_OS_BSD`, `TARGET_OS_CYGWIN` are
+  **not Apple's at all** — verified, zero definitions of each in Apple's
+  `TargetConditionals.h`. They are swift-corelibs-foundation's own additions for
+  selecting a non-Darwin branch. On a Darwin target the correct value is not
+  "unknown" but **0**, so they join the existing not-Darwin block.
+
+Verified rather than asserted, by `sdk/tests/target_os_probe.c`, which
+`scripts/sdk_abi_probe.sh` now compiles on **both** sides: on macOS against
+**Apple's own SDK**, so a value we assert that Apple disagrees with fails the
+build there (green against MacOSX15.4 and MacOSX26.1); and on Linux against
+`sdk/` alone with no `-D`, which is the half that reproduces CF's build
+condition. It is compile-only — `#if` for every macro under `-Werror` catches a
+**missing** one, and `_Static_assert` on the target-decided values catches a
+**wrong** one. The wrong-value case is the dangerous one: it compiles clean and
+silently selects CF's WASI or Android branch.
 
 ### 2.2 `sys/_symbol_aliasing.h`
 
