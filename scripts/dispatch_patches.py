@@ -194,34 +194,20 @@ assert not _hits, (
 print("  [ok]   guard: no static PTHREAD_*_INITIALIZER in src/")
 
 # ---------------------------------------------------------------------------
-# 6. Don't restub the QoS enum when the sysroot has pthread/qos.h.
+# 6. WITHDRAWN -- superseded by staging Apple's own private headers.
 #
-# src/shims/priority.h defines QOS_CLASS_USER_INTERACTIVE and friends for
-# platforms without Darwin's QoS. Our sysroot has <pthread/qos.h>, so they
-# collide -- identical shape to patch 3, one layer over.
-# ---------------------------------------------------------------------------
-edit("src/shims/priority.h",
-"""#if HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)
-#include <pthread/qos.h>
-#include <pthread/qos_private.h>""",
-"""/* swiftcore-macho: upstream models two cases -- BOTH QoS headers present, or
- * NEITHER. Our sysroot is the third: Darwin's PUBLIC <pthread/qos.h> is there
- * (so qos_class_t and its enumerators are already defined) but Apple's PRIVATE
- * <pthread/qos_private.h> is not, and inventing that SPI header would be worse
- * than not having it. Upstream's condition conflates the two, so we fall to the
- * #else and redefine every enumerator on top of the real ones:
- *     error: redefinition of enumerator 'QOS_CLASS_USER_INTERACTIVE'
- * Take the public header for the TYPE; the private SPI stays absent. */
-#if HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos.h>)
-#include <pthread/qos.h>
-#if __has_include(<pthread/qos_private.h>)
-#include <pthread/qos_private.h>
-#else
-/* QOS_CLASS_MAINTENANCE is Apple SPI: it lives in qos_private.h, not the public
- * qos.h, so taking the public header alone leaves exactly this one enumerator
- * undeclared. 0x05 is its documented value, below BACKGROUND (0x09). */
-#define QOS_CLASS_MAINTENANCE ((qos_class_t)0x05)
-#endif""",
-     "public QoS header without the private SPI")
+# The QoS collision is NOT fixed by splitting upstream's condition. The three
+# headers libdispatch wants are all open source, in releases machorun ALREADY
+# pins, so upstream's "both headers present" case can simply be made true:
+#
+#   pthread/qos_private.h      libpthread-539.100.4  private/pthread/qos_private.h
+#   sys/qos_private.h          libpthread-539.100.4  private/sys/qos_private.h
+#   pthread/priority_private.h xnu-12377.121.6       bsd/pthread/priority_private.h
+#
+# With those staged, HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)
+# is TRUE and libdispatch takes its own Darwin path. No patch, no invented SPI.
+#
+# Staging is machorun-isamask's (sdk/ provenance + restore-integrity check).
+# Until it lands, the QoS TUs do not build -- which is the correct failure.
 
 print("dispatch patches applied")

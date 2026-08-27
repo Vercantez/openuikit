@@ -791,3 +791,37 @@ condition broken into two rather than a header swapped.
 wrong version of this patch invents Apple SPI values, and a wrong
 `_PTHREAD_PRIORITY_QOS_CLASS_SHIFT` would mis-encode every queue priority
 silently rather than failing to build.
+
+### Patch 6 withdrawn — the "private SPI" is open source, in releases we already pin
+
+Checked before writing it, and the answer removes the patch entirely. All three
+headers libdispatch wants are published, in tags machorun already pins:
+
+| header | release (already pinned) | path |
+|---|---|---|
+| `pthread/qos_private.h` | `libpthread-539.100.4` | `private/pthread/qos_private.h` |
+| `sys/qos_private.h` | `libpthread-539.100.4` | `private/sys/qos_private.h` |
+| `pthread/priority_private.h` | `xnu-12377.121.6` | `bsd/pthread/priority_private.h` |
+
+`qos_private.h` alone is not enough — it includes the other two. With all three
+staged, `HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)` becomes
+true, upstream's "both headers" case is satisfied, and **the third case
+libdispatch does not model stops being a case at all**. No patch, no split
+condition, and the encoding values come from Apple's source rather than anyone's
+inference.
+
+**And the inference would have been wrong.** The constants, read from xnu:
+
+```c
+typedef unsigned long pthread_priority_t;              /* :152 */
+#define _PTHREAD_PRIORITY_QOS_CLASS_MASK   0x003fff00u /* :174 */
+#define _PTHREAD_PRIORITY_QOS_CLASS_SHIFT  (8ull)      /* :175 */
+```
+
+The mask is **14 bits**, not the 8 that a shift of 8 and a plausible guess would
+suggest. Every queue priority would have been mis-encoded — silently, since
+nothing checks an encoding against a value it produced itself. `QOS_CLASS_MAINTENANCE`
+is `((qos_class_t)0x05)` (`libpthread private/sys/qos_private.h:38`), which my
+guess happened to match; the mask is the one that would have cost.
+
+That is the argument for checking before inventing, in one number.

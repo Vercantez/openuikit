@@ -5,11 +5,12 @@ scene pixel-identically ([ISA_MASK_VERDICT.md](ISA_MASK_VERDICT.md)). Does the
 **whole** module build and run, and how much of the 108-scene golden suite does
 it actually render?
 
-**Answer: the whole module builds; 62 of 108 scenes render; every one of the
-110 frames is byte-identical to the same code running natively on macOS, and
-all 56 first-attempt scenes pass the project's own gate.** What stops the
-remaining 46 is memory corruption in the runtime substrate — not missing UIKit,
-not fonts, not `_Concurrency`.
+**Answer: the whole module builds; between 51 and 65 of 108 scenes render
+depending on the run; and 321 of 322 rendered frames are byte-identical to the
+same code running natively on macOS.** What stops the rest is nondeterministic
+memory corruption in the runtime substrate — not missing UIKit, not fonts, not
+`_Concurrency`. One frame in 322 rendered and was *silently wrong*, which is why
+this document reports a band rather than a number.
 
 ## 1. The build — no vendoring, no VENDOR-EDITs
 
@@ -97,27 +98,39 @@ from the real-UIKit golden either because OpenUIKit is not bit-exact against
 UIKit, or because this stack disagrees with the same code natively. Those have
 different owners, so `full/scripts/score.py` measures them separately.
 
-### Scenes
+### Scenes — three full runs, because one run is a sample
+
+A single 108-scene pass cannot be quoted as a measurement here: the failures are
+address-dependent, so the suite was run three times end to end.
 
 ```
-total scenes in fixtures/scenes                     108
-rendered on the first attempt                        56   (110 PNG frames)
-rendered within 2 retries                           +6    -> 62 / 108
-fail persistently (3 attempts each)                  46
+run 1                                                59 / 108
+run 2                                                55 / 108
+run 3                                                58 / 108
+
+ALWAYS PASS (rendered in all three)                  51    <- the capability floor
+ALWAYS FAIL (failed in all three)                    43    <- the wall
+FLIPPED     (passed in some, failed in others)       14    <- residual address sensitivity
+union that rendered at least once                    65    <- the ceiling
 ```
 
-The retry column is not padding, it is the finding: **the failures are
-nondeterministic**. One scene run five times produced "corrupted double-linked
-list", a SIGSEGV at `0x10024000000`, "corrupted double-linked list", a SIGSEGV
-at `0x10102464c45df`, and "free(): invalid pointer" — five runs, four distinct
-failures. Any single-run number is a sample, so both are quoted.
+**Fourteen scenes — 13 % of the suite — are not reproducible either way.** So the
+honest statement is a band, 51 to 65, not a point. Quoting any single run's
+number would have been quoting a die roll: the three runs differ by 4, and
+`label_sizes` alone reads ok / FAIL / ok.
+
+Flippers, since these are the informative rows: `alert_dark`, `button_basic`,
+`button_dark`, `collection_dark`, `demo_settings`, `hit_testing`, `label_align`,
+`label_multiline`, `label_sizes`, `label_truncate`, `modal_sheet`,
+`modal_sheet_grabber`, `navbar_inline`, `textfield_basic`.
 
 ### Fidelity of what did render
 
 ```
-A) Linux/machorun vs macOS-native OpenUIKit    110 / 110  BYTE-IDENTICAL
-B) macOS-native   vs real-UIKit golden          12 / 110  pixel-identical
-C) Linux/machorun vs real-UIKit golden          12 / 110  pixel-identical
+A) Linux/machorun vs macOS-native OpenUIKit    321 / 322 frames byte-identical
+                                                 1 frame RENDERED BUT WRONG
+B) macOS-native   vs real-UIKit golden          12 / 109 pixel-identical
+C) Linux/machorun vs real-UIKit golden          12 / 109 pixel-identical
 
 Tools/compare/compare.py -- the PROJECT'S OWN gate (tolerances + structural
 blob/geometry checks + layout.json):
@@ -125,34 +138,25 @@ blob/geometry checks + layout.json):
    Linux/machorun render   56 / 56 scenes pass
 ```
 
-**A is the number that measures this stack, and it is perfect.** B and C being
-equal is the proof: every deviation from the real-UIKit golden is inherited
-from OpenUIKit-on-macOS, and *none* is introduced by compiling to Mach-O on
-Linux and running under machorun. The bare "12/110 pixel-identical" is
-glyph-rasterisation residue the project already tolerates by design — quoted
-because it is the strictest possible reading, not because it is a defect here.
+**A is the number that measures this stack.** B and C being equal is the proof
+that every deviation from the real-UIKit golden is inherited from
+OpenUIKit-on-macOS and none is introduced by compiling to Mach-O on Linux. The
+bare "12/109 pixel-identical" is glyph-rasterisation residue the project already
+tolerates by design; it is quoted because it is the strictest possible reading.
 
-### The 46 that do not render
+### The corruption is NOT fail-stop — a rendered frame can be wrong
 
-Categorised from the first-attempt run, by what the process actually said:
+One frame in 322, `collection_dark` in run 1, **rendered successfully and
+differed from the macOS render by 6,957 pixels at up to 97 per channel**. The
+same scene was byte-identical in run 3 and crashed on four consecutive fresh
+attempts afterwards. One scene, three outcomes: crash, correct, silently wrong.
 
-| signature | scenes |
-|---|---|
-| glibc heap-corruption abort (`double free or corruption`, `corrupted double-linked list`, `free(): invalid size`, `malloc_consolidate(): invalid chunk size`, `_int_malloc` assertion) | 22 |
-| SIGSEGV on a wild address (`0xffeea114fffecb2e`, `0x10102464c45df`, …) | 19 |
-| `os_unfair_lock_unlock: this thread does not own the lock` (objc4 lock state corrupted) | 2 |
-| no diagnostic line — flaky, rendered when re-run alone | 9 |
-
-Every one of these is **memory corruption**, detected at different points. Not
-one is a missing UIKit capability, a missing font, or a `_Concurrency` gap:
-`label_basic` and `label_dark` render text and pass the gate, and the
-dispatch/voucher stubs never fired. The persistent 46 cluster on the
-chrome-heavy scenes — `attrtext_*`, `button_*`, `collection_*`, `navbar_*`,
-`navitem_*`, `tabbar_*`, `tableview_*`, `toolbar_*`, `control_*`,
-`constraints_*`, `gradient_*` — i.e. the scenes that build the largest object
-graphs, which is what a corruption bug would be expected to hit first.
-
-
+This is the single most important caveat on the whole scoreboard. **"Rendered ok"
+is not a pass.** A count of exit-zero scenes would have reported that run as
+59/108 with no hint that one of the 59 was garbage. Only diffing every frame
+against a native render catches it, which is what comparison A is for and why it
+reads 321/322 rather than 322/322. Any future gate over this stack must diff
+pixels, not check exit codes.
 
 ## 4. What blocks the rest — and a harness bug that cost an evening
 
