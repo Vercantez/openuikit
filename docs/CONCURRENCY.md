@@ -14,7 +14,7 @@
 > | 2 no `sysctlbyname` on a Linux host | **landed** |
 > | 3 defer to real Mach headers for types | **landed** |
 > | 4 pthread semaphore backend | **landed** 2026-08-27, verified both platforms |
-> | 5 runloop eventfd handle | **specified, not written** |
+> | 5 runloop eventfd handle | **scoped to exact sites, not written** |
 > | 6 QoS private headers | **withdrawn** — they are in tags we already pin |
 >
 > **Superseded claims, explicitly struck:**
@@ -902,3 +902,48 @@ that path.
 real translation (`opendir`/`readdir`/`closedir`/`rewinddir`/`dirfd`) plus
 `bsearch`, `div`, `ldiv`, `strncat`, `strnlen`, `getprogname`, `dlclose`,
 `timezone`/`daylight`/`tzname`.
+
+---
+
+## Part 9 — patch 5 scoped to its exact sites (2026-08-27)
+
+Measured against a pristine `release/6.2` checkout, so the anchor list is real
+rather than remembered.
+
+**The gate is wrong, not the code.** Every site selects Mach with
+`#if TARGET_OS_MAC` and offers the eventfd path as `#elif defined(__linux__)`.
+We are `TARGET_OS_MAC = 1` with no `__linux__`, so we take the Mach branch
+every time — `mach_port_construct` is one of machorun's four self-naming
+aborts, which is why this surfaces at the call rather than as a mystery.
+
+The honest replacement is `TARGET_OS_MAC && HAVE_MACH`, because that states the
+true condition: a Mac target *without* Mach IPC. `HAVE_MACH` is already 0 in
+`sdk/dispatch-config/config_ac.h`, so nothing new has to be invented — the
+config already knows, and only these guards fail to ask it.
+
+**Six sites, and no others.**
+
+| file | line | what |
+|---|---|---|
+| `private/private.h` | 190 | `typedef mach_port_t dispatch_runloop_handle_t` (the `int` branch is right there) |
+| `src/queue.c` | 6473 | runloop handle helpers |
+| `src/queue.c` | 6488 | " |
+| `src/queue.c` | 6505 | " |
+| `src/queue.c` | 6525 | `_dispatch_runloop_queue_handle_init` — `mach_port_construct` vs `eventfd` |
+| `src/queue.c` | 6590 | `_dispatch_runloop_queue_handle_dispose` |
+
+`src/queue.c`'s other `TARGET_OS_MAC` guards (3932–4152, 6923) are voucher and
+QoS, **not** runloop handles, and must be left alone. That distinction is the
+whole reason for scoping this by line rather than by a global substitution.
+
+`eventfd` itself needs no staged Linux header: `scripts/stage_linux_abi.sh`
+already declares it with a `GLIBCSYM` asm label and pins `EFD_CLOEXEC` /
+`EFD_NONBLOCK` in `sdk/tests/epoll_abi_probe.c`.
+
+**Deliberately not written yet.** Patch 5's TU cannot be compiled today — the
+staged `sys/socket.h` is broken by the `constrained_ctypes.h` →
+`machine/_param.h` → `net/net_kev.h` → `sys/_types/{_sa_family_t,_socklen_t,
+_iovec_t}.h` chain, which also blocks 3 CoreFoundation files. Writing six
+coordinated guard edits that nothing can compile would be the "compiles, links,
+unverified" position this port exists to avoid. **That sysroot chain is now the
+critical path for two consumers and is machorun's to fix.**
