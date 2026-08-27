@@ -108,31 +108,27 @@ struct signalfd_siginfo {
 };
 _Static_assert(sizeof(struct signalfd_siginfo) == 128, "signalfd_siginfo is 128 bytes");
 _Static_assert(__builtin_offsetof(struct signalfd_siginfo, ssi_signo) == 0, "ssi_signo");
-/* ARMED HAZARD, made loud rather than silent.
+/* NO GLIBCSYM LABEL HERE, AND THAT IS THE WHOLE POINT.
  *
- * This is the opaque/sized-type overflow class from the #49 audit, and unlike
- * the eight types that audit found dormant, THIS ONE IS REACHED: libdispatch's
- * event_epoll.c calls signalfd(-1, &sigmask, ...) with a sigset_t it owns.
+ * GLIBCSYM means "this ABI is identical on both sides, bind straight to glibc".
+ * signalfd is the opposite: it takes a sigset_t*, Darwin's is 4 bytes and
+ * glibc's is 128, and glibc reads the 8 it hands the kernel out of the guest's
+ * 4. machorun's libSystem now TRANSLATES it (master e5e7224, verified present
+ * in the built artifact), widening the mask and remapping the ten signal
+ * numbers that differ.
  *
- *     Darwin sigset_t   4 bytes   (a uint32 bitmask)
- *     glibc  sigset_t  128 bytes
+ * A GLIBCSYM label would emit _glibc_signalfd and bypass that translator
+ * entirely -- shipping exactly the bug the wrapper was written to prevent.
+ * Measured: with the label, event_epoll.o imported _glibc_signalfd. So the
+ * declaration is plain, and binds to libSystem's _signalfd.
  *
- * A naive GLIBCSYM forward would hand glibc a 4-byte object and let it read the
- * 8 bytes it passes to the kernel -- so the guest subscribes to whatever
- * happens to sit next to its mask on the stack. Silent, plausible, and wrong.
- * pthread_sigmask is worse: its third argument is an OUT parameter, so a naive
- * forward WRITES 128 bytes into 4.
+ * This is the general rule for everything staged here: GLIBCSYM for a function
+ * whose ABI genuinely matches, a PLAIN declaration for anything libSystem has
+ * to translate. Getting that backwards is silent.
  *
- * So this declaration refuses to compile rather than forwarding. The fix is a
- * TRANSLATING wrapper in machorun's libSystem -- widen Darwin's 32-bit mask
- * into the kernel's, as the directory family is already translated rather than
- * forwarded -- not a declaration we can stage from here.
- */
-_Static_assert(sizeof(sigset_t) == 8,
-    "signalfd cannot be forwarded directly: Darwin's sigset_t is 4 bytes and "
-    "glibc's is 128, so glibc would read past the guest's object. Needs a "
-    "translating wrapper in libSystem, not a GLIBCSYM forward.");
-extern int signalfd(int, const sigset_t *, int) GLIBCSYM(signalfd);
+ * The _Static_assert that used to sit here refusing to compile is gone,
+ * because it said "there is no translating wrapper yet" and now there is. */
+extern int signalfd(int, const sigset_t *, int);
 #endif
 EOF
 
@@ -225,16 +221,15 @@ typedef unsigned long nfds_t;
 #define POLLHUP  0x010
 #define POLLNVAL 0x020
 extern int poll(struct pollfd *, nfds_t, int) GLIBCSYM(poll);
-/* ppoll takes a sigset_t*, so it is a CROSSING call in the same family as
-   signalfd and sigsuspend -- Darwin 4 bytes, glibc 128. CFRunLoop only ever
-   passes NULL for that argument, which is safe, but the declaration cannot
-   enforce that. Declared with the mask argument as void* so a caller passing a
-   real sigset_t* fails to compile rather than silently over-reading; NULL still
-   converts. If a translating wrapper lands in libSystem, this can become the
-   honest signature. */
+/* ppoll also takes a sigset_t*, so it is a crossing call and gets a PLAIN
+   declaration for the same reason as signalfd. NOTE: libSystem does not define
+   _ppoll yet (measured: 0 in the built artifact), so this will be an
+   unresolved symbol at link rather than a wrong answer at runtime -- which is
+   the failure we want while it is missing. CoreFoundation only ever passes
+   NULL for the mask, so the mask argument stays void*: NULL converts, a real
+   sigset_t* does not compile. */
 extern int ppoll(struct pollfd *, nfds_t, const struct timespec *,
-                 const void * /* sigset_t* would cross; see above */)
-    GLIBCSYM(ppoll);
+                 const void * /* sigset_t* would cross; see above */);
 #endif
 EOF
 
