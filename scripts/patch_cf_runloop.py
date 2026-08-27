@@ -45,7 +45,7 @@ MARK = "CF_RUNLOOP_USE_EPOLL"
 
 # Measured against swift-corelibs-foundation release/6.2. If corelibs changes
 # shape, the count changes and this refuses rather than silently doing less.
-EXPECTED_CHAINS = 12
+EXPECTED_CHAINS = 17
 
 PROLOGUE = """/* swiftcore-macho / foundation-macho: see scripts/patch_cf_runloop.py.
  *
@@ -86,8 +86,21 @@ def find_chains(lines):
         elif re.match(r"#\s*endif", t) and stack:
             _, idxs = stack.pop()
             br = [lines[j] for j in idxs]
-            if any("TARGET_OS_MAC" in b for b in br) and \
-               any("TARGET_OS_LINUX" in b for b in br):
+            # The defining property is "an alternative implementation
+            # exists", NOT how the alternative is spelled. Measured on
+            # release/6.2: 12 chains spell it `#elif TARGET_OS_LINUX` and 5
+            # spell it `#else` -- the same category, and the first version of
+            # this script caught only the first spelling. That left three
+            # errors whose cause was this script's own inconsistency: it
+            # disabled the chain DECLARING voucher_t and mach_msg_header_t *msg
+            # while leaving blocks that USE them, and left the 6-argument
+            # __CFRunLoopDoSource1 declaration active against a 3-argument call.
+            #
+            # Chains with a TARGET_OS_MAC branch and NO alternative are still
+            # skipped -- disabling those deletes code rather than switching it.
+            if any("TARGET_OS_MAC" in b for b in br) and (
+                    any("TARGET_OS_LINUX" in b for b in br) or
+                    any(re.match(r"#\s*else", b.strip()) for b in br)):
                 chains.append(idxs)
     if stack:
         die("unbalanced preprocessor nesting -- refusing to edit")
@@ -177,6 +190,54 @@ def patch_main_thread(cfdir):
         print(f"  {d}")
 
 
+# ---------------------------------------------------------------------------
+# Two Mach-only blocks with NO alternative branch, which the rule above
+# therefore skips -- and which must go anyway, because they reference symbols
+# the rewrite has just disabled. Deleting code is a stronger act than switching
+# it, so these are named individually rather than swept:
+#
+#   voucherState / voucherCopy   use voucher_t, declared in a chain now off
+#   free(msg)                    uses mach_msg_header_t *msg, likewise
+#
+# Both sit inside __CFRunLoopRun's body, where the Mach and non-Mach paths
+# interleave, and both are pure Mach bookkeeping with no non-Mach counterpart:
+# there are no vouchers to restore and no Mach message buffer to free.
+# ---------------------------------------------------------------------------
+DANGLING = [
+    ("""#if TARGET_OS_MAC
+        voucher_mach_msg_state_t voucherState = VOUCHER_MACH_MSG_STATE_UNCHANGED;""",
+     """#if CF_RUNLOOP_USE_MACH
+        voucher_mach_msg_state_t voucherState = VOUCHER_MACH_MSG_STATE_UNCHANGED;""",
+     "voucher state (voucher_t is no longer declared)"),
+    ("""#if TARGET_OS_MAC
+        if (msg && msg != (mach_msg_header_t *)msg_buffer) free(msg);""",
+     """#if CF_RUNLOOP_USE_MACH
+        if (msg && msg != (mach_msg_header_t *)msg_buffer) free(msg);""",
+     "Mach message buffer free (msg is no longer declared)"),
+    ("""#if TARGET_OS_MAC
+            msg, size, reply,
+#endif""",
+     """#if CF_RUNLOOP_USE_MACH
+            msg, size, reply,
+#endif""",
+     "source1 perform arguments (the 3-argument signature has no msg/size/reply)"),
+]
+
+
+def patch_dangling(path):
+    text = open(path).read()
+    for old_s, new_s, why in DANGLING:
+        if new_s in text:
+            print(f"  dangling: {why} -- already patched")
+            continue
+        n = text.count(old_s)
+        if n != 1:
+            die(f"dangling block for {why} matched {n}x, expected 1")
+        text = text.replace(old_s, new_s, 1)
+        print(f"  dangling: {why}")
+    open(path, "w").write(text)
+
+
 def main():
     if len(sys.argv) < 2:
         die("usage: patch_cf_runloop.py <CF_SOURCE_DIR>")
@@ -187,6 +248,7 @@ def main():
 
     if MARK in src:
         print("  CFRunLoop.c: already patched")
+        patch_dangling(path)
         patch_main_thread(sys.argv[1])
         return 0
 
@@ -220,6 +282,7 @@ def main():
     open(path, "w").write(out)
     print(f"  CFRunLoop.c: rewrote {changed} branch guards across "
           f"{len(chains)} dual-platform chains")
+    patch_dangling(path)
     patch_main_thread(sys.argv[1])
     return 0
 
