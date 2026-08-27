@@ -678,3 +678,45 @@ machorun's SDK for headers and `.tbd`s. Still no Xcode and no Apple toolchain.
 It checks `swiftcompat.c` by md5 on the far side of the bind mount, because a
 mount that silently truncates would produce a shim that compiles fine and
 quietly drops whichever symbols fell off the end.
+
+## 13. `__gxx_personality_v0` binds from libSystem because a `.tbd` loses a reexport
+
+swift-loader-fixes asked for a relink: our `libswiftCore.dylib` two-level-binds
+`___gxx_personality_v0` naming **libSystem**, where Apple's shipped one names
+**libc++**. To keep the Swift gate green they made machorun's
+`libSystem.B.dylib` re-export `libc++abi.dylib` — a deliberate deviation macOS
+does not have, recorded with an exit condition.
+
+**The relink is not the blocker.** Measured on the current tree:
+
+| | `libc++.1.dylib` (the dylib) | `libc++.1.tbd` (what the linker reads) |
+|---|---|---|
+| `LC_REEXPORT_DYLIB /usr/lib/libc++abi.dylib` | **yes**, exactly like Darwin | — |
+| symbols advertised | 105 own **+ 367 re-exported** | **105 own only** |
+
+`scripts/gen_tbd.sh` generates from `nm` of the built dylib and does not follow
+`LC_REEXPORT_DYLIB`, so all 367 re-exported symbols — `___gxx_personality_v0`
+among them — are invisible at link time. Apple's own
+`MacOSX.sdk/usr/lib/libc++.tbd` does **not** use a `reexported-libraries:`
+stanza either; it lists the re-exported symbols **inline in its own `exports:`**.
+That is why linking `-lc++` on macOS yields a two-level bind naming libc++.
+
+So a relink today, with the stdlib's real library set
+(`-lSystem -lobjc -lc++`, no `-lc++abi`, `-undefined dynamic_lookup`), produces:
+
+```
+current tbds:        ___gxx_personality_v0 (dynamically looked up)   <- a FLAT bind
+libc++.tbd patched:  ___gxx_personality_v0 (from libc++)             <- Apple's answer
+```
+
+A flat bind would satisfy "no longer names libSystem" while reintroducing
+exactly the defect class §12 was about: a symbol whose provider is decided by
+load order. **Sequence matters — the tbd fix must land before the relink, or the
+rebuild is spent producing the wrong answer.** Patching `libc++.tbd` to
+advertise the symbol was verified end to end: the bind moves to libc++ and
+`30_throw` still runs clean against the macOS baseline.
+
+**Cost of the relink, stated plainly.** libswiftCore's object files died with
+the Graviton box and the swift-6.2.4 source is not local, so this is a full
+stdlib cross-build, not a link step: either a new box (~$3) or a source fetch
+plus hours of local Docker CPU. Worth doing once, after the tbd fix.
