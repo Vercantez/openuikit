@@ -729,3 +729,65 @@ Had `mach_port_construct` not been implemented as a *named* abort, this would
 have surfaced as a runtime failure inside CFRunLoop's first main-queue wakeup
 instead of at the call — a good argument for machorun's choice to make the four
 unimplemented Mach entry points announce themselves.
+
+---
+
+## Part 8 — QoS: the third case upstream doesn't model, and a defect in my own patch 3
+
+### Compiling found a bug in patch 3 that reading did not
+
+Patch 3's first version kept `typedef void *dispatch_mach_msg_t;` in the
+real-headers branch. But dispatch's **own public headers** already declare it as
+`struct dispatch_mach_msg_s *`, so that was the same collision one layer up —
+I had removed the Mach-type collision and introduced a dispatch-type one.
+
+Only `firehose_activity_id_t` is genuinely absent. Fixed. Worth recording *how*
+it was found: by compiling the TUs, not by re-reading the patch. The patch looked
+right.
+
+### QoS is the same shape as Mach, with a sharper edge
+
+`src/shims/priority.h` guards on:
+
+```c
+#if HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)
+```
+
+Upstream models two worlds — **both** QoS headers present, or **neither**. Our
+sysroot is a third it does not model: Darwin's **public** `<pthread/qos.h>` is
+staged (so `qos_class_t` and its enumerators already exist) but Apple's
+**private** `<pthread/qos_private.h>` is not.
+
+Falling to the `#else` redefines every enumerator on top of the real ones:
+
+```
+error: redefinition of enumerator 'QOS_CLASS_USER_INTERACTIVE'
+```
+
+**But taking the public header is not sufficient either**, and this is the part
+worth knowing before someone repeats it. Setting `HAVE_PTHREAD_QOS_H=1` gets the
+enum and then demands Apple's private *priority-encoding* SPI:
+
+```
+error: unknown type name 'pthread_priority_t'
+error: use of undeclared identifier '_PTHREAD_PRIORITY_QOS_CLASS_MASK'
+error: use of undeclared identifier '_PTHREAD_PRIORITY_QOS_CLASS_SHIFT'
+```
+
+20 errors in one TU. `QOS_CLASS_MAINTENANCE` is also private SPI (`0x05`), not in
+the public header.
+
+So the two halves must be **split**, which upstream's single condition prevents:
+take the real `qos_class_t` **enum** from the public header (it exists, it is
+correct, redefining it collides), and keep libdispatch's **own** priority
+encoding (`pthread_priority_t` and the mask/shift constants), because that is
+Apple-private SPI we do not have and should not invent.
+
+That is the remaining shape of patch 6. It is the same type-vs-capability split
+as patch 3 — the *type* is real, the *encoding SPI* is not — but it needs the
+condition broken into two rather than a header swapped.
+
+**Not finished.** Recorded precisely rather than half-implemented, because the
+wrong version of this patch invents Apple SPI values, and a wrong
+`_PTHREAD_PRIORITY_QOS_CLASS_SHIFT` would mis-encode every queue priority
+silently rather than failing to build.

@@ -138,7 +138,11 @@ typedef void *mach_msg_header_t;""",
 #include <mach/message.h>
 #include <mach/error.h>
 
-typedef void *dispatch_mach_msg_t;      /* libdispatch's own, not Mach's */
+/* dispatch_mach_msg_t is NOT redefined here: dispatch's own public headers
+ * already declare it as struct dispatch_mach_msg_s *, and restubbing it to
+ * void * is the same collision one layer up. Only firehose_activity_id_t is
+ * genuinely absent. (Found by compiling, not by reading -- the first version of
+ * this patch kept the typedef and collided.) */
 typedef uint64_t firehose_activity_id_t;
 
 #else
@@ -188,5 +192,36 @@ assert not _hits, (
     "sides means NO size check will catch it. Re-examine before building."
     % ", ".join(_hits))
 print("  [ok]   guard: no static PTHREAD_*_INITIALIZER in src/")
+
+# ---------------------------------------------------------------------------
+# 6. Don't restub the QoS enum when the sysroot has pthread/qos.h.
+#
+# src/shims/priority.h defines QOS_CLASS_USER_INTERACTIVE and friends for
+# platforms without Darwin's QoS. Our sysroot has <pthread/qos.h>, so they
+# collide -- identical shape to patch 3, one layer over.
+# ---------------------------------------------------------------------------
+edit("src/shims/priority.h",
+"""#if HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos_private.h>)
+#include <pthread/qos.h>
+#include <pthread/qos_private.h>""",
+"""/* swiftcore-macho: upstream models two cases -- BOTH QoS headers present, or
+ * NEITHER. Our sysroot is the third: Darwin's PUBLIC <pthread/qos.h> is there
+ * (so qos_class_t and its enumerators are already defined) but Apple's PRIVATE
+ * <pthread/qos_private.h> is not, and inventing that SPI header would be worse
+ * than not having it. Upstream's condition conflates the two, so we fall to the
+ * #else and redefine every enumerator on top of the real ones:
+ *     error: redefinition of enumerator 'QOS_CLASS_USER_INTERACTIVE'
+ * Take the public header for the TYPE; the private SPI stays absent. */
+#if HAVE_PTHREAD_QOS_H && __has_include(<pthread/qos.h>)
+#include <pthread/qos.h>
+#if __has_include(<pthread/qos_private.h>)
+#include <pthread/qos_private.h>
+#else
+/* QOS_CLASS_MAINTENANCE is Apple SPI: it lives in qos_private.h, not the public
+ * qos.h, so taking the public header alone leaves exactly this one enumerator
+ * undeclared. 0x05 is its documented value, below BACKGROUND (0x09). */
+#define QOS_CLASS_MAINTENANCE ((qos_class_t)0x05)
+#endif""",
+     "public QoS header without the private SPI")
 
 print("dispatch patches applied")
