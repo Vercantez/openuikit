@@ -909,3 +909,90 @@ free can drag in a dylib, and the failure lands at load rather than at compile.
 `rendered_ok=108 crashed=0 hung=0`; arm A 162/162 identical to macOS-native, and
 162/162 identical to the pre-bundle Linux run. The process layer is complete:
 **bundle, launch, run loop.**
+
+## 11. The model layer — measured, and it is bigger than the UI layer
+
+Everything proven so far is the **presentation half**. `~/uikit/docs/APP_COMPAT.md`
+established that real apps touch a small UIKit vocabulary and that OpenUIKit
+covers ~75% of it. That census cannot say anything about the other half, and
+the reason is structural rather than an oversight:
+
+```python
+SYMBOL_RE = re.compile(r'\b((?:UI|NS|CA)[A-Z][A-Za-z0-9_]*)\b')
+```
+
+filtered against UIKit's SDK headers. `URLSession`, `JSONDecoder`, `Date`,
+`Data`, `FileManager`, `Codable`, `UserDefaults` match none of that. **The
+model layer was invisible to the instrument, not absent from the apps.**
+
+Same corpus, same weighting, Foundation's alphabet
+(`~/swift-macho-linux/full/census/`):
+
+| | |
+|---|---|
+| corpus | eidolon, DuckDuckGo iOS, ios-oss, pocket-casts-ios — 5,257 Swift files |
+| **model-layer references** | **18,024** |
+| UIKit references (existing census) | 10,162 |
+| files importing Foundation | **1,762** |
+| files importing UIKit | 1,282 |
+
+**The model layer is roughly 1.8× the UI layer by symbol count, and Foundation
+is imported by more files than UIKit.** The half we have not started is the
+larger half.
+
+### By family
+
+| family | uses | share |
+|---|---|---|
+| files (`URL`, `FileManager`, `Bundle`) | 3,525 | 19.6% |
+| collections (`Data`, `NSNumber`, `UUID`, `Error`) | 2,887 | 16.0% |
+| dates (`Date`, `Calendar`, `DateFormatter`) | 2,636 | 14.6% |
+| concurrency (`DispatchQueue`, `Task`, `Timer`, `RunLoop`) | 1,827 | 10.1% |
+| notification (`NotificationCenter`) | 1,750 | 9.7% |
+| persistence (`UserDefaults`, `NSCoding`, Core Data) | 1,716 | 9.5% |
+| json/coding (`Codable`, `JSONDecoder`) | 1,435 | 8.0% |
+| text/format (`Locale`, `NSAttributedString`, formatters) | 1,148 | 6.4% |
+| networking (`URLSession`, `URLRequest`) | 814 | 4.5% |
+
+### Against what exists today
+
+Foundation-macho currently emits **20 ObjC classes**: `NSURL` plus 19
+`__NSCF*` CoreFoundation bridge classes.
+
+| status | uses | share |
+|---|---|---|
+| have, or in flight (#45 `_Concurrency`, #47 libdispatch/CFRunLoop, OpenUIKit's own `NotificationCenter`, `Bundle` from #56) | 5,635 | 31.3% |
+| **a CF bridge class exists, the Swift-facing API does not** | 7,511 | 41.7% |
+| nothing at all | 4,878 | 27.1% |
+
+**The middle row is the interesting one.** `URL` alone is 2,844 uses and
+`NSURL` is emitted — but Swift's `URL` struct and its API are a different
+artifact from the ObjC class. Most of that 41.7% is plumbing without a surface,
+which is a different kind of work from the 27.1% that has nothing at all.
+
+Biggest single items with nothing behind them: `UserDefaults` (1,186),
+`FileManager` (333), `URLRequest` (317), `UUID` (307), and the whole `Codable`
+family (`Decodable` 294, `CodingKeys` 292, `Decoder` 253, `Codable` 141,
+`JSONDecoder` 113).
+
+### Two things outside Foundation entirely
+
+`SwiftUI` is imported by **993 files across 3 of the 4 apps**, and `Combine` by
+260 across 3. Neither is Foundation and neither exists here in any form. The
+UIKit/Foundation framing of "what a real app needs" does not cover them, and
+nothing in this project currently plans to.
+
+### Honest imprecision
+
+Identifier matching cannot tell `Foundation.Data` from an app's own `Data`. The
+NS*-prefixed names are unambiguous; the curated Swift names are common words
+and over-count somewhat, so families and rankings are solid while individual
+counts are order-of-magnitude.
+
+**A wider alphabet was tried and rejected on measurement.** Scraping
+Foundation's `.swiftinterface` for public type names swept in `Message`,
+`Category`, `Field`, `Language`, `Currency`, `Style` — which matched
+*app-defined* types and inflated "nothing at all" by ~2,900 uses. It looked
+like a more thorough census and was a less accurate one. Corpus is HEAD
+shallow clones, so counts drift slightly from the 2026-08-25 census (eidolon
+159 = 159 exactly; pocket-casts-ios 1,826 vs 1,690).
