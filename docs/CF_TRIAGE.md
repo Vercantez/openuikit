@@ -422,3 +422,106 @@ Re-open this decision when **any** of these becomes true — not "later":
 
 Until then the epoll RunLoop is the supported path and Mach emulation stays
 unbuilt.
+
+---
+
+# Part 4 — ICU measured, and the corrected M2 estimate
+
+## 15. ICU: headers unblock 13 of 15 files immediately
+
+`apple/swift-foundation-icu` 0.0.9 (corelibs' own FetchContent route; no
+substitute hand-rolled). 252 MB, 198 headers under
+`icuSources/include/_foundation_unicode/`, and all eight headers CF asked for
+are present.
+
+**Adding the header path alone compiles 13 of the 15 ICU-blocked files.** The
+other two fail on gaps that have nothing to do with ICU — `CFLocale` wants
+`sys/mount.h`, `CFTimeZone` wants `dirent.h`, both sysroot items owned
+elsewhere.
+
+Those 13 files **define 152 `CF*` symbols**, which is the largest single block of
+the link gap, and they **require 133 distinct ICU entry points**:
+
+| family | syms | | family | syms |
+|---|---|---|---|---|
+| `ucal_` | 22 | | `ucol_` | 8 |
+| `udat_` | 21 | | `ureldatefmt_` | 4 |
+| `unum_` | 17 | | `udtitvfmt_` | 4 |
+| `uregex_` | 16 | | `udatpg_` | 4 |
+| `ucnv_` | 15 | | `utrans_`, `ulistfmt_`, `ufieldpositer_` | 3 each |
+| `uloc_` | 8 | | `uenum_`, others | 2 each |
+
+So ICU splits cleanly into two pieces of very different size: **the headers are
+free and unblock 13 files today**; the **library is a real C++ cross-build**.
+
+### What the ICU build actually is
+
+- **470 C++ files, ~338K lines** (common 157K, i18n 176K, io 5.6K).
+- **Data is vendored**, as `icuSources/common/icu_packaged_main_data.{0..3}.inc.h`
+  — roughly 20 MB compiled in as C arrays, with `USE_PACKAGE_DATA=1`. There is
+  no external `.dat` to fetch and `stubdata/` is excluded from the build. Good
+  news: the port is self-contained.
+- `U_DISABLE_RENAMING=1`, so symbols are plain `ucal_open` etc. The
+  `_foundation_unicode/` prefix is an include-path convention, not a symbol
+  rename. (Worth stating because "symbol-renamed ICU" is the usual shorthand and
+  it is the opposite of what this configuration does.)
+- `MAC_OS_X_VERSION_MIN_REQUIRED=101500` is already set, so the tree expects to
+  be built for Darwin.
+
+## 16. Delivered: the small unblocked items
+
+Real implementations, in `src/compat/`, not measurement stubs:
+
+- **`OSAtomic.c`** — all 5 symbols CF reaches, via `__atomic` builtins.
+  Verified at runtime, including that increment/decrement/add return the **new**
+  value (Darwin's do) and that a *failed* CAS leaves the target unchanged.
+- **`MachOArch.c`** — `NXGetLocalArchInfo`, `NXFindBestFatArch` (exact
+  `(cputype, cpusubtype)` match, then a `_ALL` subtype fallback, with
+  `CPU_SUBTYPE_MASK` capability bits excluded from the comparison), and
+  `__exp10`.
+
+### A bug worth recording, because it compiled clean
+
+`__exp10` written the obvious way — `return pow(10.0, x);` — compiles to:
+
+```
+0000000000000078 <___exp10>:
+      78: 14000000    b  0x78 <___exp10>
+```
+
+clang recognises `pow(10, x)` as the `exp10` idiom and tail-calls `__exp10`,
+which *is this function*. An unconditional branch to itself: an infinite hang.
+
+It produced **no warning and zero undefined symbols** — the symbol table looked
+*healthier* than the correct version, which references `pow`. A volatile
+function pointer defeats the pattern match. This is the same shape as the
+`ltmp0` false-green in §11: the metric that should have caught it pointed the
+wrong way.
+
+## 17. Corrected M2 estimate
+
+The original 3–4 weeks for CoreFoundation assumed the work was in CF. It is not
+— "not one of the 27 failures was a porting problem in CF's own logic" still
+holds. The work is in everything CF sits on.
+
+| item | owner | estimate |
+|---|---|---|
+| **libdispatch as Darwin Mach-O** | swiftcore-build (#47) | **gates the CF link entirely** |
+| ICU cross-build (470 C++ files, data vendored) | ours | **1.5–2.5 wk** |
+| Sysroot headers: `dirent.h`, `sys/socket.h`, `sys/mount.h`, `pwd.h`, `asl.h`, `libc.h`, + the 5 `TARGET_OS_*` macros | machorun | 2–3 d |
+| ~28–40 libc/pthread/locale exports in libSystem | machorun | 3–5 d |
+| CF proper: restore the 5 ObjC dispatch macros, wire `_CFRuntimeBridgeClasses`, take the epoll RunLoop | ours | **2–3 wk** |
+| OSAtomic / NX / `__exp10` | ours | **done** |
+
+**CF to a linked, loading dylib: 5–7 weeks**, of which 3.5–5.5 are ours and the
+rest is on machorun's and swiftcore-build's tracks. That is up from 3–4, and the
+increase is almost entirely libdispatch and ICU — two dependencies that were
+invisible until the link line.
+
+The **whole-Foundation** figure in `DECISION.md` §6 (16–22 weeks) should be read
+as **19–26**, with the same caveat: the growth is in the substrate, not in
+Foundation.
+
+Sequencing that follows: **ICU is the best next use of our own time**, because
+it is fully unblocked, it is the largest single block of the link gap, and it
+does not depend on libdispatch landing.
