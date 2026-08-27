@@ -218,6 +218,37 @@ was ASLR luck — these faults depend on whether the truncated address happens t
 be mapped, so they are **flaky run to run**, which is itself worth knowing when
 reading any single result.
 
+### Two hypotheses, one eliminated by measurement
+
+**Eliminated: the `malloc_size` ownership hole.** `darwin/src/libsystem.c:480`
+answers Darwin's "is this pointer mine?" contract with `if (mr_addr_in_image(p))
+return 0; else return glibc_malloc_usable_size(p)`, which validates nothing
+outside mapped guest images — and `munmap_chunk(): invalid pointer`, the exact
+message that comment says it fixed for objc4's `try_free`, reappears in the
+suite. So a `free()` probe was built into the libSystem umbrella, logging any
+free whose chunk header is implausible or whose pointer lies inside an image.
+Run against `tabbar_basic`, a deterministic repro: **no suspect frees at all**
+before the abort. The ownership test is not the cause.
+
+**Not the shim's own DATA blobs either.** `concpatch.c` defines
+`_dispatch_main_q` and `_dispatch_source_type_timer` as 256-byte guesses at
+opaque Darwin structs we have no header for — precisely the reasoning that
+produces opaque-pointer ABI bugs. Rebuilt at 65536 bytes, 256× larger, and five
+failing scenes failed identically. Ruled out before handing anyone a substrate
+hypothesis.
+
+**Remaining: a write past an allocation.** The abort distribution is dominated by
+glibc metadata damage (`smallbin double linked list corrupted`, `unaligned tcache
+chunk detected`, `corrupted size vs. prev_size`, `malloc(): mismatching next`)
+rather than by bad frees, and a silently-wrong rendered frame is what an
+overwrite of live data looks like when it happens to miss the allocator's
+bookkeeping. That is the opaque-pointer ABI class machorun's
+`docs/UNIMPLEMENTED.md` catalogues. The obvious suspects are *not* it: our
+libSystem forwards no `setjmp`/`longjmp`, no `sem_*`, no `glob`/`regex`, no
+locale or `iconv`, and no `opendir`/`readdir`. `fopen` is the only opaque-type
+forward on the render path, and `FILE*` crosses as a pointer. So it is a type not
+yet enumerated.
+
 ### What remains, and what it is not
 
 With the guest root staged from live `~/machorun`, the `0x2dce0`
