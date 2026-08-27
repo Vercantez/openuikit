@@ -792,7 +792,6 @@ EXPORT void *readdir(void *dirp)
 {
     struct mr_dir *d = dirp;
     const struct linux_dirent *l;
-    size_t n;
 
     if (!d) return 0;
     /* glibc signals end-of-directory with NULL and a *preserved* errno, so the

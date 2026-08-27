@@ -421,6 +421,206 @@ EXPORT int vprintf(const char *fmt, va_list ap)
 
 EXPORT int vfprintf(void *f, const char *fmt, va_list ap) { return file_format(f, fmt, ap); }
 
+/* ------------------------------------------------------------ the sscanf */
+
+/* sscanf IS VARIADIC AND THEREFORE CANNOT BE FORWARDED, for the same reason
+ * printf and dprintf cannot: Darwin's arm64 ABI passes variadic arguments on
+ * the STACK where AAPCS64 passes the first eight in REGISTERS. glibc would
+ * read registers this caller never wrote -- and every one of sscanf's variadic
+ * arguments is a POINTER IT WRITES THROUGH, so a forward is a wild store per
+ * conversion rather than a wrong number.
+ *
+ * IT IS DELIBERATELY NOT A GENERAL sscanf, and the reason is a measurement
+ * rather than laziness. CoreFoundation's link census shows ONE call site (the
+ * uuid code) plus one behind a TARGET_OS_MAC gate in CFTimeZone, which is
+ * version parsing. A general parser is a project; the directives those two
+ * need are an afternoon. So the supported set below is deliberately small AND
+ * THE UNSUPPORTED CASE ABORTS BY NAME rather than silently converting nothing
+ * -- because sscanf reports failure by returning a SHORT COUNT, which is
+ * indistinguishable at the call site from input that legitimately did not
+ * match. A directive we cannot handle must not look like a caller's bad input.
+ *
+ * Supported: whitespace, literals, %%, %n, assignment suppression with *,
+ * field widths, and d i u o x X c s p, with hh h l ll z length modifiers.
+ * Not supported and loud about it: the floating forms, %[, %S, %C.
+ *
+ * The return value is the number of items ASSIGNED, and EOF (-1) when input
+ * ran out before the first conversion could start -- not 0. A caller looping
+ * until sscanf returns less than it asked for cannot tell 0 from EOF, but a
+ * caller checking for EOF specifically can, and CF does. */
+
+static int mr_sc_isspace(int c)
+{
+    return c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r';
+}
+
+static int mr_sc_digit(int c, int base)
+{
+    int d;
+    if (c >= '0' && c <= '9')      d = c - '0';
+    else if (c >= 'a' && c <= 'z') d = c - 'a' + 10;
+    else if (c >= 'A' && c <= 'Z') d = c - 'A' + 10;
+    else return -1;
+    return d < base ? d : -1;
+}
+
+/* A FAILED CONVERSION IS NOT THE SAME ANSWER AS EXHAUSTED INPUT, and the
+ * distinction is the one thing here I got wrong first and only found by diffing
+ * against Apple's own sscanf. EOF (-1) means the input ran out BEFORE any
+ * conversion could start; 0 means there was input and it did not match. So
+ * sscanf("", "%d") is EOF and sscanf("zz", "%d") is 0 -- a caller looping until
+ * EOF and one checking for a short count take different branches, and my first
+ * version returned EOF for both. */
+static int mr_sc_fail(const char *s, int assigned, int converted_any)
+{
+    if (converted_any) return assigned;
+    return *s ? 0 : -1;                      /* matching failure vs EOF */
+}
+
+EXPORT int vsscanf(const char *in, const char *fmt, va_list ap)
+{
+    const char *s = in;
+    int assigned = 0, converted_any = 0;
+
+    while (*fmt) {
+        if (mr_sc_isspace((unsigned char)*fmt)) {
+            /* Whitespace in the format matches any run of it, including none. */
+            while (mr_sc_isspace((unsigned char)*s)) s++;
+            fmt++;
+            continue;
+        }
+        if (*fmt != '%') {
+            if (*s != *fmt) return mr_sc_fail(s, assigned, converted_any);
+            s++; fmt++;
+            continue;
+        }
+
+        fmt++;                                   /* past '%' */
+        if (*fmt == '%') {
+            if (*s != '%') return assigned;
+            s++; fmt++;
+            continue;
+        }
+
+        {
+            int suppress = 0, width = 0, base = 10, neg = 0;
+            int lmod = 0;                        /* 0 int, 1 long, 2 long long, -1 short, -2 char */
+            unsigned long long acc = 0;
+            int any = 0;
+
+            if (*fmt == '*') { suppress = 1; fmt++; }
+            while (*fmt >= '0' && *fmt <= '9') { width = width * 10 + (*fmt - '0'); fmt++; }
+            if (*fmt == 'h') { fmt++; lmod = -1; if (*fmt == 'h') { fmt++; lmod = -2; } }
+            else if (*fmt == 'l') { fmt++; lmod = 1; if (*fmt == 'l') { fmt++; lmod = 2; } }
+            else if (*fmt == 'z') { fmt++; lmod = 1; }
+            else if (*fmt == 'j') { fmt++; lmod = 2; }
+
+            switch (*fmt) {
+            case 'n': {
+                if (!suppress) { int *p = va_arg(ap, int *); *p = (int)(s - in); }
+                fmt++;
+                continue;                        /* %n assigns but does not count */
+            }
+            case 'c': {
+                int wantn = width ? width : 1, k;
+                char *p = suppress ? 0 : va_arg(ap, char *);
+                /* %c does NOT skip leading whitespace, which is the difference
+                 * from every other directive here and the one most often got
+                 * wrong -- a version that skipped would silently consume a
+                 * separator the caller was about to match literally. */
+                for (k = 0; k < wantn; k++) {
+                    if (!s[k]) return mr_sc_fail(s + k, assigned, converted_any);
+                    if (p) p[k] = s[k];
+                }
+                s += wantn;
+                if (p) assigned++;
+                converted_any = 1;
+                fmt++;
+                continue;
+            }
+            case 's': {
+                char *p = suppress ? 0 : va_arg(ap, char *);
+                int k = 0;
+                while (mr_sc_isspace((unsigned char)*s)) s++;
+                if (!*s) return mr_sc_fail(s, assigned, converted_any);
+                while (*s && !mr_sc_isspace((unsigned char)*s) && (!width || k < width)) {
+                    if (p) p[k] = *s;
+                    s++; k++;
+                }
+                if (p) { p[k] = 0; assigned++; }
+                converted_any = 1;
+                fmt++;
+                continue;
+            }
+            case 'p': base = 16; lmod = 2; goto number;
+            case 'x': case 'X': base = 16; goto number;
+            case 'o': base = 8;  goto number;
+            case 'u': case 'd':  base = 10; goto number;
+            case 'i': base = 0;  goto number;
+            default:
+                mr_bail("sscanf: an unsupported conversion. Only "
+                        "d i u o x X c s p n %% with hh/h/l/ll/z are implemented, "
+                        "because CoreFoundation's census showed two call sites and "
+                        "a general parser is a different job. This aborts rather "
+                        "than returning a short count, because a short count is "
+                        "indistinguishable from input that legitimately did not "
+                        "match. See docs/UNIMPLEMENTED.md#sscanf-subset.");
+            }
+
+number:
+            while (mr_sc_isspace((unsigned char)*s)) s++;
+            if (*s == '+' || *s == '-') {
+                neg = (*s == '-');
+                s++;
+                if (width) width--;
+            }
+            if (base == 0) {                     /* %i sniffs the prefix */
+                if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) { base = 16; s += 2; }
+                else if (s[0] == '0') base = 8;
+                else base = 10;
+            } else if (base == 16 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) {
+                s += 2;
+                if (width) width -= 2;
+            }
+            {
+                int k = 0, d;
+                while ((!width || k < width) && (d = mr_sc_digit((unsigned char)*s, base)) >= 0) {
+                    acc = acc * (unsigned)base + (unsigned)d;
+                    s++; k++; any = 1;
+                }
+            }
+            if (!any) return mr_sc_fail(s, assigned, converted_any);
+            converted_any = 1;
+            if (!suppress) {
+                unsigned long long v = neg ? (unsigned long long)(-(long long)acc) : acc;
+                /* The length modifier decides the WIDTH OF THE STORE, and this
+                 * is the part a caller cannot recover from: writing 4 bytes
+                 * through a `short *` clobbers whatever follows it, and the
+                 * uuid call site uses %hhx into a byte array. */
+                switch (lmod) {
+                case -2: *va_arg(ap, unsigned char *)      = (unsigned char)v; break;
+                case -1: *va_arg(ap, unsigned short *)     = (unsigned short)v; break;
+                case  1: *va_arg(ap, unsigned long *)      = (unsigned long)v; break;
+                case  2: *va_arg(ap, unsigned long long *) = v; break;
+                default: *va_arg(ap, unsigned int *)       = (unsigned int)v; break;
+                }
+                assigned++;
+            }
+            fmt++;
+        }
+    }
+    return assigned;
+}
+
+EXPORT int sscanf(const char *in, const char *fmt, ...)
+{
+    va_list ap; int n;
+    va_start(ap, fmt);
+    n = vsscanf(in, fmt, ap);
+    va_end(ap);
+    return n;
+}
+
 EXPORT int vsnprintf(char *dst, size_t cap, const char *fmt, va_list ap)
 {
     struct sink s;

@@ -59,4 +59,5 @@ loader_path	chained	run	pass	@loader_path in a dlopen means the CALLER's directo
 environ	chained	run	pass	the environment was two arrays with one name -- environ from the loader's envp, getenv from glibc's -- agreeing until the first write
 exp10_strings	chained	run	pass	__exp10 COMPUTES rather than branching to itself -- the catalogued idiom bug -- plus flsl, which glibc has only as ffsl, one letter and a whole word apart
 dirent_r	chained	run	pass	readdir_r returns an ERRNO and signals EOF through result, not -1 -- a wrapper returning -1 makes every caller's loop terminate as an error
+sscanf	chained	run	pass	variadic, so it cannot be forwarded -- every argument is a pointer glibc would write through; the length modifier decides the WIDTH OF THE STORE
 fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

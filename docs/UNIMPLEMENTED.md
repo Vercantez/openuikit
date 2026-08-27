@@ -893,6 +893,40 @@ is shorter, so its `d_reclen` is not Darwin's.
 `FD_SETSIZE` is 1024 and `sizeof(fd_set)` is 128 on both, measured. So
 `__darwin_check_fd_set_overflow` is a pure range check.
 
+### `sscanf-subset` — bounded by census, and loud outside it
+`sscanf` cannot be forwarded. It is variadic — Darwin's arm64 ABI passes
+variadic arguments on the **stack** where AAPCS64 passes the first eight in
+**registers** — and unlike `printf`, **every one of its variadic arguments is a
+pointer it writes through**, so a forward is a wild store per conversion rather
+than a wrong number.
+
+It is deliberately **not** a general `sscanf`. CoreFoundation's link census
+shows **one** call site (the uuid code) plus one behind a `TARGET_OS_MAC` gate
+in `CFTimeZone` (version parsing). A general parser is a project; those
+directives are an afternoon.
+
+Supported: whitespace, literals, `%%`, `%n`, suppression with `*`, field widths,
+and `d i u o x X c s p` with `hh h l ll z j` length modifiers. **Anything else
+aborts by name** — because `sscanf` reports failure by returning a **short
+count**, which is indistinguishable at the call site from input that
+legitimately did not match. A directive we cannot handle must not look like a
+caller's bad input.
+
+**Two details the fixture grades most closely.** The **length modifier decides
+the width of the store**, and a caller cannot recover from getting it wrong —
+writing four bytes through a `short *` clobbers what follows, and the uuid site
+uses `%hhx` into a byte array. And **`%c` does not skip leading whitespace**,
+unlike every other directive here; a version that skipped would silently consume
+a separator the caller was about to match literally, while still returning a
+plausible value.
+
+**`EOF` and `0` are different answers**, which I got wrong first and found only
+by diffing against Apple's own `sscanf`: `EOF` means the input ran out **before
+any conversion could start**, `0` means there was input and it did not match. So
+`sscanf("", "%d")` is `EOF` and `sscanf("zz", "%d")` is `0`. My first version
+returned `EOF` for both, and a caller looping until `EOF` takes a different
+branch from one checking a short count.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.

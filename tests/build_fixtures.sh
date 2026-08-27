@@ -408,6 +408,13 @@ want exp10_strings       && build exp10_strings       "$CHAINED_TARGET" exp10_st
 # buffer steps by.
 want dirent_r            && build dirent_r            "$CHAINED_TARGET" dirent_r            dirent_r.c --
 
+# sscanf. Variadic, so it cannot be forwarded -- and unlike printf, every one
+# of its variadic arguments is a POINTER IT WRITES THROUGH, making a forward a
+# wild store per conversion. Bounded to the directives CF's census showed, with
+# the unsupported case aborting by name rather than returning a short count,
+# which would be indistinguishable from input that legitimately did not match.
+want sscanf              && build sscanf              "$CHAINED_TARGET" sscanf              sscanf.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
