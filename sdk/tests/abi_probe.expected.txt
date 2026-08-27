@@ -17,6 +17,30 @@ sizeof uid_t                        4
 sizeof gid_t                        4
 sizeof va_list                      8
 
+== struct kinfo_proc and struct tzhead  (CFUtilities, CFTimeZone)
+sizeof struct kinfo_proc            648
+offset kinfo_proc.kp_proc           0
+offset kinfo_proc.kp_eproc          296
+sizeof struct extern_proc           296
+offset extern_proc.p_pid            40
+offset extern_proc.p_stat           36
+offset extern_proc.p_comm           243
+offset extern_proc.p_starttime      0
+sizeof struct eproc                 352
+offset eproc.e_ppid                 264
+offset eproc.e_pgid                 268
+offset eproc.e_ucred                120
+sizeof struct tzhead                44
+offset tzhead.tzh_magic             0
+offset tzhead.tzh_version           4
+offset tzhead.tzh_ttisgmtcnt        20
+offset tzhead.tzh_ttisstdcnt        24
+offset tzhead.tzh_leapcnt           28
+offset tzhead.tzh_timecnt           32
+offset tzhead.tzh_typecnt           36
+offset tzhead.tzh_charcnt           40
+KERN_PROC_PID 1  KERN_PROC 14  CTL_KERN 1
+
 == struct dirent and struct statfs  (CoreFoundation's, and $INODE64-sensitive)
 sizeof struct dirent                1048
 offset dirent.d_ino                 0

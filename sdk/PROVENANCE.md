@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        366 rows: header path -> where it comes from
+  MANIFEST.tsv        376 rows: header path -> where it comes from
   SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
   local/              19 clean-room headers of ours (4,396 lines)
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        366 headers, 3.2 MB -- COMMITTED
+  usr/include/        376 headers, 3.4 MB -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -29,8 +29,8 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 
 | source | headers | licence | redistributable |
 |---|---:|---|---|
-| **xnu** | 211 | APSL 2.0 | yes |
-| **Libc** | 72 | APSL 2.0 | yes |
+| **xnu** | 219 | APSL 2.0 | yes |
+| **Libc** | 74 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
 | **libpthread** | 17 | APSL 2.0 | yes |
 | **libplatform** | 6 | APSL 2.0 | yes |
@@ -42,7 +42,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
 | **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **366** | | |
+| | **376** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
@@ -104,6 +104,44 @@ every offset in both, 188 lines identical.
 
 Third consumer, third gap, and the pattern from `_assert.h` holds exactly:
 objc4 found none of these because it includes none of them.
+
+### The 367th through 376th: `kinfo_proc`, `tzhead`, and a closure found by diffing Apple
+
+`CFUtilities` wants `struct kinfo_proc` and `KERN_PROC_PID`; `CFTimeZone` wants
+`struct tzhead`. Those live in `sys/sysctl.h` and `tzfile.h`, and the closure
+around them brought `sys/proc.h`, `sys/event.h`, `sys/lock.h`, `sys/vm.h`,
+`sys/socket.h`, `netinet/in.h`, `search.h` and `spawn.h` — ten rows, all from
+the already-pinned xnu and Libc tags. Two upstream paths are worth recording
+because they are not where one would guess: Darwin's `tzfile.h` is
+`Libc:stdtime/FreeBSD/tzfile.h`, and the public `spawn.h` is
+`xnu:libsyscall/wrappers/spawn/spawn.h`, not anything under `Libc/include`.
+
+**The closure was computed by diffing Apple, not by iterating on errors.**
+Compiling the target headers against Apple's SDK with `-H` lists the 134
+headers it pulls; three of them (`sys/event.h`, `sys/lock.h`, `sys/vm.h`) were
+absent here. That is one measurement instead of a restage-per-error loop, and
+it also proves the closure is *Apple's*, not merely one that happens to compile.
+
+`struct kinfo_proc` is the reason this needed a differential rather than a
+compile check, and it is the sharpest case yet for that rule: 648 bytes of
+nested `extern_proc` and `eproc` with embedded `timeval`, `rusage`, `pcred` and
+`ucred`. A hand-written version — or a subtly different xnu revision — would
+compile clean and be wrong somewhere in the middle. `abi_probe` now baselines it
+against Apple's SDK: sizes for `kinfo_proc`/`extern_proc`/`eproc`/`tzhead`,
+offsets including `extern_proc.p_comm` at 243 and `eproc.e_ucred` at 120, and
+the `CTL_KERN`/`KERN_PROC`/`KERN_PROC_PID` constants. 212 lines identical.
+
+**`spawn.h` is staged and deliberately unimplemented.** `posix_spawn` is
+declared and defined nowhere, so a guest that calls it fails at load with a
+named undefined symbol — the same late-but-loud shape as `mach_msg`. This is
+NOT the declaration-only census shim, and it must not become a forward:
+`posix_spawnattr_t` is 8 bytes on Darwin and 336 in glibc, so forwarding
+destroys 328 bytes of guest stack and returns success
+(`docs/UNIMPLEMENTED.md#posix-spawn`).
+
+Still absent, and it needs a decision rather than a row: **`netdb.h` is not in
+xnu or Libc.** Darwin's lives in `Libinfo`, which is not one of the 11 pinned
+releases, so staging it means adding a twelfth upstream source.
 
 **No header in this tree was copied from Apple's Xcode SDK.** A staged copy of
 MacOSX15.4's `usr/include` exists at `build/sdk/` on the machine this was
@@ -485,13 +523,13 @@ failure rather than a mystery six months from now.
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **343 of 366** files: the 19 clean-room and 4 objc4 headers live in this
+> **353 of 376** files: the 19 clean-room and 4 objc4 headers live in this
 > repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
 > of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 366 headers
+> measured 2026-08-26, a restage of a clean checkout reproduces all 376 headers
 > byte-for-byte.
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on

@@ -36,6 +36,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
+#include <sys/sysctl.h>
+#include <tzfile.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include <time.h>
@@ -60,6 +62,23 @@ int main(void)
     SZ(wchar_t); SZ(time_t); SZ(off_t); SZ(ino_t); SZ(dev_t); SZ(mode_t);
     SZ(nlink_t); SZ(blkcnt_t); SZ(blksize_t); SZ(uid_t); SZ(gid_t);
     SZ(va_list);
+
+    puts("");
+    puts("== struct kinfo_proc and struct tzhead  (CFUtilities, CFTimeZone)");
+    SZ(struct kinfo_proc);
+    OFF(kinfo_proc, kp_proc); OFF(kinfo_proc, kp_eproc);
+    SZ(struct extern_proc);
+    OFF(extern_proc, p_pid);  OFF(extern_proc, p_stat);
+    OFF(extern_proc, p_comm); OFF(extern_proc, p_starttime);
+    SZ(struct eproc);
+    OFF(eproc, e_ppid); OFF(eproc, e_pgid); OFF(eproc, e_ucred);
+    SZ(struct tzhead);
+    OFF(tzhead, tzh_magic);    OFF(tzhead, tzh_version);
+    OFF(tzhead, tzh_ttisgmtcnt); OFF(tzhead, tzh_ttisstdcnt);
+    OFF(tzhead, tzh_leapcnt);  OFF(tzhead, tzh_timecnt);
+    OFF(tzhead, tzh_typecnt);  OFF(tzhead, tzh_charcnt);
+    printf("KERN_PROC_PID %d  KERN_PROC %d  CTL_KERN %d\n",
+           KERN_PROC_PID, KERN_PROC, CTL_KERN);
 
     puts("");
     puts("== struct dirent and struct statfs  (CoreFoundation's, and $INODE64-sensitive)");
