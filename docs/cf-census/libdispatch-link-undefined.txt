@@ -13,9 +13,22 @@
 # 7 -- event_epoll.c's own, and it is the ONLY TU that does not compile
 # ---------------------------------------------------------------------------
 # All seven are DEFINED in src/event/event_epoll.c (lines 257, 432 and nearby).
-# That file is blocked on a single thing: `sigaction` is neither declared in the
-# sysroot, nor is `struct sigaction` defined there, nor does libSystem export
-# it. Fix that and these seven disappear with it.
+# That file is blocked on a single thing: the FUNCTION `sigaction` is not
+# declared in the sysroot and libSystem does not export it.
+#
+# CORRECTED: `struct sigaction` DOES exist, fully defined at sys/signal.h:385.
+# I reported it missing and was wrong -- I grepped `struct sigaction {` with one
+# space where the header has two. Settled by asking the compiler instead:
+# `struct sigaction probe;` compiles clean, `sigaction(2,0,0)` does not. Caught
+# only because a control -- a function known to be declared -- ALSO came back
+# empty from the same pattern, which said the pattern was broken rather than the
+# symbol absent. A NEGATIVE GREP NEEDS A POSITIVE CONTROL BEFORE IT IS EVIDENCE.
+#
+# So the item is smaller than first reported: declare and implement the
+# function, no struct work. Note for whoever does: struct sigaction embeds a
+# `sigset_t sa_mask` BY VALUE, so the whole struct layout differs between the
+# platforms (4-byte mask vs 128), not just one field -- the translating-wrapper
+# treatment again rather than a forward. Fix it and these seven disappear too.
 #
 _dispatch_event_loop_atfork_child
 _dispatch_event_loop_leave_immediate
