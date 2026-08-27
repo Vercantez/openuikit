@@ -833,6 +833,21 @@ static void *mr_thread_trampoline(void *p)
     return s.fn(s.arg);
 }
 
+/* Prime the MAIN thread's direct-TSD array, closing the residue the trampoline
+ * cannot reach (the main thread has no trampoline).
+ *
+ * This has to live in the dylib rather than in the loader: mr_constrain_heap()
+ * in src/main.c would be the natural site by ordering, but it runs BEFORE
+ * find_darwin_root(), so libSystem is not even located yet -- the loader cannot
+ * call into a Mach-O image it has not mapped. An image initializer can, and
+ * src/init.c runs both __init_offsets and __mod_init_func forms.
+ *
+ * Runs on the main thread while the process is still single-threaded, so it
+ * cannot contend, and it is idempotent: if something already primed this
+ * thread, mr_thread_token() returns the cached token and allocates nothing. */
+__attribute__((constructor))
+static void mr_prime_main_thread_tsd(void) { (void)mr_thread_token(); }
+
 EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), void *arg)
 {
     g_pthread_t t;

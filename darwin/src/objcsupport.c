@@ -190,10 +190,10 @@ static void **dtsd_slots(void)
  *
  * The allocation is now hoisted: mr_thread_trampoline() primes this array
  * before the guest runs, so on every guest thread this is a pure TSD read.
- * RESIDUE: the main thread has no trampoline, so its FIRST lock acquisition
- * still allocates. That happens during startup while the process is still
- * single-threaded, so it cannot contend -- but it is not nothing, and it wants
- * an init hook rather than an argument.
+ * The main thread, which has no trampoline, is primed by an image constructor
+ * in libsystem.c (mr_prime_main_thread_tsd). That had to go in the dylib rather
+ * than the loader: mr_constrain_heap() runs before find_darwin_root(), so the
+ * loader cannot call into a Mach-O image it has not mapped yet.
  * ===================================================================== */
 static unsigned dtsd_token_counter;
 
