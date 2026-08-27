@@ -484,3 +484,37 @@ Patch count remains **2**, both saying "this is not a Mac".
 Nothing is verified to schedule. No semaphore, no timer, no out-of-line
 completion. And the `_4CF` main-queue question is still open and still
 unguessed.
+
+---
+
+## Appendix — authoritative sizes for the two dispatch DATA symbols
+
+Asked to settle whether a 256-byte hand-written stub for `_dispatch_main_q` and
+`_dispatch_source_type_timer` could overflow and produce heap-metadata
+corruption. **It cannot: both are well under 256 bytes.**
+
+| symbol | type | size | section | writable? |
+|---|---|---|---|---|
+| `_dispatch_main_q` | `struct dispatch_queue_s` | **128** | `__DATA_DIRTY,__data` | yes — dispatch mutates queue state |
+| `_dispatch_source_type_timer` | `struct dispatch_source_type_s` | **64** | `__DATA_CONST,__const` | **no** — read-only descriptor |
+
+Two independent methods, agreeing:
+
+* **Apple's shipped arm64 `libdispatch.dylib`** (iOS 26.1 simruntime): symbol-gap
+  to the next symbol in the same section — `_dispatch_main_q` @ `0x64dc0` →
+  `_dispatch_mgr_q` @ `0x64e40` (two queues of the same type laid out
+  consecutively), and `_dispatch_source_type_timer` @ `0x589c0` →
+  `_dispatch_source_type_timer_with_clock` @ `0x58a00`.
+* **Upstream's own assertion**: `src/queue_internal.h:697`
+  `dispatch_static_assert(sizeof(struct dispatch_queue_s) <= 128);`
+
+Symbol-gap alone is only an *upper* bound — padding or a non-adjacent next
+symbol inflates it — so it would not have been enough on its own. The static
+assert lands on the same number from a different direction, which is what makes
+128 assertable.
+
+**The measurement had to come from Apple's binary, not ours.** The consumer is
+Apple's shipped `libswift_Concurrency`, so Apple's Darwin layout is what binds.
+Our epoll/no-Mach configuration can produce a different `dispatch_queue_s`, and
+quoting our build's number would have been confidently wrong. When the question
+is what a shipped binary expects, measure the shipped binary.
