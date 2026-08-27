@@ -1090,44 +1090,30 @@
   #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_26_0
 #endif
 
-/* We do not target these, and no reached header defines them for us.  They are
- * declared so that `#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_x_y` in a
- * vendored header takes the false branch instead of failing to parse. */
-#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
-  #define __IPHONE_OS_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __IPHONE_OS_VERSION_MAX_ALLOWED
-  #define __IPHONE_OS_VERSION_MAX_ALLOWED 0
-#endif
-#ifndef __TV_OS_VERSION_MIN_REQUIRED
-  #define __TV_OS_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __TV_OS_VERSION_MAX_ALLOWED
-  #define __TV_OS_VERSION_MAX_ALLOWED 0
-#endif
-#ifndef __WATCH_OS_VERSION_MIN_REQUIRED
-  #define __WATCH_OS_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __WATCH_OS_VERSION_MAX_ALLOWED
-  #define __WATCH_OS_VERSION_MAX_ALLOWED 0
-#endif
-#ifndef __VISION_OS_VERSION_MIN_REQUIRED
-  #define __VISION_OS_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __VISION_OS_VERSION_MAX_ALLOWED
-  #define __VISION_OS_VERSION_MAX_ALLOWED 0
-#endif
-#ifndef __BRIDGE_OS_VERSION_MIN_REQUIRED
-  #define __BRIDGE_OS_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __BRIDGE_OS_VERSION_MAX_ALLOWED
-  #define __BRIDGE_OS_VERSION_MAX_ALLOWED 0
-#endif
-#ifndef __DRIVERKIT_VERSION_MIN_REQUIRED
-  #define __DRIVERKIT_VERSION_MIN_REQUIRED 0
-#endif
-#ifndef __DRIVERKIT_VERSION_MAX_ALLOWED
-  #define __DRIVERKIT_VERSION_MAX_ALLOWED 0
-#endif
+/* THE NON-macOS PLATFORM VERSIONS ARE DELIBERATELY *NOT* DEFINED HERE, and an
+ * earlier version of this file defined them to 0 -- which was worse than doing
+ * nothing in two distinct ways.
+ *
+ * The stated intent was that `#if __IPHONE_OS_VERSION_MIN_REQUIRED >=
+ * __IPHONE_x_y` should take the false branch rather than fail to parse. That
+ * intent is already satisfied: C says an identifier that survives macro
+ * expansion in `#if` is replaced by 0, so an UNDEFINED name gives the false
+ * branch by itself. The define bought nothing.
+ *
+ * What it cost:
+ *
+ *   1. `#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_x_y` -- the same test
+ *      written the other way round -- became TRUE, so a macOS target read as
+ *      the OLDEST POSSIBLE iOS rather than as "not iOS". Measured consequence:
+ *      libdispatch's queue.h concluded DISPATCH_APPLY_AUTO_AVAILABLE 0, never
+ *      defined DISPATCH_APPLY_AUTO, and apply.c failed to compile.
+ *
+ *   2. `#ifdef` / `defined()` guards -- which is the form most availability
+ *      code reaches for first -- answered YES to "are we building for iOS?".
+ *      Undefined is the only answer that is true.
+ *
+ * The general shape, worth remembering: a comment stating an intent is not
+ * evidence the mechanism achieves ONLY that intent. This one did exactly what
+ * it said and one more thing besides. */
 
 #endif /* __AVAILABILITY_VERSIONS__ */
