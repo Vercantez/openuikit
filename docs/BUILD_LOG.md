@@ -1071,3 +1071,59 @@ staged shim *and* the artifact copy, counting one file twice. **A uniform answer
 across a heterogeneous set is evidence about the instrument, not the set**, which
 is team-lead's formulation and it cost about ten seconds to apply. Corrected
 count: every one has exactly **one** provider.
+
+## 19. The loader is part of the userland, and two of my checks could not see it
+
+swift-loader-fixes corrected §16's claim that `libswiftCore` had **two
+unsatisfied imports**. It does not. `_dyld_image_path_containing_address` and
+`_dyld_program_sdk_at_least` are implemented, advertised in `libSystem.B.tbd`,
+and listed in `darwin/loader-exports.txt` — **provided by the LOADER, which in
+machorun is dyld.** Verified on three axes rather than taken on report: both in
+`loader-exports.txt`, both defined by `build/machorun`, both in the `.tbd`.
+
+**The measurement was true and the conclusion was wrong.** "2 unsatisfied,
+neither present in any machorun dylib" is a correct sentence about a set that
+excludes where the answer lives. Fourth instance today of a sweep scoped to
+"the artefacts I have" — after `check_stale` missing `libc++abi`, `gen_tbd`'s
+CHECK 4 nearly being scoped to `DYLIBS`, and my own overlap check grading four
+libraries when there were six.
+
+### What it cost, and what it could have cost
+
+Nothing here: the loader's **99** exports are **disjoint** from every dylib and
+from the shim's 34, measured. So every "single-provider" verdict was correct.
+**But it was correct by luck of what the excluded set happened to contain** —
+had one shim symbol collided with a loader export, `build_compat.sh` would have
+passed it and `check_artifacts.sh` would have called a two-provider race
+single-provider.
+
+Both now fold the loader in. `nm -g` on an ELF file, not the Mach-O reader —
+different format, different tool, which is why it is a separate step rather than
+another entry in the dylib loop. The denominator reads **7** where it read 6:
+
+```
+   libSystem.B.dylib   608     libc++abi.dylib   367     libswiftCore.dylib  30723
+   libc++.1.dylib      105     libobjc.A.dylib   420     libquartz.dylib       507
+   machorun(loader)     99   <- the dyld surface, in no dylib at all
+```
+
+Negative control: a shim defining `dyld_program_sdk_at_least` is **REFUSED**,
+naming `machorun(loader)` as the owner.
+
+### Three inert changes in a row while fixing this, which is the real lesson
+
+1. The loader block **did not apply at all** — I ran a `str.replace` without
+   asserting the anchor, it matched nothing, and only the variable assignment
+   landed. The build still passed, reporting 6 libraries.
+2. Re-applied with the anchor asserted, it was **still inert in Docker**:
+   `LOADER` defaults under `$W` (=`/b` in the container) while machorun is
+   mounted at `/work`, so the block skipped silently and PASSed.
+3. Once running, the refusal **named no owner** — the attribution loop ran the
+   Mach-O reader over an ELF file and got nothing.
+
+Each one produced a green build. `scripts/apply_patches.py` has asserted anchors
+for exactly this reason and I did not extend the same courtesy to a shell edit,
+which is how a patch that matches nothing gets committed. **The only reason all
+three surfaced is that I checked for a specific string in the output — the
+`machorun(loader)` row — rather than for a zero exit status.** A green build was
+the wrong evidence three times in a row.

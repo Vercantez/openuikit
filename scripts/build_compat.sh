@@ -28,6 +28,11 @@ TC=${TC:-/opt/swift624/usr}
 SRC=${SRC:-$W/compat}
 # machorun's built userland -- the thing we must not collide with.
 MRLIB=${MRLIB:-$W/machorun/darwin/usr/lib}
+# The loader counts as userland. In machorun the loader IS dyld, so its 99
+# exports are the dyld surface and live in no dylib. A shim symbol colliding
+# with one of those is the same defect as colliding with libSystem's, and this
+# assertion could not see it until 2026-08-27.
+LOADER=${LOADER:-$W/machorun/build/machorun}
 OUT=${OUT:-$MRLIB/libswiftcompat.dylib}
 NM=${NM:-/usr/lib/llvm-18/bin/llvm-nm}
 LLD_BIN=${LLD_BIN:-/usr/lib/llvm-18/bin}
@@ -134,6 +139,23 @@ while IFS= read -r f; do
 done < <(find "$MRLIB" -name '*.dylib' 2>/dev/null | sort)
 sort -u "$tmp/userland.raw" 2>/dev/null > "$tmp/userland.txt" || true
 
+# Fold the LOADER's exports into the userland set. In machorun the loader IS
+# dyld, so the whole dyld surface lives in build/machorun and in no dylib at
+# all; a shim symbol colliding with one of those is the same defect as one
+# colliding with libSystem's. `nm -g` on an ELF file, not the Mach-O reader
+# above -- different format, different tool, which is why it is a separate step.
+loadn=0
+if [ -f "$LOADER" ]; then
+  nm -g "$LOADER" 2>/dev/null | awk '$2 ~ /^[TDBRW]$/ {print "_"$3}' | sort -u > "$tmp/loader.txt" || : > "$tmp/loader.txt"
+  loadn=$(wc -l < "$tmp/loader.txt" | tr -d ' ')
+fi
+if [ "${loadn:-0}" -gt 0 ]; then
+  printf '%s\t%s\t%s\n' "machorun(loader)" "$loadn" "$LOADER" >> "$tmp/examined.txt"
+  sort -u "$tmp/userland.txt" "$tmp/loader.txt" > "$tmp/u2.txt" && mv "$tmp/u2.txt" "$tmp/userland.txt"
+else
+  echo "note: no loader symbols read from $LOADER -- the dyld surface is NOT in this comparison" >&2
+fi
+
 examined=$(wc -l < "$tmp/examined.txt" | tr -d ' ')
 
 # REFUSAL 1: nothing to grade against. A vacuous pass is worse than no check.
@@ -175,9 +197,15 @@ if [ -n "$overlap" ]; then
   echo "BUILD REFUSED: libswiftcompat defines $(printf '%s\n' "$overlap" | wc -l) symbol(s) machorun's userland already defines." >&2
   echo >&2
   printf '%s\n' "$overlap" | while read -r s; do
+    # The loader row is an ELF file; the Mach-O reader returns nothing for it,
+    # which produced a refusal that named no owner at all. Read it with the
+    # already-extracted list instead of re-running the wrong tool on it.
     where=$(while IFS=$'\t' read -r lib _ path; do
-              "$NM" --defined-only --extern-only "$path" 2>/dev/null \
-                | awk -v s="$s" -v l="$lib" '$NF==s {print l}'
+              case "$lib" in
+                "machorun(loader)") grep -qx "$s" "$tmp/loader.txt" 2>/dev/null && echo "$lib" ;;
+                *) "$NM" --defined-only --extern-only "$path" 2>/dev/null \
+                     | awk -v s="$s" -v l="$lib" '$NF==s {print l}' ;;
+              esac
             done < "$tmp/examined.txt" | tr '\n' ' ')
     printf '    %-52s already in: %s\n' "$s" "$where" >&2
   done

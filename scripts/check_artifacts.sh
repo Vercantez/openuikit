@@ -38,6 +38,17 @@ set -uo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MRLIB=${MRLIB:-$HOME/machorun/darwin/usr/lib}
+# THE LOADER IS PART OF THE PROVIDER SET, and leaving it out is a scope bug that
+# passes. In machorun the loader IS dyld, so the entire dyld surface --
+# _dyld_image_path_containing_address, _dyld_program_sdk_at_least and 97 others
+# -- is defined by build/machorun and by no dylib at all. A sweep over "the
+# dylibs I have" reports truthfully about a set that excludes where the answer
+# lives; I concluded "2 symbols unsatisfied" from exactly that, and both were
+# implemented. Measured 2026-08-27: the loader's 99 exports are disjoint from
+# every dylib and from the shim, so including it changes no current verdict --
+# which is the point. Correctness that depends on the excluded set happening to
+# be empty is luck.
+LOADER=${LOADER:-$HOME/machorun/build/machorun}
 NM=${NM:-nm}
 command -v "$NM" >/dev/null 2>&1 || { echo "no symbol reader ($NM)" >&2; exit 2; }
 
@@ -55,7 +66,14 @@ echo "staging directories discovered: $ndirs"
 mrlibs=$(find "$MRLIB" -name '*.dylib' 2>/dev/null | grep -v libswiftcompat | grep -v libswiftCore | sort)
 nmr=$(printf '%s\n' "$mrlibs" | grep -c .)
 [ "$nmr" -gt 0 ] || { echo "REFUSING TO GRADE: no machorun dylibs under $MRLIB." >&2; exit 2; }
-echo "machorun userland images: $nmr"
+# Loader symbol table, extracted once. nm on the ELF loader, not a dylib.
+loader_syms=$(mktemp); trap 'rm -f "$loader_syms"' EXIT
+if [ -f "$LOADER" ]; then
+  nm -g "$LOADER" 2>/dev/null | awk '$2 ~ /^[TDBRW]$/ {print "_"$3}' | sort -u > "$loader_syms"
+fi
+nload=$(wc -l < "$loader_syms" | tr -d ' ')
+[ "$nload" -gt 0 ] || echo "   note: loader at $LOADER unreadable; dyld-surface symbols will look unprovided" >&2
+echo "machorun userland images: $nmr   loader exports: $nload"
 echo
 
 fail=0
@@ -93,6 +111,7 @@ for d in $dirs; do
   while read -r s; do
     [ -n "$s" ] || continue
     provs=$(for f in $mrlibs "$S"; do "$NM" -jUg "$f" 2>/dev/null | grep -qx "$s" && basename "$f" .dylib; done | tr '\n' ' ')
+    grep -qx "$s" "$loader_syms" 2>/dev/null && provs="$provs machorun(loader)"
     c=$(echo $provs | wc -w | tr -d ' ')
     case $c in 0) none="$none $s";; 1) one=$((one+1));; *) many="$many $s($provs)";; esac
   done < /tmp/ca_flat.$$
@@ -117,6 +136,7 @@ for d in $dirs; do
     while read -r s; do
       [ -n "$s" ] || continue
       cp2=$(for f in $mrlibs "$S" "$L"; do "$NM" -jUg "$f" 2>/dev/null | grep -qx "$s" && echo x; done | wc -l | tr -d ' ')
+    grep -qx "$s" "$loader_syms" 2>/dev/null && cp2=$((cp2+1))
       [ "$cp2" = 1 ] || cbad="$cbad $s($cp2)"
     done < /tmp/ca_cflat.$$
     rm -f /tmp/ca_cflat.$$

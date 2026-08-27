@@ -57,8 +57,13 @@ docker exec "$C" bash -c '
   cp -a /work/build/sdk/MacOSX.sdk/usr/include/c++/v1 /b/sdk/usr/include/c++/v1
 '
 
+# LOADER must be passed explicitly: it defaults to $W/machorun/build/machorun,
+# and W is /b in here while machorun is mounted at /work. Without this the
+# loader block is skipped silently and the assertion grades a set missing the
+# entire dyld surface -- an inert guard that reports PASS.
 docker exec -e W=/b -e SDK=/b/sdk -e SRC=/src/sdk/compat \
-            -e MRLIB=/work/darwin/usr/lib -e OUT=/b/libswiftcompat.dylib \
+            -e MRLIB=/work/darwin/usr/lib -e LOADER=/work/build/machorun \
+            -e OUT=/b/libswiftcompat.dylib \
             "$C" bash /src/scripts/build_compat.sh
 
 mkdir -p "$(dirname "$OUT")"
