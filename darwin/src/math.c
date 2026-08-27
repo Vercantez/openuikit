@@ -99,6 +99,34 @@ extern int    glibc_ilogb(double)            GLIBCSYM(ilogb);
 extern void   glibc_sincos(double, double *, double *) GLIBCSYM(sincos);
 extern void   glibc_sincosf(float, float *, float *)   GLIBCSYM(sincosf);
 
+/* __exp10 IS FORWARDED TO GLIBC'S exp10 RATHER THAN COMPUTED, and the reason
+ * is a bug this project has already made once.
+ *
+ * Written the obvious way -- `return pow(10.0, x);` -- clang RECOGNISES THE
+ * exp10 IDIOM and tail-calls __exp10, which is the function being defined. It
+ * compiled to a single unconditional branch to itself:
+ *
+ *     78: 14000000    b   0x78
+ *
+ * with no warning, and it produced ZERO undefined symbols -- so the symbol
+ * table looked HEALTHIER than the correct version, which references pow. That
+ * is in the false-green catalogue, and std::__sort later did the same thing for
+ * the same reason.
+ *
+ * glibc's libm exports a real exp10 (checked with nm -D: two versioned
+ * symbols), so there is nothing to compute here and no idiom to trip over. A
+ * forward is not a workaround -- Darwin's __exp10 and POSIX exp10 are the same
+ * function -- and it is also the ONLY form that structurally cannot recurse,
+ * because the callee is a different symbol in a different library.
+ *
+ * VERIFIED BY DISASSEMBLY rather than by the symbol table, because the symbol
+ * table is exactly what lied last time. */
+extern double glibc_exp10(double)            GLIBCSYM(exp10);
+extern float  glibc_exp10f(float)            GLIBCSYM(exp10f);
+
+EXPORT double __exp10(double x)  { return glibc_exp10(x); }
+EXPORT float  __exp10f(float x)  { return glibc_exp10f(x); }
+
 /* ------------------------------------------------------------ the exports */
 /* THE `l` FORMS MUST NOT REACH glibc's `l` FORMS, and the reason is an ABI
  * difference rather than a naming one. MEASURED: `long double` is 8 bytes on

@@ -391,6 +391,15 @@ fi
 # the code that introduced it. The environ WALK is the half that would fail.
 want environ             && build environ             "$CHAINED_TARGET" environ             environ.c --
 
+# __exp10 and the BSD string forms. __exp10 is in the false-green catalogue as
+# the function that compiled to an unconditional branch to ITSELF when written
+# as pow(10.0, x) -- clang recognises the idiom and tail-calls the function
+# being defined -- and produced ZERO undefined symbols, so the symbol table
+# looked healthier than the correct version. Every line of this fixture
+# produces a VALUE, because a symbol that exists and links is precisely the
+# reassuring signal that hid it.
+want exp10_strings       && build exp10_strings       "$CHAINED_TARGET" exp10_strings       exp10_strings.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

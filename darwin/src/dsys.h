@@ -81,6 +81,9 @@ extern void  *glibc_bsearch(const void *, const void *, size_t, size_t,
                             int (*)(const void *, const void *)) GLIBCSYM(bsearch);
 extern char  *glibc_strncat(char *, const char *, size_t)   GLIBCSYM(strncat);
 extern size_t glibc_strnlen(const char *, size_t)           GLIBCSYM(strnlen);
+extern int    glibc_strncasecmp(const char *, const char *, size_t) GLIBCSYM(strncasecmp);
+extern char  *glibc_strtok(char *, const char *)            GLIBCSYM(strtok);
+extern char  *glibc_strtok_r(char *, const char *, char **) GLIBCSYM(strtok_r);
 extern int    glibc_dlclose(void *)                         GLIBCSYM(dlclose);
 /* DATA, not functions: glibc's tzset() fills these and a guest reads them.
  * Forwarding a data symbol works the same way -- machorun resolves the

@@ -931,6 +931,60 @@ EXPORT const void *_dyld_get_image_header(unsigned i)     { return mr_dyld_image
 EXPORT const char *_dyld_get_image_name(unsigned i)       { return mr_dyld_image_name(i); }
 EXPORT long        _dyld_get_image_vmaddr_slide(unsigned i) { return mr_dyld_image_slide(i); }
 
+/* ------------------------------------------- the rest of the string family */
+
+/* Plain forwards, and glibc really does export all three -- checked with
+ * nm -D rather than assumed, after pthread_atfork turned out to have a header
+ * declaration and no dynamic symbol. strncasecmp uses the C locale in its
+ * non-_l form on both systems, so there is no locale_t crossing here; the _l
+ * variants are a separate question and deliberately not answered yet. */
+EXPORT int   strncasecmp(const char *a, const char *b, size_t n) { return glibc_strncasecmp(a, b, n); }
+EXPORT char *strtok(char *s, const char *sep)                    { return glibc_strtok(s, sep); }
+EXPORT char *strtok_r(char *s, const char *sep, char **save)     { return glibc_strtok_r(s, sep, save); }
+
+/* strnstr(3) is BSD-only -- glibc has strstr but not the length-bounded form,
+ * confirmed absent from libc.so.6 -- so it is implemented rather than bound.
+ *
+ * The contract detail worth getting right: `len` bounds the HAYSTACK, not the
+ * needle, and the haystack need not be NUL-terminated within it. A version
+ * written as strstr-with-a-length-check would read past `len` looking for the
+ * terminator, which is the whole reason a caller reaches for the n form. */
+EXPORT char *strnstr(const char *haystack, const char *needle, size_t len)
+{
+    size_t nlen = glibc_strlen(needle);
+    size_t i;
+
+    if (nlen == 0) return (char *)haystack;
+    if (nlen > len) return 0;
+    /* <= because a match may end exactly at the bound. */
+    for (i = 0; i + nlen <= len; i++) {
+        if (haystack[i] == 0) return 0;        /* the haystack ended first */
+        if (glibc_strncmp(haystack + i, needle, nlen) == 0)
+            return (char *)(haystack + i);
+    }
+    return 0;
+}
+
+/* flsl(3): find LAST set bit, 1-based, 0 for 0. glibc has ffsl -- find FIRST
+ * -- and not this, which is a pairing worth noticing rather than a coincidence:
+ * the two names differ by one letter and their answers differ by the whole
+ * width of the word. Binding flsl to ffsl would compile, link, and return a
+ * plausible small number for every input.
+ *
+ * __builtin_clzl is undefined for 0, so the zero case is handled before it
+ * rather than trusted to it. */
+EXPORT int flsl(long mask)
+{
+    if (mask == 0) return 0;
+    return (int)(sizeof(long) * 8 - (unsigned)__builtin_clzl((unsigned long)mask));
+}
+
+EXPORT int fls(int mask)
+{
+    if (mask == 0) return 0;
+    return (int)(sizeof(int) * 8 - (unsigned)__builtin_clz((unsigned)mask));
+}
+
 /* The _FORTIFY_SOURCE expansion of strlcpy, which libdispatch's init.c reaches
  * through <string.h> without ever naming it. There is nothing to forward to --
  * glibc has neither strlcpy's semantics nor Apple's __*_chk family -- so this
