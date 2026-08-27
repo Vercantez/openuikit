@@ -275,35 +275,10 @@ fi
 #
 # Depth-limited for the same reason src/resolve.c's lookup_in is: a re-export
 # cycle would otherwise not terminate, and four is deeper than any real chain.
-# ONE RE-EXPORT IS DELIBERATELY NOT ADVERTISED, and the asymmetry is the point.
-#
-# libSystem.B.dylib re-exports libc++abi.dylib. That is a DEVIATION from Darwin
-# (macOS does not), added so that ~/swiftcore-macho's source-built libswiftCore
-# -- which carries a stale two-level bind for ___gxx_personality_v0 naming
-# libSystem -- still loads. See docs/UNIMPLEMENTED.md#unwind-compact.
-#
-# It must not go in the .tbd. MEASURED: with it advertised, a Linux-built C++
-# guest linking `-lSystem -lobjc -lc++` binds ___cxa_throw and
-# ___gxx_personality_v0 "(from libSystem)", because -lSystem comes first and now
-# vends them. Apple's answer, and the one Apple's own shipped libswiftCore
-# records, is "(from libc++)". So advertising it does not merely describe the
-# deviation -- it PROPAGATES it into every new binary, and each of those becomes
-# another artifact pinning libSystem in place.
-#
-# A .tbd is what we PROMISE, not merely what a dylib happens to contain, and we
-# do not promise to keep re-exporting libc++abi from libSystem. Promising it
-# would make a temporary compatibility shim permanent by making binaries depend
-# on it. The runtime re-export stays until libswiftCore is relinked; the promise
-# never existed. Delete both together.
-tbd_skips_reexport() { # <re-exporter basename> <re-exported basename>
-    [ "$1" = "libSystem.B.dylib" ] && [ "$2" = "libc++abi.dylib" ]
-}
-
 reexport_closure() { # reexport_closure <dylib-path> <depth>
     local f="$1" d="${2:-0}" name base
     [ "$d" -lt 4 ] || return 0
     for name in $(reexports_of "$f"); do
-        tbd_skips_reexport "$(basename "$f")" "$(basename "$name")" && continue
         base="$DYLIB/$(basename "$name")"
         [ -f "$base" ] || {
             echo "   note: $(basename "$f") re-exports $name, which is not in $DYLIB;" >&2
