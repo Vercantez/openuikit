@@ -1,6 +1,44 @@
 # libdispatch's REAL undefined-symbol set, from an actual link
 #
 # ###########################################################################
+# CURRENT AS OF 2026-08-27 13:07 UTC libSystem (machorun 559356b).
+#
+#   compile   25 of 25 TUs
+#   link      17 undefined, no truncation (-Wl,--error-limit=0 verified)
+#             9 loader-resolved _glibc_*, 8 GENUINE GAPS
+#
+# machorun-isamask landed 12 in one pass (53904cc) -- the 11 from the list
+# below plus pthread_attr_init, "because destroy without init is a strange
+# thing to ship". All 12 verified present in the BUILT dylib, not just master.
+#
+# THE 8 THAT REMAIN:
+#     syscall                        the futex call, see THE FUTEX PROBLEM
+#     pthread_exit
+#     pthread_setschedparam
+#     pthread_attr_setdetachstate
+#     pthread_attr_setstacksize
+#     pthread_attr_getschedparam     deliberately not done: OUT direction, and
+#                                    struct sched_param is 8 bytes vs 4
+#     pthread_attr_getschedpolicy    deliberately not done: same, plus
+#     pthread_attr_setschedpolicy    SCHED_OTHER is 1 on Darwin and glibc's 1
+#                                    is SCHED_FIFO, so a forward silently makes
+#                                    threads real-time
+#
+# CORRECTION TO MY OWN madvise NOTE BELOW, measured by machorun-isamask and
+# then re-measured here: LINUX'S MADV_REMOVE IS 9, NOT 5. Linux 5 is
+# UNASSIGNED, so forwarding Darwin's MADV_FREE (5) returns EINVAL -- loud, not
+# destructive. I wrote that it "punches a hole in the underlying object", which
+# was over-warning: right symptom, mechanism one number off. Confirmed with
+# _Static_assert against glibc: MADV_REMOVE==9, MADV_FREE==8.
+#
+# The complementary error is worth recording next to it. madvise was on the
+# SAFE-to-forward pile because advice 0..4 agree -- which is true, and
+# libdispatch calls madvise with exactly one advice, MADV_FREE, the first value
+# outside that range. PROBING THE COMMON RANGE AND GENERALISING MISSES THE ONLY
+# CASE THE CONSUMER EXERCISES.
+# ###########################################################################
+#
+# ###########################################################################
 # CORRECTION. THIS INVALIDATES EVERY COUNT BELOW THAT SAYS 20.
 #
 # THE TRUE COUNT IS 29. THE NUMBER 20 WAS THE LINKER'S ERROR LIMIT.
