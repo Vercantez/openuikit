@@ -177,6 +177,10 @@ echo "== C targets (CPortableIO, CSTBTrueType)"
     -o "$OUT/cportableio.o" "$UIKIT/Sources/CPortableIO/io.c"
 "${CC[@]}" -I"$UIKIT/Sources/CSTBTrueType/include" -c \
     -o "$OUT/cstbtruetype.o" "$UIKIT/Sources/CSTBTrueType/stb_impl.c"
+# CHostClock: the two primitives a run loop needs from its host, and the only
+# ones -- OpenUIKit owns no clock by design (UIWindow.tick takes the time from
+# whoever drives it).
+"${CC[@]}" -I"$W/full/hostclock/include" -c -o "$OUT/hostclock.o" "$W/full/hostclock/hostclock.c"
 
 # ~/uikit has no modulemap for these two (SPM generates one); write them into a
 # private include dir so ~/uikit stays untouched.
@@ -190,6 +194,7 @@ cat >"$OUT/inc/CSTBTrueType/module.modulemap" <<'EOF'
 module CSTBTrueType { header "stb_truetype.h" export * }
 EOF
 CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
+      -Xcc -I"$W/full/hostclock/include"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
 
 # ---- OpenCoreGraphics ------------------------------------------------------
@@ -235,7 +240,7 @@ echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/mai
 "${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
-    "$W/full/driver/main.swift"
+    "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" "$W/full/driver/main.swift"
 
 # ---- link ------------------------------------------------------------------
 # swiftcore-FIRST: the staged libSystem.tbd still advertises swift_*, so a
@@ -254,6 +259,6 @@ echo "== link"
     -o "$OUT/render_full" \
     "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/uikitshim.o" "$OUT/foundation.o" \
     "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
-    "$OUT/cportableio.o" "$OUT/cstbtruetype.o"
+    "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
 
 echo "== done"; ls -l "$OUT/render_full"

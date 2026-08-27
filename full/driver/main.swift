@@ -187,6 +187,12 @@ func renderRealApp(_ outdir: String, assets: String) {
 }
 
 let args = CommandLine.arguments
+if args.count >= 2, args[1] == "runloop" {
+    warnToStderr("[render_full] run-loop self-test (wall clock vs synthetic clock)")
+    let ok = MainActor.assumeIsolated { runLoopSelfTest() }
+    warnToStderr(ok ? "[render_full] RUN LOOP OK" : "[render_full] RUN LOOP FAILED")
+    cpio_exit(ok ? 0 : 1)
+}
 if args.count >= 3, args[1] == "realapp" {
     let assets = args.count >= 4 ? args[3] : "/uikit/fixtures/realapp/assets"
     MainActor.assumeIsolated { renderRealApp(args[2], assets: assets) }
