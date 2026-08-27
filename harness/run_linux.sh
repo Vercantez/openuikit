@@ -47,6 +47,10 @@ selected() {
 
 mkdir -p "$OUT_DIR"
 : > "$STATUS_FILE"
+# A fingerprint left by the PREVIOUS run would be read as this one's if this
+# one dies before writing its own -- the stale-artifact shape, one directory
+# over. Remove it before anything can produce a verdict from it.
+rm -f "$OUT_DIR/.fingerprint"
 
 # skip_all <reason>: record a machine-readable reason so difftest.sh can print
 # it once instead of repeating it on every row.
@@ -110,15 +114,27 @@ if [ ! -x "$LOADER" ]; then
 fi
 LOADER="$(cd "$(dirname "$LOADER")" && pwd)/$(basename "$LOADER")"
 
+# THE MEASUREMENT WINDOW IS BRACKETED, AND IT STARTS AFTER THE BUILD.
+# The build legitimately changes the loader -- that is what it is for -- so
+# fingerprinting from the top of this script would flag every ordinary run.
+# What must not change is the artefact set BETWEEN the last build step and the
+# last fixture, because that is the interval the scoreboard describes.
+. /work/harness/common.sh
+OUT=/work/tests/actual/linux
+FP_BEFORE="$(gate_fingerprint)"
+
 cd /work/tests/bin
 export LC_ALL=C LANG=C TZ=UTC
-OUT=/work/tests/actual/linux
 for id in $FIXTURE_IDS; do
     [ -f "$id" ] || { echo "127" > "$OUT/$id.exit"; : > "$OUT/$id.stdout"; echo "no such fixture" > "$OUT/$id.stderr"; continue; }
     rc=0
     timeout -k 2 20 "$LOADER" "./$id" > "$OUT/$id.stdout" 2> "$OUT/$id.stderr" || rc=$?
     echo "$rc" > "$OUT/$id.exit"
 done
+
+# Recorded rather than judged here: difftest.sh owns the verdict, and a run
+# whose subject moved must not be able to print a scoreboard at all.
+printf '%s\t%s\n' "$FP_BEFORE" "$(gate_fingerprint)" > "$OUT/.fingerprint"
 echo "RAN"
 INNER
 )"

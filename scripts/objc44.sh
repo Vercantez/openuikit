@@ -38,6 +38,11 @@ LOADER="${MACHORUN_LOADER:-$ROOT/build/machorun}"
     exit 2; }
 
 [ -x "$LOADER" ] || { echo "objc44: no loader at $LOADER (scripts/build.sh loader)" >&2; exit 1; }
+
+# The same stability bracket difftest.sh uses: this gate takes minutes and the
+# tree it measures is shared. See harness/common.sh#gate_check_stable.
+. "$ROOT/harness/common.sh"
+GATE_FP_BEFORE="$(gate_fingerprint)"
 [ -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ] || {
     echo "objc44: darwin/usr/lib/libobjc.A.dylib is missing." >&2
     echo "        Build it with scripts/build_objc4.sh (needs a macOS SDK)." >&2
@@ -79,6 +84,10 @@ for f in "$D"/*.txt; do
 done
 
 echo "----------------------------------------------------------------------"
+# BEFORE the score, not after: a number printed and then retracted is a number
+# someone has already read.
+gate_check_stable "$GATE_FP_BEFORE" "$(gate_fingerprint)" "loader and darwin/ dylibs" || exit 2
+printf 'subject: build %s\n' "$GATE_FP_BEFORE"
 printf 'objc4 differential corpus under machorun: %d/%d PASS\n' $pass $((pass+fail))
 if [ ${#FAILED[@]} -gt 0 ]; then
     echo

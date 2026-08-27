@@ -1098,9 +1098,51 @@ sides, exit 0 / 0, in both link orders.
    `BASELINE-DRIFT`, and the affected fixture can then never be scored `PASS`
    in that run. Re-recording is a deliberate, separate, committable act.
 
-Verdicts: `PASS` `FAIL` `XFAIL` `XPASS` `SKIPPED` `NO-ORACLE` `BASELINE-DRIFT`.
-`XPASS` matters — it means a documented wall has fallen and the manifest is now
-lying.
+5. **The subject has to hold still for the whole run, and a run whose subject
+   moved is VOID rather than reported.** `build/` and `darwin/usr/` are shared
+   and master is checked out in the main repo, so another agent building there
+   swaps the loader out mid-gate. `check_stale.sh` answers *"was this artefact
+   built from these sources"* and **cannot** answer *"was it the same artefact
+   throughout"* — different questions. Each gate now fingerprints the loader and
+   every `darwin/usr/lib` dylib **after the build and again after the last
+   fixture**, and refuses if they differ. It is detection, not coordination:
+   there is no lock, and the goal is that an invalidated run says so.
+
+Verdicts: `PASS` `FAIL` `XFAIL` `XPASS` `SKIPPED` `NO-ORACLE` `BASELINE-DRIFT`,
+plus `RUN VOID` which is not a verdict at all — it exits 2 and prints **no
+table**, because a scoreboard printed with a warning above it leaves numbers on
+screen that someone will quote. `XPASS` matters — it means a documented wall has
+fallen and the manifest is now lying.
+
+**Why VOID rather than a warning, measured rather than argued.** A real race was
+staged: `run_linux.sh` was started, and the moment the fixtures began a byte was
+appended to `build/machorun` from the host. A trailing byte does not affect an
+ELF's execution, so **every fixture still passed and the run reported
+`pass 45  fail 0  xfail 1  drift 0`** — a flawless scoreboard describing two
+different loaders. With the bracket the same recorded run exits 2 and prints
+nothing. The failure mode is not that a raced run looks broken; it is that a
+raced run looks *perfect*.
+
+**Each gate prints its subject** — `subject: HEAD d5a0257 build 11203927dc5f` —
+so a number quoted later names the tree it came from. `objc44.sh` and
+`quartz_pixel.sh` reporting the *same* build digest is a free cross-check that
+neither could give alone.
+
+**A concurrent rebuild of UNCHANGED sources must not void a run, and making
+that true required a build fix.** The Darwin dylibs were already
+byte-deterministic (measured: two rebuilds of `libSystem.B.dylib` are
+md5-identical). **The loader was not** — two builds of identical sources
+differed in exactly **5 bytes**, with identical GNU build IDs. Cause: `tlv_asm.S`
+was on the same command line as the `.c` files, so gcc assembled it through a
+temporary `/tmp/ccXXXXXX.s` and, under `-g`, the assembler recorded that temp
+*name* in `.debug_line`. It is now assembled to a named object first, and the
+loader is reproducible. Without that, every concurrent `build.sh loader` would
+have voided a run for no reason — **a gate that cries wolf is a gate people stop
+reading**, and this check would have earned that within a day.
+
+**`difftest.sh` also brackets `git HEAD`, and that is a second question rather
+than the same one twice.** The binaries can be byte-identical across a branch
+switch while `tests/expected/` — the baselines being graded against — is not.
 
 ### …and the same four, for the drawing fixtures
 

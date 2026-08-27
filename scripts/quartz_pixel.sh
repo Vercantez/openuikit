@@ -138,6 +138,9 @@ run_linux() {
     # read-only one wins for that subtree. This is the same kernel-enforced
     # guarantee harness/run_linux.sh gives, and it is what makes "the Linux
     # side cannot rewrite a baseline" a fact rather than a policy.
+    # A fingerprint from the previous run would be read as this one's if the
+    # container dies before writing its own. Same hazard as run_linux.sh.
+    rm -f "$ACT/.fingerprint"
     docker run --rm -i --name "$cname" --platform linux/arm64 \
         -e "MR_IDS=$IDS" -e "MR_OBJC=$WANT_OBJC" \
         -v "$ROOT:/work" -v "$ROOT/tests/expected:/work/tests/expected:ro" \
@@ -152,6 +155,12 @@ if [ "$MR_OBJC" = 1 ]; then
     bash scripts/build_objc4.sh   > "$L/.objc4.log" 2>&1
 fi
 bash scripts/build_quartz.sh      > "$L/.quartz.log" 2>&1
+# THE BRACKET STARTS HERE, AFTER THE BUILD. Placing it at the top of the script
+# was tried and is wrong: this gate builds the loader itself, so the artefacts
+# change on every ordinary run and the check fired every time. A gate that cries
+# wolf is a gate people stop reading -- caught by running it, not by review.
+. /work/harness/common.sh
+FP_BEFORE="$(gate_fingerprint)"
 cd "$L/linux"
 export LC_ALL=C LANG=C TZ=UTC
 for id in $MR_IDS; do
@@ -160,6 +169,7 @@ for id in $MR_IDS; do
         > "$id.stdout" 2> "$id.stderr" || rc=$?
     echo $rc > "$id.exit"
 done
+printf '%s\t%s\n' "$FP_BEFORE" "$(gate_fingerprint)" > "$L/.fingerprint"
 INNER
     local drc=$?
     if [ $drc -ne 0 ]; then
@@ -323,7 +333,14 @@ both|linux)
         fi
     done
 
-    printf '\n%s== scoreboard%s  pass %d  fail %d  baseline-drift %d\n' \
+    if [ -f "$ACT/.fingerprint" ]; then
+        gate_check_stable "$(cut -f1 "$ACT/.fingerprint")" \
+                          "$(cut -f2 "$ACT/.fingerprint")" \
+                          "loader and darwin/ dylibs" || exit 2
+        printf '\n%ssubject%s  build %s\n' "$C_DIM" "$C_RESET" \
+            "$(cut -f1 "$ACT/.fingerprint")"
+    fi
+    printf '%s== scoreboard%s  pass %d  fail %d  baseline-drift %d\n' \
         "$C_BLD" "$C_RESET" "$npass" "$nfail" "$ndrift"
     ;;
 esac

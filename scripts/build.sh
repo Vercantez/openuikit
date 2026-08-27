@@ -67,6 +67,19 @@ mkdir -p "$BUILD"
 
 build_loader() {
     echo "== loader: $CC $CFLAGS"
+    # THE .S IS ASSEMBLED SEPARATELY, TO A NAMED OBJECT, AND THAT IS WHAT MAKES
+    # THIS BUILD REPRODUCIBLE. Passing tlv_asm.S on the same line as the .c
+    # files made two builds of identical sources differ in exactly 5 bytes:
+    # gcc assembles a .S through a temporary /tmp/ccXXXXXX.s, and with -g the
+    # assembler records that temp NAME in .debug_line. The GNU build IDs were
+    # identical, so the binaries were semantically the same and textually not.
+    #
+    # It matters because the harness now fingerprints this file to detect a
+    # loader swapped out from under a running gate (harness/common.sh). A
+    # binary that differs on every rebuild would void runs for no reason, and
+    # a gate that cries wolf is a gate people stop reading.
+    # shellcheck disable=SC2086
+    $CC $CFLAGS -c -o "$BUILD/tlv_asm.o" "$ROOT"/src/tlv_asm.S
     # shellcheck disable=SC2086
     $CC $CFLAGS -o "$BUILD/machorun" \
         "$ROOT"/src/util.c \
@@ -77,7 +90,7 @@ build_loader() {
         "$ROOT"/src/fixups_chained.c \
         "$ROOT"/src/fixups_classic.c \
         "$ROOT"/src/tlv.c \
-        "$ROOT"/src/tlv_asm.S \
+        "$BUILD/tlv_asm.o" \
         "$ROOT"/src/init.c \
         "$ROOT"/src/objc_notify.c \
         "$ROOT"/src/crash.c \

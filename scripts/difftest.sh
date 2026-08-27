@@ -48,6 +48,13 @@ MAC_DIR="$ACTUAL_DIR/macos"
 LNX_DIR="$ACTUAL_DIR/linux"
 DRIFTED=""
 
+# Taken before ANY work, and compared after all of it. See the check further
+# down for why the tree moving mid-run is a real event here rather than a
+# hypothetical one.
+HEAD_BEFORE=""
+git -C "$ROOT" rev-parse --short HEAD >/dev/null 2>&1 &&
+    HEAD_BEFORE="$(git -C "$ROOT" rev-parse --short HEAD)"
+
 # ------------------------------------------------------------ oracle trust
 # Baselines are only meaningful if a Darwin machine produced them. This is the
 # check that makes the numbers trustworthy; without it a stray run on Linux
@@ -86,6 +93,38 @@ else
     LINUX_SKIP_REASON="harness/run_linux.sh has not produced any results"
 fi
 
+# ------------------------------------------- did the subject hold still?
+#
+# REFUSES BEFORE PRINTING ANYTHING, which is the whole design. A scoreboard
+# assembled from two different loaders looks exactly like one assembled from
+# one, so there is no verdict worth showing and no partial result worth
+# salvaging -- printing the table with a warning above it would leave numbers on
+# the screen that someone will quote. See harness/common.sh#gate_check_stable.
+FP_LINE=""
+if [ -z "$LINUX_SKIP_REASON" ] && [ -f "$LNX_DIR/.fingerprint" ]; then
+    fp_before="$(cut -f1 "$LNX_DIR/.fingerprint")"
+    fp_after="$(cut -f2 "$LNX_DIR/.fingerprint")"
+    gate_check_stable "$fp_before" "$fp_after" "loader and darwin/ dylibs" || exit 2
+    FP_LINE="build $fp_before"
+elif [ -z "$LINUX_SKIP_REASON" ]; then
+    # The Linux side says it ran but recorded no fingerprint. That is a harness
+    # older than this check, not a clean run -- report it as unknown rather than
+    # letting a missing file read as agreement.
+    FP_LINE="build unrecorded (harness predates the stability check)"
+fi
+
+# THE SOURCES MUST ALSO HOLD STILL, and this is a second question rather than
+# the same one twice. The artefacts can be byte-identical across a branch switch
+# while tests/expected/ -- the baselines being graded against -- is not. HEAD is
+# the cheapest thing that moves when either does.
+HEAD_AFTER=""
+if git -C "$ROOT" rev-parse --short HEAD >/dev/null 2>&1; then
+    HEAD_AFTER="$(git -C "$ROOT" rev-parse --short HEAD)"
+    if [ -n "${HEAD_BEFORE:-}" ]; then
+        gate_check_stable "$HEAD_BEFORE" "$HEAD_AFTER" "git HEAD" || exit 2
+    fi
+fi
+
 # ------------------------------------------------------------ the table
 printf '\n%smachorun differential test%s\n' "$C_BLD" "$C_RESET"
 printf '%soracle: %s | %s%s\n' "$C_DIM" \
@@ -93,6 +132,12 @@ printf '%soracle: %s | %s%s\n' "$C_DIM" \
     "$(awk -F': ' '/^ld:/{print $2}' "$PROVENANCE")" "$C_RESET"
 if [ -n "$LINUX_SKIP_REASON" ]; then
     printf '%slinux:  not run -- %s%s\n' "$C_YEL" "$LINUX_SKIP_REASON" "$C_RESET"
+fi
+# The subject, named on the scoreboard. A verdict is about a specific tree, and
+# a table that does not say which one cannot be quoted later without guessing.
+if [ -n "$FP_LINE" ] || [ -n "$HEAD_AFTER" ]; then
+    printf '%ssubject: %s%s%s\n' "$C_DIM" \
+        "${HEAD_AFTER:+HEAD $HEAD_AFTER }" "$FP_LINE" "$C_RESET"
 fi
 printf '\n'
 printf '%-26s %-4s %-8s %-16s %s\n' "FIXTURE" "RUNG" "FIXUPS" "VERDICT" "DETAIL"
