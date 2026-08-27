@@ -33,6 +33,12 @@ RECONCILE = {
     "length":                   "NSUInteger",
     "countForKey:":             "NSUInteger",
     "countForObject:":          "NSUInteger",
+    "firstWeekday":             "NSUInteger",
+    "minimumDaysInFirstWeek":   "NSUInteger",
+    # MEASURED, and not one I would have predicted: CFStreamStatus is SIGNED,
+    # NSStreamStatus is UNSIGNED. The names look like a straight rename, which
+    # is exactly why it needed measuring rather than reading.
+    "streamStatus":             "NSStreamStatus",
     # CF uses UniChar; Foundation declares unichar. Same type, Foundation spelling.
     "characterAtIndex:":        "unichar",
     # CF uses Boolean (unsigned char); Foundation declares BOOL (signed char).
