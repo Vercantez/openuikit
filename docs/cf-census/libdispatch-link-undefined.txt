@@ -1,5 +1,75 @@
 # libdispatch's REAL undefined-symbol set, from an actual link
 #
+# ###########################################################################
+# CORRECTION. THIS INVALIDATES EVERY COUNT BELOW THAT SAYS 20.
+#
+# THE TRUE COUNT IS 29. THE NUMBER 20 WAS THE LINKER'S ERROR LIMIT.
+#
+#     ld64.lld: error: too many errors emitted, stopping now
+#               (use --error-limit=0 to see all errors)
+#
+# ld64.lld stops after 20 diagnostics by default. Every "20 undefined symbols"
+# measurement in this file -- including the one I re-ran specifically to prove
+# a stale list wrong, then reported twice as a verified re-measurement -- was
+# reading the CEILING and calling it the COUNT.
+#
+# The tell was there and I walked past it twice: the last line of both link
+# logs says so in plain English. I grepped for "undefined symbol", counted the
+# hits, and never read the end of the file I was grepping.
+#
+# WORSE, THE CAP FORGED A CONFIRMATION. Two independent links returned exactly
+# 20 and I reported the stability as evidence -- "the count is unchanged, the
+# membership changed, that is why you re-link rather than re-quote." The
+# stability was an artefact of the cap. A SATURATED MEASUREMENT IS PERFECTLY
+# REPRODUCIBLE, and reproducibility was the thing I was treating as proof.
+# A metric pinned at its limit looks exactly like a metric that has converged.
+#
+# Re-linked with -Wl,--error-limit=0 and confirmed the log now contains no
+# "too many errors" line. 29 symbols: 9 loader-resolved _glibc_*, 20 genuine
+# libSystem gaps. Ten had been hidden the whole time, including the entire
+# pthread_attr_* family and `syscall` -- see THE FUTEX PROBLEM below, which is
+# the most consequential item in this file and was invisible at 20.
+#
+# Raw verified list: docs/cf-census/libdispatch-link-symbols-raw.txt
+# ###########################################################################
+#
+# ---------------------------------------------------------------------------
+# THE FUTEX PROBLEM -- the item behind the cap, and the one that matters most
+# ---------------------------------------------------------------------------
+# src/shims/lock.c:498
+#
+#     return (int)syscall(SYS_futex, uaddr, op | opflags, val, timeout,
+#                         uaddr2, val3);
+#
+# SEVEN ARGUMENTS THROUGH THE VARIADIC MULTIPLEXER, on libdispatch's core
+# locking path -- every lock, every thread event. syscall() is precisely what
+# machorun has said it will not forward, and it is right to refuse: Darwin's
+# arm64 ABI puts variadic arguments on the stack and AAPCS64 puts the first
+# eight in registers, so a forward reads six garbage values, one of which is a
+# pointer it then writes through.
+#
+# TURNING FUTEX OFF IS NOT THE ANSWER, AND I CHECKED RATHER THAN ASSUMED.
+# HAVE_FUTEX=0 looked attractive because the #else branch of the thread-event
+# paths falls through to _dispatch_sema4_*, our own pthread semaphore backend
+# from patch 4, already built and verified 4/4 on both platforms. Building it
+# fails 6 TUs with "define _dispatch_lock encoding scheme for your platform":
+# lock.h couples the lock-WORD ENCODING to the same flag as the futex SYSCALL.
+# It is not a config switch, it is a platform port.
+#
+# So the ask is narrow: A NON-VARIADIC futex ENTRY POINT in libSystem, six
+# fixed arguments --
+#
+#     int futex(uint32_t *uaddr, int op, uint32_t val,
+#               const struct timespec *timeout, uint32_t *uaddr2,
+#               uint32_t val3);
+#
+# -- plus a one-line patch here pointing _dispatch_futex at it instead of at
+# syscall(). Non-variadic means no ABI hazard at all. Same shape as the gettid
+# patch already in dispatch_patches.py, which replaced syscall(SYS_gettid) with
+# a direct gettid() call for exactly this reason -- that patch is why `syscall`
+# does not appear from queue.c. lock.c was never looked at, because its symbol
+# sat behind the cap.
+#
 # MEASURED 2026-08-27 ~12:20 UTC against the libSystem built 12:04:36 UTC
 # (machorun master 1f93f0b, "libSystem: sigaction"). Re-linked, not re-quoted.
 #
