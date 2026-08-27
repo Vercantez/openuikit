@@ -103,3 +103,42 @@ The shapes that would exercise it: threads created *during* contention; a thread
 whose first-ever lock acquisition happens while another thread holds that lock;
 and a lock taken for the first time from inside an allocation path. Whoever owns
 that gate should confirm which of these it covers.
+
+
+---
+
+## Correction to this review, after building the fixture
+
+**The deadlock I described appears to be UNREACHABLE in machorun as it stands,
+and my "narrow, but not obviously impossible" was too generous to my own
+finding.**
+
+The fixture (`tests/src/21_unfair_lock_firsttouch.c`) passes **identically** with
+and without the fix. It cannot fail, so by the standard applied to everything
+else tonight it is not a regression test for this bug.
+
+Why: to deadlock, a thread must hold glibc's arena mutex *while* first-touching
+a lock. My case C stages "allocate, then lock" — but `malloc` has **returned**
+by then and released the arena. Being *inside* the allocator while locking
+requires allocator **interposition** (a malloc hook, or a replaced allocator
+that itself locks), and machorun forwards `malloc` straight to glibc with no
+hooks. There is no path in.
+
+**What survives, and it is smaller than the review first claimed:**
+
+* Lock acquisition allocating is a **real divergence from Darwin**, whose
+  `os_unfair_lock_lock` never allocates. The fix is correct on that ground
+  alone, removes an allocation from the hottest path in the runtime, and closes
+  the hazard *in advance* of anyone adding allocator interposition.
+* The **unsound comment** is still a genuine finding and still worth correcting:
+  "independent of ours" is not "no lock", regardless of whether the deadlock is
+  reachable today.
+* It is **not** evidence about #50. The weak correlation I noted (first-touch on
+  new threads; bigger scenes make more threads) is now weaker still, because the
+  mechanism has no reachable failure mode.
+
+The fixture is kept as **coverage** for three lock-acquisition shapes the
+existing gate cannot reach, labelled as such in its own header. That has
+independent value — it would catch a token-uniqueness or init-ordering
+regression on first-touch-under-contention — but it is not verification of the
+allocation fix, and it does not pretend to be.
