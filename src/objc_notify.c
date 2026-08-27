@@ -326,15 +326,7 @@ const void *_dyld_get_prog_image_header(void)
     return MR.main_image ? (const void *)(uintptr_t)MR.main_image->load_base : NULL;
 }
 
-static mr_image *image_containing(const void *addr)
-{
-    uint64_t a = (uint64_t)(uintptr_t)addr;
-    for (int i = 0; i < MR.nimages; i++) {
-        mr_image *im = MR.images[i];
-        if (a >= im->span_lo && a < im->span_hi) return im;
-    }
-    return NULL;
-}
+#define image_containing(a) mr_image_containing(a)
 
 const void *dyld_image_header_containing_address(const void *addr);
 const void *dyld_image_header_containing_address(const void *addr)
@@ -424,6 +416,35 @@ const dyld_build_version_t dyld_platform_version_bridgeOS_2_0  = { 5, 0x00020000
 const dyld_build_version_t dyld_fall_2018_os_versions          = { 0xffffffff, 0x07E20961 };
 const dyld_build_version_t dyld_fall_2020_os_versions          = { 0xffffffff, 0x07E40961 };
 
+/* "Was the program built against an SDK at least this new?"
+ *
+ * IT ANSWERS YES UNCONDITIONALLY, AND THAT IS THE CORRECT ANSWER FOR EVERY
+ * BINARY THIS PROJECT CAN BUILD -- not a convenient one. Measured rather than
+ * assumed, because an unconditional yes is exactly the shape that has bitten
+ * this project twice (libswiftcompat's pthread_main_np returning 1 made every
+ * thread the main thread; the CF_IS_OBJC predicate was right by accident):
+ *
+ *   every fixture carries sdk 26.1 in LC_BUILD_VERSION -- the SDK, not the
+ *     deployment target, which is macos11/12;
+ *   the newest constant any caller asks about is macOS 10.13 (2017), and the
+ *     newest wildcard date is dyld_fall_2020_os_versions (2020-09).
+ *
+ * 26.1 is newer than all of them, so an exact implementation returns 1 for
+ * every query we can generate. THERE IS NO FIXTURE THAT COULD TELL THE TWO
+ * APART, which is why this is documented rather than reimplemented: a change
+ * nobody can test is a change made on speculation.
+ *
+ * WHEN IT BECOMES WRONG, so the next person has a condition rather than a
+ * feeling: the moment machorun runs a guest built against an OLD SDK -- an
+ * app shipped years ago, which is precisely the kind of binary the project
+ * exists to run. Then objc4 and libswiftCore take modern-behaviour branches
+ * the binary was not written for, silently.
+ *
+ * The exact implementation needs the program's LC_BUILD_VERSION (which
+ * src/image.c currently skips) and, for the 0xffffffff wildcard-platform
+ * constants, dyld's own table mapping each platform's version to a release
+ * DATE. The same-platform comparison is unambiguous; the date mapping is the
+ * part that must be copied rather than guessed. */
 int dyld_program_sdk_at_least(dyld_build_version_t v);
 int dyld_program_sdk_at_least(dyld_build_version_t v) { (void)v; return 1; }
 

@@ -195,6 +195,9 @@ const char *mr_guest_executable_path(void);
  * field order is the ABI and is pinned in sdk/tests/glibc_abi_probe.c. */
 typedef struct { const char *dli_fname; void *dli_fbase;
                  const char *dli_sname; void *dli_saddr; } mr_dl_info;
+/* Which image an address is in, or NULL. ONE definition -- see the note in
+ * src/image.c. Signal-handler safe: no lock, no allocation. */
+mr_image *mr_image_containing(const void *addr);
 int   mr_dladdr(const void *addr, mr_dl_info *out);
 void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name);
 void *mr_dlsym_handle(void *handle, const char *name);

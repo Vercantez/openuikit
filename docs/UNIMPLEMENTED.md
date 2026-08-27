@@ -989,6 +989,30 @@ Two things the entry could not have predicted, both recorded in
 own, which objc4 uses as an ownership test, and glibc's `malloc_usable_size`
 does not.
 
+### `dyld-program-sdk-at-least` — correct today, and here is when it stops
+`dyld_program_sdk_at_least()` returns 1 for every query. **That is the correct
+answer for every binary this project can build**, measured rather than assumed:
+every fixture carries `sdk 26.1` in `LC_BUILD_VERSION` (the SDK, not the
+`macos11`/`macos12` deployment target), and the newest constant any caller asks
+about is macOS 10.13 (2017), with `dyld_fall_2020_os_versions` (2020-09) the
+newest wildcard date. An exact implementation returns 1 for all of them, so
+**no fixture could distinguish the two** — which is why this is documented
+rather than reimplemented. A change nobody can test is a change made on
+speculation.
+
+objc4 really does call it with the specific-platform constants
+(`dyld_platform_version_macOS_10_11` and friends), so this is a live path, not
+dead code.
+
+**It becomes wrong the moment machorun runs a guest built against an OLD SDK**
+— an app shipped years ago, which is exactly the kind of binary the project
+exists to run. objc4 and libswiftCore would then take modern-behaviour branches
+the binary was not written for, silently. The exact implementation needs the
+program's `LC_BUILD_VERSION` (which `src/image.c` currently skips) plus, for the
+`0xffffffff` wildcard-platform constants, dyld's own table mapping each
+platform's version to a release DATE. The same-platform comparison is
+unambiguous; **the date table must be copied, not guessed.**
+
 ### `dlopen-dlsym` — **DONE.** dlopen, dladdr and every dlsym handle
 `dlopen` over guest Mach-O images, `dladdr`, and `dlsym` with `RTLD_DEFAULT`,
 `RTLD_NEXT`, `RTLD_SELF`, `RTLD_MAIN_ONLY` and real handles all work. The objc4

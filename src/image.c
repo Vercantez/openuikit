@@ -564,8 +564,7 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
     out->dli_fname = NULL; out->dli_fbase = NULL;
     out->dli_sname = NULL; out->dli_saddr = NULL;
 
-    for (int i = 0; i < MR.nimages; i++)
-        if (a >= MR.images[i]->span_lo && a < MR.images[i]->span_hi) { im = MR.images[i]; break; }
+    im = mr_image_containing(addr);
     if (!im) return 0;                       /* a stack address, glibc, the loader */
 
     /* Darwin reports the path the image was loaded by. For a dylib that is its
@@ -605,12 +604,22 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
     return 1;
 }
 
-/* The image a return address belongs to. This is "the calling image" -- the
- * notion whose absence kept dlsym's RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY and
- * dlopen's @loader_path unimplemented. It is available because our dlopen and
- * dlsym live in libSystem.B.dylib, a Mach-O we build, so __builtin_return_address
- * there is a guest address rather than a loader one. */
-static mr_image *image_containing(const void *addr)
+/* THE ONE PLACE THAT ANSWERS "WHICH IMAGE IS THIS ADDRESS IN".
+ *
+ * There were four copies of this loop -- crash.c's image_of, objc_notify.c's
+ * image_containing, this one, and an inline scan in mr_dladdr -- and all four
+ * agreed, which is the condition under which duplication is cheapest to remove
+ * and most likely to be left alone. The predicate is a half-open interval, and
+ * a copy that drifted to `<= span_hi` would put an address one byte past an
+ * image inside it: a wrong image name in a backtrace, a wrong answer from
+ * dladdr, and a dlsym scope starting one image too early. None of those looks
+ * like a bug at the call site.
+ *
+ * It also underpins "the calling image" -- the notion whose absence kept
+ * dlsym's RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY and dlopen's @loader_path
+ * unimplemented. Callable from a signal handler: it takes no lock and
+ * allocates nothing, which crash.c depends on. */
+mr_image *mr_image_containing(const void *addr)
 {
     uint64_t a = (uint64_t)(uintptr_t)addr;
     for (int i = 0; i < MR.nimages; i++)
@@ -626,7 +635,7 @@ static mr_image *image_containing(const void *addr)
  * load order, which is what dyld means by it too. */
 void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name)
 {
-    mr_image *caller = image_containing(caller_ra);
+    mr_image *caller = mr_image_containing(caller_ra);
     uint64_t addr = 0;
     int start;
 
