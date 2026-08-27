@@ -1018,3 +1018,136 @@ Foundation's `.swiftinterface` for public type names swept in `Message`,
 like a more thorough census and was a less accurate one. Corpus is HEAD
 shallow clones, so counts drift slightly from the 2026-08-25 census (eidolon
 159 = 159 exactly; pocket-casts-ios 1,826 vs 1,690).
+
+## 12. SwiftUI + Combine — scoping a first-class target, and one refusal
+
+The user made SwiftUI and Combine first-class targets. This is the scope, with
+no implementation attached.
+
+### What this instrument cannot match — stated before it was run
+
+The model-layer census worked because Foundation's alphabet is mostly
+`NS*`-prefixed and unambiguous. **SwiftUI's is not**, and the failure mode here
+would be worse than a wrong number: it would be a confident one.
+
+- **The type names collide badly.** `Text`, `Image`, `List`, `Group`,
+  `Section`, `Path`, `Alignment`, `State`, `Binding`, `Environment`, `Color`,
+  `Font`, `Shape` — every one is a plausible app-defined type. §11 already
+  proved this shape when scraping `.swiftinterface` swept in `Message`,
+  `Category`, `Currency` and inflated a gap by ~2,900 uses of *app* code.
+  SwiftUI is that hazard concentrated.
+- **Most of the API is not type names at all.** It is modifiers — method calls
+  on opaque types — and apps define their own freely. **Measured, not assumed:**
+  the first non-test SwiftUI view in the corpus (pocket-casts `MainTabView.swift`)
+  contains exactly one modifier call, `.trackScrollOffset()`, and it is
+  **app-defined**. A modifier census would have scored it as SwiftUI surface.
+- **The rest is syntax**: `some View`, result builders, the implicit
+  `@ViewBuilder` on `body`. Not identifiers, not countable.
+
+**So no SwiftUI "API use count" is produced.** Measuring the model layer with
+the wrong alphabet under-reported it; measuring SwiftUI with this one would
+over-report it. Same error, opposite sign.
+
+### What IS unambiguous, and what it says
+
+Only the `@`-prefixed attributes, the `: View` / `some View` syntax, and a few
+Combine names nobody reuses:
+
+| app | files | imports SwiftUI | declares a View | View types | imports Combine |
+|---|---|---|---|---|---|
+| eidolon | 159 | 0 | 0 | 0 | 0 |
+| DuckDuckGo iOS | 1,202 | 265 | 177 | 232 | 115 |
+| ios-oss | 2,070 | 113 | 60 | 67 | 38 |
+| pocket-casts-ios | 1,826 | 615 | 424 | 423 | 107 |
+| **total** | 5,257 | **993** | **661** | **722** | **260** |
+
+**This corrects my own earlier figure.** I reported "993 files import SwiftUI".
+Only **661 actually declare a View**, and 32 of the imports are in test files.
+993 was adoption-flavoured and wrong; 661 view-bearing files with 722 View types
+is the real shape. `eidolon` has *zero* — it is a 2014-era pure-UIKit app, so
+this is 3 of 4, and the split is generational rather than stylistic.
+
+Structure: 2,099 `some View`, 862 `body` declarations, 81 custom `ViewModifier`
+types, 397 previews. State plumbing, all unambiguous: `@State` 563,
+`@Published` 544, `@ViewBuilder` 536, `@Environment` 301, `@EnvironmentObject`
+250, `@ObservedObject` 189, `@Binding` 109, `@StateObject` 84. Combine:
+`ObservableObject` 195, `AnyCancellable` 175, `AnyPublisher` 171.
+
+**A third framework showed up unasked:** `@Observable` (39) and `@Bindable` (8)
+are the **Observation** framework, not SwiftUI and not Combine — and it is
+macro-based, so it is a compile-time expansion problem rather than a runtime
+one. It has no `.swiftinterface` at the expected SDK path, so it is unsized here.
+
+### Size, by the project's own counting method
+
+Counting a framework's OWN declared types is legitimate — the rejected use was
+*matching* those names against app source. Different question, different hazard.
+
+| framework | public types |
+|---|---|
+| **UIKit** | **737** (530 classes + 208 protocols) |
+| SwiftUI | 794 (672 structs, 78 protocols) |
+| SwiftUICore | 556 |
+| Combine | 123 |
+
+The UIKit figure reproduces `APP_COMPAT.md`'s 737 exactly, which is the control
+that makes the comparison legitimate rather than two numbers from two methods.
+
+**The target is ~1,473 types against UIKit's 737 — about 2×.** (Exported-symbol
+counts say 8×, but that comparison is meaningless: UIKit is ObjC and its methods
+live in ObjC metadata rather than the export table, while every Swift generic
+specialization is a symbol. Types are the comparable unit.)
+
+### The number that made UIKit tractable does not exist for SwiftUI
+
+`APP_COMPAT.md`'s decisive finding was not 737. It was that **apps reference
+only ~171 distinct UIKit types**, which is why the punch list was finite. The
+equivalent number for SwiftUI is exactly what the collisions above make
+unmeasurable by text. **Getting it requires a semantic index** — building the
+corpus and reading the compiler's index store, or swift-syntax with type
+resolution — not a regex. Until then, "how much of SwiftUI do apps actually
+use" is *unknown*, and it is the single number that would most change the
+estimate.
+
+### The oracle — and this is the part with no precedent
+
+Every prior port had a reference: libdispatch, libc++, CoreFoundation and objc4
+are open source. UIKit was not, and was solved by **oracle harvesting**: render
+on real UIKit, capture PNG plus layout JSON, diff pixels with tolerance and
+structural gates. SwiftUI has no source either, so the same question arises —
+and it splits into three layers, only two of which are already solved.
+
+1. **Rendered pixels.** Transfers *directly*. A SwiftUI view hosted in a
+   `UIHostingController` on Mac Catalyst renders to pixels like anything else,
+   and `Tools/oracle2` already does exactly this. No new invention.
+2. **Resulting view tree and geometry.** Also transfers — a hosted SwiftUI view
+   produces a real UIKit hierarchy with frames, dumpable as the existing layout
+   JSON already is.
+3. **Update semantics — when `body` re-runs, what is invalidated, whether
+   `@State` identity survives a re-render.** Not visible in a frame or a tree.
+   This is `AttributeGraph`'s behaviour: a **private** framework
+   (`/System/Library/PrivateFrameworks`, 576 exported symbols, a `.tbd` in the
+   SDK but no headers), referenced 913 times across SwiftUICore's exports.
+
+Layer 3 is *measurable* — instrument `body` with a counter, drive a scripted
+sequence of state mutations, record `(view identity → evaluation)` in order.
+The project already has an oracle of exactly this kind: `openrender scrolltrace`
+captures a time series rather than a picture. So the oracle *form* exists; the
+harness does not.
+
+**But here is the finding, and it is a "we don't know yet" rather than a gap.**
+For UIKit, the observable output *was* the contract — a pixel is a promise. For
+SwiftUI, the pixels are a contract and **the incremental re-evaluation
+behaviour is not**. Apple does not specify when or how often `body` runs; it is
+an implementation detail that moves between OS releases. So an evaluation-trace
+oracle would be pinning *unspecified* behaviour, and a reimplementation that
+matched it would be matching an implementation detail rather than a contract.
+
+The consequence is concrete and uncomfortable: **a naive implementation that
+re-evaluates every `body` on every change would pass a pixel oracle and a tree
+oracle completely, and be unusably slow on a real app — and no oracle we know
+how to build would catch it.** SwiftUI's entire value is the incremental
+update, and that is the one property we currently have no way to validate
+against the real thing. That question should be answered before anyone commits
+to an implementation strategy, because it decides whether "correct" is even
+definable here.
