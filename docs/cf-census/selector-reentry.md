@@ -130,3 +130,40 @@ libswiftCore does not reference it at all. The lesson is that
 linked symbol would have shown the opposite pattern, and picking one that shows
 neither proves nothing either way. The four agreeing on the signature, with a
 name that is genuinely absent showing neither, is the evidence.
+
+## Precondition for the `-userInfo` ownership fix — checked, and it has a trap
+
+t10 pins the leak at `2 → 7 over 5 calls`, exactly +1 per call. The named fix is
+autorelease. Before designing anything, is autorelease available?
+
+**The Objective-C machinery is all present** in machorun's libobjc:
+
+```
+objc_autoreleasePoolPush      1
+objc_autoreleasePoolPop       1
+objc_autorelease              1
+objc_autoreleaseReturnValue   1
+```
+
+**But the obvious CF-level shortcut is a trap.** `CFAutorelease` is defined —
+`CFRuntime.c:829` — and it is a **no-op**:
+
+```c
+CFTypeRef CFAutorelease(CFTypeRef __attribute__((cf_consumed)) cf) {
+    if (NULL == cf) { CRSetCrashLogMessage("*** CFAutorelease() called with NULL ***"); HALT; }
+    return cf;
+}
+```
+
+It returns its argument and does nothing else. corelibs has no pool to drain
+into, so it kept the symbol and dropped the behaviour.
+
+**Anyone reaching for the CF-named function would "fix" the leak, see t10 still
+green, and have changed nothing** — and t10 asserts the leak, so green is
+exactly what a no-op fix produces. That is the failure this file already
+documents twice: a call that succeeds and does nothing, indistinguishable from
+one that works.
+
+**So the fix must go through `objc_autorelease` (or a real pool), not
+`CFAutorelease`**, and t10's assertion must FLIP rather than stay green — a fix
+that leaves it passing has done nothing.
