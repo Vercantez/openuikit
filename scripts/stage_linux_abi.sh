@@ -138,12 +138,26 @@ cat > "$INC/linux/futex.h" <<'EOF'
 #define FUTEX_WAITERS       0x80000000
 #define FUTEX_OWNER_DIED    0x40000000
 #define FUTEX_TID_MASK      0x3fffffff
+/* Priority-inheritance ops: libdispatch's unfair lock uses FUTEX_LOCK_PI /
+ * FUTEX_UNLOCK_PI so the kernel can boost a lock holder. Pinned in the probe. */
+#define FUTEX_LOCK_PI       6
+#define FUTEX_UNLOCK_PI     7
+#define FUTEX_TRYLOCK_PI    8
 #endif
 EOF
 
 # sys/syscall.h -- only SYS_futex, which is all libdispatch's lock needs. The
 # value is pinned on aarch64 by the probe; declaring the whole syscall table
 # would be surface we do not use and cannot check.
+# <syscall.h> is the spelling src/shims/lock.c uses; glibc makes it a one-line
+# forward to <sys/syscall.h>, and so do we.
+cat > "$INC/syscall.h" <<'EOF'
+#ifndef _SWIFTCORE_MACHO_SYSCALL_H
+#define _SWIFTCORE_MACHO_SYSCALL_H
+#include <sys/syscall.h>
+#endif
+EOF
+
 cat > "$INC/sys/syscall.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_SYS_SYSCALL_H
 #define _SWIFTCORE_MACHO_SYS_SYSCALL_H
@@ -174,4 +188,4 @@ fi
 
 echo "staged Linux-ABI headers into $INC"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
-   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" | sed 's/^/  /'
+   "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" | sed 's/^/  /'

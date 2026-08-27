@@ -5,9 +5,9 @@ scene pixel-identically ([ISA_MASK_VERDICT.md](ISA_MASK_VERDICT.md)). Does the
 **whole** module build and run, and how much of the 108-scene golden suite does
 it actually render?
 
-**Answer: the whole module builds, 104 of 108 scenes render, all 158 frames are
-byte-identical to the same code running natively on macOS, and 104/104 pass the
-project's own gate.**
+**Answer: 108 of 108. Three consecutive full runs, zero crashes, zero hangs,
+zero flippers; all 162 frames byte-identical to the same code running natively
+on macOS in every run; 108/108 passing the project's own gate.**
 
 That is with the SOURCE-BUILT Swift runtime. With Apple's staged
 iOS-simulator `libswiftCore` the same binaries manage only 51–65 depending on
@@ -105,7 +105,32 @@ from the real-UIKit golden either because OpenUIKit is not bit-exact against
 UIKit, or because this stack disagrees with the same code natively. Those have
 different owners, so `full/scripts/score.py` measures them separately.
 
-### Scenes — with the source-built runtime
+### Scenes — 108/108, after the std::__sort fix (machorun 5f28325)
+
+```
+run 1 / run 2 / run 3                        108 / 108 / 108
+ALWAYS PASS                                  108      the capability floor
+ALWAYS FAIL                                    0
+FLIPPED                                        0      address sensitivity GONE
+
+A) Linux/machorun vs macOS-native      162 / 162 frames byte-identical, each run
+   silent-corruption sweep             486 frames across 3 runs, 0 differing
+B) macOS-native   vs real-UIKit golden  12 / 162 pixel-identical
+C) Linux/machorun vs real-UIKit golden  12 / 162 pixel-identical   (B == C)
+
+Tools/compare/compare.py                108 / 108 scenes pass
+```
+
+Zero flippers is the result worth stating separately: the earlier 51-65 band had
+14 scenes that were not reproducible either way, and that address sensitivity is
+now entirely absent rather than merely reduced. B == C still holds exactly, so
+every remaining deviation from the real-UIKit golden is inherited from
+OpenUIKit-on-macOS and none is introduced by the Mach-O path.
+
+The 486-frame sweep matters because of what it caught last time: one frame in
+322 previously rendered *successfully and wrong*. Zero now, across three runs.
+
+### Scenes — the earlier 104/108, with the source-built runtime
 
 ```
 total scenes                                        108

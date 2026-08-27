@@ -461,20 +461,43 @@ edit("src/shims/lock.h",
 """#elif defined(__linux__)
 
 #include <linux/futex.h>""",
-"""#elif defined(__linux__) || DISPATCH_LOCK_USE_FUTEX
+"""#elif defined(__linux__) || HAVE_FUTEX
 
 /* swiftcore-macho: reached by a Darwin target without Mach thread ports. The
  * futex ABI is declared by scripts/stage_linux_abi.sh and pinned against real
  * glibc by sdk/tests/epoll_abi_probe.c (FUTEX_*, SYS_futex), which were staged
  * for exactly this.
  *
- * The selector is DISPATCH_LOCK_USE_FUTEX from config_ac.h, NOT lock.h's own
- * HAVE_FUTEX: that is defined at lock.h:169, AFTER this branch at line 58, so
- * using it silently evaluated to 0 and fell through to "define _dispatch_lock
- * encoding scheme for your platform here" -- 4 errors became 20. Measured, not
- * reasoned; a macro defined later in the same header is not available here. */
+ * HAVE_FUTEX comes from config_ac.h. lock.h sets it at line 169 under
+ * `#ifndef HAVE_FUTEX`, which is AFTER this branch at line 58 -- so relying on
+ * lock.h's own definition silently evaluated to 0 and fell through to "define
+ * _dispatch_lock encoding scheme for your platform here", taking the error
+ * count from 4 to 20. Defining it in the config instead makes it true at both
+ * points, and lock.c's six `#elif HAVE_FUTEX` sites then need no patch. */
 #include <linux/futex.h>""",
      "patch 10b: let a non-Linux target reach the futex lock")
+
+# ---------------------------------------------------------------------------
+# 11. lock.c's Darwin ulock/thread_switch block.
+#
+# `#if TARGET_OS_MAC` at src/shims/lock.c:23 opens a block using
+# ULF_WAIT_WORKQ_DATA_CONTENTION and SWITCH_OPTION_OSLOCK_DEPRESS -- constants
+# from Darwin's __ulock_wait and thread_switch SPIs, neither of which our
+# sysroot declares nor libSystem exports. The futex implementations below it are
+# already selected by HAVE_FUTEX. Fifth instance of TARGET_OS_MAC standing in
+# for "has Mach kernel facilities".
+# ---------------------------------------------------------------------------
+edit("src/shims/lock.c",
+"""#if TARGET_OS_MAC
+dispatch_static_assert(DLOCK_LOCK_DATA_CONTENTION ==
+		ULF_WAIT_WORKQ_DATA_CONTENTION);""",
+"""#if TARGET_OS_MAC && HAVE_MACH
+/* swiftcore-macho: __ulock_wait / thread_switch are Darwin kernel SPIs the
+ * sysroot does not declare and libSystem does not export. The futex paths
+ * below are selected by HAVE_FUTEX instead. */
+dispatch_static_assert(DLOCK_LOCK_DATA_CONTENTION ==
+		ULF_WAIT_WORKQ_DATA_CONTENTION);""",
+     "patch 11: lock.c's ulock block needs Mach, not just TARGET_OS_MAC")
 
 # ---------------------------------------------------------------------------
 # GUARD for patch 4 (pthread semaphore backend), checked every run.

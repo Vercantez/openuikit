@@ -127,5 +127,8 @@ _Static_assert(SYS_futex == 98, "SYS_futex on aarch64");
 _Static_assert(FUTEX_WAITERS    == 0x80000000, "FUTEX_WAITERS");
 _Static_assert(FUTEX_OWNER_DIED == 0x40000000, "FUTEX_OWNER_DIED");
 _Static_assert(FUTEX_TID_MASK   == 0x3fffffff, "FUTEX_TID_MASK");
+_Static_assert(FUTEX_LOCK_PI    == 6, "FUTEX_LOCK_PI");
+_Static_assert(FUTEX_UNLOCK_PI  == 7, "FUTEX_UNLOCK_PI");
+_Static_assert(FUTEX_TRYLOCK_PI == 8, "FUTEX_TRYLOCK_PI");
 
 /* Compile-only. */

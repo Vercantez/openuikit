@@ -52,10 +52,28 @@
  * where glibc's sem_init writes 32 -- a clean link, a 0 return, and 28 bytes
  * gone. Darwin also returns ENOSYS for sem_init, so USE_POSIX_SEM emulates a
  * configuration Apple's own platform does not have. See dispatch_patches.py. */
-/* Selects patch 10's futex lock word. Must live HERE rather than reuse
- * lock.h's own HAVE_FUTEX, which is defined at lock.h:169 -- after the branch
- * at line 58 that needs it. config_ac.h arrives via internal.h long before. */
-#define DISPATCH_LOCK_USE_FUTEX 1
+/* Selects patch 10's futex lock word. lock.h sets HAVE_FUTEX at line 169 under
+ * `#ifndef HAVE_FUTEX`, so defining it HERE wins everywhere -- including the
+ * branch at lock.h:58, which runs BEFORE line 169 and would otherwise read it
+ * as 0. That ordering cost me a 4->20 error regression before I measured it.
+ * Using upstream's own macro rather than inventing one also means lock.c's six
+ * `#elif HAVE_FUTEX` sites activate with no patch at all. */
+#define HAVE_FUTEX 1
+
+/* The lock scheme and the TSD scheme are COUPLED, which is not obvious from
+ * either file. libdispatch's futex lock builds its owner field from
+ * _dispatch_get_tsd_base()->tid, and _dispatch_get_tsd_base() exists ONLY under
+ * DISPATCH_USE_THREAD_LOCAL_STORAGE -- the Apple direct-TSD path has no such
+ * accessor, because there the owner is a mach thread port instead. So taking
+ * the futex lock (patch 10) obliges us to leave Apple's TSD optimisations too.
+ * Measured: with direct TSD, src/shims/lock.c had 5 errors; with these, 1. */
+#define USE_APPLE_TSD_OPTIMIZATIONS 0
+#define DISPATCH_USE_THREAD_LOCAL_STORAGE 1
+
+/* No dtrace on Linux. internal.h includes the CMake-GENERATED "provider.h"
+ * under DISPATCH_USE_DTRACE, so this is a build-system artifact rather than a
+ * porting gap -- worth saying because it looks like a missing header. */
+#define DISPATCH_USE_DTRACE 0
 
 #define USE_PTHREAD_SEM 1
 #endif
