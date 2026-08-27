@@ -1014,3 +1014,60 @@ half the reason to use it is that the other root is deliberately not current.
 The sweep now reports **16** trees rather than 19, with the three `mrroot`s
 reclassified as covered. `check_stale.sh` grading discovered trees rather than
 six hardcoded paths is routed to machorun-isamask; it is their gate.
+
+## 18. Closing the artifacts gap: what is assertable about a staged libswiftCore
+
+`build_compat.sh` asserts the **shim**. Nothing asserted anything about the
+`libswiftCore` sitting beside it — and that is the artifact whose staleness
+produced the "newer, worse binary parked in a staging directory" class in the
+first place. **Half-covered is the most misleading state a directory can be in,
+because the presence of *a* check reads as coverage.**
+
+`scripts/check_artifacts.sh` discovers every directory shaped the way
+`stage_swiftcore.sh` reads — `libswiftcompat.dylib` beside
+`swift-macosx/arm64/libswiftCore.dylib` — and asserts five things. **Each one is
+a bug this project actually had:**
+
+1. arm64 Mach-O with install name `/usr/lib/swift/libswiftCore.dylib`.
+2. `___gxx_personality_v0` binds **`from libc++`**. A pre-relink build names
+   libSystem, and staging one silently reintroduces the deviation machorun
+   carried for a week (§13, §16).
+3. **No `__cxxabiv1` type_info vtable is a flat bind.** Those are exactly the
+   symbols the shim shadowed with zerofill placeholders in §12.
+4. **Every remaining flat bind has exactly one provider** across (machorun
+   userland + that directory's shim). Zero is an unsatisfiable import; two is a
+   coin toss.
+5. **All staging directories carry the same `libswiftCore`.** Divergence between
+   them is precisely how a worse artifact sat one command from installation
+   while a better one was deployed.
+
+Current state: **2 directories, 5 userland images, PASS.** All **23** remaining
+flat binds have exactly one provider — the shim — which is what
+`build_compat.sh`'s disjointness assertion guarantees going forward: a shim that
+never overlaps the userland can never create a second provider.
+
+### Four controls, each demonstrated to fire
+
+| control | result |
+|---|---|
+| pre-relink `libswiftCore` (recovered from `952aa1d`) | FAIL — names libSystem, **and** 4 flat `__cxxabiv1` vtables |
+| two staging dirs with different `libswiftCore` | FAIL — divergence named |
+| zero staging directories | **REFUSE**, exit 2 — a pass over nothing is not a pass |
+| shim with `getline` genuinely removed | FAIL — `flat binds with NO provider: _getline` |
+
+**The fourth control was inert on the first attempt** and reported PASS: a `sed`
+that did not actually remove `getline` left the shim at 34 exports with the
+symbol present, so the check was grading an unmodified input. Caught by printing
+the mutant's export count and symbol presence *beside* the verdict — the same
+two-numbers-that-must-agree habit that caught the lost counter in the re-check.
+**An inert control is worse than no control, because it reports the reassuring
+half of a test that never ran.**
+
+### A seventh bad measurement, caught immediately by the tell
+
+Counting providers for the 23 flat binds, the first attempt printed
+`2 libswiftcompat libswiftcompat` for **every** symbol — the glob included the
+staged shim *and* the artifact copy, counting one file twice. **A uniform answer
+across a heterogeneous set is evidence about the instrument, not the set**, which
+is team-lead's formulation and it cost about ten seconds to apply. Corrected
+count: every one has exactly **one** provider.
