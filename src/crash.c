@@ -80,12 +80,9 @@ static int safe_read(uint64_t addr, void *dst, size_t n)
 
 /* ----------------------------------------------------------- attribution */
 
-static mr_image *image_of(uint64_t pc)
-{
-    for (int i = 0; i < MR.nimages; i++)
-        if (pc >= MR.images[i]->span_lo && pc < MR.images[i]->span_hi) return MR.images[i];
-    return NULL;
-}
+/* One definition of "which image is this address in" lives in src/image.c.
+ * This was a fourth copy of it. */
+#define image_of(pc) mr_image_containing((const void *)(uintptr_t)(pc))
 
 /* Greatest export at or below `off`. Exports are the only symbols we keep --
  * the trie has no statics -- so a hit can be several kilobytes short of the
