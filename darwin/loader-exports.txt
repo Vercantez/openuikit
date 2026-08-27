@@ -59,6 +59,8 @@ _mr_addr_in_image   #internal
 _mr_addr_in_glibc_heap #internal
 _mr_dlopen          #internal
 _mr_dlsym_handle    #internal
+_mr_dlsym_scoped    #internal
+_mr_dladdr          #internal
 _mr_dlsym_default   #internal
 
 # The crash reporter's frame walk, callable from our dylibs' mr_bail. A

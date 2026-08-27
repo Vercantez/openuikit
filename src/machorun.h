@@ -188,6 +188,14 @@ void mr_install_crash_reporter(void);
  * Darwin SDK headers. Pinned in sdk/tests/glibc_abi_probe.c. */
 #define MR_RTLD_NOLOAD 0x10
 void *mr_dlopen(const char *path, int mode);
+
+/* Darwin's Dl_info, from sdk/usr/include/dlfcn.h. Duplicated rather than
+ * included because the loader is an ELF and does not read the Darwin SDK; the
+ * field order is the ABI and is pinned in sdk/tests/glibc_abi_probe.c. */
+typedef struct { const char *dli_fname; void *dli_fbase;
+                 const char *dli_sname; void *dli_saddr; } mr_dl_info;
+int   mr_dladdr(const void *addr, mr_dl_info *out);
+void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name);
 void *mr_dlsym_handle(void *handle, const char *name);
 
 #endif /* MACHORUN_H */

@@ -864,14 +864,11 @@ EXPORT void backtrace_symbols_fd(void *const *b, int n, int fd) { glibc_backtrac
  * host ELF images, and machorun has no guest dlopen yet. Forwarding to glibc
  * would answer about the loader's own ELF world, which is a different process
  * image than the one the caller means. */
-EXPORT int dladdr(const void *addr, void *info)
-{
-    (void)addr; (void)info;
-    mr_bail("dladdr: machorun has no guest image introspection yet. Forwarding to "
-            "glibc's dladdr would describe the LOADER's ELF images, not the "
-            "Mach-O ones the caller is asking about. See docs/UNIMPLEMENTED.md.");
-    return 0;
-}
+/* dladdr over GUEST images. Forwarding to glibc would describe the LOADER's
+ * ELF world -- a different program with different addresses -- so the loader
+ * answers from its own image table and LC_SYMTAB (src/image.c). */
+extern int mr_dladdr(const void *addr, void *info);   /* -> loader */
+EXPORT int dladdr(const void *addr, void *info) { return mr_dladdr(addr, info); }
 /* dlopen over guest Mach-O images. The loader does the work (src/image.c's
  * mr_dlopen) because only it has the image table, the fixup machinery and the
  * objc notification path; this side is the Darwin ABI in front of it.
@@ -900,15 +897,11 @@ EXPORT void *dlopen(const char *path, int mode) { return mr_dlopen(path, mode); 
 #define MR_RTLD_MAIN_ONLY ((void *)-5L)
 
 extern void *mr_dlsym_default(const char *name);   /* -> loader, via host lookup */
+extern void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name);
 
 EXPORT void *dlsym(void *h, const char *name)
 {
     if (h == MR_RTLD_DEFAULT) return mr_dlsym_default(name);
-    if (h == MR_RTLD_NEXT || h == MR_RTLD_SELF || h == MR_RTLD_MAIN_ONLY)
-        mr_bail("dlsym: RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY need a notion of "
-                "'the calling image', which means walking back to the caller's "
-                "return address. RTLD_DEFAULT and real handles are implemented "
-                "(docs/UNIMPLEMENTED.md#dlopen-dlsym).");
     /* Darwin's dlsym prepends the underscore; the export trie stores it. */
     if (!name) return 0;
     {
@@ -918,6 +911,16 @@ EXPORT void *dlsym(void *h, const char *name)
             mr_bail2("dlsym: symbol name longer than machorun's buffer", name);
         buf[0] = '_';
         glibc_memcpy(buf + 1, name, n + 1);
+
+        /* THE SCOPED HANDLES NEED "THE CALLING IMAGE", AND IT IS AVAILABLE
+         * HERE. That notion was missing for as long as the question was asked
+         * in the loader, which only ever sees its own frames. This function is
+         * in libSystem.B.dylib -- a Mach-O we build and the guest calls
+         * directly -- so __builtin_return_address(0) is the guest's own return
+         * address, in the guest's own image. Nothing has to be walked. */
+        if (h == MR_RTLD_NEXT || h == MR_RTLD_SELF || h == MR_RTLD_MAIN_ONLY)
+            return mr_dlsym_scoped(__builtin_return_address(0), (int)(long)h, buf);
+
         return mr_dlsym_handle(h, buf);
     }
 }

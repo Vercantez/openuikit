@@ -51,4 +51,5 @@
 32_pthread_attr	ae	chained	run	pass	PTHREAD_CREATE_JOINABLE is 1 here and DETACHED there, so the safe-looking direction is the broken one; SCHED_OTHER is glibc's SCHED_FIFO
 33_dlopen	af	chained	run	pass	loading a dylib at RUN TIME: the export trie through a handle, the initialiser, the TLV, and a bind from the new image into an old one
 34_sysctl	ag	chained	run	pass	the five MIBs CF needs; KERN_PROC_PID gates __CFInitialize and returns a 648-byte BSD struct CF reads one field from
+35_dladdr	ah	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/SELF/MAIN_ONLY -- one gap, not three: all of them needed THE CALLING IMAGE
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug
