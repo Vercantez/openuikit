@@ -77,15 +77,31 @@ struct SyntheticFrameSource: HostFrameSource {
 /// Both are exercised -- `runLoopSelfTest()` pulls, `externallyDrivenTest()`
 /// pushes -- and neither reimplements the other.
 ///
-/// WHY NOT A TIMERFD, which is the shape that would let CF wait on us
-/// DIRECTLY: the guest cannot open one. machorun's libSystem exports 537
-/// symbols and not one is a file-descriptor wait primitive -- no timerfd, no
-/// eventfd, no epoll, no ppoll, and not even POSIX poll/select or Darwin's
-/// kqueue/kevent (measured with a control: the same grep finds nanosleep,
-/// clock_gettime, read, write, pthread_create). The guest is Darwin-targeted
-/// and Darwin has no timerfd at all, so the SDK does not declare one either.
-/// Until machorun exports that family, "hand CF a descriptor" is not
-/// available to anyone in this process, CF included.
+/// A TIMERFD-BACKED SOURCE IS BUILDABLE. This design just does not need one.
+///
+/// A CORRECTED CLAIM, KEPT BECAUSE THE MISTAKE IS THE USEFUL PART. Measuring
+/// machorun's libSystem finds 537 exported symbols and not one file-descriptor
+/// wait primitive -- no timerfd, eventfd, epoll or ppoll, not even POSIX
+/// poll/select or Darwin's kqueue -- with a control proving the grep
+/// discriminates (it finds nanosleep, clock_gettime, read, write,
+/// pthread_create). THAT MEASUREMENT IS CORRECT. The conclusion drawn from it,
+/// "so nothing in this process can wait on a descriptor, CF included", was
+/// WRONG. The primitives are simply not reached through libSystem:
+/// swiftcore-macho/scripts/stage_linux_abi.sh declares them with GLIBCSYM asm
+/// labels (`_glibc_<name>`), and machorun's loader binds that prefix straight to
+/// glibc (src/resolve.c:31), deliberately bypassing libSystem. CF's epoll layer
+/// already runs on exactly that mechanism -- libdispatch's real link has 20
+/// undefined symbols and none of the eight is among them.
+///
+/// The lesson is this project's own, in the polarity that is easy to miss: an
+/// EMPTY result was read as a capability gap. The control proved only that the
+/// grep worked on libSystem; it never established that libSystem was the right
+/// place to look. A control that validates the instrument does not validate the
+/// choice of subject.
+///
+/// So `wait` could arm a timerfd through a C shim in that style. It stays a
+/// sleep because the pull/push split above already composes: CF owns the block
+/// inside `wait`, and no descriptor has to cross this API at all.
 @MainActor
 struct UIKitFrameDriver {
     let window: UIWindow
