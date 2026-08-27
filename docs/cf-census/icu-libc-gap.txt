@@ -23,6 +23,17 @@
 # pthread_mach_thread_np is Darwin-only and has no glibc equivalent; it will
 # need a real answer rather than a forward.
 #
+# STATUS 2026-08-27: 17 of the 20 have landed in machorun's libSystem. THREE
+# REMAIN -- wcslen, wmemchr, pthread_mach_thread_np -- verified both by symbol
+# table and by `git log -S <name> -- darwin/src/` returning nothing for each, so
+# this is not a build-ordering artifact.
+#
+# The first two are trivial wide-char forwards. The third is the one this note
+# already warned about, and it has since acquired a SIBLING: CFRunLoop needs
+# pthread_main_thread_np, absent the same way and Darwin-only for the same
+# reason. They are one work item, not two, and the design question is identical
+# -- capture the main thread's identity at init rather than forward anything.
+#
 closedir
 div
 dlclose
