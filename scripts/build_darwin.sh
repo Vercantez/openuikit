@@ -184,31 +184,6 @@ else
     echo "      exception ABI, and any guest that throws will fail by name." >&2
 fi
 
-# libSystem RE-EXPORTS libc++abi, and this one IS a deviation from Darwin --
-# recorded as such rather than blended in.
-#
-# On macOS, libSystem re-exports libunwind (which is why _Unwind_* is "from
-# libSystem" in every Apple binary) and does NOT re-export libc++abi; Apple's
-# own libswiftCore binds ___gxx_personality_v0 "from libc++". Our layout now
-# matches that exactly -- verified with nm -m on Apple's SHIPPED
-# libswiftCore.sim.dylib, which is the authority here.
-#
-# The deviation exists for OUR OWN artifacts, not Apple's. machorun's
-# libSystem.B.tbd used to promise ___gxx_personality_v0, because the aborting
-# stub lived in objcsupport.c, and ~/swiftcore-macho's source-built
-# libswiftCore.dylib was linked against that promise: it carries a TWO-LEVEL
-# bind for ___gxx_personality_v0 naming libSystem. Removing the promise without
-# this re-export breaks that binary -- "undefined symbol, looked in
-# libSystem.B.dylib" -- for a symbol that is in the process the whole time.
-#
-# EXIT CONDITION, so this does not become permanent by inertia: once
-# ~/swiftcore-macho relinks libswiftCore against the current .tbd (its bind
-# should say "from libc++", as Apple's does), drop this line and check the
-# swift gate. Verify by content: `nm -m .../libswiftCore.dylib | grep
-# gxx_personality` must not say libSystem.
-LIBSYSTEM_REEXPORT=""
-[ -f "$OUT/libc++abi.dylib" ] && LIBSYSTEM_REEXPORT="-reexport_library $OUT/libc++abi.dylib"
-
 # -undefined dynamic_lookup makes every glibc reference a flat-lookup bind,
 # which machorun resolves through dlsym for images out of this tree. It is also
 # how libunwind's two dyld imports -- _dyld_find_unwind_sections and
@@ -217,7 +192,6 @@ LIBSYSTEM_REEXPORT=""
 $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
       -install_name /usr/lib/libSystem.B.dylib \
       -undefined dynamic_lookup \
-      ${LIBSYSTEM_REEXPORT} \
       -o "$OUT/libSystem.B.dylib" $LIBSYSTEM_OBJ $UNWIND_OBJ
 
 echo "   -> $OUT/libSystem.B.dylib"
