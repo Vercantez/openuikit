@@ -1,0 +1,77 @@
+{
+ "files": 5257,
+ "initializers": {
+  "URL": {
+   "string": 907,
+   "fileURLWithPath": 86,
+   "trimmedAddressBarString": 7,
+   "throwing": 2
+  },
+  "Data": {
+   "contentsOf": 41,
+   "reading": 4,
+   "videoFeed": 1,
+   "project": 7,
+   "projects": 1,
+   "me": 3,
+   "repeating": 8,
+   "_dataDict": 2,
+   "capacity": 2,
+   "base64Encoded": 2,
+   "count": 1,
+   "buffer": 1,
+   "bytes": 1
+  },
+  "Date": {
+   "timeIntervalSinceNow": 56,
+   "timeIntervalSince1970": 146,
+   "timeIntervalSinceReferenceDate": 5,
+   "timeInterval": 1
+  },
+  "UUID": {
+   "uuidString": 6
+  },
+  "URLRequest": {
+   "url": 149
+  }
+ },
+ "bare_initializers": {
+  "URL": 0,
+  "Data": 37,
+  "Date": 582,
+  "UUID": 177,
+  "URLRequest": 0
+ },
+ "members_RANKING_ONLY": {
+  "URL.absoluteString": 330,
+  "Date.timeIntervalSince1970": 269,
+  "URL.appendingPathComponent": 220,
+  "URL.host": 202,
+  "Date.now": 198,
+  "URL.path": 190,
+  "URL.query": 142,
+  "URL.password": 130,
+  "URL.fragment": 126,
+  "URL.user": 106,
+  "Date.addingTimeInterval": 64,
+  "URL.scheme": 60,
+  "Date.timeIntervalSince": 42,
+  "Date.timeIntervalSinceNow": 38,
+  "URL.queryItems": 36,
+  "URL.appending": 34,
+  "URL.lastPathComponent": 28,
+  "URL.deletingLastPathComponent": 15,
+  "Date.timeIntervalSinceReferenceDate": 13,
+  "Date.compare": 11,
+  "URL.isFileURL": 11,
+  "URL.pathExtension": 10,
+  "URL.deletingPathExtension": 8,
+  "URL.baseURL": 8,
+  "Date.distance": 7,
+  "Date.advanced": 5,
+  "URL.appendingPathExtension": 4,
+  "URL.pathComponents": 3,
+  "URL.relativePath": 2,
+  "URL.absoluteURL": 1
+ }
+}
