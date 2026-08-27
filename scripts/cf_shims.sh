@@ -416,17 +416,29 @@ cat > "$X/mach/mach_port_extra.h" <<'EOF'
    mach headers. Redeclaring them is a typedef-redefinition error that takes
    the whole census from 74 passing to ZERO -- measured. Declare only the
    functions. */
-kern_return_t mach_port_construct(ipc_space_t, mach_port_options_t *,
-                                  mach_port_context_t, mach_port_name_t *);
-kern_return_t mach_port_destruct(ipc_space_t, mach_port_name_t, mach_port_delta_t,
-                                 mach_port_context_t);
+/* THE NINE ARE GONE, and this is the RunLoop fork paying out exactly as the
+   note above predicted. mach_port_construct/destruct/type/insert_member/
+   extract_member and mk_timer_create/destroy/arm/cancel were referenced by ONE
+   file, CFRunLoop.c, and only from its Mach branch. patch_cf_runloop.py now
+   selects the eventfd/epoll branch, which defines its own static mk_timer_*
+   over timerfd -- so these declarations stopped being scaffolding and became a
+   COLLISION: 20 "static declaration follows non-static declaration" errors,
+   our own shim preventing the real implementation from compiling.
+
+   Checked for all ten before removing any, not just the four that erupted:
+   nine belong to CFRunLoop.c alone. mach_vm_region is CFUtilities.c's, and
+   stays.
+
+   AND ONE OF THE NINE CAME BACK. The first cut removed all nine on the
+   strength of "which FILE references it", which is the wrong test: the right
+   question is which REACHABLE BRANCH does. Measured properly, by grepping the
+   PREPROCESSED output, five are eliminated outright and four survive -- but the
+   four surviving mk_timer_* occurrences are the epoll branch's own static
+   DEFINITIONS, which is exactly why our declarations collided with them. Only
+   mach_port_type survives as a genuine CALL, from a Darwin block that has no
+   Linux alternative and which patch_cf_runloop.py therefore leaves alone. So
+   eight go and this one stays. */
 kern_return_t mach_port_type(ipc_space_t, mach_port_name_t, mach_port_type_t *);
-kern_return_t mach_port_insert_member(ipc_space_t, mach_port_name_t, mach_port_name_t);
-kern_return_t mach_port_extract_member(ipc_space_t, mach_port_name_t, mach_port_name_t);
-mach_port_name_t mk_timer_create(void);
-kern_return_t mk_timer_destroy(mach_port_name_t);
-kern_return_t mk_timer_arm(mach_port_name_t, uint64_t);
-kern_return_t mk_timer_cancel(mach_port_name_t, uint64_t *);
 kern_return_t mach_vm_region(vm_map_t, mach_vm_address_t *, mach_vm_size_t *,
                              vm_region_flavor_t, vm_region_info_t,
                              mach_msg_type_number_t *, mach_port_t *);
