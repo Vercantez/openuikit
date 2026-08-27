@@ -170,6 +170,11 @@ want 19_isa_mask         && build 19_isa_mask         "$CHAINED_TARGET" 19_isa_m
 # glibc swap the RECURSIVE and ERRORCHECK constants.
 want 21_pthread_cond     && build 21_pthread_cond     "$CHAINED_TARGET" 21_pthread_cond     21_pthread_cond.c --
 
+# The constants that cross the boundary. All 128 _SC_* names differ between
+# Darwin and glibc, so sysconf cannot be forwarded. Grades PREDICATES rather
+# than values, because the right answers legitimately differ per host.
+want 22_sysconf          && build 22_sysconf          "$CHAINED_TARGET" 22_sysconf          22_sysconf.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

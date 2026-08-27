@@ -1,19 +1,18 @@
 ### file
-/Users/miguelsalinas/machorun-wt-master/tests/bin/07_dylib: Mach-O 64-bit executable arm64
+/Users/miguelsalinas/machorun-wt-master/tests/bin/21_unfair_lock_firsttouch: Mach-O 64-bit executable arm64
 
 ### mach header
-/Users/miguelsalinas/machorun-wt-master/tests/bin/07_dylib:
+/Users/miguelsalinas/machorun-wt-master/tests/bin/21_unfair_lock_firsttouch:
 Mach header
       magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
- 0xfeedfacf 16777228          0  0x00           2    19       1216 0x00200085
+ 0xfeedfacf 16777228          0  0x00           2    18       1208 0x00200085
 
 ### dependencies
-/Users/miguelsalinas/machorun-wt-master/tests/bin/07_dylib:
-	@rpath/lib07greet.dylib (compatibility version 0.0.0, current version 0.0.0)
+/Users/miguelsalinas/machorun-wt-master/tests/bin/21_unfair_lock_firsttouch:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
 
 ### load commands
-/Users/miguelsalinas/machorun-wt-master/tests/bin/07_dylib:
+/Users/miguelsalinas/machorun-wt-master/tests/bin/21_unfair_lock_firsttouch:
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
@@ -28,7 +27,7 @@ Load command 0
     flags 0x0
 Load command 1
       cmd LC_SEGMENT_64
-  cmdsize 472
+  cmdsize 392
   segname __TEXT
    vmaddr 0x0000000100000000
    vmsize 0x0000000000004000
@@ -36,14 +35,14 @@ Load command 1
  filesize 16384
   maxprot 0x00000005
  initprot 0x00000005
-   nsects 5
+   nsects 4
     flags 0x0
 Section
   sectname __text
    segname __TEXT
-      addr 0x0000000100000508
-      size 0x00000000000000e4
-    offset 1288
+      addr 0x00000001000004f8
+      size 0x0000000000000434
+    offset 1272
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -53,9 +52,9 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x00000001000005ec
-      size 0x0000000000000030
-    offset 1516
+      addr 0x000000010000092c
+      size 0x0000000000000060
+    offset 2348
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -63,23 +62,11 @@ Section
  reserved1 0 (index into indirect symbol table)
  reserved2 12 (size of stubs)
 Section
-  sectname __init_offsets
-   segname __TEXT
-      addr 0x000000010000061c
-      size 0x0000000000000004
-    offset 1564
-     align 2^2 (4)
-    reloff 0
-    nreloc 0
-     flags 0x00000016
- reserved1 0
- reserved2 0
-Section
   sectname __cstring
    segname __TEXT
-      addr 0x0000000100000620
-      size 0x000000000000005a
-    offset 1568
+      addr 0x000000010000098c
+      size 0x00000000000000d6
+    offset 2444
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -89,9 +76,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x000000010000067c
+      addr 0x0000000100000a64
       size 0x0000000000000060
-    offset 1660
+    offset 2660
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -114,97 +101,114 @@ Section
   sectname __got
    segname __DATA_CONST
       addr 0x0000000100004000
-      size 0x0000000000000030
+      size 0x0000000000000048
     offset 16384
      align 2^3 (8)
     reloff 0
     nreloc 0
      flags 0x00000006
- reserved1 4 (index into indirect symbol table)
+ reserved1 8 (index into indirect symbol table)
  reserved2 0
 Load command 3
       cmd LC_SEGMENT_64
-  cmdsize 72
-  segname __LINKEDIT
+  cmdsize 152
+  segname __DATA
    vmaddr 0x0000000100008000
    vmsize 0x0000000000004000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 1
+    flags 0x0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x0000000100008000
+      size 0x0000000000000018
+    offset 0
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 4
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x000000010000c000
+   vmsize 0x0000000000004000
   fileoff 32768
- filesize 984
+ filesize 1480
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
     flags 0x0
-Load command 4
+Load command 5
       cmd LC_DYLD_CHAINED_FIXUPS
   cmdsize 16
   dataoff 32768
- datasize 176
-Load command 5
+ datasize 256
+Load command 6
       cmd LC_DYLD_EXPORTS_TRIE
   cmdsize 16
-  dataoff 32944
- datasize 72
-Load command 6
+  dataoff 33024
+ datasize 48
+Load command 7
      cmd LC_SYMTAB
  cmdsize 24
-  symoff 33024
-   nsyms 10
-  stroff 33224
- strsize 120
-Load command 7
+  symoff 33088
+   nsyms 22
+  stroff 33512
+ strsize 304
+Load command 8
             cmd LC_DYSYMTAB
         cmdsize 80
       ilocalsym 0
-      nlocalsym 1
-     iextdefsym 1
-     nextdefsym 3
-      iundefsym 4
-      nundefsym 6
+      nlocalsym 11
+     iextdefsym 11
+     nextdefsym 2
+      iundefsym 13
+      nundefsym 9
          tocoff 0
            ntoc 0
       modtaboff 0
         nmodtab 0
    extrefsymoff 0
     nextrefsyms 0
- indirectsymoff 33184
-  nindirectsyms 10
+ indirectsymoff 33440
+  nindirectsyms 17
       extreloff 0
         nextrel 0
       locreloff 0
         nlocrel 0
-Load command 8
+Load command 9
           cmd LC_LOAD_DYLINKER
       cmdsize 32
          name /usr/lib/dyld (offset 12)
-Load command 9
+Load command 10
      cmd LC_UUID
  cmdsize 24
-    uuid 7764B2A2-CF92-3DF4-85E6-01A73C328067
-Load command 10
+    uuid A455E54F-A704-3584-ADDF-F95685CF4557
+Load command 11
       cmd LC_BUILD_VERSION
   cmdsize 32
  platform 1
-    minos 12.0
-      sdk 26.1
+    minos 13.0
+      sdk 26.5
    ntools 1
      tool 3
   version 1230.1
-Load command 11
+Load command 12
       cmd LC_SOURCE_VERSION
   cmdsize 16
   version 0.0
-Load command 12
+Load command 13
        cmd LC_MAIN
    cmdsize 24
-  entryoff 1356
+  entryoff 1272
  stacksize 0
-Load command 13
-          cmd LC_LOAD_DYLIB
-      cmdsize 48
-         name @rpath/lib07greet.dylib (offset 24)
-   time stamp 2 Wed Dec 31 18:00:02 1969
-      current version 0.0.0
-compatibility version 0.0.0
 Load command 14
           cmd LC_LOAD_DYLIB
       cmdsize 56
@@ -213,34 +217,32 @@ Load command 14
       current version 1356.0.0
 compatibility version 1.0.0
 Load command 15
-          cmd LC_RPATH
-      cmdsize 32
-         path @loader_path (offset 12)
-Load command 16
       cmd LC_FUNCTION_STARTS
   cmdsize 16
-  dataoff 33016
- datasize 8
-Load command 17
+  dataoff 33072
+ datasize 16
+Load command 16
       cmd LC_DATA_IN_CODE
   cmdsize 16
-  dataoff 33024
+  dataoff 33088
  datasize 0
-Load command 18
+Load command 17
       cmd LC_CODE_SIGNATURE
   cmdsize 16
-  dataoff 33344
- datasize 408
+  dataoff 33824
+ datasize 424
 
 ### undefined symbols
-_greet
-_greet_counter
-_greet_name
-_greet_via_callback
+___stack_chk_fail
+___stack_chk_guard
+_os_unfair_lock_lock
+_os_unfair_lock_unlock
 _printf
+_pthread_create
+_pthread_join
 _puts
+_usleep
 
 ### defined external symbols
 0000000100000000 T __mh_execute_header
-0000000100000514 T _exe_callback
-000000010000054c T _main
+00000001000004f8 T _main
