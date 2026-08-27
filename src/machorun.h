@@ -157,6 +157,12 @@ int  mr_addr_in_glibc_heap(const void *p);
  * objects from -- has to live below this. See the placement note in src/map.c. */
 #define MR_ISA_LIMIT 0x800000000000ull
 
+/* The size mr_constrain_heap() probes with to prove that LARGE allocations are
+ * constrained too. It has to sit above glibc's 32 MiB mmap threshold, because
+ * everything below it was never in question -- that is the whole reason the
+ * original probe could not see the bug it was guarding against. */
+#define MR_HEAP_PROBE_LARGE (33ull * 1024 * 1024)
+
 /* --------------------------------------------------------------- fixups */
 void mr_fixups_apply(mr_image *im);
 void mr_fixups_chained(mr_image *im);

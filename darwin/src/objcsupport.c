@@ -661,11 +661,24 @@ EXPORT size_t strcspn(const char *s, const char *r)    { return glibc_strcspn(s,
 EXPORT ssize_t pread(int fd, void *b, size_t n, off_t o) { return glibc_pread(fd, b, n, o); }
 EXPORT int    geteuid(void) { return glibc_geteuid(); }
 
+/* The rest of the credential family. geteuid was exported alone because it was
+ * the only one objc4 needed, and that asymmetry is worse than a plain gap: a
+ * guest that calls getuid() links against a libSystem advertising geteuid and
+ * dies at load on the sibling. Found writing the passwd fixture, which used
+ * geteuid and documented why rather than tripping over it. All four are plain
+ * value returns with no struct and no errno contract, so a forward is the whole
+ * implementation. */
+extern int glibc_getuid(void)  GLIBCSYM(getuid);
+extern int glibc_getgid(void)  GLIBCSYM(getgid);
+extern int glibc_getegid(void) GLIBCSYM(getegid);
+EXPORT int    getuid(void)  { return glibc_getuid(); }
+EXPORT int    getgid(void)  { return glibc_getgid(); }
+EXPORT int    getegid(void) { return glibc_getegid(); }
+
 /* issetugid(2): "was this process started with elevated privilege?" objc4 uses
  * it to decide whether to honour OBJC_* environment variables. Linux has no
  * such call; comparing real and effective uid is the standard substitute and
  * catches exactly the setuid case objc4 cares about. */
-extern int glibc_getuid(void) GLIBCSYM(getuid);
 EXPORT int issetugid(void) { return glibc_getuid() != glibc_geteuid(); }
 
 /* reallocf(3) is BSD-only: realloc that frees the original on failure. */
