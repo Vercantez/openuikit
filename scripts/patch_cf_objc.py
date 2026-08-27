@@ -410,4 +410,56 @@ NEW_ISA = """    _CFRuntimeSetInstanceTypeID(cf, newTypeID);
 
 ok &= apply(RUNTIME, OLD_ISA, NEW_ISA, "CFRuntime.c   (SetInstanceTypeIDAndIsa: the isa half)")
 
+# ---------------------------------------- __CFMachPortClass: exclude, not invent
+#
+# CFRuntime.c:234 puts __CFMachPortClass in the runtime class table under
+# `#if TARGET_OS_MAC`. CFMachPort.c DOES NOT EXIST IN CORELIBS AT ALL -- the
+# purest instance of taking Apple's branch without Apple's code.
+#
+# EXCLUDED RATHER THAN STUBBED, and the reason is recorded here so nobody
+# "restores" it later: our CFRunLoop is the epoll backend with zero Mach IPC
+# (patch_cf_runloop.py rewrites 25 guards across 17 chains), so there is no Mach
+# port for the class to describe. A registered class with no implementation is a
+# null waiting for a caller -- the same shape as the empty registration slot that
+# made every CFDictionary crash.
+OLD_MACHPORT = """#if TARGET_OS_MAC
+    [_kCFRuntimeIDCFMachPort] = &__CFMachPortClass,
+#endif"""
+
+NEW_MACHPORT = """/* EXCLUDED: CFMachPort.c does not exist in corelibs, so this entry named a
+ * class nothing defines. We compile as TARGET_OS_MAC but implement corelibs,
+ * and this is the clearest case of that gap. Our CFRunLoop is the epoll
+ * backend with no Mach IPC, so there is no Mach port to describe -- do not
+ * "restore" this without also supplying CFMachPort.c. */
+#if 0
+    [_kCFRuntimeIDCFMachPort] = &__CFMachPortClass,
+#endif"""
+
+ok &= apply(RUNTIME, OLD_MACHPORT, NEW_MACHPORT, "CFRuntime.c   (__CFMachPortClass excluded)")
+
+# ------------------------ CFPlatform.c's Swift-gated tail: NOT a one-flag fix
+#
+# RECORDED AS A NEGATIVE RESULT so nobody retries it. I reported
+# _CFThreadSetName as "the one genuine one-flag fix" and that was WRONG: I read
+# its inner guard (SWIFT_CORELIBS_FOUNDATION_HAS_THREADS) and stopped. Tracking
+# preprocessor DEPTH instead of the nearest directive shows the real one --
+# `#if DEPLOYMENT_RUNTIME_SWIFT` at CFPlatform.c:1699, running to 2355, THE
+# ENTIRE REST OF THE FILE.
+#
+# That block holds ~657 lines that LOOK portable and are marked
+# CF_CROSS_PLATFORM_EXPORT: _CFThreadCreate/SetName/GetName/SpecificSet,
+# _CFEnviron, _CFOpenFile, _CFReallocf, posix_spawn. Only _CFThreadSetName
+# surfaced as undefined because a link reports what its consumers reference, not
+# what is absent -- the 6-of-99 shape again.
+#
+# ADMITTING THE BLOCK WHOLESALE DOES NOT WORK, measured rather than assumed:
+# it opens with swift_retain/swift_release, and compiling it produces 16 errors
+# starting at CFPlatform.c:2306, `unknown type name _CFPosixSpawnFileActionsRef`
+# -- the posix_spawn types are Swift-gated in a header as well. My "none of it
+# is Swift-specific" generalised from the function-name list rather than the
+# block, which is the same over-generalisation as reading the inner #if.
+#
+# The remaining options are to lift ONLY the thread helpers out of the block, or
+# to supply _CFThreadSetName narrowly. Both are real work; neither is a flag.
+
 sys.exit(0 if ok else 1)
