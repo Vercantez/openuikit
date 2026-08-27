@@ -746,6 +746,83 @@ expectation rather than catching a machorun bug.
 non-`N_STAB` symbol at or below the address, `n_value` plus slide), and
 `mr_dlsym_scoped` taking the caller's return address.
 
+The third of the three, `@loader_path`, is rung (ai) below — the same return
+address, handed to `mr_dlopen` instead.
+
+---
+
+### (ai) `loader_path` — `@loader_path` means the CALLER's directory
+`tests/src/loader_path.c` + `_mid.c` + `_leaf.c` · chained · **four images in
+two directories**
+
+**The layout is the test.** Two copies of one library, same basename, in two
+directories, and two images asking for the same string:
+
+    tests/bin/loader_path                                   the executable
+    tests/bin/libloader_path_leaf.dylib                     leaf_where() -> "bin"
+    tests/bin/loader_path_plugins/libloader_path_mid.dylib  the caller
+    tests/bin/loader_path_plugins/libloader_path_leaf.dylib leaf_where() -> "plugins"
+
+`dlopen("@loader_path/libloader_path_leaf.dylib")` is correct from both, and
+correct means **two different files**. Nothing simpler distinguishes the two
+answers, which is why the fixture is four images rather than two: a plugin that
+sits beside its executable gets the same answer either way.
+
+**Why the wrong answer is dangerous rather than merely wrong.** Resolving
+against the main executable does not return NULL and does not fail a "did
+`dlopen` succeed" check — it finds the *other* library of the same name and
+returns a valid handle to it. A plugin would silently get the host app's copy of
+its own dependency. The shared basename is the whole point.
+
+**Three spellings, and only two follow the caller.**
+
+| spelling | resolves against |
+|---|---|
+| `@loader_path/` | the caller's directory |
+| `@rpath/` | the **caller's** `LC_RPATH`s first, the main executable's second |
+| `@executable_path/` | the main executable, from every image, always |
+
+`@rpath` is the one that is easy to miss, because nothing at the call site
+mentions the caller. The executable's first `LC_RPATH` is `@loader_path`
+(= `bin`) and the middle dylib's is `@loader_path` (= `plugins`), so the same
+`@rpath` string must resolve to different files. `@executable_path` is the
+**control**: it is the spelling that must not have moved, and the difference
+between it and `@loader_path` is the only reason Darwin has both.
+
+**Identity is checked in both directions.** Two spellings naming the same file
+must give the same handle — `dlopen` canonicalises, so `@loader_path` and
+`@rpath` from the executable are one image, not two — and two spellings naming
+different files must give different ones. "Not NULL" alone passes with the bug;
+"different" alone passes with a loader that loads a second copy of everything.
+
+**It found a second bug on its first Linux run,** which is a case a fixture
+about paths had no reason to be hunting: `dlopen` of a library that is in
+neither directory **aborted the process at exit 72** instead of returning NULL.
+A load command that cannot be resolved is fatal; a `dlopen` that cannot be
+resolved is an answer. And the abort printed **no stdout at all** despite eleven
+checks having already passed, because `_exit` does not flush and the guest
+shares the loader's `stdout` — two bare `_exit` sites that `mr_die`'s own flush
+had never covered. Both are written up in `docs/UNIMPLEMENTED.md#dlopen-dlsym`.
+
+**Teeth, two mutations, each confirmed by a changed loader md5 and judged by the
+*shape* of the failure rather than by its count:**
+
+| mutation | result |
+|---|---|
+| resolve against `MR.main_image` again | FAIL on exactly 3 of 12 — the three caller-dependent checks, and no others |
+| drop the not-found `return NULL` | exit 72 at the twelfth check, with the eleven before it printed |
+
+**Stated honestly:** the two `@rpath`-agrees-with-`@loader_path` checks pass
+under the first mutation too. They are not teeth for this bug — both spellings
+resolve wrongly and *identically* — they guard against a loader that maps a
+second copy per spelling. And `@executable_path does NOT follow the caller`
+passes before and after, because `@executable_path` never consults the loading
+image at all; it guards a *future* wrong fix, not this one.
+
+**Loader must implement:** `mr_dlopen(path, mode, caller_ra)` with
+`mr_image_containing(caller_ra)` as the loading image for both resolution and
+load, and a `NULL` return when the path resolves to nothing.
+
 ---
 
 ### (x) `fat` — universal binary

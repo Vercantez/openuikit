@@ -667,6 +667,13 @@ with the string inline at `cmd_start + name_offset`, NUL-terminated, padded to
 | `@rpath/` | try each `LC_RPATH` of the loading image, then of the main executable, in order; each `LC_RPATH` may itself start with `@executable_path`/`@loader_path` |
 | absolute (`/usr/lib/...`) | **redirect into our own darwin/ tree** — see below |
 
+**The same rules apply to a `dlopen` path, with "the image containing this
+`LC_LOAD_DYLIB`" read as "the image that called `dlopen`".** That is not a
+restatement: it is a different image, discoverable only from the caller's
+return address, and getting it wrong is silent — see `tests/bin/loader_path`
+and `docs/FIXTURES.md` rung (ai). `@executable_path` still means the main
+executable in both cases, which is the only reason the two spellings differ.
+
 The redirect is the entire point of the project. `/usr/lib/libSystem.B.dylib`
 does not exist on Linux and, notably, **does not exist as a file on macOS
 either** (`ls /usr/lib/libSystem.B.dylib` -> no such file; it lives only in the

@@ -1,0 +1,13 @@
+@loader_path from the executable finds bin's leaf    ok
+@loader_path from the plugin finds the plugin's leaf ok
+the same string gave two different images            ok
+@rpath searches the executable's LC_RPATHs           ok
+@rpath searches the PLUGIN's LC_RPATHs first         ok
+@rpath and @loader_path agree from the executable    ok
+@rpath and @loader_path agree from the plugin        ok
+@executable_path from the executable is bin's leaf   ok
+@executable_path does NOT follow the caller          ok
+@executable_path is the same image from both         ok
+and it is the executable's own leaf                  ok
+@loader_path of an absent library is NULL            ok
+PASSED: 0 failure(s)

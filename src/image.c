@@ -356,6 +356,13 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
                 mr_log("weak dylib %s not found; its binds will resolve to NULL", want);
                 return NULL;
             }
+            /* BEFORE the report, and it is not cosmetic: _exit does not flush,
+             * and the guest shares this stdout. Without it a fixture that
+             * printed eleven passing lines and then hit this looks like a
+             * fixture that printed nothing -- measured, on loader_path's first
+             * Linux run. mr_die does the same for the same reason; these two
+             * bare _exit sites had been missed. */
+            fflush(stdout);
             fprintf(stderr, "machorun: cannot find dylib '%s'\n", want);
             fprintf(stderr, "  required by: %s\n", loader ? loader->path : "(main)");
             for (int i = 0; i < ntried; i++)
@@ -445,25 +452,56 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
  * rather than a search. dlopen(NULL) means "the main program" on Darwin, which
  * is MR.main_image.
  *
- * @loader_path RESOLVES AGAINST THE MAIN IMAGE, NOT THE CALLER, AND THAT IS AN
- * APPROXIMATION. Real dyld resolves it against the image that called dlopen,
- * which requires attributing a return address to an image -- the same missing
- * notion of "the calling image" that keeps RTLD_NEXT and RTLD_SELF
- * unimplemented (docs/UNIMPLEMENTED.md#dlopen-dlsym). For a guest that dlopens
- * a plugin from its main executable, which is the case in the corpus, the two
- * are the same answer.
+ * "THE LOADING IMAGE" FOR A dlopen IS THE IMAGE THAT CALLED IT, AND THAT IS
+ * WHAT caller_ra IS FOR. It decides three things, not one:
+ *
+ *     @loader_path/    the caller's directory
+ *     @rpath/          the caller's LC_RPATHs are searched first, the main
+ *                      executable's second -- and each of those LC_RPATHs may
+ *                      itself begin @loader_path, so the caller decides twice
+ *     a relative path  tried against the caller's directory before the cwd
+ *
+ * All three used to be answered with MR.main_image, which is right only while
+ * the caller IS the main executable. A plugin that dlopens its own sibling by
+ * @loader_path is the ordinary case on Darwin -- it is how a framework loads
+ * its helpers -- and answering from the main executable does not fail loudly:
+ * it looks in the WRONG DIRECTORY, so it either returns NULL for a library
+ * that is present, or finds a different file of the same name and returns a
+ * handle to it. tests/bin/loader_path stages exactly that: the same string,
+ * "@loader_path/libloader_path_leaf.dylib", dlopen'd from two images that sit
+ * in different directories, and the two answers must be different files.
+ *
+ * @executable_path DOES NOT MOVE. It means the main executable in every image,
+ * which is the whole difference between the two spellings, so the fixture
+ * checks that this change did not sweep it along.
+ *
+ * caller_ra comes from libSystem's dlopen, where __builtin_return_address(0)
+ * is the guest's own return address -- the same one-line trick that answers
+ * dlsym's RTLD_NEXT/RTLD_SELF, because it is the same missing notion.
  * ===================================================================== */
 void mr_objc_note_new_images(int from);
 
-void *mr_dlopen(const char *path, int mode)
+void *mr_dlopen(const char *path, int mode, const void *caller_ra)
 {
     int before = MR.nimages;
-    mr_image *im;
+    mr_image *im, *caller;
 
     char *tried[MAX_TRIED], *resolved;
     int ntried = 0, is_runtime = 0;
 
     if (!path) return MR.main_image;          /* Darwin: a handle for the program */
+
+    /* NULL is the loader calling itself and means the main executable. A
+     * non-NULL address in no image cannot be a guest frame, and silently
+     * falling back to the main image there would reintroduce exactly the wrong
+     * answer this argument exists to remove -- so say it instead. */
+    caller = caller_ra ? mr_image_containing(caller_ra) : MR.main_image;
+    if (!caller)
+        mr_die("dlopen(\"%s\"): called from 0x%llx, which is not in any Mach-O image. "
+               "@loader_path and @rpath resolve against the CALLING image, so there is "
+               "no honest answer from here. A loader or glibc frame means libSystem's "
+               "dlopen was reached other than by a guest call.",
+               path, (unsigned long long)(uintptr_t)caller_ra);
 
     /* RESOLVE BEFORE ASKING WHETHER IT IS LOADED. The caller's spelling is
      * almost never the table's: a guest says "./libfoo.dylib" and the image
@@ -479,13 +517,35 @@ void *mr_dlopen(const char *path, int mode)
      * redirect into darwin/ rather than match. */
     im = mr_image_find_loaded(path);
     if (!im) {
-        resolved = resolve_dylib_path(path, MR.main_image, tried, &ntried, &is_runtime);
-        if (resolved) { im = mr_image_find_loaded(resolved); free(resolved); }
+        resolved = resolve_dylib_path(path, caller, tried, &ntried, &is_runtime);
+        /* NOT FOUND IS AN ANSWER HERE, NOT AN ERROR, AND THAT IS THE ONE PLACE
+         * dlopen PARTS COMPANY WITH A LOAD COMMAND. An LC_LOAD_DYLIB that
+         * cannot be resolved is fatal: the program was linked against it and
+         * cannot run. A dlopen that cannot be resolved returns NULL, and
+         * asking is a normal thing to do -- "is this optional framework
+         * present?" is how CoreFoundation decides which branch to take, and it
+         * asks about libraries it fully expects to be absent.
+         *
+         * mr_image_load prints its tried-list and _exit(72)s, which is right
+         * for its own callers and wrong for this one. FOUND BY tests/bin/
+         * loader_path, whose last case dlopens a library that is deliberately
+         * in neither directory: on Linux the whole fixture died at exit 72
+         * with no stdout, having already passed the eleven checks before it.
+         * The `dlopen` fixture never reached this because every path it names
+         * exists, and RTLD_NOLOAD returns below before getting here. */
+        if (!resolved) {
+            mr_log("dlopen: %s not found (%d path(s) tried); returning NULL", path, ntried);
+            for (int i = 0; i < ntried; i++) free(tried[i]);
+            return NULL;
+        }
+        im = mr_image_find_loaded(resolved);
+        free(resolved);
     }
+    for (int i = 0; i < ntried; i++) free(tried[i]);
     if (im) return im;                        /* already in, including RTLD_NOLOAD */
     if (mode & MR_RTLD_NOLOAD) return NULL;   /* the honest "not loaded" */
 
-    im = mr_image_load(path, MR.main_image, 0, 0);
+    im = mr_image_load(path, caller, 0, 0);
     if (!im) return NULL;
 
     for (int k = MR.nimages - 1; k >= before; k--) mr_fixups_apply(MR.images[k]);
@@ -615,10 +675,11 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
  * dladdr, and a dlsym scope starting one image too early. None of those looks
  * like a bug at the call site.
  *
- * It also underpins "the calling image" -- the notion whose absence kept
- * dlsym's RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY and dlopen's @loader_path
- * unimplemented. Callable from a signal handler: it takes no lock and
- * allocates nothing, which crash.c depends on. */
+ * It also IS "the calling image" -- the notion whose absence kept dlsym's
+ * RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY unimplemented and dlopen's
+ * @loader_path approximate. Four questions that look unrelated in a symbol
+ * census are this one function plus a return address. Callable from a signal
+ * handler: it takes no lock and allocates nothing, which crash.c depends on. */
 /* THE _dyld_* IMAGE-INTROSPECTION FAMILY, which libSystem cannot answer.
  *
  * CoreFoundation walks the loaded images to find bundles and to map addresses

@@ -159,7 +159,8 @@ Path expansion, in order, per MACHO_NOTES §8:
 
 ```
 @executable_path/ -> dirname(main executable)
-@loader_path/     -> dirname(the image holding this LC_LOAD_DYLIB)
+@loader_path/     -> dirname(the image holding this LC_LOAD_DYLIB; for a
+                     dlopen, the image that CALLED it)
 @rpath/           -> each LC_RPATH of the loading image, then of the main
                      executable, in order; each may itself be @-prefixed
 absolute          -> prefix map into our tree
