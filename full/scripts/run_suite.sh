@@ -15,6 +15,11 @@ set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 UIKIT=${UIKIT:-$HOME/uikit}
 SUITE=${SUITE:-suite}
+# MRROOT lets a run use an alternative guest root -- e.g. one with a different
+# Swift runtime. The runtime turned out to be the discriminator for most of the
+# failures, so comparing roots is a first-class operation, not a hack.
+MRROOT=${MRROOT:-/w/scratch/mrroot_full}
+MRMOUNT=${MRMOUNT:-}
 OUT=$ROOT/build/full/$SUITE
 
 # LOW_HEAP=1 runs every scene with RLIMIT_STACK unlimited, which flips Linux to
@@ -60,12 +65,13 @@ for s in "${scenes[@]}"; do
     cname="mrsuite_${SUITE}_${name}"
     out=$(timeout --signal=KILL "$SCENE_TIMEOUT" docker run --rm --name "$cname" "${STACKOPT[@]}" \
         -v "$ROOT:/w" -v "$UIKIT:/uikit:ro" -w /w/build/full \
-        -e MACHORUN_ROOT=/w/scratch/mrroot_full \
+        ${MRMOUNT:+-v "$MRMOUNT"} \
+        -e MACHORUN_ROOT="$MRROOT" \
         -e OPENUIKIT_RESOURCE_ROOT=/uikit/Sources/OpenUIKit/Resources \
         -e OPENUIKIT_FONT_DIR=/w/scratch/fonts \
         -e OPENUIKIT_BACKEND="${OPENUIKIT_BACKEND:-quartz}" \
         swift-macho-spike:noble \
-        /w/scratch/mrroot_full/machorun ./render_full "/w/build/full/$SUITE" "/uikit/fixtures/scenes/$name.json" 2>&1)
+        "$MRROOT/machorun" ./render_full "/w/build/full/$SUITE" "/uikit/fixtures/scenes/$name.json" 2>&1)
     st=$?
     if [ $st -eq 0 ]; then
         pass=$((pass+1)); printf '%-34s ok\n' "$name"
