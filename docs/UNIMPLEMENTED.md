@@ -126,6 +126,42 @@ way `vendor/objc4` is built. That is a real project and has not been attempted;
 until then, growing `libcxx_std.cpp` by explicit instantiation is the cheap path
 and keeps our copies bit-identical to the headers they are compiled against.
 
+### `duplicate-definitions` — CHECKED, hard, since 2026-08-27
+Two dylibs defining the same symbol is **not an error** to the linker or the
+loader. It is a coin toss decided by load order, and it has cost this project
+twice: `swift_retain`/`swift_release` defined in libSystem beat the real
+libswiftCore, which is why `-lswiftCore` before `-lSystem` was once load-bearing;
+and `syspatch.c`'s `malloc_type` shim beat machorun's own for a week
+(`malloc-type-zones` above).
+
+`scripts/gen_tbd.sh` CHECK 4 is an all-pairs sweep over **every dylib present in
+`darwin/usr/lib`**, not only the ones it emits stubs for. That scope is the whole
+point: the overlap that prompted it was between `libc++abi.dylib` and
+`libswiftcompat.dylib`, and libswiftcompat is staged from `~/swiftcore-macho` so
+it is not in `DYLIBS` and never will be. A check scoped to `DYLIBS` would have
+reported clean about four libraries and said nothing about the fifth — exactly
+how `check_stale` missed `libc++abi` when it arrived.
+
+**THE DANGEROUS CLASS IS ZEROFILL-VERSUS-REAL, and the check labels it.** A
+symbol in `(__DATA,__common)` is a PLACEHOLDER — `otool -s` says "no contents in
+the file" — put there to satisfy a link. Two real definitions are a mess; a
+placeholder shadowing a real implementation is a jump through NULL waiting for a
+link order to change.
+
+The instance it was built for: `libswiftcompat.dylib` defined the four
+`__cxxabiv1::*_type_info` vtables as zerofill, and `libswiftCore.dylib` imports
+all four `(dynamically looked up)` — flat, so first-loaded wins.
+`__gxx_personality_v0` matches a `catch` by dispatching through exactly those
+vtables. It was safe only because `libc++abi` happened to load first, measured
+with `MACHORUN_VERBOSE`. **The shim's own comment was right when written** —
+*"nothing in a `-fno-exceptions` runtime dispatches through them"* — and adding a
+real libc++abi invalidated it from another repository. Fixed by deletion in
+`~/swiftcore-macho`, not by correcting it in two places.
+
+**If this check fires on a STAGED artifact**, run `scripts/stage_swiftcore.sh`
+before believing it: a stale copy carries duplicates the source no longer has,
+and every git-level check says you are current.
+
 ### `weak-definition-gaps` — a missing symbol that binds to NULL instead of failing
 A `<weak-def-coalesce>` bind is **not** an optional symbol. It says "one
 definition of this is shared across the program and the linker does not care
