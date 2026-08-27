@@ -63,6 +63,10 @@ _mr_dlsym_scoped    #internal
 _mr_dladdr          #internal
 _mr_dlsym_default   #internal
 _mr_guest_executable_path #internal
+_mr_dyld_image_count #internal
+_mr_dyld_image_header #internal
+_mr_dyld_image_name #internal
+_mr_dyld_image_slide #internal
 
 # The crash reporter's frame walk, callable from our dylibs' mr_bail. A
 # guest-side diagnostic knows which rule was broken and cannot name who broke

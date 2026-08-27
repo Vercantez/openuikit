@@ -300,6 +300,13 @@ fi
 # and glibc exports no dynamic symbol for it at all.
 want 36_execpath         && build 36_execpath         "$CHAINED_TARGET" 36_execpath         36_execpath.c --
 
+# --------------------------------------------------------------- rung (aj)
+# The _dyld_* image table. Three gaps that look unrelated in a symbol census --
+# _NSGetExecutablePath needing the MAIN image, dladdr needing the CALLING one,
+# and these needing the WHOLE TABLE -- are one cause: libSystem has no view of
+# MR.images, and here the loader IS dyld.
+want 37_dyld_images      && build 37_dyld_images      "$CHAINED_TARGET" 37_dyld_images      37_dyld_images.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

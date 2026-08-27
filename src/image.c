@@ -619,6 +619,45 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
  * dlsym's RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY and dlopen's @loader_path
  * unimplemented. Callable from a signal handler: it takes no lock and
  * allocates nothing, which crash.c depends on. */
+/* THE _dyld_* IMAGE-INTROSPECTION FAMILY, which libSystem cannot answer.
+ *
+ * CoreFoundation walks the loaded images to find bundles and to map addresses
+ * back to binaries. On Darwin that is dyld's own table; here the loader IS
+ * dyld, so MR.images is the table and libSystem has no view of it -- the same
+ * reason _NSGetExecutablePath and dladdr had to come from this side.
+ *
+ * INDEX 0 IS THE MAIN EXECUTABLE, which is a contract rather than an accident:
+ * mr_image_load registers an image BEFORE its dependencies (so a dependency
+ * cycle terminates), and the main image is loaded first, so it lands at 0
+ * exactly as dyld promises. tests/bin/37_dyld_images asserts it rather than
+ * leaving it to the comment.
+ *
+ * Out-of-range indices return NULL/0 rather than aborting, because that is
+ * what dyld does and because the standard idiom is to walk until the header
+ * comes back NULL -- aborting would turn every correct caller into a crash. */
+uint32_t mr_dyld_image_count(void)
+{
+    return (uint32_t)MR.nimages;
+}
+
+const void *mr_dyld_image_header(uint32_t i)
+{
+    if (i >= (uint32_t)MR.nimages) return NULL;
+    return (const void *)(uintptr_t)MR.images[i]->load_base;
+}
+
+const char *mr_dyld_image_name(uint32_t i)
+{
+    if (i >= (uint32_t)MR.nimages) return NULL;
+    return MR.images[i]->path;
+}
+
+intptr_t mr_dyld_image_slide(uint32_t i)
+{
+    if (i >= (uint32_t)MR.nimages) return 0;
+    return (intptr_t)MR.images[i]->slide;
+}
+
 mr_image *mr_image_containing(const void *addr)
 {
     uint64_t a = (uint64_t)(uintptr_t)addr;

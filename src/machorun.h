@@ -199,6 +199,10 @@ typedef struct { const char *dli_fname; void *dli_fbase;
  * src/image.c. Signal-handler safe: no lock, no allocation. */
 mr_image *mr_image_containing(const void *addr);
 int   mr_dladdr(const void *addr, mr_dl_info *out);
+uint32_t    mr_dyld_image_count(void);
+const void *mr_dyld_image_header(uint32_t);
+const char *mr_dyld_image_name(uint32_t);
+intptr_t    mr_dyld_image_slide(uint32_t);
 void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name);
 void *mr_dlsym_handle(void *handle, const char *name);
 

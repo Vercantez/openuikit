@@ -817,6 +817,31 @@ EXPORT size_t strlcpy(char *dst, const char *src, size_t size)
     return n;
 }
 
+/* The _dyld_* image-introspection family. Every one of these is a question
+ * only the loader can answer -- MR.images is dyld's table here, and libSystem
+ * has no view of it. Same shape as _NSGetExecutablePath needing the MAIN image
+ * and dladdr needing the CALLING one: three separate-looking gaps, one cause.
+ *
+ * CoreFoundation walks these to find bundles and to map addresses back to
+ * binaries, and the standard idiom is to count first or to walk until the
+ * header comes back NULL -- so out-of-range must return NULL/0 rather than
+ * abort, which is what dyld does and what every correct caller relies on.
+ *
+ * The DECLARATIONS are the ABI: _dyld_image_count returns uint32_t and the
+ * slide is an intptr_t, which is signed because an image can land BELOW its
+ * preferred base. An unsigned slide would read a downward slide as an
+ * enormous positive offset, and every address computed from it would be
+ * wrong in a way that looks like a valid pointer. */
+extern unsigned    mr_dyld_image_count(void);          /* -> loader, image.c */
+extern const void *mr_dyld_image_header(unsigned);
+extern const char *mr_dyld_image_name(unsigned);
+extern long        mr_dyld_image_slide(unsigned);
+
+EXPORT unsigned    _dyld_image_count(void)                { return mr_dyld_image_count(); }
+EXPORT const void *_dyld_get_image_header(unsigned i)     { return mr_dyld_image_header(i); }
+EXPORT const char *_dyld_get_image_name(unsigned i)       { return mr_dyld_image_name(i); }
+EXPORT long        _dyld_get_image_vmaddr_slide(unsigned i) { return mr_dyld_image_slide(i); }
+
 /* The _FORTIFY_SOURCE expansion of strlcpy, which libdispatch's init.c reaches
  * through <string.h> without ever naming it. There is nothing to forward to --
  * glibc has neither strlcpy's semantics nor Apple's __*_chk family -- so this
