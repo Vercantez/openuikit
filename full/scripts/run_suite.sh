@@ -18,9 +18,24 @@ SUITE=${SUITE:-suite}
 # MRROOT lets a run use an alternative guest root -- e.g. one with a different
 # Swift runtime. The runtime turned out to be the discriminator for most of the
 # failures, so comparing roots is a first-class operation, not a hack.
+MRROOT_WAS_SET=${MRROOT+yes}
 MRROOT=${MRROOT:-/w/scratch/mrroot_full}
 MRMOUNT=${MRMOUNT:-}
 OUT=$ROOT/build/full/$SUITE
+
+# Freshness is asserted ONLY for the default root. scratch/mrroot_full is a COPY
+# of machorun's userland, and a copy read long after it was made is
+# indistinguishable from a fresh one -- an enumeration on 2026-08-27 found four
+# such roots still carrying a malloc_type bug that had been fixed upstream weeks
+# earlier, in trees guests were actually executed against.
+#
+# But an EXPLICIT MRROOT is the entire point of the knob three comments up:
+# comparing an alternative runtime is a first-class operation here, and half the
+# reason to point at another root is that it is deliberately NOT current.
+# Refusing that would break the feature in the name of protecting it.
+if [ -z "${MRROOT_WAS_SET:-}" ]; then
+    "$ROOT/scripts/require_fresh_root.sh" scratch/mrroot_full || exit 1
+fi
 
 # LOW_HEAP=1 runs every scene with RLIMIT_STACK unlimited, which flips Linux to
 # the LEGACY bottom-up mmap layout process-wide: the PIE, and therefore brk and

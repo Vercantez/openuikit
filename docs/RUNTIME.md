@@ -148,3 +148,72 @@ scripts/run_quartz.sh                                    # machorun + byte-for-b
 `scratch/` and `build/` are gitignored; `scratch/mrroot` is a copy of
 `~/machorun/darwin` plus the loader plus the staged runtime — this repository
 never writes into `~/machorun`.
+
+## 7. The guest roots are copies, and four of them had rotted
+
+`scratch/mrroot*` are copies of `~/machorun/darwin/usr/lib`. Three scripts build
+one; **eight others just read one**, and a copy read long after it was made is
+indistinguishable from a fresh one. `scratch/` is gitignored, so there is no
+commit, no diff and no review to notice drift by — and machorun's own
+`check_stale.sh` grades six hardcoded paths, all inside `~/machorun`. **A copy
+tree it has never heard of is the case it structurally cannot see.**
+
+An enumeration on 2026-08-27 (`~/swiftcore-macho/docs/BUILD_LOG.md` §17) found
+**five** such roots here, **all five stale** — every dylib in every one differed
+from machorun's. Resolving `malloc_type_malloc` *by symbol* rather than by file
+offset, because a byte at an address is not proof it is the same function:
+
+```
+machorun/darwin/usr/lib   b … symbol stub for: _glibc_malloc   <- current
+scratch/mrroot            b … symbol stub for: _malloc         <- pre-fix
+scratch/mrroot2           b … symbol stub for: _malloc         <- pre-fix
+scratch/mrroot_isa        b … symbol stub for: _malloc         <- pre-fix
+scratch/mrroot_prefix     b … symbol stub for: _malloc         <- pre-fix
+scratch/mrroot_full       (symbol absent — older still)
+```
+
+That defect cost this project a week when it was live in machorun. It was still
+on disk here, in trees guests are actually executed against, long after it was
+fixed at the source.
+
+### What changed
+
+**Two roots deleted:** `mrroot_isa` and `mrroot_prefix`, which nothing
+referenced (verified across 23,988 files in five repositories, with a control —
+`mrroot_full` returned 3 references, proving the sweep could find things). Every
+dylib in both was checked to have a byte-identical copy that **survives both
+deletions**, not merely a copy somewhere — two of them were each other's only
+other copy, which a naive check would have been satisfied by while both vanished.
+
+**Three roots kept and refreshed**, because they *are* referenced —
+`mrroot` (12 files), `mrroot_full` (2), `mrroot2` (1). All three now match
+machorun and none carries the malloc_type defect.
+
+**`scripts/require_fresh_root.sh`** is the durable part. Every script that reads
+a root it does not build now calls it and **refuses** rather than silently
+testing the past:
+
+```
+STALE GUEST ROOT: scratch/mrroot
+  1 of 6 dylib(s) differ from ~/machorun/darwin/usr/lib:
+      darwin/usr/lib/libobjc.A.dylib
+  Refresh it:   MRROOT_REFRESH=1 scripts/require_fresh_root.sh scratch/mrroot
+```
+
+It refuses rather than auto-refreshing because refreshing by default would swap
+the runtime out from under someone deliberately testing an older one. It reports
+its denominator (`6 dylib(s) match … 4 local-only skipped`), and it **refuses to
+grade** a root where it compared zero files — a vacuous green is worse than no
+check.
+
+**`full/scripts/run_suite.sh` is guarded only on its DEFAULT root.** An explicit
+`MRROOT` is the entire point of that knob — comparing an alternative runtime is
+a first-class operation there, and half the reason to point at another root is
+that it is deliberately not current. Refusing that would have broken the feature
+in the name of protecting it.
+
+### Still open
+
+`check_stale.sh` should grade **discovered** trees rather than its six hardcoded
+paths. That is machorun's gate, so it belongs to machorun-isamask rather than
+being landed under them.
