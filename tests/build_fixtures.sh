@@ -307,6 +307,13 @@ want 36_execpath         && build 36_execpath         "$CHAINED_TARGET" 36_execp
 # MR.images, and here the loader IS dyld.
 want 37_dyld_images      && build 37_dyld_images      "$CHAINED_TARGET" 37_dyld_images      37_dyld_images.c --
 
+# --------------------------------------------------------------- rung (ak)
+# OSAtomic and OSSpinLock. No struct, no constant, no variadic argument, no
+# differing width -- the entire risk is a RETURN VALUE off by one operation:
+# Darwin's increment family returns the NEW value, so add_fetch and not
+# fetch_add. Every assertion is written so a fetch_add implementation fails it.
+want 38_osatomic         && build 38_osatomic         "$CHAINED_TARGET" 38_osatomic         38_osatomic.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -817,6 +817,95 @@ EXPORT size_t strlcpy(char *dst, const char *src, size_t size)
     return n;
 }
 
+/* ---------------------------------------- OSAtomic and OSSpinLock (Darwin) */
+
+/* ADOPTED FROM foundation-macho's src/compat/OSAtomic.c RATHER THAN REWRITTEN,
+ * which is deliberate: an implementation someone has already exercised beats a
+ * fresh one, and the risk here is a SECOND DEFINITION rather than a missing
+ * one -- which is what CHECK 4 exists to catch and what cost this project a
+ * week when a shim shadowed the real malloc_type family. Their own comment
+ * said these belong in machorun's libSystem, since they are Darwin platform
+ * API rather than Foundation. This is that move.
+ *
+ * THREE SEMANTICS THAT ARE EASY TO GET WRONG AND THAT CoreFoundation RELIES ON:
+ *
+ *   The increment/decrement/add forms return the NEW value, not the old one.
+ *   Darwin's do. That is why these use __atomic_add_fetch rather than
+ *   __atomic_fetch_add -- the two differ by exactly one value and a caller
+ *   comparing the result against zero would take the wrong branch every time.
+ *
+ *   The plain (non-Barrier) forms are documented as NOT full barriers, but
+ *   Apple's arm64 implementations are sequentially consistent in practice and
+ *   callers have come to depend on it. SEQ_CST is the conservative choice; a
+ *   weaker order would be a silent behavioural difference rather than a
+ *   visible failure, which is the kind this boundary must not introduce.
+ *
+ *   The compare-and-swap forms are STRONG -- no spurious failure -- which is
+ *   what Darwin promises and what CF's retain/release paths assume. Passing
+ *   the caller's value directly to __atomic_compare_exchange_n would be wrong
+ *   twice over: it updates `expected` in place on failure, so it needs a local. */
+
+EXPORT int OSAtomicIncrement32(volatile int *value)
+{
+    return __atomic_add_fetch(value, 1, __ATOMIC_SEQ_CST);
+}
+
+EXPORT int OSAtomicDecrement32(volatile int *value)
+{
+    return __atomic_sub_fetch(value, 1, __ATOMIC_SEQ_CST);
+}
+
+EXPORT long long OSAtomicAdd64(long long amount, volatile long long *value)
+{
+    return __atomic_add_fetch(value, amount, __ATOMIC_SEQ_CST);
+}
+
+EXPORT int OSAtomicCompareAndSwap32Barrier(int oldValue, int newValue,
+                                           volatile int *theValue)
+{
+    int expected = oldValue;
+    return __atomic_compare_exchange_n(theValue, &expected, newValue,
+                                       0 /* strong */,
+                                       __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+}
+
+EXPORT int OSAtomicCompareAndSwapPtrBarrier(void *oldValue, void *newValue,
+                                            void *volatile *theValue)
+{
+    void *expected = oldValue;
+    return __atomic_compare_exchange_n(theValue, &expected, newValue,
+                                       0 /* strong */,
+                                       __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
+}
+
+EXPORT void OSMemoryBarrier(void)
+{
+    __atomic_thread_fence(__ATOMIC_SEQ_CST);
+}
+
+/* OSSpinLock IS BACKED BY os_unfair_lock, AND THE TWO ARE COMPATIBLE BY
+ * MEASUREMENT RATHER THAN BY LUCK: both are a 4-byte word whose unlocked state
+ * is zero (OS_SPINLOCK_INIT and OS_UNFAIR_LOCK_INIT are both {0}), so a lock
+ * initialised through either spelling is valid for the other.
+ *
+ * Writing a second spin loop here would mean maintaining a second
+ * synchronisation primitive to get wrong, when libsystem.c already has one
+ * that is exercised by tests/bin/21_unfair_lock_firsttouch and by a 300-run
+ * threading gate. Reuse is the same judgement as adopting the OSAtomic bodies
+ * above.
+ *
+ * ONE OBSERVABLE DIFFERENCE, recorded rather than hidden: recursive
+ * acquisition ABORTS here and HANGS FOREVER on Darwin. Apple deprecated
+ * OSSpinLock precisely because it has no owner tracking and no priority
+ * donation, so a recursive or preempted holder deadlocks. Aborting with a
+ * sentence is a divergence in the safe direction -- it cannot be mistaken for
+ * correct behaviour, where a hang can be mistaken for slow work. */
+extern void os_unfair_lock_lock(void *);      /* darwin/src/libsystem.c */
+extern void os_unfair_lock_unlock(void *);
+
+EXPORT void OSSpinLockLock(volatile int *lock)   { os_unfair_lock_lock((void *)lock); }
+EXPORT void OSSpinLockUnlock(volatile int *lock) { os_unfair_lock_unlock((void *)lock); }
+
 /* The _dyld_* image-introspection family. Every one of these is a question
  * only the loader can answer -- MR.images is dyld's table here, and libSystem
  * has no view of it. Same shape as _NSGetExecutablePath needing the MAIN image

@@ -739,6 +739,25 @@ down a branch it never takes on a Mac. We return `-1`/`ESRCH` and leave the
 outputs alone, because a caller that ignores the `-1` must see what it would
 have seen.
 
+### `osspinlock-recursive` — we abort where Darwin hangs
+`OSSpinLock` is backed by `os_unfair_lock`, and the two are compatible **by
+measurement rather than by luck**: both are a 4-byte word whose unlocked state
+is zero (`OS_SPINLOCK_INIT` and `OS_UNFAIR_LOCK_INIT` are both `{0}`), so a lock
+initialised through either spelling is valid for the other. Writing a second
+spin loop would mean maintaining a second synchronisation primitive to get
+wrong, when `libsystem.c` already has one exercised by
+`tests/bin/21_unfair_lock_firsttouch` and a 300-run threading gate.
+
+**One observable difference:** recursive acquisition **aborts** here and **hangs
+forever** on Darwin. Apple deprecated `OSSpinLock` precisely because it has no
+owner tracking and no priority donation, so a recursive or preempted holder
+deadlocks. Aborting is a divergence in the safe direction — it cannot be
+mistaken for correct behaviour, where a hang can be mistaken for slow work.
+
+It is therefore **absent from `38_osatomic`**: a fixture that must match its
+oracle byte-for-byte cannot contain a case where one side hangs. Same reason
+`POLLWRBAND` is absent from `28_poll` and `SIGEMT` from `29_sigaction`.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.

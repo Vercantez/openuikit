@@ -54,4 +54,5 @@
 35_dladdr	ah	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/SELF/MAIN_ONLY -- one gap, not three: all of them needed THE CALLING IMAGE
 36_execpath	ai	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the loader -- /proc/self/exe is a real path and the wrong one; plus pthread_atfork, which glibc has no dynamic symbol for
 37_dyld_images	aj	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
+38_osatomic	ak	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug
