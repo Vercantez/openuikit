@@ -1115,3 +1115,50 @@ because a short read produces a *plausible-looking* file rather than an error.
 **Copy build inputs into the container with `docker cp`, or verify the byte
 count afterwards.** A mount that reads correctly under `sed` and truncates under
 `cp` will not announce itself.
+
+## 32. What the last 31 are, and why tooling should stop here
+
+The harvest is at **31**, from 155. They are not a homogeneous tail — they split
+into two groups with different prospects, which is the distinction that decides
+whether more tool work pays:
+
+**Colon-only selectors (4)** — `_addComponents::::`,
+`_composeAbsoluteTime:::`, `_decomposeAbsoluteTime:::`, `_diffComponents:::::`.
+These have **unnamed parameter labels**, and the deriver's
+`re.findall(r'(\w+):')` cannot express an empty label. A closeable tool gap.
+
+**No return type at the call site (27)** — `absoluteURL`, `scheme`, `host`,
+`port`, `user`, `password`, `query`, `fragment`, `localizedDescription`,
+`localizedFailureReason`, `localizedRecoverySuggestion`, `_cfTypeID`,
+`_cfMutableCopy`, `_fastCStringContents:`, `_getCString:maxLength:encoding:`,
+`getBuffer:length:`, `setTolerance:`, `open`,
+`enumerateKeysAndObjectsWithOptions:usingBlock:`, … These reach CF through
+`CF_OBJC_CALLV`, which carries no return type; the type lives in the *caller's*
+assignment target, one scope up.
+
+**Tooling should stop here.** The second group is where the evidence is thinnest
+and judgement matters most — precisely the place not to mechanise. A tool that
+inferred a return type by walking back to a variable declaration would be
+guessing with extra steps, and a guessed Objective-C signature is the
+`posix_spawnattr_t` hazard in ObjC clothing. 27 declarations written by hand,
+each citing its call site and its assignment context, is both faster and more
+trustworthy than the parser that would produce them.
+
+The tool earned its keep: **147 of 178 call sites derived mechanically**, with
+every one citing its source. The last 31 are the residue it was never the right
+instrument for.
+
+### Curve, complete
+
+| step | compiling | unknown |
+|---|---|---|
+| 0 — `@class` only | 69 / 82 | — |
+| 1 — types header | 73 / 82 | 151 |
+| 2a — hand-written | 77 / 82 | 155 |
+| 2b — derived + reconciled | 77 / 82 | 50 |
+| 3 — machorun master SDK | 75 / 82 | 50 |
+| 4 — iteration 2 | 75 / 82 | **31** |
+
+`155 → 50 → 31`, compile count never moved for a reason inside this work. The
+one drop, 77 → 75, was machorun's `constrained_ctypes.h` regression, and the
+second column is what made that attributable rather than suspicious.
