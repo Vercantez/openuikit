@@ -124,19 +124,25 @@ func resolveClass(named name: String) -> Any.Type? {
 
 // MARK: - What NSObject supplies for free
 
-/// The `init` requirement that real UIKit gets from NSObjectProtocol.
+/// `UIApplicationDelegate` NOW CARRIES `init()` ITSELF (~/uikit branch
+/// appcompat/delegate-init), so this alias is all that remains of the local
+/// stand-in. Real UIKit gets the same requirement from NSObjectProtocol.
 ///
-/// TO MAKE UNMODIFIED APP SOURCE CONFORM, ~/uikit NEEDS EXACTLY TWO WORDS:
-///   1. `UIResponder.init()` becomes `public required init() {}`
-///   2. `UIApplicationDelegate` gains `init()`
-/// A subclass that adds only defaulted stored properties -- which is what
-/// `class AppDelegate: UIResponder, UIApplicationDelegate { var window: UIWindow? }`
-/// is -- INHERITS a required initialiser, so the conformance is satisfied with
-/// no app-side syntax at all. Declared here instead of there because ~/uikit is
-/// read-only in this tree; the mechanism is identical either way.
-protocol InstantiableAppDelegate: UIApplicationDelegate {
-    init()
-}
+/// THE OTHER DESIGN WAS MEASURED AND REJECTED. Making `UIResponder.init()`
+/// `required` would let a delegate INHERIT the requirement and cost app source
+/// nothing -- but `required` propagates to every UIResponder subclass that
+/// declares its own designated initialiser, which in OpenUIKit is 14 sites in
+/// 14 files. Worse than the count: six are UIView subclasses that would have to
+/// GAIN a parameterless `init()`, and real UIKit's UIView has none (its
+/// designated initialisers are `init(frame:)` and `init(coder:)`). A change
+/// justified as matching UIKit would have made the library less like UIKit.
+/// The protocol requirement alone costs ZERO library edits.
+///
+/// WHAT IT COSTS AN APP, measured not assumed -- see the two probe delegates in
+/// LaunchTest.swift: a `final` delegate satisfies `init()` with no extra
+/// syntax; a NON-final one needs its initialiser spelled `required`. One line,
+/// in the app, only for non-final delegates.
+typealias InstantiableAppDelegate = UIApplicationDelegate
 
 // MARK: - UIApplicationMain, by name
 

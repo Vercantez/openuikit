@@ -198,6 +198,18 @@ func launchByNameSelfTest() -> Bool {
         + (wrongRejected ? "rejected at conformance  PASS" : "NOT rejected at conformance  FAIL"))
     if !(resolves && wrongRejected) { ok = false }
 
+    // A NON-FINAL delegate -- the shape real apps write -- launched the same
+    // way, so the mechanism is not an artefact of `final`.
+    let openResult = UIApplicationMain(principalClassName: noPrincipal,
+                                       delegateClassName: "render_full.ProbeAppDelegateOpen")
+    var openOK = false
+    if case .success(let a2) = openResult, let d2 = a2.delegate as? ProbeAppDelegateOpen {
+        openOK = d2.initSentinel == 0x0BE11 && d2.didFinishLaunching
+    }
+    print("  non-final  : open class delegate launched by name -> "
+        + (openOK ? "yes, init ran  PASS" : "FAIL"))
+    if !openOK { ok = false }
+
     let noName = UIApplicationMain(principalClassName: noPrincipal, delegateClassName: noDelegate)
     let noNameRejected: Bool
     if case .failure(.noDelegateName) = noName { noNameRejected = true } else { noNameRejected = false }
@@ -215,4 +227,32 @@ private func fixed3ms(_ v: Double) -> String {
     var f = "\(frac)"
     while f.count < 3 { f = "0" + f }
     return "\(whole)." + f
+}
+
+// MARK: - What the protocol requirement costs REAL app source
+
+/// A NON-FINAL delegate, which is the shape real apps write
+/// (`class AppDelegate: UIResponder, UIApplicationDelegate`). `ProbeAppDelegate`
+/// above is `final` and needs no extra syntax; this one does, and the single
+/// word `required` is the entire app-side cost of launch-by-name.
+///
+/// That word is why `UIResponder.init()` was NOT made `required` instead: doing
+/// so would move this one word out of the app and into 14 sites across
+/// OpenUIKit, six of which would gain a parameterless `init()` that real UIKit's
+/// UIView does not have. See `InstantiableAppDelegate` in LaunchByName.swift.
+class ProbeAppDelegateOpen: UIResponder, UIApplicationDelegate {
+    let initSentinel: Int
+    var didFinishLaunching = false
+
+    required override init() {
+        initSentinel = 0x0BE11
+        super.init()
+    }
+
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions
+                     launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        didFinishLaunching = true
+        return true
+    }
 }
