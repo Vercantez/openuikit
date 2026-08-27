@@ -318,6 +318,52 @@ fills freed memory with the perturb byte, so a freed block reads `0xa5a5…` und
 zeros where `EmptyKey` should be — which is what a never-initialised allocation
 looks like, or one whose initialising write went somewhere else.
 
+### The threshold, and what it points at
+
+Regenerating the reproducer at varying instantiation counts against Apple's
+runtime gives a sharp boundary:
+
+```
+N=4    pass          N=160   os_unfair_lock_unlock bail
+N=16   pass          N=192   same
+N=64   pass          N=256   same
+N=128  pass          N=900   objc4 "Hash table corrupted"
+```
+
+It is therefore **not** a structural disagreement between the runtime and
+objc4 — that would fail at N=1. It is a threshold, and it sits where
+libswiftCore's static 64 KiB `InitialAllocationPool` is exhausted and the
+metadata allocator falls through to `swift_slowAlloc` → `malloc`. 128
+instantiations × 2 metadata records each is the right order for 64 KiB.
+
+Two further readings narrow it:
+
+**The lock word is not corrupted.** A wrapper recording every value ever seen
+in a lock word at unlock saw exactly one unlock, holding `0x00000001` — a valid
+first-thread token. So `os_unfair_lock_unlock: this thread does not own the
+lock` is an **unbalanced unlock**, not memory damage. Worth stating plainly,
+because those failures read as corruption and are not.
+
+**With the check bypassed, a metadata pointer of 1.** The guest then dies at
+the first instruction of
+`TargetMetadata<InProcess>::isCanonicalStaticallySpecializedGenericMetadata()`,
+`ldr x8, [x0]`, with `this == 0x1`. `MetadataResponse` is a two-field struct
+(`Metadata*`, `MetadataState`) returned in x0/x1, and small integers are what
+the state field holds.
+
+**Hypothesis, not result:** past the pool, the metadata allocator's malloc path
+yields metadata the runtime mis-reads. It would explain the threshold, the
+pointer of 1, and why the source-built runtime — a different build of that same
+allocator — is unaffected, and it demotes the objc4 DenseMap damage at N=900 to
+a downstream symptom.
+
+**Image-initialiser ordering is eliminated.** A documented untested risk
+(`UNIMPLEMENTED.md#objc-load-ordering`) and a plausible fit for a table that is
+used before it is constructed. Measured: under machorun, `libobjc.A.dylib` is
+objc-processed before `libswiftCore.dylib` runs its initialiser, **identically
+for both runtimes**. No inversion. The threshold predicted this independently —
+an ordering bug would fail at N=1.
+
 ### What remains, and what it is not
 
 With the guest root staged from live `~/machorun`, the `0x2dce0`
