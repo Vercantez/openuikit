@@ -1,4 +1,4 @@
-binary: 33_sysctl
+binary: 34_sysctl
 architectures: arm64
 filetype: EXECUTE
 header-flags: NOUNDEFS DYLDLINK TWOLEVEL PIE

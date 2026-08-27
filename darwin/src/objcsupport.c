@@ -872,36 +872,27 @@ EXPORT int dladdr(const void *addr, void *info)
             "Mach-O ones the caller is asking about. See docs/UNIMPLEMENTED.md.");
     return 0;
 }
-/* RTLD_NOLOAD is a QUESTION, not a load request: "if this is already in the
- * process give me a handle, otherwise tell me so, and do not load it". That is
- * answerable without implementing dlopen, and CoreFoundation asks it on the
- * OpenUIKit render path --
- *     dlopen("/System/.../CoreFoundation.framework/CoreFoundation", RTLD_NOLOAD)
- * -- where an unconditional bail killed the process over a question we can
- * answer truthfully.
+/* dlopen over guest Mach-O images. The loader does the work (src/image.c's
+ * mr_dlopen) because only it has the image table, the fixup machinery and the
+ * objc notification path; this side is the Darwin ABI in front of it.
  *
- * Truthfully is the operative word, and it is why this asks the loader instead
- * of returning NULL flat. NULL means "not loaded". If the image IS loaded, NULL
- * is a lie, and the caller's next move is to take its framework-is-absent
- * branch -- a silently wrong answer in place of a loud one, which is the trade
- * this project keeps refusing. So: not loaded, say so; loaded, admit we have no
- * handle to give back. Darwin's RTLD_NOLOAD is 0x10 (sdk/usr/include/dlfcn.h). */
+ * THE HANDLE IS AN OPAQUE LOADER POINTER (an mr_image *), not a glibc handle.
+ * It must never reach glibc's dlsym or dlclose, which is why dlclose no longer
+ * forwards: it would hand ld.so a pointer into a different linker's world.
+ *
+ * RTLD_NOLOAD is still answered as a QUESTION rather than a load request --
+ * "if this is already in the process give me a handle, otherwise say so" --
+ * and now it can hand back a real handle instead of stopping. CoreFoundation
+ * asks it on the OpenUIKit render path.
+ *
+ * Darwin's RTLD_NOLOAD is 0x10 (sdk/usr/include/dlfcn.h). */
 #define MR_RTLD_NOLOAD 0x10
 
-EXPORT void *dlopen(const char *path, int mode)
-{
-    if ((mode & MR_RTLD_NOLOAD) && path) {
-        if (!mr_image_is_loaded(path)) return 0;      /* the honest "no" */
-        mr_bail2("dlopen(RTLD_NOLOAD) names an image that IS loaded, and machorun "
-                 "has no handle type to hand back for it. Returning NULL would "
-                 "tell the caller it is absent, which is worse than stopping "
-                 "(docs/UNIMPLEMENTED.md#dlopen-dlsym). Image", path);
-    }
-    mr_bail2("dlopen: not implemented for guest Mach-O images "
-             "(docs/UNIMPLEMENTED.md#dlopen-dlsym). Requested",
-             path ? path : "(NULL -- a handle for the main program)");
-    return 0;
-}
+extern void *mr_dlopen(const char *path, int mode);          /* -> loader */
+extern void *mr_dlsym_handle(void *handle, const char *name);/* -> loader */
+
+EXPORT void *dlopen(const char *path, int mode) { return mr_dlopen(path, mode); }
+
 /* Darwin's pseudo-handles, from <dlfcn.h>. */
 #define MR_RTLD_NEXT      ((void *)-1L)
 #define MR_RTLD_DEFAULT   ((void *)-2L)
@@ -916,17 +907,34 @@ EXPORT void *dlsym(void *h, const char *name)
     if (h == MR_RTLD_NEXT || h == MR_RTLD_SELF || h == MR_RTLD_MAIN_ONLY)
         mr_bail("dlsym: RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY need a notion of "
                 "'the calling image', which means walking back to the caller's "
-                "return address. Only RTLD_DEFAULT is implemented "
+                "return address. RTLD_DEFAULT and real handles are implemented "
                 "(docs/UNIMPLEMENTED.md#dlopen-dlsym).");
-    mr_bail("dlsym: a real handle means dlopen, which machorun does not "
-            "implement yet (docs/UNIMPLEMENTED.md#dlopen-dlsym).");
-    return 0;
+    /* Darwin's dlsym prepends the underscore; the export trie stores it. */
+    if (!name) return 0;
+    {
+        char buf[512];
+        size_t n = glibc_strlen(name);
+        if (n + 2 > sizeof(buf))
+            mr_bail2("dlsym: symbol name longer than machorun's buffer", name);
+        buf[0] = '_';
+        glibc_memcpy(buf + 1, name, n + 1);
+        return mr_dlsym_handle(h, buf);
+    }
 }
-/* glibc declares dlclose __nonnull((1)) and dereferences the handle, so
- * forwarding NULL straight through SIGSEGVs inside ld.so -- measured. Darwin
- * is more permissive: dlclose(NULL) returns non-zero and sets no error. Match
- * Darwin, since that is the ABI a guest was compiled against. */
-EXPORT int   dlclose(void *h) { return h ? glibc_dlclose(h) : 1; }
+
+/* dlclose does NOT unload, and says so rather than pretending.
+ *
+ * machorun never unmaps an image: the loader has no teardown path, objc4 has
+ * registered classes out of it, and a later dlopen of the same path returns the
+ * same handle by design. Darwin's dlclose returns 0 on success, and success is
+ * a fair description of "your reference is dropped" -- what it is not is a
+ * promise that the code went away, and nothing in the corpus depends on that.
+ * Returning non-zero would make a guest think the close FAILED, which is a
+ * different and wronger claim.
+ *
+ * dlclose(NULL) returns non-zero on Darwin, which is also what glibc's would do
+ * if it did not first dereference the pointer and SIGSEGV -- measured. */
+EXPORT int dlclose(void *h) { return h ? 0 : 1; }
 EXPORT char *dlerror(void) { return 0; }
 
 /* vasprintf(3).

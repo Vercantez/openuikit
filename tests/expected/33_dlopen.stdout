@@ -1,0 +1,16 @@
+RTLD_NOLOAD before load is NULL              ok
+dlopen returned a handle                     ok
+dlsym found an exported function             ok
+initialiser ran before dlopen returned       ok
+dlsym found the TLV accessor                 ok
+thread-local storage works in the new image  ok
+dlsym found the libSystem caller             ok
+a bind from the NEW image into an OLD one    ok
+dlsym of an absent symbol is NULL            ok
+RTLD_NOLOAD after load returns a handle      ok
+RTLD_NOLOAD returns the SAME handle          ok
+re-dlopen returns the SAME handle            ok
+dlopen(NULL) returns a handle                ok
+dlclose(handle) returns 0                    ok
+dlclose(NULL) is non-zero                    ok
+PASSED: 0 failure(s)

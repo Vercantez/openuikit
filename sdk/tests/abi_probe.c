@@ -85,7 +85,7 @@ int main(void)
      * the saved set-user-ID into a neighbouring field and the value CF reads
      * is a zero it was never given.
      *
-     * It cannot be caught by tests/bin/33_sysctl: the synthesized struct is
+     * It cannot be caught by tests/bin/34_sysctl: the synthesized struct is
      * zeroed, so on a container running as root every offset reads 0 and the
      * fixture's uid check passes whatever the constant says. Measured that
      * directly -- a deliberately wrong offset passed the fixture. This pin and
