@@ -202,14 +202,22 @@ static struct mr_block make_mutable_block = {
 };
 
 /* ------------------------------------------------ registration and dispatch */
-static void deliver_mapped(void)
+/* `from` is the index to start at: 0 for the startup batch, and MR.nimages as
+ * it stood before a dlopen for the images that call brought in. Delivering the
+ * whole table again on a dlopen would hand objc4 classes it has already
+ * realized, and objc4 asserts on that rather than ignoring it.
+ *
+ * batch[] is rebuilt per call because makeImageMutable indexes into THIS
+ * delivery's infos[], not into MR.images. */
+static void deliver_mapped_from(int from)
 {
     struct objc_mapped_info infos[MR_MAX_IMAGES];
     unsigned n = 0;
 
-    for (int i = 0; i < MR.nimages; i++) {
+    for (int i = from; i < MR.nimages; i++) {
         mr_image *im = MR.images[i];
         if (!image_has_objc(im)) continue;
+        if (im->objc_mapped) continue;
         infos[n].mh   = (const void *)(uintptr_t)im->load_base;
         infos[n].path = im->install_name ? im->install_name : im->path;
         infos[n].sectionLocationMetadata = (struct _dyld_section_location_info_s *)im;
@@ -224,6 +232,12 @@ static void deliver_mapped(void)
     mr_log("objc: delivering map_images for %u image(s)", n);
     if (n && CB.mapped) CB.mapped(n, infos, &make_mutable_block);
 }
+
+static void deliver_mapped(void) { deliver_mapped_from(0); }
+
+/* The dlopen half: tell objc4 about images that arrived after startup, then let
+ * mr_run_initialisers deliver load_images (+load) for each. */
+void mr_objc_note_new_images(int from) { if (CB_registered) deliver_mapped_from(from); }
 
 void _dyld_objc_register_callbacks(const void *callbacks);
 void _dyld_objc_register_callbacks(const void *callbacks)
@@ -340,6 +354,14 @@ const char *dyld_image_path_containing_address(const void *addr)
 const void *_dyld_get_dlopen_image_header(void *handle);
 const void *_dyld_get_dlopen_image_header(void *handle)
 {
+    /* A machorun dlopen handle IS the mr_image *, so this is a field read.
+     * objc4 calls it from its dlopen path to find the header of what was just
+     * loaded. */
+    if (handle && mr_addr_in_image(handle) == 0) {
+        for (int i = 0; i < MR.nimages; i++)
+            if (MR.images[i] == (mr_image *)handle)
+                return (const void *)(uintptr_t)MR.images[i]->load_base;
+    }
     mr_unimplemented("dlopen",
                      "_dyld_get_dlopen_image_header(%p): machorun has no dlopen yet, so "
                      "there is no handle this could describe. See docs/UNIMPLEMENTED.md.",

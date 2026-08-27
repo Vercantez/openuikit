@@ -251,6 +251,21 @@ fi
 # MADV_FREE, the only one libdispatch uses -- does not.
 want 31_fcntl_madvise    && build 31_fcntl_madvise    "$CHAINED_TARGET" 31_fcntl_madvise    31_fcntl_madvise.c --
 
+# --------------------------------------------------------------- rung (ae)
+# Loading a dylib at RUN TIME. The plugin deliberately carries an initialiser,
+# a TLV, an exported function and a call into libSystem, because mapping is the
+# easy part -- those four are what the rest of the dlopen sequence exists for,
+# and a fixture that only checked `dlopen(...) != NULL` would pass with three
+# of them broken. The plugin is NOT linked into the executable: it is found by
+# path at run time, so it must not be on the link line.
+if want 32_dlopen; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+        -o "$BIN/lib32plug.dylib" "$SRC/32plug.c" -install_name "@rpath/lib32plug.dylib"
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/32_dlopen" \
+        "$SRC/32_dlopen.c"
+    echo "==> 32_dlopen"; built+=(32_dlopen)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -182,4 +182,12 @@ void mr_objc_note_image(mr_image *im);      /* -> load_images / +load */
 int  mr_objc_run_objc_init(void);           /* -> _objc_init; 0 if no libobjc */
 void mr_install_crash_reporter(void);
 
+/* dlopen over guest images. The handle is the mr_image *; see src/image.c.
+ * RTLD_NOLOAD is Darwin's 0x10 (sdk/usr/include/dlfcn.h) and is duplicated here
+ * rather than included, because the loader is an ELF and does not read the
+ * Darwin SDK headers. Pinned in sdk/tests/glibc_abi_probe.c. */
+#define MR_RTLD_NOLOAD 0x10
+void *mr_dlopen(const char *path, int mode);
+void *mr_dlsym_handle(void *handle, const char *name);
+
 #endif /* MACHORUN_H */

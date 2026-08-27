@@ -647,6 +647,46 @@ chasing, which `src/resolve.c`'s `lookup_in` already did — the gap was that ou
 
 ---
 
+### (ae) `32_dlopen` — loading a dylib at run time
+`tests/src/32_dlopen.c` + `tests/src/32plug.c` · chained
+
+Until this rung, machorun could load only what a binary's load commands named.
+It is what took the objc4 corpus from **43/44 to 44/44**.
+
+**Mapping an image is the easy part and proves almost nothing**, so the plugin
+carries one of each thing the rest of the sequence exists for: an exported
+function (the export trie must be reachable THROUGH A HANDLE, a different lookup
+from the flat `RTLD_DEFAULT` search that already worked), a `__mod_init_func`
+(initialisers must run, and before `dlopen` returns), a `__thread` variable (TLV
+descriptors for an image arriving after the process is threaded), and a call
+into libSystem (a bind in the NEW image against an OLD one). **A fixture that
+only checked `dlopen(...) != NULL` would pass with three of those four broken.**
+
+Identity is checked twice, because Darwin returns the same handle for the same
+image and does not re-run its initialisers — an implementation that reloads
+produces two copies of the plugin's state, invisible until something depends on
+identity, and objc4 depends on it hard.
+
+**Teeth, by three mutations of `src/image.c`, each confirmed in the built loader
+before the result was trusted — and one of them PASSED:**
+
+| mutation | result |
+|---|---|
+| skip `mr_run_initialisers` | FAIL on the initialiser and TLV cases |
+| skip `mr_objc_note_new_images` | **passes here** — this fixture has no ObjC; `042-dlopen` catches it, on machorun's own "load_images before map_images" invariant |
+| fixups oldest-first | **passes, and correctly** — `mr_image_load` maps the whole graph before anything is bound, so the iteration order is cosmetic |
+
+The third is worth keeping visible: **a mutation that passes because the
+property is not a property is not a missing test.** Recording it stops someone
+later "fixing" an ordering that never mattered.
+
+**Loader must implement:** `mr_dlopen` — the startup sequence for one image on
+demand, with the objc notification scoped to the new images only. And resolve
+the path BEFORE asking whether it is loaded: the caller's spelling is almost
+never the image table's.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

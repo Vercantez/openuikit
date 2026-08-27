@@ -833,27 +833,53 @@ Two things the entry could not have predicted, both recorded in
 own, which objc4 uses as an ownership test, and glibc's `malloc_usable_size`
 does not.
 
-### `dlopen-dlsym`
-`dlsym(RTLD_DEFAULT, name)` **is** implemented (`mr_dlsym_default`,
-`src/resolve.c`): it is the flat search the binder already does, with Darwin's
-leading underscore added for you. It deliberately does not fall back to the
-host, so a guest asking for a symbol we lack gets NULL rather than a same-named
-glibc symbol.
+### `dlopen-dlsym` — `dlopen` DONE; `RTLD_NEXT` and `dladdr` remain
+**`dlopen` over guest Mach-O images works** (`mr_dlopen`, `src/image.c`), and
+`tests/objc44/042-dlopen` passes — **the objc4 corpus is 44/44**. rung (ae)
+`tests/src/32_dlopen.c` covers it against real dyld.
 
-Everything else aborts naming itself: `dlopen`, `dlclose`, `dladdr`, and
-`dlsym` with `RTLD_NEXT` / `RTLD_SELF` / `RTLD_MAIN_ONLY` or a real handle.
-`RTLD_NEXT` and friends need a notion of "the calling image", i.e. walking back
-to the caller's return address. `dladdr` would have to describe *guest* images;
-forwarding it to glibc would describe the loader's own ELF world, which is a
-different program.
+It is the startup sequence from `src/main.c` performed on demand for one image
+instead of the whole graph, and it has to be the SAME sequence or a dlopen'd
+image differs from a linked one in ways nobody would predict: load (pulling in
+its own dependencies, deduped), fixups, protect read-only segments, set up TLV,
+objc `map_images` **for the new images only**, then initialisers — which deliver
+`load_images` (+load) per image. `src/objc_notify.c`'s `deliver_mapped_from`
+takes a starting index for exactly that; re-delivering the whole table would
+hand objc4 classes it has already realized.
 
-`dlopen` is the larger piece and `mr_image_load` was written re-entrant for it.
-Beyond loading, it must also deliver a `mapped` notification for the new image
-before running its initialisers — `src/objc_notify.c` has the machinery but
-only ever delivers the startup batch. Measured cost of not having it:
-`tests/objc44/042-dlopen` and (until `dlsym` landed) `025-internal-symbols`.
-That test is one of the two reasons the retired `~/objc4-linux` is still on
-disk — see `unwind-compact` below for the other.
+**The handle is the `mr_image *`.** It is already the token objc4 receives as
+`sectionLocationMetadata`, it is stable for the life of the process because
+images are never unmapped, and it makes `dlsym` a lookup in one export trie
+rather than a search. It must never reach glibc's `dlsym`/`dlclose`, which is
+why `dlclose` no longer forwards.
+
+**Resolution happens BEFORE the is-it-loaded question**, and that is measured
+rather than stylistic: a guest says `./libfoo.dylib` while the image table holds
+the resolved filesystem path or an `@rpath` install name, so comparing raw
+strings made `RTLD_NOLOAD` answer "not loaded" about an image that was. Real
+dyld canonicalises for the same reason. The raw check is kept as well, because
+an install name is a legitimate spelling that resolution would redirect.
+
+**`dlclose` does not unload, and says so rather than pretending.** machorun has
+no teardown path, objc4 has registered classes out of the image, and a later
+`dlopen` of the same path returns the same handle by design. Darwin returns 0
+for success, and "your reference is dropped" is a fair description; what it is
+not is a promise the code went away.
+
+**Still absent, and named rather than rounded off:**
+
+* **`@loader_path` resolves against the MAIN image, not the caller.** Real dyld
+  resolves it against the image that called `dlopen`, which needs attributing a
+  return address to an image — the same missing notion of "the calling image"
+  below. For a guest that dlopens a plugin from its main executable, which is
+  every case in the corpus, the two are the same answer.
+* **`dlsym` with `RTLD_NEXT` / `RTLD_SELF` / `RTLD_MAIN_ONLY`**, for that same
+  reason. `RTLD_DEFAULT` and real handles are implemented.
+* **`dladdr`.** It would have to describe *guest* images; forwarding to glibc
+  describes the loader's own ELF world, which is a different program. Note that
+  the crash reporter (`src/crash.c`) already attributes an address to an image
+  and symbol, so the machinery exists — what is missing is the Darwin `Dl_info`
+  shape around it.
 
 ### `blocks-byref`
 `darwin/src/objcsupport.c` implements the Blocks runtime — `_Block_copy`,

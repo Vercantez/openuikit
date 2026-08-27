@@ -423,3 +423,97 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
 
     return im;
 }
+
+/* ===================================================================== *
+ * dlopen, for GUEST Mach-O images.
+ *
+ * This is the startup sequence in src/main.c, performed on demand for one
+ * image instead of for the whole graph, and it must be the SAME sequence or a
+ * dlopen'd image differs from a linked one in ways nobody would predict:
+ *
+ *     load (pulls in its own dependencies, deduped against MR.images)
+ *     fixups, NEWEST FIRST -- a bind in the new image can name a symbol in an
+ *       image it dragged in, so everything must be mapped before anything is
+ *       bound, exactly as at startup
+ *     protect read-only segments, set up TLV
+ *     objc map_images for the new images ONLY
+ *     initialisers, which deliver load_images (+load) per image
+ *
+ * THE HANDLE IS THE mr_image *. It is already the token objc4 receives as
+ * `sectionLocationMetadata`, it is stable for the life of the process because
+ * images are never unmapped, and it makes dlsym a lookup in one export trie
+ * rather than a search. dlopen(NULL) means "the main program" on Darwin, which
+ * is MR.main_image.
+ *
+ * @loader_path RESOLVES AGAINST THE MAIN IMAGE, NOT THE CALLER, AND THAT IS AN
+ * APPROXIMATION. Real dyld resolves it against the image that called dlopen,
+ * which requires attributing a return address to an image -- the same missing
+ * notion of "the calling image" that keeps RTLD_NEXT and RTLD_SELF
+ * unimplemented (docs/UNIMPLEMENTED.md#dlopen-dlsym). For a guest that dlopens
+ * a plugin from its main executable, which is the case in the corpus, the two
+ * are the same answer.
+ * ===================================================================== */
+void mr_objc_note_new_images(int from);
+
+void *mr_dlopen(const char *path, int mode)
+{
+    int before = MR.nimages;
+    mr_image *im;
+
+    char *tried[MAX_TRIED], *resolved;
+    int ntried = 0, is_runtime = 0;
+
+    if (!path) return MR.main_image;          /* Darwin: a handle for the program */
+
+    /* RESOLVE BEFORE ASKING WHETHER IT IS LOADED. The caller's spelling is
+     * almost never the table's: a guest says "./libfoo.dylib" and the image
+     * table holds the resolved filesystem path, or an @rpath install name.
+     * Comparing raw strings makes RTLD_NOLOAD answer "not loaded" about an
+     * image that IS -- MEASURED, not feared: the first version of this
+     * returned NULL from the fixture's second RTLD_NOLOAD where real dyld
+     * returns the handle, and only that check caught it. dyld canonicalises
+     * for the same reason.
+     *
+     * The raw check stays as well, because an install name ("/usr/lib/
+     * libSystem.B.dylib") is a legitimate spelling that resolution would
+     * redirect into darwin/ rather than match. */
+    im = mr_image_find_loaded(path);
+    if (!im) {
+        resolved = resolve_dylib_path(path, MR.main_image, tried, &ntried, &is_runtime);
+        if (resolved) { im = mr_image_find_loaded(resolved); free(resolved); }
+    }
+    if (im) return im;                        /* already in, including RTLD_NOLOAD */
+    if (mode & MR_RTLD_NOLOAD) return NULL;   /* the honest "not loaded" */
+
+    im = mr_image_load(path, MR.main_image, 0, 0);
+    if (!im) return NULL;
+
+    for (int k = MR.nimages - 1; k >= before; k--) mr_fixups_apply(MR.images[k]);
+    for (int k = before; k < MR.nimages; k++) mr_protect_readonly_segments(MR.images[k]);
+    for (int k = before; k < MR.nimages; k++) mr_tlv_setup(MR.images[k]);
+
+    mr_objc_note_new_images(before);
+    mr_run_initialisers(im);
+
+    mr_log("dlopen: %s at 0x%llx (%d new image(s))",
+           im->path, (unsigned long long)im->load_base, MR.nimages - before);
+    return im;
+}
+
+/* dlsym on a real handle: one image's export trie, following its re-exports
+ * the same way a two-level bind does. */
+void *mr_dlsym_handle(void *handle, const char *name);
+void *mr_dlsym_handle(void *handle, const char *name)
+{
+    mr_image *im = handle;
+    uint64_t addr = 0;
+
+    if (!im || !name) return NULL;
+    for (int i = 0; i < MR.nimages; i++)
+        if (MR.images[i] == im)
+            return mr_exports_lookup(im, name, &addr) ? (void *)(uintptr_t)addr : NULL;
+
+    mr_die("dlsym: handle %p is not an image machorun loaded. A machorun dlopen "
+           "handle is the mr_image pointer; anything else is a handle from a "
+           "different dynamic linker.", handle);
+}
