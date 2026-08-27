@@ -746,3 +746,82 @@ outranks a `.tbd`, so the linker resolves it locally and emits no import.
 Expect this file to grow: swiftc here is 6.2.x and the staged runtime is an
 older Apple build, so anything the newer compiler emits a direct call to may be
 missing.
+
+## 9. The 46-scene wall was ours, and the scoreboard that hid it
+
+Re-running the 108-scene suite as a regression gate for §8 scored **59 ok / 47
+crashed / 2 hung**. Three wrong explanations were eliminated before the right
+one, and the order is the lesson.
+
+**It was not the availability shim.** Forcing `swiftcorepatch.c` to answer
+`false` — the back-deploy fallback, isolated deinit run inline — left 15/15
+still crashing.
+
+**It was not launch-by-name.** Removing both new driver files from the binary
+left 15/15 still crashing.
+
+Both of those arms were run against a **broken baseline**, so both conclusions
+were right and neither was earned.
+
+**The guest root was two machorun versions at once.** `build_full.sh` rebuilds
+the libSystem/libc++ umbrellas from machorun's *current* dylib on every run —
+deliberately — but staged the **loader** only when the root directory did not
+exist. The staged loader was an hour older than the dylibs wrapped around it.
+The first symptom was not an error: it was a plausible-looking scoreboard.
+Only later did the mismatch turn loud, the newer libSystem wanting
+`_mr_report_backtrace` from a loader too old to export it. **The loud failure
+is what made the quiet one findable.**
+
+**And the actual bug was in this repo.** machorun's `0f39750` names it:
+`spike/syspatch.c` defined `malloc_type_zone_malloc_with_options_internal` with
+FOUR parameters. It takes FIVE, and `size` is the THIRD
+(`malloc/malloc.h:192`), so the argument forwarded to `malloc` as the size was
+the **alignment**:
+
+```
+_malloc_type_zone_malloc_with_options_internal:
+    mov x0, x1
+    b   _malloc
+```
+
+Every allocation through that entry point got a block the size of its own
+alignment — sixteen bytes, whatever was asked for — and the caller wrote its
+whole object over the neighbours. That was the entirety of the "46 UIKit scenes
+fail with nondeterministic memory corruption" wall: 22 glibc heap aborts, 19
+SIGSEGVs on wild addresses, 9 silent failures, no two alike, because a heap
+overflow of arbitrary size onto arbitrary neighbours never fails the same way
+twice. Only Apple's *shipped* libswiftCore reaches that entry point — ours
+calls plain `malloc` — which is why it read as a property of the runtime.
+
+The family is now **deleted** here rather than corrected here. The umbrella
+reexports machorun's libSystem, machorun defines all fourteen correctly, and a
+definition in the umbrella **shadows** the reexport — so a fixed copy here
+would be a second implementation that silently wins, and re-adding one later
+would reinstate the bug rather than collide with the fix. Verified by symbol
+count: the built umbrella exports zero `malloc_type` symbols.
+
+`spike/syspatch.c` and `spike/cxxpatch.cpp` were also missing from the
+umbrella's rebuild guard, so editing either changed nothing until the root was
+wiped by hand — a fix present in source and absent from the artifact under
+measurement.
+
+### Restored, and measured three ways
+
+Suite: `rendered_ok=108 crashed=0 hung=0`, one process per scene, current
+loader, coherent root. Decoded RGBA, never PNG bytes:
+
+| comparison | identical |
+|---|---|
+| **A) Linux/machorun vs macOS-native** — isolates this stack | **162 / 162** |
+| B) macOS-native vs real-UIKit golden — OpenUIKit's own fidelity | 12 / 162 |
+| C) Linux/machorun vs real-UIKit golden — headline | 12 / 162 |
+
+**B and C are identical, frame for frame and delta for delta.** Every
+difference from the golden is OpenUIKit's own fidelity against real UIKit,
+contributed equally on macOS and on Linux; the Mach-O/machorun stack
+contributes **zero**. Arm A is the number that belongs to this project, and it
+is exact.
+
+The macOS-native reference had to be rebuilt to say any of this — no such
+render survived on disk, and without it only arm C is available, which cannot
+tell "our stack is wrong" from "OpenUIKit approximates UIKit here".
