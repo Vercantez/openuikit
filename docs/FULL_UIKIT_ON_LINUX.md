@@ -275,6 +275,49 @@ locale or `iconv`, and no `opendir`/`readdir`. `fopen` is the only opaque-type
 forward on the render path, and `FILE*` crosses as a pointer. So it is a type not
 yet enumerated.
 
+### Two machorun defects found while hunting, neither of them the corruption
+
+**1. `malloc_size` returns 0 for mmap-backed allocations.** A/B with the same
+probe binary and loader, only `libSystem` differing:
+
+```
+pre-a8aafaf   (ownership by elimination)            0 of 10 misreported
+post-a8aafaf  (ownership established positively)    4 of 10 misreported
+```
+
+Every misreport is an allocation at or above glibc's 32 MiB mmap threshold:
+those live outside `brk`, `mr_addr_in_glibc_heap` answers "not ours", and
+`malloc_size` returns 0 for memory `malloc` just handed back. `a8aafaf`'s own
+comment predicts this case; what it does not say is that it has a live consumer.
+objc4's `try_free` is `if (p && malloc_size(p)) free(p)`, so a block of 32 MiB
+or more is now **never freed** — a leak rather than corruption, which is the
+safe direction, but silent. Anything using `malloc_size` to *size* a buffer
+rather than to test ownership gets 0 instead of the length.
+
+**2. Allocations past the mmap threshold land ABOVE 2^47.** From the same run:
+
+```
+req=  32505856   ptr=0x10032e02180    below 2^47, brk
+req=  33554432   ptr=0xffffbbe7f010   ABOVE 2^47, mmap
+req= 268435456   ptr=0xffffade7f010   ABOVE 2^47, mmap
+```
+
+`mr_constrain_heap()` constrains `brk` and verifies `brk`. Allocations past the
+threshold are not `brk`, so they sit back above the isa/data-mask ceiling the
+entire heap fix exists to stay under. Nothing on the render path allocates
+32 MiB in one block today, so this is not the corruption hunted here — it is a
+hole in the guarantee, and it becomes someone's bug the first time a guest
+allocates a large buffer and objc4 or libswiftCore masks a pointer into it.
+
+### The bucket array is zeroed, not freed
+
+`MALLOC_PERTURB_` discriminates the two, and it is worth knowing which: glibc
+fills freed memory with the perturb byte, so a freed block reads `0xa5a5…` under
+`MALLOC_PERTURB_=165`. objc4's corrupted DenseMap buckets still read
+`0x0 0x0 0x0 0x0`. **The array was never freed.** It is memory that reads as
+zeros where `EmptyKey` should be — which is what a never-initialised allocation
+looks like, or one whose initialising write went somewhere else.
+
 ### What remains, and what it is not
 
 With the guest root staged from live `~/machorun`, the `0x2dce0`
