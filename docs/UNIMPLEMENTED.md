@@ -172,6 +172,48 @@ struct is compiled into the guest and its layout is not glibc's. Same for
 glibc object inside Darwin's opaque bytes and using the signature word to tell
 "Apple-initialised" from "adopted".
 
+### `posix-spawn` — absent, and the obvious forwarder would smash the guest's stack
+Not implemented at all: `nm -g darwin/usr/lib/libSystem.B.dylib | grep spawn` is
+empty and `sdk/` ships no `spawn.h`, so nothing here can currently compile
+against it. That is the safe state, and this entry exists so the next person
+does not leave it by the shortest route.
+
+CoreFoundation reaches `posix_spawn` and six `posix_spawn_file_actions_*` from
+`CFPlatform.c:2291`, in CF's **generic POSIX** branch, and
+`~/foundation-macho/docs/CF_TRIAGE.md` §53 records that "glibc has all of it".
+That is true of the *functions* and false of the *ABI*, which is the trap:
+
+| | `posix_spawnattr_t` | `posix_spawn_file_actions_t` |
+|---|---|---|
+| Darwin (`typedef void *`) | **8** bytes | **8** bytes |
+| glibc (a struct) | **336** bytes | **80** bytes |
+
+Measured rather than read off a header: the Darwin typedefs are in Apple's own
+`spawn.h`, and the glibc sizes are `sizeof` in the test-bed container.
+
+A guest compiled against Darwin's header writes `posix_spawnattr_t attr;` and
+reserves **8 bytes**. Forward `posix_spawnattr_init(&attr)` straight to glibc
+and glibc writes **336** into it — a 328-byte overrun of a guest stack slot,
+with no diagnostic, from a call that returns 0 for success. `file_actions` is
+the same bug at 80 against 8. Every symbol resolves, the link is clean, and the
+corruption is silent, which is the worst combination this project has a name
+for.
+
+The shape of the fix is already in the tree. Darwin's contract is that those 8
+bytes hold *a pointer to an opaque allocation the library owns*, which makes
+this **easier** than the `pthread_mutex_t` case `adopt()` handles in
+`darwin/src/libsystem.c`, not harder: there is no Apple-initialised static form
+to detect, so there is nothing to overlay and no signature word to check.
+Allocate the glibc object, keep its address in the guest's 8 bytes, free it in
+`posix_spawnattr_destroy` / `posix_spawn_file_actions_destroy`.
+
+A declaration-only `spawn.h` exists on the Foundation track
+(`~/foundation-macho/scripts/cf_shims.sh`) purely to make CF's 86 files compile
+for a link-surface census. That is a legitimate measurement instrument and a
+terrible SDK: a header that declares a function with nothing behind it links
+clean and fails at load. It must not be staged into `sdk/` — `#swift-interop`
+is what an unbacked promise costs when it is found from the other end.
+
 ### `printf-family-gaps`
 Our formatter implements the `%[flags][width][.prec][length]` grammar for
 `diuxXospcf/e/g/a` and delegates only float conversion to glibc (through a
