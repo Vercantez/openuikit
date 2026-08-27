@@ -53,8 +53,10 @@ dea174bb0a2621285e0380e1044283d04d7911c0c0c7507ae370e154b5a2d963  xnu:bsd/arm/_t
 de0bc923b92bd88f3bd8bcd38b20f8123277732d7d3309cb2a5bdc60bb4dd8c6  xnu:bsd/arm/signal.h  arm/signal.h
 4b6d31fc15d19635ae7179647145130a86d0dff5ee9157e632e9bd3828ba3b73  xnu:bsd/arm/types.h  arm/types.h
 e357fa44a55a715cc0dc0bac94569c3fa69e211279561b34347c8e2026267f9f  Libc:include/assert.h  assert.h
+338dff615c1c7d8e3bd3379dd491969f1fb39f0d626e9b1c349f2a66fa9d73f4  xnu:bsd/bsm/audit.h  bsm/audit.h
 570c931a6e130e96e023be387885630e5435c902e940eefb9462cb1121cbb9f0  Libc:include/crt_externs.h  crt_externs.h
 5aec0e370e25838b080f9159f2328eb49a2caa24f2e11a88721a2d4aa91882e5  Libc:include/ctype.h  ctype.h
+d4509c79ea7f394f246ef9082818496107503390c04a73b889e57100e21c2613  Libc:include/dirent.h  dirent.h
 f10e88955369c100176821a2e4dd6951534c834ad0f8e7fe644b64ba573170bb  libdispatch:dispatch/base.h  dispatch/base.h
 e07296616a4384f3ed67290fa0e935af0fa3da9508bb44239a2d7270dcbd3682  libdispatch:dispatch/block.h  dispatch/block.h
 99df3b84a5066912b37eb495b1236874bcaf86ce44617945e307fdb855dfee0e  libdispatch:dispatch/data.h  dispatch/data.h
@@ -252,6 +254,7 @@ e56f6f9b9c48eb7c035d5241a611169cd130a6319a5d179522c818d9d3384cdb  xnu:bsd/sys/_t
 63908a097cb2628d6d652317974e416a0df39e46b1a9a0ab0a10b83ea8948a2f  xnu:bsd/sys/_types/_fsid_t.h  sys/_types/_fsid_t.h
 f411229eb775e55326d5f3e1e00c822c97fff57e474e5f66574aa1572d67259f  xnu:bsd/sys/_types/_fsobj_id_t.h  sys/_types/_fsobj_id_t.h
 e687ad58c03701c132a02ebf20699c8cacfd34c3a67271bd2a415a5a8e4a9ea7  xnu:bsd/sys/_types/_gid_t.h  sys/_types/_gid_t.h
+37149a21b22fd67bc5382f65e18bf08e0beead4d723dd0857d70a9e110a18f38  xnu:bsd/sys/_types/_graftdmg_un.h  sys/_types/_graftdmg_un.h
 fb7255c9872e2a805c206796326e21d47146e22c93c09752126d7166bdaba5e5  xnu:bsd/sys/_types/_id_t.h  sys/_types/_id_t.h
 8da608117e441ff6e6b108d35334d7cf4b346b838522f97bcc621d925e0ba7fe  xnu:bsd/sys/_types/_in_addr_t.h  sys/_types/_in_addr_t.h
 cf4b90c7af861346ee46c6b9e5d57cfe20bd62a03b1533ee9a369480ace0bac9  xnu:bsd/sys/_types/_in_port_t.h  sys/_types/_in_port_t.h
@@ -266,6 +269,7 @@ b2a7ba9b9b2d357d75e59114874658f893b23ea6d1357815b027d8189075daba  xnu:bsd/sys/_t
 8f178c4c396766f74c2cf8240af9ca420aef38b67bd0d6b7b1ec84c2c48dfc91  xnu:bsd/sys/_types/_mach_port_t.h  sys/_types/_mach_port_t.h
 353733f9ae0a8950aeaa4967e70684c267fc2461f32ffb0b84fdb2ff2b794124  xnu:bsd/sys/_types/_mbstate_t.h  sys/_types/_mbstate_t.h
 7c4261bde41387fc23aefe5dee1e6298ae6b6f5592bca51947fdd9736e0640a6  xnu:bsd/sys/_types/_mode_t.h  sys/_types/_mode_t.h
+b2e3f4a4bc8f59a6a47e2907ec11a33fa3c406e1a55f81f8ec90ec15acc6b14b  xnu:bsd/sys/_types/_mount_t.h  sys/_types/_mount_t.h
 7cc46bfc5d0f4238c735ff28bb1a8dcefc26d1f0e52b7098a5c89e68bf87288a  xnu:bsd/sys/_types/_nlink_t.h  sys/_types/_nlink_t.h
 af0d845cdc154ae1a7fd3c609602b4ed09e295166cfc0aaa2206daf34c1e3aa3  xnu:bsd/sys/_types/_null.h  sys/_types/_null.h
 47e59afa1ca0d9beeb20835cbf44ea9d6dddc5bd12822ca35c5c0fc21dd45c49  xnu:bsd/sys/_types/_o_dsync.h  sys/_types/_o_dsync.h
@@ -301,15 +305,20 @@ e435f739013a22883da08b7d8b8819d6fd421756d025b369fecdee90ff40eb39  xnu:bsd/sys/_t
 37c49808a92cc4417181adb1530cc24ca11cc89f064c6c0494a1aff981f92870  xnu:bsd/sys/_types/_useconds_t.h  sys/_types/_useconds_t.h
 ba8364ff4aed847f5ca3259e27fc2d1920432d02e8e79c7ac57ec043f1dc2842  xnu:bsd/sys/_types/_uuid_t.h  sys/_types/_uuid_t.h
 33b0fae1253bc5cfaab0d860468407c19fa7b489614745921cbf03cd5c79dec2  xnu:bsd/sys/_types/_va_list.h  sys/_types/_va_list.h
+334e00e29a707f060907cb9f6c946dd9f0dc7102ab9a7c7986ff6f1c670c51ed  xnu:bsd/sys/_types/_vnode_t.h  sys/_types/_vnode_t.h
 4672bdd8d97a8441b8bf214fa277f760a690bc8b275413125e12c645302beb7a  xnu:bsd/sys/_types/_wchar_t.h  sys/_types/_wchar_t.h
 f6bb1d228df3635d191ee34fdd786fad6851f679ed9da7d6c48e12d3f437854e  xnu:bsd/sys/_types/_wint_t.h  sys/_types/_wint_t.h
 efd9793f56c08917cf1ddf5108b78240ede88a5bbc8977d6fdaf1684b6b01c1c  xnu:bsd/sys/appleapiopts.h  sys/appleapiopts.h
+367a55a1fcd7b2c085870a5686a675218c3926d07a89fb3ae210f28a4c9f2269  xnu:bsd/sys/attr.h  sys/attr.h
 6bab328310e9d4f9ff47f763f1fa8cf0000e25ce6be04a9743bf176ccdf94682  xnu:bsd/sys/cdefs.h  sys/cdefs.h
+b5f753cd37068f106abb209d87839a9d1a3ad2bf03d2638b1fc768c605638b7b  xnu:bsd/sys/dirent.h  sys/dirent.h
 b16e5eb195f153793b14c3826e6b04db945e9ed6a37c5a9046196555bded6906  xnu:bsd/sys/errno.h  sys/errno.h
 5d227b5ec649d710a9cc938ff2f9b9b929e1932cdcd24c868a3d74e877c3fbe0  xnu:bsd/sys/fcntl.h  sys/fcntl.h
 623ba0c15ea17a4c8458ce9b37f3c1d91e9e288c05cb769669734bdc6c5f67bc  xnu:bsd/sys/mman.h  sys/mman.h
+278cf3c858babbe4fa4871818823cff33f122b8a132ef165e6937dbc4db855de  xnu:bsd/sys/mount.h  sys/mount.h
 ee6024c8fee1eb9bcd280203532cba183fb015c5549eebcd8f45f4667529ad4a  xnu:bsd/sys/param.h  sys/param.h
 3f1e1e9a2b707f22407df44ee8a8b270348d3b4b53313ec52d06a6198716e273  libpthread:include/sys/qos.h  sys/qos.h
+d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/queue.h  sys/queue.h
 69541c4d1b100294f244724ef58609fb66448574d4ceaffbd87b3284f8ab5613  xnu:bsd/sys/resource.h  sys/resource.h
 e6501f5479116b740fd0099210e63c22a58d24b0ee2554e7135b39a4dd856516  xnu:bsd/sys/select.h  sys/select.h
 2efb1aca5abdfa6f9e8bad155f2db319fdca1a029400cad1558e4df981d6eeea  xnu:bsd/sys/signal.h  sys/signal.h
@@ -319,6 +328,7 @@ c82fe60eac5d7864220e1468e6b75740b07d2ad6d18fe923b495059e48c2f100  xnu:bsd/sys/sy
 bff79defba61c84ecae9f96a204d1f147faaef2e8a2651b903b4056b231c3494  xnu:bsd/sys/syslog.h  sys/syslog.h
 863406e0dbf0b08d6bf8558026207496e292c4c3698f0a85da6706316e6a1ba5  xnu:bsd/sys/time.h  sys/time.h
 f8b136bb10d56bb604e7b253f1ec23858d0b4ae21fe85eaede0ccc66afdb554a  xnu:bsd/sys/types.h  sys/types.h
+25b62ef73d2cc2c58c5081e4fea84906d4bffeff428d60f9111ed67c280a6f0b  xnu:bsd/sys/ucred.h  sys/ucred.h
 5d5dccb886d6ecfd7678949d27859f9d7d4a2094328e4374941b753388c58b69  xnu:bsd/sys/unistd.h  sys/unistd.h
 3a82112a1dc8025e7d3a09cb6d9d39bb60c13018052838d3f8ade1b208f83983  xnu:bsd/sys/wait.h  sys/wait.h
 171758cbd3e9ea630810c6249c59a9f9190abb8dc5a0932c1c3bd2c12aa03080  Libc:include/syslog.h  syslog.h

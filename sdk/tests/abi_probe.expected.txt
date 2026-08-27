@@ -17,6 +17,31 @@ sizeof uid_t                        4
 sizeof gid_t                        4
 sizeof va_list                      8
 
+== struct dirent and struct statfs  (CoreFoundation's, and $INODE64-sensitive)
+sizeof struct dirent                1048
+offset dirent.d_ino                 0
+offset dirent.d_seekoff             8
+offset dirent.d_reclen              16
+offset dirent.d_namlen              18
+offset dirent.d_type                20
+offset dirent.d_name                21
+sizeof struct statfs                2168
+offset statfs.f_bsize               0
+offset statfs.f_iosize              4
+offset statfs.f_blocks              8
+offset statfs.f_bfree               16
+offset statfs.f_bavail              24
+offset statfs.f_files               32
+offset statfs.f_ffree               40
+offset statfs.f_fsid                48
+offset statfs.f_owner               56
+offset statfs.f_type                60
+offset statfs.f_flags               64
+offset statfs.f_fssubtype           68
+offset statfs.f_fstypename          72
+offset statfs.f_mntonname           88
+offset statfs.f_mntfromname         1112
+
 == struct stat  (docs/ABI.md: 144 bytes on Darwin, 128 on Linux)
 sizeof struct stat                  144
 offset stat.st_dev                  0

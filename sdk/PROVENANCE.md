@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        356 rows: header path -> where it comes from
+  MANIFEST.tsv        366 rows: header path -> where it comes from
   SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
   local/              19 clean-room headers of ours (4,396 lines)
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        356 headers, 3.1 MB -- COMMITTED
+  usr/include/        366 headers, 3.2 MB -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -29,8 +29,8 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 
 | source | headers | licence | redistributable |
 |---|---:|---|---|
-| **xnu** | 202 | APSL 2.0 | yes |
-| **Libc** | 71 | APSL 2.0 | yes |
+| **xnu** | 211 | APSL 2.0 | yes |
+| **Libc** | 72 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
 | **libpthread** | 17 | APSL 2.0 | yes |
 | **libplatform** | 6 | APSL 2.0 | yes |
@@ -42,7 +42,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
 | **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **356** | | |
+| | **366** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
@@ -81,6 +81,29 @@ calls `__assert_rtn`, which `libSystem.B.dylib` did not export either. It does
 now (`darwin/src/posix.c`), reproducing Libc's exact message text — a guest's
 stderr is compared byte-for-byte against macOS, so "Assertion failed: (e),
 function f, file x.c, line 12." is an ABI string and not a nicety.
+
+### The 357th through 366th, and the same lesson from a third consumer
+
+CoreFoundation asks for two headers nothing here had needed: `CFLocale` includes
+`sys/mount.h` and `CFTimeZone` includes `dirent.h`. Neither was staged, and
+neither is one file — the include closure pulled in ten rows in total
+(`dirent.h`, `sys/dirent.h`, `sys/mount.h`, `sys/attr.h`, `sys/ucred.h`,
+`sys/queue.h`, `bsm/audit.h`, and `sys/_types/_{graftdmg_un,mount_t,vnode_t}.h`),
+all from the already-pinned xnu and Libc tags. The restage added exactly those
+ten files and changed no existing header, which is the offline integrity check
+this tree relies on.
+
+`struct statfs` is the reason this got a differential rather than a compile
+check. It is one of the `$INODE64`-variant structures, so a sysroot that got
+`__DARWIN_ONLY_64_BIT_INO_T` or the xnu platform selection wrong would produce a
+*differently shaped* `statfs` and still compile — the same silent-wrong-value
+family as §2.1. So `sdk/tests/abi_probe.c` now probes `struct statfs` and
+`struct dirent`, and the baseline recorded against **Apple's** SDK matches ours
+byte-for-byte: `sizeof struct statfs` 2168, `sizeof struct dirent` 1048, and
+every offset in both, 188 lines identical.
+
+Third consumer, third gap, and the pattern from `_assert.h` holds exactly:
+objc4 found none of these because it includes none of them.
 
 **No header in this tree was copied from Apple's Xcode SDK.** A staged copy of
 MacOSX15.4's `usr/include` exists at `build/sdk/` on the machine this was
@@ -462,13 +485,13 @@ failure rather than a mystery six months from now.
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **333 of 356** files: the 19 clean-room and 4 objc4 headers live in this
+> **343 of 366** files: the 19 clean-room and 4 objc4 headers live in this
 > repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
 > of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 356 headers
+> measured 2026-08-26, a restage of a clean checkout reproduces all 366 headers
 > byte-for-byte.
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on

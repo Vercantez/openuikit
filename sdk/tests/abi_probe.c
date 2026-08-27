@@ -35,6 +35,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/mount.h>
+#include <dirent.h>
 #include <sys/types.h>
 #include <time.h>
 #include <runetype.h>
@@ -58,6 +60,18 @@ int main(void)
     SZ(wchar_t); SZ(time_t); SZ(off_t); SZ(ino_t); SZ(dev_t); SZ(mode_t);
     SZ(nlink_t); SZ(blkcnt_t); SZ(blksize_t); SZ(uid_t); SZ(gid_t);
     SZ(va_list);
+
+    puts("");
+    puts("== struct dirent and struct statfs  (CoreFoundation's, and $INODE64-sensitive)");
+    SZ(struct dirent);
+    OFF(dirent, d_ino); OFF(dirent, d_seekoff); OFF(dirent, d_reclen);
+    OFF(dirent, d_namlen); OFF(dirent, d_type); OFF(dirent, d_name);
+    SZ(struct statfs);
+    OFF(statfs, f_bsize);  OFF(statfs, f_iosize); OFF(statfs, f_blocks);
+    OFF(statfs, f_bfree);  OFF(statfs, f_bavail); OFF(statfs, f_files);
+    OFF(statfs, f_ffree);  OFF(statfs, f_fsid);   OFF(statfs, f_owner);
+    OFF(statfs, f_type);   OFF(statfs, f_flags);  OFF(statfs, f_fssubtype);
+    OFF(statfs, f_fstypename); OFF(statfs, f_mntonname); OFF(statfs, f_mntfromname);
 
     puts("");
     puts("== struct stat  (docs/ABI.md: 144 bytes on Darwin, 128 on Linux)");
