@@ -211,7 +211,17 @@ def implemented_classes():
     path = os.path.join(HERE, os.pardir, "docs", "cf-census", "ns-classes.txt")
     if not os.path.exists(path):
         return set()
-    return {l.strip() for l in open(path) if l.strip()}
+    # Skip comments. Without this the generated file's own header counted as
+    # five classes, so the guard reported 10 implemented where 5 exist -- and
+    # would have accepted a "class" named `#`. An instrument that reads its
+    # input file's prose as data is the same error as reading a declaration as
+    # a call; it just happens one layer up.
+    out = set()
+    for line in open(path):
+        line = line.split("#", 1)[0].strip()
+        if line:
+            out.add(line)
+    return out
 
 
 def main():
