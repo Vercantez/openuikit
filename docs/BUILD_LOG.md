@@ -813,3 +813,70 @@ check whose failure path was shadowed by the shell's own error handling. Each
 time the component was doing something other than what its name claimed, and
 each time only *running the failure case* showed it. **A refusal that has never
 been observed to fire is a comment.**
+
+## 16. The relink: `__gxx_personality_v0` now names libc++, and six flat binds went with it
+
+§13 established that the relink was blocked on a `.tbd` bug rather than on the
+rebuild. swift-loader-fixes fixed `gen_tbd.sh` to vend what a dylib re-exports
+(machorun `559356b`, `libc++.1.tbd` 105 → 472 symbols), and this is the rebuild.
+
+**Verified the precondition before paying for the box**, with the stdlib's own
+library set rather than a C++ guest — `-lSystem -lobjc -lc++`, no `-lc++abi`,
+`-undefined dynamic_lookup` — and only then provisioned. Result:
+
+```
+                                        before the tbd fix      after
+___gxx_personality_v0                    (from libSystem)        (from libc++)
+__ZTVN10__cxxabiv117__class_type_infoE   (dynamically looked up)  (from libc++)
+__ZTVN10__cxxabiv119__pointer_type_infoE (dynamically looked up)  (from libc++)
+__ZTVN10__cxxabiv120__function_type_infoE(dynamically looked up)  (from libc++)
+__ZTVN10__cxxabiv120__si_class_type_infoE(dynamically looked up)  (from libc++)
+__ZdlPvmSt11align_val_t                  (dynamically looked up)  (from libc++)
+___cxa_demangle                          (dynamically looked up)  (from libc++)
+```
+
+**The line that was asked for is the first one. The more valuable result is the
+other six.** They are the exact symbols §12 was about, and they are no longer
+resolved by load order at all — libswiftCore names the library it wants.
+Deleting the duplicates from the shim fixed the current process; this makes the
+whole class unreachable *for this image*, which is a stronger property than "no
+duplicate happens to exist right now".
+
+**Neutrality proved rather than assumed.** The relinked library's export set is
+**identical** to both prior builds — 30,723 symbols, `diff` reports 0 differing
+— and `libswift_Concurrency` resolves against it exactly as before (435
+undefined, 59 outside libswiftCore either way). So substituting it into the
+staging directories cannot change the Swift surface. `18_swift_class` passes
+under machorun in **both** link orders against the macOS baseline.
+
+**Cost: $0.80.** c8g.16xlarge for 16 minutes. Configure ~10 s, 173 objects, the
+stdlib build about four minutes. Two configure flags were missing from §7's
+recipe for a concurrency-enabled build and are recorded here:
+`-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE=$W/libdispatch -DSWIFT_INCLUDE_APINOTES=ON`.
+The errors changed *kind* at each step, which is the tell that each fix landed
+rather than masked the previous one.
+
+### One thing I did not do, and why
+
+`libswift_Concurrency.dylib` still carries **three flat vtable binds**
+(`__class_`, `__si_class_`, and `__vmi_class_type_info`) because it was built
+against the old `.tbd`s. Rebuilding it needs a new patch: with
+`SWIFT_PATH_TO_LIBDISPATCH_SOURCE` set, ninja wants a
+`stdlib/public/Concurrency/dispatch` directory that only exists if libdispatch
+was built; without it, `StdlibOptions.cmake:225` refuses with *"Concurrency
+requires libdispatch on non-Darwin hosts"*. That is patch-8 work, not a flag.
+
+It is **latent rather than live** — libswift_Concurrency is not staged — so I
+stopped rather than open a new patch on a metered box. The blocker is named here
+so the next attempt starts from the cause.
+
+### A measurement I threw away
+
+While checking the relinked library's unsatisfied imports I extracted the
+`.tbd`-advertised symbol set with a hand-rolled regex, and it reported ~180
+symbols unsatisfied — including `_malloc`, `_memcpy` and `_objc_msgSend`, which
+are obviously present. The regex mis-parsed the `.tbd` format. **A list that
+looks like a finding and is an artifact of a bad parse is the same failure as a
+sweep with no denominator**, so it was discarded rather than reported, and the
+closure was measured against the built dylibs instead — the method already
+validated in §12.
