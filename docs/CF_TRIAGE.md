@@ -1323,3 +1323,95 @@ Not "does it compile". Construct both cases and assert the predicate:
 Both halves, on both sides — the counter-practice this project already uses for
 negative controls. A test that only checks the native case would pass today,
 with the table empty, and prove nothing about registration at all.
+
+## 36. Class registration: the guard, and a correction to §35's premise
+
+§35 said registration was all-or-nothing per type because "the accidental
+correctness holds only while the table is uniformly empty: register *some*
+types and the unregistered ones invert". **That is wrong, and measuring it is
+what found the real defect.**
+
+`_CFRuntimeCreateInstance` sets `memory->_cfisa = __CFISAForTypeID(typeID)`
+(CFRuntime.c:550) — it initialises the instance from *the very slot* that
+`CF_IS_OBJC` later compares against. So a CF-created instance matches its own
+type's slot whether or not that type was ever registered. Registered and
+unregistered types are each **self-consistent**; unregistered types do not
+invert when a neighbour registers.
+
+The hazard is **temporal**, not partial. An instance created *before* its type
+is registered keeps `_cfisa = 0` while the slot later holds a class, and CF then
+reads that instance as foreign and messages a struct. Registration must
+therefore happen in `__CFInitialize`, before any instance exists. The checker
+enforces exactly that as `MISPLACED`.
+
+### The one category that is inconsistent today: constant strings
+
+Objects whose `_cfisa` does *not* come from the table are the real exposure, and
+there is exactly one such category. Measured, not reasoned:
+
+* `__CONSTANT_CFSTRINGS__` is defined for our target (`clang -E`, and the census
+  already passes `-fconstant-cfstrings`), so `CFSTR` takes the compiler-builtin
+  path, not `STATIC_CLASS_REF`.
+* In `CFRuntime.o`, **every** `__cfstring` entry's isa slot relocates against
+  `___CFConstantStringClassReference` (`llvm-objdump -r --section=__cfstring`).
+* `CFRuntime.o` **defines** that symbol — `S ___CFConstantStringClassReference`
+  — as corelibs' zeroed `int[24]` (CFRuntime.c:286).
+
+Nonzero isa, zero slot ⇒ `CF_IS_OBJC(_kCFRuntimeIDCFString, CFSTR("x"))` is
+**already true**, and restoring the dispatch macros armed it. CF would message
+a zeroed array as a class. On macOS the same address is a real ObjC class:
+
+```
+CFSTR isa  == &__CFConstantStringClassReference  -> __NSCFConstantString
+provided by /System/.../CoreFoundation      [s length] == 5
+```
+
+So the fix is not registration — it is that our Foundation must supply
+`___CFConstantStringClassReference` as a real class **and CF's placeholder
+definition must go**. Two definitions in two dylibs would split constant strings
+across two "classes" silently. Checked as `CONSTANT_STRING`.
+
+### A hypothesis measurement killed
+
+The four static CF objects (`kCFBooleanTrue/False`, `kCFNull`, the allocators)
+looked like the same bypass — their initialisers name a class outright,
+`INIT_CFRUNTIME_BASE_WITH_CLASS(__NSCFBoolean, _kCFRuntimeIDCFBoolean)`. They
+are not. `STATIC_CLASS_REF` expands to `NULL` in our configuration
+(ForFoundationOnly.h:790), confirmed by compiling a probe TU and finding **no
+undefined ObjC class reference** in `CFNumber.o` or `CFBase.o`. Those objects
+get `_cfisa = 0` and stay consistent with the empty table. Reading the `#if`
+ladder would have been ambiguous; the object file was not.
+
+### `scripts/check_registration.py` — refuses, does not warn
+
+Derives the BRIDGED set from CF's own source: a type is bridged iff it appears
+as the first argument of `CF_IS_OBJC` / `CF_OBJC_[RETAINED_]FUNCDISPATCHV`.
+**19 of CF's 56 typeIDs.** `docs/cf-registration.tsv` adjudicates all 56 and
+names the class for each bridged one; the checker fails on disagreement in
+either direction, so the table cannot invent membership and cannot omit it.
+
+Seven refusal modes: `UNADJUDICATED`, `STALE`, `CONTRADICTED`, `UNREGISTERED`,
+`MISSING_CLASS`, `MISPLACED`, `CONSTANT_STRING`.
+
+Teeth demonstrated on both sides, per standing practice:
+
+| control | result |
+|---|---|
+| today's real state | REFUSES, 39 problems (19 MISSING_CLASS, 19 UNREGISTERED, 1 CONSTANT_STRING) |
+| synthesised complete state (19 calls in `__CFInitialize`, 19 classes listed) | **exit 0** |
+| one call moved out of `__CFInitialize` | REFUSES, 1 MISPLACED |
+| object that does not define the constant-string symbol | check silent |
+| `--objdir` absent | reports NOT MEASURED — never reads as clean |
+
+The `CFTYPE_IS_OBJC` path (behind `CFGetTypeID`/`CFEqual`/`CFHash`) is
+deliberately *not* evidence of bridging: it applies to every type but compares
+against that type's own slot, so unregistered types stay self-consistent under
+it. Eight dispatch sites pass a local variable and cannot be attributed by the
+tool; it prints them rather than dropping them. All eight are in CFBag,
+CFDictionary, CFSet and CFRuntime, whose types are already BRIDGED by resolved
+sites elsewhere, so they add no members — adjudicated here, not in the tool.
+
+**Registration is still NOT wired up.** The 19 `__NSCF*` classes do not exist,
+so all 19 would be `objc_lookUpClass` → nil. The refusal list *is* the work
+order for the NS* implementations, and this is the same call as §35 for a
+better-measured reason.

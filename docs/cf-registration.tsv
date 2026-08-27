@@ -1,0 +1,91 @@
+# Adjudication of every CFTypeID CoreFoundation defines.
+#
+#   <typeID symbol>  TAB  BRIDGED|NOT_BRIDGED  TAB  <ObjC class> | <reason>
+#
+# Checked by scripts/check_registration.py, which REFUSES if any typeID CF
+# defines is missing here, if a row names a typeID CF does not define, or if
+# a verdict contradicts CF's own dispatch sites. This file adjudicates; it
+# cannot invent membership -- the BRIDGED set is derived from CF's source and
+# the checker fails on disagreement in either direction.
+#
+# BRIDGED means CF dispatches on the type: it appears as the first argument of
+# CF_IS_OBJC or CF_OBJC_[RETAINED_]FUNCDISPATCHV, so CF is prepared to receive a
+# foreign ObjC instance of it and MUST be able to tell one from its own struct.
+# 19 types, measured, not remembered.
+#
+# The class names are a SPECIFICATION OF WHAT WE WILL IMPLEMENT, not a claim
+# about Apple's. Three are attested in corelibs' own source, via
+# INIT_CFRUNTIME_BASE_WITH_CLASS(CLASS, TYPEID) in CFNumber.c and CFBase.c:
+# __NSCFBoolean, __NSCFNumber, NSNull (and __NSCFType for CFAllocator). The rest
+# follow CF's own __NSCF<Type> convention. None of them exist yet, which is why
+# the checker currently reports MISSING_CLASS for all 19 -- that is the honest
+# state, and the list doubles as the work order for the NS* implementations.
+#
+# Two BRIDGED types are dispatched but never MESSAGED: CFBag's three sites
+# (CFBag.c:250,258,266) are "if ObjC, bail" guards that return 0/false. They
+# still need a registered class so the predicate answers correctly; they do not
+# need a method surface. CFBoolean is the same shape.
+#
+# NOT_BRIDGED types are safe to leave unregistered: _CFRuntimeCreateInstance
+# initialises _cfisa from the very slot CF_IS_OBJC compares against
+# (CFRuntime.c:550), so an unregistered type's own instances match their own
+# empty slot and read as native, correctly.
+
+_kCFRuntimeIDNotAType	NOT_BRIDGED	sentinel for "no type"; never instantiated
+_kCFRuntimeIDCFType	NOT_BRIDGED	the base type; no instances of its own
+_kCFRuntimeIDCFAllocator	NOT_BRIDGED	statics use STATIC_CLASS_REF, which is NULL in our config (measured)
+_kCFRuntimeIDCFBasicHash	NOT_BRIDGED	internal storage for CFDictionary/CFSet/CFBag; never handed out
+_kCFRuntimeIDCFStorage	NOT_BRIDGED	internal storage for CFArray/CFString; never handed out
+_kCFRuntimeIDCFRunArray	NOT_BRIDGED	internal storage for CFAttributedString; never handed out
+
+_kCFRuntimeIDCFString	BRIDGED	__NSCFString
+_kCFRuntimeIDCFArray	BRIDGED	__NSCFArray
+_kCFRuntimeIDCFDictionary	BRIDGED	__NSCFDictionary
+_kCFRuntimeIDCFSet	BRIDGED	__NSCFSet
+_kCFRuntimeIDCFBag	BRIDGED	__NSCFBag
+_kCFRuntimeIDCFData	BRIDGED	__NSCFData
+_kCFRuntimeIDCFNumber	BRIDGED	__NSCFNumber
+_kCFRuntimeIDCFBoolean	BRIDGED	__NSCFBoolean
+_kCFRuntimeIDCFDate	BRIDGED	__NSCFDate
+_kCFRuntimeIDCFTimeZone	BRIDGED	__NSCFTimeZone
+_kCFRuntimeIDCFCalendar	BRIDGED	__NSCFCalendar
+_kCFRuntimeIDCFLocale	BRIDGED	__NSCFLocale
+_kCFRuntimeIDCFError	BRIDGED	__NSCFError
+_kCFRuntimeIDCFURL	BRIDGED	NSURL
+_kCFRuntimeIDCFCharacterSet	BRIDGED	__NSCFCharacterSet
+_kCFRuntimeIDCFAttributedString	BRIDGED	__NSCFAttributedString
+_kCFRuntimeIDCFReadStream	BRIDGED	__NSCFInputStream
+_kCFRuntimeIDCFWriteStream	BRIDGED	__NSCFOutputStream
+_kCFRuntimeIDCFRunLoopTimer	BRIDGED	__NSCFTimer
+
+_kCFRuntimeIDCFNull	NOT_BRIDGED	NSNull is attested in CFBase.c:813 but CF has no dispatch site
+_kCFRuntimeIDCFBinaryHeap	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFBitVector	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFTree	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFUUID	NOT_BRIDGED	NSUUID is a separate type, not toll-free with CFUUID
+_kCFRuntimeIDCFBundle	NOT_BRIDGED	NSBundle wraps CFBundle, does not bridge to it
+_kCFRuntimeIDCFURLComponents	NOT_BRIDGED	NSURLComponents wraps it; CF has no dispatch site
+_kCFRuntimeIDCFKeyedArchiverUID	NOT_BRIDGED	archiver-internal; CF has no dispatch site
+_kCFRuntimeIDCFDateComponents	NOT_BRIDGED	NSDateComponents wraps it; CF has no dispatch site
+_kCFRuntimeIDCFDateFormatter	NOT_BRIDGED	NSDateFormatter wraps it; CF has no dispatch site
+_kCFRuntimeIDCFNumberFormatter	NOT_BRIDGED	NSNumberFormatter wraps it; CF has no dispatch site
+_kCFRuntimeIDCFListFormatter	NOT_BRIDGED	NSListFormatter wraps it; CF has no dispatch site
+_kCFRuntimeIDCFDateIntervalFormatter	NOT_BRIDGED	wrapped, not bridged; CF has no dispatch site
+_kCFRuntimeIDCFRelativeDateTimeFormatter	NOT_BRIDGED	wrapped, not bridged; CF has no dispatch site
+_kCFRuntimeIDCFPreferencesDomain	NOT_BRIDGED	CF-internal preferences plumbing
+_kCFRuntimeIDCFNotificationCenter	NOT_BRIDGED	NSNotificationCenter is independent, not toll-free
+_kCFRuntimeIDCFRunLoop	NOT_BRIDGED	NSRunLoop wraps CFRunLoop; CF has no dispatch site
+_kCFRuntimeIDCFRunLoopMode	NOT_BRIDGED	CF-internal; never handed out
+_kCFRuntimeIDCFRunLoopObserver	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFRunLoopSource	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFSocket	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFFileDescriptor	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFMachPort	NOT_BRIDGED	NSMachPort wraps it; Mach is out of scope for this port anyway
+_kCFRuntimeIDCFMessagePort	NOT_BRIDGED	NSMessagePort wraps it; Mach is out of scope
+_kCFRuntimeIDCFXMLParser	NOT_BRIDGED	NSXMLParser is independent, not toll-free
+_kCFRuntimeIDCFXMLNode	NOT_BRIDGED	no ObjC counterpart; CF has no dispatch site
+_kCFRuntimeIDCFPFactory	NOT_BRIDGED	CFPlugIn internal; CF has no dispatch site
+_kCFRuntimeIDCFPlugInInstance	NOT_BRIDGED	CFPlugIn internal; CF has no dispatch site
+_kCFRuntimeIDCFPasteboard	NOT_BRIDGED	not built for this platform
+_kCFRuntimeIDCFUserNotification	NOT_BRIDGED	not built for this platform
+_kCFRuntimeIDCFWindowsNamedPipe	NOT_BRIDGED	TARGET_OS_WIN32 only; not built for this platform
