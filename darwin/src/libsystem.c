@@ -594,6 +594,19 @@ EXPORT const char *getprogname(void)
     return slash;
 }
 
+/* Wide-char, for #48's libc++ surface. This file is -nostdinc, so wchar_t is
+ * spelled out: it is `int` on arm64-apple-macos, 4 bytes and SIGNED.
+ *
+ * glibc's is also 4 bytes but UNSIGNED -- measured on both. Same width means
+ * the same register, so the calling convention is identical and a forward is
+ * safe; the signedness would only matter to a comparison that ordered
+ * characters, and both of these only compare for equality. Noting it because
+ * "same size" was the trap on pthread_cond_t, and it is worth being explicit
+ * about which property is actually doing the work. sizeof(wchar_t) is pinned
+ * in sdk/tests/abi_probe.c against Apple's SDK. */
+typedef int mr_wchar_t;
+FWD(size_t, wcslen,  (const mr_wchar_t *s),                 (s))
+FWD(mr_wchar_t *, wmemchr, (const mr_wchar_t *s, mr_wchar_t c, size_t n), (s, c, n))
 FWD(size_t, strlen,  (const char *s),                    (s))
 FWD(char *, strcpy,  (char *d, const char *s),           (d, s))
 FWD(char *, strncpy, (char *d, const char *s, size_t n), (d, s, n))
