@@ -229,7 +229,7 @@ int mr_addr_in_glibc_heap(const void *p)
 
 void mr_constrain_heap(void)
 {
-    void *probe;
+    void *probe, *big;
     uint64_t brk_now;
 
     /* Before the first guest thread and before the runtimes allocate anything:
@@ -246,18 +246,36 @@ void mr_constrain_heap(void)
         mr_die("mallopt(M_ARENA_MAX, 1) was refused. Without it every guest thread "
                "after the first allocates from its own mmap'd arena above 2^47, and "
                "libswiftCore would truncate any class object living there.");
-    /* This one genuinely can be refused: glibc's do_set_mmap_threshold rejects
-     * anything above HEAP_MAX_SIZE/2, which is exactly the 32 MiB we ask for. We
-     * sit on the boundary deliberately -- raising this constant would silently
-     * turn the knob off rather than widen it. */
+    /* M_MMAP_MAX 0 forbids malloc from using mmap AT ALL, which is what actually
+     * closes this. M_MMAP_THRESHOLD alone could not: glibc caps it at
+     * HEAP_MAX_SIZE/2 = 32 MiB, so every single allocation of 32 MiB or more
+     * went to mmap and landed at 0xffff_xxxx_xxxx -- above the very ceiling this
+     * function exists to enforce. That was a documented "residue" and it was the
+     * wrong call: a hole in the guarantee is not made safe by writing it down.
+     *
+     * MEASURED, same program, only this knob differing:
+     *     without   1 MiB low, 32/64/256 MiB and 1 GiB ALL at 0xffff...
+     *     with      every size low, up to and including 1 GiB, each fully
+     *               written to so the memory is demonstrably real
+     *
+     * The cost is real and worth naming: a large block freed by the guest goes
+     * back to the brk free list instead of being munmap'd, so RSS can stay high
+     * after a big free. That is a retention cost, and it buys the property that
+     * NO allocation can be handed to Swift as an unaddressable class pointer.
+     *
+     * M_MMAP_THRESHOLD stays as defence in depth -- if M_MMAP_MAX is ever
+     * reverted, it still keeps everything under 32 MiB on brk. */
+    if (mallopt(M_MMAP_MAX, 0) == 0)
+        mr_die("mallopt(M_MMAP_MAX, 0) was refused. Without it every allocation at "
+               "or above glibc's 32 MiB mmap threshold comes from mmap and lands "
+               "above 2^47, where libswiftCore's isa mask truncates it. There is no "
+               "smaller value to fall back to: 0 is the only setting that forbids "
+               "mmap outright.");
     if (mallopt(M_MMAP_THRESHOLD, 32 * 1024 * 1024) == 0)
         mr_die("mallopt(M_MMAP_THRESHOLD, 32 MiB) was refused. glibc caps it at "
                "HEAP_MAX_SIZE/2; if that cap has changed, lower this constant to "
-               "the HIGHEST value glibc now accepts -- not to the first value that "
-               "stops this abort. This number IS the residue documented in "
-               "docs/UNIMPLEMENTED.md#isa-va-width (\"a single allocation at or "
-               "above 32 MiB still lands high\"), so lowering it widens the hole and "
-               "makes that entry wrong; change both together.");
+               "the HIGHEST value glibc now accepts, not to the first value that "
+               "stops this abort.");
 
     /* The link-time base is what actually decides this, so check the result
      * instead of assuming the linker was told. A loader that starts here and
@@ -265,6 +283,21 @@ void mr_constrain_heap(void)
     brk_now = (uint64_t)(uintptr_t)sbrk(0);
     probe = malloc(64);
     if (!probe) mr_die("out of memory constraining the heap");
+
+    /* THE SECOND PROBE IS THE POINT. A check that allocates 64 bytes and
+     * concludes "the heap is below 2^47" verifies only the case it was written
+     * for: small allocations come from brk, brk is where the link-time base put
+     * it, and the answer was never in doubt. The case that WAS broken -- a
+     * single allocation big enough for glibc to reach for mmap -- is invisible
+     * to it. So probe on the far side of the old boundary too, and do it with a
+     * size that would have failed before this function set M_MMAP_MAX.
+     *
+     * It is not touched, only measured: on Linux an untouched brk extension
+     * costs address space and a syscall, not resident memory, so this is two
+     * brk calls at startup rather than 33 MiB of RSS. */
+    big = malloc(MR_HEAP_PROBE_LARGE);
+    if (!big) mr_die("out of memory taking the large-allocation probe (%llu bytes)",
+                     (unsigned long long)MR_HEAP_PROBE_LARGE);
 
     if (brk_now >= MR_ISA_LIMIT || (uint64_t)(uintptr_t)probe >= MR_ISA_LIMIT)
         mr_die("the heap starts at 0x%llx and malloc answered 0x%llx, at or above "
@@ -275,10 +308,22 @@ void mr_constrain_heap(void)
                (unsigned long long)brk_now, (unsigned long long)(uintptr_t)probe,
                (unsigned long long)MR_ISA_LIMIT);
 
+    if ((uint64_t)(uintptr_t)big >= MR_ISA_LIMIT)
+        mr_die("a %llu-byte allocation answered 0x%llx, at or above 2^47 (0x%llx), "
+               "while a small one stayed low. That is glibc serving large requests "
+               "from mmap instead of brk, which is exactly what mallopt(M_MMAP_MAX, 0) "
+               "above is supposed to forbid -- so either that call did not take "
+               "effect, or this glibc reaches for mmap by another route.",
+               (unsigned long long)MR_HEAP_PROBE_LARGE,
+               (unsigned long long)(uintptr_t)big, (unsigned long long)MR_ISA_LIMIT);
+
+    free(big);
     free(probe);
     heap_bounds_init();
-    mr_log("heap constrained: brk 0x%llx, one arena, mmap threshold 32 MiB (limit 0x%llx)",
-           (unsigned long long)brk_now, (unsigned long long)MR_ISA_LIMIT);
+    mr_log("heap constrained: brk 0x%llx, one arena, mmap disabled; %llu-byte probe "
+           "also below the limit 0x%llx",
+           (unsigned long long)brk_now, (unsigned long long)MR_HEAP_PROBE_LARGE,
+           (unsigned long long)MR_ISA_LIMIT);
 }
 
 void mr_reserve_pagezero(void)

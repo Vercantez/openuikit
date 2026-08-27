@@ -861,12 +861,33 @@ future libc rather than a live risk. `M_MMAP_THRESHOLD` **can** be refused --
 exactly the 32 MiB we ask for. We sit on that boundary deliberately: raising the
 constant would silently turn the knob off rather than widen it.
 
-**Residue, deliberately not fixed.** A single allocation at or above glibc's
-32 MiB `M_MMAP_THRESHOLD` maximum still comes from `mmap` and still lands above
-2^47. No class object is 32 MiB -- the sizes at issue are Swift's 64 KiB
-metadata pool refills and objc4's few-hundred-byte class pairs -- so a guest
-asking for a buffer that large is asking for a buffer, not a class. It is
-recorded here rather than asserted in `19_isa_mask`.
+**There is no residue any more, and the one there used to be was a mistake.**
+This section previously recorded that a single allocation at or above glibc's
+32 MiB `M_MMAP_THRESHOLD` cap still came from `mmap` and still landed above
+2^47, and argued it was safe because no class object is 32 MiB. The argument was
+true and the conclusion was wrong: **a hole in a guarantee is not made safe by
+writing it down**, and it sat inside the one check the whole isa-mask fix rests
+on. Measured: 1 MiB low, and 32 MiB / 64 MiB / 256 MiB / 1 GiB all at
+`0xffff_xxxx_xxxx`.
+
+`mallopt(M_MMAP_MAX, 0)` closes it -- that forbids `malloc` from using `mmap`
+at all, where `M_MMAP_THRESHOLD` alone could not, because glibc caps the
+threshold at exactly the 32 MiB in question. Every size up to 1 GiB now lands
+below the limit, each verified by writing to the whole block so the memory is
+demonstrably real.
+
+The cost, named rather than buried: a large block the guest frees returns to the
+brk free list instead of being `munmap`'d, so RSS can stay high after a big
+free. That is a retention cost, and it buys the property that no allocation can
+be handed to Swift as an unaddressable class pointer.
+
+**And the check now covers the case it used to be blind to.** The old probe
+allocated 64 bytes and concluded the heap was low -- verifying only the case it
+was written for, since small allocations were never in doubt. `mr_constrain_heap()`
+now probes a second time at 33 MiB, on the far side of the old boundary. Teeth
+verified by removing `M_MMAP_MAX` and nothing else: the loader aborts at startup
+naming the size and the address, in a configuration where the *old* probe still
+passed.
 
 objc4's own `STATIC_ASSERT` does **not** cover this. It checks `ISA_MASK`
 against the SDK's `MACH_VM_MAX_ADDRESS` -- a compile-time fact about Darwin --
