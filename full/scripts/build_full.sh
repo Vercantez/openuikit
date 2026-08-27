@@ -48,90 +48,92 @@ LD=(ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$SYS"
 CC=(clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O2)
 
 # ---- guest root ------------------------------------------------------------
+# MACHORUN=/machorun is a read-only bind mount of ~/machorun, so the guest root
+# is always staged from the CURRENT loader and userland rather than from a copy
+# that silently goes stale. That mattered once already: a guest root staged
+# before machorun's heap-below-2^47 fix (9659e73) reproduced a bug that had
+# been fixed upstream hours earlier.
+MACHORUN=${MACHORUN:-/machorun}
 if [ ! -d "$ROOTDIR" ]; then
-    echo "== staging guest root"
+    echo "== staging guest root from $MACHORUN"
     mkdir -p "$ROOTDIR/darwin/usr/lib/swift"
-    for d in "$W/scratch/mrroot/darwin/usr/lib/"*.dylib; do
+    cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
+    # The Swift runtime dylibs and the Foundation/CoreFoundation loud-abort
+    # stubs are NOT machorun's -- they are the spike's staged Apple simulator
+    # runtime and shims (docs/RUNTIME.md §4), so they come from scratch/mrroot.
+    [ -d "$W/scratch/mrroot/darwin/System" ] && cp -R "$W/scratch/mrroot/darwin/System" "$ROOTDIR/darwin/"
+    cp "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib "$ROOTDIR/darwin/usr/lib/swift/"
+    cp "$W/scratch/mrroot/darwin/usr/lib/libswiftcompat.dylib" "$ROOTDIR/darwin/usr/lib/"
+    for d in "$MACHORUN/darwin/usr/lib/"*.dylib; do
         # NOT libquartz: machorun's is an older sync of ~/quartz and is rebuilt
         # below from ~/uikit's CQuartz. Copying it here would satisfy the
         # freshness check and silently link the guest against the old ABI.
-        case "$(basename "$d")" in libquartz.dylib) continue ;; esac
+        # libquartz: machorun's is an older sync of ~/quartz, rebuilt below from
+        # ~/uikit's CQuartz. libSystem.B/libc++.1: rebuilt below as umbrellas.
+        case "$(basename "$d")" in
+            libquartz.dylib|libSystem.B.dylib|libc++.1.dylib) continue ;;
+        esac
         cp "$d" "$ROOTDIR/darwin/usr/lib/"
     done
-    cp "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib "$ROOTDIR/darwin/usr/lib/swift/"
-    cp -R "$W/scratch/mrroot/darwin/System" "$ROOTDIR/darwin/" 2>/dev/null || true
-    cp "$W/scratch/mrroot/machorun" "$ROOTDIR/machorun"
 fi
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
-# ---- libSystem umbrella, extended for _Concurrency -------------------------
-# The full module carries @MainActor (real UIKit does), so the guest loads
-# libswift_Concurrency.dylib, which imports 22 symbols our userland lacks --
-# measured with nm against this guest root, listed in full/shims/concpatch.c.
+# ---- libSystem / libc++ umbrellas -----------------------------------------
+# ONE umbrella per library, over machorun's CURRENT dylib, carrying BOTH sets
+# of additions:
+#   spike/syspatch.c   + spike/cxxpatch.cpp   the 47+5 symbols the staged Apple
+#                                             Swift runtime needs (docs/RUNTIME.md §4)
+#   full/shims/concpatch.c + conccxx.cpp      the 22 more libswift_Concurrency needs
 #
-# The umbrella pattern is docs/RUNTIME.md §4's, applied one layer further out.
-# machorun's libSystem.B.dylib is ALREADY an umbrella over libSystem.real.dylib,
-# and machorun searches a bound image's reexport deps but cannot chase
-# per-symbol trie reexports -- so the new symbols cannot be added by a sibling
-# dylib, they have to be inside something libSystem.B.dylib reexports or
-# defines. This renames the existing umbrella to a third install name and wraps
-# it, leaving machorun's own dylibs untouched on disk.
-NEED_UMBRELLA=0
-[ -f "$ROOTDIR/.conc_umbrella" ] || NEED_UMBRELLA=1
-for src in "$W/full/shims/concpatch.c" "$W/full/shims/conccxx.cpp" "$W/full/shims/lowheap.c"; do
-    [ "$src" -nt "$ROOTDIR/.conc_umbrella" ] && NEED_UMBRELLA=1
-done
-if [ "$NEED_UMBRELLA" = 1 ]; then
-    echo "== libSystem umbrella + concpatch (22 _Concurrency symbols)"
+# Building one umbrella rather than stacking mine on top of the spike's is not
+# tidiness: stacking meant wrapping whatever libSystem.B.dylib happened to be in
+# scratch/mrroot, which is a COPY that goes stale. It did -- a root staged before
+# machorun's heap-below-2^47 fix (9659e73) reproduced a bug fixed upstream hours
+# earlier. Everything is now rebuilt from ~/machorun on every run.
+#
+# Which library owns which symbol is dyld_info's answer, not a preference: these
+# images bind two-level, so a definition in the wrong library is invisible.
+if [ ! -f "$ROOTDIR/.umbrellas" ] || \
+   [ "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/full/shims/concpatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/full/shims/conccxx.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ]; then
+    echo "== libSystem + libc++ umbrellas (syspatch + concpatch)"
     LIB=$ROOTDIR/darwin/usr/lib
-    # The inner name is EXACTLY as long as "/usr/lib/libSystem.B.dylib":
-    # set_id_dylib.pl rewrites LC_ID_DYLIB in place and requires the new name to
-    # fit the existing command, and llvm-install-name-tool cannot touch this
-    # file at all (it refuses LC_REEXPORT_DYLIB, cmd 0x8000001f).
-    if [ ! -f "$LIB/libSysBaseConc.dylib" ]; then
-        cp "$LIB/libSystem.B.dylib" "$LIB/libSysBaseConc.dylib"
-        perl "$W/scripts/set_id_dylib.pl" "$LIB/libSysBaseConc.dylib" /usr/lib/libSysBaseConc.dylib
-    fi
-    "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 \
-        -syslibroot "$ROOTDIR/darwin" -dylib \
-        -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$OUT/libSystem.B.conc.dylib" "$OUT/concpatch.o" \
-        -reexport_library "$LIB/libSysBaseConc.dylib"
-    cp "$OUT/libSystem.B.conc.dylib" "$LIB/libSystem.B.dylib"
 
-    # libc++ side: __cxa_pure_virtual and the typed operator new bind against
-    # libc++, not libSystem (dyld_info -fixups), and two-level binding means a
-    # definition in the wrong library is invisible. Same umbrella trick, same
-    # same-length install-name constraint.
-    if [ ! -f "$LIB/libcxxbc.dylib" ]; then
-        cp "$LIB/libc++.1.dylib" "$LIB/libcxxbc.dylib"
-        perl "$W/scripts/set_id_dylib.pl" "$LIB/libcxxbc.dylib" /usr/lib/libcxxbc.dylib
-    fi
+    cp "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" "$LIB/libSystem.real.dylib"
+    llvm-install-name-tool-18 -id /usr/lib/libSystem.real.dylib "$LIB/libSystem.real.dylib"
+    cp "$MACHORUN/darwin/usr/lib/libc++.1.dylib" "$LIB/libc++.real.dylib"
+    llvm-install-name-tool-18 -id /usr/lib/libc++.real.dylib "$LIB/libc++.real.dylib"
+
+    "${CC[@]}" -O1 -c -o "$OUT/syspatch.o"  "$W/spike/syspatch.c"
+    "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
+    clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O1 -std=c++17 \
+        -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
+        -c -o "$OUT/cxxpatch.o" "$W/spike/cxxpatch.cpp"
     clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -fno-rtti -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/conccxx.o" "$W/full/shims/conccxx.cpp"
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 \
-        -syslibroot "$ROOTDIR/darwin" -dylib \
-        -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
-        -o "$OUT/libc++.1.conc.dylib" "$OUT/conccxx.o" \
-        -reexport_library "$LIB/libcxxbc.dylib"
-    cp "$OUT/libc++.1.conc.dylib" "$LIB/libc++.1.dylib"
 
-    # A SECOND libSystem, identical plus full/shims/lowheap.c, kept alongside
-    # rather than installed. run_suite.sh --lowheap swaps it in to MEASURE
-    # whether the remaining suite failures are all the one heap-placement bug;
-    # the default guest root never sees it.
+    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+        -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
+        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" \
+        -reexport_library "$LIB/libSystem.real.dylib"
+    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+        -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
+        -o "$LIB/libc++.1.dylib" "$OUT/cxxpatch.o" "$OUT/conccxx.o" \
+        "$LIB/libSystem.B.dylib" -reexport_library "$LIB/libc++.real.dylib"
+
+    # A second libSystem, identical plus full/shims/lowheap.c, kept alongside
+    # rather than installed. See that file's header: it is a FAILED experiment,
+    # retained so the next person does not repeat it.
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 \
-        -syslibroot "$ROOTDIR/darwin" -dylib \
-        -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/concpatch.o" "$OUT/lowheap.o" \
-        -reexport_library "$LIB/libSysBaseConc.dylib"
+    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+        -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
+        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
+        -reexport_library "$LIB/libSystem.real.dylib"
 
-    touch "$ROOTDIR/.conc_umbrella"
-    echo "   -> libSystem.B.dylib + libc++.1.dylib re-umbrella'd with the 22 symbols"
-    echo "   -> libSystem.B.lowheap.dylib built alongside (measurement, not installed)"
+    touch "$ROOTDIR/.umbrellas"
 fi
 
 # ---- libquartz, from ~/uikit's CQuartz -------------------------------------
