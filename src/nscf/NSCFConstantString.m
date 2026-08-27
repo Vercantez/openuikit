@@ -30,6 +30,15 @@
 
 #import "../../include/CFFoundationTypes.h"
 
+typedef unsigned long CFTypeID;
+typedef unsigned long CFHashCode;
+typedef long          CFIndex;
+typedef const struct __CFString *CFStringRef;
+extern CFTypeID   CFStringGetTypeID(void);
+extern CFHashCode CFStringHashCString(const uint8_t *bytes, CFIndex len);
+extern CFIndex    CFStringGetLength(CFStringRef);
+extern unichar    CFStringGetCharacterAtIndex(CFStringRef, CFIndex);
+
 /* The measured layout. isa at +0, _cfinfoa at +8, bytes at +16, length at +24 --
  * a TWO-word CFRuntimeBase. Named to match corelibs' `struct CF_CONST_STRING`,
  * whose initialiser produces exactly this and whose 0x000007c8 literal is the
@@ -89,6 +98,58 @@ struct __CFConstStrLayout {
  * deliberately NOT a private invention. Left unimplemented until that function
  * is available to call rather than reimplemented here, because two hash
  * functions that disagree would produce a dictionary that loses keys. */
+
+/* --- THE THREE SELECTORS CF DISPATCHES TYPE-ID-FREE ------------------------
+ *
+ * CF's typeID-FREE dispatch (CFTYPE_OBJC_FUNCDISPATCH, five sites in
+ * CFRuntime.c) tests `isa != __CFISAForTypeID(typeID_of(obj))`. For a constant
+ * string the isa is __NSCFConstantString, baked into __DATA by the .set alias
+ * at compile time, while CFString's slot holds __NSCFString. THEY CAN NEVER
+ * MATCH -- the isa is fixed before any registration exists to match it.
+ *
+ * So constant strings take the ObjC branch of EVERY such dispatch, always, and
+ * these three are not optional: without them CFGetTypeID(CFSTR("x")),
+ * CFEqual and CFHash on a constant string all die with "unrecognized selector".
+ * Measured, not predicted -- that was the state before this block.
+ *
+ * NONE OF THEM MAY CALL THE CF FUNCTION THAT DISPATCHED TO THEM. That is what
+ * turned the crash into a 90-second hang when -hash was first added on the
+ * shared base: -hash calling CFHash closes the loop. Each is written to reach
+ * only entry points that cannot dispatch back. */
+
+/* CFStringGetTypeID() takes no object, so it cannot dispatch. Returning the
+ * constant directly would work too, but this stays correct if CF renumbers. */
+- (CFTypeID)_cfTypeID { return CFStringGetTypeID(); }
+
+/* CFStringHashCString takes RAW BYTES, not an object -- no receiver, no
+ * dispatch, no cycle. And it is CF's OWN hash function, so agreement with
+ * CFHash on a dynamic string of equal content is by construction rather than
+ * by a reimplementation that has to be kept in step. That was the objection
+ * recorded here when this was first left unimplemented; a byte-taking entry
+ * point answers it. Constant strings are 8-bit, which is what this expects. */
+- (CFHashCode)hash {
+    return CFStringHashCString(CONST_STR(self)->ptr, (CFIndex)CONST_STR(self)->length);
+}
+
+/* Length-then-characters, deliberately, rather than CFEqual or CFStringCompare.
+ * CFEqual is the function that dispatched here, so calling it cycles.
+ * CFStringCompare dispatches -compare:, which this class does not implement,
+ * so it would trade a hang for a crash. CFStringGetLength and
+ * CFStringGetCharacterAtIndex use the typeID-TAKING dispatch: for a dynamic
+ * string it resolves false and runs natively, and for another constant string
+ * it dispatches -length / -characterAtIndex:, both of which exist above and
+ * neither of which re-enters -isEqual:. Terminating by construction. */
+- (BOOL)isEqual:(id)other {
+    if (!other) return NO;
+    if (other == self) return YES;
+    CFStringRef o = (CFStringRef)other;
+    CFIndex n = (CFIndex)CONST_STR(self)->length;
+    if (CFStringGetLength(o) != n) return NO;
+    for (CFIndex i = 0; i < n; i++) {
+        if ((unichar)CONST_STR(self)->ptr[i] != CFStringGetCharacterAtIndex(o, i)) return NO;
+    }
+    return YES;
+}
 
 @end
 

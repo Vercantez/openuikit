@@ -182,6 +182,22 @@ int main(void)
          * docs/cf-census/selector-reentry.md -- this assertion is pinned as
          * pointer-identity-only until that is fixed. */
         const void *got = CFDictionaryGetValue(dict, CFSTR("a"));
+
+        /* NOW THE STRONG VERSION, which was blocked until __NSCFConstantString
+         * gained -hash/-isEqual:/-_cfTypeID. A DYNAMIC string with the same
+         * content is a different pointer, so identity cannot answer it: the
+         * lookup must hash the probe, hash the constant key, and compare them.
+         * That exercises CFStringHashCString agreeing with itself across the
+         * two representations, which is the property the earlier comment
+         * claimed and did not test. */
+        CFStringRef probe = CFStringCreateWithCString(NULL, "a", kCFStringEncodingUTF8);
+        printf("     probe %p vs key %p (distinct: %s)\n", (void *)probe,
+               (void *)CFSTR("a"), probe != (CFStringRef)CFSTR("a") ? "yes" : "NO");
+        fflush(stdout);
+        ok("CFDictionaryGetValue by an EQUAL-BUT-DISTINCT key",
+           CFDictionaryGetValue(dict, probe) == (const void *)s,
+           "requires CFHash and CFEqual to agree across a dynamic string and a "
+           "constant one -- identity cannot answer this");
         ok("CFDictionaryGetValue by CFSTR key", got == (const void *)s,
            "pointer identity only -- CFSTR deduplicates, so no hashing occurs");
         ok("[dict count] through bridge", (NSUInteger)[(id)dict count] == 2,
