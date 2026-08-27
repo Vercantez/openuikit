@@ -818,3 +818,63 @@ all night: **a wrong Objective-C signature is the `posix_spawnattr_t` bug moved
 from C to ObjC.** The message compiles, the selector matches, `objc_msgSend`
 dispatches — and the argument or return register is wrong. It fails silently and
 at a distance. Neither half may be guessed.
+
+## 27. #51 step 2a: the four blocked files compile, and the loop is running
+
+`include/CFFoundationInterfaces.h` declares the methods the type header alone
+could not unblock. **77 of 82**, up from 73 — CFCalendar, CFDate, CFStream and
+CFString now compile with live ObjC dispatch.
+
+### Census curve
+
+| step | passing |
+|---|---|
+| 0 — `@class` forward declarations only | 69 / 82 |
+| 1 — `CFFoundationTypes.h` (types) | 73 / 82 |
+| 2a — `CFFoundationInterfaces.h` (first methods) | **77 / 82** |
+
+The 5 remaining are **not** method-signature problems: `struct tzhead`
+(CFTimeZone) and `struct kinfo_proc` (CFUtilities) are machorun's sysroot,
+CFSocket is a defect in my own `arpa/inet.h` shim, and CFRunLoop/CFURLAccess are
+a Mach macro and an `NSString` redefinition.
+
+### Why the signatures are trustworthy
+
+Each is cited to its evidence in the header, and the two halves have different
+sources:
+
+- `NSDate.timeIntervalSinceReferenceDate` / `timeIntervalSinceDate:` — **public**,
+  verified against Apple's `NSDate.h:20,30`.
+- `NSString.length` — **public**, verified against `NSString.h:109`.
+- `NSCalendar._minimumRangeOfUnit:` / `_maximumRangeOfUnit:` /
+  `_rangeOfUnit:inUnit:forAT:` — **private SPI**, read off CF's call sites at
+  `CFCalendar.c:1071,1124,2996`, which spell out every parameter type.
+- `NSInputStream/NSOutputStream._cfStreamError` — **private SPI**,
+  `CFStream.c:899,904`. Note this returns a **struct by value**, so guessing
+  `id` would have selected the wrong `objc_msgSend` variant entirely rather than
+  merely the wrong value.
+
+### The loop's next iteration is measurable
+
+Warnings went 98 → 309, and that is the instrument working rather than a
+regression: with a real `@interface`, every method *not* declared on those
+classes now warns **by name**. The unknown-method set is **155** — slightly up
+from 151, because receivers that were previously untyped now report.
+
+So each iteration's remaining work is enumerated by the compiler, and the
+convergence curve to report is the one on *that* number, not on the census.
+Next iteration starts from 155.
+
+### A fourth total wipeout, same cause as the other three
+
+The first version of this header assumed CF's own headers would already be
+included, and **said so in a comment instead of checking**. It is force-included,
+so it lands before everything: `CFRange`, `CFTimeInterval` and `CFStreamError`
+did not exist yet and all 86 files failed with "expected a type".
+
+That is the fourth time tonight a header change took the census to zero, and all
+four have the same shape — an assumption about the include environment asserted
+rather than verified: a duplicate `mach_port_context_t`, a duplicate `div_t`, an
+include path that shadowed the sysroot, and now an ordering assumption. The
+header is self-contained now, and the comment records why rather than restating
+the assumption.

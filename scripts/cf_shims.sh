@@ -479,6 +479,18 @@ typedef pthread_key_t  _CFThreadSpecificKey;
  * deallocation path ever misbehaves. */
 #define __kCFAllocatorTypeID_CONST 2
 
+/* MAX/MIN. CFString.c uses MAX() at :3380 and :6826 but never includes
+ * <sys/param.h>; on Darwin it arrives transitively through a header chain our
+ * sysroot does not reproduce. Force-included rather than added to
+ * sys/param.h, because the problem is not that the header is missing -- it is
+ * that CFString does not include it. */
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+#ifndef MIN
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+
 /* RECONSTRUCTION 4 -- _CFThreadSetName.
  * Declared only in ForSwiftFoundationOnly.h, like the _CFThread* types, but
  * CFStream calls it regardless. Same layering bug, same fix. */
