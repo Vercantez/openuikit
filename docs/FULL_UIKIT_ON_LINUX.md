@@ -825,3 +825,87 @@ is exact.
 The macOS-native reference had to be rebuilt to say any of this — no such
 render survived on disk, and without it only arm C is available, which cannot
 tell "our stack is wrong" from "OpenUIKit approximates UIKit here".
+
+## 10. Bundle — and it does not need Foundation
+
+The third and last piece of the process layer. §6 named it as the one most
+likely to need Foundation, with the standing instruction that if it genuinely
+did, it should say so plainly and wait on #47/#51 rather than get a fake.
+
+**It does not.** Foundation's `PropertyListSerialization` is the real API, but
+reading `Info.plist` needs a *parser*, and a parser is self-contained — whereas
+the Foundation module's mere **visibility** flips 33 `canImport` guards in
+OpenUIKit onto a path this sysroot cannot satisfy (§9's guard now enforces
+that). There is precedent in OpenUIKit for exactly this trade: `NotificationCenter`
+is its own portable type that deliberately shadows Foundation's, with the
+tradeoff written up in that file.
+
+### Scope is the measured one, not the specification
+
+Every `Info.plist` in reach is XML — the six `.app` fixtures in
+`~/uikit/Tools/oracle2`, plus macOS's own Calculator.app and Safari.app as a
+sanity check. So the reader covers the element set those files actually use:
+`dict`, `key`, `string`, `array`, `integer`, `real`, `true`/`false`, `data`,
+self-closing forms, the five entities, comments and the DOCTYPE.
+
+**Binary plists are a NAMED GAP, not an assumed-away one.** Shipped iOS apps
+ship `bplist00`, there is no fixture here, and a reader that returned an empty
+dictionary for one would make an app look *misconfigured* rather than
+*unsupported*. So the parser detects the magic first and reports the format.
+
+### Two layouts, both real, both from fixtures that predate the code
+
+```
+iOS (flat)   Foo.app/Foo              Foo.app/Info.plist       Foo.app/<res>
+macOS        Foo.app/Contents/MacOS/Foo   .../Contents/Info.plist  .../Contents/Resources/<res>
+```
+
+`SheetProbe.app` is flat, `Oracle2.app` has `Contents/`. Both are oracle
+fixtures built for an unrelated purpose, so neither was shaped to fit this code.
+Discovery is pure string work on the executable path — no directory probing, so
+it cannot be fooled by a missing-file answer.
+
+### The faithful API is absent, and the obvious substitute is wrong
+
+`_NSGetExecutablePath` — what real UIKit uses — is **not** among machorun's
+libSystem exports (the same grep finds `getprogname`, `readlink`, `getcwd`).
+And `/proc/self/exe` is not merely unavailable, it is **incorrect**: the ELF
+process is the *loader*, so that link names machorun rather than the guest
+Mach-O mapped inside it. Reaching for it would have produced a confident wrong
+answer. So the path comes from `argv[0]` resolved against `getcwd`, and
+`Bundle.main` reports *how* it was found.
+
+### Verified by running the same binary from two places
+
+```
+/w/build/full/Probe.app/probe -> argv[0] -> …/Probe.app/probe
+                                 id=com.openuikit.bundleprobe  layout=flat
+                                 resource resolved THROUGH the bundle   PASS
+./Probe.app/probe             -> same, resolved via getcwd              PASS
+./render_full                 -> Bundle.main nil, "not inside a .app"   PASS
+```
+
+That the *same binary* answers differently from the two locations is what makes
+this a property of the environment rather than of the code. **nil is the correct
+answer for an unbundled executable** — a Bundle that answered anyway by falling
+back to a search path is the exact failure this piece exists to remove.
+
+Parser teeth on both sides: a binary plist named as unsupported, a `<key>` with
+no value rejected, **and** a positive control (entities, comment, DOCTYPE,
+nested array) parsed correctly — without which "rejects everything" would score
+full marks.
+
+### One incident worth keeping
+
+`String.contains(_:)` has a `RegexComponent` overload that lives in
+`_StringProcessing`. Using it made the guest demand
+`libswift_StringProcessing.dylib` **at load time** and the binary stopped
+running entirely — this build disables that module by design. Splitting on `/`
+asks the same question with the stdlib alone. A stdlib method that looks
+free can drag in a dylib, and the failure lands at load rather than at compile.
+
+### Regression
+
+`rendered_ok=108 crashed=0 hung=0`; arm A 162/162 identical to macOS-native, and
+162/162 identical to the pre-bundle Linux run. The process layer is complete:
+**bundle, launch, run loop.**
