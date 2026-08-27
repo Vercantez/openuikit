@@ -35,6 +35,48 @@ LLD_BIN=${LLD_BIN:-/usr/lib/llvm-18/bin}
 CC="$TC/bin/clang"; CXX="$TC/bin/clang++"
 [ -x "$CC" ] || { CC=clang; CXX=clang++; }   # image installs it on PATH
 
+# ------------------------------------------------------------ the NM preflight
+# The default NM path exists in the build image and NOT on a macOS host. As
+# written, a missing NM makes this script die with exit 127 and "No such file or
+# directory" -- safe, but the message names a path and lets the reader think a
+# LIBRARY is missing, and the safety rides on errexit propagating out of a
+# pipeline inside a for-loop. One `|| true` in a future refactor turns that into
+# the failure this whole script exists to prevent: an empty symbol list read as
+# "no overlap", which is a green build reporting that it checked nothing.
+#
+# So the tool is checked by CONTENT, not by existence: it must emit a plausible
+# number of symbols for a dylib we know is full of them. A tool that runs and
+# prints nothing is exactly as dangerous as one that is absent.
+# Empty or non-numeric output must answer "no", not raise a shell error: this
+# runs precisely when the tool is broken, so it has to survive a broken tool.
+nm_works() {
+    local n
+    n=$("$1" --defined-only --extern-only "$2" 2>/dev/null | wc -l 2>/dev/null)
+    n=${n//[^0-9]/}
+    [ -n "$n" ] && [ "$n" -gt 50 ]
+}
+probe=""
+for cand in "$MRLIB/libc++abi.dylib" "$MRLIB/libSystem.B.dylib"; do
+  [ -f "$cand" ] && { probe=$cand; break; }
+done
+if [ -n "$probe" ]; then
+  if ! nm_works "$NM" "$probe"; then
+    found=""
+    for cand in llvm-nm llvm-nm-18 nm; do
+      command -v "$cand" >/dev/null 2>&1 && nm_works "$cand" "$probe" && { found=$cand; break; }
+    done
+    [ -n "$found" ] || {
+      echo "REFUSING TO GRADE: no working symbol reader." >&2
+      echo "  tried: $NM (the default), then llvm-nm, llvm-nm-18, nm" >&2
+      echo "  none listed >50 external symbols in $probe, which is full of them." >&2
+      echo "  Set NM=/path/to/nm. An empty symbol list would read as 'no overlap'." >&2
+      exit 2
+    }
+    echo "note: $NM unusable here; grading with '$found' instead" >&2
+    NM=$found
+  fi
+fi
+
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$(dirname "$OUT")"
 

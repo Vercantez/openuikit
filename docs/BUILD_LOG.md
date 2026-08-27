@@ -720,3 +720,52 @@ advertise the symbol was verified end to end: the bind moves to libc++ and
 the Graviton box and the swift-6.2.4 source is not local, so this is a full
 stdlib cross-build, not a link step: either a new box (~$3) or a source fetch
 plus hours of local Docker CPU. Worth doing once, after the tbd fix.
+
+## 14. Both guards from §12 were themselves defective, and one caught itself
+
+Two follow-ups, both found after §12 landed, both about the guards rather than
+the thing they guard.
+
+**The symbol reader was hardcoded to a path that does not exist off the build
+image.** `build_compat.sh` defaulted `NM` to `/usr/lib/llvm-18/bin/llvm-nm`,
+which is absent on the macOS host. Measured: it dies with exit 127, so the
+warned failure mode — *an empty symbol list read as "no overlap", a green build
+reporting that it checked nothing* — **did not apply**. But the diagnostic names
+a path and reads like a missing library, and the safety rode entirely on
+`errexit` propagating out of a pipeline inside a `for` loop; one `|| true` in a
+refactor would have converted it into the silent case.
+
+It now preflights the reader **by content**: the tool must list more than 50
+external symbols from a dylib known to be full of them, because *a tool that
+runs and prints nothing is exactly as dangerous as one that is absent*. It falls
+back through `llvm-nm`, `llvm-nm-18`, `nm` (macOS `nm` accepts the same flags and
+returns the identical 367 symbols for libc++abi), and **refuses with exit 2** if
+none work. Verified on four inputs: absent default → falls back; present but
+silent → falls back; working `nm` → accepted; nothing available → refuses.
+
+**The negative control was asserting something other than what it claimed, and
+its own inertness check caught it.** The mutant was built with
+`-install_name /usr/lib/libswiftcompat.dylib`, which looks right and is wrong:
+machorun resolves a two-level bind **by install name**, so the guest loaded
+whatever was *staged* at that path and the mutant file on disk was never in the
+process. The control was therefore an assertion about machorun's staged tree,
+not about the file it had just built — and it passed only while the staged shim
+still carried the vtables.
+
+The moment swift-loader-fixes staged the fixed shim, the mutant stopped dying of
+zerofill and started dying of `undefined symbol` (exit 73). The script's own
+`NO-OP` branch reported *"this check can no longer detect the defect it was
+written for"* rather than a pass. **That is the branch earning its place**: the
+exciting reading was "the loader now defends against this", and the true reading
+was "my control is inert".
+
+Fixed by giving the mutant its own install name (`@rpath/libshadowmutant.dylib`,
+found via `-rpath`) so it is genuinely the image in the process. It now reports
+`vtable from libshadowmutant` and SIGSEGVs on its own account, independent of
+what is staged — which is what it always claimed to be doing.
+
+**The generalisation:** §12's finding was that a *shim* silently deferred to
+another image. Both defects here are the same shape one level up — a *check*
+silently deferring to a tool or an artifact it did not verify it was actually
+using. Verify the instrument by content, not by name, and have every negative
+control assert that it is still reaching the code it was written for.

@@ -73,14 +73,23 @@ V(v_pointer,  "__ZTVN10__cxxabiv119__pointer_type_infoE");
 V(v_function, "__ZTVN10__cxxabiv120__function_type_infoE");
 EOF
   clang -target arm64-apple-macos13.0 -isysroot /b/sdk -O1 -fPIC -c /b/mutant.c -o /b/mutant.o
+
+  # THE MUTANT GETS ITS OWN INSTALL NAME, and that detail is load-bearing.
+  # It was first written as -install_name /usr/lib/libswiftcompat.dylib, which
+  # looks right and is wrong: machorun resolves a two-level bind by install
+  # name, so the guest loaded whatever was STAGED at that path and the mutant
+  # file on disk was never in the process at all. That made the control an
+  # assertion about machorun'"'"'s staged tree rather than about this file -- it
+  # passed only while the staged shim still carried the vtables, and went inert
+  # the moment the fix was staged. Caught by this script'"'"'s own INERT check.
   clang -target arm64-apple-macos13.0 -isysroot /b/sdk -fuse-ld=lld -B /usr/lib/llvm-18/bin \
-    -dynamiclib -install_name /usr/lib/libswiftcompat.dylib -nostdlib -L/b/sdk/usr/lib \
-    /b/mutant.o -lSystem -Wl,-undefined,dynamic_lookup -o /b/mutant.dylib
+    -dynamiclib -install_name @rpath/libshadowmutant.dylib -nostdlib -L/b/sdk/usr/lib \
+    /b/mutant.o -lSystem -Wl,-undefined,dynamic_lookup -o /b/libshadowmutant.dylib
 
   # Refuse to grade if the mutant is not actually zerofill: if a future clang
   # emits it into __const with real contents, the negative control is testing
   # nothing and a silent pass would be worse than no check.
-  /usr/lib/llvm-18/bin/llvm-nm -m /b/mutant.dylib \
+  /usr/lib/llvm-18/bin/llvm-nm -m /b/libshadowmutant.dylib \
     | grep -q "__DATA,__common.*__ZTVN10__cxxabiv117__class_type_infoE" \
     || { echo "REFUSING TO GRADE: mutant vtable is not zerofill; the control is inert." >&2; exit 3; }
 
@@ -90,10 +99,17 @@ EOF
 
 status=0
 for variant in real mutant; do
+  case $variant in
+    real)   dylib=/b/real.dylib;             extra="" ;;
+    # -rpath so the mutant is found by its own @rpath install name and is
+    # genuinely the image in the process, rather than deferring to whatever
+    # /usr/lib/libswiftcompat.dylib happens to be staged.
+    mutant) dylib=/b/libshadowmutant.dylib;  extra="-Wl,-rpath,/b" ;;
+  esac
   docker exec "$C" bash -euo pipefail -c "
     clang++ -target arm64-apple-macos13.0 -isysroot /b/sdk -fuse-ld=lld -B /usr/lib/llvm-18/bin \
       -nostdlib -L/b/sdk/usr/lib /b/30_throw.o \
-      /b/$variant.dylib -lc++ -lc++abi -lSystem -o /b/throw.$variant
+      $dylib -lc++ -lc++abi -lSystem $extra -o /b/throw.$variant
   "
   # Which image does the binary name for the vtable? This is what makes the
   # experiment an experiment; if the mutant stopped winning the link, the
@@ -120,7 +136,7 @@ for variant in real mutant; do
       status=1
     fi
   else
-    if [ "$from" != libswiftcompat ]; then
+    if [ "$from" != libshadowmutant ]; then
       printf '  mutant        INERT  vtable bound from %s, not the shim -- control proves nothing\n' "$from"
       status=1
     elif [ "$rc" = 139 ] || [ "$rc" = 134 ]; then
