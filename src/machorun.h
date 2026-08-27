@@ -150,6 +150,7 @@ void mr_protect_readonly_segments(mr_image *im);
 int  mr_mprotect_rw(void *addr, uint64_t size);
 void mr_reserve_pagezero(void);
 void mr_constrain_heap(void);
+int  mr_addr_in_glibc_heap(const void *p);
 
 /* libswiftCore has the 47-bit isa mask compiled into it, so anything that can
  * end up in an isa -- a mapped image, and the heap the runtimes allocate class

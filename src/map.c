@@ -164,6 +164,69 @@ static int prot_of(uint32_t vmprot)
  * 64 KiB metadata pool refills and objc4's few-hundred-byte class pairs -- and
  * a guest asking for a 32 MiB buffer is asking for a buffer, not a class.
  * docs/UNIMPLEMENTED.md#isa-va-width states the residue exactly. */
+/* Is this pointer inside glibc's main-arena heap?
+ *
+ * malloc_size(p) has to answer "did a malloc zone allocate this?", and
+ * mr_addr_in_image() only answers the mapped-image half. Everything else --
+ * a stack address, the loader's own statics, memory from an allocator that is
+ * not glibc's -- used to fall through to malloc_usable_size(), which reads the
+ * word before the pointer and validates NOTHING. It returns a plausible
+ * non-zero for any address at all, so objc4's
+ *     try_free(p) { if (p && malloc_size(p)) free(p); }
+ * frees it, and glibc aborts with "free(): invalid pointer" or
+ * "munmap_chunk(): invalid pointer". That is the exact symptom
+ * darwin/src/libsystem.c's comment records fixing for tests/objc44/023, seen
+ * again in the UIKit scenes -- so the fix was incomplete rather than wrong.
+ *
+ * The main arena is the brk region, and its bounds are knowable: [heap] in
+ * /proc/self/maps gives the start exactly, and sbrk(0) the moving top. We read
+ * the start once, here, before the guest exists, and cache the top -- it only
+ * grows, so a cached value can only be stale in the safe direction and is
+ * refreshed when a pointer sits above it.
+ *
+ * WHAT THIS DELIBERATELY GIVES UP: a single allocation at or above glibc's
+ * 32 MiB M_MMAP_THRESHOLD comes from mmap rather than brk, so it is outside
+ * these bounds and reports "not ours". A guest that try_free()s a >=32 MiB
+ * block therefore leaks it. That is the correct direction to be wrong in --
+ * guessing "not mine" leaks, guessing "mine" corrupts the heap -- and it is
+ * the same 32 MiB residue docs/UNIMPLEMENTED.md#opaque-abi-class already
+ * records. No class object is 32 MiB. */
+static uintptr_t heap_lo;
+static uintptr_t heap_hi_cache;
+
+static void heap_bounds_init(void)
+{
+    char line[512];
+    FILE *f = fopen("/proc/self/maps", "r");
+    if (!f) { mr_log("heap bounds: /proc/self/maps unreadable; malloc_size "
+                     "will answer \"not ours\" for every non-image pointer"); return; }
+    while (fgets(line, sizeof line, f)) {
+        unsigned long lo, hi;
+        if (!strstr(line, "[heap]")) continue;
+        if (sscanf(line, "%lx-%lx", &lo, &hi) == 2) {
+            heap_lo = (uintptr_t)lo;
+            heap_hi_cache = (uintptr_t)hi;
+        }
+        break;
+    }
+    fclose(f);
+    if (!heap_lo)
+        mr_log("heap bounds: no [heap] mapping yet; malloc_size will answer "
+               "\"not ours\" until one appears");
+}
+
+int mr_addr_in_glibc_heap(const void *p)
+{
+    uintptr_t a = (uintptr_t)p, hi;
+    if (!heap_lo || a < heap_lo) return 0;
+    hi = __atomic_load_n(&heap_hi_cache, __ATOMIC_RELAXED);
+    if (a < hi) return 1;
+    /* Above what we last saw: the heap may simply have grown. */
+    hi = (uintptr_t)sbrk(0);
+    __atomic_store_n(&heap_hi_cache, hi, __ATOMIC_RELAXED);
+    return a < hi;
+}
+
 void mr_constrain_heap(void)
 {
     void *probe;
@@ -213,6 +276,7 @@ void mr_constrain_heap(void)
                (unsigned long long)MR_ISA_LIMIT);
 
     free(probe);
+    heap_bounds_init();
     mr_log("heap constrained: brk 0x%llx, one arena, mmap threshold 32 MiB (limit 0x%llx)",
            (unsigned long long)brk_now, (unsigned long long)MR_ISA_LIMIT);
 }
