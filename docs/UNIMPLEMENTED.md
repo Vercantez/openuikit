@@ -714,13 +714,13 @@ a long way from the cause. `src/resolve.c` exports
 
 It is **`realpath`-resolved**, because dyld hands the guest an absolute path and
 we are given whatever was on the command line — the harness invokes
-`./35_execpath`, and a relative answer resolves against the process's cwd later
+`./36_execpath`, and a relative answer resolves against the process's cwd later
 rather than against the executable.
 
 Two contract details measured on the oracle rather than assumed: **`bufsize` is
 not updated on success** (a 4096-byte buffer holding a 112-character path comes
 back still saying 4096; Apple writes it only on the failure path), and the
-failure path *does* write the required size. `tests/bin/35_execpath` grades all
+failure path *does* write the required size. `tests/bin/36_execpath` grades all
 of it, and catches the `/proc/self/exe` version specifically — with the loader
 patched to use it, the fixture fails on `names this executable`.
 
@@ -989,53 +989,46 @@ Two things the entry could not have predicted, both recorded in
 own, which objc4 uses as an ownership test, and glibc's `malloc_usable_size`
 does not.
 
-### `dlopen-dlsym` — `dlopen` DONE; `RTLD_NEXT` and `dladdr` remain
-**`dlopen` over guest Mach-O images works** (`mr_dlopen`, `src/image.c`), and
-`tests/objc44/042-dlopen` passes — **the objc4 corpus is 44/44**. rung (af)
-`tests/src/33_dlopen.c` covers it against real dyld.
+### `dlopen-dlsym` — **DONE.** dlopen, dladdr and every dlsym handle
+`dlopen` over guest Mach-O images, `dladdr`, and `dlsym` with `RTLD_DEFAULT`,
+`RTLD_NEXT`, `RTLD_SELF`, `RTLD_MAIN_ONLY` and real handles all work. The objc4
+corpus is **44/44**; rungs (af) `33_dlopen` and (ah) `35_dladdr` cover them
+against real dyld.
 
-It is the startup sequence from `src/main.c` performed on demand for one image
-instead of the whole graph, and it has to be the SAME sequence or a dlopen'd
-image differs from a linked one in ways nobody would predict: load (pulling in
-its own dependencies, deduped), fixups, protect read-only segments, set up TLV,
-objc `map_images` **for the new images only**, then initialisers — which deliver
-`load_images` (+load) per image. `src/objc_notify.c`'s `deliver_mapped_from`
-takes a starting index for exactly that; re-delivering the whole table would
-hand objc4 classes it has already realized.
+**`dlopen`** is the startup sequence from `src/main.c` performed on demand for
+one image — load, fixups, protect, TLV, objc `map_images` **for the new images
+only**, then initialisers. The handle is the `mr_image *`. Resolution happens
+BEFORE the is-it-loaded question, because a guest's spelling is almost never the
+image table's; `dlclose` does not unload and says so.
 
-**The handle is the `mr_image *`.** It is already the token objc4 receives as
-`sectionLocationMetadata`, it is stable for the life of the process because
-images are never unmapped, and it makes `dlsym` a lookup in one export trie
-rather than a search. It must never reach glibc's `dlsym`/`dlclose`, which is
-why `dlclose` no longer forwards.
+**`dladdr` reads LC_SYMTAB, not the export trie**, and that is the difference
+between working and looking like it works. Measured on macOS: `dladdr` on a
+static, non-exported function returns its name. The trie carries only what an
+image vends, so a trie-based implementation returns `dli_sname = NULL` — or,
+worse, the nearest *exported* symbol below it, which is a wrong name with a
+plausible address — for exactly the addresses a crash report cares about.
+Measured details that are easy to get backwards: `dli_sname` has **no leading
+underscore**, `dli_saddr` is the symbol's live address exactly, and the return
+is **1/0**, not `-1`, with `dlerror()` left unset.
 
-**Resolution happens BEFORE the is-it-loaded question**, and that is measured
-rather than stylistic: a guest says `./libfoo.dylib` while the image table holds
-the resolved filesystem path or an `@rpath` install name, so comparing raw
-strings made `RTLD_NOLOAD` answer "not loaded" about an image that was. Real
-dyld canonicalises for the same reason. The raw check is kept as well, because
-an install name is a legitimate spelling that resolution would redirect.
+**THE THREE REMAINING GAPS WERE ONE GAP.** `dladdr`, the scoped `dlsym` handles
+and `dlopen`'s `@loader_path` were all unimplemented for the same reason:
+machorun had no notion of **the calling image**. The loader only ever sees its
+own frames, so asking it there is asking the wrong process. Asking in
+`libSystem.B.dylib` — a Mach-O we build, which the guest calls directly — makes
+`__builtin_return_address(0)` the guest's own return address in the guest's own
+image. **Nothing has to be walked**, and the notion that blocked three entries
+turned out to cost one line at the right layer.
 
-**`dlclose` does not unload, and says so rather than pretending.** machorun has
-no teardown path, objc4 has registered classes out of the image, and a later
-`dlopen` of the same path returns the same handle by design. Darwin returns 0
-for success, and "your reference is dropped" is a fair description; what it is
-not is a promise the code went away.
+`RTLD_SELF` searches the caller's image and everything after it in load order;
+`RTLD_NEXT` starts after the caller. That one-image difference is the whole
+distinction, and a lookup ignoring scope passes every other case.
 
-**Still absent, and named rather than rounded off:**
-
-* **`@loader_path` resolves against the MAIN image, not the caller.** Real dyld
-  resolves it against the image that called `dlopen`, which needs attributing a
-  return address to an image — the same missing notion of "the calling image"
-  below. For a guest that dlopens a plugin from its main executable, which is
-  every case in the corpus, the two are the same answer.
-* **`dlsym` with `RTLD_NEXT` / `RTLD_SELF` / `RTLD_MAIN_ONLY`**, for that same
-  reason. `RTLD_DEFAULT` and real handles are implemented.
-* **`dladdr`.** It would have to describe *guest* images; forwarding to glibc
-  describes the loader's own ELF world, which is a different program. Note that
-  the crash reporter (`src/crash.c`) already attributes an address to an image
-  and symbol, so the machinery exists — what is missing is the Darwin `Dl_info`
-  shape around it.
+**Still approximate, and named:** `@loader_path` in a `dlopen` path resolves
+against the **main** image rather than the caller. Real dyld resolves against
+the calling image, and the mechanism to do that now exists — this is a
+follow-through rather than a barrier. For a guest that dlopens a plugin from its
+main executable, which is every case in the corpus, the two are the same answer.
 
 ### `blocks-byref`
 `darwin/src/objcsupport.c` implements the Blocks runtime — `_Block_copy`,

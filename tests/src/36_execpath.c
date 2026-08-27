@@ -1,4 +1,4 @@
-/* 35_execpath.c -- rung (ah): _NSGetExecutablePath, pthread_atfork and the
+/* 36_execpath.c -- rung (ai): _NSGetExecutablePath, pthread_atfork and the
  * BSD string forms -- three of CoreFoundation's initialisation walls, and one
  * of them is the sharpest "plausible wrong answer" in the boundary.
  *
@@ -77,7 +77,7 @@ int main(void)
         const char *base = strrchr(buf, '/');
         base = base ? base + 1 : buf;
         printf("  names this executable: %s\n",
-               strcmp(base, "35_execpath") == 0 ? "yes" : "NO");
+               strcmp(base, "36_execpath") == 0 ? "yes" : "NO");
     }
 
     /* bufsize is NOT updated on success -- measured on the oracle, a

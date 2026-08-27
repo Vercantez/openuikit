@@ -1,4 +1,4 @@
-binary: 35_execpath
+binary: 35_dladdr
 architectures: arm64
 filetype: EXECUTE
 header-flags: NOUNDEFS DYLDLINK TWOLEVEL PIE
@@ -10,4 +10,4 @@ rpaths:
 loader-relevant sections (segment,section,flags):
   __TEXT,__stubs,0x80000408
   __DATA_CONST,__got,0x00000006
-undefined-symbol-count: 12
+undefined-symbol-count: 5

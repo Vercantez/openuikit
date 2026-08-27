@@ -280,14 +280,25 @@ fi
 # stub -- so every MIB is a translation or a refusal. KERN_PROC_PID gates
 # __CFInitialize itself.
 want 34_sysctl           && build 34_sysctl           "$CHAINED_TARGET" 34_sysctl           34_sysctl.c --
+# --------------------------------------------------------------- rung (ai)
+# "Which image and symbol is this address in", and the scoped dlsym handles.
+# One gap, not three: dladdr, RTLD_NEXT/SELF/MAIN_ONLY and dlopen's
+# @loader_path were all missing THE CALLING IMAGE. -export_dynamic so the
+# executable's exported_fn is in its own trie, and the fixture's static
+# local_fn is deliberately NOT, because dladdr must read LC_SYMTAB.
+if want 35_dladdr; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/35_dladdr" \
+        "$SRC/35_dladdr.c" -Wl,-export_dynamic
+    echo "==> 35_dladdr"; built+=(35_dladdr)
+fi
 
-# --------------------------------------------------------------- rung (ah)
+# --------------------------------------------------------------- rung (ai)
 # Three of CoreFoundation's initialisation walls. _NSGetExecutablePath is the
 # sharp one: readlink("/proc/self/exe") returns the LOADER under machorun -- a
 # real, existing, readable path that is not the guest -- and CF uses the answer
 # to find the main bundle. pthread_atfork is a third kind of gap: same name,
 # and glibc exports no dynamic symbol for it at all.
-want 35_execpath         && build 35_execpath         "$CHAINED_TARGET" 35_execpath         35_execpath.c --
+want 36_execpath         && build 36_execpath         "$CHAINED_TARGET" 36_execpath         36_execpath.c --
 
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
