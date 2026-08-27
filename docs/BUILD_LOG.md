@@ -769,3 +769,47 @@ another image. Both defects here are the same shape one level up — a *check*
 silently deferring to a tool or an artifact it did not verify it was actually
 using. Verify the instrument by content, not by name, and have every negative
 control assert that it is still reaching the code it was written for.
+
+## 15. The denominator rule, applied to my own sweep — and a refusal that could not fire
+
+Team-lead made a rule standing after §14: *a sweep that reports "clean" without
+reporting how many things it compared is indistinguishable from one that
+compared none.* Applied to `build_compat.sh`'s overlap check, it found three
+defects in a guard that had been passing.
+
+**It enumerated instead of discovering.** Four hardcoded names with
+`[ -f ] || continue`. Two failure modes, both reporting success: a **missing**
+library is skipped silently (grade three of four, print "disjoint"), and a
+**new** library is never looked at. It now discovers every `*.dylib` under
+`MRLIB`. The denominator went from 4 to **6** — `libquartz.dylib` (507 symbols)
+and `libswiftCore.dylib` (30,723) had never been in the comparison. Still
+disjoint, but nobody could have known that.
+
+**It printed a verdict without its denominator.** The success line now reads:
+
+```
+exports: 34  -- disjoint from machorun's userland
+graded against 6 dylib(s), 32711 distinct symbols:
+   libSystem.B.dylib     589 …  libc++abi.dylib   367 …  libswiftCore.dylib 30723 …
+```
+
+**And the refusal written for the truncation hazard could never fire.** A third
+refusal was meant to catch a dylib that reads as zero symbols — a *failed read*,
+not an empty library, which is precisely the shape of the macOS bind-mount
+truncation this project has been warned about. Testing it with a dylib truncated
+to 40 bytes: exit **1**, no output at all. Under `set -o pipefail`, nm exiting
+nonzero killed the script inside the collection loop, **before** the refusal that
+was written to report it. The guard was unreachable from the day it was written.
+
+The fix is a `|| true` that is load-bearing rather than lazy: absorb nm's failure
+so the empty read becomes a *count*, which the refusal can then grade. Verified
+on four inputs — empty `MRLIB` → refusal 1; only `libc++.1` present → refusal 2,
+naming what is absent; one dylib truncated to 40 bytes → refusal 3; the real
+tree → builds, 34 exports, disjoint across all 6.
+
+**The pattern, third instance today.** §12 was a shim deferring to another image.
+§14 was a check deferring to a tool and an artifact it never verified. This is a
+check whose failure path was shadowed by the shell's own error handling. Each
+time the component was doing something other than what its name claimed, and
+each time only *running the failure case* showed it. **A refusal that has never
+been observed to fire is a comment.**

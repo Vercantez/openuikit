@@ -105,17 +105,69 @@ mkdir -p "$(dirname "$OUT")"
 # Union of everything machorun's userland exports. Note this reads the BUILT
 # dylibs, not the .tbds: a .tbd is generated from a dylib and can lag it, and
 # what decides a flat bind at runtime is the dylib.
-: > "$tmp/userland.txt"
-for lib in libSystem.B.dylib libobjc.A.dylib libc++.1.dylib libc++abi.dylib; do
-  [ -f "$MRLIB/$lib" ] || continue
-  "$NM" --defined-only --extern-only "$MRLIB/$lib" | awk '{print $NF}'
-done | sort -u > "$tmp/userland.txt"
+#
+# IT DISCOVERS THE DYLIBS RATHER THAN LISTING THEM, and that is deliberate. This
+# loop was once four hardcoded names with `[ -f ] || continue`, which has two
+# failure modes that both report success: a library that is MISSING is skipped
+# silently (grade three of four, print "disjoint"), and a library that is NEW is
+# never looked at (machorun's own CHECK 4 was scoped to the list someone
+# happened to have, which is exactly how the libc++abi overlap went unseen).
+# Discovery fixes the second; the refusals below fix the first.
+#
+# libswiftcompat itself is excluded -- it is the thing being graded, and a
+# previously staged copy of it would collide with the new build on every symbol.
+: > "$tmp/userland.txt"; : > "$tmp/examined.txt"
+while IFS= read -r f; do
+  case "$(basename "$f")" in libswiftcompat.dylib) continue ;; esac
+  # `|| true` is load-bearing, not laziness. Under `set -o pipefail` a truncated
+  # or malformed dylib makes nm exit nonzero, which killed this script HERE --
+  # silently, with exit 1, before REFUSAL 3 below could ever report it. A guard
+  # written for exactly the truncated-file hazard could not fire. Absorb the
+  # failure so the empty read becomes a COUNT, which the refusals can grade.
+  "$NM" --defined-only --extern-only "$f" 2>/dev/null | awk '{print $NF}' \
+        > "$tmp/one.txt" || true
+  n=$(wc -l < "$tmp/one.txt" | tr -d ' ')
+  cat "$tmp/one.txt" >> "$tmp/userland.raw"
+  # Full path as well as basename: libswiftCore.dylib lives in a subdirectory,
+  # so re-deriving "$MRLIB/$basename" later would silently fail to find it.
+  printf '%s\t%s\t%s\n' "$(basename "$f")" "$n" "$f" >> "$tmp/examined.txt"
+done < <(find "$MRLIB" -name '*.dylib' 2>/dev/null | sort)
+sort -u "$tmp/userland.raw" 2>/dev/null > "$tmp/userland.txt" || true
 
-if [ ! -s "$tmp/userland.txt" ]; then
-  echo "REFUSING TO GRADE: no machorun dylibs found under $MRLIB." >&2
+examined=$(wc -l < "$tmp/examined.txt" | tr -d ' ')
+
+# REFUSAL 1: nothing to grade against. A vacuous pass is worse than no check.
+if [ "$examined" -eq 0 ] || [ ! -s "$tmp/userland.txt" ]; then
+  echo "REFUSING TO GRADE: found $examined dylib(s) under $MRLIB." >&2
   echo "The overlap check would pass vacuously, which is worse than not running it." >&2
   exit 2
 fi
+
+# REFUSAL 2: the denominator. A sweep that reports "clean" without reporting how
+# many things it compared is indistinguishable from one that compared none, so
+# the libraries whose absence would make this check meaningless are named, and
+# their absence is a refusal rather than a smaller number nobody notices.
+missing=""
+for want in libSystem.B.dylib libc++abi.dylib; do
+  grep -q "^$want	" "$tmp/examined.txt" || missing="$missing $want"
+done
+if [ -n "$missing" ]; then
+  echo "REFUSING TO GRADE: examined $examined dylib(s), but these were absent:$missing" >&2
+  echo "  found: $(cut -f1 "$tmp/examined.txt" | tr '\n' ' ')" >&2
+  echo "  They own the symbols this shim is most likely to collide with, so a" >&2
+  echo "  'disjoint' verdict without them means nothing. Check MRLIB=$MRLIB." >&2
+  exit 2
+fi
+
+# A library that reads as zero symbols is a broken read, not an empty library.
+while IFS=$'\t' read -r name count path; do
+  [ "$count" -gt 0 ] || {
+    echo "REFUSING TO GRADE: $name listed 0 external symbols." >&2
+    echo "  That is a failed read, not an empty library, and it silently shrinks" >&2
+    echo "  the set this shim is compared against." >&2
+    exit 2
+  }
+done < "$tmp/examined.txt"
 
 overlap=$(comm -12 "$tmp/shim_exports.txt" "$tmp/userland.txt")
 if [ -n "$overlap" ]; then
@@ -123,10 +175,10 @@ if [ -n "$overlap" ]; then
   echo "BUILD REFUSED: libswiftcompat defines $(printf '%s\n' "$overlap" | wc -l) symbol(s) machorun's userland already defines." >&2
   echo >&2
   printf '%s\n' "$overlap" | while read -r s; do
-    where=$(for lib in libSystem.B.dylib libobjc.A.dylib libc++.1.dylib libc++abi.dylib; do
-              [ -f "$MRLIB/$lib" ] && "$NM" --defined-only --extern-only "$MRLIB/$lib" \
+    where=$(while IFS=$'\t' read -r lib _ path; do
+              "$NM" --defined-only --extern-only "$path" 2>/dev/null \
                 | awk -v s="$s" -v l="$lib" '$NF==s {print l}'
-            done | tr '\n' ' ')
+            done < "$tmp/examined.txt" | tr '\n' ' ')
     printf '    %-52s already in: %s\n' "$s" "$where" >&2
   done
   echo >&2
@@ -138,4 +190,8 @@ fi
 
 install -m 0755 "$tmp/libswiftcompat.dylib" "$OUT"
 echo "built:   $OUT  ($(wc -c < "$OUT") bytes)"
-echo "exports: $(wc -l < "$tmp/shim_exports.txt")  -- disjoint from machorun's $(wc -l < "$tmp/userland.txt")-symbol userland"
+echo "exports: $(wc -l < "$tmp/shim_exports.txt" | tr -d ' ')  -- disjoint from machorun's userland"
+# The denominator, always. A "disjoint" verdict is only as good as the set it
+# was compared against, so the set is printed rather than implied.
+echo "graded against $examined dylib(s), $(wc -l < "$tmp/userland.txt" | tr -d ' ') distinct symbols:"
+while IFS=$'\t' read -r lib count _; do printf '   %-24s %6s symbols\n' "$lib" "$count"; done < "$tmp/examined.txt"
