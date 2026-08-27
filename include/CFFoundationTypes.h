@@ -34,11 +34,18 @@
  * the sysroot already has has now bitten this project twice — mach_port_context_t
  * took the CF census from 74 passing to zero, and a div_t shim broke all 19
  * libcxxabi files. Check the header that DEFINES a symbol, not the one named
- * after it: Darwin splits its declarations across <_stdlib.h>, <sys/_types/*>
+ * after it: Darwin splits its declarations across <_stdlib.h>, <sys/_types/...>
  * and friends, so the obvious header is often the wrong one to grep. */
 #include <objc/NSObjCRuntime.h>
 
 typedef unsigned short unichar;
+
+/* NSTimeInterval. Reconciling a signature to Foundation's SPELLING requires
+ * Foundation's TYPEDEF -- rewriting `- (CFTimeInterval)timeInterval` to
+ * `- (NSTimeInterval)timeInterval` introduced a type name that did not exist
+ * and took the census to zero. Same width as CFTimeInterval (both double);
+ * the point of the rename is the contract, not the layout. */
+typedef double NSTimeInterval;
 
 /* ---- NSRange ------------------------------------------------------------- */
 /* 19 call sites reach NSMakeRange, 4 more name NSRange directly. */

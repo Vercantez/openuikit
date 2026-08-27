@@ -878,3 +878,74 @@ rather than verified: a duplicate `mach_port_context_t`, a duplicate `div_t`, an
 include path that shadowed the sysroot, and now an ordering assumption. The
 header is self-contained now, and the comment records why rather than restating
 the assumption.
+
+## 28. #51 iteration 1: the convergence curve, with the compile count alongside
+
+| step | compiling | unknown methods | warnings |
+|---|---|---|---|
+| 0 — `@class` only | 69 / 82 | — | — |
+| 1 — types header | 73 / 82 | 151 | 98 |
+| 2a — hand-written declarations | 77 / 82 | 155 | 309 |
+| **2b — derived + reconciled** | **77 / 82** | **50** | 101 |
+
+**The compile count held at 77 while the unknown-method set fell 155 → 50.** That
+pairing is the whole point of reporting both: a harvest that flattens *because
+files stopped compiling* looks identical, in the harvest column alone, to one
+that flattens because the set is closing. Here the build did not degrade, so the
+drop is real. The 5 remaining failures are unchanged and none is signature-
+related — `struct tzhead`, `struct kinfo_proc`, a defect in my own `arpa/inet.h`
+shim, a Mach macro, and an `NSString` redefinition.
+
+Iteration 2 starts from 50.
+
+### What produced the drop
+
+`scripts/derive_interfaces.py` recovers signatures from CF's own dispatch macros,
+then `scripts/reconcile.py` applies the public/private rule:
+
+```
+  private-adopted      52     call site is authoritative; nothing else exists
+  public-reconciled    12     Foundation's declared type replaces CF's local one
+  public-unreviewed    52     MARKED, not silently adopted
+  unclassified          7     surfaced only after receivers became typed
+```
+
+The 52 marked `PUBLIC, UNREVIEWED` are the honest residue: derived signatures
+that dispatch correctly but whose declared type I have not reconciled against
+Foundation's contract. They are flagged in the header rather than quietly
+shipped, because that is precisely the `- (CFIndex)count` vs `NSUInteger count`
+distinction from §27 — invisible until a consumer other than CoreFoundation
+arrives.
+
+### Two more wipeouts, and a rule that finally generalises
+
+Iteration 1 cost two more total-zero events, bringing tonight's count to **six**:
+
+5. **Categories need a full `@interface`.** Emitting `@interface NSArray
+   (CFDerived)` against a `@class` forward declaration fails with "cannot define
+   category for undefined class". Classes already declared get a category; the
+   rest need a real interface.
+6. **A generated header referenced types it did not include** — `CFNumberType`,
+   then `NSTimeInterval`. The second is the more interesting: *reconciling a
+   signature to Foundation's spelling requires Foundation's typedef.* Renaming
+   `CFTimeInterval` to `NSTimeInterval` introduced a name that did not exist.
+
+And one near-miss that was worse than a wipeout: the derivation regex used
+`\(([^)]*)\)` for parameter types, which stops at the first `)` and mangles
+function-pointer types — `(void (*)(const void *, void *))` became `(void (*)`.
+That emitted **syntactically invalid declarations**, which is strictly worse than
+deriving nothing, because a malformed header breaks all 86 files rather than
+leaving one method undeclared. The generator now extracts balanced parentheses
+and **validates its own output**, refusing to emit anything whose parentheses do
+not balance.
+
+All six wipeouts share one shape, and it is now stated as a rule rather than a
+tally: **a header must include what it references and may assume nothing about
+where it lands.** Force-inclusion means "before everything", including before the
+headers whose types you are using. Six times tonight that was assumed instead of
+arranged.
+
+The consolation is that the census is a good instrument precisely because it
+fails this loudly: 77 → 0 on a three-line change is a fault report delivered
+immediately, not a slow degradation. That property is worth preserving as the
+header grows.

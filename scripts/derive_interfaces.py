@@ -49,17 +49,57 @@ CALLV = re.compile(
     r'(?P<recv>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*(?P<msg>.*?)\)\s*;?\s*$')
 
 
+def balanced_types(msg):
+    """Extract each `(Type)` cast, honouring NESTED parentheses.
+
+    A naive `\(([^)]*)\)` stops at the first ')' and mangles function-pointer
+    types like `(void (*)(const void *, void *))` into `(void (*)`. That emitted
+    SYNTACTICALLY INVALID declarations, which took the census from 77 to zero --
+    strictly worse than not deriving them at all, because a malformed header
+    breaks every file rather than leaving one method undeclared.
+    """
+    types, i = [], 0
+    while True:
+        j = msg.find(':', i)
+        if j < 0:
+            break
+        k = j + 1
+        while k < len(msg) and msg[k].isspace():
+            k += 1
+        if k >= len(msg) or msg[k] != '(':
+            i = j + 1
+            continue
+        depth, start = 0, k
+        while k < len(msg):
+            if msg[k] == '(':
+                depth += 1
+            elif msg[k] == ')':
+                depth -= 1
+                if depth == 0:
+                    break
+            k += 1
+        if depth != 0:
+            return None                                    # unbalanced; refuse
+        types.append(msg[start + 1:k])
+        i = k + 1
+    return types
+
+
 def parse_message(msg, selector):
     """Turn `sel:(T)a other:(U)b` into a declaration body using SELECTOR order."""
     parts = [p for p in selector.lstrip('-+').split(':') if p]
     if ':' not in selector:
         return selector.lstrip('-+')                      # zero-argument
-    # pull the (Type) casts in order of appearance
-    types = re.findall(r':\s*\(([^)]*)\)', msg)
-    if len(types) < len(parts):
+    types = balanced_types(msg)
+    if types is None or len(types) < len(parts):
         return None                                        # cannot type it
-    return " ".join(f"{p}:({t.strip()})a{i}" for i, (p, t) in
+    body = " ".join(f"{p}:({t.strip()})a{i}" for i, (p, t) in
                     enumerate(zip(parts, types)))
+    # Self-check: a declaration we emit must at least have balanced parens.
+    # Generating broken syntax is a worse failure than declining to generate.
+    if body.count('(') != body.count(')'):
+        return None
+    return body
 
 
 def main():
