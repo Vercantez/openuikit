@@ -1117,48 +1117,82 @@ fixture image has more than one dependency, so there is no order to get wrong
 implemented; the dependency sort is not differentially tested. Closing this is
 a fixture with a diamond dependency graph, not code.
 
-### `unwind-compact` — HALF DONE: the unwinder exists, libc++abi does not
-**The compact-unwind reader works.** LLVM 18.1.8's libunwind is compiled into
-`libSystem.B.dylib` from `vendor/libunwind`, **unpatched**, and the loader
-supplies the half only dyld can know: `_dyld_find_unwind_sections` and
-`_dyld_register_func_for_remove_image` (`src/unwind.c`). `_Unwind_*` and `unw_*`
-are the real implementations — 39 exported symbols — decoding Apple's compact
-`__TEXT,__unwind_info` rather than `.eh_frame`. `tests/src/27_unwind.c` (rung z)
-walks a real four-deep stack through it and matches macOS byte for byte.
+### `unwind-compact` — **DONE.** Exceptions throw, unwind and are caught
+**C++ and Objective-C exceptions work.** LLVM 18.1.8's libunwind and libc++abi
+are compiled from `vendor/libunwind` and `vendor/libcxxabi`, **both pristine,
+zero patches**, and the loader supplies the half only dyld can know:
+`_dyld_find_unwind_sections` and `_dyld_register_func_for_remove_image`
+(`src/unwind.c`). `tests/src/30_throw.cpp` (rung ac) throws across frames and
+is caught by type, and `tests/objc44/038-exceptions` and
+`044-exception-through-uncached` now pass — objc44 went from **41/44 to 43/44**,
+with only `042-dlopen` left.
 
-Compiling it into libSystem rather than shipping a separate dylib is the Darwin
-arrangement, not a shortcut: on macOS `libunwind.dylib` is a sub-library of the
-libSystem umbrella and libSystem re-exports it, so a guest that links `-lSystem`
-already expects `_Unwind_*` to be there. A separate dylib would need re-export
-chasing, which the loader does not implement.
+**THE LAYOUT MATCHES DARWIN'S, AND THAT WAS NOT THE FIRST ATTEMPT.** Verified
+against Apple's SHIPPED `libswiftCore` with `nm -m`, which is the authority:
+`__Unwind_Resume` is *from libSystem* and `___gxx_personality_v0` is *from
+libc++*. So:
 
-**WHAT IS STILL MISSING IS THE LANGUAGE RUNTIME ABOVE IT: libc++abi.** Walking a
-stack and THROWING are different jobs. `__cxa_throw` allocates an exception
-object and calls `_Unwind_RaiseException`; `__gxx_personality_v0` decides at
-each frame whether a handler matches, by parsing the LSDA and comparing
-`type_info`. None of that is in libunwind, and `darwin/src/objcsupport.c` still
-aborts by name for `__cxa_allocate_exception`, `__cxa_throw`,
-`__cxa_begin_catch`, `__cxa_end_catch`, `__cxa_rethrow`,
-`__cxa_current_exception_type` and `__gxx_personality_v0`.
+* **libunwind is inside `libSystem.B.dylib`** — on macOS `libunwind.dylib` is a
+  sub-library of the libSystem umbrella and libSystem re-exports it.
+* **libc++abi is its own `/usr/lib/libc++abi.dylib`**, `libc++.1.dylib`
+  re-exports it, and `libobjc.A.dylib` LINKS against it as Apple's does.
 
-So a program that never throws runs correctly, one that throws stops with a
-sentence, and everything in the guest stack is still built `-fno-exceptions`.
+The first arrangement put libc++abi inside libSystem, reasoning that
+`038-exceptions` loads only libobjc and libSystem so nothing else could be
+found. It worked for objc4 and **failed for C++ guests**: a guest linking
+`-lc++` binds `__ZNSt13runtime_errorD1Ev` two-level against `libc++.1.dylib`,
+and ours had nothing to re-export, so the symbol was present in the process and
+unreachable from the only library allowed to answer. *"Put it where the current
+consumer will find it"* is the reasoning that produced the bug; reproducing
+Darwin's shape is what fixed it.
 
-**Measured cost, and it is larger than "C++ exceptions (M8)" made it sound:** of
-40 real app main executables surveyed, **25 (63%) import `_Unwind_*` or
-`__cxa_throw`** and 11 import `objc_exception_throw` — before counting the
-frameworks they load. `tests/objc44/038-exceptions` and
-`044-exception-through-uncached` are not two awkward fixtures; they are the wall
-a majority of real apps hit. They remain 2 of the 3 objc44 failures.
+**ONE DELIBERATE DEVIATION, with an exit condition.** `libSystem.B.dylib` also
+re-exports `libc++abi.dylib`, which macOS does not do. It exists for OUR
+artifacts, not Apple's: machorun's `libSystem.B.tbd` used to promise
+`___gxx_personality_v0` because the aborting stub lived in `objcsupport.c`, and
+`~/swiftcore-macho`'s source-built `libswiftCore.dylib` was linked against that
+promise and carries a two-level bind naming libSystem. Once that binary is
+relinked — its bind should read *from libc++*, as Apple's does — drop the
+`-reexport_library` from `scripts/build_darwin.sh` and re-run the Swift gate.
+Verify by content, not by intention: `nm -m …/libswiftCore.dylib | grep
+gxx_personality` must not say `libSystem`.
 
-**Two things a future implementor should know, both learned the hard way here.**
-First, `_Unwind_FindEnclosingFunction` is *not* a function-identity oracle:
-compact unwind COMPRESSES, so consecutive functions with identical encodings
-share one entry and it reports the start of the RUN. The first version of rung
-z assumed otherwise and failed on macOS against Apple's own libunwind, which was
-right. Second, `_Unwind_GetIP` returns a RETURN address, so any lookup on it
-needs `ip - 1` or it names the following function — the same off-by-one the
-crash reporter had.
+**What upstream took back, and what it improved.** `operator new`/`delete` and
+the `__cxa_guard_*` trio now come from libc++abi rather than
+`darwin/src/libcxx.c`. That was forced by measurement, not tidiness: libc++abi
+itself calls `operator delete[]`, and the objc44 corpus does not load
+`libc++.1.dylib`, so all 44 failed with *"undefined symbol `__ZdaPv`, wanted by
+libc++abi.dylib"*. Both replacements are better than what they replace — the
+operators now THROW `std::bad_alloc` instead of aborting, and **the guards are
+thread-safe**, closing limit 1 of `libcxx-subset` below, which said in as many
+words *"if that changes, this needs to grow rather than be trusted"*.
+
+`darwin/src/libcxx.c` now holds exactly one thing upstream LLVM 18 lacks:
+Apple's TYPED `operator new`/`delete` (`__ZnwmSt19__type_descriptor_t`), which
+Apple's shipped libswiftCore binds two-level from libc++.
+
+**`pthread_mach_thread_np` is implemented and this closes the sweep.**
+foundation-scope's audit covered ICU (zero references, structurally) and our
+libc++ but could not reach libunwind or libc++abi. Measured on both:
+libunwind's entire external surface is three `pthread_rwlock` calls, two
+`_dyld_*` calls and plain libc — no Mach anything. **libc++abi's `cxa_guard`
+does need it**, for `PlatformThreadID()`, as a thread IDENTITY and never as a
+port to send on — so `mach_thread_self()`'s name is exactly right and
+`darwin/src/mach.c` translates rather than stubs. It is limited to the CURRENT
+thread and bails loudly otherwise, because our port names live in thread-local
+storage and inventing one for another thread would break the single property
+callers depend on.
+
+**Still absent, and named rather than rounded off:** `cxa_thread_atexit.cpp`
+(needs `__cxa_thread_atexit_impl`, see `tlv-thread-atexit`), and the Objective-C
+side is only as good as objc4's own — `objc_exception_throw` works because
+objc4 builds on `__cxa_throw`, not because anything here reimplements it.
+
+**Two things a future implementor should know**, both learned the hard way.
+`_Unwind_FindEnclosingFunction` is *not* a function-identity oracle: compact
+unwind COMPRESSES, so consecutive functions with identical encodings share one
+entry and it reports the start of the RUN. And `_Unwind_GetIP` returns a RETURN
+address, so any lookup on it needs `ip - 1` or it names the following function.
 
 ---
 

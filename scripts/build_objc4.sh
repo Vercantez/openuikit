@@ -153,9 +153,26 @@ echo "== compiled ${#OBJS[@]} objects, $fail failures"
 
 # ----------------------------------------------------------------------- link
 echo "== linking $OUT/libobjc.A.dylib"
+# LINK AGAINST libc++abi, AS APPLE'S libobjc DOES. objc-exception.mm uses the
+# C++ exception ABI -- ___cxa_throw, ___cxa_begin_catch, ___gxx_personality_v0
+# -- and with only -undefined dynamic_lookup those became FLAT binds, satisfied
+# by whichever image happened to be loaded. That is not a resolution strategy,
+# it is luck: tests/objc44/038-exceptions loads exactly libobjc and libSystem,
+# so an exception thrown there could only ever find the ABI if it lived in
+# libSystem, which is not where Darwin puts it. Naming the dependency makes
+# libc++abi load whenever libobjc does, which is the arrangement on macOS.
+ABI_DYLIB="$ROOT/darwin/usr/lib/libc++abi.dylib"
+[ -f "$ABI_DYLIB" ] || { echo "build_objc4: no $ABI_DYLIB -- run scripts/build_darwin.sh first" >&2; exit 1; }
+
+# -syslibroot so ld64 can resolve libc++abi's install name when a dylib on this
+# link line re-exports it. Without it: "unable to locate re-export with install
+# name /usr/lib/libc++abi.dylib" -- ld64 has the file but not the mapping from
+# the name inside it to a path on disk.
 $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+      -syslibroot "$ROOT/darwin" \
       -install_name /usr/lib/libobjc.A.dylib \
       -undefined dynamic_lookup \
+      "$ABI_DYLIB" \
       -o "$OUT/libobjc.A.dylib" "${OBJS[@]}" 2>&1 | sed -n '1,40p'
 
 [ -f "$OUT/libobjc.A.dylib" ] || { echo "build_objc4: link failed"; exit 1; }

@@ -113,6 +113,35 @@ EXPORT mach_port_t mach_thread_self(void)
     return (mach_port_t)v;
 }
 
+/* pthread_mach_thread_np: a pthread_t to its Mach thread port.
+ *
+ * WANTED BY libc++abi, not by libunwind. This is the last open consumer of
+ * foundation-scope's pthread_mach_thread_np sweep, which covered ICU (zero
+ * references, structurally) and our libc++ but could not reach libc++abi or
+ * libunwind because those artifacts were gone. Now measured on both:
+ * libunwind's entire external surface is three pthread_rwlock calls, two
+ * _dyld_* calls and plain libc -- no Mach anything. libc++abi's cxa_guard DOES
+ * need it, for PlatformThreadID() (cxa_guard_impl.h:162), which it uses to
+ * detect a thread recursively initialising the same function-local static --
+ * i.e. as a thread IDENTITY, never as a port to send on.
+ *
+ * So mach_thread_self()'s name is exactly the right answer, and this is a
+ * translation rather than a stub. It is deliberately limited to the CURRENT
+ * thread: our port names live in thread-local storage, so we simply do not
+ * know another thread's, and Darwin's version does. Returning something
+ * plausible for another thread would break the one property the caller
+ * depends on -- that two live threads never share an id. */
+EXPORT mach_port_t pthread_mach_thread_np(void *thread)
+{
+    if (thread != (void *)glibc_pthread_self())
+        mr_bail("pthread_mach_thread_np was asked for a thread other than the caller. "
+                "machorun mints port names into thread-local storage, so only the "
+                "current thread's is knowable; answering for another thread would "
+                "have to invent a name, and two threads sharing one is exactly what "
+                "the callers use this to rule out.");
+    return mach_thread_self();
+}
+
 /* Reference counting on names we minted. There is no kernel to tell, so this
  * is a validity check rather than a release: a name we never handed out is an
  * error the caller should hear about, not a silent success. */

@@ -46,4 +46,5 @@
 27_unwind	z	chained	run	pass	walks a real stack through Apple's compact __unwind_info; the symbols resolved the whole time it was stubbed
 28_poll	aa	chained	run	pass	poll(2) across the boundary: the eight agreeing flags, the counts, and the wrapper's heap path -- a regression guard, since the two flags that differ cannot be reached from a fixture
 29_sigaction	ab	chained	run	pass	installing a handler: struct sigaction is 16 bytes against 152, not one sa_flags bit agrees, and the signal NUMBER has to be translated again on the way back INTO guest code
+30_throw	ac	chained	run	pass	a real C++ throw across frames, caught by type; the case that matters is the handler that must NOT match
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

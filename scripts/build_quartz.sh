@@ -142,7 +142,12 @@ for d in libc++.1 libSystem.B; do
 done
 
 echo "== linking $OUT/libquartz.dylib"
+# -syslibroot so ld64 can resolve an install name found INSIDE a dylib on this
+# link line. libc++.1.dylib now re-exports /usr/lib/libc++abi.dylib, and without
+# the mapping ld64 says "unable to locate re-export with install name" even
+# though the file is right there next to it.
 $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+      -syslibroot "$ROOT/darwin" \
       -install_name /usr/lib/libquartz.dylib \
       -undefined dynamic_lookup \
       -o "$OUT/libquartz.dylib" "${OBJS[@]}" "${DEPS[@]}" 2>&1 | sed -n '1,40p'
