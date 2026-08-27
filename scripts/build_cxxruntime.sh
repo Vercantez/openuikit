@@ -10,6 +10,14 @@
 # and 17 libc++ std:: (mutex, condition_variable, locale, ios_base,
 # istream/ostream). Exceptions then pull in 6 _Unwind_* on top.
 #
+# NO ARTIFACT FROM THIS SCRIPT CURRENTLY EXISTS (checked 2026-08-27: zero
+# libunwind*/libc++abi* on the host or in the build container). It ran on an AWS
+# box that has since been terminated, against sources at /priv/llvm that only
+# existed there. "Built 19/19, 46/46 and 7/7" is a statement about COMPILING,
+# and it was relayed onward as though a dylib were sitting somewhere — which
+# sent another agent looking for it. Re-running this script needs llvmorg-18.1.8
+# sources fetched again.
+#
 # NOTHING HERE IS A STUB THAT RETURNS. These are upstream LLVM sources compiled
 # for our target, so __cxa_pure_virtual aborts like it should and std::mutex
 # really locks. A pure-virtual call that returns would convert a loud, correct
