@@ -172,6 +172,30 @@ condition. It is compile-only — `#if` for every macro under `-Werror` catches 
 **wrong** one. The wrong-value case is the dangerous one: it compiles clean and
 silently selects CF's WASI or Android branch.
 
+**The probe also covers the other constants only the preprocessor sees.**
+`sdk/tests/abi_probe.c` diffs everything a program can *print*; it structurally
+cannot see a constant that `#if` consumes and discards, because by then the
+decision is already taken. That blind spot has cost this project twice, both
+under §3's `0002-xnu-platform-macosx.patch`: `__DARWIN_ONLY_UNIX_CONFORMANCE`
+going undefined renamed every `__DARWIN_ALIAS`'d libc function (surfacing as 7
+undefined `$UNIX2003` symbols in libobjc), and `MACH_VM_MAX_ADDRESS` silently
+dropping to the **embedded 64 GiB** value instead of macOS's 128 TiB, with
+nothing failing to compile. Until now both were guarded only by that patch and
+nothing asserted the outcome — the patch said what we did, and nothing said what
+it had to achieve. The probe now asserts `MACH_VM_MAX_ADDRESS`,
+`__DARWIN_ONLY_UNIX_CONFORMANCE`, `__DARWIN_ONLY_64_BIT_INO_T`, and the
+`TARGET_CPU_*` / `TARGET_RT_*` halves of `TargetConditionals.h`.
+`MACH_VM_MAX_ADDRESS` is load-bearing twice over: objc4 sizes `ISA_MASK` and
+`FAST_DATA_MASK` against it (`docs/UNIMPLEMENTED.md#isa-va-width`), so a wrong
+value there does not fail — it changes which isa layout compiles.
+
+Verified to have teeth rather than merely to pass: substituting the embedded
+`0x0000000FFFFFF000` fails with *"MACH_VM_MAX_ADDRESS must be macOS's 128 TiB
+value"*, and flipping the conformance assertion fails likewise. The values are
+hard-coded on purpose — compiled against Apple's SDK on the oracle side, a
+number Apple moves fails the build there and gets reported, which is this repo's
+rule everywhere else: drift is noticed, not absorbed.
+
 ### 2.2 `sys/_symbol_aliasing.h`
 
 Upstream *does* publish its generator, `xnu:bsd/sys/make_symbol_aliasing.sh` —

@@ -1,6 +1,13 @@
 /*
- * target_os_probe.c -- every TARGET_OS_* macro a consumer tests must be
- * DEFINED, and must have the right value.
+ * target_os_probe.c -- the constants the PREPROCESSOR reads, verified
+ * differentially. Every one must be DEFINED, and must have the right value.
+ *
+ * The name says TARGET_OS because that is what forced the file into existence;
+ * §3 widens it to the other constants with the same blind spot.
+ * sdk/tests/abi_probe.c diffs everything a program can PRINT -- struct sizes,
+ * field offsets, errno and O_* values. It structurally cannot see a constant
+ * that #if consumes and discards, because by the time there is a value to print
+ * the decision has already been taken. Everything here lives in that gap.
  *
  * This exists because of a failure mode that is invisible until it is not.
  * swift-corelibs' CoreFoundation compiles with -Wundef-prefix=TARGET_OS
@@ -37,6 +44,8 @@
  */
 
 #include <TargetConditionals.h>
+#include <sys/cdefs.h>
+#include <mach/vm_param.h>
 
 /* ---- 1. every macro must be DEFINED: #if, not #ifdef, under -Wundef ---- */
 
@@ -115,6 +124,57 @@ _Static_assert(TARGET_OS_NANO == 0, "TARGET_OS_NANO follows TARGET_OS_WATCH");
 _Static_assert(TARGET_OS_SIMULATOR == 0, "a macos target is not the simulator");
 _Static_assert(TARGET_OS_MACCATALYST == 0, "a macos target is not Catalyst");
 #endif
+
+/* ---- 3. the other constants that are read by #if and never at runtime ----
+ *
+ * sdk/tests/abi_probe.c already diffs everything a program can PRINT -- struct
+ * sizes, field offsets, errno and O_* values. What it structurally cannot see
+ * is a constant the preprocessor consumes and then discards, because by the
+ * time there is a value to print the decision has already been made. That is
+ * the same blind spot the TARGET_OS_* macros above sat in, and this project has
+ * been bitten through it TWICE, both recorded in sdk/PROVENANCE.md §3 under
+ * patches/0002-xnu-platform-macosx.patch:
+ *
+ *   - `__DARWIN_ONLY_UNIX_CONFORMANCE` undefined made __DARWIN_SUF_UNIX03
+ *     `"$UNIX2003"`, renaming every __DARWIN_ALIAS'd libc function. It surfaced
+ *     as 7 undefined symbols in libobjc that nothing anywhere exports
+ *     (`_open$UNIX2003`, `_close$UNIX2003`, ...).
+ *   - `MACH_VM_MAX_ADDRESS` silently dropped to the EMBEDDED 64 GiB value
+ *     instead of macOS's 128 TiB. Nothing failed to compile.
+ *
+ * Both are guarded today only by a patch, with nothing asserting the outcome.
+ * That is what these asserts are: the patch says what we did, and these say
+ * what it had to achieve. MACH_VM_MAX_ADDRESS in particular is load-bearing
+ * twice over -- objc4's own STATIC_ASSERTs size ISA_MASK and FAST_DATA_MASK
+ * against it (docs/UNIMPLEMENTED.md#isa-va-width), so a wrong value here does
+ * not fail, it changes which isa layout compiles.
+ *
+ * Hard-coded values are deliberate. Compiled against Apple's SDK on the oracle
+ * side, a number Apple moves fails the build there and gets reported, which is
+ * this repo's rule everywhere else: drift is a thing to notice, not to absorb.
+ */
+
+/* macOS arm64: 128 TiB minus the last 32 MiB. The embedded value is
+ * 0x0000000FFFFFF000 (64 GiB), and confusing the two is the bug above. */
+_Static_assert(MACH_VM_MAX_ADDRESS == 0x00007ffffe000000ULL,
+               "MACH_VM_MAX_ADDRESS must be macOS's 128 TiB value, not the embedded 64 GiB one "
+               "-- objc4 sizes its isa masks against this");
+
+/* Selects the $UNIX2003 / $INODE64 symbol variants. Wrong here means every
+ * __DARWIN_ALIAS'd libc symbol is renamed, and the failure appears as
+ * undefined symbols in an unrelated library. */
+_Static_assert(__DARWIN_ONLY_UNIX_CONFORMANCE == 1,
+               "macOS arm64 is UNIX03-only; 0 renames every __DARWIN_ALIAS'd libc function");
+_Static_assert(__DARWIN_ONLY_64_BIT_INO_T == 1,
+               "macOS arm64 is 64-bit-ino_t-only; 0 selects the $INODE64 variants");
+
+/* The CPU and runtime halves of TargetConditionals.h, which pick struct layouts
+ * in vendored headers rather than merely gating declarations. */
+_Static_assert(TARGET_CPU_ARM64 == 1, "we only build this sysroot for arm64");
+_Static_assert(TARGET_CPU_X86_64 == 0, "TARGET_CPU_X86_64 must be 0 on arm64");
+_Static_assert(TARGET_RT_64_BIT == 1, "arm64 Darwin is LP64");
+_Static_assert(TARGET_RT_LITTLE_ENDIAN == 1, "arm64 Darwin is little-endian");
+_Static_assert(TARGET_RT_MAC_MACHO == 1, "the object format is Mach-O");
 
 int target_os_probe_ok(void);
 int target_os_probe_ok(void) { return 1; }
