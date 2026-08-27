@@ -647,3 +647,85 @@ catch that** — it is a content problem wearing a size problem's clothes.
 Because it is a property of libdispatch as it stands rather than a guarantee,
 `dispatch_patches.py` now **asserts** it on every run instead of noting it in a
 comment.
+
+---
+
+## Part 7 — the `_4CF` question, answered: **CFRunLoop does not need Mach ports**
+
+Asked whether CFRunLoop's dispatch main-queue integration requires port receive
+rights, since `_dispatch_get_main_queue_port_4CF` is Mach-shaped by its name.
+**It does not.** The naming is legacy; upstream already implements the non-Mach
+path, and it is an **eventfd**.
+
+### 1. "port" is an alias, not a mechanism
+
+`src/queue.c:6949`:
+
+```c
+dispatch_runloop_handle_t
+_dispatch_get_main_queue_port_4CF(void)
+{
+	return _dispatch_get_main_queue_handle_4CF();
+}
+```
+
+The port entry point is a one-line forward to the *handle* entry point. `handle`
+is the real name; `port` is the Darwin-era alias kept for source compatibility.
+So the port variant is **not separately load-bearing** — there is only one path,
+and it is parameterised by what a "handle" is.
+
+### 2. A handle is a file descriptor off Darwin
+
+`private/private.h:190-198`:
+
+```c
+#if TARGET_OS_MAC
+typedef mach_port_t dispatch_runloop_handle_t;
+#elif defined(__linux__) || defined(__FreeBSD__)
+typedef int dispatch_runloop_handle_t;          /* a file descriptor */
+#elif defined(_WIN32)
+typedef void *dispatch_runloop_handle_t;
+#else
+#error "runloop support not implemented on this platform"
+#endif
+```
+
+### 3. And that descriptor is an eventfd
+
+`_dispatch_runloop_queue_handle_init`, `src/queue.c:6525-6544`:
+
+```c
+#if TARGET_OS_MAC
+	kr = mach_port_construct(mach_task_self(), &opts, guard, &mp);
+	handle = mp;
+#else
+	int fd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+```
+
+So the run loop waits on an eventfd, which is exactly the "non-Mach mechanism
+presenting the same semantics" the question hoped for — and precisely what the
+epoll backend already uses for its own poke path. We have `sys/eventfd.h` staged
+with `EFD_CLOEXEC`/`EFD_NONBLOCK` pinned against real glibc by
+`sdk/tests/epoll_abi_probe.c`.
+
+### Verdict
+
+**The deferral of Mach port emulation is confirmed safe, and the RunLoop fork
+does not need reopening.** foundation-scope can build the epoll RunLoop; nothing
+about CFRunLoop's dispatch integration requires port receive rights, and the
+`_4CF` naming does not imply Mach semantics.
+
+### The one thing it costs us: patch 5
+
+Predictably, `TARGET_OS_MAC` is 1 for our target, so the typedef and the handle
+init both select the Mach branch — `mach_port_construct` is one of the four
+entry points machorun exports as a self-naming abort. Same shape as every other
+wall in this port: **upstream's non-Mach path is right for us, and our Darwin
+target selects the Mach one.**
+
+That is patch 5, and it is the same "this is not a Mac" statement as patches 1–4:
+we are a Darwin target without Mach IPC, a combination upstream does not model.
+Had `mach_port_construct` not been implemented as a *named* abort, this would
+have surfaced as a runtime failure inside CFRunLoop's first main-queue wakeup
+instead of at the call — a good argument for machorun's choice to make the four
+unimplemented Mach entry points announce themselves.
