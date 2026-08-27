@@ -1,5 +1,5 @@
-/* CFDerivedMethods.h -- machine-derived from CF's call sites, then adjudicated.
- * Every declaration carries its verdict; none is unreviewed. Self-contained. */
+/* CFDerivedMethods.h -- machine-derived from CF's call sites, adjudicated.
+ * Merged across derivation passes BY METHOD, not by class. Self-contained. */
 #ifndef _CF_DERIVED_METHODS_H
 #define _CF_DERIVED_METHODS_H
 #if defined(__OBJC__)
@@ -25,12 +25,15 @@
 
 @interface NSArray : NSObject
     - (NSUInteger)count;  /* CFArray.c:473 */ /* reconciled from (CFIndex) */
+    - (void)getObjects:(id *)a0 range:(NSRange)a1;  /* CFArray.c:534 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSAttributedString : NSObject
     - (CFDictionaryRef)attributesAtIndex:(NSUInteger)a0 effectiveRange:(NSRange *)a1;  /* CFAttributedString.c:314 */ /* not in split */
     - (CFStringRef)string;  /* CFAttributedString.c:300 */ /* public; measured equivalent */
     - (CFTypeRef)attribute:(NSString *)a0 atIndex:(NSUInteger)a1 effectiveRange:(NSRange *)a2;  /* CFAttributedString.c:322 */ /* not in split */
+    - (CFDictionaryRef)attributesAtIndex:(NSUInteger)a0 longestEffectiveRange:(NSRange *)a1 inRange:(NSRange)a2;  /* CFAttributedString.c:331 */ /* not in split */
+    - (CFTypeRef)attribute:(NSString *)a0 atIndex:(NSUInteger)a1 longestEffectiveRange:(NSRange *)a2 inRange:(NSRange)a3;  /* CFAttributedString.c:366 */ /* not in split */
 @end
 
 @interface NSCalendar (CFDerived)
@@ -61,6 +64,7 @@
 
 @interface NSData : NSObject
     - (const uint8_t *)bytes;  /* CFData.c:515 */ /* no public reference; SPI */
+    - (void)getBytes:(void *)a0 range:(NSRange)a1;  /* CFData.c:528 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSDate (CFDerived)
@@ -111,12 +115,19 @@
     - (void)removeAllObjects;  /* CFArray.c:697 */
     - (void)removeObjectAtIndex:(NSUInteger)a0;  /* CFArray.c:687 */ /* public; measured equivalent */
     - (void)setObject:(id)a0 atIndex:(NSUInteger)a1;  /* CFArray.c:627 */ /* public; measured equivalent */
+    - (void)replaceObjectsInRange:(NSRange)a0 withObjects:(id *)a1 count:(NSUInteger)a2;  /* CFArray.c:836 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSMutableAttributedString : NSObject
     - (CFMutableStringRef)mutableString;  /* CFAttributedString.c:441 */ /* no public reference; SPI */
     - (void)beginEditing;  /* CFAttributedString.c:643 */
     - (void)endEditing;  /* CFAttributedString.c:647 */
+    - (void)addAttribute:(NSString *)a0 value:(id)a1 range:(NSRange)a2;  /* CFAttributedString.c:539 */ /* PUBLIC, UNREVIEWED */
+    - (void)addAttributes:(NSDictionary *)a0 range:(NSRange)a1;  /* CFAttributedString.c:481 */ /* PUBLIC, UNREVIEWED */
+    - (void)removeAttribute:(NSString *)a0 range:(NSRange)a1;  /* CFAttributedString.c:580 */ /* PUBLIC, UNREVIEWED */
+    - (void)replaceCharactersInRange:(NSRange)a0 withAttributedString:(NSAttributedString *)a1;  /* CFAttributedString.c:619 */ /* PUBLIC, UNREVIEWED */
+    - (void)replaceCharactersInRange:(NSRange)a0 withString:(NSString *)a1;  /* CFAttributedString.c:446 */ /* PUBLIC, UNREVIEWED */
+    - (void)setAttributes:(NSDictionary *)a0 range:(NSRange)a1;  /* CFAttributedString.c:479 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSMutableCharacterSet : NSObject
@@ -125,6 +136,8 @@
     - (void)formUnionWithCharacterSet:(NSCharacterSet *)a0;  /* CFCharacterSet.c:2625 */ /* public; measured equivalent */
     - (void)invert;  /* CFCharacterSet.c:3005 */
     - (void)removeCharactersInString:(NSString *)a0;  /* CFCharacterSet.c:2540 */ /* public; measured equivalent */
+    - (void)addCharactersInRange:(NSRange)a0;  /* CFCharacterSet.c:2300 */ /* PUBLIC, UNREVIEWED */
+    - (void)removeCharactersInRange:(NSRange)a0;  /* CFCharacterSet.c:2369 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSMutableData : NSObject
@@ -132,6 +145,7 @@
     - (void)appendBytes:(const void *)a0 length:(NSUInteger)a1;  /* CFData.c:613 */ /* public; measured equivalent */
     - (void)increaseLengthBy:(NSUInteger)a0;  /* CFData.c:605 */ /* public; measured equivalent */
     - (void)setLength:(NSUInteger)a0;  /* CFData.c:574 */
+    - (void)replaceBytesInRange:(NSRange)a0 withBytes:(const void *)a1 length:(NSUInteger)a2;  /* CFData.c:627 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSMutableDictionary : NSObject
@@ -160,6 +174,9 @@
     - (void)appendString:(NSString *)a0;  /* CFString.c:5047 */ /* public; measured equivalent */
     - (void)insertString:(NSString *)a0 atIndex:(NSUInteger)a1;  /* CFString.c:5012 */ /* public; measured equivalent */
     - (void)setString:(NSString *)a0;  /* CFString.c:5039 */ /* public; measured equivalent */
+    - (CFIndex)replaceOccurrencesOfString:(NSString *)a0 withString:(NSString *)a1 options:(NSStringCompareOptions)a2 range:(NSRange)a3;  /* CFString.c:5188 */ /* not in split */
+    - (void)deleteCharactersInRange:(NSRange)a0;  /* CFString.c:5021 */ /* PUBLIC, UNREVIEWED */
+    - (void)replaceCharactersInRange:(NSRange)a0 withString:(NSString *)a1;  /* CFString.c:5030 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSNumber : NSObject
@@ -196,6 +213,9 @@
     - (CFStringEncoding)_smallestEncodingInCFStringEncoding;  /* CFString.c:4952 */
     - (unichar)characterAtIndex:(NSUInteger)a0;  /* CFString.c:2135 */ /* reconciled from (UniChar) */
     - (const UniChar *)_fastCharacterContents;  /* CFString.c:2265 */
+    - (void)getCharacters:(unichar *)a0 range:(NSRange)a1;  /* CFString.c:2167 */ /* PUBLIC, UNREVIEWED */
+    - (void)getLineStart:(NSUInteger *)a0 end:(NSUInteger *)a1 contentsEnd:(NSUInteger *)a2 forRange:(NSRange)a3;  /* CFString.c:4764 */ /* PUBLIC, UNREVIEWED */
+    - (void)getParagraphStart:(NSUInteger *)a0 end:(NSUInteger *)a1 contentsEnd:(NSUInteger *)a2 forRange:(NSRange)a3;  /* CFString.c:4769 */ /* PUBLIC, UNREVIEWED */
 @end
 
 @interface NSTimeZone : NSObject
@@ -217,7 +237,6 @@
     - (CFURLRef)_cfurl;  /* CFURL.c:1673 */
     - (CFURLRef)baseURL;  /* CFURL.c:3044 */ /* no public reference; SPI */
 @end
-
 
 #endif
 #endif

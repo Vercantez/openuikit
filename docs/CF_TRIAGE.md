@@ -1057,3 +1057,61 @@ Verified by negative control — the guard was deliberately fed a bogus type and
 observed to fire, rather than assumed to work. **A note I forgot twice is not a
 safeguard.** That is the same lesson as "a comment asserting an invariant is not
 a mechanism enforcing one", arrived at the expensive way.
+
+## 31. Iteration 2, and a Docker bind mount that silently truncates files
+
+| step | compiling | unknown methods |
+|---|---|---|
+| 0 — `@class` only | 69 / 82 | — |
+| 1 — types header | 73 / 82 | 151 |
+| 2a — hand-written | 77 / 82 | 155 |
+| 2b — derived + reconciled (iter 1) | 77 / 82 | 50 |
+| 3 — machorun master SDK | 75 / 82 | 50 |
+| **4 — iteration 2** | **75 / 82** | **31** |
+
+**155 → 50 → 31**, with the compile count flat. The remaining 31 are dominated by
+the genuinely underivable: 19 `CF_OBJC_CALLV` (no return type at the call site)
+and 12 `FUNCDISPATCHV` with untyped arguments.
+
+### A third reason a curve flattens
+
+We had named two — the set closed, or the build broke. Iteration 2 found a third:
+**the tool hit its limit.** The first run derived only 4 of 50 and the curve
+looked converged. It was not; my parser could not read those call sites.
+
+Worse, **the diagnostic lied**. It reported "call site not a recognised dispatch
+macro" for sites that were perfectly well recognised `CF_OBJC_FUNCDISPATCHV`
+calls whose *arguments* were untyped expressions (`range:NSMakeRange(a, b)`
+rather than `range:(NSRange)r`). That message sent me to implement multi-line
+macro joining — which was never the problem and changed nothing. Once the
+diagnostic distinguished "unrecognised" from "recognised but untypeable", the
+fix was obvious: infer the type from the callee (`NSMakeRange` → `NSRange`),
+which is reading CF's own code rather than guessing. **4 → 24 declarations.**
+
+A diagnostic that names the wrong cause is worse than one that says only
+"failed", because it directs the repair. That is the same lesson machorun
+recorded about error messages that prescribe a remedy which happens to work.
+
+### `cp` from a macOS Docker bind mount silently truncated a header
+
+The eighth and last census wipeout was not a code defect at all.
+
+```
+host file                    14845 bytes
+read through the bind mount  14845 bytes   <- correct
+cp'd into the container      12205 bytes   <- SILENTLY TRUNCATED
+```
+
+The copy stopped mid-line, inside a comment, producing "unterminated /* comment"
+across all 86 files. Every instinct said generator bug — and the generator was
+fine; the file on disk was complete and so was the mount's view of it. Only
+comparing the three sizes found it.
+
+`docker cp` (which goes through the daemon rather than the mount) transfers all
+14845 bytes and the build is clean. This is the same family as the already-recorded
+"do not run high-exec-rate loops over the macOS bind mount", and it is worse,
+because a short read produces a *plausible-looking* file rather than an error.
+
+**Copy build inputs into the container with `docker cp`, or verify the byte
+count afterwards.** A mount that reads correctly under `sed` and truncates under
+`cp` will not announce itself.

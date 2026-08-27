@@ -85,14 +85,41 @@ def balanced_types(msg):
     return types
 
 
+# Arguments are not always written as (Type)casts. CF passes expressions --
+# `range:NSMakeRange(a, b)` -- whose type is knowable from the callee. Inferring
+# these is legitimate: the type is determined by CF's own code, not guessed.
+EXPR_TYPE = {
+    "NSMakeRange": "NSRange",
+    "CFRangeMake": "CFRange",
+}
+
+
+def infer_expr_type(msg, part):
+    """Type of the argument following `part:` when it is a known call, else None."""
+    m = re.search(re.escape(part) + r'\s*:\s*(\w+)\s*\(', msg)
+    return EXPR_TYPE.get(m.group(1)) if m else None
+
+
 def parse_message(msg, selector):
     """Turn `sel:(T)a other:(U)b` into a declaration body using SELECTOR order."""
     parts = [p for p in selector.lstrip('-+').split(':') if p]
     if ':' not in selector:
         return selector.lstrip('-+')                      # zero-argument
     types = balanced_types(msg)
-    if types is None or len(types) < len(parts):
-        return None                                        # cannot type it
+    if types is None:
+        return None
+    if len(types) < len(parts):
+        # Fill gaps from inferable expressions before giving up.
+        filled, ti = [], 0
+        for part in parts:
+            inferred = infer_expr_type(msg, part)
+            if inferred:
+                filled.append(inferred)
+            elif ti < len(types):
+                filled.append(types[ti]); ti += 1
+            else:
+                return None
+        types = filled
     body = " ".join(f"{p}:({t.strip()})a{i}" for i, (p, t) in
                     enumerate(zip(parts, types)))
     # Self-check: a declaration we emit must at least have balanced parens.
@@ -123,7 +150,24 @@ def main():
             lines = src_cache[path]
             if not (0 < ln <= len(lines)):
                 continue
+            # Macro invocations wrap. Join forward until the parens balance, so a
+            # multi-line CF_OBJC_FUNCDISPATCHV is seen whole.
+            #
+            # This mattered more than it looks: with single-line-only parsing,
+            # iteration 2 derived just 4 of 50 and 34 were reported as "call site
+            # not a recognised dispatch macro". The curve FLATTENED -- which reads
+            # as convergence, and was not. A harvest can stop growing for three
+            # reasons, not two: the set closed, the build broke, or THE TOOL HIT
+            # ITS LIMIT. Only the first is progress.
             text = lines[ln - 1].strip()
+            if text.count('(') != text.count(')'):
+                joined, k = text, ln
+                while k < len(lines) and joined.count('(') != joined.count(')') \
+                        and k - ln < 6:
+                    joined += " " + lines[k].strip()
+                    k += 1
+                if joined.count('(') == joined.count(')'):
+                    text = joined
 
             fm = FUNCD.search(text)
             cm = CALLV.search(text)
@@ -134,6 +178,14 @@ def main():
                     decl = f"{sel[0]} ({fm['ret'].strip()}){body};"
                     by_class[fm["cls"]].setdefault(decl, []).append(cite)
                     continue
+                # RECOGNISED but not typeable. Saying "not a recognised dispatch
+                # macro" here was FALSE, and it cost an afternoon: it sent me to
+                # implement multi-line macro joining, which was never the
+                # problem. A diagnostic that names the wrong cause is worse than
+                # one that says only "failed" -- it directs the fix.
+                undecided.append((cite, fm["cls"], sel,
+                                  "FUNCDISPATCHV with untyped argument(s)"))
+                continue
             if cm:
                 # CALLV has no explicit return type; the caller's context does.
                 undecided.append((cite, cm["cls"], sel, "CF_OBJC_CALLV: return type from context"))
