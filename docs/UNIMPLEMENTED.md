@@ -1008,6 +1008,27 @@ Two things the entry could not have predicted, both recorded in
 own, which objc4 uses as an ownership test, and glibc's `malloc_usable_size`
 does not.
 
+### `build-provenance` — what a gate can and cannot see about a local artefact
+`scripts/check_stale.sh` now compares the **content** of an artefact's declared
+source set against a stamp recorded when it was built, falling back to mtime
+when no stamp exists. That closes the case mtime structurally cannot see: the
+tree moving SIDEWAYS rather than forwards. A branch switch, a revert, a rebase,
+or a build run while the working tree still held conflict markers all leave an
+artefact newer than its sources while being built from different content.
+
+**What is still not covered, stated so nobody reads more into the gate than is
+there.** A stamp records that the SOURCES have not changed since the build. It
+does not record that the build succeeded, that the compiler was the same one,
+or that the environment matched — and it is written by `build.sh` immediately
+after a successful build precisely because a stamp written at any other moment
+is a lie that reads exactly like the truth. The input set is declared per
+artefact in `TARGETS`, deliberately over-approximate: a false stale costs one
+rebuild, a false fresh costs an afternoon.
+
+Stamps live in `build/`, which is gitignored, so they do not travel. A fresh
+clone gets the mtime check, which is the correct degradation — a clone has no
+dylibs either, and that is MISSING rather than stale.
+
 ### `dyld-program-sdk-at-least` — correct today, and here is when it stops
 `dyld_program_sdk_at_least()` returns 1 for every query. **That is the correct
 answer for every binary this project can build**, measured rather than assumed:

@@ -85,6 +85,23 @@ build_loader() {
         "$ROOT"/src/main.c \
         $LDFLAGS -ldl -lpthread -Wl,--no-as-needed -lm -Wl,--as-needed
     echo "   -> $BUILD/machorun"
+    stamp build/machorun
+}
+
+# Record what an artefact was JUST built from. Per-target rather than
+# wholesale: `build.sh loader` must not stamp libSystem, because stamping
+# something that was not rebuilt records that its sources are current when they
+# may not be -- a lie in exactly the direction the check exists to catch.
+# bash, not sh: check_stale.sh uses `set -o pipefail`, and /bin/sh in the
+# test-bed container is dash, which has no such option. It failed with
+# "Illegal option -o pipefail" and this function swallowed it -- so the build
+# reported success while recording nothing, which is the silent-gap shape this
+# whole check exists to remove. It now SAYS when it cannot stamp, without
+# failing the build: a missing stamp degrades to the mtime check, which is
+# where we were before.
+stamp() {
+    bash "$ROOT/scripts/check_stale.sh" --stamp "$@" >/dev/null || \
+        echo "   !! could not record a build stamp for: $*" >&2
 }
 
 # The .tbd stubs are a projection of darwin/usr/lib/*.dylib, so they are
@@ -138,15 +155,16 @@ not_linux() {
 
 case "$WHAT" in
     loader) build_loader ;;
-    darwin) sh "$ROOT/scripts/build_darwin.sh" ;;
-    objc4)  bash "$ROOT/scripts/build_objc4.sh" ;;
-    quartz) bash "$ROOT/scripts/build_quartz.sh" ;;
+    darwin) sh "$ROOT/scripts/build_darwin.sh";  stamp darwin/usr/lib/libSystem.B.dylib darwin/usr/lib/libc++.1.dylib darwin/usr/lib/libc++abi.dylib ;;
+    objc4)  bash "$ROOT/scripts/build_objc4.sh"; stamp darwin/usr/lib/libobjc.A.dylib ;;
+    quartz) bash "$ROOT/scripts/build_quartz.sh"; stamp darwin/usr/lib/libquartz.dylib ;;
     tbd)    build_tbd ;;
     all)
         build_loader
         if [ "$(uname -s)" = "Linux" ]; then
             build_glibc_abi_check
             sh "$ROOT/scripts/build_darwin.sh"
+            stamp darwin/usr/lib/libSystem.B.dylib darwin/usr/lib/libc++.1.dylib darwin/usr/lib/libc++abi.dylib
             build_tbd
         else
             not_linux "darwin/"
@@ -157,8 +175,12 @@ case "$WHAT" in
         if [ "$(uname -s)" = "Linux" ]; then
             build_glibc_abi_check
             sh "$ROOT/scripts/build_darwin.sh"
+            stamp darwin/usr/lib/libSystem.B.dylib darwin/usr/lib/libc++.1.dylib \
+                  darwin/usr/lib/libc++abi.dylib
             bash "$ROOT/scripts/build_objc4.sh"
+            stamp darwin/usr/lib/libobjc.A.dylib
             bash "$ROOT/scripts/build_quartz.sh"
+            stamp darwin/usr/lib/libquartz.dylib
             build_tbd
         else
             not_linux "darwin/, objc4 and quartz"
