@@ -1,96 +1,156 @@
 # libdispatch's REAL undefined-symbol set, from an actual link
 #
-# RE-VERIFIED against the libSystem built 06:47:28 (machorun rebuilt again after
-# the first capture; re-run rather than re-quoted, because a list is only
-# current at the moment it was measured). 26 objects: 25 C TUs plus block.cpp.
+# MEASURED 2026-08-27 ~12:20 UTC against the libSystem built 12:04:36 UTC
+# (machorun master 1f93f0b, "libSystem: sigaction"). Re-linked, not re-quoted.
 #
-# UNCHANGED at 20 symbols and identical membership. `poll` HAS landed in the
-# interim and `sigaction` has NOT -- fix/sigaction has real commits in
-# ~/machorun-wt-sigact but is not merged or built. So event_epoll.c is still the
-# one TU that does not compile, and its seven symbols are still seven of the 20.
+# ===========================================================================
+# HEADLINE: libdispatch now COMPILES COMPLETELY AND LINKS. It does not RUN.
+# ===========================================================================
 #
-# THIS SUPERSEDES THE 266-SYMBOL OBJECT-LEVEL COUNT. That number was every
-# undefined symbol across the objects, most of which resolve against each other.
-# The link resolves them and leaves 20. This is why machorun-isamask was right
-# to refuse to guess it.
+#   compile   25 of 25 TUs          (was 24 of 25; event_epoll.c was the one)
+#   link      libdispatch.dylib, 299,888 bytes, arm64 Mach-O, 413 exports
+#             including the whole core API (dispatch_semaphore_*, queue_create,
+#             async, sync, once, main, get_global_queue)
+#   run       NO -- 11 symbols absent from every loaded image
 #
-# ---------------------------------------------------------------------------
-# 7 -- event_epoll.c's own, and it is the ONLY TU that does not compile
-# ---------------------------------------------------------------------------
-# All seven are DEFINED in src/event/event_epoll.c (lines 257, 432 and nearby).
-# That file is blocked on a single thing: the FUNCTION `sigaction` is not
-# declared in the sysroot and libSystem does not export it.
-#
-# CORRECTED: `struct sigaction` DOES exist, fully defined at sys/signal.h:385.
-# I reported it missing and was wrong -- I grepped `struct sigaction {` with one
-# space where the header has two. Settled by asking the compiler instead:
-# `struct sigaction probe;` compiles clean, `sigaction(2,0,0)` does not. Caught
-# only because a control -- a function known to be declared -- ALSO came back
-# empty from the same pattern, which said the pattern was broken rather than the
-# symbol absent. A NEGATIVE GREP NEEDS A POSITIVE CONTROL BEFORE IT IS EVIDENCE.
-#
-# So the item is smaller than first reported: declare and implement the
-# function, no struct work. Note for whoever does: struct sigaction embeds a
-# `sigset_t sa_mask` BY VALUE, so the whole struct layout differs between the
-# platforms (4-byte mask vs 128), not just one field -- the translating-wrapper
-# treatment again rather than a forward. Fix it and these seven disappear too.
-#
-_dispatch_event_loop_atfork_child
-_dispatch_event_loop_leave_immediate
-_dispatch_event_loop_timer_arm
-_dispatch_event_loop_timer_delete
-_dispatch_unote_register_muxed
-_dispatch_unote_resume_muxed
-_dispatch_unote_unregister_muxed
+# The count is 20, the same number as the previous measurement, and that is a
+# COINCIDENCE. The membership changed almost entirely. The seven
+# _dispatch_event_loop_* entries are gone, because they were never external --
+# they are DEFINED in event_epoll.c and were undefined only because that one TU
+# did not compile. Eight _glibc_* entries took their place, which are not gaps
+# at all. An unchanged total hiding a changed set is exactly why the rule is to
+# re-link rather than re-quote.
 #
 # ---------------------------------------------------------------------------
-# 10 -- plain libc and pthread, all present in glibc
+# WHAT ACTUALLY UNBLOCKED event_epoll.c, AND IT WAS OURS
 # ---------------------------------------------------------------------------
-dprintf
-fcntl
-madvise
-pwrite
-sysctl
-pthread_attr_destroy
-pthread_attr_init
-pthread_attr_setschedparam
-pthread_attr_setschedpolicy
-pthread_get_stackaddr_np
+# It was reported as blocked on libSystem lacking `sigaction`. libSystem does
+# now export _sigaction, but that was never the whole story and the last piece
+# was self-inflicted:
+#
+#   machorun's sdk/usr/include/signal.h is Apple's real 132-line header and
+#   HAS ALWAYS declared sigaction() at line 87. swiftcore-macho's clean-room
+#   sdk/libc/signal.h -- 62 lines, written when machorun's SDK carried no
+#   signal.h -- was copied over it by an unconditional `cp -f` in stage_sdk.sh.
+#   Ours is a strict SUBSET. It declared signal, raise, the sigset_t inlines
+#   and sigsuspend, and omitted sigaction. The declaration was hidden by us.
+#
+# A shadowing copy cannot fail. It silently produces a sysroot smaller than the
+# one it was built from, and every resulting error points at the consumer. Both
+# stage_sdk.sh copies now REFUSE to overwrite an existing header instead, and
+# sdk/libc/signal.h is deleted -- verified first by compiling a probe that uses
+# the entire surface ours declared against machorun's header alone.
+#
+# This is the umbrella-shadows-reexport shape again: the wrong definition wins
+# because it is applied last, not because it is better.
+#
+# Two more gaps behind it, both in our Linux-ABI overlay, both now fixed:
+#   SIOCOUTQ        our linux/sockios.h defined SIOCINQ and not SIOCOUTQ, while
+#                   event_epoll.c:532 uses `writer ? SIOCOUTQ : SIOCINQ`. Half
+#                   a family. Measured 0x5411 on the host.
+#   CLOCK_BOOTTIME  see the clock note below -- the one that mattered.
 #
 # ---------------------------------------------------------------------------
-# 3 -- compiler-rt / fortify / Apple SPI
+# THE CLOCK BUG THE COMPILER WOULD NOT HAVE CAUGHT
 # ---------------------------------------------------------------------------
-__strlcpy_chk        # _FORTIFY_SOURCE helper
-__udivti3            # compiler-rt 128-bit division
-_simple_asl_log      # Apple logging SPI; a no-op is defensible
+# event_epoll.c hands three clock ids to timerfd_create, a LINUX call:
 #
-# ---------------------------------------------------------------------------
-# WHAT IS NOT HERE, AND WHY IT MATTERS
-# ---------------------------------------------------------------------------
+#     clock              Darwin   Linux
+#     CLOCK_REALTIME       0        0     agrees
+#     CLOCK_MONOTONIC      6        1     DOES NOT AGREE
+#     CLOCK_BOOTTIME    absent      7     absent on Darwin
 #
-# syscall and ioctl were both in the object-level list and are ABSENT here --
-# they are event_epoll.c's, and will reappear when it compiles. The variadic-ABI
-# warning about syscall still stands for when it does: Darwin's arm64 variadic
-# ABI is not AAPCS64, so a GLIBCSYM forward hands glibc arguments it will not
-# find. ioctl has the same shape.
+# Only CLOCK_BOOTTIME is a compile error. Adding it -- the single thing the
+# compiler asked for -- makes the file build and leaves CLOCK_MONOTONIC passing
+# Darwin's 6 to Linux, where 6 is CLOCK_REALTIME_ALARM. Every
+# DISPATCH_CLOCK_UPTIME timer would then fail with EPERM (that clock wants
+# CAP_WAKE_ALARM) or, given the capability, quietly become a wall-clock alarm.
 #
-# getsockopt, pthread_kill, flsl, qos_class_main,
-# OSAtomicCompareAndSwapPtrBarrier and _NSConcreteWeakBlockVariable were also in
-# the object-level list and are gone -- resolved by the rebuilt libSystem or by
-# other objects. Reporting them as gaps would have sent someone implementing
-# symbols nothing asks for.
+# THE COMPILER OBJECTS TO THE ABSENT CONSTANT AND NEVER TO THE PRESENT-BUT-
+# WRONG ONE. Fixed as dispatch patch 14 with explicit TFD_CLOCK_* names, values
+# measured on both sides, and a _Static_assert pinning the Darwin side so the
+# table fails loudly if the SDK ever changes.
 #
-# ---------------------------------------------------------------------------
-# TWO THINGS THE LINK CAUGHT THAT THE CENSUS COULD NOT
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# THE 20, CLASSIFIED
+# ===========================================================================
 #
-# 1. block.cpp is a C++ SOURCE and my TU census never counted it, because the
-#    census enumerated `find src -name "*.c"`. It is in src/CMakeLists.txt at
-#    line 75 and defines _dispatch_block_create. It needs -fno-exceptions --
-#    the file says so itself with `#error Must build without C++ exceptions`.
-#    The denominator was 26 C files; it is 27 sources.
+# --- 8: NOT GAPS. Resolved by the loader at runtime, by design. -------------
+# machorun's resolve.c binds _glibc_<x> via dlsym(RTLD_DEFAULT, x) for any
+# image whose is_runtime is set, which is true for dylibs loaded from a Darwin
+# absolute path. libdispatch installs at /usr/lib/system/libdispatch.dylib, so
+# it qualifies. CONFIRMED AT RUNTIME rather than assumed: machorun binds
+# eagerly, and it reported __udivti3 and _sysctl as unresolved while never
+# complaining about any of these eight -- so these eight bound successfully.
+# That also independently confirms the t6_fdwait result about runtime dylibs.
+_glibc_epoll_create1
+_glibc_epoll_ctl
+_glibc_epoll_wait
+_glibc_eventfd
+_glibc_eventfd_read
+_glibc_eventfd_write
+_glibc_timerfd_create
+_glibc_timerfd_settime
 #
-# 2. The seven event-loop symbols are NOT in the probe object I built earlier
-#    with different flags, which briefly made me think they lived elsewhere.
-#    Grepping the SOURCE settled it. An object built with different flags is a
-#    different object.
+# --- 1: ALREADY SATISFIED, once linked against libswiftcompat. --------------
+# On real Darwin the compiler-rt builtins reach a program through libSystem's
+# re-export of libcompiler_rt.dylib. In this stack libswiftcompat.dylib plays
+# that role and already exports it. Referenced by benchmark.c's 128-bit
+# division in _dispatch_benchmark_init.
+___udivti3
+#
+# --- 11: GENUINE GAPS. Absent from every loaded image. ----------------------
+# Positive control run before trusting this: write, malloc, pthread_create,
+# sigaction and poll were all located by the same loop, in libSystem.
+#
+# EVERY ONE OF THESE IS FATAL AT LOAD, not at call. machorun binds eagerly, so
+# "it is only on the logging path" does not make it optional -- the process
+# will not start. It also reports them ONE AT A TIME, which is exactly the
+# serialisation this list exists to avoid; the link enumerates them in a single
+# pass, which is the whole argument for measuring at the link.
+#
+# Marked (V) where the function is VARIADIC. Darwin's arm64 ABI passes variadic
+# arguments on the STACK and AAPCS64 -- which glibc follows -- passes the first
+# eight in REGISTERS. A direct _glibc_ bind for any of these would have glibc
+# read a register as the argument and write through it: silent memory
+# corruption, not a wrong value. These need translating wrappers in libSystem.
+# Marked (C) where constants must be translated as well as the call.
+#
+_sysctl              init.c:847      fetches the OS build string into
+#                                    _dispatch_build via {CTL_KERN,
+#                                    KERN_OSVERSION}. Introspection only -- a
+#                                    stub returning a fixed string is adequate,
+#                                    and there is no Linux MIB to forward to.
+_dprintf         (V) init.c:1158     only on the DISPATCH_LOGFILE debug path.
+_simple_asl_log      init.c:1209     Apple libSystem logging SPI, the fallback
+#                                    branch of _dispatch_log. Not variadic
+#                                    (level, facility, message). May be a stub.
+___strlcpy_chk       init.c:570,1328 _FORTIFY_SOURCE expansion of strlcpy. No
+#                                    Linux equivalent to forward to; implement
+#                                    directly.
+_fcntl           (V)(C) io.c:1508-19 F_GETFL/F_SETFL plus F_GETNOSIGPIPE and
+#                                    F_SETNOSIGPIPE, which are Darwin-only and
+#                                    have no Linux command number at all.
+_getsockopt         (C) event_epoll.c:195  SO_ACCEPTCONN on the muxnote path.
+#                                    Real, not a debug path. SOL_SOCKET and the
+#                                    SO_* numbers differ between the platforms.
+_ioctl           (V)(C) event_epoll.c:532  SIOCOUTQ/SIOCINQ. Real path. The
+#                                    declaration now exists in our overlay
+#                                    (sys/ioctl.h) and deliberately does NOT
+#                                    carry GLIBCSYM, so this fails at the link
+#                                    rather than corrupting memory.
+_madvise            (C) allocator.c:562    the allocator's page release. The
+#                                    MADV_* numbers differ (MADV_FREE is 5 on
+#                                    Darwin and 8 on Linux).
+_pwrite                 io.c:2599    off_t is 64-bit on both; likely the one
+#                                    clean forward in this group.
+_pthread_attr_destroy         queue.c:4104,6453
+_pthread_attr_setschedparam   queue.c:4068,5191
+#                                    Both on the real worker-thread path.
+#                                    CAUTION: pthread_attr_t is an OPAQUE SIZED
+#                                    type -- Darwin's is {long sig; char
+#                                    opaque[56]} and glibc's is a 64-byte union.
+#                                    Sizes that coincide are the dangerous case,
+#                                    because no size check catches them (the
+#                                    pthread_cond_t lesson from patch 4's
+#                                    guard). Measure the layout, do not forward.

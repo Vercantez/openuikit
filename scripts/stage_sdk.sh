@@ -11,7 +11,7 @@
 #   objc4-priv/     machorun's clean-room private-SPI headers
 #   scf/            swift-corelibs-foundation (Apple's open-source CoreFoundation headers)
 #   foundation/     swiftcore-macho's clean-room Foundation.h
-#   libc/           clean-room setjmp.h / signal.h / MacTypes.h
+#   libc/           clean-room setjmp.h / MacTypes.h
 #
 # Output: $W/sdk/MacOSX.sdk
 set -euo pipefail
@@ -36,7 +36,22 @@ fi
 [ -f "$S/machorun-sdk/local/TargetConditionals.h" ] && \
   cp -f "$S/machorun-sdk/local/TargetConditionals.h" "$SDK/usr/include/TargetConditionals.h"
 
-cp -f "$S/libc/"*.h "$SDK/usr/include/"
+# Clean-room libc headers machorun's SDK does not carry. This REFUSES rather
+# than overwrites -- see the long note at swiftcore-macho/scripts/stage_sdk.sh.
+# Short version: this was a bare `cp -f`, machorun's SDK grew a real signal.h,
+# ours silently replaced it with a subset that omitted sigaction(), and that
+# single hidden declaration was the whole of what blocked libdispatch's
+# event_epoll.c. A shadowing copy cannot fail, so it has to be made able to.
+for h in "$S/libc/"*.h; do
+  b=${h##*/}
+  if [ -e "$SDK/usr/include/$b" ]; then
+    echo "stage_sdk: REFUSING to overwrite $SDK/usr/include/$b" >&2
+    echo "  with the clean-room libc/$b -- machorun's SDK carries a real one" >&2
+    echo "  ($(wc -l < "$SDK/usr/include/$b") lines against our $(wc -l < "$h")). Compare, then delete ours." >&2
+    exit 2
+  fi
+  cp "$h" "$SDK/usr/include/$b"
+done
 
 mkdir -p "$SDK/usr/include/c++"
 cp -a /usr/lib/llvm-18/include/c++/v1 "$SDK/usr/include/c++/v1"
