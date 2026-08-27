@@ -99,3 +99,38 @@ implementation, which is a configuration upstream does not model.
 **That is a design decision, not a build fix**, and it should be taken
 deliberately rather than by whichever `.swiftmodule` happens to be present. It
 also decides the shape of every future Swift port here, not just this one.
+
+### RULING (team-lead, 2026-08-27): route (A). Walk the chain.
+
+**And it is not a fresh decision — it follows the `ioctl` contract settled the
+same day: everything above libSystem speaks Darwin.** One namespace in, because
+a wrapper that cannot classify its own input is guessing.
+
+Route (B) violates exactly that. It makes upstream code take the **Glibc**
+branch — emitting glibc constants and glibc struct layouts — **through a
+libSystem whose entire job is translating Darwin→glibc.** Double translation
+where the two happen to agree, silent divergence where they do not:
+`SOL_SOCKET` 65535 vs 1, `sigset_t` 4 bytes vs 128, `F_GETLK` meaning
+`F_SETLKW`. Every wrapper in that layer assumes its caller spoke Darwin.
+
+**So the ambiguity above dissolves, in the direction of `canImport(Darwin)`
+being TRUE.** The framing "a Darwin ABI over a glibc implementation" is right,
+but the predicate asks **which ABI the compiler should emit against**, not which
+libc ultimately services the call. Our guest is a Darwin-ABI Mach-O. The Darwin
+branch is the true one — and falsifying it would be a lie in the
+`Synchronization` sense, not honest in the `os` sense, because Darwin *is* what
+we present whereas `os_log` genuinely is not there.
+
+**Sizing note for whoever walks it.** The objection to (A) — those overlays
+describe Apple's real libc while we stage 71 curated headers — is a **sizing**
+problem, not a direction problem, and a module declaring an unstaged header is a
+*nameable gap*, the category being retired rather than a wrong turn. Size it the
+way everything else here was sized: **by what the 34 importing files actually
+reference, not by what Apple's modulemap declares.** That is the `~171 of 737`
+move at module granularity. Apple's references 51 headers where we stage 16; the
+number that matters is how many of those 51 the importers actually touch.
+Anything genuinely unstaged is a real machorun gap belonging on this list beside
+`complex.h` and `sys/attr.h` — **name it, do not route around it.**
+
+The 29-of-34 measurement above is **retained deliberately**, not superseded: it
+is the fallback's size should (A) turn out to be unbounded.
