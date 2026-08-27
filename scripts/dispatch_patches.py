@@ -58,4 +58,33 @@ edit("src/event/event_config.h",
 #	define DISPATCH_EVENT_BACKEND_WINDOWS 0""",
      "build system selects the event backend")
 
+# ---------------------------------------------------------------------------
+# 2. Don't call sysctlbyname on a Linux host; take the fallback upstream already
+#    wrote.
+#
+# hw_config.h sets name = "hw.logicalcpu_max" on Darwin and then calls
+# sysctlbyname, which does not exist on Linux. The `else` branch immediately
+# below it is already correct for us:
+#
+#     r = (int)sysconf(_SC_NPROCESSORS_ONLN);
+#
+# So this leaves `name` NULL rather than shimming a Darwin API over Linux. A
+# fake sysctlbyname answering "hw.logicalcpu_max" would be more code, more
+# surface, and a lie; taking the existing fallback is neither.
+# ---------------------------------------------------------------------------
+edit("src/shims/hw_config.h",
+"""	switch (c) {
+	case _dispatch_hw_config_logical_cpus:
+		name = "hw.logicalcpu_max"; break;
+	case _dispatch_hw_config_physical_cpus:
+		name = "hw.physicalcpu_max"; break;
+	case _dispatch_hw_config_active_cpus:
+		name = "hw.activecpu"; break;
+	}""",
+"""	// swiftcore-macho: the host is Linux, which has no sysctlbyname. Leaving
+	// `name` NULL selects the sysconf(_SC_NPROCESSORS_ONLN) branch below --
+	// upstream's own code, and the right answer here.
+	(void)c;""",
+     "no sysctlbyname on a Linux host")
+
 print("dispatch patches applied")

@@ -28,13 +28,19 @@ TARGET_FLAGS="$TARGET_FLAGS -DDISPATCH_EVENT_BACKEND_EPOLL=1"
 # HAVE_OBJC arrives DEFINED-BUT-EMPTY, so `#if !defined(USE_OBJC) && HAVE_OBJC`
 # (src/internal.h:76) becomes `#if ... &&` -> "expected value in expression",
 # which cascaded into 89 errors across 33 TUs. Give it a value.
-TARGET_FLAGS="$TARGET_FLAGS -DHAVE_OBJC=0"
+# (HAVE_OBJC and friends now come from config_ac.h -- see below. Passing them as
+# -D collides with the generated config under -Werror.)
 # os/voucher_activity_private.h includes <firehose/tracepoint_private.h> --
 # Apple's firehose tracing, which has no open-source counterpart -- guarded by
 # OS_VOUCHER_ACTIVITY_SPI and __has_include(<mach/mach_time.h>). Our sysroot
 # HAS mach/mach_time.h (machorun staged it for objc4), so the guard passes and
 # the include fails. Turning the SPI off is what the Linux build does.
-TARGET_FLAGS="$TARGET_FLAGS -DOS_VOUCHER_ACTIVITY_SPI=0 -DVOUCHER_USE_MACH_VOUCHER=0"
+TARGET_FLAGS="$TARGET_FLAGS -DOS_VOUCHER_ACTIVITY_SPI=0 -DOS_FIREHOSE_SPI=0"
+# src/internal.h prefers <config/config_ac.h> when it exists, over the CHECKED-IN
+# config/config.h -- which is a DARWIN config (HAVE_MACH 1, HAVE_OBJC 1,
+# HAVE_PTHREAD_WORKQUEUES 1). Without this, Mach arrives from the source tree
+# with no configure step involved. Upstream's own escape hatch; zero patches.
+TARGET_FLAGS="$TARGET_FLAGS -I$W/dispatch-config-inc"
 
 rm -rf "$B"; mkdir -p "$B"; cd "$B"
 
@@ -61,8 +67,27 @@ cmake -G Ninja "$SRC" \
   \
   `# ---- no swift overlay, no tests: the C library is what CF and _Concurrency need ----` \
   -DENABLE_SWIFT=OFF \
+  `# BUILD_TESTING is CTest's variable and the one libdispatch honours.` \
+  `# ENABLE_TESTING is silently IGNORED -- it only appears in CMake's` \
+  `# "manually-specified variables were not used" warning, and the test suite` \
+  `# gets configured anyway. tests/dispatch_io_muxed.c then wants socket(),` \
+  `# bind(), listen() and drags in a BSD sockets ABI the LIBRARY never needs.` \
+  -DBUILD_TESTING=OFF \
   -DENABLE_TESTING=OFF \
   -DBUILD_SHARED_LIBS=YES \
   "$@" 2>&1 | tee "$W/configure-dispatch.log"
+
+# CORRECTION to an earlier assumption: internal.h prefers <config/config_ac.h>,
+# but CMake GENERATES a file of exactly that name into the build directory, and
+# -I<build-dir> precedes any -I we add. So supplying our own alongside does not
+# override it -- it is shadowed, and CMake's `#cmakedefine HAVE_OBJC` (valueless)
+# still wins, which is the 89-errors-across-33-TUs bug.
+#
+# It must REPLACE the generated one. Doing it post-configure, where it cannot be
+# silently reordered away.
+if [ -f "$W/dispatch-config/config_ac.h" ]; then
+  cp "$W/dispatch-config/config_ac.h" "$B/config/config_ac.h"
+  echo "installed our config_ac.h over CMake's generated one"
+fi
 
 echo "configure exit: ${PIPESTATUS[0]}"
