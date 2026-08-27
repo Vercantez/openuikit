@@ -106,15 +106,36 @@ The same `-target` lever silently changes where constructors live:
 
 **A loader that only knows `__mod_init_func` runs zero constructors on a
 modern binary and reports no error.** It just silently does nothing. That is
-why rung (e) ships as two fixtures built from one source: `05_mod_init`
-(offsets) and `05c_mod_init_classic` (pointers).
+why rung (e) ships as two fixtures built from one source: `mod_init`
+(offsets) and `mod_init_classic` (pointers).
 
 ---
 
 ## The ladder
 
-### (a) `01_exit_raw` — no libSystem calls at all
-`tests/src/01_exit_raw.s` · classic · **xfail, on purpose**
+**A FIXTURE'S IDENTITY IS ITS NAME.** `dlopen`, `throw`, `sysctl` — that name is
+the id in `tests/manifest.tsv` and the stem of its four files (`tests/bin/`,
+`tests/expected/`, `tests/meta/`, `tests/src/`). There used to be a number in
+front of it, and it caused four merge collisions in a single day: two agents
+never build the same fixture, but they always race for the same next integer,
+and the loser only finds out at merge time — because an id is claimed on a
+branch and visible only when it lands. Four filenames then silently overwrite
+another fixture's baselines.
+
+The number is gone. `difftest.sh` renders the ladder position from row order,
+so nothing has to be claimed, and `build_fixtures.sh` REFUSES a duplicate id
+rather than reporting one. What is left is the case that is a genuine conflict:
+two people building a fixture for the same thing.
+
+**The `(a)`, `(b)`, `(c)` letters below are PROSE, not identity.** Nothing
+parses them; they are a coordinate for narrative like *"rungs (a)–(i) are the
+ladder"*, which is what they were always good for. They were never unique even
+when the manifest carried them — seven letters covered more than one fixture,
+because a chained/classic pair shares a rung. Duplicate one and the cost is a
+repeated label in a document, not an overwritten baseline.
+
+### (a) `exit_raw` — no libSystem calls at all
+`tests/src/exit_raw.s` · classic · **xfail, on purpose**
 
 Entry is `_start` via `LC_MAIN`. Writes to fd 1 and exits with `svc #0x80`,
 syscall number in `x16`, BSD numbering (`write`=4, `exit`=1). libSystem is
@@ -133,7 +154,7 @@ would need seccomp-based trapping or binary rewriting, i.e. exactly the
 Darwin-syscall-emulation road this project chose not to take. Kept as a
 permanent, labelled wall — see `docs/UNIMPLEMENTED.md`.
 
-### (a′) `01b_exit_unixthread` — static, `LC_UNIXTHREAD`
+### (a′) `exit_unixthread` — static, `LC_UNIXTHREAD`
 same source · no fixups · **no oracle**
 
 Built `-static`: no `LC_LOAD_DYLINKER`, no dyld, no fixups, and entry is an
@@ -151,8 +172,8 @@ must handle, and because a parse-only fixture is still a test.
 **Loader must implement:** `LC_UNIXTHREAD` entry (`arm_thread_state64_t`, `pc`
 field), and segment mapping with no dynamic linking at all.
 
-### (b) `02_main_ret` / `02c_main_ret_classic` — LC_MAIN, return a value
-`tests/src/02_main_ret.c` · chained + classic
+### (b) `main_ret` / `main_ret_classic` — LC_MAIN, return a value
+`tests/src/main_ret.c` · chained + classic
 
 `int main(int argc, char **argv) { return 40 + argc; }`. Exits 41. **Zero
 undefined symbols** — libSystem is loaded but nothing is bound. The smallest
@@ -165,8 +186,8 @@ right protections at a slid base; apply the (empty) fixup set; call
 return value. `apple[]` must at minimum be a NUL-terminated array whose first
 entry is the executable path — libSystem's startup reads it.
 
-### (c) `03_printf` / `03c_printf_classic` — first libSystem dependency
-`tests/src/03_printf.c` · chained + classic
+### (c) `printf` / `printf_classic` — first libSystem dependency
+`tests/src/printf.c` · chained + classic
 
 Undefined: `_printf _puts _fflush ___stdoutp`.
 
@@ -193,8 +214,8 @@ variadic ABI differs from AAPCS64: variadic arguments go on the stack, 8-byte
 aligned, never in `v0`–`v7`. If our `printf` forwards to glibc's, that
 mismatch is the first thing that will break.
 
-### (d) `04_malloc` — the allocator surface
-`tests/src/04_malloc.c` · chained
+### (d) `malloc` — the allocator surface
+`tests/src/malloc.c` · chained
 
 Undefined: `_malloc _calloc _realloc _free _strdup _strlen _posix_memalign
 _printf _puts ___stack_chk_fail ___stack_chk_guard`.
@@ -209,8 +230,8 @@ free, realloc-to-9000, full free) to catch a forwarder that works once.
 `libSystem`'s completeness, and it is the first fixture where "forward to
 glibc" is doing real work.
 
-### (e) `05_mod_init` / `05c_mod_init_classic` — static initialisers
-`tests/src/05_mod_init.c` · chained + classic
+### (e) `mod_init` / `mod_init_classic` — static initialisers
+`tests/src/mod_init.c` · chained + classic
 
 Three constructors with priorities 101, 102 and default, plus a destructor.
 The output asserts the ordering:
@@ -233,8 +254,8 @@ route `__attribute__((destructor))` through `__cxa_atexit` / `__cxa_finalize`
 with a per-image `___dso_handle`, and actually run atexit handlers on normal
 exit.
 
-### (e′) `05b_cxx_init` — C++ globals
-`tests/src/05b_cxx_init.cpp` · chained · **xfail: needs libc++**
+### (e′) `cxx_init` — C++ globals
+`tests/src/cxx_init.cpp` · chained · **xfail: needs libc++**
 
 Two namespace-scope objects with non-trivial ctors/dtors, plus a guarded
 function-local static and a `std::string`. Destructors must run in reverse
@@ -244,8 +265,8 @@ construction order after `main`.
 `libc++abi.dylib` shipped as Mach-O — including `__cxa_guard_acquire` /
 `__cxa_guard_release` for the local static. Blocked until those exist.
 
-### (f) `06_tls` — thread-local storage
-`tests/src/06_tls.c` · chained
+### (f) `tls` — thread-local storage
+`tests/src/tls.c` · chained
 
 Undefined: `_printf __tlv_bootstrap`. Sections:
 
@@ -279,11 +300,11 @@ export `__tlv_bootstrap` and a `tlv_get_addr`; allocate a per-thread image
 lazily, keyed per image, and free it at thread exit. Nothing about ELF TLS
 carries over — this is a from-scratch mechanism.
 
-### (g) `07_dylib` / `07c_dylib_classic` — two images
-`tests/src/07_dylib_main.c` + `tests/src/07_dylib_lib.c` · chained + classic
+### (g) `dylib` / `dylib_classic` — two images
+`tests/src/dylib_main.c` + `tests/src/dylib_lib.c` · chained + classic
 
 The executable carries `LC_RPATH = @loader_path` and an `LC_LOAD_DYLIB` for
-`@rpath/lib07greet.dylib`; the dylib carries `LC_ID_DYLIB`. Both must sit in
+`@rpath/libdylib_greet.dylib`; the dylib carries `LC_ID_DYLIB`. Both must sit in
 `tests/bin/` together.
 
 Undefined in the exe: `_greet _greet_via_callback _greet_counter _greet_name
@@ -304,8 +325,8 @@ name; two-level namespace binding (each import names its source dylib by
 ordinal); exporting the main executable's symbols; and running each image's
 initialisers in dependency order, dependencies first.
 
-### (h) `08_pthread` — threads and per-thread TLS
-`tests/src/08_pthread.c` · chained
+### (h) `pthread` — threads and per-thread TLS
+`tests/src/pthread.c` · chained
 
 Undefined: `_pthread_create _pthread_join _pthread_mutex_lock
 _pthread_mutex_unlock _pthread_once __tlv_bootstrap _printf
@@ -332,8 +353,8 @@ what Apple's headers baked into the fixture at compile time and what our
 libSystem does at run time. That struct layout is compiled into the binary and
 cannot be changed later.
 
-### (i) `09_objc` — Objective-C
-`tests/src/09_objc.m` · chained · **xfail: needs libobjc**
+### (i) `objc` — Objective-C
+`tests/src/objc.m` · chained · **xfail: needs libobjc**
 
 Deliberately Foundation-free — links `libobjc.A.dylib` and `libSystem` only,
 using a root class. That aims it squarely at `~/objc4-linux`.
@@ -366,10 +387,10 @@ but before initialisers. A loader that only maps segments and applies fixups
 crashes here, because no class ever gets registered. Expect this to fail until
 libobjc is ported — that failure is the fixture doing its job.
 
-### (j) `11_varargs` / `11c_varargs_classic` — the Darwin variadic ABI
-`tests/src/11_varargs.c` · chained and classic
+### (j) `varargs` / `varargs_classic` — the Darwin variadic ABI
+`tests/src/varargs.c` · chained and classic
 
-`03_printf` proves the easy half of varargs. This is the one that catches a
+`printf` proves the easy half of varargs. This is the one that catches a
 `printf` that walks the Darwin `va_list` *almost* right.
 
 The divergence, measured (`docs/ABI.md` §1): Darwin/arm64 passes **every**
@@ -397,8 +418,8 @@ libSystem, not of the fixup encoding, and the pair says so.
 `va_list`, with only finished bytes crossing to glibc. This fixture is what
 caught `%#o` dropping its leading zero.
 
-### (k) `12_mach` — the Mach APIs
-`tests/src/12_mach.c` · chained
+### (k) `mach` — the Mach APIs
+`tests/src/mach.c` · chained
 
 The README's bet says Mach is "a bounded list, not a kernel ABI". This is the
 bound, for plain C: `mach_task_self` (a *data* symbol, `_mach_task_self_`, not a
@@ -419,8 +440,8 @@ trimming so the result is 16 KiB-aligned even on a 4 KiB-page kernel;
 the unit it actually returns. Ports are names in our own table — see
 `docs/UNIMPLEMENTED.md#mach-ports-are-fiction`.
 
-### (l) `13_errno` — the numbers that are not the same
-`tests/src/13_errno.c` · chained
+### (l) `errno` — the numbers that are not the same
+`tests/src/errno.c` · chained
 
 Three translations, each of which changes behaviour and not just presentation:
 
@@ -447,8 +468,8 @@ translation tables generated from a measurement of both platforms
 the unmappable ones, `struct stat` field-by-field translation, and `strerror`
 with Apple's own text.
 
-### (m) `14_utility` — a representative hand-built utility
-`tests/src/14_utility.c` · chained
+### (m) `utility` — a representative hand-built utility
+`tests/src/utility.c` · chained
 
 Every other rung isolates one mechanism. This one deliberately does not: it is
 the shape of program milestone 1 is *for*, and it exists to answer "what would
@@ -487,8 +508,8 @@ our own `optarg`/`optind`, the time surface, and a `strtol` family that sets
 
 ---
 
-### (y) `26_malloc_type` — Apple's typed allocator, and the size argument
-`tests/src/26_malloc_type.c` · chained
+### (y) `malloc_type` — Apple's typed allocator, and the size argument
+`tests/src/malloc_type.c` · chained
 
 **This rung exists because its absence cost the project its longest bug.**
 machorun's libSystem had no `malloc_type_*` family at all, so a sibling repo
@@ -533,8 +554,8 @@ stay empty.
 
 ---
 
-### (z) `27_unwind` — unwinding a real stack through compact `__unwind_info`
-`tests/src/27_unwind.c` · chained
+### (z) `unwind` — unwinding a real stack through compact `__unwind_info`
+`tests/src/unwind.c` · chained
 
 **It WALKS, it does not link.** Every unwind symbol resolved perfectly for as
 long as the unwinder was a set of aborting stubs, so a link test would have
@@ -602,8 +623,8 @@ report.
 
 ---
 
-### (ac) `30_throw` — an exception that is really thrown and really caught
-`tests/src/30_throw.cpp` · chained
+### (ac) `throw` — an exception that is really thrown and really caught
+`tests/src/throw.cpp` · chained
 
 Rung (z) proved the UNWINDER decodes Apple's compact `__unwind_info`. It says
 nothing about throwing, because walking a stack and unwinding one are different
@@ -647,8 +668,8 @@ chasing, which `src/resolve.c`'s `lookup_in` already did — the gap was that ou
 
 ---
 
-### (af) `33_dlopen` — loading a dylib at run time
-`tests/src/33_dlopen.c` + `tests/src/33plug.c` · chained
+### (af) `dlopen` — loading a dylib at run time
+`tests/src/dlopen.c` + `tests/src/dlopen_plug.c` · chained
 
 Until this rung, machorun could load only what a binary's load commands named.
 It is what took the objc4 corpus from **43/44 to 44/44**.
@@ -687,8 +708,8 @@ never the image table's.
 
 ---
 
-### (ah) `35_dladdr` — which image an address is in, and the scoped handles
-`tests/src/35_dladdr.c` · chained
+### (ah) `dladdr` — which image an address is in, and the scoped handles
+`tests/src/dladdr.c` · chained
 
 **Three named gaps, one cause.** `dladdr`, `dlsym(RTLD_NEXT/RTLD_SELF/
 RTLD_MAIN_ONLY)` and `dlopen`'s `@loader_path` were all unimplemented because
@@ -727,20 +748,20 @@ non-`N_STAB` symbol at or below the address, `n_value` plus slide), and
 
 ---
 
-### (x) `10_fat` — universal binary
-`lipo` of an x86_64 build and the arm64 `03_printf` · chained
+### (x) `fat` — universal binary
+`lipo` of an x86_64 build and the arm64 `printf` · chained
 
 Off-ladder; it tests structure, not a new runtime capability. `FAT_MAGIC`
 (`0xcafebabe`), two real slices, big-endian `fat_arch` records.
 
-Its recorded baseline is byte-identical to `03_printf`'s, because macOS picks
+Its recorded baseline is byte-identical to `printf`'s, because macOS picks
 the arm64 slice and then behaves exactly like the thin binary. That is the
 design: **any** difference under machorun is a slice-selection bug and nothing
 else. The x86_64 slice is a genuine build rather than padding, so a loader
 that simply takes the first slice will fail loudly instead of accidentally
 working.
 
-`tests/meta/10_fat.summary.txt` says so explicitly — `otool` merges all slices
+`tests/meta/fat.summary.txt` says so explicitly — `otool` merges all slices
 in its output, so the load-command and section lists there are the union
 across architectures, not what the loader will see after selection.
 
@@ -752,7 +773,7 @@ is the classic place to get an off-by-`fat_arch.offset` bug.
 
 ---
 
-### (n) `15_quartz` — the drawing rung, and the one fixture off the ladder
+### (n) `quartz` — the drawing rung, and the one fixture off the ladder
 
 Plain C, no Objective-C. Links `/usr/lib/libquartz.dylib` (our Mach-O build of
 `~/quartz`) plus libSystem and nothing else. Creates a 256×256 bitmap context,
@@ -805,23 +826,23 @@ Measured 2026-08-26: all nine checksums identical, PNG byte-identical
 
 ---
 
-### (o) `16_objc_quartz` — the smallest program in which Objective-C draws
-`tests/src/16_objc_quartz.m` · chained · 128×128
+### (o) `objc_quartz` — the smallest program in which Objective-C draws
+`tests/src/objc_quartz.m` · chained · 128×128
 
-`15_quartz` proved the rasteriser under machorun with **no** Objective-C in it.
-`09_objc` proved Objective-C under machorun with **no** drawing in it. Neither
+`quartz` proved the rasteriser under machorun with **no** Objective-C in it.
+`objc` proved Objective-C under machorun with **no** drawing in it. Neither
 proved they compose, and this is the fixture that does: one root class, two
 ivars, one `+` constructor, one `-drawInContext:`, two message sends, two
 filled ellipses, one PNG.
 
 It is deliberately trivial because its job is to be a **bisection point** for
-`17_objc_shapes`. If 17 fails and 16 passes, the bug is in what 17 adds. If 16
+`objc_shapes`. If 17 fails and 16 passes, the bug is in what 17 adds. If 16
 fails, nothing about 17's pixel diff is worth reading yet.
 
 Three images, which is one more than anything below rung (n) loads:
 `/usr/lib/libquartz.dylib`, `/usr/lib/libobjc.A.dylib`,
 `/usr/lib/libSystem.B.dylib`. 19 undefined symbols. Foundation-free, like
-`09_objc`: a root class with its own `Class isa`, instances from
+`objc`: a root class with its own `Class isa`, instances from
 `class_createInstance`.
 
 The second blob is drawn through an explicitly cast `objc_msgSend` rather than
@@ -833,8 +854,8 @@ a stage that cannot move is a stage that cannot fail.
 *together* — which is the point. It is the first fixture that needs both at
 once.
 
-### (p) `17_objc_shapes` — Objective-C in anger, and the milestone
-`tests/src/17_objc_shapes.m` · chained · 256×256
+### (p) `objc_shapes` — Objective-C in anger, and the milestone
+`tests/src/objc_shapes.m` · chained · 256×256
 
 The picture is produced by polymorphic message dispatch. Take any one of these
 away and the image changes:
@@ -871,7 +892,7 @@ is caught by an exit status:
 * **The transcendental.** Stage 5, `-[Vane drawInContext:]`, is the only code
   in the fixture that reaches `cos`/`sin` (`QZContextRotateCTM`). Two vanes at
   two angles, so one lucky argument cannot make it agree by accident. It is in
-  its own stage, last, with its own checksum, for the reason `15_quartz`'s
+  its own stage, last, with its own checksum, for the reason `quartz`'s
   stage 8 is: see `docs/QUARTZ_MACHO.md` §3.
 
 Six probe pixels are printed after every stage, each aimed at the output of a
@@ -891,8 +912,8 @@ metadata, and `objc_msgSendSuper2`.
 Measured 2026-08-26: all five stage checksums identical, PNG byte-identical
 (11,909 bytes), exit 0 / 0.
 
-### (r) `19_isa_mask` — where the loader PUT things
-`tests/src/19_isa_mask.c` · chained · in `tests/manifest.tsv`, graded by `difftest.sh`
+### (r) `isa_mask` — where the loader PUT things
+`tests/src/isa_mask.c` · chained · in `tests/manifest.tsv`, graded by `difftest.sh`
 
 The only fixture that tests an address rather than a behaviour, and the only one
 whose oracle passes for a reason that is a property of the *platform* rather
@@ -926,8 +947,8 @@ fixture FAILs, which is the whole reason it exists.
 
 Measured 2026-08-26: stdout byte-identical (285 bytes), exit 0 / 0.
 
-### (q) `18_swift_class` — Swift, and the rung that is graded twice
-`tests/src/18_swift_class.swift` · chained · `scripts/swift_gate.sh`
+### (q) `swift_class` — Swift, and the rung that is graded twice
+`tests/src/swift_class.swift` · chained · `scripts/swift_gate.sh`
 
 The first fixture whose runtime is the **Swift standard library** rather than
 libSystem, libobjc or libquartz. It is deliberately narrow. Everything in it
@@ -1046,11 +1067,11 @@ baseline): `136 of 65536 differing, 132 by >1 level, bounding box x 44..71
 y 137..160` — the ring, and nothing else.
 
 > **One correction this strengthening produced, on the day it was written.**
-> Rule 2 previously compared only the PNG for `15_quartz`, and
-> `tests/expected/15_quartz.stdout` turned out to have been recorded by a hand
+> Rule 2 previously compared only the PNG for `quartz`, and
+> `tests/expected/quartz.stdout` turned out to have been recorded by a hand
 > run that passed `oracle.png` as `argv[1]` rather than by `--record`. Its last
 > line therefore read `wrote oracle.png` where every harness run on both hosts
-> produces `wrote 15_quartz.png`. All nine stage checksums, the exit status and
+> produces `wrote quartz.png`. All nine stage checksums, the exit status and
 > the PNG were and are identical on macOS and under machorun; the stale line
 > was latent because `--linux` mode is the only mode that reads that file, and
 > `both` mode does not. Re-recorded from the macOS oracle through `--record`;
@@ -1058,7 +1079,7 @@ y 137..160` — the ring, and nothing else.
 
 ### …and for rung (q), which is graded by behaviour rather than by bytes
 
-`scripts/swift_gate.sh` grades `18_swift_class`. It is a third runner for one
+`scripts/swift_gate.sh` grades `swift_class`. It is a third runner for one
 reason and it is not the artefact: the fixture cannot be a committed
 Apple-built Mach-O, because our libswiftCore's compat gap means an Apple-built
 Swift binary does not load here at all (`docs/UNIMPLEMENTED.md#swift-compat`).
@@ -1094,13 +1115,13 @@ against the fixed loader, both `PASS`.
 
 ```
 tests/build_fixtures.sh              rebuild everything (macOS only)
-tests/build_fixtures.sh 06_tls       rebuild one
+tests/build_fixtures.sh tls       rebuild one
 harness/run_macos.sh --record        re-record after any rebuild
 
-tests/build_fixtures.sh 15_quartz    also builds the macOS oracle libquartz
-tests/build_fixtures.sh 17_objc_shapes   likewise (rungs n, o and p all need it)
+tests/build_fixtures.sh quartz    also builds the macOS oracle libquartz
+tests/build_fixtures.sh objc_shapes   likewise (rungs n, o and p all need it)
 scripts/quartz_pixel.sh --record     re-record ALL the drawing fixtures
-scripts/quartz_pixel.sh --record 17_objc_shapes   just one (macOS only; PNG too)
+scripts/quartz_pixel.sh --record objc_shapes   just one (macOS only; PNG too)
 
 scripts/stage_swiftcore.sh           stage the cross-built Swift runtime (rung q)
 scripts/swift_gate.sh --record       re-record rung (q)'s baseline (macOS only)

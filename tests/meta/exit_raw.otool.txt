@@ -1,0 +1,171 @@
+### file
+<machorun>/tests/bin/exit_raw: Mach-O 64-bit executable arm64
+
+### mach header
+<machorun>/tests/bin/exit_raw:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           2    15        760 0x00200085
+
+### dependencies
+<machorun>/tests/bin/exit_raw:
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
+
+### load commands
+<machorun>/tests/bin/exit_raw:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 232
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 2
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100000348
+      size 0x0000000000000028
+    offset 840
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x0000000100000370
+      size 0x0000000000000020
+    offset 880
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 456
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 3
+            cmd LC_DYLD_INFO_ONLY
+        cmdsize 48
+     rebase_off 0
+    rebase_size 0
+       bind_off 0
+      bind_size 0
+  weak_bind_off 0
+ weak_bind_size 0
+  lazy_bind_off 0
+ lazy_bind_size 0
+     export_off 16384
+    export_size 48
+Load command 4
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 16440
+   nsyms 4
+  stroff 16504
+ strsize 56
+Load command 5
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 1
+     iextdefsym 1
+     nextdefsym 2
+      iundefsym 3
+      nundefsym 1
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 0
+  nindirectsyms 0
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 6
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 7
+     cmd LC_UUID
+ cmdsize 24
+    uuid 6045ADEC-12CD-3C86-9653-5DDBA592E636
+Load command 8
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 11.0
+      sdk 26.1
+   ntools 1
+     tool 3
+  version 1230.1
+Load command 9
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 10
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 840
+ stacksize 0
+Load command 11
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 1356.0.0
+compatibility version 1.0.0
+Load command 12
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 16432
+ datasize 8
+Load command 13
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 16440
+ datasize 0
+Load command 14
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 16560
+ datasize 280
+
+### undefined symbols
+dyld_stub_binder
+
+### defined external symbols
+0000000100000000 T __mh_execute_header
+0000000100000348 T _start

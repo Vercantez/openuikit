@@ -14,7 +14,7 @@ no CPU emulation anywhere in this project.
 > Objective-C runs.** Apple's objc4 now builds as a Mach-O
 > `darwin/usr/lib/libobjc.A.dylib` on Linux with **4 patches** (the ELF port in
 > `~/objc4-linux` needs 9), machorun implements dyld's own ObjC image-notify
-> protocol in `src/objc_notify.c`, and `09_objc` **PASSes** byte-identically —
+> protocol in `src/objc_notify.c`, and `objc` **PASSes** byte-identically —
 > so the `XFAIL` on its row below, and "the one real wall" in §"Ranked next
 > blockers", are both superseded. 41 of `~/objc4-linux`'s 44 differential tests
 > pass against the same committed macOS baselines; the 3 that do not are the
@@ -99,27 +99,27 @@ $ git clone <repo> /tmp/clean && cd /tmp/clean
 $ scripts/difftest.sh
 
 FIXTURE                  RUNG  FIXUPS   VERDICT
-01_exit_raw              a     classic  XFAIL      raw Darwin svc -- permanent, by design
-01b_exit_unixthread      a     none     NO-ORACLE  macOS SIGKILLs it; nothing to diff against
-02_main_ret              b     chained  PASS
-02c_main_ret_classic     b     classic  PASS
-03_printf                c     chained  PASS
-03c_printf_classic       c     classic  PASS
-04_malloc                d     chained  PASS
-05_mod_init              e     chained  PASS
-05c_mod_init_classic     e     classic  PASS
-05b_cxx_init             e'    chained  PASS
-06_tls                   f     chained  PASS
-07_dylib                 g     chained  PASS
-07c_dylib_classic        g     classic  PASS
-08_pthread               h     chained  PASS
-09_objc                  i     chained  XFAIL      needs libobjc -- the one real wall
-11_varargs               j     chained  PASS
-11c_varargs_classic      j     classic  PASS
-12_mach                  k     chained  PASS
-13_errno                 l     chained  PASS
-14_utility               m     chained  PASS
-10_fat                   x     chained  PASS
+exit_raw              a     classic  XFAIL      raw Darwin svc -- permanent, by design
+exit_unixthread      a     none     NO-ORACLE  macOS SIGKILLs it; nothing to diff against
+main_ret              b     chained  PASS
+main_ret_classic     b     classic  PASS
+printf                c     chained  PASS
+printf_classic       c     classic  PASS
+malloc                d     chained  PASS
+mod_init              e     chained  PASS
+mod_init_classic     e     classic  PASS
+cxx_init             e'    chained  PASS
+tls                   f     chained  PASS
+dylib                 g     chained  PASS
+dylib_classic        g     classic  PASS
+pthread               h     chained  PASS
+objc                  i     chained  XFAIL      needs libobjc -- the one real wall
+varargs               j     chained  PASS
+varargs_classic      j     classic  PASS
+mach                  k     chained  PASS
+errno                 l     chained  PASS
+utility               m     chained  PASS
+fat                   x     chained  PASS
 --------------------------------------------------------------------------------
 pass 18  fail 0  xfail 2  xpass 0  skipped 0  no-oracle 1  drift 0
 ```
@@ -131,7 +131,7 @@ Three consecutive runs gave identical numbers.
 
 ### Count the denominator honestly
 
-21 manifest rows. One (`01b_exit_unixthread`) has no macOS baseline because
+21 manifest rows. One (`exit_unixthread`) has no macOS baseline because
 macOS itself will not execute it, so it cannot be graded. **Of the 20 gradeable
 fixtures, 18 pass and 2 are documented XFAILs.**
 
@@ -160,8 +160,8 @@ Four independent reasons to believe so, in increasing order of strength.
    `ok 20, drift 0`. A baseline fabricated anywhere else would have surfaced as
    BASELINE-DRIFT, never as PASS.
 4. **Re-run by hand, outside the harness.** Six fixtures including all four of
-   the late ones (`03_printf`, `11_varargs`, `12_mach`, `13_errno`,
-   `14_utility`, `09_objc`) were executed directly on macOS with the harness
+   the late ones (`printf`, `varargs`, `mach`, `errno`,
+   `utility`, `objc`) were executed directly on macOS with the harness
    out of the picture. stdout, stderr and exit status are byte-identical to the
    committed baselines.
 
@@ -180,25 +180,25 @@ corpus is thin.
 | classic bind stream not walked | **all 18** |
 | classic lazy-bind stream not walked | **all 18** |
 | chained binds not written | 12 |
-| `__TEXT,__init_offsets` ignored | 3 (`05_mod_init`, `05b_cxx_init`, `07_dylib`) |
-| chained rebases not applied | 2 (`07_dylib`, `14_utility`) |
-| classic rebase does not add the slide | 2 (`07c_dylib_classic`, `13_errno`) |
-| `__mod_init_func` ignored | 2 (`05c_mod_init_classic`, `07c_dylib_classic`) |
-| TLV initial-value copy removed | 2 (`06_tls`, `08_pthread`) |
-| `DYLD_CHAINED_PTR_64_OFFSET` uses `slide` instead of `load_base` | 1 (`14_utility`) |
-| TLV descriptor `offset` ignored | 1 (`06_tls`) |
-| Linux→Darwin `errno` map replaced by identity | 1 (`13_errno`) |
-| `O_*` flags passed through untranslated | 1 (`13_errno`) |
-| `struct stat` `st_mode` not translated | 1 (`13_errno`) |
-| one bit cleared in `_DefaultRuneLocale` (`_CTYPE_A`) | 1 (`14_utility`) |
-| fat slice selection disabled | 1 (`10_fat`) |
+| `__TEXT,__init_offsets` ignored | 3 (`mod_init`, `cxx_init`, `dylib`) |
+| chained rebases not applied | 2 (`dylib`, `utility`) |
+| classic rebase does not add the slide | 2 (`dylib_classic`, `errno`) |
+| `__mod_init_func` ignored | 2 (`mod_init_classic`, `dylib_classic`) |
+| TLV initial-value copy removed | 2 (`tls`, `pthread`) |
+| `DYLD_CHAINED_PTR_64_OFFSET` uses `slide` instead of `load_base` | 1 (`utility`) |
+| TLV descriptor `offset` ignored | 1 (`tls`) |
+| Linux→Darwin `errno` map replaced by identity | 1 (`errno`) |
+| `O_*` flags passed through untranslated | 1 (`errno`) |
+| `struct stat` `st_mode` not translated | 1 (`errno`) |
+| one bit cleared in `_DefaultRuneLocale` (`_CTYPE_A`) | 1 (`utility`) |
+| fat slice selection disabled | 1 (`fat`) |
 
 Two of these are worth reading twice. Breaking the **classic** bind or
 lazy-bind interpreter fails every fixture including the chained ones, because
 `ld64.lld` emits `LC_DYLD_INFO_ONLY` for the dylibs *we* build — so our own
 `libSystem.B.dylib` is bound through the classic path on every single test. And
 clearing a single bit of the 3208-byte rune table is caught by exactly one
-fixture, which is the entire reason `14_utility` prints all 128 characters in
+fixture, which is the entire reason `utility` prints all 128 characters in
 twelve classes: one wrong bit shows up as one wrong column.
 
 ### Survived — real coverage holes
@@ -221,7 +221,7 @@ that is compiled, shipped, and never executed under test.
   `MACHORUN_NO_PREFERRED_BASE=1`, which forces every executable off its
   preferred `0x100000000` base: 18 match, and the 2 that do not are the same
   two XFAILs. Nothing depends on `slide == 0`.
-  *(A first attempt at this reported `14_utility` failing under slide. That was
+  *(A first attempt at this reported `utility` failing under slide. That was
   contamination — `darwin/usr/` is a gitignored build product, so a mutated
   `libSystem` survived the `git checkout` that restored its source. Re-run after
   a clean rebuild it passes. Recorded because the trap is easy to fall into
@@ -239,7 +239,7 @@ that is compiled, shipped, and never executed under test.
   libSystem five times, each with one translation disabled, and diffs against
   the macOS baseline. All five diverge — varargs with a SIGSEGV at fault address
   `0x4d2` (1234, the first argument of `printf("int=%d\n", 1234)`), `errno` and
-  `O_*` and `struct stat` on `13_errno`, and the rune table on `14_utility`. It
+  `O_*` and `struct stat` on `errno`, and the rune table on `utility`. It
   leaves the tree clean.
 
 ## 5. How much of the userland is actually tested?
@@ -374,7 +374,7 @@ Steps 1–4 are machorun's, are bounded, and are the ones worth costing. Steps
    one that weak-binds, one that observes the Darwin→Linux `errno` direction,
    and one image with two dependencies. Four small fixtures buy back four pieces
    of untested shipped code.
-3. **ObjC (`09_objc`)** — steps 1–4 of §7.
+3. **ObjC (`objc`)** — steps 1–4 of §7.
 4. **C++ exceptions** — also step 4, and blocking on its own.
 5. **`dlopen`/`dlsym`.** `mr_image_load` was written re-entrant for it; nothing
    else is needed structurally, but no fixture exercises it so it is unwritten.
@@ -414,7 +414,7 @@ survive contact it is corrected here rather than in place.
 `harness/run_linux.sh` builds the loader by calling `scripts/build_linux.sh`,
 which is `scripts/build.sh all` — and `all` deliberately stops short of objc4,
 because 32 Objective-C++ TUs is about a minute and difftest invokes it on every
-run. So on a tree where `libobjc.A.dylib` has never been built, `09_objc` gets a
+run. So on a tree where `libobjc.A.dylib` has never been built, `objc` gets a
 red **FAIL** with `cannot find dylib '/usr/lib/libobjc.A.dylib'`, and difftest
 exits 1. §1's "the clone needs nothing from the host but Docker" is still true;
 "`$ git clone && scripts/difftest.sh`" is not the whole gate. It is
@@ -551,7 +551,7 @@ Two smaller honesty notes on the provenance record itself:
 | patches to `~/quartz`'s source | **0** (`patches-quartz/` is empty) |
 | translation units | 37 compiled, 0 failures |
 | `libquartz.dylib` | 507 exports, 65 undefined — 48 libSystem, 16 libc++, 1 `dyld_stub_binder` |
-| fixture | `tests/bin/15_quartz`, plain C, **no Objective-C** |
+| fixture | `tests/bin/quartz`, plain C, **no Objective-C** |
 | macOS, natively | 26861-byte PNG, sha256 `96aa747a85f6c35f…` |
 | machorun on Linux | 26861-byte PNG, sha256 `96aa747a85f6c35f…` |
 | per-stage checksums (9) | identical |
@@ -590,7 +590,7 @@ every future forwarder**, and the symptom will always name the wrong layer.
 
 1. It is **`QZ*`, not `CG*`**. No `CoreGraphics.framework` exists here and a
    guest linked against Apple's resolves none of its imports.
-2. **34 of 507 exports are exercised** by `15_quartz`, and **36** by all three
+2. **34 of 507 exports are exercised** by `quartz`, and **36** by all three
    drawing fixtures together — rungs (o) and (p) added two.
    The Core Animation layer tree, text,
    image decode, PDF, patterns, shadings, CMYK, P3 and non-normal blend modes
@@ -655,9 +655,9 @@ fact, and it was wrong in a way that matters (§11.5).
 
 ```
                       macOS, natively            machorun on Linux/arm64
-15_quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
-16_objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
-17_objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
+quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
+objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
+objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
 stage checksums       identical (9 / 3 / 5)      exit 0 / 0 everywhere
 ```
 
@@ -665,7 +665,7 @@ Two virgin-clone behaviours, measured on a second clone that had never been
 built:
 
 * `scripts/difftest.sh` alone gives **18 pass / 1 FAIL / 1 xfail / 1 no-oracle**,
-  exit 1, with `09_objc` red for want of a `libobjc.A.dylib` nobody built. That
+  exit 1, with `objc` red for want of a `libobjc.A.dylib` nobody built. That
   is exactly what §9.1 and the README say, re-confirmed.
 * `scripts/quartz_pixel.sh` alone gives **3/3 PASS, exit 0** on a virgin clone.
   Unlike `difftest.sh` it *is* self-sufficient: its container script builds the
@@ -688,7 +688,7 @@ and not `/usr/lib/...`; nothing is installed on the macOS host. The oracle
 library's own `otool -L` is `libquartz` + `libc++.1` + `libSystem.B` and it has
 **zero** undefined `_CG*`/`_CA*`/`_CF*`/`_NS*` symbols, so no Apple framework is
 in the comparison. (`QuartzCore` shows up in `DYLD_PRINT_LIBRARIES` output — it
-also shows up for `02_main_ret`, which draws nothing. It is dyld's own baseline
+also shows up for `main_ret`, which draws nothing. It is dyld's own baseline
 set on this OS, immediately "moved to delayed", and not a dependency of anything
 here.)
 
@@ -703,15 +703,15 @@ could not hide.
 |---|---|---|---|
 | M1 | AA scanline sampled one row down (`ys = y + 1 + (s+0.5)/ss`) | `vendor/quartz/src/qz_raster.cpp` | **FAIL**, exit 1. Diverges at stage 2; 4246 of 65536 pixels differ, bbox y 10..255 |
 | M2 | **one pixel, one channel, one level**: `if (x==100 && y==100) p[0]++` | same file | **FAIL**, exit 1. `differing pixels: 1 of 65536 (0.0015%)`, bbox `x 100..100 y 100..100`, `max channel delta: R=1` |
-| M3 | `attachCategories()` returns immediately | `vendor/objc4/runtime/objc-runtime-new.mm` | `16_objc_quartz` **PASS**, `17_objc_shapes` **FAIL** |
-| M4 | a non-root class's own method list is invisible, so every override falls through to the superclass | same file | `16_objc_quartz` **PASS**, `17_objc_shapes` **FAIL** |
+| M3 | `attachCategories()` returns immediately | `vendor/objc4/runtime/objc-runtime-new.mm` | `objc_quartz` **PASS**, `objc_shapes` **FAIL** |
+| M4 | a non-root class's own method list is invisible, so every override falls through to the superclass | same file | `objc_quartz` **PASS**, `objc_shapes` **FAIL** |
 
 M2 is the answer to "would a one-pixel change actually fail?". It fails, and
 `harness/pngdiff.c` localises it to the single pixel and even classifies it
 correctly as a ±1 story rather than a wrong shape. The PNG comparison is real.
 
 M3 and M4 are the answer to "is the ObjC fixture genuinely exercising ObjC?".
-Both are caught, and the bisection `16_objc_quartz` was built to provide works
+Both are caught, and the bisection `objc_quartz` was built to provide works
 exactly as its header claims: the smoke fixture, which has one root class and no
 inheritance and no category, stays byte-identical under both, so the failure is
 localised to what `17` adds before anything is read.
@@ -732,7 +732,7 @@ The tree was restored and re-verified clean after each mutation.
 ### 11.4 The baselines are Darwin's — and Linux cannot write them
 
 For the drawing fixtures, **the git-ordering argument of §2 does not apply**:
-`tests/expected/15_quartz.png` was committed in `9253385` together with the
+`tests/expected/quartz.png` was committed in `9253385` together with the
 fixture, long after the loader existed, and `16`/`17` in `567dfbc`. What vouches
 for them instead, all re-measured:
 
@@ -746,7 +746,7 @@ for them instead, all re-measured:
    macOS with the harness out of the picture: PNG and stdout byte-identical to
    the committed baselines.
 4. **A tampered baseline cannot be scored PASS.** One byte of
-   `tests/expected/15_quartz.png` was flipped and the full gate re-run. Verdict
+   `tests/expected/quartz.png` was flipped and the full gate re-run. Verdict
    `BASELINE-DRIFT`, exit 1, *even though Linux matched the live oracle exactly*
    — and `pngdiff` correctly reported "pixels IDENTICAL, the file bytes differ
    but the image does not… that is a PNG ENCODER difference". A mismatch is
@@ -846,8 +846,8 @@ addresses were found and closed, and neither fix helps with the other:
 
 | source | why it was high | fix | asserted by |
 |---|---|---|---|
-| mapped images | `mmap(NULL,…)` is served top-down from near 2^48 | the arena in `src/map.c` places every image from 8 GiB up | `19_isa_mask` image probes |
-| the heap | a PIE lands at `2*TASK_SIZE/3` and brk follows it, so glibc's main arena sat at `0xaaab_…` | the loader links non-PIE at `MR_LOADER_BASE` (1 TiB) so brk starts low, plus `mr_constrain_heap()` | `19_isa_mask` malloc probes |
+| mapped images | `mmap(NULL,…)` is served top-down from near 2^48 | the arena in `src/map.c` places every image from 8 GiB up | `isa_mask` image probes |
+| the heap | a PIE lands at `2*TASK_SIZE/3` and brk follows it, so glibc's main arena sat at `0xaaab_…` | the loader links non-PIE at `MR_LOADER_BASE` (1 TiB) so brk starts low, plus `mr_constrain_heap()` | `isa_mask` malloc probes |
 
 The heap half is the one that hid: libswiftCore's first 64 KiB of generic-class
 metadata come from a static pool in its own `__DATA`, which the image arena

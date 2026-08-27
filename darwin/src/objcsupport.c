@@ -468,7 +468,7 @@ EXPORT void *malloc_zone_malloc_with_options_np(void *zone, size_t align,
  * neutral -- someone WILL define it, somewhere we do not test. And the wrong
  * definition was never detectable from its own behaviour: it returned a valid
  * pointer every time, and the damage surfaced elsewhere, later, as somebody
- * else's crash. tests/src/26_malloc_type.c exists to make the size a checked
+ * else's crash. tests/src/malloc_type.c exists to make the size a checked
  * property at the point of allocation instead.
  * ===================================================================== */
 #define MT_ALIGN_TRIVIAL (sizeof(void *) * 2)   /* what plain malloc already gives */

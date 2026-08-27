@@ -11,7 +11,7 @@ stage checksums (9):   identical
 exit status:           0 / 0
 ```
 
-`scripts/quartz_pixel.sh` is the run. `tests/bin/15_quartz` is the binary.
+`scripts/quartz_pixel.sh` is the run. `tests/bin/quartz` is the binary.
 
 ---
 
@@ -136,7 +136,7 @@ and `sqrt` exactly and says **nothing** about `sin`, `cos`, `tan`, `pow`, `exp`
 or `log`; every implementation is free to be off by its own fraction of an ulp.
 
 So the fixture is built to expose it rather than hope. Stage 8 of
-`tests/src/15_quartz.c` is a rotation and nothing else, it is the only stage
+`tests/src/quartz.c` is a rotation and nothing else, it is the only stage
 that reaches a transcendental (ellipses in stages 7 and 9 are four cubic Beziers
 with a constant κ — pure arithmetic, `qz_path.cpp:110`), and its checksum is
 printed separately.
@@ -171,7 +171,7 @@ future forwarder: **libSystem's reach is bounded by the loader's own
 
 `darwin/usr/lib/libc++.1.dylib` was 14 symbols — `operator new`/`delete`, the
 `__cxa_guard_*` trio, `std::terminate`. That is genuinely everything
-`05b_cxx_init` leaves undefined, because its `std::string` fits in the
+`cxx_init` leaves undefined, because its `std::string` fits in the
 short-string buffer and every other member is a header inline.
 
 quartz uses `std::string`, `std::vector`, `std::unordered_map`,
@@ -234,7 +234,7 @@ so the pixel comparison is not secretly comparing two different C++ dialects.
 
 ## 5. The fixture, and why it is shaped this way
 
-`tests/src/15_quartz.c` — plain C, no Objective-C anywhere. That is the whole
+`tests/src/quartz.c` — plain C, no Objective-C anywhere. That is the whole
 point of it. Every other route to "a Darwin binary rasterises on Linux" runs
 through `objc_msgSend`, and when a pixel comes out wrong you cannot tell whether
 the rasteriser, the loader, libSystem's libm or the ObjC runtime did it. This one
@@ -365,11 +365,11 @@ scripts/build.sh everything          # loader + darwin/*.dylib + libobjc + libqu
 
 # macOS side
 scripts/build_quartz_macos.sh        # the oracle library, Apple's clang
-tests/build_fixtures.sh 15_quartz    # the fixture, Apple's clang (committed)
+tests/build_fixtures.sh quartz    # the fixture, Apple's clang (committed)
 
 # the differential (from the macOS host; drives docker for the Linux half)
 scripts/quartz_pixel.sh
-scripts/quartz_pixel.sh --record     # macOS only, rewrites tests/expected/15_quartz.*
+scripts/quartz_pixel.sh --record     # macOS only, rewrites tests/expected/quartz.*
 ```
 
 Re-pull quartz from upstream with `scripts/vendor_quartz.sh`; check the

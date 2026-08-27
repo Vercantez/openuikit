@@ -88,7 +88,7 @@ fi
 [ -n "$OTOOL" ] || die "no otool found (llvm-otool-18, llvm-otool or otool)"
 
 # nm interleaves `<file> (for architecture arm64):` banners when handed a fat
-# Mach-O -- tests/bin/10_fat is one -- and `$NF` on such a line yields the
+# Mach-O -- tests/bin/fat is one -- and `$NF` on such a line yields the
 # literal token `arm64):`. Dropping banner and blank lines is what keeps the fat
 # fixture from inventing two symbols that do not exist.
 strip_banners() { grep -vE '^$|\(for architecture .*\):$|^[^ ]*:$'; }
@@ -369,7 +369,7 @@ done
 for f in "${CORPUS[@]}"; do imports_of "$f" >> "$TMP/corpus_imp"; done
 sort -u "$TMP/corpus_imp" -o "$TMP/corpus_imp"
 
-# Guest-local dylibs in the corpus (lib07greet, lib041-multi-image, ...) are part
+# Guest-local dylibs in the corpus (libdylib_greet, lib041-multi-image, ...) are part
 # of the test corpus, not of the SDK; their exports resolve the rest.
 : > "$TMP/corpus_exp"
 for f in "${CORPUS[@]}"; do exports_of "$f" >> "$TMP/corpus_exp"; done

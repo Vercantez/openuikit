@@ -24,7 +24,6 @@
 #
 # id      fixture id; tests/bin/<id> is the Mach-O, tests/expected/<id>.{png,
 #         stdout,stderr,exit} is the recorded macOS behaviour
-# rung    position on the ladder in docs/FIXTURES.md
 # needs   dylibs the guest loads beyond libSystem, comma separated. The Linux
 #         side builds exactly these: `objc` costs a minute of Objective-C++, so
 #         a quartz-only run must not pay for it.
@@ -33,7 +32,7 @@
 #
 # Columns are separated by a single TAB. Keep it that way.
 #
-#id	rung	needs	size	what
-15_quartz	n	quartz	256x256	nine drawing stages through the QZ* C API; no Objective-C anywhere, so a failure here is never objc4's fault
-16_objc_quartz	o	quartz,objc	128x128	smoke: one root class, two ivars, one message send, one ellipse -- the bisection point for 17
-17_objc_shapes	p	quartz,objc	256x256	protocol, root class, three-level inheritance with [super], a category, +load/+initialize, and a polymorphic draw over a collection
+#id	needs	size	what
+quartz	quartz	256x256	nine drawing stages through the QZ* C API; no Objective-C anywhere, so a failure here is never objc4's fault
+objc_quartz	quartz,objc	128x128	smoke: one root class, two ivars, one message send, one ellipse -- the bisection point for 17
+objc_shapes	quartz,objc	256x256	protocol, root class, three-level inheritance with [super], a category, +load/+initialize, and a polymorphic draw over a collection

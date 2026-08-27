@@ -35,7 +35,7 @@ a separately `mmap`ed stack. Measured 0 in every fixture.
 ### `fat-binary` — **DONE**
 `FAT_MAGIC`/`FAT_CIGAM` and their 64-bit forms, big-endian `fat_arch` table,
 `CPU_TYPE_ARM64` non-arm64e slice selected, every file offset taken relative to
-the slice. `10_fat` PASSes with output byte-identical to `03_printf`, which is
+the slice. `fat` PASSes with output byte-identical to `printf`, which is
 what makes a slice-selection bug detectable.
 
 ### `arm64e`
@@ -98,7 +98,7 @@ destructors. `_tlv_atexit` is exported and aborts. Not in the corpus.
 the real thing's several thousand. It is:
 
 * the operator `new`/`delete` family, the `__cxa_guard_*` trio and
-  `std::terminate` (`darwin/src/libcxx.c`) — what `05b_cxx_init` leaves
+  `std::terminate` (`darwin/src/libcxx.c`) — what `cxx_init` leaves
   undefined once the headers are inlined; measured, its whole libc++ import list
   is `__ZdlPv`;
 * the out-of-line surface `vendor/quartz` reaches (`darwin/src/libcxx_std.cpp`)
@@ -225,7 +225,7 @@ no allocation semantics — but two things about the family are genuinely absent
   through the wrong type; ours cannot.
 
 The **size rules were measured against Apple's libmalloc**, because no header
-states them, and `tests/src/26_malloc_type.c` pins every one of them:
+states them, and `tests/src/malloc_type.c` pins every one of them:
 `aligned_alloc` and `..._zone_malloc_with_options_internal` return NULL when the
 alignment exceeds 16 and the size is not a multiple of it; `zone_memalign`,
 `posix_memalign` and `valloc` have no such rule.
@@ -252,7 +252,7 @@ float forms. A guest that computes with any of those may therefore get a
 different last bit under machorun than on macOS, and no amount of loader fidelity
 changes that.
 
-What is measured: `tests/bin/15_quartz` draws through `QZContextRotateCTM`
+What is measured: `tests/bin/quartz` draws through `QZContextRotateCTM`
 (cos/sin, very likely via the `__sincos_stret` aggregate ABI) and its PNG is
 **byte-identical** on both sides, as are all nine per-stage checksums. That is
 one workload agreeing, not a proof of agreement. The fixture is structured so
@@ -442,7 +442,7 @@ is what an unbacked promise costs when it is found from the other end.
 ### `printf-family-gaps`
 Our formatter implements the `%[flags][width][.prec][length]` grammar for
 `diuxXospcf/e/g/a` and delegates only float conversion to glibc (through a
-non-variadic prototype). Covered in anger by `11_varargs`, which is what caught
+non-variadic prototype). Covered in anger by `varargs`, which is what caught
 `%#o` dropping its leading zero. `%n` aborts. The `scanf` family, `syslog`,
 `err`/`warn` and `NSLog` are absent entirely — they are variadic, so they can
 never be forwarders, and none is in the corpus. Wide characters (`%ls`, `wprintf`)
@@ -489,7 +489,7 @@ distributed notifications) is **deliberately out of scope**.
 > for its single intended consumer.
 >
 > **And the promise is not unbacked.** Unlike a `.tbd` advertising a symbol
-> nothing defines, 34 Mach entry points here are real, and `12_mach` grades them
+> nothing defines, 34 Mach entry points here are real, and `mach` grades them
 > byte-for-byte against macOS. The four that are not implemented are *exported*
 > and abort with their own name and reason on first use. So a port that switches
 > the Mach backend on fails **loudly at first call** rather than silently — late,
@@ -518,7 +518,7 @@ distributed notifications) is **deliberately out of scope**.
 > individually. Removing the headers would break `dispatch/dispatch.h` before it
 > fixed anything.
 
-What *is* implemented, in `darwin/src/mach.c` and covered by `12_mach`:
+What *is* implemented, in `darwin/src/mach.c` and covered by `mach`:
 `mach_task_self` / `mach_task_self_` / `mach_host_self` / `mach_thread_self`,
 `mach_port_deallocate` / `mach_port_mod_refs`, `vm_allocate` / `vm_deallocate` /
 `vm_protect` and their `mach_vm_*` twins, `host_page_size` / `getpagesize` /
@@ -576,14 +576,14 @@ worse. Using `statx` when available is the fix and is unwritten.
 `opendir`/`readdir`/`closedir`/`rewinddir`/`dirfd` translate rather than
 forward: `struct dirent` is 1048 bytes on Darwin and 280 on glibc, and differs
 in field layout as well as size, exactly like `struct stat`. Graded by
-`tests/bin/20_dirent`.
+`tests/bin/dirent`.
 
 ### `sigaction-siginfo` — the three-argument handler form is refused
 `sigaction` translates four things and installs a trampoline
 (`darwin/src/posix.c`): the signal number in **both** directions, the 16-vs-152
 byte struct, the `sigset_t` embedded in it by value, and all seven `sa_flags`
 bits — **not one of which agrees** with Linux, with the low ones colliding with
-live Linux flags rather than with unused bits. Graded by `tests/bin/29_sigaction`
+live Linux flags rather than with unused bits. Graded by `tests/bin/sigaction`
 (rung ab).
 
 `SA_SIGINFO` is the one flag that **aborts instead of mapping**. Honouring it
@@ -601,9 +601,9 @@ something it never asked about — the same choice `mr_sigset_d2l` makes when it
 drops them from a mask.
 
 macOS returns 0 for the same call, so this is a real divergence that no wrapper
-can reconcile, and it is therefore **absent from `29_sigaction`**: a fixture
+can reconcile, and it is therefore **absent from `sigaction`**: a fixture
 that must match its oracle byte for byte cannot contain a case where the two
-systems legitimately differ. Same reason `POLLWRBAND` is absent from `28_poll`.
+systems legitimately differ. Same reason `POLLWRBAND` is absent from `poll`.
 
 ### `sigaction-sysroot` — there was never a header gap here
 Recorded because it was reported twice as a missing declaration and is not one.
@@ -622,8 +622,8 @@ return `ENOTSUP` rather than succeeding as a no-op, because a silent success
 would leave the guest believing a write to a closed pipe cannot raise a signal.
 
 macOS answers both, so this is a real divergence no wrapper can reconcile and it
-is therefore **absent from `31_fcntl_madvise`** — the same reason `POLLWRBAND` is
-absent from `28_poll` and `SIGEMT` from `29_sigaction`.
+is therefore **absent from `fcntl_madvise`** — the same reason `POLLWRBAND` is
+absent from `poll` and `SIGEMT` from `sigaction`.
 
 ### `sysctl-mibs` — three MIBs, and nothing to forward to
 `sysctl` is implemented rather than forwarded, which is unusual enough to record
@@ -714,13 +714,13 @@ a long way from the cause. `src/resolve.c` exports
 
 It is **`realpath`-resolved**, because dyld hands the guest an absolute path and
 we are given whatever was on the command line — the harness invokes
-`./36_execpath`, and a relative answer resolves against the process's cwd later
+`./execpath`, and a relative answer resolves against the process's cwd later
 rather than against the executable.
 
 Two contract details measured on the oracle rather than assumed: **`bufsize` is
 not updated on success** (a 4096-byte buffer holding a 112-character path comes
 back still saying 4096; Apple writes it only on the failure path), and the
-failure path *does* write the required size. `tests/bin/36_execpath` grades all
+failure path *does* write the required size. `tests/bin/execpath` grades all
 of it, and catches the `/proc/self/exe` version specifically — with the loader
 patched to use it, the fixture fails on `names this executable`.
 
@@ -755,12 +755,12 @@ it under-counts by four.
 
 `HW_MEMSIZE` is deliberately computed as host-pages × host-page-size, because
 the question it answers is how much memory the machine has; using 16384 would
-over-report by 4×. `tests/src/34_sysctl.c` asserts against the `sysconf` value
+over-report by 4×. `tests/src/sysctl.c` asserts against the `sysconf` value
 for that reason and says so at the call site.
 
 The fix is to pick one and make the other agree. Not done here because
 `MR_DARWIN_PAGE` is load-bearing for image mapping and `sysconf` has a recorded
-oracle (`tests/bin/22_sysconf`), so changing either is a decision with a blast
+oracle (`tests/bin/sysconf`), so changing either is a decision with a blast
 radius rather than a one-line correction.
 
 ### `ioctl-request-encoding` — one namespace in, and why that is not a preference
@@ -901,7 +901,7 @@ kernel never reported.
 
 The same shape shows up on character devices in the other direction: Darwin
 answers `POLLNVAL` for `/dev/null` and `/dev/zero`, where Linux answers
-`POLLOUT`. That one cost `tests/src/28_poll.c` its first baseline, which is why
+`POLLOUT`. That one cost `tests/src/poll.c` its first baseline, which is why
 the fixture polls pipes.
 
 Neither is reachable from an oracle-matching fixture, so both are recorded here
@@ -949,7 +949,7 @@ forwarded.
 `_dyld_objc_register_callbacks`, `_dyld_lookup_section_info` and the image
 identity SPI are implemented in `src/objc_notify.c`, and
 `darwin/usr/lib/libobjc.A.dylib` is Apple's objc4 built as Mach-O on Linux
-(`scripts/build_objc4.sh`, 4 patches). `09_objc` passes byte-identically and 41
+(`scripts/build_objc4.sh`, 4 patches). `objc` passes byte-identically and 41
 of `~/objc4-linux`'s 44 differential tests pass against the same macOS
 baselines. Full accounting in `docs/OBJC4_MACHO.md`.
 
@@ -1016,7 +1016,7 @@ unambiguous; **the date table must be copied, not guessed.**
 ### `dlopen-dlsym` — **DONE.** dlopen, dladdr and every dlsym handle
 `dlopen` over guest Mach-O images, `dladdr`, and `dlsym` with `RTLD_DEFAULT`,
 `RTLD_NEXT`, `RTLD_SELF`, `RTLD_MAIN_ONLY` and real handles all work. The objc4
-corpus is **44/44**; rungs (af) `33_dlopen` and (ah) `35_dladdr` cover them
+corpus is **44/44**; rungs (af) `dlopen` and (ah) `dladdr` cover them
 against real dyld.
 
 **`dlopen`** is the startup sequence from `src/main.c` performed on demand for
@@ -1307,7 +1307,7 @@ addresses, and fixing one does nothing for the other:
 
 1. **Mapped images.** `mmap(NULL, ...)` is served top-down from near 2^48, so
    every dylib landed at `0xffff_xxxx_xxxx`. Fixed by the arena in `src/map.c`,
-   which places every image below 2^47; `tests/bin/19_isa_mask` asserts it.
+   which places every image below 2^47; `tests/bin/isa_mask` asserts it.
 
 2. **The heap**, which the image arena does not reach. A generic class's
    metadata *is* the class its instances point at, and libswiftCore builds it
@@ -1420,7 +1420,7 @@ a fixture with a diamond dependency graph, not code.
 are compiled from `vendor/libunwind` and `vendor/libcxxabi`, **both pristine,
 zero patches**, and the loader supplies the half only dyld can know:
 `_dyld_find_unwind_sections` and `_dyld_register_func_for_remove_image`
-(`src/unwind.c`). `tests/src/30_throw.cpp` (rung ac) throws across frames and
+(`src/unwind.c`). `tests/src/throw.cpp` (rung ac) throws across frames and
 is caught by type, and `tests/objc44/038-exceptions` and
 `044-exception-through-uncached` now pass — objc44 went from **41/44 to 43/44**,
 with only `042-dlopen` left.
@@ -1517,7 +1517,7 @@ for the full ladder. These are not stubs — they are gaps in *test coverage*,
 which is the same kind of dishonesty if left unstated.
 
 ### `fixture-raw-syscall` — permanent wall
-*`01_exit_raw`, graded `XFAIL` forever.*
+*`exit_raw`, graded `XFAIL` forever.*
 
 A binary executing `svc #0x80` with a BSD syscall number in `x16` cannot be
 supported by the replace-libSystem bet. On Linux/arm64 `svc` traps to the
@@ -1527,12 +1527,12 @@ road this project chose not to take. The fixture stays in the corpus so the
 boundary appears in every test run instead of being forgotten.
 
 ### `fixture-unixthread-no-oracle`
-*`01b_exit_unixthread`, graded `NO-ORACLE`.*
+*`exit_unixthread`, graded `NO-ORACLE`.*
 
 Correction to the `lc-unixthread` entry above: the modern toolchain **will**
 emit `LC_UNIXTHREAD` for userland code — `clang -target arm64-apple-macos11
 -nostdlib -e _start -static` does it, and the fixture is committed at
-`tests/bin/01b_exit_unixthread` with its full `otool -l` in
+`tests/bin/exit_unixthread` with its full `otool -l` in
 `tests/meta/`. Its only load commands are `LC_SEGMENT_64`×3,
 `LC_UNIXTHREAD`, `LC_SYMTAB`, `LC_UUID`, `LC_SOURCE_VERSION`.
 
@@ -1568,9 +1568,9 @@ is worth keeping:
   take their output path from `argv[1]` and write a PNG through
   `fopen`/`fwrite`, so both are now on the critical path to a graded artefact.
 * **`__DATA,__objc_catlist`.** The old text said ld64 merges same-image
-  categories into the class so the corpus never produces one, and for `09_objc`
+  categories into the class so the corpus never produces one, and for `objc`
   that is exactly what happens — its `Counter (Doubling)` category leaves no
-  `__objc_catlist` at all. `17_objc_shapes` produces one anyway, plus an
+  `__objc_catlist` at all. `objc_shapes` produces one anyway, plus an
   `__objc_nlcatlist`, both 8 bytes, one entry each. The difference is that its
   category **implements `+load`**: a category with a `+load` cannot be merged
   away, because `+load` has to be called as a separate thing at a defined point
@@ -1587,7 +1587,7 @@ part of the test loop. If you rebuild, commit the new binaries and the
 re-recorded baselines together, in one commit, and say why.
 
 ### `fixture-concurrency`
-`08_pthread` is the only concurrency test and is deliberately deterministic
+`pthread` is the only concurrency test and is deliberately deterministic
 (fixed join order, all printing from `main`). It detects gross breakage in
 `pthread_create`/`join`/`mutex`/`once` and per-thread TLV allocation. It
 cannot detect races. Do not read a PASS there as "threading works".
@@ -1615,8 +1615,8 @@ from the export list:
 
 ### `quartz-fixture-coverage`
 The three drawing fixtures together call **36 of libquartz's 507 exported
-symbols** directly — 34 from `15_quartz`, 8 from `16_objc_quartz`, 18 from
-`17_objc_shapes`, overlapping heavily
+symbols** directly — 34 from `quartz`, 8 from `objc_quartz`, 18 from
+`objc_shapes`, overlapping heavily
 (`nm -u tests/bin/1[567]* | grep _QZ | sort -u | wc -l`). Adding Objective-C on
 top therefore bought exactly **two** further exports
 (`QZContextAddRoundedRect`, `QZContextFillEllipseInRect`) and nothing else, and
@@ -1633,7 +1633,7 @@ transparency layers.
 Those are not stubs — they are compiled and exported and presumably work, since
 upstream scores 97.46/100 against Apple's frameworks with all of them. They are
 simply not covered *here*, which is a different claim. Adding coverage means
-adding drawing stages to `tests/src/15_quartz.c`, rebuilding the fixture on
+adding drawing stages to `tests/src/quartz.c`, rebuilding the fixture on
 macOS, and re-recording with `scripts/quartz_pixel.sh --record` — not asserting
 that a passing PNG generalises.
 
@@ -1642,7 +1642,7 @@ What rungs (o) and (p) do **not** reach, listed so the next reader does not
 have to infer it from what they do:
 
 * **No ARC, no exceptions, no `NSObject`.** Both fixtures are Foundation-free
-  root-class programs, exactly like `09_objc`. `-retain`/`-release`/
+  root-class programs, exactly like `objc`. `-retain`/`-release`/
   `-autorelease`, `@try`/`@throw` and everything that needs a real base class
   are covered — where they are covered at all — by `tests/objc44/`, and the
   exception cases there are the two that fail (`unwind-compact`).
@@ -1691,7 +1691,7 @@ libquartz's five constructors, then libobjc's `load_images`, then the guest's
 run — and the three drawing fixtures were run against the committed macOS
 baselines with the loader and libquartz both rebuilt clean:
 
-| | `15_quartz` | `16_objc_quartz` | `17_objc_shapes` |
+| | `quartz` | `objc_quartz` | `objc_shapes` |
 |---|---|---|---|
 | control | PNG identical, stdout identical | identical | identical |
 | all 5 constructors suppressed | **PNG identical, stdout identical** | **identical** | **identical** |
@@ -1712,7 +1712,7 @@ dependency initialisers in the wrong order, or not at all, would still score
 
 Closing it needs a fixture whose output depends on a constructor in a dylib —
 the smallest honest version is a second dylib of our own, alongside
-`lib07greet.dylib`, with a file-scope object whose constructor prints and whose
+`libdylib_greet.dylib`, with a file-scope object whose constructor prints and whose
 value the executable reads, plus a `+load` in that same dylib so the two
 orderings are asserted against each other. That also closes the "One image"
 bullet in `objc-drawing-coverage` and the cross-image half of
@@ -1745,7 +1745,7 @@ Two more defects fell out of the fix:
 
 Rejected: a raw `svc` `gettid`. A kernel tid is unique among *live* threads but
 is reused after one exits; a counter is unique over the whole process, and it
-keeps `01_exit_raw` as the project's only raw syscall.
+keeps `exit_raw` as the project's only raw syscall.
 
 **Measured on a c7g.2xlarge (Neoverse-V1, Ubuntu 24.04, 4 KB pages) — same box,
 same build, the fix applied by patch between the two columns:**

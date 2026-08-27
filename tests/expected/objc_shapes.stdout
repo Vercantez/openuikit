@@ -1,0 +1,36 @@
++load Shape
++load Circle
++load RoundedBox
++load Ring
++load Vane
++load ShapeList
++load Shape(Badge)
+objc shapes 256x256 bpr=1024
+registered=1
+chain=Shape<-Circle<-Ring
+root-has-superclass=0
+conforms Shape=1 Circle=0
+responds Circle.drawInContext:=1 Circle.badgeInContext:=1 Circle.nope=0
+sel-uniqued=1 name=drawInContext:
+stage 1 background       fnv1a=f73689bf712d0383  141721ff  141721ff  141721ff  141721ff  141721ff  141721ff
++initialize Shape
++initialize Circle
++initialize RoundedBox
++initialize Ring
+count=5
+stage 2 polymorphic      fnv1a=5e1180647bb7a073  db4238ff  141721ff  38b861ff  3d70ebff  9e61e0ff  141721ff
+item 0 shape        tag=1
+item 1 circle       tag=2
+item 2 rounded-box  tag=3
+item 3 ring         tag=4
+item 4 circle       tag=5
+stage 3 category-badges  fnv1a=41db4703b3c6931f  db4238ff  e6e6d6ff  38b861ff  3d70ebff  9e61e0ff  141721ff
+inset-frame 0 22.0,158.0 72.0x46.0
+inset-frame 1 116.0,152.0 56.0x56.0
+inset-frame 2 187.0,149.0 54.0x62.0
+inset-frame 3 25.0,79.0 66.0x56.0
+inset-frame 4 204.0,76.0 36.0x36.0
+stage 4 msgsend-outline  fnv1a=b667505ce88b3f59  db4238ff  e8e8dbff  38b861ff  3d70ebff  9e61e0ff  141721ff
++initialize Vane
+stage 5 rotated-vanes    fnv1a=098ce694d0507a8c  db4238ff  e8e8dbff  38b861ff  3d70ebff  9e61e0ff  dcdce4ff
+wrote objc_shapes.png

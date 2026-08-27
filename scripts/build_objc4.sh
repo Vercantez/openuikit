@@ -25,7 +25,7 @@
 #   C++        sdk/ deliberately has no usr/include/c++/v1. Apple's libc++ was
 #              67% of the header surface objc4 reached, and docs/SDK_SURVEY.md
 #              §2.5 measured the substitution rather than assuming it: with
-#              stock LLVM 18 libc++, 28/28 TUs compile, 09_objc is byte-identical
+#              stock LLVM 18 libc++, 28/28 TUs compile, objc is byte-identical
 #              to the macOS baseline and the corpus scores the same 41/44 with
 #              the same three failures. The three -D flags below are not taste,
 #              they ARE that measurement:

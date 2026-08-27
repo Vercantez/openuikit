@@ -119,7 +119,7 @@ echo "== compiled ${#OBJS[@]} objects, $fail failures"
 # bare -undefined dynamic_lookup. That is not tidiness, it is a bug this build
 # already hit: machorun's flat lookup searches LOADED IMAGES, and a dylib nobody
 # has a LC_LOAD_DYLIB on never gets loaded. Linked with dynamic_lookup alone,
-# libquartz.dylib carries no reference to libc++.1.dylib, so tests/bin/15_quartz
+# libquartz.dylib carries no reference to libc++.1.dylib, so tests/bin/quartz
 # -- which depends on libquartz and libSystem and nothing else -- died with
 #     machorun: undefined symbol '__ZNSt3__112basic_string...6assignEPKc'
 #       wanted by: darwin/usr/lib/libquartz.dylib

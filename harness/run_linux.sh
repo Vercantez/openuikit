@@ -2,7 +2,7 @@
 # Run the fixture corpus under machorun on Linux/arm64, inside Docker.
 #
 #   harness/run_linux.sh                 run everything
-#   harness/run_linux.sh 03_printf       run one fixture
+#   harness/run_linux.sh printf       run one fixture
 #   harness/run_linux.sh --build-image   force a rebuild of the test-bed image
 #
 # Results land in tests/actual/linux/. This script NEVER writes to

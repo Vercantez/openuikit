@@ -205,8 +205,8 @@ const char *mr_guest_executable_path(void)
     tried = 1;
 
     /* RESOLVED, because dyld hands the guest an absolute path and we are given
-     * whatever was on the command line -- the harness invokes "./35_execpath"
-     * from tests/bin, so the unresolved answer is "./35_execpath". That is a
+     * whatever was on the command line -- the harness invokes "./execpath"
+     * from tests/bin, so the unresolved answer is "./execpath". That is a
      * real path and the wrong shape: CoreFoundation takes the DIRECTORY of this
      * to find the main bundle, and a relative one resolves against whatever the
      * process's cwd happens to be later rather than against the executable.

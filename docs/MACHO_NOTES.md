@@ -174,13 +174,13 @@ thread stack size the loader must arrange.
 **`LC_UNIXTHREAD` on arm64 is rare but *not* extinct — corrected.** My first pass
 claimed the toolchain could not emit one, because my `-target arm64-apple-macos14
 -static -nostdlib` attempt failed to link. That conclusion was wrong, and the
-fixture corpus disproves it: `tests/bin/01b_exit_unixthread` was built with
+fixture corpus disproves it: `tests/bin/exit_unixthread` was built with
 `-target arm64-apple-macos11 -nostdlib -e _start -static` and has exactly
 `LC_SEGMENT_64`x3, `LC_UNIXTHREAD` (flavor `ARM_THREAD_STATE64`), `LC_SYMTAB`,
 `LC_UUID`, `LC_SOURCE_VERSION` — no `LC_LOAD_DYLINKER` at all.
 
 What *is* true, and I re-verified it: **macOS refuses to exec it.** Running
-`tests/bin/01b_exit_unixthread` on this Mac gives exit 137 (SIGKILL), because
+`tests/bin/exit_unixthread` on this Mac gives exit 137 (SIGKILL), because
 macOS 11+ on arm64 requires every executable to go through dyld. So there can
 be no oracle baseline for it and it can never be graded PASS — it is a
 parse-only fixture.
@@ -845,8 +845,8 @@ is what someone bisecting this will stumble onto. It is not a fix: it is a
 property of how machorun was invoked, it lapses across a re-exec, and it moves
 every unrelated allocation too.
 
-`tests/bin/19_isa_mask` (rung r) asserts the invariant on both hosts, and
-section (4) of `18_swift_class` asserts that Swift survives it — one is *where*,
+`tests/bin/isa_mask` (rung r) asserts the invariant on both hosts, and
+section (4) of `swift_class` asserts that Swift survives it — one is *where*,
 the other is *whether*. Verified against the pre-fix loader: `printf` and
 `strtod` report `below_2_47=no` there and `yes` on macOS, so difftest fails.
 
@@ -1125,7 +1125,7 @@ method reached through `objc_msgSend`. **A variadic function is never a
 one-line forwarder.** Every one of them needs an entry in the symbol table with
 a deliberate strategy attached.
 
-Note this is also why `03_printf`'s format coverage
+Note this is also why `printf`'s format coverage
 (`%d %u %x %ld %s %c %% %5d %-5d %05d %.3f`) is well chosen: it catches a
 half-implemented formatter at the first rung that needs one.
 

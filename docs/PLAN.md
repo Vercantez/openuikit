@@ -403,8 +403,8 @@ must drive *our* loader over Mach-O images, not glibc's over ELF.)
 Data forwarders matter too and are easy to forget: `___stderrp`, `___stdoutp`,
 `___stdinp` are `FILE**` in Darwin (`stderr` is `(*__stderrp)`), so they must be
 exported as **pointer variables** initialised to glibc's `stderr`/`stdout`/`stdin`.
-`___stack_chk_guard` likewise. Fixture `03_printf` imports `___stdoutp` and
-`04_malloc` imports `___stack_chk_guard`, so both land at rungs (c) and (d) —
+`___stack_chk_guard` likewise. Fixture `printf` imports `___stdoutp` and
+`malloc` imports `___stack_chk_guard`, so both land at rungs (c) and (d) —
 early.
 
 **Bucket B — needs real implementation.** Darwin-specific semantics or a
@@ -675,18 +675,18 @@ Rungs are cumulative — every earlier fixture must keep passing.
 | M | rung / fixture | what the loader gains | what libSystem gains |
 |---|---|---|---|
 | **M0** | *(done)* `libtest.dylib` toolchain probe; corpus built and baselined | — | — |
-| **M1** | (b) `02_main_ret`, `02c_main_ret_classic` — `LC_MAIN`, exit status = `main`'s return, **zero undefined symbols** | header + LC parse, segment map, `__PAGEZERO`, base selection, chained fixups (fmt 6), `LC_MAIN` -> `main`, `apple[0]`, `exit(rc)` | loads but binds nothing; `__machorun_libsystem_bootstrap` |
+| **M1** | (b) `main_ret`, `main_ret_classic` — `LC_MAIN`, exit status = `main`'s return, **zero undefined symbols** | header + LC parse, segment map, `__PAGEZERO`, base selection, chained fixups (fmt 6), `LC_MAIN` -> `main`, `apple[0]`, `exit(rc)` | loads but binds nothing; `__machorun_libsystem_bootstrap` |
 | **M2** | (b) the `02c` classic variant | rebase/bind/lazy opcode interpreters, eager lazy binding, `dyld_stub_binder` abort-stub | — |
-| **M3** | (c) `03_printf`, `03c_printf_classic` — `_printf _puts _fflush ___stdoutp` | dylib resolution + prefix map, export trie, two-level lookup, GOT binds **including data symbols**, `__la_symbol_ptr` on the classic path | **our own printf formatter** (II.4 — not a forwarder), `___stdoutp` as a data export |
-| **M4** | (d) `04_malloc` — allocator surface + `___stack_chk_guard` | nothing structurally new | ~15 bucket-A forwarders, `___stack_chk_guard`/`___stack_chk_fail` |
-| **M5** | (e) `05_mod_init`, `05c_mod_init_classic` — ctor priorities 101/102/default + dtor | `__init_offsets` **and** `__mod_init_func`, init ordering, Darwin init signature `(argc,argv,envp,apple)`, `SG_READ_ONLY` mprotect | `___cxa_atexit` / `___cxa_finalize` / `___dso_handle`, atexit on normal exit |
-| **M6** | (f) `06_tls` | `__thread_vars` patching, TLV templates, per-image pthread key | `machorun_tlv_get_addr` (asm entry) |
-| **M7** | (g) `07_dylib`, `07c_dylib_classic` — `@rpath` dylib, data import, **reverse import back into the exe** | dependency graph, path expansion, dedup, `lib_ordinal` resolution, cross-image init ordering | — |
-| **M8** | (h) `08_pthread` — create/join/mutex/once + per-thread TLV | TLV allocation on non-main threads | pthread forwarders |
-| **M9** | (e′) `05b_cxx_init` — C++ ctors/dtors, guarded local statics; then exceptions | `LC_REEXPORT_DYLIB`, `__unwind_info` | Mach-O `libc++.1.dylib` + `libc++abi` + `libunwind` with **compact-unwind** support |
-| **M10** | (i) `09_objc` — Foundation-free ObjC: classes, selrefs, `objc_msgSend` | objc notify callbacks, image registration **before** `+load` | Mach-O build of `~/objc4-linux`'s `libobjc.A.dylib` |
-| — | (a) `01_exit_raw` | **permanent XFAIL.** Raw `svc #0x80` with BSD numbers in `x16`. Supporting it is the syscall-emulation road this project chose not to take. Kept as a labelled wall. | — |
-| — | (a′) `01b_exit_unixthread` | `LC_UNIXTHREAD` parse + map with no dynamic linking. **NO-ORACLE** — macOS SIGKILLs it (verified, exit 137), so it can never be graded PASS. | — |
+| **M3** | (c) `printf`, `printf_classic` — `_printf _puts _fflush ___stdoutp` | dylib resolution + prefix map, export trie, two-level lookup, GOT binds **including data symbols**, `__la_symbol_ptr` on the classic path | **our own printf formatter** (II.4 — not a forwarder), `___stdoutp` as a data export |
+| **M4** | (d) `malloc` — allocator surface + `___stack_chk_guard` | nothing structurally new | ~15 bucket-A forwarders, `___stack_chk_guard`/`___stack_chk_fail` |
+| **M5** | (e) `mod_init`, `mod_init_classic` — ctor priorities 101/102/default + dtor | `__init_offsets` **and** `__mod_init_func`, init ordering, Darwin init signature `(argc,argv,envp,apple)`, `SG_READ_ONLY` mprotect | `___cxa_atexit` / `___cxa_finalize` / `___dso_handle`, atexit on normal exit |
+| **M6** | (f) `tls` | `__thread_vars` patching, TLV templates, per-image pthread key | `machorun_tlv_get_addr` (asm entry) |
+| **M7** | (g) `dylib`, `dylib_classic` — `@rpath` dylib, data import, **reverse import back into the exe** | dependency graph, path expansion, dedup, `lib_ordinal` resolution, cross-image init ordering | — |
+| **M8** | (h) `pthread` — create/join/mutex/once + per-thread TLV | TLV allocation on non-main threads | pthread forwarders |
+| **M9** | (e′) `cxx_init` — C++ ctors/dtors, guarded local statics; then exceptions | `LC_REEXPORT_DYLIB`, `__unwind_info` | Mach-O `libc++.1.dylib` + `libc++abi` + `libunwind` with **compact-unwind** support |
+| **M10** | (i) `objc` — Foundation-free ObjC: classes, selrefs, `objc_msgSend` | objc notify callbacks, image registration **before** `+load` | Mach-O build of `~/objc4-linux`'s `libobjc.A.dylib` |
+| — | (a) `exit_raw` | **permanent XFAIL.** Raw `svc #0x80` with BSD numbers in `x16`. Supporting it is the syscall-emulation road this project chose not to take. Kept as a labelled wall. | — |
+| — | (a′) `exit_unixthread` | `LC_UNIXTHREAD` parse + map with no dynamic linking. **NO-ORACLE** — macOS SIGKILLs it (verified, exit 137), so it can never be graded PASS. | — |
 
 Note the reordering versus my first draft: the corpus puts **`printf` at rung
 (c)**, third. Combined with II.4, that means the printf formatter is
@@ -696,7 +696,7 @@ consequence of the variadic finding.
 Constraints on the corpus, measured and non-negotiable:
 
 - No raw pointers in fixture output (an early draft of my own `ctors.c` printed
-  `%p`; the committed `05_mod_init` correctly does not).
+  `%p`; the committed `mod_init` correctly does not).
 - No assertions on `apple[]` past index 0 — measured to vary with signing state
   (12 entries signed, 10 unsigned).
 - Build fixup-format-sensitive fixtures at **both** `macos11` and `macos14`; the
@@ -717,17 +717,17 @@ than with writing one.
 
 | milestone | estimate | confidence |
 |---|---|---|
-| M1 `02_main_ret` chained — first end-to-end run | 3–5 d | high — everything is measured, no unknowns. This is the "it runs" moment. |
+| M1 `main_ret` chained — first end-to-end run | 3–5 d | high — everything is measured, no unknowns. This is the "it runs" moment. |
 | M2 `02c` classic fixups | 1–2 d | high — opcode streams decoded byte-for-byte in MACHO_NOTES §6, which doubles as the test vector |
-| M3 `03_printf` + our own formatter | 3–6 d | medium — the loader half is a day; the printf formatter (II.4) is the rest, and it is unavoidable |
-| M4 `04_malloc` libSystem breadth | 2–4 d | high — mechanical, but the data-export and underscore traps cost a day of confusion once |
-| M5 `05_mod_init` initialisers + atexit | 2–3 d | high |
-| M6 `06_tls` | 2–4 d | medium — asm entry, and one thread-interaction case I expect to find something in |
-| M7 `07_dylib` dependency graph + `@rpath` | 3–5 d | high — the path/ordinal/dedup rules are fiddly, not deep |
-| M8 `08_pthread` | 1–2 d | high — mostly falls out of M6 |
+| M3 `printf` + our own formatter | 3–6 d | medium — the loader half is a day; the printf formatter (II.4) is the rest, and it is unavoidable |
+| M4 `malloc` libSystem breadth | 2–4 d | high — mechanical, but the data-export and underscore traps cost a day of confusion once |
+| M5 `mod_init` initialisers + atexit | 2–3 d | high |
+| M6 `tls` | 2–4 d | medium — asm entry, and one thread-interaction case I expect to find something in |
+| M7 `dylib` dependency graph + `@rpath` | 3–5 d | high — the path/ordinal/dedup rules are fiddly, not deep |
+| M8 `pthread` | 1–2 d | high — mostly falls out of M6 |
 | **subtotal M1–M8** | **17–31 d** | the tractable core, and the honest deliverable of "run a Mach-O on Linux" |
-| M9 `05b_cxx_init` + exceptions | 5–15 d | **low** — compact-unwind is the unknown; the range is wide on purpose |
-| M10 `09_objc` | 5–20 d | **low** — dominated by whether objc4 builds clean as Mach-O |
+| M9 `cxx_init` + exceptions | 5–15 d | **low** — compact-unwind is the unknown; the range is wide on purpose |
+| M10 `objc` | 5–20 d | **low** — dominated by whether objc4 builds clean as Mach-O |
 | *(beyond the corpus)* Foundation-lite, `dlopen` | 10–30 d | very low — framework work, not loader work, and where scope discipline matters most |
 
 **Recommended first action, before any loader code:** de-risk M10. Try
@@ -738,7 +738,7 @@ afternoon, and it converts the project's largest unknown into a fact — the sam
 move that started this project.
 
 **Second cheap de-risk:** write the printf formatter (II.4) early and test it
-*on macOS* against the real `printf` using `03_printf`'s format string. It has
+*on macOS* against the real `printf` using `printf`'s format string. It has
 no dependency on the loader existing, it removes the second-ranked risk, and it
 can be done in parallel.
 

@@ -1,0 +1,554 @@
+### file
+<machorun>/tests/bin/objc_shapes: Mach-O 64-bit executable arm64
+
+### mach header
+<machorun>/tests/bin/objc_shapes:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           2    20       2920 0x00200085
+
+### dependencies
+<machorun>/tests/bin/objc_shapes:
+	/usr/lib/libquartz.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
+
+### load commands
+<machorun>/tests/bin/objc_shapes:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 872
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 10
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100000ba8
+      size 0x0000000000001228
+    offset 2984
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __stubs
+   segname __TEXT
+      addr 0x0000000100001dd0
+      size 0x0000000000000198
+    offset 7632
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000408
+ reserved1 0 (index into indirect symbol table)
+ reserved2 12 (size of stubs)
+Section
+  sectname __objc_stubs
+   segname __TEXT
+      addr 0x0000000100001f80
+      size 0x00000000000001e0
+    offset 8064
+     align 2^5 (32)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methlist
+   segname __TEXT
+      addr 0x0000000100002160
+      size 0x000000000000026c
+    offset 8544
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x00000001000023cc
+      size 0x000000000000027f
+    offset 9164
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classname
+   segname __TEXT
+      addr 0x000000010000264b
+      size 0x000000000000003b
+    offset 9803
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methname
+   segname __TEXT
+      addr 0x0000000100002686
+      size 0x0000000000000123
+    offset 9862
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_methtype
+   segname __TEXT
+      addr 0x00000001000027a9
+      size 0x00000000000000fd
+    offset 10153
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __const
+   segname __TEXT
+      addr 0x00000001000028a8
+      size 0x0000000000000030
+    offset 10408
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __unwind_info
+   segname __TEXT
+      addr 0x00000001000028d8
+      size 0x00000000000000c8
+    offset 10456
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 632
+  segname __DATA_CONST
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 7
+    flags 0x10
+Section
+  sectname __got
+   segname __DATA_CONST
+      addr 0x0000000100004000
+      size 0x0000000000000120
+    offset 16384
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000006
+ reserved1 34 (index into indirect symbol table)
+ reserved2 0
+Section
+  sectname __objc_classlist
+   segname __DATA_CONST
+      addr 0x0000000100004120
+      size 0x0000000000000030
+    offset 16672
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_nlclslist
+   segname __DATA_CONST
+      addr 0x0000000100004150
+      size 0x0000000000000030
+    offset 16720
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_catlist
+   segname __DATA_CONST
+      addr 0x0000000100004180
+      size 0x0000000000000008
+    offset 16768
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_nlcatlist
+   segname __DATA_CONST
+      addr 0x0000000100004188
+      size 0x0000000000000008
+    offset 16776
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_protolist
+   segname __DATA_CONST
+      addr 0x0000000100004190
+      size 0x0000000000000008
+    offset 16784
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_imageinfo
+   segname __DATA_CONST
+      addr 0x0000000100004198
+      size 0x0000000000000008
+    offset 16792
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 3
+      cmd LC_SEGMENT_64
+  cmdsize 792
+  segname __DATA
+   vmaddr 0x0000000100008000
+   vmsize 0x0000000000004000
+  fileoff 32768
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 9
+    flags 0x0
+Section
+  sectname __objc_const
+   segname __DATA
+      addr 0x0000000100008000
+      size 0x00000000000005b0
+    offset 32768
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_selrefs
+   segname __DATA
+      addr 0x00000001000085b0
+      size 0x00000000000000a0
+    offset 34224
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000005
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_protorefs
+   segname __DATA
+      addr 0x0000000100008650
+      size 0x0000000000000008
+    offset 34384
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x1000000b
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_classrefs
+   segname __DATA
+      addr 0x0000000100008658
+      size 0x0000000000000008
+    offset 34392
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_superrefs
+   segname __DATA
+      addr 0x0000000100008660
+      size 0x0000000000000008
+    offset 34400
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x10000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_ivar
+   segname __DATA
+      addr 0x0000000100008668
+      size 0x0000000000000030
+    offset 34408
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __objc_data
+   segname __DATA
+      addr 0x0000000100008698
+      size 0x00000000000001e0
+    offset 34456
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __data
+   segname __DATA
+      addr 0x0000000100008878
+      size 0x0000000000000060
+    offset 34936
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x00000001000088d8
+      size 0x0000000000000004
+    offset 0
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 4
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x000000010000c000
+   vmsize 0x0000000000004000
+  fileoff 49152
+ filesize 8392
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 5
+      cmd LC_DYLD_CHAINED_FIXUPS
+  cmdsize 16
+  dataoff 49152
+ datasize 944
+Load command 6
+      cmd LC_DYLD_EXPORTS_TRIE
+  cmdsize 16
+  dataoff 50096
+ datasize 448
+Load command 7
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 50592
+   nsyms 153
+  stroff 53320
+ strsize 3648
+Load command 8
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 92
+     iextdefsym 92
+     nextdefsym 25
+      iundefsym 117
+      nundefsym 36
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 53040
+  nindirectsyms 70
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 9
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 10
+     cmd LC_UUID
+ cmdsize 24
+    uuid 6479C6FD-2E18-3128-8E5E-7B98B1C10A89
+Load command 11
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 12.0
+      sdk 26.1
+   ntools 1
+     tool 3
+  version 1230.1
+Load command 12
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 13
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 4980
+ stacksize 0
+Load command 14
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libquartz.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 15
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libobjc.A.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 228.0.0
+compatibility version 1.0.0
+Load command 16
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 1356.0.0
+compatibility version 1.0.0
+Load command 17
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 50544
+ datasize 48
+Load command 18
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 50592
+ datasize 0
+Load command 19
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 56976
+ datasize 568
+
+### undefined symbols
+_QZBitmapContextCreate
+_QZBitmapContextGetBytesPerRow
+_QZBitmapContextGetData
+_QZContextAddRoundedRect
+_QZContextBeginPath
+_QZContextFillEllipseInRect
+_QZContextFillPath
+_QZContextFillRect
+_QZContextRelease
+_QZContextRestoreGState
+_QZContextRotateCTM
+_QZContextSaveGState
+_QZContextSetLineWidth
+_QZContextSetRGBFillColor
+_QZContextSetRGBStrokeColor
+_QZContextStrokeRect
+_QZContextTranslateCTM
+_QZContextWritePNG
+___stderrp
+__objc_empty_cache
+_class_conformsToProtocol
+_class_createInstance
+_class_getName
+_class_getSuperclass
+_class_respondsToSelector
+_fprintf
+_fwrite
+_objc_getClass
+_objc_msgSend
+_objc_msgSendSuper2
+_object_dispose
+_printf
+_putchar
+_puts
+_sel_getName
+_sel_registerName
+
+### defined external symbols
+0000000100008710 S _OBJC_CLASS_$_Circle
+0000000100008788 S _OBJC_CLASS_$_Ring
+0000000100008760 S _OBJC_CLASS_$_RoundedBox
+0000000100008698 S _OBJC_CLASS_$_Shape
+0000000100008828 S _OBJC_CLASS_$_ShapeList
+0000000100008800 S _OBJC_CLASS_$_Vane
+0000000100008680 S _OBJC_IVAR_$_Shape._a
+000000010000867c S _OBJC_IVAR_$_Shape._b
+0000000100008668 S _OBJC_IVAR_$_Shape._frame
+0000000100008678 S _OBJC_IVAR_$_Shape._g
+0000000100008674 S _OBJC_IVAR_$_Shape._r
+000000010000866c S _OBJC_IVAR_$_Shape._tag
+0000000100008684 S _OBJC_IVAR_$_Shape.isa
+000000010000868c S _OBJC_IVAR_$_ShapeList._count
+0000000100008690 S _OBJC_IVAR_$_ShapeList._items
+0000000100008694 S _OBJC_IVAR_$_ShapeList.isa
+0000000100008688 S _OBJC_IVAR_$_Vane._angle
+00000001000086e8 S _OBJC_METACLASS_$_Circle
+00000001000087b0 S _OBJC_METACLASS_$_Ring
+0000000100008738 S _OBJC_METACLASS_$_RoundedBox
+00000001000086c0 S _OBJC_METACLASS_$_Shape
+0000000100008850 S _OBJC_METACLASS_$_ShapeList
+00000001000087d8 S _OBJC_METACLASS_$_Vane
+0000000100000000 T __mh_execute_header
+0000000100001374 T _main

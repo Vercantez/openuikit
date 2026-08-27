@@ -2,7 +2,7 @@
 # quartz_pixel.sh -- the differential for the DRAWING fixtures.
 #
 #   scripts/quartz_pixel.sh                run BOTH sides and compare (macOS host)
-#   scripts/quartz_pixel.sh 17_objc_shapes just that one
+#   scripts/quartz_pixel.sh objc_shapes just that one
 #   scripts/quartz_pixel.sh --record       re-record the macOS baselines, run nothing else
 #   scripts/quartz_pixel.sh --linux        Linux side only, compare against the baselines
 #
@@ -82,7 +82,7 @@ while IFS= read -r row; do
     [ -f "$ROOT/tests/bin/$id" ] || \
         die "no tests/bin/$id -- build it on macOS: tests/build_fixtures.sh $id"
     IDS="$IDS $id"
-    NEEDS="$NEEDS,$(field "$row" 3)"
+    NEEDS="$NEEDS,$(field "$row" 2)"
 done <<EOF
 $(draw_rows)
 EOF

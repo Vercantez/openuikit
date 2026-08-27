@@ -1,0 +1,231 @@
+### file
+<machorun>/tests/bin/pthread_attr: Mach-O 64-bit executable arm64
+
+### mach header
+<machorun>/tests/bin/pthread_attr:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           2    17       1056 0x00200085
+
+### dependencies
+<machorun>/tests/bin/pthread_attr:
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
+
+### load commands
+<machorun>/tests/bin/pthread_attr:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __PAGEZERO
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000100000000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000000
+ initprot 0x00000000
+   nsects 0
+    flags 0x0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 392
+  segname __TEXT
+   vmaddr 0x0000000100000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 4
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000100000460
+      size 0x00000000000003c8
+    offset 1120
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __stubs
+   segname __TEXT
+      addr 0x0000000100000828
+      size 0x00000000000000b4
+    offset 2088
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000408
+ reserved1 0 (index into indirect symbol table)
+ reserved2 12 (size of stubs)
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x00000001000008dc
+      size 0x000000000000027c
+    offset 2268
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __unwind_info
+   segname __TEXT
+      addr 0x0000000100000b58
+      size 0x0000000000000060
+    offset 2904
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 152
+  segname __DATA_CONST
+   vmaddr 0x0000000100004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 1
+    flags 0x10
+Section
+  sectname __got
+   segname __DATA_CONST
+      addr 0x0000000100004000
+      size 0x0000000000000080
+    offset 16384
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000006
+ reserved1 15 (index into indirect symbol table)
+ reserved2 0
+Load command 3
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000100008000
+   vmsize 0x0000000000004000
+  fileoff 32768
+ filesize 1792
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 4
+      cmd LC_DYLD_CHAINED_FIXUPS
+  cmdsize 16
+  dataoff 32768
+ datasize 496
+Load command 5
+      cmd LC_DYLD_EXPORTS_TRIE
+  cmdsize 16
+  dataoff 33264
+ datasize 48
+Load command 6
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 33320
+   nsyms 19
+  stroff 33752
+ strsize 384
+Load command 7
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 1
+     iextdefsym 1
+     nextdefsym 2
+      iundefsym 3
+      nundefsym 16
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 33624
+  nindirectsyms 31
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 8
+          cmd LC_LOAD_DYLINKER
+      cmdsize 32
+         name /usr/lib/dyld (offset 12)
+Load command 9
+     cmd LC_UUID
+ cmdsize 24
+    uuid D2CCC583-E6F1-357A-AEED-8BB2D4979626
+Load command 10
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 12.0
+      sdk 26.1
+   ntools 1
+     tool 3
+  version 1230.1
+Load command 11
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 12
+       cmd LC_MAIN
+   cmdsize 24
+  entryoff 1120
+ stacksize 0
+Load command 13
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 1356.0.0
+compatibility version 1.0.0
+Load command 14
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 33312
+ datasize 8
+Load command 15
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 33320
+ datasize 0
+Load command 16
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 34144
+ datasize 416
+
+### undefined symbols
+___stack_chk_fail
+___stack_chk_guard
+_printf
+_pthread_attr_destroy
+_pthread_attr_getdetachstate
+_pthread_attr_getschedparam
+_pthread_attr_getschedpolicy
+_pthread_attr_getstacksize
+_pthread_attr_init
+_pthread_attr_setdetachstate
+_pthread_attr_setschedparam
+_pthread_attr_setschedpolicy
+_pthread_attr_setstacksize
+_pthread_create
+_pthread_join
+_puts
+
+### defined external symbols
+0000000100000000 T __mh_execute_header
+0000000100000460 T _main

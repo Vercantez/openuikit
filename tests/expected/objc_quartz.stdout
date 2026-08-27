@@ -1,0 +1,6 @@
+objc smoke 128x128
+stage 1 background   fnv1a=31260fe886780383  1a1f2bff  1a1f2bff
+class=Blob
+stage 2 blob         fnv1a=6c7d2b6863b36b33  ed6b29ff  ed6b29ff
+stage 3 blob-msgSend fnv1a=4a41968d9f3ac903  ed6b29ff  ede629ff
+wrote objc_quartz.png

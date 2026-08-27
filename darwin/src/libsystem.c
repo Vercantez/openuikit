@@ -888,7 +888,7 @@ EXPORT void _tlv_atexit(void (*fn)(void *), void *arg)
  *      EAGAIN            35      11     <- swapped with EDEADLK
  *      EBUSY             16      16     (happens to agree)
  *
- * Found by tests/bin/21_pthread_cond's NEGATIVE CONTROL: a timedwait nobody
+ * Found by tests/bin/pthread_cond's NEGATIVE CONTROL: a timedwait nobody
  * signals must report ETIMEDOUT, and it reported "waited=yes timedout=NO"
  * under machorun -- the wait was correct and the verdict was not. A guest
  * comparing against Darwin's 60 sees 110 and concludes the wait succeeded,
@@ -920,7 +920,7 @@ struct darwin_opaque { long sig; unsigned char opaque[56]; };
  * one re-runs pthread_mutex_init over storage the other already holds locked.
  * glibc then futexes on a re-initialised word and aborts with "The futex
  * facility returned an unexpected error code" -- out of a fixture that has no
- * bug in it. MEASURED before this fix: tests/bin/08_pthread aborted 10 times
+ * bug in it. MEASURED before this fix: tests/bin/pthread aborted 10 times
  * in 300 runs, about 3%, which is precisely the rate at which a corpus that
  * runs each fixture ONCE looks green. objcsupport.c's dtsd_key_make() had the
  * same bug behind the same "nothing is threaded yet" comment; this is the
