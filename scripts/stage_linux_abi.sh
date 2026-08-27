@@ -225,6 +225,16 @@ typedef unsigned long nfds_t;
 #define POLLHUP  0x010
 #define POLLNVAL 0x020
 extern int poll(struct pollfd *, nfds_t, int) GLIBCSYM(poll);
+/* ppoll takes a sigset_t*, so it is a CROSSING call in the same family as
+   signalfd and sigsuspend -- Darwin 4 bytes, glibc 128. CFRunLoop only ever
+   passes NULL for that argument, which is safe, but the declaration cannot
+   enforce that. Declared with the mask argument as void* so a caller passing a
+   real sigset_t* fails to compile rather than silently over-reading; NULL still
+   converts. If a translating wrapper lands in libSystem, this can become the
+   honest signature. */
+extern int ppoll(struct pollfd *, nfds_t, const struct timespec *,
+                 const void * /* sigset_t* would cross; see above */)
+    GLIBCSYM(ppoll);
 #endif
 EOF
 
