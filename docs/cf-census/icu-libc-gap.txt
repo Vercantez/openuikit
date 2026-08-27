@@ -1,0 +1,45 @@
+# ICU's remaining link gap: 20 libc symbols, all libSystem's
+#
+# After task #48 (scripts/build_cxxruntime.sh) supplies libc++abi, the libc++
+# sources machorun's 83-symbol stub omits, and libunwind, EVERY C++ symbol ICU
+# needs resolves -- all 31 from the original gap, plus the 6 _Unwind_* that
+# exceptions pull in behind them. These 20 are what is left, and not one of
+# them is C++.
+#
+# Provenance: llvmorg-18.1.8 (matching the sysroot's _LIBCPP_VERSION 180100),
+# arm64-apple-macos13.0, linked against machorun master bdc5dc0's libSystem.
+#
+# TWO HAZARDS FOR WHOEVER IMPLEMENTS THESE:
+#
+#   opendir / readdir / closedir -- DIR is the opaque-pointer ABI class.
+#   Darwin's DIR is a pointer to a library-owned allocation; glibc's is a
+#   different size. Forwarding naively is the posix_spawnattr_t bug again.
+#
+#   pthread_cond_* / pthread_mutexattr_* -- these come from OUR libc++ build
+#   (std::mutex, std::condition_variable), so they are load-bearing for
+#   correctness, not conveniences. A pthread_cond_wait that does not wait
+#   produces a library that works until it is used concurrently.
+#
+# pthread_mach_thread_np is Darwin-only and has no glibc equivalent; it will
+# need a real answer rather than a forward.
+#
+closedir
+div
+dlclose
+getprogname
+opendir
+pthread_cond_broadcast
+pthread_cond_destroy
+pthread_cond_signal
+pthread_cond_timedwait
+pthread_cond_wait
+pthread_mach_thread_np
+pthread_mutexattr_destroy
+pthread_mutexattr_init
+pthread_mutexattr_settype
+readdir
+strncat
+timezone
+tzname
+wcslen
+wmemchr
