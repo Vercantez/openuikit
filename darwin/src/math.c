@@ -100,10 +100,33 @@ extern void   glibc_sincos(double, double *, double *) GLIBCSYM(sincos);
 extern void   glibc_sincosf(float, float *, float *)   GLIBCSYM(sincosf);
 
 /* ------------------------------------------------------------ the exports */
+/* THE `l` FORMS MUST NOT REACH glibc's `l` FORMS, and the reason is an ABI
+ * difference rather than a naming one. MEASURED: `long double` is 8 bytes on
+ * arm64-apple-macos -- it IS a double -- and 16 bytes on aarch64 glibc, where
+ * it is a 128-bit quad in a different register class. Forwarding sinl() to
+ * glibc_sinl() would hand 8 bytes to a callee expecting 16 and return
+ * plausible garbage, silently. So a Darwin `l` entry point forwards to glibc's
+ * DOUBLE function, which is exactly what its argument already is.
+ *
+ * Same hazard family as posix_spawnattr_t (docs/UNIMPLEMENTED.md#posix-spawn):
+ * a type whose width differs across the boundary. There it was a struct; here
+ * it is a scalar. The assert is what makes the assumption fail loudly rather
+ * than quietly if either side ever moves.
+ *
+ * These existed as DECLARATIONS in sdk/local/math.h with no definition
+ * anywhere -- an unbacked promise, the same class as a .tbd advertising a
+ * symbol nothing defines. A guest calling sinl() linked and then died at load. */
+_Static_assert(sizeof(long double) == sizeof(double),
+               "Darwin arm64 long double must be a double; if this fires, the l-suffixed "
+               "forwarders are passing the wrong width to glibc's double functions");
+
 #define FWD1(name)  EXPORT double name(double x) { return glibc_##name(x); } \
-                    EXPORT float  name##f(float x) { return glibc_##name##f(x); }
+                    EXPORT float  name##f(float x) { return glibc_##name##f(x); } \
+                    EXPORT long double name##l(long double x) { return glibc_##name((double)x); }
 #define FWD2(name)  EXPORT double name(double x, double y) { return glibc_##name(x, y); } \
-                    EXPORT float  name##f(float x, float y) { return glibc_##name##f(x, y); }
+                    EXPORT float  name##f(float x, float y) { return glibc_##name##f(x, y); } \
+                    EXPORT long double name##l(long double x, long double y) \
+                        { return glibc_##name((double)x, (double)y); }
 
 FWD1(sin) FWD1(cos) FWD1(tan)
 FWD1(asin) FWD1(acos) FWD1(atan)

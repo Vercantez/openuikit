@@ -89,11 +89,21 @@ typedef double double_t;
 #define isunordered(x, y)    __builtin_isunordered((x), (y))
 
 /* ------------------------------------------------------------- functions */
-#define __MR_MATH1(f) \
-    extern double f(double); extern float f##f(float); extern long double f##l(long double)
-#define __MR_MATH2(f) \
-    extern double f(double, double); extern float f##f(float, float); \
-    extern long double f##l(long double, long double)
+/* The parameter is NOT named `f`, and that is load-bearing rather than style.
+ * Both operands of `f##f` would be the parameter -- substitution happens on
+ * each side of ## -- so __MR_MATH1(cos) declared `coscos`, never `cosf`. Every
+ * single-precision name in this header was wrong that way, and silently: the
+ * bogus names collide with nothing, so no diagnostic fired here. A caller of
+ * cosf() got "implicit declaration" pointing at its own line rather than at
+ * this macro, and through libc++'s `using ::cosf _LIBCPP_USING_IF_EXISTS` it
+ * did not even surface there -- it surfaced inside <complex> as an unresolved
+ * using declaration. Found by ICU, the first real C++ consumer on this stack;
+ * sdk/tests/math_decl_probe.c now fails if it regresses. */
+#define __MR_MATH1(fn) \
+    extern double fn(double); extern float fn##f(float); extern long double fn##l(long double)
+#define __MR_MATH2(fn) \
+    extern double fn(double, double); extern float fn##f(float, float); \
+    extern long double fn##l(long double, long double)
 
 __MR_MATH1(acos);   __MR_MATH1(asin);   __MR_MATH1(atan);
 __MR_MATH1(cos);    __MR_MATH1(sin);    __MR_MATH1(tan);

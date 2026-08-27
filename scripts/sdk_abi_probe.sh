@@ -31,6 +31,7 @@ ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 SRC="$ROOT/sdk/tests/abi_probe.c"
 EXPECTED="$ROOT/sdk/tests/abi_probe.expected.txt"
 TARGET_OS_SRC="$ROOT/sdk/tests/target_os_probe.c"
+MATH_DECL_SRC="$ROOT/sdk/tests/math_decl_probe.c"
 BUILD="$ROOT/build/abi_probe"
 SDK="$ROOT/sdk"
 
@@ -57,6 +58,19 @@ target_os_probe() { # target_os_probe <clang> <sysroot> [extra flags...]
     echo "   TARGET_OS_* probe ok against ${tp_sysroot#$ROOT/}"
 }
 
+# sdk/tests/math_decl_probe.c, same shape and same reason: a header can declare
+# a name WRONG without declaring anything invalid. math.h generated its float
+# forms by pasting a macro parameter against itself, so all 42 were named
+# `coscos` rather than `cosf` and the header still compiled clean. The only
+# check that finds that is a compile of the real names, which is what this is.
+math_decl_probe() { # math_decl_probe <clang> <sysroot>
+    md_clang="$1"; md_sysroot="$2"
+    "$md_clang" -target arm64-apple-macos11 -isysroot "$md_sysroot" \
+        -Werror=implicit-function-declaration -fsyntax-only "$MATH_DECL_SRC" \
+        || die "math declaration probe failed against $md_sysroot -- see the header of ${MATH_DECL_SRC#$ROOT/}"
+    echo "   math decl probe ok against ${md_sysroot#$ROOT/}"
+}
+
 if [ "${1:-}" = "--record" ]; then
     [ "$(uname -s)" = "Darwin" ] || die "--record only runs on the macOS oracle"
     command -v xcrun >/dev/null 2>&1 || die "no xcrun"
@@ -67,6 +81,7 @@ if [ "${1:-}" = "--record" ]; then
     # value Apple's header produces too.
     target_os_probe "$(xcrun -f clang)" "$APPLE_SDK" \
         -DTARGET_OS_WASI=0 -DTARGET_OS_ANDROID=0 -DTARGET_OS_BSD=0 -DTARGET_OS_CYGWIN=0
+    math_decl_probe "$(xcrun -f clang)" "$APPLE_SDK"
     xcrun clang -target arm64-apple-macos11 -isysroot "$APPLE_SDK" -O1 -Wall \
         -o "$BUILD/abi_probe_macos" "$SRC" || die "oracle build failed"
     ( cd "$BUILD" && LC_ALL=C LANG=C TZ=UTC ./abi_probe_macos ) > "$EXPECTED" \
@@ -88,6 +103,7 @@ echo "== ours: $CLANG -isysroot sdk/ , linked against sdk/usr/lib/*.tbd only"
 # No -D here on purpose: sdk/ has to supply every TARGET_OS_* by itself, which
 # is precisely what it did not do until CoreFoundation tried to compile.
 target_os_probe "$CLANG" "$SDK"
+math_decl_probe "$CLANG" "$SDK"
 $CLANG -target arm64-apple-macos11 -isysroot "$SDK" -O1 -Wall \
        -c "$SRC" -o "$BUILD/abi_probe.o" || die "compile against sdk/ failed"
 
