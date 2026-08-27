@@ -1,0 +1,78 @@
+# libdispatch's REAL undefined-symbol set, from an actual link
+#
+# 2026-08-27, against machorun master e5e7224's REBUILT libSystem (dylib
+# 06:11:21, after the 06:10:20 source commit -- checked, since the artifact is
+# the thing that matters). 26 objects: 25 C TUs plus block.cpp.
+#
+# THIS SUPERSEDES THE 266-SYMBOL OBJECT-LEVEL COUNT. That number was every
+# undefined symbol across the objects, most of which resolve against each other.
+# The link resolves them and leaves 20. This is why machorun-isamask was right
+# to refuse to guess it.
+#
+# ---------------------------------------------------------------------------
+# 7 -- event_epoll.c's own, and it is the ONLY TU that does not compile
+# ---------------------------------------------------------------------------
+# All seven are DEFINED in src/event/event_epoll.c (lines 257, 432 and nearby).
+# That file is blocked on a single thing: `sigaction` is neither declared in the
+# sysroot, nor is `struct sigaction` defined there, nor does libSystem export
+# it. Fix that and these seven disappear with it.
+#
+_dispatch_event_loop_atfork_child
+_dispatch_event_loop_leave_immediate
+_dispatch_event_loop_timer_arm
+_dispatch_event_loop_timer_delete
+_dispatch_unote_register_muxed
+_dispatch_unote_resume_muxed
+_dispatch_unote_unregister_muxed
+#
+# ---------------------------------------------------------------------------
+# 10 -- plain libc and pthread, all present in glibc
+# ---------------------------------------------------------------------------
+dprintf
+fcntl
+madvise
+pwrite
+sysctl
+pthread_attr_destroy
+pthread_attr_init
+pthread_attr_setschedparam
+pthread_attr_setschedpolicy
+pthread_get_stackaddr_np
+#
+# ---------------------------------------------------------------------------
+# 3 -- compiler-rt / fortify / Apple SPI
+# ---------------------------------------------------------------------------
+__strlcpy_chk        # _FORTIFY_SOURCE helper
+__udivti3            # compiler-rt 128-bit division
+_simple_asl_log      # Apple logging SPI; a no-op is defensible
+#
+# ---------------------------------------------------------------------------
+# WHAT IS NOT HERE, AND WHY IT MATTERS
+# ---------------------------------------------------------------------------
+#
+# syscall and ioctl were both in the object-level list and are ABSENT here --
+# they are event_epoll.c's, and will reappear when it compiles. The variadic-ABI
+# warning about syscall still stands for when it does: Darwin's arm64 variadic
+# ABI is not AAPCS64, so a GLIBCSYM forward hands glibc arguments it will not
+# find. ioctl has the same shape.
+#
+# getsockopt, pthread_kill, flsl, qos_class_main,
+# OSAtomicCompareAndSwapPtrBarrier and _NSConcreteWeakBlockVariable were also in
+# the object-level list and are gone -- resolved by the rebuilt libSystem or by
+# other objects. Reporting them as gaps would have sent someone implementing
+# symbols nothing asks for.
+#
+# ---------------------------------------------------------------------------
+# TWO THINGS THE LINK CAUGHT THAT THE CENSUS COULD NOT
+# ---------------------------------------------------------------------------
+#
+# 1. block.cpp is a C++ SOURCE and my TU census never counted it, because the
+#    census enumerated `find src -name "*.c"`. It is in src/CMakeLists.txt at
+#    line 75 and defines _dispatch_block_create. It needs -fno-exceptions --
+#    the file says so itself with `#error Must build without C++ exceptions`.
+#    The denominator was 26 C files; it is 27 sources.
+#
+# 2. The seven event-loop symbols are NOT in the probe object I built earlier
+#    with different flags, which briefly made me think they lived elsewhere.
+#    Grepping the SOURCE settled it. An object built with different flags is a
+#    different object.
