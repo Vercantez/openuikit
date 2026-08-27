@@ -67,3 +67,35 @@ Worked around by building the port against a private sysroot with those two
 are **false** and upstream's platform `#if` chain selects another branch. That
 is the SDK-level lever rather than a source patch — and it is honest, since we
 have no `os_log` at runtime either.
+
+## Before walking the module chain, consider whether it is the right direction
+
+`Darwin` is necessary but not sufficient — `_DarwinFoundation1` needs a Clang
+module too, and the chain length is unknown. Before extending it, measure this
+first (already done, recorded here):
+
+**29 of the 34 FoundationEssentials files that `import Darwin` have a
+`#elseif canImport(Glibc)` branch.** Only 5 do not (`UUID_Wrappers.swift` among
+them). So there are two routes, and they are not equally sized:
+
+- **(A) Walk the chain.** Declare Clang modules for `Darwin`,
+  `_DarwinFoundation1`, and whatever follows, so Apple's Swift overlays build.
+  Chain length unknown. And these overlays describe *Apple's real libc*, while
+  our sysroot stages 71 curated headers — so they may compile and still describe
+  a surface we do not have.
+- **(B) Let upstream's own platform branch handle it.** Make `canImport(Darwin)`
+  false and the `canImport(Glibc)` branch is selected — which 29 of 34 files
+  already support, leaving 5 to deal with.
+
+**(B) IS NOT AUTOMATICALLY THE ANSWER, AND THE REASON IS THE §6 TEST.** The
+removed-`.swiftmodule` trick is only honest when the predicate it falsifies is
+*actually false at runtime*. That test passed for `os` (we have no `os_log`) and
+failed for `Synchronization` (the port genuinely uses `Mutex`). For `Darwin` it
+is **genuinely ambiguous**: the guest is a Darwin-ABI Mach-O binary whose libc is
+machorun's `libSystem` forwarding to glibc. So *neither* `canImport(Darwin)` nor
+`canImport(Glibc)` is cleanly true — we are a Darwin ABI over a glibc
+implementation, which is a configuration upstream does not model.
+
+**That is a design decision, not a build fix**, and it should be taken
+deliberately rather than by whichever `.swiftmodule` happens to be present. It
+also decides the shape of every future Swift port here, not just this one.
