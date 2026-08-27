@@ -115,6 +115,22 @@ build_tbd() {
     bash "$ROOT/scripts/gen_tbd.sh"
 }
 
+# The Linux half of every ABI we forward across, pinned against REAL glibc
+# headers. It is compile-only and costs milliseconds, and it is the only check
+# in the tree that can see glibc: everything under darwin/src/ is built
+# -nostdinc for arm64-apple-macos, so its assertions about Linux layouts are
+# assertions about our own hand-written mirrors. Run here, on the Linux branch,
+# because it is meaningless anywhere else -- on macOS `cc` would measure Darwin
+# and every assertion would fail for the wrong reason.
+build_glibc_abi_check() {
+    echo "== glibc ABI: pinning the sizes darwin/src/ mirrors by hand"
+    if ! $CC -fsyntax-only "$ROOT/sdk/tests/glibc_abi_probe.c"; then
+        echo "!! glibc's ABI has moved under us. That file's header table says" >&2
+        echo "   which forwarders depend on each number and what breaks." >&2
+        return 1
+    fi
+}
+
 not_linux() {
     echo "== $1: skipped (needs clang -target arm64-apple-macos11 + ld64.lld-18 on Linux)"
 }
@@ -128,6 +144,7 @@ case "$WHAT" in
     all)
         build_loader
         if [ "$(uname -s)" = "Linux" ]; then
+            build_glibc_abi_check
             sh "$ROOT/scripts/build_darwin.sh"
             build_tbd
         else
@@ -137,6 +154,7 @@ case "$WHAT" in
     everything)
         build_loader
         if [ "$(uname -s)" = "Linux" ]; then
+            build_glibc_abi_check
             sh "$ROOT/scripts/build_darwin.sh"
             bash "$ROOT/scripts/build_objc4.sh"
             bash "$ROOT/scripts/build_quartz.sh"
