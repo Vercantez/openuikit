@@ -273,6 +273,18 @@ if want 33_dlopen; then
     echo "==> 33_dlopen"; built+=(33_dlopen)
 fi
 
+# --------------------------------------------------------------- rung (ah)
+# "Which image and symbol is this address in", and the scoped dlsym handles.
+# One gap, not three: dladdr, RTLD_NEXT/SELF/MAIN_ONLY and dlopen's
+# @loader_path were all missing THE CALLING IMAGE. -export_dynamic so the
+# executable's exported_fn is in its own trie, and the fixture's static
+# local_fn is deliberately NOT, because dladdr must read LC_SYMTAB.
+if want 35_dladdr; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/35_dladdr" \
+        "$SRC/35_dladdr.c" -Wl,-export_dynamic
+    echo "==> 35_dladdr"; built+=(35_dladdr)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

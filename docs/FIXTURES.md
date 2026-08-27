@@ -687,6 +687,46 @@ never the image table's.
 
 ---
 
+### (ah) `35_dladdr` — which image an address is in, and the scoped handles
+`tests/src/35_dladdr.c` · chained
+
+**Three named gaps, one cause.** `dladdr`, `dlsym(RTLD_NEXT/RTLD_SELF/
+RTLD_MAIN_ONLY)` and `dlopen`'s `@loader_path` were all unimplemented because
+machorun had no notion of **the calling image** — and the loader, which is where
+the question kept being asked, only ever sees its own frames. Asking in
+`libSystem.B.dylib` instead makes `__builtin_return_address(0)` the guest's own
+return address in the guest's own image.
+
+**`dladdr` must read LC_SYMTAB.** Measured on macOS: it names a *static*
+function. The export trie has no such symbol, so the shortcut returns either
+NULL or — worse — the nearest exported symbol below it, a wrong name with a
+plausible address. `local_fn` in the fixture is static for exactly that reason.
+
+**What is deliberately NOT compared, and why that is not weakness.**
+`dli_fname` is an absolute path that legitimately differs between the platforms,
+so only the BASENAME is checked. And the libc case uses **`printf`, not
+`strlen`** — measured, `dladdr(strlen)` on macOS answers `_platform_strlen` in
+`libsystem_platform.dylib`, because Apple splits libSystem into sub-libraries
+and strlen is an assembly routine under another name. Asserting on that would
+make the fixture fail forever for a reason that is a property of the two
+platforms rather than a defect in either. **The oracle rejected the first
+version over exactly this**, which is the third time tonight it corrected an
+expectation rather than catching a machorun bug.
+
+**Teeth, three mutations, each confirmed in the built loader first:**
+
+| mutation | result |
+|---|---|
+| answer from the export trie instead of LC_SYMTAB | FAIL — the tempting shortcut, and it breaks `dli_saddr` too |
+| `RTLD_NEXT` does not skip the caller | FAIL on exactly the one case that distinguishes NEXT from SELF |
+| keep the leading underscore in `dli_sname` | FAIL on all three name comparisons |
+
+**Loader must implement:** `mr_dladdr` over LC_SYMTAB (greatest defined,
+non-`N_STAB` symbol at or below the address, `n_value` plus slide), and
+`mr_dlsym_scoped` taking the caller's return address.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

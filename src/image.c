@@ -517,3 +517,134 @@ void *mr_dlsym_handle(void *handle, const char *name)
            "handle is the mr_image pointer; anything else is a handle from a "
            "different dynamic linker.", handle);
 }
+
+/* ===================================================================== *
+ * dladdr, for GUEST Mach-O images.
+ *
+ * "Which image and symbol is this address in" is a question the loader has
+ * always been able to answer -- src/crash.c has answered it for every guest
+ * fault since the backtrace landed -- and forwarding it to glibc would answer
+ * about the LOADER's ELF world, which is a different program with different
+ * addresses. So this is a Dl_info shape around machinery that exists.
+ *
+ * IT READS THE SYMBOL TABLE, NOT THE EXPORT TRIE, and that difference is the
+ * whole reason it is worth doing properly. MEASURED on macOS: dladdr on a
+ * static, non-exported function returns its name. The export trie has no such
+ * symbol -- it carries only what the image vends -- so a trie-based dladdr
+ * would return dli_sname = NULL for exactly the addresses a backtrace or a
+ * crash report cares about most. LC_SYMTAB has them.
+ *
+ * WHAT MACOS ACTUALLY RETURNS, measured rather than assumed, because three of
+ * these four are easy to get backwards:
+ *
+ *     dli_sname     WITHOUT the leading underscore ("printf", not "_printf")
+ *     dli_saddr     the symbol's live address, exactly
+ *     dli_fbase     the mach header, i.e. the image's load base
+ *     return value  1 on success; 0 for a stack address and for NULL -- NOT
+ *                   -1, and not errno. dlerror() is not set either.
+ *
+ * A defined symbol whose address we cannot name still returns 1 with
+ * dli_sname and dli_saddr NULL, which is what Darwin's man page specifies and
+ * what a stripped image produces.
+ * ===================================================================== */
+#define MR_N_STAB 0xe0
+#define MR_N_TYPE 0x0e
+#define MR_N_SECT 0x0e
+
+int mr_dladdr(const void *addr, mr_dl_info *out)
+{
+    uint64_t a = (uint64_t)(uintptr_t)addr;
+    mr_image *im = NULL;
+    const struct nlist_64 *syms;
+    const char *strs;
+    uint64_t best_val = 0;
+    const char *best_name = NULL;
+
+    if (!out) return 0;
+    out->dli_fname = NULL; out->dli_fbase = NULL;
+    out->dli_sname = NULL; out->dli_saddr = NULL;
+
+    for (int i = 0; i < MR.nimages; i++)
+        if (a >= MR.images[i]->span_lo && a < MR.images[i]->span_hi) { im = MR.images[i]; break; }
+    if (!im) return 0;                       /* a stack address, glibc, the loader */
+
+    /* Darwin reports the path the image was loaded by. For a dylib that is its
+     * install name (/usr/lib/libfoo.dylib), not the file we opened underneath
+     * darwin/ -- a guest comparing this against its own load commands would
+     * otherwise never match. */
+    out->dli_fname = im->install_name ? im->install_name : im->path;
+    out->dli_fbase = (void *)(uintptr_t)im->load_base;
+
+    if (!im->symtab || !im->symtab->nsyms) return 1;   /* stripped: no name to give */
+
+    syms = mr_file_at(im, im->symtab->symoff,
+                      (uint64_t)im->symtab->nsyms * sizeof(*syms), "LC_SYMTAB symbols");
+    strs = mr_file_at(im, im->symtab->stroff, im->symtab->strsize, "LC_SYMTAB strings");
+    if (!syms || !strs) return 1;
+
+    /* Greatest defined symbol at or below the address. N_STAB entries are
+     * debug records with a reused n_value and must be skipped, or a stabs
+     * image answers with a source file name. */
+    for (uint32_t k = 0; k < im->symtab->nsyms; k++) {
+        uint64_t live;
+        if (syms[k].n_type & MR_N_STAB) continue;
+        if ((syms[k].n_type & MR_N_TYPE) != MR_N_SECT) continue;   /* not defined here */
+        if (syms[k].n_strx >= im->symtab->strsize) continue;
+        live = syms[k].n_value + (uint64_t)im->slide;
+        if (live > a || live < best_val) continue;
+        best_val = live;
+        best_name = strs + syms[k].n_strx;
+    }
+
+    if (best_name && best_name[0]) {
+        /* Darwin strips the Mach-O underscore. Measured: "printf", not
+         * "_printf". */
+        out->dli_sname = best_name[0] == '_' ? best_name + 1 : best_name;
+        out->dli_saddr = (void *)(uintptr_t)best_val;
+    }
+    return 1;
+}
+
+/* The image a return address belongs to. This is "the calling image" -- the
+ * notion whose absence kept dlsym's RTLD_NEXT / RTLD_SELF / RTLD_MAIN_ONLY and
+ * dlopen's @loader_path unimplemented. It is available because our dlopen and
+ * dlsym live in libSystem.B.dylib, a Mach-O we build, so __builtin_return_address
+ * there is a guest address rather than a loader one. */
+static mr_image *image_containing(const void *addr)
+{
+    uint64_t a = (uint64_t)(uintptr_t)addr;
+    for (int i = 0; i < MR.nimages; i++)
+        if (a >= MR.images[i]->span_lo && a < MR.images[i]->span_hi) return MR.images[i];
+    return NULL;
+}
+
+/* dlsym's scoped handles. `which` is the Darwin pseudo-handle as an integer:
+ * -1 RTLD_NEXT, -3 RTLD_SELF, -5 RTLD_MAIN_ONLY.
+ *
+ * NEXT and SELF differ by one image: SELF searches the caller's image and
+ * everything after it in load order, NEXT starts after the caller. "After" is
+ * load order, which is what dyld means by it too. */
+void *mr_dlsym_scoped(const void *caller_ra, int which, const char *name)
+{
+    mr_image *caller = image_containing(caller_ra);
+    uint64_t addr = 0;
+    int start;
+
+    if (which == -5) {                                    /* RTLD_MAIN_ONLY */
+        return MR.main_image && mr_exports_lookup(MR.main_image, name, &addr)
+                 ? (void *)(uintptr_t)addr : NULL;
+    }
+    if (!caller)
+        mr_die("dlsym: RTLD_NEXT/RTLD_SELF from 0x%llx, which is not in any Mach-O image. "
+               "The caller must be guest code; a loader or glibc frame means libSystem's "
+               "dlsym was reached other than by a guest call.",
+               (unsigned long long)(uintptr_t)caller_ra);
+
+    for (start = 0; start < MR.nimages; start++)
+        if (MR.images[start] == caller) break;
+    if (which == -1) start++;                             /* RTLD_NEXT skips the caller */
+
+    for (int i = start; i < MR.nimages; i++)
+        if (mr_exports_lookup(MR.images[i], name, &addr)) return (void *)(uintptr_t)addr;
+    return NULL;
+}
