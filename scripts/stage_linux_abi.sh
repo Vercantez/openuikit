@@ -50,7 +50,14 @@ _Static_assert(__builtin_offsetof(struct epoll_event, data) == 8, "epoll_event.d
 extern int epoll_create1(int) GLIBCSYM(epoll_create1);
 extern int epoll_ctl(int, int, int, struct epoll_event *) GLIBCSYM(epoll_ctl);
 extern int epoll_wait(int, struct epoll_event *, int, int) GLIBCSYM(epoll_wait);
-extern int epoll_pwait(int, struct epoll_event *, int, int, const sigset_t *) GLIBCSYM(epoll_pwait);
+/* epoll_pwait takes a sigset_t*, which is 4 bytes on Darwin and 128 in glibc,
+ * so it is a CROSSING call and must not carry a label -- a labelled version
+ * would hand glibc a 4-byte object to read 128 bytes out of. It had one.
+ * libSystem exports no _epoll_pwait today, so this is an unresolved symbol at
+ * link if anything reaches for it, which is the failure we want while no
+ * wrapper exists. Nothing in libdispatch or CF uses it (verified at the link:
+ * the epoll symbols that actually appear are create1/ctl/wait). */
+extern int epoll_pwait(int, struct epoll_event *, int, int, const sigset_t *);
 #endif
 EOF
 
@@ -269,25 +276,40 @@ EOF
 cat > "$INC/poll.h" <<'EOF'
 #ifndef _SWIFTCORE_MACHO_POLL_H
 #define _SWIFTCORE_MACHO_POLL_H
-#ifndef GLIBCSYM
-#define GLIBCSYM(n) __asm__("_glibc_" #n)
-#endif
-struct pollfd { int fd; short events; short revents; };
-typedef unsigned long nfds_t;
-#define POLLIN   0x001
-#define POLLPRI  0x002
-#define POLLOUT  0x004
-#define POLLERR  0x008
-#define POLLHUP  0x010
-#define POLLNVAL 0x020
-extern int poll(struct pollfd *, nfds_t, int) GLIBCSYM(poll);
-/* ppoll also takes a sigset_t*, so it is a crossing call and gets a PLAIN
-   declaration for the same reason as signalfd. NOTE: libSystem does not define
-   _ppoll yet (measured: 0 in the built artifact), so this will be an
-   unresolved symbol at link rather than a wrong answer at runtime -- which is
-   the failure we want while it is missing. CoreFoundation only ever passes
-   NULL for the mask, so the mask argument stays void*: NULL converts, a real
-   sigset_t* does not compile. */
+/* ADDITIVE, NOT A REPLACEMENT. This sits at the same path as machorun's own
+ * <poll.h>, so everything Darwin declares must come THROUGH it rather than be
+ * restated here -- otherwise the header silently subtracts, which is the
+ * mistake sdk/libc/signal.h made and which cost a day on #47.
+ *
+ * IT HAD ALREADY MADE IT, AND THE LABEL WAS THE ARMED PART. This file used to
+ * declare `poll` itself, with GLIBCSYM(poll) and `typedef unsigned long nfds_t`:
+ *
+ *   nfds_t   `unsigned int` (4) in machorun's <sys/poll.h>, `unsigned long`
+ *            (8) here. Two widths for one typedef name in one sysroot, chosen
+ *            by which spelling of the include a TU happened to use.
+ *   poll     GLIBCSYM bound it STRAIGHT TO GLIBC, bypassing libSystem's
+ *            translating _poll -- which exists precisely because poll needs
+ *            three translations: the nfds_t width, the POLLWRNORM/POLLWRBAND
+ *            collision, and the sigset_t on ppoll.
+ *
+ * THE LABEL WAS NOT WRONG WHEN IT WAS WRITTEN. libSystem had no _poll then, so
+ * a direct bind was the only option available. It went wrong when the wrapper
+ * LANDED. A GLIBCSYM label is a claim about the world -- "no wrapper exists and
+ * the two ABIs are identical" -- and it decays silently the moment either half
+ * stops being true. Labels must be re-checked whenever libSystem grows a
+ * symbol; that is now the audit at the end of this script.
+ *
+ * So: no poll, no nfds_t, no POLL* constants here. All of them come from
+ * Darwin's own header below, and `poll` resolves to libSystem's wrapper. */
+#include <sys/poll.h>
+
+/* ppoll is the one genuine addition: not a Darwin API, so machorun's SDK does
+ * not declare it, and libSystem exports _ppoll as an extension for us.
+ * PLAIN, NOT LABELLED -- it takes a sigset_t*, 4 bytes on Darwin against 128 in
+ * glibc, so it has to cross through the wrapper. CoreFoundation only ever
+ * passes NULL for the mask, so the parameter stays void*: NULL converts and a
+ * real sigset_t* does not compile, which keeps the hazard unreachable by
+ * construction rather than by convention. */
 extern int ppoll(struct pollfd *, nfds_t, const struct timespec *,
                  const void * /* sigset_t* would cross; see above */);
 #endif
@@ -314,7 +336,85 @@ if [ "$(uname -s)" = "Linux" ] && [ -f "$(dirname "$0")/run_epoll_abi_probe.sh" 
     echo "ABORT: staged Linux ABI disagrees with real glibc." >&2; exit 1; }
 fi
 
+# ---------------------------------------------------------------------------
+# THE LABEL AUDIT. A GLIBCSYM label decays; this is what notices.
+#
+# GLIBCSYM(x) binds a call DIRECTLY to glibc's x via the loader's dlsym path,
+# bypassing libSystem entirely. That is correct only while libSystem has no
+# wrapper for x -- and a wrapper existing is exactly what means the two ABIs
+# were NOT identical after all, since nobody writes a translating wrapper for a
+# call that could have been forwarded.
+#
+# So: LIBSYSTEM EXPORTING A SYMBOL WE HAVE LABELLED IS A CONTRADICTION, and the
+# resolution is always to drop the label. This fired for real on `poll`: the
+# label was written when libSystem had no _poll, machorun later added a _poll
+# doing three separate translations, and the label went on quietly routing
+# around all three. Nothing failed. The call succeeded and did the wrong thing.
+#
+# This is the mechanical version of a rule I would otherwise have to remember
+# to re-check every time machorun grows a symbol, which is precisely the kind
+# of thing that does not get remembered.
+: "${LIBSYSTEM:=}"
+if [ -z "$LIBSYSTEM" ]; then
+  for c in "$SDK/../../lib/libSystem.B.dylib" "$(dirname "$INC")/../lib/libSystem.B.dylib" \
+           /work/lib/libSystem.B.dylib "$HOME/machorun/darwin/usr/lib/libSystem.B.dylib"; do
+    [ -f "$c" ] && { LIBSYSTEM=$c; break; }
+  done
+fi
+if [ -z "$LIBSYSTEM" ]; then
+  echo "stage_linux_abi: REFUSING -- cannot find libSystem.B.dylib to audit the" >&2
+  echo "  GLIBCSYM labels against. Set LIBSYSTEM=<path>. Skipping this check is" >&2
+  echo "  not an option: an unaudited label is how a translating wrapper gets" >&2
+  echo "  bypassed silently (see the poll note above)." >&2
+  exit 2
+fi
+# Pick an nm that can read Mach-O. GNU nm returns EMPTY rather than failing on
+# these, so an unguarded `nm | grep` would report every symbol as absent and the
+# audit would pass by producing nothing -- a false green of exactly the shape
+# this script exists to prevent. Hence the positive control below.
+NMBIN=""
+for c in llvm-nm-18 llvm-nm nm; do command -v "$c" >/dev/null 2>&1 && { NMBIN=$c; break; }; done
+[ -n "$NMBIN" ] || { echo "stage_linux_abi: no nm available for the label audit" >&2; exit 2; }
+EXPORTS=$("$NMBIN" -gU "$LIBSYSTEM" 2>/dev/null | awk '{print $NF}')
+# POSITIVE CONTROL: _malloc is in every libSystem ever built. If we cannot see
+# it, the tool or the parse is wrong and every "not exported" answer below is
+# meaningless.
+case "$EXPORTS" in
+  *_malloc*) ;;
+  *) echo "stage_linux_abi: label audit ABORTED -- $NMBIN could not find _malloc" >&2
+     echo "  in $LIBSYSTEM, so it cannot read this file and every result would" >&2
+     echo "  be a false negative." >&2; exit 2 ;;
+esac
+# AUDIT THE STAGED HEADERS, NOT THIS SCRIPT'S TEXT. The first version grepped
+# "$0" and immediately reported `poll` as bypassed -- from the PROSE above, which
+# contains the literal GLIBCSYM(poll) while explaining why the label was removed.
+# Same class as enumerating sources from comments, which dispatch_census.sh
+# already had to learn. Grep the artifact, not the description of the artifact:
+# only a label that reached a real header can bypass anything.
+BYPASSED=""
+LABELLED=$(grep -rhoE '\)[[:space:]]*GLIBCSYM\([a-z_0-9]+\)' "$INC" 2>/dev/null \
+           | sed 's/.*GLIBCSYM(//;s/)//' | sort -u)
+for sym in $LABELLED; do
+  case "$EXPORTS" in
+    *"_$sym"*)
+      # substring match can over-report (_poll matches _ppoll), so confirm exact
+      if printf '%s\n' "$EXPORTS" | grep -qx "_$sym"; then
+        BYPASSED="$BYPASSED $sym"
+      fi ;;
+  esac
+done
+if [ -n "$BYPASSED" ]; then
+  echo "stage_linux_abi: REFUSING -- libSystem exports a translating wrapper for" >&2
+  echo "  symbols this script still binds DIRECTLY to glibc with GLIBCSYM:" >&2
+  for s in $BYPASSED; do echo "      $s" >&2; done
+  echo "  A wrapper exists because the ABIs differ. The label routes around it," >&2
+  echo "  so the call succeeds and does the wrong thing. Drop the label and let" >&2
+  echo "  the declaration bind to libSystem." >&2
+  exit 2
+fi
+
 echo "staged Linux-ABI headers into $INC"
+echo "  label audit: $(printf '%s\n' $LABELLED | grep -c .) labelled symbols in the staged headers, none shadowing a libSystem wrapper"
 ls "$INC/sys/epoll.h" "$INC/sys/eventfd.h" "$INC/sys/timerfd.h" \
    "$INC/sys/signalfd.h" "$INC/linux/sockios.h" "$INC/linux/futex.h" "$INC/sys/syscall.h" "$INC/syscall.h" "$INC/poll.h" \
    "$INC/sys/ioctl.h" | sed 's/^/  /'

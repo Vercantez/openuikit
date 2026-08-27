@@ -13,11 +13,20 @@
  *   BENIGN   — correct for our purposes, where the Darwin behaviour is either
  *              trivially reproducible or genuinely unused off Apple hardware
  *              (availability checks, malloc zones, flockfile).
- *   BIND-ONLY— present so the loader can bind, and documented as faulting if
- *              actually reached: the four __cxxabiv1 type_info vtables. Swift's
- *              C++ half emits typeinfo objects that reference them, but only
- *              RTTI and exception unwinding dereference them, and the runtime
- *              is built -fno-exceptions.
+ *
+ * There is no longer a BIND-ONLY class, and that is the point of this file's
+ * one hard rule:
+ *
+ *   NOTHING HERE MAY DEFINE A SYMBOL machorun's userland ALREADY DEFINES.
+ *
+ * Not a corrected version, not a better version -- none. libswiftCore binds
+ * most of these FLAT, so a duplicate is resolved by load order rather than by
+ * which one is right, and the wrong winner fails somewhere else entirely. As
+ * machorun's libSystem / libobjc / libc++abi grow real implementations, the
+ * answer is to DELETE the family from this file, never to keep a second copy in
+ * sync. scripts/build_compat.sh asserts the disjointness and fails the build
+ * rather than shipping an overlap; ten symbols were removed on 2026-08-27 when
+ * libc++abi landed, and the assertion is what stops them coming back.
  */
 #include <stdint.h>
 #include <stddef.h>
@@ -256,41 +265,30 @@ unsigned hardware_concurrency(void) {
     return n > 0 ? (unsigned)n : 1u;
 }
 
-/* operator delete(void*, size_t, align_val_t) */
-void sized_aligned_delete(void *p, size_t sz, size_t al) SHIM("__ZdlPvmSt11align_val_t");
-void sized_aligned_delete(void *p, size_t sz, size_t al) { (void)sz; (void)al; free(p); }
-
-/* __cxa_demangle: the runtime only ever uses this to prettify a crash log, and
- * treats a NULL return with a nonzero status as "leave the name mangled". */
-char *__cxa_demangle(const char *name, char *buf, size_t *n, int *status) {
-    (void)name; (void)buf; (void)n;
-    if (status) *status = -2;   /* -2 == "not a valid mangled name" */
-    return NULL;
-}
-
 /* std::operator+(const char*, const std::string&). libc++'s std::string is
  * layout-stable across the ABI, so this is expressed in C++ in shim.cpp
  * rather than reconstructed here. */
 
-/* BIND-ONLY: the four __cxxabiv1 type_info vtables. Swift's C++ half emits
- * typeinfo objects whose first word is (vtable + 16); nothing in a
- * -fno-exceptions runtime dispatches through them. Sized at 8 slots so the
- * +16 displacement stays inside the object. */
-#define CXXABI_VTABLE(sym) \
-    __attribute__((visibility("default"))) const void *sym[8] = {0,0,0,0,0,0,0,0}
-
-extern const void *cxxabi_class_type_info[8]        SHIM("__ZTVN10__cxxabiv117__class_type_infoE");
-extern const void *cxxabi_si_class_type_info[8]     SHIM("__ZTVN10__cxxabiv120__si_class_type_infoE");
-extern const void *cxxabi_pointer_type_info[8]      SHIM("__ZTVN10__cxxabiv119__pointer_type_infoE");
-extern const void *cxxabi_function_type_info[8]     SHIM("__ZTVN10__cxxabiv120__function_type_infoE");
-/* __vmi_class_type_info: virtual/multiple inheritance. Reached by
- * libswift_Concurrency, which has deeper class hierarchies than libswiftCore. */
-extern const void *cxxabi_vmi_class_type_info[8]    SHIM("__ZTVN10__cxxabiv121__vmi_class_type_infoE");
-CXXABI_VTABLE(cxxabi_class_type_info);
-CXXABI_VTABLE(cxxabi_si_class_type_info);
-CXXABI_VTABLE(cxxabi_pointer_type_info);
-CXXABI_VTABLE(cxxabi_function_type_info);
-CXXABI_VTABLE(cxxabi_vmi_class_type_info);
+/* DELETED 2026-08-27: the five __cxxabiv1 type_info vtables, __cxa_demangle
+ * and operator delete(void*, size_t, align_val_t).
+ *
+ * machorun now builds LLVM 18.1.8's libc++abi as a real /usr/lib/libc++abi.dylib
+ * and has real definitions of all seven. Ours were worse than redundant: the
+ * vtables were `const void *[8] = {0,...}`, which clang places in
+ * (__DATA,__common) -- ZEROFILL, no contents in the file at all. libswiftCore
+ * binds all of them FLAT ("dynamically looked up"), so which definition wins is
+ * decided by load order alone. libc++abi happens to load first today, so the
+ * real ones win; a guest that links its dylibs in a different order gets a
+ * vtable pointer into zeroed memory, and __gxx_personality_v0 dispatches
+ * through exactly those vtables to match a catch. The failure would have been a
+ * jump through NULL during exception dispatch, arbitrarily far from the cause.
+ *
+ * Deleting beats correcting. Two definitions of one symbol is the defect that
+ * kept the malloc_type fix unreachable for a week (machorun
+ * docs/STATUS.md, "umbrella shadows reexport"), and a corrected duplicate is
+ * still a duplicate. The build now refuses to produce a shim that overlaps
+ * machorun's userland at all -- see the disjointness assertion at the end of
+ * scripts/build_compat.sh, which is what keeps this from growing back. */
 
 /* ------------------------------------------------- _Concurrency additions ---
  * The gap measured against Apple's shipped libswift_Concurrency, minus the 13
@@ -298,11 +296,17 @@ CXXABI_VTABLE(cxxabi_vmi_class_type_info);
  * is itself a check on the build: if a dispatch symbol shows up here, the wrong
  * executor got compiled in).
  */
-void __cxa_pure_virtual(void);
-void __cxa_pure_virtual(void) { abort(); }
-
-int pthread_main_np(void);
-int pthread_main_np(void) { return 1; }   /* single-threaded executor */
+/* DELETED 2026-08-27: __cxa_pure_virtual (libc++abi has it) and
+ * pthread_main_np (machorun's libSystem has it, darwin/src/posix.c).
+ *
+ * pthread_main_np is the one to remember. Ours was `return 1` with the comment
+ * "single-threaded executor" -- true of the fixture that motivated it and false
+ * of every program with a second thread, since a constant 1 makes EVERY thread
+ * answer "yes, I am the main thread". machorun's records the main thread at
+ * bootstrap and compares pthread_self against it, which is exact. Ours would
+ * have won by load order and silently broken every @MainActor assertion and
+ * libdispatch's main-queue check. It was never reached only because it was
+ * never built: the shipped shim predates this line. */
 
 unsigned qos_class_self(void);
 unsigned qos_class_self(void) { return 0x21; }  /* QOS_CLASS_USER_INITIATED */
@@ -318,8 +322,11 @@ int memset_s(void *d, size_t dn, int c, size_t n) {
 extern int glibc_clock_getres(clockid_t, struct timespec *) __asm__("_glibc_clock_getres");
 int clock_getres(clockid_t id, struct timespec *ts) { return glibc_clock_getres(id, ts); }
 
-void *malloc_type_malloc(size_t n, unsigned long long type);
-void *malloc_type_malloc(size_t n, unsigned long long type) { (void)type; return malloc(n); }
+/* DELETED 2026-08-27: malloc_type_malloc. machorun's libSystem implements the
+ * whole family, and this project has already paid once for a second copy of it:
+ * a shadowing definition is what made the loader's malloc_type fix unreachable
+ * while every git-level check said the tree was current. One copy, in the
+ * library that owns the allocator. */
 
 /* os_log / os_signpost: telemetry only. No-ops that keep the shape. */
 void *os_log_create(const char *s, const char *c);
