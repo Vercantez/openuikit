@@ -105,6 +105,8 @@ SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 # images bind two-level, so a definition in the wrong library is invisible.
 if [ ! -f "$ROOTDIR/.umbrellas" ] || \
    [ "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/spike/syspatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/spike/cxxpatch.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/concpatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/conccxx.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ] || \

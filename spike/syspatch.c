@@ -213,19 +213,33 @@ extern struct mach_header_64 mr_mh_exec asm("__mh_execute_header");
 struct mach_header_64 *mr_NSGetMachExecuteHeader(void) asm("__NSGetMachExecuteHeader");
 struct mach_header_64 *mr_NSGetMachExecuteHeader(void) { return &mr_mh_exec; }
 
-/* typed malloc (newer macOS): the type token carries no semantics we must honour
- * -- it only steers a per-type heap for diagnostics -- so plain malloc is exact. */
-void *mr_mt_malloc(size_t n, uint64_t t) asm("_malloc_type_malloc");
-void *mr_mt_calloc(size_t c, size_t n, uint64_t t) asm("_malloc_type_calloc");
-void *mr_mt_realloc(void *p, size_t n, uint64_t t) asm("_malloc_type_realloc");
-int   mr_mt_pmemalign(void **mp, size_t a, size_t n, uint64_t t) asm("_malloc_type_posix_memalign");
-void *mr_mt_zmalloc(void *zone, size_t n, uint64_t opts, uint64_t t)
-        asm("_malloc_type_zone_malloc_with_options_internal");
-void *mr_mt_malloc(size_t n, uint64_t t) { (void)t; return malloc(n); }
-void *mr_mt_calloc(size_t c, size_t n, uint64_t t) { (void)t; return calloc(c, n); }
-void *mr_mt_realloc(void *p, size_t n, uint64_t t) { (void)t; return realloc(p, n); }
-int   mr_mt_pmemalign(void **mp, size_t a, size_t n, uint64_t t) { (void)t; return posix_memalign(mp, a, n); }
-void *mr_mt_zmalloc(void *zone, size_t n, uint64_t opts, uint64_t t) { (void)zone;(void)opts;(void)t; return malloc(n); }
+/* TYPED MALLOC IS DELIBERATELY NOT DEFINED HERE ANY MORE. It used to be, and
+ * that was the single worst bug this project has had.
+ *
+ * `malloc_type_zone_malloc_with_options_internal` takes FIVE parameters and
+ * `size` is the THIRD (malloc/malloc.h:192). This file declared FOUR and
+ * forwarded the second -- the ALIGNMENT -- to malloc as the size. It compiled
+ * to `mov x0, x1; b _malloc`, so every allocation through that entry point got
+ * a block the size of its own alignment, sixteen bytes whatever was asked for,
+ * and the caller wrote its whole object over the neighbours. That was the
+ * entirety of the "46 UIKit scenes fail with nondeterministic memory
+ * corruption" wall: 22 glibc heap aborts, 19 SIGSEGVs on wild addresses and 9
+ * silent failures, no two alike, because a heap overflow of arbitrary size
+ * onto arbitrary neighbours never fails the same way twice.
+ *
+ * Only Apple's SHIPPED libswiftCore reaches it -- ours calls plain
+ * malloc/calloc/realloc -- which is why the failure looked like a property of
+ * the runtime rather than of this file.
+ *
+ * machorun now defines the whole family correctly (0f39750,
+ * darwin/src/objcsupport.c) and this umbrella REEXPORTS machorun's libSystem.
+ * A definition here SHADOWS that reexport, so re-adding any of them silently
+ * reinstates the bug rather than colliding with the fix. One implementation,
+ * and it is machorun's, where it is tested.
+ *
+ * If a malloc_type symbol ever comes up undefined again, add it to machorun,
+ * NOT here -- and read the argument order off the header, because this family
+ * mixes three orders and they are not guessable. */
 
 /* strtod_l family: the locale argument is the C locale on this path; delegate. */
 double      mr_strtod_l(const char *s, char **e, void *loc) asm("_strtod_l");
