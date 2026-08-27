@@ -18,6 +18,23 @@
 # sent another agent looking for it. Re-running this script needs llvmorg-18.1.8
 # sources fetched again.
 #
+# THE THREE-SEPARATE-ARTIFACTS SHAPE IS WRONG AND SHOULD CHANGE. This script
+# emits libc++abi, libc++ and libunwind as three dylibs, which was never a
+# considered choice -- it is what building three source trees separately gives
+# you. swift-loader-fixes put libunwind INSIDE libSystem.B.dylib instead, and
+# that is the better arrangement for two reasons: it is what Darwin does
+# (libunwind.dylib is a sub-library of the libSystem umbrella, re-exported), and
+# a separate dylib needs re-export chasing that machorun's loader does not
+# implement. libc++abi should go the same way when it is next built.
+#
+# There is a second reason, found later: the _glibc_<x> convention only resolves
+# from a RUNTIME dylib. machorun's resolve.c:251 gates the loader's glibc lookup
+# on from->is_runtime, which image.c:139 sets only for dylibs loaded from a
+# Darwin absolute path under MACHORUN_ROOT/darwin. Anything folded into
+# libSystem is is_runtime by construction; a stray separate dylib in the wrong
+# place is not, and the failure reads as a missing symbol rather than a
+# placement problem.
+#
 # NOTHING HERE IS A STUB THAT RETURNS. These are upstream LLVM sources compiled
 # for our target, so __cxa_pure_virtual aborts like it should and std::mutex
 # really locks. A pure-virtual call that returns would convert a loud, correct
