@@ -216,3 +216,85 @@ Nothing here is verified to *schedule*. The bar stands and has not been met: a
 semaphore that genuinely blocks and is signalled from another thread, a timer
 source that actually fires, async work completing out of line. Compiling and
 linking proves nothing — which is the whole lesson of the 64 KiB pool.
+
+---
+
+## Part 2b — the header surface is exactly six, and `config_ac.h` replaces the flag soup
+
+Scoped further with a local clone and a probe TU (`#include <internal.h>`),
+**no box** — the box was terminated before this section and none was needed.
+
+### `config/config_ac.h` is the right lever, and the checked-in config is a trap
+
+`src/internal.h:30` reads:
+
+```c
+#if __has_include(<config/config_ac.h>)
+#include <config/config_ac.h>
+#else
+#include <config/config.h>
+#endif
+```
+
+`config/config.h` is **checked into the repo** and is a *Darwin* config:
+`HAVE_MACH 1`, `HAVE_OBJC 1`, `HAVE_PTHREAD_WORKQUEUES 1`. It is the fallback
+whenever a generated config is not found first on the include path — so the
+Mach machinery we are avoiding can arrive silently, from the source tree, with
+no configure step involved.
+
+It also explains wall #5 from Part 2: CMake's `config.h.in` uses `#cmakedefine
+HAVE_OBJC` (no `@VALUE@`), which emits `#define HAVE_OBJC` with **no value**, so
+`#if !defined(USE_OBJC) && HAVE_OBJC` became `#if ... &&`. Passing `-DHAVE_OBJC=0`
+then collides with it (`macro redefined`, and we build `-Werror`).
+
+**Supplying our own `config/config_ac.h` fixes all of it with zero patches**,
+using upstream's own escape hatch, and puts every setting in one auditable file
+instead of a growing `-D` list that can collide with a generated header.
+Committed at `sdk/dispatch-config/config_ac.h`.
+
+### The six headers, and what they actually need
+
+With `config_ac.h` in place, iterating the preprocessor to a fixed point gives
+the complete list of headers `internal.h` reaches that our SDK lacks:
+
+| header | uses in `src/` | needs |
+|---|---|---|
+| `sys/mount.h` | **0** | documented empty stub |
+| `sys/socket.h` | **0** | documented empty stub |
+| `netinet/in.h` | **0** | documented empty stub |
+| `sys/queue.h` | **0** | documented empty stub |
+| `search.h` | **0** | documented empty stub |
+| `sys/sysctl.h` | **1** (`sysctlbyname`, `hw_config.h:206`) | see below |
+
+Five of six are **include-only with zero uses**, so empty stubs are correct
+rather than expedient — no struct layouts to get wrong, no ABI risk. That is a
+much better position than writing `sockaddr_in` and `struct statfs` by hand,
+which is what the naive reading of "5 missing headers" implied.
+
+### The next layer, identified and not yet solved
+
+With all six stubbed, `internal.h` preprocesses cleanly and two real issues
+appear:
+
+1. **`src/shims/mach.h` collides with our SDK.** With `HAVE_MACH 0`, libdispatch
+   defines its own placeholder `mach_port_t`/`mach_error_t`/`mach_msg_header_t`
+   — but our sysroot carries the *real* Mach headers (machorun staged them for
+   objc4), so these are `typedef redefinition with different types`. This is the
+   sysroot-has-Mach trap for the third time: first it turned `HAVE_MACH` on,
+   then it pulled in firehose, now it collides with the no-Mach shim. The fix is
+   a scoping decision — either keep Mach headers out of dispatch's include path,
+   or let it use the real types.
+
+2. **`sysctlbyname` on a Linux host.** `hw_config.h` sets `name =
+   "hw.logicalcpu_max"` on Darwin and calls `sysctlbyname`; Linux has no such
+   function. Upstream **already has the right code** in the `else` branch —
+   `sysconf(_SC_NPROCESSORS_ONLN)`. So this is a one-line patch that says "this
+   is not a Mac", not a shim: don't set `name`, take the fallback that exists.
+
+**Patch count trending to 2–3**, and every one so far says "this is not a Mac".
+Nothing says "this is not Mach-O", which remains the signal that the approach is
+sound.
+
+### Still owed, unchanged
+
+Nothing is verified to schedule. Compiling and linking prove nothing.
