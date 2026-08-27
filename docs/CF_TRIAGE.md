@@ -1415,3 +1415,63 @@ sites elsewhere, so they add no members — adjudicated here, not in the tool.
 so all 19 would be `objc_lookUpClass` → nil. The refusal list *is* the work
 order for the NS* implementations, and this is the same call as §35 for a
 better-measured reason.
+
+## 37. RunLoop is not a port — it is a branch-selection and sysroot decision
+
+Measured before writing any code. Three findings, in order of how much they
+change the plan.
+
+**1. CFRunLoop.c is one error from compiling, and the error is a symptom.**
+It fails with a single diagnostic, `conflicting types for 'mk_timer_cancel'`,
+between CFRunLoop.c:738 and our staged `mach/mach_port_extra.h`. Fixing the
+shim would be the wrong move: line 738 is inside CF's **Mach** branch. The
+collision is the only thing currently stopping us from silently compiling a
+Mach RunLoop — the exact "staged Mach headers re-enable Mach code paths"
+back door already recorded for machorun.
+
+**2. corelibs already contains the epoll RunLoop. It is unreachable.**
+The platform layer is **13 functions** — `__CFPortAllocate/Free`,
+`__CFPortSetAllocate/Insert/Remove/Free`, `mk_timer_create/destroy/arm/cancel`,
+`__CFRunLoopServiceFileDescriptors`, `_dispatch_get_main_queue_port_4CF`,
+`_dispatch_main_queue_callback_4CF` — out of 4773 lines. corelibs writes all 13
+for Linux using eventfd/epoll/timerfd. We never reach them because we build
+`-target arm64-apple-macos13.0`, so `TARGET_OS_MAC` is 1 and wins every guard
+(24 `TARGET_OS_MAC` sites vs 16 `TARGET_OS_LINUX`).
+
+So this is not a port. It is selecting code that is already in the file.
+
+**3. Forcing the macro is the wrong fix, and measurement says why.**
+A probe that redefined `TARGET_OS_MAC 0 / TARGET_OS_LINUX 1` after
+`TargetConditionals.h` took CFRunLoop.c to a **single** missing header
+(`malloc.h`). With that shimmed it produced three errors — and the two new ones
+are the cost of the lie: `CFInternal.h:1202,1206` re-declare `qos_class_main`
+and `qos_class_self` as `static`, conflicting with the real Darwin SDK. Telling
+the whole translation unit it is not Darwin changes decisions far outside the
+RunLoop. A scoped patch that flips only CFRunLoop.c's platform-layer guards is
+the shape that works; a global `-D` is not.
+
+### The decision this needs, which is not mine to take
+
+The Linux platform layer includes `<sys/epoll.h>`, `<sys/eventfd.h>`,
+`<sys/timerfd.h>` and `<poll.h>`. **All four are absent from our sysroot**, and
+the first three are not Darwin APIs at all. Reaching them means machorun's
+Darwin sysroot and libSystem would export Linux-only interfaces:
+
+* **(A) Expose epoll/eventfd/timerfd through the Darwin sysroot** and patch
+  CFRunLoop.c's branch selection. Reuses corelibs' tested implementation; the
+  13 functions come for free. Cost: a Linux-shaped hole in a Darwin ABI
+  surface, and every future `__has_include(<sys/epoll.h>)` in any ported
+  project silently takes a Linux path — the same back door as finding 1, opened
+  deliberately this time.
+* **(B) Implement the 13 functions against Darwin-shaped APIs**, keeping the
+  sysroot honest. More code, no ABI pollution, and the platform layer is small
+  enough that this is not obviously the expensive option.
+
+This wants coordinating with libdispatch (#47), which faces the identical
+question — `DISPATCH_EVENT_BACKEND_EPOLL` is already on record as a config
+hazard there, and `_dispatch_get_main_queue_port_4CF` is two of the 13
+functions. Choosing (A) for one and (B) for the other would be the worst
+outcome.
+
+Not blocked on anything external: `poll.h` and `malloc.h` are trivial, and the
+scoped patch is understood. Blocked on which of (A) or (B) we are building.
