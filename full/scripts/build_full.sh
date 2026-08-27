@@ -217,6 +217,40 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
 
+# ---- the library path must not see Foundation ------------------------------
+# The 108-scene result depends on OpenUIKit's FREESTANDING #else branches being
+# what compiles. That was true only because scratch/sysroot_full happens to
+# contain no Foundation module of any kind -- an accident, and a fragile one:
+# machorun's staged SDK DOES ship
+# System/Library/Frameworks/Foundation.framework/Modules, so canImport(Foundation)
+# is TRUE against it with no -I at all, satisfied by a CLANG MODULEMAP rather
+# than a Swift module. Re-stage the sysroot from there and this build would
+# silently flip 33 guards onto a path it cannot satisfy.
+#
+# THE LEVER IS WHICH SDK A TARGET COMPILES AGAINST, NOT WHICH -I IT GETS.
+# So the property is now checked rather than assumed -- and the check is proved
+# able to fail, because a guard that cannot fail is worse than none.
+echo "== guard: Foundation must be invisible on the library path"
+cat >"$OUT/guard_no_foundation.swift" <<'EOF'
+#if canImport(Foundation)
+#error("Foundation is VISIBLE to the library compile. OpenUIKit's freestanding #else branches are no longer what builds. Check scratch/sysroot_full for System/Library/Frameworks/Foundation.framework/Modules -- the fix is the SDK this target uses, not an include path.")
+#endif
+EOF
+cat >"$OUT/guard_teeth.swift" <<'EOF'
+// The same mechanism aimed at a module that IS visible. This compile MUST
+// fail; if it succeeds, #error is not being evaluated and the guard above is
+// decoration.
+#if canImport(Swift)
+#error("TEETH_OK")
+#endif
+EOF
+"${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name GuardNoFoundation "$OUT/guard_no_foundation.swift"
+if "${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name GuardTeeth "$OUT/guard_teeth.swift" >/dev/null 2>&1; then
+    echo "   FATAL: the guard cannot fail -- #error is not being evaluated" >&2
+    exit 1
+fi
+echo "   -> not visible, and the guard is verified able to fail"
+
 # ---- OpenCoreGraphics ------------------------------------------------------
 echo "== OpenCoreGraphics ($(ls "$UIKIT"/Sources/OpenCoreGraphics/*.swift | wc -l) files, verbatim)"
 "${SWIFTC[@]}" "${CINC[@]}" -module-name OpenCoreGraphics \

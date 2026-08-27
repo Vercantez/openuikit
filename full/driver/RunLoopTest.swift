@@ -98,6 +98,7 @@ func runLoopSelfTest() -> Bool {
     // loop the callback should arrive because UINavigationController's
     // transition finishes on the clock, with nobody nudging it.
     allPassed = lifecycleReachesViewDidAppear() && allPassed
+    allPassed = externallyDrivenTest() && allPassed
     return allPassed
 }
 
@@ -139,4 +140,75 @@ func lifecycleReachesViewDidAppear() -> Bool {
         + "  animated=\(pushed.appearedAnimated.map { $0 ? "true" : "false" } ?? "n/a")"
         + "  turns=\(turns)  WALL=\(fixed3(wall))s  " + (ok ? "PASS" : "FAIL"))
     return ok
+}
+
+// MARK: - PUSH mode: somebody else's loop owns the thread
+
+/// The composition CFRunLoop needs, tested without CFRunLoop.
+///
+/// `UIKitRunLoop` appears NOWHERE below. The loop here owns the thread, does
+/// its own waiting, and calls `UIKitFrameDriver.tick(at:)` when it turns --
+/// exactly the position CFRunLoop will be in once it links, and exactly what
+/// CADisplayLink does on iOS. If UIKit could only be advanced by a loop that
+/// owns the thread, this test could not be written at all.
+///
+/// It has to demonstrate the same two things the pull-mode test does, or it
+/// proves only that a function can be called: the lifecycle must REACH
+/// viewDidAppear with nothing nudged, and it must take REAL time, measured by
+/// a clock the driver does not control.
+@MainActor
+func externallyDrivenTest() -> Bool {
+    let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+    let root = UIViewController()
+    let nav = UINavigationController(rootViewController: root)
+    window.rootViewController = nav
+    window.makeKeyAndVisible()
+    OpenUIKitRuntime.animationTime = 0
+
+    let pushed = AppearRecorder()
+    nav.pushViewController(pushed, animated: true)
+    let before = pushed.appeared
+
+    // ---- a host loop that is not ours ------------------------------------
+    let driver = UIKitFrameDriver(window: window)
+    let start = mr_monotonic_seconds()
+    var turns = 0
+    var t = 0.0
+    while !pushed.appeared && t < 3.0 {
+        t = mr_monotonic_seconds() - start
+        driver.tick(at: t)
+        turns += 1
+        // The host's own waiting. A real host blocks in its run loop here;
+        // this one sleeps, because the guest has no descriptor to wait on.
+        mr_sleep_seconds(start + driver.nextDeadline(after: t) - mr_monotonic_seconds())
+    }
+    let wall = mr_monotonic_seconds() - start
+
+    let ok = !before && pushed.appeared && wall > 0.05
+    print("  push mode  : externally driven, UIKitRunLoop not involved")
+    print("  push mode  : viewDidAppear=\(pushed.appeared ? "FIRED" : "never")"
+        + "  turns=\(turns)  WALL=\(fixed3(wall))s  " + (ok ? "PASS" : "FAIL"))
+
+    // ---- the same negative control the pull-mode test uses ----------------
+    // An external loop that never waits. The animation still completes and
+    // viewDidAppear still fires, so "did it fire" cannot tell the two apart --
+    // only wall time can, which is the point of measuring it here too.
+    let w2 = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+    let nav2 = UINavigationController(rootViewController: UIViewController())
+    w2.rootViewController = nav2
+    w2.makeKeyAndVisible()
+    OpenUIKitRuntime.animationTime = 0
+    let pushed2 = AppearRecorder()
+    nav2.pushViewController(pushed2, animated: true)
+    let d2 = UIKitFrameDriver(window: w2)
+    let s2 = mr_monotonic_seconds()
+    var t2 = 0.0
+    while !pushed2.appeared && t2 < 3.0 { t2 += 1.0 / 60.0; d2.tick(at: t2) }
+    let wall2 = mr_monotonic_seconds() - s2
+    let controlOK = pushed2.appeared && wall2 < 0.05
+    print("  push mode  : control (never waits) viewDidAppear="
+        + "\(pushed2.appeared ? "FIRED" : "never") WALL=\(fixed3(wall2))s  "
+        + (controlOK ? "correctly detected as NOT wall-clock" : "CONTROL FAILED"))
+
+    return ok && controlOK
 }

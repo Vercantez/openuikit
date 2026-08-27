@@ -53,6 +53,65 @@ struct SyntheticFrameSource: HostFrameSource {
     func wait(until deadline: Double) { /* deliberately nothing */ }
 }
 
+/// ONE FRAME, NO WAITING, NO THREAD OWNERSHIP -- the whole frame driver.
+///
+/// Split out from `UIKitRunLoop` because of a constraint from the CF side
+/// (foundation-scope): CFRunLoop's Linux path waits on FILE DESCRIPTORS and
+/// nothing else -- timers are timerfds, it blocks in ppoll, the dispatch main
+/// queue arrives as an eventfd. A frame driver that owns the thread and sleeps
+/// cannot compose with that, because both want the thread and CF would block in
+/// ppoll straight past the frame deadline. It works standalone and then needs
+/// rewriting.
+///
+/// So WHAT CALLS TICK IS PLUGGABLE. Two drivers sit over this one type:
+///
+///   PULL -- `UIKitRunLoop` owns the thread, and every blocking moment in it is
+///           `HostFrameSource.wait(until:)`: ONE call, in ONE place. A
+///           CFRunLoop-backed source implements that by blocking in
+///           CFRunLoopRunInMode(deadline), so CF owns the block and services
+///           its own descriptors while UIKit waits. Nothing else changes.
+///   PUSH -- somebody else's loop owns the thread and calls `tick(at:)` when it
+///           turns, which is what CADisplayLink does on iOS. No UIKit code is
+///           involved in the waiting at all.
+///
+/// Both are exercised -- `runLoopSelfTest()` pulls, `externallyDrivenTest()`
+/// pushes -- and neither reimplements the other.
+///
+/// WHY NOT A TIMERFD, which is the shape that would let CF wait on us
+/// DIRECTLY: the guest cannot open one. machorun's libSystem exports 537
+/// symbols and not one is a file-descriptor wait primitive -- no timerfd, no
+/// eventfd, no epoll, no ppoll, and not even POSIX poll/select or Darwin's
+/// kqueue/kevent (measured with a control: the same grep finds nanosleep,
+/// clock_gettime, read, write, pthread_create). The guest is Darwin-targeted
+/// and Darwin has no timerfd at all, so the SDK does not declare one either.
+/// Until machorun exports that family, "hand CF a descriptor" is not
+/// available to anyone in this process, CF included.
+@MainActor
+struct UIKitFrameDriver {
+    let window: UIWindow
+    /// Target frame interval. 60 Hz, the rate UIKit's display link runs at.
+    var frameInterval: Double = 1.0 / 60.0
+
+    /// Advance UIKit to `timestamp`. This is the entire frame driver: it does
+    /// not wait, does not read a clock, and does not care who called it.
+    func tick(at timestamp: Double) {
+        // The clock UIKit's steppers read, and the timestamp the seam gets:
+        // the same value, so a frame is never sampled at two different times.
+        OpenUIKitRuntime.animationTime = timestamp
+        window.tick(timestamp: timestamp)
+    }
+
+    /// When the driver wants its next turn. A push-mode host arms its own timer
+    /// with this; a pull-mode host passes it to `wait(until:)`.
+    func nextDeadline(after timestamp: Double) -> Double { timestamp + frameInterval }
+
+    /// True when nothing is animating: UIKit's own redraw hint, not a guess.
+    /// `animationWorkDeadline` is the latest end time of any recorded
+    /// animation, and a host is expected to keep producing frames until the
+    /// clock passes it.
+    var isIdle: Bool { OpenUIKitRuntime.animationTime > OpenUIKitRuntime.animationWorkDeadline }
+}
+
 @MainActor
 struct UIKitRunLoop {
     let window: UIWindow
@@ -60,29 +119,30 @@ struct UIKitRunLoop {
     /// Target frame interval. 60 Hz, the rate UIKit's display link runs at.
     var frameInterval: Double = 1.0 / 60.0
 
+    var driver: UIKitFrameDriver { UIKitFrameDriver(window: window, frameInterval: frameInterval) }
+
     /// Run until `predicate` returns true, or `timeout` monotonic seconds
     /// elapse. Returns the elapsed time ON THE SOURCE'S CLOCK and the number
     /// of turns taken.
+    ///
+    /// The ONLY blocking call is `source.wait(until:)` on the last line. That
+    /// is the whole reason this composes: swap the source and somebody else
+    /// owns every moment this thread is not advancing a frame.
     @discardableResult
     func run(timeout: Double, until predicate: () -> Bool) -> (elapsed: Double, turns: Int) {
+        let d = driver
         let start = source.now()
         var turns = 0
         while true {
             let t = source.now() - start
-            // The clock UIKit's steppers read, and the timestamp the seam gets:
-            // the same value, so a frame is never sampled at two different times.
-            OpenUIKitRuntime.animationTime = t
-            window.tick(timestamp: t)
+            d.tick(at: t)
             turns += 1
             if predicate() { return (t, turns) }
             if t >= timeout { return (t, turns) }
-            source.wait(until: start + t + frameInterval)
+            source.wait(until: start + d.nextDeadline(after: t))
         }
     }
 
     /// True when nothing is animating: UIKit's own redraw hint, not a guess.
-    /// `animationWorkDeadline` is the latest end time of any recorded
-    /// animation, and a host is expected to keep producing frames until the
-    /// clock passes it.
-    var isIdle: Bool { OpenUIKitRuntime.animationTime > OpenUIKitRuntime.animationWorkDeadline }
+    var isIdle: Bool { driver.isIdle }
 }
