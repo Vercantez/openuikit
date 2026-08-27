@@ -40,3 +40,35 @@ this; individual counts should be read as "order of magnitude", not exact.
 Corpus drift: these are HEAD shallow clones, so file counts differ slightly
 from `Tools/apicensus/census-2026-08-25.json` (eidolon 159 = 159 exactly;
 pocket-casts-ios 1826 vs 1690). Same repos, later commits.
+
+---
+
+# SwiftUI / Combine scope census (#57)
+
+    ./swiftui_census.py <corpus-dir> out.json
+
+Same corpus. **Deliberately produces no API-use count** — read the module
+docstring in `swiftui_census.py` for why, before adding one.
+
+The short version: SwiftUI's type names (`Text`, `Image`, `List`, `Group`,
+`Section`, `Path`, `State`, `Binding`, `Color`) collide with app-defined types
+far worse than Foundation's did; most of the API is **modifiers**, which are
+method calls on opaque types that apps define freely — measured, the first
+non-test SwiftUI view in this corpus contains exactly one modifier call and it
+is app-defined; and the remainder is syntax (`some View`, result builders),
+which is not an identifier at all.
+
+So it counts only the unambiguous: `import` lines, `@`-prefixed attributes
+(the sigil plus an exact name makes them SwiftUI's or Combine's and nobody
+else's), `: View` / `some View` syntax, and the few Combine type names nobody
+reuses.
+
+## The number this CANNOT give you, and what would
+
+`APP_COMPAT.md`'s decisive finding was not that UIKit has 737 types — it was
+that apps reference only **~171** of them, which is what made the punch list
+finite. **The SwiftUI equivalent is unmeasurable by text**, for the collision
+reasons above. Obtaining it needs a **semantic index**: build the corpus and
+read the compiler's index store, or use swift-syntax with type resolution.
+Until someone does that, "how much of SwiftUI do apps actually use" is unknown,
+and it is the single number that would most change any estimate.
