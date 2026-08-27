@@ -47,12 +47,22 @@ enum PlistError: Error, CustomStringConvertible {
     case binaryFormat
     case malformed(String)
 
+    /// The file is not there. A SEPARATE case from `.malformed`, because "no
+    /// Info.plist" and "an Info.plist I cannot read" are different faults with
+    /// different fixes. Folding the first into the second made the error read
+    /// "malformed XML property list: no Info.plist at ..." -- actively
+    /// misleading, and caught only by reading the output of the test that was
+    /// otherwise passing.
+    case missingFile(String)
+
     var description: String {
         switch self {
         case .binaryFormat:
             return "binary property list (bplist00) -- only XML is implemented; see Plist.swift"
         case .malformed(let why):
             return "malformed XML property list: \(why)"
+        case .missingFile(let path):
+            return "no property list at \(path)"
         }
     }
 }

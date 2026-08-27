@@ -318,4 +318,40 @@ echo "== link"
     "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o" "$OUT/swiftcorepatch.o"
 
+# ---- bundle fixtures -------------------------------------------------------
+# Built here rather than committed, so they cannot drift from what the test
+# expects. The oracle2 .apps cover the HAPPY cases (both layouts, real plists);
+# these cover what a real app hits first, and what a careless Bundle collapses
+# into one indistinguishable nil.
+#   Probe.app   contains render_full itself, so Bundle.main has something real
+#               to resolve -- the SAME binary run from inside a .app and from
+#               outside it must answer differently.
+#   NoKeys.app  a VALID plist carrying none of the CFBundle* keys: absent KEY.
+#   Empty.app   a .app directory with no Info.plist at all:        absent FILE.
+echo "== bundle fixtures (Probe.app, NoKeys.app, Empty.app)"
+rm -rf "$OUT/Probe.app" "$OUT/NoKeys.app" "$OUT/Empty.app"
+mkdir -p "$OUT/Probe.app" "$OUT/NoKeys.app" "$OUT/Empty.app"
+cp "$OUT/render_full" "$OUT/Probe.app/probe"
+printf 'hello from the bundle\n' >"$OUT/Probe.app/hello.txt"
+cat >"$OUT/Probe.app/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key><string>probe</string>
+	<key>CFBundleIdentifier</key><string>com.openuikit.bundleprobe</string>
+	<key>CFBundleName</key><string>Probe</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+</dict>
+</plist>
+PLIST
+cat >"$OUT/NoKeys.app/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>SomethingElse</key><string>present, but not a key UIKit asks for</string>
+</dict>
+</plist>
+PLIST
+
 echo "== done"; ls -l "$OUT/render_full"

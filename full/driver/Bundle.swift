@@ -82,7 +82,7 @@ final class Bundle {
 
     private func loadInfoPlist() {
         guard let bytes = ResourceIO.readFile(infoPlistPath) else {
-            infoPlistError = .malformed("no Info.plist at \(infoPlistPath)")
+            infoPlistError = .missingFile(infoPlistPath)
             return
         }
         switch Plist.parse(bytes) {

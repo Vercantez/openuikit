@@ -108,7 +108,77 @@ func bundleSelfTest() -> Bool {
         + "  present->\(found != nil ? "path" : "NIL")  " + (lookupOK ? "PASS" : "FAIL"))
     if !lookupOK { ok = false }
 
+    ok = absentKeyBehaviour(flat: flat) && ok
     ok = plistTeeth() && ok
+    return ok
+}
+
+/// WHAT A REAL APP HITS FIRST IS AN ABSENT KEY, NOT A MALFORMED FILE.
+///
+/// Three situations a careless implementation collapses into one bare nil, and
+/// which must stay distinguishable to a caller:
+///   1. the plist parsed, the key is simply not in it  -> nil, and NO error
+///   2. there is no Info.plist at all                  -> nil, error NAMES the path
+///   3. the plist is present and unparseable           -> nil, error names the reason
+///
+/// Collapsing 2 into 1 is what makes a MISCONFIGURED app look like a merely
+/// incomplete one -- an absence that reads as a legitimate answer, which is the
+/// shape this project keeps finding.
+@MainActor
+func absentKeyBehaviour(flat: Bundle) -> Bool {
+    var ok = true
+    let fixtures = cpio_getenv("BUNDLE_FIXTURE_DIR").map { String(cString: $0) } ?? "/w/build/full"
+
+    // ---- 1. key absent from a perfectly good plist ------------------------
+    let absent = flat.object(forInfoDictionaryKey: "NoSuchKeyWhatsoever")
+    let present = flat.object(forInfoDictionaryKey: "CFBundleIdentifier")
+    let case1 = absent == nil && present != nil
+        && flat.infoDictionary != nil && flat.infoPlistError == nil
+    print("  absent key : missing->\(absent == nil ? "nil" : "NON-NIL")"
+        + "  present->\(present != nil ? "value" : "NIL")"
+        + "  error=\(flat.infoPlistError == nil ? "none (correct)" : "SET")  "
+        + (case1 ? "PASS" : "FAIL"))
+    if !case1 { ok = false }
+
+    // Typed accessors over absent keys must be nil, not "" -- and executablePath
+    // must decline to build a path from a name that is not there.
+    if let noKeys = Bundle(path: fixtures + "/NoKeys.app") {
+        let case1b = noKeys.infoDictionary != nil && noKeys.infoPlistError == nil
+            && noKeys.bundleIdentifier == nil && noKeys.executableName == nil
+            && noKeys.executablePath == nil
+        print("  absent key : valid plist with no CFBundle* keys -> id=\(noKeys.bundleIdentifier ?? "nil")"
+            + " exec=\(noKeys.executableName ?? "nil") execPath=\(noKeys.executablePath ?? "nil")  "
+            + (case1b ? "PASS" : "FAIL"))
+        if !case1b { ok = false }
+    } else {
+        print("  absent key : NoKeys.app fixture missing under \(fixtures)  FAIL")
+        ok = false
+    }
+
+    // ---- 2. no Info.plist at all ------------------------------------------
+    // A directory named Foo.app IS a bundle whose plist is missing, which is a
+    // different thing from "not a bundle" -- so it must still open.
+    guard let empty = Bundle(path: fixtures + "/Empty.app") else {
+        print("  no plist   : Empty.app fixture missing under \(fixtures)  FAIL")
+        return false
+    }
+    let case2 = empty.infoDictionary == nil && empty.infoPlistError != nil
+        && empty.object(forInfoDictionaryKey: "CFBundleIdentifier") == nil
+        && empty.bundleIdentifier == nil
+    print("  no plist   : bundle opens=yes  infoDictionary=nil"
+        + "  error=\(empty.infoPlistError.map { "\($0)" } ?? "NONE -- silent")  "
+        + (case2 ? "PASS" : "FAIL"))
+    if !case2 { ok = false }
+
+    // ---- the distinction itself -------------------------------------------
+    // If absent-key and absent-file both produced a bare nil with no error they
+    // would be indistinguishable to a caller, and everything above would be
+    // checking nothing.
+    let distinguishable = flat.infoPlistError == nil && empty.infoPlistError != nil
+    print("  distinct   : absent-key vs absent-file are distinguishable  "
+        + (distinguishable ? "PASS" : "FAIL -- both look identical to a caller"))
+    if !distinguishable { ok = false }
+
     return ok
 }
 
