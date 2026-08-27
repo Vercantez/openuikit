@@ -175,6 +175,12 @@ want 21_pthread_cond     && build 21_pthread_cond     "$CHAINED_TARGET" 21_pthre
 # than values, because the right answers legitimately differ per host.
 want 22_sysconf          && build 22_sysconf          "$CHAINED_TARGET" 22_sysconf          22_sysconf.c --
 
+# The password database. Darwin's struct passwd is 72 bytes and glibc's 48,
+# agreeing for four fields and then diverging -- pw_dir, the field callers
+# actually want, falls off the end of glibc's allocation. Predicates again,
+# since usernames and home directories differ per host.
+want 23_passwd           && build 23_passwd           "$CHAINED_TARGET" 23_passwd           23_passwd.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

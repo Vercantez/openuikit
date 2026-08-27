@@ -72,6 +72,136 @@ HIDDEN int *mr_errno_slot(void)
     return p;
 }
 
+/* ===================================================================== *
+ * The password database. Same class as struct dirent, and worse where it
+ * counts: the two layouts AGREE for four fields and then diverge, so a
+ * forwarded struct looks right exactly long enough to be trusted.
+ *
+ *   Darwin field   off   what it would actually read out of glibc's 48 bytes
+ *   pw_name          0   pw_name        <- agrees
+ *   pw_passwd        8   pw_passwd      <- agrees
+ *   pw_uid          16   pw_uid         <- agrees
+ *   pw_gid          20   pw_gid         <- agrees
+ *   pw_change       24   pw_gecos       (a char* read as a time_t)
+ *   pw_class        32   pw_dir         (the home directory, as the class)
+ *   pw_gecos        40   pw_shell       (the shell, as the full name)
+ *   pw_dir          48   PAST THE END   <- out-of-bounds read
+ *   pw_shell        56   PAST THE END
+ *   pw_expire       64   PAST THE END
+ *
+ * Measured on macOS 26.5.2 (72 bytes) and in the test-bed image (48). The
+ * field a caller almost always wants is pw_dir -- "where is the home
+ * directory", which is exactly what CoreFoundation asks for -- and it is the
+ * first one to fall off the end of the allocation.
+ *
+ * glibc has no pw_change, pw_class or pw_expire. Darwin's neutral values are
+ * 0, "" and 0: no forced password change, no login class, no expiry. Those are
+ * answers rather than filler -- a Linux account genuinely has none of them.
+ *
+ * The strings are glibc's and live until the next call to the same function,
+ * which is the contract on BOTH systems, so they cross unchanged. Only the
+ * struct is rebuilt. ===================================================== */
+struct darwin_passwd {
+    char       *pw_name;
+    char       *pw_passwd;
+    unsigned    pw_uid;
+    unsigned    pw_gid;
+    long        pw_change;
+    char       *pw_class;
+    char       *pw_gecos;
+    char       *pw_dir;
+    char       *pw_shell;
+    long        pw_expire;
+};
+_Static_assert(sizeof(struct darwin_passwd) == 72, "Darwin struct passwd is 72 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_passwd, pw_gecos) == 40, "pw_gecos at 40");
+_Static_assert(__builtin_offsetof(struct darwin_passwd, pw_dir)   == 48, "pw_dir at 48");
+_Static_assert(__builtin_offsetof(struct darwin_passwd, pw_shell) == 56, "pw_shell at 56");
+
+/* Our mirror of glibc's. sdk/tests/glibc_abi_probe.c pins these against the
+ * REAL header -- this declaration alone would only pin itself, which is the
+ * mistake the linux_stat assertion below made for months. */
+struct linux_passwd {
+    char       *pw_name;
+    char       *pw_passwd;
+    unsigned    pw_uid;
+    unsigned    pw_gid;
+    char       *pw_gecos;
+    char       *pw_dir;
+    char       *pw_shell;
+};
+_Static_assert(sizeof(struct linux_passwd) == 48, "our mirror of glibc's struct passwd is 48 bytes");
+
+static char pw_empty_class[] = "";
+
+static void passwd_l2d(const struct linux_passwd *l, struct darwin_passwd *d)
+{
+    d->pw_name   = l->pw_name;
+    d->pw_passwd = l->pw_passwd;
+    d->pw_uid    = l->pw_uid;
+    d->pw_gid    = l->pw_gid;
+    d->pw_gecos  = l->pw_gecos;
+    d->pw_dir    = l->pw_dir;
+    d->pw_shell  = l->pw_shell;
+    d->pw_change = 0;                 /* no forced change: Linux has no field */
+    d->pw_class  = pw_empty_class;    /* no login class */
+    d->pw_expire = 0;                 /* no expiry */
+}
+
+/* Darwin returns a pointer to static storage the next call overwrites, and so
+ * does glibc, so one static IS the contract rather than a shortcut. */
+static struct darwin_passwd pw_static;
+
+EXPORT void *getpwnam(const char *name)
+{
+    struct linux_passwd *l = MR_ERRNO_CALL(glibc_getpwnam(name));
+    if (!l) return 0;
+    passwd_l2d(l, &pw_static);
+    return &pw_static;
+}
+
+EXPORT void *getpwuid(unsigned uid)
+{
+    struct linux_passwd *l = MR_ERRNO_CALL(glibc_getpwuid(uid));
+    if (!l) return 0;
+    passwd_l2d(l, &pw_static);
+    return &pw_static;
+}
+
+/* The _r forms hand us the CALLER's struct, which is Darwin-shaped and 72
+ * bytes. glibc must not write into it -- that is the 48-into-72 direction of
+ * the same bug, and it would leave pw_dir/pw_shell/pw_expire holding whatever
+ * was on the caller's stack. glibc fills a mirror of ours and we translate.
+ * The strings land in the caller's buffer either way, which is what keeps the
+ * pointers valid after we return. */
+EXPORT int getpwnam_r(const char *name, struct darwin_passwd *out,
+                      char *buf, unsigned long buflen, struct darwin_passwd **result)
+{
+    struct linux_passwd l;
+    void *found = 0;
+    int rc = MR_ERRNO_CALL(glibc_getpwnam_r(name, &l, buf, buflen, &found));
+    if (result) *result = 0;
+    if (rc != 0) return mr_pthread_rc(rc);   /* _r reports errno by return */
+    if (!found) return 0;                    /* no such user: rc 0, *result NULL */
+    passwd_l2d(&l, out);
+    if (result) *result = out;
+    return 0;
+}
+
+EXPORT int getpwuid_r(unsigned uid, struct darwin_passwd *out,
+                      char *buf, unsigned long buflen, struct darwin_passwd **result)
+{
+    struct linux_passwd l;
+    void *found = 0;
+    int rc = MR_ERRNO_CALL(glibc_getpwuid_r(uid, &l, buf, buflen, &found));
+    if (result) *result = 0;
+    if (rc != 0) return mr_pthread_rc(rc);
+    if (!found) return 0;
+    passwd_l2d(&l, out);
+    if (result) *result = out;
+    return 0;
+}
+
 static int darwin_from_linux_errno(int e)
 {
     if (e >= 0 && e < MR_ERRNO_L2D_N && mr_errno_l2d[e] >= 0)

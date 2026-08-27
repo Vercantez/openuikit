@@ -39,4 +39,5 @@
 20_dirent	s	chained	run	pass	struct dirent is 1048 bytes on Darwin and 280 on glibc, with d_type and d_name at different offsets; readdir translates rather than forwards
 21_pthread_cond	s	chained	run	pass	condition variables that really block, and the RECURSIVE/ERRORCHECK constants Darwin and glibc swap
 22_sysconf	t	chained	run	pass	all 128 _SC_* names differ between Darwin and glibc, so sysconf must translate rather than forward
+23_passwd	u	chained	run	pass	struct passwd is 72 bytes on Darwin and 48 on glibc; pw_dir falls off the end of a forwarded one
 10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug

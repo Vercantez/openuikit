@@ -1,0 +1,16 @@
+by_uid          has a name
+uid round-trip  agrees
+pw_dir absolute yes
+pw_shell absolute yes
+gecos != shell  differ
+pw_class empty  yes
+pw_change zero  yes
+pw_expire zero  yes
+name round-trip agrees
+_r rc           0
+_r found        points at ours
+_r dir absolute yes
+_r uid agrees   yes
+_r gecos!=shell differ
+absent user     NULL (correct)
+done
