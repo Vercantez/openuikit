@@ -193,6 +193,12 @@ if args.count >= 2, args[1] == "runloop" {
     warnToStderr(ok ? "[render_full] RUN LOOP OK" : "[render_full] RUN LOOP FAILED")
     cpio_exit(ok ? 0 : 1)
 }
+if args.count >= 2, args[1] == "launch" {
+    warnToStderr("[render_full] launch-by-name self-test (delegate discovered from a string)")
+    let ok = MainActor.assumeIsolated { launchByNameSelfTest() }
+    warnToStderr(ok ? "[render_full] LAUNCH BY NAME OK" : "[render_full] LAUNCH BY NAME FAILED")
+    cpio_exit(ok ? 0 : 1)
+}
 if args.count >= 3, args[1] == "realapp" {
     let assets = args.count >= 4 ? args[3] : "/uikit/fixtures/realapp/assets"
     MainActor.assumeIsolated { renderRealApp(args[2], assets: assets) }

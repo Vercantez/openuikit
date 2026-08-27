@@ -97,7 +97,8 @@ if [ ! -f "$ROOTDIR/.umbrellas" ] || \
    [ "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/concpatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/conccxx.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ]; then
+   [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/full/shims/swiftcorepatch.c" -nt "$ROOTDIR/.umbrellas" ]; then
     echo "== libSystem + libc++ umbrellas (syspatch + concpatch)"
     LIB=$ROOTDIR/darwin/usr/lib
 
@@ -181,6 +182,13 @@ echo "== C targets (CPortableIO, CSTBTrueType)"
 # ones -- OpenUIKit owns no clock by design (UIWindow.tick takes the time from
 # whoever drives it).
 "${CC[@]}" -I"$W/full/hostclock/include" -c -o "$OUT/hostclock.o" "$W/full/hostclock/hostclock.c"
+# The stdlib entry points our compiler emits and the staged Apple runtime does
+# not export. LINKED INTO THE EXECUTABLE rather than into a libswiftCore
+# umbrella: llvm-install-name-tool cannot rewrite Apple's libswiftCore at all
+# (it carries LC_SEGMENT_SPLIT_INFO, cmd 0x1e), so the rename the umbrella
+# pattern needs is not available for that library. An object file outranks a
+# .tbd, so the linker resolves the symbol here and emits no import.
+"${CC[@]}" -c -o "$OUT/swiftcorepatch.o" "$W/full/shims/swiftcorepatch.c"
 
 # ~/uikit has no modulemap for these two (SPM generates one); write them into a
 # private include dir so ~/uikit stays untouched.
@@ -240,7 +248,9 @@ echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/mai
 "${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
-    "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" "$W/full/driver/main.swift"
+    "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
+    "$W/full/driver/LaunchByName.swift" "$W/full/driver/LaunchTest.swift" \
+    "$W/full/driver/main.swift"
 
 # ---- link ------------------------------------------------------------------
 # swiftcore-FIRST: the staged libSystem.tbd still advertises swift_*, so a
@@ -259,6 +269,6 @@ echo "== link"
     -o "$OUT/render_full" \
     "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/uikitshim.o" "$OUT/foundation.o" \
     "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
-    "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
+    "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o" "$OUT/swiftcorepatch.o"
 
 echo "== done"; ls -l "$OUT/render_full"
