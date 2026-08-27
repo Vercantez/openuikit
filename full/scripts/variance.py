@@ -20,16 +20,25 @@ from collections import defaultdict
 
 
 def parse(path):
-    """-> {scene: True/False}, and the raw exit code for failures."""
-    ok, code = {}, {}
+    """-> {scene: True/False}, and how each failure presented.
+
+    HANG must be parsed, not skipped. Skipping it silently drops the scene from
+    that run, and a scene missing from one run then looks like a FLIPPER -- which
+    is how constraints_form_row first showed up as "FAIL FAIL" in the flipper
+    list, a contradiction that gave the bug away.
+    """
+    ok, how = {}, {}
     for line in open(path):
-        m = re.match(r"^(\S+)\s+(ok|EXIT=(\d+))\s*$", line)
+        m = re.match(r"^(\S+)\s+(ok|HANG|EXIT=(\d+))\s*$", line)
         if not m:
             continue
-        ok[m.group(1)] = m.group(2) == "ok"
-        if m.group(3):
-            code[m.group(1)] = int(m.group(3))
-    return ok, code
+        scene, verdict = m.group(1), m.group(2)
+        ok[scene] = verdict == "ok"
+        if verdict == "HANG":
+            how[scene] = "HANG"
+        elif m.group(3):
+            how[scene] = int(m.group(3))
+    return ok, how
 
 
 def main():
@@ -42,9 +51,14 @@ def main():
     always_pass, always_fail, flipped = [], [], []
     for s in scenes:
         results = [r[0].get(s) for r in runs]
-        if all(x is True for x in results):
+        if any(x is None for x in results):
+            # A scene absent from a run is a HOLE in the data, not a result.
+            # Reporting it as a pass or a fail would invent a measurement.
+            flipped.append((s, ["ok" if x else ("FAIL" if x is False else "MISSING")
+                                for x in results]))
+        elif all(results):
             always_pass.append(s)
-        elif all(x is False for x in results):
+        elif not any(results):
             always_fail.append(s)
         else:
             flipped.append((s, ["ok" if x else "FAIL" for x in results]))
@@ -75,9 +89,11 @@ def main():
     if codes:
         print("exit codes among ALWAYS FAIL (all runs pooled):")
         for c, k in sorted(codes.items(), key=lambda kv: -kv[1]):
-            what = {139: "SIGSEGV", 133: "SIGTRAP (glibc abort)", 137: "SIGKILL (OOM)",
-                    71: "machorun bail", 1: "driver reported failure"}.get(c, "")
-            print("   exit %-4d %4d   %s" % (c, k, what))
+            what = {139: "SIGSEGV", 133: "SIGTRAP (glibc abort)", 135: "SIGBUS",
+                    137: "SIGKILL", 71: "machorun bail",
+                    1: "driver reported failure",
+                    "HANG": "spun until the 120s timeout"}.get(c, "")
+            print("   %-9s %4d   %s" % (c if isinstance(c, str) else "exit %d" % c, k, what))
         print()
 
     print("ALWAYS FAIL (%d) -- listed, never omitted:" % len(always_fail))
