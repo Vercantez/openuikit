@@ -155,16 +155,69 @@ NEW_INIT = """CF_PRIVATE void _CFRuntimeBridgeClasses(CFTypeID typeID, const cha
 CF_PRIVATE void _CFRuntimeBridgeClasses(CFTypeID typeID, const char *classname) {
 #if defined(__OBJC__)
     Class cls = objc_lookUpClass(classname);
-    if (cls) {
-        _SetCFRuntimeObjcClass((uintptr_t)cls, typeID);
+    if (!cls) {
+        /* HALT rather than skip. Skipping looks safe and is the single worst
+         * outcome: a PARTIALLY populated table. Registration is all-or-nothing
+         * because CF_IS_OBJC compares an instance's _cfisa against this table,
+         * and any type left at 0 while its neighbours hold classes is a type
+         * whose own instances may be read as foreign.
+         *
+         * A missing class here means our Foundation is not loaded, which is a
+         * deployment error rather than a condition to tolerate: CF is being
+         * asked to bridge to something that is not there. Failing at
+         * initialisation names the problem; continuing defers it to whichever
+         * unrelated call first messages a struct. */
+        CFLog(kCFLogLevelError,
+              CFSTR("_CFRuntimeBridgeClasses: class %s not found -- Foundation "
+                    "is not loaded. Refusing to leave a partially populated "
+                    "bridge table."), classname);
+        HALT;
     }
-    /* Absent class: leave the slot 0. A type registered to a class that does
-     * not exist would be worse than an unregistered one -- CF_IS_OBJC would
-     * compare against garbage instead of against a consistent 0. */
+    _SetCFRuntimeObjcClass((uintptr_t)cls, typeID);
 #endif
 }
 
-void __CFInitialize(void) {"""
+void __CFInitialize(void) {
+    /* REGISTRATION, FIRST THING. Placement is not a style choice.
+     *
+     * __CFInitialize creates four instances of BRIDGED types further down --
+     * three CFStrings and the __CFArgStuff CFArray, at CFRuntime.c:1335-1350 --
+     * and _CFRuntimeCreateInstance stamps each one's _cfisa FROM THIS TABLE.
+     * Registering after them would leave those four holding 0 while the table
+     * holds classes, so CF_IS_OBJC would read them as foreign and message a
+     * struct. __CFArgStuff is long-lived, so that landmine would persist for
+     * the life of the process.
+     *
+     * This is safe here because Objective-C registers classes at IMAGE LOAD,
+     * not from constructors -- measured, with a probe dylib whose constructor
+     * successfully looked up a class defined in a different dylib. So our
+     * Foundation's classes are findable by the time CF's constructor runs,
+     * provided Foundation is a load-time dependency. If it is not, the lookup
+     * fails and _CFRuntimeBridgeClasses halts rather than half-registering.
+     *
+     * All 19 together: the bridged set is exactly the types CF dispatches on,
+     * and scripts/check_registration.py refuses if this list and that set
+     * disagree in either direction. */
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFString, "__NSCFString");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFArray, "__NSCFArray");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFDictionary, "__NSCFDictionary");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFSet, "__NSCFSet");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFBag, "__NSCFBag");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFData, "__NSCFData");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFNumber, "__NSCFNumber");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFBoolean, "__NSCFBoolean");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFDate, "__NSCFDate");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFTimeZone, "__NSCFTimeZone");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFCalendar, "__NSCFCalendar");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFLocale, "__NSCFLocale");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFError, "__NSCFError");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFURL, "NSURL");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFCharacterSet, "__NSCFCharacterSet");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFAttributedString, "__NSCFAttributedString");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFReadStream, "__NSCFInputStream");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFWriteStream, "__NSCFOutputStream");
+    _CFRuntimeBridgeClasses(_kCFRuntimeIDCFRunLoopTimer, "__NSCFTimer");
+"""
 
 ok = True
 print(f"patching {CF}")
