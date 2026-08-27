@@ -118,6 +118,65 @@ def rewrite(line):
     return line, False
 
 
+# ---------------------------------------------------------------------------
+# The main-thread accessor, which is NOT a machorun gap after all.
+#
+# CFRunLoop needs pthread_main_thread_np() -- the main thread's pthread_t, used
+# as a dictionary key, so the boolean pthread_main_np() cannot substitute. That
+# symbol is Darwin-only and our libSystem does not export it, which looked like
+# a libSystem gap and was reported as one.
+#
+# It is not. corelibs already wrote the substitute: CFRuntime.c defines
+# _CF_pthread_main_thread_np() returning _CFMainPThread, a global set to
+# pthread_self() inside __CFInitialize under `#elif _POSIX_THREADS` -- true for
+# us, and it runs on the main thread. CFRunLoop.c and CFRuntime.c each carry a
+# `#define pthread_main_thread_np() _CF_pthread_main_thread_np()` behind
+# `#if TARGET_OS_WIN32 || TARGET_OS_LINUX || TARGET_OS_BSD`.
+#
+# That chain has NO TARGET_OS_MAC branch, so the structural rewrite above
+# correctly leaves it alone -- it is not a platform choice between two
+# implementations, it is a fallback for platforms lacking the Darwin symbol,
+# and we are now one of those. So it is named explicitly here rather than by
+# widening the rule, which would have swept in unrelated blocks.
+# ---------------------------------------------------------------------------
+MAIN_THREAD_GUARD = "#if TARGET_OS_WIN32 || TARGET_OS_LINUX || TARGET_OS_BSD"
+MAIN_THREAD_NEW = ("#if TARGET_OS_WIN32 || TARGET_OS_LINUX || TARGET_OS_BSD"
+                   " || CF_RUNLOOP_USE_EPOLL")
+
+
+def patch_main_thread(cfdir):
+    """Enable CF's own main-thread accessor in the two files that declare it."""
+    done = []
+    for name in ("CFRunLoop.c", "CFRuntime.c"):
+        path = os.path.join(cfdir, name)
+        if not os.path.exists(path):
+            die(f"missing {path}")
+        text = open(path).read()
+        if MAIN_THREAD_NEW in text:
+            done.append(f"{name}: already patched")
+            continue
+        # CFRunLoop.c carries the guard TWICE and both need it. The second,
+        # at the __CFRunLoopRun body, declares the `void *msg` the non-Mach
+        # path passes to __CFRunLoopServiceFileDescriptors -- which is why
+        # leaving it produced four "use of undeclared identifier 'msg'"
+        # errors that looked unrelated to the main-thread accessor.
+        #
+        # Finding that was the refusal paying for itself: this function first
+        # asserted a count of 1, refused when it saw 2, and the second site was
+        # the remaining error. Had it patched "the first one" it would have
+        # fixed 18 errors, left 4, and given no hint they were the same edit.
+        expected = {"CFRunLoop.c": 2, "CFRuntime.c": 1}[name]
+        n = text.count(MAIN_THREAD_GUARD)
+        if n != expected:
+            die(f"{name}: main-thread guard matched {n}x, expected {expected} "
+                f"-- corelibs has changed shape; refusing to guess")
+        open(path, "w").write(text.replace(MAIN_THREAD_GUARD, MAIN_THREAD_NEW))
+        done.append(f"{name}: main-thread accessor enabled ({n} site"
+                    f"{'s' if n > 1 else ''})")
+    for d in done:
+        print(f"  {d}")
+
+
 def main():
     if len(sys.argv) < 2:
         die("usage: patch_cf_runloop.py <CF_SOURCE_DIR>")
@@ -128,6 +187,7 @@ def main():
 
     if MARK in src:
         print("  CFRunLoop.c: already patched")
+        patch_main_thread(sys.argv[1])
         return 0
 
     lines = src.split("\n")
@@ -160,6 +220,7 @@ def main():
     open(path, "w").write(out)
     print(f"  CFRunLoop.c: rewrote {changed} branch guards across "
           f"{len(chains)} dual-platform chains")
+    patch_main_thread(sys.argv[1])
     return 0
 
 
