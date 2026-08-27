@@ -35,6 +35,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/signal.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
 #include <sys/sysctl.h>
@@ -141,11 +143,16 @@ int main(void)
     VAL(SA_RESTART); VAL(SA_SIGINFO); VAL(SA_NOCLDSTOP);
 
     puts("");
-    puts("== socket constants are NOT here, and that is a finding rather than an");
-    puts("==   omission: sys/socket.h IS staged but includes sys/constrained_ctypes.h,");
-    puts("==   which is not, so nothing can compile against it. The glibc half is");
-    puts("==   pinned in sdk/tests/glibc_abi_probe.c; this half has to wait for the");
-    puts("==   dangling include. SOL_SOCKET is 65535 on Darwin against 1 on Linux.");
+    puts("== socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --");
+    puts("==                    and 1 IS a valid level on Linux, so a forwarded");
+    puts("==                    setsockopt would set an option at the wrong level");
+    puts("==                    rather than failing. Every SO_* differs too.)");
+    VAL(AF_UNIX); VAL(AF_INET); VAL(AF_INET6);
+    VAL(SOCK_STREAM); VAL(SOCK_DGRAM);
+    VAL(SOL_SOCKET); VAL(SO_REUSEADDR); VAL(SO_KEEPALIVE); VAL(SO_BROADCAST);
+    VAL(SO_SNDBUF); VAL(SO_RCVBUF); VAL(SO_ERROR); VAL(SO_LINGER);
+    VAL(SHUT_RD); VAL(SHUT_WR); VAL(SHUT_RDWR);
+    VAL(MSG_PEEK); VAL(MSG_OOB); VAL(IPPROTO_TCP); VAL(IPPROTO_UDP);
 
     puts("");
     puts("== open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)");
