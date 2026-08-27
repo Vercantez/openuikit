@@ -25,6 +25,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -55,7 +56,7 @@ extern CFDataRef   CFTimeZoneGetData(CFTimeZoneRef);
 
 /* ------------------------------------------------------------------ error -- */
 
-@interface __NSCFError : NSObject
+@interface __NSCFError : __NSCFType
 @end
 
 @implementation __NSCFError
@@ -89,7 +90,7 @@ extern CFDataRef   CFTimeZoneGetData(CFTimeZoneRef);
 
 /* ---------------------------------------------------------- character set -- */
 
-@interface __NSCFCharacterSet : NSObject
+@interface __NSCFCharacterSet : __NSCFType
 @end
 
 @implementation __NSCFCharacterSet
@@ -123,7 +124,7 @@ extern CFDataRef   CFTimeZoneGetData(CFTimeZoneRef);
 
 /* -------------------------------------------------------------- time zone -- */
 
-@interface __NSCFTimeZone : NSObject
+@interface __NSCFTimeZone : __NSCFType
 @end
 
 @implementation __NSCFTimeZone

@@ -21,6 +21,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -59,7 +60,7 @@ extern void           CFRunLoopTimerInvalidate(CFRunLoopTimerRef);
 
 /* ---------------------------------------------------------- input stream -- */
 
-@interface __NSCFInputStream : NSObject
+@interface __NSCFInputStream : __NSCFType
 @end
 
 @implementation __NSCFInputStream
@@ -103,7 +104,7 @@ extern void           CFRunLoopTimerInvalidate(CFRunLoopTimerRef);
 
 /* --------------------------------------------------------- output stream -- */
 
-@interface __NSCFOutputStream : NSObject
+@interface __NSCFOutputStream : __NSCFType
 @end
 
 @implementation __NSCFOutputStream
@@ -143,7 +144,7 @@ extern void           CFRunLoopTimerInvalidate(CFRunLoopTimerRef);
 
 /* ------------------------------------------------------------------ timer -- */
 
-@interface __NSCFTimer : NSObject
+@interface __NSCFTimer : __NSCFType
 @end
 
 @implementation __NSCFTimer

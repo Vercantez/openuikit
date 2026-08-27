@@ -21,6 +21,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -57,7 +58,7 @@ extern CFStringRef CFURLCopyFragment(CFURLRef, CFStringRef);
 
 /* -------------------------------------------------------------------- bag -- */
 
-@interface __NSCFBag : NSObject
+@interface __NSCFBag : __NSCFType
 @end
 
 @implementation __NSCFBag
@@ -67,7 +68,7 @@ extern CFStringRef CFURLCopyFragment(CFURLRef, CFStringRef);
 
 /* ----------------------------------------------------------------- locale -- */
 
-@interface __NSCFLocale : NSObject
+@interface __NSCFLocale : __NSCFType
 @end
 
 @implementation __NSCFLocale
@@ -105,7 +106,7 @@ extern CFStringRef CFURLCopyFragment(CFURLRef, CFStringRef);
 
 /* ------------------------------------------------------ attributed string -- */
 
-@interface __NSCFAttributedString : NSObject
+@interface __NSCFAttributedString : __NSCFType
 @end
 
 @implementation __NSCFAttributedString
@@ -129,7 +130,7 @@ extern CFStringRef CFURLCopyFragment(CFURLRef, CFStringRef);
 
 /* --------------------------------------------------------------- calendar -- */
 
-@interface __NSCFCalendar : NSObject
+@interface __NSCFCalendar : __NSCFType
 @end
 
 @implementation __NSCFCalendar
@@ -164,7 +165,7 @@ extern CFStringRef CFURLCopyFragment(CFURLRef, CFStringRef);
  * OBSERVED on macOS -- CFURLCreateWithString returns an object whose class is
  * NSURL, not __NSCFURL. The __NSCF prefix is a convention, not a rule, and
  * following it here would have been tidier and wrong. */
-@interface NSURL : NSObject
+@interface NSURL : __NSCFType
 @end
 
 @implementation NSURL

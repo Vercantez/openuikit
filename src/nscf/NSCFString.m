@@ -29,6 +29,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -58,7 +59,7 @@ extern const UniChar *CFStringGetCharactersPtr(CFStringRef);
 
 #define CFSELF ((CFStringRef)(self))
 
-@interface __NSCFString : NSObject
+@interface __NSCFString : __NSCFType
 @end
 
 @implementation __NSCFString

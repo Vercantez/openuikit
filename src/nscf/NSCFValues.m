@@ -25,6 +25,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -50,7 +51,7 @@ extern CFComparisonResult CFDateCompare(CFDateRef, CFDateRef, void *);
 
 /* ----------------------------------------------------------------- number -- */
 
-@interface __NSCFNumber : NSObject
+@interface __NSCFNumber : __NSCFType
 @end
 
 @implementation __NSCFNumber
@@ -85,7 +86,7 @@ extern CFComparisonResult CFDateCompare(CFDateRef, CFDateRef, void *);
 
 /* ---------------------------------------------------------------- boolean -- */
 
-@interface __NSCFBoolean : NSObject
+@interface __NSCFBoolean : __NSCFType
 @end
 
 @implementation __NSCFBoolean
@@ -109,7 +110,7 @@ extern CFComparisonResult CFDateCompare(CFDateRef, CFDateRef, void *);
 
 /* ------------------------------------------------------------------- data -- */
 
-@interface __NSCFData : NSObject
+@interface __NSCFData : __NSCFType
 @end
 
 @implementation __NSCFData
@@ -139,7 +140,7 @@ extern CFComparisonResult CFDateCompare(CFDateRef, CFDateRef, void *);
 
 /* ------------------------------------------------------------------- date -- */
 
-@interface __NSCFDate : NSObject
+@interface __NSCFDate : __NSCFType
 @end
 
 @implementation __NSCFDate

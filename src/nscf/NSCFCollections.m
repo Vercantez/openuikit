@@ -27,6 +27,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #include <stdint.h>
 
 #import "../../include/CFFoundationTypes.h"
@@ -60,7 +61,7 @@ extern void        CFSetApplyFunction(CFSetRef, void (*)(const void *, void *), 
 
 /* ------------------------------------------------------------------ array -- */
 
-@interface __NSCFArray : NSObject
+@interface __NSCFArray : __NSCFType
 @end
 
 @implementation __NSCFArray
@@ -88,7 +89,7 @@ extern void        CFSetApplyFunction(CFSetRef, void (*)(const void *, void *), 
 
 /* ------------------------------------------------------------- dictionary -- */
 
-@interface __NSCFDictionary : NSObject
+@interface __NSCFDictionary : __NSCFType
 @end
 
 @implementation __NSCFDictionary
@@ -134,7 +135,7 @@ extern void        CFSetApplyFunction(CFSetRef, void (*)(const void *, void *), 
 
 /* -------------------------------------------------------------------- set -- */
 
-@interface __NSCFSet : NSObject
+@interface __NSCFSet : __NSCFType
 @end
 
 @implementation __NSCFSet

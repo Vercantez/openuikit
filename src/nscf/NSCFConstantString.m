@@ -23,6 +23,7 @@
  */
 
 #import <objc/NSObject.h>
+#import "../../include/NSCFType.h"   /* the shared lifetime base */
 #import <objc/runtime.h>
 #include <stdint.h>
 #include <string.h>
@@ -46,7 +47,7 @@ struct __CFConstStrLayout {
  * a different constant class on Darwin, not a wide __NSCFConstantString. */
 #define CONST_STR(self) ((struct __CFConstStrLayout *)(self))
 
-@interface __NSCFConstantString : NSObject
+@interface __NSCFConstantString : __NSCFType
 @end
 
 @implementation __NSCFConstantString
