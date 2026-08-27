@@ -1,0 +1,798 @@
+{
+ "apps": {
+  "eidolon": {
+   "files": 159
+  },
+  "iOS": {
+   "files": 1202
+  },
+  "ios-oss": {
+   "files": 2070
+  },
+  "pocket-casts-ios": {
+   "files": 1826
+  }
+ },
+ "symbols": [
+  {
+   "symbol": "URL",
+   "apps": 4,
+   "uses": 2844
+  },
+  {
+   "symbol": "Data",
+   "apps": 4,
+   "uses": 1437
+  },
+  {
+   "symbol": "Date",
+   "apps": 4,
+   "uses": 1424
+  },
+  {
+   "symbol": "UserDefaults",
+   "apps": 4,
+   "uses": 1186
+  },
+  {
+   "symbol": "NotificationCenter",
+   "apps": 4,
+   "uses": 1065
+  },
+  {
+   "symbol": "TimeInterval",
+   "apps": 4,
+   "uses": 830
+  },
+  {
+   "symbol": "DispatchQueue",
+   "apps": 4,
+   "uses": 773
+  },
+  {
+   "symbol": "NSAttributedString",
+   "apps": 4,
+   "uses": 630
+  },
+  {
+   "symbol": "Task",
+   "apps": 4,
+   "uses": 623
+  },
+  {
+   "symbol": "Error",
+   "apps": 4,
+   "uses": 615
+  },
+  {
+   "symbol": "NSCoder",
+   "apps": 4,
+   "uses": 379
+  },
+  {
+   "symbol": "FileManager",
+   "apps": 4,
+   "uses": 333
+  },
+  {
+   "symbol": "Bundle",
+   "apps": 4,
+   "uses": 316
+  },
+  {
+   "symbol": "NSError",
+   "apps": 4,
+   "uses": 225
+  },
+  {
+   "symbol": "NSObject",
+   "apps": 4,
+   "uses": 218
+  },
+  {
+   "symbol": "NSNotification",
+   "apps": 4,
+   "uses": 170
+  },
+  {
+   "symbol": "NSString",
+   "apps": 4,
+   "uses": 155
+  },
+  {
+   "symbol": "Locale",
+   "apps": 4,
+   "uses": 154
+  },
+  {
+   "symbol": "NSNumber",
+   "apps": 4,
+   "uses": 144
+  },
+  {
+   "symbol": "RunLoop",
+   "apps": 4,
+   "uses": 129
+  },
+  {
+   "symbol": "Calendar",
+   "apps": 4,
+   "uses": 118
+  },
+  {
+   "symbol": "DateFormatter",
+   "apps": 4,
+   "uses": 77
+  },
+  {
+   "symbol": "NSMutableAttributedString",
+   "apps": 4,
+   "uses": 73
+  },
+  {
+   "symbol": "JSONSerialization",
+   "apps": 4,
+   "uses": 64
+  },
+  {
+   "symbol": "CharacterSet",
+   "apps": 4,
+   "uses": 51
+  },
+  {
+   "symbol": "NSPredicate",
+   "apps": 4,
+   "uses": 38
+  },
+  {
+   "symbol": "ISO8601DateFormatter",
+   "apps": 4,
+   "uses": 31
+  },
+  {
+   "symbol": "NSURL",
+   "apps": 4,
+   "uses": 13
+  },
+  {
+   "symbol": "NSValue",
+   "apps": 4,
+   "uses": 13
+  },
+  {
+   "symbol": "Notification",
+   "apps": 3,
+   "uses": 515
+  },
+  {
+   "symbol": "URLRequest",
+   "apps": 3,
+   "uses": 317
+  },
+  {
+   "symbol": "UUID",
+   "apps": 3,
+   "uses": 307
+  },
+  {
+   "symbol": "Decodable",
+   "apps": 3,
+   "uses": 294
+  },
+  {
+   "symbol": "CodingKeys",
+   "apps": 3,
+   "uses": 292
+  },
+  {
+   "symbol": "Decoder",
+   "apps": 3,
+   "uses": 253
+  },
+  {
+   "symbol": "URLSession",
+   "apps": 3,
+   "uses": 144
+  },
+  {
+   "symbol": "Codable",
+   "apps": 3,
+   "uses": 141
+  },
+  {
+   "symbol": "CodingKey",
+   "apps": 3,
+   "uses": 138
+  },
+  {
+   "symbol": "JSONDecoder",
+   "apps": 3,
+   "uses": 113
+  },
+  {
+   "symbol": "Timer",
+   "apps": 3,
+   "uses": 99
+  },
+  {
+   "symbol": "Encodable",
+   "apps": 3,
+   "uses": 85
+  },
+  {
+   "symbol": "HTTPURLResponse",
+   "apps": 3,
+   "uses": 76
+  },
+  {
+   "symbol": "Thread",
+   "apps": 3,
+   "uses": 53
+  },
+  {
+   "symbol": "OperationQueue",
+   "apps": 3,
+   "uses": 52
+  },
+  {
+   "symbol": "TimeZone",
+   "apps": 3,
+   "uses": 49
+  },
+  {
+   "symbol": "DateComponents",
+   "apps": 3,
+   "uses": 44
+  },
+  {
+   "symbol": "URLComponents",
+   "apps": 3,
+   "uses": 42
+  },
+  {
+   "symbol": "URLResponse",
+   "apps": 3,
+   "uses": 39
+  },
+  {
+   "symbol": "NumberFormatter",
+   "apps": 3,
+   "uses": 36
+  },
+  {
+   "symbol": "URLQueryItem",
+   "apps": 3,
+   "uses": 35
+  },
+  {
+   "symbol": "JSONEncoder",
+   "apps": 3,
+   "uses": 35
+  },
+  {
+   "symbol": "NSDictionary",
+   "apps": 3,
+   "uses": 26
+  },
+  {
+   "symbol": "URLSessionTask",
+   "apps": 3,
+   "uses": 20
+  },
+  {
+   "symbol": "NSDecimalNumber",
+   "apps": 3,
+   "uses": 19
+  },
+  {
+   "symbol": "NSRegularExpression",
+   "apps": 3,
+   "uses": 19
+  },
+  {
+   "symbol": "NSDate",
+   "apps": 3,
+   "uses": 17
+  },
+  {
+   "symbol": "URLSessionConfiguration",
+   "apps": 3,
+   "uses": 17
+  },
+  {
+   "symbol": "DecodingError",
+   "apps": 3,
+   "uses": 12
+  },
+  {
+   "symbol": "NSData",
+   "apps": 3,
+   "uses": 10
+  },
+  {
+   "symbol": "URLSessionTaskDelegate",
+   "apps": 3,
+   "uses": 5
+  },
+  {
+   "symbol": "DateComponentsFormatter",
+   "apps": 2,
+   "uses": 38
+  },
+  {
+   "symbol": "Decimal",
+   "apps": 2,
+   "uses": 35
+  },
+  {
+   "symbol": "IndexSet",
+   "apps": 2,
+   "uses": 33
+  },
+  {
+   "symbol": "DispatchGroup",
+   "apps": 2,
+   "uses": 30
+  },
+  {
+   "symbol": "DispatchWorkItem",
+   "apps": 2,
+   "uses": 21
+  },
+  {
+   "symbol": "Operation",
+   "apps": 2,
+   "uses": 21
+  },
+  {
+   "symbol": "URLSessionDownloadTask",
+   "apps": 2,
+   "uses": 20
+  },
+  {
+   "symbol": "NSUserActivity",
+   "apps": 2,
+   "uses": 20
+  },
+  {
+   "symbol": "URLError",
+   "apps": 2,
+   "uses": 17
+  },
+  {
+   "symbol": "NSItemProvider",
+   "apps": 2,
+   "uses": 16
+  },
+  {
+   "symbol": "URLProtocol",
+   "apps": 2,
+   "uses": 14
+  },
+  {
+   "symbol": "NSNull",
+   "apps": 2,
+   "uses": 14
+  },
+  {
+   "symbol": "DispatchSemaphore",
+   "apps": 2,
+   "uses": 13
+  },
+  {
+   "symbol": "NSLock",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "ByteCountFormatter",
+   "apps": 2,
+   "uses": 10
+  },
+  {
+   "symbol": "FileHandle",
+   "apps": 2,
+   "uses": 8
+  },
+  {
+   "symbol": "NSCalendar",
+   "apps": 2,
+   "uses": 7
+  },
+  {
+   "symbol": "NSFileCoordinator",
+   "apps": 2,
+   "uses": 7
+  },
+  {
+   "symbol": "Measurement",
+   "apps": 2,
+   "uses": 6
+  },
+  {
+   "symbol": "NSExtensionItem",
+   "apps": 2,
+   "uses": 5
+  },
+  {
+   "symbol": "Scanner",
+   "apps": 2,
+   "uses": 4
+  },
+  {
+   "symbol": "NSCache",
+   "apps": 2,
+   "uses": 4
+  },
+  {
+   "symbol": "URLSessionDataTask",
+   "apps": 2,
+   "uses": 3
+  },
+  {
+   "symbol": "Encoder",
+   "apps": 2,
+   "uses": 3
+  },
+  {
+   "symbol": "NSMutableString",
+   "apps": 2,
+   "uses": 2
+  },
+  {
+   "symbol": "NSManagedObjectContext",
+   "apps": 1,
+   "uses": 56
+  },
+  {
+   "symbol": "URLCredential",
+   "apps": 1,
+   "uses": 19
+  },
+  {
+   "symbol": "URLAuthenticationChallenge",
+   "apps": 1,
+   "uses": 14
+  },
+  {
+   "symbol": "NSManagedObjectModel",
+   "apps": 1,
+   "uses": 13
+  },
+  {
+   "symbol": "URLCache",
+   "apps": 1,
+   "uses": 12
+  },
+  {
+   "symbol": "NSFetchRequest",
+   "apps": 1,
+   "uses": 11
+  },
+  {
+   "symbol": "FileWrapper",
+   "apps": 1,
+   "uses": 9
+  },
+  {
+   "symbol": "NSPersistentContainer",
+   "apps": 1,
+   "uses": 8
+  },
+  {
+   "symbol": "URLSessionDelegate",
+   "apps": 1,
+   "uses": 7
+  },
+  {
+   "symbol": "NSCoding",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "NSEntityDescription",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "URLProtectionSpace",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "NSUbiquitousKeyValueStore",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "NSCopying",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "NSSecureCoding",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "URLSessionUploadTask",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "NSKeyedUnarchiver",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "NSKeyedArchiver",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "NSLocale",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "NSExpression",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "DispatchSource",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "PropertyListSerialization",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSManagedObject",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSCompoundPredicate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSBundle",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSDecimalNumberHandler",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSUUID",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "URLSessionDataDelegate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSURLComponents",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "Unicode",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSURLRequest",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSArray",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSSet",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSOrderedSet",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSSortDescriptor",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSIndexPath",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSUserDefaults",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSHTTPCookieStorage",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSCharacterSet",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSXMLParser",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSXMLParserDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "Formatter",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "PropertyListEncoder",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "PropertyListDecoder",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "KeyedDecodingContainer",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSDataDetector",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSTextCheckingResult",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "RelativeDateTimeFormatter",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSExtensionContext",
+   "apps": 1,
+   "uses": 1
+  }
+ ],
+ "imports": {
+  "eidolon": {
+   "RxSwift": 87,
+   "UIKit": 63,
+   "Quick": 49,
+   "Nimble": 49,
+   "Kiosk": 49,
+   "Foundation": 41,
+   "Moya": 32,
+   "Action": 20,
+   "Nimble_Snapshots": 19,
+   "SwiftyJSON": 14,
+   "RxOptional": 11,
+   "Artsy_UILabels": 10,
+   "RxNimble": 8,
+   "Keys": 7,
+   "Stripe": 7,
+   "RxCocoa": 7,
+   "Artsy_UIButtons": 7,
+   "ARAnalytics": 6,
+   "ORStackView": 6,
+   "RxBlocking": 5,
+   "Artsy_UIFonts": 4,
+   "SDWebImage": 3,
+   "CardFlight": 2,
+   "NSObject_Rx": 2,
+   "QuartzCore": 2
+  },
+  "iOS": {
+   "Foundation": 538,
+   "Core": 486,
+   "SwiftUI": 265,
+   "UIKit": 256,
+   "BrowserServicesKit": 246,
+   "XCTest": 207,
+   "DuckDuckGo": 173,
+   "Common": 137,
+   "Combine": 115,
+   "WebKit": 101,
+   "Bookmarks": 92,
+   "Persistence": 90,
+   "os": 89,
+   "DesignResourcesKit": 88,
+   "Subscription": 54,
+   "CoreData": 48,
+   "DDGSync": 46,
+   "DuckUI": 44,
+   "NetworkProtection": 37,
+   "UserScript": 30,
+   "Networking": 30,
+   "WidgetKit": 30,
+   "Configuration": 24,
+   "PrivacyDashboard": 22,
+   "MaliciousSiteProtection": 21
+  },
+  "ios-oss": {
+   "KsApi": 828,
+   "Prelude": 703,
+   "Library": 667,
+   "Foundation": 532,
+   "UIKit": 479,
+   "XCTest": 453,
+   "ReactiveSwift": 434,
+   "KsApiTestHelpers": 392,
+   "GraphAPI": 332,
+   "KDS": 320,
+   "ApolloAPI": 309,
+   "LibraryTestHelpers": 273,
+   "ReactiveExtensions_TestHelpers": 165,
+   "ApolloTestSupport": 153,
+   "ReactiveExtensions": 117,
+   "SwiftUI": 113,
+   "Kickstarter_Framework": 107,
+   "SnapshotTesting": 70,
+   "Combine": 38,
+   "Apollo": 38,
+   "Prelude_UIKit": 33,
+   "GraphAPITestMocks": 24,
+   "Experimentation": 22,
+   "AVFoundation": 19,
+   "PassKit": 19
+  },
+  "pocket-casts-ios": {
+   "Foundation": 651,
+   "SwiftUI": 615,
+   "PocketCastsDataModel": 604,
+   "PocketCastsUtils": 577,
+   "UIKit": 484,
+   "PocketCastsServer": 451,
+   "XCTest": 133,
+   "Combine": 107,
+   "podcasts": 65,
+   "EndOfYear": 58,
+   "SwiftProtobuf": 49,
+   "GRDB": 39,
+   "AVFoundation": 37,
+   "Kingfisher": 30,
+   "WatchKit": 22,
+   "SafariServices": 21,
+   "WidgetKit": 20,
+   "Lottie": 18,
+   "DifferenceKit": 17,
+   "SwipeCellKit": 10,
+   "AVKit": 9,
+   "MediaPlayer": 9,
+   "Intents": 8,
+   "CarPlay": 8,
+   "IntentsUI": 7
+  }
+ }
+}
