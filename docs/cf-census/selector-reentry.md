@@ -101,3 +101,32 @@ question and should not be assumed — for a correctly-registered instance the
 typeID-free check is false, so those classes never receive these messages.
 **Constant strings are the exception precisely because their isa cannot match
 the slot.**
+
+## Addendum: `CFStringHashCString` is part of a documented runtime contract
+
+Chosen for `-hash` on re-entry-safety and correctness-by-construction grounds —
+it takes bytes rather than a receiver, and it is CF's own hash. team-lead points
+out it is also **one of the four CF functions libswiftCore looks up by name at
+runtime**, which makes it interface rather than workaround.
+
+Verified, and the verification has a discriminator worth keeping:
+
+```
+                          undefined-symbol   string
+CFStringHashCString              0             1
+CFGetTypeID                      0             1
+CFStringGetTypeID                0             1
+CFStringHashNSString             0             1
+CFRelease                        0             0
+```
+
+**A `dlsym`'d name appears as a STRING and not as an undefined symbol** — it is
+looked up, not linked. All four show that signature. Our CF exports all four
+(measured in the built objects), so the contract is satisfied today.
+
+`CFRelease` was a badly chosen control: it appears as *neither*, because
+libswiftCore does not reference it at all. The lesson is that
+**string-present/symbol-absent is itself the positive discriminator** — a
+linked symbol would have shown the opposite pattern, and picking one that shows
+neither proves nothing either way. The four agreeing on the signature, with a
+name that is genuinely absent showing neither, is the evidence.
