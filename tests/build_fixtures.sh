@@ -231,6 +231,18 @@ want 28_poll             && build 28_poll             "$CHAINED_TARGET" 28_poll 
 # there, and 10 on Darwin is SIGBUS.
 want 29_sigaction        && build 29_sigaction        "$CHAINED_TARGET" 29_sigaction        29_sigaction.c --
 
+# --------------------------------------------------------------- rung (ac)
+# A C++ exception that really is thrown, really crosses frames, and really is
+# caught by type. rung (z) proved the UNWINDER works; this proves the language
+# runtime above it does. The case that matters is the handler that must NOT
+# match -- a personality routine that said yes to everything would pass every
+# other case here.
+if want 30_throw; then
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -std=c++17 -o "$BIN/30_throw" \
+        "$SRC/30_throw.cpp" -lc++
+    echo "==> 30_throw"; built+=(30_throw)
+fi
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
