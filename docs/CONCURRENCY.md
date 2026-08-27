@@ -526,9 +526,27 @@ is what a shipped binary expects, measure the shipped binary.
 ### Patch 3 works: zero Mach collisions
 
 `src/shims/mach.h` says it exists to "stub out defines for some mach types" —
-i.e. for platforms where Mach is *absent*. Our sysroot ships Darwin's real Mach
-headers and they are not separable (`<stdlib.h>` alone reaches two `mach/`
-headers). So the stubs collided with the genuine articles.
+i.e. for platforms where Mach is *absent*. So the stubs collided with the
+genuine articles.
+
+**Correction to my first account of this, measured by machorun-isamask.** I
+originally framed it as our sysroot being unusual — staging Mach headers that a
+normal Darwin build would not have. That is wrong, and the correction makes the
+patch *more* clearly right rather than less. Apple's real MacOSX15.4 SDK has
+`dispatch/source.h` include `<mach/port.h>` and `<mach/message.h>` exactly as
+ours does, and a program including only `<dispatch/dispatch.h>` comes out with
+`MACH_PORT_NULL` already defined. **On any Darwin target, including Apple's own,
+dispatch's umbrella header defines these macros.**
+
+So the collision is not "our headers are present". It is that
+`src/shims/mach.h` — the LINUX path, for a platform with no Mach headers at all
+— is being compiled for a Darwin target. It would collide identically against
+Apple's SDK. That is a genuine upstream portability gap, not a machorun artifact.
+
+(Of 85 staged `mach/` headers, 56 are reachable from ordinary non-Mach headers
+and only 29 are pure Mach API; `mach/port.h`, which defines both colliding
+macros, is in the required 56 — reached from `sys/mount.h`, `<malloc/malloc.h>`,
+`bsm/audit.h`, `os/workgroup_base.h` and `dispatch/dispatch.h` itself.)
 
 Patch 3 makes the shim defer to the real headers when `__has_include(<mach/mach.h>)`
 succeeds, keeping only `dispatch_mach_msg_t` and `firehose_activity_id_t`, which
@@ -541,6 +559,12 @@ capability question.** Header presence is not capability — and here it cuts th
 other way, because the types are real even though the IPC is not implemented.
 
 Verified locally against our sysroot: `MACH_PORT` collisions **0**. No box.
+
+**Why `__has_include` rather than `#ifndef MACH_PORT_NULL`.** The narrower guard
+fixes the two *macros* but cannot fix the four *typedef* redefinitions
+(`mach_port_t`, `mach_error_t`, `mach_msg_return_t`, `mach_msg_header_t`) —
+there is no `#ifndef` for a typedef. Deferring to the real headers fixes both
+classes at once, and states the actual condition: the types are available.
 
 ### The semaphore backend is a live ABI hazard — do NOT take `USE_POSIX_SEM`
 
