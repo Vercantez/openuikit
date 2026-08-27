@@ -475,12 +475,35 @@ EXPORT void *valloc(size_t n) { void *p = NULL; glibc_posix_memalign(&p, 16384, 
  * This is not an objc4 special case -- it is what the documented Darwin
  * behaviour is, and any guest that uses malloc_size as an ownership test gets
  * it right now. */
-extern int mr_addr_in_image(const void *p);   /* -> loader, via host lookup */
+extern int mr_addr_in_image(const void *p);      /* -> loader, via host lookup */
+extern int mr_addr_in_glibc_heap(const void *p); /* -> loader, via host lookup */
 
+/* THE IMAGE CHECK ALONE WAS NOT ENOUGH, and the way that surfaced is worth
+ * keeping: "munmap_chunk(): invalid pointer" -- the exact abort the paragraph
+ * above records fixing for tests/objc44/023 -- came back in the UIKit scenes,
+ * on tabbar_basic, with "free(): invalid pointer" on two more. A regression of
+ * precisely the symptom a fix was written against says the fix was incomplete,
+ * not that something new arrived.
+ *
+ * Incomplete because "not in an image" is not the same as "ours". A stack
+ * address, the loader's own statics, and memory from any allocator that is not
+ * glibc's all fell through to malloc_usable_size, which validates nothing and
+ * answers with whatever word precedes the pointer. try_free() then frees it.
+ *
+ * So ownership is now established POSITIVELY rather than by elimination: a
+ * pointer is ours only if it lies inside glibc's main-arena heap, whose bounds
+ * the loader reads from /proc/self/maps. Anything we cannot place is answered
+ * 0 -- "no malloc zone owns this" -- which is both Darwin's documented reply
+ * for a foreign pointer and the safe direction: answering "not mine" for
+ * something that was ours leaks it, answering "mine" for something that was
+ * not corrupts the heap. src/map.c records the one case that costs us (an
+ * allocation at or above glibc's 32 MiB mmap threshold lives outside brk and
+ * so reports "not ours"). */
 EXPORT size_t malloc_size(const void *p)
 {
     if (!p) return 0;
     if (mr_addr_in_image(p)) return 0;
+    if (!mr_addr_in_glibc_heap(p)) return 0;
     return glibc_malloc_usable_size((void *)p);
 }
 EXPORT size_t malloc_good_size(size_t n) { return n; }
