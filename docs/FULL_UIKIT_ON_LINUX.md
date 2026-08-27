@@ -5,12 +5,19 @@ scene pixel-identically ([ISA_MASK_VERDICT.md](ISA_MASK_VERDICT.md)). Does the
 **whole** module build and run, and how much of the 108-scene golden suite does
 it actually render?
 
-**Answer: the whole module builds; between 51 and 65 of 108 scenes render
-depending on the run; and 321 of 322 rendered frames are byte-identical to the
-same code running natively on macOS.** What stops the rest is nondeterministic
-memory corruption in the runtime substrate — not missing UIKit, not fonts, not
-`_Concurrency`. One frame in 322 rendered and was *silently wrong*, which is why
-this document reports a band rather than a number.
+**Answer: the whole module builds, 104 of 108 scenes render, all 158 frames are
+byte-identical to the same code running natively on macOS, and 104/104 pass the
+project's own gate.**
+
+That is with the SOURCE-BUILT Swift runtime. With Apple's staged
+iOS-simulator `libswiftCore` the same binaries manage only 51–65 depending on
+the run, with nondeterministic memory corruption — so **the Swift runtime, not
+the loader and not OpenUIKit, was the discriminator.** Both numbers are below,
+because the difference between them is the finding.
+
+The 4 remaining failures are a single named category: a crash in `libquartz`'s
+gradient shading. `OPENUIKIT_BACKEND=swift` renders all four, which localises it
+to the quartz path rather than to the runtime or the loader.
 
 ## 1. The build — no vendoring, no VENDOR-EDITs
 
@@ -98,7 +105,26 @@ from the real-UIKit golden either because OpenUIKit is not bit-exact against
 UIKit, or because this stack disagrees with the same code natively. Those have
 different owners, so `full/scripts/score.py` measures them separately.
 
-### Scenes — three full runs, because one run is a sample
+### Scenes — with the source-built runtime
+
+```
+total scenes                                        108
+render                                              104   (158 PNG frames)
+fail                                                  4   gradient_basic / _dark /
+                                                          _in_stack / _multi, all
+                                                          deterministic, all in
+                                                          libquartz shading
+
+A) Linux/machorun vs macOS-native OpenUIKit    158 / 158  BYTE-IDENTICAL
+Tools/compare/compare.py                       104 / 104  scenes pass
+```
+
+Every frame that renders is byte-identical to the same code built and run
+natively on macOS, and every scene that renders passes the project's own gate.
+No silently-wrong frame in this configuration — the one recorded below happened
+under Apple's runtime.
+
+### Scenes — with Apple's staged runtime, three full runs
 
 A single 108-scene pass cannot be quoted as a measurement here: the failures are
 address-dependent, so the suite was run three times end to end.
