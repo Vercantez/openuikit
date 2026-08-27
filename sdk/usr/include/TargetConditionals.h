@@ -17,12 +17,21 @@
  * WHAT THIS OMITS versus Apple's:
  *   - the pre-clang-3.x fallback ladder (__ppc__, __i386__ era gating).  We
  *     require a clang that has __is_target_os; older ones get an #error.
- *   - TARGET_OS_NANO, TARGET_OS_RTKIT, TARGET_OS_EXCLAVEKIT and the other
- *     internal-platform flags.  Apple defines them; nothing we compile reads
- *     them, and a guest that does gets an undefined-identifier error rather
- *     than a wrong answer.
+ *   - TARGET_OS_RTKIT, TARGET_OS_EXCLAVEKIT, TARGET_OS_UIKITFORMAC and the
+ *     other internal-platform flags.  Apple defines them; nothing we compile
+ *     reads them, and a guest that does gets an undefined-identifier error
+ *     rather than a wrong answer.
  *   - TARGET_ABI_USES_IOS_VALUES and the Rosetta/translation flags.
- *   - the deprecated TARGET_IPHONE_SIMULATOR / TARGET_OS_NANO aliases.
+ *   - the deprecated TARGET_IPHONE_SIMULATOR alias.
+ *
+ * THAT LIST IS A LIABILITY, NOT A DESIGN.  "Nothing we compile reads them" is
+ * true only of what we have compiled SO FAR, and it has now been wrong twice:
+ * TARGET_OS_NANO was on this omit-list until CoreFoundation turned out to test
+ * it, and four macros that are not Apple's at all (TARGET_OS_WASI, _ANDROID,
+ * _BSD, _CYGWIN) were missing entirely because only corelibs' CF defines them.
+ * Each new consumer of the sysroot has found a gap here; expect the next one
+ * to as well, and treat it as a gap in this file rather than a quirk of the
+ * consumer.
  */
 
 #ifndef __TARGETCONDITIONALS__
@@ -59,11 +68,37 @@
 #define TARGET_OS_SIMULATOR           (TARGET_OS_MAC && __is_target_environment(simulator))
 #define TARGET_OS_EMBEDDED            (TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR && !TARGET_OS_MACCATALYST)
 
+/* TARGET_OS_NANO is Apple's DEPRECATED alias for TARGET_OS_WATCH -- its own
+ * header says so in as many words ("TARGET_OS_NANO - DEPRECATED: Same as
+ * TARGET_OS_WATCH") and defines it exactly this way, behind exactly this
+ * #ifndef.  CoreFoundation still tests it, so omitting it is no longer the
+ * harmless choice the note at the top of this file describes. */
+#ifndef TARGET_OS_NANO
+  #define TARGET_OS_NANO              TARGET_OS_WATCH /* deprecated */
+#endif
+
 /* Not Darwin.  Present because vendored headers test them. */
 #define TARGET_OS_WIN32               0
 #define TARGET_OS_WINDOWS             0
 #define TARGET_OS_UNIX                0
 #define TARGET_OS_LINUX               0
+
+/* These four are NOT Apple's.  They appear nowhere in any Apple
+ * TargetConditionals.h -- verified against the MacOSX15.4 SDK's copy, zero
+ * definitions of each -- and are swift-corelibs-foundation's own additions,
+ * which its CoreFoundation uses to select a non-Darwin branch.  CF tests them
+ * with #if, not #ifdef, so on a Darwin target they are not "unknown", they are
+ * FALSE: 0 is the accurate answer here rather than a convenience.
+ *
+ * Why this is found at all: CF compiles with -Wundef-prefix=TARGET_OS promoted
+ * to an error, so an undefined macro fails the build instead of quietly
+ * evaluating to 0.  That error is doing us a favour.  A wrong VALUE would be
+ * strictly worse than a missing one -- it would select a WASI or Android code
+ * path in a file that compiles clean. */
+#define TARGET_OS_WASI                0
+#define TARGET_OS_ANDROID             0
+#define TARGET_OS_BSD                 0
+#define TARGET_OS_CYGWIN              0
 
 /* ------------------------------------------------------------------- CPU */
 #define TARGET_CPU_PPC                0
