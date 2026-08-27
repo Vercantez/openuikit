@@ -243,7 +243,9 @@ os/workgroup_object.h	libdispatch:os/workgroup_object.h
 os/workgroup_parallel.h	libdispatch:os/workgroup_parallel.h
 os/workgroup.h	libdispatch:os/workgroup.h
 pthread.h	libpthread:include/pthread/pthread.h
+pthread/priority_private.h	xnu:bsd/pthread/priority_private.h
 pthread/pthread_impl.h	libpthread:include/pthread/pthread_impl.h
+pthread/qos_private.h	libpthread:private/pthread/qos_private.h
 pthread/qos.h	libpthread:include/pthread/qos.h
 pthread/sched.h	libpthread:include/pthread/sched.h
 runetype.h	Libc:include/runetype.h
@@ -363,6 +365,7 @@ sys/mman.h	xnu:bsd/sys/mman.h
 sys/mount.h	xnu:bsd/sys/mount.h
 sys/param.h	xnu:bsd/sys/param.h
 sys/proc.h	xnu:bsd/sys/proc.h
+sys/qos_private.h	libpthread:private/sys/qos_private.h
 sys/qos.h	libpthread:include/sys/qos.h
 sys/queue.h	xnu:bsd/sys/queue.h
 sys/resource.h	xnu:bsd/sys/resource.h

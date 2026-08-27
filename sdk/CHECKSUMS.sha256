@@ -204,8 +204,10 @@ d610780d732a3dcad409f3c1ca9dea0196e6ede483113078e7d8dd28f41851f5  libdispatch:os
 19e54464470067c61c837c3e3f292b1ecb77bf2bf5892cbe115940aaa3d0c96a  libdispatch:os/workgroup_object.h  os/workgroup_object.h
 e401e04d766fdccfa0cd7130464cc4183cbbdda98edea71c8d66cb8929a3c01a  libdispatch:os/workgroup_parallel.h  os/workgroup_parallel.h
 c14ac88c6c17f6eaea94ecd5a6fed5bb2a509cc154be43bfea44e6a4430468ca  libpthread:include/pthread/pthread.h  pthread.h
+7471216f3bcf1c07595e9ee29bcada84bb03f0d863a12a3f320bf290f920658f  xnu:bsd/pthread/priority_private.h  pthread/priority_private.h
 42896cbc575d9099c53f8c0afbaa04f40b2d11d24f92af5ccd7dacdaf8690231  libpthread:include/pthread/pthread_impl.h  pthread/pthread_impl.h
 bfcfcf23501c328f5aa7f3bb39c0c8167730ab111393063c5b5fb4bd72d074f2  libpthread:include/pthread/qos.h  pthread/qos.h
+223a4c216a30c2d98941fa68ec983f2dcb3650bf3adb6cbb8d0a69881f4aeade  libpthread:private/pthread/qos_private.h  pthread/qos_private.h
 07d65b8d135be978a33579b5a333bd4576a8c6b36351ef510e0cca2aa0987020  libpthread:include/pthread/sched.h  pthread/sched.h
 77e4c54bae90d051e567de33c1a56f97e8e3c61fb28f5e7e96e1f859ba50c72a  Libc:include/runetype.h  runetype.h
 07d65b8d135be978a33579b5a333bd4576a8c6b36351ef510e0cca2aa0987020  libpthread:include/pthread/sched.h  sched.h
@@ -324,6 +326,7 @@ b16e5eb195f153793b14c3826e6b04db945e9ed6a37c5a9046196555bded6906  xnu:bsd/sys/er
 ee6024c8fee1eb9bcd280203532cba183fb015c5549eebcd8f45f4667529ad4a  xnu:bsd/sys/param.h  sys/param.h
 de7edcc6107af2392ba679b6a0dec480c2e526eaa62e5b9738339e6070351c81  xnu:bsd/sys/proc.h  sys/proc.h
 3f1e1e9a2b707f22407df44ee8a8b270348d3b4b53313ec52d06a6198716e273  libpthread:include/sys/qos.h  sys/qos.h
+7901abe0601b12570c510cbb0c36a41f74e44bef960f1bb0233310584a9829ab  libpthread:private/sys/qos_private.h  sys/qos_private.h
 d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/queue.h  sys/queue.h
 69541c4d1b100294f244724ef58609fb66448574d4ceaffbd87b3284f8ab5613  xnu:bsd/sys/resource.h  sys/resource.h
 e6501f5479116b740fd0099210e63c22a58d24b0ee2554e7135b39a4dd856516  xnu:bsd/sys/select.h  sys/select.h

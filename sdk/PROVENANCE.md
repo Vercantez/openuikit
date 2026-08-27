@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        376 rows: header path -> where it comes from
+  MANIFEST.tsv        379 rows: header path -> where it comes from
   SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
   local/              19 clean-room headers of ours (4,396 lines)
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        376 headers, 3.4 MB -- COMMITTED
+  usr/include/        379 headers, 3.4 MB -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -29,10 +29,10 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 
 | source | headers | licence | redistributable |
 |---|---:|---|---|
-| **xnu** | 219 | APSL 2.0 | yes |
+| **xnu** | 220 | APSL 2.0 | yes |
 | **Libc** | 74 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
-| **libpthread** | 17 | APSL 2.0 | yes |
+| **libpthread** | 19 | APSL 2.0 | yes |
 | **libplatform** | 6 | APSL 2.0 | yes |
 | **libmalloc** | 5 | APSL 2.0 | yes |
 | **cctools** | 5 | APSL 2.0 | yes |
@@ -42,7 +42,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
 | **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **376** | | |
+| | **379** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
@@ -138,6 +138,43 @@ NOT the declaration-only census shim, and it must not become a forward:
 `posix_spawnattr_t` is 8 bytes on Darwin and 336 in glibc, so forwarding
 destroys 328 bytes of guest stack and returns success
 (`docs/UNIMPLEMENTED.md#posix-spawn`).
+
+### The three with no oracle: the QoS private headers
+
+`pthread/qos_private.h`, `sys/qos_private.h` (libpthread) and
+`pthread/priority_private.h` (xnu) are the only headers here that **cannot be
+checked against Apple's SDK**, because Apple does not ship them — verified
+absent from MacOSX15.4. Everything else in this tree is provable by compiling
+the same source both sides; these are not, so they get
+`sdk/tests/qos_probe.c` instead, which substitutes three weaker checks for the
+one strong one:
+
+1. **against the public header they extend.** Apple ships `sys/qos.h`, and the
+   private headers add to its `qos_class_t` rather than replacing it, so every
+   shared enumerator must agree. A mismatched revision shows up here.
+2. **cross-project.** The QoS values are libpthread's and the encoding that
+   consumes them is xnu's — two separately versioned projects that must agree
+   or Apple's own build breaks. `_pthread_priority_make_from_thread_qos()`
+   encodes one-hot at `SHIFT + qos - 1`, so every representable class has to
+   land inside `_PTHREAD_PRIORITY_QOS_CLASS_MASK`, and the class mask must not
+   overlap the relative-priority field beside it.
+3. **pinned constants**, so upstream drift fails the build.
+
+Why this earns a whole probe: `_PTHREAD_PRIORITY_QOS_CLASS_SHIFT` is 8, which
+makes an 8-bit mask the natural guess, and the real
+`_PTHREAD_PRIORITY_QOS_CLASS_MASK` is `0x003fff00` — **fourteen** bits. A port
+that invented `0x0000ff00` would mis-encode every queue priority silently,
+because nothing checks an encoding against a value it produced itself. Teeth
+verified by substituting exactly that guess: the probe fails with
+`4194048U == 65280U`.
+
+**One limitation, stated rather than hidden.** `THREAD_QOS_LAST` is *used* by
+`priority_private.h:232` and *defined* in no published Apple source — not
+`osfmk/mach/thread_policy.h`, not `osfmk/kern/kern_types.h`. It lives in a
+kernel-private header. So the three `static inline` encoders in that file
+compile, because nothing instantiates them, but cannot be called from a guest.
+libdispatch does not call them; a port that does gets an undeclared-identifier
+error at its own call site, which is at least loud.
 
 Still absent, and it needs a decision rather than a row: **`netdb.h` is not in
 xnu or Libc.** Darwin's lives in `Libinfo`, which is not one of the 11 pinned
@@ -523,13 +560,13 @@ failure rather than a mystery six months from now.
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **353 of 376** files: the 19 clean-room and 4 objc4 headers live in this
+> **356 of 379** files: the 19 clean-room and 4 objc4 headers live in this
 > repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
 > of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 376 headers
+> measured 2026-08-26, a restage of a clean checkout reproduces all 379 headers
 > byte-for-byte.
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on
