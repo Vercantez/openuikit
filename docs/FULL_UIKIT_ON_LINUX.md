@@ -97,45 +97,72 @@ different owners, so `full/scripts/score.py` measures them separately.
 
 <!-- SCOREBOARD -->
 
-## 4. What blocks the rest — one bug, and it is not UIKit
+## 4. What blocks the rest — and a harness bug that cost an evening
 
-Of the scenes that do not render, the overwhelming majority die at the **same
-instruction**: `libswiftCore+0x2dce0`, inside `_swift_initClassMetadataImpl`,
-on a fault address of the form `0x2aaa_xxxx_xxxx`.
+### The mask that fires is FAST_DATA_MASK, not the isa mask
 
-That address shape is the whole diagnosis. `0x2aaa…` is `0xaaaa…` with **bit 47
-cleared** — a glibc `brk`-heap pointer truncated by Apple's 47-bit isa mask.
-Verified arithmetically: the faulting instruction is `ldr w10, [x19, #0x4]`, and
-`(0xaaaaf544387c | 1<<47) & 0x7ffffffffff8` is exactly the `x19` that faulted.
+The dominant failure is `libswiftCore+0x2dce0`, inside
+`_swift_initClassMetadataImpl`, faulting on addresses shaped `0x2aaa_xxxx_xxxx`
+— `0xaaaa_xxxx_xxxx` with bit 47 cleared. The truncating instruction and the
+load that feeds it are:
 
-So this is the **heap half** of the isa-mask problem. `ISA_MASK_VERDICT.md` §5
-recorded that the predicted glibc-heap residual "did not materialise" — that was
-true for the slice and is **wrong for the full module**. The slice instantiated
-few classes at runtime; the full module instantiates many, and runtime class
-metadata is `malloc`'d. machorun's `fix/map-below-isa-mask` arena places
-**images** below 2^47 and cannot move the C heap.
+```
+2dc84   ldr  x8, [x28, #0x20]              ; objc_class + 0x20 == class_data_bits_t
+2dc88   and  x19, x8, #0x7ffffffffff8      ; FAST_DATA_MASK, not ISA_MASK
+...
+2dce0   ldr  w10, [x19, #0x4]              ; <-- SIGSEGV
+```
 
-**Correction recorded rather than quietly fixed**, because it changes the
-roadmap: the guest-malloc-arena work is not optional polish, it is what unblocks
-the rest of the suite.
+Offset `+0x20` is `class_data_bits_t`, so the 47-bit constant here is
+**FAST_DATA_MASK / DEBUG_DATA_MASK**, yielding `class_rw_t*` — which objc4
+**mallocs**. Same 47-bit ceiling as [ISA_MASK_VERDICT.md](ISA_MASK_VERDICT.md),
+different field, different allocation. This is worth stating precisely because
+it rules out the tempting fix: widening those sites in Apple's runtime would
+corrupt `class_rw_t` decoding rather than repair anything. machorun's
+`patches-macho/0001` header says the same thing.
 
-### The measurement that pins it, and one that failed
+### It was already fixed upstream; the harness was stale
 
-`RLIMIT_STACK=unlimited` flips Linux to the legacy bottom-up mmap layout
-process-wide, which puts the PIE — and therefore `brk` and the whole C heap —
-near `0x5555…`, **below 2^47**. Running the suite that way is a measurement, not
-a fix (machorun's own commit rejects the same trick for image placement, and the
-reasons carry over: it is a property of how the process was invoked, it lapses
-across a re-exec, and it moves every unrelated allocation).
+machorun master has both halves: `9659e73` *"loader: link low, because the heap
+is the other half of the isa mask"* (with `mr_constrain_heap()` in `src/map.c`:
+two `mallopt` calls plus a probe that **verifies** rather than trusts), and
+`b497429` *"objc4: run Apple's stock class_rw_t masks, now that the heap fits
+under them"*.
 
-An attempt to do better — a bump allocator over an arena at 64 GiB, in a second
-libSystem umbrella — **failed, and is recorded as failed**: overriding `malloc`
-in the umbrella while machorun's `libSystem.real` keeps calling glibc's
-internally means two allocators share one heap, and glibc aborts with
-*"malloc(): corrupted top size"*. The interception has to happen inside
-machorun's own libSystem, which is where the guest-arena work already lives.
-`full/shims/lowheap.c` is kept for the next person with that result in its
-header.
+The guest root used for the first suite run had been staged **before** those
+landed, so it faithfully reproduced a bug that had been fixed hours earlier.
+That is a harness defect, not a finding. `build_full.sh` now stages the loader,
+libobjc and both umbrellas from a read-only bind mount of `~/machorun` on
+**every** run, so the staleness cannot recur — and the two umbrellas were
+collapsed into one layer each (`spike/syspatch.c` + `full/shims/concpatch.c`
+over machorun's current `libSystem`), because stacking a new umbrella on a
+copied old one is exactly how the stale layer survived.
+
+### A measurement that was invalid, recorded as invalid
+
+`RLIMIT_STACK=unlimited` was used as a cheap proxy for "put the heap below
+2^47", on the theory that it flips Linux to the legacy bottom-up mmap layout.
+**It does not move the heap.** Checked directly:
+
+```
+default          [heap] aaab02458000-aaab02479000
+--ulimit stack=-1 [heap] aaab104bf000-aaab104e0000
+```
+
+`brk` follows the PIE, which aarch64 Linux places at `0xaaaa…` regardless of
+the stack rlimit; the flag changes `mmap` placement only. The 108-scene A/B run
+on it (49 vs 49, one scene swapped each way) therefore measured nothing and is
+discarded. The single scene that appeared to improve in an earlier spot check
+was ASLR luck — these faults depend on whether the truncated address happens to
+be mapped, so they are **flaky run to run**, which is itself worth knowing when
+reading any single result.
+
+An attempt to do the measurement properly — a bump allocator over a 64 GiB
+arena in a second libSystem umbrella — also **failed, and is kept as failed**:
+overriding `malloc` in the umbrella while machorun's `libSystem.real` keeps
+calling glibc's internally puts two allocators on one heap, and glibc aborts
+with *"malloc(): corrupted top size"*. `full/shims/lowheap.c` retains that
+result in its header so the next person does not repeat it.
 
 ## 5. Reproducing
 

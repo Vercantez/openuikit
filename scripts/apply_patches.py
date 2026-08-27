@@ -205,9 +205,18 @@ if os.environ.get("SWIFTCORE_MACHO_LEGACY_IMAGE_REG") == "1":
 # scripts/widen_isa_mask.py applies the identical change to an already-built
 # dylib, for when no rebuild machine is available.
 # ---------------------------------------------------------------------------
-edit("include/swift/ABI/System.h",
-     "0x00007ffffffffff8ULL",
-     "0x007ffffffffffff8ULL /* swiftcore-macho: machorun wide-VA isa, patch 6 */",
-     "wide-VA objc isa mask")
+# NOT POLICY, and off by default. The team decided the loader fix (map images
+# AND heap below 2^47) is the architecture: it repairs Apple's shipped runtime
+# too, which widening never can. Keep this only as a fallback for a runtime we
+# build and cannot re-target. Set SWIFTCORE_MACHO_WIDEN_ISA=1 to apply.
+#
+# Its anchor is ALSO unverified against 6.2.4 -- the constant is not in Swift's
+# shipped shims and I could not confirm where it lives. It asserts on mismatch,
+# so enabling it will fail loudly rather than silently no-op.
+if os.environ.get("SWIFTCORE_MACHO_WIDEN_ISA") == "1":
+    edit("include/swift/ABI/System.h",
+         "0x00007ffffffffff8ULL",
+         "0x007ffffffffffff8ULL /* swiftcore-macho: machorun wide-VA isa, patch 6 */",
+         "wide-VA objc isa mask")
 
 print("patches applied")
