@@ -484,3 +484,72 @@ Two things fall out of this:
    Swift value crosses into an `NSArray`/`NSDictionary`.
 5. **Thread safety.** The slice has none. CF brings its own locking; our `NS*`
    layer must not undo it.
+
+---
+
+## 12. RULING: Swift `URL` is a PORT of upstream swift-foundation, and it is PERMANENT
+
+**Recorded by existential-fix for #58, on team-lead's instruction, in
+foundation-scope's repo because this is where the architecture ruling belongs.**
+
+### The check that decided it
+
+#58 was briefed as "surface Swift APIs over CF bridge classes that already
+exist", with `URL` first. Two candidate designs: `URL` backed by CFURL, or a
+portable-Swift `URL`. Building **both** is the one outcome that must not
+happen — that is malloc_type, the libSystem umbrella and `swiftcorepatch.c`,
+three for three, where two implementations exist and one silently wins.
+
+The hinge was: **does Apple's own modern Foundation implement `URL` natively in
+Swift, or over CFURL?** Measured in upstream source rather than assumed
+(`swiftlang/swift-foundation`, `Sources/FoundationEssentials/URL/URL.swift`,
+lines 659-676):
+
+```swift
+#if FOUNDATION_FRAMEWORK
+    internal typealias _Impl = any _URLProtocol & AnyObject
+    private static var _type: any _URLProtocol.Type {
+        if URL.compatibility2            { _BridgedURL.self }   // NSURL-backed
+        else if foundation_swift_url_v2_enabled() { _URL.self } // native Swift
+        else if foundation_swift_url_enabled()    { _SwiftURL.self }
+        else                             { _BridgedURL.self }   // NSURL-backed
+    }
+#else
+    internal typealias _Impl = _URL                             // native Swift
+    private static let _type = _Impl.self
+#endif
+```
+
+**Off Darwin — which is our configuration — `URL` is unconditionally `_URL`, a
+native Swift `final class` (`URL_Impl.swift:42`), with no CoreFoundation and no
+NSURL.** `URL_Bridge.swift` is entirely inside `#if FOUNDATION_FRAMEWORK`.
+
+One precision worth keeping, because the simpler claim is not quite true: **on
+Darwin it is runtime-flag-selected and the fallback branch is still
+`_BridgedURL`.** So "Apple ships a native-Swift URL" is conditional there. "Off
+Darwin it is unconditionally native Swift" is not conditional, and that is us.
+
+### The ruling
+
+**Swift `URL` is native-Swift, ported from upstream, and this is PERMANENT.
+CoreFoundation must never grow a rival `URL`.** If a CFURL-backed `URL` is ever
+proposed, it is a deviation requiring justification against this entry, not a
+default. The Swift overlay was always a separable half of this architecture
+(§0); `URL` lives in that half.
+
+### And it reframes the work: this is a PORT, not a reimplementation
+
+swift-foundation is **Apache 2.0 with Runtime Library Exception**. The URL
+implementation is ~13,500 lines of existing, upstream, open-source Swift that
+in our configuration already compiles without CF.
+
+**That puts the model layer in the libdispatch / libc++ / CoreFoundation
+category — port from source — and NOT in the UIKit category, where no source
+exists and everything had to be oracle-harvested.** It also corrects the
+framing in `~/swiftcore-macho` docs §11 and in the #58 brief, both of which
+read as though the Swift surface had to be written here. It does not.
+
+The oracle built for it (`~/swift-macho-linux/full/oracle-url/`, 809 real URL
+literals from four shipping apps, diffed against real Foundation) remains the
+right validation either way — a port needs its differential just as much as a
+reimplementation does, and it is what will catch a porting mistake.
