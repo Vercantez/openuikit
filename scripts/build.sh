@@ -81,6 +81,7 @@ build_loader() {
         "$ROOT"/src/init.c \
         "$ROOT"/src/objc_notify.c \
         "$ROOT"/src/crash.c \
+        "$ROOT"/src/unwind.c \
         "$ROOT"/src/main.c \
         $LDFLAGS -ldl -lpthread -Wl,--no-as-needed -lm -Wl,--as-needed
     echo "   -> $BUILD/machorun"

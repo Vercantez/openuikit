@@ -487,6 +487,121 @@ our own `optarg`/`optind`, the time surface, and a `strtol` family that sets
 
 ---
 
+### (y) `26_malloc_type` — Apple's typed allocator, and the size argument
+`tests/src/26_malloc_type.c` · chained
+
+**This rung exists because its absence cost the project its longest bug.**
+machorun's libSystem had no `malloc_type_*` family at all, so a sibling repo
+supplied its own `malloc_type_zone_malloc_with_options_internal` with four
+parameters instead of five. The real signature is
+`(zone, align, size, options, type_id)`, so the argument it forwarded to
+`malloc` as the size was the **alignment** — it compiled to `mov x0, x1;
+b _malloc`, sixteen bytes whatever was asked for, and every caller wrote its
+whole object over the neighbours. One wrong register was the entirety of the
+"46 UIKit scenes fail with nondeterministic memory corruption" wall.
+
+Three design decisions, each of which the bug would have defeated otherwise:
+
+* **Every request uses a size and an alignment that differ, and neither is 16.**
+  A wrong-argument bug in this family is invisible whenever the two coincide,
+  and 16 is both the usual alignment and a plausible size — the one value that
+  hides the bug rather than showing it. No requested size here can be produced
+  by accident from the alignment, the count, the options word or the zone
+  pointer.
+* **`malloc_size` is checked BEFORE anything is written.** The broken version
+  returned a perfectly valid pointer every single time; the damage surfaced
+  somewhere else, later, as somebody else's crash. A fixture that only wrote and
+  looked for a crash would be testing the heap's luck. The guard blocks and the
+  full-size fill are a second layer, for a block that is honestly reported and
+  still too small.
+* **The negative cases are checked too**, because an implementation that
+  succeeds where macOS returns NULL diverges in the permissive direction, which
+  nothing downstream notices. Those rules are **measured, not read** — no header
+  states them: `aligned_alloc` and `..._zone_malloc_with_options_internal`
+  return NULL when the alignment exceeds 16 and the size is not a multiple of
+  it, while `zone_memalign`, `posix_memalign` and `valloc` have no such rule.
+
+Teeth demonstrated rather than predicted: rebuilding `darwin/src/objcsupport.c`
+with the four-parameter form reproduces `mov x0, x1; b _malloc` exactly
+(confirmed with `otool`, not assumed), and the fixture reports
+`wanted 6144, got 40` — 40 being what glibc makes of a 32-byte request — plus
+the negative case, for five failures against a clean oracle.
+
+**Loader must implement:** nothing. This is entirely a `darwin/src/` rung; it is
+here because the family is libSystem surface and a hole in libSystem does not
+stay empty.
+
+---
+
+### (z) `27_unwind` — unwinding a real stack through compact `__unwind_info`
+`tests/src/27_unwind.c` · chained
+
+**It WALKS, it does not link.** Every unwind symbol resolved perfectly for as
+long as the unwinder was a set of aborting stubs, so a link test would have
+passed throughout — the same trap that hid the `std::__sort` recursion, where
+the symbol existed and the body was an infinite loop.
+
+Apple's binaries carry no `.eh_frame`. `__TEXT,__unwind_info` is a compressed
+two-level page table whose leaves are 32-bit encodings of a frame's shape. To
+name `level1` as the caller of `level2`, libunwind has to find the right
+second-level page by binary search, decode the encoding, work out where `x29`
+and `x30` were spilled, and restore them. Getting the page lookup or the
+register mask wrong still produces AN answer — just the wrong frame.
+
+**THE macOS ORACLE REJECTED THE FIRST VERSION AND WAS RIGHT**, which is the most
+useful thing this rung has produced. It matched frames by calling
+`_Unwind_FindEnclosingFunction` and comparing against `&level1/&level2/&level3`,
+and it failed on macOS against Apple's own libunwind, naming none of the three.
+**Compact unwind COMPRESSES**: consecutive functions with identical encodings
+share one entry, so the reported `start_ip` is the start of the RUN, not of the
+function — and three adjacent one-line functions are exactly the case that
+merges. `_Unwind_FindEnclosingFunction` is not a function-identity oracle on any
+platform, and a test built on that assumption tests the wrong thing everywhere.
+
+What replaced it is exact and immune to merging: each level records its own
+`__builtin_return_address(0)` on the way down, and the walk must report those
+same addresses on the way out. Comparing the unwinder against the compiler's own
+idea of the return address cannot be passed by accident.
+
+Two smaller traps the fixture had to survive, both measured:
+
+* **`walk()` must be `noinline`.** It is `static` and called once, so at `-O1`
+  clang inlines it into `level3`; then two levels record the SAME return address
+  and the frames under test shift by one. The tell was `ra[0] == ra[1]`, which is
+  impossible unless a frame vanished.
+* **`ip - 1` before any lookup.** `_Unwind_GetIP` returns a return address and
+  the byte after a call can belong to the next function — the same off-by-one
+  `src/crash.c` had.
+
+**Teeth demonstrated by two mutations of `src/unwind.c`**, each with the defect
+confirmed present in the built loader (source marker plus a changed md5) before
+the result was trusted — a mutant that did not take reads exactly like a fixture
+with no teeth:
+
+| mutation | result |
+|---|---|
+| drop the image slide | SIGSEGV at `0x12f74`, an unslid section address |
+| swap the two sections | exit 1, no crash, three named failures |
+
+The second matters more. A wrong answer that does not crash is the failure mode
+this rung exists for. The CFA-monotonic check is labelled in the source as NOT
+the tell: under the second mutation the walk stops at frame 0, so it has nothing
+to compare and reports "yes" on a build where three other checks fail. It is
+kept for the opposite case — a decoder producing plausible pcs while mis-reading
+frame sizes — and the label is there so nobody rediscovers why it never fires.
+
+**Loader must implement:** `_dyld_find_unwind_sections` — given any address,
+the mach header of the containing image and the live addresses and lengths of
+its `__TEXT,__eh_frame` and `__TEXT,__unwind_info`. Live addresses: a section
+header's `addr` is where the linker wanted it and every image here is slid. A
+zero `dwarf_section` is normal rather than a gap — Apple's linker emits compact
+unwind for everything it can express and none of this corpus has an
+`__eh_frame`. Also `_dyld_register_func_for_remove_image`, which is honestly a
+no-op: nothing is ever unmapped here, so the callback would have nothing to
+report.
+
+---
+
 ### (x) `10_fat` — universal binary
 `lipo` of an x86_64 build and the arm64 `03_printf` · chained
 

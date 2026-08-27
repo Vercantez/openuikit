@@ -4,6 +4,15 @@
 # this repository and git already vouches for them.
 #
 # scripts/sdk_stage.sh --verify re-fetches upstream and checks these.
+#
+# THREE UNWIND HEADERS ARE DELIBERATELY ABSENT FROM THIS FILE, for the same
+# reason the clean-room and objc4 rows are: unwind.h, unwind_itanium.h and
+# mach-o/compact_unwind_encoding.h come from vendor/libunwind, which lives in
+# this repository, so git already vouches for them. They could NOT have come
+# from the same place as the two rows below -- Apple's libunwind-201
+# distribution ships only libunwind.h and __libunwind_config.h, and does not
+# contain either of the others. Mixing an upstream row with a vendored file
+# would make this list say something untrue about where a header came from.
 c1f75e3d4d3b06d7ffbd50697666c874236d269e30307e303609d71f2269bdd9  libclosure:Block.h  Block.h
 b226c1e20cabb4d18a12b50631ce14a6087deb9442a4a10dda96b8b4a773b667  Libc:include/___wctype.h  ___wctype.h
 dd744708e8d73f7e8867ec6cb279ac5ff144f749d9a9e556aca730826d5b7406  libunwind:libunwind/include/__libunwind_config.h  __libunwind_config.h

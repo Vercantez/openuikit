@@ -1,4 +1,4 @@
-/* 27_poll.c -- rung (y): poll(2), where all three arguments are wrong.
+/* 28_poll.c -- rung (aa): poll(2), where all three arguments are wrong.
  *
  * poll is the most innocent-looking call in the boundary: an array of 8-byte
  * structs whose layout is identical on both systems, a count, and a

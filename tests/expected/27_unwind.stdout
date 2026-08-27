@@ -1,0 +1,9 @@
+enclosing(level1) covers it: yes
+enclosing(NULL) is NULL:     yes
+frame 1 return address is level3 (walk's caller)     as recorded
+frame 2 return address is level2 (level3's caller)   as recorded
+frame 3 return address is level1 (level2's caller)   as recorded
+frames walked:               enough
+all 3 return addresses match: yes
+CFA strictly increasing:     yes
+PASSED: 0 failure(s)

@@ -60,6 +60,27 @@ _mr_addr_in_glibc_heap #internal
 _mr_image_is_loaded #internal
 _mr_dlsym_default   #internal
 
+# The crash reporter's frame walk, callable from our dylibs' mr_bail. A
+# guest-side diagnostic knows which rule was broken and cannot name who broke
+# it -- darwin/src has no access to the loader's image table -- so every
+# mr_bail message was a true statement with no addressee. See src/crash.c.
+# --- dyld's half of unwinding (src/unwind.c) -------------------------------
+#
+# libunwind knows how to DECODE Apple's compact __TEXT,__unwind_info; only the
+# loader knows WHERE it is, so libunwind asks once per frame and the first
+# thing findUnwindSections() does on __APPLE__ is call the first of these.
+#
+# NOT #internal, unlike the mr_* seams above: on Darwin both live in
+# libdyld.dylib, which libSystem re-exports, so a guest that links -lSystem is
+# entitled to resolve them. They belong in the .tbd.
+__dyld_find_unwind_sections
+__dyld_register_func_for_remove_image
+
+_mr_report_backtrace #internal
+_mr_report_memory   #internal
+_mr_guard_arm       #internal
+_mr_guard_disarm    #internal
+
 # --- objc4's -delay_init references to the Swift runtime (src/resolve.c) ----
 #
 # ld64.lld-18 does not implement -delay_init, so objc4's swift_retain and

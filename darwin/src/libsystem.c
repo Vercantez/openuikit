@@ -47,6 +47,7 @@ HIDDEN __attribute__((noreturn)) void mr_bail(const char *what)
     mr_say("machorun/libSystem: ");
     mr_say(what);
     mr_say("\n");
+    mr_report_backtrace(NULL);
     glibc_fflush(NULL);
     glibc__exit(71);
     __builtin_unreachable();
@@ -59,6 +60,7 @@ HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *det
     mr_say(": ");
     mr_say(detail);
     mr_say("\n");
+    mr_report_backtrace(NULL);
     glibc_fflush(NULL);
     glibc__exit(71);
     __builtin_unreachable();
@@ -1087,6 +1089,87 @@ EXPORT int pthread_mutexattr_gettype(void *a, int *type)
     return rc;
 }
 
+/* ===================================================================== *
+ * Read-write locks.
+ *
+ * libunwind takes one around its DWARF FDE cache and around its dynamic
+ * unwind-section registry, so unwinding cannot work without these -- they were
+ * the first thing the link failed on.
+ *
+ * UNLIKE pthread_cond_t, THIS ONE FITS INLINE, and the difference is measured
+ * rather than assumed because the cond case looked identical and was not:
+ *
+ *      type                    Darwin total   Darwin OPAQUE   glibc
+ *      pthread_rwlock_t                 200             192      56   fits, 136 spare
+ *      pthread_rwlockattr_t              24              16       8   fits
+ *
+ * macOS 26.5.2 and the test-bed image, pinned in sdk/tests/glibc_abi_probe.c.
+ * So a rwlock can use adopt()'s scheme directly: glibc's object lives in the
+ * guest's own bytes and no handle or allocation is needed.
+ *
+ * DARWIN HAS TWO SIGNATURES FOR A RWLOCK AND ONLY ONE OF THEM CAN REACH US.
+ * Measured: PTHREAD_RWLOCK_INITIALIZER leaves __sig == 0x2DA8B3B4, and after
+ * Apple's pthread_rwlock_init it is 0x52574C4B ('RWLK'). The second can never
+ * appear here, because OUR pthread_rwlock_init writes MR_ADOPTED_SIG instead --
+ * so the static-initialiser value is the only Darwin signature this code ever
+ * sees. Recorded because "why is only one constant here" is otherwise a
+ * reasonable thing to get wrong later.
+ * ===================================================================== */
+#define DARWIN_RWLOCK_SIG 0x2DA8B3B4L   /* _PTHREAD_RWLOCK_SIG_init */
+
+_Static_assert(sizeof(((struct darwin_opaque *)0)->opaque) >= 56,
+               "glibc's pthread_rwlock_t is 56 bytes and must fit in Darwin's opaque area");
+
+/* Same double-checked adoption as adopt(), with pthread_rwlock_init in place
+ * of pthread_mutex_init. Not a parameter to adopt() because the initialiser is
+ * the only difference and a function pointer there would be harder to read
+ * than fifteen lines. */
+static void *rwlock_g(struct darwin_opaque *o)
+{
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) != MR_ADOPTED_SIG) {
+        glibc_pthread_mutex_lock(adopt_lock());
+        if (o->sig != MR_ADOPTED_SIG) {
+            if (o->sig != DARWIN_RWLOCK_SIG && o->sig != 0)
+                mr_bail("a pthread_rwlock_t has an unexpected Darwin signature; its "
+                        "layout was compiled into the guest and cannot be renegotiated");
+            glibc_memset(o->opaque, 0, sizeof(o->opaque));
+            glibc_pthread_rwlock_init(o->opaque, NULL);
+            __atomic_store_n(&o->sig, MR_ADOPTED_SIG, __ATOMIC_RELEASE);
+        }
+        glibc_pthread_mutex_unlock(adopt_lock());
+    }
+    return o->opaque;
+}
+
+EXPORT int pthread_rwlock_init(void *rw, const void *attr)
+{
+    struct darwin_opaque *o = rw;
+    if (attr) mr_bail("pthread_rwlock_init with a non-NULL attribute is not implemented "
+                      "(Darwin's pthread_rwlockattr_t layout is not glibc's, and the "
+                      "only attribute either platform has is process-shared, which "
+                      "machorun has no second process to share with)");
+    if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) == MR_ADOPTED_SIG)
+        glibc_pthread_rwlock_destroy(o->opaque);
+    glibc_memset(o->opaque, 0, sizeof(o->opaque));
+    glibc_pthread_rwlock_init(o->opaque, NULL);
+    o->sig = MR_ADOPTED_SIG;
+    return 0;
+}
+
+EXPORT int pthread_rwlock_destroy(void *rw)
+{
+    struct darwin_opaque *o = rw;
+    if (o->sig != MR_ADOPTED_SIG) return 0;
+    o->sig = 0;
+    return mr_pthread_rc(glibc_pthread_rwlock_destroy(o->opaque));
+}
+
+EXPORT int pthread_rwlock_rdlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_rdlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_tryrdlock(void *rw) { return mr_pthread_rc(glibc_pthread_rwlock_tryrdlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_wrlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_wrlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_trywrlock(void *rw) { return mr_pthread_rc(glibc_pthread_rwlock_trywrlock(rwlock_g(rw))); }
+EXPORT int pthread_rwlock_unlock(void *rw)    { return mr_pthread_rc(glibc_pthread_rwlock_unlock(rwlock_g(rw))); }
+
 EXPORT int pthread_once(void *once, void (*fn)(void))
 {
     struct darwin_opaque *o = once;
@@ -1206,9 +1289,99 @@ EXPORT int   pthread_equal(void *a, void *b)   { return glibc_pthread_equal((g_p
  * docs/UNIMPLEMENTED.md#os-unfair-lock-owner. Do not "simplify" it back. */
 static unsigned unfair_token(void) { return mr_thread_token(); }
 
+static char *hex32(char *p, unsigned v)
+{
+    static const char d[] = "0123456789abcdef";
+    *p++ = '0'; *p++ = 'x';
+    for (int i = 28; i >= 0; i -= 4) *p++ = d[(v >> i) & 15];
+    return p;
+}
+
+static char *hex64(char *p, unsigned long long v)
+{
+    static const char d[] = "0123456789abcdef";
+    int i = 60;
+    *p++ = '0'; *p++ = 'x';
+    while (i > 0 && !((v >> i) & 15)) i -= 4;
+    for (; i >= 0; i -= 4) *p++ = d[(v >> i) & 15];
+    return p;
+}
+
+/* A ring of the last few lock operations, gated on MACHORUN_LOCK_TRACE.
+ *
+ * The question a failed unlock raises is not answerable from the failure site:
+ * "this thread does not own the lock" is consistent with the caller never
+ * having taken it, with something else having released it, and with the four
+ * bytes never having been a lock at all. Those want different investigations
+ * and the history separates them in one read. Off by default -- two stores per
+ * lock operation is not free on a path objc4 takes millions of times. */
+#define LOCKLOG_N 48
+struct locklog_entry { void *addr; unsigned word; unsigned char op; };
+static struct locklog_entry locklog[LOCKLOG_N];
+static unsigned locklog_n;
+static signed char locklog_on = -1;
+
+static int lock_trace(void)
+{
+    if (locklog_on < 0) {
+        const char *e = glibc_getenv("MACHORUN_LOCK_TRACE");
+        locklog_on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    return locklog_on;
+}
+
+static void locklog_put(void *l, unsigned word, char op)
+{
+    unsigned i = locklog_n++ % LOCKLOG_N;
+    locklog[i].addr = l; locklog[i].word = word; locklog[i].op = (unsigned char)op;
+}
+
+
+/* L took it, T trylock succeeded, f trylock failed, U released it, x tried to
+ * release one it did not hold. `word` is what the four bytes held BEFORE the
+ * operation, so a lock whose history is L then x with different words was
+ * overwritten between the two, and one that only ever shows x was never ours. */
+/* A write watchpoint for the four bytes of a held lock, gated on
+ * MACHORUN_LOCK_GUARD.
+ *
+ * "The lock word changed while we held it" is where a lock investigation stops
+ * being answerable from the lock code, because the next question is WHO WROTE
+ * IT and nothing at the failure site knows. The loader owns the mechanism
+ * (src/crash.c) since only it has the fault handler and the image table; this
+ * side just says which word to watch and when. Heap locks only -- a lock in an
+ * image's __DATA shares its page with the rest of __DATA. */
+static int lock_guard(void)
+{
+    static signed char on = -1;
+    if (on < 0) {
+        const char *e = glibc_getenv("MACHORUN_LOCK_GUARD");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    return on;
+}
+
+static void locklog_dump(void *culprit)
+{
+    unsigned start = locklog_n > LOCKLOG_N ? locklog_n - LOCKLOG_N : 0;
+    mr_say("  lock history (most recent last; * marks the failing address):\n");
+    for (unsigned k = start; k < locklog_n; k++) {
+        struct locklog_entry *e = &locklog[k % LOCKLOG_N];
+        char buf[80], *p = buf;
+        *p++ = ' '; *p++ = ' '; *p++ = ' '; *p++ = ' ';
+        *p++ = (e->addr == culprit) ? '*' : ' ';
+        *p++ = ' '; *p++ = (char)e->op; *p++ = ' ';
+        p = hex64(p, (unsigned long long)(uintptr_t)e->addr);
+        *p++ = ' '; *p++ = 'w'; *p++ = 'a'; *p++ = 's'; *p++ = ' ';
+        p = hex64(p, e->word);
+        *p++ = '\n'; *p = 0;
+        mr_say(buf);
+    }
+}
+
 EXPORT void os_unfair_lock_lock(void *l)
 {
     unsigned *w = l, me = unfair_token(), expect = 0;
+    if (lock_trace()) locklog_put(l, __atomic_load_n(w, __ATOMIC_RELAXED), 'L');
     while (!__atomic_compare_exchange_n(w, &expect, me, 1, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
         if (expect == me)
             mr_bail("os_unfair_lock_lock: recursive acquisition by the owning thread "
@@ -1216,20 +1389,43 @@ EXPORT void os_unfair_lock_lock(void *l)
         expect = 0;
         glibc_sched_yield();
     }
+    if (lock_guard()) mr_guard_arm(w);
 }
 
 EXPORT int os_unfair_lock_trylock(void *l)
 {
     unsigned *w = l, me = unfair_token(), expect = 0;
-    return __atomic_compare_exchange_n(w, &expect, me, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);
+    int got = __atomic_compare_exchange_n(w, &expect, me, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED);
+    if (lock_trace()) locklog_put(l, expect, got ? 'T' : 'f');
+    return got;
 }
 
+/* "this thread does not own the lock" is true and useless on its own: it does
+ * not say whether the lock word was ZERO (a genuine unbalanced unlock -- the
+ * caller never took it, or took it and something released it), or held ANOTHER
+ * LIVE TOKEN (two threads, or one thread whose token changed underneath it,
+ * which would be our TSD breaking rather than the guest misbehaving). Those
+ * want opposite investigations, and the three numbers separate them. */
 EXPORT void os_unfair_lock_unlock(void *l)
 {
     unsigned *w = l, me = unfair_token();
-    unsigned owner = __atomic_load_n(w, __ATOMIC_RELAXED);
-    if (owner != me)
-        mr_bail("os_unfair_lock_unlock: this thread does not own the lock");
+    unsigned owner;
+    if (lock_guard()) mr_guard_disarm(w);
+    owner = __atomic_load_n(w, __ATOMIC_RELAXED);
+    if (lock_trace()) locklog_put(l, owner, owner == me ? 'U' : 'x');
+    if (owner != me) {
+        if (lock_trace()) locklog_dump(l);
+        char buf[96], *p = buf;
+        p = hex32(p, (unsigned)(uintptr_t)l >> 0);
+        *p++ = ' '; *p++ = 'h'; *p++ = 'o'; *p++ = 'l'; *p++ = 'd'; *p++ = 's'; *p++ = ' ';
+        p = hex32(p, owner);
+        *p++ = ','; *p++ = ' '; *p++ = 'w'; *p++ = 'e'; *p++ = ' '; *p++ = 'a';
+        *p++ = 'r'; *p++ = 'e'; *p++ = ' ';
+        p = hex32(p, me);
+        *p = 0;
+        mr_report_memory(l, 64, 64);
+        mr_bail2("os_unfair_lock_unlock: this thread does not own the lock; lock at", buf);
+    }
     __atomic_store_n(w, 0u, __ATOMIC_RELEASE);
 }
 

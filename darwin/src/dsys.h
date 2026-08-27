@@ -39,6 +39,14 @@ typedef __builtin_va_list  va_list;
 #define NULL ((void *)0)
 
 #define GLIBCSYM(n) __asm__("_glibc_" #n)
+
+/* Defined by build/machorun, not by glibc and not by a dylib -- src/resolve.c
+ * strips the leading underscore and dlsyms it out of the loader, the same path
+ * the _dyld_* surface takes. Registered in darwin/loader-exports.txt. */
+extern void mr_report_backtrace(const char *why);
+extern void mr_report_memory(const void *addr, unsigned before, unsigned after);
+extern void mr_guard_arm(const void *word);
+extern void mr_guard_disarm(const void *word);
 #define EXPORT __attribute__((visibility("default")))
 #define HIDDEN __attribute__((visibility("hidden")))
 
@@ -183,6 +191,14 @@ extern int     glibc_getpwuid_r(unsigned, void *, char *, size_t, void **)     G
 extern void   *glibc_mmap(void *, size_t, int, int, int, long) GLIBCSYM(mmap);
 extern int     glibc_munmap(void *, size_t)                 GLIBCSYM(munmap);
 extern int     glibc_mprotect(void *, size_t, int)          GLIBCSYM(mprotect);
+
+extern int glibc_pthread_rwlock_init(void *, const void *)   GLIBCSYM(pthread_rwlock_init);
+extern int glibc_pthread_rwlock_destroy(void *)             GLIBCSYM(pthread_rwlock_destroy);
+extern int glibc_pthread_rwlock_rdlock(void *)              GLIBCSYM(pthread_rwlock_rdlock);
+extern int glibc_pthread_rwlock_tryrdlock(void *)           GLIBCSYM(pthread_rwlock_tryrdlock);
+extern int glibc_pthread_rwlock_wrlock(void *)              GLIBCSYM(pthread_rwlock_wrlock);
+extern int glibc_pthread_rwlock_trywrlock(void *)           GLIBCSYM(pthread_rwlock_trywrlock);
+extern int glibc_pthread_rwlock_unlock(void *)              GLIBCSYM(pthread_rwlock_unlock);
 
 typedef unsigned long g_pthread_t;
 extern int glibc_pthread_create(g_pthread_t *, const void *, void *(*)(void *), void *) GLIBCSYM(pthread_create);

@@ -1060,7 +1060,7 @@ EXPORT int sigwait(const unsigned int *set, int *signo)
  *    for 0x0100, and a Darwin guest asking for 0x0100 is asking for
  *    POLLWRBAND. Measured on a writable pipe under Linux: events=POLLOUT
  *    yields revents=0x0004, not 0x0104. A negative control caught the claim
- *    before it shipped -- tests/src/27_poll.c passed with the translation
+ *    before it shipped -- tests/src/28_poll.c passed with the translation
  *    deliberately removed, which is what sent me back to measure.
  *
  * 3. ppoll's sigset_t, which is the 4-against-128 crossing the rest of this

@@ -37,18 +37,69 @@ echo "== darwin: $CLANG $CFLAGS"
 # mach.c       the Mach APIs, on Linux primitives
 # ctype.c      Apple's rune table (a DATA ABI), setlocale, getopt, time
 # math.c       libm -- on Darwin there is no -lm, libSystem re-exports it
+LIBCXX_INC_FOR_UNWIND="${LIBCXX_INC:-/usr/lib/llvm-18/include/c++/v1}"
+SDK_FOR_UNWIND="${OBJC4_SDK:-$ROOT/sdk}"
+
 LIBSYSTEM_OBJ=""
 for f in libsystem posix mach ctype objcsupport math; do
     $CLANG $CFLAGS -c "$ROOT/darwin/src/$f.c" -o "$OBJ/$f.o"
     LIBSYSTEM_OBJ="$LIBSYSTEM_OBJ $OBJ/$f.o"
 done
 
+# ---------------------------------------------------------------- libunwind
+#
+# LLVM 18.1.8's libunwind, PRISTINE (vendor/libunwind, zero patches), compiled
+# INTO libSystem.B.dylib rather than as a separate dylib. That is not a
+# shortcut, it is the Darwin arrangement: on macOS libunwind.dylib is a
+# sub-library of the libSystem umbrella and libSystem re-exports it, so a guest
+# that links -lSystem already expects to find _Unwind_* there. Building it
+# separately would need re-export chasing, which the loader does not implement.
+#
+# It compiles UNPATCHED against machorun's own sdk/ -- the whole file set built
+# clean on the first attempt, which is worth stating because it is unusual and
+# because it means the compact-unwind reader here is byte-for-byte the one
+# Apple's toolchain ships rather than an approximation of it.
+#
+# THE FOUR EXCLUDED FILES ARE OTHER ARCHITECTURES' UNWINDERS, not gaps:
+# Unwind-EHABI (ARM32), Unwind-seh (Windows), Unwind-sjlj (setjmp/longjmp
+# unwinding), Unwind-wasm and Unwind_AIXExtras. None can be reached on
+# arm64-apple-macos.
+#
+# NOT -nostdinc, unlike the rest of darwin/src: libunwind is upstream code that
+# includes <stdint.h>, <inttypes.h> and <mach-o/compact_unwind_encoding.h>, so
+# it needs real headers. sdk/ supplies them, same as build_quartz.sh.
+UNWIND_SRC="$ROOT/vendor/libunwind"
+UNWIND_CFLAGS="-target $TARGET -isysroot $SDK_FOR_UNWIND -I$UNWIND_SRC/include -I$UNWIND_SRC/src -fPIC -Os -g0 -DNDEBUG -fno-stack-protector"
+UNWIND_OBJ=""
+if [ -d "$LIBCXX_INC_FOR_UNWIND" ] && [ -f "$SDK_FOR_UNWIND/usr/include/stdio.h" ]; then
+    $CLANG $UNWIND_CFLAGS -std=gnu++17 -nostdinc++ -isystem "$LIBCXX_INC_FOR_UNWIND" \
+        -fno-exceptions -fno-rtti \
+        -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE \
+        -c "$UNWIND_SRC/src/libunwind.cpp" -o "$OBJ/unw_libunwind.o"
+    for f in UnwindLevel1 UnwindLevel1-gcc-ext; do
+        $CLANG $UNWIND_CFLAGS -c "$UNWIND_SRC/src/$f.c" -o "$OBJ/unw_$f.o"
+        UNWIND_OBJ="$UNWIND_OBJ $OBJ/unw_$f.o"
+    done
+    for f in UnwindRegistersRestore UnwindRegistersSave; do
+        $CLANG $UNWIND_CFLAGS -c "$UNWIND_SRC/src/$f.S" -o "$OBJ/unw_$f.o"
+        UNWIND_OBJ="$UNWIND_OBJ $OBJ/unw_$f.o"
+    done
+    UNWIND_OBJ="$OBJ/unw_libunwind.o $UNWIND_OBJ"
+    echo "   + libunwind (vendor/libunwind, 5 objects, 0 patches)"
+else
+    echo "   !! no libc++ headers or no sdk/: libSystem.B.dylib will carry NO" >&2
+    echo "      unwinder, and any guest that throws will fail by name." >&2
+fi
+
 # -undefined dynamic_lookup makes every glibc reference a flat-lookup bind,
-# which machorun resolves through dlsym for images out of this tree.
+# which machorun resolves through dlsym for images out of this tree. It is also
+# how libunwind's two dyld imports -- _dyld_find_unwind_sections and
+# _dyld_register_func_for_remove_image, both in src/unwind.c -- reach the
+# loader without a bootstrap cycle through the .tbd files.
 $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
       -install_name /usr/lib/libSystem.B.dylib \
       -undefined dynamic_lookup \
-      -o "$OUT/libSystem.B.dylib" $LIBSYSTEM_OBJ
+      -o "$OUT/libSystem.B.dylib" $LIBSYSTEM_OBJ $UNWIND_OBJ
 
 echo "   -> $OUT/libSystem.B.dylib"
 

@@ -57,6 +57,30 @@ static void *alloc_aligned(size_t n, size_t align)
     return p;
 }
 
+/* Apple's TYPED memory operations. Apple's clang lowers `new T` in code built
+ * against their libc++ to operator new(size_t, std::__type_descriptor_t) -- an
+ * extra 64-bit token describing the type, for their memory-safety tooling --
+ * and their libc++ defines the pair. Ours did not, and Apple's SHIPPED
+ * libswiftCore uses nothing else: it imports __ZnwmSt19__type_descriptor_t and
+ * __ZdlPvSt19__type_descriptor_t and never the plain forms. Our own
+ * Linux-built libswiftCore imports __Znwm and __ZdlPvm instead, which is
+ * exactly why the shipped runtime was the only one affected.
+ *
+ * The descriptor is metadata; it does not change what must be allocated, so
+ * these forward to the untyped implementations. The parameter is taken as a
+ * 64-bit scalar rather than a struct because the call sites pass a single
+ * value in x1 (`movk` x4 building 0x00080c4018a671a6, then `bl`), and an
+ * 8-byte POD and a uint64_t are the same thing to AAPCS64.
+ *
+ * ONLY these two are defined, deliberately. The array and aligned typed forms
+ * exist in Apple's libc++ and nothing we run imports them yet; machorun now
+ * names any weak-definition gap out loud at load time (src/resolve.c), so the
+ * first binary that needs one will say so instead of branching through zero. */
+EXPORT void *mr_new_typed(size_t n, unsigned long long td)
+                                                    __asm__("__ZnwmSt19__type_descriptor_t");
+EXPORT void  mr_delete_typed(void *p, unsigned long long td)
+                                                    __asm__("__ZdlPvSt19__type_descriptor_t");
+
 EXPORT void *mr_new(size_t n)                       __asm__("__Znwm");
 EXPORT void *mr_new_array(size_t n)                 __asm__("__Znam");
 EXPORT void *mr_new_align(size_t n, size_t a)       __asm__("__ZnwmSt11align_val_t");
@@ -67,6 +91,9 @@ EXPORT void  mr_delete_sized(void *p, size_t n)     __asm__("__ZdlPvm");
 EXPORT void  mr_delete_array_sized(void *p, size_t n) __asm__("__ZdaPvm");
 EXPORT void  mr_delete_align(void *p, size_t a)     __asm__("__ZdlPvSt11align_val_t");
 EXPORT void  mr_delete_array_align(void *p, size_t a) __asm__("__ZdaPvSt11align_val_t");
+
+EXPORT void *mr_new_typed(size_t n, unsigned long long td) { (void)td; return alloc(n); }
+EXPORT void  mr_delete_typed(void *p, unsigned long long td) { (void)td; glibc_free(p); }
 
 EXPORT void *mr_new(size_t n) { return alloc(n); }
 EXPORT void *mr_new_array(size_t n) { return alloc(n); }

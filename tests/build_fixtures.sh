@@ -189,15 +189,6 @@ want 23_passwd           && build 23_passwd           "$CHAINED_TARGET" 23_passw
 # SIG_UNBLOCK and returns success. darwin/src/posix.c translates; this grades it.
 want 25_sigmask          && build 25_sigmask          "$CHAINED_TARGET" 25_sigmask          25_sigmask.c --
 
-# ---------------------------------------------------------------- rung (y)
-# poll(2). A regression guard rather than a discriminating test, and the
-# fixture's own header says why: the two flags that differ cannot be reached
-# from a fixture, because poll masks revents by the events requested and the
-# one case that would show the mapping is a place the two KERNELS disagree.
-# What it does hold is the eight agreeing flags, the counts, and the wrapper's
-# heap path, byte-for-byte against macOS.
-want 27_poll             && build 27_poll             "$CHAINED_TARGET" 27_poll             27_poll.c --
-
 # ---------------------------------------------------------------- rung (v)
 # std::sort over the five types libcxx_std.cpp instantiates by hand. It SORTS
 # rather than links, because the symbol resolved perfectly while recursing
@@ -207,6 +198,30 @@ if want 24_cxx_sort; then
         "$SRC/24_cxx_sort.cpp" -lc++
     echo "==> 24_cxx_sort"; built+=(24_cxx_sort)
 fi
+
+# ---------------------------------------------------------------- rung (y)
+# Apple's TYPED allocator. Every request asks for a size and an alignment that
+# differ, and neither is 16, because a wrong-argument bug in this family is
+# invisible whenever the two coincide -- and 16 is both the usual alignment and
+# a plausible size. Checked with malloc_size BEFORE anything is written: the
+# broken version returned a valid pointer every time and the damage surfaced
+# elsewhere, later, as somebody else's crash.
+want 26_malloc_type      && build 26_malloc_type      "$CHAINED_TARGET" 26_malloc_type      26_malloc_type.c --
+
+# ---------------------------------------------------------------- rung (z)
+# Unwinding a real stack through Apple's compact __TEXT,__unwind_info. It WALKS
+# rather than links: every unwind symbol resolved perfectly while the unwinder
+# was a set of aborting stubs.
+want 27_unwind           && build 27_unwind           "$CHAINED_TARGET" 27_unwind           27_unwind.c --
+
+# --------------------------------------------------------------- rung (aa)
+# poll(2). A regression guard rather than a discriminating test, and the
+# fixture's own header says why: the two flags that differ cannot be reached
+# from a fixture, because poll masks revents by the events requested and the
+# one case that would show the mapping is a place the two KERNELS disagree.
+# What it does hold is the eight agreeing flags, the counts, and the wrapper's
+# heap path, byte-for-byte against macOS.
+want 28_poll             && build 28_poll             "$CHAINED_TARGET" 28_poll             28_poll.c --
 
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
@@ -295,35 +310,22 @@ fi
 echo
 echo "recording metadata -> tests/meta/"
 set +e   # otool/nm/grep returning "nothing found" is normal here
-
-# otool and file echo the path they were given, so a recording made in one
-# worktree differs from the same recording made in another in ~47 files, none
-# of which mean anything. Strip the root back to a repo-relative path so the
-# recorded metadata says what it is about rather than where it was made.
-# Without this, two agents in two worktrees produce a merge conflict per
-# fixture out of pure churn.
-#
-# THE TREE IS HALF-CONVERTED ON PURPOSE. Only tests/meta/27_poll.* is recorded
-# relative so far; the other 46 still carry whatever absolute path last
-# recorded them. Re-recording everything is a 47-file diff, and there was a
-# merge in flight in another worktree when this landed, so the sweep was left
-# for a quiet moment: run tests/build_fixtures.sh with no arguments and commit
-# tests/meta/ on its own. Nothing reads these files programmatically -- they
-# are the machine-readable half of docs/FIXTURES.md -- so the mixed state
-# costs nothing but the diff it is deferring.
-derel() { sed "s#$ROOT/##g"; }
-
 for f in "$BIN"/*; do
     n="$(basename "$f")"
     LC="$(otool -l "$f")"
 
+    # otool/file/nm echo the path they were given, so a recorded baseline
+    # otherwise embeds whichever directory built it. That made every agent
+    # working in a git worktree dirty all 34 meta files and collide with every
+    # other agent, for no change in content. Rewrite the repository root to a
+    # fixed marker so these files describe the BINARY and nothing else.
     { echo "### file";           file "$f"
       echo; echo "### mach header";   otool -h "$f"
       echo; echo "### dependencies";  otool -L "$f"
       echo; echo "### load commands"; printf '%s\n' "$LC"
       echo; echo "### undefined symbols";        nm -u  "$f" 2>/dev/null
       echo; echo "### defined external symbols"; nm -gU "$f" 2>/dev/null
-    } | derel > "$META/$n.otool.txt"
+    } | sed "s|$ROOT/|<machorun>/|g" > "$META/$n.otool.txt"
 
     # Every section, with its segment and its S_* type nibble. The section
     # TYPE (flags & 0xff) is what tells the loader that a __DATA section is
@@ -369,7 +371,11 @@ for f in "$BIN"/*; do
         | sed 's/^/  /'
       printf 'undefined-symbol-count: '
       nm -u "$f" 2>/dev/null | grep -c .
-    } | derel > "$META/$n.summary.txt"
+      # Same elision as the otool file above, and it was NOT redundant:
+      # tests/meta/10_fat.summary.txt shipped with a worktree path in its
+      # `dylibs:` line, because otool -L on a universal binary names the file
+      # itself among its own dependencies.
+    } | sed "s|$ROOT/|<machorun>/|g" > "$META/$n.summary.txt"
 done
 set -e
 
