@@ -351,6 +351,33 @@ the first instruction of
 (`Metadata*`, `MetadataState`) returned in x0/x1, and small integers are what
 the state field holds.
 
+**The faulting value is the `type` ARGUMENT, and 1 is a valid state.** Traced
+through the disassembly rather than guessed:
+
+```
+_swift_checkMetadataState:                    ; (MetadataRequest x0, const Metadata *type x1)
+  34a7c   mov x8, x1        ; x8   = type
+  34a80   str x0, [sp,#8]   ; spill the request
+  34a84   add x1, sp, #8
+  34a88   mov x0, x8        ; x0   = type
+  34a8c   bl  performOnMetadataCache<MetadataResponse>(...)
+performOnMetadataCache:
+  34ab4   mov x20, x0       ; x20  = type
+  34ab8   bl  isCanonicalStaticallySpecializedGenericMetadata()   ; faults, x0 == 1
+```
+
+So `type == 1`. Swift's `MetadataState` values are `Complete` 0x00,
+`NonTransitiveComplete` **0x01**, `LayoutComplete` 0x3F, `Abstract` 0xFF — so 1
+is not garbage that happens to be small, it is *exactly what the state half of a
+`MetadataResponse` holds*. A `MetadataResponse` is `{Metadata*, MetadataState}`
+returned in x0/x1, and here the **state has ended up in the pointer slot** and
+flowed into `swift_checkMetadataState` as `type`.
+
+`swift_checkMetadataState` itself is **byte-identical in both runtimes** (same
+instruction sequence, ours at 0x2f9378), and the guest binary is the same in
+both tests — only the runtime dylib changes. So the difference is in what the
+runtime *returns*, not in how the guest calls it.
+
 **Hypothesis, not result:** past the pool, the metadata allocator's malloc path
 yields metadata the runtime mis-reads. It would explain the threshold, the
 pointer of 1, and why the source-built runtime — a different build of that same
