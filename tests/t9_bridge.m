@@ -170,12 +170,20 @@ int main(void)
            dcls && !strcmp(class_getName(dcls), "__NSCFDictionary"),
            "if this is null or wrong, CF will message a non-class");
         ok("CFDictionaryGetCount == 2", CFDictionaryGetCount(dict) == 2, "two pairs in");
-        /* Lookup exercises CFEqual and CFHash on constant strings -- the hash
-         * path NSCFConstantString deliberately does NOT implement, so this is
-         * the case most likely to fail, and informative either way. */
+        /* CORRECTION: this does NOT exercise CFHash/CFEqual, and the comment
+         * that said it did was wrong in the direction that flatters the test.
+         * CFSTR("a") twice yields the SAME POINTER (measured: 0x100004008 both
+         * times), so the lookup short-circuits on identity and never hashes.
+         *
+         * It cannot be strengthened by using a distinct-but-equal key either:
+         * CF's typeID-free dispatch sends -hash and -isEqual: to constant
+         * strings, __NSCFConstantString implements neither, and the process
+         * dies with "unrecognized selector". See
+         * docs/cf-census/selector-reentry.md -- this assertion is pinned as
+         * pointer-identity-only until that is fixed. */
         const void *got = CFDictionaryGetValue(dict, CFSTR("a"));
         ok("CFDictionaryGetValue by CFSTR key", got == (const void *)s,
-           "requires CFHash/CFEqual to agree across two distinct CFSTRs");
+           "pointer identity only -- CFSTR deduplicates, so no hashing occurs");
         ok("[dict count] through bridge", (NSUInteger)[(id)dict count] == 2,
            "objc_msgSend -> __NSCFDictionary -> CFDictionaryGetCount");
         ok("[dict objectForKey:] through bridge",
