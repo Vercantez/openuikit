@@ -76,8 +76,10 @@ AvailabilityInternalLegacy.h	local
 AvailabilityMacros.h	local
 AvailabilityVersions.h	local
 Block.h	libclosure:Block.h
+bsm/audit.h	xnu:bsd/bsm/audit.h
 crt_externs.h	Libc:include/crt_externs.h
 ctype.h	Libc:include/ctype.h
+dirent.h	Libc:include/dirent.h
 dispatch/base.h	libdispatch:dispatch/base.h
 dispatch/block.h	libdispatch:dispatch/block.h
 dispatch/data.h	libdispatch:dispatch/data.h
@@ -292,6 +294,7 @@ sys/_types/_fsfilcnt_t.h	xnu:bsd/sys/_types/_fsfilcnt_t.h
 sys/_types/_fsid_t.h	xnu:bsd/sys/_types/_fsid_t.h
 sys/_types/_fsobj_id_t.h	xnu:bsd/sys/_types/_fsobj_id_t.h
 sys/_types/_gid_t.h	xnu:bsd/sys/_types/_gid_t.h
+sys/_types/_graftdmg_un.h	xnu:bsd/sys/_types/_graftdmg_un.h
 sys/_types/_id_t.h	xnu:bsd/sys/_types/_id_t.h
 sys/_types/_in_addr_t.h	xnu:bsd/sys/_types/_in_addr_t.h
 sys/_types/_in_port_t.h	xnu:bsd/sys/_types/_in_port_t.h
@@ -306,6 +309,7 @@ sys/_types/_key_t.h	xnu:bsd/sys/_types/_key_t.h
 sys/_types/_mach_port_t.h	xnu:bsd/sys/_types/_mach_port_t.h
 sys/_types/_mbstate_t.h	xnu:bsd/sys/_types/_mbstate_t.h
 sys/_types/_mode_t.h	xnu:bsd/sys/_types/_mode_t.h
+sys/_types/_mount_t.h	xnu:bsd/sys/_types/_mount_t.h
 sys/_types/_nlink_t.h	xnu:bsd/sys/_types/_nlink_t.h
 sys/_types/_null.h	xnu:bsd/sys/_types/_null.h
 sys/_types/_o_dsync.h	xnu:bsd/sys/_types/_o_dsync.h
@@ -341,15 +345,20 @@ sys/_types/_uintptr_t.h	xnu:bsd/sys/_types/_uintptr_t.h
 sys/_types/_useconds_t.h	xnu:bsd/sys/_types/_useconds_t.h
 sys/_types/_uuid_t.h	xnu:bsd/sys/_types/_uuid_t.h
 sys/_types/_va_list.h	xnu:bsd/sys/_types/_va_list.h
+sys/_types/_vnode_t.h	xnu:bsd/sys/_types/_vnode_t.h
 sys/_types/_wchar_t.h	xnu:bsd/sys/_types/_wchar_t.h
 sys/_types/_wint_t.h	xnu:bsd/sys/_types/_wint_t.h
 sys/appleapiopts.h	xnu:bsd/sys/appleapiopts.h
+sys/attr.h	xnu:bsd/sys/attr.h
 sys/cdefs.h	xnu:bsd/sys/cdefs.h
+sys/dirent.h	xnu:bsd/sys/dirent.h
 sys/errno.h	xnu:bsd/sys/errno.h
 sys/fcntl.h	xnu:bsd/sys/fcntl.h
 sys/mman.h	xnu:bsd/sys/mman.h
+sys/mount.h	xnu:bsd/sys/mount.h
 sys/param.h	xnu:bsd/sys/param.h
 sys/qos.h	libpthread:include/sys/qos.h
+sys/queue.h	xnu:bsd/sys/queue.h
 sys/resource.h	xnu:bsd/sys/resource.h
 sys/select.h	xnu:bsd/sys/select.h
 sys/signal.h	xnu:bsd/sys/signal.h
@@ -359,6 +368,7 @@ sys/syslimits.h	xnu:bsd/sys/syslimits.h
 sys/syslog.h	xnu:bsd/sys/syslog.h
 sys/time.h	xnu:bsd/sys/time.h
 sys/types.h	xnu:bsd/sys/types.h
+sys/ucred.h	xnu:bsd/sys/ucred.h
 sys/unistd.h	xnu:bsd/sys/unistd.h
 sys/wait.h	xnu:bsd/sys/wait.h
 syslog.h	Libc:include/syslog.h
