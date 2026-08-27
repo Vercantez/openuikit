@@ -947,3 +947,37 @@ _iovec_t}.h` chain, which also blocks 3 CoreFoundation files. Writing six
 coordinated guard edits that nothing can compile would be the "compiles, links,
 unverified" position this port exists to avoid. **That sysroot chain is now the
 critical path for two consumers and is machorun's to fix.**
+
+## Re-check, 2026-08-27: `sysctl` landed, but not the one patch 2 needs
+
+machorun grew `sysctl` (machorun-isamask, for the five MIBs CoreFoundation's
+`__CFInitialize` needs), and swift-loader-fixes flagged that any measurement
+which failed earlier for un-localised reasons deserves re-running rather than
+trusting. Two of mine were candidates. Both came back **unchanged**, recorded
+precisely because a null result stated vaguely is worse than not running it.
+
+**Patch 2 stands.** machorun exports **`_sysctl`** and *not* `_sysctlbyname`, in
+the dylib and the `.tbd` alike. libdispatch's `hw_config.h` calls
+`sysctlbyname` specifically, so the premise — "Linux has no such function, take
+upstream's own `sysconf(_SC_NPROCESSORS_ONLN)` fallback" — is intact.
+
+**But it is now a patch with an expiry date, and that is new.** If
+`sysctlbyname` arrives, patch 2 stops being "this is not a Mac" and becomes a
+divergence maintained for no reason — at which point the answer is to **delete
+it**, not keep it correct in two places. That is the same call §12 made about
+the shim's duplicates. Re-check when machorun-isamask's sysctl work finishes.
+
+**libswiftCore's closure is unchanged**, re-measured against the *current*
+userland (6 dylibs, 2,032 symbols) rather than this morning's number: 184
+undefined, the same **two** unsatisfied, neither in any machorun dylib —
+`_dyld_image_path_containing_address` and `_dyld_program_sdk_at_least`, both
+dyld-surface rather than libSystem's. Guest `dlopen` landing did not touch them;
+libswiftCore's `_dlopen`/`_dlsym`/`_dladdr`/`_dlerror` were already satisfied.
+
+**And the re-check script mis-stated its own denominator.** It printed
+`userland dylibs read: 0` while collecting 2,032 symbols — the counter was
+incremented inside a subshell created by a pipe and discarded at the end of it.
+The number was wrong and **detectably** so, because a second number in the same
+output contradicted it. Sixth lost-counter zero of the day; the second caught
+only because something adjacent disagreed. **Two numbers that must agree are
+worth more than one number you trust** — the finding stood, the label did not.
