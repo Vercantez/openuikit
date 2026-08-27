@@ -553,3 +553,54 @@ The oracle built for it (`~/swift-macho-linux/full/oracle-url/`, 809 real URL
 literals from four shipping apps, diffed against real Foundation) remains the
 right validation either way — a port needs its differential just as much as a
 reimplementation does, and it is what will catch a porting mistake.
+
+### §12 addendum — licence, read from the artifact; and the closure, measured
+
+**LICENCE, quoted rather than inferred.** `swiftlang/swift-foundation` carries
+`LICENSE.md` (the Apache 2.0 text verbatim) and `NOTICE.txt`. The exception is
+in `LICENSE.md` at line 205:
+
+> `## Runtime Library Exception to the Apache 2.0 License: ##`
+>
+> *"As an exception, if you use this Software to compile your source code and
+> portions of this Software are embedded into the binary product as a result,
+> you may redistribute such product without providing attribution as would
+> otherwise be required by Sections 4(a), 4(b) and 4(d) of the License."*
+
+333 source headers state `Licensed under Apache License v2.0 with Runtime
+Library Exception`. So **Apache 2.0 + RLE is confirmed from the repository's
+own files**, not from what swiftlang repos generally use.
+
+**`NOTICE.txt` discloses five third-party derivations**, which matter only if
+the corresponding files are ported: Fabian Fett's `Base64.swift`, Daniel
+Lemire's `chromiumbase64`, Nick Galbreath's `base64`, **logic from ICU**, and
+**data from CLDR**. The last two are worth flagging to #48 — upstream carries
+ICU/CLDR derivations in-tree, which bears on the "which locales must we carry"
+question.
+
+**CLOSURE: `URL` is nearly self-contained — 24 of 249 FoundationEssentials
+files, about 10%.** That is the 22 URL sources a non-framework build compiles
+(25 minus `URL_Bridge.swift`, `URLComponents_ObjC.swift`, `URL_Swift.swift`,
+all framework-only) plus exactly two pulled files: `Data/Data.swift` and
+`Data/ContiguousBytes.swift`.
+
+**§6's hazard does NOT bite here.** Taking `URL` does not drag the module in.
+
+Two larger numbers were measured first and are wrong; both are recorded because
+the instrument error is the same one four times over and it always inflates:
+
+- **53 files / 21%** — counted framework-only sources and `#if
+  FOUNDATION_FRAMEWORK` blocks a non-framework port never compiles.
+- **A `Locale`/`Calendar`/ICU alarm that was not real.** Those appear in
+  **none** of the 25 URL files; they arrived on a second hop through files that
+  were themselves wrongly pulled.
+- **The entire `Predicate` subtree (4 files) was spurious**, from one ambiguous
+  token: `URLTemplate` declares its own nested `Expression`, and whole-word
+  identifier matching cannot tell it from `Predicate/Expression.swift`.
+  `PredicateExpressions`, `PredicateBindings` and `StandardPredicateExpression`
+  appear in **zero** URL files.
+
+**The lesson, four for four today: identifier matching cannot distinguish
+same-named types, and every time it guessed it guessed UPWARD.** Any closure or
+census number from a regex is an UPPER BOUND until each edge is checked
+individually.
