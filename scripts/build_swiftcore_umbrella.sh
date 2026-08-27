@@ -2,7 +2,9 @@
 # build_swiftcore_umbrella.sh -- runs INSIDE swift-macho-spike:noble. Wraps the
 # staged iOS-simulator libswiftCore.dylib in an umbrella that adds the handful
 # of symbols the sysroot .tbd advertises but this runtime build lacks (version
-# skew; see spike/swiftcorepatch.c). Idempotent: refuses to double-wrap.
+# skew; see full/shims/swiftcorepatch.c -- ONE implementation, shared with the
+# executable-linked path in full/scripts/build_full.sh). Idempotent: refuses to
+# double-wrap.
 set -euo pipefail
 ROOT=/w
 SYS=$ROOT/scratch/sysroot
@@ -31,7 +33,7 @@ PRISTINE="$ROOT/scratch/real/libswiftCore.sim.dylib"
 cp "$PRISTINE" "$REAL"
 perl "$ROOT/scripts/set_id_dylib.pl" "$REAL" /usr/lib/swift/libswiftCor.dylib
 
-"${CC[@]}" -O1 -c -o "$OUT/swiftcorepatch.o" "$ROOT/spike/swiftcorepatch.c"
+"${CC[@]}" -O1 -c -o "$OUT/swiftcorepatch.o" "$ROOT/full/shims/swiftcorepatch.c"
 "${LD[@]}" -dylib -install_name /usr/lib/swift/libswiftCore.dylib -undefined dynamic_lookup \
     -o "$OUT/libswiftCore.umbrella.dylib" "$OUT/swiftcorepatch.o" \
     -reexport_library "$REAL"
