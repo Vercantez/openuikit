@@ -189,8 +189,12 @@ void mr_constrain_heap(void)
      * turn the knob off rather than widen it. */
     if (mallopt(M_MMAP_THRESHOLD, 32 * 1024 * 1024) == 0)
         mr_die("mallopt(M_MMAP_THRESHOLD, 32 MiB) was refused. glibc caps it at "
-               "HEAP_MAX_SIZE/2; if that cap has changed, lower the constant in "
-               "mr_constrain_heap() rather than ignoring this.");
+               "HEAP_MAX_SIZE/2; if that cap has changed, lower this constant to "
+               "the HIGHEST value glibc now accepts -- not to the first value that "
+               "stops this abort. This number IS the residue documented in "
+               "docs/UNIMPLEMENTED.md#isa-va-width (\"a single allocation at or "
+               "above 32 MiB still lands high\"), so lowering it widens the hole and "
+               "makes that entry wrong; change both together.");
 
     /* The link-time base is what actually decides this, so check the result
      * instead of assuming the linker was told. A loader that starts here and

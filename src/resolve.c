@@ -130,10 +130,25 @@ void mr_resolve_report(mr_image *from, const mr_image *in, const char *name)
                 "  bind to libSystem that nothing can satisfy.\n", name);
         return;
     }
+    /* "Add it to that dylib" is the right fix only if that dylib is really the
+     * symbol's owner, and a TWO-LEVEL bind is not evidence that it is: the
+     * ordinal was chosen by the linker from that dylib's .tbd, so a stale stub
+     * points here just as convincingly as a genuine gap. Getting that backwards
+     * is what the swift_retain/swift_release case above is -- adding those to
+     * libSystem clears the error and restores the bug their removal fixed.
+     * That pair is special-cased because its remedy is actively harmful; the
+     * general shape is not, so name it rather than enumerate more symbols. */
     if (in && in->is_runtime)
         fprintf(stderr,
-                "  %s is one of our own dylibs, so this is a gap in our Darwin\n"
-                "  userland: add %s to it (see docs/UNIMPLEMENTED.md).\n",
+                "  That is one of our own dylibs, so either it is missing this symbol\n"
+                "  or the stub that promised it is stale. The linker chose that\n"
+                "  library from its .tbd, so check which it is before adding anything:\n"
+                "      nm -g %s | grep %s\n"
+                "  Exports it: your sysroot's .tbd disagrees with the dylib and needs\n"
+                "  re-staging from machorun's sdk/usr/lib.\n"
+                "  Does not:   a real gap (docs/UNIMPLEMENTED.md) -- but check that no\n"
+                "  other loaded image owns it first, because anything defined here\n"
+                "  loads early and wins every flat lookup.\n",
                 in->path, name);
 }
 
