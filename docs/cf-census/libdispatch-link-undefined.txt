@@ -118,9 +118,15 @@ ___udivti3
 #
 _sysctl              init.c:847      fetches the OS build string into
 #                                    _dispatch_build via {CTL_KERN,
-#                                    KERN_OSVERSION}. Introspection only -- a
-#                                    stub returning a fixed string is adequate,
-#                                    and there is no Linux MIB to forward to.
+#                                    KERN_OSVERSION}. Introspection only.
+#                                    CANNOT BE FORWARDED AT ALL: sys/sysctl.h
+#                                    is gone from glibc 2.39, Linux's sysctl(2)
+#                                    returns ENOSYS, and the symbol survives in
+#                                    libc.so.6 only as a compat stub -- exactly
+#                                    the shape that lets a link succeed and the
+#                                    call quietly do nothing. Wants an
+#                                    implementation returning a fixed build
+#                                    string, not a forward.
 _dprintf         (V) init.c:1158     only on the DISPATCH_LOGFILE debug path.
 _simple_asl_log      init.c:1209     Apple libSystem logging SPI, the fallback
 #                                    branch of _dispatch_log. Not variadic
@@ -128,9 +134,25 @@ _simple_asl_log      init.c:1209     Apple libSystem logging SPI, the fallback
 ___strlcpy_chk       init.c:570,1328 _FORTIFY_SOURCE expansion of strlcpy. No
 #                                    Linux equivalent to forward to; implement
 #                                    directly.
-_fcntl           (V)(C) io.c:1508-19 F_GETFL/F_SETFL plus F_GETNOSIGPIPE and
-#                                    F_SETNOSIGPIPE, which are Darwin-only and
-#                                    have no Linux command number at all.
+_fcntl           (V) io.c:1508-19    NOT the three-hazard case it looks like.
+#                                    MEASURED what libdispatch actually passes:
+#                                      F_GETFL         3 / 3   agree
+#                                      F_SETFL         4 / 4   agree
+#                                      F_GETNOSIGPIPE 74 / --  Darwin only
+#                                      F_SETNOSIGPIPE 73 / --  Darwin only
+#                                    The dangerous lock-command rotation
+#                                    (Darwin's F_GETLK is glibc's F_SETLKW, so a
+#                                    lock QUERY becomes a blocking acquire) is
+#                                    NOT REACHABLE from libdispatch -- no
+#                                    F_*LK* or F_*OWN anywhere in the tree. The
+#                                    real problem is the two NOSIGPIPE
+#                                    commands, which have no Linux counterpart
+#                                    at all: Linux has no per-fd SIGPIPE
+#                                    suppression, only per-send MSG_NOSIGNAL or
+#                                    a process-wide SIG_IGN. They cannot be
+#                                    forwarded or translated -- fail cleanly or
+#                                    emulate. Still variadic, so still a
+#                                    wrapper, for a smaller reason.
 _getsockopt         (C) event_epoll.c:195  SO_ACCEPTCONN on the muxnote path.
 #                                    Real, not a debug path. SOL_SOCKET and the
 #                                    SO_* numbers differ between the platforms.
@@ -139,18 +161,37 @@ _ioctl           (V)(C) event_epoll.c:532  SIOCOUTQ/SIOCINQ. Real path. The
 #                                    (sys/ioctl.h) and deliberately does NOT
 #                                    carry GLIBCSYM, so this fails at the link
 #                                    rather than corrupting memory.
-_madvise            (C) allocator.c:562    the allocator's page release. The
-#                                    MADV_* numbers differ (MADV_FREE is 5 on
-#                                    Darwin and 8 on Linux).
-_pwrite                 io.c:2599    off_t is 64-bit on both; likely the one
-#                                    clean forward in this group.
+_madvise            (C) allocator.c:562    the allocator's page release, called
+#                                    with exactly one advice, MADV_FREE -- and
+#                                    that is precisely the one outside the
+#                                    agreeing range. MEASURED 5 on Darwin, 8 on
+#                                    Linux, and Linux's 5 is MADV_REMOVE, which
+#                                    punches a hole in the underlying object
+#                                    rather than lazily releasing a page. On
+#                                    anonymous memory that is EINVAL rather
+#                                    than damage, but this is a forward whose
+#                                    wrong constant names a DESTRUCTIVE
+#                                    operation. A general note that "madvise
+#                                    advice 0..4 agree" is true and does not
+#                                    cover this call site.
+_pwrite                 io.c:2599    off_t is 64-bit on both; a clean forward.
 _pthread_attr_destroy         queue.c:4104,6453
 _pthread_attr_setschedparam   queue.c:4068,5191
 #                                    Both on the real worker-thread path.
-#                                    CAUTION: pthread_attr_t is an OPAQUE SIZED
-#                                    type -- Darwin's is {long sig; char
-#                                    opaque[56]} and glibc's is a 64-byte union.
-#                                    Sizes that coincide are the dangerous case,
-#                                    because no size check catches them (the
-#                                    pthread_cond_t lesson from patch 4's
-#                                    guard). Measure the layout, do not forward.
+#                                    pthread_attr_t was worth suspecting and is
+#                                    not a problem: MEASURED 64 bytes on both,
+#                                    _Static_assert compiles clean against
+#                                    Apple's SDK and against glibc. Provided
+#                                    init and destroy land on the same side it
+#                                    is self-consistent. Treat as plain.
+#                                    ITS NEIGHBOUR IS NOT. setschedparam takes
+#                                    const struct sched_param *, MEASURED 8
+#                                    bytes on Darwin and 4 on Linux, so glibc
+#                                    reads 4 of the 8 -- survivable only if
+#                                    sched_priority leads on both sides, which
+#                                    is worth confirming rather than assuming.
+#                                    Related trap if setschedpolicy is ever
+#                                    touched: SCHED_OTHER is 1 on Darwin and 0
+#                                    on glibc, and Darwin's 1 IS glibc's
+#                                    SCHED_FIFO -- asking for the ordinary
+#                                    scheduler makes the thread real-time.
