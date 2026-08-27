@@ -125,3 +125,49 @@ The refusal list is the work order. Starting points chosen for leverage:
 
 The remaining 14 are mechanical once the pattern is established, and each is
 one CF function per selector.
+
+
+## Where these classes live, and what actually flips `canImport(Foundation)`
+
+The #54 trap says a nearly-empty Foundation is worse than none, because its
+existence flips OpenUIKit's 33 `canImport(Foundation)` guards onto a path it
+cannot satisfy. So: do the 19 classes flip them?
+
+**No — and the reason is not the one I was about to give.** I was going to argue
+that the classes are safe because they are an ObjC dylib while `canImport` is a
+Swift-module question, so only `build_overlay.sh`'s `-module-name Foundation`
+could flip the guards. That reasoning is wrong. Measured:
+
+```
+A: no Foundation.swiftmodule on the search path  -> FOUNDATION_VISIBLE
+B: a Foundation.swiftmodule on the search path   -> FOUNDATION_VISIBLE
+control: canImport(NoSuchModuleXYZ)              -> takes the #else
+```
+
+`canImport(Foundation)` is **already true** for anything compiled against our
+staged SDK, with no `-I` at all. It is satisfied by a CLANG module:
+
+```
+$SDK/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap
+```
+
+which `scripts/stage_sdk.sh` puts there. The control matters: a module name that
+certainly does not exist takes the `#else`, so the probe discriminates and
+"visible" is a real answer rather than a stuck one.
+
+**Consequences for where the classes live:**
+
+* Adding all 19 `__NSCF*` classes to the ObjC dylib changes nothing about the
+  guards. They were already flipped, by the SDK, before any of this work.
+* The lever is therefore **which SDK a target compiles against**, not which
+  `-I` it gets. An app-only *include path* is the wrong knob; an app-only
+  *sysroot*, or an SDK without the Foundation framework directory, is the right
+  one.
+* Which means the risk #54 identified is real but already realised, and is not
+  something this task can newly cause. Anything compiling OpenUIKit's
+  freestanding branch against this SDK is relying on those guards being false
+  when they measure true — worth checking on the OpenUIKit side, because it is
+  the sort of thing that works until a guarded branch is actually reached.
+
+So the 19 classes go in the ObjC half (`src/nscf/`, built into the same dylib as
+the slice) and the question that needs answering is not about them.
