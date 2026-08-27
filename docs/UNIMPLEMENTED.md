@@ -642,6 +642,40 @@ nobody reads a crash report and believes it came from a Mac.
 Every other MIB **aborts**. An unimplemented MIB and a nonexistent one are
 different facts, and only one of them should look like a normal failure.
 
+### `libdispatch-init` — **DONE**, and recorded because the crash is far from the cause
+`libdispatch_init()` is `DISPATCH_EXPORT` — an ordinary exported function, **not
+a constructor**. On Darwin, libSystem is an umbrella with libdispatch as a
+sub-library and **libSystem's own initialiser calls it**. Nothing in this stack
+was, so every function pointer that init assigns stayed NULL.
+
+Measured init sections: `libswiftCore` 1, `libSystem` 1, `libquartz` 1,
+**`libdispatch` 0**. The symptom was `SIGSEGV at pc 0x0` inside `_dispatch_time`
+— a call through a null pointer rather than a bad address, with the argument
+register holding exactly the nanoseconds the caller passed.
+
+`__machorun_libsystem_bootstrap` now makes the call, which is the position
+`src/main.c` documents as *"Darwin's libSystem initializer"*: after every image
+is mapped and bound, before any guest initialiser. Both halves matter — mapped,
+because `mr_dlsym_default` searches loaded images; before, because a guest
+initialiser touching a dispatch queue would otherwise find the NULL.
+
+Looked up by name rather than linked: libSystem does not depend on libdispatch
+(the dependency runs the other way) and a link would be a cycle.
+`mr_dlsym_default` is the loader's flat search over guest images and does not
+fall back to the host, so a process without libdispatch gets NULL and nothing
+happens.
+
+**Not gradeable as a fixture**, which is why it is here: on macOS the real
+libSystem calls the real libdispatch's init, not a stub's, so a fixture with a
+stand-in would diverge from its oracle. Proved directly instead — a guest dylib
+exporting `libdispatch_init` reports **yes** before `main`, and **no** with the
+call removed. The whole 34-fixture corpus covers the NULL path, since none of
+them loads libdispatch.
+
+**A libdispatch `dlopen`'d later is not covered:** the bootstrap has already run.
+Nothing does that today; the honest fix if something ever does is for the loader
+to make the call on load rather than for this to poll.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.

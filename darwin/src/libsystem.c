@@ -79,6 +79,7 @@ static char **mr_envp;
 static char **mr_apple;
 
 extern void tzset(void);
+static void mr_init_libdispatch(void);   /* defined just below the bootstrap */
 
 EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, char **apple)
 {
@@ -95,6 +96,52 @@ EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, c
     /* Before any guest thread exists, so pthread_main_np has a truth to compare
      * against rather than a zero that would make every thread look like main. */
     mr_record_main_thread();
+    /* THE POSITION IS THE POINT. See mr_init_libdispatch below. */
+    mr_init_libdispatch();
+}
+
+/* libdispatch_init() IS NOT A CONSTRUCTOR, AND THAT IS NOT AN OVERSIGHT IN
+ * libdispatch -- it is DISPATCH_EXPORT, an ordinary exported function, and on
+ * Darwin **libSystem's own initialiser calls it**. libdispatch is a sub-library
+ * of the libSystem umbrella there, so the call is a plain linked one.
+ *
+ * Nothing in our stack was making it, so every function pointer that init
+ * assigns stayed NULL. Measured init sections: libswiftCore 1, libSystem 1,
+ * libquartz 1, **libdispatch 0**. The symptom was a SIGSEGV at pc 0x0 inside
+ * _dispatch_time -- a call through a null pointer rather than a bad address,
+ * with the argument register holding exactly the nanoseconds the caller passed.
+ *
+ * THAT DISTANCE IS WHY THIS BELONGS HERE RATHER THAN AS A CONSTRUCTOR IN
+ * SOMEONE'S libdispatch BUILD. The crash lands in dispatch_time, which is a
+ * long way from a missing init, and the next person to meet it will not have
+ * the diagnosis in hand -- they will go looking for a missing SYMBOL, because
+ * that is what an absent callee usually means here. Putting the call where
+ * Darwin puts it means no consumer has to discover this twice.
+ *
+ * WHY THE BOOTSTRAP AND NOT __attribute__((constructor)): this function runs at
+ * the point src/main.c documents as "Darwin's libSystem initializer" -- AFTER
+ * every image is mapped and bound, and BEFORE any guest initialiser. Both
+ * halves are load-bearing. Mapped, because mr_dlsym_default searches the loaded
+ * images and libdispatch must be among them; before, because a guest
+ * initialiser that touches a dispatch queue would otherwise get the NULL
+ * pointer we are here to fill.
+ *
+ * Looked up by name rather than linked, because libSystem does not depend on
+ * libdispatch -- the dependency runs the other way, and a link here would be a
+ * cycle. mr_dlsym_default is the loader's flat search over guest images and
+ * deliberately does not fall back to the host, so a process with no libdispatch
+ * gets NULL and this does nothing, which is the correct behaviour rather than
+ * a fallback.
+ *
+ * A libdispatch dlopen'd LATER is not covered: the bootstrap has already run.
+ * Nothing does that today, and the honest fix if something ever does is for the
+ * loader to make the call on load rather than for this to poll. */
+extern void *mr_dlsym_default(const char *name);   /* -> loader, resolve.c */
+
+static void mr_init_libdispatch(void)
+{
+    void (*init)(void) = (void (*)(void))mr_dlsym_default("libdispatch_init");
+    if (init) init();
 }
 
 EXPORT int   *_NSGetArgc(void)    { return &mr_argc; }
