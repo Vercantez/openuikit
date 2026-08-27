@@ -335,6 +335,13 @@ want dyld_images         && build dyld_images         "$CHAINED_TARGET" dyld_ima
 # fetch_add. Every assertion is written so a fetch_add implementation fails it.
 want osatomic            && build osatomic            "$CHAINED_TARGET" osatomic            osatomic.c --
 
+# Resource limits, writev and thread scope. Only two of seven RLIMIT_* numbers
+# move, which is what makes them look safe -- and both land on LIVE Linux
+# limits: Darwin's NOFILE is Linux's MEMLOCK, so a forward returns a byte
+# figure as a file-descriptor count. struct rlimit and struct iovec both agree
+# on the two systems, so this is a constants problem in a struct's clothes.
+want rlimit              && build rlimit              "$CHAINED_TARGET" rlimit              rlimit.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

@@ -2246,6 +2246,140 @@ EXPORT int _NSGetExecutablePath(char *buf, unsigned *bufsize)
     return 0;
 }
 
+/* ------------------------------- resource limits, writev, and thread scope */
+
+/* THE RLIMIT RESOURCE NUMBERS ARE ROTATED, and only two of the seven move --
+ * which is what makes it look safe. Measured both sides 2026-08-27:
+ *
+ *     CPU 0  FSIZE 1  DATA 2  STACK 3  CORE 4        agree
+ *     RLIMIT_NOFILE    Darwin 8   Linux 7            differ
+ *     RLIMIT_AS        Darwin 5   Linux 9            differ
+ *
+ * And the collisions are with LIVE limits rather than unused slots: Darwin's
+ * NOFILE (8) is Linux's RLIMIT_MEMLOCK and Darwin's AS (5) is Linux's
+ * RLIMIT_RSS. So a forwarded getrlimit(RLIMIT_NOFILE) does not fail -- it
+ * returns how much memory this process may lock, as a file-descriptor count.
+ * CoreFoundation asks for NOFILE, so this is the live one rather than the
+ * theoretical one.
+ *
+ * AND THE STRUCT NEEDS TRANSLATING AFTER ALL, which I got wrong first time and
+ * only found because the negative control PASSED. The LAYOUT agrees -- 16
+ * bytes on both, rlim_t 8 on both -- so every size check passes and I wrote
+ * "struct rlimit needs nothing". The VALUE inside it does not:
+ *
+ *     RLIM_INFINITY   Darwin 0x7fffffffffffffff   Linux 0xffffffffffffffff
+ *
+ * A guest testing `rlim_cur == RLIM_INFINITY` compares against DARWIN's
+ * spelling, so an unlimited Linux resource reads as a specific enormous FINITE
+ * number and every "is this capped?" test answers wrongly. It is the
+ * sockaddr_in shape inverted: there an identical size hid a different layout,
+ * here an identical layout hides a different value. Nothing structural catches
+ * either.
+ *
+ * That is also why the control passed: forwarding the raw resource number gave
+ * Linux's MEMLOCK, which is unlimited, which the fixture then read as finite
+ * because the sentinels disagree -- one bug concealing another. */
+#define MR_D_RLIMIT_NOFILE 8
+#define MR_L_RLIMIT_NOFILE 7
+#define MR_D_RLIMIT_AS     5
+#define MR_L_RLIMIT_AS     9
+
+static int mr_rlimit_d2l(int r)
+{
+    if (r >= 0 && r <= 4) return r;              /* CPU FSIZE DATA STACK CORE */
+    if (r == MR_D_RLIMIT_NOFILE) return MR_L_RLIMIT_NOFILE;
+    if (r == MR_D_RLIMIT_AS)     return MR_L_RLIMIT_AS;
+    mr_bail("getrlimit/setrlimit: a Darwin RLIMIT_* with no mapping. The "
+            "numbers are ROTATED between the two systems -- Darwin's NOFILE is "
+            "Linux's MEMLOCK -- so a forward returns a different limit rather "
+            "than failing. See docs/UNIMPLEMENTED.md#rlimit-rotated.");
+}
+
+#define MR_D_RLIM_INFINITY 0x7fffffffffffffffULL
+#define MR_L_RLIM_INFINITY 0xffffffffffffffffULL
+
+struct mr_rlimit { unsigned long long cur, max; };
+_Static_assert(sizeof(struct mr_rlimit) == 16, "struct rlimit is 16 bytes on both");
+
+static unsigned long long mr_rlim_l2d(unsigned long long v)
+{
+    return v == MR_L_RLIM_INFINITY ? MR_D_RLIM_INFINITY : v;
+}
+
+static unsigned long long mr_rlim_d2l(unsigned long long v)
+{
+    return v == MR_D_RLIM_INFINITY ? MR_L_RLIM_INFINITY : v;
+}
+
+EXPORT int getrlimit(int resource, struct mr_rlimit *rlp)
+{
+    struct mr_rlimit tmp;
+    int rc = MR_ERRNO_CALL(glibc_getrlimit(mr_rlimit_d2l(resource), &tmp));
+    if (rc == 0 && rlp) {
+        rlp->cur = mr_rlim_l2d(tmp.cur);
+        rlp->max = mr_rlim_l2d(tmp.max);
+    }
+    return rc;
+}
+
+EXPORT int setrlimit(int resource, const struct mr_rlimit *rlp)
+{
+    struct mr_rlimit tmp;
+    if (!rlp) { *mr_errno_slot() = 14; return -1; }      /* EFAULT */
+    tmp.cur = mr_rlim_d2l(rlp->cur);
+    tmp.max = mr_rlim_d2l(rlp->max);
+    return MR_ERRNO_CALL(glibc_setrlimit(mr_rlimit_d2l(resource), &tmp));
+}
+
+/* writev IS A GENUINE PLAIN FORWARD, and it is worth saying why rather than
+ * just doing it: struct iovec is 16 bytes on both with iov_base at 0 and
+ * iov_len at 8 -- measured, not assumed. That is unusual enough in this file
+ * to be the exception that needs evidence. The count is an int on both, so
+ * there is no nfds_t-style width problem either. */
+EXPORT long writev(int fd, const void *iov, int iovcnt)
+{
+    return MR_ERRNO_CALL(glibc_writev(fd, iov, iovcnt));
+}
+
+/* PTHREAD_SCOPE IS OFF BY ONE, the third instance of that spacing after
+ * SIG_BLOCK and the detach state, and it fails the same way -- in the
+ * direction that looks fine:
+ *
+ *     PTHREAD_SCOPE_SYSTEM    Darwin 1   glibc 0
+ *     PTHREAD_SCOPE_PROCESS   Darwin 2   glibc 1
+ *
+ * Linux implements only SCOPE_SYSTEM. So a forwarded Darwin SCOPE_SYSTEM (1)
+ * arrives as glibc's SCOPE_PROCESS, which glibc rejects with ENOTSUP -- the
+ * guest asks for the one scope Linux supports and is told it is unsupported.
+ * Darwin's SCOPE_PROCESS (2) is out of range and also fails, so BOTH
+ * directions fail without translation and only one of them should. */
+#define MR_D_PTHREAD_SCOPE_SYSTEM  1
+#define MR_D_PTHREAD_SCOPE_PROCESS 2
+#define MR_L_PTHREAD_SCOPE_SYSTEM  0
+#define MR_L_PTHREAD_SCOPE_PROCESS 1
+
+EXPORT int pthread_attr_setscope(void *a, int scope)
+{
+    int l;
+    if (scope == MR_D_PTHREAD_SCOPE_SYSTEM)       l = MR_L_PTHREAD_SCOPE_SYSTEM;
+    else if (scope == MR_D_PTHREAD_SCOPE_PROCESS) l = MR_L_PTHREAD_SCOPE_PROCESS;
+    else return 22;                               /* EINVAL, by return value */
+    return glibc_pthread_attr_setscope(a, l);
+}
+
+/* The read-back half, and it exists because the whole-families rule applies to
+ * a translation as much as to a symbol list: a set without its get is a
+ * one-way mapping nothing can check, and the fixture that grades this needs
+ * both ends to prove the round trip. */
+EXPORT int pthread_attr_getscope(const void *a, int *out)
+{
+    int l = 0, rc = glibc_pthread_attr_getscope(a, &l);
+    if (rc == 0 && out)
+        *out = (l == MR_L_PTHREAD_SCOPE_PROCESS) ? MR_D_PTHREAD_SCOPE_PROCESS
+                                                 : MR_D_PTHREAD_SCOPE_SYSTEM;
+    return rc;
+}
+
 /* _simple_asl_log is Apple SPI: the fallback branch of libdispatch's
  * _dispatch_log when no other destination is configured. It is NOT variadic
  * (level, facility, message), which is worth stating because the rest of the

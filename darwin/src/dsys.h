@@ -168,6 +168,11 @@ extern int     glibc_pipe(int *)                            GLIBCSYM(pipe);
  * answers the same question through sysctl(KERN_PROC), which is why this is
  * here -- see the sysctl section in darwin/src/posix.c. */
 extern int     glibc_getresuid(unsigned *, unsigned *, unsigned *) GLIBCSYM(getresuid);
+extern int     glibc_getrlimit(int, void *)                 GLIBCSYM(getrlimit);
+extern int     glibc_setrlimit(int, const void *)           GLIBCSYM(setrlimit);
+extern long    glibc_writev(int, const void *, int)         GLIBCSYM(writev);
+extern int     glibc_pthread_attr_setscope(void *, int)     GLIBCSYM(pthread_attr_setscope);
+extern int     glibc_pthread_attr_getscope(const void *, int *) GLIBCSYM(pthread_attr_getscope);
 /* pthread_atfork IS NOT A DYNAMIC SYMBOL IN GLIBC. It lives in
  * libc_nonshared.a as a static wrapper over __register_atfork, so dlsym finds
  * nothing and a plain forward fails at RUNTIME with an undefined symbol rather

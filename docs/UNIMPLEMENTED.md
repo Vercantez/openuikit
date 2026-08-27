@@ -758,6 +758,54 @@ It is therefore **absent from `osatomic`**: a fixture that must match its
 oracle byte-for-byte cannot contain a case where one side hangs. Same reason
 `POLLWRBAND` is absent from `28_poll` and `SIGEMT` from `29_sigaction`.
 
+### `rlimit-rotated` — **DONE**, and the struct needed translating after all
+Two of the seven `RLIMIT_*` numbers move, which is what makes them look safe.
+Measured both sides:
+
+    CPU 0  FSIZE 1  DATA 2  STACK 3  CORE 4     agree
+    RLIMIT_NOFILE   Darwin 8   Linux 7          differ
+    RLIMIT_AS       Darwin 5   Linux 9          differ
+
+Both collisions are with **live** limits rather than unused slots: Darwin's
+`NOFILE` (8) is Linux's `RLIMIT_MEMLOCK`, and Darwin's `AS` (5) is Linux's
+`RLIMIT_RSS`. A forwarded `getrlimit(RLIMIT_NOFILE)` does not fail — it returns
+how much memory the process may lock, **as a file-descriptor count**.
+CoreFoundation asks for `NOFILE`.
+
+**And `struct rlimit` needed translating too, which I got wrong first and only
+found because a negative control PASSED.** The layout agrees — 16 bytes on
+both, `rlim_t` 8 on both — so every size check passes. The *value* does not:
+
+    RLIM_INFINITY   Darwin 0x7fffffffffffffff   Linux 0xffffffffffffffff
+
+A guest testing `rlim_cur == RLIM_INFINITY` compares against **Darwin's**
+spelling, so an unlimited Linux resource reads as a specific enormous **finite**
+number and every "is this capped?" test answers wrongly. It is the
+`sockaddr_in` shape inverted: there an identical size hid a different layout,
+here an identical layout hides a different value. **Nothing structural catches
+either.**
+
+The two bugs also concealed each other: forwarding the raw resource number gave
+Linux's `MEMLOCK`, which is unlimited, which the fixture then read as *finite*
+because the sentinels disagree — so the control passed while both were broken.
+`tests/bin/rlimit` now reads an actually-unlimited resource (`RLIMIT_AS`, which
+is unlimited on both) so the sentinel is discriminated on its own.
+
+### `pthread-scope-off-by-one` — **DONE**
+    PTHREAD_SCOPE_SYSTEM    Darwin 1   glibc 0
+    PTHREAD_SCOPE_PROCESS   Darwin 2   glibc 1
+
+Third instance of that spacing after `SIG_BLOCK` and the detach state, and it
+fails in the direction that looks fine. Linux implements only `SCOPE_SYSTEM`, so
+a forwarded Darwin `SCOPE_SYSTEM` (1) arrives as glibc's `SCOPE_PROCESS` and is
+refused with `ENOTSUP` — **the guest asks for the one scope Linux supports and
+is told it is unsupported.** `getscope` translates back, because a set without
+its get is a one-way mapping nothing can check.
+
+`writev` by contrast is a **genuine** plain forward: `struct iovec` is 16 bytes
+on both with `iov_base` at 0 and `iov_len` at 8, measured rather than assumed.
+That is unusual enough here to be the exception that needs evidence.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.
