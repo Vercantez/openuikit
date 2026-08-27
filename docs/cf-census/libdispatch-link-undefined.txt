@@ -1,8 +1,13 @@
 # libdispatch's REAL undefined-symbol set, from an actual link
 #
-# 2026-08-27, against machorun master e5e7224's REBUILT libSystem (dylib
-# 06:11:21, after the 06:10:20 source commit -- checked, since the artifact is
-# the thing that matters). 26 objects: 25 C TUs plus block.cpp.
+# RE-VERIFIED against the libSystem built 06:47:28 (machorun rebuilt again after
+# the first capture; re-run rather than re-quoted, because a list is only
+# current at the moment it was measured). 26 objects: 25 C TUs plus block.cpp.
+#
+# UNCHANGED at 20 symbols and identical membership. `poll` HAS landed in the
+# interim and `sigaction` has NOT -- fix/sigaction has real commits in
+# ~/machorun-wt-sigact but is not merged or built. So event_epoll.c is still the
+# one TU that does not compile, and its seven symbols are still seven of the 20.
 #
 # THIS SUPERSEDES THE 266-SYMBOL OBJECT-LEVEL COUNT. That number was every
 # undefined symbol across the objects, most of which resolve against each other.
