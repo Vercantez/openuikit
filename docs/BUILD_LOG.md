@@ -880,3 +880,93 @@ looks like a finding and is an artifact of a bad parse is the same failure as a
 sweep with no denominator**, so it was discarded rather than reported, and the
 closure was measured against the built dylibs instead — the method already
 validated in §12.
+
+## 17. The staging-directory enumeration: 19 trees, 1 gate, and a fixed bug still live in 4 of them
+
+§12 found a newer-and-worse artefact parked where a staging script would read it.
+Team-lead's question was the right generalisation: **which artefact directories
+exist, and which gate looks at each one?** Nobody knew that denominator. Now:
+
+```
+roots examined:                    5
+shell scripts scanned:           107     (292 skipped by named exclusions)
+scripts that copy a built binary: 11
+individual copy sites:            26
+directories holding 2+ dylibs:    19
+directories any gate looks at:     1
+```
+
+`scripts/enumerate_staging.sh` is the sweep; it prints that denominator every
+run, and it *discovers* both the copy sites and the destination trees rather
+than grading a list — because every gate we have grades a list someone happened
+to write down, which is the failure mode itself.
+
+### The result
+
+`machorun/darwin/usr/lib` is the one gated tree (`check_stale.sh`, which grades
+6 paths; `gen_tbd.sh` CHECK 4; objc44 and swift_gate run its dylibs). Everything
+else is ungated. Most of that is harmless — build output dirs and fixture bins.
+**Five are not.**
+
+`~/swift-macho-linux/scratch/` holds **five independent full copies** of
+machorun's Darwin userland — `mrroot`, `mrroot2`, `mrroot_full`, `mrroot_isa`,
+`mrroot_prefix` — each a runtime tree that guests are actually executed against
+via `MACHORUN_ROOT`. Measured against machorun's current `darwin/usr/lib`:
+
+```
+scratch/mrroot_full     5/5 dylibs differ
+scratch/mrroot_isa      5/5 dylibs differ
+scratch/mrroot_prefix   5/5 dylibs differ
+scratch/mrroot          5/5 dylibs differ
+scratch/mrroot2         5/5 dylibs differ
+--> 5 of 5 are stale, and no gate looks at any of them
+```
+
+**And the staleness is not cosmetic.** Resolving `malloc_type_malloc` *by symbol*
+in each — not by file offset, since a byte at an address is not proof it is the
+same function:
+
+```
+machorun/darwin/usr/lib   b  ... symbol stub for: _glibc_malloc   <- current, correct
+scratch/mrroot_isa        b  ... symbol stub for: _malloc         <- pre-fix
+scratch/mrroot_prefix     b  ... symbol stub for: _malloc         <- pre-fix
+scratch/mrroot            b  ... symbol stub for: _malloc         <- pre-fix
+scratch/mrroot2           b  ... symbol stub for: _malloc         <- pre-fix
+scratch/mrroot_full       (does not define the symbol at all)     <- older still
+```
+
+**The malloc_type defect that cost this project a week is still live, on disk, in
+four runtime trees, right now.** swift-loader-fixes warned about `mrroot`
+specifically; the sweep found three more they had not checked, and confirmed
+theirs.
+
+`run_machorun.sh` does `rm -rf` and re-copies, so a tree is fresh *while it runs*
+— the rot is in the copies left behind between runs, which the next reader
+reasonably assumes are current. Every git-level check says the tree is current,
+because these directories are not in git.
+
+### Two recommendations, in order of value
+
+1. **Delete the four unused roots, keep one.** Five copies of a userland is five
+   things to keep fresh; `run_machorun.sh` rebuilds its own on every run, so the
+   leftovers have no consumer. Deletion beats freshening, for the same reason
+   deleting the duplicate symbols beat correcting them.
+2. **Point `check_stale.sh` at discovered trees, not a list.** It grades 6
+   hardcoded paths. A copy tree it has never heard of is the case it cannot see.
+
+### A fourth instance of one bug, caught by the rule this time
+
+Measuring those trees, my first loop printed **`0 of 0 copy-trees are stale`** —
+a `find -maxdepth 3` that could not reach a path four levels down, so the body
+never executed. That is the **fourth** zero tonight produced by a loop that did
+not run (a zsh `[ "$a" \< "$b" ]` that errored, a refusal shadowed by
+`set -o pipefail`, a `.tbd` regex whose character class omitted uppercase and so
+reported 6 gated paths as 2, and this).
+
+The difference is that this one announced itself: **because the count was
+printed next to the verdict, `0 of 0` was obviously not `0 of 5`.** Every earlier
+instance printed only the verdict and read as good news. That is the denominator
+rule paying for itself inside the sweep written to apply it.
+
+Worth naming the direction: **all four bad measurements erred toward a smaller,
+tidier, more reassuring number.** None of them ever invented a problem.
