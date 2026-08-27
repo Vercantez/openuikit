@@ -384,5 +384,28 @@ PIN(struct sched_param, 4);
  * four symbols in that census that really were plain forwards. */
 PIN(pthread_attr_t, 64);
 
+/* SCHEDULING AND DETACH STATE, both revealed ten symbols late because
+ * ld64.lld caps its diagnostics at 20 and every "20 undefined" measurement was
+ * the CEILING rather than the count.
+ *
+ * SCHED_RR is the only one of the three policies that agrees, and Darwin's
+ * SCHED_OTHER (1) is THIS header's SCHED_FIFO -- so a forwarded request for
+ * the ordinary scheduler makes the thread real-time, which on a machine
+ * running a test suite is a hang rather than a slowdown.
+ *
+ * The detach state is worse because it is off by ONE: Darwin's
+ * PTHREAD_CREATE_JOINABLE is 1 and 1 HERE is DETACHED, so the SAFE-LOOKING
+ * direction is the broken one -- the guest asks for a joinable thread, gets a
+ * detached one, and the pthread_join that follows has nothing to join. Darwin
+ * DETACHED (2) is out of range here and merely fails. Same shape as
+ * SIG_BLOCK/SIG_UNBLOCK. */
+_Static_assert(SCHED_OTHER == 0, "glibc SCHED_OTHER moved (Darwin's is 1, "
+    "which is THIS header's SCHED_FIFO -- see mr_sched_policy_d2l)");
+_Static_assert(SCHED_FIFO  == 1, "glibc SCHED_FIFO moved (Darwin's is 4)");
+_Static_assert(SCHED_RR    == 2, "glibc SCHED_RR moved (Darwin's is 2 too -- the only one)");
+_Static_assert(PTHREAD_CREATE_JOINABLE == 0, "glibc PTHREAD_CREATE_JOINABLE moved "
+    "(Darwin's is 1, which is THIS header's DETACHED)");
+_Static_assert(PTHREAD_CREATE_DETACHED == 1, "glibc PTHREAD_CREATE_DETACHED moved (Darwin's is 2)");
+
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */

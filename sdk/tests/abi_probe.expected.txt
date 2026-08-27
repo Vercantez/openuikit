@@ -301,6 +301,8 @@ value  SCHED_FIFO                   4
 value  SCHED_RR                     2
 sizeof struct sched_param           8
 sizeof pthread_attr_t               64
+value  PTHREAD_CREATE_JOINABLE      1
+value  PTHREAD_CREATE_DETACHED      2
 
 == stat mode bits
 value  S_IFMT                       61440

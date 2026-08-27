@@ -1,0 +1,17 @@
+== detach state round trip
+  init rc=0
+  set JOINABLE rc=0  read back PTHREAD_CREATE_JOINABLE
+  set DETACHED rc=0  read back PTHREAD_CREATE_DETACHED
+== and that JOINABLE really reached pthread_create
+  create rc=0
+  join rc=0  worker ran=1
+== scheduling policy round trip
+  set SCHED_RR    rc=0  read back SCHED_RR
+  set SCHED_OTHER rc=0  read back SCHED_OTHER
+  set SCHED_FIFO  rc=0  read back SCHED_FIFO
+== sched_param: 8 bytes here, 4 on Linux, and the OUT direction
+  set rc=0  get rc=0  priority read back=17
+== stack size
+  set rc=0  read back 512 KiB
+  destroy rc=0
+done

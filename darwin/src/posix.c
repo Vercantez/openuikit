@@ -1546,6 +1546,201 @@ EXPORT int pthread_attr_setschedparam(void *a, const void *param)
     return glibc_pthread_attr_setschedparam(a, param);
 }
 
+/* --- the rest of the pthread_attr surface, revealed by an untruncated link */
+
+/* These arrived ten symbols late, because ld64.lld stops after 20 diagnostics
+ * and every "20 undefined symbols" measurement was the CEILING rather than the
+ * count. Worth recording where the work is rather than only in a commit
+ * message: the whole pthread_attr family was invisible while everyone argued
+ * about fcntl, and TWO INDEPENDENT LINKS BOTH RETURNING EXACTLY 20 was offered
+ * as evidence the number was sound. A saturated measurement is perfectly
+ * reproducible, and a metric pinned at its limit looks exactly like one that
+ * has converged.
+ *
+ * THE DETACH STATE IS OFF BY ONE, which is the same worst-case spacing as
+ * SIG_BLOCK and fails the same way -- in the direction that looks fine:
+ *
+ *     PTHREAD_CREATE_JOINABLE   Darwin 1   glibc 0
+ *     PTHREAD_CREATE_DETACHED   Darwin 2   glibc 1
+ *
+ * A forwarded JOINABLE (1) is read by glibc as DETACHED, so the guest gets a
+ * thread it cannot join, and the pthread_join that follows fails or -- worse
+ * -- joins a thread that has already been reaped. DETACHED (2) is out of
+ * glibc's range and merely fails, which is the only reason this would ever be
+ * noticed. Both columns pinned in sdk/tests/{abi,glibc_abi}_probe.c. */
+#define MR_D_PTHREAD_CREATE_JOINABLE 1
+#define MR_D_PTHREAD_CREATE_DETACHED 2
+#define MR_L_PTHREAD_CREATE_JOINABLE 0
+#define MR_L_PTHREAD_CREATE_DETACHED 1
+
+EXPORT int pthread_attr_setdetachstate(void *a, int d)
+{
+    int l;
+    if (d == MR_D_PTHREAD_CREATE_JOINABLE)      l = MR_L_PTHREAD_CREATE_JOINABLE;
+    else if (d == MR_D_PTHREAD_CREATE_DETACHED) l = MR_L_PTHREAD_CREATE_DETACHED;
+    else return 22;                              /* EINVAL, by return value */
+    return glibc_pthread_attr_setdetachstate(a, l);
+}
+
+/* The read-back direction of the same off-by-one. A guest that stores JOINABLE
+ * and reads DETACHED has been told its own attribute object changed under it. */
+EXPORT int pthread_attr_getdetachstate(const void *a, int *out)
+{
+    int l = 0, rc = glibc_pthread_attr_getdetachstate(a, &l);
+    if (rc == 0 && out)
+        *out = (l == MR_L_PTHREAD_CREATE_DETACHED) ? MR_D_PTHREAD_CREATE_DETACHED
+                                                   : MR_D_PTHREAD_CREATE_JOINABLE;
+    return rc;
+}
+
+/* size_t on both, no flags, the attr object is glibc's. Genuinely plain. */
+EXPORT int pthread_attr_setstacksize(void *a, size_t n)
+{
+    return glibc_pthread_attr_setstacksize(a, n);
+}
+
+EXPORT int pthread_attr_getstacksize(const void *a, size_t *out)
+{
+    return glibc_pthread_attr_getstacksize(a, out);
+}
+
+/* THE SCHEDULING POLICY, which is the one that would not have failed.
+ *
+ *     SCHED_OTHER   Darwin 1   glibc 0
+ *     SCHED_FIFO    Darwin 4   glibc 1
+ *     SCHED_RR      Darwin 2   glibc 2      <- the only one that agrees
+ *
+ * Darwin's SCHED_OTHER IS glibc's SCHED_FIFO, so a forwarded request for the
+ * ORDINARY scheduler makes the thread real-time: it runs until it blocks or
+ * yields, and on a machine running a test suite that is a hang rather than a
+ * slowdown. Darwin's SCHED_FIFO (4) is not a valid Linux policy and merely
+ * fails, which is again the wrong half being loud. */
+#define MR_D_SCHED_OTHER 1
+#define MR_D_SCHED_FIFO  4
+#define MR_D_SCHED_RR    2
+#define MR_L_SCHED_OTHER 0
+#define MR_L_SCHED_FIFO  1
+#define MR_L_SCHED_RR    2
+
+static int mr_sched_policy_d2l(int d)
+{
+    switch (d) {
+    case MR_D_SCHED_OTHER: return MR_L_SCHED_OTHER;
+    case MR_D_SCHED_FIFO:  return MR_L_SCHED_FIFO;
+    case MR_D_SCHED_RR:    return MR_L_SCHED_RR;
+    default:               return -1;
+    }
+}
+
+static int mr_sched_policy_l2d(int l)
+{
+    switch (l) {
+    case MR_L_SCHED_OTHER: return MR_D_SCHED_OTHER;
+    case MR_L_SCHED_FIFO:  return MR_D_SCHED_FIFO;
+    case MR_L_SCHED_RR:    return MR_D_SCHED_RR;
+    default:
+        mr_bail("pthread_attr_getschedpolicy(): glibc reported a policy with no "
+                "Darwin equivalent (SCHED_BATCH/IDLE/DEADLINE are Linux-only). "
+                "Handing the raw number back would name a different policy.");
+    }
+}
+
+EXPORT int pthread_attr_setschedpolicy(void *a, int policy)
+{
+    int l = mr_sched_policy_d2l(policy);
+    if (l < 0) return 22;                        /* EINVAL, by return value */
+    return glibc_pthread_attr_setschedpolicy(a, l);
+}
+
+EXPORT int pthread_attr_getschedpolicy(const void *a, int *out)
+{
+    int l = 0, rc = glibc_pthread_attr_getschedpolicy(a, &l);
+    if (rc == 0 && out) *out = mr_sched_policy_l2d(l);
+    return rc;
+}
+
+/* THE OUT DIRECTION OF sched_param, which I declined to write an hour ago on
+ * the grounds that nothing asked. Something asks.
+ *
+ * struct sched_param is 8 bytes on Darwin and 4 on glibc, with sched_priority
+ * the leading field on both (measured, offset 0 either way). The IN direction
+ * is therefore safe as a forward -- glibc reads the 4 bytes the guest meant.
+ * This is the OUT direction, where a forward has glibc write 4 bytes into the
+ * guest's 8 and leave Darwin's trailing opaque word holding whatever was on
+ * the stack. Reading it back through Darwin's struct would then see garbage in
+ * a field the guest is entitled to treat as initialised. So glibc fills OUR
+ * 4-byte mirror and we write the whole 8. */
+struct darwin_sched_param { int sched_priority; char opaque[4]; };
+_Static_assert(sizeof(struct darwin_sched_param) == 8, "Darwin struct sched_param is 8 bytes");
+
+EXPORT int pthread_attr_getschedparam(const void *a, struct darwin_sched_param *out)
+{
+    int lprio = 0, rc = glibc_pthread_attr_getschedparam(a, &lprio);
+    if (rc == 0 && out) {
+        out->sched_priority = lprio;
+        glibc_memset(out->opaque, 0, sizeof out->opaque);
+    }
+    return rc;
+}
+
+/* Both a policy and a sched_param, so both translations at once. The param is
+ * IN, so the 8-into-4 read is the safe direction. */
+EXPORT int pthread_setschedparam(unsigned long thread, int policy, const void *param)
+{
+    int l = mr_sched_policy_d2l(policy);
+    if (l < 0) return 22;                        /* EINVAL */
+    return glibc_pthread_setschedparam(thread, l, param);
+}
+
+/* Plain: the thread is glibc's, the value is opaque, and there is no return. */
+EXPORT void pthread_exit(void *value) { glibc_pthread_exit(value); }
+
+/* --- futex: a NON-VARIADIC door, deliberately, and not syscall(2) --------- */
+
+/* libdispatch's core lock path (src/shims/lock.c) reaches the futex through
+ * the variadic multiplexer:
+ *
+ *     syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
+ *
+ * SEVEN ARGUMENTS THROUGH syscall(2), on every lock and every thread event.
+ * machorun does not export syscall and will not: Darwin's arm64 ABI passes
+ * variadic arguments on the STACK where AAPCS64 passes the first eight in
+ * REGISTERS, so a forward would hand glibc six values it never wrote -- one of
+ * them a struct timespec * it writes through. That is not a wrong lock, it is
+ * a wild store on the hottest path in the library.
+ *
+ * So the door is this instead: a NON-VARIADIC six-argument futex(). Fixed
+ * arguments use the same registers under both ABIs, so there is no mismatch
+ * left to translate -- which is a stronger property than translating it. The
+ * caller patches one line to reach it, the same shape as the existing
+ * syscall(SYS_gettid) -> gettid() patch.
+ *
+ * NOTHING ABOUT THE ARGUMENTS IS TRANSLATED, and that is deliberate rather
+ * than lazy. The op values (FUTEX_WAIT, FUTEX_WAKE, FUTEX_PRIVATE_FLAG ...)
+ * are LINUX constants with no Darwin counterpart at all, so the caller is
+ * Linux shim code compiled for a Darwin target and is already speaking Linux
+ * -- the signalfd judgement, for the same reason. struct timespec is 16 bytes
+ * with identical field offsets on both (pinned by abi_probe), so it crosses as
+ * itself. The uaddrs are the guest's own memory.
+ *
+ * __NR_futex is 98 on aarch64. It is spelled out here because sys/syscall.h is
+ * a Linux header this Darwin-targeted translation unit cannot include. */
+#define MR_NR_FUTEX 98
+
+EXPORT int futex(unsigned int *uaddr, int op, unsigned int val,
+                 const void *timeout, unsigned int *uaddr2, unsigned int val3)
+{
+    /* syscall(2) reports errors through errno like any other libc call, so the
+     * full bracket applies rather than half of it -- and the errno the guest
+     * reads must be Darwin's: a futex wait that times out reports ETIMEDOUT,
+     * which is 60 on Darwin and 110 on Linux, and lock.c compares against the
+     * number it was compiled with. */
+    long rc = MR_ERRNO_CALL(glibc_syscall(MR_NR_FUTEX, (long)(size_t)uaddr, op,
+                                          val, (long)(size_t)timeout,
+                                          (long)(size_t)uaddr2, val3));
+    return (int)rc;
+}
+
 /* --- getsockopt: the level differs, and 1 is valid on both ---------------- */
 
 /* SOL_SOCKET is 65535 on Darwin and 1 on Linux, and 1 IS a valid level on

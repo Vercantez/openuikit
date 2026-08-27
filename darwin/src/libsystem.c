@@ -1289,13 +1289,32 @@ EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), 
     g_pthread_t t;
     struct mr_thread_start *s;
     int rc;
-    if (attr) mr_bail("pthread_create with a non-NULL pthread_attr_t is not implemented "
-                   "(Darwin's attr struct layout differs from glibc's)");
+    /* A non-NULL attr USED to abort here, on the grounds that Darwin's attr
+     * layout differs from glibc's. The SIZE does not -- pthread_attr_t is 64
+     * bytes on both, pinned in glibc_abi_probe.c -- but the CONTENTS did,
+     * because nothing filled the guest's object with glibc's data.
+     *
+     * That changed when the pthread_attr_* family landed in darwin/src/posix.c.
+     * init, destroy, setdetachstate, setstacksize and the sched entries all
+     * call glibc's, so the guest's 64 bytes hold GLIBC's attr from the moment
+     * it is initialised, and handing it straight to glibc_pthread_create is
+     * correct rather than merely convenient.
+     *
+     * WHY THAT ARGUMENT IS SAFE HERE AND NOT FOR pthread_cond_t, which is the
+     * comparison that matters: POSIX gives cond a STATIC INITIALIZER
+     * (PTHREAD_COND_INITIALIZER), so a guest can produce one that never passed
+     * through our init and still holds Darwin's bytes -- which is exactly why
+     * that type keeps a handle indirection. pthread_attr_t has NO static
+     * initializer on either system; pthread_attr_init is mandatory. So every
+     * attr that legitimately reaches this call has been through ours.
+     *
+     * A guest that zeroes an attr and passes it without init is undefined
+     * behaviour under POSIX, and equally undefined on Darwin. */
     s = glibc_malloc(sizeof *s);
     if (!s) return 12 /* Darwin ENOMEM */;
     s->fn = fn;
     s->arg = arg;
-    rc = mr_pthread_rc(glibc_pthread_create(&t, NULL, mr_thread_trampoline, s));
+    rc = mr_pthread_rc(glibc_pthread_create(&t, attr, mr_thread_trampoline, s));
     if (rc == 0) *thread = (void *)t;
     else glibc_free(s);
     return rc;
