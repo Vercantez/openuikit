@@ -1,0 +1,173 @@
+# The Objective-C methods CoreFoundation messages
+#
+# 151 distinct selectors across 24 Foundation classes, harvested by RESTORING
+# CF's ObjC dispatch macros and compiling: each one is a clang
+# "instance method '-x' not found" against forward-declared classes.
+#
+# Provenance: foundation-macho scripts/patch_cf_objc.py applied to
+# swift-corelibs-foundation release/6.2, compiled -x objective-c
+# -DINCLUDE_OBJC=1 -DDEPLOYMENT_RUNTIME_SWIFT=0, arm64-apple-macos13.0.
+#
+# WHY THIS LIST EXISTS: with only @class forward declarations the messages
+# compile anyway, with "return type defaults to 'id'" -- clang GUESSING the
+# signature. That is the same silent-miscompilation shape as an implicit
+# function declaration, so these need real @interface declarations, not
+# forward declarations.
+#
+# This is the size of the Foundation header CF must see at compile time.
+# It overlaps heavily with the 128 selectors libswiftCore needs (docs/
+# DECISION.md §1.3) -- -length, -characterAtIndex:, -count, -objectForKey:,
+# -getCharacters:range:, -_cfTypeID -- so one set of NS* implementations
+# satisfies both consumers.
+#
+-__addObject:forKey:
+-__apply:context:
+-__applyValues:context:
+-__getValue:forKey:
+-__getValue:forObj:
+-__setObject:forKey:
+-_addComponents::::
+-_cfAppendCString:length:
+-_cfCapitalize:
+-_cfLowercase:
+-_cfMutableCopy
+-_cfNormalize:
+-_cfNumberType
+-_cfPad:length:padIndex:
+-_cfStreamError
+-_cfTrim:
+-_cfTrimWS
+-_cfTypeID
+-_cfUppercase:
+-_cffireTime
+-_cfurl
+-_composeAbsoluteTime:::
+-_copyDisplayNameForKey:value:
+-_copyGregorianStartDate
+-_copyLocale
+-_copyTimeZone
+-_daylightSavingTimeOffsetForAbsoluteTime:
+-_decomposeAbsoluteTime:::
+-_diffComponents:::::
+-_doesNotRequireSpecialCaseHandling
+-_encodingCantBeStoredInEightBitCFString
+-_expandedCFCharacterSet
+-_fastCStringContents:
+-_fastCharacterContents
+-_fastestEncodingInCFStringEncoding
+-_getCString:maxLength:encoding:
+-_getValue:forType:
+-_nextDaylightSavingTimeTransitionAfterAbsoluteTime:
+-_prefs
+-_retainedBitmapRepresentation
+-_reverseCompare:
+-_setDoesNotRequireSpecialCaseHandling
+-_setGregorianStartDate:
+-_smallestEncodingInCFStringEncoding
+-absoluteURL
+-addAttribute:value:range:
+-addAttributes:range:
+-addCharactersInRange:
+-addCharactersInString:
+-addObject:
+-appendBytes:length:
+-appendCharacters:length:
+-appendString:
+-baseURL
+-beginEditing
+-boolValue
+-bytes
+-calendarIdentifier
+-characterAtIndex:
+-close
+-code
+-compare:
+-containsKey:
+-containsObject:
+-count
+-countForKey:
+-countForObject:
+-data
+-deleteCharactersInRange:
+-domain
+-endEditing
+-enumerateKeysAndObjectsWithOptions:usingBlock:
+-exchangeObjectAtIndex:withObjectAtIndex:
+-firstWeekday
+-formIntersectionWithCharacterSet:
+-formUnionWithCharacterSet:
+-fragment
+-getBuffer:length:
+-getBytes:range:
+-getCharacters:range:
+-getLineStart:end:contentsEnd:forRange:
+-getObjects:
+-getObjects:andKeys:
+-getObjects:range:
+-getParagraphStart:end:contentsEnd:forRange:
+-hasBytesAvailable
+-hasMemberInPlane:
+-hasSpaceAvailable
+-host
+-increaseLengthBy:
+-insertObject:atIndex:
+-insertString:atIndex:
+-invalidate
+-invert
+-invertedSet
+-isFileReferenceURL
+-isValid
+-length
+-localeIdentifier
+-localizedDescription
+-localizedFailureReason
+-localizedRecoverySuggestion
+-longCharacterIsMember:
+-member:
+-minimumDaysInFirstWeek
+-mutableBytes
+-mutableString
+-name
+-objectForKey:
+-open
+-password
+-port
+-propertyForKey:
+-query
+-read:maxLength:
+-relativeString
+-removeAllObjects
+-removeAttribute:range:
+-removeCharactersInRange:
+-removeCharactersInString:
+-removeObject:
+-removeObjectAtIndex:
+-removeObjectForKey:
+-replaceBytesInRange:withBytes:length:
+-replaceCharactersInRange:withAttributedString:
+-replaceCharactersInRange:withString:
+-replaceObject:
+-replaceObject:forKey:
+-replaceObjectsInRange:withObjects:count:
+-scheme
+-setAttributes:range:
+-setFirstWeekday:
+-setLength:
+-setLocale:
+-setMinimumDaysInFirstWeek:
+-setObject:
+-setObject:atIndex:
+-setProperty:forKey:
+-setString:
+-setTimeZone:
+-setTolerance:
+-streamError
+-streamStatus
+-string
+-timeInterval
+-timeIntervalSinceDate:
+-timeIntervalSinceReferenceDate
+-tolerance
+-user
+-userInfo
+-write:maxLength:
