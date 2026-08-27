@@ -126,8 +126,49 @@ def apply(path, old, new, label):
     return True
 
 
+# ---------------------------------------------------------------- registration
+#
+# _SetCFRuntimeObjcClass() exists at CFInternal.h:916 and is CALLED FROM NOWHERE:
+# corelibs has no _CFRuntimeBridgeClasses, so __CFRuntimeObjCClassTable is never
+# populated and __CFISAForTypeID() returns 0 for every type.
+#
+# That is why CF_IS_OBJC is currently RIGHT BY ACCIDENT. A native CF instance
+# gets `_cfisa = __CFISAForTypeID(typeID)` = 0 (CFRuntime.c:550); a real ObjC
+# object has a real isa; so `isa != __CFISAForTypeID(typeID)` happens to answer
+# correctly for both. It inverts the moment anything registers a class: every
+# UNREGISTERED type would then see its own instances as foreign and CF would
+# start messaging structs.
+#
+# So registration is all-or-nothing per type, and it is a CORRECTNESS
+# prerequisite rather than an optimisation.
+
+OLD_INIT = "void __CFInitialize(void) {"
+
+NEW_INIT = """CF_PRIVATE void _CFRuntimeBridgeClasses(CFTypeID typeID, const char *classname);
+
+/* RESTORED -- see foundation-macho scripts/patch_cf_objc.py.
+ * Binds a CF type to the Objective-C class whose instances CF hands out, so
+ * __CFISAForTypeID() stops returning 0 and CF_IS_OBJC becomes right on purpose
+ * rather than by accident. Looked up by NAME at run time, exactly as
+ * libswiftCore's swift_stdlib_connectNSBaseClasses does -- CF must not link
+ * against Foundation. */
+CF_PRIVATE void _CFRuntimeBridgeClasses(CFTypeID typeID, const char *classname) {
+#if defined(__OBJC__)
+    Class cls = objc_lookUpClass(classname);
+    if (cls) {
+        _SetCFRuntimeObjcClass((uintptr_t)cls, typeID);
+    }
+    /* Absent class: leave the slot 0. A type registered to a class that does
+     * not exist would be worse than an unregistered one -- CF_IS_OBJC would
+     * compare against garbage instead of against a consistent 0. */
+#endif
+}
+
+void __CFInitialize(void) {"""
+
 ok = True
 print(f"patching {CF}")
 ok &= apply(INTERNAL, OLD_INTERNAL, NEW_INTERNAL, "CFInternal.h  (CF_IS_OBJC + 3)")
 ok &= apply(RUNTIME,  OLD_RUNTIME,  NEW_RUNTIME,  "CFRuntime.c   (CFTYPE_* + 2)")
+ok &= apply(RUNTIME,  OLD_INIT,     NEW_INIT,     "CFRuntime.c   (_CFRuntimeBridgeClasses)")
 sys.exit(0 if ok else 1)

@@ -1266,3 +1266,60 @@ Read alone, "unknown methods: 0" is the number this entire loop was driving
 toward. Only `PASS=0` alongside it says what actually happened. The standing
 rule — treat zero or unchanged as suspect, not only improvements — was written
 for exactly this and still nearly caught me by surprise.
+
+## 35. Class registration: mechanism added, registration deliberately NOT done
+
+`scripts/patch_cf_objc.py` now also restores `_CFRuntimeBridgeClasses`, the
+function corelibs is missing:
+
+```c
+CF_PRIVATE void _CFRuntimeBridgeClasses(CFTypeID typeID, const char *classname) {
+    Class cls = objc_lookUpClass(classname);
+    if (cls) _SetCFRuntimeObjcClass((uintptr_t)cls, typeID);
+}
+```
+
+Verified present: `__CFRuntimeBridgeClasses` is a defined symbol in `CFRuntime.o`,
+and the census holds at 75/82 with 18 unknown methods.
+
+**Nothing calls it, and that is deliberate. Class registration is NOT done.**
+`CF_IS_OBJC` still works by accident, exactly as before, and this section should
+not be read as having closed that hole.
+
+Three reasons for stopping at the mechanism:
+
+1. **Partial registration is worse than none.** The accidental correctness holds
+   only while the table is uniformly empty: every native instance gets
+   `_cfisa = 0` and every foreign object has a real isa. Register *some* types
+   and the unregistered ones invert — their own instances start reading as
+   foreign ObjC objects and CF messages structs. So this is all-or-nothing per
+   type, and "add a few call sites to make progress" is the one approach
+   guaranteed to be wrong.
+
+2. **The classes to register do not exist yet.** Apple binds `_kCFRuntimeIDCFString`
+   to `__NSCFString`, `CFArray` to `__NSCFArray`, and so on — the concrete
+   bridge classes that wrap a CF object. Our Foundation has no `__NSCF*` classes,
+   so `objc_lookUpClass` would return nil for every one and the function would
+   correctly do nothing. Registration is downstream of the `NS*` implementation,
+   not a precursor to it.
+
+3. **It cannot be verified at runtime yet.** CoreFoundation does not link — that
+   is blocked on libdispatch (#47) — so there is no way to observe whether
+   registration makes `CF_IS_OBJC` right on purpose. Landing an unverifiable
+   change to the one mechanism whose current correctness is accidental is
+   precisely the wrong risk to take.
+
+### The test this needs, when CF links
+
+Not "does it compile". Construct both cases and assert the predicate:
+
+- a **native CF object** (`CFStringCreateWithCString`) — `CF_IS_OBJC` must be
+  **false**, and its `_cfisa` must equal `__CFISAForTypeID(_kCFRuntimeIDCFString)`
+- a **foreign ObjC object** (our `NSString` subclass) — `CF_IS_OBJC` must be
+  **true**
+- an **unregistered type**, to prove the inversion hazard is understood rather
+  than merely described
+
+Both halves, on both sides — the counter-practice this project already uses for
+negative controls. A test that only checks the native case would pass today,
+with the table empty, and prove nothing about registration at all.
