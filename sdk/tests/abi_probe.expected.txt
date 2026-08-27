@@ -151,6 +151,51 @@ value  ENOTSUP                      45
 value  ETIMEDOUT                    60
 value  ENOSYS                       78
 
+== signals  (9 of 28 shared names differ from Linux, and three form a
+==           CYCLE: Darwin SIGCONT 19 / SIGCHLD 20 against Linux 18 / 17,
+==           so a forwarded number does not merely miss, it names a
+==           different real signal. Nothing forwards one today.)
+value  SIGHUP                       1
+value  SIGINT                       2
+value  SIGQUIT                      3
+value  SIGILL                       4
+value  SIGTRAP                      5
+value  SIGABRT                      6
+value  SIGFPE                       8
+value  SIGKILL                      9
+value  SIGBUS                       10
+value  SIGSEGV                      11
+value  SIGSYS                       12
+value  SIGPIPE                      13
+value  SIGALRM                      14
+value  SIGTERM                      15
+value  SIGURG                       16
+value  SIGSTOP                      17
+value  SIGTSTP                      18
+value  SIGCONT                      19
+value  SIGCHLD                      20
+value  SIGTTIN                      21
+value  SIGTTOU                      22
+value  SIGXCPU                      24
+value  SIGXFSZ                      25
+value  SIGVTALRM                    26
+value  SIGPROF                      27
+value  SIGWINCH                     28
+value  SIGUSR1                      30
+value  SIGUSR2                      31
+value  SIG_BLOCK                    1
+value  SIG_UNBLOCK                  2
+value  SIG_SETMASK                  3
+value  SA_RESTART                   2
+value  SA_SIGINFO                   64
+value  SA_NOCLDSTOP                 8
+
+== socket constants are NOT here, and that is a finding rather than an
+==   omission: sys/socket.h IS staged but includes sys/constrained_ctypes.h,
+==   which is not, so nothing can compile against it. The glibc half is
+==   pinned in sdk/tests/glibc_abi_probe.c; this half has to wait for the
+==   dangling include. SOL_SOCKET is 65535 on Darwin against 1 on Linux.
+
 == open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)
 value  O_RDONLY                     0
 value  O_WRONLY                     1

@@ -75,7 +75,11 @@
 #include <signal.h>
 #include <spawn.h>
 #include <stddef.h>
+#include <dlfcn.h>
 #include <errno.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <ucontext.h>
 
@@ -153,6 +157,81 @@ _Static_assert(offsetof(struct dirent, d_type) == 18,
 _Static_assert(offsetof(struct dirent, d_name) == 19,
     "glibc struct dirent has moved d_name (Darwin puts it at 21).");
 PIN(glob_t, 72);
+
+/* ------------------------------------------------------------------ CONSTANTS
+ * A hazard the size checks above structurally cannot see: same width, symbols
+ * resolve, behaviour inverts. Measured across 160 constants, 76 differ. errno,
+ * the O_* flags, MAP_ANON and the clock ids were already translated when this
+ * audit ran; sysconf was not, and every one of its 128 shared _SC_* names has a
+ * different value on the two systems.
+ *
+ * The two families below are NOT forwarded today -- libSystem exports no
+ * sigaction, kill, raise, socket or setsockopt -- so these are landmines rather
+ * than live bugs. They are pinned now because the measurement exists and
+ * because both have imminent consumers: libdispatch's link step reaches the
+ * socket constants, and CF's remaining surface reaches into both. Pinning is
+ * cheap while nobody is under pressure to ship the symbol.
+ *
+ * The Darwin halves live in sdk/tests/abi_probe.c, which compiles against our
+ * SDK and diffs against Apple's. Signals are there; SOCKETS ARE NOT, because
+ * sys/socket.h is staged with a dangling include (sys/constrained_ctypes.h)
+ * and nothing can compile against it yet. So the socket family is currently
+ * guarded on ONE side only, and that is recorded rather than glossed. */
+
+/* SIGNALS. Nine of the 28 shared names differ, and three form a CYCLE --
+ * Darwin SIGCONT 19 / SIGCHLD 20 against Linux 18 / 17 -- so a forwarded
+ * number does not merely miss, it names a DIFFERENT REAL SIGNAL. A guest
+ * asking to handle SIGCHLD would be handed SIGCONT. */
+_Static_assert(SIGBUS  ==  7, "glibc SIGBUS moved (Darwin's is 10)");
+_Static_assert(SIGUSR1 == 10, "glibc SIGUSR1 moved (Darwin's is 30)");
+_Static_assert(SIGUSR2 == 12, "glibc SIGUSR2 moved (Darwin's is 31)");
+_Static_assert(SIGCHLD == 17, "glibc SIGCHLD moved (Darwin's is 20 -- and Darwin's 17 is SIGSTOP)");
+_Static_assert(SIGCONT == 18, "glibc SIGCONT moved (Darwin's is 19 -- and Darwin's 18 is SIGTSTP)");
+_Static_assert(SIGSTOP == 19, "glibc SIGSTOP moved (Darwin's is 17)");
+_Static_assert(SIGTSTP == 20, "glibc SIGTSTP moved (Darwin's is 18)");
+_Static_assert(SIGURG  == 23, "glibc SIGURG moved (Darwin's is 16)");
+_Static_assert(SIGSYS  == 31, "glibc SIGSYS moved (Darwin's is 12)");
+/* The three that agree, pinned so a change is noticed rather than assumed. */
+_Static_assert(SIGSEGV == 11, "glibc SIGSEGV moved (Darwin's is 11 too, so far)");
+_Static_assert(SIGKILL ==  9, "glibc SIGKILL moved");
+_Static_assert(SIGPIPE == 13, "glibc SIGPIPE moved");
+/* sigprocmask's how-argument is shifted by one, which is the quiet kind: every
+ * value is valid on both sides, so a forward silently does the wrong operation
+ * -- SIG_BLOCK becomes SIG_UNBLOCK. */
+_Static_assert(SIG_BLOCK   == 0, "glibc SIG_BLOCK moved (Darwin's is 1)");
+_Static_assert(SIG_UNBLOCK == 1, "glibc SIG_UNBLOCK moved (Darwin's is 2)");
+_Static_assert(SIG_SETMASK == 2, "glibc SIG_SETMASK moved (Darwin's is 3)");
+_Static_assert(SA_SIGINFO  == 4, "glibc SA_SIGINFO moved (Darwin's is 64)");
+
+/* SOCKETS. SOL_SOCKET is the one to notice: 65535 on Darwin against 1 on
+ * Linux, and 1 on Linux is a valid level, so a forwarded setsockopt would set
+ * an option at the wrong level rather than failing. Every SO_* differs too. */
+_Static_assert(SOL_SOCKET   == 1, "glibc SOL_SOCKET moved (Darwin's is 65535)");
+_Static_assert(SO_REUSEADDR == 2, "glibc SO_REUSEADDR moved (Darwin's is 4)");
+_Static_assert(SO_ERROR     == 4, "glibc SO_ERROR moved (Darwin's is 4103)");
+_Static_assert(SO_BROADCAST == 6, "glibc SO_BROADCAST moved (Darwin's is 32)");
+_Static_assert(SO_SNDBUF    == 7, "glibc SO_SNDBUF moved (Darwin's is 4097)");
+_Static_assert(SO_RCVBUF    == 8, "glibc SO_RCVBUF moved (Darwin's is 4098)");
+_Static_assert(SO_KEEPALIVE == 9, "glibc SO_KEEPALIVE moved (Darwin's is 8)");
+_Static_assert(SO_LINGER    == 13, "glibc SO_LINGER moved (Darwin's is 128)");
+_Static_assert(AF_INET6     == 10, "glibc AF_INET6 moved (Darwin's is 30)");
+/* AF_UNIX/AF_INET and SOCK_STREAM/SOCK_DGRAM agree; pinned for the same
+ * reason as the agreeing signals. */
+_Static_assert(AF_UNIX    == 1, "glibc AF_UNIX moved");
+_Static_assert(AF_INET    == 2, "glibc AF_INET moved");
+_Static_assert(SOCK_STREAM == 1, "glibc SOCK_STREAM moved");
+_Static_assert(SOCK_DGRAM  == 2, "glibc SOCK_DGRAM moved");
+
+/* dlfcn, because dlopen's mode already crosses: darwin/src/objcsupport.c tests
+ * RTLD_NOLOAD using DARWIN's 0x10, which is right precisely because the guest
+ * passes Darwin's value and we never forward the mode to glibc. If anyone ever
+ * does forward it, 0x10 means something else here. */
+_Static_assert(RTLD_NOLOAD == 4,   "glibc RTLD_NOLOAD moved (Darwin's is 16 -- and libSystem tests Darwin's)");
+_Static_assert(RTLD_GLOBAL == 256, "glibc RTLD_GLOBAL moved (Darwin's is 8)");
+
+/* pthread attributes, which CF's list reaches (pthread_attr_setdetachstate). */
+_Static_assert(PTHREAD_CREATE_JOINABLE == 0, "glibc PTHREAD_CREATE_JOINABLE moved (Darwin's is 1)");
+_Static_assert(PTHREAD_CREATE_DETACHED == 1, "glibc PTHREAD_CREATE_DETACHED moved (Darwin's is 2)");
 
 /* Not a struct-shape problem but the same family: a width mismatch inside a
  * translated struct. Darwin's dev_t is 4 bytes and mode_t/nlink_t are 2. */
