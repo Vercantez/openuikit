@@ -77,6 +77,8 @@ extern void  *glibc_aligned_alloc(size_t, size_t)           GLIBCSYM(aligned_all
 extern size_t glibc_malloc_usable_size(void *)              GLIBCSYM(malloc_usable_size);
 
 extern size_t glibc_strlen(const char *)                    GLIBCSYM(strlen);
+extern size_t glibc_wcslen(const int *)                      GLIBCSYM(wcslen);
+extern int   *glibc_wmemchr(const int *, int, size_t)       GLIBCSYM(wmemchr);
 extern char  *glibc_strcpy(char *, const char *)            GLIBCSYM(strcpy);
 extern char  *glibc_strncpy(char *, const char *, size_t)   GLIBCSYM(strncpy);
 extern char  *glibc_strcat(char *, const char *)            GLIBCSYM(strcat);

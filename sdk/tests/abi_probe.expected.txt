@@ -190,6 +190,16 @@ value  SA_RESTART                   2
 value  SA_SIGINFO                   64
 value  SA_NOCLDSTOP                 8
 
+== clock ids  (darwin/src/posix.c translates these; both tables are hand-written)
+value  CLOCK_REALTIME               0
+value  CLOCK_MONOTONIC              6
+value  CLOCK_MONOTONIC_RAW          4
+value  CLOCK_MONOTONIC_RAW_APPROX   5
+value  CLOCK_UPTIME_RAW             8
+value  CLOCK_UPTIME_RAW_APPROX      9
+value  CLOCK_PROCESS_CPUTIME_ID     12
+value  CLOCK_THREAD_CPUTIME_ID      16
+
 == socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --
 ==                    and 1 IS a valid level on Linux, so a forwarded
 ==                    setsockopt would set an option at the wrong level

@@ -143,6 +143,12 @@ int main(void)
     VAL(SA_RESTART); VAL(SA_SIGINFO); VAL(SA_NOCLDSTOP);
 
     puts("");
+    puts("== clock ids  (darwin/src/posix.c translates these; both tables are hand-written)");
+    VAL(CLOCK_REALTIME); VAL(CLOCK_MONOTONIC); VAL(CLOCK_MONOTONIC_RAW);
+    VAL(CLOCK_MONOTONIC_RAW_APPROX); VAL(CLOCK_UPTIME_RAW); VAL(CLOCK_UPTIME_RAW_APPROX);
+    VAL(CLOCK_PROCESS_CPUTIME_ID); VAL(CLOCK_THREAD_CPUTIME_ID);
+
+    puts("");
     puts("== socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --");
     puts("==                    and 1 IS a valid level on Linux, so a forwarded");
     puts("==                    setsockopt would set an option at the wrong level");

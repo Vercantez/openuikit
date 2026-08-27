@@ -67,6 +67,7 @@
 #define _XOPEN_SOURCE 700
 
 #include <dirent.h>
+#include <time.h>
 #include <glob.h>
 #include <pthread.h>
 #include <regex.h>
@@ -252,6 +253,22 @@ _Static_assert(PTHREAD_CREATE_DETACHED == 1, "glibc PTHREAD_CREATE_DETACHED move
 PIN(dev_t,   8);
 PIN(mode_t,  4);
 PIN(nlink_t, 4);
+
+/* CLOCK IDS. darwin/src/posix.c's mr_linux_clock_id() maps Darwin's ids onto
+ * these, and BOTH tables in it are hand-written -- so before this block
+ * nothing verified either half. That is the shape of the linux_stat bug at
+ * the top of this file: a mirror of glibc's values that glibc never checks.
+ *
+ * A wrong value here does not fail: it silently reads a DIFFERENT CLOCK.
+ * Passing Darwin's CLOCK_MONOTONIC (6) through untranslated lands on Linux's
+ * CLOCK_REALTIME_ALARM, which at least needs a capability and returns EPERM;
+ * most other confusions just return the wrong time. */
+_Static_assert(CLOCK_REALTIME           == 0, "glibc CLOCK_REALTIME moved (Darwin's is 0 too)");
+_Static_assert(CLOCK_MONOTONIC          == 1, "glibc CLOCK_MONOTONIC moved (Darwin's is 6)");
+_Static_assert(CLOCK_PROCESS_CPUTIME_ID == 2, "glibc CLOCK_PROCESS_CPUTIME_ID moved (Darwin's is 12)");
+_Static_assert(CLOCK_THREAD_CPUTIME_ID  == 3, "glibc CLOCK_THREAD_CPUTIME_ID moved (Darwin's is 16)");
+_Static_assert(CLOCK_MONOTONIC_RAW      == 4, "glibc CLOCK_MONOTONIC_RAW moved (Darwin's is 4 too)");
+_Static_assert(CLOCK_BOOTTIME           == 7, "glibc CLOCK_BOOTTIME moved");
 
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */
