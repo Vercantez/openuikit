@@ -208,6 +208,12 @@ fi
 # elsewhere, later, as somebody else's crash.
 want 26_malloc_type      && build 26_malloc_type      "$CHAINED_TARGET" 26_malloc_type      26_malloc_type.c --
 
+# ---------------------------------------------------------------- rung (z)
+# Unwinding a real stack through Apple's compact __TEXT,__unwind_info. It WALKS
+# rather than links: every unwind symbol resolved perfectly while the unwinder
+# was a set of aborting stubs.
+want 27_unwind           && build 27_unwind           "$CHAINED_TARGET" 27_unwind           27_unwind.c --
+
 # ---------------------------------------------------------------- rung (s)
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
