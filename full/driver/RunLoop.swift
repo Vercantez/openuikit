@@ -77,31 +77,40 @@ struct SyntheticFrameSource: HostFrameSource {
 /// Both are exercised -- `runLoopSelfTest()` pulls, `externallyDrivenTest()`
 /// pushes -- and neither reimplements the other.
 ///
-/// A TIMERFD-BACKED SOURCE IS BUILDABLE. This design just does not need one.
+/// THIS BINARY CANNOT OPEN A TIMERFD, and not for the obvious reason. Two wrong
+/// answers preceded the right one; both are kept, because the shape of the
+/// mistakes is worth more than the conclusion.
 ///
-/// A CORRECTED CLAIM, KEPT BECAUSE THE MISTAKE IS THE USEFUL PART. Measuring
-/// machorun's libSystem finds 537 exported symbols and not one file-descriptor
-/// wait primitive -- no timerfd, eventfd, epoll or ppoll, not even POSIX
-/// poll/select or Darwin's kqueue -- with a control proving the grep
-/// discriminates (it finds nanosleep, clock_gettime, read, write,
-/// pthread_create). THAT MEASUREMENT IS CORRECT. The conclusion drawn from it,
-/// "so nothing in this process can wait on a descriptor, CF included", was
-/// WRONG. The primitives are simply not reached through libSystem:
+/// MEASURED, AND CORRECT: machorun's libSystem exports 537 symbols and not one
+/// is a file-descriptor wait primitive -- no timerfd, eventfd, epoll or ppoll,
+/// not even POSIX poll/select or Darwin's kqueue. The control discriminates:
+/// the same grep finds nanosleep, clock_gettime, read, write, pthread_create.
+///
+/// WRONG CONCLUSION #1 -- "so nothing here can wait on a descriptor, CF's epoll
+/// path included." They are not reached through libSystem at all.
 /// swiftcore-macho/scripts/stage_linux_abi.sh declares them with GLIBCSYM asm
-/// labels (`_glibc_<name>`), and machorun's loader binds that prefix straight to
-/// glibc (src/resolve.c:31), deliberately bypassing libSystem. CF's epoll layer
-/// already runs on exactly that mechanism -- libdispatch's real link has 20
-/// undefined symbols and none of the eight is among them.
+/// labels (`_glibc_<name>`) and machorun resolves that prefix with
+/// dlsym(RTLD_DEFAULT) straight to glibc (src/resolve.c:31). CF's RunLoop
+/// already runs on it. AN EMPTY RESULT READ AS A CAPABILITY GAP -- and the
+/// control had proved only that the instrument worked on libSystem, never that
+/// libSystem was where the answer lived.
 ///
-/// The lesson is this project's own, in the polarity that is easy to miss: an
-/// EMPTY result was read as a capability gap. The control proved only that the
-/// grep worked on libSystem; it never established that libSystem was the right
-/// place to look. A control that validates the instrument does not validate the
-/// choice of subject.
+/// WRONG CONCLUSION #2, mine again while correcting the first -- "so a C shim
+/// here could arm one." It could not. That escape hatch is gated on
+/// `from->is_runtime` (src/resolve.c:251), and `is_runtime` is set only for a
+/// dylib loaded from a DARWIN ABSOLUTE PATH under MACHORUN_ROOT/darwin
+/// (src/image.c:139). A guest MAIN EXECUTABLE -- which is what render_full is --
+/// never gets it. foundation-scope measured both arms from identical source: as
+/// a main executable, `undefined symbol '_glibc_epoll_wait'`; as
+/// /usr/lib/libfdprobe.dylib inside the guest root, all five calls succeed.
 ///
-/// So `wait` could arm a timerfd through a C shim in that style. It stays a
-/// sleep because the pull/push split above already composes: CF owns the block
-/// inside `wait`, and no descriptor has to cross this API at all.
+/// SO THE RESTRICTION IS REAL FOR US, for a reason neither guess named: any
+/// blocking descriptor wait must live in a RUNTIME DYLIB or be delegated to
+/// one. The pull/push split above already satisfies that by construction. The
+/// single blocking moment is `HostFrameSource.wait(until:)`, and a CF-backed
+/// source implements it as CFRunLoopRunInMode -- CF's call, inside CF, which is
+/// a runtime dylib. An API whose only blocking moment is delegated is what
+/// survives a restriction like this one.
 @MainActor
 struct UIKitFrameDriver {
     let window: UIWindow
