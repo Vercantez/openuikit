@@ -437,8 +437,21 @@ cat > "$X/mach/mach_port_extra.h" <<'EOF'
    DEFINITIONS, which is exactly why our declarations collided with them. Only
    mach_port_type survives as a genuine CALL, from a Darwin block that has no
    Linux alternative and which patch_cf_runloop.py therefore leaves alone. So
-   eight go and this one stays. */
-kern_return_t mach_port_type(ipc_space_t, mach_port_name_t, mach_port_type_t *);
+   eight go and this one stays.
+
+   AND NOW ALL NINE DO GO. mach_port_type's last caller was a version-1 source's
+   RECV-right preflight -- a MACH-ONLY DIAGNOSTIC that CFLogs once and changes
+   nothing, and on the epoll layer a version-1 source's "port" is an eventfd, so
+   the question it asks cannot arise. patch_cf_runloop.py gates it, and
+   CFRunLoop.o now has ZERO Mach IPC imports where it had nine. Only
+   mach_absolute_time remains, which is Mach TIME and exported by libSystem.
+
+   Verified at the OBJECT level, and the first attempt was wrong in an
+   instructive way: a preprocessor check reported mach_port_type "reachable" in
+   all 86 files, which is nonsense -- it was matching THIS DECLARATION, which
+   CFShimCarbon.h force-includes everywhere. `llvm-nm -u` over the built objects
+   reports none. WHEN THE THING YOU GREP FOR IS SOMETHING YOU YOURSELF
+   INSERTED, THE PREPROCESSOR CANNOT TELL YOU WHETHER ANYONE CALLS IT. */
 kern_return_t mach_vm_region(vm_map_t, mach_vm_address_t *, mach_vm_size_t *,
                              vm_region_flavor_t, vm_region_info_t,
                              mach_msg_type_number_t *, mach_port_t *);

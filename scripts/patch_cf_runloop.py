@@ -221,6 +221,21 @@ DANGLING = [
             msg, size, reply,
 #endif""",
      "source1 perform arguments (the 3-argument signature has no msg/size/reply)"),
+    # A DIFFERENT justification from the three above, so stated separately.
+    # This block does not reference anything the rewrite disabled -- it is
+    # gated out because it is a MACH-ONLY DIAGNOSTIC WITH NO NON-MACH MEANING.
+    # Its entire body preflights a version-1 source's mach port for a RECV
+    # right and CFLogs once if absent: no return, no state change, no effect on
+    # behaviour. On the epoll layer a version-1 source's "port" is an eventfd
+    # and the question does not arise. Removing it costs a Mach-specific
+    # warning and nothing else -- and it is the LAST Mach IPC dependency in the
+    # file, taking mach_port_type out with it and finally retiring all nine of
+    # cf_shims.sh's Mach declarations.
+    ("""#if TARGET_OS_MAC
+    // Preflight Version-1 ports to make sure their mach port has a RECV right. """,
+     """#if CF_RUNLOOP_USE_MACH
+    // Preflight Version-1 ports to make sure their mach port has a RECV right. """,
+     "version-1 port RECV preflight (Mach-only diagnostic, no non-Mach meaning)"),
 ]
 
 
