@@ -300,6 +300,49 @@ are absent: `wchar_t` is 4 bytes on both systems, but nothing exercises it.
 themselves. Anything requiring real cross-process Mach IPC (XPC, launchd,
 distributed notifications) is **deliberately out of scope**.
 
+> **PORTING AGAINST THIS SYSROOT? FEATURE-DETECTING MACH DOES NOT WORK.**
+> `sdk/usr/include/mach/` is complete, because it is Apple's, and every
+> convention in the ecosystem reads a present header as a present capability:
+> `check_include_files(mach/mach.h HAVE_MACH)`, `__has_include(<mach/mach_time.h>)`
+> and autoconf's `AC_CHECK_HEADER` all answer **yes** here. **Force Mach off
+> explicitly** — `-DHAVE_MACH=0` or the port's equivalent — rather than letting
+> detection decide. Measured near-misses in swift-corelibs-libdispatch alone:
+> its CMake would have enabled the entire Mach backend, and its firehose
+> subsystem is reached only because `__has_include(<mach/mach_time.h>)`
+> succeeds. Note too that libdispatch's checked-in `config/config.h` is a
+> *Darwin* config (`HAVE_MACH 1`) that `internal.h` falls back to when no
+> generated config is found first — so Mach can arrive from the source tree
+> with no configure step at all.
+>
+> **Why the headers are not simply removed**, which was proposed and measured:
+> `mach/` is not a separable capability tree. It is woven into Darwin's own C
+> library header graph, so moving it out of the default include root breaks
+> ordinary code that has nothing to do with Mach. Transitive `mach/` headers
+> reached from a single `#include`, measured against this sysroot:
+>
+> | header | `mach/` headers pulled |
+> |---|---:|
+> | `<stdlib.h>` | 2 (via `sys/wait.h` → `sys/signal.h` → `arm/_mcontext.h`) |
+> | `<sys/mount.h>` | 8 |
+> | `<dispatch/dispatch.h>` | 14 |
+> | `<mach-o/loader.h>` | 20 |
+> | `<malloc/malloc.h>` | 56 |
+>
+> `<stdlib.h>` alone settles it. Fourteen non-`mach/` staged headers include
+> `mach/` directly, among them `dispatch/`'s own public headers and
+> `bsm/audit.h`, which `sys/mount.h` needs for CFLocale. objc4 for its part
+> pulls **83 of the 85** staged `mach/` rows transitively, because
+> `mach/mach.h` is an umbrella — so an opt-in set would not be a small one even
+> for its single intended consumer.
+>
+> **And the promise is not unbacked.** Unlike a `.tbd` advertising a symbol
+> nothing defines, 34 Mach entry points here are real, and `12_mach` grades them
+> byte-for-byte against macOS. The four that are not implemented are *exported*
+> and abort with their own name and reason on first use. So a port that switches
+> the Mach backend on fails **loudly at first call** rather than silently — late,
+> but named. That is why the remedy here is a documented rule rather than a
+> header move.
+
 What *is* implemented, in `darwin/src/mach.c` and covered by `12_mach`:
 `mach_task_self` / `mach_task_self_` / `mach_host_self` / `mach_thread_self`,
 `mach_port_deallocate` / `mach_port_mod_refs`, `vm_allocate` / `vm_deallocate` /
