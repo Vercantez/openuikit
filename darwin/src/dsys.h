@@ -88,6 +88,13 @@ extern int    glibc_dlclose(void *)                         GLIBCSYM(dlclose);
 extern long   glibc_tz_timezone                             GLIBCSYM(timezone);
 extern int    glibc_tz_daylight                             GLIBCSYM(daylight);
 extern char  *glibc_tz_tzname[2]                            GLIBCSYM(tzname);
+/* glibc's own environ, as DATA. The guest's `environ` must be kept equal to
+ * this or the two spellings of "the environment" diverge -- see the setenv
+ * family in darwin/src/libsystem.c. */
+extern char **glibc_environ                                 GLIBCSYM(environ);
+extern int    glibc_setenv(const char *, const char *, int) GLIBCSYM(setenv);
+extern int    glibc_unsetenv(const char *)                  GLIBCSYM(unsetenv);
+extern int    glibc_putenv(char *)                          GLIBCSYM(putenv);
 extern void  *glibc_opendir(const char *)                   GLIBCSYM(opendir);
 extern void  *glibc_readdir(void *)                         GLIBCSYM(readdir);
 extern int    glibc_closedir(void *)                        GLIBCSYM(closedir);

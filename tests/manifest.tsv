@@ -55,4 +55,5 @@ execpath	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the load
 dyld_images	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
 osatomic	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
 rlimit	chained	run	pass	RLIMIT_NOFILE is 8 here and 7 there, and Darwin's 8 is Linux's MEMLOCK -- a forward returns a memory limit as a descriptor count; plus PTHREAD_SCOPE off by one
+environ	chained	run	pass	the environment was two arrays with one name -- environ from the loader's envp, getenv from glibc's -- agreeing until the first write
 fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

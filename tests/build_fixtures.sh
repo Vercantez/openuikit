@@ -342,6 +342,13 @@ want osatomic            && build osatomic            "$CHAINED_TARGET" osatomic
 # on the two systems, so this is a constants problem in a struct's clothes.
 want rlimit              && build rlimit              "$CHAINED_TARGET" rlimit              rlimit.c --
 
+# The environment. `environ` is a VARIABLE the guest reads and getenv is a
+# CALL, and they had different backing: environ from the loader's envp, getenv
+# from glibc's array. Identical contents at startup, diverging on the first
+# write -- the worst lifetime for a defect, since the code that breaks is never
+# the code that introduced it. The environ WALK is the half that would fail.
+want environ             && build environ             "$CHAINED_TARGET" environ             environ.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

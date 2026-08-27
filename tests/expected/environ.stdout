@@ -1,0 +1,19 @@
+== a variable that does not exist
+  before setenv                getenv:ok  environ-walk:ok  agree:yes
+== after setenv, both spellings must see it
+  setenv rc=0
+  after setenv                 getenv:ok  environ-walk:ok  agree:yes
+== overwrite, and overwrite=0 must NOT overwrite
+  after overwrite=1            getenv:ok  environ-walk:ok  agree:yes
+  after overwrite=0            getenv:ok  environ-walk:ok  agree:yes
+== enough new variables to force a reallocation
+  original still visible       getenv:ok  environ-walk:ok  agree:yes
+  the last filler              getenv:ok  environ-walk:ok  agree:yes
+  environ has at least the 65 we added: yes
+== unsetenv, and both spellings must stop seeing it
+  unsetenv rc=0
+  after unsetenv               getenv:ok  environ-walk:ok  agree:yes
+== putenv, which stores the caller's buffer rather than copying
+  putenv rc=0
+  after putenv                 getenv:ok  environ-walk:ok  agree:yes
+done

@@ -84,7 +84,13 @@ static void mr_init_libdispatch(void);   /* defined just below the bootstrap */
 EXPORT void __machorun_libsystem_bootstrap(int argc, char **argv, char **envp, char **apple)
 {
     mr_argc = argc; mr_argv = argv; mr_envp = envp; mr_apple = apple;
-    environ = envp;
+    /* Point at GLIBC's environ rather than at envp. They hold the same array
+     * at this moment -- the loader passed its own environ as envp -- but
+     * naming glibc's makes the two spellings the same object by construction
+     * rather than by coincidence, which is the property the setenv family
+     * above depends on. */
+    (void)envp;
+    environ = glibc_environ;
     __stdoutp = glibc_stdout;
     __stderrp = glibc_stderr;
     __stdinp  = glibc_stdin;
@@ -739,7 +745,56 @@ EXPORT int fputs_unlocked(const char *s, void *f) { return glibc_fputs(s, f); }
 FWD(int, getpid, (void), ())
 /* the strtol family lives in posix.c: Darwin sets EINVAL where glibc does not */
 FWDE(double, strtod, (const char *s, char **e), (s, e))
+/* THE ENVIRONMENT IS TWO ARRAYS WITH ONE NAME, and it was already latent
+ * before anything wrote to it.
+ *
+ * `environ` is OUR exported variable, set at bootstrap from the loader's envp.
+ * getenv forwards to glibc's, which reads GLIBC's environ. At startup those
+ * hold the same contents, so everything works -- and they are two different
+ * arrays. The moment anything mutates one, a guest walking `environ` and a
+ * guest calling getenv see different environments, each internally consistent.
+ * That is the two-reference-counts shape: no size differs, no constant
+ * differs, and nothing structural catches it.
+ *
+ * So the family operates on ONE environment -- glibc's -- and `environ` is
+ * re-pointed after every mutation. The re-point is not decoration: glibc's
+ * setenv REALLOCATES the array when it grows, which changes the value of
+ * glibc's environ, and a guest holding our stale pointer would be walking
+ * freed memory. A cached copy taken once at bootstrap is correct exactly until
+ * the first setenv, which is the worst possible lifetime for a bug.
+ *
+ * The guest reads `environ` as a VARIABLE, so there is no read to intercept;
+ * re-syncing on write is the only point of control we have. It is sufficient
+ * because libSystem is the only path by which a guest can mutate anything. */
+static void mr_sync_environ(void) { environ = glibc_environ; }
+
 FWD(char *, getenv, (const char *n), (n))
+
+EXPORT int setenv(const char *name, const char *value, int overwrite)
+{
+    int rc = MR_ERRNO_CALL(glibc_setenv(name, value, overwrite));
+    mr_sync_environ();
+    return rc;
+}
+
+EXPORT int unsetenv(const char *name)
+{
+    int rc = MR_ERRNO_CALL(glibc_unsetenv(name));
+    mr_sync_environ();
+    return rc;
+}
+
+/* putenv takes ownership of the CALLER's string on both systems -- it stores
+ * the pointer rather than copying -- so the buffer must outlive the call. That
+ * contract is identical here and is why this is a forward rather than a copy:
+ * copying would look tidier and would break a caller that later modifies its
+ * own buffer to change the value, which is legal and which some code does. */
+EXPORT int putenv(char *string)
+{
+    int rc = MR_ERRNO_CALL(glibc_putenv(string));
+    mr_sync_environ();
+    return rc;
+}
 FWD(time_t, time, (time_t *t), (t))
 FWD(int, fileno, (void *f), (f))
 FWDE(int, fseek, (void *f, long o, int w), (f, o, w))

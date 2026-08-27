@@ -806,6 +806,40 @@ its get is a one-way mapping nothing can check.
 on both with `iov_base` at 0 and `iov_len` at 8, measured rather than assumed.
 That is unusual enough here to be the exception that needs evidence.
 
+### `environ-two-arrays` — **DONE**, and it was latent before anything wrote
+`environ` is a **variable** the guest reads directly; `getenv` is a **call**.
+They had different backing: `environ` was set at bootstrap from the loader's
+`envp`, and `getenv` forwards to glibc, which reads **glibc's** array. At
+startup both hold the same contents, so every read agrees and nothing looks
+wrong.
+
+**The divergence appears only after the first write** — which is the worst
+possible lifetime for a defect, because the code that breaks is never the code
+that introduced it. Adding `setenv` as a plain forward would have activated it:
+glibc's array would grow a variable the guest's `environ` walk never sees. Two
+environments, one name, each internally consistent — the two-reference-counts
+shape, with no size or constant differing and nothing structural to catch it.
+
+The family now operates on **one** environment (glibc's), and `environ` is
+re-pointed after every mutation. **The re-point is not decoration:** glibc's
+`setenv` *reallocates* the array when it grows, changing the value of glibc's
+`environ`, so a pointer cached at bootstrap is correct exactly until the first
+`setenv` and then points at freed memory. The guest reads `environ` as a
+variable, so there is no read to intercept — re-syncing on write is the only
+point of control, and it suffices because libSystem is the only path by which a
+guest can mutate anything.
+
+`putenv` stores the **caller's** buffer rather than copying, on both systems, so
+it stays a forward: copying would look tidier and would break a caller that
+later modifies its own buffer to change the value, which is legal.
+
+`tests/bin/environ` checks **agreement rather than values** — it never prints an
+environment variable's contents, since a container and a Mac share almost none
+of theirs. The `environ` **walk** is the half that would have failed; `getenv`
+alone passes with two separate environments, because `getenv` and `setenv` were
+always talking to the same one. Proved: reverting to the two-array arrangement
+gives `getenv:ok environ-walk:NO`.
+
 ### `pagesize-two-answers` — `getpagesize()` and `sysconf(_SC_PAGESIZE)` disagree
 Found while implementing `HW_MEMSIZE`, and reported rather than fixed because
 the right answer is a design decision rather than a defect to patch quietly.
