@@ -1,0 +1,357 @@
+TARGET_OS_MAC gates: 273 total, 157 where TARGET_OS_MAC is the SOLE way in
+
+CFBase.c:109  (146 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (6): __MallocDefaultZoneInfoPlaceholder, malloc_default_zone, malloc_size, malloc_zone_calloc, memset, round_page
+
+CFStringEncodings.c:1010  (80 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (4): CFUniCharIsSurrogateHighCharacter, __CFStringGetEightBitStringEncoding, badIndex, usedBufLen
+
+CFURL.c:5231  (72 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (6): CFStringAppendCharactersToAppendBuffer, CFStringAppendStringToAppendBuffer, CFStringInitAppendBuffer, appendBuffer, hasScheme, slashUniChar
+
+CFPreferences.c:97  (64 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (4): __byHostIdentifierString, __hostUUIDString, timeout, uuidBytes
+
+CFBundle_InfoPlist.c:38  (60 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (7): buflen, memset, os_log_debug, resources, strlen, strncmp, sysctlbyname
+
+CFUtilities.c:1180  (51 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (8): mach_error_string, mach_task_self, mach_vm_allocate, mach_vm_deallocate, memset, round_page, state, vm_purgable_control
+
+CFRuntime.c:1063  (43 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (7): CRSetCrashLogMessage2, __asm, atomic_fetch_and, atomic_fetch_or, exec, pthread_is_threaded_np, write
+
+CFUtilities.c:298  (42 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): data, locBundle, versExtra
+
+CFURL.c:2367  (38 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): __CFGenericValidateType, memcpy
+
+CFSystemDirectories.c:55  (37 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): cPath, cf_strlcat, strlen
+
+CFTimeZone.c:670  (35 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (6): dispatch_once, initOnce, major, minor, patch, sscanf
+
+CFError.c:500  (34 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:200  (34 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (8): address, count, info, mach_task_self, mach_vm_region, object_name, printf, size
+
+CFBuiltinConverters.c:282  (32 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): byte, usedCharLen
+
+CFSystemDirectories.c:21  (31 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (4): CFSearchPathDomainMaskToSysdir, CFSearchPathToSysdir, cf_strlcpy, sysdir_get_next_search_path_enumeration
+
+CFUtilities.c:513  (30 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (4): dispatch_once, dlopen, dlsym, onceToken
+
+CFLocale.c:1584  (29 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): measurementPref
+
+CFKnownLocations.c:26  (27 lines)  #if TARGET_OS_MAC
+
+CFLocale.c:1188  (27 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): keyExistsAndHasValidFormat
+
+CFSocketStream.c:22  (25 lines)  #if TARGET_OS_MAC
+
+CFBase.c:32  (24 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): size_t
+
+CFBundle_Tables.c:181  (24 lines)  #if TARGET_OS_MAC
+    enclosed by 11: #if 0
+    unresolved identifiers (1): __builtin_return_address
+
+CFURL.c:5205  (24 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:623  (23 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): kinfo, len, sysctl
+
+CFBundle.c:554  (22 lines)  #if TARGET_OS_MAC
+
+CFRuntime.c:69  (21 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): __CFObjectAllocRecordAllocationFunction, __CFObjectAllocSetLastAllocEventNameFunction
+
+CFSocket.c:2369  (21 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    unresolved identifiers (3): memcpy, name, strnlen
+
+CFUtilities.c:50  (20 lines)  #if TARGET_OS_MAC
+
+CFBundle_Grok.c:979  (19 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): localFlags, localVersion, retval
+
+CFUtilities.c:266  (19 lines)  #if TARGET_OS_MAC
+
+CFRunLoop.c:4773  (18 lines)  #if TARGET_OS_MAC
+    enclosed by 28: #if __HAS_DISPATCH__
+    unresolved identifiers (1): __CFGenericValidateType
+
+CFUtilities.c:1027  (18 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (9): __CFBundleMainID, asl_close, asl_free, asl_new, asl_open, asl_send, asl_set, euid
+
+CFDateIntervalFormatter.c:170  (17 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): status, u_errorName, udtitvfmt_setAttribute
+
+CFString.c:6779  (16 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): snprintf_l
+
+uuid.c:48  (16 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): mach_absolute_time
+
+CFBase.c:304  (15 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFAllocatorZoneIntrospect
+
+CFBase.c:333  (15 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFAllocatorZoneIntrospect
+
+CFBase.c:355  (15 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFAllocatorZoneIntrospect
+
+CFBase.c:377  (15 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFAllocatorNullZoneIntrospect
+
+CFBase.c:541  (15 lines)  #if TARGET_OS_MAC
+    enclosed by 496: #if DEPLOYMENT_RUNTIME_SWIFT
+    unresolved identifiers (1): __CFAllocatorZoneIntrospect
+
+CFRuntime.c:1348  (15 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (5): _NSGetArgc, _NSGetArgv, args, memmove, strlen
+
+CFSocket.c:1661  (15 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    unresolved identifiers (7): getrlimit, len, lim1, lim2, maxfd, setrlimit, sysctl
+
+CFLocale.c:1615  (13 lines)  #if U_ICU_VERSION_MAJOR_NUM > 54 || (DEPLOYMENT_RUNTIME_OBJC
+
+CFUtilities.c:945  (13 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (5): lock, os_unfair_lock_lock, os_unfair_lock_unlock, strlen, writev
+
+CFSocket.c:464  (12 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    unresolved identifiers (3): closesocket, fcntl, socketpair
+
+CFURL.c:4726  (12 lines)  #if TARGET_OS_MAC
+
+CFURL.c:4919  (12 lines)  #if TARGET_OS_MAC
+
+CFURL.c:5001  (12 lines)  #if TARGET_OS_MAC
+
+CFURL.c:5062  (12 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:649  (11 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (5): dispatch_once, geteuid, getuid, gotSVUID, onceToken
+
+CFError.c:539  (10 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): mach_error_string, strlen
+
+CFURL.c:2937  (10 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:819  (10 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): info, proc_pidinfo
+
+CFBase.c:639  (9 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): _CFTypeGetClass, malloc_size, memset
+
+CFBundle_Locale.c:382  (9 lines)  #if TARGET_OS_MAC
+
+CFPlatform.c:14  (9 lines)  #if TARGET_OS_MAC
+
+CFURL.c:4855  (9 lines)  #if TARGET_OS_MAC
+
+CFBase.c:682  (8 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): _CFTypeGetClass, malloc_size, memset
+
+CFRuntime.c:25  (8 lines)  #if TARGET_OS_MAC
+
+CFSocket.c:19  (8 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+
+CFURLAccess.c:50  (8 lines)  #if TARGET_OS_MAC
+
+CFBase.c:710  (7 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFICUConverters.c:223  (7 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:591  (7 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): len, pcnt, sysctl
+
+CFUtilities.c:609  (7 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (3): len, memsize, sysctl
+
+CFBundle_Grok.c:954  (6 lines)  #if TARGET_OS_MAC
+
+CFConcreteStreams.c:458  (6 lines)  #if TARGET_OS_MAC
+
+CFLocale.c:1683  (6 lines)  #if TARGET_OS_MAC
+    enclosed by 1679: #if TARGET_OS_MAC || TARGET_OS_WIN32 || TARGET_OS_LINUX 
+    unresolved identifiers (1): output
+
+CFURLAccess.c:796  (6 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFNetwork__CFURLWriteDataAndPropertiesToResource
+
+CFURLAccess.c:842  (6 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFNetwork__CFURLDestroyResource
+
+CFDate.c:159  (5 lines)  #if TARGET_OS_MAC
+    enclosed by 40: #if DEFINE_CFDATE_FUNCTIONS
+    unresolved identifiers (2): info, mach_timebase_info
+
+CFLocale.c:1738  (5 lines)  #if TARGET_OS_MAC
+    enclosed by 1735: #if U_ICU_VERSION_MAJOR_NUM > 54
+    unresolved identifiers (1): celsius
+
+CFPlatform.c:1820  (5 lines)  #if TARGET_OS_MAC
+    enclosed by 1699: #if DEPLOYMENT_RUNTIME_SWIFT
+    enclosed by 1819: #if SWIFT_CORELIBS_FOUNDATION_HAS_THREADS
+    unresolved identifiers (1): pthread_self
+
+CFPlatformConverters.c:77  (5 lines)  #if TARGET_OS_MAC
+
+CFSocket.c:115  (5 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    enclosed by 109: #if defined(LOG_CFSOCKET)
+    unresolved identifiers (4): pthread_mach_thread_np, pthread_self, pthread_threadid_np, tid
+
+CFStream.c:1694  (5 lines)  #if TARGET_OS_MAC
+    enclosed by 1669: #if __HAS_DISPATCH__
+
+CFUtilities.c:921  (5 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (4): pthread_mach_thread_np, pthread_self, pthread_threadid_np, tid
+
+CFBase.c:20  (4 lines)  #if TARGET_OS_MAC
+
+CFBase.c:480  (4 lines)  #if TARGET_OS_MAC
+    enclosed by 472: #if __clang_analyzer__
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFBase.c:507  (4 lines)  #if TARGET_OS_MAC
+    enclosed by 496: #if DEPLOYMENT_RUNTIME_SWIFT
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFBase.c:591  (4 lines)  #if defined(DEBUG) && TARGET_OS_MAC
+    unresolved identifiers (2): _CFTypeGetClass, __CFGenericValidateType
+
+CFBase.c:598  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFBase.c:620  (4 lines)  #if defined(DEBUG) && TARGET_OS_MAC
+    unresolved identifiers (2): _CFTypeGetClass, __CFGenericValidateType
+
+CFBase.c:628  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFBase.c:656  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFBase.c:675  (4 lines)  #if defined(DEBUG) && TARGET_OS_MAC
+    unresolved identifiers (2): _CFTypeGetClass, __CFGenericValidateType
+
+CFBase.c:702  (4 lines)  #if !TARGET_OS_MAC
+
+CFBase.c:733  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): _CFTypeGetClass, __CFGenericValidateType
+
+CFBase.c:741  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFTypeGetClass
+
+CFLocale.c:1630  (4 lines)  #if U_ICU_VERSION_MAJOR_NUM > 54 || (DEPLOYMENT_RUNTIME_OBJC
+
+CFPlatform.c:66  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): _NSGetArgc, _NSGetArgv
+
+CFRuntime.c:1290  (4 lines)  #if __HAS_DISPATCH__ && !TARGET_OS_MAC
+
+CFRuntime.c:1331  (4 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): __CFStringGetUserDefaultEncoding, pthread_atfork
+
+CFSocket.c:2422  (4 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    unresolved identifiers (3): fcntl, ioctlsocket, yes
+
+CFSocketStream.c:121  (4 lines)  #if TARGET_OS_MAC
+
+CFTimeZone.c:48  (4 lines)  #if TARGET_OS_MAC
+
+CFURL.c:2974  (4 lines)  #if TARGET_OS_MAC
+
+CFUtilities.c:1059  (4 lines)  #if TARGET_OS_MAC
+
+CFBundle_Binary.c:526  (3 lines)  #if TARGET_OS_MAC
+    enclosed by 465: #if defined(BINARY_SUPPORT_DLFCN)
+    enclosed by 522: #if defined(BINARY_SUPPORT_DYLD)
+    unresolved identifiers (1): bundleFlags
+
+CFDate.c:106  (3 lines)  #if TARGET_OS_MAC
+    enclosed by 40: #if DEFINE_CFDATE_FUNCTIONS
+    enclosed by 103: #if DEPLOYMENT_RUNTIME_SWIFT
+    unresolved identifiers (1): mach_absolute_time
+
+CFRuntime.c:1391  (3 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): _NSGetArgc, _NSGetArgv
+
+CFSocket.c:1600  (3 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    unresolved identifiers (2): dladdr, info
+
+CFStringEncodingConverter.c:560  (3 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFConverterMacRoman
+
+CFBasicHash.c:24  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __SetLastAllocationEventName
+
+CFBundle_Binary.c:507  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 465: #if defined(BINARY_SUPPORT_DLFCN)
+    unresolved identifiers (1): dlopen_preflight
+
+CFBundle_InfoPlist.c:1173  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): _CFBundleFilteredPlistMemoryMapped
+
+CFBundle_InfoPlist.c:1207  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): munmap
+
+CFFileUtilities.c:397  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 219: #if TARGET_OS_WIN32
+    unresolved identifiers (2): buffer, readdir_r
+
+CFPlatform.c:895  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): pthread_setspecific
+
+CFPlatform.c:1858  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 1699: #if DEPLOYMENT_RUNTIME_SWIFT
+    enclosed by 1857: #if SWIFT_CORELIBS_FOUNDATION_HAS_THREADS
+    unresolved identifiers (1): pthread_self
+
+CFRuntime.c:418  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (2): malloc_default_zone, malloc_zone_memalign
+
+CFSocket.c:1751  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 13: #if __HAS_DISPATCH__
+    enclosed by 1745: #if TARGET_OS_MAC || TARGET_OS_LINUX || TARGET_OS_BSD
+    unresolved identifiers (3): attr, pthread_attr_set_qos_class_np, qos_class_main
+
+CFStorage.c:1111  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __builtin_ctzl
+
+CFStream.c:1779  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 1669: #if __HAS_DISPATCH__
+    enclosed by 1769: #if TARGET_OS_WIN32
+    unresolved identifiers (3): attr, pthread_attr_set_qos_class_np, qos_class_main
+
+CFURLAccess.c:727  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): __CFNetwork__CFURLCreateDataAndPropertiesFromResource
+
+CFUtilities.c:678  (2 lines)  #if 1 && TARGET_OS_MAC
+    enclosed by 665: #if !TARGET_OS_WASI
+    unresolved identifiers (2): ids, pthread_getugid_np
+
+CFUtilities.c:799  (2 lines)  #if TARGET_OS_MAC
+    enclosed by 771: #if TARGET_OS_WIN32
+    unresolved identifiers (1): fprintf_l
+
+CFUtilities.c:1344  (2 lines)  #if TARGET_OS_MAC
+    unresolved identifiers (1): fcntl
+
