@@ -1027,3 +1027,73 @@ provisioning a second box to rebuild what exists is not proportionate.
 `(from libc++)` on all three, and the sysroot's `libc++.1.tbd` must carry **472**
 symbols rather than 105 — a rebuild against the old stubs would produce flat
 binds and look like progress.
+
+## The `Concurrency/dispatch` blocker was self-inflicted, and my hypothesis was wrong
+
+Both worth recording, because the wrong hypothesis was the plausible one.
+
+**The diagnosis cost one `curl` and nothing else.** Reading
+`stdlib/cmake/modules/StdlibOptions.cmake` and
+`stdlib/public/Concurrency/CMakeLists.txt` from the release tag:
+
+```
+SWIFT_ENABLE_DISPATCH (default ON)  ->  SWIFT_CONCURRENCY_USES_DISPATCH=TRUE
+                                    ->  SWIFT_CONCURRENCY_GLOBAL_EXECUTOR="dispatch"
+                                    ->  list(APPEND swift_concurrency_link_libraries dispatch)
+```
+
+That last line is the ninja dependency `stdlib/public/Concurrency/dispatch` with
+"no known rule to make it" — a CMake *link library named `dispatch`*, in a build
+that has no such target. And without `SWIFT_PATH_TO_LIBDISPATCH_SOURCE`,
+line 225 refuses first. **Between them they look like a demand for libdispatch;
+they are actually a demand to pick an executor.**
+
+**I hypothesised `-DSWIFT_PATH_TO_LIBDISPATCH_BUILD` beside `_SOURCE`, on the
+grounds that the ninja path was a build-tree path. That was wrong.** The answer
+is `-DSWIFT_ENABLE_DISPATCH=OFF`, which makes `USES_DISPATCH` false so neither
+branch fires — and **Part 3 of this document already recorded it.** I hit the
+line-225 error, reached for the flag it named, and never re-read my own notes.
+The blocker was self-inflicted about ninety minutes earlier by my own flag
+choice. swift-loader-fixes predicted it would "dissolve when libdispatch lands";
+their instinct that it was *a flag rather than patch-8 work* was right, and the
+mechanism was the opposite of the one we both assumed — **it dissolves by
+turning dispatch off, not by having it available.**
+
+The configuration that works, now recorded where §7 will be read:
+
+```sh
+scripts/configure.sh \
+  -DSWIFT_ENABLE_DISPATCH=OFF \
+  -DSWIFT_CONCURRENCY_GLOBAL_EXECUTOR=singlethreaded \
+  -DSWIFT_STDLIB_SINGLE_THREADED_CONCURRENCY=ON \
+  -DSWIFT_INCLUDE_APINOTES=ON
+```
+
+`singlethreaded` matters and `hooked` would have been a silent downgrade: the
+default with dispatch off is `hooked`, which compiles `PlatformExecutorNone` —
+`UnimplementedMainExecutor`, the trap this document's Part 2 names. **Selecting
+the executor explicitly is the difference between a run loop and a binary that
+compiles against a lie.**
+
+### Result
+
+`libswift_Concurrency.dylib` rebuilt: its **three** flat `__cxxabiv1` vtable
+binds are now two-level `(from libc++)`. All **9** remaining flat binds have
+exactly one provider. libswiftCore from this build has an export set
+**identical** to the one already shipped (30,723 symbols, 0 differing), so the
+executor flag does not touch it and the staged pair is consistent.
+
+### Two build-mechanics notes for the next person
+
+`ninja` will not run the `libswift_Concurrency` link while `libswiftCore.so`'s
+ELF link edge fails, even under `-k 0` — it skips targets whose dependencies
+failed. **The object list does not need that link to succeed**: it is in
+`build.ninja` itself, in the explicit inputs of the `.so` rule.
+
+Take the inputs **before** `||`. The order-only dependencies after it include a
+**phony alias**, `stdlib-public-Concurrency--OSX-arm64-_Concurrency.o`, which
+resolves to the real `OSX/arm64/_Concurrency.o` and does not exist as a file.
+Counting it as an object produced a "26 inputs, 1 missing" that sent me looking
+for a compile failure that had never happened — 25 explicit inputs, all present.
+
+Box: c8g.16xlarge, 16 min, ~$0.68, terminated "User initiated" on completion.

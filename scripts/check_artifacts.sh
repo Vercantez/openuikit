@@ -104,6 +104,26 @@ for d in $dirs; do
     [ -n "$many" ] && { echo "   FAIL flat binds with MORE THAN ONE provider (a coin toss):$many"; fail=1; }
   fi
 
+  # 4b. the same flat-bind rule for libswift_Concurrency, where present.
+  # It is a staged artifact too, and it carried three flat __cxxabiv1 vtable
+  # binds until 2026-08-27 purely because it predated the .tbd re-export fix.
+  C="$d/swift-macosx/arm64/libswift_Concurrency.dylib"
+  if [ -f "$C" ]; then
+    cv=$("$NM" -m "$C" | grep 'dynamically looked up' | grep -c 'cxxabiv1.*type_infoE')
+    [ "$cv" -eq 0 ] && echo "   ok   libswift_Concurrency: no __cxxabiv1 vtable binds flat" \
+                    || { echo "   FAIL libswift_Concurrency: $cv __cxxabiv1 vtable(s) bind flat"; fail=1; }
+    "$NM" -m "$C" | grep 'dynamically looked up' | awk '{print $(NF-3)}' | sort -u > /tmp/ca_cflat.$$
+    cn=$(wc -l < /tmp/ca_cflat.$$ | tr -d ' '); cbad=""
+    while read -r s; do
+      [ -n "$s" ] || continue
+      cp2=$(for f in $mrlibs "$S" "$L"; do "$NM" -jUg "$f" 2>/dev/null | grep -qx "$s" && echo x; done | wc -l | tr -d ' ')
+      [ "$cp2" = 1 ] || cbad="$cbad $s($cp2)"
+    done < /tmp/ca_cflat.$$
+    rm -f /tmp/ca_cflat.$$
+    [ -z "$cbad" ] && echo "   ok   libswift_Concurrency: all $cn flat bind(s) have exactly one provider" \
+                   || { echo "   FAIL libswift_Concurrency flat binds not single-provider:$cbad"; fail=1; }
+  fi
+
   # 5. cross-directory agreement
   sha=$(shasum -a256 "$L" | cut -d' ' -f1)
   if [ -z "$first_core_sha" ]; then first_core_sha=$sha; first_core_dir=$rel
