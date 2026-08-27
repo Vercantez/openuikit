@@ -118,7 +118,7 @@ PIN(pthread_attr_t,       64);
  * relocks it -- every symbol resolving, every size matching, the behaviour
  * inverted. darwin/src/libsystem.c translates; this pins the glibc half so a
  * change there fails the build instead of silently un-swapping the mapping.
- * tests/bin/21_pthread_cond case 5 is the behavioural check. */
+ * tests/bin/pthread_cond case 5 is the behavioural check. */
 _Static_assert(PTHREAD_MUTEX_NORMAL     == 0, "glibc PTHREAD_MUTEX_NORMAL moved");
 _Static_assert(PTHREAD_MUTEX_RECURSIVE  == 1, "glibc PTHREAD_MUTEX_RECURSIVE moved; "
     "darwin/src/libsystem.c's mutex_type_d2g() maps Darwin's 2 onto this value");

@@ -64,7 +64,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # hard stop would block a run that is still worth something.
 bash "$ROOT/scripts/check_stale.sh" --warn >&2
 
-ID=18_swift_class
+ID=swift_class
 SRC="$ROOT/tests/src/$ID.swift"
 EXP="$ROOT/tests/expected"
 ACT="$ROOT/tests/actual/swift"
@@ -198,8 +198,8 @@ cp -a /usr/lib/swift/shims "$RES/shims"
 # .tbd-only SDK; -O avoids needing SwiftOnoneSupport, which our core-only
 # stdlib build does not produce.
 if ! swiftc -c -target arm64-apple-macos13.0 -sdk /work/sdk -resource-dir "$RES" -O \
-        /work/tests/src/18_swift_class.swift -o /tmp/18_swift_class.o \
-        > "$OUT/18_swift_class.compile.log" 2>&1; then
+        /work/tests/src/swift_class.swift -o /tmp/swift_class.o \
+        > "$OUT/swift_class.compile.log" 2>&1; then
     echo "COMPILE-FAILED"
     exit 0
 fi
@@ -211,16 +211,16 @@ link_and_run() { # link_and_run <variant> <link tail...>
     if ! clang -target arm64-apple-macos13.0 -isysroot /work/sdk \
             -fuse-ld=lld -B /usr/lib/llvm-18/bin -nostdlib \
             -L/work/sdk/usr/lib -L"$RES/macosx/arm64" \
-            /tmp/18_swift_class.o "$@" \
-            -o "/tmp/18_swift_class.$variant" \
-            > "$OUT/18_swift_class.$variant.link.log" 2>&1; then
+            /tmp/swift_class.o "$@" \
+            -o "/tmp/swift_class.$variant" \
+            > "$OUT/swift_class.$variant.link.log" 2>&1; then
         echo "LINK-FAILED $variant"
         return
     fi
     rc=0
-    LC_ALL=C LANG=C TZ=UTC timeout -k 2 60 "$LOADER" "/tmp/18_swift_class.$variant" \
-        > "$OUT/18_swift_class.$variant.stdout" 2> "$OUT/18_swift_class.$variant.stderr" || rc=$?
-    echo "$rc" > "$OUT/18_swift_class.$variant.exit"
+    LC_ALL=C LANG=C TZ=UTC timeout -k 2 60 "$LOADER" "/tmp/swift_class.$variant" \
+        > "$OUT/swift_class.$variant.stdout" 2> "$OUT/swift_class.$variant.stderr" || rc=$?
+    echo "$rc" > "$OUT/swift_class.$variant.exit"
 }
 
 LOADER="${MACHORUN_LOADER:-build/machorun}"

@@ -1,6 +1,6 @@
 # Apple's objc4, built as Mach-O, on Linux
 
-**Result: 4 patches, down from the ELF port's 9. `09_objc` passes. 41 of 44 on
+**Result: 4 patches, down from the ELF port's 9. `objc` passes. 41 of 44 on
 the differential corpus, and all 3 failures are machorun gaps that predate this
 work — none is attributable to objc4 or to the Mach-O route.**
 
@@ -267,7 +267,7 @@ ownership test now gets it right.
 
 ## 6. Results
 
-### `09_objc`
+### `objc`
 
 ```
 === stdout diff (macOS baseline vs machorun/Linux)   IDENTICAL
@@ -276,7 +276,7 @@ ownership test now gets it right.
 ```
 
 The full fixture corpus is unregressed: **19 PASS**, 1 permanent XFAIL
-(`01_exit_raw`, raw `svc`), 1 NO-ORACLE. `09_objc` moves from `xfail` to `pass`
+(`exit_raw`, raw `svc`), 1 NO-ORACLE. `objc` moves from `xfail` to `pass`
 in `tests/manifest.tsv`.
 
 ### The 44-test differential corpus — 41/44

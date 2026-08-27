@@ -31,7 +31,7 @@ all 44 tests; the two gaps are an unwinder over `__TEXT,__unwind_info` and guest
 It also said `~/quartz`, whose 97.5/100 is measured on macOS against Apple's own
 frameworks and said nothing about Linux. That row moved here too:
 `scripts/build_quartz.sh` builds it as `/usr/lib/libquartz.dylib` on Linux with
-**zero patches to its source**, and `tests/bin/15_quartz` — a plain C Mach-O
+**zero patches to its source**, and `tests/bin/quartz` — a plain C Mach-O
 compiled by Apple's clang, no Objective-C anywhere in it — writes the **same
 26,861-byte PNG, byte for byte**, run natively on macOS and run under machorun
 on Linux. `docs/QUARTZ_MACHO.md` is the accounting, including the three holes
@@ -131,7 +131,7 @@ docs/       design, ABI notes, status
 ## Status
 
 **Mach-O binaries built by Apple's toolchain execute on Linux/arm64.** Of the
-21 gradeable fixtures, **20 pass and 1 is a permanent XFAIL** (`01_exit_raw`,
+21 gradeable fixtures, **20 pass and 1 is a permanent XFAIL** (`exit_raw`,
 raw `svc` — the deliberate boundary of the replace-libSystem bet) — pass
 meaning stdout, stderr *and* exit status are byte-identical to the same bytes
 running natively on macOS. (A 22nd fixture has no baseline because macOS itself
@@ -164,15 +164,15 @@ bug rather than merely to pass without it.
 **And a precompiled Darwin binary now DRAWS.** `~/quartz` — the portable
 Quartz 2D + Core Animation reimplementation, C++17, 507-symbol `QZ*` C API —
 builds as `darwin/usr/lib/libquartz.dylib` on Linux with **zero patches to its
-source**, 37 translation units, 0 failures. `tests/bin/15_quartz` is a plain C
+source**, 37 translation units, 0 failures. `tests/bin/quartz` is a plain C
 Mach-O with **no Objective-C in it at all**, compiled by Apple's clang against
 Apple's SDK, that calls `QZBitmapContextCreate`, draws nine stages (fills,
 alpha compositing, cubic Béziers, dashed strokes, linear and radial gradients, a
 rotation, an even-odd clip) and writes a PNG:
 
-**And so does a precompiled *Objective-C* Darwin binary.** `16_objc_quartz` is
+**And so does a precompiled *Objective-C* Darwin binary.** `objc_quartz` is
 the smoke test — one root class, one ivar, one message, one ellipse — and
-`17_objc_shapes` is the milestone: a protocol, a root class, three levels of
+`objc_shapes` is the milestone: a protocol, a root class, three levels of
 inheritance with `[super]` (`objc_msgSendSuper2`), a category on an
 already-compiled class, six `+load`s, lazy `+initialize`, an `objc_msgSend` with
 a four-double HFA return, and a **polymorphic draw loop typed by the protocol**,
@@ -181,9 +181,9 @@ the compiler could have known. Every pixel in it comes out of a message send.
 
 ```
                       macOS, natively            machorun on Linux/arm64
-15_quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
-16_objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
-17_objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
+quartz             26861  96aa747a85f6c35f    26861  96aa747a85f6c35f
+objc_quartz         2678  32a7e67a4139e108     2678  32a7e67a4139e108
+objc_shapes        11909  a7ca5744d100b911    11909  a7ca5744d100b911
 stage checksums       identical (9 / 3 / 5)      exit 0 / 0 everywhere
 ```
 
@@ -250,8 +250,8 @@ with the things a green suite does not by itself establish (`docs/STATUS.md`):
 A third verification (`docs/STATUS.md` §11) attacked the drawing gate rather
 than the loader, and it holds: a **one-pixel, one-channel, one-level** change to
 quartz's rasteriser fails the differential and `pngdiff` names the pixel;
-breaking category attachment in objc4 fails `17_objc_shapes` while
-`16_objc_quartz` stays byte-identical, which is exactly the bisection the smoke
+breaking category attachment in objc4 fails `objc_shapes` while
+`objc_quartz` stays byte-identical, which is exactly the bisection the smoke
 fixture exists for; and making a class's own method list invisible — so
 overrides fall through to the superclass — moves the **framebuffer checksum**,
 proving the picture really is produced by dynamic dispatch. A baseline with one
@@ -410,7 +410,7 @@ container, since `darwin/`, `libobjc` and the `.tbd`s are Linux Mach-O build
 products. `scripts/difftest.sh` builds the loader and the two small dylibs for
 you but deliberately *not* objc4 or quartz (a minute of Objective-C++ and
 another of C++ on every run), so on a tree where `libobjc.A.dylib` has never
-been built `09_objc` is a red **FAIL**, not the documented PASS. That is
+been built `objc` is a red **FAIL**, not the documented PASS. That is
 measured, not theorised: `git clone && scripts/difftest.sh` gives **19 pass /
 1 fail**; with `build.sh everything` first it gives **20 pass / 0 fail /
 1 xfail / 1 no-oracle**.

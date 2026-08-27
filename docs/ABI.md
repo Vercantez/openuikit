@@ -86,7 +86,7 @@ A libSystem whose `printf` hands its `va_list` to glibc's `vprintf`:
 
 ```
 $ scripts/abi_naive_probe.sh varargs
-=== varargs -- running 03_printf
+=== varargs -- running printf
     exit: 139 (macOS: 0)
     stderr:
       machorun: guest died with SIGSEGV at pc 0xffffbd459154 (fault address 0x4d2)
@@ -123,7 +123,7 @@ something to reimplement for a fixture.
 on Linux/aarch64. So `%Lf` consumes one slot in a Darwin list and two in a Linux
 one. This is a second, independent reason the printf family cannot be forwarded,
 and it would still bite even if the `va_list` shapes agreed. Covered by
-`11_varargs` (`ldbl=2.500 2.500000e+00 sizeof=8`).
+`varargs` (`ldbl=2.500 2.500000e+00 sizeof=8`).
 
 ---
 
@@ -212,7 +212,7 @@ if (errno == ERANGE) ...
 
 breaks: the guest's `errno = 0` lands in *our* slot, glibc never sees it, and a
 stale glibc errno is translated back on top of the guest's clear.
-`13_errno` covers both directions (`errno after success=0`, `guest-set errno
+`errno` covers both directions (`errno after success=0`, `guest-set errno
 persists=yes`).
 
 A Linux errno with no Darwin twin is reported as its **negative**, so it is
@@ -322,7 +322,7 @@ compiled for macOS is entitled to assume 16 KiB, so `vm_allocate` over-maps by
 one Darwin page and trims, and `getpagesize()` / `vm_page_size` report 16384
 regardless of the host. This is latent rather than currently biting — but it is
 the kind of difference that surfaces ten thousand lines later, so it is paid for
-up front. `12_mach` asserts `(addr & 0x3fff) == 0`.
+up front. `mach` asserts `(addr & 0x3fff) == 0`.
 
 **`mach_absolute_time` units.** On Apple silicon the real counter is 24 MHz and
 `mach_timebase_info` reports `numer/denom = 125/3`. Ours returns nanoseconds
@@ -378,7 +378,7 @@ $ scripts/abi_naive_probe.sh rune
 ```
 
 Every character classifies as nothing, and **the guest never called a function
-of ours to get that wrong answer**. `14_utility` prints all twelve classes over
+of ours to get that wrong answer**. `utility` prints all twelve classes over
 all 128 ASCII characters, so a single wrong bit shows up as a single wrong
 column.
 
@@ -395,7 +395,7 @@ strtol("12", NULL, 99)     both set EINVAL (bad base)
 
 Darwin documents "if no conversion could be performed, 0 is returned and errno
 is set to EINVAL"; glibc leaves errno alone. A guest following its own man page
-is not being exotic, so our `strtol` family sets it. `14_utility` is what
+is not being exotic, so our `strtol` family sets it. `utility` is what
 noticed — one line out of thirty-two.
 
 **`getopt` argument order.** Darwin's `getopt` stops at the first non-option
@@ -413,7 +413,7 @@ scripts/gen_errno_table.sh      # re-takes the errno + strerror measurement,
                                 # regenerates darwin/src/errno_table.h
 scripts/abi_naive_probe.sh      # disables each translation in turn and shows
                                 # how far the output moves from the oracle
-scripts/difftest.sh 11_varargs 12_mach 13_errno
+scripts/difftest.sh varargs mach errno
 ```
 
 If a variant in `abi_naive_probe.sh` ever reports *"IDENTICAL to macOS — this

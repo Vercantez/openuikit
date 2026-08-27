@@ -629,7 +629,7 @@ int mr_dladdr(const void *addr, mr_dl_info *out)
  * INDEX 0 IS THE MAIN EXECUTABLE, which is a contract rather than an accident:
  * mr_image_load registers an image BEFORE its dependencies (so a dependency
  * cycle terminates), and the main image is loaded first, so it lands at 0
- * exactly as dyld promises. tests/bin/37_dyld_images asserts it rather than
+ * exactly as dyld promises. tests/bin/dyld_images asserts it rather than
  * leaving it to the comment.
  *
  * Out-of-range indices return NULL/0 rather than aborting, because that is

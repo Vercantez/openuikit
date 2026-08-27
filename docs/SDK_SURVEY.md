@@ -19,7 +19,7 @@ document is the inventory that milestone needs. It writes no SDK.
 >
 > The other **734** headers are Apple's libc++, and they are replaceable
 > wholesale: objc4 built against **stock LLVM 18 libc++** scores **41/44** on the
-> differential corpus and produces a byte-identical `09_objc` — the same numbers
+> differential corpus and produces a byte-identical `objc` — the same numbers
 > as the Apple-SDK build, measured, not assumed.
 >
 > `ld64.lld-18` reads hand-written tbd-v4 files. A guest compiled and linked
@@ -273,7 +273,7 @@ By subdirectory, from the objc4 side: `__algorithm` 198, `__type_traits` 116,
 The public headers objc4 names directly are ordinary: `algorithm atomic bit
 cassert cinttypes cstddef cstdint cstdlib cstring functional initializer_list
 iterator limits map new type_traits unordered_map utility vector`. Only
-`05b_cxx_init.cpp` on the fixture side pulls in iostreams.
+`cxx_init.cpp` on the fixture side pulls in iostreams.
 
 ---
 
@@ -479,7 +479,7 @@ delta against the Apple-libc++ build is that `_abort` is **no longer** imported.
 
 ```
 == compiled 32 objects, 0 failures
-09_objc under machorun            stdout IDENTICAL to the macOS baseline, exit 0
+objc under machorun            stdout IDENTICAL to the macOS baseline, exit 0
 objc4 differential corpus under machorun: 41/44 PASS
   failing: 038-exceptions  042-dlopen  044-exception-through-uncached
 ```
@@ -525,10 +525,10 @@ occurrences, so the fat fixture contributes twice):
 |---|---|
 | `/usr/lib/libSystem.B.dylib` | 69 |
 | `/usr/lib/libobjc.A.dylib` | 47 |
-| `/usr/lib/libc++.1.dylib` | 1 (`05b_cxx_init`) |
+| `/usr/lib/libc++.1.dylib` | 1 (`cxx_init`) |
 
 plus four `@rpath` test dylibs that are part of the corpus, not the SDK
-(`lib07greet.dylib`, `lib07greet_classic.dylib`, `lib041-multi-image.dylib`,
+(`libdylib_greet.dylib`, `libdylib_greet_classic.dylib`, `lib041-multi-image.dylib`,
 `lib042-dlopen-dlopen.dylib`).
 
 **The `.tbd` surface is three files.** Apple's `MacOSX26.1.sdk/usr/lib` ships
@@ -867,7 +867,7 @@ as `scripts/gen_errno_table.sh`.
   nobody rediscovers it.
 * **The `...` terminator** (§4.2). Say it in a comment in `gen_tbd.sh`, because
   the error message does not.
-* **`10_fat` needs `lipo`.** `llvm-lipo-18` is in the container; not a header or
+* **`fat` needs `lipo`.** `llvm-lipo-18` is in the container; not a header or
   a `.tbd` issue, but it is on the path to building anything fat on Linux.
 
 ---
@@ -905,7 +905,7 @@ for r in xnu Libc libpthread libplatform libdispatch libmalloc libclosure \
 done                        # then suffix-match each relative path
 
 # --- libc++ substitution ------------------------------------------------
-# 28/28 compile, 41/44 corpus, 09_objc byte-identical
+# 28/28 compile, 41/44 corpus, objc byte-identical
 apt-get install -y libc++-18-dev libc++abi-18-dev
 DARWIN_CLANG=<wrapper adding -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1
              -D__STDC_WANT_LIB_EXT1__=0

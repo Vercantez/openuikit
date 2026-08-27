@@ -426,7 +426,7 @@ EXPORT int fstat(int fd, struct darwin_stat *out)
 
 /* macOS's headers rename these to the $INODE64 symbols on x86_64 only; on
  * arm64 the plain names are what the linker emits (verified: `nm -u` on
- * tests/bin/13_errno lists _stat and _fstat). The aliases are here anyway so
+ * tests/bin/errno lists _stat and _fstat). The aliases are here anyway so
  * an x86_64-built object that made it into a fat file still resolves. */
 EXPORT int mr_stat64(const char *p, struct darwin_stat *o)  __asm__("_stat$INODE64");
 EXPORT int mr_stat64(const char *p, struct darwin_stat *o)  { return stat(p, o); }
@@ -476,7 +476,7 @@ EXPORT int     remove(const char *p)
 
 /* ------------------------------------------------------ the strtol family
  *
- * Measured 2026-08-25, and the fixture 14_utility is what noticed:
+ * Measured 2026-08-25, and the fixture utility is what noticed:
  *
  *     strtol("zz", NULL, 10)   Darwin: errno = EINVAL (22)   Linux: errno = 0
  *     strtoul / strtoll / strtoull / atoi: the same
@@ -1310,7 +1310,7 @@ EXPORT int raise(int dsig)
  *    for 0x0100, and a Darwin guest asking for 0x0100 is asking for
  *    POLLWRBAND. Measured on a writable pipe under Linux: events=POLLOUT
  *    yields revents=0x0004, not 0x0104. A negative control caught the claim
- *    before it shipped -- tests/src/28_poll.c passed with the translation
+ *    before it shipped -- tests/src/poll.c passed with the translation
  *    deliberately removed, which is what sent me back to measure.
  *
  * 3. ppoll's sigset_t, which is the 4-against-128 crossing the rest of this

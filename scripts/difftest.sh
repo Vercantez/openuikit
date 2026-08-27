@@ -4,7 +4,7 @@
 #   scripts/difftest.sh                run the whole loop and print the table
 #   scripts/difftest.sh --no-run       grade whatever is already in tests/actual/
 #   scripts/difftest.sh --no-verify    skip re-verifying the oracle (not advised)
-#   scripts/difftest.sh 03_printf ...  restrict to some fixtures
+#   scripts/difftest.sh printf ...  restrict to some fixtures
 #
 # Verdicts
 #   PASS            Linux output is byte-identical to macOS, exit code included
@@ -95,17 +95,22 @@ if [ -n "$LINUX_SKIP_REASON" ]; then
     printf '%slinux:  not run -- %s%s\n' "$C_YEL" "$LINUX_SKIP_REASON" "$C_RESET"
 fi
 printf '\n'
-printf '%-24s %-5s %-8s %-16s %s\n' "FIXTURE" "RUNG" "FIXUPS" "VERDICT" "DETAIL"
+printf '%-26s %-4s %-8s %-16s %s\n' "FIXTURE" "RUNG" "FIXUPS" "VERDICT" "DETAIL"
 printf '%s\n' "--------------------------------------------------------------------------------"
 
 n_pass=0 n_fail=0 n_xfail=0 n_xpass=0 n_skip=0 n_noor=0 n_drift=0
+ladder=0
 
 while IFS= read -r row; do
     id="$(field "$row" 1)"
-    rung="$(field "$row" 2)"
-    fixups="$(field "$row" 3)"
-    oracle="$(field "$row" 4)"
-    linux="$(field "$row" 5)"
+    fixups="$(field "$row" 2)"
+    oracle="$(field "$row" 3)"
+    linux="$(field "$row" 4)"
+    # The ladder position is RENDERED, not stored. It used to be a column that
+    # every new fixture had to claim, which is a thing to remember rather than
+    # a thing that refuses -- and four merges in one day collided on it. Row
+    # order in the manifest IS the ladder; this just numbers it for reading.
+    ladder=$((ladder + 1))
     selected "$id" || continue
 
     colour="$C_RESET"; verdict_s=""; detail=""
@@ -148,8 +153,8 @@ while IFS= read -r row; do
         fi
     fi
 
-    printf '%-24s %-5s %-8s %s%-16s%s %s\n' \
-        "$id" "$rung" "$fixups" "$colour" "$verdict_s" "$C_RESET" "$detail"
+    printf '%-26s %-4s %-8s %s%-16s%s %s\n' \
+        "$id" "$ladder" "$fixups" "$colour" "$verdict_s" "$C_RESET" "$detail"
 done < <(manifest_rows)
 
 printf '%s\n' "--------------------------------------------------------------------------------"

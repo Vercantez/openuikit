@@ -1,0 +1,11 @@
+binary: exit_unixthread
+architectures: arm64
+filetype: EXECUTE
+header-flags: NOUNDEFS
+load-commands: LC_SEGMENT_64,LC_SOURCE_VERSION,LC_SYMTAB,LC_UNIXTHREAD,LC_UUID
+fixups: none
+entry: LC_UNIXTHREAD
+dylibs: 
+rpaths: 
+loader-relevant sections (segment,section,flags):
+undefined-symbol-count: 0

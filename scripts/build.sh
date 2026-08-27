@@ -39,7 +39,7 @@
 # drops libm.so.6 from DT_NEEDED, the global scope has no libm in it, and the
 # first guest that calls sin() dies with
 #     machorun: undefined symbol '_glibc_sin'  wanted by libSystem.B.dylib
-# Measured 2026-08-26 with tests/bin/15_quartz. Forcing the DT_NEEDED entry is
+# Measured 2026-08-26 with tests/bin/quartz. Forcing the DT_NEEDED entry is
 # what makes libSystem's libm forwarders (darwin/src/math.c) resolvable.
 #
 # XCODE IS NO LONGER A BUILD INPUT. objc4 compiles against sdk/ -- our own
@@ -100,7 +100,7 @@ build_tbd() {
     # difftest that cannot start because a .tbd is missing helps nobody.
     #
     # libquartz.dylib is in the same position for the same reason (37 C++ TUs),
-    # and there is a sharper edge on it: tests/bin/15_quartz imports 34 _QZ*
+    # and there is a sharper edge on it: tests/bin/quartz imports 34 _QZ*
     # symbols, so gen_tbd.sh's CHECK 3 -- "every symbol the corpus references is
     # exported by some stub" -- would fail hard on a tree where libquartz simply
     # has not been built yet. That is a build-order artefact, not a missing

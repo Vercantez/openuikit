@@ -102,7 +102,7 @@ done
 # MAIN corpus's threaded fixture, for a SECOND intermittent bug this same
 # repeat-until-a-distribution-appears method caught.
 #
-# tests/bin/08_pthread aborted about 3% of runs with "The futex facility
+# tests/bin/pthread aborted about 3% of runs with "The futex facility
 # returned an unexpected error code" -- 10 failures in 300 -- from a fixture
 # with no bug in it. The cause was adopt_lock() in darwin/src/libsystem.c
 # lazily initialising the very mutex that guards lazy initialisation, behind the
@@ -117,7 +117,7 @@ done
 if [ $# -eq 0 ]; then
     B="$ROOT/tests/bin"
     E="$ROOT/tests/expected"
-    for id in 08_pthread 21_pthread_cond; do
+    for id in pthread pthread_cond; do
         if [ ! -x "$B/$id" ] || [ ! -f "$E/$id.stdout" ]; then
             echo "stress: skipping $id (no binary or no recorded baseline)"
             continue

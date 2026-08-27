@@ -123,9 +123,9 @@ run() { case "$WANT" in all|"$1") return 0;; *) return 1;; esac; }
 echo
 echo "machorun: what a naive Darwin userland does"
 echo "--------------------------------------------------------------------"
-run varargs && build_variant varargs /tmp/patch-varargs.py 03_printf
-run errno   && build_variant errno   /tmp/patch-errno.py   13_errno
-run flags   && build_variant flags   /tmp/patch-flags.py   13_errno
-run stat    && build_variant stat    /tmp/patch-stat.py    13_errno
-run rune    && build_variant rune    /tmp/patch-rune.py    14_utility
+run varargs && build_variant varargs /tmp/patch-varargs.py printf
+run errno   && build_variant errno   /tmp/patch-errno.py   errno
+run flags   && build_variant flags   /tmp/patch-flags.py   errno
+run stat    && build_variant stat    /tmp/patch-stat.py    errno
+run rune    && build_variant rune    /tmp/patch-rune.py    utility
 INNER

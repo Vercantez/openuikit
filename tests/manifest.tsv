@@ -2,7 +2,6 @@
 #
 # id            fixture id; tests/bin/<id> is the Mach-O, tests/expected/<id>.*
 #               is the recorded macOS behaviour
-# rung          position on the ladder in docs/FIXTURES.md (a..i)
 # fixups        chained | classic | none
 # oracle        run                 macOS can execute it, so a baseline exists
 #               norun:<reason>      macOS refuses to execute it; no baseline,
@@ -14,45 +13,45 @@
 # Columns are separated by a single TAB. Keep it that way; the harness splits
 # on tabs so descriptions may contain spaces.
 #
-#id	rung	fixups	oracle	linux	what
-01_exit_raw	a	classic	run	xfail:raw Darwin svc syscalls; on Linux svc traps to the Linux kernel with Linux numbering	no libSystem calls at all - write+exit via svc #0x80
-01b_exit_unixthread	a	none	norun:macOS 11+ on arm64 SIGKILLs static executables (no LC_LOAD_DYLINKER)	xfail:no oracle baseline to compare against	fully static, LC_UNIXTHREAD entry, no dyld
-02_main_ret	b	chained	run	pass	LC_MAIN entry, exit status is main's return value
-02c_main_ret_classic	b	classic	run	pass	same, classic LC_DYLD_INFO_ONLY fixups
-03_printf	c	chained	run	pass	first real libSystem dependency: printf/puts + Darwin varargs
-03c_printf_classic	c	classic	run	pass	same, classic fixups and __la_symbol_ptr lazy binding
-04_malloc	d	chained	run	pass	malloc/calloc/realloc/free/strdup/posix_memalign
-05_mod_init	e	chained	run	pass	initialisers via __TEXT,__init_offsets (S_INIT_FUNC_OFFSETS)
-05c_mod_init_classic	e	classic	run	pass	same source, initialisers via __DATA_CONST,__mod_init_func
-05b_cxx_init	e	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local static
-06_tls	f	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
-07_dylib	g	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
-07c_dylib_classic	g	classic	run	pass	same, classic fixups on both images
-08_pthread	h	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
-09_objc	i	chained	run	pass	Foundation-free Objective-C: classes, selrefs, objc_msgSend
-11_varargs	j	chained	run	pass	Darwin arm64 varargs in anger: >8 args, interleaved int/double, va_copy, guest va_list into vsnprintf
-11c_varargs_classic	j	classic	run	pass	same source, classic fixups -- the varargs ABI is a libSystem property, not a fixup one
-12_mach	k	chained	run	pass	mach_task_self, vm_allocate/protect/deallocate, mach_absolute_time, timebase, mach_error_string
-13_errno	l	chained	run	pass	errno numbering, O_* flag values and struct stat layout all differ between Darwin and Linux
-14_utility	m	chained	run	pass	a representative hand-built utility: ctype (a DATA table Darwin inlines into the guest), setlocale, getopt, qsort, strftime, fgets
-19_isa_mask	r	chained	run	pass	every loaded image sits below 2^47, because libswiftCore has the 47-bit isa mask compiled in
-20_dirent	s	chained	run	pass	struct dirent is 1048 bytes on Darwin and 280 on glibc, with d_type and d_name at different offsets; readdir translates rather than forwards
-21_pthread_cond	s	chained	run	pass	condition variables that really block, and the RECURSIVE/ERRORCHECK constants Darwin and glibc swap
-22_sysconf	t	chained	run	pass	all 128 _SC_* names differ between Darwin and glibc, so sysconf must translate rather than forward
-23_passwd	u	chained	run	pass	struct passwd is 72 bytes on Darwin and 48 on glibc; pw_dir falls off the end of a forwarded one
-24_cxx_sort	v	chained	run	pass	std::sort really sorts all five hand-instantiated types; the broken version recursed forever
-25_sigmask	w	chained	run	pass	sigset_t is 4 bytes on Darwin and 128 on glibc, ten signal numbers differ, and SIG_BLOCK/UNBLOCK/SETMASK are off by one
-26_malloc_type	y	chained	run	pass	Apple's typed allocator; the size argument sits in a different register in every member of the family
-27_unwind	z	chained	run	pass	walks a real stack through Apple's compact __unwind_info; the symbols resolved the whole time it was stubbed
-28_poll	aa	chained	run	pass	poll(2) across the boundary: the eight agreeing flags, the counts, and the wrapper's heap path -- a regression guard, since the two flags that differ cannot be reached from a fixture
-29_sigaction	ab	chained	run	pass	installing a handler: struct sigaction is 16 bytes against 152, not one sa_flags bit agrees, and the signal NUMBER has to be translated again on the way back INTO guest code
-30_throw	ac	chained	run	pass	a real C++ throw across frames, caught by type; the case that matters is the handler that must NOT match
-31_fcntl_madvise	ad	chained	run	pass	fcntl's command agrees and its O_* value does not; madvise's four common advice values agree and MADV_FREE, the only one libdispatch uses, does not
-32_pthread_attr	ae	chained	run	pass	PTHREAD_CREATE_JOINABLE is 1 here and DETACHED there, so the safe-looking direction is the broken one; SCHED_OTHER is glibc's SCHED_FIFO
-33_dlopen	af	chained	run	pass	loading a dylib at RUN TIME: the export trie through a handle, the initialiser, the TLV, and a bind from the new image into an old one
-34_sysctl	ag	chained	run	pass	the five MIBs CF needs; KERN_PROC_PID gates __CFInitialize and returns a 648-byte BSD struct CF reads one field from
-35_dladdr	ah	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/SELF/MAIN_ONLY -- one gap, not three: all of them needed THE CALLING IMAGE
-36_execpath	ai	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the loader -- /proc/self/exe is a real path and the wrong one; plus pthread_atfork, which glibc has no dynamic symbol for
-37_dyld_images	aj	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
-38_osatomic	ak	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
-10_fat	x	chained	run	pass	universal binary (x86_64 + arm64); same output as 03_printf, so any diff is a slice-selection bug
+#id	fixups	oracle	linux	what
+exit_raw	classic	run	xfail:raw Darwin svc syscalls; on Linux svc traps to the Linux kernel with Linux numbering	no libSystem calls at all - write+exit via svc #0x80
+exit_unixthread	none	norun:macOS 11+ on arm64 SIGKILLs static executables (no LC_LOAD_DYLINKER)	xfail:no oracle baseline to compare against	fully static, LC_UNIXTHREAD entry, no dyld
+main_ret	chained	run	pass	LC_MAIN entry, exit status is main's return value
+main_ret_classic	classic	run	pass	same, classic LC_DYLD_INFO_ONLY fixups
+printf	chained	run	pass	first real libSystem dependency: printf/puts + Darwin varargs
+printf_classic	classic	run	pass	same, classic fixups and __la_symbol_ptr lazy binding
+malloc	chained	run	pass	malloc/calloc/realloc/free/strdup/posix_memalign
+mod_init	chained	run	pass	initialisers via __TEXT,__init_offsets (S_INIT_FUNC_OFFSETS)
+mod_init_classic	classic	run	pass	same source, initialisers via __DATA_CONST,__mod_init_func
+cxx_init	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local static
+tls	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
+dylib	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
+dylib_classic	classic	run	pass	same, classic fixups on both images
+pthread	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
+objc	chained	run	pass	Foundation-free Objective-C: classes, selrefs, objc_msgSend
+varargs	chained	run	pass	Darwin arm64 varargs in anger: >8 args, interleaved int/double, va_copy, guest va_list into vsnprintf
+varargs_classic	classic	run	pass	same source, classic fixups -- the varargs ABI is a libSystem property, not a fixup one
+mach	chained	run	pass	mach_task_self, vm_allocate/protect/deallocate, mach_absolute_time, timebase, mach_error_string
+errno	chained	run	pass	errno numbering, O_* flag values and struct stat layout all differ between Darwin and Linux
+utility	chained	run	pass	a representative hand-built utility: ctype (a DATA table Darwin inlines into the guest), setlocale, getopt, qsort, strftime, fgets
+isa_mask	chained	run	pass	every loaded image sits below 2^47, because libswiftCore has the 47-bit isa mask compiled in
+dirent	chained	run	pass	struct dirent is 1048 bytes on Darwin and 280 on glibc, with d_type and d_name at different offsets; readdir translates rather than forwards
+pthread_cond	chained	run	pass	condition variables that really block, and the RECURSIVE/ERRORCHECK constants Darwin and glibc swap
+sysconf	chained	run	pass	all 128 _SC_* names differ between Darwin and glibc, so sysconf must translate rather than forward
+passwd	chained	run	pass	struct passwd is 72 bytes on Darwin and 48 on glibc; pw_dir falls off the end of a forwarded one
+cxx_sort	chained	run	pass	std::sort really sorts all five hand-instantiated types; the broken version recursed forever
+sigmask	chained	run	pass	sigset_t is 4 bytes on Darwin and 128 on glibc, ten signal numbers differ, and SIG_BLOCK/UNBLOCK/SETMASK are off by one
+malloc_type	chained	run	pass	Apple's typed allocator; the size argument sits in a different register in every member of the family
+unwind	chained	run	pass	walks a real stack through Apple's compact __unwind_info; the symbols resolved the whole time it was stubbed
+poll	chained	run	pass	poll(2) across the boundary: the eight agreeing flags, the counts, and the wrapper's heap path -- a regression guard, since the two flags that differ cannot be reached from a fixture
+sigaction	chained	run	pass	installing a handler: struct sigaction is 16 bytes against 152, not one sa_flags bit agrees, and the signal NUMBER has to be translated again on the way back INTO guest code
+throw	chained	run	pass	a real C++ throw across frames, caught by type; the case that matters is the handler that must NOT match
+fcntl_madvise	chained	run	pass	fcntl's command agrees and its O_* value does not; madvise's four common advice values agree and MADV_FREE, the only one libdispatch uses, does not
+pthread_attr	chained	run	pass	PTHREAD_CREATE_JOINABLE is 1 here and DETACHED there, so the safe-looking direction is the broken one; SCHED_OTHER is glibc's SCHED_FIFO
+dlopen	chained	run	pass	loading a dylib at RUN TIME: the export trie through a handle, the initialiser, the TLV, and a bind from the new image into an old one
+sysctl	chained	run	pass	the five MIBs CF needs; KERN_PROC_PID gates __CFInitialize and returns a 648-byte BSD struct CF reads one field from
+dladdr	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/SELF/MAIN_ONLY -- one gap, not three: all of them needed THE CALLING IMAGE
+execpath	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the loader -- /proc/self/exe is a real path and the wrong one; plus pthread_atfork, which glibc has no dynamic symbol for
+dyld_images	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
+osatomic	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
+fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

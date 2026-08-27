@@ -1,0 +1,11 @@
+quartz fixture 256x256 bpr=1024
+stage 1 background         fnv1a=d94f2402c6af0383  171c29ff  171c29ff  171c29ff  171c29ff  171c29ff
+stage 2 rects              fnv1a=83a49f171b167383  171c29ff  171c29ff  171c29ff  171c29ff  d93d33ff
+stage 3 alpha-rects        fnv1a=ec51e3dd15a3ad7f  171c29ff  171c29ff  171c29ff  171c29ff  df642cff
+stage 4 bezier-fill        fnv1a=863bf669fc3ef033  171c29ff  403166ff  8053c7ff  171c29ff  df642cff
+stage 5 dashed-stroke      fnv1a=8eaad059c40e32ae  171c29ff  403166ff  8053c7ff  171c29ff  df642cff
+stage 6 linear-gradient    fnv1a=3f7c5fa9121b0df3  171c29ff  403166ff  8053c7ff  171c29ff  df642cff
+stage 7 radial-gradient    fnv1a=edb33eafc79b8532  171c29ff  403166ff  8053c7ff  171c29ff  df642cff
+stage 8 rotated            fnv1a=550799e8b5041e36  171c29ff  403166ff  8053c7ff  d1d2daff  df642cff
+stage 9 eo-clip            fnv1a=8b61a189e1bb6db6  171c29ff  403166ff  8053c7ff  d1d2daff  df642cff
+wrote quartz.png

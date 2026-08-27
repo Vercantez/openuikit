@@ -4,7 +4,7 @@
 #
 #   harness/run_macos.sh            verify baselines still match this machine
 #   harness/run_macos.sh --record   (re-)record baselines
-#   harness/run_macos.sh --record 03_printf 06_tls    record just these
+#   harness/run_macos.sh --record printf tls    record just these
 #
 # GUARDING THE ORACLE
 # -------------------
@@ -73,7 +73,7 @@ n_ok=0 n_drift=0 n_recorded=0 n_skipped=0 n_missing=0
 
 while IFS= read -r row; do
     id="$(field "$row" 1)"
-    oracle="$(field "$row" 4)"
+    oracle="$(field "$row" 3)"   # id, fixups, ORACLE, linux, what
     selected "$id" || continue
 
     if [ "$(verdict "$oracle")" = "norun" ]; then

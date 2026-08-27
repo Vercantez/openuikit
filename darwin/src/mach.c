@@ -284,7 +284,7 @@ EXPORT kern_return_t mach_timebase_info(struct mach_timebase_info *info)
 }
 
 /* ------------------------------------------------------------ error strings
- * The text is Apple's, recorded from macOS (tests/expected/12_mach.stdout is
+ * The text is Apple's, recorded from macOS (tests/expected/mach.stdout is
  * the check). A code we do not know says so instead of inventing prose. */
 EXPORT const char *mach_error_string(kern_return_t kr)
 {
