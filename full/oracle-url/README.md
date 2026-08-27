@@ -52,3 +52,25 @@ ranks highest: `appendingPathComponent("x")` and `deletingLastPathComponent()`.
 Field choice follows the member census (`full/census/`): `absoluteString`
 19.3%, `appendingPathComponent` 12.9%, `host` 11.8%, `path` 11.1%, `query`
 8.3% — the top five are 63.4% of all URL member uses.
+
+## 16 rows are EXPECTED-FAIL without FoundationInternationalization
+
+`URLParser.swift` declares `_uidnaHook()` as a `dynamic package func` returning
+`UIDNAHook.Type?`. `FoundationInternationalization` overrides it; without that
+module it returns **nil**, and IDNA/punycode encoding of non-ASCII hostnames is
+skipped. `URL` itself works fine — this is a scope boundary of the port, not a
+defect in it.
+
+Measured against this corpus rather than assumed: **7 inputs contain non-ASCII
+characters and 16 rows carry punycode output**, e.g.
+
+    http://💩.la              ->  host = xn--ls8h.la
+    https://💩.la:8080        ->  host = xn--ls8h.la
+
+(Those come from DuckDuckGo's own test data — a real IDNA case, better than one
+we would have invented.)
+
+**So the 16 `xn--` rows must be marked expected-fail and not chased**, until and
+unless `FoundationInternationalization` is ported too. A run that "fixes" them
+without that module has done something wrong. Everything else in the 809 is a
+genuine acceptance criterion.
