@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        379 rows: header path -> where it comes from
+  MANIFEST.tsv        387 rows: header path -> where it comes from
   SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
   local/              19 clean-room headers of ours (4,396 lines)
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        379 headers, 3.4 MB -- COMMITTED
+  usr/include/        387 headers, 3.5 MB -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -29,7 +29,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 
 | source | headers | licence | redistributable |
 |---|---:|---|---|
-| **xnu** | 220 | APSL 2.0 | yes |
+| **xnu** | 228 | APSL 2.0 | yes |
 | **Libc** | 74 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
 | **libpthread** | 19 | APSL 2.0 | yes |
@@ -42,7 +42,7 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
 | **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **379** | | |
+| | **387** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
@@ -138,6 +138,37 @@ NOT the declaration-only census shim, and it must not become a forward:
 `posix_spawnattr_t` is 8 bytes on Darwin and 336 in glibc, so forwarding
 destroys 328 bytes of guest stack and returns success
 (`docs/UNIMPLEMENTED.md#posix-spawn`).
+
+### A header that includes what we do not ship is an unbacked promise
+
+Staging `sys/socket.h` and `spawn.h` as part of the `kinfo_proc` closure
+introduced a regression with a nasty shape: it cost the person who staged them
+nothing — their own compile never took those branches — and broke CFSocket,
+CFSocketStream and `uuid` for the NEXT consumer, who had no reason to suspect
+the sysroot. `sys/socket.h:77` includes `sys/constrained_ctypes.h`, which was
+not shipped.
+
+`scripts/sdk_stage.sh` now closes the include graph mechanically after every
+restage: it preprocesses **each staged header on its own** and fails if any
+include does not resolve.
+
+**It is a compile, not a grep, and the difference is the whole point.** A grep
+over `#include` lines cannot see `#ifdef` guards, and cannot know that
+`stdarg.h`, `stddef.h` and friends come from the compiler's resource directory
+rather than from here — it reports 106 edges of which 103 are noise.
+Preprocessing answers the question actually at issue, "does this resolve for
+the target we build", with no false positives: **3 real edges, 2 distinct
+missing files**, both introduced by a staging commit nobody's own build noticed.
+
+Closing it is iterative by nature — each layer resolved reveals the next, since
+a header that was never reachable cannot report its own missing includes. From
+the two the check first named, the loop ran to a fixed point in five more
+rounds: `machine/_param.h`, `net/net_kev.h`, `sys/_types/_sa_family_t.h`,
+`sys/_types/_socklen_t.h`, `sys/_types/_iovec_t.h`, `netinet6/in6.h`. All from
+the already-pinned xnu tag.
+
+This is the include-graph analogue of a `.tbd` advertising symbols nothing
+defines, and it belongs in the script rather than in anyone's judgement.
 
 ### The three with no oracle: the QoS private headers
 
@@ -560,13 +591,13 @@ failure rather than a mystery six months from now.
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **356 of 379** files: the 19 clean-room and 4 objc4 headers live in this
+> **364 of 387** files: the 19 clean-room and 4 objc4 headers live in this
 > repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
 > of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 379 headers
+> measured 2026-08-26, a restage of a clean checkout reproduces all 387 headers
 > byte-for-byte.
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on

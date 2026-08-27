@@ -213,6 +213,7 @@ mach/vm_sync.h	xnu:osfmk/mach/vm_sync.h
 mach/vm_types.h	xnu:osfmk/mach/vm_types.h
 machine/_endian.h	xnu:bsd/machine/_endian.h
 machine/_mcontext.h	xnu:bsd/machine/_mcontext.h
+machine/_param.h	xnu:bsd/machine/_param.h
 machine/_types.h	xnu:bsd/machine/_types.h
 machine/endian.h	xnu:bsd/machine/endian.h
 machine/limits.h	xnu:bsd/machine/limits.h
@@ -225,7 +226,9 @@ malloc/_platform.h	libmalloc:include/malloc/_platform.h
 malloc/_ptrcheck.h	libmalloc:include/malloc/_ptrcheck.h
 malloc/malloc.h	libmalloc:include/malloc/malloc.h
 math.h	local
+net/net_kev.h	xnu:bsd/net/net_kev.h
 netinet/in.h	xnu:bsd/netinet/in.h
+netinet6/in6.h	xnu:bsd/netinet6/in6.h
 nl_types.h	Libc:include/FreeBSD/nl_types.h
 objc/message.h	objc4:runtime/message.h
 objc/objc-api.h	objc4:runtime/objc-api.h
@@ -310,6 +313,7 @@ sys/_types/_int32_t.h	xnu:bsd/sys/_types/_int32_t.h
 sys/_types/_int64_t.h	xnu:bsd/sys/_types/_int64_t.h
 sys/_types/_int8_t.h	xnu:bsd/sys/_types/_int8_t.h
 sys/_types/_intptr_t.h	xnu:bsd/sys/_types/_intptr_t.h
+sys/_types/_iovec_t.h	xnu:bsd/sys/_types/_iovec_t.h
 sys/_types/_key_t.h	xnu:bsd/sys/_types/_key_t.h
 sys/_types/_mach_port_t.h	xnu:bsd/sys/_types/_mach_port_t.h
 sys/_types/_mbstate_t.h	xnu:bsd/sys/_types/_mbstate_t.h
@@ -327,10 +331,12 @@ sys/_types/_ptrdiff_t.h	xnu:bsd/sys/_types/_ptrdiff_t.h
 sys/_types/_rsize_t.h	xnu:bsd/sys/_types/_rsize_t.h
 sys/_types/_rune_t.h	xnu:bsd/sys/_types/_rune_t.h
 sys/_types/_s_ifmt.h	xnu:bsd/sys/_types/_s_ifmt.h
+sys/_types/_sa_family_t.h	xnu:bsd/sys/_types/_sa_family_t.h
 sys/_types/_seek_set.h	xnu:bsd/sys/_types/_seek_set.h
 sys/_types/_sigaltstack.h	xnu:bsd/sys/_types/_sigaltstack.h
 sys/_types/_sigset_t.h	xnu:bsd/sys/_types/_sigset_t.h
 sys/_types/_size_t.h	xnu:bsd/sys/_types/_size_t.h
+sys/_types/_socklen_t.h	xnu:bsd/sys/_types/_socklen_t.h
 sys/_types/_ssize_t.h	xnu:bsd/sys/_types/_ssize_t.h
 sys/_types/_suseconds_t.h	xnu:bsd/sys/_types/_suseconds_t.h
 sys/_types/_time_t.h	xnu:bsd/sys/_types/_time_t.h
@@ -356,6 +362,7 @@ sys/_types/_wint_t.h	xnu:bsd/sys/_types/_wint_t.h
 sys/appleapiopts.h	xnu:bsd/sys/appleapiopts.h
 sys/attr.h	xnu:bsd/sys/attr.h
 sys/cdefs.h	xnu:bsd/sys/cdefs.h
+sys/constrained_ctypes.h	xnu:bsd/sys/constrained_ctypes.h
 sys/dirent.h	xnu:bsd/sys/dirent.h
 sys/errno.h	xnu:bsd/sys/errno.h
 sys/event.h	xnu:bsd/sys/event.h
@@ -372,6 +379,7 @@ sys/resource.h	xnu:bsd/sys/resource.h
 sys/select.h	xnu:bsd/sys/select.h
 sys/signal.h	xnu:bsd/sys/signal.h
 sys/socket.h	xnu:bsd/sys/socket.h
+sys/spawn.h	xnu:bsd/sys/spawn.h
 sys/stat.h	xnu:bsd/sys/stat.h
 sys/stdio.h	xnu:bsd/sys/stdio.h
 sys/sysctl.h	xnu:bsd/sys/sysctl.h

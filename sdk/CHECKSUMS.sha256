@@ -180,6 +180,7 @@ a009f5856efa59f9e6010447e4b9f38777ff2c624af23abb5dd028a35e99df2e  xnu:osfmk/mach
 1f919b1ca0f8b4f6ea4f767701d50965c2a6d2b3e8bafca8f5ddb05f60c93cb1  xnu:osfmk/mach_debug/zone_info.h  mach_debug/zone_info.h
 17eb7d38845502ce04aac3ab709dffeb4ec253781051b5d7894703e9786730de  xnu:bsd/machine/_endian.h  machine/_endian.h
 9d3425653d2a1623d785dee4601c3c00e05f4797d7e840b00f17d529f8c6c51e  xnu:bsd/machine/_mcontext.h  machine/_mcontext.h
+a439dd9d92d11570d734c87c634f32f85dc8f98624c72acc70e2f0bfbcd73e1a  xnu:bsd/machine/_param.h  machine/_param.h
 f27264f8fdec9f164b4fc2b556f666ed7c5c0e5b88fd9f23db0b731ffa6cf864  xnu:bsd/machine/_types.h  machine/_types.h
 37f9e1c8599a729e605477a5b6a77cea727fa66816e4585d0dd32e3ba377f450  xnu:bsd/machine/endian.h  machine/endian.h
 50345f1ab843fca787a38c552a84177e678d79dab86e714434f94f2546839357  xnu:bsd/machine/limits.h  machine/limits.h
@@ -191,7 +192,9 @@ d761900eeb8cb62610bffa6471461fe706d06d4a5f278af7109673fa80c32b05  libmalloc:incl
 b89b39d9b2e03aaf6e388382117a446c9311df9157871ce65cf2330994f7a556  libmalloc:include/malloc/_platform.h  malloc/_platform.h
 d3c4e809117b24467e9313cc348c0495aad8780cea6bf58177743b9be09c3591  libmalloc:include/malloc/_ptrcheck.h  malloc/_ptrcheck.h
 8055f0655289193f9b6db61f55f13d04dfe44603dc57eb48223e3e098c8b88b6  libmalloc:include/malloc/malloc.h  malloc/malloc.h
+fb6f826bd7d3312f373d9493f5ab9fd23d0ceb9659239811b82ef9803038273a  xnu:bsd/net/net_kev.h  net/net_kev.h
 4556b5c0618eb0b4b286968ee07377aa7d340c1f745d8ea2d5d07acc027ded64  xnu:bsd/netinet/in.h  netinet/in.h
+46a5395540f036a472601adceb7fc2f1cb62b29c3043613edb70011ebdedbd54  xnu:bsd/netinet6/in6.h  netinet6/in6.h
 4361bb97610e7525dfbade6802bb7188c8bd9157f5fb1d873cc20afa7724ca7c  Libc:include/FreeBSD/nl_types.h  nl_types.h
 a671fc6fc89d3b1bf40bb8580fa8fd6be02e422c5a7453cf9c182e463d1bc240  xnu:libkern/os/base.h  os/base.h
 d610780d732a3dcad409f3c1ca9dea0196e6ede483113078e7d8dd28f41851f5  libdispatch:os/clock.h  os/clock.h
@@ -270,6 +273,7 @@ e40d40ad59c6dc98577b2c7cfdba1121ebfee17b29e093cbd10b7936df496d8e  xnu:bsd/sys/_t
 a2427b34e5e83996bd28d83cec920cf3b82a366af90e767234557bd11fa33a18  xnu:bsd/sys/_types/_int64_t.h  sys/_types/_int64_t.h
 607f6beede0251eb801e763493df26fd45d46eb951e4ff9cac17f1ac951b8cc0  xnu:bsd/sys/_types/_int8_t.h  sys/_types/_int8_t.h
 b2a7ba9b9b2d357d75e59114874658f893b23ea6d1357815b027d8189075daba  xnu:bsd/sys/_types/_intptr_t.h  sys/_types/_intptr_t.h
+f60cfdd101322d759ce291978284113a4e5a3f867cabecdcc66318a59c0f3884  xnu:bsd/sys/_types/_iovec_t.h  sys/_types/_iovec_t.h
 42e8a3f076c5892d7b8ca5594b15a989eb206df5834070bd2b89b1febb3e9913  xnu:bsd/sys/_types/_key_t.h  sys/_types/_key_t.h
 8f178c4c396766f74c2cf8240af9ca420aef38b67bd0d6b7b1ec84c2c48dfc91  xnu:bsd/sys/_types/_mach_port_t.h  sys/_types/_mach_port_t.h
 353733f9ae0a8950aeaa4967e70684c267fc2461f32ffb0b84fdb2ff2b794124  xnu:bsd/sys/_types/_mbstate_t.h  sys/_types/_mbstate_t.h
@@ -287,10 +291,12 @@ f32872a8af4cfb71be9ca5bcd356241badadceba195d55907129425bc239c222  xnu:bsd/sys/_t
 5febac593aa617100cf0017a8147113cfec25cdc5975d9241a9d7e91fb09c4bb  xnu:bsd/sys/_types/_rsize_t.h  sys/_types/_rsize_t.h
 36cd7e6c6ce34e125b4c52f005262d38eba8ef8486c7cac7adedcc5d37cc3b49  xnu:bsd/sys/_types/_rune_t.h  sys/_types/_rune_t.h
 95154f4d16869867b303c173ed569ab17957fedb98ce7140583df75bcca2bd9e  xnu:bsd/sys/_types/_s_ifmt.h  sys/_types/_s_ifmt.h
+04be200df47f1cc3e10ec0a57ac563b8ecbd80c3d29e10e8ea5875145c4d53b7  xnu:bsd/sys/_types/_sa_family_t.h  sys/_types/_sa_family_t.h
 353b2276ef8132f625b1b780e7593a43183fbf054c1bc906c0515f89dad335c8  xnu:bsd/sys/_types/_seek_set.h  sys/_types/_seek_set.h
 2bc87d34186fe6524fe89fa1e2d878462c6688134d03880b8bfa1486db297687  xnu:bsd/sys/_types/_sigaltstack.h  sys/_types/_sigaltstack.h
 df99c73ecdbde1fcb3a4a22169871e036240452472b8ea70f287456d42593972  xnu:bsd/sys/_types/_sigset_t.h  sys/_types/_sigset_t.h
 db84f57e9d0992b42649957a58f530f25a8e4bf417bf85592dca602cc79ca6fc  xnu:bsd/sys/_types/_size_t.h  sys/_types/_size_t.h
+a747e7fd8c243c7bbbd2f2cfa4b05f56f905e1f013fb2ff230f07a1954fdbf07  xnu:bsd/sys/_types/_socklen_t.h  sys/_types/_socklen_t.h
 58eb3bdea24b27e6b5fb45e203e476faf2510b5c0aa81a0b45c17b528aa9c192  xnu:bsd/sys/_types/_ssize_t.h  sys/_types/_ssize_t.h
 d799ffc16cf29b6559b36d879fc7d5fec80ec3c39502eaef078ae9178eeaf275  xnu:bsd/sys/_types/_suseconds_t.h  sys/_types/_suseconds_t.h
 c0a28cdc5c9c8cf99abea53556895bd8001a6cb13ae6ca9f366955500678b35a  xnu:bsd/sys/_types/_time_t.h  sys/_types/_time_t.h
@@ -316,6 +322,7 @@ f6bb1d228df3635d191ee34fdd786fad6851f679ed9da7d6c48e12d3f437854e  xnu:bsd/sys/_t
 efd9793f56c08917cf1ddf5108b78240ede88a5bbc8977d6fdaf1684b6b01c1c  xnu:bsd/sys/appleapiopts.h  sys/appleapiopts.h
 367a55a1fcd7b2c085870a5686a675218c3926d07a89fb3ae210f28a4c9f2269  xnu:bsd/sys/attr.h  sys/attr.h
 6bab328310e9d4f9ff47f763f1fa8cf0000e25ce6be04a9743bf176ccdf94682  xnu:bsd/sys/cdefs.h  sys/cdefs.h
+63b2593d44e5b6d06e7ce079a453b1a7d496b1b9e3692f6d0cd5fc910f60c1d6  xnu:bsd/sys/constrained_ctypes.h  sys/constrained_ctypes.h
 b5f753cd37068f106abb209d87839a9d1a3ad2bf03d2638b1fc768c605638b7b  xnu:bsd/sys/dirent.h  sys/dirent.h
 b16e5eb195f153793b14c3826e6b04db945e9ed6a37c5a9046196555bded6906  xnu:bsd/sys/errno.h  sys/errno.h
 3d706489a4ab1bd529f5c38627f3dcd624a7706d7b9184f6118b9dad788f4f29  xnu:bsd/sys/event.h  sys/event.h
@@ -332,6 +339,7 @@ d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/qu
 e6501f5479116b740fd0099210e63c22a58d24b0ee2554e7135b39a4dd856516  xnu:bsd/sys/select.h  sys/select.h
 2efb1aca5abdfa6f9e8bad155f2db319fdca1a029400cad1558e4df981d6eeea  xnu:bsd/sys/signal.h  sys/signal.h
 478453ae0823d115e3aa7c7e23589c2a47ef928983d805131f3fc0f1be855d1f  xnu:bsd/sys/socket.h  sys/socket.h
+b34765529855f41b8d3598c1443065c67fcdcb8ad734ba6d60c8d255bc5d4379  xnu:bsd/sys/spawn.h  sys/spawn.h
 dd8154be80f467ba57d4edaa7c6617bd32db54bfebdda892b390f9b0364fe488  xnu:bsd/sys/stat.h  sys/stat.h
 13734663bc1c750884a7a71efa131b105e1332385fdf3dfe5649a07df062725f  xnu:bsd/sys/stdio.h  sys/stdio.h
 7149cf776a82e9a301e55aa922a4eeb9c0688836faa4cd4cbdaee86e6ff2bc36  xnu:bsd/sys/sysctl.h  sys/sysctl.h
