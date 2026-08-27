@@ -651,3 +651,90 @@ Net for M2: unchanged at **5–7 weeks**, with the composition shifted — less 
 more substrate. The pattern from §17 holds and is now three-for-three: **every
 correction to this estimate has moved work out of Foundation and into the things
 Foundation stands on.**
+
+---
+
+# Part 6 — correcting the selector counts, and what #51 actually needs
+
+## 22. The overlap claim was wrong. Retracted.
+
+I reported that CF's 151 selectors "overlap heavily" with libswiftCore's 128,
+and that one set of `NS*` implementations therefore satisfies both consumers.
+**I never computed the intersection.** I recognised six names in both lists and
+generalised. Computed:
+
+```
+libswiftCore selectors : 124   (128 strings in __objc_methname; 4 are property
+                                type-encodings like T@"NSString",R,C, not selectors)
+CoreFoundation         : 151
+UNION                  : 253
+SHARED BY BOTH         :  22
+```
+
+Twenty-two, about 15%. That is a **modest** overlap. "One implementation
+satisfies both" is true only in the sense that one library can implement 253
+methods.
+
+**What survives, at the strength the evidence supports:** the 22 shared
+selectors are almost exactly the class-cluster primitives — `length`,
+`characterAtIndex:`, `getCharacters:range:`, `count`, `objectForKey:`, `member:`,
+`addObject:`, `insertObject:atIndex:`, `removeObjectAtIndex:`, `_cfTypeID`. Both
+consumers independently bottom out on the same primitive set. That is real and
+useful: a correct class-cluster implementation serves both. It is *not* evidence
+that the two want the same surface, and it is much weaker support for the
+architecture than claimed.
+
+The architecture is still right for the reasons in `DECISION.md` that were
+measured properly. None of them depended on this.
+
+## 23. Both selector counts have measurement bias, in opposite directions
+
+Neither 151 nor the ground-truth alternative is the number to plan against yet.
+
+**151 is a lower bound with a receiver-typing bias.** It was harvested from
+clang's "instance method not found" warnings, which fire only for messages to
+*typed* pointers like `(NSArray *)`. CF's `CFTYPE_OBJC_FUNCDISPATCH0/1` casts to
+`id`, and clang permits any method on `id` silently. So the 151 systematically
+excludes everything CF sends to `id` — which is why `isEqual:`, `hash`,
+`copyWithZone:`, `objectAtIndex:`, `description`, `retain` and `release` are all
+absent despite CF certainly messaging them.
+
+**The `__objc_methname` harvest gave 57, and that is a floor from a partial
+build.** Extracting emitted selectors from the compiled objects is the right
+instrument — it is what produced libswiftCore's number and has no typing bias.
+But 13 files still fail to compile in that configuration, and they are exactly
+the heaviest dispatch consumers: CFArray, CFAttributedString, CFCalendar,
+CFCharacterSet, CFData, CFDate, CFString. Only 7 objects emitted selectors at
+all, which briefly looked like evidence that the restoration was inert.
+
+It is not. **The restoration is live**, confirmed two ways: the preprocessed
+expansion at `CFArrayGetCount` is
+`if (_CFIsObjCDispatch(...)) return (CFIndex)[(NSArray *)array count];`, and
+`CFDictionary.o` emits 17 real selectors with `_objc_msgSend` undefined, which
+only happens when a message is actually generated. The missing selectors are
+missing files, not missing dispatch. (Worth noting the near-miss: "only 7 of 69
+objects emit selectors" is a alarming-looking number that meant nothing, and the
+check that resolved it was `nm` finding no `CFArrayGetCount` in `CFArray.o` —
+because there was no `CFArray.o`.)
+
+## 24. What #51 needs first
+
+Those 13 files fail on Foundation **types**, not classes: `NSMakeRange`,
+`NSCalendarUnit`, `NSRange`, `NSUInteger`, `CFStreamError` bridging. So the
+first deliverable of #51 is not the method declarations at all — it is the
+**type** surface CF needs, without which the census cannot even be taken.
+
+Order that follows:
+
+1. Foundation types header (`NSRange`, `NSMakeRange`, `NSUInteger`,
+   `NSCalendarUnit`, …) — unblocks the last 13 files.
+2. Re-harvest the selector set from `__objc_methname` across all 82 objects.
+   That is the real denominator, with no receiver-typing bias, and it is the
+   number to plan against. Expect it to exceed 151.
+3. `@interface` declarations for those methods — real signatures, because
+   `@class`-only forward declarations compile with 78 "return type defaults to
+   `id`" warnings, which is clang guessing the message-send ABI.
+4. Class registration (`_CFRuntimeBridgeClasses`), which is a correctness
+   prerequisite — see §9 in the false-green record.
+
+I am not writing headers against a number I have already had to correct once.
