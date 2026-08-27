@@ -601,3 +601,148 @@ works around its absence by calling `presentPickerNow()` by hand.
   likely to want Foundation — and per §6, a nearly-empty Foundation is worse
   than none, so if bundle mechanics genuinely need it, that is a finding and the
   work waits on the real thing rather than a fake one.
+
+## 8. Launch by name — the delegate crosses as a string
+
+Real UIKit never receives an app delegate object. `@main` on a
+`UIApplicationDelegate` synthesises
+
+```swift
+UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv,
+                  nil, NSStringFromClass(AppDelegate.self))
+```
+
+so the delegate crosses the boundary as a **string**, and UIKit does
+`NSClassFromString` → `[[cls alloc] init]` → install. OpenUIKit's entry point
+took the instance (`UIApplicationMain(delegate: MyAppDelegate())`), which is
+the gap §6 named as the second of the three process-layer pieces.
+
+### Which runtime can answer, measured rather than assumed
+
+objc4 was the obvious candidate — we have it, it is what UIKit uses, and the
+binary really does carry an `__objc_classlist` (178 entries). But OpenUIKit's
+classes are **not** NSObject subclasses and carry no `@objc`
+(`Sources/OpenUIKit/UISelector.swift` states this as a design rule), so what
+ObjC knows about them is decided by the Swift compiler's Darwin class emission,
+not by intent. Asked directly in the guest:
+
+```
+objc4 : registered classes=270
+        objc_getClass("_TtC9OpenUIKit6UIView")            = FOUND
+        objc_getClass("_TtC11render_full16ProbeAppDelegate") = FOUND
+```
+
+**objc4 does know them.** That is a real capability and worth recording — the
+`NSStringFromClass`/`NSClassFromString` round trip a real app performs would
+resolve under machorun today.
+
+It is still not what `UIApplicationMain` should use, for a reason that has
+nothing to do with lookup: ObjC can only `alloc` these classes. `SwiftObject`'s
+`+alloc` reaches `swift_allocObject` with the right size and then the Swift
+initialiser body never runs, so every stored property holds whatever the
+allocator left there. It would "work" on a delegate whose properties are all
+`Optional` and be silently wrong on any other — the exact false-green shape this
+project keeps finding. So discovery goes through the Swift runtime's own
+`__swift5_types` records.
+
+### The gap that measuring found
+
+`_typeByName` accepts two spellings and rejects the one that matters:
+
+```
+name form : raw=yes  resolved=yes   mangled          "11render_full16ProbeAppDelegateC"
+name form : raw=yes  resolved=yes   qualified source "render_full.ProbeAppDelegate"
+name form : raw=no   resolved=yes   NSStringFromClass "_TtC11render_full16ProbeAppDelegate"
+name form : raw=no   resolved=no    bare class name  "ProbeAppDelegate"
+```
+
+The `_TtC` form — *the* form a real `@main` supplies — does not resolve.
+`swiftMangling(fromObjCClassName:)` re-spells it; both manglings carry the same
+length-prefixed components, so this is a re-spelling and not a guess, and
+anything more elaborate than module + class returns nil rather than a wrong
+answer.
+
+### Discovery and instantiation are separate problems
+
+Only the second is short, and it is where the missing NSObject actually bites.
+`UIApplicationDelegate` refines `NSObjectProtocol` in real UIKit, so a
+conforming class necessarily **has** an `init`; a Swift metatype offers no way
+to call an initialiser that no protocol requires. Two words in `~/uikit` close
+it for unmodified app source:
+
+1. `UIResponder.init()` becomes `public required init() {}`
+2. `UIApplicationDelegate` gains `init()`
+
+after which `class AppDelegate: UIResponder, UIApplicationDelegate { var window: UIWindow? }`
+— a subclass adding only defaulted stored properties — **inherits** the required
+initialiser and satisfies the requirement with no app-side syntax at all. It is
+spelled locally as `InstantiableAppDelegate` only because `~/uikit` is read-only
+in this tree; the mechanism is identical either way.
+
+### Result, 3/3 runs
+
+```
+launch  : delegate=ProbeAppDelegate  didFinishLaunching=yes  init-ran=yes   PASS
+run     : root appeared at launch=yes  pushed-before-loop=not fired  after=FIRED
+run     : turns=22  wall=0.357s  applicationState=active                    PASS
+control : unknown class name                     -> rejected                PASS
+control : non-delegate class (name resolves=yes) -> rejected at conformance PASS
+control : nil delegate name                      -> rejected                PASS
+```
+
+The delegate is named **only as a string** on the launch path, in the
+`NSStringFromClass` spelling. `init-ran` is a sentinel set by `init()` and
+nothing else, because the interesting wrong answer (`alloc` without `init`)
+produces an object of the right class with an uninitialised body. The
+non-delegate control separates "the name did not resolve" from "the conformance
+was not checked" — both must fail, and for different reasons.
+
+**This test's own first bug is worth recording.** The `run` assertion originally
+watched the window's *root* controller, which appears at `makeKeyAndVisible`
+with no animation — so it had already fired before any loop ran, and the loop
+proved nothing. It now pushes a controller `animated: true` after launch, which
+can only complete on the clock, and requires `wall > 0.05 s`.
+
+### An unrelated break, found because everything stopped loading
+
+`render_full` stopped loading entirely — every mode, including the 108-scene
+suite — with
+
+```
+machorun: undefined symbol '_$ss042_stdlib_isOSVersionAtLeastOrVariantVersion...'
+```
+
+Attribution, from the emitted assembly rather than from guessing:
+`swift_task_deinitOnExecutorMainActorBackDeploy`, the back-deployment thunk the
+compiler generates for a **`@MainActor`-isolated deinit**. `~/uikit`'s M15
+commits put the UI classes under `-default-isolation MainActor`, which gives
+them isolated deinits — so a build that had been loading for weeks stopped
+loading with no change on this side.
+
+Three details make this worth a section:
+
+- **The sysroot does not warn you.** `libswiftCore.tbd` *advertises* the symbol,
+  so the link is clean and the failure is deferred to load time in the guest.
+  Same `.tbd`-disagrees-with-dylib class as `pthread_main_np`, inverted: there
+  the `.tbd` advertised too little, here too much.
+- **`nm` says the symbol is not there and `grep` says it is** — chained-fixup
+  imports do not appear in `nm` output. The attribution above came from
+  `-S` assembly, after `llvm-objdump` produced no disassembly at all and a
+  per-file bisect with its errors suppressed produced a confident empty answer.
+- **Only the question was missing, not the answer.** The thunk asks "is the OS
+  new enough to have `swift_task_deinitOnExecutor`?" and that function *is*
+  present (`libswift_Concurrency.dylib` exports it).
+
+`full/shims/swiftcorepatch.c` forwards the six-argument form to the
+three-argument `_stdlib_isOSVersionAtLeast` that libswiftCore already exports,
+which is what Apple's own implementation does off macCatalyst — the "variant"
+triple describes the iOS-on-macOS variant of a zippered binary, and nothing here
+is zippered. It is linked **into the executable** rather than into a
+libswiftCore umbrella: `llvm-install-name-tool` cannot rewrite Apple's
+libswiftCore at all (it carries `LC_SEGMENT_SPLIT_INFO`, cmd `0x1e`), so the
+rename that pattern needs is unavailable for that one library. An object file
+outranks a `.tbd`, so the linker resolves it locally and emits no import.
+
+Expect this file to grow: swiftc here is 6.2.x and the staged runtime is an
+older Apple build, so anything the newer compiler emits a direct call to may be
+missing.
