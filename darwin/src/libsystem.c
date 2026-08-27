@@ -809,6 +809,27 @@ static void *mr_thread_trampoline(void *p)
                     "to an unmapped address. See mr_constrain_heap() in src/map.c.");
         glibc_free(probe);
     }
+
+    /* Prime this thread's direct-TSD array BEFORE the guest runs.
+     *
+     * os_unfair_lock_lock -> unfair_token -> mr_thread_token -> dtsd_slots,
+     * and dtsd_slots CALLOCS on a thread's first call. So without this, taking
+     * a lock for the first time on a thread allocates -- and Darwin's
+     * os_unfair_lock_lock never allocates, which callers are entitled to rely
+     * on: it is usable from inside an allocator.
+     *
+     * The concrete hazard is glibc's arena mutex, which is NOT recursive. A
+     * thread already inside glibc malloc that first-touches a lock would
+     * deadlock against a mutex it already holds. mr_thread_token()'s own
+     * comment argues it "must not take a lock itself" and that the TSD path
+     * "is glibc's, which is independent of ours" -- but independent-of-ours is
+     * not none, and calloc takes glibc's.
+     *
+     * Doing it here costs one allocation per thread at a point where the guest
+     * is not yet running and no lock is held, and makes mr_thread_token() a
+     * pure TSD read on every path a lock can reach. */
+    (void)mr_thread_token();
+
     return s.fn(s.arg);
 }
 
