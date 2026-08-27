@@ -276,6 +276,32 @@ value  O_CLOEXEC                    16777216
 value  O_NOFOLLOW                   256
 value  O_SYNC                       128
 
+== fcntl commands  (the five a run loop uses agree; the other five are
+==                  ROTATED INTO EACH OTHER. Darwin's F_GETLK is Linux's
+==                  F_SETLKW, so ASKING whether a lock is held instead
+==                  ACQUIRES it and blocks. Not forwarded -- see
+==                  docs/UNIMPLEMENTED.md#not-a-plain-forward.)
+value  F_DUPFD                      0
+value  F_GETFD                      1
+value  F_SETFD                      2
+value  F_GETFL                      3
+value  F_SETFL                      4
+value  F_GETLK                      7
+value  F_SETLK                      8
+value  F_SETLKW                     9
+value  F_GETOWN                     5
+value  F_SETOWN                     6
+sizeof struct flock                 24
+
+== scheduling  (SCHED_OTHER is 1 here and 0 on Linux, and Darwin's 1 IS
+==              Linux's SCHED_FIFO -- so a guest asking for the NORMAL
+==              scheduler would be made real-time. Not forwarded.)
+value  SCHED_OTHER                  1
+value  SCHED_FIFO                   4
+value  SCHED_RR                     2
+sizeof struct sched_param           8
+sizeof pthread_attr_t               64
+
 == stat mode bits
 value  S_IFMT                       61440
 value  S_IFREG                      32768

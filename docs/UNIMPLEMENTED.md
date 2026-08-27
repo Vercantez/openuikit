@@ -554,6 +554,67 @@ that includes only `<sys/signal.h>` sees the struct and not the function —
 same two-line probe against both. The fix for a consumer hitting this is
 `#include <signal.h>`, not staging a header.
 
+### `not-a-plain-forward` — six symbols that look like forwards and are not
+Measured 2026-08-27 against Apple's SDK and glibc 2.39, after a consumer's
+census classified all of these as "plain POSIX, present in glibc". Four of that
+list genuinely are — `madvise` (the five common advice values agree),
+`pwrite` (non-variadic, `off_t` 8 on both), `pthread_attr_init` and
+`pthread_attr_destroy` (`pthread_attr_t` is 64 bytes on both). **These six are
+not, and none is implemented.**
+
+**`fcntl` — three independent disqualifications, and the second is the worst
+collision found anywhere in this file.** The five commands a run loop uses
+agree; the other five are *rotated into each other*:
+
+| cmd | Darwin | glibc | | cmd | Darwin | glibc |
+|---|---|---|---|---|---|---|
+| `F_DUPFD` | 0 | 0 | | `F_GETLK` | **7** | 5 |
+| `F_GETFD` | 1 | 1 | | `F_SETLK` | **8** | 6 |
+| `F_SETFD` | 2 | 2 | | `F_SETLKW` | **9** | 7 |
+| `F_GETFL` | 3 | 3 | | `F_GETOWN` | **5** | 9 |
+| `F_SETFL` | 4 | 4 | | `F_SETOWN` | **6** | 8 |
+
+Darwin's `F_GETLK` (7) is glibc's `F_SETLKW`, so a guest **asking** whether a
+lock is held instead **acquires** it and blocks indefinitely — a query becomes a
+hang. Darwin's `F_SETLK` (8) is glibc's `F_SETOWN`, so a `struct flock *` is
+read as a pid. Darwin's `F_GETOWN` (5) is glibc's `F_GETLK`, and `F_GETOWN`
+takes no third argument — so glibc writes 32 bytes through whatever register
+was there. Separately, `struct flock` is **24 bytes on Darwin against 32**, so
+even a correctly numbered `F_GETLK` overflows. And `fcntl` is variadic, so it
+also carries the Darwin-arm64 varargs problem below.
+
+**`dprintf`** is variadic — same reason `printf` has its own formatter here
+rather than a forward. It must route through that.
+
+**`sysctl`** cannot be forwarded in either direction. `sys/sysctl.h` **no longer
+exists in glibc 2.39**, Linux's `sysctl(2)` was removed from the kernel and
+returns `ENOSYS`, and Darwin's is an unrelated BSD MIB API (`CTL_HW`/`HW_NCPU`
+integer arrays). The `sysctl` symbol survives in `libc.so.6` as a compat stub,
+which is what would let a link succeed and a call do nothing. It wants
+implementing per-MIB the way `sysconf` already is; the MIB set should come from
+a real consumer rather than a guess.
+
+**`pthread_attr_setschedpolicy` silently makes threads real-time.**
+`SCHED_OTHER` is **1 on Darwin and 0 on glibc**; `SCHED_FIFO` is **4 against
+1**; `SCHED_RR` is 2 on both and is the only one that agrees. A guest asking for
+the *normal* scheduler is handed glibc's `SCHED_FIFO`.
+
+**`pthread_attr_setschedparam`**: `struct sched_param` is 8 bytes on Darwin and
+4 on glibc.
+
+**`pthread_get_stackaddr_np` is inverted, not merely renamed.** glibc's nearest
+equivalent, `pthread_attr_getstack`, returns the stack's LOW address; Darwin's
+returns the HIGH one. Measured on macOS: `stackaddr` `0x16b79c000` with a local
+at `0x16b799fd8`, i.e. below it, and `stackaddr - stacksize` giving the low
+bound. An alias would be off by exactly the stack size — a pointer that looks
+entirely reasonable and is at the wrong end of the right region.
+
+**The general point, since this is the second census to arrive mis-sorted:**
+"exists in glibc under the same name" is not the same claim as "has the same
+ABI", and the four hazard families in `docs/ABI.md` are exactly the ways the two
+come apart — struct size, constant value, scalar-typedef width, and variadic
+convention. `fcntl` manages three of the four at once.
+
 ### `signal-surface-remaining` — what is still not exported
 `sigaction`, `pthread_kill`, `kill` and `raise` translate. Still absent, and
 each would need the same signal-number translation rather than a forward:

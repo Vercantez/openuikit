@@ -84,6 +84,8 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <poll.h>
+#include <fcntl.h>
+#include <sched.h>
 #include <ucontext.h>
 
 #define PIN(type, bytes) \
@@ -342,6 +344,45 @@ _Static_assert((long)(SIG_IGN) == 1, "glibc SIG_IGN is no longer 1");
  * three-argument handler form means translating this too, and a ucontext_t we
  * have no mapping for at all. */
 PIN(siginfo_t, 128);
+
+/* FCNTL. The five commands a run loop uses agree; the other five are ROTATED
+ * INTO EACH OTHER, which is the worst arrangement in this file. Darwin's
+ * F_GETLK is 7, and 7 HERE is F_SETLKW -- so a forwarded "is this lock held?"
+ * becomes "take this lock and block until you can", and a query turns into an
+ * indefinite hang. Darwin's F_SETLK (8) is this header's F_SETOWN, so a
+ * struct flock * is read as a pid; Darwin's F_GETOWN (5) is this header's
+ * F_GETLK, and F_GETOWN takes no third argument, so glibc writes 32 bytes
+ * through whatever register was there.
+ *
+ * fcntl is NOT forwarded and NOT implemented -- see
+ * docs/UNIMPLEMENTED.md#not-a-plain-forward. These pins exist so that if
+ * anyone adds a forward later, the numbers they would have relied on are
+ * already written down and checked. */
+_Static_assert(F_DUPFD  == 0, "glibc F_DUPFD moved (Darwin's is 0 too)");
+_Static_assert(F_GETFD  == 1, "glibc F_GETFD moved (Darwin's is 1 too)");
+_Static_assert(F_SETFD  == 2, "glibc F_SETFD moved (Darwin's is 2 too)");
+_Static_assert(F_GETFL  == 3, "glibc F_GETFL moved (Darwin's is 3 too)");
+_Static_assert(F_SETFL  == 4, "glibc F_SETFL moved (Darwin's is 4 too)");
+_Static_assert(F_GETLK  == 5, "glibc F_GETLK moved (Darwin's is 7; Darwin's F_GETOWN is THIS value)");
+_Static_assert(F_SETLK  == 6, "glibc F_SETLK moved (Darwin's is 8; Darwin's F_SETOWN is THIS value)");
+_Static_assert(F_SETLKW == 7, "glibc F_SETLKW moved (Darwin's is 9; Darwin's F_GETLK is THIS value -- "
+    "a forwarded query would BLOCK acquiring the lock)");
+_Static_assert(F_GETOWN == 9, "glibc F_GETOWN moved (Darwin's is 5)");
+_Static_assert(F_SETOWN == 8, "glibc F_SETOWN moved (Darwin's is 6; Darwin's F_SETLK is THIS value)");
+PIN(struct flock, 32);
+
+/* SCHEDULING. SCHED_RR is the only one of the three that agrees, and the
+ * disagreement is the dangerous direction: Darwin's SCHED_OTHER is 1, and 1
+ * HERE is SCHED_FIFO -- so a guest asking for the ordinary scheduler would be
+ * made real-time, run-until-you-yield. Not forwarded, same reference. */
+_Static_assert(SCHED_OTHER == 0, "glibc SCHED_OTHER moved (Darwin's is 1, "
+    "which is THIS header's SCHED_FIFO)");
+_Static_assert(SCHED_FIFO  == 1, "glibc SCHED_FIFO moved (Darwin's is 4)");
+_Static_assert(SCHED_RR    == 2, "glibc SCHED_RR moved (Darwin's is 2 too -- the only one)");
+PIN(struct sched_param, 4);
+/* This one DOES agree, which is why pthread_attr_init/destroy are among the
+ * four symbols in that census that really were plain forwards. */
+PIN(pthread_attr_t, 64);
 
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */

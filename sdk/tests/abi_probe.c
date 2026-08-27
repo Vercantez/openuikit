@@ -43,6 +43,8 @@
 #include <tzfile.h>
 #include <dirent.h>
 #include <poll.h>
+#include <sched.h>
+#include <pthread.h>
 #include <sys/types.h>
 #include <time.h>
 #include <runetype.h>
@@ -191,6 +193,23 @@ int main(void)
     VAL(O_NONBLOCK); VAL(O_APPEND); VAL(O_CREAT); VAL(O_TRUNC);
     VAL(O_EXCL); VAL(O_NOCTTY); VAL(O_DIRECTORY); VAL(O_CLOEXEC);
     VAL(O_NOFOLLOW); VAL(O_SYNC);
+
+    puts("");
+    puts("== fcntl commands  (the five a run loop uses agree; the other five are");
+    puts("==                  ROTATED INTO EACH OTHER. Darwin's F_GETLK is Linux's");
+    puts("==                  F_SETLKW, so ASKING whether a lock is held instead");
+    puts("==                  ACQUIRES it and blocks. Not forwarded -- see");
+    puts("==                  docs/UNIMPLEMENTED.md#not-a-plain-forward.)");
+    VAL(F_DUPFD); VAL(F_GETFD); VAL(F_SETFD); VAL(F_GETFL); VAL(F_SETFL);
+    VAL(F_GETLK); VAL(F_SETLK); VAL(F_SETLKW); VAL(F_GETOWN); VAL(F_SETOWN);
+    SZ(struct flock);
+
+    puts("");
+    puts("== scheduling  (SCHED_OTHER is 1 here and 0 on Linux, and Darwin's 1 IS");
+    puts("==              Linux's SCHED_FIFO -- so a guest asking for the NORMAL");
+    puts("==              scheduler would be made real-time. Not forwarded.)");
+    VAL(SCHED_OTHER); VAL(SCHED_FIFO); VAL(SCHED_RR);
+    SZ(struct sched_param); SZ(pthread_attr_t);
 
     puts("");
     puts("== stat mode bits");
