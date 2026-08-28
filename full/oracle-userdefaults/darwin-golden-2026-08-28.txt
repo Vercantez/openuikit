@@ -1,7 +1,7 @@
 # UserDefaults DARWIN GOLDEN -- expectations for the guest route (#87 step 4).
 # Every line is a row the HOST PORT board scored, and the answer REAL
 # Foundation gave for it in the run that produced:
-#   control 462/462 · corelibs 245/313 · port 627/627 · cross 26/26
+#   control 498/498 · corelibs 272/340 · port 675/675 · cross 26/26
 # Host: macOS Version 26.5.2 (Build 25F84)
 # Regenerate: full/oracle-userdefaults/build_ud_host.sh OUT && OUT/ud_runner golden
 # Format: <col>\t<row>\t<answer>, TABS, row and answer C-escaped.
@@ -393,6 +393,42 @@ D	integer("3.14159265358979")	0
 D	double("3.14159265358979")	3.14159265358979
 D	bool("3.14159265358979")	false
 D	string("3.14159265358979")	3.14159265358979
+D	integer("café")	0
+D	double("café")	0
+D	bool("café")	false
+D	string("café")	café
+D	integer("日本語")	0
+D	double("日本語")	0
+D	bool("日本語")	false
+D	string("日本語")	日本語
+D	integer("🇯🇵")	0
+D	double("🇯🇵")	0
+D	bool("🇯🇵")	false
+D	string("🇯🇵")	🇯🇵
+D	integer("é")	0
+D	double("é")	0
+D	bool("é")	false
+D	string("é")	é
+D	integer("naïve")	0
+D	double("naïve")	0
+D	bool("naïve")	false
+D	string("naïve")	naïve
+D	integer("Ωμέγα")	0
+D	double("Ωμέγα")	0
+D	bool("Ωμέγα")	false
+D	string("Ωμέγα")	Ωμέγα
+D	integer("עברית")	0
+D	double("עברית")	0
+D	bool("עברית")	false
+D	string("עברית")	עברית
+D	integer("🧑‍🚀")	0
+D	double("🧑‍🚀")	0
+D	bool("🧑‍🚀")	false
+D	string("🧑‍🚀")	🧑‍🚀
+D	integer("a​b")	0
+D	double("a​b")	0
+D	bool("a​b")	false
+D	string("a​b")	a​b
 D	integer v_string [String(hello)]	0
 D	double v_string [String(hello)]	0
 D	float v_string [String(hello)]	0.0
@@ -646,6 +682,18 @@ D	register: NOT in persistentDomain	true
 D	set(nil) removes	nil
 D	suite isolation: other suite's key is not in this one	nil
 D	suite isolation: same suite, both sides see it	String(other)
+D	non-ASCII key round-trip [clé_caché]	String(v0-é日🔑)
+D	non-ASCII key string(forKey:) [clé_caché]	v0-é日🔑
+D	non-ASCII key looked up by first character [clé_caché]	nil
+D	non-ASCII key round-trip [日本語のキー]	String(v1-é日🔑)
+D	non-ASCII key string(forKey:) [日本語のキー]	v1-é日🔑
+D	non-ASCII key looked up by first character [日本語のキー]	nil
+D	non-ASCII key round-trip [🔑]	String(v2-é日🔑)
+D	non-ASCII key string(forKey:) [🔑]	v2-é日🔑
+D	non-ASCII key looked up by first character [🔑]	String(v2-é日🔑)
+D	non-ASCII key round-trip [ключ]	String(v3-é日🔑)
+D	non-ASCII key string(forKey:) [ключ]	v3-é日🔑
+D	non-ASCII key looked up by first character [ключ]	nil
 C	integer("123")	123
 C	double("123")	123
 C	bool("123")	true
@@ -907,55 +955,82 @@ C	bool("1,5")	true
 C	integer("3.14159265358979")	3
 C	double("3.14159265358979")	3.14159265358979
 C	bool("3.14159265358979")	true
-C	integer v_string	0
-C	bool v_string	false
-C	integer v_empty	0
-C	bool v_empty	false
-C	integer v_int	42
-C	bool v_int	true
-C	integer v_int_zero	0
-C	bool v_int_zero	false
-C	integer v_int_one	1
-C	bool v_int_one	true
-C	integer v_int_neg	-1
-C	bool v_int_neg	true
-C	integer v_int_max	9223372036854775807
-C	bool v_int_max	true
-C	integer v_int_min	-9223372036854775808
-C	bool v_int_min	true
-C	integer v_int_big	1099511627776
-C	bool v_int_big	true
-C	integer v_double	3
-C	bool v_double	true
-C	integer v_double_whole	1
-C	bool v_double_whole	true
-C	integer v_double_frac	0
-C	bool v_double_frac	true
-C	integer v_double_neg	-2
-C	bool v_double_neg	true
-C	integer v_double_pi	3
-C	bool v_double_pi	true
-C	integer v_float	1
-C	bool v_float	true
-C	integer v_bool_true	1
-C	bool v_bool_true	true
-C	integer v_bool_false	0
-C	bool v_bool_false	false
-C	integer v_data	0
-C	bool v_data	false
-C	integer v_data_empty	0
-C	bool v_data_empty	false
-C	integer v_date	0
-C	bool v_date	false
-C	integer v_arr_int	0
-C	bool v_arr_int	false
-C	integer v_arr_str	0
-C	bool v_arr_str	false
-C	integer v_arr_mixed	0
-C	bool v_arr_mixed	false
-C	integer v_arr_empty	0
-C	bool v_arr_empty	false
-C	integer v_dict	0
-C	bool v_dict	false
-C	integer v_dict_nested	0
-C	bool v_dict_nested	false
+C	integer("café")	0
+C	double("café")	0
+C	bool("café")	false
+C	integer("日本語")	0
+C	double("日本語")	0
+C	bool("日本語")	false
+C	integer("🇯🇵")	0
+C	double("🇯🇵")	0
+C	bool("🇯🇵")	false
+C	integer("é")	0
+C	double("é")	0
+C	bool("é")	false
+C	integer("naïve")	0
+C	double("naïve")	0
+C	bool("naïve")	false
+C	integer("Ωμέγα")	0
+C	double("Ωμέγα")	0
+C	bool("Ωμέγα")	false
+C	integer("עברית")	0
+C	double("עברית")	0
+C	bool("עברית")	false
+C	integer("🧑‍🚀")	0
+C	double("🧑‍🚀")	0
+C	bool("🧑‍🚀")	false
+C	integer("a​b")	0
+C	double("a​b")	0
+C	bool("a​b")	false
+C	integer v_string [String(hello)]	0
+C	bool v_string [String(hello)]	false
+C	integer v_empty [String()]	0
+C	bool v_empty [String()]	false
+C	integer v_int [Int(42)]	42
+C	bool v_int [Int(42)]	true
+C	integer v_int_zero [Int(0)]	0
+C	bool v_int_zero [Int(0)]	false
+C	integer v_int_one [Int(1)]	1
+C	bool v_int_one [Int(1)]	true
+C	integer v_int_neg [Int(-1)]	-1
+C	bool v_int_neg [Int(-1)]	true
+C	integer v_int_max [Int(9223372036854775807)]	9223372036854775807
+C	bool v_int_max [Int(9223372036854775807)]	true
+C	integer v_int_min [Int(-9223372036854775808)]	-9223372036854775808
+C	bool v_int_min [Int(-9223372036854775808)]	true
+C	integer v_int_big [Int(1099511627776)]	1099511627776
+C	bool v_int_big [Int(1099511627776)]	true
+C	integer v_double [Double(3.5)]	3
+C	bool v_double [Double(3.5)]	true
+C	integer v_double_whole [Double(1.0)]	1
+C	bool v_double_whole [Double(1.0)]	true
+C	integer v_double_frac [Double(0.1)]	0
+C	bool v_double_frac [Double(0.1)]	true
+C	integer v_double_neg [Double(-2.9)]	-2
+C	bool v_double_neg [Double(-2.9)]	true
+C	integer v_double_pi [Double(3.141592653589793)]	3
+C	bool v_double_pi [Double(3.141592653589793)]	true
+C	integer v_float [Float(1.5)]	1
+C	bool v_float [Float(1.5)]	true
+C	integer v_bool_true [Bool(true)]	1
+C	bool v_bool_true [Bool(true)]	true
+C	integer v_bool_false [Bool(false)]	0
+C	bool v_bool_false [Bool(false)]	false
+C	integer v_data [Data]	0
+C	bool v_data [Data]	false
+C	integer v_data_empty [Data]	0
+C	bool v_data_empty [Data]	false
+C	integer v_date [Date]	0
+C	bool v_date [Date]	false
+C	integer v_arr_int [Array]	0
+C	bool v_arr_int [Array]	false
+C	integer v_arr_str [Array]	0
+C	bool v_arr_str [Array]	false
+C	integer v_arr_mixed [Array]	0
+C	bool v_arr_mixed [Array]	false
+C	integer v_arr_empty [Array]	0
+C	bool v_arr_empty [Array]	false
+C	integer v_dict [Dict]	0
+C	bool v_dict [Dict]	false
+C	integer v_dict_nested [Dict]	0
+C	bool v_dict_nested [Dict]	false

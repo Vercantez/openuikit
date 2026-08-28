@@ -238,6 +238,17 @@ let CORPUS_STRINGS = [
     " yes", "00", " 0", "true1",
     "1E3", "0X10", ".5", "5.", "1e", "inf", "INF", "nan", "-inf", "1e400",
     "0.1", "1,5", "3.14159265358979",
+    // NON-ASCII, and these are here for the GUEST route rather than for
+    // Darwin's coercion rules. The guest bridge builds CFStrings with
+    // CFStringCreateWithBytes(UTF-8, isExternalRepresentation: false); an
+    // ASCII-only corpus passes with almost any encoding argument, so an
+    // ASCII-only corpus does not measure the encoding at all. Each of these
+    // breaks a different assumption: multi-byte scalars, a script with no
+    // Latin-1 fallback, an emoji outside the BMP (surrogate pair in UTF-16,
+    // four bytes in UTF-8), a combining sequence whose scalar count differs
+    // from its character count, and a right-to-left string.
+    "café", "日本語", "🇯🇵", "e\u{0301}", "naïve",
+    "Ωμέγα", "עברית", "🧑‍🚀", "a\u{200B}b",
 ]
 
 /// Keys harvested from the pinned 20-app corpus (userdefaults-census JSON),
@@ -484,9 +495,17 @@ for (k, v) in CORPUS_VALUES {
     // corelibs' getters see the same Swift value; only the string path differs,
     // so non-string rows are where corelibs is EXPECTED to agree. Scoring them
     // keeps the CORELIBS board from being a rigged subset.
+    //
+    // ROW NAMES MUST MATCH THE PORT BOARD'S, INCLUDING THE [label]. They did
+    // not: this said "integer \(k)" while portB says "integer \(k) [\(label)]".
+    // Harmless while both boards were only ever read by eye, and NOT harmless
+    // once the golden carries both columns for the guest to join on -- 52 of
+    // the 313 CORELIBS rows silently failed to match any PORT row, so the
+    // guest's must-fail board quietly scored 261 instead of 313. It still had
+    // teeth, which is exactly why nothing pointed at it.
     let sv = port.object(forKey: k)
-    corelibs.check("integer \(k)", expected: eI, got: String(corelibsInteger(sv)))
-    corelibs.check("bool \(k)", expected: eB, got: String(corelibsBool(sv)))
+    corelibs.check("integer \(k) [\(v.label)]", expected: eI, got: String(corelibsInteger(sv)))
+    corelibs.check("bool \(k) [\(v.label)]", expected: eB, got: String(corelibsBool(sv)))
 }
 
 // ---- 4. absent keys — absence is an answer
@@ -566,6 +585,34 @@ portB.check("suite isolation: other suite's key is not in this one",
 portB.check("suite isolation: same suite, both sides see it",
             expected: renderReal(realOther.object(forKey: "iso")),
             got: renderPorted(portOther.object(forKey: "iso")))
+
+// ---- 7b. NON-ASCII KEYS.
+//
+// The string corpus stores non-ASCII VALUES, but under ASCII keys s0..sN, so it
+// never puts a multi-byte string through the KEY path -- and on the guest that
+// is a different call: the key becomes a CFString that CFPreferences hashes and
+// compares, while the value is only stored and returned. A round trip that only
+// exercises values would pass with a broken key encoding.
+for (i, uk) in ["clé_caché", "日本語のキー", "🔑", "ключ"].enumerated() {
+    real.set("v\(i)-é日🔑", forKey: uk); port.set("v\(i)-é日🔑", forKey: uk)
+    portB.check("non-ASCII key round-trip [\(uk)]",
+                expected: renderReal(real.object(forKey: uk)),
+                got: renderPorted(port.object(forKey: uk)))
+    portB.check("non-ASCII key string(forKey:) [\(uk)]",
+                expected: real.string(forKey: uk) ?? "nil",
+                got: port.string(forKey: uk) ?? "nil")
+    // Look the key up by its FIRST CHARACTER ALONE. If the key encoding
+    // truncated at the first byte or folded multi-byte scalars, that lookup
+    // would find the value and the round trip above would still pass, because
+    // both sides would be wrong in the same store. Whatever Darwin answers is
+    // the expectation -- nil for a prefix that is not a key, and the value
+    // itself for the single-character key "🔑", where this degenerates into an
+    // identity check. The row is named for what it DOES rather than for what it
+    // is usually testing, because it is not the same test in both cases.
+    portB.check("non-ASCII key looked up by first character [\(uk)]",
+                expected: renderReal(real.object(forKey: String(uk.prefix(1)))),
+                got: renderPorted(port.object(forKey: String(uk.prefix(1)))))
+}
 
 // ---- 8. CROSS-READ: the port WRITES, real Foundation READS.
 //
