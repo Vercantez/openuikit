@@ -38,6 +38,14 @@
 #            tests/objc44 is exported by one of the generated .tbd files.
 #            This is the one that answers "is the stub complete?" with the
 #            corpus rather than with an opinion.
+#   CHECK 4  no two dylibs in darwin/usr/lib define the same symbol (below).
+#   CHECK 5  every symbol the darwin root leaves to the loader's HOST FALLBACK
+#            is accounted for by a decision -- the `_glibc_*` label, the loader
+#            export list, src/host_deny.c, or darwin/host-bound-allowed.txt.
+#            The only one of the five that is not about the .tbd surface at
+#            all; it is here because it sweeps the same "every dylib present"
+#            scope CHECK 4 does. Delegated to scripts/check_undefined.sh,
+#            which also grades guest roots.
 #
 # ---------------------------------------------------------------------------
 # THE ONE FORMAT TRAP, since the error message does not say it (survey §4.2):
@@ -446,4 +454,30 @@ if [ "$n_missing" != 0 ]; then
     exit 1
 fi
 
-echo "   all four checks passed"
+# --------------- CHECK 5: what the darwin root leaves to the HOST fallback
+#
+# CHECKs 2 and 3 are both about the .tbd surface -- what our dylibs promise a
+# linker. This one is about what the LOADER does when nothing promised
+# anything: src/resolve.c answers an unresolved bind from an is_runtime image
+# out of glibc BY NAME, with no translation, and nothing graded that. It is not
+# a .tbd concern, but it belongs beside CHECK 4 for the reason CHECK 4 exists:
+# both sweep EVERY dylib in the tree including the staged ones a hand-written
+# DYLIBS list would never mention, and both are about a resolution decided by
+# something other than the linker.
+#
+# Delegated rather than inlined, because the same check has to run against
+# GUEST roots (~/swift-macho-linux/scratch/mrroot_fe and its siblings), which
+# is where it found the eight names #73 is about. Two copies of one symbol
+# checker would drift exactly as a .tbd drifts from its dylib.
+echo "   CHECK 5: the host-fallback surface of darwin/"
+# Status captured from the command, NOT from a pipeline: `cmd | sed` reports
+# sed's exit status, and this file's `set -o pipefail` is one edit away from
+# turning that into a check that cannot fail.
+cu_out=$(bash "$ROOT/scripts/check_undefined.sh" --strict "$ROOT/darwin" 2>&1); cu_rc=$?
+printf '%s\n' "$cu_out" | sed 's/^/   /'
+if [ "$cu_rc" != 0 ]; then
+    echo "!! re-run: scripts/check_undefined.sh --strict $ROOT/darwin" >&2
+    exit 1
+fi
+
+echo "   all five checks passed"
