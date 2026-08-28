@@ -344,10 +344,90 @@ report other threads' acquisitions as its own on Graviton3; see
 ### `pthread-attr`
 `pthread_create` with a non-NULL `pthread_attr_t` aborts: Darwin's attribute
 struct is compiled into the guest and its layout is not glibc's. Same for
-`pthread_mutex_init` with attributes. The static initialisers
-(`PTHREAD_MUTEX_INITIALIZER`, `PTHREAD_ONCE_INIT`) *are* handled, by keeping a
-glibc object inside Darwin's opaque bytes and using the signature word to tell
-"Apple-initialised" from "adopted".
+`pthread_mutex_init` with attributes. The static initialisers *are* handled, by
+keeping a glibc object inside Darwin's opaque bytes and using the signature word
+to tell "Apple-initialised" from "adopted" — **all four mutex ones**, see below.
+
+### `pthread-mutex-variants` — **FIXED 2026-08-27**; the signature word IS the type
+
+`adopt()` used to accept exactly one static-initialiser signature, and that was
+a live wall rather than a theoretical gap: CoreFoundation's `CFLock_t` is
+`pthread_mutex_t` and `CFLockInit` is `PTHREAD_ERRORCHECK_MUTEX_INITIALIZER`
+(`CFLocking.h`), so it is CF's lock **everywhere** — and the first
+`CFPreferences` call died inside `pthread_mutex_lock` before touching a file.
+It had stayed hidden because the CFString/CFDictionary paths exercised until
+then never take one. Isolated from CF by a 30-line probe (userdefaults, #78).
+
+**This is the constants family wearing the ABI's own clothes.** The value that
+decides the behaviour is not a flag anyone passes — it is the first eight bytes
+of an object the *guest's compiler* laid down from Apple's header, so nothing
+at any call site names it and nothing at any call site can be reviewed for it.
+Measured off Apple's own SDK by reading the first word of each initialiser:
+
+| initialiser | signature | Darwin type |
+|---|---|---|
+| `PTHREAD_MUTEX_INITIALIZER` | `0x32AAABA7` | NORMAL |
+| `PTHREAD_ERRORCHECK_MUTEX_INITIALIZER` | `0x32AAABA1` | ERRORCHECK |
+| `PTHREAD_RECURSIVE_MUTEX_INITIALIZER` | `0x32AAABA2` | RECURSIVE |
+| `PTHREAD_FIRSTFIT_MUTEX_INITIALIZER` | `0x32AAABA3` | (see below) |
+| `PTHREAD_COND_INITIALIZER` | `0x3CB0B1BB` | — one only |
+| `PTHREAD_RWLOCK_INITIALIZER` | `0x2DA8B3B4` | — one only |
+| `PTHREAD_ONCE_INIT` | `0x30B1BCBA` | — one only |
+
+**Accepting the signature is only half, and the easy half.** Adopting an
+errorcheck mutex as a *default* one locks and unlocks perfectly well and
+silently drops the checking upstream chose. So the semantics were oracled
+against Darwin and are graded by RETURN VALUE in
+`tests/bin/pthread_mutex_variants`: errorcheck gives `EDEADLK` on an owner
+relock, `EBUSY` on `trylock` while held and `EPERM` on an unowned unlock;
+recursive relocks freely and needs one unlock per lock; **the default returns 0
+on an unowned unlock** — measured, Darwin does not complain — which is the line
+that separates a real default from a mis-adopted errorcheck.
+
+**Two constant inversions sit under this**, which is why the implementation
+routes the signature through the *existing* `mutex_type_d2g()` rather than
+mapping to glibc's numbers directly: the mutex **type** constants are swapped
+(Darwin ERRORCHECK 1 / RECURSIVE 2 against glibc RECURSIVE 1 / ERRORCHECK 2),
+and `EDEADLK` is **11 on Darwin and 35 on Linux** with Darwin's 11 being Linux's
+`EAGAIN` — the two are exactly each other's.
+
+Teeth, three mutations: reverting to the single-signature check reproduces the
+original wall (**exit 71**, the bail); adopting every variant as the default,
+*or* mapping the Darwin type straight to glibc's number without the swap, both
+**hang the fixture to a 20-second timeout (exit 124)** rather than merely
+printing a wrong line — a default mutex relocked by its owner deadlocks, and a
+mis-typed one leaves a lock held across the cross-thread section.
+
+### `pthread-mutex-firstfit` — accepted, mapped to default, and the enumeration took two goes
+
+`PTHREAD_FIRSTFIT_MUTEX_INITIALIZER` (`0x32AAABA3`) is accepted and adopted as a
+**default** mutex.
+
+**The first enumeration of the family missed it, in the reassuring direction,
+and that is the part worth keeping.** Compiling
+`#ifdef PTHREAD_FIRSTFIT_MUTEX_INITIALIZER` against Apple's SDK reports NOT
+DEFINED, and "a guest cannot name it" follows naturally and is **false**:
+grepping every `PTHREAD_*_INITIALIZER` macro out of Apple's pthread headers
+finds it in `<pthread/pthread_spis.h>`, an SPI header `<pthread.h>` does not
+pull in. The `#ifdef` sweep was scoped to what one `#include` could see and
+reported cleanly about a set that excluded the answer — the same shape as
+`#gate-scope-excludes-the-answer`. The grep is the check that found it, and the
+grep is what the other three initialisers are now confirmed complete by.
+
+**Mapping it to the default is measured, not assumed harmless.** With the SPI
+header included, a firstfit mutex on macOS answers `lock` 0, `trylock`-while-held
+`EBUSY`, `unlock` 0 and **unlock-unowned 0** — bit for bit the default mutex's
+observable contract. "First fit" is a **wakeup-ordering** policy, not an
+error-checking one, so from any single thread the two are indistinguishable.
+What the mapping loses is which waiter glibc wakes, and glibc offers no way to
+select that: a missed optimisation, not a broken promise, because neither
+platform's default mutex guarantees an order and no caller can observe a
+violated one.
+
+**Not covered by the fixture, and this is the reason rather than an oversight:**
+`sdk/` does not stage `pthread/pthread_spis.h`, so the fixture cannot name the
+initialiser at all. Staging an Apple SPI header for one constant is a bigger
+decision than this fix; if it is ever staged, the fixture gains one section.
 
 ### `large-allocations-above-2^47` — a hole in the heap guarantee, not in malloc_size
 `mr_constrain_heap()` puts glibc's main arena below 2^47 and VERIFIES it, which

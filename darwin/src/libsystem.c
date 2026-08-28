@@ -1156,11 +1156,113 @@ EXPORT void _tlv_atexit(void (*fn)(void *), void *arg)
  * pthread_once_t is 16. We keep a glibc object inside the opaque area and use
  * the signature word to tell "statically initialised by Apple's header" from
  * "already adopted by us". */
-#define DARWIN_MUTEX_SIG 0x32AAABA7L
+/* THE STATIC INITIALISER'S SIGNATURE *IS* THE TYPE, and there are THREE of
+ * them, not one. This is the constants family wearing the ABI's own clothes:
+ * the value is not a flag anyone passes, it is the first eight bytes of an
+ * object the guest's compiler laid down, so nothing at any call site names it.
+ *
+ * Measured off Apple's own headers (a probe that reads the first word of each
+ * public initialiser -- the ABI as compiled, not as documented):
+ *
+ *      PTHREAD_MUTEX_INITIALIZER              0x32AAABA7
+ *      PTHREAD_ERRORCHECK_MUTEX_INITIALIZER   0x32AAABA1
+ *      PTHREAD_RECURSIVE_MUTEX_INITIALIZER    0x32AAABA2
+ *      PTHREAD_COND_INITIALIZER               0x3CB0B1BB   (one only)
+ *      PTHREAD_RWLOCK_INITIALIZER             0x2DA8B3B4   (one only)
+ *      PTHREAD_ONCE_INIT                      0x30B1BCBA   (one only)
+ *
+ * ACCEPTING ONLY THE FIRST ONE WAS A REAL WALL, not a theoretical one.
+ * CoreFoundation's `CFLock_t` is `pthread_mutex_t` and `CFLockInit` is
+ * `PTHREAD_ERRORCHECK_MUTEX_INITIALIZER` (CFLocking.h), so that is CF's lock
+ * EVERYWHERE -- and the first CFPreferences call died in pthread_mutex_lock
+ * before touching a file. It had not surfaced earlier only because the CFString
+ * and CFDictionary paths exercised so far never take one.
+ *
+ * FIRSTFIT (0x32AAABA3) IS A FOURTH, AND ENUMERATING IT TOOK TWO GOES -- worth
+ * recording, because the first answer was wrong in the reassuring direction.
+ * Compiling `#ifdef PTHREAD_FIRSTFIT_MUTEX_INITIALIZER` against Apple's SDK
+ * says NOT DEFINED, and the conclusion "a guest cannot name it" followed
+ * naturally and was false: grepping the SDK finds that macro in
+ * `<pthread/pthread_spis.h>`, an SPI header `<pthread.h>` does not pull in. A
+ * guest that includes it explicitly gets a real firstfit initialiser. The
+ * enumeration was scoped to what one #include could see, and reported cleanly
+ * about a set that excluded the answer.
+ *
+ * It is ACCEPTED and mapped to the DEFAULT type, and that is measured rather
+ * than assumed harmless: with the SPI header included, a firstfit mutex on
+ * macOS answers lock 0, trylock-while-held EBUSY, unlock 0 and
+ * UNLOCK-UNOWNED 0 -- bit for bit the DEFAULT mutex's observable contract.
+ * "First fit" is a WAKEUP-ORDERING policy, not an error-checking one, so from
+ * any single thread the two are indistinguishable. What mapping loses is which
+ * waiter glibc wakes, and glibc offers no way to select that. A missed
+ * optimisation, not a broken promise: neither platform's default mutex
+ * guarantees an order, so no caller can observe a violated one. Recorded in
+ * docs/UNIMPLEMENTED.md#pthread-mutex-firstfit, and deliberately NOT covered by
+ * tests/bin/pthread_mutex_variants -- our sysroot does not stage
+ * pthread/pthread_spis.h, so the fixture cannot name the initialiser at all.
+ *
+ * The variants are a MUTEX-only family. cond, rwlock and once have exactly one
+ * public initialiser each -- checked the second way this time, by grepping
+ * every `PTHREAD_*_INITIALIZER`/`_INIT` macro out of Apple's pthread headers
+ * rather than by guessing names to #ifdef -- which is why their own checks a
+ * few hundred lines down still compare against a single value. */
+#define DARWIN_MUTEX_SIG            0x32AAABA7L
+#define DARWIN_MUTEX_SIG_ERRORCHECK 0x32AAABA1L
+#define DARWIN_MUTEX_SIG_RECURSIVE  0x32AAABA2L
+#define DARWIN_MUTEX_SIG_FIRSTFIT   0x32AAABA3L
 #define DARWIN_ONCE_SIG  0x30B1BCBAL
 #define MR_ADOPTED_SIG   0x6D724F4BL   /* 'mrOK' */
 
 struct darwin_opaque { long sig; unsigned char opaque[56]; };
+
+/* Darwin static-initialiser signature -> DARWIN mutex type, or -1. It stops at
+ * Darwin's type on purpose and hands off to mutex_type_d2g() below rather than
+ * mapping to glibc's directly: the two platforms' type numbers are SWAPPED
+ * (Darwin ERRORCHECK 1 / RECURSIVE 2, glibc RECURSIVE 1 / ERRORCHECK 2, both
+ * measured), so a second table doing the same job would be a second place to
+ * get that inversion wrong. */
+static int mutex_type_d2g(int darwin_type);
+
+static int mutex_type_for_sig(long sig)
+{
+    if (sig == DARWIN_MUTEX_SIG || sig == 0)      return 0;  /* NORMAL */
+    if (sig == DARWIN_MUTEX_SIG_ERRORCHECK)       return 1;  /* ERRORCHECK */
+    if (sig == DARWIN_MUTEX_SIG_RECURSIVE)        return 2;  /* RECURSIVE */
+    /* firstfit: a wakeup-ORDERING policy, and its single-threaded contract is
+     * measured to be the default's exactly. See the note above. */
+    if (sig == DARWIN_MUTEX_SIG_FIRSTFIT)         return 0;
+    return -1;
+}
+
+/* Initialise glibc's mutex with the type the guest's initialiser asked for.
+ * The default goes through the attr-less path so the common case allocates and
+ * destroys nothing. */
+static void mutex_init_typed(void *storage, int darwin_type)
+{
+    unsigned char attr[16];              /* glibc's pthread_mutexattr_t is 8 */
+    int g;
+    if (darwin_type == 0) { glibc_pthread_mutex_init(storage, (void *)0); return; }
+    g = mutex_type_d2g(darwin_type);
+    glibc_memset(attr, 0, sizeof attr);
+    glibc_pthread_mutexattr_init(attr);
+    glibc_pthread_mutexattr_settype(attr, g);
+    glibc_pthread_mutex_init(storage, attr);
+    glibc_pthread_mutexattr_destroy(attr);
+}
+
+/* "0x" + 16 hex digits + NUL, for a bail that names what it actually saw. A
+ * message that says "an unexpected signature" and not WHICH one costs the next
+ * person the same measurement this one took. */
+static const char *sig_hex(long v, char out[19])
+{
+    static const char d[] = "0123456789ABCDEF";
+    int i;
+    out[0] = '0'; out[1] = 'x';
+    for (i = 0; i < 16; i++)
+        out[2 + i] = d[(unsigned long)v >> (60 - 4 * i) & 0xf];
+    out[18] = 0;
+    return out;
+}
 
 /* The lock that guards lazy adoption must not itself be lazily initialised,
  * and it used to be:
@@ -1203,11 +1305,23 @@ static void *adopt(struct darwin_opaque *o, long expect_sig, int is_once)
     if (__atomic_load_n(&o->sig, __ATOMIC_ACQUIRE) != MR_ADOPTED_SIG) {
         glibc_pthread_mutex_lock(adopt_lock());
         if (o->sig != MR_ADOPTED_SIG) {
-            if (o->sig != expect_sig && o->sig != 0)
-                mr_bail("a pthread object has an unexpected Darwin signature; its layout "
-                     "was compiled into the guest and cannot be renegotiated");
+            /* A MUTEX may arrive under any of Darwin's three public static
+             * initialisers, and the signature is the only thing that says
+             * which -- so it is read for its TYPE, not merely checked. The
+             * once path keeps the single-value check it always had, because
+             * Apple publishes exactly one PTHREAD_ONCE_INIT. */
+            int dtype = is_once ? -1 : mutex_type_for_sig(o->sig);
+            if (is_once ? (o->sig != expect_sig && o->sig != 0) : (dtype < 0)) {
+                char hex[19];
+                mr_bail2("a pthread object has an unexpected Darwin signature; its "
+                         "layout was compiled into the guest and cannot be "
+                         "renegotiated. Accepted static initialisers are "
+                         "0x32AAABA7 (default), 0x32AAABA1 (errorcheck), "
+                         "0x32AAABA2 (recursive) and 0x32AAABA3 (firstfit) for a "
+                         "mutex, 0x30B1BCBA for a once. Found", sig_hex(o->sig, hex));
+            }
             glibc_memset(o->opaque, 0, sizeof(o->opaque));
-            if (!is_once) glibc_pthread_mutex_init(o->opaque, NULL);
+            if (!is_once) mutex_init_typed(o->opaque, dtype);
             __atomic_store_n(&o->sig, MR_ADOPTED_SIG, __ATOMIC_RELEASE);
         }
         glibc_pthread_mutex_unlock(adopt_lock());

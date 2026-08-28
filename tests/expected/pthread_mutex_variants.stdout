@@ -1,0 +1,25 @@
+sizeof pthread_mutex_t   64
+plain      sig           0x32AAABA7
+errorcheck sig           0x32AAABA1
+recursive  sig           0x32AAABA2
+the three differ         1
+firstfit initializer     not public
+-- default
+  lock                   0
+  unlock                 0
+  unlock unowned         0
+-- errorcheck (CF's CFLockInit)
+  lock                   0
+  relock is EDEADLK      1
+  trylock is EBUSY       1
+  unlock                 0
+  unlock unowned EPERM   1
+-- recursive
+  lock                   0
+  relock                 0
+  unlock                 0
+  unlock                 0
+  unlock unowned EPERM   1
+-- cross-thread
+  owner unlocks EPERM    1
+done

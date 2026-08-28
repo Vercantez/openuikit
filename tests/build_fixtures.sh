@@ -455,6 +455,16 @@ want xattr               && build xattr               "$CHAINED_TARGET" xattr   
 # managed, since neither machine has quotas to exercise a success path with.
 want quota               && build quota               "$CHAINED_TARGET" quota               quota.c --
 
+# pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
+# the signature word IS the type -- a constant nothing at any call site names,
+# because the guest's compiler laid it down. CoreFoundation's CFLockInit is the
+# ERRORCHECK one, so accepting only the default made the first CFPreferences
+# call die inside pthread_mutex_lock. Accepting the signature is the easy half:
+# adopting an errorcheck mutex AS A DEFAULT one locks and unlocks perfectly and
+# silently drops the checking, so this grades the SEMANTICS by return value --
+# and EDEADLK is 11 here and 35 there, with Darwin's 11 being Linux's EAGAIN.
+want pthread_mutex_variants && build pthread_mutex_variants "$CHAINED_TARGET" pthread_mutex_variants pthread_mutex_variants.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc
