@@ -49,6 +49,7 @@
 #include <time.h>
 #include <runetype.h>
 #include <sys/cdefs.h>
+#include <MacTypes.h>
 #include <grp.h>
 #include <sys/quota.h>
 #include <sys/xattr.h>
@@ -311,6 +312,21 @@ int main(void)
     OFF(passwd, pw_gid);    OFF(passwd, pw_change); OFF(passwd, pw_class);
     OFF(passwd, pw_gecos);  OFF(passwd, pw_dir);    OFF(passwd, pw_shell);
     OFF(passwd, pw_expire);
+
+    puts("");
+    puts("== MacTypes  (sdk/local/MacTypes.h -- OURS. A typedef of the wrong");
+    puts("==            width compiles perfectly, so Apple's header certifies");
+    puts("==            these rather than a careful reading of it)");
+    SZ(UInt8); SZ(UInt16); SZ(UInt32); SZ(UInt64);
+    SZ(SInt8); SZ(SInt16); SZ(SInt32); SZ(SInt64);
+    SZ(OSErr); SZ(OSStatus); SZ(Boolean); SZ(UniChar); SZ(Fixed);
+    /* The Unicode transfer-format types and the Pascal string family, merged
+     * in for #88. Str255 is 256 bytes and not 255 -- the length byte is the
+     * first one -- which is exactly the sort of off-by-one a differential
+     * settles and a reading does not. */
+    SZ(UTF8Char); SZ(UTF16Char); SZ(UTF32Char); SZ(UnicodeScalarValue);
+    SZ(Str63); SZ(Str255); SZ(StrFileName);
+    SZ(StringPtr); SZ(StringHandle); SZ(ConstStringPtr); SZ(ConstStr255Param);
 
     puts("");
     puts("== quotactl  (the ARGUMENT ORDER is swapped against Linux's, and the");

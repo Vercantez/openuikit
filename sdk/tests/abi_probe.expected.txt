@@ -358,6 +358,34 @@ offset passwd.pw_dir                48
 offset passwd.pw_shell              56
 offset passwd.pw_expire             64
 
+== MacTypes  (sdk/local/MacTypes.h -- OURS. A typedef of the wrong
+==            width compiles perfectly, so Apple's header certifies
+==            these rather than a careful reading of it)
+sizeof UInt8                        1
+sizeof UInt16                       2
+sizeof UInt32                       4
+sizeof UInt64                       8
+sizeof SInt8                        1
+sizeof SInt16                       2
+sizeof SInt32                       4
+sizeof SInt64                       8
+sizeof OSErr                        2
+sizeof OSStatus                     4
+sizeof Boolean                      1
+sizeof UniChar                      2
+sizeof Fixed                        4
+sizeof UTF8Char                     1
+sizeof UTF16Char                    2
+sizeof UTF32Char                    4
+sizeof UnicodeScalarValue           4
+sizeof Str63                        64
+sizeof Str255                       256
+sizeof StrFileName                  64
+sizeof StringPtr                    8
+sizeof StringHandle                 8
+sizeof ConstStringPtr               8
+sizeof ConstStr255Param             8
+
 == quotactl  (the ARGUMENT ORDER is swapped against Linux's, and the
 ==            first argument is a mount point against a block device)
 sizeof struct dqblk                 64

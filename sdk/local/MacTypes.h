@@ -25,9 +25,20 @@
  * width typedefs with published, stable meanings -- there is nothing to
  * transcribe and nothing to get creatively right.
  *
+ * THE PASCAL STRING FAMILY WAS ONCE OMITTED HERE AND IS NOT ANY MORE (#88,
+ * 2026-08-27). It was removed on the reasoning that nothing should reach for
+ * it -- and ~/swiftcore-macho's own clean-room MacTypes.h supplies it, so
+ * something did. When machorun's SDK grew this file the two collided, and the
+ * proposed resolution ("machorun's is canonical, delete the other") would have
+ * DROPPED TEN TYPEDEFS, because the 129-line file is not a superset of the
+ * 54-line one: measured, 40 typedefs against 41, each missing names the other
+ * has. Size was doing the arguing. The Pascal-string and UTF families are
+ * therefore merged in below, from Apple's own definitions, so that this file
+ * IS the superset the reconciliation assumed it was.
+ *
  * WHAT THIS OMITS versus Apple's 816-line header, deliberately and in full:
- *   - the Pascal string family (Str15 .. Str255, StringPtr, StringHandle,
- *     ConstStr255Param and the rest) and the string-copy inlines
+ *   - the Pascal string INLINES (the string-copy/compare helpers); the TYPES
+ *     are present, the functions are not
  *   - the Carbon numeric types beyond Fixed: Fract, ShortFixed, wide,
  *     UnsignedWide, Float80/Float96, extended80/extended96, NumVersion
  *   - the QuickDraw-era aggregates: Point, Rect, Pattern, Style, VersRec
@@ -118,6 +129,33 @@ typedef UInt16        UniChar;
 typedef UniChar      *UniCharPtr;
 typedef unsigned long UniCharCount;
 typedef UniCharCount *UniCharCountPtr;
+
+/* The transfer-format character types. Widths are the whole content of the
+ * names, and each is pinned by sdk/tests/abi_probe.c against Apple's own
+ * header -- a typedef of the wrong width compiles perfectly and is exactly
+ * what a differential catches. */
+typedef UInt32 UnicodeScalarValue;
+typedef UInt32 UTF32Char;
+typedef UInt16 UTF16Char;
+typedef UInt8  UTF8Char;
+
+/* -------------------------------------------------------- Pascal strings
+ * A length byte followed by that many characters, which is why Str255 is 256
+ * bytes and not 255. Present because ~/swiftcore-macho's clean-room copy
+ * supplies them and something links against that; see the note at the top of
+ * this file about which of the two headers was actually the superset.
+ *
+ * StrFileName is spelled Apple's way -- Str63, not a bare [64] array -- so the
+ * name means what it means on Darwin rather than merely being the right size.
+ * That distinction costs one typedef and is the difference between a
+ * transcription and a coincidence. */
+typedef unsigned char           Str63[64];
+typedef unsigned char           Str255[256];
+typedef Str63                   StrFileName;
+typedef unsigned char          *StringPtr;
+typedef StringPtr              *StringHandle;
+typedef const unsigned char    *ConstStringPtr;
+typedef const unsigned char    *ConstStr255Param;
 
 /* -------------------------------------------------------------- script codes
  * Vestigial, and one line each; present because the Darwin overlay's constant
