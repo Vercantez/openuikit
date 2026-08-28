@@ -4,7 +4,9 @@
 #   control 462/462 · corelibs 245/313 · port 627/627 · cross 26/26
 # Host: macOS Version 26.5.2 (Build 25F84)
 # Regenerate: full/oracle-userdefaults/build_ud_host.sh OUT && OUT/ud_runner golden
-# Format: <row>\t<expected>, ONE TAB, both fields C-escaped.
+# Format: <col>\t<row>\t<answer>, TABS, row and answer C-escaped.
+#   col D = what REAL Foundation answered (the guest PORT board grades on this)
+#   col C = what CORELIBS rules answered (the guest MUST-FAIL board grades on this)
 # Rows are NOT sorted -- order is the order they were scored, which is
 # the order the guest replays them in.
 #
@@ -17,630 +19,943 @@
 # NOTE ON SCOPE: these are the SUITE-scoped rows. Anything whose answer
 # depends on this machine's NSGlobalDomain is deliberately not here --
 # see the README's "Reading these numbers safely".
-roundtrip v_string [String(hello)]	String(hello)
-roundtrip v_empty [String()]	String()
-roundtrip v_int [Int(42)]	Int(42)
-roundtrip v_int_zero [Int(0)]	Int(0)
-roundtrip v_int_one [Int(1)]	Int(1)
-roundtrip v_int_neg [Int(-1)]	Int(-1)
-roundtrip v_int_max [Int(9223372036854775807)]	Int(9223372036854775807)
-roundtrip v_int_min [Int(-9223372036854775808)]	Int(-9223372036854775808)
-roundtrip v_int_big [Int(1099511627776)]	Int(1099511627776)
-roundtrip v_double [Double(3.5)]	Double(3.5)
-roundtrip v_double_whole [Double(1.0)]	Double(1)
-roundtrip v_double_frac [Double(0.1)]	Double(0.10000000000000001)
-roundtrip v_double_neg [Double(-2.9)]	Double(-2.8999999999999999)
-roundtrip v_double_pi [Double(3.141592653589793)]	Double(3.1415926535897931)
-roundtrip v_float [Float(1.5)]	Double(1.5)
-roundtrip v_bool_true [Bool(true)]	Bool(true)
-roundtrip v_bool_false [Bool(false)]	Bool(false)
-roundtrip v_data [Data]	Data(deadbeef)
-roundtrip v_data_empty [Data]	Data()
-roundtrip v_date [Date]	Date(1000)
-roundtrip v_arr_int [Array]	[Int(1),Int(2),Int(3)]
-roundtrip v_arr_str [Array]	[String(a),String(b)]
-roundtrip v_arr_mixed [Array]	[String(a),Int(1),String(b)]
-roundtrip v_arr_empty [Array]	[]
-roundtrip v_dict [Dict]	{x=Int(1),y=String(two)}
-roundtrip v_dict_nested [Dict]	{nested={deep=[Int(1),Int(2)]}}
-integer("123")	123
-double("123")	123
-bool("123")	false
-string("123")	123
-integer("0123")	123
-double("0123")	123
-bool("0123")	false
-string("0123")	0123
-integer(" 123")	123
-double(" 123")	123
-bool(" 123")	false
-string(" 123")	 123
-integer("123 ")	0
-double("123 ")	123
-bool("123 ")	false
-string("123 ")	123 
-integer("12.9")	0
-double("12.9")	12.9
-bool("12.9")	false
-string("12.9")	12.9
-integer("3.75")	0
-double("3.75")	3.75
-bool("3.75")	false
-string("3.75")	3.75
-integer("-7")	-7
-double("-7")	-7
-bool("-7")	false
-string("-7")	-7
-integer("+7")	7
-double("+7")	7
-bool("+7")	false
-string("+7")	+7
-integer("0")	0
-double("0")	0
-bool("0")	false
-string("0")	0
-integer("1")	1
-double("1")	1
-bool("1")	true
-string("1")	1
-integer("2")	2
-double("2")	2
-bool("2")	false
-string("2")	2
-integer("-1")	-1
-double("-1")	-1
-bool("-1")	false
-string("-1")	-1
-integer("0.0")	0
-double("0.0")	0
-bool("0.0")	false
-string("0.0")	0.0
-integer("1.0")	0
-double("1.0")	1
-bool("1.0")	false
-string("1.0")	1.0
-integer("1e3")	0
-double("1e3")	1000
-bool("1e3")	false
-string("1e3")	1e3
-integer("0x10")	0
-double("0x10")	0
-bool("0x10")	false
-string("0x10")	0x10
-integer("YES")	0
-double("YES")	0
-bool("YES")	true
-string("YES")	YES
-integer("Yes")	0
-double("Yes")	0
-bool("Yes")	true
-string("Yes")	Yes
-integer("yes")	0
-double("yes")	0
-bool("yes")	true
-string("yes")	yes
-integer("Y")	0
-double("Y")	0
-bool("Y")	false
-string("Y")	Y
-integer("y")	0
-double("y")	0
-bool("y")	false
-string("y")	y
-integer("TRUE")	0
-double("TRUE")	0
-bool("TRUE")	true
-string("TRUE")	TRUE
-integer("True")	0
-double("True")	0
-bool("True")	true
-string("True")	True
-integer("true")	0
-double("true")	0
-bool("true")	true
-string("true")	true
-integer("T")	0
-double("T")	0
-bool("T")	false
-string("T")	T
-integer("t")	0
-double("t")	0
-bool("t")	false
-string("t")	t
-integer("NO")	0
-double("NO")	0
-bool("NO")	false
-string("NO")	NO
-integer("no")	0
-double("no")	0
-bool("no")	false
-string("no")	no
-integer("N")	0
-double("N")	0
-bool("N")	false
-string("N")	N
-integer("n")	0
-double("n")	0
-bool("n")	false
-string("n")	n
-integer("FALSE")	0
-double("FALSE")	0
-bool("FALSE")	false
-string("FALSE")	FALSE
-integer("false")	0
-double("false")	0
-bool("false")	false
-string("false")	false
-integer("F")	0
-double("F")	0
-bool("F")	false
-string("F")	F
-integer("f")	0
-double("f")	0
-bool("f")	false
-string("f")	f
-integer("banana")	0
-double("banana")	0
-bool("banana")	false
-string("banana")	banana
-integer("")	0
-double("")	0
-bool("")	false
-string("")	
-integer(" ")	0
-double(" ")	0
-bool(" ")	false
-string(" ")	 
-integer("1banana")	0
-double("1banana")	1
-bool("1banana")	false
-string("1banana")	1banana
-integer("banana1")	0
-double("banana1")	0
-bool("banana1")	false
-string("banana1")	banana1
-integer("9223372036854775807")	2147483647
-double("9223372036854775807")	9.2233720368547758e+18
-bool("9223372036854775807")	false
-string("9223372036854775807")	9223372036854775807
-integer("9223372036854775808")	2147483647
-double("9223372036854775808")	9.2233720368547758e+18
-bool("9223372036854775808")	false
-string("9223372036854775808")	9223372036854775808
-integer("-0")	0
-double("-0")	-0
-bool("-0")	false
-string("-0")	-0
-integer("2147483647")	2147483647
-double("2147483647")	2147483647
-bool("2147483647")	false
-string("2147483647")	2147483647
-integer("2147483648")	2147483647
-double("2147483648")	2147483648
-bool("2147483648")	false
-string("2147483648")	2147483648
-integer("3000000000")	2147483647
-double("3000000000")	3000000000
-bool("3000000000")	false
-string("3000000000")	3000000000
-integer("-2147483648")	-2147483648
-double("-2147483648")	-2147483648
-bool("-2147483648")	false
-string("-2147483648")	-2147483648
-integer("-2147483649")	-2147483648
-double("-2147483649")	-2147483649
-bool("-2147483649")	false
-string("-2147483649")	-2147483649
-integer("-3000000000")	-2147483648
-double("-3000000000")	-3000000000
-bool("-3000000000")	false
-string("-3000000000")	-3000000000
-integer("\\t123")	123
-double("\\t123")	123
-bool("\\t123")	false
-string("\\t123")	\t123
-integer("123\\t")	0
-double("123\\t")	123
-bool("123\\t")	false
-string("123\\t")	123\t
-integer("  -7")	-7
-double("  -7")	-7
-bool("  -7")	false
-string("  -7")	  -7
-integer("- 7")	-7
-double("- 7")	0
-bool("- 7")	false
-string("- 7")	- 7
-integer("--7")	0
-double("--7")	0
-bool("--7")	false
-string("--7")	--7
-integer("+ 7")	7
-double("+ 7")	0
-bool("+ 7")	false
-string("+ 7")	+ 7
-integer("007")	7
-double("007")	7
-bool("007")	false
-string("007")	007
-integer("2147483647x")	0
-double("2147483647x")	2147483647
-bool("2147483647x")	false
-string("2147483647x")	2147483647x
-integer("+")	0
-double("+")	0
-bool("+")	false
-string("+")	+
-integer("-")	0
-double("-")	0
-bool("-")	false
-string("-")	-
-integer("+0")	0
-double("+0")	0
-bool("+0")	false
-string("+0")	+0
-integer("1_000")	0
-double("1_000")	1
-bool("1_000")	false
-string("1_000")	1_000
-integer(" 1")	1
-double(" 1")	1
-bool(" 1")	false
-string(" 1")	 1
-integer("1 ")	0
-double("1 ")	1
-bool("1 ")	false
-string("1 ")	1 
-integer("01")	1
-double("01")	1
-bool("01")	false
-string("01")	01
-integer("+1")	1
-double("+1")	1
-bool("+1")	false
-string("+1")	+1
-integer("yEs")	0
-double("yEs")	0
-bool("yEs")	true
-string("yEs")	yEs
-integer("YeS")	0
-double("YeS")	0
-bool("YeS")	true
-string("YeS")	YeS
-integer("tRuE")	0
-double("tRuE")	0
-bool("tRuE")	true
-string("tRuE")	tRuE
-integer("truex")	0
-double("truex")	0
-bool("truex")	false
-string("truex")	truex
-integer("yess")	0
-double("yess")	0
-bool("yess")	false
-string("yess")	yess
-integer("yes ")	0
-double("yes ")	0
-bool("yes ")	false
-string("yes ")	yes 
-integer(" yes")	0
-double(" yes")	0
-bool(" yes")	false
-string(" yes")	 yes
-integer("00")	0
-double("00")	0
-bool("00")	false
-string("00")	00
-integer(" 0")	0
-double(" 0")	0
-bool(" 0")	false
-string(" 0")	 0
-integer("true1")	0
-double("true1")	0
-bool("true1")	false
-string("true1")	true1
-integer("1E3")	0
-double("1E3")	1000
-bool("1E3")	false
-string("1E3")	1E3
-integer("0X10")	0
-double("0X10")	0
-bool("0X10")	false
-string("0X10")	0X10
-integer(".5")	0
-double(".5")	0.5
-bool(".5")	false
-string(".5")	.5
-integer("5.")	0
-double("5.")	5
-bool("5.")	false
-string("5.")	5.
-integer("1e")	0
-double("1e")	1
-bool("1e")	false
-string("1e")	1e
-integer("inf")	0
-double("inf")	0
-bool("inf")	false
-string("inf")	inf
-integer("INF")	0
-double("INF")	0
-bool("INF")	false
-string("INF")	INF
-integer("nan")	0
-double("nan")	0
-bool("nan")	false
-string("nan")	nan
-integer("-inf")	0
-double("-inf")	0
-bool("-inf")	false
-string("-inf")	-inf
-integer("1e400")	0
-double("1e400")	inf
-bool("1e400")	false
-string("1e400")	1e400
-integer("0.1")	0
-double("0.1")	0.10000000000000001
-bool("0.1")	false
-string("0.1")	0.1
-integer("1,5")	0
-double("1,5")	1
-bool("1,5")	false
-string("1,5")	1,5
-integer("3.14159265358979")	0
-double("3.14159265358979")	3.14159265358979
-bool("3.14159265358979")	false
-string("3.14159265358979")	3.14159265358979
-integer v_string [String(hello)]	0
-double v_string [String(hello)]	0
-float v_string [String(hello)]	0.0
-bool v_string [String(hello)]	false
-string v_string [String(hello)]	hello
-array? v_string	false
-dict? v_string	false
-data? v_string	false
-stringArray v_string	nil
-integer v_empty [String()]	0
-double v_empty [String()]	0
-float v_empty [String()]	0.0
-bool v_empty [String()]	false
-string v_empty [String()]	
-array? v_empty	false
-dict? v_empty	false
-data? v_empty	false
-stringArray v_empty	nil
-integer v_int [Int(42)]	42
-double v_int [Int(42)]	42
-float v_int [Int(42)]	42.0
-bool v_int [Int(42)]	true
-string v_int [Int(42)]	42
-array? v_int	false
-dict? v_int	false
-data? v_int	false
-stringArray v_int	nil
-integer v_int_zero [Int(0)]	0
-double v_int_zero [Int(0)]	0
-float v_int_zero [Int(0)]	0.0
-bool v_int_zero [Int(0)]	false
-string v_int_zero [Int(0)]	0
-array? v_int_zero	false
-dict? v_int_zero	false
-data? v_int_zero	false
-stringArray v_int_zero	nil
-integer v_int_one [Int(1)]	1
-double v_int_one [Int(1)]	1
-float v_int_one [Int(1)]	1.0
-bool v_int_one [Int(1)]	true
-string v_int_one [Int(1)]	1
-array? v_int_one	false
-dict? v_int_one	false
-data? v_int_one	false
-stringArray v_int_one	nil
-integer v_int_neg [Int(-1)]	-1
-double v_int_neg [Int(-1)]	-1
-float v_int_neg [Int(-1)]	-1.0
-bool v_int_neg [Int(-1)]	true
-string v_int_neg [Int(-1)]	-1
-array? v_int_neg	false
-dict? v_int_neg	false
-data? v_int_neg	false
-stringArray v_int_neg	nil
-integer v_int_max [Int(9223372036854775807)]	9223372036854775807
-double v_int_max [Int(9223372036854775807)]	9.2233720368547758e+18
-float v_int_max [Int(9223372036854775807)]	9.223372e+18
-bool v_int_max [Int(9223372036854775807)]	true
-string v_int_max [Int(9223372036854775807)]	9223372036854775807
-array? v_int_max	false
-dict? v_int_max	false
-data? v_int_max	false
-stringArray v_int_max	nil
-integer v_int_min [Int(-9223372036854775808)]	-9223372036854775808
-double v_int_min [Int(-9223372036854775808)]	-9.2233720368547758e+18
-float v_int_min [Int(-9223372036854775808)]	-9.223372e+18
-bool v_int_min [Int(-9223372036854775808)]	true
-string v_int_min [Int(-9223372036854775808)]	-9223372036854775808
-array? v_int_min	false
-dict? v_int_min	false
-data? v_int_min	false
-stringArray v_int_min	nil
-integer v_int_big [Int(1099511627776)]	1099511627776
-double v_int_big [Int(1099511627776)]	1099511627776
-float v_int_big [Int(1099511627776)]	1.0995116e+12
-bool v_int_big [Int(1099511627776)]	true
-string v_int_big [Int(1099511627776)]	1099511627776
-array? v_int_big	false
-dict? v_int_big	false
-data? v_int_big	false
-stringArray v_int_big	nil
-integer v_double [Double(3.5)]	3
-double v_double [Double(3.5)]	3.5
-float v_double [Double(3.5)]	3.5
-bool v_double [Double(3.5)]	true
-string v_double [Double(3.5)]	3.5
-array? v_double	false
-dict? v_double	false
-data? v_double	false
-stringArray v_double	nil
-integer v_double_whole [Double(1.0)]	1
-double v_double_whole [Double(1.0)]	1
-float v_double_whole [Double(1.0)]	1.0
-bool v_double_whole [Double(1.0)]	true
-string v_double_whole [Double(1.0)]	1
-array? v_double_whole	false
-dict? v_double_whole	false
-data? v_double_whole	false
-stringArray v_double_whole	nil
-integer v_double_frac [Double(0.1)]	0
-double v_double_frac [Double(0.1)]	0.10000000000000001
-float v_double_frac [Double(0.1)]	0.1
-bool v_double_frac [Double(0.1)]	true
-string v_double_frac [Double(0.1)]	0.1
-array? v_double_frac	false
-dict? v_double_frac	false
-data? v_double_frac	false
-stringArray v_double_frac	nil
-integer v_double_neg [Double(-2.9)]	-2
-double v_double_neg [Double(-2.9)]	-2.8999999999999999
-float v_double_neg [Double(-2.9)]	-2.9
-bool v_double_neg [Double(-2.9)]	true
-string v_double_neg [Double(-2.9)]	-2.9
-array? v_double_neg	false
-dict? v_double_neg	false
-data? v_double_neg	false
-stringArray v_double_neg	nil
-integer v_double_pi [Double(3.141592653589793)]	3
-double v_double_pi [Double(3.141592653589793)]	3.1415926535897931
-float v_double_pi [Double(3.141592653589793)]	3.1415927
-bool v_double_pi [Double(3.141592653589793)]	true
-string v_double_pi [Double(3.141592653589793)]	3.141592653589793
-array? v_double_pi	false
-dict? v_double_pi	false
-data? v_double_pi	false
-stringArray v_double_pi	nil
-integer v_float [Float(1.5)]	1
-double v_float [Float(1.5)]	1.5
-float v_float [Float(1.5)]	1.5
-bool v_float [Float(1.5)]	true
-string v_float [Float(1.5)]	1.5
-array? v_float	false
-dict? v_float	false
-data? v_float	false
-stringArray v_float	nil
-integer v_bool_true [Bool(true)]	1
-double v_bool_true [Bool(true)]	1
-float v_bool_true [Bool(true)]	1.0
-bool v_bool_true [Bool(true)]	true
-string v_bool_true [Bool(true)]	1
-array? v_bool_true	false
-dict? v_bool_true	false
-data? v_bool_true	false
-stringArray v_bool_true	nil
-integer v_bool_false [Bool(false)]	0
-double v_bool_false [Bool(false)]	0
-float v_bool_false [Bool(false)]	0.0
-bool v_bool_false [Bool(false)]	false
-string v_bool_false [Bool(false)]	0
-array? v_bool_false	false
-dict? v_bool_false	false
-data? v_bool_false	false
-stringArray v_bool_false	nil
-integer v_data [Data]	0
-double v_data [Data]	0
-float v_data [Data]	0.0
-bool v_data [Data]	false
-string v_data [Data]	nil
-array? v_data	false
-dict? v_data	false
-data? v_data	true
-stringArray v_data	nil
-integer v_data_empty [Data]	0
-double v_data_empty [Data]	0
-float v_data_empty [Data]	0.0
-bool v_data_empty [Data]	false
-string v_data_empty [Data]	nil
-array? v_data_empty	false
-dict? v_data_empty	false
-data? v_data_empty	true
-stringArray v_data_empty	nil
-integer v_date [Date]	0
-double v_date [Date]	0
-float v_date [Date]	0.0
-bool v_date [Date]	false
-string v_date [Date]	nil
-array? v_date	false
-dict? v_date	false
-data? v_date	false
-stringArray v_date	nil
-integer v_arr_int [Array]	0
-double v_arr_int [Array]	0
-float v_arr_int [Array]	0.0
-bool v_arr_int [Array]	false
-string v_arr_int [Array]	nil
-array? v_arr_int	true
-dict? v_arr_int	false
-data? v_arr_int	false
-stringArray v_arr_int	nil
-integer v_arr_str [Array]	0
-double v_arr_str [Array]	0
-float v_arr_str [Array]	0.0
-bool v_arr_str [Array]	false
-string v_arr_str [Array]	nil
-array? v_arr_str	true
-dict? v_arr_str	false
-data? v_arr_str	false
-stringArray v_arr_str	a|b
-integer v_arr_mixed [Array]	0
-double v_arr_mixed [Array]	0
-float v_arr_mixed [Array]	0.0
-bool v_arr_mixed [Array]	false
-string v_arr_mixed [Array]	nil
-array? v_arr_mixed	true
-dict? v_arr_mixed	false
-data? v_arr_mixed	false
-stringArray v_arr_mixed	nil
-integer v_arr_empty [Array]	0
-double v_arr_empty [Array]	0
-float v_arr_empty [Array]	0.0
-bool v_arr_empty [Array]	false
-string v_arr_empty [Array]	nil
-array? v_arr_empty	true
-dict? v_arr_empty	false
-data? v_arr_empty	false
-stringArray v_arr_empty	
-integer v_dict [Dict]	0
-double v_dict [Dict]	0
-float v_dict [Dict]	0.0
-bool v_dict [Dict]	false
-string v_dict [Dict]	nil
-array? v_dict	false
-dict? v_dict	true
-data? v_dict	false
-stringArray v_dict	nil
-integer v_dict_nested [Dict]	0
-double v_dict_nested [Dict]	0
-float v_dict_nested [Dict]	0.0
-bool v_dict_nested [Dict]	false
-string v_dict_nested [Dict]	nil
-array? v_dict_nested	false
-dict? v_dict_nested	true
-data? v_dict_nested	false
-stringArray v_dict_nested	nil
-absent object(forKey:)	nil
-absent string(forKey:)	nil
-absent integer(forKey:)	0
-absent double(forKey:)	0
-absent float(forKey:)	0.0
-absent bool(forKey:)	false
-absent array(forKey:)	nil
-absent data(forKey:)	nil
-absent stringArray(forKey:)	nil
-absent dictionary(forKey:)	nil
-register: unset key reads the registered value	String(from-register)
-register: a SET key beats the registered one	String(hello)
-register: typed getter sees it	7
-register: after set	String(set-value)
-register: removeObject FALLS BACK to registered	String(from-register)
-register: NOT in persistentDomain	true
-set(nil) removes	nil
-suite isolation: other suite's key is not in this one	nil
-suite isolation: same suite, both sides see it	String(other)
+D	roundtrip v_string [String(hello)]	String(hello)
+D	roundtrip v_empty [String()]	String()
+D	roundtrip v_int [Int(42)]	Int(42)
+D	roundtrip v_int_zero [Int(0)]	Int(0)
+D	roundtrip v_int_one [Int(1)]	Int(1)
+D	roundtrip v_int_neg [Int(-1)]	Int(-1)
+D	roundtrip v_int_max [Int(9223372036854775807)]	Int(9223372036854775807)
+D	roundtrip v_int_min [Int(-9223372036854775808)]	Int(-9223372036854775808)
+D	roundtrip v_int_big [Int(1099511627776)]	Int(1099511627776)
+D	roundtrip v_double [Double(3.5)]	Double(3.5)
+D	roundtrip v_double_whole [Double(1.0)]	Double(1)
+D	roundtrip v_double_frac [Double(0.1)]	Double(0.10000000000000001)
+D	roundtrip v_double_neg [Double(-2.9)]	Double(-2.8999999999999999)
+D	roundtrip v_double_pi [Double(3.141592653589793)]	Double(3.1415926535897931)
+D	roundtrip v_float [Float(1.5)]	Double(1.5)
+D	roundtrip v_bool_true [Bool(true)]	Bool(true)
+D	roundtrip v_bool_false [Bool(false)]	Bool(false)
+D	roundtrip v_data [Data]	Data(deadbeef)
+D	roundtrip v_data_empty [Data]	Data()
+D	roundtrip v_date [Date]	Date(1000)
+D	roundtrip v_arr_int [Array]	[Int(1),Int(2),Int(3)]
+D	roundtrip v_arr_str [Array]	[String(a),String(b)]
+D	roundtrip v_arr_mixed [Array]	[String(a),Int(1),String(b)]
+D	roundtrip v_arr_empty [Array]	[]
+D	roundtrip v_dict [Dict]	{x=Int(1),y=String(two)}
+D	roundtrip v_dict_nested [Dict]	{nested={deep=[Int(1),Int(2)]}}
+D	integer("123")	123
+D	double("123")	123
+D	bool("123")	false
+D	string("123")	123
+D	integer("0123")	123
+D	double("0123")	123
+D	bool("0123")	false
+D	string("0123")	0123
+D	integer(" 123")	123
+D	double(" 123")	123
+D	bool(" 123")	false
+D	string(" 123")	 123
+D	integer("123 ")	0
+D	double("123 ")	123
+D	bool("123 ")	false
+D	string("123 ")	123 
+D	integer("12.9")	0
+D	double("12.9")	12.9
+D	bool("12.9")	false
+D	string("12.9")	12.9
+D	integer("3.75")	0
+D	double("3.75")	3.75
+D	bool("3.75")	false
+D	string("3.75")	3.75
+D	integer("-7")	-7
+D	double("-7")	-7
+D	bool("-7")	false
+D	string("-7")	-7
+D	integer("+7")	7
+D	double("+7")	7
+D	bool("+7")	false
+D	string("+7")	+7
+D	integer("0")	0
+D	double("0")	0
+D	bool("0")	false
+D	string("0")	0
+D	integer("1")	1
+D	double("1")	1
+D	bool("1")	true
+D	string("1")	1
+D	integer("2")	2
+D	double("2")	2
+D	bool("2")	false
+D	string("2")	2
+D	integer("-1")	-1
+D	double("-1")	-1
+D	bool("-1")	false
+D	string("-1")	-1
+D	integer("0.0")	0
+D	double("0.0")	0
+D	bool("0.0")	false
+D	string("0.0")	0.0
+D	integer("1.0")	0
+D	double("1.0")	1
+D	bool("1.0")	false
+D	string("1.0")	1.0
+D	integer("1e3")	0
+D	double("1e3")	1000
+D	bool("1e3")	false
+D	string("1e3")	1e3
+D	integer("0x10")	0
+D	double("0x10")	0
+D	bool("0x10")	false
+D	string("0x10")	0x10
+D	integer("YES")	0
+D	double("YES")	0
+D	bool("YES")	true
+D	string("YES")	YES
+D	integer("Yes")	0
+D	double("Yes")	0
+D	bool("Yes")	true
+D	string("Yes")	Yes
+D	integer("yes")	0
+D	double("yes")	0
+D	bool("yes")	true
+D	string("yes")	yes
+D	integer("Y")	0
+D	double("Y")	0
+D	bool("Y")	false
+D	string("Y")	Y
+D	integer("y")	0
+D	double("y")	0
+D	bool("y")	false
+D	string("y")	y
+D	integer("TRUE")	0
+D	double("TRUE")	0
+D	bool("TRUE")	true
+D	string("TRUE")	TRUE
+D	integer("True")	0
+D	double("True")	0
+D	bool("True")	true
+D	string("True")	True
+D	integer("true")	0
+D	double("true")	0
+D	bool("true")	true
+D	string("true")	true
+D	integer("T")	0
+D	double("T")	0
+D	bool("T")	false
+D	string("T")	T
+D	integer("t")	0
+D	double("t")	0
+D	bool("t")	false
+D	string("t")	t
+D	integer("NO")	0
+D	double("NO")	0
+D	bool("NO")	false
+D	string("NO")	NO
+D	integer("no")	0
+D	double("no")	0
+D	bool("no")	false
+D	string("no")	no
+D	integer("N")	0
+D	double("N")	0
+D	bool("N")	false
+D	string("N")	N
+D	integer("n")	0
+D	double("n")	0
+D	bool("n")	false
+D	string("n")	n
+D	integer("FALSE")	0
+D	double("FALSE")	0
+D	bool("FALSE")	false
+D	string("FALSE")	FALSE
+D	integer("false")	0
+D	double("false")	0
+D	bool("false")	false
+D	string("false")	false
+D	integer("F")	0
+D	double("F")	0
+D	bool("F")	false
+D	string("F")	F
+D	integer("f")	0
+D	double("f")	0
+D	bool("f")	false
+D	string("f")	f
+D	integer("banana")	0
+D	double("banana")	0
+D	bool("banana")	false
+D	string("banana")	banana
+D	integer("")	0
+D	double("")	0
+D	bool("")	false
+D	string("")	
+D	integer(" ")	0
+D	double(" ")	0
+D	bool(" ")	false
+D	string(" ")	 
+D	integer("1banana")	0
+D	double("1banana")	1
+D	bool("1banana")	false
+D	string("1banana")	1banana
+D	integer("banana1")	0
+D	double("banana1")	0
+D	bool("banana1")	false
+D	string("banana1")	banana1
+D	integer("9223372036854775807")	2147483647
+D	double("9223372036854775807")	9.2233720368547758e+18
+D	bool("9223372036854775807")	false
+D	string("9223372036854775807")	9223372036854775807
+D	integer("9223372036854775808")	2147483647
+D	double("9223372036854775808")	9.2233720368547758e+18
+D	bool("9223372036854775808")	false
+D	string("9223372036854775808")	9223372036854775808
+D	integer("-0")	0
+D	double("-0")	-0
+D	bool("-0")	false
+D	string("-0")	-0
+D	integer("2147483647")	2147483647
+D	double("2147483647")	2147483647
+D	bool("2147483647")	false
+D	string("2147483647")	2147483647
+D	integer("2147483648")	2147483647
+D	double("2147483648")	2147483648
+D	bool("2147483648")	false
+D	string("2147483648")	2147483648
+D	integer("3000000000")	2147483647
+D	double("3000000000")	3000000000
+D	bool("3000000000")	false
+D	string("3000000000")	3000000000
+D	integer("-2147483648")	-2147483648
+D	double("-2147483648")	-2147483648
+D	bool("-2147483648")	false
+D	string("-2147483648")	-2147483648
+D	integer("-2147483649")	-2147483648
+D	double("-2147483649")	-2147483649
+D	bool("-2147483649")	false
+D	string("-2147483649")	-2147483649
+D	integer("-3000000000")	-2147483648
+D	double("-3000000000")	-3000000000
+D	bool("-3000000000")	false
+D	string("-3000000000")	-3000000000
+D	integer("\\t123")	123
+D	double("\\t123")	123
+D	bool("\\t123")	false
+D	string("\\t123")	\t123
+D	integer("123\\t")	0
+D	double("123\\t")	123
+D	bool("123\\t")	false
+D	string("123\\t")	123\t
+D	integer("  -7")	-7
+D	double("  -7")	-7
+D	bool("  -7")	false
+D	string("  -7")	  -7
+D	integer("- 7")	-7
+D	double("- 7")	0
+D	bool("- 7")	false
+D	string("- 7")	- 7
+D	integer("--7")	0
+D	double("--7")	0
+D	bool("--7")	false
+D	string("--7")	--7
+D	integer("+ 7")	7
+D	double("+ 7")	0
+D	bool("+ 7")	false
+D	string("+ 7")	+ 7
+D	integer("007")	7
+D	double("007")	7
+D	bool("007")	false
+D	string("007")	007
+D	integer("2147483647x")	0
+D	double("2147483647x")	2147483647
+D	bool("2147483647x")	false
+D	string("2147483647x")	2147483647x
+D	integer("+")	0
+D	double("+")	0
+D	bool("+")	false
+D	string("+")	+
+D	integer("-")	0
+D	double("-")	0
+D	bool("-")	false
+D	string("-")	-
+D	integer("+0")	0
+D	double("+0")	0
+D	bool("+0")	false
+D	string("+0")	+0
+D	integer("1_000")	0
+D	double("1_000")	1
+D	bool("1_000")	false
+D	string("1_000")	1_000
+D	integer(" 1")	1
+D	double(" 1")	1
+D	bool(" 1")	false
+D	string(" 1")	 1
+D	integer("1 ")	0
+D	double("1 ")	1
+D	bool("1 ")	false
+D	string("1 ")	1 
+D	integer("01")	1
+D	double("01")	1
+D	bool("01")	false
+D	string("01")	01
+D	integer("+1")	1
+D	double("+1")	1
+D	bool("+1")	false
+D	string("+1")	+1
+D	integer("yEs")	0
+D	double("yEs")	0
+D	bool("yEs")	true
+D	string("yEs")	yEs
+D	integer("YeS")	0
+D	double("YeS")	0
+D	bool("YeS")	true
+D	string("YeS")	YeS
+D	integer("tRuE")	0
+D	double("tRuE")	0
+D	bool("tRuE")	true
+D	string("tRuE")	tRuE
+D	integer("truex")	0
+D	double("truex")	0
+D	bool("truex")	false
+D	string("truex")	truex
+D	integer("yess")	0
+D	double("yess")	0
+D	bool("yess")	false
+D	string("yess")	yess
+D	integer("yes ")	0
+D	double("yes ")	0
+D	bool("yes ")	false
+D	string("yes ")	yes 
+D	integer(" yes")	0
+D	double(" yes")	0
+D	bool(" yes")	false
+D	string(" yes")	 yes
+D	integer("00")	0
+D	double("00")	0
+D	bool("00")	false
+D	string("00")	00
+D	integer(" 0")	0
+D	double(" 0")	0
+D	bool(" 0")	false
+D	string(" 0")	 0
+D	integer("true1")	0
+D	double("true1")	0
+D	bool("true1")	false
+D	string("true1")	true1
+D	integer("1E3")	0
+D	double("1E3")	1000
+D	bool("1E3")	false
+D	string("1E3")	1E3
+D	integer("0X10")	0
+D	double("0X10")	0
+D	bool("0X10")	false
+D	string("0X10")	0X10
+D	integer(".5")	0
+D	double(".5")	0.5
+D	bool(".5")	false
+D	string(".5")	.5
+D	integer("5.")	0
+D	double("5.")	5
+D	bool("5.")	false
+D	string("5.")	5.
+D	integer("1e")	0
+D	double("1e")	1
+D	bool("1e")	false
+D	string("1e")	1e
+D	integer("inf")	0
+D	double("inf")	0
+D	bool("inf")	false
+D	string("inf")	inf
+D	integer("INF")	0
+D	double("INF")	0
+D	bool("INF")	false
+D	string("INF")	INF
+D	integer("nan")	0
+D	double("nan")	0
+D	bool("nan")	false
+D	string("nan")	nan
+D	integer("-inf")	0
+D	double("-inf")	0
+D	bool("-inf")	false
+D	string("-inf")	-inf
+D	integer("1e400")	0
+D	double("1e400")	inf
+D	bool("1e400")	false
+D	string("1e400")	1e400
+D	integer("0.1")	0
+D	double("0.1")	0.10000000000000001
+D	bool("0.1")	false
+D	string("0.1")	0.1
+D	integer("1,5")	0
+D	double("1,5")	1
+D	bool("1,5")	false
+D	string("1,5")	1,5
+D	integer("3.14159265358979")	0
+D	double("3.14159265358979")	3.14159265358979
+D	bool("3.14159265358979")	false
+D	string("3.14159265358979")	3.14159265358979
+D	integer v_string [String(hello)]	0
+D	double v_string [String(hello)]	0
+D	float v_string [String(hello)]	0.0
+D	bool v_string [String(hello)]	false
+D	string v_string [String(hello)]	hello
+D	array? v_string	false
+D	dict? v_string	false
+D	data? v_string	false
+D	stringArray v_string	nil
+D	integer v_empty [String()]	0
+D	double v_empty [String()]	0
+D	float v_empty [String()]	0.0
+D	bool v_empty [String()]	false
+D	string v_empty [String()]	
+D	array? v_empty	false
+D	dict? v_empty	false
+D	data? v_empty	false
+D	stringArray v_empty	nil
+D	integer v_int [Int(42)]	42
+D	double v_int [Int(42)]	42
+D	float v_int [Int(42)]	42.0
+D	bool v_int [Int(42)]	true
+D	string v_int [Int(42)]	42
+D	array? v_int	false
+D	dict? v_int	false
+D	data? v_int	false
+D	stringArray v_int	nil
+D	integer v_int_zero [Int(0)]	0
+D	double v_int_zero [Int(0)]	0
+D	float v_int_zero [Int(0)]	0.0
+D	bool v_int_zero [Int(0)]	false
+D	string v_int_zero [Int(0)]	0
+D	array? v_int_zero	false
+D	dict? v_int_zero	false
+D	data? v_int_zero	false
+D	stringArray v_int_zero	nil
+D	integer v_int_one [Int(1)]	1
+D	double v_int_one [Int(1)]	1
+D	float v_int_one [Int(1)]	1.0
+D	bool v_int_one [Int(1)]	true
+D	string v_int_one [Int(1)]	1
+D	array? v_int_one	false
+D	dict? v_int_one	false
+D	data? v_int_one	false
+D	stringArray v_int_one	nil
+D	integer v_int_neg [Int(-1)]	-1
+D	double v_int_neg [Int(-1)]	-1
+D	float v_int_neg [Int(-1)]	-1.0
+D	bool v_int_neg [Int(-1)]	true
+D	string v_int_neg [Int(-1)]	-1
+D	array? v_int_neg	false
+D	dict? v_int_neg	false
+D	data? v_int_neg	false
+D	stringArray v_int_neg	nil
+D	integer v_int_max [Int(9223372036854775807)]	9223372036854775807
+D	double v_int_max [Int(9223372036854775807)]	9.2233720368547758e+18
+D	float v_int_max [Int(9223372036854775807)]	9.223372e+18
+D	bool v_int_max [Int(9223372036854775807)]	true
+D	string v_int_max [Int(9223372036854775807)]	9223372036854775807
+D	array? v_int_max	false
+D	dict? v_int_max	false
+D	data? v_int_max	false
+D	stringArray v_int_max	nil
+D	integer v_int_min [Int(-9223372036854775808)]	-9223372036854775808
+D	double v_int_min [Int(-9223372036854775808)]	-9.2233720368547758e+18
+D	float v_int_min [Int(-9223372036854775808)]	-9.223372e+18
+D	bool v_int_min [Int(-9223372036854775808)]	true
+D	string v_int_min [Int(-9223372036854775808)]	-9223372036854775808
+D	array? v_int_min	false
+D	dict? v_int_min	false
+D	data? v_int_min	false
+D	stringArray v_int_min	nil
+D	integer v_int_big [Int(1099511627776)]	1099511627776
+D	double v_int_big [Int(1099511627776)]	1099511627776
+D	float v_int_big [Int(1099511627776)]	1.0995116e+12
+D	bool v_int_big [Int(1099511627776)]	true
+D	string v_int_big [Int(1099511627776)]	1099511627776
+D	array? v_int_big	false
+D	dict? v_int_big	false
+D	data? v_int_big	false
+D	stringArray v_int_big	nil
+D	integer v_double [Double(3.5)]	3
+D	double v_double [Double(3.5)]	3.5
+D	float v_double [Double(3.5)]	3.5
+D	bool v_double [Double(3.5)]	true
+D	string v_double [Double(3.5)]	3.5
+D	array? v_double	false
+D	dict? v_double	false
+D	data? v_double	false
+D	stringArray v_double	nil
+D	integer v_double_whole [Double(1.0)]	1
+D	double v_double_whole [Double(1.0)]	1
+D	float v_double_whole [Double(1.0)]	1.0
+D	bool v_double_whole [Double(1.0)]	true
+D	string v_double_whole [Double(1.0)]	1
+D	array? v_double_whole	false
+D	dict? v_double_whole	false
+D	data? v_double_whole	false
+D	stringArray v_double_whole	nil
+D	integer v_double_frac [Double(0.1)]	0
+D	double v_double_frac [Double(0.1)]	0.10000000000000001
+D	float v_double_frac [Double(0.1)]	0.1
+D	bool v_double_frac [Double(0.1)]	true
+D	string v_double_frac [Double(0.1)]	0.1
+D	array? v_double_frac	false
+D	dict? v_double_frac	false
+D	data? v_double_frac	false
+D	stringArray v_double_frac	nil
+D	integer v_double_neg [Double(-2.9)]	-2
+D	double v_double_neg [Double(-2.9)]	-2.8999999999999999
+D	float v_double_neg [Double(-2.9)]	-2.9
+D	bool v_double_neg [Double(-2.9)]	true
+D	string v_double_neg [Double(-2.9)]	-2.9
+D	array? v_double_neg	false
+D	dict? v_double_neg	false
+D	data? v_double_neg	false
+D	stringArray v_double_neg	nil
+D	integer v_double_pi [Double(3.141592653589793)]	3
+D	double v_double_pi [Double(3.141592653589793)]	3.1415926535897931
+D	float v_double_pi [Double(3.141592653589793)]	3.1415927
+D	bool v_double_pi [Double(3.141592653589793)]	true
+D	string v_double_pi [Double(3.141592653589793)]	3.141592653589793
+D	array? v_double_pi	false
+D	dict? v_double_pi	false
+D	data? v_double_pi	false
+D	stringArray v_double_pi	nil
+D	integer v_float [Float(1.5)]	1
+D	double v_float [Float(1.5)]	1.5
+D	float v_float [Float(1.5)]	1.5
+D	bool v_float [Float(1.5)]	true
+D	string v_float [Float(1.5)]	1.5
+D	array? v_float	false
+D	dict? v_float	false
+D	data? v_float	false
+D	stringArray v_float	nil
+D	integer v_bool_true [Bool(true)]	1
+D	double v_bool_true [Bool(true)]	1
+D	float v_bool_true [Bool(true)]	1.0
+D	bool v_bool_true [Bool(true)]	true
+D	string v_bool_true [Bool(true)]	1
+D	array? v_bool_true	false
+D	dict? v_bool_true	false
+D	data? v_bool_true	false
+D	stringArray v_bool_true	nil
+D	integer v_bool_false [Bool(false)]	0
+D	double v_bool_false [Bool(false)]	0
+D	float v_bool_false [Bool(false)]	0.0
+D	bool v_bool_false [Bool(false)]	false
+D	string v_bool_false [Bool(false)]	0
+D	array? v_bool_false	false
+D	dict? v_bool_false	false
+D	data? v_bool_false	false
+D	stringArray v_bool_false	nil
+D	integer v_data [Data]	0
+D	double v_data [Data]	0
+D	float v_data [Data]	0.0
+D	bool v_data [Data]	false
+D	string v_data [Data]	nil
+D	array? v_data	false
+D	dict? v_data	false
+D	data? v_data	true
+D	stringArray v_data	nil
+D	integer v_data_empty [Data]	0
+D	double v_data_empty [Data]	0
+D	float v_data_empty [Data]	0.0
+D	bool v_data_empty [Data]	false
+D	string v_data_empty [Data]	nil
+D	array? v_data_empty	false
+D	dict? v_data_empty	false
+D	data? v_data_empty	true
+D	stringArray v_data_empty	nil
+D	integer v_date [Date]	0
+D	double v_date [Date]	0
+D	float v_date [Date]	0.0
+D	bool v_date [Date]	false
+D	string v_date [Date]	nil
+D	array? v_date	false
+D	dict? v_date	false
+D	data? v_date	false
+D	stringArray v_date	nil
+D	integer v_arr_int [Array]	0
+D	double v_arr_int [Array]	0
+D	float v_arr_int [Array]	0.0
+D	bool v_arr_int [Array]	false
+D	string v_arr_int [Array]	nil
+D	array? v_arr_int	true
+D	dict? v_arr_int	false
+D	data? v_arr_int	false
+D	stringArray v_arr_int	nil
+D	integer v_arr_str [Array]	0
+D	double v_arr_str [Array]	0
+D	float v_arr_str [Array]	0.0
+D	bool v_arr_str [Array]	false
+D	string v_arr_str [Array]	nil
+D	array? v_arr_str	true
+D	dict? v_arr_str	false
+D	data? v_arr_str	false
+D	stringArray v_arr_str	a|b
+D	integer v_arr_mixed [Array]	0
+D	double v_arr_mixed [Array]	0
+D	float v_arr_mixed [Array]	0.0
+D	bool v_arr_mixed [Array]	false
+D	string v_arr_mixed [Array]	nil
+D	array? v_arr_mixed	true
+D	dict? v_arr_mixed	false
+D	data? v_arr_mixed	false
+D	stringArray v_arr_mixed	nil
+D	integer v_arr_empty [Array]	0
+D	double v_arr_empty [Array]	0
+D	float v_arr_empty [Array]	0.0
+D	bool v_arr_empty [Array]	false
+D	string v_arr_empty [Array]	nil
+D	array? v_arr_empty	true
+D	dict? v_arr_empty	false
+D	data? v_arr_empty	false
+D	stringArray v_arr_empty	
+D	integer v_dict [Dict]	0
+D	double v_dict [Dict]	0
+D	float v_dict [Dict]	0.0
+D	bool v_dict [Dict]	false
+D	string v_dict [Dict]	nil
+D	array? v_dict	false
+D	dict? v_dict	true
+D	data? v_dict	false
+D	stringArray v_dict	nil
+D	integer v_dict_nested [Dict]	0
+D	double v_dict_nested [Dict]	0
+D	float v_dict_nested [Dict]	0.0
+D	bool v_dict_nested [Dict]	false
+D	string v_dict_nested [Dict]	nil
+D	array? v_dict_nested	false
+D	dict? v_dict_nested	true
+D	data? v_dict_nested	false
+D	stringArray v_dict_nested	nil
+D	absent object(forKey:)	nil
+D	absent string(forKey:)	nil
+D	absent integer(forKey:)	0
+D	absent double(forKey:)	0
+D	absent float(forKey:)	0.0
+D	absent bool(forKey:)	false
+D	absent array(forKey:)	nil
+D	absent data(forKey:)	nil
+D	absent stringArray(forKey:)	nil
+D	absent dictionary(forKey:)	nil
+D	register: unset key reads the registered value	String(from-register)
+D	register: a SET key beats the registered one	String(hello)
+D	register: typed getter sees it	7
+D	register: after set	String(set-value)
+D	register: removeObject FALLS BACK to registered	String(from-register)
+D	register: NOT in persistentDomain	true
+D	set(nil) removes	nil
+D	suite isolation: other suite's key is not in this one	nil
+D	suite isolation: same suite, both sides see it	String(other)
+C	integer("123")	123
+C	double("123")	123
+C	bool("123")	true
+C	integer("0123")	123
+C	double("0123")	123
+C	bool("0123")	true
+C	integer(" 123")	123
+C	double(" 123")	123
+C	bool(" 123")	true
+C	integer("123 ")	123
+C	double("123 ")	123
+C	bool("123 ")	true
+C	integer("12.9")	12
+C	double("12.9")	12.9
+C	bool("12.9")	true
+C	integer("3.75")	3
+C	double("3.75")	3.75
+C	bool("3.75")	true
+C	integer("-7")	-7
+C	double("-7")	-7
+C	bool("-7")	true
+C	integer("+7")	7
+C	double("+7")	7
+C	bool("+7")	true
+C	integer("0")	0
+C	double("0")	0
+C	bool("0")	false
+C	integer("1")	1
+C	double("1")	1
+C	bool("1")	true
+C	integer("2")	2
+C	double("2")	2
+C	bool("2")	true
+C	integer("-1")	-1
+C	double("-1")	-1
+C	bool("-1")	true
+C	integer("0.0")	0
+C	double("0.0")	0
+C	bool("0.0")	false
+C	integer("1.0")	1
+C	double("1.0")	1
+C	bool("1.0")	true
+C	integer("1e3")	1
+C	double("1e3")	1000
+C	bool("1e3")	true
+C	integer("0x10")	0
+C	double("0x10")	0
+C	bool("0x10")	false
+C	integer("YES")	0
+C	double("YES")	0
+C	bool("YES")	true
+C	integer("Yes")	0
+C	double("Yes")	0
+C	bool("Yes")	true
+C	integer("yes")	0
+C	double("yes")	0
+C	bool("yes")	true
+C	integer("Y")	0
+C	double("Y")	0
+C	bool("Y")	true
+C	integer("y")	0
+C	double("y")	0
+C	bool("y")	true
+C	integer("TRUE")	0
+C	double("TRUE")	0
+C	bool("TRUE")	true
+C	integer("True")	0
+C	double("True")	0
+C	bool("True")	true
+C	integer("true")	0
+C	double("true")	0
+C	bool("true")	true
+C	integer("T")	0
+C	double("T")	0
+C	bool("T")	true
+C	integer("t")	0
+C	double("t")	0
+C	bool("t")	true
+C	integer("NO")	0
+C	double("NO")	0
+C	bool("NO")	false
+C	integer("no")	0
+C	double("no")	0
+C	bool("no")	false
+C	integer("N")	0
+C	double("N")	0
+C	bool("N")	false
+C	integer("n")	0
+C	double("n")	0
+C	bool("n")	false
+C	integer("FALSE")	0
+C	double("FALSE")	0
+C	bool("FALSE")	false
+C	integer("false")	0
+C	double("false")	0
+C	bool("false")	false
+C	integer("F")	0
+C	double("F")	0
+C	bool("F")	false
+C	integer("f")	0
+C	double("f")	0
+C	bool("f")	false
+C	integer("banana")	0
+C	double("banana")	0
+C	bool("banana")	false
+C	integer("")	0
+C	double("")	0
+C	bool("")	false
+C	integer(" ")	0
+C	double(" ")	0
+C	bool(" ")	false
+C	integer("1banana")	1
+C	double("1banana")	1
+C	bool("1banana")	true
+C	integer("banana1")	0
+C	double("banana1")	0
+C	bool("banana1")	false
+C	integer("9223372036854775807")	9223372036854775807
+C	double("9223372036854775807")	9.2233720368547758e+18
+C	bool("9223372036854775807")	true
+C	integer("9223372036854775808")	9223372036854775807
+C	double("9223372036854775808")	9.2233720368547758e+18
+C	bool("9223372036854775808")	true
+C	integer("-0")	0
+C	double("-0")	-0
+C	bool("-0")	false
+C	integer("2147483647")	2147483647
+C	double("2147483647")	2147483647
+C	bool("2147483647")	true
+C	integer("2147483648")	2147483648
+C	double("2147483648")	2147483648
+C	bool("2147483648")	true
+C	integer("3000000000")	3000000000
+C	double("3000000000")	3000000000
+C	bool("3000000000")	true
+C	integer("-2147483648")	-2147483648
+C	double("-2147483648")	-2147483648
+C	bool("-2147483648")	true
+C	integer("-2147483649")	-2147483649
+C	double("-2147483649")	-2147483649
+C	bool("-2147483649")	true
+C	integer("-3000000000")	-3000000000
+C	double("-3000000000")	-3000000000
+C	bool("-3000000000")	true
+C	integer("\\t123")	123
+C	double("\\t123")	123
+C	bool("\\t123")	true
+C	integer("123\\t")	123
+C	double("123\\t")	123
+C	bool("123\\t")	true
+C	integer("  -7")	-7
+C	double("  -7")	-7
+C	bool("  -7")	true
+C	integer("- 7")	-7
+C	double("- 7")	0
+C	bool("- 7")	false
+C	integer("--7")	0
+C	double("--7")	0
+C	bool("--7")	false
+C	integer("+ 7")	7
+C	double("+ 7")	0
+C	bool("+ 7")	false
+C	integer("007")	7
+C	double("007")	7
+C	bool("007")	true
+C	integer("2147483647x")	2147483647
+C	double("2147483647x")	2147483647
+C	bool("2147483647x")	true
+C	integer("+")	0
+C	double("+")	0
+C	bool("+")	false
+C	integer("-")	0
+C	double("-")	0
+C	bool("-")	false
+C	integer("+0")	0
+C	double("+0")	0
+C	bool("+0")	false
+C	integer("1_000")	1
+C	double("1_000")	1
+C	bool("1_000")	true
+C	integer(" 1")	1
+C	double(" 1")	1
+C	bool(" 1")	true
+C	integer("1 ")	1
+C	double("1 ")	1
+C	bool("1 ")	true
+C	integer("01")	1
+C	double("01")	1
+C	bool("01")	true
+C	integer("+1")	1
+C	double("+1")	1
+C	bool("+1")	true
+C	integer("yEs")	0
+C	double("yEs")	0
+C	bool("yEs")	true
+C	integer("YeS")	0
+C	double("YeS")	0
+C	bool("YeS")	true
+C	integer("tRuE")	0
+C	double("tRuE")	0
+C	bool("tRuE")	true
+C	integer("truex")	0
+C	double("truex")	0
+C	bool("truex")	true
+C	integer("yess")	0
+C	double("yess")	0
+C	bool("yess")	true
+C	integer("yes ")	0
+C	double("yes ")	0
+C	bool("yes ")	true
+C	integer(" yes")	0
+C	double(" yes")	0
+C	bool(" yes")	true
+C	integer("00")	0
+C	double("00")	0
+C	bool("00")	false
+C	integer(" 0")	0
+C	double(" 0")	0
+C	bool(" 0")	false
+C	integer("true1")	0
+C	double("true1")	0
+C	bool("true1")	true
+C	integer("1E3")	1
+C	double("1E3")	1000
+C	bool("1E3")	true
+C	integer("0X10")	0
+C	double("0X10")	0
+C	bool("0X10")	false
+C	integer(".5")	0
+C	double(".5")	0.5
+C	bool(".5")	false
+C	integer("5.")	5
+C	double("5.")	5
+C	bool("5.")	true
+C	integer("1e")	1
+C	double("1e")	1
+C	bool("1e")	true
+C	integer("inf")	0
+C	double("inf")	0
+C	bool("inf")	false
+C	integer("INF")	0
+C	double("INF")	0
+C	bool("INF")	false
+C	integer("nan")	0
+C	double("nan")	0
+C	bool("nan")	false
+C	integer("-inf")	0
+C	double("-inf")	0
+C	bool("-inf")	false
+C	integer("1e400")	1
+C	double("1e400")	inf
+C	bool("1e400")	true
+C	integer("0.1")	0
+C	double("0.1")	0.10000000000000001
+C	bool("0.1")	false
+C	integer("1,5")	1
+C	double("1,5")	1
+C	bool("1,5")	true
+C	integer("3.14159265358979")	3
+C	double("3.14159265358979")	3.14159265358979
+C	bool("3.14159265358979")	true
+C	integer v_string	0
+C	bool v_string	false
+C	integer v_empty	0
+C	bool v_empty	false
+C	integer v_int	42
+C	bool v_int	true
+C	integer v_int_zero	0
+C	bool v_int_zero	false
+C	integer v_int_one	1
+C	bool v_int_one	true
+C	integer v_int_neg	-1
+C	bool v_int_neg	true
+C	integer v_int_max	9223372036854775807
+C	bool v_int_max	true
+C	integer v_int_min	-9223372036854775808
+C	bool v_int_min	true
+C	integer v_int_big	1099511627776
+C	bool v_int_big	true
+C	integer v_double	3
+C	bool v_double	true
+C	integer v_double_whole	1
+C	bool v_double_whole	true
+C	integer v_double_frac	0
+C	bool v_double_frac	true
+C	integer v_double_neg	-2
+C	bool v_double_neg	true
+C	integer v_double_pi	3
+C	bool v_double_pi	true
+C	integer v_float	1
+C	bool v_float	true
+C	integer v_bool_true	1
+C	bool v_bool_true	true
+C	integer v_bool_false	0
+C	bool v_bool_false	false
+C	integer v_data	0
+C	bool v_data	false
+C	integer v_data_empty	0
+C	bool v_data_empty	false
+C	integer v_date	0
+C	bool v_date	false
+C	integer v_arr_int	0
+C	bool v_arr_int	false
+C	integer v_arr_str	0
+C	bool v_arr_str	false
+C	integer v_arr_mixed	0
+C	bool v_arr_mixed	false
+C	integer v_arr_empty	0
+C	bool v_arr_empty	false
+C	integer v_dict	0
+C	bool v_dict	false
+C	integer v_dict_nested	0
+C	bool v_dict_nested	false

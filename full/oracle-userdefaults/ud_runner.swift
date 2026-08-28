@@ -160,9 +160,9 @@ struct Board {
     /// table separately is deliberate -- a second construction of the same
     /// expectations would be a SECOND AUTHORITY, and a transcription slip in
     /// it would surface as a port failure, or worse, mask a real one.
-    var all: [(row: String, expected: String)] = []
+    var all: [(row: String, expected: String, got: String)] = []
     mutating func check(_ row: String, expected: String, got: String) {
-        all.append((row, expected))
+        all.append((row, expected, got))
         if expected == got { pass += 1 }
         else { fail += 1; failures.append((row, expected, got)) }
     }
@@ -664,7 +664,9 @@ if mode == "golden" {
     out += " · port \(portB.pass)/\(portB.scored) · cross \(cross.pass)/\(cross.scored)\n"
     out += "# Host: macOS \(ProcessInfo.processInfo.operatingSystemVersionString)\n"
     out += "# Regenerate: full/oracle-userdefaults/build_ud_host.sh OUT && OUT/ud_runner golden\n"
-    out += "# Format: <row>\\t<expected>, ONE TAB, both fields C-escaped.\n"
+    out += "# Format: <col>\\t<row>\\t<answer>, TABS, row and answer C-escaped.\n"
+    out += "#   col D = what REAL Foundation answered (the guest PORT board grades on this)\n"
+    out += "#   col C = what CORELIBS rules answered (the guest MUST-FAIL board grades on this)\n"
     out += "# Rows are NOT sorted -- order is the order they were scored, which is\n"
     out += "# the order the guest replays them in.\n"
     out += "#\n"
@@ -705,8 +707,18 @@ if mode == "golden" {
         }
         return r
     }
-    for (row, expected) in portB.all {
-        out += "\(esc(row))\t\(esc(expected))\n"
+    // Column 1: DARWIN -- what real Foundation answered. The guest's PORT board
+    // grades against this.
+    for (row, expected, _) in portB.all {
+        out += "D\t\(esc(row))\t\(esc(expected))\n"
+    }
+    // Column 2: CORELIBS -- what upstream's own rules answered for the same
+    // rows. The guest's MUST-FAIL board grades against THIS, and is required to
+    // fail: a guest that matches corelibs on the 68 divergent rows has
+    // regressed to upstream behaviour, and a guest column with no must-fail
+    // partner cannot distinguish "correct" from "the harness sees nothing".
+    for (row, _, got) in corelibs.all {
+        out += "C\t\(esc(row))\t\(esc(got))\n"
     }
 
     // TOOTH ON THE FORMAT ITSELF. Re-parse what is about to be written and
@@ -714,28 +726,31 @@ if mode == "golden" {
     // value containing the separator degrades SILENTLY -- the guest would grade
     // two rows against a truncated expectation and report the difference as a
     // port defect. Demonstrated necessary: those two rows exist in this corpus.
-    var reparsed: [(String, String)] = []
+    var reparsed: [(String, String, String)] = []
     for line in out.split(separator: "\n", omittingEmptySubsequences: false) {
         if line.hasPrefix("#") || line.isEmpty { continue }
         let parts = line.split(separator: "\t", omittingEmptySubsequences: false)
-        guard parts.count == 2 else {
+        guard parts.count == 3 else {
             FileHandle.standardError.write(Data(
-                "golden: line does not have exactly 2 fields: \(line)\n".utf8))
+                "golden: line does not have exactly 3 fields: \(line)\n".utf8))
             exit(4)
         }
-        reparsed.append((unesc(String(parts[0])), unesc(String(parts[1]))))
+        reparsed.append((String(parts[0]), unesc(String(parts[1])), unesc(String(parts[2]))))
     }
-    guard reparsed.count == portB.all.count else {
+    let want = portB.all.map { ("D", $0.row, $0.expected) }
+             + corelibs.all.map { ("C", $0.row, $0.got) }
+    guard reparsed.count == want.count else {
         FileHandle.standardError.write(Data(
-            "golden: re-parse produced \(reparsed.count) rows, table has \(portB.all.count)\n".utf8))
+            "golden: re-parse produced \(reparsed.count) rows, table has \(want.count)\n".utf8))
         exit(4)
     }
-    for (i, r) in reparsed.enumerated() where r.0 != portB.all[i].row || r.1 != portB.all[i].expected {
+    for (i, r) in reparsed.enumerated() where r.0 != want[i].0 || r.1 != want[i].1 || r.2 != want[i].2 {
         FileHandle.standardError.write(Data(
-            "golden: row \(i) does not round-trip: wrote \(portB.all[i]) read \(r)\n".utf8))
+            "golden: row \(i) does not round-trip: wrote \(want[i]) read \(r)\n".utf8))
         exit(4)
     }
     print("golden: all \(reparsed.count) rows round-trip through the escaped format")
+    print("golden: D \(portB.all.count) darwin rows · C \(corelibs.all.count) corelibs rows")
     // To a FILE, named on the command line -- never to stdout. The board
     // reports above have already gone to stdout, and they should: a golden is
     // only trustworthy alongside the evidence that the run producing it was
