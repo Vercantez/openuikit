@@ -78,7 +78,7 @@ open class UIButton: UIControl {
     /// in Swift, so re-export the name).
     public typealias State = UIControl.State
 
-    public let buttonType: ButtonType
+    public private(set) var buttonType: ButtonType
     private let _titleLabel: UIButtonLabel
     private let _imageView: UIImageView
 
@@ -102,11 +102,23 @@ open class UIButton: UIControl {
             : UIColor(white: 0.52, alpha: 0.45)
     })
 
-    public init(type: ButtonType = .custom) {
-        buttonType = type
+    public override init(frame: CGRect) {
+        buttonType = .custom
         _titleLabel = UIButtonLabel()
         _imageView = UIImageView()
-        super.init(frame: .zero)
+        super.init(frame: frame)
+        configureButtonViews()
+    }
+
+    public required init?(coder: NSCoder) {
+        buttonType = .custom
+        _titleLabel = UIButtonLabel()
+        _imageView = UIImageView()
+        super.init(coder: coder)
+        configureButtonViews()
+    }
+
+    private func configureButtonViews() {
         isOpaque = false
         _titleLabel.font = .systemFont(ofSize: 15)
         // Real UIButton titles truncate in the middle (oracle-verified).
@@ -119,9 +131,9 @@ open class UIButton: UIControl {
         updateImageView()
     }
 
-    public convenience override init(frame: CGRect = .zero) {
-        self.init(type: .custom)
-        self.frame = frame
+    public convenience init(type: ButtonType) {
+        self.init(frame: .zero)
+        buttonType = type
     }
 
     // MARK: - Menus & primary action (M13)

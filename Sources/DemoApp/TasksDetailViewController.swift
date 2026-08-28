@@ -47,6 +47,9 @@ public final class PriorityOptionButton: UIControl {
         applySelection(animated: false)
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     public func setOn(_ on: Bool, animated: Bool) {
         guard on != isOn else { return }
         isOn = on

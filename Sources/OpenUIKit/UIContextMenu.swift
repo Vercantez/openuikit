@@ -264,8 +264,14 @@ public struct UIMenuLayout {
 /// compare.py prunes it the way it prunes UIKit's `_UIContextMenuView`.
 @preconcurrency @MainActor
 final class _UIContextMenuView: UIView {
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = UIMenuMetrics.platterFill
+        layer.cornerRadius = UIMenuMetrics.cornerRadius
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         backgroundColor = UIMenuMetrics.platterFill
         layer.cornerRadius = UIMenuMetrics.cornerRadius
     }
@@ -279,8 +285,14 @@ final class _UIContextMenuView: UIView {
 final class _UIContextMenuShadowView: UIView {
     var platterRect: CGRect = .zero
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         isUserInteractionEnabled = false
     }
@@ -340,8 +352,14 @@ final class _UIContextMenuGlyphView: UIView {
     var kind: Kind = .check
     var strokeColor: UIColor = UIMenuMetrics.titleColor
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         isUserInteractionEnabled = false
     }
@@ -417,6 +435,11 @@ final class _UIContextMenuCell: UIControl {
             glyphs.append(g)
         }
         isEnabled = !element.attributes.contains(.disabled)
+    }
+
+    @available(*, unavailable, message: "context-menu cells require a row layout")
+    required init?(coder: NSCoder) {
+        fatalError("context-menu cells cannot be decoded")
     }
 
     override func layoutSubviews() {

@@ -19,25 +19,33 @@ private final class CountingCell: UITableViewCell {
         CountingCell.created += 1
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
-/// Deliberately uses UIKit's ordinary non-required override spelling.  The
-/// reuse registry must still construct the dynamic subtype.
+/// Deliberately uses UIKit's ordinary non-required override spelling for the
+/// reuse initializer. The separate required coder path remains unavailable,
+/// as it is for a normal programmatic cell.
 private final class CountingHeader: UITableViewHeaderFooterView {
     static var created = 0
     override init(reuseIdentifier: String?) {
         CountingHeader.created += 1
         super.init(reuseIdentifier: reuseIdentifier)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 /// Grandchildren which add designated initializers must not be forced to
 /// implement an OpenUIKit-only required initializer. Real UIKit adds no such
-/// requirement to either reusable-view hierarchy.
+/// requirement to either reusable-view hierarchy. They do still satisfy
+/// UIView's UIKit-required coder initializer separately.
 private class GrandchildBaseCell: UITableViewCell {
     override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 private final class CustomGrandchildCell: GrandchildBaseCell {
@@ -46,12 +54,16 @@ private final class CustomGrandchildCell: GrandchildBaseCell {
         self.marker = marker
         super.init(style: .default, reuseIdentifier: nil)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 private class GrandchildBaseHeader: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 private final class CustomGrandchildHeader: GrandchildBaseHeader {
@@ -60,6 +72,8 @@ private final class CustomGrandchildHeader: GrandchildBaseHeader {
         self.marker = marker
         super.init(reuseIdentifier: nil)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor

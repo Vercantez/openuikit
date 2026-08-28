@@ -93,6 +93,9 @@ public final class CheckboxView: UIControl {
         applyCheckedState(animated: false)
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
         fill.center = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -199,6 +202,9 @@ public final class TaskCell: UITableViewCell {
         contentView.addSubview(dot)
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     /// Bind `task`. Called from `cellForRowAt` on both fresh and recycled
     /// cells, so every piece of visible state is assigned unconditionally.
     public func configure(_ task: TaskItem) {
@@ -288,6 +294,9 @@ public final class IconCell: UITableViewCell {
         accessoryType = .disclosureIndicator
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     public func configure(icon: IconGlyph, color: UIColor, title: String) {
         tile?.removeFromSuperview()
         let t = IconTile(glyph: icon, color: color)
@@ -324,6 +333,9 @@ public final class PlaceholderCell: UITableViewCell {
         textLabel.font = .systemFont(ofSize: 15)
         textLabel.textColor = .tertiaryLabel
     }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
 }
 
 // MARK: - Floating pill button
@@ -349,7 +361,7 @@ public final class PillButton: UIButton {
             return UIColor(red: c.red * k, green: c.green * k,
                            blue: c.blue * k, alpha: c.alpha)
         })
-        super.init(type: .custom)
+        super.init(frame: .zero)
         setTitle(title, for: .normal)
         setTitleColor(.white, for: .normal)
         setTitleColor(.white, for: .highlighted)
@@ -360,6 +372,9 @@ public final class PillButton: UIButton {
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 3)
     }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func layoutSubviews() {
         super.layoutSubviews()

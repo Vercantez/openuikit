@@ -582,10 +582,16 @@ What is NOT there:
   instantiates it, and Swift only allows that through a `required`
   initializer — so `UICollectionReusableView.init(frame:)` is `required` and
   UIKit's usual `override init(frame: CGRect)` becomes
-  `required init(frame: CGRect = .zero)`. Same shape as
+  `required init(frame: CGRect)`. Same shape as
   `UITableViewCell.init(style:reuseIdentifier:)`, and the same kind of
   source-level cost as the selector `ActionTable` (docs/OBJC_RUNTIME.md): a
   subclass that adds no custom initializer needs no change at all.
+- **Frame-only collection-view construction is an intentional compatibility
+  extension.** UIKit classifies `init(frame:)` as convenience but raises at
+  runtime when no layout is supplied. OpenUIKit's `UICollectionView()` and
+  `UICollectionView(frame:)` instead install a `UICollectionViewFlowLayout`,
+  preserving this project's preexisting source surface. Portable app code
+  should use `init(frame:collectionViewLayout:)` for UIKit-identical intent.
 - **A cell shows no selection by default**, exactly like UIKit: `isSelected`
   flips and `selectedBackgroundView` (nil unless the app sets it) is
   unhidden. Nothing is drawn otherwise, and there is no fade.
@@ -1247,18 +1253,18 @@ exercised and OpenUIKit does not fully honour.
   resolve, and the real-app harness compiles them verbatim. Residue is
   narrowed and listed above: `NSAttributedString`, `Notification`/
   `NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's.
-- **`UIView.init(coder:)` is a source-compatibility bridge, not archive
-  support.** The Foundation-invisible Mach-O guest build cannot put
-  `NSCoder` in OpenUIKit's public interface, so the superclass entry point is
-  spelled `init?(coder: AnyObject)`. It is deliberately non-required, ignores
-  its token, always succeeds, and initializes a zero-frame view. That lets a
-  code-only app subclass's concrete `init?(coder: NSCoder)` call `super`, but
-  it is not UIKit's exact ABI and no nib/storyboard/unarchiver state is read.
-  It also does not reproduce UIKit's initializer-inheritance corner: a
-  subclass that overrides `init(frame:)` and supplies the concrete `NSCoder`
-  initializer still cannot be constructed as `Subclass()` solely through
-  `UIView`'s defaulted frame argument. Focus's `AsyncImageView()` is the first
-  measured downstream instance of that separate gap.
+- **`UIView.init(coder:)` preserves UIKit's initializer contract, not archive
+  support.** `UIView` exposes the exact required `init?(coder: NSCoder)`
+  designated initializer and a distinct zero-argument convenience
+  initializer. Foundation-visible builds make OpenUIKit's `NSCoder` an alias
+  of `Foundation.NSCoder`; the Foundation-hidden Mach-O boundary aliases its
+  Foundation-shim spelling back to OpenUIKit's fallback class. App and
+  framework declarations therefore have one signature in both build modes.
+  A code-based subclass that overrides `init(frame:)` and implements the
+  required coder path inherits `init()` through ordinary Swift convenience-
+  initializer rules; Focus's unchanged `AsyncImageView()` is the regression
+  case. The coder token is still ignored, the view starts with zero geometry,
+  and no nib, storyboard, or unarchiver state is decoded.
 - **`#selector` and `@objc` do not compile off Darwin — and this is now the
   ONLY thing left in the real-app ledger.** Measured by reverting the vendored
   source to pristine upstream text: Linux emits *"error: Objective-C

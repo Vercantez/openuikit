@@ -75,8 +75,14 @@ final class UITableCellAccessoryView: UIView {
         didSet { if accessoryType != oldValue { setNeedsDisplay() } }
     }
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isUserInteractionEnabled = false
+        isOpaque = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isUserInteractionEnabled = false
         isOpaque = false
     }
@@ -248,12 +254,33 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Init
 
-    public init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+    public init(style: CellStyle, reuseIdentifier: String?) {
         self.style = style
         self.reuseIdentifier = reuseIdentifier
         super.init(frame: CGRect(x: 0, y: 0, width: 320,
                                  height: UITableViewCell.defaultRowHeight))
+        configureCell(for: style)
+    }
 
+    /// UIKit's legacy zero-argument cell keeps the standard 320 x 44 frame
+    /// of `init(style:reuseIdentifier:)`; it is not UIView's zero-frame path.
+    public convenience init() {
+        self.init(style: .default, reuseIdentifier: nil)
+    }
+
+    public override convenience init(frame: CGRect) {
+        _ = frame
+        self.init(style: .default, reuseIdentifier: nil)
+    }
+
+    public required init?(coder: NSCoder) {
+        style = .default
+        reuseIdentifier = nil
+        super.init(coder: coder)
+        configureCell(for: .default)
+    }
+
+    private func configureCell(for style: CellStyle) {
         textLabel.font = .systemFont(ofSize: 17)
         textLabel.textColor = .label
 
@@ -511,13 +538,27 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
     public init(reuseIdentifier: String?) {
         self.reuseIdentifier = reuseIdentifier
         super.init(frame: .zero)
+        configureContentView()
+    }
+
+    public required init?(coder: NSCoder) {
+        reuseIdentifier = nil
+        super.init(coder: coder)
+        configureContentView()
+    }
+
+    private func configureContentView() {
         contentView.addSubview(textLabel)
         addSubview(contentView)
     }
 
-    public convenience override init(frame: CGRect = .zero) {
+    public override convenience init(frame: CGRect) {
         self.init(reuseIdentifier: nil)
         self.frame = frame
+    }
+
+    public convenience init() {
+        self.init(reuseIdentifier: nil)
     }
 
     open func prepareForReuse() {
@@ -570,9 +611,13 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
 @_spi(OpenUIKitInternals)
 @preconcurrency @MainActor
 open class _UITableViewCellDynamicConstructor: UITableViewCell {
-    public required override init(style: CellStyle = .default,
-                                  reuseIdentifier: String? = nil) {
+    public required override init(style: CellStyle,
+                                  reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }
 
@@ -581,5 +626,9 @@ open class _UITableViewCellDynamicConstructor: UITableViewCell {
 open class _UITableViewHeaderFooterDynamicConstructor: UITableViewHeaderFooterView {
     public required override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

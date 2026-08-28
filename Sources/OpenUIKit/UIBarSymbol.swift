@@ -317,8 +317,14 @@ final class _BarSymbolView: UIView {
     var symbol: _BarSymbol? { didSet { setNeedsDisplay() } }
     var color: UIColor = .label { didSet { setNeedsDisplay() } }
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         isUserInteractionEnabled = false
     }

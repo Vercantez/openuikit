@@ -196,6 +196,8 @@ final class DescriptiveActionView: UIView {
          dismissAction: (() -> Void)? = nil) {
         super.init(frame: frame)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
     func actionWasAdded(vc: UIViewController) {}
 }
 
@@ -204,5 +206,7 @@ final class MultipleActionView: UIView {
          themeOverride: Theme.ThemeType? = nil) {
         super.init(frame: frame)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
     func actionWasAdded() {}
 }

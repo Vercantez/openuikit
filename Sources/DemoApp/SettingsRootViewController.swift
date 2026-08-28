@@ -65,6 +65,9 @@ final class ProfileCard: UIControl {
         addTarget(for: .touchUpInside) { [weak self] _, _ in self?.onTap?() }
     }
 
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         let h = bounds.height

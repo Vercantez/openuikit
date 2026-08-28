@@ -171,6 +171,9 @@ final class NavDemoRow: UIControl {
         addSubview(hairline)
     }
 
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         let t = titleLabel.intrinsicContentSize

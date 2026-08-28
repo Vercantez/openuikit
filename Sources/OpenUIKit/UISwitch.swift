@@ -75,13 +75,14 @@ open class UISwitch: UIControl {
     static let offRemovedLeft: (CGFloat) -> CGFloat = { p in 0.974 * p + 0.032 }
     static let offRemovedRight: (CGFloat) -> CGFloat = { p in 0.969 * p + 0.137 }
 
-    public init() {
-        super.init(frame: CGRect(origin: .zero, size: UISwitch.forcedSize))
-    }
-
     public override init(frame: CGRect) {
         // UIKit ignores the size and keeps the origin.
         super.init(frame: CGRect(origin: frame.origin, size: UISwitch.forcedSize))
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        frame = CGRect(origin: frame.origin, size: UISwitch.forcedSize)
     }
 
     public func setOn(_ on: Bool, animated: Bool) {

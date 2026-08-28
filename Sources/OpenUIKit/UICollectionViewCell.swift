@@ -66,8 +66,12 @@ open class UICollectionReusableView: UIView, ReusableView {
     /// identifier).
     var elementKind: String?
 
-    public required override init(frame: CGRect = .zero) {
+    public required override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     /// Reset before the view is handed back out. Override to clear content;
@@ -124,8 +128,17 @@ open class UICollectionViewCell: UICollectionReusableView {
     /// The collection view currently displaying this cell (set while bound).
     weak var collectionView: UICollectionView?
 
-    public required init(frame: CGRect = .zero) {
+    public required init(frame: CGRect) {
         super.init(frame: frame)
+        configureContentView()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureContentView()
+    }
+
+    private func configureContentView() {
         contentView.frame = bounds
         addSubview(contentView)
     }

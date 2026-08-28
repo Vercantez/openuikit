@@ -66,8 +66,12 @@ open class UIStackView: UIView {
 
     public private(set) var arrangedSubviews: [UIView] = []
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    public required init(coder: NSCoder) {
+        super.init(coder: coder)!
     }
 
     public func addArrangedSubview(_ view: UIView) {

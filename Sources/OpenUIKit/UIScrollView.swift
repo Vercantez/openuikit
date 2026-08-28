@@ -366,10 +366,21 @@ open class UIScrollView: UIView {
 
     public let panGestureRecognizer: UIPanGestureRecognizer
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         let pan = UIScrollViewPanGestureRecognizer()
         panGestureRecognizer = pan
         super.init(frame: frame)
+        configurePanGesture(pan)
+    }
+
+    public required init?(coder: NSCoder) {
+        let pan = UIScrollViewPanGestureRecognizer()
+        panGestureRecognizer = pan
+        super.init(coder: coder)
+        configurePanGesture(pan)
+    }
+
+    private func configurePanGesture(_ pan: UIScrollViewPanGestureRecognizer) {
         clipsToBounds = true // UIKit default for scroll views
         pan.scrollView = self
         pan.addTarget { [weak self] r in

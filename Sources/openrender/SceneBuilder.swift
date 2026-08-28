@@ -760,6 +760,8 @@ final class SceneCollectionCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 17)
         contentView.addSubview(label)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
         label.frame = contentView.bounds
@@ -776,6 +778,8 @@ final class SceneCollectionSupplementary: UICollectionReusableView {
         label.textColor = .secondaryLabel
         addSubview(label)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
         label.frame = CGRect(x: 16, y: 0, width: max(0, bounds.width - 32),

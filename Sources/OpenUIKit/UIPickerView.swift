@@ -220,6 +220,10 @@ open class UIPickerView: UIView {
                                 height: UIPickerView.defaultHeight))
     }
 
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: Model
 
     public var numberOfComponents: Int { rowCounts.count }

@@ -81,7 +81,7 @@ open class UIActivityIndicatorView: UIView {
     /// `OpenUIKitRuntime.animationTime` when the spin started.
     var animationStart: Double = 0
 
-    public init(style: Style = .medium) {
+    public init(style: Style) {
         self.style = style
         super.init(frame: CGRect(origin: .zero,
                                  size: UIActivityIndicatorView.metrics(style).sizeValue))
@@ -91,6 +91,12 @@ open class UIActivityIndicatorView: UIView {
     public override init(frame: CGRect) {
         self.style = .medium
         super.init(frame: frame)
+        isUserInteractionEnabled = false
+    }
+
+    public required init(coder: NSCoder) {
+        self.style = .medium
+        super.init(coder: coder)!
         isUserInteractionEnabled = false
     }
 

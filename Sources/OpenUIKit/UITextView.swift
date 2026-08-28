@@ -52,8 +52,14 @@ import Foundation
 final class UITextViewCanvasView: UIView {
     weak var owner: UITextView?
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         isUserInteractionEnabled = false
     }
@@ -191,8 +197,17 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// Preferred caret x (text space) preserved across up/down moves.
     var preferredCaretX: CGFloat?
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureTextCanvas()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureTextCanvas()
+    }
+
+    private func configureTextCanvas() {
         isOpaque = true
         backgroundColor = .systemBackground
         contentView.owner = self

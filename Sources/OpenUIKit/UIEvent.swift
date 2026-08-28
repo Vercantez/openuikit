@@ -174,7 +174,7 @@ open class UIWindow: UIView {
         }
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         UIApplication.shared._register(window: self)
     }
@@ -184,6 +184,11 @@ open class UIWindow: UIView {
     public init(windowScene: UIWindowScene) {
         super.init(frame: windowScene.screen.bounds)
         self.windowScene = windowScene
+        UIApplication.shared._register(window: self)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
         UIApplication.shared._register(window: self)
     }
 

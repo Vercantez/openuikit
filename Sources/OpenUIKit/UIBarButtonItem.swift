@@ -286,6 +286,11 @@ final class _UIBarButtonItemView: UIControl {
         applyColors()
     }
 
+    @available(*, unavailable, message: "bar button item views require a UIBarButtonItem")
+    required init?(coder: NSCoder) {
+        fatalError("bar button item views cannot be decoded")
+    }
+
     /// Foreground color: `label`, the item's own tint when it has one,
     /// `tertiaryLabel` when disabled, white on a prominent platter.
     var contentColor: UIColor {

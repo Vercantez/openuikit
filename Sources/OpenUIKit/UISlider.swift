@@ -79,8 +79,19 @@ open class UISlider: UIControl {
     public var maximumTrackTintColor: UIColor? { didSet { setNeedsDisplay() } }
     public var thumbTintColor: UIColor? { didSet { setNeedsDisplay() } }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    /// UIKit's plain slider starts at its legacy 100 x 34 control size.
+    /// Keep this distinct from an explicit `init(frame: .zero)` request.
+    public convenience init() {
+        self.init(frame: CGRect(x: 0, y: 0, width: 100,
+                                height: UISlider.intrinsicHeight))
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     public func setValue(_ v: Float, animated: Bool = false) {

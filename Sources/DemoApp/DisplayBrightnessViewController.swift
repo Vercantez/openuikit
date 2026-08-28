@@ -66,6 +66,9 @@ public final class BrightnessSlider: UIControl {
         addGestureRecognizer(pan)
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     var trackWidth: CGFloat {
         bounds.width - BrightnessSlider.thumbSize
     }
@@ -111,6 +114,9 @@ final class SunIconView: UIView {
         isOpaque = false
         isUserInteractionEnabled = false
     }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
         let gray = UIColor.systemGray2.resolvedCGColor(with: traitCollection)

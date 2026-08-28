@@ -49,7 +49,7 @@ public final class TasksRootViewController: UIViewController,
 
     // MARK: Views
 
-    public let tableView = UITableView(style: .insetGrouped)
+    public let tableView = UITableView(frame: .zero, style: .insetGrouped)
     var addButton: PillButton!
 
     // MARK: State

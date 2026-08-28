@@ -233,8 +233,17 @@ open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHos
     /// Horizontal scroll of overflowing text (points, >= 0).
     public internal(set) var textScrollOffset: CGFloat = 0
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureTextFieldViews()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureTextFieldViews()
+    }
+
+    private func configureTextFieldViews() {
         isOpaque = false
         backgroundView.isUserInteractionEnabled = false
         canvasView.isUserInteractionEnabled = false

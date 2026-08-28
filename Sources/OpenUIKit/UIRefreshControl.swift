@@ -89,8 +89,14 @@ open class UIRefreshControl: UIControl {
     }
 
     public convenience init() {
-        self.init(frame: CGRect(x: 0, y: 0, width: 0,
+        self.init(frame: CGRect(x: 0, y: 0, width: 320,
                                 height: UIRefreshControl.controlHeight))
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        isHidden = true
+        isUserInteractionEnabled = false
     }
 
     /// True while this control is holding the scroll view's top inset open

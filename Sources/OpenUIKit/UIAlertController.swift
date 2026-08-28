@@ -171,8 +171,14 @@ public enum UIScreenMetrics {
 /// entirely in `UIAlertController._layoutCard`.
 @preconcurrency @MainActor
 final class _UIAlertCardView: UIView {
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = UIAlertMetrics.cardFill
+        layer.cornerRadius = UIAlertMetrics.cardCornerRadius
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         backgroundColor = UIAlertMetrics.cardFill
         layer.cornerRadius = UIAlertMetrics.cardCornerRadius
     }
@@ -197,8 +203,14 @@ final class _UIAlertShadowView: UIView {
     var cardRect: CGRect = .zero
     var cornerRadius: CGFloat = UIAlertMetrics.cardCornerRadius
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         isUserInteractionEnabled = false
     }
@@ -269,6 +281,11 @@ final class _UIAlertActionView: UIControl {
         label.text = action.title
         addSubview(label)
         applyStyle()
+    }
+
+    @available(*, unavailable, message: "alert action views require a UIAlertAction")
+    required init?(coder: NSCoder) {
+        fatalError("alert action views cannot be decoded")
     }
 
     func applyStyle() {

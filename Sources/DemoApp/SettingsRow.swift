@@ -114,6 +114,9 @@ public final class SettingsRow: UIControl {
         }
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     private func addChevron() {
         let c = UILabel()
         c.text = "\u{203A}" // ›
@@ -206,6 +209,9 @@ public final class GroupCard: UIView {
             addSubview(row)
         }
     }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
 }
 
 /// A grouped-table section header ("GENERAL" style: 13pt, secondaryLabel,

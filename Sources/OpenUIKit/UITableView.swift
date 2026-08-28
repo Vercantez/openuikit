@@ -119,8 +119,14 @@ public extension UITableViewDelegate {
 /// name: compare.py skips the subtree (real UIKit's internals differ).
 @preconcurrency @MainActor
 final class UITableViewCardView: UIView {
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isUserInteractionEnabled = false
+        backgroundColor = .secondarySystemGroupedBackground
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isUserInteractionEnabled = false
         backgroundColor = .secondarySystemGroupedBackground
     }
@@ -245,9 +251,27 @@ open class UITableView: UIScrollView {
 
     // MARK: Init
 
-    public init(frame: CGRect = .zero, style: Style = .plain) {
+    public init(frame: CGRect, style: Style) {
         self.style = style
         super.init(frame: frame)
+        configureStyle(style)
+    }
+
+    public override convenience init(frame: CGRect) {
+        self.init(frame: frame, style: .plain)
+    }
+
+    public convenience init() {
+        self.init(frame: .zero, style: .plain)
+    }
+
+    public required init?(coder: NSCoder) {
+        style = .plain
+        super.init(coder: coder)
+        configureStyle(.plain)
+    }
+
+    private func configureStyle(_ style: Style) {
         switch style {
         case .plain:
             backgroundColor = .systemBackground
@@ -255,10 +279,6 @@ open class UITableView: UIScrollView {
             backgroundColor = .systemGroupedBackground
         }
         alwaysBounceVertical = true
-    }
-
-    public override convenience init(frame: CGRect = .zero) {
-        self.init(frame: frame, style: .plain)
     }
 
     // MARK: Section metrics (prefix sums)

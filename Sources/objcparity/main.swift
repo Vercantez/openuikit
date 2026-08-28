@@ -35,6 +35,9 @@ final class CardView: UIView {
         addSubview(bodyLabel)
     }
 
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         layoutPasses += 1

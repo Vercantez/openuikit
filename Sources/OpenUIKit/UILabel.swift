@@ -105,8 +105,17 @@ open class UILabel: UIView {
         return AttributedTextLayout.flatten(a, defaultFont: font, defaultColor: textColor)
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureDefaults()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureDefaults()
+    }
+
+    private func configureDefaults() {
         isOpaque = false
         // UIKit: labels do not receive touches by default.
         isUserInteractionEnabled = false

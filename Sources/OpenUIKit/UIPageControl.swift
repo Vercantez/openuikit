@@ -75,8 +75,12 @@ open class UIPageControl: UIControl {
     public var pageIndicatorTintColor: UIColor? { didSet { setNeedsDisplay() } }
     public var currentPageIndicatorTintColor: UIColor? { didSet { setNeedsDisplay() } }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     /// UIKit's sizing helper (independent of the current page count).

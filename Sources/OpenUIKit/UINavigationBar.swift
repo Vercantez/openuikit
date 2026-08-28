@@ -71,6 +71,11 @@ final class _UINavigationBarBackButton: UIControl {
         addSubview(backLabel)
     }
 
+    @available(*, unavailable, message: "navigation-bar back buttons require a title and tint color")
+    required init?(coder: NSCoder) {
+        fatalError("navigation-bar back buttons cannot be decoded")
+    }
+
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let c = chevron.intrinsicContentSize
         let t = backLabel.intrinsicContentSize
@@ -273,10 +278,21 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         return topItem?.standardAppearance ?? standardAppearance
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         titleLabel = UINavigationBar.makeTitleLabel(nil)
         hairline = UIView()
         super.init(frame: frame)
+        configureBar()
+    }
+
+    public required init?(coder: NSCoder) {
+        titleLabel = UINavigationBar.makeTitleLabel(nil)
+        hairline = UIView()
+        super.init(coder: coder)
+        configureBar()
+    }
+
+    private func configureBar() {
         if let proxy = Self._appearanceProxy {
             standardAppearance = proxy.standardAppearance
             scrollEdgeAppearance = proxy.scrollEdgeAppearance

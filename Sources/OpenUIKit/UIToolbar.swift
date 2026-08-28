@@ -62,8 +62,17 @@ public final class UIToolbar: UIView, _UIBarItemContainer {
     let hairline = UIView()
     var itemViews: [_UIBarButtonItemView] = []
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureChrome()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureChrome()
+    }
+
+    private func configureChrome() {
         isOpaque = false
         background.isUserInteractionEnabled = false
         hairline.isUserInteractionEnabled = false

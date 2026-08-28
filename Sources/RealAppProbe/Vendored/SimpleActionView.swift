@@ -30,12 +30,10 @@ class SimpleActionView: UIView {
     // M15: RESTORED to the app's original text. `NSCoder` is Foundation's and
     // the target imports Foundation again, so the type resolves. It is still
     // `@available(*, unavailable)` in the app and is never called — OpenUIKit
-    // has no archiving. `UIView` now exposes a non-required
-    // `init?(coder: AnyObject)` compatibility path, because the
-    // Foundation-invisible guest build cannot name `NSCoder`; this exact
-    // `NSCoder` spelling therefore remains a NEW required overload rather
-    // than an override. It is a partial win: the line is unmodified, but the
-    // archiving behind it does not exist.
+    // has no archiving. OpenUIKit aliases Foundation's exact NSCoder identity
+    // (and the Foundation-hidden app shim aliases OpenUIKit's fallback), so
+    // this is the required UIView override it is on UIKit rather than a
+    // similarly named overload.
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

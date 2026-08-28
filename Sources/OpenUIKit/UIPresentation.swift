@@ -190,8 +190,15 @@ public final class _UISheetGrabber: UIView {
         return UIColor(red: 0.4706, green: 0.4706, blue: 0.502, alpha: a)
     })
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        isUserInteractionEnabled = false
+        backgroundColor = _UISheetGrabber.fill
+        layer.cornerRadius = _UISheetGrabber.height / 2
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isUserInteractionEnabled = false
         backgroundColor = _UISheetGrabber.fill
         layer.cornerRadius = _UISheetGrabber.height / 2
@@ -504,8 +511,14 @@ final class _UIPageSheetView: UIView {
     }
     var settle: Settle?
 
-    override init(frame: CGRect = .zero) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+        isOpaque = false
+        clipsToBounds = false
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isOpaque = false
         clipsToBounds = false
     }

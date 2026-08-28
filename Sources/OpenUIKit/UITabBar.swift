@@ -80,6 +80,11 @@ final class _UITabBarItemView: UIControl {
         addSubview(titleLabel)
     }
 
+    @available(*, unavailable, message: "tab-bar item views require a UITabBarItem")
+    required init?(coder: NSCoder) {
+        fatalError("tab-bar item views cannot be decoded")
+    }
+
     /// Recolor icon + title. The icon is the item image's alpha channel
     /// flattened to `color` (template rendering).
     func apply(color: UIColor) {
@@ -154,8 +159,17 @@ public final class UITabBar: UIView {
     let capsule = UIView()
     var itemViews: [_UITabBarItemView] = []
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureChrome()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureChrome()
+    }
+
+    private func configureChrome() {
         isOpaque = false
         platter.backgroundColor = UITabBar.platterColor
         platter.layer.cornerRadius = UITabBar.platterHeight / 2

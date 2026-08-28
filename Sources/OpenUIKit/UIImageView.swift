@@ -51,8 +51,13 @@ open class UIImageView: UIView {
         isUserInteractionEnabled = false
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        isUserInteractionEnabled = false
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
         isUserInteractionEnabled = false
     }
 

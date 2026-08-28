@@ -53,8 +53,17 @@ open class UIProgressView: UIView {
     public var progressTintColor: UIColor?
     public var trackTintColor: UIColor?
 
-    public override init(frame: CGRect = .zero) {
-        super.init(frame: frame)
+    public override init(frame: CGRect) {
+        var normalizedFrame = frame
+        normalizedFrame.size.height = UIProgressView.barHeight
+        super.init(frame: normalizedFrame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        var normalizedFrame = frame
+        normalizedFrame.size.height = UIProgressView.barHeight
+        frame = normalizedFrame
     }
 
     public override var intrinsicContentSize: CGSize {

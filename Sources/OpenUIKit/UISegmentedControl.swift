@@ -92,8 +92,12 @@ open class UISegmentedControl: UIControl {
         for t in items { insertSegment(withTitle: t, at: titles.count, animated: false) }
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     public var numberOfSegments: Int { titles.count }

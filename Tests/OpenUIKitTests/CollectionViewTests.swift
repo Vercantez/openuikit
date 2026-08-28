@@ -494,6 +494,8 @@ private final class CountingItemCell: UICollectionViewCell {
         CountingItemCell.created += 1
         super.init(frame: frame)
     }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 @MainActor
@@ -614,10 +616,14 @@ final class CollectionViewReuseTests: XCTestCase {
 @MainActor
 private final class HeaderView: UICollectionReusableView {
     required init(frame: CGRect = .zero) { super.init(frame: frame) }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 @MainActor
 private final class FooterView: UICollectionReusableView {
     required init(frame: CGRect = .zero) { super.init(frame: frame) }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
 }
 
 // MARK: - 3. Behaviour

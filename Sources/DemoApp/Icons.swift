@@ -307,6 +307,9 @@ public final class IconTile: UIView {
         isOpaque = false
     }
 
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) { fatalError() }
+
     public override func drawContent(in canvas: Canvas, bounds: CGRect) {
         let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
         let tile = (backgroundColor ?? .black).resolvedCGColor(with: traitCollection)

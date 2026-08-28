@@ -399,28 +399,24 @@ open class UIView: UIResponder {
     }
     var _tintColor: UIColor?
 
-    public init(frame: CGRect = .zero) {
+    public init(frame: CGRect) {
         super.init()
         self.frame = frame
     }
 
+    /// UIKit exposes a real zero-argument convenience initializer in addition
+    /// to `init(frame:)`.  It cannot be modeled as a default argument on the
+    /// designated frame initializer: default arguments are not inherited when
+    /// a subclass overrides `init(frame:)`, while convenience initializers are.
+    public convenience override init() {
+        self.init(frame: .zero)
+    }
+
     /// Source-compatible entry point for code-based UIKit views that carry
-    /// the required `init?(coder: NSCoder)` boilerplate.
-    ///
-    /// OpenUIKit does not decode Interface Builder archives.  More
-    /// importantly, its Mach-O guest build deliberately compiles with the
-    /// Foundation module hidden, so this declaration cannot name
-    /// `Foundation.NSCoder`.  Accepting an opaque class token lets an app's
-    /// concrete `NSCoder` initializer call this designated superclass
-    /// initializer without adding Foundation to the portable library.  The
-    /// class constraint preserves NSCoder's reference-type boundary without
-    /// pretending OpenUIKit implements its decoding protocol.
-    ///
-    /// The token is intentionally ignored and the view starts with the same
-    /// zero geometry and property defaults as `init(frame: .zero)`.  The
-    /// initializer is failable only to preserve UIKit's call-site shape; the
-    /// compatibility path itself never returns nil.
-    public init?(coder: AnyObject) {
+    /// the required `init?(coder: NSCoder)` boilerplate.  OpenUIKit does not
+    /// decode Interface Builder archives; this initializer only preserves the
+    /// framework initializer contract and starts with zero geometry.
+    public required init?(coder: NSCoder) {
         _ = coder
         super.init()
         self.frame = .zero

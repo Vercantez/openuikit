@@ -141,6 +141,8 @@ final class StackViewTests: XCTestCase {
             size = CGSize(width: w, height: h)
             super.init(frame: .zero)
         }
+        @available(*, unavailable)
+        required init?(coder: NSCoder) { fatalError() }
         override var intrinsicContentSize: CGSize { size }
         override func sizeThatFits(_ s: CGSize) -> CGSize { size }
     }

@@ -240,8 +240,17 @@ open class UISearchBar: UIView {
         }
     }
 
-    public override init(frame: CGRect = .zero) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        configureSearchField()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureSearchField()
+    }
+
+    private func configureSearchField() {
         // Measured: the field's font is system MEDIUM 17, not regular.
         searchTextField.font = .systemFont(ofSize: 17, weight: .medium)
         // Measured: black / white at alpha 0.25, not `placeholderText`.

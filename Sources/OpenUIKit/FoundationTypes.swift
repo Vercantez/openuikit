@@ -107,6 +107,12 @@ public typealias NSRangePointer = Foundation.NSRangePointer
 /// host tick timestamp, not a wall clock — the UNIT is all that is shared.
 public typealias TimeInterval = Foundation.TimeInterval
 
+/// Foundation's keyed-archive decoder base class.  UIKit's view initializer
+/// names this exact type; keeping the alias in OpenUIKit's namespace lets an
+/// app import Foundation and OpenUIKit together without creating a second
+/// initializer signature.
+public typealias NSCoder = Foundation.NSCoder
+
 // MARK: - Bundle
 
 /// Foundation's resource bundle type. UIViewController's nib initializer
@@ -115,10 +121,20 @@ public typealias Bundle = Foundation.Bundle
 
 #else
 
+/// Foundation-free identity used by UIKit's required coder initializers.
+/// The Mach-O app-path Foundation shim aliases its `NSCoder` spelling back to
+/// this class so framework and application declarations keep one signature.
+/// No archive decoding is implemented by this compatibility type.
+open class NSCoder {
+    public init() {}
+}
+
 /// Foundation-free renderer builds still compile the complete OpenUIKit
 /// module. They cannot load resources or nibs, but they need the identity and
 /// `main` spelling carried by UIViewController's public initializer surface.
-/// A real application build compiles the branch above against Foundation.
+/// Foundation-visible package builds use the aliases above; a
+/// Foundation-hidden guest app uses these fallback identities at the shared
+/// framework/application boundary.
 public final class Bundle: @unchecked Sendable {
     public static let main = Bundle()
     private init() {}

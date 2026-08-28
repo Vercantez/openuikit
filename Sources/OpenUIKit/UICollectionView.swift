@@ -220,16 +220,34 @@ open class UICollectionView: UIScrollView {
 
     // MARK: Init
 
-    public init(frame: CGRect = .zero, collectionViewLayout layout: UICollectionViewLayout) {
+    public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         collectionViewLayout = layout
         super.init(frame: frame)
+        configureCollectionView(with: layout)
+    }
+
+    /// Compatibility extension: UIKit classifies this as convenience too,
+    /// but raises at runtime without an explicit layout. OpenUIKit supplies a
+    /// flow layout for its long-standing zero/frame-only source surface.
+    public override convenience init(frame: CGRect) {
+        self.init(frame: frame, collectionViewLayout: UICollectionViewFlowLayout())
+    }
+
+    public convenience init() {
+        self.init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    }
+
+    public required init?(coder: NSCoder) {
+        let layout = UICollectionViewFlowLayout()
+        collectionViewLayout = layout
+        super.init(coder: coder)
+        configureCollectionView(with: layout)
+    }
+
+    private func configureCollectionView(with layout: UICollectionViewLayout) {
         layout.collectionView = self
         backgroundColor = .systemBackground
         alwaysBounceVertical = false
-    }
-
-    public override convenience init(frame: CGRect = .zero) {
-        self.init(frame: frame, collectionViewLayout: UICollectionViewFlowLayout())
     }
 
     // MARK: Counts (cached; the layout asks for them once per prepare)

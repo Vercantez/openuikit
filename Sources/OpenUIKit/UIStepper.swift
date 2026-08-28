@@ -97,6 +97,10 @@ open class UIStepper: UIControl {
         self.init(frame: CGRect(origin: .zero, size: UIStepper.intrinsicSize))
     }
 
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     open override var intrinsicContentSize: CGSize { UIStepper.intrinsicSize }
     open override func sizeThatFits(_ size: CGSize) -> CGSize { UIStepper.intrinsicSize }
 
