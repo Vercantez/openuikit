@@ -1,0 +1,201 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	objectVersion = 55;
+	objects = {
+		000000000000000000000001 = {
+			isa = PBXProject;
+			mainGroup = 000000000000000000000002;
+			targets = (
+				AAAAAAAAAAAAAAAAAAAAAAAA,
+				BBBBBBBBBBBBBBBBBBBBBBBB,
+			);
+		};
+		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000003 /* App */,
+				000000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000001 /* Source.swift */,
+				100000000000000000000002 /* Generated.swift */,
+				100000000000000000000003 /* Intents.intentdefinition */,
+				100000000000000000000005 /* Resource.txt */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		000000000000000000000004 = {
+			isa = PBXGroup;
+			children = (
+				100000000000000000000006 /* Mini.app */,
+				100000000000000000000007 /* Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		100000000000000000000001 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Source.swift;
+			sourceTree = "<group>";
+		};
+		100000000000000000000002 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Generated.swift;
+			sourceTree = "<group>";
+		};
+		100000000000000000000003 = {
+			isa = PBXVariantGroup;
+			children = (
+				100000000000000000000004 /* Base */,
+			);
+			name = Intents.intentdefinition;
+			sourceTree = "<group>";
+		};
+		100000000000000000000004 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file.intentdefinition;
+			name = Base;
+			path = Base.lproj/Intents.intentdefinition;
+			sourceTree = "<group>";
+		};
+		100000000000000000000005 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = Resource.txt;
+			sourceTree = "<group>";
+		};
+		100000000000000000000006 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			path = Mini.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		100000000000000000000007 = {
+			isa = PBXFileReference;
+			explicitFileType = "wrapper.app-extension";
+			path = Extension.appex;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		200000000000000000000001 = {isa = PBXBuildFile; fileRef = 100000000000000000000001; };
+		200000000000000000000002 = {isa = PBXBuildFile; fileRef = 100000000000000000000002; };
+		200000000000000000000003 = {isa = PBXBuildFile; fileRef = 100000000000000000000003; };
+		200000000000000000000004 = {isa = PBXBuildFile; productRef = 600000000000000000000001; };
+		200000000000000000000005 = {isa = PBXBuildFile; fileRef = 100000000000000000000005; };
+		200000000000000000000006 = {
+			isa = PBXBuildFile;
+			fileRef = 100000000000000000000007;
+			settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); };
+		};
+		300000000000000000000001 = {
+			isa = PBXShellScriptBuildPhase;
+			files = ();
+			inputPaths = ();
+			name = "Run Script (Copy Wordmark)";
+			outputPaths = ();
+			shellPath = /bin/sh;
+			shellScript = "test \"$PRODUCT_NAME\" && test \"$SRCROOT\"\n";
+		};
+		300000000000000000000002 = {
+			isa = PBXShellScriptBuildPhase;
+			files = ();
+			inputPaths = ();
+			name = "Run Swiftlint";
+			outputPaths = ();
+			shellPath = /bin/sh;
+			shellScript = "\n";
+		};
+		300000000000000000000003 = {
+			isa = PBXShellScriptBuildPhase;
+			files = ();
+			inputPaths = ("$(SRCROOT)/App/Input.yaml", );
+			name = Glean;
+			outputPaths = ("$(SRCROOT)/App/Generated.swift", );
+			shellPath = /bin/sh;
+			shellScript = "bash $PWD/generate.sh\n";
+		};
+		300000000000000000000004 = {
+			isa = PBXShellScriptBuildPhase;
+			files = ();
+			inputFileListPaths = ();
+			inputPaths = ("$(SOURCE_ROOT)/nimbus.fml.yaml", );
+			name = "Nimbus Feature Manifest Generator Script";
+			outputFileListPaths = ();
+			outputPaths = ("$(SRCROOT)/$(PROJECT)/Other.swift", );
+			shellPath = /bin/sh;
+			shellScript = "test $ACTION && test $SOURCE_ROOT\n";
+		};
+		300000000000000000000005 = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				200000000000000000000001,
+				200000000000000000000002,
+				200000000000000000000003,
+			);
+		};
+		300000000000000000000006 = {
+			isa = PBXFrameworksBuildPhase;
+			files = (200000000000000000000004, );
+		};
+		300000000000000000000007 = {
+			isa = PBXResourcesBuildPhase;
+			files = (200000000000000000000005, );
+		};
+		300000000000000000000008 = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (200000000000000000000006, );
+			name = "Embed App Extensions";
+		};
+		400000000000000000000001 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (400000000000000000000002, );
+		};
+		400000000000000000000002 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {};
+			name = FocusDebug;
+		};
+		500000000000000000000001 = {
+			isa = PBXTargetDependency;
+			target = BBBBBBBBBBBBBBBBBBBBBBBB;
+		};
+		600000000000000000000001 = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LocalKit;
+		};
+		AAAAAAAAAAAAAAAAAAAAAAAA = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 400000000000000000000001;
+			buildPhases = (
+				300000000000000000000001,
+				300000000000000000000002,
+				300000000000000000000003,
+				300000000000000000000004,
+				300000000000000000000005,
+				300000000000000000000006,
+				300000000000000000000007,
+				300000000000000000000008,
+			);
+			buildRules = ();
+			dependencies = (500000000000000000000001, );
+			name = Blockzilla;
+			packageProductDependencies = (600000000000000000000001, );
+			productReference = 100000000000000000000006;
+			productType = "com.apple.product-type.application";
+		};
+		BBBBBBBBBBBBBBBBBBBBBBBB = {
+			isa = PBXNativeTarget;
+			name = Extension;
+		};
+	};
+	rootObject = 000000000000000000000001;
+}

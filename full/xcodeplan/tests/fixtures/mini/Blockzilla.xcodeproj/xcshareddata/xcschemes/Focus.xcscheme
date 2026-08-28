@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme version="1.7">
+  <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
+    <BuildActionEntries>
+      <BuildActionEntry buildForTesting="YES" buildForRunning="YES"
+                        buildForProfiling="YES" buildForArchiving="YES"
+                        buildForAnalyzing="YES">
+        <BuildableReference BuildableIdentifier="primary"
+                            BlueprintIdentifier="AAAAAAAAAAAAAAAAAAAAAAAA"
+                            BuildableName="Mini.app"
+                            BlueprintName="Blockzilla"
+                            ReferencedContainer="container:Blockzilla.xcodeproj" />
+      </BuildActionEntry>
+    </BuildActionEntries>
+  </BuildAction>
+  <LaunchAction buildConfiguration="FocusDebug">
+    <BuildableProductRunnable runnableDebuggingMode="0">
+      <BuildableReference BuildableIdentifier="primary"
+                          BlueprintIdentifier="AAAAAAAAAAAAAAAAAAAAAAAA"
+                          BuildableName="Mini.app"
+                          BlueprintName="Blockzilla"
+                          ReferencedContainer="container:Blockzilla.xcodeproj" />
+    </BuildableProductRunnable>
+  </LaunchAction>
+</Scheme>
