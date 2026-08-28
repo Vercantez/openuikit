@@ -7,8 +7,8 @@
 # macOS run. Regenerating them from the Linux side would make every test
 # tautological.
 #
-# Both tests are real differentials: t1_objc.m picks up Apple's
-# Foundation/CoreFoundation here via __has_include, and t2_bridge.swift is
+# Every test is a real differential: t1_objc.m picks up Apple's
+# Foundation/CoreFoundation here via __has_include, while the Swift probes are
 # ordinary Foundation API, so the same sources run on both sides.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -28,6 +28,15 @@ xcrun --sdk macosx swiftc -O -target arm64-apple-macos13.0 \
   tests/t2_bridge.swift -o "$TMP/t2_bridge"
 "$TMP/t2_bridge" > "$OUT/t2_bridge.txt"
 
-for f in "$OUT"/t1_objc.txt "$OUT"/t2_bridge.txt; do
+T22_APP="$TMP/FocusBundleProbe.app"
+mkdir -p "$T22_APP"
+cp tests/fixtures/t22/Info.plist "$T22_APP/Info.plist"
+cp tests/fixtures/t22/launch_probe.txt "$T22_APP/launch_probe.txt"
+xcrun --sdk macosx swiftc -O -target arm64-apple-macos13.0 \
+  tests/t22_bundle_resource.swift -o "$T22_APP/FocusBundleProbe"
+"$T22_APP/FocusBundleProbe" > "$OUT/t22_bundle_resource.txt"
+
+for f in "$OUT"/t1_objc.txt "$OUT"/t2_bridge.txt \
+         "$OUT"/t22_bundle_resource.txt; do
   echo "--- $f ---"; cat "$f"
 done

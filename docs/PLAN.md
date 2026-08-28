@@ -86,6 +86,12 @@ Bundle first; then Timer, RunLoop, Notification/NotificationCenter; then Process
 Pipe, Thread, Operation/OperationQueue, UserDefaults. RunLoop and Process touch
 machorun's syscall surface and should get slack.
 
+**Focus vertical slice (2026-08-28):** the first Bundle subset now runs in a
+flat `.app` as a real Mach-O guest: `Bundle.main` and String-valued resource
+path lookup, Apple-differential positive plus mutation and missing-runtime
+controls. See `docs/BUNDLE_GUEST.md`. URL-valued lookup, Info.plist metadata,
+localisation and arbitrary bundles remain explicit gaps.
+
 ### M6 — formatters and ICU *(deferred, off the critical path)*
 DateFormatter, NumberFormatter, Locale, Calendar, CharacterSet, collation. 21 CF
 files touch ICU. The app census shows 2 uses each of Locale/DateFormatter/Calendar

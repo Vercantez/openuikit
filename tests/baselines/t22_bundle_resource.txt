@@ -1,0 +1,6 @@
+bundle=FocusBundleProbe.app
+resource=launch_probe.txt
+bytes=23
+content=focus-bundle-oracle-v1
+missing=nil
+PASS

@@ -22,11 +22,15 @@ mkdir -p "$W/obj" "$W/swiftmodule" "$W/root/darwin/usr/lib"
 echo "==> compiling Foundation overlay"
 # -parse-as-library: no top-level code. -O: avoids needing SwiftOnoneSupport,
 # which we did not build (same constraint as swiftcore-macho's run harness).
+# -whole-module-optimization is also structural now that the overlay has more
+# than one source: it makes swiftc emit the single Foundation.o this link step
+# owns. Without it `-c file1 file2 -o Foundation.o` is an invalid request.
 swiftc -c -target $TRIPLE -sdk "$SDK" \
-  -module-name Foundation -parse-as-library -O \
+  -module-name Foundation -parse-as-library -O -whole-module-optimization \
   -I "$W/swiftmodule" \
   -emit-module -emit-module-path "$W/swiftmodule/Foundation.swiftmodule" \
-  "$R/src/overlay/Foundation.swift" -o "$W/obj/Foundation.o"
+  "$R/src/overlay/Foundation.swift" "$R/src/overlay/Bundle.swift" \
+  -o "$W/obj/Foundation.o"
 
 echo "==> linking libFoundation.dylib"
 # -lswiftCore BEFORE -lSystem: machorun binds flat in load order and its
