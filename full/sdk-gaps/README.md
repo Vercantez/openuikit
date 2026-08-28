@@ -274,3 +274,96 @@ exactly how `complex.h` and `sys/attr.h` were found. The measurement above bound
 the work; it does not prove the modules build. The next step is to generate the
 pruned modulemap and compile `import Darwin` against it, which needs no
 swift-foundation checkout and is the cheapest possible test of the whole chain.
+
+---
+
+## THE LIST AFTER THE MODULE ACTUALLY BUILT (foundation-port, 2026-08-27)
+
+FoundationEssentials compiles whole -- 202 files, 0 errors, a 12 MB Mach-O with
+19,776 defined external symbols. Getting there added gaps to this list and, more
+usefully, **split them by whether the implementation already exists**, which is
+the difference between a five-minute header copy and a project.
+
+### Declaration only -- libSystem ALREADY exports these
+
+| header | symbols already exported | note |
+|---|---|---|
+| `sysdir.h` (79 lines) | `_sysdir_start_search_path_enumeration`, `_sysdir_get_next_search_path_enumeration` | `FileManager+DarwinSearchPaths.swift` does `import Darwin.sysdir` |
+| `pwd.h` | `getpwnam_r`, `getpwuid_r` | |
+
+### Header AND implementation absent -- these fail at the LINK
+
+`copyfile.h` (copyfile, fcopyfile) · `removefile.h` (removefile, removefile_state_*)
+· `fts.h` (fts_open/read/close/set) · `sys/xattr.h` ({get,set,list,fget,fset}xattr)
+· `grp.h` (getgrnam_r, getgrgid_r) · `sys/utsname.h` (uname) · `sys/quota.h`
+(quotactl) · and `vm_copy`, which machorun's `mach/vm_map.h` does not declare
+(it has allocate/deallocate/protect/remap) and libSystem does not export.
+
+All 108 pre-staging errors were confined to nine files. **Zero in URL, JSON,
+Codable, String, Calendar, Locale, TimeZone, Decimal, Predicate,
+AttributedString, Formatting.** `full/foundation/stage_fe_sysroot.sh` stages
+the eight from Xcode into the gitignored sysroot to measure past them; that is
+a measurement, not a fix.
+
+Beyond FileManager, the link also wants **`abs`, `labs`, `strncasecmp_l`** and
+the three `uuid_*` entry points -- plain libc that libSystem's 674 exports do
+not include. `full/foundation/fm_unimplemented.c` covers all 36.
+
+### A fifth artifact class: **API NOTES**
+
+`Date.swift:239` failed with "cannot find 'CLOCK_REALTIME' in scope" while the
+macro sat in `<_time.h>` byte-identical to Apple's, in module
+`_DarwinFoundation2._time`, compiling fine from C. **`CLOCK_REALTIME` in Swift
+is not the C macro** -- it is an API-notes rename of the enumerator
+`_CLOCK_REALTIME`, declared in `_DarwinFoundation2.apinotes`. ClangImporter does
+not import a `#define` that aliases an enumerator.
+
+`stage_objc_module.sh` already knew this class and staged exactly one of the
+five sidecars Apple ships (ObjectiveC, `_DarwinFoundation2`, Dispatch, os, XPC).
+**A modulemap generator that stages headers and modulemaps is not finished:
+a missing sidecar presents as "cannot find X in scope" for a symbol that is
+demonstrably present in C.**
+
+### The `os` module: three separate absences, not one
+
+Route (A) makes `canImport(Darwin)` TRUE, which turns on `internal import os`
+in 14 FoundationEssentials files -- 2 of them with **no os-less fallback**
+(`Calendar/Calendar.swift`, `String/String+Path.swift`, which reference nothing
+from `os` and use it purely as the Darwin spelling of "pull in libc").
+
+Apple's `os` overlay is unavailable three ways, each measured: (1) the Clang
+module `os` is undeclared and nine headers short (`os/log.h`, `os/atomic.h`,
+`os/trace_base.h`, `os/activity.h`, `os/signpost.h`, `os/trace.h`, and three
+`_modules/_os_*.h`); (2) staging all nine from Xcode still fails inside
+`os_workgroup` -- "unexpected type name 'OS_object'", 11x "unknown type name
+'os_workgroup_t'"; (3) `libswiftos.dylib` does not exist for this target and
+**libSystem exports zero `_os_log*`** -- the whole `os_unfair_lock` family and
+nothing else beginning `os_`. `full/foundation/os-module/` supplies the three
+declarations the port actually uses instead.
+
+### Swift RUNTIME dylibs, which are not an SDK gap but block the guest
+
+The linked Mach-O oracle runner needs four dylibs the guest root does not have,
+and 17 symbols across three of them -- all **metadata**, so they cannot be
+stubbed:
+
+| dylib | non-lazy binds |
+|---|---|
+| `libswift_StringProcessing.dylib` | 12 |
+| `libswift_errno.dylib` | 4 |
+| `libswiftSynchronization.dylib` | 1 |
+| `libswiftDarwin.dylib` | 0 (an empty stub would do) |
+
+Same class of artifact as `libswiftCore.dylib` and `libswift_Concurrency.dylib`:
+cross-built by `~/swiftcore-macho`, staged by
+`machorun/scripts/stage_swiftcore.sh`. Its `artifacts/` holds neither today.
+
+### Ordering hazard in the sysroot staging, which nothing enforces
+
+`stage_objc_module.sh` WRITES `usr/include/module.modulemap`;
+`gen_darwin_modulemap.py` APPENDS to it. Run them the other way round and the
+whole Darwin family disappears while the file still exists and still declares
+ObjectiveC. The shared `scratch/sysroot` currently has the inverse damage: it
+was restaged from `machorun/sdk` at 12:22:24 (four minutes before `sdk/` was
+last touched at 12:26:30), which wiped the objc module -- **it has no
+`module.modulemap` and no `objc/NSObject.h` at all.**
