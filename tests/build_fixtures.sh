@@ -384,6 +384,42 @@ if want loader_path; then
     echo "==> loader_path"; built+=(loader_path)
 fi
 
+# THE DEDUPE CONTRACT, and it is an asymmetry rather than a rule (#90).
+# Measured on real dyld in docs/DUP_IMAGES.md: the same FILE reached by two
+# different dep strings is ONE image; two DISTINCT files sharing an install name
+# are TWO. Both halves are built here because a loader that deduped on install
+# name would pass the first and fail the second -- in the direction that looks
+# like an improvement.
+#
+# install_name_tool rewrites each mid's LC_LOAD_DYLIB to the ALIAS path. Without
+# that rewrite both routes would name the same string, the loader's string test
+# would dedupe them, and the fixture would grade nothing at all.
+if want dup_images; then
+    DUP_DIR="$BIN/dup_images_alias"
+    mkdir -p "$DUP_DIR"
+    for kind in link copy; do
+        "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+            -o "$BIN/libdup_$kind.dylib" "$SRC/dup_images_leaf.c" \
+            -DDUP_KIND="$kind" -install_name "@rpath/libdup_$kind.dylib"
+        # the second path: a SYMLINK for `link`, a real COPY for `copy`
+        rm -f "$DUP_DIR/libdup_$kind.dylib"
+        if [ "$kind" = link ]; then ln -s "../libdup_$kind.dylib" "$DUP_DIR/libdup_$kind.dylib"
+        else cp "$BIN/libdup_$kind.dylib" "$DUP_DIR/libdup_$kind.dylib"; fi
+        "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+            -o "$BIN/libdup_${kind}_mid.dylib" "$SRC/dup_images_mid.c" \
+            -DDUP_KIND="$kind" "$BIN/libdup_$kind.dylib" \
+            -install_name "@rpath/libdup_${kind}_mid.dylib" -Wl,-rpath,@loader_path
+        install_name_tool -change "@rpath/libdup_$kind.dylib" \
+            "@rpath/dup_images_alias/libdup_$kind.dylib" "$BIN/libdup_${kind}_mid.dylib"
+    done
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -o "$BIN/dup_images" \
+        "$SRC/dup_images.c" \
+        "$BIN/libdup_link.dylib" "$BIN/libdup_link_mid.dylib" \
+        "$BIN/libdup_copy.dylib" "$BIN/libdup_copy_mid.dylib" \
+        -Wl,-rpath,@loader_path
+    echo "==> dup_images"; built+=(dup_images)
+fi
+
 # The environment. `environ` is a VARIABLE the guest reads and getenv is a
 # CALL, and they had different backing: environ from the loader's envp, getenv
 # from glibc's array. Identical contents at startup, diverging on the first

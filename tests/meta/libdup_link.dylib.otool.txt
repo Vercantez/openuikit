@@ -1,0 +1,177 @@
+### file
+<machorun>/tests/bin/libdup_link.dylib: Mach-O 64-bit dynamically linked shared library arm64
+
+### mach header
+<machorun>/tests/bin/libdup_link.dylib:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           6    15        824 0x00100085
+
+### dependencies
+<machorun>/tests/bin/libdup_link.dylib:
+	@rpath/libdup_link.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)
+
+### load commands
+<machorun>/tests/bin/libdup_link.dylib:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 232
+  segname __TEXT
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 2
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000000000378
+      size 0x000000000000000c
+    offset 888
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __unwind_info
+   segname __TEXT
+      addr 0x0000000000000384
+      size 0x0000000000000058
+    offset 900
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 152
+  segname __DATA
+   vmaddr 0x0000000000004000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 0
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 1
+    flags 0x0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x0000000000004000
+      size 0x0000000000000004
+    offset 0
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000000008000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 448
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 3
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libdup_link.dylib (offset 24)
+   time stamp 1 Wed Dec 31 18:00:01 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 4
+      cmd LC_DYLD_CHAINED_FIXUPS
+  cmdsize 16
+  dataoff 16384
+ datasize 56
+Load command 5
+      cmd LC_DYLD_EXPORTS_TRIE
+  cmdsize 16
+  dataoff 16440
+ datasize 32
+Load command 6
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 16480
+   nsyms 2
+  stroff 16512
+ strsize 32
+Load command 7
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 1
+     iextdefsym 1
+     nextdefsym 1
+      iundefsym 2
+      nundefsym 0
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 0
+  nindirectsyms 0
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 8
+     cmd LC_UUID
+ cmdsize 24
+    uuid 8D46B137-E6B6-32C7-A6E6-A676CE69C33E
+Load command 9
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 12.0
+      sdk 26.1
+   ntools 1
+     tool 3
+  version 1230.1
+Load command 10
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+Load command 11
+          cmd LC_LOAD_DYLIB
+      cmdsize 56
+         name /usr/lib/libSystem.B.dylib (offset 24)
+   time stamp 2 Wed Dec 31 18:00:02 1969
+      current version 1356.0.0
+compatibility version 1.0.0
+Load command 12
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 16472
+ datasize 8
+Load command 13
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 16480
+ datasize 0
+Load command 14
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 16544
+ datasize 288
+
+### undefined symbols
+
+### defined external symbols
+0000000000000378 T _dup_link_token

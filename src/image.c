@@ -393,6 +393,40 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
     im->fd = fd;
     if (fstat(fd, &st) != 0) mr_die("cannot stat %s: %m", path);
     im->raw_len = (size_t)st.st_size;
+    im->dev = st.st_dev;
+    im->ino = st.st_ino;
+
+    /* DYLD'S SECOND DEDUPE TEST: the path resolved to a FILE THAT IS ALREADY
+     * LOADED. The string test above (mr_image_find_loaded) catches a request
+     * naming a loaded install name or path; it cannot catch a SYMLINK, whose
+     * resolved path is a string nobody has seen. dyld loads such an image ONCE
+     * -- measured, docs/DUP_IMAGES.md variant 4 -- and without this machorun
+     * loaded it twice. Two copies of a dylib is two copies of its statics, its
+     * constructors, and, when the dylib is CoreFoundation, its ObjC classes.
+     *
+     * WHAT THIS MUST NOT DO, and the asymmetry IS the design: two DISTINCT
+     * FILES that happen to share an LC_ID_DYLIB stay TWO images. dyld keeps
+     * them separate (variant 3, and that is the CoreFoundation case this
+     * project actually hit), so a dedupe keyed on the install name would
+     * collapse them -- looking like a better result while diverging from
+     * Darwin. (st_dev, st_ino) draws the line where dyld draws it: the same
+     * FILE, never merely the same NAME.
+     *
+     * Placed after the fstat because it needs one, and before the mmap so a
+     * duplicate is never mapped at all. */
+    for (int i = 0; i < MR.nimages; i++) {
+        mr_image *other = MR.images[i];
+        if (other->dev != st.st_dev || other->ino != st.st_ino) continue;
+        mr_log("%s is the same file as %s (dev %llu ino %llu); aliasing it "
+               "rather than loading a second copy", path, other->path,
+               (unsigned long long)st.st_dev, (unsigned long long)st.st_ino);
+        close(fd);
+        free(im->dir);
+        free(im);
+        free(path);
+        return other;
+    }
+
     raw = mmap(NULL, im->raw_len, PROT_READ, MAP_PRIVATE, fd, 0);
     if (raw == MAP_FAILED) mr_die("cannot map %s for parsing: %m", path);
     im->raw = raw;

@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <sys/types.h>   /* dev_t, ino_t: mr_image's on-disk identity */
 #include "macho.h"
 
 #define MR_MAX_SEGMENTS 16
@@ -88,6 +89,16 @@ struct mr_image {
     const struct section_64 *sec_thread_vars, *sec_thread_data, *sec_thread_bss;
     uint32_t tlv_key;          /* pthread_key_t, valid when tlv_registered */
     int      tlv_registered;
+
+    /* IDENTITY ON DISK, for dyld's SECOND dedupe test. dyld treats an image as
+     * already loaded when the requested STRING matches a loaded install name or
+     * path (that is mr_image_find_loaded), OR when the path resolves to a FILE
+     * already loaded -- which is this pair. Measured against real dyld in
+     * docs/DUP_IMAGES.md, and note what it deliberately does NOT do: two
+     * DISTINCT files sharing one LC_ID_DYLIB stay TWO images, because that is
+     * what dyld does. */
+    dev_t dev;
+    ino_t ino;
 
     int is_runtime;      /* came out of our darwin/ tree: host dlsym allowed */
     int is_main;

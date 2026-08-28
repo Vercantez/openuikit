@@ -1,0 +1,7 @@
+== a SYMLINK is the same file: one image
+  direct and aliased token agree: yes
+  images named libdup_link.dylib: 1
+== a COPY is a different file, even with the same install name: two images
+  direct and copied token agree: no
+  images named libdup_copy.dylib: 2
+done
