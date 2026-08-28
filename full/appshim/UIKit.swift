@@ -13,13 +13,13 @@
 //  * But introducing a module NAMED Foundation, however small, flips
 //    OpenUIKit's 33 `#if canImport(Foundation)` guards AND OpenCoreGraphics'
 //    to their Foundation branches, which then demand Foundation's own
-//    IndexPath, NSRange, NSRangePointer, TimeInterval, CGFloat, CGPoint,
-//    CGSize and CGRect. There is no "small Foundation" for this stack: a
+//    IndexPath, IndexSet, NSRange, NSRangePointer, TimeInterval, CGFloat,
+//    CGPoint, CGSize and CGRect. There is no "small Foundation" for this stack: a
 //    nearly-empty one is WORSE than none, because it switches the library onto
 //    a path it cannot satisfy.
 //
 // So the cheap configuration is this one: no Foundation module at all, and
-// NSCoder supplied by OpenUIKit alongside the other names M15 moved out. The
+// NSCoder supplied by OpenUIKit alongside its Foundation-free value names. The
 // library stays on its freestanding branch -- the same branch that renders
 // 108/108 -- and the app source still compiles unmodified.
 @_exported import Foundation

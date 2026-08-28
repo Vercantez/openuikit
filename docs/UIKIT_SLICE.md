@@ -54,14 +54,18 @@ Measured, not assumed:
   slice compiles down OpenCoreGraphics' and UIView's **`#else` freestanding
   branches** — its own `CGRect`/`CGPoint`/`CGColor`/`CGAffineTransform`. The
   geometry, color, layer and render-pass path is Foundation-free.
-- Post-M15 the FULL OpenUIKit *does* hard-require Foundation, but ONLY for the
+- At the time this slice result was measured (after M15 and before table API
+  commit `064c774`), the FULL OpenUIKit hard-required Foundation only for the
   **names** `IndexPath` / `NSRange` / `TimeInterval`, declared solely under
   `#if canImport(Foundation)` in `FoundationTypes.swift`. Those names are used
   by the table/collection/text/timer files — **not** by the view/color/render
   core. So: a UIKit *render* slice is Foundation-free; a full app additionally
   needs those ~3 typealiases (trivially shimmable, as `FreestandingShims` shows)
   plus real Foundation for its own model layer. None of it is corelibs-shaped
-  Swift-Foundation; it is three type names.
+  Swift-Foundation; it was three type names. Since `064c774`, UITableView's
+  section-editing surface also names `IndexSet`; the current Foundation-free
+  full build supplies a narrow value implementation in
+  `full/shims/FoundationNames.swift`.
 
 ## 4. Run side — how far it gets, and the exact wall
 
@@ -130,8 +134,10 @@ two different stdlib gaps; neither renders a full scene yet.)
   render *logic* are all already proven; a fixed release path should let the
   existing bytes render, and the result is then a byte diff against
   `~/uikit/golden/boxes_basic.png`.
-- **To a whole iOS app:** on top of the above, the `IndexPath`/`NSRange`/
-  `TimeInterval` typealiases (3 lines) for the full module, `_Concurrency` if
+- **To a whole iOS app:** at this milestone, on top of the above, the
+  `IndexPath`/`NSRange`/`TimeInterval` typealiases (3 lines) for the full
+  module; current OpenUIKit additionally needs the Foundation-free `IndexSet`
+  described in §3. Then `_Concurrency` if
   `@MainActor`/`async` are wanted (a second runtime dylib + its libSystem
   symbols), and the text/font stack for labels. No new *compiler* capability is
   required — §2/§3 show OpenUIKit's Swift already lowers to loadable Mach-O.

@@ -56,8 +56,10 @@
 #             re-exports its .real. Never compared against machorun: it is a
 #             different library on purpose.
 #   staged    byte-identical to a RECORDED sha256 of the external artefact it was
-#             staged from -- Apple's iOS simruntime dylibs, which have no
-#             machorun counterpart at all.
+#             staged from -- usually Apple's iOS simruntime dylibs. An optional
+#             fifth field identifies a same-path machorun artefact this staged
+#             file intentionally overrides, accounting for it without falsely
+#             grading the two different runtimes as copies.
 #   local     not graded; may excuse an upstream file from MISSING
 #
 # `staged` EXISTS AS ITS OWN KIND ON PURPOSE, and the reason is the history
@@ -148,9 +150,15 @@ accounted=""      # upstream paths this root is known to account for
 while IFS=$'\t' read -r kind rel up rest; do
     case "$kind" in ''|'#'*) continue ;; esac
     f="$TARGET/$rel"
-    # For a `staged` row the third column is a sha256, not an upstream path,
-    # so it must not be counted as accounting for anything in machorun.
-    case "$kind" in staged) ;; *) [ "${up:--}" = "-" ] || accounted="$accounted $up" ;; esac
+    # For a `staged` row the third column is a sha256, not an upstream path.
+    # Its optional fifth column explicitly names a machorun artefact that the
+    # staged file replaces; absent that field it accounts for no upstream file.
+    case "$kind" in
+        staged)
+            staged_up=$(printf '%s\n' "$rest" | awk -F '\t' 'NF >= 2 { print $2 }')
+            [ "${staged_up:--}" = "-" ] || accounted="$accounted $staged_up" ;;
+        *) [ "${up:--}" = "-" ] || accounted="$accounted $up" ;;
+    esac
     case "$kind" in
     copy)
         n_copy=$((n_copy+1))
@@ -170,7 +178,8 @@ while IFS=$'\t' read -r kind rel up rest; do
             bad_copy="$bad_copy$rel\tdiffers from $MACHORUN/$up\n"
         fi ;;
     staged)
-        # Manifest columns here are: staged <rel> <sha256-of-source> <where it came from>
+        # Manifest columns here are: staged <rel> <sha256-of-source>
+        # <where-it-came-from> [<machorun-path-intentionally-overridden>]
         n_staged=$((n_staged+1))
         want=$up
         srcdesc=$(printf '%s' "$rest" | cut -f1)

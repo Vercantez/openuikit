@@ -9,7 +9,7 @@
 //    in the entire real-app target.
 //  * But a module named Foundation on the LIBRARY's search path flips
 //    OpenUIKit's 33 `#if canImport(Foundation)` guards and OpenCoreGraphics'
-//    too, which then demand Foundation's own IndexPath, NSRange,
+//    too, which then demand Foundation's own IndexPath, IndexSet, NSRange,
 //    NSRangePointer, TimeInterval, CGFloat, CGPoint, CGSize and CGRect. A
 //    nearly-empty Foundation is WORSE than none: it switches the library onto
 //    a path it cannot satisfy.

@@ -113,6 +113,13 @@ case_ "staged file mutated" 1 "is not the artefact it was staged from" \
 case_ "staged with no source digest" 1 "refusing to grade it against itself" \
     'stage_row -'
 
+# (5f) A staged file may intentionally replace a same-path machorun artefact.
+#     Its optional fifth manifest field must account for that upstream file
+#     without pretending the two different runtime builds are byte-identical.
+#     Removing only that accounting field must expose the upstream omission.
+case_ "staged override loses accounting" 1 "MISSING FROM THIS ROOT" \
+    'grep -v "libswiftCore" "$R/.manifest" > "$R/.m2" && mv "$R/.m2" "$R/.manifest"; printf "staged\tdarwin/usr/lib/swift/libswiftCore.dylib\t%s\tpretend external runtime\n" "$(shasum -a 256 <"$R/darwin/usr/lib/swift/libswiftCore.dylib" | cut -d" " -f1)" >> "$R/.manifest"'
+
 # (6) A STALE PLAIN COPY -- the case the old guard did handle, kept so the
 #     rewrite is not a regression.
 case_ "stale copy (libobjc)" 1 "STALE COPIES" \
