@@ -705,7 +705,10 @@ open class UITableView: UIScrollView {
     public func register(_ cellClass: UITableViewCell.Type,
                          forCellReuseIdentifier identifier: String) {
         cellRegistry.register(identifier: identifier) { id in
-            cellClass.init(_openUIKitStyle: .default, reuseIdentifier: id)
+            let constructor = unsafeBitCast(
+                cellClass,
+                to: _UITableViewCellDynamicConstructor.Type.self)
+            return constructor.init(style: .default, reuseIdentifier: id)
         }
     }
 
@@ -724,7 +727,10 @@ open class UITableView: UIScrollView {
     public func register(_ viewClass: UITableViewHeaderFooterView.Type,
                          forHeaderFooterViewReuseIdentifier identifier: String) {
         headerFooterRegistry.register(identifier: identifier) { id in
-            viewClass.init(_openUIKitReuseIdentifier: id)
+            let constructor = unsafeBitCast(
+                viewClass,
+                to: _UITableViewHeaderFooterDynamicConstructor.Type.self)
+            return constructor.init(reuseIdentifier: id)
         }
     }
 

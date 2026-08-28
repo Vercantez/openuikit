@@ -287,19 +287,6 @@ open class UITableViewCell: UIView, ReusableView {
         addSubview(separatorView)
     }
 
-    /// Pure Swift cannot dynamically invoke a non-required initializer from a
-    /// class metatype, while UIKit's Objective-C runtime can.  Keep the public
-    /// Apple-compatible initializer non-required and route the reuse registry
-    /// through this inherited convenience initializer. Its underscore-prefixed
-    /// public spelling exists only because Swift requires a required initializer
-    /// on an open class to be public. Application subclasses continue to write
-    /// ordinary `override init(style:reuseIdentifier:)`; dynamic construction
-    /// still dispatches through that override.
-    public required convenience init(_openUIKitStyle style: CellStyle,
-                                     reuseIdentifier: String?) {
-        self.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
-
     // MARK: Reuse
 
     open func prepareForReuse() {
@@ -533,13 +520,6 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         self.frame = frame
     }
 
-    /// See UITableViewCell's matching constructor bridge.  The public UIKit
-    /// initializer remains ordinarily overridable; this inherited convenience
-    /// entry lets the pure-Swift reuse registry construct the dynamic subtype.
-    public required convenience init(_openUIKitReuseIdentifier identifier: String) {
-        self.init(reuseIdentifier: identifier)
-    }
-
     open func prepareForReuse() {
         textLabel.text = nil
         kind = .header
@@ -572,5 +552,34 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
                                 : UITableViewHeaderFooterView.footerLabelY
         textLabel.frame = CGRect(x: labelX, y: y,
                                  width: min(s.width, maxW), height: s.height)
+    }
+}
+
+// Swift only permits a dynamic metatype call through a required initializer,
+// unlike Objective-C's selector dispatch. These open SPI sibling classes turn
+// that source-language restriction into the same initializer-vtable lookup:
+// UITableView casts only the one-word class metatype, then invokes the required
+// override below. Because each override occupies its base initializer's vtable
+// slot, the allocator receives the original registered metatype and constructs
+// that subclass, including its ordinary non-required initializer override.
+//
+// These classes must remain open. That prevents whole-module optimization from
+// devirtualizing the constructor call which deliberately carries another class's
+// metatype. They are SPI so application subclasses inherit no OpenUIKit-only
+// required initializer.
+@_spi(OpenUIKitInternals)
+@preconcurrency @MainActor
+open class _UITableViewCellDynamicConstructor: UITableViewCell {
+    public required override init(style: CellStyle = .default,
+                                  reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+}
+
+@_spi(OpenUIKitInternals)
+@preconcurrency @MainActor
+open class _UITableViewHeaderFooterDynamicConstructor: UITableViewHeaderFooterView {
+    public required override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
     }
 }

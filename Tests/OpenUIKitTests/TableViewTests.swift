@@ -31,6 +31,37 @@ private final class CountingHeader: UITableViewHeaderFooterView {
     }
 }
 
+/// Grandchildren which add designated initializers must not be forced to
+/// implement an OpenUIKit-only required initializer. Real UIKit adds no such
+/// requirement to either reusable-view hierarchy.
+private class GrandchildBaseCell: UITableViewCell {
+    override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+}
+
+private final class CustomGrandchildCell: GrandchildBaseCell {
+    let marker: Int
+    init(marker: Int) {
+        self.marker = marker
+        super.init(style: .default, reuseIdentifier: nil)
+    }
+}
+
+private class GrandchildBaseHeader: UITableViewHeaderFooterView {
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+    }
+}
+
+private final class CustomGrandchildHeader: GrandchildBaseHeader {
+    let marker: Int
+    init(marker: Int) {
+        self.marker = marker
+        super.init(reuseIdentifier: nil)
+    }
+}
+
 @MainActor
 private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
     var rows = 10_000
@@ -192,6 +223,11 @@ final class TableViewReuseTests: XCTestCase {
         XCTAssertTrue(header is CountingHeader)
         XCTAssertEqual(header?.reuseIdentifier, "header")
         XCTAssertEqual(CountingHeader.created, 1)
+    }
+
+    func testReusableViewGrandchildrenMayAddDesignatedInitializers() {
+        XCTAssertEqual(CustomGrandchildCell(marker: 41).marker, 41)
+        XCTAssertEqual(CustomGrandchildHeader(marker: 42).marker, 42)
     }
 }
 
