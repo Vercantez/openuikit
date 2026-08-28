@@ -8,7 +8,15 @@ set -euo pipefail
 ROOT=/w
 SDK=$ROOT/scratch/mrsdk                # machorun header-only SDK (+ quartz/objc)
 OUT=$ROOT/build/slice3
-COMPAT=$ROOT/scratch/mrroot2/darwin/usr/lib/libswiftcompat.dylib
+# RETARGETED from scratch/mrroot2 (#75). mrroot2 had a CONSUMER -- this line --
+# and NO PRODUCER: no script in the repo creates it, so it could not be rebuilt
+# if it were ever lost or found stale, and a build input nothing can regenerate
+# is the worst kind. The file read here is BYTE-IDENTICAL in mrroot2, mrroot and
+# machorun (sha256 d038be7a0506…), verified before the switch, so this changes
+# the provenance and not the bytes. mrroot has a producer
+# (scripts/stage_swift_runtime.sh) and, since #75, a manifest describing every
+# file in it.
+COMPAT=$ROOT/scratch/mrroot/darwin/usr/lib/libswiftcompat.dylib
 mkdir -p "$OUT"
 
 # Resource dir = the self-built stdlib's Swift.swiftmodule/dylib + the compiler's
