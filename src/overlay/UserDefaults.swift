@@ -45,10 +45,11 @@ import Foundation
 // CF call now goes through the seam in UserDefaultsBridge_Guest.swift, which
 // talks to our CF through a declared C surface. See include/CFPreferencesMinimal.h.
 import FoundationEssentials
-// Darwin for pthread: the host half gets it via Foundation's re-export, the
-// guest half has to ask. The FE sysroot has the module -- that is what
-// `canImport(Darwin) == true` means for this port (see #58's route (A)).
-import Darwin
+// NOT `import Darwin`: that pulls Apple's Swift Darwin OVERLAY DYLIBS into the
+// load graph, and they depend on Apple's Foundation -- the thing we are
+// building. The libc surface we actually use is declared instead. See
+// include/UDPlatformMinimal.h for the measurement.
+import UDPlatformMinimal
 #endif
 
 // MARK: - The value model
@@ -533,7 +534,7 @@ extension UserDefaults {
         var buf = [CChar](repeating: 0, count: 64)
         _ = buf.withUnsafeMutableBufferPointer { b in
             withVaList([v]) { va in
-                vsnprintf(b.baseAddress, 64, "%0.16g", va)
+                _udVsnprintf(b.baseAddress, 64, "%0.16g", va)
             }
         }
         return String(cString: buf)
@@ -565,15 +566,15 @@ internal final class _UDLock<Value>: @unchecked Sendable {
 }
 
 internal final class _UDMutex: @unchecked Sendable {
-    private var m = pthread_mutex_t()
-    init() { pthread_mutex_init(&m, nil) }
-    deinit { pthread_mutex_destroy(&m) }
-    func lock() { pthread_mutex_lock(&m) }
-    func unlock() { pthread_mutex_unlock(&m) }
+    private var m = _UDMutexStorage()
+    init() { _udMutexInit(&m) }
+    deinit { _udMutexDestroy(&m) }
+    func lock() { _udMutexLock(&m) }
+    func unlock() { _udMutexUnlock(&m) }
 }
 
 internal func _UDHomeDirectory() -> String {
-    if let h = getenv("HOME") { return String(cString: h) }
+    if let h = _udGetenv("HOME") { return String(cString: h) }
     return "/"
 }
 
@@ -581,6 +582,6 @@ internal func _UDHomeDirectory() -> String {
 /// that returns is indistinguishable from one that works.
 internal func _UDUnimplemented(_ what: String) -> Never {
     let msg = "UNIMPLEMENTED (UserDefaults): \(what)\n"
-    msg.withCString { p in _ = write(2, p, strlen(p)) }
+    msg.withCString { p in _udWriteStderr(p) }
     fatalError(msg)
 }

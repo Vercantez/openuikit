@@ -18,7 +18,7 @@
 
 import FoundationEssentials
 import PortedUserDefaultsGuest
-import Darwin   // exit(); FoundationEssentials does not re-export it
+import UDPlatformMinimal   // exit(); NOT Darwin -- see the header
 
 var pass = 0, fail = 0
 func check(_ label: String, _ got: String, _ want: String) {
@@ -30,7 +30,7 @@ print("\n=== FE + our CoreFoundation, in ONE process ===")
 
 let suite = "com.example.udguest"
 guard let d = UserDefaults(suiteName: suite) else {
-    print("FATAL: UserDefaults(suiteName:) returned nil"); exit(1)
+    print("FATAL: UserDefaults(suiteName:) returned nil"); ud_exit(1)
 }
 
 // Negative control FIRST. If a read returned something for every key, every
@@ -76,4 +76,4 @@ check("synchronize", String(d.synchronize()), "true")
 
 print("\nguest runner: pass \(pass)  fail \(fail)")
 print(fail == 0 ? "GUEST RUNNER PASS" : "GUEST RUNNER FAIL")
-exit(fail == 0 ? 0 : 1)
+ud_exit(fail == 0 ? 0 : 1)

@@ -18,6 +18,7 @@
 
 import FoundationEssentials
 import CFPreferencesMinimal
+import UDPlatformMinimal
 
 // The guest speaks to OUR CoreFoundation through the declared surface in
 // include/CFPreferencesMinimal.h -- deliberately NOT `import CoreFoundation`,
@@ -189,5 +190,29 @@ internal func _udRemoveSuite(_ suite: String) {
 /// sees a populated one, which is exactly the row the scoreboard should fail
 /// on. Do not "fix" it by making the host side empty too.
 internal func _udCopyAll(_ appID: UDCFString) -> [String: Any] { [:] }
+
+
+// MARK: - The libc surface, declared not imported
+//
+// Same rule as the CF side: `import Darwin` would pull Apple's Swift Darwin
+// OVERLAY DYLIBS into the load graph, and those depend on Apple's Foundation.
+// See include/UDPlatformMinimal.h.
+
+internal typealias _UDMutexStorage = ud_pthread_mutex_t
+internal func _udMutexInit(_ m: inout _UDMutexStorage)    { _ = ud_pthread_mutex_init(&m, nil) }
+internal func _udMutexDestroy(_ m: inout _UDMutexStorage) { _ = ud_pthread_mutex_destroy(&m) }
+internal func _udMutexLock(_ m: inout _UDMutexStorage)    { _ = ud_pthread_mutex_lock(&m) }
+internal func _udMutexUnlock(_ m: inout _UDMutexStorage)  { _ = ud_pthread_mutex_unlock(&m) }
+
+internal func _udVsnprintf(_ buf: UnsafeMutablePointer<CChar>?, _ n: Int,
+                           _ fmt: String, _ va: CVaListPointer) {
+    _ = fmt.withCString { f in ud_vsnprintf(buf, n, f, va) }
+}
+internal func _udGetenv(_ name: String) -> UnsafeMutablePointer<CChar>? {
+    name.withCString { ud_getenv($0) }
+}
+internal func _udWriteStderr(_ p: UnsafePointer<CChar>) {
+    _ = ud_write(2, p, ud_strlen(p))
+}
 
 #endif  // !UD_HOST_ORACLE

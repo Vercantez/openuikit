@@ -6,3 +6,10 @@ module CFPreferencesMinimal [system] {
     header "../CFPreferencesMinimal.h"
     export *
 }
+
+// The libc surface the guest half needs, for the same reason and by the same
+// rule: declare what we use rather than import a module we do not ship.
+module UDPlatformMinimal [system] {
+    header "../UDPlatformMinimal.h"
+    export *
+}

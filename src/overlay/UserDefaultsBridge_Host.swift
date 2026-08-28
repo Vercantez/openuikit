@@ -205,4 +205,29 @@ extension UserDefaults {
     }
 }
 
+
+// MARK: - The libc surface
+//
+// The host half gets these from Foundation's re-export of Darwin, so they are
+// one-line forwards. The guest half declares them instead, because importing
+// Darwin there drags Apple's overlay dylibs -- and Apple's Foundation -- into
+// the load graph.
+
+internal typealias _UDMutexStorage = pthread_mutex_t
+internal func _udMutexInit(_ m: inout _UDMutexStorage)    { pthread_mutex_init(&m, nil) }
+internal func _udMutexDestroy(_ m: inout _UDMutexStorage) { pthread_mutex_destroy(&m) }
+internal func _udMutexLock(_ m: inout _UDMutexStorage)    { pthread_mutex_lock(&m) }
+internal func _udMutexUnlock(_ m: inout _UDMutexStorage)  { pthread_mutex_unlock(&m) }
+
+internal func _udVsnprintf(_ buf: UnsafeMutablePointer<CChar>?, _ n: Int,
+                           _ fmt: String, _ va: CVaListPointer) {
+    _ = vsnprintf(buf, n, fmt, va)
+}
+internal func _udGetenv(_ name: String) -> UnsafeMutablePointer<CChar>? {
+    getenv(name)
+}
+internal func _udWriteStderr(_ p: UnsafePointer<CChar>) {
+    _ = write(2, p, strlen(p))
+}
+
 #endif  // UD_HOST_ORACLE
