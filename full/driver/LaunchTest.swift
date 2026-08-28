@@ -18,10 +18,9 @@ import OpenUIKit
 
 // MARK: - The app under test: ordinary app source, no launch machinery in it
 
-/// What an app delegate looks like. The only thing here that is not what a
-/// real iOS delegate would write is the `InstantiableAppDelegate` conformance
-/// in place of plain `UIApplicationDelegate` -- see that protocol's comment
-/// for the two words in ~/uikit that would remove even that.
+/// What an app delegate looks like. The only adaptation is opting into the
+/// driver's local `InstantiableAppDelegate`, because pure Swift cannot invoke
+/// an initializer through an ordinary UIApplicationDelegate metatype.
 final class ProbeAppDelegate: UIResponder, InstantiableAppDelegate {
     /// Set by `init()` and by nothing else. If a launch path allocated the
     /// object without running the initialiser, this is not 0xA11CE.
@@ -229,18 +228,17 @@ private func fixed3ms(_ v: Double) -> String {
     return "\(whole)." + f
 }
 
-// MARK: - What the protocol requirement costs REAL app source
+// MARK: - Non-final control for the experimental capability
 
 /// A NON-FINAL delegate, which is the shape real apps write
-/// (`class AppDelegate: UIResponder, UIApplicationDelegate`). `ProbeAppDelegate`
-/// above is `final` and needs no extra syntax; this one does, and the single
-/// word `required` is the entire app-side cost of launch-by-name.
+/// (`class AppDelegate: UIResponder, UIApplicationDelegate`). This test opts
+/// into the local launch-by-name capability, so a non-final class must make
+/// its initializer `required` to satisfy metatype construction.
 ///
-/// That word is why `UIResponder.init()` was NOT made `required` instead: doing
-/// so would move this one word out of the app and into 14 sites across
-/// OpenUIKit, six of which would gain a parameterless `init()` that real UIKit's
-/// UIView does not have. See `InstantiableAppDelegate` in LaunchByName.swift.
-class ProbeAppDelegateOpen: UIResponder, UIApplicationDelegate {
+/// This adaptation belongs to the experiment, not to the Focus guest port:
+/// Focus will use a same-module entry adapter that names `AppDelegate()`
+/// concretely and therefore needs neither this conformance nor `required`.
+class ProbeAppDelegateOpen: UIResponder, InstantiableAppDelegate {
     let initSentinel: Int
     var didFinishLaunching = false
 

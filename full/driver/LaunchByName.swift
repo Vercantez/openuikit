@@ -11,8 +11,9 @@
 // Nothing but the string is passed; the app never hands UIKit an object.
 //
 // OpenUIKit's entry point takes the object instead
-// (`UIApplicationMain(delegate: MyAppDelegate())`), which is the whole gap
-// this file measures and then closes.
+// (`UIApplicationMain(delegate: MyAppDelegate())`). This file measures the
+// class-name gap and proves discovery/initialization with an explicit local
+// capability; it does not claim ordinary app delegates gain that capability.
 //
 // TWO RUNTIMES COULD ANSWER "what class is named X", AND ONLY ONE DOES.
 // The obvious answer is objc4 -- we have it, it is what UIKit uses, and the
@@ -28,12 +29,12 @@
 //
 // INSTANTIATION IS A SEPARATE PROBLEM FROM DISCOVERY, and it is where the
 // missing NSObject actually bites. `[[cls alloc] init]` works in real UIKit
-// because UIApplicationDelegate refines NSObjectProtocol, so every conforming
-// class necessarily HAS an `init`. A Swift metatype gives you no way to call
-// an initialiser that no protocol requires. The portable equivalent of what
-// NSObject supplies for free is to REQUIRE it, which is what
-// `InstantiableAppDelegate` does here -- see its comment for the two-line
-// change to ~/uikit that would let real app source use it unmodified.
+// because Objective-C supplies allocation/initialisation dynamically. A pure
+// Swift metatype gives you no way to call an initializer that no protocol
+// requires. This EXPERIMENT therefore uses a local opt-in protocol; public
+// OpenUIKit UIApplicationDelegate correctly has no invented `init()`
+// requirement. A real guest app instead gets a same-module entry adapter
+// which constructs its concrete AppDelegate type.
 //
 // Do NOT read `alloc` without `init` as a way around that: SwiftObject's
 // +alloc reaches swift_allocObject with the right size, and then the Swift
@@ -124,9 +125,10 @@ func resolveClass(named name: String) -> Any.Type? {
 
 // MARK: - What NSObject supplies for free
 
-/// `UIApplicationDelegate` NOW CARRIES `init()` ITSELF (~/uikit branch
-/// appcompat/delegate-init), so this alias is all that remains of the local
-/// stand-in. Real UIKit gets the same requirement from NSObjectProtocol.
+/// Local capability used only by this class-name launch experiment. It must
+/// not leak into OpenUIKit's public UIApplicationDelegate: UIKit's Swift
+/// protocol does not require `init()`, and ordinary non-final app delegates
+/// inherit UIResponder.init() without spelling `required`.
 ///
 /// THE OTHER DESIGN WAS MEASURED AND REJECTED. Making `UIResponder.init()`
 /// `required` would let a delegate INHERIT the requirement and cost app source
@@ -136,13 +138,12 @@ func resolveClass(named name: String) -> Any.Type? {
 /// GAIN a parameterless `init()`, and real UIKit's UIView has none (its
 /// designated initialisers are `init(frame:)` and `init(coder:)`). A change
 /// justified as matching UIKit would have made the library less like UIKit.
-/// The protocol requirement alone costs ZERO library edits.
-///
-/// WHAT IT COSTS AN APP, measured not assumed -- see the two probe delegates in
-/// LaunchTest.swift: a `final` delegate satisfies `init()` with no extra
-/// syntax; a NON-final one needs its initialiser spelled `required`. One line,
-/// in the app, only for non-final delegates.
-typealias InstantiableAppDelegate = UIApplicationDelegate
+/// Requiring construction here keeps the metatype cast honest: only delegates
+/// which explicitly opt into this experimental path can launch by name.
+@MainActor
+protocol InstantiableAppDelegate: UIApplicationDelegate {
+    init()
+}
 
 // MARK: - UIApplicationMain, by name
 
