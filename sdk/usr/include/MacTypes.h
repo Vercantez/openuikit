@@ -147,12 +147,23 @@ typedef UInt8  UTF8Char;
  * copy would compile silently and rot in place, which is the shadowing shape
  * one file over. This macro is what lets that shim say
  *
+ *     #include <MacTypes.h>          <-- THE ORDER IS THE CHECK
  *     #ifdef MR_MACTYPES_HAS_PASCAL_STRINGS
  *     #error "...delete include/CFCarbonTypesShim.h..."
  *     #endif
  *
  * and turn its own removal from something somebody must remember into
- * something the compiler insists on. Requested by the shim's author, who found
+ * something the compiler insists on.
+ *
+ * THE INCLUDE ON THE FIRST LINE IS NOT DECORATION, and this example did not
+ * show it until somebody was bitten. THIS header defines the macro, so an
+ * `#ifdef` placed ABOVE the include tests a name that cannot be defined yet:
+ * it passes silently against a header that already supplies the types, which
+ * is the precise rot the tripwire exists to prevent, occurring inside the
+ * tripwire. Measured downstream 2026-08-28 -- the guard did not fire on its
+ * first run, and only running it found that; reading it did not. A check that
+ * runs before the thing it checks for is worse than no check, because it
+ * reports success. Requested by the shim's author, who found
  * the redefinition assumption was wrong; it is one line here and a refusal
  * there. It is named for the Pascal family specifically because that is what
  * the shim re-supplies -- a broader name would be asserting more than this
