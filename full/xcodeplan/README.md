@@ -55,11 +55,11 @@ The parser requires all of these facts simultaneously:
   `Licenses`.
 
 The attested workspace lock resolves SnapKit 5.7.0 at
-`e74fe2a978d1216c3602b129447c7301573cc2d8`. That intentionally differs from
-the `250529bec615066185ff328984855101820fcbee` diagnostic-census checkout in
-`full/focus-ios`: `xcodeplan` records the real Xcode graph and never substitutes
-the census dependency. A runnable build must fetch and validate the locked
-revision separately.
+`e74fe2a978d1216c3602b129447c7301573cc2d8`. The current Focus census and module
+proofs now use that same locked revision rather than the earlier diagnostic
+checkout of upstream `main`. `xcodeplan` still records only the dependency
+identity; each runnable build/proof must fetch and validate the locked source
+subject separately.
 
 Every PBX build-file, file, product, configuration, target, group, variant,
 and dependency identifier used by that graph must resolve. Non-generated source
