@@ -152,7 +152,17 @@ struct Board {
     let name: String
     var pass = 0, fail = 0
     var failures: [(row: String, expected: String, got: String)] = []
+    /// EVERY row, passing or failing, with the answer REAL Foundation gave.
+    /// This is what `ud_runner golden` emits, and it is the only reason the
+    /// GUEST route can be graded at all: the guest runs on Linux under
+    /// machorun with no real Foundation to ask, so its expectations have to
+    /// come from here. Recording it inside `check` rather than rebuilding the
+    /// table separately is deliberate -- a second construction of the same
+    /// expectations would be a SECOND AUTHORITY, and a transcription slip in
+    /// it would surface as a port failure, or worse, mask a real one.
+    var all: [(row: String, expected: String)] = []
     mutating func check(_ row: String, expected: String, got: String) {
+        all.append((row, expected))
         if expected == got { pass += 1 }
         else { fail += 1; failures.append((row, expected, got)) }
     }
@@ -628,6 +638,120 @@ if portB.fail == 0 {
 print("\nSCOREBOARD  control \(control.pass)/\(control.scored) · "
     + "corelibs \(corelibs.pass)/\(corelibs.scored) · "
     + "port \(portB.pass)/\(portB.scored) · cross \(cross.pass)/\(cross.scored)")
+
+// ---- golden emit, for the GUEST route (#87 step 4)
+//
+// The guest runs on Linux under machorun. There is no real Foundation there to
+// diff against, so its expectations must be CARRIED from here. This emits the
+// PORT board's rows -- row identity and the answer real Foundation gave -- so
+// the guest column and the host column are graded against literally the same
+// values produced by the same live oracle in the same run.
+//
+// It is emitted only after the run has been shown sound: a golden captured
+// from a run whose CONTROL-SELF was broken would propagate the breakage to a
+// second scoreboard, where nothing could see it.
+if mode == "golden" {
+    guard ok && portB.fail == 0 else {
+        FileHandle.standardError.write(Data(
+            "REFUSING to emit a golden from a run that is not sound (control fail \(control.fail), port fail \(portB.fail)).\n".utf8))
+        exit(2)
+    }
+    var out = ""
+    out += "# UserDefaults DARWIN GOLDEN -- expectations for the guest route (#87 step 4).\n"
+    out += "# Every line is a row the HOST PORT board scored, and the answer REAL\n"
+    out += "# Foundation gave for it in the run that produced:\n"
+    out += "#   control \(control.pass)/\(control.scored) · corelibs \(corelibs.pass)/\(corelibs.scored)"
+    out += " · port \(portB.pass)/\(portB.scored) · cross \(cross.pass)/\(cross.scored)\n"
+    out += "# Host: macOS \(ProcessInfo.processInfo.operatingSystemVersionString)\n"
+    out += "# Regenerate: full/oracle-userdefaults/build_ud_host.sh OUT && OUT/ud_runner golden\n"
+    out += "# Format: <row>\\t<expected>, ONE TAB, both fields C-escaped.\n"
+    out += "# Rows are NOT sorted -- order is the order they were scored, which is\n"
+    out += "# the order the guest replays them in.\n"
+    out += "#\n"
+    out += "# WHY BOTH FIELDS ARE ESCAPED. Two rows in this corpus -- string(\"\\t123\")\n"
+    out += "# and string(\"123\\t\") -- have a LITERAL TAB in the expected value, because\n"
+    out += "# the stored string does. Written raw into a tab-separated file they make\n"
+    out += "# three fields, and a naive parser silently takes the wrong one as the\n"
+    out += "# expectation. Escaping \\\\, \\t, \\n and \\r makes the format total.\n"
+    out += "#\n"
+    out += "# NOTE ON SCOPE: these are the SUITE-scoped rows. Anything whose answer\n"
+    out += "# depends on this machine's NSGlobalDomain is deliberately not here --\n"
+    out += "# see the README's \"Reading these numbers safely\".\n"
+    func esc(_ s: String) -> String {
+        var r = ""
+        for c in s.unicodeScalars {
+            switch c {
+            case "\\": r += "\\\\"
+            case "\t": r += "\\t"
+            case "\n": r += "\\n"
+            case "\r": r += "\\r"
+            default: r.unicodeScalars.append(c)
+            }
+        }
+        return r
+    }
+    func unesc(_ s: String) -> String {
+        var r = ""; var it = s.makeIterator();
+        while let c = it.next() {
+            if c != "\\" { r.append(c); continue }
+            guard let n = it.next() else { r.append(c); break }
+            switch n {
+            case "\\": r.append("\\")
+            case "t": r.append("\t")
+            case "n": r.append("\n")
+            case "r": r.append("\r")
+            default: r.append("\\"); r.append(n)
+            }
+        }
+        return r
+    }
+    for (row, expected) in portB.all {
+        out += "\(esc(row))\t\(esc(expected))\n"
+    }
+
+    // TOOTH ON THE FORMAT ITSELF. Re-parse what is about to be written and
+    // require it to reproduce the in-memory table exactly. Without this, a
+    // value containing the separator degrades SILENTLY -- the guest would grade
+    // two rows against a truncated expectation and report the difference as a
+    // port defect. Demonstrated necessary: those two rows exist in this corpus.
+    var reparsed: [(String, String)] = []
+    for line in out.split(separator: "\n", omittingEmptySubsequences: false) {
+        if line.hasPrefix("#") || line.isEmpty { continue }
+        let parts = line.split(separator: "\t", omittingEmptySubsequences: false)
+        guard parts.count == 2 else {
+            FileHandle.standardError.write(Data(
+                "golden: line does not have exactly 2 fields: \(line)\n".utf8))
+            exit(4)
+        }
+        reparsed.append((unesc(String(parts[0])), unesc(String(parts[1]))))
+    }
+    guard reparsed.count == portB.all.count else {
+        FileHandle.standardError.write(Data(
+            "golden: re-parse produced \(reparsed.count) rows, table has \(portB.all.count)\n".utf8))
+        exit(4)
+    }
+    for (i, r) in reparsed.enumerated() where r.0 != portB.all[i].row || r.1 != portB.all[i].expected {
+        FileHandle.standardError.write(Data(
+            "golden: row \(i) does not round-trip: wrote \(portB.all[i]) read \(r)\n".utf8))
+        exit(4)
+    }
+    print("golden: all \(reparsed.count) rows round-trip through the escaped format")
+    // To a FILE, named on the command line -- never to stdout. The board
+    // reports above have already gone to stdout, and they should: a golden is
+    // only trustworthy alongside the evidence that the run producing it was
+    // sound. Mixing the two streams would make the golden unparseable and the
+    // evidence invisible at the same time.
+    let dest = CommandLine.arguments.count > 2 ? CommandLine.arguments[2] : "darwin-golden.txt"
+    do {
+        try out.write(toFile: dest, atomically: true, encoding: .utf8)
+    } catch {
+        FileHandle.standardError.write(Data("golden: cannot write \(dest): \(error)\n".utf8))
+        exit(3)
+    }
+    print("\ngolden: \(portB.all.count) rows -> \(dest)")
+    RealDefaults(suiteName: xrefSuite)?.removePersistentDomain(forName: xrefSuite)
+    exit(0)
+}
 
 RealDefaults(suiteName: xrefSuite)?.removePersistentDomain(forName: xrefSuite)
 exit((ok && portB.fail == 0 && cross.fail == 0) ? 0 : 1)
