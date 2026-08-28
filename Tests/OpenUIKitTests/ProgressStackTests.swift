@@ -289,4 +289,92 @@ final class StackViewTests: XCTestCase {
         s.layoutSubviews()  // must not crash or resurrect b
         XCTAssertNil(b.superview)
     }
+
+    func testArrangedSubviewsConvenienceInitializerInstallsViewsInOrder() {
+        final class StackSubclass: UIStackView {}
+
+        let first = UIView(frame: CGRect(x: 1, y: 2, width: 3, height: 4))
+        let second = UILabel()
+        let stack = StackSubclass(arrangedSubviews: [first, second])
+
+        XCTAssertEqual(stack.frame, .zero)
+        XCTAssertEqual(stack.arrangedSubviews.count, 2)
+        XCTAssertTrue(stack.arrangedSubviews[0] === first)
+        XCTAssertTrue(stack.arrangedSubviews[1] === second)
+        XCTAssertTrue(stack.subviews[0] === first)
+        XCTAssertTrue(stack.subviews[1] === second)
+        XCTAssertTrue(first.superview === stack)
+        XCTAssertTrue(second.superview === stack)
+        XCTAssertFalse(first.translatesAutoresizingMaskIntoConstraints)
+        XCTAssertFalse(second.translatesAutoresizingMaskIntoConstraints)
+
+        stack.frame = CGRect(x: 0, y: 0, width: 100, height: 20)
+        stack.distribution = .fillEqually
+        stack.layoutIfNeeded()
+        XCTAssertEqual(first.frame, CGRect(x: 0, y: 0, width: 50, height: 20))
+        XCTAssertEqual(second.frame, CGRect(x: 50, y: 0, width: 50, height: 20))
+    }
+
+    func testLayoutMarginsRelativeArrangementInsetsBothAxes() {
+        let first = UIView(), second = UIView()
+        let stack = UIStackView(arrangedSubviews: [first, second])
+        stack.frame = CGRect(x: 0, y: 0, width: 120, height: 40)
+        stack.layoutMargins = UIEdgeInsets(top: 3, left: 10, bottom: 7, right: 20)
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.spacing = 10
+        stack.distribution = .fillEqually
+
+        stack.layoutIfNeeded()
+        XCTAssertEqual(first.frame, CGRect(x: 10, y: 3, width: 40, height: 30))
+        XCTAssertEqual(second.frame, CGRect(x: 60, y: 3, width: 40, height: 30))
+
+        stack.isLayoutMarginsRelativeArrangement = false
+        stack.layoutIfNeeded()
+        XCTAssertEqual(first.frame, CGRect(x: 0, y: 0, width: 55, height: 40))
+        XCTAssertEqual(second.frame, CGRect(x: 65, y: 0, width: 55, height: 40))
+    }
+
+    func testVerticalLayoutMarginsRelativeArrangementInsetsBothAxes() {
+        // Real UIKit 26.1 Catalyst probe with these exact inputs produces the
+        // two frames below and a 42x39 compressed fitting size.
+        let first = IntrinsicView(20, 10), second = IntrinsicView(30, 15)
+        let stack = UIStackView(arrangedSubviews: [first, second])
+        stack.frame = CGRect(x: 0, y: 0, width: 60, height: 70)
+        stack.axis = .vertical
+        stack.spacing = 4
+        stack.distribution = .fillEqually
+        stack.layoutMargins = UIEdgeInsets(top: 2, left: 5, bottom: 3, right: 7)
+        stack.isLayoutMarginsRelativeArrangement = true
+
+        stack.layoutIfNeeded()
+        XCTAssertEqual(first.frame, CGRect(x: 5, y: 2, width: 48, height: 30.5))
+        XCTAssertEqual(second.frame, CGRect(x: 5, y: 37, width: 48, height: 30.5))
+        XCTAssertEqual(stack.sizeThatFits(.zero), CGSize(width: 42, height: 39))
+    }
+
+    func testMarginsContributeToNaturalFittingSizeWhenRelative() {
+        let stack = UIStackView(arrangedSubviews: [
+            IntrinsicView(20, 10), IntrinsicView(30, 15),
+        ])
+        stack.axis = .vertical
+        stack.spacing = 4
+        stack.layoutMargins = UIEdgeInsets(top: 2, left: 5, bottom: 3, right: 7)
+
+        XCTAssertEqual(stack.sizeThatFits(.zero), CGSize(width: 30, height: 29))
+        stack.isLayoutMarginsRelativeArrangement = true
+        XCTAssertEqual(stack.sizeThatFits(.zero), CGSize(width: 42, height: 34))
+    }
+
+    func testHorizontalMarginsContributeToNaturalFittingSizeWhenRelative() {
+        let stack = UIStackView(arrangedSubviews: [
+            IntrinsicView(20, 10), IntrinsicView(30, 15),
+        ])
+        stack.spacing = 10
+        stack.distribution = .fillEqually
+        stack.layoutMargins = UIEdgeInsets(top: 3, left: 10, bottom: 7, right: 20)
+
+        XCTAssertEqual(stack.sizeThatFits(.zero), CGSize(width: 70, height: 15))
+        stack.isLayoutMarginsRelativeArrangement = true
+        XCTAssertEqual(stack.sizeThatFits(.zero), CGSize(width: 100, height: 25))
+    }
 }

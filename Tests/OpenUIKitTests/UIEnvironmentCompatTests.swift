@@ -16,21 +16,33 @@ final class UIEnvironmentCompatTests: XCTestCase {
 
     private final class WindowlessDelegate: UIResponder, UIApplicationDelegate {}
 
+    private final class OnboardingStyleController: UIViewController {
+        override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+            .portrait
+        }
+
+        override var shouldAutorotate: Bool { false }
+        override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
+    }
+
     private var savedBounds: CGRect = .zero
     private var savedScale: CGFloat = 1
     private var savedLanguage: String?
+    private var savedIdiom: UIUserInterfaceIdiom = .unspecified
 
     override func setUp() {
         super.setUp()
         savedBounds = UIScreen.main.bounds
         savedScale = UIScreen.main.scale
         savedLanguage = UITextInputMode.activeInputModes.first?.primaryLanguage
+        savedIdiom = UIDevice.current.userInterfaceIdiom
     }
 
     override func tearDown() {
         UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
         UITextInputMode._hostConfigure(primaryLanguage: savedLanguage)
         UIWindowScene()._hostConfigure(interfaceOrientation: nil)
+        UIDevice.current.userInterfaceIdiom = savedIdiom
         super.tearDown()
     }
 
@@ -38,11 +50,46 @@ final class UIEnvironmentCompatTests: XCTestCase {
         XCTAssertEqual(UIInterfaceOrientation.unknown.rawValue, 0)
         XCTAssertEqual(UIInterfaceOrientation.portrait.rawValue, 1)
         XCTAssertEqual(UIInterfaceOrientation.portraitUpsideDown.rawValue, 2)
-        XCTAssertEqual(UIInterfaceOrientation.landscapeLeft.rawValue, 3)
-        XCTAssertEqual(UIInterfaceOrientation.landscapeRight.rawValue, 4)
+        XCTAssertEqual(UIInterfaceOrientation.landscapeLeft.rawValue, 4)
+        XCTAssertEqual(UIInterfaceOrientation.landscapeRight.rawValue, 3)
         XCTAssertTrue(UIInterfaceOrientation.portrait.isPortrait)
         XCTAssertTrue(UIInterfaceOrientation.landscapeRight.isLandscape)
         XCTAssertFalse(UIInterfaceOrientation.unknown.isLandscape)
+    }
+
+    func testOrientationMaskBitsMatchInterfaceOrientationRawValues() {
+        XCTAssertEqual(UIInterfaceOrientationMask.portrait.rawValue, 2)
+        XCTAssertEqual(UIInterfaceOrientationMask.portraitUpsideDown.rawValue, 4)
+        XCTAssertEqual(UIInterfaceOrientationMask.landscapeRight.rawValue, 8)
+        XCTAssertEqual(UIInterfaceOrientationMask.landscapeLeft.rawValue, 16)
+        XCTAssertEqual(UIInterfaceOrientationMask.landscape.rawValue, 24)
+        XCTAssertEqual(UIInterfaceOrientationMask.allButUpsideDown.rawValue, 26)
+        XCTAssertEqual(UIInterfaceOrientationMask.all.rawValue, 30)
+
+        for orientation in [UIInterfaceOrientation.portrait,
+                            .portraitUpsideDown, .landscapeLeft, .landscapeRight] {
+            let dynamicMask = UIInterfaceOrientationMask(
+                rawValue: 1 << UInt(orientation.rawValue))
+            XCTAssertTrue(UIInterfaceOrientationMask.all.contains(dynamicMask))
+        }
+    }
+
+    func testControllerOrientationAndStatusBarPolicyDefaultsAndOverrides() {
+        let base = UIViewController()
+        UIDevice.current.userInterfaceIdiom = .phone
+        XCTAssertEqual(base.supportedInterfaceOrientations, .allButUpsideDown)
+        UIDevice.current.userInterfaceIdiom = .pad
+        XCTAssertEqual(base.supportedInterfaceOrientations, .all)
+        XCTAssertTrue(base.shouldAutorotate)
+        XCTAssertEqual(base.preferredStatusBarStyle, .default)
+
+        XCTAssertEqual(UIStatusBarStyle.default.rawValue, 0)
+        XCTAssertEqual(UIStatusBarStyle.lightContent.rawValue, 1)
+        XCTAssertEqual(UIStatusBarStyle.darkContent.rawValue, 3)
+        let onboarding = OnboardingStyleController()
+        XCTAssertEqual(onboarding.supportedInterfaceOrientations, .portrait)
+        XCTAssertFalse(onboarding.shouldAutorotate)
+        XCTAssertEqual(onboarding.preferredStatusBarStyle, .lightContent)
     }
 
     func testWindowSceneOrientationFollowsHostSurface() {

@@ -63,11 +63,27 @@ open class UIStackView: UIView {
     public var alignment: Alignment = .fill {
         didSet { setNeedsLayout() }
     }
+    public var isLayoutMarginsRelativeArrangement = false {
+        didSet {
+            if isLayoutMarginsRelativeArrangement != oldValue { setNeedsLayout() }
+        }
+    }
 
     public private(set) var arrangedSubviews: [UIView] = []
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+
+    /// Creates a zero-frame stack and installs `views` in their supplied
+    /// order. UIKit declares this as a convenience initializer (its frame and
+    /// coder initializers remain the designated paths), so subclasses inherit
+    /// it under the same Swift initializer rules.
+    public convenience init(arrangedSubviews views: [UIView]) {
+        self.init(frame: .zero)
+        for view in views {
+            addArrangedSubview(view)
+        }
     }
 
     public required init(coder: NSCoder) {
@@ -204,10 +220,21 @@ open class UIStackView: UIView {
             crossMax = max(crossMax, crossLength(natural))
         }
         let spacingTotal = spacing * CGFloat(visible.count - 1)
-        let along = (distribution == .fillEqually
+        var along = (distribution == .fillEqually
                      ? axisMax * CGFloat(visible.count) : axisSum) + spacingTotal
-        return axis == .horizontal ? CGSize(width: along, height: crossMax)
-                                   : CGSize(width: crossMax, height: along)
+        var across = crossMax
+        if isLayoutMarginsRelativeArrangement {
+            let margins = layoutMargins
+            if axis == .horizontal {
+                along += margins.left + margins.right
+                across += margins.top + margins.bottom
+            } else {
+                along += margins.top + margins.bottom
+                across += margins.left + margins.right
+            }
+        }
+        return axis == .horizontal ? CGSize(width: along, height: across)
+                                   : CGSize(width: across, height: along)
     }
 
     private func axisLength(_ s: CGSize) -> CGFloat { axis == .horizontal ? s.width : s.height }
@@ -222,7 +249,11 @@ open class UIStackView: UIView {
         guard !arranged.isEmpty else { return }
         let visible = arranged.filter { !$0.isHidden }
 
-        let total = axisLength(bounds.size)
+        let layoutRect = isLayoutMarginsRelativeArrangement
+            ? bounds.inset(by: layoutMargins) : bounds
+        let total = axisLength(layoutRect.size)
+        let axisOffset = axis == .horizontal ? layoutRect.minX : layoutRect.minY
+        let crossOffset = axis == .horizontal ? layoutRect.minY : layoutRect.minX
         let n = CGFloat(visible.count)
         let spacingTotal = spacing * max(0, n - 1)
         let contents = arranged.map { contentSize(of: $0) }
@@ -239,9 +270,11 @@ open class UIStackView: UIView {
 
         for (i, view) in arranged.enumerated() {
             let (o, l) = exact[i]
-            let axisOrigin = UIStackView.roundOrigin(o)
+            let axisOrigin = UIStackView.roundOrigin(axisOffset + o)
             let axisLen = view.isHidden ? 0 : UIStackView.roundSize(l)
-            let (crossOrigin, crossLen) = crossPlacement(content: crossLength(contents[i]))
+            let (crossOrigin, crossLen) = crossPlacement(
+                content: crossLength(contents[i]),
+                total: crossLength(layoutRect.size), offset: crossOffset)
             if axis == .horizontal {
                 view.frame = CGRect(x: axisOrigin, y: crossOrigin,
                                     width: axisLen, height: crossLen)
@@ -349,8 +382,8 @@ open class UIStackView: UIView {
 
     /// Exact cross-axis (origin, length) for one view given its content
     /// cross length, before rounding (then rounded like the main axis).
-    private func crossPlacement(content: CGFloat) -> (CGFloat, CGFloat) {
-        let total = crossLength(bounds.size)
+    private func crossPlacement(content: CGFloat, total: CGFloat,
+                                offset: CGFloat) -> (CGFloat, CGFloat) {
         var origin: CGFloat = 0
         var length: CGFloat = total
         switch alignment {
@@ -365,6 +398,6 @@ open class UIStackView: UIView {
             length = content
             origin = (total - content) / 2
         }
-        return (UIStackView.roundOrigin(origin), UIStackView.roundSize(length))
+        return (UIStackView.roundOrigin(offset + origin), UIStackView.roundSize(length))
     }
 }

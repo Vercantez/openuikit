@@ -8,6 +8,41 @@ private typealias PortableGradientLayer = OpenUIKit.CAGradientLayer
 private typealias PortableColor = OpenUIKit.CGColor
 
 @MainActor
+private final class LayerLayoutDelegateProbe: OpenUIKit.CALayerDelegate {
+    private(set) var layers: [PortableLayer] = []
+
+    func layoutSublayers(of layer: PortableLayer) {
+        layers.append(layer)
+    }
+}
+
+@MainActor
+private final class LayerLayoutViewProbe: UIView {
+    let gradient = PortableGradientLayer()
+    private(set) var callbacks: [String] = []
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        layer.insertSublayer(gradient, at: 0)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func layoutSubviews() {
+        callbacks.append("layoutSubviews")
+        super.layoutSubviews()
+    }
+
+    override func layoutSublayers(of layer: PortableLayer) {
+        callbacks.append("layoutSublayers.begin")
+        super.layoutSublayers(of: layer)
+        gradient.frame = bounds
+        callbacks.append("layoutSublayers.end")
+    }
+}
+
+@MainActor
 final class LayerContextCompatibilityTests: XCTestCase {
     private var savedBackend: RenderBackend = CanvasBackendSelection.current
     private var savedCompositor: RenderCompositor = OpenUIKitRuntime.compositor
@@ -33,6 +68,59 @@ final class LayerContextCompatibilityTests: XCTestCase {
     private func pixel(_ bitmap: Bitmap, x: Int, y: Int) -> [UInt8] {
         let offset = (y * bitmap.width + x) * 4
         return Array(bitmap.pixels[offset..<(offset + 4)])
+    }
+
+    func testStandaloneLayerLayoutDelegateRunsOnlyWhenInvalidated() {
+        let root = PortableLayer()
+        let child = PortableLayer()
+        let probe = LayerLayoutDelegateProbe()
+        root.delegate = probe
+
+        XCTAssertTrue(root.needsLayout())
+        root.layoutIfNeeded()
+        XCTAssertEqual(probe.layers.count, 1)
+        XCTAssertTrue(probe.layers.first === root)
+        XCTAssertFalse(root.needsLayout())
+
+        root.layoutIfNeeded()
+        XCTAssertEqual(probe.layers.count, 1, "a clean layer does not relayout")
+
+        root.addSublayer(child)
+        XCTAssertTrue(root.needsLayout())
+        root.layoutIfNeeded()
+        XCTAssertEqual(probe.layers.count, 2)
+
+        child.frame = CGRect(x: 1, y: 2, width: 3, height: 4)
+        XCTAssertTrue(root.needsLayout(), "child geometry invalidates its parent")
+        root.layoutIfNeeded()
+        XCTAssertEqual(probe.layers.count, 3)
+    }
+
+    func testUIViewBackingLayerRoutesLayoutThroughDelegateAndSuper() {
+        let view = LayerLayoutViewProbe(
+            frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        XCTAssertTrue(view.layer.delegate === view)
+
+        view.layoutIfNeeded()
+        XCTAssertEqual(view.callbacks, [
+            "layoutSublayers.begin", "layoutSubviews", "layoutSublayers.end",
+        ])
+        XCTAssertEqual(view.gradient.frame, view.bounds)
+
+        view.layoutIfNeeded()
+        XCTAssertEqual(view.callbacks.count, 3, "a clean view does not relayout")
+
+        view.frame = CGRect(x: 5, y: 6, width: 80, height: 30)
+        view.layoutIfNeeded()
+        XCTAssertEqual(view.callbacks.suffix(3), [
+            "layoutSublayers.begin", "layoutSubviews", "layoutSublayers.end",
+        ])
+        XCTAssertEqual(view.gradient.frame, CGRect(x: 0, y: 0, width: 80, height: 30))
+
+        view.layer.setNeedsLayout()
+        view.layoutIfNeeded()
+        XCTAssertEqual(view.callbacks.count, 9,
+                       "backing-layer invalidation also schedules view layout")
     }
 
     func testExplicitLayerHierarchyPreservesOrderAndRemoval() {

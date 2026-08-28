@@ -30,6 +30,18 @@ public enum UIViewContentMode: Sendable {
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
 }
 
+/// Class-only subset of QuartzCore's layer delegate used for layout. Core
+/// Animation makes this callback optional; a default implementation gives
+/// portable Swift delegates the same adopt-only-what-you-use ergonomics.
+@preconcurrency @MainActor
+public protocol CALayerDelegate: AnyObject {
+    func layoutSublayers(of layer: CALayer)
+}
+
+public extension CALayerDelegate {
+    func layoutSublayers(of layer: CALayer) {}
+}
+
 /// Portable CALayer subset. A UIView's backing layer forwards its geometry
 /// to the view; layers created directly keep independent geometry and can be
 /// attached as an explicit layer tree.  Rendering lives in RenderPass.swift
@@ -37,6 +49,7 @@ public enum UIViewContentMode: Sendable {
 @preconcurrency @MainActor
 open class CALayer {
     public weak var owner: UIView?
+    public weak var delegate: CALayerDelegate?
 
     private var storedBounds: CGRect = .zero
     private var storedPosition: CGPoint = .zero
@@ -45,6 +58,8 @@ open class CALayer {
     private var storedBackgroundColor: CGColor?
     private var storedOpacity: Float = 1
     private var storedHidden = false
+    private var _needsLayout = true
+    private var _isLayingOut = false
 
     /// Geometry follows Core Animation's bounds/position/anchor model.
     /// A backing layer mirrors its UIView so existing view geometry remains
@@ -53,7 +68,11 @@ open class CALayer {
         get { owner?.bounds ?? storedBounds }
         set {
             if let owner { owner.bounds = newValue }
-            else { storedBounds = newValue }
+            else if storedBounds != newValue {
+                storedBounds = newValue
+                _setNeedsLayoutFromMutation()
+                superlayer?._setNeedsLayoutFromMutation()
+            }
         }
     }
     public var position: CGPoint {
@@ -79,9 +98,15 @@ open class CALayer {
                 owner.frame = newValue
                 return
             }
+            let oldBounds = storedBounds
+            let oldPosition = storedPosition
             storedBounds.size = newValue.size
             storedPosition = CGPoint(x: newValue.minX + anchorPoint.x * newValue.width,
                                      y: newValue.minY + anchorPoint.y * newValue.height)
+            if storedBounds != oldBounds || storedPosition != oldPosition {
+                _setNeedsLayoutFromMutation()
+                superlayer?._setNeedsLayoutFromMutation()
+            }
         }
     }
 
@@ -95,6 +120,7 @@ open class CALayer {
             }
             storedSublayers.removeAll(keepingCapacity: true)
             for child in newValue ?? [] { _insertSublayer(child, at: storedSublayers.count) }
+            _setNeedsLayoutFromMutation()
         }
     }
     public private(set) weak var superlayer: CALayer?
@@ -122,12 +148,14 @@ open class CALayer {
         layer.removeFromSuperlayer()
         layer.superlayer = self
         storedSublayers.insert(layer, at: Swift.max(0, Swift.min(index, storedSublayers.count)))
+        _setNeedsLayoutFromMutation()
     }
 
     public func removeFromSuperlayer() {
         guard let parent = superlayer else { return }
         parent.storedSublayers.removeAll { $0 === self }
         superlayer = nil
+        parent._setNeedsLayoutFromMutation()
     }
 
     public var backgroundColor: CGColor? {
@@ -181,7 +209,59 @@ open class CALayer {
     public var shadowRadius: CGFloat = 3
 
     public init() {}
-    init(owner: UIView) { self.owner = owner }
+    init(owner: UIView) {
+        self.owner = owner
+        self.delegate = owner
+    }
+
+    /// Marks this layer's delegate/layout pass dirty.
+    public func setNeedsLayout() {
+        _needsLayout = true
+        owner?.needsLayout = true
+    }
+
+    /// Property-tree mutations implicitly invalidate layout, except while
+    /// the receiving layer is already running its callback (Core Animation's
+    /// documented recursion guard). Explicit `setNeedsLayout()` calls remain
+    /// able to schedule a subsequent pass.
+    private func _setNeedsLayoutFromMutation() {
+        guard !_isLayingOut else { return }
+        setNeedsLayout()
+    }
+
+    public func needsLayout() -> Bool { _needsLayout }
+
+    /// Runs the nearest dirty ancestor first, then every dirty descendant.
+    /// This mirrors the observable Core Animation contract while remaining
+    /// synchronous and deterministic for portable hosts.
+    public func layoutIfNeeded() {
+        var root = self
+        var ancestor = superlayer
+        while let candidate = ancestor, candidate._needsLayout {
+            root = candidate
+            ancestor = candidate.superlayer
+        }
+        root._layoutTreeIfNeeded()
+    }
+
+    private func _layoutTreeIfNeeded() {
+        if _needsLayout {
+            _needsLayout = false
+            _isLayingOut = true
+            layoutSublayers()
+            _isLayingOut = false
+        }
+        for sublayer in storedSublayers {
+            sublayer._layoutTreeIfNeeded()
+        }
+    }
+
+    /// Subclass override point. The default Core Animation implementation
+    /// consults its delegate before any layout manager; OpenUIKit currently
+    /// models that delegate path and has no CALayoutManager surface.
+    open func layoutSublayers() {
+        delegate?.layoutSublayers(of: self)
+    }
 
     /// Paint the receiver and its descendants into an existing graphics
     /// context. Like Core Animation, the root's own frame/position is not
@@ -206,7 +286,7 @@ public final class CAGradientLayer: CALayer {
 }
 
 @preconcurrency @MainActor
-open class UIView: UIResponder {
+open class UIView: UIResponder, CALayerDelegate {
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
     public var center: CGPoint = .zero {
         didSet {
@@ -472,7 +552,10 @@ open class UIView: UIResponder {
 
     // MARK: Layout
     var needsLayout = true
-    public func setNeedsLayout() { needsLayout = true }
+    public func setNeedsLayout() {
+        needsLayout = true
+        layer.setNeedsLayout()
+    }
 
     /// Schedule the receiver's update-constraints callback for the next
     /// layout pass. UIKit propagates this dirtiness to the hierarchy root:
@@ -555,12 +638,22 @@ open class UIView: UIResponder {
                 $0.viewIfLoaded === self ? $0 : nil
             }
             controller?.viewWillLayoutSubviews()
-            layoutSubviews()
+            layer.layoutIfNeeded()
             controller?.viewDidLayoutSubviews()
         }
         for s in subviews { s._layoutSubtree() }
     }
     open func layoutSubviews() {}
+
+    /// CALayerDelegate entry point for this view's backing layer. UIKit routes
+    /// `layoutSubviews()` through this callback; doing the same preserves the
+    /// ordering seen by subclasses that override `layoutSublayers(of:)` and
+    /// call `super`, including views that resize explicit gradient layers.
+    open func layoutSublayers(of layer: CALayer) {
+        guard layer === self.layer else { return }
+        needsLayout = false
+        layoutSubviews()
+    }
 
     func _autoresizeChildren(oldSize: CGSize) {
         // UIKit autoresizing-mask distribution. For each axis the frame is

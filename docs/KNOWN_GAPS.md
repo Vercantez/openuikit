@@ -59,8 +59,12 @@ Objective-C optional dispatch:
 
 OpenUIKit supports process-local explicit `CALayer` trees, ordered
 `addSublayer`/`insertSublayer`/`removeFromSuperlayer`, axial
-`CAGradientLayer`, and `render(in:)`. This is deliberately not yet a unified
-mirror of UIKit's private backing-layer tree:
+`CAGradientLayer`, and `render(in:)`. Layers also have UIKit-shaped weak
+delegates and a synchronous dirty-layout path: geometry/tree mutations call
+`setNeedsLayout()`, `layoutIfNeeded()` walks the dirty explicit-layer subtree,
+and a view's backing layer dispatches `layoutSublayers(of:)` to the view before
+`layoutSubviews()`. This is deliberately not yet a unified mirror of UIKit's
+private backing-layer tree:
 
 - `view.layer.sublayers` exposes app-installed layers only; it does not also
   expose the backing layers of `view.subviews`. Rendering places those
@@ -68,6 +72,10 @@ mirror of UIKit's private backing-layer tree:
   which matches Focus's `insertSublayer(gradient, at: 0)` use. An app that
   appends a layer expecting it to appear above an already-added UIView child
   will still see it below that child.
+- Layout is synchronous and caller-driven. There is no `CALayoutManager`,
+  display transaction, run-loop commit, or window-server scheduling; an app
+  that expects Core Animation to perform a later implicit pass must call the
+  view/layer `layoutIfNeeded()` path (the OpenUIKit host does this for views).
 - Explicit-layer shadows are implemented by the quartz/layers compositor but
   not by the pure-Swift render pass. Backgrounds, calibrated axial gradients,
   opacity groups, clipping, borders, descendant geometry, and array order work
@@ -75,6 +83,14 @@ mirror of UIKit's private backing-layer tree:
 - `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.
+
+## Orientation and status-bar policy (Focus Onboarding, 2026-08-28)
+
+`UIInterfaceOrientationMask`, `UIStatusBarStyle`, and the corresponding
+`UIViewController` override points preserve UIKit's exact raw values and
+controller defaults. They are policy surfaces only: no portable system rotates
+a window from `supportedInterfaceOrientations`/`shouldAutorotate`, and no host
+status bar is rendered or recolored from `preferredStatusBarStyle`.
 
 ## Actor isolation (M15, 2026-08-25): what is `@MainActor` and what is not
 

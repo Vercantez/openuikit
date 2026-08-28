@@ -12,8 +12,10 @@ public enum UIInterfaceOrientation: Int, Sendable {
     case unknown = 0
     case portrait = 1
     case portraitUpsideDown = 2
-    case landscapeLeft = 3
-    case landscapeRight = 4
+    // UIKit's interface orientation names describe the CONTENT rotation and
+    // are intentionally opposite UIDeviceOrientation's landscape names.
+    case landscapeLeft = 4
+    case landscapeRight = 3
 
     public var isPortrait: Bool {
         self == .portrait || self == .portraitUpsideDown
@@ -22,6 +24,41 @@ public enum UIInterfaceOrientation: Int, Sendable {
     public var isLandscape: Bool {
         self == .landscapeLeft || self == .landscapeRight
     }
+}
+
+/// The orientations a controller permits. UIKit defines each bit by shifting
+/// one by the corresponding `UIInterfaceOrientation` raw value; preserving
+/// that relationship matters for callers that construct masks dynamically.
+public struct UIInterfaceOrientationMask: OptionSet, Sendable {
+    public let rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+
+    public static let portrait = UIInterfaceOrientationMask(
+        rawValue: 1 << UInt(UIInterfaceOrientation.portrait.rawValue))
+    public static let landscapeLeft = UIInterfaceOrientationMask(
+        rawValue: 1 << UInt(UIInterfaceOrientation.landscapeLeft.rawValue))
+    public static let landscapeRight = UIInterfaceOrientationMask(
+        rawValue: 1 << UInt(UIInterfaceOrientation.landscapeRight.rawValue))
+    public static let portraitUpsideDown = UIInterfaceOrientationMask(
+        rawValue: 1 << UInt(UIInterfaceOrientation.portraitUpsideDown.rawValue))
+    public static let landscape: UIInterfaceOrientationMask = [
+        .landscapeLeft, .landscapeRight,
+    ]
+    public static let all: UIInterfaceOrientationMask = [
+        .portrait, .landscapeLeft, .landscapeRight, .portraitUpsideDown,
+    ]
+    public static let allButUpsideDown: UIInterfaceOrientationMask = [
+        .portrait, .landscapeLeft, .landscapeRight,
+    ]
+}
+
+/// A controller's preferred status-bar foreground treatment. OpenUIKit does
+/// not draw host-system chrome, but retaining UIKit's values lets the host and
+/// app/controller policy communicate without lossy ad-hoc integers.
+public enum UIStatusBarStyle: Int, Sendable {
+    case `default` = 0
+    case lightContent = 1
+    case darkContent = 3
 }
 
 @preconcurrency @MainActor

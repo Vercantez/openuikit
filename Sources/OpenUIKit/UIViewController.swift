@@ -212,6 +212,23 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// the drag itself, which is not measured here.
     public var isModalInPresentation = false
 
+    /// Orientations this controller allows. UIKit's base implementation is
+    /// device-family dependent: phones exclude upside-down portrait while
+    /// iPads permit all four interface orientations.
+    open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        UIDevice.current.userInterfaceIdiom == .pad ? .all : .allButUpsideDown
+    }
+
+    /// UIKit's legacy rotation gate defaults to enabled. Modern hosts should
+    /// primarily consult `supportedInterfaceOrientations`, but open-source
+    /// controllers still commonly override both surfaces.
+    open var shouldAutorotate: Bool { true }
+
+    /// Foreground treatment requested for host-owned status-bar content.
+    /// OpenUIKit itself draws no system status bar; hosts may consume this
+    /// policy when presenting a controller.
+    open var preferredStatusBarStyle: UIStatusBarStyle { .default }
+
     /// The controller this one is currently presenting.
     public internal(set) var presentedViewController: UIViewController?
     /// The controller that presented this one.
