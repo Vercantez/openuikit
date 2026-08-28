@@ -1,0 +1,16 @@
+# Captured on macOS 26.5.2 (25F84), Apple Swift 6.2.1, real Foundation.
+# Regenerate: swift darwin_probe_domains.swift
+# NOTE: the NSGlobalDomain counts are THIS MACHINE'S and will differ elsewhere;
+#       the load-bearing fact is the COMPOSITION, not the numbers.
+
+dictionaryRepresentation count = 81
+persistentDomain(suite) count  = 2   keys=["mine_1", "mine_2"]
+persistentDomain(NSGlobalDomain) count = 52
+
+keys in dictionaryRepresentation but NOT in this suite: 79
+  of those, in NSGlobalDomain: 52
+  sample: ACDMonthlyAnalyticsLastPosted, AKLastIDMSEnvironment, AKLastLocale, AppleAntiAliasingThreshold, AppleInterfaceStyle, AppleInterfaceStyleSwitchesAutomatically, AppleKeyboardUIMode, AppleLanguages, AppleLanguagesSchemaVersion, AppleLocale, AppleMiniaturizeOnDoubleClick, ApplePressAndHoldEnabled
+
+volatileDomainNames = ["NSRegistrationDomain", "NSArgumentDomain"]
+argumentDomain      = [:]
+registrationDomain in volatile names? true

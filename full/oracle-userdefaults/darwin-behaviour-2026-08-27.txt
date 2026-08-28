@@ -1,0 +1,226 @@
+# Captured on macOS 26.5.2 (build 25F84), Apple Swift 6.2.1, real Foundation.
+# Regenerate: swift darwin_probe_behaviour.swift com.example.udprobe.scratch 1
+#             swift darwin_probe_behaviour.swift com.example.udprobe.scratch 2   (after the first exits -- process restart)
+#             swift darwin_probe_behaviour.swift com.example.udprobe.scratch 3   (cleanup)
+
+=== PHASE 1 · suite com.example.udprobe.golden ===
+
+[1] object(forKey:) -- the DYNAMIC TYPE the value comes back as
+  k_string                                       NSTaggedPointerString = hello
+  k_int                                          __NSCFNumber = 42
+  k_bool_true                                    __NSCFBoolean = 1
+  k_bool_false                                   __NSCFBoolean = 0
+  k_double                                       __NSCFNumber = 3.5
+  k_float                                        __NSCFNumber = 1.5
+  k_data                                         _NSInlineData = {length = 4, bytes = 0xdeadbeef}
+  k_date                                         __NSTaggedDate = 1970-01-01 00:16:40 +0000
+  k_array_int                                    __NSArrayI = (
+    1,
+    2,
+    3
+)
+  k_dict                                         __NSDictionaryI = {
+    x = 1;
+    y = two;
+}
+  k_url_file                                     NSPathStore2 = /tmp/x
+  k_url_http                                     _NSInlineData = {length = 263, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000000cd }
+  k_int_zero                                     __NSCFNumber = 0
+  k_int_one                                      __NSCFNumber = 1
+  k_nsnumber_one                                 __NSCFNumber = 1
+  k_nsnumber_true                                __NSCFBoolean = 1
+  k_double_whole                                 __NSCFNumber = 1
+
+[2] COERCION -- every typed getter over every stored type
+  key                      string        integer   double     bool   array? dict? data?
+  k_string               "hello"       0        0         false   .      .     .
+  k_int                  "42"          42       42        true    .      .     .
+  k_bool_true            "1"           1        1         true    .      .     .
+  k_bool_false           "0"           0        0         false   .      .     .
+  k_double               "3.5"         3        3.5       true    .      .     .
+  k_string_numeric       "123"         123      123       false   .      .     .
+  k_string_double        "3.75"        0        3.75      false   .      .     .
+  k_string_YES           "YES"         0        0         true    .      .     .
+  k_string_true          "true"        0        0         true    .      .     .
+  k_string_no            "no"          0        0         false   .      .     .
+  k_string_nonnumeric    "banana"      0        0         false   .      .     .
+  k_int_zero             "0"           0        0         false   .      .     .
+  k_int_two              "2"           2        2         true    .      .     .
+  k_int_neg              "-1"          -1       -1        true    .      .     .
+  k_data                 nil           0        0         false   .      .     Y
+  k_date                 nil           0        0         false   .      .     .
+  k_array_int            nil           0        0         false   Y      .     .
+  k_dict                 nil           0        0         false   .      Y     .
+  k_empty_string         ""            0        0         false   .      .     .
+  k_absent               nil           0        0         false   .      .     .
+
+[3] ABSENT KEY -- absence is an answer, and the answers differ per getter
+  object(forKey: absent)                         nil
+  string(forKey: absent)                         nil
+  integer(forKey: absent)                        Int = 0
+  double(forKey: absent)                         Double = 0.0
+  float(forKey: absent)                          Float = 0.0
+  bool(forKey: absent)                           Bool = false
+  array(forKey: absent)                          nil
+  data(forKey: absent)                           nil
+  url(forKey: absent)                            nil
+  stringArray(forKey: absent)                    nil
+
+[4] URL -- set(URL) stores WHAT, and url(forKey:) returns WHAT
+  object(k_url_file)                             NSPathStore2 = /tmp/x
+  url(k_url_file)                                URL = file:///tmp/x
+  object(k_url_http)                             _NSInlineData = {length = 263, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000000cd }
+  url(k_url_http)                                URL = https://example.com/a?b=c
+  url(k_string) -- a plain string read as URL    URL = hello -- file:///Users/miguelsalinas/swift-macho-linux/full/oracle-userdefaults/
+  url(k_int)                                     nil
+
+[5] register(defaults:) LAYERING
+  reg_only (registered, never set)               __StringStorage = from-register
+  k_string (set AND registered)                  NSTaggedPointerString = hello
+  reg_int integer(forKey:)                       Int = 7
+  dictionaryRepresentation() contains reg_only:  true
+  dictionaryRepresentation() count:              111
+  persistentDomain contains reg_only:            false   (registered values are NOT persistent)
+  persistentDomain count:                        30
+
+[6] removeObject -- does it fall back to the registered value?
+  after set                                      NSTaggedPointerString = set-value
+  after removeObject                             __StringStorage = from-register
+  removeObject on an absent key: did not trap
+
+[7] SUITE ISOLATION
+  this suite   k_string                          NSTaggedPointerString = hello
+  other suite  k_string                          __StringStorage = other-value
+  standard     k_string (must be nil)            NSIndirectTaggedPointerString = register-should-LOSE
+  UserDefaults(suiteName: nil)  is standard?  false
+  two UserDefaults(suiteName: same) identical? false
+
+[8] WHAT set() ACCEPTS AND REFUSES (non-plist values)
+  k_nested round-trip                            __NSDictionaryI = {
+    nested =     {
+        deep =         (
+            1,
+            2,
+            "1970-01-01 00:00:05 +0000"
+        );
+    };
+}
+
+[9] STORAGE
+  expected path: /Users/miguelsalinas/Library/Preferences/com.example.udprobe.golden.plist
+  exists:        true
+  size:          61 bytes
+  magic:         62 70 6c 69 73 74 30 30
+  FORMAT:        BINARY plist (bplist00)
+  synchronize() -> true
+=== PHASE 2 · suite com.example.udprobe.golden ===
+
+[1] object(forKey:) -- the DYNAMIC TYPE the value comes back as
+  k_string                                       NSTaggedPointerString = hello
+  k_int                                          __NSCFNumber = 42
+  k_bool_true                                    __NSCFBoolean = 1
+  k_bool_false                                   __NSCFBoolean = 0
+  k_double                                       __NSCFNumber = 3.5
+  k_float                                        __NSCFNumber = 1.5
+  k_data                                         __NSCFData = {length = 4, bytes = 0xdeadbeef}
+  k_date                                         __NSTaggedDate = 1970-01-01 00:16:40 +0000
+  k_array_int                                    __NSCFArray = (
+    1,
+    2,
+    3
+)
+  k_dict                                         __NSDictionaryI = {
+    x = 1;
+    y = two;
+}
+  k_url_file                                     NSTaggedPointerString = /tmp/x
+  k_url_http                                     __NSCFData = {length = 263, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000000cd }
+  k_int_zero                                     __NSCFNumber = 0
+  k_int_one                                      __NSCFNumber = 1
+  k_nsnumber_one                                 __NSCFNumber = 1
+  k_nsnumber_true                                __NSCFBoolean = 1
+  k_double_whole                                 __NSCFNumber = 1
+
+[2] COERCION -- every typed getter over every stored type
+  key                      string        integer   double     bool   array? dict? data?
+  k_string               "hello"       0        0         false   .      .     .
+  k_int                  "42"          42       42        true    .      .     .
+  k_bool_true            "1"           1        1         true    .      .     .
+  k_bool_false           "0"           0        0         false   .      .     .
+  k_double               "3.5"         3        3.5       true    .      .     .
+  k_string_numeric       "123"         123      123       false   .      .     .
+  k_string_double        "3.75"        0        3.75      false   .      .     .
+  k_string_YES           "YES"         0        0         true    .      .     .
+  k_string_true          "true"        0        0         true    .      .     .
+  k_string_no            "no"          0        0         false   .      .     .
+  k_string_nonnumeric    "banana"      0        0         false   .      .     .
+  k_int_zero             "0"           0        0         false   .      .     .
+  k_int_two              "2"           2        2         true    .      .     .
+  k_int_neg              "-1"          -1       -1        true    .      .     .
+  k_data                 nil           0        0         false   .      .     Y
+  k_date                 nil           0        0         false   .      .     .
+  k_array_int            nil           0        0         false   Y      .     .
+  k_dict                 nil           0        0         false   .      Y     .
+  k_empty_string         ""            0        0         false   .      .     .
+  k_absent               nil           0        0         false   .      .     .
+
+[3] ABSENT KEY -- absence is an answer, and the answers differ per getter
+  object(forKey: absent)                         nil
+  string(forKey: absent)                         nil
+  integer(forKey: absent)                        Int = 0
+  double(forKey: absent)                         Double = 0.0
+  float(forKey: absent)                          Float = 0.0
+  bool(forKey: absent)                           Bool = false
+  array(forKey: absent)                          nil
+  data(forKey: absent)                           nil
+  url(forKey: absent)                            nil
+  stringArray(forKey: absent)                    nil
+
+[4] URL -- set(URL) stores WHAT, and url(forKey:) returns WHAT
+  object(k_url_file)                             NSTaggedPointerString = /tmp/x
+  url(k_url_file)                                URL = file:///tmp/x
+  object(k_url_http)                             __NSCFData = {length = 263, bytes = 0x62706c69 73743030 d4010203 04050607 ... 00000000 000000cd }
+  url(k_url_http)                                URL = https://example.com/a?b=c
+  url(k_string) -- a plain string read as URL    URL = hello -- file:///Users/miguelsalinas/swift-macho-linux/full/oracle-userdefaults/
+  url(k_int)                                     nil
+
+[5] register(defaults:) LAYERING
+  reg_only (registered, never set)               __StringStorage = from-register
+  k_string (set AND registered)                  NSTaggedPointerString = hello
+  reg_int integer(forKey:)                       Int = 7
+  dictionaryRepresentation() contains reg_only:  true
+  dictionaryRepresentation() count:              112
+  persistentDomain contains reg_only:            false   (registered values are NOT persistent)
+  persistentDomain count:                        31
+
+[6] removeObject -- does it fall back to the registered value?
+  after set                                      NSTaggedPointerString = set-value
+  after removeObject                             __StringStorage = from-register
+  removeObject on an absent key: did not trap
+
+[7] SUITE ISOLATION
+  this suite   k_string                          NSTaggedPointerString = hello
+  other suite  k_string                          __StringStorage = other-value
+  standard     k_string (must be nil)            NSIndirectTaggedPointerString = register-should-LOSE
+  UserDefaults(suiteName: nil)  is standard?  false
+  two UserDefaults(suiteName: same) identical? false
+
+[8] WHAT set() ACCEPTS AND REFUSES (non-plist values)
+  k_nested round-trip                            __NSSingleEntryDictionaryI = {
+    nested =     {
+        deep =         (
+            1,
+            2,
+            "1970-01-01 00:00:05 +0000"
+        );
+    };
+}
+
+[9] STORAGE
+  expected path: /Users/miguelsalinas/Library/Preferences/com.example.udprobe.golden.plist
+  exists:        true
+  size:          61 bytes
+  magic:         62 70 6c 69 73 74 30 30
+  FORMAT:        BINARY plist (bplist00)
+  synchronize() -> true
+removed persistent domain com.example.udprobe.golden

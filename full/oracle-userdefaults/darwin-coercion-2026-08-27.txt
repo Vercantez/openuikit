@@ -1,0 +1,69 @@
+# Captured on macOS 26.5.2 (25F84), Apple Swift 6.2.1, real Foundation.
+# Regenerate: swift darwin_probe_coercion.swift
+
+stored string        | UD.integer  UD.double   UD.bool  | NSString.integerValue  .doubleValue  .boolValue
+--------------------------------------------------------------------------------------------------------
+"123"                | 123         123         false    | 123                   123           true  <-- DIVERGES
+"0123"               | 123         123         false    | 123                   123           true  <-- DIVERGES
+" 123"               | 123         123         false    | 123                   123           true  <-- DIVERGES
+"123 "               | 0           123         false    | 123                   123           true  <-- DIVERGES
+"12.9"               | 0           12.9        false    | 12                    12.9          true  <-- DIVERGES
+"3.75"               | 0           3.75        false    | 3                     3.75          true  <-- DIVERGES
+"-7"                 | -7          -7          false    | -7                    -7            true  <-- DIVERGES
+"+7"                 | 7           7           false    | 7                     7             true  <-- DIVERGES
+"0"                  | 0           0           false    | 0                     0             false
+"1"                  | 1           1           true     | 1                     1             true
+"2"                  | 2           2           false    | 2                     2             true  <-- DIVERGES
+"-1"                 | -1          -1          false    | -1                    -1            true  <-- DIVERGES
+"0.0"                | 0           0           false    | 0                     0             false
+"1.0"                | 0           1           false    | 1                     1             true  <-- DIVERGES
+"1e3"                | 0           1000        false    | 1                     1000          true  <-- DIVERGES
+"0x10"               | 0           0           false    | 0                     0             false
+"YES"                | 0           0           true     | 0                     0             true
+"Yes"                | 0           0           true     | 0                     0             true
+"yes"                | 0           0           true     | 0                     0             true
+"Y"                  | 0           0           false    | 0                     0             true  <-- DIVERGES
+"y"                  | 0           0           false    | 0                     0             true  <-- DIVERGES
+"TRUE"               | 0           0           true     | 0                     0             true
+"True"               | 0           0           true     | 0                     0             true
+"true"               | 0           0           true     | 0                     0             true
+"T"                  | 0           0           false    | 0                     0             true  <-- DIVERGES
+"t"                  | 0           0           false    | 0                     0             true  <-- DIVERGES
+"NO"                 | 0           0           false    | 0                     0             false
+"no"                 | 0           0           false    | 0                     0             false
+"N"                  | 0           0           false    | 0                     0             false
+"n"                  | 0           0           false    | 0                     0             false
+"FALSE"              | 0           0           false    | 0                     0             false
+"false"              | 0           0           false    | 0                     0             false
+"F"                  | 0           0           false    | 0                     0             false
+"f"                  | 0           0           false    | 0                     0             false
+"banana"             | 0           0           false    | 0                     0             false
+""                   | 0           0           false    | 0                     0             false
+" "                  | 0           0           false    | 0                     0             false
+"1banana"            | 0           1           false    | 1                     1             true  <-- DIVERGES
+"banana1"            | 0           0           false    | 0                     0             false
+"9223372036854775807"| 2147483647  9.22337e+18 false    | 9223372036854775807   9.22337e+18   true  <-- DIVERGES
+"9223372036854775808"| 2147483647  9.22337e+18 false    | 9223372036854775807   9.22337e+18   true  <-- DIVERGES
+"-0"                 | 0           -0          false    | 0                     -0            false
+
+rows where UserDefaults' answer != the NSString conversion: 19 of 42
+
+--- numbers, the other direction ---
+  n_two      object=2  string=2  integer=2  double=2.0  bool=true
+  n_neg      object=-1  string=-1  integer=-1  double=-1.0  bool=true
+  n_frac     object=0.4  string=0.4  integer=0  double=0.4  bool=true
+  n_zerod    object=0  string=0  integer=0  double=0.0  bool=false
+  n_big      object=1099511627776  string=1099511627776  integer=1099511627776  double=1099511627776.0  bool=true
+
+--- register(defaults:) with a STRING, read through typed getters ---
+  integer(r_str_num) = 42
+  bool(r_bool_str)   = true
+  object(r_int)      = __NSCFNumber 5
+
+--- stringArray on a mixed array ---
+  array(mixed)       = [a, 1, b]
+  stringArray(mixed) = nil
+  stringArray(allstr)= Optional(["a", "b"])
+
+--- set(nil) vs removeObject ---
+  after set(nil): nil
