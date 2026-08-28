@@ -998,7 +998,7 @@ Constraint entry keys:
 | key | type | notes |
 |---|---|---|
 | `item` | string | required. Dot-joined subview-index path (layout-dump addressing); `""` = root. |
-| `attribute` | string | required. One of `left, right, top, bottom, leading, trailing, width, height, centerX, centerY, firstBaseline, lastBaseline`. |
+| `attribute` | string | required. One of `left, right, top, bottom, leading, trailing, width, height, centerX, centerY, firstBaseline, lastBaseline` or, since v5.4, the margin attributes `leftMargin, rightMargin, topMargin, bottomMargin, leadingMargin, trailingMargin, centerXWithinMargins, centerYWithinMargins` — the item's own layout-margins edges, the same geometry `"guide": "layoutMargins"` addresses (fixture `constraints_margins`, 100.0 %). |
 | `relation` | string | `eq` (default), `le`, `ge`. |
 | `guide` | string | v5.3. Constrain one of `item`'s LAYOUT GUIDES instead of the view itself: `safeArea`, `layoutMargins` or `readableContent`. |
 | `toItem` | string or null | second item's path; null/omitted = unary (sizes). |

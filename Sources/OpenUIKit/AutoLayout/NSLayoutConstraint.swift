@@ -36,24 +36,42 @@ public struct UILayoutPriority: RawRepresentable, Hashable, Comparable, Sendable
     }
 }
 
+// `open`, not `final`: real UIKit's NSLayoutConstraint is an ordinary
+// Objective-C class and libraries subclass it. SnapKit's `LayoutConstraint:
+// NSLayoutConstraint` is the case that measured this — with the class final
+// the subclass fails to declare, loses the @MainActor it would have
+// inherited, and every member access inside it then reports as an isolation
+// violation, so ONE keyword produced 74 unrelated-looking errors.
 @MainActor
-public final class NSLayoutConstraint {
-    public enum Attribute: Sendable {
-        case left, right, top, bottom, leading, trailing
-        case width, height, centerX, centerY
-        case lastBaseline, firstBaseline
-        case notAnAttribute
+open class NSLayoutConstraint {
+    /// Raw values are Darwin's `NSLayoutAttribute` (NSLayoutConstraint.h):
+    /// left = 1 through centerYWithinMargins = 20, notAnAttribute = 0.
+    /// `baseline` is `NS_SWIFT_UNAVAILABLE` on iOS, so it is not spelled here.
+    public enum Attribute: Int, Sendable {
+        case left = 1, right = 2, top = 3, bottom = 4, leading = 5, trailing = 6
+        case width = 7, height = 8, centerX = 9, centerY = 10
+        case lastBaseline = 11, firstBaseline = 12
+        /// The margin attributes address the item's own `layoutMarginsGuide`
+        /// edges — `leftMargin` is `left` inset by `layoutMargins.left`, and
+        /// `centerXWithinMargins` is the centre of what remains between the
+        /// horizontal margins. iOS 8.0; absent from AppKit, which is why the
+        /// header guards them with `TARGET_OS_IPHONE`.
+        case leftMargin = 13, rightMargin = 14, topMargin = 15, bottomMargin = 16
+        case leadingMargin = 17, trailingMargin = 18
+        case centerXWithinMargins = 19, centerYWithinMargins = 20
+        case notAnAttribute = 0
     }
 
-    public enum Relation: Sendable {
-        case lessThanOrEqual, equal, greaterThanOrEqual
+    /// Raw values are Darwin's `NSLayoutRelation`.
+    public enum Relation: Int, Sendable {
+        case lessThanOrEqual = -1, equal = 0, greaterThanOrEqual = 1
     }
 
     /// Layout axis (also used by UIStackView.axis and the content-hugging /
     /// compression-resistance APIs). Previously declared as a stand-alone
     /// namespace enum in UIStackView.swift; moved here with M9.
-    public enum Axis: Sendable {
-        case horizontal, vertical
+    public enum Axis: Int, Sendable {
+        case horizontal = 0, vertical = 1
     }
 
     /// The constrained object: a `UIView` or a ``UILayoutGuide`` (UIKit types
@@ -71,6 +89,10 @@ public final class NSLayoutConstraint {
     /// optional while active is a programmer error there. We simply honor the
     /// current value at each solve.
     public var priority: UILayoutPriority = .required
+
+    /// A debugging name, printed in `description` (UIKit's `NSIdentifier`
+    /// category). Identifiers starting with NS or UI are reserved there.
+    public var identifier: String?
 
     /// The view whose `constraints` array holds this constraint while active
     /// (nearest common ancestor of the items).
@@ -136,6 +158,16 @@ public final class NSLayoutConstraint {
         for c in constraints { c.isActive = false }
     }
 
+    /// Real UIKit's constraint inherits `description` from `NSObject` and
+    /// subclasses override it (SnapKit's `LayoutConstraint` does). OpenUIKit
+    /// has no NSObject, so the overridable member is declared here; the
+    /// default text is not UIKit's and nothing may depend on its wording.
+    open var description: String {
+        let name = identifier.map { " '\($0)'" } ?? ""
+        return "<NSLayoutConstraint\(name) \(firstAttribute) \(relation) "
+            + "\(secondAttribute) * \(multiplier) + \(constant)>"
+    }
+
     static func commonAncestor(_ a: UIView, _ b: UIView) -> UIView? {
         var chain: Set<ObjectIdentifier> = []
         var v: UIView? = a
@@ -151,6 +183,12 @@ public final class NSLayoutConstraint {
         return nil
     }
 }
+
+// No `CustomStringConvertible` conformance: the protocol is nonisolated, so
+// conforming a @MainActor class to it "crosses into main actor-isolated
+// code" (a warning today, an error in Swift 6 language mode) for a printing
+// convenience nothing here needs. Real UIKit gets `description` from
+// NSObject, which is not a Swift protocol conformance at all.
 
 // MARK: - UIView constraint surface
 

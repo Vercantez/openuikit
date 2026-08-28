@@ -1395,6 +1395,14 @@ func layoutAttribute(_ s: String) -> NSLayoutConstraint.Attribute {
     case "centerY": return .centerY
     case "firstBaseline": return .firstBaseline
     case "lastBaseline": return .lastBaseline
+    case "leftMargin": return .leftMargin
+    case "rightMargin": return .rightMargin
+    case "topMargin": return .topMargin
+    case "bottomMargin": return .bottomMargin
+    case "leadingMargin": return .leadingMargin
+    case "trailingMargin": return .trailingMargin
+    case "centerXWithinMargins": return .centerXWithinMargins
+    case "centerYWithinMargins": return .centerYWithinMargins
     default: fatalError("bad constraint attribute '\(s)'")
     }
 }

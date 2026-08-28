@@ -64,8 +64,11 @@
 //     untransformed layout rect. No fixture transforms a safe-area child.
 //   * RTL. `leading`/`trailing` alias `left`/`right` everywhere in this
 //     module, exactly as they already do in the rest of Auto Layout (M9).
-//   * `UILayoutSupport` / `topLayoutGuide` / `bottomLayoutGuide` — the
-//     pre-iOS-11 spelling. Deprecated in UIKit; not declared here.
+//   * `topLayoutGuide` / `bottomLayoutGuide` — the pre-iOS-11 spelling.
+//     Deprecated in UIKit; not declared here. The `UILayoutSupport` PROTOCOL
+//     they vend is declared (bottom of this file) because a library types
+//     against it, but nothing conforms to it, so the deprecated behaviour
+//     stays unbuilt rather than invented.
 //   * An UNREFERENCED user guide keeps `layoutFrame == .zero`, as in UIKit.
 //     A SYSTEM guide, by contrast, always reports its frame here even if no
 //     constraint mentions it (real UIKit leaves it zero until the guide
@@ -411,4 +414,27 @@ extension UIView {
                             right: max(0, f.maxX - (b.maxX - m.right)))
     }
 
+}
+
+// MARK: - UILayoutSupport (declared, unconformed)
+//
+// UIKit's pre-iOS-11 top/bottom layout guides are vended as this protocol.
+// The guides themselves are deprecated and are NOT implemented here (file
+// header, "WHAT IS NOT MODELLED"), but the protocol is a TYPE that portable
+// library source names: SnapKit spells `typealias ConstraintLayoutSupport =
+// UILayoutSupport` unconditionally under `canImport(UIKit)`, so the name has
+// to resolve for the library to compile at all.
+//
+// Nothing in OpenUIKit conforms to it and nothing vends one, so no app can
+// obtain an instance and no behaviour is fabricated — a missing conformance
+// is a compile error at the point of misuse, which is the loud failure this
+// deserves. `AnyObject`, not UIKit's `NSObjectProtocol`, because OpenUIKit
+// has no NSObject (UISelector.swift); the class constraint is what matters,
+// and it is what SnapKit's `target: AnyObject?` needs.
+@MainActor
+public protocol UILayoutSupport: AnyObject {
+    var length: CGFloat { get }
+    var topAnchor: NSLayoutYAxisAnchor { get }
+    var bottomAnchor: NSLayoutYAxisAnchor { get }
+    var heightAnchor: NSLayoutDimension { get }
 }

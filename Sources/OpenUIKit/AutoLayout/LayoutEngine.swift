@@ -333,11 +333,42 @@ enum LayoutEngine {
                 } else {
                     e.add(vv.top, 1); e.add(vv.height, 1)
                 }
+            // The margin attributes are the item's own layout-margins guide
+            // spelled as an attribute: UIKit resolves `leftMargin` to the same
+            // edge as `layoutMarginsGuide.leadingAnchor`. Margins are read as
+            // a constant at solve time, exactly as intrinsic sizes and
+            // baselines above are — `layoutMargins` already folds in the safe
+            // area (UILayoutGuide.swift). LTR only, like leading/trailing.
+            case .leftMargin, .leadingMargin:
+                e.add(vv.left, 1); e.constant = Double(margins(vv).left)
+            case .rightMargin, .trailingMargin:
+                e.add(vv.left, 1); e.add(vv.width, 1)
+                e.constant = -Double(margins(vv).right)
+            case .topMargin:
+                e.add(vv.top, 1); e.constant = Double(margins(vv).top)
+            case .bottomMargin:
+                e.add(vv.top, 1); e.add(vv.height, 1)
+                e.constant = -Double(margins(vv).bottom)
+            case .centerXWithinMargins:
+                let m = margins(vv)
+                e.add(vv.left, 1); e.add(vv.width, 0.5)
+                e.constant = Double(m.left - m.right) / 2
+            case .centerYWithinMargins:
+                let m = margins(vv)
+                e.add(vv.top, 1); e.add(vv.height, 0.5)
+                e.constant = Double(m.top - m.bottom) / 2
             case .notAnAttribute:
                 break
             }
             return e
         }
+    }
+
+    /// Layout margins of the constrained item. A layout guide has none of its
+    /// own — UIKit's margin attributes are declared on views — so a guide
+    /// contributes zero and the attribute degenerates to its plain edge.
+    private static func margins(_ vv: ViewVars) -> UIEdgeInsets {
+        vv.view?.layoutMargins ?? .zero
     }
 
     // MARK: - Oracle-fitted rounding (docs/SCENE_SPEC.md, Constraints v4.3)

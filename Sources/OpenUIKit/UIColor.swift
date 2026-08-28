@@ -24,6 +24,14 @@ public enum UIUserInterfaceStyle: Sendable {
     case unspecified, light, dark
 }
 
+/// Raw values are Darwin's `UIUserInterfaceLayoutDirection` (UIApplication.h).
+/// Auto Layout in OpenUIKit is LTR throughout — `leading` aliases `left`
+/// everywhere (docs/KNOWN_GAPS.md) — so this is a declared value, not a
+/// switch: nothing in the layout or render path reads it.
+public enum UIUserInterfaceLayoutDirection: Int, Sendable {
+    case leftToRight = 0, rightToLeft = 1
+}
+
 public struct UITraitCollection: Equatable, Sendable {
     public var userInterfaceStyle: UIUserInterfaceStyle
     public var displayScale: CGFloat

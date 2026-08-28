@@ -1421,8 +1421,43 @@ scroll view hand-off. Not shipped:
   vertex optimum, verified by fixtures), but in principle several weaker
   constraints could jointly outweigh one stronger — no fixture or normal
   layout depends on this.
-- leading/trailing alias left/right (LTR only; no RTL, no layout margins,
-  no safe-area/layout guides).
+- leading/trailing alias left/right (LTR only; no RTL). Layout margins and
+  the safe-area/layout guides arrived with "controls2"; the eight MARGIN
+  ATTRIBUTES (`leftMargin` … `centerYWithinMargins`) arrived 2026-08-28 and
+  are golden-exact against real UIKit — fixture `constraints_margins`,
+  100.0 % pixels, and a probe confirms the attribute spelling and the
+  `layoutMarginsGuide` spelling resolve to the identical geometry on both
+  sides. **They are read as a constant at solve time**, like intrinsic sizes
+  and baselines: a constraint that uses a view's OWN margin attribute while
+  that same view's frame is being solved is order-dependent here, because the
+  margins depend on the frame the solve has not produced yet. Real UIKit
+  converges over repeated layout passes. No fixture does this, and the
+  fixture deliberately takes its margins from a FRAME-BASED container.
+
+- **Oracle limitation found while measuring the margin attributes
+  (2026-08-28), and it predates them.** The scene spec forces a safe area by
+  overriding `safeAreaInsets` on a private `UIView` subclass. That override
+  reaches DESCENDANTS — a child's inherited safe area, its guides and its
+  `layoutMargins` all follow it — but it does **not** reach the overriding
+  view's OWN `layoutMargins`. Probe, root 320x480 forced to safe
+  (59,16,34,20), a box pinned to the root's own layout-margins guide:
+
+  | | oracle (real UIKit, forced safe area) | OpenUIKit |
+  |---|---|---|
+  | box at the root's own margins | (8, 8) | (24, 67) |
+  | box at a child container's margins | (24, 8) | (24, 8) |
+
+  Both spellings — the guide and the attribute — diverge identically, so
+  this is the safe-area model, not the new attributes. OpenUIKit adds the
+  forced insets to that view's own margins; the oracle's UIKit does not,
+  because its internal margin computation reads an ivar the getter override
+  never sets. **On a real device the safe area is not overridden and the
+  question does not arise**, and the controls2 measurement that says margins
+  = base + safe area (44,10,34,12 -> 52,18,42,20) was taken through a real
+  window, so OpenUIKit is very likely right and the oracle is the artifact.
+  Not resolved either way here, because nothing renders it: no fixture pins
+  to the forced view's own margins, and `constraints_safearea` — written
+  before anyone noticed — happens to use a descendant's guide.
 - Constraint attributes map to FRAME edges in the solve space; a superview's
   bounds.origin (scrolled UIScrollView content) is not modeled, so
   constraint children of a scrolled view anchor to its frame, not its

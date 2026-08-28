@@ -1,0 +1,65 @@
+{
+  "name" : "constraints_margins",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        480
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        30,
+        320,
+        300
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        24,
+        37,
+        60,
+        40
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        232,
+        252,
+        60,
+        40
+      ],
+      "path" : "0.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        118,
+        150,
+        80,
+        30
+      ],
+      "path" : "0.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        24,
+        137,
+        268,
+        24
+      ],
+      "path" : "0.3"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "constraints_margins",
+  "size": [320, 480],
+  "scale": 2,
+  "style": "light",
+  "constraints": [
+    { "item": "0.0", "attribute": "left",   "toItem": "0", "toAttribute": "leftMargin" },
+    { "item": "0.0", "attribute": "top",    "toItem": "0", "toAttribute": "topMargin" },
+    { "item": "0.0", "attribute": "width",  "constant": 60 },
+    { "item": "0.0", "attribute": "height", "constant": 40 },
+
+    { "item": "0.1", "attribute": "right",  "toItem": "0", "toAttribute": "rightMargin" },
+    { "item": "0.1", "attribute": "bottom", "toItem": "0", "toAttribute": "bottomMargin" },
+    { "item": "0.1", "attribute": "width",  "constant": 60 },
+    { "item": "0.1", "attribute": "height", "constant": 40 },
+
+    { "item": "0.2", "attribute": "centerX", "toItem": "0", "toAttribute": "centerXWithinMargins" },
+    { "item": "0.2", "attribute": "centerY", "toItem": "0", "toAttribute": "centerYWithinMargins" },
+    { "item": "0.2", "attribute": "width",   "constant": 80 },
+    { "item": "0.2", "attribute": "height",  "constant": 30 },
+
+    { "item": "0.3", "attribute": "leading",  "toItem": "0", "toAttribute": "leadingMargin" },
+    { "item": "0.3", "attribute": "trailing", "toItem": "0", "toAttribute": "trailingMargin" },
+    { "item": "0.3", "attribute": "top",      "toItem": "0", "toAttribute": "topMargin", "constant": 100 },
+    { "item": "0.3", "attribute": "height",   "constant": 24 }
+  ],
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemGray5",
+    "safeAreaInsets": [59, 16, 34, 20],
+    "subviews": [
+      {
+        "class": "UIView",
+        "frame": [0, 30, 320, 300],
+        "backgroundColor": "systemBackground",
+        "subviews": [
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemOrange" },
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" },
+          { "class": "UIView", "useConstraints": true, "backgroundColor": "systemPink" }
+        ]
+      }
+    ]
+  }
+}
