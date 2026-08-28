@@ -137,10 +137,25 @@ Given a name and a trait environment `(scale, appearance, idiom)`:
    If none, take `any`. **`light` and `dark` never substitute for each other**
    — falling back from `dark` to `light` is a wrong render, not a near miss.
 
-4. **Scale.** Exact match wins. Otherwise the **smallest scale above** the
-   request (downscaling a larger asset beats upscaling a smaller one), then the
-   **largest below**, then any variant with `scale: null`. A `null`-scale
-   variant is ranked last so an explicit match always beats it.
+4. **Scale.** Exact match wins. Otherwise the **largest scale below** the
+   request, then the **smallest above**, then any variant with `scale: null`. A
+   `null`-scale variant is ranked last so an explicit match always beats it.
+
+   > **CORRECTED 2026-08-28 BY MEASUREMENT (#82).** This step used to say
+   > *smallest above, then largest below*, reasoning that downscaling a larger
+   > asset beats upscaling a smaller one. That argument is plausible and it is
+   > **not what UIKit does**. An asset carrying only 1x and 3x, asked at 2x on
+   > both an iPhone and an iPad, gets the **1x** payload from
+   > `UIImage(named:)`; the old rule returned 3x. Four rows, one rule, and
+   > `EXPECTED_RESOLUTION.md` named it in advance as the likeliest divergence
+   > in the run.
+   >
+   > Scope of the evidence, which is narrower than the rule: the only
+   > observable fall-**up** case is `{1x,3x}` asked at 2x, because no 1x
+   > simulator device exists and a 3x ask against `{1x,2x}` falls down either
+   > way. "Largest below" is confirmed in both directions that could be
+   > observed; "smallest above" is now the last resort rather than the first
+   > choice, and remains unobserved.
 
 5. Return the first remaining variant.
 
@@ -154,17 +169,23 @@ $ xcassets_tool.py resolve index.json accountCloudKit --scale 2 --appearance dar
    { "payload": { "filename": "icloud-dark.pdf", ... }, "scale": null, ... }
 ```
 
-### What the oracle does and does not say about this
+### What the oracle says about this — UPDATED, #82 closed the gap
 
 `actool` + `assetutil` establish that the reader's **variant table** matches
-Apple's — every `(name, scale, idiom, appearance, filename)` tuple. They do
-**not** establish that steps 2–4 pick the same variant UIKit would at runtime,
-because `assetutil` dumps the catalog rather than performing a lookup.
+Apple's — every `(name, scale, idiom, appearance, filename)` tuple (#79).
 
-**So step 2–4 is the part of this document with the weakest evidence, and a
-consumer should treat it as a specification to be tested against
-`UIImage(named:)` on a device or simulator, not as a measured result.** The
-tuple table underneath it is measured.
+**Steps 1–4 are now measured too (#82).** `UIImage(named:in:compatibleWith:)`
+was run against a compiled fixture in three simulator devices (2x phone, 3x
+phone, 2x pad) and the returned image identified against every candidate
+payload: **234 of 234 image rows and 90 of 90 colour rows choose what UIKit
+chooses.** The correction in step 4 above is what that run bought.
+
+Two limits remain, and they are limits of the vehicle rather than of the
+result:
+
+* **1x is unreachable** — no 1x simulator device exists — so a 1x request has
+  never been observed.
+* **`scale: null` variants** were exercised at 2x and 3x only.
 
 ---
 
@@ -215,13 +236,38 @@ Lookups:
 ## Checklist for the OpenUIKit side
 
 - [ ] `UIImage(named:)` → steps 1–5; **raise** on `unresolved`.
-- [ ] `UIColor(named:)` → same steps; use `native` + `color_space` if
-      colour-managed, else `srgb`; **raise** on a `reference` variant, because
-      the system palette is not in the catalog and `actool` resolving it is not
-      something this index can reproduce.
+- [ ] `UIColor(named:)` → same steps; **raise** on a `reference` variant,
+      because the system palette is not in the catalog and `actool` resolving
+      it is not something this index can reproduce. Which field to use is now
+      measured against `UIColor`, and it depends on the space:
+      - `srgb` / `extended-srgb` → **`native`** (UIKit reports it unchanged)
+      - `display-p3` → **`srgb`**. `UIColor.getRed:green:blue:alpha:` converts
+        out of P3 while `cgColor.colorSpace` still reports DisplayP3, and it
+        agrees with this index's conversion to **~3e-5** on every P3 colour in
+        the corpus. #79 said no oracle could corroborate that conversion; one
+        can, and it does.
+      - `gray-gamma-22` → **`native`**, replicating `white` into R, G and B.
+        UIKit does **not** gamma-convert: for `white = 0.9` it reports
+        `0.9, 0.9, 0.9`, while this index's `srgb` conversion gives
+        `0.902873`. Neither is wrong — one is a colour-managed conversion, the
+        other is component reporting — but a consumer that wants to **match
+        UIKit** must use `native` here.
 - [ ] `template-rendering-intent: "template"` (2,452 uses in 16 apps) means the
       image is a tinting mask — carry it through to `UIImage.renderingMode`.
 - [ ] `resizing` (11 uses in 3 apps) is `UIImage.resizableImage(withCapInsets:)`.
 - [ ] Vector payloads are `.pdf` (and `.svg` for symbolsets). If the consumer
       cannot rasterise PDF, that is a **named gap**, not a fallback to nothing.
 - [ ] Bundle order for `collisions` is the consumer's to decide, and to state.
+      **Measured (#82), for the one case the index cannot answer from source:**
+      when two catalogs defining the same name are compiled together, `actool`
+      emits **one** rendition — the one from the catalog listed **first** on its
+      command line — and `UIImage(named:)` returns that one. So the winner is
+      decided at *build* time by catalog order, not at runtime by bundle
+      search. A consumer reproducing Xcode's behaviour should apply its own
+      catalog order and take the first definition.
+- [ ] **`.unspecified` is not a state to plan for.** Asked with
+      `userInterfaceIdiom = .unspecified`, UIKit substitutes the **device's**
+      idiom rather than falling back to `universal` — measured on 36 rows. A
+      real app's trait collection always carries phone, pad or mac, so step 2
+      never sees `.unspecified`; a consumer that synthesises trait collections
+      should fill in the device idiom rather than leaving it unset.

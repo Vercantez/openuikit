@@ -659,22 +659,37 @@ def resolve(asset, scale=2, appearance="light", idiom="universal"):
     if not vs:
         return None, trace
 
-    # 3. SCALE.  Exact, else the smallest scale ABOVE the request (upscaling a
-    #    smaller asset looks worse than downscaling a larger one), else the
-    #    largest below.  A variant with scale None matches any request and is
+    # 3. SCALE.  Exact, else the LARGEST SCALE BELOW the request, else the
+    #    smallest above.  A variant with scale None matches any request and is
     #    ranked last so an explicit match always wins.
+    #
+    #    CORRECTED 2026-08-28 BY MEASUREMENT (#82), AND IT WAS WRONG BEFORE.
+    #    This step used to prefer the smallest scale ABOVE, reasoning that
+    #    downscaling a larger asset beats upscaling a smaller one.  That was a
+    #    plausible argument and it is not what UIKit does.  EXPECTED_RESOLUTION.md
+    #    named it in advance as the likeliest divergence in the run, and the
+    #    oracle found it: an asset carrying only 1x and 3x, asked at 2x on both
+    #    an iPhone and an iPad, gets `g1.png` from `UIImage(named:)` and got
+    #    `g3.png` from this function.  Four rows, one rule.
+    #
+    #    SCOPE OF THE MEASUREMENT, because it is narrower than the rule: the
+    #    only observable fall-UP case is {1x,3x} asked at 2x, since no 1x
+    #    simulator device exists and a 3x ask against {1x,2x} falls DOWN either
+    #    way.  So "largest below" is confirmed in both directions that could be
+    #    observed, and "smallest above" is now only the last resort rather than
+    #    the first choice.
     exact = [v for v in vs if v.get("scale") == scale]
     if exact:
         vs = exact
         trace.append("scale=%d exact -> %d" % (scale, len(vs)))
     else:
-        above = sorted((v for v in vs if v.get("scale") and v["scale"] > scale),
-                       key=lambda v: v["scale"])
         below = sorted((v for v in vs if v.get("scale") and v["scale"] < scale),
                        key=lambda v: -v["scale"])
+        above = sorted((v for v in vs if v.get("scale") and v["scale"] > scale),
+                       key=lambda v: v["scale"])
         none = [v for v in vs if v.get("scale") is None]
-        vs = above[:1] or below[:1] or none
-        trace.append("scale=%d -> %s" % (scale, "above" if above else ("below" if below else "scaleless")))
+        vs = below[:1] or above[:1] or none
+        trace.append("scale=%d -> %s" % (scale, "below" if below else ("above" if above else "scaleless")))
     if not vs:
         return None, trace
     return vs[0], trace

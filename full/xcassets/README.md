@@ -11,6 +11,10 @@ UIKit surface — they can be proved without a pixel oracle.
     ./roundtrip.py <index-dir> <corpus>                # byte gate
     ./spot_oracle.py <corpus> <fresh-work-dir>         # differential vs actool
     ./teeth.sh <corpus> <fresh-work-dir>               # prove the gates can fail
+    ./build_fixture.py <corpus> <index-dir> <fixture>  # the resolution oracle (#82)
+    ./run_resolution_oracle.sh <fixture> <fresh-out>   #   real UIImage(named:)
+    ./score_resolution.py <fixture> <out>
+    ./teeth_resolution.sh <fixture> <out> <fresh-work>
 
 `INDEX_FORMAT.md` is the handover document for the OpenUIKit side.
 `EXPECTED.md` is the pre-registration, committed in `24e624a` before
@@ -221,13 +225,124 @@ two are now separate lines.
   and its `srgb` field is this tool's own conversion — a convenience the oracle
   **cannot** corroborate, labelled as such in `INDEX_FORMAT.md`.
 
-### What the oracle does NOT establish
+### What proof 3 does NOT establish — closed by proof 5
 
-`assetutil` dumps a catalog; it does not perform a lookup. So the **variant
-table** is measured against Apple, and **steps 2–4 of the resolution algorithm**
-(idiom → appearance → scale) are a specification, not a measured result. The
-right next test is `UIImage(named:)` in a simulator. `INDEX_FORMAT.md` says so
-where a reader will see it.
+`assetutil` dumps a catalog; it does not perform a lookup. So proof 3 measures
+the **variant table** and says nothing about **steps 1–4 of the resolution
+algorithm**. That gap was named rather than filed as done, and #82 closed it —
+see below.
+
+## Proof 5 — the resolution algorithm, against `UIImage(named:)` (#82)
+
+    ./build_fixture.py <corpus> <index-dir> <fixture>
+    ./run_resolution_oracle.sh <fixture> <fresh-out>
+    ./score_resolution.py <fixture> <out>
+    ./teeth_resolution.sh <fixture> <out> <fresh-work>
+
+Pre-registration: `EXPECTED_RESOLUTION.md`, committed in `1f70b91` before the
+probe or the scorer existed.
+
+**The vehicle is the simulator, and that is a measured conclusion.** Mac
+Catalyst is this project's established oracle vehicle and **cannot express the
+scale axis**; neither can a `simctl spawn`ed process. Five routes, all pinned
+to 2.0 — `UIImage(named:in:compatibleWith:)`, `imageAsset.image(with:)`,
+`traits.performAsCurrent`, and spawns on a 2x and a 3x device. `displayScale`
+in a `UITraitCollection` does not drive catalog scale selection: UIKit takes it
+from the **screen**, and neither vehicle has one. So the probe is a real `.app`
+installed and launched in three simulators.
+
+```
+devices        scale 2 idiom ipad · scale 2 idiom iphone · scale 3 idiom iphone
+               1x is unreachable: no 1x simulator device exists
+
+INSTRUMENT CHECKS, before any scoreboard
+   closest same-size candidate pair    49.500   (must exceed 10.0)
+   assets ruled undecidable                 0
+   image rows identified                  234 of 234
+     of which byte-exact                    91   (the rest actool re-encoded)
+
+IMAGES    agree with UIKit    234 of 234    chose differently 0 · index found none 0
+COLOURS   agree with UIKit     90 of 90     differ 0
+          display-p3 24 · extended-srgb 18 · gray-gamma-22 6 · srgb 42
+          system references     6   (excluded: the palette is not in the catalog)
+COLLISION rows recorded         6   (no prediction registered)
+EXCLUDED  ask .unspecified     36   (not a state an app can be in)
+
+VERDICT: the index chooses what UIKit chooses on every decidable row.
+```
+
+### The pre-registered prediction FAILED, and that is what the run bought
+
+`EXPECTED_RESOLUTION.md` P2 named step 4 as the likeliest divergence: *"smallest
+scale above, then largest below"* was a choice made from reasoning —
+downscaling beats upscaling — that no oracle had ever checked.
+
+**UIKit disagrees.** An asset carrying only 1x and 3x, asked at 2x on both an
+iPhone and an iPad, returns the **1x** payload; the index returned 3x. Four
+rows, one rule. `resolve()` and `INDEX_FORMAT.md` step 4 are corrected to
+*largest below, then smallest above*, with the scope of the evidence stated:
+the only observable fall-**up** case is `{1x,3x}` at 2x, so "smallest above"
+is now a last resort that remains unobserved.
+
+**The scoreboard above is from re-scoring the same probe data after the fix —
+no re-measurement.** The probe does not know the algorithm and does not compare
+anything, so the specification can be corrected without touching the evidence.
+
+### Identification had to be measured, not assumed
+
+Exact hashing identified only 33 of 92 rows: `actool` re-encodes payloads, so
+UIKit's returned image is not byte-identical to the source file for most real
+assets. Measured over 276 rows and 69 same-size candidate pairs, in mean
+absolute difference per byte:
+
+| | |
+|---|---|
+| UIKit vs the nearest candidate | max **0.2817**, median 0.0075 |
+| any two same-size candidates | min **49.5**, median 117.6 |
+
+A **176× margin**. Thresholds are set from that data (`IDENTIFY_MAX 2.0`,
+`MARGIN_MIN 10.0`) rather than chosen, and both instrument checks run and are
+printed *before* the scoreboard, per #78's `renderDiscriminates`: candidates of
+one asset must be far apart, and every scored row's returned image must match
+some candidate. 0 undecidable, 0 unidentified.
+
+### Three findings the run produced beyond its own scoreboard
+
+* **The `srgb` field IS corroborable, and #79 said it was not.** `UIColor`'s
+  `getRed:green:blue:alpha:` converts out of Display P3 (while
+  `cgColor.colorSpace` still reports DisplayP3) and agrees with this index's
+  P3→sRGB matrix to **~3e-5** on every P3 colour in the corpus. That is a
+  correction to this oracle's own pre-registration (P4).
+* **`gray-gamma-22` is the exception.** UIKit does not gamma-convert: for
+  `white = 0.9` it reports `0.9, 0.9, 0.9`, while the index's conversion gives
+  `0.902873`. Neither is wrong — one is colour-managed conversion, the other is
+  component reporting — but a consumer matching UIKit must use `native`.
+* **The name collision is decided at BUILD time.** Two catalogs defining one
+  name, compiled together: `actool` emits a single rendition, from the catalog
+  listed **first**, and `UIImage(named:)` returns it. The index records both
+  and picks neither; `INDEX_FORMAT.md` now tells the consumer to apply catalog
+  order and take the first.
+
+And one exclusion worth naming: asked with `userInterfaceIdiom = .unspecified`,
+UIKit substitutes the **device's** idiom rather than falling back to
+`universal`. 36 rows. A real app's traits always carry phone/pad/mac, so this
+is not a state to plan for — excluded, counted, and recorded rather than scored
+as 24 divergences that were one artefact of the question.
+
+### Teeth (`teeth_resolution.sh`), 4 of 4
+
+```
+TOOTH 1  a planted wrong PAYLOAD, end to end through the device   PASS  named SynLightDark
+TOOTH 2  an index-side light/dark swap, no device run needed      PASS  25 rows differ
+TOOTH 3  no result files                                          PASS  exit 2, refused
+TOOTH 3b zero decidable rows                                      PASS  exit 2, refused
+```
+
+Tooth 1 was **vacuous first** and said so: it planted into ProtonMail's
+`AppIcon-calculator-preview`, an asset the oracle already excludes as
+unidentified, so the scoreboard stayed 234 of 234 and the tooth reported FAIL
+while the oracle was fine. It now targets a row that is definitely scored and
+asserts that the oracle names **that** asset, not merely that something failed.
 
 ## Proof 4 — the teeth (`teeth.sh`)
 
