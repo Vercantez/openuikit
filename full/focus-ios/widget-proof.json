@@ -1,0 +1,104 @@
+{
+  "build": {
+    "apple_toolchain_required": true,
+    "module_name": "Widget",
+    "module_suffixes": [
+      ".abi.json",
+      ".swiftdoc",
+      ".swiftmodule",
+      ".swiftsourceinfo"
+    ],
+    "parse_as_library": true,
+    "swift_language_version": "5",
+    "target": "arm64-apple-macos13.0",
+    "whole_module_optimization": true
+  },
+  "claims": {
+    "apple_toolchain_module_emission_only": true,
+    "linux_guest_link_or_run": false,
+    "resource_catalog_compilation_or_decode": false,
+    "runtime_bundle_discovery": false
+  },
+  "focus": {
+    "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "package_manifest": {
+      "path": "BlockzillaPackage/Package.swift",
+      "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248",
+      "size": 1975
+    },
+    "worktree_prefix": "focus-ios"
+  },
+  "generated_source": {
+    "classification": "generated-build-input",
+    "path": "generated/Widget/Bundle+Module.swift",
+    "purpose": "compile-only module-local Bundle.module contract; runtime discovery intentionally unavailable",
+    "sha256": "c0a3ee61e4fc8015d5e4a36775293347e21c58850605a6d47141f344211829aa",
+    "size": 146
+  },
+  "port_context": {
+    "openuikit": {
+      "commit": "0bba80a4138ece678844e2f55da16ffb7cbf70e9",
+      "compiler_input": false,
+      "worktree_prefix": "."
+    },
+    "snapkit": {
+      "commit": "e74fe2a978d1216c3602b129447c7301573cc2d8",
+      "compiler_input": false,
+      "worktree_prefix": "."
+    }
+  },
+  "resources": {
+    "byte_count": 73131,
+    "declaration": "raw-unhandled-at-pinned-manifest",
+    "file_count": 5,
+    "files": [
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/Contents.json",
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+        "size": 63
+      },
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/GradientFirst.colorset/Contents.json",
+        "sha256": "75759bdc8a68e4694bda34486c47e347ab8af010ebb8de7372b0ca443c08186b",
+        "size": 692
+      },
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/GradientSecond.colorset/Contents.json",
+        "sha256": "f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda44af2",
+        "size": 692
+      },
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/icon_logo.imageset/Contents.json",
+        "sha256": "b4a48ee46b1087f15188dc0a4cdf065251008e51e44427b1bb94f0744085eb79",
+        "size": 159
+      },
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/icon_logo.imageset/icon_logo.pdf",
+        "sha256": "7f8ea654a4d0ac064fb38027c16ae730b1f0561a031bb465b71997b0df4188b7",
+        "size": 71525
+      }
+    ],
+    "source_digest": "cf65ea586b104d622bb50ec5f0c09a1dc11ec0f293d322776dbb6f698f880126",
+    "source_path": "BlockzillaPackage/Sources/Widget/Media.xcassets",
+    "stage_path": "resources/Widget/Media.xcassets"
+  },
+  "schema": 1,
+  "target": {
+    "input_stage_path": "inputs/Widget",
+    "name": "Widget",
+    "source_digest": "9206ccc2a5bc96333805a38d48fb2092a40d308a4db950897e7977161e67884e",
+    "source_root": "BlockzillaPackage/Sources/Widget",
+    "sources": [
+      {
+        "path": "BlockzillaPackage/Sources/Widget/Assets.swift",
+        "sha256": "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+        "size": 533
+      },
+      {
+        "path": "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+        "sha256": "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+        "size": 2006
+      }
+    ]
+  }
+}
