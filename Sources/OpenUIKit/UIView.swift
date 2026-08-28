@@ -461,8 +461,13 @@ open class UIView: UIResponder {
     }
 
     // MARK: Traits
-    public var traitCollection: UITraitCollection {
-        var t = superview?.traitCollection ?? UITraitCollection.current
+    open var traitCollection: UITraitCollection {
+        // UIKit supplies a complete environment even before a view joins a
+        // hierarchy. OpenUIKit's process-wide collection may intentionally
+        // leave size axes unspecified for the host surface to resolve, so a
+        // detached view completes just those axes from UIScreen's bounds
+        // rather than exposing placeholders to initializers/viewDidLoad.
+        var t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
         if overrideUserInterfaceStyle != .unspecified {
             t.userInterfaceStyle = overrideUserInterfaceStyle
         }

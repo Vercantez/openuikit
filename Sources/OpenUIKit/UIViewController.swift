@@ -395,9 +395,13 @@ open class UIViewController: UIResponder, UIContentContainer {
     open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {}
 
     /// A controller inherits traits from its loaded root view, then its
-    /// containing controller, then the process-wide current collection.
+    /// containing controller. Before either relationship exists, the main
+    /// screen completes any process-wide unspecified size axes so view-load
+    /// code observes the same portable environment as a detached UIView.
     public var traitCollection: UITraitCollection {
-        viewIfLoaded?.traitCollection ?? parent?.traitCollection ?? .current
+        viewIfLoaded?.traitCollection
+            ?? parent?.traitCollection
+            ?? UIScreen.main._currentTraitsResolvingSizeClasses
     }
 
     /// UIKit returns a local coordinator while a presentation or size change

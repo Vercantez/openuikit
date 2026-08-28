@@ -24,6 +24,13 @@ public enum UIUserInterfaceStyle: Sendable {
     case unspecified, light, dark
 }
 
+/// Raw values match UIKit's `UIUserInterfaceSizeClass`.
+public enum UIUserInterfaceSizeClass: Int, Sendable {
+    case unspecified = 0
+    case compact = 1
+    case regular = 2
+}
+
 /// Raw values are Darwin's `UIUserInterfaceLayoutDirection` (UIApplication.h).
 /// Auto Layout in OpenUIKit is LTR throughout — `leading` aliases `left`
 /// everywhere (docs/KNOWN_GAPS.md) — so this is a declared value, not a
@@ -35,25 +42,110 @@ public enum UIUserInterfaceLayoutDirection: Int, Sendable {
 public struct UITraitCollection: Equatable, Sendable {
     public var userInterfaceStyle: UIUserInterfaceStyle
     public var displayScale: CGFloat
-    /// Dynamic Type setting (M14). Defaults to `.large`, which is what a
-    /// device ships with and the size at which every `UIFontMetrics` scale
-    /// factor measures 1.0 — see UIFontMetrics.swift.
+    public var horizontalSizeClass: UIUserInterfaceSizeClass
+    public var verticalSizeClass: UIUserInterfaceSizeClass
+    /// Dynamic Type setting (M14). A partial collection defaults to
+    /// `.unspecified`; OpenUIKit's complete host environment defaults to
+    /// `.large`, the category where every `UIFontMetrics` factor is 1.0.
     public var preferredContentSizeCategory: UIContentSizeCategory
 
-    public init(userInterfaceStyle: UIUserInterfaceStyle = .unspecified, displayScale: CGFloat = 2) {
-        self.userInterfaceStyle = userInterfaceStyle
-        self.displayScale = displayScale
-        self.preferredContentSizeCategory = .large
+    /// UIKit's empty collection: every modeled trait is unspecified.
+    public init() {
+        userInterfaceStyle = .unspecified
+        displayScale = 0
+        horizontalSizeClass = .unspecified
+        verticalSizeClass = .unspecified
+        preferredContentSizeCategory = .unspecified
     }
-    /// Real UIKit's `UITraitCollection(preferredContentSizeCategory:)`; the
-    /// other axes take the process-wide current values, as UIKit's does.
+
+    /// UIKit's partial collection containing only an interface style.
+    public init(userInterfaceStyle: UIUserInterfaceStyle) {
+        self.init()
+        self.userInterfaceStyle = userInterfaceStyle
+    }
+
+    /// UIKit's partial collection containing only a display scale.
+    public init(displayScale: CGFloat) {
+        self.init()
+        self.displayScale = displayScale
+    }
+
+    /// UIKit's partial collection containing only a horizontal size class.
+    public init(horizontalSizeClass: UIUserInterfaceSizeClass) {
+        self.init()
+        self.horizontalSizeClass = horizontalSizeClass
+    }
+
+    /// UIKit's partial collection containing only a vertical size class.
+    public init(verticalSizeClass: UIUserInterfaceSizeClass) {
+        self.init()
+        self.verticalSizeClass = verticalSizeClass
+    }
+
+    /// UIKit's partial collection containing only a Dynamic Type category.
     public init(preferredContentSizeCategory: UIContentSizeCategory) {
-        self.userInterfaceStyle = UITraitCollection.current.userInterfaceStyle
-        self.displayScale = UITraitCollection.current.displayScale
+        self.init()
         self.preferredContentSizeCategory = preferredContentSizeCategory
     }
+
+    /// OpenUIKit host convenience: construct a complete render environment in
+    /// one call. The existing style/scale spelling is retained; size classes
+    /// may be supplied by a host that already knows them, while `.unspecified`
+    /// lets UIScreen/UIWindow derive the portable bounds approximation.
+    public init(
+        userInterfaceStyle: UIUserInterfaceStyle,
+        displayScale: CGFloat,
+        horizontalSizeClass: UIUserInterfaceSizeClass = .unspecified,
+        verticalSizeClass: UIUserInterfaceSizeClass = .unspecified,
+        preferredContentSizeCategory: UIContentSizeCategory = .large
+    ) {
+        self.userInterfaceStyle = userInterfaceStyle
+        self.displayScale = displayScale
+        self.horizontalSizeClass = horizontalSizeClass
+        self.verticalSizeClass = verticalSizeClass
+        self.preferredContentSizeCategory = preferredContentSizeCategory
+    }
+
+    /// UIKit's legacy merge initializer. Later collections win for each trait,
+    /// but an unspecified/default value does not erase an earlier value. This
+    /// includes Dynamic Type deliberately; it is part of the modeled trait
+    /// environment rather than an unrelated OpenUIKit setting.
+    public init(traitsFrom traitCollections: [UITraitCollection]) {
+        self.init()
+        for traits in traitCollections {
+            if traits.userInterfaceStyle != .unspecified {
+                userInterfaceStyle = traits.userInterfaceStyle
+            }
+            if traits.displayScale != 0 {
+                displayScale = traits.displayScale
+            }
+            if traits.horizontalSizeClass != .unspecified {
+                horizontalSizeClass = traits.horizontalSizeClass
+            }
+            if traits.verticalSizeClass != .unspecified {
+                verticalSizeClass = traits.verticalSizeClass
+            }
+            if traits.preferredContentSizeCategory != .unspecified {
+                preferredContentSizeCategory = traits.preferredContentSizeCategory
+            }
+        }
+    }
+
+    /// A portable host approximation, not Apple's idiom/multitasking policy:
+    /// each unspecified axis becomes regular at 600 pt and compact below it.
+    /// Explicit host/current axes remain authoritative.
+    mutating func _resolveUnspecifiedSizeClasses(for size: CGSize) {
+        if horizontalSizeClass == .unspecified {
+            horizontalSizeClass = size.width >= 600 ? .regular : .compact
+        }
+        if verticalSizeClass == .unspecified {
+            verticalSizeClass = size.height >= 600 ? .regular : .compact
+        }
+    }
+
     /// Process-wide current traits (real UIKit: UITraitCollection.current).
-    public static var current = UITraitCollection(userInterfaceStyle: .light)
+    public static var current = UITraitCollection(userInterfaceStyle: .light,
+                                                   displayScale: 2)
 }
 
 public class UIColor: Equatable {

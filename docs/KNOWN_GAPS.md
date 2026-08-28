@@ -1158,6 +1158,16 @@ exercised and OpenUIKit does not fully honour.
   `UITraitCollection.current.preferredContentSizeCategory` itself, and
   `registerForTraitChanges` handlers only fire when a host calls
   `UIView._traitsDidChange(previous:)`.
+- **Size classes use a bounds approximation, not device policy.** Partial
+  `UITraitCollection` construction and `traitsFrom` merging match the modeled
+  UIKit traits, and views/controllers inherit both axes through their window;
+  before attachment they use `UIScreen.main`'s completed environment. If a
+  host supplies a non-unspecified axis in `UITraitCollection.current`, it
+  remains authoritative. Otherwise `UIScreen` and `UIWindow` classify that
+  axis as regular at 600 pt and compact below it. OpenUIKit does not model
+  device idiom, iPhone landscape exceptions, split-view/multitasking policy,
+  or automatic trait-change delivery when a window is resized; a host must
+  call `UIView._traitsDidChange(previous:)` after changing its environment.
 - **A non-large sheet detent is drawn EDGE TO EDGE; iOS 26 draws a floating
   card.** `UISheetPresentationController.detents` is measured
   (`Tools/oracle2/detentprobe`, 13 cases, raw dump at

@@ -72,6 +72,22 @@ public final class UIEvent {
 
 @preconcurrency @MainActor
 open class UIWindow: UIView {
+    /// A window is the size-class root for its view hierarchy. Hosts may set
+    /// either axis explicitly in `UITraitCollection.current`; only an
+    /// unspecified axis is derived from this window's bounds.
+    open override var traitCollection: UITraitCollection {
+        // Do not ask UIView's detached fallback first: it deliberately
+        // completes missing axes from UIScreen, which would erase the fact
+        // that this window still needs to classify its own (possibly smaller)
+        // surface. A UIWindow is the root of its trait environment.
+        var traits = UITraitCollection.current
+        if overrideUserInterfaceStyle != .unspecified {
+            traits.userInterfaceStyle = overrideUserInterfaceStyle
+        }
+        traits._resolveUnspecifiedSizeClasses(for: bounds.size)
+        return traits
+    }
+
     /// Window stacking priority. Values match UIKit's public constants so
     /// arithmetic such as `.alert + 1` retains its intended ordering.
     public struct Level: RawRepresentable, Hashable, Comparable, Sendable {

@@ -49,10 +49,23 @@ public final class UIScreen {
     /// zoomed-display iPhones, so the two cannot diverge.
     public var nativeScale: CGFloat { scale }
 
-    /// Traits of the screen: the current style plus this screen's scale.
+    /// Traits of the screen. Explicit process-wide size classes are retained;
+    /// otherwise the host surface supplies OpenUIKit's documented 600 pt
+    /// per-axis approximation. This read does not mutate process-wide traits.
     public var traitCollection: UITraitCollection {
-        UITraitCollection(userInterfaceStyle: UITraitCollection.current.userInterfaceStyle,
-                          displayScale: scale)
+        var traits = _currentTraitsResolvingSizeClasses
+        traits.displayScale = scale
+        return traits
+    }
+
+    /// Complete only the axes missing from the process environment. Detached
+    /// views/controllers use this while retaining current's style, scale, and
+    /// Dynamic Type category; UIScreen.traitCollection separately substitutes
+    /// the physical screen scale above.
+    var _currentTraitsResolvingSizeClasses: UITraitCollection {
+        var traits = UITraitCollection.current
+        traits._resolveUnspecifiedSizeClasses(for: bounds.size)
+        return traits
     }
 
     init(bounds: CGRect, scale: CGFloat) {
