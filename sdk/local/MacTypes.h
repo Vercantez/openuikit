@@ -139,6 +139,29 @@ typedef UInt32 UTF32Char;
 typedef UInt16 UTF16Char;
 typedef UInt8  UTF8Char;
 
+/* A FEATURE MACRO, because a REDEFINITION WOULD NOT FAIL. ~/foundation-macho
+ * carries a CFCarbonTypesShim.h that re-supplies these types -- written while
+ * this header still omitted them -- and the natural assumption is that the
+ * duplicate becomes a loud redefinition error once this header grows them.
+ * IT DOES NOT: C permits a typedef to be repeated IDENTICALLY, so the third
+ * copy would compile silently and rot in place, which is the shadowing shape
+ * one file over. This macro is what lets that shim say
+ *
+ *     #ifdef MR_MACTYPES_HAS_PASCAL_STRINGS
+ *     #error "...delete include/CFCarbonTypesShim.h..."
+ *     #endif
+ *
+ * and turn its own removal from something somebody must remember into
+ * something the compiler insists on. Requested by the shim's author, who found
+ * the redefinition assumption was wrong; it is one line here and a refusal
+ * there. It is named for the Pascal family specifically because that is what
+ * the shim re-supplies -- a broader name would be asserting more than this
+ * comment can back. Apple's header has no such macro, which is why it is NOT
+ * in sdk/tests/abi_probe.c: that probe compiles against Apple's SDK on the
+ * oracle side and a macro only we define has no oracle to agree with. The
+ * downstream #error is the check of record. */
+#define MR_MACTYPES_HAS_PASCAL_STRINGS 1
+
 /* -------------------------------------------------------- Pascal strings
  * A length byte followed by that many characters, which is why Str255 is 256
  * bytes and not 255. Present because ~/swiftcore-macho's clean-room copy
