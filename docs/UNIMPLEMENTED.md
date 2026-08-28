@@ -677,6 +677,77 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
+### `quotactl` — **DONE 2026-08-27**, and the measurement made the wrapper unnecessary
+
+The obvious plan was a translating wrapper, and the obstacles are real — all
+four measured, not surveyed:
+
+* **The argument ORDER is swapped.** Darwin is
+  `quotactl(path, cmd, id, addr)`; Linux is `quotactl(cmd, special, id, addr)`.
+  A forward hands Linux a `const char *` as its integer command and an integer
+  as its device path. **Not a family in the catalogue**: not a size, a
+  constant, a scalar width, a variadic convention or a return convention — an
+  *order*.
+* **The first argument is a different object.** Darwin takes the **mount
+  point** (FoundationEssentials passes `statfs`'s `f_mntonname`); Linux takes
+  the **block device**. Bridging them means parsing `/proc/mounts`.
+* **The commands do not correspond.** Darwin's `Q_QUOTASTAT` ("are quotas
+  on?") has no Linux equivalent at all.
+* **`struct dqblk` differs in layout _and units_** — Darwin's `dqb_curbytes`
+  counts bytes; Linux's block limits are in 1024-byte units.
+
+**Then the measurement was taken and it made the wrapper unnecessary.** On
+macOS 26.5.2, APFS:
+
+    quotactl("/",     QCMD(Q_QUOTASTAT, USRQUOTA), euid, &on)  -> -1, errno 45
+    quotactl("/",     QCMD(Q_GETQUOTA,  USRQUOTA), euid, &dqb) -> -1, errno 45
+    quotactl("/tmp",  QCMD(Q_QUOTASTAT, USRQUOTA), euid, &on)  -> -1, errno 45
+    quotactl("/machorun/no/such/path", ...)                    -> -1, errno 2
+
+45 is `ENOTSUP`. **APFS implements no quotas at all**, so on every modern Mac
+the answer to every `quotactl` command is "not supported" — and the only
+consumer, `FileManager.attributesOfFileSystem`, treats a non-zero return as
+"no quota" and reports the plain `statfs` totals. That is the **ordinary** path
+on Darwin today, not a fallback.
+
+So machorun returns what Darwin returns, and `tests/bin/quota` compares the two
+byte for byte. **That is a stronger claim than any translating wrapper could
+have made**, because neither machine has quotas to exercise a success path
+with: a wrapper would have been ~200 lines of `/proc/mounts` parsing and unit
+conversion whose success path no test on either side could reach.
+
+The path is still `stat`ed, because Darwin distinguishes a bad path (`ENOENT`)
+from an unsupported filesystem (`ENOTSUP`) and so must this. Teeth: removing
+the path check fails line 16; returning `EOPNOTSUPP` (102) instead of `ENOTSUP`
+(45) fails lines 13–15.
+
+**The limit, named:** on a Linux host that *does* have quotas enabled (ext4
+with `usrquota`), this reports `ENOTSUP` where a translation could have reported
+real limits. `FileManager` then falls back to the filesystem's totals — an
+**over**-report of the space available to that user, never an under-report, and
+exactly what the same code does on any Mac.
+
+**One way this fixture could go stale**, said out loud: a Mac with an HFS+
+volume that has quotas turned on would answer differently.
+`harness/run_macos.sh` re-runs every fixture natively on every gate run and
+reports BASELINE-DRIFT rather than passing quietly, so that would be caught.
+
+### `statfs` — NOT IMPLEMENTED, and it surfaced from the quota work
+
+`FileManager.attributesOfFileSystem` calls `statfs` before it calls `quotactl`,
+and libSystem exports no `statfs`. It is **not on #69's list** — it was
+surfaced by `gen_tbd.sh` CHECK 3 refusing to emit a stub when the quota fixture
+first passed `statfs("/").f_mntonname`, which is the check doing exactly its
+job. The fixture was rewritten to use `"/"` directly rather than to grow a
+second subject.
+
+The groundwork is already in place: `struct statfs` is **2168 bytes** on Darwin
+and every field offset is already pinned by `sdk/tests/abi_probe.c` (it is the
+`$INODE64` variant, so a wrong `__DARWIN_ONLY_64_BIT_INO_T` yields a differently
+shaped struct that still compiles). Linux's `struct statfs` is a different
+shape again and `statvfs` a third. This is a translation of the `struct stat`
+kind and is not started.
+
 ### `xattr` — **DONE 2026-08-27**; four hazards, and only one of them is a struct
 
 All eight entry points — `getxattr`, `fgetxattr`, `setxattr`, `fsetxattr`,

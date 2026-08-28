@@ -349,6 +349,7 @@ a4eb26cdfd3721b111f9979455d80a854625b0ef96ba4de1a4e7705f462e0f84  xnu:bsd/sys/pr
 3f1e1e9a2b707f22407df44ee8a8b270348d3b4b53313ec52d06a6198716e273  libpthread:include/sys/qos.h  sys/qos.h
 7901abe0601b12570c510cbb0c36a41f74e44bef960f1bb0233310584a9829ab  libpthread:private/sys/qos_private.h  sys/qos_private.h
 d2ebbbb79330588c103e0384cfc9a45a220e2ca18827ad255af5864354f40544  xnu:bsd/sys/queue.h  sys/queue.h
+2591eecff2632320968e58e58bb12e8c26e7192fe3551f3636809faa51d452a2  xnu:bsd/sys/quota.h  sys/quota.h
 69541c4d1b100294f244724ef58609fb66448574d4ceaffbd87b3284f8ab5613  xnu:bsd/sys/resource.h  sys/resource.h
 e6501f5479116b740fd0099210e63c22a58d24b0ee2554e7135b39a4dd856516  xnu:bsd/sys/select.h  sys/select.h
 e17b25db8625f0aa8d911c12c743707c6155e8d97680ad05fea5f70702cd758a  xnu:bsd/sys/semaphore.h  sys/semaphore.h

@@ -358,6 +358,20 @@ offset passwd.pw_dir                48
 offset passwd.pw_shell              56
 offset passwd.pw_expire             64
 
+== quotactl  (the ARGUMENT ORDER is swapped against Linux's, and the
+==            first argument is a mount point against a block device)
+sizeof struct dqblk                 64
+value  SUBCMDSHIFT                  8
+value  SUBCMDMASK                   0x00000000000000ff
+value  USRQUOTA                     0
+value  GRPQUOTA                     1
+value  Q_QUOTAON                    0x0000000000000100
+value  Q_QUOTAOFF                   0x0000000000000200
+value  Q_GETQUOTA                   0x0000000000000300
+value  Q_SETQUOTA                   0x0000000000000400
+value  Q_SYNC                       0x0000000000000600
+value  Q_QUOTASTAT                  0x0000000000000700
+
 == xattr options  (they ROTATE: Darwin XATTR_CREATE 0x02 is Linux's
 ==                 XATTR_REPLACE, so create-if-absent performs
 ==                 replace-if-present -- the exact inverse)

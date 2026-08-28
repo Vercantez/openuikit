@@ -448,6 +448,13 @@ want grp                 && build grp                 "$CHAINED_TARGET" grp     
 # container does not support extended attributes at all.
 want xattr               && build xattr               "$CHAINED_TARGET" xattr               xattr.c --
 
+# quota. The translating wrapper turned out to be unnecessary, and the
+# measurement is why: on APFS every quotactl command returns ENOTSUP, so the
+# "no quota" path is the ORDINARY path on Darwin and this fixture grades it
+# byte for byte on both systems -- which no translating wrapper could have
+# managed, since neither machine has quotas to exercise a success path with.
+want quota               && build quota               "$CHAINED_TARGET" quota               quota.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

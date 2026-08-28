@@ -2603,6 +2603,67 @@ EXPORT int gethostuuid(unsigned char out[16], const void *wait)
 }
 
 /* ===================================================================== *
+ * quotactl. THE ANSWER TURNED OUT TO BE A MEASUREMENT, NOT A DESIGN.
+ *
+ * The obvious plan was a translating wrapper, and the obstacles are real and
+ * large -- all four measured, not surveyed:
+ *
+ *   ARGUMENT ORDER IS SWAPPED. Darwin is quotactl(path, cmd, id, addr);
+ *     Linux is quotactl(cmd, special, id, addr). A forward hands Linux a
+ *     `const char *` as its integer command and an integer as its device
+ *     path. Not a family in the catalogue: not a size, a constant, a width, a
+ *     variadic convention or a return convention -- an ORDER.
+ *   THE FIRST ARGUMENT IS A DIFFERENT OBJECT. Darwin takes the MOUNT POINT
+ *     (FoundationEssentials passes statfs's f_mntonname); Linux takes the
+ *     BLOCK DEVICE. Bridging them means parsing /proc/mounts.
+ *   THE COMMANDS DO NOT CORRESPOND. Darwin's Q_QUOTASTAT ("are quotas on?")
+ *     has no Linux equivalent at all.
+ *   struct dqblk DIFFERS IN LAYOUT *AND UNITS*: Darwin's dqb_curbytes counts
+ *     BYTES, Linux's block limits are in 1024-byte units.
+ *
+ * SO THE MEASUREMENT WAS TAKEN BEFORE THE WRAPPER WAS WRITTEN, AND IT MADE THE
+ * WRAPPER UNNECESSARY. On macOS 26.5.2, APFS:
+ *
+ *     quotactl("/",    QCMD(Q_QUOTASTAT, USRQUOTA), euid, &on)  -> -1, errno 45
+ *     quotactl("/",    QCMD(Q_GETQUOTA,  USRQUOTA), euid, &dqb) -> -1, errno 45
+ *     quotactl("/tmp", QCMD(Q_QUOTASTAT, USRQUOTA), euid, &on)  -> -1, errno 45
+ *     quotactl("/no/such/path", ...)                            -> -1, errno 2
+ *
+ * 45 is ENOTSUP. APFS does not implement quotas AT ALL, so on every modern Mac
+ * the answer to every quotactl command is "not supported" -- and the only
+ * consumer, FileManager.attributesOfFileSystem, is written for exactly that:
+ * a non-zero return means "no quota" and it reports the plain statfs totals.
+ * That is not a fallback path, it is the ordinary path on Darwin today.
+ *
+ * This therefore returns what Darwin returns, and the difftest fixture
+ * compares the two byte for byte -- which is a far stronger claim than any
+ * translating wrapper could have made, because NEITHER side has quotas to
+ * exercise a success path with. A wrapper would have been ~200 lines of
+ * /proc/mounts parsing and unit conversion whose success path no test on
+ * either machine could reach.
+ *
+ * THE LIMIT, NAMED: on a Linux host that DOES have quotas enabled (ext4 with
+ * usrquota), this reports ENOTSUP where a translation could have reported real
+ * limits. FileManager then falls back to the filesystem's totals -- an
+ * OVER-report of the space available to that user, never an under-report, and
+ * exactly what the same code does on any Mac. docs/UNIMPLEMENTED.md#quotactl.
+ *
+ * The path is still stat'ed, because Darwin distinguishes a bad path (ENOENT)
+ * from an unsupported filesystem (ENOTSUP) and so must this.
+ * ===================================================================== */
+#define D_ENOTSUP 45
+
+EXPORT int quotactl(const char *path, int cmd, int uid, char *addr)
+{
+    struct linux_stat st;
+    (void)cmd; (void)uid; (void)addr;
+    if (!path) { *mr_errno_slot() = 14; return -1; }          /* EFAULT */
+    if (MR_ERRNO_CALL(glibc_stat(path, &st)) != 0) return -1; /* ENOENT, ... */
+    *mr_errno_slot() = D_ENOTSUP;
+    return -1;
+}
+
+/* ===================================================================== *
  * EXTENDED ATTRIBUTES. Four separate hazards in one family, and only one
  * of them is a struct.
  *

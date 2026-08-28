@@ -33,6 +33,7 @@
 #include <mach/vm_map.h>
 #include <pwd.h>
 #include <stddef.h>
+#include <sys/quota.h>
 #include <sys/utsname.h>
 #include <sys/xattr.h>
 #include <sysdir.h>
@@ -92,6 +93,12 @@ unsigned long fm_link_probe(void)
         acc += (unsigned long)fremovexattr(0, "user.x", 0);
         acc += (unsigned long)listxattr(p, buf, sizeof buf, 0);
         acc += (unsigned long)flistxattr(0, buf, sizeof buf, 0);
+    }
+
+    /* sys/quota.h */
+    {
+        int on = 0;
+        acc += (unsigned long)quotactl("/", QCMD(Q_QUOTASTAT, USRQUOTA), 0, (char *)&on);
     }
 
     /* sys/utsname.h */

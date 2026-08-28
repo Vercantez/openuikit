@@ -393,6 +393,7 @@ sys/proc_info.h	xnu:bsd/sys/proc_info.h
 sys/qos.h	libpthread:include/sys/qos.h
 sys/qos_private.h	libpthread:private/sys/qos_private.h
 sys/queue.h	xnu:bsd/sys/queue.h
+sys/quota.h	xnu:bsd/sys/quota.h
 sys/resource.h	xnu:bsd/sys/resource.h
 sys/semaphore.h	xnu:bsd/sys/semaphore.h
 sys/select.h	xnu:bsd/sys/select.h

@@ -50,6 +50,7 @@
 #include <runetype.h>
 #include <sys/cdefs.h>
 #include <grp.h>
+#include <sys/quota.h>
 #include <sys/xattr.h>
 #include <pwd.h>
 #include <sysdir.h>
@@ -310,6 +311,14 @@ int main(void)
     OFF(passwd, pw_gid);    OFF(passwd, pw_change); OFF(passwd, pw_class);
     OFF(passwd, pw_gecos);  OFF(passwd, pw_dir);    OFF(passwd, pw_shell);
     OFF(passwd, pw_expire);
+
+    puts("");
+    puts("== quotactl  (the ARGUMENT ORDER is swapped against Linux's, and the");
+    puts("==            first argument is a mount point against a block device)");
+    SZ(struct dqblk);
+    VAL(SUBCMDSHIFT); HEX(SUBCMDMASK); VAL(USRQUOTA); VAL(GRPQUOTA);
+    HEX(Q_QUOTAON); HEX(Q_QUOTAOFF); HEX(Q_GETQUOTA); HEX(Q_SETQUOTA);
+    HEX(Q_SYNC); HEX(Q_QUOTASTAT);
 
     puts("");
     puts("== xattr options  (they ROTATE: Darwin XATTR_CREATE 0x02 is Linux's");
