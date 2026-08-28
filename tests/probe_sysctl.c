@@ -304,3 +304,19 @@ long writev(int fd, const void *iov, int iovcnt)
 {
     return mr_glibc_writev(fd, iov, iovcnt);
 }
+
+/* WALL 11: OSMemoryBarrier -- named by T18 on the CFBundle path, which is
+ * BEYOND #86's three preferences findings. Added because it is one line and
+ * because CFBundle decides the plist FILENAME for UserDefaults.standard; the
+ * next symbol after it, if any, is reported rather than chased.
+ *
+ * NOT FICTION and not new work: src/compat/OSAtomic.c already implements this
+ * family. It is stubbed here only because src/compat is not in the libCFTest
+ * link (build_cftest_harness.sh links cfobjc/obj and nscfobj only) -- the
+ * "a file existing is not a file linked" correction from the #78 scope report,
+ * showing up a second time. If src/compat is ever added to that link, DELETE
+ * this and the OSAtomicCompareAndSwapPtrBarrier stub with it.
+ *
+ * Darwin's contract is a full barrier; __sync_synchronize is exactly that. */
+void OSMemoryBarrier(void);
+void OSMemoryBarrier(void) { __sync_synchronize(); }

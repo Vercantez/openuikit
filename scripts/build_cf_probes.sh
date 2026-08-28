@@ -124,7 +124,13 @@ run() {          # name, args...
   return $?
 }
 
-case "$WHICH" in all|t16|t19) rebuild_nscf ;; esac
+# EVERY CF-linked probe relinks, because the relink is what regenerates the
+# stub set from probe_sysctl.c. This once read `all|t16|t19`, so editing
+# probe_sysctl.c and running `t18` silently exercised the PREVIOUS library and
+# reported a stub that had just been implemented. A selector that decides
+# whether to rebuild is a staleness hole; t17 is excluded because it links
+# libSystem only and touches neither CF nor the stubs.
+case "$WHICH" in all|t16|t18|t19) rebuild_nscf ;; esac
 
 if [ "$WHICH" = all ] || [ "$WHICH" = t17 ]; then
   note "T17 -- the mutex-signature wall, isolated from CoreFoundation"
@@ -171,12 +177,24 @@ if [ "$WHICH" = all ] || [ "$WHICH" = t16 ]; then
   build_objc t16_cfprefs && mv /work/obj/t16_cfprefs.o /work/obj/t16.o \
     && link_with_cf t16 && run t16 | tail -24
 
-  # WHERE the file landed is a finding, not a detail, so look in BOTH places.
-  # Searching only under $HOME reported "nothing landed" while the write had
-  # gone to /Library/Preferences -- gate-scope-excludes-the-answer, in this
-  # script, about the very result it exists to report.
+  # SEARCH WHERE CF SAYS IT WRITES, NOT WHERE WE ASSUME.
+  #
+  # This has now been wrong TWICE in this one script, the same way both times.
+  # First it searched only $HOME while the file was in /Library/Preferences.
+  # Then it searched $HOME and /Library while CF was writing to the PASSWD
+  # entry's home -- because CF's order is CFFIXED_USER_HOME, then the passwd
+  # entry, and only THEN $HOME (CFPlatform.c:370). $HOME is the last thing CF
+  # consults and the first thing a harness assumes.
+  #
+  # T20 prints the directory CF resolves; this searches the union of every
+  # candidate rather than picking one. A reporter that looks in one place
+  # reports "nothing happened" for a write that happened somewhere else.
   echo "  --- preference files on disk:"
-  f=$(find "$HOME/Library/Preferences" /Library/Preferences \
+  PWHOME=$(getent passwd "$(id -u)" 2>/dev/null | cut -d: -f6)
+  f=$(find "$HOME/Library/Preferences" \
+           "${PWHOME:-/nonexistent}/Library/Preferences" \
+           "${CFFIXED_USER_HOME:-/nonexistent}/Library/Preferences" \
+           /Library/Preferences \
         -name '*t16prefs*' 2>/dev/null | head -1)
   if [ -z "$f" ]; then
     echo "    (none. If T16 reported 'synchronize returned TRUE' above, that is"
@@ -189,10 +207,15 @@ if [ "$WHICH" = all ] || [ "$WHICH" = t16 ]; then
            echo "                            CFPreferences.c:202 defaults"
            echo "                            __CFPreferencesWritesXML = true."; fi
     case "$f" in
-      "$HOME"/*) echo "    location: under \$HOME  (matches Darwin)" ;;
-      *)         echo "    location: $(dirname "$f")  <-- the ANY-USER domain."
-                 echo "                            Darwin's per-app default is"
-                 echo "                            \$HOME/Library/Preferences." ;;
+      /Library/Preferences/*)
+        echo "    location: /Library/Preferences  <-- the ANY-USER domain."
+        echo "                            Darwin's per-app default is the"
+        echo "                            CURRENT user's home." ;;
+      *)
+        echo "    location: $(dirname "$f")"
+        echo "                            (a per-user home -- matches Darwin's"
+        echo "                            shape; which home is CF's choice, not"
+        echo "                            \$HOME's: CFPlatform.c:370)" ;;
     esac
   fi
 fi
