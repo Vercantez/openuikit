@@ -1,8 +1,10 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                         2578 errors
+  app                         2134 errors
   empty                          0 errors
-  openuikit                      2 errors
-  snapkit                      218 errors
+  openuikit                      0 errors
+  snapkit-vendoring-after        0 errors
+  snapkit-vendoring-before       0 errors
+  snapkit                        0 errors
   stub-FocusAppServices          0 errors
   stub-Fuzi                      0 errors
   stub-Glean                     0 errors
@@ -14,34 +16,34 @@
   target-Licenses                8 errors
   target-Onboarding              2 errors
   target-UIComponents            2 errors
-  target-UIHelpers              54 errors
+  target-UIHelpers              42 errors
   target-Widget                 12 errors
-  TOTAL                       2922
+  TOTAL                       2246
 
-=== ERROR KINDS, ranked (denominator 2922) ===
-    638  value of type 'X' has no member 'X'
-    286  cannot find 'X' in scope
-    262  cannot infer contextual base in reference to member 'X'
-    192  cannot find type 'X' in scope
+=== ERROR KINDS, ranked (denominator 2246) ===
+    408  value of type 'X' has no member 'X'
+    264  cannot find 'X' in scope
+    258  cannot infer contextual base in reference to member 'X'
+    172  cannot find type 'X' in scope
     144  'X' requires a contextual type
     112  cannot use optional chaining on non-optional value of type 'X'
-    112  type 'X' (aka 'X') has no member 'X'
     110  type 'X' has no member 'X'
-     84  main actor-isolated property 'X' can not be mutated from a nonisolated context
-     76  main actor-isolated property 'X' can not be referenced from a nonisolated context
      74  ambiguous use of 'X'
      66  extra argument 'X' in call
      62  cannot convert value of type 'X' to expected argument type 'X'
      50  argument passed to call that takes no arguments
      50  missing argument for parameter 'X' in call
      44  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
-     44  call to main actor-isolated instance method 'X' in a synchronous nonisolated context [#ActorIsolatedCall]
      40  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
+     38  method does not override any method from its superclass
+     32  reference to member 'X' cannot be resolved without a contextual type
+     26  generic parameter 'X' could not be inferred
+     20  'X' is unavailable in macOS
 
-=== MISSING TYPES: 90 distinct / 478 occurrences ===
-  Apple-framework names (a REAL gap)     :  57 distinct /  284 uses
+=== MISSING TYPES: 87 distinct / 436 occurrences ===
+  Apple-framework names (a REAL gap)     :  55 distinct /  280 uses
   app's own symbols (an earlier failure) :   1 distinct /    2 uses
-  other                                  :  32 distinct /  192 uses
+  other                                  :  31 distinct /  154 uses
 
   the real Apple-type gap, ranked:
      26  UIPasteboard
@@ -85,7 +87,6 @@
       2  UIDragSession
       2  UIDropInteractionDelegate
       2  UIDropProposal
-      2  UILayoutSupport
       2  UIPageViewControllerDataSource
       2  UIPageViewControllerDelegate
       2  UIPointerInteractionDelegate
@@ -98,14 +99,13 @@
       2  UIStatusBarStyle
       2  UITextPosition
       2  UIUserActivityRestoring
-      2  UIUserInterfaceLayoutDirection
       2  UIView
       2  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 748
+  total member errors                    : 518
   on Apple-framework types (the #94 list): 89 distinct / 338 uses
-  SnapKit's own DSL (blocked on SnapKit)  : 21 distinct / 226 uses
+  SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
      88  UITableView                        allowsMultipleSelection, backgroundView, beginUpdates, cellLayoutMarginsFollowReadableWidth, deleteRows, deleteSections …

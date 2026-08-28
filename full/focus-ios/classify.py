@@ -90,7 +90,7 @@ print("\n=== MISSING MEMBERS on types that DO exist ===")
 print("  total member errors                    : %d" % sum(members.values()))
 print("  on Apple-framework types (the #94 list): %d distinct / %d uses"
       % (len(apple_members), sum(apple_members.values())))
-print("  SnapKit's own DSL (blocked on SnapKit)  : %d distinct / %d uses"
+print("  SnapKit's own DSL (.snp / .snp_)        : %d distinct / %d uses"
       % (len(snapkit_members), sum(snapkit_members.values())))
 by_type = collections.Counter()
 for (t, m), c in apple_members.items():

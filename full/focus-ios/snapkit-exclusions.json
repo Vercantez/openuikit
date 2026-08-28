@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "repository_commit": "250529bec615066185ff328984855101820fcbee",
+  "source_root": "Sources",
+  "exclusions": [
+    {
+      "path": "Sources/Debugging.swift",
+      "sha256": "6af70d54a6e6fb112d87f8adb93caead0bc2afc472e4bbb04347bf591be3b3e3",
+      "reason": "Diagnostic string formatting only: it overrides NSLayoutConstraint.description from an extension through NSObject/@objc dispatch, which a pure-Swift OpenUIKit base cannot provide. No constraint creation, installation, update, or SnapKit DSL API is defined here."
+    }
+  ]
+}

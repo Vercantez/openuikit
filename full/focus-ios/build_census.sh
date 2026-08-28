@@ -1,5 +1,5 @@
 #!/bin/bash
-# build_census.sh -- #93 phase 2. Clear focus-ios's MODULE walls, then run the
+# build_census.sh -- #93. Clear focus-ios's MODULE walls, then run the
 # saturated -wmo census against OpenUIKit and classify what is left.
 #
 #   full/focus-ios/build_census.sh [OUTDIR]
@@ -14,7 +14,10 @@
 #   3. SnapKit            THE REAL SOURCE, recompiled. Not reimplemented:
 #                         recompile-from-source is the whole point of the
 #                         project, and SnapKit is MIT and pure Swift over
-#                         NSLayoutConstraint. Its OpenUIKit gaps are census rows.
+#                         NSLayoutConstraint. One diagnostic-only source file
+#                         is excluded by a pinned, hash-checked vendoring rule.
+#                         The rule, source denominator, and subject digest are
+#                         printed and recorded on every run.
 #   4. the app's own SPM targets, in dependency order
 #   5. the app module
 #   6. classify every error and print the breakdown with denominators
@@ -32,6 +35,13 @@ OUT=${1:-/tmp/focus-ios-census}
 TARGET=${TARGET:-arm64-apple-macos13.0}
 UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
 
+# Reusing a directory can retain an old module or log and manufacture a green
+# stage. The census is defined over a fresh output root, so enforce that at the
+# boundary instead of relying on the caller to remember.
+if [ -d "$OUT" ] && [ -n "$(find "$OUT" -mindepth 1 -maxdepth 1 -print -quit)" ]; then
+    printf 'REFUSED: output directory is not empty: %s\n' "$OUT" >&2
+    exit 2
+fi
 mkdir -p "$OUT/modules" "$OUT/logs"
 say() { printf '%s\n' "$*"; }
 hr()  { say ""; say "########## $*"; }
@@ -74,15 +84,33 @@ build_mod() {
     local -a srcs=()
     while IFS= read -r -d '' f; do srcs+=("$f"); done \
         < <(find "$srcdir" -name '*.swift' -print0)
-    set -- "${srcs[@]}"
+    compile_mod "$name" "$log" "${srcs[@]}"
+}
+
+# compile_mod <module-name> <logname> <source>...
+compile_mod() {
+    local name=$1; shift
+    local log=$1; shift
     swiftc -emit-module -emit-module-path "$OUT/modules/$name.swiftmodule" \
         -wmo -target "$TARGET" -module-name "$name" \
         "${INC[@]}" -I "$OUT/modules" "$@" > "$OUT/logs/$log.log" 2>&1
     local r=$?
-    local n; n=$(grep -c 'error:' "$OUT/logs/$log.log" 2>/dev/null || echo 0)
+    local n; n=$(grep -c 'error:' "$OUT/logs/$log.log" 2>/dev/null || true)
     printf '  %-22s %s  (%s errors)\n' "$name" \
         "$([ $r -eq 0 ] && echo OK || echo FAILED)" "$n"
     return $r
+}
+
+# build_mod_list <module-name> <logname> <newline-safe-list>
+build_mod_list() {
+    local name=$1; shift
+    local log=$1; shift
+    local list=$1; shift
+    local -a srcs=()
+    while IFS= read -r f; do
+        [ -n "$f" ] && srcs+=("$f")
+    done < "$list"
+    compile_mod "$name" "$log" "${srcs[@]}"
 }
 
 # --- 2. stub modules ---------------------------------------------------------
@@ -92,8 +120,43 @@ for s in Glean FocusAppServices WebKit Sentry Fuzi MobileCoreServices; do
 done
 
 # --- 3. SnapKit, the REAL source --------------------------------------------
-hr "3. SnapKit -- real upstream source, recompiled against OpenUIKit"
-build_mod SnapKit snapkit "$SNAPKIT/Sources"
+hr "3. SnapKit -- real upstream source, one explicit vendoring exclusion"
+SNAPKIT_POLICY=$HERE/snapkit-exclusions.json
+SNAPKIT_FILES=$OUT/snapkit-files.txt
+SNAPKIT_AUDIT_BEFORE=$OUT/snapkit-vendoring-before.json
+SNAPKIT_AUDIT_AFTER=$OUT/snapkit-vendoring-after.json
+
+# This is intentionally fatal rather than another census row. If the pin,
+# source set, excluded file, or excluded file's bytes changed, the compiler's
+# subject is no longer the approved SnapKit vendoring subject.
+python3 "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+    "$SNAPKIT_FILES" "$SNAPKIT_AUDIT_BEFORE" \
+    | tee "$OUT/logs/snapkit-vendoring-before.log"
+rc=$?
+[ $rc -eq 0 ] || { say "  REFUSED SnapKit vendoring policy (rc=$rc)"; exit 4; }
+
+build_mod_list SnapKit snapkit "$SNAPKIT_FILES"
+snapkit_rc=$?
+if [ $snapkit_rc -eq 0 ] && [ -f "$OUT/modules/SnapKit.swiftmodule" ]; then
+    SNAPKIT_BUILT=1
+else
+    SNAPKIT_BUILT=0
+fi
+
+# Recompute after swiftc returns. This closes the subject bracket: a dependency
+# source mutation during compilation voids the row instead of leaving a green
+# result attached to an unknown mixture of bytes.
+python3 "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+    "$OUT/snapkit-files-after.txt" "$SNAPKIT_AUDIT_AFTER" \
+    > "$OUT/logs/snapkit-vendoring-after.log"
+rc=$?
+[ $rc -eq 0 ] || { say "  REFUSED post-build SnapKit subject (rc=$rc)"; exit 4; }
+if ! cmp -s "$SNAPKIT_FILES" "$OUT/snapkit-files-after.txt" || \
+   ! cmp -s "$SNAPKIT_AUDIT_BEFORE" "$SNAPKIT_AUDIT_AFTER"; then
+    say "  REFUSED: SnapKit subject changed while swiftc was running"
+    exit 4
+fi
+say "  subject bracket: unchanged before/after swiftc"
 
 # --- 4. the app's own SPM targets, dependency order --------------------------
 hr "4. focus-ios's own SPM targets"
@@ -119,12 +182,17 @@ done
 # `import` from halting the run.
 hr "5. name-only modules, so an unbuildable target cannot hide the app's errors"
 mkdir -p "$OUT/empty"
-# SnapKit is in this list even though its REAL source is compiled at stage 3:
-# stage 3 fails on OpenUIKit gaps, so no .swiftmodule is emitted, so the app's
-# `import SnapKit` halts the run. The name-only module lets the app census
-# proceed; the resulting `has no member 'snp'` errors are attributed to SnapKit
-# by classify.py rather than counted against OpenUIKit.
-for t in UIHelpers DesignSystem Widget Licenses UIComponents Onboarding AppShortcuts SnapKit; do
+# SnapKit gets a name-only fallback only when the real source fails. When the
+# real module exists, emitting another SnapKit.swiftmodule in a later -I path is
+# needless ambiguity and could turn a path-order change into a false green.
+name_only_targets=(UIHelpers DesignSystem Widget Licenses UIComponents Onboarding AppShortcuts)
+if [ "$SNAPKIT_BUILT" -eq 0 ]; then
+    name_only_targets+=(SnapKit)
+    say "  SnapKit: real module absent; emitting an explicit name-only fallback"
+else
+    say "  SnapKit: using the real 36-source module; no name-only fallback"
+fi
+for t in "${name_only_targets[@]}"; do
     printf '// name-only module: satisfies `import %s`, defines nothing.\n' "$t" \
         > "$OUT/empty/$t.swift"
     swiftc -emit-module -emit-module-path "$OUT/empty/$t.swiftmodule" \
