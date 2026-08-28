@@ -368,6 +368,7 @@ f8b136bb10d56bb604e7b253f1ec23858d0b4ae21fe85eaede0ccc66afdb554a  xnu:bsd/sys/ty
 2d51c76d8c2448b0402aa92296747b4619b1956a3b98eeaf16875a40099a6b0e  xnu:bsd/sys/utsname.h  sys/utsname.h
 cdf9b052c7d82ccea3118fa36b1e9b6f9b131ef081392c177cdb66eb9ea35279  xnu:bsd/sys/vm.h  sys/vm.h
 3a82112a1dc8025e7d3a09cb6d9d39bb60c13018052838d3f8ade1b208f83983  xnu:bsd/sys/wait.h  sys/wait.h
+13712c213662a486d337337bb38008e2c1b48b611123285d0d7cb7c22e4125ed  xnu:bsd/sys/xattr.h  sys/xattr.h
 171758cbd3e9ea630810c6249c59a9f9190abb8dc5a0932c1c3bd2c12aa03080  Libc:include/syslog.h  syslog.h
 cf4912303943c5bda8404f5fd7a2a8219153353a49df2aeaddbb2dcd4b35c0bf  Libc:include/time.h  time.h
 fad3359f962d64bd5b6c58351f294d1b8546d8d98e8d4c537fba91b22534f8b4  Libc:stdtime/FreeBSD/tzfile.h  tzfile.h

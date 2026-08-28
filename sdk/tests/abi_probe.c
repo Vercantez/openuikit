@@ -50,6 +50,7 @@
 #include <runetype.h>
 #include <sys/cdefs.h>
 #include <grp.h>
+#include <sys/xattr.h>
 #include <pwd.h>
 #include <sysdir.h>
 #include <mach/vm_param.h>
@@ -309,6 +310,15 @@ int main(void)
     OFF(passwd, pw_gid);    OFF(passwd, pw_change); OFF(passwd, pw_class);
     OFF(passwd, pw_gecos);  OFF(passwd, pw_dir);    OFF(passwd, pw_shell);
     OFF(passwd, pw_expire);
+
+    puts("");
+    puts("== xattr options  (they ROTATE: Darwin XATTR_CREATE 0x02 is Linux's");
+    puts("==                 XATTR_REPLACE, so create-if-absent performs");
+    puts("==                 replace-if-present -- the exact inverse)");
+    HEX(XATTR_NOFOLLOW); HEX(XATTR_CREATE); HEX(XATTR_REPLACE);
+    HEX(XATTR_NOSECURITY); HEX(XATTR_NODEFAULT); HEX(XATTR_SHOWCOMPRESSION);
+    VAL(XATTR_MAXNAMELEN);
+    VAL(ENOATTR);
 
     puts("");
     puts("== struct group  (getgrnam_r's out parameter -- and unlike passwd,");

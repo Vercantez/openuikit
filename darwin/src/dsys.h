@@ -158,6 +158,18 @@ extern int     glibc_close(int)                             GLIBCSYM(close);
  * ordinary argument passing lands exactly where its va_arg looks. */
 extern int     glibc_open(const char *, int, unsigned)      GLIBCSYM(open);
 extern off_t   glibc_lseek(int, off_t, int)                 GLIBCSYM(lseek);
+extern ssize_t glibc_getxattr(const char *, const char *, void *, size_t)   GLIBCSYM(getxattr);
+extern ssize_t glibc_lgetxattr(const char *, const char *, void *, size_t)  GLIBCSYM(lgetxattr);
+extern ssize_t glibc_fgetxattr(int, const char *, void *, size_t)           GLIBCSYM(fgetxattr);
+extern int     glibc_setxattr(const char *, const char *, const void *, size_t, int)  GLIBCSYM(setxattr);
+extern int     glibc_lsetxattr(const char *, const char *, const void *, size_t, int) GLIBCSYM(lsetxattr);
+extern int     glibc_fsetxattr(int, const char *, const void *, size_t, int)          GLIBCSYM(fsetxattr);
+extern int     glibc_removexattr(const char *, const char *)                GLIBCSYM(removexattr);
+extern int     glibc_lremovexattr(const char *, const char *)               GLIBCSYM(lremovexattr);
+extern int     glibc_fremovexattr(int, const char *)                        GLIBCSYM(fremovexattr);
+extern ssize_t glibc_listxattr(const char *, char *, size_t)                GLIBCSYM(listxattr);
+extern ssize_t glibc_llistxattr(const char *, char *, size_t)               GLIBCSYM(llistxattr);
+extern ssize_t glibc_flistxattr(int, char *, size_t)                        GLIBCSYM(flistxattr);
 extern void   *glibc_getgrnam(const char *)                  GLIBCSYM(getgrnam);
 extern void   *glibc_getgrgid(unsigned)                      GLIBCSYM(getgrgid);
 extern int     glibc_getgrnam_r(const char *, void *, char *, size_t, void **) GLIBCSYM(getgrnam_r);

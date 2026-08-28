@@ -358,6 +358,18 @@ offset passwd.pw_dir                48
 offset passwd.pw_shell              56
 offset passwd.pw_expire             64
 
+== xattr options  (they ROTATE: Darwin XATTR_CREATE 0x02 is Linux's
+==                 XATTR_REPLACE, so create-if-absent performs
+==                 replace-if-present -- the exact inverse)
+value  XATTR_NOFOLLOW               0x0000000000000001
+value  XATTR_CREATE                 0x0000000000000002
+value  XATTR_REPLACE                0x0000000000000004
+value  XATTR_NOSECURITY             0x0000000000000008
+value  XATTR_NODEFAULT              0x0000000000000010
+value  XATTR_SHOWCOMPRESSION        0x0000000000000020
+value  XATTR_MAXNAMELEN             127
+value  ENOATTR                      93
+
 == struct group  (getgrnam_r's out parameter -- and unlike passwd,
 ==                this one AGREES with glibc field for field)
 sizeof struct group                 32

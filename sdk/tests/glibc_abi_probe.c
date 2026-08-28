@@ -80,6 +80,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <grp.h>
+#include <sys/xattr.h>
 #include <pwd.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -189,6 +190,20 @@ _Static_assert(offsetof(struct group, gr_name)   == 0,  "glibc struct group move
 _Static_assert(offsetof(struct group, gr_passwd) == 8,  "glibc struct group moved gr_passwd");
 _Static_assert(offsetof(struct group, gr_gid)    == 16, "glibc struct group moved gr_gid");
 _Static_assert(offsetof(struct group, gr_mem)    == 24, "glibc struct group moved gr_mem");
+
+/* The xattr option words, which ROTATE rather than merely diverge. Darwin's
+ * XATTR_CREATE is 0x02 and so is glibc's XATTR_REPLACE, so a forwarded
+ * "create only if absent" performs "replace only if present" -- inverse
+ * behaviour with a success return. Darwin's XATTR_REPLACE (0x04) is not a
+ * valid flag here at all. darwin/src/posix.c's xattr_flags_d2l is what stands
+ * between those two facts, and these are the numbers it is written against. */
+_Static_assert(XATTR_CREATE  == 0x1, "glibc XATTR_CREATE moved (Darwin's is 0x2)");
+_Static_assert(XATTR_REPLACE == 0x2, "glibc XATTR_REPLACE moved (it IS Darwin's XATTR_CREATE)");
+/* "no such attribute" is ENODATA here and ENOATTR (93) on Darwin, and Darwin
+ * ALSO has an ENODATA at 96 -- so the generic errno table's correct name
+ * translation lands on a value no xattr caller tests for. xattr_fix_errno()
+ * overrides it for this family alone. */
+_Static_assert(ENODATA == 61, "glibc ENODATA moved; darwin/src/posix.c maps 96 -> 93 for xattr");
 
 /* ------------------------------------------------------------------ CONSTANTS
  * A hazard the size checks above structurally cannot see: same width, symbols

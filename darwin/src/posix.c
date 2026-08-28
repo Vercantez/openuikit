@@ -2602,6 +2602,288 @@ EXPORT int gethostuuid(unsigned char out[16], const void *wait)
     return 0;
 }
 
+/* ===================================================================== *
+ * EXTENDED ATTRIBUTES. Four separate hazards in one family, and only one
+ * of them is a struct.
+ *
+ * (1) THE OPTION FLAGS ROTATE. Measured both sides:
+ *
+ *         Darwin                  Linux
+ *         XATTR_NOFOLLOW  0x01    -- not a flag at all, see (2)
+ *         XATTR_CREATE    0x02    XATTR_REPLACE 0x02
+ *         XATTR_REPLACE   0x04    -- not a valid flag
+ *
+ *     So Darwin's XATTR_CREATE arrives at Linux AS XATTR_REPLACE: "create
+ *     this only if it does not exist" performs "replace this only if it
+ *     does", which is the exact inverse and fails or succeeds exactly
+ *     backwards. Rotation again, as in fcntl and the O_* bits -- a value
+ *     that maps to SOMETHING ELSE REAL rather than to nothing.
+ *
+ * (2) XATTR_NOFOLLOW IS A FLAG ON DARWIN AND A DIFFERENT FUNCTION ON LINUX.
+ *     Linux spells "do not follow the symlink" `lgetxattr`/`lsetxattr`/
+ *     `lremovexattr`/`llistxattr`. A forwarded flag word cannot express it,
+ *     so the wrapper DISPATCHES on the bit.
+ *
+ * (3) DIFFERENT ARITY -- a shape none of the catalogued hazard families
+ *     covers. Darwin's get/set take a `position` argument (for resource
+ *     forks) that Linux's do not, and Darwin's take `options` where Linux's
+ *     set takes `flags` and Linux's get takes nothing at all. A forward
+ *     therefore hands Linux the POSITION where it expects the flags.
+ *     Measured on Darwin: a non-zero `position` on an ordinary attribute is
+ *     EINVAL, which is exactly what this returns -- there are no resource
+ *     forks here, so that answer is faithful rather than a refusal.
+ *
+ * (4) THE NAME SPACE. Linux refuses any name outside `user.`, `security.`,
+ *     `system.` and `trusted.`; Darwin accepts anything. Measured in the
+ *     test-bed image: `setxattr(path, "com.apple.foo", ...)` and
+ *     `setxattr(path, "plainname", ...)` BOTH fail with EOPNOTSUPP, and
+ *     `com.apple.*` is what a real Darwin file is full of.
+ *
+ *     So every name is prefixed with `user.` on the way in and stripped on
+ *     the way out. ALWAYS prefixed, never conditionally: mapping only the
+ *     names that need it would send Darwin's "foo" and Darwin's "user.foo"
+ *     to the same Linux attribute, and both can exist at once on Darwin
+ *     (measured). Prefixing unconditionally is injective, so the mapping is
+ *     reversible and `listxattr` can undo it exactly.
+ *
+ *     CONSEQUENCE, stated rather than discovered: attributes NOT in the
+ *     `user.` namespace -- `security.selinux` and friends -- are invisible
+ *     to the guest, because a guest asking for "security.selinux" is asking
+ *     for "user.security.selinux". That is the honest answer: the guest
+ *     could not have created them and cannot address them.
+ *
+ * (5) AND THE ERRNO NAME, which the generic table gets RIGHT and USELESSLY.
+ *     "no such attribute" is ENOATTR (93) on Darwin and ENODATA (61) on
+ *     Linux. Darwin ALSO has an ENODATA, at 96, so the general table maps
+ *     61 -> 96 -- correct as a name translation and wrong as an answer,
+ *     because every xattr caller tests against ENOATTR. This family
+ *     overrides it. Nothing else in the table does, which is why it is here
+ *     and not in scripts/gen_errno_table.sh.
+ * ===================================================================== */
+
+#define D_XATTR_NOFOLLOW        0x0001
+#define D_XATTR_CREATE          0x0002
+#define D_XATTR_REPLACE         0x0004
+#define D_XATTR_NOSECURITY      0x0008
+#define D_XATTR_NODEFAULT       0x0010
+#define D_XATTR_SHOWCOMPRESSION 0x0020
+
+#define L_XATTR_CREATE   0x1
+#define L_XATTR_REPLACE  0x2
+
+#define D_ENOATTR        93
+#define D_ENAMETOOLONG   63
+#define D_EINVAL         22
+
+#define XATTR_PREFIX     "user."
+#define XATTR_PREFIX_LEN 5
+#define XATTR_NAME_MAX   256
+
+/* Darwin options -> Linux setxattr flags. Anything we cannot perform stops
+ * the process by name rather than being dropped: dropping a flag makes the
+ * call do something OTHER than what was asked, which is the whole lesson of
+ * the O_* and POLL* work. */
+static int xattr_flags_d2l(int options)
+{
+    int f = 0;
+    if (options & D_XATTR_CREATE)  f |= L_XATTR_CREATE;
+    if (options & D_XATTR_REPLACE) f |= L_XATTR_REPLACE;
+    if (options & D_XATTR_NOSECURITY)
+        mr_bail("setxattr(XATTR_NOSECURITY): that flag asks the Darwin VFS to "
+                "skip its access check, which Linux has no way to express. "
+                "Dropping it would perform a DIFFERENT operation than the one "
+                "requested");
+    if (options & D_XATTR_NODEFAULT)
+        mr_bail("xattr(XATTR_NODEFAULT): Darwin-only; it selects which of the "
+                "VFS's attribute sources answer, and Linux has one source");
+    if (options & D_XATTR_SHOWCOMPRESSION)
+        mr_bail("xattr(XATTR_SHOWCOMPRESSION): Darwin-only; it exposes the "
+                "attributes behind HFS+/APFS decmpfs compression, which does "
+                "not exist here");
+    if (options & ~(D_XATTR_NOFOLLOW | D_XATTR_CREATE | D_XATTR_REPLACE |
+                    D_XATTR_NOSECURITY | D_XATTR_NODEFAULT |
+                    D_XATTR_SHOWCOMPRESSION))
+        mr_bail("xattr: an option bit outside Darwin's own vocabulary was "
+                "requested; refusing to guess what it meant");
+    return f;
+}
+
+/* "foo" -> "user.foo". Returns 0 and sets errno on overflow. */
+static int xattr_name_d2l(const char *name, char *out, unsigned long outlen)
+{
+    unsigned long i = 0;
+    if (!name) { *mr_errno_slot() = 22; return 0; }          /* EINVAL */
+    while (i < XATTR_PREFIX_LEN) { out[i] = XATTR_PREFIX[i]; i++; }
+    while (*name) {
+        if (i + 1 >= outlen) { *mr_errno_slot() = D_ENAMETOOLONG; return 0; }
+        out[i++] = *name++;
+    }
+    out[i] = 0;
+    return 1;
+}
+
+/* Linux ENODATA is Darwin ENOATTR for this family alone -- see (5) above.
+ * Applied AFTER the generic translation, so everything else keeps the table's
+ * answer. */
+static void xattr_fix_errno(void)
+{
+    if (*mr_errno_slot() == 96) *mr_errno_slot() = D_ENOATTR;   /* ENODATA */
+}
+
+EXPORT long getxattr(const char *path, const char *name, void *value,
+                     unsigned long size, unsigned int position, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    long n;
+    if (position != 0) { *mr_errno_slot() = D_EINVAL; return -1; }
+    (void)xattr_flags_d2l(options);          /* for the bails; get takes none */
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    n = (options & D_XATTR_NOFOLLOW)
+        ? MR_ERRNO_CALL(glibc_lgetxattr(path, lname, value, size))
+        : MR_ERRNO_CALL(glibc_getxattr(path, lname, value, size));
+    if (n < 0) xattr_fix_errno();
+    return n;
+}
+
+EXPORT long fgetxattr(int fd, const char *name, void *value,
+                      unsigned long size, unsigned int position, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    long n;
+    if (position != 0) { *mr_errno_slot() = D_EINVAL; return -1; }
+    (void)xattr_flags_d2l(options);
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    n = MR_ERRNO_CALL(glibc_fgetxattr(fd, lname, value, size));
+    if (n < 0) xattr_fix_errno();
+    return n;
+}
+
+EXPORT int setxattr(const char *path, const char *name, const void *value,
+                    unsigned long size, unsigned int position, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    int flags = xattr_flags_d2l(options), rc;
+    if (position != 0) { *mr_errno_slot() = D_EINVAL; return -1; }
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    rc = (options & D_XATTR_NOFOLLOW)
+         ? MR_ERRNO_CALL(glibc_lsetxattr(path, lname, value, size, flags))
+         : MR_ERRNO_CALL(glibc_setxattr(path, lname, value, size, flags));
+    if (rc < 0) xattr_fix_errno();
+    return rc;
+}
+
+EXPORT int fsetxattr(int fd, const char *name, const void *value,
+                     unsigned long size, unsigned int position, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    int flags = xattr_flags_d2l(options), rc;
+    if (position != 0) { *mr_errno_slot() = D_EINVAL; return -1; }
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    rc = MR_ERRNO_CALL(glibc_fsetxattr(fd, lname, value, size, flags));
+    if (rc < 0) xattr_fix_errno();
+    return rc;
+}
+
+EXPORT int removexattr(const char *path, const char *name, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    int rc;
+    (void)xattr_flags_d2l(options);
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    rc = (options & D_XATTR_NOFOLLOW)
+         ? MR_ERRNO_CALL(glibc_lremovexattr(path, lname))
+         : MR_ERRNO_CALL(glibc_removexattr(path, lname));
+    if (rc < 0) xattr_fix_errno();
+    return rc;
+}
+
+EXPORT int fremovexattr(int fd, const char *name, int options)
+{
+    char lname[XATTR_NAME_MAX];
+    int rc;
+    (void)xattr_flags_d2l(options);
+    if (!xattr_name_d2l(name, lname, sizeof lname)) return -1;
+    rc = MR_ERRNO_CALL(glibc_fremovexattr(fd, lname));
+    if (rc < 0) xattr_fix_errno();
+    return rc;
+}
+
+/* listxattr has to REWRITE its answer, not just forward it: the names on disk
+ * carry the `user.` prefix this family added, and the caller must not see it.
+ * Names outside the `user.` namespace are dropped -- see (4).
+ *
+ * The two-call protocol (size query, then fetch) has to be honoured on OUR
+ * side of the rewrite, because the stripped list is shorter than the raw one:
+ * answering a size query with the raw size would make a caller allocate more
+ * than it needs, which is harmless, and answering a fetch with the raw list
+ * would overrun, which is not. So the raw list is always fetched into our own
+ * buffer and the stripped size is what the caller is told. */
+static long xattr_list_common(const char *path, int fd, int use_fd,
+                              char *out, unsigned long size, int options)
+{
+    char *raw;
+    long rawn, i, need = 0;
+    int nofollow = options & D_XATTR_NOFOLLOW;
+
+    (void)xattr_flags_d2l(options);
+
+    rawn = use_fd ? MR_ERRNO_CALL(glibc_flistxattr(fd, 0, 0))
+                  : (nofollow ? MR_ERRNO_CALL(glibc_llistxattr(path, 0, 0))
+                              : MR_ERRNO_CALL(glibc_listxattr(path, 0, 0)));
+    if (rawn < 0) { xattr_fix_errno(); return -1; }
+    if (rawn == 0) return 0;
+
+    raw = glibc_malloc((unsigned long)rawn);
+    if (!raw) { *mr_errno_slot() = 12; return -1; }          /* ENOMEM */
+    rawn = use_fd ? MR_ERRNO_CALL(glibc_flistxattr(fd, raw, (unsigned long)rawn))
+                  : (nofollow ? MR_ERRNO_CALL(glibc_llistxattr(path, raw, (unsigned long)rawn))
+                              : MR_ERRNO_CALL(glibc_listxattr(path, raw, (unsigned long)rawn)));
+    if (rawn < 0) { glibc_free(raw); xattr_fix_errno(); return -1; }
+
+    /* First pass: how much the stripped list needs. */
+    for (i = 0; i < rawn; ) {
+        const char *n = raw + i;
+        unsigned long l = glibc_strlen(n);
+        if (l > XATTR_PREFIX_LEN &&
+            glibc_memcmp(n, XATTR_PREFIX, XATTR_PREFIX_LEN) == 0)
+            need += (long)(l - XATTR_PREFIX_LEN) + 1;
+        i += (long)l + 1;
+    }
+    if (size == 0) { glibc_free(raw); return need; }         /* size query */
+    if ((unsigned long)need > size) {
+        glibc_free(raw);
+        *mr_errno_slot() = 34;                               /* ERANGE, 34 both */
+        return -1;
+    }
+    /* Second pass: write them. */
+    {
+        long o = 0;
+        for (i = 0; i < rawn; ) {
+            const char *n = raw + i;
+            unsigned long l = glibc_strlen(n);
+            if (l > XATTR_PREFIX_LEN &&
+                glibc_memcmp(n, XATTR_PREFIX, XATTR_PREFIX_LEN) == 0) {
+                glibc_memcpy(out + o, n + XATTR_PREFIX_LEN,
+                             l - XATTR_PREFIX_LEN + 1);
+                o += (long)(l - XATTR_PREFIX_LEN) + 1;
+            }
+            i += (long)l + 1;
+        }
+    }
+    glibc_free(raw);
+    return need;
+}
+
+EXPORT long listxattr(const char *path, char *namebuff, unsigned long size, int options)
+{
+    return xattr_list_common(path, -1, 0, namebuff, size, options);
+}
+
+EXPORT long flistxattr(int fd, char *namebuff, unsigned long size, int options)
+{
+    return xattr_list_common(0, fd, 1, namebuff, size, options);
+}
+
 /* ----------------------------------------------------------------- uname
  *
  * `struct utsname` is the struct-layout hazard in its plainest form, and in the

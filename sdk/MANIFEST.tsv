@@ -410,6 +410,7 @@ sys/ucred.h	xnu:bsd/sys/ucred.h
 sys/un.h	xnu:bsd/sys/un.h
 sys/unistd.h	xnu:bsd/sys/unistd.h
 sys/utsname.h	xnu:bsd/sys/utsname.h
+sys/xattr.h	xnu:bsd/sys/xattr.h
 sys/vm.h	xnu:bsd/sys/vm.h
 sys/wait.h	xnu:bsd/sys/wait.h
 sysdir.h	local

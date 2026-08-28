@@ -677,6 +677,89 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
+### `xattr` — **DONE 2026-08-27**; four hazards, and only one of them is a struct
+
+All eight entry points — `getxattr`, `fgetxattr`, `setxattr`, `fsetxattr`,
+`removexattr`, `fremovexattr`, `listxattr`, `flistxattr` — in
+`darwin/src/posix.c`, graded by `tests/bin/xattr`. #69 named five; the family
+is eight and is done whole.
+
+**1. The option flags ROTATE.** Measured both sides:
+
+| | Darwin | Linux |
+|---|---|---|
+| `XATTR_NOFOLLOW` | `0x01` | not a flag at all — see 2 |
+| `XATTR_CREATE` | `0x02` | `XATTR_REPLACE` is `0x02` |
+| `XATTR_REPLACE` | `0x04` | not a valid flag |
+
+So a forwarded `XATTR_CREATE` arrives as `XATTR_REPLACE`: **"create only if it
+does not exist" performs "replace only if it does"** — the exact inverse,
+failing and succeeding backwards. Rotation again, as in `fcntl` and the `O_*`
+bits: a value that maps to *something else real* rather than to nothing.
+
+**2. `XATTR_NOFOLLOW` is a flag here and a different function there.** Linux
+spells it `lgetxattr`/`lsetxattr`/`lremovexattr`/`llistxattr`; a flag word
+cannot express it, so the wrapper dispatches on the bit.
+
+**3. Different ARITY — a shape none of the six catalogued hazard families
+covers.** Darwin's get/set carry a `position` argument (resource forks) that
+Linux's do not, and Darwin's take `options` where Linux's `set` takes `flags`
+and Linux's `get` takes nothing. A forward hands Linux the **position** where
+it expects the flags. Measured on Darwin: a non-zero `position` on an ordinary
+attribute is `EINVAL`, which is what this returns — there are no resource forks
+here, so that answer is faithful rather than a refusal.
+
+**4. The name space, and this is what makes the family work at all.** Linux
+refuses any name outside `user.`, `security.`, `system.` and `trusted.`;
+Darwin accepts anything, and a real Darwin file is full of `com.apple.*`.
+Measured in the test-bed image: `setxattr(path, "com.apple.foo", …)` **and**
+`setxattr(path, "plainname", …)` both fail with `EOPNOTSUPP`.
+
+Every name is therefore prefixed with `user.` on the way in and stripped on the
+way out. **Always prefixed, never conditionally**: mapping only the names that
+need it would send Darwin's `"foo"` and Darwin's `"user.foo"` to the same Linux
+attribute, and both can exist at once on Darwin (measured). Unconditional
+prefixing is injective, so `listxattr` can undo it exactly.
+
+*Consequence, stated rather than discovered:* attributes outside the `user.`
+namespace — `security.selinux` and friends — are **invisible** to the guest,
+because a guest asking for `"security.selinux"` is asking for
+`"user.security.selinux"`. That is the honest answer: the guest could not have
+created them and cannot address them.
+
+**5. And the errno NAME, which the generic table gets right and uselessly.**
+"No such attribute" is `ENOATTR` (**93**) on Darwin and `ENODATA` (**61**) on
+Linux — and Darwin *also* has an `ENODATA`, at **96**. So the general table
+maps 61 → 96: a correct name translation and a useless answer, because every
+xattr caller tests against `ENOATTR`. This family overrides it; nothing else in
+the table does, which is why the override is in `posix.c` and not in
+`scripts/gen_errno_table.sh`.
+
+**Refused rather than dropped:** `XATTR_NOSECURITY`, `XATTR_NODEFAULT` and
+`XATTR_SHOWCOMPRESSION` have no Linux equivalent and abort by name. Dropping
+them would perform a *different* operation than the one requested — the
+`#open-flags-unmappable` rule. If a real consumer turns out to pass
+`XATTR_SHOWCOMPRESSION` defensively (it is vacuous here — there is no decmpfs),
+the message names it and the fix is one line.
+
+**The fixture runs in `/tmp`, and that is not a detail.** The test-bed
+container mounts this repository from macOS and **that mount supports no
+extended attributes at all**: measured, `setxattr` under the mount returns
+`EOPNOTSUPP` (95) while the same call on `/tmp` succeeds. A fixture written in
+the fixture directory would have failed for a reason unrelated to the code.
+
+**Teeth, four mutations, each caught in a different part of the output:**
+
+| mutation | result |
+|---|---|
+| forward the option word raw (no rotation fix) | FAIL, lines 9–11 |
+| drop the `user.` prefix | FAIL, lines 6–13 |
+| drop the `ENODATA` → `ENOATTR` override | FAIL, line 10 |
+| ignore the `position` argument | FAIL, line 14 |
+
+Both constant columns are pinned: `sdk/tests/abi_probe.c` against Apple's SDK,
+`sdk/tests/glibc_abi_probe.c` against the real glibc header.
+
 ### `grp` — **DONE 2026-08-27**, and it is *not* the passwd shape
 
 `getgrnam`, `getgrgid`, `getgrnam_r`, `getgrgid_r` are implemented

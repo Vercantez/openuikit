@@ -1,0 +1,27 @@
+XATTR_NOFOLLOW          0x1
+XATTR_CREATE            0x2
+XATTR_REPLACE           0x4
+XATTR_MAXNAMELEN        127
+ENOATTR                 93
+setxattr alpha rc       0 errno 0
+getxattr size query     11
+getxattr value          11 [alpha-value]
+setxattr CREATE exists  rc -1 errno 17 EEXIST 17
+setxattr REPLACE absent rc -1 errno 93 is ENOATTR 1
+alpha still             11 [alpha-value]
+getxattr missing        -1 errno 93 is ENOATTR 1
+getxattr short buffer   -1 errno 34 ERANGE 34
+getxattr position 1     -1 errno 22 EINVAL 22
+fsetxattr beta rc       0 errno 0
+fgetxattr beta          4 [beta]
+listxattr size query    positive
+listxattr rc            positive
+  listxattr ours=2 [machorun.alpha] [machorun.beta]
+flistxattr rc           positive
+  flistxattr ours=2 [machorun.alpha] [machorun.beta]
+getxattr NOFOLLOW       11 [alpha-value]
+removexattr rc          0 errno 0
+removexattr again rc    -1 errno 93 is ENOATTR 1
+fremovexattr rc         0 errno 0
+  after removal ours=0
+done

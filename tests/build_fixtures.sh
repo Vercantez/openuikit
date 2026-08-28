@@ -438,6 +438,16 @@ want uname               && build uname               "$CHAINED_TARGET" uname   
 # *result NULL, which inverts exactly like readdir_r's.
 want grp                 && build grp                 "$CHAINED_TARGET" grp                 grp.c --
 
+# xattr. Four hazards at once: the option flags ROTATE (Darwin XATTR_CREATE
+# 0x02 is Linux XATTR_REPLACE 0x02, so "create only if absent" performs
+# "replace only if present"); XATTR_NOFOLLOW is a FLAG on Darwin and a
+# DIFFERENT FUNCTION on Linux; the two get/set families have different ARITY
+# because of Darwin's resource-fork `position`; and Linux refuses every name
+# outside its four namespaces, which is every name a Darwin file actually has.
+# Runs in /tmp on purpose -- the repository's bind mount into the test-bed
+# container does not support extended attributes at all.
+want xattr               && build xattr               "$CHAINED_TARGET" xattr               xattr.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

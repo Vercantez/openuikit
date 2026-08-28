@@ -34,6 +34,7 @@
 #include <pwd.h>
 #include <stddef.h>
 #include <sys/utsname.h>
+#include <sys/xattr.h>
 #include <sysdir.h>
 
 /* Returned rather than discarded, so no call can be optimised away as dead. */
@@ -77,6 +78,20 @@ unsigned long fm_link_probe(void)
         acc += (unsigned long)getgrgid_r(0, &gr, buf, sizeof buf, &gres);
         acc += (unsigned long)(getgrnam("root") != NULL);
         acc += (unsigned long)(getgrgid(0) != NULL);
+    }
+
+    /* sys/xattr.h -- the family whole: path and descriptor forms of all four
+     * operations. Eight entry points, not the five #69 named. */
+    {
+        const char *p = "/dev/null";
+        acc += (unsigned long)getxattr(p, "user.x", buf, sizeof buf, 0, 0);
+        acc += (unsigned long)fgetxattr(0, "user.x", buf, sizeof buf, 0, 0);
+        acc += (unsigned long)setxattr(p, "user.x", buf, 1, 0, XATTR_CREATE);
+        acc += (unsigned long)fsetxattr(0, "user.x", buf, 1, 0, XATTR_REPLACE);
+        acc += (unsigned long)removexattr(p, "user.x", XATTR_NOFOLLOW);
+        acc += (unsigned long)fremovexattr(0, "user.x", 0);
+        acc += (unsigned long)listxattr(p, buf, sizeof buf, 0);
+        acc += (unsigned long)flistxattr(0, buf, sizeof buf, 0);
     }
 
     /* sys/utsname.h */
