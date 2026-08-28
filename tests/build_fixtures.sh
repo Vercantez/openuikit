@@ -423,6 +423,13 @@ want sscanf              && build sscanf              "$CHAINED_TARGET" sscanf  
 # the implementation and this is what pins it.
 want vm_copy             && build vm_copy             "$CHAINED_TARGET" vm_copy             vm_copy.c --
 
+# uname. struct utsname is 1280 bytes on Darwin and 390 in glibc, with five
+# 256-byte fields against six 65-byte ones -- so a forward writes the SAFE
+# direction for the size and reads every field but the first from the wrong
+# place. Also grades the one behaviour only a sentinel finds: Darwin writes
+# strlen+1 bytes per field and leaves the rest alone, glibc zeroes all 65.
+want uname               && build uname               "$CHAINED_TARGET" uname               uname.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

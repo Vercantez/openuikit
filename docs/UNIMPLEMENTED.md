@@ -677,6 +677,52 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
+### `uname-identity` — a Darwin `sysname` over a Linux `release`, deliberately
+
+`uname` is implemented (`darwin/src/posix.c`) and graded by `tests/bin/uname`.
+The **layout** half is an ordinary translation and is fully checked: Darwin's
+`struct utsname` is **1280 bytes with five 256-byte fields** at
+`0/256/512/768/1024`; glibc's is **390 bytes with six 65-byte fields** at
+`0/65/130/195/260/325`. A forward writes 390 bytes into 1280 — the *safe*
+direction for the size, which is exactly why it would not crash — and then
+reads every field but the first from the wrong place. Verified by mutation: a
+naive forward leaves `machine` holding 256 bytes of the fixture's sentinel and
+`sysname` reading `Linux`, **with the call returning 0**.
+
+It also pins a behaviour only a sentinel finds: **Darwin writes `strlen+1` bytes
+per field and leaves the rest of the field alone**, where glibc zeroes all 65.
+Adding a `memset` to our field copy fails three lines of the fixture and nothing
+else in the tree notices.
+
+**The CONTENT half is a decision, and here it is with its cost.**
+
+| field | value | why |
+|---|---|---|
+| `sysname` | `"Darwin"` | every compile-time signal the guest carries says Darwin — `TARGET_OS_MAC`, the Mach-O it is, the SDK it was built against. A guest branching here should find the branch its own binary was compiled for. |
+| `machine` | `"arm64"` | a NAME TRANSLATION of the same CPU; glibc spells it `aarch64` and a guest switching on the string would not recognise its own architecture. |
+| `nodename` | the kernel's | a fact about the machine. |
+| `release` | **the kernel's, i.e. a LINUX version** | see below. |
+| `version` | names machorun and quotes the Linux kernel | so anything that *prints* the version string tells the whole truth. |
+
+**`release` is the honest divergence and it has a named consumer.**
+FoundationEssentials' `ProcessInfo.operatingSystemVersion` splits exactly this
+field on `.`, so under machorun it reports the **Linux kernel version** —
+`(6, 12, 76)` rather than anything Darwin-shaped. Version-gated code will take
+the "very old OS" branch.
+
+Inventing a Darwin release was considered and rejected: it would be a
+**fabricated number that version-gated code acts on**, which is the
+guess-with-a-plausible-face this project keeps refusing (`#sysdir-empty` makes
+the same call). A wrong-but-real kernel version is discoverable by anyone who
+looks; an invented one is not. If a real app turns out to break on this, the
+change is one line and the evidence for flipping it belongs here.
+
+`sysname`, `machine`, the offsets, the NUL termination and the untouched-tail
+behaviour are graded byte-for-byte. `nodename`, `release` and `version` are
+machine-specific — two Macs disagree about all three — so **no** differential
+fixture could ever compare their contents; the fixture grades their shape and
+says so in its own header rather than omitting them silently.
+
 ### `stat-birthtime`
 `struct stat` is translated field by field between Darwin's 144-byte layout and
 Linux's 128-byte one. Linux's `struct stat` has **no** birth time — `statx`

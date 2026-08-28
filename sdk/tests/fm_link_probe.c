@@ -32,6 +32,7 @@
 #include <mach/vm_map.h>
 #include <pwd.h>
 #include <stddef.h>
+#include <sys/utsname.h>
 #include <sysdir.h>
 
 /* Returned rather than discarded, so no call can be optimised away as dead. */
@@ -66,6 +67,12 @@ unsigned long fm_link_probe(void)
         char a[64] = { 0 }, b[64] = { 0 };
         acc += (unsigned long)vm_copy(mach_task_self(),
                                       (vm_address_t)a, sizeof a, (vm_address_t)b);
+    }
+
+    /* sys/utsname.h */
+    {
+        struct utsname uts;
+        acc += (unsigned long)uname(&uts) + (unsigned char)uts.sysname[0];
     }
 
     return acc;

@@ -61,4 +61,5 @@ exp10_strings	chained	run	pass	__exp10 COMPUTES rather than branching to itself 
 dirent_r	chained	run	pass	readdir_r returns an ERRNO and signals EOF through result, not -1 -- a wrapper returning -1 makes every caller's loop terminate as an error
 sscanf	chained	run	pass	variadic, so it cannot be forwarded -- every argument is a pointer glibc would write through; the length modifier decides the WIDTH OF THE STORE
 vm_copy	chained	run	pass	Mach's in-task virtual copy: no alignment requirement at all, MEMMOVE semantics on overlap (the checksum separates that from a forward copy by 16), and unmapped/PROT_NONE/read-only all give KERN_INVALID_ADDRESS rather than KERN_PROTECTION_FAILURE
+uname	chained	run	pass	struct utsname is 1280 bytes with 256-byte fields on Darwin and 390 with 65-byte ones in glibc, so a forward is safe on SIZE and wrong on every OFFSET; plus the sentinel check for Darwin writing strlen+1 bytes and leaving the rest of the field alone
 fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug

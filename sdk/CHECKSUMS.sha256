@@ -364,6 +364,7 @@ f8b136bb10d56bb604e7b253f1ec23858d0b4ae21fe85eaede0ccc66afdb554a  xnu:bsd/sys/ty
 25b62ef73d2cc2c58c5081e4fea84906d4bffeff428d60f9111ed67c280a6f0b  xnu:bsd/sys/ucred.h  sys/ucred.h
 3a45612e83bd6182ffe78fe7ab40a346bd5ad773cc11590de00b2b7f467b9838  xnu:bsd/sys/un.h  sys/un.h
 5d5dccb886d6ecfd7678949d27859f9d7d4a2094328e4374941b753388c58b69  xnu:bsd/sys/unistd.h  sys/unistd.h
+2d51c76d8c2448b0402aa92296747b4619b1956a3b98eeaf16875a40099a6b0e  xnu:bsd/sys/utsname.h  sys/utsname.h
 cdf9b052c7d82ccea3118fa36b1e9b6f9b131ef081392c177cdb66eb9ea35279  xnu:bsd/sys/vm.h  sys/vm.h
 3a82112a1dc8025e7d3a09cb6d9d39bb60c13018052838d3f8ade1b208f83983  xnu:bsd/sys/wait.h  sys/wait.h
 171758cbd3e9ea630810c6249c59a9f9190abb8dc5a0932c1c3bd2c12aa03080  Libc:include/syslog.h  syslog.h

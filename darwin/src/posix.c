@@ -2497,6 +2497,97 @@ EXPORT int gethostuuid(unsigned char out[16], const void *wait)
     return 0;
 }
 
+/* ----------------------------------------------------------------- uname
+ *
+ * `struct utsname` is the struct-layout hazard in its plainest form, and in the
+ * OUT-parameter direction: Darwin's is 1280 bytes with five 256-byte fields at
+ * 0/256/512/768/1024; glibc's is 390 bytes with SIX 65-byte fields at
+ * 0/65/130/195/260/325. Both measured, not recalled. A forward writes 390 bytes
+ * into a 1280-byte object -- the safe direction for the SIZE, which is exactly
+ * why it would not crash -- and then every field but the first is read from the
+ * wrong place: the guest's `nodename` at +256 lands inside glibc's `machine`.
+ *
+ * ONE BEHAVIOURAL DIFFERENCE THAT ONLY A MEASUREMENT FINDS: Darwin writes
+ * strlen+1 bytes per field and LEAVES THE REST OF THE FIELD ALONE; glibc zeroes
+ * the whole 65 bytes. Filling the struct with a sentinel before the call shows
+ * it immediately and nothing else does. tests/bin/uname checks it, which is why
+ * the copy below is a string copy and not a memset-then-copy.
+ *
+ * WHAT IT REPORTS is a DECISION, not a measurement, and the two halves are
+ * different in kind:
+ *
+ *   sysname   "Darwin". Every compile-time signal the guest carries says Darwin
+ *             -- TARGET_OS_MAC, the Mach-O it is, the SDK it was built against
+ *             -- and a guest branching here should find the branch its own
+ *             binary was compiled for. "Linux" would be true about the kernel
+ *             and contradict every other signal in the process.
+ *   machine   "arm64". A NAME TRANSLATION, not a claim: glibc spells the same
+ *             CPU "aarch64", and a guest switching on the string would fail to
+ *             recognise its own architecture.
+ *   nodename  the kernel's, verbatim.
+ *   release   the kernel's, verbatim, and THIS IS THE HONEST DIVERGENCE: a
+ *             LINUX version number under a Darwin sysname.
+ *             FoundationEssentials' ProcessInfo.operatingSystemVersion parses
+ *             exactly this field, so it reports the Linux kernel version.
+ *             Inventing a Darwin release was rejected: it would be a fabricated
+ *             number that version-gated code ACTS on -- the guess with a
+ *             plausible face. A wrong-but-real kernel version is discoverable;
+ *             an invented one is not. docs/UNIMPLEMENTED.md#uname-identity.
+ *   version   names machorun, so anything that PRINTS the version string tells
+ *             the whole truth instead of half of it.
+ */
+
+struct darwin_utsname {
+    char sysname[256]; char nodename[256]; char release[256];
+    char version[256]; char machine[256];
+};
+struct linux_utsname {
+    char sysname[65]; char nodename[65]; char release[65];
+    char version[65]; char machine[65];  char domainname[65];
+};
+_Static_assert(sizeof(struct darwin_utsname) == 1280, "Darwin utsname is 1280 bytes");
+_Static_assert(sizeof(struct linux_utsname) == 390, "glibc aarch64 utsname is 390 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_utsname, nodename) == 256, "Darwin nodename at 256");
+_Static_assert(__builtin_offsetof(struct linux_utsname,  nodename) == 65,  "glibc nodename at 65");
+
+/* Exactly strlen+1 bytes and never more, matching what Darwin was measured to
+ * do. The bound is the DESTINATION field's, not the source's. */
+static void uts_put(char *dst, const char *src)
+{
+    size_t i = 0;
+    while (src[i] && i < 255) { dst[i] = src[i]; i++; }
+    dst[i] = 0;
+}
+
+static size_t uts_cat(char *dst, size_t at, const char *src)
+{
+    while (*src && at < 255) dst[at++] = *src++;
+    dst[at] = 0;
+    return at;
+}
+
+EXPORT int uname(struct darwin_utsname *u)
+{
+    struct linux_utsname l;
+    size_t at;
+
+    if (!u) { *mr_errno_slot() = 14; return -1; }   /* EFAULT, 14 on both */
+    if (MR_ERRNO_CALL(glibc_uname(&l)) != 0) return -1;
+
+    uts_put(u->sysname,  "Darwin");
+    uts_put(u->nodename, l.nodename);
+    uts_put(u->release,  l.release);
+    uts_put(u->machine,  "arm64");
+
+    at = uts_cat(u->version, 0, "machorun: a Darwin userland on ");
+    at = uts_cat(u->version, at, l.sysname);
+    at = uts_cat(u->version, at, " ");
+    at = uts_cat(u->version, at, l.release);
+    at = uts_cat(u->version, at, " ");
+    (void)uts_cat(u->version, at, l.version);
+    return 0;
+}
+
 /* sysdir_*: Darwin's search-path enumeration, behind NSSearchPathForDirectories
  * InDomains -- "where is the Caches directory", "where is Application Support".
  *

@@ -158,6 +158,7 @@ extern int     glibc_close(int)                             GLIBCSYM(close);
  * ordinary argument passing lands exactly where its va_arg looks. */
 extern int     glibc_open(const char *, int, unsigned)      GLIBCSYM(open);
 extern off_t   glibc_lseek(int, off_t, int)                 GLIBCSYM(lseek);
+extern int     glibc_uname(void *)                           GLIBCSYM(uname);
 extern int     glibc_stat(const char *, void *)             GLIBCSYM(stat);
 extern int     glibc_lstat(const char *, void *)            GLIBCSYM(lstat);
 extern int     glibc_fstat(int, void *)                     GLIBCSYM(fstat);
