@@ -58,6 +58,15 @@ public enum UIModalPresentationStyle {
     case automatic
     case pageSheet
     case fullScreen
+    case currentContext
+    case custom
+    /// Full-bounds presentations which leave the presenting hierarchy in
+    /// place. OpenUIKit already renders non-sheet styles this way; naming the
+    /// UIKit cases exposes that behavior to application source.
+    case overFullScreen
+    case overCurrentContext
+    /// Used by adaptive-presentation delegates to request no adaptation.
+    case none
     /// UIAlertController's own style: a centred card over a dim, never a
     /// sheet. Set by `UIAlertController.init` — apps do not choose it.
     case alert

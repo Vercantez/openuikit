@@ -72,6 +72,40 @@ public final class UIEvent {
 
 @preconcurrency @MainActor
 open class UIWindow: UIView {
+    /// Window stacking priority. Values match UIKit's public constants so
+    /// arithmetic such as `.alert + 1` retains its intended ordering.
+    public struct Level: RawRepresentable, Hashable, Comparable, Sendable {
+        public var rawValue: CGFloat
+
+        public init(rawValue: CGFloat) { self.rawValue = rawValue }
+        public init(_ rawValue: CGFloat) { self.rawValue = rawValue }
+
+        public static let normal = Level(0)
+        public static let statusBar = Level(1_000)
+        public static let alert = Level(2_000)
+
+        public static func < (lhs: Level, rhs: Level) -> Bool {
+            lhs.rawValue < rhs.rawValue
+        }
+
+        public static func + (lhs: Level, rhs: CGFloat) -> Level {
+            Level(lhs.rawValue + rhs)
+        }
+
+        public static func + (lhs: CGFloat, rhs: Level) -> Level { rhs + lhs }
+
+        public static func - (lhs: Level, rhs: CGFloat) -> Level {
+            Level(lhs.rawValue - rhs)
+        }
+
+        public static func - (lhs: Level, rhs: Level) -> CGFloat {
+            lhs.rawValue - rhs.rawValue
+        }
+
+        public static func += (lhs: inout Level, rhs: CGFloat) { lhs = lhs + rhs }
+        public static func -= (lhs: inout Level, rhs: CGFloat) { lhs = lhs - rhs }
+    }
+
     /// Multi-tap sequence rules (UITouch.tapCount): a touch that begins
     /// within `multiTapInterval` seconds of the previous touch's end and
     /// within `multiTapSlop` points of its position continues the tap
@@ -106,6 +140,7 @@ open class UIWindow: UIView {
     override var _firstResponderWindow: UIWindow? { self }
 
     public var isKeyWindow: Bool { UIApplication.shared.keyWindow === self }
+    public var windowLevel: Level = .normal
 
     /// The controller whose view fills the window. Setting it swaps the old
     /// root view out and installs the new one at the window's bounds — the
@@ -125,6 +160,14 @@ open class UIWindow: UIView {
 
     public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
+        UIApplication.shared._register(window: self)
+    }
+
+    /// Construct a window already associated with a scene. In OpenUIKit's
+    /// single-display host the scene's screen supplies the initial bounds.
+    public init(windowScene: UIWindowScene) {
+        super.init(frame: windowScene.screen.bounds)
+        self.windowScene = windowScene
         UIApplication.shared._register(window: self)
     }
 

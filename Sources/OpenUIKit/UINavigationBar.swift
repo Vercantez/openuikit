@@ -114,6 +114,19 @@ final class _UINavigationBarBackButton: UIControl {
 
 @preconcurrency @MainActor
 public final class UINavigationBar: UIView, _UIBarItemContainer {
+    /// Process-wide proxy for UIKit's `UINavigationBar.appearance()` spelling.
+    /// New bars inherit the proxy's objects. This is the useful subset for a
+    /// single-process portable host; containment- and trait-scoped proxies are
+    /// deliberately outside this compatibility step.
+    private static var _appearanceProxy: UINavigationBar?
+
+    public static func appearance() -> UINavigationBar {
+        if let proxy = _appearanceProxy { return proxy }
+        let proxy = UINavigationBar(frame: .zero)
+        _appearanceProxy = proxy
+        return proxy
+    }
+
     // MARK: Bar-zone metrics
     //
     // MEASURED, real iOS 26.1 / iPhone 16 / compact width, no safe-area top
@@ -264,6 +277,12 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         titleLabel = UINavigationBar.makeTitleLabel(nil)
         hairline = UIView()
         super.init(frame: frame)
+        if let proxy = Self._appearanceProxy {
+            standardAppearance = proxy.standardAppearance
+            scrollEdgeAppearance = proxy.scrollEdgeAppearance
+            compactAppearance = proxy.compactAppearance
+            isTranslucent = proxy.isTranslucent
+        }
         hairline.isUserInteractionEnabled = false
         addSubview(hairline)
         addSubview(titleLabel)
@@ -298,6 +317,10 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
                 ?? .systemFont(ofSize: UINavigationBar.largeTitleFontSize, weight: .bold)
             l.textColor = a.largeTitleTextAttributes.foregroundColor ?? .label
         }
+        let backColor = a.backButtonAppearance.normal.titleTextAttributes[.foregroundColor]
+            as? UIColor ?? tintColor ?? .systemBlue
+        backButton?.chevron.textColor = backColor
+        backButton?.backLabel.textColor = backColor
     }
 
     static func makeTitleLabel(_ text: String?) -> UILabel {
@@ -310,7 +333,10 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     func makeBackButton(_ title: String?) -> _UINavigationBarBackButton? {
         guard let title else { return nil }
-        let b = _UINavigationBarBackButton(title: title, tintColor: tintColor)
+        let appearanceColor = effectiveAppearance.backButtonAppearance.normal
+            .titleTextAttributes[.foregroundColor] as? UIColor
+        let b = _UINavigationBarBackButton(title: title,
+                                           tintColor: appearanceColor ?? tintColor)
         b.addTarget(for: .touchUpInside) { [weak self] _, _ in
             self?.onBackTapped?()
         }

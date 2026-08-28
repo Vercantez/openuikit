@@ -107,10 +107,84 @@ public struct UIBarTitleTextAttributes {
     }
 }
 
+/// The position adjustment used by bar-item appearance state. UIKit exposes
+/// this as a small value type rather than a CGPoint because the two fields are
+/// semantic horizontal/vertical offsets.
+public struct UIOffset: Codable, Equatable, Sendable {
+    public var horizontal: CGFloat
+    public var vertical: CGFloat
+
+    public init(horizontal: CGFloat, vertical: CGFloat) {
+        self.horizontal = horizontal
+        self.vertical = vertical
+    }
+
+    public init() { self.init(horizontal: 0, vertical: 0) }
+
+    public static let zero = UIOffset()
+}
+
+/// Appearance values for one control state of a bar button item.
+@preconcurrency @MainActor
+open class UIBarButtonItemStateAppearance {
+    open var titleTextAttributes: [NSAttributedString.Key: Any] = [:]
+    open var titlePositionAdjustment: UIOffset = .zero
+    open var backgroundImage: UIImage?
+    open var backgroundImagePositionAdjustment: UIOffset = .zero
+
+    public init() {}
+
+    fileprivate init(copying other: UIBarButtonItemStateAppearance) {
+        titleTextAttributes = other.titleTextAttributes
+        titlePositionAdjustment = other.titlePositionAdjustment
+        backgroundImage = other.backgroundImage
+        backgroundImagePositionAdjustment = other.backgroundImagePositionAdjustment
+    }
+}
+
+/// State-specific styling used by navigation-bar back buttons and ordinary
+/// bar button items. Rendering currently consumes the title color for the
+/// navigation back control; the remaining values are retained faithfully so
+/// callers can configure and inspect an appearance before fuller rendering
+/// support lands.
+@preconcurrency @MainActor
+open class UIBarButtonItemAppearance {
+    fileprivate var style: UIBarButtonItem.Style
+    open private(set) var normal = UIBarButtonItemStateAppearance()
+    open private(set) var highlighted = UIBarButtonItemStateAppearance()
+    open private(set) var disabled = UIBarButtonItemStateAppearance()
+    open private(set) var focused = UIBarButtonItemStateAppearance()
+
+    public init(style: UIBarButtonItem.Style) {
+        self.style = style
+    }
+
+    public convenience init() { self.init(style: .plain) }
+
+    open func configureWithDefault(for style: UIBarButtonItem.Style) {
+        self.style = style
+        normal = UIBarButtonItemStateAppearance()
+        highlighted = UIBarButtonItemStateAppearance()
+        disabled = UIBarButtonItemStateAppearance()
+        focused = UIBarButtonItemStateAppearance()
+    }
+
+    fileprivate init(copying other: UIBarButtonItemAppearance) {
+        style = other.style
+        normal = UIBarButtonItemStateAppearance(copying: other.normal)
+        highlighted = UIBarButtonItemStateAppearance(copying: other.highlighted)
+        disabled = UIBarButtonItemStateAppearance(copying: other.disabled)
+        focused = UIBarButtonItemStateAppearance(copying: other.focused)
+    }
+}
+
 @preconcurrency @MainActor
 public final class UINavigationBarAppearance: UIBarAppearance {
     public var titleTextAttributes = UIBarTitleTextAttributes()
     public var largeTitleTextAttributes = UIBarTitleTextAttributes()
+    public var backButtonAppearance = UIBarButtonItemAppearance()
+    public private(set) var backIndicatorImage: UIImage?
+    public private(set) var backIndicatorTransitionMaskImage: UIImage?
 
     public required init() { super.init() }
     public override init(barAppearance other: UIBarAppearance) {
@@ -118,7 +192,16 @@ public final class UINavigationBarAppearance: UIBarAppearance {
         if let nav = other as? UINavigationBarAppearance {
             titleTextAttributes = nav.titleTextAttributes
             largeTitleTextAttributes = nav.largeTitleTextAttributes
+            backButtonAppearance = UIBarButtonItemAppearance(copying: nav.backButtonAppearance)
+            backIndicatorImage = nav.backIndicatorImage
+            backIndicatorTransitionMaskImage = nav.backIndicatorTransitionMaskImage
         }
+    }
+
+    public func setBackIndicatorImage(_ backIndicatorImage: UIImage?,
+                                      transitionMaskImage backIndicatorTransitionMaskImage: UIImage?) {
+        self.backIndicatorImage = backIndicatorImage
+        self.backIndicatorTransitionMaskImage = backIndicatorTransitionMaskImage
     }
 }
 
