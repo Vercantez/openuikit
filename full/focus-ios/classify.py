@@ -9,11 +9,12 @@ import os
 import re
 import sys
 
+from diagnostics import primary_error_messages
+
 OUT = sys.argv[1]
 APP = sys.argv[2]
 LOGS = os.path.join(OUT, "logs")
 
-ERR = re.compile(r"error: (.*)")
 NAME = re.compile(r"cannot find (?:type )?'([^']+)' in scope")
 MEMBER = re.compile(r"(?:value of type|type) '([^']+)' has no member '([^']+)'")
 APPLE = re.compile(r"^(UI|NS|CG|CA|CF|WK|CL|AV|MK|SK|UT|QL)[A-Z]")
@@ -41,24 +42,25 @@ for fn in sorted(os.listdir(LOGS)):
     if not fn.endswith(".log"):
         continue
     txt = open(os.path.join(LOGS, fn), encoding="utf-8", errors="replace").read()
-    stages.append((fn[:-4], txt, txt.count("error:")))
+    messages = primary_error_messages(txt)
+    stages.append((fn[:-4], messages))
 
 print("=== STAGES (every one reported, including the clean ones) ===")
-for name, _, n in stages:
-    print("  %-26s %5d errors" % (name, n))
-print("  %-26s %5d" % ("TOTAL", sum(n for _, _, n in stages)))
+for name, messages in stages:
+    print("  %-26s %5d primary diagnostics" % (name, len(messages)))
+print("  %-26s %5d" % ("TOTAL", sum(len(messages) for _, messages in stages)))
 
 # Whole-corpus error-kind breakdown
 kinds = collections.Counter()
 names = collections.Counter()
 members = collections.Counter()
-for _, txt, _ in stages:
-    for m in ERR.finditer(txt):
-        kinds[norm(m.group(1))] += 1
-    for m in NAME.finditer(txt):
-        names[m.group(1)] += 1
-    for m in MEMBER.finditer(txt):
-        members[(m.group(1), m.group(2))] += 1
+for _, messages in stages:
+    for message in messages:
+        kinds[norm(message)] += 1
+        for match in NAME.finditer(message):
+            names[match.group(1)] += 1
+        for match in MEMBER.finditer(message):
+            members[(match.group(1), match.group(2))] += 1
 
 print("\n=== ERROR KINDS, ranked (denominator %d) ===" % sum(kinds.values()))
 for k, n in kinds.most_common(18):

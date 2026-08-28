@@ -1,135 +1,135 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                         2134 errors
-  empty                          0 errors
-  openuikit                      0 errors
-  snapkit-vendoring-after        0 errors
-  snapkit-vendoring-before       0 errors
-  snapkit                        0 errors
-  stub-FocusAppServices          0 errors
-  stub-Fuzi                      0 errors
-  stub-Glean                     0 errors
-  stub-MobileCoreServices        0 errors
-  stub-Sentry                    0 errors
-  stub-WebKit                    0 errors
-  target-AppShortcuts            2 errors
-  target-DesignSystem           44 errors
-  target-Licenses                8 errors
-  target-Onboarding              2 errors
-  target-UIComponents            2 errors
-  target-UIHelpers              42 errors
-  target-Widget                 12 errors
-  TOTAL                       2246
+  app                         1060 primary diagnostics
+  empty                          0 primary diagnostics
+  openuikit                      0 primary diagnostics
+  snapkit-vendoring-after        0 primary diagnostics
+  snapkit-vendoring-before       0 primary diagnostics
+  snapkit                        0 primary diagnostics
+  stub-FocusAppServices          0 primary diagnostics
+  stub-Fuzi                      0 primary diagnostics
+  stub-Glean                     0 primary diagnostics
+  stub-MobileCoreServices        0 primary diagnostics
+  stub-Sentry                    0 primary diagnostics
+  stub-WebKit                    0 primary diagnostics
+  target-AppShortcuts            1 primary diagnostics
+  target-DesignSystem           22 primary diagnostics
+  target-Licenses                4 primary diagnostics
+  target-Onboarding              1 primary diagnostics
+  target-UIComponents            1 primary diagnostics
+  target-UIHelpers              21 primary diagnostics
+  target-Widget                  6 primary diagnostics
+  TOTAL                       1116
 
-=== ERROR KINDS, ranked (denominator 2246) ===
-    408  value of type 'X' has no member 'X'
-    264  cannot find 'X' in scope
-    258  cannot infer contextual base in reference to member 'X'
-    172  cannot find type 'X' in scope
-    144  'X' requires a contextual type
-    112  cannot use optional chaining on non-optional value of type 'X'
-    110  type 'X' has no member 'X'
-     74  ambiguous use of 'X'
-     66  extra argument 'X' in call
-     62  cannot convert value of type 'X' to expected argument type 'X'
-     50  argument passed to call that takes no arguments
-     50  missing argument for parameter 'X' in call
-     44  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
-     40  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
-     38  method does not override any method from its superclass
-     32  reference to member 'X' cannot be resolved without a contextual type
-     26  generic parameter 'X' could not be inferred
-     20  'X' is unavailable in macOS
+=== ERROR KINDS, ranked (denominator 1116) ===
+    204  value of type 'X' has no member 'X'
+    132  cannot find 'X' in scope
+    129  cannot infer contextual base in reference to member 'X'
+     86  cannot find type 'X' in scope
+     72  'X' requires a contextual type
+     56  cannot use optional chaining on non-optional value of type 'X'
+     55  type 'X' has no member 'X'
+     37  ambiguous use of 'X'
+     33  extra argument 'X' in call
+     31  cannot convert value of type 'X' to expected argument type 'X'
+     25  argument passed to call that takes no arguments
+     25  missing argument for parameter 'X' in call
+     22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
+     20  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
+     19  method does not override any method from its superclass
+     16  reference to member 'X' cannot be resolved without a contextual type
+     13  generic parameter 'X' could not be inferred
+     10  'X' is unavailable in macOS
 
-=== MISSING TYPES: 87 distinct / 436 occurrences ===
-  Apple-framework names (a REAL gap)     :  55 distinct /  280 uses
-  app's own symbols (an earlier failure) :   1 distinct /    2 uses
-  other                                  :  31 distinct /  154 uses
+=== MISSING TYPES: 87 distinct / 218 occurrences ===
+  Apple-framework names (a REAL gap)     :  55 distinct /  140 uses
+  app's own symbols (an earlier failure) :   1 distinct /    1 uses
+  other                                  :  31 distinct /   77 uses
 
   the real Apple-type gap, ranked:
-     26  UIPasteboard
-     22  CAGradientLayer
-     14  CATransaction
-     14  UIApplication
-     14  UIColor
-     14  UIPageViewController
-      8  UIDropInteraction
-      8  UIFont
-      8  UIViewController
-      8  UIViewControllerTransitionCoordinator
-      8  UIViewPropertyAnimator
-      6  CACornerMask
-      6  UIDropSession
-      6  UIHostingController
-      6  UIMenuItem
-      4  CABasicAnimation
-      4  UIApplicationShortcutItem
-      4  UIDragInteraction
-      4  UIDragItem
-      4  UIGraphicsBeginImageContextWithOptions
-      4  UIGraphicsEndImageContext
-      4  UIGraphicsGetImageFromCurrentImageContext
-      4  UIImage
-      4  UIImpactFeedbackGenerator
-      4  UIInterfaceOrientation
-      4  UIInterfaceOrientationMask
-      4  UIMenuController
-      4  UIPageControl
-      4  UIPointerInteraction
-      4  UITableViewDiffableDataSource
-      4  UITextInputMode
-      2  CATransform3D
-      2  NSDiffableDataSourceSnapshot
-      2  NSStringDrawingOptions
-      2  UIActivityItemProvider
-      2  UIBarButtonItemAppearance
-      2  UIContentContainer
-      2  UIDragInteractionDelegate
-      2  UIDragSession
-      2  UIDropInteractionDelegate
-      2  UIDropProposal
-      2  UIPageViewControllerDataSource
-      2  UIPageViewControllerDelegate
-      2  UIPointerInteractionDelegate
-      2  UIPointerRegion
-      2  UIPointerStyle
-      2  UIPrintFormatter
-      2  UIPrintInfo
-      2  UIPrintPageRenderer
-      2  UISpringTimingParameters
-      2  UIStatusBarStyle
-      2  UITextPosition
-      2  UIUserActivityRestoring
-      2  UIView
-      2  UIViewControllerRepresentable
+     13  UIPasteboard
+     11  CAGradientLayer
+      7  CATransaction
+      7  UIApplication
+      7  UIColor
+      7  UIPageViewController
+      4  UIDropInteraction
+      4  UIFont
+      4  UIViewController
+      4  UIViewControllerTransitionCoordinator
+      4  UIViewPropertyAnimator
+      3  CACornerMask
+      3  UIDropSession
+      3  UIHostingController
+      3  UIMenuItem
+      2  CABasicAnimation
+      2  UIApplicationShortcutItem
+      2  UIDragInteraction
+      2  UIDragItem
+      2  UIGraphicsBeginImageContextWithOptions
+      2  UIGraphicsEndImageContext
+      2  UIGraphicsGetImageFromCurrentImageContext
+      2  UIImage
+      2  UIImpactFeedbackGenerator
+      2  UIInterfaceOrientation
+      2  UIInterfaceOrientationMask
+      2  UIMenuController
+      2  UIPageControl
+      2  UIPointerInteraction
+      2  UITableViewDiffableDataSource
+      2  UITextInputMode
+      1  CATransform3D
+      1  NSDiffableDataSourceSnapshot
+      1  NSStringDrawingOptions
+      1  UIActivityItemProvider
+      1  UIBarButtonItemAppearance
+      1  UIContentContainer
+      1  UIDragInteractionDelegate
+      1  UIDragSession
+      1  UIDropInteractionDelegate
+      1  UIDropProposal
+      1  UIPageViewControllerDataSource
+      1  UIPageViewControllerDelegate
+      1  UIPointerInteractionDelegate
+      1  UIPointerRegion
+      1  UIPointerStyle
+      1  UIPrintFormatter
+      1  UIPrintInfo
+      1  UIPrintPageRenderer
+      1  UISpringTimingParameters
+      1  UIStatusBarStyle
+      1  UITextPosition
+      1  UIUserActivityRestoring
+      1  UIView
+      1  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 518
-  on Apple-framework types (the #94 list): 89 distinct / 338 uses
+  total member errors                    : 259
+  on Apple-framework types (the #94 list): 89 distinct / 169 uses
   SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
-     88  UITableView                        allowsMultipleSelection, backgroundView, beginUpdates, cellLayoutMarginsFollowReadableWidth, deleteRows, deleteSections …
-     40  CALayer                            anchorPoint, backgroundColor, frame, insertSublayer, maskedCorners, position …
-     28  UIView                             AnimationCurve, canPerformAction, layoutSublayers, snapshotView, transition, updateConstraints …
-     28  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
-     18  UIViewController                   preferredContentSize, preferredContentSizeDidChange, traitCollectionDidChange, updateViewConstraints, viewDidLayoutSubviews, viewWillTransition
-     18  UINavigationBar                    appearance, setBackgroundImage, shadowImage, titleTextAttributes
-     16  UIButton                           imageView, setImage
-     16  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
-     14  UIBarButtonItem                    accessibilityIdentifier
-     10  UITableViewCell                    imageView, separatorInset
-      8  UITraitCollection                  horizontalSizeClass, verticalSizeClass
-      6  UIModalPresentationStyle           none, overCurrentContext
-      4  NSView                             alpha
-      4  UINavigationController             setNavigationBarHidden
-      4  UIApplication                      openSettingsURLString
-      4  UIProgressView                     setProgress
-      4  UIImageView                        none
-      4  UILabel                            adjustsFontSizeToFitWidth, minimumScaleFactor
-      4  UIScrollView                       isZooming, setZoomScale
-      4  UINavigationBarAppearance          backButtonAppearance, setBackIndicatorImage
-      2  UIContentSizeCategory              didChangeNotification
-      2  UITextView                         keyboardType
-      2  UIKeyCommand                       wantsPriorityOverSystemBehavior
-      2  NSAttributedString                 boundingRect
-      2  UIKeyEventKey                      keyCode
+     44  UITableView                        allowsMultipleSelection, backgroundView, beginUpdates, cellLayoutMarginsFollowReadableWidth, deleteRows, deleteSections …
+     20  CALayer                            anchorPoint, backgroundColor, frame, insertSublayer, maskedCorners, position …
+     14  UIView                             AnimationCurve, canPerformAction, layoutSublayers, snapshotView, transition, updateConstraints …
+     14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
+      9  UIViewController                   preferredContentSize, preferredContentSizeDidChange, traitCollectionDidChange, updateViewConstraints, viewDidLayoutSubviews, viewWillTransition
+      9  UINavigationBar                    appearance, setBackgroundImage, shadowImage, titleTextAttributes
+      8  UIButton                           imageView, setImage
+      8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
+      7  UIBarButtonItem                    accessibilityIdentifier
+      5  UITableViewCell                    imageView, separatorInset
+      4  UITraitCollection                  horizontalSizeClass, verticalSizeClass
+      3  UIModalPresentationStyle           none, overCurrentContext
+      2  NSView                             alpha
+      2  UINavigationController             setNavigationBarHidden
+      2  UIApplication                      openSettingsURLString
+      2  UIProgressView                     setProgress
+      2  UIImageView                        none
+      2  UILabel                            adjustsFontSizeToFitWidth, minimumScaleFactor
+      2  UIScrollView                       isZooming, setZoomScale
+      2  UINavigationBarAppearance          backButtonAppearance, setBackIndicatorImage
+      1  UIContentSizeCategory              didChangeNotification
+      1  UITextView                         keyboardType
+      1  UIKeyCommand                       wantsPriorityOverSystemBehavior
+      1  NSAttributedString                 boundingRect
+      1  UIKeyEventKey                      keyCode

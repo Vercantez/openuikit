@@ -95,8 +95,8 @@ compile_mod() {
         -wmo -target "$TARGET" -module-name "$name" \
         "${INC[@]}" -I "$OUT/modules" "$@" > "$OUT/logs/$log.log" 2>&1
     local r=$?
-    local n; n=$(grep -c 'error:' "$OUT/logs/$log.log" 2>/dev/null || true)
-    printf '  %-22s %s  (%s errors)\n' "$name" \
+    local n; n=$(python3 "$HERE/diagnostics.py" count "$OUT/logs/$log.log")
+    printf '  %-22s %s  (%s primary diagnostics)\n' "$name" \
         "$([ $r -eq 0 ] && echo OK || echo FAILED)" "$n"
     return $r
 }
@@ -215,7 +215,7 @@ while IFS= read -r l; do files+=("$l"); done < "$OUT/appfiles.txt"
 swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
     "${INC[@]}" -I "$OUT/modules" -I "$OUT/empty" "${files[@]}" \
     > "$OUT/logs/app.log" 2>&1
-say "  errors: $(grep -c 'error:' "$OUT/logs/app.log" | tr -d ' ')"
+say "  primary diagnostics: $(python3 "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
 
 # --- 6. the census -----------------------------------------------------------
 hr "7. CENSUS"

@@ -1,18 +1,21 @@
-# focus-ios phase 3 — real SnapKit loads, and its 226-error wall is gone
+# focus-ios phase 3 — real SnapKit loads, and its DSL wall is gone
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
 **Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `ef5986d`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
-Phase 1 measured 1,066 errors over **104 of 179** files and said so as a lower
-bound. With the module walls cleared the same census reaches **182 files** and
-initially reported **2,922**. OpenUIKit #94 milestone 1 reduced that to **2,538**.
-Compiling real SnapKit after the one explicit diagnostic-file exclusion reduces
-the current result to **2,246**. All runs use `-wmo`; 182 shipping files remain
-the app denominator.
+Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
+so as a lower bound. With the module walls cleared the same census reaches **182
+files**. The old instrument then reported 2,922 lines, but that included Swift's
+rendered copy of every diagnostic (and even `error:` text in source snippets).
+Replaying the saved logs through the corrected primary-diagnostic parser gives
+**1,454** initially, **1,262** after OpenUIKit #94 milestone 1, and **1,116**
+after compiling real SnapKit under the explicit exclusion below: **146 fewer**
+primary diagnostics overall, including **145 fewer** in the saturated app row.
+All runs use `-wmo`; 182 shipping files remain the app denominator.
 
 ```
-STAGE                     ERRORS   what it means
+STAGE                PRIMARY DIAGNOSTICS   what it means
 stub-Glean                     0   \
 stub-FocusAppServices          0    |  six stub modules, all compile clean
 stub-WebKit                    0    |  against OpenUIKit
@@ -20,16 +23,16 @@ stub-Sentry                    0    |
 stub-Fuzi                      0    |
 stub-MobileCoreServices        0   /
 snapkit                        0   REAL upstream source, 36/37 files (see below)
-target-UIHelpers              42   \
-target-DesignSystem           44    |  focus-ios's own SPM targets,
-target-Widget                 12    |  vs OpenUIKit
-target-Licenses                8    |
-target-AppShortcuts            2    |
-target-Onboarding              2    |
-target-UIComponents            2   /
-app                         2134   the saturated app census, 182 files, -wmo
+target-UIHelpers              21   \
+target-DesignSystem           22    |  focus-ios's own SPM targets,
+target-Widget                  6    |  vs OpenUIKit
+target-Licenses                4    |
+target-AppShortcuts            1    |
+target-Onboarding              1    |
+target-UIComponents            1   /
+app                         1060   the saturated app census, 182 files, -wmo
                           ------
-TOTAL                       2246
+TOTAL                       1116
 ```
 
 ## What was built, and why each shape
@@ -72,12 +75,12 @@ sources, and untracked sources.
 ## The saturated census
 
 ```
-MISSING TYPES     87 distinct / 436 occurrences
-                  55 Apple-framework names / 280 uses   <- real gap
-                  31 other / 154 · 1 app symbol / 2
+MISSING TYPES     87 distinct / 218 occurrences
+                  55 Apple-framework names / 140 uses   <- real gap
+                  31 other / 77 · 1 app symbol / 1
 
-MISSING MEMBERS   518 total
-                  89 distinct on Apple types / 338 uses <- the #94 list
+MISSING MEMBERS   259 total
+                  89 distinct on Apple types / 169 uses <- the #94 list
                    0 distinct SnapKit DSL   /   0 uses  <- real module loaded
 ```
 
@@ -85,22 +88,22 @@ Top of the **member** list, which is what no type census could see:
 
 | uses | type | members |
 |---|---|---|
-| 88 | `UITableView` | `allowsMultipleSelection`, `backgroundView`, `beginUpdates`, `deleteRows`, `deleteSections`, … |
-| 40 | `CALayer` | `anchorPoint`, `backgroundColor`, `frame`, `insertSublayer`, `maskedCorners`, `position`, … |
-| 28 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `transition`, `updateConstraints`, … |
-| 28 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
-| 18 | `UIViewController` | `preferredContentSize`, `traitCollectionDidChange`, `viewDidLayoutSubviews`, `viewWillTransition` |
-| 18 | `UINavigationBar` | `appearance`, `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
-| 16 | `UIButton` | `imageView`, `setImage` |
-| 16 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
+| 44 | `UITableView` | `allowsMultipleSelection`, `backgroundView`, `beginUpdates`, `deleteRows`, `deleteSections`, … |
+| 20 | `CALayer` | `anchorPoint`, `backgroundColor`, `frame`, `insertSublayer`, `maskedCorners`, `position`, … |
+| 14 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `transition`, `updateConstraints`, … |
+| 14 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
+| 9 | `UIViewController` | `preferredContentSize`, `traitCollectionDidChange`, `viewDidLayoutSubviews`, `viewWillTransition` |
+| 9 | `UINavigationBar` | `appearance`, `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
+| 8 | `UIButton` | `imageView`, `setImage` |
+| 8 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
 
-Heaviest **missing types**: `UIPasteboard` 26, `CAGradientLayer` 22, `CATransaction` 14,
-`UIPageViewController` 14, `UIDropInteraction` 8. (`UIApplication`, `UIColor`,
+Heaviest **missing types**: `UIPasteboard` 13, `CAGradientLayer` 11, `CATransaction` 7,
+`UIPageViewController` 7, `UIDropInteraction` 4. (`UIApplication`, `UIColor`,
 `UIFont`, `UIViewController` also appear in the "cannot find type" list — those
 are cases where an *extension* on the type failed to resolve, not the type
 itself missing; they are in the member list above where they belong.)
 
-## Instrument notes — three of my own bugs, each caught by a number that could not survive
+## Instrument notes — four bugs, each caught by a number that could not survive
 
 1. **`$(find ...)` unquoted split paths containing spaces.** focus-ios has
    `Preview Files/` and `SwiftUI Onboarding/`. The split fragments arrived as
@@ -115,7 +118,14 @@ itself missing; they are in the member list above where they belong.)
    early failure making the subject look almost clean. The census retains a
    visibly reported name-only fallback for a failed SnapKit build, but does not
    emit it when the real module succeeds. The current run loads the real module:
-   the previous 21 distinct / 226 `.snp` errors are now 0 / 0.
+   the previous 21 distinct / 113 `.snp` primary diagnostics are now 0 / 0.
+4. **Counting the substring `error:` counted every Swift diagnostic twice.**
+   The compiler renders a location-bearing primary line and a second
+   `` `- error:`` marker under the source; source snippets can themselves
+   contain `error:` parameter labels. [`diagnostics.py`](diagnostics.py) now
+   accepts only location-bearing primary lines. Its controls include both
+   duplicate-rendering and source-text false positives. The saved current run
+   is 1,116 primary diagnostics, not 2,246 substrings.
 
 **Caveat, stated rather than discovered later:** the census targets
 `arm64-apple-macos13.0`, because that is what OpenUIKit builds. One consequence
