@@ -177,6 +177,20 @@ if [ "$FORCE_BUILD" = 1 ] || ! docker image inspect "$IMAGE" >/dev/null 2>&1; th
         || skip "could not build the Swift test-bed image $IMAGE"
 fi
 
+# ------------------------------------------- will the subject hold still?
+#
+# THIS WAS THE ONE GATE OF FIVE WITH NO BRACKET, and it is the gate most exposed
+# to the thing a bracket detects: it RUNS the shipped dylibs without rebuilding
+# them, and darwin/usr/lib/swift/libswiftCore.dylib is re-staged by a different
+# repo (~/swiftcore-macho, scripts/stage_swiftcore.sh) while this runs. A restage
+# landing between the link and the run gives two PASSes about two runtimes.
+# check_stale.sh above answers a different question -- is the artefact older than
+# its source -- and cannot see a change that happens DURING the run.
+GATE_FP_BEFORE="$(gate_fingerprint)"
+GATE_HEAD_BEFORE=""
+git -C "$ROOT" rev-parse --short HEAD >/dev/null 2>&1 && \
+    GATE_HEAD_BEFORE="$(git -C "$ROOT" rev-parse --short HEAD)"
+
 printf '%sbuilding and running %s under machorun (linux/arm64, %s)%s\n' \
     "$C_BLD" "$ID" "$IMAGE" "$C_RESET"
 printf '%s\n' "----------------------------------------------------------------------"
@@ -253,6 +267,21 @@ case "$(printf '%s\n' "$result" | tail -1)" in
                         "$C_RED" "$C_RESET"; exit 1 ;;
     *) skip "container run failed: $(printf '%s' "$result" | tail -3 | tr '\n' ' ')" ;;
 esac
+
+# ------------------------------------------- did the subject hold still?
+# Checked BEFORE any verdict is printed, as difftest does: a scoreboard
+# assembled from two runtimes looks exactly like one assembled from one, so
+# there is nothing worth showing and nothing worth salvaging.
+GATE_FP_AFTER="$(gate_fingerprint)"
+gate_check_stable "$GATE_FP_BEFORE" "$GATE_FP_AFTER" "loader and darwin/ dylibs" || exit 2
+if [ -n "$GATE_HEAD_BEFORE" ]; then
+    gate_check_stable "$GATE_HEAD_BEFORE" "$(git -C "$ROOT" rev-parse --short HEAD)" "git HEAD" || exit 2
+fi
+
+# The subject, named on the scoreboard. A verdict is about a specific tree, and
+# a result that does not say which one cannot be quoted later without guessing.
+printf '%ssubject: %sbuild %s%s\n' "$C_DIM" \
+    "${GATE_HEAD_BEFORE:+HEAD $GATE_HEAD_BEFORE }" "$GATE_FP_BEFORE" "$C_RESET"
 
 # ================================================================== grading
 for v in "${ORDER_IDS[@]}"; do

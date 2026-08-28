@@ -108,9 +108,22 @@ capture_run() {
 # reports stability it never checked. Seventh instance today of a sweep whose
 # scope silently excluded the answer; caught by diffing this list against
 # check_stale's rather than by reading the glob.
+#
+# `LC_ALL=C sort`, and the missing `LC_ALL=C` was a live defect: the digest is
+# taken over the LIST as well as the contents, so the ORDER is part of it, and
+# a plain `sort` orders by the caller's locale. Measured on this tree,
+# unchanged bytes, two different answers:
+#     LC_ALL=C          b984e4689caa      libSystem.B.dylib sorts FIRST
+#     LC_ALL=en_US.UTF-8 1f2741d649c9     libSystem.B.dylib sorts SIXTH
+# (UTF-8 collation ignores case, so `libS` lands after `libs`.) The failure
+# direction is the bad one: a before-fingerprint taken in one shell and an
+# after-fingerprint taken in another VOIDS a perfectly good run, and the message
+# it prints -- "another build ran against this tree mid-gate" -- is exactly the
+# wrong next place to look. b984e4689caa is the digest quoted in the standing
+# 108/108 result, which held only because containers default to LC_ALL=C.
 gate_subject_files() {
     echo "$ROOT/build/machorun"
-    find "$ROOT/darwin/usr/lib" -name '*.dylib' 2>/dev/null | sort
+    find "$ROOT/darwin/usr/lib" -name '*.dylib' 2>/dev/null | LC_ALL=C sort
 }
 
 _sha256() { if _have sha256sum; then sha256sum; else shasum -a 256; fi; }
