@@ -23,6 +23,10 @@ final class UIButtonTests: XCTestCase {
         return b
     }
 
+    private func makeImage(width: Int, height: Int) -> UIImage {
+        UIImage(bitmap: Bitmap(width: width, height: height))
+    }
+
     // MARK: defaults
 
     func testDefaultTitleFontIs15Regular() {
@@ -35,6 +39,68 @@ final class UIButtonTests: XCTestCase {
         // "UIButtonLabel" for the title subview.
         let b = UIButton(type: .system)
         XCTAssertEqual(String(describing: type(of: b.subviews[0])), "UIButtonLabel")
+    }
+
+    func testImageViewExistsAndTracksExactControlState() {
+        let button = UIButton(type: .system)
+        XCTAssertNotNil(button.imageView)
+        XCTAssertNil(button.currentImage)
+
+        let normal = makeImage(width: 10, height: 6)
+        let highlighted = makeImage(width: 14, height: 8)
+        let selected = makeImage(width: 12, height: 7)
+        button.setImage(normal, for: .normal)
+        button.setImage(highlighted, for: .highlighted)
+        button.setImage(selected, for: .selected)
+        XCTAssertTrue(button.image(for: .normal) === normal)
+        XCTAssertTrue(button.currentImage === normal)
+        XCTAssertTrue(button.imageView?.image === normal)
+
+        button.isHighlighted = true
+        XCTAssertTrue(button.currentImage === highlighted)
+        XCTAssertTrue(button.imageView?.image === highlighted)
+
+        // Measured on iOS 26: combined highlighted+selected with no exact
+        // assignment falls directly back to normal, not either partial state.
+        button.isSelected = true
+        XCTAssertTrue(button.currentImage === normal)
+        let combined: UIControl.State = [.highlighted, .selected]
+        button.setImage(selected, for: combined)
+        XCTAssertTrue(button.currentImage === selected)
+        button.setImage(nil, for: combined)
+        XCTAssertTrue(button.currentImage === normal)
+    }
+
+    func testImageOnlyAndImageTitleLayout() {
+        let image = makeImage(width: 10, height: 6)
+        let button = UIButton(type: .system)
+        button.setImage(image, for: .normal)
+        button.sizeToFit()
+        button.layoutIfNeeded()
+        XCTAssertEqual(button.frame.size, CGSize(width: 10, height: 18))
+        XCTAssertEqual(button.imageView?.frame,
+                       CGRect(x: 0, y: 6, width: 10, height: 6))
+        XCTAssertEqual(button.titleLabel?.frame, .zero)
+
+        button.setTitle("Go", for: .normal)
+        let titleSize = button.titleLabel!.intrinsicContentSize
+        button.sizeToFit()
+        button.layoutIfNeeded()
+        XCTAssertEqual(button.frame.width, titleSize.width.rounded(.down) + 10)
+        XCTAssertEqual(button.frame.height, Swift.max(titleSize.height, 6) + 12)
+        XCTAssertEqual(button.imageView?.frame.minX, 0)
+        XCTAssertEqual(button.titleLabel?.frame.minX, 10)
+
+        // Real-iOS fixed-frame oracle: image [25,19,10,6], title
+        // [35,13,20,18] in an 80x44 button. OpenUIKit's established Catalyst
+        // label line box is one point taller (19), hence y=12.5/height=19;
+        // horizontal image/title geometry is exact.
+        button.frame = CGRect(x: 10, y: 20, width: 80, height: 44)
+        button.layoutIfNeeded()
+        XCTAssertEqual(button.imageView?.frame,
+                       CGRect(x: 25, y: 19, width: 10, height: 6))
+        XCTAssertEqual(button.titleLabel?.frame,
+                       CGRect(x: 35, y: 12.5, width: 20, height: 19))
     }
 
     // MARK: sizing (golden/button_basic.layout.json)

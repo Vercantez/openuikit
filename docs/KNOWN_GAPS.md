@@ -1,5 +1,52 @@
 # Known gaps (living document — fixers: read this)
 
+## `UIApplicationDelegate.window` optional-requirement bridge (Focus UIHelpers, 2026-08-28)
+
+Objective-C UIKit declares `window` as an optional protocol requirement. A
+read through an application-delegate existential therefore has two optional
+layers: whether the delegate implements the requirement and whether the
+implemented property contains a window. OpenUIKit's Foundation- and
+Objective-C-interoperability-free Swift core cannot declare such a
+requirement, so it exposes `UIWindow??` through the protocol and uses the Swift
+standard library's `Mirror` to recover the usual app declaration,
+`var window: UIWindow?`, from stored instance data.
+Concrete reads and writes still use the app's own property; existential reads
+work for ordinary stored properties, including storage inherited from a
+superclass.
+
+This is a focused source/runtime bridge, not a general replacement for
+Objective-C optional dispatch:
+
+- Assigning `window` through an `any UIApplicationDelegate` value calls an
+  inert compatibility setter; it cannot mutate the app's differently typed
+  `UIWindow?` storage.
+- Computed, lazy, and property-wrapped `window` declarations are not exposed
+  as a stored child named `window`, so the reflective existential getter does
+  not discover them.
+- The getter depends on Swift reflection field metadata. A host built with
+  reflection metadata disabled will observe the outer optional as nil.
+
+## Explicit CALayer subset (Focus UIHelpers, 2026-08-28)
+
+OpenUIKit supports process-local explicit `CALayer` trees, ordered
+`addSublayer`/`insertSublayer`/`removeFromSuperlayer`, axial
+`CAGradientLayer`, and `render(in:)`. This is deliberately not yet a unified
+mirror of UIKit's private backing-layer tree:
+
+- `view.layer.sublayers` exposes app-installed layers only; it does not also
+  expose the backing layers of `view.subviews`. Rendering places those
+  explicit layers above the view's own contents and below its UIView children,
+  which matches Focus's `insertSublayer(gradient, at: 0)` use. An app that
+  appends a layer expecting it to appear above an already-added UIView child
+  will still see it below that child.
+- Explicit-layer shadows are implemented by the quartz/layers compositor but
+  not by the pure-Swift render pass. Backgrounds, calibrated axial gradients,
+  opacity groups, clipping, borders, descendant geometry, and array order work
+  in both paths; Focus's gradient/order/removal cases have pixel tests in both.
+- `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
+  current-context stack. Nested restoration and `scale == 0` screen-scale
+  selection match UIKit, but the stack is not thread-local yet.
+
 ## Actor isolation (M15, 2026-08-25): what is `@MainActor` and what is not
 
 Real UIKit marks its UI classes `@MainActor`, and app source is written

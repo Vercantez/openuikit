@@ -21,9 +21,14 @@
 /// fill/stroke colors CG keeps in its graphics state.
 final class UIGraphicsState {
     let canvas: Canvas
+    /// Non-nil only for a legacy UIGraphicsBeginImageContext... entry.
+    let imageScale: CGFloat?
     var fillColor: CGColor = .black
     var strokeColor: CGColor = .black
-    init(canvas: Canvas) { self.canvas = canvas }
+    init(canvas: Canvas, imageScale: CGFloat? = nil) {
+        self.canvas = canvas
+        self.imageScale = imageScale
+    }
 }
 
 public enum UIGraphics {
@@ -33,6 +38,9 @@ public enum UIGraphics {
     /// Make `canvas` the current drawing context (UIGraphicsPushContext).
     public static func pushContext(_ canvas: Canvas) {
         stack.append(UIGraphicsState(canvas: canvas))
+    }
+    static func pushImageContext(_ canvas: Canvas, scale: CGFloat) {
+        stack.append(UIGraphicsState(canvas: canvas, imageScale: scale))
     }
     /// Pop the current drawing context (UIGraphicsPopContext).
     public static func popContext() {
@@ -71,6 +79,39 @@ extension UIColor {
 public func UIRectFill(_ rect: CGRect) {
     UIGraphicsGetCurrentContext()?.fill(rect: rect, color: UIGraphicsCurrentFillColor())
 }
+
+// MARK: - Legacy image-context API
+
+/// Begin a bitmap image context and make it current. A scale of zero selects
+/// the screen scale, matching UIKit; a positive scale is used verbatim.
+public func UIGraphicsBeginImageContextWithOptions(_ size: CGSize, _ opaque: Bool,
+                                                    _ scale: CGFloat) {
+    let resolvedScale = scale > 0 ? scale : OpenUIKitRuntime.imageScreenScale
+    let pw = Swift.max(0, Int((size.width * resolvedScale).rounded()))
+    let ph = Swift.max(0, Int((size.height * resolvedScale).rounded()))
+    // Canvas requires a real surface. Keep UIKit's harmless zero-size
+    // behavior by using a transparent 1x1 backing for a degenerate request.
+    let bitmap = Bitmap(width: Swift.max(1, pw), height: Swift.max(1, ph))
+    if opaque {
+        var i = 3
+        while i < bitmap.pixels.count { bitmap.pixels[i] = 255; i += 4 }
+    }
+    UIGraphics.pushImageContext(Canvas(bitmap: bitmap, scale: resolvedScale),
+                                scale: resolvedScale)
+}
+
+/// Snapshot the current legacy image context. Contexts installed with
+/// UIGraphicsPushContext are not image contexts and therefore return nil.
+public func UIGraphicsGetImageFromCurrentImageContext() -> UIImage? {
+    guard let state = UIGraphics.top, let scale = state.imageScale else { return nil }
+    let source = state.canvas.bitmap
+    let snapshot = Bitmap(width: source.width, height: source.height)
+    snapshot.pixels = source.pixels
+    return UIImage(bitmap: snapshot, scale: scale)
+}
+
+/// End the current legacy image context and restore the previous context.
+public func UIGraphicsEndImageContext() { UIGraphics.popContext() }
 
 // MARK: - UIGraphicsImageRenderer
 

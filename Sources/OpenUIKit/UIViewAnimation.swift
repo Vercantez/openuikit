@@ -38,9 +38,10 @@
 //     transitions. A block that records no animation at all completes
 //     immediately (as in UIKit, where no CAAnimation is created).
 //
-// This file is pure Swift (no Foundation, no CQuartz): the API surface,
-// recording, the spring duration fit and affine interpolation. Quartz-
-// evaluated sampling lives in LayerBridge.swift.
+// This file has no Foundation dependency. Recording and value interpolation
+// are pure Swift; exact timing sampling (including begin-from-current-state)
+// calls LayerBridge's CQuartz-backed evaluator so recording and rendering use
+// one curve/spring implementation.
 
 // MARK: - Recorded animation
 
@@ -84,6 +85,9 @@ struct UIViewAnimation {
     let delay: Double
     let duration: Double
     let timing: Timing
+    /// Animation-block transaction that owns this property animation. Zero
+    /// denotes a manually constructed/test animation with no completion.
+    var transactionID: Int = 0
 }
 
 // MARK: - Animation block context
@@ -95,11 +99,18 @@ enum UIViewAnimationContext {
         var duration: Double
         var delay: Double
         var timing: UIViewAnimation.Timing
+        var beginsFromCurrentState: Bool = false
+        var transactionID: Int = 0
     }
     static var current: Params?
     /// Animations recorded by the innermost running block (used to decide
     /// whether its completion has anything to wait for).
     static var recordedInBlock = 0
+    static var nextTransactionID = 1
+    /// Old completion entries displaced while the current animations closure
+    /// runs. They are delivered only after the animation context is restored,
+    /// so reentrant completion work cannot inherit the replacement transaction.
+    static var interruptedEntries: [UIViewAnimationCompletionQueue.Entry] = []
 }
 
 // MARK: - Deferred completion handlers
@@ -117,6 +128,7 @@ enum UIViewAnimationCompletionQueue {
     struct Entry {
         let end: Double
         let seq: Int
+        let transactionID: Int
         let body: (Bool) -> Void
     }
 
@@ -124,9 +136,29 @@ enum UIViewAnimationCompletionQueue {
     private static var nextSeq = 0
 
     /// Queue `body` for delivery once the clock reaches `end`.
-    static func schedule(end: Double, _ body: @escaping (Bool) -> Void) {
-        entries.append(Entry(end: end, seq: nextSeq, body: body))
+    static func schedule(end: Double, transactionID: Int,
+                         _ body: @escaping (Bool) -> Void) {
+        entries.append(Entry(end: end, seq: nextSeq,
+                             transactionID: transactionID, body: body))
         nextSeq &+= 1
+    }
+
+    /// An in-flight property animation was replaced. UIKit completes the
+    /// displaced animation block with `finished == false`; this matters for
+    /// patterns such as animateHidden, whose old completion must not apply a
+    /// stale hidden state after a reversal.
+    static func takeInterrupted(transactionID: Int) -> [Entry] {
+        guard transactionID != 0 else { return [] }
+        var interrupted: [Entry] = []
+        entries.removeAll { entry in
+            if entry.transactionID == transactionID {
+                interrupted.append(entry)
+                return true
+            }
+            return false
+        }
+        interrupted.sort { $0.seq < $1.seq }
+        return interrupted
     }
 
     /// Deliver every handler due at or before `time`, oldest end first
@@ -174,6 +206,16 @@ extension UIView {
         public static let curveEaseOut = AnimationOptions(rawValue: 2 << 16)
         public static let curveLinear = AnimationOptions(rawValue: 3 << 16)
 
+        /// Continue a replaced property animation from its sampled
+        /// presentation value instead of jumping back to the old model.
+        public static let beginFromCurrentState = AnimationOptions(rawValue: 1 << 2)
+
+        /// UIKit's cross-dissolve transition selector. OpenUIKit preserves
+        /// transition duration/completion and all property animations in the
+        /// block; content snapshot blending is not yet represented by the
+        /// portable renderer, so content-only changes switch at commit time.
+        public static let transitionCrossDissolve = AnimationOptions(rawValue: 5 << 20)
+
         var timingCurve: UIViewAnimation.Timing {
             switch (rawValue >> 16) & 0xF {
             case 1: return .curve(c1x: 0.42, c1y: 0, c2x: 1, c2y: 1)      // easeIn
@@ -190,7 +232,8 @@ extension UIView {
                                animations: () -> Void,
                                completion: ((Bool) -> Void)? = nil) {
         runAnimationBlock(UIViewAnimationContext.Params(
-            duration: duration, delay: delay, timing: options.timingCurve),
+            duration: duration, delay: delay, timing: options.timingCurve,
+            beginsFromCurrentState: options.contains(.beginFromCurrentState)),
             animations: animations, completion: completion)
     }
 
@@ -210,27 +253,56 @@ extension UIView {
                                completion: ((Bool) -> Void)? = nil) {
         runAnimationBlock(UIViewAnimationContext.Params(
             duration: duration, delay: delay,
-            timing: .spring(dampingRatio: dampingRatio, initialVelocity: velocity)),
+            timing: .spring(dampingRatio: dampingRatio, initialVelocity: velocity),
+            beginsFromCurrentState: options.contains(.beginFromCurrentState)),
             animations: animations, completion: completion)
     }
 
     static func runAnimationBlock(_ params: UIViewAnimationContext.Params,
                                   animations: () -> Void,
-                                  completion: ((Bool) -> Void)?) {
+                                  completion: ((Bool) -> Void)?,
+                                  waitsForDurationWhenEmpty: Bool = false) {
         let savedParams = UIViewAnimationContext.current
         let savedCount = UIViewAnimationContext.recordedInBlock
-        UIViewAnimationContext.current = params
+        let savedInterrupted = UIViewAnimationContext.interruptedEntries
+        var transaction = params
+        if let enclosing = savedParams {
+            // A nested block participates in the outer transaction, matching
+            // UIKit's inherited animation context/completion ownership.
+            transaction.transactionID = enclosing.transactionID
+        } else {
+            transaction.transactionID = UIViewAnimationContext.nextTransactionID
+            UIViewAnimationContext.nextTransactionID &+= 1
+        }
+        UIViewAnimationContext.current = transaction
         UIViewAnimationContext.recordedInBlock = 0
+        UIViewAnimationContext.interruptedEntries = []
         animations()
         let recorded = UIViewAnimationContext.recordedInBlock
+        let interrupted = UIViewAnimationContext.interruptedEntries
         UIViewAnimationContext.current = savedParams
         // An outer block owns everything its nested blocks recorded, so its
         // own completion still has something to wait for.
         UIViewAnimationContext.recordedInBlock = savedCount &+ recorded
+        UIViewAnimationContext.interruptedEntries = savedInterrupted
+
+        // Deliver interruptions after this transaction's completion has been
+        // scheduled and after its context has been removed. A reentrant old
+        // completion that starts a third animation is therefore independent
+        // and can correctly interrupt the just-created replacement.
+        defer {
+            if savedParams != nil {
+                UIViewAnimationContext.interruptedEntries
+                    .append(contentsOf: interrupted)
+            } else {
+                for entry in interrupted { entry.body(false) }
+            }
+        }
 
         guard let completion else { return }
         let end = OpenUIKitRuntime.animationTime + params.delay + params.duration
-        if recorded == 0 || end <= OpenUIKitRuntime.animationTime {
+        if (recorded == 0 && !waitsForDurationWhenEmpty)
+            || end <= OpenUIKitRuntime.animationTime {
             // Nothing to animate (UIKit creates no CAAnimation, so the
             // handler runs right away), or a zero-length animation that is
             // already over.
@@ -240,7 +312,8 @@ extension UIView {
         // Real UIKit delivers after `delay + duration` of wall time; we
         // deliver when the host clock passes that point (UIWindow.tick).
         OpenUIKitRuntime.noteAnimationWork(until: end)
-        UIViewAnimationCompletionQueue.schedule(end: end, completion)
+        UIViewAnimationCompletionQueue.schedule(
+            end: end, transactionID: transaction.transactionID, completion)
     }
 
     /// Deliver `UIView.animate` completion handlers whose animation has ended
@@ -268,10 +341,24 @@ extension UIView {
                          to: UIViewAnimation.Value) {
         guard let ctx = UIViewAnimationContext.current else { return }
         UIViewAnimationContext.recordedInBlock &+= 1
-        let anim = UIViewAnimation(property: property, from: from, to: to,
-                                   begin: OpenUIKitRuntime.animationTime,
-                                   delay: ctx.delay, duration: ctx.duration,
-                                   timing: ctx.timing)
+        let now = OpenUIKitRuntime.animationTime
+        var actualFrom = from
+        if let oldIndex = animations.firstIndex(where: { $0.property == property }) {
+            let old = animations[oldIndex]
+            let oldEnd = old.begin + old.delay + old.duration
+            if now < oldEnd {
+                UIViewAnimationContext.interruptedEntries.append(contentsOf:
+                    UIViewAnimationCompletionQueue.takeInterrupted(
+                        transactionID: old.transactionID))
+                if ctx.beginsFromCurrentState {
+                    actualFrom = presentationValue(of: old, at: now)
+                }
+            }
+        }
+        let anim = UIViewAnimation(property: property, from: actualFrom, to: to,
+                                   begin: now, delay: ctx.delay,
+                                   duration: ctx.duration, timing: ctx.timing,
+                                   transactionID: ctx.transactionID)
         // Host redraw hint: frames keep changing until this animation ends.
         OpenUIKitRuntime.noteAnimationWork(until: anim.begin + anim.delay
                                                   + anim.duration)
@@ -281,6 +368,40 @@ extension UIView {
             animations[i] = anim
         } else {
             animations.append(anim)
+        }
+    }
+
+    /// Sample one old property's presentation value using the exact timing
+    /// evaluator the renderer uses, then apply the same value interpolation.
+    /// This is the core of `.beginFromCurrentState` no-jump reversal.
+    func presentationValue(of animation: UIViewAnimation,
+                           at time: Double) -> UIViewAnimation.Value {
+        let u = LayerBridge.animationProgress(animation, at: time)
+        func lerp(_ a: CGFloat, _ b: CGFloat) -> CGFloat { a + (b - a) * u }
+        switch (animation.from, animation.to) {
+        case (.scalar(let a), .scalar(let b)):
+            return .scalar(lerp(a, b))
+        case (.point(let a), .point(let b)):
+            return .point(CGPoint(x: lerp(a.x, b.x), y: lerp(a.y, b.y)))
+        case (.rect(let a), .rect(let b)):
+            return .rect(CGRect(x: lerp(a.minX, b.minX),
+                                y: lerp(a.minY, b.minY),
+                                width: lerp(a.width, b.width),
+                                height: lerp(a.height, b.height)))
+        case (.transform(let a), .transform(let b)):
+            return .transform(UIViewTransformInterpolation.interpolate(a, b, u))
+        case (.color(let a), .color(let b)):
+            if u <= 0 { return .color(a) }
+            if u >= 1 { return .color(b) }
+            let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+            let lhs = a?.resolvedCGColor(with: traitCollection) ?? clear
+            let rhs = b?.resolvedCGColor(with: traitCollection) ?? clear
+            return .color(UIColor(red: lerp(lhs.red, rhs.red),
+                                  green: lerp(lhs.green, rhs.green),
+                                  blue: lerp(lhs.blue, rhs.blue),
+                                  alpha: lerp(lhs.alpha, rhs.alpha)))
+        default:
+            return animation.from
         }
     }
 

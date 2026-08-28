@@ -185,6 +185,12 @@ public protocol UIUserActivityRestoring: AnyObject {
 /// public protocol does not require `init()`.
 @preconcurrency @MainActor
 public protocol UIApplicationDelegate: AnyObject {
+    /// Main application window. UIKit declares this ObjC-optional, so reading
+    /// it through a delegate existential has TWO optional layers: whether the
+    /// delegate implements the property, then whether its value is nil. Swift
+    /// without ObjC optional requirements spells that observable shape
+    /// explicitly as `UIWindow??`.
+    var window: UIWindow?? { get set }
     func application(_ application: UIApplication,
                      willFinishLaunchingWithOptions
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
@@ -199,6 +205,31 @@ public protocol UIApplicationDelegate: AnyObject {
 }
 
 extension UIApplicationDelegate {
+    public var window: UIWindow?? {
+        get {
+            // A normal Swift app delegate declares `var window: UIWindow?`,
+            // which intentionally is not the double-optional requirement and
+            // therefore uses this default witness. Recover that stored value
+            // for existential reads; a delegate with no window member returns
+            // outer nil, exactly like an unimplemented ObjC optional property.
+            var mirror: Mirror? = Mirror(reflecting: self)
+            while let current = mirror {
+                if let value = current.children.first(where: { $0.label == "window" })?.value {
+                    let optional = Mirror(reflecting: value)
+                    if optional.displayStyle == .optional {
+                        guard let wrapped = optional.children.first?.value else {
+                            return .some(nil)
+                        }
+                        return .some(wrapped as? UIWindow)
+                    }
+                    return .some(value as? UIWindow)
+                }
+                mirror = current.superclassMirror
+            }
+            return nil
+        }
+        set { _ = newValue }
+    }
     public func application(_ application: UIApplication,
                             willFinishLaunchingWithOptions
                             launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { true }

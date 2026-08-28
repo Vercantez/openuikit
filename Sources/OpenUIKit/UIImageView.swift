@@ -36,7 +36,13 @@ import Foundation
 
 @preconcurrency @MainActor
 open class UIImageView: UIView {
-    open var image: UIImage?
+    open var image: UIImage? {
+        didSet {
+            guard image !== oldValue else { return }
+            setNeedsDisplay()
+            setNeedsLayout()
+        }
+    }
 
     public init(image: UIImage?) {
         super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))

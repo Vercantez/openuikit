@@ -48,6 +48,21 @@ open class UILabel: UIView {
     public var textAlignment: NSTextAlignment = .natural
     public var numberOfLines: Int = 1
     public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
+    /// Shrink single-line plain text to fit the label's width. UIKit keeps
+    /// `font` and intrinsic size unchanged; the smaller font exists only for
+    /// layout/drawing, which is also OpenUIKit's model below.
+    public var adjustsFontSizeToFitWidth: Bool = false {
+        didSet {
+            if adjustsFontSizeToFitWidth != oldValue { setNeedsDisplay() }
+        }
+    }
+    /// Lowest permitted drawing-size ratio when automatic shrinking is on.
+    /// Stored verbatim like UIKit; the draw calculation clamps it to 0...1.
+    public var minimumScaleFactor: CGFloat = 0 {
+        didSet {
+            if minimumScaleFactor != oldValue { setNeedsDisplay() }
+        }
+    }
     /// Dynamic Type opt-in (M14). Stored so real app source compiles and so a
     /// host that changes `UITraitCollection.current.preferredContentSizeCategory`
     /// can tell which labels asked to follow it. OpenUIKit never changes the
@@ -178,6 +193,47 @@ open class UILabel: UIView {
 
     // MARK: - Drawing
 
+    /// Effective font for single-line PLAIN text in `width`. This deliberately
+    /// does not mutate `font`: UIKit's public font, intrinsic size and baseline
+    /// metrics continue to describe the requested font after a shrink draw.
+    /// Attributed and multiline shrinking remain outside this focused surface.
+    func effectiveDrawingFont(for text: String, width: CGFloat) -> UIFont {
+        guard adjustsFontSizeToFitWidth, numberOfLines == 1,
+              _attributed == nil, width > 0, font.pointSize > 0 else {
+            return font
+        }
+        let natural = FontEngine.measure(text, font: font)
+        guard natural > width + 1e-6 else { return font }
+
+        let minimum = Swift.min(Swift.max(minimumScaleFactor, 0), 1)
+        var lower = Swift.max(font.pointSize * minimum, 0.1)
+        var upper = font.pointSize
+        var candidate = font
+        candidate.pointSize = lower
+
+        // If even the minimum is too wide, use it and let the existing
+        // truncation/clip path handle the remaining overflow.
+        if FontEngine.measure(text, font: candidate) > width + 1e-6 {
+            return candidate
+        }
+
+        // Font metrics are table-interpolated rather than assumed perfectly
+        // linear. Solve for the largest fitting point size so a string whose
+        // required scale is above the minimum is never needlessly ellipsized.
+        for _ in 0..<28 {
+            let mid = (lower + upper) / 2
+            var probe = font
+            probe.pointSize = mid
+            if FontEngine.measure(text, font: probe) <= width + 1e-6 {
+                lower = mid
+            } else {
+                upper = mid
+            }
+        }
+        candidate.pointSize = lower
+        return candidate
+    }
+
     open override func drawContent(in canvas: Canvas, bounds: CGRect) {
         if let t = attributedLayoutText {
             let lines = attributedDrawLines(t, width: bounds.width)
@@ -191,36 +247,40 @@ open class UILabel: UIView {
             return
         }
         guard let text, !text.isEmpty else { return }
-        let lineH = lineBoxHeight
-        let metrics = FontEngine.metrics(for: font)
+        let drawingFont = effectiveDrawingFont(for: text, width: bounds.width)
+        let lineH = FontEngine.labelLineHeight(for: drawingFont)
+        let metrics = FontEngine.metrics(for: drawingFont)
 
         // Lay out lines for drawing.
         struct DrawLine { var text: String; var width: CGFloat; var delta: CGFloat }
         var drawLines: [DrawLine] = []
         var needsClip = false
         func measureWith(_ s: String, delta: CGFloat) -> CGFloat {
-            FontEngine.measure(s, font: font) + delta * CGFloat(s.unicodeScalars.count)
+            FontEngine.measure(s, font: drawingFont)
+                + delta * CGFloat(s.unicodeScalars.count)
         }
         if numberOfLines == 1 {
-            let full = FontEngine.measure(text, font: font)
+            let full = FontEngine.measure(text, font: drawingFont)
             if full <= bounds.width + 1e-6 {
                 drawLines = [DrawLine(text: text, width: full, delta: 0)]
             } else {
-                let t = TextLayout.truncate(text, font: font, maxWidth: bounds.width,
+                let t = TextLayout.truncate(text, font: drawingFont,
+                                            maxWidth: bounds.width,
                                             mode: lineBreakMode)
                 let w = measureWith(t.text, delta: t.delta)
                 drawLines = [DrawLine(text: t.text, width: w, delta: t.delta)]
                 needsClip = w > bounds.width + 1e-6
             }
         } else {
-            let wrapped = TextLayout.wrap(text, font: font, maxWidth: bounds.width,
+            let wrapped = TextLayout.wrap(text, font: drawingFont,
+                                          maxWidth: bounds.width,
                                           maxLines: numberOfLines)
             for (i, l) in wrapped.enumerated() {
                 if i == wrapped.count - 1, l.text.endIndex < text.endIndex {
                     // Text remains beyond the last line: tail-truncate the
                     // remainder into it (what UIKit draws for a capped label).
                     let remainder = String(text[l.text.startIndex...]).replacingNewlines()
-                    let t = TextLayout.truncate(remainder, font: font,
+                    let t = TextLayout.truncate(remainder, font: drawingFont,
                                                 maxWidth: bounds.width,
                                                 mode: .byTruncatingTail)
                     drawLines.append(DrawLine(text: t.text,
@@ -251,7 +311,7 @@ open class UILabel: UIView {
         let baselineInLine = (metrics.ascender + 0.5).rounded(.down)
         let color = textColor.resolvedCGColor(with: traitCollection)
         guard color.alpha > 0 else { return }
-        let glyphFont = GlyphRasterizer.font(for: font)
+        let glyphFont = GlyphRasterizer.font(for: drawingFont)
 
         for (i, line) in drawLines.enumerated() {
             var penX: CGFloat
@@ -268,13 +328,15 @@ open class UILabel: UIView {
             }
             let baselineY = y0 + CGFloat(i) * lineH + baselineInLine
             drawLineGlyphs(line.text, at: CGPoint(x: penX, y: baselineY),
-                           in: canvas, color: color, glyphFont: glyphFont,
+                           in: canvas, font: drawingFont, color: color,
+                           glyphFont: glyphFont,
                            extraAdvance: line.delta)
         }
     }
 
     private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
-                                color: CGColor, glyphFont: InstancedGlyphFont?,
+                                font: UIFont, color: CGColor,
+                                glyphFont: InstancedGlyphFont?,
                                 extraAdvance: CGFloat = 0) {
         UILabel.drawGlyphLine(line, at: origin, in: canvas, font: font,
                               dark: traitCollection.userInterfaceStyle == .dark,

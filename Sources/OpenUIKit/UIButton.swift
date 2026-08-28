@@ -80,12 +80,19 @@ open class UIButton: UIControl {
 
     public let buttonType: ButtonType
     private let _titleLabel: UIButtonLabel
+    private let _imageView: UIImageView
 
     /// Real UIKit exposes `titleLabel` as optional UILabel.
     public var titleLabel: UILabel? { _titleLabel }
 
+    /// Real UIKit exposes a persistent image view even before an image has
+    /// been assigned. It is optional in the API for Objective-C history, but
+    /// a live UIButton owns the same view for its lifetime.
+    public var imageView: UIImageView? { _imageView }
+
     private var titles: [UInt: String] = [:]
     private var titleColors: [UInt: UIColor] = [:]
+    private var images: [UInt: UIImage] = [:]
 
     /// Default disabled title color of a plain .system button (measured
     /// from the oracle; see file header).
@@ -98,13 +105,18 @@ open class UIButton: UIControl {
     public init(type: ButtonType = .custom) {
         buttonType = type
         _titleLabel = UIButtonLabel()
+        _imageView = UIImageView()
         super.init(frame: .zero)
         isOpaque = false
         _titleLabel.font = .systemFont(ofSize: 15)
         // Real UIButton titles truncate in the middle (oracle-verified).
         _titleLabel.lineBreakMode = .byTruncatingMiddle
         addSubview(_titleLabel)
+        // Keep the long-standing OpenUIKit title-label ordering stable for
+        // layout dumps/tests; UIKit does not promise a public subview order.
+        addSubview(_imageView)
         updateTitleView()
+        updateImageView()
     }
 
     public convenience override init(frame: CGRect = .zero) {
@@ -173,6 +185,24 @@ open class UIButton: UIControl {
 
     public var currentTitle: String? { title(for: state) }
 
+    // MARK: Image state
+
+    public func setImage(_ image: UIImage?, for state: State) {
+        images[state.rawValue] = image
+        updateImageView()
+        setNeedsLayout()
+    }
+
+    /// UIKit's state lookup is exact-state then `.normal`. In particular,
+    /// a button in `[.highlighted, .selected]` does not fall back to the
+    /// separately assigned highlighted or selected image (iOS 26 oracle:
+    /// Tools/oracle2/uihelpersprobe).
+    public func image(for state: State) -> UIImage? {
+        images[state.rawValue] ?? images[State.normal.rawValue]
+    }
+
+    public var currentImage: UIImage? { image(for: state) }
+
     public func setTitleColor(_ color: UIColor?, for state: State) {
         titleColors[state.rawValue] = color
         updateTitleView()
@@ -219,9 +249,15 @@ open class UIButton: UIControl {
         _titleLabel.textColor = currentTitleColor
     }
 
+    private func updateImageView() {
+        _imageView.image = currentImage
+        _imageView.isHidden = currentImage == nil
+    }
+
     open override func stateDidChange() {
         super.stateDidChange()
         updateTitleView()
+        updateImageView()
     }
 
     // MARK: - Sizing
@@ -229,8 +265,17 @@ open class UIButton: UIControl {
     /// Legacy plain buttons ignore the constraint entirely (oracle:
     /// sizeThatFits(200) of a 211pt title reports 211).
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let intr = _titleLabel.intrinsicContentSize
-        return CGSize(width: intr.width.rounded(.up), height: intr.height + 12)
+        let title = _titleLabel.intrinsicContentSize
+        let titleSize = (currentTitle?.isEmpty == false) ? title : .zero
+        let imageSize = currentImage?.size ?? .zero
+        // The image+title rect oracle floors the title's half-point
+        // intrinsic width ("Go": 20.5 -> 20), while the established
+        // title-only UIButton rule continues to ceil it.
+        let titleWidth = imageSize.width > 0 && titleSize.width > 0
+            ? titleSize.width.rounded(.down) : titleSize.width.rounded(.up)
+        let contentWidth = titleWidth + imageSize.width
+        let contentHeight = Swift.max(titleSize.height, imageSize.height)
+        return CGSize(width: contentWidth, height: contentHeight + 12)
     }
 
     open override var intrinsicContentSize: CGSize {
@@ -243,20 +288,26 @@ open class UIButton: UIControl {
     open override func layoutSubviews() {
         super.layoutSubviews()
         updateTitleView()
+        updateImageView()
         let scale = _titleLabel.layoutScale
         let intr = _titleLabel.intrinsicContentSize
-        var w = intr.width.rounded(.up)
+        let imageSize = currentImage?.size ?? .zero
+        let hasTitle = currentTitle?.isEmpty == false
+        let availableTitleWidth = Swift.max(0, bounds.width - imageSize.width)
+        var w = hasTitle
+            ? (imageSize.width > 0 ? intr.width.rounded(.down) : intr.width.rounded(.up))
+            : 0
         // Overflowing titles (see file header): squeeze case gets the full
         // bounds width; true truncation hugs the truncated middle line.
-        if w > bounds.width {
+        if w > availableTitleWidth {
             let title = _titleLabel.text ?? ""
             let font = _titleLabel.font
             if FontEngine.measureTight(title, font: font)
-                <= bounds.width.rounded(.down) + 1e-6 {
-                w = bounds.width
+                <= availableTitleWidth.rounded(.down) + 1e-6 {
+                w = availableTitleWidth
             } else {
                 let t = TextLayout.truncate(title, font: font,
-                                            maxWidth: bounds.width,
+                                            maxWidth: availableTitleWidth,
                                             mode: .byTruncatingMiddle)
                 // Drawn advance: tight delta applies to every glyph except
                 // the ellipsis (same rule as UILabel's glyph run).
@@ -264,15 +315,31 @@ open class UIButton: UIControl {
                 for u in t.text.unicodeScalars where u.value != 0x2026 { count += 1 }
                 let drawn = FontEngine.measure(t.text, font: font)
                     + t.delta * CGFloat(count)
-                w = Swift.min(bounds.width, Swift.max(0, drawn.rounded(.up)))
+                w = Swift.min(availableTitleWidth,
+                              Swift.max(0, drawn.rounded(.up)))
             }
         }
         let h = Swift.min(intr.height, bounds.height)
         // Center, offsets rounded half-up to the pixel grid (same rounding
         // the label uses for its text block).
         func pixelRound(_ v: CGFloat) -> CGFloat { (v * scale + 0.5).rounded(.down) / scale }
-        _titleLabel.frame = CGRect(x: pixelRound((bounds.width - w) / 2),
-                                   y: pixelRound((bounds.height - h) / 2),
-                                   width: w, height: h)
+        let totalWidth = imageSize.width + w
+        let x = pixelRound((bounds.width - totalWidth) / 2)
+        if let image = currentImage {
+            let iw = Swift.min(image.size.width, bounds.width)
+            let ih = Swift.min(image.size.height, bounds.height)
+            _imageView.frame = CGRect(x: x,
+                                      y: pixelRound((bounds.height - ih) / 2),
+                                      width: iw, height: ih)
+        } else {
+            _imageView.frame = .zero
+        }
+        if hasTitle {
+            _titleLabel.frame = CGRect(x: x + imageSize.width,
+                                       y: pixelRound((bounds.height - h) / 2),
+                                       width: w, height: h)
+        } else {
+            _titleLabel.frame = .zero
+        }
     }
 }

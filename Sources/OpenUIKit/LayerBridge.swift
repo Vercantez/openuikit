@@ -201,6 +201,10 @@ public enum LayerBridge {
         var subtreePlacementAnimated = false
         /// Any descendant transform is not a pure translation.
         var hasNonTranslationTransform = false
+        /// Explicit app-installed CALayer children are rendered directly.
+        /// They deliberately bypass subtree flattening until their mutable
+        /// property graph participates in the cache fingerprint model.
+        var hasExplicitLayers = false
         var viewCount: Int = 1
     }
 
@@ -256,6 +260,17 @@ public enum LayerBridge {
             extent = extent.union(ce)
         }
 
+        let explicitLayers = lay._orderedSublayers
+        if !explicitLayers.isEmpty {
+            info.hasExplicitLayers = true
+            info.viewCount += explicitLayers.count
+            h.combine(explicitLayers.count)
+            for layer in explicitLayers {
+                h.combine(ObjectIdentifier(layer))
+                if !v.clipsToBounds { extent = extent.union(layer.frame) }
+            }
+        }
+
         // Active animations. Placement properties (position / alpha / pure-
         // translation transform) stay live on a composite layer; anything
         // else salts the fingerprint so the subtree reads as "changing".
@@ -293,6 +308,7 @@ public enum LayerBridge {
                 info.hasNonTranslationTransform = true
             }
             if ci.hasNonTranslationTransform { info.hasNonTranslationTransform = true }
+            if ci.hasExplicitLayers { info.hasExplicitLayers = true }
             if ci.subtreePlacementAnimated {
                 info.subtreePlacementAnimated = true
                 // A child moving INSIDE this subtree changes its pixels.
@@ -374,6 +390,8 @@ public enum LayerBridge {
             h.combine(label.textAlignment)
             h.combine(label.numberOfLines)
             h.combine(label.lineBreakMode)
+            h.combine(label.adjustsFontSizeToFitWidth)
+            h.combine(label.minimumScaleFactor)
         case let iv as UIImageView:
             if let img = iv.image { h.combine(ObjectIdentifier(img)) }
             h.combine(iv.contentMode)
@@ -485,6 +503,14 @@ public enum LayerBridge {
             QZLayerAddSublayer(l, content)
         }
 
+        // Explicit app layers are above the backing layer's own contents and
+        // below UIView-backed child layers. Preserve their array order.
+        for explicit in v.layer._orderedSublayers {
+            if let child = buildExplicitLayer(explicit, arena: &arena) {
+                QZLayerAddSublayer(l, child)
+            }
+        }
+
         // Children clip to our bounds when masksToBounds is set.
         var childScope = visible
         if v.clipsToBounds, let vis = childScope {
@@ -521,6 +547,61 @@ public enum LayerBridge {
         return l
     }
 
+    /// Translate a portable explicit CALayer tree into quartz's native layer
+    /// tree. QZGradientLayer is the same calibrated implementation used by
+    /// UIGradientView in the layers compositor.
+    static func buildExplicitLayer(_ layer: CALayer,
+                                   arena: inout Arena) -> QZLayerRef? {
+        let gradient = layer as? CAGradientLayer
+        let gradientColors = gradient?.colors ?? []
+        guard let raw = gradientColors.count >= 2
+                ? QZGradientLayerCreate() : QZLayerCreate()
+        else { return nil }
+        let qz = arena.track(raw)
+
+        let bounds = layer.bounds
+        QZLayerSetBounds(qz, qzRect(bounds))
+        QZLayerSetPosition(qz, QZPoint(x: layer.position.x, y: layer.position.y))
+        QZLayerSetAnchorPoint(qz, QZPoint(x: layer.anchorPoint.x,
+                                         y: layer.anchorPoint.y))
+        QZLayerSetHidden(qz, layer.isHidden)
+        QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(layer.opacity, 0), 1)))
+        QZLayerSetCornerRadius(qz, QZFloat(layer.cornerRadius))
+        QZLayerSetMasksToBounds(qz, layer.masksToBounds)
+
+        if let color = layer.backgroundColor {
+            QZLayerSetBackgroundColor(qz, QZFloat(color.red), QZFloat(color.green),
+                                      QZFloat(color.blue), QZFloat(color.alpha))
+        }
+        if layer.borderWidth > 0, let color = layer.borderColor {
+            QZLayerSetBorderWidth(qz, QZFloat(layer.borderWidth))
+            QZLayerSetBorderColor(qz, QZFloat(color.red), QZFloat(color.green),
+                                  QZFloat(color.blue), QZFloat(color.alpha))
+        }
+        if layer.shadowOpacity > 0, !layer.masksToBounds, !bounds.isEmpty,
+           let color = layer.shadowColor {
+            let opacity = CGFloat(Swift.min(Swift.max(layer.shadowOpacity, 0), 1))
+            let strength = color.alpha * opacity
+            if strength > 0 {
+                QZLayerSetShadow(qz, QZFloat(layer.shadowOffset.width),
+                                 QZFloat(layer.shadowOffset.height),
+                                 QZFloat(layer.shadowRadius), QZFloat(color.red),
+                                 QZFloat(color.green), QZFloat(color.blue),
+                                 QZFloat(strength))
+            }
+        }
+
+        if let gradient, gradientColors.count >= 2 {
+            configureGradient(qz, layer: gradient, colors: gradientColors)
+        }
+        for child in layer._orderedSublayers {
+            if let sub = buildExplicitLayer(child, arena: &arena) {
+                QZLayerAddSublayer(qz, sub)
+            }
+        }
+        return qz
+    }
+
     // MARK: Subtree composite cache
 
     /// Emit a single contents-image layer for `v`'s whole subtree when a
@@ -532,6 +613,7 @@ public enum LayerBridge {
         // Eligibility.
         guard info.viewCount >= 2,
               !info.hasNonTranslationTransform,
+              !info.hasExplicitLayers,
               isTranslationOnly(v.transform)
         else { return nil }
         if info.subtreePlacementAnimated {
@@ -670,6 +752,28 @@ public enum LayerBridge {
                                                 y: view.startPoint.y))
         QZGradientLayerSetEndPoint(l, QZPoint(x: view.endPoint.x,
                                               y: view.endPoint.y))
+    }
+
+    static func configureGradient(_ l: QZLayerRef, layer: CAGradientLayer,
+                                  colors: [CGColor]) {
+        let n = colors.count
+        var locs: [QZFloat]
+        if let requested = layer.locations, requested.count == n {
+            locs = requested.map { QZFloat(Swift.min(Swift.max($0, 0), 1)) }
+        } else {
+            locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }
+        }
+        var rgba = [QZFloat]()
+        rgba.reserveCapacity(n * 4)
+        for color in colors {
+            rgba.append(QZFloat(color.red)); rgba.append(QZFloat(color.green))
+            rgba.append(QZFloat(color.blue)); rgba.append(QZFloat(color.alpha))
+        }
+        QZGradientLayerSetColors(l, &rgba, &locs, Int32(n))
+        QZGradientLayerSetStartPoint(l, QZPoint(x: layer.startPoint.x,
+                                                y: layer.startPoint.y))
+        QZGradientLayerSetEndPoint(l, QZPoint(x: layer.endPoint.x,
+                                              y: layer.endPoint.y))
     }
 
     // MARK: Presentation sampling (M6 animations)

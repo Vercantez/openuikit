@@ -166,6 +166,11 @@ public enum UIRenderer {
 
         v.drawContent(in: c, bounds: bounds)
 
+        // App-installed backing-layer children sit above the view's own
+        // contents and below its UIView sublayers. Focus inserts gradients
+        // at index zero for precisely this ordering.
+        renderSublayers(of: v.layer, into: c)
+
         for sub in v.subviews {
             c.save()
             // Position the subview: its center (in our bounds coordinates),
@@ -184,6 +189,94 @@ public enum UIRenderer {
 
         if grouped { c.endTransparencyLayer() }
         c.restore()
+    }
+
+    // MARK: Explicit CALayer trees
+
+    /// Render a standalone layer as the root of `CALayer.render(in:)`.
+    /// Root placement is intentionally ignored; descendants use the normal
+    /// position/bounds/anchor mapping.
+    static func renderLayer(_ layer: CALayer, into c: Canvas) {
+        guard !layer.isHidden else { return }
+        let alpha = Swift.min(Swift.max(CGFloat(layer.opacity), 0), 1)
+        guard alpha > 0 else { return }
+
+        c.save()
+        if alpha < 1 { c.beginTransparencyLayer(alpha: alpha) }
+
+        let bounds = layer.bounds
+        if layer.masksToBounds {
+            c.clip(to: layerRoundedRect(bounds, cornerRadius: layer.cornerRadius))
+        }
+
+        if let background = layer.backgroundColor, background.alpha > 0,
+           !bounds.isEmpty {
+            c.fill(layerRoundedRect(bounds, cornerRadius: layer.cornerRadius),
+                   color: background)
+        }
+
+        if let gradient = layer as? CAGradientLayer {
+            renderGradientLayer(gradient, bounds: bounds, into: c)
+        }
+
+        renderSublayers(of: layer, into: c)
+        renderBorder(of: layer, bounds: bounds, into: c)
+
+        if alpha < 1 { c.endTransparencyLayer() }
+        c.restore()
+    }
+
+    /// Render children back-to-front in their array order.
+    static func renderSublayers(of parent: CALayer, into c: Canvas) {
+        for child in parent._orderedSublayers {
+            c.save()
+            let b = child.bounds
+            c.translate(x: child.position.x, y: child.position.y)
+            c.translate(x: -(b.minX + child.anchorPoint.x * b.width),
+                        y: -(b.minY + child.anchorPoint.y * b.height))
+            renderLayer(child, into: c)
+            c.restore()
+        }
+    }
+
+    /// Axial CAGradientLayer drawing through the same Generic-RGB calibrated
+    /// stop densification as UIGradientView.
+    static func renderGradientLayer(_ layer: CAGradientLayer, bounds: CGRect,
+                                    into c: Canvas) {
+        guard !bounds.isEmpty, let colors = layer.colors, colors.count >= 2 else { return }
+        let n = colors.count
+        let locations: [CGFloat]
+        if let requested = layer.locations, requested.count == n {
+            locations = requested.map { Swift.min(Swift.max($0, 0), 1) }
+        } else {
+            locations = (0..<n).map { CGFloat($0) / CGFloat(n - 1) }
+        }
+        let (denseColors, denseLocations) = _CAGradientColorSpace.densify(
+            colors: colors, locations: locations)
+        c.save()
+        c.translate(x: bounds.minX, y: bounds.minY)
+        c.concatenate(CGAffineTransform(scaleX: bounds.width, y: bounds.height))
+        c.drawLinearGradient(colors: denseColors, locations: denseLocations,
+                             start: layer.startPoint, end: layer.endPoint,
+                             in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        c.restore()
+    }
+
+    static func renderBorder(of layer: CALayer, bounds: CGRect, into c: Canvas) {
+        let width = layer.borderWidth
+        guard width > 0, !bounds.isEmpty, let color = layer.borderColor,
+              color.alpha > 0 else { return }
+        let outer = layerRoundedRect(bounds, cornerRadius: layer.cornerRadius)
+        let innerRect = bounds.insetBy(dx: width, dy: width)
+        if !innerRect.isNull, innerRect.width > 0, innerRect.height > 0 {
+            var ring = outer
+            ring.elements += layerRoundedRect(
+                innerRect,
+                cornerRadius: Swift.max(0, layer.cornerRadius - width)).elements
+            c.fill(ring, color: color, evenOdd: true)
+        } else {
+            c.fill(outer, color: color)
+        }
     }
 
     /// Effective shadow parameters for `v`, or nil when no shadow is

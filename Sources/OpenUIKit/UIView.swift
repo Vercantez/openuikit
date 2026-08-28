@@ -30,10 +30,137 @@ public enum UIViewContentMode: Sendable {
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
 }
 
-/// Minimal CALayer facade: UIKit-visible layer properties live here.
+/// Portable CALayer subset. A UIView's backing layer forwards its geometry
+/// to the view; layers created directly keep independent geometry and can be
+/// attached as an explicit layer tree.  Rendering lives in RenderPass.swift
+/// (and LayerBridge.swift for the quartz compositor).
 @preconcurrency @MainActor
-public final class CALayer {
+open class CALayer {
     public weak var owner: UIView?
+
+    private var storedBounds: CGRect = .zero
+    private var storedPosition: CGPoint = .zero
+    private var storedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+    private var storedSublayers: [CALayer] = []
+    private var storedBackgroundColor: CGColor?
+    private var storedOpacity: Float = 1
+    private var storedHidden = false
+
+    /// Geometry follows Core Animation's bounds/position/anchor model.
+    /// A backing layer mirrors its UIView so existing view geometry remains
+    /// the single source of truth.
+    public var bounds: CGRect {
+        get { owner?.bounds ?? storedBounds }
+        set {
+            if let owner { owner.bounds = newValue }
+            else { storedBounds = newValue }
+        }
+    }
+    public var position: CGPoint {
+        get { owner?.center ?? storedPosition }
+        set {
+            if let owner { owner.center = newValue }
+            else { storedPosition = newValue }
+        }
+    }
+    public var anchorPoint: CGPoint {
+        get { storedAnchorPoint }
+        set { storedAnchorPoint = newValue }
+    }
+    public var frame: CGRect {
+        get {
+            if let owner { return owner.frame }
+            return CGRect(x: position.x - anchorPoint.x * bounds.width,
+                          y: position.y - anchorPoint.y * bounds.height,
+                          width: bounds.width, height: bounds.height)
+        }
+        set {
+            if let owner {
+                owner.frame = newValue
+                return
+            }
+            storedBounds.size = newValue.size
+            storedPosition = CGPoint(x: newValue.minX + anchorPoint.x * newValue.width,
+                                     y: newValue.minY + anchorPoint.y * newValue.height)
+        }
+    }
+
+    /// Explicit Core Animation children. UIKit exposes nil, rather than an
+    /// empty array, when a layer has no children.
+    public var sublayers: [CALayer]? {
+        get { storedSublayers.isEmpty ? nil : storedSublayers }
+        set {
+            for child in storedSublayers where child.superlayer === self {
+                child.superlayer = nil
+            }
+            storedSublayers.removeAll(keepingCapacity: true)
+            for child in newValue ?? [] { _insertSublayer(child, at: storedSublayers.count) }
+        }
+    }
+    public private(set) weak var superlayer: CALayer?
+
+    /// The exact ordered storage used by the render pipelines (unlike the
+    /// public UIKit-shaped optional, this never allocates an Optional array).
+    var _orderedSublayers: [CALayer] { storedSublayers }
+
+    public func addSublayer(_ layer: CALayer) {
+        _insertSublayer(layer, at: storedSublayers.count)
+    }
+
+    public func insertSublayer(_ layer: CALayer, at index: UInt32) {
+        _insertSublayer(layer, at: Swift.min(Int(index), storedSublayers.count))
+    }
+
+    private func _insertSublayer(_ layer: CALayer, at index: Int) {
+        // Reject self and ancestor insertion. Without this guard a malformed
+        // graph would recurse forever in both render pipelines.
+        var ancestor: CALayer? = self
+        while let candidate = ancestor {
+            if candidate === layer { return }
+            ancestor = candidate.superlayer
+        }
+        layer.removeFromSuperlayer()
+        layer.superlayer = self
+        storedSublayers.insert(layer, at: Swift.max(0, Swift.min(index, storedSublayers.count)))
+    }
+
+    public func removeFromSuperlayer() {
+        guard let parent = superlayer else { return }
+        parent.storedSublayers.removeAll { $0 === self }
+        superlayer = nil
+    }
+
+    public var backgroundColor: CGColor? {
+        get {
+            if let owner {
+                return owner.backgroundColor?.resolvedCGColor(with: owner.traitCollection)
+            }
+            return storedBackgroundColor
+        }
+        set {
+            if let owner {
+                owner.backgroundColor = newValue.map {
+                    UIColor(red: $0.red, green: $0.green, blue: $0.blue, alpha: $0.alpha)
+                }
+            } else {
+                storedBackgroundColor = newValue
+            }
+        }
+    }
+    public var opacity: Float {
+        get { owner.map { Float($0.alpha) } ?? storedOpacity }
+        set {
+            if let owner { owner.alpha = CGFloat(newValue) }
+            else { storedOpacity = newValue }
+        }
+    }
+    public var isHidden: Bool {
+        get { owner?.isHidden ?? storedHidden }
+        set {
+            if let owner { owner.isHidden = newValue }
+            else { storedHidden = newValue }
+        }
+    }
     public var cornerRadius: CGFloat = 0 {
         didSet {
             if cornerRadius != oldValue {
@@ -52,7 +179,30 @@ public final class CALayer {
     public var shadowOpacity: Float = 0
     public var shadowOffset: CGSize = CGSize(width: 0, height: -3)
     public var shadowRadius: CGFloat = 3
+
+    public init() {}
     init(owner: UIView) { self.owner = owner }
+
+    /// Paint the receiver and its descendants into an existing graphics
+    /// context. Like Core Animation, the root's own frame/position is not
+    /// applied; only its bounds contents and descendant placement are drawn.
+    public func render(in context: Canvas) {
+        if let owner { UIRenderer.renderView(owner, into: context) }
+        else { UIRenderer.renderLayer(self, into: context) }
+    }
+}
+
+/// Axial Core Animation gradient layer. The render pipelines route these
+/// stops through the same oracle-calibrated Generic-RGB interpolation used by
+/// UIGradientView (or quartz's calibrated QZGradientLayer implementation).
+@preconcurrency @MainActor
+public final class CAGradientLayer: CALayer {
+    public var colors: [CGColor]?
+    public var locations: [CGFloat]?
+    public var startPoint = CGPoint(x: 0.5, y: 0)
+    public var endPoint = CGPoint(x: 0.5, y: 1)
+
+    public override init() { super.init() }
 }
 
 @preconcurrency @MainActor

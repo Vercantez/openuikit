@@ -19,6 +19,9 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+// Re-export the SDK's declaration rather than shadowing it. Selective export
+// keeps OpenCoreGraphics' CGColor/CGAffineTransform out of the namespace.
+@_exported import enum CoreGraphics.CGBlendMode
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -31,6 +34,45 @@ import Foundation
 public enum UIImageRenderingMode: Sendable {
     case automatic, alwaysOriginal, alwaysTemplate
 }
+
+/// Core Graphics blend-mode source surface used by `UIImage.draw`.
+///
+/// On Darwin this is CoreGraphics' own type, just as UIKit exposes it. The
+/// alias is important: importing OpenUIKit and CoreGraphics together still
+/// yields one declaration rather than two ambiguous `CGBlendMode`s. A
+/// Foundation/CoreGraphics-free target gets the portable mirror below.
+#if !canImport(CoreGraphics)
+public enum CGBlendMode: Int32, Sendable {
+    case normal = 0
+    case multiply = 1
+    case screen = 2
+    case overlay = 3
+    case darken = 4
+    case lighten = 5
+    case colorDodge = 6
+    case colorBurn = 7
+    case softLight = 8
+    case hardLight = 9
+    case difference = 10
+    case exclusion = 11
+    case hue = 12
+    case saturation = 13
+    case color = 14
+    case luminosity = 15
+    case clear = 16
+    case copy = 17
+    case sourceIn = 18
+    case sourceOut = 19
+    case sourceAtop = 20
+    case destinationOver = 21
+    case destinationIn = 22
+    case destinationOut = 23
+    case destinationAtop = 24
+    case xor = 25
+    case plusDarker = 26
+    case plusLighter = 27
+}
+#endif
 
 public final class UIImage {
     /// Pixel backing store (width/height are in PIXELS at `scale`).
@@ -104,6 +146,15 @@ public final class UIImage {
     public convenience init?(data: [UInt8], scale: CGFloat = 1) {
         guard let bitmap = ImageCodec.decode(data) else { return nil }
         self.init(bitmap: bitmap, scale: scale)
+    }
+
+    /// Foundation.Data-compatible spelling without a Foundation dependency.
+    /// Keeping this generic in the emitted interface matters for Mach-O guest
+    /// builds: OpenUIKit can be compiled while Foundation is invisible, then
+    /// a client importing Foundation.Data still satisfies `Sequence<UInt8>`.
+    public convenience init?<Bytes: Sequence>(data: Bytes, scale: CGFloat = 1)
+    where Bytes.Element == UInt8 {
+        self.init(data: Array(data), scale: scale)
     }
 
     /// Decode an image file. Like UIKit, an `@2x`/`@3x` suffix on the file
@@ -300,5 +351,36 @@ extension UIImage {
     /// Draw at natural size with its top-left at `point`.
     public func draw(at point: CGPoint) {
         draw(in: CGRect(origin: point, size: size))
+    }
+
+
+    /// Draw at natural size with an explicit blend mode and global alpha.
+    /// `.normal` uses a transparency layer so alpha is applied once to the
+    /// whole image, matching CGContext/UIImage semantics even for
+    /// translucent source pixels. Unsupported blend modes currently use the
+    /// same source-over path; see `CGBlendMode`'s declaration.
+    public func draw(at point: CGPoint, blendMode: CGBlendMode, alpha: CGFloat) {
+        guard let canvas = UIGraphicsGetCurrentContext() else { return }
+        let rect = CGRect(origin: point, size: size)
+        let opacity = Swift.min(Swift.max(alpha, 0), 1)
+        guard opacity > 0 else { return }
+
+        // Keep the mode switch explicit: this is an honest compatibility
+        // fallback, not an accidental claim that Canvas implements all 28
+        // Core Graphics equations.
+        switch blendMode {
+        case .normal:
+            break
+        default:
+            break
+        }
+
+        if opacity >= 1 {
+            canvas.draw(bitmap, in: rect)
+        } else {
+            canvas.beginTransparencyLayer(alpha: opacity)
+            canvas.draw(bitmap, in: rect)
+            canvas.endTransparencyLayer()
+        }
     }
 }

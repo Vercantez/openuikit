@@ -77,6 +77,101 @@ final class AnimationTests: XCTestCase {
         XCTAssertEqual(to, 0)
     }
 
+    func testBeginFromCurrentStateSamplesPresentationWithoutJump() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear]) {
+            view.alpha = 0
+        }
+        OpenUIKitRuntime.animationTime = 0.4
+        UIView.transition(with: view, duration: 1,
+                          options: [.beginFromCurrentState, .curveLinear],
+                          animations: { view.alpha = 1 })
+
+        XCTAssertEqual(view.animations.count, 1)
+        guard case .scalar(let source) = view.animations[0].from else {
+            return XCTFail("replacement has no scalar source")
+        }
+        XCTAssertEqual(source, 0.6, accuracy: 2e-5)
+        XCTAssertEqual(view.animations[0].begin, 0.4)
+        XCTAssertEqual(view.alpha, 1, "model is the replacement's final value")
+    }
+
+    func testReplacementCompletesOldTransactionFalseAndNewOneTrue() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(view)
+        var completions: [String] = []
+
+        UIView.transition(with: view, duration: 1,
+                          options: [.beginFromCurrentState, .curveLinear],
+                          animations: { view.alpha = 0 },
+                          completion: { completions.append("old:\($0)") })
+        OpenUIKitRuntime.animationTime = 0.4
+        UIView.transition(with: view, duration: 0.5,
+                          options: [.beginFromCurrentState, .curveLinear],
+                          animations: { view.alpha = 1 },
+                          completion: { completions.append("new:\($0)") })
+
+        XCTAssertEqual(completions, ["old:false"])
+        window.tick(timestamp: 0.89)
+        XCTAssertEqual(completions, ["old:false"])
+        window.tick(timestamp: 0.9)
+        XCTAssertEqual(completions, ["old:false", "new:true"])
+    }
+
+    func testRapidAnimateHiddenReversalCannotApplyStaleHiddenState() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(view)
+        var finishedValues: [Bool] = []
+
+        func animateHidden(_ hidden: Bool) {
+            view.isHidden = false
+            UIView.transition(with: view, duration: 1,
+                              options: [.beginFromCurrentState, .curveLinear],
+                              animations: { view.alpha = hidden ? 0 : 1 },
+                              completion: { finished in
+                                  finishedValues.append(finished)
+                                  if finished { view.isHidden = hidden }
+                              })
+        }
+
+        animateHidden(true)
+        OpenUIKitRuntime.animationTime = 0.4
+        animateHidden(false)
+        XCTAssertEqual(finishedValues, [false])
+        XCTAssertFalse(view.isHidden)
+
+        window.tick(timestamp: 1.4)
+        XCTAssertEqual(finishedValues, [false, true])
+        XCTAssertFalse(view.isHidden)
+        XCTAssertEqual(view.alpha, 1)
+    }
+
+    func testContentOnlyTransitionStillObservesDuration() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        window.addSubview(view)
+        var finished: Bool?
+        UIView.transition(with: view, duration: 0.25,
+                          options: [.transitionCrossDissolve],
+                          animations: { view.tag = 7 },
+                          completion: { finished = $0 })
+        XCTAssertEqual(view.tag, 7)
+        XCTAssertNil(finished)
+        window.tick(timestamp: 0.24)
+        XCTAssertNil(finished)
+        window.tick(timestamp: 0.25)
+        XCTAssertEqual(finished, true)
+    }
+
+    func testTransitionOptionRawValuesMatchUIKit() {
+        XCTAssertEqual(UIView.AnimationOptions.beginFromCurrentState.rawValue,
+                       1 << 2)
+        XCTAssertEqual(UIView.AnimationOptions.transitionCrossDissolve.rawValue,
+                       5 << 20)
+    }
+
     // MARK: Completion handlers (delivered on the host clock)
 
     /// A block that records no animation has nothing to wait for — UIKit
