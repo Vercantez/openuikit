@@ -394,6 +394,9 @@ scripts/build.sh            # the same minus objc4 and quartz, ~2 minutes of C++
 scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sources
 scripts/sdk_stage.sh --verify  # re-fetch all 333 and check the COMMITTED sha256s
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
+                            #   LINUX ONLY. On macOS it REFUSES and prints the docker
+                            #   line, because BSD comm would make it report a FALSE
+                            #   regression rather than a result (#95).
 scripts/gen_tbd.sh --check  # ^ those checks ONLY, writing nothing. RUN IT AS A GATE:
                             #   CHECK 3 otherwise runs only inside build.sh, where its
                             #   output scrolls past, and it was silently inert for two

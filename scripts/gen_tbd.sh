@@ -61,6 +61,35 @@
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+
+# THIS GATE RUNS ON LINUX ONLY, AND SAYING SO IS THE POINT (#95).
+#
+# Run on macOS it exits 1 with 28 `comm: not in sorted order` lines and CHECK 5
+# output that reads like a genuine host-fallback regression -- because BSD comm
+# rejects input GNU comm accepts. The darwin root is fine; the gate simply
+# cannot run here. That is a FALSE RED, and it is the mirror of the false green
+# in CHECK 3 that graded zero binaries under a UTF-8 locale (#74): a wrong
+# verdict is worse than no verdict, in either colour. One measured cost of it --
+# during #90's baseline this was nearly recorded as "gen_tbd is red before and
+# after", which would have set two meaningless numbers against each other.
+#
+# Same refusal shape as scripts/objc44.sh, deliberately: one message up front
+# naming the right invocation, rather than a wall of output that invites someone
+# to re-record a baseline.
+[ "$(uname -s)" = "Linux" ] || {
+    echo "gen_tbd: this reads the LINUX darwin/ root, but \`uname -s\` says $(uname -s)." >&2
+    echo "         BSD comm rejects input GNU comm accepts, so this would report a" >&2
+    echo "         FALSE regression rather than a result. Run it in the test bed:" >&2
+    echo "           docker run --rm -i --platform linux/arm64 -v \"$ROOT:/work\" -w /work \\" >&2
+    echo "             \"\${MACHORUN_IMAGE:-machorun-testbed:24.04}\" bash -c 'bash scripts/gen_tbd.sh'" >&2
+    exit 2; }
+
+# Every sort and comm in this file has to agree on collation, and only two sites
+# said so. A locale-dependent sort feeding a locale-dependent comm is exactly how
+# #74's CHECK 3 came to grade zero binaries while printing a pass, so set it once
+# here rather than per call site and leave nothing to remember.
+export LC_ALL=C
+
 DYLIB="$ROOT/darwin/usr/lib"
 OUT="$ROOT/sdk/usr/lib"
 LOADER="${MACHORUN_LOADER:-$ROOT/build/machorun}"
