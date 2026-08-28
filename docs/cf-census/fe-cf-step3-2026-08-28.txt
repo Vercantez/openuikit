@@ -1,0 +1,20 @@
+# #87 step 3: the port compiles and LINKS in guest configuration.
+# It does NOT yet load. The blocker is named below.
+
+=== guest compile ===
+  UserDefaultsGuest.o   90,680 bytes (port + guest bridge)
+  ud_guest              11,587,904 bytes, Mach-O arm64 executable
+                        = FoundationEssentials + our CoreFoundation + the port
+
+=== host oracle, after the seam refactor: UNCHANGED ===
+  control 462/462 · corelibs 245/313 · port 627/627 · cross 26/26
+
+=== the load-time blocker ===
+machorun: cannot find dylib '/System/Library/Frameworks/Foundation.framework/Foundation'
+  required by: /work/root/darwin/usr/lib/swift/libswift_Builtin_float.dylib
+  tried: /work/root/darwin/System/Library/Frameworks/Foundation.framework/Foundation
+  tried: /System/Library/Frameworks/Foundation.framework/Foundation
+  Darwin absolute paths are redirected into our own tree at /work/root/darwin.
+  Nothing else can satisfy them: /System/Library/Frameworks/Foundation.framework/Foundation is not a file on Linux, and
+  (measured) not a file on macOS either -- it lives in the dyld
+  shared cache. Build or add that dylib under darwin/.

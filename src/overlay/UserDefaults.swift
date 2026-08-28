@@ -38,74 +38,20 @@ import Foundation
 #else
 // Target configuration: this file is part of the Foundation overlay, over our
 // own CF. Data/Date/URL come from the FoundationEssentials port.
+//
+// NOTE THE ABSENCE OF `import CoreFoundation`. It would resolve to APPLE'S
+// CoreFoundation Swift overlay -- measured: arm64e-apple-macos26.1, built by a
+// different compiler than the one here -- while this build LINKS OURS. Every
+// CF call now goes through the seam in UserDefaultsBridge_Guest.swift, which
+// talks to our CF through a declared C surface. See include/CFPreferencesMinimal.h.
 import FoundationEssentials
-import CoreFoundation
+// Darwin for pthread: the host half gets it via Foundation's re-export, the
+// guest half has to ask. The FE sysroot has the module -- that is what
+// `canImport(Darwin) == true` means for this port (see #58's route (A)).
+import Darwin
 #endif
 
 // MARK: - The value model
-
-/// The set of types CFPreferences can store. Kept explicit rather than
-/// inferred, because `set(_:forKey:)` has to REFUSE anything else — Darwin
-/// raises, and silently dropping a value is the failure mode this project
-/// keeps finding (`succeeds-and-does-nothing`).
-internal enum _UDPlist {
-
-    /// Convert a Swift value to something CFPreferences will accept.
-    ///
-    /// Upstream routes this through corelibs' own `__SwiftValue.store`, a
-    /// boxing class that exists only in corelibs (`Bridging.swift:73`) because
-    /// corelibs' NSNumber does not bridge. DEVIATION (structural, not
-    /// behavioural): we run on a real Objective-C runtime with real
-    /// `_ObjectiveCBridgeable`, so `as AnyObject` is the boxing, and
-    /// `__SwiftValue` must not be ported.
-    static func toCF(_ value: Any) -> AnyObject? {
-        switch value {
-        case let v as String:  return v as AnyObject
-        case let v as Bool:    return v as AnyObject   // BEFORE the integers:
-                                                       // Bool is expressible as
-                                                       // Int and would fold
-        case let v as Int:     return v as AnyObject
-        case let v as Int8:    return Int(v) as AnyObject
-        case let v as Int16:   return Int(v) as AnyObject
-        case let v as Int32:   return Int(v) as AnyObject
-        case let v as Int64:   return Int(v) as AnyObject
-        case let v as UInt8:   return Int(v) as AnyObject
-        case let v as UInt16:  return Int(v) as AnyObject
-        case let v as UInt32:  return Int(v) as AnyObject
-        case let v as UInt64:  return Int(bitPattern: UInt(v)) as AnyObject
-        case let v as UInt:    return Int(bitPattern: v) as AnyObject
-        case let v as Float:   return Double(v) as AnyObject
-        case let v as Double:  return v as AnyObject
-        case let v as Data:    return v as AnyObject
-        case let v as Date:    return v as AnyObject
-        case let v as [Any]:
-            var out: [AnyObject] = []
-            out.reserveCapacity(v.count)
-            for e in v {
-                guard let c = toCF(e) else { return nil }
-                out.append(c)
-            }
-            return out as AnyObject
-        case let v as [String: Any]:
-            var out: [String: AnyObject] = [:]
-            for (k, e) in v {
-                guard let c = toCF(e) else { return nil }
-                out[k] = c
-            }
-            return out as AnyObject
-        case let v as [AnyHashable: Any]:
-            // Darwin requires plist dictionary keys to be strings.
-            var out: [String: AnyObject] = [:]
-            for (k, e) in v {
-                guard let ks = k.base as? String, let c = toCF(e) else { return nil }
-                out[ks] = c
-            }
-            return out as AnyObject
-        default:
-            return nil
-        }
-    }
-}
 
 // MARK: -
 
@@ -131,9 +77,9 @@ open class UserDefaults {
     /// identifier**. Every in-process read still passes in that case; only the
     /// plist FILENAME is wrong. The oracle therefore drives explicit suites and
     /// asserts the on-disk filename — see `full/oracle-userdefaults/`.
-    private var _appID: CFString {
-        if let s = _suite { return s as CFString }
-        return kCFPreferencesCurrentApplication
+    private var _appID: UDCFString {
+        if let s = _suite, let cf = _udCFString(s) { return cf }
+        return _udCurrentApplication()
     }
 
     // MARK: Construction
@@ -162,8 +108,8 @@ open class UserDefaults {
         if let v = _volatile.withLock({ $0[UserDefaults.argumentDomain]?[defaultName] }) {
             return v
         }
-        if let cf = CFPreferencesCopyAppValue(defaultName as CFString, _appID) {
-            return UserDefaults._fromCF(cf)
+        if let v = _udCopyValue(defaultName, _appID) {
+            return v
         }
         return UserDefaults._registered.withLock { $0[defaultName] }
     }
@@ -181,19 +127,13 @@ open class UserDefaults {
             return
         }
 
-        guard let cf = _UDPlist.toCF(value) else {
-            // Darwin raises an exception for a non-plist value. Trapping is the
-            // closest honest equivalent: the alternative is dropping the write,
-            // which looks identical to success.
-            fatalError("UserDefaults: value of type \(type(of: value)) is not a "
-                     + "property-list type and cannot be stored for key "
-                     + "'\(defaultName)'")
-        }
-        CFPreferencesSetAppValue(defaultName as CFString, cf, _appID)
+        // The seam traps on a non-plist value rather than dropping the write,
+        // because a dropped write is indistinguishable from a performed one.
+        _udSetValue(value, defaultName, _appID)
     }
 
     open func removeObject(forKey defaultName: String) {
-        CFPreferencesSetAppValue(defaultName as CFString, nil, _appID)
+        _udSetValue(nil, defaultName, _appID)
     }
 
     // MARK: - The typed getters
@@ -309,16 +249,16 @@ open class UserDefaults {
     // MARK: - Typed setters
 
     open func set(_ value: Int, forKey defaultName: String) {
-        CFPreferencesSetAppValue(defaultName as CFString, value as AnyObject, _appID)
+        _udSetValue(value, defaultName, _appID)
     }
     open func set(_ value: Float, forKey defaultName: String) {
-        CFPreferencesSetAppValue(defaultName as CFString, Double(value) as AnyObject, _appID)
+        _udSetValue(Double(value), defaultName, _appID)
     }
     open func set(_ value: Double, forKey defaultName: String) {
-        CFPreferencesSetAppValue(defaultName as CFString, value as AnyObject, _appID)
+        _udSetValue(value, defaultName, _appID)
     }
     open func set(_ value: Bool, forKey defaultName: String) {
-        CFPreferencesSetAppValue(defaultName as CFString, value as AnyObject, _appID)
+        _udSetValue(value, defaultName, _appID)
     }
 
     open func set(_ url: URL?, forKey defaultName: String) {
@@ -340,8 +280,7 @@ open class UserDefaults {
         // for us: we build arm64-apple-macos. A straight port would have
         // silently switched that branch on.
         if url.isFileURL {
-            CFPreferencesSetAppValue(defaultName as CFString,
-                                     url.path as AnyObject, _appID)
+            _udSetValue(url.path, defaultName, _appID)
         } else {
             _UDUnimplemented("set(_ url:forKey:) on a non-file URL requires "
                            + "NSKeyedArchiver to match Darwin's archived form; "
@@ -361,13 +300,11 @@ open class UserDefaults {
     // MARK: - Suites
 
     open func addSuite(named suiteName: String) {
-        CFPreferencesAddSuitePreferencesToApp(kCFPreferencesCurrentApplication,
-                                              suiteName as CFString)
+        _udAddSuite(suiteName)
     }
 
     open func removeSuite(named suiteName: String) {
-        CFPreferencesRemoveSuitePreferencesFromApp(kCFPreferencesCurrentApplication,
-                                                   suiteName as CFString)
+        _udRemoveSuite(suiteName)
     }
 
     // MARK: - Domains
@@ -386,13 +323,7 @@ open class UserDefaults {
         // that our global domain is EMPTY, not that we skip it. If one ever
         // exists, this is the line that has to learn about it.
         var out: [String: Any] = UserDefaults._registered.withLock { $0 }
-        if let keys = CFPreferencesCopyKeyList(_appID, kCFPreferencesCurrentUser,
-                                               kCFPreferencesAnyHost) as? [String],
-           let vals = CFPreferencesCopyMultiple(keys as CFArray, _appID,
-                                                kCFPreferencesCurrentUser,
-                                                kCFPreferencesAnyHost) as? [String: Any] {
-            for (k, v) in vals { out[k] = UserDefaults._fromCFAny(v) }
-        }
+        for (k, v) in _udCopyAll(_appID) { out[k] = v }
         for (k, v) in _volatile.withLock({ $0[UserDefaults.argumentDomain] ?? [:] }) {
             out[k] = v
         }
@@ -401,13 +332,7 @@ open class UserDefaults {
 
     private func _persistentOnly() -> [String: Any] {
         var out: [String: Any] = [:]
-        if let keys = CFPreferencesCopyKeyList(_appID, kCFPreferencesCurrentUser,
-                                               kCFPreferencesAnyHost) as? [String],
-           let vals = CFPreferencesCopyMultiple(keys as CFArray, _appID,
-                                                kCFPreferencesCurrentUser,
-                                                kCFPreferencesAnyHost) as? [String: Any] {
-            for (k, v) in vals { out[k] = UserDefaults._fromCFAny(v) }
-        }
+        for (k, v) in _udCopyAll(_appID) { out[k] = v }
         return out
     }
 
@@ -469,7 +394,7 @@ open class UserDefaults {
 
     @discardableResult
     open func synchronize() -> Bool {
-        CFPreferencesAppSynchronize(_appID)
+        _udSynchronize(_appID)
     }
 
     open func objectIsForced(forKey key: String) -> Bool { false }
@@ -595,8 +520,23 @@ extension UserDefaults {
     /// -0.0 -> "-0". That is CFNumber's `%g`-family formatting at 16
     /// significant digits, which is what NSNumber.stringValue produces — the
     /// one place upstream's NSNumber route was already right.
+    /// Implemented with vsnprintf rather than String(format:) because
+    /// String(format:) is FOUNDATION's, not FoundationEssentials', so it does
+    /// not exist in the guest configuration -- and because "%0.16g" IS a C
+    /// format string, so this is the same call one layer less indirect.
+    ///
+    /// SHARED BETWEEN BOTH CONFIGURATIONS ON PURPOSE, unlike the CF seam. The
+    /// coercion table is the thing under test; both columns of the scoreboard
+    /// are the SAME port graded against DARWIN, not against each other. It is
+    /// the bridge that must be independently derived, not the behaviour.
     static func _describe(_ v: Double) -> String {
-        String(format: "%0.16g", v)
+        var buf = [CChar](repeating: 0, count: 64)
+        _ = buf.withUnsafeMutableBufferPointer { b in
+            withVaList([v]) { va in
+                vsnprintf(b.baseAddress, 64, "%0.16g", va)
+            }
+        }
+        return String(cString: buf)
     }
 
     static func _expandingTilde(_ path: String) -> String {
@@ -608,54 +548,6 @@ extension UserDefaults {
     }
 }
 
-// MARK: - CF -> Swift
-
-extension UserDefaults {
-
-    /// Unbox a CFPropertyList into Swift values.
-    ///
-    /// Upstream calls `__SwiftValue.fetch` and then `_unboxingNSNumbers`, which
-    /// leans on corelibs' `NSNumber._swiftValueOfOptimalType`. Neither exists
-    /// here. On a real ObjC runtime the bridge does this, but the BOOLEAN case
-    /// has to be handled before the numeric one or `true` folds to `1` — the
-    /// NSNumber folding hazard.
-    static func _fromCF(_ cf: CFTypeRef) -> Any? {
-        _fromCFAny(cf)
-    }
-
-    static func _fromCFAny(_ v: Any) -> Any {
-        #if UD_HOST_ORACLE
-        // Distinguish CFBoolean from CFNumber BEFORE any numeric cast.
-        // Measured (BEHAV §1): a stored `true` comes back as __NSCFBoolean and
-        // a stored `1` as __NSCFNumber, and they must not fold together.
-        if CFGetTypeID(v as CFTypeRef) == CFBooleanGetTypeID() {
-            return CFBooleanGetValue((v as! CFBoolean))
-        }
-        #endif
-        switch v {
-        case let n as NSNumber:
-            if CFGetTypeID(n as CFTypeRef) == CFBooleanGetTypeID() {
-                return CFBooleanGetValue(unsafeBitCast(n, to: CFBoolean.self))
-            }
-            let t = CFNumberGetType(n as CFNumber)
-            switch t {
-            case .float32Type, .float64Type, .floatType, .doubleType, .cgFloatType:
-                return n.doubleValue
-            default:
-                return n.intValue
-            }
-        case let s as String: return s
-        case let d as Data:   return d
-        case let d as Date:   return d
-        case let a as [Any]:  return a.map { _fromCFAny($0) }
-        case let d as [String: Any]:
-            var out: [String: Any] = [:]
-            for (k, e) in d { out[k] = _fromCFAny(e) }
-            return out
-        default: return v
-        }
-    }
-}
 
 // MARK: - Small dependencies, kept local on purpose
 //
