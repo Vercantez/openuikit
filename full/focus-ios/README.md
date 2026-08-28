@@ -1,14 +1,15 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `81e1e05`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `c166f96`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 SnapKit now comes from the exact 5.7.0 revision named by Focus's
 [`Package.resolved`](https://github.com/mozilla-mobile/focus-ios/blob/a2832521c1daa0c23419c73705ae043ed60c9791/focus-ios/Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved),
-not the former diagnostic checkout of upstream `main`. A fresh census after
-that correction has an exact zero delta: SnapKit remains 0, the broad app row
-remains 709, and the total remains 739 primary diagnostics.
+not the former diagnostic checkout of upstream `main`. At that isolated
+correction checkpoint the census had an exact zero delta: SnapKit remained 0,
+the broad app row remained 709, and the total remained 739 primary diagnostics.
+The current counts below also include the later size-class increment.
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
 so as a lower bound. With the module walls cleared the same census reaches **182
@@ -22,13 +23,15 @@ application-shell, table, shortcut/activity, and process-local pasteboard
 increments through OpenUIKit `4be65c9`, **751** after the Focus UIHelpers
 increment at OpenUIKit `1ae41f9`, and **747** after the UIView coder increment
 at OpenUIKit `325c3d9`, then **739** after the named-asset API increment at
-OpenUIKit `81e1e05`. SnapKit removed 146 primary diagnostics overall; the
+OpenUIKit `81e1e05`, and **729** after the size-class trait increment at
+OpenUIKit `c166f96`. SnapKit removed 146 primary diagnostics overall; the
 controller increment removed another 91 net; the eight subsequent OpenUIKit
 commits through the coder increment removed another 278 net, and the asset
-increment removed another eight across the target and broad rows. All runs use
-`-wmo`; the deliberately
-broad 182-file source inventory remains the saturation denominator (and is not
-the Xcode target inventory; see below).
+increment removed another eight across the target and broad rows. The
+size-class increment removes eight missing-member errors plus two dependent
+`.regular` inference errors, with no new diagnostics. All runs use `-wmo`; the
+deliberately broad 182-file source inventory remains the saturation denominator
+(and is not the Xcode target inventory; see below).
 
 ```
 STAGE                PRIMARY DIAGNOSTICS   what it means
@@ -46,9 +49,9 @@ target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
 target-UIComponents            0   /
-app                          709   broad saturated census, 182 files, -wmo
+app                          699   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                        739
+TOTAL                        729
 ```
 
 ## What was built, and why each shape
@@ -134,6 +137,27 @@ explicitly and rasterize or decode those vectors before the force unwraps are
 safe at runtime; [`../../uikit/docs/NAMED_ASSETS.md`](../../../uikit/docs/NAMED_ASSETS.md)
 records the precise boundary.
 
+[`package_resources.py`](package_resources.py) now supplies the explicit,
+fail-closed staging step for the pinned package slice: five resource roots,
+124 files, and 314,632 bytes retain their exact catalog hierarchy and are
+verified before and after use. Its generated `Bundle.module` accessor traps at
+runtime rather than pretending Foundation bundle discovery is wired. The four
+shipping DesignSystem sources still emit cleanly against the pinned OpenUIKit
+commit, while [`PACKAGE_RESOURCES.md`](PACKAGE_RESOURCES.md) records the raw
+PDF/SVG, `actool`, bundle-layout, Widget, Licenses, and Linux-execution limits.
+
+OpenUIKit `c166f96` adds UIKit-measured partial size-class collections and
+value-based `traitsFrom` merging, then propagates the axes through screens,
+detached views/controllers, windows, and attached hierarchies. Explicit host
+axes win; otherwise each screen or window uses the documented portable 600 pt
+per-axis approximation. A screen/window-disagreement regression ensures a
+window classifies its own bounds rather than inheriting already-resolved screen
+axes. The change passes 842 native tests (2 skipped), strict release
+compilation, and the Foundation-hidden 95-source Linux gate. It removes all
+eight Focus size-class member errors and the two downstream inference errors;
+automatic resize delivery and Apple's idiom/multitasking policy remain out of
+scope.
+
 ## The one SnapKit vendoring exclusion
 
 [`snapkit-exclusions.json`](snapkit-exclusions.json) records exactly one rule:
@@ -176,8 +200,8 @@ MISSING TYPES     68 distinct / 159 occurrences
                   44 Apple-framework names / 98 uses    <- real gap
                   23 other / 60 · 1 app symbol / 1
 
-MISSING MEMBERS   156 total
-                  49 distinct on Apple types / 84 uses  <- the #94 list
+MISSING MEMBERS   148 total
+                  47 distinct on Apple types / 76 uses  <- the #94 list
                    0 distinct SnapKit DSL   /   0 uses  <- real module loaded
 ```
 
@@ -186,7 +210,6 @@ Top of the **member** list, which is what no type census could see:
 | uses | type | members |
 |---|---|---|
 | 14 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
-| 8 | `UITraitCollection` | `horizontalSizeClass`, `verticalSizeClass` |
 | 8 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
 | 7 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `userInterfaceLayoutDirection` |
 | 7 | `UIBarButtonItem` | `accessibilityIdentifier` |
@@ -226,7 +249,7 @@ remaining pasteboard declaration gap.
    contain `error:` parameter labels. [`diagnostics.py`](diagnostics.py) now
    accepts only location-bearing primary lines. Its controls include both
    duplicate-rendering and source-text false positives. The saved current run
-   is 751 primary diagnostics.
+   is 729 primary diagnostics.
 5. **The broad `find` inventory is not the Blockzilla target.** The Xcode source
    phase has 131 Swift references: 129 exist and two generated sources
    (`Metrics.swift`, `AppNimbus.swift`) are absent from this checkout. The broad
