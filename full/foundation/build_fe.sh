@@ -107,6 +107,8 @@ swiftc -target "${TARGET:-arm64-apple-macos15.0}" -sdk "$SYS" \
     -package-name SwiftFoundation \
     -I "${OSMOD:-$W/scratch/fe4_os}" \
     ${COLLECTIONS:+-I "$COLLECTIONS"} \
+    -Xcc -fmodule-map-file="$SF/Sources/_FoundationCShims/include/module.modulemap" \
+    -Xcc -I"$SF/Sources/_FoundationCShims/include" \
     "${FEATURES[@]}" \
     "$@" \
     "${SRCS[@]}"
