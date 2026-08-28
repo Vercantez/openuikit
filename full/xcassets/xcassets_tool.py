@@ -533,7 +533,19 @@ class Reader:
             for k, v in comps_raw.items():
                 comps[k], encodings[k] = component_value(v, path, k)
             rgba, how = to_srgb(space, comps, path)
+            # NATIVE components, in the file's OWN colour space and in the
+            # order assetutil reports them.  This is the field the oracle
+            # checks: measured on a synthetic probe, `actool` stores
+            # display-p3 components UNCONVERTED under `Colorspace: "p3"`, so
+            # the `srgb` field below is a convenience for the consumer that
+            # Apple's compiler cannot corroborate, and is labelled as such.
+            if space == "gray-gamma-22":
+                native = [comps.get("white", 0.0), comps.get("alpha", 1.0)]
+            else:
+                native = [comps.get("red", 0.0), comps.get("green", 0.0),
+                          comps.get("blue", 0.0), comps.get("alpha", 1.0)]
             variants.append({"idiom": e["idiom"], "appearance": appearance,
+                             "native": native,
                              "srgb": [round(c, 6) for c in rgba],
                              "color_space": space, "conversion": how,
                              "encodings": encodings,
@@ -673,7 +685,15 @@ def cmd_index(args):
     reader = Reader(strict=args.strict)
     app = os.path.abspath(args.app)
     catalogs = []
-    for dirpath, dirnames, _ in os.walk(app):
+    # Accept EITHER an app tree or a single `.xcassets`.  Pointing the tool at
+    # one catalog and having it walk for `.xcassets` CHILDREN finds none and
+    # indexes nothing -- a silent empty index, which is how the first spot
+    # oracle run scored 0 of 89 without anything having gone wrong in the
+    # reader at all.
+    if app.endswith(".xcassets") and os.path.isdir(app):
+        catalogs = [app]
+        app = os.path.dirname(app)
+    for dirpath, dirnames, _ in (os.walk(app) if not catalogs else []):
         if ".git" in dirnames:
             dirnames.remove(".git")
         for d in list(dirnames):
@@ -683,6 +703,9 @@ def cmd_index(args):
     catalogs.sort()
     for c in catalogs:
         reader.read_catalog(c)
+
+    if not reader.catalogs:
+        refuse(app, "no .xcassets found -- refusing to write an empty index")
 
     out = os.path.abspath(args.out)
     res = os.path.join(out, "Resources")
