@@ -465,6 +465,15 @@ want quota               && build quota               "$CHAINED_TARGET" quota   
 # and EDEADLK is 11 here and 35 there, with Darwin's 11 being Linux's EAGAIN.
 want pthread_mutex_variants && build pthread_mutex_variants "$CHAINED_TARGET" pthread_mutex_variants pthread_mutex_variants.c --
 
+# cflog_surface. snprintf_l + pthread_threadid_np -- with writev, CFLog's
+# signature. snprintf_l must go through OUR formatter (Darwin varargs are on
+# the stack, AAPCS64's are in registers) and its locale argument is enforced
+# rather than assumed: libSystem exports setlocale and no other locale entry
+# point, so a guest cannot construct a locale_t and NULL/LC_GLOBAL_LOCALE both
+# mean C. pthread_threadid_np is graded for a REAL id -- the cross-thread line
+# is the one an implementation returning a constant cannot pass.
+want cflog_surface       && build cflog_surface       "$CHAINED_TARGET" cflog_surface       cflog_surface.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

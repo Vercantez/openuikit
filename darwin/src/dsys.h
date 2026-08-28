@@ -174,6 +174,8 @@ extern void   *glibc_getgrnam(const char *)                  GLIBCSYM(getgrnam);
 extern void   *glibc_getgrgid(unsigned)                      GLIBCSYM(getgrgid);
 extern int     glibc_getgrnam_r(const char *, void *, char *, size_t, void **) GLIBCSYM(getgrnam_r);
 extern int     glibc_getgrgid_r(unsigned, void *, char *, size_t, void **)     GLIBCSYM(getgrgid_r);
+extern int     glibc_gettid(void)                            GLIBCSYM(gettid);
+extern int     glibc_vsnprintf(char *, size_t, const char *, va_list) GLIBCSYM(vsnprintf);
 extern int     glibc_uname(void *)                           GLIBCSYM(uname);
 extern int     glibc_stat(const char *, void *)             GLIBCSYM(stat);
 extern int     glibc_lstat(const char *, void *)            GLIBCSYM(lstat);

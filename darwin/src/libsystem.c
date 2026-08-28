@@ -646,6 +646,50 @@ EXPORT int vsprintf(char *dst, const char *fmt, va_list ap)
     return vsnprintf(dst, (size_t)-1, fmt, ap);
 }
 
+/* snprintf_l -- CFLog's, and the locale argument is the whole question.
+ *
+ * IT MUST GO THROUGH OUR OWN vsnprintf, not glibc's, and that is not a
+ * preference: Darwin's arm64 varargs are all on the STACK with an 8-byte
+ * va_list, AAPCS64 passes them in registers with a 32-byte one, so forwarding
+ * any variadic formatter to glibc hands it garbage. That is why this library
+ * owns a formatter at all.
+ *
+ * THE LOCALE IS ENFORCED BY CONSTRUCTION RATHER THAN ASSUMED, which is the
+ * part worth reading. The obvious implementation -- "forward to vsnprintf,
+ * because the C locale is the only one this stack can be in" -- is TRUE today
+ * and is a property somebody has to keep true; if a real locale ever arrives,
+ * it silently formats 1.5 as "1,5" in a German locale. Plausible output, wrong
+ * bytes, no error.
+ *
+ * So instead of a comment, a check. Measured on the built dylib: libSystem
+ * exports `setlocale` and NOTHING ELSE from the locale surface -- no
+ * `newlocale`, `duplocale`, `uselocale` or `freelocale`, and no other `*_l`
+ * function. A guest therefore CANNOT CONSTRUCT a locale_t: the only values it
+ * can hold are NULL and LC_GLOBAL_LOCALE ((locale_t)-1, measured on Darwin).
+ * And `setlocale` itself refuses anything but "C"/"POSIX" (ctype.c), so the
+ * global locale is C as well. Both accepted values therefore MEAN the C
+ * locale, and anything else means the guest obtained a locale_t from somewhere
+ * this library does not know about -- which is exactly when formatting it in
+ * the C locale would be a wrong answer, so it stops instead.
+ *
+ * Measured on Darwin, so the two accepted cases are known to agree there too:
+ * snprintf_l(buf, n, NULL, "%d %.2f %s", 42, 1.5, "x") and the same call with
+ * a freshly made "C" locale both yield 9 and "42 1.50 x". */
+EXPORT int snprintf_l(char *dst, size_t cap, void *loc, const char *fmt, ...)
+{
+    va_list ap; int n;
+    if (loc != (void *)0 && loc != (void *)-1)
+        mr_bail("snprintf_l with a locale this libSystem did not hand out: it "
+                "exports setlocale and no other locale entry point, so the only "
+                "locale_t a guest can hold is NULL or LC_GLOBAL_LOCALE, and both "
+                "mean C. Formatting in C for an unknown locale would put the "
+                "wrong bytes in the buffer and report success");
+    va_start(ap, fmt);
+    n = vsnprintf(dst, cap, fmt, ap);
+    va_end(ap);
+    return n;
+}
+
 EXPORT int sprintf(char *dst, const char *fmt, ...)
 {
     va_list ap; int n;
@@ -1739,6 +1783,44 @@ EXPORT int pthread_create(void **thread, const void *attr, void *(*fn)(void *), 
 EXPORT int   pthread_join(void *t, void **ret) { return mr_pthread_rc(glibc_pthread_join((g_pthread_t)t, ret)); }
 EXPORT int   pthread_detach(void *t)           { return mr_pthread_rc(glibc_pthread_detach((g_pthread_t)t)); }
 EXPORT void *pthread_self(void)                { return (void *)glibc_pthread_self(); }
+
+/* pthread_threadid_np -- the 64-bit thread id CFLog stamps every line with.
+ *
+ * MEASURED ON DARWIN, and the measurement changed the design: it succeeds for
+ * ANY thread, not only the caller.
+ *
+ *      pthread_threadid_np(NULL, &id)           -> 0, id non-zero
+ *      pthread_threadid_np(pthread_self(), &id) -> 0, the SAME id
+ *      pthread_threadid_np(other, &id)          -> 0, and it is THAT thread's
+ *      pthread_threadid_np(NULL, NULL)          -> 22 (EINVAL)
+ *
+ * Self is exact here: Linux's gettid() is the same kind of number -- a
+ * kernel-visible, process-unique thread id.
+ *
+ * ANOTHER THREAD IS NOT SERVED, AND IT STOPS RATHER THAN RETURNING ESRCH.
+ * glibc has no way to map a pthread_t to its tid from outside that thread, so
+ * answering would need a registry keyed on pthread_t, filled by this library's
+ * own pthread_create and torn down at thread exit. That is buildable -- every
+ * guest thread goes through our wrapper -- and it is not built.
+ *
+ * ESRCH was the tempting answer and is the wrong one: it says "no such
+ * thread", which is FALSE (the thread exists and Darwin would have answered),
+ * and a caller keying a cache or a log line by thread id would take a
+ * legitimate-looking failure branch over a lie. A stop names the gap and
+ * cannot be mistaken for the truth. Nothing reaches it today: CFLog asks for
+ * the thread it is running on. */
+EXPORT int pthread_threadid_np(void *thread, uint64_t *idp)
+{
+    if (!idp) return 22;                       /* EINVAL, measured on Darwin */
+    if (thread != (void *)0 && thread != (void *)glibc_pthread_self())
+        mr_bail("pthread_threadid_np for a thread other than the caller: glibc "
+                "cannot map a pthread_t to its tid from outside that thread, so "
+                "this needs a registry filled by our own pthread_create. Darwin "
+                "answers this call, so returning ESRCH would report 'no such "
+                "thread' about a thread that exists");
+    *idp = (uint64_t)(unsigned int)glibc_gettid();
+    return 0;
+}
 EXPORT int   pthread_equal(void *a, void *b)   { return glibc_pthread_equal((g_pthread_t)a, (g_pthread_t)b); }
 
 /* pthread_key_create/delete/getspecific/setspecific are NOT here any more. A

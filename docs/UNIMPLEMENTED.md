@@ -348,6 +348,92 @@ struct is compiled into the guest and its layout is not glibc's. Same for
 keeping a glibc object inside Darwin's opaque bytes and using the signature word
 to tell "Apple-initialised" from "adopted" — **all four mutex ones**, see below.
 
+### `cflog-surface` — **DONE 2026-08-27**: `snprintf_l`, `pthread_threadid_np`
+
+Found by the UserDefaults CF-preferences trace (#78) and graded by
+`tests/bin/cflog_surface`. With `writev`, these three in that order **are
+CFLog's signature**: CoreFoundation was not failing, it was trying to LOG, and
+until `writev` existed the message was the one thing nobody could see. A stub
+abort on `writev` reads like a missing file primitive; the finding was a
+diagnostic we were deaf to.
+
+**Two of the four reported gaps were not gaps.** `gethostuuid` and `writev`
+were already implemented (`darwin/src/posix.c`); the report was measured
+against a **stale `libSystem.B.dylib`** — see `#stale-artifact-after-a-merge`
+below. Only `snprintf_l` and `pthread_threadid_np` were genuinely absent.
+
+**`snprintf_l` must go through THIS library's formatter**, and that is not a
+preference: Darwin's arm64 varargs are all on the STACK with an 8-byte
+`va_list`, AAPCS64 passes them in registers with a 32-byte one. Verified by
+mutation — forwarding to glibc's `vsnprintf` **SIGSEGVs (exit 139)**.
+
+**Its locale argument is enforced by construction, not assumed.** The tempting
+implementation is "forward to `vsnprintf`, because the C locale is the only one
+this stack can be in" — true today, and a property somebody has to keep true;
+if a real locale ever arrives it silently formats `1.5` as `"1,5"`. So instead
+of a comment there is a check, resting on a measurement: libSystem exports
+`setlocale` and **nothing else** from the locale surface — no `newlocale`,
+`duplocale`, `uselocale`, `freelocale`, and no other `*_l` function. A guest
+therefore **cannot construct** a `locale_t`; the only values it can hold are
+`NULL` and `LC_GLOBAL_LOCALE` (`(locale_t)-1`, measured), and `setlocale`
+itself refuses anything but `C`/`POSIX`. Both accepted values mean C; anything
+else means a `locale_t` from somewhere this library does not know about, and it
+stops.
+
+**`pthread_threadid_np` — the measurement changed the design.** Darwin succeeds
+for **any** thread, not only the caller: `NULL` and `pthread_self()` give the
+same non-zero id, another thread gives *that thread's* id, and a NULL
+out-pointer is `EINVAL` (22). Self is exact here (Linux's `gettid()` is the
+same kind of number). **Another thread is refused with a stop, not `ESRCH`** —
+glibc cannot map a `pthread_t` to its tid from outside that thread, so
+answering needs a registry keyed on `pthread_t` and filled by our own
+`pthread_create`. That is buildable (every guest thread goes through our
+wrapper) and is not built. `ESRCH` was the tempting answer and is the wrong
+one: it says "no such thread", which is **false** — the thread exists and
+Darwin would have answered — and a caller keying a log line or cache by thread
+id would take a legitimate-looking failure branch over a lie.
+
+**Teeth, three mutations, and the third is an honest gap rather than a pass:**
+
+| mutation | result |
+|---|---|
+| `snprintf_l` forwards to glibc's `vsnprintf` | **exit 139** (SIGSEGV) |
+| `pthread_threadid_np` returns a constant | FAIL, line 11 — the cross-thread line |
+| drop the `snprintf_l` locale guard | **NOT caught** |
+
+The third cannot be caught by a differential fixture, and the reason is the
+same property the guard rests on: a guest **cannot construct** a non-C
+`locale_t` through this libSystem, so no fixture can present one. The guard is
+for the day something else can, and it is unreachable until then. Recorded so
+`cflog_surface PASS` is not read as covering it — the same shape as `#grp`'s
+`ERANGE` gap.
+
+### `stale-artifact-after-a-merge` — the main clone's build products are not merged
+
+**Measured 2026-08-27, and it cost another agent a false measurement.**
+`darwin/usr/` is gitignored, so a `git merge` updates `darwin/src/*.c` and
+leaves `darwin/usr/lib/*.dylib` **untouched**. The standing rule — *one
+worktree per agent, use the main clone only for merges* — means the main clone
+is the one tree where nobody ever runs a build, and therefore the one tree
+whose artefacts are reliably stale.
+
+Measured on this tree right after #80 merged: main clone `libsystem.c` at
+22:57, `libSystem.B.dylib` at **19:59**, and `strings` on that dylib contained
+**none** of the new `0x32AAABA1/2/3` signatures. Another agent reading it
+concluded four symbols were missing; **two of them had been implemented for
+weeks**.
+
+`scripts/check_stale.sh` catches this exactly and exits 1 — run in the main
+clone it reported **`ok 2 stale 4`** and named both timestamps. The mechanism
+was never the gap; nobody had reason to run it *there*, because gating happens
+in the worktree where the build is fresh.
+
+**So the rule needs a second half: after a merge into the main clone, rebuild
+it, or run `check_stale.sh` there before anyone measures against it.** A merge
+makes the source current and the artefacts stale in one step, which is the
+[[stale-artifact-invisible-to-every-check]] shape produced by the very
+discipline meant to keep trees clean.
+
 ### `pthread-mutex-variants` — **FIXED 2026-08-27**; the signature word IS the type
 
 `adopt()` used to accept exactly one static-initialiser signature, and that was

@@ -1,0 +1,13 @@
+snprintf            n=15 [42 1.50 str z 7]
+snprintf_l NULL     n=15 [42 1.50 str z 7]
+  same as snprintf  1
+snprintf_l GLOBAL   n=15 [42 1.50 str z 7]
+  same as snprintf  1
+snprintf_l trunc    n=15 [42 1]
+  returns full len  1
+threadid NULL       rc=0 nonzero=1
+threadid self       rc=0 same as NULL=1
+threadid no out     rc=22 is EINVAL=1
+child saw its own   nonzero=1 differs from parent=1
+threadid stable     1
+done
