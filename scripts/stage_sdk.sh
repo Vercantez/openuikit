@@ -50,16 +50,19 @@ if [ -n "$_hdr_conflicts" ] && [ "$PREFER_MACHORUN_HEADERS" != 1 ]; then
     echo "  A shadowing copy cannot fail, so this refuses rather than overwrites." >&2
     echo "  NOTHING HAS BEEN DELETED -- \$W/sdk is untouched." >&2
     echo >&2
-    echo "  THE TWO COPIES ARE COMPLEMENTARY, NOT DUPLICATE -- measured on both" >&2
-    echo "  and corrected 2026-08-28. swiftcore-macho's 54-line MacTypes.h HAS" >&2
-    echo "  the Pascal-string and UTF families; machorun's 129-line one OMITS" >&2
-    echo "  them deliberately and has ten OTHERS the 54-line one lacks. Neither" >&2
-    echo "  is a superset, so DO NOT delete either without merging first." >&2
+    echo "  AS OF machorun d885940 THE OVERRIDE IS CORRECT, NOT LOSSY." >&2
+    echo "  machorun's MacTypes.h was merged (#88 step 1) and now carries the" >&2
+    echo "  Pascal-string and UTF families as well as the ten it already had --" >&2
+    echo "  it is a genuine SUPERSET of the clean-room copy, with the single" >&2
+    echo "  exception of BytePtr_t, which is not Apple's and is deliberately out." >&2
     echo >&2
     echo "  PREFER_MACHORUN_HEADERS=1 $0   keeps machorun's and skips ours." >&2
-    echo "  That is LOSSY, not neutral: it drops the ten. It is usable only" >&2
-    echo "  because include/CFCarbonTypesShim.h re-supplies them, and that" >&2
-    echo "  shim is a THIRD copy waiting to be deleted. See task #88." >&2
+    echo >&2
+    echo "  This still REFUSES by default because a collision is still a" >&2
+    echo "  collision: the clean-room copy has not been deleted yet (#88 steps" >&2
+    echo "  2-3, in ~/swiftcore-macho -- BytePtr_t's referents first). When it" >&2
+    echo "  goes, this refusal disappears on its own and the override becomes" >&2
+    echo "  unnecessary rather than merely safe." >&2
     exit 2
 fi
 

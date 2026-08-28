@@ -57,12 +57,12 @@ mkdir -p /work/obj
 # because NSCFConstantString.m calls CF's inline ASCII-superset predicate
 # instead of duplicating it.
 # CF's PUBLIC headers declare CFStringGetPascalString and friends, so any TU
-# including them needs the Pascal-string types machorun's MacTypes.h omits ON
-# PURPOSE. CF's own build gets them from force-including CoreFoundation_Prefix.h;
-# a non-CF file should not take CF's whole build prefix to borrow one inline
-# predicate, so the repo carries the four typedefs. See include/CFCarbonTypesShim.h.
-NSCF_INCLUDES="-I/work/nscf-include -I$CF/include -I$CF/internalInclude \
-               -include /repo/include/CFCarbonTypesShim.h"
+# including them needs the Pascal-string types. This repo carried a shim for
+# them until machorun d885940 merged the family into its own MacTypes.h (#88
+# step 1). The shim is DELETED, and its #error tripwire is what insisted --
+# the deletion was compiler-enforced rather than remembered, which was the
+# whole point of adding the macro contract.
+NSCF_INCLUDES="-I/work/nscf-include -I$CF/include -I$CF/internalInclude"
 
 case "$WHICH" in
   all|t16|t17|t18|t19) ;;
