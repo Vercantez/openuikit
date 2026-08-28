@@ -254,7 +254,34 @@ Lookups:
         UIKit** must use `native` here.
 - [ ] `template-rendering-intent: "template"` (2,452 uses in 16 apps) means the
       image is a tinting mask — carry it through to `UIImage.renderingMode`.
-- [ ] `resizing` (11 uses in 3 apps) is `UIImage.resizableImage(withCapInsets:)`.
+- [ ] `resizing` (11 uses in 3 apps) is `UIImage.resizableImage(withCapInsets:)`
+      — **but the numbers are not in the same units.**
+
+      > **`cap_insets` are PIXELS in `Contents.json` and POINTS in `UIImage`.**
+      > Measured (#82): Telegram's chat bubbles declare
+      > `{top 26, left 26, bottom 32, right 26}` on a **2x** variant and
+      > `UIImage.capInsets` reports `{13, 13, 16, 13}` — exactly half. **Divide
+      > by the chosen variant's `scale` before calling
+      > `resizableImage(withCapInsets:)`**, or a 2x asset gets double-size
+      > insets and stretches from the wrong place. 18 of 18 rows agree once
+      > divided.
+      >
+      > Scope: every resizing asset in the corpus that survives raster-only
+      > selection is 2x-only, so "divide by the variant's scale" and "divide by
+      > 2" are not distinguishable from this data. The former is the only
+      > reading consistent with points being scale-independent, and it is
+      > observed at 2x only.
+      >
+      > Both spellings are **parsed** and normalised (`cap-insets` and
+      > `capInsets`), but only `cap-insets` rows are **oracle-confirmed**: the
+      > two `capInsets` assets in the corpus are precisely the ones `actool`
+      > re-slices (below), so their pixels cannot be identified.
+
+- [ ] **Resizable assets cannot be matched to their source bitmap.** `actool`
+      collapses the stretchable region: Telegram's `BubbleNotification` has a
+      53×124 source and UIKit returns 53×117. The payload in the index is the
+      source file, which is correct for re-compiling, and is *not* what UIKit
+      hands back for a 9-part image.
 - [ ] Vector payloads are `.pdf` (and `.svg` for symbolsets). If the consumer
       cannot rasterise PDF, that is a **named gap**, not a fallback to nothing.
 - [ ] Bundle order for `collisions` is the consumer's to decide, and to state.

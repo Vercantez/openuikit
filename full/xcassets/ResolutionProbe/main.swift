@@ -93,6 +93,14 @@ func traits(_ idiom: UIUserInterfaceIdiom, _ style: UIUserInterfaceStyle) -> UIT
 }
 
 struct Row: Decodable {
+    struct Resizing: Decodable {
+        struct Insets: Decodable {
+            let top: Double?; let left: Double?; let bottom: Double?; let right: Double?
+        }
+        let mode: String?
+        let cap_insets: Insets?
+        let insets_spelling: String?
+    }
     struct Candidate: Decodable {
         let sha256: String?
         let file: String?
@@ -100,6 +108,7 @@ struct Row: Decodable {
         let idiom: String
         let appearance: String
         let scale: Int?
+        let resizing: Resizing?
         let native: [Double]?
         let color_space: String?
     }
@@ -207,6 +216,16 @@ for r in rows {
             }
             let h = bitmapHash(cg)
             rec["image_scale"] = Double(img.scale)
+            // CAP INSETS, for the `resizing` rows.  UIKit exposes them on the
+            // returned image, so the numbers a reader parsed out of
+            // `cap-insets` / `capInsets` can be checked against what UIKit
+            // actually built -- the one part of the resizing key that is
+            // observable without drawing anything.
+            let ci = img.capInsets
+            if ci != .zero {
+                rec["cap_insets"] = ["top": Double(ci.top), "left": Double(ci.left),
+                                     "bottom": Double(ci.bottom), "right": Double(ci.right)]
+            }
             rec["hash"] = h
             // EXACT match first, because when it holds it needs no threshold.
             if let m = candHash[r.asset], let sha = m.first(where: { $0.value == h })?.key {

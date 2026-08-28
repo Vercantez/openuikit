@@ -258,10 +258,12 @@ devices        scale 2 idiom ipad · scale 2 idiom iphone · scale 3 idiom iphon
 INSTRUMENT CHECKS, before any scoreboard
    closest same-size candidate pair    49.500   (must exceed 10.0)
    assets ruled undecidable                 0
-   image rows identified                  234 of 234
-     of which byte-exact                    91   (the rest actool re-encoded)
+   image rows identified                  252 of 264
+     of which byte-exact                   127   (the rest actool re-encoded)
+   unidentified, NOT scored                 12   all resizable: actool re-slices them
 
-IMAGES    agree with UIKit    234 of 234    chose differently 0 · index found none 0
+IMAGES    agree with UIKit    252 of 252    chose differently 0 · index found none 0
+CAP INSETS agree with UIKit    18 of 18     differ 0   (cap-insets spelling)
 COLOURS   agree with UIKit     90 of 90     differ 0
           display-p3 24 · extended-srgb 18 · gray-gamma-22 6 · srgb 42
           system references     6   (excluded: the palette is not in the catalog)
@@ -305,6 +307,29 @@ A **176× margin**. Thresholds are set from that data (`IDENTIFY_MAX 2.0`,
 printed *before* the scoreboard, per #78's `renderDiscriminates`: candidates of
 one asset must be far apart, and every scored row's returned image must match
 some candidate. 0 undecidable, 0 unidentified.
+
+### Two more findings, from closing a sample item that was missed first time
+
+The task's sample list asked for **cap-insets in both spellings** and the first
+pass did not deliver it — the fixture selected by scale/appearance/idiom shape
+and `resizing` was not among the tags. Added on a re-read, it produced two
+things worth more than the row count:
+
+* **`cap_insets` are PIXELS in `Contents.json` and POINTS in `UIImage`.**
+  Telegram's chat bubbles declare `{26, 26, 32, 26}` on a 2x variant;
+  `UIImage.capInsets` reports `{13, 13, 16, 13}`. **A consumer passing the raw
+  numbers to `resizableImage(withCapInsets:)` doubles the insets on every 2x
+  asset** — a silent wrong render, which is the failure class this whole reader
+  exists to prevent. 18 of 18 agree once divided by the variant's scale.
+  Observed at 2x only: every resizing asset that survives raster-only selection
+  is 2x-only, so "÷ the variant's scale" and "÷ 2" are not distinguishable here.
+* **Resizable assets cannot be pixel-identified, and the instrument caught it
+  rather than guessing.** `actool` collapses the stretchable region:
+  `BubbleNotification` has a 53×124 source and UIKit returns 53×117. All 12
+  unidentified rows are this class, and they are named as such instead of being
+  a bare count. It also means the two `capInsets`-spelling assets are parsed but
+  **not** oracle-confirmed — the spelling is handled, its numbers are not
+  independently checked.
 
 ### Three findings the run produced beyond its own scoreboard
 

@@ -52,6 +52,7 @@ def as_asset(row):
                       "color_space": c.get("color_space")})
         else:
             v["payload"] = {"sha256": c["sha256"], "filename": c["filename"]}
+            v["resizing"] = c.get("resizing")
         vs.append(v)
     return {"type": row["kind"], "variants": vs}
 
@@ -209,6 +210,16 @@ def main():
                 continue
             sha, why = identify(r.get("distances") or [])
             if sha is None:
+                # RESIZABLE ASSETS CANNOT BE PIXEL-IDENTIFIED, and the check
+                # caught it rather than guessing.  Measured: Telegram's
+                # `BubbleNotification` has a 53x124 source and UIKit returns
+                # 53x117 -- `actool` COLLAPSES the stretchable region of a
+                # 9-part image, so the stored rendition is not the source
+                # bitmap at all.  Named here so the class is visible instead of
+                # being a bare "unidentified" count.
+                if any((c.get("resizing") or {}).get("cap_insets")
+                       for c in row["candidates"]):
+                    st["unidentified_resizable"] += 1
                 # INSTRUMENT failure, not a disagreement: this row cannot
                 # decide anything and is never counted as agreement.
                 st["unidentified"] += 1
@@ -225,6 +236,39 @@ def main():
                               "UIKit chose %s" % _name(row, sha)))
                 continue
             st["image_scored"] += 1
+            # CAP INSETS.  Checked on the rows that have them, because the
+            # census found BOTH `cap-insets` and `capInsets` in one corpus and
+            # a reader keyed on one spelling drops the other in silence.
+            # `UIImage.capInsets` is what UIKit built from the compiled
+            # catalog, so it confirms the numbers survived the parse.
+            rz = (v.get("resizing") or {}).get("cap_insets")
+            if rz:
+                st["capinsets_scored"] += 1
+                st["capinsets_by_%s" % ((v["resizing"] or {}).get("insets_spelling") or "?")] += 1
+                # CAP INSETS ARE PIXELS IN Contents.json AND POINTS IN UIImage.
+                # Measured: Telegram's chat bubbles declare
+                # {top 26, left 26, bottom 32, right 26} on a 2x variant and
+                # `UIImage.capInsets` reports {13, 13, 16, 13} -- exactly half.
+                # So the stored numbers are in the VARIANT's pixels and UIKit
+                # divides by its scale.
+                #
+                # SCOPE: every resizing asset in the corpus that survives
+                # raster-only selection is 2x-only, so "divide by the chosen
+                # variant's scale" and "divide by 2" are not distinguishable
+                # from this data.  The former is stated because it is the only
+                # reading consistent with points being scale-independent, and
+                # it is flagged as observed at 2x only.
+                vscale = v.get("scale") or 1
+                got_ci = r.get("cap_insets") or {}
+                want_ci = {k: float(rz.get(k) or 0) / vscale
+                           for k in ("top", "left", "bottom", "right")}
+                have_ci = {k: float(got_ci.get(k) or 0) for k in ("top", "left", "bottom", "right")}
+                if want_ci == have_ci:
+                    st["capinsets_agree"] += 1
+                else:
+                    st["capinsets_differ"] += 1
+                    fails.append(("CAP INSETS differ", r["asset"], ask,
+                                  "index/%dx %s | UIKit %s" % (vscale, want_ci, have_ci)))
             if v["payload"]["sha256"] == sha:
                 st["image_agree"] += 1
             else:
@@ -249,6 +293,7 @@ def main():
     print("     of which byte-exact               %8d   (the rest actool re-encoded)"
           % st["identified_exact"])
     print("   image rows unidentified, NOT scored  %7d" % st["unidentified"])
+    print("     of which resizable (actool re-slices) %5d" % st["unidentified_resizable"])
 
     for bucket, rows in (("", fails),):
         for kind in sorted({f[0] for f in rows}):
@@ -285,6 +330,11 @@ def main():
     print("IMAGES    agree with UIKit    %4d of %d" % (st["image_agree"], st["image_scored"]))
     print("          chose differently   %4d   (must be 0)" % st["image_differs"])
     print("          index found none    %4d   (must be 0)" % st["index_no_match"])
+    print("CAP INSETS agree with UIKit  %4d of %d" % (st["capinsets_agree"], st["capinsets_scored"]))
+    print("          differ              %4d   (must be 0)" % st["capinsets_differ"])
+    for k in sorted(st):
+        if k.startswith("capinsets_by_"):
+            print("          by spelling: %-13s %4d" % (k[len("capinsets_by_"):], st[k]))
     print("COLOURS   agree with UIKit    %4d of %d" % (st["colour_agree"], st["colour_scored"]))
     print("          differ              %4d   (must be 0)" % st["colour_differs"])
     for k in sorted(st):
@@ -305,6 +355,7 @@ def main():
         return 2
 
     ok = (st["image_differs"] == 0 and st["index_no_match"] == 0
+          and st["capinsets_differ"] == 0
           and st["colour_differs"] == 0 and st["uikit_returned_nothing"] == 0
           and st["colour_no_expectation"] == 0)
     print("")

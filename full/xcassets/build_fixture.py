@@ -73,6 +73,16 @@ def shape_of(rec):
         tags.append("appearance-light")
     if idioms - {"universal"}:
         tags.append("idiom-specific")
+    # `resizing` carries cap insets, and the census found BOTH spellings in the
+    # same corpus -- `cap-insets` (WordPress, Telegram) and `capInsets`
+    # (eidolon, Telegram).  A reader keyed on one drops the other silently, so
+    # the grid has to carry one of each and `UIImage.capInsets` has to confirm
+    # the numbers survived.
+    for v in vs:
+        r = v.get("resizing")
+        if r:
+            tags.append("resizing-%s" % (r.get("insets_spelling") or "none"))
+            break
     return tags or None
 
 
@@ -87,7 +97,8 @@ def main():
     indexes = load_indexes(index_dir)
     QUOTA = {"scale-all-three": 6, "scale-1-2-only": 4, "scale-gap": 4,
              "scaleless": 6, "appearance-dark": 8, "appearance-light": 3,
-             "idiom-specific": 6}
+             "idiom-specific": 6, "resizing-cap-insets": 3,
+             "resizing-capInsets": 3, "resizing-none": 2}
     picked, have = [], Counter()
     colours, colour_have = [], Counter()
 
@@ -163,7 +174,8 @@ def main():
                 seen_payload.add(p["sha256"])
             cands.append({"sha256": p["sha256"], "file": p["sha256"] + p["ext"],
                           "filename": p["filename"], "idiom": v["idiom"],
-                          "appearance": v["appearance"], "scale": v.get("scale")})
+                          "appearance": v["appearance"], "scale": v.get("scale"),
+                          "resizing": v.get("resizing")})
         rows.append({"asset": fname, "kind": kind, "origin_app": app,
                      "origin_name": name, "shapes": tags, "candidates": cands})
         return fname
