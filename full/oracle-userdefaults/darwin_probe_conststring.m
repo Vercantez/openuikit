@@ -159,6 +159,66 @@ int main(void) {
             }
         }
 
+        // ---- the rest of CFString.c's IMMUTABLE NSString dispatch surface.
+        //
+        // FOURTEEN selectors in total, enumerated from CF's own
+        // CF_OBJC_FUNCDISPATCH sites rather than from the 151-name harvest --
+        // the NSMutableString ones cannot reach a constant string at all. So
+        // the surface for THIS class is bounded and small, which is why the
+        // execution-driven loop terminates quickly.
+        //
+        // Probed as a batch because a Darwin probe build is expensive and a
+        // round trip per selector is not. IMPLEMENTING them stays
+        // execution-driven, one abort at a time -- a measured row is permission
+        // to implement correctly when reached, not a reason to implement now.
+        printf("\n--- the remaining immutable dispatch surface\n");
+        {
+            id k = (id)CFSTR("hello");
+            CFStringRef wide = CFStringCreateWithCString(NULL, "caf\xc3\xa9", kCFStringEncodingUTF8);
+
+            SEL e = sel_registerName("_encodingCantBeStoredInEightBitCFString");
+            if ([k respondsToSelector:e]) {
+                BOOL (*fn)(id, SEL) = (void *)objc_msgSend;
+                printf("  _encodingCantBeStoredInEightBitCFString  constant=%s  "
+                       "non-ASCII dynamic=%s\n",
+                       fn(k, e) ? "YES" : "NO",
+                       fn((id)wide, e) ? "YES" : "NO");
+                printf("     (CF's native answer is __CFStrIsUnicode; an 8-bit string is NO.\n"
+                       "      The non-ASCII control is what makes the constant's NO a measurement.)\n");
+            } else printf("  _encodingCantBeStoredInEightBitCFString  NOT IMPLEMENTED\n");
+
+            id c = [(NSString *)k copy];
+            printf("  copy                 -> %s   same pointer as receiver? %s\n",
+                   object_getClassName(c), (c == k) ? "YES" : "no");
+            id mc = [(NSString *)k mutableCopy];
+            printf("  mutableCopy          -> %s   (must be a distinct mutable)\n",
+                   object_getClassName(mc));
+
+            SEL sub = sel_registerName("_createSubstringWithRange:");
+            if ([k respondsToSelector:sub]) {
+                id (*fn)(id, SEL, NSRange) = (void *)objc_msgSend;
+                id s = fn(k, sub, NSMakeRange(1, 3));
+                printf("  _createSubstringWithRange:{1,3} -> %s \"%s\"\n",
+                       object_getClassName(s), [(NSString *)s UTF8String]);
+            } else printf("  _createSubstringWithRange:  NOT IMPLEMENTED\n");
+
+            unichar ubuf[8];
+            [(NSString *)k getCharacters:ubuf range:NSMakeRange(0, 5)];
+            printf("  getCharacters:range:{0,5} -> %04x %04x %04x %04x %04x\n",
+                   ubuf[0], ubuf[1], ubuf[2], ubuf[3], ubuf[4]);
+
+            NSUInteger st = 0, en = 0, ce = 0;
+            [(NSString *)k getLineStart:&st end:&en contentsEnd:&ce
+                               forRange:NSMakeRange(0, 5)];
+            printf("  getLineStart:...{0,5}      -> start=%lu end=%lu contentsEnd=%lu\n",
+                   (unsigned long)st, (unsigned long)en, (unsigned long)ce);
+            [(NSString *)k getParagraphStart:&st end:&en contentsEnd:&ce
+                                    forRange:NSMakeRange(0, 5)];
+            printf("  getParagraphStart:...{0,5} -> start=%lu end=%lu contentsEnd=%lu\n",
+                   (unsigned long)st, (unsigned long)en, (unsigned long)ce);
+            CFRelease(wide);
+        }
+
         // Identity, because selector-reentry.md records that CFSTR twice yields
         // ONE pointer -- which is why t9's dictionary lookup never hashed.
         printf("\n--- identity\n");

@@ -99,6 +99,17 @@ macOS Version 26.5.2 (Build 25F84)
     bufferSize=6 -> true   buf=hello
     bufferSize=7 -> true   buf=hello
 
+--- the remaining immutable dispatch surface
+  _encodingCantBeStoredInEightBitCFString  constant=NO  non-ASCII dynamic=YES
+     (CF's native answer is __CFStrIsUnicode; an 8-bit string is NO.
+      The non-ASCII control is what makes the constant's NO a measurement.)
+  copy                 -> __NSCFConstantString   same pointer as receiver? YES
+  mutableCopy          -> __NSCFString   (must be a distinct mutable)
+  _createSubstringWithRange:{1,3} -> NSTaggedPointerString "ell"
+  getCharacters:range:{0,5} -> 0068 0065 006c 006c 006f
+  getLineStart:...{0,5}      -> start=0 end=5 contentsEnd=5
+  getParagraphStart:...{0,5} -> start=0 end=5 contentsEnd=5
+
 --- identity
   CFSTR("x") == CFSTR("x") ?   SAME POINTER
   CFEqual(CFSTR("x"), dynamic "x")  true
