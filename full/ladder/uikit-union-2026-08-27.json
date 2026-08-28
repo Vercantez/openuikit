@@ -1,0 +1,1815 @@
+{
+ "apps": 20,
+ "swift_files": 25371,
+ "uses": 115846,
+ "distinct": 361,
+ "weighted_coverage": 88.13424719023531,
+ "gap_uses": 4925,
+ "types": {
+  "UIColor": {
+   "apps": 20,
+   "uses": 16879,
+   "ours": true
+  },
+  "UIView": {
+   "apps": 20,
+   "uses": 12665,
+   "ours": true
+  },
+  "UIImage": {
+   "apps": 20,
+   "uses": 10395,
+   "ours": true
+  },
+  "NSAttributedString": {
+   "apps": 18,
+   "uses": 8049,
+   "ours": true
+  },
+  "NSCoder": {
+   "apps": 19,
+   "uses": 4044,
+   "ours": false
+  },
+  "UILabel": {
+   "apps": 20,
+   "uses": 3860,
+   "ours": true
+  },
+  "NSLayoutConstraint": {
+   "apps": 19,
+   "uses": 3665,
+   "ours": true
+  },
+  "UIViewController": {
+   "apps": 20,
+   "uses": 3581,
+   "ours": true
+  },
+  "UITableView": {
+   "apps": 17,
+   "uses": 3050,
+   "ours": true
+  },
+  "UIButton": {
+   "apps": 19,
+   "uses": 2822,
+   "ours": true
+  },
+  "UIImageView": {
+   "apps": 19,
+   "uses": 2770,
+   "ours": true
+  },
+  "UIFont": {
+   "apps": 20,
+   "uses": 2695,
+   "ours": true
+  },
+  "UIStackView": {
+   "apps": 17,
+   "uses": 2135,
+   "ours": true
+  },
+  "NSObject": {
+   "apps": 20,
+   "uses": 2085,
+   "ours": false
+  },
+  "UIApplication": {
+   "apps": 20,
+   "uses": 1970,
+   "ours": true
+  },
+  "UITableViewCell": {
+   "apps": 17,
+   "uses": 1941,
+   "ours": true
+  },
+  "UIBarButtonItem": {
+   "apps": 19,
+   "uses": 1700,
+   "ours": true
+  },
+  "NSString": {
+   "apps": 20,
+   "uses": 1646,
+   "ours": false
+  },
+  "UIAction": {
+   "apps": 16,
+   "uses": 1390,
+   "ours": true
+  },
+  "UIScrollView": {
+   "apps": 18,
+   "uses": 1291,
+   "ours": true
+  },
+  "UITapGestureRecognizer": {
+   "apps": 20,
+   "uses": 1142,
+   "ours": true
+  },
+  "UICollectionView": {
+   "apps": 15,
+   "uses": 1134,
+   "ours": true
+  },
+  "NSMutableAttributedString": {
+   "apps": 18,
+   "uses": 1119,
+   "ours": true
+  },
+  "UINavigationController": {
+   "apps": 20,
+   "uses": 957,
+   "ours": true
+  },
+  "UIAlertAction": {
+   "apps": 19,
+   "uses": 952,
+   "ours": true
+  },
+  "UIEvent": {
+   "apps": 18,
+   "uses": 886,
+   "ours": true
+  },
+  "UIAlertController": {
+   "apps": 19,
+   "uses": 836,
+   "ours": true
+  },
+  "UITextField": {
+   "apps": 18,
+   "uses": 833,
+   "ours": true
+  },
+  "UIDevice": {
+   "apps": 18,
+   "uses": 784,
+   "ours": true
+  },
+  "UIScreen": {
+   "apps": 18,
+   "uses": 704,
+   "ours": true
+  },
+  "UIGestureRecognizer": {
+   "apps": 20,
+   "uses": 679,
+   "ours": true
+  },
+  "UITraitCollection": {
+   "apps": 18,
+   "uses": 664,
+   "ours": true
+  },
+  "NSValue": {
+   "apps": 15,
+   "uses": 606,
+   "ours": false
+  },
+  "UITextView": {
+   "apps": 18,
+   "uses": 589,
+   "ours": true
+  },
+  "UIMenu": {
+   "apps": 16,
+   "uses": 556,
+   "ours": true
+  },
+  "UIPanGestureRecognizer": {
+   "apps": 18,
+   "uses": 456,
+   "ours": true
+  },
+  "UIKeyCommand": {
+   "apps": 14,
+   "uses": 439,
+   "ours": true
+  },
+  "UIPasteboard": {
+   "apps": 17,
+   "uses": 409,
+   "ours": false
+  },
+  "UICollectionViewCell": {
+   "apps": 15,
+   "uses": 394,
+   "ours": true
+  },
+  "UITouch": {
+   "apps": 18,
+   "uses": 391,
+   "ours": true
+  },
+  "UIVisualEffectView": {
+   "apps": 17,
+   "uses": 384,
+   "ours": false
+  },
+  "UIResponder": {
+   "apps": 20,
+   "uses": 377,
+   "ours": true
+  },
+  "UISwitch": {
+   "apps": 16,
+   "uses": 328,
+   "ours": true
+  },
+  "UIWindow": {
+   "apps": 20,
+   "uses": 325,
+   "ours": true
+  },
+  "UIActivityIndicatorView": {
+   "apps": 16,
+   "uses": 317,
+   "ours": true
+  },
+  "UIFontMetrics": {
+   "apps": 10,
+   "uses": 304,
+   "ours": true
+  },
+  "UIBlurEffect": {
+   "apps": 16,
+   "uses": 265,
+   "ours": false
+  },
+  "UILongPressGestureRecognizer": {
+   "apps": 14,
+   "uses": 257,
+   "ours": true
+  },
+  "UIActivityViewController": {
+   "apps": 16,
+   "uses": 239,
+   "ours": true
+  },
+  "UITableViewDelegate": {
+   "apps": 15,
+   "uses": 239,
+   "ours": true
+  },
+  "UIControl": {
+   "apps": 14,
+   "uses": 238,
+   "ours": true
+  },
+  "UINib": {
+   "apps": 10,
+   "uses": 210,
+   "ours": false
+  },
+  "UITableViewDataSource": {
+   "apps": 15,
+   "uses": 204,
+   "ours": true
+  },
+  "UIStoryboard": {
+   "apps": 11,
+   "uses": 190,
+   "ours": false
+  },
+  "UIWindowScene": {
+   "apps": 17,
+   "uses": 186,
+   "ours": true
+  },
+  "UIScrollViewDelegate": {
+   "apps": 15,
+   "uses": 182,
+   "ours": true
+  },
+  "UIPresentationController": {
+   "apps": 13,
+   "uses": 174,
+   "ours": true
+  },
+  "UIMenuElement": {
+   "apps": 15,
+   "uses": 171,
+   "ours": true
+  },
+  "UIContextMenuConfiguration": {
+   "apps": 15,
+   "uses": 169,
+   "ours": true
+  },
+  "UITextFieldDelegate": {
+   "apps": 17,
+   "uses": 168,
+   "ours": true
+  },
+  "UIPageViewController": {
+   "apps": 10,
+   "uses": 160,
+   "ours": false
+  },
+  "UIGestureRecognizerDelegate": {
+   "apps": 18,
+   "uses": 159,
+   "ours": true
+  },
+  "NSMutableParagraphStyle": {
+   "apps": 18,
+   "uses": 156,
+   "ours": true
+  },
+  "UISearchBar": {
+   "apps": 13,
+   "uses": 155,
+   "ours": true
+  },
+  "UIFontDescriptor": {
+   "apps": 16,
+   "uses": 151,
+   "ours": true
+  },
+  "UIViewPropertyAnimator": {
+   "apps": 11,
+   "uses": 151,
+   "ours": false
+  },
+  "UICollectionViewLayout": {
+   "apps": 15,
+   "uses": 147,
+   "ours": true
+  },
+  "UIViewControllerTransitionCoordinator": {
+   "apps": 18,
+   "uses": 141,
+   "ours": false
+  },
+  "UIGraphicsImageRenderer": {
+   "apps": 15,
+   "uses": 134,
+   "ours": true
+  },
+  "UICollectionViewLayoutAttributes": {
+   "apps": 12,
+   "uses": 134,
+   "ours": true
+  },
+  "UITraitPreferredContentSizeCategory": {
+   "apps": 5,
+   "uses": 132,
+   "ours": true
+  },
+  "UITableViewController": {
+   "apps": 12,
+   "uses": 130,
+   "ours": true
+  },
+  "UIScene": {
+   "apps": 10,
+   "uses": 128,
+   "ours": true
+  },
+  "UISearchController": {
+   "apps": 10,
+   "uses": 128,
+   "ours": false
+  },
+  "UICollectionReusableView": {
+   "apps": 12,
+   "uses": 119,
+   "ours": true
+  },
+  "UIViewControllerContextTransitioning": {
+   "apps": 12,
+   "uses": 105,
+   "ours": true
+  },
+  "NSItemProvider": {
+   "apps": 13,
+   "uses": 103,
+   "ours": false
+  },
+  "UIImpactFeedbackGenerator": {
+   "apps": 16,
+   "uses": 100,
+   "ours": false
+  },
+  "UICollectionViewFlowLayout": {
+   "apps": 12,
+   "uses": 100,
+   "ours": true
+  },
+  "UIViewControllerAnimatedTransitioning": {
+   "apps": 12,
+   "uses": 97,
+   "ours": true
+  },
+  "UITextViewDelegate": {
+   "apps": 13,
+   "uses": 97,
+   "ours": true
+  },
+  "UINavigationBar": {
+   "apps": 14,
+   "uses": 89,
+   "ours": true
+  },
+  "UIAccessibilityCustomAction": {
+   "apps": 9,
+   "uses": 87,
+   "ours": false
+  },
+  "UIAdaptivePresentationControllerDelegate": {
+   "apps": 11,
+   "uses": 87,
+   "ours": true
+  },
+  "NSToolbarItem": {
+   "apps": 2,
+   "uses": 85,
+   "ours": false
+  },
+  "NSTextAttachment": {
+   "apps": 12,
+   "uses": 83,
+   "ours": false
+  },
+  "UICollectionViewDelegate": {
+   "apps": 14,
+   "uses": 81,
+   "ours": true
+  },
+  "UICollectionViewDataSource": {
+   "apps": 13,
+   "uses": 81,
+   "ours": true
+  },
+  "UIGlassEffect": {
+   "apps": 7,
+   "uses": 79,
+   "ours": false
+  },
+  "UITableViewHeaderFooterView": {
+   "apps": 13,
+   "uses": 78,
+   "ours": true
+  },
+  "UIApplicationShortcutItem": {
+   "apps": 16,
+   "uses": 77,
+   "ours": false
+  },
+  "UIImagePickerController": {
+   "apps": 9,
+   "uses": 75,
+   "ours": false
+  },
+  "UINotificationFeedbackGenerator": {
+   "apps": 11,
+   "uses": 75,
+   "ours": false
+  },
+  "UINavigationBarAppearance": {
+   "apps": 13,
+   "uses": 74,
+   "ours": true
+  },
+  "NSDiffableDataSourceSnapshot": {
+   "apps": 9,
+   "uses": 70,
+   "ours": false
+  },
+  "UIRefreshControl": {
+   "apps": 12,
+   "uses": 68,
+   "ours": true
+  },
+  "UISwipeActionsConfiguration": {
+   "apps": 10,
+   "uses": 67,
+   "ours": false
+  },
+  "UIContextualAction": {
+   "apps": 10,
+   "uses": 67,
+   "ours": false
+  },
+  "UIPinchGestureRecognizer": {
+   "apps": 7,
+   "uses": 64,
+   "ours": false
+  },
+  "UISegmentedControl": {
+   "apps": 11,
+   "uses": 62,
+   "ours": true
+  },
+  "UITabBarController": {
+   "apps": 12,
+   "uses": 61,
+   "ours": true
+  },
+  "UIDropSession": {
+   "apps": 8,
+   "uses": 61,
+   "ours": false
+  },
+  "NSCollectionLayoutSize": {
+   "apps": 7,
+   "uses": 59,
+   "ours": false
+  },
+  "UILayoutGuide": {
+   "apps": 9,
+   "uses": 57,
+   "ours": true
+  },
+  "UIToolbar": {
+   "apps": 9,
+   "uses": 57,
+   "ours": true
+  },
+  "UISlider": {
+   "apps": 13,
+   "uses": 56,
+   "ours": true
+  },
+  "UISwipeGestureRecognizer": {
+   "apps": 10,
+   "uses": 54,
+   "ours": false
+  },
+  "UIDocumentPickerViewController": {
+   "apps": 10,
+   "uses": 51,
+   "ours": false
+  },
+  "NSCollectionLayoutSection": {
+   "apps": 8,
+   "uses": 51,
+   "ours": false
+  },
+  "UIMenuItem": {
+   "apps": 6,
+   "uses": 50,
+   "ours": false
+  },
+  "UISplitViewController": {
+   "apps": 5,
+   "uses": 49,
+   "ours": false
+  },
+  "UIDropInteraction": {
+   "apps": 6,
+   "uses": 48,
+   "ours": false
+  },
+  "UITableViewDiffableDataSource": {
+   "apps": 7,
+   "uses": 47,
+   "ours": false
+  },
+  "UICollectionViewDelegateFlowLayout": {
+   "apps": 10,
+   "uses": 47,
+   "ours": true
+  },
+  "UITabBarItem": {
+   "apps": 8,
+   "uses": 47,
+   "ours": true
+  },
+  "UIPickerView": {
+   "apps": 5,
+   "uses": 46,
+   "ours": true
+  },
+  "UIViewControllerTransitioningDelegate": {
+   "apps": 14,
+   "uses": 46,
+   "ours": true
+  },
+  "NSTextStorage": {
+   "apps": 5,
+   "uses": 45,
+   "ours": false
+  },
+  "UITextRange": {
+   "apps": 4,
+   "uses": 45,
+   "ours": false
+  },
+  "UIMenuController": {
+   "apps": 7,
+   "uses": 45,
+   "ours": false
+  },
+  "UITextPosition": {
+   "apps": 7,
+   "uses": 45,
+   "ours": false
+  },
+  "UIBackgroundConfiguration": {
+   "apps": 5,
+   "uses": 44,
+   "ours": false
+  },
+  "UIContextMenuInteraction": {
+   "apps": 9,
+   "uses": 43,
+   "ours": true
+  },
+  "UISheetPresentationController": {
+   "apps": 9,
+   "uses": 43,
+   "ours": true
+  },
+  "UITraitHorizontalSizeClass": {
+   "apps": 4,
+   "uses": 43,
+   "ours": true
+  },
+  "UINavigationControllerDelegate": {
+   "apps": 14,
+   "uses": 41,
+   "ours": true
+  },
+  "UIDragItem": {
+   "apps": 7,
+   "uses": 41,
+   "ours": false
+  },
+  "NSTextContainer": {
+   "apps": 8,
+   "uses": 40,
+   "ours": false
+  },
+  "UIGraphicsImageRendererFormat": {
+   "apps": 12,
+   "uses": 39,
+   "ours": true
+  },
+  "UITraitVerticalSizeClass": {
+   "apps": 2,
+   "uses": 39,
+   "ours": true
+  },
+  "UISceneSession": {
+   "apps": 10,
+   "uses": 37,
+   "ours": true
+  },
+  "UIStoryboardSegue": {
+   "apps": 6,
+   "uses": 37,
+   "ours": false
+  },
+  "UICollectionViewDiffableDataSource": {
+   "apps": 7,
+   "uses": 36,
+   "ours": false
+  },
+  "UISearchResultsUpdating": {
+   "apps": 9,
+   "uses": 35,
+   "ours": false
+  },
+  "UIProgressView": {
+   "apps": 12,
+   "uses": 35,
+   "ours": true
+  },
+  "UIVisualEffect": {
+   "apps": 5,
+   "uses": 35,
+   "ours": false
+  },
+  "UIPopoverPresentationControllerDelegate": {
+   "apps": 7,
+   "uses": 35,
+   "ours": true
+  },
+  "UICollectionViewDropProposal": {
+   "apps": 5,
+   "uses": 33,
+   "ours": false
+  },
+  "NSParagraphStyle": {
+   "apps": 8,
+   "uses": 33,
+   "ours": true
+  },
+  "UIContentConfiguration": {
+   "apps": 2,
+   "uses": 32,
+   "ours": false
+  },
+  "UICollectionViewCompositionalLayout": {
+   "apps": 8,
+   "uses": 31,
+   "ours": false
+  },
+  "UISearchBarDelegate": {
+   "apps": 9,
+   "uses": 31,
+   "ours": true
+  },
+  "UISceneConfiguration": {
+   "apps": 9,
+   "uses": 31,
+   "ours": false
+  },
+  "NSCollectionLayoutItem": {
+   "apps": 7,
+   "uses": 30,
+   "ours": false
+  },
+  "NSLayoutManager": {
+   "apps": 4,
+   "uses": 30,
+   "ours": false
+  },
+  "UIApplicationDelegate": {
+   "apps": 17,
+   "uses": 29,
+   "ours": true
+  },
+  "UIApplicationShortcutIcon": {
+   "apps": 11,
+   "uses": 29,
+   "ours": false
+  },
+  "UIDragSession": {
+   "apps": 7,
+   "uses": 27,
+   "ours": false
+  },
+  "NSCollectionLayoutGroup": {
+   "apps": 7,
+   "uses": 27,
+   "ours": false
+  },
+  "UIPercentDrivenInteractiveTransition": {
+   "apps": 5,
+   "uses": 27,
+   "ours": false
+  },
+  "UIPageControl": {
+   "apps": 8,
+   "uses": 27,
+   "ours": true
+  },
+  "UIPageViewControllerDelegate": {
+   "apps": 9,
+   "uses": 26,
+   "ours": false
+  },
+  "UIScreenEdgePanGestureRecognizer": {
+   "apps": 9,
+   "uses": 26,
+   "ours": true
+  },
+  "UIPopoverPresentationController": {
+   "apps": 5,
+   "uses": 26,
+   "ours": true
+  },
+  "UITabBar": {
+   "apps": 9,
+   "uses": 25,
+   "ours": true
+  },
+  "UIEditMenuInteraction": {
+   "apps": 5,
+   "uses": 24,
+   "ours": false
+  },
+  "UIActivityItemSource": {
+   "apps": 8,
+   "uses": 23,
+   "ours": true
+  },
+  "UIPointerInteraction": {
+   "apps": 6,
+   "uses": 23,
+   "ours": false
+  },
+  "UIDeferredMenuElement": {
+   "apps": 4,
+   "uses": 23,
+   "ours": true
+  },
+  "UIDocumentPickerDelegate": {
+   "apps": 10,
+   "uses": 22,
+   "ours": false
+  },
+  "UIContextMenuInteractionCommitAnimating": {
+   "apps": 9,
+   "uses": 22,
+   "ours": true
+  },
+  "UIPointerStyle": {
+   "apps": 5,
+   "uses": 22,
+   "ours": false
+  },
+  "UIStepper": {
+   "apps": 1,
+   "uses": 22,
+   "ours": true
+  },
+  "UISelectionFeedbackGenerator": {
+   "apps": 11,
+   "uses": 21,
+   "ours": false
+  },
+  "UITargetedPreview": {
+   "apps": 7,
+   "uses": 21,
+   "ours": true
+  },
+  "UIPageViewControllerDataSource": {
+   "apps": 9,
+   "uses": 21,
+   "ours": false
+  },
+  "UINavigationItem": {
+   "apps": 7,
+   "uses": 21,
+   "ours": true
+  },
+  "UITextItem": {
+   "apps": 3,
+   "uses": 21,
+   "ours": false
+  },
+  "UICollectionViewListCell": {
+   "apps": 2,
+   "uses": 21,
+   "ours": false
+  },
+  "NSCollectionLayoutEnvironment": {
+   "apps": 2,
+   "uses": 21,
+   "ours": false
+  },
+  "UIWindowSceneDelegate": {
+   "apps": 10,
+   "uses": 20,
+   "ours": true
+  },
+  "UISearchControllerDelegate": {
+   "apps": 8,
+   "uses": 20,
+   "ours": false
+  },
+  "UISheetPresentationControllerDelegate": {
+   "apps": 5,
+   "uses": 19,
+   "ours": true
+  },
+  "UIDropProposal": {
+   "apps": 5,
+   "uses": 19,
+   "ours": false
+  },
+  "UIListContentConfiguration": {
+   "apps": 5,
+   "uses": 17,
+   "ours": false
+  },
+  "UIContentView": {
+   "apps": 2,
+   "uses": 17,
+   "ours": false
+  },
+  "NSLayoutYAxisAnchor": {
+   "apps": 6,
+   "uses": 17,
+   "ours": true
+  },
+  "UIEditMenuConfiguration": {
+   "apps": 4,
+   "uses": 17,
+   "ours": false
+  },
+  "UITraitUserInterfaceStyle": {
+   "apps": 7,
+   "uses": 16,
+   "ours": true
+  },
+  "NSLayoutXAxisAnchor": {
+   "apps": 4,
+   "uses": 16,
+   "ours": true
+  },
+  "UIRotationGestureRecognizer": {
+   "apps": 1,
+   "uses": 16,
+   "ours": false
+  },
+  "UIInterpolatingMotionEffect": {
+   "apps": 4,
+   "uses": 16,
+   "ours": false
+  },
+  "UIDatePicker": {
+   "apps": 5,
+   "uses": 15,
+   "ours": false
+  },
+  "UITextInputMode": {
+   "apps": 5,
+   "uses": 15,
+   "ours": false
+  },
+  "UICellConfigurationState": {
+   "apps": 2,
+   "uses": 14,
+   "ours": false
+  },
+  "UICollectionViewDropCoordinator": {
+   "apps": 5,
+   "uses": 14,
+   "ours": false
+  },
+  "UIViewControllerInteractiveTransitioning": {
+   "apps": 4,
+   "uses": 14,
+   "ours": false
+  },
+  "UIBarButtonItemGroup": {
+   "apps": 5,
+   "uses": 14,
+   "ours": false
+  },
+  "UICoordinateSpace": {
+   "apps": 2,
+   "uses": 14,
+   "ours": false
+  },
+  "UIScrollEdgeElementContainerInteraction": {
+   "apps": 2,
+   "uses": 13,
+   "ours": false
+  },
+  "UICollectionViewLayoutInvalidationContext": {
+   "apps": 3,
+   "uses": 13,
+   "ours": false
+  },
+  "UITabBarAppearance": {
+   "apps": 6,
+   "uses": 13,
+   "ours": true
+  },
+  "UIPrintInfo": {
+   "apps": 5,
+   "uses": 12,
+   "ours": false
+  },
+  "UILargeContentViewerInteraction": {
+   "apps": 2,
+   "uses": 12,
+   "ours": false
+  },
+  "UIUserActivityRestoring": {
+   "apps": 9,
+   "uses": 11,
+   "ours": false
+  },
+  "UIPointerRegion": {
+   "apps": 5,
+   "uses": 11,
+   "ours": false
+  },
+  "UIPopoverPresentationControllerSourceItem": {
+   "apps": 2,
+   "uses": 11,
+   "ours": false
+  },
+  "UICollectionViewController": {
+   "apps": 7,
+   "uses": 10,
+   "ours": false
+  },
+  "UIContextMenuInteractionDelegate": {
+   "apps": 8,
+   "uses": 10,
+   "ours": true
+  },
+  "UICollectionViewDropDelegate": {
+   "apps": 5,
+   "uses": 10,
+   "ours": false
+  },
+  "UICollectionViewDragDelegate": {
+   "apps": 5,
+   "uses": 10,
+   "ours": false
+  },
+  "UIDragInteraction": {
+   "apps": 4,
+   "uses": 10,
+   "ours": false
+  },
+  "NSIndexPath": {
+   "apps": 5,
+   "uses": 10,
+   "ours": false
+  },
+  "UIDropInteractionDelegate": {
+   "apps": 6,
+   "uses": 10,
+   "ours": false
+  },
+  "UIFindSession": {
+   "apps": 1,
+   "uses": 10,
+   "ours": false
+  },
+  "UIMutableApplicationShortcutItem": {
+   "apps": 3,
+   "uses": 10,
+   "ours": false
+  },
+  "UIPressesEvent": {
+   "apps": 3,
+   "uses": 10,
+   "ours": true
+  },
+  "UIOpenURLContext": {
+   "apps": 7,
+   "uses": 9,
+   "ours": false
+  },
+  "UIImagePickerControllerDelegate": {
+   "apps": 7,
+   "uses": 9,
+   "ours": false
+  },
+  "UIDragPreviewParameters": {
+   "apps": 3,
+   "uses": 9,
+   "ours": false
+  },
+  "UIInputView": {
+   "apps": 5,
+   "uses": 9,
+   "ours": false
+  },
+  "UIPointerInteractionDelegate": {
+   "apps": 5,
+   "uses": 9,
+   "ours": false
+  },
+  "NSTextContentStorage": {
+   "apps": 2,
+   "uses": 9,
+   "ours": false
+  },
+  "UIPickerViewDataSource": {
+   "apps": 5,
+   "uses": 8,
+   "ours": true
+  },
+  "UIPickerViewDelegate": {
+   "apps": 5,
+   "uses": 8,
+   "ours": true
+  },
+  "UIPrintInteractionController": {
+   "apps": 4,
+   "uses": 8,
+   "ours": false
+  },
+  "NSAdaptiveImageGlyph": {
+   "apps": 2,
+   "uses": 8,
+   "ours": false
+  },
+  "UIVibrancyEffect": {
+   "apps": 4,
+   "uses": 8,
+   "ours": false
+  },
+  "UIConfigurationState": {
+   "apps": 2,
+   "uses": 8,
+   "ours": false
+  },
+  "UIContextMenuInteractionAnimating": {
+   "apps": 5,
+   "uses": 8,
+   "ours": true
+  },
+  "NSTextLocation": {
+   "apps": 3,
+   "uses": 8,
+   "ours": false
+  },
+  "UIViewControllerTransitionCoordinatorContext": {
+   "apps": 3,
+   "uses": 8,
+   "ours": false
+  },
+  "NSCollectionLayoutBoundarySupplementaryItem": {
+   "apps": 4,
+   "uses": 8,
+   "ours": false
+  },
+  "UICollectionLayoutListConfiguration": {
+   "apps": 2,
+   "uses": 7,
+   "ours": false
+  },
+  "UITextInput": {
+   "apps": 4,
+   "uses": 7,
+   "ours": false
+  },
+  "UITabBarControllerDelegate": {
+   "apps": 7,
+   "uses": 7,
+   "ours": true
+  },
+  "NSTextLayoutManager": {
+   "apps": 3,
+   "uses": 7,
+   "ours": false
+  },
+  "NSTextRange": {
+   "apps": 2,
+   "uses": 7,
+   "ours": false
+  },
+  "UIContentContainer": {
+   "apps": 6,
+   "uses": 7,
+   "ours": false
+  },
+  "NSCollectionLayoutDimension": {
+   "apps": 2,
+   "uses": 7,
+   "ours": false
+  },
+  "UILocalizedIndexedCollation": {
+   "apps": 2,
+   "uses": 6,
+   "ours": false
+  },
+  "UIEditMenuInteractionDelegate": {
+   "apps": 5,
+   "uses": 6,
+   "ours": false
+  },
+  "UIGlassContainerEffect": {
+   "apps": 2,
+   "uses": 6,
+   "ours": false
+  },
+  "UIReferenceLibraryViewController": {
+   "apps": 1,
+   "uses": 6,
+   "ours": false
+  },
+  "UIAccessibilityElement": {
+   "apps": 3,
+   "uses": 6,
+   "ours": false
+  },
+  "UIMotionEffectGroup": {
+   "apps": 4,
+   "uses": 6,
+   "ours": false
+  },
+  "NSTextLayoutFragment": {
+   "apps": 1,
+   "uses": 6,
+   "ours": false
+  },
+  "UIMenuBuilder": {
+   "apps": 3,
+   "uses": 6,
+   "ours": false
+  },
+  "UITraitLegibilityWeight": {
+   "apps": 1,
+   "uses": 6,
+   "ours": false
+  },
+  "UISplitViewControllerDelegate": {
+   "apps": 5,
+   "uses": 5,
+   "ours": false
+  },
+  "NSMenuToolbarItem": {
+   "apps": 2,
+   "uses": 5,
+   "ours": false
+  },
+  "UITab": {
+   "apps": 2,
+   "uses": 5,
+   "ours": false
+  },
+  "UIInputViewAudioFeedback": {
+   "apps": 2,
+   "uses": 5,
+   "ours": false
+  },
+  "UITextChecker": {
+   "apps": 2,
+   "uses": 5,
+   "ours": false
+  },
+  "UICollectionViewDataSourcePrefetching": {
+   "apps": 4,
+   "uses": 5,
+   "ours": false
+  },
+  "NSLayoutDimension": {
+   "apps": 2,
+   "uses": 5,
+   "ours": true
+  },
+  "UIImageAsset": {
+   "apps": 2,
+   "uses": 5,
+   "ours": false
+  },
+  "UIDocumentInteractionControllerDelegate": {
+   "apps": 3,
+   "uses": 5,
+   "ours": false
+  },
+  "NSCollectionLayoutSpacing": {
+   "apps": 1,
+   "uses": 5,
+   "ours": false
+  },
+  "NSLayoutAnchor": {
+   "apps": 2,
+   "uses": 5,
+   "ours": true
+  },
+  "UICellAccessory": {
+   "apps": 1,
+   "uses": 5,
+   "ours": false
+  },
+  "UICalendarView": {
+   "apps": 1,
+   "uses": 5,
+   "ours": false
+  },
+  "UIPreviewParameters": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "UIKeyInput": {
+   "apps": 3,
+   "uses": 4,
+   "ours": true
+  },
+  "UIDragInteractionDelegate": {
+   "apps": 3,
+   "uses": 4,
+   "ours": false
+  },
+  "UISpringTimingParameters": {
+   "apps": 4,
+   "uses": 4,
+   "ours": false
+  },
+  "UITextSelectionRect": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "NSLayoutManagerDelegate": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "UIPencilInteraction": {
+   "apps": 1,
+   "uses": 4,
+   "ours": false
+  },
+  "NSTextAttachmentViewProvider": {
+   "apps": 3,
+   "uses": 4,
+   "ours": false
+  },
+  "UITextInputPasswordRules": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "NSTextParagraph": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "UITextSelectionDisplayInteraction": {
+   "apps": 1,
+   "uses": 4,
+   "ours": false
+  },
+  "UICornerRadius": {
+   "apps": 1,
+   "uses": 4,
+   "ours": false
+  },
+  "UIResponderStandardEditActions": {
+   "apps": 2,
+   "uses": 4,
+   "ours": false
+  },
+  "UIFocusGuide": {
+   "apps": 1,
+   "uses": 4,
+   "ours": false
+  },
+  "UISearchTextField": {
+   "apps": 2,
+   "uses": 3,
+   "ours": true
+  },
+  "UIDragPreview": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIInteraction": {
+   "apps": 2,
+   "uses": 3,
+   "ours": true
+  },
+  "UIWebView": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIPointerShape": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UITextInputTokenizer": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UIEditMenuInteractionAnimating": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UITextLoupeSession": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "NSDataAsset": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UITableViewDataSourcePrefetching": {
+   "apps": 3,
+   "uses": 3,
+   "ours": false
+  },
+  "UICollectionViewFlowLayoutInvalidationContext": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIAttachmentBehavior": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UIScreenshotServiceDelegate": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIViewImplicitlyAnimating": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UITableViewDragDelegate": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UITableViewDropProposal": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UIPrintPageRenderer": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIPasteControl": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UIBarButtonItemAppearance": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UIPrintFormatter": {
+   "apps": 2,
+   "uses": 3,
+   "ours": false
+  },
+  "UICommand": {
+   "apps": 1,
+   "uses": 3,
+   "ours": true
+  },
+  "UIFocusAnimationCoordinator": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UICollectionViewFocusUpdateContext": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UITableViewRowAction": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UITraitDisplayScale": {
+   "apps": 1,
+   "uses": 3,
+   "ours": true
+  },
+  "UICalendarSelectionSingleDate": {
+   "apps": 1,
+   "uses": 3,
+   "ours": false
+  },
+  "UICornerConfiguration": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UINavigationBarDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSTextList": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIFindInteractionDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UITextSearchOptions": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIPointerInteractionAnimating": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIScrollViewAccessibilityDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSTextStorageDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSTextContentStorageDelegate": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UITextInputDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UISearchToken": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSTextTab": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIDynamicAnimator": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UISnapBehavior": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIPushBehavior": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIScreenshotService": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UIBarItem": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UICollectionViewCompositionalLayoutConfiguration": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIToolbarDelegate": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIToolbarAppearance": {
+   "apps": 1,
+   "uses": 2,
+   "ours": true
+  },
+  "UITableViewDropDelegate": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UITableViewDropCoordinator": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UIViewPrintFormatter": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSCollectionLayoutSupplementaryItem": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "NSCollectionLayoutAnchor": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIPointerEffect": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UIMenuSystem": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UITraitUserInterfaceIdiom": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UITabBarItemAppearance": {
+   "apps": 2,
+   "uses": 2,
+   "ours": false
+  },
+  "UIColorPickerViewController": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIViewControllerRestoration": {
+   "apps": 1,
+   "uses": 2,
+   "ours": false
+  },
+  "UIContentSizeCategoryAdjusting": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIBarPositioning": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "NSStringDrawingContext": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIPreviewTarget": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UICubicTimingParameters": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIPencilInteractionDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "NSTextLayoutManagerDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "NSTextElement": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITextCursorView": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITextSelectionDisplayInteractionDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UILocalNotification": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIDocumentMenuViewController": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIPasteConfiguration": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UICommandAlternate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIFindInteraction": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "NSDiffableDataSourceSectionSnapshot": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITitlebar": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITabBarDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": true
+  },
+  "UIGraphicsImageRendererContext": {
+   "apps": 1,
+   "uses": 1,
+   "ours": true
+  },
+  "NSCollectionLayoutEdgeSpacing": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITraitChangeRegistration": {
+   "apps": 1,
+   "uses": 1,
+   "ours": true
+  },
+  "UIActionSheetDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIColorPickerViewControllerDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIWindowSceneDestructionRequestOptions": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITabAccessory": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITraitTabAccessoryEnvironment": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UISceneDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": true
+  },
+  "UISimpleTextPrintFormatter": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIFocusUpdateContext": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIFeedbackGenerator": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIScrollEdgeEffect": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIBackgroundExtensionView": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UITraitLayoutDirection": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIScribbleInteractionDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UIScribbleInteraction": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UICollectionViewUpdateItem": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UICalendarViewDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  },
+  "UICalendarSelectionSingleDateDelegate": {
+   "apps": 1,
+   "uses": 1,
+   "ours": false
+  }
+ }
+}
