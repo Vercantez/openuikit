@@ -34,7 +34,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-@MainActor
+@preconcurrency @MainActor
 open class UIImageView: UIView {
     open var image: UIImage?
 

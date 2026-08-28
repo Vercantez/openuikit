@@ -43,7 +43,7 @@ public struct UITransitionContextViewKey: Hashable, Sendable {
 
 /// What UIKit hands an animator: the container to animate inside, the two
 /// controllers/views, their start and end frames, and the completion hook.
-@MainActor
+@preconcurrency @MainActor
 public protocol UIViewControllerContextTransitioning: AnyObject {
     var containerView: UIView { get }
     var isAnimated: Bool { get }
@@ -61,7 +61,7 @@ public protocol UIViewControllerContextTransitioning: AnyObject {
 }
 
 /// An object that performs one transition's animation.
-@MainActor
+@preconcurrency @MainActor
 public protocol UIViewControllerAnimatedTransitioning: AnyObject {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
@@ -74,7 +74,7 @@ extension UIViewControllerAnimatedTransitioning {
 
 /// An app's hook for a modal presentation: custom animators and/or a custom
 /// `UIPresentationController`.
-@MainActor
+@preconcurrency @MainActor
 public protocol UIViewControllerTransitioningDelegate: AnyObject {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
@@ -103,7 +103,7 @@ extension UIViewControllerTransitioningDelegate {
 /// presentation container the presentation controller installed; the "to"
 /// view on a presentation is the presentation controller's `presentedView`
 /// (the sheet platter), which is what the built-in animator moves.
-@MainActor
+@preconcurrency @MainActor
 final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
     let containerView: UIView
     let isAnimated: Bool
@@ -164,7 +164,7 @@ final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
 
 /// An app's hook for push/pop animations. UIKit's protocol, minus the
 /// interactive-controller member — see the file header for why.
-@MainActor
+@preconcurrency @MainActor
 public protocol UINavigationControllerDelegate: AnyObject {
     func navigationController(_ navigationController: UINavigationController,
                               willShow viewController: UIViewController, animated: Bool)
@@ -190,7 +190,7 @@ extension UINavigationControllerDelegate {
 /// The context for one push or pop. `containerView` is the navigation
 /// controller's clipped content area — the same view the built-in slide moves
 /// its two child views inside.
-@MainActor
+@preconcurrency @MainActor
 final class _UINavigationTransitionContext: UIViewControllerContextTransitioning {
     unowned let nav: UINavigationController
     let push: Bool
@@ -253,7 +253,7 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
 /// completion is owned by `UINavigationController.stepTransition(to:)`. A
 /// custom animator, which has no scrub hook, finishes through
 /// `context.completeTransition(_:)` like UIKit's.
-@MainActor
+@preconcurrency @MainActor
 final class _UINavigationSlideAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
         UINavigationController.transitionDuration

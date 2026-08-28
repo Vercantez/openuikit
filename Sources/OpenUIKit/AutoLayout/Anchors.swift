@@ -21,7 +21,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-@MainActor
+@preconcurrency @MainActor
 public class NSLayoutAnchor {
     /// The anchored object: a `UIView` or a ``UILayoutGuide``. UIKit types
     /// this as `Any` on `NSLayoutConstraint`; both kinds get the same four
@@ -46,7 +46,7 @@ public class NSLayoutAnchor {
 }
 
 /// Horizontal-position anchors (left/right/leading/trailing/centerX).
-@MainActor
+@preconcurrency @MainActor
 public final class NSLayoutXAxisAnchor: NSLayoutAnchor {
     public func constraint(equalTo anchor: NSLayoutXAxisAnchor,
                            constant: CGFloat = 0) -> NSLayoutConstraint {
@@ -63,7 +63,7 @@ public final class NSLayoutXAxisAnchor: NSLayoutAnchor {
 }
 
 /// Vertical-position anchors (top/bottom/centerY/baselines).
-@MainActor
+@preconcurrency @MainActor
 public final class NSLayoutYAxisAnchor: NSLayoutAnchor {
     public func constraint(equalTo anchor: NSLayoutYAxisAnchor,
                            constant: CGFloat = 0) -> NSLayoutConstraint {
@@ -81,7 +81,7 @@ public final class NSLayoutYAxisAnchor: NSLayoutAnchor {
 
 /// Size anchors (width/height): dimension-to-dimension with multiplier, or
 /// constant-only.
-@MainActor
+@preconcurrency @MainActor
 public final class NSLayoutDimension: NSLayoutAnchor {
     public func constraint(equalTo anchor: NSLayoutDimension, multiplier: CGFloat = 1,
                            constant: CGFloat = 0) -> NSLayoutConstraint {

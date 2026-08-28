@@ -18,12 +18,12 @@
 
 /// Content container (same class name real UIKit dumps — compare.py prunes
 /// this subtree on both sides).
-@MainActor
+@preconcurrency @MainActor
 final class UITransitionView: UIView {}
-@MainActor
+@preconcurrency @MainActor
 final class UIViewControllerWrapperView: UIView {}
 
-@MainActor
+@preconcurrency @MainActor
 open class UITabBarController: UIViewController, UITabBarDelegate {
     public let tabBar = UITabBar()
     let transitionView = UITransitionView()
@@ -177,7 +177,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
 /// `animationControllerForTransitionFrom` and the interactive variant are
 /// declared but never consulted — tab switches here are not animated
 /// (docs/KNOWN_GAPS.md).
-@MainActor
+@preconcurrency @MainActor
 public protocol UITabBarControllerDelegate: AnyObject {
     func tabBarController(_ tabBarController: UITabBarController,
                           shouldSelect viewController: UIViewController) -> Bool

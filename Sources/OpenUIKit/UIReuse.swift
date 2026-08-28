@@ -20,7 +20,7 @@
 /// Internal on purpose — real UIKit has no such protocol (it uses
 /// `-prepareForReuse` by convention on unrelated classes), so exporting one
 /// would add API an app cannot have written against.
-@MainActor
+@preconcurrency @MainActor
 protocol ReusableView: AnyObject {
     var reuseIdentifier: String? { get }
     func prepareForReuse()
@@ -35,7 +35,7 @@ let reusePoolCapacityPerIdentifier = 64
 /// Registered factories + per-identifier recycle pools for one family of
 /// reusable views (a table's cells, a collection's cells, a collection's
 /// supplementary views of one kind).
-@MainActor
+@preconcurrency @MainActor
 final class ReuseRegistry<V: ReusableView> {
     private var pools: [String: [V]] = [:]
     private var factories: [String: (String) -> V] = [:]

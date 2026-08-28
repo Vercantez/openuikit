@@ -122,7 +122,7 @@ public struct NSDirectionalEdgeInsets: Equatable, Sendable {
 /// gives it the same four variables a view gets — the only difference is
 /// that a guide has no frame to write back to, so the solution lands in
 /// ``layoutFrame`` instead.
-@MainActor
+@preconcurrency @MainActor
 public final class UILayoutGuide {
     /// The view whose coordinate space ``layoutFrame`` is expressed in. Set
     /// by `UIView.addLayoutGuide(_:)`.
@@ -431,7 +431,7 @@ extension UIView {
 // deserves. `AnyObject`, not UIKit's `NSObjectProtocol`, because OpenUIKit
 // has no NSObject (UISelector.swift); the class constraint is what matters,
 // and it is what SnapKit's `target: AnyObject?` needs.
-@MainActor
+@preconcurrency @MainActor
 public protocol UILayoutSupport: AnyObject {
     var length: CGFloat { get }
     var topAnchor: NSLayoutYAxisAnchor { get }

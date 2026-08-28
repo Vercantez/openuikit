@@ -39,7 +39,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-@MainActor
+@preconcurrency @MainActor
 open class UIPageControl: UIControl {
     static let contentHeight: CGFloat = 26
     static let slotPitch: CGFloat = 18

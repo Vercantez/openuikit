@@ -87,7 +87,7 @@ extension Selector {
 ///             Self.actions.perform(name, on: self, with: sender)
 ///         }
 ///     }
-@MainActor
+@preconcurrency @MainActor
 public protocol SelectorDispatching: AnyObject {
     /// Invoke the method the selector names. Return `false` if unknown --
     /// the caller reports it through ``SelectorDispatch/onUnresolved``.
@@ -175,7 +175,7 @@ public struct ActionTable<Owner: AnyObject>: ExpressibleByArrayLiteral {
 /// no runtime to throw it from, so a miss is silent by default (matching
 /// UIKit's behaviour for a nil target) and observable through
 /// ``onUnresolved`` -- which the test suite and `openhost` install.
-@MainActor
+@preconcurrency @MainActor
 public enum SelectorDispatch {
     /// Called with (target, selector name) whenever a send finds no method.
     /// `nil` target means the weak target had already deallocated.

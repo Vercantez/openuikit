@@ -22,7 +22,7 @@
 //   POINT (ties away from zero) and its size to the nearest 0.5 pt (ties
 //   away from zero), applied AFTER solving with no error redistribution.
 
-@MainActor
+@preconcurrency @MainActor
 enum LayoutEngine {
     /// Global count of active constraints — fast bail-out so hierarchies
     /// without Auto Layout pay one integer compare per layoutIfNeeded.

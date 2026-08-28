@@ -169,7 +169,7 @@ public enum UIScreenMetrics {
 
 /// The alert's view: the blurred platter with its rounded corners. Built
 /// entirely in `UIAlertController._layoutCard`.
-@MainActor
+@preconcurrency @MainActor
 final class _UIAlertCardView: UIView {
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -191,7 +191,7 @@ final class _UIAlertCardView: UIView {
 /// card's shape reproduces that: the ring path is the view's bounds wound one
 /// way plus the card's rounded rect wound the other, which the non-zero
 /// winding rule turns into "everything except the card".
-@MainActor
+@preconcurrency @MainActor
 final class _UIAlertShadowView: UIView {
     /// The card's rect in this view's coordinates.
     var cardRect: CGRect = .zero
@@ -254,7 +254,7 @@ final class _UIAlertShadowView: UIView {
 }
 
 /// One action pill. A UIControl so a tap runs the action and dismisses.
-@MainActor
+@preconcurrency @MainActor
 final class _UIAlertActionView: UIControl {
     let action: UIAlertAction
     let label = UILabel()
@@ -300,7 +300,7 @@ final class _UIAlertActionView: UIControl {
 
 // MARK: - UIAlertController
 
-@MainActor
+@preconcurrency @MainActor
 open class UIAlertController: UIViewController {
     public enum Style: Int, Sendable {
         case actionSheet = 0
@@ -531,7 +531,7 @@ open class UIAlertController: UIViewController {
 
 /// Owns the dim behind an alert and sizes the card. The card IS the
 /// presented controller's view, so `presentedView` is the default.
-@MainActor
+@preconcurrency @MainActor
 final class _UIAlertPresentationController: UIPresentationController {
     let dim = _UIDimmingView()
     let shadow = _UIAlertShadowView()
@@ -595,7 +595,7 @@ final class _UIAlertPresentationController: UIPresentationController {
 /// MEASURED alert transition: only the dim animates, on a critically damped
 /// spring. The card carries no animation on its layer or on any ancestor —
 /// see the file header and docs/KNOWN_GAPS.md.
-@MainActor
+@preconcurrency @MainActor
 final class _UIAlertAnimator: UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     init(presenting: Bool) { self.presenting = presenting }

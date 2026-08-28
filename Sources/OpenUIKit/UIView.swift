@@ -31,7 +31,7 @@ public enum UIViewContentMode: Sendable {
 }
 
 /// Minimal CALayer facade: UIKit-visible layer properties live here.
-@MainActor
+@preconcurrency @MainActor
 public final class CALayer {
     public weak var owner: UIView?
     public var cornerRadius: CGFloat = 0 {
@@ -55,7 +55,7 @@ public final class CALayer {
     init(owner: UIView) { self.owner = owner }
 }
 
-@MainActor
+@preconcurrency @MainActor
 open class UIView: UIResponder {
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
     public var center: CGPoint = .zero {

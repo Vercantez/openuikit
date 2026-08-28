@@ -47,7 +47,7 @@
 /// HID stack — the host synthesizes presses from its own key events, the
 /// same way it synthesizes touches (see `UIWindow.sendKey`, which stays the
 /// text-input path and is deliberately NOT routed through presses).
-@MainActor
+@preconcurrency @MainActor
 public final class UIPress {
     public enum Phase: Sendable { case began, changed, ended, cancelled }
     public let phase: Phase
@@ -76,7 +76,7 @@ extension UIPress: Hashable {
 }
 
 /// Event carrying a set of `UIPress`es (UIKit's UIPressesEvent).
-@MainActor
+@preconcurrency @MainActor
 public final class UIPressesEvent {
     public let timestamp: TimeInterval
     public let allPresses: Set<UIPress>
@@ -91,7 +91,7 @@ public final class UIPressesEvent {
 
 // MARK: - UIResponder
 
-@MainActor
+@preconcurrency @MainActor
 open class UIResponder {
     public init() {}
 

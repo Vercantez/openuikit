@@ -39,6 +39,48 @@ runs each). Renders are byte-identical — 108/108 scenes, 9/9 traces, 737
 tests (5 new, `Tests/OpenUIKitTests/ActorIsolationTests.swift`, which fail to
 **compile** if the isolation regresses), and `scripts/linux_verify.sh` still 162/162 byte-identical frames.
 
+### `@preconcurrency`: the half of the SDK's annotation M15 left off (2026-08-28)
+
+M15 put `@MainActor` exactly where the SDK puts it and stopped there. The SDK
+writes something stronger, and the difference is not cosmetic: UIKit's classes
+are marked `NS_SWIFT_UI_ACTOR` in **Objective-C headers**, and every Swift
+declaration imported from Objective-C is implicitly `@preconcurrency`. So the
+SDK's contract is `@preconcurrency @MainActor`, and OpenUIKit's was
+`@MainActor` alone.
+
+What that costs, measured rather than reasoned:
+
+| | SnapKit 250529be vs … | errors |
+|---|---|---|
+| the real iOS 26.1 SDK, same swiftc, same flags | | **0** (and 0 warnings) |
+| OpenUIKit at 4f76a8c | | 218 |
+| OpenUIKit with the type-level gaps fixed, `@MainActor` alone | | 94 |
+| the same tree, `@preconcurrency @MainActor` | | **2** |
+
+92 of those 94 were `main actor-isolated … from a nonisolated context`
+errors on code the real SDK accepts **silently**. Nothing about SnapKit is
+unusual; it is ordinary Swift-5-language-mode source, and that is the mode
+essentially every shipping app and dependency compiles in.
+
+The mechanism, probed directly rather than assumed: in Swift 5 language mode
+`@preconcurrency` on a declaration makes an isolation violation by a client
+in another module **silent**, and inside the declaring module a **warning**
+instead of an error. Enforcement in the Swift 6 language mode is unchanged,
+and there is no runtime component at all — the attribute only moves
+diagnostics.
+
+So all 174 `@MainActor` declarations in `Sources/OpenUIKit` carry
+`@preconcurrency` as of this change. Read it as transcription, not
+relaxation: it is the second half of an annotation the oracle always had.
+
+**What it costs us.** Inside OpenUIKit, an isolation mistake now warns where
+it used to error. `ActorIsolationTests` still compiles and still fails on a
+regression that *removes* isolation — the annotation is still there, and
+Swift-6-mode checking still sees it — but it will no longer catch a
+nonisolated-context violation written inside the library. Gates on the
+change: 108/108 scenes, 9/9 traces, 765 tests, and all 162 rendered PNGs
+**byte-identical** to the pre-change tree.
+
 ### The three places the isolation boundary is crossed, and why
 
 All three are `MainActor.assumeIsolated`. `assumeIsolated` is a **checked**

@@ -73,7 +73,7 @@ extension UIApplication {
 /// UIKit's app delegate protocol. Every method has a default no-op
 /// implementation (UIKit gets that from ObjC `@optional`), so an app
 /// delegate implements only what it cares about.
-@MainActor
+@preconcurrency @MainActor
 public protocol UIApplicationDelegate: AnyObject {
     /// So the delegate can be created from its class NAME, which is how a real
     /// iOS binary launches: `@main` passes `NSStringFromClass(AppDelegate.self)`
@@ -111,7 +111,7 @@ extension UIApplicationDelegate {
 
 // MARK: - UIApplication
 
-@MainActor
+@preconcurrency @MainActor
 open class UIApplication: UIResponder {
     /// The application object. Apps use this; constructing another
     /// UIApplication is meaningless (UIKit traps on it — we merely ignore
@@ -345,7 +345,7 @@ open class UIApplication: UIResponder {
 /// file header). The host then runs its own loop and drives the remaining
 /// lifecycle with `app._hostDidBecomeActive()` / `_hostWillTerminate()`.
 @discardableResult
-@MainActor
+@preconcurrency @MainActor
 public func UIApplicationMain(delegate: UIApplicationDelegate,
                               launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil)
     -> UIApplication {
@@ -366,7 +366,7 @@ public enum UISceneActivationState: Int, Sendable {
 /// A scene session. OpenUIKit has no state restoration and no session
 /// persistence: the identifier is whatever the creator supplies and the
 /// role is carried for app code that switches on it.
-@MainActor
+@preconcurrency @MainActor
 public final class UISceneSession {
     public struct Role: Hashable, RawRepresentable, Sendable {
         public let rawValue: String
@@ -388,12 +388,12 @@ public final class UISceneSession {
 
 /// Options passed to `scene(_:willConnectTo:options:)`. Empty here — there
 /// is no launch surface to describe.
-@MainActor
+@preconcurrency @MainActor
 public final class UISceneConnectionOptions {
     public init() {}
 }
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UISceneDelegate: AnyObject {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession,
                options connectionOptions: UISceneConnectionOptions)
@@ -414,7 +414,7 @@ extension UISceneDelegate {
     public func sceneDidEnterBackground(_ scene: UIScene) {}
 }
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UIWindowSceneDelegate: UISceneDelegate {
     var window: UIWindow? { get set }
 }
@@ -422,7 +422,7 @@ public protocol UIWindowSceneDelegate: UISceneDelegate {
 /// A scene. Minimal by design: OpenUIKit's hosts boot a plain UIWindow, and
 /// scenes exist so scene-shaped app code (`class SceneDelegate: UIResponder,
 /// UIWindowSceneDelegate`) compiles and receives its callbacks.
-@MainActor
+@preconcurrency @MainActor
 open class UIScene: UIResponder {
     public let session: UISceneSession
     public weak var delegate: UISceneDelegate?
@@ -456,7 +456,7 @@ extension UIScene: Hashable {
     }
 }
 
-@MainActor
+@preconcurrency @MainActor
 open class UIWindowScene: UIScene {
     /// Single-display: always `UIScreen.main`.
     public var screen: UIScreen { .main }

@@ -79,7 +79,7 @@
 
 import CQuartz
 
-@MainActor
+@preconcurrency @MainActor
 public enum LayerBridge {
     // MARK: Entry
 

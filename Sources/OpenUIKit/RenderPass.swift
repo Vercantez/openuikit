@@ -17,7 +17,7 @@
 // transform is non-identity and not a pure translation, its background and
 // border fills use hard (0/1 threshold at 0.5 coverage) edges.
 
-@MainActor
+@preconcurrency @MainActor
 public enum UIRenderer {
     /// CALayer's cornerRadius path, WITHOUT clamping the radius.
     ///

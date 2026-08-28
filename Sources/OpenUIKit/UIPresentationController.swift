@@ -23,7 +23,7 @@
 // is `unowned` to avoid a cycle. The presentation controller never outlives
 // the controller it presents.
 
-@MainActor
+@preconcurrency @MainActor
 open class UIPresentationController {
     /// The controller being presented. See the LIFETIME NOTE above.
     public unowned let presentedViewController: UIViewController

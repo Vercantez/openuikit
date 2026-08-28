@@ -129,13 +129,13 @@
 //     — an offscreen picker receives no gesture — and closing it needs the
 //     Simulator drag route (docs/KNOWN_GAPS.md).
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UIPickerViewDataSource: AnyObject {
     func numberOfComponents(in pickerView: UIPickerView) -> Int
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
 }
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UIPickerViewDelegate: AnyObject {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int,
                     forComponent component: Int) -> String?
@@ -159,7 +159,7 @@ extension UIPickerViewDelegate {
                            inComponent component: Int) {}
 }
 
-@MainActor
+@preconcurrency @MainActor
 open class UIPickerView: UIView {
     // MARK: Measured constants (file header)
 

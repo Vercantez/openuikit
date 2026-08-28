@@ -9,7 +9,7 @@
 // `TimeInterval` used to be declared here as `= Double`. It is Foundation's
 // now (M15, FoundationTypes.swift) — same underlying type, one name.
 
-@MainActor
+@preconcurrency @MainActor
 public final class UITouch: Hashable {
     public enum Phase: Sendable {
         case began, moved, stationary, ended, cancelled

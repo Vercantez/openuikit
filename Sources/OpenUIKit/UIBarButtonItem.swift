@@ -59,7 +59,7 @@
 // all of which are exact.
 
 /// A button (or a space) in a `UINavigationBar` / `UIToolbar`.
-@MainActor
+@preconcurrency @MainActor
 public class UIBarButtonItem {
     /// UIKit's bar-button styles. iOS 26 renamed `.done` to `.prominent`
     /// (a tint-filled platter); both spellings are kept.
@@ -157,14 +157,14 @@ public class UIBarButtonItem {
 
 /// Anything that lays bar button items out and needs to hear about a
 /// mutation (`isEnabled`, `title`, …).
-@MainActor
+@preconcurrency @MainActor
 protocol _UIBarItemContainer: AnyObject {
     func _barItemsChanged()
 }
 
 // MARK: - Measured metrics
 
-@MainActor
+@preconcurrency @MainActor
 public enum _UIBarMetrics {
     /// Capsule platter height in a NAVIGATION bar (measured: the
     /// `_UINavigationBarPlatterView` frames are 44 tall, top-aligned at the
@@ -231,7 +231,7 @@ public enum _UIBarMetrics {
 /// One laid-out bar button: platter + content (title label, image view or a
 /// custom view). A `UIControl`, so `target`/`action` and the closure form
 /// both work through the normal control path.
-@MainActor
+@preconcurrency @MainActor
 final class _UIBarButtonItemView: UIControl {
     let item: UIBarButtonItem
     let platter = UIView()
@@ -381,7 +381,7 @@ final class _UIBarButtonItemView: UIControl {
 /// Lays a row of `UIBarButtonItem`s out inside `bounds`, honoring flexible
 /// and fixed spaces. Shared by `UINavigationBar` (leading / trailing groups)
 /// and `UIToolbar` (one full-width row).
-@MainActor
+@preconcurrency @MainActor
 enum _UIBarItemLayout {
     /// Natural width of one item view (0 for a flexible space).
     static func width(of view: _UIBarButtonItemView) -> CGFloat {

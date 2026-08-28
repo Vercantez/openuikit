@@ -48,7 +48,7 @@ import Foundation
 /// non-interactive labels above it) are forwarded to the cell so row
 /// highlighting works while real controls inside keep receiving their own
 /// touches. The class name keeps the subtree private to compare.py.
-@MainActor
+@preconcurrency @MainActor
 final class UITableViewCellContentView: UIView {
     var cell: UITableViewCell? { superview as? UITableViewCell }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -69,7 +69,7 @@ final class UITableViewCellContentView: UIView {
 
 /// Draws the accessory glyph as Canvas vector strokes (no SF Symbols in the
 /// portable stack). Geometry fitted to the golden accessory ink.
-@MainActor
+@preconcurrency @MainActor
 final class UITableCellAccessoryView: UIView {
     var accessoryType: UITableViewCell.AccessoryType = .none {
         didSet { if accessoryType != oldValue { setNeedsDisplay() } }
@@ -140,7 +140,7 @@ final class UITableCellAccessoryView: UIView {
 
 // MARK: - UITableViewCell
 
-@MainActor
+@preconcurrency @MainActor
 open class UITableViewCell: UIView, ReusableView {
     public enum CellStyle: Sendable {
         case `default`, subtitle, value1, value2
@@ -421,7 +421,7 @@ open class UITableViewCell: UIView, ReusableView {
 /// semibold secondaryLabel at y=10 (x=8 plain, x=24 inset-grouped); footer
 /// 13 pt regular at y=8, wrapping. The class name matches real UIKit's so
 /// compare.py treats the subtree as private on both sides.
-@MainActor
+@preconcurrency @MainActor
 public final class UITableViewHeaderFooterView: UIView {
     public static let headerHeight: CGFloat = 40.5
     static let headerLabelY: CGFloat = 10

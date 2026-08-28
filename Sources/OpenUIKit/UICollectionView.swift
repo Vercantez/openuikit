@@ -36,7 +36,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UICollectionViewDataSource: AnyObject {
     func numberOfSections(in collectionView: UICollectionView) -> Int
     func collectionView(_ collectionView: UICollectionView,
@@ -60,7 +60,7 @@ public extension UICollectionViewDataSource {
     }
 }
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UICollectionViewDelegate: UIScrollViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         shouldSelectItemAt indexPath: IndexPath) -> Bool
@@ -98,7 +98,7 @@ public extension UICollectionViewDelegate {
 /// implementations do the falling back themselves — they return the layout's
 /// property, which is exactly the value UIKit would have used. A conforming
 /// type therefore only implements what it wants to change.
-@MainActor
+@preconcurrency @MainActor
 public protocol UICollectionViewDelegateFlowLayout: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -158,7 +158,7 @@ public extension UICollectionViewDelegateFlowLayout {
 
 // MARK: - UICollectionView
 
-@MainActor
+@preconcurrency @MainActor
 open class UICollectionView: UIScrollView {
     public static let elementKindSectionHeader = "UICollectionElementKindSectionHeader"
     public static let elementKindSectionFooter = "UICollectionElementKindSectionFooter"

@@ -29,7 +29,7 @@ public enum NSLineBreakMode: Sendable {
     case byTruncatingHead, byTruncatingTail, byTruncatingMiddle
 }
 
-@MainActor
+@preconcurrency @MainActor
 open class UILabel: UIView {
     /// Plain text. Real UIKit keeps one storage: setting `text` drops any
     /// attributed string, and setting `attributedText` makes `text` report

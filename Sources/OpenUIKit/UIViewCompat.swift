@@ -170,7 +170,7 @@ public enum UITraitHorizontalSizeClass: UITraitDefinition {
 }
 
 /// The opaque token UIKit hands back so a registration can be dropped.
-@MainActor
+@preconcurrency @MainActor
 public final class UITraitChangeRegistration {
     let traits: [String]
     let fire: (UITraitCollection) -> Void

@@ -42,7 +42,7 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
-@MainActor
+@preconcurrency @MainActor
 open class UIStackView: UIView {
     public enum Distribution: Sendable {
         case fill, fillEqually, fillProportionally, equalSpacing, equalCentering

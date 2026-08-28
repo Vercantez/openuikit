@@ -34,7 +34,7 @@ import Foundation
 /// non-interactive subviews) are forwarded to the cell so selection works
 /// while real controls inside keep their own touches — the same forwarding
 /// UITableViewCellContentView does.
-@MainActor
+@preconcurrency @MainActor
 final class UICollectionViewCellContentView: UIView {
     var cell: UICollectionViewCell? { superview as? UICollectionViewCell }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -55,7 +55,7 @@ final class UICollectionViewCellContentView: UIView {
 
 /// Base class for everything a collection view recycles: cells and
 /// supplementary (header/footer) views.
-@MainActor
+@preconcurrency @MainActor
 open class UICollectionReusableView: UIView, ReusableView {
     /// Stamped by the collection view when the view is created for an
     /// identifier (UIKit sets it the same way — it is read-only to apps).
@@ -84,7 +84,7 @@ open class UICollectionReusableView: UIView, ReusableView {
 
 // MARK: - UICollectionViewCell
 
-@MainActor
+@preconcurrency @MainActor
 open class UICollectionViewCell: UICollectionReusableView {
     public let contentView: UIView = UICollectionViewCellContentView()
 

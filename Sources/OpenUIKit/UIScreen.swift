@@ -17,7 +17,7 @@
 // keeps `UIScreen.main.bounds` sane for code that reads it before a host
 // exists.
 
-@MainActor
+@preconcurrency @MainActor
 public final class UIScreen {
     /// The screen the app renders into.
     public static let main = UIScreen(bounds: CGRect(x: 0, y: 0, width: 390, height: 844),

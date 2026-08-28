@@ -7,7 +7,7 @@
 // through the protocol witnesses — the classic Swift protocol-extension
 // dispatch pitfall.
 
-@MainActor
+@preconcurrency @MainActor
 open class UITableViewController: UIViewController, UITableViewDataSource,
                                   UITableViewDelegate {
     let style: UITableView.Style

@@ -74,7 +74,7 @@ public enum UITextFieldBorderStyle: Sendable {
 ///   - `textFieldShouldReturn`       — the return key's handler; UIKit does
 ///     NOT resign on its own, and neither do we (an app returning true
 ///     usually calls `resignFirstResponder()` itself)
-@MainActor
+@preconcurrency @MainActor
 public protocol UITextFieldDelegate: AnyObject {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
     func textFieldDidBeginEditing(_ textField: UITextField)
@@ -107,20 +107,20 @@ public extension UITextFieldDelegate {
 
 /// Real UIKit's placeholder-label class name (private in compare.py's
 /// layout diff, like the oracle's).
-@MainActor
+@preconcurrency @MainActor
 final class UITextFieldLabel: UILabel {}
 
 /// The .roundedRect chrome (private class name keeps it out of layout
 /// comparison, mirroring _UITextFieldRoundedRectBackgroundViewNeue).
-@MainActor
+@preconcurrency @MainActor
 final class UITextFieldBackgroundView: UIView {}
 
 /// Clipping container for the text label + caret (mirrors
 /// _UITextLayoutCanvasView).
-@MainActor
+@preconcurrency @MainActor
 final class UITextFieldCanvasView: UIView {}
 
-@MainActor
+@preconcurrency @MainActor
 open class UITextField: UIControl, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
 
     // MARK: Content properties

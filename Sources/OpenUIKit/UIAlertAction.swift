@@ -4,7 +4,7 @@
 // (`default` 0, `cancel` 1, `destructive` 2 — read straight off
 // `UIAlertAction.style.rawValue` by Tools/oracle2/alertprobe).
 
-@MainActor
+@preconcurrency @MainActor
 public final class UIAlertAction {
     public enum Style: Int, Sendable {
         case `default` = 0

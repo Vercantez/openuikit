@@ -56,8 +56,13 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
 5. **Actor isolation follows real UIKit, not convenience.** The UI classes
    (`UIResponder` and every subclass, `UIControl`, `UIGestureRecognizer`,
    `UIScreen`, the event/touch, presentation, bar-item and Auto Layout
-   types, and every delegate protocol) are `@MainActor`, because the SDK's
-   are and app source is written against that. `OpenCoreGraphics`, the
+   types, and every delegate protocol) are **`@preconcurrency @MainActor`**,
+   because that is the whole of what the SDK's carry: `NS_SWIFT_UI_ACTOR` in
+   an Objective-C header imports as `@MainActor` *and* `@preconcurrency`,
+   and app source — and every dependency an app builds from source — is
+   written against that pair. Dropping the first half made ordinary
+   Swift-5-mode source fail to compile where the SDK accepts it in silence
+   (measured: 92 of SnapKit's 94 remaining errors). `OpenCoreGraphics`, the
    text engine's glyph entry points and the Cassowary solver stay
    **nonisolated** — they are legal off the main actor and the renderer
    must stay free to move off it. Crossing the boundary is

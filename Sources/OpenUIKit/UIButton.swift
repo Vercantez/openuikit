@@ -54,7 +54,7 @@ import Foundation
 
 /// The title label subclass real UIKit uses; the layout dump prints the
 /// dynamic class name, so the oracle's "UIButtonLabel" entries match.
-@MainActor
+@preconcurrency @MainActor
 public final class UIButtonLabel: UILabel {}
 
 extension UIColor {
@@ -68,7 +68,7 @@ extension UIColor {
     }
 }
 
-@MainActor
+@preconcurrency @MainActor
 open class UIButton: UIControl {
     public enum ButtonType: Sendable {
         case custom, system

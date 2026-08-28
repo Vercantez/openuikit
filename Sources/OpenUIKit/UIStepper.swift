@@ -42,7 +42,7 @@
 // `autorepeat` is accepted and IGNORED — repeating on a held touch needs a
 // timer on the host clock, and no fixture or scripted capture exercises it.
 
-@MainActor
+@preconcurrency @MainActor
 open class UIStepper: UIControl {
     /// Measured intrinsic size.
     public static let intrinsicSize = CGSize(width: 94, height: 32)

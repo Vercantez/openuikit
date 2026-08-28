@@ -83,7 +83,7 @@ public struct UIEdgeInsets: Equatable, Sendable {
 
 // MARK: - Delegate
 
-@MainActor
+@preconcurrency @MainActor
 public protocol UIScrollViewDelegate: AnyObject {
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
@@ -279,7 +279,7 @@ public enum UIScrollPhysics {
 
 // MARK: - UIScrollView
 
-@MainActor
+@preconcurrency @MainActor
 open class UIScrollView: UIView {
     // MARK: Content geometry
 
@@ -911,7 +911,7 @@ open class UIScrollView: UIView {
 /// scroll-specific begin gates — axis eligibility (the drag must move along
 /// a scrollable/bounceable axis) and content-touch cancellation policy
 /// (canCancelContentTouches / touchesShouldCancel(in:)).
-@MainActor
+@preconcurrency @MainActor
 public final class UIScrollViewPanGestureRecognizer: UIPanGestureRecognizer {
     weak var scrollView: UIScrollView?
 

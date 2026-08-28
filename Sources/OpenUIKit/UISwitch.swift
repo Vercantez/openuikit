@@ -19,7 +19,7 @@
 //     (off: x=2, on: x=63-2-37=24; y=2). Golden thumb outline matches a
 //     circular corner radius of 12 (height/2) within ~0.1px; no visible
 //     shadow survives in the golden capture.
-@MainActor
+@preconcurrency @MainActor
 open class UISwitch: UIControl {
     /// Frame size real UIKit forces on every UISwitch (Catalyst iOS 26.1).
     static let forcedSize = CGSize(width: 63, height: 28)

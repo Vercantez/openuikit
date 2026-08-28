@@ -42,7 +42,7 @@ public struct UILayoutPriority: RawRepresentable, Hashable, Comparable, Sendable
 // the subclass fails to declare, loses the @MainActor it would have
 // inherited, and every member access inside it then reports as an isolation
 // violation, so ONE keyword produced 74 unrelated-looking errors.
-@MainActor
+@preconcurrency @MainActor
 open class NSLayoutConstraint {
     /// Raw values are Darwin's `NSLayoutAttribute` (NSLayoutConstraint.h):
     /// left = 1 through centerYWithinMargins = 20, notAnAttribute = 0.
