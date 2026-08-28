@@ -15,6 +15,11 @@
 set -euo pipefail
 
 PORT_SRC=${PORT_SRC:-$HOME/foundation-macho/src/overlay/UserDefaults.swift}
+# The CF seam lives in a SEPARATE FILE PER CONFIGURATION, so the host build
+# compiles the host bridge and never sees the guest one. That separation is
+# what keeps the scoreboard's two columns independently derived -- a single
+# bridge compiled into both would make the comparison share source with itself.
+PORT_BRIDGE=${PORT_BRIDGE:-$HOME/foundation-macho/src/overlay/UserDefaultsBridge_Host.swift}
 HERE=$(cd "$(dirname "$0")" && pwd)
 OUT=${1:-${TMPDIR:-/tmp}/ud-host}
 
@@ -35,10 +40,10 @@ echo "    port src   $PORT_SRC"
 echo "    port sha   $(shasum -a 256 "$PORT_SRC" | cut -d' ' -f1)"
 
 echo "==> building the port as module PortedUserDefaults (-DUD_HOST_ORACLE)"
-swiftc -c -O -parse-as-library \
+swiftc -c -O -parse-as-library -wmo \
   -module-name PortedUserDefaults -DUD_HOST_ORACLE \
   -emit-module -emit-module-path "$OUT/PortedUserDefaults.swiftmodule" \
-  "$PORT_SRC" -o "$OUT/PortedUserDefaults.o"
+  "$PORT_BRIDGE" "$PORT_SRC" -o "$OUT/PortedUserDefaults.o"
 
 echo "==> building the runner"
 swiftc -O -I "$OUT" \
