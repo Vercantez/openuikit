@@ -34,6 +34,12 @@
 // Sources/OpenUIKit/NotificationCenter.swift for the full tradeoff. The
 // delegate method runs first, then the observers.
 
+#if canImport(Foundation)
+import class Foundation.NSUserActivity
+import protocol Foundation.NSSecureCoding
+import struct Foundation.URL
+#endif
+
 // MARK: - Application state
 
 extension UIApplication {
@@ -65,8 +71,110 @@ extension UIApplication {
         public init(rawValue: String) { self.rawValue = rawValue }
         public static let universalLinksOnly =
             OpenExternalURLOptionsKey(rawValue: "universalLinksOnly")
+        public static let eventAttribution =
+            OpenExternalURLOptionsKey(rawValue: "UIApplicationOpenExternalURLOptionsEventAttributionKey")
+    }
+
+    /// Options delivered to the application delegate for an incoming URL.
+    public struct OpenURLOptionsKey: Hashable, RawRepresentable, Sendable {
+        public let rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let sourceApplication =
+            OpenURLOptionsKey(rawValue: "UIApplicationOpenURLOptionsSourceApplicationKey")
+        public static let annotation =
+            OpenURLOptionsKey(rawValue: "UIApplicationOpenURLOptionsAnnotationKey")
+        public static let openInPlace =
+            OpenURLOptionsKey(rawValue: "UIApplicationOpenURLOptionsOpenInPlaceKey")
+        public static let eventAttribution =
+            OpenURLOptionsKey(rawValue: "UIApplicationOpenURLOptionsEventAttributionKey")
     }
 }
+
+// MARK: - Home-screen shortcuts and activity restoration
+
+/// The icon metadata attached to a home-screen quick action. Portable hosts
+/// do not currently render an app launcher, but retaining the metadata lets
+/// them expose quick actions without changing application source later.
+open class UIApplicationShortcutIcon {
+    public enum IconType: Int, Sendable {
+        case compose, play, pause, add, location, search, share, prohibit
+        case contact, home, markLocation, favorite, love, cloud, invitation
+        case confirmation, mail, message, date, time, capturePhoto, captureVideo
+        case task, taskCompleted, alarm, bookmark, shuffle, audio, update
+    }
+
+    enum Storage {
+        case type(IconType)
+        case templateImageName(String)
+        case systemImageName(String)
+    }
+
+    let storage: Storage
+
+    private init(storage: Storage) { self.storage = storage }
+
+    public convenience init(type: IconType) { self.init(storage: .type(type)) }
+    public convenience init(templateImageName: String) {
+        self.init(storage: .templateImageName(templateImageName))
+    }
+    public convenience init(systemImageName: String) {
+        self.init(storage: .systemImageName(systemImageName))
+    }
+}
+
+/// Immutable metadata for one home-screen quick action.
+open class UIApplicationShortcutItem {
+    private let _type: String
+    private let _localizedTitle: String
+    private let _localizedSubtitle: String?
+    private let _icon: UIApplicationShortcutIcon?
+
+    open var type: String { _type }
+    open var localizedTitle: String { _localizedTitle }
+    open var localizedSubtitle: String? { _localizedSubtitle }
+    open var icon: UIApplicationShortcutIcon? { _icon }
+    open var targetContentIdentifier: Any? { nil }
+
+#if canImport(Foundation)
+    private let _userInfo: [String: any NSSecureCoding]?
+    open var userInfo: [String: any NSSecureCoding]? { _userInfo }
+
+    public init(type: String, localizedTitle: String,
+                localizedSubtitle: String?, icon: UIApplicationShortcutIcon?,
+                userInfo: [String: any NSSecureCoding]? = nil) {
+        _type = type
+        _localizedTitle = localizedTitle
+        _localizedSubtitle = localizedSubtitle
+        _icon = icon
+        _userInfo = userInfo
+    }
+#else
+    private let _userInfo: [String: Any]?
+    open var userInfo: [String: Any]? { _userInfo }
+
+    public init(type: String, localizedTitle: String,
+                localizedSubtitle: String?, icon: UIApplicationShortcutIcon?,
+                userInfo: [String: Any]? = nil) {
+        _type = type
+        _localizedTitle = localizedTitle
+        _localizedSubtitle = localizedSubtitle
+        _icon = icon
+        _userInfo = userInfo
+    }
+#endif
+
+    public convenience init(type: String, localizedTitle: String) {
+        self.init(type: type, localizedTitle: localizedTitle,
+                  localizedSubtitle: nil, icon: nil, userInfo: nil)
+    }
+}
+
+#if canImport(Foundation)
+@preconcurrency @MainActor
+public protocol UIUserActivityRestoring: AnyObject {
+    func restoreUserActivityState(_ userActivity: NSUserActivity)
+}
+#endif
 
 // MARK: - UIApplicationDelegate
 
@@ -112,6 +220,11 @@ open class UIApplication: UIResponder {
     /// UIApplication is meaningless (UIKit traps on it — we merely ignore
     /// the extra instance, since it is never wired to anything).
     public static let shared = UIApplication()
+
+    /// URL which opens this app's settings in a host that implements such a
+    /// destination. The spelling/value match UIKit; the host URL hook decides
+    /// whether it can actually be opened.
+    nonisolated public static let openSettingsURLString = "app-settings:"
 
     /// The app delegate. Weak, like UIKit's: `UIApplicationMain` retains the
     /// delegate it was given (`_retainedDelegate`), and an app that assigns
@@ -241,9 +354,7 @@ open class UIApplication: UIResponder {
     /// does for a scheme nothing claims.
     public static var urlOpenHandler: ((String) -> Bool)?
 
-    /// URLs are plain strings: `URL` is a Foundation type and the library
-    /// may not import Foundation. A host or app on Foundation passes
-    /// `url.absoluteString`.
+    /// The Foundation-free spelling used by renderer-only builds and hosts.
     open func canOpenURL(_ url: String) -> Bool {
         UIApplication.urlOpenHandler != nil
     }
@@ -254,6 +365,21 @@ open class UIApplication: UIResponder {
         let ok = UIApplication.urlOpenHandler?(url) ?? false
         completionHandler?(ok)
     }
+
+#if canImport(Foundation)
+    /// UIKit-compatible URL spelling. A real application build links the
+    /// Foundation module; renderer-only builds retain the String hook above.
+    open func canOpenURL(_ url: URL) -> Bool {
+        canOpenURL(url.absoluteString)
+    }
+
+    open func open(_ url: URL,
+                   options: [OpenExternalURLOptionsKey: Any] = [:],
+                   completionHandler: ((Bool) -> Void)? = nil) {
+        open(url.absoluteString, options: options,
+             completionHandler: completionHandler)
+    }
+#endif
 
     // MARK: Launch + lifecycle (host-driven)
 

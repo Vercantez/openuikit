@@ -3,6 +3,14 @@ import XCTest
 
 @MainActor
 final class ApplicationShellCompatibilityTests: XCTestCase {
+    private final class ActivityRestorer: UIUserActivityRestoring {
+        var restoredType: String?
+
+        func restoreUserActivityState(_ userActivity: NSUserActivity) {
+            restoredType = userActivity.activityType
+        }
+    }
+
     func testSceneWindowUsesSceneScreenAndWindowLevelsSupportArithmetic() {
         let scene = UIWindowScene()
         let window = UIWindow(windowScene: scene)
@@ -59,5 +67,47 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
         XCTAssertEqual(overlay.view.frame, window.bounds)
         XCTAssertNotNil(presenter.view.superview)
         XCTAssertTrue(presenter.presentedViewController === overlay)
+    }
+
+    func testFoundationURLUsesThePortableHostHook() {
+        let prior = UIApplication.urlOpenHandler
+        defer { UIApplication.urlOpenHandler = prior }
+        var opened: String?
+        UIApplication.urlOpenHandler = {
+            opened = $0
+            return $0 == "https://example.com/path"
+        }
+
+        let url = URL(string: "https://example.com/path")!
+        XCTAssertTrue(UIApplication.shared.canOpenURL(url))
+        var result: Bool?
+        UIApplication.shared.open(url, options: [.universalLinksOnly: true]) {
+            result = $0
+        }
+        XCTAssertEqual(opened, url.absoluteString)
+        XCTAssertEqual(result, true)
+        XCTAssertEqual(UIApplication.openSettingsURLString, "app-settings:")
+    }
+
+    func testShortcutAndIncomingURLMetadataShapes() {
+        let icon = UIApplicationShortcutIcon(systemImageName: "trash")
+        let item = UIApplicationShortcutItem(
+            type: "org.example.erase", localizedTitle: "Erase",
+            localizedSubtitle: "Erase and open", icon: icon)
+        XCTAssertEqual(item.type, "org.example.erase")
+        XCTAssertEqual(item.localizedTitle, "Erase")
+        XCTAssertEqual(item.localizedSubtitle, "Erase and open")
+        XCTAssertTrue(item.icon === icon)
+
+        let options: [UIApplication.OpenURLOptionsKey: Any] = [
+            .sourceApplication: "org.example.sender",
+            .openInPlace: true,
+        ]
+        XCTAssertEqual(options[.sourceApplication] as? String,
+                       "org.example.sender")
+
+        let restorer = ActivityRestorer()
+        restorer.restoreUserActivityState(NSUserActivity(activityType: "org.example.activity"))
+        XCTAssertEqual(restorer.restoredType, "org.example.activity")
     }
 }
