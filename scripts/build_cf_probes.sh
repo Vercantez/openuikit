@@ -56,7 +56,13 @@ mkdir -p /work/obj
 # The include set the nscf surface now requires. CF's own headers are on it
 # because NSCFConstantString.m calls CF's inline ASCII-superset predicate
 # instead of duplicating it.
-NSCF_INCLUDES="-I/work/nscf-include -I$CF/include -I$CF/internalInclude"
+# CF's PUBLIC headers declare CFStringGetPascalString and friends, so any TU
+# including them needs the Pascal-string types machorun's MacTypes.h omits ON
+# PURPOSE. CF's own build gets them from force-including CoreFoundation_Prefix.h;
+# a non-CF file should not take CF's whole build prefix to borrow one inline
+# predicate, so the repo carries the four typedefs. See include/CFCarbonTypesShim.h.
+NSCF_INCLUDES="-I/work/nscf-include -I$CF/include -I$CF/internalInclude \
+               -include /repo/include/CFCarbonTypesShim.h"
 
 case "$WHICH" in
   all|t16|t17|t18|t19) ;;
@@ -109,12 +115,19 @@ tbd_vs_dylib() {
   # against the tree, and invisible to the symbol comparison above. It also
   # gives the restored file a FRESH mtime, so the timestamps lie as well.
   # Content is the only thing that does not.
-  B=/work/mrsrc/darwin/usr/lib/libSystem.B.dylib
+  #
+  # /stage IS THE ONE AUTHORITY, deliberately. An earlier version of this check
+  # compared against a container-local rebuild in /work/mrsrc, which created
+  # TWO authorities -- and two honest builds of the same source differ in bytes,
+  # so it would fire on a difference that meant nothing. Refresh the snapshot
+  # with `scripts/container.sh restage` and let it decide.
+  B=/stage/darwinlib/libSystem.B.dylib
   if [ -f "$B" ] && ! cmp -s "$B" "$D"; then
-    echo "  *** the STAGED libSystem differs from the one built in /work/mrsrc."
-    echo "      staged $(wc -c < "$D") bytes, built $(wc -c < "$B") bytes."
-    echo "      stage_sdk.sh restores /stage's copy over it -- re-stage before"
-    echo "      trusting any 'missing symbol' this run reports."
+    echo "  *** the libSystem in /work differs from the /stage snapshot."
+    echo "      work $(wc -c < "$D") bytes, snapshot $(wc -c < "$B") bytes."
+    echo "      stage_sdk.sh will replace the work copy on its next run."
+    echo "      Reconcile first (scripts/container.sh check) -- a run against a"
+    echo "      mixture is not a measurement of either."
     fail=1
   fi
   if [ "${n:-0}" -gt 0 ]; then
@@ -193,7 +206,9 @@ if [ "$WHICH" = all ] || [ "$WHICH" = t17 ]; then
   cp -f /repo/tests/t17_pthread_sig.c /work/obj/t17_src.c
   clang -target $TRIPLE -isysroot $SDK -Os -c /work/obj/t17_src.c -o /work/obj/t17.o \
     && link_bare t17 && run t17
-  echo "  (the errorcheck mutex ABORTS until #80 lands; that is the expected result)"
+  echo "  (all three must lock: machorun #80 taught adopt() the ERRORCHECK,"
+  echo "   RECURSIVE and FIRSTFIT signatures. An abort here is a REGRESSION,"
+  echo "   or a stale libSystem -- check the tbd-check line above first.)"
 fi
 
 if [ "$WHICH" = all ] || [ "$WHICH" = t19 ]; then
