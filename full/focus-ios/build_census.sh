@@ -19,7 +19,7 @@
 #                         The rule, source denominator, and subject digest are
 #                         printed and recorded on every run.
 #   4. the app's own SPM targets, in dependency order
-#   5. the app module
+#   5. a broad all-source saturation module (not the Xcode target graph)
 #   6. classify every error and print the breakdown with denominators
 #
 # ★ -wmo IS NOT OPTIONAL. swiftc's default multi-file mode stops after the first
@@ -95,7 +95,7 @@ compile_mod() {
         -wmo -target "$TARGET" -module-name "$name" \
         "${INC[@]}" -I "$OUT/modules" "$@" > "$OUT/logs/$log.log" 2>&1
     local r=$?
-    local n; n=$(python3 "$HERE/diagnostics.py" count "$OUT/logs/$log.log")
+    local n; n=$(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/$log.log")
     printf '  %-22s %s  (%s primary diagnostics)\n' "$name" \
         "$([ $r -eq 0 ] && echo OK || echo FAILED)" "$n"
     return $r
@@ -129,7 +129,7 @@ SNAPKIT_AUDIT_AFTER=$OUT/snapkit-vendoring-after.json
 # This is intentionally fatal rather than another census row. If the pin,
 # source set, excluded file, or excluded file's bytes changed, the compiler's
 # subject is no longer the approved SnapKit vendoring subject.
-python3 "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
     "$SNAPKIT_FILES" "$SNAPKIT_AUDIT_BEFORE" \
     | tee "$OUT/logs/snapkit-vendoring-before.log"
 rc=$?
@@ -146,7 +146,7 @@ fi
 # Recompute after swiftc returns. This closes the subject bracket: a dependency
 # source mutation during compilation voids the row instead of leaving a green
 # result attached to an unknown mixture of bytes.
-python3 "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
     "$OUT/snapkit-files-after.txt" "$SNAPKIT_AUDIT_AFTER" \
     > "$OUT/logs/snapkit-vendoring-after.log"
 rc=$?
@@ -180,6 +180,11 @@ done
 # of the compiler rather than from a module that could not be built. The empty
 # modules contribute no symbols and therefore cannot mask a gap; they only stop
 # `import` from halting the run.
+#
+# This is intentionally a SATURATION instrument, not an executable target
+# manifest. It also sees extension-product sources and cannot see generated
+# Xcode inputs. README.md records the exact measured difference; the runnable
+# build uses a separate, fail-closed target inventory rather than this `find`.
 hr "5. name-only modules, so an unbuildable target cannot hide the app's errors"
 mkdir -p "$OUT/empty"
 # SnapKit gets a name-only fallback only when the real source fails. When the
@@ -201,7 +206,7 @@ for t in "${name_only_targets[@]}"; do
 done
 say "  emitted $(ls "$OUT/empty"/*.swiftmodule 2>/dev/null | wc -l | tr -d ' ') name-only modules"
 
-hr "6. THE SATURATED CENSUS -- all shipping sources, one module, -wmo"
+hr "6. THE BROAD SATURATED CENSUS -- all non-test sources, one module, -wmo"
 find "$APP" -name '*.swift' \
   | grep -v '/focus-ios-tests/' \
   | grep -v '/Tests/' \
@@ -209,14 +214,14 @@ find "$APP" -name '*.swift' \
   | grep -v '/Package.swift$' \
   | grep -v 'get_supported_locales.swift' \
   > "$OUT/appfiles.txt"
-say "  shipping files: $(wc -l < "$OUT/appfiles.txt" | tr -d ' ')"
+say "  broad source files: $(wc -l < "$OUT/appfiles.txt" | tr -d ' ')"
 files=()
 while IFS= read -r l; do files+=("$l"); done < "$OUT/appfiles.txt"
 swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
     "${INC[@]}" -I "$OUT/modules" -I "$OUT/empty" "${files[@]}" \
     > "$OUT/logs/app.log" 2>&1
-say "  primary diagnostics: $(python3 "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
+say "  primary diagnostics: $(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
 
 # --- 6. the census -----------------------------------------------------------
 hr "7. CENSUS"
-python3 "$HERE/classify.py" "$OUT" "$APP" | tee "$OUT/census.txt"
+python3 -B "$HERE/classify.py" "$OUT" "$APP" | tee "$OUT/census.txt"

@@ -1,5 +1,5 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                         1060 primary diagnostics
+  app                          969 primary diagnostics
   empty                          0 primary diagnostics
   openuikit                      0 primary diagnostics
   snapkit-vendoring-after        0 primary diagnostics
@@ -18,32 +18,32 @@
   target-UIComponents            1 primary diagnostics
   target-UIHelpers              21 primary diagnostics
   target-Widget                  6 primary diagnostics
-  TOTAL                       1116
+  TOTAL                       1025
 
-=== ERROR KINDS, ranked (denominator 1116) ===
-    204  value of type 'X' has no member 'X'
-    132  cannot find 'X' in scope
+=== ERROR KINDS, ranked (denominator 1025) ===
+    190  value of type 'X' has no member 'X'
     129  cannot infer contextual base in reference to member 'X'
-     86  cannot find type 'X' in scope
-     72  'X' requires a contextual type
+    126  cannot find 'X' in scope
+     81  cannot find type 'X' in scope
      56  cannot use optional chaining on non-optional value of type 'X'
-     55  type 'X' has no member 'X'
+     54  type 'X' has no member 'X'
      37  ambiguous use of 'X'
+     34  'X' requires a contextual type
      33  extra argument 'X' in call
      31  cannot convert value of type 'X' to expected argument type 'X'
-     25  argument passed to call that takes no arguments
      25  missing argument for parameter 'X' in call
      22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
      20  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
-     19  method does not override any method from its superclass
      16  reference to member 'X' cannot be resolved without a contextual type
+     13  method does not override any method from its superclass
      13  generic parameter 'X' could not be inferred
      10  'X' is unavailable in macOS
+     10  'X' is inaccessible due to 'X' protection level
 
-=== MISSING TYPES: 87 distinct / 218 occurrences ===
-  Apple-framework names (a REAL gap)     :  55 distinct /  140 uses
+=== MISSING TYPES: 81 distinct / 207 occurrences ===
+  Apple-framework names (a REAL gap)     :  53 distinct /  135 uses
   app's own symbols (an earlier failure) :   1 distinct /    1 uses
-  other                                  :  31 distinct /   77 uses
+  other                                  :  27 distinct /   71 uses
 
   the real Apple-type gap, ranked:
      13  UIPasteboard
@@ -55,7 +55,6 @@
       4  UIDropInteraction
       4  UIFont
       4  UIViewController
-      4  UIViewControllerTransitionCoordinator
       4  UIViewPropertyAnimator
       3  CACornerMask
       3  UIDropSession
@@ -82,7 +81,6 @@
       1  NSStringDrawingOptions
       1  UIActivityItemProvider
       1  UIBarButtonItemAppearance
-      1  UIContentContainer
       1  UIDragInteractionDelegate
       1  UIDragSession
       1  UIDropInteractionDelegate
@@ -103,22 +101,21 @@
       1  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 259
-  on Apple-framework types (the #94 list): 89 distinct / 169 uses
+  total member errors                    : 244
+  on Apple-framework types (the #94 list): 81 distinct / 162 uses
   SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
      44  UITableView                        allowsMultipleSelection, backgroundView, beginUpdates, cellLayoutMarginsFollowReadableWidth, deleteRows, deleteSections …
      20  CALayer                            anchorPoint, backgroundColor, frame, insertSublayer, maskedCorners, position …
-     14  UIView                             AnimationCurve, canPerformAction, layoutSublayers, snapshotView, transition, updateConstraints …
      14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
-      9  UIViewController                   preferredContentSize, preferredContentSizeDidChange, traitCollectionDidChange, updateViewConstraints, viewDidLayoutSubviews, viewWillTransition
+     12  UIView                             canPerformAction, layoutSublayers, snapshotView, transition, userInterfaceLayoutDirection
       9  UINavigationBar                    appearance, setBackgroundImage, shadowImage, titleTextAttributes
       8  UIButton                           imageView, setImage
+      8  UITraitCollection                  horizontalSizeClass, verticalSizeClass
       8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
       7  UIBarButtonItem                    accessibilityIdentifier
       5  UITableViewCell                    imageView, separatorInset
-      4  UITraitCollection                  horizontalSizeClass, verticalSizeClass
       3  UIModalPresentationStyle           none, overCurrentContext
       2  NSView                             alpha
       2  UINavigationController             setNavigationBarHidden
@@ -133,3 +130,4 @@
       1  UIKeyCommand                       wantsPriorityOverSystemBehavior
       1  NSAttributedString                 boundingRect
       1  UIKeyEventKey                      keyCode
+      1  NSValue                            cgRectValue
