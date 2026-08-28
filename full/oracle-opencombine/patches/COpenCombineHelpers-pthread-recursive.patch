@@ -1,0 +1,35 @@
+--- COpenCombineHelpers.original.cpp
++++ COpenCombineHelpers.cpp
+@@ -12 +11,0 @@
+-#include <system_error>
+@@ -45,7 +44,3 @@
+-// See 'double expansion trick'
+-#define OPENCOMBINE_STRINGIFY(value) #value
+-#define OPENCOMBINE_STRINGIFY_(value) OPENCOMBINE_STRINGIFY(value)
+-#define OPENCOMBINE_STRING_LINE_NUMBER OPENCOMBINE_STRINGIFY_(__LINE__)
+-
+-// Throw an exception if the argument is non-zero with filename and line where the error
+-// occured.
++// A pthread failure is terminal here. The public entry points have a C ABI, so
++// no recoverable error can cross the boundary; abort also avoids depending on
++// libc++'s system_error implementation merely to terminate the process.
+@@ -54,2 +49 @@
+-        const char* what = __FILE__ ":" OPENCOMBINE_STRING_LINE_NUMBER ": " #errc; \
+-        throw std::system_error((errc), std::system_category(), what); \
++        std::abort(); \
+@@ -76 +70 @@
+-    PThreadMutex() {
++    explicit PThreadMutex(bool recursive = false) {
+@@ -78 +72,5 @@
+-        attrs.setErrorCheck();
++        if (recursive) {
++            attrs.setRecursive();
++        } else {
++            attrs.setErrorCheck();
++        }
+@@ -219,0 +218,3 @@
++#if OPENCOMBINE_HAS_PTHREAD
++    return {new PThreadMutex(true)};
++#else
+@@ -220,0 +222 @@
++#endif

@@ -1,0 +1,154 @@
+{
+  "assets": {
+    "Combine.swift": "828b05c3a47296fb7b0b9ed5a6ca1a45a5da46e245441c21028335f60511799f",
+    "oracles/oracle-mutation.patch": "bb3abcea9a316d9af6c206ca072a13ab6894b74dc5dd51630cd931a2500f0f5c",
+    "oracles/module-shadow-probe.swift": "ade172fe4a1eae9282c7e1f2ff6959f9018a5e6784f26d942a858fc61ac345a5",
+    "oracles/published_oracle.swift": "ade476e4d1ce9841073e447b45e313710f727279575ff42f7204b0804d23437f",
+    "oracles/published_oracle_mutated.swift": "c9b98e42a81ea8b3c7332ffaf2b3f58219b3afe158ff0c362bbf2c8a2aa3a220",
+    "oracles/published_oracle_reentrant.swift": "480cbe6b6bdfc30acbeb55d49b163490b0a49d21943830a7406fdae919168b5f",
+    "patches/COpenCombineHelpers-pthread-recursive.patch": "875cd931e95c5442775e1042a412517ab7475be0489b1a81f824a54f6872c79b"
+  },
+  "compiler_inputs": {
+    "files": {
+      "Sources/COpenCombineHelpers/COpenCombineHelpers.cpp": "73dbadeff3f6cebb9f5c57e09380e3166b65e68f0b0427d97d6a8ffdce693693",
+      "Sources/COpenCombineHelpers/include/COpenCombineHelpers.h": "eb2afa8d9b46891a47ac39e43a4f94d727120acdbc0644934296c4c4ca62e935",
+      "Sources/COpenCombineHelpers/include/module.modulemap": "d34fdd050111a8cbf5ced89a129088fcfeb2964eea76ad518fafe044966572d1",
+      "Sources/OpenCombineDispatch/DispatchQueue+Scheduler.swift": "7c6783fc8a74346a7bfcdfd9bc6251b4d3b74bb4057471853a61cb245568c3e7"
+    },
+    "roots": [
+      "Sources/COpenCombineHelpers",
+      "Sources/OpenCombineDispatch"
+    ]
+  },
+  "core_sources": {
+    "root": "Sources/OpenCombine",
+    "sha256": "d26c121f2ad571a5c6dce050deccfb147e37d80cbf0e482a48328cd64e1650f5",
+    "swift_file_count": 103
+  },
+  "dispatch_boundary": {
+    "dispatch_swiftmodule_entry_kind": "directory",
+    "expected_failure_exit": 1,
+    "expected_interface_error_count": 2,
+    "expected_interface_error_line": "<SUBJECT>/work/inputs/dispatch-work/fe/sysroot/usr/lib/swift/Dispatch.swiftmodule/arm64e-apple-macos.swiftinterface:9:8: error: no such module '_StringProcessing'",
+    "expected_source_error_count": 1,
+    "expected_source_error_line": "<SUBJECT>/source/Sources/OpenCombineDispatch/DispatchQueue+Scheduler.swift:8:8: error: failed to build module 'Dispatch'; this SDK is not supported by the compiler (the SDK is built with 'Apple Swift version 6.2.1 effective-5.10 (swiftlang-6.2.1.4.7 clang-1700.4.4.1)', while this compiler is 'Swift version 6.2.4 (swift-6.2.4-RELEASE)'). Please select a toolchain which matches the SDK.",
+    "dispatch_swiftmodule_bundle_files": {
+      "arm64e-apple-ios-macabi.swiftdoc": "cd93645d74b17b011342375d2e97260f745ade122cd919ae5aa6027d5bdd8825",
+      "arm64e-apple-ios-macabi.swiftinterface": "634bc199ec707abc765d864068cefab67ac917fa64919647885675b938180bdb",
+      "arm64e-apple-macos.swiftdoc": "ce48824a4185f1b2f5d3307461ff34b645ac07d05112d063a98faed85a086a33",
+      "arm64e-apple-macos.swiftinterface": "e56976b010bef7a6f04d34db78755c8126d3142895423ced39326568b9b79792",
+      "x86_64-apple-ios-macabi.swiftdoc": "623a24b0b4320d8f7abd78dbe778b4d4ee19bcc22bb7db73f25bbc5e88785338",
+      "x86_64-apple-ios-macabi.swiftinterface": "b222aa7dcfde32bd6cf1403726a95cb8df0033f84222011fd376f0c931942ab0",
+      "x86_64-apple-macos.swiftdoc": "16cbf3d10cedcc615aa5cece99b830ad60523f66c753e553ad4ff61e31a4c8b5",
+      "x86_64-apple-macos.swiftinterface": "dc53a647a9fb265d55f140f161f7b74ceabd3fa0ef14f3667ccbee782d7003a8"
+    },
+    "dispatch_swiftmodule_bundle_path": "/work/fe/sysroot/usr/lib/swift/Dispatch.swiftmodule",
+    "expected_dispatch_swiftmodule_bundle_count": 1,
+    "expected_dispatch_swiftmodule_bundle_directory_count": 0,
+    "expected_libswift_dispatch_dylib_count": 0,
+    "expected_target_compatible_module_count": 0,
+    "libdispatch_path": "/work/lib/libdispatch.dylib",
+    "libdispatch_sha256": "17c2f611a8034c1148f339c8477726906c9ed6f905a15f069323ab9fa439d265",
+    "libswift_dispatch_tbd_path": "/work/fe/sysroot/usr/lib/swift/libswiftDispatch.tbd",
+    "libswift_dispatch_tbd_sha256": "daad5c4385b441f89b27ff89f597cadc1204902bab073628b78dc1c1137f8c99",
+    "target_compatible_module_stem": "arm64-apple-macos"
+  },
+  "helper_patch": {
+    "path": "Sources/COpenCombineHelpers/COpenCombineHelpers.cpp",
+    "patched_object_sha256": "2ca57603bd44df34c453086eec9f1c536f50c442f09174dffa2a3e65a8655873",
+    "patched_sha256": "d9fbefcdba66d892d9064c46b21b6084af217ddec1d604bcaf27b160de66083b",
+    "patch_asset": "patches/COpenCombineHelpers-pthread-recursive.patch",
+    "patch_sha256": "875cd931e95c5442775e1042a412517ab7475be0489b1a81f824a54f6872c79b",
+    "upstream_sha256": "73dbadeff3f6cebb9f5c57e09380e3166b65e68f0b0427d97d6a8ffdce693693"
+  },
+  "isolated_inputs": {
+    "concurrency_module": {
+      "bundle_relative": "_Concurrency.swiftmodule",
+      "directory_count": 0,
+      "file_count": 6,
+      "sha256": "18202e5d7dbbfe85fd12f02049a23dda6bef1a3e14c8347a8ffb769c86e109c1",
+      "symlink_count": 0
+    },
+    "sdk": {
+      "directory_count": 95,
+      "file_count": 1559,
+      "sha256": "dfbdb6b65f6dcf5e7b72857dcf47ec43c0fb26f86aeae06189c803b61c1799a8",
+      "source_path": "/work/sdk/MacOSX.sdk",
+      "symlink_count": 3
+    },
+    "swift_module": {
+      "bundle_relative": "Swift.swiftmodule",
+      "directory_count": 0,
+      "file_count": 6,
+      "sha256": "5557fdbdce380ef69b427c77262c3da9fcd40d02ff7549fa7fde6fe2fdf9ee49",
+      "symlink_count": 0
+    }
+  },
+  "link_inputs": {
+    "/work/fe/sysroot/usr/lib/libSystem.B.tbd": "ad4dcac8a6eadab4b2d5bfc692bdc9cdcf66d524cf5b8adf6597cb24a99a09b2",
+    "/work/fe/sysroot/usr/lib/swift/libswift_Concurrency.tbd": "43a521e871c3dc7f1538761e2fcfa12bcfe82533df00d1aa505d459f498b46a6",
+    "/work/lib/libc++abi.dylib": "210abc640e723902da7dc4f6e493ec6c8fc4f17d1b4ffd6fe45f50cee3697858",
+    "/work/lib/libobjc.A.dylib": "9b5ca00ca17e8bd030f75c32ffe651dfe4c29a90ad57115e69c6d5b7eea5950c",
+    "/work/lib/libswiftCore.dylib": "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb",
+    "/work/lib/libswiftcompat.dylib": "d038be7a050624241339a43f794005ea376a8e54609fc14d0a689d6ea5fb7593"
+  },
+  "oracles": {
+    "missing_dylib_exit": 72,
+    "missing_dylib_line": "machorun: cannot find dylib '/usr/lib/swift/libOpenCombine.dylib'",
+    "missing_dylib_stream": "stderr",
+    "mutated_exit": 133,
+    "mutated_line": "PublishedOracle_mutated/published_oracle.generated.swift:26: Fatal error: ORACLE_FAIL received=[3, 5, 9] stored=[3, 3, 5]",
+    "mutated_stream": "stderr",
+    "positive_exit": 0,
+    "positive_line": "ORACLE_OK received=3,5,8 stored=3,3,5",
+    "positive_stream": "stdout",
+    "reentrant_exit": 0,
+    "reentrant_line": "REENTRANT_OK received=3,5,8 stored=3,3,3 final=5",
+    "reentrant_stream": "stdout"
+  },
+  "repository": {
+    "commit": "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b",
+    "url": "https://github.com/OpenCombine/OpenCombine.git"
+  },
+  "runtime_root": {
+    "files": {
+      ".manifest": "c02342075e1d7adf55070aee677feaff400666d41cdad6ac15eb1559c73485ac",
+      ".umbrellas": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation": "e87bf7ff3c764a8e8e1e3220124e1a73ab8355123ee2248d550bd8953c5ce228",
+      "darwin/System/Library/Frameworks/Foundation.framework/Foundation": "d132f375cf4aa7cb791227282642a0e83a374f79a1885bae8328c1a98a437d65",
+      "darwin/usr/lib/libSystem.B.dylib": "6383477aec84a6c134f97009d3f775c4e21aefa8d37f1c2b223622715745b7de",
+      "darwin/usr/lib/libSystem.B.lowheap.dylib": "67b87e97d6711d1b6cee4e20b0d2030b664987ec0e010eb74e6f4c444b469599",
+      "darwin/usr/lib/libSystem.real.dylib": "0aeac468ea61265cdc7c7c4066022865871722084aa09dea7e8e18820c636344",
+      "darwin/usr/lib/libc++.1.dylib": "6c6e0475735469129b30a04c5171495681f74c105a8c57a7b9aedf8b5145f6fc",
+      "darwin/usr/lib/libc++.real.dylib": "8b8871c5245815e546258ed6916d9f4a170eb9c0e38e65ac533241ec981d42e5",
+      "darwin/usr/lib/libc++abi.dylib": "210abc640e723902da7dc4f6e493ec6c8fc4f17d1b4ffd6fe45f50cee3697858",
+      "darwin/usr/lib/libobjc.A.dylib": "9b5ca00ca17e8bd030f75c32ffe651dfe4c29a90ad57115e69c6d5b7eea5950c",
+      "darwin/usr/lib/libquartz.dylib": "7b72aec3aa175217a46c52406982d0dcd513b7adaa75edb8f101c5ce8f338016",
+      "darwin/usr/lib/libswiftcompat.dylib": "d038be7a050624241339a43f794005ea376a8e54609fc14d0a689d6ea5fb7593",
+      "darwin/usr/lib/swift/libswiftCore.dylib": "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb",
+      "darwin/usr/lib/swift/libswiftObjectiveC.dylib": "a087814c8d0a74f90a3ec4f93c312f803e38cb119e64271e59d48d095a996b33",
+      "darwin/usr/lib/swift/libswift_Concurrency.dylib": "d7598cb49803f45d0bec67a57369713f13a17e8ff7bfd0b6504f9311c065e391",
+      "machorun": "d702b819c3d97dcf76fb913068c29a22344ad6f8019c28886fddf06fac35eaaa"
+    },
+    "required_libsystem_export": "__NSGetMachExecuteHeader"
+  },
+  "schema": 1,
+  "toolchain": {
+    "clang_version": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "clangxx_sha256": "6d99f6207153b8b2063ace5d2a6177debaf6a6b6f31649e03afac07b98ba0b4d",
+    "concurrency_module_relative": "_Concurrency.swiftmodule/arm64-apple-macos.swiftmodule",
+    "concurrency_module_sha256": "a6fae0ed5f0eeb85c6b525db945b5a9686ed3aab38f5971b1e0340f3bbb72aa4",
+    "container_image_id": "sha256:85f9d4c5089ef811c53c55be5e8683f0f582cc9b158f9d9c5348331f3dec4044",
+    "lld_version": "Ubuntu LLD 18.1.3",
+    "lld_sha256": "f8835e48488195c65fb3dcb946053284ddf6b1369922893785209a9073c4e57b",
+    "machorun_sha256": "1f3b2dd38cf2f6b4fb03db3ab6b3bc765ac16cc5d367141b92704a92e7699158",
+    "nm_sha256": "1c8ca894bddd7e2fd776a06132600444f2d075a25d9a0953321ed09bc1cb0b99",
+    "objdump_sha256": "32b78ffb3f9f14a19716cb7d3d6a5baa59ea98bc502fb183d3ff429df0f20a21",
+    "sdk_path": "/work/sdk/MacOSX.sdk",
+    "swift_module_relative": "Swift.swiftmodule/arm64-apple-macos.swiftmodule",
+    "swift_module_sha256": "23b2acd808d87a9382a9a0964f4b580db9fe2d7c9bb4998ca444ef6aa421dfd8",
+    "swiftc_sha256": "5a7209655c37a4f4937ea5219a4af59a7c9fc52dd13c615f26682642bc3a83ff",
+    "swift_version": "Swift version 6.2.4 (swift-6.2.4-RELEASE)",
+    "target": "arm64-apple-macos13.0"
+  }
+}

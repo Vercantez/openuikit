@@ -1,0 +1,5 @@
+--- published_oracle.swift
++++ published_oracle_mutated.swift
+@@ -22 +22 @@
+-counter.value = 8
++counter.value = 9 // mutation control: the oracle still requires 8
