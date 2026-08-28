@@ -1,0 +1,1197 @@
+{
+ "root": "/Users/miguelsalinas/swift-macho-linux/scratch/ladder-corpus/focus-ios/focus-ios",
+ "files_by_class": {
+  "app": 180,
+  "test": 40,
+  "preview": 4,
+  "tool": 3
+ },
+ "lines_total": 23912,
+ "families": {
+  "WebKit": {
+   "by_class_token": {
+    "app|WKNavigationDelegate": 2,
+    "app|WKWebView": 23,
+    "app|WKWebViewConfiguration": 3,
+    "app|WKNavigation": 9,
+    "app|WKNavigationAction": 3,
+    "app|WKNavigationActionPolicy": 5,
+    "app|WKWebsiteDataTypeDiskCache": 1,
+    "app|WKWebsiteDataTypeOfflineWebApplicationCache": 1,
+    "app|WKWebsiteDataTypeMemoryCache": 1,
+    "app|WKWebsiteDataTypeLocalStorage": 1,
+    "app|WKWebsiteDataTypeCookies": 1,
+    "app|WKWebsiteDataTypeSessionStorage": 1,
+    "app|WKWebsiteDataTypeIndexedDBDatabases": 1,
+    "app|WKWebsiteDataTypeWebSQLDatabases": 1,
+    "app|WKWebsiteDataStore": 2,
+    "app|WKContentRuleList": 5,
+    "app|WKContentRuleListStore": 2,
+    "app|WKScriptMessage": 2,
+    "app|WKBackForwardListItem": 1,
+    "app|WKWebpagePreferences": 4,
+    "app|WKUserScriptInjectionTime": 1,
+    "app|WKUserScript": 1,
+    "app|WKNavigationResponse": 1,
+    "app|WKNavigationResponsePolicy": 1,
+    "app|WKUIDelegate": 1,
+    "app|WKWindowFeatures": 1,
+    "app|WKScriptMessageHandler": 1,
+    "app|WKUserContentController": 1,
+    "app|WKContextMenuElementInfo": 1
+   },
+   "files_touched": {
+    "app": 6
+   }
+  },
+  "UIKit": {
+   "by_class_token": {
+    "app|UIKit": 100,
+    "app|UIResponder": 9,
+    "app|UIViewController": 49,
+    "app|UIView": 148,
+    "app|UIHelpers": 11,
+    "app|UIComponents": 7,
+    "app|UIFont": 25,
+    "app|UIImage": 70,
+    "app|UIColor": 93,
+    "preview|UIColor": 1,
+    "preview|UIImage": 1,
+    "preview|UIFont": 2,
+    "app|UIImageView": 25,
+    "app|UIActivityIndicatorView": 4,
+    "app|UIButton": 58,
+    "app|UIScreen": 14,
+    "app|UIGraphicsImageRenderer": 3,
+    "app|UIApplication": 48,
+    "app|UIInterfaceOrientation": 1,
+    "app|UITextInputMode": 1,
+    "app|UILabel": 49,
+    "app|UIGraphicsBeginImageContextWithOptions": 1,
+    "app|UIGraphicsEndImageContext": 1,
+    "app|UIGraphicsGetCurrentContext": 1,
+    "app|UIGraphicsGetImageFromCurrentImageContext": 1,
+    "app|UITableView": 84,
+    "app|UITableViewCell": 54,
+    "app|UIDevice": 33,
+    "app|UIHostingController": 3,
+    "app|UIInterfaceOrientationMask": 2,
+    "app|UIScrollView": 16,
+    "app|UIStackView": 30,
+    "app|UIViewControllerTransitionCoordinator": 4,
+    "app|UIStatusBarStyle": 1,
+    "app|UIPopoverPresentationControllerDelegate": 2,
+    "app|UIPresentationController": 3,
+    "app|UITraitCollection": 4,
+    "app|UIModalPresentationStyle": 2,
+    "app|UIEdgeInsets": 23,
+    "app|UIPageControl": 4,
+    "preview|UIViewController": 1,
+    "preview|UIViewControllerRepresentable": 1,
+    "app|UITapGestureRecognizer": 16,
+    "app|UIPointerInteraction": 2,
+    "app|UIPointerInteractionDelegate": 1,
+    "app|UIPointerRegion": 1,
+    "app|UIPointerStyle": 2,
+    "app|UITargetedPreview": 1,
+    "app|UIPointerEffect": 1,
+    "app|UIConstants": 536,
+    "app|UIDropInteraction": 4,
+    "app|UIContextMenuInteraction": 4,
+    "app|UIWindowScene": 1,
+    "app|UINavigationController": 4,
+    "app|UIKeyCommand": 18,
+    "app|UIMenuElement": 4,
+    "app|UIAction": 19,
+    "app|UIMenu": 10,
+    "app|UIDropInteractionDelegate": 1,
+    "app|UIDropSession": 3,
+    "app|UIDropProposal": 2,
+    "app|UIPopoverArrowDirection": 1,
+    "app|UIAdaptivePresentationControllerDelegate": 1,
+    "app|UIActivityViewController": 4,
+    "app|UIPopoverPresentationController": 2,
+    "app|UIPasteboard": 16,
+    "app|UIAlertController": 11,
+    "app|UIApplicationMain": 1,
+    "app|UIApplicationDelegate": 1,
+    "app|UIWindow": 4,
+    "app|UINavigationBarAppearance": 1,
+    "app|UINavigationBar": 2,
+    "app|UIBarButtonItemAppearance": 1,
+    "app|UIApplicationShortcutItem": 2,
+    "app|UIUserActivityRestoring": 1,
+    "app|UIContentSizeCategory": 1,
+    "app|UITableViewDelegate": 7,
+    "app|UITableViewDataSource": 7,
+    "app|UISwitch": 14,
+    "app|UITextFieldDelegate": 6,
+    "app|UITextField": 24,
+    "app|UIBarButtonItem": 17,
+    "app|UITextViewDelegate": 1,
+    "app|UITextView": 9,
+    "app|UIAlertAction": 11,
+    "app|UIGestureRecognizer": 5,
+    "app|UIFontMetrics": 2,
+    "app|UIContentContainer": 1,
+    "app|UIViewPropertyAnimator": 4,
+    "app|UIImpactFeedbackGenerator": 2,
+    "app|UISpringTimingParameters": 1,
+    "app|UIPageViewController": 7,
+    "app|UIPageViewControllerDataSource": 1,
+    "app|UIPageViewControllerDelegate": 1,
+    "app|UILayoutPriority": 9,
+    "app|UITouch": 7,
+    "app|UIEvent": 6,
+    "app|UITextPosition": 3,
+    "app|UIContextMenuInteractionDelegate": 1,
+    "app|UIContextMenuConfiguration": 6,
+    "app|UIContextMenuInteractionAnimating": 2,
+    "app|UIControl": 11,
+    "app|UIProgressView": 2,
+    "app|UILongPressGestureRecognizer": 2,
+    "app|UILayoutGuide": 2,
+    "app|UIDragInteraction": 2,
+    "app|UIMenuItem": 3,
+    "app|UIMenuController": 2,
+    "app|UIDragInteractionDelegate": 1,
+    "app|UIDragSession": 1,
+    "app|UIDragItem": 2,
+    "app|UIControlPublisher": 5,
+    "app|UIControlSubscription": 2,
+    "app|UIPress": 1,
+    "app|UIPressesEvent": 1,
+    "app|UIActivityItemProvider": 1,
+    "app|UIActivity": 4,
+    "app|UIPrintInfo": 1,
+    "app|UIPrintPageRenderer": 1,
+    "app|UIViewAnimationCurve": 2,
+    "app|UIKeyboardFrameBeginUserInfoKey": 1,
+    "app|UIUserInterfaceStyle": 2,
+    "app|UIGestureRecognizerDelegate": 1,
+    "app|UIViewControllerTransitioningDelegate": 1,
+    "app|UITableViewHeaderFooterView": 3,
+    "app|UIPrintFormatter": 1,
+    "app|UIRefreshControl": 1,
+    "app|UIScrollViewDelegate": 1,
+    "app|UITableViewDiffableDataSource": 2,
+    "test|UIWebview": 1,
+    "test|UIPasteboard": 7,
+    "test|UIConstants": 16,
+    "test|UIDeviceOrientation": 1,
+    "test|UIDevice": 2,
+    "test|UIAlertController": 1,
+    "test|UIImagePNGRepresentation": 1,
+    "test|UIImage": 2,
+    "test|UIGraphicsImageRendererFormat": 1,
+    "test|UIGraphicsImageRenderer": 1
+   },
+   "files_touched": {
+    "app": 112,
+    "preview": 4,
+    "test": 10
+   }
+  },
+  "SwiftUI-ish": {
+   "by_class_token": {
+    "preview|View": 12,
+    "preview|HStack": 3,
+    "preview|Text": 3,
+    "preview|NavigationView": 1,
+    "preview|Image": 1,
+    "app|Image": 25,
+    "app|View": 59,
+    "app|VStack": 18,
+    "app|HStack": 11,
+    "app|Text": 128,
+    "app|NavigationView": 2,
+    "app|Button": 39,
+    "app|Published": 20,
+    "app|ZStack": 3,
+    "app|ObservableObject": 2,
+    "test|Text": 1
+   },
+   "files_touched": {
+    "preview": 4,
+    "app": 38,
+    "test": 1
+   }
+  },
+  "Foundation": {
+   "by_class_token": {
+    "app|NSObject": 5,
+    "app|NSEC_PER_SEC": 3,
+    "app|DispatchQueue": 39,
+    "app|NSURL": 12,
+    "app|NSCharacterSet": 1,
+    "app|NSItemProvider": 7,
+    "app|Bundle": 52,
+    "app|NSExtensionItem": 4,
+    "app|URL": 288,
+    "test|UserDefaults": 4,
+    "test|URL": 77,
+    "app|Data": 15,
+    "app|PropertyListDecoder": 1,
+    "app|NSCoder": 53,
+    "app|NSLayoutConstraint": 59,
+    "app|NSCache": 2,
+    "app|UUID": 8,
+    "app|URLSessionDataTask": 2,
+    "app|URLRequest": 10,
+    "app|URLSession": 2,
+    "app|HTTPURLResponse": 1,
+    "app|NSString": 8,
+    "app|UserDefaults": 56,
+    "app|JSONEncoder": 2,
+    "app|JSONDecoder": 3,
+    "app|NSBundle": 1,
+    "app|NSLog": 3,
+    "app|NSExtensionRequestHandling": 1,
+    "app|NSExtensionContext": 1,
+    "app|JSONSerialization": 6,
+    "app|NSSecureCoding": 1,
+    "app|NSDictionary": 3,
+    "app|Locale": 6,
+    "app|URLComponents": 15,
+    "app|NotificationCenter": 19,
+    "app|Notification": 12,
+    "app|Date": 12,
+    "app|Calendar": 1,
+    "app|NSAttributedString": 25,
+    "app|NSUserActivity": 6,
+    "app|NSMutableAttributedString": 7,
+    "app|CharacterSet": 17,
+    "app|NSRange": 11,
+    "app|NSMutableParagraphStyle": 1,
+    "app|Timer": 6,
+    "app|NSEC_PER_MSEC": 2,
+    "app|NSRegularExpression": 12,
+    "app|NSDiffableDataSourceSnapshot": 1,
+    "app|FileManager": 11,
+    "app|DateFormatter": 1,
+    "app|NSNumber": 4,
+    "app|NSLocalizedString": 230,
+    "app|NSException": 1,
+    "app|NSError": 10,
+    "app|NSTextAlignment": 2,
+    "app|NSDataDetector": 1,
+    "app|NSTextCheckingResult": 1,
+    "app|URLQueryItem": 3,
+    "app|NSURLComponents": 2,
+    "app|NSData": 1,
+    "app|NSKeyedUnarchiver": 1,
+    "app|NSKeyedArchiver": 1,
+    "app|NSCoding": 1,
+    "app|NSMutableCharacterSet": 2,
+    "app|NSLocale": 1,
+    "app|NSStringDrawingOptions": 1,
+    "app|RunLoop": 2,
+    "app|NSTimer": 1,
+    "app|OperationQueue": 1,
+    "app|URLCache": 1,
+    "app|NSSearchPathForDirectoriesInDomains": 2,
+    "app|HTTPCookieStorage": 1,
+    "app|NSClassFromString": 1,
+    "app|NSObjectProtocol": 1,
+    "app|NSNull": 2,
+    "app|NSMutableURLRequest": 1,
+    "app|NSSelectorFromString": 2,
+    "app|NSValue": 1,
+    "app|NSNotification": 4,
+    "app|NSUserActivityPersistentIdentifier": 2,
+    "app|NSKeyValueObservation": 1,
+    "app|NSKeyValueChangeKey": 1,
+    "app|NSURLErrorFailingURLErrorKey": 1,
+    "test|NSPredicate": 11,
+    "test|Date": 2,
+    "test|Calendar": 1,
+    "test|URLRequest": 6,
+    "test|NSObject": 1,
+    "test|NSLog": 13,
+    "test|CharacterSet": 2,
+    "test|Locale": 1,
+    "test|NSRegularExpression": 2,
+    "test|NSRange": 2,
+    "test|NSString": 1,
+    "test|NSHomeDirectory": 1,
+    "test|JSONSerialization": 2,
+    "tool|FileManager": 1,
+    "tool|NSString": 1,
+    "tool|URL": 4,
+    "tool|Data": 1,
+    "tool|JSONSerialization": 1
+   },
+   "files_touched": {
+    "app": 123,
+    "test": 21,
+    "tool": 1
+   }
+  },
+  "OtherFrameworkImports": {
+   "by_class_token": {
+    "app|UIKit": 100,
+    "app|Social": 1,
+    "app|MobileCoreServices": 2,
+    "app|PackageDescription": 1,
+    "test|XCTest": 40,
+    "test|AppShortcuts": 2,
+    "app|Foundation": 64,
+    "app|SwiftUI": 24,
+    "preview|SwiftUI": 4,
+    "app|UIHelpers": 7,
+    "app|Combine": 18,
+    "app|SnapKit": 7,
+    "app|DesignSystem": 5,
+    "app|Widget": 3,
+    "app|UIComponents": 3,
+    "app|SafariServices": 2,
+    "app|Glean": 15,
+    "app|Onboarding": 6,
+    "app|StoreKit": 1,
+    "app|Intents": 6,
+    "app|AppShortcuts": 4,
+    "app|Sentry": 2,
+    "app|WebKit": 6,
+    "app|IntentsUI": 3,
+    "app|Licenses": 1,
+    "app|LocalAuthentication": 2,
+    "app|FocusAppServices": 4,
+    "app|Network": 1,
+    "app|Fuzi": 1,
+    "app|AudioToolbox": 1,
+    "app|CoreHaptics": 1,
+    "app|os": 1,
+    "app|PassKit": 1,
+    "test|Foundation": 5,
+    "test|Onboarding": 1,
+    "tool|PackageDescription": 1,
+    "tool|Foundation": 2,
+    "tool|ContentBlockerGenLib": 1,
+    "app|WidgetKit": 1
+   },
+   "files_touched": {
+    "app": 179,
+    "test": 40,
+    "preview": 4,
+    "tool": 3
+   }
+  },
+  "objc-ish": {
+   "by_class_token": {
+    "app|NSObject": 5,
+    "app|#selector": 77,
+    "app|@objc": 86,
+    "test|NSObject": 1
+   },
+   "files_touched": {
+    "app": 38,
+    "test": 1
+   }
+  }
+ },
+ "imports_per_file": {
+  "OpenInFocus/ActionViewController.swift": [
+   "MobileCoreServices",
+   "Social",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Package.swift": [
+   "PackageDescription"
+  ],
+  "BlockzillaPackage/Tests/BlockzillaPackageTests/AppShortcutsTests.swift": [
+   "AppShortcuts",
+   "XCTest"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/UIFont+AppFonts.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/UIImage+AppImages.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift": [
+   "Foundation",
+   "SwiftUI",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/Bundle+CurrentBundle.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Widget/Assets.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Licenses/LicenseListView.swift": [
+   "SwiftUI",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Licenses/LicenseList.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/UIComponents/AsyncImageView.swift": [
+   "UIHelpers",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIButton+Background.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/ImageLoader.swift": [
+   "Combine",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIViewController+Child.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIScreenExtensions.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIImageExtensions.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIViewExtensions.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIApplication+Orientation.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/FaviIconGenerator.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UILabelExtensions.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UITableView+Dequeue.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/UIHelpers/UIDeviceExtensions.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/OnboardingViewController.swift": [
+   "DesignSystem",
+   "SnapKit",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandlerV2.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/ToolTipRoute.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingVersion.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandlerV1.swift": [
+   "Combine",
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandling.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Handler/Action.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipTableViewCell.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipViewController.swift": [
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipView.swift": [
+   "DesignSystem",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift": [
+   "SwiftUI",
+   "Widget"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift": [
+   "SwiftUI",
+   "Widget"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift": [
+   "SwiftUI"
+  ],
+  "BlockzillaPackage/Sources/AppShortcuts/ShortcutViewModel.swift": [
+   "Foundation",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/AppShortcuts/ShortcutView.swift": [
+   "Combine",
+   "DesignSystem",
+   "UIComponents",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/AppShortcuts/Shortcut.swift": [
+   "Foundation"
+  ],
+  "BlockzillaPackage/Sources/AppShortcuts/ShortcutsManager.swift": [
+   "Foundation",
+   "UIHelpers",
+   "UIKit"
+  ],
+  "BlockzillaPackage/Sources/AppShortcuts/ShortcutsPersister.swift": [
+   "Foundation"
+  ],
+  "Deferred/Deferred.swift": [
+   "Foundation"
+  ],
+  "Deferred/ReadWriteLock.swift": [
+   "Foundation"
+  ],
+  "Deferred/LockProtected.swift": [
+   "Foundation"
+  ],
+  "Shared/AppInfo.swift": [
+   "Foundation"
+  ],
+  "Shared/Settings.swift": [
+   "Foundation"
+  ],
+  "Shared/Utils.swift": [
+   "Foundation",
+   "SafariServices"
+  ],
+  "Shared/AppConfig.swift": [
+   "Foundation",
+   "UIKit"
+  ],
+  "ContentBlocker/ActionRequestHandler.swift": [
+   "MobileCoreServices",
+   "UIKit"
+  ],
+  "Search/get_supported_locales.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/NavigationPath.swift": [
+   "Foundation",
+   "Glean"
+  ],
+  "Blockzilla/HomeViewController.swift": [
+   "Onboarding",
+   "UIKit"
+  ],
+  "Blockzilla/ShortcutsPresenter.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/BrowserViewController.swift": [
+   "AppShortcuts",
+   "Combine",
+   "Foundation",
+   "Glean",
+   "Intents",
+   "Onboarding",
+   "SnapKit",
+   "StoreKit",
+   "SwiftUI",
+   "UIKit"
+  ],
+  "Blockzilla/AppDelegate.swift": [
+   "AppShortcuts",
+   "Combine",
+   "Glean",
+   "Onboarding",
+   "Sentry",
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Cells/SettingsTableViewToggleCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Cells/SettingsTableViewAccessoryCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Cells/SettingsTableViewCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/AutocompleteSettingViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/AddCustomDomainViewController.swift": [
+   "Glean",
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/SafariInstructionsViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/AddSearchEngineViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/SearchSettingsViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/AutocompleteCustomUrlViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/AboutViewController.swift": [
+   "Foundation",
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Controller/SettingsContentViewController.swift": [
+   "Foundation",
+   "UIKit",
+   "WebKit"
+  ],
+  "Blockzilla/Settings/Controller/SettingsViewController.swift": [
+   "Combine",
+   "DesignSystem",
+   "Glean",
+   "Intents",
+   "IntentsUI",
+   "Licenses",
+   "Onboarding",
+   "SwiftUI",
+   "UIKit"
+  ],
+  "Blockzilla/Settings/View/InstructionsView.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/View/ActionFooterView.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Helpers/BlockerToggle.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Settings/Helpers/BlockerEnabledDetector.swift": [
+   "Foundation",
+   "SafariServices"
+  ],
+  "Blockzilla/Tracking Protection/TrackingProtectionPageStats.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/TrackingProtectionDelegate.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/TrackingProtectionViewController.swift": [
+   "Combine",
+   "Foundation",
+   "Glean",
+   "Onboarding",
+   "SnapKit",
+   "UIHelpers",
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Model/ToggleItem.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/Model/TrackingProtectionState.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/Model/TrackingProtectionManager.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/Model/SecureConnectionStatus.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Tracking Protection/Views/SubtitleCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Views/TrackingHeaderView.swift": [
+   "Combine",
+   "UIComponents",
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Views/ImageCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift": [
+   "Combine",
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Presentation/SheetModalViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Tracking Protection/Presentation/SheetMetrics.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Pro Tips/TipManager.swift": [
+   "Foundation",
+   "LocalAuthentication"
+  ],
+  "Blockzilla/Pro Tips/TipsPageViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Pro Tips/ShareTrackersViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Pro Tips/TipViewController.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/InternalSettings/InternalSettingsView.swift": [
+   "SwiftUI"
+  ],
+  "Blockzilla/InternalSettings/InternalExperimentDetailView.swift": [
+   "Combine",
+   "FocusAppServices",
+   "SwiftUI"
+  ],
+  "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift": [
+   "FocusAppServices",
+   "SwiftUI"
+  ],
+  "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift": [
+   "SwiftUI"
+  ],
+  "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift": [
+   "Combine",
+   "Glean",
+   "SwiftUI"
+  ],
+  "Blockzilla/InternalSettings/InternalSettings.swift": [
+   "Combine",
+   "Foundation"
+  ],
+  "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift": [
+   "Sentry",
+   "SwiftUI"
+  ],
+  "Blockzilla/SearchSuggestions/OverlayView.swift": [
+   "Glean",
+   "SnapKit",
+   "UIHelpers",
+   "UIKit"
+  ],
+  "Blockzilla/SearchSuggestions/SearchSuggestionsPromptView.swift": [
+   "Glean",
+   "UIKit"
+  ],
+  "Blockzilla/Extensions/CharacterSetExtensions.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Extensions/StringExtensions.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Extensions/FileManagerExtensions.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Extensions/URLExtensions.swift": [
+   "Foundation",
+   "Network"
+  ],
+  "Blockzilla/Extensions/ClosedRangeExtensions.swift": [],
+  "Blockzilla/Extensions/UIPasteBoardExtensions.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Search/SearchEngineManager.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Search/SearchEngine.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Search/OpenSearchParser.swift": [
+   "Fuzi",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/UIConstants.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/AutocompleteTextField.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift": [
+   "AppShortcuts",
+   "AudioToolbox",
+   "CoreHaptics",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/GradientBackgroundView.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/SmartLabel.swift": [
+   "UIHelpers",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/SplashViewController.swift": [
+   "Combine",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/BrowserToolbar.swift": [
+   "Combine",
+   "UIComponents",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/GradientProgressBar.swift": [
+   "Foundation",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/UIAlertController+Rename.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/InsetButton.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/Toast.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/EditView.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/HomeViewToolbar.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/URLBar/URLBar.swift": [
+   "Combine",
+   "Glean",
+   "SnapKit",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/URLBar/URLBarDelegate.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/URLBar/Combine+UIControl.swift": [
+   "Combine",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/URLBar/URLBarViewModel.swift": [
+   "Combine",
+   "UIKit"
+  ],
+  "Blockzilla/UIComponents/ErrorPage/ErrorPage.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/Metadata.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/WebCacheUtils.swift": [
+   "Foundation",
+   "WebKit"
+  ],
+  "Blockzilla/Utilities/UserDefault.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/FindInPageBar.swift": [
+   "DesignSystem",
+   "UIKit"
+  ],
+  "Blockzilla/Utilities/SearchHistoryUtils.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/AuthenticationManager.swift": [
+   "LocalAuthentication"
+  ],
+  "Blockzilla/Utilities/LocalContentBlocker.swift": [
+   "Foundation",
+   "WebKit"
+  ],
+  "Blockzilla/Utilities/SearchInContentTelemetry.swift": [
+   "Glean",
+   "WebKit"
+  ],
+  "Blockzilla/Utilities/TelemetryIntegration.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/TitleActivityItemProvider.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Utilities/SearchSuggestClient.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/OpenUtils.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Utilities/AdsTelemetryHelper.swift": [
+   "Foundation",
+   "Glean",
+   "WebKit"
+  ],
+  "Blockzilla/Utilities/SupportUtils.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/OnboardingTelemetryHelper.swift": [
+   "Foundation",
+   "Glean"
+  ],
+  "Blockzilla/Utilities/Debouncer.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/KeyboardType.swift": [
+   "Glean",
+   "UIKit"
+  ],
+  "Blockzilla/Utilities/InternalURL.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/URIFixup.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Utilities/KeyboardHelper.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Nimbus/NimbusExtensions.swift": [
+   "FocusAppServices",
+   "Foundation"
+  ],
+  "Blockzilla/Nimbus/NimbusWrapper.swift": [
+   "FocusAppServices",
+   "Foundation",
+   "os"
+  ],
+  "Blockzilla/Theme/ThemeViewController.swift": [
+   "UIHelpers",
+   "UIKit"
+  ],
+  "Blockzilla/Theme/SystemThemeDelegate.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Theme/Theme.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Theme/ThemeCells/ThemeTableViewAccessoryCell.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Menu Extensions/MenuAction.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Menu Extensions/PhotonActionSheetItem+MenuAction.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Menu/Menu Extensions/UIAction+MenuAction.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Old/PhotonActionSheet.swift": [
+   "SnapKit",
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Old/PhotonActionSheetCell.swift": [
+   "SnapKit",
+   "UIHelpers",
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Protocol/MenuItemProvider.swift": [
+   "AppShortcuts",
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Protocol/WebMenuAction.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Menu/Protocol/MenuActionable.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Lib/PaddedSwitch.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Lib/InsetTextField.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Lib/RequestHandler/RequestHandler.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Lib/TrackingProtection/TrackingProtection.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Lib/DomainCompletion/DomainCompletion+ErrorMessage.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Lib/DomainCompletion/DomainCompletion.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Siri/SiriFavoriteViewController.swift": [
+   "Intents",
+   "IntentsUI",
+   "UIKit"
+  ],
+  "Blockzilla/Siri/SiriShortcuts.swift": [
+   "Intents",
+   "IntentsUI"
+  ],
+  "Blockzilla/Modules/WebView/WebViewController.swift": [
+   "Combine",
+   "Glean",
+   "PassKit",
+   "UIKit",
+   "WebKit"
+  ],
+  "Blockzilla/Declarative DataSource/SectionItem.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Declarative DataSource/DataSource.swift": [
+   "UIKit"
+  ],
+  "Blockzilla/Onboarding/OnboardingConstants.swift": [
+   "Foundation"
+  ],
+  "Blockzilla/Onboarding/OnboardingFactory.swift": [
+   "Onboarding",
+   "SwiftUI",
+   "UIKit"
+  ],
+  "focus-ios-tests/XCUITest/AsianLocaleTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/WebsiteMemoryTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/SettingAppearanceTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/ShortcutsTest.swift": [
+   "Foundation",
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/CopyTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/TPSidebarBadge.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/URLValidationTest.swift": [
+   "Foundation",
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/SearchSuggestionsTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/BaseTestCase.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/PastenGoTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/CollapsedURLTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/DragAndDropTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/RequestDesktopTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/SearchProviderTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/OpenInFocusTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/BasicBrowsing.swift": [
+   "Foundation",
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/WebsiteAccessTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/XCUIApplication+Buttons.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/TestHelpers.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/OnboardingTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/TPSettingsTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/FindInPageTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/XCUITest/UserAgentTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/URIFixupTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/BrowserViewControllerTests.swift": [
+   "AppShortcuts",
+   "Onboarding",
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/URLExtensionsTests.swift": [
+   "Foundation",
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/SupportUtilsTest.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/NavigationPathTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/RequestHandlerTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/SearchEngineTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/DomainCompletionTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/TrackingAdsTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ClientTests/SearchEngineManagerTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ScreenshotTests/SnapshotHelper.swift": [
+   "Foundation",
+   "XCTest"
+  ],
+  "focus-ios-tests/ScreenshotTests/MarketingTests.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ScreenshotTests/BaseTestCaseL10n.swift": [
+   "XCTest"
+  ],
+  "focus-ios-tests/ScreenshotTests/SnapshotTests.swift": [
+   "XCTest"
+  ],
+  "FocusIntentExtension/IntentHandler.swift": [
+   "Intents"
+  ],
+  "content-blocker-lib-ios/ContentBlockerGen/Package.swift": [
+   "PackageDescription"
+  ],
+  "content-blocker-lib-ios/ContentBlockerGen/Tests/ContentBlockerGenTests/ContentBlockerGenTests.swift": [
+   "XCTest"
+  ],
+  "content-blocker-lib-ios/ContentBlockerGen/Tests/ContentBlockerGenTests/XCTestManifests.swift": [
+   "XCTest"
+  ],
+  "content-blocker-lib-ios/ContentBlockerGen/Sources/ContentBlockerGen/main.swift": [
+   "ContentBlockerGenLib",
+   "Foundation"
+  ],
+  "content-blocker-lib-ios/ContentBlockerGen/Sources/ContentBlockerGenLib/ContentBlockerGenLib.swift": [
+   "Foundation"
+  ],
+  "Widgets/Widgets.swift": [
+   "Intents",
+   "SwiftUI",
+   "Widget",
+   "WidgetKit"
+  ]
+ }
+}

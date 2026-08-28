@@ -1,0 +1,45 @@
+    172 error: cannot find 'X' in scope
+    140 error: value of type 'X' has no member 'X'
+    120 error: cannot find type 'X' in scope
+     92 error: type 'X' has no member 'X'
+     86 error: cannot use optional chaining on non-optional value of type 'X'
+     66 error: cannot infer contextual base in reference to member 'X'
+     44 error: 'X' requires a contextual type
+     38 error: main actor-isolated property 'X' can not be referenced from a nonisolated context
+     36 error: main actor-isolated property 'X' can not be mutated from a nonisolated context
+     24 error: incorrect argument label in call (have 'X', expected 'X')
+     18 error: call to main actor-isolated instance method 'X' in a synchronous nonisolated context [#ActorIsolatedCall]
+     18 error: argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
+     16 error: call to main actor-isolated initializer 'X' in a synchronous nonisolated context [#ActorIsolatedCall]
+     16 error: argument passed to call that takes no arguments
+     14 error: method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
+     14 error: 'X' is inaccessible due to 'X' protection level
+     12 error: use the 'X' modifier to override a required initializer
+     12 error: ambiguous use of 'X'
+     10 error: method does not override any method from its superclass
+     10 error: extra argument 'X' in call
+     10 error: 'X' is not a member type of class 'X'
+      8 error: overriding non-open property outside of its defining module
+      8 error: overriding non-open instance method outside of its defining module
+      8 error: missing argument for parameter 'X' in call
+      8 error: cannot convert value of type 'X' to expected argument type 'X'
+      6 error: property does not override any property from its superclass
+      6 error: extra arguments at positions #N, #N, #N in call
+      6 error: 'X' is ambiguous for type lookup in this context
+      4 error: reference to member 'X' cannot be resolved without a contextual type
+      4 error: initializer for conditional binding must have Optional type, not 'X'
+      4 error: generic parameter 'X' could not be inferred
+      4 error: extra arguments at positions #N, #N in call
+      4 error: could not infer type of image literal
+      4 error: cannot assign value of type 'X' to type 'X'
+      4 error: 'X' cannot be used in class 'X' because it has no superclass
+      2 error: type of expression is ambiguous without a type annotation
+      2 error: overriding declaration requires an 'X' keyword
+      2 error: non-'X' property 'X' is declared in extension of 'X' and cannot be overridden
+      2 error: no exact matches in call to initializer 
+      2 error: must call a designated initializer of the superclass 'X'
+      2 error: missing arguments for parameters 'X', 'X', 'X', 'X', 'X' in call
+      2 error: cannot call value of non-function type 'X'
+      2 error: call to main actor-isolated static method 'X' in a synchronous nonisolated context [#ActorIsolatedCall]
+      2 error: @escaping attribute only applies to function types
+      2 error: 'X' initializer is inaccessible due to 'X' protection level
