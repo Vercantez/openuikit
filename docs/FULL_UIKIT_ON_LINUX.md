@@ -436,7 +436,9 @@ result in its header so the next person does not repeat it.
 
 ```sh
 # build: ~/uikit read-only, everything else in ~/swift-macho-linux
-docker run --rm -v ~/swift-macho-linux:/w -v ~/uikit:/uikit:ro -w /w \
+# THE ~/machorun MOUNT IS NOT OPTIONAL -- see below.
+docker run --rm -v ~/swift-macho-linux:/w -v ~/uikit:/uikit:ro \
+    -v ~/machorun:/machorun:ro -w /w -e QUARTZ_REBUILD=1 \
     swift-macho-spike:noble bash full/scripts/build_full.sh
 
 # render all 108 scenes, one process per scene
@@ -447,6 +449,18 @@ swift build -c release --product openrender --scratch-path /tmp/ub   # in ~/uiki
 OPENUIKIT_BACKEND=quartz /tmp/ub/release/openrender render /tmp/mac_out fixtures/scenes/*.json
 python3 full/scripts/score.py ~/swift-macho-linux/build/full/suite /tmp/mac_out ~/uikit/golden
 ```
+
+**`-v ~/machorun:/machorun:ro` was missing from this block, and following the
+instructions as written produced a silent no-op** (found 2026-08-27). The guest
+root is staged from `MACHORUN=/machorun`; without the mount that path does not
+exist, so every `-nt` freshness test compares against a missing file and is
+FALSE, and the loader copy *and* the `libSystem`/`libc++` umbrella rebuild are
+both skipped — with no error and exit 0. The build then links against whatever
+`scratch/mrroot_full` already contained, which is how a guest root ends up half
+one machorun version and half another. `build_full.sh` now **refuses** when the
+mount is absent rather than trusting the reader to have the right command line.
+`QUARTZ_REBUILD=1` is likewise needed for a rebuild: `libquartz.dylib` is
+otherwise only built when the file is missing.
 
 Fonts: `run_suite.sh` copies `SFNS*.ttf` from the host macOS into
 `scratch/fonts` and passes `OPENUIKIT_FONT_DIR`, exactly as `~/uikit`'s own
