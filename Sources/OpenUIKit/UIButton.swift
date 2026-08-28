@@ -142,6 +142,11 @@ open class UIButton: UIControl {
     public var menu: UIMenu?
     public var showsMenuAsPrimaryAction = false
 
+    /// Whether the button opts into the system pointer treatment. The value
+    /// is stateful and matches UIKit's default (`false`); OpenUIKit does not
+    /// yet have a host cursor renderer to consume it.
+    public var isPointerInteractionEnabled = false
+
     /// UIKit's `performPrimaryAction()` (iOS 17+): presents the menu when
     /// `showsMenuAsPrimaryAction` is set, otherwise sends
     /// `.primaryActionTriggered` + `.touchUpInside`.

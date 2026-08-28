@@ -613,6 +613,13 @@ extension UIView {
 
     public func addInteraction(_ interaction: UIInteraction) {
         guard !_interactions.contains(where: { $0 === interaction }) else { return }
+        // UIKit interactions have one owning view. A live iOS 26.1 probe
+        // confirms that adding an attached interaction to B first removes it
+        // from A (including A's willMove/didMove(nil) lifecycle) before B's
+        // attachment callbacks run.
+        if let oldView = interaction.view, oldView !== self {
+            oldView.removeInteraction(interaction)
+        }
         interaction.willMove(to: self)
         _interactions.append(interaction)
         interaction.didMove(to: self)

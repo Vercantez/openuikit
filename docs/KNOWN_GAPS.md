@@ -1,5 +1,34 @@
 # Known gaps (living document — fixers: read this)
 
+## Pointer-interaction descriptors (Focus AppShortcuts, 2026-08-28)
+
+OpenUIKit now exposes the Swift-overlay pointer family needed by Focus:
+`UIPointerInteraction`, its delegate and regions, value-shaped
+`UIPointerEffect`/`UIPointerShape`, and `UIPointerStyle`. Interactions retain
+UIKit's one-view lifecycle, weak delegate, enabled state, and measured
+defaults. `UIButton.isPointerInteractionEnabled` is also a real stored toggle,
+defaulting to `false` like UIKit.
+
+This is source and state compatibility, not a claim that Linux has UIKit's
+cursor compositor:
+
+- The host does not ingest mouse-hover movement into pointer-region requests,
+  so it does not automatically ask delegates for styles or send enter/exit
+  animation callbacks.
+- The focused delegate surface currently includes the optional-equivalent
+  `styleFor` callback. `UIPointerRegionRequest`, region selection, and the
+  enter/exit animator protocols remain unmodeled.
+- Effects, shapes, and styles preserve their inputs but do not morph, tint,
+  scale, shadow, hide, or otherwise redraw the host cursor.
+- The iOS Swift overlay advertises `UIPointerEffect` as `Sendable` and
+  `Equatable`, but its preview is main-actor UI state and the live equality
+  operator is non-reflexive. OpenUIKit keeps effects and shapes main-actor
+  isolated and deliberately does not claim those misleading conformances.
+- `invalidate()` is intentionally a no-op until a host pointer event/style
+  bridge exists.
+- Enabling a button's pointer interaction records the application-visible
+  UIKit state; it does not synthesize a hidden interaction or hover renderer.
+
 ## `UIApplicationDelegate.window` optional-requirement bridge (Focus UIHelpers, 2026-08-28)
 
 Objective-C UIKit declares `window` as an optional protocol requirement. A
