@@ -34,6 +34,42 @@
 
 #include <stdint.h>
 
+/* CORRECTION 2026-08-28, from machorun-files and verified here: THIS FILE IS A
+ * THIRD COPY, and the omission runs the OTHER way from what I first reported.
+ * Measured on both headers:
+ *
+ *   swiftcore-macho/sdk/libc/MacTypes.h    54 lines   HAS all ten of
+ *       Str255 ConstStr255Param StringPtr ConstStringPtr StringHandle
+ *       UTF8Char UTF16Char UTF32Char UnicodeScalarValue BytePtr_t
+ *   machorun/sdk/local/MacTypes.h         129 lines   OMITS all ten, and says
+ *       so in its own header comment -- but HAS AbsoluteTime, OptionBits,
+ *       LogicalAddress, Duration and more the 54-line one lacks.
+ *
+ * THE TWO ARE COMPLEMENTARY, NOT DUPLICATE. Neither is a superset, so
+ * "compare, then delete ours" is wrong in BOTH directions as written. My error
+ * has a name worth keeping: I preferred the copy that was BIGGER rather than
+ * the copy that was a SUPERSET -- 129 against 54 makes one look obviously
+ * canonical, and it is not.
+ *
+ * Consequence: PREFER_MACHORUN_HEADERS=1 in stage_sdk.sh is LOSSY, not
+ * neutral. It keeps the header lacking these ten, and THIS FILE is what makes
+ * that combination compile -- re-supplying, from a third repo, types that
+ * already exist in a second one. Exactly the duplication this project warns
+ * about, committed by the person warning about it.
+ *
+ * THE DELETION SIGNAL IS NOT AUTOMATIC, so it is a contract instead. C permits
+ * identical repeated typedefs, so if machorun's header grows these, the
+ * duplication compiles SILENTLY and this file rots in place. The #error below
+ * is the tripwire: whoever adds them defines MR_MACTYPES_HAS_PASCAL_STRINGS
+ * beside them, and this file then refuses to build until it is deleted. One
+ * line on their side buys a loud failure here instead of a silent third copy.
+ */
+#ifdef MR_MACTYPES_HAS_PASCAL_STRINGS
+#error "machorun's MacTypes.h now defines the Pascal-string and UTF types. \
+DELETE include/CFCarbonTypesShim.h and its -include from build_cf_probes.sh; \
+this file exists only to compensate for their absence."
+#endif
+
 /* MacTypes.h FIRST, and it is not optional. CF's public headers assume it has
  * already been included -- the CF census gets that from force-including
  * CoreFoundation_Prefix.h, which the nscf compile line does not use. Without

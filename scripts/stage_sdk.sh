@@ -50,10 +50,16 @@ if [ -n "$_hdr_conflicts" ] && [ "$PREFER_MACHORUN_HEADERS" != 1 ]; then
     echo "  A shadowing copy cannot fail, so this refuses rather than overwrites." >&2
     echo "  NOTHING HAS BEEN DELETED -- \$W/sdk is untouched." >&2
     echo >&2
-    echo "  Resolve one of two ways:" >&2
-    echo "    - delete the clean-room copy from \$SWIFTCORE/sdk/libc (the real" >&2
-    echo "      one is machorun's, and two definitions is the whole hazard), or" >&2
-    echo "    - PREFER_MACHORUN_HEADERS=1 $0   to keep machorun's and skip ours." >&2
+    echo "  THE TWO COPIES ARE COMPLEMENTARY, NOT DUPLICATE -- measured on both" >&2
+    echo "  and corrected 2026-08-28. swiftcore-macho's 54-line MacTypes.h HAS" >&2
+    echo "  the Pascal-string and UTF families; machorun's 129-line one OMITS" >&2
+    echo "  them deliberately and has ten OTHERS the 54-line one lacks. Neither" >&2
+    echo "  is a superset, so DO NOT delete either without merging first." >&2
+    echo >&2
+    echo "  PREFER_MACHORUN_HEADERS=1 $0   keeps machorun's and skips ours." >&2
+    echo "  That is LOSSY, not neutral: it drops the ten. It is usable only" >&2
+    echo "  because include/CFCarbonTypesShim.h re-supplies them, and that" >&2
+    echo "  shim is a THIRD copy waiting to be deleted. See task #88." >&2
     exit 2
 fi
 
