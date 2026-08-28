@@ -202,6 +202,13 @@ extension UIView {
     /// Fire every registration on this view and, recursively, its subviews.
     /// Hosts call this after changing `UITraitCollection.current`.
     public func _traitsDidChange(previous: UITraitCollection) {
+        // UIViewController's legacy callback is attached to its root view in
+        // UIKit. Deliver it once at that boundary; child-controller roots are
+        // reached naturally by the subtree walk below.
+        if let controller = _managingViewController,
+           controller.viewIfLoaded === self {
+            controller.traitCollectionDidChange(previous)
+        }
         for r in _traitRegistrations { r.fire(previous) }
         for s in subviews { s._traitsDidChange(previous: previous) }
     }

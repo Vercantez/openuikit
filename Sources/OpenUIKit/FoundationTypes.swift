@@ -12,7 +12,8 @@
 //
 // The collision was never missing API. It was duplicate NAMES. So the library
 // imports Foundation here and re-exports Foundation's own types under the
-// names UIKit uses. `typealias` is what makes that work: unqualified lookup
+// names UIKit uses; `Bundle` follows the same rule for UIViewController's nib
+// API. `typealias` is what makes that work: unqualified lookup
 // that finds a typealias AND the type it aliases resolves to ONE declaration,
 // so `import Foundation` + `import OpenUIKit` in one file is unambiguous — and
 // unlike the old shadowing, an `IndexPath` built by an app's model layer IS
@@ -104,5 +105,22 @@ public typealias NSRangePointer = Foundation.NSRangePointer
 /// Foundation's `TimeInterval` (`Double`, seconds). OpenUIKit's clock is the
 /// host tick timestamp, not a wall clock — the UNIT is all that is shared.
 public typealias TimeInterval = Foundation.TimeInterval
+
+// MARK: - Bundle
+
+/// Foundation's resource bundle type. UIViewController's nib initializer
+/// exposes it even when the controller is otherwise entirely programmatic.
+public typealias Bundle = Foundation.Bundle
+
+#else
+
+/// Foundation-free renderer builds still compile the complete OpenUIKit
+/// module. They cannot load resources or nibs, but they need the identity and
+/// `main` spelling carried by UIViewController's public initializer surface.
+/// A real application build compiles the branch above against Foundation.
+public final class Bundle: @unchecked Sendable {
+    public static let main = Bundle()
+    private init() {}
+}
 
 #endif

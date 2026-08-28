@@ -180,6 +180,11 @@ open class UIView: UIResponder {
     /// enters the solver as required left/top/width/height constraints;
     /// constraint-positioned views set this to false.
     public var translatesAutoresizingMaskIntoConstraints = true
+    /// UIKit creates every view with a pending constraints update. The flag
+    /// is cleared by `updateConstraints()` (whose overrides must call super)
+    /// and is propagated to ancestors by `setNeedsUpdateConstraints()` so a
+    /// root-driven pass can visit dirty descendants bottom-up.
+    var _needsUpdateConstraints = true
     /// Constraints installed on this view (nearest common ancestor of their
     /// items). Managed by NSLayoutConstraint.activate/deactivate.
     var _installedConstraints: [NSLayoutConstraint] = []
@@ -254,12 +259,17 @@ open class UIView: UIResponder {
         view.removeFromSuperview()
         view.superview = self
         subviews.append(view)
+        // A newly attached view starts with a pending constraints update.
+        // Re-issuing the invalidation after assigning `superview` propagates
+        // that pending work to this hierarchy's root.
+        view.setNeedsUpdateConstraints()
         setNeedsLayout()
     }
     public func insertSubview(_ view: UIView, at index: Int) {
         view.removeFromSuperview()
         view.superview = self
         subviews.insert(view, at: index)
+        view.setNeedsUpdateConstraints()
         setNeedsLayout()
     }
     public func removeFromSuperview() {
@@ -290,12 +300,66 @@ open class UIView: UIResponder {
     // MARK: Layout
     var needsLayout = true
     public func setNeedsLayout() { needsLayout = true }
+
+    /// Schedule the receiver's update-constraints callback for the next
+    /// layout pass. UIKit propagates this dirtiness to the hierarchy root:
+    /// invalidating a child and laying out the root updates the child first,
+    /// then the ancestors, and finally lays out the root.
+    open func setNeedsUpdateConstraints() {
+        _needsUpdateConstraints = true
+        var top = self
+        var ancestor = superview
+        while let current = ancestor {
+            current._needsUpdateConstraints = true
+            top = current
+            ancestor = current.superview
+        }
+        // Measured UIKit behavior: a constraints invalidation schedules the
+        // root layout, not a standalone layoutSubviews call on the child.
+        top.setNeedsLayout()
+    }
+
+    open func needsUpdateConstraints() -> Bool { _needsUpdateConstraints }
+
+    /// Run a bottom-up constraints update for the hierarchy rooted here.
+    /// A view-controller-managed root dispatches to the controller in lieu
+    /// of calling the root view directly; UIViewController's base method then
+    /// sends `updateConstraints()` to the view, matching UIKit's documented
+    /// separation-of-concerns hook.
+    open func updateConstraintsIfNeeded() {
+        _updateConstraintsSubtreeIfNeeded()
+    }
+
+    func _updateConstraintsSubtreeIfNeeded() {
+        for subview in subviews {
+            subview._updateConstraintsSubtreeIfNeeded()
+        }
+        guard _needsUpdateConstraints else { return }
+        if let controller = _managingViewController,
+           controller.viewIfLoaded === self {
+            controller.updateViewConstraints()
+        } else {
+            updateConstraints()
+        }
+    }
+
+    /// Override point for constraint creation/adjustment. Overrides must call
+    /// super; the base implementation clears the pending-update flag. This
+    /// also gives direct calls the same state transition observed on UIKit.
+    open func updateConstraints() {
+        _needsUpdateConstraints = false
+    }
+
     public func layoutIfNeeded() {
         // Auto Layout (M9): solve constraints for the whole hierarchy first
         // (UIKit solves in the window/root space before layoutSubviews).
         // No-op (one integer compare) when no constraints are installed.
         var top: UIView = self
         while let sv = top.superview { top = sv }
+        // Constraints update bottom-up before solving and layout. A child
+        // invalidation dirties its ancestors, so the controller-managed root
+        // is reached after every dirty descendant.
+        top._updateConstraintsSubtreeIfNeeded()
         // Safe area is a layout INPUT (it is derived from frames) and also a
         // layout OUTPUT (guides move views). UIKit resolves that by treating
         // the previous pass's safe area as this pass's input; we iterate
@@ -311,8 +375,15 @@ open class UIView: UIResponder {
     }
     func _layoutSubtree() {
         if needsLayout {
-            layoutSubviews()
+            // Clear before callbacks so setNeedsLayout() from inside an
+            // override schedules a subsequent pass instead of being erased.
             needsLayout = false
+            let controller = _managingViewController.flatMap {
+                $0.viewIfLoaded === self ? $0 : nil
+            }
+            controller?.viewWillLayoutSubviews()
+            layoutSubviews()
+            controller?.viewDidLayoutSubviews()
         }
         for s in subviews { s._layoutSubtree() }
     }

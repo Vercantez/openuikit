@@ -153,6 +153,16 @@ enum UIViewAnimationCompletionQueue {
 // MARK: - UIView.animate API
 
 extension UIView {
+    /// Raw values are Darwin's `UIViewAnimationCurve`. The type is still
+    /// used by transition-coordinator contexts even though modern animation
+    /// calls express the same curves through `AnimationOptions`.
+    public enum AnimationCurve: Int, Sendable {
+        case easeInOut = 0
+        case easeIn = 1
+        case easeOut = 2
+        case linear = 3
+    }
+
     /// Animation options. Raw values mirror UIKit's UIViewAnimationOptions
     /// (curve occupies bits 16..19; 0 = easeInOut is the default).
     public struct AnimationOptions: OptionSet, Sendable {

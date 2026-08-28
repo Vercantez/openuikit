@@ -27,9 +27,64 @@
 @preconcurrency @MainActor
 final class UILayoutContainerView: UIView {}
 
+/// The container contract UIViewController adopts on UIKit. The Objective-C
+/// protocol inherits NSObjectProtocol; OpenUIKit has no NSObject facade in
+/// its Swift core, so `AnyObject` preserves the class-only part of that shape.
 @preconcurrency @MainActor
-open class UIViewController: UIResponder {
-    public override init() { super.init() }
+public protocol UIContentContainer: AnyObject {
+    var preferredContentSize: CGSize { get }
+    func preferredContentSizeDidChange(
+        forChildContentContainer container: UIContentContainer)
+    func systemLayoutFittingSizeDidChange(
+        forChildContentContainer container: UIContentContainer)
+    func size(
+        forChildContentContainer container: UIContentContainer,
+        withParentContainerSize parentSize: CGSize
+    ) -> CGSize
+    func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator)
+    func willTransition(
+        to newCollection: UITraitCollection,
+        with coordinator: UIViewControllerTransitionCoordinator)
+}
+
+@preconcurrency @MainActor
+open class UIViewController: UIResponder, UIContentContainer {
+    private let _nibName: String?
+    private let _nibBundle: Bundle
+    private let _hasExplicitNibRequest: Bool
+
+    /// UIKit's plain initializer is the nil/nil nib initializer. Keep it as a
+    /// designated initializer in the portable core so existing programmatic
+    /// subclasses can continue to call `super.init()` without coder churn.
+    public override init() {
+        _nibName = nil
+        _nibBundle = .main
+        _hasExplicitNibRequest = false
+        super.init()
+    }
+
+    /// Designated initializer for UIKit source compatibility. OpenUIKit has
+    /// no Interface Builder archive loader: nil/nil is the ordinary
+    /// programmatic path, while an explicit nib request remains lazy and is
+    /// rejected only if this class's default `loadView()` is ultimately used.
+    /// A subclass that overrides `loadView()` can therefore use this exact
+    /// initializer spelling without claiming that OpenUIKit loaded a nib.
+    public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        _nibName = nibNameOrNil
+        _nibBundle = nibBundleOrNil ?? .main
+        _hasExplicitNibRequest = nibNameOrNil != nil || nibBundleOrNil != nil
+        super.init()
+    }
+
+    /// The requested nib name, retained even though the portable core cannot
+    /// decode nib archives.
+    open var nibName: String? { _nibName }
+
+    /// UIKit normalizes a nil initializer argument to `Bundle.main`; a
+    /// Catalyst 26.1 oracle reports that value for both `init()` and nil/nil.
+    open var nibBundle: Bundle? { _nibBundle }
 
     // MARK: View loading (lazy loadView/viewDidLoad)
 
@@ -86,6 +141,12 @@ open class UIViewController: UIResponder {
     /// frame and nil (transparent) background — the same as a programmatic
     /// UIViewController without a nib. Containers re-frame the view anyway.
     open func loadView() {
+        if _hasExplicitNibRequest {
+            let requestedName = _nibName ?? "<class-named nib>"
+            fatalError(
+                "OpenUIKit cannot load Interface Builder nib '\(requestedName)'; "
+                + "override loadView() to construct the view programmatically")
+        }
         view = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
     }
 
@@ -241,6 +302,118 @@ open class UIViewController: UIResponder {
     open func viewDidAppear(_ animated: Bool) {}
     open func viewWillDisappear(_ animated: Bool) {}
     open func viewDidDisappear(_ animated: Bool) {}
+
+    // MARK: Layout callbacks (app-compat, 2026-08-28)
+    //
+    // Real UIKit brackets the root view's `layoutSubviews` with these two, and
+    // app code puts real work in them (focus-ios positions its URL bar from
+    // `viewDidLayoutSubviews`). They FIRE — `UIView._layoutSubtree` calls them
+    // around the layout of the view whose `_managingViewController` is self —
+    // rather than being declared and silent, which would be the failure this
+    // whole surface exists to avoid.
+
+    open func viewWillLayoutSubviews() {}
+    open func viewDidLayoutSubviews() {}
+
+    /// The controller's half of the update-constraints pass. Runs before
+    /// layout, once per pass, when something has called
+    /// `view.setNeedsUpdateConstraints()` — see `UIView.updateConstraints()`.
+    /// An override must call `super`, as in UIKit.
+    open func updateViewConstraints() {
+        _view?.updateConstraints()
+    }
+
+    // MARK: Content size (app-compat, 2026-08-28)
+
+    /// The size this controller would like when presented in a container that
+    /// asks — a popover in UIKit. OpenUIKit presents nothing that consults it,
+    /// so it is STORAGE plus the notification UIKit sends: setting it tells
+    /// the parent through `preferredContentSizeDidChange(forChildContentContainer:)`,
+    /// which is the part app code observes. `.zero` means "no preference",
+    /// as in UIKit.
+    open var preferredContentSize: CGSize = .zero {
+        didSet {
+            guard preferredContentSize != oldValue else { return }
+            parent?.preferredContentSizeDidChange(forChildContentContainer: self)
+        }
+    }
+
+    /// UIKit's `UIContentContainer` callback. Default does nothing.
+    open func preferredContentSizeDidChange(
+        forChildContentContainer container: UIContentContainer) {}
+
+    /// Notification bridge for a child whose Auto Layout fitting size
+    /// changed. UIKit's UIViewController base implementation is a no-op; a
+    /// presentation/container subclass decides how that affects its chrome.
+    open func systemLayoutFittingSizeDidChange(
+        forChildContentContainer container: UIContentContainer) {}
+
+    /// UIKit's default answer is the proposed parent size unchanged.
+    open func size(
+        forChildContentContainer container: UIContentContainer,
+        withParentContainerSize parentSize: CGSize
+    ) -> CGSize {
+        parentSize
+    }
+
+    /// UIKit's `UIContentContainer` size-transition callback (a rotation, or a
+    /// window resize). OpenUIKit never rotates a window on its own; a HOST
+    /// that resizes its surface is what calls this, so the callback exists and
+    /// is deliverable but nothing in the library triggers it.
+    /// docs/KNOWN_GAPS.md.
+    open func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        // UIKit's base implementation forwards top-down through containment.
+        // A custom container can override `size(forChild…:)`; if the child is
+        // already at that size UIKit suppresses the redundant callback.
+        for child in children {
+            let childSize = self.size(
+                forChildContentContainer: child,
+                withParentContainerSize: size)
+            if child.viewIfLoaded?.bounds.size != childSize {
+                child.viewWillTransition(to: childSize, with: coordinator)
+            }
+        }
+    }
+
+    /// Trait-transition counterpart of `viewWillTransition(to:with:)`.
+    /// Calling super propagates the transition through contained children.
+    open func willTransition(
+        to newCollection: UITraitCollection,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        for child in children {
+            child.willTransition(to: newCollection, with: coordinator)
+        }
+    }
+
+    /// Legacy iOS 8–16 trait-change override still used by focus-ios. Hosts
+    /// deliver it through `UIView._traitsDidChange(previous:)`; the modern
+    /// registration callbacks use that same delivery path.
+    open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {}
+
+    /// A controller inherits traits from its loaded root view, then its
+    /// containing controller, then the process-wide current collection.
+    public var traitCollection: UITraitCollection {
+        viewIfLoaded?.traitCollection ?? parent?.traitCollection ?? .current
+    }
+
+    /// UIKit returns a local coordinator while a presentation or size change
+    /// is active, then asks the containing controller. OpenUIKit's existing
+    /// animator contexts do not yet vend that public wrapper, but forwarding
+    /// to the parent preserves custom-container behavior and keeps the
+    /// property overridable for a future real coordinator.
+    open var transitionCoordinator: UIViewControllerTransitionCoordinator? {
+        parent?.transitionCoordinator
+    }
+
+    /// Which edges a full-screen child extends under. Stored; OpenUIKit's
+    /// containers inset their children explicitly rather than consulting it
+    /// (docs/KNOWN_GAPS.md, "App compatibility").
+    open var edgesForExtendedLayout: UIRectEdge = .all
+    open var extendedLayoutIncludesOpaqueBars = false
 
     enum AppearanceState { case disappeared, appearing, appeared, disappearing }
     var _appearanceState: AppearanceState = .disappeared

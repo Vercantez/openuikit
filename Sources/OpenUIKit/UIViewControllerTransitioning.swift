@@ -307,3 +307,74 @@ final class _UINavigationSlideAnimator: UIViewControllerAnimatedTransitioning {
         UINavigationController.registerTransitioning(nav)
     }
 }
+
+// MARK: - Transition coordinator (declared, unconformed — app-compat 2026-08-28)
+//
+// Every UIKit app that handles rotation overrides
+// `viewWillTransition(to:with:)`, so the coordinator TYPE has to exist for
+// that override to declare. focus-ios overrides it in four controllers.
+//
+// Nothing in OpenUIKit vends a coordinator: the library never rotates a
+// window and never resizes one on its own (docs/KNOWN_GAPS.md, "App
+// lifecycle / environment" — the host owns the surface). So this is the same
+// shape as `UILayoutSupport`: the protocols are declared so app source
+// compiles, no type conforms, and a host that grows real size transitions
+// implements them then rather than inheriting a fake now. `animate(
+// alongsideTransition:completion:)` returning Bool is UIKit's signature —
+// false means "not animated" — so a future conformer has somewhere honest to
+// say so.
+@preconcurrency @MainActor
+public protocol UIViewControllerTransitionCoordinatorContext: AnyObject {
+    var isAnimated: Bool { get }
+    var presentationStyle: UIModalPresentationStyle { get }
+    var initiallyInteractive: Bool { get }
+    var isInterruptible: Bool { get }
+    var isInteractive: Bool { get }
+    var isCancelled: Bool { get }
+    var transitionDuration: TimeInterval { get }
+    var percentComplete: CGFloat { get }
+    var completionVelocity: CGFloat { get }
+    var completionCurve: UIView.AnimationCurve { get }
+    var containerView: UIView { get }
+    var targetTransform: CGAffineTransform { get }
+    func viewController(forKey key: UITransitionContextViewControllerKey) -> UIViewController?
+    func view(forKey key: UITransitionContextViewKey) -> UIView?
+}
+
+@preconcurrency @MainActor
+public protocol UIViewControllerTransitionCoordinator: UIViewControllerTransitionCoordinatorContext {
+    @discardableResult
+    func animate(
+        alongsideTransition animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?,
+        completion: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?) -> Bool
+    @discardableResult
+    func animateAlongsideTransition(
+        in view: UIView?,
+        animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?,
+        completion: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?) -> Bool
+    func notifyWhenInteractionChanges(
+        _ handler: @escaping (any UIViewControllerTransitionCoordinatorContext) -> Void)
+    func notifyWhenInteractionEnds(
+        _ handler: @escaping (any UIViewControllerTransitionCoordinatorContext) -> Void)
+}
+
+extension UIViewControllerTransitionCoordinator {
+    /// UIKit's `completion:` is defaulted because it imports from a nullable
+    /// Objective-C block parameter; a Swift PROTOCOL requirement may not carry
+    /// a default argument, so the one-argument spelling app code writes lives
+    /// here instead.
+    @discardableResult
+    public func animate(
+        alongsideTransition animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?
+    ) -> Bool {
+        animate(alongsideTransition: animation, completion: nil)
+    }
+
+    @discardableResult
+    public func animateAlongsideTransition(
+        in view: UIView?,
+        animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?
+    ) -> Bool {
+        animateAlongsideTransition(in: view, animation: animation, completion: nil)
+    }
+}
