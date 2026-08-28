@@ -1,7 +1,7 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `0bba80a`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `4c82757`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 SnapKit now comes from the exact 5.7.0 revision named by Focus's
@@ -9,8 +9,8 @@ SnapKit now comes from the exact 5.7.0 revision named by Focus's
 not the former diagnostic checkout of upstream `main`. At that isolated
 correction checkpoint the census had an exact zero delta: SnapKit remained 0,
 the broad app row remained 709, and the total remained 739 primary diagnostics.
-The current counts below also include the later size-class, pointer, and exact
-view-initializer increments.
+The current counts below also include the later size-class, pointer, exact
+view-initializer, and Onboarding UIKit-core increments.
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
 so as a lower bound. With the module walls cleared the same census reaches **182
@@ -27,7 +27,8 @@ at OpenUIKit `325c3d9`, then **739** after the named-asset API increment at
 OpenUIKit `81e1e05`, **729** after the size-class trait increment at OpenUIKit
 `c166f96`, **721** after the pointer increment at OpenUIKit `26e0698`, and
 **678** after the exact `UIView`/`NSCoder` initializer model at OpenUIKit
-`0bba80a`. SnapKit removed 146 primary diagnostics overall; the
+`0bba80a`, and **654** after the Focus Onboarding UIKit-core increment at
+OpenUIKit `4c82757`. SnapKit removed 146 primary diagnostics overall; the
 controller increment removed another 91 net; the eight subsequent OpenUIKit
 commits through the coder increment removed another 278 net, and the asset
 increment removed another eight across the target and broad rows. The
@@ -35,8 +36,10 @@ size-class increment removes eight missing-member errors plus two dependent
 `.regular` inference errors, with no new diagnostics. The pointer increment
 then removes exactly eight diagnostics with none added. Comparing the
 initializer run to that pointer checkpoint, 75 diagnostic instances disappear
-and 32 downstream instances become visible, for a net reduction of 43. This is
-a diagnostic-set delta, not a claim that one change added 75 independent APIs.
+and 32 downstream instances become visible, for a net reduction of 43. The
+Onboarding increment then removes exactly 24 diagnostic instances and exposes
+none. These are diagnostic-set deltas, not claims that each removed diagnostic
+corresponds to one independent API.
 All runs use `-wmo`; the deliberately broad 182-file source inventory remains
 the saturation denominator (and is not the Xcode target inventory; see below).
 
@@ -56,9 +59,9 @@ target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
 target-UIComponents            0   /
-app                          648   broad saturated census, 182 files, -wmo
+app                          624   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                        678
+TOTAL                        654
 ```
 
 ## What was built, and why each shape
@@ -188,6 +191,33 @@ storyboard decoding. The census moves to 648 broad-app / 678 total diagnostics;
 missing types remain 64 distinct / 154 uses across the pointer and initializer
 checkpoints.
 
+OpenUIKit `4c82757` adds the exact remaining UIKit surfaces in Focus's
+non-SwiftUI Onboarding core: the inherited
+`UIStackView.init(arrangedSubviews:)` convenience initializer and
+margin-relative arrangement/fitting, weak `CALayerDelegate` layout dispatch
+through `UIView.layoutSublayers(of:)`, UIKit's orientation-mask/raw-value
+model, and controller orientation/status-bar policy override points. Layout is
+deliberately synchronous and there is still no `CALayoutManager`, Core
+Animation transaction scheduler, actual host rotation, or rendered system
+status bar.
+
+The exact unchanged ten-source UIKit/core Onboarding closure now emits a module
+with zero errors; its only diagnostics are two upstream warnings where Focus
+exposes `Combine.Published.Publisher` without importing Combine in those source
+files. An independent uncontended OpenUIKit run passes all 864 tests with two
+expected skips, and strict release compilation passes. Repeated validation also
+passes the Foundation-hidden 96-source Mach-O build and all 13 Linux UIHelpers
+guest checks. A wall-clock-only rasterizer smoke budget can exceed ten seconds
+when this host is loaded; that check is outside the changed code path, while all
+functional assertions remain green.
+
+The fresh saturated census moves from 648 broad-app / 678 total diagnostics to
+624 / 654. A message-multiset comparison removes exactly 24 instances and adds
+zero: the stack initializer roots and their inference cascades, plus the
+orientation, status-style, and layer-layout surfaces. The saved
+[`census-2026-08-28.txt`](census-2026-08-28.txt) has SHA-256
+`8cb485a23dd47cd442653a3d322030e418ce49ba3cad90baa4e98c9553045665`.
+
 ## Exact AppShortcuts dependency proof
 
 The separate [`appshortcuts_proof.py`](appshortcuts_proof.py) consumes the
@@ -246,12 +276,12 @@ repository redirection.
 ## The saturated census
 
 ```
-MISSING TYPES     64 distinct / 154 occurrences
-                  40 Apple-framework names / 93 uses    <- real gap
+MISSING TYPES     63 distinct / 152 occurrences
+                  39 Apple-framework names / 91 uses    <- real gap
                   23 other / 60 · 1 app symbol / 1
 
-MISSING MEMBERS   155 total
-                  50 distinct on Apple types / 82 uses  <- the #94 list
+MISSING MEMBERS   154 total
+                  49 distinct on Apple types / 81 uses  <- the #94 list
                    0 distinct SnapKit DSL   /   0 uses  <- real module loaded
 ```
 
@@ -262,7 +292,7 @@ Top of the **member** list, which is what no type census could see:
 | 14 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
 | 9 | `UIButton` | `contentEdgeInsets`, `contentHorizontalAlignment`, `semanticContentAttribute`, `titleEdgeInsets` |
 | 8 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
-| 7 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `userInterfaceLayoutDirection` |
+| 6 | `UIView` | `canPerformAction`, `snapshotView`, `userInterfaceLayoutDirection` |
 | 7 | `UIBarButtonItem` | `accessibilityIdentifier` |
 | 7 | `UINavigationBar` | `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
 | 6 | `CAGradientLayer` | `add`, `animation`, `drawsAsynchronously`, `mask`, `removeAnimation` |
@@ -300,7 +330,7 @@ remaining pasteboard declaration gap.
    contain `error:` parameter labels. [`diagnostics.py`](diagnostics.py) now
    accepts only location-bearing primary lines. Its controls include both
    duplicate-rendering and source-text false positives. The saved current run
-   is 678 primary diagnostics.
+   is 654 primary diagnostics.
 5. **The broad `find` inventory is not the Blockzilla target.** The Xcode source
    phase has 131 Swift references: 129 exist and two generated sources
    (`Metrics.swift`, `AppNimbus.swift`) are absent from this checkout. The broad

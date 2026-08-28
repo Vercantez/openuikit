@@ -1,5 +1,5 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                          648 primary diagnostics
+  app                          624 primary diagnostics
   empty                          0 primary diagnostics
   openuikit                      0 primary diagnostics
   snapkit-vendoring-after        0 primary diagnostics
@@ -18,30 +18,30 @@
   target-UIComponents            0 primary diagnostics
   target-UIHelpers               0 primary diagnostics
   target-Widget                  6 primary diagnostics
-  TOTAL                        678
+  TOTAL                        654
 
-=== ERROR KINDS, ranked (denominator 678) ===
-    113  value of type 'X' has no member 'X'
+=== ERROR KINDS, ranked (denominator 654) ===
+    112  value of type 'X' has no member 'X'
      92  cannot find 'X' in scope
-     78  cannot infer contextual base in reference to member 'X'
-     62  cannot find type 'X' in scope
+     69  cannot infer contextual base in reference to member 'X'
+     60  cannot find type 'X' in scope
      42  type 'X' has no member 'X'
      30  'X' requires a contextual type
      24  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
      22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
      20  ambiguous use of 'X'
-     18  argument passed to call that takes no arguments
      15  extra argument 'X' in call
      14  reference to member 'X' cannot be resolved without a contextual type
-     12  method does not override any method from its superclass
      12  cannot convert value of type 'X' to expected argument type 'X'
+     11  method does not override any method from its superclass
      10  'X' is unavailable in macOS
      10  type of expression is ambiguous without a type annotation
       9  generic parameter 'X' could not be inferred
       9  cannot assign value of type 'X' to type 'X'
+      8  'X' is inaccessible due to 'X' protection level
 
-=== MISSING TYPES: 64 distinct / 154 occurrences ===
-  Apple-framework names (a REAL gap)     :  40 distinct /   93 uses
+=== MISSING TYPES: 63 distinct / 152 occurrences ===
+  Apple-framework names (a REAL gap)     :  39 distinct /   91 uses
   app's own symbols (an earlier failure) :   1 distinct /    1 uses
   other                                  :  23 distinct /   60 uses
 
@@ -63,7 +63,6 @@
       2  UIDragItem
       2  UIImage
       2  UIImpactFeedbackGenerator
-      2  UIInterfaceOrientationMask
       2  UIMenuController
       2  UIPageControl
       2  UITableViewDiffableDataSource
@@ -75,6 +74,7 @@
       1  UIDragSession
       1  UIDropInteractionDelegate
       1  UIDropProposal
+      1  UIInterfaceOrientationMask
       1  UIPageViewControllerDataSource
       1  UIPageViewControllerDelegate
       1  UIPasteboard
@@ -82,23 +82,22 @@
       1  UIPrintInfo
       1  UIPrintPageRenderer
       1  UISpringTimingParameters
-      1  UIStatusBarStyle
       1  UITextPosition
       1  UIView
       1  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 155
-  on Apple-framework types (the #94 list): 50 distinct / 82 uses
+  total member errors                    : 154
+  on Apple-framework types (the #94 list): 49 distinct / 81 uses
   SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
      14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
       9  UIButton                           contentEdgeInsets, contentHorizontalAlignment, semanticContentAttribute, titleEdgeInsets
       8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
-      7  UIView                             canPerformAction, layoutSublayers, snapshotView, userInterfaceLayoutDirection
       7  UIBarButtonItem                    accessibilityIdentifier
       7  UINavigationBar                    setBackgroundImage, shadowImage, titleTextAttributes
+      6  UIView                             canPerformAction, snapshotView, userInterfaceLayoutDirection
       6  CAGradientLayer                    add, animation, drawsAsynchronously, mask, removeAnimation
       5  CALayer                            maskedCorners
       2  NSView                             alpha
