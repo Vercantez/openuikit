@@ -677,6 +677,107 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
+### `fts` — NOT IMPLEMENTED; **measured and handed over, not started**
+
+`fts_open`/`fts_read`/`fts_close`/`fts_set`. Measured 2026-08-27 on both sides
+so that whoever takes it starts from numbers rather than from a plan.
+
+**`FTS` is 72 bytes on both. `FTSENT` is 112 on Darwin and 120 on Linux**, and
+it diverges from the middle onward:
+
+| field | Darwin | Linux |
+|---|---:|---:|
+| `fts_accpath` | 40 | 40 |
+| `fts_path` | 48 | 48 |
+| `fts_pathlen` | 64 | 64 |
+| `fts_namelen` | 66 | 66 |
+| `fts_level` | **86** | **92** |
+| `fts_info` | **88** | **94** |
+| `fts_flags` | **90** | **96** |
+| `fts_instr` | **92** | **98** |
+| `fts_statp` | **96** | **104** |
+| `fts_name` | **104** | **112** |
+
+**All 23 `FTS_*` constants agree** — 7 options, 12 info codes, 4 instructions,
+0 differ. So this is a pure layout problem, and a nasty one: `fts_info` is the
+field every caller switches on, and a forward reads it out of the wrong place.
+
+Two facts decide the design, and both are easy to miss:
+
+* **`fts_name` is an INLINE flexible array, not a pointer.** The name lives in
+  the struct (offset 104, `sizeof` 112), so every entry is a variable-size
+  allocation. A translation cannot fill a fixed-size struct.
+* **`fts_statp` is a `struct stat *`** — glibc's 128-byte one, where the guest
+  expects Darwin's 144-byte one with different offsets. So translating
+  `FTSENT` is **not sufficient**; every entry's `stat` needs the
+  `stat_l2d` treatment `posix.c` already has.
+
+Two designs, both sized:
+
+* **(A) Own the walker** — `opendir`/`readdir`/`lstat`, our own `FTS`/`FTSENT`,
+  the `mr_dir` pattern. **~500 lines**: pre/post-order (`FTS_D`/`FTS_DP`),
+  cycle detection (`FTS_DC`), unreadable directories (`FTS_DNR`), `FTS_SL`
+  versus `FTS_SLNONE`, `FTS_NOSTAT`/`FTS_NSOK`, `FTS_XDEV`, `FTS_SEEDOT`,
+  `fts_compar` sorting, and `fts_set(FTS_SKIP|FTS_FOLLOW|FTS_AGAIN)`.
+* **(B) Translate over glibc's `fts`** — **~150–250 lines**, and it needs a
+  per-`FTS` entry pool (variable-size because of the inline name), a reverse
+  map so `fts_set` can hand glibc back *its* entry when the guest passes
+  *ours*, and per-entry `stat` translation.
+
+**The consumer, so the surface can be bounded:** FoundationEssentials'
+`_FTSSequence` (`FileOperations+Enumeration.swift`) opens with
+`FTS_PHYSICAL | FTS_NOCHDIR | FTS_NOSTAT`, reads `fts_info`, `fts_name` (by
+computed offset — upstream notes Swift imports the flexible array wrongly),
+`fts_path`, `fts_level` and `fts_statp`, and calls `fts_set(…, FTS_SKIP)`. It
+never uses `fts_children` or `fts_compar`.
+
+### `copyfile` / `removefile` — NOT IMPLEMENTED; **measured and handed over**
+
+Darwin-only APIs with no glibc counterpart. Measured 2026-08-27 against Apple's
+headers and against what FoundationEssentials actually calls, because the
+header surface and the used surface are very different sizes.
+
+**`copyfile.h`**: 143 lines, **28 `COPYFILE_*` flags**, **18
+`COPYFILE_STATE_*` keys**, an opaque `copyfile_state_t`, and a callback
+protocol (`copyfile_callback_t`).
+**What FE uses**: `copyfile` and `fcopyfile` only, with `state` always `nil`,
+no callbacks, and **7 flags** — `COPYFILE_DATA`, `COPYFILE_METADATA`,
+`COPYFILE_ALL`, `COPYFILE_EXCL`, `COPYFILE_NOFOLLOW`, `COPYFILE_CLONE`,
+`COPYFILE_RUN_IN_PLACE`.
+
+**But the used subset has prerequisites that are themselves missing.**
+`COPYFILE_METADATA` means times, mode, owner, BSD file flags *and* extended
+attributes. Checked by `nm` against `libSystem.B.dylib`: `chmod`, `chown`,
+`readlink`, `symlink`, `mkstemp`, `mkdtemp` are exported; **`utimes`,
+`futimes`, `chflags`, `fchflags`, `fchmod`, `fchown`, `link`, `clonefile`,
+`statfs`, `fstatfs` are not**. `xattr` landed with this task, so that piece is
+now in place. `COPYFILE_CLONE` is APFS copy-on-write — Linux's closest thing is
+`FICLONE` on btrfs/XFS, and the honest answer elsewhere is to fail and let the
+caller fall back (FE has a non-clone branch two lines away).
+
+**`removefile.h`**: 79 lines, **12 `REMOVEFILE_*` flags**, 5 state keys, an
+opaque `removefile_state_t`, and a callback protocol with
+`REMOVEFILE_PROCEED`/`SKIP`/`STOP`.
+**What FE uses**: `removefile(path, state, REMOVEFILE_RECURSIVE)` plus
+`removefile_state_alloc`/`_free`/`_get(REMOVEFILE_STATE_ERRNO)`/`_set` of
+`CONFIRM_CALLBACK`, `CONFIRM_CONTEXT`, `ERROR_CALLBACK`, `ERROR_CONTEXT`.
+
+**So removefile is bigger than "implement it over `unlink`", and the reason is
+worth stating**: the used subset *requires* the state object and the callback
+protocol. The confirm callback is how `FileManager`'s delegate says "skip this
+one" and the error callback is how it decides to continue or stop — that is
+`FileManager.removeItem`'s semantics, not decoration. **~250–350 lines**: a
+depth-first walker, a state object holding two callbacks, two contexts and an
+errno, and correct `PROCEED`/`SKIP`/`STOP` handling. The secure-overwrite
+passes (1/3/7/35) are unused and should refuse loudly rather than silently
+doing an ordinary unlink — a "secure delete" that is not one is the worst kind
+of quiet wrong answer.
+
+**Total for the three: roughly 900–1100 lines plus three differential
+fixtures, and `copyfile` is additionally blocked on `utimes`, `chflags`,
+`fchmod`, `fchown` and `link`.** That is why they are handed over measured
+rather than started: this is a project, not the tail of a task.
+
 ### `quotactl` — **DONE 2026-08-27**, and the measurement made the wrapper unnecessary
 
 The obvious plan was a translating wrapper, and the obstacles are real — all
