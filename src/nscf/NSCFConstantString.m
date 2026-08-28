@@ -30,10 +30,35 @@
 
 #import "../../include/CFFoundationTypes.h"
 
-typedef unsigned long CFTypeID;
+/* CF's OWN __CFStringEncodingIsSupersetOfASCII, not a copy of it. It is
+ * CF_INLINE in ForFoundationOnly.h:246, so it comes in by include or not at
+ * all; reimplementing its thirty-line switch here would be a second answer to
+ * a question CF already answers, free to drift from the one CF uses. Requires
+ * the CF source tree on the include path (-I .../CoreFoundation/include). */
+#include "ForFoundationOnly.h"
+
 typedef unsigned long CFHashCode;
-typedef long          CFIndex;
-typedef const struct __CFString *CFStringRef;
+
+/* Loud, naming itself and the value that reached it, on fd 2. A method that
+ * returned a plausible-but-wrong answer here would be read by CF as a normal
+ * result -- see the comment on -_getCString:maxLength:encoding:. */
+extern long write(int, const void *, unsigned long);
+extern void abort(void);
+static void __NSCFConstantStringUnimplemented(const char *what, unsigned long v) {
+    char b[320];
+    unsigned long n = 0;
+    const char *p = "UNIMPLEMENTED (__NSCFConstantString): ";
+    while (p[n]) { b[n] = p[n]; n++; }
+    for (unsigned long i = 0; what[i] && n < sizeof b - 32; i++) b[n++] = what[i];
+    b[n++] = ' '; b[n++] = '('; b[n++] = '0'; b[n++] = 'x';
+    for (int s = 28; s >= 0; s -= 4) {
+        unsigned d = (unsigned)((v >> s) & 0xF);
+        b[n++] = (char)(d < 10 ? '0' + d : 'a' + d - 10);
+    }
+    b[n++] = ')'; b[n++] = '\n';
+    (void)!write(2, b, n);
+    abort();
+}
 extern CFTypeID   CFStringGetTypeID(void);
 extern CFHashCode CFStringHashCString(const uint8_t *bytes, CFIndex len);
 extern CFIndex    CFStringGetLength(CFStringRef);
@@ -148,6 +173,136 @@ struct __CFConstStrLayout {
     for (CFIndex i = 0; i < n; i++) {
         if ((unichar)CONST_STR(self)->ptr[i] != CFStringGetCharacterAtIndex(o, i)) return NO;
     }
+    return YES;
+}
+
+/* --- THE FAST-CONTENTS SELECTORS -------------------------------------------
+ *
+ * DISCOVERED BY EXECUTION, not by reading the 151-selector list. Driving
+ * tests/t18_bundle_identity.c under machorun made CF name what it wanted, one
+ * abort at a time; the list said which selectors EXIST, not which are REACHED,
+ * and 80 of the 151 are unimplemented while this path needs a handful.
+ *
+ * Every answer below is a row in
+ * ~/swift-macho-linux/full/oracle-userdefaults/darwin-conststring-2026-08-28.txt,
+ * measured against real Foundation on macOS 26.5.2. The probe carries two
+ * CONTROLS -- a dynamic 8-bit string and a dynamic non-ASCII one -- so that
+ * "this is how a CONSTANT string answers" is distinguishable from "this is how
+ * any 8-bit string answers". Without them there is no way to tell which
+ * behaviour belongs to this class.
+ *
+ * None of these dispatches. They read the compiler-emitted bytes, which is what
+ * makes them terminating by construction rather than by an argument about
+ * CF's internals -- the preferred shape per docs/cf-census/selector-reentry.md,
+ * and the same reason -hash uses byte-taking CFStringHashCString. */
+
+/* CFString.c:2236 dispatches this from _CFStringGetCStringPtrInternal, whose
+ * native answer is `__CFStrContents(str) + skip` for an 8-bit string. A
+ * constant string's bytes are the compiler's C literal, so that IS the answer.
+ *
+ * MEASURED, because both halves were open questions and neither is in a header:
+ *
+ *   requiresNullTermination YES -> non-NULL, SAME POINTER as NO
+ *   byte at [length]            -> 0x00, for "hello", "" and "a/b/c.plist"
+ *
+ * So the argument does not change the answer, and it does not because the
+ * literal is NUL-terminated in __TEXT,__cstring. Had it not been, YES would
+ * have had to return NULL -- which is what the dynamic 8-bit control returns
+ * (NSTaggedPointerString: NULL for both), confirming the detector is not
+ * simply saying non-NULL to everything. */
+- (const char *)_fastCStringContents:(BOOL)requiresNullTermination {
+    return (const char *)CONST_STR(self)->ptr;
+}
+
+/* --- THE THREE BELOW ARE MEASURED BUT **NOT YET EXECUTION-REACHED** --------
+ *
+ * Said plainly so nobody reads them as evidence. Exactly ONE selector in this
+ * block was discovered by an abort naming it: `_fastCStringContents:`. These
+ * three come from the same Darwin probe and from dispatch sites adjacent to it
+ * in CFString.c, and nothing has yet been observed asking for them.
+ *
+ * They are here because each is a three-line constant answer with a measured
+ * row and a control, and because leaving a known-adjacent dispatch site
+ * unimplemented converts a future "unrecognized selector" abort into work
+ * someone repeats. They are NOT evidence that the executed set is four.
+ * When wall 1 (#80) lifts and CF runs further, whichever of these is actually
+ * reached should have that recorded here. */
+
+/* The wide counterpart, dispatched from CFStringGetCharactersPtr
+ * (CFString.c:2264). A constant string has no UniChar buffer to hand out, and
+ * Darwin's answer is NULL -- measured on all three constants. The non-ASCII
+ * dynamic control answers non-NULL for this one, which is what makes NULL here
+ * a real answer rather than a stub that always refuses. */
+- (const unichar *)_fastCharacterContents {
+    return NULL;
+}
+
+/* 1536 = 0x600 = kCFStringEncodingASCII, measured for every constant string;
+ * the non-ASCII control answers 256 (kCFStringEncodingUnicode) for fastest and
+ * 0 (kCFStringEncodingMacRoman) for smallest, so the two are NOT the same
+ * question in general -- they merely coincide for ASCII-only contents, which
+ * is every narrow literal the compiler emits into this class. */
+- (CFStringEncoding)_fastestEncodingInCFStringEncoding { return 0x0600; }
+- (CFStringEncoding)_smallestEncodingInCFStringEncoding { return 0x0600; }
+
+/* --- -_getCString:maxLength:encoding: — EXECUTION-REACHED (T19) ------------
+ *
+ * Named by an abort in T19's CFStringGetCString, exactly as
+ * `_fastCStringContents:` was named by T18. CFString.c:2324 dispatches it as
+ *
+ *     _getCString:buffer maxLength:(NSUInteger)bufferSize - 1 encoding:encoding
+ *
+ * so `maxLength` is the buffer capacity MINUS the terminator. That is what the
+ * call site says; what Darwin DOES is measured, because the boundary is where
+ * this either overruns a caller's buffer or refuses a copy that would have fit
+ * (darwin-conststring-2026-08-28.txt, "the boundary", CFSTR("hello"), len 5):
+ *
+ *     maxLength=4 -> false          maxLength=5 -> true, NUL written at [5]
+ *
+ * So `maxLength == length` SUCCEEDS and the NUL goes one past it: the method
+ * writes length+1 bytes when it returns true. Off by one in either direction is
+ * a buffer overrun or a spurious failure, and neither is visible from the
+ * header.
+ *
+ * ENCODING. Measured, UTF8/ASCII/MacRoman/ISOLatin1 all return the same bytes
+ * for an ASCII string, and Unicode(UTF16) returns TRUE with a real conversion
+ * (BOM + widened chars). We do the 8-bit case and REFUSE LOUDLY otherwise
+ * rather than returning NO, because CF reads NO as "did not fit" — a wrong
+ * answer that is indistinguishable from a legitimate one, which is the
+ * silent-plausible shape this project keeps finding. No UTF-16 request has been
+ * observed on any path measured so far; when one is, it will name itself here
+ * instead of silently degrading.
+ *
+ * The ASCII-superset test is CF's OWN predicate, included rather than
+ * reimplemented — a second copy of that 30-line table is a thing that can
+ * drift from the one CF uses to decide the same question. */
+- (BOOL)_getCString:(char *)buffer
+          maxLength:(NSUInteger)maxLength
+           encoding:(CFStringEncoding)encoding
+{
+    const uint8_t *bytes = CONST_STR(self)->ptr;
+    CFIndex n = (CFIndex)CONST_STR(self)->length;
+
+    /* A narrow literal is USUALLY pure ASCII, but nothing guarantees it, and if
+     * it is not then the bytes are UTF-8 and only UTF-8 reproduces them. Scan
+     * rather than assume: the assumption would be invisible and wrong exactly
+     * for the strings where it matters. */
+    Boolean allASCII = true;
+    for (CFIndex i = 0; i < n; i++) if (bytes[i] & 0x80) { allASCII = false; break; }
+
+    Boolean byteCompatible =
+        (allASCII && __CFStringEncodingIsSupersetOfASCII(encoding)) ||
+        (encoding == kCFStringEncodingUTF8);
+
+    if (!byteCompatible) {
+        __NSCFConstantStringUnimplemented(
+            "-_getCString:maxLength:encoding: needs a real transcoding for this "
+            "encoding; returning NO would be read as 'did not fit'", encoding);
+    }
+
+    if ((CFIndex)maxLength < n) return NO;   /* measured: maxLength EXCLUDES the NUL */
+    for (CFIndex i = 0; i < n; i++) buffer[i] = (char)bytes[i];
+    buffer[n] = '\0';
     return YES;
 }
 

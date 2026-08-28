@@ -1,0 +1,60 @@
+### T19 -- constant-string dispatch under machorun
+
+=== T19: CFString dispatch on CONSTANT strings ===
+Every constant string takes the ObjC branch of every typeID-free
+dispatch, because its isa can never equal CFString's slot.
+
+  .. CFStringGetCStringPtr -> -_fastCStringContents: (the selector T18 named)
+  OK   returned the literal's bytes
+  OK   bytes are NUL-terminated at [length]
+  .. CFStringGetCharactersPtr -> -_fastCharacterContents (must be NULL: 8-bit)
+  OK   NULL, matching Darwin for a constant string
+  .. length / characterAtIndex:
+  OK   length == 5
+  OK   characterAtIndex:1 == 'e'
+  .. CFGetTypeID -> -_cfTypeID
+  OK   CFGetTypeID == CFStringGetTypeID()
+  .. CFHash -> -hash, and it must AGREE with a dynamic string of equal content
+  OK   CFHash(constant) == CFHash(dynamic) for equal content
+  .. CFEqual -> -isEqual: across two DIFFERENT representations
+  OK   CFEqual(constant, dynamic) is true
+  OK   CFEqual is symmetric across the two
+  .. identity: CFSTR("x") twice is ONE pointer (why t9 never hashed)
+  OK   same pointer, as on Darwin
+  .. CFStringHasPrefix (CFPreferences.c:135 does this on a literal)
+  OK   prefix of a constant by a constant
+  OK   negative control: not a prefix
+  .. CFStringCompare on two constants
+  OK   "a" < "b"
+  OK   equal constants compare equal
+  .. CFStringFindWithOptions (reached from CFURLCreateWithFileSystemPath)
+  OK   found "/" at index 1
+  .. CFStringGetCString into a caller buffer
+  OK   copied "hello" out
+  .. CFURLCreateWithFileSystemPath(CFSTR("/Library/Preferences")) -- CFKnownLocations.c:38, the literal that names our storage dir
+  OK   created a CFURL from a constant string
+  OK   round-tripped the path back out
+
+T19: pass 18  fail 0
+T19 PASS
+
+### T19 refuse -- the negative control on the loud refusal
+T19 refuse: asking for UTF-16 (0x0100), which we do not transcode.
+Expected: a loud UNIMPLEMENTED naming the encoding, then SIGABRT.
+UNIMPLEMENTED (__NSCFConstantString): -_getCString:maxLength:encoding: needs a real transcoding for this encoding; returning NO would be read as 'did not fit' (0x00000100)
+(SIGABRT expected)
+
+### T8 / T9 regression after changing the shared class
+bash: line 1:  7707 Aborted                 /work/mrun /work/t19 refuse 2>&1
+
+T8 PASS
+
+T9 PASS
+
+### T18 -- bundle path now stops at WALL 1 (the mutex), not a selector
+  .. CFBundleGetMainBundle()
+machorun/libSystem: a pthread object has an unexpected Darwin signature; its layout was compiled into the guest and cannot be renegotiated
+  backtrace (frame-pointer chain):
+    #0  0x20000070c  libSystem.B.dylib+0x70c
+    #1  0x200002990  libSystem.B.dylib+0x2990  (_pthread_mutex_lock+0xa8)
+    #2  0x2000f7874  libCFTest.dylib+0x1e874  (_CFBundleGetInfoDictionary+0x24)
