@@ -1,5 +1,17 @@
 //===----------------------------------------------------------------------===//
 //
+// ### THIS IS OURS.  IT IS NOT APPLE'S `os` OVERLAY. ###
+//
+// Written in this repository, named `os` only because upstream's source
+// imports that name, and it implements THREE declarations out of a module
+// that has dozens.  **Its silence about everything else -- `os_signpost`,
+// `os_activity`, `OSAllocatedUnfairLock`, `OSLogPrivacy`'s mask and format
+// options, the whole `os_workgroup` family -- is a SCOPE STATEMENT, not an
+// implementation choice.**  If something fails to compile against this module,
+// the conclusion is almost always "that part of `os` was never provided here",
+// not "the overlay is broken".  Add what you need, and extend the measured
+// list below when you do, so the next reader still knows what is covered.
+//
 // `os` -- the smallest module that makes upstream's Darwin branch mean here
 // what it means on Darwin.  Provided, not faked: every declaration below is
 // backed by something that exists at runtime, and the one thing that does not

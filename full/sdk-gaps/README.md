@@ -354,9 +354,30 @@ stubbed:
 | `libswiftSynchronization.dylib` | 1 |
 | `libswiftDarwin.dylib` | 0 (an empty stub would do) |
 
-Same class of artifact as `libswiftCore.dylib` and `libswift_Concurrency.dylib`:
-cross-built by `~/swiftcore-macho`, staged by
-`machorun/scripts/stage_swiftcore.sh`. Its `artifacts/` holds neither today.
+**RESOLVED, and the diagnosis above was wrong in the expensive direction.** I
+wrote that these were a cross-build, because `~/swiftcore-macho/artifacts/`
+holds none of them and `/usr/lib/swift` on macOS holds none of them either --
+they live in the dyld shared cache. **All four are on disk**, in the iOS 26.1
+CoreSimulator runtime that `scripts/stage_swift_runtime.sh` already reads.
+The narrow check (`/usr/lib/swift`) was true; the conclusion (`not on this
+machine`) did not follow. What found it is BUILD_LOG.md §10's own closing
+habit: *before provisioning, check whether the question is about a binary we
+already have.*
+
+`full/foundation/stage_swift_overlays.sh` stages them, walking LC_LOAD_DYLIB
+transitively -- **the closure is nine, not four**, adding
+`libswift_RegexParser`, `libswift_Builtin_float` and
+`libswift_DarwinFoundation1/2/3`. The oracle runner then loads and runs under
+machorun with a scoreboard byte-identical to the native macOS run.
+
+One thing to have straight before touching that root: **the staged
+`libswiftCore.dylib` is NOT the simulator's.** It is 9,908,448 bytes, platform
+1 (macOS), minos 13.0, sha256-identical to
+`~/swiftcore-macho/artifacts/swift-macosx/arm64/libswiftCore.dylib`; the
+simulator's is 8,778,560, platform 7, minos 26.1. But `libswift_Concurrency`
+in that same root IS byte-identical to the simulator's. **The root was already
+a mixture**, so a simulator-platform overlay against a cross-built macOS
+libswiftCore is the configuration that already worked.
 
 ### Ordering hazard in the sysroot staging, which nothing enforces
 

@@ -62,7 +62,18 @@ SYS=${SYS:-$W/scratch/sysroot_fe4}
 SRCS=()
 while IFS= read -r f; do SRCS+=("$f"); done < <(
     find "$SF/Sources/FoundationEssentials" -name '*.swift' | sort)
-echo "== FoundationEssentials: ${#SRCS[@]} files"
+# THE TARGET TRAVELS WITH THE ARTIFACT, not just with a commit message.  This
+# module raises the deployment floor of everything that links it: macos15.0,
+# because Package.swift:92 declares `.macOS("15")` and `Mutex` is
+# @available(macOS 15).  Anyone later diffing this against a macos13 binary
+# would be reading ABI noise as a port bug.
+echo "== FoundationEssentials: ${#SRCS[@]} files, target ${TARGET:-arm64-apple-macos15.0}"
+# ALL tags at HEAD, not `git describe --exact-match`, which picks one
+# arbitrarily.  swift-foundation's release/6.2.2 HEAD carries BOTH
+# swift-6.2.1-RELEASE and swift-6.2.2-RELEASE -- the module did not change
+# between those releases -- and describe printed the 6.2.1 one, a report line
+# that reads as the wrong branch.
+echo "   swift-foundation  $(cd "$SF" && git rev-parse --short HEAD)  tags: $(cd "$SF" && git tag --points-at HEAD | tr '\n' ' ')"
 
 # UPSTREAM'S OWN BUILD CONFIGURATION, COPIED RATHER THAN CHOSEN.
 # Sources/FoundationEssentials/CMakeLists.txt:81-91 and Package.swift:116-156.
