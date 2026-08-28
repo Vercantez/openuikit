@@ -364,12 +364,64 @@ sort -u "$TMP/tbd_all" -o "$TMP/tbd_all"
 # and did NOT find loader_path_plugins/libloader_path_mid.dylib exporting it, so
 # it reported a missing symbol about a set that excluded the answer -- which is
 # the exact failure this check exists to catch, pointed at itself.
-CORPUS=()
+#
+# ...AND THE FILTER BELOW WAS THE SECOND SCOPE BUG IN THESE SAME EIGHT LINES.
+# It used to be `head -c 4 "$f" | grep -q .` as an is-this-a-binary test. Mach-O
+# magic is cf fa ed fe, which is not a valid UTF-8 character, and under a UTF-8
+# locale GNU grep's `.` matches a CHARACTER -- so the filter dropped EVERY
+# BINARY IN THE CORPUS. Measured on an unchanged tree, same second:
+#     $ bash scripts/gen_tbd.sh --check
+#        corpus: 0 binaries import 0 distinct symbols; 0 unresolved by the stubs
+#        all four checks passed
+#     $ LC_ALL=C bash scripts/gen_tbd.sh --check
+#        corpus: 103 binaries import 395 distinct symbols; 0 unresolved
+# Not the grep: GNU grep 3.12 from Homebrew's gnubin gives 0 too. It is the
+# locale, and en_US.UTF-8 is what everyone here actually has. Live since fc13df4
+# (2026-08-26), i.e. this check has been INERT on every build for two days --
+# and CHECK 3 is the one its own header calls "the one that answers 'is the stub
+# complete?' with the corpus rather than with an opinion".
+#
+# So the filter now matches the Mach-O MAGIC, byte by byte, through `od`. That
+# says what it means (this corpus is Mach-O fixtures, nothing else) and there is
+# no character decoding anywhere in it to be locale-dependent.
+CORPUS=(); CANDIDATES=(); DROPPED=""
 while IFS= read -r f; do
     case "$f" in *.txt|*.md|*.sh|*.c|*.m) continue ;; esac
-    head -c 4 "$f" | grep -q . || continue
-    CORPUS+=("$f")
-done < <(find "$ROOT/tests/bin" "$ROOT/tests/objc44" -type f -not -name '.*' | sort)
+    CANDIDATES+=("$f")
+    magic=$(head -c 4 "$f" | LC_ALL=C od -An -tx1 | tr -d ' \n')
+    case "$magic" in
+        cffaedfe|cefaedfe|feedfacf|feedface|cafebabe|bebafeca) CORPUS+=("$f") ;;
+        *) DROPPED="$DROPPED$f\tmagic ${magic:-empty}\n" ;;
+    esac
+done < <(find "$ROOT/tests/bin" "$ROOT/tests/objc44" -type f -not -name '.*' | LC_ALL=C sort)
+
+# THE VERDICT MUST CONSUME THE DENOMINATOR. The old code printed `corpus: 0`
+# truthfully on the line above `all four checks passed` -- a count a human has
+# to notice is not a check. Two independent refusals:
+#
+#   (a) an EMPTY corpus is never a pass. Whatever went wrong, this check did not
+#       run, and saying so is the only honest output.
+#   (b) every CANDIDATE must be a Mach-O. Measured today: 103 candidates, 103
+#       Mach-O, 0 other -- the extension list above already removes everything
+#       that is not a binary, so a dropped candidate means either a new kind of
+#       fixture (add its extension) or a filter that has stopped working. Named,
+#       with the magic that was actually read, because "0 binaries" was exactly
+#       the diagnostic that was missing last time.
+if [ "${#CORPUS[@]}" -eq 0 ]; then
+    echo "!! CHECK 3 CANNOT RUN: the corpus is empty (${#CANDIDATES[@]} candidate file(s) under tests/)." >&2
+    echo "   This check grades stub completeness AGAINST THE CORPUS; with no corpus it grades nothing." >&2
+    echo "   Refusing rather than reporting 0 unresolved symbols out of 0." >&2
+    exit 1
+fi
+if [ -n "$DROPPED" ]; then
+    echo "!! CHECK 3 SCOPE: ${#CORPUS[@]} of ${#CANDIDATES[@]} candidate file(s) were classified as Mach-O." >&2
+    echo "   These were dropped and would have been graded silently:" >&2
+    printf '%b' "$DROPPED" | while IFS=$'\t' read -r df dm; do
+        [ -n "$df" ] && printf '     %-56s %s\n' "${df#$ROOT/}" "$dm"
+    done >&2
+    echo "   If a non-binary fixture was added, exclude it by extension above." >&2
+    exit 1
+fi
 
 : > "$TMP/corpus_imp"
 for f in "${CORPUS[@]}"; do imports_of "$f" >> "$TMP/corpus_imp"; done

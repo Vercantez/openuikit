@@ -394,6 +394,10 @@ scripts/build.sh            # the same minus objc4 and quartz, ~2 minutes of C++
 scripts/sdk_stage.sh        # regenerate sdk/usr/include from its 11 pinned sources
 scripts/sdk_stage.sh --verify  # re-fetch all 333 and check the COMMITTED sha256s
 scripts/gen_tbd.sh          # sdk/usr/lib/*.tbd from our own dylibs, and 3 checks
+scripts/gen_tbd.sh --check  # ^ those checks ONLY, writing nothing. RUN IT AS A GATE:
+                            #   CHECK 3 otherwise runs only inside build.sh, where its
+                            #   output scrolls past, and it was silently inert for two
+                            #   days without any gate run being able to notice.
 scripts/difftest.sh         # macOS oracle vs machorun-on-Linux, one row per fixture
 scripts/objc44.sh           # the 44-test objc4 differential corpus (run INSIDE the container)
 scripts/stress_unfair_lock.sh  # the lock-owner regression gate; objc44.sh ends with it
