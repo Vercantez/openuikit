@@ -427,7 +427,7 @@ echo "== UIHelpers surface probe (Foundation invisible)"
 # full Darwin geometry contract. See full/appshim/Foundation.swift.
 APPINC=$OUT/appinc; mkdir -p "$APPINC"
 echo "== app path (Foundation probe + UIKit shim + RealAppProbe: UNMODIFIED app source)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -module-name Foundation \
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -module-name Foundation \
     -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
     -emit-object -o "$OUT/foundation.o" "$W/full/appshim/Foundation.swift"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name UIKit \

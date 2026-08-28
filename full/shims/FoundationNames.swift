@@ -379,11 +379,12 @@ public struct IndexSet: Hashable, Sendable, BidirectionalCollection, SetAlgebra 
     }
 }
 
-// NSCoder is deliberately NOT here. The app path needs it, the render path
-// never does, and it is supplied by full/appshim/Foundation.swift on the
-// app-only include path -- because that is where a real app gets it (real
-// UIKit re-exports Foundation). Declaring it in both places is ambiguous, and
-// the compiler says so.
+// NSCoder is deliberately NOT here. It is declared by OpenUIKit's own
+// FoundationTypes.swift fallback because UIView's required initializer needs
+// one stable identity while Foundation is hidden. The app-only
+// full/appshim/Foundation.swift module aliases that same OpenUIKit.NSCoder; it
+// does not introduce a rival declaration or put Foundation on the library
+// search path.
 
 // MARK: - Time
 
