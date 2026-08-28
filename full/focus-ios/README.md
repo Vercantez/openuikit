@@ -1,7 +1,7 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `325c3d9`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `81e1e05`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
@@ -15,9 +15,12 @@ controller/layout increment at OpenUIKit `9c2aace`, **832** after the
 application-shell, table, shortcut/activity, and process-local pasteboard
 increments through OpenUIKit `4be65c9`, **751** after the Focus UIHelpers
 increment at OpenUIKit `1ae41f9`, and **747** after the UIView coder increment
-at OpenUIKit `325c3d9`. SnapKit removed 146 primary diagnostics overall; the
+at OpenUIKit `325c3d9`, then **739** after the named-asset API increment at
+OpenUIKit `81e1e05`. SnapKit removed 146 primary diagnostics overall; the
 controller increment removed another 91 net; the eight subsequent OpenUIKit
-commits removed another 278 net. All runs use `-wmo`; the deliberately
+commits through the coder increment removed another 278 net, and the asset
+increment removed another eight across the target and broad rows. All runs use
+`-wmo`; the deliberately
 broad 182-file source inventory remains the saturation denominator (and is not
 the Xcode target inventory; see below).
 
@@ -31,15 +34,15 @@ stub-Fuzi                      0    |
 stub-MobileCoreServices        0   /
 snapkit                        0   REAL upstream source, 36/37 files (see below)
 target-UIHelpers               0   \
-target-DesignSystem           22    |  focus-ios's own SPM targets,
+target-DesignSystem           18    |  focus-ios's own SPM targets,
 target-Widget                  6    |  vs OpenUIKit
 target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
 target-UIComponents            0   /
-app                          713   broad saturated census, 182 files, -wmo
+app                          709   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                        747
+TOTAL                        739
 ```
 
 ## What was built, and why each shape
@@ -104,6 +107,26 @@ the same Foundation-invisible 94-source Linux Mach-O build. It deliberately
 does not claim nib/storyboard support: the opaque token is ignored, the
 initializer always produces a zero-frame view, and UIKit's separate inherited
 `Subclass()` initializer corner remains open for Focus's `AsyncImageView`.
+
+OpenUIKit `81e1e05` adds the bundle-selecting `UIImage` and `UIColor` named
+asset initializers used by Focus's `DesignSystem`. The portable subset loads
+loose PNG/JPEG scale variants and raw universal sRGB color sets, including
+luminosity light/dark entries. Explicit bundles are isolated; path traversal,
+non-finite scales, malformed alpha, gamut-qualified entries, compiled catalogs,
+and unsupported vector formats have fail-closed tests. The change passes 834
+native tests (2 skipped), strict-concurrency compilation, and the
+Foundation-invisible 95-source Linux Mach-O build plus its 13-check guest.
+
+The untouched seven-source target row falls from 22 to 18 diagnostics, exactly
+removing the four overload errors. With the three preview-only SwiftUI files
+excluded and a generated `Bundle.module` accessor, Focus's four shipping
+`DesignSystem` sources emit a module with a zero-byte diagnostic log. That is a
+source/module milestone, not a runtime-image claim: the pinned package omits
+the catalogs from `Package.swift`, and all 44 payloads behind its 24 forced
+image names are still vector PDF/SVG. The Linux builder must stage resources
+explicitly and rasterize or decode those vectors before the force unwraps are
+safe at runtime; [`../../uikit/docs/NAMED_ASSETS.md`](../../../uikit/docs/NAMED_ASSETS.md)
+records the precise boundary.
 
 ## The one SnapKit vendoring exclusion
 

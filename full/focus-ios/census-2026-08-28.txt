@@ -1,5 +1,5 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                          713 primary diagnostics
+  app                          709 primary diagnostics
   empty                          0 primary diagnostics
   openuikit                      0 primary diagnostics
   snapkit-vendoring-after        0 primary diagnostics
@@ -12,22 +12,22 @@
   stub-Sentry                    0 primary diagnostics
   stub-WebKit                    0 primary diagnostics
   target-AppShortcuts            1 primary diagnostics
-  target-DesignSystem           22 primary diagnostics
+  target-DesignSystem           18 primary diagnostics
   target-Licenses                4 primary diagnostics
   target-Onboarding              1 primary diagnostics
   target-UIComponents            0 primary diagnostics
   target-UIHelpers               0 primary diagnostics
   target-Widget                  6 primary diagnostics
-  TOTAL                        747
+  TOTAL                        739
 
-=== ERROR KINDS, ranked (denominator 747) ===
+=== ERROR KINDS, ranked (denominator 739) ===
     114  value of type 'X' has no member 'X'
      96  cannot infer contextual base in reference to member 'X'
      93  cannot find 'X' in scope
      66  cannot find type 'X' in scope
      42  type 'X' has no member 'X'
      37  ambiguous use of 'X'
-     34  'X' requires a contextual type
+     30  'X' requires a contextual type
      29  extra argument 'X' in call
      27  missing argument for parameter 'X' in call
      22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
