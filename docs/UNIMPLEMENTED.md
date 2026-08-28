@@ -608,6 +608,59 @@ already wrong on Intel Macs. Programs that use the raw counter as a
 concept, so a ceiling can be neither raised nor lowered, and silently ignoring
 the flag would let a guest believe it had locked memory down.
 
+### `vm-copy` — **DONE 2026-08-27**, and four of its rules were not what a reader would guess
+
+`vm_copy` is implemented in `darwin/src/mach.c` and graded by
+`tests/bin/vm_copy` against the macOS oracle. It was worth measuring rather
+than reading, because four of the five things that decide the implementation
+are stated wrongly in every summary of the call:
+
+| measured on macOS/arm64 | what a summary says |
+|---|---|
+| no page-alignment requirement on address **or** size; a 100-byte copy at `+8` succeeds and touches exactly 100 bytes | "the regions must be page-aligned" |
+| overlapping regions get **memmove** semantics | unspecified |
+| unmapped, `PROT_NONE` **and** read-only all give `KERN_INVALID_ADDRESS` (1) | `KERN_PROTECTION_FAILURE` (2) for the protection cases |
+| `size == 0` succeeds | — |
+
+**The range check IS the implementation.** A bare `memmove` with the Mach
+signature is not a slightly-worse `vm_copy`; it is a different outcome, because
+Darwin *returns* an error for an unmapped address where a `memmove` takes
+SIGSEGV. Verified by mutation: removing the check makes the fixture exit **139**
+instead of 0, and replacing `memmove` with a forward byte copy changes the
+overlap checksum (7176144 → 7176128) and fails on line 14.
+
+**It reads `/proc/self/maps`, and the cost is real.** `msync(2)` and
+`mincore(2)` both report unmapped ranges and neither can see PROTECTION, so a
+read-only destination would pass a cheap check and then fault inside `memmove`
+— and the protection cases are three of the eight measured. One `open`/`read`
+per call is therefore the price of agreeing with Darwin. It is streamed a line
+at a time, never slurped: a truncated read of a large app's map would report a
+mapped address as unmapped, which is a wrong answer that looks like a finding.
+If `/proc/self/maps` cannot be opened the call **aborts with a sentence**
+rather than guessing.
+
+**Two cases deliberately NOT in the fixture, named rather than omitted:**
+
+* **A range that runs off the end of an allocation** returns
+  `KERN_PROTECTION_FAILURE` (2) on Darwin — measured. Linux **merges adjacent
+  anonymous VMAs with the same flags**, so "past the end of an allocation" is
+  not observable in `/proc/self/maps` at all: depending on placement we would
+  answer either `KERN_INVALID_ADDRESS` (a hole) or `KERN_SUCCESS` (merged).
+  Neither matches, and no amount of parsing fixes it.
+* **A task port that is not this task** returns 268435459
+  (`0x10000003`, `MACH_SEND_INVALID_DEST`) — an IPC error about the *port*,
+  raised before `vm_copy` runs. machorun's ports are integers with no IPC space
+  behind them (`#mach-ports-are-fiction`) and every other `vm_*` entry answers
+  `KERN_INVALID_TASK`. Faking a send failure in `vm_copy` alone would make the
+  family inconsistent to hide one line.
+
+**Note on `Platform.copyMemoryPages`.** FoundationEssentials calls this behind
+`if vm_copy(...) != KERN_SUCCESS { memmove(...) }`, so a stub returning
+`KERN_FAILURE` was a legitimate implementation *for that caller* — and that is
+exactly how a gap becomes permanent. The real implementation costs that caller
+a `/proc/self/maps` read it would not have paid on the fallback path; said here
+because it is a trade, not a free win.
+
 ### `errno-untranslatable`
 54 of the 87 errno names common to both systems have different values
 (`docs/ABI.md` §4); the table in `darwin/src/errno_table.h` is generated from a

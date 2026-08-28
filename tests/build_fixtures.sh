@@ -415,6 +415,14 @@ want dirent_r            && build dirent_r            "$CHAINED_TARGET" dirent_r
 # which would be indistinguishable from input that legitimately did not match.
 want sscanf              && build sscanf              "$CHAINED_TARGET" sscanf              sscanf.c --
 
+# vm_copy. Mach's in-task virtual copy, and every summary of it is wrong: no
+# page-alignment requirement, memmove semantics on overlap (the checksum tells
+# that apart from a forward copy), and an unmapped OR read-only OR PROT_NONE
+# region gives KERN_INVALID_ADDRESS rather than KERN_PROTECTION_FAILURE. A
+# bare memmove would SIGSEGV where Darwin returns an error, so the check is
+# the implementation and this is what pins it.
+want vm_copy             && build vm_copy             "$CHAINED_TARGET" vm_copy             vm_copy.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

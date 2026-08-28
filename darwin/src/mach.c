@@ -228,6 +228,113 @@ EXPORT kern_return_t vm_protect(mach_port_t task, vm_address_t addr, vm_size_t s
     return KERN_SUCCESS;
 }
 
+/* ------------------------------------------------------------- vm_copy
+ *
+ * Darwin's in-task virtual copy. MEASURED against macOS/arm64 rather than read
+ * off a summary, because every summary of this call is wrong about it
+ * (tests/src/vm_copy.c is the measurement, tests/expected/vm_copy.stdout the
+ * record):
+ *
+ *   - NO page-alignment requirement, on either address or the size. An
+ *     unaligned 100-byte copy succeeds and touches exactly 100 bytes.
+ *   - OVERLAPPING regions get memmove semantics, not a forward byte copy. The
+ *     fixture's checksum tells the two apart (7176144 against 7176128), which
+ *     is why it prints a checksum instead of "it copied".
+ *   - a PROT_NONE, read-only or unmapped region gives KERN_INVALID_ADDRESS,
+ *     NOT KERN_PROTECTION_FAILURE. The name of the error is the part a reader
+ *     would have got wrong.
+ *   - size 0 succeeds.
+ *
+ * So the implementation is: check both ranges, then memmove. The check is what
+ * makes it a translation rather than a memmove with a Mach signature -- Darwin
+ * RETURNS an error for an unmapped address and a bare memmove would take a
+ * SIGSEGV, which is not a worse error code, it is a different outcome.
+ *
+ * WHY /proc/self/maps AND NOT SOMETHING CHEAPER. msync(2) and mincore(2) both
+ * report unmapped ranges, and neither can see PROTECTION -- so a read-only
+ * destination would pass the check and then fault inside memmove. The three
+ * protection cases are a third of what was measured. The cost is one open/read
+ * of /proc/self/maps per call, which is real and is the reason
+ * Platform.copyMemoryPages' memmove fallback is not obviously worse than this;
+ * correctness first, and the cost is named here rather than discovered.
+ */
+
+/* Fill `have` with what /proc/self/maps says covers [addr, addr+len):
+ * returns 0 if any byte of the range is not in a mapping. Bits are the same
+ * VM_PROT_* / PROT_* values, which agree on both systems (READ 1, WRITE 2). */
+static int mr_range_prot(unsigned long addr, unsigned long len, int *have)
+{
+    char buf[8192];
+    char line[512];
+    unsigned nline = 0;
+    unsigned long cur = addr, end = addr + len;
+    int fd, prot = 7, covered = 0;
+    ssize_t n;
+
+    *have = 0;
+    if (len == 0) return 1;
+    if (end < addr) return 0;                    /* wrapped: never mapped */
+
+    fd = glibc_open("/proc/self/maps", 0 /* O_RDONLY, 0 on both */, 0);
+    if (fd < 0)
+        mr_bail("vm_copy: /proc/self/maps is unreadable, so an unmapped "
+                "address cannot be distinguished from a mapped one. Refusing "
+                "to guess: the wrong answer here is a SIGSEGV where Darwin "
+                "returns KERN_INVALID_ADDRESS");
+
+    /* Streamed a line at a time rather than slurped, because a real app's map
+     * is far larger than any buffer worth reserving here, and a truncated read
+     * would report a mapped address as unmapped -- a wrong answer that looks
+     * like a finding. */
+    while (!covered && (n = glibc_read(fd, buf, sizeof buf)) > 0) {
+        for (ssize_t i = 0; i < n && !covered; i++) {
+            if (buf[i] != '\n') {
+                if (nline < sizeof line - 1) line[nline++] = buf[i];
+                continue;
+            }
+            line[nline] = 0;
+            nline = 0;
+            {
+                char *p = line, *q;
+                unsigned long s = glibc_strtoul(p, &q, 16);
+                unsigned long e;
+                int lprot = 0;
+                if (q == p || *q != '-') continue;
+                e = glibc_strtoul(q + 1, &q, 16);
+                if (*q != ' ') continue;
+                q++;
+                if (q[0] == 'r') lprot |= 1;
+                if (q[1] == 'w') lprot |= 2;
+                if (q[2] == 'x') lprot |= 4;
+                if (e <= cur) continue;          /* entirely before us */
+                if (s > cur) break;              /* a HOLE at cur */
+                prot &= lprot;
+                cur = e;
+                if (cur >= end) covered = 1;
+            }
+        }
+    }
+    glibc_close(fd);
+    if (!covered) return 0;
+    *have = prot;
+    return 1;
+}
+
+EXPORT kern_return_t vm_copy(mach_port_t task, vm_address_t src, vm_size_t size,
+                             vm_address_t dst)
+{
+    int have = 0;
+
+    if (task != mach_task_self_) return KERN_INVALID_TASK;
+    if (size == 0) return KERN_SUCCESS;          /* measured: Darwin returns 0 */
+    if (!mr_range_prot(src, size, &have) || !(have & 1))
+        return KERN_INVALID_ADDRESS;             /* measured: 1, not 2 */
+    if (!mr_range_prot(dst, size, &have) || !(have & 2))
+        return KERN_INVALID_ADDRESS;
+    glibc_memmove((void *)dst, (const void *)src, size);
+    return KERN_SUCCESS;
+}
+
 /* The mach_vm_* family is the same thing with 64-bit-wide types; on arm64
  * those are the same types. */
 EXPORT kern_return_t mach_vm_allocate(mach_port_t t, uint64_t *a, uint64_t s, int f)

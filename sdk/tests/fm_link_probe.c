@@ -28,6 +28,8 @@
  *     section is a lie about coverage.
  */
 
+#include <mach/mach.h>
+#include <mach/vm_map.h>
 #include <pwd.h>
 #include <stddef.h>
 #include <sysdir.h>
@@ -55,6 +57,15 @@ unsigned long fm_link_probe(void)
         path[0] = 0;
         st = sysdir_get_next_search_path_enumeration(st, path);
         acc += (unsigned long)st + (unsigned char)path[0];
+    }
+
+    /* mach/vm_map.h -- declared in sdk/local/mach/vm_map.h, whose standing rule
+     * is that a routine appears only if libSystem exports it. This is that
+     * rule made checkable instead of remembered. */
+    {
+        char a[64] = { 0 }, b[64] = { 0 };
+        acc += (unsigned long)vm_copy(mach_task_self(),
+                                      (vm_address_t)a, sizeof a, (vm_address_t)b);
     }
 
     return acc;

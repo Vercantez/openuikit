@@ -52,6 +52,15 @@ extern kern_return_t vm_protect(vm_map_t target_task,
                                 boolean_t set_maximum,
                                 vm_prot_t new_protection);
 
+/* MEASURED against macOS, not read off a summary: no page-alignment
+ * requirement on address or size, memmove semantics on overlap, and an
+ * unmapped/PROT_NONE/read-only region gives KERN_INVALID_ADDRESS rather than
+ * KERN_PROTECTION_FAILURE. tests/src/vm_copy.c is the measurement. */
+extern kern_return_t vm_copy(vm_map_t target_task,
+                             vm_address_t source_address,
+                             vm_size_t size,
+                             vm_address_t dest_address);
+
 extern kern_return_t vm_remap(vm_map_t target_task,
                               vm_address_t *target_address,
                               vm_size_t size,
