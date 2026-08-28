@@ -1,0 +1,68 @@
+
+########## 0. clean slate
+  removed /root/Library/Preferences/com.example.udguest.persist.plist
+  confirmed absent
+
+########## 1. WRITE (a process that scores nothing)
+=== corpus derived from the golden ===
+  values  26
+  strings 96
+
+persist-write: suite com.example.udguest.persist
+  values written   17 of 26 (9 unmarshalled by design)
+  strings written  96
+  non-ASCII keys   4
+  synchronised, exiting without scoring anything.
+
+########## 2. WITNESS — from the shell, not from the guest
+  /root/Library/Preferences/com.example.udguest.persist.plist
+    2036 bytes, magic 'bplist00'
+    contains a distinctive corpus value (Int.max as a stored string)
+
+########## 3. READ (a FRESH process; nothing it reads was written by it)
+    roundtrip v_dict [Dict]                     golden {x=Int(1),y=String(two)}
+    roundtrip v_dict_nested [Dict]              golden {nested={deep=[Int(1),Int(2)]}}
+    integer v_data [Data]                       golden 0
+    double v_data [Data]                        golden 0
+    float v_data [Data]                         golden 0.0
+    … 84 more
+
+=== DENOMINATOR ===
+  golden rows        675
+  scored             579
+  refused            96
+  scored + refused   675
+  unaccounted for    0
+  corelibs rows      340
+    consulted        322
+    unused: refused  18
+    unused: NO MATCH 0
+
+=== TEETH ===
+  presence: 17/17 values · 96/96 strings · 4/4 non-ASCII keys
+  witness:  last corpus string reads correctly
+  ✓ every written key is present and the witness value is exact — the
+    board is grading a populated store, not an empty one.
+  ✓ all 675 golden rows accounted for (579 scored + 96 refused).
+  ✓ every corelibs row is either consulted (322) or refused (18).
+  ✓ MUST-FAIL fails 68 of 322 rows — the guest
+    disagrees with upstream exactly where Darwin does.
+  ✓ PORT is perfect on 579 rows against real Foundation's answers.
+
+GUEST SCOREBOARD  port 579/579 · must-fail 68/322 failing (required) · refused 96 · denominator 675
+  read phase exit 0
+
+########## 4. NEGATIVE CONTROL — same binary, store DELETED, must FAIL
+  store deleted and confirmed absent (the mutation TOOK -- #89 lost two
+  teeth tests to mutations that silently did not)
+PORT: scored 579 · pass 313 · fail 266
+  presence: 0/17 values · 0/96 strings · 0/4 non-ASCII keys
+  witness:  last corpus string reads WRONG: nil
+  ✗ the store does not hold what was written. An agreement-only board
+GUEST SCOREBOARD  port 313/579 · must-fail 162/322 failing (required) · refused 96 · denominator 675
+  control exit 1
+
+########## VERDICT
+  ✓ a fresh process re-read what the port wrote, and scored it.
+  ✓ with the store deleted the same binary FAILS (exit 1) — the
+    read phase is grading the file, not agreeing with itself.

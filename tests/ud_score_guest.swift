@@ -251,39 +251,111 @@ func refuse(_ row: String, _ why: String) {
     refused.append((row, want, why))
 }
 
+// MARK: - Mode
+//
+// THREE MODES, and the split exists for one reason: a single process proves
+// nothing about persistence. Everything `score` reads back could have come from
+// CF's in-memory preferences cache. On Darwin that ambiguity is tolerable
+// because writes go through cfprefsd and the file is not authoritative in real
+// time anyway; HERE THERE IS NO DAEMON, so persistence must come from the file
+// -- which makes this the route where a format or flush defect actually bites,
+// and makes a fresh-process read the only honest test of it.
+//
+//   score          write and read in ONE process (the #87 step 4 board)
+//   persist-write  write, synchronise, exit. NOTHING is scored.
+//   persist-read   a FRESH process: read and score, writing nothing.
+//
+// Mode comes from the environment rather than argv because ud_getenv is
+// already declared in the guest's libc surface and needs no argument plumbing
+// through machorun.
+func envStr(_ name: String) -> String? {
+    guard let p = ud_getenv(name) else { return nil }
+    var s = ""; var i = 0
+    while p[i] != 0 { s.append(Character(UnicodeScalar(UInt8(bitPattern: p[i])))); i += 1 }
+    return s
+}
+let MODE = envStr("UD_MODE") ?? "score"
+guard ["score", "persist-write", "persist-read"].contains(MODE) else {
+    die("unknown UD_MODE '\(MODE)'")
+}
+
 // MARK: - Replay
 
-let SUITE = "com.example.udguest.score"
-let SUITE_OTHER = "com.example.udguest.score.other"
+let SUITE = MODE == "score" ? "com.example.udguest.score"
+                            : "com.example.udguest.persist"
+let SUITE_OTHER = SUITE + ".other"
 guard let d = UserDefaults(suiteName: SUITE) else { die("UserDefaults(suiteName:) returned nil") }
 guard let other = UserDefaults(suiteName: SUITE_OTHER) else { die("other suite nil") }
-
-// Start from a known-empty store, or a previous run's values grade this one.
-for (k, _) in corpusValues { d.removeObject(forKey: k) }
-for i in 0..<corpusStrings.count { d.removeObject(forKey: "s\(i)") }
-for k in ["reg_only", "reg_int", "nilme", "iso", "definitely_absent_key",
-          "clé_caché", "日本語のキー", "🔑", "ключ", "c", "日", "к"] {
-    d.removeObject(forKey: k); other.removeObject(forKey: k)
-}
-_ = d.synchronize(); _ = other.synchronize()
 
 let UNMARSHALLED_WHY =
     "guest CF bridge marshals Bool/String/Int/Double/Float only; "
   + "Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)"
 
+// REGISTRATION IS PER-PROCESS BY DESIGN, so its rows cannot be scored after a
+// restart -- register(defaults:) populates a volatile domain that is never
+// written to the file. Two of the six would even PASS across a restart
+// ("a SET key beats the registered one" reads a persisted key; "removeObject
+// FALLS BACK to registered" reads nil either way), which is exactly the shape
+// this board refuses to count: right answer, no registration involved.
+let REGISTER_ROWS = [
+    "register: unset key reads the registered value",
+    "register: a SET key beats the registered one",
+    "register: typed getter sees it",
+    "register: after set",
+    "register: removeObject FALLS BACK to registered",
+]
+let REGISTER_WHY =
+    "register(defaults:) is a VOLATILE domain, never written to the file; "
+  + "after a restart these rows would answer without any registration present"
+
 var writable: [(String, V)] = []
-for (k, v) in corpusValues {
-    switch v {
-    case .s(let x): d.set(x, forKey: k); writable.append((k, v))
-    case .i(let x): d.set(x, forKey: k); writable.append((k, v))
-    case .d(let x): d.set(x, forKey: k); writable.append((k, v))
-    case .f(let x): d.set(x, forKey: k); writable.append((k, v))
-    case .b(let x): d.set(x, forKey: k); writable.append((k, v))
-    case .unmarshalled: break
+for (k, v) in corpusValues { if case .unmarshalled = v {} else { writable.append((k, v)) } }
+
+func writeCorpus() {
+    for (k, v) in writable {
+        switch v {
+        case .s(let x): d.set(x, forKey: k)
+        case .i(let x): d.set(x, forKey: k)
+        case .d(let x): d.set(x, forKey: k)
+        case .f(let x): d.set(x, forKey: k)
+        case .b(let x): d.set(x, forKey: k)
+        case .unmarshalled: break
+        }
     }
+    for (i, s) in corpusStrings.enumerated() { d.set(s, forKey: "s\(i)") }
+    // The rows outside the corpus loops that are nonetheless pure stored state.
+    d.set("x", forKey: "nilme"); d.set(nil, forKey: "nilme")
+    other.set("other", forKey: "iso")
+    for (i, uk) in NONASCII_KEYS.enumerated() { d.set("v\(i)-é日🔑", forKey: uk) }
+    _ = d.synchronize(); _ = other.synchronize()
 }
-for (i, s) in corpusStrings.enumerated() { d.set(s, forKey: "s\(i)") }
-_ = d.synchronize()
+
+let NONASCII_KEYS = ["clé_caché", "日本語のキー", "🔑", "ключ"]
+
+if MODE != "persist-read" {
+    // Start from a known-empty store, or a previous run's values grade this one.
+    for (k, _) in corpusValues { d.removeObject(forKey: k) }
+    for i in 0..<corpusStrings.count { d.removeObject(forKey: "s\(i)") }
+    for k in ["reg_only", "reg_int", "nilme", "iso", "definitely_absent_key",
+              "clé_caché", "日本語のキー", "🔑", "ключ", "c", "日", "к"] {
+        d.removeObject(forKey: k); other.removeObject(forKey: k)
+    }
+    _ = d.synchronize(); _ = other.synchronize()
+    writeCorpus()
+}
+
+if MODE == "persist-write" {
+    // NOTHING IS SCORED HERE. Report only what was written, so the orchestrator
+    // and the reader phase have a stated expectation to check against.
+    say("")
+    say("persist-write: suite \(SUITE)")
+    say("  values written   \(writable.count) of \(corpusValues.count) "
+      + "(\(corpusValues.count - writable.count) unmarshalled by design)")
+    say("  strings written  \(corpusStrings.count)")
+    say("  non-ASCII keys   \(NONASCII_KEYS.count)")
+    say("  synchronised, exiting without scoring anything.")
+    ud_exit(0)
+}
 
 // ---- 1. round-trip
 for (k, v) in corpusValues {
@@ -349,14 +421,18 @@ score("absent stringArray(forKey:)", d.stringArray(forKey: ak) == nil ? "nil" : 
 score("absent dictionary(forKey:)", d.dictionary(forKey: ak) == nil ? "nil" : "some")
 
 // ---- 5. register(defaults:) layering and removeObject fallback
-d.register(defaults: ["reg_only": "from-register", "v_string": "reg-LOSES", "reg_int": 7])
-score("register: unset key reads the registered value", render(d.object(forKey: "reg_only")))
-score("register: a SET key beats the registered one", render(d.object(forKey: "v_string")))
-score("register: typed getter sees it", String(d.integer(forKey: "reg_int")))
-d.set("set-value", forKey: "reg_only")
-score("register: after set", render(d.object(forKey: "reg_only")))
-d.removeObject(forKey: "reg_only")
-score("register: removeObject FALLS BACK to registered", render(d.object(forKey: "reg_only")))
+if MODE == "persist-read" {
+    for r in REGISTER_ROWS { refuse(r, REGISTER_WHY) }
+} else {
+    d.register(defaults: ["reg_only": "from-register", "v_string": "reg-LOSES", "reg_int": 7])
+    score("register: unset key reads the registered value", render(d.object(forKey: "reg_only")))
+    score("register: a SET key beats the registered one", render(d.object(forKey: "v_string")))
+    score("register: typed getter sees it", String(d.integer(forKey: "reg_int")))
+    d.set("set-value", forKey: "reg_only")
+    score("register: after set", render(d.object(forKey: "reg_only")))
+    d.removeObject(forKey: "reg_only")
+    score("register: removeObject FALLS BACK to registered", render(d.object(forKey: "reg_only")))
+}
 
 // persistentDomain is HOST-ONLY on this build: _udCopyAll returns [:], so the
 // answer "reg_only is not in the persistent domain" would be true because the
@@ -367,13 +443,13 @@ refuse("register: NOT in persistentDomain",
      + "guest; this row would PASS VACUOUSLY (empty domain lacks every key)")
 
 // ---- 6. set(nil) is removeObject
-d.set("x", forKey: "nilme")
-d.set(nil, forKey: "nilme")
+// In persist-read the write already happened in the previous process, and
+// re-doing it here would turn a persistence test back into a round trip.
+if MODE != "persist-read" { d.set("x", forKey: "nilme"); d.set(nil, forKey: "nilme") }
 score("set(nil) removes", render(d.object(forKey: "nilme")))
 
 // ---- 7. suite isolation
-other.set("other", forKey: "iso")
-_ = other.synchronize()
+if MODE != "persist-read" { other.set("other", forKey: "iso"); _ = other.synchronize() }
 score("suite isolation: other suite's key is not in this one", render(d.object(forKey: "iso")))
 score("suite isolation: same suite, both sides see it", render(other.object(forKey: "iso")))
 
@@ -390,8 +466,8 @@ score("suite isolation: same suite, both sides see it", render(other.object(forK
 // unlike `roundtrip`/`string(...)` their names do not encode the corpus. If the
 // spelling drifts from the host's, the consumption check reports them as
 // unaccounted-for golden rows — which is a hard failure, not a smaller board.
-for (i, uk) in ["clé_caché", "日本語のキー", "🔑", "ключ"].enumerated() {
-    d.set("v\(i)-é日🔑", forKey: uk)
+for (i, uk) in NONASCII_KEYS.enumerated() {
+    if MODE != "persist-read" { d.set("v\(i)-é日🔑", forKey: uk) }
     score("non-ASCII key round-trip [\(uk)]", render(d.object(forKey: uk)))
     score("non-ASCII key string(forKey:) [\(uk)]", d.string(forKey: uk) ?? "nil")
     score("non-ASCII key looked up by first character [\(uk)]",
@@ -491,6 +567,32 @@ if unusedUnexplained.count > 10 { say("      … \(unusedUnexplained.count - 10)
 say("")
 say("=== TEETH ===")
 var ok = true
+
+// PRESENCE, BEFORE AGREEMENT. This board compares answers, and an EMPTY store
+// agrees with a golden on every row whose expectation happens to be nil or a
+// zero-valued getter. So count what is actually THERE first: every value and
+// string written must read back non-nil, and a specific distinctive value must
+// be exactly right. Without this a persist-read against a deleted file could
+// score respectably and mean nothing.
+let presentValues = writable.filter { d.object(forKey: $0.0) != nil }.count
+let presentStrings = (0..<corpusStrings.count).filter { d.object(forKey: "s\($0)") != nil }.count
+let presentKeys = NONASCII_KEYS.filter { d.object(forKey: $0) != nil }.count
+let witness = d.string(forKey: "s\(corpusStrings.count - 1)") ?? "nil"
+let witnessWant = corpusStrings.last ?? ""
+say("  presence: \(presentValues)/\(writable.count) values · "
+  + "\(presentStrings)/\(corpusStrings.count) strings · "
+  + "\(presentKeys)/\(NONASCII_KEYS.count) non-ASCII keys")
+say("  witness:  last corpus string reads \(witness == witnessWant ? "correctly" : "WRONG: \(witness)")")
+if presentValues != writable.count || presentStrings != corpusStrings.count
+    || presentKeys != NONASCII_KEYS.count || witness != witnessWant {
+    say("  ✗ the store does not hold what was written. An agreement-only board")
+    say("    scores well against an EMPTY store, so this is checked before the")
+    say("    scoreboard is allowed to mean anything.")
+    ok = false
+} else {
+    say("  ✓ every written key is present and the witness value is exact — the")
+    say("    board is grading a populated store, not an empty one.")
+}
 if !unconsumed.isEmpty {
     say("  ✗ \(unconsumed.count) golden rows were neither scored nor refused.")
     say("    A verdict that does not consume its denominator is not a verdict.")

@@ -6,7 +6,7 @@
 === corpus derived from the golden ===
   values  26
   strings 96
-2026-08-28 06:06:22.329 ud_score_guest[16119:16119] _CFGetHostUUIDString: unable to determine UUID for host. Error: 2
+2026-08-28 06:12:51.866 ud_score_guest[16350:16350] _CFGetHostUUIDString: unable to determine UUID for host. Error: 2
 
 === UserDefaults differential oracle — GUEST ROUTE (#87 step 4) ===
 route:
@@ -56,8 +56,8 @@ MUST-FAIL: scored 322 · pass 254 · fail 68
 
 REFUSED (not attempted — reported, not skipped): 91
   40 rows · Array: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
-  20 rows · Dict: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
   20 rows · Data: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
+  20 rows · Dict: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
   10 rows · Date: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
   1 rows · persistentDomain reads through _udCopyAll, which returns [:] on the guest; this row would PASS VACUOUSLY (empty domain lacks every key)
     roundtrip v_data [Data]                     golden Data(deadbeef)
@@ -86,6 +86,10 @@ REFUSED (not attempted — reported, not skipped): 91
     unused: NO MATCH 0
 
 === TEETH ===
+  presence: 17/17 values · 96/96 strings · 4/4 non-ASCII keys
+  witness:  last corpus string reads correctly
+  ✓ every written key is present and the witness value is exact — the
+    board is grading a populated store, not an empty one.
   ✓ all 675 golden rows accounted for (584 scored + 91 refused).
   ✓ every corelibs row is either consulted (322) or refused (18).
   ✓ MUST-FAIL fails 68 of 322 rows — the guest
