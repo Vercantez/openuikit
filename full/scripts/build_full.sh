@@ -54,6 +54,33 @@ CC=(clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O2)
 # before machorun's heap-below-2^47 fix (9659e73) reproduced a bug that had
 # been fixed upstream hours earlier.
 MACHORUN=${MACHORUN:-/machorun}
+# REFUSE WITHOUT THE MOUNT, rather than silently building half a root.
+# Measured 2026-08-27: invoked without `-v ~/machorun:/machorun:ro`, every `-nt`
+# test below compares against a path that does not exist and is therefore FALSE,
+# so the loader copy AND the umbrella rebuild are both skipped -- with no error,
+# exit 0, and a `render_full` that links fine against whatever the root happened
+# to contain. That is the same class as the half-and-half root the comment above
+# describes, except it leaves no trace at all. The docs' own §5 reproduce command
+# omitted the mount, so this was reachable by following the instructions.
+for req in "$MACHORUN/build/machorun" "$MACHORUN/darwin/usr/lib/libSystem.B.dylib"; do
+    [ -e "$req" ] && continue
+    cat >&2 <<EOF
+
+build_full: REFUSING TO BUILD -- $req is missing.
+
+  MACHORUN=$MACHORUN does not look like a machorun checkout. Without it every
+  freshness test below is silently FALSE and the loader + umbrella steps are
+  skipped, producing a guest root assembled from whatever was already on disk.
+
+  Add the mount:
+    docker run --rm -v ~/swift-macho-linux:/w -v ~/uikit:/uikit:ro \\
+        -v ~/machorun:/machorun:ro -w /w -e QUARTZ_REBUILD=1 \\
+        swift-macho-spike:noble bash full/scripts/build_full.sh
+
+  (If machorun is checked out elsewhere, mount it and set MACHORUN=<that path>.)
+EOF
+    exit 2
+done
 # RE-STAGED WHENEVER THE LOADER MOVES, not only when the root is missing.
 # Staging on first creation only was not enough, and the gap was not
 # theoretical: the umbrellas below are rebuilt from machorun's CURRENT
@@ -110,14 +137,36 @@ if [ ! -f "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/concpatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/conccxx.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
    [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/swiftcorepatch.c" -nt "$ROOTDIR/.umbrellas" ]; then
+   [ "$W/full/shims/swiftcorepatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
+   [ "$W/scripts/set_id_dylib.pl" -nt "$ROOTDIR/.umbrellas" ]; then
     echo "== libSystem + libc++ umbrellas (syspatch + concpatch)"
     LIB=$ROOTDIR/darwin/usr/lib
 
-    cp "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" "$LIB/libSystem.real.dylib"
-    llvm-install-name-tool-18 -id /usr/lib/libSystem.real.dylib "$LIB/libSystem.real.dylib"
-    cp "$MACHORUN/darwin/usr/lib/libc++.1.dylib" "$LIB/libc++.real.dylib"
-    llvm-install-name-tool-18 -id /usr/lib/libc++.real.dylib "$LIB/libc++.real.dylib"
+    # THE RENAME USES scripts/set_id_dylib.pl, NOT llvm-install-name-tool.
+    # Measured 2026-08-27: llvm-install-name-tool-18 (this container) and
+    # Homebrew LLVM 21.1.3 (host) BOTH die with
+    #   error: unsupported load command (cmd=0x8000001f)
+    # on libc++.1.dylib, which since machorun #55 carries LC_REEXPORT_DYLIB of
+    # libc++abi. Three LLVM majors apart makes that a design fact about
+    # llvm-objcopy, not a version skew, so `set -e` killed this script here and
+    # scratch/mrroot_full could not be rebuilt by its own pipeline at all. The
+    # 108/108 scoreboard of task #67 was obtained past this break by hand.
+    # set_id_dylib.pl edits ONLY the 8-byte-aligned LC_ID_DYLIB field in place
+    # (growing the command out of the linker's header padding when the new name
+    # is longer, as it is for libc++), leaving every content byte alone -- which
+    # is also the invariant require_fresh_root.sh grades .real files on.
+    # Graded byte-for-byte against Apple's tooling by scripts/set_id_dylib_test.sh.
+    rename_id() {   # rename_id <src> <dst-file> <new-install-name>
+        cp "$1" "$2"
+        perl "$W/scripts/set_id_dylib.pl" "$2" "$3" >/dev/null
+        # Read it back through a DIFFERENT reader than the one that wrote it.
+        local got
+        got=$(llvm-otool-18 -D "$2" 2>/dev/null | tail -1)
+        [ "$got" = "$3" ] || { echo "build_full: LC_ID_DYLIB rewrite failed on $2 -- reads '$got', wanted '$3'" >&2; exit 1; }
+        echo "   $(basename "$2") <- $(basename "$1")  id=$got"
+    }
+    rename_id "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" "$LIB/libSystem.real.dylib" /usr/lib/libSystem.real.dylib
+    rename_id "$MACHORUN/darwin/usr/lib/libc++.1.dylib"    "$LIB/libc++.real.dylib"    /usr/lib/libc++.real.dylib
 
     "${CC[@]}" -O1 -c -o "$OUT/syspatch.o"  "$W/spike/syspatch.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
@@ -145,6 +194,20 @@ if [ ! -f "$ROOTDIR/.umbrellas" ] || \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
+
+    # The umbrella must DEFINE the symbols that are its whole reason to exist.
+    # __NSGetMachExecuteHeader is the discriminator: no machorun libSystem has
+    # ever exported it (checked with nm and `git log -S`), it comes only from
+    # full/shims/concpatch.c, and every scene dies at load without it. That is
+    # exactly the state a `MRROOT_REFRESH=1` left this root in for most of
+    # 2026-08-27 -- so the property is asserted here, at the moment it is built.
+    for sym in __NSGetMachExecuteHeader; do
+        llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
+            | awk '{print $NF}' | grep -qx "$sym" || {
+            echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
+            exit 1; }
+    done
+    echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. __NSGetMachExecuteHeader), reexporting libSystem.real"
 
     touch "$ROOTDIR/.umbrellas"
 fi
@@ -179,7 +242,14 @@ if [ ! -f "$ROOTDIR/darwin/usr/lib/libquartz.dylib" ] || [ -n "${QUARTZ_REBUILD:
         -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
         -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \
         "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
-    echo "   -> libquartz.dylib ($(nm -gU "$ROOTDIR/darwin/usr/lib/libquartz.dylib" 2>/dev/null | grep -c QZ) QZ exports)"
+    # llvm-nm-18, not nm: the container's `nm` is GNU binutils and CANNOT READ
+    # MACH-O -- it printed "file format not recognized" to the stderr this line
+    # was discarding, grep counted an empty stream, and the build cheerfully
+    # reported "(0 QZ exports)" about a dylib carrying 388. A counter that reads
+    # zero when the tool failed is worse than no counter: it looks like a result.
+    QZN=$(llvm-nm-18 --extern-only --defined-only "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | grep -c '_QZ')
+    [ "$QZN" -gt 0 ] || { echo "build_full: libquartz.dylib exports no QZ symbols" >&2; exit 1; }
+    echo "   -> libquartz.dylib ($QZN QZ exports)"
 fi
 # A .tbd is not needed: link the guest directly against the dylib we just built.
 QUARTZLIB=$ROOTDIR/darwin/usr/lib/libquartz.dylib
