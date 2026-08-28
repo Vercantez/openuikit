@@ -106,3 +106,43 @@ echo "staged: $SDK"
 find "$SDK" -name '*.h' | wc -l | sed 's/^/headers: /'
 find "$SDK" -name '*.tbd' | wc -l | sed 's/^/tbds:    /'
 ls "$W/lib" | sed 's/^/lib:     /'
+
+# ---------------------------------------------------------------------------
+# THE .tbd MUST NOT LAG THE DYLIB IT DESCRIBES.
+#
+# The link resolves against the .tbd; the loader resolves against the dylib. So
+# a .tbd that is older than its dylib does not fail — it manufactures PHANTOM
+# MISSING SYMBOLS: every name the dylib exports and the .tbd omits shows up as
+# undefined, gets a loud "STUB CALLED" stub, and looks exactly like a real gap.
+#
+# That is not hypothetical. On 2026-08-28 it cost four functions written twice
+# (gethostuuid, writev, snprintf_l, pthread_threadid_np — two of which had been
+# in libSystem for weeks), and the shims then SHADOWED the real ones, because
+# build_cftest_harness.sh links the probe object before -lSystem. One of the
+# shadowed symbols was a documented FICTION, so the lie won by link order.
+# Refreshing the .tbd dropped the stub count from 245 to 208 in one step.
+#
+# Reported, not fixed here: regenerating a .tbd is machorun's `build.sh tbd`,
+# and this script only stages what it is given. But it must never stage the
+# mismatch SILENTLY.
+NM=${NM:-llvm-nm-18}
+tbd_lag=0
+for d in "$SDK/usr/lib/libSystem.B.tbd"; do
+    dylib="$W/root/darwin/usr/lib/libSystem.B.dylib"
+    [ -f "$d" ] && [ -f "$dylib" ] || continue
+    missing=$("$NM" -g "$dylib" 2>/dev/null \
+        | awk '$2=="T"{print substr($3,2)}' | sort -u \
+        | while read -r s; do grep -q "_${s}\b" "$d" || echo "$s"; done | wc -l)
+    total=$("$NM" -g "$dylib" 2>/dev/null | awk '$2=="T"' | wc -l)
+    if [ "${missing:-0}" -gt 0 ]; then
+        echo "tbd:     *** $(basename "$d") omits $missing of $total symbols the"
+        echo "tbd:         dylib exports. Those will present as MISSING and get"
+        echo "tbd:         loud stubs that shadow the real implementations."
+        echo "tbd:         Regenerate with machorun's scripts/build.sh tbd."
+        tbd_lag=1
+    else
+        echo "tbd:     libSystem.B.tbd advertises all $total exported symbols"
+    fi
+done
+[ "$tbd_lag" -eq 0 ] || echo "tbd:     (staged anyway — this is a WARNING, and it is the reason"
+[ "$tbd_lag" -eq 0 ] || echo "tbd:          a 'missing symbol' must be confirmed against the DYLIB)"

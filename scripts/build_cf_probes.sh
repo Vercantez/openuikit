@@ -72,6 +72,62 @@ fail=0
 ran=0
 note() { printf '\n=== %s\n' "$*"; ran=$((ran+1)); }
 
+# ---------------------------------------------------------------------------
+# THE .tbd MUST NOT LAG THE DYLIB, CHECKED BEFORE ANY PROBE RUNS.
+#
+# The link resolves against the .tbd; the loader resolves against the dylib. A
+# .tbd that omits what the dylib exports does not fail -- it manufactures
+# PHANTOM MISSING SYMBOLS: each shows up undefined, gets a loud "STUB CALLED"
+# stub, and is indistinguishable from a real gap.
+#
+# It cost four functions written twice on 2026-08-28, two of which had been in
+# libSystem for weeks. The shims then SHADOWED the real ones, because
+# build_cftest_harness.sh links the probe object before -lSystem -- and one of
+# them was a documented FICTION, so the lie won on link order alone.
+# Refreshing the .tbd dropped the stub count 245 -> 208 in one step.
+#
+# It lives HERE rather than only in stage_sdk.sh because stage_sdk.sh restores
+# both files from a READ-ONLY /stage that can be older than ~/machorun. It can
+# revert a fresh libSystem and its .tbd TOGETHER, leaving them consistent with
+# each other and stale against the tree -- and consistent-and-stale passes any
+# check that only compares the two to each other. That is exactly what happened
+# while this check was being written, which is why it reports the DYLIB's date
+# too rather than only the symbol comparison.
+tbd_vs_dylib() {
+  T=/work/sdk/MacOSX.sdk/usr/lib/libSystem.B.tbd
+  D=/work/root/darwin/usr/lib/libSystem.B.dylib
+  [ -f "$T" ] && [ -f "$D" ] || { echo "tbd-check: missing $T or $D"; return 0; }
+  total=$(llvm-nm-18 -g "$D" 2>/dev/null | awk '$2=="T"' | wc -l)
+  missing=$(llvm-nm-18 -g "$D" 2>/dev/null | awk '$2=="T"{print substr($3,2)}' \
+            | sort -u | while read -r s; do grep -q "_${s}\b" "$T" || echo "$s"; done)
+  n=$(printf '%s' "$missing" | grep -c . || true)
+  echo "tbd-check: dylib $(date -r "$D" +%H:%M) · tbd $(date -r "$T" +%H:%M) · $total exported"
+
+  # AND COMPARE AGAINST THE BUILT ARTEFACT, not just the two staged files to
+  # each other. stage_sdk.sh restores the dylib AND the .tbd from a read-only
+  # /stage, so it reverts them together -- consistent with each other, stale
+  # against the tree, and invisible to the symbol comparison above. It also
+  # gives the restored file a FRESH mtime, so the timestamps lie as well.
+  # Content is the only thing that does not.
+  B=/work/mrsrc/darwin/usr/lib/libSystem.B.dylib
+  if [ -f "$B" ] && ! cmp -s "$B" "$D"; then
+    echo "  *** the STAGED libSystem differs from the one built in /work/mrsrc."
+    echo "      staged $(wc -c < "$D") bytes, built $(wc -c < "$B") bytes."
+    echo "      stage_sdk.sh restores /stage's copy over it -- re-stage before"
+    echo "      trusting any 'missing symbol' this run reports."
+    fail=1
+  fi
+  if [ "${n:-0}" -gt 0 ]; then
+    echo "  *** the .tbd omits $n of $total symbols the dylib exports."
+    echo "      They will present as MISSING and get stubs that shadow real code."
+    printf '%s\n' "$missing" | head -6 | sed 's/^/        /'
+    echo "      Fix: rebuild machorun's libSystem, run its scripts/build.sh tbd,"
+    echo "      and stage BOTH into /work -- stage_sdk.sh restores the old pair."
+    fail=1
+  fi
+}
+tbd_vs_dylib
+
 rebuild_nscf() {
   note "rebuilding the NS* surface (NSCFConstantString needs CF's headers)"
   clang -target $TRIPLE -isysroot $SDK -fobjc-runtime=macosx-13.0 -fno-objc-arc \
