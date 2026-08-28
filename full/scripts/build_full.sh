@@ -434,7 +434,7 @@ echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/mai
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
     "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
     "$W/full/driver/LaunchByName.swift" "$W/full/driver/LaunchTest.swift" \
-    "$W/full/driver/IndexSetTest.swift" \
+    "$W/full/driver/IndexSetTest.swift" "$W/full/driver/PasteboardTest.swift" \
     "$W/full/driver/Plist.swift" "$W/full/driver/Bundle.swift" "$W/full/driver/BundleTest.swift" \
     "$W/full/driver/main.swift"
 

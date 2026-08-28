@@ -211,6 +211,12 @@ if args.count >= 2, args[1] == "indexset" {
     warnToStderr(ok ? "[render_full] INDEX SET OK" : "[render_full] INDEX SET FAILED")
     cpio_exit(ok ? 0 : 1)
 }
+if args.count >= 2, args[1] == "pasteboard" {
+    warnToStderr("[render_full] Foundation-free UIPasteboard self-test")
+    let ok = pasteboardSelfTest()
+    warnToStderr(ok ? "[render_full] PASTEBOARD OK" : "[render_full] PASTEBOARD FAILED")
+    cpio_exit(ok ? 0 : 1)
+}
 if args.count >= 3, args[1] == "realapp" {
     let assets = args.count >= 4 ? args[3] : "/uikit/fixtures/realapp/assets"
     MainActor.assumeIsolated { renderRealApp(args[2], assets: assets) }
