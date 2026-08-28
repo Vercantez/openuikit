@@ -1,0 +1,196 @@
+{
+  "build": {
+    "module_order": [
+      "UIHelpers",
+      "UIComponents",
+      "DesignSystem",
+      "AppShortcuts"
+    ],
+    "parse_as_library": true,
+    "swift_language_version": "5",
+    "target": "arm64-apple-macos13.0",
+    "whole_module_optimization": true
+  },
+  "focus": {
+    "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "package_manifest": {
+      "path": "BlockzillaPackage/Package.swift",
+      "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248",
+      "size": 1975
+    },
+    "worktree_prefix": "focus-ios"
+  },
+  "openuikit": {
+    "commit": "0bba80a4138ece678844e2f55da16ffb7cbf70e9",
+    "worktree_prefix": "."
+  },
+  "resource_integration": {
+    "accessor_path": "accessors/DesignSystem/Bundle+Module.swift",
+    "accessor_sha256": "c0a3ee61e4fc8015d5e4a36775293347e21c58850605a6d47141f344211829aa",
+    "accessor_size": 146,
+    "historical_openuikit_commit": "81e1e05fbde712a28ea031534462b80740ed5eb5",
+    "policy_path": "package-resources.json",
+    "policy_sha256": "386de0addac9cc47fd9a4a54d665b62186d179c0a2516d45b30636f649c40acc",
+    "policy_size": 3626,
+    "tool_path": "package_resources.py",
+    "tool_sha256": "3ac3e47a861fdcc7dcf8cf1f34c940ab908b295b34e282aa8dc6d4decf919cce",
+    "tool_size": 41722
+  },
+  "schema": 1,
+  "targets": [
+    {
+      "name": "UIHelpers",
+      "source_digest": "5d240421951ca5d1523027e097e50c86d8ebc3ac96ce14a31461071df6660b9c",
+      "source_root": "BlockzillaPackage/Sources/UIHelpers",
+      "sources": [
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/FaviIconGenerator.swift",
+          "sha256": "061714d90475de0320a2498b22c75d2a430625c7f49636902f0c8304d151fc93",
+          "size": 1421
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/ImageLoader.swift",
+          "sha256": "ef3ceee801c0fb7e63d0a78185f5956c56c4fde976f9ef909eac5065132e0bcb",
+          "size": 2489
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIApplication+Orientation.swift",
+          "sha256": "c47e83212c074d34bd0f793065faba5e0691a7612eec6f8cbd59691a7907a309",
+          "size": 648
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIButton+Background.swift",
+          "sha256": "2f5dcc1c57b951a86d54d4f41dcbc415a9d08c92bba9c7c6295fe4040f582382",
+          "size": 1388
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIDeviceExtensions.swift",
+          "sha256": "2167de4be7bfd70659bd2c786a7a9a463d266316660d04eb83cdd668f9cfde40",
+          "size": 999
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIImageExtensions.swift",
+          "sha256": "13e31d863f387bc493d5ef2761ca46c7edc62c744e11ff396e85b2bfe0512319",
+          "size": 731
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UILabelExtensions.swift",
+          "sha256": "ca9be28a9998bbf4c93ad1fb33df0e1a6dfea4e0a475ce617ad481fd862102bf",
+          "size": 383
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIScreenExtensions.swift",
+          "sha256": "959f976a3b34bba81d59cee67f97a188d2114ab175c11eccd2397db42907b443",
+          "size": 350
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UITableView+Dequeue.swift",
+          "sha256": "dceb0ac806f6faf634aed350d69edaf304414b374404f2af46bc2fbd7a108de7",
+          "size": 817
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIViewController+Child.swift",
+          "sha256": "06dd18d432add4ca3a8c70bbfb455d007bef75df6388e3a5dbdb7b541f3760f0",
+          "size": 991
+        },
+        {
+          "path": "BlockzillaPackage/Sources/UIHelpers/UIViewExtensions.swift",
+          "sha256": "72c10b8c6849ad412bacd5f7b6ddb3cb8662d49f8af2998abd0ffdc946fa5f37",
+          "size": 1616
+        }
+      ]
+    },
+    {
+      "name": "UIComponents",
+      "source_digest": "973462bfb1cd91327344759fbe3c5972ae0b42d16463aa6c126795863b5953c8",
+      "source_root": "BlockzillaPackage/Sources/UIComponents",
+      "sources": [
+        {
+          "path": "BlockzillaPackage/Sources/UIComponents/AsyncImageView.swift",
+          "sha256": "5fbda4ebce61254c8b0099f3f50892947beab6654af168885b6cac00240abdaa",
+          "size": 2278
+        }
+      ]
+    },
+    {
+      "name": "DesignSystem",
+      "production_exclusions": {
+        "rationale": "SwiftUI-only Preview Files are not inputs to the reviewed four-source production subset.",
+        "source_digest": "f51db65db76ad183db8cd1d9df5322a4fd1b0be5990c1620373c21fba2cc734c",
+        "sources": [
+          {
+            "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "sha256": "0bcfbf1b672fdd82d305a8fd0fbbc319e59285b43b7aa7d4566cf445e5ecd2f1",
+            "size": 4148
+          },
+          {
+            "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "sha256": "99da3374150876e5212adc7f9baca7f1cd4c62afea40919a64ac31a700e7e00a",
+            "size": 2114
+          },
+          {
+            "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "sha256": "59f55ca617ce706cb7abe85b3d44f192261fb8690ba05b8eab4fde02f1664508",
+            "size": 1752
+          }
+        ]
+      },
+      "source_digest": "00d6773590819770061d4dc9e23adedc1f5ed39962a321475093289edf28ca9b",
+      "source_root": "BlockzillaPackage/Sources/DesignSystem",
+      "sources": [
+        {
+          "path": "BlockzillaPackage/Sources/DesignSystem/Bundle+CurrentBundle.swift",
+          "sha256": "725315f04ecbbe4bdeceb73bdf07550e2c3f38307696d0fa7035600e018ca3af",
+          "size": 2060
+        },
+        {
+          "path": "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift",
+          "sha256": "4078f76f180d37f6d560dd63d59ef161302a73b7f416933533663700c314224f",
+          "size": 3248
+        },
+        {
+          "path": "BlockzillaPackage/Sources/DesignSystem/UIFont+AppFonts.swift",
+          "sha256": "ac4895febb0ad6c588ada61420b0b271afb33092d76e1dbed828ee8b337c83e6",
+          "size": 1412
+        },
+        {
+          "path": "BlockzillaPackage/Sources/DesignSystem/UIImage+AppImages.swift",
+          "sha256": "ba5720a57aa90406b95a66ea62433557b666c1558d59781018de050585797734",
+          "size": 2152
+        }
+      ]
+    },
+    {
+      "name": "AppShortcuts",
+      "source_digest": "8af6563e8cf24f8fc0cf36e232393321aed36deff8178edd7dbe57c7a27b885e",
+      "source_root": "BlockzillaPackage/Sources/AppShortcuts",
+      "sources": [
+        {
+          "path": "BlockzillaPackage/Sources/AppShortcuts/Shortcut.swift",
+          "sha256": "b7f1501bd41bad472012008bc35a20883de651b6d787070c6b7ce4ed2174120a",
+          "size": 1691
+        },
+        {
+          "path": "BlockzillaPackage/Sources/AppShortcuts/ShortcutView.swift",
+          "sha256": "a5cfad552e9552bb5afdec662ec05583e1deee5826bfbd6beb4a629867ede8f1",
+          "size": 5956
+        },
+        {
+          "path": "BlockzillaPackage/Sources/AppShortcuts/ShortcutViewModel.swift",
+          "sha256": "2d34847cb586ecb53508d52883cc494e90912c21f76c98c4ee17e4f67f4e7b41",
+          "size": 1189
+        },
+        {
+          "path": "BlockzillaPackage/Sources/AppShortcuts/ShortcutsManager.swift",
+          "sha256": "67a979250e07a5d97abf7ebb8a4f59d1810c564c8ce5641071e1e880b3c4cce3",
+          "size": 4078
+        },
+        {
+          "path": "BlockzillaPackage/Sources/AppShortcuts/ShortcutsPersister.swift",
+          "sha256": "82edccb54c639e035d82f186c26dc1e6d20d84a9a00cd9bee85bab894307f44e",
+          "size": 1017
+        }
+      ]
+    }
+  ]
+}
