@@ -1,8 +1,14 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `81e1e05`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `81e1e05`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
+
+SnapKit now comes from the exact 5.7.0 revision named by Focus's
+[`Package.resolved`](https://github.com/mozilla-mobile/focus-ios/blob/a2832521c1daa0c23419c73705ae043ed60c9791/focus-ios/Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved),
+not the former diagnostic checkout of upstream `main`. A fresh census after
+that correction has an exact zero delta: SnapKit remains 0, the broad app row
+remains 709, and the total remains 739 primary diagnostics.
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
 so as a lower bound. With the module walls cleared the same census reaches **182
@@ -139,19 +145,29 @@ that override point. The file defines no constraint construction, installation,
 update, or `.snp` API; omitting it loses only SnapKit's custom debug string.
 
 [`snapkit_sources.py`](snapkit_sources.py) refuses rather than widening this
-rule silently. It requires the exact repository commit and approved path, checks
-the excluded bytes, requires a clean tracked/disk source inventory, rejects
-symlinks, records every included source hash, and brackets `swiftc` with matching
-before/after attestations. The current denominator and subject are:
+rule silently. It requires Focus commit `a2832521` and the clean, tracked workspace
+lock at SHA-256
+`632a0df0276ba7828f456ae3964f158fb7115d05f175ddf637abdd7ab4a4633b`,
+parses its one exact SnapKit 5.7.0 pin, and requires the dependency checkout to
+be that same `e74fe2a9` commit. It also requires both reviewed source-set
+digests, the approved exclusion path and bytes, and a clean tracked/disk source
+inventory; rejects symlinks; records every included source hash; isolates Git
+pin checks from ambient `GIT_*` redirection and global/system configuration;
+and brackets `swiftc` with matching before/after attestations. The current
+denominator and subject are:
 
 ```
 37 discovered = 36 included + 1 excluded
-included source digest: 33004a4b0f0a7361f526c54e7384d42519e967d304e30938deb4ff98152e9a7f
+all source digest:      17335843f47647248c46f95493241753548b14a52ff70e5c0d77ec485c510ba8
+included source digest: a56f18961b549a4a90d925520db8d177cec2e734a2381eefb6a191b59bdfdc6e
 ```
 
 `python3 full/focus-ios/test_snapkit_sources.py -v` supplies positive coverage
-and negative controls for pin drift, byte drift, scope expansion, dirty tracked
-sources, and untracked sources.
+and negative controls for Focus and SnapKit pin drift, workspace-lock byte and
+parsed-pin drift, a rehashed lock that differs from pinned HEAD, source-digest
+and excluded-byte drift, staged-only lock drift, scope expansion, dirty tracked
+sources, and untracked sources (including ignored files), plus ambient Git
+repository redirection.
 
 ## The saturated census
 

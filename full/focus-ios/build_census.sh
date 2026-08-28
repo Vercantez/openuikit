@@ -11,13 +11,14 @@
 #   1. OpenUIKit          built FRESH from a clone of ~/uikit (never written to)
 #   2. stub modules       Glean, FocusAppServices, WebKit, Sentry, Fuzi,
 #                         MobileCoreServices -- measured surfaces, see stubs/
-#   3. SnapKit            THE REAL SOURCE, recompiled. Not reimplemented:
-#                         recompile-from-source is the whole point of the
-#                         project, and SnapKit is MIT and pure Swift over
-#                         NSLayoutConstraint. One diagnostic-only source file
-#                         is excluded by a pinned, hash-checked vendoring rule.
-#                         The rule, source denominator, and subject digest are
-#                         printed and recorded on every run.
+#   3. SnapKit            THE REAL SOURCE at Focus's workspace-lock revision,
+#                         recompiled. Not reimplemented: recompile-from-source
+#                         is the whole point of the project, and SnapKit is MIT
+#                         and pure Swift over NSLayoutConstraint. One
+#                         diagnostic-only source file is excluded by a pinned,
+#                         hash-checked vendoring rule. The lock link, rule,
+#                         source denominator, and subject digest are printed and
+#                         recorded on every run.
 #   4. the app's own SPM targets, in dependency order
 #   5. a broad all-source saturation module (not the Xcode target graph)
 #   6. classify every error and print the breakdown with denominators
@@ -30,7 +31,7 @@ set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 SML=$(cd "$HERE/../.." && pwd)
 APP=${APP:-$SML/scratch/ladder-corpus/focus-ios/focus-ios}
-SNAPKIT=${SNAPKIT:-$SML/scratch/ladder-deps/SnapKit}
+SNAPKIT=${SNAPKIT:-$SML/scratch/xcodeplan-deps/SnapKit}
 OUT=${1:-/tmp/focus-ios-census}
 TARGET=${TARGET:-arm64-apple-macos13.0}
 UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
@@ -127,9 +128,10 @@ SNAPKIT_AUDIT_BEFORE=$OUT/snapkit-vendoring-before.json
 SNAPKIT_AUDIT_AFTER=$OUT/snapkit-vendoring-after.json
 
 # This is intentionally fatal rather than another census row. If the pin,
-# source set, excluded file, or excluded file's bytes changed, the compiler's
-# subject is no longer the approved SnapKit vendoring subject.
-python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+# workspace lock, source set/digests, excluded file, or excluded file's bytes
+# changed, the compiler's subject is no longer the approved SnapKit vendoring
+# subject.
+python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$APP" "$SNAPKIT_POLICY" \
     "$SNAPKIT_FILES" "$SNAPKIT_AUDIT_BEFORE" \
     | tee "$OUT/logs/snapkit-vendoring-before.log"
 rc=$?
@@ -146,7 +148,7 @@ fi
 # Recompute after swiftc returns. This closes the subject bracket: a dependency
 # source mutation during compilation voids the row instead of leaving a green
 # result attached to an unknown mixture of bytes.
-python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$SNAPKIT_POLICY" \
+python3 -B "$HERE/snapkit_sources.py" "$SNAPKIT" "$APP" "$SNAPKIT_POLICY" \
     "$OUT/snapkit-files-after.txt" "$SNAPKIT_AUDIT_AFTER" \
     > "$OUT/logs/snapkit-vendoring-after.log"
 rc=$?

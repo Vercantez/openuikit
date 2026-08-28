@@ -1,7 +1,18 @@
 {
-  "schema": 1,
-  "repository_commit": "250529bec615066185ff328984855101820fcbee",
+  "schema": 2,
+  "repository_commit": "e74fe2a978d1216c3602b129447c7301573cc2d8",
   "source_root": "Sources",
+  "all_source_digest": "17335843f47647248c46f95493241753548b14a52ff70e5c0d77ec485c510ba8",
+  "included_source_digest": "a56f18961b549a4a90d925520db8d177cec2e734a2381eefb6a191b59bdfdc6e",
+  "workspace_lock": {
+    "focus_repository_commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "path": "Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+    "sha256": "632a0df0276ba7828f456ae3964f158fb7115d05f175ddf637abdd7ab4a4633b",
+    "package": "SnapKit",
+    "repository_url": "https://github.com/SnapKit/SnapKit",
+    "revision": "e74fe2a978d1216c3602b129447c7301573cc2d8",
+    "version": "5.7.0"
+  },
   "exclusions": [
     {
       "path": "Sources/Debugging.swift",
