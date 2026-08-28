@@ -77,6 +77,36 @@ public class UIColor: Equatable {
         storage = .dynamic { traits in dynamicProvider(traits).resolvedCGColor(with: traits) }
     }
 
+    /// UIKit's bundle-selecting named-color initializer.
+    ///
+    /// OpenUIKit reads uncompiled sRGB `.colorset/Contents.json` resources.
+    /// Default and luminosity light/dark entries become a dynamic UIColor.
+    /// Apple's compiled `Assets.car`, Display-P3 conversion, high-contrast,
+    /// idiom and gamut variants are intentionally outside this subset.
+    /// `traitCollection` is accepted for source compatibility; luminosity is
+    /// selected when the returned color is resolved, just like other dynamic
+    /// OpenUIKit colors.
+    public convenience init?(named name: String,
+                             in bundle: Bundle?,
+                             compatibleWith traitCollection: UITraitCollection?) {
+        guard let asset = _NamedColorAsset.load(
+            name: name,
+            resourceRoots: BundleAssetLookup.resourceRoots(in: bundle)
+        ) else { return nil }
+
+        if asset.hasAppearanceVariants {
+            self.init(dynamicProvider: { traits in
+                let color = asset.resolvedColor(for: traits)
+                return UIColor(red: color.red, green: color.green,
+                               blue: color.blue, alpha: color.alpha)
+            })
+        } else {
+            let color = asset.resolvedColor(for: traitCollection ?? .current)
+            self.init(red: color.red, green: color.green,
+                      blue: color.blue, alpha: color.alpha)
+        }
+    }
+
     /// Resolve to concrete sRGB components for the given traits.
     public func resolvedCGColor(with traits: UITraitCollection) -> CGColor {
         switch storage {
@@ -163,4 +193,139 @@ public class UIColor: Equatable {
     public static let tertiarySystemFill = UIColor(semantic: "tertiarySystemFill")
     public static let quaternarySystemFill = UIColor(semantic: "quaternarySystemFill")
     public static let tintColor = UIColor(semantic: "tintColor")
+}
+
+/// The intentionally small, portable part of an Xcode named-color asset.
+/// Parsing uses OpenUIKit's Foundation-free JSON parser and CPortableIO, so
+/// the same source remains buildable when Foundation is hidden.
+private struct _NamedColorAsset {
+    private enum Appearance {
+        case base
+        case light
+        case dark
+        case unsupported
+    }
+
+    let base: CGColor
+    let light: CGColor?
+    let dark: CGColor?
+
+    var hasAppearanceVariants: Bool { light != nil || dark != nil }
+
+    func resolvedColor(for traits: UITraitCollection) -> CGColor {
+        switch traits.userInterfaceStyle {
+        case .dark:
+            return dark ?? base
+        case .light:
+            return light ?? base
+        case .unspecified:
+            return base
+        }
+    }
+
+    static func load(name: String, resourceRoots: [String]) -> _NamedColorAsset? {
+        guard let name = BundleAssetLookup.relativeResourceName(name) else {
+            return nil
+        }
+
+        // Raw SPM/copied catalogs keep one of these shapes. `Colors.xcassets`
+        // is the exact pinned Focus DesignSystem layout; the other two cover
+        // the common root and generic catalog spellings without recursively
+        // walking arbitrary host directories.
+        let catalogPrefixes = ["", "Colors.xcassets", "Assets.xcassets", "Media.xcassets"]
+        for root in resourceRoots {
+            let rootPrefix = root.isEmpty || root.hasSuffix("/") ? root : root + "/"
+            for catalog in catalogPrefixes {
+                let catalogPrefix = catalog.isEmpty ? "" : catalog + "/"
+                let path = rootPrefix + catalogPrefix + name + ".colorset/Contents.json"
+                guard let bytes = ResourceIO.readFile(path),
+                      let asset = parse(bytes) else { continue }
+                return asset
+            }
+        }
+        return nil
+    }
+
+    private static func parse(_ bytes: [UInt8]) -> _NamedColorAsset? {
+        guard let entries = JSONValue.parse(bytes)?["colors"]?.arrayValue else {
+            return nil
+        }
+
+        var base: CGColor?
+        var light: CGColor?
+        var dark: CGColor?
+        for entry in entries {
+            guard entry["idiom"]?.stringValue == "universal",
+                  entry["display-gamut"] == nil else { continue }
+            guard let value = parseColor(entry["color"]) else { continue }
+
+            switch appearance(in: entry) {
+            case .dark:
+                if dark == nil { dark = value }
+            case .light:
+                if light == nil { light = value }
+            case .base:
+                if base == nil { base = value }
+            case .unsupported:
+                continue
+            }
+        }
+
+        guard let fallback = base ?? light ?? dark else { return nil }
+        return _NamedColorAsset(base: fallback, light: light, dark: dark)
+    }
+
+    private static func appearance(in entry: JSONValue) -> Appearance {
+        guard let appearances = entry["appearances"]?.arrayValue else {
+            return .base
+        }
+        guard appearances.count == 1,
+              appearances[0]["appearance"]?.stringValue == "luminosity" else {
+            return .unsupported
+        }
+        switch appearances[0]["value"]?.stringValue {
+        case "light": return .light
+        case "dark": return .dark
+        default: return .unsupported
+        }
+    }
+
+    private static func parseColor(_ value: JSONValue?) -> CGColor? {
+        guard let value,
+              value["color-space"]?.stringValue == "srgb",
+              let components = value["components"],
+              let red = component(components["red"]),
+              let green = component(components["green"]),
+              let blue = component(components["blue"]) else {
+            return nil
+        }
+        let alpha: CGFloat
+        if let encodedAlpha = components["alpha"] {
+            guard let parsedAlpha = component(encodedAlpha) else { return nil }
+            alpha = parsedAlpha
+        } else {
+            alpha = 1
+        }
+        return CGColor(red: clamp(red), green: clamp(green),
+                       blue: clamp(blue), alpha: clamp(alpha))
+    }
+
+    private static func component(_ value: JSONValue?) -> CGFloat? {
+        if let number = value?.doubleValue, number.isFinite {
+            return CGFloat(number)
+        }
+        guard let string = value?.stringValue else { return nil }
+        if string.hasPrefix("0x") || string.hasPrefix("0X") {
+            let digits = string.dropFirst(2)
+            guard digits.count == 2,
+                  let byte = Int(digits, radix: 16), byte <= 0xFF else { return nil }
+            return CGFloat(byte) / 255
+        }
+        guard let number = Double(string), number.isFinite else { return nil }
+        return CGFloat(number)
+    }
+
+    private static func clamp(_ value: CGFloat) -> CGFloat {
+        Swift.max(0, Swift.min(1, value))
+    }
 }

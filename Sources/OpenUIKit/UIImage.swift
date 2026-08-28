@@ -175,15 +175,40 @@ public final class UIImage {
     /// Results are cached by name (UIKit caches `named:` lookups too).
     public static func named(_ name: String) -> UIImage? {
         if let hit = _namedCache[name] { return hit }
-        guard !name.isEmpty else { return nil }
+        guard let img = loadNamed(name,
+                                  searchPaths: OpenUIKitRuntime.imageSearchPaths,
+                                  preferredScale: OpenUIKitRuntime.imageScreenScale) else {
+            return nil
+        }
+        _namedCache[name] = img
+        return img
+    }
+
+    /// Decode a loose PNG/JPEG resource from one of `searchPaths`.
+    ///
+    /// This deliberately does not claim to read Apple's compiled `Assets.car`
+    /// files or vector PDF/SVG image-set members. A Linux app builder must
+    /// materialize supported raster files into the bundle resource directory.
+    private static func loadNamed(_ name: String,
+                                  searchPaths: [String],
+                                  preferredScale: CGFloat) -> UIImage? {
+        guard let name = BundleAssetLookup.relativeResourceName(name) else {
+            return nil
+        }
         let (base, ext) = splitExtension(name)
         let exts = ext.map { [$0] } ?? ["png", "jpg", "jpeg"]
         var scales: [Int] = []
-        let want = Int(OpenUIKitRuntime.imageScreenScale.rounded())
+        // Converting NaN, infinity, or an out-of-range CGFloat directly to Int
+        // traps. Bound finite values before conversion and give non-finite
+        // caller input a deterministic 1x fallback.
+        let boundedScale = preferredScale.isFinite
+            ? Swift.max(1, Swift.min(3, preferredScale))
+            : 1
+        let want = Int(boundedScale.rounded())
         for s in stride(from: Swift.max(1, Swift.min(3, want)), through: 1, by: -1) {
             scales.append(s)
         }
-        for dir in OpenUIKitRuntime.imageSearchPaths {
+        for dir in searchPaths {
             let prefix = dir.isEmpty || dir.hasSuffix("/") ? dir : dir + "/"
             for e in exts {
                 for s in scales {
@@ -191,9 +216,7 @@ public final class UIImage {
                     let path = prefix + base + suffix + "." + e
                     if let bytes = ResourceIO.readFile(path),
                        let bitmap = ImageCodec.decode(bytes) {
-                        let img = UIImage(bitmap: bitmap, scale: CGFloat(s))
-                        _namedCache[name] = img
-                        return img
+                        return UIImage(bitmap: bitmap, scale: CGFloat(s))
                     }
                 }
             }
@@ -205,6 +228,28 @@ public final class UIImage {
     /// simply forwards to `named(_:)`.
     public convenience init?(named name: String) {
         guard let img = UIImage.named(name) else { return nil }
+        self.init(bitmap: img.bitmap, scale: img.scale)
+    }
+
+    /// UIKit's bundle-selecting named-image initializer.
+    ///
+    /// The supported portable subset is loose PNG/JPEG resources plus their
+    /// `@2x`/`@3x` variants. `traitCollection.displayScale` chooses the
+    /// preferred variant; appearance, idiom and gamut variants, compiled
+    /// asset catalogs, vector PDFs and SVGs are not decoded here.
+    ///
+    /// In a Foundation-hidden guest build Bundle has no filesystem metadata,
+    /// so the host-configured `OpenUIKitRuntime.imageSearchPaths` are used.
+    public convenience init?(named name: String,
+                             in bundle: Bundle?,
+                             compatibleWith traitCollection: UITraitCollection?) {
+        let preferredScale = traitCollection?.displayScale
+            ?? OpenUIKitRuntime.imageScreenScale
+        guard let img = UIImage.loadNamed(
+            name,
+            searchPaths: BundleAssetLookup.resourceRoots(in: bundle),
+            preferredScale: preferredScale
+        ) else { return nil }
         self.init(bitmap: img.bitmap, scale: img.scale)
     }
 
