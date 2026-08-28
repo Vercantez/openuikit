@@ -1,9 +1,35 @@
-# UserDefaults — the Darwin behaviour probes (SCOPING stage, #78)
+# UserDefaults — the differential oracle (#78)
 
-**Status: this is not yet an oracle. It is the instrument that measured what a
-`UserDefaults` oracle would have to grade against, and it has already found a
-route-deciding divergence.** The scored runner, the corpus rows and the
-host/guest scoreboards do not exist yet and must not be reported as if they do.
+**Status: host route DONE. Guest route BLOCKED on two named substrate walls,
+neither of them in UserDefaults.**
+
+```
+CONTROL-SELF  462/462   real vs real — the instrument check
+CORELIBS      245/313   upstream's own rules vs real; 68 failures, and this
+                        board MUST fail or the oracle detects nothing
+PORT          627/627   ours vs real, including every row CORELIBS fails
+CROSS-READ     26/26    the port writes, real Foundation reads
+PERSIST       113/113   a FRESH PROCESS re-reads what the port wrote
+```
+
+Build and run: `build_ud_host.sh OUT && OUT/ud_runner score`. The other
+direction — proof the PORT board can fail — is `mutation_test.sh`: removing any
+one deviation from upstream drops it (32 / 4 / 16 / 1 failures).
+
+The port is `~/foundation-macho/src/overlay/UserDefaults.swift`, ONE file in
+two configurations: `-DUD_HOST_ORACLE` builds it as module `PortedUserDefaults`
+so it coexists with real `Foundation.UserDefaults` in one process; undefined, it
+is the Foundation overlay over our own CF.
+
+**The guest route is blocked BELOW UserDefaults, not by it.** CF's preferences
+path ran for the first time and stops on (1) `CFLock_t` being an ERRORCHECK
+pthread mutex whose signature machorun does not accept, and (2) an
+unimplemented `-[__NSCFConstantString _fastCStringContents:]` on the CFBundle
+path. Both are reproduced by probes smaller than the thing they explain, in
+`~/foundation-macho/docs/CF_PREFERENCES_EXECUTION.md`.
+
+Everything below is the scoping measurement that produced the corrections the
+port carries. It is kept because those corrections cite it by row.
 
 ## Why a probe before a route
 
