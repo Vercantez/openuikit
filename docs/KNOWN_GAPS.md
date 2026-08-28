@@ -1208,6 +1208,18 @@ exercised and OpenUIKit does not fully honour.
   resolve, and the real-app harness compiles them verbatim. Residue is
   narrowed and listed above: `NSAttributedString`, `Notification`/
   `NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's.
+- **`UIView.init(coder:)` is a source-compatibility bridge, not archive
+  support.** The Foundation-invisible Mach-O guest build cannot put
+  `NSCoder` in OpenUIKit's public interface, so the superclass entry point is
+  spelled `init?(coder: AnyObject)`. It is deliberately non-required, ignores
+  its token, always succeeds, and initializes a zero-frame view. That lets a
+  code-only app subclass's concrete `init?(coder: NSCoder)` call `super`, but
+  it is not UIKit's exact ABI and no nib/storyboard/unarchiver state is read.
+  It also does not reproduce UIKit's initializer-inheritance corner: a
+  subclass that overrides `init(frame:)` and supplies the concrete `NSCoder`
+  initializer still cannot be constructed as `Subclass()` solely through
+  `UIView`'s defaulted frame argument. Focus's `AsyncImageView()` is the first
+  measured downstream instance of that separate gap.
 - **`#selector` and `@objc` do not compile off Darwin — and this is now the
   ONLY thing left in the real-app ledger.** Measured by reverting the vendored
   source to pristine upstream text: Linux emits *"error: Objective-C

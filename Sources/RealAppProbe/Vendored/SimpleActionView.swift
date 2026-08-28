@@ -30,11 +30,11 @@ class SimpleActionView: UIView {
     // M15: RESTORED to the app's original text. `NSCoder` is Foundation's and
     // the target imports Foundation again, so the type resolves. It is still
     // `@available(*, unavailable)` in the app and is never called — OpenUIKit
-    // has no archiving, and `UIView` deliberately declares no
-    // `init?(coder:)` of its own (making it `required`, as real UIKit does,
-    // would force every UIView subclass in the library to implement it). That
-    // is why this compiles as a NEW required initializer rather than an
-    // override, and why it is a partial win: the line is unmodified, the
+    // has no archiving. `UIView` now exposes a non-required
+    // `init?(coder: AnyObject)` compatibility path, because the
+    // Foundation-invisible guest build cannot name `NSCoder`; this exact
+    // `NSCoder` spelling therefore remains a NEW required overload rather
+    // than an override. It is a partial win: the line is unmodified, but the
     // archiving behind it does not exist.
     @available(*, unavailable)
     required init?(coder: NSCoder) {

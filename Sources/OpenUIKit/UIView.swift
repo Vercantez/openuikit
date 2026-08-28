@@ -404,6 +404,28 @@ open class UIView: UIResponder {
         self.frame = frame
     }
 
+    /// Source-compatible entry point for code-based UIKit views that carry
+    /// the required `init?(coder: NSCoder)` boilerplate.
+    ///
+    /// OpenUIKit does not decode Interface Builder archives.  More
+    /// importantly, its Mach-O guest build deliberately compiles with the
+    /// Foundation module hidden, so this declaration cannot name
+    /// `Foundation.NSCoder`.  Accepting an opaque class token lets an app's
+    /// concrete `NSCoder` initializer call this designated superclass
+    /// initializer without adding Foundation to the portable library.  The
+    /// class constraint preserves NSCoder's reference-type boundary without
+    /// pretending OpenUIKit implements its decoding protocol.
+    ///
+    /// The token is intentionally ignored and the view starts with the same
+    /// zero geometry and property defaults as `init(frame: .zero)`.  The
+    /// initializer is failable only to preserve UIKit's call-site shape; the
+    /// compatibility path itself never returns nil.
+    public init?(coder: AnyObject) {
+        _ = coder
+        super.init()
+        self.frame = .zero
+    }
+
     // MARK: Hierarchy
     public func addSubview(_ view: UIView) {
         view.removeFromSuperview()
