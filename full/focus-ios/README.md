@@ -83,10 +83,15 @@ image contexts, image alpha drawing, explicit `CALayer` trees and axial
 `CAGradientLayer`, orientation/text-input descriptions, and interruption-safe
 `UIView.transition`. A real-iOS simulator oracle fixes the observable values;
 824 native tests pass (2 skipped). A Foundation-invisible build compiles all 94
-OpenUIKit Swift sources, and Linux `machorun` executes both a byte-identical
-gradient render and the delegate-window reflection bridge. This increment
-removes 21 target diagnostics and 60 broad-app diagnostics; it also exposes
-additional downstream diagnostics, so those reductions need not add linearly.
+OpenUIKit Swift sources; `full/scripts/run_uihelpers.sh` then executes 13
+behavioral checks under Linux `machorun` across delegate reflection, button
+state/layout, gradient ordering/removal, nested legacy image contexts,
+`CALayer.render(in:)`, alpha drawing, animation interruption, orientation, and
+text-input mode. The checked-in runner supplies the required read-only
+OpenUIKit resources and refuses a stale guest root or renderer. A separate
+gradient scene is byte-identical to the native render. This increment removes
+21 target diagnostics and 60 broad-app diagnostics; it also exposes additional
+downstream diagnostics, so those reductions need not add linearly.
 
 ## The one SnapKit vendoring exclusion
 

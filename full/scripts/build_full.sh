@@ -30,6 +30,15 @@ ROOTDIR=$W/scratch/mrroot_full         # guest root for this renderer
 MC=$W/scratch/modcache_full
 mkdir -p "$OUT" "$MC"
 
+# Bracket the complete source/resource subject used by the focused UIHelpers
+# guest proof. The runner re-computes this exact content digest; a leftover
+# render_full from another checkout or commit cannot pass on timestamps alone.
+UIHELPERS_SUBJECT_BEFORE=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
+# These files are commit markers for a completely successful build. Remove
+# them before mutating any output, so a failed or interrupted rebuild can never
+# leave yesterday's attestation blessing today's partial binary.
+rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256"
+
 # ---- private sysroot -------------------------------------------------------
 # The shared sysroot carries machorun's OLD quartz headers under
 # usr/include/quartz with a modulemap naming the module `Quartz`. Both the
@@ -77,7 +86,7 @@ build_full: REFUSING TO BUILD -- $req is missing.
 
   Add the mount:
     docker run --rm -v ~/swift-macho-linux:/w -v ~/uikit:/uikit:ro \\
-        -v ~/machorun:/machorun:ro -w /w -e QUARTZ_REBUILD=1 \\
+        -v ~/machorun:/machorun:ro -w /w \\
         swift-macho-spike:noble bash full/scripts/build_full.sh
 
   (If machorun is checked out elsewhere, mount it and set MACHORUN=<that path>.)
@@ -148,15 +157,10 @@ SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 #
 # Which library owns which symbol is dyld_info's answer, not a preference: these
 # images bind two-level, so a definition in the wrong library is invisible.
-if [ ! -f "$ROOTDIR/.umbrellas" ] || \
-   [ "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/spike/syspatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/spike/cxxpatch.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/concpatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/conccxx.cpp" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/lowheap.c" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/full/shims/swiftcorepatch.c" -nt "$ROOTDIR/.umbrellas" ] || \
-   [ "$W/scripts/set_id_dylib.pl" -nt "$ROOTDIR/.umbrellas" ]; then
+# Rebuild on every invocation. These dylibs are independently loaded outputs;
+# timestamp-triggered reuse could record a current source digest over an old
+# umbrella when content changed without a newer mtime.
+{
     echo "== libSystem + libc++ umbrellas (syspatch + concpatch)"
     LIB=$ROOTDIR/darwin/usr/lib
 
@@ -228,7 +232,7 @@ if [ ! -f "$ROOTDIR/.umbrellas" ] || \
     echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. __NSGetMachExecuteHeader), reexporting libSystem.real"
 
     touch "$ROOTDIR/.umbrellas"
-fi
+}
 
 # ---- the manifest: which files here are COPIES and which are BUILT ---------
 # A guest root is a MIXTURE, and a freshness check that cannot tell the two
@@ -286,39 +290,41 @@ echo "== manifest ($ROOTDIR/.manifest)"
 # LLVM-18 libc++ headers with the same three -D flags; clang's DEFAULT floating
 # point mode, so the pixel diff measures the loader and not -ffast-math).
 QOBJ=$OUT/quartz-obj
-if [ ! -f "$ROOTDIR/darwin/usr/lib/libquartz.dylib" ] || [ -n "${QUARTZ_REBUILD:-}" ]; then
-    echo "== libquartz from /uikit/Sources/CQuartz ($(ls "$UIKIT"/Sources/CQuartz/*.cpp | wc -l) TUs)"
-    mkdir -p "$QOBJ"
-    QINC="-I$UIKIT/Sources/CQuartz/include -I$UIKIT/Sources/CQuartz"
-    QCXX=(-std=gnu++17 -fno-exceptions -fno-rtti -fPIC -Os -g0 -DNDEBUG
-          -Wno-unused-parameter -Wno-unused-function
-          -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1
-          -D__STDC_WANT_LIB_EXT1__=0
-          -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE
-          "-D_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap()")
-    QOBJS=()
-    for f in "$UIKIT"/Sources/CQuartz/*.cpp; do
-        o="$QOBJ/$(basename "$f" .cpp).o"
-        clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$f" -o "$o"
-        QOBJS+=("$o")
-    done
-    # -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
-    # LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
-    # resolve those install names to files.
-    ld64.lld-18 -dylib -arch arm64 -platform_version macos 13.0 13.0 \
-        -syslibroot "$ROOTDIR/darwin" \
-        -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
-        -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \
-        "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
-    # llvm-nm-18, not nm: the container's `nm` is GNU binutils and CANNOT READ
-    # MACH-O -- it printed "file format not recognized" to the stderr this line
-    # was discarding, grep counted an empty stream, and the build cheerfully
-    # reported "(0 QZ exports)" about a dylib carrying 388. A counter that reads
-    # zero when the tool failed is worse than no counter: it looks like a result.
-    QZN=$(llvm-nm-18 --extern-only --defined-only "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | grep -c '_QZ')
-    [ "$QZN" -gt 0 ] || { echo "build_full: libquartz.dylib exports no QZ symbols" >&2; exit 1; }
-    echo "   -> libquartz.dylib ($QZN QZ exports)"
-fi
+# Always rebuild. This dylib is loaded separately from render_full and the root
+# manifest deliberately labels it local, so a source digest cannot attest a
+# cached copy. Rebuilding plus the artifact hash published below closes that
+# otherwise-real false-green path.
+echo "== libquartz from /uikit/Sources/CQuartz ($(ls "$UIKIT"/Sources/CQuartz/*.cpp | wc -l) TUs)"
+mkdir -p "$QOBJ"
+QINC="-I$UIKIT/Sources/CQuartz/include -I$UIKIT/Sources/CQuartz"
+QCXX=(-std=gnu++17 -fno-exceptions -fno-rtti -fPIC -Os -g0 -DNDEBUG
+      -Wno-unused-parameter -Wno-unused-function
+      -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1
+      -D__STDC_WANT_LIB_EXT1__=0
+      -D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_NONE
+      "-D_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap()")
+QOBJS=()
+for f in "$UIKIT"/Sources/CQuartz/*.cpp; do
+    o="$QOBJ/$(basename "$f" .cpp).o"
+    clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$f" -o "$o"
+    QOBJS+=("$o")
+done
+# -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
+# LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
+# resolve those install names to files.
+ld64.lld-18 -dylib -arch arm64 -platform_version macos 13.0 13.0 \
+    -syslibroot "$ROOTDIR/darwin" \
+    -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
+    -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \
+    "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
+# llvm-nm-18, not nm: the container's `nm` is GNU binutils and CANNOT READ
+# MACH-O -- it printed "file format not recognized" to the stderr this line
+# was discarding, grep counted an empty stream, and the build cheerfully
+# reported "(0 QZ exports)" about a dylib carrying 388. A counter that reads
+# zero when the tool failed is worse than no counter: it looks like a result.
+QZN=$(llvm-nm-18 --extern-only --defined-only "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | grep -c '_QZ')
+[ "$QZN" -gt 0 ] || { echo "build_full: libquartz.dylib exports no QZ symbols" >&2; exit 1; }
+echo "   -> libquartz.dylib ($QZN QZ exports)"
 # A .tbd is not needed: link the guest directly against the dylib we just built.
 QUARTZLIB=$ROOTDIR/darwin/usr/lib/libquartz.dylib
 
@@ -404,6 +410,13 @@ echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + Founda
     -o "$OUT/openuikit.o" \
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
+# Keep this focused probe honest even though the combined renderer below must
+# see APPINC for RealAppProbe. A separate typecheck before APPINC exists proves
+# UIHelpersTest itself needs only the Foundation-invisible OpenUIKit module.
+echo "== UIHelpers surface probe (Foundation invisible)"
+"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -module-name UIHelpersSurfaceGuard \
+    -typecheck "$W/full/driver/UIHelpersTest.swift"
+
 # ---- the renderer: ~/uikit's SceneBuilder verbatim + our main ---------------
 # ---- the app path -----------------------------------------------------------
 # NO Foundation module: see full/appshim/UIKit.swift for why a small one is
@@ -435,6 +448,7 @@ echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/mai
     "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
     "$W/full/driver/LaunchByName.swift" "$W/full/driver/LaunchTest.swift" \
     "$W/full/driver/IndexSetTest.swift" "$W/full/driver/PasteboardTest.swift" \
+    "$W/full/driver/UIHelpersTest.swift" \
     "$W/full/driver/Plist.swift" "$W/full/driver/Bundle.swift" "$W/full/driver/BundleTest.swift" \
     "$W/full/driver/main.swift"
 
@@ -492,5 +506,27 @@ cat >"$OUT/NoKeys.app/Info.plist" <<'PLIST'
 </dict>
 </plist>
 PLIST
+
+UIHELPERS_SUBJECT_AFTER=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
+if [ "$UIHELPERS_SUBJECT_BEFORE" != "$UIHELPERS_SUBJECT_AFTER" ]; then
+    echo "build_full: REFUSING -- UIHelpers probe inputs changed during the build" >&2
+    echo "  before: $UIHELPERS_SUBJECT_BEFORE" >&2
+    echo "  after:  $UIHELPERS_SUBJECT_AFTER" >&2
+    exit 2
+fi
+{
+    printf 'render_full\t%s\n' "$(sha256sum "$OUT/render_full" | awk '{print $1}')"
+    printf 'libquartz.dylib\t%s\n' \
+        "$(sha256sum "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | awk '{print $1}')"
+    printf 'libSystem.B.dylib\t%s\n' \
+        "$(sha256sum "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" | awk '{print $1}')"
+    printf 'libc++.1.dylib\t%s\n' \
+        "$(sha256sum "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" | awk '{print $1}')"
+} > "$OUT/uihelpers-artifacts.sha256.tmp"
+printf '%s\n' "$UIHELPERS_SUBJECT_AFTER" > "$OUT/uihelpers-subject.sha256.tmp"
+# Publish the subject last: its presence is the commit marker that both the
+# build and artifact manifests reached the successful end of the bracket.
+mv "$OUT/uihelpers-artifacts.sha256.tmp" "$OUT/uihelpers-artifacts.sha256"
+mv "$OUT/uihelpers-subject.sha256.tmp" "$OUT/uihelpers-subject.sha256"
 
 echo "== done"; ls -l "$OUT/render_full"

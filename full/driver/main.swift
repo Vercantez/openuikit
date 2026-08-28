@@ -217,6 +217,12 @@ if args.count >= 2, args[1] == "pasteboard" {
     warnToStderr(ok ? "[render_full] PASTEBOARD OK" : "[render_full] PASTEBOARD FAILED")
     cpio_exit(ok ? 0 : 1)
 }
+if args.count >= 2, args[1] == "uihelpers" {
+    warnToStderr("[render_full] UIHelpers surfaces against Foundation-invisible OpenUIKit")
+    let ok = MainActor.assumeIsolated { uiHelpersSelfTest() }
+    warnToStderr(ok ? "[render_full] UIHELPERS OK" : "[render_full] UIHELPERS FAILED")
+    cpio_exit(ok ? 0 : 1)
+}
 if args.count >= 3, args[1] == "realapp" {
     let assets = args.count >= 4 ? args[3] : "/uikit/fixtures/realapp/assets"
     MainActor.assumeIsolated { renderRealApp(args[2], assets: assets) }
