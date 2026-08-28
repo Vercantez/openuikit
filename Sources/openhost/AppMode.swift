@@ -62,15 +62,24 @@ let appRegistry: [String: (size: CGSize, makeRoot: @MainActor () -> UIViewContro
 /// logs every lifecycle transition, so `--app` mode is also the manual test
 /// for the lifecycle ordering the unit tests assert.
 final class HostAppDelegate: UIResponder, UIApplicationDelegate {
-    let name: String
-    let makeRoot: () -> UIViewController
+    var name: String = ""
+    var makeRoot: () -> UIViewController = {
+        fatalError("HostAppDelegate launched with no root factory configured")
+    }
     var window: UIWindow?
     var root: UIViewController?
 
-    init(name: String, makeRoot: @escaping () -> UIViewController) {
+    /// `UIApplicationDelegate` requires `init()` so a delegate can be created
+    /// from its class NAME, the way a real iOS binary launches (see
+    /// UIApplication.swift). That is why the host's configuration arrives
+    /// through the convenience initialiser below rather than through stored
+    /// `let`s: a parameterless initialiser has to exist.
+    override init() { super.init() }
+
+    convenience init(name: String, makeRoot: @escaping () -> UIViewController) {
+        self.init()
         self.name = name
         self.makeRoot = makeRoot
-        super.init()
     }
 
     func application(_ application: UIApplication,
