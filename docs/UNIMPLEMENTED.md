@@ -935,6 +935,37 @@ is the risk here rather than the mechanism, and it wants someone with CF's
 sources to check rather than rediscover. macOS returns real paths, so this
 cannot be graded against an oracle either.
 
+**The HEADER landed 2026-08-27 (#69) and is `sdk/local/sysdir.h`, clean-room.**
+`sysdir` is published in **no** apple-oss-distributions release — the whole Libc
+tree at the pinned tag contains no `sysdir` anything, and neither does Libinfo
+or xnu — so there is nothing to stage and the interface had to be written. All
+26 enumerators and 3 type widths are therefore pinned by `sdk/tests/abi_probe.c`
+against **Apple's own SDK**: the probe compiles on macOS with Apple's `sysdir.h`
+and on Linux with ours, and the two outputs must be byte-identical. Verified by
+mutation — changing `SYSDIR_DIRECTORY_CACHES` to 12 and `_MASK_ALL` to `0x0f`
+fails the differential naming both.
+
+### `pwd-partial-surface` — the header declares seven names libSystem lacks
+
+Staging Apple's `pwd.h` (from **Libinfo-600**, whose published copy is
+**byte-identical** to the shipped SDK's) brings declarations for `getpwent`,
+`setpwent`, `endpwent`, `setpassent`, `user_from_uid`, `getpwuuid` and
+`getpwuuid_r`. libSystem implements only `getpwnam`/`getpwuid` and their `_r`
+forms.
+
+This is the ordinary state of every staged header — `stdio.h` declares more than
+we implement too — and the failure is honest: an undefined symbol at link time
+naming the function. It is written down because it is the exact shape the
+**partial-claim** hazard takes, and because it is now the negative control for
+`sdk/tests/fm_link_probe.c`: adding a `getpwent()` call to that probe makes the
+Linux link fail with `undefined symbol: _getpwent` while the macOS link still
+succeeds, which is what proves the probe can fail at all.
+
+The alternative — writing a cut-down `pwd.h` — was rejected: it would make
+`struct passwd` **ours** rather than Apple's, and that struct is an out
+parameter of `getpwnam_r`. A header trimmed by hand is a layout nobody
+differentially checks.
+
 ### `readdir-r-contract` — **DONE**, and the contract inverts easily
 `readdir_r` returns an **errno** — 0 on success, *including at end of
 directory* — and signals end-of-directory by storing NULL through `result`. It

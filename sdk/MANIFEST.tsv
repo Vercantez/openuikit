@@ -255,6 +255,7 @@ os/workgroup_interval.h	libdispatch:os/workgroup_interval.h
 os/workgroup_object.h	libdispatch:os/workgroup_object.h
 os/workgroup_parallel.h	libdispatch:os/workgroup_parallel.h
 poll.h	Libc:include/poll.h
+pwd.h	Libinfo:lookup.subproj/pwd.h
 pthread.h	libpthread:include/pthread/pthread.h
 pthread/priority_private.h	xnu:bsd/pthread/priority_private.h
 pthread/pthread.h	libpthread:include/pthread/pthread.h
@@ -409,6 +410,7 @@ sys/un.h	xnu:bsd/sys/un.h
 sys/unistd.h	xnu:bsd/sys/unistd.h
 sys/vm.h	xnu:bsd/sys/vm.h
 sys/wait.h	xnu:bsd/sys/wait.h
+sysdir.h	local
 syslog.h	Libc:include/syslog.h
 time.h	Libc:include/time.h
 tzfile.h	Libc:stdtime/FreeBSD/tzfile.h

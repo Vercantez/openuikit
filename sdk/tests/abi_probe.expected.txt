@@ -345,6 +345,54 @@ encode _DefaultRuneLocale.encoding  NONE
 runetype[0..15]             00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00024200 00004200 00004200 00004200 00004200 00000200 00000200
 maplower['A'..'F']          97 98 99 100 101 102
 
+== struct passwd  (Libinfo; getpwnam_r's out parameter)
+sizeof struct passwd                72
+offset passwd.pw_name               0
+offset passwd.pw_passwd             8
+offset passwd.pw_uid                16
+offset passwd.pw_gid                20
+offset passwd.pw_change             24
+offset passwd.pw_class              32
+offset passwd.pw_gecos              40
+offset passwd.pw_dir                48
+offset passwd.pw_shell              56
+offset passwd.pw_expire             64
+
+== sysdir  (sdk/local/sysdir.h -- OUR header; nothing upstream
+==          publishes this interface, so these pin it against Apple's)
+sizeof sysdir_search_path_directory_t 4
+sizeof sysdir_search_path_domain_mask_t 4
+sizeof sysdir_search_path_enumeration_state 4
+value  SYSDIR_DIRECTORY_APPLICATION 1
+value  SYSDIR_DIRECTORY_DEMO_APPLICATION 2
+value  SYSDIR_DIRECTORY_DEVELOPER_APPLICATION 3
+value  SYSDIR_DIRECTORY_ADMIN_APPLICATION 4
+value  SYSDIR_DIRECTORY_LIBRARY     5
+value  SYSDIR_DIRECTORY_DEVELOPER   6
+value  SYSDIR_DIRECTORY_USER        7
+value  SYSDIR_DIRECTORY_DOCUMENTATION 8
+value  SYSDIR_DIRECTORY_DOCUMENT    9
+value  SYSDIR_DIRECTORY_CORESERVICE 10
+value  SYSDIR_DIRECTORY_AUTOSAVED_INFORMATION 11
+value  SYSDIR_DIRECTORY_DESKTOP     12
+value  SYSDIR_DIRECTORY_CACHES      13
+value  SYSDIR_DIRECTORY_APPLICATION_SUPPORT 14
+value  SYSDIR_DIRECTORY_DOWNLOADS   15
+value  SYSDIR_DIRECTORY_INPUT_METHODS 16
+value  SYSDIR_DIRECTORY_MOVIES      17
+value  SYSDIR_DIRECTORY_MUSIC       18
+value  SYSDIR_DIRECTORY_PICTURES    19
+value  SYSDIR_DIRECTORY_PRINTER_DESCRIPTION 20
+value  SYSDIR_DIRECTORY_SHARED_PUBLIC 21
+value  SYSDIR_DIRECTORY_PREFERENCE_PANES 22
+value  SYSDIR_DIRECTORY_ALL_APPLICATIONS 100
+value  SYSDIR_DIRECTORY_ALL_LIBRARIES 101
+value  SYSDIR_DOMAIN_MASK_USER      0x0000000000000001
+value  SYSDIR_DOMAIN_MASK_LOCAL     0x0000000000000002
+value  SYSDIR_DOMAIN_MASK_NETWORK   0x0000000000000004
+value  SYSDIR_DOMAIN_MASK_SYSTEM    0x0000000000000008
+value  SYSDIR_DOMAIN_MASK_ALL       0x000000000000ffff
+
 == variadic ABI  (Darwin passes EVERY variadic argument on the stack
 ==                with an 8-byte va_list; Linux uses x1-x7/v0-v7 and 32)
 1 2 3 4.50 five 6

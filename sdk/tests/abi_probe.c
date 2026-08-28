@@ -49,6 +49,8 @@
 #include <time.h>
 #include <runetype.h>
 #include <sys/cdefs.h>
+#include <pwd.h>
+#include <sysdir.h>
 #include <mach/vm_param.h>
 #include <mach/machine/vm_param.h>
 
@@ -288,6 +290,60 @@ int main(void)
     printf("maplower['A'..'F']          ");
     for (int i = 'A'; i <= 'F'; i++)
         printf("%d%s", (int)_DefaultRuneLocale.__maplower[i], i == 'F' ? "\n" : " ");
+
+    /* THE FILE-MANAGER SURFACE (#69). Two very different provenances, graded by
+     * one instrument, and a reader needs to know which is which.
+     *
+     * `struct passwd` comes from Libinfo, whose published pwd.h is
+     * BYTE-IDENTICAL to the shipped SDK's -- so these offsets confirm the
+     * staging and little else. `sysdir` is the opposite: it is published
+     * NOWHERE (the whole Libc tree at the pinned tag contains no `sysdir`
+     * anything), so sdk/local/sysdir.h is written by us and every enumerator
+     * below is a value somebody could have got wrong. Printing them makes
+     * Apple's own SDK the authority rather than my reading of it. */
+    puts("");
+    puts("== struct passwd  (Libinfo; getpwnam_r's out parameter)");
+    SZ(struct passwd);
+    OFF(passwd, pw_name);   OFF(passwd, pw_passwd); OFF(passwd, pw_uid);
+    OFF(passwd, pw_gid);    OFF(passwd, pw_change); OFF(passwd, pw_class);
+    OFF(passwd, pw_gecos);  OFF(passwd, pw_dir);    OFF(passwd, pw_shell);
+    OFF(passwd, pw_expire);
+
+    puts("");
+    puts("== sysdir  (sdk/local/sysdir.h -- OUR header; nothing upstream");
+    puts("==          publishes this interface, so these pin it against Apple's)");
+    SZ(sysdir_search_path_directory_t);
+    SZ(sysdir_search_path_domain_mask_t);
+    SZ(sysdir_search_path_enumeration_state);
+    VAL(SYSDIR_DIRECTORY_APPLICATION);
+    VAL(SYSDIR_DIRECTORY_DEMO_APPLICATION);
+    VAL(SYSDIR_DIRECTORY_DEVELOPER_APPLICATION);
+    VAL(SYSDIR_DIRECTORY_ADMIN_APPLICATION);
+    VAL(SYSDIR_DIRECTORY_LIBRARY);
+    VAL(SYSDIR_DIRECTORY_DEVELOPER);
+    VAL(SYSDIR_DIRECTORY_USER);
+    VAL(SYSDIR_DIRECTORY_DOCUMENTATION);
+    VAL(SYSDIR_DIRECTORY_DOCUMENT);
+    VAL(SYSDIR_DIRECTORY_CORESERVICE);
+    VAL(SYSDIR_DIRECTORY_AUTOSAVED_INFORMATION);
+    VAL(SYSDIR_DIRECTORY_DESKTOP);
+    VAL(SYSDIR_DIRECTORY_CACHES);
+    VAL(SYSDIR_DIRECTORY_APPLICATION_SUPPORT);
+    VAL(SYSDIR_DIRECTORY_DOWNLOADS);
+    VAL(SYSDIR_DIRECTORY_INPUT_METHODS);
+    VAL(SYSDIR_DIRECTORY_MOVIES);
+    VAL(SYSDIR_DIRECTORY_MUSIC);
+    VAL(SYSDIR_DIRECTORY_PICTURES);
+    VAL(SYSDIR_DIRECTORY_PRINTER_DESCRIPTION);
+    VAL(SYSDIR_DIRECTORY_SHARED_PUBLIC);
+    VAL(SYSDIR_DIRECTORY_PREFERENCE_PANES);
+    VAL(SYSDIR_DIRECTORY_ALL_APPLICATIONS);
+    VAL(SYSDIR_DIRECTORY_ALL_LIBRARIES);
+    HEX(SYSDIR_DOMAIN_MASK_USER);
+    HEX(SYSDIR_DOMAIN_MASK_LOCAL);
+    HEX(SYSDIR_DOMAIN_MASK_NETWORK);
+    HEX(SYSDIR_DOMAIN_MASK_SYSTEM);
+    HEX(SYSDIR_DOMAIN_MASK_ALL);
 
     puts("");
     puts("== variadic ABI  (Darwin passes EVERY variadic argument on the stack");

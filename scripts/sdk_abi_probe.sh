@@ -33,6 +33,7 @@ EXPECTED="$ROOT/sdk/tests/abi_probe.expected.txt"
 TARGET_OS_SRC="$ROOT/sdk/tests/target_os_probe.c"
 MATH_DECL_SRC="$ROOT/sdk/tests/math_decl_probe.c"
 QOS_SRC="$ROOT/sdk/tests/qos_probe.c"
+FM_LINK_SRC="$ROOT/sdk/tests/fm_link_probe.c"
 BUILD="$ROOT/build/abi_probe"
 SDK="$ROOT/sdk"
 
@@ -88,6 +89,27 @@ qos_probe() { # qos_probe <clang> <sysroot>
     echo "   QoS private probe ok against ${q_sysroot#$ROOT/}"
 }
 
+# sdk/tests/fm_link_probe.c is the only probe here that LINKS rather than
+# compiles, and that is the whole point. `-fsyntax-only` cannot tell a header
+# that declares something from a header that declares something nothing
+# defines, and the .tbd is generated from the dylib so it cannot tell either.
+# A link can. It runs on BOTH sides: on macOS against Apple's SDK and real
+# libSystem, which is what makes the declarations Apple's rather than ours; on
+# Linux against sdk/ and our .tbd stubs, which is what makes them BACKED. It is
+# never executed -- behaviour belongs to the difftest fixtures.
+fm_link_probe() { # fm_link_probe <clang> <sysroot> [link args...]
+    fl_clang="$1"; fl_sysroot="$2"; shift 2
+    "$fl_clang" -target arm64-apple-macos11 -isysroot "$fl_sysroot" -O1 -Wall -Werror \
+        -c "$FM_LINK_SRC" -o "$BUILD/fm_link_probe.o" \
+        || die "FileManager link probe failed to COMPILE against $fl_sysroot"
+    "$@" || die "FileManager link probe failed to LINK against $fl_sysroot --
+  a header in sdk/ declares a symbol nothing in libSystem defines. That is the
+  partial-claim hazard: it costs the person who staged the header nothing and
+  fails for the next consumer. Implement it in darwin/src, or do not stage the
+  header until you do."
+    echo "   FileManager link probe ok against ${fl_sysroot#$ROOT/}"
+}
+
 if [ "${1:-}" = "--record" ]; then
     [ "$(uname -s)" = "Darwin" ] || die "--record only runs on the macOS oracle"
     command -v xcrun >/dev/null 2>&1 || die "no xcrun"
@@ -99,6 +121,9 @@ if [ "${1:-}" = "--record" ]; then
     target_os_probe "$(xcrun -f clang)" "$APPLE_SDK" \
         -DTARGET_OS_WASI=0 -DTARGET_OS_ANDROID=0 -DTARGET_OS_BSD=0 -DTARGET_OS_CYGWIN=0
     math_decl_probe "$(xcrun -f clang)" "$APPLE_SDK"
+    fm_link_probe "$(xcrun -f clang)" "$APPLE_SDK" \
+        xcrun clang -target arm64-apple-macos11 -isysroot "$APPLE_SDK" \
+            -o "$BUILD/fm_link_probe_macos" "$BUILD/fm_link_probe.o" -Wl,-dylib
     xcrun clang -target arm64-apple-macos11 -isysroot "$APPLE_SDK" -O1 -Wall \
         -o "$BUILD/abi_probe_macos" "$SRC" || die "oracle build failed"
     ( cd "$BUILD" && LC_ALL=C LANG=C TZ=UTC ./abi_probe_macos ) > "$EXPECTED" \
@@ -122,6 +147,10 @@ echo "== ours: $CLANG -isysroot sdk/ , linked against sdk/usr/lib/*.tbd only"
 target_os_probe "$CLANG" "$SDK"
 math_decl_probe "$CLANG" "$SDK"
 qos_probe "$CLANG" "$SDK"
+fm_link_probe "$CLANG" "$SDK" \
+    "$LD64" -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+        -syslibroot "$SDK" -L/usr/lib -lSystem \
+        -o "$BUILD/fm_link_probe.dylib" "$BUILD/fm_link_probe.o"
 $CLANG -target arm64-apple-macos11 -isysroot "$SDK" -O1 -Wall \
        -c "$SRC" -o "$BUILD/abi_probe.o" || die "compile against sdk/ failed"
 
