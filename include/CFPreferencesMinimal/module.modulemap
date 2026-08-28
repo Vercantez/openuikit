@@ -1,0 +1,8 @@
+// The minimal CoreFoundation surface UserDefaults needs, as a clang module the
+// guest build can import WITHOUT pulling Apple's CoreFoundation Swift overlay.
+// Named distinctly from "CoreFoundation" on purpose: two modules claiming that
+// name is the ambiguity this exists to avoid.
+module CFPreferencesMinimal [system] {
+    header "../CFPreferencesMinimal.h"
+    export *
+}
