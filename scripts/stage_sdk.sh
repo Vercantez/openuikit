@@ -18,6 +18,72 @@ set -euo pipefail
 W=${W:-/work}
 S=${S:-/stage}
 SDK=$W/sdk/MacOSX.sdk
+
+# ---------------------------------------------------------------------------
+# PRECONDITIONS, BEFORE THE rm -rf. A GUARD THAT REFUSES AFTER DESTROYING IS
+# NOT A GUARD.
+#
+# This script deletes $W/sdk and rebuilds it. The clean-room-header collision
+# check below used to run AFTER that deletion, comparing files it had just
+# copied in -- so when it fired, it exited 2 having already destroyed the SDK,
+# leaving a half-built tree. Measured 2026-08-28: that is what broke the nscf
+# compile, and the symptom (CF headers unable to find MacTypes types) looked
+# nothing like a staging abort.
+#
+# Both checks now run over the INPUTS, which are readable without touching $W.
+# The identical check remains in the copy loop below as a backstop; it should
+# now be unreachable.
+
+# (1) Would a clean-room libc header shadow one machorun's SDK now carries?
+#     machorun's SDK grows over time -- MacTypes.h appeared in it recently --
+#     so this collision is expected to APPEAR, not to be a permanent state.
+: "${PREFER_MACHORUN_HEADERS:=0}"
+_hdr_conflicts=""
+for _h in "$S/libc/"*.h; do
+    [ -e "$_h" ] || continue
+    _b=${_h##*/}
+    [ -e "$S/machorun-sdk/usr/include/$_b" ] && _hdr_conflicts="$_hdr_conflicts $_b"
+done
+if [ -n "$_hdr_conflicts" ] && [ "$PREFER_MACHORUN_HEADERS" != 1 ]; then
+    echo "stage_sdk: machorun's SDK now carries headers our clean-room set also has:" >&2
+    echo "          $_hdr_conflicts" >&2
+    echo "  A shadowing copy cannot fail, so this refuses rather than overwrites." >&2
+    echo "  NOTHING HAS BEEN DELETED -- \$W/sdk is untouched." >&2
+    echo >&2
+    echo "  Resolve one of two ways:" >&2
+    echo "    - delete the clean-room copy from \$SWIFTCORE/sdk/libc (the real" >&2
+    echo "      one is machorun's, and two definitions is the whole hazard), or" >&2
+    echo "    - PREFER_MACHORUN_HEADERS=1 $0   to keep machorun's and skip ours." >&2
+    exit 2
+fi
+
+# (2) Would restoring the snapshot's dylibs replace something different in $W?
+#     /stage is a SNAPSHOT from container-creation time; the sibling repos move
+#     on. Copying it over $W unconditionally is how a freshly built libSystem
+#     got silently reverted together with its .tbd -- mutually consistent,
+#     jointly stale, and with fresh mtimes, which defeats both a consistency
+#     check and a timestamp check. From inside the container ~/machorun is not
+#     mounted, so this cannot ask which is newer; it asks the answerable
+#     question: am I about to replace something DIFFERENT from what I hold?
+#     First-time staging (nothing in $W yet) is not a downgrade and never trips.
+: "${FORCE_STAGE:=0}"
+_lib_conflicts=""
+for _f in "$S/darwinlib/"*.dylib; do
+    [ -e "$_f" ] || continue
+    _w="$W/lib/$(basename "$_f")"
+    [ -f "$_w" ] || continue
+    cmp -s "$_f" "$_w" || _lib_conflicts="$_lib_conflicts $(basename "$_f")"
+done
+if [ -n "$_lib_conflicts" ] && [ "$FORCE_STAGE" != 1 ]; then
+    echo "stage_sdk: REFUSING to overwrite artefacts in \$W that differ from the" >&2
+    echo "          /stage snapshot:$_lib_conflicts" >&2
+    echo "  NOTHING HAS BEEN DELETED -- \$W/sdk is untouched." >&2
+    echo "  Refresh the snapshot:  scripts/container.sh restage" >&2
+    echo "  See what differs:      scripts/container.sh check" >&2
+    echo "  Force the snapshot in: FORCE_STAGE=1 $0" >&2
+    exit 4
+fi
+
 rm -rf "$W/sdk"
 mkdir -p "$SDK"
 
@@ -45,6 +111,16 @@ fi
 for h in "$S/libc/"*.h; do
   b=${h##*/}
   if [ -e "$SDK/usr/include/$b" ]; then
+    # The precondition above already refused this case, so reaching here means
+    # the caller opted in with PREFER_MACHORUN_HEADERS=1 -- keep machorun's and
+    # say which one won. Left as a backstop rather than deleted: if the
+    # precondition ever stops catching a collision, this still will, and it is
+    # cheaper to print a line than to discover a shadowed header later.
+    if [ "${PREFER_MACHORUN_HEADERS:-0}" = 1 ]; then
+      echo "stage_sdk: keeping machorun's $b ($(wc -l < "$SDK/usr/include/$b") lines)," \
+           "skipping our clean-room copy ($(wc -l < "$h") lines)"
+      continue
+    fi
     echo "stage_sdk: REFUSING to overwrite $SDK/usr/include/$b" >&2
     echo "  with the clean-room libc/$b -- machorun's SDK carries a real one" >&2
     echo "  ($(wc -l < "$SDK/usr/include/$b") lines against our $(wc -l < "$h")). Compare, then delete ours." >&2
@@ -93,6 +169,7 @@ EOF
 # machorun loads at run time. machorun resolves LC_LOAD_DYLIB paths under
 # $MACHORUN_ROOT/darwin, so lay the dylibs out at their real Darwin paths.
 mkdir -p "$W/lib" "$W/swiftmodule" "$W/root/darwin/usr/lib"
+
 cp -a "$S/darwinlib/"*.dylib "$W/lib/"
 cp -a "$S/swiftcore/swift-macosx/arm64/libswiftCore.dylib" "$W/lib/"
 cp -a "$S/swiftcore/swift-macosx/Swift.swiftmodule" "$W/swiftmodule/"
