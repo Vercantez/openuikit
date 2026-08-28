@@ -1,7 +1,7 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `4be65c9`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `1ae41f9`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
@@ -11,11 +11,12 @@ rendered copy of every diagnostic (and even `error:` text in source snippets).
 Replaying the saved logs through the corrected primary-diagnostic parser gives
 **1,454** initially, **1,262** after OpenUIKit #94 milestone 1, **1,116** after
 compiling real SnapKit under the explicit exclusion below, **1,025** after the
-controller/layout increment at OpenUIKit `9c2aace`, and **832** after the
+controller/layout increment at OpenUIKit `9c2aace`, **832** after the
 application-shell, table, shortcut/activity, and process-local pasteboard
-increments through OpenUIKit `4be65c9`. SnapKit removed 146 primary diagnostics
-overall; the controller increment removed another 91 net; the six subsequent
-OpenUIKit commits removed another 193 net. All runs use `-wmo`; the deliberately
+increments through OpenUIKit `4be65c9`, and **751** after the Focus UIHelpers
+increment at OpenUIKit `1ae41f9`. SnapKit removed 146 primary diagnostics
+overall; the controller increment removed another 91 net; the seven subsequent
+OpenUIKit commits removed another 274 net. All runs use `-wmo`; the deliberately
 broad 182-file source inventory remains the saturation denominator (and is not
 the Xcode target inventory; see below).
 
@@ -28,16 +29,16 @@ stub-Sentry                    0    |
 stub-Fuzi                      0    |
 stub-MobileCoreServices        0   /
 snapkit                        0   REAL upstream source, 36/37 files (see below)
-target-UIHelpers              21   \
+target-UIHelpers               0   \
 target-DesignSystem           22    |  focus-ios's own SPM targets,
 target-Widget                  6    |  vs OpenUIKit
 target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
 target-UIComponents            1   /
-app                          776   broad saturated census, 182 files, -wmo
+app                          716   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                        832
+TOTAL                        751
 ```
 
 ## What was built, and why each shape
@@ -67,13 +68,25 @@ controller/layout controls. Its 19 nib-initializer call sites remove 57 primary
 diagnostics from the broad app row; the other controller types and members bring
 the measured net reduction to 91 while also exposing some downstream errors.
 
-The next six commits preserve that standard: delegate initialization and launch
+The next seven commits preserve that standard: delegate initialization and launch
 shell behavior, shortcut/activity URLs, table editing/reuse/initializer
 compatibility, and a thread-safe process-local pasteboard are implemented and
 tested, not merely declared. The final pasteboard source is also compiled as
 part of the 92-file Foundation-free OpenUIKit Mach-O target and its 11-check
 guest oracle runs under `machorun` on Linux. The pasteboard increment alone
 removes 12 of the 13 previous broad-census `UIPasteboard` diagnostics.
+
+OpenUIKit `1ae41f9` then clears all 21 diagnostics in Focus's real 11-source
+`UIHelpers` package target and emits `UIHelpers.swiftmodule`. The implemented
+surfaces include stateful button images, single-line label shrinking, legacy
+image contexts, image alpha drawing, explicit `CALayer` trees and axial
+`CAGradientLayer`, orientation/text-input descriptions, and interruption-safe
+`UIView.transition`. A real-iOS simulator oracle fixes the observable values;
+824 native tests pass (2 skipped). A Foundation-invisible build compiles all 94
+OpenUIKit Swift sources, and Linux `machorun` executes both a byte-identical
+gradient render and the delegate-window reflection bridge. This increment
+removes 21 target diagnostics and 60 broad-app diagnostics; it also exposes
+additional downstream diagnostics, so those reductions need not add linearly.
 
 ## The one SnapKit vendoring exclusion
 
@@ -103,12 +116,12 @@ sources, and untracked sources.
 ## The saturated census
 
 ```
-MISSING TYPES     76 distinct / 184 occurrences
-                  50 Apple-framework names / 119 uses   <- real gap
-                  25 other / 64 · 1 app symbol / 1
+MISSING TYPES     68 distinct / 159 occurrences
+                  44 Apple-framework names / 98 uses    <- real gap
+                  23 other / 60 · 1 app symbol / 1
 
-MISSING MEMBERS   181 total
-                  54 distinct on Apple types / 103 uses <- the #94 list
+MISSING MEMBERS   156 total
+                  49 distinct on Apple types / 84 uses  <- the #94 list
                    0 distinct SnapKit DSL   /   0 uses  <- real module loaded
 ```
 
@@ -116,17 +129,17 @@ Top of the **member** list, which is what no type census could see:
 
 | uses | type | members |
 |---|---|---|
-| 20 | `CALayer` | `anchorPoint`, `backgroundColor`, `frame`, `insertSublayer`, `maskedCorners`, `position`, … |
 | 14 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
-| 12 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `transition`, `userInterfaceLayoutDirection` |
-| 8 | `UIButton` | `imageView`, `setImage` |
 | 8 | `UITraitCollection` | `horizontalSizeClass`, `verticalSizeClass` |
 | 8 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
+| 7 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `userInterfaceLayoutDirection` |
 | 7 | `UIBarButtonItem` | `accessibilityIdentifier` |
 | 7 | `UINavigationBar` | `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
+| 6 | `CAGradientLayer` | `add`, `animation`, `drawsAsynchronously`, `mask`, `removeAnimation` |
+| 5 | `CALayer` | `maskedCorners` |
 
-Heaviest **missing types**: `CAGradientLayer` 11, `CATransaction` 7,
-`UIPageViewController` 7, and `UIDropInteraction` 4. (`UIApplication`, `UIColor`,
+Heaviest **missing types**: `CATransaction` 7, `UIPageViewController` 7, and
+`UIDropInteraction` 4. (`UIApplication`, `UIColor`,
 `UIFont`, `UIViewController` also appear in the "cannot find type" list — those
 are cases where an *extension* on the type failed to resolve, not the type
 itself missing; they are in the member list above where they belong.) The one
@@ -157,7 +170,7 @@ remaining pasteboard declaration gap.
    contain `error:` parameter labels. [`diagnostics.py`](diagnostics.py) now
    accepts only location-bearing primary lines. Its controls include both
    duplicate-rendering and source-text false positives. The saved current run
-   is 832 primary diagnostics.
+   is 751 primary diagnostics.
 5. **The broad `find` inventory is not the Blockzilla target.** The Xcode source
    phase has 131 Swift references: 129 exist and two generated sources
    (`Metrics.swift`, `AppNimbus.swift`) are absent from this checkout. The broad

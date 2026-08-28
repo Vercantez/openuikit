@@ -1,5 +1,5 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                          776 primary diagnostics
+  app                          716 primary diagnostics
   empty                          0 primary diagnostics
   openuikit                      0 primary diagnostics
   snapkit-vendoring-after        0 primary diagnostics
@@ -16,37 +16,36 @@
   target-Licenses                4 primary diagnostics
   target-Onboarding              1 primary diagnostics
   target-UIComponents            1 primary diagnostics
-  target-UIHelpers              21 primary diagnostics
+  target-UIHelpers               0 primary diagnostics
   target-Widget                  6 primary diagnostics
-  TOTAL                        832
+  TOTAL                        751
 
-=== ERROR KINDS, ranked (denominator 832) ===
-    134  value of type 'X' has no member 'X'
-    122  cannot infer contextual base in reference to member 'X'
-    107  cannot find 'X' in scope
-     77  cannot find type 'X' in scope
-     47  type 'X' has no member 'X'
+=== ERROR KINDS, ranked (denominator 751) ===
+    114  value of type 'X' has no member 'X'
+     96  cannot infer contextual base in reference to member 'X'
+     93  cannot find 'X' in scope
+     66  cannot find type 'X' in scope
+     42  type 'X' has no member 'X'
      37  ambiguous use of 'X'
      34  'X' requires a contextual type
-     30  extra argument 'X' in call
-     25  missing argument for parameter 'X' in call
+     33  extra argument 'X' in call
+     27  missing argument for parameter 'X' in call
      22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
      20  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
      15  reference to member 'X' cannot be resolved without a contextual type
-     13  cannot convert value of type 'X' to expected argument type 'X'
-     13  generic parameter 'X' could not be inferred
      12  method does not override any method from its superclass
+     11  cannot convert value of type 'X' to expected argument type 'X'
      10  'X' is unavailable in macOS
+      9  generic parameter 'X' could not be inferred
       9  cannot assign value of type 'X' to type 'X'
-      9  could not infer type of image literal
+      9  type of expression is ambiguous without a type annotation
 
-=== MISSING TYPES: 76 distinct / 184 occurrences ===
-  Apple-framework names (a REAL gap)     :  50 distinct /  119 uses
+=== MISSING TYPES: 68 distinct / 159 occurrences ===
+  Apple-framework names (a REAL gap)     :  44 distinct /   98 uses
   app's own symbols (an earlier failure) :   1 distinct /    1 uses
-  other                                  :  25 distinct /   64 uses
+  other                                  :  23 distinct /   60 uses
 
   the real Apple-type gap, ranked:
-     11  CAGradientLayer
       7  CATransaction
       7  UIApplication
       7  UIColor
@@ -62,18 +61,13 @@
       2  CABasicAnimation
       2  UIDragInteraction
       2  UIDragItem
-      2  UIGraphicsBeginImageContextWithOptions
-      2  UIGraphicsEndImageContext
-      2  UIGraphicsGetImageFromCurrentImageContext
       2  UIImage
       2  UIImpactFeedbackGenerator
-      2  UIInterfaceOrientation
       2  UIInterfaceOrientationMask
       2  UIMenuController
       2  UIPageControl
       2  UIPointerInteraction
       2  UITableViewDiffableDataSource
-      2  UITextInputMode
       1  CATransform3D
       1  NSDiffableDataSourceSnapshot
       1  NSStringDrawingOptions
@@ -98,24 +92,25 @@
       1  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 181
-  on Apple-framework types (the #94 list): 54 distinct / 103 uses
+  total member errors                    : 156
+  on Apple-framework types (the #94 list): 49 distinct / 84 uses
   SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
-     20  CALayer                            anchorPoint, backgroundColor, frame, insertSublayer, maskedCorners, position …
      14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
-     12  UIView                             canPerformAction, layoutSublayers, snapshotView, transition, userInterfaceLayoutDirection
-      8  UIButton                           imageView, setImage
       8  UITraitCollection                  horizontalSizeClass, verticalSizeClass
       8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
+      7  UIView                             canPerformAction, layoutSublayers, snapshotView, userInterfaceLayoutDirection
       7  UIBarButtonItem                    accessibilityIdentifier
       7  UINavigationBar                    setBackgroundImage, shadowImage, titleTextAttributes
+      6  CAGradientLayer                    add, animation, drawsAsynchronously, mask, removeAnimation
+      5  CALayer                            maskedCorners
+      3  UIButton                           isPointerInteractionEnabled
       2  NSView                             alpha
       2  UINavigationController             setNavigationBarHidden
       2  UIProgressView                     setProgress
+      2  UITextInputMode                    perform, responds
       2  UIImageView                        none
-      2  UILabel                            adjustsFontSizeToFitWidth, minimumScaleFactor
       2  UIScrollView                       isZooming, setZoomScale
       1  UIContentSizeCategory              didChangeNotification
       1  UITextView                         keyboardType
