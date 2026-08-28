@@ -1,7 +1,7 @@
-# focus-ios phase 4 — real SnapKit plus controller launch compatibility
+# focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `9c2aace`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `4be65c9`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
@@ -10,11 +10,14 @@ files**. The old instrument then reported 2,922 lines, but that included Swift's
 rendered copy of every diagnostic (and even `error:` text in source snippets).
 Replaying the saved logs through the corrected primary-diagnostic parser gives
 **1,454** initially, **1,262** after OpenUIKit #94 milestone 1, **1,116** after
-compiling real SnapKit under the explicit exclusion below, and **1,025** after
-the controller/layout increment at OpenUIKit `9c2aace`. SnapKit removed 146
-primary diagnostics overall; the controller increment removed another 91 net.
-All runs use `-wmo`; the deliberately broad 182-file source inventory remains
-the saturation denominator (and is not the Xcode target inventory; see below).
+compiling real SnapKit under the explicit exclusion below, **1,025** after the
+controller/layout increment at OpenUIKit `9c2aace`, and **832** after the
+application-shell, table, shortcut/activity, and process-local pasteboard
+increments through OpenUIKit `4be65c9`. SnapKit removed 146 primary diagnostics
+overall; the controller increment removed another 91 net; the six subsequent
+OpenUIKit commits removed another 193 net. All runs use `-wmo`; the deliberately
+broad 182-file source inventory remains the saturation denominator (and is not
+the Xcode target inventory; see below).
 
 ```
 STAGE                PRIMARY DIAGNOSTICS   what it means
@@ -32,9 +35,9 @@ target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
 target-UIComponents            1   /
-app                          969   broad saturated census, 182 files, -wmo
+app                          776   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                       1025
+TOTAL                        832
 ```
 
 ## What was built, and why each shape
@@ -49,7 +52,7 @@ TOTAL                       1025
 | **MobileCoreServices** | UTI constants | iOS-only, absent from the macOS SDK. A measurement enabler, stated as such. |
 | **SnapKit** | **the REAL upstream source, recompiled** | MIT, pure Swift over `NSLayoutConstraint`. 36 of 37 upstream Swift files compile into the real module. `Debugging.swift` is excluded by the narrow, pinned rule below; it contributes diagnostic descriptions, not layout behavior or DSL API. |
 
-## The OpenUIKit controller increment
+## The OpenUIKit compatibility increments
 
 OpenUIKit `9c2aace` implements behavior rather than name-only declarations:
 bottom-up constraint updates, controller-bracketed layout callbacks, legacy
@@ -63,6 +66,14 @@ The increment passes 773 OpenUIKit tests (2 skipped), including eight focused
 controller/layout controls. Its 19 nib-initializer call sites remove 57 primary
 diagnostics from the broad app row; the other controller types and members bring
 the measured net reduction to 91 while also exposing some downstream errors.
+
+The next six commits preserve that standard: delegate initialization and launch
+shell behavior, shortcut/activity URLs, table editing/reuse/initializer
+compatibility, and a thread-safe process-local pasteboard are implemented and
+tested, not merely declared. The final pasteboard source is also compiled as
+part of the 92-file Foundation-free OpenUIKit Mach-O target and its 11-check
+guest oracle runs under `machorun` on Linux. The pasteboard increment alone
+removes 12 of the 13 previous broad-census `UIPasteboard` diagnostics.
 
 ## The one SnapKit vendoring exclusion
 
@@ -92,12 +103,12 @@ sources, and untracked sources.
 ## The saturated census
 
 ```
-MISSING TYPES     81 distinct / 207 occurrences
-                  53 Apple-framework names / 135 uses   <- real gap
-                  27 other / 71 · 1 app symbol / 1
+MISSING TYPES     76 distinct / 184 occurrences
+                  50 Apple-framework names / 119 uses   <- real gap
+                  25 other / 64 · 1 app symbol / 1
 
-MISSING MEMBERS   244 total
-                  81 distinct on Apple types / 162 uses <- the #94 list
+MISSING MEMBERS   181 total
+                  54 distinct on Apple types / 103 uses <- the #94 list
                    0 distinct SnapKit DSL   /   0 uses  <- real module loaded
 ```
 
@@ -105,20 +116,24 @@ Top of the **member** list, which is what no type census could see:
 
 | uses | type | members |
 |---|---|---|
-| 44 | `UITableView` | `allowsMultipleSelection`, `backgroundView`, `beginUpdates`, `deleteRows`, `deleteSections`, … |
 | 20 | `CALayer` | `anchorPoint`, `backgroundColor`, `frame`, `insertSublayer`, `maskedCorners`, `position`, … |
 | 14 | `UITextField` | `attributedPlaceholder`, `autocapitalizationType`, `caretRect`, `clearButtonMode`, … |
 | 12 | `UIView` | `canPerformAction`, `layoutSublayers`, `snapshotView`, `transition`, `userInterfaceLayoutDirection` |
-| 9 | `UINavigationBar` | `appearance`, `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
 | 8 | `UIButton` | `imageView`, `setImage` |
 | 8 | `UITraitCollection` | `horizontalSizeClass`, `verticalSizeClass` |
 | 8 | `WKWebView` | `addObserver`, `backForwardList`, `hasOnlySecureContent`, `observe`, `reloadFromOrigin` |
+| 7 | `UIBarButtonItem` | `accessibilityIdentifier` |
+| 7 | `UINavigationBar` | `setBackgroundImage`, `shadowImage`, `titleTextAttributes` |
 
-Heaviest **missing types**: `UIPasteboard` 13, `CAGradientLayer` 11, `CATransaction` 7,
-`UIPageViewController` 7, `UIDropInteraction` 4. (`UIApplication`, `UIColor`,
+Heaviest **missing types**: `CAGradientLayer` 11, `CATransaction` 7,
+`UIPageViewController` 7, and `UIDropInteraction` 4. (`UIApplication`, `UIColor`,
 `UIFont`, `UIViewController` also appear in the "cannot find type" list — those
 are cases where an *extension* on the type failed to resolve, not the type
-itself missing; they are in the member list above where they belong.)
+itself missing; they are in the member list above where they belong.) The one
+remaining `UIPasteboard` entry comes from a source that imports SwiftUI but not
+UIKit: iOS SwiftUI re-exports UIKit and the source typechecks against the iOS
+simulator SDK, while macOS SwiftUI does not. It is a target artifact, not a
+remaining pasteboard declaration gap.
 
 ## Instrument notes — five bugs, each caught by a number that could not survive
 
@@ -142,7 +157,7 @@ itself missing; they are in the member list above where they belong.)
    contain `error:` parameter labels. [`diagnostics.py`](diagnostics.py) now
    accepts only location-bearing primary lines. Its controls include both
    duplicate-rendering and source-text false positives. The saved current run
-   is 1,025 primary diagnostics, not 2,064 substrings.
+   is 832 primary diagnostics.
 5. **The broad `find` inventory is not the Blockzilla target.** The Xcode source
    phase has 131 Swift references: 129 exist and two generated sources
    (`Metrics.swift`, `AppNimbus.swift`) are absent from this checkout. The broad
@@ -152,7 +167,12 @@ itself missing; they are in the member list above where they belong.)
    the app module instead of importing their products. Those extra targets
    contribute 20 primary diagnostics plus one duplicate-`@main` diagnostic.
    This census remains useful for saturation, but an executable build must use
-   a pinned Xcode/Package-derived source and resource inventory.
+   a pinned Xcode/Package-derived source and resource inventory. That exact
+   source inventory is now recorded and fail-closed in
+   [`focus-main-sources.json`](focus-main-sources.json), and the two open-source
+   generated inputs can now be reproduced and byte-attested by
+   [`generated_sources.py`](generated_sources.py); they are not yet integrated
+   into an executable target build.
 
 **Caveat, stated rather than discovered later:** the census targets
 `arm64-apple-macos13.0`, because that is what OpenUIKit builds. One consequence
@@ -162,8 +182,9 @@ code expects UIKit). Counts here are still a **lower bound** for the iOS target.
 ## What is still not here
 
 This is a compile census, not yet an application link. The next build instrument
-must replace the broad source pass with the exact target graph, restore its two
-generated Swift inputs, compile package products as separate modules, and then
-measure the resulting Mach-O link/import surface. Combine and SwiftUI currently
-resolve from Apple's macOS SDK during this census; neither is yet present in the
-durable Linux guest root.
+must consume the recorded exact target graph, integrate the two reconstructed
+generated Swift inputs, replace the remaining proprietary Intents generation
+with a measured compatible source, compile package products as separate modules,
+and then measure the resulting Mach-O link/import surface. Combine and SwiftUI
+currently resolve from Apple's macOS SDK during this census; neither complete
+framework is yet present in the durable Linux guest root.

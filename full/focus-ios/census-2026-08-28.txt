@@ -1,5 +1,5 @@
 === STAGES (every one reported, including the clean ones) ===
-  app                          969 primary diagnostics
+  app                          776 primary diagnostics
   empty                          0 primary diagnostics
   openuikit                      0 primary diagnostics
   snapkit-vendoring-after        0 primary diagnostics
@@ -18,35 +18,34 @@
   target-UIComponents            1 primary diagnostics
   target-UIHelpers              21 primary diagnostics
   target-Widget                  6 primary diagnostics
-  TOTAL                       1025
+  TOTAL                        832
 
-=== ERROR KINDS, ranked (denominator 1025) ===
-    190  value of type 'X' has no member 'X'
-    129  cannot infer contextual base in reference to member 'X'
-    126  cannot find 'X' in scope
-     81  cannot find type 'X' in scope
-     56  cannot use optional chaining on non-optional value of type 'X'
-     54  type 'X' has no member 'X'
+=== ERROR KINDS, ranked (denominator 832) ===
+    134  value of type 'X' has no member 'X'
+    122  cannot infer contextual base in reference to member 'X'
+    107  cannot find 'X' in scope
+     77  cannot find type 'X' in scope
+     47  type 'X' has no member 'X'
      37  ambiguous use of 'X'
      34  'X' requires a contextual type
-     33  extra argument 'X' in call
-     31  cannot convert value of type 'X' to expected argument type 'X'
+     30  extra argument 'X' in call
      25  missing argument for parameter 'X' in call
      22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
      20  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
-     16  reference to member 'X' cannot be resolved without a contextual type
-     13  method does not override any method from its superclass
+     15  reference to member 'X' cannot be resolved without a contextual type
+     13  cannot convert value of type 'X' to expected argument type 'X'
      13  generic parameter 'X' could not be inferred
+     12  method does not override any method from its superclass
      10  'X' is unavailable in macOS
-     10  'X' is inaccessible due to 'X' protection level
+      9  cannot assign value of type 'X' to type 'X'
+      9  could not infer type of image literal
 
-=== MISSING TYPES: 81 distinct / 207 occurrences ===
-  Apple-framework names (a REAL gap)     :  53 distinct /  135 uses
+=== MISSING TYPES: 76 distinct / 184 occurrences ===
+  Apple-framework names (a REAL gap)     :  50 distinct /  119 uses
   app's own symbols (an earlier failure) :   1 distinct /    1 uses
-  other                                  :  27 distinct /   71 uses
+  other                                  :  25 distinct /   64 uses
 
   the real Apple-type gap, ranked:
-     13  UIPasteboard
      11  CAGradientLayer
       7  CATransaction
       7  UIApplication
@@ -61,7 +60,6 @@
       3  UIHostingController
       3  UIMenuItem
       2  CABasicAnimation
-      2  UIApplicationShortcutItem
       2  UIDragInteraction
       2  UIDragItem
       2  UIGraphicsBeginImageContextWithOptions
@@ -80,13 +78,13 @@
       1  NSDiffableDataSourceSnapshot
       1  NSStringDrawingOptions
       1  UIActivityItemProvider
-      1  UIBarButtonItemAppearance
       1  UIDragInteractionDelegate
       1  UIDragSession
       1  UIDropInteractionDelegate
       1  UIDropProposal
       1  UIPageViewControllerDataSource
       1  UIPageViewControllerDelegate
+      1  UIPasteboard
       1  UIPointerInteractionDelegate
       1  UIPointerRegion
       1  UIPointerStyle
@@ -96,38 +94,33 @@
       1  UISpringTimingParameters
       1  UIStatusBarStyle
       1  UITextPosition
-      1  UIUserActivityRestoring
       1  UIView
       1  UIViewControllerRepresentable
 
 === MISSING MEMBERS on types that DO exist ===
-  total member errors                    : 244
-  on Apple-framework types (the #94 list): 81 distinct / 162 uses
+  total member errors                    : 181
+  on Apple-framework types (the #94 list): 54 distinct / 103 uses
   SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
 
   by owning type, ranked:
-     44  UITableView                        allowsMultipleSelection, backgroundView, beginUpdates, cellLayoutMarginsFollowReadableWidth, deleteRows, deleteSections …
      20  CALayer                            anchorPoint, backgroundColor, frame, insertSublayer, maskedCorners, position …
      14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
      12  UIView                             canPerformAction, layoutSublayers, snapshotView, transition, userInterfaceLayoutDirection
-      9  UINavigationBar                    appearance, setBackgroundImage, shadowImage, titleTextAttributes
       8  UIButton                           imageView, setImage
       8  UITraitCollection                  horizontalSizeClass, verticalSizeClass
       8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
       7  UIBarButtonItem                    accessibilityIdentifier
-      5  UITableViewCell                    imageView, separatorInset
-      3  UIModalPresentationStyle           none, overCurrentContext
+      7  UINavigationBar                    setBackgroundImage, shadowImage, titleTextAttributes
       2  NSView                             alpha
       2  UINavigationController             setNavigationBarHidden
-      2  UIApplication                      openSettingsURLString
       2  UIProgressView                     setProgress
       2  UIImageView                        none
       2  UILabel                            adjustsFontSizeToFitWidth, minimumScaleFactor
       2  UIScrollView                       isZooming, setZoomScale
-      2  UINavigationBarAppearance          backButtonAppearance, setBackIndicatorImage
       1  UIContentSizeCategory              didChangeNotification
       1  UITextView                         keyboardType
       1  UIKeyCommand                       wantsPriorityOverSystemBehavior
       1  NSAttributedString                 boundingRect
       1  UIKeyEventKey                      keyCode
       1  NSValue                            cgRectValue
+      1  WKNavigation                       effectiveContentMode
