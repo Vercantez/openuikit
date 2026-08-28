@@ -85,6 +85,65 @@ An absolute Darwin path (`/usr/lib/...`, `/System/Library/...`) with no entry in
 the prefix map. Hard error naming the path. This is the entry that grows as
 frameworks are added, and its frequency is an honest progress metric.
 
+### `host-bind-denied` — the host fallback is a DEFAULT, not a decision
+
+`src/resolve.c` lets an image the darwin-root prefix map served (`is_runtime`)
+satisfy an otherwise-undefined bind out of glibc by name, with **no
+translation**. That is deliberate — it is how `libSystem.B.dylib` reaches glibc
+— but nobody has to *choose* it. A dylib staged into a guest root for an
+unrelated reason drags its undefined symbols along, and each one our userland
+does not define is answered silently.
+
+**Measured 2026-08-27** on the FoundationEssentials URL-oracle guest root
+(`~/swift-macho-linux/scratch/mrroot_fe`, `MACHORUN_VERBOSE=1`): **371 distinct
+symbols host-bound**, and the three classes are very different in kind.
+
+| class | count | what it is |
+|---|---:|---|
+| `_glibc_*` | 329 | the EXPLICIT boundary. `darwin/src/dsys.h` labels glibc's function `_glibc_<name>`; the label is an author's assertion that the ABI is identical, and the Darwin-facing wrapper is where translation lives. |
+| loader exports | 34 | `_dyld_*`, `_mr_*`, `_getsegmentdata` — the loader-is-dyld seam, enumerated in `darwin/loader-exports.txt` and gated by `gen_tbd.sh` CHECKs 1 and 2. |
+| **plain C names** | **8** | arrived by accident, with nobody's assertion behind them. |
+
+The eight: `_nanf` `_openat` `_remquo` `_remquof` `_sem_open` `_strtof`
+`_strtold` `_vdprintf`. **Four are ABI-divergent** and are now denied in
+`src/host_deny.c` — they bind to a stub that names itself and stops the process
+on first call, rather than refusing at load (all four are dormant in the root
+that found them; a load failure over a call that never happens trades a silent
+hazard for a loud regression). The other four are genuinely compatible and
+still host-bind.
+
+Measured live by removing the deny hook and calling each one — this is what the
+denial prevents, not what it is feared to prevent:
+
+    openat(AT_FDCWD=-2, ...)  -> -1 EBADF  Darwin's AT_FDCWD is an ordinary bad fd to Linux
+    sem_open(...)             -> 0x0       which is Darwin's SUCCESS: SEM_FAILED is
+                                           (sem_t *)-1 there and (sem_t *)0 here
+    strtold("1.5")            -> 0.0       long double is 8 bytes on Darwin
+                                           (LDBL_MANT_DIG 53) and 16 on Linux (113)
+    vdprintf(...)             -> SIGSEGV   va_list is 8 bytes on Darwin and 32 on Linux
+
+and the flag rotation, which is worse than any of them because it *succeeds*:
+Darwin's `O_CREAT` (0x200) is Linux's `O_TRUNC`, so a guest creating a file
+truncates one. `tests/host_deny/witness.c` demonstrates it on a 24-byte file —
+`openat(..., O_WRONLY|O_CREAT)` returns a valid fd and the file is 0 bytes
+afterwards.
+
+**`vdprintf` was on the "fine" pile.** #73 classified it with `nanf`/`remquo`
+as compatible stdio; the measurement above is what moved it. Nothing about the
+name, arity or linkage says `va_list` is a different object on the two sides.
+
+`_glibc_*` is deliberately **not** denied. `darwin/src/posix.c`'s own `open`
+wrapper reaches glibc through exactly that label after translating the flags;
+denying the labelled spelling would block the correct implementation of the
+symbol being protected. The label is where the audit belongs — and a label
+applied *to a symbol that needs translating* routes around the wrapper
+silently, which is the trap that nearly shipped over `signalfd`.
+
+Graded by `scripts/host_deny_gate.sh` (9/9: 4 denied names fire, 2 controls
+return correct values, the verbose log distinguishes the two paths, and the
+built loader is checked to contain the table the source declares). Teeth shown
+by mutation: stubbing the hook out drops it to 4 pass / 5 fail.
+
 ---
 
 ## libSystem

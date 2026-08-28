@@ -129,6 +129,12 @@ char *mr_join(const char *a, const char *b);
 char *mr_dirname(const char *path);
 int   mr_file_exists(const char *path);
 
+/* ------------------------------------------------------------- host_deny */
+/* The loud stub for `name`, or NULL when the name may be host-bound. The host
+ * fallback is a DEFAULT, not a decision; src/host_deny.c is the list of names
+ * where taking glibc's symbol by name alone is a wrong answer. */
+void *mr_host_deny_trap(const char *name);
+
 static inline uint64_t mr_round_up(uint64_t v, uint64_t a) { return (v + a - 1) & ~(a - 1); }
 static inline uint64_t mr_round_dn(uint64_t v, uint64_t a) { return v & ~(a - 1); }
 

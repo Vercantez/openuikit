@@ -87,6 +87,7 @@ build_loader() {
         "$ROOT"/src/map.c \
         "$ROOT"/src/trie.c \
         "$ROOT"/src/resolve.c \
+        "$ROOT"/src/host_deny.c \
         "$ROOT"/src/fixups_chained.c \
         "$ROOT"/src/fixups_classic.c \
         "$ROOT"/src/tlv.c \

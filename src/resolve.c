@@ -286,6 +286,19 @@ uint64_t mr_resolve_symbol(mr_image *from, int lib_ordinal, const char *name,
     }
 
     if (!*found && from->is_runtime) {
+        /* The host fallback is a DEFAULT: a symbol reaches glibc without
+         * anyone having decided that it should. src/host_deny.c holds the
+         * names where that is a wrong answer rather than a right one, and they
+         * bind to a stub that names itself on first call. Checked BEFORE
+         * host_lookup, and only ever reached once every loaded image has come
+         * up empty -- so a real implementation always wins over the table. */
+        void *trap = mr_host_deny_trap(name);
+        if (trap) {
+            *found = 1;
+            mr_log("host: %s DENIED (ABI-divergent; loud stub -- src/host_deny.c)",
+                   name);
+            return (uint64_t)(uintptr_t)trap;
+        }
         addr = host_lookup(name);
         if (addr) {
             *found = 1;
