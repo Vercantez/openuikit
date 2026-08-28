@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "repository_commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+  "package_manifest": {
+    "path": "BlockzillaPackage/Package.swift",
+    "size": 1975,
+    "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248"
+  },
+  "resources": [
+    {
+      "target": "DesignSystem",
+      "declaration": "raw-unhandled",
+      "source_path": "BlockzillaPackage/Sources/DesignSystem/Colors.xcassets",
+      "stage_path": "resources/DesignSystem/Colors.xcassets",
+      "kind": "directory",
+      "file_count": 40,
+      "byte_count": 18621,
+      "source_digest": "da3cadc474b51d242db2dde483c15b4c5c0b03bac0df11c3ff1dd32281e994d4"
+    },
+    {
+      "target": "DesignSystem",
+      "declaration": "raw-unhandled",
+      "source_path": "BlockzillaPackage/Sources/DesignSystem/Assets.xcassets",
+      "stage_path": "resources/DesignSystem/Assets.xcassets",
+      "kind": "directory",
+      "file_count": 77,
+      "byte_count": 150818,
+      "source_digest": "9a06e64a83591e2dc2e7f6e44afd6f181c4f9501f4bf22502887b3033e025532"
+    },
+    {
+      "target": "Widget",
+      "declaration": "raw-unhandled",
+      "source_path": "BlockzillaPackage/Sources/Widget/Media.xcassets",
+      "stage_path": "resources/Widget/Media.xcassets",
+      "kind": "directory",
+      "file_count": 5,
+      "byte_count": 73131,
+      "source_digest": "cf65ea586b104d622bb50ec5f0c09a1dc11ec0f293d322776dbb6f698f880126"
+    },
+    {
+      "target": "Licenses",
+      "declaration": "declared-copy",
+      "source_path": "BlockzillaPackage/Sources/Licenses/license-list.plist",
+      "stage_path": "resources/Licenses/license-list.plist",
+      "kind": "file",
+      "file_count": 1,
+      "byte_count": 55562,
+      "source_digest": "8c814c66d2e1fb2d38bd6442b1dcd9793327ca7a596b5179060b766275bef377"
+    },
+    {
+      "target": "Licenses",
+      "declaration": "declared-copy",
+      "source_path": "BlockzillaPackage/Sources/Licenses/focus-ios.plist",
+      "stage_path": "resources/Licenses/focus-ios.plist",
+      "kind": "file",
+      "file_count": 1,
+      "byte_count": 16500,
+      "source_digest": "e613db4a1ae22ea3b65a35f7b36e047b88e8b8dea6266c5e94cb250e8193ec45"
+    }
+  ],
+  "source_digest": "c04936bbf7e156abd3e417c5234b168026d0260c8e3eacd8aa3c0a8e83015f19",
+  "staged_resource_digest": "0e58bc76ee291d321cd94a1c98310cee0e86703f17cf48ea5be0dbaa64fb4bee",
+  "module_proof": {
+    "target": "DesignSystem",
+    "openuikit_commit": "81e1e05fbde712a28ea031534462b80740ed5eb5",
+    "sources": [
+      {
+        "path": "BlockzillaPackage/Sources/DesignSystem/Bundle+CurrentBundle.swift",
+        "size": 2060,
+        "sha256": "725315f04ecbbe4bdeceb73bdf07550e2c3f38307696d0fa7035600e018ca3af"
+      },
+      {
+        "path": "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift",
+        "size": 3248,
+        "sha256": "4078f76f180d37f6d560dd63d59ef161302a73b7f416933533663700c314224f"
+      },
+      {
+        "path": "BlockzillaPackage/Sources/DesignSystem/UIFont+AppFonts.swift",
+        "size": 1412,
+        "sha256": "ac4895febb0ad6c588ada61420b0b271afb33092d76e1dbed828ee8b337c83e6"
+      },
+      {
+        "path": "BlockzillaPackage/Sources/DesignSystem/UIImage+AppImages.swift",
+        "size": 2152,
+        "sha256": "ba5720a57aa90406b95a66ea62433557b666c1558d59781018de050585797734"
+      }
+    ],
+    "source_digest": "00d6773590819770061d4dc9e23adedc1f5ed39962a321475093289edf28ca9b",
+    "accessor": {
+      "stage_path": "accessors/DesignSystem/Bundle+Module.swift",
+      "size": 146,
+      "sha256": "c0a3ee61e4fc8015d5e4a36775293347e21c58850605a6d47141f344211829aa"
+    }
+  }
+}
