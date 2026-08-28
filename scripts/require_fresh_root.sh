@@ -55,7 +55,21 @@
 #   umbrella  newer than every input, DEFINES its discriminator symbol, and
 #             re-exports its .real. Never compared against machorun: it is a
 #             different library on purpose.
+#   staged    byte-identical to a RECORDED sha256 of the external artefact it was
+#             staged from -- Apple's iOS simruntime dylibs, which have no
+#             machorun counterpart at all.
 #   local     not graded; may excuse an upstream file from MISSING
+#
+# `staged` EXISTS AS ITS OWN KIND ON PURPOSE, and the reason is the history
+# above. "Matches machorun" is meaningless for a file machorun has never had, so
+# the tempting move is to file those under `local` and skip them -- and SKIPPING
+# IS EXACTLY WHAT DOOMED THE UMBRELLA: `libSystem.real.dylib` was skipped as
+# "local-only, no upstream counterpart" and that was the one file where
+# staleness was a live question. A staged dylib has an invariant, it is just not
+# machorun: identity against the external source it was taken from. Recording
+# the SOURCE's digest is what keeps that from being self-reference -- a manifest
+# line written by hashing the file already in the root would be a check that can
+# never fail.
 #
 # WHAT WAS KEPT, because it was right. It REFUSES rather than auto-refreshing
 # (refreshing by default would swap the runtime out from under someone
@@ -97,6 +111,9 @@ nm_defined() {
     esac
 }
 reexports() { "$OTOOL" -l "$1" 2>/dev/null | grep -A2 LC_REEXPORT_DYLIB | awk '/^ *name /{print $2}'; }
+# sha256sum on Linux, shasum on macOS -- picked once, the way sdk_stage.sh does.
+if command -v sha256sum >/dev/null 2>&1; then _sha256() { sha256sum | cut -d' ' -f1; }
+else                                         _sha256() { shasum -a 256 | cut -d' ' -f1; }; fi
 
 # ---- the manifest ---------------------------------------------------------
 MANIFEST="$TARGET/.manifest"
@@ -122,7 +139,7 @@ if [ ! -f "$MANIFEST" ]; then
 fi
 
 # ---- grade ----------------------------------------------------------------
-n_copy=0; n_renamed=0; n_umbrella=0; n_local=0
+n_copy=0; n_renamed=0; n_umbrella=0; n_staged=0; n_local=0
 bad_copy=""; bad_derived=""; absent=""
 declare -a NOTES=()
 note() { NOTES+=("$1"); }
@@ -131,7 +148,9 @@ accounted=""      # upstream paths this root is known to account for
 while IFS=$'\t' read -r kind rel up rest; do
     case "$kind" in ''|'#'*) continue ;; esac
     f="$TARGET/$rel"
-    [ "${up:--}" = "-" ] || accounted="$accounted $up"
+    # For a `staged` row the third column is a sha256, not an upstream path,
+    # so it must not be counted as accounting for anything in machorun.
+    case "$kind" in staged) ;; *) [ "${up:--}" = "-" ] || accounted="$accounted $up" ;; esac
     case "$kind" in
     copy)
         n_copy=$((n_copy+1))
@@ -149,6 +168,24 @@ while IFS=$'\t' read -r kind rel up rest; do
             note "$(printf '  %-42s copy      identical to %s' "$rel" "$up")"
         else
             bad_copy="$bad_copy$rel\tdiffers from $MACHORUN/$up\n"
+        fi ;;
+    staged)
+        # Manifest columns here are: staged <rel> <sha256-of-source> <where it came from>
+        n_staged=$((n_staged+1))
+        want=$up
+        srcdesc=$(printf '%s' "$rest" | cut -f1)
+        if [ ! -f "$f" ]; then
+            bad_derived="$bad_derived$rel\tdeclared staged but absent from the root\n"; continue; fi
+        # A staged row with no recorded source digest is refused rather than
+        # graded: hashing the file and comparing it to itself is the vacuous
+        # green this whole script exists to refuse.
+        if [ "${#want}" -ne 64 ]; then
+            bad_derived="$bad_derived$rel\tmanifest records no sha256 for the staged source -- refusing to grade it against itself\n"; continue; fi
+        got=$(_sha256 <"$f")
+        if [ "$got" = "$want" ]; then
+            note "$(printf '  %-42s staged    %s == recorded source (%s)' "$rel" "${got:0:16}" "$srcdesc")"
+        else
+            bad_derived="$bad_derived$rel\tis not the artefact it was staged from: have ${got:0:16}, recorded ${want:0:16} ($srcdesc)\n"
         fi ;;
     renamed)
         n_renamed=$((n_renamed+1))
@@ -217,7 +254,7 @@ while IFS= read -r up; do
 done < <({ find "$MACHORUN/darwin/usr/lib" -name '*.dylib' -type f 2>/dev/null
            [ -f "$MACHORUN/build/machorun" ] && echo "$MACHORUN/build/machorun"; } | LC_ALL=C sort)
 
-graded=$((n_copy + n_renamed + n_umbrella))
+graded=$((n_copy + n_renamed + n_umbrella + n_staged))
 if [ "$graded" -eq 0 ]; then
     echo "require_fresh_root: REFUSING TO GRADE -- 0 gradable files in $SHORT" >&2
     echo "  ($n_local local, manifest source: $MANIFEST_SRC.) Is the root populated?" >&2
@@ -235,8 +272,8 @@ nbad_der=$(count "$bad_derived")
 nabsent=$(printf '%s\n' $absent | grep -c .)
 
 if [ "$nbad_copy" -eq 0 ] && [ "$nbad_der" -eq 0 ] && [ "$nabsent" -eq 0 ]; then
-    printf 'root ok: %s -- %d copies identical, %d renamed identical outside LC_ID_DYLIB, %d umbrellas built, %d local\n' \
-        "$SHORT" "$n_copy" "$n_renamed" "$n_umbrella" "$n_local"
+    printf 'root ok: %s -- %d copies identical, %d renamed identical outside LC_ID_DYLIB, %d umbrellas built, %d staged match their source, %d local\n' \
+        "$SHORT" "$n_copy" "$n_renamed" "$n_umbrella" "$n_staged" "$n_local"
     printf '  %d upstream artefact(s) in %s, all accounted for; manifest: %s\n' \
         "$n_upstream" "${MACHORUN#$HOME/}" "$MANIFEST_SRC"
     # The per-file evidence -- digests, export counts, what re-exports what.
@@ -261,8 +298,8 @@ fi
 {
 echo
 echo "GUEST ROOT NOT USABLE: $SHORT"
-printf '  graded %d file(s): %d copy, %d renamed, %d umbrella (+%d local, not graded)\n' \
-    "$graded" "$n_copy" "$n_renamed" "$n_umbrella" "$n_local"
+printf '  graded %d file(s): %d copy, %d renamed, %d umbrella, %d staged (+%d local, not graded)\n' \
+    "$graded" "$n_copy" "$n_renamed" "$n_umbrella" "$n_staged" "$n_local"
 printf '  upstream set: %d artefact(s) in %s; manifest: %s\n' "$n_upstream" "${MACHORUN#$HOME/}" "$MANIFEST_SRC"
 echo
 
@@ -274,7 +311,7 @@ if [ "$nbad_copy" -gt 0 ]; then
     echo
 fi
 if [ "$nbad_der" -gt 0 ]; then
-    echo "  DERIVED ARTEFACTS WRONG ($nbad_der of $((n_renamed + n_umbrella + n_local))):"
+    echo "  DERIVED ARTEFACTS WRONG ($nbad_der of $((n_renamed + n_umbrella + n_staged + n_local))):"
     show "$bad_derived"
     echo "      Fix: RE-RUN full/scripts/build_full.sh. These files are BUILD OUTPUTS."
     echo "      DO NOT use MRROOT_REFRESH=1 on them: copying machorun's plain library over an"

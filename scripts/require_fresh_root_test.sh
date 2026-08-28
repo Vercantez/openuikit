@@ -47,6 +47,16 @@ case_() {
 echo "require_fresh_root_test: subject $SRCROOT"
 echo
 
+# libswiftObjectiveC.dylib is the right stand-in for the simruntime dylibs in
+# mrroot_fe: it has NO machorun counterpart, so promoting it from `local` to
+# `staged` does not disturb the upstream accounting.
+STAGED_REL=darwin/usr/lib/swift/libswiftObjectiveC.dylib
+STAGED_SHA=$(shasum -a 256 <"$SRCROOT/$STAGED_REL" | cut -d' ' -f1)
+stage_row() {   # rewrite that file's manifest row as `staged` with digest $1
+    grep -v "libswiftObjectiveC" "$R/.manifest" > "$R/.m2" && mv "$R/.m2" "$R/.manifest"
+    printf 'staged\t%s\t%s\tpretend iOS 26.1 simruntime\n' "$STAGED_REL" "$1" >> "$R/.manifest"
+}
+
 # (0) THE CASE THE OLD GUARD GOT BACKWARDS. A correctly built root -- umbrellas
 #     that differ from machorun BY DESIGN -- must grade CLEAN.
 case_ "correct root grades clean" 0 "root ok" "true"
@@ -86,6 +96,22 @@ case_ "upstream dylib missing from root" 1 "MISSING FROM THIS ROOT" \
 #      the manifest can see it. Only enumerating UPSTREAM finds it.
 case_ "upstream dylib undeclared" 1 "MISSING FROM THIS ROOT" \
     'rm -f "$R/darwin/usr/lib/libc++abi.dylib"; grep -v "libc++abi" "$R/.manifest" > "$R/.m2" && mv "$R/.m2" "$R/.manifest"'
+
+# (5c/d/e) THE `staged` KIND -- files with NO machorun counterpart at all (the
+#     Apple simruntime dylibs in mrroot_fe). "Matches machorun" is meaningless
+#     for them, so the tempting move is to file them under `local` and skip them
+#     -- and SKIPPING IS WHAT DOOMED THE UMBRELLA. Their invariant is identity
+#     against the RECORDED digest of the external source. Graded in all three
+#     states: matching, mutated, and declared without a source digest.
+case_ "staged matches its source" 0 "staged match their source" \
+    'stage_row "$STAGED_SHA"'
+case_ "staged file mutated" 1 "is not the artefact it was staged from" \
+    'stage_row "$STAGED_SHA"; printf "\x00" >> "$R/$STAGED_REL"'
+# No recorded digest must REFUSE, not hash the file and compare it to itself:
+# that would be a check that can never fail, which is the vacuous green this
+# whole guard exists to reject.
+case_ "staged with no source digest" 1 "refusing to grade it against itself" \
+    'stage_row -'
 
 # (6) A STALE PLAIN COPY -- the case the old guard did handle, kept so the
 #     rewrite is not a regression.
