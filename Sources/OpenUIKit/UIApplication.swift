@@ -72,16 +72,11 @@ extension UIApplication {
 
 /// UIKit's app delegate protocol. Every method has a default no-op
 /// implementation (UIKit gets that from ObjC `@optional`), so an app
-/// delegate implements only what it cares about.
+/// delegate implements only what it cares about. Delegate construction is an
+/// entry-point/runtime responsibility, not a protocol requirement: UIKit's
+/// public protocol does not require `init()`.
 @preconcurrency @MainActor
 public protocol UIApplicationDelegate: AnyObject {
-    /// So the delegate can be created from its class NAME, which is how a real
-    /// iOS binary launches: `@main` passes `NSStringFromClass(AppDelegate.self)`
-    /// and UIKit instantiates what it finds. Real UIKit inherits this
-    /// requirement from NSObjectProtocol; a Swift metatype offers no way to
-    /// call an initialiser that no protocol requires.
-    init()
-
     func application(_ application: UIApplication,
                      willFinishLaunchingWithOptions
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool

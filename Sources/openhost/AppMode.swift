@@ -69,17 +69,13 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var root: UIViewController?
 
-    /// `UIApplicationDelegate` requires `init()` so a delegate can be created
-    /// from its class NAME, the way a real iOS binary launches (see
-    /// UIApplication.swift). That is why the host's configuration arrives
-    /// through the convenience initialiser below rather than through stored
-    /// `let`s: a parameterless initialiser has to exist.
-    override init() { super.init() }
-
-    convenience init(name: String, makeRoot: @escaping () -> UIViewController) {
-        self.init()
+    /// openhost owns this concrete delegate instance and supplies it directly
+    /// to `UIApplicationMain(delegate:)`; no class-name construction is
+    /// involved in the portable launch path.
+    init(name: String, makeRoot: @escaping () -> UIViewController) {
         self.name = name
         self.makeRoot = makeRoot
+        super.init()
     }
 
     func application(_ application: UIApplication,

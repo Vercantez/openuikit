@@ -430,8 +430,20 @@ final class ResponderFirstResponderTests: XCTestCase {
 
 // MARK: - Application lifecycle
 
+/// Compile control for the shape used by Focus and ordinary UIKit apps. This
+/// class is deliberately non-final and declares no initializer: conformance
+/// must use UIResponder's inherited initializer without making it `required`.
+@MainActor
+private class ImplicitInitializerApplicationDelegate: UIResponder, UIApplicationDelegate {}
+
 @MainActor
 final class ApplicationLifecycleTests: XCTestCase {
+    func testNonFinalResponderDelegateConformsWithImplicitInitializer() {
+        let delegate = ImplicitInitializerApplicationDelegate()
+        let protocolValue: UIApplicationDelegate = delegate
+        XCTAssertTrue(protocolValue === delegate)
+    }
+
     /// Launch -> active -> resign -> background -> foreground -> active ->
     /// terminate, in UIKit's order, with the state observable from inside
     /// every callback.
