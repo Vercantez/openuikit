@@ -41,7 +41,7 @@ OUT=${OUT:-$W/bin/ud_guest}
 TRIPLE=${TRIPLE:-arm64-apple-macos13.0}
 
 OBJS=(
-  "$W/fe/runner.o"
+  "${RUNNER:-$W/fe/runner.o}"
   "$W/fe/UserDefaultsGuest.o"
   "$W/fe/module/FoundationEssentials.o"
   "$W/fe/collections/OrderedCollections.o"
