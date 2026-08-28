@@ -167,11 +167,34 @@ fi
 if [ "$WHICH" = all ] || [ "$WHICH" = t16 ]; then
   note "T16 -- CF's preferences path"
   export HOME=/work/t16home; rm -rf "$HOME"; mkdir -p "$HOME"
+  rm -f /Library/Preferences/com.example.t16prefs.plist
   build_objc t16_cfprefs && mv /work/obj/t16_cfprefs.o /work/obj/t16.o \
-    && link_with_cf t16 && run t16 | head -20
-  echo "  --- what landed on disk under \$HOME:"
-  find "$HOME" -type f 2>/dev/null | sed 's/^/    /' || true
-  echo "  (empty until #80 lands: T16 stops at the first CFLock_t, before any write)"
+    && link_with_cf t16 && run t16 | tail -24
+
+  # WHERE the file landed is a finding, not a detail, so look in BOTH places.
+  # Searching only under $HOME reported "nothing landed" while the write had
+  # gone to /Library/Preferences -- gate-scope-excludes-the-answer, in this
+  # script, about the very result it exists to report.
+  echo "  --- preference files on disk:"
+  f=$(find "$HOME/Library/Preferences" /Library/Preferences \
+        -name '*t16prefs*' 2>/dev/null | head -1)
+  if [ -z "$f" ]; then
+    echo "    (none. If T16 reported 'synchronize returned TRUE' above, that is"
+    echo "     a FINDING -- a write that reports success and leaves no file.)"
+  else
+    echo "    $f"
+    if head -c 6 "$f" | grep -q bplist
+      then echo "    format:   bplist00  (matches Darwin)"
+      else echo "    format:   XML       <-- DIVERGES. Darwin writes binary;"
+           echo "                            CFPreferences.c:202 defaults"
+           echo "                            __CFPreferencesWritesXML = true."; fi
+    case "$f" in
+      "$HOME"/*) echo "    location: under \$HOME  (matches Darwin)" ;;
+      *)         echo "    location: $(dirname "$f")  <-- the ANY-USER domain."
+                 echo "                            Darwin's per-app default is"
+                 echo "                            \$HOME/Library/Preferences." ;;
+    esac
+  fi
 fi
 
 echo

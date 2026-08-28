@@ -162,3 +162,145 @@ int flsl(long mask)
     if (mask == 0) return 0;
     return (int)(64 - __builtin_clzl((unsigned long)mask));
 }
+
+/* WALL 7: gethostuuid -- AND IT CORRECTS A PREDICTION IN #78's SCOPE REPORT.
+ *
+ * That report said gethostuuid was unreachable, on the reasoning that
+ * UserDefaults always passes kCFPreferencesAnyHost. The argument is true and
+ * the conclusion was wrong. `CFPreferencesCopyAppValue` does not use the
+ * caller's host argument for the search: `CFApplicationPreferences.c:422-429`
+ * builds an EIGHT-DOMAIN search list and four of those domains are
+ * kCFPreferencesCurrentHost. Reaching a by-host domain needs
+ * _CFPreferencesGetByHostIdentifierString -> _CFGetHostUUIDString ->
+ * gethostuuid, whatever the caller asked for.
+ *
+ * Measured, not argued: with machorun #80's mutex fix in, T16's very first
+ * CFPreferencesCopyAppValue printed `STUB CALLED: gethostuuid`. A link-level
+ * reading of the gate could not have seen this, which is the whole reason the
+ * route ruling wanted CF EXECUTED.
+ *
+ * NOT FICTION, and that distinction matters here. Darwin returns the host's
+ * hardware UUID; /etc/machine-id is Linux's stable per-host identifier and is
+ * the honest analogue. It is 32 lower-case hex digits with no dashes, which is
+ * exactly 16 bytes -- the same shape CFUUIDCreateFromUUIDBytes wants.
+ *
+ * THE FAILURE PATH IS DARWIN'S OWN, so it needs no invention: on -1, CF logs
+ * and returns NULL, and _CFPreferencesGetByHostIdentifierString then uses
+ * CFSTR("UnknownHostID"). So a host with no machine-id degrades to a defined
+ * Darwin behaviour rather than to a guess -- which is why this returns -1
+ * instead of fabricating a UUID.
+ *
+ * THIS BELONGS IN MACHORUN'S libSystem, not here. CFPreferences.c's own
+ * comment says so: "The entry point is in libSystem.B.dylib, but not actually
+ * declared". It sits in this file under the rule at the top -- a probe is a
+ * claim that something is absent -- and must be DELETED the moment machorun
+ * exports it, or link order will silently prefer this copy over theirs. */
+int gethostuuid(unsigned char *uuid_buf, const struct timespec *timeoutp);
+int gethostuuid(unsigned char *uuid_buf, const struct timespec *timeoutp)
+{
+    (void)timeoutp;                      /* Darwin's timeout is for a daemon
+                                          * round trip; reading a file cannot
+                                          * block on one. */
+    if (!uuid_buf) return -1;
+
+    FILE *f = fopen("/etc/machine-id", "r");
+    if (!f) return -1;
+    char hex[33];
+    size_t n = fread(hex, 1, 32, f);
+    fclose(f);
+    if (n != 32) return -1;
+
+    for (int i = 0; i < 16; i++) {
+        int hi = -1, lo = -1;
+        char a = hex[i * 2], b = hex[i * 2 + 1];
+        if (a >= '0' && a <= '9') hi = a - '0';
+        else if (a >= 'a' && a <= 'f') hi = a - 'a' + 10;
+        else if (a >= 'A' && a <= 'F') hi = a - 'A' + 10;
+        if (b >= '0' && b <= '9') lo = b - '0';
+        else if (b >= 'a' && b <= 'f') lo = b - 'a' + 10;
+        else if (b >= 'A' && b <= 'F') lo = b - 'A' + 10;
+        /* A malformed machine-id is a failure, not a partial UUID: half a
+         * host identifier would still name a by-host preference file. */
+        if (hi < 0 || lo < 0) return -1;
+        uuid_buf[i] = (unsigned char)((hi << 4) | lo);
+    }
+    return 0;
+}
+
+/* WALL 8: snprintf_l -- the locale-aware snprintf, reached from CF's number
+ * and string formatting on the preferences path.
+ *
+ * NOT FICTION for the only locale we can be in. Darwin's `_l` family takes an
+ * explicit locale_t; passing NULL means the C locale, and LC_GLOBAL_LOCALE
+ * here IS the C locale because nothing in this stack calls setlocale with
+ * anything else. Under those conditions snprintf_l and snprintf are the same
+ * function, so this forwards rather than reimplements.
+ *
+ * WHAT WOULD MAKE IT A LIE, stated so the next person can check rather than
+ * trust: a non-C locale would change decimal separators and digit grouping,
+ * and this forward would silently format 1.5 as "1,5" in a German locale --
+ * plausible output, wrong bytes, no error. If ICU or a real locale ever lands,
+ * this must be revisited, and the fact that it CANNOT currently be wrong is a
+ * property of the environment, not of the code.
+ *
+ * Belongs in machorun's libSystem with the rest of the printf family. */
+#include <stdarg.h>
+typedef void *mr_locale_t;
+int snprintf_l(char *buf, size_t n, mr_locale_t loc, const char *fmt, ...);
+int snprintf_l(char *buf, size_t n, mr_locale_t loc, const char *fmt, ...)
+{
+    (void)loc;
+    va_list ap;
+    va_start(ap, fmt);
+    int r = vsnprintf(buf, n, fmt, ap);
+    va_end(ap);
+    return r;
+}
+
+/* WALL 9: pthread_threadid_np -- Darwin's 64-bit kernel thread id.
+ *
+ * NOT FICTION. Darwin's contract: with a NULL thread argument, write the
+ * CALLING thread's id and return 0; a non-NULL thread other than self needs
+ * the kernel's mapping, which is the part we cannot do. Linux's gettid() is
+ * exactly the calling-thread case, so self is answered truthfully and anything
+ * else is refused with ESRCH rather than being handed the caller's own id --
+ * a wrong-but-plausible id is how a thread-keyed cache silently collides.
+ *
+ * Reached on the preferences path via CF's logging/diagnostic helpers.
+ * Belongs in machorun's libSystem beside the rest of the pthread surface. */
+#include <sys/syscall.h>
+#include <errno.h>
+/* Through the loader's glibc bridge, like mr_glibc_readlink above: the guest's
+ * own syscall() would be Darwin's numbering, and SYS_gettid is Linux's. */
+extern long mr_glibc_syscall(long, ...) __asm__("_glibc_syscall");
+int pthread_threadid_np(void *thread, unsigned long long *thread_id);
+int pthread_threadid_np(void *thread, unsigned long long *thread_id)
+{
+    if (thread != NULL) return ESRCH;    /* not self: we have no mapping */
+    if (thread_id) *thread_id = (unsigned long long)mr_glibc_syscall(SYS_gettid);
+    return 0;
+}
+
+/* WALL 10: writev -- and the three walls before it name what CF is doing.
+ *
+ * snprintf_l, pthread_threadid_np and writev arriving in that order, all on
+ * the FIRST CFPreferencesCopyAppValue, is CFLog's signature: format the
+ * message, stamp it with the thread id, write it with one vector call. CF is
+ * not failing here, it is trying to TELL us something -- and until writev
+ * exists the message is the one thing we cannot see.
+ *
+ * That is worth stating because a stub abort on `writev` reads like a missing
+ * file primitive, and the actual finding is a diagnostic we are deaf to.
+ *
+ * NOT FICTION: glibc's writev, through the loader's bridge for the same reason
+ * as gettid above. Darwin's struct iovec is {void *iov_base; size_t iov_len},
+ * which is glibc's layout exactly -- both are pointer-then-size_t with no
+ * padding on arm64 -- so the vector can be forwarded rather than translated.
+ * If that ever stops being true this is a silent buffer-boundary bug, so the
+ * assertion is written down rather than assumed. */
+extern long mr_glibc_writev(int, const void *, int) __asm__("_glibc_writev");
+long writev(int fd, const void *iov, int iovcnt);
+long writev(int fd, const void *iov, int iovcnt)
+{
+    return mr_glibc_writev(fd, iov, iovcnt);
+}

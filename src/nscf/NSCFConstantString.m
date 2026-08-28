@@ -39,6 +39,12 @@
 
 typedef unsigned long CFHashCode;
 
+/* NSRange's layout, declared locally rather than pulled from a Foundation
+ * header this slice does not have. Two NSUIntegers, which is what the ObjC
+ * runtime will pass by value for a `range:` argument. Named distinctly so it
+ * can never be mistaken for the real NSRange if one arrives later. */
+typedef struct { unsigned long location, length; } __NSCFRange;
+
 /* Loud, naming itself and the value that reached it, on fd 2. A method that
  * returned a plausible-but-wrong answer here would be read by CF as a normal
  * result -- see the comment on -_getCString:maxLength:encoding:. */
@@ -212,6 +218,48 @@ struct __CFConstStrLayout {
  * simply saying non-NULL to everything. */
 - (const char *)_fastCStringContents:(BOOL)requiresNullTermination {
     return (const char *)CONST_STR(self)->ptr;
+}
+
+/* --- -_encodingCantBeStoredInEightBitCFString — EXECUTION-REACHED (T16) ----
+ *
+ * The third selector named by an abort, and the first named AFTER machorun #80
+ * cleared the mutex wall: with CFLock_t working, T16's very first
+ * CFPreferencesCopyAppValue got past the lock and died here instead.
+ * CFString.c:1271 dispatches it from CFStrIsUnicode(), whose native answer is
+ * `__CFStrIsUnicode(str)`.
+ *
+ * A constant string is 8-bit, so the answer is NO. Measured, not reasoned: the
+ * golden records constant=NO against a non-ASCII dynamic control answering YES.
+ * Without that control a hard-coded NO is indistinguishable from a method that
+ * says NO to everything.
+ *
+ * NOTE THE DOUBLE NEGATIVE IN THE NAME -- "CANT be stored in eight bit" -- so
+ * the 8-bit case returns NO. Returning YES would tell CF every constant string
+ * is wide, and CF would then read the literal's bytes as UTF-16: an answer that
+ * looks plausible and corrupts every literal in the process. */
+- (BOOL)_encodingCantBeStoredInEightBitCFString { return NO; }
+
+/* --- -getCharacters:range: — EXECUTION-REACHED (T16, after the above) ------
+ *
+ * The fourth selector named by an abort. CF dispatches it from
+ * CFStringGetCharacters when it decides the receiver is foreign; the native
+ * answer copies UniChars out of the string's own storage.
+ *
+ * A constant string stores BYTES, so this widens. Measured
+ * (darwin-conststring-2026-08-28.txt): `getCharacters:range:{0,5}` on
+ * CFSTR("hello") gives `0068 0065 006c 006c 006f` -- each byte zero-extended,
+ * which is what ASCII-to-UTF-16 is.
+ *
+ * No dispatch and no bounds check, matching -characterAtIndex: above and for
+ * the same recorded reason: NSString's contract makes an out-of-range range
+ * programmer error, Darwin raises, and raising needs NSException which this
+ * slice does not have. Faulting loudly beats filling a caller's buffer with
+ * whatever follows the literal in __TEXT. */
+- (void)getCharacters:(unichar *)buffer range:(__NSCFRange)range {
+    const uint8_t *bytes = CONST_STR(self)->ptr;
+    for (unsigned long i = 0; i < range.length; i++) {
+        buffer[i] = (unichar)bytes[range.location + i];
+    }
 }
 
 /* --- THE THREE BELOW ARE MEASURED BUT **NOT YET EXECUTION-REACHED** --------
