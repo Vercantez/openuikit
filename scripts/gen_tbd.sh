@@ -29,6 +29,10 @@
 # and that second list is a static file, which means it can rot. Three checks
 # below keep it honest; each is a hard failure.
 #
+#   CHECK 0  every .tbd ON DISK is byte-identical to what this run would emit.
+#            The one check that reads the artefact instead of re-deriving it --
+#            see its own note. A .tbd that lags its dylib passes every other
+#            check in this file, because they all recompute from the dylibs.
 #   CHECK 1  every name in loader-exports.txt is really defined by
 #            build/machorun. A loader change that drops or renames one is
 #            caught here, not in a guest six weeks later.
@@ -330,14 +334,21 @@ emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     } > "$3"
 }
 
+# BOTH MODES EMIT, and only one of them installs. That is the whole of CHECK 0
+# below: a generated artefact can only be graded by regenerating it and
+# comparing, because every other check here RE-DERIVES the symbol set from the
+# dylibs and is therefore blind to what is actually on disk.
+mkdir -p "$TMP/out"
+emit_tbd "/usr/lib/libSystem.B.dylib" "$TMP/sym.libSystem.B" "$TMP/out/libSystem.B.tbd"
+emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$TMP/out/libobjc.A.tbd"
+emit_tbd "/usr/lib/libc++.1.dylib"    "$TMP/sym.libc++.1"    "$TMP/out/libc++.1.tbd"
+emit_tbd "/usr/lib/libc++abi.dylib"   "$TMP/sym.libc++abi"   "$TMP/out/libc++abi.tbd"
+[ -f "$TMP/sym.libquartz" ] && \
+    emit_tbd "/usr/lib/libquartz.dylib" "$TMP/sym.libquartz" "$TMP/out/libquartz.tbd"
+
 if [ "$MODE" = generate ]; then
     mkdir -p "$OUT"
-    emit_tbd "/usr/lib/libSystem.B.dylib" "$TMP/sym.libSystem.B" "$OUT/libSystem.B.tbd"
-    emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$OUT/libobjc.A.tbd"
-    emit_tbd "/usr/lib/libc++.1.dylib"    "$TMP/sym.libc++.1"    "$OUT/libc++.1.tbd"
-    emit_tbd "/usr/lib/libc++abi.dylib"   "$TMP/sym.libc++abi"   "$OUT/libc++abi.tbd"
-    [ -f "$TMP/sym.libquartz" ] && \
-        emit_tbd "/usr/lib/libquartz.dylib" "$TMP/sym.libquartz" "$OUT/libquartz.tbd"
+    for d in "${DYLIBS[@]}"; do cp "$TMP/out/$d.tbd" "$OUT/$d.tbd"; done
     # Apple ships libSystem.tbd and libobjc.tbd as symlinks; -lSystem looks for
     # the unsuffixed name. libquartz has no suffixed form, so no symlink.
     ln -sf libSystem.B.tbd "$OUT/libSystem.tbd"
@@ -348,9 +359,62 @@ if [ "$MODE" = generate ]; then
             "$d.tbd" "$(wc -l < "$TMP/sym.$d")" "$(wc -c < "$OUT/$d.tbd")"
     done
 else
+    # ------------- CHECK 0: the .tbd ON DISK is the one this script would write
+    #
+    # THE ARTEFACT THE LINKER READS IS THE ONE NOTHING WAS CHECKING. Every other
+    # check in this file recomputes the symbol set from darwin/usr/lib/*.dylib
+    # and grades THAT -- so a .tbd that lags its dylib passes all of them.
+    # Reproduced by construction: deleting two symbol lines from
+    # libSystem.B.tbd left `gen_tbd.sh --check` printing "all five checks
+    # passed" and `check_stale.sh` returning 0.
+    #
+    # THAT IS NOT A COSMETIC LAG, and the failure mode is the expensive kind.
+    # The LOADER resolves against the dylib and the LINKER against the .tbd, so
+    # a short .tbd does not fail -- it MANUFACTURES PHANTOM MISSING SYMBOLS.
+    # Measured downstream 2026-08-27: a consumer's stub count fell 245 -> 208
+    # the moment a lagging .tbd was refreshed, and four functions had been
+    # written to fill gaps that did not exist. Worse, those stubs then LINKED
+    # AHEAD of libSystem and shadowed the real implementations -- one of them
+    # replacing a correct _NSGetExecutablePath with a documented fiction, so
+    # every CF log line named the loader instead of the guest.
+    #
+    # `cmp`, not a symbol-set comparison, and deliberately: the install name,
+    # the targets, the tbd-version and the document-end marker are as load-
+    # bearing as the symbol list (omit the `...` and LLVM rejects the whole
+    # file as "unsupported file type"). Byte identity is the only property that
+    # cannot be partly true.
     for d in "${DYLIBS[@]}"; do
         [ -f "$OUT/$d.tbd" ] || die "--check: $OUT/$d.tbd does not exist (run without --check)"
     done
+    tbd_drift=0
+    for d in "${DYLIBS[@]}"; do
+        cmp -s "$TMP/out/$d.tbd" "$OUT/$d.tbd" && continue
+        tbd_drift=1
+        echo "!! $OUT/$d.tbd is NOT what this script would generate from" >&2
+        echo "   $DYLIB/$d.dylib. The linker reads the .tbd and the loader reads" >&2
+        echo "   the dylib, so this does not fail a link -- it invents missing" >&2
+        echo "   symbols and hides real ones." >&2
+        printf '   on disk: %6d symbol lines   would be: %6d\n' \
+            "$(grep -c "^ *'" "$OUT/$d.tbd" || true)" \
+            "$(grep -c "^ *'" "$TMP/out/$d.tbd" || true)" >&2
+        grep -o "'[^']*'" "$OUT/$d.tbd"     | tr -d "'" | LC_ALL=C sort -u > "$TMP/have.$d"
+        grep -o "'[^']*'" "$TMP/out/$d.tbd" | tr -d "'" | LC_ALL=C sort -u > "$TMP/want.$d"
+        comm -13 "$TMP/have.$d" "$TMP/want.$d" | sed 's/^/     missing from the .tbd: /' | head -20 >&2
+        comm -23 "$TMP/have.$d" "$TMP/want.$d" | sed 's/^/     .tbd advertises but the dylib does not define: /' | head -20 >&2
+    done
+    if [ "$tbd_drift" != 0 ]; then
+        echo "   Regenerate: scripts/build.sh tbd   (and RE-STAGE any sysroot that copied it)" >&2
+        exit 1
+    fi
+    # The three unsuffixed names ld64 actually looks for. A missing symlink is
+    # a link failure with a confusing message rather than a wrong answer, but it
+    # is generated here too, so it is graded here too.
+    for l in libSystem:libSystem.B libobjc:libobjc.A libc++:libc++.1; do
+        [ -L "$OUT/${l%%:*}.tbd" ] || die "--check: $OUT/${l%%:*}.tbd is not a symlink (run without --check)"
+        [ "$(readlink "$OUT/${l%%:*}.tbd")" = "${l#*:}.tbd" ] || \
+            die "--check: $OUT/${l%%:*}.tbd points at $(readlink "$OUT/${l%%:*}.tbd"), not ${l#*:}.tbd"
+    done
+    echo "   CHECK 0: every .tbd on disk is byte-identical to what this run would emit"
 fi
 
 # --------------------------------- CHECK 3: the corpus resolves against the stubs
@@ -480,4 +544,4 @@ if [ "$cu_rc" != 0 ]; then
     exit 1
 fi
 
-echo "   all five checks passed"
+echo "   all six checks passed"

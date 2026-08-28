@@ -408,6 +408,43 @@ for the day something else can, and it is unreachable until then. Recorded so
 `cflog_surface PASS` is not read as covering it — the same shape as `#grp`'s
 `ERANGE` gap.
 
+### `tbd-drift` — **FIXED 2026-08-27**: the artefact the LINKER reads was ungraded
+
+`gen_tbd.sh --check` verified that each `.tbd` **existed** and then graded a
+symbol set it had just **recomputed from the dylibs** — so a `.tbd` that lagged
+its dylib passed every check in the file. `check_stale.sh` did not see it
+either: it tracks build products against their sources, and a `.tbd` is
+generated from a *dylib*, not from a source file.
+
+**Reproduced by construction before fixing:** deleting two symbol lines from
+`sdk/usr/lib/libSystem.B.tbd` left `gen_tbd.sh --check` printing *"all five
+checks passed"* and `check_stale.sh` returning 0.
+
+**The failure mode is the expensive kind, and it was measured downstream, not
+imagined.** The **loader** resolves against the dylib and the **linker**
+against the `.tbd`, so a short `.tbd` does not fail a link — it **manufactures
+phantom missing symbols**. A consumer's stub count fell **245 → 208** the
+moment a lagging `.tbd` was refreshed, and **four functions had been written to
+fill gaps that did not exist**. It compounds: those stubs then linked *ahead*
+of libSystem and shadowed the real implementations, one of them replacing a
+correct `_NSGetExecutablePath` with a documented fiction, so every CF log line
+named the loader instead of the guest (`#stale-artifact-after-a-merge` is the
+first layer of the same incident).
+
+**CHECK 0 is now the first check and the only one that reads the artefact**:
+both modes emit to a temp directory, and `--check` compares the result to what
+is on disk. When they differ it prints the symbol counts and names the symbols
+in both directions — *missing from the .tbd* and *advertised but not defined*.
+
+**`cmp`, not a symbol-set comparison, and that is load-bearing.** The install
+name, the targets, the tbd-version and the trailing `...` document-end marker
+matter as much as the symbol list — omit the `...` and LLVM rejects the whole
+file as *"unsupported file type"*. Byte identity is the only property that
+cannot be partly true. Verified: the three teeth are a lagging `.tbd` (names
+the two missing symbols), a `.tbd` advertising a symbol nothing defines (names
+it), **and a `.tbd` whose symbol set is identical but whose `...` is gone** —
+the last of which a set comparison would have passed.
+
 ### `stale-artifact-after-a-merge` — the main clone's build products are not merged
 
 **Measured 2026-08-27, and it cost another agent a false measurement.**
