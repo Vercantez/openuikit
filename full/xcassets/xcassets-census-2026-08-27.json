@@ -1,0 +1,1505 @@
+{
+ "apps": 20,
+ "array_entry_counts": {
+  ".appiconset": {
+   "images": 1218
+  },
+  ".brandassets": {
+   "assets": 8
+  },
+  ".colorset": {
+   "colors": 886
+  },
+  ".complicationset": {
+   "assets": 17
+  },
+  ".dataset": {
+   "data": 2
+  },
+  ".imageset": {
+   "images": 11004
+  },
+  ".imagestack": {
+   "layers": 12
+  },
+  ".launchimage": {
+   "images": 12
+  },
+  ".solidimagestack": {
+   "layers": 6
+  },
+  ".stickerpack": {
+   "stickers": 32
+  },
+  ".stickersiconset": {
+   "images": 9
+  },
+  ".symbolset": {
+   "symbols": 27
+  }
+ },
+ "asset_types": {
+  ".appiconset": {
+   "apps": 19,
+   "uses": 146
+  },
+  ".brandassets": {
+   "apps": 2,
+   "uses": 2
+  },
+  ".colorset": {
+   "apps": 17,
+   "uses": 510
+  },
+  ".complicationset": {
+   "apps": 2,
+   "uses": 2
+  },
+  ".dataset": {
+   "apps": 2,
+   "uses": 2
+  },
+  ".imageset": {
+   "apps": 20,
+   "uses": 6785
+  },
+  ".imagestack": {
+   "apps": 2,
+   "uses": 4
+  },
+  ".imagestacklayer": {
+   "apps": 2,
+   "uses": 12
+  },
+  ".increment": {
+   "apps": 1,
+   "uses": 1
+  },
+  ".launchimage": {
+   "apps": 3,
+   "uses": 3
+  },
+  ".solidimagestack": {
+   "apps": 1,
+   "uses": 2
+  },
+  ".solidimagestacklayer": {
+   "apps": 1,
+   "uses": 6
+  },
+  ".sticker": {
+   "apps": 1,
+   "uses": 32
+  },
+  ".stickerpack": {
+   "apps": 1,
+   "uses": 1
+  },
+  ".stickersiconset": {
+   "apps": 1,
+   "uses": 1
+  },
+  ".symbolset": {
+   "apps": 9,
+   "uses": 27
+  },
+  ".xcassets": {
+   "apps": 20,
+   "uses": 170
+  },
+  "<folder>": {
+   "apps": 16,
+   "uses": 510
+  }
+ },
+ "catalogs": 176,
+ "contents_json": 8216,
+ "corpus_root": "/Users/miguelsalinas/swift-macho-linux/scratch/ladder-corpus",
+ "entry_keys": {
+  ".appiconset": {
+   "appearances[]": {
+    "appearance": {
+     "apps": 7,
+     "uses": 116
+    },
+    "value": {
+     "apps": 7,
+     "uses": 116
+    }
+   },
+   "images": {
+    "appearances": {
+     "apps": 7,
+     "uses": 116
+    },
+    "filename": {
+     "apps": 19,
+     "uses": 1025
+    },
+    "idiom": {
+     "apps": 19,
+     "uses": 1218
+    },
+    "platform": {
+     "apps": 13,
+     "uses": 226
+    },
+    "role": {
+     "apps": 4,
+     "uses": 88
+    },
+    "scale": {
+     "apps": 16,
+     "uses": 1007
+    },
+    "size": {
+     "apps": 19,
+     "uses": 1218
+    },
+    "subtype": {
+     "apps": 4,
+     "uses": 74
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 19,
+     "uses": 146
+    },
+    "version": {
+     "apps": 19,
+     "uses": 146
+    }
+   },
+   "properties{}": {
+    "pre-rendered": {
+     "apps": 1,
+     "uses": 3
+    }
+   }
+  },
+  ".brandassets": {
+   "assets": {
+    "filename": {
+     "apps": 2,
+     "uses": 8
+    },
+    "idiom": {
+     "apps": 2,
+     "uses": 8
+    },
+    "role": {
+     "apps": 2,
+     "uses": 8
+    },
+    "size": {
+     "apps": 2,
+     "uses": 8
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 2,
+     "uses": 2
+    },
+    "version": {
+     "apps": 2,
+     "uses": 2
+    }
+   }
+  },
+  ".colorset": {
+   "appearances[]": {
+    "appearance": {
+     "apps": 12,
+     "uses": 376
+    },
+    "value": {
+     "apps": 12,
+     "uses": 376
+    }
+   },
+   "color.components{}": {
+    "alpha": {
+     "apps": 14,
+     "uses": 852
+    },
+    "blue": {
+     "apps": 14,
+     "uses": 850
+    },
+    "green": {
+     "apps": 14,
+     "uses": 850
+    },
+    "red": {
+     "apps": 14,
+     "uses": 850
+    },
+    "white": {
+     "apps": 1,
+     "uses": 2
+    }
+   },
+   "colors": {
+    "appearances": {
+     "apps": 12,
+     "uses": 376
+    },
+    "color": {
+     "apps": 15,
+     "uses": 866
+    },
+    "idiom": {
+     "apps": 17,
+     "uses": 886
+    }
+   },
+   "color{}": {
+    "color-space": {
+     "apps": 14,
+     "uses": 852
+    },
+    "components": {
+     "apps": 14,
+     "uses": 852
+    },
+    "platform": {
+     "apps": 4,
+     "uses": 13
+    },
+    "reference": {
+     "apps": 5,
+     "uses": 14
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 17,
+     "uses": 510
+    },
+    "version": {
+     "apps": 17,
+     "uses": 510
+    }
+   }
+  },
+  ".complicationset": {
+   "assets": {
+    "filename": {
+     "apps": 2,
+     "uses": 17
+    },
+    "idiom": {
+     "apps": 2,
+     "uses": 17
+    },
+    "role": {
+     "apps": 2,
+     "uses": 17
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 2,
+     "uses": 2
+    },
+    "version": {
+     "apps": 2,
+     "uses": 2
+    }
+   }
+  },
+  ".dataset": {
+   "data": {
+    "filename": {
+     "apps": 2,
+     "uses": 2
+    },
+    "idiom": {
+     "apps": 2,
+     "uses": 2
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 2,
+     "uses": 2
+    },
+    "version": {
+     "apps": 2,
+     "uses": 2
+    }
+   }
+  },
+  ".imageset": {
+   "appearances[]": {
+    "appearance": {
+     "apps": 14,
+     "uses": 370
+    },
+    "value": {
+     "apps": 14,
+     "uses": 370
+    }
+   },
+   "images": {
+    "appearances": {
+     "apps": 14,
+     "uses": 370
+    },
+    "filename": {
+     "apps": 20,
+     "uses": 9166
+    },
+    "height-class": {
+     "apps": 1,
+     "uses": 2
+    },
+    "idiom": {
+     "apps": 20,
+     "uses": 11004
+    },
+    "language-direction": {
+     "apps": 3,
+     "uses": 14
+    },
+    "resizing": {
+     "apps": 3,
+     "uses": 11
+    },
+    "scale": {
+     "apps": 19,
+     "uses": 5932
+    },
+    "screen-width": {
+     "apps": 3,
+     "uses": 100
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 20,
+     "uses": 6785
+    },
+    "template-rendering-intent": {
+     "apps": 1,
+     "uses": 5
+    },
+    "version": {
+     "apps": 20,
+     "uses": 6785
+    }
+   },
+   "properties{}": {
+    "compression-type": {
+     "apps": 1,
+     "uses": 2
+    },
+    "localizable": {
+     "apps": 1,
+     "uses": 1
+    },
+    "preserves-vector-representation": {
+     "apps": 16,
+     "uses": 1561
+    },
+    "template-rendering-intent": {
+     "apps": 16,
+     "uses": 2452
+    }
+   }
+  },
+  ".imagestack": {
+   "info{}": {
+    "author": {
+     "apps": 2,
+     "uses": 4
+    },
+    "version": {
+     "apps": 2,
+     "uses": 4
+    }
+   },
+   "layers": {
+    "filename": {
+     "apps": 2,
+     "uses": 12
+    }
+   }
+  },
+  ".imagestacklayer": {
+   "info{}": {
+    "author": {
+     "apps": 2,
+     "uses": 12
+    },
+    "version": {
+     "apps": 2,
+     "uses": 12
+    }
+   },
+   "properties{}": {
+    "frame-center": {
+     "apps": 1,
+     "uses": 1
+    }
+   }
+  },
+  ".increment": {
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 1
+    },
+    "version": {
+     "apps": 1,
+     "uses": 1
+    }
+   }
+  },
+  ".launchimage": {
+   "images": {
+    "extent": {
+     "apps": 3,
+     "uses": 12
+    },
+    "filename": {
+     "apps": 1,
+     "uses": 2
+    },
+    "idiom": {
+     "apps": 3,
+     "uses": 12
+    },
+    "minimum-system-version": {
+     "apps": 3,
+     "uses": 12
+    },
+    "orientation": {
+     "apps": 3,
+     "uses": 12
+    },
+    "scale": {
+     "apps": 3,
+     "uses": 12
+    },
+    "subtype": {
+     "apps": 1,
+     "uses": 1
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 3,
+     "uses": 3
+    },
+    "version": {
+     "apps": 3,
+     "uses": 3
+    }
+   }
+  },
+  ".solidimagestack": {
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 2
+    },
+    "version": {
+     "apps": 1,
+     "uses": 2
+    }
+   },
+   "layers": {
+    "filename": {
+     "apps": 1,
+     "uses": 6
+    }
+   }
+  },
+  ".solidimagestacklayer": {
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 6
+    },
+    "version": {
+     "apps": 1,
+     "uses": 6
+    }
+   },
+   "properties{}": {
+    "frame-size": {
+     "apps": 1,
+     "uses": 1
+    }
+   }
+  },
+  ".sticker": {
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 32
+    },
+    "version": {
+     "apps": 1,
+     "uses": 32
+    }
+   },
+   "properties{}": {
+    "accessibility-label": {
+     "apps": 1,
+     "uses": 11
+    },
+    "filename": {
+     "apps": 1,
+     "uses": 32
+    }
+   }
+  },
+  ".stickerpack": {
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 1
+    },
+    "version": {
+     "apps": 1,
+     "uses": 1
+    }
+   },
+   "properties{}": {
+    "grid-size": {
+     "apps": 1,
+     "uses": 1
+    }
+   },
+   "stickers": {
+    "filename": {
+     "apps": 1,
+     "uses": 32
+    }
+   }
+  },
+  ".stickersiconset": {
+   "images": {
+    "filename": {
+     "apps": 1,
+     "uses": 9
+    },
+    "idiom": {
+     "apps": 1,
+     "uses": 9
+    },
+    "platform": {
+     "apps": 1,
+     "uses": 5
+    },
+    "scale": {
+     "apps": 1,
+     "uses": 9
+    },
+    "size": {
+     "apps": 1,
+     "uses": 9
+    }
+   },
+   "info{}": {
+    "author": {
+     "apps": 1,
+     "uses": 1
+    },
+    "version": {
+     "apps": 1,
+     "uses": 1
+    }
+   }
+  },
+  ".symbolset": {
+   "info{}": {
+    "author": {
+     "apps": 9,
+     "uses": 27
+    },
+    "version": {
+     "apps": 9,
+     "uses": 27
+    }
+   },
+   "properties{}": {
+    "symbol-rendering-intent": {
+     "apps": 1,
+     "uses": 4
+    }
+   },
+   "symbols": {
+    "filename": {
+     "apps": 9,
+     "uses": 27
+    },
+    "idiom": {
+     "apps": 9,
+     "uses": 27
+    }
+   }
+  },
+  ".xcassets": {
+   "info{}": {
+    "author": {
+     "apps": 20,
+     "uses": 170
+    },
+    "version": {
+     "apps": 20,
+     "uses": 170
+    }
+   },
+   "properties{}": {
+    "generate-swift-asset-symbol-extensions": {
+     "apps": 1,
+     "uses": 2
+    }
+   }
+  },
+  "<folder>": {
+   "info{}": {
+    "author": {
+     "apps": 16,
+     "uses": 510
+    },
+    "version": {
+     "apps": 16,
+     "uses": 510
+    }
+   },
+   "properties{}": {
+    "provides-namespace": {
+     "apps": 6,
+     "uses": 143
+    }
+   }
+  }
+ },
+ "per_app_asset_types": {
+  "Hackers": {
+   ".appiconset": 1,
+   ".colorset": 3,
+   ".imageset": 1,
+   ".xcassets": 3
+  },
+  "NetNewsWire": {
+   ".appiconset": 3,
+   ".colorset": 38,
+   ".imageset": 44,
+   ".symbolset": 5,
+   ".xcassets": 3,
+   "<folder>": 3
+  },
+  "ProtonMail-ios": {
+   ".appiconset": 5,
+   ".colorset": 80,
+   ".imageset": 377,
+   ".xcassets": 5,
+   "<folder>": 28
+  },
+  "Signal-iOS": {
+   ".imageset": 521,
+   ".increment": 1,
+   ".symbolset": 4,
+   ".xcassets": 4,
+   "<folder>": 121
+  },
+  "Telegram-iOS": {
+   ".appiconset": 8,
+   ".colorset": 1,
+   ".complicationset": 1,
+   ".imageset": 1511,
+   ".launchimage": 1,
+   ".xcassets": 13,
+   "<folder>": 89
+  },
+  "WordPress-iOS": {
+   ".appiconset": 7,
+   ".colorset": 5,
+   ".imageset": 251,
+   ".symbolset": 2,
+   ".xcassets": 9,
+   "<folder>": 20
+  },
+  "duckduckgo-ios": {
+   ".appiconset": 9,
+   ".colorset": 69,
+   ".imageset": 712,
+   ".symbolset": 4,
+   ".xcassets": 28,
+   "<folder>": 24
+  },
+  "eidolon": {
+   ".appiconset": 1,
+   ".imageset": 9,
+   ".launchimage": 1,
+   ".xcassets": 1
+  },
+  "eigen": {
+   ".appiconset": 2,
+   ".colorset": 3,
+   ".imageset": 29,
+   ".xcassets": 2
+  },
+  "element-ios": {
+   ".appiconset": 2,
+   ".imageset": 339,
+   ".xcassets": 2,
+   "<folder>": 46
+  },
+  "firefox-ios": {
+   ".appiconset": 38,
+   ".colorset": 56,
+   ".imageset": 371,
+   ".xcassets": 20,
+   "<folder>": 20
+  },
+  "focus-ios": {
+   ".appiconset": 5,
+   ".colorset": 50,
+   ".imageset": 71,
+   ".xcassets": 8,
+   "<folder>": 9
+  },
+  "home-assistant-ios": {
+   ".appiconset": 34,
+   ".colorset": 12,
+   ".imageset": 52,
+   ".symbolset": 4,
+   ".xcassets": 6,
+   "<folder>": 8
+  },
+  "ios-oss": {
+   ".appiconset": 12,
+   ".colorset": 75,
+   ".dataset": 1,
+   ".imageset": 517,
+   ".xcassets": 3,
+   "<folder>": 18
+  },
+  "mastodon-ios": {
+   ".appiconset": 2,
+   ".colorset": 102,
+   ".imageset": 58,
+   ".symbolset": 1,
+   ".xcassets": 4,
+   "<folder>": 46
+  },
+  "nextcloud-ios": {
+   ".appiconset": 2,
+   ".colorset": 3,
+   ".dataset": 1,
+   ".imageset": 75,
+   ".symbolset": 1,
+   ".xcassets": 4
+  },
+  "pocket-casts-ios": {
+   ".appiconset": 3,
+   ".brandassets": 1,
+   ".colorset": 6,
+   ".complicationset": 1,
+   ".imageset": 1093,
+   ".imagestack": 2,
+   ".imagestacklayer": 6,
+   ".xcassets": 42,
+   "<folder>": 15
+  },
+  "simplenote-ios": {
+   ".appiconset": 4,
+   ".colorset": 2,
+   ".imageset": 60,
+   ".xcassets": 3,
+   "<folder>": 2
+  },
+  "vlc-ios": {
+   ".appiconset": 5,
+   ".brandassets": 1,
+   ".colorset": 3,
+   ".imageset": 259,
+   ".imagestack": 2,
+   ".imagestacklayer": 6,
+   ".launchimage": 1,
+   ".solidimagestack": 2,
+   ".solidimagestacklayer": 6,
+   ".symbolset": 4,
+   ".xcassets": 5,
+   "<folder>": 40
+  },
+  "wikipedia-ios": {
+   ".appiconset": 3,
+   ".colorset": 2,
+   ".imageset": 435,
+   ".sticker": 32,
+   ".stickerpack": 1,
+   ".stickersiconset": 1,
+   ".symbolset": 2,
+   ".xcassets": 5,
+   "<folder>": 21
+  }
+ },
+ "top_level_keys": {
+  ".appiconset": {
+   "images": {
+    "apps": 19,
+    "uses": 146
+   },
+   "info": {
+    "apps": 19,
+    "uses": 146
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 3
+   }
+  },
+  ".brandassets": {
+   "assets": {
+    "apps": 2,
+    "uses": 2
+   },
+   "info": {
+    "apps": 2,
+    "uses": 2
+   }
+  },
+  ".colorset": {
+   "colors": {
+    "apps": 17,
+    "uses": 510
+   },
+   "info": {
+    "apps": 17,
+    "uses": 510
+   }
+  },
+  ".complicationset": {
+   "assets": {
+    "apps": 2,
+    "uses": 2
+   },
+   "info": {
+    "apps": 2,
+    "uses": 2
+   }
+  },
+  ".dataset": {
+   "data": {
+    "apps": 2,
+    "uses": 2
+   },
+   "info": {
+    "apps": 2,
+    "uses": 2
+   }
+  },
+  ".imageset": {
+   "images": {
+    "apps": 20,
+    "uses": 6785
+   },
+   "info": {
+    "apps": 20,
+    "uses": 6785
+   },
+   "properties": {
+    "apps": 17,
+    "uses": 3113
+   }
+  },
+  ".imagestack": {
+   "info": {
+    "apps": 2,
+    "uses": 4
+   },
+   "layers": {
+    "apps": 2,
+    "uses": 4
+   }
+  },
+  ".imagestacklayer": {
+   "info": {
+    "apps": 2,
+    "uses": 12
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  ".increment": {
+   "info": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  ".launchimage": {
+   "images": {
+    "apps": 3,
+    "uses": 3
+   },
+   "info": {
+    "apps": 3,
+    "uses": 3
+   }
+  },
+  ".solidimagestack": {
+   "info": {
+    "apps": 1,
+    "uses": 2
+   },
+   "layers": {
+    "apps": 1,
+    "uses": 2
+   }
+  },
+  ".solidimagestacklayer": {
+   "info": {
+    "apps": 1,
+    "uses": 6
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  ".sticker": {
+   "info": {
+    "apps": 1,
+    "uses": 32
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 32
+   }
+  },
+  ".stickerpack": {
+   "info": {
+    "apps": 1,
+    "uses": 1
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 1
+   },
+   "stickers": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  ".stickersiconset": {
+   "images": {
+    "apps": 1,
+    "uses": 1
+   },
+   "info": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  ".symbolset": {
+   "info": {
+    "apps": 9,
+    "uses": 27
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 4
+   },
+   "symbols": {
+    "apps": 9,
+    "uses": 27
+   }
+  },
+  ".xcassets": {
+   "info": {
+    "apps": 20,
+    "uses": 170
+   },
+   "properties": {
+    "apps": 1,
+    "uses": 2
+   }
+  },
+  "<folder>": {
+   "info": {
+    "apps": 16,
+    "uses": 510
+   },
+   "properties": {
+    "apps": 6,
+    "uses": 143
+   }
+  }
+ },
+ "unparsable": [],
+ "values": {
+  "appearance": {
+   "luminosity": {
+    "apps": 16,
+    "uses": 862
+   }
+  },
+  "color-space": {
+   "display-p3": {
+    "apps": 8,
+    "uses": 39
+   },
+   "extended-srgb": {
+    "apps": 3,
+    "uses": 14
+   },
+   "gray-gamma-22": {
+    "apps": 1,
+    "uses": 2
+   },
+   "srgb": {
+    "apps": 14,
+    "uses": 797
+   }
+  },
+  "compression-type": {
+   "lossless": {
+    "apps": 1,
+    "uses": 2
+   }
+  },
+  "height-class": {
+   "compact": {
+    "apps": 1,
+    "uses": 2
+   }
+  },
+  "idiom": {
+   "car": {
+    "apps": 1,
+    "uses": 12
+   },
+   "ios-marketing": {
+    "apps": 14,
+    "uses": 45
+   },
+   "ipad": {
+    "apps": 14,
+    "uses": 500
+   },
+   "iphone": {
+    "apps": 13,
+    "uses": 439
+   },
+   "mac": {
+    "apps": 4,
+    "uses": 42
+   },
+   "tv": {
+    "apps": 2,
+    "uses": 80
+   },
+   "universal": {
+    "apps": 20,
+    "uses": 11703
+   },
+   "vision": {
+    "apps": 1,
+    "uses": 6
+   },
+   "watch": {
+    "apps": 4,
+    "uses": 349
+   },
+   "watch-marketing": {
+    "apps": 4,
+    "uses": 7
+   }
+  },
+  "language-direction": {
+   "left-to-right": {
+    "apps": 3,
+    "uses": 11
+   },
+   "right-to-left": {
+    "apps": 1,
+    "uses": 3
+   }
+  },
+  "platform": {
+   "ios": {
+    "apps": 13,
+    "uses": 235
+   },
+   "osx": {
+    "apps": 2,
+    "uses": 3
+   },
+   "watchos": {
+    "apps": 3,
+    "uses": 6
+   }
+  },
+  "preserves-vector-representation": {
+   "true": {
+    "apps": 16,
+    "uses": 1561
+   }
+  },
+  "provides-namespace": {
+   "true": {
+    "apps": 6,
+    "uses": 143
+   }
+  },
+  "reference": {
+   "labelColor": {
+    "apps": 1,
+    "uses": 1
+   },
+   "linkColor": {
+    "apps": 1,
+    "uses": 1
+   },
+   "quaternaryLabelColor": {
+    "apps": 1,
+    "uses": 1
+   },
+   "systemBackgroundColor": {
+    "apps": 3,
+    "uses": 6
+   },
+   "systemGrayColor": {
+    "apps": 1,
+    "uses": 2
+   },
+   "systemPurpleColor": {
+    "apps": 1,
+    "uses": 1
+   },
+   "systemRedColor": {
+    "apps": 1,
+    "uses": 2
+   }
+  },
+  "role": {
+   "appLauncher": {
+    "apps": 4,
+    "uses": 30
+   },
+   "circular": {
+    "apps": 2,
+    "uses": 2
+   },
+   "companionSettings": {
+    "apps": 4,
+    "uses": 14
+   },
+   "extra-large": {
+    "apps": 2,
+    "uses": 2
+   },
+   "graphic-bezel": {
+    "apps": 2,
+    "uses": 2
+   },
+   "graphic-circular": {
+    "apps": 2,
+    "uses": 2
+   },
+   "graphic-corner": {
+    "apps": 2,
+    "uses": 2
+   },
+   "graphic-extra-large": {
+    "apps": 1,
+    "uses": 1
+   },
+   "graphic-large-rectangular": {
+    "apps": 2,
+    "uses": 2
+   },
+   "modular": {
+    "apps": 2,
+    "uses": 2
+   },
+   "notificationCenter": {
+    "apps": 4,
+    "uses": 17
+   },
+   "primary-app-icon": {
+    "apps": 2,
+    "uses": 4
+   },
+   "quickLook": {
+    "apps": 4,
+    "uses": 27
+   },
+   "top-shelf-image": {
+    "apps": 2,
+    "uses": 2
+   },
+   "top-shelf-image-wide": {
+    "apps": 2,
+    "uses": 2
+   },
+   "utilitarian": {
+    "apps": 2,
+    "uses": 2
+   }
+  },
+  "scale": {
+   "1x": {
+    "apps": 20,
+    "uses": 2201
+   },
+   "2x": {
+    "apps": 20,
+    "uses": 2712
+   },
+   "3x": {
+    "apps": 20,
+    "uses": 2047
+   }
+  },
+  "screen-width": {
+   "<=145": {
+    "apps": 3,
+    "uses": 25
+   },
+   ">145": {
+    "apps": 3,
+    "uses": 25
+   },
+   ">161": {
+    "apps": 3,
+    "uses": 25
+   },
+   ">183": {
+    "apps": 3,
+    "uses": 25
+   }
+  },
+  "size": {
+   "1024x1024": {
+    "apps": 19,
+    "uses": 262
+   },
+   "1024x768": {
+    "apps": 1,
+    "uses": 1
+   },
+   "108x108": {
+    "apps": 4,
+    "uses": 7
+   },
+   "117x117": {
+    "apps": 2,
+    "uses": 3
+   },
+   "1280x768": {
+    "apps": 2,
+    "uses": 2
+   },
+   "128x128": {
+    "apps": 3,
+    "uses": 9
+   },
+   "129x129": {
+    "apps": 2,
+    "uses": 3
+   },
+   "16x16": {
+    "apps": 2,
+    "uses": 8
+   },
+   "1920x720": {
+    "apps": 2,
+    "uses": 2
+   },
+   "20x20": {
+    "apps": 14,
+    "uses": 176
+   },
+   "2320x720": {
+    "apps": 2,
+    "uses": 2
+   },
+   "24x24": {
+    "apps": 4,
+    "uses": 7
+   },
+   "256x256": {
+    "apps": 2,
+    "uses": 8
+   },
+   "27.5x27.5": {
+    "apps": 4,
+    "uses": 7
+   },
+   "27x20": {
+    "apps": 1,
+    "uses": 2
+   },
+   "29x29": {
+    "apps": 16,
+    "uses": 202
+   },
+   "32x24": {
+    "apps": 1,
+    "uses": 2
+   },
+   "32x32": {
+    "apps": 2,
+    "uses": 8
+   },
+   "33x33": {
+    "apps": 2,
+    "uses": 3
+   },
+   "38x38": {
+    "apps": 1,
+    "uses": 2
+   },
+   "400x240": {
+    "apps": 2,
+    "uses": 2
+   },
+   "40x40": {
+    "apps": 16,
+    "uses": 186
+   },
+   "44x44": {
+    "apps": 4,
+    "uses": 7
+   },
+   "46x46": {
+    "apps": 2,
+    "uses": 3
+   },
+   "50x50": {
+    "apps": 7,
+    "uses": 25
+   },
+   "512x512": {
+    "apps": 2,
+    "uses": 8
+   },
+   "51x51": {
+    "apps": 2,
+    "uses": 3
+   },
+   "54x54": {
+    "apps": 2,
+    "uses": 3
+   },
+   "57x57": {
+    "apps": 3,
+    "uses": 18
+   },
+   "60x45": {
+    "apps": 1,
+    "uses": 2
+   },
+   "60x60": {
+    "apps": 13,
+    "uses": 89
+   },
+   "64x64": {
+    "apps": 1,
+    "uses": 2
+   },
+   "67x50": {
+    "apps": 1,
+    "uses": 1
+   },
+   "68x68": {
+    "apps": 1,
+    "uses": 1
+   },
+   "72x72": {
+    "apps": 3,
+    "uses": 18
+   },
+   "74x55": {
+    "apps": 1,
+    "uses": 1
+   },
+   "76x76": {
+    "apps": 14,
+    "uses": 91
+   },
+   "83.5x83.5": {
+    "apps": 14,
+    "uses": 45
+   },
+   "86x86": {
+    "apps": 4,
+    "uses": 7
+   },
+   "98x98": {
+    "apps": 4,
+    "uses": 7
+   }
+  },
+  "subtype": {
+   "38mm": {
+    "apps": 4,
+    "uses": 21
+   },
+   "40mm": {
+    "apps": 4,
+    "uses": 7
+   },
+   "41mm": {
+    "apps": 2,
+    "uses": 3
+   },
+   "42mm": {
+    "apps": 4,
+    "uses": 14
+   },
+   "44mm": {
+    "apps": 4,
+    "uses": 14
+   },
+   "45mm": {
+    "apps": 2,
+    "uses": 9
+   },
+   "49mm": {
+    "apps": 2,
+    "uses": 6
+   },
+   "retina4": {
+    "apps": 1,
+    "uses": 1
+   }
+  },
+  "template-rendering-intent": {
+   "original": {
+    "apps": 11,
+    "uses": 290
+   },
+   "template": {
+    "apps": 16,
+    "uses": 2167
+   }
+  },
+  "value": {
+   "dark": {
+    "apps": 16,
+    "uses": 793
+   },
+   "light": {
+    "apps": 3,
+    "uses": 11
+   },
+   "tinted": {
+    "apps": 7,
+    "uses": 58
+   }
+  }
+ }
+}
