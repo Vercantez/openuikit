@@ -19,7 +19,8 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
    only to satisfy Swift's default-argument import rule or to avoid
    redeclaring AppKit's `IndexPath` members, and each carries a comment saying
    so. Everything else is still pure Swift stdlib + the C shims
-   (`CPortableIO` for file reads, `CSTBTrueType` for glyph rasterization,
+   (`CPortableIO` for file reads and its opaque portable mutex,
+   `CSTBTrueType` for glyph rasterization,
    `CQuartz` — the vendored portable quartz library — for the default
    rendering backend).
 

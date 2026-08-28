@@ -19,4 +19,11 @@ const char *cpio_getenv(const char *name);
 /* Terminates the process. Needed by Foundation-free executables. */
 void cpio_exit(int code);
 
+/* A small opaque mutex for Swift state which is deliberately non-actor
+   isolated (for example UIPasteboard, which UIKit marks Sendable). */
+void *cpio_mutex_create(void);
+void cpio_mutex_destroy(void *mutex);
+void cpio_mutex_lock(void *mutex);
+void cpio_mutex_unlock(void *mutex);
+
 #endif

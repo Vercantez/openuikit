@@ -1,6 +1,11 @@
 #include "include/cportableio.h"
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct {
+    pthread_mutex_t value;
+} cpio_mutex;
 
 unsigned char *cpio_read_file(const char *path, size_t *out_size) {
     FILE *f = fopen(path, "rb");
@@ -30,6 +35,35 @@ void cpio_log_stderr(const char *msg) {
 const char *cpio_getenv(const char *name) { return getenv(name); }
 
 void cpio_exit(int code) { exit(code); }
+
+void *cpio_mutex_create(void) {
+    cpio_mutex *mutex = malloc(sizeof(*mutex));
+    if (!mutex) return NULL;
+    if (pthread_mutex_init(&mutex->value, NULL) != 0) {
+        free(mutex);
+        return NULL;
+    }
+    return mutex;
+}
+
+void cpio_mutex_destroy(void *raw_mutex) {
+    if (!raw_mutex) return;
+    cpio_mutex *mutex = raw_mutex;
+    (void)pthread_mutex_destroy(&mutex->value);
+    free(mutex);
+}
+
+void cpio_mutex_lock(void *raw_mutex) {
+    if (!raw_mutex) return;
+    cpio_mutex *mutex = raw_mutex;
+    (void)pthread_mutex_lock(&mutex->value);
+}
+
+void cpio_mutex_unlock(void *raw_mutex) {
+    if (!raw_mutex) return;
+    cpio_mutex *mutex = raw_mutex;
+    (void)pthread_mutex_unlock(&mutex->value);
+}
 
 int cpio_write_file(const char *path, const unsigned char *buf, size_t size) {
     FILE *f = fopen(path, "wb");
