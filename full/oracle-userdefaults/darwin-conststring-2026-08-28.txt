@@ -1,0 +1,105 @@
+# Captured on macOS 26.5.2 (25F84), real Foundation + CoreFoundation.
+# Regenerate: clang -fno-objc-arc -framework Foundation -framework CoreFoundation \
+#               darwin_probe_conststring.m -o /tmp/dpcs && /tmp/dpcs
+# 1536 = 0x600 = kCFStringEncodingASCII; 256 = 0x100 = kCFStringEncodingUnicode.
+# This is the golden that ~/foundation-macho/src/nscf/NSCFConstantString.m
+# cites by name at each implemented selector.
+
+=== Darwin __NSCFConstantString: what CF actually gets back ===
+macOS Version 26.5.2 (Build 25F84)
+
+--- CFSTR("hello")            constant, narrow   isa=__NSCFConstantString
+  _fastCStringContents:YES   non-NULL  -> "hello"  (len 5)
+  _fastCStringContents:NO    non-NULL  -> "hello"
+  same pointer for YES/NO?   YES
+  byte at [length] (5)      0x00 (NUL -- terminated)
+  _fastCharacterContents     NULL  (8-bit strings must say NULL)
+  CFStringGetCStringPtr(ASCII) hello
+  CFStringGetCStringPtr(UTF8)  hello
+  CFStringGetCharactersPtr     NULL
+  length                       5
+  hash (CFHash)                0x1045a366f139
+  _cfTypeID via CFGetTypeID    7  (CFString is 7)
+  _fastestEncodingInCFStringEncoding  1536
+  _smallestEncodingInCFStringEncoding 1536
+
+--- CFSTR("")                 constant, empty   isa=__NSCFConstantString
+  _fastCStringContents:YES   non-NULL  -> ""  (len 0)
+  _fastCStringContents:NO    non-NULL  -> ""
+  same pointer for YES/NO?   YES
+  byte at [length] (0)      0x00 (NUL -- terminated)
+  _fastCharacterContents     NULL  (8-bit strings must say NULL)
+  CFStringGetCStringPtr(ASCII) 
+  CFStringGetCStringPtr(UTF8)  
+  CFStringGetCharactersPtr     NULL
+  length                       0
+  hash (CFHash)                0x0
+  _cfTypeID via CFGetTypeID    7  (CFString is 7)
+  _fastestEncodingInCFStringEncoding  1536
+  _smallestEncodingInCFStringEncoding 1536
+
+--- CFSTR("a/b/c.plist")      constant, path-shaped   isa=__NSCFConstantString
+  _fastCStringContents:YES   non-NULL  -> "a/b/c.plist"  (len 11)
+  _fastCStringContents:NO    non-NULL  -> "a/b/c.plist"
+  same pointer for YES/NO?   YES
+  byte at [length] (11)      0x00 (NUL -- terminated)
+  _fastCharacterContents     NULL  (8-bit strings must say NULL)
+  CFStringGetCStringPtr(ASCII) a/b/c.plist
+  CFStringGetCStringPtr(UTF8)  a/b/c.plist
+  CFStringGetCharactersPtr     NULL
+  length                       11
+  hash (CFHash)                0x59ac957746d00fe9
+  _cfTypeID via CFGetTypeID    7  (CFString is 7)
+  _fastestEncodingInCFStringEncoding  1536
+  _smallestEncodingInCFStringEncoding 1536
+
+--- CFStringCreateWithCString  DYNAMIC 8-bit (control)   isa=NSTaggedPointerString
+  _fastCStringContents:YES   NULL
+  _fastCStringContents:NO    NULL
+  same pointer for YES/NO?   YES
+  _fastCharacterContents     NULL  (8-bit strings must say NULL)
+  CFStringGetCStringPtr(ASCII) NULL
+  CFStringGetCStringPtr(UTF8)  NULL
+  CFStringGetCharactersPtr     NULL
+  length                       5
+  hash (CFHash)                0x1045a366f139
+  _cfTypeID via CFGetTypeID    7  (CFString is 7)
+  _fastestEncodingInCFStringEncoding  1536
+  _smallestEncodingInCFStringEncoding 1536
+
+--- CFStringCreateWithCString  DYNAMIC non-ASCII (control)   isa=__NSCFString
+  _fastCStringContents:YES   NULL
+  _fastCStringContents:NO    NULL
+  same pointer for YES/NO?   YES
+  _fastCharacterContents     non-NULL  (8-bit strings must say NULL)
+  CFStringGetCStringPtr(ASCII) NULL
+  CFStringGetCStringPtr(UTF8)  NULL
+  CFStringGetCharactersPtr     non-NULL
+  length                       4
+  hash (CFHash)                0x7beea9487
+  _cfTypeID via CFGetTypeID    7  (CFString is 7)
+  _fastestEncodingInCFStringEncoding  256
+  _smallestEncodingInCFStringEncoding 0
+
+--- _getCString:maxLength:encoding: on CFSTR("hello")  (len 5)
+  maxLength=32 enc=UTF8           -> true   buf="hello"  byte[5]=0x00 (NUL)
+  maxLength=32 enc=ASCII          -> true   buf="hello"  byte[5]=0x00 (NUL)
+  maxLength=32 enc=MacRoman       -> true   buf="hello"  byte[5]=0x00 (NUL)
+  maxLength=32 enc=Unicode(UTF16) -> true   buf="ÿþh"  byte[5]=0x00 (NUL)
+  maxLength=32 enc=ISOLatin1      -> true   buf="hello"  byte[5]=0x00 (NUL)
+  --- the boundary, UTF8, string length 5:
+    maxLength=3 -> false
+    maxLength=4 -> false
+    maxLength=5 -> true   buf="hello"  NUL at index 5
+    maxLength=6 -> true   buf="hello"  NUL at index 5
+    maxLength=7 -> true   buf="hello"  NUL at index 5
+  --- CFStringGetCString (public; passes bufferSize-1):
+    bufferSize=4 -> false
+    bufferSize=5 -> false
+    bufferSize=6 -> true   buf=hello
+    bufferSize=7 -> true   buf=hello
+
+--- identity
+  CFSTR("x") == CFSTR("x") ?   SAME POINTER
+  CFEqual(CFSTR("x"), dynamic "x")  true
+  CFHash equal across the two?      yes
