@@ -28,6 +28,7 @@
  *     section is a lie about coverage.
  */
 
+#include <grp.h>
 #include <mach/mach.h>
 #include <mach/vm_map.h>
 #include <pwd.h>
@@ -67,6 +68,15 @@ unsigned long fm_link_probe(void)
         char a[64] = { 0 }, b[64] = { 0 };
         acc += (unsigned long)vm_copy(mach_task_self(),
                                       (vm_address_t)a, sizeof a, (vm_address_t)b);
+    }
+
+    /* grp.h -- the family whole: both lookup keys and both reentrancy forms. */
+    {
+        struct group gr, *gres = NULL;
+        acc += (unsigned long)getgrnam_r("root", &gr, buf, sizeof buf, &gres);
+        acc += (unsigned long)getgrgid_r(0, &gr, buf, sizeof buf, &gres);
+        acc += (unsigned long)(getgrnam("root") != NULL);
+        acc += (unsigned long)(getgrgid(0) != NULL);
     }
 
     /* sys/utsname.h */

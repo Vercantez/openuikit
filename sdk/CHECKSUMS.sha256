@@ -77,6 +77,7 @@ ff95a158e0799dcf0622e83882e64d88f1783b98a91d9b206bcba2a12f8425e6  Libc:include/e
 289f3be20c07d8eae5589f43994cfdb5fb33b3b099a6aee67f63e00d90039a8f  Libc:include/fcntl.h  fcntl.h
 4f0730fa6a81d7681d4fe190d6971deff3ec294f1fca828e5798f38984159b0f  xnu:libsyscall/wrappers/gethostuuid.h  gethostuuid.h
 546a38b61e290ba12e8ad28a9bccc5eefded09fdcaac8c9be0b7777fa339bb43  Libc:include/getopt.h  getopt.h
+0f372957378505d685eab6b328686ee09d1b8614f5ebed5a1a6d1eb643aa868e  Libinfo:lookup.subproj/grp.h  grp.h
 d5fbab3ef6097275a1d35768976eea152fe8fa8b73159d3b49697d6de3cd05d9  Libc:include/inttypes.h  inttypes.h
 c860f1b8b6226fa44df65877877aec5333d3332bf9d9d156a118de078b2aba3f  libplatform:include/libkern/OSAtomic.h  libkern/OSAtomic.h
 84a5e40b675e50678e433c96e9c7ea702a5fa72f908a2967b0d21995326d93ec  libplatform:include/libkern/OSAtomicDeprecated.h  libkern/OSAtomicDeprecated.h

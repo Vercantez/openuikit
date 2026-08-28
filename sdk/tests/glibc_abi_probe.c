@@ -79,6 +79,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <netinet/in.h>
+#include <grp.h>
 #include <pwd.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -175,6 +176,19 @@ _Static_assert(offsetof(struct passwd, pw_dir)   == 32,
     "glibc struct passwd moved pw_dir (Darwin puts it at 48 -- past the end of this struct)");
 _Static_assert(offsetof(struct passwd, pw_shell) == 40,
     "glibc struct passwd moved pw_shell (Darwin puts it at 56)");
+
+/* struct group: 32 here AND 32 on Darwin, with every field at the same offset
+ * -- so darwin/src/posix.c's group_l2d is a copy rather than a translation.
+ * That agreement is exactly why it is pinned: it is a fact about today's two
+ * headers, not a property of the type, and "same size" was the pthread_cond_t
+ * trap. Darwin's gr_name/gr_passwd/gr_gid/gr_mem are at 0/8/16/24 (measured on
+ * macOS 26.5.2); if glibc ever moves one, this fails the build instead of
+ * returning somebody else's gid. */
+PIN(struct group, 32);
+_Static_assert(offsetof(struct group, gr_name)   == 0,  "glibc struct group moved gr_name");
+_Static_assert(offsetof(struct group, gr_passwd) == 8,  "glibc struct group moved gr_passwd");
+_Static_assert(offsetof(struct group, gr_gid)    == 16, "glibc struct group moved gr_gid");
+_Static_assert(offsetof(struct group, gr_mem)    == 24, "glibc struct group moved gr_mem");
 
 /* ------------------------------------------------------------------ CONSTANTS
  * A hazard the size checks above structurally cannot see: same width, symbols

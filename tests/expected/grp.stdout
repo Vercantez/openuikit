@@ -1,0 +1,32 @@
+sizeof struct group     32
+offset gr_name          0
+offset gr_passwd        8
+offset gr_gid           16
+offset gr_mem           24
+getgrgid_r(0) rc        0
+  found                 1
+  result points at &g   1
+  gr_gid                0
+  gr_name non-empty     1
+  gr_name in buffer     1
+  gr_passwd non-NULL    1
+  gr_mem non-NULL       1
+  gr_mem in buffer      1
+  gr_mem terminates     1
+getgrnam_r(round trip) rc 0
+  found                 1
+  gid came back as 0    1
+  name came back same   1
+getgrnam_r(missing) rc  0
+  result set to NULL    1
+getgrgid_r(tiny) rc     34
+  rc == ERANGE          1
+  result set to NULL    1
+getgrgid(0) non-NULL    1
+  gr_gid                0
+  same name as _r       1
+getgrnam(same) non-NULL 1
+  gr_gid                0
+  static storage reused 1
+getgrnam(missing) NULL  1
+done

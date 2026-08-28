@@ -430,6 +430,14 @@ want vm_copy             && build vm_copy             "$CHAINED_TARGET" vm_copy 
 # strlen+1 bytes per field and leaves the rest alone, glibc zeroes all 65.
 want uname               && build uname               "$CHAINED_TARGET" uname               uname.c --
 
+# grp. The passwd family's sibling, and the measurement said it is NOT the
+# passwd shape: struct group is 32 bytes with identical offsets on both, so
+# there is no layout to translate. What is left is the pthread-style errno
+# RETURN (where ERANGE agreeing at 34 on both sides is what lets an
+# untranslated wrapper look fine) and the not-found contract, rc 0 with
+# *result NULL, which inverts exactly like readdir_r's.
+want grp                 && build grp                 "$CHAINED_TARGET" grp                 grp.c --
+
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why
 # this needs grading: struct dirent does NOT agree between Darwin and glibc

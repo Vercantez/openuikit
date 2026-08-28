@@ -202,6 +202,111 @@ EXPORT int getpwuid_r(unsigned uid, struct darwin_passwd *out,
     return 0;
 }
 
+/* ===================================================================== *
+ * The group database. The passwd family's sibling, and the interesting
+ * result is that IT IS NOT THE PASSWD SHAPE.
+ *
+ * Measured on both sides before writing anything: `struct group` is 32 bytes
+ * with gr_name/gr_passwd/gr_gid/gr_mem at 0/8/16/24 on BOTH systems. Darwin
+ * adds no fields here the way it does to `struct passwd` (pw_change, pw_class
+ * and pw_expire are what make that one 72 against 48), so there is no layout
+ * to translate.
+ *
+ * THAT IS A FINDING, NOT A REASON TO STOP CHECKING. "Same size" was the
+ * pthread_cond_t trap -- 48 on both, and only 40 bytes of Darwin's are ours.
+ * So the mirrors and assertions below stay: they cost nothing and they turn a
+ * future divergence into a build failure instead of a wrong gr_gid.
+ * sdk/tests/glibc_abi_probe.c pins glibc's side against the REAL header, which
+ * this file -- built -nostdinc for a Darwin target -- structurally cannot do.
+ *
+ * WHAT STILL CROSSES: the _r forms report errors AS THEIR RETURN VALUE, an
+ * errno, exactly like the pthread family, so the VALUE needs translating even
+ * though the struct does not. ERANGE happens to be 34 on both, which is
+ * precisely the arrangement that makes this look unnecessary -- the one error
+ * a caller usually tests for agrees, and the rest do not.
+ *
+ * And the contract that inverts easily, measured on both: "no such group" is
+ * rc == 0 with *result == NULL, not an error return. A wrapper reporting
+ * ENOENT there makes every correct caller's lookup fail. Same shape as
+ * readdir_r (docs/UNIMPLEMENTED.md#readdir-r-contract).
+ * ===================================================================== */
+struct darwin_group {
+    char     *gr_name;
+    char     *gr_passwd;
+    unsigned  gr_gid;
+    char    **gr_mem;
+};
+struct linux_group {
+    char     *gr_name;
+    char     *gr_passwd;
+    unsigned  gr_gid;
+    char    **gr_mem;
+};
+_Static_assert(sizeof(struct darwin_group) == 32, "Darwin struct group is 32 bytes");
+_Static_assert(sizeof(struct linux_group) == 32, "our mirror of glibc's struct group is 32 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_group, gr_gid) == 16, "gr_gid at 16");
+_Static_assert(__builtin_offsetof(struct darwin_group, gr_mem) == 24, "gr_mem at 24");
+_Static_assert(__builtin_offsetof(struct linux_group,  gr_mem) == 24,
+    "if glibc ever moves gr_mem, group_l2d below stops being a copy");
+
+/* Field by field rather than a struct assignment, so the day the layouts stop
+ * agreeing this is the place that has to change and the assertions above are
+ * what will say so. */
+static void group_l2d(const struct linux_group *l, struct darwin_group *d)
+{
+    d->gr_name   = l->gr_name;
+    d->gr_passwd = l->gr_passwd;
+    d->gr_gid    = l->gr_gid;
+    d->gr_mem    = l->gr_mem;
+}
+
+/* Static storage the next call overwrites -- the contract on both systems. */
+static struct darwin_group gr_static;
+
+EXPORT void *getgrnam(const char *name)
+{
+    struct linux_group *l = MR_ERRNO_CALL(glibc_getgrnam(name));
+    if (!l) return 0;
+    group_l2d(l, &gr_static);
+    return &gr_static;
+}
+
+EXPORT void *getgrgid(unsigned gid)
+{
+    struct linux_group *l = MR_ERRNO_CALL(glibc_getgrgid(gid));
+    if (!l) return 0;
+    group_l2d(l, &gr_static);
+    return &gr_static;
+}
+
+EXPORT int getgrnam_r(const char *name, struct darwin_group *out,
+                      char *buf, unsigned long buflen, struct darwin_group **result)
+{
+    struct linux_group l;
+    void *found = 0;
+    int rc = MR_ERRNO_CALL(glibc_getgrnam_r(name, &l, buf, buflen, &found));
+    if (result) *result = 0;
+    if (rc != 0) return mr_pthread_rc(rc);   /* _r reports errno by return */
+    if (!found) return 0;                    /* no such group: rc 0, *result NULL */
+    group_l2d(&l, out);
+    if (result) *result = out;
+    return 0;
+}
+
+EXPORT int getgrgid_r(unsigned gid, struct darwin_group *out,
+                      char *buf, unsigned long buflen, struct darwin_group **result)
+{
+    struct linux_group l;
+    void *found = 0;
+    int rc = MR_ERRNO_CALL(glibc_getgrgid_r(gid, &l, buf, buflen, &found));
+    if (result) *result = 0;
+    if (rc != 0) return mr_pthread_rc(rc);
+    if (!found) return 0;
+    group_l2d(&l, out);
+    if (result) *result = out;
+    return 0;
+}
+
 static int darwin_from_linux_errno(int e)
 {
     if (e >= 0 && e < MR_ERRNO_L2D_N && mr_errno_l2d[e] >= 0)

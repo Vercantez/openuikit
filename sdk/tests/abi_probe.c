@@ -49,6 +49,7 @@
 #include <time.h>
 #include <runetype.h>
 #include <sys/cdefs.h>
+#include <grp.h>
 #include <pwd.h>
 #include <sysdir.h>
 #include <mach/vm_param.h>
@@ -308,6 +309,12 @@ int main(void)
     OFF(passwd, pw_gid);    OFF(passwd, pw_change); OFF(passwd, pw_class);
     OFF(passwd, pw_gecos);  OFF(passwd, pw_dir);    OFF(passwd, pw_shell);
     OFF(passwd, pw_expire);
+
+    puts("");
+    puts("== struct group  (getgrnam_r's out parameter -- and unlike passwd,");
+    puts("==                this one AGREES with glibc field for field)");
+    SZ(struct group);
+    OFF(group, gr_name); OFF(group, gr_passwd); OFF(group, gr_gid); OFF(group, gr_mem);
 
     puts("");
     puts("== sysdir  (sdk/local/sysdir.h -- OUR header; nothing upstream");

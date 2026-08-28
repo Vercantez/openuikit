@@ -358,6 +358,14 @@ offset passwd.pw_dir                48
 offset passwd.pw_shell              56
 offset passwd.pw_expire             64
 
+== struct group  (getgrnam_r's out parameter -- and unlike passwd,
+==                this one AGREES with glibc field for field)
+sizeof struct group                 32
+offset group.gr_name                0
+offset group.gr_passwd              8
+offset group.gr_gid                 16
+offset group.gr_mem                 24
+
 == sysdir  (sdk/local/sysdir.h -- OUR header; nothing upstream
 ==          publishes this interface, so these pin it against Apple's)
 sizeof sysdir_search_path_directory_t 4

@@ -677,6 +677,52 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
+### `grp` — **DONE 2026-08-27**, and it is *not* the passwd shape
+
+`getgrnam`, `getgrgid`, `getgrnam_r`, `getgrgid_r` are implemented
+(`darwin/src/posix.c`) and graded by `tests/bin/grp`. The family is done whole:
+both lookup keys and both reentrancy forms, matching the `getpw*` precedent
+beside it.
+
+**Measured before writing anything, and the measurement changed the design.**
+`struct passwd` is 72 bytes on Darwin against 48 in glibc — agreeing for four
+fields and then diverging, which is what makes a forwarded one look right just
+long enough to be trusted. **`struct group` is 32 bytes on both**, with
+`gr_name`/`gr_passwd`/`gr_gid`/`gr_mem` at `0/8/16/24` on both. There is no
+layout to translate.
+
+The mirrors and `_Static_assert`s are kept anyway, and `sdk/tests/abi_probe.c`
+(Darwin side, against Apple's SDK) and `sdk/tests/glibc_abi_probe.c` (Linux
+side, against the real glibc header) now pin all four offsets. "Same size" was
+the `pthread_cond_t` trap; the agreement is a fact about today's two headers,
+not a property of the type.
+
+**What still crosses:** the `_r` forms report errors **as their return value**,
+an errno — the pthread convention — so the *value* needs translating even
+though the struct does not. And "no such group" is `rc == 0` with
+`*result == NULL`, **not** an error; a wrapper reporting `ENOENT` there makes
+every correct caller's lookup fail (`#readdir-r-contract`, the same inversion).
+
+**A HONEST GAP IN THE FIXTURE, measured rather than assumed.** Three mutations
+were run against `tests/bin/grp`:
+
+| mutation | caught? |
+|---|---|
+| "no such group" returns `ENOENT` instead of `rc 0` | **yes**, line 20 |
+| `gr_mem` dropped from the copy | **yes**, lines 13–15 |
+| `return rc` instead of `mr_pthread_rc(rc)` — the errno translation removed | **NO** |
+
+The third is not a fixture bug that can be fixed here. The only return values
+this family produces in practice are `0` and `ERANGE`, and **`ERANGE` is 34 on
+both systems** — the worst possible arrangement, because the one error a caller
+tests for agrees and every other one does not. Provoking `EIO`/`EINTR`/`EMFILE`
+from `getgr*_r` deterministically is not something a fixture can do.
+
+The translation is *not* untested: `mr_pthread_rc` is shared with the pthread
+family, and `tests/bin/pthread_cond` asserts `rc == ETIMEDOUT` — a value that
+genuinely differs (**60** on Darwin, **110** on Linux). That is where this code
+path has teeth; said here so nobody reads `grp` PASS as covering it.
+
 ### `uname-identity` — a Darwin `sysname` over a Linux `release`, deliberately
 
 `uname` is implemented (`darwin/src/posix.c`) and graded by `tests/bin/uname`.

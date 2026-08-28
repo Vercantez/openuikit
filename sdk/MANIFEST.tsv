@@ -101,6 +101,7 @@ execinfo.h	Libc:gen/execinfo.h
 fcntl.h	Libc:include/fcntl.h
 gethostuuid.h	xnu:libsyscall/wrappers/gethostuuid.h
 getopt.h	Libc:include/getopt.h
+grp.h	Libinfo:lookup.subproj/grp.h
 inttypes.h	Libc:include/inttypes.h
 libkern/OSAtomic.h	libplatform:include/libkern/OSAtomic.h
 libkern/OSAtomicDeprecated.h	libplatform:include/libkern/OSAtomicDeprecated.h
