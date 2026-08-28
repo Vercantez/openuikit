@@ -53,7 +53,7 @@ Field choice follows the member census (`full/census/`): `absoluteString`
 19.3%, `appendingPathComponent` 12.9%, `host` 11.8%, `path` 11.1%, `query`
 8.3% — the top five are 63.4% of all URL member uses.
 
-## 16 rows are EXPECTED-FAIL without FoundationInternationalization
+## 7 rows are EXPECTED-FAIL without FoundationInternationalization
 
 `URLParser.swift` declares `_uidnaHook()` as a `dynamic package func` returning
 `UIDNAHook.Type?`. `FoundationInternationalization` overrides it; without that
@@ -74,3 +74,33 @@ we would have invented.)
 unless `FoundationInternationalization` is ported too. A run that "fixes" them
 without that module has done something wrong. Everything else in the 809 is a
 genuine acceptance criterion.
+
+### CORRECTED 2026-08-27: the heading said 16, and the measured answer is 7
+
+The body above is right and the old heading was not, so the heading is fixed.
+**16 golden rows contain `xn--`; only SEVEN have a non-ASCII input.** The other
+nine were ALREADY punycode when the app author wrote them
+(`https://xn--ls8h.la/path/to/resource`) -- they need no IDNA hook, `_SwiftURL`
+handles them correctly, and **they must PASS.** Marking all sixteen
+expected-fail makes a correct run look broken.
+
+The rule a scorer must use is **non-ASCII input AND punycode golden**, both
+halves. `url_runner.swift` implements exactly that, and it found this by
+tripping its own "IDNA rows that matched: must be 0" alarm -- built to the old
+heading, it reported `7 of 16 confirmed failing / 9 of 16 matched`, which was
+the classifier being wrong rather than the port.
+
+Measured result of the first full run (`full/foundation/build_fe_host.sh`,
+Apple toolchain, Apple SDK, native):
+
+    scored                 809 of 809
+    pass                   802 of 802 non-IDNA rows
+    fail                   0 of 802 non-IDNA rows
+    expected-fail (IDNA)   7 of 7 confirmed failing
+    IDNA rows that matched 0 of 7   (must be 0)
+
+The seven fail in the IDNA way and in no other: `host` is the raw label,
+`absoluteString` is percent-encoded rather than punycoded, and
+`scheme`/`port`/`path`/`query`/`pathComponents` are correct on those same rows.
+The runner PRINTS them with their diffs rather than counting them, because an
+expected failure still has to fail in the expected shape.
