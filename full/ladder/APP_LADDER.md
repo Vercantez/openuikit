@@ -28,6 +28,25 @@ Two build routes exist and per-app feasibility differs:
 
 Both routes are scored. The `SEL` column is the only difference between them.
 
+### The number to hold in mind while reading everything below
+
+**220 distinct UIKit types referenced across the four census apps, 116
+implemented, 104 missing — and frequency-weighted coverage is 91.5 %.** The
+missing 104 are the demand **tail**, and two consequences run through this
+whole document:
+
+* A missing-type *count* means little on its own. What matters is which tail
+  entries are **walls**: a missing `UICollectionViewCompositionalLayout` puts
+  cells nowhere, a missing `UIImpactFeedbackGenerator` is a no-op with no
+  hardware behind it either way. So §4 and §5.1 split every app's tail into
+  **BLOCKING** and **STUB-ABLE** (`classify_gaps.py` — judgement, and labelled
+  as judgement).
+* A dependency is a **demand row of its own**, not a build-shape footnote. It
+  must itself compile against this stack, so an app whose own code is perfectly
+  UIKit-shaped is still bounded by its worst load-bearing dependency. The 30
+  heaviest were cloned and pushed through the same instruments (§5.2). This is
+  what moved eidolon off the route-(a) NEAR rung.
+
 ---
 
 ## 1. The corpus — 20 apps, every SHA pinned
@@ -91,6 +110,9 @@ belong to no family.
 | UIKit-first share | `class X: …UIView/UIViewController/…` — the mirror of `: View`, unambiguous the same way | a UIKit view built by composition without subclassing; a subclass of an app's own base class |
 | `#selector` classification | what else is on the **same line** | a site whose wiring is on another line lands in `unclassified` — so `unclassified` is a **floor on both categories, not a residue** |
 | build shape | file existence + line grep | `pod '` counts declared pods, not the resolved transitive set; SPM pins and direct URLs are different denominators and are reported separately |
+| in-tree vs external module | `.target(name:)` / `.library(name:)` in any in-tree `Package.swift`, `PRODUCT_NAME` in any `project.pbxproj`, or a directory of that name | the directory rule over-matches, so an external dep in a same-named folder reads as in-tree. **The external list is a FLOOR.** |
+| dependency class | the dep cloned and run through `ladder_census.py` itself | says what a dep DEMANDS, never whether it builds; and only 30 deps were cloned, so `DEP = ?` is a hole, not a pass |
+| blocking vs stub-able | **judgement**, applied by rule in `classify_gaps.py` | it is an opinion about each type; three calls that could go either way are named in that file's docstring |
 | size | file and line counts including blanks and comments | — |
 
 **Two walks, two denominators, on purpose.** UIKit counts use apicensus's
@@ -100,6 +122,36 @@ Every table names which. NetNewsWire's "99,999 Swift lines" is not a cap: `wc -l
 over the same file set gives 99,303 newlines and the walk sees 696 files —
 99,303 + 696 = 99,999, because the convention is `count("\n") + 1` per file.
 Checked because a round number is exactly the shape of a saturated metric.
+
+### Three instrument defects found by spot-check, and what each would have said
+
+Recorded because each produced a confident, plausible, wrong table before it
+was caught — and two of the three were caught only because a number failed to
+move when it should have.
+
+1. **The dep census read demo apps and documentation as library code.**
+   Alamofire's `watchOS Example/ContentView.swift` and GRDB's
+   `Documentation/DemoApps/` each declare `struct X: View`, which classified
+   two pure-Swift libraries as **SwiftUI-bound**. Kingfisher's `Demo/` did the
+   same *on top of a real SwiftUI surface*, so the false positive sat invisibly
+   beside a true one. Fixed by an explicit skip list, passed only for the dep
+   run — the 20-app numbers are unchanged, because a demo app inside an app
+   repo is part of the app.
+2. **A re-run that changed nothing, because it never ran.** The corrected dep
+   census was piped to `head -3`; SIGPIPE killed Python before it wrote its
+   JSON, and the classifier then re-read the *stale* file and printed an
+   identical table. Caught by `md5` of the output before and after, not by
+   reading the numbers. See `stale-artifact-invisible-to-every-check`.
+3. **`productName` in `project.pbxproj` names EXTERNAL packages, not in-tree
+   targets.** Using it as an "is this module in-tree?" signal silently deleted
+   SnapKit, NextcloudKit, RealmSwift, ObjectMapper and HAKit from the very
+   dependency list `deps.py` exists to produce. `PRODUCT_NAME` (a real target's
+   build setting) is kept; `productName` is gone.
+
+Two threshold corrections followed from #1: `if net:` had made SwiftSoup — an
+HTML parser with one incidental URL-family reference — "networking-bound", and
+`if view_bearing_files:` needed a floor. Both now require evidence
+proportional to the library's size.
 
 ### One blindness found by spot-check, not assumed
 
@@ -114,57 +166,80 @@ as "low *Foundation* networking", **never** as "offline-capable". `NETLIBS` in
 
 ## 3. The ladder
 
-Rubric in `score_ladder.py`: eight subscores, each an **ordinal bucket 0–3 of a
+Rubric in `score_ladder.py`: nine subscores, each an **ordinal bucket 0–3 of a
 measured quantity**, thresholds written in the script rather than chosen per
 app. The composite is a plain sum with **no weights**, because nothing in this
 project measures the relative cost of "one more Apple framework" against "one
 more missing UIKit type". **Read the subscores; the total only orders apps into
-bands.**
+bands.** Bands scale with the column count (route (b) max 27 → NEAR ≤ 9,
+MID ≤ 16; route (a) max 30 → NEAR ≤ 11, MID ≤ 19) rather than being retuned.
 
 `UI` SwiftUI share of view-declaring files · `OBJC` ObjC share of source lines ·
-`NIB` nib-bound Swift files · `UIK` genuinely-missing UIKit uses · `MOD`
-distinct imported modules · `FW` distinct non-UIKit/Foundation Apple frameworks
-· `NET` Foundation networking + third-party stack · `SIZE` Swift files ·
-`SEL` `#selector` sites (route (a) only).
+`NIB` nib-bound Swift files · `UIK` genuinely-missing UIKit uses ·
+**`DEP` worst LOAD-BEARING external dependency class** · `MOD` distinct
+imported modules · `FW` distinct non-UIKit/Foundation Apple frameworks ·
+`NET` Foundation networking + third-party stack · `SIZE` Swift files ·
+`SEL` `#selector` sites, **app's own plus its load-bearing deps'** (route (a)
+only).
 
-Two **gates** override the sum, because they are not degrees:
-SwiftUI-majority (the framework does not exist here) and ObjC-majority (that
-app is on the facade road, not this one).
+Three **gates** override the sum, because they are not degrees: SwiftUI-majority
+(the framework does not exist here), ObjC-majority (that app is on the facade
+road, not this one), and **a SwiftUI/Combine-bound load-bearing dependency**
+(same wall, one level down).
 
-| app | UI | OBJC | NIB | UIK | MOD | FW | NET | SIZE | **=B** | SEL | **=A** | verdict (b) Apple tc | verdict (a) Linux swiftc |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **eidolon** | 0 | 0 | 3 | **0** | 1 | 0 | 1 | 0 | **5** | 1 | **6** | **NEAR** | **NEAR** |
-| **focus-ios** | 2 | 0 | 0 | 1 | 1 | 2 | 0 | 0 | **6** | 2 | **8** | **NEAR** | **NEAR** |
-| eigen | 1 | 3 | 1 | 1 | 0 | 1 | 0 | 0 | 7 | 2 | 9 | FAR — ObjC-majority (facade) | FAR — ObjC-majority (facade) |
-| Hackers | 3 | 0 | 1 | 1 | 1 | 1 | 1 | 0 | 8 | 1 | 9 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| ProtonMail-ios | 3 | 0 | 0 | 1 | 2 | 2 | 0 | 2 | 10 | 2 | 12 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| **simplenote-ios** | 1 | 2 | 2 | 1 | 1 | 2 | 0 | 1 | **10** | 3 | 13 | **MID** | FAR — `#selector` wall |
-| vlc-ios | 1 | 3 | 2 | 2 | 1 | 2 | 0 | 0 | 11 | 3 | 14 | FAR — ObjC-majority (facade) | FAR — ObjC-majority (facade) |
-| **ios-oss** | 1 | 0 | 1 | 1 | 2 | 2 | 2 | 3 | **12** | 3 | 15 | **MID** | FAR — `#selector` wall |
-| mastodon-ios | 3 | 0 | 0 | 2 | 2 | 2 | 3 | 1 | 13 | 2 | 15 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| NetNewsWire | 2 | 1 | 2 | 2 | 2 | 2 | 2 | 1 | 14 | 3 | 17 | MID | FAR — `#selector` wall |
-| Signal-iOS | 1 | 0 | 0 | 3 | 2 | 3 | 3 | 3 | 15 | 3 | 18 | MID | FAR — `#selector` wall |
-| Telegram-iOS | 0 | 2 | 0 | 3 | 3 | 3 | 1 | 3 | 15 | 3 | 18 | MID | FAR — `#selector` wall |
-| duckduckgo-ios | 3 | 0 | 1 | 2 | 2 | 3 | 2 | 2 | 15 | 3 | 18 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| nextcloud-ios | 2 | 1 | 2 | 2 | 2 | 3 | 2 | 1 | 15 | 3 | 18 | MID | FAR — `#selector` wall |
-| home-assistant-ios | 3 | 0 | 0 | 2 | 3 | 3 | 3 | 2 | 16 | 2 | 18 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| firefox-ios | 1 | 0 | 0 | 3 | 3 | 3 | 3 | 3 | 16 | 3 | 19 | FAR | FAR — `#selector` wall |
-| wikipedia-ios | 3 | 2 | 2 | 2 | 1 | 2 | 2 | 2 | 16 | 3 | 19 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| element-ios | 3 | 3 | 2 | 1 | 2 | 3 | 0 | 3 | 17 | 3 | 20 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| pocket-casts-ios | 3 | 0 | 2 | 2 | 2 | 3 | 3 | 2 | 17 | 3 | 20 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
-| WordPress-iOS | 2 | 1 | 1 | 2 | 3 | 3 | 3 | 3 | 18 | 3 | 21 | FAR | FAR — `#selector` wall |
+**`DEP = ?` means no external dependency of that app was among the 30
+measured.** `?` scores 0, so those three rows (NetNewsWire, simplenote-ios,
+vlc-ios) are **floors, not clean sheets** — each has external deps that were
+simply not in the measured set.
+
+| app | UI | OBJC | NIB | UIK | DEP | MOD | FW | NET | SIZE | **=B** | SEL | **=A** | verdict (b) Apple tc | verdict (a) Linux swiftc |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **focus-ios** | 2 | 0 | 0 | 1 | 0 | 1 | 2 | 0 | 0 | **6** | 2 | **8** | **NEAR** | **NEAR** |
+| **eidolon** | 0 | 0 | 3 | **0** | 2 | 1 | 0 | 1 | 0 | **7** | 3 | 10 | **NEAR** | FAR — `#selector` wall |
+| Hackers | 3 | 0 | 1 | 1 | 0 | 1 | 1 | 1 | 0 | 8 | 1 | 9 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| eigen | 1 | 3 | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 8 | 2 | 10 | FAR — ObjC-majority (facade) | FAR — ObjC-majority (facade) |
+| ProtonMail-ios | 3 | 0 | 0 | 1 | 0 | 2 | 2 | 0 | 2 | 10 | 2 | 12 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| simplenote-ios | 1 | 2 | 2 | 1 | **?** | 1 | 2 | 0 | 1 | 10 | 3 | 13 | MID | FAR — `#selector` wall |
+| vlc-ios | 1 | 3 | 2 | 2 | **?** | 1 | 2 | 0 | 0 | 11 | 3 | 14 | FAR — ObjC-majority (facade) | FAR — ObjC-majority (facade) |
+| mastodon-ios | 3 | 0 | 0 | 2 | 0 | 2 | 2 | 3 | 1 | 13 | 2 | 15 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| NetNewsWire | 2 | 1 | 2 | 2 | **?** | 2 | 2 | 2 | 1 | 14 | 3 | 17 | MID | FAR — `#selector` wall |
+| ios-oss | 1 | 0 | 1 | 1 | 2 | 2 | 2 | 2 | 3 | 14 | 3 | 17 | MID | FAR — `#selector` wall |
+| Telegram-iOS | 0 | 2 | 0 | 3 | 0 | 3 | 3 | 1 | 3 | 15 | 3 | 18 | MID | FAR — `#selector` wall |
+| duckduckgo-ios | 3 | 0 | 1 | 2 | 0 | 2 | 3 | 2 | 2 | 15 | 3 | 18 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| Signal-iOS | 1 | 0 | 0 | 3 | 1 | 2 | 3 | 3 | 3 | 16 | 3 | 19 | MID | FAR — `#selector` wall |
+| firefox-ios | 1 | 0 | 0 | 3 | 0 | 3 | 3 | 3 | 3 | 16 | 3 | 19 | MID | FAR — `#selector` wall |
+| element-ios | 3 | 3 | 2 | 1 | 0 | 2 | 3 | 0 | 3 | 17 | 3 | 20 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| pocket-casts-ios | 3 | 0 | 2 | 2 | 0 | 2 | 3 | 3 | 2 | 17 | 3 | 20 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| WordPress-iOS | 2 | 1 | 1 | 2 | 0 | 3 | 3 | 3 | 3 | 18 | 3 | 21 | FAR | FAR — `#selector` wall |
+| home-assistant-ios | 3 | 0 | 0 | 2 | 2 | 3 | 3 | 3 | 2 | 18 | 3 | 21 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| nextcloud-ios | 2 | 1 | 2 | 2 | **3** | 2 | 3 | 2 | 1 | 18 | 3 | 21 | FAR — SwiftUI-bound dep | FAR — SwiftUI-bound dep |
+| wikipedia-ios | 3 | 2 | 2 | 2 | 2 | 1 | 2 | 2 | 2 | 18 | 3 | 21 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
 
 **Route (b) — Apple toolchain: NEAR 2, MID 6, FAR 12.**
-**Route (a) — Linux cross-swiftc: NEAR 2, MID 0, FAR 18.** Route (a) collapses
-because **only 2 of 20 apps have ≤ 10 `#selector` sites** (eidolon 8, Hackers
-3); the corpus total is **5,680 `#selector` and 13,380 `@objc`**.
+**Route (a) — Linux cross-swiftc: NEAR 1, MID 0, FAR 19.**
+
+### What the dependency column changed, and it changed the top of the ladder
+
+**eidolon was NEAR on both routes on the app-only count. It is not.** Its own
+source has 8 `#selector` sites; **RxSwift/RxCocoa, which 87 of its 159 files
+import, has 157** — so the real route-(a) figure is **165**, over the wall.
+(All 157 are RxSwift's: Moya, Quick, Nimble and SwiftyJSON contribute zero.)
+`focus-ios` is now the **only** app NEAR on route (a), and it gets there by
+having no load-bearing external dependency at all among the measured set.
+
+Corpus totals for route (a): **5,680 `#selector` in app source and 13,380
+`@objc`**; **only 2 of 20 apps have ≤ 10 sites of their own** (eidolon 8,
+Hackers 3), and one of those two loses the property to a dependency.
 
 ### The headline the ladder does not show
 
 **No app in this corpus is close to runnable, and in no app is UIKit the
 reason.** Effective UIKit coverage ranges **87.5 % – 100.0 %** across all
-twenty. The 12 FAR verdicts are 8 × SwiftUI, 3 × ObjC-majority, and 1 × sheer
-mass — not one is "OpenUIKit is missing too much".
+twenty. The 12 FAR verdicts are **8 × SwiftUI-majority, 2 × ObjC-majority,
+1 × SwiftUI-bound load-bearing dependency (nextcloud-ios) and 1 × sheer mass
+(WordPress-iOS)** — not one is "OpenUIKit is missing too much". Split by the
+§5.1 test, the corpus's whole remaining UIKit debt is **135 blocking types /
+3,234 uses**, against 90 types / 1,691 uses that can be honest no-ops.
 
 ### Is SwiftUI so universal that the ladder is padding?
 
@@ -182,80 +257,109 @@ are the SwiftUI-heaviest.
 
 ## 4. Per-app gap tables — the top five, with each one's gate named
 
-### 4.1 eidolon (Artsy auction kiosk) — B 5 / A 6, **NEAR on both routes**
+Every table now carries two extra rows the first version lacked: the app's
+missing-type tail **split BLOCKING vs STUB-ABLE** (`classify_gaps.py` —
+judgement, per the test in that file's docstring), and its **load-bearing
+external dependencies** with the worst class.
 
-159 Swift files, 13,949 lines. 39 UIKit-subclass files, **0 SwiftUI**,
-3 ObjC files (46 lines).
+Corpus-wide the split is **135 blocking types / 3,234 uses** against
+**90 stub-able types / 1,691 uses**, 0 unclassified. So roughly **a third of
+the missing-type demand can be a no-op**, and the shape of the tail is very
+different per app: focus-ios is 22 stub-able types against 13 blocking,
+wikipedia-ios is 12 against 53.
 
-| gap | measurement | note |
-|---|---|---|
-| **missing UIKit types** | **0 uses, 0 types** | **Verified by grep, not inferred**: `UIVisualEffectView\|UIPasteboard\|UICollectionViewCompositionalLayout\|UIImpactFeedbackGenerator\|UIPageViewController\|UISearchController\|NSTextAttachment\|UIViewControllerTransitionCoordinator\|UIViewPropertyAnimator` over eidolon's Swift returns **nothing**. Its whole 99-use "missing" column is `NSObject` 32 + `NSString` 14 + `NSCoder` 5 + `NSValue` 1 (Foundation) and `UIStoryboard` 32 + `UIStoryboardSegue` 13 + `UIWebView` 2 (out of scope). |
-| **storyboards** | 26 of 159 files carry `@IBOutlet`; `Auction.storyboard` + `Fulfillment.storyboard` + `KeypadView.xib` | **This is the app's blocker.** `UIStoryboardExtensions.swift` loads both storyboards by name; they are the two flows. Storyboards are out of scope *by choice* — so eidolon is NEAR only if that choice is revisited, or 16 % of its files are rewritten. |
-| **model layer** | 308 Foundation references; **1** Foundation-networking | but **145 files import a third-party network/reactive stack** — RxSwift 87, Moya 32, SwiftyJSON 14, RxCocoa 7, Alamofire 2, RxOptional 11, RxBlocking 5, Action 20. Every one must compile too. |
-| **route (a)** | **8 `#selector` sites, all UI-wiring, 0 deep**; 25 `@objc` | The smallest `#selector` surface in the corpus after Hackers. Eight hand edits to `Selector.named()`, no rewriter needed. |
-| **build** | **CocoaPods, 37 declared pods, no SPM at all**; 1 xcodeproj + 1 xcworkspace | Includes **`Stripe 14.0.1` and `CardFlight-v4` — closed-source binary SDKs** — plus a `cocoapods-keys` plugin that needs 11 API keys before the project will even resolve. Several pods are ObjC (`Artsy+UILabels`, `ORStackView`, `FLKAutoLayout`, `ARAnalytics`, `ARTiledImageView`). |
-| **frameworks** | **1** non-UIKit/Foundation Apple framework — the lowest in the corpus | the only app here that does not drag in WebKit / AVFoundation / CoreData / MapKit / … |
-
-**Verdict in one line:** the *cleanest UIKit demand in the corpus, and the
-worst build*. Its UIKit gap is literally zero; its blockers are storyboards,
-CocoaPods with two binary SDKs, and a reactive stack larger than the app.
-
-### 4.2 focus-ios (Firefox Focus) — B 6 / A 8, **NEAR on both routes**
+### 4.1 focus-ios (Firefox Focus) — B 6 / A 8, **NEAR on both routes; the only route-(a) NEAR**
 
 227 Swift files, 24,139 lines. 51 UIKit-subclass files vs 18 SwiftUI, **0 ObjC,
 0 nib-bound files**.
 
 | gap | measurement | note |
 |---|---|---|
-| **missing UIKit types** | **88 uses / 35 types**, effective coverage 93.4 % | Ranked: `UIPasteboard` 21, `UIPageViewController` 7, `NSItemProvider` 6, `UIViewControllerTransitionCoordinator` 4, `UIDropInteraction` 4, `UIViewPropertyAnimator` 4, then a 29-type tail at ≤ 3 each — drag/drop (5 types), pointer (5), print (3), diffable data source (2). **The single largest item is one type.** |
+| **missing UIKit — BLOCKING** | **13 types / 29 uses** | `UIPageViewController` 7, `UIViewControllerTransitionCoordinator` 4, `UIViewPropertyAnimator` 4, `UIMenuItem` 3, `UIMenuController` 2, `UITableViewDiffableDataSource` 2, then 7 singletons. **Twenty-nine uses is the whole real UIKit debt of this app.** |
+| **missing UIKit — STUB-ABLE** | **22 types / 59 uses** | `UIPasteboard` 21, `NSItemProvider` 6, drag/drop 5 types, pointer 5 types, shortcuts, printing, `UIImagePickerController`. Two thirds of its gap is a no-op. |
+| **dependencies** | **0 load-bearing** among the 30 measured; `Sentry` (2 of 227 files) and `SnapKit` (7) are peripheral | **The only app in the corpus with no load-bearing external dependency measured.** This is why it is the sole route-(a) NEAR: nothing else brings `#selector` in with it. |
 | **SwiftUI** | 18 view-declaring files, 26.1 % | **Confined and checked**: `Onboarding/SwiftUI Onboarding` (5), `InternalSettings` (6), `DesignSystem/Preview Files` (3), Widgets (2), Licenses (1). The browser chrome itself is UIKit. |
 | **WebKit** | **6 files import WebKit, 4 use `WKWebView`** | **The decisive blocker, and it is not UIKit.** A browser without a web view has no content area. WebKit is an entire unbuilt framework and nothing in this project plans for one. |
 | **model layer** | 956 references, 42 Foundation-networking, **0 third-party network libs** | genuinely small; the network work is inside WebKit |
-| **route (a)** | 77 `#selector` (73 wiring, 1 deep, 3 unclassified); 86 `@objc` | 77 mechanical edits — over the 10-site line but nothing structural |
+| **route (a)** | 77 `#selector` (73 wiring, 1 deep, 3 unclassified) + **0 from deps**; 86 `@objc` | 77 mechanical edits — over the 10-site line but nothing structural, and nothing inherited |
 | **build** | **plain SPM** (`BlockzillaPackage` + `ContentBlockerGen`) + 1 xcodeproj, **no Pods, no Bazel, no submodules**; 35 modules; 6 direct SPM URLs | the *easiest build in the corpus* |
 | **assets** | 8 `.xcassets`, **633 `.strings`**, 1 storyboard | asset catalogs and localization are both live |
 
-**Verdict in one line:** *the best build and the cleanest UI shape in the
-corpus, blocked on one framework nobody has scoped.* If WebKit could be stubbed
-to a blank content view, focus-ios is the app to try first.
+**Verdict in one line:** *the best build, the cleanest UI shape and the only
+dependency-free app in the corpus, blocked on one framework nobody has scoped.*
+If WebKit could be stubbed to a blank content view, focus-ios is the app to try
+first — and its entire blocking UIKit debt is 13 types.
 
-### 4.3 eigen (Artsy) — B 7 / A 9, gated **FAR: ObjC-majority**
+### 4.2 eidolon (Artsy auction kiosk) — B 7 / A 10, **NEAR (b) / FAR (a)**
+
+159 Swift files, 13,949 lines. 39 UIKit-subclass files, **0 SwiftUI**,
+3 ObjC files (46 lines).
+
+| gap | measurement | note |
+|---|---|---|
+| **missing UIKit types** | **0 uses, 0 types — 0 blocking, 0 stub-able** | **Verified by grep, not inferred**: `UIVisualEffectView\|UIPasteboard\|UICollectionViewCompositionalLayout\|UIImpactFeedbackGenerator\|UIPageViewController\|UISearchController\|NSTextAttachment\|UIViewControllerTransitionCoordinator\|UIViewPropertyAnimator` over eidolon's Swift returns **nothing**. Its whole 99-use "missing" column is `NSObject` 32 + `NSString` 14 + `NSCoder` 5 + `NSValue` 1 (Foundation) and `UIStoryboard` 32 + `UIStoryboardSegue` 13 + `UIWebView` 2 (out of scope). |
+| **dependencies** | **5 load-bearing measured** — RxSwift (87 files), Moya (32), SwiftyJSON (14), Quick (49), Nimble (49); worst class **networking-bound** (Moya) | **This is what demotes the app.** RxSwift is UIKit-bound and 117k lines; Moya sits on `URLSession`, which is ABSENT. |
+| **route (a)** | **8 own `#selector` + 157 from RxSwift = 165** | The app's own surface is 8 sites, all UI-wiring, 0 deep — the smallest in the corpus after Hackers. **RxCocoa's 157 are the wall**, and all 157 are RxSwift's: Moya, Quick, Nimble and SwiftyJSON contribute zero. |
+| **storyboards** | 26 of 159 files carry `@IBOutlet`; `Auction.storyboard` + `Fulfillment.storyboard` + `KeypadView.xib` | `UIStoryboardExtensions.swift` loads both storyboards by name; they are the two flows. Storyboards are out of scope *by choice* — so eidolon is NEAR (b) only if that choice is revisited, or 16 % of its files are rewritten. |
+| **model layer** | 308 Foundation references; **1** Foundation-networking | but **145 files import a third-party network/reactive stack**. Every one must compile too. |
+| **build** | **CocoaPods, 37 declared pods, no SPM at all**; 1 xcodeproj + 1 xcworkspace | Includes **`Stripe 14.0.1` and `CardFlight-v4` — closed-source binary SDKs** — plus a `cocoapods-keys` plugin that needs 11 API keys before the project will even resolve. Several pods are ObjC (`Artsy+UILabels`, `ORStackView`, `FLKAutoLayout`, `ARAnalytics`, `ARTiledImageView`). |
+| **frameworks** | **0** non-UIKit/Foundation Apple frameworks — the lowest in the corpus | the only app here that does not drag in WebKit / AVFoundation / CoreData / MapKit / … |
+
+**Verdict in one line:** the *cleanest UIKit demand in the corpus — literally
+zero — and the worst everything-else*. Storyboards, CocoaPods with two binary
+SDKs, and a reactive stack that is larger than the app and brings 157
+`#selector` sites of its own.
+
+### 4.3 Hackers — B 8 / A 9, gated **FAR: SwiftUI-majority**
+
+150 Swift files, 31,130 lines, **0 ObjC, 1 nib-bound file, 3 `#selector` sites
+— the lowest in the corpus, and 0 from deps**. UIKit gap is **3 uses / 2
+types, both STUB-ABLE** (`UIPasteboard` 2, `UIImpactFeedbackGenerator` 1) —
+**zero blocking types, the only app in the corpus with a UIKit debt of
+literally nothing that matters.** Clean multi-module SPM (6 manifests, 6 pins),
+29 modules, 1 measured dep (`SwiftSoup`, Foundation-heavy, not load-bearing).
+
+**Why the gate fires:** 31 view-declaring files vs 4 UIKit-subclass files =
+**88.6 % SwiftUI**. Everything else about this app is ideal. It is the single
+best argument in the corpus for the SwiftUI decision: a small, modern, clean,
+pure-SPM app with no blocking UIKit gap and no dependency problem, that this
+stack cannot run **for exactly one reason**.
+
+### 4.4 eigen (Artsy) — B 8 / A 10, gated **FAR: ObjC-majority**
 
 140 Swift files (12,940 lines) against **193 `.m`/`.mm` files (19,038 lines) =
-59.5 % of source**. UIKit gap 21 uses / 13 types, effective coverage 96.3 %;
-23 modules and 5 heavy frameworks — the lowest dependency load after eidolon;
-only 3 nib-bound Swift files; 29 `#selector`.
+59.5 % of source**. UIKit gap 21 uses / 13 types — **10 blocking / 16 uses**
+(`UIPageViewController` 4, `UISplitViewController` 2, blur 4) against
+**3 stub-able / 5 uses**. 23 modules and 5 heavy frameworks — the lowest
+dependency load after eidolon; only 3 nib-bound Swift files; **29 own
+`#selector` + 0 from deps** (its 3 load-bearing deps — Nimble, Quick,
+Interstellar — carry none).
 
 **Why the gate fires:** its Swift half cannot be recompiled in isolation
 because the majority of the app is Objective-C. That is the **facade** road
 (docs/OBJC_FACADE.md — ~750 C entry points for the top-20 types covering 71 %
 of uses, ~10k lines; ~2,200 entry points / ~30k lines for everything). eigen is
 the **best-shaped candidate on that road** in this corpus: small, low
-dependency count, low UIKit gap. It also carries 34 CocoaPods and a React
+dependency count, low UIKit gap, and the *lowest inherited `#selector` count of
+any app with real dependencies*. It also carries 34 CocoaPods and a React
 Native bridge (`React`, `ReactAppDependencyProvider`).
-
-### 4.4 Hackers — B 8 / A 9, gated **FAR: SwiftUI-majority**
-
-150 Swift files, 31,130 lines, **0 ObjC, 1 nib-bound file, 3 `#selector` sites
-— the lowest in the corpus**. UIKit gap is **3 uses / 2 types**
-(`UIPasteboard` 2, `UIImpactFeedbackGenerator` 1). Clean multi-module SPM
-(6 manifests, 6 pins), 29 modules.
-
-**Why the gate fires:** 31 view-declaring files vs 4 UIKit-subclass files =
-**88.6 % SwiftUI**. Everything else about this app is ideal. It is the single
-best argument in the corpus for the SwiftUI decision: a small, modern, clean,
-pure-SPM app that this stack cannot run **for exactly one reason**.
 
 ### 4.5 simplenote-ios — B 10 / A 13, **MID (b)** / FAR (a)
 
 351 Swift files (33,225 lines) + 51 ObjC files (9,558 lines, 22.3 %).
 21.5 % SwiftUI, 26 nib-bound files (7.4 %), 28 xib/storyboards.
-UIKit gap **81 uses / 27 types**, effective coverage 94.4 %: `UIContextualAction`
-12, `UIPasteboard` 10, `UIApplicationShortcutItem` 7, `UIBlurEffect` 6,
-`UIMenuController` 5. Model layer 903 references, 36 Foundation-networking,
-0 third-party network libs — but it syncs through **Simperium** (ObjC) and
-CoreData (10 files). Route (a) dies on **103 `#selector` / 410 `@objc`**.
-Build is clean: 1 SPM manifest, 1 xcodeproj, no Pods.
+UIKit gap **81 uses / 27 types**, effective coverage 94.4 %, splitting
+**16 blocking / 48 uses** (`UIContextualAction` 12, `UIBlurEffect` 6,
+`UIMenuController` 5, `UIViewControllerTransitionCoordinator` 4) against
+**11 stub-able / 33 uses** (`UIPasteboard` 10, shortcuts 10, haptics 3).
+Model layer 903 references, 36 Foundation-networking, 0 third-party network
+libs — but it syncs through **Simperium** (ObjC) and CoreData (10 files).
+Route (a) dies on **103 `#selector` / 410 `@objc`**. Build is clean: 1 SPM
+manifest, 1 xcodeproj, no Pods.
+
+**Read its `DEP = ?` as a hole, not a pass.** None of simplenote's external
+deps (Simperium, Gridicons, AutomatticTracks, ZIPFoundation) were in the 30
+measured, so its B = 10 is a floor and its MID could be a FAR.
 
 ---
 
@@ -301,7 +405,93 @@ stubbable".** That is the cheapest reach-per-line anywhere in this document.
 
 Full ranked list: `uikit-union-2026-08-27.json`.
 
-### 5.2 Model surface — 130,883 references across 20 apps
+#### The same list, split BLOCKING vs STUB-ABLE (judgement — `classify_gaps.py`)
+
+The whole point of the tail framing in §0: **135 of the 225 genuinely-missing
+types are blocking (3,234 uses); 90 are stub-able (1,691 uses); 0
+unclassified.** Roughly a third of the remaining demand can be a compiling
+no-op — and it is not the third you would guess from the use counts, because
+the two highest-reach entries land on opposite sides.
+
+**STUB-ABLE, by app-reach** — a no-op, a call recorder, or an honest
+"unavailable" leaves screens and state correct:
+
+| type / cluster | apps | uses |
+|---|---|---|
+| `UIPasteboard` (process-local is real and correct) | **17** | 409 |
+| haptics — `UIImpactFeedbackGenerator` 16, `UINotificationFeedbackGenerator` 11, `UISelectionFeedbackGenerator` 11 | **16** | 196 |
+| home-screen shortcuts — `UIApplicationShortcutItem` 16, `UIApplicationShortcutIcon` 11 | **16** | ~110 |
+| `NSItemProvider` | 13 | 103 |
+| system pickers — `UIDocumentPickerViewController` 10 + delegate 10, `UIImagePickerController` 9 | 10 | 148 |
+| `UIAccessibilityCustomAction` | 9 | 87 |
+| scene lifecycle — `UISceneConfiguration` 9, `UIUserActivityRestoring` 9, `UIOpenURLContext` 7 | 9 | 51 |
+| drag & drop — `UIDropSession` 8, `UIDragItem` 7, + 9 more | 8 | ~230 |
+| pointer / hover — `UIPointerInteraction` 6, + 4 more | 6 | ~67 |
+| printing, pencil, scribble, find, focus, UIKit Dynamics | ≤ 5 | ~70 |
+
+**BLOCKING, by app-reach** — a no-op changes what appears, drops rows, or
+wedges the app:
+
+| type / cluster | apps | uses |
+|---|---|---|
+| `UIViewControllerTransitionCoordinator` | **18** | 141 |
+| materials / blur — `UIVisualEffectView` 17, `UIBlurEffect` 16, `UIGlassEffect` 7 | **17** | 763 |
+| `NSTextAttachment` + TextKit (`NSTextContainer` 8, `NSTextStorage` 5, `NSLayoutManager` 4) | 12 | 168 |
+| `UIViewPropertyAnimator` | 11 | 151 |
+| `UIPageViewController` + delegate/data-source | 10 | ~207 |
+| search controller — `UISearchController` 10, `UISearchResultsUpdating` 9 | 10 | 183 |
+| swipe actions — `UIContextualAction` 10, `UISwipeActionsConfiguration` 10 | 10 | 134 |
+| `UISwipeGestureRecognizer` / `UIPinchGestureRecognizer` | 10 | 118 |
+| diffable data sources — snapshot 9, table 7, collection 7 | 9 | 153 |
+| compositional layout — `NSCollectionLayout*` 8 + `UICollectionViewCompositionalLayout` 8 | 8 | 198 |
+| text input — `UITextPosition` 7, `UITextRange` 4, `UITextInput` 4 | 7 | ~100 |
+| menus — `UIMenuController` 7, `UIMenuItem` 6, `UIEditMenuInteraction` 5 | 7 | 119 |
+| cell content configuration — `UIContentConfiguration` 2, `UIListContentConfiguration` 5, `UIBackgroundConfiguration` 5 | 5 | ~93 |
+
+**The re-ordering this produces.** Of the six highest-reach missing types,
+**three are stub-able** (`UIPasteboard` 17, haptics 16, shortcuts 16) and
+**three are blocking** (`UIViewControllerTransitionCoordinator` 18, blur 17/16).
+So the cheapest genuine unlock is *transition coordinator plus the three
+stub clusters* — 18/17/16/16-app reach for work that is one type of real
+plumbing and three files of honest no-ops.
+
+### 5.2 External dependencies — the demand row the first version treated as build shape
+
+`clone_deps.sh` clones the 30 heaviest external dependencies (selection rule in
+that script: imported by ≥ 2 apps, or by ≥ 25 files in one app); `deps.py`
+separates in-tree modules from external ones; `dep_class.py` pushes each dep
+through **`ladder_census.py` itself** and classifies it by measurement. 30 of 30
+cloned, 0 failed. Pins in `dep-pins-2026-08-27.tsv`.
+
+| class | n | deps |
+|---|---|---|
+| **Foundation-heavy** — mostly covered by the FoundationEssentials port | 11 | SwiftSoup, GRDB, SwiftyJSON, SwiftProtobuf, Nimble, Quick, Starscream, ReactiveSwift, ObjectMapper, Interstellar, PromiseKit |
+| **UIKit-bound** — needs OpenUIKit's surface, which exists | 6 | KeychainAccess, SnapKit, AlamofireImage, **RxSwift**, SwipeCellKit, DifferenceKit |
+| **ObjC** — the facade road, not this one | 5 | **Sentry** (33.5 %), SDWebImage (99.7 %), CocoaLumberjack (75.1 %), RealmSwift (46.5 %), SVProgressHUD (98.3 %) |
+| **SwiftUI/Combine-bound** — the wall | 4 | Lottie, Kingfisher, Nuke, NextcloudKit |
+| **networking-bound** — sits on `URLSession`, which is ABSENT | 4 | **Alamofire** (910 refs), Apollo, HAKit, Moya |
+| pure-Swift portable | 0 | — |
+
+**Zero of the thirty are pure-Swift portable.** Every heavy dependency in this
+corpus needs something this stack does not yet fully have.
+
+**Route (a): 19 of 30 deps have zero `#selector`.** The eleven that do not,
+ranked: **RxSwift 157**, Sentry 67, Kingfisher 7, SwipeCellKit 7, GRDB 4,
+ReactiveSwift 3, HAKit 3, Lottie 2, Nuke 2, AlamofireImage 1, DifferenceKit 1.
+
+**Does fixing one dep unlock several apps? Mostly no, and that is the finding.**
+Unlike UIKit types, the dependency graph is **per-app**: the heaviest deps are
+single-app (proton_app_uniffi 533 files, ReactiveSwift 434, LibSignalClient 417,
+ApolloAPI 309, PromiseKit 249). Only four measured deps are load-bearing in more
+than one app — **GRDB** (Signal-iOS 183 files, home-assistant 160), Kingfisher,
+Lottie and Alamofire. So the dependency row selects *which app to try*; it is
+not a shared roadmap the way the UIKit and Foundation punch lists are.
+
+**The one dependency-shaped item that IS shared** is the class, not the
+library: **`URLSession`**. Four measured deps are networking-bound and every one
+of them is blocked on the same absent surface — which is already §5.3 item 3.
+
+### 5.3 Model surface — 130,883 references across 20 apps
 
 Supply bands derived from what is actually on disk or recorded (see
 `model_supply.py`'s docstring for how each name was placed), **not asserted**:
@@ -347,7 +537,7 @@ than it looked like. And "OPENUIKIT-SHADOWS" is not free: a shadowing
 `NSAttributedString` cannot be handed to Foundation's, which is a divergence
 the app sees, not one the library hides.
 
-### 5.3 Build capability — measured, and it is the biggest gap of the three
+### 5.4 Build capability — measured, and it is the biggest gap of the four
 
 | capability | apps needing it | evidence |
 |---|---|---|
@@ -365,7 +555,7 @@ the app sees, not one the library hides.
 graph (15/20, and *every* app is a module graph) outrank every UIKit type on
 the punch list. Nothing about them needs an oracle.
 
-### 5.4 So: the single ordering the user asked for
+### 5.5 So: the single ordering the user asked for
 
 1. **`UserDefaults`** — 20/20 apps, nothing behind it, no oracle needed.
 2. **Asset catalogs** — 20/20 apps, self-contained, no oracle needed.
@@ -376,12 +566,26 @@ the punch list. Nothing about them needs an oracle.
 5. **JSON/Codable landing** (#77, in flight) — 18/20 apps, 12,966 uses.
 6. **`FileManager`** (#69, stubbed) — 20/20 apps, 3,419 uses.
 7. **Materials / blur** — 17/20 apps, and the largest remaining *pixel* error.
-8. Then the type tail: `UIPasteboard`, `NSItemProvider`, `NSTextAttachment`,
-   `UIViewPropertyAnimator`, table/collection extras, search, pickers.
+8. Then the blocking type tail: `NSTextAttachment`, `UIViewPropertyAnimator`,
+   `UIPageViewController`, search controller, swipe actions, diffable data
+   sources, compositional layout.
+9. And, cheap and separable, the **stub-able** clusters: `UIPasteboard` (17/20),
+   `NSItemProvider` (13/20), pickers (10/20), drag & drop (8/20), pointer
+   (6/20), printing/pencil/find/focus. 90 types and 1,691 uses of honest
+   no-ops.
 
 Route (a) additionally needs **every one of an app's `#selector` sites already
-written portably** — and at 5,680 sites across the corpus, that selects apps
-rather than being fixed by work on our side.
+written portably — its dependencies' included**. At 5,680 sites in app source
+and RxSwift alone carrying 157, that selects apps rather than being fixed by
+work on our side. **19 of the 30 measured dependencies are `#selector`-clean;
+the eleven that are not are led by RxSwift 157 and Sentry 67.**
+
+**What the dependency row does NOT give you.** Unlike the UIKit and Foundation
+lists, it is not a shared roadmap: the heaviest deps are single-app, and only
+four (GRDB, Kingfisher, Lottie, Alamofire) are load-bearing in more than one.
+Fixing a dependency picks an app; it does not move the field. The exception is
+the class rather than the library — four measured deps are networking-bound and
+all four are blocked on the same absent `URLSession`, which is already item 3.
 
 ---
 
@@ -402,11 +606,16 @@ Recorded rather than guessed, following the sysdir precedent.
    "its 40 local packages", nor to determine which modules are reachable from
    the iOS app target. NetNewsWire imports `AppKit` in 132 files because it is a
    Mac app too; those files are in the denominator.
-4. **Third-party dependency compilability.** `NETLIBS` detects that a network
-   stack exists; nothing measures whether RxSwift, ReactiveSwift, GRDB, Realm,
-   SwiftProtobuf, Lottie or `proton_app_uniffi` (a Rust FFI module) could be
-   built for this target. For eidolon and eigen, closed-source binary pods
-   (`Stripe`, `CardFlight-v4`) make the answer "no" without further work.
+4. **Third-party dependency compilability.** 30 deps were cloned, censused and
+   classified (§5.2), which says what each one *demands* — it does **not** say
+   whether any of them builds. And the 30 are not the whole set: the biggest
+   single-app deps were **not** measured because they are not public libraries
+   (`proton_app_uniffi`, a Rust FFI module, 533 files; `LibSignalClient` 417;
+   `BrowserServicesKit` 246; `WordPressAPI` 119; `Glean`). Three apps
+   (NetNewsWire, simplenote-ios, vlc-ios) have **no** dep in the measured set
+   at all and carry `DEP = ?`. For eidolon and eigen, closed-source binary pods
+   (`Stripe`, `CardFlight-v4`) make the answer "no" without further work, and
+   there is no source to census.
 5. **Non-Swift, non-ObjC code.** C/C++/Rust in the dependency graph was not
    counted. Telegram's `third-party/`, Signal's `LibSignalClient` and
    `SignalRingRTC`, VLC's `VLCKit`, ProtonMail's uniffi module are all in this
@@ -423,7 +632,12 @@ Recorded rather than guessed, following the sysdir precedent.
 9. **Binary property lists.** A real `.ipa` path needs them; #56 named the gap
    and the parser reports the format rather than pretending. Every Info.plist
    in this corpus was assumed XML and not checked.
-10. **`@objc` beyond `#selector`.** 13,380 `@objc` sites were counted and
+10. **Whether a dep's `#selector` sites are reachable from the app.** RxSwift's
+    157 are counted whole; some live in RxCocoa target-action bindings the app
+    may never touch. Dead-code reachability was not computed, so the
+    dep-inclusive `SEL` figure is an upper bound in the same way the app-only
+    one was a lower bound.
+11. **`@objc` beyond `#selector`.** 13,380 `@objc` sites were counted and
     classified only coarsely: `@objc dynamic` 321, `@objc protocol` 203,
     `@objc(Name)` 785, `@objcMembers` 305 — leaving ~11,700 plain `@objc`
     unclassified. Which of them are *load-bearing* (KVO, ObjC subclassing,
@@ -446,9 +660,28 @@ full/ladder/union_and_imports.py scratch/ladder-corpus \
     uikit_sdk_types.txt openuikit_types.txt \
     uikit-union-2026-08-27.json imports-full-2026-08-27.json
 full/ladder/score_ladder.py ladder-census-2026-08-27.json \
-    imports-full-2026-08-27.json nibdeps.tsv ladder-scores-2026-08-27.json
+    imports-full-2026-08-27.json nibdeps.tsv dep-classes-2026-08-27.json \
+    ladder-scores-2026-08-27.json
 full/ladder/model_supply.py ladder-census-2026-08-27.json model-supply-2026-08-27.json
+full/ladder/classify_gaps.py ladder-census-2026-08-27.json \
+    uikit-union-2026-08-27.json gap-classes-2026-08-27.json
+
+# dependency demand row
+full/ladder/clone_deps.sh scratch/ladder-deps                      # pins SHAs
+full/ladder/deps.py scratch/ladder-corpus imports-full-2026-08-27.json \
+    deps-2026-08-27.json
+full/ladder/ladder_census.py scratch/ladder-deps \
+    uikit_sdk_types.txt openuikit_types.txt deps-census-2026-08-27.json \
+    "Demo,Demos,demo,Example,Examples,example,examples,Sample,Samples,\
+TestSamples,Documentation,Playground,Playgrounds,fastlane,Scripts,\
+watchOS Example,Test,Tests,IntegrationTests,UITests,Benchmarks"
+full/ladder/dep_class.py deps-census-2026-08-27.json deps-2026-08-27.json \
+    dep-classes-2026-08-27.json ladder-census-2026-08-27.json
 ```
+
+**The 5th argument to `ladder_census.py` is load-bearing and only for deps** —
+without it the census reads a library's demo app as library code (§2 defect 1).
+The 20-app corpus run passes no extra skips.
 
 `nibdeps.tsv` comes from `full/ladder/nibdeps.sh <corpus>`, which measures how
 many `.swift` files are **bound** to a nib rather than how many `.xib` files
@@ -465,4 +698,7 @@ headers and from `Sources/OpenUIKit`, never from a doc.**
 
 Outputs: `ladder-census-2026-08-27.json` (per-app raw),
 `ladder-scores-2026-08-27.json` (the ladder), `model-supply-2026-08-27.json`,
-`uikit-union-2026-08-27.json`, `imports-full-2026-08-27.json`, `nibdeps.tsv`.
+`uikit-union-2026-08-27.json`, `imports-full-2026-08-27.json`, `nibdeps.tsv`,
+`gap-classes-2026-08-27.json` (blocking/stub-able),
+`deps-2026-08-27.json` (in-tree vs external), `deps-census-2026-08-27.json`,
+`dep-classes-2026-08-27.json`, `dep-pins-2026-08-27.tsv`.

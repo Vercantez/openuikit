@@ -400,6 +400,22 @@ def census_app(root, sdk_types, ours):
 
 def main():
     corpus, sdk_file, ours_file, out_file = sys.argv[1:5]
+    # Optional 5th arg: extra directory names to skip, in BOTH walks.
+    #
+    # THIS EXISTS BECAUSE OF A MEASURED DEFECT, not as a convenience. Run over
+    # DEPENDENCY repos the census read their demo apps and documentation as
+    # library code: Alamofire's `watchOS Example/ContentView.swift` and GRDB's
+    # `Documentation/DemoApps/` each declare `struct X: View`, which classified
+    # two pure-Swift libraries as SwiftUI-bound. Kingfisher's `Demo/` did the
+    # same on top of a REAL SwiftUI surface, so the false positive sat invisibly
+    # next to a true positive. Apps do not have this problem -- a demo app
+    # inside an app repo is part of the app -- so the 20-app corpus run passes
+    # NO extra skips and its numbers are unchanged by this option.
+    if len(sys.argv) > 5:
+        extra = {d for d in sys.argv[5].split(",") if d}
+        SKIP_UIKIT.update(extra)
+        SKIP_MODEL.update(extra)
+        print(f"extra skip dirs: {sorted(extra)}", file=sys.stderr)
     sdk_types = set(open(sdk_file).read().split())
     ours = set(open(ours_file).read().split())
     print(f"UIKit SDK types: {len(sdk_types)}   OpenUIKit types: {len(ours)}", file=sys.stderr)
