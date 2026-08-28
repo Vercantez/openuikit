@@ -1,7 +1,7 @@
 # focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `1ae41f9`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit `250529be` · OpenUIKit `325c3d9`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
@@ -13,10 +13,11 @@ Replaying the saved logs through the corrected primary-diagnostic parser gives
 compiling real SnapKit under the explicit exclusion below, **1,025** after the
 controller/layout increment at OpenUIKit `9c2aace`, **832** after the
 application-shell, table, shortcut/activity, and process-local pasteboard
-increments through OpenUIKit `4be65c9`, and **751** after the Focus UIHelpers
-increment at OpenUIKit `1ae41f9`. SnapKit removed 146 primary diagnostics
-overall; the controller increment removed another 91 net; the seven subsequent
-OpenUIKit commits removed another 274 net. All runs use `-wmo`; the deliberately
+increments through OpenUIKit `4be65c9`, **751** after the Focus UIHelpers
+increment at OpenUIKit `1ae41f9`, and **747** after the UIView coder increment
+at OpenUIKit `325c3d9`. SnapKit removed 146 primary diagnostics overall; the
+controller increment removed another 91 net; the eight subsequent OpenUIKit
+commits removed another 278 net. All runs use `-wmo`; the deliberately
 broad 182-file source inventory remains the saturation denominator (and is not
 the Xcode target inventory; see below).
 
@@ -35,10 +36,10 @@ target-Widget                  6    |  vs OpenUIKit
 target-Licenses                4    |
 target-AppShortcuts            1    |
 target-Onboarding              1    |
-target-UIComponents            1   /
-app                          716   broad saturated census, 182 files, -wmo
+target-UIComponents            0   /
+app                          713   broad saturated census, 182 files, -wmo
                           ------
-TOTAL                        751
+TOTAL                        747
 ```
 
 ## What was built, and why each shape
@@ -68,7 +69,7 @@ controller/layout controls. Its 19 nib-initializer call sites remove 57 primary
 diagnostics from the broad app row; the other controller types and members bring
 the measured net reduction to 91 while also exposing some downstream errors.
 
-The next seven commits preserve that standard: delegate initialization and launch
+The next six commits preserve that standard: delegate initialization and launch
 shell behavior, shortcut/activity URLs, table editing/reuse/initializer
 compatibility, and a thread-safe process-local pasteboard are implemented and
 tested, not merely declared. The final pasteboard source is also compiled as
@@ -92,6 +93,17 @@ OpenUIKit resources and refuses a stale guest root or renderer. A separate
 gradient scene is byte-identical to the native render. This increment removes
 21 target diagnostics and 60 broad-app diagnostics; it also exposes additional
 downstream diagnostics, so those reductions need not add linearly.
+
+OpenUIKit `325c3d9` adds the designated, non-required
+`UIView.init?(coder: AnyObject)` bridge needed by code-only subclasses whose
+concrete `init?(coder: NSCoder)` calls `super`. Focus's real one-source
+`UIComponents` package target now emits a 52,628-byte module with a zero-byte
+diagnostic log; the broad app row falls by three and the total by four. The
+change passes 827 native tests (2 skipped), strict-concurrency compilation, and
+the same Foundation-invisible 94-source Linux Mach-O build. It deliberately
+does not claim nib/storyboard support: the opaque token is ignored, the
+initializer always produces a zero-frame view, and UIKit's separate inherited
+`Subclass()` initializer corner remains open for Focus's `AsyncImageView`.
 
 ## The one SnapKit vendoring exclusion
 
