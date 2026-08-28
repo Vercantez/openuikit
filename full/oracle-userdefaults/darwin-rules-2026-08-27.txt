@@ -1,0 +1,87 @@
+# Captured on macOS 26.5.2 (25F84), Apple Swift 6.2.1, real Foundation.
+# Regenerate: swift darwin_probe_rules.swift
+# This is the file the port's correction comments cite by name.
+
+=== INTEGER: where exactly is the boundary? ===
+  integer("2147483647") = 2147483647
+  integer("2147483648") = 2147483647
+  integer("3000000000") = 2147483647
+  integer("-2147483648") = -2147483648
+  integer("-2147483649") = -2147483648
+  integer("-3000000000") = -2147483648
+  integer(" 123") = 123
+  integer("\t123") = 123
+  integer("\n123") = 123
+  integer("123\t") = 0
+  integer("  -7") = -7
+  integer("- 7") = -7
+  integer("--7") = 0
+  integer("+ 7") = 7
+  integer("007") = 7
+  integer("2147483647x") = 0
+  integer("") = 0
+  integer("+") = 0
+  integer("-") = 0
+  integer("+0") = 0
+  integer("1_000") = 0
+
+  and on a STORED NUMBER (not a string), is there a clamp?
+    integer(stored Int 3000000000) = 3000000000
+    integer(stored Int.max)          = 9223372036854775807
+    integer(stored Double 2.9)       = 2
+    integer(stored Double -2.9)      = -2
+
+=== BOOL: is it a literal word list, and is it case-insensitive? ===
+  bool("1") = true
+  bool(" 1") = false
+  bool("1 ") = false
+  bool("01") = false
+  bool("1.0") = false
+  bool("+1") = false
+  bool("yEs") = true
+  bool("YeS") = true
+  bool("tRuE") = true
+  bool("truex") = false
+  bool("yess") = false
+  bool("yes ") = false
+  bool(" yes") = false
+  bool("0") = false
+  bool("00") = false
+  bool(" 0") = false
+  bool("-1") = false
+  bool("2") = false
+  bool("true1") = false
+  bool("YES\n") = false
+
+=== DOUBLE: prefix parse? which grammar? ===
+  double("123 ") = 123.0
+  double(" 123") = 123.0
+  double("1banana") = 1.0
+  double("1e3") = 1000.0
+  double("1E3") = 1000.0
+  double("0x10") = 0.0
+  double("0X10") = 0.0
+  double(".5") = 0.5
+  double("5.") = 5.0
+  double("1e") = 1.0
+  double("inf") = 0.0
+  double("INF") = 0.0
+  double("nan") = 0.0
+  double("-inf") = 0.0
+  double("1e400") = inf
+  double("0.1") = 0.1
+  double("1,5") = 1.0
+
+=== FLOAT vs DOUBLE on the same stored value ===
+  float(pi)=3.1415927  double(pi)=3.14159265358979
+  float(pid)=3.1415927  double(pid)=3.141592653589793
+
+=== string(forKey:) on numbers -- what FORMAT? ===
+  string(stored Double 1.0) = 1
+  string(stored Double 0.1) = 0.1
+  string(stored Double 1e+21) = 1e+21
+  string(stored Double 1.5) = 1.5
+  string(stored Double -0.0) = -0
+  string(stored Int.max)    = 9223372036854775807
+  string(stored true)       = 1
+  string(stored false)      = 0

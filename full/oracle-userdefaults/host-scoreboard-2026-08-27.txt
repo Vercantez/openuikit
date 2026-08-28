@@ -1,0 +1,68 @@
+# UserDefaults host-route scoreboard
+# macOS 26.5.2 (25F84) · Apple Swift 6.2.1 · SDK 26.1 · arm64
+# port sha256 6a0b06f5475abec3228b8800196ec08d18175f6e806c148dc6cd85f9687722e5
+# Regenerate: full/oracle-userdefaults/build_ud_host.sh OUT && OUT/ud_runner score
+
+=== UserDefaults differential oracle — HOST ROUTE ===
+port:  PortedUserDefaults.UserDefaults  (foundation-macho/src/overlay/UserDefaults.swift)
+real:  Foundation.UserDefaults          (macOS Version 26.5.2 (Build 25F84))
+both drive the SAME system CFPreferences; only the Swift layer differs.
+
+instrument: the renderer discriminates all 11 control pairs (incl. Bool(true) vs Int(1), which it once folded).
+
+=== STORAGE — the filename is part of the behaviour ===
+  com.example.udoracle.real         exists=false  —
+  com.example.udoracle.port         exists=false  —
+  NOTE: on Darwin these writes go through cfprefsd, so the file is not
+        authoritative in real time and its size lags the domain. Our
+        target has no daemon; there the file IS authoritative. That is a
+        recorded behavioural difference, not a bug in either.
+
+CONTROL-SELF  (real vs real — instrument check, must be 100%): scored 462 · pass 462 · fail 0
+
+CORELIBS      (upstream's own rules vs real — MUST FAIL): scored 313 · pass 245 · fail 68
+    bool("123")                               expected false   got true
+    bool("0123")                              expected false   got true
+    bool(" 123")                              expected false   got true
+    integer("123 ")                           expected 0   got 123
+    bool("123 ")                              expected false   got true
+    integer("12.9")                           expected 0   got 12
+    bool("12.9")                              expected false   got true
+    integer("3.75")                           expected 0   got 3
+    bool("3.75")                              expected false   got true
+    bool("-7")                                expected false   got true
+    bool("+7")                                expected false   got true
+    bool("2")                                 expected false   got true
+    bool("-1")                                expected false   got true
+    integer("1.0")                            expected 0   got 1
+    bool("1.0")                               expected false   got true
+    integer("1e3")                            expected 0   got 1
+    bool("1e3")                               expected false   got true
+    bool("Y")                                 expected false   got true
+    bool("y")                                 expected false   got true
+    bool("T")                                 expected false   got true
+    bool("t")                                 expected false   got true
+    integer("1banana")                        expected 0   got 1
+    bool("1banana")                           expected false   got true
+    integer("9223372036854775807")            expected 2147483647   got 9223372036854775807
+    bool("9223372036854775807")               expected false   got true
+    … 43 more
+
+PORT          (ours vs real): scored 627 · pass 627 · fail 0
+
+CROSS-READ    (port writes → real Foundation reads): scored 26 · pass 26 · fail 0
+
+=== TEETH ===
+  ✓ CONTROL-SELF is perfect (462 rows) — the harness can
+    tell same from same.
+  ✓ CORELIBS fails 68 of 313 rows — the
+    oracle detects the divergence a straight port would have shipped.
+  ✓ PORT is perfect on 627 rows, including every row CORELIBS fails.
+
+SCOREBOARD  control 462/462 · corelibs 245/313 · port 627/627 · cross 26/26
+persist-write: wrote 113 keys through the PORT into com.example.udoracle.persist, synchronised, exiting.
+
+PERSIST (fresh process; port wrote, both read): scored 113 · pass 113 · fail 0
+
+  TOOTH — a value must actually be present, or an empty store scores 100%:
+    v_string after restart = String(hello)
