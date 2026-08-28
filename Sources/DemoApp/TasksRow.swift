@@ -183,7 +183,7 @@ public final class TaskCell: UITableViewCell {
     /// on every configure, because cells outlive the row they display.
     public var onToggle: ((TaskCell) -> Void)?
 
-    public required init(style: CellStyle = .default,
+    public override init(style: CellStyle = .default,
                          reuseIdentifier: String? = nil) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         accessoryType = .disclosureIndicator
@@ -282,7 +282,7 @@ public final class IconCell: UITableViewCell {
 
     var tile: IconTile?
 
-    public required init(style: CellStyle = .default,
+    public override init(style: CellStyle = .default,
                          reuseIdentifier: String? = nil) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         accessoryType = .disclosureIndicator
@@ -317,7 +317,7 @@ public final class IconCell: UITableViewCell {
 public final class PlaceholderCell: UITableViewCell {
     public static let identifier = "PlaceholderCell"
 
-    public required init(style: CellStyle = .default,
+    public override init(style: CellStyle = .default,
                          reuseIdentifier: String? = nil) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none

@@ -281,6 +281,13 @@ public enum UIScrollPhysics {
 
 @preconcurrency @MainActor
 open class UIScrollView: UIView {
+    public enum KeyboardDismissMode: Sendable {
+        case none
+        case onDrag
+        case interactive
+        case onDragWithAccessory
+    }
+
     // MARK: Content geometry
 
     /// The scroll position — literally the layer's bounds origin (UIKit/CA).
@@ -328,6 +335,7 @@ open class UIScrollView: UIView {
     /// delivering touch-down to content subviews.
     public var delaysContentTouches = true
     public var canCancelContentTouches = true
+    public var keyboardDismissMode: KeyboardDismissMode = .none
     /// Per-millisecond deceleration factor (UIKit .normal).
     public var decelerationRate: CGFloat = UIScrollPhysics.decelerationRateNormal
 
@@ -472,6 +480,9 @@ open class UIScrollView: UIView {
         case .began:
             stopScrollAnimation()
             isDragging = true
+            if keyboardDismissMode != .none {
+                _ = window?.firstResponder?.resignFirstResponder()
+            }
             dragStartOffset = contentOffset
             // Absorb EXACTLY the 10 pt activation slop along the drag
             // direction. MEASURED (golden/scroll_traces/touch_calib.json):

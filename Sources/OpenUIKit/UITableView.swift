@@ -58,12 +58,24 @@ public protocol UITableViewDataSource: AnyObject {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String?
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
+    func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath)
 }
 
 public extension UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int { 1 }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { nil }
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? { nil }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { true }
+    func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        .delete
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {}
 }
 
 @preconcurrency @MainActor
@@ -73,6 +85,10 @@ public protocol UITableViewDelegate: UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                    forRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath)
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath)
 }
@@ -89,6 +105,10 @@ public extension UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                    forRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? { nil }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? { nil }
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {}
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {}
 }
@@ -171,8 +191,57 @@ open class UITableView: UIScrollView {
         didSet { if separatorStyle != oldValue { retile() } }
     }
     public var allowsSelection = true
+    public var allowsMultipleSelection = false
+    public var allowsSelectionDuringEditing = false
+    public var allowsMultipleSelectionDuringEditing = false
+    public var cellLayoutMarginsFollowReadableWidth = true
+
+    /// Estimates affect UIKit's pre-layout bookkeeping, not final geometry.
+    /// OpenUIKit already computes exact visible metrics eagerly, but retains
+    /// these values because applications commonly configure them.
+    public var estimatedRowHeight: CGFloat = UITableView.automaticDimension
+    public var estimatedSectionHeaderHeight: CGFloat = UITableView.automaticDimension
+    public var estimatedSectionFooterHeight: CGFloat = UITableView.automaticDimension
+
+    public var backgroundView: UIView? {
+        didSet {
+            guard backgroundView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let view = backgroundView {
+                view.isUserInteractionEnabled = false
+                insertSubview(view, at: 0)
+            }
+            setNeedsLayout()
+        }
+    }
+
+    public var tableHeaderView: UIView? {
+        didSet {
+            guard tableHeaderView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let view = tableHeaderView { addSubview(view) }
+            setNeedsMetrics()
+        }
+    }
+
+    public var tableFooterView: UIView? {
+        didSet {
+            guard tableFooterView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let view = tableFooterView { addSubview(view) }
+            setNeedsMetrics()
+        }
+    }
+
+    public private(set) var isEditing = false
 
     public private(set) var indexPathForSelectedRow: IndexPath?
+    private var additionalSelectedRows: Set<IndexPath> = []
+    public var indexPathsForSelectedRows: [IndexPath]? {
+        var paths = additionalSelectedRows
+        if let indexPathForSelectedRow { paths.insert(indexPathForSelectedRow) }
+        return paths.isEmpty ? nil : paths.sorted()
+    }
 
     // MARK: Init
 
@@ -241,13 +310,16 @@ open class UITableView: UIScrollView {
         metrics.removeAll()
         metricsDirty = false
         metricsWidth = bounds.width
+        let headerHeight = max(0, tableHeaderView?.frame.height ?? 0)
+        let footerHeight = max(0, tableFooterView?.frame.height ?? 0)
         guard let ds = dataSource else {
-            contentSize = .zero
+            contentSize = CGSize(width: bounds.width,
+                                 height: headerHeight + footerHeight)
             return
         }
         let sections = ds.numberOfSections(in: self)
         metrics.reserveCapacity(sections)
-        var y: CGFloat = 0
+        var y: CGFloat = headerHeight
         for s in 0..<sections {
             var m = SectionMetrics()
             m.headerTitle = ds.tableView(self, titleForHeaderInSection: s)
@@ -298,7 +370,7 @@ open class UITableView: UIScrollView {
             m.end = y
             metrics.append(m)
         }
-        contentSize = CGSize(width: bounds.width, height: y)
+        contentSize = CGSize(width: bounds.width, height: y + footerHeight)
     }
 
     // MARK: Public geometry / lookup API
@@ -359,15 +431,104 @@ open class UITableView: UIScrollView {
     // MARK: Reload
 
     public func reloadData() {
+        discardVisibleData(clearSelection: true)
+        setNeedsMetrics()
+    }
+
+    private func discardVisibleData(clearSelection: Bool) {
         visibleCellsByPath.removeAll { _, cell in
             cell.removeFromSuperview()
             recycle(cell)
         }
-        headerViews.removeAll { $1.removeFromSuperview() }
-        footerViews.removeAll { $1.removeFromSuperview() }
+        headerViews.removeAll { _, view in
+            view.removeFromSuperview()
+            recycleHeaderFooter(view)
+        }
+        footerViews.removeAll { _, view in
+            view.removeFromSuperview()
+            recycleHeaderFooter(view)
+        }
         cardViews.removeAll { $1.removeFromSuperview() }
-        indexPathForSelectedRow = nil
+        if clearSelection {
+            indexPathForSelectedRow = nil
+            additionalSelectedRows.removeAll()
+        }
+    }
+
+    // MARK: Editing and structural updates
+
+    public enum RowAnimation: Sendable {
+        case fade, right, left, top, bottom, none, middle, automatic
+    }
+
+    public func setEditing(_ editing: Bool, animated: Bool) {
+        guard isEditing != editing else { return }
+        isEditing = editing
+        for cell in visibleCells { cell.setEditing(editing, animated: animated) }
+        if editing && !allowsSelectionDuringEditing {
+            selectRow(at: nil, animated: animated)
+        }
+    }
+
+    private var updateNesting = 0
+    private var structuralUpdatePending = false
+
+    public func beginUpdates() { updateNesting += 1 }
+
+    public func endUpdates() {
+        guard updateNesting > 0 else { return }
+        updateNesting -= 1
+        if updateNesting == 0, structuralUpdatePending {
+            applyStructuralUpdate()
+        }
+    }
+
+    private func noteStructuralUpdate() {
+        structuralUpdatePending = true
+        if updateNesting == 0 { applyStructuralUpdate() }
+    }
+
+    private func applyStructuralUpdate() {
+        structuralUpdatePending = false
+        // The data source is authoritative after an insert/delete call.  Drop
+        // only the visible presentation, preserve programmatic selection, and
+        // tile the new model immediately.  This is coherent UIKit behavior;
+        // RowAnimation is currently a visual hint rather than a different
+        // data-update algorithm.
+        discardVisibleData(clearSelection: false)
         setNeedsMetrics()
+        retile()
+    }
+
+    public func insertRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+        noteStructuralUpdate()
+    }
+
+    public func deleteRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+        if let selected = indexPathForSelectedRow, indexPaths.contains(selected) {
+            indexPathForSelectedRow = nil
+        }
+        noteStructuralUpdate()
+    }
+
+    public func reloadRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+        noteStructuralUpdate()
+    }
+
+    public func insertSections(_ sections: IndexSet, with animation: RowAnimation) {
+        noteStructuralUpdate()
+    }
+
+    public func deleteSections(_ sections: IndexSet, with animation: RowAnimation) {
+        if let selected = indexPathForSelectedRow,
+           sections.contains(selected.section) {
+            indexPathForSelectedRow = nil
+        }
+        noteStructuralUpdate()
+    }
+
+    public func reloadSections(_ sections: IndexSet, with animation: RowAnimation) {
+        noteStructuralUpdate()
     }
 
     // MARK: Animated updates (M10)
@@ -536,6 +697,7 @@ open class UITableView: UIScrollView {
     // supplementary views.
 
     private let cellRegistry = ReuseRegistry<UITableViewCell>()
+    private let headerFooterRegistry = ReuseRegistry<UITableViewHeaderFooterView>()
 
     /// Recycled cells kept per identifier (shared cap — see UIReuse.swift).
     static var poolCapacityPerIdentifier: Int { reusePoolCapacityPerIdentifier }
@@ -543,7 +705,7 @@ open class UITableView: UIScrollView {
     public func register(_ cellClass: UITableViewCell.Type,
                          forCellReuseIdentifier identifier: String) {
         cellRegistry.register(identifier: identifier) { id in
-            cellClass.init(style: .default, reuseIdentifier: id)
+            cellClass.init(_openUIKitStyle: .default, reuseIdentifier: id)
         }
     }
 
@@ -559,17 +721,35 @@ open class UITableView: UIScrollView {
         return cell
     }
 
+    public func register(_ viewClass: UITableViewHeaderFooterView.Type,
+                         forHeaderFooterViewReuseIdentifier identifier: String) {
+        headerFooterRegistry.register(identifier: identifier) { id in
+            viewClass.init(_openUIKitReuseIdentifier: id)
+        }
+    }
+
+    public func dequeueReusableHeaderFooterView(
+        withIdentifier identifier: String
+    ) -> UITableViewHeaderFooterView? {
+        headerFooterRegistry.dequeue(identifier)
+    }
+
     private func recycle(_ cell: UITableViewCell) {
         cell.tableView = nil
         cellRegistry.recycle(cell)
+    }
+
+    private func recycleHeaderFooter(_ view: UIView) {
+        guard let reusable = view as? UITableViewHeaderFooterView else { return }
+        headerFooterRegistry.recycle(reusable)
     }
 
     // MARK: Tiling
 
     // Slot -> live view bookkeeping (shared component, UIReuse.swift).
     var visibleCellsByPath = VisibleViewMap<IndexPath, UITableViewCell>()
-    var headerViews = VisibleViewMap<Int, UITableViewHeaderFooterView>()
-    var footerViews = VisibleViewMap<Int, UITableViewHeaderFooterView>()
+    var headerViews = VisibleViewMap<Int, UIView>()
+    var footerViews = VisibleViewMap<Int, UIView>()
     var cardViews = VisibleViewMap<Int, UITableViewCardView>()
 
     open override var bounds: CGRect {
@@ -632,8 +812,24 @@ open class UITableView: UIScrollView {
         inTile = true
         defer { inTile = false }
 
-        guard dataSource != nil, bounds.width > 0 else { return }
+        guard bounds.width > 0 else { return }
         metricsIfNeeded()
+
+        backgroundView?.frame = bounds
+        if let header = tableHeaderView {
+            header.frame = CGRect(x: 0, y: 0, width: bounds.width,
+                                  height: max(0, header.frame.height))
+        }
+        if let footer = tableFooterView {
+            footer.frame = CGRect(x: 0,
+                                  y: contentSize.height - max(0, footer.frame.height),
+                                  width: bounds.width,
+                                  height: max(0, footer.frame.height))
+        }
+        guard dataSource != nil else {
+            if let backgroundView { sendSubviewToBack(backgroundView) }
+            return
+        }
 
         let (neededCells, neededSections) = neededViews()
         let visTop = contentOffset.y
@@ -644,8 +840,14 @@ open class UITableView: UIScrollView {
             recycle(cell)
         }
         let sectionSet = Set(neededSections)
-        headerViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
-        footerViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
+        headerViews.retire(keeping: sectionSet) { _, view in
+            view.removeFromSuperview()
+            recycleHeaderFooter(view)
+        }
+        footerViews.retire(keeping: sectionSet) { _, view in
+            view.removeFromSuperview()
+            recycleHeaderFooter(view)
+        }
         cardViews.retire(keeping: sectionSet) { $1.removeFromSuperview() }
 
         // Section chrome.
@@ -667,15 +869,17 @@ open class UITableView: UIScrollView {
             }
             if m.headerHeight > 0 {
                 let header = headerViews[s] ?? {
-                    let h = UITableViewHeaderFooterView()
+                    let h = tableDelegate?.tableView(self, viewForHeaderInSection: s)
+                        ?? UITableViewHeaderFooterView()
                     headerViews[s] = h
                     addSubview(h)
                     return h
                 }()
-                header.configure(kind: .header, text: m.headerTitle,
-                                 labelX: style == .plain
-                                     ? UITableView.plainHeaderLabelX
-                                     : groupedHeaderLabelX)
+                (header as? UITableViewHeaderFooterView)?.configure(
+                    kind: .header, text: m.headerTitle,
+                    labelX: style == .plain
+                        ? UITableView.plainHeaderLabelX
+                        : groupedHeaderLabelX)
                 header.backgroundColor = style == .plain ? .systemBackground : nil
                 var y = m.headerY
                 if style == .plain {
@@ -688,15 +892,17 @@ open class UITableView: UIScrollView {
             }
             if m.footerHeight > 0 {
                 let footer = footerViews[s] ?? {
-                    let f = UITableViewHeaderFooterView()
+                    let f = tableDelegate?.tableView(self, viewForFooterInSection: s)
+                        ?? UITableViewHeaderFooterView()
                     footerViews[s] = f
                     addSubview(f)
                     return f
                 }()
-                footer.configure(kind: .footer, text: m.footerTitle,
-                                 labelX: style == .plain
-                                     ? UITableView.plainHeaderLabelX
-                                     : groupedHeaderLabelX)
+                (footer as? UITableViewHeaderFooterView)?.configure(
+                    kind: .footer, text: m.footerTitle,
+                    labelX: style == .plain
+                        ? UITableView.plainHeaderLabelX
+                        : groupedHeaderLabelX)
                 footer.frame = CGRect(x: 0, y: m.rowsEnd, width: bounds.width,
                                       height: m.footerHeight)
             }
@@ -719,7 +925,9 @@ open class UITableView: UIScrollView {
                 } else if cell.backgroundColor == nil {
                     cell.backgroundColor = .systemBackground
                 }
-                cell.setSelected(path == indexPathForSelectedRow, animated: false)
+                cell.setSelected(path == indexPathForSelectedRow
+                    || additionalSelectedRows.contains(path), animated: false)
+                cell.setEditing(isEditing, animated: false)
                 visibleCellsByPath[path] = cell
                 addSubview(cell)
                 tableDelegate?.tableView(self, willDisplay: cell, forRowAt: path)
@@ -732,6 +940,7 @@ open class UITableView: UIScrollView {
         for s in neededSections.reversed() {
             if let card = cardViews[s] { sendSubviewToBack(card) }
         }
+        if let backgroundView { sendSubviewToBack(backgroundView) }
         if style == .plain {
             for s in neededSections {
                 if let h = headerViews[s] { bringSubviewToFront(h) }
@@ -747,12 +956,17 @@ open class UITableView: UIScrollView {
 
     /// Horizontal separator insets for `cell` (style-dependent, measured).
     func separatorDrawInsets(for cell: UITableViewCell) -> (left: CGFloat, right: CGFloat) {
+        let defaults: (left: CGFloat, right: CGFloat)
         switch style {
         case .plain:
-            return (UITableView.separatorLeftInset, UITableView.plainSeparatorRightInset)
+            defaults = (UITableView.separatorLeftInset,
+                        UITableView.plainSeparatorRightInset)
         case .grouped, .insetGrouped:
-            return (UITableView.separatorLeftInset, UITableView.groupedSeparatorRightInset)
+            defaults = (UITableView.separatorLeftInset,
+                        UITableView.groupedSeparatorRightInset)
         }
+        guard cell._hasExplicitSeparatorInset else { return defaults }
+        return (cell.separatorInset.left, cell.separatorInset.right)
     }
 
     /// Apply the measured separator visibility rules across visible cells:
@@ -784,14 +998,42 @@ open class UITableView: UIScrollView {
     /// Programmatic selection (UIKit semantics: no delegate callbacks).
     public func selectRow(at indexPath: IndexPath?, animated: Bool,
                           scrollPosition: ScrollPosition = .none) {
-        if let old = indexPathForSelectedRow, old != indexPath {
-            visibleCellsByPath[old]?.setSelected(false, animated: animated)
-        }
-        indexPathForSelectedRow = indexPath
+        let permitsMultiple = isEditing
+            ? allowsMultipleSelectionDuringEditing
+            : allowsMultipleSelection
         guard let indexPath else {
+            if let old = indexPathForSelectedRow {
+                visibleCellsByPath[old]?.setSelected(false, animated: animated)
+            }
+            for old in additionalSelectedRows {
+                visibleCellsByPath[old]?.setSelected(false, animated: animated)
+            }
+            indexPathForSelectedRow = nil
+            additionalSelectedRows.removeAll()
             updateSeparators()
             return
         }
+        if permitsMultiple {
+            if let primary = indexPathForSelectedRow, primary != indexPath {
+                additionalSelectedRows.insert(indexPath)
+            } else {
+                indexPathForSelectedRow = indexPath
+            }
+            visibleCellsByPath[indexPath]?.setSelected(true, animated: animated)
+            if scrollPosition != .none {
+                scrollToRow(at: indexPath, at: scrollPosition, animated: animated)
+            }
+            updateSeparators()
+            return
+        }
+        if let old = indexPathForSelectedRow, old != indexPath {
+            visibleCellsByPath[old]?.setSelected(false, animated: animated)
+        }
+        for old in additionalSelectedRows {
+            visibleCellsByPath[old]?.setSelected(false, animated: animated)
+        }
+        additionalSelectedRows.removeAll()
+        indexPathForSelectedRow = indexPath
         visibleCellsByPath[indexPath]?.setSelected(true, animated: animated)
         if scrollPosition != .none {
             scrollToRow(at: indexPath, at: scrollPosition, animated: animated)
@@ -800,8 +1042,14 @@ open class UITableView: UIScrollView {
     }
 
     public func deselectRow(at indexPath: IndexPath, animated: Bool) {
-        guard indexPathForSelectedRow == indexPath else { return }
-        indexPathForSelectedRow = nil
+        if indexPathForSelectedRow == indexPath {
+            indexPathForSelectedRow = additionalSelectedRows.sorted().first
+            if let promoted = indexPathForSelectedRow {
+                additionalSelectedRows.remove(promoted)
+            }
+        } else if additionalSelectedRows.remove(indexPath) == nil {
+            return
+        }
         visibleCellsByPath[indexPath]?.setSelected(false, animated: animated)
         updateSeparators()
     }
@@ -835,12 +1083,44 @@ open class UITableView: UIScrollView {
     /// A bound cell finished a tap: select it and notify the delegate
     /// (highlight → selected is seamless; UIKit fires didSelect after the
     /// selection state is set).
+    func cellHighlightDidChange(_ cell: UITableViewCell, highlighted: Bool) {
+        guard let path = indexPath(for: cell) else { return }
+        if highlighted {
+            tableDelegate?.tableView(self, didHighlightRowAt: path)
+        } else {
+            tableDelegate?.tableView(self, didUnhighlightRowAt: path)
+        }
+    }
+
     func commitRowTap(on cell: UITableViewCell) {
         guard allowsSelection, let path = indexPath(for: cell) else { return }
+        if isEditing && !allowsSelectionDuringEditing && !allowsMultipleSelectionDuringEditing {
+            return
+        }
+        let permitsMultiple = isEditing
+            ? allowsMultipleSelectionDuringEditing
+            : allowsMultipleSelection
+        if permitsMultiple {
+            if indexPathForSelectedRow == path || additionalSelectedRows.contains(path) {
+                deselectRow(at: path, animated: false)
+                tableDelegate?.tableView(self, didDeselectRowAt: path)
+            } else {
+                if indexPathForSelectedRow == nil {
+                    indexPathForSelectedRow = path
+                } else {
+                    additionalSelectedRows.insert(path)
+                }
+                cell.setSelected(true, animated: false)
+                updateSeparators()
+                tableDelegate?.tableView(self, didSelectRowAt: path)
+            }
+            return
+        }
         if let old = indexPathForSelectedRow, old != path {
             visibleCellsByPath[old]?.setSelected(false, animated: false)
             tableDelegate?.tableView(self, didDeselectRowAt: old)
         }
+        additionalSelectedRows.removeAll()
         indexPathForSelectedRow = path
         cell.setSelected(true, animated: false)
         updateSeparators()

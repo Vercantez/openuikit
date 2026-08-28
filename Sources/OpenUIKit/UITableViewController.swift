@@ -50,6 +50,17 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
     open func tableView(_ tableView: UITableView,
                         titleForFooterInSection section: Int) -> String? { nil }
 
+    open func tableView(_ tableView: UITableView,
+                        canEditRowAt indexPath: IndexPath) -> Bool { true }
+
+    open func tableView(_ tableView: UITableView,
+                        editingStyleForRowAt indexPath: IndexPath)
+        -> UITableViewCell.EditingStyle { .delete }
+
+    open func tableView(_ tableView: UITableView,
+                        commit editingStyle: UITableViewCell.EditingStyle,
+                        forRowAt indexPath: IndexPath) {}
+
     // MARK: UITableViewDelegate (override in subclasses)
 
     open func tableView(_ tableView: UITableView,
@@ -69,6 +80,18 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 
     open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                         forRowAt indexPath: IndexPath) {}
+
+    open func tableView(_ tableView: UITableView,
+                        viewForHeaderInSection section: Int) -> UIView? { nil }
+
+    open func tableView(_ tableView: UITableView,
+                        viewForFooterInSection section: Int) -> UIView? { nil }
+
+    open func tableView(_ tableView: UITableView,
+                        didHighlightRowAt indexPath: IndexPath) {}
+
+    open func tableView(_ tableView: UITableView,
+                        didUnhighlightRowAt indexPath: IndexPath) {}
 
     open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
 

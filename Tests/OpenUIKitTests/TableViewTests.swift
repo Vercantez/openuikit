@@ -15,9 +15,19 @@ import Foundation
 @MainActor
 private final class CountingCell: UITableViewCell {
     static var created = 0
-    required init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+    override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
         CountingCell.created += 1
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+}
+
+/// Deliberately uses UIKit's ordinary non-required override spelling.  The
+/// reuse registry must still construct the dynamic subtype.
+private final class CountingHeader: UITableViewHeaderFooterView {
+    static var created = 0
+    override init(reuseIdentifier: String?) {
+        CountingHeader.created += 1
+        super.init(reuseIdentifier: reuseIdentifier)
     }
 }
 
@@ -103,6 +113,7 @@ final class TableViewReuseTests: XCTestCase {
         super.setUp()
         TextTestSupport.configureResourceRoot()
         CountingCell.created = 0
+        CountingHeader.created = 0
     }
 
     /// The reuse gate: sweeping a 10k-row table end to end must never
@@ -171,6 +182,109 @@ final class TableViewReuseTests: XCTestCase {
         XCTAssertTrue(cell is CountingCell)
         XCTAssertEqual(cell?.reuseIdentifier, "counting")
         XCTAssertEqual(CountingCell.created, 1)
+    }
+
+    func testRegisteredHeaderClassUsesOrdinaryOverrideInitializer() {
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 200))
+        table.register(CountingHeader.self,
+                       forHeaderFooterViewReuseIdentifier: "header")
+        let header = table.dequeueReusableHeaderFooterView(withIdentifier: "header")
+        XCTAssertTrue(header is CountingHeader)
+        XCTAssertEqual(header?.reuseIdentifier, "header")
+        XCTAssertEqual(CountingHeader.created, 1)
+    }
+}
+
+@MainActor
+final class TableViewCompatibilityTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    func testHeaderFooterAndBackgroundParticipateInScrollGeometry() {
+        let source = BigTableSource()
+        source.rows = 1
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 60))
+        let background = UIView()
+        table.backgroundView = background
+        table.tableHeaderView = UIView(frame: CGRect(x: 12, y: 7, width: 20, height: 10))
+        table.tableFooterView = UIView(frame: CGRect(x: 5, y: 3, width: 20, height: 20))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 10)
+        XCTAssertEqual(table.contentSize.height,
+                       10 + UITableViewCell.defaultRowHeight + 20,
+                       accuracy: 0.001)
+        XCTAssertEqual(table.tableHeaderView?.frame,
+                       CGRect(x: 0, y: 0, width: 320, height: 10))
+        XCTAssertEqual(table.tableFooterView?.frame.minY ?? -1,
+                       10 + UITableViewCell.defaultRowHeight,
+                       accuracy: 0.001)
+        XCTAssertEqual(background.frame, table.bounds)
+
+        table.contentOffset = CGPoint(x: 0, y: 12)
+        XCTAssertEqual(background.frame, table.bounds,
+                       "the background remains fixed to the visible bounds")
+    }
+
+    func testBatchDeletionRebuildsAgainstTheMutatedDataSourceAtEndUpdates() {
+        let source = BigTableSource()
+        source.rows = 3
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 3)
+
+        table.beginUpdates()
+        source.rows = 2
+        table.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 3,
+                       "a batch is committed atomically by endUpdates")
+        table.endUpdates()
+
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 2)
+        XCTAssertNil(table.cellForRow(at: IndexPath(row: 2, section: 0)))
+    }
+
+    func testMultipleSelectionAndEditingStateReachVisibleCells() {
+        let source = BigTableSource()
+        source.rows = 3
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        table.dataSource = source
+        table.delegate = source
+        table.allowsMultipleSelection = true
+        table.layoutIfNeeded()
+
+        table.selectRow(at: IndexPath(row: 0, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 0, section: 0), IndexPath(row: 1, section: 0)])
+
+        table.setEditing(true, animated: false)
+        XCTAssertTrue(table.isEditing)
+        XCTAssertTrue(table.visibleCells.allSatisfy(\.isEditing))
+        XCTAssertNil(table.indexPathsForSelectedRows,
+                     "selection is cleared when editing selection is disabled")
+    }
+
+    func testExplicitZeroSeparatorInsetOverridesStyleDefault() {
+        let source = BigTableSource()
+        source.rows = 1
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 100))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+
+        XCTAssertEqual(cell.separatorView.frame.minX, 16)
+        cell.separatorInset = .zero
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell.separatorView.frame.minX, 0)
+        XCTAssertEqual(cell.separatorView.frame.width, 320)
     }
 }
 

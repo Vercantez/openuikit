@@ -74,6 +74,7 @@ import AppKit
 /// adds the two-component conveniences below to Foundation's type, which is
 /// exactly what this extension does.
 public typealias IndexPath = Foundation.IndexPath
+public typealias IndexSet = Foundation.IndexSet
 
 extension IndexPath {
     /// Table-view index path, stored `[section, row]` like UIKit's.

@@ -154,6 +154,10 @@ open class UITableViewCell: UIView, ReusableView {
         case none, blue, gray, `default`
     }
 
+    public enum EditingStyle: Sendable {
+        case none, delete, insert
+    }
+
     // MARK: Measured metrics (see file header)
 
     /// Default (and value1) row height; subtitle rows are taller.
@@ -189,9 +193,25 @@ open class UITableViewCell: UIView, ReusableView {
     public let reuseIdentifier: String?
 
     public let contentView: UIView = UITableViewCellContentView()
-    public let textLabel = UILabel()
+    /// UIKit exposes these legacy cell views as optionals.  The stock styles
+    /// create them eagerly, so an implicitly-unwrapped optional preserves both
+    /// source shapes used by applications: `textLabel.text` and
+    /// `textLabel?.text`.
+    public let textLabel: UILabel! = UILabel()
     /// Present for subtitle/value1/value2 cells, nil for `.default` (UIKit).
     public private(set) var detailTextLabel: UILabel?
+    public private(set) var imageView: UIImageView? = UIImageView()
+
+    /// Per-cell separator override. The untouched initial value uses the
+    /// table's measured style inset; assigning any value (including `.zero`)
+    /// establishes an explicit cell override, matching common UIKit code.
+    public var separatorInset: UIEdgeInsets = .zero {
+        didSet {
+            _hasExplicitSeparatorInset = true
+            setNeedsLayout()
+        }
+    }
+    var _hasExplicitSeparatorInset = false
 
     public var accessoryType: AccessoryType = .none {
         didSet {
@@ -206,17 +226,29 @@ open class UITableViewCell: UIView, ReusableView {
 
     public private(set) var isSelected = false
     public private(set) var isHighlighted = false
+    public private(set) var isEditing = false
 
     /// The table currently displaying this cell (set while bound).
     weak var tableView: UITableView?
     /// Managed by the table's tiling pass.
     let separatorView = UIView()
     let accessoryView = UITableCellAccessoryView()
-    var selectedBackgroundView: UIView?
+    public var selectedBackgroundView: UIView? {
+        didSet {
+            guard selectedBackgroundView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let view = selectedBackgroundView {
+                view.isUserInteractionEnabled = false
+                view.alpha = (isSelected || isHighlighted) ? 1 : 0
+                insertSubview(view, at: 0)
+                setNeedsLayout()
+            }
+        }
+    }
 
     // MARK: Init
 
-    public required init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+    public init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
         self.style = style
         self.reuseIdentifier = reuseIdentifier
         super.init(frame: CGRect(x: 0, y: 0, width: 320,
@@ -227,6 +259,7 @@ open class UITableViewCell: UIView, ReusableView {
 
         contentView.frame = bounds
         addSubview(contentView)
+        if let imageView { contentView.addSubview(imageView) }
         contentView.addSubview(textLabel)
 
         switch style {
@@ -254,12 +287,32 @@ open class UITableViewCell: UIView, ReusableView {
         addSubview(separatorView)
     }
 
+    /// Pure Swift cannot dynamically invoke a non-required initializer from a
+    /// class metatype, while UIKit's Objective-C runtime can.  Keep the public
+    /// Apple-compatible initializer non-required and route the reuse registry
+    /// through this inherited convenience initializer. Its underscore-prefixed
+    /// public spelling exists only because Swift requires a required initializer
+    /// on an open class to be public. Application subclasses continue to write
+    /// ordinary `override init(style:reuseIdentifier:)`; dynamic construction
+    /// still dispatches through that override.
+    public required convenience init(_openUIKitStyle style: CellStyle,
+                                     reuseIdentifier: String?) {
+        self.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
     // MARK: Reuse
 
     open func prepareForReuse() {
         setSelected(false, animated: false)
         setHighlighted(false, animated: false)
+        setEditing(false, animated: false)
         separatorView.isHidden = false
+    }
+
+    public func setEditing(_ editing: Bool, animated: Bool) {
+        guard editing != isEditing else { return }
+        isEditing = editing
+        setNeedsLayout()
     }
 
     // MARK: Selection / highlight
@@ -283,7 +336,6 @@ open class UITableViewCell: UIView, ReusableView {
         v.isUserInteractionEnabled = false
         v.alpha = 0
         selectedBackgroundView = v
-        insertSubview(v, at: 0)
         return v
     }
 
@@ -312,6 +364,7 @@ open class UITableViewCell: UIView, ReusableView {
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard selectionStyle != .none, tableView?.allowsSelection != false else { return }
         setHighlighted(true, animated: false)
+        tableView?.cellHighlightDidChange(self, highlighted: true)
     }
 
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
@@ -319,12 +372,14 @@ open class UITableViewCell: UIView, ReusableView {
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isHighlighted else { return }
         setHighlighted(false, animated: false)
+        tableView?.cellHighlightDidChange(self, highlighted: false)
         tableView?.commitRowTap(on: self)
     }
 
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isHighlighted else { return }
         setHighlighted(false, animated: true)
+        tableView?.cellHighlightDidChange(self, highlighted: false)
     }
 
     // MARK: Layout (measured cell geometry)
@@ -378,10 +433,26 @@ open class UITableViewCell: UIView, ReusableView {
         }
 
         // Labels.
-        let maxTextW = contentWidth - 2 * UITableViewCell.labelX
+        var labelX = UITableViewCell.labelX
+        if let imageView, let image = imageView.image {
+            let size = image.size
+            let longestSide = max(size.width, size.height)
+            let scale = longestSide > h ? h / longestSide : 1
+            let fitted = CGSize(width: size.width * scale,
+                                height: size.height * scale)
+            imageView.isHidden = false
+            imageView.frame = CGRect(x: UITableViewCell.labelX,
+                                     y: (h - fitted.height) / 2,
+                                     width: fitted.width,
+                                     height: fitted.height)
+            labelX = imageView.frame.maxX + UITableViewCell.labelX
+        } else {
+            imageView?.isHidden = true
+        }
+        let maxTextW = contentWidth - labelX - UITableViewCell.labelX
         let primary = textLabel.sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: h))
-        textLabel.frame = CGRect(x: UITableViewCell.labelX,
+        textLabel.frame = CGRect(x: labelX,
                                  y: UITableViewCell.primaryLabelY,
                                  width: min(primary.width, max(0, maxTextW)),
                                  height: primary.height)
@@ -390,7 +461,7 @@ open class UITableViewCell: UIView, ReusableView {
                                           height: h))
             switch style {
             case .subtitle:
-                d.frame = CGRect(x: UITableViewCell.labelX,
+                d.frame = CGRect(x: labelX,
                                  y: UITableViewCell.subtitleDetailY,
                                  width: min(s.width, max(0, maxTextW)),
                                  height: s.height)
@@ -422,23 +493,57 @@ open class UITableViewCell: UIView, ReusableView {
 /// 13 pt regular at y=8, wrapping. The class name matches real UIKit's so
 /// compare.py treats the subtree as private on both sides.
 @preconcurrency @MainActor
-public final class UITableViewHeaderFooterView: UIView {
+open class UITableViewHeaderFooterView: UIView, ReusableView {
     public static let headerHeight: CGFloat = 40.5
     static let headerLabelY: CGFloat = 10
     static let footerLabelY: CGFloat = 8
     /// Footer height = labelY + text height + 6 (measured 30 for one line).
     static let footerBottomPadding: CGFloat = 6
 
-    public let textLabel = UILabel()
+    public internal(set) var reuseIdentifier: String?
+    public let contentView = UIView()
+    public let textLabel: UILabel! = UILabel()
+
+    public var backgroundView: UIView? {
+        didSet {
+            guard backgroundView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let view = backgroundView {
+                view.isUserInteractionEnabled = false
+                insertSubview(view, at: 0)
+            }
+            setNeedsLayout()
+        }
+    }
 
     enum Kind { case header, footer }
     var kind: Kind = .header
     /// Leading x of the label (style-dependent; the table sets it).
     var labelX: CGFloat = 8
 
-    public override init(frame: CGRect = .zero) {
-        super.init(frame: frame)
-        addSubview(textLabel)
+    public init(reuseIdentifier: String?) {
+        self.reuseIdentifier = reuseIdentifier
+        super.init(frame: .zero)
+        contentView.addSubview(textLabel)
+        addSubview(contentView)
+    }
+
+    public convenience override init(frame: CGRect = .zero) {
+        self.init(reuseIdentifier: nil)
+        self.frame = frame
+    }
+
+    /// See UITableViewCell's matching constructor bridge.  The public UIKit
+    /// initializer remains ordinarily overridable; this inherited convenience
+    /// entry lets the pure-Swift reuse registry construct the dynamic subtype.
+    public required convenience init(_openUIKitReuseIdentifier identifier: String) {
+        self.init(reuseIdentifier: identifier)
+    }
+
+    open func prepareForReuse() {
+        textLabel.text = nil
+        kind = .header
+        labelX = 8
     }
 
     func configure(kind: Kind, text: String?, labelX: CGFloat) {
@@ -457,8 +562,10 @@ public final class UITableViewHeaderFooterView: UIView {
         setNeedsLayout()
     }
 
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
+        backgroundView?.frame = bounds
+        contentView.frame = bounds
         let maxW = max(0, bounds.width - 2 * labelX)
         let s = textLabel.sizeThatFits(CGSize(width: maxW, height: CGFloat.greatestFiniteMagnitude))
         let y = kind == .header ? UITableViewHeaderFooterView.headerLabelY
