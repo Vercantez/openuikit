@@ -226,6 +226,7 @@ public enum LayerBridge {
 
         let lay = v.layer
         h.combine(lay.cornerRadius)
+        h.combine(lay.maskedCorners.rawValue)
         let traits = v.traitCollection
         if let bg = v.backgroundColor {
             combine(&h, bg.resolvedCGColor(with: traits))
@@ -477,6 +478,7 @@ public enum LayerBridge {
         QZLayerSetOpacity(l, QZFloat(Swift.min(
             Swift.max(backingPresentation.opacity, 0), 1)))
         QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
+        QZLayerSetMaskedCorners(l, UInt32(v.layer.maskedCorners.rawValue))
         QZLayerSetMasksToBounds(l, v.clipsToBounds)
 
         let traits = v.traitCollection
@@ -609,6 +611,7 @@ public enum LayerBridge {
         QZLayerSetHidden(qz, layer.isHidden)
         QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(presentation.opacity, 0), 1)))
         QZLayerSetCornerRadius(qz, QZFloat(presentation.cornerRadius))
+        QZLayerSetMaskedCorners(qz, UInt32(layer.maskedCorners.rawValue))
         QZLayerSetMasksToBounds(qz, layer.masksToBounds)
 
         if let color = layer.backgroundColor {

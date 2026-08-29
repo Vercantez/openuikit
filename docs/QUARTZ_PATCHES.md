@@ -153,3 +153,22 @@ premultiplied pixels by the rendered mask alpha, then composites it back.
 
 Upstream fix: adopt the changed `apply_layer_mask` and the outer masked group
 in `render_layer()` together; either half alone retains one of the two bugs.
+
+## 007-layer-masked-corners.patch
+
+`src/qz_internal.hpp`, `include/quartz/layer_ext.h`,
+`src/pkg_layer_ext.cpp`, `src/qz_layer.cpp` — adds a four-bit
+`QZLayerSetMaskedCorners` property and uses it in every layer corner path:
+background, `masksToBounds`, gradient clipping, border, and shadow
+silhouette. Bits map to minX/minY, maxX/minY, minX/maxY, maxX/maxY and
+default to all four. The selective path uses the same unclamped kappa curves
+as patch 001, with straight line segments at unselected corners.
+
+The mapping and defaults come from a real iOS 26.1 Simulator hierarchy
+probe. In UIView's visual top-left coordinate system minY is the top edge;
+flipping a standalone layer swaps minY/maxY visually. Unknown input bits are
+discarded by OpenUIKit before the bridge reaches QZ.
+
+Upstream fix: adopt the field, setter, and path plumbing together. Keeping
+the setter without routing all five shape consumers would make background,
+clipping, borders, gradients, and shadows disagree with one another.

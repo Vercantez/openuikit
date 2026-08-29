@@ -83,6 +83,20 @@ private backing-layer tree:
   model layer changes immediately; completion runs only when the host advances
   `UIWindow.tick(timestamp:)`, using the same deterministic clock as
   `UIView.animate`.
+- `CACornerMask` and `CALayer.maskedCorners` are implemented for Focus's
+  top/bottom search-suggestion and sheet corners. Real iOS 26.1 reports raw
+  bits 1/2/4/8, defaults the property to 15, and strips unknown bits on
+  assignment; OpenUIKit does the same. Both renderers use the selected
+  corners for background, `masksToBounds`, border, gradient clipping, and
+  shadow silhouettes. In UIKit's top-left view coordinates, minY is the
+  visual top: the Simulator hierarchy probe maps minX/minY to top-left and
+  maxX/minY to top-right. A standalone real `CALayer` with
+  `isGeometryFlipped = true` swaps minY/maxY visually. The same probe found
+  that legacy `CALayer.render(in:)` ignores the mask and rounds all four
+  corners; OpenUIKit preserves that quirk separately from live rendering.
+  OpenUIKit does not yet
+  expose `isGeometryFlipped` or `init(layer:)`; the real copying initializer
+  was also measured to reset `maskedCorners` to its default 15.
 - `UIProgressView.setProgress(_:animated:)` now updates the model immediately
   and samples a reversible 0.25-second fill presentation from that clock. It
   supplies the exact superclass call used by Focus's `GradientProgressBar`;

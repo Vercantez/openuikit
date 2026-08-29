@@ -126,13 +126,15 @@ void QZGradientLayerSetRadial(QZLayerRef layer, bool radial) {
     if (layer) layer->grad_radial = radial;
 }
 
-static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius) {
-    if (radius <= 0.5) {
+static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius,
+                            uint32_t masked_corners) {
+    masked_corners &= 0x0fu;
+    if (radius <= 0.5 || masked_corners == 0) {
         QZContextAddRect(ctx, r);
         return;
     }
     double half = std::min(std::fabs(r.size.width), std::fabs(r.size.height)) * 0.5;
-    if (radius <= half) {
+    if (masked_corners == 0x0f && radius <= half) {
         QZContextAddRoundedRect(ctx, r, radius);
         return;
     }
@@ -146,19 +148,39 @@ static void rounded_or_rect(QZContextRef ctx, QZRect r, double radius) {
     double kr = k * radius;
     double x0 = r.origin.x, y0 = r.origin.y;
     double x1 = x0 + r.size.width, y1 = y0 + r.size.height;
-    QZContextMoveToPoint(ctx, x0 + radius, y0);
-    QZContextAddLineToPoint(ctx, x1 - radius, y0);
-    QZContextAddCurveToPoint(ctx, x1 - radius + kr, y0, x1, y0 + radius - kr,
-                             x1, y0 + radius);
-    QZContextAddLineToPoint(ctx, x1, y1 - radius);
-    QZContextAddCurveToPoint(ctx, x1, y1 - radius + kr, x1 - radius + kr, y1,
-                             x1 - radius, y1);
-    QZContextAddLineToPoint(ctx, x0 + radius, y1);
-    QZContextAddCurveToPoint(ctx, x0 + radius - kr, y1, x0, y1 - radius + kr,
-                             x0, y1 - radius);
-    QZContextAddLineToPoint(ctx, x0, y0 + radius);
-    QZContextAddCurveToPoint(ctx, x0, y0 + radius - kr, x0 + radius - kr, y0,
-                             x0 + radius, y0);
+    bool min_x_min_y = masked_corners & 0x01;
+    bool max_x_min_y = masked_corners & 0x02;
+    bool min_x_max_y = masked_corners & 0x04;
+    bool max_x_max_y = masked_corners & 0x08;
+    QZContextMoveToPoint(ctx, x0 + (min_x_min_y ? radius : 0), y0);
+    QZContextAddLineToPoint(ctx, x1 - (max_x_min_y ? radius : 0), y0);
+    if (max_x_min_y) {
+        QZContextAddCurveToPoint(ctx, x1 - radius + kr, y0,
+                                 x1, y0 + radius - kr, x1, y0 + radius);
+    } else {
+        QZContextAddLineToPoint(ctx, x1, y0);
+    }
+    QZContextAddLineToPoint(ctx, x1, y1 - (max_x_max_y ? radius : 0));
+    if (max_x_max_y) {
+        QZContextAddCurveToPoint(ctx, x1, y1 - radius + kr,
+                                 x1 - radius + kr, y1, x1 - radius, y1);
+    } else {
+        QZContextAddLineToPoint(ctx, x1, y1);
+    }
+    QZContextAddLineToPoint(ctx, x0 + (min_x_max_y ? radius : 0), y1);
+    if (min_x_max_y) {
+        QZContextAddCurveToPoint(ctx, x0 + radius - kr, y1,
+                                 x0, y1 - radius + kr, x0, y1 - radius);
+    } else {
+        QZContextAddLineToPoint(ctx, x0, y1);
+    }
+    QZContextAddLineToPoint(ctx, x0, y0 + (min_x_min_y ? radius : 0));
+    if (min_x_min_y) {
+        QZContextAddCurveToPoint(ctx, x0, y0 + radius - kr,
+                                 x0 + radius - kr, y0, x0 + radius, y0);
+    } else {
+        QZContextAddLineToPoint(ctx, x0, y0);
+    }
     QZContextClosePath(ctx);
 }
 
@@ -358,7 +380,7 @@ static void draw_border(QZLayer *layer, QZContextRef ctx, QZRect b, double cr) {
     QZContextSetLineJoin(ctx, kQZLineJoinMiter);
     QZContextSetLineCap(ctx, kQZLineCapButt);
     QZContextBeginPath(ctx);
-    rounded_or_rect(ctx, inner, inner_cr);
+    rounded_or_rect(ctx, inner, inner_cr, layer->masked_corners);
     QZContextStrokePath(ctx);
     QZContextRestoreGState(ctx);
 }
@@ -368,13 +390,13 @@ static void draw_border(QZLayer *layer, QZContextRef ctx, QZRect b, double cr) {
  * the built path must be filled even-odd. */
 static bool add_shadow_silhouette(QZLayer *layer, QZContextRef ctx,
                                   QZRect b, double cr, bool bg_visible) {
-    rounded_or_rect(ctx, b, cr);
+    rounded_or_rect(ctx, b, cr, layer->masked_corners);
     if (bg_visible) return false;
     double bw = layer->border_width;
     QZRect inner = QZRectMake(b.origin.x + bw, b.origin.y + bw,
                               b.size.width - 2 * bw, b.size.height - 2 * bw);
     if (inner.size.width <= 0 || inner.size.height <= 0) return false;
-    rounded_or_rect(ctx, inner, std::max(0.0, cr - bw));
+    rounded_or_rect(ctx, inner, std::max(0.0, cr - bw), layer->masked_corners);
     return true;
 }
 
@@ -438,7 +460,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
 
     if (layer->masks_to_bounds) {
         QZContextBeginPath(ctx);
-        rounded_or_rect(ctx, b, cr);
+        rounded_or_rect(ctx, b, cr, layer->masked_corners);
         QZContextClip(ctx);
     }
 
@@ -449,7 +471,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
                                  layer->background.b, layer->background.a);
         if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
         QZContextBeginPath(ctx);
-        rounded_or_rect(ctx, b, cr);
+        rounded_or_rect(ctx, b, cr, layer->masked_corners);
         QZContextFillPath(ctx);
         QZContextRestoreGState(ctx);
     } else if (shadow_on && !group && border_visible) {
@@ -465,7 +487,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
     if (layer->kind == QZLayerKindInternal::Gradient && layer->grad_colors.size() >= 2) {
         QZContextSaveGState(ctx);
         QZContextBeginPath(ctx);
-        rounded_or_rect(ctx, b, cr);
+        rounded_or_rect(ctx, b, cr, layer->masked_corners);
         QZContextClip(ctx);
         std::vector<double> stops(layer->grad_locs.begin(), layer->grad_locs.end());
         std::vector<double> ts;

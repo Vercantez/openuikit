@@ -338,9 +338,13 @@ the oracle outputs standard PNG).
 
 ### Corner radius
 `layer.cornerRadius` uses **circular** corners (kappa bezier approximation is
-fine — `Path.roundedRect` implements it). Radius clamps to min(w,h)/2.
-UIKit does NOT use continuous corners unless requested; default `cornerCurve`
-is `.circular`.
+fine). Core Animation does not clamp an oversized layer radius; the renderers
+therefore use their layer-specific unclamped kappa path instead of
+`Path.roundedRect` in that case. `layer.maskedCorners` selects any subset of
+the four curves for the background, clip, border, gradient, and shadow
+silhouette. The raw minY corners are the visual top corners in UIView's
+top-left coordinate space. UIKit does NOT use continuous corners unless
+requested; default `cornerCurve` is `.circular`.
 
 ### Anti-aliasing
 - Plain (non-transformed) layer edges are pixel-aligned rect fills — when

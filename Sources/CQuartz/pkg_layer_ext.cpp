@@ -92,6 +92,9 @@ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
     layer->layer_shadow_color = {r, g, b, 1};
     layer->layer_shadow_opacity = qz::clampd(opacity, 0, 1);
 }
+void QZLayerSetMaskedCorners(QZLayerRef layer, uint32_t corners) {
+    if (layer) layer->masked_corners = corners & 0x0fu;
+}
 void QZLayerSetEdgeAntialias(QZLayerRef layer, bool antialias) {
     if (layer) layer->edge_antialias = antialias;
 }

@@ -30,33 +30,60 @@ public enum UIRenderer {
     /// `Path.roundedRect` (frozen Canvas contract) clamps, so the render
     /// pass builds the layer path itself. For radius <= min(w,h)/2 this is
     /// numerically identical to `Path.roundedRect`.
-    static func layerRoundedRect(_ r: CGRect, cornerRadius radius: CGFloat) -> Path {
-        if radius <= 0 { return .rect(r) }
-        if radius <= Swift.min(r.width, r.height) / 2 {
+    static func layerRoundedRect(
+        _ r: CGRect,
+        cornerRadius radius: CGFloat,
+        maskedCorners corners: CACornerMask = ._allKnown
+    ) -> Path {
+        let corners = corners.intersection(._allKnown)
+        if radius <= 0 || corners.isEmpty { return .rect(r) }
+        if corners == ._allKnown,
+           radius <= Swift.min(r.width, r.height) / 2 {
             return .roundedRect(r, cornerRadius: radius)
         }
-        // Unclamped kappa construction (same control-point math as
-        // Path.roundedRect, radius NOT limited to half the smaller side).
+        // Per-corner, unclamped kappa construction. With all four bits this
+        // is the same oversized-radius path as before; square corners use a
+        // line to the vertex instead of a cubic quarter-circle.
         let k: CGFloat = 0.5522847498307936
         let kr = k * radius
+        let minXMinY = corners.contains(.layerMinXMinYCorner)
+        let maxXMinY = corners.contains(.layerMaxXMinYCorner)
+        let minXMaxY = corners.contains(.layerMinXMaxYCorner)
+        let maxXMaxY = corners.contains(.layerMaxXMaxYCorner)
         var p = Path()
-        p.move(to: CGPoint(x: r.minX + radius, y: r.minY))
-        p.addLine(to: CGPoint(x: r.maxX - radius, y: r.minY))
-        p.addCurve(to: CGPoint(x: r.maxX, y: r.minY + radius),
-                   control1: CGPoint(x: r.maxX - radius + kr, y: r.minY),
-                   control2: CGPoint(x: r.maxX, y: r.minY + radius - kr))
-        p.addLine(to: CGPoint(x: r.maxX, y: r.maxY - radius))
-        p.addCurve(to: CGPoint(x: r.maxX - radius, y: r.maxY),
-                   control1: CGPoint(x: r.maxX, y: r.maxY - radius + kr),
-                   control2: CGPoint(x: r.maxX - radius + kr, y: r.maxY))
-        p.addLine(to: CGPoint(x: r.minX + radius, y: r.maxY))
-        p.addCurve(to: CGPoint(x: r.minX, y: r.maxY - radius),
-                   control1: CGPoint(x: r.minX + radius - kr, y: r.maxY),
-                   control2: CGPoint(x: r.minX, y: r.maxY - radius + kr))
-        p.addLine(to: CGPoint(x: r.minX, y: r.minY + radius))
-        p.addCurve(to: CGPoint(x: r.minX + radius, y: r.minY),
-                   control1: CGPoint(x: r.minX, y: r.minY + radius - kr),
-                   control2: CGPoint(x: r.minX + radius - kr, y: r.minY))
+        p.move(to: CGPoint(x: r.minX + (minXMinY ? radius : 0), y: r.minY))
+        p.addLine(to: CGPoint(x: r.maxX - (maxXMinY ? radius : 0), y: r.minY))
+        if maxXMinY {
+            p.addCurve(to: CGPoint(x: r.maxX, y: r.minY + radius),
+                       control1: CGPoint(x: r.maxX - radius + kr, y: r.minY),
+                       control2: CGPoint(x: r.maxX, y: r.minY + radius - kr))
+        } else {
+            p.addLine(to: CGPoint(x: r.maxX, y: r.minY))
+        }
+        p.addLine(to: CGPoint(x: r.maxX, y: r.maxY - (maxXMaxY ? radius : 0)))
+        if maxXMaxY {
+            p.addCurve(to: CGPoint(x: r.maxX - radius, y: r.maxY),
+                       control1: CGPoint(x: r.maxX, y: r.maxY - radius + kr),
+                       control2: CGPoint(x: r.maxX - radius + kr, y: r.maxY))
+        } else {
+            p.addLine(to: CGPoint(x: r.maxX, y: r.maxY))
+        }
+        p.addLine(to: CGPoint(x: r.minX + (minXMaxY ? radius : 0), y: r.maxY))
+        if minXMaxY {
+            p.addCurve(to: CGPoint(x: r.minX, y: r.maxY - radius),
+                       control1: CGPoint(x: r.minX + radius - kr, y: r.maxY),
+                       control2: CGPoint(x: r.minX, y: r.maxY - radius + kr))
+        } else {
+            p.addLine(to: CGPoint(x: r.minX, y: r.maxY))
+        }
+        p.addLine(to: CGPoint(x: r.minX, y: r.minY + (minXMinY ? radius : 0)))
+        if minXMinY {
+            p.addCurve(to: CGPoint(x: r.minX + radius, y: r.minY),
+                       control1: CGPoint(x: r.minX, y: r.minY + radius - kr),
+                       control2: CGPoint(x: r.minX + radius - kr, y: r.minY))
+        } else {
+            p.addLine(to: CGPoint(x: r.minX, y: r.minY))
+        }
         p.close()
         return p
     }
@@ -96,7 +123,8 @@ public enum UIRenderer {
         t.a == 1 && t.b == 0 && t.c == 0 && t.d == 1
     }
 
-    static func renderView(_ v: UIView, into c: Canvas) {
+    static func renderView(_ v: UIView, into c: Canvas,
+                           honorsMaskedCorners: Bool = true) {
         if v.isHidden { return }
         let backingPresentation = LayerBridge.presentationState(
             of: v, at: OpenUIKitRuntime.animationTime)
@@ -106,7 +134,8 @@ public enum UIRenderer {
         var maskAlpha: CGFloat = 1
         var maskClip: Path?
         if let mask = v.layer.mask {
-            guard let maskState = solidMaskPresentation(mask) else { return }
+            guard let maskState = solidMaskPresentation(
+                mask, honorsMaskedCorners: honorsMaskedCorners) else { return }
             maskAlpha = maskState.alpha
             maskClip = maskState.clip
         }
@@ -123,6 +152,7 @@ public enum UIRenderer {
 
         let bounds = backingPresentation.bounds
         let radius = backingPresentation.cornerRadius
+        let corners = honorsMaskedCorners ? v.layer.maskedCorners : ._allKnown
         let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
         let shadow = shadowParams(of: v, bounds: bounds)
 
@@ -133,7 +163,8 @@ public enum UIRenderer {
         // the translucent card at shadowOpacity × alpha). Draw it before the
         // transparency layer opens.
         if grouped, let sh = shadow,
-           let sil = shadowSilhouette(of: v, bounds: bounds, radius: radius) {
+           let sil = shadowSilhouette(of: v, bounds: bounds, radius: radius,
+                                      maskedCorners: corners) {
             c.save()
             c.setShadow(color: sh.color.withAlpha(alpha),
                         offset: sh.offset, blur: sh.blur)
@@ -144,7 +175,10 @@ public enum UIRenderer {
         if grouped { c.beginTransparencyLayer(alpha: alpha) }
 
         // masksToBounds clips background, content AND subviews — apply first.
-        if v.clipsToBounds { c.clip(to: layerRoundedRect(bounds, cornerRadius: radius)) }
+        if v.clipsToBounds {
+            c.clip(to: layerRoundedRect(bounds, cornerRadius: radius,
+                                        maskedCorners: corners))
+        }
 
         // Layer shadow (spec v2), non-grouped case: CoreAnimation derives
         // the shadow from the layer's content alpha (background + border
@@ -165,7 +199,8 @@ public enum UIRenderer {
                     c.save()
                     c.setShadow(color: sh.color, offset: sh.offset, blur: sh.blur)
                 }
-                c.fill(layerRoundedRect(bounds, cornerRadius: radius), color: color,
+                c.fill(layerRoundedRect(bounds, cornerRadius: radius,
+                                        maskedCorners: corners), color: color,
                        hardEdges: hardEdges)
                 if shadowHere != nil { c.restore() }
                 backgroundDrawn = true
@@ -178,7 +213,7 @@ public enum UIRenderer {
             c.save()
             c.setShadow(color: sh.color, offset: sh.offset, blur: sh.blur)
             renderBorder(of: v, bounds: bounds, radius: radius,
-                         hardEdges: hardEdges, into: c)
+                         maskedCorners: corners, hardEdges: hardEdges, into: c)
             c.restore()
         }
 
@@ -187,7 +222,8 @@ public enum UIRenderer {
         // App-installed backing-layer children sit above the view's own
         // contents and below its UIView sublayers. Focus inserts gradients
         // at index zero for precisely this ordering.
-        renderSublayers(of: v.layer, into: c)
+        renderSublayers(of: v.layer, into: c,
+                        honorsMaskedCorners: honorsMaskedCorners)
 
         for sub in v.subviews {
             c.save()
@@ -200,13 +236,14 @@ public enum UIRenderer {
             c.concatenate(sub.transform)
             c.translate(x: -presentation.bounds.midX,
                         y: -presentation.bounds.midY)
-            renderView(sub, into: c)
+            renderView(sub, into: c,
+                       honorsMaskedCorners: honorsMaskedCorners)
             c.restore()
         }
 
         // CALayer draws its border ABOVE its contents and sublayers.
         renderBorder(of: v, bounds: bounds, radius: radius,
-                     hardEdges: hardEdges, into: c)
+                     maskedCorners: corners, hardEdges: hardEdges, into: c)
 
         if grouped { c.endTransparencyLayer() }
         if maskClip != nil { c.endTransparencyLayer() }
@@ -218,7 +255,8 @@ public enum UIRenderer {
     /// Render a standalone layer as the root of `CALayer.render(in:)`.
     /// Root placement is intentionally ignored; descendants use the normal
     /// position/bounds/anchor mapping.
-    static func renderLayer(_ layer: CALayer, into c: Canvas) {
+    static func renderLayer(_ layer: CALayer, into c: Canvas,
+                            honorsMaskedCorners: Bool = true) {
         guard !layer.isHidden else { return }
         let presentation = layer._presentationState(at: OpenUIKitRuntime.animationTime)
         let alpha = Swift.min(Swift.max(CGFloat(presentation.opacity), 0), 1)
@@ -227,7 +265,8 @@ public enum UIRenderer {
         var maskAlpha: CGFloat = 1
         var maskClip: Path?
         if let mask = layer.mask {
-            guard let maskState = solidMaskPresentation(mask) else { return }
+            guard let maskState = solidMaskPresentation(
+                mask, honorsMaskedCorners: honorsMaskedCorners) else { return }
             maskAlpha = maskState.alpha
             maskClip = maskState.clip
         }
@@ -239,27 +278,39 @@ public enum UIRenderer {
         if alpha < 1 { c.beginTransparencyLayer(alpha: alpha) }
 
         let bounds = presentation.bounds
+        let corners = honorsMaskedCorners ? layer.maskedCorners : ._allKnown
         // The pure-Swift fallback can exactly alpha-mask with the Focus-used
         // solid rounded rectangle. Arbitrary alpha-mask layer trees are
         // handled by the CQuartz layers compositor (`QZLayerSetMask`).
         if layer.masksToBounds {
-            c.clip(to: layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius))
+            c.clip(to: layerRoundedRect(bounds,
+                                        cornerRadius: presentation.cornerRadius,
+                                        maskedCorners: corners))
         }
 
         if let background = layer.backgroundColor, background.alpha > 0,
            !bounds.isEmpty {
-            c.fill(layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius),
+            c.fill(layerRoundedRect(bounds,
+                                    cornerRadius: presentation.cornerRadius,
+                                    maskedCorners: corners),
                    color: background)
         }
 
         if let gradient = layer as? CAGradientLayer {
+            c.save()
+            c.clip(to: layerRoundedRect(bounds,
+                                        cornerRadius: presentation.cornerRadius,
+                                        maskedCorners: corners))
             renderGradientLayer(gradient, bounds: bounds,
                                 locations: presentation.locations, into: c)
+            c.restore()
         }
 
-        renderSublayers(of: layer, into: c)
+        renderSublayers(of: layer, into: c,
+                        honorsMaskedCorners: honorsMaskedCorners)
         renderBorder(of: layer, bounds: bounds,
-                     cornerRadius: presentation.cornerRadius, into: c)
+                     cornerRadius: presentation.cornerRadius,
+                     maskedCorners: corners, into: c)
 
         if alpha < 1 { c.endTransparencyLayer() }
         if maskClip != nil { c.endTransparencyLayer() }
@@ -269,7 +320,8 @@ public enum UIRenderer {
     /// Presented alpha and geometry of the solid mask subset supported by
     /// the dependency-free renderer. Quartz handles arbitrary mask trees.
     private static func solidMaskPresentation(
-        _ mask: CALayer
+        _ mask: CALayer,
+        honorsMaskedCorners: Bool
     ) -> (alpha: CGFloat, clip: Path)? {
         precondition(mask._orderedSublayers.isEmpty,
                      "OpenUIKit's pure-Swift renderer supports only a solid CALayer mask")
@@ -282,11 +334,14 @@ public enum UIRenderer {
             x: state.position.x - mask.anchorPoint.x * state.bounds.width,
             y: state.position.y - mask.anchorPoint.y * state.bounds.height,
             width: state.bounds.width, height: state.bounds.height)
-        return (alpha, layerRoundedRect(rect, cornerRadius: state.cornerRadius))
+        return (alpha, layerRoundedRect(rect, cornerRadius: state.cornerRadius,
+                                        maskedCorners: honorsMaskedCorners
+                                            ? mask.maskedCorners : ._allKnown))
     }
 
     /// Render children back-to-front in their array order.
-    static func renderSublayers(of parent: CALayer, into c: Canvas) {
+    static func renderSublayers(of parent: CALayer, into c: Canvas,
+                                honorsMaskedCorners: Bool = true) {
         for child in parent._orderedSublayers {
             c.save()
             let presentation = child._presentationState(
@@ -295,7 +350,8 @@ public enum UIRenderer {
             c.translate(x: presentation.position.x, y: presentation.position.y)
             c.translate(x: -(b.minX + child.anchorPoint.x * b.width),
                         y: -(b.minY + child.anchorPoint.y * b.height))
-            renderLayer(child, into: c)
+            renderLayer(child, into: c,
+                        honorsMaskedCorners: honorsMaskedCorners)
             c.restore()
         }
     }
@@ -326,18 +382,23 @@ public enum UIRenderer {
     }
 
     static func renderBorder(of layer: CALayer, bounds: CGRect,
-                             cornerRadius: CGFloat? = nil, into c: Canvas) {
+                             cornerRadius: CGFloat? = nil,
+                             maskedCorners: CACornerMask? = nil,
+                             into c: Canvas) {
         let width = layer.borderWidth
         guard width > 0, !bounds.isEmpty, let color = layer.borderColor,
               color.alpha > 0 else { return }
         let radius = cornerRadius ?? layer.cornerRadius
-        let outer = layerRoundedRect(bounds, cornerRadius: radius)
+        let corners = maskedCorners ?? layer.maskedCorners
+        let outer = layerRoundedRect(bounds, cornerRadius: radius,
+                                     maskedCorners: corners)
         let innerRect = bounds.insetBy(dx: width, dy: width)
         if !innerRect.isNull, innerRect.width > 0, innerRect.height > 0 {
             var ring = outer
             ring.elements += layerRoundedRect(
                 innerRect,
-                cornerRadius: Swift.max(0, radius - width)).elements
+                cornerRadius: Swift.max(0, radius - width),
+                maskedCorners: corners).elements
             c.fill(ring, color: color, evenOdd: true)
         } else {
             c.fill(outer, color: color)
@@ -361,40 +422,48 @@ public enum UIRenderer {
     /// The shadow-casting silhouette of `v`'s layer: the outer rounded rect
     /// when the background is visible, else the border ring, else nil.
     static func shadowSilhouette(of v: UIView, bounds: CGRect,
-                                 radius: CGFloat)
+                                 radius: CGFloat,
+                                 maskedCorners corners: CACornerMask)
         -> (path: Path, evenOdd: Bool)? {
         guard !bounds.isEmpty else { return nil }
         if let bg = v.backgroundColor,
            bg.resolvedCGColor(with: v.traitCollection).alpha > 0 {
-            return (layerRoundedRect(bounds, cornerRadius: radius), false)
+            return (layerRoundedRect(bounds, cornerRadius: radius,
+                                     maskedCorners: corners), false)
         }
         let bw = v.layer.borderWidth
         if bw > 0, let bc = v.layer.borderColor, bc.alpha > 0 {
             let innerRect = bounds.insetBy(dx: bw, dy: bw)
             if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
-                var ring = layerRoundedRect(bounds, cornerRadius: radius)
+                var ring = layerRoundedRect(bounds, cornerRadius: radius,
+                                            maskedCorners: corners)
                 ring.elements += layerRoundedRect(
-                    innerRect, cornerRadius: Swift.max(0, radius - bw)).elements
+                    innerRect, cornerRadius: Swift.max(0, radius - bw),
+                    maskedCorners: corners).elements
                 return (ring, true)
             }
-            return (layerRoundedRect(bounds, cornerRadius: radius), false)
+            return (layerRoundedRect(bounds, cornerRadius: radius,
+                                     maskedCorners: corners), false)
         }
         return nil
     }
 
     static func renderBorder(of v: UIView, bounds: CGRect, radius: CGFloat,
+                             maskedCorners corners: CACornerMask,
                              hardEdges: Bool, into c: Canvas) {
         let bw = v.layer.borderWidth
         guard bw > 0, !bounds.isEmpty, let bc = v.layer.borderColor, bc.alpha > 0
         else { return }
-        let outer = layerRoundedRect(bounds, cornerRadius: radius)
+        let outer = layerRoundedRect(bounds, cornerRadius: radius,
+                                     maskedCorners: corners)
         let innerRect = bounds.insetBy(dx: bw, dy: bw)
         if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
             // Even-odd ring between the outer rounded rect and the inner one
             // (inner corner radius shrinks by the border width, floored at 0).
             let innerRadius = Swift.max(0, radius - bw)
             var ring = outer
-            ring.elements += layerRoundedRect(innerRect, cornerRadius: innerRadius).elements
+            ring.elements += layerRoundedRect(innerRect, cornerRadius: innerRadius,
+                                               maskedCorners: corners).elements
             c.fill(ring, color: bc, evenOdd: true, hardEdges: hardEdges)
         } else {
             // Border consumes the whole bounds.

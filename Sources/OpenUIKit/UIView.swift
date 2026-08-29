@@ -25,6 +25,26 @@ public struct UIRectEdge: OptionSet, Sendable {
     public init(rawValue: UInt) { self.rawValue = rawValue }
 }
 
+/// The corners affected by `CALayer.cornerRadius`.
+///
+/// Core Animation names corners in the layer's local coordinate system.
+/// UIView backing layers are not geometry-flipped, so minY is the visual top
+/// in OpenUIKit's UIKit-style, top-left coordinate space.
+public struct CACornerMask: OptionSet, Sendable {
+    public let rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+
+    public static let layerMinXMinYCorner = CACornerMask(rawValue: 1 << 0)
+    public static let layerMaxXMinYCorner = CACornerMask(rawValue: 1 << 1)
+    public static let layerMinXMaxYCorner = CACornerMask(rawValue: 1 << 2)
+    public static let layerMaxXMaxYCorner = CACornerMask(rawValue: 1 << 3)
+
+    static let _allKnown: CACornerMask = [
+        .layerMinXMinYCorner, .layerMaxXMinYCorner,
+        .layerMinXMaxYCorner, .layerMaxXMaxYCorner,
+    ]
+}
+
 public enum UIViewContentMode: Sendable {
     case scaleToFill, scaleAspectFit, scaleAspectFill, redraw, center
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
@@ -221,6 +241,13 @@ open class CALayer {
             }
         }
     }
+    private var storedMaskedCorners: CACornerMask = ._allKnown
+    /// Selects which corners receive `cornerRadius`. Unknown raw-value bits
+    /// are discarded, matching iOS 26 Core Animation.
+    public var maskedCorners: CACornerMask {
+        get { storedMaskedCorners }
+        set { storedMaskedCorners = newValue.intersection(._allKnown) }
+    }
     public var borderWidth: CGFloat = 0
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
@@ -320,8 +347,15 @@ open class CALayer {
     /// context. Like Core Animation, the root's own frame/position is not
     /// applied; only its bounds contents and descendant placement are drawn.
     public func render(in context: Canvas) {
-        if let owner { UIRenderer.renderView(owner, into: context) }
-        else { UIRenderer.renderLayer(self, into: context) }
+        // iOS 26's legacy render(in:) path was measured to round all four
+        // corners regardless of maskedCorners, unlike live compositing.
+        if let owner {
+            UIRenderer.renderView(owner, into: context,
+                                  honorsMaskedCorners: false)
+        } else {
+            UIRenderer.renderLayer(self, into: context,
+                                   honorsMaskedCorners: false)
+        }
     }
 }
 

@@ -199,6 +199,9 @@ struct QZLayer {
     qz::Color background{0, 0, 0, 0};
     double opacity = 1;
     double corner_radius = 0;
+    /* CALayer.maskedCorners: minX/minY, maxX/minY, minX/maxY,
+     * maxX/maxY. Unknown bits are discarded by the setter. */
+    uint32_t masked_corners = 0x0f;
     double border_width = 0;
     qz::Color border_color{0, 0, 0, 1};
     bool masks_to_bounds = false;
