@@ -46,9 +46,24 @@ open class UIProgressView: UIView {
     static let barHeight: CGFloat = 4
     /// Minimum fill length: the pill's diameter.
     static let minFillWidth: CGFloat = 8
+    /// UIKit's default progress-fill transition is short and linear. The
+    /// portable host samples it from the same deterministic clock as the
+    /// layer/UIView animation engines.
+    static let animatedProgressDuration: Double = 0.25
 
-    public var progress: Float = 0 {
-        didSet { progress = min(max(progress, 0), 1) }
+    struct ProgressAnimation {
+        let from: Float
+        let to: Float
+        let begin: Double
+        let duration: Double
+    }
+    private var progressAnimation: ProgressAnimation?
+
+    open var progress: Float = 0 {
+        didSet {
+            progress = min(max(progress, 0), 1)
+            progressAnimation = nil
+        }
     }
     public var progressTintColor: UIColor?
     public var trackTintColor: UIColor?
@@ -74,7 +89,24 @@ open class UIProgressView: UIView {
         CGSize(width: size.width, height: UIProgressView.barHeight)
     }
 
-    public override func layoutSubviews() {
+    /// Update the model immediately and, when requested, retain a presentation
+    /// interpolation for the host clock. Reversing an in-flight update starts
+    /// from its sampled presentation value rather than jumping to the old
+    /// model value.
+    open func setProgress(_ progress: Float, animated: Bool) {
+        let target = min(max(progress, 0), 1)
+        let now = OpenUIKitRuntime.animationTime
+        let from = _presentationProgress(at: now)
+        self.progress = target
+        guard animated, from != target else { return }
+        progressAnimation = ProgressAnimation(
+            from: from, to: target, begin: now,
+            duration: UIProgressView.animatedProgressDuration)
+        OpenUIKitRuntime.noteAnimationWork(
+            until: now + UIProgressView.animatedProgressDuration)
+    }
+
+    open override func layoutSubviews() {
         super.layoutSubviews()
         // Real UIKit forces the default-style bar to its 4pt height no
         // matter what frame height was assigned (frame origin preserved).
@@ -88,9 +120,25 @@ open class UIProgressView: UIView {
     /// Fill length in points for the current progress and bounds width.
     /// Round half-up to whole points; minimum 8pt (pill diameter).
     var fillWidth: CGFloat {
+        fillWidth(for: progress)
+    }
+
+    func fillWidth(for progress: Float) -> CGFloat {
         let exact = CGFloat(progress) * bounds.width
         return max(UIProgressView.minFillWidth,
                    exact.rounded(.toNearestOrAwayFromZero))
+    }
+
+    func _presentationProgress(at time: Double) -> Float {
+        guard let animation = progressAnimation else { return progress }
+        let elapsed = time - animation.begin
+        if elapsed <= 0 { return animation.from }
+        if elapsed >= animation.duration {
+            progressAnimation = nil
+            return progress
+        }
+        let fraction = Float(elapsed / animation.duration)
+        return animation.from + (animation.to - animation.from) * fraction
     }
 
     public override func drawContent(in canvas: Canvas, bounds: CGRect) {
@@ -103,11 +151,14 @@ open class UIProgressView: UIView {
             canvas.fill(.roundedRect(bounds, cornerRadius: radius), color: track)
         }
 
-        guard progress > 0 else { return }  // fill not drawn at 0
+        let presentedProgress = _presentationProgress(
+            at: OpenUIKitRuntime.animationTime)
+        guard presentedProgress > 0 else { return }  // fill not drawn at 0
         let fill = (progressTintColor ?? tintColor).resolvedCGColor(with: traits)
         guard fill.alpha > 0 else { return }
         let fillRect = CGRect(x: bounds.minX, y: bounds.minY,
-                              width: min(fillWidth, bounds.width), height: bounds.height)
+                              width: min(fillWidth(for: presentedProgress), bounds.width),
+                              height: bounds.height)
         canvas.fill(.roundedRect(fillRect, cornerRadius: radius), color: fill)
     }
 }

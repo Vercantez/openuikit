@@ -198,29 +198,44 @@ public enum UIRenderer {
     /// position/bounds/anchor mapping.
     static func renderLayer(_ layer: CALayer, into c: Canvas) {
         guard !layer.isHidden else { return }
-        let alpha = Swift.min(Swift.max(CGFloat(layer.opacity), 0), 1)
+        let presentation = layer._presentationState(at: OpenUIKitRuntime.animationTime)
+        let alpha = Swift.min(Swift.max(CGFloat(presentation.opacity), 0), 1)
         guard alpha > 0 else { return }
 
         c.save()
         if alpha < 1 { c.beginTransparencyLayer(alpha: alpha) }
 
-        let bounds = layer.bounds
+        let bounds = presentation.bounds
+        // The pure-Swift fallback can exactly clip the Focus-used solid,
+        // rounded-rect mask. Arbitrary alpha-mask layer trees are handled by
+        // the CQuartz layers compositor (`QZLayerSetMask`).
+        if let mask = layer.mask,
+           let color = mask.backgroundColor, color.alpha > 0 {
+            let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
+            let rect = CGRect(
+                x: state.position.x - mask.anchorPoint.x * state.bounds.width,
+                y: state.position.y - mask.anchorPoint.y * state.bounds.height,
+                width: state.bounds.width, height: state.bounds.height)
+            c.clip(to: layerRoundedRect(rect, cornerRadius: state.cornerRadius))
+        }
         if layer.masksToBounds {
-            c.clip(to: layerRoundedRect(bounds, cornerRadius: layer.cornerRadius))
+            c.clip(to: layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius))
         }
 
         if let background = layer.backgroundColor, background.alpha > 0,
            !bounds.isEmpty {
-            c.fill(layerRoundedRect(bounds, cornerRadius: layer.cornerRadius),
+            c.fill(layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius),
                    color: background)
         }
 
         if let gradient = layer as? CAGradientLayer {
-            renderGradientLayer(gradient, bounds: bounds, into: c)
+            renderGradientLayer(gradient, bounds: bounds,
+                                locations: presentation.locations, into: c)
         }
 
         renderSublayers(of: layer, into: c)
-        renderBorder(of: layer, bounds: bounds, into: c)
+        renderBorder(of: layer, bounds: bounds,
+                     cornerRadius: presentation.cornerRadius, into: c)
 
         if alpha < 1 { c.endTransparencyLayer() }
         c.restore()
@@ -230,8 +245,10 @@ public enum UIRenderer {
     static func renderSublayers(of parent: CALayer, into c: Canvas) {
         for child in parent._orderedSublayers {
             c.save()
-            let b = child.bounds
-            c.translate(x: child.position.x, y: child.position.y)
+            let presentation = child._presentationState(
+                at: OpenUIKitRuntime.animationTime)
+            let b = presentation.bounds
+            c.translate(x: presentation.position.x, y: presentation.position.y)
             c.translate(x: -(b.minX + child.anchorPoint.x * b.width),
                         y: -(b.minY + child.anchorPoint.y * b.height))
             renderLayer(child, into: c)
@@ -242,11 +259,13 @@ public enum UIRenderer {
     /// Axial CAGradientLayer drawing through the same Generic-RGB calibrated
     /// stop densification as UIGradientView.
     static func renderGradientLayer(_ layer: CAGradientLayer, bounds: CGRect,
+                                    locations presentedLocations: [CGFloat]? = nil,
                                     into c: Canvas) {
         guard !bounds.isEmpty, let colors = layer.colors, colors.count >= 2 else { return }
         let n = colors.count
         let locations: [CGFloat]
-        if let requested = layer.locations, requested.count == n {
+        if let requested = presentedLocations ?? layer.locations,
+           requested.count == n {
             locations = requested.map { Swift.min(Swift.max($0, 0), 1) }
         } else {
             locations = (0..<n).map { CGFloat($0) / CGFloat(n - 1) }
@@ -262,17 +281,19 @@ public enum UIRenderer {
         c.restore()
     }
 
-    static func renderBorder(of layer: CALayer, bounds: CGRect, into c: Canvas) {
+    static func renderBorder(of layer: CALayer, bounds: CGRect,
+                             cornerRadius: CGFloat? = nil, into c: Canvas) {
         let width = layer.borderWidth
         guard width > 0, !bounds.isEmpty, let color = layer.borderColor,
               color.alpha > 0 else { return }
-        let outer = layerRoundedRect(bounds, cornerRadius: layer.cornerRadius)
+        let radius = cornerRadius ?? layer.cornerRadius
+        let outer = layerRoundedRect(bounds, cornerRadius: radius)
         let innerRect = bounds.insetBy(dx: width, dy: width)
         if !innerRect.isNull, innerRect.width > 0, innerRect.height > 0 {
             var ring = outer
             ring.elements += layerRoundedRect(
                 innerRect,
-                cornerRadius: Swift.max(0, layer.cornerRadius - width)).elements
+                cornerRadius: Swift.max(0, radius - width)).elements
             c.fill(ring, color: color, evenOdd: true)
         } else {
             c.fill(outer, color: color)

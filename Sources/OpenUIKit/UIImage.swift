@@ -97,6 +97,13 @@ public final class UIImage {
         self.scale = scale > 0 ? scale : 1
     }
 
+    /// UIKit's empty image initializer. The resulting image has zero logical
+    /// size and is useful as a sentinel (for example, to suppress navigation
+    /// bar background and shadow artwork).
+    public convenience init() {
+        self.init(bitmap: Bitmap(width: 0, height: 0), scale: 1)
+    }
+
     private init(bitmap: Bitmap, scale: CGFloat, renderingMode: UIImageRenderingMode) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
@@ -258,6 +265,18 @@ public final class UIImage {
     public static func clearNamedCache() { _namedCache.removeAll() }
     private static var _namedCache: [String: UIImage] = [:]
 
+    /// Compiler entry point used by `#imageLiteral(resourceName:)` in
+    /// unchanged UIKit application sources. Image literals follow the same
+    /// loose-resource lookup policy as `UIImage(named:)`; a missing literal is
+    /// a packaging error and therefore fails loudly instead of inventing a
+    /// transparent placeholder.
+    public convenience init(imageLiteralResourceName name: String) {
+        guard let image = UIImage.named(name) else {
+            preconditionFailure("UIImage image literal resource not found: \(name)")
+        }
+        self.init(bitmap: image.bitmap, scale: image.scale)
+    }
+
     /// "…@2x.png" → 2, "…@3x" → 3, anything else → 1.
     static func scaleFromFileName(_ path: String) -> CGFloat {
         let (base, _) = splitExtension(path)
@@ -380,6 +399,11 @@ public final class UIImage {
         return out
     }
 }
+
+extension UIImage: _ExpressibleByImageLiteral {}
+
+/// Swift's image-literal default type, matching UIKit's module-level alias.
+public typealias _ImageLiteralType = UIImage
 
 // MARK: - Drawing (M14, real-app harness)
 //

@@ -133,6 +133,20 @@ final class NamedAssetLoadingTests: XCTestCase {
         }
     }
 
+    func testImageLiteralUsesUIKitNamedResourceLookup() {
+        withTempDirectory { root in
+            writeImage(width: 6, height: 4, red: 77,
+                       to: root + "/literal.png")
+            OpenUIKitRuntime.imageSearchPaths = [root]
+            OpenUIKitRuntime.imageScreenScale = 1
+
+            let image: UIImage = #imageLiteral(resourceName: "literal")
+
+            XCTAssertEqual(image.size, CGSize(width: 6, height: 4))
+            XCTAssertEqual(image.bitmap.pixels.first, 77)
+        }
+    }
+
     func testStructuredBundleDoesNotFallThroughOutsideItsResourceDirectory() {
         withTempDirectory { root in
             let bundle = makeStructuredBundle(at: root + "/Structured.bundle")

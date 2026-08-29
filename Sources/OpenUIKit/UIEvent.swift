@@ -311,6 +311,9 @@ open class UIWindow: UIView {
         // on this clock, after the steppers above (a completion may start the
         // next animation, and it should see a settled scroll/transition).
         UIView._stepAnimationCompletions(to: timestamp)
+        // Explicit Core Animation transactions share the same deterministic
+        // host clock and complete after presentation-affecting work settles.
+        CATransaction._stepCompletions(to: timestamp)
         // Caret blink of the focused text editor advances on the same host
         // clock (text-input module; additive like the steppers above).
         UITextInputState._stepCaretBlink(to: timestamp)

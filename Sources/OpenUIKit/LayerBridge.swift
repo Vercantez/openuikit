@@ -559,14 +559,16 @@ public enum LayerBridge {
         else { return nil }
         let qz = arena.track(raw)
 
-        let bounds = layer.bounds
+        let presentation = layer._presentationState(at: OpenUIKitRuntime.animationTime)
+        let bounds = presentation.bounds
         QZLayerSetBounds(qz, qzRect(bounds))
-        QZLayerSetPosition(qz, QZPoint(x: layer.position.x, y: layer.position.y))
+        QZLayerSetPosition(qz, QZPoint(x: presentation.position.x,
+                                      y: presentation.position.y))
         QZLayerSetAnchorPoint(qz, QZPoint(x: layer.anchorPoint.x,
                                          y: layer.anchorPoint.y))
         QZLayerSetHidden(qz, layer.isHidden)
-        QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(layer.opacity, 0), 1)))
-        QZLayerSetCornerRadius(qz, QZFloat(layer.cornerRadius))
+        QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(presentation.opacity, 0), 1)))
+        QZLayerSetCornerRadius(qz, QZFloat(presentation.cornerRadius))
         QZLayerSetMasksToBounds(qz, layer.masksToBounds)
 
         if let color = layer.backgroundColor {
@@ -592,7 +594,12 @@ public enum LayerBridge {
         }
 
         if let gradient, gradientColors.count >= 2 {
-            configureGradient(qz, layer: gradient, colors: gradientColors)
+            configureGradient(qz, layer: gradient, colors: gradientColors,
+                              locations: presentation.locations)
+        }
+        if let mask = layer.mask,
+           let maskLayer = buildExplicitLayer(mask, arena: &arena) {
+            QZLayerSetMask(qz, maskLayer)
         }
         for child in layer._orderedSublayers {
             if let sub = buildExplicitLayer(child, arena: &arena) {
@@ -755,10 +762,11 @@ public enum LayerBridge {
     }
 
     static func configureGradient(_ l: QZLayerRef, layer: CAGradientLayer,
-                                  colors: [CGColor]) {
+                                  colors: [CGColor],
+                                  locations: [CGFloat]? = nil) {
         let n = colors.count
         var locs: [QZFloat]
-        if let requested = layer.locations, requested.count == n {
+        if let requested = locations ?? layer.locations, requested.count == n {
             locs = requested.map { QZFloat(Swift.min(Swift.max($0, 0), 1)) }
         } else {
             locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }

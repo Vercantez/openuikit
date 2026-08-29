@@ -7,6 +7,13 @@ import CoreGraphics
 
 @MainActor
 final class UIImageCompatibilityTests: XCTestCase {
+    func testEmptyInitializerHasZeroSize() {
+        let image = UIImage()
+        XCTAssertEqual(image.size, .zero)
+        XCTAssertEqual(image.bitmap.width, 0)
+        XCTAssertEqual(image.bitmap.height, 0)
+    }
+
     func testFoundationDataInitializerUsesUIKitSpelling() {
         let source = Bitmap(width: 2, height: 1)
         source.pixels = [255, 0, 0, 255, 0, 255, 0, 128]

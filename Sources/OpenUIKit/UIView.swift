@@ -58,8 +58,14 @@ open class CALayer {
     private var storedBackgroundColor: CGColor?
     private var storedOpacity: Float = 1
     private var storedHidden = false
+    private var storedMask: CALayer?
+    private weak var maskOwner: CALayer?
     private var _needsLayout = true
     private var _isLayingOut = false
+    /// Core Animation records live in `CoreAnimation.swift`. They are kept on
+    /// the portable layer rather than the transient QZLayer built for one
+    /// frame, so rebuilding the renderer tree does not restart animations.
+    var _explicitAnimations: [_CALayerAnimationRecord] = []
 
     /// Geometry follows Core Animation's bounds/position/anchor model.
     /// A backing layer mirrors its UIView so existing view geometry remains
@@ -69,6 +75,8 @@ open class CALayer {
         set {
             if let owner { owner.bounds = newValue }
             else if storedBounds != newValue {
+                _recordImplicitAnimation(keyPath: "bounds", from: storedBounds,
+                                         to: newValue)
                 storedBounds = newValue
                 _setNeedsLayoutFromMutation()
                 superlayer?._setNeedsLayoutFromMutation()
@@ -79,7 +87,11 @@ open class CALayer {
         get { owner?.center ?? storedPosition }
         set {
             if let owner { owner.center = newValue }
-            else { storedPosition = newValue }
+            else if storedPosition != newValue {
+                _recordImplicitAnimation(keyPath: "position", from: storedPosition,
+                                         to: newValue)
+                storedPosition = newValue
+            }
         }
     }
     public var anchorPoint: CGPoint {
@@ -104,6 +116,14 @@ open class CALayer {
             storedPosition = CGPoint(x: newValue.minX + anchorPoint.x * newValue.width,
                                      y: newValue.minY + anchorPoint.y * newValue.height)
             if storedBounds != oldBounds || storedPosition != oldPosition {
+                if storedBounds != oldBounds {
+                    _recordImplicitAnimation(keyPath: "bounds", from: oldBounds,
+                                             to: storedBounds)
+                }
+                if storedPosition != oldPosition {
+                    _recordImplicitAnimation(keyPath: "position", from: oldPosition,
+                                             to: storedPosition)
+                }
                 _setNeedsLayoutFromMutation()
                 superlayer?._setNeedsLayoutFromMutation()
             }
@@ -144,6 +164,10 @@ open class CALayer {
         while let candidate = ancestor {
             if candidate === layer { return }
             ancestor = candidate.superlayer
+        }
+        if let owner = layer.maskOwner {
+            owner.storedMask = nil
+            layer.maskOwner = nil
         }
         layer.removeFromSuperlayer()
         layer.superlayer = self
@@ -200,6 +224,29 @@ open class CALayer {
     public var borderWidth: CGFloat = 0
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
+    /// An alpha mask is retained by the receiving layer but is not a
+    /// sublayer. The CQuartz compositor renders its full layer tree into an
+    /// alpha surface, matching Core Animation's ownership and paint model.
+    public var mask: CALayer? {
+        get { storedMask }
+        set {
+            guard newValue !== self, storedMask !== newValue else { return }
+            let oldMask = storedMask
+            storedMask = nil
+            oldMask?.maskOwner = nil
+
+            if let previousOwner = newValue?.maskOwner {
+                previousOwner.storedMask = nil
+            }
+            newValue?.removeFromSuperlayer()
+            storedMask = newValue
+            newValue?.maskOwner = self
+        }
+    }
+    /// Core Animation treats this as a rendering-policy hint; it does not
+    /// alter pixels or scheduling, which is also true for this deterministic
+    /// software renderer.
+    public var drawsAsynchronously: Bool = false
     // Shadow (spec v2) — CALayer defaults: opaque black, opacity 0 (off),
     // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
     // Invisible while masksToBounds is true, like CoreAnimation.
@@ -295,7 +342,7 @@ open class UIView: UIResponder, CALayerDelegate {
             }
         }
     }
-    public var bounds: CGRect = .zero {
+    open var bounds: CGRect = .zero {
         didSet {
             if bounds != oldValue {
                 recordAnimation(.bounds, from: .rect(oldValue), to: .rect(bounds))

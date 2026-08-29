@@ -55,7 +55,7 @@ Objective-C optional dispatch:
 - The getter depends on Swift reflection field metadata. A host built with
   reflection metadata disabled will observe the outer optional as nil.
 
-## Explicit CALayer subset (Focus UIHelpers, 2026-08-28)
+## Explicit CALayer subset (Focus UIHelpers and progress bar, 2026-08-29)
 
 OpenUIKit supports process-local explicit `CALayer` trees, ordered
 `addSublayer`/`insertSublayer`/`removeFromSuperlayer`, axial
@@ -65,6 +65,27 @@ delegates and a synchronous dirty-layout path: geometry/tree mutations call
 and a view's backing layer dispatches `layoutSublayers(of:)` to the view before
 `layoutSubviews()`. This is deliberately not yet a unified mirror of UIKit's
 private backing-layer tree:
+
+- Focus's progress-bar slice adds `CATransaction`, copied/keyed
+  `CABasicAnimation`, layer masks, `drawsAsynchronously`, and host-clock
+  presentation sampling for `bounds`, `bounds.size`, `position`, `opacity`,
+  `cornerRadius`, and gradient `locations`. Explicit `fromValue`/`toValue`,
+  removal/forwards fill, infinite repetition, replacement/removal, implicit
+  frame animation inside an explicit transaction, and transaction completion
+  are behavioral and tested. The model layer changes immediately; completion
+  runs only when the host advances `UIWindow.tick(timestamp:)`, using the same
+  deterministic clock as `UIView.animate`.
+- `UIProgressView.setProgress(_:animated:)` now updates the model immediately
+  and samples a reversible 0.25-second fill presentation from that clock. It
+  supplies the exact superclass call used by Focus's `GradientProgressBar`;
+  it does not reproduce UIKit's private progress image-view layer hierarchy.
+- This is not general Core Animation. There is no automatic run-loop
+  transaction, `presentation()` facade, timing-function surface, delegate,
+  animation group/keyframe/spring class, additive/cumulative/autoreverse
+  behavior, or `byValue` lowering. Unsupported animation classes, key paths,
+  and `byValue` fail loudly at `CALayer.add`; the implemented basic
+  interpolation is linear. Extend the value/key-path table alongside an exact
+  app consumer and behavior oracle rather than accepting an inert animation.
 
 - `view.layer.sublayers` exposes app-installed layers only; it does not also
   expose the backing layers of `view.subviews`. Rendering places those
@@ -77,9 +98,12 @@ private backing-layer tree:
   that expects Core Animation to perform a later implicit pass must call the
   view/layer `layoutIfNeeded()` path (the OpenUIKit host does this for views).
 - Explicit-layer shadows are implemented by the quartz/layers compositor but
-  not by the pure-Swift render pass. Backgrounds, calibrated axial gradients,
-  opacity groups, clipping, borders, descendant geometry, and array order work
-  in both paths; Focus's gradient/order/removal cases have pixel tests in both.
+  not by the pure-Swift render pass. CQuartz renders arbitrary mask layer trees;
+  the pure-Swift fallback implements the Focus-used solid rounded-rectangle
+  alpha mask only. Backgrounds, calibrated axial gradients, opacity groups,
+  clipping, borders, descendant geometry, and array order work in both paths;
+  Focus's gradient/order/removal and animated-mask cases have pixel tests in
+  both.
 - `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.
