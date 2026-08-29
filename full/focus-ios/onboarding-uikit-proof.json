@@ -1,0 +1,232 @@
+{
+  "build": {
+    "apple_toolchain_required": true,
+    "dependency_order": [
+      "UIKit",
+      "SnapKit",
+      "DesignSystem",
+      "OnboardingUIKitCore"
+    ],
+    "direct_module_suffixes": [
+      ".abi.json",
+      ".swiftdoc",
+      ".swiftmodule",
+      ".swiftsourceinfo"
+    ],
+    "openuikit_swiftpm_target": "UIKit",
+    "parse_as_library": true,
+    "swift_language_version": "5",
+    "swiftpm_triple": "arm64-apple-macosx",
+    "target": "arm64-apple-macos13.0",
+    "whole_module_optimization": true
+  },
+  "claims": {
+    "apple_toolchain_module_emission_only": true,
+    "focus_package_or_xcode_build": false,
+    "linux_guest_link_or_run": false,
+    "resource_catalog_compilation_or_decode": false,
+    "runtime_bundle_discovery": false
+  },
+  "diagnostic_contract": {
+    "dependency_build_diagnostics_recorded_and_zero_errors": true,
+    "design_system_and_snapkit_zero_diagnostics": true,
+    "onboarding_expected_warnings": [
+      {
+        "column": 57,
+        "line": 11,
+        "message": "cannot use struct 'Publisher' here; 'Combine' was not imported by this file",
+        "path": "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandlerV2.swift"
+      },
+      {
+        "column": 50,
+        "line": 9,
+        "message": "cannot use struct 'Publisher' here; 'Combine' was not imported by this file",
+        "path": "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandling.swift"
+      }
+    ],
+    "zero_errors_every_module": true
+  },
+  "focus": {
+    "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "design_system": {
+      "excluded_source_count": 3,
+      "excluded_source_digest": "f51db65db76ad183db8cd1d9df5322a4fd1b0be5990c1620373c21fba2cc734c",
+      "excluded_sources": [
+        "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+        "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+        "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift"
+      ],
+      "input_stage_path": "inputs/focus",
+      "resource_byte_count": 169439,
+      "resource_count": 117,
+      "resource_declaration": "raw-unhandled-at-pinned-manifest",
+      "resource_digest": "4f75873dc2a9e08bea4d35cd1b2e6fc8cad6858f0ff8f44afeb59efe2ffde61f",
+      "resource_stage_path": "resources/DesignSystem",
+      "source_byte_count": 8872,
+      "source_count": 4,
+      "source_digest": "00d6773590819770061d4dc9e23adedc1f5ed39962a321475093289edf28ca9b",
+      "source_root": "BlockzillaPackage/Sources/DesignSystem",
+      "sources": [
+        "BlockzillaPackage/Sources/DesignSystem/Bundle+CurrentBundle.swift",
+        "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift",
+        "BlockzillaPackage/Sources/DesignSystem/UIFont+AppFonts.swift",
+        "BlockzillaPackage/Sources/DesignSystem/UIImage+AppImages.swift"
+      ]
+    },
+    "onboarding_uikit_core": {
+      "excluded_source_count": 11,
+      "excluded_source_digest": "a6279791d2fd29f777c7a3f3cc00dfa3e51619af9a29a60ec84fed649ed288c3",
+      "excluded_sources": [
+        "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift",
+        "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift",
+        "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift",
+        "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift",
+        "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift",
+        "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+      ],
+      "input_stage_path": "inputs/focus",
+      "module_name": "OnboardingUIKitCore",
+      "source_byte_count": 25924,
+      "source_count": 10,
+      "source_digest": "d26e2983c5de94bd187b100b21713cf0f84e9e2dff551628377e0dc9b91a32cb",
+      "source_root": "BlockzillaPackage/Sources/Onboarding",
+      "sources": [
+        "BlockzillaPackage/Sources/Onboarding/Handler/Action.swift",
+        "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandlerV1.swift",
+        "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandlerV2.swift",
+        "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingEventsHandling.swift",
+        "BlockzillaPackage/Sources/Onboarding/Handler/OnboardingVersion.swift",
+        "BlockzillaPackage/Sources/Onboarding/Handler/ToolTipRoute.swift",
+        "BlockzillaPackage/Sources/Onboarding/OnboardingViewController.swift",
+        "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipTableViewCell.swift",
+        "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipView.swift",
+        "BlockzillaPackage/Sources/Onboarding/Tooltip/TooltipViewController.swift"
+      ]
+    },
+    "package_manifest": {
+      "path": "BlockzillaPackage/Package.swift",
+      "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248",
+      "size": 1975
+    },
+    "workspace_lock": {
+      "path": "Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+      "sha256": "632a0df0276ba7828f456ae3964f158fb7115d05f175ddf637abdd7ab4a4633b",
+      "size": 1409
+    },
+    "worktree_prefix": "focus-ios"
+  },
+  "generated_source": {
+    "classification": "generated-build-input",
+    "path": "generated/DesignSystem/Bundle+Module.swift",
+    "purpose": "compile-only DesignSystem Bundle.module contract; runtime discovery unavailable",
+    "sha256": "c0a3ee61e4fc8015d5e4a36775293347e21c58850605a6d47141f344211829aa",
+    "size": 146
+  },
+  "openuikit": {
+    "commit": "4c82757bb9cf193605dd9625d73562b1758e85e8",
+    "input_stage_path": "inputs/openuikit",
+    "inventory_byte_count": 8441392,
+    "inventory_digest": "7f500c99e43e41836c8db5e40449450710373d45cf8e01bda71791e8b7a3e0a7",
+    "inventory_file_count": 299,
+    "inventory_roots": [
+      "Package.swift",
+      "Sources/COpenUIKitABI",
+      "Sources/CPortableIO",
+      "Sources/CQuartz",
+      "Sources/CSDL2",
+      "Sources/CSTBTrueType",
+      "Sources/DemoApp",
+      "Sources/OpenCoreGraphics",
+      "Sources/OpenUIKit",
+      "Sources/OpenUIKitC",
+      "Sources/RealAppProbe",
+      "Sources/UIKitShim",
+      "Sources/objcparity",
+      "Sources/openhost/AppMode.swift",
+      "Sources/openhost/HostCore.swift",
+      "Sources/openhost/main.swift",
+      "Sources/openrender",
+      "Tests"
+    ],
+    "package_manifest": {
+      "path": "Package.swift",
+      "sha256": "83222d507a16fa3fb1b93988d67beb5a017b73d790fd47e617da3f213f5bc061",
+      "size": 9314
+    },
+    "validation_only_symlink_exclusions": [
+      {
+        "path": "Sources/openhost/SceneBuilder.swift",
+        "sha256": "c28f5085f31c6035da590d26d591e1db89aadf496e49f695ad434aa3366eb452",
+        "size": 32,
+        "target": "../openrender/SceneBuilder.swift"
+      },
+      {
+        "path": "Sources/openhost/SceneIO.swift",
+        "sha256": "ee579d7cd85f4ef611f195eb72a9665d9a3b3976fe1ad11046e7f22f8906584b",
+        "size": 27,
+        "target": "../openrender/SceneIO.swift"
+      }
+    ],
+    "worktree_prefix": "."
+  },
+  "schema": 1,
+  "snapkit": {
+    "commit": "e74fe2a978d1216c3602b129447c7301573cc2d8",
+    "excluded_source": {
+      "path": "Sources/Debugging.swift",
+      "reason": "Diagnostic string formatting only: it overrides NSLayoutConstraint.description through NSObject/@objc dispatch, which a pure-Swift OpenUIKit base cannot provide; it defines no constraint creation, installation, update, or SnapKit DSL API.",
+      "sha256": "6af70d54a6e6fb112d87f8adb93caead0bc2afc472e4bbb04347bf591be3b3e3",
+      "size": 6281
+    },
+    "included_source_byte_count": 121457,
+    "included_source_count": 36,
+    "included_source_digest": "e9c16679de0d7f0e6cda4a8f296f2c173bb1bdc1d11303e1c5a0f2d9459a6b54",
+    "included_sources": [
+      "Sources/Constraint.swift",
+      "Sources/ConstraintAttributes.swift",
+      "Sources/ConstraintConfig.swift",
+      "Sources/ConstraintConstantTarget.swift",
+      "Sources/ConstraintDSL.swift",
+      "Sources/ConstraintDescription.swift",
+      "Sources/ConstraintDirectionalInsetTarget.swift",
+      "Sources/ConstraintDirectionalInsets.swift",
+      "Sources/ConstraintInsetTarget.swift",
+      "Sources/ConstraintInsets.swift",
+      "Sources/ConstraintItem.swift",
+      "Sources/ConstraintLayoutGuide+Extensions.swift",
+      "Sources/ConstraintLayoutGuide.swift",
+      "Sources/ConstraintLayoutGuideDSL.swift",
+      "Sources/ConstraintLayoutSupport.swift",
+      "Sources/ConstraintLayoutSupportDSL.swift",
+      "Sources/ConstraintMaker.swift",
+      "Sources/ConstraintMakerEditable.swift",
+      "Sources/ConstraintMakerExtendable.swift",
+      "Sources/ConstraintMakerFinalizable.swift",
+      "Sources/ConstraintMakerPrioritizable.swift",
+      "Sources/ConstraintMakerRelatable+Extensions.swift",
+      "Sources/ConstraintMakerRelatable.swift",
+      "Sources/ConstraintMultiplierTarget.swift",
+      "Sources/ConstraintOffsetTarget.swift",
+      "Sources/ConstraintPriority.swift",
+      "Sources/ConstraintPriorityTarget.swift",
+      "Sources/ConstraintRelatableTarget.swift",
+      "Sources/ConstraintRelation.swift",
+      "Sources/ConstraintView+Extensions.swift",
+      "Sources/ConstraintView.swift",
+      "Sources/ConstraintViewDSL.swift",
+      "Sources/LayoutConstraint.swift",
+      "Sources/LayoutConstraintItem.swift",
+      "Sources/Typealiases.swift",
+      "Sources/UILayoutSupport+Extensions.swift"
+    ],
+    "input_stage_path": "inputs/snapkit",
+    "source_root": "Sources",
+    "workspace_lock_revision": "e74fe2a978d1216c3602b129447c7301573cc2d8",
+    "worktree_prefix": "."
+  }
+}
