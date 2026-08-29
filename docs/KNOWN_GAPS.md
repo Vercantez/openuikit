@@ -94,9 +94,12 @@ private backing-layer tree:
   and `byValue` fail loudly at `CALayer.add`; the implemented basic
   interpolation is linear. Endpoint value shapes are checked per key path
   (including `CGSize` for `bounds.size` and equal-length gradient-location
-  vectors); supplied but mismatched values fail at `add` instead of being
-  silently ignored. Extend the value/key-path table alongside an exact app
-  consumer and behavior oracle rather than accepting an inert animation.
+  vectors); scalar `Double` and `[Double]` endpoints are decoded explicitly
+  on both Darwin and Linux, where corelibs Foundation's `CGFloat` is a
+  distinct dynamic type. Supplied but mismatched values fail at `add` instead
+  of being silently ignored. Extend the value/key-path table alongside an
+  exact app consumer and behavior oracle rather than accepting an inert
+  animation.
 
 - `view.layer.sublayers` exposes app-installed layers only; it does not also
   expose the backing layers of `view.subviews`. Rendering places those
@@ -113,10 +116,13 @@ private backing-layer tree:
   the pure-Swift fallback implements the Focus-used solid rounded-rectangle
   alpha mask only. That mask subset works on both explicit layers and UIView
   backing layers, including presented geometry and partial alpha; masked
-  subtrees bypass static composite caching. Backgrounds, calibrated axial
-  gradients, opacity groups, clipping, borders, descendant geometry, and array
-  order work in both paths; Focus's gradient/order/removal and animated-mask
-  cases have pixel tests in both.
+  subtrees bypass static composite caching. On backing layers, the mask wraps
+  the final composite, including a group-opacity shadow, and partial mask
+  alpha is applied once; the CQuartz and pure-Swift compositors pin the same
+  native-QuartzCore 20x8 alpha rows. Backgrounds, calibrated axial gradients,
+  opacity groups, clipping, borders, descendant geometry, and array order work
+  in both paths; Focus's gradient/order/removal and animated-mask cases have
+  pixel tests in both.
 - `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.

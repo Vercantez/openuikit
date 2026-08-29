@@ -134,3 +134,22 @@ purely the Swift interop).
 
 Upstream fix: adopt as-is; the functions are self-contained and touch no
 existing behavior.
+
+## 006-layer-mask-group.patch
+
+`src/qz_layer.cpp` — makes `CALayer.mask` an outer alpha mask over the
+already-composited layer result. Native QuartzCore `CALayer.render(in:)` was
+measured with a sharp 20x8 probe: a 50%-opaque white layer with a black,
+zero-radius shadow and an opaque 5x8 mask produces alpha 192 only in the
+masked five columns; a 50%-opaque mask produces alpha 96 there. Thus the
+mask covers the group-opacity shadow as well as the content, and partial mask
+alpha is multiplied once after their overlap is composed.
+
+The old QZ path multiplied the drawing clip by mask alpha after emitting the
+group shadow. That let the shadow escape an opaque mask and would attenuate
+shadow and content independently for a translucent mask. The patch opens an
+outer transparency layer, renders the complete layer into it, multiplies its
+premultiplied pixels by the rendered mask alpha, then composites it back.
+
+Upstream fix: adopt the changed `apply_layer_mask` and the outer masked group
+in `render_layer()` together; either half alone retains one of the two bugs.

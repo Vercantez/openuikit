@@ -93,19 +93,16 @@ enum _CALayerAnimationValue {
         case let value as CGPoint: return .point(value)
         case let value as CGSize: return .size(value)
         case let value as CGRect: return .rect(value)
-#if canImport(CoreGraphics)
         case let value as Double: return .scalar(CGFloat(value))
-#endif
         case let value as CGFloat: return .scalar(value)
         case let value as Float: return .scalar(CGFloat(value))
         case let value as Int: return .scalar(CGFloat(value))
         // An uncontextualized Swift array literal stored in `Any` is
         // `[Double]`, including Focus's exact GradientProgressBar endpoints.
-        // Foundation.CGFloat is a distinct bridged value type on Darwin, so a
-        // `[CGFloat]` cast does not accept those bytes there.
-#if canImport(CoreGraphics)
+        // Foundation.CGFloat can be a distinct bridged value type (notably in
+        // corelibs Foundation), so a `[CGFloat]` cast does not accept those
+        // bytes on every supported host.
         case let value as [Double]: return .vector(value.map { CGFloat($0) })
-#endif
         case let value as [CGFloat]: return .vector(value)
         case let value as [Float]: return .vector(value.map { CGFloat($0) })
         case let value as [Int]: return .vector(value.map { CGFloat($0) })

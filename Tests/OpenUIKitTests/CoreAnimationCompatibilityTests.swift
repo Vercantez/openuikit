@@ -592,6 +592,14 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
     func testEndpointShapesAreStrictAndNilModelLocationsCanAnimate() {
         let layer = PortableLayer()
+        let scalarDouble: Double = 0.25
+        let scalar = PortableBasicAnimation(keyPath: "opacity")
+        scalar.fromValue = scalarDouble
+        scalar.toValue = Double(0.75)
+        XCTAssertNotNil(layer._resolvedEndpoints(for: scalar,
+                                                  keyPath: "opacity"),
+                        "Linux Double is distinct from Foundation.CGFloat")
+
         let size = PortableBasicAnimation(keyPath: "bounds.size")
         size.fromValue = CGSize(width: 10, height: 20)
         size.toValue = CGSize(width: 30, height: 40)
@@ -617,10 +625,13 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         ]
         XCTAssertNil(gradient.locations)
         let supplied = PortableBasicAnimation(keyPath: "locations")
-        supplied.fromValue = [0.0, 0.25]
-        supplied.toValue = [0.75, 1.0]
+        let suppliedFrom: [Double] = [0.0, 0.25]
+        let suppliedTo: [Double] = [0.75, 1.0]
+        supplied.fromValue = suppliedFrom
+        supplied.toValue = suppliedTo
         XCTAssertNotNil(gradient._resolvedEndpoints(for: supplied,
-                                                     keyPath: "locations"))
+                                                     keyPath: "locations"),
+                        "Linux [Double] is distinct from [Foundation.CGFloat]")
 
         gradient.colors!.append(
             PortableCGColor(red: 0, green: 1, blue: 0, alpha: 1))
@@ -723,6 +734,50 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(inside, 126)
             XCTAssertLessThanOrEqual(inside, 129)
             XCTAssertEqual(bitmap.pixels[(4 * 20 + 14) * 4 + 3], 0)
+        }
+    }
+
+    func testBackingMaskCoversGroupedShadowInBothCompositors() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 8))
+        view.backgroundColor = .white
+        view.alpha = 0.5
+        view.layer.shadowColor = PortableCGColor(
+            red: 0, green: 0, blue: 0, alpha: 1)
+        view.layer.shadowOpacity = 1
+        view.layer.shadowRadius = 0
+        view.layer.shadowOffset = .zero
+
+        let mask = PortableLayer()
+        mask.anchorPoint = .zero
+        mask.frame = CGRect(x: 0, y: 0, width: 5, height: 8)
+        mask.backgroundColor = PortableCGColor(
+            red: 1, green: 1, blue: 1, alpha: 1)
+        view.layer.mask = mask
+
+        // Measured with QuartzCore CALayer.render(in:): the mask is an
+        // outer alpha mask over both the group-opacity content and its
+        // shadow. It does not leave an unmasked shadow in x=5..<20.
+        for bitmap in [
+            LayerBridge.render(view, scale: 1),
+            UIRenderer.renderPassRender(view, scale: 1),
+        ] {
+            let row = (0..<20).map { bitmap.pixels[(4 * 20 + $0) * 4 + 3] }
+            XCTAssertEqual(row, [UInt8](repeating: 192, count: 5)
+                + [UInt8](repeating: 0, count: 15))
+        }
+
+        // A translucent mask attenuates the already-composited 0.75 alpha
+        // once (0.75 * 0.5 = 0.375 -> 96), rather than attenuating the
+        // overlapping shadow and content as independent draw operations.
+        mask.backgroundColor = PortableCGColor(
+            red: 1, green: 1, blue: 1, alpha: 0.5)
+        for bitmap in [
+            LayerBridge.render(view, scale: 1),
+            UIRenderer.renderPassRender(view, scale: 1),
+        ] {
+            let row = (0..<20).map { bitmap.pixels[(4 * 20 + $0) * 4 + 3] }
+            XCTAssertEqual(row, [UInt8](repeating: 96, count: 5)
+                + [UInt8](repeating: 0, count: 15))
         }
     }
 

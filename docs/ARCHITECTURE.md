@@ -288,6 +288,14 @@ behaviour against UIKit's documented callback order.
 (The contract below is what BOTH compositors implement: RenderPass.swift
 directly, LayerBridge via the patched quartz layer compositor.)
 For a view with alpha `a`, cornerRadius `r`:
+Before step 0, `layer.mask` opens an outer alpha-mask group around the whole
+layer result; the group closes after step 6. The mask therefore covers the
+shadow as well as content and sublayers, and translucent mask alpha multiplies
+the final composite once. A 20x8 QuartzCore oracle (50%-opaque white layer,
+black zero-radius shadow, opaque 5x8 mask) yields alpha 192 in x=0..<5 and
+zero outside; changing the mask to 50% alpha yields 96 inside. Both
+compositors pin those exact rows in `CoreAnimationCompatibilityTests`.
+
 0. Layer shadow (spec v2, `shadowOpacity > 0 && !masksToBounds`): the
    blurred, offset silhouette of the layer's shape (outer rounded rect when
    the background is visible, else the border ring) composites BENEATH

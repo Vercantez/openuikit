@@ -112,6 +112,10 @@ public enum UIRenderer {
         }
 
         c.save()
+        // CALayer.mask is outside the layer composite: it covers the shadow
+        // as well as content and sublayers. Keep its transparency group open
+        // around both the group-opacity shadow and the view opacity group so
+        // partial mask alpha is multiplied into the final result exactly once.
         if maskAlpha < 1 { c.beginTransparencyLayer(alpha: maskAlpha) }
         if let maskClip { c.clip(to: maskClip) }
         let grouped = alpha < 1

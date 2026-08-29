@@ -293,9 +293,15 @@ static void draw_layer_contents(QZLayer *layer, QZContextRef ctx) {
 
 static void render_layer(QZLayer *layer, QZContextRef ctx);
 
-/* Multiply the current clip by the mask layer's alpha (CALayer.mask). */
+/* Apply the mask layer's alpha to the already-composited layer group.
+ *
+ * CALayer.mask is an outer alpha mask: it covers the layer shadow as well
+ * as the layer's content, sublayers and border, and partial mask alpha is
+ * multiplied into that final composite once. Applying mask alpha through
+ * the drawing clip would be observably wrong when shadow and content
+ * overlap because each operation would be attenuated separately. */
 static void apply_layer_mask(QZLayer *layer, QZContextRef ctx) {
-    if (!layer->mask || layer->mask == layer) return;
+    if (!layer->mask || layer->mask == layer || ctx->trans.empty()) return;
     QZContextRef mctx = QZBitmapContextCreate(
         nullptr, (size_t)ctx->width, (size_t)ctx->height, 8, ctx->bpr,
         kQZImageAlphaPremultipliedLast);
@@ -303,15 +309,16 @@ static void apply_layer_mask(QZLayer *layer, QZContextRef ctx) {
     mctx->gs.ctm = ctx->gs.ctm;
     mctx->gs.antialias = ctx->gs.antialias;
     render_layer(layer->mask, mctx);
-    if (ctx->gs.clip.size() != (size_t)ctx->width * (size_t)ctx->height)
-        ctx->gs.clip.assign((size_t)ctx->width * (size_t)ctx->height, 255);
+    uint8_t *group = ctx->pixels;
     const uint8_t *mp = mctx->pixels;
-    int w = ctx->width, h = ctx->height;
-    for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
+    for (int y = 0; y < ctx->height; y++) {
+        for (int x = 0; x < ctx->width; x++) {
+            size_t gi = (size_t)y * ctx->bpr + (size_t)x * 4;
             uint8_t ma = mp[(size_t)y * mctx->bpr + (size_t)x * 4 + 3];
-            unsigned v = ((unsigned)ctx->gs.clip[(size_t)y * w + x] * ma + 127u) / 255u;
-            ctx->gs.clip[(size_t)y * w + x] = (uint8_t)v;
+            group[gi + 0] = mul255(group[gi + 0], ma);
+            group[gi + 1] = mul255(group[gi + 1], ma);
+            group[gi + 2] = mul255(group[gi + 2], ma);
+            group[gi + 3] = mul255(group[gi + 3], ma);
         }
     }
     QZContextRelease(mctx);
@@ -390,6 +397,12 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
     QZRect b = layer->bounds;
     double cr = layer->corner_radius;
 
+    /* A CALayer mask applies once to the final layer composite, including
+     * a grouped shadow. Build that composite offscreen and multiply it by
+     * the rendered mask immediately before returning to the destination. */
+    bool masked = layer->mask && layer->mask != layer;
+    if (masked) QZContextBeginTransparencyLayer(ctx);
+
     bool bg_visible = layer->background.a > 0.001;
     bool border_visible = layer->border_width > 0 && layer->border_color.a > 0.001;
     /* CA hides the layer shadow while masksToBounds is set, and there is
@@ -428,8 +441,6 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
         rounded_or_rect(ctx, b, cr);
         QZContextClip(ctx);
     }
-
-    if (layer->mask) apply_layer_mask(layer, ctx);
 
     if (bg_visible) {
         QZContextSaveGState(ctx);
@@ -542,6 +553,10 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
     if (group) {
         QZContextEndTransparencyLayer(ctx);
         ctx->gs.alpha = saved_alpha;
+    }
+    if (masked) {
+        apply_layer_mask(layer, ctx);
+        QZContextEndTransparencyLayer(ctx);
     }
     QZContextRestoreGState(ctx);
 }
