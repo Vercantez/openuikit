@@ -1,0 +1,72 @@
+{
+  "candidates": [
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "e3976a926431bd88d2ababcf89764f4ae5b6e7da9be4cda979dc1e50d05f2586",
+        "spdx": "MIT"
+      },
+      "module_or_product": "OpenSwiftUI",
+      "repository": "https://github.com/OpenSwiftUIProject/OpenSwiftUI.git",
+      "reuse": "Selective core-model and compatibility-test donor; its dependency and renderer graph is not the OpenUIKit Mach-O guest graph.",
+      "revision": "4373df0d44e7a26003fcd4cd15a52ebc61415208"
+    },
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "385ee68d169ba712fc7e6230def0ea979d812d0d69f2f985a3512d1e858a5804",
+        "spdx": "Apache-2.0"
+      },
+      "module_or_product": "TokamakShim / TokamakCore",
+      "repository": "https://github.com/TokamakUI/Tokamak.git",
+      "reuse": "Result-builder, reconciliation, and layout reference only; its source import and renderer contracts differ from Focus/OpenUIKit.",
+      "revision": "e0d8e9db462938610337327ade58161aa3b698ac"
+    },
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "c6728f560792a4594805683ce03d84cabea3c7e8c3209f5f83ab8e99cbe116a6",
+        "spdx": "MIT"
+      },
+      "module_or_product": "AltSwiftUI",
+      "repository": "https://github.com/rakutentech/AltSwiftUI.git",
+      "reuse": "Selective UIKit hosting and control-mapping donor; its documented View contract is not source-interchangeable with SwiftUI and it assumes Apple's UIKit.",
+      "revision": "1e83580f3003bb6b5fd01a15f7719c037ca0f39f"
+    },
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "3c25f31e07a5c2136c56fdacb988ddf589d0b0bf2a0a2a8ee8c703d8d2bbb03f",
+        "spdx": "MIT"
+      },
+      "module_or_product": "SwiftCrossUI",
+      "repository": "https://github.com/stackotter/swift-cross-ui.git",
+      "reuse": "Backend abstraction reference only; its module, DSL, and application lifecycle do not satisfy unmodified import SwiftUI source.",
+      "revision": "b835ea76f35cfcda1c60de72af484aa0b5963041"
+    },
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "69b0c5b2bca1c0d0c92f883eb5e6c830541fa365229d9533150ff779da1b678c",
+        "spdx": "MIT"
+      },
+      "module_or_product": "SwiftOpenUI",
+      "repository": "https://github.com/codelynx/SwiftOpenUI.git",
+      "reuse": "Selective declarative graph, layout, state, and backend-contract donor; it has no OpenUIKit UIHostingController boundary and is not itself named SwiftUI.",
+      "revision": "8100d9ca2f46b0f2a9251c33afd466c166939229"
+    },
+    {
+      "license": {
+        "path": "LICENSE",
+        "sha256": "567c1d9c9e13c9696efc29e90eb8d1345e24f7c93ef54f674952c307dd1d8d73",
+        "spdx": "Apache-2.0"
+      },
+      "module_or_product": "SwiftUI",
+      "repository": "https://github.com/Lore-Hex/QuillUI.git",
+      "reuse": "Selective module-shadow, re-export, compatibility-extension, and hosting-boundary donor; its SwiftOpenUI/AppKit/UIKit/GTK-or-Qt graph must not replace the existing OpenUIKit Mach-O substrate wholesale.",
+      "revision": "006b072e38158a15ff39554d6acde2b839a964ab"
+    }
+  ],
+  "policy": "Pins are evidence and donor candidates, not dependencies. Copy or adapt code only with file-level license attribution and a behavior test against the OpenUIKit guest contract.",
+  "schema": 1
+}

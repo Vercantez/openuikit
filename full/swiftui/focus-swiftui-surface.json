@@ -1,0 +1,3939 @@
+{
+  "aggregate": {
+    "adjacent_framework_lexical_candidates": {
+      "WidgetKit": {
+        "StaticConfiguration": [
+          "Widgets/Widgets.swift"
+        ],
+        "Timeline": [
+          "Widgets/Widgets.swift"
+        ],
+        "TimelineEntry": [
+          "Widgets/Widgets.swift"
+        ],
+        "TimelineProvider": [
+          "Widgets/Widgets.swift"
+        ],
+        "Widget": [
+          "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+          "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+          "Widgets/Widgets.swift"
+        ],
+        "WidgetConfiguration": [
+          "Widgets/Widgets.swift"
+        ],
+        "WidgetPreviewContext": [
+          "Widgets/Widgets.swift"
+        ]
+      }
+    },
+    "lexical_syntax_counts": {
+      "availability_check_tokens": 5,
+      "body_some_view_declarations": 18,
+      "generic_view_constraint_candidates": 1,
+      "if_tokens_lexically_nested_under_body_braces": 7,
+      "named_dollar_projection_candidates": 11,
+      "opaque_some_view_parameter_candidates": 1,
+      "preview_provider_conformance_candidates": 18,
+      "some_view_occurrences": 44,
+      "view_conformance_candidates": 18
+    },
+    "swiftui_lexical_candidates": {
+      "dot_call_modifiers": {
+        "aspectRatio": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "background": {
+          "file_count": 4,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 8
+        },
+        "bold": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 3
+        },
+        "clipShape": {
+          "file_count": 4,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 4
+        },
+        "colorScheme": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "cornerRadius": {
+          "file_count": 3,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 4
+        },
+        "disabled": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "edgesIgnoringSafeArea": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "font": {
+          "file_count": 9,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 19
+        },
+        "fontWeight": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "foregroundColor": {
+          "file_count": 5,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 12
+        },
+        "frame": {
+          "file_count": 7,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 20
+        },
+        "ignoresSafeArea": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 3
+        },
+        "minimumScaleFactor": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "multilineTextAlignment": {
+          "file_count": 4,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 7
+        },
+        "navigationBarBackButtonHidden": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "navigationBarHidden": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "navigationBarTitle": {
+          "file_count": 8,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "Blockzilla/Settings/Controller/SettingsViewController.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift"
+          ],
+          "line_location_count": 8
+        },
+        "navigationBarTitleDisplayMode": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "navigationTitle": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "onAppear": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "onChange": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "onReceive": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "onTapGesture": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "opacity": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "overlay": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "padding": {
+          "file_count": 6,
+          "files": [
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 16
+        },
+        "previewContext": {
+          "file_count": 1,
+          "files": [
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 1
+        },
+        "previewLayout": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "resizable": {
+          "file_count": 5,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 7
+        },
+        "scaledToFill": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "scaledToFit": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "shadow": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "simultaneousGesture": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "stroke": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "tabViewStyle": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "tag": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "toolbar": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        }
+      },
+      "global_functions": {
+        "withAnimation": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        }
+      },
+      "leading_dot_members": {
+        "all": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "always": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "black": {
+          "file_count": 3,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 3
+        },
+        "bold": {
+          "file_count": 3,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 4
+        },
+        "bottom": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 26
+        },
+        "bottomTrailing": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 2
+        },
+        "caption": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 5
+        },
+        "center": {
+          "file_count": 4,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 5
+        },
+        "fit": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "gray": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 3
+        },
+        "headline": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "horizontal": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 6
+        },
+        "infinity": {
+          "file_count": 3,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 4
+        },
+        "inline": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "leading": {
+          "file_count": 5,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 27
+        },
+        "light": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/Settings/Controller/SettingsViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 4
+        },
+        "medium": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "page": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "sizeThatFits": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "system": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 5
+        },
+        "title3": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "top": {
+          "file_count": 4,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 17
+        },
+        "topLeading": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 2
+        },
+        "trailing": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift"
+          ],
+          "line_location_count": 11
+        },
+        "vertical": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/BrowserViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "white": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 3
+        }
+      },
+      "property_wrappers": {
+        "ObservedObject": {
+          "file_count": 6,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 6
+        },
+        "Published": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/Onboarding/OnboardingFactory.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift"
+          ],
+          "line_location_count": 2
+        },
+        "State": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift"
+          ],
+          "line_location_count": 1
+        }
+      },
+      "types_and_protocols": {
+        "Button": {
+          "file_count": 7,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 19
+        },
+        "Color": {
+          "file_count": 8,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift",
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/Assets.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 20
+        },
+        "EdgeInsets": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "Font": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift"
+          ],
+          "line_location_count": 8
+        },
+        "ForEach": {
+          "file_count": 6,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift"
+          ],
+          "line_location_count": 7
+        },
+        "Form": {
+          "file_count": 9,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift"
+          ],
+          "line_location_count": 9
+        },
+        "Gradient": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/Assets.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 4
+        },
+        "HStack": {
+          "file_count": 9,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 14
+        },
+        "Image": {
+          "file_count": 8,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/Assets.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 25
+        },
+        "LinearGradient": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 2
+        },
+        "List": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "NavigationLink": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift"
+          ],
+          "line_location_count": 6
+        },
+        "NavigationView": {
+          "file_count": 3,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 3
+        },
+        "ObservableObject": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift"
+          ],
+          "line_location_count": 1
+        },
+        "Picker": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "PreviewProvider": {
+          "file_count": 18,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 18
+        },
+        "RoundedRectangle": {
+          "file_count": 4,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 6
+        },
+        "ScrollView": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "Section": {
+          "file_count": 6,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 16
+        },
+        "Spacer": {
+          "file_count": 8,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 17
+        },
+        "TabView": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "TapGesture": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "Text": {
+          "file_count": 15,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 66
+        },
+        "TextField": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "Toggle": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 5
+        },
+        "UIHostingController": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/Settings/Controller/SettingsViewController.swift",
+            "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift"
+          ],
+          "line_location_count": 3
+        },
+        "UIViewControllerRepresentable": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift"
+          ],
+          "line_location_count": 1
+        },
+        "VStack": {
+          "file_count": 7,
+          "files": [
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 18
+        },
+        "View": {
+          "file_count": 19,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+            "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalSettingsView.swift",
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+            "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+            "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift",
+            "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 63
+        },
+        "ZStack": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift"
+          ],
+          "line_location_count": 3
+        }
+      }
+    }
+  },
+  "claim_boundary": {
+    "compile_surface": "Exact checked-in direct-import files and hashes for the reviewed pin; API-looking tokens remain conservative lexical candidates, not compiler-resolved ownership or ABI completeness.",
+    "lexical_candidates": "Token locations are exact, but type/member/projected-value/ViewBuilder attribution is deliberately not claimed; hosting files contain UIKit and Combine collisions.",
+    "renderer": "No renderer is implemented or proven by this inventory.",
+    "runtime_semantics": "No SwiftUI runtime behavior is implemented or proven by this inventory.",
+    "source_compatibility_goal": "A guest module named SwiftUI must compile these sources without changing their imports or call sites."
+  },
+  "entry_surfaces": [
+    {
+      "entry": "OnboardingFactory.make(.v2)",
+      "host": "PortraitHostingController<OnboardingView>",
+      "kind": "main_app_runtime"
+    },
+    {
+      "entry": "BrowserViewController route .widget",
+      "host": "PortraitHostingController<CardBannerView>",
+      "kind": "main_app_runtime"
+    },
+    {
+      "entry": "BrowserViewController route .showMeHow",
+      "host": "PortraitHostingController<ShowMeHowOnboardingView>",
+      "kind": "main_app_runtime"
+    },
+    {
+      "entry": "SettingsViewController licenses",
+      "host": "UIHostingController<LicenseListView>",
+      "kind": "main_app_runtime"
+    },
+    {
+      "entry": "SettingsViewController internal settings",
+      "host": "UIHostingController<InternalSettingsView>",
+      "kind": "main_app_runtime"
+    },
+    {
+      "entry": "WidgetsExtension @main",
+      "host": "WidgetKit StaticConfiguration<FocusWidgetsEntryView>",
+      "kind": "extension_runtime"
+    }
+  ],
+  "files": [
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 89345,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "AppShortcuts",
+        "Combine",
+        "Foundation",
+        "Glean",
+        "Intents",
+        "Onboarding",
+        "SnapKit",
+        "StoreKit",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {
+          "bottom": [
+            141,
+            148,
+            158,
+            186,
+            227,
+            233,
+            240,
+            260,
+            262,
+            688,
+            690,
+            713,
+            716,
+            717,
+            720,
+            744,
+            747,
+            748,
+            791,
+            1715,
+            1741,
+            1828
+          ],
+          "center": [
+            248
+          ],
+          "horizontal": [
+            516,
+            517,
+            531
+          ],
+          "leading": [
+            164,
+            186,
+            221,
+            226,
+            232,
+            261,
+            532,
+            686,
+            691,
+            743,
+            749,
+            925,
+            978
+          ],
+          "medium": [
+            161
+          ],
+          "top": [
+            141,
+            148,
+            158,
+            186,
+            221,
+            231,
+            240,
+            260,
+            683,
+            716,
+            747,
+            791
+          ],
+          "trailing": [
+            165,
+            221,
+            226,
+            232,
+            261,
+            686,
+            691,
+            743,
+            749
+          ],
+          "vertical": [
+            247
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {}
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 1,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 2,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 2104,
+      "path": "Blockzilla/BrowserViewController.swift",
+      "role": "hosting_call_site",
+      "scope": "main_application",
+      "sha256": "e5593a1879452d4a34ede38148481e52201fee6c556eaa441a74250d1a90fc1f",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1419,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Sentry",
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "navigationBarTitle": [
+            25
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Button": [
+            12,
+            15,
+            18,
+            21
+          ],
+          "Form": [
+            10
+          ],
+          "PreviewProvider": [
+            29
+          ],
+          "Section": [
+            11
+          ],
+          "Text": [
+            11,
+            13,
+            16,
+            19,
+            22,
+            25
+          ],
+          "View": [
+            8,
+            9,
+            30
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 33,
+      "path": "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "a496d9777ddcef942598ba5e49b01a63b4478749f08837abca40c6483e93ecf8",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "NSError": [
+            21
+          ],
+          "NSException": [
+            18
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 3250,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Combine",
+        "FocusAppServices",
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "navigationBarTitle": [
+            61
+          ],
+          "onReceive": [
+            47
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {
+          "State": [
+            13
+          ]
+        },
+        "types_and_protocols": {
+          "ForEach": [
+            30,
+            40
+          ],
+          "Form": [
+            25
+          ],
+          "HStack": [
+            31
+          ],
+          "Picker": [
+            39
+          ],
+          "PreviewProvider": [
+            65
+          ],
+          "Section": [
+            26,
+            29,
+            38
+          ],
+          "Spacer": [
+            33
+          ],
+          "Text": [
+            27,
+            29,
+            32,
+            34,
+            39,
+            42,
+            44,
+            61
+          ],
+          "View": [
+            23,
+            24,
+            66
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 5,
+        "named_dollar_projection_candidates": 1,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 76,
+      "path": "Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "91263c0b731dd815b692737764d47f329e1aa75bac469bf7f7a1c5da526861d5",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 2602,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "FocusAppServices",
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "font": [
+            20,
+            26,
+            38
+          ],
+          "navigationBarTitle": [
+            44
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "caption": [
+            20,
+            26,
+            38
+          ],
+          "leading": [
+            18,
+            24,
+            36
+          ]
+        },
+        "property_wrappers": {
+          "ObservedObject": [
+            10
+          ]
+        },
+        "types_and_protocols": {
+          "ForEach": [
+            34
+          ],
+          "Form": [
+            15
+          ],
+          "NavigationLink": [
+            35
+          ],
+          "PreviewProvider": [
+            48
+          ],
+          "Section": [
+            16,
+            30
+          ],
+          "Text": [
+            16,
+            19,
+            20,
+            25,
+            26,
+            30,
+            32,
+            37,
+            38,
+            44
+          ],
+          "Toggle": [
+            17,
+            23
+          ],
+          "VStack": [
+            18,
+            24,
+            36
+          ],
+          "View": [
+            13,
+            14,
+            49
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 1,
+        "named_dollar_projection_candidates": 2,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 55,
+      "path": "Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "84845854da7b6015859ae088734994e9008211d973d6faa26e9b04e2148327da",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1145,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "navigationBarTitle": [
+            28
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {
+          "ObservedObject": [
+            8
+          ]
+        },
+        "types_and_protocols": {
+          "Button": [
+            21
+          ],
+          "Form": [
+            13
+          ],
+          "PreviewProvider": [
+            32
+          ],
+          "Section": [
+            14,
+            20
+          ],
+          "Text": [
+            16,
+            25,
+            28
+          ],
+          "Toggle": [
+            15
+          ],
+          "View": [
+            11,
+            12,
+            33
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 1,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 36,
+      "path": "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "e3d3dea9026a1c0a885dc02319fda6fb4ba2b57b8835cf4d12100b221feafb8c",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "UserDefaults": [
+            22
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1533,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "font": [
+            33
+          ],
+          "navigationBarTitle": [
+            35
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "caption": [
+            33
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Form": [
+            10
+          ],
+          "NavigationLink": [
+            12,
+            17,
+            22,
+            27
+          ],
+          "PreviewProvider": [
+            39
+          ],
+          "Section": [
+            11,
+            16,
+            21,
+            26,
+            31
+          ],
+          "Text": [
+            13,
+            18,
+            23,
+            28,
+            32,
+            35
+          ],
+          "View": [
+            7,
+            9,
+            40
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 43,
+      "path": "Blockzilla/InternalSettings/InternalSettingsView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "263b9c34b558b461166efe634fc07d6f1c81ada38e05e98159a7f3c0f8bfb858",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 4752,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Combine",
+        "Glean",
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "disabled": [
+            68
+          ],
+          "font": [
+            66
+          ],
+          "navigationBarTitle": [
+            104
+          ],
+          "onChange": [
+            59,
+            72
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "caption": [
+            66
+          ],
+          "leading": [
+            56,
+            64,
+            70
+          ]
+        },
+        "property_wrappers": {
+          "ObservedObject": [
+            13
+          ]
+        },
+        "types_and_protocols": {
+          "Button": [
+            75,
+            79,
+            85,
+            89,
+            93,
+            97
+          ],
+          "Form": [
+            52
+          ],
+          "PreviewProvider": [
+            108
+          ],
+          "Section": [
+            54,
+            62,
+            84
+          ],
+          "Text": [
+            54,
+            57,
+            62,
+            65,
+            66,
+            76,
+            80,
+            86,
+            90,
+            94,
+            98,
+            102,
+            104
+          ],
+          "TextField": [
+            71
+          ],
+          "Toggle": [
+            55,
+            63
+          ],
+          "VStack": [
+            56,
+            64,
+            70
+          ],
+          "View": [
+            50,
+            51,
+            109
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 1,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 1,
+        "named_dollar_projection_candidates": 3,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 112,
+      "path": "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+      "role": "runtime_view",
+      "scope": "main_application",
+      "sha256": "b1e374f8ffb8032268a4800170f5a822a0c98b9c14b5a962c4d13132367358ca",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "URL": [
+            9,
+            18,
+            23,
+            28,
+            33,
+            38,
+            44
+          ]
+        },
+        "UIKit": {
+          "UIApplication": [
+            75
+          ],
+          "UIPasteboard": [
+            79
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 9166,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Onboarding",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {
+          "Published": [
+            10
+          ]
+        },
+        "types_and_protocols": {}
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 1,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 119,
+      "path": "Blockzilla/Onboarding/OnboardingFactory.swift",
+      "role": "hosting_call_site",
+      "scope": "main_application",
+      "sha256": "53016321a0870300d74d0f921efd6b54a33e0f6cf92c20d4b3b858d5050cbff9",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {
+        "Combine": {
+          "Published": [
+            10,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 28861,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Combine",
+        "DesignSystem",
+        "Glean",
+        "Intents",
+        "IntentsUI",
+        "Licenses",
+        "Onboarding",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "navigationBarTitle": [
+            474
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "light": [
+            83,
+            84
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "UIHostingController": [
+            474,
+            478
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 607,
+      "path": "Blockzilla/Settings/Controller/SettingsViewController.swift",
+      "role": "hosting_call_site",
+      "scope": "main_application",
+      "sha256": "0a1d8380f50508658dc30fb167264e7f2e682182817277cdd803680ab577032f",
+      "target": "Blockzilla",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 4148,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "clipShape": [
+            16
+          ],
+          "frame": [
+            15
+          ],
+          "navigationTitle": [
+            32
+          ],
+          "overlay": [
+            17
+          ],
+          "stroke": [
+            19
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "black": [
+            19
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Color": [
+            14,
+            19
+          ],
+          "ForEach": [
+            10
+          ],
+          "Form": [
+            9
+          ],
+          "HStack": [
+            11
+          ],
+          "NavigationView": [
+            30
+          ],
+          "PreviewProvider": [
+            28
+          ],
+          "RoundedRectangle": [
+            16,
+            18
+          ],
+          "Spacer": [
+            13
+          ],
+          "Text": [
+            12
+          ],
+          "View": [
+            7,
+            8,
+            29
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 151,
+      "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+      "role": "preview_only",
+      "scope": "local_package",
+      "sha256": "0bcfbf1b672fdd82d305a8fd0fbbc319e59285b43b7aa7d4566cf445e5ecd2f1",
+      "target": "DesignSystem",
+      "visible_module_api_locations": {
+        "UIKit": {
+          "UIColor": [
+            75
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 2114,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Font": [
+          "init(uiFont:)"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "font": [
+            13
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Font": [
+            13,
+            26,
+            28
+          ],
+          "ForEach": [
+            10
+          ],
+          "Form": [
+            9
+          ],
+          "HStack": [
+            11
+          ],
+          "PreviewProvider": [
+            20
+          ],
+          "Text": [
+            12
+          ],
+          "View": [
+            7,
+            8,
+            21
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 86,
+      "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift",
+      "role": "preview_only",
+      "scope": "local_package",
+      "sha256": "99da3374150876e5212adc7f9baca7f1cd4c62afea40919a64ac31a700e7e00a",
+      "target": "DesignSystem",
+      "visible_module_api_locations": {
+        "CoreText": {
+          "CTFont": [
+            28
+          ]
+        },
+        "UIKit": {
+          "UIFont": [
+            27,
+            50
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1752,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "frame": [
+            16
+          ],
+          "resizable": [
+            15
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "ForEach": [
+            10
+          ],
+          "Form": [
+            9
+          ],
+          "HStack": [
+            11
+          ],
+          "Image": [
+            14
+          ],
+          "PreviewProvider": [
+            23
+          ],
+          "Spacer": [
+            13
+          ],
+          "Text": [
+            12
+          ],
+          "View": [
+            7,
+            8,
+            24
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 65,
+      "path": "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift",
+      "role": "preview_only",
+      "scope": "local_package",
+      "sha256": "59f55ca617ce706cb7abe85b3d44f192261fb8690ba05b8eab4fde02f1664508",
+      "target": "DesignSystem",
+      "visible_module_api_locations": {
+        "UIKit": {
+          "UIImage": [
+            41
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 3248,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Foundation",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Color": [
+          "accent"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Color": [
+            69,
+            70
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 71,
+      "path": "BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "4078f76f180d37f6d560dd63d59ef161302a73b7f416933533663700c314224f",
+      "target": "DesignSystem",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1642,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI",
+        "UIKit"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "navigationBarTitle": [
+            19
+          ],
+          "padding": [
+            17
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "ForEach": [
+            13
+          ],
+          "List": [
+            12
+          ],
+          "NavigationLink": [
+            14
+          ],
+          "NavigationView": [
+            41
+          ],
+          "PreviewProvider": [
+            39
+          ],
+          "ScrollView": [
+            15
+          ],
+          "Text": [
+            16,
+            21
+          ],
+          "View": [
+            8,
+            11,
+            40
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 51,
+      "path": "BlockzillaPackage/Sources/Licenses/LicenseListView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "0a12bcaf8132a4b07f66dcdc7865537de9b0f5d2e4b0bf6601165ee060582a86",
+      "target": "Licenses",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 852,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Color": [
+          "actionButton",
+          "secondOnboardingScreenBackground",
+          "secondOnboardingScreenBottomButton",
+          "secondOnboardingScreenText",
+          "systemBackground"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Color": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 13,
+      "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "d64850a384db3bfc2961cad6f7b1d9d3522f081fa19709462c11f41893615e81",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "Bundle": [
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        "UIKit": {
+          "UIColor": [
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 452,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Font": [
+          "body16",
+          "body16Bold",
+          "title20",
+          "title28Bold"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "bold": [
+            8,
+            11
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "bold": [
+            8,
+            11
+          ],
+          "system": [
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Font": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 12,
+      "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Font+AppFonts.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "845f9756402af21481e34275d2cc294d602fa4df5d90e69548ea37c8e47a3300",
+      "target": "Onboarding",
+      "visible_module_api_locations": {}
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 806,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Image": [
+          "background",
+          "close",
+          "huggingFocus",
+          "jiggleModeImage",
+          "logo",
+          "stepOneImage",
+          "stepThreeImage",
+          "stepTwoImage"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Image": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 16,
+      "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "d6731252dc45289bc513b17cf1b4ba78e7c56b399e1b6a5942c8d1352b35ae54",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "Bundle": [
+            8,
+            9,
+            10,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 491,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "UIHostingController": [
+            7
+          ],
+          "View": [
+            7
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 1,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 12,
+      "path": "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift",
+      "role": "hosting_bridge",
+      "scope": "local_package",
+      "sha256": "efd238b2b4b3481a7a6f0f1fd63f6d458d43731e70c9cc172a8a15aa9271dd77",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "UIKit": {
+          "UIInterfaceOrientationMask": [
+            11
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1942,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "PreviewProvider": [
+            18
+          ],
+          "UIViewControllerRepresentable": [
+            24
+          ],
+          "View": [
+            7,
+            8,
+            19
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 49,
+      "path": "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift",
+      "role": "preview_only",
+      "scope": "local_package",
+      "sha256": "449dcbfb79b4a4f1b4ba856c59f172d20e93bce63e55c944cdfd2a2951213a5b",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "UIKit": {
+          "UIViewController": [
+            24
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {
+        "WidgetKit": {
+          "Widget": [
+            6,
+            119,
+            127,
+            137
+          ]
+        }
+      },
+      "app_link_closure": true,
+      "bytes": 4554,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI",
+        "Widget"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "background": [
+            36,
+            78
+          ],
+          "clipShape": [
+            67
+          ],
+          "colorScheme": [
+            68
+          ],
+          "cornerRadius": [
+            79
+          ],
+          "font": [
+            55,
+            75
+          ],
+          "fontWeight": [
+            56
+          ],
+          "foregroundColor": [
+            74,
+            86
+          ],
+          "frame": [
+            39,
+            66,
+            76,
+            77
+          ],
+          "ignoresSafeArea": [
+            93,
+            101
+          ],
+          "multilineTextAlignment": [
+            59
+          ],
+          "onTapGesture": [
+            92
+          ],
+          "opacity": [
+            91
+          ],
+          "padding": [
+            34,
+            40,
+            48,
+            61,
+            80
+          ],
+          "shadow": [
+            87
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "black": [
+            91
+          ],
+          "bold": [
+            56
+          ],
+          "center": [
+            59
+          ],
+          "horizontal": [
+            40,
+            61,
+            80
+          ],
+          "infinity": [
+            76
+          ],
+          "light": [
+            68
+          ],
+          "title3": [
+            55
+          ],
+          "trailing": [
+            48
+          ],
+          "vertical": [
+            34
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Button": [
+            47,
+            72
+          ],
+          "Color": [
+            78,
+            86,
+            91,
+            101
+          ],
+          "HStack": [
+            45
+          ],
+          "Image": [
+            47
+          ],
+          "PreviewProvider": [
+            97
+          ],
+          "RoundedRectangle": [
+            67,
+            85
+          ],
+          "Spacer": [
+            46
+          ],
+          "Text": [
+            54,
+            58,
+            73
+          ],
+          "VStack": [
+            25,
+            29,
+            53
+          ],
+          "View": [
+            9,
+            20,
+            44,
+            52,
+            64,
+            71,
+            84,
+            90,
+            98
+          ],
+          "ZStack": [
+            21,
+            24,
+            100
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 1,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 8,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 149,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "f74fe3774be86ed3ea54bb7c36b89db115eb3da72736c3366aba5b11a700c5aa",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "CoreGraphics": {
+          "CGFloat": [
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 3948,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "background": [
+            51,
+            62,
+            69
+          ],
+          "bold": [
+            30
+          ],
+          "cornerRadius": [
+            52,
+            63
+          ],
+          "edgesIgnoringSafeArea": [
+            70
+          ],
+          "font": [
+            31,
+            39,
+            48,
+            59
+          ],
+          "foregroundColor": [
+            41,
+            47,
+            58
+          ],
+          "frame": [
+            27,
+            49,
+            50,
+            60,
+            61
+          ],
+          "multilineTextAlignment": [
+            32
+          ],
+          "navigationBarHidden": [
+            68
+          ],
+          "onAppear": [
+            71
+          ],
+          "padding": [
+            33,
+            36,
+            65,
+            67
+          ],
+          "resizable": [
+            25
+          ],
+          "scaledToFit": [
+            26
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "black": [
+            58
+          ],
+          "bold": [
+            30
+          ],
+          "bottom": [
+            33,
+            36,
+            65,
+            70
+          ],
+          "center": [
+            32
+          ],
+          "infinity": [
+            49,
+            60
+          ],
+          "leading": [
+            34,
+            67
+          ],
+          "system": [
+            31
+          ],
+          "top": [
+            70
+          ],
+          "trailing": [
+            67
+          ]
+        },
+        "property_wrappers": {
+          "ObservedObject": [
+            8
+          ]
+        },
+        "types_and_protocols": {
+          "Button": [
+            18,
+            43,
+            54
+          ],
+          "Color": [
+            51,
+            62,
+            69
+          ],
+          "HStack": [
+            16
+          ],
+          "Image": [
+            21,
+            24
+          ],
+          "PreviewProvider": [
+            105
+          ],
+          "Spacer": [
+            17,
+            42
+          ],
+          "Text": [
+            29,
+            35,
+            37,
+            46,
+            57
+          ],
+          "VStack": [
+            15,
+            28,
+            34
+          ],
+          "View": [
+            7,
+            14,
+            106
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 109,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "0eebbfa3d4736fdd1e4caadd4c1806618cc18f85f54523b37898037c8ff800c6",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "CoreGraphics": {
+          "CGFloat": [
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 4078,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "background": [
+            48,
+            59
+          ],
+          "cornerRadius": [
+            49
+          ],
+          "edgesIgnoringSafeArea": [
+            63
+          ],
+          "font": [
+            31,
+            36,
+            45
+          ],
+          "foregroundColor": [
+            44
+          ],
+          "frame": [
+            46,
+            47
+          ],
+          "multilineTextAlignment": [
+            32,
+            37
+          ],
+          "navigationBarHidden": [
+            65
+          ],
+          "onAppear": [
+            66
+          ],
+          "padding": [
+            19,
+            33,
+            38,
+            50
+          ],
+          "resizable": [
+            61
+          ],
+          "scaledToFill": [
+            62
+          ],
+          "simultaneousGesture": [
+            53
+          ]
+        },
+        "global_functions": {
+          "withAnimation": [
+            41
+          ]
+        },
+        "leading_dot_members": {
+          "all": [
+            63
+          ],
+          "center": [
+            32,
+            37
+          ],
+          "infinity": [
+            46
+          ]
+        },
+        "property_wrappers": {
+          "ObservedObject": [
+            8
+          ]
+        },
+        "types_and_protocols": {
+          "Button": [
+            18,
+            40
+          ],
+          "Color": [
+            48
+          ],
+          "EdgeInsets": [
+            19
+          ],
+          "HStack": [
+            16
+          ],
+          "Image": [
+            18,
+            28,
+            60
+          ],
+          "PreviewProvider": [
+            92
+          ],
+          "Spacer": [
+            17,
+            25,
+            57
+          ],
+          "TapGesture": [
+            53
+          ],
+          "Text": [
+            30,
+            35,
+            43
+          ],
+          "VStack": [
+            15,
+            27
+          ],
+          "View": [
+            7,
+            14,
+            93
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 110,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "ef92bd5b89c44805b3177189ad5b3d3ad88be16f8d5e1f3307faf4c6500a87ef",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "CoreGraphics": {
+          "CGFloat": [
+            72,
+            73,
+            74,
+            75,
+            76
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1191,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "ignoresSafeArea": [
+            24
+          ],
+          "tabViewStyle": [
+            23
+          ],
+          "tag": [
+            19,
+            21
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "always": [
+            23
+          ],
+          "page": [
+            23
+          ]
+        },
+        "property_wrappers": {
+          "ObservedObject": [
+            9
+          ]
+        },
+        "types_and_protocols": {
+          "PreviewProvider": [
+            34
+          ],
+          "TabView": [
+            17
+          ],
+          "View": [
+            8,
+            16,
+            35
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 1,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 38,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "65cb54ccf6bc12863b8b1b026a825f826d850a71157f961c992ed6d6220b7952",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "UIKit": {
+          "UIPageControl": [
+            28,
+            29
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 1981,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {
+          "Published": [
+            28
+          ]
+        },
+        "types_and_protocols": {
+          "ObservableObject": [
+            12
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 60,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "ae5c6d4c49d0a81fd1e7552051658c5bb116dd6b7f0d212044c3d1e33b3c24ff",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "Combine": {
+          "ObservableObject": [
+            12
+          ],
+          "Published": [
+            28
+          ]
+        },
+        "Foundation": {
+          "URL": [
+            53
+          ]
+        },
+        "UIKit": {
+          "UIApplication": [
+            53
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {
+        "WidgetKit": {
+          "Widget": [
+            6
+          ]
+        }
+      },
+      "app_link_closure": true,
+      "bytes": 4976,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI",
+        "Widget"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "clipShape": [
+            61
+          ],
+          "colorScheme": [
+            62
+          ],
+          "font": [
+            28,
+            38,
+            54
+          ],
+          "foregroundColor": [
+            26,
+            36,
+            52
+          ],
+          "frame": [
+            25,
+            35,
+            51,
+            60
+          ],
+          "multilineTextAlignment": [
+            29,
+            39,
+            55
+          ],
+          "navigationBarBackButtonHidden": [
+            76
+          ],
+          "navigationBarTitleDisplayMode": [
+            69
+          ],
+          "navigationTitle": [
+            68
+          ],
+          "padding": [
+            67
+          ],
+          "resizable": [
+            24,
+            34,
+            50
+          ],
+          "toolbar": [
+            70
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "gray": [
+            26,
+            36,
+            52
+          ],
+          "inline": [
+            69
+          ],
+          "leading": [
+            21,
+            29,
+            31,
+            39,
+            47,
+            55
+          ],
+          "light": [
+            62
+          ],
+          "top": [
+            22,
+            32,
+            48
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Button": [
+            71
+          ],
+          "EdgeInsets": [
+            67
+          ],
+          "HStack": [
+            22,
+            32,
+            41,
+            48,
+            57
+          ],
+          "Image": [
+            23,
+            33,
+            43,
+            49
+          ],
+          "NavigationView": [
+            19
+          ],
+          "PreviewProvider": [
+            100
+          ],
+          "RoundedRectangle": [
+            61
+          ],
+          "ScrollView": [
+            20
+          ],
+          "Spacer": [
+            42,
+            44,
+            58,
+            63,
+            66
+          ],
+          "Text": [
+            27,
+            37,
+            53
+          ],
+          "VStack": [
+            21,
+            31,
+            47
+          ],
+          "View": [
+            9,
+            18,
+            101
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 113,
+      "path": "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "2ff75ad07ee409f05a61f7fe036e27b34a25142ccd464bbfc63642c35efe5291",
+      "target": "Onboarding",
+      "visible_module_api_locations": {
+        "CoreGraphics": {
+          "CGFloat": [
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 533,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Gradient": [
+          "quickAccessWidget"
+        ],
+        "Image": [
+          "logo",
+          "magnifyingGlass"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {},
+        "global_functions": {},
+        "leading_dot_members": {},
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Color": [
+            8
+          ],
+          "Gradient": [
+            7,
+            8
+          ],
+          "Image": [
+            11,
+            12,
+            13
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 0,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 0,
+        "some_view_occurrences": 0,
+        "view_conformance_candidates": 0
+      },
+      "line_count": 14,
+      "path": "BlockzillaPackage/Sources/Widget/Assets.swift",
+      "role": "runtime_support",
+      "scope": "local_package",
+      "sha256": "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+      "target": "Widget",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "Bundle": [
+            13
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {},
+      "app_link_closure": true,
+      "bytes": 2006,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "SwiftUI"
+      ],
+      "focus_declared_swiftui_extensions": {},
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "aspectRatio": [
+            38
+          ],
+          "background": [
+            44
+          ],
+          "clipShape": [
+            59
+          ],
+          "font": [
+            22
+          ],
+          "fontWeight": [
+            23
+          ],
+          "foregroundColor": [
+            25,
+            30,
+            39
+          ],
+          "frame": [
+            31,
+            40,
+            58
+          ],
+          "minimumScaleFactor": [
+            24
+          ],
+          "padding": [
+            43
+          ],
+          "previewLayout": [
+            57
+          ],
+          "resizable": [
+            37
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "all": [
+            43
+          ],
+          "bottomTrailing": [
+            48
+          ],
+          "fit": [
+            38
+          ],
+          "headline": [
+            22
+          ],
+          "medium": [
+            23
+          ],
+          "sizeThatFits": [
+            57
+          ],
+          "top": [
+            20
+          ],
+          "topLeading": [
+            47
+          ],
+          "white": [
+            25,
+            30,
+            39
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "HStack": [
+            20,
+            34
+          ],
+          "Image": [
+            29,
+            36
+          ],
+          "LinearGradient": [
+            45
+          ],
+          "PreviewProvider": [
+            54
+          ],
+          "RoundedRectangle": [
+            59
+          ],
+          "Spacer": [
+            27,
+            33,
+            35
+          ],
+          "Text": [
+            21
+          ],
+          "VStack": [
+            19
+          ],
+          "View": [
+            7,
+            18,
+            55
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 0,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 0,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 2,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 66,
+      "path": "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift",
+      "role": "runtime_view",
+      "scope": "local_package",
+      "sha256": "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+      "target": "Widget",
+      "visible_module_api_locations": {
+        "CoreGraphics": {
+          "CGFloat": [
+            63,
+            64,
+            65
+          ]
+        }
+      }
+    },
+    {
+      "adjacent_framework_lexical_candidate_locations": {
+        "WidgetKit": {
+          "StaticConfiguration": [
+            49
+          ],
+          "Timeline": [
+            16,
+            17
+          ],
+          "TimelineEntry": [
+            26
+          ],
+          "TimelineProvider": [
+            10
+          ],
+          "Widget": [
+            8,
+            45
+          ],
+          "WidgetConfiguration": [
+            48
+          ],
+          "WidgetPreviewContext": [
+            61
+          ]
+        }
+      },
+      "app_link_closure": false,
+      "bytes": 4465,
+      "direct_import_swiftui": true,
+      "direct_imports": [
+        "Intents",
+        "SwiftUI",
+        "Widget",
+        "WidgetKit"
+      ],
+      "focus_declared_swiftui_extensions": {
+        "Gradient": [
+          "quickAccessWidget"
+        ],
+        "View": [
+          "widgetBackground(backgroundView:)"
+        ]
+      },
+      "lexical_swiftui_candidate_locations": {
+        "dot_call_modifiers": {
+          "previewContext": [
+            61
+          ]
+        },
+        "global_functions": {},
+        "leading_dot_members": {
+          "bottomTrailing": [
+            40
+          ],
+          "topLeading": [
+            39
+          ]
+        },
+        "property_wrappers": {},
+        "types_and_protocols": {
+          "Color": [
+            66
+          ],
+          "Gradient": [
+            65,
+            66
+          ],
+          "LinearGradient": [
+            37
+          ],
+          "PreviewProvider": [
+            58
+          ],
+          "View": [
+            30,
+            33,
+            59,
+            111,
+            112
+          ]
+        }
+      },
+      "lexical_syntax": {
+        "availability_check_tokens": 2,
+        "body_some_view_declarations": 1,
+        "generic_view_constraint_candidates": 0,
+        "if_tokens_lexically_nested_under_body_braces": 0,
+        "named_dollar_projection_candidates": 0,
+        "opaque_some_view_parameter_candidates": 1,
+        "preview_provider_conformance_candidates": 1,
+        "some_view_occurrences": 4,
+        "view_conformance_candidates": 1
+      },
+      "line_count": 121,
+      "path": "Widgets/Widgets.swift",
+      "role": "extension_entry_point",
+      "scope": "widget_extension",
+      "sha256": "88741a2ef2de7d2fc098f896200b7900566f1633116b2f30dbaadcdf8747a92f",
+      "target": "WidgetsExtension",
+      "visible_module_api_locations": {
+        "Foundation": {
+          "Bundle": [
+            71
+          ],
+          "Date": [
+            12,
+            17,
+            22,
+            27,
+            60
+          ],
+          "NSLocalizedString": [
+            75,
+            80,
+            85,
+            90
+          ],
+          "URL": [
+            107,
+            108
+          ]
+        }
+      }
+    }
+  ],
+  "generated_source_boundary": {
+    "intent_derived_output": {
+      "current_xcode_reference_sha256": "4b8206a1e37f0bb6c13cb8ef1fb2b9fd0b0fbb360c05c73b7762a1d1eebbabb4",
+      "direct_import_swiftui": false,
+      "historical_xcode_14_2_bytes": "unresolved",
+      "path": "derived/EraseIntent.swift",
+      "provenance": "full/focus-ios/generated_sources_provenance.md"
+    },
+    "main_target_missing_outputs": [
+      {
+        "accepted_output_sha256": "62c7618de24c2e7273c8e48f54a05988fddff719d92400e262ed8770058f4bec",
+        "direct_import_swiftui": false,
+        "path": "Blockzilla/Generated/AppNimbus.swift",
+        "provenance": "full/focus-ios/generated_sources_provenance.md",
+        "status": "reviewed developer-channel output hash; historical launcher revision inferred"
+      },
+      {
+        "accepted_output_sha256": "aea69809e642b25bebb82f392d82d8d6efca2227fc585cff8bf983e0fd3bea17",
+        "direct_import_swiftui": false,
+        "path": "Blockzilla/Generated/Metrics.swift",
+        "provenance": "full/focus-ios/generated_sources_provenance.md",
+        "status": "reproducibly generated and reviewed output hash"
+      }
+    ]
+  },
+  "implicit_compile_requirements": {
+    "compiler_lowering": [
+      "ViewBuilder.buildBlock/buildEither/buildIf/buildLimitedAvailability",
+      "Binding projected-value plumbing",
+      "DynamicProperty update participation",
+      "opaque-result and conditional-content storage"
+    ],
+    "inferred_public_signature_families": [
+      "Alignment / HorizontalAlignment / VerticalAlignment",
+      "Animation and withAnimation",
+      "Axis and Edge.Set",
+      "Binding",
+      "ColorScheme",
+      "ContentMode",
+      "Font.TextStyle and Font.Weight",
+      "NavigationBarItem.TitleDisplayMode",
+      "Optional View content",
+      "PageTabViewStyle and index-display mode",
+      "PreviewLayout",
+      "Shape and ShapeStyle",
+      "TextAlignment",
+      "ToolbarContentBuilder",
+      "UnitPoint"
+    ],
+    "reason": "The pinned files use these unqualified without a direct provider import, or require them through property-wrapper/result-builder lowering. SwiftUI may re-export the single authoritative provider module rather than redeclare its types.",
+    "required_reexports_or_visible_modules": {
+      "Combine": [
+        "ObservableObject",
+        "Published"
+      ],
+      "CoreGraphics": [
+        "CGFloat"
+      ],
+      "CoreText": [
+        "CTFont"
+      ],
+      "Foundation": [
+        "Bundle",
+        "Date",
+        "NSError",
+        "NSException",
+        "NSLocalizedString",
+        "URL",
+        "UserDefaults"
+      ],
+      "UIKit": [
+        "UIApplication",
+        "UIColor",
+        "UIFont",
+        "UIImage",
+        "UIInterfaceOrientationMask",
+        "UIPageControl",
+        "UIPasteboard",
+        "UIViewController"
+      ]
+    },
+    "visibility_derivation": "For each exact importer, scan a reviewed external-symbol vocabulary and retain occurrences when the source does not directly import the provider (UIKit is an accepted direct visibility route for Foundation/CoreGraphics/CoreText). Locations prove unqualified visibility demand, not declaration ownership.",
+    "visible_module_symbol_evidence": {
+      "Combine": {
+        "ObservableObject": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift"
+          ],
+          "line_location_count": 1
+        },
+        "Published": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/Onboarding/OnboardingFactory.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift"
+          ],
+          "line_location_count": 3
+        }
+      },
+      "CoreGraphics": {
+        "CGFloat": {
+          "file_count": 5,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+            "BlockzillaPackage/Sources/Widget/SearchWidgetView.swift"
+          ],
+          "line_location_count": 34
+        }
+      },
+      "CoreText": {
+        "CTFont": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift"
+          ],
+          "line_location_count": 1
+        }
+      },
+      "Foundation": {
+        "Bundle": {
+          "file_count": 4,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift",
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift",
+            "BlockzillaPackage/Sources/Widget/Assets.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 10
+        },
+        "Date": {
+          "file_count": 1,
+          "files": [
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 5
+        },
+        "NSError": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "NSException": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "NSLocalizedString": {
+          "file_count": 1,
+          "files": [
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 4
+        },
+        "URL": {
+          "file_count": 3,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift",
+            "Widgets/Widgets.swift"
+          ],
+          "line_location_count": 10
+        },
+        "UserDefaults": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift"
+          ],
+          "line_location_count": 1
+        }
+      },
+      "UIKit": {
+        "UIApplication": {
+          "file_count": 2,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift"
+          ],
+          "line_location_count": 2
+        },
+        "UIColor": {
+          "file_count": 2,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppColorsView.swift",
+            "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift"
+          ],
+          "line_location_count": 6
+        },
+        "UIFont": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppFontsView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "UIImage": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/DesignSystem/Preview Files/AppImagesView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "UIInterfaceOrientationMask": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/PortraitHostingController.swift"
+          ],
+          "line_location_count": 1
+        },
+        "UIPageControl": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/SwiftUI Onboarding/OnboardingView.swift"
+          ],
+          "line_location_count": 2
+        },
+        "UIPasteboard": {
+          "file_count": 1,
+          "files": [
+            "Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift"
+          ],
+          "line_location_count": 1
+        },
+        "UIViewController": {
+          "file_count": 1,
+          "files": [
+            "BlockzillaPackage/Sources/Onboarding/Preview Files/OnboardingPreview.swift"
+          ],
+          "line_location_count": 1
+        }
+      }
+    }
+  },
+  "membership": {
+    "app_link_closure_direct_importers": 27,
+    "direct_importer_count": 28,
+    "package_implicit_swift_source_counts": {
+      "AppShortcuts": 5,
+      "DesignSystem": 7,
+      "Licenses": 2,
+      "Onboarding": 21,
+      "UIHelpers": 11,
+      "Widget": 2
+    },
+    "preview_only_compile_inputs": 4,
+    "production_or_bridge_inputs": 24,
+    "role_counts": {
+      "extension_entry_point": 1,
+      "hosting_bridge": 1,
+      "hosting_call_site": 3,
+      "preview_only": 4,
+      "runtime_support": 6,
+      "runtime_view": 13
+    },
+    "scope_counts": {
+      "local_package": 18,
+      "main_application": 9,
+      "widget_extension": 1
+    },
+    "target_direct_import_counts": {
+      "Blockzilla": 9,
+      "DesignSystem": 4,
+      "Licenses": 1,
+      "Onboarding": 11,
+      "Widget": 2,
+      "WidgetsExtension": 1
+    },
+    "unique_widget_extension_only_importers": 1,
+    "widget_extension_swift_source_count": 3
+  },
+  "schema": 2,
+  "subject": {
+    "focus_commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "focus_repository": "mozilla-mobile/focus-ios",
+    "package_manifest": {
+      "path": "BlockzillaPackage/Package.swift",
+      "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248"
+    },
+    "pbx_project": {
+      "path": "Blockzilla.xcodeproj/project.pbxproj",
+      "sha256": "5a9c088023d20de3e41e6283ab4bde12338ae54da3f2a57b1e6743434b74e4ac"
+    },
+    "xcode_plan": {
+      "configuration": "FocusDebug",
+      "path": "full/xcodeplan/focus-plan.json",
+      "sha256": "7d7fa64265cf926de3caf37c3227ff57649492713a8360abe2e6f968183f0568",
+      "swift_source_references": 131,
+      "target": "Blockzilla"
+    }
+  }
+}
