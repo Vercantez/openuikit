@@ -25,6 +25,10 @@ let package = Package(
     platforms: [.macOS(.v11)],
     products: [
         .library(name: "OpenUIKit", targets: ["OpenUIKit"]),
+        // Source-compatible first SwiftUI slice.  The public module name is
+        // intentionally literal: unchanged app source keeps `import SwiftUI`.
+        // Its renderer is backed by OpenUIKit rather than an Apple framework.
+        .library(name: "SwiftUI", targets: ["SwiftUI"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
@@ -69,6 +73,10 @@ let package = Package(
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+        // S1 is the stateless composition/hosting surface required by Focus's
+        // Widget/Assets.swift and Widget/SearchWidgetView.swift.  Keep this a
+        // separate module so UIKit-only users do not acquire SwiftUI symbols.
+        .target(name: "SwiftUI", dependencies: ["OpenUIKit"]),
         // M7.5 demo app: a multi-screen Settings-style app written against
         // OpenUIKit exactly like a normal UIKit app (UIViewController
         // subclasses, addTarget actions, UIView.animate). Same rules as
@@ -145,6 +153,7 @@ let package = Package(
                           dependencies: ["OpenUIKit", "OpenUIKitC", "CPortableIO"],
                           linkerSettings: [.linkedLibrary("m", .when(platforms: [.linux]))]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
+        .testTarget(name: "SwiftUITests", dependencies: ["SwiftUI", "OpenUIKit"]),
         .testTarget(name: "OpenUIKitCTests",
                     dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"]),
     ],
