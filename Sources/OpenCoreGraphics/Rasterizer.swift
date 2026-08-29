@@ -117,10 +117,23 @@ struct _CoverageAccumulator {
 
     init?(clippingBoxMinX minX: CGFloat, minY: CGFloat, maxX: CGFloat, maxY: CGFloat,
           limitWidth: Int, limitHeight: Int) {
-        let x0 = Swift.max(0, Int(minX.rounded(.down)))
-        let y0 = Swift.max(0, Int(minY.rounded(.down)))
-        let x1 = Swift.min(limitWidth, Int(maxX.rounded(.up)))
-        let y1 = Swift.min(limitHeight, Int(maxY.rounded(.up)))
+        guard limitWidth > 0, limitHeight > 0,
+              !minX.isNaN, !minY.isNaN, !maxX.isNaN, !maxY.isNaN else {
+            return nil
+        }
+        // Clamp while values are still floating point.  Converting an
+        // infinity (or a finite value outside Int's range) traps in Swift;
+        // geometry can legitimately reach either after a very large finite
+        // affine transform.  Once clamped to the surface dimensions, the
+        // conversion is both safe and semantically the desired pixel window.
+        let x0f = Swift.min(CGFloat(limitWidth), Swift.max(0, minX.rounded(.down)))
+        let y0f = Swift.min(CGFloat(limitHeight), Swift.max(0, minY.rounded(.down)))
+        let x1f = Swift.min(CGFloat(limitWidth), Swift.max(0, maxX.rounded(.up)))
+        let y1f = Swift.min(CGFloat(limitHeight), Swift.max(0, maxY.rounded(.up)))
+        let x0 = Int(x0f)
+        let y0 = Int(y0f)
+        let x1 = Int(x1f)
+        let y1 = Int(y1f)
         guard x1 > x0, y1 > y0 else { return nil }
         originX = x0; originY = y0
         width = x1 - x0; height = y1 - y0
@@ -132,6 +145,10 @@ struct _CoverageAccumulator {
     /// clamped horizontally (preserving winding for visible pixels) and
     /// clipped vertically (rows outside the window are irrelevant).
     mutating func add(from a: CGPoint, to b: CGPoint) {
+        // Accumulator callers normally surface-clip first.  Reject malformed
+        // path components defensively so no later floor/ceil Int conversion
+        // can trap on NaN or infinity.
+        guard a.x.isFinite, a.y.isFinite, b.x.isFinite, b.y.isFinite else { return }
         var p0 = CGPoint(x: a.x - CGFloat(originX), y: a.y - CGFloat(originY))
         var p1 = CGPoint(x: b.x - CGFloat(originX), y: b.y - CGFloat(originY))
         if p0.y == p1.y { return }
@@ -139,57 +156,243 @@ struct _CoverageAccumulator {
         if p0.y > p1.y { swap(&p0, &p1); dir = -1 }
         let yTop = Swift.max(0, p0.y), yBot = Swift.min(CGFloat(height), p1.y)
         guard yTop < yBot else { return }
-        let dxdy = (p1.x - p0.x) / (p1.y - p0.y)
-        var x = p0.x + (yTop - p0.y) * dxdy
-        let clampHi = CGFloat(width)
         var y = Int(yTop)  // floor; yTop >= 0
         let yEnd = Swift.min(height, Int(yBot.rounded(.up)))
+        let deltaX = p1.x - p0.x
+        let deltaY = p1.y - p0.y
+        let dxdy = deltaX / deltaY
 
         accum.withUnsafeMutableBufferPointer { acc in
+            // Normalize a hostile segment to a surface-bounded polyline
+            // before scan conversion.  Merely normalizing its global `t`
+            // loses every unit-sized row offset for (-greatest ... greatest):
+            // all crossings round to t=0.5 and a diagonal becomes vertical.
+            // Horizontal clamping retains the outside portions as boundary
+            // segments (required for winding), while sequential intersections
+            // reduce the remaining coordinates before the next boundary.
+            if !deltaX.isFinite || !deltaY.isFinite || !dxdy.isFinite {
+                for segment in Self.surfaceClampedSegments(
+                    from: p0, to: p1, width: width, height: height) {
+                    Self.depositClippedSegment(
+                        from: segment.0, to: segment.1, direction: dir,
+                        stride: stride, width: width, into: acc)
+                }
+                return
+            }
+
+            var x = p0.x + (yTop - p0.y) * dxdy
             while y < yEnd {
                 let rowTop = Swift.max(CGFloat(y), yTop)
                 let rowBot = Swift.min(CGFloat(y + 1), yBot)
                 let dy = rowBot - rowTop
                 if dy <= 0 { y += 1; continue }
                 let xNext = x + dxdy * dy
-                var x0 = Swift.min(x, xNext), x1 = Swift.max(x, xNext)
+                Self.deposit(startX: x, endX: xNext, dy: dy, direction: dir,
+                             rowBase: y * stride, width: width, into: acc)
                 x = xNext
-                // Horizontal clamp into [0, width].
-                x0 = Swift.min(Swift.max(x0, 0), clampHi)
-                x1 = Swift.min(Swift.max(x1, 0), clampHi)
-                let d = dy * dir
-                let base = y * stride
-                let x0floor = x0.rounded(.down)
-                let x0i = Int(x0floor)
-                let x1ceil = x1.rounded(.up)
-                let x1i = Int(x1ceil)
-                if x1i <= x0i + 1 {
-                    // Span within one pixel column: split by midpoint.
-                    let xmf = 0.5 * (x0 + x1) - x0floor
-                    acc[base + x0i] += d * (1 - xmf)
-                    acc[base + x0i + 1] += d * xmf
-                } else {
-                    // Span crosses columns: exact trapezoid areas per column.
-                    let s = 1 / (x1 - x0)
-                    let x0f = x0 - x0floor
-                    let a0 = 0.5 * s * (1 - x0f) * (1 - x0f)
-                    let x1f = x1 - x1ceil + 1
-                    let am = 0.5 * s * x1f * x1f
-                    acc[base + x0i] += d * a0
-                    if x1i == x0i + 2 {
-                        acc[base + x0i + 1] += d * (1 - a0 - am)
-                    } else {
-                        let a1 = s * (1.5 - x0f)
-                        acc[base + x0i + 1] += d * (a1 - a0)
-                        let ds = d * s
-                        for xi in (x0i + 2)..<(x1i - 1) { acc[base + xi] += ds }
-                        let a2 = a1 + CGFloat(x1i - x0i - 3) * s
-                        acc[base + x1i - 1] += d * (1 - a2 - am)
-                    }
-                    acc[base + x1i] += d * am
-                }
                 y += 1
             }
+        }
+    }
+
+    private static func surfaceClampedSegments(
+        from originalStart: CGPoint, to originalEnd: CGPoint,
+        width: Int, height: Int
+    ) -> [(CGPoint, CGPoint)] {
+        let maximumX = CGFloat(width)
+        var start = originalStart
+        var end = originalEnd
+        var reversed = false
+        if start.x > end.x {
+            swap(&start, &end)
+            reversed = true
+        }
+
+        var points: [CGPoint]
+        if end.x <= 0 {
+            points = [CGPoint(x: 0, y: start.y), CGPoint(x: 0, y: end.y)]
+        } else if start.x >= maximumX {
+            points = [CGPoint(x: maximumX, y: start.y),
+                      CGPoint(x: maximumX, y: end.y)]
+        } else {
+            points = []
+            var current = start
+            if current.x < 0,
+               let crossing = intersectionAtX(0, from: current, to: end) {
+                points.append(CGPoint(x: 0, y: current.y))
+                points.append(crossing)
+                current = crossing
+            } else {
+                points.append(current)
+            }
+
+            if end.x > maximumX,
+               let crossing = intersectionAtX(maximumX, from: current, to: end) {
+                if points.last != crossing { points.append(crossing) }
+                points.append(CGPoint(x: maximumX, y: end.y))
+            } else if points.last != end {
+                points.append(end)
+            }
+        }
+
+        if reversed { points.reverse() }
+        guard points.count > 1 else { return [] }
+        var result: [(CGPoint, CGPoint)] = []
+        result.reserveCapacity(points.count - 1)
+        for index in 1..<points.count {
+            if let clipped = verticallyClipped(
+                from: points[index - 1], to: points[index], height: height) {
+                result.append(clipped)
+            }
+        }
+        return result
+    }
+
+    private static func verticallyClipped(from originalStart: CGPoint,
+                                          to originalEnd: CGPoint,
+                                          height: Int) -> (CGPoint, CGPoint)? {
+        let maximumY = CGFloat(height)
+        var start = originalStart
+        var end = originalEnd
+        var reversed = false
+        if start.y > end.y {
+            swap(&start, &end)
+            reversed = true
+        }
+        guard end.y > 0, start.y < maximumY else { return nil }
+        if start.y < 0 {
+            guard let crossing = intersectionAtY(0, from: start, to: end) else {
+                return nil
+            }
+            start = crossing
+        }
+        if end.y > maximumY {
+            guard let crossing = intersectionAtY(maximumY, from: start, to: end) else {
+                return nil
+            }
+            end = crossing
+        }
+        guard start.y != end.y else { return nil }
+        return reversed ? (end, start) : (start, end)
+    }
+
+    private static func intersectionAtX(_ value: CGFloat,
+                                        from start: CGPoint,
+                                        to end: CGPoint) -> CGPoint? {
+        guard let t = normalizedParameter(value, from: start.x, to: end.x) else {
+            return nil
+        }
+        return CGPoint(x: value,
+                       y: overflowSafeInterpolate(start.y, end.y, at: t))
+    }
+
+    private static func intersectionAtY(_ value: CGFloat,
+                                        from start: CGPoint,
+                                        to end: CGPoint) -> CGPoint? {
+        guard let t = normalizedParameter(value, from: start.y, to: end.y) else {
+            return nil
+        }
+        return CGPoint(x: overflowSafeInterpolate(start.x, end.x, at: t),
+                       y: value)
+    }
+
+    private static func depositClippedSegment(
+        from originalStart: CGPoint, to originalEnd: CGPoint,
+        direction: CGFloat, stride: Int, width: Int,
+        into accumulator: UnsafeMutableBufferPointer<CGFloat>
+    ) {
+        var start = originalStart
+        var end = originalEnd
+        var resolvedDirection = direction
+        if start.y > end.y {
+            swap(&start, &end)
+            resolvedDirection = -resolvedDirection
+        }
+        let deltaY = end.y - start.y
+        guard deltaY > 0 else { return }
+        var row = Int(start.y)
+        let endRow = Int(end.y.rounded(.up))
+        while row < endRow {
+            let rowTop = Swift.max(CGFloat(row), start.y)
+            let rowBottom = Swift.min(CGFloat(row + 1), end.y)
+            let dy = rowBottom - rowTop
+            if dy > 0 {
+                let topT = (rowTop - start.y) / deltaY
+                let bottomT = (rowBottom - start.y) / deltaY
+                let topX = overflowSafeInterpolate(start.x, end.x, at: topT)
+                let bottomX = overflowSafeInterpolate(start.x, end.x, at: bottomT)
+                deposit(startX: topX, endX: bottomX, dy: dy,
+                        direction: resolvedDirection, rowBase: row * stride,
+                        width: width, into: accumulator)
+            }
+            row += 1
+        }
+    }
+
+    private static func normalizedParameter(_ value: CGFloat,
+                                            from start: CGFloat,
+                                            to end: CGFloat) -> CGFloat? {
+        let scale = Swift.max(1, start.magnitude, end.magnitude, value.magnitude)
+        let normalizedStart = start / scale
+        let denominator = end / scale - normalizedStart
+        guard denominator != 0, denominator.isFinite else { return nil }
+        let t = (value / scale - normalizedStart) / denominator
+        guard t.isFinite else { return nil }
+        return Swift.min(1, Swift.max(0, t))
+    }
+
+    private static func overflowSafeInterpolate(_ start: CGFloat, _ end: CGFloat,
+                                                at t: CGFloat) -> CGFloat {
+        if start.sign == end.sign {
+            return start + (end - start) * t
+        }
+        return (1 - t) * start + t * end
+    }
+
+    private static func deposit(
+        startX: CGFloat, endX: CGFloat, dy: CGFloat, direction: CGFloat,
+        rowBase: Int, width: Int, into acc: UnsafeMutableBufferPointer<CGFloat>
+    ) {
+        var x0 = Swift.min(startX, endX)
+        var x1 = Swift.max(startX, endX)
+        let clampHigh = CGFloat(width)
+        // Clamp before floor/ceil and Int conversion, including on this
+        // per-row path, for the same reason as the accumulator initializer.
+        x0 = Swift.min(clampHigh, Swift.max(0, x0))
+        x1 = Swift.min(clampHigh, Swift.max(0, x1))
+        let d = dy * direction
+        let x0Floor = x0.rounded(.down)
+        let x0i = Int(x0Floor)
+        let x1Ceil = x1.rounded(.up)
+        let x1i = Int(x1Ceil)
+        if x1i <= x0i + 1 {
+            // Span within one pixel column: split by midpoint.
+            let midpointFraction = 0.5 * (x0 + x1) - x0Floor
+            acc[rowBase + x0i] += d * (1 - midpointFraction)
+            acc[rowBase + x0i + 1] += d * midpointFraction
+        } else {
+            // Span crosses columns: exact trapezoid areas per column.
+            let reciprocalSpan = 1 / (x1 - x0)
+            let x0Fraction = x0 - x0Floor
+            let firstArea = 0.5 * reciprocalSpan
+                * (1 - x0Fraction) * (1 - x0Fraction)
+            let x1Fraction = x1 - x1Ceil + 1
+            let lastArea = 0.5 * reciprocalSpan * x1Fraction * x1Fraction
+            acc[rowBase + x0i] += d * firstArea
+            if x1i == x0i + 2 {
+                acc[rowBase + x0i + 1] += d * (1 - firstArea - lastArea)
+            } else {
+                let nextArea = reciprocalSpan * (1.5 - x0Fraction)
+                acc[rowBase + x0i + 1] += d * (nextArea - firstArea)
+                let deltaArea = d * reciprocalSpan
+                for x in (x0i + 2)..<(x1i - 1) {
+                    acc[rowBase + x] += deltaArea
+                }
+                let penultimateArea = nextArea
+                    + CGFloat(x1i - x0i - 3) * reciprocalSpan
+                acc[rowBase + x1i - 1] += d * (1 - penultimateArea - lastArea)
+            }
+            acc[rowBase + x1i] += d * lastArea
         }
     }
 

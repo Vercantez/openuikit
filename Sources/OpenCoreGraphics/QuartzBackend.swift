@@ -329,6 +329,18 @@ final class QuartzBackend: CanvasBackend {
                     x1: Swift.min(width, ox + w), y1: Swift.min(height, oy + h)))
     }
 
+    func applyBackdropFilter(_ filter: _CanvasBackdropFilter,
+                             coverage: [UInt8], bounds: _CanvasDeviceBounds) {
+        guard let data = QZBitmapContextGetData(ctx) else { return }
+        _BackdropFilterCPU.applyToPremultiplied(
+            data.assumingMemoryBound(to: UInt8.self), width: width,
+            height: height, bytesPerRow: bytesPerRow, coverage: coverage,
+            bounds: bounds, filter: filter)
+        syncRegion((x0: bounds.x0, y0: bounds.y0,
+                    x1: bounds.x1, y1: bounds.y1),
+                   whereCoverageIsNonzero: coverage)
+    }
+
     // MARK: Path plumbing
 
     /// Rasterize a CALayer-style mask path with the same QZ antialiaser and
@@ -415,7 +427,10 @@ final class QuartzBackend: CanvasBackend {
         syncRegion((x0: 0, y0: 0, x1: width, y1: height))
     }
 
-    private func syncRegion(_ r: (x0: Int, y0: Int, x1: Int, y1: Int)?) {
+    private func syncRegion(
+        _ r: (x0: Int, y0: Int, x1: Int, y1: Int)?,
+        whereCoverageIsNonzero coverage: [UInt8]? = nil
+    ) {
         guard layerDepth == 0, let r else { return }
         guard let data = QZBitmapContextGetData(ctx) else { return }
         let src = data.assumingMemoryBound(to: UInt8.self)
@@ -425,6 +440,12 @@ final class QuartzBackend: CanvasBackend {
                 let srow = y * bpr
                 let drow = y * bw * 4
                 for x in r.x0..<r.x1 {
+                    // Backdrop filtering writes a sparse analytic mask inside
+                    // a rectangular bound. The QZ backing is premultiplied,
+                    // so round-tripping an untouched translucent pixel through
+                    // this sync can change its public straight-alpha bytes.
+                    // Preserve the write contract by not syncing mask holes.
+                    if let coverage, coverage[y * bw + x] == 0 { continue }
                     let s = srow + x * 4, d = drow + x * 4
                     let a = Int(src[s + 3])
                     if a == 0 {

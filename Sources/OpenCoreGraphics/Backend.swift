@@ -59,6 +59,12 @@ protocol CanvasBackend: AnyObject {
     func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
                             start: CGPoint, end: CGPoint, in rect: CGRect)
     func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow)
+
+    // Additive destination-filter op (CanvasBackdropFilter.swift).  The
+    // coverage buffer is full-surface device-space coverage; bounds encloses
+    // its nonzero pixels.  Backends must mutate their CURRENT render target.
+    func applyBackdropFilter(_ filter: _CanvasBackdropFilter,
+                             coverage: [UInt8], bounds: _CanvasDeviceBounds)
 }
 
 /// Line cap / join styles for the additive stroke entry point
@@ -121,5 +127,12 @@ final class SwiftRasterizerBackend: CanvasBackend {
     }
     func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow) {
         canvas._drawShadow(path, evenOdd: evenOdd, shadow)
+    }
+    func applyBackdropFilter(_ filter: _CanvasBackdropFilter,
+                             coverage: [UInt8], bounds: _CanvasDeviceBounds) {
+        _BackdropFilterCPU.applyToStraight(
+            &canvas.bitmap.pixels, width: canvas.bitmap.width,
+            height: canvas.bitmap.height, coverage: coverage,
+            bounds: bounds, filter: filter)
     }
 }
