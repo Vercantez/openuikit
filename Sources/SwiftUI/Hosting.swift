@@ -3,24 +3,39 @@ import Foundation
 #endif
 import OpenUIKit
 
-/// OpenUIKit-backed host for the stateless S1/S1.5 SwiftUI tree.
+/// OpenUIKit-backed host for the SwiftUI tree and its retained dynamic state.
 @preconcurrency @MainActor
 open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
+    private let graph = _OpenGraphHost()
+
     public var rootView: Content {
         didSet {
             guard let host = viewIfLoaded as? _SwiftUIHostingView else { return }
-            host.node = rootView._makeOpenUIKitNode()
+            host.node = graph.evaluate(rootView)
         }
     }
 
     public init(rootView: Content) {
         self.rootView = rootView
         super.init()
+        graph.invalidate = { [weak self] in
+            guard let self,
+                  let host = self.viewIfLoaded as? _SwiftUIHostingView else { return }
+            host.node = self.graph.evaluate(self.rootView)
+        }
     }
 
     open override func loadView() {
-        view = _SwiftUIHostingView(node: rootView._makeOpenUIKitNode())
+        view = _SwiftUIHostingView(node: graph.evaluate(rootView))
     }
+
+    // Internal behavior probes. These deliberately count graph evaluation and
+    // delivered (coalesced) invalidations, not layout passes or publisher
+    // sends; @testable clients use them to keep subscription semantics honest.
+    var _openGraphRenderCount: Int { graph.renderCount }
+    var _openGraphInvalidationCount: Int { graph.invalidationCount }
+    var _openGraphStateCount: Int { graph.stateCount }
+    var _openGraphObservationCount: Int { graph.observationCount }
 }
 
 public typealias UIHostingController<Content> = _OpenUIHostingController<Content>

@@ -1,0 +1,861 @@
+// Focused runtime coverage for SwiftUI S2 dynamic state and observation.
+
+import XCTest
+import Combine
+import OpenUIKit
+@testable import SwiftUI
+
+private final class ObservationModel: Combine.ObservableObject {
+    @Combine.Published var value: Int
+
+    init(_ value: Int) {
+        self.value = value
+    }
+}
+
+private final class WeakReference<Object: AnyObject> {
+    weak var value: Object?
+
+    init(_ value: Object?) {
+        self.value = value
+    }
+}
+
+private struct ObservationFixture: View {
+    @ObservedObject var model: ObservationModel
+    let capture: @MainActor (Binding<Int>) -> Void
+
+    init(
+        model: ObservationModel,
+        capture: @escaping @MainActor (Binding<Int>) -> Void = { _ in }
+    ) {
+        self.model = model
+        self.capture = capture
+    }
+
+    var body: some View {
+        // Read the same observed object repeatedly and expose the exact
+        // projected-binding shape used by Focus's $viewModel.activeScreen.
+        capture($model.value)
+        return HStack {
+            Text("value=\(model.value)")
+            Text("again=\(model.value)")
+        }
+    }
+}
+
+private struct StateFixture: View {
+    @State private var count: Int
+    let capture: @MainActor (Binding<Int>) -> Void
+
+    init(initialValue: Int, capture: @escaping @MainActor (Binding<Int>) -> Void) {
+        _count = State(wrappedValue: initialValue)
+        self.capture = capture
+    }
+
+    var body: some View {
+        capture($count)
+        return Text("state=\(count)")
+    }
+}
+
+private struct StatefulLeaf: View {
+    @State private var value: Int
+    let name: String
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    init(
+        name: String,
+        initialValue: Int,
+        capture: @escaping @MainActor (String, Binding<Int>) -> Void
+    ) {
+        self.name = name
+        _value = State(initialValue: initialValue)
+        self.capture = capture
+    }
+
+    var body: some View {
+        capture(name, $value)
+        return Text("\(name)=\(value)")
+    }
+}
+
+private struct SameTypeConditionalFixture: View {
+    let firstBranch: Bool
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    @ViewBuilder var body: some View {
+        if firstBranch {
+            StatefulLeaf(name: "first", initialValue: 11, capture: capture)
+        } else {
+            // Deliberately the exact same concrete type as the first branch.
+            StatefulLeaf(name: "second", initialValue: 22, capture: capture)
+        }
+    }
+}
+
+private struct OptionalStackFixture: View {
+    let showsOptional: Bool
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    var body: some View {
+        VStack {
+            if showsOptional {
+                StatefulLeaf(name: "optional", initialValue: 10, capture: capture)
+            }
+            HStack {
+                StatefulLeaf(name: "stable", initialValue: 20, capture: capture)
+            }
+        }
+    }
+}
+
+private struct ArrayElement {
+    let name: String
+    let initialValue: Int
+}
+
+private struct ArrayBoundaryFixture: View {
+    let leading: [ArrayElement]
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    var body: some View {
+        VStack {
+            for element in leading {
+                HStack {
+                    StatefulLeaf(
+                        name: element.name,
+                        initialValue: element.initialValue,
+                        capture: capture
+                    )
+                }
+            }
+            VStack {
+                StatefulLeaf(name: "stable", initialValue: 100, capture: capture)
+            }
+        }
+    }
+}
+
+private struct DeferredBackgroundFixture: View {
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    var body: some View {
+        HStack {
+            Text("left").background(
+                StatefulLeaf(name: "leftBackground", initialValue: 1, capture: capture)
+            )
+            Text("right").background(
+                StatefulLeaf(name: "rightBackground", initialValue: 2, capture: capture)
+            )
+        }
+    }
+}
+
+private struct OpaqueElementID: Hashable, CustomStringConvertible {
+    let rawValue: Int
+
+    // Both IDs intentionally have the same textual representation. Graph
+    // identity must use Hashable equality, never reflected/interpolated text.
+    var description: String { "same-description" }
+}
+
+private struct IdentifiedElement {
+    let id: OpaqueElementID
+    let initialValue: Int
+}
+
+private struct ForEachFixture: View {
+    let elements: [IdentifiedElement]
+    let capture: @MainActor (String, Binding<Int>) -> Void
+
+    var body: some View {
+        VStack {
+            ForEach(elements, id: \.id) { element in
+                StatefulLeaf(
+                    name: "id\(element.id.rawValue)",
+                    initialValue: element.initialValue,
+                    capture: capture
+                )
+            }
+        }
+    }
+}
+
+private final class DynamicUpdateRecorder {
+    var events: [String] = []
+}
+
+private struct InnerDynamicProperty: DynamicProperty {
+    @State private var count: Int
+    @ObservedObject private var model: ObservationModel
+    let recorder: DynamicUpdateRecorder
+    private(set) var updatedValue = -1
+
+    init(initialValue: Int, model: ObservationModel, recorder: DynamicUpdateRecorder) {
+        _count = State(initialValue: initialValue)
+        _model = ObservedObject(initialValue: model)
+        self.recorder = recorder
+    }
+
+    mutating func update() {
+        recorder.events.append("inner")
+        updatedValue = count
+    }
+
+    var value: Int { count }
+    var modelValue: Int { model.value }
+    var valueBinding: Binding<Int> { $count }
+    var modelBinding: Binding<Int> { $model.value }
+}
+
+private struct OuterDynamicProperty: DynamicProperty {
+    var inner: InnerDynamicProperty
+    let recorder: DynamicUpdateRecorder
+    private(set) var updatedValue = -1
+
+    mutating func update() {
+        recorder.events.append("outer")
+        updatedValue = inner.updatedValue
+    }
+}
+
+private struct NestedDynamicLeaf: View {
+    var property: OuterDynamicProperty
+    let capture: @MainActor (Binding<Int>, Binding<Int>) -> Void
+
+    var body: some View {
+        capture(property.inner.valueBinding, property.inner.modelBinding)
+        return Text(
+            "nested=\(property.inner.value)/\(property.inner.modelValue)"
+                + "/updated=\(property.updatedValue)"
+        )
+    }
+}
+
+// Oracle-shaped regression for DynamicProperty's value semantics. A Mirror
+// existential copy can run update(), but body must evaluate the prepared View
+// copy containing that mutation rather than the original value.
+private struct UpdatingProperty: DynamicProperty {
+    @State private var source = 7
+    private(set) var value = -1
+
+    mutating func update() {
+        value = source
+    }
+}
+
+private struct UpdatingPropertyFixture: View {
+    var property = UpdatingProperty()
+    let capture: @MainActor (Int) -> Void
+
+    var body: some View {
+        capture(property.value)
+        return Text("updated=\(property.value)")
+    }
+}
+
+// DynamicProperty permits reference types too. This also verifies recursive
+// State discovery at native class-object offsets on both Swift runtimes.
+private final class ClassUpdatingProperty: DynamicProperty {
+    @State private var source: Int
+    private(set) var value = -1
+    let recorder: DynamicUpdateRecorder
+
+    init(source: Int, recorder: DynamicUpdateRecorder) {
+        _source = State(initialValue: source)
+        self.recorder = recorder
+    }
+
+    func update() {
+        recorder.events.append("class")
+        value = source
+    }
+
+    var sourceBinding: Binding<Int> { $source }
+}
+
+private struct ClassUpdatingPropertyFixture: View {
+    var property: ClassUpdatingProperty
+    let capture: @MainActor (Binding<Int>) -> Void
+
+    var body: some View {
+        capture(property.sourceBinding)
+        return Text("classUpdated=\(property.value)")
+    }
+}
+
+private final class DynamicPropertyLifetimeToken {}
+
+private struct ReferenceBearingUpdatingProperty: DynamicProperty {
+    let token: DynamicPropertyLifetimeToken
+    private(set) var value = -1
+
+    mutating func update() {
+        value = 42
+    }
+}
+
+private struct ReferenceBearingUpdatingPropertyFixture: View {
+    var property: ReferenceBearingUpdatingProperty
+
+    var body: some View {
+        Text("referenceUpdated=\(property.value)")
+    }
+}
+
+private struct NestedDynamicBranchFixture: View {
+    let showsLeaf: Bool
+    let model: ObservationModel
+    let recorder: DynamicUpdateRecorder
+    let capture: @MainActor (Binding<Int>, Binding<Int>) -> Void
+
+    @ViewBuilder var body: some View {
+        if showsLeaf {
+            NestedDynamicLeaf(
+                property: OuterDynamicProperty(
+                    inner: InnerDynamicProperty(
+                        initialValue: 5,
+                        model: model,
+                        recorder: recorder
+                    ),
+                    recorder: recorder
+                ),
+                capture: capture
+            )
+        } else {
+            Text("absent")
+        }
+    }
+}
+
+private final class NonisolatedStorageBox {
+    var value = 1
+}
+
+// A declaration-level compatibility probe: none of these functions is actor
+// isolated. The old globally-@MainActor wrappers fail to compile this shape.
+private func makeNonisolatedBinding(
+    storage: NonisolatedStorageBox
+) -> Binding<Int> {
+    Binding(get: { storage.value }, set: { storage.value = $0 })
+}
+
+private func makeNonisolatedState() -> State<Int> {
+    State(initialValue: 3)
+}
+
+private func makeNonisolatedObservedObject(
+    _ model: ObservationModel
+) -> ObservedObject<ObservationModel> {
+    ObservedObject(initialValue: model)
+}
+
+@MainActor
+final class SwiftUIObservationTests: XCTestCase {
+    func testBindingRoundTripsAndWritableDynamicMember() {
+        struct FormValue: Equatable {
+            var count: Int
+            var title: String
+        }
+
+        var storage = FormValue(count: 1, title: "one")
+        let binding = SwiftUI.Binding<FormValue>(
+            get: { storage },
+            set: { storage = $0 }
+        )
+
+        XCTAssertEqual(binding.wrappedValue, storage)
+        binding.wrappedValue = FormValue(count: 2, title: "two")
+        XCTAssertEqual(storage, FormValue(count: 2, title: "two"))
+
+        binding.count.wrappedValue = 7
+        XCTAssertEqual(storage, FormValue(count: 7, title: "two"))
+        XCTAssertEqual(binding.projectedValue.title.wrappedValue, "two")
+
+        let reprojected = SwiftUI.Binding(projectedValue: binding)
+        reprojected.title.wrappedValue = "projected"
+        XCTAssertEqual(storage, FormValue(count: 7, title: "projected"))
+    }
+
+    func testWrappersRetainSystemCompatibleNonisolatedConstruction() {
+        let box = NonisolatedStorageBox()
+        let binding = makeNonisolatedBinding(storage: box)
+        binding.wrappedValue = 8
+        XCTAssertEqual(box.value, 8)
+
+        let state = makeNonisolatedState()
+        state.wrappedValue = 9
+        XCTAssertEqual(state.projectedValue.wrappedValue, 9)
+
+        let model = ObservationModel(4)
+        let observed = makeNonisolatedObservedObject(model)
+        XCTAssertTrue(observed.wrappedValue === model)
+    }
+
+    func testObservedObjectUsesThePlatformCombineIdentity() {
+        let model = ObservationModel(3)
+
+        func acceptsCombineObject<T: Combine.ObservableObject>(_ value: T) {
+            _ = value
+        }
+        func acceptsCombinePublisher(
+            _ value: Combine.Published<Int>.Publisher
+        ) {
+            _ = value
+        }
+
+        acceptsCombineObject(model)
+        acceptsCombinePublisher(model.$value)
+    }
+
+    func testObservedObjectDeliversOneDeferredMainActorInvalidation() async throws {
+        let model = ObservationModel(0)
+        var projectedBinding: Binding<Int>?
+        let controller = UIHostingController(
+            rootView: ObservationFixture(model: model) {
+                projectedBinding = $0
+            }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 220, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(controller._openGraphRenderCount, 1)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 0)
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+        XCTAssertEqual(texts(in: host), ["value=0", "again=0"])
+
+        projectedBinding?.wrappedValue = 1
+        XCTAssertEqual(model.value, 1, "projected binding must write the model")
+        XCTAssertEqual(
+            controller._openGraphRenderCount,
+            1,
+            "ObservableObject delivery is deferred to the next main-actor turn"
+        )
+
+        await drainMainActor()
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(controller._openGraphRenderCount, 2)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 1)
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+        XCTAssertEqual(texts(in: host), ["value=1", "again=1"])
+    }
+
+    func testStateLocationSurvivesRecomputationAndRootReplacement() async throws {
+        var binding: Binding<Int>?
+        let controller = UIHostingController(
+            rootView: StateFixture(initialValue: 2) { binding = $0 }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 140, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(texts(in: host), ["state=2"])
+
+        binding?.wrappedValue = 7
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(controller._openGraphInvalidationCount, 1)
+        XCTAssertEqual(texts(in: host), ["state=7"])
+
+        controller.rootView = StateFixture(initialValue: 99) { binding = $0 }
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(
+            texts(in: host),
+            ["state=7"],
+            "a same-identity root update must reuse retained State storage"
+        )
+        XCTAssertEqual(binding?.wrappedValue, 7)
+    }
+
+    func testSameTypeConditionalBranchesNeverStealState() async throws {
+        var bindings: [String: Binding<Int>] = [:]
+        let capture: @MainActor (String, Binding<Int>) -> Void = {
+            bindings[$0] = $1
+        }
+        let controller = UIHostingController(
+            rootView: SameTypeConditionalFixture(firstBranch: true, capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 180, height: 44)
+        host.layoutIfNeeded()
+
+        bindings["first"]?.wrappedValue = 91
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["first=91"])
+
+        bindings.removeAll()
+        controller.rootView = SameTypeConditionalFixture(
+            firstBranch: false,
+            capture: capture
+        )
+        host.layoutIfNeeded()
+        XCTAssertEqual(bindings["second"]?.wrappedValue, 22)
+        XCTAssertEqual(texts(in: host), ["second=22"])
+
+        bindings["second"]?.wrappedValue = 82
+        await drainMainActor()
+        bindings.removeAll()
+        controller.rootView = SameTypeConditionalFixture(
+            firstBranch: true,
+            capture: capture
+        )
+        host.layoutIfNeeded()
+        XCTAssertEqual(
+            bindings["first"]?.wrappedValue,
+            11,
+            "state in a branch is destroyed while that branch is absent"
+        )
+    }
+
+    func testOptionalTupleAndStackScopesProtectLaterSiblingState() async throws {
+        var bindings: [String: Binding<Int>] = [:]
+        let capture: @MainActor (String, Binding<Int>) -> Void = {
+            bindings[$0] = $1
+        }
+        let controller = UIHostingController(
+            rootView: OptionalStackFixture(showsOptional: true, capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+
+        bindings["stable"]?.wrappedValue = 99
+        await drainMainActor()
+        XCTAssertEqual(controller._openGraphStateCount, 2)
+
+        bindings.removeAll()
+        controller.rootView = OptionalStackFixture(
+            showsOptional: false,
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(
+            bindings["stable"]?.wrappedValue,
+            99,
+            "removing an earlier optional must not shift a nested stack sibling"
+        )
+        _ = host
+    }
+
+    func testBuilderArrayCannotShiftStateAcrossItsStackBoundary() async throws {
+        var bindings: [String: Binding<Int>] = [:]
+        let capture: @MainActor (String, Binding<Int>) -> Void = {
+            bindings[$0] = $1
+        }
+        let controller = UIHostingController(
+            rootView: ArrayBoundaryFixture(
+                leading: [
+                    ArrayElement(name: "a", initialValue: 10),
+                    ArrayElement(name: "b", initialValue: 20),
+                ],
+                capture: capture
+            )
+        )
+        _ = try XCTUnwrap(controller.view)
+
+        bindings["stable"]?.wrappedValue = 909
+        await drainMainActor()
+        XCTAssertEqual(controller._openGraphStateCount, 3)
+
+        bindings.removeAll()
+        controller.rootView = ArrayBoundaryFixture(
+            leading: [ArrayElement(name: "b", initialValue: 20)],
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 2)
+        XCTAssertEqual(
+            bindings["stable"]?.wrappedValue,
+            909,
+            "a positional array shrinking must not renumber a later stack"
+        )
+    }
+
+    func testDeferredBackgroundsKeepTheirParentTupleScopes() async throws {
+        var bindings: [String: Binding<Int>] = [:]
+        let controller = UIHostingController(
+            rootView: DeferredBackgroundFixture {
+                bindings[$0] = $1
+            }
+        )
+        _ = try XCTUnwrap(controller.view)
+        XCTAssertEqual(controller._openGraphStateCount, 2)
+        XCTAssertEqual(bindings["leftBackground"]?.wrappedValue, 1)
+        XCTAssertEqual(bindings["rightBackground"]?.wrappedValue, 2)
+
+        bindings["rightBackground"]?.wrappedValue = 22
+        await drainMainActor()
+        XCTAssertEqual(bindings["leftBackground"]?.wrappedValue, 1)
+        XCTAssertEqual(bindings["rightBackground"]?.wrappedValue, 22)
+    }
+
+    func testForEachStateFollowsTypedIDAcrossReorderAndDiesOnRemoval() async throws {
+        let id1 = OpaqueElementID(rawValue: 1)
+        let id2 = OpaqueElementID(rawValue: 2)
+        let id3 = OpaqueElementID(rawValue: 3)
+        var bindings: [String: Binding<Int>] = [:]
+        let capture: @MainActor (String, Binding<Int>) -> Void = {
+            bindings[$0] = $1
+        }
+        let controller = UIHostingController(
+            rootView: ForEachFixture(
+                elements: [
+                    IdentifiedElement(id: id1, initialValue: 10),
+                    IdentifiedElement(id: id2, initialValue: 20),
+                    IdentifiedElement(id: id3, initialValue: 30),
+                ],
+                capture: capture
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 200, height: 120)
+
+        bindings["id2"]?.wrappedValue = 200
+        await drainMainActor()
+        bindings.removeAll()
+        controller.rootView = ForEachFixture(
+            elements: [
+                IdentifiedElement(id: id3, initialValue: 3000),
+                IdentifiedElement(id: id2, initialValue: 2000),
+                IdentifiedElement(id: id1, initialValue: 1000),
+            ],
+            capture: capture
+        )
+        host.layoutIfNeeded()
+        XCTAssertEqual(controller._openGraphStateCount, 3)
+        XCTAssertEqual(bindings["id1"]?.wrappedValue, 10)
+        XCTAssertEqual(bindings["id2"]?.wrappedValue, 200)
+        XCTAssertEqual(bindings["id3"]?.wrappedValue, 30)
+        XCTAssertEqual(texts(in: host), ["id3=30", "id2=200", "id1=10"])
+
+        let removedBinding = bindings["id2"]
+        bindings.removeAll()
+        controller.rootView = ForEachFixture(
+            elements: [
+                IdentifiedElement(id: id3, initialValue: 30),
+                IdentifiedElement(id: id1, initialValue: 10),
+            ],
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 2)
+        let invalidationsAfterRemoval = controller._openGraphInvalidationCount
+        removedBinding?.wrappedValue = 999
+        await drainMainActor()
+        XCTAssertEqual(
+            controller._openGraphInvalidationCount,
+            invalidationsAfterRemoval,
+            "a binding retained past element removal must be detached from the graph"
+        )
+
+        bindings.removeAll()
+        controller.rootView = ForEachFixture(
+            elements: [
+                IdentifiedElement(id: id2, initialValue: 222),
+                IdentifiedElement(id: id3, initialValue: 30),
+                IdentifiedElement(id: id1, initialValue: 10),
+            ],
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 3)
+        XCTAssertEqual(
+            bindings["id2"]?.wrappedValue,
+            222,
+            "removing an ID destroys its state before a later reinsertion"
+        )
+    }
+
+    func testDynamicPropertyUpdateMutationIsVisibleToBodyOnEveryRender() throws {
+        var values: [Int] = []
+        let capture: @MainActor (Int) -> Void = { values.append($0) }
+        let controller = UIHostingController(
+            rootView: UpdatingPropertyFixture(capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 180, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(values, [7])
+        XCTAssertEqual(texts(in: host), ["updated=7"])
+
+        controller.rootView = UpdatingPropertyFixture(capture: capture)
+        host.layoutIfNeeded()
+        XCTAssertEqual(
+            values,
+            [7, 7],
+            "body must receive the mutated DynamicProperty value on each render"
+        )
+        XCTAssertEqual(texts(in: host), ["updated=7"])
+    }
+
+    func testClassDynamicPropertyRecursivelyPreparesStateAndUpdatesBody() async throws {
+        let recorder = DynamicUpdateRecorder()
+        let property = ClassUpdatingProperty(source: 6, recorder: recorder)
+        var binding: Binding<Int>?
+        let controller = UIHostingController(
+            rootView: ClassUpdatingPropertyFixture(property: property) {
+                binding = $0
+            }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 240, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(recorder.events, ["class"])
+        XCTAssertEqual(texts(in: host), ["classUpdated=6"])
+
+        binding?.wrappedValue = 16
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(recorder.events, ["class", "class"])
+        XCTAssertEqual(texts(in: host), ["classUpdated=16"])
+    }
+
+    func testDynamicPropertyWriteBackBalancesReferenceStorage() throws {
+        weak var weakToken: DynamicPropertyLifetimeToken?
+        var controller: UIHostingController<ReferenceBearingUpdatingPropertyFixture>?
+
+        do {
+            let token = DynamicPropertyLifetimeToken()
+            weakToken = token
+            controller = UIHostingController(
+                rootView: ReferenceBearingUpdatingPropertyFixture(
+                    property: ReferenceBearingUpdatingProperty(token: token)
+                )
+            )
+            let host = try XCTUnwrap(controller?.view)
+            host.frame = CGRect(x: 0, y: 0, width: 240, height: 44)
+            host.layoutIfNeeded()
+            XCTAssertEqual(texts(in: host), ["referenceUpdated=42"])
+        }
+
+        XCTAssertNotNil(weakToken)
+        controller = nil
+        XCTAssertNil(
+            weakToken,
+            "prepared DynamicProperty copies must balance reference ownership"
+        )
+    }
+
+    func testNestedDynamicPropertiesPrepareUpdateAndTearDownRecursively() async throws {
+        let model = ObservationModel(7)
+        let recorder = DynamicUpdateRecorder()
+        var stateBinding: Binding<Int>?
+        var modelBinding: Binding<Int>?
+        let capture: @MainActor (Binding<Int>, Binding<Int>) -> Void = {
+            stateBinding = $0
+            modelBinding = $1
+        }
+        let controller = UIHostingController(
+            rootView: NestedDynamicBranchFixture(
+                showsLeaf: true,
+                model: model,
+                recorder: recorder,
+                capture: capture
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 260, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(recorder.events, ["inner", "outer"])
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+        XCTAssertEqual(texts(in: host), ["nested=5/7/updated=5"])
+
+        stateBinding?.wrappedValue = 15
+        modelBinding?.wrappedValue = 17
+        await drainMainActor()
+        XCTAssertEqual(
+            recorder.events,
+            ["inner", "outer", "inner", "outer"],
+            "nested and outer update() each execute exactly once per render"
+        )
+        XCTAssertEqual(controller._openGraphInvalidationCount, 1)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["nested=15/17/updated=15"])
+
+        controller.rootView = NestedDynamicBranchFixture(
+            showsLeaf: false,
+            model: model,
+            recorder: recorder,
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 0)
+        XCTAssertEqual(controller._openGraphObservationCount, 0)
+        let invalidationsAfterRemoval = controller._openGraphInvalidationCount
+        model.value = 99
+        await drainMainActor()
+        XCTAssertEqual(controller._openGraphInvalidationCount, invalidationsAfterRemoval)
+
+        stateBinding = nil
+        modelBinding = nil
+        controller.rootView = NestedDynamicBranchFixture(
+            showsLeaf: true,
+            model: model,
+            recorder: recorder,
+            capture: capture
+        )
+        XCTAssertEqual(controller._openGraphStateCount, 1)
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+        XCTAssertEqual(stateBinding?.wrappedValue, 5)
+        XCTAssertEqual(modelBinding?.wrappedValue, 99)
+    }
+
+    func testRootReplacementCancelsOldObservationAndControllerTearsDown() async throws {
+        let oldModel = ObservationModel(1)
+        let newModel = ObservationModel(2)
+        var controller: UIHostingController<ObservationFixture>? = UIHostingController(
+            rootView: ObservationFixture(model: oldModel)
+        )
+        _ = try XCTUnwrap(controller?.view)
+        XCTAssertEqual(controller?._openGraphObservationCount, 1)
+
+        controller?.rootView = ObservationFixture(model: newModel)
+        let countAfterReplacement = try XCTUnwrap(controller?._openGraphInvalidationCount)
+
+        oldModel.value = 10
+        await drainMainActor()
+        XCTAssertEqual(controller?._openGraphInvalidationCount, countAfterReplacement)
+
+        newModel.value = 20
+        await drainMainActor()
+        XCTAssertEqual(controller?._openGraphInvalidationCount, countAfterReplacement + 1)
+
+        let weakController = WeakReference(controller)
+        controller = nil
+        await drainMainActor()
+        XCTAssertNil(
+            weakController.value,
+            "subscriptions must not retain the hosting controller"
+        )
+
+        // A model which outlives the controller can continue publishing after
+        // teardown without touching a dead graph.
+        newModel.value = 21
+        await drainMainActor()
+    }
+
+    private func drainMainActor() async {
+        // One yield runs the graph's queued invalidation; the second makes the
+        // assertion insensitive to executor handoff details on either host.
+        await Task.yield()
+        await Task.yield()
+    }
+
+    private func texts(in root: UIView) -> [String] {
+        descendants(of: root)
+            .compactMap { $0 as? UILabel }
+            .filter { $0.accessibilityIdentifier == "SwiftUI.Text" }
+            .compactMap(\.text)
+    }
+
+    private func descendants(of root: UIView) -> [UIView] {
+        root.subviews.flatMap { [$0] + descendants(of: $0) }
+    }
+}

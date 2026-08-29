@@ -23,7 +23,9 @@ public protocol _OpenView {
 
 public extension _OpenView {
     func _makeOpenUIKitNode() -> _OpenViewNode {
-        body._makeOpenUIKitNode()
+        _OpenGraphContext.withView(self) { preparedView in
+            preparedView.body._makeOpenUIKitNode()
+        }
     }
 }
 
@@ -81,6 +83,54 @@ enum _OpenViewModification {
     case navigationTitle(String)
 }
 
+/// Construction-time modifier payload. Background and overlay views remain
+/// deferred until their modified content is reached through the structural
+/// tree; evaluating them while a parent body is being assembled would flatten
+/// sibling tuple/stack scopes and alias their dynamic state.
+fileprivate enum _OpenViewModifier {
+    case font(Font?)
+    case fontWeight(Font.Weight?)
+    case minimumScaleFactor(CGFloat)
+    case foregroundColor(Color?)
+    case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
+    case padding(Edge.Set, CGFloat?)
+    case background(@MainActor () -> _OpenViewNode, alignment: Alignment)
+    case overlay(@MainActor () -> _OpenViewNode, alignment: Alignment)
+    case resizable
+    case aspectRatio(ContentMode)
+    case previewLayout(PreviewLayout)
+    case clipRoundedRectangle(CGFloat)
+    case navigationTitle(String)
+
+    @MainActor
+    func resolve() -> _OpenViewModification {
+        switch self {
+        case .font(let value): return .font(value)
+        case .fontWeight(let value): return .fontWeight(value)
+        case .minimumScaleFactor(let value): return .minimumScaleFactor(value)
+        case .foregroundColor(let value): return .foregroundColor(value)
+        case .frame(let width, let height, let alignment):
+            return .frame(width: width, height: height, alignment: alignment)
+        case .padding(let edges, let length): return .padding(edges, length)
+        case .background(let makeNode, let alignment):
+            return .background(
+                _OpenGraphContext.withStructuralScope(.background, operation: makeNode),
+                alignment: alignment
+            )
+        case .overlay(let makeNode, let alignment):
+            return .overlay(
+                _OpenGraphContext.withStructuralScope(.overlay, operation: makeNode),
+                alignment: alignment
+            )
+        case .resizable: return .resizable
+        case .aspectRatio(let value): return .aspectRatio(value)
+        case .previewLayout(let value): return .previewLayout(value)
+        case .clipRoundedRectangle(let radius): return .clipRoundedRectangle(radius)
+        case .navigationTitle(let title): return .navigationTitle(title)
+        }
+    }
+}
+
 extension Never: _OpenView {
     public typealias Body = Never
 
@@ -112,7 +162,19 @@ public enum _OpenViewBuilder {
         _ c0: C0,
         _ c1: C1
     ) -> _OpenTupleView<(C0, C1)> {
-        _OpenTupleView((c0, c1), nodes: { [c0._makeOpenUIKitNode(), c1._makeOpenUIKitNode()] })
+        _OpenTupleView(
+            (c0, c1),
+            nodes: {
+                [
+                    _OpenGraphContext.withStructuralScope(.tupleElement(0)) {
+                        c0._makeOpenUIKitNode()
+                    },
+                    _OpenGraphContext.withStructuralScope(.tupleElement(1)) {
+                        c1._makeOpenUIKitNode()
+                    },
+                ]
+            }
+        )
     }
 
     public static func buildBlock<C0: _OpenView, C1: _OpenView, C2: _OpenView>(
@@ -123,7 +185,17 @@ public enum _OpenViewBuilder {
         _OpenTupleView(
             (c0, c1, c2),
             nodes: {
-                [c0._makeOpenUIKitNode(), c1._makeOpenUIKitNode(), c2._makeOpenUIKitNode()]
+                [
+                    _OpenGraphContext.withStructuralScope(.tupleElement(0)) {
+                        c0._makeOpenUIKitNode()
+                    },
+                    _OpenGraphContext.withStructuralScope(.tupleElement(1)) {
+                        c1._makeOpenUIKitNode()
+                    },
+                    _OpenGraphContext.withStructuralScope(.tupleElement(2)) {
+                        c2._makeOpenUIKitNode()
+                    },
+                ]
             }
         )
     }
@@ -183,11 +255,19 @@ public struct _OpenConditionalContent<TrueContent: _OpenView, FalseContent: _Ope
     private let nodeBuilder: @MainActor () -> _OpenViewNode
 
     init(first content: TrueContent) {
-        nodeBuilder = { content._makeOpenUIKitNode() }
+        nodeBuilder = {
+            _OpenGraphContext.withStructuralScope(.conditionalTrue) {
+                content._makeOpenUIKitNode()
+            }
+        }
     }
 
     init(second content: FalseContent) {
-        nodeBuilder = { content._makeOpenUIKitNode() }
+        nodeBuilder = {
+            _OpenGraphContext.withStructuralScope(.conditionalFalse) {
+                content._makeOpenUIKitNode()
+            }
+        }
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
@@ -204,7 +284,15 @@ public struct _OpenViewArray<Content: _OpenView>: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.group(components.map { $0._makeOpenUIKitNode() }))
+        _OpenViewNode(
+            .group(
+                components.enumerated().map { index, component in
+                    _OpenGraphContext.withStructuralScope(.arrayElement(index)) {
+                        component._makeOpenUIKitNode()
+                    }
+                }
+            )
+        )
     }
 }
 
@@ -213,7 +301,10 @@ extension Optional: _OpenView where Wrapped: _OpenView {
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         switch self {
-        case .some(let wrapped): return wrapped._makeOpenUIKitNode()
+        case .some(let wrapped):
+            return _OpenGraphContext.withStructuralScope(.optionalSome) {
+                wrapped._makeOpenUIKitNode()
+            }
         case .none: return _OpenViewNode(.empty)
         }
     }
@@ -335,7 +426,11 @@ public struct _OpenHStack<Content: _OpenView>: _OpenView {
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(
             .hStack(
-                children: _flattenGroup(content._makeOpenUIKitNode()),
+                children: _flattenGroup(
+                    _OpenGraphContext.withStructuralScope(.hStackContent) {
+                        content._makeOpenUIKitNode()
+                    }
+                ),
                 alignment: alignment,
                 spacing: spacing
             )
@@ -362,7 +457,11 @@ public struct _OpenVStack<Content: _OpenView>: _OpenView {
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(
             .vStack(
-                children: _flattenGroup(content._makeOpenUIKitNode()),
+                children: _flattenGroup(
+                    _OpenGraphContext.withStructuralScope(.vStackContent) {
+                        content._makeOpenUIKitNode()
+                    }
+                ),
                 alignment: alignment,
                 spacing: spacing
             )
@@ -381,16 +480,26 @@ public struct _OpenForm<Content: _OpenView>: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.form(rows: _flattenGroup(content._makeOpenUIKitNode())))
+        _OpenViewNode(
+            .form(
+                rows: _flattenGroup(
+                    _OpenGraphContext.withStructuralScope(.formContent) {
+                        content._makeOpenUIKitNode()
+                    }
+                )
+            )
+        )
     }
 }
 
-/// Eager, stateless collection expansion used by the DesignSystem previews.
-/// Identity is accepted for source compatibility; S1.5 does not diff updates.
+/// Eager collection expansion. Each element's explicit Hashable ID forms a
+/// typed graph scope so retained state follows the element through reorder and
+/// is destroyed when that ID leaves the collection.
 public struct _OpenForEach<Data, ID, Content>: _OpenView
 where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView {
     public typealias Body = Never
     public let data: Data
+    private let idKeyPath: KeyPath<Data.Element, ID>
     private let contentBuilder: @MainActor (Data.Element) -> Content
 
     public init(
@@ -399,12 +508,25 @@ where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView {
         @_OpenViewBuilder content: @escaping @MainActor (Data.Element) -> Content
     ) {
         self.data = data
-        _ = id
+        idKeyPath = id
         contentBuilder = content
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.group(data.map { contentBuilder($0)._makeOpenUIKitNode() }))
+        _OpenGraphContext.withStructuralScope(.forEachContent) {
+            var seen: Set<AnyHashable> = []
+            let nodes = data.map { element -> _OpenViewNode in
+                let identifier = AnyHashable(element[keyPath: idKeyPath])
+                precondition(
+                    seen.insert(identifier).inserted,
+                    "ForEach requires unique element IDs"
+                )
+                return _OpenGraphContext.withStructuralScope(.forEachElement(identifier)) {
+                    contentBuilder(element)._makeOpenUIKitNode()
+                }
+            }
+            return _OpenViewNode(.group(nodes))
+        }
     }
 }
 
@@ -417,7 +539,10 @@ public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        let (node, title) = _extractNavigationTitle(content._makeOpenUIKitNode())
+        let contentNode = _OpenGraphContext.withStructuralScope(.navigationContent) {
+            content._makeOpenUIKitNode()
+        }
+        let (node, title) = _extractNavigationTitle(contentNode)
         return _OpenViewNode(.navigation(content: node, title: title))
     }
 }
@@ -442,10 +567,22 @@ public struct _OpenLinearGradient: _OpenView {
 public struct _OpenModifiedContent<Content: _OpenView>: _OpenView {
     public typealias Body = Never
     let content: Content
-    let modification: _OpenViewModification
+    private let modifier: _OpenViewModifier
+
+    fileprivate init(content: Content, modification: _OpenViewModifier) {
+        self.content = content
+        modifier = modification
+    }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.modified(content._makeOpenUIKitNode(), modification))
+        _OpenViewNode(
+            .modified(
+                _OpenGraphContext.withStructuralScope(.modifiedContent) {
+                    content._makeOpenUIKitNode()
+                },
+                modifier.resolve()
+            )
+        )
     }
 }
 
@@ -487,7 +624,10 @@ public extension _OpenView {
     ) -> some _OpenView {
         _OpenModifiedContent(
             content: self,
-            modification: .background(background._makeOpenUIKitNode(), alignment: alignment)
+            modification: .background(
+                { background._makeOpenUIKitNode() },
+                alignment: alignment
+            )
         )
     }
 
@@ -497,7 +637,10 @@ public extension _OpenView {
     ) -> some _OpenView {
         _OpenModifiedContent(
             content: self,
-            modification: .overlay(overlay._makeOpenUIKitNode(), alignment: alignment)
+            modification: .overlay(
+                { overlay._makeOpenUIKitNode() },
+                alignment: alignment
+            )
         )
     }
 

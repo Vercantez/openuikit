@@ -1,6 +1,33 @@
 // swift-tools-version:5.9
 import PackageDescription
 
+// Manifest conditionals describe the machine evaluating Package.swift, not a
+// `swift build --triple` destination. Keep the shim in the graph on every
+// host, and select it at target-dependency resolution time for Linux only.
+// Native Darwin SwiftUI therefore continues to compile against the SDK's
+// first-party Combine module and never builds or links the shim.
+let platformCombinePackages: [Package.Dependency] = [
+    .package(
+        url: "https://github.com/OpenCombine/OpenCombine.git",
+        revision: "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b"
+    ),
+]
+let platformCombineTargets: [Target] = [
+    .target(
+        name: "Combine",
+        dependencies: [
+            .product(
+                name: "OpenCombine",
+                package: "OpenCombine",
+                condition: .when(platforms: [.linux])
+            ),
+        ]
+    ),
+]
+let swiftUICombineDependencies: [Target.Dependency] = [
+    .target(name: "Combine", condition: .when(platforms: [.linux])),
+]
+
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
 // here -- no swiftSettings, no linkerSettings, no `.when(platforms:)`:
 //
@@ -41,6 +68,7 @@ let package = Package(
         // libobjc2/gnustep-base, outside SPM, and links this .so.
         .library(name: "OpenUIKitC", type: .dynamic, targets: ["OpenUIKitC"]),
     ],
+    dependencies: platformCombinePackages,
     targets: [
         // Vendored stb_truetype (single-header C library, public domain).
         .target(name: "CSTBTrueType"),
@@ -77,10 +105,13 @@ let package = Package(
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
-        // S1/S1.5 is the stateless composition/hosting surface required by
-        // Focus's widget and seven DesignSystem Swift files. Keep this a
-        // separate module so UIKit-only users do not acquire SwiftUI symbols.
-        .target(name: "SwiftUI", dependencies: ["OpenUIKit"]),
+        // S1/S1.5 plus the first S2 observation/state slice. Keep this a
+        // separate module so UIKit-only users do not acquire SwiftUI or
+        // Combine symbols.
+        .target(
+            name: "SwiftUI",
+            dependencies: ["OpenUIKit"] + swiftUICombineDependencies
+        ),
         // M7.5 demo app: a multi-screen Settings-style app written against
         // OpenUIKit exactly like a normal UIKit app (UIViewController
         // subclasses, addTarget actions, UIView.animate). Same rules as
@@ -157,9 +188,15 @@ let package = Package(
                           dependencies: ["OpenUIKit", "OpenUIKitC", "CPortableIO"],
                           linkerSettings: [.linkedLibrary("m", .when(platforms: [.linux]))]),
         .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
-        .testTarget(name: "SwiftUITests", dependencies: ["SwiftUI", "OpenUIKit"]),
+        .testTarget(
+            name: "SwiftUITests",
+            dependencies: [
+                "SwiftUI",
+                "OpenUIKit",
+            ] + swiftUICombineDependencies
+        ),
         .testTarget(name: "OpenUIKitCTests",
                     dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"]),
-    ],
+    ] + platformCombineTargets,
     cxxLanguageStandard: .cxx17
 )
