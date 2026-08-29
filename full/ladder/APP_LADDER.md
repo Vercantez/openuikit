@@ -4,6 +4,15 @@ Measured 2026-08-27. Tooling in this directory, corpus SHAs pinned in
 `scratch/ladder-corpus/PINS.txt`, raw output in the JSON files beside this one.
 **Measurement only — nothing was built, nothing was fixed.**
 
+**Port-roadmap update (2026-08-28):** the scores below remain the frozen
+baseline, but “out of scope” is no longer the project policy. The
+source-unchanged [`Apple framework port roadmap`](../framework-roadmap/FRAMEWORK-ROADMAP.md)
+now tracks all 135 observed Apple first-party modules, and the measured
+[`SwiftUI port contract`](../swiftui/ROADMAP.md) defines its first Focus slice.
+Those artifacts are plans and contracts. OpenUIKit `3cde5ad` implements the
+first exact two-file Focus SwiftUI widget slice, but full SwiftUI, WebKit, and
+the other listed frameworks are not thereby implemented or runnable.
+
 ---
 
 ## 0. What "runnable" means here, so nobody over-reads the ladder
@@ -183,9 +192,9 @@ imported modules · `FW` distinct non-UIKit/Foundation Apple frameworks ·
 only).
 
 Three **gates** override the sum, because they are not degrees: SwiftUI-majority
-(the framework does not exist here), ObjC-majority (that app is on the facade
-road, not this one), and **a SwiftUI/Combine-bound load-bearing dependency**
-(same wall, one level down).
+(the framework was unavailable when this baseline was scored), ObjC-majority
+(that app is on the facade road, not this one), and **a SwiftUI/Combine-bound
+load-bearing dependency** (same wall, one level down).
 
 **`DEP = ?` means no external dependency of that app was among the 30
 measured.** `?` scores 0, so those three rows (NetNewsWire, simplenote-ios,
@@ -279,14 +288,15 @@ wikipedia-ios is 12 against 53.
 | **missing UIKit — STUB-ABLE** | **22 types / 59 uses** | `UIPasteboard` 21, `NSItemProvider` 6, drag/drop 5 types, pointer 5 types, shortcuts, printing, `UIImagePickerController`. Two thirds of its gap is a no-op. |
 | **dependencies** | **0 load-bearing** among the 30 measured; `Sentry` (2 of 227 files) and `SnapKit` (7) are peripheral | **The only app in the corpus with no load-bearing external dependency measured.** This is why it is the sole route-(a) NEAR: nothing else brings `#selector` in with it. |
 | **SwiftUI** | 18 view-declaring files, 26.1 % | **Confined and checked**: `Onboarding/SwiftUI Onboarding` (5), `InternalSettings` (6), `DesignSystem/Preview Files` (3), Widgets (2), Licenses (1). The browser chrome itself is UIKit. |
-| **WebKit** | **6 files import WebKit, 4 use `WKWebView`** | **The decisive blocker, and it is not UIKit.** A browser without a web view has no content area. WebKit is an entire unbuilt framework and nothing in this project plans for one. |
+| **WebKit** | **6 files import WebKit, 4 use `WKWebView`** | **The decisive blocker, and it is not UIKit.** A browser without a web view has no content area. WebKit remains unbuilt, but is now an explicit first-party-framework port target. |
 | **model layer** | 956 references, 42 Foundation-networking, **0 third-party network libs** | genuinely small; the network work is inside WebKit |
 | **route (a)** | 77 `#selector` (73 wiring, 1 deep, 3 unclassified) + **0 from deps**; 86 `@objc` | 77 mechanical edits — over the 10-site line but nothing structural, and nothing inherited |
 | **build** | **plain SPM** (`BlockzillaPackage` + `ContentBlockerGen`) + 1 xcodeproj, **no Pods, no Bazel, no submodules**; 35 modules; 6 direct SPM URLs | the *easiest build in the corpus* |
 | **assets** | 8 `.xcassets`, **633 `.strings`**, 1 storyboard | asset catalogs and localization are both live |
 
 **Verdict in one line:** *the best build, the cleanest UI shape and the only
-dependency-free app in the corpus, blocked on one framework nobody has scoped.*
+dependency-free app in the corpus, blocked on a framework now scoped but not
+yet implemented.*
 If WebKit could be stubbed to a blank content view, focus-ios is the app to try
 first — and its entire blocking UIKit debt is 13 types.
 

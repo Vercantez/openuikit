@@ -4,6 +4,25 @@
 **Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `4c82757`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
+## Source-unchanged compatibility policy
+
+Focus is an immutable upstream input. Port work must not patch, overlay,
+rewrite, or replace application or package source files. Missing Apple APIs
+belong in source-compatible framework modules exposed under their original
+module names; graph, resource, generated-source, and linker compatibility
+belong in the build/runtime layers. Every proof must attest the exact upstream
+bytes it consumes and label any separately generated build artifact. SwiftUI
+and the other Apple first-party imports are therefore framework-port work, not
+permission to translate their call sites inside Focus.
+
+The corpus-wide priority list is generated in
+[`../framework-roadmap/FRAMEWORK-ROADMAP.md`](../framework-roadmap/FRAMEWORK-ROADMAP.md).
+Focus's exact 28-file SwiftUI boundary and staged acceptance gates are in
+[`../swiftui/ROADMAP.md`](../swiftui/ROADMAP.md). Both are implementation
+backlogs. OpenUIKit `3cde5ad` now implements and renders the first exact
+two-file Focus widget slice, but that is not a claim that full SwiftUI or any
+other listed framework already executes in the Mach-O guest.
+
 SnapKit now comes from the exact 5.7.0 revision named by Focus's
 [`Package.resolved`](https://github.com/mozilla-mobile/focus-ios/blob/a2832521c1daa0c23419c73705ae043ed60c9791/focus-ios/Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved),
 not the former diagnostic checkout of upstream `main`. At that isolated

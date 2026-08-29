@@ -7,6 +7,13 @@
 **stale — 12 `Sources/` files newer than it** — so nothing here was measured
 against it.
 
+**Later #94 policy:** this remains a historical first-screen scope. The full
+source-unchanged port now includes SwiftUI and every measured Apple first-party
+module in the [framework roadmap](../framework-roadmap/FRAMEWORK-ROADMAP.md);
+the exact Focus boundary is in the [SwiftUI contract](../swiftui/ROADMAP.md).
+OpenUIKit `3cde5ad` now covers the first two-file Focus widget slice; neither
+document implies the complete frameworks already work.
+
 **Bottom line: the app was chosen on a premise that is false, and the wall that
 was named is not the biggest one.** WebKit is small and stub-able for
 launch-to-first-screen. The real blockers are two prebuilt **Rust
@@ -229,7 +236,7 @@ reach because they live in the 75 files outside the subset.
 | 7 | Core Animation (`CAGradientLayer`, `CATransaction`, `CABasicAnimation`) | 34 uses | **YES** (chrome) | **IMPLEMENT.** Small, and invisible to every prior census. |
 | 8 | Xcode-generated SiriKit `EraseIntent*` | 3 types | no | **GENERATE or STUB** — a build-system step, not a framework. |
 | 9 | Sentry, Fuzi | 2 + 1 files | no | **STUB** Sentry; Fuzi only parses OpenSearch XML at settings time. |
-| 10 | SwiftUI (14 files) + Combine (7) | onboarding/settings/widgets | no | out of scope for first screen; #57's problem. |
+| 10 | SwiftUI (historical subset count 14) + Combine (7) | onboarding/settings/widgets | no | deferred from this historical first-screen slice; now explicit #94 framework-port work. |
 
 **Recommended first target if this app is pursued: launch-to-first-screen needs
 1, 2, 3, 5, 6-partial and the launch-path subset of 4 + 7.** Items 8, 9, 10 and
