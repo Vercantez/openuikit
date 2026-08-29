@@ -1,5 +1,77 @@
 # Known gaps (living document — fixers: read this)
 
+## Text-input traits, side views, and responder editing (Focus, 2026-08-29)
+
+`UITextField` and `UITextView` now retain the Focus-used keyboard traits with
+UIKit's exact enum raw values and defaults: keyboard type and appearance,
+autocapitalization, autocorrection, return-key type, and automatic return-key
+enabling. This is a real app/host contract, but OpenUIKit itself still has no
+software keyboard.
+The built-in SDL host therefore records these requests without changing its
+physical-key routing, and `enablesReturnKeyAutomatically` does not disable a
+hardware return event for an empty editor.
+
+The same slice adds coupled plain/attributed placeholders; measured left and
+right side-view geometry and `UITextField.ViewMode`; the standard clear
+button; `selectAll(_:)`; `UIView.endEditing(_:)`; and the keyboard assistant
+item/group source shapes. Boundaries that remain explicit:
+
+- A plain placeholder's UIKit getter synthesizes font, color, paragraph-style,
+  and shadow attributes. OpenUIKit synthesizes the rendering-relevant font and
+  `placeholderText` color. Explicit attributed placeholders keep every
+  OpenUIKit-supported attribute, but the generated dictionary does not invent
+  the unimplemented `NSShadow` value or UIKit's private paragraph style.
+- The clear button's 200x34 rounded-field geometry and text exclusion, its
+  four visibility modes, nonempty-text rule, delegate gate, editing-changed
+  event, non-nil empty result, and right-view precedence are measured and
+  implemented. A visible right view suppresses the clear control entirely,
+  regardless of assignment order, while retaining UIKit's distinct
+  `clearButtonRect(forBounds:)` hook result. That hook uses fractional-width
+  geometry whenever the clear mode is active and no right view wins, even for
+  empty text; inactive modes use the 19x19 result. Its icon is a
+  hand-drawn `xmark.circle.fill` equivalent: SF Symbols are proprietary, so
+  the outline is not pixel-identical even though the frame and interaction
+  are. UIKit keeps an empty/inactive private clear-button view at its measured
+  frame while suppressing its image; OpenUIKit keeps the same control instance
+  but hides and zero-frames it. Normal rendering and hit testing agree, while
+  private subview introspection does not.
+- Inactive custom left/right views detach during layout exactly as measured,
+  preserving their last frame, bounds, and caller-owned `isHidden` value; an
+  active view reattaches with its vertically centered origin ceiled to the
+  display pixel grid.
+- `UITextInputAssistantItem` has stable responder-owned identity, mutable
+  leading/trailing groups, and exclusive `UIBarButtonItemGroup` ownership.
+  No portable host draws a keyboard shortcut bar, collapses a group to its
+  representative, or supplies UIKit's default editing-command groups; a new
+  OpenUIKit assistant item therefore starts with empty arrays rather than the
+  one leading/two trailing groups observed on iOS 26.1.
+- `selectAll(_:)` focuses an attached enabled `UITextField` and selects its
+  whole UTF-16 document. Selection UI remains outside the existing focused
+  text-field selection core, and `UITextView` still uses its earlier scalar
+  caret model rather than exposing ranged selection.
+- `UITextField.textDidChangeNotification` uses UIKit's exact name and is
+  posted synchronously for successful host typing, deletion, and clear-button
+  mutation, after selection delegation and `.editingChanged`, with the field
+  as object and nil `userInfo`. Programmatic `text`/`attributedText` assignment
+  does not post. The older portable `UITextInput.replace`/marked-text paths
+  retain their existing no-`.editingChanged` contract and do not yet mirror
+  iOS 26.1's notification from those lower-level calls.
+
+`endEditing(_:)` is pinned to the iOS 26.1 runtime, including behavior that is
+easy to misread from the SDK header's “optionally force” comment. With no first
+responder it returns true. With an active responder outside the receiver's
+subtree it returns false for either argument and sends no delegate message.
+The non-force path preflights `canResignFirstResponder` and then resigns, so a
+permissive text delegate is asked twice while a refusing one is asked once.
+The force path calls `resignFirstResponder` once and returns true regardless of
+that result. Consequently a refusing `UITextFieldDelegate` leaves the field
+first responder and editing, with no did-end callback, even though
+`endEditing(true)` reports true. OpenUIKit deliberately preserves that
+measured result rather than treating `force` as permission to bypass the
+delegate. Modern successful field endings call the reason-bearing delegate
+method once; its default implementation forwards to the legacy callback so a
+delegate implementing only the old spelling still receives exactly one call.
+
 ## Pointer-interaction descriptors (Focus AppShortcuts, 2026-08-28)
 
 OpenUIKit now exposes the Swift-overlay pointer family needed by Focus:

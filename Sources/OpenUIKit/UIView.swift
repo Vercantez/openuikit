@@ -614,6 +614,46 @@ open class UIView: UIResponder, CALayerDelegate {
         sv.subviews.removeAll { $0 === self }
         superview = nil
     }
+
+    /// Whether the receiver is the supplied view or lies below it in the
+    /// view hierarchy (UIKit includes identity in this predicate).
+    open func isDescendant(of view: UIView) -> Bool {
+        var candidate: UIView? = self
+        while let current = candidate {
+            if current === view { return true }
+            candidate = current.superview
+        }
+        return false
+    }
+
+    /// Ask the first responder in this view's subtree to resign.
+    ///
+    /// iOS 26.1's measured `force` behavior is subtler than the SDK header's
+    /// “optionally force” shorthand: UIKit still gives the responder (and
+    /// therefore its text delegate) the opportunity to refuse; `true` changes
+    /// the RETURN VALUE to true but leaves focus/editing untouched and sends
+    /// no did-end callback. An active responder outside the receiver's
+    /// subtree returns false for either force value. With no active responder,
+    /// the operation is already satisfied and returns true.
+    @discardableResult
+    open func endEditing(_ force: Bool) -> Bool {
+        guard let window else { return true }
+        guard let responder = window.firstResponder else { return true }
+        guard let responderView = responder as? UIView,
+              responderView.isDescendant(of: self) else { return false }
+        if force {
+            // Measured UIKit calls the responder once, then reports success
+            // even when that call refuses to end editing.
+            _ = responder.resignFirstResponder()
+            return true
+        }
+        // The non-force path first checks eligibility, then performs the
+        // resignation. A permissive text delegate is consequently asked
+        // twice; a refusing one is asked once (iOS 26.1 behavior).
+        guard responder.canResignFirstResponder else { return false }
+        return responder.resignFirstResponder()
+    }
+
     public func bringSubviewToFront(_ view: UIView) {
         guard let i = subviews.firstIndex(where: { $0 === view }) else { return }
         subviews.remove(at: i)

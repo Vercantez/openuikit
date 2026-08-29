@@ -71,7 +71,7 @@ public enum UITextFieldBorderStyle: Sendable {
 ///   - `textFieldShouldEndEditing`   — false blocks `resignFirstResponder()`
 ///   - `textField(_:shouldChangeCharactersIn:replacementString:)` — false
 ///     drops the insertion / deletion
-///   - `textFieldShouldClear`        — false blocks `text = nil` via clear
+///   - `textFieldShouldClear`        — false blocks `text = ""` via clear
 ///   - `textFieldShouldReturn`       — the return key's handler; UIKit does
 ///     NOT resign on its own, and neither do we (an app returning true
 ///     usually calls `resignFirstResponder()` itself)
@@ -97,7 +97,13 @@ public extension UITextFieldDelegate {
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool { true }
     func textFieldDidEndEditing(_ textField: UITextField) {}
     func textFieldDidEndEditing(_ textField: UITextField,
-                                reason: UITextField.DidEndEditingReason) {}
+                                reason: UITextField.DidEndEditingReason) {
+        // UIKit calls the reason-bearing callback on modern systems and
+        // falls back to the legacy spelling when that is all a delegate
+        // implements. A default forward gives pure Swift protocols the same
+        // one-callback behavior without Objective-C optional dispatch.
+        textFieldDidEndEditing(textField)
+    }
     func textFieldDidChangeSelection(_ textField: UITextField) {}
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
@@ -121,6 +127,38 @@ final class UITextFieldBackgroundView: UIView {}
 @preconcurrency @MainActor
 final class UITextFieldCanvasView: UIView {}
 
+/// Portable vector stand-in for UIKit's SF-Symbol-backed clear button. Its
+/// measured frame and interaction are exact; the glyph outline is documented
+/// as an approximation because SF Symbols cannot be redistributed.
+@preconcurrency @MainActor
+final class UITextFieldClearButton: UIControl {
+    override func stateDidChange() {
+        super.stateDidChange()
+        setNeedsDisplay()
+    }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        guard bounds.width > 0, bounds.height > 0 else { return }
+        let baseCircleColor = UIColor.tertiaryLabel
+            .resolvedCGColor(with: traitCollection)
+        // CGColor.withAlpha multiplies the existing component, so pass only
+        // the state factor (passing the resolved alpha again would square it).
+        let circleColor = baseCircleColor.withAlpha(isHighlighted ? 0.65 : 1)
+        canvas.fill(Path.roundedRect(bounds, cornerRadius: bounds.height / 2),
+                    color: circleColor)
+
+        let inset: CGFloat = 5.5
+        var cross = Path()
+        cross.move(to: CGPoint(x: bounds.minX + inset, y: bounds.minY + inset))
+        cross.addLine(to: CGPoint(x: bounds.maxX - inset, y: bounds.maxY - inset))
+        cross.move(to: CGPoint(x: bounds.maxX - inset, y: bounds.minY + inset))
+        cross.addLine(to: CGPoint(x: bounds.minX + inset, y: bounds.maxY - inset))
+        let foreground = UIColor.systemBackground.resolvedCGColor(with: traitCollection)
+        canvas.stroke(cross, color: foreground, lineWidth: 1.5,
+                      cap: .round, join: .round)
+    }
+}
+
 /// Stable identity carried by every position minted for one field. Positions
 /// from another editor are deliberately rejected rather than interpreted as
 /// coincidentally matching integer offsets.
@@ -129,7 +167,30 @@ private final class UITextFieldDocumentIdentity {}
 @preconcurrency @MainActor
 open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHosting {
 
+    /// Posted synchronously after user-driven text mutation, with the field as
+    /// the object and no userInfo. The SDK declares this name nonisolated.
+    nonisolated public static let textDidChangeNotification =
+        Notification.Name("UITextFieldTextDidChangeNotification")
+
+    /// Visibility policy shared by the clear button and custom side views.
+    /// Raw values are UIKit's stable NS_ENUM values.
+    public enum ViewMode: Int, Sendable {
+        case never = 0
+        case whileEditing = 1
+        case unlessEditing = 2
+        case always = 3
+    }
+
     // MARK: Content properties
+
+    // Keyboard traits are retained even though OpenUIKit itself owns no
+    // software keyboard. A host can inspect them when choosing an input UI.
+    open var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    open var autocorrectionType: UITextAutocorrectionType = .default
+    open var keyboardType: UIKeyboardType = .default
+    open var keyboardAppearance: UIKeyboardAppearance = .default
+    open var returnKeyType: UIReturnKeyType = .default
+    open var enablesReturnKeyAutomatically = false
 
     open var text: String? {
         get { _text.isEmpty ? (_hasText ? _text : nil) : _text }
@@ -175,12 +236,40 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     }
     var _attributed: NSAttributedString?
 
-    public var placeholder: String? {
-        didSet { refreshContent() }
+    private var _placeholder: String?
+    private var _attributedPlaceholder: NSAttributedString?
+    private var placeholderUsesDefaultAttributes = false
+
+    /// The plain and attributed placeholder properties are two views of one
+    /// UIKit value: assigning either updates the other's string, and nil on
+    /// either side clears both (iOS 26.1 oracle).
+    open var placeholder: String? {
+        get { _placeholder }
+        set {
+            _placeholder = newValue
+            placeholderUsesDefaultAttributes = newValue != nil
+            _attributedPlaceholder = newValue.map(makeDefaultAttributedPlaceholder)
+            refreshContent()
+        }
+    }
+
+    open var attributedPlaceholder: NSAttributedString? {
+        get { _attributedPlaceholder }
+        set {
+            _attributedPlaceholder = newValue.map(NSAttributedString.init(attributedString:))
+            _placeholder = newValue?.string
+            placeholderUsesDefaultAttributes = false
+            refreshContent()
+        }
     }
 
     public var font: UIFont = .systemFont(ofSize: 17) {
-        didSet { refreshContent() }
+        didSet {
+            if placeholderUsesDefaultAttributes, let placeholder = _placeholder {
+                _attributedPlaceholder = makeDefaultAttributedPlaceholder(placeholder)
+            }
+            refreshContent()
+        }
     }
 
     public var textColor: UIColor = .label {
@@ -188,6 +277,26 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     }
 
     public var borderStyle: UITextFieldBorderStyle = .none {
+        didSet { setNeedsLayout() }
+    }
+
+    open var clearButtonMode: ViewMode = .never {
+        didSet {
+            if clearButtonMode != .never { ensureClearButton() }
+            setNeedsLayout()
+        }
+    }
+
+    open var leftView: UIView? {
+        didSet { replaceAccessoryView(oldValue, with: leftView) }
+    }
+    open var leftViewMode: ViewMode = .never {
+        didSet { setNeedsLayout() }
+    }
+    open var rightView: UIView? {
+        didSet { replaceAccessoryView(oldValue, with: rightView) }
+    }
+    open var rightViewMode: ViewMode = .never {
         didSet { setNeedsLayout() }
     }
 
@@ -217,6 +326,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// Created lazily on first edit so static scenes/layout dumps never
     /// see it (a plain UIView: background = tint bar).
     var caretView: UIView?
+    private var clearButton: UITextFieldClearButton?
 
     // MARK: Delegate (M13)
 
@@ -271,6 +381,68 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         canvasView.addSubview(textLabel)
         canvasView.addSubview(placeholderLabel)
         refreshContent()
+    }
+
+    private func makeDefaultAttributedPlaceholder(_ text: String) -> NSAttributedString {
+        NSAttributedString(string: text,
+                           attributes: [.font: font,
+                                        .foregroundColor: UIColor.placeholderText])
+    }
+
+    private func replaceAccessoryView(_ oldView: UIView?, with newView: UIView?) {
+        guard oldView !== newView else { return }
+        oldView?.removeFromSuperview()
+        setNeedsLayout()
+    }
+
+    /// UIKit keeps an inactive accessory detached while preserving its last
+    /// frame, bounds, and caller-controlled `isHidden` value. Attachment is
+    /// reconciled in layout (not synchronously from the property setters).
+    private func layoutAccessoryView(_ view: UIView, mode viewMode: ViewMode,
+                                     frame: @autoclosure () -> CGRect) {
+        if mode(viewMode, showsForEditing: isEditing) {
+            if view.superview !== self { addSubview(view) }
+            view.frame = frame()
+        } else if view.superview === self {
+            view.removeFromSuperview()
+        }
+    }
+
+    private func ensureClearButton() {
+        if let clearButton {
+            if clearButton.superview !== self { addSubview(clearButton) }
+            return
+        }
+        let button = UITextFieldClearButton()
+        button.isOpaque = false
+        button.addTarget(for: .touchUpInside) { [weak self] _, _ in
+            _ = self?._clear()
+        }
+        clearButton = button
+        addSubview(button)
+    }
+
+    private func mode(_ mode: ViewMode, showsForEditing editing: Bool) -> Bool {
+        switch mode {
+        case .never: return false
+        case .whileEditing: return editing
+        case .unlessEditing: return !editing
+        case .always: return true
+        }
+    }
+
+    private var shouldShowRightView: Bool {
+        rightView != nil && mode(rightViewMode, showsForEditing: isEditing)
+    }
+
+    private var isClearButtonModeActive: Bool {
+        mode(clearButtonMode, showsForEditing: isEditing)
+    }
+
+    private var shouldShowClearButton: Bool {
+        !_text.isEmpty
+            && isClearButtonModeActive
+            && !shouldShowRightView
     }
 
     // MARK: UTF-16 document model
@@ -431,8 +603,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         refreshContent()
         revealCaret()
         revealSelectionEnd()
-        if emitEditingChanged { sendActions(for: .editingChanged) }
         delegate?.textFieldDidChangeSelection(self)
+        if emitEditingChanged {
+            sendActions(for: .editingChanged)
+            NotificationCenter.default.post(name: Self.textDidChangeNotification,
+                                            object: self)
+        }
         return true
     }
 
@@ -534,6 +710,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         markedUTF16Range = nil
     }
 
+    /// Standard responder action. UIKit first focuses an attached field, then
+    /// selects its entire UTF-16 document. A detached/disabled field cannot
+    /// become first responder and leaves its existing selection untouched.
+    open override func selectAll(_ sender: Any?) {
+        guard isFirstResponder || becomeFirstResponder() else { return }
+        storeSelection(NSRange(location: 0, length: documentUTF16Length),
+                       notifyDelegate: true)
+    }
+
     func refreshContent() {
         textLabel.font = font
         textLabel.textColor = textColor
@@ -543,9 +728,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             textLabel.text = _text
         }
         placeholderLabel.font = font
-        placeholderLabel.text = placeholder
+        placeholderLabel.textColor = .placeholderText
+        placeholderLabel.attributedText = _attributedPlaceholder
         textLabel.isHidden = _text.isEmpty
-        placeholderLabel.isHidden = !_text.isEmpty || (placeholder ?? "").isEmpty
+        placeholderLabel.isHidden = !_text.isEmpty || (_placeholder ?? "").isEmpty
         setNeedsLayout()
     }
 
@@ -553,18 +739,74 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     var lineHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
 
-    public func textRect(forBounds bounds: CGRect) -> CGRect {
+    open func borderRect(forBounds bounds: CGRect) -> CGRect { bounds }
+
+    open func textRect(forBounds bounds: CGRect) -> CGRect {
+        var rect: CGRect
         switch borderStyle {
         case .roundedRect, .bezel, .line:
-            return bounds.insetBy(dx: UITextField.roundedRectTextInset.width,
+            rect = bounds.insetBy(dx: UITextField.roundedRectTextInset.width,
                                   dy: UITextField.roundedRectTextInset.height)
         case .none:
-            return bounds
+            rect = bounds
         }
+
+        if let leftView, mode(leftViewMode, showsForEditing: isEditing) {
+            rect.origin.x += leftView.bounds.width
+            rect.size.width -= leftView.bounds.width
+        }
+        if rightView != nil, mode(rightViewMode, showsForEditing: isEditing) {
+            let rightEdge = rightViewRect(forBounds: bounds).minX
+            rect.size.width = Swift.min(rect.maxX, rightEdge) - rect.minX
+        }
+        if shouldShowClearButton {
+            let clearEdge = clearButtonRect(forBounds: bounds).minX - 29.0 / 3.0
+            rect.size.width = Swift.min(rect.maxX, clearEdge) - rect.minX
+        }
+        rect.size.width = Swift.max(0, rect.width)
+        return rect
     }
 
-    public func editingRect(forBounds bounds: CGRect) -> CGRect {
+    open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         textRect(forBounds: bounds)
+    }
+
+    open func editingRect(forBounds bounds: CGRect) -> CGRect {
+        textRect(forBounds: bounds)
+    }
+
+    open func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+        // iOS 26.1 bases this hook on MODE ACTIVITY, not text presence or the
+        // existence of a visible private control. For a 200x34 field an active
+        // clear mode uses (175, 8, 19.667, 19), even with empty text. An
+        // inactive mode uses (176, 8, 19, 19). An active right view suppresses
+        // the clear control and also selects the latter hook geometry.
+        let usesActiveClearGeometry = isClearButtonModeActive && !shouldShowRightView
+        let width: CGFloat = usesActiveClearGeometry ? 59.0 / 3.0 : 19
+        let height: CGFloat = 19
+        let trailingInset: CGFloat = usesActiveClearGeometry ? 16.0 / 3.0 : 5
+        let x = bounds.maxX - width - trailingInset
+        let y = bounds.minY
+            + ((bounds.height - height) / 2).rounded(.toNearestOrAwayFromZero)
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+
+    open func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+        guard let leftView else { return .zero }
+        return CGRect(x: bounds.minX,
+                      y: FontEngine.ceilToPixel(
+                        bounds.minY + ((bounds.height - leftView.bounds.height) / 2),
+                        scale: textLabel.layoutScale),
+                      width: leftView.bounds.width, height: leftView.bounds.height)
+    }
+
+    open func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        guard let rightView else { return .zero }
+        return CGRect(x: bounds.maxX - rightView.bounds.width,
+                      y: FontEngine.ceilToPixel(
+                        bounds.minY + ((bounds.height - rightView.bounds.height) / 2),
+                        scale: textLabel.layoutScale),
+                      width: rightView.bounds.width, height: rightView.bounds.height)
     }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -601,12 +843,34 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         let chrome = borderStyle == .roundedRect
         backgroundView.isHidden = !chrome
         if chrome {
-            backgroundView.frame = bounds
+            backgroundView.frame = borderRect(forBounds: bounds)
             backgroundView.backgroundColor = UITextField.chromeFillColor
             backgroundView.layer.cornerRadius = UITextField.roundedRectCornerRadius
             backgroundView.layer.borderWidth = UITextField.roundedRectBorderWidth
             backgroundView.layer.borderColor =
                 UITextField.chromeBorderColor.resolvedCGColor(with: traitCollection)
+        }
+        if let leftView {
+            layoutAccessoryView(leftView, mode: leftViewMode,
+                                frame: leftViewRect(forBounds: bounds))
+        }
+        if let rightView {
+            layoutAccessoryView(rightView, mode: rightViewMode,
+                                frame: rightViewRect(forBounds: bounds))
+        }
+        let showsClearButton = shouldShowClearButton
+        if showsClearButton { ensureClearButton() }
+        if let clearButton {
+            if shouldShowRightView {
+                // Measured iOS 26.1 precedence: an active rightView removes
+                // the private clear control from the hierarchy, independent
+                // of which property was assigned first.
+                clearButton.removeFromSuperview()
+            } else {
+                clearButton.isHidden = !showsClearButton
+                clearButton.frame = showsClearButton
+                    ? clearButtonRect(forBounds: bounds) : .zero
+            }
         }
         let tr = textRect(forBounds: bounds)
         canvasView.frame = tr
@@ -685,7 +949,6 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             caretView?.isHidden = true
             setNeedsLayout()
             sendActions(for: .editingDidEnd)
-            delegate?.textFieldDidEndEditing(self)
             delegate?.textFieldDidEndEditing(self, reason: .committed)
         }
         return r
@@ -751,10 +1014,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     @discardableResult
     public func _clear() -> Bool {
         if let d = delegate, !d.textFieldShouldClear(self) { return false }
-        text = nil
+        // Real clear-button interaction leaves a non-nil empty string.
+        text = ""
         storeSelection(NSRange(location: 0, length: 0), notifyDelegate: false)
         sendActions(for: .editingChanged)
-        delegate?.textFieldDidChangeSelection(self)
+        NotificationCenter.default.post(name: Self.textDidChangeNotification,
+                                        object: self)
         return true
     }
 

@@ -25,6 +25,152 @@
 import class Foundation.NSObject
 #endif
 
+// MARK: - Keyboard traits
+
+/// Keyboard layout requested by a text editor. OpenUIKit has no system
+/// keyboard, but preserving UIKit's exact values lets an app and a host agree
+/// on the requested layout without source adaptation.
+public enum UIKeyboardType: Int, Sendable {
+    case `default` = 0
+    case asciiCapable = 1
+    case numbersAndPunctuation = 2
+    case URL = 3
+    case numberPad = 4
+    case phonePad = 5
+    case namePhonePad = 6
+    case emailAddress = 7
+    case decimalPad = 8
+    case twitter = 9
+    case webSearch = 10
+    case asciiCapableNumberPad = 11
+
+    @available(*, deprecated, renamed: "asciiCapable")
+    public static var alphabet: UIKeyboardType { .asciiCapable }
+}
+
+/// Visual style requested for the software keyboard. Portable hosts retain
+/// this value but do not themselves draw an on-screen keyboard.
+public enum UIKeyboardAppearance: Int, Sendable {
+    case `default` = 0
+    case dark = 1
+    case light = 2
+
+    @available(*, deprecated, renamed: "dark")
+    public static var alert: UIKeyboardAppearance { .dark }
+}
+
+/// Automatic-capitalization policy requested from the keyboard.
+public enum UITextAutocapitalizationType: Int, Sendable {
+    case none = 0
+    case words = 1
+    case sentences = 2
+    case allCharacters = 3
+}
+
+/// Automatic-correction policy requested from the keyboard.
+public enum UITextAutocorrectionType: Int, Sendable {
+    case `default` = 0
+    case no = 1
+    case yes = 2
+}
+
+/// Label/action requested for the keyboard's return key.
+public enum UIReturnKeyType: Int, Sendable {
+    case `default` = 0
+    case go = 1
+    case google = 2
+    case join = 3
+    case next = 4
+    case route = 5
+    case search = 6
+    case send = 7
+    case yahoo = 8
+    case done = 9
+    case emergencyCall = 10
+    case `continue` = 11
+}
+
+// MARK: - Keyboard assistant-bar values
+
+/// A logical group of bar-button items. OpenUIKit does not draw a keyboard
+/// assistant bar, but it keeps UIKit's ownership rule: an item can belong to
+/// only one group, either as a member or as that group's representative.
+@preconcurrency @MainActor
+open class UIBarButtonItemGroup: NSObject {
+    private var storedBarButtonItems: [UIBarButtonItem]
+    private var storedRepresentativeItem: UIBarButtonItem?
+
+    open var barButtonItems: [UIBarButtonItem] {
+        get { storedBarButtonItems }
+        set { replaceItems(with: newValue) }
+    }
+
+    open var representativeItem: UIBarButtonItem? {
+        get { storedRepresentativeItem }
+        set { replaceRepresentative(with: newValue) }
+    }
+
+    /// No OpenUIKit bar currently collapses a group to its representative.
+    open private(set) var isDisplayingRepresentativeItem = false
+
+    public init(barButtonItems: [UIBarButtonItem],
+                representativeItem: UIBarButtonItem?) {
+        storedBarButtonItems = []
+        storedRepresentativeItem = nil
+        super.init()
+        replaceItems(with: barButtonItems)
+        replaceRepresentative(with: representativeItem)
+    }
+
+    private func replaceItems(with items: [UIBarButtonItem]) {
+        let unique = items.reduce(into: [UIBarButtonItem]()) { result, item in
+            if !result.contains(where: { $0 === item }) { result.append(item) }
+        }
+        for item in storedBarButtonItems
+        where !unique.contains(where: { $0 === item }) && item._buttonGroup === self {
+            item._buttonGroup = nil
+        }
+        storedBarButtonItems = []
+        for item in unique {
+            item._buttonGroup?._removeAssociation(of: item)
+            if storedRepresentativeItem === item { storedRepresentativeItem = nil }
+            item._buttonGroup = self
+            storedBarButtonItems.append(item)
+        }
+    }
+
+    private func replaceRepresentative(with item: UIBarButtonItem?) {
+        if let old = storedRepresentativeItem, old !== item,
+           old._buttonGroup === self {
+            old._buttonGroup = nil
+        }
+        storedRepresentativeItem = nil
+        guard let item else { return }
+        item._buttonGroup?._removeAssociation(of: item)
+        storedBarButtonItems.removeAll { $0 === item }
+        item._buttonGroup = self
+        storedRepresentativeItem = item
+    }
+
+    func _removeAssociation(of item: UIBarButtonItem) {
+        storedBarButtonItems.removeAll { $0 === item }
+        if storedRepresentativeItem === item { storedRepresentativeItem = nil }
+        if item._buttonGroup === self { item._buttonGroup = nil }
+    }
+}
+
+/// Mutable contents of the keyboard's shortcut bar. The portable hosts have
+/// no built-in shortcut commands, so a fresh item starts with empty groups;
+/// assignments are retained exactly for app/host inspection.
+@preconcurrency @MainActor
+open class UITextInputAssistantItem: NSObject {
+    open var allowsHidingShortcuts = true
+    open var leadingBarButtonGroups: [UIBarButtonItemGroup] = []
+    open var trailingBarButtonGroups: [UIBarButtonItemGroup] = []
+
+    public override init() { super.init() }
+}
+
 /// UIKit's UIKeyInput: minimal text entry.
 @preconcurrency @MainActor
 public protocol UIKeyInput: AnyObject {

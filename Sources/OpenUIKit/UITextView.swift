@@ -118,6 +118,15 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     // MARK: Content properties
 
+    // UIKit text-input traits. The portable renderer has no keyboard of its
+    // own; hosts can inspect these exact values when choosing an input UI.
+    open var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    open var autocorrectionType: UITextAutocorrectionType = .default
+    open var keyboardType: UIKeyboardType = .default
+    open var keyboardAppearance: UIKeyboardAppearance = .default
+    open var returnKeyType: UIReturnKeyType = .default
+    open var enablesReturnKeyAutomatically = false
+
     public var text: String = "" {
         didSet {
             _attributed = nil

@@ -98,6 +98,17 @@ open class UIResponder {
     /// Accessibility attributes (storage only — see UIViewCompat.swift for
     /// the accessors and for why nothing consults them).
     var _accessibility = AccessibilityState()
+    private var _inputAssistantItemStorage: UITextInputAssistantItem?
+
+    /// Stable keyboard-shortcut-bar configuration for this responder.
+    /// OpenUIKit hosts do not draw that bar; the object and its mutations are
+    /// nevertheless observable with UIKit's lifetime semantics.
+    open var inputAssistantItem: UITextInputAssistantItem {
+        if let item = _inputAssistantItemStorage { return item }
+        let item = UITextInputAssistantItem()
+        _inputAssistantItemStorage = item
+        return item
+    }
 
     // MARK: The chain
 
@@ -165,6 +176,12 @@ open class UIResponder {
         }
         return true
     }
+
+    // MARK: Standard editing actions
+
+    /// Default standard-edit action. Text editors override this; ordinary
+    /// responders ignore it, matching UIKit's responder-chain surface.
+    open func selectAll(_ sender: Any?) {}
 
     // MARK: Touch entry points
 

@@ -103,6 +103,10 @@ public class UIBarButtonItem {
 
     /// Set by the bar that owns the item so a mutation can trigger a relayout.
     weak var _bar: _UIBarItemContainer?
+    /// UIKit permits one assistant/navigation customization group association
+    /// per item. Managed by `UIBarButtonItemGroup`.
+    weak var _buttonGroup: UIBarButtonItemGroup?
+    public var buttonGroup: UIBarButtonItemGroup? { _buttonGroup }
 
     // MARK: Initializers (UIKit's own signatures)
 

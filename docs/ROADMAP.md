@@ -181,6 +181,17 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     Verified against the unchanged Focus autocomplete override bodies and a
     real-UIKit UTF-16/IME probe. Selection chrome and UITextView migration
     remain out of scope (docs/KNOWN_GAPS.md "Text input").
+  - Focus text-traits and responder-editing slice DONE (2026-08-29): exact
+    keyboard type/appearance, autocapitalization, autocorrection, and return
+    enum values/defaults on UITextField/UITextView; coupled placeholders; measured
+    clear-button and left/right side-view modes/geometry, including right-view
+    precedence independent of assignment order; assistant-item group
+    storage/ownership; attached-field `selectAll`; ordered text-change
+    notifications; and subtree-aware `UIView.endEditing`. The surprising iOS
+    26.1 force/refusal contract is
+    oracle-pinned rather than inferred from the SDK header. The host keyboard,
+    SF Symbol clear glyph, and assistant-bar presentation remain documented
+    boundaries in KNOWN_GAPS.
 - **M9 Auto Layout — DONE (2026-08-24)**: pure-Swift Cassowary (kiwi-style
   incremental simplex, deterministic pivoting) in
   Sources/OpenUIKit/AutoLayout/; NSLayoutConstraint

@@ -23,6 +23,36 @@ current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
 Everything else is the record of how the number got there, and the superseded
 sections are marked as such.
 
+## Focus text-input compatibility slice (2026-08-29)
+
+The unchanged Focus sources exercise a compact but connected UIKit cluster:
+keyboard traits on fields and text views, attributed placeholders, clear and
+custom side views, assistant-bar group clearing, `selectAll(_:)`, overridable
+text-field rect hooks, `textDidChangeNotification`, and subtree-wide
+`endEditing(_:)`. OpenUIKit now exports and implements that cluster as one
+behaviorally coherent slice rather than as compile-only properties.
+
+Ground truth came from the local iOS 26.1 SDK plus a Simulator oracle. The
+oracle pinned all enum values/defaults; placeholder coupling; the 19.667x19 pt
+clear-button geometry in a 200x34 rounded field; side-view/text rectangles;
+and right-view precedence over the clear control (including assignment order).
+With an always-visible 12x22 right view, the oracle reported right-view
+`[188,6,12,22]`, clear-button-hook `[176,8,19,19]`, and text/editing
+`[7,2,181,30]`, with no clear control in the hierarchy. It also pinned
+the hook's mode-dependent no-right-view geometry: inactive `.never` and
+`.whileEditing` use `[176,8,19,19]`, while active modes use
+`[175,8,19.667,19]` even when text is empty. Other probes pinned
+inactive side-view detachment with geometry preservation; attached-vs-detached
+`selectAll`; assistant identity/defaults; and every `endEditing` branch (no
+responder, outside subtree, permissive delegate, refusing delegate, force
+false/true). Group ownership follows the SDK's explicit single-group contract.
+Focus's text-field subclasses compile
+against genuinely open placeholder/text/editing/right-view hooks; no app
+source, overlay, or conditional import is involved. Presentation boundaries
+for the host keyboard, assistant bar, generated placeholder metadata, and the
+SF Symbol clear glyph are enumerated in docs/KNOWN_GAPS.md rather than hidden
+behind inert API.
+
 ## Baseline measurement (2026-08-25, before M12)
 
 Corpus: three large production apps, all code-based or mostly code-based —
