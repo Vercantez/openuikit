@@ -58,10 +58,12 @@ open class UIProgressView: UIView {
         let duration: Double
     }
     private var progressAnimation: ProgressAnimation?
+    private var storedProgress: Float = 0
 
-    open var progress: Float = 0 {
-        didSet {
-            progress = min(max(progress, 0), 1)
+    open var progress: Float {
+        get { storedProgress }
+        set {
+            storedProgress = min(max(newValue, 0), 1)
             progressAnimation = nil
         }
     }
@@ -97,7 +99,14 @@ open class UIProgressView: UIView {
         let target = min(max(progress, 0), 1)
         let now = OpenUIKitRuntime.animationTime
         let from = _presentationProgress(at: now)
-        self.progress = target
+        // UIKit's method updates its private model storage. In particular it
+        // does not route through an overriding Swift property observer; an
+        // app subclass can call `super.setProgress` and then create one
+        // explicitly animated layer update from the old presentation. Routing
+        // through `self.progress` here would eagerly fire that observer and
+        // collapse the app's subsequent animation to a no-op.
+        storedProgress = target
+        progressAnimation = nil
         guard animated, from != target else { return }
         progressAnimation = ProgressAnimation(
             from: from, to: target, begin: now,

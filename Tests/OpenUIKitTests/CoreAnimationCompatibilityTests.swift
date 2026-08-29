@@ -8,6 +8,27 @@ private typealias PortableTransaction = OpenUIKit.CATransaction
 private typealias PortableCGColor = OpenUIKit.CGColor
 
 @MainActor
+private final class ProgressSubclassProbe: UIProgressView {
+    let maskProbe = PortableLayer()
+    var observerCalls = 0
+
+    override var progress: Float {
+        didSet {
+            observerCalls += 1
+            maskProbe.bounds.size.width = CGFloat(progress) * 100
+        }
+    }
+
+    override func setProgress(_ progress: Float, animated: Bool) {
+        super.setProgress(progress, animated: animated)
+        PortableTransaction.begin()
+        PortableTransaction.setAnimationDuration(animated ? 0.25 : 0)
+        maskProbe.bounds.size.width = CGFloat(self.progress) * 100
+        PortableTransaction.commit()
+    }
+}
+
+@MainActor
 final class CoreAnimationCompatibilityTests: XCTestCase {
     private var savedTime: Double = 0
     private var savedDeadline: Double = 0
@@ -158,6 +179,28 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         XCTAssertEqual(progress._presentationProgress(at: 20.125), 0.5,
                        accuracy: 0.0001,
                        "reversal begins at the current presentation value")
+    }
+
+    func testProgressMethodLetsSubclassInstallOneAnimationAfterSuper() {
+        let progress = ProgressSubclassProbe()
+        progress.maskProbe.bounds = CGRect(x: 0, y: 0, width: 0, height: 4)
+
+        progress.setProgress(0.8, animated: true)
+
+        XCTAssertEqual(progress.progress, 0.8)
+        XCTAssertEqual(progress.observerCalls, 0,
+                       "super.setProgress must not eagerly invoke an override observer")
+        XCTAssertEqual(progress.maskProbe.bounds.width, 80, accuracy: 0.0001)
+        XCTAssertEqual(progress.maskProbe._presentationState(at: 10).bounds.width, 0)
+        XCTAssertEqual(progress.maskProbe._presentationState(at: 10.125).bounds.width,
+                       40, accuracy: 0.0001)
+        XCTAssertEqual(progress.maskProbe._presentationState(at: 10.25).bounds.width,
+                       80, accuracy: 0.0001)
+
+        progress.progress = 0.25
+        XCTAssertEqual(progress.observerCalls, 1,
+                       "direct model assignment still invokes the subclass observer")
+        XCTAssertEqual(progress.maskProbe.bounds.width, 25, accuracy: 0.0001)
     }
 
     func testGradientLocationsAnimateAndLayerMaskClipsQuartzPixels() {
