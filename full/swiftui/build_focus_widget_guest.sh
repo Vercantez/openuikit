@@ -686,12 +686,18 @@ grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t_$s10ObjectiveC8SelectorV9OpenU
     echo "focus_widget_guest: non-prefix OpenUIKit extension definition escaped ownership audit" >&2
     exit 2
 }
+# Swift 6 lowers CALayer's MainActor-isolated deinit through
+# `pthread_main_np`. The deliberately narrow sysroot TBD does not advertise
+# that compatibility entry point; the project-owned libSystem umbrella does,
+# and is already the image behind the exact /usr/lib/libSystem.B.dylib load.
+# Keep the physical provider explicit in the link-input allowlist.
 expected_openuikit_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
     "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$FULL/openuikit.o" \
     "$FULL/opencoregraphics.o" \
     "$FULL/cportableio.o" \

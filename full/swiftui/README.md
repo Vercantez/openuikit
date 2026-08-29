@@ -98,13 +98,13 @@ python3 -m unittest discover \
   -s full/swiftui -p 'test_*.py' -v
 ```
 
-The local contract suite currently contains 34 tests (17 inventory tests plus
-17 packaging/executable-proof boundary tests). Expected result at the reviewed
+The local contract suite currently contains 35 tests (17 inventory tests plus
+18 packaging/executable-proof boundary tests). Expected result at the reviewed
 pin:
 
 ```text
 SWIFTUI CONTRACT OK sha256=5a7486b2c0d626c98ad3a96a58bb242d21ef8594c45efc36f3f5f4f2abe48f71
-Ran 34 tests
+Ran 35 tests
 OK
 ```
 

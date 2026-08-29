@@ -85,6 +85,14 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("expected_guest_inputs", text)
         self.assertIn('assert_exact_text "guest linker inputs"', text)
 
+    def test_openuikit_link_inputs_cover_main_actor_deinit_provider(self) -> None:
+        text = BUILD.read_text()
+        expected = text.split("expected_openuikit_inputs=", 1)[1].split(
+            "expected_swiftui_inputs=", 1
+        )[0]
+        self.assertIn('"$MRROOT/darwin/usr/lib/libSystem.B.dylib"', expected)
+        self.assertIn('"$FULL/openuikit.o"', expected)
+
     def test_swiftui_package_compiles_and_attests_complete_source_directory(self) -> None:
         text = BUILD.read_text()
         helper = ATTEST.read_text()

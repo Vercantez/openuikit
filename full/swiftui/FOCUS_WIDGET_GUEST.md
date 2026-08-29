@@ -38,6 +38,13 @@ image, although this is still a project runtime package atop the prepared guest
 SDK and Swift runtime, not a standalone Apple-compatible framework or general
 SwiftUI implementation.
 
+Swift 6 lowers OpenUIKit's main-actor-isolated layer destruction through
+`pthread_main_np`. The project's `libSystem.B.dylib` umbrella is therefore an
+explicit physical linker input for `libOpenUIKit` as well as the already
+declared `/usr/lib/libSystem.B.dylib` runtime image. The exact linker-input and
+recursive-runtime-closure allowlists fail closed if that provider relationship
+changes.
+
 The resource input must be `Focus_Widget.bundle` emitted by the committed
 `full/focus-ios/onboarding_resources_proof.py`. The build checks the reviewed
 resource index, named-color catalogs, logo, Focus commit, source hashes, clean
