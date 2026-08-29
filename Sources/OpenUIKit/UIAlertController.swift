@@ -34,7 +34,8 @@
 //     `.destructive` is systemRed. The `preferredAction` gets a filled
 //     tint-blue pill with a 17 pt semibold WHITE title.
 //
-// MATERIALS (we have no UIVisualEffectView — see docs/KNOWN_GAPS.md): the
+// MATERIALS (UIVisualEffectView exists, but the view renderer does not route
+// it into Canvas's backdrop-filter primitive yet — see docs/KNOWN_GAPS.md): the
 // card and the button fills are live blurs of whatever is behind them. Both
 // were solved as "flat colour at alpha over the backdrop" by rendering the
 // same alert over four known neutral bases per appearance and least-squares

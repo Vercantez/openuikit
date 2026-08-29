@@ -23,6 +23,52 @@ current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
 Everything else is the record of how the number got there, and the superseded
 sections are marked as such.
 
+## Visual-effect source compatibility slice (2026-08-29)
+
+The 20-app ladder corpus uses `UIVisualEffectView` in 17 repositories and
+`UIBlurEffect` in 16; four repositories also use `UIVibrancyEffect`. This
+slice makes the unchanged Swift source for the foundational iOS 8/13 effect
+family compile against real public types rather than app-side shims:
+`UIVisualEffect`, all 20 public iOS `UIBlurEffect.Style` cases,
+`UIVibrancyEffectStyle`, both vibrancy factory spellings represented by the
+iOS 26.1 symbol graph, and the open effect-view API. It also narrows
+`UIBarAppearance.backgroundEffect` from the previous `AnyObject?` placeholder
+to UIKit's `UIBlurEffect?` property. Runtime probes override the header's
+misleading `copy` annotation: UIKit retains exact identity and sends zero copy
+messages on assignment and appearance-copy initialization, so OpenUIKit uses
+strong storage and documents the resulting `@NSCopying` metadata divergence.
+
+Runtime coverage is intentionally useful before pixels land. Apps can create,
+subclass, mutate, and inspect effects and effect views; immutable built-in
+effect objects copy by identity, compare/hash with measured UIKit semantics,
+and securely archive with their configuration on Darwin and Linux. Their
+NSObject equality/hash surface remains nonisolated for strict Swift 6.
+`contentView` is stable once accessed and reproduces UIKit's nil/base/blur lazy
+materialization, vibrancy's eager materialization, the measured access-order
+geometry matrix, and immediate bounds-origin realignment only when an assigned
+effect changes under NSObject equality. Fresh/default-reset base, toolbar, and
+tab appearances share UIKit's internal chrome-effect identity, while ordinary
+blur factories remain distinct. Apps
+must add children through `contentView`; direct effect-view insertion is a
+native `NSInternalInconsistencyException` and a documented portable fatal
+invariant failure on Linux. Unknown effect subclasses remain valid but
+inert. On Darwin, a base effect view also supports the deliberately narrow
+geometry/effect snapshot documented in
+`KNOWN_GAPS.md`; it is not a subclass or content-hierarchy archive. The
+renderer-facing descriptor is internal and backend neutral so a later
+view-render integration slice can route it into the existing deterministic
+software/Quartz Canvas backdrop-filter primitive without changing app source
+or making the public effects mutable. No corpus source was edited for this
+slice.
+
+This does not close the material-rendering row: app and framework effect
+views remain visually transparent, and existing framework platters retain
+their measured flat fallbacks. Public raw construction preserves measured
+unnamed blur tags 3 and 21, while arbitrary extensible-enum integers remain a
+documented pure-Swift limitation. Archive portability, private-hierarchy
+differences, bar declaration metadata, and Foundation-hidden behavior are
+recorded in docs/KNOWN_GAPS.md under “Visual-effect object and view semantics.”
+
 ## Focus text-input compatibility slice (2026-08-29)
 
 The unchanged Focus sources exercise a compact but connected UIKit cluster:
@@ -237,7 +283,7 @@ Details per cluster are in docs/ROADMAP.md (M12) and the scope/divergence
 notes in docs/KNOWN_GAPS.md. Three divergences are worth surfacing here
 because they change what an app sees:
 
-- **No `UIVisualEffectView`, so nothing blurs.** Alert cards, button pills,
+- **`UIVisualEffectView` exists, but nothing blurs yet.** Alert cards, button pills,
   the sheet grabber, the tab-bar platter and the `UIPageControl` background
   are measured FLAT equivalents fitted over neutral bases. Correct on a flat
   backdrop (residual < 1.5 counts), wrong in hue over a saturated one.
@@ -355,7 +401,7 @@ orderings are given, since they disagree sharply at the top now.
 
 | # | cluster | uses | apps | notes |
 |---|---|---|---|---|
-| 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. The oldest open divergence in the project and **the single largest source of remaining pixel error**: every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — is a flat colour fitted over a neutral base. Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a saturated one. Closing it is a real backdrop-sampling blur in the compositor, not a type declaration. |
+| 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. The oldest open divergence in the project and **the single largest source of remaining pixel error**: every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — is a flat colour fitted over a neutral base. Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a saturated one. The deterministic backdrop-filter primitive now exists; closing this row means routing effect descriptors and framework chrome through it, not adding more declarations. |
 | 2 | **Home-screen shortcuts** | 31 | 3 | `UIApplicationShortcutItem` 18, `UIApplicationShortcutIcon` 8, `UIMutableApplicationShortcutItem` 5. Pure value types plus one `UIApplication` property; no pixels, no oracle needed. The cheapest three-app entry on the list. |
 | 3 | **Haptics** | 30 | 3 | `UIImpactFeedbackGenerator` 15, `UINotificationFeedbackGenerator` 8, `UISelectionFeedbackGenerator` 7. No portable hardware to drive, so the honest shape is a no-op that records calls (and is therefore testable). Compile-blocker removal, nothing more. |
 | 4 | **TextKit attachments** | 17 | 3 | `NSTextAttachment` 13, plus one-off `NSTextContainer` / `NSLayoutManager` / `NSTextStorage`. The first one is real work — an inline image box the data-driven text engine must lay out and the run painter must draw. The other three are TextKit-1 plumbing we deliberately do not have. |

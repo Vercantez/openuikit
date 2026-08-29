@@ -21,9 +21,12 @@
 //    font and color; anything unset keeps the measured default (17 pt
 //    semibold `label` inline, 34 pt bold `label` large).
 //
-// DIVERGENCE: there is no `UIVisualEffectView`, so `backgroundEffect` is
-// accepted and ignored; a translucent bar renders as its flat equivalent.
-// Same class of gap as the alert card and the tab-bar platter — see
+// `backgroundEffect` now has UIKit's UIBlurEffect type. Although the iOS SDK
+// header spells the Objective-C property `copy`, iOS 26.1 runtime probes show
+// strong identity storage with zero copy messages on assignment and appearance
+// copy initialization. Pure Swift cannot retain @NSCopying declaration metadata
+// while suppressing its generated copy, so runtime behavior wins here. The
+// current bar compositor does not consume the descriptor yet; see
 // docs/KNOWN_GAPS.md.
 
 /// The height/style family used by legacy bar-background APIs.
@@ -55,8 +58,11 @@ public class UIBarAppearance {
     /// The 1/3 pt hairline under the bar. `nil` = no hairline.
     public var shadowColor: UIColor?
     public var backgroundImage: UIImage?
-    /// Accepted and ignored — no UIVisualEffectView (see the file header).
-    public var backgroundEffect: AnyObject?
+    /// Runtime-measured strong storage. The SDK header carries Objective-C
+    /// `copy` metadata, but UIKit 26.1 sends no copy message here; see the file
+    /// header and docs/KNOWN_GAPS.md for the unavoidable declaration tradeoff.
+    @available(iOS 13.0, *)
+    public var backgroundEffect: UIBlurEffect?
 
     public internal(set) var _configuration: _Configuration = .default
 
@@ -65,18 +71,33 @@ public class UIBarAppearance {
     /// Measured hairline thickness (`_UIBarBackgroundShadowView`).
     public static let shadowHeight: CGFloat = 1.0 / 3.0
 
-    public required init() {}
+    /// UIKit reuses one internal chrome effect for every default base,
+    /// toolbar, and tab appearance, including later default resets. Ordinary
+    /// public UIBlurEffect factories remain independent objects.
+    static let _defaultChromeEffect = UIBlurEffect(
+        style: .systemChromeMaterial)
+
+    public required init() {
+        // Base, toolbar, and tab appearances start with adaptive chrome on
+        // iOS 26.1. UINavigationBarAppearance deliberately clears it in its
+        // own initializer. The configure methods are full resets.
+        backgroundEffect = UIBarAppearance._defaultChromeEffect
+    }
 
     public init(barAppearance other: UIBarAppearance) {
         backgroundColor = other.backgroundColor
         shadowColor = other.shadowColor
         backgroundImage = other.backgroundImage
+        // Measured UIKit retains this exact object and sends no copy message,
+        // even for a hostile UIBlurEffect subclass.
+        backgroundEffect = other.backgroundEffect
         _configuration = other._configuration
     }
 
     /// iOS 26's default: transparent until content scrolls under the bar.
     public func configureWithDefaultBackground() {
         _configuration = .default
+        backgroundEffect = UIBarAppearance._defaultChromeEffect
         backgroundColor = nil
         backgroundImage = nil
         shadowColor = UIBarAppearance.defaultShadowColor
@@ -84,6 +105,7 @@ public class UIBarAppearance {
 
     public func configureWithOpaqueBackground() {
         _configuration = .opaque
+        backgroundEffect = nil
         backgroundColor = .systemBackground
         backgroundImage = nil
         shadowColor = UIBarAppearance.defaultShadowColor
@@ -91,6 +113,7 @@ public class UIBarAppearance {
 
     public func configureWithTransparentBackground() {
         _configuration = .transparent
+        backgroundEffect = nil
         backgroundColor = nil
         backgroundImage = nil
         shadowColor = nil
@@ -188,7 +211,11 @@ public final class UINavigationBarAppearance: UIBarAppearance {
     public private(set) var backIndicatorImage: UIImage?
     public private(set) var backIndicatorTransitionMaskImage: UIImage?
 
-    public required init() { super.init() }
+    public required init() {
+        super.init()
+        backgroundEffect = nil
+    }
+
     public override init(barAppearance other: UIBarAppearance) {
         super.init(barAppearance: other)
         if let nav = other as? UINavigationBarAppearance {
@@ -198,6 +225,13 @@ public final class UINavigationBarAppearance: UIBarAppearance {
             backIndicatorImage = nav.backIndicatorImage
             backIndicatorTransitionMaskImage = nav.backIndicatorTransitionMaskImage
         }
+    }
+
+    /// Unlike the base, toolbar, and tab families, navigation appearances
+    /// reset their default background to no effect on iOS 26.1.
+    public override func configureWithDefaultBackground() {
+        super.configureWithDefaultBackground()
+        backgroundEffect = nil
     }
 
     public func setBackIndicatorImage(_ backIndicatorImage: UIImage?,
@@ -210,9 +244,15 @@ public final class UINavigationBarAppearance: UIBarAppearance {
 @preconcurrency @MainActor
 public final class UIToolbarAppearance: UIBarAppearance {
     public required init() { super.init() }
+    public override init(barAppearance other: UIBarAppearance) {
+        super.init(barAppearance: other)
+    }
 }
 
 @preconcurrency @MainActor
 public final class UITabBarAppearance: UIBarAppearance {
     public required init() { super.init() }
+    public override init(barAppearance other: UIBarAppearance) {
+        super.init(barAppearance: other)
+    }
 }

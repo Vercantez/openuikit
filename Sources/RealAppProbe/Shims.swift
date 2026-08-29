@@ -122,9 +122,10 @@ enum AppTheme {
 final class ThemeableSwitch: UISwitch {}
 
 // Replaces podcasts' LiquidGlass feature flag (iOS 26 glass materials).
-// OpenUIKit has no UIVisualEffectView (docs/APP_COMPAT.md's standing
-// divergence), so the harness pins the flag off — which is also what the real
-// app does below iOS 26.
+// OpenUIKit now has UIVisualEffectView's object/view semantics and a Canvas
+// backdrop-filter primitive, but not UIGlassEffect or the view-render
+// integration between them, so the harness pins the flag off — which is also
+// what the real app does below iOS 26.
 enum LiquidGlass { static let isEnabled = false }
 
 // Replaces podcasts/SceneHelper.swift's window lookup. Only reachable from

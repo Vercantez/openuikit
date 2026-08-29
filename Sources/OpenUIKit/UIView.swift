@@ -372,6 +372,15 @@ public final class CAGradientLayer: CALayer {
     public override init() { super.init() }
 }
 
+/// Internal hierarchy policy for UIKit containers whose public contract does
+/// not permit arbitrary direct children. UIView's public insertion methods
+/// consult it; framework implementation paths can install private children
+/// through the scoped bypasses below.
+@MainActor
+protocol _UIViewSubviewAdmission: AnyObject {
+    func validateSubviewInsertion(_ view: UIView)
+}
+
 @preconcurrency @MainActor
 open class UIView: UIResponder, CALayerDelegate {
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
@@ -593,6 +602,14 @@ open class UIView: UIResponder, CALayerDelegate {
 
     // MARK: Hierarchy
     public func addSubview(_ view: UIView) {
+        (self as? _UIViewSubviewAdmission)?.validateSubviewInsertion(view)
+        _addSubviewWithoutAdmissionCheck(view)
+    }
+
+    /// Framework containers with a restricted public hierarchy use this
+    /// path to install their own implementation views. It intentionally is
+    /// not public: app calls still pass through the admission check above.
+    func _addSubviewWithoutAdmissionCheck(_ view: UIView) {
         view.removeFromSuperview()
         view.superview = self
         subviews.append(view)
@@ -602,7 +619,15 @@ open class UIView: UIResponder, CALayerDelegate {
         view.setNeedsUpdateConstraints()
         setNeedsLayout()
     }
+
     public func insertSubview(_ view: UIView, at index: Int) {
+        (self as? _UIViewSubviewAdmission)?.validateSubviewInsertion(view)
+        _insertSubviewWithoutAdmissionCheck(view, at: index)
+    }
+
+    /// Internal twin of `_addSubviewWithoutAdmissionCheck(_:)` for ordered
+    /// implementation children.
+    func _insertSubviewWithoutAdmissionCheck(_ view: UIView, at index: Int) {
         view.removeFromSuperview()
         view.superview = self
         subviews.insert(view, at: index)

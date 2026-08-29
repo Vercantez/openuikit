@@ -41,8 +41,9 @@
 //                   as; the style was literally renamed `.prominent`).
 //
 // DIVERGENCE (documented in docs/KNOWN_GAPS.md): the platter is a real glass
-// material — it samples and blurs its backdrop, which OpenUIKit has no
-// equivalent for (no UIVisualEffectView). We draw the measured FLAT
+// material — it samples and blurs its backdrop. OpenUIKit has the filtering
+// backend, but its view renderer does not route this platter through it yet.
+// We draw the measured FLAT
 // equivalent: white in light mode, (25, 25, 25) in dark, plus the measured
 // soft shadow. Over a flat neutral backdrop that is what the golden shows
 // (over white the platter is literally invisible apart from its shadow);

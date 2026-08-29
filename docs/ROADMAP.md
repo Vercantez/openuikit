@@ -762,11 +762,12 @@ against it — the caveat is stated in full in docs/APP_COMPAT.md.
 
 **The accepted-divergence ledger is now consolidated** at the top of
 docs/KNOWN_GAPS.md: nine divergences the project has decided to live with
-(no `UIVisualEffectView`, the flat picker rows, the `UIActivityViewController`
-stub, no SF Symbols, the four surfaces with no fixture, the edge-to-edge
-sheet detent, Dynamic Type between probed bases, the three Foundation
-shadows, storage-only accessibility), each with what it costs and why. None
-of them is an unmeasured guess, which is the property that matters.
+(visual-effect APIs not yet wired to the backdrop backend, the flat picker rows, the
+`UIActivityViewController` stub, no SF Symbols, the four surfaces with no
+fixture, the edge-to-edge sheet detent, Dynamic Type between probed bases,
+the three Foundation shadows, storage-only accessibility), each with what it
+costs and why. None of them is an unmeasured guess, which is the property that
+matters.
 
 ## Next — where the census points (docs/APP_COMPAT.md)
 
@@ -775,9 +776,11 @@ its tails, and M14 took Dynamic Type. Re-ranked at the wrap-up on the 96
 missing types / 474 uses that are left, **apps first then uses**:
 
 1. **Materials / blur** (37 uses, 3 apps) — `UIVisualEffectView` 20,
-   `UIBlurEffect` 12. Still the single largest source of remaining PIXEL
-   divergence, since every platter in the framework is a fitted flat colour.
-   The fix is a backdrop-sampling blur in the compositor, not a declaration.
+   `UIBlurEffect` 12. The public object/view-semantics API is now present, but
+   this remains the single largest source of PIXEL divergence because every
+   platter in the framework is a fitted flat colour. The backdrop-filter
+   primitive now exists; the remaining fix is descriptor routing and
+   framework integration.
 2. **Home-screen shortcuts** (31, 3) — value types plus one `UIApplication`
    property. No pixels, no oracle. The cheapest three-app entry left.
 3. **Haptics** (30, 3) — a recording no-op; compile-blocker removal.

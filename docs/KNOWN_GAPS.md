@@ -1,5 +1,133 @@
 # Known gaps (living document — fixers: read this)
 
+## Visual-effect object and view semantics (2026-08-29)
+
+OpenUIKit now exports `UIVisualEffect`, `UIBlurEffect`,
+`UIVibrancyEffect`, `UIVibrancyEffectStyle`, and `UIVisualEffectView` with
+the public iOS 26.1 Swift shape. Built-in effect objects are immutable
+`NSObject` subclasses on Foundation-visible builds, copy by identity, support
+secure coding, and preserve their dynamic type and configuration through an
+archive. `UIVisualEffectView` has an open copy-on-assignment `effect`, a
+stable open `contentView`, UIKit's initializer inheritance, and the SDK's
+public `NSSecureCoding` conformance. Built-in `UIBlurEffect` instances use
+style-based `NSObject.isEqual` and the style raw value as `hash` (the inert
+initializer has hash zero). `UIVibrancyEffect` compares its backing blur and
+intentionally ignores `UIVibrancyEffectStyle`; a nil backing blur remains
+different from an explicitly supplied inert blur. These semantics and hashes
+survive secure archive round trips. Both overrides remain callable from a
+nonisolated strict-Swift-6 context, as NSObject's contract requires. The
+zero-argument vibrancy archive deliberately omits its blur key; decoding
+guards that absence explicitly so the inert object round-trips with both
+Darwin and corelibs Foundation.
+
+The content host is lazy for nil, base, and blur effects. If a detached view's
+combined origin-and-size bounds assignment happens before the first
+`contentView` access, that access materializes the content at the current
+bounds origin. Access first and the same mutation retains a zero content
+origin. Vibrancy materializes its content hierarchy eagerly, so both access
+orders retain zero. An origin-only mutation after accessing a nil-effect view
+also stays at zero, as does frame -> access -> blur -> combined bounds.
+Effect assignment has a separate immediate rule: when the previous and new
+effects are not equal under `NSObject.isEqual` (including nil/non-nil
+transitions), existing content moves to the current bounds origin. Identical
+or semantically equal replacements retain the established origin. The rule
+runs after eager vibrancy materialization, so nil/base/blur -> vibrancy also
+realigns immediately. Hosted views follow their bounds origin, and a decoded
+snapshot exposes bounds-origin content immediately. Once materialized, the
+stable content host is the frontmost direct child, uses flexible width and
+height, and always keeps `contentView.bounds.origin` zero. The conformance
+preserves unchanged-source compatibility; the narrow portable view-snapshot
+behavior is stated explicitly below. These contracts and the style raw values
+come from the local iOS 26.1 headers, Swift symbol graph, and the reproducible
+`scripts/visual_effect_probe_sim.sh` Simulator oracle. Its checked-in textual result is
+`fixtures/realapp/visual_effect_semantics_ios26.1.txt` and is consumed by the
+OpenUIKit regression suite.
+
+For a hostile custom effect, iOS 26.1 sends exactly one copy both from
+`UIVisualEffectView.init(effect:)` and while decoding an archived effect view,
+then stores the returned object. OpenUIKit does the same when Foundation is
+visible; immutable built-in effects return identity from that copy.
+
+This is the real object/view-semantics slice, not a claim that blur rendering
+is finished. The deliberate boundaries are:
+
+- The deterministic software/Quartz Canvas backdrop-filter primitive exists,
+  but no view-render path consumes the internal backend-neutral effect
+  descriptor yet. Blur and vibrancy therefore do not sample, blur,
+  desaturate, tint, or amplify pixels. A recognized blur owns a transparent,
+  noninteractive backdrop host behind `contentView`; vibrancy, the base
+  effect, and unknown subclasses are inert. Existing fitted flat framework
+  materials remain unchanged.
+- UIKit lazily creates parts of its private hierarchy and some blur styles
+  add private tint/filter views. OpenUIKit reproduces the public content
+  host's measured lazy/eager access-order boundary, but only models the
+  hierarchy necessary for public ordering and a future compositor attachment
+  point. Private subview counts are not an API compatibility promise.
+- UIKit rejects the probed direct `addSubview` call on an effect view with
+  `NSInternalInconsistencyException` and directs apps to `contentView`.
+  OpenUIKit enforces that hierarchy invariant for its public direct insertion
+  entry points with the same corrective action. The
+  exact platform boundary is exception delivery: pure Swift on Linux has no
+  Objective-C exception ABI, so a direct insertion terminates with a
+  deterministic fatal invariant failure instead of throwing a catchable
+  `NSException`. `effectView.contentView.addSubview(...)` remains the portable
+  source-compatible path.
+- UIKit's Objective-C extensible enums accept arbitrary integer raw values.
+  `UIBlurEffect.Style` is intentionally a native Swift enum so normal app
+  switches see UIKit's 20 public iOS cases. Measured private blur tags 3 and
+  21 are constructible through the normal public `init(rawValue:)` and
+  round-trip through effect archives. UIKit also constructs arbitrary values
+  such as -1, 22, and 100; OpenUIKit returns `nil` for those because accepting
+  every integer while retaining a native enum's exhaustive 20-public-case
+  switch shape is not representable in pure Swift. Unknown vibrancy raw
+  integers likewise return `nil`.
+- Archive payload keys are OpenUIKit-private and are not wire compatible with
+  Apple's private UIKit archives. Built-in effect-object secure archives
+  round-trip on Linux and Darwin. View coding is much narrower: on Darwin, a
+  private `NSObject` surrogate snapshots only a base `UIVisualEffectView`'s effect,
+  frame, and bounds origin. Decoding always creates a base view. It does not
+  retain an external subclass's identity or encoded fields, `contentView`
+  children, or unrelated inherited `UIView` state such as alpha, tag,
+  visibility, and background color. A direct external regression locks in
+  that loss. The snapshot encodes its effect and scalar values through keyed
+  secure-coding paths, so retaining the SDK's `NSSecureCoding` conformance is
+  honest about the encoded payload, but it is not a claim of UIKit graph
+  fidelity.
+  Custom-effect payload reconstruction also deliberately differs from iOS
+  26.1. Both implementations preserve the hostile subclass's dynamic type and
+  send exactly one copy while decoding the view, but UIKit rebuilds an unknown
+  effect subclass through its zero-argument initializer before that copy and
+  discards the subclass's keyed payload. OpenUIKit decodes the subclass's
+  `NSSecureCoding` payload and then copies it, so custom fields can survive.
+  This portable data-preservation behavior is intentional; it is not UIKit
+  archive-wire fidelity.
+  A secure decoder's allowed-class list would also have to name the internal
+  surrogate, so the public `unarchivedObject(ofClass:from:)` convenience
+  cannot decode a view root; ordinary Darwin keyed decoding can. Swift
+  corelibs Foundation instead boxes a non-`NSObject` view root as
+  `__SwiftValue`, which it cannot decode at all. Full view/subclass graph
+  archives require changing the portable `UIView` ancestry or Foundation's
+  replacement-object mechanisms.
+- When Foundation is deliberately hidden, public effect/view construction,
+  mutation, hierarchy, and descriptors remain available, but the
+  `NSCopying`/`NSSecureCoding` conformances cannot be named. The `effect`
+  property consequently uses strong assignment rather than Objective-C copy
+  semantics in that configuration.
+- Animated interpolation of one effect into another and automatic use by
+  bars, alerts, sheets, page controls, and other existing framework chrome
+  are compositor/integration work. `UIBarAppearance.backgroundEffect` now
+  has the exact `UIBlurEffect?` caller-facing type and the measured iOS 26.1
+  runtime behavior: assignment and `init(barAppearance:)` retain exact
+  identity and send zero copy messages, including for hostile subclasses.
+  This conflicts with the SDK header's Objective-C `copy` annotation. Swift's
+  `@NSCopying` necessarily sends a copy, so OpenUIKit deliberately omits that
+  declaration metadata to match runtime behavior while preserving caller
+  syntax. Fresh base, toolbar, and tab appearances and every subsequent
+  default-background reset reuse one internal `.systemChromeMaterial` effect
+  object; ordinary public factories remain distinct from that object and one
+  another. The navigation appearance default is nil; every opaque/transparent
+  reset is nil. Bars still do not render the stored effect.
+
 ## Text-input traits, side views, and responder editing (Focus, 2026-08-29)
 
 `UITextField` and `UITextView` now retain the Focus-used keyboard traits with
@@ -496,7 +624,7 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 
 | divergence | what it costs | why accepted | section |
 |---|---|---|---|
-| **No `UIVisualEffectView` / `UIBlurEffect`** | every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background, button pills — is a flat colour FITTED over a neutral base. Residual < 1.5 counts on a flat backdrop; **wrong in hue over a saturated one** | the fix is a real backdrop-sampling blur in the compositor, not a type declaration — the single largest remaining pixel divergence and the #1 punch-list cluster (37 uses, 3 apps) | "App compatibility (M12)", "Alerts", "Bars & appearance" |
+| **Visual-effect APIs are not wired to the backdrop backend** | app-created effect views now have real object, hierarchy, geometry and mutation semantics plus a narrow base-view archive snapshot, but every framework platter — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background, button pills — remains a flat colour FITTED over a neutral base. Residual < 1.5 counts on a flat backdrop; **wrong in hue over a saturated one** | deterministic backdrop sampling exists at the Canvas layer; the remaining work is translating effect descriptors into that primitive and integrating framework chrome | "Visual-effect object and view semantics", "Alerts", "Bars & appearance" |
 | **`UIPickerView` rows are not perspective-projected** | each row's RECTANGLE is exact (1e-6 pt); its TEXT is drawn flat — exact at the selected row, ~0.5 pt at \|d\|=1, ~4 pt at \|d\|=2 | shearing a glyph run needs a second rasterizer; the text engine draws harvested masks on an axis-aligned baseline | "UIPickerView" |
 | **`UIActivityViewController` shares nothing** | presents as the measured action-sheet shape and reports "unavailable"; no share targets exist | there is no system share service to call, on any platform we target | "Menus, actions & delegate protocols" |
 | **No SF Symbols** | of the bar system items only `.edit` and `.save` are text (exact); `.done` is the prominent checkmark; every other is a hand-fitted vector of the MEASURED size, and no golden gates those vectors | the symbol font is not redistributable and not portable | "Bars & appearance" |
@@ -750,7 +878,7 @@ than an OpenUIKit gap (docs/REAL_APP_TEST.md).
   `UIViewController.additionalSafeAreaInsets` all exist and are measured.
   What is still missing is that OpenUIKit's OWN nav/tab chrome does not use
   `additionalSafeAreaInsets` yet.
-- **No `UIVisualEffectView`, so nothing in the framework blurs** — see the
+- **`UIVisualEffectView` exists, but nothing in the framework blurs yet** — see the
   alerts section below for the fitted flat model and exactly where it is
   wrong. This is now a cross-cutting divergence, not an alert detail: it
   covers the alert card and pills, the sheet grabber, the tab-bar platter,
@@ -1336,8 +1464,12 @@ What is NOT faithful:
   navigation bar did not). The rule was not pinned down; OpenUIKit always
   gives each item its own platter, which is what every measured *navigation
   bar* does. `toolbar_basic` therefore uses title items only.
-- **`isTranslucent` is stored and ignored** (no blur to be translucent with),
-  and `UIBarAppearance.backgroundEffect` is accepted and ignored.
+- **`isTranslucent` is stored and ignored** (no blur to be translucent with).
+  `UIBarAppearance.backgroundEffect` has its measured type, strong-identity
+  runtime behavior, per-family default, and configuration-reset semantics,
+  but the bar renderer still ignores that effect. The SDK's contradictory
+  Objective-C `copy` declaration metadata is the source-shape limitation
+  documented in “Visual-effect object and view semantics” above.
 - **`configureWithDefaultBackground()` == transparent for a static bar.**
   iOS 26's default bar is transparent at rest and gets its material from the
   scroll-edge effect once content passes under it; that effect is modelled
@@ -1361,7 +1493,7 @@ real iOS 26.1 by `Tools/oracle2/alertprobe` (20 configurations, full private
 view-tree dumps + window snapshots + a display-link sampling of the present
 animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
 
-- **No `UIVisualEffectView`, so nothing actually blurs.** The alert card and
+- **The visual-effect API exists, but nothing actually blurs yet.** The alert card and
   the button pills are live blurs in real UIKit. Here they are the measured
   FLAT equivalents: a least-squares fit of `out = k·base + m` over four
   neutral bases per appearance, giving alpha 0.7143 of 0.9937-white over the
