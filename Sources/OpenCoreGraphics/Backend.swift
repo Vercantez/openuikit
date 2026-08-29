@@ -39,6 +39,7 @@ protocol CanvasBackend: AnyObject {
     func clip(_ path: Path)
 
     func beginTransparencyLayer(alpha: CGFloat)
+    func beginMaskedTransparencyLayer(alpha: CGFloat, mask: Path)
     func endTransparencyLayer()
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool)
@@ -87,6 +88,9 @@ final class SwiftRasterizerBackend: CanvasBackend {
     func clip(_ path: Path) {}
 
     func beginTransparencyLayer(alpha: CGFloat) { canvas._beginLayer(alpha) }
+    func beginMaskedTransparencyLayer(alpha: CGFloat, mask: Path) {
+        canvas._beginLayer(1, mask: canvas._coverageMask(mask, alpha: alpha))
+    }
     func endTransparencyLayer() { canvas._endLayer() }
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {

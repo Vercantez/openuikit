@@ -188,6 +188,14 @@ public final class Canvas {
     public func clip(to path: Path) { _clip(path); backend.clip(path) }
 
     public func beginTransparencyLayer(alpha: CGFloat) { backend.beginTransparencyLayer(alpha: alpha) }
+
+    /// Begin an offscreen transparency group whose completed pixels are
+    /// multiplied by `mask` coverage exactly once before compositing. This
+    /// additive entry point models CALayer.mask; using `clip(to:)` would
+    /// attenuate every overlapping draw independently at antialiased edges.
+    public func beginMaskedTransparencyLayer(alpha: CGFloat, mask: Path) {
+        backend.beginMaskedTransparencyLayer(alpha: alpha, mask: mask)
+    }
     public func endTransparencyLayer() { backend.endTransparencyLayer() }
 
     /// Fill a path. `hardEdges: true` disables edge anti-aliasing: coverage is
@@ -250,6 +258,8 @@ struct TransparencyLayer {
     var savedPixels: [UInt8]
     var alpha: CGFloat
     var savedStateStackDepth: Int
+    /// Device-space coverage applied to the completed group, not its draws.
+    var mask: [UInt8]?
 }
 
 // MARK: - Hard-edged (non-anti-aliased) fill

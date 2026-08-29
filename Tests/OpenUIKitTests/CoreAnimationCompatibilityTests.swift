@@ -781,6 +781,71 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         }
     }
 
+    func testRoundedBackingMaskCoverageWrapsFinalGroupComposite() {
+        let savedBackend = OpenUIKitRuntime.renderBackend
+        OpenUIKitRuntime.renderBackend = .quartz
+        defer { OpenUIKitRuntime.renderBackend = savedBackend }
+
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 8))
+        view.backgroundColor = .white
+        view.alpha = 0.5
+        view.layer.shadowColor = PortableCGColor(
+            red: 0, green: 0, blue: 0, alpha: 1)
+        view.layer.shadowOpacity = 1
+        view.layer.shadowRadius = 0
+        view.layer.shadowOffset = .zero
+
+        let mask = PortableLayer()
+        mask.anchorPoint = .zero
+        mask.frame = CGRect(x: 0, y: 0, width: 5, height: 8)
+        mask.cornerRadius = 3
+        mask.backgroundColor = PortableCGColor(
+            red: 1, green: 1, blue: 1, alpha: 1)
+        view.layer.mask = mask
+
+        for maskOpacity: CGFloat in [1, 0.5] {
+            mask.backgroundColor = PortableCGColor(
+                red: 1, green: 1, blue: 1, alpha: maskOpacity)
+            let bridge = LayerBridge.render(view, scale: 4)
+            let expectedPrefix: [UInt8] = maskOpacity == 1
+                ? [0, 0, 59, 190] + [UInt8](repeating: 192, count: 12)
+                    + [190, 59, 0, 0]
+                : [0, 0, 29, 95] + [UInt8](repeating: 96, count: 12)
+                    + [95, 29, 0, 0]
+            let bridgeRow = (0..<bridge.width).map {
+                bridge.pixels[(4 * bridge.width + $0) * 4 + 3]
+            }
+            XCTAssertEqual(bridgeRow,
+                           expectedPrefix + [UInt8](repeating: 0, count: 60))
+
+            for backend: RenderBackend in [.quartz, .swift] {
+                OpenUIKitRuntime.renderBackend = backend
+                let renderPass = UIRenderer.renderPassRender(view, scale: 4)
+
+                // Obtain this backend's geometric mask coverage without a
+                // shadow/group overlap. The correct grouped result is that
+                // completed 0.75-alpha composite multiplied by coverage once.
+                view.alpha = 1
+                view.layer.shadowOpacity = 0
+                let coverage = UIRenderer.renderPassRender(view, scale: 4)
+                view.alpha = 0.5
+                view.layer.shadowOpacity = 1
+                let actualAlpha = stride(from: 3, to: renderPass.pixels.count,
+                                         by: 4).map { renderPass.pixels[$0] }
+                let expectedAlpha = stride(from: 3, to: coverage.pixels.count,
+                                           by: 4).map {
+                    UInt8((Int(coverage.pixels[$0]) * 192 + 127) / 255)
+                }
+                XCTAssertEqual(actualAlpha, expectedAlpha,
+                               "\(backend) must apply curved coverage once")
+                if case .quartz = backend {
+                    XCTAssertEqual(renderPass.pixels, bridge.pixels,
+                                   "QZ renderers must agree byte-for-byte")
+                }
+            }
+        }
+    }
+
     func testPresentedRootBoundsControlNeutralizationCullingAndShadow() {
         let root = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 8))
         root.bounds = CGRect(x: 20, y: 0, width: 30, height: 8)

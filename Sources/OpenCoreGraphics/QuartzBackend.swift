@@ -33,6 +33,9 @@ final class QuartzBackend: CanvasBackend {
     /// Transparency-layer nesting depth; the backing->Bitmap sync only runs
     /// at depth 0 (the QZ backing pointer is redirected inside layers).
     private var layerDepth = 0
+    /// Device-space alpha masks paired one-for-one with QZ transparency
+    /// groups. `nil` is an ordinary, unmasked group.
+    private var layerMasks: [[UInt8]?] = []
 
     init?(canvas: Canvas) {
         let bitmap = canvas.bitmap
@@ -99,15 +102,55 @@ final class QuartzBackend: CanvasBackend {
     // MARK: Transparency layers
 
     func beginTransparencyLayer(alpha: CGFloat) {
+        beginTransparencyLayer(alpha: alpha, mask: nil)
+    }
+
+    func beginMaskedTransparencyLayer(alpha: CGFloat, mask: Path) {
+        // Rasterize the mask's scalar alpha and geometric coverage in one
+        // operation, just as a CALayer mask background is rendered. Applying
+        // them in two separately quantized stages differs by one at edges.
+        beginTransparencyLayer(alpha: 1,
+                               mask: rasterizedMask(mask, alpha: alpha))
+    }
+
+    private func beginTransparencyLayer(alpha: CGFloat, mask: [UInt8]?) {
         // CG semantics: the alpha in effect at Begin is captured as the group
         // alpha and applied when the layer is composited at End.
         QZContextSetAlpha(ctx, alpha)
         QZContextBeginTransparencyLayer(ctx)
+        layerMasks.append(mask)
         layerDepth += 1
     }
 
     func endTransparencyLayer() {
         guard layerDepth > 0 else { return }
+        let mask = layerMasks.removeLast()
+        if let mask, let data = QZBitmapContextGetData(ctx) {
+            // QZ's current backing is the innermost transparency buffer.
+            // It is premultiplied RGBA, so every component must receive the
+            // same coverage before End composites the completed group.
+            let pixels = data.assumingMemoryBound(to: UInt8.self)
+            for y in 0..<height {
+                let row = y * bytesPerRow
+                let maskRow = y * width
+                for x in 0..<width {
+                    let coverage = Int(mask[maskRow + x])
+                    if coverage == 255 { continue }
+                    let offset = row + x * 4
+                    if coverage == 0 {
+                        pixels[offset] = 0
+                        pixels[offset + 1] = 0
+                        pixels[offset + 2] = 0
+                        pixels[offset + 3] = 0
+                    } else {
+                        pixels[offset] = UInt8((Int(pixels[offset]) * coverage + 127) / 255)
+                        pixels[offset + 1] = UInt8((Int(pixels[offset + 1]) * coverage + 127) / 255)
+                        pixels[offset + 2] = UInt8((Int(pixels[offset + 2]) * coverage + 127) / 255)
+                        pixels[offset + 3] = UInt8((Int(pixels[offset + 3]) * coverage + 127) / 255)
+                    }
+                }
+            }
+        }
         QZContextEndTransparencyLayer(ctx)
         // Canvas's layer alpha is a per-layer parameter, not sticky state.
         QZContextSetAlpha(ctx, 1)
@@ -288,20 +331,49 @@ final class QuartzBackend: CanvasBackend {
 
     // MARK: Path plumbing
 
-    private func setPath(_ path: Path) {
-        QZContextBeginPath(ctx)
+    /// Rasterize a CALayer-style mask path with the same QZ antialiaser and
+    /// exact current CTM as this backend. Keeping this backend-native is what
+    /// makes curved mask-edge coverage agree with the QZLayer compositor.
+    private func rasterizedMask(_ path: Path, alpha: CGFloat) -> [UInt8]? {
+        guard let maskContext = QZBitmapContextCreate(
+            nil, width, height, 8, bytesPerRow, 1)
+        else { return nil }
+        defer { QZContextRelease(maskContext) }
+        QZContextConcatCTM(maskContext, QZContextGetCTM(ctx))
+        QZContextSetRGBFillColor(
+            maskContext, 1, 1, 1, Swift.min(Swift.max(alpha, 0), 1))
+        setPath(path, in: maskContext)
+        QZContextFillPath(maskContext)
+        guard let data = QZBitmapContextGetData(maskContext) else { return nil }
+        let pixels = data.assumingMemoryBound(to: UInt8.self)
+        let maskBytesPerRow = QZBitmapContextGetBytesPerRow(maskContext)
+        var result = [UInt8](repeating: 0, count: width * height)
+        for y in 0..<height {
+            let row = y * maskBytesPerRow
+            let resultRow = y * width
+            for x in 0..<width {
+                result[resultRow + x] = pixels[row + x * 4 + 3]
+            }
+        }
+        return result
+    }
+
+    private func setPath(_ path: Path, in target: QZContextRef? = nil) {
+        let target = target ?? ctx
+        QZContextBeginPath(target)
         for e in path.elements {
             switch e {
             case .move(let p):
-                QZContextMoveToPoint(ctx, p.x, p.y)
+                QZContextMoveToPoint(target, p.x, p.y)
             case .line(let p):
-                QZContextAddLineToPoint(ctx, p.x, p.y)
+                QZContextAddLineToPoint(target, p.x, p.y)
             case .quad(let c, let p):
-                QZContextAddQuadCurveToPoint(ctx, c.x, c.y, p.x, p.y)
+                QZContextAddQuadCurveToPoint(target, c.x, c.y, p.x, p.y)
             case .cubic(let c1, let c2, let p):
-                QZContextAddCurveToPoint(ctx, c1.x, c1.y, c2.x, c2.y, p.x, p.y)
+                QZContextAddCurveToPoint(
+                    target, c1.x, c1.y, c2.x, c2.y, p.x, p.y)
             case .close:
-                QZContextClosePath(ctx)
+                QZContextClosePath(target)
             }
         }
     }

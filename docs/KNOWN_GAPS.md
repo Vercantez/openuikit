@@ -118,11 +118,13 @@ private backing-layer tree:
   backing layers, including presented geometry and partial alpha; masked
   subtrees bypass static composite caching. On backing layers, the mask wraps
   the final composite, including a group-opacity shadow, and partial mask
-  alpha is applied once; the CQuartz and pure-Swift compositors pin the same
-  native-QuartzCore 20x8 alpha rows. Backgrounds, calibrated axial gradients,
-  opacity groups, clipping, borders, descendant geometry, and array order work
-  in both paths; Focus's gradient/order/removal and animated-mask cases have
-  pixel tests in both.
+  alpha and antialiased rounded-edge coverage are each applied once. QZ
+  LayerBridge and QZ-backed RenderPass pin the same native-QuartzCore 20x8 and
+  4x rounded-mask bytes; Swift-backed RenderPass pins the same once-only
+  equation against its own path coverage. Backgrounds, calibrated axial
+  gradients, opacity groups, clipping, borders, descendant geometry, and array
+  order work in both paths; Focus's gradient/order/removal and animated-mask
+  cases have pixel tests in both.
 - `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.

@@ -294,7 +294,14 @@ shadow as well as content and sublayers, and translucent mask alpha multiplies
 the final composite once. A 20x8 QuartzCore oracle (50%-opaque white layer,
 black zero-radius shadow, opaque 5x8 mask) yields alpha 192 in x=0..<5 and
 zero outside; changing the mask to 50% alpha yields 96 inside. Both
-compositors pin those exact rows in `CoreAnimationCompatibilityTests`.
+compositors pin those exact rows in `CoreAnimationCompatibilityTests`. A
+second 4x rounded-mask oracle pins fractional edge coverage too: at the sharp
+row an opaque mask yields `[0, 0, 59, 190, 192..., 190, 59, 0, 0]`, and a
+50% mask yields `[0, 0, 29, 95, 96..., 95, 29, 0, 0]`. RenderPass implements
+that outer operation with Canvas's additive `beginMaskedTransparencyLayer`;
+ordinary `clip(to:)` is deliberately not used because it would multiply
+fractional coverage into the shadow and content separately (`c - .25c²`)
+instead of once into their completed 0.75-alpha group (`.75c`).
 
 0. Layer shadow (spec v2, `shadowOpacity > 0 && !masksToBounds`): the
    blurred, offset silhouette of the layer's shape (outer rounded rect when

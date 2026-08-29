@@ -116,8 +116,9 @@ public enum UIRenderer {
         // as well as content and sublayers. Keep its transparency group open
         // around both the group-opacity shadow and the view opacity group so
         // partial mask alpha is multiplied into the final result exactly once.
-        if maskAlpha < 1 { c.beginTransparencyLayer(alpha: maskAlpha) }
-        if let maskClip { c.clip(to: maskClip) }
+        if let maskClip {
+            c.beginMaskedTransparencyLayer(alpha: maskAlpha, mask: maskClip)
+        }
         let grouped = alpha < 1
 
         let bounds = backingPresentation.bounds
@@ -208,7 +209,7 @@ public enum UIRenderer {
                      hardEdges: hardEdges, into: c)
 
         if grouped { c.endTransparencyLayer() }
-        if maskAlpha < 1 { c.endTransparencyLayer() }
+        if maskClip != nil { c.endTransparencyLayer() }
         c.restore()
     }
 
@@ -232,14 +233,15 @@ public enum UIRenderer {
         }
 
         c.save()
+        if let maskClip {
+            c.beginMaskedTransparencyLayer(alpha: maskAlpha, mask: maskClip)
+        }
         if alpha < 1 { c.beginTransparencyLayer(alpha: alpha) }
-        if maskAlpha < 1 { c.beginTransparencyLayer(alpha: maskAlpha) }
 
         let bounds = presentation.bounds
-        // The pure-Swift fallback can exactly clip the Focus-used solid,
-        // rounded-rect mask. Arbitrary alpha-mask layer trees are handled by
-        // the CQuartz layers compositor (`QZLayerSetMask`).
-        if let maskClip { c.clip(to: maskClip) }
+        // The pure-Swift fallback can exactly alpha-mask with the Focus-used
+        // solid rounded rectangle. Arbitrary alpha-mask layer trees are
+        // handled by the CQuartz layers compositor (`QZLayerSetMask`).
         if layer.masksToBounds {
             c.clip(to: layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius))
         }
@@ -259,8 +261,8 @@ public enum UIRenderer {
         renderBorder(of: layer, bounds: bounds,
                      cornerRadius: presentation.cornerRadius, into: c)
 
-        if maskAlpha < 1 { c.endTransparencyLayer() }
         if alpha < 1 { c.endTransparencyLayer() }
+        if maskClip != nil { c.endTransparencyLayer() }
         c.restore()
     }
 

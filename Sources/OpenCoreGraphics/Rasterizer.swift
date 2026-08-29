@@ -302,7 +302,11 @@ extension Canvas {
 
     // MARK: Clip
 
-    func _clip(_ path: Path) {
+    /// Rasterize a path into a standalone full-surface coverage mask. Unlike
+    /// `_clip`, this intentionally does not multiply the current clip: a
+    /// masked transparency layer applies this coverage to its final group,
+    /// while the inherited graphics clip still governs the individual draws.
+    func _coverageMask(_ path: Path, alpha: CGFloat = 1) -> [UInt8] {
         let subpaths = _flattenSubpaths(path, transform: state.ctm)
         let bw = bitmap.width, bh = bitmap.height
         // Coverage of the clip path, full-bitmap, zero outside its bbox.
@@ -317,11 +321,18 @@ extension Canvas {
                 acc.enumerateRows(evenOdd: false) { row, cov in
                     let rowBase = (oy + row) * bw + ox
                     for xi in 0..<w {
-                        mask[rowBase + xi] = UInt8((cov[xi] * 255).rounded())
+                        mask[rowBase + xi] = UInt8(
+                            (cov[xi] * Swift.min(Swift.max(alpha, 0), 1) * 255)
+                                .rounded())
                     }
                 }
             }
         }
+        return newMask
+    }
+
+    func _clip(_ path: Path) {
+        var newMask = _coverageMask(path)
         if let old = state.clipMask {
             for i in 0..<newMask.count {
                 let o = old[i]
@@ -335,9 +346,10 @@ extension Canvas {
 
     // MARK: Transparency layers
 
-    func _beginLayer(_ alpha: CGFloat) {
+    func _beginLayer(_ alpha: CGFloat, mask: [UInt8]? = nil) {
         layerStack.append(TransparencyLayer(savedPixels: bitmap.pixels, alpha: alpha,
-                                            savedStateStackDepth: stateStack.count))
+                                            savedStateStackDepth: stateStack.count,
+                                            mask: mask))
         // Fresh transparent buffer for the layer's content.
         bitmap.pixels.withUnsafeMutableBufferPointer { buf in
             for i in 0..<buf.count { buf[i] = 0 }
@@ -360,7 +372,12 @@ extension Canvas {
             let o = i * 4
             let ca = content[o + 3]
             if ca == 0 { continue }
-            let sa = CGFloat(ca) / 255 * la
+            var sa = CGFloat(ca) / 255 * la
+            if let mask = layer.mask {
+                let coverage = mask[i]
+                if coverage == 0 { continue }
+                sa *= CGFloat(coverage) / 255
+            }
             if sa <= 0 { continue }
             _blendPixel(at: o,
                         r: CGFloat(content[o]) / 255,
