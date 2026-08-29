@@ -137,6 +137,17 @@ extension UIView {
     }
 }
 
+// MARK: - Semantic content direction
+
+/// Raw values match UIKit's `UISemanticContentAttribute`.
+public enum UISemanticContentAttribute: Int, Sendable {
+    case unspecified = 0
+    case playback = 1
+    case spatial = 2
+    case forceLeftToRight = 3
+    case forceRightToLeft = 4
+}
+
 // MARK: - Trait change registration (iOS 17's replacement for
 // traitCollectionDidChange)
 //

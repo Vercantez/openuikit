@@ -20,6 +20,52 @@
 
 @preconcurrency @MainActor
 open class UIControl: UIView {
+    /// UIKit's legacy control-content alignment values and raw values.
+    /// They remain the layout contract for unconfigured UIButton instances
+    /// used by older applications.
+    public enum ContentVerticalAlignment: Int, Sendable {
+        case center = 0
+        case top = 1
+        case bottom = 2
+        case fill = 3
+    }
+
+    public enum ContentHorizontalAlignment: Int, Sendable {
+        case center = 0
+        case left = 1
+        case right = 2
+        case fill = 3
+        case leading = 4
+        case trailing = 5
+    }
+
+    open var contentVerticalAlignment: ContentVerticalAlignment = .center {
+        didSet {
+            if contentVerticalAlignment != oldValue { setNeedsLayout() }
+        }
+    }
+
+    open var contentHorizontalAlignment: ContentHorizontalAlignment = .center {
+        didSet {
+            if contentHorizontalAlignment != oldValue { setNeedsLayout() }
+        }
+    }
+
+    /// Resolve logical leading/trailing through the receiver's semantic
+    /// direction. UIKit guarantees this property returns a physical value.
+    open var effectiveContentHorizontalAlignment: ContentHorizontalAlignment {
+        switch contentHorizontalAlignment {
+        case .leading:
+            return effectiveUserInterfaceLayoutDirection == .rightToLeft
+                ? .right : .left
+        case .trailing:
+            return effectiveUserInterfaceLayoutDirection == .rightToLeft
+                ? .left : .right
+        default:
+            return contentHorizontalAlignment
+        }
+    }
+
     // MARK: State
 
     /// UIControl.State option set (UIKit raw values).

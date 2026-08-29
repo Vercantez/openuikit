@@ -129,6 +129,41 @@ private backing-layer tree:
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.
 
+## Legacy button layout and semantic direction (2026-08-29)
+
+Unconfigured `UIButton` instances now expose UIKit's legacy content, title,
+and image edge insets; horizontal and vertical alignment enums; overridable
+background/content/title/image rect hooks; attributed-title state fallback;
+and semantic leading/trailing layout. Raw values, exact-state-then-normal
+fallback, LTR/RTL content order, and the measured inset/alignment geometry are
+pinned to an iOS 26.1 UIKit oracle.
+
+Nonzero legacy content insets replace the built-in padding, including UIKit's
+unclamped negative size totals. Explicit sizing rounds each inset component
+independently to the nearest display pixel, and an exactly-zero fitted axis is
+reported as `noIntrinsicMetric` only by intrinsic sizing. Content rectangles
+instead collapse crossed edges at their midpoint and outward-integralize to
+the display-pixel grid. Title/image `.fill` geometry follows a third measured
+rule: it preserves signed nearest-pixel inset areas in the public rect hooks,
+then standardizes those rectangles only when assigning the subview frames.
+
+This remains the legacy button path, with these explicit boundaries:
+
+- `UIButton.Configuration` and configuration-update handlers are not yet
+  implemented. A configured modern button is not emulated by translating it
+  into legacy edge insets.
+- OpenUIKit has no process-wide `UIApplication` locale direction. Each
+  `.unspecified` view therefore resolves against a left-to-right application
+  fallback; matching UIKit, a parent's semantic attribute does not propagate
+  into descendants. Explicit force-LTR/force-RTL, playback, and spatial
+  semantics work for a view's immediate content.
+- Legacy left/right inset fields remain physical values. Semantic direction
+  reverses image/title order and resolves leading/trailing alignment, but does
+  not reinterpret those stored fields as directional insets.
+- Attributed titles use OpenUIKit's implemented `UILabel` attributed-text
+  subset; this does not claim the full TextKit layout or every UIKit
+  attributed-string rendering attribute.
+
 ## Orientation and status-bar policy (Focus Onboarding, 2026-08-28)
 
 `UIInterfaceOrientationMask`, `UIStatusBarStyle`, and the corresponding

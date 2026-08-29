@@ -483,6 +483,8 @@ open class UIView: UIResponder, CALayerDelegate {
 
     /// `registerForTraitChanges` bookings (UIViewCompat.swift).
     var _traitRegistrations: [UITraitChangeRegistration] = []
+    /// Backing storage for UIView's semantic layout-direction contract.
+    var _semanticContentAttribute: UISemanticContentAttribute = .unspecified
 
     var _customLayoutGuides: [UILayoutGuide] = []
     var _safeAreaGuide: UILayoutGuide?
@@ -590,6 +592,47 @@ open class UIView: UIResponder, CALayerDelegate {
     }
 
     // MARK: Traits
+    /// The semantic direction of this view's immediate content. OpenUIKit's
+    /// unspecified value resolves against its process-wide LTR fallback;
+    /// playback and spatial controls deliberately remain left-to-right.
+    open var semanticContentAttribute: UISemanticContentAttribute {
+        get { _semanticContentAttribute }
+        set {
+            guard newValue != _semanticContentAttribute else { return }
+            _semanticContentAttribute = newValue
+            setNeedsLayout()
+        }
+    }
+
+    open class func userInterfaceLayoutDirection(
+        for semanticContentAttribute: UISemanticContentAttribute
+    ) -> UIUserInterfaceLayoutDirection {
+        userInterfaceLayoutDirection(for: semanticContentAttribute,
+                                     relativeTo: .leftToRight)
+    }
+
+    open class func userInterfaceLayoutDirection(
+        for semanticContentAttribute: UISemanticContentAttribute,
+        relativeTo layoutDirection: UIUserInterfaceLayoutDirection
+    ) -> UIUserInterfaceLayoutDirection {
+        switch semanticContentAttribute {
+        case .unspecified:
+            return layoutDirection
+        case .playback, .spatial, .forceLeftToRight:
+            return .leftToRight
+        case .forceRightToLeft:
+            return .rightToLeft
+        }
+    }
+
+    /// Direction appropriate for arranging this view's immediate content.
+    /// UIKit does not propagate semantic content attributes through a view
+    /// subtree. OpenUIKit has no process-wide UIApplication locale yet, so
+    /// each unspecified view resolves against an LTR application fallback.
+    open var effectiveUserInterfaceLayoutDirection: UIUserInterfaceLayoutDirection {
+        type(of: self).userInterfaceLayoutDirection(for: semanticContentAttribute)
+    }
+
     open var traitCollection: UITraitCollection {
         // UIKit supplies a complete environment even before a view joins a
         // hierarchy. OpenUIKit's process-wide collection may intentionally
