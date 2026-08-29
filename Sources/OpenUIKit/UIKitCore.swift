@@ -59,17 +59,37 @@ public enum OpenUIKitRuntime {
     public static var animationTime: Double = 0
 
     /// Host redraw hint (M7.5 dirty-flag rendering): the latest end time —
-    /// on the `animationTime` clock — of any recorded UIView animation or
-    /// control-internal animation (UISwitch toggle). A host needs to keep
-    /// rendering frames while `animationTime <= animationWorkDeadline`;
-    /// past it (and with no active scroll/navigation animation and no input)
-    /// the frame is static and rendering can be skipped. Monotone
-    /// non-decreasing; never reset.
-    public internal(set) static var animationWorkDeadline: Double = -.infinity
+    /// on the `animationTime` clock — of any recorded presentation work. A
+    /// host needs to keep rendering frames while
+    /// `animationTime <= animationWorkDeadline`; past it (and with no active
+    /// scroll/navigation animation and no input) the frame is static and
+    /// rendering can be skipped.
+    ///
+    /// Most UIKit/control animations publish a monotone high-water mark.
+    /// Explicit Core Animation work is tracked separately because removing
+    /// or replacing an infinite animation must lower the live-work deadline.
+    private static var retainedAnimationWorkDeadline: Double = -.infinity
+    private static var coreAnimationWorkDeadline: Double = -.infinity
+    public internal(set) static var animationWorkDeadline: Double {
+        get { Swift.max(retainedAnimationWorkDeadline, coreAnimationWorkDeadline) }
+        set {
+            // The setter is intentionally a reset/restore seam for tests.
+            retainedAnimationWorkDeadline = newValue
+            coreAnimationWorkDeadline = -.infinity
+        }
+    }
 
     /// Record that presentation-affecting animation work runs until `t`.
     static func noteAnimationWork(until t: Double) {
-        if t > animationWorkDeadline { animationWorkDeadline = t }
+        if t > retainedAnimationWorkDeadline {
+            retainedAnimationWorkDeadline = t
+        }
+    }
+
+    /// Replace the live explicit-Core-Animation deadline. Unlike the general
+    /// high-water mark this value may move down when work is cancelled.
+    static func _setCoreAnimationWorkDeadline(_ t: Double) {
+        coreAnimationWorkDeadline = t
     }
 
     /// Layer-contents caching (M8 perf): LayerBridge reuses per-view content

@@ -73,10 +73,15 @@ private backing-layer tree:
   installed directly on a `UIView` backing layer. Explicit `fromValue`/`toValue`,
   removal/forwards fill, infinite repetition, replacement/removal, implicit
   frame animation inside an explicit transaction, and transaction completion
-  are behavioral and tested. Completion follows the live keyed animation, so
-  removal, shorter replacement, and infinite repetition change when it becomes
-  due. The model layer changes immediately; completion runs only when the host
-  advances `UIWindow.tick(timestamp:)`, using the same deterministic clock as
+  are behavioral and tested. Each installed animation has a fresh work
+  identity. Removal retires that identity immediately; replacing a key in a
+  later transaction therefore releases the old completion rather than making
+  it wait for unrelated replacement work. A replacement made in the same
+  transaction is still part of that transaction's completion. Finite work and
+  retained forwards-fill records stop contributing to the redraw deadline at
+  their endpoint, while removing an infinite record lowers that deadline. The
+  model layer changes immediately; completion runs only when the host advances
+  `UIWindow.tick(timestamp:)`, using the same deterministic clock as
   `UIView.animate`.
 - `UIProgressView.setProgress(_:animated:)` now updates the model immediately
   and samples a reversible 0.25-second fill presentation from that clock. It
@@ -87,8 +92,11 @@ private backing-layer tree:
   animation group/keyframe/spring class, additive/cumulative/autoreverse
   behavior, or `byValue` lowering. Unsupported animation classes, key paths,
   and `byValue` fail loudly at `CALayer.add`; the implemented basic
-  interpolation is linear. Extend the value/key-path table alongside an exact
-  app consumer and behavior oracle rather than accepting an inert animation.
+  interpolation is linear. Endpoint value shapes are checked per key path
+  (including `CGSize` for `bounds.size` and equal-length gradient-location
+  vectors); supplied but mismatched values fail at `add` instead of being
+  silently ignored. Extend the value/key-path table alongside an exact app
+  consumer and behavior oracle rather than accepting an inert animation.
 
 - `view.layer.sublayers` exposes app-installed layers only; it does not also
   expose the backing layers of `view.subviews`. Rendering places those
@@ -103,10 +111,12 @@ private backing-layer tree:
 - Explicit-layer shadows are implemented by the quartz/layers compositor but
   not by the pure-Swift render pass. CQuartz renders arbitrary mask layer trees;
   the pure-Swift fallback implements the Focus-used solid rounded-rectangle
-  alpha mask only. Backgrounds, calibrated axial gradients, opacity groups,
-  clipping, borders, descendant geometry, and array order work in both paths;
-  Focus's gradient/order/removal and animated-mask cases have pixel tests in
-  both.
+  alpha mask only. That mask subset works on both explicit layers and UIView
+  backing layers, including presented geometry and partial alpha; masked
+  subtrees bypass static composite caching. Backgrounds, calibrated axial
+  gradients, opacity groups, clipping, borders, descendant geometry, and array
+  order work in both paths; Focus's gradient/order/removal and animated-mask
+  cases have pixel tests in both.
 - `UIGraphicsBeginImageContextWithOptions` uses OpenUIKit's process-global
   current-context stack. Nested restoration and `scale == 0` screen-scale
   selection match UIKit, but the stack is not thread-local yet.

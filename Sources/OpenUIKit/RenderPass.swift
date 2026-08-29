@@ -98,18 +98,28 @@ public enum UIRenderer {
 
     static func renderView(_ v: UIView, into c: Canvas) {
         if v.isHidden { return }
-        let backingPresentation = v.layer._presentationState(
-            at: OpenUIKitRuntime.animationTime)
+        let backingPresentation = LayerBridge.presentationState(
+            of: v, at: OpenUIKitRuntime.animationTime)
         let alpha = min(CGFloat(backingPresentation.opacity), 1)
         if alpha <= 0 { return }
 
+        var maskAlpha: CGFloat = 1
+        var maskClip: Path?
+        if let mask = v.layer.mask {
+            guard let maskState = solidMaskPresentation(mask) else { return }
+            maskAlpha = maskState.alpha
+            maskClip = maskState.clip
+        }
+
         c.save()
+        if maskAlpha < 1 { c.beginTransparencyLayer(alpha: maskAlpha) }
+        if let maskClip { c.clip(to: maskClip) }
         let grouped = alpha < 1
 
         let bounds = backingPresentation.bounds
         let radius = backingPresentation.cornerRadius
         let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
-        let shadow = shadowParams(of: v)
+        let shadow = shadowParams(of: v, bounds: bounds)
 
         // Group opacity + shadow: CoreAnimation composites the shadow onto
         // the destination BENEATH the whole group (it is not occluded by the
@@ -117,7 +127,8 @@ public enum UIRenderer {
         // — verified against golden/alpha_shadow_group (shadow shows through
         // the translucent card at shadowOpacity × alpha). Draw it before the
         // transparency layer opens.
-        if grouped, let sh = shadow, let sil = shadowSilhouette(of: v) {
+        if grouped, let sh = shadow,
+           let sil = shadowSilhouette(of: v, bounds: bounds, radius: radius) {
             c.save()
             c.setShadow(color: sh.color.withAlpha(alpha),
                         offset: sh.offset, blur: sh.blur)
@@ -178,8 +189,8 @@ public enum UIRenderer {
             // Position the subview: its center (in our bounds coordinates),
             // then its transform about that center (anchor 0.5/0.5), then
             // shift so the subview's own bounds coordinates line up.
-            let presentation = sub.layer._presentationState(
-                at: OpenUIKitRuntime.animationTime)
+            let presentation = LayerBridge.presentationState(
+                of: sub, at: OpenUIKitRuntime.animationTime)
             c.translate(x: presentation.position.x, y: presentation.position.y)
             c.concatenate(sub.transform)
             c.translate(x: -presentation.bounds.midX,
@@ -193,6 +204,7 @@ public enum UIRenderer {
                      hardEdges: hardEdges, into: c)
 
         if grouped { c.endTransparencyLayer() }
+        if maskAlpha < 1 { c.endTransparencyLayer() }
         c.restore()
     }
 
@@ -210,18 +222,9 @@ public enum UIRenderer {
         var maskAlpha: CGFloat = 1
         var maskClip: Path?
         if let mask = layer.mask {
-            precondition(mask._orderedSublayers.isEmpty,
-                         "OpenUIKit's pure-Swift renderer supports only a solid CALayer mask")
-            guard !mask.isHidden, let color = mask.backgroundColor else { return }
-            let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
-            maskAlpha = Swift.min(Swift.max(
-                color.alpha * CGFloat(state.opacity), 0), 1)
-            guard maskAlpha > 0 else { return }
-            let rect = CGRect(
-                x: state.position.x - mask.anchorPoint.x * state.bounds.width,
-                y: state.position.y - mask.anchorPoint.y * state.bounds.height,
-                width: state.bounds.width, height: state.bounds.height)
-            maskClip = layerRoundedRect(rect, cornerRadius: state.cornerRadius)
+            guard let maskState = solidMaskPresentation(mask) else { return }
+            maskAlpha = maskState.alpha
+            maskClip = maskState.clip
         }
 
         c.save()
@@ -255,6 +258,25 @@ public enum UIRenderer {
         if maskAlpha < 1 { c.endTransparencyLayer() }
         if alpha < 1 { c.endTransparencyLayer() }
         c.restore()
+    }
+
+    /// Presented alpha and geometry of the solid mask subset supported by
+    /// the dependency-free renderer. Quartz handles arbitrary mask trees.
+    private static func solidMaskPresentation(
+        _ mask: CALayer
+    ) -> (alpha: CGFloat, clip: Path)? {
+        precondition(mask._orderedSublayers.isEmpty,
+                     "OpenUIKit's pure-Swift renderer supports only a solid CALayer mask")
+        guard !mask.isHidden, let color = mask.backgroundColor else { return nil }
+        let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
+        let alpha = CGFloat(Swift.min(Swift.max(
+            color.alpha * CGFloat(state.opacity), 0), 1))
+        guard alpha > 0 else { return nil }
+        let rect = CGRect(
+            x: state.position.x - mask.anchorPoint.x * state.bounds.width,
+            y: state.position.y - mask.anchorPoint.y * state.bounds.height,
+            width: state.bounds.width, height: state.bounds.height)
+        return (alpha, layerRoundedRect(rect, cornerRadius: state.cornerRadius))
     }
 
     /// Render children back-to-front in their array order.
@@ -319,10 +341,10 @@ public enum UIRenderer {
     /// Effective shadow parameters for `v`, or nil when no shadow is
     /// visible. `color` carries shadowColor.alpha × shadowOpacity; `blur`
     /// is the Canvas blur (2 × shadowRadius → sigma = shadowRadius points).
-    static func shadowParams(of v: UIView)
+    static func shadowParams(of v: UIView, bounds: CGRect)
         -> (color: CGColor, offset: CGSize, blur: CGFloat)? {
         let l = v.layer
-        guard l.shadowOpacity > 0, !l.masksToBounds, !v.bounds.isEmpty,
+        guard l.shadowOpacity > 0, !l.masksToBounds, !bounds.isEmpty,
               let sc = l.shadowColor else { return nil }
         let opacity = CGFloat(min(max(l.shadowOpacity, 0), 1))
         let color = sc.withAlpha(opacity)
@@ -332,10 +354,10 @@ public enum UIRenderer {
 
     /// The shadow-casting silhouette of `v`'s layer: the outer rounded rect
     /// when the background is visible, else the border ring, else nil.
-    static func shadowSilhouette(of v: UIView) -> (path: Path, evenOdd: Bool)? {
-        let bounds = v.bounds
+    static func shadowSilhouette(of v: UIView, bounds: CGRect,
+                                 radius: CGFloat)
+        -> (path: Path, evenOdd: Bool)? {
         guard !bounds.isEmpty else { return nil }
-        let radius = v.layer.cornerRadius
         if let bg = v.backgroundColor,
            bg.resolvedCGColor(with: v.traitCollection).alpha > 0 {
             return (layerRoundedRect(bounds, cornerRadius: radius), false)

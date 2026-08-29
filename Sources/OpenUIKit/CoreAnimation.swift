@@ -84,12 +84,14 @@ open class CABasicAnimation: CAPropertyAnimation {
 enum _CALayerAnimationValue {
     case scalar(CGFloat)
     case point(CGPoint)
+    case size(CGSize)
     case rect(CGRect)
     case vector([CGFloat])
 
     static func decode(_ value: Any?) -> _CALayerAnimationValue? {
         switch value {
         case let value as CGPoint: return .point(value)
+        case let value as CGSize: return .size(value)
         case let value as CGRect: return .rect(value)
 #if canImport(CoreGraphics)
         case let value as Double: return .scalar(CGFloat(value))
@@ -120,6 +122,9 @@ enum _CALayerAnimationValue {
             return .scalar(lerp(a, b))
         case let (.point(a), .point(b)):
             return .point(CGPoint(x: lerp(a.x, b.x), y: lerp(a.y, b.y)))
+        case let (.size(a), .size(b)):
+            return .size(CGSize(width: lerp(a.width, b.width),
+                                height: lerp(a.height, b.height)))
         case let (.rect(a), .rect(b)):
             return .rect(CGRect(x: lerp(a.origin.x, b.origin.x),
                                 y: lerp(a.origin.y, b.origin.y),
@@ -218,7 +223,12 @@ public enum CATransaction {
     private static var completions: [Completion] = []
     private static var nextSequence = 0
     private static var nextWorkID = 0
-    private static var workDeadlines: [Int: Double] = [:]
+    private struct WorkState {
+        var deadline: Double
+        var animationIsLive: Bool
+        var completionReferences: Int
+    }
+    private static var workStates: [Int: WorkState] = [:]
 
     public static func begin() {
         // Core Animation nests transactions by inheriting the enclosing
@@ -234,11 +244,15 @@ public enum CATransaction {
     public static func commit() {
         guard let frame = frames.popLast() else { return }
         if frame.completionIsLocal, let completion = frame.completion {
+            let ids = frame.animationWorkIDs
+            for id in ids where workStates[id] != nil {
+                workStates[id]!.completionReferences += 1
+            }
             completions.append(Completion(
                 fallbackEnd: OpenUIKitRuntime.animationTime,
-                animationWorkIDs: frame.animationWorkIDs,
+                animationWorkIDs: ids,
                 sequence: nextSequence,
-                                          body: completion))
+                body: completion))
             nextSequence &+= 1
         }
         if !frames.isEmpty {
@@ -280,30 +294,45 @@ public enum CATransaction {
         return frame.animationDuration
     }
 
-    static func _noteAnimation(duration: Double, replacing workID: Int?) -> Int {
-        let id: Int
-        if let workID {
-            id = workID
-        } else {
-            id = nextWorkID
-            nextWorkID &+= 1
-        }
+    static func _noteAnimation(duration: Double) -> Int {
+        let id = nextWorkID
+        nextWorkID &+= 1
         let end = duration.isFinite
             ? OpenUIKitRuntime.animationTime + Swift.max(0, duration)
             : .infinity
-        workDeadlines[id] = end
+        workStates[id] = WorkState(
+            deadline: end, animationIsLive: true, completionReferences: 0)
         if !frames.isEmpty {
             let index = frames.index(before: frames.endIndex)
             if !frames[index].animationWorkIDs.contains(id) {
                 frames[index].animationWorkIDs.append(id)
             }
         }
-        OpenUIKitRuntime.noteAnimationWork(until: end)
+        _refreshWorkDeadline()
         return id
     }
 
     static func _removeAnimation(workID: Int) {
-        workDeadlines[workID] = OpenUIKitRuntime.animationTime
+        guard var state = workStates[workID] else { return }
+        state.deadline = OpenUIKitRuntime.animationTime
+        state.animationIsLive = false
+        if state.completionReferences == 0 {
+            workStates.removeValue(forKey: workID)
+        } else {
+            workStates[workID] = state
+        }
+        _refreshWorkDeadline()
+    }
+
+    static func _finishAnimation(workID: Int) {
+        guard var state = workStates[workID] else { return }
+        state.animationIsLive = false
+        if state.completionReferences == 0 {
+            workStates.removeValue(forKey: workID)
+        } else {
+            workStates[workID] = state
+        }
+        _refreshWorkDeadline()
     }
 
     public static func flush() {
@@ -311,33 +340,67 @@ public enum CATransaction {
     }
 
     static func _stepCompletions(to time: Double) {
-        guard !completions.isEmpty else { return }
-        var due: [Completion] = []
+        // Retire finite work even when its layer is not sampled. This bounds
+        // the registry for add/remove churn and lets the host stop redrawing
+        // when a non-removed forwards-fill record reaches its endpoint.
+        let finishedIDs = workStates.compactMap { id, state in
+            state.animationIsLive && state.deadline <= time ? id : nil
+        }
+        for id in finishedIDs {
+            _finishAnimation(workID: id)
+        }
+
+        var due: [(end: Double, completion: Completion)] = []
         completions.removeAll { entry in
-            if _completionEnd(entry) <= time {
-                due.append(entry)
+            let end = _completionEnd(entry)
+            if end <= time {
+                due.append((end, entry))
                 return true
             }
             return false
         }
         due.sort {
-            (_completionEnd($0), $0.sequence) < (_completionEnd($1), $1.sequence)
+            ($0.end, $0.completion.sequence) <
+                ($1.end, $1.completion.sequence)
         }
-        for entry in due { entry.body() }
+        for entry in due {
+            for id in entry.completion.animationWorkIDs {
+                guard var state = workStates[id] else { continue }
+                state.completionReferences -= 1
+                if state.completionReferences == 0 && !state.animationIsLive {
+                    workStates.removeValue(forKey: id)
+                } else {
+                    workStates[id] = state
+                }
+            }
+            entry.completion.body()
+        }
+        _refreshWorkDeadline()
     }
 
     private static func _completionEnd(_ entry: Completion) -> Double {
         entry.animationWorkIDs.reduce(entry.fallbackEnd) { result, id in
-            Swift.max(result, workDeadlines[id] ?? entry.fallbackEnd)
+            Swift.max(result, workStates[id]?.deadline ?? entry.fallbackEnd)
         }
     }
+
+    private static func _refreshWorkDeadline() {
+        let deadline = workStates.values.reduce(-Double.infinity) {
+            result, state in
+            state.animationIsLive ? Swift.max(result, state.deadline) : result
+        }
+        OpenUIKitRuntime._setCoreAnimationWorkDeadline(deadline)
+    }
+
+    static var _workRegistryCountForTesting: Int { workStates.count }
 
     static func _resetForTesting() {
         frames.removeAll()
         completions.removeAll()
         nextSequence = 0
         nextWorkID = 0
-        workDeadlines.removeAll()
+        workStates.removeAll()
+        _refreshWorkDeadline()
     }
 }
 
@@ -355,13 +418,15 @@ extension CALayer {
         }
 
         let copy = animation._copyAnimation()
-        let replacedWorkID = key.flatMap { requestedKey in
-            _explicitAnimations.last { $0.key == requestedKey }?.workID
+        if let key {
+            let replaced = _explicitAnimations.filter { $0.key == key }
+            _explicitAnimations.removeAll { $0.key == key }
+            for record in replaced {
+                CATransaction._removeAnimation(workID: record.workID)
+            }
         }
         let duration = _CALayerAnimationRecord._totalDuration(of: copy)
-        let workID = CATransaction._noteAnimation(
-            duration: duration, replacing: replacedWorkID)
-        if let key { _explicitAnimations.removeAll { $0.key == key } }
+        let workID = CATransaction._noteAnimation(duration: duration)
         let record = _CALayerAnimationRecord(
             key: key, animation: copy, keyPath: keyPath,
             from: endpoints.0, to: endpoints.1,
@@ -409,12 +474,22 @@ extension CALayer {
             bounds: bounds, position: position, opacity: opacity,
             cornerRadius: cornerRadius,
             locations: (self as? CAGradientLayer)?.locations)
+        _applyExplicitPresentation(to: &result, at: time)
+        return result
+    }
+
+    /// Apply explicit records over a caller-supplied base state. Backing
+    /// layers use this to compose CABasicAnimation over UIView.animate's
+    /// already-presented geometry instead of falling back to model values.
+    func _applyExplicitPresentation(
+        to result: inout _CALayerPresentationState, at time: Double
+    ) {
+        _purgeFinishedAnimations(at: time)
         for record in _explicitAnimations {
             guard let value = record.value(at: time) else { continue }
             switch (record.keyPath, value) {
             case ("bounds", .rect(let value)): result.bounds = value
-            case ("bounds.size", .point(let value)):
-                result.bounds.size = CGSize(width: value.x, height: value.y)
+            case ("bounds.size", .size(let value)): result.bounds.size = value
             case ("position", .point(let value)): result.position = value
             case ("opacity", .scalar(let value)): result.opacity = Float(value)
             case ("cornerRadius", .scalar(let value)): result.cornerRadius = value
@@ -422,16 +497,15 @@ extension CALayer {
             default: break
             }
         }
-        return result
     }
 
-    private func _resolvedEndpoints(for animation: CABasicAnimation,
-                                    keyPath: String)
+    func _resolvedEndpoints(for animation: CABasicAnimation,
+                            keyPath: String)
         -> (_CALayerAnimationValue, _CALayerAnimationValue)? {
         let model: _CALayerAnimationValue?
         switch keyPath {
         case "bounds": model = .rect(bounds)
-        case "bounds.size": model = .point(CGPoint(x: bounds.width, y: bounds.height))
+        case "bounds.size": model = .size(bounds.size)
         case "position": model = .point(position)
         case "opacity": model = .scalar(CGFloat(opacity))
         case "cornerRadius": model = .scalar(cornerRadius)
@@ -440,12 +514,20 @@ extension CALayer {
         }
         default: model = nil
         }
-        guard let model else { return nil }
+        guard _isSupportedKeyPath(keyPath) else { return nil }
+        let suppliedFrom = animation.fromValue.flatMap(_CALayerAnimationValue.decode)
+        let suppliedTo = animation.toValue.flatMap(_CALayerAnimationValue.decode)
+        // A fully supplied vector animation is valid even when the model
+        // gradient has nil locations. Only an omitted endpoint needs model
+        // or live-presentation fallback.
         let presentation = _presentationAnimationValue(
             for: keyPath, at: OpenUIKitRuntime.animationTime) ?? model
-        guard let from = _resolvedEndpoint(animation.fromValue,
-                                           fallback: presentation),
-              let to = _resolvedEndpoint(animation.toValue, fallback: model)
+        let from = animation.fromValue == nil ? presentation : suppliedFrom
+        let to = animation.toValue == nil ? model : suppliedTo
+        guard let from, let to,
+              _value(from, hasShapeFor: keyPath),
+              _value(to, hasShapeFor: keyPath),
+              _endpointPairIsCompatible(from, to: to)
         else { return nil }
         return (from, to)
     }
@@ -461,17 +543,39 @@ extension CALayer {
         return nil
     }
 
-    private func _resolvedEndpoint(
-        _ value: Any?, fallback: _CALayerAnimationValue
-    ) -> _CALayerAnimationValue? {
-        guard let value else { return fallback }
-        // A supplied-but-unsupported endpoint must not silently turn into a
-        // model-to-model animation. Returning nil makes add(_:forKey:) fail
-        // loudly at the compatibility boundary.
-        return _CALayerAnimationValue.decode(value)
+    private func _isSupportedKeyPath(_ keyPath: String) -> Bool {
+        ["bounds", "bounds.size", "position", "opacity", "cornerRadius",
+         "locations"].contains(keyPath)
+    }
+
+    private func _value(_ value: _CALayerAnimationValue,
+                        hasShapeFor keyPath: String) -> Bool {
+        switch (keyPath, value) {
+        case ("bounds", .rect), ("bounds.size", .size),
+             ("position", .point), ("opacity", .scalar),
+             ("cornerRadius", .scalar), ("locations", .vector):
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func _endpointPairIsCompatible(
+        _ from: _CALayerAnimationValue, to: _CALayerAnimationValue
+    ) -> Bool {
+        guard case let (.vector(a), .vector(b)) = (from, to) else {
+            return true
+        }
+        // Validate interpolation arity, not gradient color arity. Focus's
+        // unchanged progress bar deliberately installs seven locations on a
+        // three-color layer; Core Animation accepts and retains that value.
+        return a.count == b.count
     }
 
     private func _purgeFinishedAnimations(at time: Double) {
+        for record in _explicitAnimations where time >= record.end {
+            CATransaction._finishAnimation(workID: record.workID)
+        }
         _explicitAnimations.removeAll { record in
             time >= record.end && record.animation.isRemovedOnCompletion
         }

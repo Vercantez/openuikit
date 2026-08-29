@@ -261,6 +261,12 @@ open class CALayer {
         self.delegate = owner
     }
 
+    isolated deinit {
+        for record in _explicitAnimations {
+            CATransaction._removeAnimation(workID: record.workID)
+        }
+    }
+
     /// Marks this layer's delegate/layout pass dirty.
     public func setNeedsLayout() {
         _needsLayout = true

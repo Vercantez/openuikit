@@ -111,17 +111,19 @@ public enum LayerBridge {
 
         var arena = Arena()
         defer { arena.releaseAll() }
+        let rootPresentation = presentationState(
+            of: root, at: OpenUIKitRuntime.animationTime)
         guard let rootLayer = buildLayer(for: root, scale: scale, arena: &arena,
-                                         visible: root.bounds,
-                                         acc: CGPoint(x: -root.bounds.minX,
-                                                      y: -root.bounds.minY),
+                                         visible: rootPresentation.bounds,
+                                         acc: CGPoint(x: -rootPresentation.bounds.minX,
+                                                      y: -rootPresentation.bounds.minY),
                                          isRenderRoot: true)
         else { return bitmap }
         // Like CALayer.render(in:), the root's OWN transform/position are
         // not applied — neutralize them so bounds render at the origin.
         QZLayerSetAffineTransform(rootLayer, QZAffineTransformIdentity())
-        QZLayerSetPosition(rootLayer, QZPoint(x: root.bounds.midX,
-                                              y: root.bounds.midY))
+        QZLayerSetPosition(rootLayer, QZPoint(x: rootPresentation.bounds.midX,
+                                              y: rootPresentation.bounds.midY))
         QZLayerRenderInContext(rootLayer, ctx)
 
         copyPremultipliedBacking(ctx, into: bitmap)
@@ -256,7 +258,7 @@ public enum LayerBridge {
         contentFingerprint(of: v, traits: traits, now: now, into: &h)
         h.combine(v.contentVersion)
 
-        if let ce = contentExtent(of: v, scale: scale) {
+        if let ce = contentExtent(of: v, bounds: b, scale: scale) {
             extent = extent.union(ce)
         }
 
@@ -268,6 +270,17 @@ public enum LayerBridge {
             for layer in explicitLayers {
                 h.combine(ObjectIdentifier(layer))
                 if !v.clipsToBounds { extent = extent.union(layer.frame) }
+            }
+        }
+        if let mask = lay.mask {
+            // A mask is part of the backing layer's live property graph. Keep
+            // this subtree and its ancestors out of the static flattening
+            // path until mask trees participate in the cache fingerprint.
+            info.hasExplicitLayers = true
+            info.viewCount += 1
+            h.combine(ObjectIdentifier(mask))
+            if !mask._explicitAnimations.isEmpty {
+                h.combine(now.bitPattern)
             }
         }
         if !lay._explicitAnimations.isEmpty {
@@ -451,15 +464,19 @@ public enum LayerBridge {
         else { return nil }
         let l = arena.track(raw)
 
-        let b = v.bounds
+        let now = OpenUIKitRuntime.animationTime
+        let backingPresentation = presentationState(of: v, at: now)
+        let b = backingPresentation.bounds
         QZLayerSetBounds(l, qzRect(b))
-        QZLayerSetPosition(l, QZPoint(x: v.center.x, y: v.center.y))
+        QZLayerSetPosition(l, QZPoint(x: backingPresentation.position.x,
+                                      y: backingPresentation.position.y))
         let t = v.transform
         QZLayerSetAffineTransform(l, QZAffineTransform(a: t.a, b: t.b, c: t.c,
                                                        d: t.d, tx: t.tx, ty: t.ty))
         QZLayerSetHidden(l, v.isHidden)
-        QZLayerSetOpacity(l, QZFloat(Swift.min(Swift.max(v.alpha, 0), 1)))
-        QZLayerSetCornerRadius(l, QZFloat(v.layer.cornerRadius))
+        QZLayerSetOpacity(l, QZFloat(Swift.min(
+            Swift.max(backingPresentation.opacity, 0), 1)))
+        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
         QZLayerSetMasksToBounds(l, v.clipsToBounds)
 
         let traits = v.traitCollection
@@ -480,10 +497,17 @@ public enum LayerBridge {
         var eff = t
         if !v.animations.isEmpty {
             eff = applyPresentation(to: l, view: v, traits: traits,
-                                    at: OpenUIKitRuntime.animationTime)
+                                    at: now)
         }
-        applyCoreAnimationPresentation(
-            to: l, layer: v.layer, at: OpenUIKitRuntime.animationTime)
+        // Reapply the composed geometry after UIView presentation sampling:
+        // explicit CABasicAnimation is the final override, but an animated
+        // bounds.size must preserve UIView.animate's presented origin.
+        QZLayerSetBounds(l, qzRect(backingPresentation.bounds))
+        QZLayerSetPosition(l, QZPoint(x: backingPresentation.position.x,
+                                      y: backingPresentation.position.y))
+        QZLayerSetOpacity(l, QZFloat(Swift.min(
+            Swift.max(backingPresentation.opacity, 0), 1)))
+        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
 
         // UIKit does not anti-alias the edges of transformed (rotated /
         // scaled) layers — same rule as RenderPass.isAxisAlignedTranslationOnly.
@@ -509,8 +533,14 @@ public enum LayerBridge {
 
         if let g = gradient, isGradientLayer {
             configureGradient(l, view: g, traits: traits)
-        } else if let content = contentLayer(for: v, scale: scale, arena: &arena) {
+        } else if let content = contentLayer(
+            for: v, bounds: b, scale: scale, arena: &arena) {
             QZLayerAddSublayer(l, content)
+        }
+
+        if let mask = lay.mask,
+           let maskLayer = buildExplicitLayer(mask, arena: &arena) {
+            QZLayerSetMask(l, maskLayer)
         }
 
         // Explicit app layers are above the backing layer's own contents and
@@ -555,37 +585,6 @@ public enum LayerBridge {
             }
         }
         return l
-    }
-
-    /// Apply explicit CABasicAnimation records installed directly on a
-    /// UIView's backing layer. UIView.animate records are applied first;
-    /// app-installed layer animations are the final presentation override.
-    static func applyCoreAnimationPresentation(
-        to layerRef: QZLayerRef, layer: CALayer, at time: Double
-    ) {
-        if case .rect(let value)? = layer._presentationAnimationValue(
-            for: "bounds", at: time) {
-            QZLayerSetBounds(layerRef, qzRect(value))
-        }
-        if case .point(let value)? = layer._presentationAnimationValue(
-            for: "bounds.size", at: time) {
-            var bounds = layer.bounds
-            bounds.size = CGSize(width: value.x, height: value.y)
-            QZLayerSetBounds(layerRef, qzRect(bounds))
-        }
-        if case .point(let value)? = layer._presentationAnimationValue(
-            for: "position", at: time) {
-            QZLayerSetPosition(layerRef, QZPoint(x: value.x, y: value.y))
-        }
-        if case .scalar(let value)? = layer._presentationAnimationValue(
-            for: "opacity", at: time) {
-            QZLayerSetOpacity(layerRef,
-                              QZFloat(Swift.min(Swift.max(value, 0), 1)))
-        }
-        if case .scalar(let value)? = layer._presentationAnimationValue(
-            for: "cornerRadius", at: time) {
-            QZLayerSetCornerRadius(layerRef, QZFloat(value))
-        }
     }
 
     /// Translate a portable explicit CALayer tree into quartz's native layer
@@ -767,8 +766,11 @@ public enum LayerBridge {
         // Neutralize root placement (applied at composite time); opacity is
         // applied on the composite layer so the flattened content stays
         // full-intensity (group-alpha semantics).
+        let presentation = presentationState(
+            of: v, at: OpenUIKitRuntime.animationTime)
         QZLayerSetAffineTransform(root, QZAffineTransformIdentity())
-        QZLayerSetPosition(root, QZPoint(x: v.bounds.midX, y: v.bounds.midY))
+        QZLayerSetPosition(root, QZPoint(x: presentation.bounds.midX,
+                                        y: presentation.bounds.midY))
         QZLayerSetOpacity(root, 1)
         QZLayerRenderInContext(root, ctx)
 
@@ -829,6 +831,40 @@ public enum LayerBridge {
 
     static func lerp(_ a: CGFloat, _ b: CGFloat, _ u: CGFloat) -> CGFloat {
         a + (b - a) * u
+    }
+
+    /// The backing-layer state after first sampling UIView.animate records
+    /// and then applying app-installed CABasicAnimation records. Keeping the
+    /// composition in one value prevents a size-only CA record from restoring
+    /// a model bounds origin (and gives both renderers identical geometry).
+    static func presentationState(
+        of v: UIView, at time: Double
+    ) -> _CALayerPresentationState {
+        var result = _CALayerPresentationState(
+            bounds: v.bounds, position: v.center, opacity: Float(v.alpha),
+            cornerRadius: v.layer.cornerRadius,
+            locations: (v.layer as? CAGradientLayer)?.locations)
+        for animation in v.animations {
+            let u = animationProgress(animation, at: time)
+            switch (animation.property, animation.from, animation.to) {
+            case (.position, .point(let a), .point(let b)):
+                result.position = CGPoint(x: lerp(a.x, b.x, u),
+                                          y: lerp(a.y, b.y, u))
+            case (.bounds, .rect(let a), .rect(let b)):
+                result.bounds = CGRect(x: lerp(a.minX, b.minX, u),
+                                       y: lerp(a.minY, b.minY, u),
+                                       width: lerp(a.width, b.width, u),
+                                       height: lerp(a.height, b.height, u))
+            case (.alpha, .scalar(let a), .scalar(let b)):
+                result.opacity = Float(lerp(a, b, u))
+            case (.cornerRadius, .scalar(let a), .scalar(let b)):
+                result.cornerRadius = lerp(a, b, u)
+            default:
+                break
+            }
+        }
+        v.layer._applyExplicitPresentation(to: &result, at: time)
+        return result
     }
 
     /// Eased progress (springs may overshoot past 1) of `a` at animation-
@@ -942,10 +978,14 @@ public enum LayerBridge {
     /// grid-aligned when an ancestor — e.g. a scroll view — shifts its
     /// bounds origin fractionally).
     static func contentExtent(of v: UIView, scale: CGFloat) -> CGRect? {
+        contentExtent(of: v, bounds: v.bounds, scale: scale)
+    }
+
+    static func contentExtent(of v: UIView, bounds b: CGRect,
+                              scale: CGFloat) -> CGRect? {
         // Plain containers draw no content — skip the offscreen entirely.
         if type(of: v) == UIView.self { return nil }
         if v is UIStackView || v is UIGradientView { return nil }
-        let b = v.bounds
         guard !b.isEmpty else { return nil }
         var raw: CGRect
         if let iv = v as? UIImageView {
@@ -977,9 +1017,10 @@ public enum LayerBridge {
     /// and wrap it as a contents-image sublayer. nil when nothing drew.
     /// The offscreen result is cached on the view and reused while the
     /// view's content fingerprint is unchanged (M8).
-    static func contentLayer(for v: UIView, scale: CGFloat,
+    static func contentLayer(for v: UIView, bounds: CGRect, scale: CGFloat,
                              arena: inout Arena) -> QZLayerRef? {
-        guard let extent = contentExtent(of: v, scale: scale) else { return nil }
+        guard let extent = contentExtent(of: v, bounds: bounds, scale: scale)
+        else { return nil }
         let pw = Int((extent.width * scale).rounded())
         let ph = Int((extent.height * scale).rounded())
         guard pw > 0, ph > 0 else { return nil }
@@ -995,10 +1036,10 @@ public enum LayerBridge {
             // Key on the bounds-RELATIVE extent (drawContent draws in
             // bounds-relative coordinates; absolute origin shifts must not
             // invalidate — see contentExtent).
-            h.combine(extent.minX - v.bounds.minX)
-            h.combine(extent.minY - v.bounds.minY)
+            h.combine(extent.minX - bounds.minX)
+            h.combine(extent.minY - bounds.minY)
             h.combine(extent.width); h.combine(extent.height)
-            h.combine(v.bounds.width); h.combine(v.bounds.height)
+            h.combine(bounds.width); h.combine(bounds.height)
             key = UInt64(bitPattern: Int64(h.finalize()))
             if state.contentValid, state.contentKey == key,
                state.contentExtent.size == extent.size {
@@ -1011,7 +1052,7 @@ public enum LayerBridge {
         let offscreen = Bitmap(width: pw, height: ph)
         let canvas = Canvas(bitmap: offscreen, scale: scale)
         canvas.translate(x: -extent.minX, y: -extent.minY)
-        v.drawContent(in: canvas, bounds: v.bounds)
+        v.drawContent(in: canvas, bounds: bounds)
 
         // Skip fully transparent content (e.g. empty labels).
         var any = false
