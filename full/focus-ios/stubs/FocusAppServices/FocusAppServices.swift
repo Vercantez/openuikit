@@ -83,12 +83,15 @@ public struct AvailableExperiment {
     public let userFacingName: String
     public let userFacingDescription: String
     public let branches: [ExperimentBranch]
+    public let referenceBranch: String?
     public init(slug: String, userFacingName: String = "",
-                userFacingDescription: String = "", branches: [ExperimentBranch] = []) {
+                userFacingDescription: String = "", branches: [ExperimentBranch] = [],
+                referenceBranch: String? = nil) {
         self.slug = slug
         self.userFacingName = userFacingName
         self.userFacingDescription = userFacingDescription
         self.branches = branches
+        self.referenceBranch = referenceBranch
     }
 }
 
