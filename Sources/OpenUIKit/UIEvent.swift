@@ -304,6 +304,9 @@ open class UIWindow: UIView {
         // the host clock passes the transition end (same pattern; see
         // UINavigationController).
         UINavigationController._stepTransitions(to: timestamp)
+        // UIPageViewController begins animated replacement appearance on the
+        // first host turn after containment, matching UIKit's run-loop order.
+        UIPageViewController._stepTransitions(to: timestamp)
         // A released sheet drag settles (springs back or completes its
         // dismissal) on the same clock — same additive pattern.
         _UIPageSheetView._stepSheetInteractions(to: timestamp)

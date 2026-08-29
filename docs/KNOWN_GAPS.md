@@ -72,6 +72,69 @@ delegate. Modern successful field endings call the reason-bearing delegate
 method once; its default implementation forwards to the legacy callback so a
 delegate implementing only the old spelling still receives exactly one call.
 
+## `UIPageViewController` (Focus Pro Tips, 2026-08-29)
+
+OpenUIKit now exposes the complete public iOS 26.1 Swift shape used by a
+code-created page controller: the four nested raw-value enums, string-backed
+option keys, open configuration/state properties, weak delegate/data source,
+both protocols (with pure-Swift defaults for Objective-C-optional methods),
+and `setViewControllers`. The implementation supplies horizontal and vertical
+three-slot scrolling, neighboring-page queries, delegate completion, child
+containment/appearance, and the horizontal page indicator. Focus's unchanged
+Pro Tips controller depends on the indicator being a direct root subview; the
+portable hierarchy deliberately preserves that observable UIKit detail.
+
+The defaults, raw values, hierarchy, spacing, containment callbacks, and
+programmatic completion order were probed on a real iPhone 17 Pro Simulator
+running iOS 26.1. Two unintuitive results are intentional and regression
+tested: an incoming child receives `didMove(toParent:)` before its view loads,
+and a replaced outgoing child receives `willMove(toParent: nil)` once while
+staging and again immediately before `removeFromParent()`. An animated first
+install has nothing to animate and completes inline with `true`; an animated
+replacement publishes the incoming controller immediately, starts appearance
+on the next host turn, and completes on `UIWindow.tick`. Superseding that
+transition with a nonanimated set calls the first completion inline with
+`false`, the second with `true`, and removes both superseded children before
+returning. The cancelled scroll animation is removed as well, so a later host
+tick cannot mutate the replacement.
+
+This is a coherent page-controller subset, not a portable clone of every
+private UIKit transition implementation:
+
+- `.pageCurl` preserves public configuration, required one/two-controller
+  validation, and curl gesture types. A supplied second controller is retained
+  in public `viewControllers` but is not contained and receives no lifecycle
+  callbacks; only the first is contained and rendered as a flat swap. The
+  recognizers are inert, with no paper mesh, spine renderer, reverse side, or
+  two-page spread. Matching the SDK contract, a `.mid` spine defaults to
+  double-sided and assigning `false` to `isDoubleSided` traps via Swift
+  `precondition`, the portable analogue of UIKit's Objective-C exception.
+- Real iOS 26.1 has a pathological animated-on-animated reentry: the first
+  completion is `false`, but the second completion remains unfired and the
+  intermediate child remains contained after at least 870 ms. OpenUIKit does
+  not reproduce that leak/wedge. It deterministically retires the first page,
+  completes the second animation with `true` on the host clock, and leaves
+  only the final child. Both behaviors are oracle/regression pinned so this
+  divergence cannot be mistaken for an unmeasured guess.
+- Interactive scrolling stages only the immediate predecessor/successor. It
+  uses the existing portable `UIScrollView` physics and callback contract.
+  Once one direction has staged a neighbor, crossing back over the center in
+  the same gesture safely cancels that transition at release but does not
+  restage the opposite neighbor; a following gesture can navigate that way.
+  UIKit's private prefetch queue, gesture-arbitration details, accessibility
+  paging actions, and transition-coordinator objects are not modeled. This
+  interactive behavior is runtime-tested rather than UIKit-oracle-driven.
+- Objective-C optional protocol dispatch has no direct representation in the
+  portable Swift core. The presentation-count/index requirements therefore
+  default to zero. A data source using those defaults can leave a zero-sized
+  direct `UIPageControl`; it reserves no content space.
+- The existing portable `UIPageControl` reserves 26 points. The iOS 26.1
+  hierarchy probe reported a device/scale-rounded height of roughly 25.667
+  points for this private container. Focus relies on lookup and tint, not that
+  subpixel discrepancy.
+- `init(coder:)` retains the required source surface but does not decode nibs
+  or storyboards, consistent with OpenUIKit's wider Interface Builder boundary.
+
 ## Pointer-interaction descriptors (Focus AppShortcuts, 2026-08-28)
 
 OpenUIKit now exposes the Swift-overlay pointer family needed by Focus:

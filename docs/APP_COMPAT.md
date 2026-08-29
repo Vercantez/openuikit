@@ -53,6 +53,39 @@ for the host keyboard, assistant bar, generated placeholder metadata, and the
 SF Symbol clear glyph are enumerated in docs/KNOWN_GAPS.md rather than hidden
 behind inert API.
 
+## Focus Pro Tips page controller (2026-08-29)
+
+The unchanged Focus source at revision
+`a2832521c1daa0c23419c73705ae043ed60c9791` contains a conventional
+`TipsPageViewController`: it constructs a horizontal scroll-style
+`UIPageViewController`, installs itself as delegate/data source, sets an
+initial controller with `animated: true`, and finds the direct child
+`UIPageControl` to apply the app's tint. This slice adds that public surface
+and real runtime behavior to OpenUIKit; no Focus source, project, dependency,
+or generated input is patched.
+
+The compatibility work is deliberately measured beyond “the names compile.”
+An iOS 26.1 oracle pins enum and option-key raw values, lazy defaults, direct
+hierarchy shape, page-indicator eligibility, inter-page spacing, appearance
+and containment callback order, synchronous versus host-clock completion,
+interruption, and page-indicator query timing. Gesture-driven neighbor/delegate
+flow and reversal cancellation are portable-runtime tested; the UIKit oracle
+does not synthesize an interactive gesture. The saturated Focus census is run
+from a fresh clone of this OpenUIKit revision and brackets every Focus Swift
+input with before/after SHA-256 manifests. On the page slice's isolated base,
+the broad saturated census moved from **457 to 440 primary diagnostics**: all
+**17** diagnostics in `TipsPageViewController.swift` (including the
+type/protocol errors and their enum/color cascades) disappeared. This final
+integrated revision also contains the independently accepted text-input slice
+and totals **400** diagnostics. Its log contains zero `UIPageViewController`
+or `TipsPageViewController` occurrences. Both manifests report source-subject
+SHA-256 `96e2b5eda3ba03f7c5963b06500ceb05d59777f37c4e61006be37ce0424398bd`.
+
+Rendering and reentrant-transition limits are listed in
+`docs/KNOWN_GAPS.md` under “UIPageViewController”; in particular, page curl
+is a flat programmatic swap and OpenUIKit deliberately cleans up an
+animated-on-animated reentry that iOS 26.1 itself leaves wedged.
+
 ## Baseline measurement (2026-08-25, before M12)
 
 Corpus: three large production apps, all code-based or mostly code-based —
