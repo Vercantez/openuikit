@@ -1,0 +1,628 @@
+{
+  "bundle_layout": {
+    "index": "resource-index.json",
+    "lookup_semantics": "explicit-index-with-dark-to-default-appearance-fallback",
+    "onboarding": "Focus_Onboarding.bundle",
+    "root": "bundles",
+    "widget": "Focus_Widget.bundle"
+  },
+  "catalogs": {
+    "onboarding-colors": {
+      "byte_count": 2456,
+      "file_count": 5,
+      "files": [
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets/Contents.json",
+          "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+          "size": 63
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets/actionButton.colorset/Contents.json",
+          "sha256": "4f89a7164eba864344821fedf16ff651a542b696220289967535a6e3811ae9f1",
+          "size": 689
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets/secondOnboardingScreenBackground.colorset/Contents.json",
+          "sha256": "732d93cf49fa1ed0d2f3a97bf79c7420833b7fc6026124c0704e6a1b2faf54e4",
+          "size": 689
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets/secondOnboardingScreenBottomButton.colorset/Contents.json",
+          "sha256": "86c7d9e63dfbd1ab09008ff392b8100f7c1914b58e8de99346d00a08c180a579",
+          "size": 326
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets/secondOnboardingScreenText.colorset/Contents.json",
+          "sha256": "fecf223ec5945953783e066a501fbe52601a5d1898748cb1cee9d89e2ea480af",
+          "size": 689
+        }
+      ],
+      "root": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Colors.xcassets",
+      "source_digest": "b2168510bd9d7b2325f9bfdde956a07475be6610259e29f5f8b43072cd8d6998"
+    },
+    "onboarding-images": {
+      "byte_count": 32352935,
+      "file_count": 13,
+      "files": [
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/Contents.json",
+          "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+          "size": 63
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_background.imageset/Contents.json",
+          "sha256": "01a9f5fb7f0717f820013c1ff82c89fcbf77f0952fa665c34ffd5a63538b0e90",
+          "size": 383
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_background.imageset/background_icon_dark.pdf",
+          "sha256": "659590ff0bfc50927743b27e28a25583bf46678ccb886b049b9f3f0a844f5c3c",
+          "size": 2852
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_background.imageset/icon_onboarding_background.pdf",
+          "sha256": "4b692c91c4a07791c9dff2d126a0aa719b6d0889722b5425212ba062be1ff7ff",
+          "size": 6534
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_close.imageset/Contents.json",
+          "sha256": "6143715bb2f2f4abee1061203a3492f14f8d8d78fd6dcae86e47e20443b14e51",
+          "size": 363
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_close.imageset/icon_close.pdf",
+          "sha256": "7b9a395c042caa6a672904996b47c3f39ec44ab73feeff15b36a52fba2b43ac0",
+          "size": 15783951
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_close.imageset/icon_close_light.pdf",
+          "sha256": "823a5bbbc12991b832eea10f1bc131d383f7745ad4eeb63aabbd913f5fd20759",
+          "size": 15783269
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_hugging_focus.imageset/Contents.json",
+          "sha256": "e038476d7b10572d42fc202000943cca7016cc2997d0ad0396d9eb552491224d",
+          "size": 231
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_hugging_focus.imageset/HuggingFocus.pdf",
+          "sha256": "0cea10117ec887aac52aa50c4e044b12124c817d19ef951497d0c2698de4e4bc",
+          "size": 123975
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_logo.imageset/Contents.json",
+          "sha256": "b4a48ee46b1087f15188dc0a4cdf065251008e51e44427b1bb94f0744085eb79",
+          "size": 159
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_logo.imageset/icon_logo.pdf",
+          "sha256": "7f8ea654a4d0ac064fb38027c16ae730b1f0561a031bb465b71997b0df4188b7",
+          "size": 71525
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/jiggle_mode_image.imageset/Contents.json",
+          "sha256": "a228447d3cac984c73c61de2da481a0fb3f298e2dc44a18ec2947cd3f0275f0d",
+          "size": 160
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/jiggle_mode_image.imageset/JiggleMode.pdf",
+          "sha256": "0dc9330222df238758512ed9aa5a6b8c6a9d69d3913382e67fad187d33f88929",
+          "size": 579470
+        }
+      ],
+      "root": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets",
+      "source_digest": "f2fcaa1fae4e8b71b4104cf5673b955df2711b8004d6a928861f5d86601bf0fd"
+    },
+    "widget-media": {
+      "byte_count": 73131,
+      "file_count": 5,
+      "files": [
+        {
+          "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/Contents.json",
+          "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+          "size": 63
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/GradientFirst.colorset/Contents.json",
+          "sha256": "75759bdc8a68e4694bda34486c47e347ab8af010ebb8de7372b0ca443c08186b",
+          "size": 692
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/GradientSecond.colorset/Contents.json",
+          "sha256": "f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda44af2",
+          "size": 692
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/icon_logo.imageset/Contents.json",
+          "sha256": "b4a48ee46b1087f15188dc0a4cdf065251008e51e44427b1bb94f0744085eb79",
+          "size": 159
+        },
+        {
+          "path": "BlockzillaPackage/Sources/Widget/Media.xcassets/icon_logo.imageset/icon_logo.pdf",
+          "sha256": "7f8ea654a4d0ac064fb38027c16ae730b1f0561a031bb465b71997b0df4188b7",
+          "size": 71525
+        }
+      ],
+      "root": "BlockzillaPackage/Sources/Widget/Media.xcassets",
+      "source_digest": "cf65ea586b104d622bb50ec5f0c09a1dc11ec0f293d322776dbb6f698f880126"
+    }
+  },
+  "claims": {
+    "actool_or_asset_car_emission": false,
+    "apple_bundle_equivalence": false,
+    "cross_host_reproducibility": "bounded-to-exact-reviewed-outputs-on-two-observed-front-end-profiles",
+    "current_openuikit_automatic_luminosity_image_selection": false,
+    "current_openuikit_loose_image_layout": true,
+    "current_openuikit_system_symbol_api": false,
+    "foundation_or_ui_framework_runtime_lookup": false,
+    "linux_guest_link_or_run": false,
+    "normalized_resource_bundle_and_lookup_index": true,
+    "rasterizer_dependency_byte_identity": false,
+    "rasterizer_path_immutability_during_rendering": false,
+    "raw_color_catalogs_preserved": true
+  },
+  "focus": {
+    "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "package_manifest": {
+      "path": "BlockzillaPackage/Package.swift",
+      "sha256": "2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248",
+      "size": 1975
+    },
+    "pinned_manifest_resource_declaration": "raw-unhandled",
+    "worktree_prefix": "focus-ios"
+  },
+  "lookup_contract": {
+    "Onboarding": {
+      "colors": [
+        "actionButton",
+        "secondOnboardingScreenBackground",
+        "secondOnboardingScreenBottomButton",
+        "secondOnboardingScreenText"
+      ],
+      "images": [
+        "icon_background",
+        "icon_close",
+        "icon_hugging_focus",
+        "icon_logo",
+        "jiggle_mode_image"
+      ],
+      "symbols": [
+        "1.circle.fill",
+        "2.circle.fill",
+        "3.circle.fill"
+      ]
+    },
+    "Widget": {
+      "colors": [
+        "GradientFirst",
+        "GradientSecond"
+      ],
+      "images": [
+        "icon_logo"
+      ],
+      "symbols": [
+        "magnifyingglass"
+      ]
+    }
+  },
+  "lookup_sources": [
+    {
+      "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Color+AppColors.swift",
+      "sha256": "d64850a384db3bfc2961cad6f7b1d9d3522f081fa19709462c11f41893615e81",
+      "size": 852
+    },
+    {
+      "path": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Image+AppImages.swift",
+      "sha256": "d6731252dc45289bc513b17cf1b4ba78e7c56b399e1b6a5942c8d1352b35ae54",
+      "size": 806
+    },
+    {
+      "path": "BlockzillaPackage/Sources/Widget/Assets.swift",
+      "sha256": "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+      "size": 533
+    }
+  ],
+  "normalization": {
+    "dpi_per_scale": 72,
+    "pdf_command_flags": [
+      "-png",
+      "-transp",
+      "-singlefile",
+      "-r",
+      "<72*scale>"
+    ],
+    "pdf_mappings": [
+      {
+        "appearance": "default",
+        "name": "icon_background",
+        "page_points": [
+          375.0,
+          810.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_background.imageset/icon_onboarding_background.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "dark",
+        "name": "icon_background",
+        "page_points": [
+          375.0,
+          810.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_background.imageset/background_icon_dark.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "default",
+        "name": "icon_close",
+        "page_points": [
+          30.0,
+          30.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_close.imageset/icon_close_light.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "dark",
+        "name": "icon_close",
+        "page_points": [
+          30.0,
+          30.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_close.imageset/icon_close.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "default",
+        "name": "icon_hugging_focus",
+        "page_points": [
+          193.651,
+          300.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_hugging_focus.imageset/HuggingFocus.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "default",
+        "name": "icon_logo",
+        "page_points": [
+          145.094,
+          150.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/icon_logo.imageset/icon_logo.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "default",
+        "name": "jiggle_mode_image",
+        "page_points": [
+          261.0,
+          147.0
+        ],
+        "source": "BlockzillaPackage/Sources/Onboarding/DesignSystem/Images.xcassets/jiggle_mode_image.imageset/JiggleMode.pdf",
+        "target": "Onboarding"
+      },
+      {
+        "appearance": "default",
+        "name": "icon_logo",
+        "page_points": [
+          145.094,
+          150.0
+        ],
+        "source": "BlockzillaPackage/Sources/Widget/Media.xcassets/icon_logo.imageset/icon_logo.pdf",
+        "target": "Widget"
+      }
+    ],
+    "pdf_outputs": {
+      "Onboarding/icon_background/dark/1x": {
+        "height": 810,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/dark@1x.png",
+        "sha256": "3574155e662c0b41111af8abb3894ea2a8e70cc0ffc7159a7e91e5f8659ce42c",
+        "size": 16655,
+        "width": 375
+      },
+      "Onboarding/icon_background/dark/2x": {
+        "height": 1620,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/dark@2x.png",
+        "sha256": "8c41108f8fb18b5dc8bc7af8a682a90b9252479c5440696b437fe623aa599d87",
+        "size": 62424,
+        "width": 750
+      },
+      "Onboarding/icon_background/dark/3x": {
+        "height": 2430,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/dark@3x.png",
+        "sha256": "e014859d3da1db60cc2beaeb47fc2ac65af55a621228d6c98a6e160d6bd38c20",
+        "size": 144080,
+        "width": 1125
+      },
+      "Onboarding/icon_background/default/1x": {
+        "height": 810,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/default@1x.png",
+        "sha256": "4fd236935d280cd303212406e40974dc06f4edfc43f7f42570b8e0f8e0335a93",
+        "size": 2661,
+        "width": 375
+      },
+      "Onboarding/icon_background/default/2x": {
+        "height": 1620,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/default@2x.png",
+        "sha256": "9ca45e41656b502088140215d2803980a32e2441248ad7ba16b5e8d078c3c54a",
+        "size": 7553,
+        "width": 750
+      },
+      "Onboarding/icon_background/default/3x": {
+        "height": 2430,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_background/default@3x.png",
+        "sha256": "10840a4aa860d00f81d026460f4f5f20b79abdc89990ada4291eed6c408bd317",
+        "size": 16508,
+        "width": 1125
+      },
+      "Onboarding/icon_close/dark/1x": {
+        "height": 30,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/dark@1x.png",
+        "sha256": "0ad4478107e03ae957d27e7f289f33383ba020c19cf991fd0d0e112035a2ac09",
+        "size": 953,
+        "width": 30
+      },
+      "Onboarding/icon_close/dark/2x": {
+        "height": 60,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/dark@2x.png",
+        "sha256": "ca3f7f276c1ee79d56f8c7fd4e0fe91e01069e59d67d4d80d77a152c1dbf68d2",
+        "size": 1747,
+        "width": 60
+      },
+      "Onboarding/icon_close/dark/3x": {
+        "height": 90,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/dark@3x.png",
+        "sha256": "0f0e8eb87af25c26ad70b6544357df27d336d21069cedb36c084e0c104873594",
+        "size": 2535,
+        "width": 90
+      },
+      "Onboarding/icon_close/default/1x": {
+        "height": 30,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/default@1x.png",
+        "sha256": "b8e41d2147e533f7e91897d611accc40485aae6345c4baf7fb0fed8865abab52",
+        "size": 867,
+        "width": 30
+      },
+      "Onboarding/icon_close/default/2x": {
+        "height": 60,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/default@2x.png",
+        "sha256": "5aee351253c7609c544408c1909f5ced2591935f5e5fded16961fd160cddbbaa",
+        "size": 1506,
+        "width": 60
+      },
+      "Onboarding/icon_close/default/3x": {
+        "height": 90,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_close/default@3x.png",
+        "sha256": "d0b0832698c1b7d54b95906a658e166dffba80463b712e45c20c3c960db1ee6f",
+        "size": 2174,
+        "width": 90
+      },
+      "Onboarding/icon_hugging_focus/default/1x": {
+        "height": 300,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_hugging_focus/default@1x.png",
+        "sha256": "c1acdd1c9ee819dcbe4645906aef4042a31e9073e34aa88b7510091f746e2f69",
+        "size": 42303,
+        "width": 194
+      },
+      "Onboarding/icon_hugging_focus/default/2x": {
+        "height": 600,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_hugging_focus/default@2x.png",
+        "sha256": "e05baa50d724a14691e8204ecd4ff290d9f1d7d9b6dcfb17920c3dece9d07ae2",
+        "size": 104637,
+        "width": 388
+      },
+      "Onboarding/icon_hugging_focus/default/3x": {
+        "height": 900,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_hugging_focus/default@3x.png",
+        "sha256": "bfad78236f53600885dbe738c15d8ba26310bf2a23f8c825b799113c509d0965",
+        "size": 176613,
+        "width": 581
+      },
+      "Onboarding/icon_logo/default/1x": {
+        "height": 150,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_logo/default@1x.png",
+        "sha256": "180d76a144c6e74324283e8bfb72d9d7bb32125fe57769e3403b0ca72b6ef415",
+        "size": 19130,
+        "width": 146
+      },
+      "Onboarding/icon_logo/default/2x": {
+        "height": 300,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_logo/default@2x.png",
+        "sha256": "5acd6ff3214009dd583d37fead8eaada34d69049cb14202d18103c2d5f84dd7f",
+        "size": 52496,
+        "width": 291
+      },
+      "Onboarding/icon_logo/default/3x": {
+        "height": 450,
+        "path": "bundles/Focus_Onboarding.bundle/images/icon_logo/default@3x.png",
+        "sha256": "cc0a1e50c01c13fd3315fbd14a89ebb521bedf9ebc21bf511c73e2e6c4305942",
+        "size": 91082,
+        "width": 436
+      },
+      "Onboarding/jiggle_mode_image/default/1x": {
+        "height": 147,
+        "path": "bundles/Focus_Onboarding.bundle/images/jiggle_mode_image/default@1x.png",
+        "sha256": "5ed6eddfd91aea96aed2f9d3147dce77a8b7a8c8c13ec8f8cb09d20c176064bd",
+        "size": 38099,
+        "width": 261
+      },
+      "Onboarding/jiggle_mode_image/default/2x": {
+        "height": 294,
+        "path": "bundles/Focus_Onboarding.bundle/images/jiggle_mode_image/default@2x.png",
+        "sha256": "2413282f3d90f52ddf989c5f9edf3847aa6930abbf87cb68dd29d81a0e95be1c",
+        "size": 129963,
+        "width": 522
+      },
+      "Onboarding/jiggle_mode_image/default/3x": {
+        "height": 441,
+        "path": "bundles/Focus_Onboarding.bundle/images/jiggle_mode_image/default@3x.png",
+        "sha256": "2a9352b29a03d278ed0fb7be1aaaf96d65224d0839082323e2d3dd404316ae62",
+        "size": 262268,
+        "width": 783
+      },
+      "Widget/icon_logo/default/1x": {
+        "height": 150,
+        "path": "bundles/Focus_Widget.bundle/images/icon_logo/default@1x.png",
+        "sha256": "180d76a144c6e74324283e8bfb72d9d7bb32125fe57769e3403b0ca72b6ef415",
+        "size": 19130,
+        "width": 146
+      },
+      "Widget/icon_logo/default/2x": {
+        "height": 300,
+        "path": "bundles/Focus_Widget.bundle/images/icon_logo/default@2x.png",
+        "sha256": "5acd6ff3214009dd583d37fead8eaada34d69049cb14202d18103c2d5f84dd7f",
+        "size": 52496,
+        "width": 291
+      },
+      "Widget/icon_logo/default/3x": {
+        "height": 450,
+        "path": "bundles/Focus_Widget.bundle/images/icon_logo/default@3x.png",
+        "sha256": "cc0a1e50c01c13fd3315fbd14a89ebb521bedf9ebc21bf511c73e2e6c4305942",
+        "size": 91082,
+        "width": 436
+      }
+    },
+    "scales": [
+      1,
+      2,
+      3
+    ],
+    "symbol_generator": {
+      "kind": "original-integer-geometry-alpha-mask",
+      "logical_size_points": [
+        24,
+        24
+      ],
+      "png_deflate": "RFC1951 stored blocks with fixed filter 0",
+      "supersample": 8
+    },
+    "symbol_mappings": {
+      "Onboarding": [
+        "1.circle.fill",
+        "2.circle.fill",
+        "3.circle.fill"
+      ],
+      "Widget": [
+        "magnifyingglass"
+      ]
+    },
+    "symbol_outputs": {
+      "Onboarding/1.circle.fill/default/1x": {
+        "height": 24,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/1.circle.fill/default@1x.png",
+        "sha256": "8b4b9a661d879a64a8e3fd92a9a5ea00ac4b8097c5577b174f1db8ffbc6120c0",
+        "size": 2409,
+        "width": 24
+      },
+      "Onboarding/1.circle.fill/default/2x": {
+        "height": 48,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/1.circle.fill/default@2x.png",
+        "sha256": "e7736ae4dc7afd77b011838c57d07cd39ba25e5a4680c33b72f5d4423ccae3fc",
+        "size": 9345,
+        "width": 48
+      },
+      "Onboarding/1.circle.fill/default/3x": {
+        "height": 72,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/1.circle.fill/default@3x.png",
+        "sha256": "f728524938e4404b2521daccee89f783b94a9d519378730667f3091c9b249876",
+        "size": 20889,
+        "width": 72
+      },
+      "Onboarding/2.circle.fill/default/1x": {
+        "height": 24,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/2.circle.fill/default@1x.png",
+        "sha256": "a5809e9af5455b2662c78fef69229288e8769340a5dee357a936233186ec2ab6",
+        "size": 2409,
+        "width": 24
+      },
+      "Onboarding/2.circle.fill/default/2x": {
+        "height": 48,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/2.circle.fill/default@2x.png",
+        "sha256": "7a4b24ad813346f098b35e2e2c206568364d213a1970aa62674c499b0f630a9b",
+        "size": 9345,
+        "width": 48
+      },
+      "Onboarding/2.circle.fill/default/3x": {
+        "height": 72,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/2.circle.fill/default@3x.png",
+        "sha256": "60e4df12a3e7e5fba3219d2409be6aefc8aafae73688a85d135c03bea7e969ff",
+        "size": 20889,
+        "width": 72
+      },
+      "Onboarding/3.circle.fill/default/1x": {
+        "height": 24,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/3.circle.fill/default@1x.png",
+        "sha256": "931c9eac1b4ff11343b098351f7b2b6d68920bd494bc1fb3809c874848f0f4bc",
+        "size": 2409,
+        "width": 24
+      },
+      "Onboarding/3.circle.fill/default/2x": {
+        "height": 48,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/3.circle.fill/default@2x.png",
+        "sha256": "faf21052f97e93b8b2d3c67a6d42dc65c4d5c5ae1ddf276a3154e6f716d4d0b4",
+        "size": 9345,
+        "width": 48
+      },
+      "Onboarding/3.circle.fill/default/3x": {
+        "height": 72,
+        "path": "bundles/Focus_Onboarding.bundle/symbols/3.circle.fill/default@3x.png",
+        "sha256": "a35f04da5cae290c7257c96201fe0c89fca8b21e985a430672bd1545b633d96b",
+        "size": 20889,
+        "width": 72
+      },
+      "Widget/magnifyingglass/default/1x": {
+        "height": 24,
+        "path": "bundles/Focus_Widget.bundle/symbols/magnifyingglass/default@1x.png",
+        "sha256": "ac28495c9ca12a541302d9a1ab9b7a2e19aa765c6e9f03cf0e55169fb5bd983e",
+        "size": 2409,
+        "width": 24
+      },
+      "Widget/magnifyingglass/default/2x": {
+        "height": 48,
+        "path": "bundles/Focus_Widget.bundle/symbols/magnifyingglass/default@2x.png",
+        "sha256": "9077434adde7ac6ccb49842aa8cd76257e40e35db739592aa9c059a01f1cc33c",
+        "size": 9345,
+        "width": 48
+      },
+      "Widget/magnifyingglass/default/3x": {
+        "height": 72,
+        "path": "bundles/Focus_Widget.bundle/symbols/magnifyingglass/default@3x.png",
+        "sha256": "b670deab128d1f3ae181f985448b8f423081f5c6c673a910e581087cffbbb066",
+        "size": 20889,
+        "width": 72
+      }
+    },
+    "symbol_overlay_aliases": {
+      "Onboarding": {
+        "1.circle.fill": "step_one",
+        "2.circle.fill": "step_two",
+        "3.circle.fill": "step_three"
+      },
+      "Widget": {
+        "magnifyingglass": "icon_magnifying_glass"
+      }
+    }
+  },
+  "rasterizer_profiles": [
+    {
+      "id": "homebrew-poppler-25.04.0-darwin-arm64",
+      "machine": "arm64",
+      "path": "/opt/homebrew/Cellar/poppler/25.04.0/bin/pdftocairo",
+      "sha256": "963b05a5c78b2a8a32bbfb9a2a3c542a258dd7ec8e9b64d782a4d9848ed058c1",
+      "size": 225664,
+      "system": "Darwin",
+      "version_sha256": "a78b264de5df5bd46533719094cbfc5bc61fcf339816d5c30d3cd67a036d72d5"
+    },
+    {
+      "id": "ubuntu-noble-poppler-24.02.0-1ubuntu9.9-linux-aarch64",
+      "machine": "aarch64",
+      "path": "/usr/bin/pdftocairo",
+      "sha256": "dec6518985e0810a886ac53a3293f2d49cf292621874501ab0a821eff666e41f",
+      "size": 198904,
+      "system": "Linux",
+      "version_sha256": "334b226b04b408c69f0cdddd748b566360c34853bf5edddc7f0c808a4f67d559"
+    }
+  ],
+  "schema": 1
+}
