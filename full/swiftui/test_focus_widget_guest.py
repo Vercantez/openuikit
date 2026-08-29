@@ -36,7 +36,79 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn('scripts/require_fresh_root.sh" "$MRROOT"', text)
         self.assertIn('"$MRROOT/machorun" ./focus_widget_guest', text)
         for forbidden in ("Foundation.framework", "SwiftUI.framework", "SwiftUICore.framework"):
-            self.assertIn(forbidden, text)
+            self.assertIn(forbidden.replace(".", r"\."), text)
+
+    def test_frameworks_are_real_dylibs_with_exact_identity_and_rpaths(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn("-dylib -install_name @rpath/libOpenUIKit.dylib", text)
+        self.assertIn("-dylib -install_name @rpath/libSwiftUI.dylib", text)
+        self.assertIn('"$PACKAGE/libOpenUIKit.dylib"', text)
+        self.assertIn('"$PACKAGE/libSwiftUI.dylib"', text)
+        self.assertIn('"libOpenUIKit LC_ID_DYLIB"', text)
+        self.assertIn('"libSwiftUI LC_ID_DYLIB"', text)
+        self.assertIn('"guest LC_RPATH set"', text)
+        self.assertIn("expected_openuikit_loads", text)
+        self.assertIn("expected_swiftui_loads", text)
+        self.assertIn("expected_guest_loads", text)
+        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=51", text)
+        self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=6", text)
+        self.assertIn('assert_exact_text "package top-level inventory"', text)
+        self.assertIn("packaged CQuartz headers drifted", text)
+        self.assertIn('rm -rf "$MC"', text)
+
+    def test_executable_links_frameworks_instead_of_their_objects(self) -> None:
+        text = BUILD.read_text()
+        focus_compile = text.split('echo "== FocusWidget', 1)[1].split(
+            'echo "== guest harness', 1
+        )[0]
+        harness_compile = text.split('echo "== guest harness', 1)[1].split(
+            'echo "== package OpenUIKit', 1
+        )[0]
+        for compile_step in (focus_compile, harness_compile):
+            self.assertIn('"${PACKAGE_CINC[@]}"', compile_step)
+            self.assertIn('-I "$PACKAGE"', compile_step)
+            self.assertNotIn('-I "$FULL"', compile_step)
+            self.assertNotIn('"${CINC[@]}"', compile_step)
+        link = text.split('echo "== link arm64 Mach-O against packaged dylibs', 1)[1]
+        link = link.split("llvm-otool-18 -hv", 1)[0]
+        self.assertIn('-L"$PACKAGE" -lSwiftUI -lOpenUIKit', link)
+        self.assertNotIn('"$OUT/swiftui.o"', link)
+        self.assertNotIn('"$FULL/openuikit.o"', link)
+        self.assertNotIn('"$FULL/opencoregraphics.o"', link)
+        self.assertIn('"$AUDIT/focus_widget_guest.link-map"', link)
+        self.assertIn("executable link map contains framework object", text)
+        self.assertIn("expected_openuikit_inputs", text)
+        self.assertIn("expected_swiftui_inputs", text)
+        self.assertIn("expected_guest_inputs", text)
+        self.assertIn('assert_exact_text "guest linker inputs"', text)
+
+    def test_symbol_provider_and_missing_dylib_controls_are_fail_closed(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn("libOpenUIKit.defined", text)
+        self.assertIn("libSwiftUI.defined", text)
+        self.assertIn("focus_widget_guest.defined", text)
+        self.assertIn("executable still contains static framework definitions", text)
+        self.assertIn("app SwiftUI imports do not bind to libSwiftUI", text)
+        self.assertIn("SwiftUI imports do not bind to libOpenUIKit", text)
+        self.assertIn("missing-swiftui-control", text)
+        self.assertIn("missing-libSwiftUI control exited", text)
+        self.assertIn("missing-libSwiftUI discriminator changed", text)
+        self.assertIn("missing-openuikit-control", text)
+        self.assertIn("missing-libOpenUIKit control exited", text)
+        self.assertIn("missing-libOpenUIKit requester changed", text)
+
+    def test_cross_process_pixels_and_packaged_artifacts_are_bracketed(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn("focus-search-widget.first.png", text)
+        self.assertIn("separate guest processes emitted different PNG bytes", text)
+        self.assertIn("separate guest processes emitted different proof logs", text)
+        self.assertIn("printf 'libSwiftUI\\t%s\\n'", text)
+        self.assertIn("printf 'libOpenUIKit\\t%s\\n'", text)
+        self.assertIn("printf 'SwiftUI-module\\t%s\\n'", text)
+        self.assertIn("printf 'package-tree\\t%s\\n'", text)
+        self.assertIn("printf 'SwiftUI-package/tree\\t%s\\n'", text)
+        self.assertIn("printf 'libSwiftUI.dylib\\t%s\\n'", text)
+        self.assertIn("printf 'libOpenUIKit.dylib\\t%s\\n'", text)
 
     def test_normalized_bundle_is_hash_pinned(self) -> None:
         text = BUILD.read_text()

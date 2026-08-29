@@ -136,13 +136,18 @@ S1 is green only when all of the following are true:
 
 Current status (2026-08-28): those six bounded execution gates are green for
 the exact two-file slice. `build_focus_widget_guest.sh` emits an arm64 Mach-O
-executable, links the local SwiftUI implementation as static objects, executes
-it under machorun on Linux, and produces a deterministic 270x270 PNG from the
-unchanged Focus view. `FOCUS_WIDGET_GUEST.md` records the source/resource/root
-attestations, pixel checks, reproduction command, and honesty limits. The
-required reusable `libSwiftUI.dylib` packaging is still open, so this result is
-not a claim that the complete framework architecture, S2, WidgetKit, or the
-full Focus app is executable.
+`SwiftUI.swiftmodule`, `libSwiftUI.dylib`, its single-identity
+`libOpenUIKit.dylib` dependency, and an executable that imports both libraries
+instead of defining their objects. It executes the package under machorun on
+Linux and produces a deterministic 270x270 PNG from the unchanged Focus view
+in two separate guest processes. Exact IDs, RPATHs, dependency allowlists,
+bind providers, symbol ownership, and a missing-SwiftUI-dylib negative control
+plus its missing-OpenUIKit recursive counterpart are all gated.
+`FOCUS_WIDGET_GUEST.md` records the source/resource/root/package
+attestations, pixel checks, reproduction command, and honesty limits. This
+closes the reusable dylib packaging sub-gate for the current S1/S1.5 surface;
+it is not a claim that the complete framework architecture, state/observation,
+S2, WidgetKit, or the full Focus app is executable.
 
 A macOS-native render, a compile-only module, a hand-recreated widget, or a
 Linux process that never mounts/draws the exact Focus view does not satisfy S1.

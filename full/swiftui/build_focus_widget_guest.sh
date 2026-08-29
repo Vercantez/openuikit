@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Build and run Focus's exact Widget/Assets.swift + SearchWidgetView.swift as
-# an arm64 Mach-O guest. Run inside swift-macho-spike:noble with /w, /uikit,
-# /machorun, and a normalized Focus_Widget.bundle mounted.
+# Package the local SwiftUI/OpenUIKit implementation as arm64 Mach-O dylibs,
+# link Focus's exact Widget/Assets.swift + SearchWidgetView.swift against those
+# dylibs, and run the guest. Run inside swift-macho-spike:noble with /w,
+# /uikit, /machorun, and a normalized Focus_Widget.bundle mounted.
 
 set -euo pipefail
 
@@ -12,6 +13,8 @@ RESOURCE_INPUT=${1:?usage: build_focus_widget_guest.sh <normalized-Focus_Widget.
 FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
 FOCUS_WIDGET=$FOCUS_REPO/BlockzillaPackage/Sources/Widget
 OUT=$W/build/swiftui-guest
+PACKAGE=$OUT/package
+AUDIT=$OUT/audit
 FULL=$W/build/full
 SYS=$W/scratch/sysroot_full
 MRROOT=$W/scratch/mrroot_full
@@ -27,6 +30,8 @@ EXPECTED_SECOND_SHA=f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda4
 EXPECTED_RESOURCE_TREE_SHA=144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d
 EXPECTED_RESOURCE_FILE_COUNT=16
 EXPECTED_RESOURCE_DIRECTORY_COUNT=7
+EXPECTED_PACKAGE_FILE_COUNT=51
+EXPECTED_PACKAGE_DIRECTORY_COUNT=6
 SUBSTRATE_MANIFEST=$FULL/focus-widget-substrate.sha256
 SYSTEM_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 MEDIUM_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
@@ -93,6 +98,10 @@ substrate_artifact_digest() {
 runtime_fingerprint() {
     {
         printf 'guest\t%s\n' "$(hash_file "$OUT/focus_widget_guest")"
+        printf 'libSwiftUI\t%s\n' "$(hash_file "$PACKAGE/libSwiftUI.dylib")"
+        printf 'libOpenUIKit\t%s\n' "$(hash_file "$PACKAGE/libOpenUIKit.dylib")"
+        printf 'SwiftUI-module\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"
+        printf 'package-tree\t%s\n' "$(tree_digest "$PACKAGE")"
         printf 'resources\t%s\n' "$(tree_digest "$OUT/Focus_Widget.bundle")"
         printf 'system-font\t%s\n' "$(hash_file "$SYSTEM_FONT")"
         printf 'medium-font\t%s\n' "$(hash_file "$MEDIUM_FONT")"
@@ -205,10 +214,24 @@ current_full_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT"
 }
 
 rm -rf "$OUT"
-mkdir -p "$OUT/fonts" "$MC"
+rm -rf "$MC"
+mkdir -p "$OUT/fonts" "$PACKAGE" "$AUDIT" "$MC" \
+    "$PACKAGE/include/CPortableIO" \
+    "$PACKAGE/include/CSTBTrueType" \
+    "$PACKAGE/include/CHostClock" \
+    "$PACKAGE/include/CQuartz"
 cp -a "$RESOURCE_INPUT" "$OUT/Focus_Widget.bundle"
 cp "$SYSTEM_FONT" "$OUT/fonts/DejaVuSans.ttf"
 cp "$MEDIUM_FONT" "$OUT/fonts/DejaVuSans-Bold.ttf"
+for module in OpenUIKit OpenCoreGraphics; do
+    for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+        cp "$FULL/$module.$extension" "$PACKAGE/$module.$extension"
+    done
+done
+cp -a "$FULL/inc/CPortableIO/." "$PACKAGE/include/CPortableIO/"
+cp -a "$FULL/inc/CSTBTrueType/." "$PACKAGE/include/CSTBTrueType/"
+cp -a "$W/full/hostclock/include/." "$PACKAGE/include/CHostClock/"
+cp -a "$UIKIT/Sources/CQuartz/include/." "$PACKAGE/include/CQuartz/"
 [ "$(tree_digest "$OUT/Focus_Widget.bundle")" = "$EXPECTED_RESOURCE_TREE_SHA" ] || {
     echo "focus_widget_guest: normalized bundle changed while staging" >&2; exit 2; }
 require_hash "$OUT/fonts/DejaVuSans.ttf" "$EXPECTED_SYSTEM_FONT_SHA" staged-DejaVuSans.ttf
@@ -223,21 +246,25 @@ LD=(ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0
 CINC=(-Xcc -I"$FULL/inc/CPortableIO" -Xcc -I"$FULL/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
+PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
+              -Xcc -I"$PACKAGE/include/CSTBTrueType"
+              -Xcc -I"$PACKAGE/include/CHostClock"
+              -Xcc -I"$PACKAGE/include/CQuartz")
 
 # Repeat build_full's Foundation-invisibility gate at the SwiftUI boundary.
 "${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name SwiftUINoFoundation \
     "$FULL/guard_no_foundation.swift"
 
 echo "== SwiftUI S1 (authoritative OpenUIKit sources; Foundation hidden)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$FULL" \
-    -module-name SwiftUI -emit-module -emit-module-path "$OUT/SwiftUI.swiftmodule" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" \
+    -module-name SwiftUI -emit-module -emit-module-path "$PACKAGE/SwiftUI.swiftmodule" \
     -emit-object -o "$OUT/swiftui.o" \
     "$UIKIT/Sources/SwiftUI/Values.swift" \
     "$UIKIT/Sources/SwiftUI/View.swift" \
     "$UIKIT/Sources/SwiftUI/Hosting.swift"
 
 echo "== FocusWidget (two pinned app sources direct from clean checkout)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$FULL" -I "$OUT" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" -I "$OUT" \
     -module-name FocusWidget \
     -emit-module -emit-module-path "$OUT/FocusWidget.swiftmodule" \
     -emit-object -o "$OUT/focuswidget.o" \
@@ -246,29 +273,279 @@ echo "== FocusWidget (two pinned app sources direct from clean checkout)"
     "$W/full/swiftui/FocusWidgetBundle.generated.swift"
 
 echo "== guest harness (project-owned, separate from Focus sources)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$FULL" -I "$OUT" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" -I "$OUT" \
     -module-name FocusWidgetGuest -emit-object -o "$OUT/guest-main.o" \
     "$W/full/swiftui/FocusWidgetGuestMain.swift"
 
-echo "== link arm64 Mach-O"
-"${LD[@]}" -exported_symbol __mh_execute_header -rpath @loader_path \
+echo "== package OpenUIKit as the single framework dependency"
+"${LD[@]}" -dylib -install_name @rpath/libOpenUIKit.dylib -rpath @loader_path \
     -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    -o "$OUT/focus_widget_guest" \
-    "$OUT/guest-main.o" "$OUT/focuswidget.o" "$OUT/swiftui.o" \
+    -map "$AUDIT/libOpenUIKit.link-map" -o "$PACKAGE/libOpenUIKit.dylib" \
     "$FULL/openuikit.o" "$FULL/opencoregraphics.o" \
     "$FULL/cportableio.o" "$FULL/cstbtruetype.o" "$FULL/hostclock.o" \
     "$FULL/swiftcorepatch.o"
 
+echo "== package reusable libSwiftUI.dylib"
+"${LD[@]}" -dylib -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
+    -L"$PACKAGE" -lOpenUIKit \
+    -L"$MRROOT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libSwiftUI.link-map" \
+    -o "$PACKAGE/libSwiftUI.dylib" "$OUT/swiftui.o"
+
+echo "== link arm64 Mach-O against packaged dylibs (no framework objects)"
+"${LD[@]}" -exported_symbol __mh_execute_header \
+    -rpath @loader_path/package \
+    -L"$PACKAGE" -lSwiftUI -lOpenUIKit \
+    -L"$MRROOT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/focus_widget_guest.link-map" -o "$OUT/focus_widget_guest" \
+    "$OUT/guest-main.o" "$OUT/focuswidget.o"
+
+llvm-otool-18 -hv "$PACKAGE/libOpenUIKit.dylib" | \
+    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
+    echo "focus_widget_guest: libOpenUIKit is not an arm64 Mach-O dylib" >&2; exit 2; }
+llvm-otool-18 -hv "$PACKAGE/libSwiftUI.dylib" | \
+    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
+    echo "focus_widget_guest: libSwiftUI is not an arm64 Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$OUT/focus_widget_guest" | \
     grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' || {
     echo "focus_widget_guest: link output is not arm64 Mach-O" >&2; exit 2; }
-load_commands=$(llvm-otool-18 -L "$OUT/focus_widget_guest")
-for forbidden in Foundation.framework SwiftUI.framework SwiftUICore.framework libSwiftUI; do
-    if printf '%s\n' "$load_commands" | grep -Fq "$forbidden"; then
-        echo "focus_widget_guest: forbidden Apple $forbidden load command leaked into guest" >&2
+
+load_paths() {
+    llvm-otool-18 -L "$1" | tail -n +2 | \
+        sed -E 's/^[[:space:]]*//; s/[[:space:]]+\(compatibility version.*$//'
+}
+rpaths() {
+    llvm-otool-18 -l "$1" | awk '
+        $1 == "cmd" && $2 == "LC_RPATH" { getline; getline; print $2 }
+    '
+}
+assert_exact_text() {
+    local label=$1 got=$2 expected=$3
+    [ "$got" = "$expected" ] || {
+        echo "focus_widget_guest: $label changed" >&2
+        diff -u <(printf '%s\n' "$expected") <(printf '%s\n' "$got") >&2 || true
+        exit 2
+    }
+}
+link_map_inputs() {
+    awk '
+        /^# Object files:/ { in_inputs = 1; next }
+        /^# Sections:/ { in_inputs = 0 }
+        in_inputs { sub(/^\[[^]]+\][[:space:]]+/, ""); print }
+    ' "$1"
+}
+
+invalid_package=$(find "$PACKAGE" -mindepth 1 ! -type d ! -type f -print -quit)
+[ -z "$invalid_package" ] || {
+    echo "focus_widget_guest: package has a symlink/non-regular node: $invalid_package" >&2
+    exit 2
+}
+package_file_count=$(find "$PACKAGE" -type f | wc -l | tr -d '[:space:]')
+[ "$package_file_count" = "$EXPECTED_PACKAGE_FILE_COUNT" ] || {
+    echo "focus_widget_guest: package has $package_file_count files, expected $EXPECTED_PACKAGE_FILE_COUNT" >&2
+    exit 2
+}
+package_directory_count=$(find "$PACKAGE" -mindepth 1 -type d | wc -l | tr -d '[:space:]')
+[ "$package_directory_count" = "$EXPECTED_PACKAGE_DIRECTORY_COUNT" ] || {
+    echo "focus_widget_guest: package has $package_directory_count directories, expected $EXPECTED_PACKAGE_DIRECTORY_COUNT" >&2
+    exit 2
+}
+expected_package_names=$(printf '%s\n' \
+    OpenCoreGraphics.abi.json \
+    OpenCoreGraphics.swiftdoc \
+    OpenCoreGraphics.swiftmodule \
+    OpenCoreGraphics.swiftsourceinfo \
+    OpenUIKit.abi.json \
+    OpenUIKit.swiftdoc \
+    OpenUIKit.swiftmodule \
+    OpenUIKit.swiftsourceinfo \
+    SwiftUI.abi.json \
+    SwiftUI.swiftdoc \
+    SwiftUI.swiftmodule \
+    SwiftUI.swiftsourceinfo \
+    libOpenUIKit.dylib \
+    libSwiftUI.dylib)
+actual_package_names=$(find "$PACKAGE" -maxdepth 1 -type f -exec basename {} \; | LC_ALL=C sort)
+assert_exact_text "package top-level inventory" "$actual_package_names" "$expected_package_names"
+for module in OpenUIKit OpenCoreGraphics; do
+    for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+        cmp -s "$FULL/$module.$extension" "$PACKAGE/$module.$extension" || {
+            echo "focus_widget_guest: packaged $module.$extension differs from build_full" >&2
+            exit 2
+        }
+    done
+done
+[ "$(tree_digest "$PACKAGE/include/CPortableIO")" = \
+    "$(tree_digest "$FULL/inc/CPortableIO")" ] || {
+    echo "focus_widget_guest: packaged CPortableIO headers drifted" >&2; exit 2; }
+[ "$(tree_digest "$PACKAGE/include/CSTBTrueType")" = \
+    "$(tree_digest "$FULL/inc/CSTBTrueType")" ] || {
+    echo "focus_widget_guest: packaged CSTBTrueType headers drifted" >&2; exit 2; }
+[ "$(tree_digest "$PACKAGE/include/CHostClock")" = \
+    "$(tree_digest "$W/full/hostclock/include")" ] || {
+    echo "focus_widget_guest: packaged CHostClock headers drifted" >&2; exit 2; }
+[ "$(tree_digest "$PACKAGE/include/CQuartz")" = \
+    "$(tree_digest "$UIKIT/Sources/CQuartz/include")" ] || {
+    echo "focus_widget_guest: packaged CQuartz headers drifted" >&2; exit 2; }
+package_tree_before=$(tree_digest "$PACKAGE")
+
+assert_exact_text "libOpenUIKit LC_ID_DYLIB" \
+    "$(llvm-otool-18 -D "$PACKAGE/libOpenUIKit.dylib" | tail -n 1)" \
+    '@rpath/libOpenUIKit.dylib'
+assert_exact_text "libSwiftUI LC_ID_DYLIB" \
+    "$(llvm-otool-18 -D "$PACKAGE/libSwiftUI.dylib" | tail -n 1)" \
+    '@rpath/libSwiftUI.dylib'
+assert_exact_text "libOpenUIKit LC_RPATH set" \
+    "$(rpaths "$PACKAGE/libOpenUIKit.dylib")" \
+    "$(printf '%s\n' /usr/lib/swift @loader_path)"
+assert_exact_text "libSwiftUI LC_RPATH set" \
+    "$(rpaths "$PACKAGE/libSwiftUI.dylib")" \
+    "$(printf '%s\n' /usr/lib/swift @loader_path)"
+assert_exact_text "guest LC_RPATH set" \
+    "$(rpaths "$OUT/focus_widget_guest")" \
+    "$(printf '%s\n' /usr/lib/swift @loader_path/package)"
+
+expected_openuikit_loads=$(printf '%s\n' \
+    @rpath/libOpenUIKit.dylib \
+    /usr/lib/swift/libswiftCore.dylib \
+    /usr/lib/libswiftcompat.dylib \
+    /usr/lib/libSystem.B.dylib \
+    /usr/lib/libobjc.A.dylib \
+    /usr/lib/libquartz.dylib \
+    /usr/lib/swift/libswift_Concurrency.dylib \
+    /usr/lib/swift/libswiftObjectiveC.dylib)
+expected_swiftui_loads=$(printf '%s\n' \
+    @rpath/libSwiftUI.dylib \
+    @rpath/libOpenUIKit.dylib \
+    /usr/lib/swift/libswiftCore.dylib \
+    /usr/lib/libswiftcompat.dylib \
+    /usr/lib/libSystem.B.dylib \
+    /usr/lib/libobjc.A.dylib \
+    /usr/lib/libquartz.dylib \
+    /usr/lib/swift/libswiftObjectiveC.dylib)
+expected_guest_loads=$(printf '%s\n' \
+    @rpath/libSwiftUI.dylib \
+    @rpath/libOpenUIKit.dylib \
+    /usr/lib/swift/libswiftCore.dylib \
+    /usr/lib/libswiftcompat.dylib \
+    /usr/lib/libSystem.B.dylib \
+    /usr/lib/libobjc.A.dylib \
+    /usr/lib/libquartz.dylib \
+    /usr/lib/swift/libswiftObjectiveC.dylib)
+assert_exact_text "libOpenUIKit dylib loads" \
+    "$(load_paths "$PACKAGE/libOpenUIKit.dylib")" "$expected_openuikit_loads"
+assert_exact_text "libSwiftUI dylib loads" \
+    "$(load_paths "$PACKAGE/libSwiftUI.dylib")" "$expected_swiftui_loads"
+assert_exact_text "guest dylib loads" \
+    "$(load_paths "$OUT/focus_widget_guest")" "$expected_guest_loads"
+
+for binary in \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libSwiftUI.dylib" \
+    "$OUT/focus_widget_guest"; do
+    llvm-otool-18 -l "$binary" > "$AUDIT/$(basename "$binary").load-commands"
+    if load_paths "$binary" | grep -Eq \
+        'Foundation\.framework|SwiftUI\.framework|SwiftUICore\.framework|/usr/lib/swift/lib(SwiftUI|SwiftUICore|Foundation)\.dylib|@rpath/lib(SwiftUICore|Foundation)\.dylib'; then
+        echo "focus_widget_guest: an Apple Foundation/SwiftUI/SwiftUICore load leaked into $(basename "$binary")" >&2
+        exit 2
+    fi
+done
+
+llvm-nm-18 -gj --defined-only "$PACKAGE/libOpenUIKit.dylib" \
+    > "$AUDIT/libOpenUIKit.defined"
+llvm-nm-18 -gj --defined-only "$PACKAGE/libSwiftUI.dylib" \
+    > "$AUDIT/libSwiftUI.defined"
+llvm-nm-18 -gj --defined-only "$OUT/focus_widget_guest" \
+    > "$AUDIT/focus_widget_guest.defined"
+llvm-nm-18 -u "$PACKAGE/libSwiftUI.dylib" \
+    > "$AUDIT/libSwiftUI.undefined"
+llvm-nm-18 -u "$OUT/focus_widget_guest" \
+    > "$AUDIT/focus_widget_guest.undefined"
+llvm-objdump-18 --macho --bind "$PACKAGE/libSwiftUI.dylib" \
+    > "$AUDIT/libSwiftUI.bind"
+llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
+    > "$AUDIT/focus_widget_guest.bind"
+
+grep -Eq '^_?\$s9OpenUIKit' "$AUDIT/libOpenUIKit.defined" || {
+    echo "focus_widget_guest: libOpenUIKit exports no OpenUIKit symbols" >&2; exit 2; }
+grep -Eq '^_?\$s7SwiftUI' "$AUDIT/libSwiftUI.defined" || {
+    echo "focus_widget_guest: libSwiftUI exports no SwiftUI symbols" >&2; exit 2; }
+if grep -Eq '^_?\$s9OpenUIKit' "$AUDIT/libSwiftUI.defined"; then
+    echo "focus_widget_guest: libSwiftUI contains a duplicate OpenUIKit implementation" >&2
+    exit 2
+fi
+if grep -Eq '^_?\$s(7SwiftUI|9OpenUIKit)' "$AUDIT/focus_widget_guest.defined"; then
+    echo "focus_widget_guest: executable still contains static framework definitions" >&2
+    exit 2
+fi
+grep -Eq '_\$s9OpenUIKit' "$AUDIT/libSwiftUI.undefined" || {
+    echo "focus_widget_guest: libSwiftUI has no imported OpenUIKit symbols" >&2; exit 2; }
+grep -Eq '_\$s7SwiftUI' "$AUDIT/focus_widget_guest.undefined" || {
+    echo "focus_widget_guest: executable has no imported SwiftUI symbols" >&2; exit 2; }
+grep -Eq '[[:space:]]libOpenUIKit[[:space:]]+_\$s9OpenUIKit' \
+    "$AUDIT/libSwiftUI.bind" || {
+    echo "focus_widget_guest: SwiftUI imports do not bind to libOpenUIKit" >&2; exit 2; }
+grep -Eq '[[:space:]]libSwiftUI[[:space:]]+_\$s7SwiftUI' \
+    "$AUDIT/focus_widget_guest.bind" || {
+    echo "focus_widget_guest: app SwiftUI imports do not bind to libSwiftUI" >&2; exit 2; }
+expected_openuikit_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$FULL/openuikit.o" \
+    "$FULL/opencoregraphics.o" \
+    "$FULL/cportableio.o" \
+    "$FULL/cstbtruetype.o" \
+    "$FULL/hostclock.o" \
+    "$FULL/swiftcorepatch.o" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+expected_swiftui_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$OUT/swiftui.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+expected_guest_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$PACKAGE/libSwiftUI.dylib" \
+    "$PACKAGE/libOpenUIKit.dylib" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$SYS/usr/lib/libobjc.tbd" \
+    "$OUT/guest-main.o" \
+    "$OUT/focuswidget.o" \
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+assert_exact_text "libOpenUIKit linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOpenUIKit.link-map")" "$expected_openuikit_inputs"
+assert_exact_text "libSwiftUI linker inputs" \
+    "$(link_map_inputs "$AUDIT/libSwiftUI.link-map")" "$expected_swiftui_inputs"
+assert_exact_text "guest linker inputs" \
+    "$(link_map_inputs "$AUDIT/focus_widget_guest.link-map")" "$expected_guest_inputs"
+for input in openuikit.o opencoregraphics.o cportableio.o cstbtruetype.o \
+    hostclock.o swiftcorepatch.o; do
+    grep -Fq "$input" "$AUDIT/libOpenUIKit.link-map" || {
+        echo "focus_widget_guest: libOpenUIKit link map omitted $input" >&2; exit 2; }
+done
+grep -Fq 'swiftui.o' "$AUDIT/libSwiftUI.link-map" || {
+    echo "focus_widget_guest: libSwiftUI link map omitted swiftui.o" >&2; exit 2; }
+for forbidden_object in swiftui.o openuikit.o opencoregraphics.o \
+    cportableio.o cstbtruetype.o hostclock.o swiftcorepatch.o; do
+    if grep -Fq "$forbidden_object" "$AUDIT/focus_widget_guest.link-map"; then
+        echo "focus_widget_guest: executable link map contains framework object $forbidden_object" >&2
         exit 2
     fi
 done
@@ -296,13 +573,88 @@ export MACHORUN_ROOT="$MRROOT"
 cd "$OUT"
 "$MRROOT/machorun" ./focus_widget_guest \
     /w/build/swiftui-guest/Focus_Widget.bundle \
-    /w/build/swiftui-guest/focus-search-widget.png | tee guest.log
+    /w/build/swiftui-guest/focus-search-widget.png | tee guest-first.log
+cp "$OUT/focus-search-widget.png" "$OUT/focus-search-widget.first.png"
+"$MRROOT/machorun" ./focus_widget_guest \
+    /w/build/swiftui-guest/Focus_Widget.bundle \
+    /w/build/swiftui-guest/focus-search-widget.png | tee guest-repeat.log
+cmp -s "$OUT/focus-search-widget.first.png" "$OUT/focus-search-widget.png" || {
+    echo "focus_widget_guest: separate guest processes emitted different PNG bytes" >&2
+    exit 2
+}
+cmp -s "$OUT/guest-first.log" "$OUT/guest-repeat.log" || {
+    echo "focus_widget_guest: separate guest processes emitted different proof logs" >&2
+    exit 2
+}
 
 require_hash "$OUT/Focus_Widget.bundle/resource-index.json" "$EXPECTED_INDEX_SHA" staged-resource-index
 [ -s "$OUT/focus-search-widget.png" ] || {
     echo "focus_widget_guest: guest emitted no PNG" >&2; exit 2; }
-grep -q '^PASS: exact unchanged Focus SearchWidgetView ran under machorun$' "$OUT/guest.log" || {
+grep -q '^PASS: exact unchanged Focus SearchWidgetView ran under machorun$' "$OUT/guest-first.log" || {
     echo "focus_widget_guest: runtime PASS marker missing" >&2; exit 2; }
+
+# A missing-library control proves that the executable cannot fall back to
+# statically linked SwiftUI symbols or an Apple framework. Keep OpenUIKit in
+# place so the discriminator is specifically the absent packaged SwiftUI dylib.
+missing_control=$OUT/missing-swiftui-control
+mkdir -p "$missing_control/package"
+cp "$OUT/focus_widget_guest" "$missing_control/focus_widget_guest"
+cp "$PACKAGE/libOpenUIKit.dylib" "$missing_control/package/libOpenUIKit.dylib"
+set +e
+(
+    cd "$missing_control"
+    "$MRROOT/machorun" ./focus_widget_guest \
+        /w/build/swiftui-guest/Focus_Widget.bundle \
+        /w/build/swiftui-guest/missing-control-must-not-exist.png
+) > "$AUDIT/missing-swiftui.stdout" 2> "$AUDIT/missing-swiftui.stderr"
+missing_rc=$?
+set -e
+[ "$missing_rc" -eq 72 ] || {
+    echo "focus_widget_guest: missing-libSwiftUI control exited $missing_rc, expected 72" >&2
+    sed -n '1,120p' "$AUDIT/missing-swiftui.stdout" >&2
+    sed -n '1,120p' "$AUDIT/missing-swiftui.stderr" >&2
+    exit 2
+}
+grep -Fxq "machorun: cannot find dylib '@rpath/libSwiftUI.dylib'" \
+    "$AUDIT/missing-swiftui.stderr" || {
+    echo "focus_widget_guest: missing-libSwiftUI discriminator changed" >&2; exit 2; }
+[ ! -s "$AUDIT/missing-swiftui.stdout" ] || {
+    echo "focus_widget_guest: missing-libSwiftUI control unexpectedly entered app main" >&2; exit 2; }
+[ ! -e "$OUT/missing-control-must-not-exist.png" ] || {
+    echo "focus_widget_guest: missing-libSwiftUI control emitted an artifact" >&2; exit 2; }
+
+# The reciprocal control leaves libSwiftUI present but withholds its sole
+# OpenUIKit implementation. This proves recursive dylib loading and rules out
+# an OpenUIKit copy hidden inside either the executable or libSwiftUI.
+missing_openuikit=$OUT/missing-openuikit-control
+mkdir -p "$missing_openuikit/package"
+cp "$OUT/focus_widget_guest" "$missing_openuikit/focus_widget_guest"
+cp "$PACKAGE/libSwiftUI.dylib" "$missing_openuikit/package/libSwiftUI.dylib"
+set +e
+(
+    cd "$missing_openuikit"
+    "$MRROOT/machorun" ./focus_widget_guest \
+        /w/build/swiftui-guest/Focus_Widget.bundle \
+        /w/build/swiftui-guest/missing-openuikit-must-not-exist.png
+) > "$AUDIT/missing-openuikit.stdout" 2> "$AUDIT/missing-openuikit.stderr"
+missing_openuikit_rc=$?
+set -e
+[ "$missing_openuikit_rc" -eq 72 ] || {
+    echo "focus_widget_guest: missing-libOpenUIKit control exited $missing_openuikit_rc, expected 72" >&2
+    sed -n '1,120p' "$AUDIT/missing-openuikit.stdout" >&2
+    sed -n '1,120p' "$AUDIT/missing-openuikit.stderr" >&2
+    exit 2
+}
+grep -Fxq "machorun: cannot find dylib '@rpath/libOpenUIKit.dylib'" \
+    "$AUDIT/missing-openuikit.stderr" || {
+    echo "focus_widget_guest: missing-libOpenUIKit discriminator changed" >&2; exit 2; }
+grep -Fxq '  required by: ./package/libSwiftUI.dylib' \
+    "$AUDIT/missing-openuikit.stderr" || {
+    echo "focus_widget_guest: missing-libOpenUIKit requester changed" >&2; exit 2; }
+[ ! -s "$AUDIT/missing-openuikit.stdout" ] || {
+    echo "focus_widget_guest: missing-libOpenUIKit control unexpectedly entered app main" >&2; exit 2; }
+[ ! -e "$OUT/missing-openuikit-must-not-exist.png" ] || {
+    echo "focus_widget_guest: missing-libOpenUIKit control emitted an artifact" >&2; exit 2; }
 
 runtime_after=$(runtime_fingerprint)
 support_after=$(support_digest)
@@ -310,7 +662,7 @@ resource_input_after=$(tree_digest "$RESOURCE_INPUT")
 resource_staged_after=$(tree_digest "$OUT/Focus_Widget.bundle")
 current_full_subject_after=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
 [ "$runtime_after" = "$runtime_before" ] || {
-    echo "focus_widget_guest: binary, guest root, fonts, or bundle changed during execution" >&2
+    echo "focus_widget_guest: binary, framework package, guest root, fonts, or bundle changed during execution" >&2
     exit 2
 }
 [ "$support_after" = "$support_before" ] || {
@@ -341,9 +693,18 @@ require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchW
     printf 'OpenUIKit-substrate-artifacts\t%s\n' "$recorded_substrate"
     printf 'DejaVuSans.ttf\t%s\n' "$EXPECTED_SYSTEM_FONT_SHA"
     printf 'DejaVuSans-Bold.ttf\t%s\n' "$EXPECTED_MEDIUM_FONT_SHA"
+    printf 'SwiftUI.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"
+    printf 'SwiftUI.swiftdoc\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftdoc")"
+    printf 'SwiftUI.swiftsourceinfo\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftsourceinfo")"
+    printf 'SwiftUI.abi.json\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.abi.json")"
+    printf 'OpenUIKit.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/OpenUIKit.swiftmodule")"
+    printf 'OpenCoreGraphics.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/OpenCoreGraphics.swiftmodule")"
+    printf 'SwiftUI-package/tree\t%s\n' "$package_tree_before"
+    printf 'libSwiftUI.dylib\t%s\n' "$(hash_file "$PACKAGE/libSwiftUI.dylib")"
+    printf 'libOpenUIKit.dylib\t%s\n' "$(hash_file "$PACKAGE/libOpenUIKit.dylib")"
     printf 'focus_widget_guest\t%s\n' "$(hash_file "$OUT/focus_widget_guest")"
     printf 'focus-search-widget.png\t%s\n' "$(hash_file "$OUT/focus-search-widget.png")"
 } > "$OUT/artifacts.sha256"
 
-echo "== PASS: unchanged Focus SwiftUI widget built, linked, and ran as a Linux Mach-O guest"
+echo "== PASS: unchanged Focus widget ran through packaged SwiftUI/OpenUIKit dylibs as a Linux Mach-O guest"
 cat "$OUT/artifacts.sha256"

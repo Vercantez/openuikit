@@ -7,10 +7,14 @@ clean checkout, uses separately identified generated build support, rejects
 Apple SwiftUI/Foundation load commands, and grades the resulting hierarchy,
 resources, layout, clipping, visible pixels, and deterministic PNG bytes.
 
-This is deliberately a bounded first execution slice. SwiftUI is linked as
-static objects into the proof executable; a reusable `libSwiftUI.dylib`, state
-and observation coverage, WidgetKit, and the complete unchanged Focus app are
-later milestones. Apple's SwiftUI binary is neither available nor linked.
+This is deliberately a bounded first execution slice. The emitted
+`SwiftUI.swiftmodule` and `libSwiftUI.dylib` form a reusable arm64 Mach-O
+package with one sibling `libOpenUIKit.dylib` plus the matching OpenUIKit,
+OpenCoreGraphics, and C compile modules; the Focus executable imports the
+framework symbols instead of defining static copies. State and observation
+coverage, WidgetKit, installation as a system framework, and the complete
+unchanged Focus app remain later milestones. Apple's SwiftUI binary is neither
+available nor linked.
 
 ## Measured pinned boundary
 
@@ -65,7 +69,7 @@ without a direct provider import. That evidence includes `UIImage`,
 - `test_focus_swiftui_surface.py` checks regeneration, denominators, critical
   API families, generated-source limits, tokenizer behavior, first-slice
   identity, and donor-lock shape. `test_focus_widget_guest.py` adds static
-  regression teeth around the executable proof boundary.
+  regression teeth around the dylib packaging and executable proof boundary.
 
 ## Reproduce
 
@@ -79,12 +83,13 @@ python3 -m unittest discover \
   -s full/swiftui -p 'test_*.py' -v
 ```
 
-The local contract suite currently contains 23 tests (17 inventory tests plus
-6 executable-proof boundary tests). Expected result at the reviewed pin:
+The local contract suite currently contains 27 tests (17 inventory tests plus
+10 packaging/executable-proof boundary tests). Expected result at the reviewed
+pin:
 
 ```text
 SWIFTUI CONTRACT OK sha256=5a7486b2c0d626c98ad3a96a58bb242d21ef8594c45efc36f3f5f4f2abe48f71
-Ran 23 tests
+Ran 27 tests
 OK
 ```
 
@@ -122,7 +127,7 @@ meets the `ROADMAP.md` execution gates with an OpenUIKit
 `UIHostingController`, exact resource staging, no Apple SwiftUI load command,
 a linked Mach-O guest running under Linux machorun, a checked mounted view
 hierarchy, and deterministic pixel probes. See `FOCUS_WIDGET_GUEST.md` for the
-reproduction command and explicit limits.
+reproduction command, exact dylib/linkage gates, and explicit limits.
 
 ## Donor evidence
 
