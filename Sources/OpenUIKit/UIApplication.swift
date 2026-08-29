@@ -35,9 +35,30 @@
 // delegate method runs first, then the observers.
 
 #if canImport(Foundation)
-import class Foundation.NSUserActivity
 import protocol Foundation.NSSecureCoding
 import struct Foundation.URL
+
+#if canImport(Darwin)
+import class Foundation.NSUserActivity
+#else
+import class Foundation.NSObject
+#endif
+#endif
+
+#if canImport(Foundation) && !canImport(Darwin)
+/// Corelibs Foundation does not provide `NSUserActivity`.  Keep the UIKit
+/// restoration contract source-compatible on Linux with the identity and
+/// activity-type state that portable hosts can currently deliver.
+open class NSUserActivity: NSObject {
+    private let _activityType: String
+
+    open var activityType: String { _activityType }
+
+    public init(activityType: String) {
+        _activityType = activityType
+        super.init()
+    }
+}
 #endif
 
 // MARK: - Application state

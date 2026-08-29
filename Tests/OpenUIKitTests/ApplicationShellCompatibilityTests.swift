@@ -11,6 +11,10 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
         }
     }
 
+    private final class OverridingActivity: NSUserActivity {
+        override var activityType: String { super.activityType + ".override" }
+    }
+
     func testSceneWindowUsesSceneScreenAndWindowLevelsSupportArithmetic() {
         let scene = UIWindowScene()
         let window = UIWindow(windowScene: scene)
@@ -109,5 +113,10 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
         let restorer = ActivityRestorer()
         restorer.restoreUserActivityState(NSUserActivity(activityType: "org.example.activity"))
         XCTAssertEqual(restorer.restoredType, "org.example.activity")
+
+        let overridden = OverridingActivity(activityType: "org.example.activity")
+        let object: NSObject = overridden
+        XCTAssertTrue(object === overridden)
+        XCTAssertEqual(overridden.activityType, "org.example.activity.override")
     }
 }

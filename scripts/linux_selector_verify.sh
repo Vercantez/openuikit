@@ -64,7 +64,9 @@ echo "==> selector dispatch tests"
 #     flake at the same rate). So: run under a timeout and retry.
 swift build --build-tests >/dev/null
 BUNDLE="$(swift build --build-tests --show-bin-path | tail -1)/OpenUIKitPackageTests.xctest"
-SUITES=OpenUIKitTests.SelectorNameTests,OpenUIKitTests.ActionTableTests,OpenUIKitTests.SelectorDispatchDeliveryTests,OpenUIKitTests.ControlSelectorTargetTests,OpenUIKitTests.GestureSelectorTargetTests,OpenUIKitTests.SelectorDemoAppTests
+# ApplicationShellCompatibilityTests executes Linux-only Foundation fallbacks
+# (currently NSUserActivity) rather than merely letting the build type-check them.
+SUITES=OpenUIKitTests.SelectorNameTests,OpenUIKitTests.ActionTableTests,OpenUIKitTests.SelectorDispatchDeliveryTests,OpenUIKitTests.ControlSelectorTargetTests,OpenUIKitTests.GestureSelectorTargetTests,OpenUIKitTests.SelectorDemoAppTests,OpenUIKitTests.ApplicationShellCompatibilityTests
 ok=0
 for attempt in 1 2 3 4 5 6 7 8; do
   if SWIFT_BACKTRACE=enable=no timeout 120 "$BUNDLE" "$SUITES" >/out/tests.log 2>&1; then
