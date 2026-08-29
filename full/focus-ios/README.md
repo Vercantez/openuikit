@@ -26,11 +26,21 @@ Onboarding, WidgetKit, or the complete app executes yet.
 
 ## SwiftUI S1.5 census checkpoint
 
-The raw-`swiftc` census now supplies one separately labelled generated
-`Bundle.module` accessor to each exact target whose pinned source resolves that
-SwiftPM-generated member. The generated files live under the output directory
-and are additional compiler inputs; no Focus source is copied, edited, or
-overlaid.
+The raw-`swiftc` census now supplies one separately labelled, normalized
+compile-only `Bundle.module` accessor to each exact target whose pinned source
+resolves that member. This models the generated support the Linux build plan
+must provide; it does not claim the pinned package manifest makes stock SwiftPM
+generate every one of these accessors. The generated files live under the
+output directory and are additional compiler inputs; no Focus source is
+copied, edited, or overlaid.
+
+Before and after all compiler processes, the census requires Focus commit
+`a2832521`, a clean ordinary worktree, the exact 227-file tracked Swift
+inventory, byte equality with every corresponding Git blob, and a matching
+subject manifest. The byte comparison also catches source hidden from ordinary
+status by ignore, assume-unchanged, or skip-worktree flags.
+The pinned Swift subject digest is
+`96e2b5eda3ba03f7c5963b06500ceb05d59777f37c4e61006be37ce0424398bd`.
 This clears the artificial resource-accessor wall and exposes the real next
 target boundary:
 

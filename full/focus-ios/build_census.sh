@@ -35,6 +35,7 @@ SNAPKIT=${SNAPKIT:-$SML/scratch/xcodeplan-deps/SnapKit}
 OUT=${1:-/tmp/focus-ios-census}
 TARGET=${TARGET:-arm64-apple-macos13.0}
 UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
+FOCUS_EXPECTED_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
 
 # Reusing a directory can retain an old module or log and manufacture a green
 # stage. The census is defined over a fresh output root, so enforce that at the
@@ -47,8 +48,8 @@ mkdir -p "$OUT/modules" "$OUT/logs"
 say() { printf '%s\n' "$*"; }
 hr()  { say ""; say "########## $*"; }
 
-# The port's normalized target-resource plan must supply SwiftPM-equivalent
-# Bundle.module accessors outside the application source.  The raw swiftc
+# The port's normalized target-resource plan must supply Bundle.module
+# accessors outside the application source.  The raw swiftc
 # census has no build-plan step, so stage that one narrowly identified,
 # compile-only generated input for each exact target whose pinned sources
 # resolve SwiftPM's Bundle.module member.  This is build support, not an
@@ -67,7 +68,7 @@ write_bundle_accessor() {
     local accessor="$directory/resource_bundle_accessor.swift"
     mkdir -p "$directory"
     printf '%s\n' \
-        '// Generated build support: SwiftPM Bundle.module census accessor.' \
+        '// Generated build support: normalized Bundle.module census accessor.' \
         'import Foundation' \
         'extension Foundation.Bundle {' \
         '    static var module: Bundle { fatalError("compile-only census accessor") }' \
@@ -77,6 +78,8 @@ write_bundle_accessor() {
 
 # --- 0. pins, by COMMIT ------------------------------------------------------
 hr "0. pins"
+python3 -B "$HERE/focus_subject.py" "$APP" "$FOCUS_EXPECTED_COMMIT" \
+    "$OUT/focus-subject-before.json" || exit 4
 say "  focus-ios  $(git -C "$APP" rev-parse HEAD 2>/dev/null)"
 say "  SnapKit    $(git -C "$SNAPKIT" rev-parse HEAD 2>/dev/null)"
 say "  OpenUIKit  $(git -C "$UIKIT_SRC" rev-parse HEAD 2>/dev/null)"
@@ -258,6 +261,18 @@ swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
     > "$OUT/logs/app.log" 2>&1
 say "  primary diagnostics: $(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
 
-# --- 6. the census -----------------------------------------------------------
+# Re-attest every Focus Swift byte after all compiler processes return. This
+# catches edited, untracked, ignored, assume-unchanged, and skip-worktree Swift
+# inputs rather than trusting `git status`, and brackets the live subject just
+# like the SnapKit vendoring gate above.
+python3 -B "$HERE/focus_subject.py" "$APP" "$FOCUS_EXPECTED_COMMIT" \
+    "$OUT/focus-subject-after.json" || exit 4
+if ! cmp -s "$OUT/focus-subject-before.json" "$OUT/focus-subject-after.json"; then
+    say "  REFUSED: Focus Swift source subject changed while swiftc was running"
+    exit 4
+fi
+say "  Focus source bracket: unchanged before/after all census compilers"
+
+# --- 7. the census -----------------------------------------------------------
 hr "7. CENSUS"
 python3 -B "$HERE/classify.py" "$OUT" "$APP" | tee "$OUT/census.txt"
