@@ -53,8 +53,8 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("expected_openuikit_loads", text)
         self.assertIn("expected_swiftui_loads", text)
         self.assertIn("expected_guest_loads", text)
-        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=51", text)
-        self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=6", text)
+        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=61", text)
+        self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=7", text)
         self.assertIn('assert_exact_text "package top-level inventory"', text)
         self.assertIn("packaged CQuartz headers drifted", text)
         self.assertIn('rm -rf "$MC"', text)
@@ -85,6 +85,29 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("expected_guest_inputs", text)
         self.assertIn('assert_exact_text "guest linker inputs"', text)
 
+    def test_swiftui_package_compiles_and_attests_complete_source_directory(self) -> None:
+        text = BUILD.read_text()
+        helper = ATTEST.read_text()
+        self.assertIn('SWIFTUI_SOURCE_DIR=$UIKIT/Sources/SwiftUI', text)
+        self.assertIn('SWIFTUI_SOURCES=("$SWIFTUI_SOURCE_DIR"/*.swift)', text)
+        self.assertIn('"${SWIFTUI_SOURCES[@]}"', text)
+        self.assertIn('unsupported SwiftUI source node', text)
+        self.assertIn("[ \"$uikit/Sources/SwiftUI\", 'openuikit/Sources/SwiftUI' ]", helper)
+
+    def test_observation_closes_over_sibling_combine_dylibs(self) -> None:
+        text = BUILD.read_text()
+        helper = ATTEST.read_text()
+        for dylib in ("libCombine.dylib", "libOpenCombine.dylib"):
+            self.assertIn(dylib, text)
+        self.assertIn("-lOpenUIKit -lCombine -lOpenCombine", text)
+        self.assertIn("OPENCOMBINE_ROOT", text)
+        self.assertIn("OpenCombine.o", helper)
+        self.assertIn("COpenCombineHelpers.cpp", helper)
+        self.assertIn("OpenCombine root is outside project root", helper)
+        self.assertIn("OpenCombine input $_->[1]", helper)
+        self.assertIn("OpenCombine => 'libCombine'", helper)
+        self.assertIn("OpenCombine => 'libOpenCombine'", helper)
+
     def test_symbol_provider_and_missing_dylib_controls_are_fail_closed(self) -> None:
         text = BUILD.read_text()
         self.assertIn("libOpenUIKit.defined", text)
@@ -103,6 +126,9 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("missing-openuikit-control", text)
         self.assertIn("missing-libOpenUIKit control exited", text)
         self.assertIn("missing-libOpenUIKit requester changed", text)
+        self.assertIn("run_missing_observation_control combine libCombine.dylib", text)
+        self.assertIn("run_missing_observation_control opencombine libOpenCombine.dylib", text)
+        self.assertIn("missing-$missing_name requester changed", text)
 
     def test_cross_process_pixels_and_packaged_artifacts_are_bracketed(self) -> None:
         text = BUILD.read_text()
@@ -209,7 +235,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
 
     def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
         helper = ATTEST.read_text()
-        for module in ("SwiftUI", "OpenUIKit", "OpenCoreGraphics"):
+        for module in ("SwiftUI", "OpenUIKit", "OpenCoreGraphics", "Combine", "OpenCombine"):
             self.assertIn(module, helper)
         self.assertIn("no two-level bind", helper)
         self.assertIn("expected exactly", helper)

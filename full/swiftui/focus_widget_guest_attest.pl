@@ -60,25 +60,46 @@ sub inventory_tree {
 
 sub inventory_command {
     my (@args) = @_;
-    my ($w, $uikit, $full, $sysroot);
+    my ($w, $uikit, $full, $sysroot, $opencombine_root);
     GetOptionsFromArray(
         \@args,
         'w=s'       => \$w,
         'uikit=s'   => \$uikit,
         'full=s'    => \$full,
         'sysroot=s' => \$sysroot,
+        'opencombine-root=s' => \$opencombine_root,
     ) or fail('invalid inventory options');
     fail('inventory takes no positional arguments') if @args;
-    fail('inventory requires --w, --uikit, --full, and --sysroot')
-        unless defined($w) && defined($uikit) && defined($full) && defined($sysroot);
+    fail('inventory requires --w, --uikit, --full, --sysroot, and --opencombine-root')
+        unless defined($w) && defined($uikit) && defined($full) && defined($sysroot)
+            && defined($opencombine_root);
+
+    fail('OpenCombine root must be an absolute canonical path')
+        unless $opencombine_root =~ m{^/}
+            && normalize_absolute($opencombine_root) eq $opencombine_root;
+    fail("OpenCombine root is outside project root $w: $opencombine_root")
+        unless beneath($opencombine_root, $w);
 
     my @records;
+    my @opencombine_files = (
+        [ "$opencombine_root/export/RESULT.txt", 'opencombine/export/RESULT.txt' ],
+        [ "$opencombine_root/export/artifacts/OpenCombine.o", 'opencombine/export/artifacts/OpenCombine.o' ],
+        [ "$opencombine_root/export/artifacts/OpenCombine.swiftmodule", 'opencombine/export/artifacts/OpenCombine.swiftmodule' ],
+        [ "$opencombine_root/export/artifacts/OpenCombine.swiftdoc", 'opencombine/export/artifacts/OpenCombine.swiftdoc' ],
+        [ "$opencombine_root/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp", 'opencombine/source/Sources/COpenCombineHelpers/COpenCombineHelpers.cpp' ],
+        [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h", 'opencombine/source/Sources/COpenCombineHelpers/include/COpenCombineHelpers.h' ],
+        [ "$opencombine_root/source/Sources/COpenCombineHelpers/include/module.modulemap", 'opencombine/source/Sources/COpenCombineHelpers/include/module.modulemap' ],
+    );
+    require_regular_beneath_no_links($_->[0], $w, "OpenCombine input $_->[1]")
+        for @opencombine_files;
     my @files = (
         [ "$w/full/swiftui/build_focus_widget_guest.sh", 'project/full/swiftui/build_focus_widget_guest.sh' ],
         [ "$w/full/swiftui/focus_widget_guest_attest.pl", 'project/full/swiftui/focus_widget_guest_attest.pl' ],
         [ "$w/full/swiftui/FocusWidgetBundle.generated.swift", 'project/full/swiftui/FocusWidgetBundle.generated.swift' ],
         [ "$w/full/swiftui/FocusWidgetGuestMain.swift", 'project/full/swiftui/FocusWidgetGuestMain.swift' ],
         [ "$w/full/scripts/build_full.sh", 'project/full/scripts/build_full.sh' ],
+        [ "$w/full/oracle-opencombine/Combine.swift", 'project/full/oracle-opencombine/Combine.swift' ],
+        [ "$w/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch", 'project/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch' ],
         [ "$w/full/scripts/uihelpers_subject.sh", 'project/full/scripts/uihelpers_subject.sh' ],
         [ "$w/scripts/require_fresh_root.sh", 'project/scripts/require_fresh_root.sh' ],
         [ "$w/scripts/macho_same_except_id.pl", 'project/scripts/macho_same_except_id.pl' ],
@@ -91,9 +112,7 @@ sub inventory_command {
             qw(swiftmodule swiftdoc swiftsourceinfo abi.json)),
         map({ [ "$full/OpenCoreGraphics.$_", "build-full/OpenCoreGraphics.$_" ] }
             qw(swiftmodule swiftdoc swiftsourceinfo abi.json)),
-        [ "$uikit/Sources/SwiftUI/Values.swift", 'openuikit/Sources/SwiftUI/Values.swift' ],
-        [ "$uikit/Sources/SwiftUI/View.swift", 'openuikit/Sources/SwiftUI/View.swift' ],
-        [ "$uikit/Sources/SwiftUI/Hosting.swift", 'openuikit/Sources/SwiftUI/Hosting.swift' ],
+        @opencombine_files,
     );
     push @records, node_record($_->[0], $_->[1]) for @files;
 
@@ -102,6 +121,7 @@ sub inventory_command {
         [ "$full/inc/CSTBTrueType", 'build-full/inc/CSTBTrueType' ],
         [ "$w/full/hostclock/include", 'project/full/hostclock/include' ],
         [ "$uikit/Sources/CQuartz/include", 'openuikit/Sources/CQuartz/include' ],
+        [ "$uikit/Sources/SwiftUI", 'openuikit/Sources/SwiftUI' ],
         [ $sysroot, 'sdk/sysroot_full' ],
     );
     inventory_tree($_->[0], $_->[1], \@records) for @trees;
@@ -360,13 +380,15 @@ sub prefixed_swift_module {
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
     return 'OpenUIKit' if $symbol =~ /^_?\$s9OpenUIKit/;
     return 'OpenCoreGraphics' if $symbol =~ /^_?\$s16OpenCoreGraphics/;
+    return 'Combine' if $symbol =~ /^_?\$s7Combine/;
+    return 'OpenCombine' if $symbol =~ /^_?\$s11OpenCombine/;
     return undef;
 }
 
 sub framework_tokens {
     my ($symbol) = @_;
     return grep { index($symbol, length($_) . $_) >= 0 }
-        qw(SwiftUI OpenUIKit OpenCoreGraphics);
+        qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine);
 }
 
 sub classify_framework_symbol {
@@ -380,7 +402,7 @@ sub classify_framework_symbol {
     $expanded =~ s/[\r\n]+\z//;
     fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
     my @owners;
-    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics)) {
+    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
         push @owners, $module
             if $expanded =~ /\(extension in \Q$module\E\):/
             || $expanded =~ /^associated type descriptor for \Q$module\E\./
@@ -406,7 +428,8 @@ sub symbol_records {
 
 sub provider_command {
     my (@args) = @_;
-    my ($nm, $objdump, $demangle, $openuikit, $swiftui, $executable);
+    my ($nm, $objdump, $demangle, $openuikit, $swiftui, $combine, $opencombine,
+        $executable);
     GetOptionsFromArray(
         \@args,
         'nm=s'         => \$nm,
@@ -414,28 +437,40 @@ sub provider_command {
         'demangle=s'   => \$demangle,
         'openuikit=s'  => \$openuikit,
         'swiftui=s'    => \$swiftui,
+        'combine=s'    => \$combine,
+        'opencombine=s' => \$opencombine,
         'executable=s' => \$executable,
     ) or fail('invalid provider options');
     fail('providers takes no positional arguments') if @args;
-    fail('providers requires --nm, --objdump, --demangle, --openuikit, --swiftui, and --executable')
+    fail('providers requires --nm, --objdump, --demangle, --openuikit, --swiftui, --combine, --opencombine, and --executable')
         unless defined($nm) && defined($objdump) && defined($demangle) && defined($openuikit)
-            && defined($swiftui) && defined($executable);
+            && defined($swiftui) && defined($combine) && defined($opencombine)
+            && defined($executable);
 
     my %paths = (
         libOpenUIKit => $openuikit,
         libSwiftUI => $swiftui,
+        libCombine => $combine,
+        libOpenCombine => $opencombine,
         executable => $executable,
     );
     require_regular_no_link($paths{$_}, "provider image $_") for keys %paths;
-    my %expected_provider = (
+    # OpenCombine's literal Combine compatibility image re-exports the
+    # implementation. Two-level client binds therefore name libCombine while
+    # the actual definitions live in libOpenCombine; audit both facts.
+    my %expected_bind_provider = (
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenUIKit',
+        Combine => 'libCombine',
+        OpenCombine => 'libCombine',
     );
-    my %allowed_owner = (
+    my %definition_owner = (
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenUIKit',
+        Combine => 'libCombine',
+        OpenCombine => 'libOpenCombine',
     );
     my (%definitions, %undefined, %binds, %counts, %symbol_module);
     for my $image (sort keys %paths) {
@@ -473,25 +508,26 @@ sub provider_command {
         for my $symbol (sort keys %{$definitions{$image} || {}}) {
             my $module = $symbol_module{$symbol};
             fail("reverse ownership violation: $image defines $module symbol $symbol")
-                unless $allowed_owner{$module} eq $image;
+                unless $definition_owner{$module} eq $image;
         }
         for my $symbol (sort keys %{$undefined{$image} || {}}) {
             my $module = $symbol_module{$symbol};
-            my $expected = $expected_provider{$module};
+            my $expected = $expected_bind_provider{$module};
             fail("provider image $image imports its own $module symbol $symbol")
                 if $expected eq $image;
             my @providers = sort keys %{$binds{$image}{$symbol} || {}};
             fail("no two-level bind for $image undefined $symbol") unless @providers;
             fail("$image undefined $symbol binds to [@providers], expected exactly $expected")
                 unless @providers == 1 && $providers[0] eq $expected;
-            fail("$expected does not define imported symbol $symbol")
-                unless $definitions{$expected}{$symbol};
+            my $owner = $definition_owner{$module};
+            fail("$owner does not define imported symbol $symbol")
+                unless $definitions{$owner}{$symbol};
         }
         for my $symbol (sort keys %{$binds{$image} || {}}) {
             fail("bind table contains framework symbol absent from undefined table: $image $symbol")
                 unless $undefined{$image}{$symbol};
             my $module = $symbol_module{$symbol};
-            my $expected = $expected_provider{$module};
+            my $expected = $expected_bind_provider{$module};
             my @providers = sort keys %{$binds{$image}{$symbol}};
             fail("noncanonical provider for $image $symbol: [@providers], expected exactly $expected")
                 unless @providers == 1 && $providers[0] eq $expected;
@@ -502,8 +538,10 @@ sub provider_command {
         [ 'libOpenUIKit', 'defined', 'OpenUIKit' ],
         [ 'libOpenUIKit', 'defined', 'OpenCoreGraphics' ],
         [ 'libSwiftUI', 'defined', 'SwiftUI' ],
+        [ 'libOpenCombine', 'defined', 'OpenCombine' ],
         [ 'libSwiftUI', 'undefined', 'OpenUIKit' ],
         [ 'libSwiftUI', 'undefined', 'OpenCoreGraphics' ],
+        [ 'libSwiftUI', 'undefined', 'OpenCombine' ],
         [ 'executable', 'undefined', 'SwiftUI' ],
         [ 'executable', 'undefined', 'OpenUIKit' ],
         [ 'executable', 'undefined', 'OpenCoreGraphics' ],
@@ -515,7 +553,7 @@ sub provider_command {
     print "format\tfocus-widget-framework-providers-v2\n";
     for my $image (sort keys %paths) {
         for my $kind (qw(defined undefined)) {
-            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics)) {
+            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
                 printf "count\t%s\t%s\t%s\t%d\n", $image, $kind, $module,
                     ($counts{$image}{$kind}{$module} || 0);
             }

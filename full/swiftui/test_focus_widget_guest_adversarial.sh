@@ -182,7 +182,7 @@ expect_resume_refusal inventory-logic
 
 final_log=$TMP/final-clean-resume.log
 SKIP_FULL_BUILD=1 bash "$BUILD" "$RESOURCE_INPUT" > "$final_log" 2>&1
-grep -Fxq '== PASS: unchanged Focus widget ran through packaged SwiftUI/OpenUIKit dylibs as a Linux Mach-O guest' \
+grep -Fxq '== PASS: unchanged Focus widget ran through packaged SwiftUI/OpenUIKit/Combine dylibs as a Linux Mach-O guest' \
     "$final_log" || {
     echo "focus_widget_guest_adversarial: clean resume did not recover after restored tamper cases" >&2
     sed -n '1,240p' "$final_log" >&2

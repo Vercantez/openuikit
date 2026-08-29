@@ -2,9 +2,9 @@
 
 This proof compiles Focus's pinned `Widget/Assets.swift` and
 `Widget/SearchWidgetView.swift` directly from the clean checkout, links them
-against a reusable `libSwiftUI.dylib` backed by the sibling
-`libOpenUIKit.dylib`, and runs the resulting arm64 Mach-O executable under
-`machorun` on Linux. The guest
+against a reusable `libSwiftUI.dylib` backed by sibling `libOpenUIKit.dylib`,
+`libCombine.dylib`, and `libOpenCombine.dylib` images, and runs the resulting
+arm64 Mach-O executable under `machorun` on Linux. The guest
 mounts the exact production composition, checks its OpenUIKit hierarchy and
 layout, applies the production preview's 135x135 frame and 20-point rounded
 clip, resolves both normalized named colors and `icon_logo`, proves visible
@@ -19,15 +19,16 @@ project-owned executable harness. On the Foundation-hidden path the accessor
 returns the identity-only `Bundle.main`, while the host supplies the normalized
 bundle directory through `OpenUIKitRuntime.imageSearchPaths`.
 
-The emitted `package/` directory contains the SwiftUI, OpenUIKit, and
-OpenCoreGraphics Swift modules, their matching C module maps and public
-headers, `libSwiftUI.dylib`, and `libOpenUIKit.dylib`. The proof compiles the
-Focus client and harness against that package rather than reaching back into
-`build/full`. `libSwiftUI` has the exact install name
-`@rpath/libSwiftUI.dylib` and imports its OpenUIKit symbols from
-`@rpath/libOpenUIKit.dylib`. The executable imports both libraries through
-`@loader_path/package`; its link map contains neither framework object and it
-exports neither framework implementation's symbols. Swift may still emit
+The emitted `package/` directory contains the SwiftUI, OpenUIKit,
+OpenCoreGraphics, literal Combine, and OpenCombine Swift modules, their
+matching C module maps and public headers, and four sibling dylibs. The proof
+compiles the Focus client and harness against that package rather than reaching
+back into `build/full`. Every sibling has an `@rpath` install name and an
+`@loader_path` runpath. `libSwiftUI` imports UI symbols from
+`libOpenUIKit`, and observation symbols through the literal `libCombine`
+re-export and single `libOpenCombine` implementation. The executable imports
+only SwiftUI and OpenUIKit directly through `@loader_path/package`; its link
+map contains no framework object. Swift may still emit
 consumer-owned specializations and metadata records whose mangled signatures
 mention imported types; those are not a second framework implementation.
 OpenUIKit, OpenCoreGraphics, the portable C support, and the small Swift-runtime
@@ -46,11 +47,12 @@ SwiftUI/build-support and OpenUIKit source brackets, exact open-font bytes,
 Foundation invisibility, Mach-O architecture, exact `LC_ID_DYLIB`, `LC_RPATH`,
 dependency and linker-input allowlists, absence of direct Apple Foundation/
 SwiftUI/SwiftUICore loads from the executable and packaged dylibs, universal
-SwiftUI/OpenUIKit/OpenCoreGraphics two-level bind providers across direct,
-associated-type, conformance, and foreign-type-extension manglings, reverse
-framework symbol-ownership exclusions, a missing-`libSwiftUI`
-loader-failure control, a reciprocal missing-`libOpenUIKit` recursive-load
-control, the guest-root manifest against the current machorun checkout, a hash
+two-level bind providers across direct, associated-type, conformance, and
+foreign-type-extension manglings for all five Swift module identities, reverse
+framework symbol-ownership exclusions,
+missing-`libSwiftUI` and missing-`libOpenUIKit` controls, and separate
+missing-`libCombine` and missing-`libOpenCombine` recursive-load controls, the
+guest-root manifest against the current machorun checkout, a hash
 manifest for every node in the complete `build/full` input subset, the complete
 CPortableIO/CSTBTrueType header trees, and the complete private SDK/sysroot
 resolution tree used by the resume-only path, stable
@@ -101,6 +103,14 @@ does not satisfy the 2x gate's deliberately strict RGB-235 near-white probe.
 
 Run in the project image (the resource-proof parent is mounted read-only):
 
+The build consumes the exact successful OpenCombine oracle subject at
+`scratch/opencombine-core-durable-20260828-r2` by default. Its result, object,
+module, helper source/header/module map, and project-owned patch are all
+hash-pinned and included in the build-input bracket. A fresh checkout must
+first reproduce the prerequisite described in `full/oracle-opencombine/README.md`;
+an alternate location can be selected with `OPENCOMBINE_ROOT`, but it must
+match the same reviewed bytes.
+
 ```bash
 docker run --rm \
   -v "$PWD":/w \
@@ -115,8 +125,9 @@ docker run --rm \
 Generated output lives only under `build/swiftui-guest/`. This is an exact S1
 widget-slice execution proof, not a linked Focus application, WidgetKit
 extension, Apple SwiftUI compatibility claim, or general SwiftUI runtime.
-FocusWidget and the harness remain ordinary executable objects; SwiftUI and
-OpenUIKit are separately loadable sibling dylibs with one OpenUIKit identity.
+FocusWidget and the harness remain ordinary executable objects; SwiftUI,
+OpenUIKit, Combine, and OpenCombine are separately loadable sibling dylibs with
+one OpenUIKit and one OpenCombine identity.
 The package has not yet been installed into a system guest root or wrapped as
 an Apple `.framework` directory, and it does not imply coverage beyond the
-currently implemented SwiftUI S1/S1.5 source surface.
+currently implemented SwiftUI source surface.

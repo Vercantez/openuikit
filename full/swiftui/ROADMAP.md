@@ -134,21 +134,22 @@ S1 is green only when all of the following are true:
    and a deterministic pixel probe demonstrates a non-flat gradient, decoded
    logo, clipping, and text coverage at the expected geometry.
 
-Current status (2026-08-28): those six bounded execution gates are green for
+Current status (2026-08-29): those six bounded execution gates are green for
 the exact two-file slice. `build_focus_widget_guest.sh` emits an arm64 Mach-O
-`SwiftUI.swiftmodule`, `libSwiftUI.dylib`, its single-identity
-`libOpenUIKit.dylib` dependency, and an executable that imports both libraries
-instead of defining their objects. It executes the package under machorun on
-Linux and produces a deterministic 270x270 PNG from the unchanged Focus view
-in two separate guest processes. Exact IDs, RPATHs, dependency allowlists,
-complete direct/non-prefix Swift ABI bind providers and symbol ownership,
-symlink-free runtime-closure ancestry, and a missing-SwiftUI-dylib negative
-control plus its missing-OpenUIKit recursive counterpart are all gated.
+`SwiftUI.swiftmodule`, `libSwiftUI.dylib`, single-identity OpenUIKit and
+OpenCombine implementations, a literal Combine re-export sibling, and an
+executable that imports framework dylibs instead of defining their objects. It
+executes the package under machorun on Linux and produces a deterministic
+270x270 PNG from the unchanged Focus view in two separate guest processes.
+Exact IDs, RPATHs, dependency allowlists, complete direct/non-prefix Swift ABI
+bind providers and symbol ownership, symlink-free runtime-closure ancestry,
+and four independent missing-sibling controls are all gated.
 `FOCUS_WIDGET_GUEST.md` records the source/resource/root/package
 attestations, pixel checks, reproduction command, and honesty limits. This
-closes the reusable dylib packaging sub-gate for the current S1/S1.5 surface;
-it is not a claim that the complete framework architecture, state/observation,
-S2, WidgetKit, or the full Focus app is executable.
+closes the reusable dylib packaging sub-gate for the currently implemented
+surface; state/observation compiles into that dylib with one Combine identity,
+but this widget does not exercise it. It is not a claim that S2, WidgetKit, or
+the full Focus app is executable.
 
 A macOS-native render, a compile-only module, a hand-recreated widget, or a
 Linux process that never mounts/draws the exact Focus view does not satisfy S1.
