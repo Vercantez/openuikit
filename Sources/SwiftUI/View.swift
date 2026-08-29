@@ -68,6 +68,11 @@ indirect enum _OpenViewNodeKind {
     )
     case viewController(UIViewController)
     case form(rows: [_OpenViewNode])
+    case list(rows: [_OpenViewNode])
+    case navigationLink(
+        label: _OpenViewNode,
+        makeDestinationController: @MainActor () -> UIViewController
+    )
     case navigation(content: _OpenViewNode, configuration: _OpenNavigationConfiguration)
     case gradient(Gradient, UnitPoint, UnitPoint)
     case modified(_OpenViewNode, _OpenViewModification)
@@ -642,7 +647,7 @@ public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
         let contentNode = _OpenGraphContext.withStructuralScope(.navigationContent) {
             content._makeOpenUIKitNode()
         }
-        let (node, configuration) = _extractNavigationConfiguration(
+        let (node, configuration) = _openExtractNavigationConfiguration(
             contentNode
         )
         return _OpenViewNode(.navigation(content: node, configuration: configuration))
@@ -850,6 +855,10 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationTitle(title))
     }
 
+    func navigationBarTitle(_ title: String) -> some _OpenView {
+        navigationTitle(title)
+    }
+
     func navigationBarHidden(_ hidden: Bool) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationBarHidden(hidden))
     }
@@ -907,12 +916,12 @@ struct _OpenNavigationConfiguration {
 }
 
 @MainActor
-private func _extractNavigationConfiguration(
+func _openExtractNavigationConfiguration(
     _ node: _OpenViewNode
 ) -> (_OpenViewNode, _OpenNavigationConfiguration) {
     switch node.kind {
     case .modified(let content, let modification):
-        var (unwrapped, configuration) = _extractNavigationConfiguration(content)
+        var (unwrapped, configuration) = _openExtractNavigationConfiguration(content)
         switch modification {
         case .navigationTitle(let title):
             configuration.title = title
@@ -929,7 +938,7 @@ private func _extractNavigationConfiguration(
         }
         return (unwrapped, configuration)
     case .scroll(let content):
-        let (unwrapped, configuration) = _extractNavigationConfiguration(content)
+        let (unwrapped, configuration) = _openExtractNavigationConfiguration(content)
         return (_OpenViewNode(.scroll(content: unwrapped)), configuration)
     case .group(let children):
         let (unwrapped, configuration) = _extractNavigationChildren(children)
@@ -952,6 +961,9 @@ private func _extractNavigationConfiguration(
     case .form(let rows):
         let (unwrapped, configuration) = _extractNavigationChildren(rows)
         return (_OpenViewNode(.form(rows: unwrapped)), configuration)
+    case .list(let rows):
+        let (unwrapped, configuration) = _extractNavigationChildren(rows)
+        return (_OpenViewNode(.list(rows: unwrapped)), configuration)
     default:
         return (node, _OpenNavigationConfiguration())
     }
@@ -963,7 +975,7 @@ private func _extractNavigationChildren(
 ) -> ([_OpenViewNode], _OpenNavigationConfiguration) {
     var configuration = _OpenNavigationConfiguration()
     let nodes = children.map { child -> _OpenViewNode in
-        let (node, childConfiguration) = _extractNavigationConfiguration(child)
+        let (node, childConfiguration) = _openExtractNavigationConfiguration(child)
         if let title = childConfiguration.title { configuration.title = title }
         configuration.barHidden = configuration.barHidden || childConfiguration.barHidden
         configuration.backButtonHidden = configuration.backButtonHidden

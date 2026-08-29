@@ -243,6 +243,8 @@ enum _OpenGraphStructuralScope: Hashable {
     case scrollContent
     case tabViewContent
     case formContent
+    case listContent
+    case navigationLinkLabel
     case forEachContent
     case forEachElement(AnyHashable)
     case navigationContent

@@ -19,6 +19,16 @@ private final class _SwiftUIPassthroughView: UIView {
     }
 }
 
+@MainActor
+private func _enclosingViewController(for view: UIView) -> UIViewController? {
+    var responder: UIResponder? = view
+    while let current = responder {
+        if let controller = current as? UIViewController { return controller }
+        responder = current.next
+    }
+    return nil
+}
+
 /// OpenUIKit-backed host for the SwiftUI tree and its retained dynamic state.
 @preconcurrency @MainActor
 open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
@@ -31,11 +41,13 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     ] = [:]
     private var deliveredAppearActions: Set<_OpenAppearanceIdentity> = []
     private var hostIsVisible = false
+    private var appliedRootNavigationTitle: String?
+    private var appliedRootBackButtonHidden = false
 
     public var rootView: Content {
         didSet {
             guard viewIfLoaded is _SwiftUIHostingView else { return }
-            install(graph.evaluate(rootView))
+            install(evaluateRoot())
         }
     }
 
@@ -45,18 +57,35 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
         graph.invalidate = { [weak self] in
             guard let self,
                   self.viewIfLoaded is _SwiftUIHostingView else { return }
-            self.install(self.graph.evaluate(self.rootView))
+            self.install(self.evaluateRoot())
         }
     }
 
     open override func loadView() {
-        let node = graph.evaluate(rootView)
+        let node = evaluateRoot()
         let host = _SwiftUIHostingView(node: node)
         host.didCompleteLayout = { [weak self] in
             self?.completeRepresentedControllerMounts()
         }
         view = host
         install(node)
+    }
+
+    private func evaluateRoot() -> _OpenViewNode {
+        let evaluated = graph.evaluate(rootView)
+        let (node, configuration) = _openExtractNavigationConfiguration(evaluated)
+        // Remove metadata that SwiftUI previously owned, but do not erase an
+        // unrelated title/navigation-item value an embedding UIKit app set.
+        if configuration.title != nil || title == appliedRootNavigationTitle {
+            title = configuration.title
+        }
+        appliedRootNavigationTitle = configuration.title
+        if configuration.backButtonHidden
+            || navigationItem.hidesBackButton == appliedRootBackButtonHidden {
+            navigationItem.hidesBackButton = configuration.backButtonHidden
+        }
+        appliedRootBackButtonHidden = configuration.backButtonHidden
+        return node
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -191,9 +220,10 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             }
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children):
+             .form(let children), .list(let children):
             children.forEach(visit)
-        case .button(let label, _), .scroll(let label):
+        case .button(let label, _), .scroll(let label),
+             .navigationLink(let label, _):
             visit(label)
         case .tabView(let pages, let selection, _, _):
             if let selected = _openSelectedTabPage(pages: pages, selection: selection) {
@@ -230,9 +260,10 @@ private func _openAppearanceActions(
         switch node.kind {
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children):
+             .form(let children), .list(let children):
             children.forEach(visit)
-        case .button(let label, _), .scroll(let label):
+        case .button(let label, _), .scroll(let label),
+             .navigationLink(let label, _):
             visit(label)
         case .tabView(let pages, let selection, _, _):
             if let selected = _openSelectedTabPage(pages: pages, selection: selection) {
@@ -430,6 +461,20 @@ private enum _ViewRenderer {
                 height += max(defaultFormRowHeight, size.height)
             }
             return CGSize(width: width, height: height)
+        case .list(let rows):
+            let viewport = _bounded(proposed)
+            var height: CGFloat = 0
+            let rowProposal = CGSize(
+                width: max(0, viewport.width - 32),
+                height: defaultFormRowHeight
+            )
+            for row in rows {
+                let size = measure(row, proposed: rowProposal, environment: environment)
+                height += max(defaultFormRowHeight, size.height)
+            }
+            return CGSize(width: viewport.width, height: min(viewport.height, height))
+        case .navigationLink(let label, _):
+            return measure(label, proposed: proposed, environment: environment)
         case .navigation(let content, let configuration):
             let hasBarContent = configuration.title != nil || configuration.toolbar != nil
             let barHeight = configuration.barHidden || !hasBarContent ? 0 : navigationBarHeight
@@ -697,6 +742,44 @@ private enum _ViewRenderer {
             surface.addSubview(hosted)
         case .form(let rows):
             placeForm(rows, in: rect, on: surface, environment: environment)
+        case .list(let rows):
+            placeList(rows, in: rect, on: surface, environment: environment)
+        case .navigationLink(let label, let makeDestinationController):
+            let control = UIControl(frame: rect)
+            control.isOpaque = false
+            control.backgroundColor = .clear
+            control.accessibilityIdentifier = "SwiftUI.NavigationLink"
+            control.addTarget(for: .touchUpInside) { [weak control] _, _ in
+                guard let control,
+                      let source = _enclosingViewController(for: control),
+                      let navigationController = source.navigationController else {
+                    preconditionFailure(
+                        "SwiftUI.NavigationLink requires an enclosing UINavigationController"
+                    )
+                }
+                let destination = makeDestinationController()
+                destination.loadViewIfNeeded()
+                navigationController.pushViewController(destination, animated: true)
+            }
+            surface.addSubview(control)
+            place(
+                label,
+                in: control.bounds.inset(
+                    by: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 32)
+                ),
+                on: control,
+                environment: environment
+            )
+            let disclosure = _SystemSymbolView(name: "chevron.right")
+            disclosure.strokeColor = .label
+            disclosure.frame = CGRect(
+                x: max(0, control.bounds.width - 21),
+                y: max(0, (control.bounds.height - 12) / 2),
+                width: 7,
+                height: 12
+            )
+            disclosure.accessibilityIdentifier = "SwiftUI.NavigationLink.disclosure"
+            control.addSubview(disclosure)
         case .navigation(let content, let configuration):
             placeNavigation(
                 content,
@@ -901,6 +984,67 @@ private enum _ViewRenderer {
                 environment: environment
             )
             y += rowHeight
+        }
+    }
+
+    private static func placeList(
+        _ rows: [_OpenViewNode],
+        in rect: CGRect,
+        on surface: UIView,
+        environment: _RenderEnvironment
+    ) {
+        let list = UIScrollView(frame: rect)
+        list.backgroundColor = .systemBackground
+        list.clipsToBounds = true
+        list.accessibilityIdentifier = "SwiftUI.List"
+        surface.addSubview(list)
+
+        var rowLayouts: [(node: _OpenViewNode, height: CGFloat)] = []
+        var contentHeight: CGFloat = 0
+        let proposal = CGSize(
+            width: max(0, list.bounds.width - 32),
+            height: defaultFormRowHeight
+        )
+        for row in rows {
+            let measured = measure(row, proposed: proposal, environment: environment)
+            let height = max(defaultFormRowHeight, measured.height)
+            rowLayouts.append((row, height))
+            contentHeight += height
+        }
+        list.contentSize = CGSize(
+            width: list.bounds.width,
+            height: max(list.bounds.height, contentHeight)
+        )
+
+        var y: CGFloat = 0
+        for (index, layout) in rowLayouts.enumerated() {
+            let rowFrame = CGRect(
+                x: 0,
+                y: y,
+                width: list.bounds.width,
+                height: layout.height
+            )
+            place(
+                layout.node,
+                in: rowFrame,
+                on: list,
+                environment: environment
+            )
+            if index + 1 < rowLayouts.count {
+                let separator = UIView(
+                    frame: CGRect(
+                        x: 16,
+                        y: rowFrame.maxY - 0.5,
+                        width: max(0, list.bounds.width - 16),
+                        height: 0.5
+                    )
+                )
+                separator.backgroundColor = .separator
+                separator.isUserInteractionEnabled = false
+                separator.accessibilityIdentifier = "SwiftUI.List.separator.\(index)"
+                list.addSubview(separator)
+            }
+            y += layout.height
         }
     }
 
@@ -1199,11 +1343,13 @@ private enum _ViewRenderer {
         switch node.kind {
         case .button:
             return true
+        case .navigationLink:
+            return true
         case .modified(let content, _):
             return _containsButton(content)
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children):
+             .form(let children), .list(let children):
             return children.contains(where: _containsButton)
         case .scroll(let content), .navigation(let content, _):
             return _containsButton(content)
@@ -1266,6 +1412,7 @@ private final class _SystemSymbolView: UIView {
         super.init(frame: .zero)
         isOpaque = false
         backgroundColor = .clear
+        isUserInteractionEnabled = false
     }
 
     required init?(coder: NSCoder) {
@@ -1273,6 +1420,17 @@ private final class _SystemSymbolView: UIView {
     }
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        if name == "chevron.right" {
+            let color = strokeColor.resolvedCGColor(with: traitCollection)
+            var path = Path()
+            path.move(to: CGPoint(x: bounds.minX + bounds.width * 0.2, y: bounds.minY))
+            path.addLine(to: CGPoint(x: bounds.maxX, y: bounds.midY))
+            path.addLine(
+                to: CGPoint(x: bounds.minX + bounds.width * 0.2, y: bounds.maxY)
+            )
+            canvas.stroke(path, color: color, lineWidth: max(1, bounds.width * 0.22))
+            return
+        }
         guard name == "magnifyingglass" else { return }
         let color = strokeColor.resolvedCGColor(with: traitCollection)
         let side = min(bounds.width, bounds.height)
