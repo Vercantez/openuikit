@@ -95,15 +95,10 @@ private final class _OpenStateStorage<Value>: _OpenAnyStateStorage {
 private final class _OpenStateSeed<Value> {
     let initialValue: Value
     let localStorage: _OpenStateStorage<Value>
-    var graphStorage: _OpenStateStorage<Value>?
 
     init(_ initialValue: Value) {
         self.initialValue = initialValue
         localStorage = _OpenStateStorage(value: initialValue)
-    }
-
-    var storage: _OpenStateStorage<Value> {
-        graphStorage ?? localStorage
     }
 }
 
@@ -115,7 +110,7 @@ private struct _OpenPropertyPathComponent: Hashable {
 
 private protocol _OpenGraphProperty {
     @MainActor
-    func prepare(
+    mutating func prepare(
         in graph: _OpenGraphHost,
         propertyPath: [_OpenPropertyPathComponent]
     )
@@ -124,33 +119,44 @@ private protocol _OpenGraphProperty {
 @propertyWrapper
 public struct _OpenState<Value>: _OpenDynamicProperty, _OpenGraphProperty {
     private let seed: _OpenStateSeed<Value>
+    // Graph attachment belongs to this prepared State value, not its shared
+    // pre-mount seed. Two structural copies of one View value therefore bind
+    // to two state locations even though their initial wrappers share a seed.
+    private var graphStorage: _OpenStateStorage<Value>?
 
     public init(wrappedValue: Value) {
         seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
     }
 
     public init(initialValue: Value) {
         seed = _OpenStateSeed(initialValue)
+        graphStorage = nil
     }
 
     public var wrappedValue: Value {
-        get { seed.storage.value }
-        nonmutating set { seed.storage.set(newValue) }
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
     }
 
     public var projectedValue: _OpenBinding<Value> {
-        _OpenBinding(
-            get: { seed.storage.value },
-            set: { seed.storage.set($0) }
+        let storage = storage
+        return _OpenBinding(
+            get: { storage.value },
+            set: { storage.set($0) }
         )
     }
 
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
     @MainActor
-    fileprivate func prepare(
+    fileprivate mutating func prepare(
         in graph: _OpenGraphHost,
         propertyPath: [_OpenPropertyPathComponent]
     ) {
-        seed.graphStorage = graph.stateStorage(
+        graphStorage = graph.stateStorage(
             propertyPath: propertyPath,
             initialValue: seed.initialValue
         )
@@ -199,7 +205,7 @@ public struct _OpenObservedObject<ObjectType>: _OpenDynamicProperty, _OpenGraphP
     public var projectedValue: Wrapper { Wrapper(object) }
 
     @MainActor
-    fileprivate func prepare(
+    fileprivate mutating func prepare(
         in graph: _OpenGraphHost,
         propertyPath: [_OpenPropertyPathComponent]
     ) {
@@ -251,13 +257,14 @@ private struct _OpenStateKey: Hashable {
     let valueType: ObjectIdentifier
 }
 
-// Swift's public Mirror API intentionally returns child values as copies. A
-// DynamicProperty update, however, has value semantics: body must see the
-// mutated property in the prepared copy of its View. These runtime entry
-// points are the same cross-platform primitives used by the standard
-// library's Reflection SPI to pair stored fields with their byte offsets.
-// We keep the ABI declarations private and validate every reflected field
-// before writing through an offset.
+// Swift's public Mirror API can be replaced by CustomReflectable and always
+// returns child values as copies. DynamicProperty preparation instead needs
+// the real stored-field list plus value-semantic write-back. These runtime
+// entry points are the same cross-platform primitives used by the standard
+// library's internal Mirror implementation and Reflection SPI. Calling the
+// child accessor directly deliberately bypasses a user-supplied customMirror;
+// runtime metadata remains the authority for field count, order, type, and
+// offset. Every field is validated before writing through an offset.
 private typealias _OpenReflectionNameFree = @convention(c) (
     UnsafePointer<CChar>?
 ) -> Void
@@ -289,10 +296,58 @@ private func _openRecursiveChildMetadata(
     fieldMetadata: UnsafeMutablePointer<_OpenFieldReflectionMetadata>
 ) -> Any.Type
 
+@_silgen_name("swift_getMetadataKind")
+private func _openMetadataKind(_ type: Any.Type) -> UInt
+
+@_silgen_name("swift_reflectionMirror_count")
+private func _openDirectChildCount<Container>(
+    _ value: Container,
+    type: Any.Type
+) -> Int
+
+@_silgen_name("swift_reflectionMirror_subscript")
+private func _openDirectChild<Container>(
+    of value: Container,
+    type: Any.Type,
+    index: Int,
+    outName: UnsafeMutablePointer<UnsafePointer<CChar>?>,
+    outFreeFunc: UnsafeMutablePointer<_OpenReflectionNameFree?>
+) -> Any
+
+private enum _OpenMetadataKind: UInt {
+    case `class` = 0
+    case `struct` = 0x200
+    case `enum` = 0x201
+    case optional = 0x202
+    case foreignClass = 0x203
+    case tuple = 0x301
+    case existential = 0x303
+}
+
+private func _openRuntimeChild<Container>(
+    of value: Container,
+    type: Any.Type,
+    index: Int
+) -> (label: String?, value: Any) {
+    var name: UnsafePointer<CChar>?
+    var freeName: _OpenReflectionNameFree?
+    let child = _openDirectChild(
+        of: value,
+        type: type,
+        index: index,
+        outName: &name,
+        outFreeFunc: &freeName
+    )
+    let label = name.map { String(cString: $0) }
+    freeName?(name)
+    return (label, child)
+}
+
 private struct _OpenWritableReflectedField {
     let value: Any
     let declaredType: Any.Type
     let byteOffset: Int
+    let isStrong: Bool
     let propertyPathComponent: _OpenPropertyPathComponent
 }
 
@@ -350,11 +405,11 @@ final class _OpenGraphHost {
         let typeID = ObjectIdentifier(View.self)
         return withPath(.viewType(typeID)) {
             var preparedView = view
-            var visitedDynamicObjects: Set<ObjectIdentifier> = []
+            var activeDynamicObjects: Set<ObjectIdentifier> = []
             prepareFields(
                 of: &preparedView,
                 propertyPath: [],
-                visitedDynamicObjects: &visitedDynamicObjects
+                activeDynamicObjects: &activeDynamicObjects
             )
             return makeBody(preparedView)
         }
@@ -379,13 +434,13 @@ final class _OpenGraphHost {
     private func prepareFields<Container>(
         of value: inout Container,
         propertyPath: [_OpenPropertyPathComponent],
-        visitedDynamicObjects: inout Set<ObjectIdentifier>
+        activeDynamicObjects: inout Set<ObjectIdentifier>
     ) {
         let fields = writableReflectedFields(of: value)
         guard !fields.isEmpty else { return }
 
         let rootAddress: UnsafeMutableRawPointer
-        switch Mirror(reflecting: value).displayStyle {
+        switch _OpenMetadataKind(rawValue: _openMetadataKind(Container.self)) {
         case .struct, .tuple:
             return withUnsafeMutablePointer(to: &value) { pointer in
                 let rawPointer = UnsafeMutableRawPointer(pointer)
@@ -395,11 +450,11 @@ final class _OpenGraphHost {
                         rootAddress: rawPointer,
                         containerSize: MemoryLayout<Container>.size,
                         propertyPath: propertyPath,
-                        visitedDynamicObjects: &visitedDynamicObjects
+                        activeDynamicObjects: &activeDynamicObjects
                     )
                 }
             }
-        case .class:
+        case .class, .foreignClass:
             // Recursive class-field offsets are relative to the native Swift
             // heap object, including its header. The runtime reports those
             // same offsets on Darwin and Linux.
@@ -417,7 +472,7 @@ final class _OpenGraphHost {
                 rootAddress: rootAddress,
                 containerSize: nil,
                 propertyPath: propertyPath,
-                visitedDynamicObjects: &visitedDynamicObjects
+                activeDynamicObjects: &activeDynamicObjects
             )
         }
     }
@@ -425,7 +480,14 @@ final class _OpenGraphHost {
     private func writableReflectedFields<Container>(
         of value: Container
     ) -> [_OpenWritableReflectedField] {
-        let rootMirror = Mirror(reflecting: value)
+        let runtimeCount = _openRecursiveChildCount(Container.self)
+        guard runtimeCount >= 0 else {
+            fatalError(
+                "SwiftUI reflection returned an invalid field count for "
+                    + "\(Container.self)"
+            )
+        }
+
         let reflectedChildren: [(
             inheritanceDepth: Int,
             fieldIndex: Int,
@@ -433,52 +495,87 @@ final class _OpenGraphHost {
             value: Any
         )]
 
-        switch rootMirror.displayStyle {
+        switch _OpenMetadataKind(rawValue: _openMetadataKind(Container.self)) {
         case .struct, .tuple:
-            reflectedChildren = rootMirror.children.enumerated().map {
-                (0, $0.offset, $0.element.label, $0.element.value)
+            let directCount = _openDirectChildCount(
+                value,
+                type: Container.self
+            )
+            guard directCount == runtimeCount else {
+                fatalError(
+                    "SwiftUI reflection metadata mismatch for \(Container.self): "
+                        + "runtime reported \(runtimeCount) stored fields but "
+                        + "the runtime child accessor reported \(directCount)"
+                )
             }
-        case .class:
-            var mirrors: [(inheritanceDepth: Int, mirror: Mirror)] = []
-            var mirror: Mirror? = rootMirror
+            reflectedChildren = (0..<runtimeCount).map { index in
+                let child = _openRuntimeChild(
+                    of: value,
+                    type: Container.self,
+                    index: index
+                )
+                return (0, index, child.label, child.value)
+            }
+        case .class, .foreignClass:
+            guard let rootClass = Container.self as? AnyClass else {
+                fatalError(
+                    "SwiftUI reflection classified \(Container.self) as a class "
+                        + "without class metadata"
+                )
+            }
+            var classes: [(inheritanceDepth: Int, type: AnyClass)] = []
+            var reflectedClass: AnyClass? = rootClass
             var inheritanceDepth = 0
-            while let current = mirror {
-                mirrors.append((inheritanceDepth, current))
-                mirror = current.superclassMirror
+            while let current = reflectedClass {
+                classes.append((inheritanceDepth, current))
+                reflectedClass = _getSuperclass(current)
                 inheritanceDepth += 1
             }
-            // The runtime's recursive class-field APIs enumerate base-class
-            // storage first. Mirror exposes the subclass first, so normalize
-            // it here while retaining the old depth/index identity.
-            reflectedChildren = mirrors.reversed().flatMap { entry in
-                entry.mirror.children.enumerated().map {
-                    (
+
+            // Recursive metadata enumerates base storage first. Query each
+            // class's real direct children in that order while keeping the
+            // subclass-relative depth used in property-path identity.
+            reflectedChildren = classes.reversed().flatMap { entry in
+                let directCount = _openDirectChildCount(
+                    value,
+                    type: entry.type
+                )
+                guard directCount >= 0 else {
+                    fatalError(
+                        "SwiftUI reflection returned an invalid field count "
+                            + "for \(entry.type)"
+                    )
+                }
+                return (0..<directCount).map { fieldIndex in
+                    let child = _openRuntimeChild(
+                        of: value,
+                        type: entry.type,
+                        index: fieldIndex
+                    )
+                    return (
                         entry.inheritanceDepth,
-                        $0.offset,
-                        $0.element.label,
-                        $0.element.value
+                        fieldIndex,
+                        child.label,
+                        child.value
                     )
                 }
             }
         default:
-            let dynamicChildren = rootMirror.children.filter {
-                $0.value is any _OpenDynamicProperty
-            }
-            guard dynamicChildren.isEmpty else {
+            guard runtimeCount == 0 else {
                 fatalError(
-                    "SwiftUI cannot prepare DynamicProperty fields in unsupported "
-                        + "container \(Container.self)"
+                    "SwiftUI DynamicProperty reflection supports stored fields "
+                        + "in structs, tuples, and classes; got \(Container.self) "
+                        + "with \(runtimeCount) runtime fields"
                 )
             }
             return []
         }
 
-        let runtimeCount = _openRecursiveChildCount(Container.self)
         guard runtimeCount == reflectedChildren.count else {
             fatalError(
                 "SwiftUI reflection metadata mismatch for \(Container.self): "
-                    + "runtime reported \(runtimeCount) fields but Mirror reported "
-                    + "\(reflectedChildren.count)"
+                    + "runtime reported \(runtimeCount) stored fields but direct "
+                    + "runtime traversal reported \(reflectedChildren.count)"
             )
         }
 
@@ -513,6 +610,7 @@ final class _OpenGraphHost {
                 value: child.value,
                 declaredType: declaredType,
                 byteOffset: byteOffset,
+                isStrong: metadata.isStrong,
                 propertyPathComponent: _OpenPropertyPathComponent(
                     inheritanceDepth: child.inheritanceDepth,
                     fieldIndex: child.fieldIndex,
@@ -527,10 +625,16 @@ final class _OpenGraphHost {
         rootAddress: UnsafeMutableRawPointer,
         containerSize: Int?,
         propertyPath: [_OpenPropertyPathComponent],
-        visitedDynamicObjects: inout Set<ObjectIdentifier>
+        activeDynamicObjects: inout Set<ObjectIdentifier>
     ) {
         guard let dynamicProperty = field.value as? any _OpenDynamicProperty else {
             return
+        }
+        guard field.isStrong else {
+            fatalError(
+                "SwiftUI cannot write back a non-strong DynamicProperty field "
+                    + "of type \(field.declaredType)"
+            )
         }
         let childPath = propertyPath + [field.propertyPathComponent]
         prepareDynamicProperty(
@@ -539,7 +643,7 @@ final class _OpenGraphHost {
             address: rootAddress.advanced(by: field.byteOffset),
             availableContainerSize: containerSize.map { $0 - field.byteOffset },
             propertyPath: childPath,
-            visitedDynamicObjects: &visitedDynamicObjects
+            activeDynamicObjects: &activeDynamicObjects
         )
     }
 
@@ -549,7 +653,7 @@ final class _OpenGraphHost {
         address: UnsafeMutableRawPointer,
         availableContainerSize: Int?,
         propertyPath: [_OpenPropertyPathComponent],
-        visitedDynamicObjects: inout Set<ObjectIdentifier>
+        activeDynamicObjects: inout Set<ObjectIdentifier>
     ) {
         guard ObjectIdentifier(declaredType) == ObjectIdentifier(Property.self) else {
             fatalError(
@@ -576,21 +680,38 @@ final class _OpenGraphHost {
 
         var preparedProperty = property
 
-        if let graphProperty = preparedProperty as? any _OpenGraphProperty {
+        if var graphProperty = preparedProperty as? any _OpenGraphProperty {
             graphProperty.prepare(in: self, propertyPath: propertyPath)
+            guard let typedGraphProperty = graphProperty as? Property else {
+                fatalError(
+                    "SwiftUI could not restore a prepared graph property of "
+                        + "type \(Property.self)"
+                )
+            }
+            preparedProperty = typedGraphProperty
             preparedProperty.update()
             address.assumingMemoryBound(to: Property.self).pointee = preparedProperty
             return
         }
 
         // DynamicProperty is normally a value type, but the public protocol
-        // does not forbid classes. Track class identities so a pathological
-        // self-referential custom property cannot recurse forever.
-        let dynamicMirror = Mirror(reflecting: preparedProperty)
-        if dynamicMirror.displayStyle == .class {
+        // does not forbid classes. Track class identities only on the active
+        // recursion path: cycles terminate, while two structural fields that
+        // alias one class property still each receive update().
+        let propertyKind = _OpenMetadataKind(
+            rawValue: _openMetadataKind(Property.self)
+        )
+        var activeObjectIdentifier: ObjectIdentifier?
+        if propertyKind == .class || propertyKind == .foreignClass {
             let identifier = ObjectIdentifier(preparedProperty as AnyObject)
-            guard visitedDynamicObjects.insert(identifier).inserted else {
+            guard activeDynamicObjects.insert(identifier).inserted else {
                 return
+            }
+            activeObjectIdentifier = identifier
+        }
+        defer {
+            if let activeObjectIdentifier {
+                activeDynamicObjects.remove(activeObjectIdentifier)
             }
         }
 
@@ -600,7 +721,7 @@ final class _OpenGraphHost {
         prepareFields(
             of: &preparedProperty,
             propertyPath: propertyPath,
-            visitedDynamicObjects: &visitedDynamicObjects
+            activeDynamicObjects: &activeDynamicObjects
         )
         preparedProperty.update()
         address.assumingMemoryBound(to: Property.self).pointee = preparedProperty

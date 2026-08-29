@@ -1,8 +1,9 @@
-// SwiftUI S1/S1.5: source-compatible view composition backed by OpenUIKit.
+// SwiftUI S1/S1.5 composition plus the bounded S2 observation runtime.
 //
-// This is deliberately a small, honest implementation.  It covers the
-// stateless syntax used by Focus's SearchWidgetView and DesignSystem previews,
-// turning that syntax into an OpenUIKit hierarchy.  It is not a claim that
+// This is deliberately a small, honest implementation. It covers the syntax
+// used by Focus's SearchWidgetView and DesignSystem previews plus the S2
+// state/observation semantics documented in docs/SWIFTUI_S2.md, turning that
+// bounded surface into an OpenUIKit hierarchy. It is not a claim that
 // arbitrary SwiftUI works.
 
 #if canImport(Foundation)

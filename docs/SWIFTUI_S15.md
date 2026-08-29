@@ -44,7 +44,8 @@ target is a separate passing gate, so this is not a host-only type-check.
 This slice adds the smallest executed vocabulary the DesignSystem views use:
 
 - `Form` with ordered, minimum-44-point static rows;
-- eager, stateless `ForEach(_:id:content:)` expansion in collection order;
+- eager `ForEach(_:id:content:)` expansion in collection order, with S2 using
+  the typed explicit ID to scope dynamic state across reorder and removal;
 - `NavigationView` and `navigationTitle(_:)` with an OpenUIKit title bar;
 - `Color` as a renderable view, including `Color(UIColor)` and fixed frames;
 - renderable `RoundedRectangle`, `stroke(_:lineWidth:)`, `clipShape`, and
@@ -64,12 +65,14 @@ test fixture carries the same license and names its exact upstream provenance.
 
 ## Boundaries
 
-`Form` is a static, clipped OpenUIKit surface, not a scrolling stateful SwiftUI
-form. `ForEach` expands once when the view body is evaluated; it does not diff
-identity or animate mutations. `NavigationView` implements one title/content
-column, not split-view policy, navigation paths, toolbar preferences, or
-interactive transitions. Shape support is limited to the rounded rectangle
-fill/stroke/clip path exercised here.
+`Form` is a static, clipped OpenUIKit surface, not a scrolling SwiftUI form.
+`ForEach` expands eagerly whenever the view body is evaluated. S2 preserves
+State by the exact explicit `Hashable` ID, but this is not SwiftUI's general
+view diffing engine and it does not animate insertion, removal, or moves; see
+[`SWIFTUI_S2.md`](SWIFTUI_S2.md). `NavigationView` implements one
+title/content column, not split-view policy, navigation paths, toolbar
+preferences, or interactive transitions. Shape support is limited to the
+rounded rectangle fill/stroke/clip path exercised here.
 
 Asset catalog compilation remains outside SwiftUI. Named colors and images
 delegate to OpenUIKit's loose-resource support; the separate Focus resource

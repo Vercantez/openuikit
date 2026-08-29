@@ -255,6 +255,80 @@ private struct UpdatingPropertyFixture: View {
     }
 }
 
+// CustomReflectable must not be able to replace the stored-field mirror and
+// silently hide DynamicProperty values from the preparation pass.
+private struct CustomMirroredUpdatingProperty: DynamicProperty, CustomReflectable {
+    @State private var source = 7
+    private(set) var value = -1
+
+    mutating func update() {
+        value = source
+    }
+
+    var customMirror: Mirror {
+        Mirror(self, children: EmptyCollection<(label: String?, value: Any)>())
+    }
+}
+
+private struct CustomMirroredUpdatingFixture: View, CustomReflectable {
+    var property = CustomMirroredUpdatingProperty()
+    let capture: @MainActor (Int) -> Void
+
+    nonisolated var customMirror: Mirror {
+        Mirror(self, children: EmptyCollection<(label: String?, value: Any)>())
+    }
+
+    var body: some View {
+        capture(property.value)
+        return Text("customUpdated=\(property.value)")
+    }
+}
+
+private final class AliasedClassUpdatingProperty: DynamicProperty {
+    private(set) var updateCount = 0
+
+    func update() {
+        updateCount += 1
+    }
+}
+
+private struct AliasedClassUpdatingFixture: View {
+    var first: AliasedClassUpdatingProperty
+    var second: AliasedClassUpdatingProperty
+    let capture: @MainActor (Int) -> Void
+
+    var body: some View {
+        let observed = first.updateCount * 10 + second.updateCount
+        capture(observed)
+        return Text("aliasUpdated=\(observed)")
+    }
+}
+
+private struct ReusedStateLeaf: View {
+    @State private var value = 1
+    let capture: @MainActor (Binding<Int>) -> Void
+
+    var body: some View {
+        capture($value)
+        return Text("reused=\(value)")
+    }
+}
+
+private struct ReusedStateFixture: View {
+    let leaf: ReusedStateLeaf
+
+    init(capture: @escaping @MainActor (Binding<Int>) -> Void) {
+        leaf = ReusedStateLeaf(capture: capture)
+    }
+
+    var body: some View {
+        HStack {
+            leaf
+            leaf
+        }
+    }
+}
+
 // DynamicProperty permits reference types too. This also verifies recursive
 // State discovery at native class-object offsets on both Swift runtimes.
 private final class ClassUpdatingProperty: DynamicProperty {
@@ -689,6 +763,84 @@ final class SwiftUIObservationTests: XCTestCase {
             "body must receive the mutated DynamicProperty value on each render"
         )
         XCTAssertEqual(texts(in: host), ["updated=7"])
+    }
+
+    func testCustomMirrorCannotHideStoredDynamicPropertyFromPreparation() throws {
+        var values: [Int] = []
+        let capture: @MainActor (Int) -> Void = { values.append($0) }
+        let controller = UIHostingController(
+            rootView: CustomMirroredUpdatingFixture(capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 220, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(values, [7])
+        XCTAssertEqual(texts(in: host), ["customUpdated=7"])
+
+        controller.rootView = CustomMirroredUpdatingFixture(capture: capture)
+        host.layoutIfNeeded()
+        XCTAssertEqual(
+            values,
+            [7, 7],
+            "runtime stored-field metadata must override an empty customMirror"
+        )
+        XCTAssertEqual(texts(in: host), ["customUpdated=7"])
+    }
+
+    func testAliasedClassDynamicPropertyUpdatesOncePerStructuralField() throws {
+        let shared = AliasedClassUpdatingProperty()
+        var values: [Int] = []
+        let controller = UIHostingController(
+            rootView: AliasedClassUpdatingFixture(
+                first: shared,
+                second: shared,
+                capture: { values.append($0) }
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 220, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(shared.updateCount, 2)
+        XCTAssertEqual(values, [22])
+        XCTAssertEqual(
+            texts(in: host),
+            ["aliasUpdated=22"],
+            "alias detection must be recursion-scoped, not render-wide"
+        )
+
+        let replacementShared = AliasedClassUpdatingProperty()
+        controller.rootView = AliasedClassUpdatingFixture(
+            first: replacementShared,
+            second: replacementShared,
+            capture: { values.append($0) }
+        )
+        host.layoutIfNeeded()
+        XCTAssertEqual(replacementShared.updateCount, 2)
+        XCTAssertEqual(
+            values,
+            [22, 22],
+            "both oracle-shaped renders must observe two structural updates"
+        )
+    }
+
+    func testReusedStatefulViewValueGetsOneLocationPerStructuralScope() throws {
+        var bindings: [Binding<Int>] = []
+        let controller = UIHostingController(
+            rootView: ReusedStateFixture { bindings.append($0) }
+        )
+        _ = try XCTUnwrap(controller.view)
+
+        XCTAssertEqual(controller._openGraphStateCount, 2)
+        XCTAssertEqual(bindings.count, 2)
+        let initialBindings = bindings
+        initialBindings[0].wrappedValue = 7
+        XCTAssertEqual(
+            initialBindings.map(\.wrappedValue),
+            [7, 1],
+            "copies of one pre-mount State seed must attach independently"
+        )
     }
 
     func testClassDynamicPropertyRecursivelyPreparesStateAndUpdatesBody() async throws {

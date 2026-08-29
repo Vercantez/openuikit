@@ -1,9 +1,11 @@
 # SwiftUI S1: Focus static widget
 
-OpenUIKit now exports a package product and public module literally named
-`SwiftUI`.  The S1 surface is the exact stateless composition vocabulary used
-by the pinned Focus files `Widget/Assets.swift` and
-`Widget/SearchWidgetView.swift`.
+OpenUIKit exports a package product and public module literally named
+`SwiftUI`. The historical S1 milestone is the exact stateless composition
+vocabulary used by the pinned Focus files `Widget/Assets.swift` and
+`Widget/SearchWidgetView.swift`. Later additions are bounded separately; the
+current state/observation slice is documented in
+[`SWIFTUI_S2.md`](SWIFTUI_S2.md).
 
 The application sources are not patched, rewritten, or overlaid.  The proof
 script copies the two files byte-for-byte into a temporary SwiftPM target and
@@ -107,11 +109,13 @@ their original spellings.
 
 ## Boundaries
 
-S1 does not implement SwiftUI state or bindings, controls, lists, navigation,
-environment/property wrappers, animations, arbitrary shapes, general SF
-Symbols, preview tooling, or the full SwiftUI layout algorithm.  The preview
-modifier is compile-compatible metadata; it does not launch an Xcode preview.
-Only `magnifyingglass` has a portable system-symbol drawing today.
+The S1 milestone did not implement SwiftUI state or bindings, controls, lists,
+navigation, environment/property wrappers, animations, arbitrary shapes,
+general SF Symbols, preview tooling, or the full SwiftUI layout algorithm.
+S1.5 and S2 now add specifically documented subsets of that list; they do not
+broaden the original two-file widget proof. The preview modifier remains
+compile-compatible metadata and does not launch an Xcode preview. Only
+`magnifyingglass` has a portable system-symbol drawing today.
 
 The compile proof emits a host module, while the runtime proof now builds and
 runs a native Mach-O executable on macOS and a native ELF executable on Linux,
