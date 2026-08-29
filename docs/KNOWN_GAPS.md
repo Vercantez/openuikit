@@ -816,9 +816,9 @@ NOT modelled: failure requirements — `require(toFail:)` does not exist and
   the requested offset (`UIScrollPhysics.velocityToLand`); UIKit instead
   reshapes the curve's duration. Paging lands in the right place, over a
   slightly different interval.
-- **Text-field/-view `shouldChange…` ranges are in UNICODE SCALARS**, not
-  UTF-16 — the caret model's units. Same numbers for ASCII, different ones
-  for emoji and other non-BMP text.
+- **`UITextView` `shouldChange…` ranges are in UNICODE SCALARS**, not UTF-16
+  — that editor still uses the original M8 caret model. `UITextField` ranges
+  are UTF-16 and share coordinates with its `UITextPosition` API.
 - **`textFieldShouldEndEditing` is asked twice on a focus transfer** (once by
   `canResignFirstResponder`, once inside `resignFirstResponder`). UIKit asks
   once; the predicate is expected to be pure.
@@ -1718,10 +1718,24 @@ scroll view hand-off. Not shipped:
 
 ## Text input (M8, 2026-08-24): scope notes
 
-- SELECTION is not implemented (no range selection, no select-all/copy/
-  paste, no selection handles, no shift+arrows). Caret editing only.
-  UIKit's UITextInput/UITextPosition/UITextRange protocol family is not
-  reproduced — UIKeyInput plus internal key routing is the whole surface.
+- `UITextField` now implements the deterministic core of `UITextInput`:
+  document-owned `UITextPosition`/`UITextRange` values, UTF-16 endpoint and
+  offset math, ranged selection/replacement, marked-text replacement and
+  unmarking, and caret/first/selection rect queries. Its delegate `NSRange`s
+  therefore use UIKit's UTF-16 coordinates even for emoji. `UITextView` has
+  not migrated yet: it remains caret-only and scalar-indexed.
+- Selection CHROME is not implemented (no highlight paint, handles,
+  select-all/copy/paste menu, or shift+arrows). The single-line field still
+  exposes real range state and one deterministic `UITextSelectionRect`, so
+  apps can inspect, copy, replace, and move the selection programmatically.
+  Tokenizer, document writing-direction, directional-position, and hit-test
+  members of UIKit's larger `UITextInput` protocol remain future slices.
+  `UITextSelectionRect` includes the pre-iOS-17.4 abstract geometry and
+  writing-direction shape; its newer custom `transform` getter is not yet
+  present.
+- `UITextField.unmarkText()` clears the marked range to UIKit's final state,
+  but does not reproduce UIKit 26.1's two
+  `textFieldDidChangeSelection(_:)` callbacks for that operation.
 - Caret geometry is measured (height = lineHeight + 1.5, TF y from the
   probed caretRect box math, TV y = floor(8 + line·lineH − 0.75)) but the
   BAR IS DRAWN 2 pt WIDE in tint color per the visible iOS caret; real

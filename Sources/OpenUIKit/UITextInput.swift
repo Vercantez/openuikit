@@ -17,12 +17,166 @@
 // clock (UIWindow.tick / the timestamps passed to sendText/sendKey) — never
 // from a wall clock — so scripted captures are deterministic.
 
+import class Foundation.NSObject
+
 /// UIKit's UIKeyInput: minimal text entry.
 @preconcurrency @MainActor
 public protocol UIKeyInput: AnyObject {
     var hasText: Bool { get }
     func insertText(_ text: String)
     func deleteBackward()
+}
+
+// MARK: - Document positions and ranges
+
+/// An opaque location in a text document.
+///
+/// UIKit exposes positions as reference objects rather than integer offsets.
+/// OpenUIKit follows that shape and, for its built-in editors, stores the
+/// offset in UTF-16 code units.  UTF-16 is intentional: UIKit permits a
+/// position between the two code units of a surrogate pair, and its
+/// `offset(from:to:)`, delegate `NSRange`s, and marked-text ranges all share
+/// that coordinate system.
+open class UITextPosition: NSObject, @unchecked Sendable {
+    let _document: AnyObject?
+    let _utf16Offset: Int?
+
+    /// The base class is constructible so custom text inputs can subclass it.
+    /// A bare position is not associated with a built-in OpenUIKit editor.
+    public override init() {
+        _document = nil
+        _utf16Offset = nil
+        super.init()
+    }
+
+    init(document: AnyObject, utf16Offset: Int) {
+        _document = document
+        _utf16Offset = utf16Offset
+        super.init()
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? UITextPosition else { return false }
+        if let lhsDocument = _document,
+           let rhsDocument = other._document,
+           let lhsOffset = _utf16Offset,
+           let rhsOffset = other._utf16Offset {
+            return lhsDocument === rhsDocument && lhsOffset == rhsOffset
+        }
+        return self === other
+    }
+
+    open override var hash: Int {
+        if let document = _document, let offset = _utf16Offset {
+            var hasher = Hasher()
+            hasher.combine(ObjectIdentifier(document))
+            hasher.combine(offset)
+            return hasher.finalize()
+        }
+        return ObjectIdentifier(self).hashValue
+    }
+}
+
+/// An immutable ordered pair of positions in one text document.
+open class UITextRange: NSObject, @unchecked Sendable {
+    private let _start: UITextPosition
+    private let _end: UITextPosition
+    private let _valid: Bool
+
+    /// The base range is empty and unassociated. Built-in editors reject it.
+    public override init() {
+        let position = UITextPosition()
+        _start = position
+        _end = position
+        _valid = false
+        super.init()
+    }
+
+    init(start: UITextPosition, end: UITextPosition) {
+        _start = start
+        _end = end
+        _valid = true
+        super.init()
+    }
+
+    open var start: UITextPosition { _start }
+    open var end: UITextPosition { _end }
+    open var isEmpty: Bool { !_valid || start == end }
+
+    var _isOpenUIKitRange: Bool { _valid }
+}
+
+/// Geometry for one visual piece of a selection. A single-line
+/// `UITextField` returns at most one of these; multi-line editors may return
+/// several as their text-input surface grows.
+public enum NSWritingDirection: Int, Sendable {
+    case natural = -1
+    case leftToRight = 0
+    case rightToLeft = 1
+}
+
+open class UITextSelectionRect: NSObject, @unchecked Sendable {
+    private let _rect: CGRect
+    private let _writingDirection: NSWritingDirection
+    private let _containsStart: Bool
+    private let _containsEnd: Bool
+    private let _isVertical: Bool
+
+    /// UIKit exposes this as an abstract subclassing surface. The default
+    /// values make `super.init()` usable by portable custom text inputs;
+    /// concrete subclasses override the getters.
+    public override init() {
+        _rect = .zero
+        _writingDirection = .natural
+        _containsStart = false
+        _containsEnd = false
+        _isVertical = false
+        super.init()
+    }
+
+    public init(rect: CGRect, writingDirection: NSWritingDirection = .natural,
+                containsStart: Bool, containsEnd: Bool,
+                isVertical: Bool = false) {
+        _rect = rect
+        _writingDirection = writingDirection
+        _containsStart = containsStart
+        _containsEnd = containsEnd
+        _isVertical = isVertical
+        super.init()
+    }
+
+    open var rect: CGRect { _rect }
+    open var writingDirection: NSWritingDirection { _writingDirection }
+    open var containsStart: Bool { _containsStart }
+    open var containsEnd: Bool { _containsEnd }
+    open var isVertical: Bool { _isVertical }
+}
+
+/// The deterministic core of UIKit's text-input protocol used by
+/// OpenUIKit's editors. Keyboard tokenization and writing-direction APIs are
+/// separate future slices; selection, replacement, composition, document
+/// navigation, and geometry are real behaviors here rather than compile-only
+/// placeholders.
+@preconcurrency @MainActor
+public protocol UITextInput: UIKeyInput {
+    func text(in range: UITextRange) -> String?
+    func replace(_ range: UITextRange, withText text: String)
+
+    var selectedTextRange: UITextRange? { get set }
+    var markedTextRange: UITextRange? { get }
+    func setMarkedText(_ markedText: String?, selectedRange: NSRange)
+    func unmarkText()
+
+    var beginningOfDocument: UITextPosition { get }
+    var endOfDocument: UITextPosition { get }
+    func textRange(from fromPosition: UITextPosition,
+                   to toPosition: UITextPosition) -> UITextRange?
+    func position(from position: UITextPosition, offset: Int) -> UITextPosition?
+    func offset(from: UITextPosition, to: UITextPosition) -> Int
+
+    func firstRect(for range: UITextRange) -> CGRect
+    func caretRect(for position: UITextPosition) -> CGRect
+    func selectionRects(for range: UITextRange) -> [UITextSelectionRect]
 }
 
 /// Editing keys the host can send (beyond committed text).

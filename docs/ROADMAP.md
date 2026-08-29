@@ -175,7 +175,12 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     .editingDidBegin/Changed/DidEnd, horizontal keep-caret-visible scroll,
     multiline caret movement; openhost SDL_TEXTINPUT/KEYDOWN wiring +
     scripted text/key events; `--app textdemo` + scripts/textinput_demo.gif.
-    Selection is out of scope (docs/KNOWN_GAPS.md "Text input").
+  - UITextField selection core DONE (2026-08-29): UTF-16 document positions
+    and ranges, selected/marked text, ranged insertion/replacement and
+    composed-character deletion, plus deterministic caret/selection geometry.
+    Verified against the unchanged Focus autocomplete override bodies and a
+    real-UIKit UTF-16/IME probe. Selection chrome and UITextView migration
+    remain out of scope (docs/KNOWN_GAPS.md "Text input").
 - **M9 Auto Layout — DONE (2026-08-24)**: pure-Swift Cassowary (kiwi-style
   incremental simplex, deterministic pivoting) in
   Sources/OpenUIKit/AutoLayout/; NSLayoutConstraint

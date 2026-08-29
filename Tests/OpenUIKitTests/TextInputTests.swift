@@ -7,6 +7,106 @@ import Foundation
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+/// Exact declarations/bodies extracted from Focus's
+/// `Blockzilla/UIComponents/AutocompleteTextField.swift`. The surrounding
+/// fields and test-only entry points are harness code; the marked blocks stay
+/// byte-for-byte identical to the app source so this test catches superclass
+/// override-surface regressions without editing or compiling around unrelated
+/// Focus diagnostics.
+private final class FocusAutocompleteTextInputExcerpt: UITextField {
+    private var autocompleteTextLabel: UILabel?
+    private var hideCursor: Bool = false
+    private var lastReplacement: String?
+
+    var isSelectionActive: Bool {
+        return autocompleteTextLabel != nil
+    }
+
+    // BEGIN EXACT FOCUS L44-49
+    public override var text: String? {
+        didSet {
+            super.text = text
+            self.textDidChange(self)
+        }
+    }
+    // END EXACT FOCUS L44-49
+
+    private func textDidChange(_ textField: UITextField) {}
+
+    // BEGIN EXACT FOCUS L158-170
+    /// Commits the completion by setting the text and removing the highlight.
+    fileprivate func applyCompletion() {
+
+        // Clear the current completion, then set the text without the attributed style.
+        let text = (self.text ?? "") + (self.autocompleteTextLabel?.text ?? "")
+        let didRemoveCompletion = removeCompletion()
+        self.text = text
+        hideCursor = false
+        // Move the cursor to the end of the completion.
+        if didRemoveCompletion {
+            selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
+        }
+    }
+    // END EXACT FOCUS L158-170
+
+    // BEGIN EXACT FOCUS L172-178
+    /// Removes the autocomplete-highlighted. Returns true if a completion was actually removed
+    @objc @discardableResult fileprivate func removeCompletion() -> Bool {
+        let hasActiveCompletion = isSelectionActive
+        autocompleteTextLabel?.removeFromSuperview()
+        autocompleteTextLabel = nil
+        return hasActiveCompletion
+    }
+    // END EXACT FOCUS L172-178
+
+    // BEGIN EXACT FOCUS L237-239
+    public override func caretRect(for position: UITextPosition) -> CGRect {
+        return hideCursor ? CGRect.zero : super.caretRect(for: position)
+    }
+    // END EXACT FOCUS L237-239
+
+    // BEGIN EXACT FOCUS L277-282
+    public override func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+        // Clear the autocompletion if any provisionally inserted text has been
+        // entered (e.g., a partial composition from a Japanese keyboard).
+        removeCompletion()
+        super.setMarkedText(markedText, selectedRange: selectedRange)
+    }
+    // END EXACT FOCUS L277-282
+
+    // BEGIN EXACT FOCUS L302-308
+    // Reset the cursor to the end of the text field.
+    // This forces `caretRect(for position: UITextPosition)` to be called which will decide if we should show the cursor
+    // This exists because ` caretRect(for position: UITextPosition)` is not called after we apply an autocompletion.
+    private func forceResetCursor() {
+        selectedTextRange = nil
+        selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
+    }
+    // END EXACT FOCUS L302-308
+
+    // BEGIN EXACT FOCUS L310-319
+    public override func deleteBackward() {
+        lastReplacement = ""
+        hideCursor = false
+        if isSelectionActive {
+            removeCompletion()
+            forceResetCursor()
+        } else {
+            super.deleteBackward()
+        }
+    }
+    // END EXACT FOCUS L310-319
+
+    func installCompletion(_ text: String) {
+        let label = UILabel()
+        label.text = text
+        autocompleteTextLabel = label
+    }
+
+    func applyCompletionForTest() { applyCompletion() }
+    func setCursorHiddenForTest(_ hidden: Bool) { hideCursor = hidden }
+}
+
 @MainActor
 final class CaretMathTests: XCTestCase {
     let font = UIFont.systemFont(ofSize: 17)
@@ -228,6 +328,292 @@ final class TextFieldEditingTests: XCTestCase {
         let expected = FontEngine.roundToPixel(
             FontEngine.measure("Hello", font: tf.font), scale: 2)
         XCTAssertEqual(caret.frame.minX, expected, accuracy: 1e-9)
+    }
+}
+
+@MainActor
+final class TextFieldSelectionTests: XCTestCase {
+    final class Delegate: UITextFieldDelegate {
+        var changes: [NSRange] = []
+        var selectionChanges = 0
+
+        func textField(_ textField: UITextField,
+                       shouldChangeCharactersIn range: NSRange,
+                       replacementString string: String) -> Bool {
+            changes.append(range)
+            return true
+        }
+
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            selectionChanges += 1
+        }
+    }
+
+    func position(_ offset: Int, in field: UITextField) -> UITextPosition {
+        field.position(from: field.beginningOfDocument, offset: offset)!
+    }
+
+    func range(_ lower: Int, _ upper: Int, in field: UITextField) -> UITextRange {
+        field.textRange(from: position(lower, in: field),
+                        to: position(upper, in: field))!
+    }
+
+    func offsets(of range: UITextRange, in field: UITextField) -> [Int] {
+        [field.offset(from: field.beginningOfDocument, to: range.start),
+         field.offset(from: field.beginningOfDocument, to: range.end)]
+    }
+
+    func testUTF16PositionsRangesAndStrictDocumentIdentity() {
+        let field = UITextField()
+        field.text = "A😀B"
+
+        XCTAssertEqual(field.offset(from: field.beginningOfDocument,
+                                    to: field.endOfDocument), 4)
+        XCTAssertEqual(position(0, in: field), field.beginningOfDocument)
+        XCTAssertEqual(position(4, in: field), field.endOfDocument)
+        XCTAssertNil(field.position(from: field.beginningOfDocument, offset: 5))
+        XCTAssertNil(field.position(from: field.beginningOfDocument, offset: Int.min))
+
+        // Real UIKit permits every UTF-16 boundary, including the middle of
+        // a surrogate pair; slicing there produces the replacement scalar.
+        XCTAssertEqual(field.text(in: range(0, 2, in: field)), "A�")
+        XCTAssertEqual(field.text(in: range(1, 3, in: field)), "😀")
+        XCTAssertEqual(offsets(of: field.textRange(from: position(3, in: field),
+                                                   to: position(1, in: field))!,
+                               in: field), [1, 3])
+
+        let other = UITextField()
+        other.text = field.text
+        let foreign = range(0, 1, in: other)
+        let originalSelection = field.selectedTextRange!
+        XCTAssertNil(field.text(in: foreign))
+        XCTAssertNil(field.textRange(from: foreign.start, to: field.endOfDocument))
+        XCTAssertNil(field.position(from: foreign.start, offset: 1))
+        XCTAssertEqual(field.offset(from: foreign.start, to: field.endOfDocument), 0)
+        field.selectedTextRange = foreign
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field),
+                       offsets(of: originalSelection, in: field))
+        XCTAssertEqual(field.caretRect(for: foreign.start), .zero)
+
+        // UIKit's three abstract document geometry classes are NSObject
+        // subclassing surfaces, not unrelated Swift-only value wrappers.
+        let positionObject: NSObject = field.beginningOfDocument
+        let rangeObject: NSObject = field.selectedTextRange!
+        let selectionObject: NSObject = UITextSelectionRect()
+        XCTAssertNotEqual(positionObject, rangeObject)
+        XCTAssertEqual((selectionObject as! UITextSelectionRect).writingDirection,
+                       .natural)
+    }
+
+    func testSelectionReplacementAndContentAssignmentClamping() {
+        let field = UITextField()
+        field.text = "A😀B"
+        field.selectedTextRange = range(1, 3, in: field)
+        XCTAssertEqual(field.text(in: field.selectedTextRange!), "😀")
+
+        field.replace(field.selectedTextRange!, withText: "Z")
+        XCTAssertEqual(field.text, "AZB")
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+
+        field.text = "abcdef"
+        field.selectedTextRange = range(2, 4, in: field)
+        field.text = "xy"
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+        field.selectedTextRange = nil
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [0, 0])
+        field.selectedTextRange = field.textRange(from: field.endOfDocument,
+                                                  to: field.endOfDocument)
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+    }
+
+    func testTypingReplacesSelectionAndBackspaceDeletesComposedCharacters() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 120))
+        let field = UITextField(frame: CGRect(x: 10, y: 10, width: 280, height: 34))
+        let delegate = Delegate()
+        field.delegate = delegate
+        window.addSubview(field)
+
+        field.text = "A😀B"
+        XCTAssertTrue(field.becomeFirstResponder())
+        field.selectedTextRange = range(1, 3, in: field)
+        window.sendText("Z")
+        XCTAssertEqual(field.text, "AZB")
+        XCTAssertEqual(delegate.changes.last, NSRange(location: 1, length: 2))
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+
+        field.text = "A😀B"
+        field.selectedTextRange = range(3, 3, in: field)
+        window.sendKey(.backspace)
+        XCTAssertEqual(field.text, "AB")
+        XCTAssertEqual(delegate.changes.last, NSRange(location: 1, length: 2))
+        XCTAssertEqual(field.caretOffset, 1)
+
+        field.text = "Ae\u{301}B"
+        field.selectedTextRange = range(3, 3, in: field)
+        window.sendKey(.backspace)
+        XCTAssertEqual(field.text, "AB")
+        XCTAssertEqual(delegate.changes.last, NSRange(location: 1, length: 2))
+        XCTAssertEqual(field.caretOffset, 1)
+
+        field.text = "A😀B"
+        field.selectedTextRange = range(4, 4, in: field)
+        window.sendKey(.left)
+        XCTAssertEqual(field.caretOffset, 3)
+        window.sendKey(.left)
+        XCTAssertEqual(field.caretOffset, 1)
+
+        field.text = "A😀B"
+        field.selectedTextRange = range(2, 2, in: field)
+        window.sendKey(.backspace)
+        XCTAssertEqual(field.text, "AB")
+        XCTAssertEqual(delegate.changes.last, NSRange(location: 1, length: 2))
+        XCTAssertEqual(field.caretOffset, 1)
+    }
+
+    func testMarkedTextReplacementSelectionAndCommit() {
+        let field = UITextField()
+        let delegate = Delegate()
+        field.delegate = delegate
+        field.text = "abcdef"
+        field.selectedTextRange = range(2, 4, in: field)
+
+        var editingChanges = 0
+        field.addTarget(for: .editingChanged) { control, _ in
+            _ = control
+            editingChanges += 1
+        }
+        let delegateMutationsBeforeMark = delegate.changes.count
+        let selectionChangesBeforeMark = delegate.selectionChanges
+        field.setMarkedText("XYZ", selectedRange: NSRange(location: 1, length: 1))
+
+        XCTAssertEqual(field.text, "abXYZef")
+        XCTAssertEqual(offsets(of: field.markedTextRange!, in: field), [2, 5])
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [3, 4])
+        XCTAssertEqual(field.text(in: field.markedTextRange!), "XYZ")
+        XCTAssertEqual(editingChanges, 0)
+        XCTAssertEqual(delegate.changes.count, delegateMutationsBeforeMark)
+        XCTAssertEqual(delegate.selectionChanges, selectionChangesBeforeMark + 1)
+
+        field.setMarkedText("Q", selectedRange: NSRange(location: 99, length: 99))
+        XCTAssertEqual(field.text, "abQef")
+        XCTAssertEqual(offsets(of: field.markedTextRange!, in: field), [2, 3])
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [3, 3])
+        field.selectedTextRange = nil
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [0, 0])
+        XCTAssertNotNil(field.markedTextRange)
+        field.setMarkedText(nil, selectedRange: NSRange(location: 0, length: 0))
+        XCTAssertNil(field.markedTextRange)
+        XCTAssertEqual(field.text, "abef")
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+        XCTAssertEqual(editingChanges, 0)
+        XCTAssertEqual(delegate.changes.count, delegateMutationsBeforeMark)
+    }
+
+    func testMarkedEmptyAndDirectReplaceUseUITextInputCallbacks() {
+        let field = UITextField()
+        let delegate = Delegate()
+        field.delegate = delegate
+        field.text = "abcdef"
+        field.selectedTextRange = range(2, 4, in: field)
+
+        var editingChanges = 0
+        field.addTarget(for: .editingChanged) { _, _ in editingChanges += 1 }
+        delegate.changes.removeAll()
+        delegate.selectionChanges = 0
+
+        // With no active mark, an empty non-nil marked string is a no-op.
+        field.setMarkedText("", selectedRange: NSRange(location: 0, length: 0))
+        XCTAssertEqual(field.text, "abcdef")
+        XCTAssertNil(field.markedTextRange)
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 4])
+        XCTAssertEqual(delegate.changes.count, 0)
+        XCTAssertEqual(delegate.selectionChanges, 0)
+        XCTAssertEqual(editingChanges, 0)
+
+        field.setMarkedText("XYZ", selectedRange: NSRange(location: 0, length: 0))
+        delegate.selectionChanges = 0
+        field.setMarkedText("", selectedRange: NSRange(location: 0, length: 0))
+        XCTAssertEqual(field.text, "abef")
+        XCTAssertNil(field.markedTextRange)
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [2, 2])
+        XCTAssertEqual(delegate.changes.count, 0)
+        XCTAssertEqual(delegate.selectionChanges, 1)
+        XCTAssertEqual(editingChanges, 0)
+
+        delegate.selectionChanges = 0
+        field.replace(range(0, 2, in: field), withText: "Q")
+        XCTAssertEqual(field.text, "Qef")
+        XCTAssertEqual(offsets(of: field.selectedTextRange!, in: field), [1, 1])
+        XCTAssertEqual(delegate.changes.count, 0)
+        XCTAssertEqual(delegate.selectionChanges, 1)
+        XCTAssertEqual(editingChanges, 0)
+    }
+
+    func testCaretAndSelectionGeometryUseDocumentPositions() {
+        let field = UITextField(frame: CGRect(x: 0, y: 0, width: 240, height: 34))
+        field.borderStyle = .roundedRect
+        field.text = "Hello"
+        field.layoutIfNeeded()
+
+        let caret = field.caretRect(for: position(2, in: field))
+        let expectedX = field.textRect(forBounds: field.bounds).minX
+            + FontEngine.roundToPixel(FontEngine.measure("He", font: field.font), scale: 2)
+        XCTAssertEqual(caret.minX, expectedX, accuracy: 1e-9)
+        XCTAssertEqual(caret.minY, 6, accuracy: 1e-9)
+        XCTAssertEqual(caret.width, 1, accuracy: 1e-9)
+        XCTAssertEqual(caret.height, 21.5, accuracy: 1e-9)
+
+        let selection = range(1, 4, in: field)
+        let first = field.firstRect(for: selection)
+        let startX = field.caretRect(for: position(1, in: field)).minX
+        let endX = field.caretRect(for: position(4, in: field)).minX
+        XCTAssertEqual(first.minX, startX, accuracy: 1e-9)
+        XCTAssertEqual(first.width, endX - startX, accuracy: 1e-9)
+        let rects = field.selectionRects(for: selection)
+        XCTAssertEqual(rects.count, 1)
+        XCTAssertEqual(rects[0].rect, first)
+        XCTAssertTrue(rects[0].containsStart)
+        XCTAssertTrue(rects[0].containsEnd)
+        XCTAssertFalse(rects[0].isVertical)
+        XCTAssertEqual(rects[0].writingDirection, .natural)
+        XCTAssertTrue(field.selectionRects(for: range(2, 2, in: field)).isEmpty)
+
+        field.text = "A😀B"
+        let leadingEmojiX = field.caretRect(for: position(1, in: field)).minX
+        let surrogateMidpointX = field.caretRect(for: position(2, in: field)).minX
+        let trailingEmojiX = field.caretRect(for: position(3, in: field)).minX
+        XCTAssertEqual(surrogateMidpointX, leadingEmojiX, accuracy: 1e-9)
+        XCTAssertGreaterThanOrEqual(trailingEmojiX, surrogateMidpointX)
+    }
+
+    func testExactFocusOverrideBodiesCompileAndRunUnchanged() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 100))
+        let field = FocusAutocompleteTextInputExcerpt(
+            frame: CGRect(x: 10, y: 10, width: 280, height: 34))
+        window.addSubview(field)
+        field.text = "moz"
+        XCTAssertTrue(field.becomeFirstResponder())
+
+        field.installCompletion("illa")
+        field.applyCompletionForTest()
+        XCTAssertEqual(field.text, "mozilla")
+        XCTAssertEqual(field.offset(from: field.beginningOfDocument,
+                                    to: field.selectedTextRange!.end), 7)
+
+        field.installCompletion(".org")
+        field.setMarkedText("Q", selectedRange: NSRange(location: 1, length: 0))
+        XCTAssertFalse(field.isSelectionActive)
+        XCTAssertEqual(field.markedTextRange.map { field.text(in: $0) }.flatMap { $0 }, "Q")
+        // A new provisional edit has real range/selection semantics after
+        // the Focus override clears its completion.
+        field.setMarkedText("XY", selectedRange: NSRange(location: 1, length: 1))
+        XCTAssertEqual(field.markedTextRange.map { field.text(in: $0) }.flatMap { $0 }, "XY")
+
+        field.unmarkText()
+        field.setCursorHiddenForTest(true)
+        XCTAssertEqual(field.caretRect(for: field.endOfDocument), .zero)
+        field.setCursorHiddenForTest(false)
+        XCTAssertEqual(field.caretRect(for: field.endOfDocument).width, 1)
     }
 }
 
