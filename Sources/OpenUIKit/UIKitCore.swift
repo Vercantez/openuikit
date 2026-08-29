@@ -52,10 +52,12 @@ public enum OpenUIKitRuntime {
     /// Presentation clock for UIView animations (M6), in seconds since the
     /// animations were committed (t = 0 shows every non-delayed animation's
     /// FROM state). The host sets it, then renders: LayerBridge builds the
-    /// layer tree from presentation values sampled at this time. Static
+    /// layer tree from presentation values sampled at this time. RenderPass
+    /// also samples its supported geometry/opacity/corner-radius and explicit
+    /// gradient-location subset on either Canvas backend; animated transforms
+    /// and background colors still require the layers compositor. Static
     /// hierarchies (no recorded animations) are unaffected by the clock.
-    /// Requires the quartz backend + layers compositor (the render pass
-    /// draws model values only — see docs/KNOWN_GAPS.md).
+    /// See docs/KNOWN_GAPS.md for the exact split.
     public static var animationTime: Double = 0
 
     /// Host redraw hint (M7.5 dirty-flag rendering): the latest end time —

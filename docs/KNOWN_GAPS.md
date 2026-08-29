@@ -1911,11 +1911,13 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
 
 ## Animation engine (M6, 2026-08-24): scope notes
 
-- Presentation sampling requires the DEFAULT pipeline (quartz backend +
-  layers compositor). Under `OPENUIKIT_COMPOSITOR=renderpass` or
-  `OPENUIKIT_BACKEND=swift` animation scenes render MODEL values only
-  (every frame = final state). Owner: view module, only if a host ever
-  needs animated rendering on the pure-Swift path.
+- The default quartz/layers pipeline has the broadest presentation surface.
+  RenderPass (including the pure-Swift backend) now samples `UIView.animate`
+  and explicit-CA presentation values for `bounds`, `bounds.size`, `position`,
+  `opacity`/view alpha, `cornerRadius`, and gradient `locations`. Animated
+  background colors and transforms remain layers-compositor-only; RenderPass
+  draws their model values. A root bounds animation also does not resize the
+  already-allocated output bitmap.
 - `UIView.animate` completion handlers now fire ON THE CLOCK (M8.1, was
   synchronous): they are queued at `begin + delay + duration` and
   delivered by `UIView._stepAnimationCompletions(to:)`, which
