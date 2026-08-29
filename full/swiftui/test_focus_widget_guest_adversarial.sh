@@ -32,6 +32,8 @@ done
 TMP=$(mktemp -d /tmp/focus-widget-adversarial.XXXXXX)
 CURRENT_TARGET=
 CURRENT_BACKUP=
+# 0 = originally absent, 1 = regular file, 2 = directory moved aside and
+# replaced by a symlink for the runtime-ancestor case.
 CURRENT_EXISTED=0
 restore_current() {
     if [ -n "$CURRENT_TARGET" ]; then
@@ -40,9 +42,10 @@ restore_current() {
         elif [ -d "$CURRENT_TARGET" ]; then
             rmdir "$CURRENT_TARGET"
         fi
-        if [ "$CURRENT_EXISTED" = 1 ]; then
-            cp -p "$CURRENT_BACKUP" "$CURRENT_TARGET"
-        fi
+        case "$CURRENT_EXISTED" in
+            1) cp -p "$CURRENT_BACKUP" "$CURRENT_TARGET" ;;
+            2) mv "$CURRENT_BACKUP" "$CURRENT_TARGET" ;;
+        esac
     fi
     CURRENT_TARGET=
     CURRENT_BACKUP=
@@ -73,20 +76,39 @@ begin_absent_case() {
     CURRENT_EXISTED=0
 }
 
+begin_directory_symlink_case() {
+    local label=$1 target=$2
+    [ -d "$target" ] && [ ! -L "$target" ] || {
+        echo "focus_widget_guest_adversarial: expected real directory mutation target $target" >&2
+        exit 2
+    }
+    CURRENT_TARGET=$target
+    CURRENT_BACKUP=$TMP/$label.backup
+    CURRENT_EXISTED=2
+    mv "$CURRENT_TARGET" "$CURRENT_BACKUP"
+    ln -s "$CURRENT_BACKUP" "$CURRENT_TARGET"
+}
+
 expect_resume_refusal() {
     local label=$1 log=$TMP/$1.log rc
-    if [ "$CURRENT_EXISTED" = 1 ]; then
-        if [ -f "$CURRENT_TARGET" ] && [ ! -L "$CURRENT_TARGET" ] && \
-                cmp -s "$CURRENT_TARGET" "$CURRENT_BACKUP"; then
-            echo "focus_widget_guest_adversarial: $label mutation changed no bytes or type" >&2
-            exit 2
-        fi
-    else
-        [ -e "$CURRENT_TARGET" ] || [ -L "$CURRENT_TARGET" ] || {
-            echo "focus_widget_guest_adversarial: $label did not add its node" >&2
-            exit 2
-        }
-    fi
+    case "$CURRENT_EXISTED" in
+        1)
+            if [ -f "$CURRENT_TARGET" ] && [ ! -L "$CURRENT_TARGET" ] && \
+                    cmp -s "$CURRENT_TARGET" "$CURRENT_BACKUP"; then
+                echo "focus_widget_guest_adversarial: $label mutation changed no bytes or type" >&2
+                exit 2
+            fi ;;
+        2)
+            [ -L "$CURRENT_TARGET" ] || {
+                echo "focus_widget_guest_adversarial: $label did not install its ancestor symlink" >&2
+                exit 2
+            } ;;
+        *)
+            [ -e "$CURRENT_TARGET" ] || [ -L "$CURRENT_TARGET" ] || {
+                echo "focus_widget_guest_adversarial: $label did not add its node" >&2
+                exit 2
+            } ;;
+    esac
     set +e
     SKIP_FULL_BUILD=1 bash "$BUILD" "$RESOURCE_INPUT" > "$log" 2>&1
     rc=$?
@@ -141,6 +163,14 @@ expect_resume_refusal sysroot-tbd
 begin_case extensionless-stub "$MRROOT/darwin/System/Library/Frameworks/Foundation.framework/Foundation"
 printf 'adversarial-extensionless-stub-drift' >> "$CURRENT_TARGET"
 expect_resume_refusal extensionless-stub
+
+# Leaf-only lstat checks do not protect a trusted root: an ancestor directory
+# can be moved outside the root and replaced by a symlink while every loaded
+# image keeps the same bytes. The complete resume used to pass this mutation
+# and falsely label the external stub as guest-root content.
+begin_directory_symlink_case runtime-ancestor-symlink \
+    "$MRROOT/darwin/System/Library/Frameworks/Foundation.framework"
+expect_resume_refusal runtime-ancestor-symlink
 
 begin_case provider-logic "$ATTEST"
 perl -pi -e 's/SwiftUI => '\''libSwiftUI'\''/SwiftUI => '\''libSwiftUI_TAMPER'\''/' "$CURRENT_TARGET"

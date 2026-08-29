@@ -78,10 +78,11 @@ without a direct provider import. That evidence includes `UIImage`,
 - `test_focus_swiftui_surface.py` checks regeneration, denominators, critical
   API families, generated-source limits, tokenizer behavior, first-slice
   identity, and donor-lock shape. `test_focus_widget_guest.py` adds static
-  regression teeth around the dylib packaging and executable proof boundary.
-  The isolated-only `test_focus_widget_guest_adversarial.sh` mutates every
-  reviewed resume/cache boundary and requires each dirty resume to fail before
-  guest success.
+  regression teeth around the dylib packaging and executable proof boundary,
+  including non-prefix Swift ABI ownership. The isolated-only
+  `test_focus_widget_guest_adversarial.sh` mutates every reviewed resume/cache
+  boundary, including a symlinked runtime ancestor, and requires each dirty
+  resume to fail before guest success.
 
 ## Reproduce
 

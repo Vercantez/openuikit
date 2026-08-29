@@ -504,16 +504,33 @@ llvm-objdump-18 --macho --bind "$PACKAGE/libSwiftUI.dylib" \
 llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.bind"
 
-# Universal, non-vacuous two-level provider gate. Every undefined whose
-# mangled name begins with SwiftUI, OpenUIKit, or OpenCoreGraphics is matched
-# to every bind-table row for that symbol and to the exact defining sibling.
-# The same pass rejects all reverse ownership (including OpenCoreGraphics
-# duplicates), rather than accepting one representative grep match.
+# Universal, non-vacuous two-level provider gate. Every symbol owned by
+# SwiftUI, OpenUIKit, or OpenCoreGraphics is classified, including associated
+# type descriptors, conformances, and extensions whose mangling does not begin
+# with its declaring module. Unknown framework-bearing manglings fail closed.
+# Every import is matched to every bind-table row and the exact defining
+# sibling; every definition is checked for reverse ownership.
 perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
+    --demangle swift-demangle \
     --openuikit "$PACKAGE/libOpenUIKit.dylib" \
     --swiftui "$PACKAGE/libSwiftUI.dylib" \
     --executable "$OUT/focus_widget_guest" \
     > "$AUDIT/framework-providers.tsv"
+grep -Fqx $'import\texecutable\tSwiftUI\tlibSwiftUI\t_$sxSg7SwiftUI9_OpenViewA2bCRzlMc' \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: non-prefix SwiftUI conformance import escaped provider audit" >&2
+    exit 2
+}
+grep -Fqx $'definition\tlibSwiftUI\tSwiftUI\t_$s4Body7SwiftUI9_OpenViewPTl' \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: non-prefix SwiftUI associated-type definition escaped ownership audit" >&2
+    exit 2
+}
+grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t_$s10ObjectiveC8SelectorV9OpenUIKitE10actionNameSSvg' \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: non-prefix OpenUIKit extension definition escaped ownership audit" >&2
+    exit 2
+}
 expected_openuikit_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \

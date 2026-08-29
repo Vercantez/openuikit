@@ -46,8 +46,9 @@ SwiftUI/build-support and OpenUIKit source brackets, exact open-font bytes,
 Foundation invisibility, Mach-O architecture, exact `LC_ID_DYLIB`, `LC_RPATH`,
 dependency and linker-input allowlists, absence of direct Apple Foundation/
 SwiftUI/SwiftUICore loads from the executable and packaged dylibs, universal
-SwiftUI/OpenUIKit/OpenCoreGraphics two-level bind providers, reverse framework
-symbol-ownership exclusions, a missing-`libSwiftUI`
+SwiftUI/OpenUIKit/OpenCoreGraphics two-level bind providers across direct,
+associated-type, conformance, and foreign-type-extension manglings, reverse
+framework symbol-ownership exclusions, a missing-`libSwiftUI`
 loader-failure control, a reciprocal missing-`libOpenUIKit` recursive-load
 control, the guest-root manifest against the current machorun checkout, a hash
 manifest for every node in the complete `build/full` input subset, the complete
@@ -71,6 +72,11 @@ recorded input or closure manifests. Those stubs abort if reached; this widget
 success proves that the bounded path does not call them, not that Foundation or
 CoreFoundation behavior has been implemented.
 
+Every resolved closure image must be a regular file reached only through real
+directories below its declared package or guest-root boundary. A symlink at the
+image or any ancestor component is rejected rather than followed and mislabeled
+as in-root content.
+
 The resume contract is deliberately fail-closed. Its canonical input manifest
 records regular files, directories, symlinks, and symlink targets, so missing,
 extra, type, byte, or link-target drift is visible. It includes the Foundation
@@ -78,8 +84,9 @@ guard source, all OpenUIKit/OpenCoreGraphics module artifacts, both complete C
 header trees, and every node of `scratch/sysroot_full`, including the five
 exact TBD paths named by the link maps. The adversarial integration runner
 mutates each reviewed class in isolation—plus provider and inventory proof
-logic—and requires `SKIP_FULL_BUILD=1` to stop before guest success, restores
-the byte, and finally proves a clean isolated resume still runs.
+logic and a runtime ancestor-directory symlink—and requires
+`SKIP_FULL_BUILD=1` to stop before guest success, restores the node, and finally
+proves a clean isolated resume still runs.
 
 The Noble image's pinned DejaVu Sans and DejaVu Sans Bold provide a
 redistributable missing-glyph fallback. The proof stages and preflights their

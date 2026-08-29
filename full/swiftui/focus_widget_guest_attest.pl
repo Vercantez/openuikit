@@ -178,6 +178,37 @@ sub beneath {
     return $path eq $root || index($path, "$root/") == 0;
 }
 
+sub require_directory_no_link {
+    my ($path, $what) = @_;
+    my @st = lstat($path);
+    fail("missing $what: $path") unless @st;
+    fail("$what is a symlink: $path") if -l _;
+    fail("$what is not a directory: $path") unless -d _;
+}
+
+sub require_regular_beneath_no_links {
+    my ($path, $root, $what) = @_;
+    fail("$what is outside its trusted root $root: $path") unless beneath($path, $root);
+    fail("$what is the trusted root directory, not a file: $path") if $path eq $root;
+    require_directory_no_link($root, "$what trusted root");
+
+    my $relative = substr($path, length($root));
+    $relative =~ s{^/}{};
+    my @parts = split m{/}, $relative;
+    my $cursor = $root;
+    for my $index (0 .. $#parts) {
+        $cursor .= "/$parts[$index]";
+        my @st = lstat($cursor);
+        fail("missing $what path component: $cursor") unless @st;
+        fail("$what path component is a symlink: $cursor") if -l _;
+        if ($index == $#parts) {
+            fail("$what is not a regular file: $cursor") unless -f _;
+        } else {
+            fail("$what ancestor is not a directory: $cursor") unless -d _;
+        }
+    }
+}
+
 sub runtime_path {
     my ($dyld_path, $guest_root) = @_;
     return normalize_absolute("$guest_root/darwin$dyld_path");
@@ -219,6 +250,19 @@ sub require_regular_no_link {
     fail("$what is not a regular file: $path") unless -f _;
 }
 
+sub require_runtime_image {
+    my ($path, $executable, $package, $guest_root, $what) = @_;
+    if ($path eq $executable) {
+        require_regular_beneath_no_links($path, dirname($executable), $what);
+    } elsif (beneath($path, $package)) {
+        require_regular_beneath_no_links($path, $package, $what);
+    } elsif (beneath($path, $guest_root)) {
+        require_regular_beneath_no_links($path, $guest_root, $what);
+    } else {
+        fail("$what is outside executable/package/root: $path");
+    }
+}
+
 sub closure_command {
     my (@args) = @_;
     my ($otool, $executable, $package, $guest_root);
@@ -235,13 +279,15 @@ sub closure_command {
     $executable = normalize_absolute($executable);
     $package = normalize_absolute($package);
     $guest_root = normalize_absolute($guest_root);
-    require_regular_no_link($executable, 'guest executable');
+    require_directory_no_link($package, 'framework package');
+    require_directory_no_link($guest_root, 'guest root');
+    require_runtime_image($executable, $executable, $package, $guest_root, 'guest executable');
 
     my @queue = ([ $executable, [] ]);
     my (%processed_state, %files, %edges);
     while (@queue) {
         my ($image, $inherited) = @{shift @queue};
-        require_regular_no_link($image, 'runtime closure image');
+        require_runtime_image($image, $executable, $package, $guest_root, 'runtime closure image');
         my $state_key = join("\0", $image, @$inherited);
         next if $processed_state{$state_key}++;
         fail('runtime closure exceeded 4096 resolution states') if keys(%processed_state) > 4096;
@@ -281,7 +327,8 @@ sub closure_command {
             fail("cannot resolve $kind $name required by $label") unless @candidates;
             fail("ambiguous resolution of $name required by $label: @candidates") if @candidates > 1;
             my $resolved = $candidates[0];
-            require_regular_no_link($resolved, "resolved $kind $name");
+            require_runtime_image(
+                $resolved, $executable, $package, $guest_root, "resolved $kind $name");
             my $target_label = runtime_label($resolved, $executable, $package, $guest_root);
             $edges{join("\t", 'edge', $label, $kind, $name, $target_label)} = 1;
             push @queue, [ $resolved, [ @rpaths ] ];
@@ -290,8 +337,8 @@ sub closure_command {
 
     my $loader = "$guest_root/machorun";
     my $root_manifest = "$guest_root/.manifest";
-    require_regular_no_link($loader, 'machorun loader');
-    require_regular_no_link($root_manifest, 'guest-root manifest');
+    require_regular_beneath_no_links($loader, $guest_root, 'machorun loader');
+    require_regular_beneath_no_links($root_manifest, $guest_root, 'guest-root manifest');
     $files{'loader/machorun'} = file_sha256($loader);
     $files{'attestation/guest-root.manifest'} = file_sha256($root_manifest);
 
@@ -308,7 +355,7 @@ sub closure_command {
     print "$_\n" for sort keys %edges;
 }
 
-sub swift_module {
+sub prefixed_swift_module {
     my ($symbol) = @_;
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
     return 'OpenUIKit' if $symbol =~ /^_?\$s9OpenUIKit/;
@@ -316,32 +363,62 @@ sub swift_module {
     return undef;
 }
 
-sub symbol_lines {
-    my ($text) = @_;
-    my @symbols;
+sub framework_tokens {
+    my ($symbol) = @_;
+    return grep { index($symbol, length($_) . $_) >= 0 }
+        qw(SwiftUI OpenUIKit OpenCoreGraphics);
+}
+
+sub classify_framework_symbol {
+    my ($demangle, $symbol) = @_;
+    my $prefix = prefixed_swift_module($symbol);
+    return ($prefix, undef) if defined $prefix;
+
+    my @mentioned = framework_tokens($symbol);
+    return (undef, undef) unless @mentioned;
+    my $expanded = capture_command($demangle, '--compact', $symbol);
+    $expanded =~ s/[\r\n]+\z//;
+    fail("demangler returned multiple lines for $symbol") if $expanded =~ /[\r\n]/;
+    my @owners;
+    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics)) {
+        push @owners, $module
+            if $expanded =~ /\(extension in \Q$module\E\):/
+            || $expanded =~ /^associated type descriptor for \Q$module\E\./
+            || $expanded =~ /\bin \Q$module\E\z/;
+    }
+    fail("ambiguous framework owner [@owners] for $symbol ($expanded)") if @owners > 1;
+    fail("unclassified framework-bearing symbol $symbol ($expanded)") unless @owners == 1;
+    return ($owners[0], $expanded);
+}
+
+sub symbol_records {
+    my ($demangle, $text) = @_;
+    my @records;
     for my $line (split /\n/, $text) {
         my @fields = split /\s+/, $line;
         next unless @fields;
         my $symbol = $fields[-1];
-        push @symbols, $symbol if defined swift_module($symbol);
+        my ($module, $expanded) = classify_framework_symbol($demangle, $symbol);
+        push @records, [ $symbol, $module, $expanded ] if defined $module;
     }
-    return @symbols;
+    return @records;
 }
 
 sub provider_command {
     my (@args) = @_;
-    my ($nm, $objdump, $openuikit, $swiftui, $executable);
+    my ($nm, $objdump, $demangle, $openuikit, $swiftui, $executable);
     GetOptionsFromArray(
         \@args,
         'nm=s'         => \$nm,
         'objdump=s'    => \$objdump,
+        'demangle=s'   => \$demangle,
         'openuikit=s'  => \$openuikit,
         'swiftui=s'    => \$swiftui,
         'executable=s' => \$executable,
     ) or fail('invalid provider options');
     fail('providers takes no positional arguments') if @args;
-    fail('providers requires --nm, --objdump, --openuikit, --swiftui, and --executable')
-        unless defined($nm) && defined($objdump) && defined($openuikit)
+    fail('providers requires --nm, --objdump, --demangle, --openuikit, --swiftui, and --executable')
+        unless defined($nm) && defined($objdump) && defined($demangle) && defined($openuikit)
             && defined($swiftui) && defined($executable);
 
     my %paths = (
@@ -360,21 +437,32 @@ sub provider_command {
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenUIKit',
     );
-    my (%definitions, %undefined, %binds, %counts);
+    my (%definitions, %undefined, %binds, %counts, %symbol_module);
     for my $image (sort keys %paths) {
-        my @defined = symbol_lines(capture_command($nm, '-gj', '--defined-only', $paths{$image}));
-        my @undefined = symbol_lines(capture_command($nm, '-u', $paths{$image}));
-        $definitions{$image}{$_} = 1 for @defined;
-        $undefined{$image}{$_} = 1 for @undefined;
-        $counts{$image}{defined}{swift_module($_)}++ for @defined;
-        $counts{$image}{undefined}{swift_module($_)}++ for @undefined;
+        my @defined = symbol_records(
+            $demangle, capture_command($nm, '-gj', '--defined-only', $paths{$image}));
+        my @undefined = symbol_records($demangle, capture_command($nm, '-u', $paths{$image}));
+        for my $record (@defined) {
+            my ($symbol, $module) = @$record;
+            $definitions{$image}{$symbol} = 1;
+            $symbol_module{$symbol} = $module;
+            $counts{$image}{defined}{$module}++;
+        }
+        for my $record (@undefined) {
+            my ($symbol, $module) = @$record;
+            $undefined{$image}{$symbol} = 1;
+            $symbol_module{$symbol} = $module;
+            $counts{$image}{undefined}{$module}++;
+        }
         for my $mode ('--bind', '--lazy-bind', '--weak-bind') {
             my $text = capture_command($objdump, '--macho', $mode, $paths{$image});
             for my $line (split /\n/, $text) {
                 my @fields = split /\s+/, $line;
                 next unless @fields >= 2;
                 my $symbol = $fields[-1];
-                next unless defined swift_module($symbol);
+                my ($module) = classify_framework_symbol($demangle, $symbol);
+                next unless defined $module;
+                $symbol_module{$symbol} = $module;
                 my $provider = $fields[-2];
                 $binds{$image}{$symbol}{$provider} = 1;
             }
@@ -383,12 +471,12 @@ sub provider_command {
 
     for my $image (sort keys %paths) {
         for my $symbol (sort keys %{$definitions{$image} || {}}) {
-            my $module = swift_module($symbol);
+            my $module = $symbol_module{$symbol};
             fail("reverse ownership violation: $image defines $module symbol $symbol")
                 unless $allowed_owner{$module} eq $image;
         }
         for my $symbol (sort keys %{$undefined{$image} || {}}) {
-            my $module = swift_module($symbol);
+            my $module = $symbol_module{$symbol};
             my $expected = $expected_provider{$module};
             fail("provider image $image imports its own $module symbol $symbol")
                 if $expected eq $image;
@@ -402,7 +490,7 @@ sub provider_command {
         for my $symbol (sort keys %{$binds{$image} || {}}) {
             fail("bind table contains framework symbol absent from undefined table: $image $symbol")
                 unless $undefined{$image}{$symbol};
-            my $module = swift_module($symbol);
+            my $module = $symbol_module{$symbol};
             my $expected = $expected_provider{$module};
             my @providers = sort keys %{$binds{$image}{$symbol}};
             fail("noncanonical provider for $image $symbol: [@providers], expected exactly $expected")
@@ -432,9 +520,12 @@ sub provider_command {
                     ($counts{$image}{$kind}{$module} || 0);
             }
         }
+        for my $symbol (sort keys %{$definitions{$image} || {}}) {
+            print join("\t", 'definition', $image, $symbol_module{$symbol}, $symbol), "\n";
+        }
         for my $symbol (sort keys %{$undefined{$image} || {}}) {
             my ($provider) = keys %{$binds{$image}{$symbol}};
-            print join("\t", 'import', $image, swift_module($symbol), $provider, $symbol), "\n";
+            print join("\t", 'import', $image, $symbol_module{$symbol}, $provider, $symbol), "\n";
         }
     }
 }

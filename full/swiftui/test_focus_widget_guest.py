@@ -92,7 +92,11 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("focus_widget_guest.defined", text)
         self.assertIn("framework-providers.tsv", text)
         self.assertIn('perl "$ATTEST" providers', text)
+        self.assertIn("--demangle swift-demangle", text)
         self.assertIn("Universal, non-vacuous two-level provider gate", text)
+        self.assertIn("_$sxSg7SwiftUI9_OpenViewA2bCRzlMc", text)
+        self.assertIn("_$s4Body7SwiftUI9_OpenViewPTl", text)
+        self.assertIn("_$s10ObjectiveC8SelectorV9OpenUIKitE10actionNameSSvg", text)
         self.assertIn("missing-swiftui-control", text)
         self.assertIn("missing-libSwiftUI control exited", text)
         self.assertIn("missing-libSwiftUI discriminator changed", text)
@@ -213,6 +217,10 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("reverse ownership violation", helper)
         self.assertIn("bind table contains framework symbol absent from undefined table", helper)
         self.assertIn("vacuous provider gate", helper)
+        self.assertIn("unclassified framework-bearing symbol", helper)
+        self.assertIn("associated type descriptor", helper)
+        self.assertIn("extension in", helper)
+        self.assertIn("'definition'", helper)
 
     def test_adversarial_resume_matrix_covers_reviewed_tamper_classes(self) -> None:
         text = ADVERSARIAL.read_text()
@@ -226,6 +234,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             "header-symlink",
             "sysroot-tbd",
             "extensionless-stub",
+            "runtime-ancestor-symlink",
             "provider-logic",
             "inventory-logic",
         ):
@@ -233,6 +242,9 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("expect_resume_refusal", text)
         self.assertIn("reached guest success before refusal", text)
         self.assertIn("clean isolated resume completed", text)
+        helper = ATTEST.read_text()
+        self.assertIn("require_regular_beneath_no_links", helper)
+        self.assertIn("path component is a symlink", helper)
 
 
 if __name__ == "__main__":
