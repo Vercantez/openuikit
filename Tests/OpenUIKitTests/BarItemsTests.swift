@@ -84,6 +84,18 @@ final class BarButtonItemTests: XCTestCase {
         XCTAssertFalse(UIBarButtonItem(barButtonSystemItem: .add)._isSpace)
     }
 
+    func testAccessibilityIdentifierRoundTripsOnTheItem() {
+        let item = UIBarButtonItem(title: "Save")
+        XCTAssertNil(item.accessibilityIdentifier)
+        item.accessibilityIdentifier = "settings.save"
+        XCTAssertEqual(item.accessibilityIdentifier, "settings.save")
+
+        // Real iOS 26.1 exposes the identifier through UIBarItem's AX node;
+        // none of the private descendant UIViews copy it.
+        let view = _UIBarButtonItemView(item: item)
+        XCTAssertNil(view.accessibilityIdentifier)
+    }
+
     // MARK: Colors (measured — see UIBarButtonItem.swift)
 
     func testUntintedItemIsLabelColoredAndDisabledIsTertiary() {
@@ -339,6 +351,25 @@ final class BarButtonActionTests: XCTestCase {
 @MainActor
 final class BarAppearanceTests: XCTestCase {
 
+    /// UIAppearance is process-global, so tests of the implicit legacy path
+    /// deliberately neutralize any proxy installed by another test.
+    private func makeImplicitBar() -> UINavigationBar {
+        let bar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: 393, height: 54))
+        let initial = UINavigationBarAppearance()
+        initial.configureWithOpaqueBackground()
+        bar._standardAppearance = initial
+        bar._standardAppearanceIsExplicit = false
+        bar.scrollEdgeAppearance = nil
+        bar.compactAppearance = nil
+        bar._legacyBackgroundImages = [:]
+        bar.shadowImage = nil
+        bar.titleTextAttributes = nil
+        bar.largeTitleTextAttributes = nil
+        bar.setState(title: "Library", backTitle: nil)
+        bar.applyAppearance()
+        return bar
+    }
+
     func testConfigurationsSetTheMeasuredDefaults() {
         let a = UINavigationBarAppearance()
         a.configureWithOpaqueBackground()
@@ -380,8 +411,10 @@ final class BarAppearanceTests: XCTestCase {
         let (nav, _) = makeNav()
         let a = UINavigationBarAppearance()
         a.configureWithOpaqueBackground()
-        a.titleTextAttributes = UIBarTitleTextAttributes(
-            font: .systemFont(ofSize: 20, weight: .bold), foregroundColor: .systemRed)
+        a.titleTextAttributes = [
+            .font: UIFont.systemFont(ofSize: 20, weight: .bold),
+            .foregroundColor: UIColor.systemRed,
+        ]
         nav.navigationBar.standardAppearance = a
         nav.view.layoutIfNeeded()
         XCTAssertEqual(nav.navigationBar.titleLabel.font.pointSize, 20)
@@ -389,12 +422,174 @@ final class BarAppearanceTests: XCTestCase {
     }
 
     func testAttributeDictionarySpelling() {
-        let attrs = UIBarTitleTextAttributes([
+        let appearance = UINavigationBarAppearance()
+        appearance.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 22),
             .foregroundColor: UIColor.systemGreen,
-        ])
-        XCTAssertEqual(attrs.font?.pointSize, 22)
-        XCTAssertEqual(attrs.foregroundColor, UIColor.systemGreen)
+        ]
+        let attrs = appearance.titleTextAttributes
+        XCTAssertEqual((attrs[.font] as? UIFont)?.pointSize, 22)
+        XCTAssertEqual(attrs[.foregroundColor] as? UIColor, UIColor.systemGreen)
+    }
+
+    func testAttributeDictionariesHaveValueSemantics() {
+        let appearance = UINavigationBarAppearance()
+        var attrs = appearance.titleTextAttributes
+        attrs[.foregroundColor] = UIColor.systemRed
+        appearance.titleTextAttributes = attrs
+        attrs[.foregroundColor] = UIColor.systemBlue
+
+        XCTAssertEqual(appearance.titleTextAttributes[.foregroundColor] as? UIColor,
+                       UIColor.systemRed)
+    }
+
+    func testBarMetricsRawValuesAndAliasesMatchUIKit() {
+        XCTAssertEqual(UIBarMetrics.default.rawValue, 0)
+        XCTAssertEqual(UIBarMetrics.compact.rawValue, 1)
+        XCTAssertEqual(UIBarMetrics.defaultPrompt.rawValue, 101)
+        XCTAssertEqual(UIBarMetrics.compactPrompt.rawValue, 102)
+        XCTAssertEqual(UIBarMetrics.landscapePhone, .compact)
+        XCTAssertEqual(UIBarMetrics.landscapePhonePrompt, .compactPrompt)
+    }
+
+    func testLegacyBackgroundImagesRoundTripByExactMetric() {
+        let bar = makeImplicitBar()
+        let regular = UIImage(bitmap: Bitmap(width: 4, height: 2))
+        let compact = UIImage(bitmap: Bitmap(width: 3, height: 1))
+
+        bar.setBackgroundImage(regular, for: .default)
+        XCTAssertTrue(bar.backgroundImage(for: .default) === regular)
+        XCTAssertNil(bar.backgroundImage(for: .compact),
+                     "the legacy getter does not fall back across metrics")
+        bar.setBackgroundImage(compact, for: .compact)
+        XCTAssertTrue(bar.backgroundImage(for: .compact) === compact)
+        bar.setBackgroundImage(nil, for: .compact)
+        XCTAssertNil(bar.backgroundImage(for: .compact))
+        XCTAssertTrue(bar.backgroundImage(for: .default) === regular)
+    }
+
+    func testPromptArtworkFallsBackVisuallyWithoutChangingExactGetter() {
+        let bar = makeImplicitBar()
+        let regular = UIImage(bitmap: Bitmap(width: 4, height: 2))
+        let prompt = UIImage(bitmap: Bitmap(width: 5, height: 3))
+        bar.setBackgroundImage(regular, for: .default)
+
+        let item = UINavigationItem(title: "Library")
+        item.prompt = "Choose a shelf"
+        bar.setItems([item])
+        XCTAssertNil(bar.backgroundImage(for: .defaultPrompt))
+        XCTAssertTrue(bar.legacyBackgroundImageForCurrentMetrics === regular)
+
+        bar.setBackgroundImage(prompt, for: .defaultPrompt)
+        XCTAssertTrue(bar.backgroundImage(for: .defaultPrompt) === prompt)
+        XCTAssertTrue(bar.legacyBackgroundImageForCurrentMetrics === prompt)
+    }
+
+    func testLegacyEmptyImagesSuppressBackgroundAndHairline() {
+        let bar = makeImplicitBar()
+        let emptyBackground = UIImage()
+        let emptyShadow = UIImage()
+        bar.isTranslucent = false
+        bar.setBackgroundImage(emptyBackground, for: .default)
+        bar.shadowImage = emptyShadow
+        bar.titleTextAttributes = [
+            .font: UIFont.systemFont(ofSize: 23, weight: .bold),
+            .foregroundColor: UIColor.systemRed,
+        ]
+        bar.layoutIfNeeded()
+
+        XCTAssertTrue(bar.backgroundImage(for: .default) === emptyBackground)
+        XCTAssertTrue(bar.shadowImage === emptyShadow)
+        XCTAssertNil(bar.backgroundColor)
+        XCTAssertTrue(bar.backgroundImageView.image === emptyBackground)
+        XCTAssertFalse(bar.backgroundImageView.isHidden)
+        XCTAssertTrue(bar.shadowImageView.image === emptyShadow)
+        XCTAssertFalse(bar.shadowImageView.isHidden)
+        XCTAssertTrue(bar.hairline.isHidden)
+        XCTAssertEqual(bar.titleLabel.font.pointSize, 23)
+        XCTAssertEqual(bar.titleLabel.textColor, UIColor.systemRed)
+    }
+
+    func testLegacyShadowIsIgnoredWithoutALegacyBackground() {
+        let bar = makeImplicitBar()
+        let emptyShadow = UIImage()
+        bar.shadowImage = emptyShadow
+        bar.layoutIfNeeded()
+
+        XCTAssertEqual(bar.backgroundColor, UIColor.systemBackground)
+        XCTAssertNil(bar.shadowImageView.image)
+        XCTAssertTrue(bar.shadowImageView.isHidden)
+        XCTAssertFalse(bar.hairline.isHidden)
+    }
+
+    func testExplicitModernAppearanceWinsInBothSetterOrders() {
+        for modernFirst in [false, true] {
+            let bar = makeImplicitBar()
+            let emptyBackground = UIImage()
+            let emptyShadow = UIImage()
+            let modern = UINavigationBarAppearance()
+            modern.configureWithOpaqueBackground()
+            modern.backgroundColor = .systemGreen
+            modern.shadowColor = .systemBlue
+            modern.titleTextAttributes = [.foregroundColor: UIColor.systemBlue]
+
+            let installLegacy = {
+                bar.setBackgroundImage(emptyBackground, for: .default)
+                bar.shadowImage = emptyShadow
+                bar.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
+            }
+            if modernFirst {
+                bar.standardAppearance = modern
+                installLegacy()
+            } else {
+                installLegacy()
+                bar.standardAppearance = modern
+            }
+            bar.layoutIfNeeded()
+
+            XCTAssertTrue(bar.backgroundImage(for: .default) === emptyBackground)
+            XCTAssertTrue(bar.shadowImage === emptyShadow)
+            XCTAssertEqual(bar.titleTextAttributes?[.foregroundColor] as? UIColor,
+                           UIColor.systemRed)
+            XCTAssertEqual(bar.backgroundColor, UIColor.systemGreen)
+            XCTAssertNil(bar.backgroundImageView.image)
+            XCTAssertTrue(bar.backgroundImageView.isHidden)
+            XCTAssertNil(bar.shadowImageView.image)
+            XCTAssertTrue(bar.shadowImageView.isHidden)
+            XCTAssertFalse(bar.hairline.isHidden)
+            XCTAssertEqual(bar.hairline.backgroundColor, UIColor.systemBlue)
+            XCTAssertEqual(bar.titleLabel.textColor, UIColor.systemBlue)
+        }
+    }
+
+    func testNavigationItemModernAppearancesWinOverLegacyState() {
+        for useScrollEdge in [false, true] {
+            let bar = makeImplicitBar()
+            let emptyBackground = UIImage()
+            bar.setBackgroundImage(emptyBackground, for: .default)
+            bar.shadowImage = UIImage()
+            bar.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
+
+            let modern = UINavigationBarAppearance()
+            modern.configureWithOpaqueBackground()
+            modern.backgroundColor = .systemGreen
+            modern.titleTextAttributes = [.foregroundColor: UIColor.systemBlue]
+            let item = UINavigationItem(title: "Modern")
+            if useScrollEdge {
+                item.scrollEdgeAppearance = modern
+            } else {
+                item.standardAppearance = modern
+            }
+            bar.setItems([item])
+            bar.layoutIfNeeded()
+
+            XCTAssertTrue(bar.effectiveAppearance === modern)
+            XCTAssertTrue(bar.effectiveAppearanceSelection.isExplicit)
+            XCTAssertTrue(bar.backgroundImage(for: .default) === emptyBackground)
+            XCTAssertEqual(bar.backgroundColor, UIColor.systemGreen)
+            XCTAssertNil(bar.backgroundImageView.image)
+            XCTAssertEqual(bar.titleLabel.textColor, UIColor.systemBlue)
+        }
     }
 
     /// `scrollEdgeAppearance` wins while the tracked scroll view sits at its
@@ -431,6 +626,64 @@ final class BarAppearanceTests: XCTestCase {
         nav.view.layoutIfNeeded()
         XCTAssertEqual(nav.navigationBar.standardAppearance._configuration, .opaque)
         XCTAssertEqual(nav.navigationBar.backgroundColor, UIColor.systemTeal)
+    }
+
+    func testClearingBarTintRestoresTheImplicitDefaultAndKeepsLegacyState() {
+        let bar = makeImplicitBar()
+        let compactBackground = UIImage(bitmap: Bitmap(width: 4, height: 2))
+        let shadow = UIImage()
+        bar.setBackgroundImage(compactBackground, for: .compact)
+        bar.shadowImage = shadow
+        bar.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
+
+        bar.barTintColor = .systemTeal
+        XCTAssertEqual(bar.backgroundColor, UIColor.systemTeal)
+        XCTAssertEqual(bar.standardAppearance.backgroundColor, UIColor.systemTeal)
+
+        bar.barTintColor = nil
+
+        XCTAssertFalse(bar._standardAppearanceIsExplicit)
+        XCTAssertEqual(bar.standardAppearance._configuration, .opaque)
+        XCTAssertEqual(bar.standardAppearance.backgroundColor,
+                       UIColor.systemBackground)
+        XCTAssertEqual(bar.backgroundColor, UIColor.systemBackground)
+        XCTAssertTrue(bar.backgroundImage(for: .compact) === compactBackground)
+        XCTAssertTrue(bar.shadowImage === shadow)
+        XCTAssertEqual(bar.titleTextAttributes?[.foregroundColor] as? UIColor,
+                       UIColor.systemRed)
+        XCTAssertEqual(bar.titleLabel.textColor, UIColor.systemRed)
+    }
+
+    func testBarTintTransitionsDoNotMutateAnExplicitModernAppearance() {
+        let bar = makeImplicitBar()
+        let modern = UINavigationBarAppearance()
+        modern.configureWithOpaqueBackground()
+        modern.backgroundColor = .systemGreen
+        modern.shadowColor = .systemOrange
+        modern.titleTextAttributes = [.foregroundColor: UIColor.systemBlue]
+        bar.standardAppearance = modern
+
+        let legacyBackground = UIImage()
+        let legacyShadow = UIImage()
+        bar.setBackgroundImage(legacyBackground, for: .default)
+        bar.shadowImage = legacyShadow
+        bar.titleTextAttributes = [.foregroundColor: UIColor.systemRed]
+
+        bar.barTintColor = .systemTeal
+        bar.barTintColor = nil
+
+        XCTAssertTrue(bar.standardAppearance === modern)
+        XCTAssertTrue(bar._standardAppearanceIsExplicit)
+        XCTAssertEqual(modern._configuration, .opaque)
+        XCTAssertEqual(modern.backgroundColor, UIColor.systemGreen)
+        XCTAssertEqual(modern.shadowColor, UIColor.systemOrange)
+        XCTAssertEqual(bar.backgroundColor, UIColor.systemGreen)
+        XCTAssertEqual(bar.hairline.backgroundColor, UIColor.systemOrange)
+        XCTAssertEqual(bar.titleLabel.textColor, UIColor.systemBlue)
+        XCTAssertTrue(bar.backgroundImage(for: .default) === legacyBackground)
+        XCTAssertTrue(bar.shadowImage === legacyShadow)
+        XCTAssertEqual(bar.titleTextAttributes?[.foregroundColor] as? UIColor,
+                       UIColor.systemRed)
     }
 }
 

@@ -30,16 +30,34 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
 
     func testNavigationAppearanceProxyIsInheritedByNewBars() {
         let proxy = UINavigationBar.appearance()
-        let originalStandard = proxy.standardAppearance
+        let originalStandard = proxy._standardAppearance
+        let originalStandardIsExplicit = proxy._standardAppearanceIsExplicit
         let originalEdge = proxy.scrollEdgeAppearance
+        let originalCompact = proxy.compactAppearance
+        let originalBackgroundImages = proxy._legacyBackgroundImages
+        let originalShadowImage = proxy.shadowImage
+        let originalTitleAttributes = proxy.titleTextAttributes
+        let originalLargeTitleAttributes = proxy.largeTitleTextAttributes
+        let originalIsTranslucent = proxy.isTranslucent
         defer {
-            proxy.standardAppearance = originalStandard
+            proxy._standardAppearance = originalStandard
+            proxy._standardAppearanceIsExplicit = originalStandardIsExplicit
             proxy.scrollEdgeAppearance = originalEdge
+            proxy.compactAppearance = originalCompact
+            proxy._legacyBackgroundImages = originalBackgroundImages
+            proxy.shadowImage = originalShadowImage
+            proxy.titleTextAttributes = originalTitleAttributes
+            proxy.largeTitleTextAttributes = originalLargeTitleAttributes
+            proxy.isTranslucent = originalIsTranslucent
+            proxy.applyAppearance()
         }
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .systemPurple
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.systemBlue,
+        ]
         appearance.backButtonAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.systemOrange,
         ]
@@ -47,14 +65,30 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
         appearance.setBackIndicatorImage(indicator, transitionMaskImage: indicator)
         proxy.standardAppearance = appearance
         proxy.scrollEdgeAppearance = appearance
+        let emptyBackground = UIImage()
+        let emptyShadow = UIImage()
+        proxy.setBackgroundImage(emptyBackground, for: .default)
+        proxy.shadowImage = emptyShadow
+        proxy.titleTextAttributes = [
+            .foregroundColor: UIColor.systemRed,
+        ]
 
         let bar = UINavigationBar()
         XCTAssertTrue(bar.standardAppearance === appearance)
         XCTAssertTrue(bar.scrollEdgeAppearance === appearance)
+        XCTAssertTrue(bar._standardAppearanceIsExplicit)
         XCTAssertTrue(appearance.backIndicatorImage === indicator)
         XCTAssertTrue(appearance.backIndicatorTransitionMaskImage === indicator)
+        XCTAssertTrue(bar.backgroundImage(for: .default) === emptyBackground)
+        XCTAssertTrue(bar.shadowImage === emptyShadow)
 
         bar.setState(title: "Details", backTitle: "Back")
+        XCTAssertEqual(bar.backgroundColor, .systemPurple)
+        XCTAssertNil(bar.backgroundImageView.image,
+                     "the proxy's explicit modern appearance wins as a whole")
+        XCTAssertTrue(bar.backgroundImageView.isHidden)
+        XCTAssertFalse(bar.hairline.isHidden)
+        XCTAssertEqual(bar.titleLabel.textColor, .systemBlue)
         XCTAssertEqual(bar.backButton?.backLabel.textColor, .systemOrange)
         XCTAssertEqual(bar.backButton?.chevron.textColor, .systemOrange)
     }

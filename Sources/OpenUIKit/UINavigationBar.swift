@@ -216,6 +216,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     var titleLabel: UILabel
     var backButton: _UINavigationBarBackButton?
     let hairline: UIView
+    /// Legacy and modern background images share these rendering surfaces.
+    /// A zero-sized `UIImage()` deliberately draws nothing; UIKit apps use
+    /// that sentinel to suppress the default background and shadow artwork.
+    let backgroundImageView = UIImageView()
+    let shadowImageView = UIImageView()
 
     // MARK: Navigation items (M13)
 
@@ -238,12 +243,23 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// configuration — that is what OpenUIKit's inline bar has drawn since
     /// M7.5, and iOS 26's own default (transparent + scroll-edge effect) is
     /// what `prefersLargeTitles` already models.
-    public var standardAppearance: UINavigationBarAppearance = {
+    var _standardAppearance: UINavigationBarAppearance = {
         let a = UINavigationBarAppearance()
         a.configureWithOpaqueBackground()
         return a
-    }() {
-        didSet { applyAppearance() }
+    }()
+    /// UIKit synthesizes its initial `standardAppearance` from legacy state,
+    /// but an appearance explicitly assigned by the app becomes authoritative
+    /// as a WHOLE. The distinction is observable: legacy getters still retain
+    /// later values while the explicit modern appearance keeps rendering.
+    var _standardAppearanceIsExplicit = false
+    public var standardAppearance: UINavigationBarAppearance {
+        get { _standardAppearance }
+        set {
+            _standardAppearance = newValue
+            _standardAppearanceIsExplicit = true
+            applyAppearance()
+        }
     }
     public var scrollEdgeAppearance: UINavigationBarAppearance? {
         didSet { applyAppearance() }
@@ -251,31 +267,62 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     public var compactAppearance: UINavigationBarAppearance? {
         didSet { applyAppearance() }
     }
+    /// Legacy values remain independent of `standardAppearance`. Real UIKit
+    /// reports them through their legacy getters even when a modern appearance
+    /// wins rendering (measured on iOS 26.1, both setter orders).
+    var _legacyBackgroundImages: [UIBarMetrics: UIImage] = [:]
+    public var shadowImage: UIImage? {
+        didSet { if shadowImage !== oldValue { applyAppearance() } }
+    }
+    public var titleTextAttributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            applyTitleAttributes()
+            setNeedsLayout()
+        }
+    }
+    public var largeTitleTextAttributes: [NSAttributedString.Key: Any]? {
+        didSet {
+            applyTitleAttributes()
+            setNeedsLayout()
+        }
+    }
     /// Legacy `barTintColor`, folded into the standard appearance's
     /// background color (UIKit's own documented equivalence).
     public var barTintColor: UIColor? {
         didSet {
-            if let barTintColor {
-                standardAppearance.configureWithOpaqueBackground()
-                standardAppearance.backgroundColor = barTintColor
+            if !_standardAppearanceIsExplicit {
+                // The implicit standard appearance is synthesized from the
+                // legacy value. Clearing that value must synthesize the
+                // default again rather than retaining the previous tint.
+                _standardAppearance.configureWithOpaqueBackground()
+                if let barTintColor {
+                    _standardAppearance.backgroundColor = barTintColor
+                }
             }
             applyAppearance()
         }
     }
     public var isTranslucent: Bool = true
 
-    /// The appearance in force right now: `scrollEdgeAppearance` while the
-    /// tracked scroll view sits at (or above) its top edge, otherwise
-    /// `standardAppearance`. Per-item overrides win over both, exactly as in
-    /// UIKit.
-    var effectiveAppearance: UINavigationBarAppearance {
+    /// The appearance in force right now and whether it was explicitly
+    /// supplied by the app. Per-item objects win over bar objects. An explicit
+    /// modern appearance is used in whole, so legacy properties remain
+    /// inspectable but do not leak into its rendering.
+    var effectiveAppearanceSelection: (appearance: UINavigationBarAppearance,
+                                       isExplicit: Bool) {
         let atEdge = trackedScrollView.map {
             $0.contentOffset.y <= -$0.contentInset.top + 0.5
         } ?? true
-        if atEdge, let a = topItem?.scrollEdgeAppearance ?? scrollEdgeAppearance {
-            return a
+        if atEdge {
+            if let a = topItem?.scrollEdgeAppearance { return (a, true) }
+            if let a = scrollEdgeAppearance { return (a, true) }
         }
-        return topItem?.standardAppearance ?? standardAppearance
+        if let a = topItem?.standardAppearance { return (a, true) }
+        return (_standardAppearance, _standardAppearanceIsExplicit)
+    }
+
+    var effectiveAppearance: UINavigationBarAppearance {
+        effectiveAppearanceSelection.appearance
     }
 
     public override init(frame: CGRect) {
@@ -294,44 +341,123 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     private func configureBar() {
         if let proxy = Self._appearanceProxy {
-            standardAppearance = proxy.standardAppearance
+            _standardAppearance = proxy._standardAppearance
+            _standardAppearanceIsExplicit = proxy._standardAppearanceIsExplicit
             scrollEdgeAppearance = proxy.scrollEdgeAppearance
             compactAppearance = proxy.compactAppearance
+            _legacyBackgroundImages = proxy._legacyBackgroundImages
+            shadowImage = proxy.shadowImage
+            titleTextAttributes = proxy.titleTextAttributes
+            largeTitleTextAttributes = proxy.largeTitleTextAttributes
             isTranslucent = proxy.isTranslucent
         }
+        backgroundImageView.isUserInteractionEnabled = false
+        backgroundImageView.contentMode = .scaleToFill
+        shadowImageView.isUserInteractionEnabled = false
+        shadowImageView.contentMode = .scaleToFill
         hairline.isUserInteractionEnabled = false
+        addSubview(backgroundImageView)
+        addSubview(shadowImageView)
         addSubview(hairline)
         addSubview(titleLabel)
         applyAppearance()
     }
 
+    /// UIKit's legacy, metric-keyed background API. The getter reports only
+    /// the exact installed metric (no fallback); visual fallback is applied
+    /// separately when a prompt is present.
+    public func setBackgroundImage(_ backgroundImage: UIImage?,
+                                   for barMetrics: UIBarMetrics) {
+        if let backgroundImage {
+            _legacyBackgroundImages[barMetrics] = backgroundImage
+        } else {
+            _legacyBackgroundImages.removeValue(forKey: barMetrics)
+        }
+        applyAppearance()
+    }
+
+    public func backgroundImage(for barMetrics: UIBarMetrics) -> UIImage? {
+        _legacyBackgroundImages[barMetrics]
+    }
+
+    /// OpenUIKit currently has one physical navigation-bar height. A prompt
+    /// selects its prompt artwork when present, with `.default` as UIKit's
+    /// documented fallback. Compact values still round-trip for source/API
+    /// parity and become renderable when compact bars land.
+    var legacyBackgroundImageForCurrentMetrics: UIImage? {
+        if promptLabel != nil, let prompt = _legacyBackgroundImages[.defaultPrompt] {
+            return prompt
+        }
+        return _legacyBackgroundImages[.default]
+    }
+
     /// Push the appearance's background + hairline onto the bar.
     func applyAppearance() {
+        let selection = effectiveAppearanceSelection
+        let a = selection.appearance
         // Large-title mode is transparent at rest by measurement (iOS 26);
         // its material comes from the scroll-edge pocket.
         guard !prefersLargeTitles else {
             backgroundColor = nil
+            backgroundImageView.image = nil
+            backgroundImageView.isHidden = true
+            shadowImageView.image = nil
+            shadowImageView.isHidden = true
             hairline.isHidden = true
+            for v in leftItemViews + rightItemViews { v.backdropColor = nil }
+            applyTitleAttributes()
+            setNeedsLayout()
             return
         }
-        let a = effectiveAppearance
-        backgroundColor = a._resolvedBackgroundColor
-        hairline.backgroundColor = a.shadowColor
-        hairline.isHidden = a.shadowColor == nil || backgroundColor == nil
+
+        let legacyBackground = selection.isExplicit
+            ? nil : legacyBackgroundImageForCurrentMetrics
+        let renderedBackground: UIImage?
+        if let legacyBackground {
+            // A custom legacy image replaces the system background, including
+            // the zero-sized UIImage() sentinel used to make a bar clear.
+            backgroundColor = nil
+            renderedBackground = legacyBackground
+        } else {
+            backgroundColor = a._resolvedBackgroundColor
+            renderedBackground = a.backgroundImage
+        }
+        backgroundImageView.image = renderedBackground
+        backgroundImageView.isHidden = renderedBackground == nil
+
+        if legacyBackground != nil, let shadowImage {
+            // UIKit consults a custom shadow only when a custom legacy
+            // background exists. UIImage() therefore suppresses the hairline.
+            shadowImageView.image = shadowImage
+            shadowImageView.isHidden = false
+            hairline.isHidden = true
+        } else {
+            shadowImageView.image = nil
+            shadowImageView.isHidden = true
+            hairline.backgroundColor = a.shadowColor
+            hairline.isHidden = a.shadowColor == nil
+                || (backgroundColor == nil && renderedBackground == nil)
+        }
         for v in leftItemViews + rightItemViews { v.backdropColor = backgroundColor }
         applyTitleAttributes()
         setNeedsLayout()
     }
 
     func applyTitleAttributes() {
-        let a = effectiveAppearance
-        titleLabel.font = a.titleTextAttributes.font
+        let selection = effectiveAppearanceSelection
+        let a = selection.appearance
+        let inlineAttributes = !selection.isExplicit
+            ? (titleTextAttributes ?? a.titleTextAttributes) : a.titleTextAttributes
+        let largeAttributes = !selection.isExplicit
+            ? (largeTitleTextAttributes ?? a.largeTitleTextAttributes)
+            : a.largeTitleTextAttributes
+        titleLabel.font = inlineAttributes[.font] as? UIFont
             ?? .systemFont(ofSize: 17, weight: .semibold)
-        titleLabel.textColor = a.titleTextAttributes.foregroundColor ?? .label
+        titleLabel.textColor = inlineAttributes[.foregroundColor] as? UIColor ?? .label
         if let l = largeTitleLabel {
-            l.font = a.largeTitleTextAttributes.font
+            l.font = largeAttributes[.font] as? UIFont
                 ?? .systemFont(ofSize: UINavigationBar.largeTitleFontSize, weight: .bold)
-            l.textColor = a.largeTitleTextAttributes.foregroundColor ?? .label
+            l.textColor = largeAttributes[.foregroundColor] as? UIColor ?? .label
         }
         let backColor = a.backButtonAppearance.normal.titleTextAttributes[.foregroundColor]
             as? UIColor ?? tintColor ?? .systemBlue
@@ -462,6 +588,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+        backgroundImageView.frame = bounds
+        if let image = shadowImageView.image {
+            shadowImageView.frame = CGRect(x: 0, y: bounds.height,
+                                           width: bounds.width, height: image.size.height)
+        } else {
+            shadowImageView.frame = .zero
+        }
         // Measured: the golden's `_UIBarBackgroundShadowView` sits just
         // BELOW the bar zone (bar-local y 54 inside a background that starts
         // at -10), i.e. flush against the content, not inside the bar.

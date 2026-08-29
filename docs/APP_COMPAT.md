@@ -83,7 +83,7 @@ Precisely how much of the ~360 that covers:
 | `UIBarButtonItem(…target:action:)` | — | blocked on the type ("Bars & appearance", 181 uses) |
 | `NotificationCenter.addObserver(_:selector:name:)` | — | blocked on the type ("App lifecycle", 543 uses) |
 | `Timer.scheduledTimer(…selector:)` | — | not implemented |
-| `UIAppearance`, KVO | — | not implemented (portable answers in docs/OBJC_RUNTIME.md) |
+| `UIAppearance`, KVO | — | process-wide `UINavigationBar.appearance()` subset works; `UITableView` and scoped/containment appearance proxies plus KVO remain missing (portable design in docs/OBJC_RUNTIME.md) |
 
 So the *dispatch mechanism* is no longer the blocker for any of them — the
 remaining ones are blocked on their host types, and each becomes a one-line
@@ -447,7 +447,7 @@ needs it.
 | # | cluster | uses | apps | notes |
 |---|---|---|---|---|
 | 1 | ~~**Collection view**~~ **SHIPPED (M13)** | 498 | 4 | `UICollectionView` 222, `UICollectionViewCell` 78, `UICollectionViewLayout` 41, `UICollectionViewFlowLayout` 30, data source/delegate 51 — all of that now exists. The reuse machinery was lifted out of `UITableView` into `Sources/OpenUIKit/UIReuse.swift` first, and both containers drive it. Still open in the TAIL of this cluster: `UICollectionViewCompositionalLayout`, `NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus animated batch updates (docs/KNOWN_GAPS.md "UICollectionView"). |
-| 2 | ~~**Bars & appearance** (6 types)~~ **SHIPPED (M13)** | ~~322~~ | 4 | `UIBarButtonItem`, `UINavigationItem`, `UIToolbar`, `UIBarAppearance` + the navigation-bar / toolbar / tab-bar subclasses, and `UIBarTitleTextAttributes`. See "What M13 shipped" below. |
+| 2 | ~~**Bars & appearance** (6 types)~~ **SHIPPED (M13)** | ~~322~~ | 4 | `UIBarButtonItem`, `UINavigationItem`, `UIToolbar`, `UIBarAppearance` + the navigation-bar / toolbar / tab-bar subclasses, and `UIBarMetrics`. Navigation-title attributes use UIKit's dictionary source shape. See "What M13 shipped" below. |
 | 3 | ~~**Menus & actions** (9 types)~~ **SHIPPED (M13)** | ~~252~~ | 2 | `UIKeyCommand` 81, `UIAction` 69, `UIMenu` 49, `UIContextMenuConfiguration` 23. Concentrated in two apps but dense there, and `UIAction` is how modern code-based UI wires buttons at all. |
 | 4 | ~~**Delegate protocols** (14 types)~~ **SHIPPED (M13)** | ~~144~~ | 4 | `UITextFieldDelegate` 20, `UITextViewDelegate` 15, `UIGestureRecognizerDelegate` 14, the collection-view trio 51, the presentation-controller delegates 23. Mostly *declarations that do not exist yet* — an app fails to compile on the conformance before any behaviour is missing. Cheapest points on the list. |
 | 5 | **Share / system UI** (5 types) | 130 | 3 | `UIActivityViewController` 84 **SHIPPED (M13, as a stub)**; `UIImagePickerController` 17 and `NSItemProvider` 16 still open. System UI we cannot reproduce; the honest shape is a compiling stub that reports "unavailable". |
@@ -481,7 +481,7 @@ this commit:
 | the notification-name group | ~90 | **closed** (controls2) — `NotificationCenter`, `Notification.Name` and the five posted app-lifecycle names |
 | `systemLayoutSizeFitting` + `UIView.layoutFittingCompressedSize` | 24 | **closed** (M14, `UIViewCompat.swift` / `UIStackView.swift`) |
 | `UIFont.preferredFont` | 21 | **closed** (M14, `UIFontMetrics.swift`) |
-| `UIAppearance` proxies (`UINavigationBar.appearance` 11, `UITableView.appearance` 6) | 17 | **still missing** — needs a portable answer, sketched in docs/OBJC_RUNTIME.md |
+| `UIAppearance` proxies (`UINavigationBar.appearance` 11, `UITableView.appearance` 6) | 17 | **partial** — the process-wide `UINavigationBar.appearance()` subset is shipped; `UITableView.appearance()` and trait-/containment-scoped proxies remain missing |
 | `UIView.addKeyframe` | 12 | **still missing** — keyframe animations |
 | `UIView.performWithoutAnimation` | 8 | **still missing** — falls out of `setAnimationsEnabled` |
 | `UIFont.monospacedDigitSystemFont` | 8 | **still missing** — needs the monospaced-digit metrics harvested |
@@ -606,7 +606,7 @@ scenes**:
 | type | corpus uses | notes |
 |---|---|---|
 | `UIBarButtonItem` | 270 | all five UIKit initializers (`title:style:target:action:`, `barButtonSystemItem:target:action:`, `image:style:target:action:`, `customView:`, plain), `isEnabled`, `tintColor`, `width`, `style`. Target-action goes through the M12 selector machinery, and the sender UIKit hands the action is the ITEM. |
-| `UINavigationBarAppearance` | 33 | plus `UIBarAppearance`, `UIToolbarAppearance`, `UITabBarAppearance`, `UIBarTitleTextAttributes`. `configureWith{Default,Opaque,Transparent}Background`, `backgroundColor`, `shadowColor`, `titleTextAttributes`, `largeTitleTextAttributes`; wired to `standardAppearance` / `scrollEdgeAppearance` / `compactAppearance` on the bar AND per-item on `UINavigationItem`. |
+| `UINavigationBarAppearance` | 33 | plus `UIBarAppearance`, `UIToolbarAppearance`, `UITabBarAppearance`, and `UIBarMetrics`. `configureWith{Default,Opaque,Transparent}Background`, `backgroundColor`, `shadowColor`, dictionary-shaped `titleTextAttributes` / `largeTitleTextAttributes`; wired to `standardAppearance` / `scrollEdgeAppearance` / `compactAppearance` on the bar AND per-item on `UINavigationItem`. The 2026-08-29 Focus slice also added the metric-keyed legacy background-image API, legacy shadow/title properties, and `UIBarButtonItem.accessibilityIdentifier`. |
 | `UIToolbar` | 12 | `items`, `setItems(_:animated:)`, `barTintColor`, `tintColor`, `isTranslucent`, appearance objects; plus `UINavigationController.toolbar` / `isToolbarHidden` / `setToolbarHidden(_:animated:)` driven by the top controller's `toolbarItems`. |
 | `UINavigationItem` | — | `title`, `titleView`, `prompt`, `left`/`rightBarButtonItem(s)` (+ the animated setters), `backBarButtonItem`, `backButtonTitle`, `hidesBackButton`, `largeTitleDisplayMode`, per-item appearances. Reachable as `UIViewController.navigationItem`, created lazily and seeded from `title` exactly like UIKit — which is how every real app configures a bar. |
 

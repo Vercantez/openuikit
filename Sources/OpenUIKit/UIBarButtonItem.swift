@@ -91,6 +91,12 @@ public class UIBarButtonItem {
     public var width: CGFloat = 0
     public var customView: UIView?
     public private(set) var systemItem: SystemItem?
+    /// Stable identifier consumed by UIKit's accessibility tree and UI tests.
+    /// OpenUIKit currently has no assistive-technology tree, so—as with the
+    /// other accessibility properties—this is faithful round-trip storage.
+    /// Real UIKit also keeps it on the UIBarItem rather than copying it onto
+    /// the private descendant UIView (iOS 26.1 runtime probe).
+    public var accessibilityIdentifier: String?
     /// Target-action, dispatched through the M12 selector machinery.
     public weak var target: AnyObject?
     public var action: Selector?

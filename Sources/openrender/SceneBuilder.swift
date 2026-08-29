@@ -1007,12 +1007,14 @@ func makeBarAppearance<A: UIBarAppearance>(_ j: SceneJSON, _ kind: A.Type) -> A 
     return a
 }
 
-func barTitleAttributes(_ j: SceneJSON) -> UIBarTitleTextAttributes {
-    var attrs = UIBarTitleTextAttributes()
-    attrs.foregroundColor = colorOrDie(j["color"], "titleTextAttributes")
+func barTitleAttributes(_ j: SceneJSON) -> [NSAttributedString.Key: Any] {
+    var attrs: [NSAttributedString.Key: Any] = [:]
+    if let color = colorOrDie(j["color"], "titleTextAttributes") {
+        attrs[.foregroundColor] = color
+    }
     if j["fontSize"] != nil || j["fontWeight"] != nil
         || j["italic"] != nil || j["monospaced"] != nil {
-        attrs.font = fontFrom(j)
+        attrs[.font] = fontFrom(j)
     }
     return attrs
 }

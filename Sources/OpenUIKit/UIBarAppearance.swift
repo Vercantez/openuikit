@@ -26,6 +26,25 @@
 // Same class of gap as the alert card and the tab-bar platter — see
 // docs/KNOWN_GAPS.md.
 
+/// The height/style family used by legacy bar-background APIs.
+///
+/// Raw values are ABI-visible UIKit values, measured from the iOS 26.1 SDK
+/// and confirmed at runtime. `defaultPrompt` / `compactPrompt` select the
+/// artwork used when a bar has a prompt; the non-prompt metric is the visual
+/// fallback when no prompt-specific image was installed.
+public enum UIBarMetrics: Int, Sendable {
+    case `default` = 0
+    case compact = 1
+    case defaultPrompt = 101
+    case compactPrompt = 102
+
+    /// Deprecated UIKit spellings retained as aliases. Swift enums cannot
+    /// declare duplicate raw-value cases, so these are static properties just
+    /// like the imported SDK surface.
+    public static var landscapePhone: UIBarMetrics { .compact }
+    public static var landscapePhonePrompt: UIBarMetrics { .compactPrompt }
+}
+
 /// Shared base of the three bar appearance objects.
 @preconcurrency @MainActor
 public class UIBarAppearance {
@@ -84,26 +103,6 @@ public class UIBarAppearance {
         case .default: return backgroundColor       // nil unless the app set one
         case .opaque: return backgroundColor ?? .systemBackground
         }
-    }
-}
-
-/// Text attributes a bar appearance can override. Mirrors the subset of
-/// `[NSAttributedString.Key: Any]` UIKit reads for bar titles; OpenUIKit
-/// keeps it typed because the library has no Foundation `Any` bridging.
-public struct UIBarTitleTextAttributes {
-    public var font: UIFont?
-    public var foregroundColor: UIColor?
-    public init(font: UIFont? = nil, foregroundColor: UIColor? = nil) {
-        self.font = font
-        self.foregroundColor = foregroundColor
-    }
-
-    /// UIKit spelling: `appearance.titleTextAttributes = [.font: f,
-    /// .foregroundColor: c]`. The dictionary form is accepted through the
-    /// attributed-string keys OpenUIKit already declares.
-    public init(_ attributes: [NSAttributedString.Key: Any]) {
-        font = attributes[.font] as? UIFont
-        foregroundColor = attributes[.foregroundColor] as? UIColor
     }
 }
 
@@ -180,8 +179,11 @@ open class UIBarButtonItemAppearance {
 
 @preconcurrency @MainActor
 public final class UINavigationBarAppearance: UIBarAppearance {
-    public var titleTextAttributes = UIBarTitleTextAttributes()
-    public var largeTitleTextAttributes = UIBarTitleTextAttributes()
+    /// UIKit's exact source shape. Keeping these as dictionaries matters to
+    /// unmodified apps: dictionary literals cannot be assigned to a wrapper
+    /// struct without changing the app source.
+    public var titleTextAttributes: [NSAttributedString.Key: Any] = [:]
+    public var largeTitleTextAttributes: [NSAttributedString.Key: Any] = [:]
     public var backButtonAppearance = UIBarButtonItemAppearance()
     public private(set) var backIndicatorImage: UIImage?
     public private(set) var backIndicatorTransitionMaskImage: UIImage?

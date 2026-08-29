@@ -617,9 +617,11 @@ than an OpenUIKit gap (docs/REAL_APP_TEST.md).
 - **No Dynamic Type.** `UIFontMetrics` (66 uses), `UIFont.preferredFont` (21)
   and `UITraitPreferredContentSizeCategory` (55) are all missing; text sizes
   are absolute.
-- **No `UIAppearance` proxies** (`UINavigationBar.appearance()` etc., ~20
-  uses) and no `UIView.setAnimationsEnabled` (92 uses — the single most-used
-  missing member on a type we do implement).
+- **`UIAppearance` is partial.** The process-wide
+  `UINavigationBar.appearance()` subset is shipped. `UITableView.appearance()`
+  and trait-/containment-scoped proxies remain missing, as does
+  `UIView.setAnimationsEnabled` (92 uses — the single most-used missing member
+  on a type we do implement).
 - **Selectors: `addTarget(_:action:for:)` still takes a closure.** Not because
   it cannot be otherwise — the M12 measurement retracted the earlier verdict
   and showed `@objc`/`#selector` compile, link and run on stock Linux Swift
@@ -1117,7 +1119,30 @@ Re-probe any of it with
     SIMCTL_CHILD_SIMSCENE_DEBUG=1 scripts/render_sim_scenes.sh <outdir> <scene.json>
 
 which prints the full private view tree (frames, fonts, colors) for every
-scene it renders. What is NOT faithful:
+scene it renders.
+
+The 2026-08-29 Focus compatibility slice adds the older API alongside those
+modern appearance objects. `UIBarMetrics` has the SDK/runtime raw values
+0/1/101/102; `setBackgroundImage(_:for:)` and its getter preserve exact
+per-metric identity, while a prompted inline bar visually falls back from
+`.defaultPrompt` to `.default`. A custom legacy background replaces the
+system background (including the common empty-`UIImage()` clear sentinel),
+and a custom `shadowImage` is consulted only with that background. Legacy
+title attributes and the two modern navigation-title attribute properties
+have UIKit's exact `[NSAttributedString.Key: Any]` shapes.
+
+An explicitly supplied modern appearance remains authoritative as a whole in
+both setter orders. That precedence also survives `UINavigationBar.appearance()`
+proxy inheritance and per-`UINavigationItem` standard/scroll-edge overrides;
+the independent legacy getters still round-trip their values. This is based
+on an iOS 26.1 runtime/render probe, not inferred behavior.
+`UIBarButtonItem.accessibilityIdentifier` likewise round-trips on the item.
+OpenUIKit still has no assistive-technology tree, and—matching the measured
+private UIKit view hierarchy—it does not copy that identifier onto the
+rendering descendant view. Compact metric artwork is retained but cannot be
+selected visually until OpenUIKit has a compact-height navigation bar.
+
+What is NOT faithful:
 
 - **The platters are glass; ours are flat.** iOS 26 puts every bar button in
   its own capsule that samples, blurs and refracts the backdrop. We draw the

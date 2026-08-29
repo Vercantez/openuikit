@@ -614,7 +614,8 @@ Punch-list cluster #2, **322 corpus uses across all four apps**, closed:
 `UIBarButtonItem` (270 — the largest missing type after Foundation and nibs),
 `UINavigationItem`, `UIToolbar`, `UIBarAppearance` +
 `UINavigationBarAppearance` / `UIToolbarAppearance` / `UITabBarAppearance`,
-and `UIBarTitleTextAttributes`. `UIViewController.navigationItem` and
+and `UIBarMetrics`; navigation-title attributes have UIKit's dictionary
+source shape. `UIViewController.navigationItem` and
 `toolbarItems` now drive the bars, which is how every real code-based app
 configures them. 8 new exported types, 5 new fixtures.
 
