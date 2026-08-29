@@ -32,7 +32,9 @@ EXPECTED_RESOURCE_FILE_COUNT=16
 EXPECTED_RESOURCE_DIRECTORY_COUNT=7
 EXPECTED_PACKAGE_FILE_COUNT=51
 EXPECTED_PACKAGE_DIRECTORY_COUNT=6
-SUBSTRATE_MANIFEST=$FULL/focus-widget-substrate.sha256
+BUILD_INPUT_MANIFEST=$FULL/focus-widget-build-inputs.manifest
+RUNTIME_CLOSURE_MANIFEST=$FULL/focus-widget-runtime-closure.manifest
+ATTEST=$W/full/swiftui/focus_widget_guest_attest.pl
 SYSTEM_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 MEDIUM_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 EXPECTED_SYSTEM_FONT_SHA=ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280
@@ -68,31 +70,57 @@ support_digest() {
             "$UIKIT/Sources/SwiftUI/Hosting.swift" \
             "$W/full/swiftui/FocusWidgetBundle.generated.swift" \
             "$W/full/swiftui/FocusWidgetGuestMain.swift" \
+            "$W/full/swiftui/focus_widget_guest_attest.pl" \
+            "$W/full/scripts/build_full.sh" \
             "$W/full/swiftui/build_focus_widget_guest.sh"; do
             printf '%s\t%s\n' "${file#"$W"/}" "$(hash_file "$file")"
         done
     } | hash_stream
 }
 
-substrate_artifact_digest() {
-    local file
-    for file in \
-        "$FULL/openuikit.o" \
-        "$FULL/opencoregraphics.o" \
-        "$FULL/cportableio.o" \
-        "$FULL/cstbtruetype.o" \
-        "$FULL/hostclock.o" \
-        "$FULL/swiftcorepatch.o" \
-        "$MRROOT/machorun" \
-        "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
-        "$MRROOT/darwin/usr/lib/libquartz.dylib" \
-        "$MRROOT/darwin/usr/lib/libSystem.B.dylib"; do
-        [ -s "$file" ] && [ -f "$file" ] && [ ! -L "$file" ] || {
-            echo "focus_widget_guest: missing regular substrate artifact: $file" >&2
-            return 2
-        }
-        printf '%s\t%s\n' "${file#"$W"/}" "$(hash_file "$file")"
-    done | hash_stream
+generate_build_input_inventory() {
+    perl "$ATTEST" inventory \
+        --w "$W" --uikit "$UIKIT" --full "$FULL" --sysroot "$SYS"
+}
+
+assert_build_input_inventory() {
+    local current
+    current=$(mktemp "$FULL/.focus-widget-build-inputs.current.XXXXXX")
+    generate_build_input_inventory > "$current" || {
+        rm -f "$current"
+        echo "focus_widget_guest: could not enumerate complete build inputs" >&2
+        return 2
+    }
+    if ! cmp -s "$BUILD_INPUT_MANIFEST" "$current"; then
+        echo "focus_widget_guest: complete build-input inventory drifted; ordinary rebuild required" >&2
+        diff -u "$BUILD_INPUT_MANIFEST" "$current" >&2 || true
+        rm -f "$current"
+        return 2
+    fi
+    rm -f "$current"
+}
+
+generate_runtime_closure() {
+    perl "$ATTEST" closure --otool llvm-otool-18 \
+        --executable "$OUT/focus_widget_guest" \
+        --package "$PACKAGE" --guest-root "$MRROOT"
+}
+
+assert_runtime_closure() {
+    local current
+    current=$(mktemp "$FULL/.focus-widget-runtime-closure.current.XXXXXX")
+    generate_runtime_closure > "$current" || {
+        rm -f "$current"
+        echo "focus_widget_guest: could not resolve complete Mach-O runtime closure" >&2
+        return 2
+    }
+    if ! cmp -s "$RUNTIME_CLOSURE_MANIFEST" "$current"; then
+        echo "focus_widget_guest: recursive Mach-O runtime closure drifted" >&2
+        diff -u "$RUNTIME_CLOSURE_MANIFEST" "$current" >&2 || true
+        rm -f "$current"
+        return 2
+    fi
+    rm -f "$current"
 }
 
 runtime_fingerprint() {
@@ -102,15 +130,13 @@ runtime_fingerprint() {
         printf 'libOpenUIKit\t%s\n' "$(hash_file "$PACKAGE/libOpenUIKit.dylib")"
         printf 'SwiftUI-module\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"
         printf 'package-tree\t%s\n' "$(tree_digest "$PACKAGE")"
+        printf 'build-input-manifest\t%s\n' "$(hash_file "$BUILD_INPUT_MANIFEST")"
+        printf 'runtime-closure-manifest\t%s\n' "$(hash_file "$RUNTIME_CLOSURE_MANIFEST")"
         printf 'resources\t%s\n' "$(tree_digest "$OUT/Focus_Widget.bundle")"
         printf 'system-font\t%s\n' "$(hash_file "$SYSTEM_FONT")"
         printf 'medium-font\t%s\n' "$(hash_file "$MEDIUM_FONT")"
         printf 'staged-system-font\t%s\n' "$(hash_file "$OUT/fonts/DejaVuSans.ttf")"
         printf 'staged-medium-font\t%s\n' "$(hash_file "$OUT/fonts/DejaVuSans-Bold.ttf")"
-        find "$MRROOT" -type f \( -name machorun -o -name '*.dylib' \) \
-            -print0 | LC_ALL=C sort -z | while IFS= read -r -d '' file; do
-                printf '%s\t%s\n' "${file#"$MRROOT"/}" "$(hash_file "$file")"
-            done
     } | hash_stream
 }
 
@@ -169,6 +195,7 @@ for required in \
     "$UIKIT/Sources/SwiftUI/Hosting.swift" \
     "$W/full/swiftui/FocusWidgetBundle.generated.swift" \
     "$W/full/swiftui/FocusWidgetGuestMain.swift" \
+    "$ATTEST" \
     "$MACHORUN/build/machorun"; do
     [ -f "$required" ] || { echo "focus_widget_guest: missing $required" >&2; exit 2; }
 done
@@ -178,31 +205,24 @@ support_before=$(support_digest)
 # before adding SwiftUI. The source checkout is mounted read-only at /uikit.
 # SKIP_FULL_BUILD=1 exists only to resume after a post-link/proof-gate failure;
 # the ordinary reproduction always rebuilds the substrate in this invocation.
-if [ "${SKIP_FULL_BUILD:-0}" != 1 ]; then
+skip_full_build=${SKIP_FULL_BUILD:-0}
+if [ "$skip_full_build" != 1 ]; then
     bash "$W/full/scripts/build_full.sh"
-    substrate_after_build=$(substrate_artifact_digest)
-    printf '%s\n' "$substrate_after_build" > "$SUBSTRATE_MANIFEST.tmp"
-    mv "$SUBSTRATE_MANIFEST.tmp" "$SUBSTRATE_MANIFEST"
+    build_input_recording=$(mktemp "$FULL/.focus-widget-build-inputs.recording.XXXXXX")
+    generate_build_input_inventory > "$build_input_recording"
+    mv "$build_input_recording" "$BUILD_INPUT_MANIFEST"
 else
-    [ -f "$SUBSTRATE_MANIFEST" ] && [ ! -L "$SUBSTRATE_MANIFEST" ] || {
-        echo "focus_widget_guest: SKIP_FULL_BUILD has no regular substrate manifest" >&2
-        exit 2
-    }
-    recorded_substrate=$(tr -d '[:space:]' < "$SUBSTRATE_MANIFEST")
-    printf '%s\n' "$recorded_substrate" | grep -Eq '^[0-9a-f]{64}$' || {
-        echo "focus_widget_guest: malformed substrate manifest" >&2
-        exit 2
-    }
-    current_substrate=$(substrate_artifact_digest)
-    [ "$current_substrate" = "$recorded_substrate" ] || {
-        echo "focus_widget_guest: SKIP_FULL_BUILD substrate artifacts drifted; rebuild first" >&2
+    [ -f "$BUILD_INPUT_MANIFEST" ] && [ ! -L "$BUILD_INPUT_MANIFEST" ] || {
+        echo "focus_widget_guest: SKIP_FULL_BUILD has no regular complete build-input manifest" >&2
         exit 2
     }
 fi
 
-recorded_substrate=$(tr -d '[:space:]' < "$SUBSTRATE_MANIFEST")
-[ "$(substrate_artifact_digest)" = "$recorded_substrate" ] || {
-    echo "focus_widget_guest: substrate artifact manifest does not match the build" >&2
+assert_build_input_inventory
+build_input_manifest_sha=$(hash_file "$BUILD_INPUT_MANIFEST")
+build_input_node_count=$(grep -c '^node'"$(printf '\t')" "$BUILD_INPUT_MANIFEST")
+[ "$build_input_node_count" -gt 900 ] || {
+    echo "focus_widget_guest: complete build-input inventory is vacuous ($build_input_node_count nodes)" >&2
     exit 2
 }
 
@@ -318,6 +338,11 @@ llvm-otool-18 -hv "$PACKAGE/libSwiftUI.dylib" | \
 llvm-otool-18 -hv "$OUT/focus_widget_guest" | \
     grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' || {
     echo "focus_widget_guest: link output is not arm64 Mach-O" >&2; exit 2; }
+
+# Close the compile/link bracket before any package byte is compared with its
+# build/full origin.  Those origins are therefore an attested cache, not a
+# self-selected cache that the package can merely agree with.
+assert_build_input_inventory
 
 load_paths() {
     llvm-otool-18 -L "$1" | tail -n +2 | \
@@ -466,37 +491,29 @@ llvm-nm-18 -gj --defined-only "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.defined"
 llvm-nm-18 -gj --defined-only "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.defined"
+llvm-nm-18 -u "$PACKAGE/libOpenUIKit.dylib" \
+    > "$AUDIT/libOpenUIKit.undefined"
 llvm-nm-18 -u "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.undefined"
 llvm-nm-18 -u "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.undefined"
+llvm-objdump-18 --macho --bind "$PACKAGE/libOpenUIKit.dylib" \
+    > "$AUDIT/libOpenUIKit.bind"
 llvm-objdump-18 --macho --bind "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.bind"
 llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.bind"
 
-grep -Eq '^_?\$s9OpenUIKit' "$AUDIT/libOpenUIKit.defined" || {
-    echo "focus_widget_guest: libOpenUIKit exports no OpenUIKit symbols" >&2; exit 2; }
-grep -Eq '^_?\$s7SwiftUI' "$AUDIT/libSwiftUI.defined" || {
-    echo "focus_widget_guest: libSwiftUI exports no SwiftUI symbols" >&2; exit 2; }
-if grep -Eq '^_?\$s9OpenUIKit' "$AUDIT/libSwiftUI.defined"; then
-    echo "focus_widget_guest: libSwiftUI contains a duplicate OpenUIKit implementation" >&2
-    exit 2
-fi
-if grep -Eq '^_?\$s(7SwiftUI|9OpenUIKit)' "$AUDIT/focus_widget_guest.defined"; then
-    echo "focus_widget_guest: executable still contains static framework definitions" >&2
-    exit 2
-fi
-grep -Eq '_\$s9OpenUIKit' "$AUDIT/libSwiftUI.undefined" || {
-    echo "focus_widget_guest: libSwiftUI has no imported OpenUIKit symbols" >&2; exit 2; }
-grep -Eq '_\$s7SwiftUI' "$AUDIT/focus_widget_guest.undefined" || {
-    echo "focus_widget_guest: executable has no imported SwiftUI symbols" >&2; exit 2; }
-grep -Eq '[[:space:]]libOpenUIKit[[:space:]]+_\$s9OpenUIKit' \
-    "$AUDIT/libSwiftUI.bind" || {
-    echo "focus_widget_guest: SwiftUI imports do not bind to libOpenUIKit" >&2; exit 2; }
-grep -Eq '[[:space:]]libSwiftUI[[:space:]]+_\$s7SwiftUI' \
-    "$AUDIT/focus_widget_guest.bind" || {
-    echo "focus_widget_guest: app SwiftUI imports do not bind to libSwiftUI" >&2; exit 2; }
+# Universal, non-vacuous two-level provider gate. Every undefined whose
+# mangled name begins with SwiftUI, OpenUIKit, or OpenCoreGraphics is matched
+# to every bind-table row for that symbol and to the exact defining sibling.
+# The same pass rejects all reverse ownership (including OpenCoreGraphics
+# duplicates), rather than accepting one representative grep match.
+perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
+    --openuikit "$PACKAGE/libOpenUIKit.dylib" \
+    --swiftui "$PACKAGE/libSwiftUI.dylib" \
+    --executable "$OUT/focus_widget_guest" \
+    > "$AUDIT/framework-providers.tsv"
 expected_openuikit_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
@@ -566,6 +583,31 @@ require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchW
 # manifest against the currently mounted machorun checkout immediately before
 # execution. This runs on both the ordinary rebuild and resume-only paths.
 MACHORUN="$MACHORUN" bash "$W/scripts/require_fresh_root.sh" "$MRROOT"
+
+# Resolve the executable's complete transitive Mach-O load graph, including
+# re-exports, weak-load declarations, the loader, the root manifest, and the
+# extensionless Foundation/CoreFoundation loud-abort substrate stubs. An
+# ordinary build records it atomically; a resume may only match that prior
+# record. Never overwrite the record from a resume-only invocation.
+if [ "$skip_full_build" != 1 ]; then
+    runtime_closure_recording=$(mktemp "$FULL/.focus-widget-runtime-closure.recording.XXXXXX")
+    generate_runtime_closure > "$runtime_closure_recording"
+    mv "$runtime_closure_recording" "$RUNTIME_CLOSURE_MANIFEST"
+else
+    [ -f "$RUNTIME_CLOSURE_MANIFEST" ] && [ ! -L "$RUNTIME_CLOSURE_MANIFEST" ] || {
+        echo "focus_widget_guest: SKIP_FULL_BUILD has no regular runtime-closure manifest" >&2
+        exit 2
+    }
+fi
+assert_build_input_inventory
+assert_runtime_closure
+runtime_closure_manifest_sha=$(hash_file "$RUNTIME_CLOSURE_MANIFEST")
+runtime_closure_file_count=$(grep -c '^file'"$(printf '\t')" "$RUNTIME_CLOSURE_MANIFEST")
+runtime_closure_edge_count=$(grep -Ec '^(edge|weak-missing)'"$(printf '\t')" "$RUNTIME_CLOSURE_MANIFEST")
+[ "$runtime_closure_file_count" -ge 18 ] && [ "$runtime_closure_edge_count" -gt 40 ] || {
+    echo "focus_widget_guest: recursive runtime closure is vacuous ($runtime_closure_file_count files, $runtime_closure_edge_count edges)" >&2
+    exit 2
+}
 runtime_before=$(runtime_fingerprint)
 
 echo "== run arm64 Mach-O under machorun on Linux"
@@ -575,6 +617,8 @@ cd "$OUT"
     /w/build/swiftui-guest/Focus_Widget.bundle \
     /w/build/swiftui-guest/focus-search-widget.png | tee guest-first.log
 cp "$OUT/focus-search-widget.png" "$OUT/focus-search-widget.first.png"
+assert_build_input_inventory
+assert_runtime_closure
 "$MRROOT/machorun" ./focus_widget_guest \
     /w/build/swiftui-guest/Focus_Widget.bundle \
     /w/build/swiftui-guest/focus-search-widget.png | tee guest-repeat.log
@@ -586,6 +630,8 @@ cmp -s "$OUT/guest-first.log" "$OUT/guest-repeat.log" || {
     echo "focus_widget_guest: separate guest processes emitted different proof logs" >&2
     exit 2
 }
+assert_build_input_inventory
+assert_runtime_closure
 
 require_hash "$OUT/Focus_Widget.bundle/resource-index.json" "$EXPECTED_INDEX_SHA" staged-resource-index
 [ -s "$OUT/focus-search-widget.png" ] || {
@@ -656,6 +702,8 @@ grep -Fxq '  required by: ./package/libSwiftUI.dylib' \
 [ ! -e "$OUT/missing-openuikit-must-not-exist.png" ] || {
     echo "focus_widget_guest: missing-libOpenUIKit control emitted an artifact" >&2; exit 2; }
 
+assert_build_input_inventory
+assert_runtime_closure
 runtime_after=$(runtime_fingerprint)
 support_after=$(support_digest)
 resource_input_after=$(tree_digest "$RESOURCE_INPUT")
@@ -678,6 +726,8 @@ current_full_subject_after=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$
     echo "focus_widget_guest: authoritative OpenUIKit sources changed during execution" >&2
     exit 2
 }
+assert_build_input_inventory
+assert_runtime_closure
 [ -z "$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)" ] || {
     echo "focus_widget_guest: Focus checkout changed during execution" >&2; exit 2; }
 require_hash "$FOCUS_WIDGET/Assets.swift" "$EXPECTED_ASSETS_SHA" Assets.swift
@@ -690,7 +740,12 @@ require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchW
     printf 'Focus_Widget.bundle/tree\t%s\n' "$EXPECTED_RESOURCE_TREE_SHA"
     printf 'SwiftUI-build-support-subject\t%s\n' "$support_before"
     printf 'OpenUIKit-full-subject\t%s\n' "$recorded_full_subject"
-    printf 'OpenUIKit-substrate-artifacts\t%s\n' "$recorded_substrate"
+    printf 'complete-build-inputs/manifest\t%s\n' "$build_input_manifest_sha"
+    printf 'complete-build-inputs/nodes\t%s\n' "$build_input_node_count"
+    printf 'recursive-runtime-closure/manifest\t%s\n' "$runtime_closure_manifest_sha"
+    printf 'recursive-runtime-closure/files\t%s\n' "$runtime_closure_file_count"
+    printf 'recursive-runtime-closure/edges\t%s\n' "$runtime_closure_edge_count"
+    printf 'framework-provider-audit\t%s\n' "$(hash_file "$AUDIT/framework-providers.tsv")"
     printf 'DejaVuSans.ttf\t%s\n' "$EXPECTED_SYSTEM_FONT_SHA"
     printf 'DejaVuSans-Bold.ttf\t%s\n' "$EXPECTED_MEDIUM_FONT_SHA"
     printf 'SwiftUI.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"

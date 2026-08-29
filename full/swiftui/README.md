@@ -4,8 +4,9 @@ An OpenUIKit-backed module named exactly `SwiftUI` now compiles, mounts, and
 renders Focus's two-file `Widget` package slice as an arm64 Mach-O executable
 under Linux machorun. The proof compiles the pinned Focus files directly from a
 clean checkout, uses separately identified generated build support, rejects
-Apple SwiftUI/Foundation load commands, and grades the resulting hierarchy,
-resources, layout, clipping, visible pixels, and deterministic PNG bytes.
+direct Apple SwiftUI/Foundation load commands in the emitted app/package
+images, and grades the resulting hierarchy, resources, layout, clipping,
+visible pixels, and deterministic PNG bytes.
 
 This is deliberately a bounded first execution slice. The emitted
 `SwiftUI.swiftmodule` and `libSwiftUI.dylib` form a reusable arm64 Mach-O
@@ -15,6 +16,14 @@ framework symbols instead of defining static copies. State and observation
 coverage, WidgetKit, installation as a system framework, and the complete
 unchanged Focus app remain later milestones. Apple's SwiftUI binary is neither
 available nor linked.
+
+“Apple Foundation is not linked” here means the executable, `libSwiftUI`, and
+`libOpenUIKit` have no direct Apple Foundation/SwiftUI/SwiftUICore load. The
+recursively loaded non-Apple Swift substrate does name Foundation and
+CoreFoundation paths; the prepared guest root deliberately satisfies them with
+project-owned extensionless loud-abort stubs. The executable proof resolves
+and hashes that full transitive closure and calls this distinction out rather
+than hiding those two known substrate loads.
 
 ## Measured pinned boundary
 
@@ -70,6 +79,9 @@ without a direct provider import. That evidence includes `UIImage`,
   API families, generated-source limits, tokenizer behavior, first-slice
   identity, and donor-lock shape. `test_focus_widget_guest.py` adds static
   regression teeth around the dylib packaging and executable proof boundary.
+  The isolated-only `test_focus_widget_guest_adversarial.sh` mutates every
+  reviewed resume/cache boundary and requires each dirty resume to fail before
+  guest success.
 
 ## Reproduce
 
@@ -83,13 +95,13 @@ python3 -m unittest discover \
   -s full/swiftui -p 'test_*.py' -v
 ```
 
-The local contract suite currently contains 27 tests (17 inventory tests plus
-10 packaging/executable-proof boundary tests). Expected result at the reviewed
+The local contract suite currently contains 32 tests (17 inventory tests plus
+15 packaging/executable-proof boundary tests). Expected result at the reviewed
 pin:
 
 ```text
 SWIFTUI CONTRACT OK sha256=5a7486b2c0d626c98ad3a96a58bb242d21ef8594c45efc36f3f5f4f2abe48f71
-Ran 27 tests
+Ran 32 tests
 OK
 ```
 

@@ -9,6 +9,9 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT / "full/swiftui/build_focus_widget_guest.sh"
 ACCESSOR = ROOT / "full/swiftui/FocusWidgetBundle.generated.swift"
 HARNESS = ROOT / "full/swiftui/FocusWidgetGuestMain.swift"
+ATTEST = ROOT / "full/swiftui/focus_widget_guest_attest.pl"
+ADVERSARIAL = ROOT / "full/swiftui/test_focus_widget_guest_adversarial.sh"
+BUILD_FULL = ROOT / "full/scripts/build_full.sh"
 
 
 class FocusWidgetGuestProofTests(unittest.TestCase):
@@ -87,9 +90,9 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("libOpenUIKit.defined", text)
         self.assertIn("libSwiftUI.defined", text)
         self.assertIn("focus_widget_guest.defined", text)
-        self.assertIn("executable still contains static framework definitions", text)
-        self.assertIn("app SwiftUI imports do not bind to libSwiftUI", text)
-        self.assertIn("SwiftUI imports do not bind to libOpenUIKit", text)
+        self.assertIn("framework-providers.tsv", text)
+        self.assertIn('perl "$ATTEST" providers', text)
+        self.assertIn("Universal, non-vacuous two-level provider gate", text)
         self.assertIn("missing-swiftui-control", text)
         self.assertIn("missing-libSwiftUI control exited", text)
         self.assertIn("missing-libSwiftUI discriminator changed", text)
@@ -147,9 +150,89 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("support_before=$(support_digest)", text)
         self.assertIn("runtime_before=$(runtime_fingerprint)", text)
         self.assertIn("runtime_after=$(runtime_fingerprint)", text)
-        self.assertIn("SUBSTRATE_MANIFEST=$FULL/focus-widget-substrate.sha256", text)
-        self.assertIn("substrate_artifact_digest", text)
-        self.assertIn("SKIP_FULL_BUILD substrate artifacts drifted", text)
+        self.assertIn("BUILD_INPUT_MANIFEST=$FULL/focus-widget-build-inputs.manifest", text)
+        self.assertIn("assert_build_input_inventory", text)
+        self.assertIn("complete build-input inventory drifted", text)
+
+    def test_complete_resume_inventory_covers_all_consumed_cache_trees(self) -> None:
+        helper = ATTEST.read_text()
+        for artifact in (
+            "guard_no_foundation.swift",
+            '"$full/OpenUIKit.$_"',
+            '"$full/OpenCoreGraphics.$_"',
+            "qw(swiftmodule swiftdoc swiftsourceinfo abi.json)",
+            "inc/CPortableIO",
+            "inc/CSTBTrueType",
+            "sdk/sysroot_full",
+        ):
+            self.assertIn(artifact, helper)
+        for linker_input in (
+            "libswiftCore.tbd",
+            "libSystem.tbd",
+            "libobjc.tbd",
+            "libswift_Concurrency.tbd",
+            "libswiftObjectiveC.tbd",
+        ):
+            self.assertIn(linker_input, helper)
+        self.assertIn("unsupported inventory node type", helper)
+        self.assertIn("symlink target", helper)
+
+    def test_build_and_runtime_manifests_are_atomic_and_resume_cannot_rewrite(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn('mktemp "$FULL/.focus-widget-build-inputs.recording.XXXXXX"', text)
+        self.assertIn('mv "$build_input_recording" "$BUILD_INPUT_MANIFEST"', text)
+        self.assertIn('mktemp "$FULL/.focus-widget-runtime-closure.recording.XXXXXX"', text)
+        self.assertIn('mv "$runtime_closure_recording" "$RUNTIME_CLOSURE_MANIFEST"', text)
+        normal = text.split('if [ "$skip_full_build" != 1 ]; then', 1)[1]
+        self.assertIn('else\n    [ -f "$BUILD_INPUT_MANIFEST" ]', normal)
+        runtime = text.split("Resolve the executable's complete transitive", 1)[1]
+        self.assertIn('else\n    [ -f "$RUNTIME_CLOSURE_MANIFEST" ]', runtime)
+        self.assertGreaterEqual(text.count("assert_build_input_inventory"), 6)
+        self.assertGreaterEqual(text.count("assert_runtime_closure"), 5)
+
+    def test_recursive_runtime_closure_includes_extensionless_substrate_stubs(self) -> None:
+        helper = ATTEST.read_text()
+        self.assertIn("macho_commands", helper)
+        self.assertIn("LC_REEXPORT_DYLIB", helper)
+        self.assertIn("LC_LOAD_WEAK_DYLIB", helper)
+        self.assertIn("weak-missing", helper)
+        self.assertIn("Foundation.framework/Foundation", helper)
+        self.assertIn("CoreFoundation.framework/CoreFoundation", helper)
+        self.assertIn("known substrate stub is absent from recursive closure", helper)
+        build_full = BUILD_FULL.read_text()
+        self.assertIn("restaging $framework loud-abort stub", build_full)
+        self.assertIn("staged\\tdarwin/System/Library/Frameworks/%s.framework/%s", build_full)
+
+    def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
+        helper = ATTEST.read_text()
+        for module in ("SwiftUI", "OpenUIKit", "OpenCoreGraphics"):
+            self.assertIn(module, helper)
+        self.assertIn("no two-level bind", helper)
+        self.assertIn("expected exactly", helper)
+        self.assertIn("does not define imported symbol", helper)
+        self.assertIn("reverse ownership violation", helper)
+        self.assertIn("bind table contains framework symbol absent from undefined table", helper)
+        self.assertIn("vacuous provider gate", helper)
+
+    def test_adversarial_resume_matrix_covers_reviewed_tamper_classes(self) -> None:
+        text = ADVERSARIAL.read_text()
+        for label in (
+            "guard-source",
+            "swiftmodule",
+            "modulemap",
+            "header",
+            "header-extra",
+            "header-missing",
+            "header-symlink",
+            "sysroot-tbd",
+            "extensionless-stub",
+            "provider-logic",
+            "inventory-logic",
+        ):
+            self.assertIn(label, text)
+        self.assertIn("expect_resume_refusal", text)
+        self.assertIn("reached guest success before refusal", text)
+        self.assertIn("clean isolated resume completed", text)
 
 
 if __name__ == "__main__":

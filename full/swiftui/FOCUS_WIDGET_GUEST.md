@@ -44,15 +44,42 @@ checkout before and after, the canonical digest of all 16 bundle files, the
 exact seven-directory normalized-bundle topology,
 SwiftUI/build-support and OpenUIKit source brackets, exact open-font bytes,
 Foundation invisibility, Mach-O architecture, exact `LC_ID_DYLIB`, `LC_RPATH`,
-dependency and linker-input allowlists, absence of Apple Foundation/SwiftUI/
-SwiftUICore loads, SwiftUI-to-OpenUIKit and executable-to-SwiftUI bind
-providers, exclusive framework symbol ownership, a missing-`libSwiftUI`
+dependency and linker-input allowlists, absence of direct Apple Foundation/
+SwiftUI/SwiftUICore loads from the executable and packaged dylibs, universal
+SwiftUI/OpenUIKit/OpenCoreGraphics two-level bind providers, reverse framework
+symbol-ownership exclusions, a missing-`libSwiftUI`
 loader-failure control, a reciprocal missing-`libOpenUIKit` recursive-load
 control, the guest-root manifest against the current machorun checkout, a hash
-manifest for
-every linked substrate object used by the resume-only path, stable
+manifest for every node in the complete `build/full` input subset, the complete
+CPortableIO/CSTBTrueType header trees, and the complete private SDK/sysroot
+resolution tree used by the resume-only path, stable
 guest-root/package execution brackets, runtime assertions, and final artifact
 hashes.
+
+The direct-load statement above is intentionally narrower than “no
+Foundation-named load anywhere.” The staged non-Apple Swift runtime itself has
+transitive load commands for
+`/System/Library/Frameworks/Foundation.framework/Foundation` and
+`CoreFoundation.framework/CoreFoundation`. In this project guest root those
+paths resolve to the project's extensionless loud-abort substrate stubs, not to
+Apple Foundation binaries. `build_full.sh` records and grades both stubs in the
+root manifest, and the guest proof recursively resolves every Mach-O load and
+re-export from the executable, hashes the complete closure plus its edges,
+loader, and root manifest, and brackets that exact closure before and after
+both successful guest processes. A resume cannot replace the previously
+recorded input or closure manifests. Those stubs abort if reached; this widget
+success proves that the bounded path does not call them, not that Foundation or
+CoreFoundation behavior has been implemented.
+
+The resume contract is deliberately fail-closed. Its canonical input manifest
+records regular files, directories, symlinks, and symlink targets, so missing,
+extra, type, byte, or link-target drift is visible. It includes the Foundation
+guard source, all OpenUIKit/OpenCoreGraphics module artifacts, both complete C
+header trees, and every node of `scratch/sysroot_full`, including the five
+exact TBD paths named by the link maps. The adversarial integration runner
+mutates each reviewed class in isolation—plus provider and inventory proof
+logic—and requires `SKIP_FULL_BUILD=1` to stop before guest success, restores
+the byte, and finally proves a clean isolated resume still runs.
 
 The Noble image's pinned DejaVu Sans and DejaVu Sans Bold provide a
 redistributable missing-glyph fallback. The proof stages and preflights their

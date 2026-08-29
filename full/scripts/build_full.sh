@@ -142,6 +142,24 @@ for d in "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib; do
 done
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
+# Keep the extensionless Foundation/CoreFoundation loud-abort stubs in step
+# independently of loader freshness too.  They are real transitive load
+# inputs of the staged Swift runtime, but the old root manifest only enumerated
+# *.dylib and therefore could neither notice their absence nor their drift.
+for framework in Foundation CoreFoundation; do
+    source="$W/scratch/mrroot/darwin/System/Library/Frameworks/$framework.framework/$framework"
+    target="$ROOTDIR/darwin/System/Library/Frameworks/$framework.framework/$framework"
+    [ -f "$source" ] && [ ! -L "$source" ] || {
+        echo "build_full: no regular staged $framework loud-abort stub in $W/scratch/mrroot" >&2
+        exit 2
+    }
+    mkdir -p "$(dirname "$target")"
+    if ! cmp -s "$source" "$target"; then
+        echo "== restaging $framework loud-abort stub from scratch/mrroot"
+        cp "$source" "$target"
+    fi
+done
+
 # ---- libSystem / libc++ umbrellas -----------------------------------------
 # ONE umbrella per library, over machorun's CURRENT dylib, carrying BOTH sets
 # of additions:
@@ -275,6 +293,12 @@ echo "== manifest ($ROOTDIR/.manifest)"
         else
             printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
         fi
+    done
+    for framework in Foundation CoreFoundation; do
+        source="$W/scratch/mrroot/darwin/System/Library/Frameworks/$framework.framework/$framework"
+        source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
+        printf 'staged\tdarwin/System/Library/Frameworks/%s.framework/%s\t%s\t%s\n' \
+            "$framework" "$framework" "$source_sha" "$source"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
