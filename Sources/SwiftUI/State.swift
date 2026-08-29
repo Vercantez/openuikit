@@ -6,6 +6,7 @@
 // implementations here.
 
 @_exported import Combine
+import OpenUIKit
 
 // These source-facing declarations deliberately are not globally
 // @MainActor-isolated. Apple's SwiftUI permits Binding, State, ObservedObject,
@@ -237,6 +238,10 @@ enum _OpenGraphStructuralScope: Hashable {
     case arrayElement(Int)
     case hStackContent
     case vStackContent
+    case zStackContent
+    case buttonLabel
+    case scrollContent
+    case tabViewContent
     case formContent
     case forEachContent
     case forEachElement(AnyHashable)
@@ -244,6 +249,8 @@ enum _OpenGraphStructuralScope: Hashable {
     case modifiedContent
     case background
     case overlay
+    case toolbar
+    case onAppear
 }
 
 private enum _OpenGraphPathComponent: Hashable {
@@ -351,6 +358,22 @@ private struct _OpenWritableReflectedField {
     let propertyPathComponent: _OpenPropertyPathComponent
 }
 
+/// Opaque, typed identity for a stable location in one host's rendered graph.
+/// The path components stay private so callers cannot manufacture identities
+/// from lossy strings or couple themselves to the graph representation.
+struct _OpenGraphIdentity: Hashable {
+    private let path: [_OpenGraphPathComponent]
+
+    fileprivate init(path: [_OpenGraphPathComponent]) {
+        self.path = path
+    }
+}
+
+private struct _OpenRepresentedControllerKey: Hashable {
+    let viewPath: [_OpenGraphPathComponent]
+    let controllerType: ObjectIdentifier
+}
+
 /// Retained by one hosting controller. It owns dynamic-property locations and
 /// subscriptions, but never owns the controller back.
 @MainActor
@@ -358,8 +381,10 @@ final class _OpenGraphHost {
     private var path: [_OpenGraphPathComponent] = []
     private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
     private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
+    private var representedControllers: [_OpenRepresentedControllerKey: UIViewController] = [:]
     private var activeStateKeys: Set<_OpenStateKey> = []
     private var activeObservationKeys: Set<ObjectIdentifier> = []
+    private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
     private var invalidationScheduled = false
 
     var invalidate: (@MainActor () -> Void)?
@@ -368,6 +393,7 @@ final class _OpenGraphHost {
 
     var stateCount: Int { state.count }
     var observationCount: Int { observations.count }
+    var representedControllerCount: Int { representedControllers.count }
 
     func evaluate<Content: _OpenView>(_ content: Content) -> _OpenViewNode {
         // A direct root replacement supersedes queued work from the previous
@@ -376,6 +402,7 @@ final class _OpenGraphHost {
         invalidationScheduled = false
         activeStateKeys.removeAll(keepingCapacity: true)
         activeObservationKeys.removeAll(keepingCapacity: true)
+        activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
         path.removeAll(keepingCapacity: true)
         renderCount += 1
 
@@ -394,6 +421,12 @@ final class _OpenGraphHost {
         }
         for key in staleObservationKeys {
             observations.removeValue(forKey: key)?.cancellation.cancel()
+        }
+        let staleControllerKeys = representedControllers.keys.filter {
+            !activeRepresentedControllerKeys.contains($0)
+        }
+        for key in staleControllerKeys {
+            representedControllers.removeValue(forKey: key)
         }
         return node
     }
@@ -420,6 +453,10 @@ final class _OpenGraphHost {
         operation: () -> Result
     ) -> Result {
         withPath(.structural(scope), operation: operation)
+    }
+
+    func currentIdentity() -> _OpenGraphIdentity {
+        _OpenGraphIdentity(path: path)
     }
 
     private func withPath<Result>(
@@ -776,6 +813,32 @@ final class _OpenGraphHost {
         observations[key] = _OpenObservationEntry(cancellation)
     }
 
+    fileprivate func representedController<Controller: UIViewController>(
+        make: () -> Controller,
+        update: (Controller) -> Void
+    ) -> Controller {
+        let key = _OpenRepresentedControllerKey(
+            viewPath: path,
+            controllerType: ObjectIdentifier(Controller.self)
+        )
+        activeRepresentedControllerKeys.insert(key)
+
+        let controller: Controller
+        if let existing = representedControllers[key] {
+            guard let typed = existing as? Controller else {
+                preconditionFailure(
+                    "UIViewControllerRepresentable type changed at a stable structural location"
+                )
+            }
+            controller = typed
+        } else {
+            controller = make()
+            representedControllers[key] = controller
+        }
+        update(controller)
+        return controller
+    }
+
     fileprivate func scheduleInvalidation() {
         guard !invalidationScheduled else { return }
         invalidationScheduled = true
@@ -813,5 +876,21 @@ enum _OpenGraphContext {
     ) -> Result {
         guard let currentHost else { return operation() }
         return currentHost.withStructuralScope(scope, operation: operation)
+    }
+
+    static func currentIdentity() -> _OpenGraphIdentity? {
+        currentHost?.currentIdentity()
+    }
+
+    static func representedController<Controller: UIViewController>(
+        make: () -> Controller,
+        update: (Controller) -> Void
+    ) -> Controller {
+        guard let currentHost else {
+            let controller = make()
+            update(controller)
+            return controller
+        }
+        return currentHost.representedController(make: make, update: update)
     }
 }

@@ -57,8 +57,18 @@ indirect enum _OpenViewNodeKind {
     case spacer(minLength: CGFloat?)
     case hStack(children: [_OpenViewNode], alignment: VerticalAlignment, spacing: CGFloat?)
     case vStack(children: [_OpenViewNode], alignment: HorizontalAlignment, spacing: CGFloat?)
+    case zStack(children: [_OpenViewNode], alignment: Alignment)
+    case button(label: _OpenViewNode, action: @MainActor () -> Void)
+    case scroll(content: _OpenViewNode)
+    case tabView(
+        pages: [_OpenTabPage],
+        selection: AnyHashable,
+        setSelection: @MainActor (AnyHashable) -> Void,
+        indexDisplayMode: PageTabViewStyle.IndexDisplayMode?
+    )
+    case viewController(UIViewController)
     case form(rows: [_OpenViewNode])
-    case navigation(content: _OpenViewNode, title: String?)
+    case navigation(content: _OpenViewNode, configuration: _OpenNavigationConfiguration)
     case gradient(Gradient, UnitPoint, UnitPoint)
     case modified(_OpenViewNode, _OpenViewModification)
 }
@@ -68,20 +78,40 @@ enum _OpenRoundedRectangleStyle {
     case stroke(Color, lineWidth: CGFloat)
 }
 
+struct _OpenTabPage {
+    let content: _OpenViewNode
+    let tag: AnyHashable?
+}
+
 enum _OpenViewModification {
     case font(Font?)
     case fontWeight(Font.Weight?)
     case minimumScaleFactor(CGFloat)
     case foregroundColor(Color?)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
+    case flexibleFrame(maxWidth: CGFloat?, maxHeight: CGFloat?, alignment: Alignment)
     case padding(Edge.Set, CGFloat?)
+    case edgeInsetsPadding(EdgeInsets)
     case background(_OpenViewNode, alignment: Alignment)
     case overlay(_OpenViewNode, alignment: Alignment)
     case resizable
     case aspectRatio(ContentMode)
+    case multilineTextAlignment(TextAlignment)
+    case tapAction(@MainActor () -> Void)
+    case simultaneousTapAction(@MainActor () -> Void)
+    case onAppear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
+    case shadow(radius: CGFloat)
+    case colorScheme(ColorScheme)
+    case safeAreaIgnored
     case previewLayout(PreviewLayout)
     case clipRoundedRectangle(CGFloat)
     case navigationTitle(String)
+    case navigationBarHidden(Bool)
+    case navigationBackButtonHidden(Bool)
+    case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
+    case toolbar(_OpenViewNode)
+    case tag(AnyHashable)
+    case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
 }
 
 /// Construction-time modifier payload. Background and overlay views remain
@@ -94,14 +124,29 @@ fileprivate enum _OpenViewModifier {
     case minimumScaleFactor(CGFloat)
     case foregroundColor(Color?)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
+    case flexibleFrame(maxWidth: CGFloat?, maxHeight: CGFloat?, alignment: Alignment)
     case padding(Edge.Set, CGFloat?)
+    case edgeInsetsPadding(EdgeInsets)
     case background(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case overlay(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case resizable
     case aspectRatio(ContentMode)
+    case multilineTextAlignment(TextAlignment)
+    case tapAction(@MainActor () -> Void)
+    case simultaneousTapAction(@MainActor () -> Void)
+    case onAppear(@MainActor () -> Void)
+    case shadow(radius: CGFloat)
+    case colorScheme(ColorScheme)
+    case safeAreaIgnored
     case previewLayout(PreviewLayout)
     case clipRoundedRectangle(CGFloat)
     case navigationTitle(String)
+    case navigationBarHidden(Bool)
+    case navigationBackButtonHidden(Bool)
+    case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
+    case toolbar(@MainActor () -> _OpenViewNode)
+    case tag(AnyHashable)
+    case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
 
     @MainActor
     func resolve() -> _OpenViewModification {
@@ -112,7 +157,14 @@ fileprivate enum _OpenViewModifier {
         case .foregroundColor(let value): return .foregroundColor(value)
         case .frame(let width, let height, let alignment):
             return .frame(width: width, height: height, alignment: alignment)
+        case .flexibleFrame(let maxWidth, let maxHeight, let alignment):
+            return .flexibleFrame(
+                maxWidth: maxWidth,
+                maxHeight: maxHeight,
+                alignment: alignment
+            )
         case .padding(let edges, let length): return .padding(edges, length)
+        case .edgeInsetsPadding(let insets): return .edgeInsetsPadding(insets)
         case .background(let makeNode, let alignment):
             return .background(
                 _OpenGraphContext.withStructuralScope(.background, operation: makeNode),
@@ -125,9 +177,31 @@ fileprivate enum _OpenViewModifier {
             )
         case .resizable: return .resizable
         case .aspectRatio(let value): return .aspectRatio(value)
+        case .multilineTextAlignment(let alignment):
+            return .multilineTextAlignment(alignment)
+        case .tapAction(let action): return .tapAction(action)
+        case .simultaneousTapAction(let action): return .simultaneousTapAction(action)
+        case .onAppear(let action):
+            return _OpenGraphContext.withStructuralScope(.onAppear) {
+                .onAppear(identity: _OpenGraphContext.currentIdentity(), action: action)
+            }
+        case .shadow(let radius): return .shadow(radius: radius)
+        case .colorScheme(let scheme): return .colorScheme(scheme)
+        case .safeAreaIgnored: return .safeAreaIgnored
         case .previewLayout(let value): return .previewLayout(value)
         case .clipRoundedRectangle(let radius): return .clipRoundedRectangle(radius)
         case .navigationTitle(let title): return .navigationTitle(title)
+        case .navigationBarHidden(let hidden): return .navigationBarHidden(hidden)
+        case .navigationBackButtonHidden(let hidden):
+            return .navigationBackButtonHidden(hidden)
+        case .navigationTitleDisplayMode(let mode):
+            return .navigationTitleDisplayMode(mode)
+        case .toolbar(let makeNode):
+            return .toolbar(
+                _OpenGraphContext.withStructuralScope(.toolbar, operation: makeNode)
+            )
+        case .tag(let value): return .tag(value)
+        case .pageTabViewStyle(let mode): return .pageTabViewStyle(mode)
         }
     }
 }
@@ -195,6 +269,31 @@ public enum _OpenViewBuilder {
                     },
                     _OpenGraphContext.withStructuralScope(.tupleElement(2)) {
                         c2._makeOpenUIKitNode()
+                    },
+                ]
+            }
+        )
+    }
+
+    /// SwiftUI's builder accepts arbitrary-length sibling lists.  Partial
+    /// blocks keep that property without a ladder of fixed tuple overloads.
+    public static func buildPartialBlock<Content: _OpenView>(first: Content) -> Content {
+        first
+    }
+
+    public static func buildPartialBlock<Accumulated: _OpenView, Next: _OpenView>(
+        accumulated: Accumulated,
+        next: Next
+    ) -> _OpenTupleView<(Accumulated, Next)> {
+        _OpenTupleView(
+            (accumulated, next),
+            nodes: {
+                [
+                    _OpenGraphContext.withStructuralScope(.tupleElement(0)) {
+                        accumulated._makeOpenUIKitNode()
+                    },
+                    _OpenGraphContext.withStructuralScope(.tupleElement(1)) {
+                        next._makeOpenUIKitNode()
                     },
                 ]
             }
@@ -543,8 +642,10 @@ public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
         let contentNode = _OpenGraphContext.withStructuralScope(.navigationContent) {
             content._makeOpenUIKitNode()
         }
-        let (node, title) = _extractNavigationTitle(contentNode)
-        return _OpenViewNode(.navigation(content: node, title: title))
+        let (node, configuration) = _extractNavigationConfiguration(
+            contentNode
+        )
+        return _OpenViewNode(.navigation(content: node, configuration: configuration))
     }
 }
 
@@ -576,14 +677,17 @@ public struct _OpenModifiedContent<Content: _OpenView>: _OpenView {
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(
-            .modified(
-                _OpenGraphContext.withStructuralScope(.modifiedContent) {
-                    content._makeOpenUIKitNode()
-                },
-                modifier.resolve()
+        let contentNode = _OpenGraphContext.withStructuralScope(.modifiedContent) {
+            content._makeOpenUIKitNode()
+        }
+        let resolvedModifier = modifier.resolve()
+        if case .pageTabViewStyle(let indexDisplayMode) = resolvedModifier {
+            return _openApplyingPageTabViewStyle(
+                contentNode,
+                indexDisplayMode: indexDisplayMode
             )
-        )
+        }
+        return _OpenViewNode(.modified(contentNode, resolvedModifier))
     }
 }
 
@@ -615,8 +719,31 @@ public extension _OpenView {
         )
     }
 
+    func frame(
+        maxWidth: CGFloat? = nil,
+        maxHeight: CGFloat? = nil,
+        alignment: Alignment = .center
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .flexibleFrame(
+                maxWidth: maxWidth,
+                maxHeight: maxHeight,
+                alignment: alignment
+            )
+        )
+    }
+
     func padding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .padding(edges, length))
+    }
+
+    func padding(_ length: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .padding(.all, length))
+    }
+
+    func padding(_ insets: EdgeInsets) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .edgeInsetsPadding(insets))
     }
 
     func background<Background: _OpenView>(
@@ -649,6 +776,64 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .aspectRatio(contentMode))
     }
 
+    func scaledToFit() -> some _OpenView {
+        aspectRatio(contentMode: .fit)
+    }
+
+    func scaledToFill() -> some _OpenView {
+        aspectRatio(contentMode: .fill)
+    }
+
+    func bold() -> some _OpenView {
+        fontWeight(.bold)
+    }
+
+    func multilineTextAlignment(_ alignment: TextAlignment) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .multilineTextAlignment(alignment)
+        )
+    }
+
+    func cornerRadius(_ radius: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .clipRoundedRectangle(max(0, radius))
+        )
+    }
+
+    func shadow(radius: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .shadow(radius: max(0, radius)))
+    }
+
+    func colorScheme(_ colorScheme: ColorScheme) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .colorScheme(colorScheme))
+    }
+
+    func ignoresSafeArea() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .safeAreaIgnored)
+    }
+
+    func edgesIgnoringSafeArea(_ edges: Edge.Set) -> some _OpenView {
+        _ = edges
+        return _OpenModifiedContent(content: self, modification: .safeAreaIgnored)
+    }
+
+    func onAppear(perform action: @escaping @MainActor () -> Void) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .onAppear(action))
+    }
+
+    func onTapGesture(perform action: @escaping @MainActor () -> Void) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .tapAction(action))
+    }
+
+    func simultaneousGesture(_ gesture: TapGesture) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .simultaneousTapAction(gesture.action ?? {})
+        )
+    }
+
     func previewLayout(_ value: PreviewLayout) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .previewLayout(value))
     }
@@ -664,6 +849,44 @@ public extension _OpenView {
     func navigationTitle(_ title: String) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationTitle(title))
     }
+
+    func navigationBarHidden(_ hidden: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .navigationBarHidden(hidden))
+    }
+
+    func navigationBarBackButtonHidden(_ hidden: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .navigationBackButtonHidden(hidden))
+    }
+
+    func navigationBarTitleDisplayMode(
+        _ displayMode: NavigationBarTitleDisplayMode
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .navigationTitleDisplayMode(displayMode)
+        )
+    }
+
+    func toolbar<ToolbarContent: _OpenView>(
+        @_OpenViewBuilder content: () -> ToolbarContent
+    ) -> some _OpenView {
+        let toolbarContent = content()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .toolbar { toolbarContent._makeOpenUIKitNode() }
+        )
+    }
+
+    func tag<Value: Hashable>(_ tag: Value) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .tag(AnyHashable(tag)))
+    }
+
+    func tabViewStyle(_ style: PageTabViewStyle) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .pageTabViewStyle(style.indexDisplayMode)
+        )
+    }
 }
 
 @MainActor
@@ -675,11 +898,83 @@ private func _flattenGroup(_ node: _OpenViewNode) -> [_OpenViewNode] {
 }
 
 @MainActor
-private func _extractNavigationTitle(_ node: _OpenViewNode) -> (_OpenViewNode, String?) {
-    if case .modified(let content, .navigationTitle(let title)) = node.kind {
-        return (content, title)
+struct _OpenNavigationConfiguration {
+    var title: String?
+    var barHidden = false
+    var backButtonHidden = false
+    var titleDisplayMode: NavigationBarTitleDisplayMode = .automatic
+    var toolbar: _OpenViewNode?
+}
+
+@MainActor
+private func _extractNavigationConfiguration(
+    _ node: _OpenViewNode
+) -> (_OpenViewNode, _OpenNavigationConfiguration) {
+    switch node.kind {
+    case .modified(let content, let modification):
+        var (unwrapped, configuration) = _extractNavigationConfiguration(content)
+        switch modification {
+        case .navigationTitle(let title):
+            configuration.title = title
+        case .navigationBarHidden(let hidden):
+            configuration.barHidden = hidden
+        case .navigationBackButtonHidden(let hidden):
+            configuration.backButtonHidden = hidden
+        case .navigationTitleDisplayMode(let displayMode):
+            configuration.titleDisplayMode = displayMode
+        case .toolbar(let toolbar):
+            configuration.toolbar = toolbar
+        default:
+            unwrapped = _OpenViewNode(.modified(unwrapped, modification))
+        }
+        return (unwrapped, configuration)
+    case .scroll(let content):
+        let (unwrapped, configuration) = _extractNavigationConfiguration(content)
+        return (_OpenViewNode(.scroll(content: unwrapped)), configuration)
+    case .group(let children):
+        let (unwrapped, configuration) = _extractNavigationChildren(children)
+        return (_OpenViewNode(.group(unwrapped)), configuration)
+    case .hStack(let children, let alignment, let spacing):
+        let (unwrapped, configuration) = _extractNavigationChildren(children)
+        return (
+            _OpenViewNode(.hStack(children: unwrapped, alignment: alignment, spacing: spacing)),
+            configuration
+        )
+    case .vStack(let children, let alignment, let spacing):
+        let (unwrapped, configuration) = _extractNavigationChildren(children)
+        return (
+            _OpenViewNode(.vStack(children: unwrapped, alignment: alignment, spacing: spacing)),
+            configuration
+        )
+    case .zStack(let children, let alignment):
+        let (unwrapped, configuration) = _extractNavigationChildren(children)
+        return (_OpenViewNode(.zStack(children: unwrapped, alignment: alignment)), configuration)
+    case .form(let rows):
+        let (unwrapped, configuration) = _extractNavigationChildren(rows)
+        return (_OpenViewNode(.form(rows: unwrapped)), configuration)
+    default:
+        return (node, _OpenNavigationConfiguration())
     }
-    return (node, nil)
+}
+
+@MainActor
+private func _extractNavigationChildren(
+    _ children: [_OpenViewNode]
+) -> ([_OpenViewNode], _OpenNavigationConfiguration) {
+    var configuration = _OpenNavigationConfiguration()
+    let nodes = children.map { child -> _OpenViewNode in
+        let (node, childConfiguration) = _extractNavigationConfiguration(child)
+        if let title = childConfiguration.title { configuration.title = title }
+        configuration.barHidden = configuration.barHidden || childConfiguration.barHidden
+        configuration.backButtonHidden = configuration.backButtonHidden
+            || childConfiguration.backButtonHidden
+        if childConfiguration.titleDisplayMode != .automatic {
+            configuration.titleDisplayMode = childConfiguration.titleDisplayMode
+        }
+        if let toolbar = childConfiguration.toolbar { configuration.toolbar = toolbar }
+        return node
+    }
+    return (nodes, configuration)
 }
 
 public protocol _OpenPreviewProvider {

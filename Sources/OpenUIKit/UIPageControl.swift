@@ -41,6 +41,17 @@ import Foundation
 
 @preconcurrency @MainActor
 open class UIPageControl: UIControl {
+    /// Process-wide UIKit-style appearance proxy.  New page controls copy the
+    /// two tint values Focus configures before creating its SwiftUI TabView.
+    private static var _appearanceProxy: UIPageControl?
+
+    public static func appearance() -> UIPageControl {
+        if let proxy = _appearanceProxy { return proxy }
+        let proxy = UIPageControl(frame: .zero, applyingAppearance: false)
+        _appearanceProxy = proxy
+        return proxy
+    }
+
     static let contentHeight: CGFloat = 26
     static let slotPitch: CGFloat = 18
     static let contentSidePadding: CGFloat = 14
@@ -77,10 +88,23 @@ open class UIPageControl: UIControl {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        applyAppearanceProxy()
     }
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+        applyAppearanceProxy()
+    }
+
+    private init(frame: CGRect, applyingAppearance: Bool) {
+        super.init(frame: frame)
+        if applyingAppearance { applyAppearanceProxy() }
+    }
+
+    private func applyAppearanceProxy() {
+        guard let proxy = Self._appearanceProxy, proxy !== self else { return }
+        pageIndicatorTintColor = proxy.pageIndicatorTintColor
+        currentPageIndicatorTintColor = proxy.currentPageIndicatorTintColor
     }
 
     /// UIKit's sizing helper (independent of the current page count).

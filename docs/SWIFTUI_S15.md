@@ -79,3 +79,8 @@ delegate to OpenUIKit's loose-resource support; the separate Focus resource
 normalizer must materialize supported catalog members for runtime use. The
 exact-source gate emits a module but does not claim that every DesignSystem
 asset format (notably vector PDF/SVG inputs) renders yet.
+
+The next source-preservation slice is
+[`SWIFTUI_S2_ONBOARDING.md`](SWIFTUI_S2_ONBOARDING.md), which adds retained
+observation, tagged page selection, lifecycle semantics, and the complete
+unchanged Focus Onboarding target.

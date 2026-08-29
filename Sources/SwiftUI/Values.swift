@@ -7,6 +7,7 @@ public struct _OpenFont: Equatable, Sendable {
     public enum TextStyle: Equatable, Sendable {
         case headline
         case body
+        case title3
     }
 
     public struct Weight: Equatable, Sendable {
@@ -46,11 +47,40 @@ public struct _OpenFont: Equatable, Sendable {
 
     public static let headline = _OpenFont(.headline)
     public static let body = _OpenFont(.body)
+    public static let title3 = _OpenFont(.title3)
+
+    public static func system(size: CGFloat) -> _OpenFont {
+        _OpenFont(
+            storage: .uiFont(pointSize: size, weight: .regular, design: .default)
+        )
+    }
+
+    public func bold() -> _OpenFont {
+        switch storage {
+        case .textStyle(let style):
+            let pointSize: CGFloat
+            switch style {
+            case .headline, .body: pointSize = 17
+            case .title3: pointSize = 20
+            }
+            return _OpenFont(
+                storage: .uiFont(pointSize: pointSize, weight: .bold, design: .default)
+            )
+        case .uiFont(let pointSize, _, let design):
+            return _OpenFont(
+                storage: .uiFont(pointSize: pointSize, weight: .bold, design: design)
+            )
+        }
+    }
+
+    private init(storage: Storage) {
+        self.storage = storage
+    }
 
     func resolve(weight override: Weight?) -> UIFont {
         switch storage {
         case .textStyle(let style):
-            let size: CGFloat = 17
+            let size: CGFloat = style == .title3 ? 20 : 17
             let weight: UIFont.Weight = override?.value
                 ?? (style == .headline ? .semibold : .regular)
             return .systemFont(ofSize: size, weight: weight)
@@ -71,9 +101,10 @@ public struct _OpenFont: Equatable, Sendable {
 public typealias CTFont = UIFont
 
 public struct _OpenColor {
-    enum Storage {
+    indirect enum Storage {
         case resolved(UIColor)
         case named(String, Bundle?)
+        case opacity(Storage, CGFloat)
     }
 
     let storage: Storage
@@ -96,6 +127,15 @@ public struct _OpenColor {
     public static let red = _OpenColor(uiColor: .red)
     public static let green = _OpenColor(uiColor: .green)
     public static let blue = _OpenColor(uiColor: .blue)
+    public static let gray = _OpenColor(uiColor: .gray)
+
+    public func opacity(_ opacity: CGFloat) -> _OpenColor {
+        _OpenColor(storage: .opacity(storage, min(max(opacity, 0), 1)))
+    }
+
+    private init(storage: Storage) {
+        self.storage = storage
+    }
 
     @MainActor
     func resolve() -> UIColor {
@@ -104,6 +144,9 @@ public struct _OpenColor {
             return color
         case .named(let name, let bundle):
             return UIColor(named: name, in: bundle, compatibleWith: nil) ?? .clear
+        case .opacity(let storage, let opacity):
+            let base = _OpenColor(storage: storage).resolve()
+            return base.withAlphaComponent(base.cgColor.alpha * opacity)
         }
     }
 }
