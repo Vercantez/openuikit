@@ -120,6 +120,17 @@ two-file widget slice.  It does not prove a linked Focus application,
 WidgetKit/timeline execution, or a SwiftUI Mach-O guest running on Linux;
 those remain separate integration gates.
 
+The next deliberately bounded slice is documented in
+[`SWIFTUI_S15.md`](SWIFTUI_S15.md). It adds the static forms, collection rows,
+single-column navigation metadata, UIKit image/font bridges, colors as views,
+and rounded overlays required by all seven unchanged Focus DesignSystem files.
+It does not broaden the S1 widget claim into general SwiftUI support.
+
+The DesignSystem exact-source proof emits host modules on macOS and Linux, and
+its bounded renderer tests execute natively against OpenUIKit. That S1.5 result
+does not yet prove the seven-file DesignSystem slice as a Mach-O guest; the S1
+widget execution proof above remains the narrower Linux-guest milestone.
+
 The SwiftUI implementation imports Foundation only when it is available and
 otherwise uses OpenUIKit's portable geometry, `Bundle`, and `NSCoder`
 identities.  This keeps the module eligible for the Foundation-hidden Mach-O

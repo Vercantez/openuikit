@@ -25,6 +25,10 @@ let package = Package(
     platforms: [.macOS(.v11)],
     products: [
         .library(name: "OpenUIKit", targets: ["OpenUIKit"]),
+        // Literal import bridge for unchanged iOS source.  The target already
+        // existed for in-package probes; publishing it also lets external
+        // source-preservation probes keep `import UIKit` byte-for-byte.
+        .library(name: "UIKit", targets: ["UIKit"]),
         // Source-compatible first SwiftUI slice.  The public module name is
         // intentionally literal: unchanged app source keeps `import SwiftUI`.
         // Its renderer is backed by OpenUIKit rather than an Apple framework.
@@ -73,8 +77,8 @@ let package = Package(
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
-        // S1 is the stateless composition/hosting surface required by Focus's
-        // Widget/Assets.swift and Widget/SearchWidgetView.swift.  Keep this a
+        // S1/S1.5 is the stateless composition/hosting surface required by
+        // Focus's widget and seven DesignSystem Swift files. Keep this a
         // separate module so UIKit-only users do not acquire SwiftUI symbols.
         .target(name: "SwiftUI", dependencies: ["OpenUIKit"]),
         // M7.5 demo app: a multi-screen Settings-style app written against

@@ -3,7 +3,7 @@ import Foundation
 #endif
 import OpenUIKit
 
-/// OpenUIKit-backed host for the stateless S1 SwiftUI tree.
+/// OpenUIKit-backed host for the stateless S1/S1.5 SwiftUI tree.
 @preconcurrency @MainActor
 open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     public var rootView: Content {
@@ -66,7 +66,7 @@ private struct _RenderEnvironment {
     var font: _OpenFont? = .body
     var weight: _OpenFont.Weight?
     var minimumScaleFactor: CGFloat = 0
-    var foregroundColor: _OpenColor? = .black
+    var foregroundColor: _OpenColor?
     var imageResizable = false
     var imageContentMode: _OpenContentMode = .fit
 
@@ -76,6 +76,8 @@ private struct _RenderEnvironment {
 @MainActor
 private enum _ViewRenderer {
     static let defaultSpacing: CGFloat = 8
+    static let defaultFormRowHeight: CGFloat = 44
+    static let navigationBarHeight: CGFloat = 52
 
     static func measure(
         _ node: _OpenViewNode,
@@ -96,6 +98,8 @@ private enum _ViewRenderer {
             return label.sizeThatFits(_bounded(proposed))
         case .image(let source):
             return measureImage(source, proposed: proposed, environment: environment)
+        case .color, .roundedRectangle:
+            return _bounded(proposed)
         case .spacer(let minLength):
             let value = max(0, minLength ?? 0)
             return CGSize(width: value, height: value)
@@ -125,6 +129,27 @@ private enum _ViewRenderer {
                 height = max(height, _bounded(proposed).height)
             }
             return CGSize(width: width, height: height)
+        case .form(let rows):
+            var width: CGFloat = 0
+            var height: CGFloat = 0
+            let rowProposal = CGSize(
+                width: _bounded(proposed).width,
+                height: defaultFormRowHeight
+            )
+            for row in rows {
+                let size = measure(row, proposed: rowProposal, environment: environment)
+                width = max(width, size.width)
+                height += max(defaultFormRowHeight, size.height)
+            }
+            return CGSize(width: width, height: height)
+        case .navigation(let content, let title):
+            let barHeight = title == nil ? 0 : navigationBarHeight
+            let childProposal = CGSize(
+                width: proposed.width,
+                height: max(0, proposed.height - barHeight)
+            )
+            let child = measure(content, proposed: childProposal, environment: environment)
+            return CGSize(width: child.width, height: child.height + barHeight)
         case .gradient:
             return _bounded(proposed)
         case .modified(let content, let modification):
@@ -174,9 +199,13 @@ private enum _ViewRenderer {
                 return CGSize(width: size.width + horizontal, height: size.height + vertical)
             case .background:
                 return measure(content, proposed: proposed, environment: environment)
+            case .overlay:
+                return measure(content, proposed: proposed, environment: environment)
             case .previewLayout:
                 return measure(content, proposed: proposed, environment: environment)
             case .clipRoundedRectangle:
+                return measure(content, proposed: proposed, environment: environment)
+            case .navigationTitle:
                 return measure(content, proposed: proposed, environment: environment)
             }
         }
@@ -202,6 +231,25 @@ private enum _ViewRenderer {
             surface.addSubview(label)
         case .image(let source):
             placeImage(source, in: rect, on: surface, environment: environment)
+        case .color(let color):
+            let view = UIView(frame: rect)
+            view.backgroundColor = color.resolve()
+            view.accessibilityIdentifier = "SwiftUI.Color"
+            surface.addSubview(view)
+        case .roundedRectangle(let cornerRadius, let style):
+            let view = UIView(frame: rect)
+            view.layer.cornerRadius = max(0, cornerRadius)
+            switch style {
+            case .fill(let color):
+                view.backgroundColor = (color ?? environment.foregroundColor ?? .black).resolve()
+                view.accessibilityIdentifier = "SwiftUI.RoundedRectangle.fill"
+            case .stroke(let color, let lineWidth):
+                view.backgroundColor = .clear
+                view.layer.borderWidth = max(0, lineWidth)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.accessibilityIdentifier = "SwiftUI.RoundedRectangle.stroke"
+            }
+            surface.addSubview(view)
         case .spacer:
             return
         case .gradient(let gradient, let start, let end):
@@ -225,6 +273,16 @@ private enum _ViewRenderer {
                 children,
                 alignment: alignment,
                 spacing: spacing ?? defaultSpacing,
+                in: rect,
+                on: surface,
+                environment: environment
+            )
+        case .form(let rows):
+            placeForm(rows, in: rect, on: surface, environment: environment)
+        case .navigation(let content, let title):
+            placeNavigation(
+                content,
+                title: title,
                 in: rect,
                 on: surface,
                 environment: environment
@@ -273,14 +331,117 @@ private enum _ViewRenderer {
             case .background(let background, _):
                 place(background, in: rect, on: surface, environment: environment)
                 place(content, in: rect, on: surface, environment: environment)
+            case .overlay(let overlay, _):
+                place(content, in: rect, on: surface, environment: environment)
+                place(overlay, in: rect, on: surface, environment: environment)
             case .previewLayout:
                 place(content, in: rect, on: surface, environment: environment)
             case .clipRoundedRectangle(let radius):
-                surface.layer.cornerRadius = radius
-                surface.clipsToBounds = radius > 0
+                if surface is _SwiftUIHostingView, rect == surface.bounds {
+                    surface.layer.cornerRadius = radius
+                    surface.clipsToBounds = radius > 0
+                    place(content, in: rect, on: surface, environment: environment)
+                } else {
+                    let clippingView = UIView(frame: rect)
+                    clippingView.layer.cornerRadius = radius
+                    clippingView.clipsToBounds = radius > 0
+                    clippingView.accessibilityIdentifier = "SwiftUI.ClipRoundedRectangle"
+                    surface.addSubview(clippingView)
+                    place(
+                        content,
+                        in: clippingView.bounds,
+                        on: clippingView,
+                        environment: environment
+                    )
+                }
+            case .navigationTitle:
+                // NavigationView consumes this metadata while building its
+                // node.  Outside a NavigationView it leaves content intact.
                 place(content, in: rect, on: surface, environment: environment)
             }
         }
+    }
+
+    private static func placeForm(
+        _ rows: [_OpenViewNode],
+        in rect: CGRect,
+        on surface: UIView,
+        environment: _RenderEnvironment
+    ) {
+        let formView = UIView(frame: rect)
+        formView.backgroundColor = .systemGroupedBackground
+        formView.clipsToBounds = true
+        formView.accessibilityIdentifier = "SwiftUI.Form"
+        surface.addSubview(formView)
+
+        var y: CGFloat = 0
+        for (index, row) in rows.enumerated() {
+            let proposal = CGSize(
+                width: max(0, formView.bounds.width - 32),
+                height: defaultFormRowHeight
+            )
+            let measured = measure(row, proposed: proposal, environment: environment)
+            let rowHeight = max(defaultFormRowHeight, measured.height)
+            guard y < formView.bounds.height else { break }
+
+            let rowView = UIView(
+                frame: CGRect(
+                    x: 0,
+                    y: y,
+                    width: formView.bounds.width,
+                    height: min(rowHeight, formView.bounds.height - y)
+                )
+            )
+            rowView.backgroundColor = .secondarySystemBackground
+            rowView.accessibilityIdentifier = "SwiftUI.Form.row.\(index)"
+            formView.addSubview(rowView)
+
+            place(
+                row,
+                in: rowView.bounds.inset(by: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)),
+                on: rowView,
+                environment: environment
+            )
+            y += rowHeight
+        }
+    }
+
+    private static func placeNavigation(
+        _ content: _OpenViewNode,
+        title: String?,
+        in rect: CGRect,
+        on surface: UIView,
+        environment: _RenderEnvironment
+    ) {
+        let navigationView = UIView(frame: rect)
+        navigationView.backgroundColor = .systemBackground
+        navigationView.clipsToBounds = true
+        navigationView.accessibilityIdentifier = "SwiftUI.NavigationView"
+        surface.addSubview(navigationView)
+
+        let barHeight = title == nil ? 0 : min(navigationBarHeight, navigationView.bounds.height)
+        if let title {
+            let label = UILabel(
+                frame: CGRect(x: 16, y: 0, width: max(0, navigationView.bounds.width - 32), height: barHeight)
+            )
+            label.text = title
+            label.font = .systemFont(ofSize: 20, weight: .bold)
+            label.textColor = .label
+            label.accessibilityIdentifier = "SwiftUI.NavigationTitle"
+            navigationView.addSubview(label)
+        }
+
+        place(
+            content,
+            in: CGRect(
+                x: 0,
+                y: barHeight,
+                width: navigationView.bounds.width,
+                height: max(0, navigationView.bounds.height - barHeight)
+            ),
+            on: navigationView,
+            environment: environment
+        )
     }
 
     private static func placeHStack(
@@ -394,9 +555,7 @@ private enum _ViewRenderer {
     ) -> UILabel {
         let label = UILabel()
         label.text = string
-        let size: CGFloat = environment.font?.style == .headline ? 17 : 17
-        let defaultWeight: UIFont.Weight = environment.font?.style == .headline ? .semibold : .regular
-        label.font = .systemFont(ofSize: size, weight: environment.weight?.value ?? defaultWeight)
+        label.font = (environment.font ?? .body).resolve(weight: environment.weight)
         label.textColor = environment.foregroundColor?.resolve() ?? .label
         label.adjustsFontSizeToFitWidth = environment.minimumScaleFactor > 0
         label.minimumScaleFactor = environment.minimumScaleFactor
@@ -415,6 +574,8 @@ private enum _ViewRenderer {
         case .named(let name, let bundle):
             natural = UIImage(named: name, in: bundle, compatibleWith: nil)?.size
                 ?? CGSize(width: 22, height: 22)
+        case .uiImage(let image):
+            natural = image.size
         }
         guard environment.imageResizable else { return natural }
         let bounded = _bounded(proposed)
@@ -450,6 +611,17 @@ private enum _ViewRenderer {
                 ? .scaleAspectFit
                 : .scaleAspectFill
             imageView.accessibilityIdentifier = "SwiftUI.Image.named.\(name)"
+            surface.addSubview(imageView)
+        case .uiImage(let image):
+            let rendered = environment.foregroundColor.map { color in
+                image.withTintColor(color.resolve())
+            } ?? image
+            let imageView = UIImageView(image: rendered)
+            imageView.frame = rect
+            imageView.contentMode = environment.imageContentMode == .fit
+                ? .scaleAspectFit
+                : .scaleAspectFill
+            imageView.accessibilityIdentifier = "SwiftUI.Image.uiImage"
             surface.addSubview(imageView)
         }
     }

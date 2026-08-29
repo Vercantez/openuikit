@@ -22,15 +22,53 @@ public struct _OpenFont: Equatable, Sendable {
         public static let bold = Weight(.bold)
     }
 
-    let style: TextStyle
+    enum Storage: Equatable, Sendable {
+        case textStyle(TextStyle)
+        case uiFont(pointSize: CGFloat, weight: UIFont.Weight, design: UIFont.Design)
+    }
+
+    let storage: Storage
 
     private init(_ style: TextStyle) {
-        self.style = style
+        storage = .textStyle(style)
+    }
+
+    /// CoreText is toll-free bridged to UIFont on Apple platforms.  The
+    /// portable bridge preserves the same source spelling while carrying the
+    /// immutable OpenUIKit font metrics directly.
+    public init(_ font: CTFont) {
+        storage = .uiFont(
+            pointSize: font.pointSize,
+            weight: font.weight,
+            design: font.design
+        )
     }
 
     public static let headline = _OpenFont(.headline)
     public static let body = _OpenFont(.body)
+
+    func resolve(weight override: Weight?) -> UIFont {
+        switch storage {
+        case .textStyle(let style):
+            let size: CGFloat = 17
+            let weight: UIFont.Weight = override?.value
+                ?? (style == .headline ? .semibold : .regular)
+            return .systemFont(ofSize: size, weight: weight)
+        case .uiFont(let pointSize, let storedWeight, let design):
+            let descriptor = UIFontDescriptor(
+                pointSize: pointSize,
+                weight: override?.value ?? storedWeight,
+                design: design
+            )
+            return UIFont(descriptor: descriptor, size: pointSize)
+        }
+    }
 }
+
+/// Source-compatible CoreText bridge for Focus's `Font(uiFont as CTFont)`.
+/// OpenUIKit's UIFont is already a value type carrying the portable metrics,
+/// so the non-Darwin representation needs no opaque CoreText object.
+public typealias CTFont = UIFont
 
 public struct _OpenColor {
     enum Storage {
@@ -45,6 +83,10 @@ public struct _OpenColor {
     }
 
     public init(uiColor: UIColor) {
+        storage = .resolved(uiColor)
+    }
+
+    public init(_ uiColor: UIColor) {
         storage = .resolved(uiColor)
     }
 
