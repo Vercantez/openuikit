@@ -1,7 +1,7 @@
-# focus-ios current port census — exact sources, real SnapKit, and OpenUIKit #94
+# focus-ios port census — exact sources, real SnapKit, and OpenUIKit #94
 
 **Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
-**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `4c82757`
+**Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `5ce928c`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
 ## Source-unchanged compatibility policy
@@ -18,18 +18,52 @@ permission to translate their call sites inside Focus.
 The corpus-wide priority list is generated in
 [`../framework-roadmap/FRAMEWORK-ROADMAP.md`](../framework-roadmap/FRAMEWORK-ROADMAP.md).
 Focus's exact 28-file SwiftUI boundary and staged acceptance gates are in
-[`../swiftui/ROADMAP.md`](../swiftui/ROADMAP.md). Both are implementation
-backlogs. OpenUIKit `3cde5ad` now implements and renders the first exact
-two-file Focus widget slice, but that is not a claim that full SwiftUI or any
-other listed framework already executes in the Mach-O guest.
+[`../swiftui/ROADMAP.md`](../swiftui/ROADMAP.md). OpenUIKit `5ce928c` now
+implements the first exact two-file widget runtime slice and the seven-source
+DesignSystem compile/renderer slice. The widget is independently proven as an
+arm64 Mach-O guest under Linux machorun; this is not a claim that full SwiftUI,
+Onboarding, WidgetKit, or the complete app executes yet.
+
+## SwiftUI S1.5 census checkpoint
+
+The raw-`swiftc` census now supplies one separately labelled generated
+`Bundle.module` accessor to each exact target whose pinned source resolves that
+SwiftPM-generated member. The generated files live under the output directory
+and are additional compiler inputs; no Focus source is copied, edited, or
+overlaid.
+This clears the artificial resource-accessor wall and exposes the real next
+target boundary:
+
+```text
+target-UIHelpers               0
+target-DesignSystem            0
+target-Widget                  0
+target-AppShortcuts            0
+target-UIComponents            0
+target-Licenses                3
+target-Onboarding             64
+app                          696   broad saturated census, 182 files, -wmo
+                          ------
+TOTAL                        763
+```
+
+The larger total is not a compatibility regression: the old raw target stage
+reported one `no such module 'DesignSystem'` diagnostic and stopped, whereas
+it now compiles the real DesignSystem and Widget modules and exposes all 64
+Onboarding diagnostics. The independently comparable broad-app row fell from
+724 at the initial local SwiftUI slice (`3cde5ad`) to 696 at S1.5, a net 28
+diagnostics removed. The exact saved classification is
+[`census-swiftui-s15-2026-08-28.txt`](census-swiftui-s15-2026-08-28.txt)
+(SHA-256 `667821b62719a422997f4b364a5c71d082fbc4568ae000b049f59311e75a1f03`).
 
 SnapKit now comes from the exact 5.7.0 revision named by Focus's
 [`Package.resolved`](https://github.com/mozilla-mobile/focus-ios/blob/a2832521c1daa0c23419c73705ae043ed60c9791/focus-ios/Blockzilla.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved),
 not the former diagnostic checkout of upstream `main`. At that isolated
 correction checkpoint the census had an exact zero delta: SnapKit remained 0,
 the broad app row remained 709, and the total remained 739 primary diagnostics.
-The current counts below also include the later size-class, pointer, exact
-view-initializer, and Onboarding UIKit-core increments.
+The historical UIKit-core checkpoint below also includes the later size-class,
+pointer, exact view-initializer, and Onboarding UIKit-core increments. The
+SwiftUI S1.5 checkpoint above supersedes it as the current count.
 
 Phase 1 reported 1,066 literal `error:` lines over **104 of 179** files and said
 so as a lower bound. With the module walls cleared the same census reaches **182
@@ -62,7 +96,7 @@ corresponds to one independent API.
 All runs use `-wmo`; the deliberately broad 182-file source inventory remains
 the saturation denominator (and is not the Xcode target inventory; see below).
 
-```
+```text
 STAGE                PRIMARY DIAGNOSTICS   what it means
 stub-Glean                     0   \
 stub-FocusAppServices          0    |  six stub modules, all compile clean
@@ -251,11 +285,10 @@ adaptation output; the full fail-closed contract is recorded in
 [`appshortcuts-proof.md`](appshortcuts-proof.md).
 
 This is Apple-toolchain, macOS-targeted module emission, not a linked app or a
-Linux-executed guest. The broad census's raw `target-AppShortcuts` row remains
-at one diagnostic because that deliberately independent target stage stops at
-`no such module 'DesignSystem'`; the dependency-aware proof builds the real
-prerequisite modules first. Neither result is evidence that arbitrary
-`.xcodeproj` files can be passed to `xcodebuild` on Linux.
+Linux-executed guest. The raw census now also emits the generated DesignSystem
+resource accessor, so its real DesignSystem prerequisite and the unchanged
+AppShortcuts target both emit with zero diagnostics. Neither result is evidence
+that arbitrary `.xcodeproj` files can be passed to `xcodebuild` on Linux.
 
 ## The one SnapKit vendoring exclusion
 

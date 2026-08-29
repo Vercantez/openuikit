@@ -1,0 +1,109 @@
+=== STAGES (every one reported, including the clean ones) ===
+  app                          696 primary diagnostics
+  empty                          0 primary diagnostics
+  openuikit                      0 primary diagnostics
+  snapkit-vendoring-after        0 primary diagnostics
+  snapkit-vendoring-before       0 primary diagnostics
+  snapkit                        0 primary diagnostics
+  stub-FocusAppServices          0 primary diagnostics
+  stub-Fuzi                      0 primary diagnostics
+  stub-Glean                     0 primary diagnostics
+  stub-MobileCoreServices        0 primary diagnostics
+  stub-Sentry                    0 primary diagnostics
+  stub-WebKit                    0 primary diagnostics
+  target-AppShortcuts            0 primary diagnostics
+  target-DesignSystem            0 primary diagnostics
+  target-Licenses                3 primary diagnostics
+  target-Onboarding             64 primary diagnostics
+  target-UIComponents            0 primary diagnostics
+  target-UIHelpers               0 primary diagnostics
+  target-Widget                  0 primary diagnostics
+  TOTAL                        763
+
+=== ERROR KINDS, ranked (denominator 763) ===
+    150  cannot find 'X' in scope
+    130  value of type 'X' has no member 'X'
+     93  cannot infer contextual base in reference to member 'X'
+     54  cannot find type 'X' in scope
+     26  'X' requires a contextual type
+     24  'X' is inaccessible due to 'X' protection level
+     24  type 'X' has no member 'X'
+     24  argument of 'X' refers to instance method 'X' that is not exposed to Objective-C
+     22  method cannot be marked 'X' because the type of the parameter cannot be represented in Objective-C
+     20  ambiguous use of 'X'
+     17  extra argument 'X' in call
+     16  reference to member 'X' cannot be resolved without a contextual type
+     15  extraneous argument label 'X' in call
+     12  type 'X' (aka 'X') has no member 'X'
+     11  method does not override any method from its superclass
+     10  unknown attribute 'X'
+     10  value of type 'X' (aka 'X') has no member 'X'
+     10  type of expression is ambiguous without a type annotation
+
+=== MISSING TYPES: 74 distinct / 204 occurrences ===
+  Apple-framework names (a REAL gap)     :  32 distinct /   68 uses
+  app's own symbols (an earlier failure) :   3 distinct /    4 uses
+  other                                  :  39 distinct /  132 uses
+
+  the real Apple-type gap, ranked:
+      7  CATransaction
+      7  UIPageViewController
+      4  UIApplication
+      4  UIDropInteraction
+      4  UIViewPropertyAnimator
+      3  CACornerMask
+      3  UIDropSession
+      3  UIMenuItem
+      3  UIViewController
+      2  CABasicAnimation
+      2  UIDragInteraction
+      2  UIDragItem
+      2  UIImpactFeedbackGenerator
+      2  UIMenuController
+      2  UITableViewDiffableDataSource
+      2  UIViewControllerRepresentable
+      1  CATransform3D
+      1  NSDiffableDataSourceSnapshot
+      1  NSStringDrawingOptions
+      1  UIActivityItemProvider
+      1  UIDragInteractionDelegate
+      1  UIDragSession
+      1  UIDropInteractionDelegate
+      1  UIDropProposal
+      1  UIPageViewControllerDataSource
+      1  UIPageViewControllerDelegate
+      1  UIPrintFormatter
+      1  UIPrintInfo
+      1  UIPrintPageRenderer
+      1  UISpringTimingParameters
+      1  UITextPosition
+      1  UIView
+
+=== MISSING MEMBERS on types that DO exist ===
+  total member errors                    : 154
+  on Apple-framework types (the #94 list): 50 distinct / 85 uses
+  SnapKit's own DSL (.snp / .snp_)        : 0 distinct / 0 uses
+
+  by owning type, ranked:
+     14  UITextField                        attributedPlaceholder, autocapitalizationType, autocorrectionType, caretRect, clearButtonMode, enablesReturnKeyAutomatically …
+      9  UIButton                           contentEdgeInsets, contentHorizontalAlignment, semanticContentAttribute, titleEdgeInsets
+      8  WKWebView                          addObserver, backForwardList, hasOnlySecureContent, observe, reloadFromOrigin
+      7  UIBarButtonItem                    accessibilityIdentifier
+      7  UINavigationBar                    setBackgroundImage, shadowImage, titleTextAttributes
+      6  UIView                             canPerformAction, snapshotView, userInterfaceLayoutDirection
+      6  CAGradientLayer                    add, animation, drawsAsynchronously, mask, removeAnimation
+      5  CALayer                            maskedCorners
+      4  UIPageControl                      appearance
+      2  NSView                             alpha
+      2  UINavigationController             setNavigationBarHidden
+      2  UIProgressView                     setProgress
+      2  UITextInputMode                    perform, responds
+      2  UIImageView                        none
+      2  UIScrollView                       isZooming, setZoomScale
+      1  UIContentSizeCategory              didChangeNotification
+      1  UITextView                         keyboardType
+      1  UIKeyCommand                       wantsPriorityOverSystemBehavior
+      1  NSAttributedString                 boundingRect
+      1  UIKeyEventKey                      keyCode
+      1  NSValue                            cgRectValue
+      1  WKNavigation                       effectiveContentMode

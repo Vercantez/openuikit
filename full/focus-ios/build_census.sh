@@ -47,6 +47,34 @@ mkdir -p "$OUT/modules" "$OUT/logs"
 say() { printf '%s\n' "$*"; }
 hr()  { say ""; say "########## $*"; }
 
+# The port's normalized target-resource plan must supply SwiftPM-equivalent
+# Bundle.module accessors outside the application source.  The raw swiftc
+# census has no build-plan step, so stage that one narrowly identified,
+# compile-only generated input for each exact target whose pinned sources
+# resolve SwiftPM's Bundle.module member.  This is build support, not an
+# overlay: it defines no application type, traps if accidentally executed, and
+# lives under OUT.
+target_needs_bundle_accessor() {
+    case "$1" in
+        DesignSystem|Widget|Licenses|Onboarding) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+write_bundle_accessor() {
+    local target=$1
+    local directory="$OUT/generated-build-support/$target"
+    local accessor="$directory/resource_bundle_accessor.swift"
+    mkdir -p "$directory"
+    printf '%s\n' \
+        '// Generated build support: SwiftPM Bundle.module census accessor.' \
+        'import Foundation' \
+        'extension Foundation.Bundle {' \
+        '    static var module: Bundle { fatalError("compile-only census accessor") }' \
+        '}' > "$accessor"
+    printf '%s\n' "$accessor"
+}
+
 # --- 0. pins, by COMMIT ------------------------------------------------------
 hr "0. pins"
 say "  focus-ios  $(git -C "$APP" rev-parse HEAD 2>/dev/null)"
@@ -83,8 +111,14 @@ build_mod() {
     local log=$1; shift
     local srcdir=$1; shift
     local -a srcs=()
+    local accessor
     while IFS= read -r -d '' f; do srcs+=("$f"); done \
         < <(find "$srcdir" -name '*.swift' -print0)
+    if target_needs_bundle_accessor "$name"; then
+        accessor=$(write_bundle_accessor "$name")
+        srcs+=("$accessor")
+        say "  $name generated build support: ${accessor#"$OUT"/}"
+    fi
     compile_mod "$name" "$log" "${srcs[@]}"
 }
 
