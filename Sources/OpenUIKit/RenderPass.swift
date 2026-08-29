@@ -98,14 +98,16 @@ public enum UIRenderer {
 
     static func renderView(_ v: UIView, into c: Canvas) {
         if v.isHidden { return }
-        let alpha = min(v.alpha, 1)
+        let backingPresentation = v.layer._presentationState(
+            at: OpenUIKitRuntime.animationTime)
+        let alpha = min(CGFloat(backingPresentation.opacity), 1)
         if alpha <= 0 { return }
 
         c.save()
         let grouped = alpha < 1
 
-        let bounds = v.bounds
-        let radius = v.layer.cornerRadius
+        let bounds = backingPresentation.bounds
+        let radius = backingPresentation.cornerRadius
         let hardEdges = !isAxisAlignedTranslationOnly(v.transform)
         let shadow = shadowParams(of: v)
 
@@ -176,9 +178,12 @@ public enum UIRenderer {
             // Position the subview: its center (in our bounds coordinates),
             // then its transform about that center (anchor 0.5/0.5), then
             // shift so the subview's own bounds coordinates line up.
-            c.translate(x: sub.center.x, y: sub.center.y)
+            let presentation = sub.layer._presentationState(
+                at: OpenUIKitRuntime.animationTime)
+            c.translate(x: presentation.position.x, y: presentation.position.y)
             c.concatenate(sub.transform)
-            c.translate(x: -sub.bounds.midX, y: -sub.bounds.midY)
+            c.translate(x: -presentation.bounds.midX,
+                        y: -presentation.bounds.midY)
             renderView(sub, into: c)
             c.restore()
         }
@@ -202,22 +207,32 @@ public enum UIRenderer {
         let alpha = Swift.min(Swift.max(CGFloat(presentation.opacity), 0), 1)
         guard alpha > 0 else { return }
 
+        var maskAlpha: CGFloat = 1
+        var maskClip: Path?
+        if let mask = layer.mask {
+            precondition(mask._orderedSublayers.isEmpty,
+                         "OpenUIKit's pure-Swift renderer supports only a solid CALayer mask")
+            guard !mask.isHidden, let color = mask.backgroundColor else { return }
+            let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
+            maskAlpha = Swift.min(Swift.max(
+                color.alpha * CGFloat(state.opacity), 0), 1)
+            guard maskAlpha > 0 else { return }
+            let rect = CGRect(
+                x: state.position.x - mask.anchorPoint.x * state.bounds.width,
+                y: state.position.y - mask.anchorPoint.y * state.bounds.height,
+                width: state.bounds.width, height: state.bounds.height)
+            maskClip = layerRoundedRect(rect, cornerRadius: state.cornerRadius)
+        }
+
         c.save()
         if alpha < 1 { c.beginTransparencyLayer(alpha: alpha) }
+        if maskAlpha < 1 { c.beginTransparencyLayer(alpha: maskAlpha) }
 
         let bounds = presentation.bounds
         // The pure-Swift fallback can exactly clip the Focus-used solid,
         // rounded-rect mask. Arbitrary alpha-mask layer trees are handled by
         // the CQuartz layers compositor (`QZLayerSetMask`).
-        if let mask = layer.mask,
-           let color = mask.backgroundColor, color.alpha > 0 {
-            let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
-            let rect = CGRect(
-                x: state.position.x - mask.anchorPoint.x * state.bounds.width,
-                y: state.position.y - mask.anchorPoint.y * state.bounds.height,
-                width: state.bounds.width, height: state.bounds.height)
-            c.clip(to: layerRoundedRect(rect, cornerRadius: state.cornerRadius))
-        }
+        if let maskClip { c.clip(to: maskClip) }
         if layer.masksToBounds {
             c.clip(to: layerRoundedRect(bounds, cornerRadius: presentation.cornerRadius))
         }
@@ -237,6 +252,7 @@ public enum UIRenderer {
         renderBorder(of: layer, bounds: bounds,
                      cornerRadius: presentation.cornerRadius, into: c)
 
+        if maskAlpha < 1 { c.endTransparencyLayer() }
         if alpha < 1 { c.endTransparencyLayer() }
         c.restore()
     }

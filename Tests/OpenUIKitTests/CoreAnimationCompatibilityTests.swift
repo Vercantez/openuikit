@@ -38,6 +38,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         savedTime = OpenUIKitRuntime.animationTime
         savedDeadline = OpenUIKitRuntime.animationWorkDeadline
         OpenUIKitRuntime.animationTime = 10
+        OpenUIKitRuntime.animationWorkDeadline = -.infinity
         PortableTransaction._resetForTesting()
     }
 
@@ -119,6 +120,33 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         XCTAssertTrue(layer._explicitAnimations.isEmpty)
     }
 
+    func testNestedTransactionInheritsValuesWithoutMutatingParent() {
+        var completionCalls = 0
+        PortableTransaction.begin()
+        PortableTransaction.setAnimationDuration(1.75)
+        PortableTransaction.setDisableActions(true)
+        PortableTransaction.setCompletionBlock { completionCalls += 1 }
+
+        PortableTransaction.begin()
+        XCTAssertEqual(PortableTransaction.animationDuration(), 1.75)
+        XCTAssertTrue(PortableTransaction.disableActions())
+        XCTAssertNotNil(PortableTransaction.completionBlock())
+        PortableTransaction.setAnimationDuration(0.5)
+        PortableTransaction.setDisableActions(false)
+        PortableTransaction.commit()
+        PortableTransaction.flush()
+        XCTAssertEqual(completionCalls, 0,
+                       "an inherited completion is not scheduled by the child")
+
+        XCTAssertEqual(PortableTransaction.animationDuration(), 1.75)
+        XCTAssertTrue(PortableTransaction.disableActions())
+        PortableTransaction.commit()
+        PortableTransaction.flush()
+        XCTAssertEqual(completionCalls, 1)
+        XCTAssertEqual(PortableTransaction.animationDuration(), 0.25)
+        XCTAssertFalse(PortableTransaction.disableActions())
+    }
+
     func testTransactionCompletionWaitsForLongestAnimationAndIsTickDriven() {
         let layer = PortableLayer()
         var calls: [String] = []
@@ -139,6 +167,168 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         XCTAssertEqual(calls, ["complete"])
         window.tick(timestamp: 100)
         XCTAssertEqual(calls, ["complete"])
+    }
+
+    func testTransactionCompletionTracksRemovalReplacementAndInfinity() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+
+        do {
+            let layer = PortableLayer()
+            var calls = 0
+            PortableTransaction.begin()
+            PortableTransaction.setCompletionBlock { calls += 1 }
+            let animation = PortableBasicAnimation(keyPath: "opacity")
+            animation.duration = 0.4
+            animation.fromValue = 0.0
+            animation.toValue = 1.0
+            layer.add(animation, forKey: "fade")
+            PortableTransaction.commit()
+
+            OpenUIKitRuntime.animationTime = 10.053
+            layer.removeAnimation(forKey: "fade")
+            window.tick(timestamp: 10.052)
+            XCTAssertEqual(calls, 0)
+            window.tick(timestamp: 10.053)
+            XCTAssertEqual(calls, 1)
+        }
+
+        do {
+            OpenUIKitRuntime.animationTime = 20
+            let layer = PortableLayer()
+            var calls = 0
+            PortableTransaction.begin()
+            PortableTransaction.setCompletionBlock { calls += 1 }
+            let original = PortableBasicAnimation(keyPath: "opacity")
+            original.duration = 0.4
+            original.fromValue = 0.0
+            original.toValue = 1.0
+            layer.add(original, forKey: "fade")
+            PortableTransaction.commit()
+
+            OpenUIKitRuntime.animationTime = 20.01
+            let replacement = PortableBasicAnimation(keyPath: "opacity")
+            replacement.duration = 0.1
+            replacement.fromValue = 0.0
+            replacement.toValue = 1.0
+            layer.add(replacement, forKey: "fade")
+            window.tick(timestamp: 20.109)
+            XCTAssertEqual(calls, 0)
+            window.tick(timestamp: 20.111)
+            XCTAssertEqual(calls, 1)
+        }
+
+        do {
+            OpenUIKitRuntime.animationTime = 30
+            let layer = PortableLayer()
+            var calls = 0
+            PortableTransaction.begin()
+            PortableTransaction.setCompletionBlock { calls += 1 }
+            let infinite = PortableBasicAnimation(keyPath: "opacity")
+            infinite.duration = 0.1
+            infinite.repeatCount = .infinity
+            infinite.fromValue = 0.0
+            infinite.toValue = 1.0
+            layer.add(infinite, forKey: "fade")
+            PortableTransaction.commit()
+            window.tick(timestamp: 100)
+            XCTAssertEqual(calls, 0)
+            OpenUIKitRuntime.animationTime = 100
+            layer.removeAllAnimations()
+            window.tick(timestamp: 100)
+            XCTAssertEqual(calls, 1)
+        }
+    }
+
+    func testFractionalRepeatForwardsFillEndsAtFractionalPhase() {
+        let layer = PortableLayer()
+        layer.opacity = 1
+        let animation = PortableBasicAnimation(keyPath: "opacity")
+        animation.duration = 2
+        animation.repeatCount = 2.5
+        animation.fromValue = 0.0
+        animation.toValue = 1.0
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        layer.add(animation, forKey: "fade")
+
+        XCTAssertEqual(layer._presentationState(at: 15).opacity, 0.5,
+                       accuracy: 0.0001)
+    }
+
+    func testExplicitAnimationOutsideTransactionPublishesWorkDeadline() {
+        let layer = PortableLayer()
+        let animation = PortableBasicAnimation(keyPath: "position")
+        animation.duration = 0.75
+        animation.fromValue = CGPoint.zero
+        animation.toValue = CGPoint(x: 10, y: 0)
+        layer.add(animation, forKey: "move")
+        XCTAssertEqual(OpenUIKitRuntime.animationWorkDeadline, 10.75,
+                       accuracy: 0.0001)
+    }
+
+    func testMissingFromEndpointUsesInterruptedPresentationValue() {
+        let layer = PortableLayer()
+        layer.position = CGPoint(x: 100, y: 0)
+        let first = PortableBasicAnimation(keyPath: "position")
+        first.duration = 2
+        first.fromValue = CGPoint.zero
+        first.toValue = CGPoint(x: 100, y: 0)
+        layer.add(first, forKey: "move")
+
+        OpenUIKitRuntime.animationTime = 11
+        let replacement = PortableBasicAnimation(keyPath: "position")
+        replacement.duration = 2
+        replacement.toValue = CGPoint(x: 200, y: 0)
+        layer.add(replacement, forKey: "move")
+        XCTAssertEqual(layer._presentationState(at: 11).position.x, 50,
+                       accuracy: 0.0001)
+        XCTAssertEqual(layer._presentationState(at: 12).position.x, 125,
+                       accuracy: 0.0001)
+    }
+
+    func testBackingLayerOpacityAnimationRendersInBothCompositors() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 4))
+        view.backgroundColor = .white
+        let animation = PortableBasicAnimation(keyPath: "opacity")
+        animation.duration = 2
+        animation.fromValue = 0.0
+        animation.toValue = 1.0
+        view.layer.add(animation, forKey: "fade")
+        OpenUIKitRuntime.animationTime = 11
+
+        for bitmap in [
+            LayerBridge.render(view, scale: 1),
+            UIRenderer.renderPassRender(view, scale: 1),
+        ] {
+            let alpha = bitmap.pixels[(2 * bitmap.width + 4) * 4 + 3]
+            XCTAssertGreaterThanOrEqual(alpha, 126)
+            XCTAssertLessThanOrEqual(alpha, 129)
+        }
+    }
+
+    func testTransparentSolidMaskAgreesAcrossRenderers() {
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 4))
+        let layer = PortableLayer()
+        layer.anchorPoint = CGPoint(x: 0, y: 0)
+        layer.frame = root.bounds
+        layer.backgroundColor = PortableCGColor(
+            red: 1, green: 1, blue: 1, alpha: 1)
+        let mask = PortableLayer()
+        mask.anchorPoint = CGPoint(x: 0, y: 0)
+        mask.frame = root.bounds
+        mask.backgroundColor = PortableCGColor(
+            red: 1, green: 1, blue: 1, alpha: 0)
+        layer.mask = mask
+        root.layer.addSublayer(layer)
+
+        for bitmap in [
+            LayerBridge.render(root, scale: 1),
+            UIRenderer.renderPassRender(root, scale: 1),
+        ] {
+            XCTAssertTrue(bitmap.pixels.enumerated().allSatisfy {
+                $0.offset % 4 != 3 || $0.element == 0
+            })
+        }
     }
 
     func testZeroDurationAndDisabledActionsDoNotLeaveImplicitAnimations() {
@@ -215,8 +405,10 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
         let locationAnimation = PortableBasicAnimation(keyPath: "locations")
         locationAnimation.duration = 2
-        locationAnimation.fromValue = [CGFloat(0), CGFloat(0.5)]
-        locationAnimation.toValue = [CGFloat(0.5), CGFloat(1)]
+        // Preserve Focus's exact source shape: without contextual annotation,
+        // these endpoint arrays arrive through Any as [Double] on Darwin.
+        locationAnimation.fromValue = [0.0, 0.5]
+        locationAnimation.toValue = [0.5, 1.0]
         locationAnimation.fillMode = .forwards
         locationAnimation.isRemovedOnCompletion = false
         gradient.add(locationAnimation, forKey: "locations")

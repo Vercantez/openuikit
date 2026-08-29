@@ -91,12 +91,22 @@ enum _CALayerAnimationValue {
         switch value {
         case let value as CGPoint: return .point(value)
         case let value as CGRect: return .rect(value)
+#if canImport(CoreGraphics)
+        case let value as Double: return .scalar(CGFloat(value))
+#endif
         case let value as CGFloat: return .scalar(value)
         case let value as Float: return .scalar(CGFloat(value))
         case let value as Int: return .scalar(CGFloat(value))
+        // An uncontextualized Swift array literal stored in `Any` is
+        // `[Double]`, including Focus's exact GradientProgressBar endpoints.
+        // Foundation.CGFloat is a distinct bridged value type on Darwin, so a
+        // `[CGFloat]` cast does not accept those bytes there.
+#if canImport(CoreGraphics)
+        case let value as [Double]: return .vector(value.map { CGFloat($0) })
+#endif
         case let value as [CGFloat]: return .vector(value)
-        case let value as [Float]: return .vector(value.map(CGFloat.init))
-        case let value as [Int]: return .vector(value.map(CGFloat.init))
+        case let value as [Float]: return .vector(value.map { CGFloat($0) })
+        case let value as [Int]: return .vector(value.map { CGFloat($0) })
         default: return nil
         }
     }
@@ -130,12 +140,17 @@ struct _CALayerAnimationRecord {
     let from: _CALayerAnimationValue
     let to: _CALayerAnimationValue
     let begin: Double
+    let workID: Int
 
     var end: Double {
+        begin + Self._totalDuration(of: animation)
+    }
+
+    static func _totalDuration(of animation: CAAnimation) -> Double {
         guard animation.repeatCount.isFinite else { return .infinity }
         let plays = animation.repeatCount > 0
             ? Double(animation.repeatCount) : 1
-        return begin + Swift.max(0, animation.duration) * plays
+        return Swift.max(0, animation.duration) * plays
     }
 
     /// nil means the model value should be used for this record at `time`.
@@ -164,7 +179,11 @@ struct _CALayerAnimationRecord {
         guard !animation.isRemovedOnCompletion,
               animation.fillMode == .forwards || animation.fillMode == .both
         else { return nil }
-        return to
+        let repeats = animation.repeatCount
+        guard repeats > 0, repeats.isFinite else { return to }
+        let remainder = Double(repeats).truncatingRemainder(dividingBy: 1)
+        guard remainder > 0 else { return to }
+        return from.interpolated(to: to, fraction: CGFloat(remainder))
     }
 }
 
@@ -182,11 +201,15 @@ public enum CATransaction {
         var animationDuration: Double = 0.25
         var disableActions = false
         var completion: (() -> Void)?
-        var latestAnimationEnd: Double?
+        // A nested frame can observe an inherited completion without owning
+        // another scheduled invocation of it.
+        var completionIsLocal = false
+        var animationWorkIDs: [Int] = []
     }
 
     struct Completion {
-        let end: Double
+        let fallbackEnd: Double
+        let animationWorkIDs: [Int]
         let sequence: Int
         let body: () -> Void
     }
@@ -194,21 +217,36 @@ public enum CATransaction {
     private static var frames: [Frame] = []
     private static var completions: [Completion] = []
     private static var nextSequence = 0
+    private static var nextWorkID = 0
+    private static var workDeadlines: [Int: Double] = [:]
 
-    public static func begin() { frames.append(Frame()) }
+    public static func begin() {
+        // Core Animation nests transactions by inheriting the enclosing
+        // transaction's current values. The child's later mutations remain
+        // local and are discarded when it commits.
+        let parent = frames.last
+        frames.append(Frame(
+            animationDuration: parent?.animationDuration ?? 0.25,
+            disableActions: parent?.disableActions ?? false,
+            completion: parent?.completion))
+    }
 
     public static func commit() {
         guard let frame = frames.popLast() else { return }
-        if let completion = frame.completion {
-            let end = frame.latestAnimationEnd ?? OpenUIKitRuntime.animationTime
-            completions.append(Completion(end: end, sequence: nextSequence,
+        if frame.completionIsLocal, let completion = frame.completion {
+            completions.append(Completion(
+                fallbackEnd: OpenUIKitRuntime.animationTime,
+                animationWorkIDs: frame.animationWorkIDs,
+                sequence: nextSequence,
                                           body: completion))
             nextSequence &+= 1
         }
-        if !frames.isEmpty, let end = frame.latestAnimationEnd {
+        if !frames.isEmpty {
             let index = frames.index(before: frames.endIndex)
-            frames[index].latestAnimationEnd = Swift.max(
-                frames[index].latestAnimationEnd ?? -.infinity, end)
+            for id in frame.animationWorkIDs
+                where !frames[index].animationWorkIDs.contains(id) {
+                frames[index].animationWorkIDs.append(id)
+            }
         }
     }
 
@@ -230,7 +268,9 @@ public enum CATransaction {
 
     public static func setCompletionBlock(_ block: (() -> Void)?) {
         guard !frames.isEmpty else { return }
-        frames[frames.index(before: frames.endIndex)].completion = block
+        let index = frames.index(before: frames.endIndex)
+        frames[index].completion = block
+        frames[index].completionIsLocal = true
     }
 
     public static func completionBlock() -> (() -> Void)? { frames.last?.completion }
@@ -240,16 +280,30 @@ public enum CATransaction {
         return frame.animationDuration
     }
 
-    static func _noteAnimation(duration: Double) {
-        guard !frames.isEmpty, duration.isFinite else {
-            if !duration.isFinite { OpenUIKitRuntime.noteAnimationWork(until: .infinity) }
-            return
+    static func _noteAnimation(duration: Double, replacing workID: Int?) -> Int {
+        let id: Int
+        if let workID {
+            id = workID
+        } else {
+            id = nextWorkID
+            nextWorkID &+= 1
         }
-        let end = OpenUIKitRuntime.animationTime + Swift.max(0, duration)
-        let index = frames.index(before: frames.endIndex)
-        frames[index].latestAnimationEnd = Swift.max(
-            frames[index].latestAnimationEnd ?? -.infinity, end)
+        let end = duration.isFinite
+            ? OpenUIKitRuntime.animationTime + Swift.max(0, duration)
+            : .infinity
+        workDeadlines[id] = end
+        if !frames.isEmpty {
+            let index = frames.index(before: frames.endIndex)
+            if !frames[index].animationWorkIDs.contains(id) {
+                frames[index].animationWorkIDs.append(id)
+            }
+        }
         OpenUIKitRuntime.noteAnimationWork(until: end)
+        return id
+    }
+
+    static func _removeAnimation(workID: Int) {
+        workDeadlines[workID] = OpenUIKitRuntime.animationTime
     }
 
     public static func flush() {
@@ -260,20 +314,30 @@ public enum CATransaction {
         guard !completions.isEmpty else { return }
         var due: [Completion] = []
         completions.removeAll { entry in
-            if entry.end <= time {
+            if _completionEnd(entry) <= time {
                 due.append(entry)
                 return true
             }
             return false
         }
-        due.sort { ($0.end, $0.sequence) < ($1.end, $1.sequence) }
+        due.sort {
+            (_completionEnd($0), $0.sequence) < (_completionEnd($1), $1.sequence)
+        }
         for entry in due { entry.body() }
+    }
+
+    private static func _completionEnd(_ entry: Completion) -> Double {
+        entry.animationWorkIDs.reduce(entry.fallbackEnd) { result, id in
+            Swift.max(result, workDeadlines[id] ?? entry.fallbackEnd)
+        }
     }
 
     static func _resetForTesting() {
         frames.removeAll()
         completions.removeAll()
         nextSequence = 0
+        nextWorkID = 0
+        workDeadlines.removeAll()
     }
 }
 
@@ -291,15 +355,18 @@ extension CALayer {
         }
 
         let copy = animation._copyAnimation()
-        if let key {
-            _explicitAnimations.removeAll { $0.key == key }
+        let replacedWorkID = key.flatMap { requestedKey in
+            _explicitAnimations.last { $0.key == requestedKey }?.workID
         }
+        let duration = _CALayerAnimationRecord._totalDuration(of: copy)
+        let workID = CATransaction._noteAnimation(
+            duration: duration, replacing: replacedWorkID)
+        if let key { _explicitAnimations.removeAll { $0.key == key } }
         let record = _CALayerAnimationRecord(
             key: key, animation: copy, keyPath: keyPath,
             from: endpoints.0, to: endpoints.1,
-            begin: OpenUIKitRuntime.animationTime)
+            begin: OpenUIKitRuntime.animationTime, workID: workID)
         _explicitAnimations.append(record)
-        CATransaction._noteAnimation(duration: record.end - record.begin)
     }
 
     public func animation(forKey key: String) -> CAAnimation? {
@@ -308,18 +375,30 @@ extension CALayer {
     }
 
     public func removeAnimation(forKey key: String) {
+        let removed = _explicitAnimations.filter { $0.key == key }
         _explicitAnimations.removeAll { $0.key == key }
+        for record in removed { CATransaction._removeAnimation(workID: record.workID) }
     }
 
-    public func removeAllAnimations() { _explicitAnimations.removeAll() }
+    public func removeAllAnimations() {
+        let removed = _explicitAnimations
+        _explicitAnimations.removeAll()
+        for record in removed { CATransaction._removeAnimation(workID: record.workID) }
+    }
 
     func _recordImplicitAnimation<T>(keyPath: String, from: T, to: T) {
         guard let duration = CATransaction._implicitAnimationDuration,
               duration > 0
         else { return }
+        _purgeFinishedAnimations(at: OpenUIKitRuntime.animationTime)
         let animation = CABasicAnimation(keyPath: keyPath)
         animation.duration = duration
-        animation.fromValue = from
+        // A replacement begins at the live presentation value. A first
+        // mutation still uses the pre-mutation model value supplied by the
+        // property's setter (important for frame, whose storage is updated
+        // before this hook runs).
+        animation.fromValue = _explicitAnimations.contains { $0.keyPath == keyPath }
+            ? nil : from
         animation.toValue = to
         add(animation, forKey: keyPath)
     }
@@ -361,11 +440,35 @@ extension CALayer {
         }
         default: model = nil
         }
-        guard let fallback = model,
-              let from = _CALayerAnimationValue.decode(animation.fromValue) ?? Optional(fallback),
-              let to = _CALayerAnimationValue.decode(animation.toValue) ?? Optional(fallback)
+        guard let model else { return nil }
+        let presentation = _presentationAnimationValue(
+            for: keyPath, at: OpenUIKitRuntime.animationTime) ?? model
+        guard let from = _resolvedEndpoint(animation.fromValue,
+                                           fallback: presentation),
+              let to = _resolvedEndpoint(animation.toValue, fallback: model)
         else { return nil }
         return (from, to)
+    }
+
+    func _presentationAnimationValue(
+        for keyPath: String, at time: Double
+    ) -> _CALayerAnimationValue? {
+        _purgeFinishedAnimations(at: time)
+        for record in _explicitAnimations.reversed()
+            where record.keyPath == keyPath {
+            if let value = record.value(at: time) { return value }
+        }
+        return nil
+    }
+
+    private func _resolvedEndpoint(
+        _ value: Any?, fallback: _CALayerAnimationValue
+    ) -> _CALayerAnimationValue? {
+        guard let value else { return fallback }
+        // A supplied-but-unsupported endpoint must not silently turn into a
+        // model-to-model animation. Returning nil makes add(_:forKey:) fail
+        // loudly at the compatibility boundary.
+        return _CALayerAnimationValue.decode(value)
     }
 
     private func _purgeFinishedAnimations(at time: Double) {

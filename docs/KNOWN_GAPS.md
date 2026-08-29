@@ -69,12 +69,15 @@ private backing-layer tree:
 - Focus's progress-bar slice adds `CATransaction`, copied/keyed
   `CABasicAnimation`, layer masks, `drawsAsynchronously`, and host-clock
   presentation sampling for `bounds`, `bounds.size`, `position`, `opacity`,
-  `cornerRadius`, and gradient `locations`. Explicit `fromValue`/`toValue`,
+  `cornerRadius`, and gradient `locations`, including supported animations
+  installed directly on a `UIView` backing layer. Explicit `fromValue`/`toValue`,
   removal/forwards fill, infinite repetition, replacement/removal, implicit
   frame animation inside an explicit transaction, and transaction completion
-  are behavioral and tested. The model layer changes immediately; completion
-  runs only when the host advances `UIWindow.tick(timestamp:)`, using the same
-  deterministic clock as `UIView.animate`.
+  are behavioral and tested. Completion follows the live keyed animation, so
+  removal, shorter replacement, and infinite repetition change when it becomes
+  due. The model layer changes immediately; completion runs only when the host
+  advances `UIWindow.tick(timestamp:)`, using the same deterministic clock as
+  `UIView.animate`.
 - `UIProgressView.setProgress(_:animated:)` now updates the model immediately
   and samples a reversible 0.25-second fill presentation from that clock. It
   supplies the exact superclass call used by Focus's `GradientProgressBar`;

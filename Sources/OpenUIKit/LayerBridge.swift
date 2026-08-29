@@ -270,6 +270,14 @@ public enum LayerBridge {
                 if !v.clipsToBounds { extent = extent.union(layer.frame) }
             }
         }
+        if !lay._explicitAnimations.isEmpty {
+            // A UIView backing layer can carry app-installed CA animations.
+            // Keep it and every ancestor out of the static composite/culling
+            // paths while their presentation is clock-dependent.
+            info.hasExplicitLayers = true
+            info.selfPlacementAnimated = true
+            h.combine(now.bitPattern)
+        }
 
         // Active animations. Placement properties (position / alpha / pure-
         // translation transform) stay live on a composite layer; anything
@@ -474,6 +482,8 @@ public enum LayerBridge {
             eff = applyPresentation(to: l, view: v, traits: traits,
                                     at: OpenUIKitRuntime.animationTime)
         }
+        applyCoreAnimationPresentation(
+            to: l, layer: v.layer, at: OpenUIKitRuntime.animationTime)
 
         // UIKit does not anti-alias the edges of transformed (rotated /
         // scaled) layers — same rule as RenderPass.isAxisAlignedTranslationOnly.
@@ -545,6 +555,37 @@ public enum LayerBridge {
             }
         }
         return l
+    }
+
+    /// Apply explicit CABasicAnimation records installed directly on a
+    /// UIView's backing layer. UIView.animate records are applied first;
+    /// app-installed layer animations are the final presentation override.
+    static func applyCoreAnimationPresentation(
+        to layerRef: QZLayerRef, layer: CALayer, at time: Double
+    ) {
+        if case .rect(let value)? = layer._presentationAnimationValue(
+            for: "bounds", at: time) {
+            QZLayerSetBounds(layerRef, qzRect(value))
+        }
+        if case .point(let value)? = layer._presentationAnimationValue(
+            for: "bounds.size", at: time) {
+            var bounds = layer.bounds
+            bounds.size = CGSize(width: value.x, height: value.y)
+            QZLayerSetBounds(layerRef, qzRect(bounds))
+        }
+        if case .point(let value)? = layer._presentationAnimationValue(
+            for: "position", at: time) {
+            QZLayerSetPosition(layerRef, QZPoint(x: value.x, y: value.y))
+        }
+        if case .scalar(let value)? = layer._presentationAnimationValue(
+            for: "opacity", at: time) {
+            QZLayerSetOpacity(layerRef,
+                              QZFloat(Swift.min(Swift.max(value, 0), 1)))
+        }
+        if case .scalar(let value)? = layer._presentationAnimationValue(
+            for: "cornerRadius", at: time) {
+            QZLayerSetCornerRadius(layerRef, QZFloat(value))
+        }
     }
 
     /// Translate a portable explicit CALayer tree into quartz's native layer
