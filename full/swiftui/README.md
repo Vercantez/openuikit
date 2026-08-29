@@ -1,13 +1,16 @@
-# Focus SwiftUI source contract
+# Focus SwiftUI source contract and first guest slice
 
-SwiftUI does **not** run in the Linux Mach-O guest yet. Apple's SwiftUI binary
-is neither available nor linked, and no local substitute currently provides
-the compile surface, state engine, OpenUIKit renderer, and hosting boundary
-needed by Focus.
+An OpenUIKit-backed module named exactly `SwiftUI` now compiles, mounts, and
+renders Focus's two-file `Widget` package slice as an arm64 Mach-O executable
+under Linux machorun. The proof compiles the pinned Focus files directly from a
+clean checkout, uses separately identified generated build support, rejects
+Apple SwiftUI/Foundation load commands, and grades the resulting hierarchy,
+resources, layout, clipping, visible pixels, and deterministic PNG bytes.
 
-This directory turns that broad gap into a fail-closed port contract without
-changing Focus source. It is the starting point for a module whose public name
-is exactly `SwiftUI` and whose renderer is OpenUIKit.
+This is deliberately a bounded first execution slice. SwiftUI is linked as
+static objects into the proof executable; a reusable `libSwiftUI.dylib`, state
+and observation coverage, WidgetKit, and the complete unchanged Focus app are
+later milestones. Apple's SwiftUI binary is neither available nor linked.
 
 ## Measured pinned boundary
 
@@ -55,10 +58,14 @@ without a direct provider import. That evidence includes `UIImage`,
   contract.
 - `ROADMAP.md` separates compile, runtime-semantic, and renderer/host gates and
   defines staged acceptance criteria.
+- `FOCUS_WIDGET_GUEST.md`, `build_focus_widget_guest.sh`, and the separately
+  labelled generated accessor and harness reproduce the exact unchanged Focus
+  widget as a Linux Mach-O guest.
 - `donor-lock.json` pins six permissively licensed reference implementations.
 - `test_focus_swiftui_surface.py` checks regeneration, denominators, critical
   API families, generated-source limits, tokenizer behavior, first-slice
-  identity, and donor-lock shape.
+  identity, and donor-lock shape. `test_focus_widget_guest.py` adds static
+  regression teeth around the executable proof boundary.
 
 ## Reproduce
 
@@ -72,11 +79,12 @@ python3 -m unittest discover \
   -s full/swiftui -p 'test_*.py' -v
 ```
 
-Expected result at the reviewed pin:
+The local contract suite currently contains 23 tests (17 inventory tests plus
+6 executable-proof boundary tests). Expected result at the reviewed pin:
 
 ```text
 SWIFTUI CONTRACT OK sha256=5a7486b2c0d626c98ad3a96a58bb242d21ef8594c45efc36f3f5f4f2abe48f71
-Ran 17 tests
+Ran 23 tests
 OK
 ```
 
@@ -109,10 +117,12 @@ rounded clipping, layout/font/paint modifiers, and package assets. A new test
 harness may instantiate this public view; the two Focus files themselves must
 remain byte-identical.
 
-This slice is not complete merely when it typechecks. `ROADMAP.md` requires an
-OpenUIKit `UIHostingController`, exact resource staging, no Apple SwiftUI load
-command, a linked Mach-O guest running under Linux machorun, a correct mounted
-view hierarchy, and deterministic pixel probes.
+This slice is not complete merely when it typechecks. The committed guest proof
+meets the `ROADMAP.md` execution gates with an OpenUIKit
+`UIHostingController`, exact resource staging, no Apple SwiftUI load command,
+a linked Mach-O guest running under Linux machorun, a checked mounted view
+hierarchy, and deterministic pixel probes. See `FOCUS_WIDGET_GUEST.md` for the
+reproduction command and explicit limits.
 
 ## Donor evidence
 
