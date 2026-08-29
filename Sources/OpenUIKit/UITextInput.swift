@@ -17,7 +17,13 @@
 // clock (UIWindow.tick / the timestamps passed to sendText/sendKey) — never
 // from a wall clock — so scripted captures are deterministic.
 
+// Native and corelibs builds use Foundation's NSObject. The Foundation-hidden
+// Mach-O substrate supplies the same name alongside its existing NSRange /
+// IndexPath build-support declarations, so importing the unavailable module
+// here must remain conditional.
+#if canImport(Foundation)
 import class Foundation.NSObject
+#endif
 
 /// UIKit's UIKeyInput: minimal text entry.
 @preconcurrency @MainActor
