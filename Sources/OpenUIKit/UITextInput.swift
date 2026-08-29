@@ -23,6 +23,8 @@
 // here must remain conditional.
 #if canImport(Foundation)
 import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 // MARK: - Keyboard traits
