@@ -12,7 +12,7 @@
 // no UIKit at all on Linux, so this target is the only `UIKit` in scope.
 //
 // This target is a shim by definition and is labelled as such in the report.
-// It contains no API of its own — two re-exports, nothing else.
+// It contains no API of its own — framework re-exports only.
 //
 // M15: it re-exports Foundation as well, because REAL UIKit does
 // (`@_exported import Foundation` is in UIKit's own swiftinterface). That is
@@ -20,6 +20,14 @@
 // `NSCoder` — the corpus's single most common missing type, 344 of 5,099
 // files. It became possible only once OpenUIKit's geometry types were
 // Foundation's own; before M15 this line would have made every `CGRect` in
-// every vendored file ambiguous.
+// every vendored file ambiguous. Linux-built Mach-O app builds do not yet
+// have the complete Foundation umbrella, but they do stage the open-source
+// FoundationEssentials module. Re-exporting it on that path preserves real
+// UIKit's app-facing contract: an unchanged file with only `import UIKit`
+// sees the canonical `IndexPath`, rather than OpenUIKit's old fallback value.
+#if canImport(Foundation)
 @_exported import Foundation
+#elseif canImport(FoundationEssentials)
+@_exported import FoundationEssentials
+#endif
 @_exported import OpenUIKit

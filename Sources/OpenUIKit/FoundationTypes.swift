@@ -13,7 +13,10 @@
 // The collision was never missing API. It was duplicate NAMES. So the library
 // imports Foundation here and re-exports Foundation's own types under the
 // names UIKit uses; `Bundle` follows the same rule for UIViewController's nib
-// API. `typealias` is what makes that work: unqualified lookup
+// API. A Foundation-free Mach-O build can instead import the open-source
+// FoundationEssentials module and share its `IndexPath`; that is the first
+// app-facing identity needed before the complete Foundation umbrella exists.
+// `typealias` is what makes that work: unqualified lookup
 // that finds a typealias AND the type it aliases resolves to ONE declaration,
 // so `import Foundation` + `import OpenUIKit` in one file is unambiguous — and
 // unlike the old shadowing, an `IndexPath` built by an app's model layer IS
@@ -68,13 +71,26 @@ import Foundation
 import AppKit
 #endif
 
-// MARK: - IndexPath
-
 /// Foundation's `IndexPath`. Real UIKit does not declare its own either — it
 /// adds the two-component conveniences below to Foundation's type, which is
 /// exactly what this extension does.
 public typealias IndexPath = Foundation.IndexPath
-public typealias IndexSet = Foundation.IndexSet
+
+#elseif canImport(FoundationEssentials)
+
+import FoundationEssentials
+
+/// FoundationEssentials' canonical `IndexPath`. This branch is used by the
+/// Linux-built Mach-O framework before a complete `Foundation` umbrella is
+/// available. App code that imports FoundationEssentials and OpenUIKit now
+/// sees one identity rather than two lookalike values.
+public typealias IndexPath = FoundationEssentials.IndexPath
+
+#endif
+
+// MARK: - IndexPath
+
+#if canImport(Foundation) || canImport(FoundationEssentials)
 
 extension IndexPath {
     /// Table-view index path, stored `[section, row]` like UIKit's.
@@ -95,6 +111,12 @@ extension IndexPath {
     public var item: Int { count > 1 ? self[1] : 0 }
 #endif
 }
+
+#endif
+
+#if canImport(Foundation)
+
+public typealias IndexSet = Foundation.IndexSet
 
 // MARK: - Ranges and time
 
