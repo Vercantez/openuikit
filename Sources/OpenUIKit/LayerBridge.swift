@@ -729,7 +729,7 @@ public enum LayerBridge {
         guard let raw = QZLayerCreate() else { return nil }
         let l = arena.track(raw)
         arena.imageBoxes.append(box)
-        QZLayerSetBounds(l, QZRect(origin: QZPoint(x: 0, y: 0),
+        QZLayerSetBounds(l, QZRect(origin: QZPoint(x: QZFloat(0), y: QZFloat(0)),
                                    size: QZSize(width: ext.width, height: ext.height)))
         var pos = CGPoint(x: center.x + translation.x + (ext.midX - v.bounds.midX),
                           y: center.y + translation.y + (ext.midY - v.bounds.midY))
@@ -1104,7 +1104,7 @@ public enum LayerBridge {
                              arena: inout Arena) -> QZLayerRef? {
         guard let raw = QZLayerCreate() else { return nil }
         let l = arena.track(raw)
-        QZLayerSetBounds(l, QZRect(origin: QZPoint(x: 0, y: 0),
+        QZLayerSetBounds(l, QZRect(origin: QZPoint(x: QZFloat(0), y: QZFloat(0)),
                                    size: QZSize(width: extent.width,
                                                 height: extent.height)))
         QZLayerSetPosition(l, QZPoint(x: extent.midX, y: extent.midY))

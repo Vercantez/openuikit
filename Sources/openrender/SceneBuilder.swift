@@ -80,7 +80,8 @@ func parseColor(_ s: String) -> UIColor? {
         let inner = s.dropFirst(5).dropLast()
         let parts = inner.split(separator: ",").compactMap { Double(trimmedWS($0)) }
         guard parts.count == 4 else { return nil }
-        return UIColor(red: parts[0], green: parts[1], blue: parts[2], alpha: parts[3])
+        return UIColor(red: CGFloat(parts[0]), green: CGFloat(parts[1]),
+                       blue: CGFloat(parts[2]), alpha: CGFloat(parts[3]))
     }
     return nil
 }

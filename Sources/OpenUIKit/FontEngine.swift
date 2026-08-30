@@ -67,22 +67,22 @@ public enum FontEngine {
                       let id = obj["id"]?.stringValue,
                       let size = obj["pointSize"]?.doubleValue else { continue }
                 var e = Entry()
-                e.pointSize = size
-                e.ascender = obj["ascender"]?.doubleValue ?? 0
-                e.descender = obj["descender"]?.doubleValue ?? 0
-                e.lineHeight = obj["lineHeight"]?.doubleValue ?? 0
-                e.capHeight = obj["capHeight"]?.doubleValue ?? 0
-                e.xHeight = obj["xHeight"]?.doubleValue ?? 0
-                e.leading = obj["leading"]?.doubleValue ?? 0
+                e.pointSize = CGFloat(size)
+                e.ascender = CGFloat(obj["ascender"]?.doubleValue ?? 0)
+                e.descender = CGFloat(obj["descender"]?.doubleValue ?? 0)
+                e.lineHeight = CGFloat(obj["lineHeight"]?.doubleValue ?? 0)
+                e.capHeight = CGFloat(obj["capHeight"]?.doubleValue ?? 0)
+                e.xHeight = CGFloat(obj["xHeight"]?.doubleValue ?? 0)
+                e.leading = CGFloat(obj["leading"]?.doubleValue ?? 0)
                 e.advances = Array<CGFloat>(repeating: 0, count: 95)
                 if let adv = obj["advances"]?.objectValue {
                     for (k, v) in adv {
                         let u = Array(k.unicodeScalars)
                         guard u.count == 1, let d = v.doubleValue else { continue }
                         if u[0].value >= 32, u[0].value <= 126 {
-                            e.advances[Int(u[0].value) - 32] = d
+                            e.advances[Int(u[0].value) - 32] = CGFloat(d)
                         } else if u[0].value > 126 {
-                            e.extAdvances[u[0].value] = d
+                            e.extAdvances[u[0].value] = CGFloat(d)
                         }
                     }
                 }
@@ -100,7 +100,7 @@ public enum FontEngine {
             if let tm = json["t"]?.objectValue {
                 for (k, v) in tm {
                     if let s = Double(k), let tv = v.doubleValue {
-                        t.tCurve.append((s, tv))
+                        t.tCurve.append((CGFloat(s), CGFloat(tv)))
                     }
                 }
                 t.tCurve.sort { $0.size < $1.size }
@@ -459,7 +459,7 @@ public enum FontEngine {
             var m: [Int: [CGFloat]] = [:]
             for (sk, v) in sizes {
                 guard let s = Int(sk), let arr = v.arrayValue, arr.count == 4 else { continue }
-                m[s] = arr.map { $0.doubleValue ?? 0 }
+                m[s] = arr.map { CGFloat($0.doubleValue ?? 0) }
             }
             out[fam] = m
         }

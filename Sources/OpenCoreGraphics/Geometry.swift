@@ -49,7 +49,9 @@ public struct CGVector: Equatable, Sendable {
 // Foundation-less build (embedded / freestanding). Keep the original structs;
 // they are the reference semantics the Foundation types are checked against by
 // the oracle suite.
-public typealias CGFloat = Double
+// Keep the same distinct eight-byte value identity as CoreFoundation.CGFloat.
+// The implementation lives in PortableCGFloat.swift so unchanged libraries
+// may conform both Double and CGFloat to the same protocol, as on Apple SDKs.
 
 public struct CGPoint: Equatable, Hashable, Sendable {
     public var x: CGFloat

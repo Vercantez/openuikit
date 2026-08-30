@@ -30,4 +30,7 @@
 #elseif canImport(FoundationEssentials)
 @_exported import FoundationEssentials
 #endif
+#if canImport(ObjectiveC)
+@_exported import ObjectiveC
+#endif
 @_exported import OpenUIKit

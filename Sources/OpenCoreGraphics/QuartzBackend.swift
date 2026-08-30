@@ -153,7 +153,7 @@ final class QuartzBackend: CanvasBackend {
         }
         QZContextEndTransparencyLayer(ctx)
         // Canvas's layer alpha is a per-layer parameter, not sticky state.
-        QZContextSetAlpha(ctx, 1)
+        QZContextSetAlpha(ctx, QZFloat(1))
         layerDepth -= 1
         if layerDepth == 0 { syncAll() }
     }
@@ -200,7 +200,8 @@ final class QuartzBackend: CanvasBackend {
             ctx, QZSize(width: shadow.offset.width, height: shadow.offset.height),
             shadow.blur * s, shadow.color.red, shadow.color.green,
             shadow.color.blue, shadow.color.alpha)
-        QZContextSetRGBFillColor(ctx, 0, 0, 0, 0)
+        QZContextSetRGBFillColor(
+            ctx, QZFloat(0), QZFloat(0), QZFloat(0), QZFloat(0))
         setPath(path)
         if evenOdd { QZContextEOFillPath(ctx) } else { QZContextFillPath(ctx) }
         QZContextRestoreGState(ctx)
@@ -276,7 +277,7 @@ final class QuartzBackend: CanvasBackend {
             ctx, interpolate ? kQZInterpolationDefault : kQZInterpolationNone)
         // QZ (like CG) maps the image bottom row to rect.minY in y-up user
         // space; our user space is top-down, so counter-flip about the rect.
-        QZContextTranslateCTM(ctx, 0, rect.minY + rect.maxY)
+        QZContextTranslateCTM(ctx, 0, QZFloat(rect.minY + rect.maxY))
         QZContextScaleCTM(ctx, 1, -1)
         QZContextDrawImage(ctx, QZRect(origin: QZPoint(x: rect.minX, y: rect.minY),
                                        size: QZSize(width: rect.width, height: rect.height)),
