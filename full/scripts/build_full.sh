@@ -25,8 +25,8 @@
 #
 # Runs in swift-macho-spike:noble.  /w = ~/swift-macho-linux, /uikit = ~/uikit:ro
 set -euo pipefail
-W=/w
-UIKIT=/uikit
+W=${W:-/w}
+UIKIT=${UIKIT:-/uikit}
 TARGET=arm64-apple-macos15.0           # FoundationEssentials' declared floor
 MINOS=15.0
 SYS=$W/scratch/sysroot_fe4             # Darwin + FE compile sysroot
@@ -42,6 +42,9 @@ FE_COLLECTIONS=$FE_BUILD/collections
 FE_OS=$FE_BUILD/os
 FE_CSHIMS=$FE_BUILD/cshims
 PINNED_INPUTS_TOOL=$W/full/foundation/pinned_inputs.pl
+BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE:-}
+BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT:-}
+BUILD_FULL_PREVIEW_MACRO_PLUGIN=${BUILD_FULL_PREVIEW_MACRO_PLUGIN:-}
 
 # ---- pinned upstream compile inputs ---------------------------------------
 # This preflight happens before outputs or success markers are touched. The
@@ -78,6 +81,57 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -module-cache-path "$MC"
         -Xfrontend -disable-objc-attr-requires-foundation-module)
 LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$SYS" -rpath /usr/lib/swift)
 CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
+
+# Optional, purpose-specific Preview seam used by the cold core-package build.
+# All inputs stay external to this build's UIKit module: the target DTS module
+# is visible during UIKit/app compiles, its object is linked exactly once into
+# each executable, and the native host plugin is loaded but never target-linked.
+PREVIEW_INPUT_COUNT=0
+[ -n "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" ] \
+    && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
+[ -n "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" ] \
+    && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
+[ -n "$BUILD_FULL_PREVIEW_MACRO_PLUGIN" ] \
+    && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
+[ "$PREVIEW_INPUT_COUNT" -eq 0 ] || [ "$PREVIEW_INPUT_COUNT" -eq 3 ] || {
+    echo 'build_full: Preview inputs are all-or-none' >&2
+    exit 2
+}
+PREVIEW_SWIFT_FLAGS=()
+PREVIEW_LINK_OBJECTS=()
+PREVIEW_INPUT_STATE_BEFORE='disabled'
+if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+    [ "$(basename "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE")" = \
+        DeveloperToolsSupport.swiftmodule ] || {
+        echo 'build_full: Preview target module basename drifted' >&2; exit 2; }
+    [ "$(basename "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT")" = \
+        developertoolsupport.o ] || {
+        echo 'build_full: Preview target object basename drifted' >&2; exit 2; }
+    [ "$(basename "$BUILD_FULL_PREVIEW_MACRO_PLUGIN")" = \
+        OpenUIKitPreviewMacros-tool ] || {
+        echo 'build_full: Preview host plugin basename drifted' >&2; exit 2; }
+    for input in "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" \
+        "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" \
+        "$BUILD_FULL_PREVIEW_MACRO_PLUGIN"; do
+        [ -f "$input" ] && [ ! -L "$input" ] || {
+            echo "build_full: Preview input is not a regular non-symlink file: $input" >&2
+            exit 2
+        }
+    done
+    [ -x "$BUILD_FULL_PREVIEW_MACRO_PLUGIN" ] || {
+        echo 'build_full: Preview host plugin is not executable' >&2; exit 2; }
+    PREVIEW_SWIFT_FLAGS=(
+        -I "$(dirname "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE")"
+        -load-plugin-executable \
+        "$BUILD_FULL_PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros"
+    )
+    PREVIEW_LINK_OBJECTS=("$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT")
+    PREVIEW_INPUT_STATE_BEFORE=$(
+        sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" \
+            "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" \
+            "$BUILD_FULL_PREVIEW_MACRO_PLUGIN"
+    )
+fi
 
 # ---- guest root ------------------------------------------------------------
 # MACHORUN=/machorun is a read-only bind mount of ~/machorun, so the guest root
@@ -549,7 +603,8 @@ APPINC=$OUT/appinc
 rm -rf "$UIKITINC" "$APPINC"
 mkdir -p "$UIKITINC" "$APPINC"
 echo "== literal UIKit shim (FoundationEssentials branch, actual /uikit source)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" -I "$OUT" \
     -module-name UIKit -emit-module -emit-module-path "$UIKITINC/UIKit.swiftmodule" \
     -emit-object -o "$OUT/uikitshim.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
 
@@ -558,6 +613,7 @@ echo "== literal UIKit shim (FoundationEssentials branch, actual /uikit source)"
 # identity rather than merely checking that an unqualified spelling exists.
 echo "== literal UIKit IndexPath compile proof"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" \
     -I "$OUT" -I "$UIKITINC" -module-name LiteralUIKitIndexPathProbe \
     -emit-object -o "$OUT/literal_uikit_indexpath_probe.o" \
     "$W/full/foundation/literal_uikit_indexpath_probe.swift"
@@ -583,12 +639,14 @@ echo "== app-only Foundation identity shim + RealAppProbe (UNMODIFIED app source
 # shared rather than merely source-compatible.
 echo "== Foundation/UIKit notification identity compile proof"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" \
     -I "$OUT" -I "$UIKITINC" -I "$APPINC" \
     -module-name NotificationGuestIdentityProbe -typecheck \
     "$W/full/foundation/notification_foundation_extension_probe.swift" \
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" \
     -I "$OUT" -I "$UIKITINC" -I "$APPINC" -default-isolation MainActor \
     -module-name RealAppProbe -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \
     -emit-object -o "$OUT/realappprobe.o" \
@@ -598,6 +656,7 @@ echo "== Foundation/UIKit notification identity compile proof"
 # whose interface transitively names UIKit, Foundation, and FoundationEssentials.
 echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
 "${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" \
     -I "$OUT" -I "$UIKITINC" -I "$APPINC" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
@@ -622,6 +681,7 @@ COMMON_LINK_OBJECTS=(
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
     "$OUT/swiftcorepatch.o"
     "${FE_OBJECTS[@]}"
+    "${PREVIEW_LINK_OBJECTS[@]}"
 )
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
     -L"$ROOTDIR/darwin/usr/lib" \
@@ -689,6 +749,18 @@ if [ "$PINNED_SOURCE_STATE_BEFORE" != "$PINNED_SOURCE_STATE_AFTER" ]; then
     echo "build_full: REFUSING -- pinned upstream compile inputs changed during build" >&2
     exit 2
 fi
+PREVIEW_INPUT_STATE_AFTER='disabled'
+if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+    PREVIEW_INPUT_STATE_AFTER=$(
+        sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" \
+            "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" \
+            "$BUILD_FULL_PREVIEW_MACRO_PLUGIN"
+    )
+fi
+if [ "$PREVIEW_INPUT_STATE_BEFORE" != "$PREVIEW_INPUT_STATE_AFTER" ]; then
+    echo 'build_full: REFUSING -- Preview inputs changed during the build' >&2
+    exit 2
+fi
 {
     printf 'render_full\t%s\n' "$(sha256sum "$OUT/render_full" | awk '{print $1}')"
     printf 'indexpath_identity_probe\t%s\n' \
@@ -701,6 +773,14 @@ fi
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" | awk '{print $1}')"
     printf 'libc++.1.dylib\t%s\n' \
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" | awk '{print $1}')"
+    if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+        printf 'DeveloperToolsSupport.swiftmodule\t%s\n' \
+            "$(sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" | awk '{print $1}')"
+        printf 'developertoolsupport.o\t%s\n' \
+            "$(sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" | awk '{print $1}')"
+        printf 'OpenUIKitPreviewMacros-tool\t%s\n' \
+            "$(sha256sum "$BUILD_FULL_PREVIEW_MACRO_PLUGIN" | awk '{print $1}')"
+    fi
 } > "$OUT/uihelpers-artifacts.sha256.tmp"
 printf '%s\n' "$UIHELPERS_SUBJECT_AFTER" > "$OUT/uihelpers-subject.sha256.tmp"
 # Publish the subject last: its presence is the commit marker that both the

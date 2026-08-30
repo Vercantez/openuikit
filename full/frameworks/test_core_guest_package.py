@@ -1,0 +1,486 @@
+#!/usr/bin/env python3
+"""Static and manifest-contract tests for the cold core guest package."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import unittest
+
+
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parents[1]
+TOOL = HERE / "core_package_manifest.py"
+BUILDER = HERE / "build_core_guest_package.sh"
+BUILD_FULL = REPO / "full/scripts/build_full.sh"
+HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
+CANONICAL_VALIDATOR = REPO / "full/xcodeplan/core_guest_package.py"
+FOUNDATION_SOURCES = (
+    "full/appshim/FoundationGuest.swift",
+    "full/appshim/FoundationOpenUIKitAliases.swift",
+    "full/foundation/CharacterSet.swift",
+    "full/foundation/String+CharacterSet.swift",
+    "full/foundation/Scanner.swift",
+    "full/foundation/Error+LocalizedDescription.swift",
+    "full/foundation/DateFormatter.swift",
+    "full/foundation/UserDefaults.swift",
+)
+FRAMEWORKS = (
+    "FoundationEssentials",
+    "OpenCoreGraphics",
+    "OpenUIKit",
+    "OpenCombine",
+    "Combine",
+    "SwiftUI",
+    "Foundation",
+    "UIKit",
+)
+DEPENDENCIES = (
+    "InternalCollectionsUtilities",
+    "OrderedCollections",
+    "_RopeModule",
+    "os",
+)
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def run_tool(*arguments: str, expected: int = 0) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(
+        ["python3", str(TOOL), *arguments],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != expected:
+        raise AssertionError(
+            f"manifest command returned {result.returncode}, expected {expected}\n"
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
+        )
+    return result
+
+
+def run_canonical(
+    package: Path, expected: int = 0
+) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(
+        ["python3", str(CANONICAL_VALIDATOR), str(package), "--emit-summary"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != expected:
+        raise AssertionError(
+            f"canonical validator returned {result.returncode}, expected {expected}\n"
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
+        )
+    return result
+
+
+def write_file(path: Path, payload: bytes | str = b"fixture") -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if isinstance(payload, str):
+        path.write_text(payload, encoding="utf-8", newline="\n")
+    else:
+        path.write_bytes(payload)
+
+
+class FoundationManifestTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        for index, relative in enumerate(FOUNDATION_SOURCES, 1):
+            write_file(self.root / relative, f"// source {index}\n")
+        self.manifest = self.root / "full/foundation/foundation_guest_sources.txt"
+        write_file(self.manifest, "\n".join(FOUNDATION_SOURCES) + "\n")
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def attest(self, expected: int = 0) -> subprocess.CompletedProcess[str]:
+        return run_tool(
+            "foundation-sources",
+            "--support-root",
+            str(self.root),
+            "--manifest",
+            str(self.manifest),
+            "--output",
+            str(self.root / "attestation.tsv"),
+            expected=expected,
+        )
+
+    def test_exact_order_is_attested(self) -> None:
+        self.attest()
+        lines = (self.root / "attestation.tsv").read_text().splitlines()
+        self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 8)
+
+    def test_reordered_manifest_is_refused(self) -> None:
+        reordered = list(FOUNDATION_SOURCES)
+        reordered[0], reordered[1] = reordered[1], reordered[0]
+        write_file(self.manifest, "\n".join(reordered) + "\n")
+        refusal = self.attest(expected=2)
+        self.assertIn("exact ordered 8-path contract", refusal.stderr)
+
+    def test_symlinked_source_is_refused(self) -> None:
+        source = self.root / FOUNDATION_SOURCES[-1]
+        source.unlink()
+        source.symlink_to(self.root / FOUNDATION_SOURCES[0])
+        refusal = self.attest(expected=2)
+        self.assertIn("symlink", refusal.stderr)
+
+
+class PackageFixture:
+    def __init__(self, root: Path, preview: bool) -> None:
+        self.root = root
+        self.preview = preview
+        for relative in (
+            "sdk",
+            "modules",
+            "lib",
+            "include",
+            "objects",
+            "resources/OpenUIKit/fonts",
+            "guest-root/darwin/usr/lib",
+            "probe",
+            "attestation",
+        ):
+            (root / relative).mkdir(parents=True, exist_ok=True)
+        for framework in FRAMEWORKS:
+            write_file(root / f"modules/{framework}.swiftmodule", framework)
+            write_file(root / f"lib/lib{framework}.dylib", f"dylib:{framework}")
+        for dependency in DEPENDENCIES:
+            write_file(root / f"modules/{dependency}.swiftmodule", dependency)
+        write_file(root / "guest-root/darwin/usr/lib/libquartz.dylib", "quartz")
+        write_file(root / "guest-root/machorun", "loader")
+        write_file(root / "guest-root/.manifest", "fixture-root\n")
+        write_file(root / "probe/CoreGuestPackageProbe", "probe")
+        write_file(root / "resources/OpenUIKit/system_colors.json", "{}\n")
+        write_file(root / "resources/OpenUIKit/font_metrics.json", "{}\n")
+        write_file(root / "resources/OpenUIKit/fonts/DejaVuSans.ttf", "system-font")
+        write_file(root / "resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf", "bold-font")
+        for name in (
+            "input-provenance.tsv",
+            "source-sets.tsv",
+            "foundation-sources.tsv",
+            "sdk-tree.tsv",
+            "include-tree.tsv",
+            "guest-root-tree.tsv",
+            "openuikit-resources-tree.tsv",
+            "runtime-closure.tsv",
+        ):
+            write_file(root / f"attestation/{name}", f"format\t{name}\n")
+        self.compile_arguments = [
+            "-target",
+            "arm64-apple-macos15.0",
+            "-sdk",
+            "sdk",
+            "-I",
+            "modules",
+        ]
+        self.link_arguments = [
+            "-arch",
+            "arm64",
+            "-platform_version",
+            "macos",
+            "15.0",
+            "15.0",
+            "-syslibroot",
+            "sdk",
+            "-Llib",
+            "-lUIKit",
+            "-lFoundation",
+            "-lSwiftUI",
+        ]
+        (root / "compile-flags.rsp").write_bytes(
+            b"".join(token.encode() + b"\0" for token in self.compile_arguments)
+        )
+        (root / "link-inputs.rsp").write_bytes(
+            b"".join(token.encode() + b"\0" for token in self.link_arguments)
+        )
+        self.plugin: Path | None = None
+        if preview:
+            write_file(root / "modules/DeveloperToolsSupport.swiftmodule", "dts-module")
+            write_file(root / "objects/developertoolsupport.o", "dts-object")
+            self.plugin = root.parent / "OpenUIKitPreviewMacros-tool"
+            write_file(self.plugin, "host-plugin")
+            self.plugin.chmod(0o755)
+            (root / "preview-plugin-load-flag.rsp").write_bytes(
+                b"-load-plugin-executable\0"
+                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0"
+            )
+            write_file(
+                root / "attestation/preview-input.tsv",
+                "\n".join(
+                    (
+                        "format\tcore-preview-input-v1",
+                        "module-name\tDeveloperToolsSupport",
+                        "module-path\tmodules/DeveloperToolsSupport.swiftmodule",
+                        f"module-sha256\t{sha256(root / 'modules/DeveloperToolsSupport.swiftmodule')}",
+                        "object-path\tobjects/developertoolsupport.o",
+                        f"object-sha256\t{sha256(root / 'objects/developertoolsupport.o')}",
+                        "plugin-basename\tOpenUIKitPreviewMacros-tool",
+                        f"plugin-sha256\t{sha256(self.plugin)}",
+                        "plugin-elf-class\tELF64",
+                        "plugin-elf-machine\tAArch64",
+                        "plugin-toolchain\tSwift version 6.2.4",
+                        "plugin-swiftsyntax-revision\t4799286537280063c85a32f09884cfbca301b1a1",
+                        "plugin-registration\tOpenUIKitPreviewMacros",
+                        "plugin-load-flags\tpreview-plugin-load-flag.rsp",
+                    )
+                )
+                + "\n",
+            )
+        self._write_ledger()
+
+    def _artifact(self, category: str, name: str, role: str, relative: str) -> str:
+        path = self.root / relative
+        return "\t".join(
+            (category, name, role, relative, sha256(path), str(path.stat().st_size))
+        )
+
+    def _write_ledger(self) -> None:
+        records = ["format\tcore-artifacts-v1"]
+        for framework in FRAMEWORKS:
+            records.append(
+                self._artifact(
+                    "framework", framework, "swiftmodule", f"modules/{framework}.swiftmodule"
+                )
+            )
+            records.append(
+                self._artifact("framework", framework, "dylib", f"lib/lib{framework}.dylib")
+            )
+        for dependency in DEPENDENCIES:
+            records.append(
+                self._artifact(
+                    "module-dependency",
+                    dependency,
+                    "swiftmodule",
+                    f"modules/{dependency}.swiftmodule",
+                )
+            )
+        records.append(
+            self._artifact(
+                "runtime", "CQuartz", "dylib", "guest-root/darwin/usr/lib/libquartz.dylib"
+            )
+        )
+        records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
+        for relative in sorted(
+            path.relative_to(self.root).as_posix()
+            for path in (self.root / "resources/OpenUIKit").rglob("*")
+            if path.is_file()
+        ):
+            role = "runtime-resource"
+            if relative.endswith("DejaVuSans.ttf"):
+                role = "system-font"
+            elif relative.endswith("DejaVuSans-Bold.ttf"):
+                role = "bold-font"
+            records.append(self._artifact("resource", "OpenUIKit", role, relative))
+        if self.preview:
+            records.append(
+                self._artifact(
+                    "module-dependency",
+                    "DeveloperToolsSupport",
+                    "swiftmodule",
+                    "modules/DeveloperToolsSupport.swiftmodule",
+                )
+            )
+            records.append(
+                self._artifact(
+                    "object",
+                    "DeveloperToolsSupport",
+                    "object",
+                    "objects/developertoolsupport.o",
+                )
+            )
+        write_file(self.root / "attestation/artifacts.tsv", "\n".join(records) + "\n")
+
+    def write_manifest(self) -> None:
+        arguments = [
+            "write",
+            "--package-root",
+            str(self.root),
+            "--artifact-ledger",
+            str(self.root / "attestation/artifacts.tsv"),
+            "--artifact-ledger-relative",
+            "attestation/artifacts.tsv",
+            "--input-provenance",
+            "attestation/input-provenance.tsv",
+            "--source-sets",
+            "attestation/source-sets.tsv",
+            "--foundation-sources",
+            "attestation/foundation-sources.tsv",
+            "--sdk-inventory",
+            "attestation/sdk-tree.tsv",
+            "--include-inventory",
+            "attestation/include-tree.tsv",
+            "--guest-inventory",
+            "attestation/guest-root-tree.tsv",
+            "--resource-inventory",
+            "attestation/openuikit-resources-tree.tsv",
+            "--runtime-closure",
+            "attestation/runtime-closure.tsv",
+            "--compile-rsp",
+            "compile-flags.rsp",
+            "--link-rsp",
+            "link-inputs.rsp",
+        ]
+        if self.preview:
+            assert self.plugin is not None
+            arguments.extend(
+                (
+                    "--preview-attestation",
+                    "attestation/preview-input.tsv",
+                    "--external-preview-plugin",
+                    str(self.plugin),
+                )
+            )
+        run_tool(*arguments)
+
+
+class PackageContractTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.base = Path(self.temporary.name)
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def fixture(self, preview: bool) -> PackageFixture:
+        fixture = PackageFixture(self.base / ("preview" if preview else "plain"), preview)
+        fixture.write_manifest()
+        return fixture
+
+    def test_plain_schema_is_relocatable(self) -> None:
+        fixture = self.fixture(False)
+        document = json.loads((fixture.root / "attestation/core-package.json").read_text())
+        self.assertEqual(document["classification"], "open-uikit-core-guest-package")
+        self.assertEqual(document["format_version"], 1)
+        self.assertEqual(document["target"]["triple"], "arm64-apple-macos15.0")
+        self.assertEqual(document["paths"]["resources"], "resources/OpenUIKit")
+        self.assertIsNone(document["preview"])
+        self.assertNotIn(str(self.base), json.dumps(document))
+        relocated = self.base / "relocated package with spaces"
+        shutil.copytree(fixture.root, relocated)
+        run_tool("verify", "--package-root", str(relocated))
+        summary = run_canonical(relocated)
+        self.assertIn("preview=no", summary.stdout)
+
+    def test_preview_is_external_and_dts_is_driver_owned(self) -> None:
+        fixture = self.fixture(True)
+        document = json.loads((fixture.root / "attestation/core-package.json").read_text())
+        preview = document["preview"]
+        self.assertEqual(preview["plugin_module"], "OpenUIKitPreviewMacros")
+        self.assertEqual(
+            preview["developer_tools_support_object"],
+            "objects/developertoolsupport.o",
+        )
+        self.assertEqual(
+            preview["app_compile_diagnostic_arguments"],
+            ["-Xfrontend", "-dump-macro-expansions"],
+        )
+        self.assertNotIn("objects/developertoolsupport.o", document["executable_link_arguments"])
+        self.assertEqual(
+            (fixture.root / "preview-plugin-load-flag.rsp").read_bytes(),
+            b"-load-plugin-executable\0${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0",
+        )
+        self.assertFalse((fixture.root / "OpenUIKitPreviewMacros-tool").exists())
+        self.assertNotIn(str(fixture.plugin), json.dumps(document))
+        assert fixture.plugin is not None
+        run_tool(
+            "verify",
+            "--package-root",
+            str(fixture.root),
+            "--preview-plugin",
+            str(fixture.plugin),
+        )
+        summary = run_canonical(fixture.root)
+        self.assertIn("preview=yes", summary.stdout)
+        relocated = self.base / "relocated preview package"
+        shutil.copytree(fixture.root, relocated)
+        run_tool("verify", "--package-root", str(relocated))
+        self.assertIn("preview=yes", run_canonical(relocated).stdout)
+
+    def test_changed_resource_is_refused(self) -> None:
+        fixture = self.fixture(False)
+        write_file(fixture.root / "resources/OpenUIKit/system_colors.json", "changed\n")
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("artifact hash drifted", refusal.stderr)
+
+    def test_unattested_library_is_refused(self) -> None:
+        fixture = self.fixture(False)
+        write_file(fixture.root / "lib/libStale.dylib", "stale")
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("artifact coverage drifted under lib", refusal.stderr)
+
+    def test_preview_plugin_hash_is_optionally_revalidated(self) -> None:
+        fixture = self.fixture(True)
+        assert fixture.plugin is not None
+        write_file(fixture.plugin, "changed plugin")
+        fixture.plugin.chmod(0o755)
+        refusal = run_tool(
+            "verify",
+            "--package-root",
+            str(fixture.root),
+            "--preview-plugin",
+            str(fixture.plugin),
+            expected=2,
+        )
+        self.assertIn("plugin hash drifted", refusal.stderr)
+
+
+class ShellContractTests(unittest.TestCase):
+    def test_builder_requires_exact_uikit_pin_and_fresh_output(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        for token in (
+            "--expected-support-commit",
+            "--expected-support-tree",
+            "--uikit-checkout",
+            "--expected-uikit-commit",
+            "--expected-uikit-tree",
+            "assert_clean_commit \"$UIKIT\"",
+            "output root already exists",
+            ".INVALID-DO-NOT-USE",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("EXPECTED_UIKIT_COMMIT=83fbcbe", source)
+
+    def test_preview_plugin_is_never_packaged_or_target_linked(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        self.assertIn("'${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros'", source)
+        self.assertIn("probe_dts_count", source)
+        self.assertIn("UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)", source)
+        self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
+
+    def test_build_full_preview_hook_preserves_early_visibility_boundary(self) -> None:
+        source = BUILD_FULL.read_text(encoding="utf-8")
+        self.assertIn("PREVIEW_INPUT_COUNT", source)
+        self.assertIn("${PREVIEW_SWIFT_FLAGS[@]}", source)
+        self.assertIn("${PREVIEW_LINK_OBJECTS[@]}", source)
+        self.assertLess(source.index("literal UIKit shim"), source.index("app-only Foundation identity shim"))
+
+    def test_host_wrapper_mounts_inputs_read_only_and_outputs_fresh(self) -> None:
+        source = HOST_WRAPPER.read_text(encoding="utf-8")
+        for mount in (
+            '"$RUN_ROOT/w:/w:ro"',
+            '"$STAGED_INPUT_ROOT/sysroot_fe4:/w/scratch/sysroot_fe4:ro"',
+            '"$UIKIT_CHECKOUT:/uikit:ro"',
+            '"$MACHORUN_CHECKOUT:/machorun:ro"',
+        ):
+            self.assertIn(mount, source)
+        self.assertIn("git clone --no-hardlinks --no-local", source)
+        self.assertIn("core_guest_package.py /w/build/core-package --emit-summary", source)
+        self.assertIn(".INVALID-DO-NOT-USE", source)
+
+
+if __name__ == "__main__":
+    unittest.main()
