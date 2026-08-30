@@ -1,0 +1,19 @@
+format	focus-primary-delta-v1
+baseline-count	218
+candidate-count	204
+removed-count	14
+added-count	0
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	143	26	value of type 'WKWebView' has no member 'reloadFromOrigin'
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	394	42	value of type 'WKNavigation' has no member 'effectiveContentMode'
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	414	21	extra arguments at positions #2, #3, #4 in call
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	414	22	cannot convert value of type 'Data' to expected argument type 'URLRequest'
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	437	46	value of type 'WKWebView' has no member 'backForwardList'
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	449	42	value of type 'WKWebView' has no member 'backForwardList'
+removed	1	focus/Blockzilla/Modules/WebView/WebViewController.swift	84	28	value of type 'WKWebView' has no member 'hasOnlySecureContent'
+removed	1	focus/Blockzilla/Settings/Controller/SettingsContentViewController.swift	159	21	extra arguments at positions #2, #3, #4 in call
+removed	1	focus/Blockzilla/Settings/Controller/SettingsContentViewController.swift	159	22	cannot convert value of type 'Data' to expected argument type 'URLRequest'
+removed	1	focus/Blockzilla/Utilities/SearchInContentTelemetry.swift	100	11	cannot find type 'URLComponents' in scope
+removed	1	focus/Blockzilla/Utilities/SearchInContentTelemetry.swift	28	66	cannot find 'UserDefaults' in scope
+removed	1	focus/Blockzilla/Utilities/SearchInContentTelemetry.swift	58	31	cannot find type 'URL' in scope
+removed	1	focus/Blockzilla/Utilities/SearchInContentTelemetry.swift	59	26	cannot find 'URLComponents' in scope
+removed	1	focus/Blockzilla/Utilities/SearchInContentTelemetry.swift	75	25	cannot find 'Locale' in scope

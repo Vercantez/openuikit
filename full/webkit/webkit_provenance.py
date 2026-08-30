@@ -71,6 +71,7 @@ def load_policy(path: Path) -> dict:
     if set(policy) != {
         "classification",
         "focus",
+        "focus_diagnostic_measurement",
         "native_oracle",
         "schema",
         "source_manifest",
@@ -82,6 +83,20 @@ def load_policy(path: Path) -> dict:
     if policy["classification"] != "portable-first-party-webkit-guest-v1":
         refuse("policy classification drifted")
     return policy
+
+
+def require_keys(value: object, expected: set[str], label: str) -> dict:
+    if not isinstance(value, dict) or set(value) != expected:
+        refuse(f"{label} key set drifted")
+    return value
+
+
+def require_hex(value: object, length: int, label: str) -> str:
+    if not isinstance(value, str) or not re.fullmatch(
+        rf"[0-9a-f]{{{length}}}", value
+    ):
+        refuse(f"invalid {label}")
+    return value
 
 
 def validate_record(root: Path, record: dict, label: str) -> tuple[str, str]:
@@ -102,6 +117,135 @@ def write_new(path: Path, lines: list[str]) -> None:
         refuse(f"refusing to overwrite output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+
+
+def validate_focus_measurement(
+    root: Path, policy: dict
+) -> tuple[tuple[str, str], dict]:
+    measurement = require_keys(
+        policy["focus_diagnostic_measurement"],
+        {
+            "added_count",
+            "artifact",
+            "baseline",
+            "candidate",
+            "delta_sha256",
+            "focus_commit",
+            "focus_tree",
+            "generated_missing_source_count",
+            "present_source_count",
+            "removed_count",
+            "snapkit_commit",
+            "snapkit_tree",
+            "target",
+            "uikit_commit",
+            "uikit_tree",
+            "webkit_module_diagnostic_count",
+        },
+        "Focus diagnostic measurement",
+    )
+    baseline = require_keys(
+        measurement["baseline"],
+        {
+            "diagnostic_count",
+            "normalized_sha256",
+            "raw_log_sha256",
+            "support_commit",
+            "support_tree",
+        },
+        "Focus diagnostic baseline",
+    )
+    candidate = require_keys(
+        measurement["candidate"],
+        {
+            "diagnostic_count",
+            "normalized_sha256",
+            "raw_log_sha256",
+            "support_commit",
+            "support_tree",
+        },
+        "Focus diagnostic candidate",
+    )
+    for name, value in (
+        ("Focus commit", measurement["focus_commit"]),
+        ("Focus tree", measurement["focus_tree"]),
+        ("SnapKit commit", measurement["snapkit_commit"]),
+        ("SnapKit tree", measurement["snapkit_tree"]),
+        ("UIKit commit", measurement["uikit_commit"]),
+        ("UIKit tree", measurement["uikit_tree"]),
+        ("baseline support commit", baseline["support_commit"]),
+        ("baseline support tree", baseline["support_tree"]),
+        ("candidate support commit", candidate["support_commit"]),
+        ("candidate support tree", candidate["support_tree"]),
+    ):
+        require_hex(value, 40, name)
+    for name, value in (
+        ("baseline raw-log digest", baseline["raw_log_sha256"]),
+        ("baseline normalized digest", baseline["normalized_sha256"]),
+        ("candidate raw-log digest", candidate["raw_log_sha256"]),
+        ("candidate normalized digest", candidate["normalized_sha256"]),
+        ("diagnostic delta digest", measurement["delta_sha256"]),
+    ):
+        require_hex(value, 64, name)
+    expected_integers = {
+        "baseline diagnostic count": (baseline["diagnostic_count"], 218),
+        "candidate diagnostic count": (candidate["diagnostic_count"], 204),
+        "removed diagnostic count": (measurement["removed_count"], 14),
+        "added diagnostic count": (measurement["added_count"], 0),
+        "present source count": (measurement["present_source_count"], 129),
+        "generated-missing source count": (
+            measurement["generated_missing_source_count"],
+            2,
+        ),
+        "WebKit module diagnostic count": (
+            measurement["webkit_module_diagnostic_count"],
+            0,
+        ),
+    }
+    for label, (actual, expected) in expected_integers.items():
+        if type(actual) is not int or actual != expected:
+            refuse(f"{label} drifted")
+    if measurement["target"] != "arm64-apple-macos15.0":
+        refuse("Focus diagnostic target drifted")
+    focus = policy["focus"]
+    if (
+        measurement["focus_commit"] != focus["commit"]
+        or measurement["focus_tree"] != focus["tree"]
+    ):
+        refuse("Focus diagnostic subject diverged from Focus usage subject")
+
+    artifact = validate_record(
+        root, measurement["artifact"], "Focus diagnostic delta artifact"
+    )
+    if artifact[1] != measurement["delta_sha256"]:
+        refuse("Focus diagnostic artifact and delta digests diverged")
+    payload = (root / artifact[0]).read_bytes()
+    if not payload.endswith(b"\n") or b"\r" in payload or b"\x00" in payload:
+        refuse("Focus diagnostic delta must be UTF-8/LF with one final LF")
+    try:
+        lines = payload.decode("utf-8")[:-1].split("\n")
+    except UnicodeDecodeError as error:
+        refuse(f"Focus diagnostic delta is not UTF-8: {error}")
+    expected_header = [
+        "format\tfocus-primary-delta-v1",
+        f"baseline-count\t{baseline['diagnostic_count']}",
+        f"candidate-count\t{candidate['diagnostic_count']}",
+        f"removed-count\t{measurement['removed_count']}",
+        f"added-count\t{measurement['added_count']}",
+    ]
+    if lines[:5] != expected_header:
+        refuse("Focus diagnostic delta header drifted")
+    entries = lines[5:]
+    if any(
+        len(line.split("\t", 5)) != 6
+        or line.split("\t", 5)[0] != "removed"
+        or line.split("\t", 5)[1] != "1"
+        for line in entries
+    ):
+        refuse("Focus diagnostic delta entry drifted")
+    if len(entries) != measurement["removed_count"]:
+        refuse("Focus diagnostic delta multiplicity drifted")
+    return artifact, measurement
 
 
 def production(args: argparse.Namespace) -> None:
@@ -150,6 +294,7 @@ def production(args: argparse.Namespace) -> None:
         refuse("native oracle key set drifted")
     signature = validate_record(root, oracle["signature_source"], "native signature oracle")
     golden = validate_record(root, oracle["golden"], "native oracle golden")
+    diagnostic_artifact, diagnostic = validate_focus_measurement(root, policy)
     lines = [
         "format\twebkit-guest-sources-v1",
         f"policy\t{sha256(policy_path)}",
@@ -166,6 +311,30 @@ def production(args: argparse.Namespace) -> None:
             "native-sdk\t"
             f"xcode={oracle['xcode_version']}\tbuild={oracle['xcode_build']}\t"
             f"ios-simulator-sdk-build={oracle['ios_simulator_sdk_build']}",
+            f"focus-diagnostic-artifact\t{diagnostic_artifact[0]}\t"
+            f"{diagnostic_artifact[1]}",
+            "focus-diagnostic-result\t"
+            f"target={diagnostic['target']}\t"
+            f"baseline={diagnostic['baseline']['diagnostic_count']}\t"
+            f"candidate={diagnostic['candidate']['diagnostic_count']}\t"
+            f"removed={diagnostic['removed_count']}\t"
+            f"added={diagnostic['added_count']}\t"
+            f"webkit-module={diagnostic['webkit_module_diagnostic_count']}",
+            "focus-diagnostic-inputs\t"
+            f"focus={diagnostic['focus_commit']}:{diagnostic['focus_tree']}\t"
+            f"uikit={diagnostic['uikit_commit']}:{diagnostic['uikit_tree']}\t"
+            f"snapkit={diagnostic['snapkit_commit']}:{diagnostic['snapkit_tree']}",
+            "focus-diagnostic-support\t"
+            f"baseline={diagnostic['baseline']['support_commit']}:"
+            f"{diagnostic['baseline']['support_tree']}\t"
+            f"candidate={diagnostic['candidate']['support_commit']}:"
+            f"{diagnostic['candidate']['support_tree']}",
+            "focus-diagnostic-hashes\t"
+            f"baseline-raw={diagnostic['baseline']['raw_log_sha256']}\t"
+            f"baseline-normalized={diagnostic['baseline']['normalized_sha256']}\t"
+            f"candidate-raw={diagnostic['candidate']['raw_log_sha256']}\t"
+            f"candidate-normalized={diagnostic['candidate']['normalized_sha256']}\t"
+            f"delta={diagnostic['delta_sha256']}",
         )
     )
     write_new(Path(args.output), lines)

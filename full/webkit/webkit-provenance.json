@@ -35,6 +35,39 @@
     ],
     "tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e"
   },
+  "focus_diagnostic_measurement": {
+    "added_count": 0,
+    "artifact": {
+      "path": "full/webkit/tests/focus-webkit-exact-delta.tsv",
+      "sha256": "bb177600e99bc4333652247109508ad4ffd63c367c5e4e55d9d5b82c34939992"
+    },
+    "baseline": {
+      "diagnostic_count": 218,
+      "normalized_sha256": "e03c0b3901562e931db1d3135b212e647786d8a4a90e0ad20b0ade2e89d46e71",
+      "raw_log_sha256": "40a41739eadebab74b5a54cee9f1d5bcdbed22d2d9c56df2cb86cbbf60e928bb",
+      "support_commit": "0a17050e90f6ad5b815426f1342048595e675a76",
+      "support_tree": "bb26b2973d027fb821f9292139271cdecbb5711c"
+    },
+    "candidate": {
+      "diagnostic_count": 204,
+      "normalized_sha256": "e78ed45fc671075939d4ce76642b288f25a924988b90b9c314128936baa76229",
+      "raw_log_sha256": "6c4cce24576cc15602fa4f3f5001210c5b86b968eccf65f0a93ecf17842c97aa",
+      "support_commit": "dfd721c5c29b615f9b32f49f1378e95cd098a78c",
+      "support_tree": "f8192dbd4a4869cbbeaaeeb604150ccefd71e824"
+    },
+    "delta_sha256": "bb177600e99bc4333652247109508ad4ffd63c367c5e4e55d9d5b82c34939992",
+    "focus_commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "focus_tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e",
+    "generated_missing_source_count": 2,
+    "present_source_count": 129,
+    "removed_count": 14,
+    "snapkit_commit": "e74fe2a978d1216c3602b129447c7301573cc2d8",
+    "snapkit_tree": "2100f3f3429a309151bc49021a0495ebde575b3f",
+    "target": "arm64-apple-macos15.0",
+    "uikit_commit": "b475f31e9ecf8f7613978e7f79bdb5c0994cd5bd",
+    "uikit_tree": "08943350fd6bc68d823751c1910c71a117c232d4",
+    "webkit_module_diagnostic_count": 0
+  },
   "native_oracle": {
     "golden": {
       "path": "full/webkit/tests/webkit-native-xcode-26.1-ios-26.1.txt",

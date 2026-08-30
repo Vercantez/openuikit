@@ -31,3 +31,20 @@ execution through the packaged loader on Linux.
 Native behavior is pinned to Xcode 26.1 / iOS Simulator 26.1. Those oracles
 cover configuration-copy identity, defaults, empty history/view state, and enum
 raw values. They are compatibility evidence, not evidence of an engine.
+
+## Untouched Focus result
+
+The exact 129-present-source Blockzilla target was measured at
+`arm64-apple-macos15.0` with Focus, SnapKit, UIKit, and both support trees
+commit/tree pinned and clean before and after compilation. The placeholder
+baseline produced 218 primary diagnostics. Replacing only its compile-time
+WebKit boundary with the five attested production sources produced 204: 14
+removed and zero added. WebKit itself emitted with zero primary diagnostics.
+
+`tests/focus-webkit-exact-delta.tsv` preserves every removed diagnostic with
+multiplicity. `webkit-provenance.json` freezes the control and candidate
+commit/tree IDs, the 129-present plus two-generated-missing denominator, and
+the raw-log, normalized-result, and delta SHA-256 values. The production
+provenance gate verifies that evidence alongside the source and native-oracle
+subjects. The remaining 204 diagnostics are unrelated platform gaps; this is
+not a claim that Focus already links or launches.

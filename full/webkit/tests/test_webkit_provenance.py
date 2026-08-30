@@ -53,6 +53,7 @@ class WebKitProvenanceTests(unittest.TestCase):
             policy["source_manifest"]["path"],
             policy["native_oracle"]["signature_source"]["path"],
             policy["native_oracle"]["golden"]["path"],
+            policy["focus_diagnostic_measurement"]["artifact"]["path"],
         ] + [record["path"] for record in policy["sources"]]
         for relative in relative_files:
             target = self.root / relative
@@ -68,6 +69,22 @@ class WebKitProvenanceTests(unittest.TestCase):
         self.assertEqual(lines[0], "format\twebkit-guest-sources-v1")
         self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 5)
         self.assertEqual(len([line for line in lines if line.startswith("native-")]), 3)
+        self.assertIn(
+            "focus-diagnostic-result\ttarget=arm64-apple-macos15.0\t"
+            "baseline=218\tcandidate=204\tremoved=14\tadded=0\twebkit-module=0",
+            lines,
+        )
+
+    def test_deleted_focus_diagnostic_delta_is_refused(self) -> None:
+        (self.root / "full/webkit/tests/focus-webkit-exact-delta.tsv").unlink()
+        refusal = run_production(self.root, expected=2)
+        self.assertIn("missing Focus diagnostic delta artifact", refusal.stderr)
+
+    def test_mutated_focus_diagnostic_delta_is_refused(self) -> None:
+        delta = self.root / "full/webkit/tests/focus-webkit-exact-delta.tsv"
+        delta.write_text(delta.read_text() + "removed\t1\tfake.swift\t1\t1\tfake\n")
+        refusal = run_production(self.root, expected=2)
+        self.assertIn("delta artifact digest drifted", refusal.stderr)
 
     def test_deleted_source_is_refused(self) -> None:
         (self.root / "full/webkit/WebKitError.swift").unlink()
