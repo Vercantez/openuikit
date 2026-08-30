@@ -75,3 +75,23 @@ The SwiftUI/OpenUIKit paths above do execute natively and are covered by
 focused behavior tests on the local host. Page swiping, animated transitions,
 general gesture arbitration, controller coordinators, SwiftUI environment
 diffing, and arbitrary tab styles remain outside this slice.
+
+For the Foundation-hidden Mach-O packaging path, observation invalidation is
+deferred to the next host-supplied `UIWindow.tick(timestamp:)` turn. This keeps
+the guest UI deterministic and avoids routing a main-actor task through the
+Apple dispatch voucher entry points that the Linux guest runtime does not
+provide. A scheduled invalidation is consumed exactly once before user graph
+code runs. Its graph pass owns a reference-identity token, so direct root
+evaluation retires stale work without letting that callback steal a newer
+publication's token. A zero-delay timer created during any recursively entered
+host step cannot run until the following outermost step.
+
+The integration proof compiles Focus's ten exact shipping SwiftUI Onboarding
+runtime sources plus its two exact Widget sources directly from the pinned,
+clean checkout. It links them with separately packaged FoundationEssentials,
+Foundation, OpenUIKit, Combine, and SwiftUI ARM64 Mach-O dylibs, then runs the
+guest on Linux. Three real window touches advance to page two, open the
+settings URL through the host hook, and dismiss through Skip. The proof also
+checks deferred rendering, both page-control states, appearance telemetry, and
+a Foundation UUID generate/parse/format round trip before printing
+`FOCUS_ONBOARDING_MACHO_GUEST_OK`.

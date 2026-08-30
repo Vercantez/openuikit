@@ -62,8 +62,16 @@ Same-typed conditional branches do not share state, and removing an earlier
 optional does not renumber a later stack sibling.
 
 `ObservedObject` subscribes once per object identity in the active graph.
-Publication schedules one coalesced render on a later main-actor turn. Removing
-the view cancels the subscription; neither the subscription nor detached
+Publication schedules one coalesced render on a later main-actor turn. Native
+package builds use Swift's main executor. A Foundation-hidden Mach-O guest
+uses the next explicit OpenUIKit host-clock tick, avoiding an unavailable
+Apple dispatch/voucher dependency while preserving deferred, coalesced UI
+work. Host-clock delivery invalidates its one-shot timer and consumes its
+action before graph code runs. Each graph pass also owns a reference-identity
+token: direct root evaluation retires the old token, so its stale callback
+cannot consume a later publication's work. Timers created during a recursively
+entered host step remain in the following outermost turn. Removing the view cancels
+the subscription; neither the subscription nor detached
 State storage retains the hosting controller. Two stored fields that alias one
 class `DynamicProperty` still each receive `update()`. Class identities are
 tracked only along the active recursive descent so true cycles terminate

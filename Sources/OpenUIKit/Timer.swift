@@ -39,6 +39,9 @@
 //   * A LATE repeating timer does not play catch-up: it fires once and its
 //     next fire date jumps to the first multiple of the interval that is
 //     still in the future. Foundation documents the same behaviour.
+//   * A timer scheduled by a callback starts on the next OUTERMOST host step.
+//     Recursively calling `_step` is reentrancy within one turn, not a new
+//     turn which can consume work that the current turn just created.
 //   * `tolerance` is stored and ignored — a scripted clock has no jitter to
 //     absorb.
 //   * There is no threading, so there is no `Timer` on a background queue.
@@ -82,6 +85,12 @@ public final class Timer {
     /// Every scheduled, still-valid timer, in no particular order.
     private static var scheduled: [Timer] = []
 
+    /// One generation is one outermost host step. A recursive `_step` is
+    /// reentrancy inside the current UI turn, not permission to run timers
+    /// that callbacks have just scheduled for the next turn.
+    private static var stepGeneration: UInt64 = 0
+    private static var stepDepth = 0
+
     /// Host redraw hint, mirroring `UIScrollView._hasActiveScrollAnimations`:
     /// true while any scheduled timer is waiting to fire, so a dirty-flag
     /// host keeps ticking instead of idling.
@@ -93,18 +102,35 @@ public final class Timer {
         scheduled.map(\.fireDate).min()
     }
 
+    private static func isScheduledAndDue(_ timer: Timer, at timestamp: TimeInterval) -> Bool {
+        timer.isValid
+            && scheduled.contains(where: { $0 === timer })
+            && timer.firstEligibleStepGeneration <= stepGeneration
+            && timer.fireDate <= timestamp
+    }
+
     /// Advance the timer clock and fire everything due. Called by
     /// `UIWindow.tick(timestamp:)` alongside the other steppers; a host with
     /// no window can call it directly.
     public static func _step(to timestamp: TimeInterval) {
+        if stepDepth == 0 {
+            stepGeneration &+= 1
+        }
+        stepDepth += 1
+        defer { stepDepth -= 1 }
+
         if timestamp > currentTime { currentTime = timestamp }
         guard !scheduled.isEmpty else { return }
         // Snapshot in fire order, so a timer that schedules another timer
         // does not perturb this pass, and two timers due in the same tick
         // fire earliest-first (Foundation's ordering).
-        let due = scheduled.filter { $0.isValid && $0.fireDate <= timestamp }
+        let due = scheduled.filter { isScheduledAndDue($0, at: timestamp) }
             .sorted { $0.fireDate < $1.fireDate }
-        for timer in due where timer.isValid {
+        for timer in due {
+            // An earlier callback may invalidate/deschedule this timer,
+            // postpone its public fireDate, or recursively consume and
+            // reschedule its occurrence. Never trust the stale snapshot.
+            guard isScheduledAndDue(timer, at: timestamp) else { continue }
             if timer.repeats {
                 var next = timer.fireDate + timer.timeInterval
                 if next <= timestamp, timer.timeInterval > 0 {
@@ -116,6 +142,15 @@ public final class Timer {
                     while next <= timestamp { next += timer.timeInterval }
                 }
                 timer.fireDate = next
+                // The next occurrence belongs to the next outer host turn,
+                // even when user code recursively advances the host clock.
+                timer.firstEligibleStepGeneration = stepGeneration &+ 1
+            } else {
+                // Consume the scheduled delivery before entering user code.
+                // The timer remains valid during its callback, matching
+                // Foundation, but a recursively driven host step cannot
+                // deliver this one-shot a second time.
+                scheduled.removeAll { $0 === timer }
             }
             timer._fire()
             if !timer.repeats { timer.invalidate() }
@@ -134,6 +169,7 @@ public final class Timer {
 
     static func _schedule(_ timer: Timer) {
         guard timer.isValid, !scheduled.contains(where: { $0 === timer }) else { return }
+        timer.firstEligibleStepGeneration = stepGeneration &+ 1
         scheduled.append(timer)
     }
 
@@ -148,6 +184,10 @@ public final class Timer {
     /// Stored and ignored (there is no jitter on a scripted clock).
     public var tolerance: TimeInterval = 0
     public private(set) var isValid: Bool = true
+
+    /// Set when the timer enters the host schedule. Even a zero-delay timer
+    /// created from a callback belongs to the next outermost `_step`.
+    private var firstEligibleStepGeneration: UInt64 = 0
 
     private var block: ((Timer) -> Void)?
     /// Retained, like Foundation's (see the header).

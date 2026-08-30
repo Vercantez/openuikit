@@ -8,6 +8,56 @@
 @_exported import Combine
 import OpenUIKit
 
+/// Owns one host-clock delivery without retaining its Timer. The timer clears
+/// its schedule before entering this object, and `take()` clears the action
+/// before calling app/graph code. Both halves matter under a nested host tick:
+/// the same one-shot timer cannot be observed again, and the action remains
+/// exactly-once even if a future Timer implementation changes its ordering.
+@MainActor
+private final class _OpenPendingInvalidation {
+    private var action: (@MainActor () -> Void)?
+
+    init(_ action: @escaping @MainActor () -> Void) {
+        self.action = action
+    }
+
+    func take() {
+        guard let action else { return }
+        self.action = nil
+        action()
+    }
+}
+
+/// Defers graph invalidation to the platform's next UI turn. Native package
+/// builds use Swift's main executor. The Foundation-hidden Mach-O guest has no
+/// usable Apple dispatch/voucher substrate, so its turn is the next explicit
+/// OpenUIKit host-clock tick instead.
+@MainActor
+enum _OpenInvalidationScheduler {
+#if canImport(Foundation)
+    static var forceHostClockForTesting = false
+#endif
+
+    static func enqueue(_ action: @escaping @MainActor () -> Void) {
+#if canImport(Foundation)
+        if !forceHostClockForTesting {
+            Task { @MainActor in action() }
+            return
+        }
+#endif
+        let pending = _OpenPendingInvalidation(action)
+        OpenUIKit.Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
+            // Timer._step snapshots work before invoking it. Remove this timer
+            // from the live schedule before arbitrary graph code can re-enter
+            // the host clock and encounter that snapshot member again.
+            timer.invalidate()
+            MainActor.assumeIsolated {
+                pending.take()
+            }
+        }
+    }
+}
+
 // These source-facing declarations deliberately are not globally
 // @MainActor-isolated. Apple's SwiftUI permits Binding, State, ObservedObject,
 // and custom DynamicProperty values to be declared and initialized from
@@ -376,6 +426,11 @@ private struct _OpenRepresentedControllerKey: Hashable {
     let controllerType: ObjectIdentifier
 }
 
+/// Identity, rather than a wrapping integer, owns one deferred graph pass.
+/// A direct evaluation retires the current token; a later publication creates
+/// a distinct token which an already-queued callback can never consume.
+private final class _OpenGraphInvalidationToken {}
+
 /// Retained by one hosting controller. It owns dynamic-property locations and
 /// subscriptions, but never owns the controller back.
 @MainActor
@@ -387,7 +442,7 @@ final class _OpenGraphHost {
     private var activeStateKeys: Set<_OpenStateKey> = []
     private var activeObservationKeys: Set<ObjectIdentifier> = []
     private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
-    private var invalidationScheduled = false
+    private var pendingInvalidationToken: _OpenGraphInvalidationToken?
 
     var invalidate: (@MainActor () -> Void)?
     private(set) var renderCount = 0
@@ -399,9 +454,10 @@ final class _OpenGraphHost {
 
     func evaluate<Content: _OpenView>(_ content: Content) -> _OpenViewNode {
         // A direct root replacement supersedes queued work from the previous
-        // value. The already-enqueued task observes this flag and becomes a
-        // no-op rather than performing a second render.
-        invalidationScheduled = false
+        // value. Retire that work by identity: if this evaluation publishes
+        // again, the new graph receives a distinct next-turn token which the
+        // already-enqueued callback cannot steal.
+        pendingInvalidationToken = nil
         activeStateKeys.removeAll(keepingCapacity: true)
         activeObservationKeys.removeAll(keepingCapacity: true)
         activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
@@ -842,11 +898,12 @@ final class _OpenGraphHost {
     }
 
     fileprivate func scheduleInvalidation() {
-        guard !invalidationScheduled else { return }
-        invalidationScheduled = true
-        Task { @MainActor [weak self] in
-            guard let self, self.invalidationScheduled else { return }
-            self.invalidationScheduled = false
+        guard pendingInvalidationToken == nil else { return }
+        let token = _OpenGraphInvalidationToken()
+        pendingInvalidationToken = token
+        _OpenInvalidationScheduler.enqueue { [weak self] in
+            guard let self, self.pendingInvalidationToken === token else { return }
+            self.pendingInvalidationToken = nil
             self.invalidationCount += 1
             self.invalidate?()
         }

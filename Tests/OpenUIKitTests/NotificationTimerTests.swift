@@ -179,6 +179,199 @@ final class TimerTests: XCTestCase {
         XCTAssertFalse(Timer._hasScheduledTimers)
     }
 
+    func testOneShotCannotDeliverAgainFromAReentrantHostStep() {
+        var deliveries = 0
+        var callbackValidity: [Bool] = []
+        let timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
+            deliveries += 1
+            callbackValidity.append(timer.isValid)
+            if deliveries < 4 {
+                Timer._step(to: Timer.currentTime)
+            }
+        }
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(deliveries, 1, "a one-shot timer must be consumed before its callback")
+        XCTAssertEqual(callbackValidity, [true], "Foundation keeps a one-shot valid during its callback")
+        XCTAssertFalse(timer.isValid, "the one-shot invalidates after its callback returns")
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
+    func testTimerScheduledDuringReentrantStepWaitsForNextOutermostStep() {
+        var events: [String] = []
+        Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { outer in
+            outer.invalidate()
+            events.append("outer")
+            Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { inner in
+                inner.invalidate()
+                events.append("inner")
+            }
+            Timer._step(to: Timer.currentTime)
+            events.append("outer-returned")
+        }
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(events, ["outer", "outer-returned"])
+        XCTAssertTrue(Timer._hasScheduledTimers)
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(events, ["outer", "outer-returned", "inner"])
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
+    func testRepeatingTimerCannotRedeliverAnOccurrenceDuringAReentrantHostStep() {
+        var deliveries = 0
+        let timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: true) { timer in
+            deliveries += 1
+            if deliveries == 1 {
+                Timer._step(to: Timer.currentTime + 100)
+            } else {
+                timer.invalidate()
+            }
+        }
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(deliveries, 1, "a repeating occurrence may deliver only once per outer host turn")
+        XCTAssertTrue(timer.isValid)
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(deliveries, 2, "the rescheduled occurrence becomes eligible on the next outer turn")
+        XCTAssertFalse(timer.isValid)
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
+    func testEarlierEqualDeadlineCallbackCannotMakeRepeaterDeliverTwiceFromOuterSnapshot() {
+        var repeatingDeliveries = 0
+        Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { _ in
+            Timer._step(to: Timer.currentTime)
+        }
+        let repeating = Timer.scheduledTimer(withTimeInterval: 0, repeats: true) { timer in
+            repeatingDeliveries += 1
+            if repeatingDeliveries == 2 { timer.invalidate() }
+        }
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(
+            repeatingDeliveries, 1,
+            "a nested step and its stale outer due snapshot are one host generation")
+        XCTAssertTrue(repeating.isValid)
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(repeatingDeliveries, 2)
+        XCTAssertFalse(repeating.isValid)
+    }
+
+    func testEarlierCallbackNestedFutureStepCannotDoubleDeliverPositiveRepeater() {
+        var repeatingDeliveries = 0
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+            Timer._step(to: Timer.currentTime + 100)
+        }
+        let repeating = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            repeatingDeliveries += 1
+            if repeatingDeliveries == 2 { timer.invalidate() }
+        }
+
+        Timer._step(to: 1)
+        XCTAssertEqual(
+            repeatingDeliveries, 1,
+            "advancing recursively must not let the outer snapshot redeliver the occurrence")
+        XCTAssertTrue(repeating.isValid)
+
+        // The nested step advanced the host clock to 101, so the positive
+        // repeater correctly rescheduled its next occurrence for 102.
+        XCTAssertEqual(Timer._nextFireTime, 102)
+        Timer._step(to: 102)
+        XCTAssertEqual(repeatingDeliveries, 2)
+        XCTAssertFalse(repeating.isValid)
+    }
+
+    func testEarlierCallbackCanPostponeLaterTimerFromOuterSnapshot() {
+        var events: [String] = []
+        var postponed: Timer!
+        Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { _ in
+            events.append("earlier")
+            postponed.fireDate = 10
+        }
+        postponed = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { _ in
+            events.append("postponed")
+        }
+
+        Timer._step(to: 0)
+        XCTAssertEqual(events, ["earlier"])
+        XCTAssertTrue(postponed.isValid)
+        XCTAssertEqual(Timer._nextFireTime, 10)
+
+        Timer._step(to: 10)
+        XCTAssertEqual(events, ["earlier", "postponed"])
+        XCTAssertFalse(postponed.isValid)
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
+    func testNestedFutureStepRevalidatesIdentityDeadlineAndGenerationTogether() {
+        var events: [String] = []
+        var postponed: Timer!
+        var invalidated: Timer!
+
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+            events.append("driver")
+            postponed.fireDate = 50
+            invalidated.invalidate()
+            Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { _ in
+                events.append("new")
+            }
+            Timer._step(to: 100)
+            events.append("driver-returned")
+        }
+        postponed = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            events.append("postponed")
+            if events.filter({ $0 == "postponed" }).count == 2 {
+                timer.invalidate()
+            }
+        }
+        invalidated = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+            events.append("invalidated")
+        }
+
+        Timer._step(to: 1)
+        XCTAssertEqual(events, ["driver", "postponed", "driver-returned"])
+        XCTAssertEqual(Timer.currentTime, 100)
+        XCTAssertEqual(Timer._nextFireTime, 1)
+
+        Timer._step(to: 100)
+        XCTAssertEqual(events, ["driver", "postponed", "driver-returned", "new"])
+        XCTAssertEqual(Timer._nextFireTime, 101)
+
+        Timer._step(to: 101)
+        XCTAssertEqual(
+            events,
+            ["driver", "postponed", "driver-returned", "new", "postponed"]
+        )
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
+    func testEqualDeadlineZeroRepeatersStayFIFOAndFireOncePerOuterTurn() {
+        var events: [String] = []
+        Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { _ in
+            events.append("driver")
+            Timer._step(to: Timer.currentTime + 100)
+        }
+        let first = Timer.scheduledTimer(withTimeInterval: 0, repeats: true) { _ in
+            events.append("first")
+        }
+        let second = Timer.scheduledTimer(withTimeInterval: 0, repeats: true) { _ in
+            events.append("second")
+        }
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(events, ["driver", "first", "second"])
+
+        Timer._step(to: Timer.currentTime)
+        XCTAssertEqual(events, ["driver", "first", "second", "first", "second"])
+        first.invalidate()
+        second.invalidate()
+        XCTAssertFalse(Timer._hasScheduledTimers)
+    }
+
     func testRepeatingTimerSkipsMissedFiresInsteadOfBursting() {
         var fired = 0
         let t = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in fired += 1 }
