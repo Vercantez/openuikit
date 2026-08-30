@@ -7,7 +7,7 @@ listed below:
 
 | Target | Revision | Upstream Swift files | Compiled |
 | --- | --- | ---: | ---: |
-| OpenUIKit | `8f98af2e53af566923de6616f3629bec0661aa8c` | 101 | 101 |
+| OpenUIKit | `83fbcbe2204eb836968d4e73ecfecec7b20c68ef` | 102 | 102 |
 | SnapKit | `e74fe2a978d1216c3602b129447c7301573cc2d8` | 37 | 36 |
 | Focus DesignSystem | `a2832521c1daa0c23419c73705ae043ed60c9791` | 7 | 7 |
 | Focus Widget | same Focus revision | 2 | 2 |
@@ -15,7 +15,7 @@ listed below:
 | Focus Licenses | same Focus revision | 2 | 2 |
 
 The OpenUIKit commit above has exact tree
-`a8b809d35b52ef317517914922392f395a8da59c`; all three Focus guest scripts
+`54552fea10c23c9124fb300db33c9db54aad32b9`; all three Focus guest scripts
 require that clean commit/tree before and after their gates.
 
 The shared substrate remains pinned to swift-foundation
@@ -56,6 +56,14 @@ It does not declare replacement `URL`, `Data`, `PropertyListDecoder`,
 type aliases to the exact OpenUIKit identities against which OpenUIKit was
 compiled. UIKit owns Bundle discovery and resource lookup; the Foundation
 umbrella does not duplicate those implementations.
+
+The same facade aliases `Notification`, its Objective-C `NSNotification`
+carrier, `NotificationCenter`, and `OperationQueue` to OpenUIKit's exact hidden
+identities. Build ordering is deliberate. `build_full.sh`'s Foundation-hidden
+UIKit is an early identity and legacy-renderer probe only. The onboarding stage
+then emits the Foundation facade, and this package script rebuilds literal
+UIKit afterward; that final Foundation-visible UIKit is the module consumed by
+the unchanged package sources and the order intended for all-source apps.
 
 The one additional Foundation surface is a bounded `NSMutableSet` needed by
 the compiled unchanged SnapKit sources. Hashable set values use their declared

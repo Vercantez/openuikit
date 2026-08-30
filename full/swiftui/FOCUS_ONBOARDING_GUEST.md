@@ -7,8 +7,8 @@ files plus the ten files that define the production onboarding views, model,
 design-system accessors, and `PortraitHostingController`. No Focus source is
 copied, patched, overlaid, generated, or conditionally rewritten.
 The framework side is pinned independently to clean OpenUIKit commit
-`8f98af2e53af566923de6616f3629bec0661aa8c`, tree
-`a8b809d35b52ef317517914922392f395a8da59c`, before and after the build/run.
+`83fbcbe2204eb836968d4e73ecfecec7b20c68ef`, tree
+`54552fea10c23c9124fb300db33c9db54aad32b9`, before and after the build/run.
 
 The project-owned harness mounts the exact `OnboardingView` through Focus's
 exact `PortraitHostingController`. It finds controls through the mounted

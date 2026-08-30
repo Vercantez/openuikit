@@ -14,8 +14,8 @@ separate guest processes, and writes a
 135-point, 270x270-pixel PNG at 2x scale.
 
 The framework checkout is independently pinned clean before and after the
-gate to OpenUIKit commit `8f98af2e53af566923de6616f3629bec0661aa8c`,
-tree `a8b809d35b52ef317517914922392f395a8da59c`.
+gate to OpenUIKit commit `83fbcbe2204eb836968d4e73ecfecec7b20c68ef`,
+tree `54552fea10c23c9124fb300db33c9db54aad32b9`.
 
 No Focus source is copied, patched, overlaid, conditionally rewritten, or
 generated. `FocusWidgetBundle.generated.swift` is separately labelled

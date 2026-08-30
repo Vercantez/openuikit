@@ -562,13 +562,32 @@ echo "== literal UIKit IndexPath compile proof"
     -emit-object -o "$OUT/literal_uikit_indexpath_probe.o" \
     "$W/full/foundation/literal_uikit_indexpath_probe.swift"
 
-# The vendored corpus also contains an explicit `import Foundation` for
-# NSCoder. Keep that measured one-name module app-only; it is compiled after
-# UIKit and never enters OpenUIKit's module search path.
-echo "== app-only Foundation NSCoder shim + RealAppProbe (UNMODIFIED app source)"
+# The original vendored probe needs Foundation's NSCoder spelling.  Compile its
+# narrow app-only module after UIKit and add only the shared notification
+# identities used by the next unchanged-app gate.  This deliberately EARLY
+# UIKit is a Foundation-hidden identity/legacy-renderer probe: neither earlier
+# framework can accidentally select a Foundation-visible source branch.  It is
+# not the final app-facing UIKit for the all-source application graph; the
+# package build emits that module after its Foundation facade exists.
+echo "== app-only Foundation identity shim + RealAppProbe (UNMODIFIED app source)"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
     -module-name Foundation -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" "$W/full/appshim/Foundation.swift"
+    -emit-object -o "$OUT/foundation.o" \
+    "$W/full/appshim/Foundation.swift" \
+    "$W/full/appshim/FoundationOpenUIKitAliases.swift"
+
+# Three files preserve the source-level split found in real apps: a
+# Foundation-only extension, a UIKit-only consumer, and a direct dual import.
+# Metatype assignments make every identity mismatch fail at its own named
+# source line; the extension lookup separately proves Notification.Name is
+# shared rather than merely source-compatible.
+echo "== Foundation/UIKit notification identity compile proof"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$UIKITINC" -I "$APPINC" \
+    -module-name NotificationGuestIdentityProbe -typecheck \
+    "$W/full/foundation/notification_foundation_extension_probe.swift" \
+    "$W/full/foundation/notification_uikit_consumer_probe.swift" \
+    "$W/full/foundation/notification_direct_import_probe.swift"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
     -I "$OUT" -I "$UIKITINC" -I "$APPINC" -default-isolation MainActor \
     -module-name RealAppProbe -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \

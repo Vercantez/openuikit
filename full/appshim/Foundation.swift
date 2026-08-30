@@ -1,4 +1,4 @@
-// A module named Foundation containing exactly ONE public name.
+// The narrow NSCoder portion of build_full's app-only Foundation module.
 //
 // MEASURED, and the shape of the result is the point:
 //
@@ -19,6 +19,13 @@
 // which supplies the canonical IndexPath identity, but it still must not see
 // this incomplete Foundation umbrella: doing so would switch unrelated APIs
 // such as NSRange and geometry onto contracts this measuring shim cannot meet.
+//
+// build_full also compiles FoundationOpenUIKitAliases.swift into this module.
+// Those four notification-family aliases are not substitute implementations:
+// they deliberately republish declarations already built into OpenUIKit and
+// give the OpenUIKit -> UIKit -> Foundation build order an executable identity
+// gate.  The reusable app-facing umbrella is FoundationGuest.swift; this file
+// remains the narrow RealAppProbe measuring input.
 //
 // A MEASURING INSTRUMENT, NOT A PROPOSAL. Shipping this would be the worst
 // kind of stub: every `import Foundation` would keep compiling while the first

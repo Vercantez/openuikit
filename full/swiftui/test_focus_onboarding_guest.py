@@ -46,12 +46,12 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("assert_clean_commit", text)
         self.assertIn(
             "EXPECTED_UIKIT_COMMIT="
-            "8f98af2e53af566923de6616f3629bec0661aa8c",
+            "83fbcbe2204eb836968d4e73ecfecec7b20c68ef",
             text,
         )
         self.assertIn(
             "EXPECTED_UIKIT_TREE="
-            "a8b809d35b52ef317517914922392f395a8da59c",
+            "54552fea10c23c9124fb300db33c9db54aad32b9",
             text,
         )
         self.assertNotIn("EXPECTED_UIKIT_COMMIT_OVERRIDE", text)

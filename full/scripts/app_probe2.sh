@@ -7,12 +7,15 @@ SWIFTC=(swiftc -target arm64-apple-macos13.0 -sdk "$SYS" -module-cache-path "$MC
         -Xfrontend -disable-objc-attr-requires-foundation-module
         -Xcc -I"$W/build/full/inc/CPortableIO" -Xcc -I"$W/build/full/inc/CSTBTrueType"
         -Xcc -I"$UIKIT/Sources/CQuartz/include" -I "$W/build/full")
-echo "== empty Foundation module"
-"${SWIFTC[@]}" -module-name Foundation -emit-module -emit-module-path "$OUT/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" "$W/full/appshim/Foundation.swift" 2>&1 | grep error | head -3
-echo "== UIKit shim (OpenUIKit only)"
+echo "== UIKit shim before the app-facing Foundation module"
 "${SWIFTC[@]}" -I "$OUT" -module-name UIKit -emit-module -emit-module-path "$OUT/UIKit.swiftmodule" \
     -emit-object -o "$OUT/uikitshim.o" "$W/full/appshim/UIKit.swift" 2>&1 | grep error | head -3
+echo "== narrow app-facing Foundation identities"
+"${SWIFTC[@]}" -I "$OUT" -module-name Foundation \
+    -emit-module -emit-module-path "$OUT/Foundation.swiftmodule" \
+    -emit-object -o "$OUT/foundation.o" \
+    "$W/full/appshim/Foundation.swift" \
+    "$W/full/appshim/FoundationOpenUIKitAliases.swift" 2>&1 | grep error | head -3
 echo "== RealAppProbe (vendored app source, UNMODIFIED)"
 "${SWIFTC[@]}" -I "$OUT" -default-isolation MainActor -module-name RealAppProbe \
     -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \

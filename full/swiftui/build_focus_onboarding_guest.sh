@@ -28,8 +28,8 @@ OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=8f98af2e53af566923de6616f3629bec0661aa8c
-EXPECTED_UIKIT_TREE=a8b809d35b52ef317517914922392f395a8da59c
+EXPECTED_UIKIT_COMMIT=83fbcbe2204eb836968d4e73ecfecec7b20c68ef
+EXPECTED_UIKIT_TREE=54552fea10c23c9124fb300db33c9db54aad32b9
 EXPECTED_FOCUS_SWIFT_COUNT=227
 EXPECTED_ONBOARDING_TREE=3db199a93294a4ea0e6549522c29e8b2e4dbfb979bd60c07cdad5d00386734f5
 EXPECTED_ONBOARDING_FILES=66
@@ -298,7 +298,23 @@ echo '== compile the bounded Foundation umbrella after SwiftUI'
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name Foundation \
     -emit-module -emit-module-path "$PACKAGE/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" "$W/full/appshim/FoundationGuest.swift"
+    -emit-object -o "$OUT/foundation.o" \
+    "$W/full/appshim/FoundationGuest.swift" \
+    "$W/full/appshim/FoundationOpenUIKitAliases.swift"
+
+# build_full emitted a deliberately early literal UIKit identity-probe module
+# before either app-facing Foundation module existed.  Pair that exact module
+# with the reusable FoundationGuest output above to prove the aliases converge
+# even across the Foundation-hidden branch.  This is not the final app-facing
+# UIKit module: build_focus_package_guest rebuilds literal UIKit after this
+# Foundation facade exists, which is the order required by all-source apps.
+echo '== FoundationGuest/UIKit notification identity compile proof'
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" -I "$FULL/uikitinc" \
+    -module-name FoundationGuestNotificationIdentityProbe -typecheck \
+    "$W/full/foundation/notification_foundation_extension_probe.swift" \
+    "$W/full/foundation/notification_uikit_consumer_probe.swift" \
+    "$W/full/foundation/notification_direct_import_probe.swift"
 
 echo '== exact unchanged Focus Widget and Onboarding modules'
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \

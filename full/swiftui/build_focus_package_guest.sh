@@ -26,8 +26,8 @@ MRROOT=$W/scratch/mrroot_full
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=8f98af2e53af566923de6616f3629bec0661aa8c
-EXPECTED_UIKIT_TREE=a8b809d35b52ef317517914922392f395a8da59c
+EXPECTED_UIKIT_COMMIT=83fbcbe2204eb836968d4e73ecfecec7b20c68ef
+EXPECTED_UIKIT_TREE=54552fea10c23c9124fb300db33c9db54aad32b9
 EXPECTED_SNAPKIT_COMMIT=e74fe2a978d1216c3602b129447c7301573cc2d8
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
@@ -237,11 +237,28 @@ swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
     -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck \
     -e 'import Swift'
 
-echo '== compile literal UIKit and pinned unchanged package source sets (SnapKit exclusion attested)'
+# The onboarding stage already built OpenUIKit with Foundation hidden, then
+# emitted the app-facing Foundation facade.  Build literal UIKit only now so
+# its Foundation-visible branch re-exports that facade.  This is the final
+# UIKit module consumed by the unchanged package sources; build_full's earlier
+# UIKit artifact remains an identity/legacy-renderer probe only.
+echo '== compile final app-facing UIKit after Foundation facade (SnapKit exclusion attested)'
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name UIKit \
     -emit-module -emit-module-path "$PACKAGE/UIKit.swiftmodule" \
     -emit-object -o "$OUT/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
+
+# The inherited FoundationGuest umbrella and the literal UIKit module above
+# are the exact modules the unchanged Focus package sources consume.  Re-run
+# the split-import identity probe against this final package graph so neither
+# the Foundation-visible UIKit branch nor packaging can reintroduce a rival
+# notification declaration.
+echo '== packaged Foundation/UIKit notification identity compile proof'
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" -module-name FocusPackageNotificationIdentityProbe -typecheck \
+    "$W/full/foundation/notification_foundation_extension_probe.swift" \
+    "$W/full/foundation/notification_uikit_consumer_probe.swift" \
+    "$W/full/foundation/notification_direct_import_probe.swift"
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name SnapKit \
     -emit-module -emit-module-path "$PACKAGE/SnapKit.swiftmodule" \
