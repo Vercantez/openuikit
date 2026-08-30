@@ -86,6 +86,10 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
 def _strict_root(path: Path) -> Path:
     try:
         metadata = path.lstat()
@@ -143,6 +147,135 @@ def _arguments(value: Any, label: str, controlled: set[str]) -> list[str]:
     return result
 
 
+def _sdk_symlink_target(
+    sdk_root: Path, relative: PurePosixPath, target: str
+) -> bytes:
+    if not target or any(
+        character in target for character in ("\0", "\r", "\n", "\t")
+    ):
+        raise CorePackageError(
+            f"unsafe SDK symlink target at {relative.as_posix()}: {target!r}"
+        )
+    try:
+        target_bytes = target.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise CorePackageError(
+            f"SDK symlink target is not UTF-8 at {relative.as_posix()}"
+        ) from exc
+    if target.startswith("/"):
+        raise CorePackageError(
+            f"absolute SDK symlink target at {relative.as_posix()}: {target}"
+        )
+    components = list(relative.parent.parts)
+    for component in target.split("/"):
+        if component in ("", "."):
+            continue
+        if component == "..":
+            if not components:
+                raise CorePackageError(
+                    f"escaping SDK symlink target at {relative.as_posix()}: {target}"
+                )
+            components.pop()
+        else:
+            components.append(component)
+    if not components:
+        raise CorePackageError(
+            f"SDK symlink resolves to the SDK root at {relative.as_posix()}: {target}"
+        )
+    destination = sdk_root.joinpath(*components)
+    try:
+        resolved = destination.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise CorePackageError(
+            f"dangling SDK symlink at {relative.as_posix()}: {target}"
+        ) from exc
+    try:
+        resolved.relative_to(sdk_root)
+    except ValueError as exc:
+        raise CorePackageError(
+            f"escaping SDK symlink target at {relative.as_posix()}: {target}"
+        ) from exc
+    return target_bytes
+
+
+def _sdk_tree_ledger(sdk_root: Path, logical_root: str) -> bytes:
+    """Rebuild the builder's core-tree-v1 SDK ledger without following links."""
+
+    records = ["format\tcore-tree-v1"]
+
+    def visit(physical: Path, relative: PurePosixPath) -> None:
+        logical = (
+            logical_root
+            if relative.as_posix() == "."
+            else f"{logical_root}/{relative.as_posix()}"
+        )
+        try:
+            mode = physical.lstat().st_mode
+        except OSError as exc:
+            raise CorePackageError(
+                f"cannot inspect SDK tree entry: {logical}: {exc}"
+            ) from exc
+        if stat.S_ISLNK(mode):
+            try:
+                target = os.readlink(physical)
+            except OSError as exc:
+                raise CorePackageError(
+                    f"cannot read SDK symlink: {logical}: {exc}"
+                ) from exc
+            target_bytes = _sdk_symlink_target(sdk_root, relative, target)
+            records.append(
+                "\t".join(
+                    ("symlink", logical, _sha256_bytes(target_bytes), target)
+                )
+            )
+            return
+        if stat.S_ISREG(mode):
+            records.append(
+                "\t".join(
+                    ("file", logical, _sha256(physical), str(physical.stat().st_size))
+                )
+            )
+            return
+        if not stat.S_ISDIR(mode):
+            raise CorePackageError(f"unsupported node in SDK tree: {logical}")
+        try:
+            entries = sorted(os.scandir(physical), key=lambda entry: entry.name)
+        except OSError as exc:
+            raise CorePackageError(f"cannot enumerate SDK tree: {logical}: {exc}") from exc
+        records.append(
+            "\t".join(
+                ("directory", logical, "empty=yes" if not entries else "empty=no")
+            )
+        )
+        for entry in entries:
+            if (
+                entry.name in ("", ".", "..")
+                or "\\" in entry.name
+                or any(
+                    character in entry.name
+                    for character in ("\0", "\r", "\n", "\t")
+                )
+            ):
+                raise CorePackageError(
+                    f"unsafe path component in SDK tree beneath {logical}: {entry.name!r}"
+                )
+            try:
+                entry.name.encode("utf-8")
+            except UnicodeEncodeError as exc:
+                raise CorePackageError(
+                    f"non-UTF-8 path component in SDK tree beneath {logical}"
+                ) from exc
+            child = (
+                PurePosixPath(entry.name)
+                if relative.as_posix() == "."
+                else relative / entry.name
+            )
+            visit(Path(entry.path), child)
+
+    visit(sdk_root, PurePosixPath("."))
+    return ("\n".join(records) + "\n").encode("utf-8")
+
+
 def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     root = _strict_root(package_root)
     manifest_relative = PurePosixPath("attestation/core-package.json")
@@ -174,6 +307,49 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         paths[key] = relative
         physical_paths[key] = physical
     manifest["paths"] = paths
+
+    raw_manifests = _mapping(manifest.get("manifests"), "manifests")
+    if not raw_manifests:
+        raise CorePackageError("manifests must not be empty")
+    verified_manifests: dict[str, dict[str, str]] = {}
+    seen_manifest_paths: set[str] = set()
+    manifest_files: dict[str, Path] = {}
+    for name in sorted(raw_manifests):
+        if not isinstance(name, str) or not name or any(
+            character in name for character in ("\0", "\r", "\n", "\t")
+        ):
+            raise CorePackageError(f"unsafe manifest record name: {name!r}")
+        record = _mapping(raw_manifests[name], f"manifests.{name}")
+        if set(record) != {"path", "sha256"}:
+            raise CorePackageError(
+                f"manifests.{name} must contain exactly path and sha256"
+            )
+        relative, physical = _regular_file(
+            root, record.get("path"), f"manifests.{name}.path"
+        )
+        if relative in seen_manifest_paths:
+            raise CorePackageError(f"duplicate manifest path: {relative}")
+        seen_manifest_paths.add(relative)
+        expected = _string(record.get("sha256"), f"manifests.{name}.sha256")
+        if not _SHA256.fullmatch(expected):
+            raise CorePackageError(
+                f"manifests.{name}.sha256 is not lowercase SHA-256"
+            )
+        actual = _sha256(physical)
+        if actual != expected:
+            raise CorePackageError(f"core package manifest changed: {relative}")
+        verified_manifests[name] = {"path": relative, "sha256": actual}
+        manifest_files[name] = physical
+    sdk_tree_path = manifest_files.get("sdk_tree")
+    if sdk_tree_path is None:
+        raise CorePackageError("manifests.sdk_tree is required")
+    published_sdk_tree = sdk_tree_path.read_bytes()
+    actual_sdk_tree = _sdk_tree_ledger(physical_paths["sdk"], paths["sdk"])
+    if published_sdk_tree != actual_sdk_tree:
+        raise CorePackageError(
+            "packaged SDK tree differs from manifests.sdk_tree ledger"
+        )
+    manifest["manifests"] = verified_manifests
 
     for relative in (
         "system_colors.json",

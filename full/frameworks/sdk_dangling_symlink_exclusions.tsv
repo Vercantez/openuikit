@@ -1,0 +1,10 @@
+format	sdk-dangling-symlink-exclusions-v1
+symlink	usr/lib/swift/libswiftCloudKit.tbd	../../../System/Library/Frameworks/CloudKit.framework/CloudKit.tbd
+symlink	usr/lib/swift/libswiftCreateML.tbd	../../../System/Library/Frameworks/CreateML.framework/Versions/Current/CreateML.tbd
+symlink	usr/lib/swift/libswiftIdentityLookup.tbd	../../../System/Library/Frameworks/IdentityLookup.framework/IdentityLookup.tbd
+symlink	usr/lib/swift/libswiftNetwork.tbd	../../../System/Library/Frameworks/Network.framework/Network.tbd
+symlink	usr/lib/swift/libswiftPencilKit.tbd	../../../System/Library/Frameworks/PencilKit.framework/PencilKit.tbd
+symlink	usr/lib/swift/libswiftShazamKit.tbd	../../../System/Library/Frameworks/ShazamKit.framework/Versions/A/ShazamKit.tbd
+symlink	usr/lib/swift/libswiftSoundAnalysis.tbd	../../..//System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis.tbd
+symlink	usr/lib/swift/libswiftSoundAnalysis_Private.tbd	../../..//System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis.tbd
+symlink	usr/lib/swift/libswiftVirtualization.tbd	../../../System/Library/Frameworks/Virtualization.framework/Versions/Current/Virtualization.tbd

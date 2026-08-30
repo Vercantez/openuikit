@@ -247,7 +247,10 @@ and machorun guest root; publishes compiler/linker arguments relative to the
 package root; and pins every module, dylib, Preview object, resource, and font
 by size and SHA-256. Absolute host paths, output/module/plugin flags owned by
 the application driver, missing framework families, symlinked libraries or
-resources, and a partial Preview tuple all refuse.
+resources, and a partial Preview tuple all refuse. The validator also rehashes
+every published attestation, recursively rebuilds the SDK's exact
+`core-tree-v1` ledger without following links, and rejects dangling, absolute,
+or SDK-escaping symlink targets before accepting the reusable package.
 
 `build_portable_application_guest.sh` composes those boundaries into the
 complete application build:

@@ -73,6 +73,10 @@ class CoreGuestPackageTests(unittest.TestCase):
         for relative in required_files:
             target = self.root / relative
             target.write_bytes((relative + "\n").encode("utf-8"))
+        self.sdk_tree = self.root / "attestation/sdk-tree.tsv"
+        self.sdk_tree.write_bytes(
+            b"format\tcore-tree-v1\ndirectory\tsdk\tempty=yes\n"
+        )
         artifacts = []
         for relative in required_files:
             if relative.startswith("guest-root/"):
@@ -96,6 +100,12 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-Llib",
             ],
             "format_version": 1,
+            "manifests": {
+                "sdk_tree": {
+                    "path": "attestation/sdk-tree.tsv",
+                    "sha256": sha256(self.sdk_tree),
+                }
+            },
             "paths": {
                 "guest_root": "guest-root",
                 "includes": "include",
@@ -137,6 +147,11 @@ class CoreGuestPackageTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+    def publish_sdk_tree(self, payload: bytes) -> None:
+        self.sdk_tree.write_bytes(payload)
+        self.manifest["manifests"]["sdk_tree"]["sha256"] = sha256(self.sdk_tree)
+        self.write_manifest(self.manifest)
+
     def test_validates_and_emits_exact_argument_arrays(self) -> None:
         root, manifest = core_guest_package.validate(self.root)
         self.assertEqual(root, self.root.resolve())
@@ -162,6 +177,71 @@ class CoreGuestPackageTests(unittest.TestCase):
         (self.root / "modules").rename(self.root / "real-modules")
         os.symlink(self.root / "real-modules", self.root / "modules")
         with self.assertRaisesRegex(core_guest_package.CorePackageError, "symlink"):
+            core_guest_package.validate(self.root)
+
+    def test_sdk_tree_ledger_accepts_a_safe_internal_symlink(self) -> None:
+        target = self.root / "sdk/usr/lib/target.tbd"
+        target.parent.mkdir(parents=True)
+        target.write_bytes(b"target\n")
+        os.symlink("target.tbd", target.parent / "alias.tbd")
+        target_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+        symlink_hash = hashlib.sha256(b"target.tbd").hexdigest()
+        self.publish_sdk_tree(
+            (
+                "format\tcore-tree-v1\n"
+                "directory\tsdk\tempty=no\n"
+                "directory\tsdk/usr\tempty=no\n"
+                "directory\tsdk/usr/lib\tempty=no\n"
+                f"symlink\tsdk/usr/lib/alias.tbd\t{symlink_hash}\ttarget.tbd\n"
+                f"file\tsdk/usr/lib/target.tbd\t{target_hash}\t7\n"
+            ).encode("utf-8")
+        )
+        core_guest_package.validate(self.root)
+
+    def test_refuses_sdk_tree_drift_and_manifest_mutation(self) -> None:
+        (self.root / "sdk/unattested.tbd").write_bytes(b"stale\n")
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "SDK tree differs"
+        ):
+            core_guest_package.validate(self.root)
+
+        (self.root / "sdk/unattested.tbd").unlink()
+        self.sdk_tree.write_bytes(b"format\tcore-tree-v1\n")
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "manifest changed"
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_unsafe_sdk_symlinks_even_if_ledgers_match(self) -> None:
+        dangling = self.root / "sdk/dangling.tbd"
+        os.symlink("missing.tbd", dangling)
+        dangling_hash = hashlib.sha256(b"missing.tbd").hexdigest()
+        self.publish_sdk_tree(
+            (
+                "format\tcore-tree-v1\n"
+                "directory\tsdk\tempty=no\n"
+                f"symlink\tsdk/dangling.tbd\t{dangling_hash}\tmissing.tbd\n"
+            ).encode("utf-8")
+        )
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "dangling SDK symlink"
+        ):
+            core_guest_package.validate(self.root)
+
+        dangling.unlink()
+        escaping = self.root / "sdk/escaping.tbd"
+        os.symlink("../outside.tbd", escaping)
+        escaping_hash = hashlib.sha256(b"../outside.tbd").hexdigest()
+        self.publish_sdk_tree(
+            (
+                "format\tcore-tree-v1\n"
+                "directory\tsdk\tempty=no\n"
+                f"symlink\tsdk/escaping.tbd\t{escaping_hash}\t../outside.tbd\n"
+            ).encode("utf-8")
+        )
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "escaping SDK symlink"
+        ):
             core_guest_package.validate(self.root)
 
     def test_refuses_host_paths_and_driver_owned_options(self) -> None:

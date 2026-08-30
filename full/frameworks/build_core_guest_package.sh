@@ -23,6 +23,7 @@ OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
 OUTPUT_ROOT=''
 EXPECTED_SUPPORT_COMMIT=''
 EXPECTED_SUPPORT_TREE=''
@@ -303,7 +304,11 @@ python3 "$MANIFEST_TOOL" inventory-tree \
     --output "$WORK/openuikit-resources.pre.tsv"
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$SYS" --logical-root sdk \
+    --dangling-exclusions "$SDK_DANGLING_EXCLUSIONS" \
     --output "$WORK/sdk.pre.tsv"
+python3 "$MANIFEST_TOOL" dangling-symlinks \
+    --root "$SYS" --exclusions "$SDK_DANGLING_EXCLUSIONS" \
+    --output "$WORK/sdk-dangling.pre.tsv"
 
 require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
 require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
@@ -390,6 +395,15 @@ mkdir -p "$STAGE/sdk" "$STAGE/modules" "$STAGE/lib" "$STAGE/include" \
     "$STAGE/objects" "$STAGE/resources/OpenUIKit/fonts" \
     "$STAGE/guest-root" "$STAGE/probe" "$STAGE/attestation"
 cp -a "$SYS/." "$STAGE/sdk/"
+cp "$SDK_DANGLING_EXCLUSIONS" \
+    "$STAGE/attestation/sdk-dangling-symlink-exclusions.tsv"
+python3 "$MANIFEST_TOOL" dangling-symlinks \
+    --root "$STAGE/sdk" \
+    --exclusions "$STAGE/attestation/sdk-dangling-symlink-exclusions.tsv" \
+    --output "$STAGE/attestation/sdk-dangling-symlinks.tsv" --remove
+cmp "$WORK/sdk-dangling.pre.tsv" \
+    "$STAGE/attestation/sdk-dangling-symlinks.tsv" \
+    || die 'staged SDK dangling-symlink set differs from bracketed input'
 cp -a "$MRROOT/." "$STAGE/guest-root/"
 cp -a "$UIKIT/Sources/OpenUIKit/Resources/." "$STAGE/resources/OpenUIKit/"
 cp "$SYSTEM_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf"
@@ -740,6 +754,8 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_SYSTEM_FONT"
     printf 'font\tbold\tcontainer:/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf\t%s\n' \
         "$EXPECTED_BOLD_FONT"
+    printf 'sdk-dangling-exclusions\t%s\tcount=9\n' \
+        "$(hash_file "$SDK_DANGLING_EXCLUSIONS")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -802,6 +818,10 @@ record_artifact attestation foundation-sources manifest \
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
+record_artifact attestation sdk-dangling-symlinks manifest \
+    attestation/sdk-dangling-symlinks.tsv
+record_artifact attestation sdk-dangling-exclusions manifest \
+    attestation/sdk-dangling-symlink-exclusions.tsv
 record_artifact attestation include-tree manifest attestation/include-tree.tsv
 record_artifact attestation guest-root-tree manifest \
     attestation/guest-root-tree.tsv
@@ -838,9 +858,15 @@ cmp "$WORK/openuikit-resources.pre.tsv" "$WORK/openuikit-resources.post.tsv" \
     || die 'OpenUIKit resources changed during build'
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$SYS" --logical-root sdk \
+    --dangling-exclusions "$SDK_DANGLING_EXCLUSIONS" \
     --output "$WORK/sdk.post.tsv"
 cmp "$WORK/sdk.pre.tsv" "$WORK/sdk.post.tsv" \
     || die 'SDK input changed during build'
+python3 "$MANIFEST_TOOL" dangling-symlinks \
+    --root "$SYS" --exclusions "$SDK_DANGLING_EXCLUSIONS" \
+    --output "$WORK/sdk-dangling.post.tsv"
+cmp "$WORK/sdk-dangling.pre.tsv" "$WORK/sdk-dangling.post.tsv" \
+    || die 'SDK dangling-symlink input changed during build'
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" post-system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" post-bold-font
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
@@ -857,6 +883,8 @@ WRITE_ARGS=(
     --source-sets attestation/source-sets.tsv
     --foundation-sources attestation/foundation-sources.tsv
     --sdk-inventory attestation/sdk-tree.tsv
+    --sdk-dangling-symlinks attestation/sdk-dangling-symlinks.tsv
+    --sdk-dangling-exclusions attestation/sdk-dangling-symlink-exclusions.tsv
     --include-inventory attestation/include-tree.tsv
     --guest-inventory attestation/guest-root-tree.tsv
     --resource-inventory attestation/openuikit-resources-tree.tsv

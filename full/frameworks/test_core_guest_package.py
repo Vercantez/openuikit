@@ -30,6 +30,17 @@ FOUNDATION_SOURCES = (
     "full/foundation/DateFormatter.swift",
     "full/foundation/UserDefaults.swift",
 )
+SDK_DANGLING_EXCLUSIONS = (
+    ("usr/lib/swift/libswiftCloudKit.tbd", "../../../System/Library/Frameworks/CloudKit.framework/CloudKit.tbd"),
+    ("usr/lib/swift/libswiftCreateML.tbd", "../../../System/Library/Frameworks/CreateML.framework/Versions/Current/CreateML.tbd"),
+    ("usr/lib/swift/libswiftIdentityLookup.tbd", "../../../System/Library/Frameworks/IdentityLookup.framework/IdentityLookup.tbd"),
+    ("usr/lib/swift/libswiftNetwork.tbd", "../../../System/Library/Frameworks/Network.framework/Network.tbd"),
+    ("usr/lib/swift/libswiftPencilKit.tbd", "../../../System/Library/Frameworks/PencilKit.framework/PencilKit.tbd"),
+    ("usr/lib/swift/libswiftShazamKit.tbd", "../../../System/Library/Frameworks/ShazamKit.framework/Versions/A/ShazamKit.tbd"),
+    ("usr/lib/swift/libswiftSoundAnalysis.tbd", "../../..//System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis.tbd"),
+    ("usr/lib/swift/libswiftSoundAnalysis_Private.tbd", "../../..//System/Library/Frameworks/SoundAnalysis.framework/Versions/A/SoundAnalysis.tbd"),
+    ("usr/lib/swift/libswiftVirtualization.tbd", "../../../System/Library/Frameworks/Virtualization.framework/Versions/Current/Virtualization.tbd"),
+)
 FRAMEWORKS = (
     "FoundationEssentials",
     "OpenCoreGraphics",
@@ -54,7 +65,7 @@ def sha256(path: Path) -> str:
 
 def run_tool(*arguments: str, expected: int = 0) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
-        ["python3", str(TOOL), *arguments],
+        ["python3", "-B", str(TOOL), *arguments],
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -72,7 +83,13 @@ def run_canonical(
     package: Path, expected: int = 0
 ) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
-        ["python3", str(CANONICAL_VALIDATOR), str(package), "--emit-summary"],
+        [
+            "python3",
+            "-B",
+            str(CANONICAL_VALIDATOR),
+            str(package),
+            "--emit-summary",
+        ],
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -139,6 +156,110 @@ class FoundationManifestTests(unittest.TestCase):
         self.assertIn("symlink", refusal.stderr)
 
 
+class SDKDanglingSymlinkTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        self.sdk = self.root / "sdk"
+        self.sdk.mkdir()
+        self.exclusions = self.root / "exclusions.tsv"
+        lines = ["format\tsdk-dangling-symlink-exclusions-v1"]
+        lines.extend(
+            f"symlink\t{relative}\t{target}"
+            for relative, target in SDK_DANGLING_EXCLUSIONS
+        )
+        write_file(self.exclusions, "\n".join(lines) + "\n")
+        for relative, target in SDK_DANGLING_EXCLUSIONS:
+            path = self.sdk / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            os.symlink(target, path)
+        write_file(self.sdk / "usr/lib/swift/valid-target.tbd", "valid\n")
+        os.symlink("valid-target.tbd", self.sdk / "usr/lib/swift/libValid.tbd")
+
+    def tearDown(self) -> None:
+        self.temporary.cleanup()
+
+    def test_checked_manifest_pins_exact_raw_path_target_pairs(self) -> None:
+        checked = HERE / "sdk_dangling_symlink_exclusions.tsv"
+        self.assertEqual(checked.read_bytes(), self.exclusions.read_bytes())
+
+    def test_normalized_inventory_attests_then_removes_only_verified_links(self) -> None:
+        inventory = self.root / "normalized.tsv"
+        run_tool(
+            "inventory-tree",
+            "--root",
+            str(self.sdk),
+            "--logical-root",
+            "sdk",
+            "--dangling-exclusions",
+            str(self.exclusions),
+            "--output",
+            str(inventory),
+        )
+        payload = inventory.read_text(encoding="utf-8")
+        self.assertIn("sdk/usr/lib/swift/libValid.tbd", payload)
+        self.assertNotIn("libswiftCloudKit.tbd", payload)
+
+        observed = self.root / "observed.tsv"
+        run_tool(
+            "dangling-symlinks",
+            "--root",
+            str(self.sdk),
+            "--exclusions",
+            str(self.exclusions),
+            "--output",
+            str(observed),
+            "--remove",
+        )
+        observed_text = observed.read_text(encoding="utf-8")
+        self.assertIn("count=9", observed_text)
+        self.assertIn("../../..//System/Library/Frameworks/SoundAnalysis", observed_text)
+        for relative, _target in SDK_DANGLING_EXCLUSIONS:
+            self.assertFalse((self.sdk / relative).is_symlink())
+        self.assertTrue((self.sdk / "usr/lib/swift/libValid.tbd").is_symlink())
+        run_tool(
+            "inventory-tree",
+            "--root",
+            str(self.sdk),
+            "--logical-root",
+            "sdk",
+            "--output",
+            str(self.root / "packaged.tsv"),
+        )
+
+    def test_target_drift_is_refused(self) -> None:
+        path = self.sdk / SDK_DANGLING_EXCLUSIONS[0][0]
+        path.unlink()
+        os.symlink("../../../wrong-target.tbd", path)
+        refusal = run_tool(
+            "dangling-symlinks",
+            "--root",
+            str(self.sdk),
+            "--exclusions",
+            str(self.exclusions),
+            "--output",
+            str(self.root / "observed.tsv"),
+            expected=2,
+        )
+        self.assertIn("target-drift", refusal.stderr)
+
+    def test_unexpected_dangling_link_is_refused(self) -> None:
+        os.symlink("missing.tbd", self.sdk / "usr/lib/swift/unreviewed.tbd")
+        refusal = run_tool(
+            "inventory-tree",
+            "--root",
+            str(self.sdk),
+            "--logical-root",
+            "sdk",
+            "--dangling-exclusions",
+            str(self.exclusions),
+            "--output",
+            str(self.root / "normalized.tsv"),
+            expected=2,
+        )
+        self.assertIn("unexpected", refusal.stderr)
+
+
 class PackageFixture:
     def __init__(self, root: Path, preview: bool) -> None:
         self.root = root
@@ -172,13 +293,18 @@ class PackageFixture:
             "input-provenance.tsv",
             "source-sets.tsv",
             "foundation-sources.tsv",
-            "sdk-tree.tsv",
+            "sdk-dangling-symlinks.tsv",
+            "sdk-dangling-symlink-exclusions.tsv",
             "include-tree.tsv",
             "guest-root-tree.tsv",
             "openuikit-resources-tree.tsv",
             "runtime-closure.tsv",
         ):
             write_file(root / f"attestation/{name}", f"format\t{name}\n")
+        write_file(
+            root / "attestation/sdk-tree.tsv",
+            "format\tcore-tree-v1\ndirectory\tsdk\tempty=yes\n",
+        )
         self.compile_arguments = [
             "-target",
             "arm64-apple-macos15.0",
@@ -321,6 +447,10 @@ class PackageFixture:
             "attestation/foundation-sources.tsv",
             "--sdk-inventory",
             "attestation/sdk-tree.tsv",
+            "--sdk-dangling-symlinks",
+            "attestation/sdk-dangling-symlinks.tsv",
+            "--sdk-dangling-exclusions",
+            "attestation/sdk-dangling-symlink-exclusions.tsv",
             "--include-inventory",
             "attestation/include-tree.tsv",
             "--guest-inventory",
@@ -486,6 +616,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertNotIn("IMAGE=${IMAGE:-", source)
         self.assertIn("core_guest_package.py /w/build/core-package --emit-summary", source)
         self.assertIn(".INVALID-DO-NOT-USE", source)
+        self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
+        self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

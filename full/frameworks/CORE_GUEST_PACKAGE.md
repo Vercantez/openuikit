@@ -91,10 +91,30 @@ NUL-delimited UTF-8 for diagnostics only; consumers use the JSON arrays. Verify
 any moved package with:
 
 ```sh
-python3 full/xcodeplan/core_guest_package.py PACKAGE --emit-summary
-python3 full/frameworks/core_package_manifest.py verify \
+python3 -B full/xcodeplan/core_guest_package.py PACKAGE --emit-summary
+python3 -B full/frameworks/core_package_manifest.py verify \
   --package-root PACKAGE
 ```
+
+The source SDK currently contains exactly nine dangling Swift overlay aliases
+for Apple frameworks that are not present in this port: CloudKit, CreateML,
+IdentityLookup, Network, PencilKit, ShazamKit, SoundAnalysis,
+SoundAnalysis_Private, and Virtualization. Their paths and raw `readlink`
+payloads (including the two byte-significant SoundAnalysis `../../..//System`
+targets) are pinned in
+`full/frameworks/sdk_dangling_symlink_exclusions.tsv`. The builder first
+attests that exact dangling set in the immutable source SDK, copies the SDK,
+and removes only those nine verified links from the fresh staged package.
+Source pre/post dangling attestations must match, while the normalized source
+inventory and packaged `attestation/sdk-tree.tsv` must be byte-identical. Any
+missing, additional, retargeted, non-symlink, absolute, or escaping entry
+refuses; the general inventory rules remain strict.
+
+The public package validator rehashes every manifest and independently rebuilds
+the packaged SDK's `core-tree-v1` ledger. It rejects dangling, absolute,
+escaping, or unsupported SDK nodes and refuses any byte drift from
+`manifests.sdk_tree`, so relocation or later cache corruption cannot bypass the
+creation-time checks.
 
 OpenUIKit's source `Resources` tree is copied byte-for-byte to
 `resources/OpenUIKit`, with symlinks forbidden and empty directories attested.
@@ -184,7 +204,7 @@ probe, closure attestation, JSON verifier, canonical consumer validator, and
 ## Static tests
 
 ```sh
-python3 full/frameworks/test_core_guest_package.py
+python3 -B full/frameworks/test_core_guest_package.py
 bash -n full/frameworks/build_core_guest_package.sh
 bash -n full/frameworks/run_core_guest_package_docker.sh
 bash -n full/scripts/build_full.sh

@@ -215,11 +215,88 @@ def _relative_symlink_target(relative: PurePosixPath, target: str) -> str:
     return PurePosixPath(*parts).as_posix()
 
 
+def read_dangling_exclusions(path: Path) -> dict[str, str]:
+    require_regular_no_link(path, "SDK dangling-symlink exclusion manifest")
+    payload = path.read_bytes()
+    if b"\r" in payload or b"\x00" in payload or not payload.endswith(b"\n"):
+        refuse("SDK dangling-symlink exclusion manifest must be UTF-8/LF text")
+    try:
+        lines = payload.decode("utf-8")[:-1].split("\n")
+    except UnicodeDecodeError as error:
+        refuse(f"SDK dangling-symlink exclusion manifest is not UTF-8: {error}")
+    if not lines or lines[0] != "format\tsdk-dangling-symlink-exclusions-v1":
+        refuse("SDK dangling-symlink exclusion manifest format drifted")
+    records: list[tuple[str, str]] = []
+    for index, line in enumerate(lines[1:], 1):
+        fields = line.split("\t")
+        if len(fields) != 3 or fields[0] != "symlink":
+            refuse(f"malformed SDK dangling-symlink exclusion record {index}")
+        relative = safe_relative(fields[1], "SDK dangling-symlink path")
+        _relative_symlink_target(PurePosixPath(relative), fields[2])
+        records.append((relative, fields[2]))
+    if not records:
+        refuse("SDK dangling-symlink exclusion manifest is empty")
+    if records != sorted(records):
+        refuse("SDK dangling-symlink exclusion manifest is not sorted")
+    if len({relative for relative, _target in records}) != len(records):
+        refuse("SDK dangling-symlink exclusion manifest contains a duplicate path")
+    return dict(records)
+
+
+def verified_dangling_symlinks(
+    root: Path, exclusions: dict[str, str]
+) -> dict[str, str]:
+    require_directory_no_link(root, "SDK inventory root")
+    observed: dict[str, str] = {}
+
+    def visit(directory: Path, relative: PurePosixPath) -> None:
+        for entry in sorted(os.scandir(directory), key=lambda item: item.name):
+            child = PurePosixPath(entry.name) if relative.as_posix() == "." else relative / entry.name
+            physical = Path(entry.path)
+            mode = physical.lstat().st_mode
+            key = child.as_posix()
+            if stat.S_ISLNK(mode):
+                target = os.readlink(physical)
+                resolved = _relative_symlink_target(child, target)
+                if not os.path.lexists(root / resolved):
+                    observed[key] = target
+                elif key in exclusions:
+                    refuse(f"excluded SDK symlink is no longer dangling: {key} -> {target}")
+                continue
+            if key in exclusions:
+                refuse(f"excluded SDK path is no longer a symlink: {key}")
+            if stat.S_ISDIR(mode):
+                visit(physical, child)
+            elif not stat.S_ISREG(mode):
+                refuse(f"unsupported node in SDK inventory: {key}")
+
+    visit(root, PurePosixPath("."))
+    missing = sorted(set(exclusions) - set(observed))
+    unexpected = sorted(set(observed) - set(exclusions))
+    drifted = sorted(
+        relative
+        for relative in set(observed) & set(exclusions)
+        if observed[relative] != exclusions[relative]
+    )
+    if missing or unexpected or drifted:
+        refuse(
+            "SDK dangling-symlink set drifted: "
+            f"missing={missing} unexpected={unexpected} target-drift={drifted}"
+        )
+    return observed
+
+
 def inventory_records(
-    root: Path, logical_root: str, reject_symlinks: bool
+    root: Path,
+    logical_root: str,
+    reject_symlinks: bool,
+    dangling_exclusions: dict[str, str] | None = None,
 ) -> list[tuple[str, ...]]:
     require_directory_no_link(root, "inventory root")
     safe_relative(logical_root, "inventory logical root")
+    exclusions = dangling_exclusions or {}
+    if exclusions:
+        verified_dangling_symlinks(root, exclusions)
     records: list[tuple[str, ...]] = []
 
     def visit(physical: Path, relative: PurePosixPath) -> None:
@@ -230,12 +307,14 @@ def inventory_records(
         )
         mode = physical.lstat().st_mode
         if stat.S_ISLNK(mode):
-            if reject_symlinks:
-                refuse(f"symlink is forbidden in {logical_root}: {logical}")
             target = os.readlink(physical)
             resolved = _relative_symlink_target(relative, target)
             if not os.path.lexists(root / resolved):
+                if relative.as_posix() in exclusions:
+                    return
                 refuse(f"dangling symlink in inventory: {logical} -> {target}")
+            if reject_symlinks:
+                refuse(f"symlink is forbidden in {logical_root}: {logical}")
             records.append(
                 ("symlink", logical, sha256_bytes(target.encode()), target)
             )
@@ -248,7 +327,12 @@ def inventory_records(
         if not stat.S_ISDIR(mode):
             refuse(f"unsupported node in inventory: {logical}")
         entries = sorted(os.scandir(physical), key=lambda entry: entry.name)
-        records.append(("directory", logical, "empty=yes" if not entries else "empty=no"))
+        included = []
+        for entry in entries:
+            child = PurePosixPath(entry.name) if relative.as_posix() == "." else relative / entry.name
+            if child.as_posix() not in exclusions:
+                included.append(entry)
+        records.append(("directory", logical, "empty=yes" if not included else "empty=no"))
         for entry in entries:
             child = PurePosixPath(entry.name) if relative.as_posix() == "." else relative / entry.name
             visit(Path(entry.path), child)
@@ -258,11 +342,38 @@ def inventory_records(
 
 
 def inventory_command(args: argparse.Namespace) -> None:
+    exclusions = (
+        read_dangling_exclusions(Path(args.dangling_exclusions))
+        if args.dangling_exclusions
+        else None
+    )
     records = inventory_records(
-        Path(args.root), args.logical_root, args.reject_symlinks
+        Path(args.root), args.logical_root, args.reject_symlinks, exclusions
     )
     output = ["format\tcore-tree-v1"]
     output.extend("\t".join(record) for record in records)
+    write_text_new(Path(args.output), "\n".join(output) + "\n")
+
+
+def dangling_symlinks_command(args: argparse.Namespace) -> None:
+    root = Path(args.root)
+    manifest = Path(args.exclusions)
+    exclusions = read_dangling_exclusions(manifest)
+    observed = verified_dangling_symlinks(root, exclusions)
+    if args.remove:
+        for relative in sorted(observed):
+            path = root / relative
+            path.unlink()
+            if path.exists() or path.is_symlink():
+                refuse(f"failed to remove verified SDK dangling symlink: {relative}")
+    output = [
+        "format\tsdk-dangling-symlinks-v1",
+        f"exclusions\t{sha256_file(manifest)}\tcount={len(observed)}",
+    ]
+    output.extend(
+        f"symlink\t{relative}\t{sha256_bytes(target.encode())}\t{target}"
+        for relative, target in sorted(observed.items())
+    )
     write_text_new(Path(args.output), "\n".join(output) + "\n")
 
 
@@ -796,6 +907,12 @@ def write_command(args: argparse.Namespace) -> None:
             "source_sets": checked_manifest(package, args.source_sets, "source sets"),
             "foundation_sources": checked_manifest(package, args.foundation_sources, "Foundation sources"),
             "sdk_tree": checked_manifest(package, args.sdk_inventory, "SDK inventory"),
+            "sdk_dangling_symlinks": checked_manifest(
+                package, args.sdk_dangling_symlinks, "SDK dangling symlinks"
+            ),
+            "sdk_dangling_exclusions": checked_manifest(
+                package, args.sdk_dangling_exclusions, "SDK dangling exclusions"
+            ),
             "include_tree": checked_manifest(package, args.include_inventory, "include inventory"),
             "guest_root_tree": checked_manifest(package, args.guest_inventory, "guest-root inventory"),
             "openuikit_resources_tree": checked_manifest(package, args.resource_inventory, "OpenUIKit resource inventory"),
@@ -861,7 +978,15 @@ def parser() -> argparse.ArgumentParser:
     inventory.add_argument("--logical-root", required=True)
     inventory.add_argument("--output", required=True)
     inventory.add_argument("--reject-symlinks", action="store_true")
+    inventory.add_argument("--dangling-exclusions")
     inventory.set_defaults(handler=inventory_command)
+
+    dangling = subparsers.add_parser("dangling-symlinks")
+    dangling.add_argument("--root", required=True)
+    dangling.add_argument("--exclusions", required=True)
+    dangling.add_argument("--output", required=True)
+    dangling.add_argument("--remove", action="store_true")
+    dangling.set_defaults(handler=dangling_symlinks_command)
 
     write = subparsers.add_parser("write")
     write.add_argument("--package-root", required=True)
@@ -871,6 +996,8 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--source-sets", required=True)
     write.add_argument("--foundation-sources", required=True)
     write.add_argument("--sdk-inventory", required=True)
+    write.add_argument("--sdk-dangling-symlinks", required=True)
+    write.add_argument("--sdk-dangling-exclusions", required=True)
     write.add_argument("--include-inventory", required=True)
     write.add_argument("--guest-inventory", required=True)
     write.add_argument("--resource-inventory", required=True)
