@@ -232,7 +232,7 @@ func _openFlattenGroup(_ node: _OpenViewNode) -> [_OpenViewNode] {
 }
 
 @MainActor
-private func _openExtractTag(
+func _openExtractTag(
     _ node: _OpenViewNode
 ) -> (content: _OpenViewNode, tag: AnyHashable?) {
     guard case .modified(let content, let modification) = node.kind else {

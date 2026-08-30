@@ -7,6 +7,7 @@ public struct _OpenFont: Equatable, Sendable {
     public enum TextStyle: Equatable, Sendable {
         case headline
         case body
+        case caption
         case title3
     }
 
@@ -47,6 +48,7 @@ public struct _OpenFont: Equatable, Sendable {
 
     public static let headline = _OpenFont(.headline)
     public static let body = _OpenFont(.body)
+    public static let caption = _OpenFont(.caption)
     public static let title3 = _OpenFont(.title3)
 
     public static func system(size: CGFloat) -> _OpenFont {
@@ -61,6 +63,7 @@ public struct _OpenFont: Equatable, Sendable {
             let pointSize: CGFloat
             switch style {
             case .headline, .body: pointSize = 17
+            case .caption: pointSize = 12
             case .title3: pointSize = 20
             }
             return _OpenFont(
@@ -80,7 +83,12 @@ public struct _OpenFont: Equatable, Sendable {
     func resolve(weight override: Weight?) -> UIFont {
         switch storage {
         case .textStyle(let style):
-            let size: CGFloat = style == .title3 ? 20 : 17
+            let size: CGFloat
+            switch style {
+            case .title3: size = 20
+            case .caption: size = 12
+            case .headline, .body: size = 17
+            }
             let weight: UIFont.Weight = override?.value
                 ?? (style == .headline ? .semibold : .regular)
             return .systemFont(ofSize: size, weight: weight)

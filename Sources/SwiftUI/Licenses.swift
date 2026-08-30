@@ -39,6 +39,14 @@ public struct _OpenNavigationLink<Destination: _OpenView, Label: _OpenView>: _Op
         self.label = label()
     }
 
+    public init(
+        destination: Destination,
+        @_OpenViewBuilder label: () -> Label
+    ) {
+        self.destination = destination
+        self.label = label()
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         let labelNode = _OpenGraphContext.withStructuralScope(.navigationLinkLabel) {
             label._makeOpenUIKitNode()

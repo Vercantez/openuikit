@@ -192,6 +192,8 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     var _openGraphStateCount: Int { graph.stateCount }
     var _openGraphObservationCount: Int { graph.observationCount }
     var _openGraphRepresentedControllerCount: Int { graph.representedControllerCount }
+    var _openGraphChangeCount: Int { graph.changeCount }
+    var _openGraphSubscriptionCount: Int { graph.subscriptionCount }
 }
 
 public typealias UIHostingController<Content> = _OpenUIHostingController<Content>
@@ -222,9 +224,16 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children):
             children.forEach(visit)
+        case .section(let header, let footer, let rows):
+            if let header { visit(header) }
+            if let footer { visit(footer) }
+            rows.forEach(visit)
         case .button(let label, _), .scroll(let label),
-             .navigationLink(let label, _):
+             .navigationLink(let label, _), .toggle(let label, _, _):
             visit(label)
+        case .picker(let label, let options, _, _):
+            visit(label)
+            options.forEach { visit($0.content) }
         case .tabView(let pages, let selection, _, _):
             if let selected = _openSelectedTabPage(pages: pages, selection: selection) {
                 visit(selected.page.content)
@@ -241,7 +250,8 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             default:
                 break
             }
-        case .empty, .text, .image, .color, .roundedRectangle, .spacer, .gradient:
+        case .empty, .text, .image, .color, .roundedRectangle, .spacer,
+             .textField, .gradient:
             break
         }
     }
@@ -262,9 +272,16 @@ private func _openAppearanceActions(
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children):
             children.forEach(visit)
+        case .section(let header, let footer, let rows):
+            if let header { visit(header) }
+            if let footer { visit(footer) }
+            rows.forEach(visit)
         case .button(let label, _), .scroll(let label),
-             .navigationLink(let label, _):
+             .navigationLink(let label, _), .toggle(let label, _, _):
             visit(label)
+        case .picker(let label, let options, _, _):
+            visit(label)
+            options.forEach { visit($0.content) }
         case .tabView(let pages, let selection, _, _):
             if let selected = _openSelectedTabPage(pages: pages, selection: selection) {
                 visit(selected.page.content)
@@ -287,7 +304,7 @@ private func _openAppearanceActions(
                 break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .spacer,
-             .viewController, .gradient:
+             .textField, .viewController, .gradient:
             break
         }
     }
@@ -344,6 +361,7 @@ private struct _RenderEnvironment {
     var imageContentMode: _OpenContentMode = .fit
     var measuresUnboundedVerticalScroll = false
     var simultaneousTapActions: [@MainActor () -> Void] = []
+    var isEnabled = true
 
     static let `default` = _RenderEnvironment()
 }
@@ -353,6 +371,7 @@ private enum _ViewRenderer {
     static let defaultSpacing: CGFloat = 8
     static let defaultFormRowHeight: CGFloat = 44
     static let navigationBarHeight: CGFloat = 52
+    static let toggleSize = CGSize(width: 63, height: 28)
 
     static func measure(
         _ node: _OpenViewNode,
@@ -461,6 +480,40 @@ private enum _ViewRenderer {
                 height += max(defaultFormRowHeight, size.height)
             }
             return CGSize(width: width, height: height)
+        case .section(let header, let footer, let rows):
+            let bounded = _bounded(proposed)
+            let headerHeight: CGFloat = header == nil ? 12 : 28
+            var height = headerHeight
+            for row in rows {
+                let size = measure(
+                    row,
+                    proposed: CGSize(width: bounded.width, height: defaultFormRowHeight),
+                    environment: environment
+                )
+                height += max(defaultFormRowHeight, size.height)
+            }
+            let footerHeight: CGFloat = footer == nil ? 12 : 28
+            return CGSize(width: bounded.width, height: height + footerHeight)
+        case .toggle(let label, _, _):
+            let labelSize = measure(label, proposed: proposed, environment: environment)
+            return CGSize(
+                width: min(_bounded(proposed).width, labelSize.width + 75),
+                height: max(defaultFormRowHeight, labelSize.height, toggleSize.height)
+            )
+        case .textField:
+            return CGSize(width: _bounded(proposed).width, height: 34)
+        case .picker(let label, let options, let selection, _):
+            let labelSize = measure(label, proposed: proposed, environment: environment)
+            let selectedSize = options.first(where: { $0.tag == selection }).map {
+                measure($0.content, proposed: proposed, environment: environment)
+            } ?? .zero
+            return CGSize(
+                width: min(
+                    _bounded(proposed).width,
+                    labelSize.width + selectedSize.width + 32
+                ),
+                height: max(defaultFormRowHeight, labelSize.height, selectedSize.height)
+            )
         case .list(let rows):
             let viewport = _bounded(proposed)
             var height: CGFloat = 0
@@ -567,7 +620,11 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: environment)
             case .clipRoundedRectangle:
                 return measure(content, proposed: proposed, environment: environment)
-            case .navigationTitle, .navigationBarHidden,
+            case .disabled(let disabled):
+                var next = environment
+                next.isEnabled = environment.isEnabled && !disabled
+                return measure(content, proposed: proposed, environment: next)
+            case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .toolbar, .tag, .pageTabViewStyle:
                 return measure(content, proposed: proposed, environment: environment)
@@ -666,6 +723,7 @@ private enum _ViewRenderer {
             control.isOpaque = false
             control.backgroundColor = .clear
             control.accessibilityIdentifier = "SwiftUI.Button"
+            control.isEnabled = environment.isEnabled
             control.addTarget(for: .touchUpInside) { _, _ in action() }
             for simultaneousAction in environment.simultaneousTapActions {
                 control.addTarget(for: .touchUpInside) { _, _ in simultaneousAction() }
@@ -744,11 +802,108 @@ private enum _ViewRenderer {
             placeForm(rows, in: rect, on: surface, environment: environment)
         case .list(let rows):
             placeList(rows, in: rect, on: surface, environment: environment)
+        case .section(let header, let footer, let rows):
+            placeSection(
+                header: header,
+                footer: footer,
+                rows: rows,
+                in: rect,
+                on: surface,
+                environment: environment
+            )
+        case .toggle(let label, let isOn, let setIsOn):
+            let toggle = UISwitch(frame: .zero)
+            toggle.frame.origin = CGPoint(
+                x: max(rect.minX, rect.maxX - toggleSize.width),
+                y: rect.minY + max(0, (rect.height - toggleSize.height) / 2)
+            )
+            toggle.setOn(isOn, animated: false)
+            toggle.isEnabled = environment.isEnabled
+            toggle.accessibilityIdentifier = "SwiftUI.Toggle.switch"
+            toggle.addTarget(for: .valueChanged) { control, _ in
+                guard let toggle = control as? UISwitch else { return }
+                setIsOn(toggle.isOn)
+            }
+            surface.addSubview(toggle)
+            place(
+                label,
+                in: CGRect(
+                    x: rect.minX,
+                    y: rect.minY,
+                    width: max(0, toggle.frame.minX - rect.minX - 12),
+                    height: rect.height
+                ),
+                on: surface,
+                environment: environment
+            )
+        case .textField(let title, let text, let setText):
+            let field = UITextField(frame: rect)
+            field.borderStyle = .roundedRect
+            field.placeholder = title
+            field.text = text
+            field.isEnabled = environment.isEnabled
+            field.accessibilityIdentifier = "SwiftUI.TextField"
+            field.addTarget(for: .editingChanged) { control, _ in
+                guard let field = control as? UITextField else { return }
+                setText(field.text ?? "")
+            }
+            surface.addSubview(field)
+        case .picker(let label, let options, let selection, let setSelection):
+            let control = UIControl(frame: rect)
+            control.isEnabled = environment.isEnabled
+            control.backgroundColor = .clear
+            control.accessibilityIdentifier = "SwiftUI.Picker"
+            surface.addSubview(control)
+            let selectedIndex = options.firstIndex { $0.tag == selection } ?? 0
+            let trailingWidth = max(88, rect.width * 0.42)
+            place(
+                label,
+                in: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: max(0, control.bounds.width - trailingWidth - 12),
+                    height: control.bounds.height
+                ),
+                on: control,
+                environment: environment
+            )
+            if options.indices.contains(selectedIndex) {
+                var selectedEnvironment = environment
+                selectedEnvironment.foregroundColor = .init(uiColor: .secondaryLabel)
+                selectedEnvironment.textAlignment = .trailing
+                place(
+                    options[selectedIndex].content,
+                    in: CGRect(
+                        x: max(0, control.bounds.width - trailingWidth),
+                        y: 0,
+                        width: max(0, trailingWidth - 20),
+                        height: control.bounds.height
+                    ),
+                    on: control,
+                    environment: selectedEnvironment
+                )
+            }
+            let disclosure = _SystemSymbolView(name: "chevron.right")
+            disclosure.strokeColor = environment.isEnabled ? .secondaryLabel : .tertiaryLabel
+            disclosure.frame = CGRect(
+                x: max(0, control.bounds.width - 9),
+                y: max(0, (control.bounds.height - 12) / 2),
+                width: 7,
+                height: 12
+            )
+            disclosure.accessibilityIdentifier = "SwiftUI.Picker.disclosure"
+            control.addSubview(disclosure)
+            control.addTarget(for: .touchUpInside) { _, _ in
+                guard !options.isEmpty else { return }
+                let next = options[(selectedIndex + 1) % options.count]
+                setSelection(next.tag)
+            }
         case .navigationLink(let label, let makeDestinationController):
             let control = UIControl(frame: rect)
             control.isOpaque = false
             control.backgroundColor = .clear
             control.accessibilityIdentifier = "SwiftUI.NavigationLink"
+            control.isEnabled = environment.isEnabled
             control.addTarget(for: .touchUpInside) { [weak control] _, _ in
                 guard let control,
                       let source = _enclosingViewController(for: control),
@@ -870,6 +1025,7 @@ private enum _ViewRenderer {
                 control.isOpaque = false
                 control.backgroundColor = .clear
                 control.accessibilityIdentifier = "SwiftUI.TapGesture"
+                control.isEnabled = environment.isEnabled
                 control.addTarget(for: .touchUpInside) { _, _ in action() }
                 surface.addSubview(control)
                 place(content, in: control.bounds, on: control, environment: environment)
@@ -883,6 +1039,7 @@ private enum _ViewRenderer {
                     control.isOpaque = false
                     control.backgroundColor = .clear
                     control.accessibilityIdentifier = "SwiftUI.SimultaneousTapGesture"
+                    control.isEnabled = environment.isEnabled
                     control.addTarget(for: .touchUpInside) { _, _ in action() }
                     surface.addSubview(control)
                     place(content, in: control.bounds, on: control, environment: environment)
@@ -933,13 +1090,110 @@ private enum _ViewRenderer {
                         environment: environment
                     )
                 }
-            case .navigationTitle, .navigationBarHidden,
+            case .disabled(let disabled):
+                var next = environment
+                next.isEnabled = environment.isEnabled && !disabled
+                place(content, in: rect, on: surface, environment: next)
+            case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .toolbar, .tag, .pageTabViewStyle:
                 // NavigationView consumes this metadata while building its
                 // node.  Outside a NavigationView it leaves content intact.
                 place(content, in: rect, on: surface, environment: environment)
             }
+        }
+    }
+
+    private static func placeSection(
+        header: _OpenViewNode?,
+        footer: _OpenViewNode?,
+        rows: [_OpenViewNode],
+        in rect: CGRect,
+        on surface: UIView,
+        environment: _RenderEnvironment
+    ) {
+        let section = UIView(frame: rect)
+        section.backgroundColor = .systemGroupedBackground
+        section.clipsToBounds = true
+        section.accessibilityIdentifier = "SwiftUI.Section"
+        surface.addSubview(section)
+
+        var y: CGFloat = header == nil ? 12 : 28
+        if let header {
+            var headerEnvironment = environment
+            headerEnvironment.font = .caption
+            headerEnvironment.foregroundColor = .init(uiColor: .secondaryLabel)
+            place(
+                header,
+                in: CGRect(
+                    x: 16,
+                    y: 0,
+                    width: max(0, section.bounds.width - 32),
+                    height: 28
+                ),
+                on: section,
+                environment: headerEnvironment
+            )
+        }
+
+        for (index, row) in rows.enumerated() {
+            let proposal = CGSize(
+                width: max(0, section.bounds.width - 32),
+                height: defaultFormRowHeight
+            )
+            let measured = measure(row, proposed: proposal, environment: environment)
+            let height = max(defaultFormRowHeight, measured.height)
+            guard y < section.bounds.height else { break }
+            let rowView = UIView(
+                frame: CGRect(
+                    x: 0,
+                    y: y,
+                    width: section.bounds.width,
+                    height: min(height, section.bounds.height - y)
+                )
+            )
+            rowView.backgroundColor = .secondarySystemBackground
+            rowView.accessibilityIdentifier = "SwiftUI.Section.row.\(index)"
+            section.addSubview(rowView)
+            place(
+                row,
+                in: rowView.bounds.inset(
+                    by: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+                ),
+                on: rowView,
+                environment: environment
+            )
+            if index + 1 < rows.count {
+                let separator = UIView(
+                    frame: CGRect(
+                        x: 16,
+                        y: max(0, rowView.bounds.height - 0.5),
+                        width: max(0, rowView.bounds.width - 16),
+                        height: 0.5
+                    )
+                )
+                separator.backgroundColor = .separator
+                separator.isUserInteractionEnabled = false
+                separator.accessibilityIdentifier = "SwiftUI.Section.separator.\(index)"
+                rowView.addSubview(separator)
+            }
+            y += height
+        }
+        if let footer, y < section.bounds.height {
+            var footerEnvironment = environment
+            footerEnvironment.font = .caption
+            footerEnvironment.foregroundColor = .init(uiColor: .secondaryLabel)
+            place(
+                footer,
+                in: CGRect(
+                    x: 16,
+                    y: y,
+                    width: max(0, section.bounds.width - 32),
+                    height: min(28, section.bounds.height - y)
+                ),
+                on: section,
+                environment: footerEnvironment
+            )
         }
     }
 
@@ -964,6 +1218,22 @@ private enum _ViewRenderer {
             let measured = measure(row, proposed: proposal, environment: environment)
             let rowHeight = max(defaultFormRowHeight, measured.height)
             guard y < formView.bounds.height else { break }
+
+            if case .section = row.kind {
+                place(
+                    row,
+                    in: CGRect(
+                        x: 0,
+                        y: y,
+                        width: formView.bounds.width,
+                        height: min(rowHeight, formView.bounds.height - y)
+                    ),
+                    on: formView,
+                    environment: environment
+                )
+                y += rowHeight
+                continue
+            }
 
             let rowView = UIView(
                 frame: CGRect(
@@ -1322,8 +1592,14 @@ private enum _ViewRenderer {
     }
 
     private static func _isSpacer(_ node: _OpenViewNode) -> Bool {
-        if case .spacer = node.kind { return true }
-        return false
+        switch node.kind {
+        case .spacer:
+            return true
+        case .modified(let content, _):
+            return _isSpacer(content)
+        default:
+            return false
+        }
     }
 
     private static func _containsText(_ node: _OpenViewNode) -> Bool {
@@ -1351,6 +1627,15 @@ private enum _ViewRenderer {
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children):
             return children.contains(where: _containsButton)
+        case .section(let header, let footer, let rows):
+            return header.map(_containsButton) == true
+                || footer.map(_containsButton) == true
+                || rows.contains(where: _containsButton)
+        case .toggle(let label, _, _):
+            return _containsButton(label)
+        case .picker(let label, let options, _, _):
+            return _containsButton(label)
+                || options.contains { _containsButton($0.content) }
         case .scroll(let content), .navigation(let content, _):
             return _containsButton(content)
         case .tabView(let pages, let selection, _, _):

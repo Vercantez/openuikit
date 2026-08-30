@@ -9,6 +9,7 @@
 #if canImport(Foundation)
 @_exported import Foundation
 #endif
+import Combine
 @_exported import OpenUIKit
 
 @MainActor
@@ -69,6 +70,27 @@ indirect enum _OpenViewNodeKind {
     case viewController(UIViewController)
     case form(rows: [_OpenViewNode])
     case list(rows: [_OpenViewNode])
+    case section(
+        header: _OpenViewNode?,
+        footer: _OpenViewNode?,
+        rows: [_OpenViewNode]
+    )
+    case toggle(
+        label: _OpenViewNode,
+        isOn: Bool,
+        setIsOn: @MainActor (Bool) -> Void
+    )
+    case textField(
+        title: String,
+        text: String,
+        setText: @MainActor (String) -> Void
+    )
+    case picker(
+        label: _OpenViewNode,
+        options: [_OpenPickerOption],
+        selection: AnyHashable,
+        setSelection: @MainActor (AnyHashable) -> Void
+    )
     case navigationLink(
         label: _OpenViewNode,
         makeDestinationController: @MainActor () -> UIViewController
@@ -86,6 +108,11 @@ enum _OpenRoundedRectangleStyle {
 struct _OpenTabPage {
     let content: _OpenViewNode
     let tag: AnyHashable?
+}
+
+struct _OpenPickerOption {
+    let content: _OpenViewNode
+    let tag: AnyHashable
 }
 
 enum _OpenViewModification {
@@ -117,6 +144,8 @@ enum _OpenViewModification {
     case toolbar(_OpenViewNode)
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
+    case disabled(Bool)
+    case effect
 }
 
 /// Construction-time modifier payload. Background and overlay views remain
@@ -152,6 +181,9 @@ fileprivate enum _OpenViewModifier {
     case toolbar(@MainActor () -> _OpenViewNode)
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
+    case disabled(Bool)
+    case onChange(@MainActor () -> Void)
+    case onReceive(@MainActor () -> Void)
 
     @MainActor
     func resolve() -> _OpenViewModification {
@@ -207,6 +239,13 @@ fileprivate enum _OpenViewModifier {
             )
         case .tag(let value): return .tag(value)
         case .pageTabViewStyle(let mode): return .pageTabViewStyle(mode)
+        case .disabled(let disabled): return .disabled(disabled)
+        case .onChange(let install):
+            _OpenGraphContext.withStructuralScope(.onChange) { install() }
+            return .effect
+        case .onReceive(let install):
+            _OpenGraphContext.withStructuralScope(.onReceive) { install() }
+            return .effect
         }
     }
 }
@@ -423,6 +462,10 @@ public struct _OpenText: _OpenView {
         self.content = content
     }
 
+    public init(verbatim content: String) {
+        self.content = content
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(.text(content))
     }
@@ -627,7 +670,16 @@ where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView {
                     "ForEach requires unique element IDs"
                 )
                 return _OpenGraphContext.withStructuralScope(.forEachElement(identifier)) {
-                    contentBuilder(element)._makeOpenUIKitNode()
+                    let node = contentBuilder(element)._makeOpenUIKitNode()
+                    if _openExtractTag(node).tag != nil {
+                        return node
+                    }
+                    return _OpenViewNode(
+                        .modified(
+                            node,
+                            .tag(identifier)
+                        )
+                    )
                 }
             }
             return _OpenViewNode(.group(nodes))
@@ -859,6 +911,38 @@ public extension _OpenView {
         navigationTitle(title)
     }
 
+    func navigationBarTitle(_ title: Text) -> some _OpenView {
+        navigationTitle(title.content)
+    }
+
+    func disabled(_ disabled: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .disabled(disabled))
+    }
+
+    func onChange<Value: Equatable>(
+        of value: Value,
+        perform action: @escaping @MainActor (Value) -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .onChange {
+                _OpenGraphContext.trackChange(value, action: action)
+            }
+        )
+    }
+
+    func onReceive<PublisherType: Combine.Publisher>(
+        _ publisher: PublisherType,
+        perform action: @escaping @MainActor (PublisherType.Output) -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .onReceive {
+                _OpenGraphContext.subscribe(publisher, action: action)
+            }
+        )
+    }
+
     func navigationBarHidden(_ hidden: Bool) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationBarHidden(hidden))
     }
@@ -964,6 +1048,14 @@ func _openExtractNavigationConfiguration(
     case .list(let rows):
         let (unwrapped, configuration) = _extractNavigationChildren(rows)
         return (_OpenViewNode(.list(rows: unwrapped)), configuration)
+    case .section(let header, let footer, let rows):
+        let (unwrapped, configuration) = _extractNavigationChildren(rows)
+        return (
+            _OpenViewNode(
+                .section(header: header, footer: footer, rows: unwrapped)
+            ),
+            configuration
+        )
     default:
         return (node, _OpenNavigationConfiguration())
     }

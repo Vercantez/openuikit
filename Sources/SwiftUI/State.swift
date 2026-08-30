@@ -294,6 +294,12 @@ enum _OpenGraphStructuralScope: Hashable {
     case tabViewContent
     case formContent
     case listContent
+    case sectionHeader
+    case sectionFooter
+    case sectionContent
+    case toggleLabel
+    case pickerLabel
+    case pickerContent
     case navigationLinkLabel
     case forEachContent
     case forEachElement(AnyHashable)
@@ -303,6 +309,8 @@ enum _OpenGraphStructuralScope: Hashable {
     case overlay
     case toolbar
     case onAppear
+    case onChange
+    case onReceive
 }
 
 private enum _OpenGraphPathComponent: Hashable {
@@ -426,6 +434,35 @@ private struct _OpenRepresentedControllerKey: Hashable {
     let controllerType: ObjectIdentifier
 }
 
+private enum _OpenEffectKind: Hashable {
+    case change
+    case subscription
+}
+
+private struct _OpenEffectKey: Hashable {
+    let identity: _OpenGraphIdentity
+    let kind: _OpenEffectKind
+    let valueType: ObjectIdentifier
+}
+
+private protocol _OpenAnyChangeStorage: AnyObject {}
+
+private final class _OpenChangeStorage<Value>: _OpenAnyChangeStorage {
+    var value: Value
+
+    init(_ value: Value) {
+        self.value = value
+    }
+}
+
+private final class _OpenSubscriptionEntry {
+    let cancellation: AnyCancellable
+
+    init(_ cancellation: AnyCancellable) {
+        self.cancellation = cancellation
+    }
+}
+
 /// Identity, rather than a wrapping integer, owns one deferred graph pass.
 /// A direct evaluation retires the current token; a later publication creates
 /// a distinct token which an already-queued callback can never consume.
@@ -439,9 +476,15 @@ final class _OpenGraphHost {
     private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
     private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
     private var representedControllers: [_OpenRepresentedControllerKey: UIViewController] = [:]
+    private var changeValues: [_OpenEffectKey: any _OpenAnyChangeStorage] = [:]
+    private var subscriptions: [_OpenEffectKey: _OpenSubscriptionEntry] = [:]
     private var activeStateKeys: Set<_OpenStateKey> = []
     private var activeObservationKeys: Set<ObjectIdentifier> = []
     private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
+    private var activeChangeKeys: Set<_OpenEffectKey> = []
+    private var activeSubscriptionKeys: Set<_OpenEffectKey> = []
+    private var postEvaluationActions: [@MainActor () -> Void] = []
+    private var isEvaluating = false
     private var pendingInvalidationToken: _OpenGraphInvalidationToken?
 
     var invalidate: (@MainActor () -> Void)?
@@ -451,8 +494,12 @@ final class _OpenGraphHost {
     var stateCount: Int { state.count }
     var observationCount: Int { observations.count }
     var representedControllerCount: Int { representedControllers.count }
+    var changeCount: Int { changeValues.count }
+    var subscriptionCount: Int { subscriptions.count }
 
     func evaluate<Content: _OpenView>(_ content: Content) -> _OpenViewNode {
+        precondition(!isEvaluating, "recursive SwiftUI graph evaluation")
+        isEvaluating = true
         // A direct root replacement supersedes queued work from the previous
         // value. Retire that work by identity: if this evaluation publishes
         // again, the new graph receives a distinct next-turn token which the
@@ -461,6 +508,9 @@ final class _OpenGraphHost {
         activeStateKeys.removeAll(keepingCapacity: true)
         activeObservationKeys.removeAll(keepingCapacity: true)
         activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
+        activeChangeKeys.removeAll(keepingCapacity: true)
+        activeSubscriptionKeys.removeAll(keepingCapacity: true)
+        postEvaluationActions.removeAll(keepingCapacity: true)
         path.removeAll(keepingCapacity: true)
         renderCount += 1
 
@@ -486,6 +536,22 @@ final class _OpenGraphHost {
         for key in staleControllerKeys {
             representedControllers.removeValue(forKey: key)
         }
+        let staleChangeKeys = changeValues.keys.filter {
+            !activeChangeKeys.contains($0)
+        }
+        for key in staleChangeKeys {
+            changeValues.removeValue(forKey: key)
+        }
+        let staleSubscriptionKeys = subscriptions.keys.filter {
+            !activeSubscriptionKeys.contains($0)
+        }
+        for key in staleSubscriptionKeys {
+            subscriptions.removeValue(forKey: key)?.cancellation.cancel()
+        }
+        isEvaluating = false
+        let actions = postEvaluationActions
+        postEvaluationActions.removeAll(keepingCapacity: true)
+        for action in actions { action() }
         return node
     }
 
@@ -871,6 +937,60 @@ final class _OpenGraphHost {
         observations[key] = _OpenObservationEntry(cancellation)
     }
 
+    fileprivate func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .change,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI onChange value type changed at a stable structural location"
+                )
+            }
+            guard storage.value != value else { return }
+            storage.value = value
+            enqueueEffect { action(value) }
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
+    fileprivate func subscribe<PublisherType: Combine.Publisher>(
+        _ publisher: PublisherType,
+        action: @escaping @MainActor (PublisherType.Output) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .subscription,
+            valueType: ObjectIdentifier(PublisherType.self)
+        )
+        activeSubscriptionKeys.insert(key)
+        subscriptions.removeValue(forKey: key)?.cancellation.cancel()
+        let cancellation = publisher.sink(
+            receiveCompletion: { _ in },
+            receiveValue: { [weak self] value in
+                MainActor.assumeIsolated {
+                    self?.enqueueEffect { action(value) }
+                }
+            }
+        )
+        subscriptions[key] = _OpenSubscriptionEntry(cancellation)
+    }
+
+    private func enqueueEffect(_ action: @escaping @MainActor () -> Void) {
+        if isEvaluating {
+            postEvaluationActions.append(action)
+        } else {
+            action()
+        }
+    }
+
     fileprivate func representedController<Controller: UIViewController>(
         make: () -> Controller,
         update: (Controller) -> Void
@@ -951,5 +1071,19 @@ enum _OpenGraphContext {
             return controller
         }
         return currentHost.representedController(make: make, update: update)
+    }
+
+    static func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value) -> Void
+    ) {
+        currentHost?.trackChange(value, action: action)
+    }
+
+    static func subscribe<PublisherType: Combine.Publisher>(
+        _ publisher: PublisherType,
+        action: @escaping @MainActor (PublisherType.Output) -> Void
+    ) {
+        currentHost?.subscribe(publisher, action: action)
     }
 }
