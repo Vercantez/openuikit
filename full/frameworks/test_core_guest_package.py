@@ -26,6 +26,16 @@ CORE_WRITABLE_OVERLAYS = (
     '"$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"',
     '"$RUN_ROOT/mrroot_full:/w/scratch/mrroot_full:rw"',
 )
+FOUNDATION_RUNTIME_LINK_CONTRACT = (
+    (
+        "-lswift_StringProcessing",
+        "/usr/lib/swift/libswift_StringProcessing.dylib",
+    ),
+    (
+        "-lswiftSynchronization",
+        "/usr/lib/swift/libswiftSynchronization.dylib",
+    ),
+)
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
@@ -121,6 +131,17 @@ def validate_core_writable_overlays(source: str) -> None:
     missing = [mount for mount in CORE_WRITABLE_OVERLAYS if source.count(mount) != 1]
     if missing:
         raise AssertionError(f"core writable-overlay contract drifted: {missing}")
+
+
+def validate_foundation_runtime_links(source: str) -> None:
+    missing = [
+        token
+        for contract in FOUNDATION_RUNTIME_LINK_CONTRACT
+        for token in contract
+        if source.count(token) != 1
+    ]
+    if missing:
+        raise AssertionError(f"Foundation runtime-link contract drifted: {missing}")
 
 
 class FoundationManifestTests(unittest.TestCase):
@@ -666,6 +687,23 @@ class ShellContractTests(unittest.TestCase):
         for cache in ("BUILD_FULL_CACHE", "BUILD_FE_CACHE"):
             self.assertIn(f'"${cache}"', builder)
             self.assertIn(f'touch "${cache}/.INVALID-DO-NOT-USE"', builder)
+
+    def test_foundation_runtime_links_are_exact_and_deletion_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_foundation_runtime_links(source)
+        self.assertNotIn("-lswift_RegexParser", source)
+        for contract in FOUNDATION_RUNTIME_LINK_CONTRACT:
+            for token in contract:
+                with self.subTest(deleted=token):
+                    with self.assertRaisesRegex(AssertionError, "runtime-link"):
+                        validate_foundation_runtime_links(source.replace(token, "", 1))
+        for spelling in (
+            "Foundation runtime link input is missing",
+            "Foundation staged runtime dylib is missing",
+            "Foundation staged runtime ID",
+            "libFoundation runtime load count",
+        ):
+            self.assertIn(spelling, source)
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

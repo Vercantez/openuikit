@@ -55,6 +55,15 @@ FoundationEssentials' dylib includes both the upstream cshim `uuid.o` and the
 project compatibility `uuid_compat.o`; the latter must not be dropped merely
 because a small dead-stripped probe happens not to reference it.
 
+The app-facing Foundation facade deliberately keeps linker auto-linking
+disabled. Its manual closure therefore names exactly
+`libswift_StringProcessing` (used by `DateFormatter`) and
+`libswiftSynchronization` (used by `UserDefaults`). The builder requires both
+SDK TBD inputs and both staged runtime dylibs, verifies their install names,
+and requires one load command for each in `libFoundation.dylib`. The facade
+object has no direct RegexParser symbol; that dylib remains StringProcessing's
+transitive runtime dependency rather than a guessed direct link.
+
 ## Output contract
 
 The package is self-contained under these directories:

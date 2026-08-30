@@ -470,6 +470,35 @@ COMMON_LINK=(-rpath @loader_path -L"$STAGE/lib"
     -L"$STAGE/sdk/usr/lib" -lSystem -lobjc
     "$RUNTIME/darwin/usr/lib/libquartz.dylib"
     "$RUNTIME/darwin/usr/lib/libSystem.B.dylib")
+FOUNDATION_RUNTIME_BASENAMES=(
+    libswift_StringProcessing
+    libswiftSynchronization
+)
+FOUNDATION_RUNTIME_LINK_FLAGS=(
+    -lswift_StringProcessing
+    -lswiftSynchronization
+)
+FOUNDATION_RUNTIME_INSTALL_NAMES=(
+    /usr/lib/swift/libswift_StringProcessing.dylib
+    /usr/lib/swift/libswiftSynchronization.dylib
+)
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 2 ] \
+    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 2 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 2 ] \
+    || die 'Foundation runtime closure cardinality drifted'
+for index in 0 1; do
+    library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
+    install_name=${FOUNDATION_RUNTIME_INSTALL_NAMES[$index]}
+    link_input=$STAGE/sdk/usr/lib/swift/$library.tbd
+    runtime_input=$RUNTIME/darwin$install_name
+    [ -f "$link_input" ] && [ ! -L "$link_input" ] \
+        || die "Foundation runtime link input is missing: $link_input"
+    [ -f "$runtime_input" ] && [ ! -L "$runtime_input" ] \
+        || die "Foundation staged runtime dylib is missing: $runtime_input"
+    actual_id=$(llvm-otool-18 -D "$runtime_input" | tail -n 1)
+    [ "$actual_id" = "$install_name" ] \
+        || die "Foundation staged runtime ID $actual_id, expected $install_name"
+done
 
 FE_OBJECTS=(
     "$FULL/foundation/essentials/FoundationEssentials.o"
@@ -584,7 +613,14 @@ echo '== link eight reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
-    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
+    load_count=$(llvm-otool-18 -L "$STAGE/lib/libFoundation.dylib" \
+        | awk -v expected="$install_name" '$1 == expected { count++ } END { print count + 0 }')
+    [ "$load_count" -eq 1 ] \
+        || die "libFoundation runtime load count $load_count for $install_name, expected 1"
+done
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
