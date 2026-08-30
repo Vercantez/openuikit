@@ -1,25 +1,25 @@
-# Focus SwiftUI source contract and first guest slice
+# Focus SwiftUI source contract and executable guest slices
 
 An OpenUIKit-backed module named exactly `SwiftUI` now compiles, mounts, and
-renders Focus's two-file `Widget` package slice as an arm64 Mach-O executable
-under Linux machorun. The proof compiles the pinned Focus files directly from a
-clean checkout, uses separately identified generated build support, rejects
-direct Apple SwiftUI/Foundation load commands in the emitted app/package
-images, and grades the resulting hierarchy, resources, layout, clipping,
-visible pixels, and deterministic PNG bytes.
+renders Focus code as arm64 Mach-O executables under Linux machorun. The first
+proof covers the two-file `Widget` package and deterministic pixels. A second
+proof executes the shipping two-page onboarding graph from ten unchanged
+Onboarding files plus those two Widget files, including observed-object
+invalidation on a host turn, three real touches, URL opening, dismissal,
+telemetry order, and the first bounded Foundation umbrella/UUID behavior.
 
-This is deliberately a bounded first execution slice. The emitted
+These are deliberately bounded execution slices. The emitted
 `SwiftUI.swiftmodule` and `libSwiftUI.dylib` form a reusable arm64 Mach-O
-package with sibling `libOpenUIKit.dylib`, `libCombine.dylib`, and
-`libOpenCombine.dylib` images plus their matching Swift and C compile modules;
-the Focus executable imports framework symbols instead of defining static
-copies. The complete state/observation sources now compile into the packaged
-SwiftUI image with one OpenCombine identity, although this widget slice does
-not exercise observation at runtime. WidgetKit, installation as a system
-framework, and the complete unchanged Focus app remain later milestones.
+package with sibling OpenUIKit, Foundation, Combine, Widget, and Onboarding
+images plus matching compile modules; the Focus executables import framework
+symbols instead of defining static copies. The complete state/observation
+sources compile into the packaged SwiftUI image with one OpenCombine identity,
+and onboarding exercises that observation path at runtime. WidgetKit,
+installation as a system framework, the remaining Onboarding target files, and
+the complete unchanged Focus app remain later milestones.
 Apple's SwiftUI and Combine binaries are neither available nor linked.
 
-“Apple Foundation is not linked” here means the executable and four packaged
+“Apple Foundation is not linked” here means the executables and packaged
 dylibs have no direct Apple Foundation/SwiftUI/SwiftUICore load. The
 recursively loaded non-Apple Swift substrate does name Foundation and
 CoreFoundation paths; the prepared guest root deliberately satisfies them with
@@ -76,6 +76,9 @@ without a direct provider import. That evidence includes `UIImage`,
 - `FOCUS_WIDGET_GUEST.md`, `build_focus_widget_guest.sh`, and the separately
   labelled generated accessor and harness reproduce the exact unchanged Focus
   widget as a Linux Mach-O guest.
+- `FOCUS_ONBOARDING_GUEST.md`, `build_focus_onboarding_guest.sh`, the bounded
+  Foundation umbrella/UUID substrate, and separately labelled build support
+  reproduce the exact unchanged shipping onboarding route as a Linux guest.
 - `donor-lock.json` pins six permissively licensed reference implementations.
 - `test_focus_swiftui_surface.py` checks regeneration, denominators, critical
   API families, generated-source limits, tokenizer behavior, first-slice
@@ -84,7 +87,8 @@ without a direct provider import. That evidence includes `UIImage`,
   including non-prefix Swift ABI ownership. The isolated-only
   `test_focus_widget_guest_adversarial.sh` mutates every reviewed resume/cache
   boundary, including a symlinked runtime ancestor, and requires each dirty
-  resume to fail before guest success.
+  resume to fail before guest success. `test_focus_onboarding_guest.py` guards
+  the exact 12-source, nine-dylib, interaction, Foundation, and UUID boundary.
 
 ## Reproduce
 
@@ -98,13 +102,11 @@ python3 -m unittest discover \
   -s full/swiftui -p 'test_*.py' -v
 ```
 
-The local contract suite currently contains 35 tests (17 inventory tests plus
-18 packaging/executable-proof boundary tests). Expected result at the reviewed
-pin:
+The local contract suite includes inventory and both executable-proof boundary
+suites. Expected result at the reviewed pin ends with:
 
 ```text
 SWIFTUI CONTRACT OK sha256=5a7486b2c0d626c98ad3a96a58bb242d21ef8594c45efc36f3f5f4f2abe48f71
-Ran 35 tests
 OK
 ```
 

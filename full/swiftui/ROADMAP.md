@@ -174,6 +174,22 @@ The package emission gate also covers the four compile-only preview/support
 requirements (`PreviewProvider` and `UIViewControllerRepresentable`) without
 pretending they are runtime routes.
 
+Current bounded progress (2026-08-30): the exact ten-file shipping SwiftUI
+route plus the two exact Widget support files now executes under Linux
+machorun. `PortraitHostingController` mounts the real `OnboardingView`; three
+OpenUIKit touches drive Get Started, Set as Default Browser, and Skip. The
+proof verifies host-turn observation/coalescing, both page states, page-control
+selection, lifecycle telemetry order, the Foundation `URL` bridge, dismissal,
+and the raw UUID function surface used by FoundationEssentials through nine
+sibling Mach-O dylibs.
+See `FOCUS_ONBOARDING_GUEST.md`.
+
+S2 remains open: eleven of the Onboarding target's 21 files are outside this
+runtime image, and the complete object-emission route still has to clear the
+stock Linux Swift IRGen failure for two Objective-C-interoperable sources.
+Package-wide preview/representable emission and bidirectional pan/page
+selection also remain explicit gates.
+
 ### S3 — real app hosting call sites
 
 With the exact package products available, compile the three unchanged app

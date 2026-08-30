@@ -114,6 +114,8 @@ MR_STUB(statfs)
 MR_STUB(sysctlbyname)
 MR_STUB(uname)
 MR_STUB(utimes)
+#ifndef OPEN_FOUNDATION_UUID_COMPAT
 MR_STUB(uuid_generate_random)
 MR_STUB(uuid_parse)
 MR_STUB(uuid_unparse_upper)
+#endif

@@ -463,7 +463,10 @@ W="$W" SF="$SF" SYS="$SYS" OSMOD="$FE_OS" COLLECTIONS="$FE_COLLECTIONS" \
     -emit-module -emit-module-path "$FE_OUT/FoundationEssentials.swiftmodule" \
     -c -o "$FE_OUT/FoundationEssentials.o"
 clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -nostdinc \
+    -DOPEN_FOUNDATION_UUID_COMPAT=1 \
     -c "$W/full/foundation/fm_unimplemented.c" -o "$FE_OUT/fm_unimplemented.o"
+clang-18 -target "$TARGET" -isysroot "$SYS" -O1 \
+    -c "$W/full/foundation/uuid_compat.c" -o "$FE_OUT/uuid_compat.o"
 
 FEMODULES=(
     -I "$FE_OUT" -I "$FE_COLLECTIONS" -I "$FE_OS"
@@ -480,6 +483,7 @@ FE_OBJECTS=(
     "$FE_CSHIMS/string_shims.o"
     "$FE_CSHIMS/uuid.o"
     "$FE_OUT/fm_unimplemented.o"
+    "$FE_OUT/uuid_compat.o"
 )
 
 # ---- module-visibility contract -------------------------------------------
