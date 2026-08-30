@@ -161,7 +161,7 @@
 		};
 		400000000000000000000002 = {
 			isa = XCBuildConfiguration;
-			buildSettings = {};
+			buildSettings = { PRODUCT_NAME = Mini; };
 			name = FocusDebug;
 		};
 		500000000000000000000001 = {

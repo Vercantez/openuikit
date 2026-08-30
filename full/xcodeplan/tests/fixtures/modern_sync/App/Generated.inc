@@ -1,0 +1,1 @@
+#define MODERN_FIXTURE_VALUE 1

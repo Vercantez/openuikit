@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme version="1.7">
+  <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
+    <BuildActionEntries>
+      <BuildActionEntry buildForTesting="YES" buildForRunning="YES"
+                        buildForProfiling="YES" buildForArchiving="YES"
+                        buildForAnalyzing="YES">
+        <BuildableReference BuildableIdentifier="primary"
+                            BlueprintIdentifier="AAAAAAAAAAAAAAAAAAAAAAAA"
+                            BuildableName="ModernApp.app"
+                            BlueprintName="ModernApp"
+                            ReferencedContainer="container:ModernSync.xcodeproj" />
+      </BuildActionEntry>
+      <BuildActionEntry buildForTesting="YES" buildForRunning="NO"
+                        buildForProfiling="NO" buildForArchiving="NO"
+                        buildForAnalyzing="YES">
+        <BuildableReference BuildableIdentifier="primary"
+                            BlueprintIdentifier="BBBBBBBBBBBBBBBBBBBBBBBB"
+                            BuildableName="Helper.app"
+                            BlueprintName="Helper"
+                            ReferencedContainer="container:ModernSync.xcodeproj" />
+      </BuildActionEntry>
+    </BuildActionEntries>
+  </BuildAction>
+  <LaunchAction buildConfiguration="Debug">
+    <BuildableProductRunnable runnableDebuggingMode="0">
+      <BuildableReference BuildableIdentifier="primary"
+                          BlueprintIdentifier="AAAAAAAAAAAAAAAAAAAAAAAA"
+                          BuildableName="ModernApp.app"
+                          BlueprintName="ModernApp"
+                          ReferencedContainer="container:ModernSync.xcodeproj" />
+    </BuildableProductRunnable>
+  </LaunchAction>
+</Scheme>

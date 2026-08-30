@@ -1,5 +1,133 @@
 # `xcodeplan`: pinned Focus Xcode graph frontend
 
+## Reusable project inventory
+
+[`project_inventory.py`](project_inventory.py) is the reusable discovery layer
+for projects that are not yet individually pinned. It accepts a shared scheme
+or an explicit native target/configuration and emits canonical JSON without
+invoking Xcode:
+
+```sh
+python3 full/xcodeplan/project_inventory.py \
+  path/to/App.xcodeproj --scheme App --output /tmp/app-inventory.json
+```
+
+The inventory preserves classic `PBXBuildFile` order, resolves groups and
+localized variant groups, records target/project build settings, evaluates only
+the documented product-name subset, and enumerates package products, target
+dependencies, phases, sources, headers, and resources. It also supports the
+simple `PBXFileSystemSynchronizedRootGroup` shape emitted by current Xcode
+templates: filesystem membership is bytewise sorted, target-specific
+`membershipExceptions` are applied, and opaque inputs remain single graph
+items. Core ML (`.mlmodel`, `.mlkitmodel`, `.mlpackage`) and Core Data
+(`.xcdatamodel`, `.xcdatamodeld`, `.xcmappingmodel`) inputs enter the
+source/compiler bucket; resource wrappers such as `.xcassets`,
+`.imagecatalog`, `.xcstickers`, and `.icon` enter the resource bucket.
+Recognized `explicitFileTypes` are mapped by exact semantic allowlists rather
+than by broad `sourcecode.*`/`audio.*`/`image.*`/`text.*`/`video.*` or
+`file.*`/`folder.*`/`wrapper.*` prefixes. Empty, unknown, or file/directory
+mismatched explicit types are rejected. Unknown inferred extensions and dotted
+directories remain one `unclassified` input instead of being flattened into
+apparently ordinary files.
+The same Focus and synchronized-project inputs produce byte-identical output on
+macOS and arm64 Linux.
+
+This slice accepts runnable application targets and verifies that their product
+reference is an `.app`/`wrapper.application` rooted in `BUILT_PRODUCTS_DIR`.
+One product-identity pipeline runs for both `--scheme` and `--target`: it
+validates project-level inheritance, target-level `PRODUCT_NAME`, supported
+`$(inherited)`/`$(TARGET_NAME)`/project-name expansion, the PBX target's
+presentation names, and the product reference. A scheme's runnable
+`BuildableName` must equal the effective configured product exactly; a safe but
+contradictory `PRODUCT_NAME` cannot hide behind the product-reference basename.
+At least one selected project or target configuration must provide
+`PRODUCT_NAME`. Native Xcode derives an empty stem when it is absent, so PBX
+target names, `productName`, product-reference paths, and coordinated scheme
+aliases are never used as invented defaults.
+The reference itself may legitimately differ because one PBX product reference
+can serve several named configurations (Focus's Focus/Klar products are the
+live example). The JSON therefore records `effective_product_name`,
+`buildable_name`, and `product_name_origin` explicitly instead of asking a
+downstream consumer to infer the configured artifact from presentation data.
+The proof also audits Xcode's adjacent native settings in both the selected
+project and target configurations. Explicit `WRAPPER_EXTENSION`,
+`WRAPPER_PREFIX`, `WRAPPER_SUFFIX`, `WRAPPER_NAME`, `FULL_PRODUCT_NAME`,
+executable-name pieces (including `EXECUTABLE_VARIANT_SUFFIX`),
+`MACH_O_TYPE`, `SKIP_INSTALL`, product type, and derived target/project names
+are accepted only as literal values exactly consistent with that one identity.
+Conditional variants are rejected, including Xcode's whitespace-normalized
+spellings such as `PRODUCT_NAME [sdk=…]`; noncanonical direct aliases such as a
+quoted `"PRODUCT_NAME "` are rejected too because native Xcode right-trims that
+key. Direct wrapper/executable/signing/output path overrides, destination-derived
+`SHALLOW_BUNDLE` inputs (including platform-suffixed variants), and ambiguous
+`PACKAGE_TYPE` settings are not modeled and therefore fail closed. A present
+bundle identifier must use a nonempty variable-free ASCII identifier grammar. This
+matters because Xcode permits `FULL_PRODUCT_NAME` to disagree with
+`WRAPPER_NAME`, splitting its native build graph even when both spellings look
+individually safe.
+
+Build artifact components use a deliberately narrow grammar: they start with a
+Unicode letter or number, are NFC-normalized, and then contain only Unicode
+letters/marks/numbers, spaces, dots, underscores, hyphens, or plus signs. This
+keeps real names such as `Firefox Focus` and `Café Notes` while excluding path,
+option, glob, quote, and shell-operator spellings. Every present project and
+target `PRODUCT_NAME` is validated even when overridden, so unsafe values are
+never silently emitted for later reuse. Selected project or target base
+`.xcconfig` files are path-pinned first and then rejected for product inventory:
+any native identity setting could be supplied there through includes or
+conditions. Parsing full `.xcconfig` inheritance remains a future slice.
+
+Safety checks pin a real, non-symlink source-root directory and reject `.`/`..`
+scheme identities, explicit scheme paths without the `.xcscheme` extension,
+DTD/entity declarations after XML encoding detection, repository escapes
+(including lexical scheme traversal), plus project/scheme/input symlinks beneath that root
+(including descendants hidden inside directory resources), duplicate
+`PBXBuildFile` identities target-wide, duplicate semantic input paths within
+each build role, mismatched scheme/build-action/product identities, repeated
+synchronized groups, and unsupported filesystem nodes. Linking and embedding
+one framework remain separate roles and require distinct `PBXBuildFile`
+objects. Input identity is compared by normalized Unicode casefold spelling and,
+for materialized source-root objects, device/inode identity. Case-only,
+normalization-only, and hard-link aliases therefore cannot compile or package
+one filesystem object twice, regardless of the host filesystem's behavior.
+Synchronized paths whose membership cannot be inferred from an
+extension are reported explicitly under `unclassified` and make
+`unsupported_features` non-empty rather than disappearing from the graph.
+Shell phases record an empty `files` array; nonempty shell-phase
+`PBXBuildFile` inputs are resolved and rejected rather than escaping the
+target-global identity checks.
+Explicit empty scheme, target, and configuration selectors are errors; they
+never downgrade to an unselected/default mode. Likewise, a present-empty PBX
+presentation field is invalid rather than being treated as absent.
+Every path rooted at `BUILT_PRODUCTS_DIR` or `SDKROOT` must also be a canonical
+relative POSIX path. Absolute paths, parent/current-directory components,
+repeated separators, backslash/drive spellings, unresolved variables, and
+control or Unicode format characters are rejected. This check covers the
+selected application product as well as framework and copy-phase inputs, so a
+successful inventory never asks a downstream join to recover containment from
+an unsafe external-tree spelling.
+Classic build-phase references whose final path is not materialized are kept in
+the graph, listed under `missing_inputs`, and also make
+`unsupported_features` non-empty. The frontend does not guess whether a shell
+phase will generate them.
+
+This initial source-root model accepts absent/empty values for both project
+directory fields and the legacy `.` spelling for `PBXProject.projectDirPath`.
+Nonempty `projectRoot` and other `projectDirPath` values are rejected rather
+than scanning the project-parent directory while Xcode silently rebases
+`SRCROOT`; safely honoring nontrivial rebasing is a future inventory slice.
+
+This first reusable slice deliberately rejects synchronized
+`explicitFolders`, build-phase membership exception sets, custom build rules,
+and target exception metadata such as per-file compiler flags, platform
+filters, and header visibility. General `.xcconfig` inheritance, conditional
+build-setting expansion, shell execution, resource compilation, target
+transitivity, compilation, linking, signing, and launching remain downstream
+stages. Thus a successful inventory means “the selected graph was understood
+within this boundary,” not “the app is buildable.” Non-application native
+targets require a later product-identity mapping before this generic frontend
+will accept them.
+
 `xcodeplan.py` turns one specifically attested Xcode scheme/target into stable
 JSON that Linux-side build work can consume. It is a parser, not a filename
 census: the tool parses the shared scheme XML and the OpenStep
@@ -82,6 +210,10 @@ generated-source, dependency, package-product, and copy-product resolution:
 ```sh
 python3 -m unittest discover -s full/xcodeplan/tests -v
 ```
+
+The same command also exercises a two-target Xcode 16-style synchronized
+fixture, including target-specific exclusions, explicit file types, classic
+compatibility, scheme identity, canonical output, and symlink/escape controls.
 
 The live pinned checkout/canonical integration test is opt-in so the unit suite
 does not require a 3rd-party checkout:
