@@ -106,6 +106,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "sdk": "sdk",
             },
             "preview": {
+                "app_compile_diagnostic_arguments": [
+                    "-Xfrontend",
+                    "-dump-macro-expansions",
+                ],
                 "developer_tools_support_object": "objects/DeveloperToolsSupport.o",
                 "plugin_module": "OpenUIKitPreviewMacros",
                 "plugin_sha256": "a" * 64,
@@ -184,6 +188,22 @@ class CoreGuestPackageTests(unittest.TestCase):
         changed["preview"]["developer_tools_support_object"] = "lib/libUIKit.dylib"
         self.write_manifest(changed)
         with self.assertRaisesRegex(core_guest_package.CorePackageError, "outside paths.objects"):
+            core_guest_package.validate(self.root)
+
+        changed = copy.deepcopy(self.manifest)
+        changed["preview"]["app_compile_diagnostic_arguments"] = ["-dump-ast"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(core_guest_package.CorePackageError, "macro-expansion"):
+            core_guest_package.validate(self.root)
+
+        changed = copy.deepcopy(self.manifest)
+        changed["executable_link_arguments"].append(
+            "objects/DeveloperToolsSupport.o"
+        )
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "exactly once"
+        ):
             core_guest_package.validate(self.root)
 
 

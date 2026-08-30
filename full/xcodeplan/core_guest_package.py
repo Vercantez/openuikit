@@ -45,6 +45,7 @@ _CONTROLLED_COMPILE_OPTIONS = {
 }
 _CONTROLLED_LINK_OPTIONS = {"-o"}
 _ALLOWED_ABSOLUTE_ARGUMENTS = {"/usr/lib", "/usr/lib/swift"}
+_PREVIEW_DIAGNOSTIC_ARGUMENTS = ["-Xfrontend", "-dump-macro-expansions"]
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
@@ -247,12 +248,35 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             raise CorePackageError(
                 "DeveloperToolsSupport object is outside paths.objects"
             ) from exc
+        diagnostic_arguments = _arguments(
+            preview.get("app_compile_diagnostic_arguments"),
+            "preview.app_compile_diagnostic_arguments",
+            set(),
+        )
+        if diagnostic_arguments != _PREVIEW_DIAGNOSTIC_ARGUMENTS:
+            raise CorePackageError(
+                "preview.app_compile_diagnostic_arguments must request the exact "
+                "bounded macro-expansion dump"
+            )
         preview = {
+            "app_compile_diagnostic_arguments": diagnostic_arguments,
             "developer_tools_support_object": object_relative,
             "plugin_module": "OpenUIKitPreviewMacros",
             "plugin_sha256": plugin_sha,
         }
     manifest["preview"] = preview
+    for token in manifest["executable_link_arguments"]:
+        if token.startswith("@") and not token.startswith(
+            ("@executable_path", "@loader_path", "@rpath")
+        ):
+            raise CorePackageError(
+                f"executable_link_arguments contains an opaque response input: {token}"
+            )
+        if preview is not None and preview["developer_tools_support_object"] in token:
+            raise CorePackageError(
+                "executable_link_arguments must not link DeveloperToolsSupport; "
+                "the application driver owns that object exactly once"
+            )
 
     required_artifacts = {
         f"{paths['modules']}/{module}.swiftmodule"
@@ -311,6 +335,7 @@ def _parser() -> argparse.ArgumentParser:
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--emit-swift-arguments", action="store_true")
     group.add_argument("--emit-link-arguments", action="store_true")
+    group.add_argument("--emit-app-diagnostic-arguments", action="store_true")
     group.add_argument("--emit-summary", action="store_true")
     return parser
 
@@ -326,6 +351,12 @@ def main(argv: list[str] | None = None) -> int:
         elif arguments.emit_link_arguments:
             sys.stdout.buffer.write(
                 b"".join(token.encode("utf-8") + b"\0" for token in manifest["executable_link_arguments"])
+            )
+        elif arguments.emit_app_diagnostic_arguments:
+            preview = manifest["preview"]
+            values = preview["app_compile_diagnostic_arguments"] if preview else []
+            sys.stdout.buffer.write(
+                b"".join(token.encode("utf-8") + b"\0" for token in values)
             )
         else:
             print(

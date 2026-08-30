@@ -243,7 +243,7 @@ PY
         die "mounted Preview plugin without package Preview contract"
     fi
 
-    local -a swift_arguments link_arguments relative_sources app_sources
+    local -a swift_arguments link_arguments diagnostic_arguments relative_sources app_sources
     mapfile -d '' -t swift_arguments < <(
         PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
             "$platform" --emit-swift-arguments
@@ -251,6 +251,10 @@ PY
     mapfile -d '' -t link_arguments < <(
         PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
             "$platform" --emit-link-arguments
+    )
+    mapfile -d '' -t diagnostic_arguments < <(
+        PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
+            "$platform" --emit-app-diagnostic-arguments
     )
     mapfile -d '' -t relative_sources <"$output/app-sources.nul"
     [ "${#relative_sources[@]}" -gt 0 ] || die "application source list is empty"
@@ -272,17 +276,30 @@ PY
         plugin_arguments=(-load-plugin-executable "$plugin#$plugin_module")
     fi
 
+    local compile_stderr=$output/app-macro-expansions.stderr compile_status
+    [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
+        || die "application compiler diagnostic output already exists"
     echo "== compile every untouched application source"
+    set +e
     (
         cd "$platform"
         swiftc "${swift_arguments[@]}" -module-cache-path "$module_cache" \
             -default-isolation MainActor -module-name "$module" \
-            "${plugin_arguments[@]}" -emit-object -o "$object" \
+            "${plugin_arguments[@]}" "${diagnostic_arguments[@]}" \
+            -emit-object -o "$object" \
             "${app_sources[@]}" \
             "$output/GeneratedSceneBootstrap.swift" \
             "$SCRIPT_DIR/PortableUIKitApplicationHost.swift" \
             "$SUPPORT_ROOT/full/driver/RunLoop.swift"
-    )
+    ) 2>"$compile_stderr"
+    compile_status=$?
+    set -e
+    cat "$compile_stderr" >&2
+    [ "$compile_status" -eq 0 ] \
+        || die "application compiler exited $compile_status"
+    if grep -Eq ':[0-9]+:[0-9]+: error:' "$compile_stderr"; then
+        die "application compiler emitted an error diagnostic despite success"
+    fi
 
     local app=$output/$product.app frameworks=$app/Contents/Frameworks
     local executable=$app/Contents/MacOS/$product libraries
@@ -315,6 +332,16 @@ PY
     if [ "$preview_required" = yes ]; then
         extra_objects+=("$platform/$dts_object")
     fi
+    {
+        printf 'app_object\t%s\t%s\n' "$(sha256sum "$object" | awk '{print $1}')" "$object"
+        if [ "$preview_required" = yes ]; then
+            [ "${#extra_objects[@]}" -eq 1 ] \
+                || die "DeveloperToolsSupport object link count is not one"
+            printf 'developer_tools_support_object\t%s\t%s\n' \
+                "$(sha256sum "${extra_objects[0]}" | awk '{print $1}')" \
+                "${extra_objects[0]}"
+        fi
+    } >"$output/application-link-objects.tsv"
     echo "== link relocatable application executable"
     (
         cd "$platform"
@@ -364,6 +391,9 @@ PY
         cd "$output"
         find "$product.app" -type f -print0 | sort -z | xargs -0 sha256sum \
             >application-files.sha256
+        sha256sum application.o app-macro-expansions.stderr \
+            application-link-objects.tsv runtime-closure.manifest runtime.log \
+            >application-build-artifacts.sha256
     )
     echo 'PORTABLE_APPLICATION_GUEST_OK'
 }

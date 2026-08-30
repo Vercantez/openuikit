@@ -272,6 +272,11 @@ closure, and cold-launches the packaged executable under machorun. Success
 requires one active UIWindow and three paced production loop turns. Source,
 support, plugin, and package brackets are rechecked after execution; partial
 outputs remain visibly unusable and can never be passed as a fresh output.
+Preview-enabled packages also publish the exact bounded macro diagnostic
+arguments. The driver captures `-dump-macro-expansions` separately as
+`app-macro-expansions.stderr`, rejects a successful compiler process that
+nevertheless printed a source error, and attests that the target-side
+DeveloperToolsSupport object appears exactly once in the executable link.
 
 ## Tests
 
