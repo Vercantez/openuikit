@@ -67,3 +67,13 @@ open class NSUserActivity {
     public init(activityType: String) {}
 }
 public typealias NSUserActivityPersistentIdentifier = String
+
+public struct NSRange: Equatable, Hashable, Sendable {
+    public var location: Int
+    public var length: Int
+    public init(location: Int, length: Int) {
+        self.location = location
+        self.length = length
+    }
+}
+public typealias NSRangePointer = UnsafeMutablePointer<NSRange>

@@ -30,15 +30,14 @@ The dependency-light production inputs are explicit:
      failure, and saturating overflow while consuming the complete digit run.
 5. `Error+LocalizedDescription.swift`
    - `LocalizedError.errorDescription` and `failureReason` customization;
-   - a stable descriptive Swift fallback while the NSError domain/code bridge
-     remains unavailable.
+   - the canonical NSError domain/code/userInfo bridge documented in
+     `FOUNDATION_GUEST_STRUCTURED_DATA.md`.
 
 `Bundle+Localization.swift` is the companion filesystem service documented in
 `FOUNDATION_GUEST_SERVICES.md`; OpenUIKit owns its identity. APIs outside these
 lists remain absent rather than returning plausible dummy values. In
 particular, this does not claim the complete named CharacterSet catalog, all
-Scanner operations, locale-sensitive collation, zero-width regex matching, a
-complete printf engine, or NSError-compatible localization.
+Scanner operations, locale-sensitive collation, or a complete printf engine.
 
 `String+CharacterSet.swift` derives its boundary-walk algorithm from the pinned
 swift-foundation source and retains the upstream Apache 2.0 with Runtime
@@ -74,9 +73,9 @@ Both outputs are byte-identical to
 `da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980`,
 and `tests/foundation-guest-compatibility-apple-2026-08-30.txt`, SHA-256
 `07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac`.
-The separate runtime probe exercises the intentionally non-Apple NSError
-fallback with a plain Swift error and a real JSON decoding failure; both must
-remain descriptive and nonempty.
+The separate runtime probe exercises the NSError bridge with a plain Swift
+error and a real JSON decoding failure; both must remain descriptive and
+nonempty.
 
 Run the native gate with clean pinned inputs:
 

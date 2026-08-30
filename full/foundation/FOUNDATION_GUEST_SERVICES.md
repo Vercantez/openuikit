@@ -9,7 +9,7 @@ file rather than maintaining a second list.
 
 The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
-`TimeZone`, and `IndexPath` identities. The eleven-source facade adds:
+`TimeZone`, and `IndexPath` identities. The sixteen-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   its mutable bridge, scalar-boundary trimming/search, percent coding, legacy
@@ -38,6 +38,10 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
   round-trip unchanged, so Codable application models persist across guest
   processes. The host gate performs the write and cold read in separate
   processes.
+- A shared `NSNumber`/`NSError`/`NSNull` value and error bridge,
+  `JSONSerialization`, and UTF-16 `NSRegularExpression` surface. Its exact
+  behavior and bounded exclusions are documented in
+  `FOUNDATION_GUEST_STRUCTURED_DATA.md`.
 
 ## Reproduce the host gates
 
@@ -52,9 +56,7 @@ bash full/foundation/tests/test_foundation_guest_text_host.sh
 
 This is not yet the complete Apple Foundation framework. The bundle parser
 accepts well-formed UTF-8 XML plists, not binary plists, and `.strings` files
-are UTF-8 only. The bounded regex overlay deliberately returns nil for
-zero-width matches so replacement always makes progress; capture-template
-replacement and locale-sensitive comparison are not claimed. The formatting
+are UTF-8 only. The formatting
 initializer is exact for Focus's measured string/object placeholders,
 positional arguments, percent escapes, and basic integer conversions; it is
 not a complete locale-aware printf implementation. `DateFormatter`

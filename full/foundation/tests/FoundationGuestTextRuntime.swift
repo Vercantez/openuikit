@@ -30,7 +30,11 @@ struct FoundationGuestTextRuntime {
         precondition(failure.currentIndex == failure.string.startIndex)
 
         let plain: any Error = PlainRuntimeError.sample(7)
-        precondition(plain.localizedDescription == "sample(7)")
+        precondition(
+            plain.localizedDescription.hasPrefix(
+                "The operation couldn’t be completed. ("
+            )
+        )
 
         precondition(
             "Focus Linux".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)

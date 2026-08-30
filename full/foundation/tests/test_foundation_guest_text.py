@@ -16,6 +16,7 @@ TESTS = FOUNDATION / "tests"
 HOST_GATE = TESTS / "test_foundation_guest_text_host.sh"
 GOLDEN = TESTS / "foundation-guest-text-apple-2026-08-30.txt"
 COMPAT_GOLDEN = TESTS / "foundation-guest-compatibility-apple-2026-08-30.txt"
+STRUCTURED_GOLDEN = TESTS / "foundation-guest-structured-data-apple-2026-08-30.txt"
 PRODUCTION = (
     FOUNDATION / "CharacterSet.swift",
     FOUNDATION / "String+CharacterSet.swift",
@@ -24,7 +25,14 @@ PRODUCTION = (
     FOUNDATION / "Scanner.swift",
     FOUNDATION / "Error+LocalizedDescription.swift",
 )
-ATTESTED = PRODUCTION + (
+STRUCTURED_PRODUCTION = (
+    FOUNDATION / "NSError.swift",
+    FOUNDATION / "NSNumber.swift",
+    FOUNDATION / "JSONSerialization.swift",
+    FOUNDATION / "NSRegularExpression.swift",
+    ROOT / "full/appshim/FoundationOpenUIKitValueAliases.swift",
+)
+ATTESTED = PRODUCTION + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestTextTestRoot.swift",
     TESTS / "FoundationGuestTextUIKit.swift",
     TESTS / "FoundationGuestTextUIKitClient.swift",
@@ -36,8 +44,11 @@ ATTESTED = PRODUCTION + (
     TESTS / "FoundationGuestServicesOpenUIKitStub.swift",
     TESTS / "FoundationGuestServicesTestRoot.swift",
     TESTS / "FoundationGuestServiceIdentityProbe.swift",
+    TESTS / "FoundationGuestStructuredDataOracle.swift",
+    TESTS / "FoundationGuestStructuredDataNegative.swift",
     GOLDEN,
     COMPAT_GOLDEN,
+    STRUCTURED_GOLDEN,
 )
 
 
@@ -71,6 +82,11 @@ class FoundationGuestTextTests(unittest.TestCase):
             "07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac",
         )
         self.assertEqual(len(COMPAT_GOLDEN.read_text().splitlines()), 35)
+        self.assertEqual(
+            hashlib.sha256(STRUCTURED_GOLDEN.read_bytes()).hexdigest(),
+            "5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e",
+        )
+        self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 77)
 
     def test_character_set_inventory_is_exact_and_not_app_specific(self) -> None:
         source = PRODUCTION[0].read_text()
@@ -148,11 +164,110 @@ class FoundationGuestTextTests(unittest.TestCase):
 
     def test_error_bridge_is_explicit_about_the_nserror_boundary(self) -> None:
         source = PRODUCTION[5].read_text()
-        self.assertIn("self as? any LocalizedError", source)
-        self.assertIn("localized.errorDescription", source)
-        self.assertIn("localized.failureReason", source)
-        self.assertIn("String(describing: self)", source)
-        self.assertNotIn("as NSError", source)
+        self.assertIn("_convertErrorToNSError(self).localizedDescription", source)
+        self.assertIn("self._getEmbeddedNSError() as? NSError", source)
+
+    def test_nserror_bridge_preserves_identity_and_error_metadata(self) -> None:
+        source = STRUCTURED_PRODUCTION[0].read_text()
+        for token in (
+            "public protocol CustomNSError: Error",
+            "public protocol RecoverableError: Error",
+            "public let domain: String",
+            "public let code: Int",
+            "public let userInfo: [String: Any]",
+            "public func _convertErrorToNSError(_ error: any Error) -> NSError",
+            "public func _convertNSErrorToError(_ error: NSError?) -> any Error",
+            "error._getEmbeddedNSError() as? NSError",
+            "error as? any LocalizedError",
+            "error as? any RecoverableError",
+            "NSLocalizedRecoveryOptionsErrorKey",
+            "NSUnderlyingErrorKey",
+        ):
+            self.assertIn(token, source)
+        self.assertNotRegex(source, r"return\s+error\s+as\s+NSError")
+
+    def test_nsnumber_is_a_real_reference_bridge_for_scalar_values(self) -> None:
+        source = STRUCTURED_PRODUCTION[1].read_text()
+        for token in (
+            "open class NSNumber: NSObject",
+            "public convenience init(value: Bool)",
+            "public convenience init<T: BinaryInteger>(value: T)",
+            "public convenience init<T: BinaryFloatingPoint>(value: T)",
+            "public convenience init(value: Decimal)",
+            "open var boolValue: Bool",
+            "open var intValue: Int",
+            "open var doubleValue: Double",
+            "open var decimalValue: Decimal",
+            "open func compare(_ otherNumber: NSNumber) -> ComparisonResult",
+            "extension Bool: _ObjectiveCBridgeable",
+            "extension Int: _ObjectiveCBridgeable",
+            "extension Double: _ObjectiveCBridgeable",
+        ):
+            self.assertIn(token, source)
+        bridge_types = re.findall(r"^extension (\w+): _ObjectiveCBridgeable", source, re.MULTILINE)
+        self.assertEqual(
+            bridge_types,
+            [
+                "Int8", "UInt8", "Int16", "UInt16", "Int32", "UInt32",
+                "Int64", "UInt64", "Int", "UInt", "Float", "Double", "Bool",
+            ],
+        )
+
+    def test_json_serialization_has_mutability_options_and_fails_with_nserror(self) -> None:
+        source = STRUCTURED_PRODUCTION[2].read_text()
+        for token in (
+            "public static let mutableContainers",
+            "public static let mutableLeaves",
+            "public static let fragmentsAllowed",
+            "public static let prettyPrinted",
+            "public static let sortedKeys",
+            "public static let withoutEscapingSlashes",
+            "JSONDecoder().decode(_FoundationGuestJSONValue.self, from: data)",
+            "JSONEncoder.OutputFormatting",
+            "number.isFinite",
+            "if value is NSNull",
+            "if let value = value as? NSNumber",
+            "domain: NSCocoaErrorDomain",
+            "code: NSPropertyListReadCorruptError",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("fatalError", source)
+        self.assertNotIn("try!", source)
+
+    def test_regex_surface_uses_utf16_ranges_and_rejects_unimplemented_options(self) -> None:
+        source = STRUCTURED_PRODUCTION[3].read_text()
+        for token in (
+            "Regex<AnyRegexOutput>",
+            "range(withName name: String)",
+            "enumerateMatches(",
+            "stringByReplacingMatches(",
+            "replacementString(",
+            "string.utf16.distance",
+            "options.subtracting(known).isEmpty",
+            "Unsupported regular-expression option",
+        ):
+            self.assertIn(token, source)
+        known = re.search(r"let known: Options = \[(.*?)\n\s*\]", source, re.DOTALL)
+        self.assertIsNotNone(known)
+        self.assertNotIn("useUnixLineSeparators", known.group(1))
+        self.assertNotIn("useUnicodeWordBoundaries", known.group(1))
+        self.assertIn("scope.matches(of: regex)", source)
+
+    def test_structured_data_oracle_is_corpus_shaped_and_adversarial(self) -> None:
+        oracle = (TESTS / "FoundationGuestStructuredDataOracle.swift").read_text()
+        for token in (
+            "NSNumber(value: UInt64.max)",
+            "swiftInteger as? NSNumber",
+            "objectNumber as? Int",
+            "JSONSerialization.isValidJSONObject([\"x\": Double.nan])",
+            "error as NSError",
+            "(existential as NSError) === plain",
+            "range(withName: \"word\")",
+            "options: [.reportCompletion]",
+            "pattern: \"(?=a)|$\"",
+            "stringByReplacingMatches(",
+        ):
+            self.assertIn(token, oracle)
 
     def test_gate_rebuilds_and_has_adversarial_teeth(self) -> None:
         gate = HOST_GATE.read_text()
@@ -167,6 +282,9 @@ class FoundationGuestTextTests(unittest.TestCase):
             "Apple compatibility oracle drifted from golden",
             "malformed-entity=rejected",
             "FoundationGuestServiceIdentityProbe.swift",
+            "foundation-guest-structured-data-apple-2026-08-30.txt",
+            "portable structured-data output differs from Apple golden",
+            "FOUNDATION_GUEST_STRUCTURED_NEGATIVE_OK",
             "Foundation|CoreFoundation",
             "FOUNDATION_GUEST_TEXT_HOST_OK",
         ):

@@ -1,13 +1,13 @@
 import FoundationEssentials
 
 public extension Error {
-    /// A human-readable description without requiring the Objective-C
-    /// `NSError` bridge.
-    ///
-    /// `LocalizedError` remains the authoritative customization point. The
-    /// descriptive fallback is deliberately truthful about the Swift error
-    /// value until the complete NSError domain/code bridge is available.
+    /// A human-readable description using this facade's canonical NSError
+    /// domain/code bridge. `LocalizedError` remains the authoritative Swift
+    /// customization point.
     var localizedDescription: String {
+        if let error = self._getEmbeddedNSError() as? NSError {
+            return error.localizedDescription
+        }
         if let localized = self as? any LocalizedError {
             if let description = localized.errorDescription {
                 return description
@@ -16,6 +16,6 @@ public extension Error {
                 return "The operation couldn’t be completed. \(reason)"
             }
         }
-        return String(describing: self)
+        return _convertErrorToNSError(self).localizedDescription
     }
 }

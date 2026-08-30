@@ -49,7 +49,7 @@ SWIFTUI_RUNTIME_LINK_CONTRACT = (
     "/usr/lib/swift/libswift_Concurrency.dylib",
 )
 FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
-    ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 10, "17_StringProcessing"),
+    ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 19, "17_StringProcessing"),
     ("EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS", 2, "15Synchronization"),
     ("EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS", 0, "12_RegexParser"),
 )
@@ -57,12 +57,17 @@ FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
+    "full/appshim/FoundationOpenUIKitValueAliases.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
     "full/foundation/Scanner.swift",
+    "full/foundation/NSError.swift",
+    "full/foundation/NSNumber.swift",
     "full/foundation/Error+LocalizedDescription.swift",
+    "full/foundation/JSONSerialization.swift",
+    "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
     "full/foundation/UserDefaults.swift",
 )
@@ -242,14 +247,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 11)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 16)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 11-path contract", refusal.stderr)
+        self.assertIn("exact ordered 16-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]

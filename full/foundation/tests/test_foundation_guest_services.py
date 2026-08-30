@@ -13,12 +13,17 @@ EXPECTED = [
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
+    "full/appshim/FoundationOpenUIKitValueAliases.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
     "full/foundation/Scanner.swift",
+    "full/foundation/NSError.swift",
+    "full/foundation/NSNumber.swift",
     "full/foundation/Error+LocalizedDescription.swift",
+    "full/foundation/JSONSerialization.swift",
+    "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
     "full/foundation/UserDefaults.swift",
 ]
@@ -40,7 +45,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 11', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 16', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)

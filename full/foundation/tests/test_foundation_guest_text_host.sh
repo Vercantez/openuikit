@@ -16,9 +16,11 @@ TARGET=arm64-apple-macos15.0
 PINNED=$ROOT/full/foundation/pinned_inputs.pl
 GOLDEN=$ROOT/full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
 COMPAT_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
+STRUCTURED_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
 EXPECTED_GOLDEN_SHA=da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980
 EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
-EXPECTED_SOURCE_DIGEST=7edf018240a49ed660996910810dd8a44b842630d346ed8c387ed6950aba48bc
+EXPECTED_STRUCTURED_GOLDEN_SHA=5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e
+EXPECTED_SOURCE_DIGEST=3847eb3bbda3ab15731de53349db5599f98a4faa20db8ce8ce717106b6e36810
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/CharacterSet.swift"
@@ -34,6 +36,11 @@ ATTESTED_SOURCES=(
     full/foundation/Bundle+Localization.swift
     full/foundation/Scanner.swift
     full/foundation/Error+LocalizedDescription.swift
+    full/foundation/NSError.swift
+    full/foundation/NSNumber.swift
+    full/foundation/JSONSerialization.swift
+    full/foundation/NSRegularExpression.swift
+    full/appshim/FoundationOpenUIKitValueAliases.swift
     full/foundation/tests/FoundationGuestTextTestRoot.swift
     full/foundation/tests/FoundationGuestTextUIKit.swift
     full/foundation/tests/FoundationGuestTextUIKitClient.swift
@@ -45,8 +52,11 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift
     full/foundation/tests/FoundationGuestServicesTestRoot.swift
     full/foundation/tests/FoundationGuestServiceIdentityProbe.swift
+    full/foundation/tests/FoundationGuestStructuredDataOracle.swift
+    full/foundation/tests/FoundationGuestStructuredDataNegative.swift
     full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
+    full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
 )
 
 die() {
@@ -90,6 +100,8 @@ initial_source_digest=$(source_digest)
 }
 [ "$(shasum -a 256 "$COMPAT_GOLDEN" | awk '{print $1}')" = \
     "$EXPECTED_COMPAT_GOLDEN_SHA" ] || die "Apple compatibility golden digest changed"
+[ "$(shasum -a 256 "$STRUCTURED_GOLDEN" | awk '{print $1}')" = \
+    "$EXPECTED_STRUCTURED_GOLDEN_SHA" ] || die "Apple structured-data golden digest changed"
 
 require_repo \
     "$SF" \
@@ -118,7 +130,8 @@ MUTATED=$OUT/mutated
 MISSING=$OUT/missing
 UIKIT=$OUT/uikit
 SERVICES=$OUT/services
-mkdir -p "$FE" "$FOUNDATION" "$MUTATED" "$MISSING" "$UIKIT" "$SERVICES"
+STRUCTURED=$OUT/structured
+mkdir -p "$FE" "$FOUNDATION" "$MUTATED" "$MISSING" "$UIKIT" "$SERVICES" "$STRUCTURED"
 
 printf 'support-commit\t%s\n' "$(git -C "$ROOT" rev-parse HEAD^{commit})" > "$OUT/input-manifest.txt"
 printf 'support-tree\t%s\n' "$(git -C "$ROOT" rev-parse HEAD^{tree})" >> "$OUT/input-manifest.txt"
@@ -231,6 +244,7 @@ build_foundation() {
 build_foundation \
     "$FOUNDATION" "$ROOT/full/foundation/CharacterSet.swift" \
     "$ROOT/full/foundation/Scanner.swift" \
+    "$ROOT/full/foundation/NSError.swift" \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 
 xcrun swiftc -target "$TARGET" \
@@ -318,6 +332,64 @@ service_output=$("$OUT/service-runtime" "$OUT/service-fixture")
     'FOUNDATION_GUEST_BUNDLE_RUNTIME_OK plist=xml localization=en malformed-entity=rejected' \
 ] || die "unexpected Foundation guest service marker: $service_output"
 
+# The structured-data/error/regex facade is a distinct module build so its
+# native differential cannot be accidentally satisfied by Darwin Foundation.
+"${SWIFTC[@]}" -parse-as-library -module-name Foundation \
+    -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -emit-module -emit-module-path "$STRUCTURED/Foundation.swiftmodule" \
+    -emit-object -o "$STRUCTURED/Foundation.o" \
+    "$ROOT/full/foundation/tests/FoundationGuestTextTestRoot.swift" \
+    "$ROOT/full/appshim/FoundationOpenUIKitServiceAliases.swift" \
+    "$ROOT/full/appshim/FoundationOpenUIKitValueAliases.swift" \
+    "$ROOT/full/foundation/CharacterSet.swift" \
+    "$ROOT/full/foundation/String+CharacterSet.swift" \
+    "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
+    "$ROOT/full/foundation/Bundle+Localization.swift" \
+    "$ROOT/full/foundation/Scanner.swift" \
+    "$ROOT/full/foundation/NSError.swift" \
+    "$ROOT/full/foundation/NSNumber.swift" \
+    "$ROOT/full/foundation/Error+LocalizedDescription.swift" \
+    "$ROOT/full/foundation/DateFormatter.swift" \
+    "$ROOT/full/foundation/UserDefaults.swift" \
+    "$ROOT/full/foundation/JSONSerialization.swift" \
+    "$ROOT/full/foundation/NSRegularExpression.swift"
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/apple-structured-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestStructuredDataOracle.swift" \
+    -o "$OUT/apple-structured-oracle"
+"$OUT/apple-structured-oracle" > "$OUT/apple-structured-output.txt"
+cmp "$STRUCTURED_GOLDEN" "$OUT/apple-structured-output.txt" \
+    || die "Apple structured-data oracle drifted from golden"
+otool -L "$OUT/apple-structured-oracle" | \
+    grep -q '/System/Library/Frameworks/Foundation.framework/' || {
+        die "Apple structured-data oracle did not load Apple Foundation"
+    }
+
+STRUCTURED_LINK_OBJECTS=(
+    "$STRUCTURED/Foundation.o"
+    "$SERVICES/OpenUIKit.o"
+    "${LINK_OBJECTS[@]}"
+)
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/port-structured-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestStructuredDataOracle.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-structured-oracle"
+"$OUT/port-structured-oracle" > "$OUT/port-structured-output.txt"
+cmp "$STRUCTURED_GOLDEN" "$OUT/port-structured-output.txt" \
+    || die "portable structured-data output differs from Apple golden"
+
+xcrun swiftc -target "$TARGET" -parse-as-library \
+    -module-cache-path "$OUT/port-structured-negative-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestStructuredDataNegative.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-structured-negative"
+structured_negative_output=$("$OUT/port-structured-negative")
+[ "$structured_negative_output" = \
+    'FOUNDATION_GUEST_STRUCTURED_NEGATIVE_OK regex-options=3 json-nonfinite=1' \
+] || die "unexpected structured negative marker: $structured_negative_output"
+
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/apple-service-module-cache" \
     "$ROOT/full/foundation/tests/FoundationGuestBundleRuntime.swift" \
@@ -345,11 +417,28 @@ uikit_output=$("$OUT/uikit-client")
 }
 
 for binary in "$OUT/port-oracle" "$OUT/port-compat-oracle" "$OUT/runtime" \
-    "$OUT/uikit-client" "$OUT/service-runtime"; do
+    "$OUT/uikit-client" "$OUT/service-runtime" "$OUT/port-structured-oracle" \
+    "$OUT/port-structured-negative"; do
     if otool -L "$binary" | grep -Eq \
         '/System/Library/Frameworks/(Foundation|CoreFoundation)\.framework/'; then
         die "portable binary loads Apple Foundation/CoreFoundation: $binary"
     fi
+done
+
+xcrun nm -gU "$STRUCTURED/Foundation.o" | \
+    xcrun swift-demangle > "$OUT/structured-foundation-symbols.txt"
+for symbol in \
+    'Foundation.NSError.init(domain:' \
+    'Foundation._convertErrorToNSError' \
+    'Foundation.NSNumber.__allocating_init<A where A: Swift.BinaryInteger>(value:' \
+    'Foundation.JSONSerialization.jsonObject' \
+    'Foundation.JSONSerialization.data' \
+    'Foundation.NSRegularExpression.matches' \
+    'Foundation.NSRegularExpression.stringByReplacingMatches' \
+    'Foundation.NSTextCheckingResult.range(at:'; do
+    grep -Fq "$symbol" "$OUT/structured-foundation-symbols.txt" || {
+        die "missing structured-data public symbol $symbol"
+    }
 done
 
 xcrun nm -gU "$FOUNDATION/Foundation.o" | \
@@ -371,6 +460,7 @@ done
 # SDK's Foundation Scanner when Scanner.swift is omitted.
 build_foundation \
     "$MISSING" "$ROOT/full/foundation/CharacterSet.swift" \
+    "$ROOT/full/foundation/NSError.swift" \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 if xcrun swiftc -target "$TARGET" -typecheck \
     -module-cache-path "$OUT/missing-module-cache" \
@@ -390,6 +480,7 @@ sed 's/, 0x200B//' "$ROOT/full/foundation/CharacterSet.swift" \
 build_foundation \
     "$MUTATED" "$MUTATED/CharacterSet.swift" \
     "$ROOT/full/foundation/Scanner.swift" \
+    "$ROOT/full/foundation/NSError.swift" \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/mutated-module-cache" \
@@ -409,7 +500,7 @@ final_source_digest=$(source_digest)
 
 printf '%s\n' \
     "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
-"runtime=2 identity=8 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
+"runtime=2 identity=8 structured=77 structured-negatives=4 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi
