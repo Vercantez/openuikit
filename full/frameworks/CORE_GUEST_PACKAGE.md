@@ -56,6 +56,12 @@ increase from 102 is the canonical Focus launch-core tranche's independent
 feedback-generator, table-diffable-data-source, and property-animator files;
 the cold builder refuses either a missing file or an unexpected extra source.
 
+The production SwiftUI source-set contract is seven Swift files. The seventh
+is the settings runtime used by Focus's untouched internal-settings screens:
+sections, toggles, text fields, pickers, disabled propagation, and retained
+change/publisher effects. It is compiled into the same real
+`libSwiftUI.dylib`; it is not an application-side overlay.
+
 FoundationEssentials' dylib includes both the upstream cshim `uuid.o` and the
 project compatibility `uuid_compat.o`; the latter must not be dropped merely
 because a small dead-stripped probe happens not to reference it.

@@ -647,6 +647,8 @@ class ShellContractTests(unittest.TestCase):
         source = BUILDER.read_text(encoding="utf-8")
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
+        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=7"), 1)
+        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=6", source)
 
     def test_builder_requires_exact_uikit_pin_and_fresh_output(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

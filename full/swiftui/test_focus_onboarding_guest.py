@@ -26,7 +26,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
     def test_exact_twelve_source_boundary_is_hash_pinned_and_direct(self) -> None:
         text = BUILD.read_text()
         self.assertIn("EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791", text)
-        self.assertIn("expected the complete six-source SwiftUI directory", text)
+        self.assertIn("expected the complete seven-source SwiftUI directory", text)
         relatives = re.findall(r"^    '([^']+\.swift)'$", text, re.MULTILINE)
         self.assertEqual(len(relatives), 12)
         hashes = re.search(
@@ -46,12 +46,12 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("assert_clean_commit", text)
         self.assertIn(
             "EXPECTED_UIKIT_COMMIT="
-            "83fbcbe2204eb836968d4e73ecfecec7b20c68ef",
+            "62dea0d97a3b9074e5c016820492bd0656b9a35a",
             text,
         )
         self.assertIn(
             "EXPECTED_UIKIT_TREE="
-            "54552fea10c23c9124fb300db33c9db54aad32b9",
+            "3dfd6024557632949c9a5036522871a36d4a0cf0",
             text,
         )
         self.assertNotIn("EXPECTED_UIKIT_COMMIT_OVERRIDE", text)

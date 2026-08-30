@@ -22,12 +22,12 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         text = BUILD.read_text()
         self.assertIn(
             "EXPECTED_UIKIT_COMMIT="
-            "83fbcbe2204eb836968d4e73ecfecec7b20c68ef",
+            "62dea0d97a3b9074e5c016820492bd0656b9a35a",
             text,
         )
         self.assertIn(
             "EXPECTED_UIKIT_TREE="
-            "54552fea10c23c9124fb300db33c9db54aad32b9",
+            "3dfd6024557632949c9a5036522871a36d4a0cf0",
             text,
         )
         self.assertIn("OpenUIKit checkout is not clean", text)

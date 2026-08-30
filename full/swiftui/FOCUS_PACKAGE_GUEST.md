@@ -7,7 +7,7 @@ listed below:
 
 | Target | Revision | Upstream Swift files | Compiled |
 | --- | --- | ---: | ---: |
-| OpenUIKit | `83fbcbe2204eb836968d4e73ecfecec7b20c68ef` | 102 | 102 |
+| OpenUIKit | `62dea0d97a3b9074e5c016820492bd0656b9a35a` | 105 | 105 |
 | SnapKit | `e74fe2a978d1216c3602b129447c7301573cc2d8` | 37 | 36 |
 | Focus DesignSystem | `a2832521c1daa0c23419c73705ae043ed60c9791` | 7 | 7 |
 | Focus Widget | same Focus revision | 2 | 2 |
@@ -15,7 +15,7 @@ listed below:
 | Focus Licenses | same Focus revision | 2 | 2 |
 
 The OpenUIKit commit above has exact tree
-`54552fea10c23c9124fb300db33c9db54aad32b9`; all three Focus guest scripts
+`3dfd6024557632949c9a5036522871a36d4a0cf0`; all three Focus guest scripts
 require that clean commit/tree before and after their gates.
 
 The shared substrate remains pinned to swift-foundation

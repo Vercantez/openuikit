@@ -29,8 +29,8 @@ OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=83fbcbe2204eb836968d4e73ecfecec7b20c68ef
-EXPECTED_UIKIT_TREE=54552fea10c23c9124fb300db33c9db54aad32b9
+EXPECTED_UIKIT_COMMIT=62dea0d97a3b9074e5c016820492bd0656b9a35a
+EXPECTED_UIKIT_TREE=3dfd6024557632949c9a5036522871a36d4a0cf0
 EXPECTED_FOCUS_SWIFT_COUNT=227
 EXPECTED_ONBOARDING_TREE=3db199a93294a4ea0e6549522c29e8b2e4dbfb979bd60c07cdad5d00386734f5
 EXPECTED_ONBOARDING_FILES=66
@@ -316,7 +316,7 @@ clang++-18 -target arm64-apple-macos15.0 -isysroot "$SYS" -stdlib=libc++ -std=c+
 
 echo '== compile SwiftUI with Foundation deliberately hidden'
 swiftui_sources=("$UIKIT"/Sources/SwiftUI/*.swift)
-[ "${#swiftui_sources[@]}" -eq 6 ] || die "expected the complete six-source SwiftUI directory"
+[ "${#swiftui_sources[@]}" -eq 7 ] || die "expected the complete seven-source SwiftUI directory"
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name SwiftUI \
     -emit-module -emit-module-path "$PACKAGE/SwiftUI.swiftmodule" \
