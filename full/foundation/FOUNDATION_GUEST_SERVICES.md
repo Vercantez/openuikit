@@ -9,11 +9,21 @@ file rather than maintaining a second list.
 
 The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
-`TimeZone`, and `IndexPath` identities. The companion sources add:
+`TimeZone`, and `IndexPath` identities. The eleven-source facade adds:
 
-- `CharacterSet`, scalar-boundary string trimming, `Scanner` hexadecimal
-  scanning, and `Error.localizedDescription`, covered by the 51-row Apple
-  differential gate in `test_foundation_guest_text_host.sh`.
+- `CharacterSet`, including Darwin-measured whitespace and URL component sets,
+  its mutable bridge, scalar-boundary trimming/search, percent coding, legacy
+  String search/replacement/comparison/path/format APIs, `Scanner` hexadecimal
+  scanning, and `Error.localizedDescription`. The text gate contains 86 Apple
+  differential rows: the original 51 plus a 35-row URL/text/format oracle.
+- Single OpenUIKit identities for attributed strings and paragraph styles,
+  `Timer`, `RunLoop`, and `NSUserActivity`. Compile-time metatype assignments
+  make a facade lookalike fail at the framework boundary.
+- OpenUIKit's filesystem-backed `Bundle` identity extended with XML Info.plist
+  metadata, localization discovery and `.strings` lookup, conventional receipt
+  URLs, and `NSLocalizedString`. A fresh fixture runs against Apple and the
+  portable implementation; a separate adversarial fixture requires an unknown
+  XML entity to fail closed in the portable parser.
 - `DateFormatter`, backed by FoundationEssentials `Calendar` and `TimeZone`.
   It implements Gregorian `G y Y M L d D E e c H k K h m s S a Z X x z`
   pattern fields, quoted literals, English and French month/weekday names, and
@@ -35,11 +45,19 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 PYTHONDONTWRITEBYTECODE=1 \
   python3 full/foundation/tests/test_foundation_guest_services.py
 bash full/foundation/tests/test_foundation_guest_services_host.sh
+bash full/foundation/tests/test_foundation_guest_text_host.sh
 ```
 
 ## Bounded behavior
 
-This is not yet the complete Apple Foundation framework. `DateFormatter`
+This is not yet the complete Apple Foundation framework. The bundle parser
+accepts well-formed UTF-8 XML plists, not binary plists, and `.strings` files
+are UTF-8 only. The bounded regex overlay deliberately returns nil for
+zero-width matches so replacement always makes progress; capture-template
+replacement and locale-sensitive comparison are not claimed. The formatting
+initializer is exact for Focus's measured string/object placeholders,
+positional arguments, percent escapes, and basic integer conversions; it is
+not a complete locale-aware printf implementation. `DateFormatter`
 does not yet use FoundationInternationalization/ICU, so localized symbol
 tables beyond English and French and date parsing are outside this slice.
 Unsupported Unicode pattern letters are rendered literally instead of being

@@ -42,9 +42,12 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=7
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=8
+EXPECTED_FOUNDATION_SOURCE_COUNT=11
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
+EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=10
+EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
+EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_FOUNDATION_TREE=4651798679b98e27383ca3626434fb128f191486
 EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
@@ -632,6 +635,30 @@ done
     -module-name Foundation -emit-module \
     -emit-module-path "$STAGE/modules/Foundation.swiftmodule" \
     -emit-object -o "$WORK/foundation.o" "${FOUNDATION_SOURCE_PATHS[@]}"
+llvm-nm-18 -u -j "$WORK/foundation.o" | LC_ALL=C sort -u \
+    > "$WORK/foundation-undefined-symbols.txt"
+foundation_string_processing_undefineds=$(awk \
+    'index($0, "17_StringProcessing") { count++ } END { print count + 0 }' \
+    "$WORK/foundation-undefined-symbols.txt")
+foundation_synchronization_undefineds=$(awk \
+    'index($0, "15Synchronization") { count++ } END { print count + 0 }' \
+    "$WORK/foundation-undefined-symbols.txt")
+foundation_regex_parser_undefineds=$(awk \
+    'index($0, "12_RegexParser") { count++ } END { print count + 0 }' \
+    "$WORK/foundation-undefined-symbols.txt")
+[ "$foundation_string_processing_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS" ] \
+    || die "Foundation StringProcessing undefined count $foundation_string_processing_undefineds, expected $EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS"
+[ "$foundation_synchronization_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS" ] \
+    || die "Foundation Synchronization undefined count $foundation_synchronization_undefineds, expected $EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS"
+[ "$foundation_regex_parser_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS" ] \
+    || die "Foundation RegexParser undefined count $foundation_regex_parser_undefineds, expected $EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS"
+printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization=%s RegexParser=%s\n' \
+    "$foundation_string_processing_undefineds" \
+    "$foundation_synchronization_undefineds" \
+    "$foundation_regex_parser_undefineds"
 
 echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -898,6 +925,8 @@ cmp "$WORK/openuikit-resources.pre.tsv" \
 
 cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv"
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
+cp "$WORK/foundation-undefined-symbols.txt" \
+    "$STAGE/attestation/foundation-undefined-symbols.txt"
 cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
 {
     printf 'format\tcore-input-provenance-v1\n'
@@ -983,6 +1012,8 @@ record_artifact attestation foundation-sources manifest \
     attestation/foundation-sources.tsv
 record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
+record_artifact attestation foundation-undefined-symbols undefined-symbols \
+    attestation/foundation-undefined-symbols.txt
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv

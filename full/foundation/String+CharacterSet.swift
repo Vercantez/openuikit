@@ -15,6 +15,8 @@
 // c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc. That implementation is otherwise
 // excluded from standalone FoundationEssentials by FOUNDATION_FRAMEWORK.
 
+import FoundationEssentials
+
 public extension String {
     /// Returns a new string made by removing scalars in `set` from both ends.
     func trimmingCharacters(in set: CharacterSet) -> String {
@@ -39,5 +41,41 @@ public extension String {
         }
 
         return String(scalars[lower...upper])
+    }
+
+    /// Finds the first scalar belonging to `set` in the requested range.
+    func rangeOfCharacter(
+        from set: CharacterSet,
+        options: String.CompareOptions = [],
+        range searchRange: Range<Index>? = nil
+    ) -> Range<Index>? {
+        let bounds = searchRange ?? startIndex..<endIndex
+        guard bounds.lowerBound <= bounds.upperBound else { return nil }
+        let scalars = unicodeScalars
+
+        if options.contains(.backwards) {
+            var upper = bounds.upperBound
+            while upper > bounds.lowerBound {
+                let lower = scalars.index(before: upper)
+                if set.contains(scalars[lower]) {
+                    if !options.contains(.anchored) || upper == bounds.upperBound {
+                        return lower..<upper
+                    }
+                    return nil
+                }
+                if options.contains(.anchored) { return nil }
+                upper = lower
+            }
+            return nil
+        }
+
+        var lower = bounds.lowerBound
+        while lower < bounds.upperBound {
+            let upper = scalars.index(after: lower)
+            if set.contains(scalars[lower]) { return lower..<upper }
+            if options.contains(.anchored) { return nil }
+            lower = upper
+        }
+        return nil
     }
 }

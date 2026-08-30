@@ -32,6 +32,31 @@ struct FoundationGuestTextRuntime {
         let plain: any Error = PlainRuntimeError.sample(7)
         precondition(plain.localizedDescription == "sample(7)")
 
+        precondition(
+            "Focus Linux".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                == "Focus%20Linux"
+        )
+        precondition("caf%C3%A9".removingPercentEncoding == "café")
+        precondition("%GG".removingPercentEncoding == nil)
+        let regexInput = "www.example"
+        let regexUpper = regexInput.index(regexInput.startIndex, offsetBy: 4)
+        precondition(
+            regexInput.range(of: "^(www|m)\\.", options: .regularExpression)
+                == regexInput.startIndex..<regexUpper
+        )
+        precondition(
+            "abc".range(of: "^", options: .regularExpression) == nil,
+            "the bounded overlay must reject zero-width regular-expression matches"
+        )
+        precondition(
+            "abc".replacingOccurrences(
+                of: "^", with: "X", options: .regularExpression
+            ) == "abc",
+            "a zero-width regular expression must not stall replacement"
+        )
+        precondition(String(format: "%2$@/%1$@", "one", "two") == "two/one")
+        precondition(NSString(string: "/tmp/file.txt").lastPathComponent == "file.txt")
+
         do {
             _ = try JSONDecoder().decode(
                 Payload.self,
@@ -44,7 +69,7 @@ struct FoundationGuestTextRuntime {
 
         print(
             "FOUNDATION_GUEST_TEXT_RUNTIME_OK "
-                + "characters=26 trimming=unicode scanner=hex error=descriptive"
+                + "characters=26 trimming=unicode scanner=hex error=descriptive compatibility=focus"
         )
     }
 }

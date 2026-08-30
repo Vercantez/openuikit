@@ -35,7 +35,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its eight LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its eleven LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -72,12 +72,20 @@ because a small dead-stripped probe happens not to reference it.
 
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
-`libswift_StringProcessing` (used by `DateFormatter`) and
+`libswift_StringProcessing` (used by `DateFormatter` and the bounded string
+search/regex compatibility surface) and
 `libswiftSynchronization` (used by `UserDefaults`). The builder requires both
 SDK TBD inputs and both staged runtime dylibs, verifies their install names,
 and requires one load command for each in `libFoundation.dylib`. The facade
 object has no direct RegexParser symbol; that dylib remains StringProcessing's
 transitive runtime dependency rather than a guessed direct link.
+
+The eleven-source facade's names-only undefined-symbol inventory is also a
+packaged attestation. With the pinned Swift compiler it contains exactly ten
+`17_StringProcessing` records, two `15Synchronization` records, and zero
+`12_RegexParser` records. The build refuses drift in any count before linking;
+this is why RegexParser is absent from the direct link list even though the
+runtime closure still reaches it through StringProcessing.
 
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so

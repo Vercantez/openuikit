@@ -77,6 +77,13 @@ open class UserDefaults {
         return Self._registered.withLock { $0[defaultName]?.value }
     }
 
+    /// KVC-era spelling retained by Foundation's public UserDefaults surface.
+    /// This is an alias for `object(forKey:)`; the portable preferences store
+    /// does not claim general NSObject key-value coding.
+    open func value(forKey key: String) -> Any? {
+        object(forKey: key)
+    }
+
     open func set(_ value: Any?, forKey defaultName: String) {
         guard let value else {
             removeObject(forKey: defaultName)

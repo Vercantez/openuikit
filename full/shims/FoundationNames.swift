@@ -43,6 +43,56 @@
 // this historical declaration is excluded. The fallback remains available to
 // genuinely freestanding configurations that do not stage that module.
 
+// MARK: - User activity
+
+#if !canImport(Foundation)
+
+/// Foundation-hidden identity used by UIKit and the later app-facing
+/// Foundation facade.
+///
+/// The portable guest has no Spotlight, Handoff, prediction daemon, or
+/// donation service. This class therefore owns only the activity metadata an
+/// application can construct and pass through its own lifecycle. Framework
+/// shims that consume activities alias this exact OpenUIKit declaration rather
+/// than introducing lookalike classes at each module boundary.
+open class NSUserActivity {
+    public let activityType: String
+    open var title: String?
+    open var userInfo: [AnyHashable: Any]?
+    open var isEligibleForSearch = false
+    open var isEligibleForPublicIndexing = false
+    open var isEligibleForHandoff = false
+    open var isEligibleForPrediction = false
+    open var suggestedInvocationPhrase: String?
+    open var persistentIdentifier: NSUserActivityPersistentIdentifier?
+    open var needsSave = false
+
+    public init(activityType: String) {
+        self.activityType = activityType
+    }
+
+    /// No system activity service exists in the guest. These methods preserve
+    /// the application's explicit current/not-current state without claiming
+    /// that the activity was published outside the process.
+    public private(set) var isCurrent = false
+
+    open func becomeCurrent() {
+        isCurrent = true
+    }
+
+    open func resignCurrent() {
+        isCurrent = false
+    }
+
+    open func invalidate() {
+        isCurrent = false
+    }
+}
+
+public typealias NSUserActivityPersistentIdentifier = String
+
+#endif
+
 // MARK: - NSRange
 
 public struct NSRange: Equatable, Hashable, Sendable {

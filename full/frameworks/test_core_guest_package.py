@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -47,11 +48,19 @@ SWIFTUI_RUNTIME_LINK_CONTRACT = (
     "-lswift_Concurrency",
     "/usr/lib/swift/libswift_Concurrency.dylib",
 )
+FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
+    ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 10, "17_StringProcessing"),
+    ("EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS", 2, "15Synchronization"),
+    ("EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS", 0, "12_RegexParser"),
+)
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
+    "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
+    "full/foundation/String+FoundationCompatibility.swift",
+    "full/foundation/Bundle+Localization.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/Error+LocalizedDescription.swift",
     "full/foundation/DateFormatter.swift",
@@ -190,6 +199,21 @@ def validate_core_preview_export_contract(source: str) -> None:
         raise AssertionError("core Preview export must remain one exact symbol")
 
 
+def validate_foundation_runtime_undefineds(source: str) -> None:
+    for assignment, expected, predicate in FOUNDATION_RUNTIME_UNDEFINED_CONTRACT:
+        match = re.search(rf"(?m)^{re.escape(assignment)}=([0-9]+)$", source)
+        if match is None or int(match.group(1)) != expected:
+            raise AssertionError(
+                f"Foundation runtime-undefined assignment drifted: {assignment}"
+            )
+        if source.count(f'index($0, "{predicate}")') != 1:
+            raise AssertionError(
+                f"Foundation runtime-undefined predicate drifted: {predicate}"
+            )
+    if source.count('llvm-nm-18 -u -j "$WORK/foundation.o"') != 1:
+        raise AssertionError("Foundation runtime-undefined inventory drifted")
+
+
 class FoundationManifestTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -218,14 +242,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 8)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 11)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 8-path contract", refusal.stderr)
+        self.assertIn("exact ordered 11-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -871,6 +895,23 @@ class ShellContractTests(unittest.TestCase):
             "libSwiftUI runtime load count",
         ):
             self.assertIn(spelling, source)
+
+    def test_foundation_runtime_undefineds_are_exact_and_mutation_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_foundation_runtime_undefineds(source)
+        self.assertIn("foundation-undefined-symbols.txt", source)
+        for assignment, expected, predicate in FOUNDATION_RUNTIME_UNDEFINED_CONTRACT:
+            with self.subTest(mutated=assignment):
+                mutated = source.replace(
+                    f"{assignment}={expected}", f"{assignment}={expected + 1}", 1
+                )
+                with self.assertRaisesRegex(AssertionError, "runtime-undefined"):
+                    validate_foundation_runtime_undefineds(mutated)
+            with self.subTest(deleted=predicate):
+                with self.assertRaisesRegex(AssertionError, "runtime-undefined"):
+                    validate_foundation_runtime_undefineds(
+                        source.replace(predicate, "deleted-predicate", 1)
+                    )
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

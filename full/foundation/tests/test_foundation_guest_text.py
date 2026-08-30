@@ -15,9 +15,12 @@ FOUNDATION = ROOT / "full/foundation"
 TESTS = FOUNDATION / "tests"
 HOST_GATE = TESTS / "test_foundation_guest_text_host.sh"
 GOLDEN = TESTS / "foundation-guest-text-apple-2026-08-30.txt"
+COMPAT_GOLDEN = TESTS / "foundation-guest-compatibility-apple-2026-08-30.txt"
 PRODUCTION = (
     FOUNDATION / "CharacterSet.swift",
     FOUNDATION / "String+CharacterSet.swift",
+    FOUNDATION / "String+FoundationCompatibility.swift",
+    FOUNDATION / "Bundle+Localization.swift",
     FOUNDATION / "Scanner.swift",
     FOUNDATION / "Error+LocalizedDescription.swift",
 )
@@ -28,7 +31,13 @@ ATTESTED = PRODUCTION + (
     TESTS / "FoundationGuestTextOracle.swift",
     TESTS / "FoundationGuestTextRuntime.swift",
     TESTS / "FoundationGuestTextMissingScanner.swift",
+    TESTS / "FoundationGuestCompatibilityOracle.swift",
+    TESTS / "FoundationGuestBundleRuntime.swift",
+    TESTS / "FoundationGuestServicesOpenUIKitStub.swift",
+    TESTS / "FoundationGuestServicesTestRoot.swift",
+    TESTS / "FoundationGuestServiceIdentityProbe.swift",
     GOLDEN,
+    COMPAT_GOLDEN,
 )
 
 
@@ -57,11 +66,18 @@ class FoundationGuestTextTests(unittest.TestCase):
             "da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980",
         )
         self.assertEqual(len(GOLDEN.read_text().splitlines()), 51)
+        self.assertEqual(
+            hashlib.sha256(COMPAT_GOLDEN.read_bytes()).hexdigest(),
+            "07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac",
+        )
+        self.assertEqual(len(COMPAT_GOLDEN.read_text().splitlines()), 35)
 
     def test_character_set_inventory_is_exact_and_not_app_specific(self) -> None:
         source = PRODUCTION[0].read_text()
         inventory = re.search(
-            r"scalarValues: \[\n(.*?)\n        \]", source, re.DOTALL
+            r"whitespacesAndNewlines = CharacterSet\(\n\s*scalarValues: \[\n(.*?)\n\s*\]",
+            source,
+            re.DOTALL,
         )
         self.assertIsNotNone(inventory)
         values = re.findall(r"0x[0-9A-F]{4}", inventory.group(1))
@@ -70,7 +86,13 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertIn("0x200B", values)
         self.assertIn("init(charactersIn aString: String)", source)
         self.assertIn("contains(_ member: Unicode.Scalar)", source)
-        for app_token in ("Reminder", "ABCDEF", "C0FFEE"):
+        for name in (
+            "urlUserAllowed", "urlPasswordAllowed", "urlHostAllowed",
+            "urlPathAllowed", "urlQueryAllowed", "urlFragmentAllowed",
+        ):
+            self.assertIn(name, source)
+        self.assertIn("removeCharacters(in aString: String)", source)
+        for app_token in ("Reminder", "C0FFEE"):
             self.assertNotIn(app_token, source)
 
     def test_trimming_keeps_upstream_attribution_and_scalar_algorithm(self) -> None:
@@ -83,8 +105,34 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertIn("set.contains(scalars[lower])", source)
         self.assertIn("set.contains(scalars[upper])", source)
 
-    def test_scanner_is_cursor_based_and_saturating(self) -> None:
+    def test_search_percent_and_format_are_native_differentially_pinned(self) -> None:
         source = PRODUCTION[2].read_text()
+        for token in (
+            "addingPercentEncoding",
+            "removingPercentEncoding",
+            "func range(",
+            "replacingOccurrences",
+            "init(format: String, _ arguments: Any...)",
+            "match.range.lowerBound != match.range.upperBound",
+            "public typealias NSString = String",
+        ):
+            self.assertIn(token, source)
+        oracle = (TESTS / "FoundationGuestCompatibilityOracle.swift").read_text()
+        self.assertIn("CharacterSet.urlUserAllowed", oracle)
+        self.assertIn("%C3%28", oracle)
+        self.assertIn("%2$@/%1$@", oracle)
+
+    def test_bundle_parser_and_localization_fail_closed(self) -> None:
+        source = PRODUCTION[3].read_text()
+        self.assertIn("var infoDictionary: [String: Any]?", source)
+        self.assertIn("func localizedString(", source)
+        self.assertIn("return nil", source[source.index('if scalars[index] == "&"'):])
+        runtime = (TESTS / "FoundationGuestBundleRuntime.swift").read_text()
+        self.assertIn("&unknown;", runtime)
+        self.assertIn("malformed.infoDictionary == nil", runtime)
+
+    def test_scanner_is_cursor_based_and_saturating(self) -> None:
+        source = PRODUCTION[4].read_text()
         for token in (
             "public var currentIndex: String.Index",
             "public var charactersToBeSkipped: CharacterSet?",
@@ -99,7 +147,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertNotIn("count == 6", source)
 
     def test_error_bridge_is_explicit_about_the_nserror_boundary(self) -> None:
-        source = PRODUCTION[3].read_text()
+        source = PRODUCTION[5].read_text()
         self.assertIn("self as? any LocalizedError", source)
         self.assertIn("localized.errorDescription", source)
         self.assertIn("localized.failureReason", source)
@@ -116,6 +164,9 @@ class FoundationGuestTextTests(unittest.TestCase):
             "portable output differs from Apple golden",
             "missing-Scanner adversarial compile unexpectedly succeeded",
             "U+200B mutation did not perturb the oracle",
+            "Apple compatibility oracle drifted from golden",
+            "malformed-entity=rejected",
+            "FoundationGuestServiceIdentityProbe.swift",
             "Foundation|CoreFoundation",
             "FOUNDATION_GUEST_TEXT_HOST_OK",
         ):

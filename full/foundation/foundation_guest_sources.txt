@@ -1,7 +1,10 @@
 full/appshim/FoundationGuest.swift
 full/appshim/FoundationOpenUIKitAliases.swift
+full/appshim/FoundationOpenUIKitServiceAliases.swift
 full/foundation/CharacterSet.swift
 full/foundation/String+CharacterSet.swift
+full/foundation/String+FoundationCompatibility.swift
+full/foundation/Bundle+Localization.swift
 full/foundation/Scanner.swift
 full/foundation/Error+LocalizedDescription.swift
 full/foundation/DateFormatter.swift

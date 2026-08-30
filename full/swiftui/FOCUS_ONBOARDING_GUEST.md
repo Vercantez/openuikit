@@ -76,6 +76,15 @@ test code, not application source. Normalized resource bundles are supplied by
 the existing pinned Focus resource proof and are checked for exact topology and
 content digests before and after execution.
 
+Because the facade link disables linker auto-linking, this builder applies the
+same measured runtime contract as the reusable core-package path: exactly one
+direct load each for `libswift_StringProcessing` and
+`libswiftSynchronization`, with their SDK TBDs, staged dylibs, and install IDs
+validated before linking. The eleven-source object is required to expose the
+measured 10/2/0 direct undefined-symbol counts for StringProcessing,
+Synchronization, and RegexParser respectively; RegexParser remains a
+transitive StringProcessing dependency rather than a direct Foundation load.
+
 ## Reproduce
 
 Run from the `swift-macho-linux` repository root after producing the normalized

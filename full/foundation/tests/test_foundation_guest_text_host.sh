@@ -15,18 +15,23 @@ SC=${SC:-$ROOT/scratch/swift-collections}
 TARGET=arm64-apple-macos15.0
 PINNED=$ROOT/full/foundation/pinned_inputs.pl
 GOLDEN=$ROOT/full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
+COMPAT_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
 EXPECTED_GOLDEN_SHA=da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980
-EXPECTED_SOURCE_DIGEST=d3597e27c2fef2959cc14159b3278be0dc65ed504909dc30cb22462f4e5ae6e0
+EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
+EXPECTED_SOURCE_DIGEST=7edf018240a49ed660996910810dd8a44b842630d346ed8c387ed6950aba48bc
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/CharacterSet.swift"
     "$ROOT/full/foundation/String+CharacterSet.swift"
+    "$ROOT/full/foundation/String+FoundationCompatibility.swift"
     "$ROOT/full/foundation/Scanner.swift"
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 )
 ATTESTED_SOURCES=(
     full/foundation/CharacterSet.swift
     full/foundation/String+CharacterSet.swift
+    full/foundation/String+FoundationCompatibility.swift
+    full/foundation/Bundle+Localization.swift
     full/foundation/Scanner.swift
     full/foundation/Error+LocalizedDescription.swift
     full/foundation/tests/FoundationGuestTextTestRoot.swift
@@ -35,7 +40,13 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestTextOracle.swift
     full/foundation/tests/FoundationGuestTextRuntime.swift
     full/foundation/tests/FoundationGuestTextMissingScanner.swift
+    full/foundation/tests/FoundationGuestCompatibilityOracle.swift
+    full/foundation/tests/FoundationGuestBundleRuntime.swift
+    full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift
+    full/foundation/tests/FoundationGuestServicesTestRoot.swift
+    full/foundation/tests/FoundationGuestServiceIdentityProbe.swift
     full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
+    full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
 )
 
 die() {
@@ -77,6 +88,8 @@ initial_source_digest=$(source_digest)
 [ "$(shasum -a 256 "$GOLDEN" | awk '{print $1}')" = "$EXPECTED_GOLDEN_SHA" ] || {
     die "Apple golden digest changed"
 }
+[ "$(shasum -a 256 "$COMPAT_GOLDEN" | awk '{print $1}')" = \
+    "$EXPECTED_COMPAT_GOLDEN_SHA" ] || die "Apple compatibility golden digest changed"
 
 require_repo \
     "$SF" \
@@ -104,7 +117,8 @@ FOUNDATION=$OUT/foundation
 MUTATED=$OUT/mutated
 MISSING=$OUT/missing
 UIKIT=$OUT/uikit
-mkdir -p "$FE" "$FOUNDATION" "$MUTATED" "$MISSING" "$UIKIT"
+SERVICES=$OUT/services
+mkdir -p "$FE" "$FOUNDATION" "$MUTATED" "$MISSING" "$UIKIT" "$SERVICES"
 
 printf 'support-commit\t%s\n' "$(git -C "$ROOT" rev-parse HEAD^{commit})" > "$OUT/input-manifest.txt"
 printf 'support-tree\t%s\n' "$(git -C "$ROOT" rev-parse HEAD^{tree})" >> "$OUT/input-manifest.txt"
@@ -210,6 +224,7 @@ build_foundation() {
         "$ROOT/full/foundation/tests/FoundationGuestTextTestRoot.swift" \
         "$character_set_source" \
         "$ROOT/full/foundation/String+CharacterSet.swift" \
+        "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
         "$@"
 }
 
@@ -230,6 +245,14 @@ otool -L "$OUT/apple-oracle" | \
     }
 
 xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/apple-compat-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestCompatibilityOracle.swift" \
+    -o "$OUT/apple-compat-oracle"
+"$OUT/apple-compat-oracle" > "$OUT/apple-compat-output.txt"
+cmp "$COMPAT_GOLDEN" "$OUT/apple-compat-output.txt" \
+    || die "Apple compatibility oracle drifted from golden"
+
+xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/port-module-cache" \
     -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextOracle.swift" \
@@ -237,6 +260,16 @@ xcrun swiftc -target "$TARGET" \
     -o "$OUT/port-oracle"
 "$OUT/port-oracle" > "$OUT/port-output.txt"
 cmp "$GOLDEN" "$OUT/port-output.txt" || die "portable output differs from Apple golden"
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/port-compat-module-cache" \
+    -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestCompatibilityOracle.swift" \
+    "$FOUNDATION/Foundation.o" "${LINK_OBJECTS[@]}" \
+    -o "$OUT/port-compat-oracle"
+"$OUT/port-compat-oracle" > "$OUT/port-compat-output.txt"
+cmp "$COMPAT_GOLDEN" "$OUT/port-compat-output.txt" \
+    || die "portable compatibility output differs from Apple golden"
 
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/runtime-module-cache" \
@@ -246,8 +279,54 @@ xcrun swiftc -target "$TARGET" -parse-as-library \
     -o "$OUT/runtime"
 runtime_output=$("$OUT/runtime")
 [ "$runtime_output" = \
-    'FOUNDATION_GUEST_TEXT_RUNTIME_OK characters=26 trimming=unicode scanner=hex error=descriptive' \
+    'FOUNDATION_GUEST_TEXT_RUNTIME_OK characters=26 trimming=unicode scanner=hex error=descriptive compatibility=focus' \
 ] || die "unexpected runtime marker: $runtime_output"
+
+"${SWIFTC[@]}" -parse-as-library -module-name OpenUIKit \
+    -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -emit-module -emit-module-path "$SERVICES/OpenUIKit.swiftmodule" \
+    -emit-object -o "$SERVICES/OpenUIKit.o" \
+    "$ROOT/full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift"
+"${SWIFTC[@]}" -parse-as-library -module-name Foundation \
+    -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -emit-module -emit-module-path "$SERVICES/Foundation.swiftmodule" \
+    -emit-object -o "$SERVICES/Foundation.o" \
+    "$ROOT/full/foundation/tests/FoundationGuestServicesTestRoot.swift" \
+    "$ROOT/full/appshim/FoundationOpenUIKitServiceAliases.swift" \
+    "$ROOT/full/foundation/CharacterSet.swift" \
+    "$ROOT/full/foundation/String+CharacterSet.swift" \
+    "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
+    "$ROOT/full/foundation/Bundle+Localization.swift"
+xcrun swiftc -target "$TARGET" -typecheck \
+    -module-cache-path "$OUT/service-identity-module-cache" \
+    -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestServiceIdentityProbe.swift"
+
+SERVICE_LINK_OBJECTS=(
+    "$SERVICES/Foundation.o"
+    "$SERVICES/OpenUIKit.o"
+    "${LINK_OBJECTS[@]}"
+)
+xcrun swiftc -target "$TARGET" -parse-as-library -D FOUNDATION_GUEST_PORT \
+    -module-cache-path "$OUT/service-runtime-module-cache" \
+    -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestBundleRuntime.swift" \
+    "${SERVICE_LINK_OBJECTS[@]}" -o "$OUT/service-runtime"
+mkdir "$OUT/service-fixture"
+service_output=$("$OUT/service-runtime" "$OUT/service-fixture")
+[ "$service_output" = \
+    'FOUNDATION_GUEST_BUNDLE_RUNTIME_OK plist=xml localization=en malformed-entity=rejected' \
+] || die "unexpected Foundation guest service marker: $service_output"
+
+xcrun swiftc -target "$TARGET" -parse-as-library \
+    -module-cache-path "$OUT/apple-service-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestBundleRuntime.swift" \
+    -o "$OUT/apple-service-runtime"
+mkdir "$OUT/apple-service-fixture"
+apple_service_output=$("$OUT/apple-service-runtime" "$OUT/apple-service-fixture")
+[ "$apple_service_output" = \
+    'FOUNDATION_GUEST_BUNDLE_APPLE_OK plist=xml localization=en' \
+] || die "unexpected Apple bundle marker: $apple_service_output"
 
 "${SWIFTC[@]}" -parse-as-library -module-name UIKit \
     -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
@@ -265,7 +344,8 @@ uikit_output=$("$OUT/uikit-client")
     die "unexpected UIKit-only marker: $uikit_output"
 }
 
-for binary in "$OUT/port-oracle" "$OUT/runtime" "$OUT/uikit-client"; do
+for binary in "$OUT/port-oracle" "$OUT/port-compat-oracle" "$OUT/runtime" \
+    "$OUT/uikit-client" "$OUT/service-runtime"; do
     if otool -L "$binary" | grep -Eq \
         '/System/Library/Frameworks/(Foundation|CoreFoundation)\.framework/'; then
         die "portable binary loads Apple Foundation/CoreFoundation: $binary"
@@ -278,6 +358,9 @@ for symbol in \
     'Foundation.CharacterSet.init(charactersIn:' \
     'Foundation.Scanner.scanHexInt64' \
     'Swift.String.trimmingCharacters(in: Foundation.CharacterSet)' \
+    'Swift.String.addingPercentEncoding(withAllowedCharacters:' \
+    'Swift.String.range(of:' \
+    'Foundation.NSMutableCharacterSet' \
     'Swift.Error.localizedDescription.getter'; do
     grep -Fq "$symbol" "$OUT/foundation-symbols.txt" || {
         die "missing public symbol $symbol"
@@ -325,8 +408,8 @@ final_source_digest=$(source_digest)
 }
 
 printf '%s\n' \
-    "FOUNDATION_GUEST_TEXT_HOST_OK rows=51 characters=26 "\
-"runtime=1 uikit-reexport=1 adversarial=2 sha256=$initial_source_digest"
+    "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
+"runtime=2 identity=8 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi

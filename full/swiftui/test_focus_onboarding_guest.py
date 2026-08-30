@@ -17,6 +17,35 @@ ACCESSOR = ROOT / "full/swiftui/FocusOnboardingBundle.generated.swift"
 WIDGET_ACCESSOR = ROOT / "full/swiftui/FocusWidgetBundle.generated.swift"
 BUILD_FULL = ROOT / "full/scripts/build_full.sh"
 STUBS = ROOT / "full/foundation/fm_unimplemented.c"
+FOUNDATION_RUNTIME_LINK_CONTRACT = (
+    "-lswift_StringProcessing",
+    "-lswiftSynchronization",
+    "/usr/lib/swift/libswift_StringProcessing.dylib",
+    "/usr/lib/swift/libswiftSynchronization.dylib",
+)
+FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
+    ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 10, "17_StringProcessing"),
+    ("EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS", 2, "15Synchronization"),
+    ("EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS", 0, "12_RegexParser"),
+)
+
+
+def validate_foundation_runtime_contract(source: str) -> None:
+    for token in FOUNDATION_RUNTIME_LINK_CONTRACT:
+        if source.count(token) != 1:
+            raise AssertionError(f"Foundation runtime-link contract drifted: {token}")
+    if "-lswift_RegexParser" in source or "libswift_RegexParser.tbd" in source:
+        raise AssertionError("Foundation runtime-link contract guessed RegexParser")
+    for assignment, expected, predicate in FOUNDATION_RUNTIME_UNDEFINED_CONTRACT:
+        match = re.search(rf"(?m)^{re.escape(assignment)}=([0-9]+)$", source)
+        if match is None or int(match.group(1)) != expected:
+            raise AssertionError(
+                f"Foundation runtime-undefined contract drifted: {assignment}"
+            )
+        if source.count(f'index($0, "{predicate}")') != 1:
+            raise AssertionError(
+                f"Foundation runtime-undefined predicate drifted: {predicate}"
+            )
 
 
 class FocusOnboardingGuestProofTests(unittest.TestCase):
@@ -91,6 +120,30 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )[0]
         self.assertIn("-lFoundationEssentials", foundation_link)
         self.assertNotIn("-reexport_library", foundation_link)
+
+    def test_foundation_runtime_closure_is_exact_and_mutation_sensitive(self) -> None:
+        source = BUILD.read_text()
+        validate_foundation_runtime_contract(source)
+        self.assertIn('llvm-nm-18 -u -j "$OUT/foundation.o"', source)
+        for token in FOUNDATION_RUNTIME_LINK_CONTRACT:
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "runtime-link"):
+                    validate_foundation_runtime_contract(source.replace(token, "", 1))
+        for assignment, expected, predicate in FOUNDATION_RUNTIME_UNDEFINED_CONTRACT:
+            with self.subTest(mutated=assignment):
+                with self.assertRaisesRegex(AssertionError, "runtime-undefined"):
+                    validate_foundation_runtime_contract(
+                        source.replace(
+                            f"{assignment}={expected}",
+                            f"{assignment}={expected + 1}",
+                            1,
+                        )
+                    )
+            with self.subTest(deleted=predicate):
+                with self.assertRaisesRegex(AssertionError, "runtime-undefined"):
+                    validate_foundation_runtime_contract(
+                        source.replace(predicate, "deleted-predicate", 1)
+                    )
 
     def test_uuid_substrate_replaces_stubs_and_is_exercised(self) -> None:
         implementation = UUID_COMPAT.read_text()

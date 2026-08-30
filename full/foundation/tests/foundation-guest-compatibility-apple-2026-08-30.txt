@@ -1,0 +1,35 @@
+whitespaces	0009,0020,00A0,1680,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,200A,200B,202F,205F,3000
+url-set	user	!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
+url-set	password	!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
+url-set	host	!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~
+url-set	path	!$&'()*+,-./0123456789:;=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
+url-set	query	!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
+url-set	fragment	!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~
+mutable	true	false	false	true
+percent-query	Focus Linux	Focus%20Linux
+percent-query	café/東京	caf%C3%A9/%E6%9D%B1%E4%BA%AC
+percent-query	100%	100%25
+percent-query	a+b&c=d	a+b&c=d
+percent-remove	caf%C3%A9	café
+percent-remove	%E6%9D%B1%E4%BA%AC	東京
+percent-remove	%	nil
+percent-remove	%GG	nil
+percent-remove	%C3%28	nil
+range	literal	4-11
+range	case-insensitive	4-11
+range	backwards	12-19
+range	anchored-front	0-3
+range	anchored-back	12-19
+range	regex	0-4
+replace	literal	X+b+X
+replace	suffix	www.example
+compare	same	0
+character-range	forward	3-4
+character-range	backwards	3-4
+format	one	Focus browser
+format	two	Focus blocked 12
+format	position	two/one
+format	percent	100% private
+format	zero	constant
+nsstring	file.txt
+nsstring-path	/tmp/focus/file.txt

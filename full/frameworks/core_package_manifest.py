@@ -19,8 +19,11 @@ PREVIEW_SWIFTSYNTAX_REVISION = "4799286537280063c85a32f09884cfbca301b1a1"
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
+    "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
+    "full/foundation/String+FoundationCompatibility.swift",
+    "full/foundation/Bundle+Localization.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/Error+LocalizedDescription.swift",
     "full/foundation/DateFormatter.swift",

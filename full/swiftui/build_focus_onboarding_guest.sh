@@ -38,6 +38,9 @@ EXPECTED_ONBOARDING_DIRECTORIES=15
 EXPECTED_WIDGET_TREE=144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d
 EXPECTED_WIDGET_FILES=16
 EXPECTED_WIDGET_DIRECTORIES=7
+EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=10
+EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
+EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
 
 EXPECTED_OPENCOMBINE_RESULT=c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104
 EXPECTED_OPENCOMBINE_OBJECT=96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914
@@ -110,7 +113,7 @@ validate_bundle() {
 
 [ "$OUT" = "$W/build/focus-onboarding-guest" ] \
     || die "derived output path invariant changed"
-for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
+for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 \
     sha256sum patch; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
@@ -123,8 +126,8 @@ done
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 8 ] \
-    || die "Foundation guest source manifest must contain exactly 8 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 11 ] \
+    || die "Foundation guest source manifest must contain exactly 11 lines"
 FOUNDATION_GUEST_SOURCES=()
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     case "$relative" in
@@ -278,6 +281,35 @@ FE_OBJECTS=(
     "$FE_OUT/fm_unimplemented.o"
     "$FE_OUT/uuid_compat.o"
 )
+FOUNDATION_RUNTIME_BASENAMES=(
+    libswift_StringProcessing
+    libswiftSynchronization
+)
+FOUNDATION_RUNTIME_LINK_FLAGS=(
+    -lswift_StringProcessing
+    -lswiftSynchronization
+)
+FOUNDATION_RUNTIME_INSTALL_NAMES=(
+    /usr/lib/swift/libswift_StringProcessing.dylib
+    /usr/lib/swift/libswiftSynchronization.dylib
+)
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 2 ] \
+    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 2 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 2 ] \
+    || die 'Foundation runtime closure cardinality drifted'
+for index in 0 1; do
+    library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
+    install_name=${FOUNDATION_RUNTIME_INSTALL_NAMES[$index]}
+    link_input=$SYS/usr/lib/swift/$library.tbd
+    runtime_input=$MRROOT/darwin$install_name
+    [ -f "$link_input" ] && [ ! -L "$link_input" ] \
+        || die "Foundation runtime link input is missing: $link_input"
+    [ -f "$runtime_input" ] && [ ! -L "$runtime_input" ] \
+        || die "Foundation staged runtime dylib is missing: $runtime_input"
+    actual_id=$(llvm-otool-18 -D "$runtime_input" | tail -n 1)
+    [ "$actual_id" = "$install_name" ] \
+        || die "Foundation staged runtime ID $actual_id, expected $install_name"
+done
 
 # A cold cache must build the SDK's textual Swift module before it recursively
 # builds _Concurrency for the pinned binary OpenCombine module.  With the
@@ -328,6 +360,26 @@ echo '== compile the bounded Foundation umbrella after SwiftUI'
     -emit-module -emit-module-path "$PACKAGE/Foundation.swiftmodule" \
     -emit-object -o "$OUT/foundation.o" \
     "${FOUNDATION_GUEST_SOURCES[@]}"
+llvm-nm-18 -u -j "$OUT/foundation.o" | LC_ALL=C sort -u \
+    > "$AUDIT/foundation-undefined-symbols.txt"
+foundation_string_processing_undefineds=$(awk \
+    'index($0, "17_StringProcessing") { count++ } END { print count + 0 }' \
+    "$AUDIT/foundation-undefined-symbols.txt")
+foundation_synchronization_undefineds=$(awk \
+    'index($0, "15Synchronization") { count++ } END { print count + 0 }' \
+    "$AUDIT/foundation-undefined-symbols.txt")
+foundation_regex_parser_undefineds=$(awk \
+    'index($0, "12_RegexParser") { count++ } END { print count + 0 }' \
+    "$AUDIT/foundation-undefined-symbols.txt")
+[ "$foundation_string_processing_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS" ] \
+    || die "Foundation StringProcessing undefined count $foundation_string_processing_undefineds, expected $EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS"
+[ "$foundation_synchronization_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS" ] \
+    || die "Foundation Synchronization undefined count $foundation_synchronization_undefineds, expected $EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS"
+[ "$foundation_regex_parser_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS" ] \
+    || die "Foundation RegexParser undefined count $foundation_regex_parser_undefineds, expected $EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS"
 
 # build_full emitted a deliberately early literal UIKit identity-probe module
 # before either app-facing Foundation module existed.  Pair that exact module
@@ -396,8 +448,15 @@ echo '== package nine reusable guest dylibs'
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L"$PACKAGE" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine \
+    -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
+for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
+    load_count=$(llvm-otool-18 -L "$PACKAGE/libFoundation.dylib" \
+        | awk -v expected="$install_name" '$1 == expected { count++ } END { print count + 0 }')
+    [ "$load_count" -eq 1 ] \
+        || die "libFoundation runtime load count $load_count for $install_name, expected 1"
+done
 "${LD[@]}" -dylib -dead_strip -install_name @rpath/libSwiftUI.dylib \
     -rpath @loader_path -L"$PACKAGE" \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
