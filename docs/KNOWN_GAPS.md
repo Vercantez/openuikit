@@ -1,5 +1,51 @@
 # Known gaps (living document — fixers: read this)
 
+## Reminder presentation/table successor slice (2026-08-30)
+
+This slice closes five diagnostics in the unchanged Reminder whole-source
+census, moving the exact multiset from **12 -> 7** with zero additions and
+zero app/vendor edits. Its supported behavior is intentionally narrower than
+the newly compiling spellings:
+
+- `UIModalTransitionStyle` raw values/availability and the open
+  `modalTransitionStyle` property match the measured public surface, but the
+  value is stored policy only. `.flipHorizontal`, `.crossDissolve`, and
+  `.partialCurl` do not select different built-in animations. No transition
+  pixel or timing claim is made.
+- `UIPopoverPresentationController`, its `UIViewController` accessor, and
+  `backgroundColor` are open at the measured availability. The color defaults
+  to nil and round-trips exact values, but OpenUIKit still always adapts to a
+  sheet. There is no regular-width arrow, background chrome, or color render.
+  Several older popover members (`sourceView`, `sourceRect`,
+  `permittedArrowDirections`, and the portable `adaptedStyle`) predate this
+  slice as public, non-open declarations even though native UIKit permits
+  broader subclass customization. Only the subclass/accessor/background
+  surface exercised and native-typechecked here is closed.
+- A valid direct `moveRow(at:to:)`, or exactly one such move inside the outer
+  `beginUpdates()` / `endUpdates()`, re-keys visible cells and remaps selection
+  by the same index-path permutation. It preserves surviving cell identity,
+  destination frames, and visible order. Structural retiling is deferred only
+  while such a batch is pending; an ordinary open batch still scrolls/layouts.
+  The data source must already describe the final ordering, as UIKit requires.
+- Multiple moves, a move mixed with insert/delete/reload, dirty or unbuilt
+  pre-update metrics, collisions, and invalid slots use the existing coherent
+  rebuild. `reloadData()` still clears selection immediately. Other fallback
+  operations preserve selection by index path, not item identity. No
+  mixed-batch cell-identity promise, animated interpolation, delete animation,
+  or UIKit `performBatchUpdates` implementation is claimed. Invalid positive
+  sources fail to a rebuild instead of shifting every live key; this is a
+  portable safety policy, not a measured UIKit exception contract.
+
+The iOS 26.1 oracle disables animation and measures only enum/property/color
+state plus direct and pure-single-batch identity, exact destination frames,
+visible order, and selection. It deliberately excludes invalid-index
+exceptions, animated-row frames/pixels, cross-dissolve rendering/timing,
+regular-width popover chrome, and mixed-batch identity. The successor Reminder
+probe pins all 22 sources, 23 direct call-site lines, exact source hash, full
+before/after diagnostic multisets, and the one-commit/changed-path boundary.
+Seven unrelated diagnostics remain, so unchanged Reminder does not compile or
+launch yet.
+
 ## UIDatePicker Reminder slice (2026-08-30)
 
 OpenUIKit now exports the picker-specific public surface exercised by
@@ -1158,9 +1204,10 @@ NOT modelled: failure requirements — `require(toFail:)` does not exist and
   a `UITableView`; no system activity exists, so a sheet with nothing to offer
   says exactly that. `completionWithItemsHandler` fires where UIKit's does.
 - **Popovers always adapt.** `UIPopoverPresentationController` stores
-  `sourceView`/`sourceRect`/`permittedArrowDirections` and presents as a
-  sheet — which is what real UIKit does at iPhone width, but an iPad-sized
-  window would get a sheet where UIKit draws an arrow-anchored popover.
+  `sourceView`/`sourceRect`/`permittedArrowDirections` and the successor
+  slice's nil/set/reset `backgroundColor` state, then presents as a sheet —
+  which is what real UIKit does at iPhone width, but an iPad-sized window
+  would get a sheet where UIKit draws an arrow-anchored, colored popover.
 - **`UIDeferredMenuElement` resolves SYNCHRONOUS providers only.** UIKit's
   provider may complete later (it shows a spinner meanwhile); there is no run
   loop to come back to, so a late completion contributes nothing.
@@ -1986,14 +2033,14 @@ scroll view hand-off. Not shipped:
 ## UITableView animated updates (M10, 2026-08-25): scope notes
 
 - `performUpdates(withDuration:delay:options:identity:updates:completion:)`
-  is NOT UIKit's API. UIKit takes an explicit list of moves/inserts/deletes
-  (`moveRow(at:to:)`, `insertRows(at:with:)`, `deleteRows(at:with:)` inside
-  `performBatchUpdates`); this takes a stable per-index-path identity and
-  diffs. It covers moves and inserts; **deletes do not animate** — a row
-  whose identity vanishes is retired immediately, because the cell would
-  have to be kept alive outside the visible set to fade it out. There is
-  no `UITableView.RowAnimation` vocabulary (`.fade`/`.top`/`.left`…);
-  inserts always fade in.
+  is NOT UIKit's API. The iOS 5 `moveRow(at:to:)` spelling now exists and
+  preserves identity for a direct or pure-single begin/end move, but it has
+  no animation pixels. UIKit's `performBatchUpdates` is still absent.
+  `performUpdates` instead takes a stable per-index-path identity and diffs;
+  it covers animated moves and inserts, while **deletes do not animate** — a
+  row whose identity vanishes is retired immediately. Structural
+  `RowAnimation` values are accepted as visual hints, but the ordinary
+  insert/delete/reload paths rebuild without style-specific animation.
 - Scrolling DURING an update is not handled: the animation's recorded
   endpoints are the frames computed at update time, so a re-tile triggered
   by a contentOffset change mid-flight assigns model frames the in-flight
@@ -2024,11 +2071,13 @@ scroll view hand-off. Not shipped:
   scenes. Apps targeting device feel should set 16.
 - Selection overlay is a full-bleed rect; on an inset-grouped section's
   first/last row it is NOT clipped to the card's 26 pt corners.
-- No editing mode (delete/reorder); animated moves/inserts arrived with
-  `performUpdates` (see above) but there is no delete animation and no
-  `UITableView.RowAnimation`, no `UITableViewHeaderFooterView` reuse pool
-  (headers/footers are rebuilt per section entering the viewport —
-  cheap, they're one label), no index titles, no multi-selection.
+- No delete/reorder accessories or data-source reorder interaction; animated
+  identity-diff moves/inserts arrived with `performUpdates` (see above), and
+  direct/pure-single UIKit-shaped moves are nonanimated. There is no delete
+  animation or style-specific structural `RowAnimation`, and no index titles.
+  Default anonymous title chrome is rebuilt as sections enter the viewport;
+  registered/dequeued `UITableViewHeaderFooterView` instances use the
+  existing reusable header-footer registry.
 - `.grouped` style renders with the `.insetGrouped` chrome (no legacy
   full-width grouped look; no fixture covers it).
 - Plain footers have no golden: they render with header-like height

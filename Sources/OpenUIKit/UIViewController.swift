@@ -205,6 +205,33 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// `.automatic` resolves to `.pageSheet` (the iOS default).
     public var modalPresentationStyle: UIModalPresentationStyle = .automatic
 
+    /// Transition requested for the next modal presentation. UIKit defaults
+    /// this to `.coverVertical`; OpenUIKit retains the exact public state while
+    /// its built-in presenter continues to use the measured transitions in
+    /// UIPresentation.swift.
+    @available(iOS 3.0, *)
+    open var modalTransitionStyle: UIModalTransitionStyle = .coverVertical
+
+    /// UIKit's accessor. Creating it is what an app's
+    /// `vc.popoverPresentationController?.sourceView = v` line does; the
+    /// controller is remembered so the presentation uses it.
+    ///
+    /// NOTE (measured, and the reason UIAlertController never touches this):
+    /// on real iOS 26 merely configuring an action sheet's popover flips it
+    /// into a popover presentation and silently drops its cancel action.
+    @available(iOS 8.0, *)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    open var popoverPresentationController: UIPopoverPresentationController? {
+        if let existing = _popoverController { return existing }
+        let controller = UIPopoverPresentationController(
+            presentedViewController: self,
+            presenting: nil
+        )
+        _popoverController = controller
+        return controller
+    }
+
     /// The dimming view swallows touches either way — there is no
     /// tap-outside-to-dismiss. Setting it true DOES now suppress the
     /// interactive drag-to-dismiss (the sheet tracks the finger and always

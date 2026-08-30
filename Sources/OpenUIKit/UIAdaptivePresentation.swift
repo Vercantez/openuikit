@@ -83,6 +83,9 @@ public extension UISheetPresentationControllerDelegate {
 
 // MARK: - UIPopoverPresentationControllerDelegate
 
+@available(iOS 8.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 @preconcurrency @MainActor
 public protocol UIPopoverPresentationControllerDelegate: UIAdaptivePresentationControllerDelegate {
     func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController)
@@ -105,11 +108,20 @@ public extension UIPopoverPresentationControllerDelegate {
 /// The anchor properties exist so that the ubiquitous
 /// `ac.popoverPresentationController?.sourceView = view` line compiles and
 /// carries its information; nothing draws an arrow (see the file header).
+@available(iOS 8.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 @preconcurrency @MainActor
-public final class UIPopoverPresentationController: UIPresentationController {
+open class UIPopoverPresentationController: UIPresentationController {
     public weak var sourceView: UIView?
     public var sourceRect: CGRect = .zero
     public var permittedArrowDirections: UIPopoverArrowDirection = .any
+    /// UIKit defaults to nil. OpenUIKit retains the requested popover chrome
+    /// color even though compact-width presentations adapt to a sheet and no
+    /// regular-width popover chrome is drawn yet.
+    @available(iOS 8.0, *)
+    @available(visionOS, unavailable)
+    open var backgroundColor: UIColor?
     public weak var popoverDelegate: UIPopoverPresentationControllerDelegate? {
         get { delegate as? UIPopoverPresentationControllerDelegate }
         set { delegate = newValue }
@@ -140,23 +152,4 @@ public struct UIPopoverArrowDirection: OptionSet, Sendable {
     public static let right = UIPopoverArrowDirection(rawValue: 1 << 3)
     public static let any: UIPopoverArrowDirection = [.up, .down, .left, .right]
     public static let unknown = UIPopoverArrowDirection(rawValue: 1 << 4)
-}
-
-// MARK: - UIViewController accessor
-
-extension UIViewController {
-    /// UIKit's accessor. Creating it is what an app's
-    /// `vc.popoverPresentationController?.sourceView = v` line does; the
-    /// controller is remembered so the presentation uses it.
-    ///
-    /// NOTE (measured, and the reason UIAlertController never touches this):
-    /// on real iOS 26 merely configuring an action sheet's popover flips it
-    /// into a popover presentation and silently drops its cancel action —
-    /// see the header of UIAlertController.swift.
-    public var popoverPresentationController: UIPopoverPresentationController? {
-        if let existing = _popoverController { return existing }
-        let c = UIPopoverPresentationController(presentedViewController: self, presenting: nil)
-        _popoverController = c
-        return c
-    }
 }

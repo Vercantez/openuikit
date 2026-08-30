@@ -432,6 +432,44 @@ private final class AdaptiveDelegate: UIAdaptivePresentationControllerDelegate {
 @MainActor
 final class AdaptivePresentationDelegateTests: XCTestCase {
 
+    func testModalTransitionStyleRawValuesDefaultAndRoundTrip() {
+        XCTAssertEqual(UIModalTransitionStyle.coverVertical.rawValue, 0)
+        XCTAssertEqual(UIModalTransitionStyle.flipHorizontal.rawValue, 1)
+        XCTAssertEqual(UIModalTransitionStyle.crossDissolve.rawValue, 2)
+        XCTAssertEqual(UIModalTransitionStyle.partialCurl.rawValue, 3)
+        XCTAssertEqual(UIModalTransitionStyle(rawValue: 0), .coverVertical)
+        XCTAssertEqual(UIModalTransitionStyle(rawValue: 1), .flipHorizontal)
+        XCTAssertEqual(UIModalTransitionStyle(rawValue: 2), .crossDissolve)
+        XCTAssertEqual(UIModalTransitionStyle(rawValue: 3), .partialCurl)
+        XCTAssertNil(UIModalTransitionStyle(rawValue: 4))
+
+        let vc = UIViewController()
+        XCTAssertEqual(vc.modalTransitionStyle, .coverVertical)
+        vc.modalTransitionStyle = .crossDissolve
+        XCTAssertEqual(vc.modalTransitionStyle, .crossDissolve)
+        vc.modalTransitionStyle = .partialCurl
+        XCTAssertEqual(vc.modalTransitionStyle, .partialCurl)
+        vc.modalTransitionStyle = .coverVertical
+        XCTAssertEqual(vc.modalTransitionStyle, .coverVertical)
+    }
+
+    func testPopoverBackgroundColorDefaultsStoresAndResets() {
+        let vc = UIViewController()
+        vc.modalPresentationStyle = .popover
+        let popover = try! XCTUnwrap(vc.popoverPresentationController)
+        XCTAssertNil(popover.backgroundColor)
+
+        let exact = UIColor(red: 0.125, green: 0.25, blue: 0.5, alpha: 0.75)
+        popover.backgroundColor = exact
+        XCTAssertEqual(popover.backgroundColor, exact)
+
+        // The contextual spellings used by unchanged Reminder source.
+        popover.backgroundColor = .systemBackground
+        XCTAssertEqual(popover.backgroundColor, .systemBackground)
+        popover.backgroundColor = nil
+        XCTAssertNil(popover.backgroundColor)
+    }
+
     /// The interactive sheet drag asks the delegate before it commits, and
     /// reports the refusal — the same place `isModalInPresentation` is read.
     func testShouldDismissGatesTheInteractiveDrag() {

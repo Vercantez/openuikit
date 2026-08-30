@@ -49,6 +49,20 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   compact overlays, wheel physics, accessibility, and native pixels remain
   roadmap work; this milestone does not claim complete UIDatePicker or an
   unchanged Reminder launch.
+- **Reminder presentation/table successor slice (2026-08-30)** — the exact
+  unchanged 22-source census advances **12 -> 7 diagnostics**, removing only
+  the popover-color, modal-transition, and table-row-move five-error surface
+  with zero additions or app/vendor edits. `UIModalTransitionStyle`, the open
+  controller property, and open popover accessor/background close measured
+  raw/default/round-trip state; style-driven animation and regular-width
+  popover chrome remain future work. Direct and pure-single begin/end
+  `UITableView.moveRow(at:to:)` preserve visible identity, exact destination
+  frames, order, and selection, including nested batches with an intervening
+  viewport change. Mixed/multiple/reload batches use a coherent nonidentity
+  rebuild and row-animation pixels are not claimed. A committed iOS 26.1
+  oracle pins only that state/identity/frame/order/selection boundary; the
+  successor Reminder gate pins all 22 sources, 23 call-site lines, complete
+  diagnostic multisets, and the exact one-commit changed-path allowlist.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding

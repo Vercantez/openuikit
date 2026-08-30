@@ -617,6 +617,327 @@ private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+/// Explicit row arrays for UIKit-compatible `moveRow(at:to:)` tests. The
+/// reference-typed item lets the assertions distinguish item identity from an
+/// index path whose meaning changes during the move.
+@MainActor
+private final class RowMoveSource: UITableViewDataSource {
+    @MainActor
+    final class Item {
+        let name: String
+        init(_ name: String) { self.name = name }
+    }
+
+    var sections: [[Item]]
+    var requestedPaths: [IndexPath] = []
+
+    init(_ names: [[String]]) {
+        sections = names.map { $0.map(Item.init) }
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        requestedPaths.append(indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "move-row")
+            ?? UITableViewCell(style: .default, reuseIdentifier: "move-row")
+        cell.textLabel.text = sections[indexPath.section][indexPath.row].name
+        return cell
+    }
+
+    func move(from source: IndexPath, to destination: IndexPath) {
+        let item = sections[source.section].remove(at: source.row)
+        sections[destination.section].insert(item, at: destination.row)
+    }
+
+    func insert(_ name: String, at destination: IndexPath) {
+        sections[destination.section].insert(Item(name), at: destination.row)
+    }
+}
+
+@MainActor
+final class TableViewRowMoveTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    private func makeTable(_ names: [[String]], height: CGFloat = 400)
+        -> (UIWindow, UITableView, RowMoveSource) {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: height))
+        let source = RowMoveSource(names)
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.rowHeight = 44
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    private func cells(in table: UITableView, section: Int, count: Int)
+        -> [UITableViewCell] {
+        (0..<count).map {
+            table.cellForRow(at: IndexPath(row: $0, section: section))!
+        }
+    }
+
+    /// iOS 26.1 oracle: A moves 0→2, B/C shift up, D stays put, and every
+    /// visible item keeps the exact cell it had before the move.
+    func testDirectMovePreservesCellsFramesOrderAndMultipleSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 0, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let from = IndexPath(row: 0, section: 0)
+        let to = IndexPath(row: 2, section: 0)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        XCTAssertTrue(after[0] === before[1])
+        XCTAssertTrue(after[1] === before[2])
+        XCTAssertTrue(after[2] === before[0])
+        XCTAssertTrue(after[3] === before[3])
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["B", "C", "A", "D"])
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 2, section: 0))
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)])
+        XCTAssertTrue(after[1].isSelected)
+        XCTAssertTrue(after[2].isSelected)
+    }
+
+    func testSameSourceAndDestinationPreservesIdentityFramesAndSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let unchanged = IndexPath(row: 1, section: 0)
+        source.move(from: unchanged, to: unchanged)
+        table.moveRow(at: unchanged, to: unchanged)
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        for index in before.indices {
+            XCTAssertTrue(after[index] === before[index])
+        }
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["A", "B", "C", "D"])
+        XCTAssertEqual(table.indexPathForSelectedRow, unchanged)
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [unchanged, IndexPath(row: 2, section: 0)])
+        XCTAssertTrue(after[1].isSelected)
+        XCTAssertTrue(after[2].isSelected)
+    }
+
+    /// The pure single-move fast path is deferred until the outer batch ends,
+    /// then applies the same identity/selection permutation as a direct move.
+    func testSingleMoveInsideBeginEndUpdatesIsAtomicAndIdentityPreserving() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let from = IndexPath(row: 3, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        table.beginUpdates()
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 1, section: 0)) === before[1],
+                      "the old slot map stays visible until endUpdates")
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 2, section: 0))
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        XCTAssertTrue(after[0] === before[0])
+        XCTAssertTrue(after[1] === before[3])
+        XCTAssertTrue(after[2] === before[1])
+        XCTAssertTrue(after[3] === before[2])
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["A", "D", "B", "C"])
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 3, section: 0))
+        XCTAssertEqual(table.indexPathsForSelectedRows, [IndexPath(row: 3, section: 0)])
+    }
+
+    func testCrossSectionMoveRekeysBothSectionsAndSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C"], ["X", "Y"]])
+        let before = Dictionary(uniqueKeysWithValues: table.visibleCells.map {
+            ($0.textLabel.text!, $0)
+        })
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 1, section: 1), animated: false)
+
+        let from = IndexPath(row: 1, section: 0)
+        let to = IndexPath(row: 1, section: 1)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        let expected: [(String, IndexPath)] = [
+            ("A", IndexPath(row: 0, section: 0)),
+            ("C", IndexPath(row: 1, section: 0)),
+            ("X", IndexPath(row: 0, section: 1)),
+            ("B", IndexPath(row: 1, section: 1)),
+            ("Y", IndexPath(row: 2, section: 1)),
+        ]
+        for (name, path) in expected {
+            XCTAssertTrue(table.cellForRow(at: path) === before[name])
+        }
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["A", "C", "X", "B", "Y"])
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 1, section: 1))
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 1, section: 1), IndexPath(row: 2, section: 1)])
+    }
+
+    func testOffscreenSelectionFollowsMoveIntoVisibleViewport() {
+        let names = (0..<100).map { "R\($0)" }
+        let (window, table, source) = makeTable([names], height: 100)
+        let rowZero = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        let rowOne = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        table.selectRow(at: IndexPath(row: 80, section: 0), animated: false)
+
+        let from = IndexPath(row: 80, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 0, section: 0)) === rowZero)
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 2, section: 0)) === rowOne)
+        XCTAssertEqual(table.cellForRow(at: to)?.textLabel.text, "R80")
+        XCTAssertEqual(table.cellForRow(at: to)?.isSelected, true)
+        XCTAssertEqual(table.indexPathForSelectedRow, to)
+    }
+
+    func testMultipleMovesInOneBatchUseCoherentRebuildFallback() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        source.move(from: IndexPath(row: 3, section: 0),
+                    to: IndexPath(row: 1, section: 0))
+        table.moveRow(at: IndexPath(row: 3, section: 0),
+                      to: IndexPath(row: 1, section: 0))
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["B", "D", "C", "A"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 4)
+    }
+
+    func testMixedMoveAndInsertBatchUsesCoherentRebuildFallback() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        let inserted = IndexPath(row: 1, section: 0)
+        source.insert("X", at: inserted)
+        table.insertRows(at: [inserted], with: .none)
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["B", "X", "C", "A", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 5)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 5)
+    }
+
+    func testNestedBatchSuppressesIntermediateRetileUntilOuterMoveCommit() {
+        let names = (0..<100).map { "R\($0)" }
+        let (window, table, source) = makeTable([names], height: 100)
+        table.selectRow(at: IndexPath(row: 80, section: 0), animated: false)
+        source.requestedPaths.removeAll()
+
+        let from = IndexPath(row: 80, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        table.beginUpdates()
+        table.beginUpdates()
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        table.contentOffset = CGPoint(x: 0, y: 40 * 44)
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(source.requestedPaths, [])
+        XCTAssertEqual(table.indexPathsForVisibleRows,
+                       [IndexPath(row: 0, section: 0),
+                        IndexPath(row: 1, section: 0),
+                        IndexPath(row: 2, section: 0)])
+        table.endUpdates()
+        table.layoutIfNeeded()
+        XCTAssertEqual(source.requestedPaths, [], "inner end must not commit")
+
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.indexPathsForVisibleRows,
+                       [IndexPath(row: 40, section: 0),
+                        IndexPath(row: 41, section: 0),
+                        IndexPath(row: 42, section: 0)])
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["R39", "R40", "R41"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 3)
+        XCTAssertEqual(table.indexPathForSelectedRow, to)
+    }
+
+    func testQueuedMoveThenReloadUsesFallbackAndRetainsReloadSelectionClearing() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+        source.requestedPaths.removeAll()
+
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        table.reloadData()
+        table.layoutIfNeeded()
+        XCTAssertNil(table.indexPathForSelectedRow)
+        XCTAssertEqual(source.requestedPaths, [])
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["B", "C", "A", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertNil(table.indexPathForSelectedRow)
+    }
+
+    func testInvalidPositiveSourceFallsBackWithoutShiftingCellsOrSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+
+        table.moveRow(at: IndexPath(row: 99, section: 0),
+                      to: IndexPath(row: 0, section: 0))
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["A", "B", "C", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 1, section: 0))
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))?.isSelected,
+                       true)
+        _ = source
+    }
+}
+
 @MainActor
 final class TableViewAnimatedUpdateTests: XCTestCase {
     override func setUp() {

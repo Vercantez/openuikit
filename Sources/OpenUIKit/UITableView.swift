@@ -453,6 +453,13 @@ open class UITableView: UIScrollView {
     public func reloadData() {
         discardVisibleData(clearSelection: true)
         setNeedsMetrics()
+        if updateNesting > 0 {
+            // A reload inside a structural batch retains reloadData's
+            // immediate selection clearing, but the final presentation is a
+            // coherent rebuild rather than the single-move identity path.
+            structuralUpdatePending = true
+            pendingStructuralUpdateIncludesNonMove = true
+        }
     }
 
     private func discardVisibleData(clearSelection: Bool) {
@@ -492,6 +499,8 @@ open class UITableView: UIScrollView {
 
     private var updateNesting = 0
     private var structuralUpdatePending = false
+    private var pendingRowMoves: [(source: IndexPath, destination: IndexPath)] = []
+    private var pendingStructuralUpdateIncludesNonMove = false
 
     public func beginUpdates() { updateNesting += 1 }
 
@@ -499,17 +508,31 @@ open class UITableView: UIScrollView {
         guard updateNesting > 0 else { return }
         updateNesting -= 1
         if updateNesting == 0, structuralUpdatePending {
-            applyStructuralUpdate()
+            commitPendingStructuralUpdate()
         }
     }
 
     private func noteStructuralUpdate() {
         structuralUpdatePending = true
-        if updateNesting == 0 { applyStructuralUpdate() }
+        pendingStructuralUpdateIncludesNonMove = true
+        if updateNesting == 0 { commitPendingStructuralUpdate() }
+    }
+
+    private func commitPendingStructuralUpdate() {
+        if !pendingStructuralUpdateIncludesNonMove, pendingRowMoves.count == 1,
+           let move = pendingRowMoves.first {
+            structuralUpdatePending = false
+            pendingRowMoves.removeAll()
+            applyRowMove(from: move.source, to: move.destination)
+            return
+        }
+        applyStructuralUpdate()
     }
 
     private func applyStructuralUpdate() {
         structuralUpdatePending = false
+        pendingRowMoves.removeAll()
+        pendingStructuralUpdateIncludesNonMove = false
         // The data source is authoritative after an insert/delete call.  Drop
         // only the visible presentation, preserve programmatic selection, and
         // tile the new model immediately.  This is coherent UIKit behavior;
@@ -531,6 +554,21 @@ open class UITableView: UIScrollView {
         noteStructuralUpdate()
     }
 
+    /// Re-key one data-source move without discarding visible cells. UIKit's
+    /// contract requires the data source to describe the destination ordering
+    /// when this method is called. The affected index paths therefore form a
+    /// deterministic permutation: the moved cell and every shifted neighbour
+    /// keep their identity, and selection follows the same permutation.
+    @available(iOS 5.0, *)
+    open func moveRow(at indexPath: IndexPath, to newIndexPath: IndexPath) {
+        if updateNesting > 0 {
+            structuralUpdatePending = true
+            pendingRowMoves.append((indexPath, newIndexPath))
+            return
+        }
+        applyRowMove(from: indexPath, to: newIndexPath)
+    }
+
     public func reloadRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
         noteStructuralUpdate()
     }
@@ -549,6 +587,119 @@ open class UITableView: UIScrollView {
 
     public func reloadSections(_ sections: IndexSet, with animation: RowAnimation) {
         noteStructuralUpdate()
+    }
+
+    /// Map a slot in the pre-move table to its slot in the post-move table.
+    /// This is a bijection for a valid single move, both within and between
+    /// sections.
+    private func remappedIndexPath(_ path: IndexPath, movingFrom source: IndexPath,
+                                   to destination: IndexPath) -> IndexPath {
+        if path == source { return destination }
+
+        if source.section == destination.section {
+            guard path.section == source.section else { return path }
+            if source.row < destination.row,
+               path.row > source.row, path.row <= destination.row {
+                return IndexPath(row: path.row - 1, section: path.section)
+            }
+            if destination.row < source.row,
+               path.row >= destination.row, path.row < source.row {
+                return IndexPath(row: path.row + 1, section: path.section)
+            }
+            return path
+        }
+
+        if path.section == source.section, path.row > source.row {
+            return IndexPath(row: path.row - 1, section: path.section)
+        }
+        if path.section == destination.section, path.row >= destination.row {
+            return IndexPath(row: path.row + 1, section: path.section)
+        }
+        return path
+    }
+
+    /// Apply one already-committed data-source move. Only cells which remain
+    /// visible are retained; cells leaving the viewport return to the reuse
+    /// pool and newly visible slots are filled by the ordinary tiler.
+    private func applyRowMove(from source: IndexPath, to destination: IndexPath) {
+        guard source.section >= 0, source.row >= 0,
+              destination.section >= 0, destination.row >= 0 else {
+            applyStructuralUpdate()
+            return
+        }
+
+        // The data source already describes the destination ordering here,
+        // so only the cached pre-update metrics can validate the source slot.
+        // If layout was dirty or never built, rebuild coherently rather than
+        // guessing from post-move row counts.
+        guard !metricsDirty, metricsWidth == bounds.width,
+              source.section < metrics.count,
+              source.row < metrics[source.section].rowEnds.count else {
+            applyStructuralUpdate()
+            return
+        }
+
+        let oldViews = visibleCellsByPath.views
+        let remap: (IndexPath) -> IndexPath = {
+            self.remappedIndexPath($0, movingFrom: source, to: destination)
+        }
+        let remappedPrimarySelection = indexPathForSelectedRow.map(remap)
+        let remappedAdditionalSelections = Set(additionalSelectedRows.map(remap))
+
+        // contentSize can clamp contentOffset and therefore try to re-tile
+        // while metrics are rebuilding. Keep the old visible map stable until
+        // every destination key and the new viewport are known.
+        inTile = true
+        setNeedsMetrics()
+        metricsIfNeeded()
+
+        guard source.section < metrics.count,
+              destination.section < metrics.count,
+              destination.row < metrics[destination.section].rowEnds.count else {
+            inTile = false
+            applyStructuralUpdate()
+            return
+        }
+        let newSourceCount = metrics[source.section].rowEnds.count
+        let sourceFitsNewCounts = source.section == destination.section
+            ? source.row < newSourceCount
+            : source.row <= newSourceCount
+        guard sourceFitsNewCounts else {
+            inTile = false
+            applyStructuralUpdate()
+            return
+        }
+
+        let needed = Set(neededViews().cells)
+        var rekeyed: [IndexPath: UITableViewCell] = [:]
+        var kept = Set<ObjectIdentifier>()
+        var collision = false
+        for (oldPath, cell) in oldViews {
+            let newPath = remap(oldPath)
+            guard needed.contains(newPath) else { continue }
+            if rekeyed[newPath] != nil {
+                collision = true
+                break
+            }
+            rekeyed[newPath] = cell
+            kept.insert(ObjectIdentifier(cell))
+        }
+
+        guard !collision else {
+            inTile = false
+            applyStructuralUpdate()
+            return
+        }
+
+        for (_, cell) in oldViews where !kept.contains(ObjectIdentifier(cell)) {
+            cell.removeFromSuperview()
+            recycle(cell)
+        }
+        visibleCellsByPath.replaceAll(with: rekeyed)
+        indexPathForSelectedRow = remappedPrimarySelection
+        additionalSelectedRows = remappedAdditionalSelections
+        inTile = false
+        retile()
     }
 
     // MARK: Animated updates (M10)
@@ -834,6 +985,11 @@ open class UITableView: UIScrollView {
     }
 
     func retile() {
+        // The data source may already expose post-update rows while the live
+        // cells still use pre-update keys. Wait for the outer structural
+        // commit; ordinary open batches with no queued structural work still
+        // re-tile on scroll and layout.
+        guard !(updateNesting > 0 && structuralUpdatePending) else { return }
         guard !inTile else { return }
         inTile = true
         defer { inTile = false }

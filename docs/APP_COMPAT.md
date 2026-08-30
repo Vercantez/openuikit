@@ -154,6 +154,56 @@ providers also retain separate closed render hashes instead of rewriting
 pixels to make unlike locale/Foundation stacks appear identical. This runtime
 proof is the bounded picker path, not a complete unchanged Reminder launch.
 
+## Reminder presentation state and table-row-move slice (2026-08-30)
+
+The unchanged Reminder revision and 22-source subject pinned by the picker
+slice now typecheck against one direct successor to DatePicker commit
+`0d08b8768db6b3a077192be04bcb13e18199c049`. The complete diagnostic
+multiset moves from **12 -> 7**: exactly the missing popover
+`backgroundColor` plus `.systemBackground` cascade, missing
+`modalTransitionStyle` plus `.crossDissolve` cascade, and missing
+`UITableView.moveRow(at:to:)` diagnostic disappear. No diagnostic is added;
+the remaining seven are byte-for-byte unchanged. The Reminder commit, tree,
+whole-source SHA-256, all 22 source paths, and the union of the prior 20 picker
+lines with the 3 new presentation/table lines are pinned. The resulting
+`call_sites=23` census and exact candidate changed-path boundary live in
+`Tools/reminderpresentationtableprobe`; app and vendor source remain clean.
+
+`UIModalTransitionStyle` carries UIKit's raw values and platform availability,
+and the externally overridable `UIViewController.modalTransitionStyle`
+defaults to `.coverVertical` and round-trips all styles. This is **state
+compatibility only**: assigning `.crossDissolve` does not change OpenUIKit's
+built-in sheet/full-screen animator or claim native transition pixels or
+timing. The iOS 8 popover controller, controller accessor, and
+`backgroundColor` are externally overridable with the measured nil/set/reset
+state. OpenUIKit still adapts every popover to its compact sheet route and
+does not draw regular-width arrow/chrome; the stored color does not yet paint
+that missing surface.
+
+The open iOS 5 `UITableView.moveRow(at:to:)` now applies a valid,
+already-committed data-source move without recycling visible cells that remain
+in the viewport. Direct moves and exactly one move inside an outer
+`beginUpdates()` / `endUpdates()` transaction preserve cell identity,
+destination frames, visible order, and selection through same-section,
+cross-section, off-screen, and no-op permutations. Pending structural batches
+suppress intermediate layout/scroll retiling until the outer commit, so a
+nested viewport change cannot read post-move items under pre-move keys.
+Multiple moves, move-plus-insert/reload, dirty pre-update metrics, and invalid
+slots take the coherent full-rebuild path. They intentionally make no cell
+identity or animation claim; `RowAnimation` remains a visual hint rather than
+implemented row-transition pixels.
+
+`Tools/presentationtableprobe` is the committed iOS 26.1 native boundary. With
+animations disabled, it pins only public enum/property/color state and the
+direct/pure-single-batch cell identity, exact destination frames, visible
+order, and selection remapping measured by the preserved oracle. It does not
+measure cross-dissolve pixels/timing, animated row interpolation,
+regular-width popover rendering, invalid-index exceptions, or mixed-batch
+identity. The seven remaining Reminder diagnostics are two picker Objective-C
+selector/representability errors, trait registration, text optionality,
+`#Preview`, `Notification` ambiguity, and the `endEditing` selector boundary;
+this is not yet a claim that unchanged Reminder compiles or launches.
+
 ## Visual-effect source compatibility slice (2026-08-29)
 
 The 20-app ladder corpus uses `UIVisualEffectView` in 17 repositories and

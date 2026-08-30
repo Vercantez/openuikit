@@ -52,6 +52,23 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+/// The transition animation requested for a modal presentation.
+///
+/// The raw values are UIKit's public `UIModalTransitionStyle` values.  The
+/// portable presenter currently retains this policy for source and state
+/// compatibility; its built-in sheet/full-screen animations remain the
+/// measured OpenUIKit transitions documented at the top of this file.
+@available(watchOS, unavailable)
+public enum UIModalTransitionStyle: Int, Sendable {
+    case coverVertical = 0
+    @available(tvOS, unavailable)
+    case flipHorizontal = 1
+    case crossDissolve = 2
+    @available(iOS 3.2, *)
+    @available(tvOS, unavailable)
+    case partialCurl = 3
+}
+
 
 public enum UIModalPresentationStyle {
     /// Resolves to .pageSheet (the iOS default for a plain present).
