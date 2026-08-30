@@ -283,7 +283,10 @@ Preview-enabled packages also publish the exact bounded macro diagnostic
 arguments. The driver captures `-dump-macro-expansions` separately as
 `app-macro-expansions.stderr`, rejects a successful compiler process that
 nevertheless printed a source error, and attests that the target-side
-DeveloperToolsSupport object appears exactly once in the executable link.
+DeveloperToolsSupport object appears exactly once in the executable link. It
+also matches UIKit's sole measured DTS import to the object's definition and
+exports only that exact Preview initializer from the application executable;
+post-link symbol counts must be one in Preview mode and zero otherwise.
 
 ## Tests
 

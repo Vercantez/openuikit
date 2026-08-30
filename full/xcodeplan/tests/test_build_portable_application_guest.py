@@ -10,6 +10,34 @@ import unittest
 HERE = Path(__file__).resolve().parent
 XCODEPLAN = HERE.parent
 REPOSITORY = XCODEPLAN.parent.parent
+PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
+    "_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC"
+)
+
+
+def validate_preview_executable_export_contract(source: str) -> None:
+    assignment = (
+        "PREVIEW_EXECUTABLE_EXPORT_SYMBOL="
+        f"'{PREVIEW_EXECUTABLE_EXPORT_SYMBOL}'"
+    )
+    required_once = (
+        assignment,
+        '-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"',
+        "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
+        "preview_definition_count=$(nm_symbol_count --defined-only",
+        "executable_preview_export_count=$(nm_symbol_count --defined-only",
+        "non-Preview libUIKit imports the Preview initializer",
+        "application Preview initializer export count",
+        "libUIKit_preview_initializer_import_count",
+        "executable_preview_initializer_export_count",
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(
+            f"portable-app Preview executable-export contract drifted: {drifted}"
+        )
+    if "-export_dynamic" in source or "-exported_symbols_list" in source:
+        raise AssertionError("portable-app Preview export must remain one exact symbol")
 
 
 class PortableApplicationGuestDriverTests(unittest.TestCase):
@@ -64,6 +92,31 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         self.assertIn("PORTABLE_UIKIT_HOST_ACTIVE windows=1", script)
         self.assertIn("PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true", script)
         self.assertIn("PORTABLE_APPLICATION_GUEST_OK", script)
+
+    def test_preview_executable_export_is_exact_and_mutation_is_refused(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_preview_executable_export_contract(source)
+        for token in (
+            '-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"',
+            "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
+            "preview_definition_count=$(nm_symbol_count --defined-only",
+            "executable_preview_export_count=$(nm_symbol_count --defined-only",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "export contract"):
+                    validate_preview_executable_export_contract(
+                        source.replace(token, "", 1)
+                    )
+        with self.assertRaisesRegex(AssertionError, "export contract"):
+            validate_preview_executable_export_contract(
+                source.replace(
+                    PREVIEW_EXECUTABLE_EXPORT_SYMBOL,
+                    PREVIEW_EXECUTABLE_EXPORT_SYMBOL + "_MUTATED",
+                    1,
+                )
+            )
 
     def test_legacy_static_link_closes_uuid_compatibility_symbols(self) -> None:
         script = (XCODEPLAN / "build_and_run_reminder_scene_guest.sh").read_text(

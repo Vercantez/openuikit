@@ -50,6 +50,7 @@ EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
 EXPECTED_MACHORUN_COMMIT=e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5
 EXPECTED_MACHORUN_TREE=1b41ede32d9a3ba2a5ec2d37685dc64b4eee9b43
 EXPECTED_PREVIEW_SWIFTSYNTAX_REVISION=4799286537280063c85a32f09884cfbca301b1a1
+PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC'
 
 EXPECTED_OPENCOMBINE_RESULT=c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104
 EXPECTED_OPENCOMBINE_OBJECT=96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914
@@ -224,6 +225,18 @@ trap 'exit 143' TERM
 
 hash_file() { sha256sum "$1" | awk '{print $1}'; }
 
+nm_symbol_count() {
+    local mode=$1 path=$2 symbol=$3
+    llvm-nm-18 "$mode" --extern-only --just-symbol-name "$path" 2>/dev/null \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }'
+}
+
+nm_developer_tools_support_count() {
+    local mode=$1 path=$2
+    llvm-nm-18 "$mode" --extern-only --just-symbol-name "$path" 2>/dev/null \
+        | awk 'index($0, "DeveloperToolsSupport") { count++ } END { print count + 0 }'
+}
+
 require_hash() {
     local path=$1 expected=$2 label=$3 actual
     [ -f "$path" ] && [ ! -L "$path" ] || die "missing regular $label: $path"
@@ -346,6 +359,10 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
     llvm-otool-18 -hv "$DEVELOPER_TOOLS_SUPPORT_OBJECT" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]OBJECT' \
         || die 'DeveloperToolsSupport object is not an ARM64 Mach-O object'
+    preview_export_definition_count=$(nm_symbol_count --defined-only \
+        "$DEVELOPER_TOOLS_SUPPORT_OBJECT" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+    [ "$preview_export_definition_count" -eq 1 ] \
+        || die "Preview DTS initializer definition count $preview_export_definition_count, expected 1"
     file "$PREVIEW_MACRO_PLUGIN" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
         || die 'Preview macro plugin is not native ELF64/aarch64'
     readelf -h "$PREVIEW_MACRO_PLUGIN" | grep -Eq 'Machine:[[:space:]]+AArch64' \
@@ -652,6 +669,15 @@ UIKIT_UNDEFINED_FLAGS=()
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
     -lOpenUIKit -lOpenCoreGraphics
 
+uikit_preview_import_count=$(nm_symbol_count --undefined-only \
+    "$STAGE/lib/libUIKit.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+uikit_dts_import_count=$(nm_developer_tools_support_count --undefined-only \
+    "$STAGE/lib/libUIKit.dylib")
+[ "$uikit_preview_import_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "Preview libUIKit initializer import count $uikit_preview_import_count, expected $PREVIEW_ENABLED"
+[ "$uikit_dts_import_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "Preview libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected $PREVIEW_ENABLED"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CoreGuestPackageProbe \
@@ -667,8 +693,17 @@ for input in "${PROBE_LINK_EXTRA[@]}"; do
 done
 [ "$probe_dts_count" -eq "$PREVIEW_ENABLED" ] \
     || die "core probe DTS link count $probe_dts_count, expected $PREVIEW_ENABLED"
+PROBE_EXPORT_FLAGS=(-exported_symbol __mh_execute_header)
+if [ "$PREVIEW_ENABLED" -eq 1 ]; then
+    staged_preview_definition_count=$(nm_symbol_count --defined-only \
+        "$STAGE/objects/developertoolsupport.o" \
+        "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+    [ "$staged_preview_definition_count" -eq 1 ] \
+        || die "staged Preview DTS initializer definition count $staged_preview_definition_count, expected 1"
+    PROBE_EXPORT_FLAGS+=(-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+fi
 "${LD[@]}" -dead_strip -ignore_auto_link \
-    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    "${PROBE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
@@ -683,19 +718,26 @@ for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
     [ "$actual_id" = "@rpath/lib$dylib.dylib" ] \
         || die "lib$dylib install name changed: $actual_id"
 done
-if [ "$PREVIEW_ENABLED" -eq 1 ]; then
-    if llvm-otool-18 -L "$STAGE/lib/libUIKit.dylib" \
-        | grep -Fq DeveloperToolsSupport; then
-        die 'libUIKit must not load a DeveloperToolsSupport dylib'
-    fi
-    llvm-nm-18 --undefined-only "$STAGE/lib/libUIKit.dylib" 2>/dev/null \
-        | grep -Fq DeveloperToolsSupport \
-        || die 'Preview-enabled libUIKit has no measured DeveloperToolsSupport imports'
+if llvm-otool-18 -L "$STAGE/lib/libUIKit.dylib" \
+    | grep -Fq DeveloperToolsSupport; then
+    die 'libUIKit must not load a DeveloperToolsSupport dylib'
 fi
+probe_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/CoreGuestPackageProbe" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+probe_dts_export_count=$(nm_developer_tools_support_count --defined-only \
+    "$STAGE/probe/CoreGuestPackageProbe")
+[ "$probe_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "core probe Preview initializer export count $probe_preview_export_count, expected $PREVIEW_ENABLED"
+[ "$probe_dts_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "core probe DeveloperToolsSupport export count $probe_dts_export_count, expected $PREVIEW_ENABLED"
 {
     printf 'format\tcore-probe-link-audit-v1\n'
     printf 'developer-tools-support-object-count\t%s\n' "$probe_dts_count"
     printf 'libUIKit-developer-tools-support-load-count\t0\n'
+    printf 'libUIKit-preview-initializer-import-count\t%s\n' \
+        "$uikit_preview_import_count"
+    printf 'executable-preview-initializer-export-count\t%s\n' \
+        "$probe_preview_export_count"
     printf 'runtime-preview-body-evaluation\t%s\n' \
         "$([ "$PREVIEW_ENABLED" -eq 1 ] && printf enabled || printf disabled)"
 } > "$STAGE/attestation/probe-link-audit.tsv"

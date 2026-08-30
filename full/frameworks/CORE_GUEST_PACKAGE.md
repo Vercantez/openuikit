@@ -164,7 +164,13 @@ kept separate under `objects/` and named only by
 generic `executable_link_arguments`: the app driver appends it exactly once.
 The core runtime probe likewise links it exactly once, leaves its UIKit imports
 dynamic, evaluates a retained Preview body, and proves UIKit carries no DTS
-dylib dependency. The JSON also publishes the exact compiler evidence flags:
+dylib dependency. In Preview mode, the builder also requires UIKit's one
+measured DTS import and the object's matching definition, then exports only
+that exact Preview initializer from the probe executable so flat lookup can
+resolve it. The post-link audit requires exactly one such export; non-Preview
+packages require zero DTS imports and exports. Broad executable export and a
+DTS dylib are deliberately outside this seam. The JSON also publishes the
+exact compiler evidence flags:
 
 ```json
 ["-Xfrontend", "-dump-macro-expansions"]

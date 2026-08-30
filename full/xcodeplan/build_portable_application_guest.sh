@@ -6,6 +6,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 SUPPORT_ROOT=$(cd -- "$SCRIPT_DIR/../.." && pwd)
+PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC'
 
 die() {
     echo "portable-application-guest: $*" >&2
@@ -33,6 +34,18 @@ require_regular() {
 require_directory() {
     local path=$1 label=$2
     [ -d "$path" ] && [ ! -L "$path" ] || die "$label is not an ordinary directory: $path"
+}
+
+nm_symbol_count() {
+    local mode=$1 path=$2 symbol=$3
+    llvm-nm-18 "$mode" --extern-only --just-symbol-name "$path" 2>/dev/null \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }'
+}
+
+nm_developer_tools_support_count() {
+    local mode=$1 path=$2
+    llvm-nm-18 "$mode" --extern-only --just-symbol-name "$path" 2>/dev/null \
+        | awk 'index($0, "DeveloperToolsSupport") { count++ } END { print count + 0 }'
 }
 
 canonical_existing() {
@@ -209,7 +222,7 @@ build_inside() {
     require_directory "$app_root" "mounted application source root"
     require_directory "$output" "mounted output root"
     require_directory "$platform" "mounted platform package"
-    for tool in python3 swiftc ld64.lld-18 llvm-otool-18 file sha256sum perl; do
+    for tool in python3 swiftc ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
     PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
@@ -350,8 +363,27 @@ PY
         || die "core package contains no dylibs"
 
     local -a extra_objects=()
+    local uikit_preview_import_count uikit_dts_import_count
+    uikit_preview_import_count=$(nm_symbol_count --undefined-only \
+        "$libraries/libUIKit.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+    uikit_dts_import_count=$(nm_developer_tools_support_count --undefined-only \
+        "$libraries/libUIKit.dylib")
     if [ "$preview_required" = yes ]; then
         extra_objects+=("$platform/$dts_object")
+        [ "$uikit_preview_import_count" -eq 1 ] \
+            || die "Preview libUIKit initializer import count $uikit_preview_import_count, expected 1"
+        [ "$uikit_dts_import_count" -eq 1 ] \
+            || die "Preview libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected 1"
+        local preview_definition_count
+        preview_definition_count=$(nm_symbol_count --defined-only \
+            "${extra_objects[0]}" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+        [ "$preview_definition_count" -eq 1 ] \
+            || die "Preview DTS initializer definition count $preview_definition_count, expected 1"
+    else
+        [ "$uikit_preview_import_count" -eq 0 ] \
+            || die "non-Preview libUIKit imports the Preview initializer"
+        [ "$uikit_dts_import_count" -eq 0 ] \
+            || die "non-Preview libUIKit imports DeveloperToolsSupport"
     fi
     {
         printf 'app_object\t%s\t%s\n' "$(sha256sum "$object" | awk '{print $1}')" "$object"
@@ -363,11 +395,17 @@ PY
                 "${extra_objects[0]}"
         fi
     } >"$output/application-link-objects.tsv"
+    local -a executable_export_arguments=(-exported_symbol __mh_execute_header)
+    if [ "$preview_required" = yes ]; then
+        executable_export_arguments+=(
+            -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
+        )
+    fi
     echo "== link relocatable application executable"
     (
         cd "$platform"
         ld64.lld-18 "${link_arguments[@]}" -dead_strip \
-            -exported_symbol __mh_execute_header \
+            "${executable_export_arguments[@]}" \
             -rpath @executable_path/../Frameworks \
             -o "$executable" "$object" "${extra_objects[@]}"
     )
@@ -376,6 +414,23 @@ PY
     llvm-otool-18 -hv "$executable" | grep -Eq \
         'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "linked application is not an ARM64 Mach-O executable"
+    local executable_preview_export_count executable_dts_export_count expected_export_count
+    executable_preview_export_count=$(nm_symbol_count --defined-only \
+        "$executable" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+    executable_dts_export_count=$(nm_developer_tools_support_count --defined-only \
+        "$executable")
+    expected_export_count=0
+    [ "$preview_required" != yes ] || expected_export_count=1
+    [ "$executable_preview_export_count" -eq "$expected_export_count" ] \
+        || die "application Preview initializer export count $executable_preview_export_count, expected $expected_export_count"
+    [ "$executable_dts_export_count" -eq "$expected_export_count" ] \
+        || die "application DeveloperToolsSupport export count $executable_dts_export_count, expected $expected_export_count"
+    {
+        printf 'libUIKit_preview_initializer_import_count\t%s\n' \
+            "$uikit_preview_import_count"
+        printf 'executable_preview_initializer_export_count\t%s\n' \
+            "$executable_preview_export_count"
+    } >>"$output/application-link-objects.tsv"
 
     local guest_root
     guest_root=$(PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" <<'PY'

@@ -19,6 +19,10 @@ TOOL = HERE / "core_package_manifest.py"
 BUILDER = HERE / "build_core_guest_package.sh"
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
+APP_DRIVER = REPO / "full/xcodeplan/build_portable_application_guest.sh"
+PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
+    "_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC"
+)
 CANONICAL_VALIDATOR = REPO / "full/xcodeplan/core_guest_package.py"
 CORE_WRITABLE_OVERLAYS = (
     '"$RUN_ROOT/build:/w/build:rw"',
@@ -157,6 +161,28 @@ def validate_swiftui_runtime_link(source: str) -> None:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 1:
         raise AssertionError("SwiftUI runtime-link scope drifted")
+
+
+def validate_core_preview_export_contract(source: str) -> None:
+    assignment = (
+        "PREVIEW_EXECUTABLE_EXPORT_SYMBOL="
+        f"'{PREVIEW_EXECUTABLE_EXPORT_SYMBOL}'"
+    )
+    required_once = (
+        assignment,
+        'PROBE_EXPORT_FLAGS+=(-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")',
+        "preview_export_definition_count=$(nm_symbol_count --defined-only",
+        "staged_preview_definition_count=$(nm_symbol_count --defined-only",
+        "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
+        "probe_preview_export_count=$(nm_symbol_count --defined-only",
+        "libUIKit-preview-initializer-import-count",
+        "executable-preview-initializer-export-count",
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"core Preview executable-export contract drifted: {drifted}")
+    if "-export_dynamic" in source or "-exported_symbols_list" in source:
+        raise AssertionError("core Preview export must remain one exact symbol")
 
 
 class FoundationManifestTests(unittest.TestCase):
@@ -638,6 +664,29 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("probe_dts_count", source)
         self.assertIn("UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)", source)
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
+
+    def test_preview_core_export_is_exact_and_mutation_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_core_preview_export_contract(source)
+        for token in (
+            'PROBE_EXPORT_FLAGS+=(-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")',
+            "staged_preview_definition_count=$(nm_symbol_count --defined-only",
+            "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
+            "probe_preview_export_count=$(nm_symbol_count --defined-only",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "export contract"):
+                    validate_core_preview_export_contract(source.replace(token, "", 1))
+        with self.assertRaisesRegex(AssertionError, "export contract"):
+            validate_core_preview_export_contract(
+                source.replace(
+                    PREVIEW_EXECUTABLE_EXPORT_SYMBOL,
+                    PREVIEW_EXECUTABLE_EXPORT_SYMBOL + "_MUTATED",
+                    1,
+                )
+            )
+        app_source = APP_DRIVER.read_text(encoding="utf-8")
+        self.assertEqual(app_source.count(PREVIEW_EXECUTABLE_EXPORT_SYMBOL), 1)
 
     def test_build_full_preview_hook_preserves_early_visibility_boundary(self) -> None:
         source = BUILD_FULL.read_text(encoding="utf-8")
