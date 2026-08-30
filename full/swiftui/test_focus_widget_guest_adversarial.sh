@@ -8,7 +8,7 @@ set -euo pipefail
 W=${W:-/w}
 RESOURCE_INPUT=${1:?usage: test_focus_widget_guest_adversarial.sh <normalized-Focus_Widget.bundle>}
 FULL=$W/build/full
-SYS=$W/scratch/sysroot_full
+SYS=$W/scratch/sysroot_fe4
 MRROOT=$W/scratch/mrroot_full
 ATTEST=$W/full/swiftui/focus_widget_guest_attest.pl
 BUILD=$W/full/swiftui/build_focus_widget_guest.sh
@@ -16,7 +16,8 @@ BUILD=$W/full/swiftui/build_focus_widget_guest.sh
 for required in \
     "$FULL/focus-widget-build-inputs.manifest" \
     "$FULL/focus-widget-runtime-closure.manifest" \
-    "$FULL/guard_no_foundation.swift" \
+    "$W/full/foundation/foundationessentials_import_guard.swift" \
+    "$FULL/foundation/essentials/FoundationEssentials.swiftmodule" \
     "$FULL/OpenUIKit.swiftmodule" \
     "$FULL/inc/CPortableIO/module.modulemap" \
     "$FULL/inc/CPortableIO/cportableio.h" \
@@ -127,13 +128,18 @@ expect_resume_refusal() {
     printf 'ADVERSARIAL PASS: %-28s resume refused before guest success (rc=%s)\n' "$label" "$rc"
 }
 
-begin_case guard-source "$FULL/guard_no_foundation.swift"
+begin_case guard-source "$W/full/foundation/foundationessentials_import_guard.swift"
 printf '\n// adversarial guard-source drift\n' >> "$CURRENT_TARGET"
 expect_resume_refusal guard-source
 
 begin_case swiftmodule "$FULL/OpenUIKit.swiftmodule"
 printf 'adversarial-swiftmodule-drift' >> "$CURRENT_TARGET"
 expect_resume_refusal swiftmodule
+
+begin_case foundationessentials-swiftmodule \
+    "$FULL/foundation/essentials/FoundationEssentials.swiftmodule"
+printf 'adversarial-foundationessentials-swiftmodule-drift' >> "$CURRENT_TARGET"
+expect_resume_refusal foundationessentials-swiftmodule
 
 begin_case modulemap "$FULL/inc/CPortableIO/module.modulemap"
 printf '\n// adversarial modulemap drift\n' >> "$CURRENT_TARGET"
@@ -177,7 +183,7 @@ perl -pi -e 's/SwiftUI => '\''libSwiftUI'\''/SwiftUI => '\''libSwiftUI_TAMPER'\'
 expect_resume_refusal provider-logic
 
 begin_case inventory-logic "$ATTEST"
-perl -pi -e 's/guard_no_foundation\.swift/guard_no_foundation.tampered.swift/' "$CURRENT_TARGET"
+perl -pi -e 's/foundationessentials_import_guard\.swift/foundationessentials_import_guard.tampered.swift/' "$CURRENT_TARGET"
 expect_resume_refusal inventory-logic
 
 final_log=$TMP/final-clean-resume.log

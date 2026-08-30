@@ -6,6 +6,9 @@ clean `a2832521c1daa0c23419c73705ae043ed60c9791` checkout: the two `Widget`
 files plus the ten files that define the production onboarding views, model,
 design-system accessors, and `PortraitHostingController`. No Focus source is
 copied, patched, overlaid, generated, or conditionally rewritten.
+The framework side is pinned independently to clean OpenUIKit commit
+`8f98af2e53af566923de6616f3629bec0661aa8c`, tree
+`a8b809d35b52ef317517914922392f395a8da59c`, before and after the build/run.
 
 The project-owned harness mounts the exact `OnboardingView` through Focus's
 exact `PortraitHostingController`. It finds controls through the mounted
@@ -52,8 +55,20 @@ with the current `ld64.lld` and changes Swift symbol ordinals under machorun;
 the source-level export preserves client visibility without that malformed
 provider graph.
 
-The generated `FocusOnboardingBundle.generated.swift` file is target build
-support equivalent to SwiftPM's resource accessor. `FoundationGuest.swift`,
+The project-owned `FocusOnboardingBundle.generated.swift` file is compatibility
+build support for this port, not a generated or SwiftPM-equivalent accessor.
+The exact pinned Focus `Package.swift` declares no Onboarding resources, so
+Apple SwiftPM 6.2.1 generates no accessor and defines
+`SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE`; the unchanged source nevertheless
+contains `Bundle.module` asset spellings. The port stages the reviewed exact
+normalized `Focus_Onboarding.bundle` beside the guest executable and resolves
+it relative to `Bundle.main`; the runtime gate asserts that exact bundle and
+resource root, then evaluates unchanged `Color.actionButton` and `Image.logo`
+through it and requires a direct same-bundle `UIImage` lookup to be non-nil.
+The Widget target receives the same explicit treatment for its adjacent
+`Focus_Widget.bundle`, unchanged named-gradient declarations, and logo image;
+neither target relies on the process-global image-search fallback.
+`FoundationGuest.swift`,
 `FocusOnboardingGuestMain.swift`, and `FocusOnboardingUUIDProbe.c` are port and
 test code, not application source. Normalized resource bundles are supplied by
 the existing pinned Focus resource proof and are checked for exact topology and
@@ -104,8 +119,10 @@ This closes a runtime-semantic sub-gate of roadmap S2, not all of S2. The full
 Onboarding package contains 21 Swift files. This executable includes the ten
 shipping SwiftUI/onboarding files needed by the checked route plus the two
 Widget files; handler, tooltip, legacy controller, and preview files remain
-outside this runtime image. The separate exact 21-source module-emission proof
-still encounters a stock Swift 6.2 Linux IRGen crash when object-emitting two
-Objective-C-interoperable sources. This is not a complete Focus application,
-a WidgetKit extension, an Apple framework implementation, or broad SwiftUI API
-coverage beyond the measured path.
+outside this focused runtime image. The separate package proof now emits and
+links all 21 unchanged Onboarding sources, including the two
+Objective-C-interoperable files that formerly triggered a stock Swift 6.2
+Linux IRGen crash. It executes selected handler and constraint semantics, not
+every emitted route. This is not a complete Focus application, a WidgetKit
+extension, an Apple framework implementation, or broad SwiftUI API coverage
+beyond the measured path.

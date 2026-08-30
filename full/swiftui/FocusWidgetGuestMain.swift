@@ -110,9 +110,6 @@ struct FocusWidgetGuestMain {
         let resourceBundle = args[1]
         let output = args[2]
 
-        // Bundle.module remains the exact spelling in Assets.swift.  This is
-        // the Foundation-hidden host's explicit filesystem side of that API.
-        OpenUIKitRuntime.imageSearchPaths = [resourceBundle]
         OpenUIKitRuntime.resourceRoot = "/uikit/Sources/OpenUIKit/Resources"
         let renderScale: CGFloat = 2
         OpenUIKitRuntime.imageScreenScale = renderScale
@@ -131,6 +128,15 @@ struct FocusWidgetGuestMain {
         require(ResourceIO.readFile(OpenUIKitRuntime.fontPaths["medium"]!)?.count == 708_920,
                 "guest cannot read staged DejaVu Sans Bold")
         UIImage.clearNamedCache()
+        require(
+            FocusWidgetResourceProof.bundlePath == resourceBundle,
+            "Bundle.module did not identify normalized Focus_Widget.bundle"
+        )
+        require(
+            FocusWidgetResourceProof.resourcePath == resourceBundle,
+            "Bundle.module resource root did not identify normalized widget bundle"
+        )
+        FocusWidgetResourceProof.exerciseUnchangedAssets()
 
         // These are the exact modifiers in SearchWidgetView_Previews. They are
         // harness-owned invocation syntax around the unchanged production view.

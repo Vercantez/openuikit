@@ -15,8 +15,11 @@ images plus matching compile modules; the Focus executables import framework
 symbols instead of defining static copies. The complete state/observation
 sources compile into the packaged SwiftUI image with one OpenCombine identity,
 and onboarding exercises that observation path at runtime. WidgetKit,
-installation as a system framework, the remaining Onboarding target files, and
-the complete unchanged Focus app remain later milestones.
+installation as a system framework, runtime coverage for every Onboarding
+controller/preview/tooltip path, and the complete unchanged Focus app remain
+later milestones. The package proof now emits and links all 21 unchanged
+Onboarding target files; the focused interaction executable still runs the
+12-source shipping route described below.
 Apple's SwiftUI and Combine binaries are neither available nor linked.
 
 “Apple Foundation is not linked” here means the executables and packaged
@@ -74,8 +77,10 @@ without a direct provider import. That evidence includes `UIImage`,
 - `ROADMAP.md` separates compile, runtime-semantic, and renderer/host gates and
   defines staged acceptance criteria.
 - `FOCUS_WIDGET_GUEST.md`, `build_focus_widget_guest.sh`, and the separately
-  labelled generated accessor and harness reproduce the exact unchanged Focus
-  widget as a Linux Mach-O guest.
+  labelled compatibility resource support and harness reproduce the exact
+  unchanged Focus widget as a Linux Mach-O guest. The pinned package manifest
+  does not declare Widget resources, so this support is not claimed to be
+  SwiftPM-generated.
 - `FOCUS_ONBOARDING_GUEST.md`, `build_focus_onboarding_guest.sh`, the bounded
   Foundation umbrella/UUID substrate, and separately labelled build support
   reproduce the exact unchanged shipping onboarding route as a Linux guest.

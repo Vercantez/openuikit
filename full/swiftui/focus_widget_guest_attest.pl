@@ -103,7 +103,7 @@ sub inventory_command {
         [ "$w/full/scripts/uihelpers_subject.sh", 'project/full/scripts/uihelpers_subject.sh' ],
         [ "$w/scripts/require_fresh_root.sh", 'project/scripts/require_fresh_root.sh' ],
         [ "$w/scripts/macho_same_except_id.pl", 'project/scripts/macho_same_except_id.pl' ],
-        [ "$full/guard_no_foundation.swift", 'build-full/guard_no_foundation.swift' ],
+        [ "$w/full/foundation/foundationessentials_import_guard.swift", 'project/full/foundation/foundationessentials_import_guard.swift' ],
         [ "$full/uihelpers-subject.sha256", 'build-full/uihelpers-subject.sha256' ],
         map({ [ "$full/$_", "build-full/$_" ] }
             qw(openuikit.o opencoregraphics.o cportableio.o cstbtruetype.o
@@ -122,16 +122,24 @@ sub inventory_command {
         [ "$w/full/hostclock/include", 'project/full/hostclock/include' ],
         [ "$uikit/Sources/CQuartz/include", 'openuikit/Sources/CQuartz/include' ],
         [ "$uikit/Sources/SwiftUI", 'openuikit/Sources/SwiftUI' ],
-        [ $sysroot, 'sdk/sysroot_full' ],
+        [ "$w/scratch/swift-foundation/Sources/_FoundationCShims/include", 'upstream/swift-foundation/_FoundationCShims/include' ],
+        [ "$full/foundation/essentials", 'build-full/foundation/essentials' ],
+        [ "$full/foundation/collections", 'build-full/foundation/collections' ],
+        [ "$full/foundation/os", 'build-full/foundation/os' ],
+        [ "$full/foundation/cshims", 'build-full/foundation/cshims' ],
+        [ $sysroot, 'sdk/sysroot_fe4' ],
     );
     inventory_tree($_->[0], $_->[1], \@records) for @trees;
 
     my @required_tbd = (
-        [ "$sysroot/usr/lib/swift/libswiftCore.tbd", 'sdk/sysroot_full/usr/lib/swift/libswiftCore.tbd' ],
-        [ "$sysroot/usr/lib/libSystem.tbd", 'sdk/sysroot_full/usr/lib/libSystem.tbd' ],
-        [ "$sysroot/usr/lib/libobjc.tbd", 'sdk/sysroot_full/usr/lib/libobjc.tbd' ],
-        [ "$sysroot/usr/lib/swift/libswift_Concurrency.tbd", 'sdk/sysroot_full/usr/lib/swift/libswift_Concurrency.tbd' ],
-        [ "$sysroot/usr/lib/swift/libswiftObjectiveC.tbd", 'sdk/sysroot_full/usr/lib/swift/libswiftObjectiveC.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswiftCore.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswiftCore.tbd' ],
+        [ "$sysroot/usr/lib/libSystem.tbd", 'sdk/sysroot_fe4/usr/lib/libSystem.tbd' ],
+        [ "$sysroot/usr/lib/libobjc.tbd", 'sdk/sysroot_fe4/usr/lib/libobjc.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswift_Concurrency.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswift_Concurrency.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswiftObjectiveC.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswiftObjectiveC.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswiftDarwin.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswiftDarwin.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswift_StringProcessing.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswift_StringProcessing.tbd' ],
+        [ "$sysroot/usr/lib/swift/libswiftSynchronization.tbd", 'sdk/sysroot_fe4/usr/lib/swift/libswiftSynchronization.tbd' ],
     );
     for my $required (@required_tbd) {
         fail("missing named linker input $required->[0]") unless lstat($required->[0]);
@@ -375,6 +383,100 @@ sub closure_command {
     print "$_\n" for sort keys %edges;
 }
 
+my @FRAMEWORK_MODULES = (
+    [ 'SwiftUI', 7 ],
+    [ 'OpenUIKit', 9 ],
+    [ 'OpenCoreGraphics', 16 ],
+    [ 'Combine', 7 ],
+    [ 'OpenCombine', 11 ],
+);
+
+sub objc_swift_module {
+    my ($symbol) = @_;
+    my $class_tail;
+    if ($symbol =~ /^_OBJC_(?:CLASS|METACLASS)_\$__TtC(.*)\z/) {
+        $class_tail = $1;
+    } elsif ($symbol =~ /^_OBJC_IVAR_\$__TtC(.*)\.[A-Za-z_][A-Za-z0-9_]*\z/) {
+        # IVAR records append a canonical Objective-C `.ivarName` to the
+        # complete Swift runtime class name.  Split it before parsing the
+        # length-prefixed class production.
+        $class_tail = $1;
+    } else {
+        return undef;
+    }
+
+    # This proof deliberately supports the emitted old-mangling nominal-type
+    # subset only: the initial class marker is in `_TtC`; each following C/O/V
+    # marker introduces one nested nominal context.  The remainder must be
+    # exactly module + those contexts + final type, each encoded as a decimal
+    # byte length and an ASCII identifier.  Parsing the lengths prevents a
+    # partial demangle or a misleading suffix from claiming module ownership.
+    $class_tail =~ s/^([COV]*)//;
+    my $nested_count = length($1);
+    my @identifiers;
+    for (1 .. $nested_count + 2) {
+        return undef unless $class_tail =~ s/^([1-9][0-9]*)//;
+        my $byte_count = 0 + $1;
+        return undef if length($class_tail) < $byte_count;
+        my $identifier = substr($class_tail, 0, $byte_count, '');
+        return undef
+            unless $identifier =~ /^[A-Za-z_][A-Za-z0-9_]*\z/;
+        push @identifiers, $identifier;
+    }
+    return undef unless length($class_tail) == 0;
+
+    for my $entry (@FRAMEWORK_MODULES) {
+        my ($module, $length) = @$entry;
+        return $module
+            if $identifiers[0] eq $module && length($identifiers[0]) == $length;
+    }
+    return undef;
+}
+
+sub objc_classifier_selftest {
+    my @positive = (
+        [ '_OBJC_CLASS_$__TtC9OpenUIKit11UITextRange', 'OpenUIKit' ],
+        [ '_OBJC_METACLASS_$__TtC7SwiftUI10_UIHosting', 'SwiftUI' ],
+        [ '_OBJC_IVAR_$__TtC16OpenCoreGraphics7Storage.value', 'OpenCoreGraphics' ],
+        [ '_OBJC_CLASS_$__TtCC9OpenUIKit5Outer5Inner', 'OpenUIKit' ],
+        [ '_OBJC_METACLASS_$__TtCO7Combine5Outer5Inner', 'Combine' ],
+        [ '_OBJC_IVAR_$__TtCV11OpenCombine5Outer5Inner.value', 'OpenCombine' ],
+        # A real earlier module owns this symbol; the later type spelling must
+        # never be mistaken for an OpenUIKit module prefix.
+        [ '_OBJC_CLASS_$__TtC7SwiftUI9OpenUIKit', 'SwiftUI' ],
+    );
+    for my $fixture (@positive) {
+        my ($symbol, $expected) = @$fixture;
+        my $actual = objc_swift_module($symbol);
+        fail("ObjC classifier expected $expected for $symbol")
+            unless defined($actual) && $actual eq $expected;
+    }
+
+    my @negative = (
+        'junk_OBJC_CLASS_$__TtC9OpenUIKit11UITextRange',
+        '_OBJC_CLASS_$_misleading__TtC9OpenUIKit11UITextRange',
+        '_OBJC_CLASS_$__TtV9OpenUIKit11UITextRange',
+        '_OBJC_CLASS_$__TtCX9OpenUIKit11UITextRange',
+        '_OBJC_EHTYPE_$__TtC9OpenUIKit11UITextRange',
+        '_OBJC_IVAR_$__TtC9OpenUIKit11UITextRange',
+        '_OBJC_CLASS_$__TtC9OpenUIKit',
+        '_OBJC_CLASS_$__TtC9OpenUIKitUITextRange',
+        '_OBJC_CLASS_$__TtC9OpenUIKit11UITextRange.evil',
+        '_OBJC_CLASS_$__TtC9OpenUIKit99X',
+        '_OBJC_CLASS_$__TtC9OpenUIKit5Outer5Inner',
+        '_OBJC_CLASS_$__TtCC9OpenUIKit5Outer',
+        '_OBJC_CLASS_$__TtC5Other9OpenUIKit',
+    );
+    for my $symbol (@negative) {
+        my $actual = objc_swift_module($symbol);
+        fail("ObjC classifier unexpectedly accepted $symbol as $actual")
+            if defined $actual;
+    }
+
+    print 'OBJC_CLASSIFIER_SELFTEST_OK positives=', scalar(@positive),
+        ' negatives=', scalar(@negative), "\n";
+}
+
 sub prefixed_swift_module {
     my ($symbol) = @_;
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
@@ -382,6 +484,8 @@ sub prefixed_swift_module {
     return 'OpenCoreGraphics' if $symbol =~ /^_?\$s16OpenCoreGraphics/;
     return 'Combine' if $symbol =~ /^_?\$s7Combine/;
     return 'OpenCombine' if $symbol =~ /^_?\$s11OpenCombine/;
+    my $objc_module = objc_swift_module($symbol);
+    return $objc_module if defined $objc_module;
     return undef;
 }
 
@@ -428,27 +532,30 @@ sub symbol_records {
 
 sub provider_command {
     my (@args) = @_;
-    my ($nm, $objdump, $demangle, $openuikit, $swiftui, $combine, $opencombine,
-        $executable);
+    my ($nm, $objdump, $demangle, $openuikit, $opencoregraphics, $swiftui,
+        $combine, $opencombine, $executable);
     GetOptionsFromArray(
         \@args,
         'nm=s'         => \$nm,
         'objdump=s'    => \$objdump,
         'demangle=s'   => \$demangle,
         'openuikit=s'  => \$openuikit,
+        'opencoregraphics=s' => \$opencoregraphics,
         'swiftui=s'    => \$swiftui,
         'combine=s'    => \$combine,
         'opencombine=s' => \$opencombine,
         'executable=s' => \$executable,
     ) or fail('invalid provider options');
     fail('providers takes no positional arguments') if @args;
-    fail('providers requires --nm, --objdump, --demangle, --openuikit, --swiftui, --combine, --opencombine, and --executable')
+    fail('providers requires --nm, --objdump, --demangle, --openuikit, --opencoregraphics, --swiftui, --combine, --opencombine, and --executable')
         unless defined($nm) && defined($objdump) && defined($demangle) && defined($openuikit)
-            && defined($swiftui) && defined($combine) && defined($opencombine)
+            && defined($opencoregraphics) && defined($swiftui)
+            && defined($combine) && defined($opencombine)
             && defined($executable);
 
     my %paths = (
         libOpenUIKit => $openuikit,
+        libOpenCoreGraphics => $opencoregraphics,
         libSwiftUI => $swiftui,
         libCombine => $combine,
         libOpenCombine => $opencombine,
@@ -461,14 +568,14 @@ sub provider_command {
     my %expected_bind_provider = (
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
-        OpenCoreGraphics => 'libOpenUIKit',
+        OpenCoreGraphics => 'libOpenCoreGraphics',
         Combine => 'libCombine',
         OpenCombine => 'libCombine',
     );
     my %definition_owner = (
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
-        OpenCoreGraphics => 'libOpenUIKit',
+        OpenCoreGraphics => 'libOpenCoreGraphics',
         Combine => 'libCombine',
         OpenCombine => 'libOpenCombine',
     );
@@ -479,6 +586,17 @@ sub provider_command {
         my @undefined = symbol_records($demangle, capture_command($nm, '-u', $paths{$image}));
         for my $record (@defined) {
             my ($symbol, $module) = @$record;
+            # A method declared in one framework as an extension of a type
+            # owned by another begins with the extended type's module.  Only
+            # definitions outside that default owner need the more expensive
+            # demangle; require an explicit `(extension in Module):` result.
+            if ($definition_owner{$module} ne $image) {
+                my $expanded = capture_command($demangle, '--compact', $symbol);
+                $expanded =~ s/[\r\n]+\z//;
+                if ($expanded =~ /^\(extension in (SwiftUI|OpenUIKit|OpenCoreGraphics|Combine|OpenCombine)\):/) {
+                    $module = $1;
+                }
+            }
             $definitions{$image}{$symbol} = 1;
             $symbol_module{$symbol} = $module;
             $counts{$image}{defined}{$module}++;
@@ -486,7 +604,7 @@ sub provider_command {
         for my $record (@undefined) {
             my ($symbol, $module) = @$record;
             $undefined{$image}{$symbol} = 1;
-            $symbol_module{$symbol} = $module;
+            $symbol_module{$symbol} = $module unless exists $symbol_module{$symbol};
             $counts{$image}{undefined}{$module}++;
         }
         for my $mode ('--bind', '--lazy-bind', '--weak-bind') {
@@ -497,7 +615,7 @@ sub provider_command {
                 my $symbol = $fields[-1];
                 my ($module) = classify_framework_symbol($demangle, $symbol);
                 next unless defined $module;
-                $symbol_module{$symbol} = $module;
+                $symbol_module{$symbol} = $module unless exists $symbol_module{$symbol};
                 my $provider = $fields[-2];
                 $binds{$image}{$symbol}{$provider} = 1;
             }
@@ -536,7 +654,8 @@ sub provider_command {
 
     for my $need (
         [ 'libOpenUIKit', 'defined', 'OpenUIKit' ],
-        [ 'libOpenUIKit', 'defined', 'OpenCoreGraphics' ],
+        [ 'libOpenCoreGraphics', 'defined', 'OpenCoreGraphics' ],
+        [ 'libOpenUIKit', 'undefined', 'OpenCoreGraphics' ],
         [ 'libSwiftUI', 'defined', 'SwiftUI' ],
         [ 'libOpenCombine', 'defined', 'OpenCombine' ],
         [ 'libSwiftUI', 'undefined', 'OpenUIKit' ],
@@ -575,6 +694,8 @@ if ($command eq 'inventory') {
     closure_command(@ARGV);
 } elsif ($command eq 'providers') {
     provider_command(@ARGV);
+} elsif ($command eq 'objc-classifier-selftest') {
+    objc_classifier_selftest(@ARGV);
 } else {
-    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers [options]');
+    fail('usage: focus_widget_guest_attest.pl inventory|closure|providers|objc-classifier-selftest [options]');
 }

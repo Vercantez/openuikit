@@ -28,7 +28,8 @@ OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=13479babf5caf308973388c7fdc789f9116750c0
+EXPECTED_UIKIT_COMMIT=8f98af2e53af566923de6616f3629bec0661aa8c
+EXPECTED_UIKIT_TREE=a8b809d35b52ef317517914922392f395a8da59c
 EXPECTED_FOCUS_SWIFT_COUNT=227
 EXPECTED_ONBOARDING_TREE=3db199a93294a4ea0e6549522c29e8b2e4dbfb979bd60c07cdad5d00386734f5
 EXPECTED_ONBOARDING_FILES=66
@@ -78,10 +79,15 @@ tree_digest() {
 }
 
 assert_clean_commit() {
-    local repo=$1 expected=$2 label=$3 actual status
+    local repo=$1 expected=$2 label=$3 expected_tree=${4:-} actual status actual_tree
     [ -d "$repo/.git" ] || die "$label is not a Git checkout: $repo"
     actual=$(git -C "$repo" rev-parse --verify HEAD^{commit})
     [ "$actual" = "$expected" ] || die "$label expected $expected, got $actual"
+    if [ -n "$expected_tree" ]; then
+        actual_tree=$(git -C "$repo" rev-parse --verify HEAD^{tree})
+        [ "$actual_tree" = "$expected_tree" ] \
+            || die "$label tree expected $expected_tree, got $actual_tree"
+    fi
     status=$(git -C "$repo" status --porcelain=v1 --untracked-files=all)
     [ -z "$status" ] || die "$label checkout is not clean: $status"
 }
@@ -111,7 +117,8 @@ done
 [ -d "$SYS/usr/include" ] || die "FoundationEssentials sysroot is missing: $SYS"
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" OpenUIKit
+assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" OpenUIKit \
+    "$EXPECTED_UIKIT_TREE"
 ONBOARDING_INPUT=$RESOURCE_INPUT/Focus_Onboarding.bundle
 WIDGET_INPUT=$RESOURCE_INPUT/Focus_Widget.bundle
 validate_bundle "$ONBOARDING_INPUT" "$EXPECTED_ONBOARDING_FILES" \
@@ -122,7 +129,7 @@ validate_bundle "$WIDGET_INPUT" "$EXPECTED_WIDGET_FILES" \
 rm -rf -- "$OUT"
 mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/CHostClock" "$PACKAGE/include/COpenCombineHelpers" \
-    "$PACKAGE/include/CQuartz" "$MODULE_CACHE" "$AUDIT" "$OUT/fonts" "$OUT/resources"
+    "$PACKAGE/include/CQuartz" "$MODULE_CACHE" "$AUDIT" "$OUT/fonts"
 
 git -C "$FOCUS_ROOT" ls-tree -r -z "$EXPECTED_FOCUS_COMMIT" -- focus-ios \
     | while IFS= read -r -d '' record; do
@@ -188,11 +195,11 @@ expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
 actual_subject=$(tr -d '[:space:]' < "$FULL/uihelpers-subject.sha256")
 [ "$actual_subject" = "$expected_subject" ] || die "build_full subject marker is stale"
 
-cp -a "$ONBOARDING_INPUT" "$OUT/resources/Focus_Onboarding.bundle"
-cp -a "$WIDGET_INPUT" "$OUT/resources/Focus_Widget.bundle"
-validate_bundle "$OUT/resources/Focus_Onboarding.bundle" "$EXPECTED_ONBOARDING_FILES" \
+cp -a "$ONBOARDING_INPUT" "$OUT/Focus_Onboarding.bundle"
+cp -a "$WIDGET_INPUT" "$OUT/Focus_Widget.bundle"
+validate_bundle "$OUT/Focus_Onboarding.bundle" "$EXPECTED_ONBOARDING_FILES" \
     "$EXPECTED_ONBOARDING_DIRECTORIES" "$EXPECTED_ONBOARDING_TREE" staged-Onboarding-bundle
-validate_bundle "$OUT/resources/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
+validate_bundle "$OUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     "$EXPECTED_WIDGET_DIRECTORIES" "$EXPECTED_WIDGET_TREE" staged-Widget-bundle
 cp "$SYSTEM_FONT" "$OUT/fonts/DejaVuSans.ttf"
 cp "$MEDIUM_FONT" "$OUT/fonts/DejaVuSans-Bold.ttf"
@@ -243,6 +250,17 @@ FE_OBJECTS=(
     "$FE_OUT/fm_unimplemented.o"
     "$FE_OUT/uuid_compat.o"
 )
+
+# A cold cache must build the SDK's textual Swift module before it recursively
+# builds _Concurrency for the pinned binary OpenCombine module.  With the
+# Swift 6.2.4 Linux compiler and Apple Swift 6.2.1 SDK interfaces, asking one
+# frontend invocation to build both can leave Swift cached but fail the nested
+# _Concurrency build.  Prewarming only Swift, with implicit stdlib imports
+# disabled by -parse-stdlib, makes the same clean-cache build deterministic.
+echo '== prewarm the Darwin Swift module cache'
+swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
+    -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck \
+    -e 'import Swift'
 
 echo '== package pinned OpenCombine and literal Combine'
 cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$OUT/COpenCombineHelpers.cpp"
@@ -334,7 +352,7 @@ echo '== package nine reusable guest dylibs'
     -o "$PACKAGE/libFoundation.dylib" "$OUT/foundation.o" \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore -lswiftObjectiveC \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
-    -L"$PACKAGE" -lFoundationEssentials -lOpenUIKit \
+    -L"$PACKAGE" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 "${LD[@]}" -dylib -dead_strip -install_name @rpath/libSwiftUI.dylib \
@@ -401,8 +419,8 @@ echo '== run exact Focus interaction path on Linux/machorun'
 (
     cd "$OUT"
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" ./focus_onboarding_guest \
-        "$OUT/resources/Focus_Onboarding.bundle" \
-        "$OUT/resources/Focus_Widget.bundle" \
+        "$OUT/Focus_Onboarding.bundle" \
+        "$OUT/Focus_Widget.bundle" \
         "$UIKIT/Sources/OpenUIKit/Resources" "$OUT/fonts"
 ) | tee "$OUT/runtime.log"
 grep -Fx \
@@ -414,7 +432,8 @@ for index in "${!SOURCE_RELATIVES[@]}"; do
         "${SOURCE_HASHES[$index]}" "post-run Focus source ${SOURCE_RELATIVES[$index]}"
 done
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" post-run-Focus
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" post-run-OpenUIKit
+assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" post-run-OpenUIKit \
+    "$EXPECTED_UIKIT_TREE"
 validate_bundle "$RESOURCE_INPUT/Focus_Onboarding.bundle" "$EXPECTED_ONBOARDING_FILES" \
     "$EXPECTED_ONBOARDING_DIRECTORIES" "$EXPECTED_ONBOARDING_TREE" post-run-Onboarding-input
 validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
@@ -425,12 +444,16 @@ validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     printf 'runtime-closure\t%s\n' "$(hash_file "$AUDIT/runtime-closure.manifest")"
     printf 'runtime-log\t%s\n' "$(hash_file "$OUT/runtime.log")"
     printf 'guest\t%s\n' "$(hash_file "$OUT/focus_onboarding_guest")"
+    printf 'onboarding-bundle-accessor\t%s\n' \
+        "$(hash_file "$W/full/swiftui/FocusOnboardingBundle.generated.swift")"
+    printf 'widget-bundle-accessor\t%s\n' \
+        "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
         OpenCombine Combine SwiftUI Widget Onboarding; do
         printf 'lib%s\t%s\n' "$dylib" "$(hash_file "$PACKAGE/lib$dylib.dylib")"
     done
-    printf 'onboarding-resources\t%s\n' "$(tree_digest "$OUT/resources/Focus_Onboarding.bundle")"
-    printf 'widget-resources\t%s\n' "$(tree_digest "$OUT/resources/Focus_Widget.bundle")"
+    printf 'onboarding-resources\t%s\n' "$(tree_digest "$OUT/Focus_Onboarding.bundle")"
+    printf 'widget-resources\t%s\n' "$(tree_digest "$OUT/Focus_Widget.bundle")"
 } > "$OUT/artifacts.sha256"
 
 echo '== Focus Onboarding Mach-O guest proof passed'

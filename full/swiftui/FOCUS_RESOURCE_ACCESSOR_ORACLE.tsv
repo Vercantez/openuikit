@@ -1,0 +1,21 @@
+format	focus-resource-accessor-provenance-v2
+toolchain	Apple-SwiftPM-6.2.1-swiftlang-6.2.1.4.8
+input	Focus/Package.swift	2d29b769de137389f5613de6755211b255533375bf6003a2192f514e96899248
+input	Focus/Package.resolved	632a0df0276ba7828f456ae3964f158fb7115d05f175ddf637abdd7ab4a4633b
+input	SnapKit/Package.swift	ebb3e3c90a96e832e848e577c04b0cb9f16723c487c0efa727114d49c0a5492a
+input	SnapKit/PrivacyInfo.xcprivacy	a07418e5fe128e224cd37964bc21c503b7aa2f575e7b4927468478ad873214fe
+swiftpm	Focus/DesignSystem	unavailable	-	SWIFT_PACKAGE,SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE
+swiftpm	Focus/Widget	unavailable	-	SWIFT_PACKAGE,SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE
+swiftpm	Focus/Onboarding	unavailable	-	SWIFT_PACKAGE,SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE
+swiftpm	Focus/Licenses	available	Focus_Licenses.bundle	SWIFT_PACKAGE,SWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE
+swiftpm	SnapKit/SnapKit	available	SnapKit_SnapKit.bundle	SWIFT_PACKAGE,SWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE
+normalized-accessor	Focus/Licenses	a15ebd0e3c1e83ae3f8456593f1fb0c761af03e1b9742a9f34ede4c83669fe95
+normalized-accessor	SnapKit/SnapKit	056cdac408eab88cced7e48cab8548c5393f6ac3040a8b0a578e77f08885b218
+normalization	Focus/Licenses	absolute-build-path=<BUILD_PATH>	terminal=LF-appended
+normalization	SnapKit/SnapKit	absolute-build-path=<BUILD_PATH>	terminal=LF-appended
+port	Focus/DesignSystem	compile-only-trap	-
+port	Focus/Widget	compatibility-repair	Focus_Widget.bundle
+port	Focus/Onboarding	compatibility-repair	Focus_Onboarding.bundle
+port	Focus/Licenses	portable-generated-primary	Focus_Licenses.bundle
+port	SnapKit/SnapKit	portable-generated-primary	SnapKit_SnapKit.bundle
+direct-swiftc	resource-defines	none	upstream-conditional-hits=0

@@ -3,6 +3,7 @@ import CPortableIO
 import Foundation
 import Onboarding
 import SwiftUI
+import Widget
 
 @_silgen_name("open_focus_uuid_compat_probe")
 private func openFocusUUIDCompatProbe() -> Int32
@@ -67,7 +68,6 @@ struct FocusOnboardingGuestMain {
             "usage: focus_onboarding_guest <Onboarding.bundle> <Widget.bundle> "
                 + "<OpenUIKit resources> <font directory>"
         )
-        OpenUIKitRuntime.imageSearchPaths = [arguments[1], arguments[2]]
         OpenUIKitRuntime.resourceRoot = arguments[3]
         OpenUIKitRuntime.imageScreenScale = 2
         OpenUIKitRuntime.renderBackend = .swift
@@ -75,6 +75,28 @@ struct FocusOnboardingGuestMain {
         OpenUIKitRuntime.fontPaths["system"] = arguments[4] + "/DejaVuSans.ttf"
         OpenUIKitRuntime.fontPaths["medium"] = arguments[4] + "/DejaVuSans-Bold.ttf"
         UIImage.clearNamedCache()
+
+        require(
+            FocusOnboardingResourceProof.bundlePath == arguments[1],
+            "Bundle.module did not identify normalized Focus_Onboarding.bundle"
+        )
+        require(
+            FocusOnboardingResourceProof.resourcePath == arguments[1],
+            "Bundle.module resource root did not identify normalized bundle"
+        )
+        require(
+            FocusOnboardingResourceProof.exerciseUnchangedAssets(),
+            "unchanged Onboarding named image did not resolve from Bundle.module"
+        )
+        require(
+            FocusWidgetResourceProof.bundlePath == arguments[2],
+            "Bundle.module did not identify normalized Focus_Widget.bundle"
+        )
+        require(
+            FocusWidgetResourceProof.resourcePath == arguments[2],
+            "Bundle.module resource root did not identify normalized widget bundle"
+        )
+        FocusWidgetResourceProof.exerciseUnchangedAssets()
 
         let generatedUUID = UUID()
         let uuidText = generatedUUID.uuidString

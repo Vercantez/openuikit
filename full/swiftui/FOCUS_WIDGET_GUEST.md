@@ -3,6 +3,7 @@
 This proof compiles Focus's pinned `Widget/Assets.swift` and
 `Widget/SearchWidgetView.swift` directly from the clean checkout, links them
 against a reusable `libSwiftUI.dylib` backed by sibling `libOpenUIKit.dylib`,
+`libOpenCoreGraphics.dylib`, `libFoundationEssentials.dylib`,
 `libCombine.dylib`, and `libOpenCombine.dylib` images, and runs the resulting
 arm64 Mach-O executable under `machorun` on Linux. The guest
 mounts the exact production composition, checks its OpenUIKit hierarchy and
@@ -12,28 +13,42 @@ title/search/logo pixels, renders twice byte-identically in each of two
 separate guest processes, and writes a
 135-point, 270x270-pixel PNG at 2x scale.
 
+The framework checkout is independently pinned clean before and after the
+gate to OpenUIKit commit `8f98af2e53af566923de6616f3629bec0661aa8c`,
+tree `a8b809d35b52ef317517914922392f395a8da59c`.
+
 No Focus source is copied, patched, overlaid, conditionally rewritten, or
-generated. `FocusWidgetBundle.generated.swift` is the separately labelled
-SwiftPM `Bundle.module` accessor; `FocusWidgetGuestMain.swift` is the
-project-owned executable harness. On the Foundation-hidden path the accessor
-returns the identity-only `Bundle.main`, while the host supplies the normalized
-bundle directory through `OpenUIKitRuntime.imageSearchPaths`.
+generated. `FocusWidgetBundle.generated.swift` is separately labelled
+project-owned compatibility build support; it is not a generated or
+SwiftPM-equivalent accessor. The exact pinned Focus `Package.swift` declares no
+Widget resources, so Apple SwiftPM 6.2.1 generates no accessor and defines
+`SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE`, even though unchanged Widget source
+contains `Bundle.module` asset spellings. `FocusWidgetGuestMain.swift` is the
+project-owned executable harness. The reviewed exact normalized
+`Focus_Widget.bundle` is staged beside the guest; the compatibility support
+resolves it relative to `Bundle.main` without a process-global image-search
+fallback. The runtime asserts that exact bundle/resource root, evaluates
+unchanged Widget color and image declarations, and then proves their rendered
+pixels.
 
 The emitted `package/` directory contains the SwiftUI, OpenUIKit,
-OpenCoreGraphics, literal Combine, and OpenCombine Swift modules, their
-matching C module maps and public headers, and four sibling dylibs. The proof
+OpenCoreGraphics, FoundationEssentials and dependency, literal Combine, and
+OpenCombine Swift modules, their
+matching C module maps and public headers, and six sibling dylibs. The proof
 compiles the Focus client and harness against that package rather than reaching
 back into `build/full`. Every sibling has an `@rpath` install name and an
 `@loader_path` runpath. `libSwiftUI` imports UI symbols from
 `libOpenUIKit`, and observation symbols through the literal `libCombine`
 re-export and single `libOpenCombine` implementation. The executable imports
-only SwiftUI and OpenUIKit directly through `@loader_path/package`; its link
+SwiftUI, OpenUIKit, FoundationEssentials, and OpenCoreGraphics directly through
+`@loader_path/package`; its link
 map contains no framework object. Swift may still emit
 consumer-owned specializations and metadata records whose mangled signatures
 mention imported types; those are not a second framework implementation.
-OpenUIKit, OpenCoreGraphics, the portable C support, and the small Swift-runtime
-patch are packaged exactly once in `libOpenUIKit`. This avoids a duplicate
-UIKit type/metadata universe. `libSwiftUI` is therefore a real reusable Mach-O
+OpenUIKit and its portable C support are packaged exactly once in
+`libOpenUIKit`; OpenCoreGraphics and FoundationEssentials each have one
+separate sibling image. This avoids duplicate UIKit, graphics, or Foundation
+type/metadata universes. `libSwiftUI` is therefore a real reusable Mach-O
 image, although this is still a project runtime package atop the prepared guest
 SDK and Swift runtime, not a standalone Apple-compatible framework or general
 SwiftUI implementation.
@@ -50,8 +65,9 @@ The resource input must be `Focus_Widget.bundle` emitted by the committed
 resource index, named-color catalogs, logo, Focus commit, source hashes, clean
 checkout before and after, the canonical digest of all 16 bundle files, the
 exact seven-directory normalized-bundle topology,
-SwiftUI/build-support and OpenUIKit source brackets, exact open-font bytes,
-Foundation invisibility, Mach-O architecture, exact `LC_ID_DYLIB`, `LC_RPATH`,
+SwiftUI/build-support and OpenUIKit source brackets, exact open-font bytes, the
+target-15 contract that Foundation remains hidden while FoundationEssentials
+is visible, Mach-O architecture, exact `LC_ID_DYLIB`, `LC_RPATH`,
 dependency and linker-input allowlists, absence of direct Apple Foundation/
 SwiftUI/SwiftUICore loads from the executable and packaged dylibs, universal
 two-level bind providers across direct, associated-type, conformance, and
@@ -62,9 +78,15 @@ missing-`libCombine` and missing-`libOpenCombine` recursive-load controls, the
 guest-root manifest against the current machorun checkout, a hash
 manifest for every node in the complete `build/full` input subset, the complete
 CPortableIO/CSTBTrueType header trees, and the complete private SDK/sysroot
-resolution tree used by the resume-only path, stable
+resolution tree used by the resume-only path, within-run
 guest-root/package execution brackets, runtime assertions, and final artifact
-hashes.
+hashes. The immutable Focus sources, normalized resource tree, support files,
+fonts, commits, and selected upstream inputs are independently hash-pinned.
+The complete derived-input manifest and package-tree hashes are explicitly
+labelled `per-run`: compiler-produced `.swiftsourceinfo` files can encode the
+absolute checkout root, so those aggregate hashes prove no mutation between
+compile and both executions in one run, not byte-for-byte reproducibility
+across different workspace paths.
 
 The direct-load statement above is intentionally narrower than “no
 Foundation-named load anywhere.” The staged non-Apple Swift runtime itself has
@@ -89,8 +111,9 @@ as in-root content.
 The resume contract is deliberately fail-closed. Its canonical input manifest
 records regular files, directories, symlinks, and symlink targets, so missing,
 extra, type, byte, or link-target drift is visible. It includes the Foundation
-guard source, all OpenUIKit/OpenCoreGraphics module artifacts, both complete C
-header trees, and every node of `scratch/sysroot_full`, including the five
+guard source, all OpenUIKit/OpenCoreGraphics and FoundationEssentials build
+artifacts, the Foundation C-shim headers, both complete portable C header trees,
+and every node of `scratch/sysroot_fe4`, including the eight
 exact TBD paths named by the link maps. The adversarial integration runner
 mutates each reviewed class in isolation—plus provider and inventory proof
 logic and a runtime ancestor-directory symlink—and requires
@@ -133,8 +156,8 @@ Generated output lives only under `build/swiftui-guest/`. This is an exact S1
 widget-slice execution proof, not a linked Focus application, WidgetKit
 extension, Apple SwiftUI compatibility claim, or general SwiftUI runtime.
 FocusWidget and the harness remain ordinary executable objects; SwiftUI,
-OpenUIKit, Combine, and OpenCombine are separately loadable sibling dylibs with
-one OpenUIKit and one OpenCombine identity.
+OpenUIKit, OpenCoreGraphics, FoundationEssentials, Combine, and OpenCombine are
+separately loadable sibling dylibs with one identity apiece.
 The package has not yet been installed into a system guest root or wrapped as
 an Apple `.framework` directory, and it does not imply coverage beyond the
 currently implemented SwiftUI source surface.

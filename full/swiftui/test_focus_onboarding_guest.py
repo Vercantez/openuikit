@@ -14,6 +14,7 @@ UUID_PROBE = ROOT / "full/swiftui/FocusOnboardingUUIDProbe.c"
 UUID_COMPAT = ROOT / "full/foundation/uuid_compat.c"
 FOUNDATION = ROOT / "full/appshim/FoundationGuest.swift"
 ACCESSOR = ROOT / "full/swiftui/FocusOnboardingBundle.generated.swift"
+WIDGET_ACCESSOR = ROOT / "full/swiftui/FocusWidgetBundle.generated.swift"
 BUILD_FULL = ROOT / "full/scripts/build_full.sh"
 STUBS = ROOT / "full/foundation/fm_unimplemented.c"
 
@@ -43,7 +44,17 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
     def test_inputs_are_clean_and_resources_are_content_pinned(self) -> None:
         text = BUILD.read_text()
         self.assertIn("assert_clean_commit", text)
-        self.assertIn("EXPECTED_UIKIT_COMMIT=13479babf5caf308973388c7fdc789f9116750c0", text)
+        self.assertIn(
+            "EXPECTED_UIKIT_COMMIT="
+            "8f98af2e53af566923de6616f3629bec0661aa8c",
+            text,
+        )
+        self.assertIn(
+            "EXPECTED_UIKIT_TREE="
+            "a8b809d35b52ef317517914922392f395a8da59c",
+            text,
+        )
+        self.assertNotIn("EXPECTED_UIKIT_COMMIT_OVERRIDE", text)
         for digest in (
             "3db199a93294a4ea0e6549522c29e8b2e4dbfb979bd60c07cdad5d00386734f5",
             "144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d",
@@ -55,6 +66,8 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
 
     def test_framework_graph_uses_nine_real_macho_dylibs(self) -> None:
         text = BUILD.read_text()
+        self.assertIn("-parse-stdlib -typecheck", text)
+        self.assertIn("-e 'import Swift'", text)
         names = (
             "FoundationEssentials", "OpenCoreGraphics", "OpenUIKit", "Foundation",
             "OpenCombine", "Combine", "SwiftUI", "Widget", "Onboarding",
@@ -112,11 +125,62 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("defaultBrowserSettingsTapped", text)
         self.assertIn("defaultBrowserSkip", text)
 
-    def test_generated_support_is_explicitly_not_application_source(self) -> None:
-        self.assertIn("not Mozilla Focus application source", ACCESSOR.read_text())
+    def test_compatibility_support_uses_the_exact_normalized_bundle(self) -> None:
+        accessor = ACCESSOR.read_text()
+        widget_accessor = WIDGET_ACCESSOR.read_text()
+        harness = HARNESS.read_text()
+        build = BUILD.read_text()
+        self.assertIn("compatibility build support", accessor)
+        self.assertIn("declares no Onboarding resources", accessor)
+        self.assertIn("SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE", accessor)
+        self.assertNotIn("SwiftPM-equivalent", accessor)
+        self.assertIn('"Focus_Onboarding.bundle"', accessor)
+        self.assertIn("Bundle.main.bundleURL.appendingPathComponent", accessor)
+        self.assertIn("guard let bundle = Bundle(url: url)", accessor)
+        self.assertIn("_ = Color.actionButton", accessor)
+        self.assertIn("_ = Image.logo", accessor)
+        self.assertIn('named: "icon_logo"', accessor)
+        self.assertIn("in: Bundle.module", accessor)
+        self.assertIn('"Focus_Widget.bundle"', widget_accessor)
+        self.assertIn("_ = Gradient.quickAccessWidget", widget_accessor)
+        self.assertIn("_ = Image.logo", widget_accessor)
+        self.assertIn(
+            "FocusOnboardingResourceProof.bundlePath == arguments[1]", harness
+        )
+        self.assertIn(
+            "FocusOnboardingResourceProof.resourcePath == arguments[1]", harness
+        )
+        self.assertIn(
+            "FocusOnboardingResourceProof.exerciseUnchangedAssets()", harness
+        )
+        self.assertIn("unchanged Onboarding named image did not resolve", harness)
+        self.assertIn(
+            "FocusWidgetResourceProof.bundlePath == arguments[2]", harness
+        )
+        self.assertIn(
+            "FocusWidgetResourceProof.resourcePath == arguments[2]", harness
+        )
+        self.assertIn("FocusWidgetResourceProof.exerciseUnchangedAssets()", harness)
+        self.assertNotIn("OpenUIKitRuntime.imageSearchPaths", harness)
+        self.assertIn(
+            'cp -a "$ONBOARDING_INPUT" "$OUT/Focus_Onboarding.bundle"', build
+        )
+        self.assertNotIn(
+            '"$OUT/resources/Focus_Onboarding.bundle"', build
+        )
+        self.assertIn(
+            'cp -a "$WIDGET_INPUT" "$OUT/Focus_Widget.bundle"', build
+        )
+        self.assertNotIn('"$OUT/resources/Focus_Widget.bundle"', build)
+        self.assertIn("printf 'onboarding-bundle-accessor\\t%s\\n'", build)
+        self.assertIn("printf 'widget-bundle-accessor\\t%s\\n'", build)
+
+    def test_compatibility_support_is_explicitly_not_application_source(self) -> None:
+        self.assertIn("not Mozilla Focus application", ACCESSOR.read_text())
+        self.assertIn("source. Pinned Focus Package.swift", ACCESSOR.read_text())
         self.assertIn("Project-owned Linux/machorun harness", HARNESS.read_text())
         self.assertIn("Project-owned runtime probe", UUID_PROBE.read_text())
-        self.assertIn("static var module: Bundle { .main }", ACCESSOR.read_text())
+        self.assertIn("static let module: Bundle", ACCESSOR.read_text())
 
     def test_success_marker_is_exact_and_fail_closed(self) -> None:
         build = BUILD.read_text()

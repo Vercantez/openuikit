@@ -124,8 +124,10 @@ S1 is green only when all of the following are true:
 
 1. The two staged source hashes match the canonical inventory and no patch is
    applied.
-2. A SwiftPM-equivalent generated `Bundle.module` accessor and normalized
-   resource bundle are separately attested.
+2. The manifest's missing Widget resource declaration is recorded honestly;
+   separately labelled project compatibility support and the reviewed
+   normalized resource bundle are attested without claiming SwiftPM generated
+   an accessor.
 3. Module emission reports zero errors against the guest `SwiftUI` and
    OpenUIKit modules.
 4. Mach-O dependency inspection proves no Apple SwiftUI linkage.
@@ -184,11 +186,12 @@ and the raw UUID function surface used by FoundationEssentials through nine
 sibling Mach-O dylibs.
 See `FOCUS_ONBOARDING_GUEST.md`.
 
-S2 remains open: eleven of the Onboarding target's 21 files are outside this
-runtime image, and the complete object-emission route still has to clear the
-stock Linux Swift IRGen failure for two Objective-C-interoperable sources.
-Package-wide preview/representable emission and bidirectional pan/page
-selection also remain explicit gates.
+S2 remains open at the runtime-coverage boundary: eleven of the Onboarding
+target's 21 files are outside the focused interaction executable. The separate
+package proof now object-emits and links all 21 unchanged target files,
+including the preview/representable sources which previously triggered the
+stock Linux Swift IRGen failure. Executing every controller, preview, tooltip,
+and bidirectional pan/page-selection path remains an explicit gate.
 
 ### S3 — real app hosting call sites
 

@@ -16,9 +16,14 @@ OUT=$W/build/swiftui-guest
 PACKAGE=$OUT/package
 AUDIT=$OUT/audit
 FULL=$W/build/full
-SYS=$W/scratch/sysroot_full
+SYS=$W/scratch/sysroot_fe4
 MRROOT=$W/scratch/mrroot_full
 MC=$W/scratch/modcache_swiftui_guest
+SWIFT_FOUNDATION=$W/scratch/swift-foundation
+FE_OUT=$FULL/foundation/essentials
+FE_COLLECTIONS=$FULL/foundation/collections
+FE_OS=$FULL/foundation/os
+FE_CSHIMS=$FULL/foundation/cshims
 SWIFTUI_SOURCE_DIR=$UIKIT/Sources/SwiftUI
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
@@ -46,6 +51,8 @@ for swiftui_source in "${SWIFTUI_SOURCES[@]}"; do
 done
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
+EXPECTED_UIKIT_COMMIT=8f98af2e53af566923de6616f3629bec0661aa8c
+EXPECTED_UIKIT_TREE=a8b809d35b52ef317517914922392f395a8da59c
 EXPECTED_ASSETS_SHA=efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e
 EXPECTED_VIEW_SHA=721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2
 EXPECTED_INDEX_SHA=2eb8af32cc6d69161dc35f1536682dcba2dd4db21ea0015cf241701f32468d12
@@ -55,8 +62,8 @@ EXPECTED_SECOND_SHA=f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda4
 EXPECTED_RESOURCE_TREE_SHA=144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d
 EXPECTED_RESOURCE_FILE_COUNT=16
 EXPECTED_RESOURCE_DIRECTORY_COUNT=7
-EXPECTED_PACKAGE_FILE_COUNT=61
-EXPECTED_PACKAGE_DIRECTORY_COUNT=7
+EXPECTED_PACKAGE_FILE_COUNT=96
+EXPECTED_PACKAGE_DIRECTORY_COUNT=12
 BUILD_INPUT_MANIFEST=$FULL/focus-widget-build-inputs.manifest
 RUNTIME_CLOSURE_MANIFEST=$FULL/focus-widget-runtime-closure.manifest
 ATTEST=$W/full/swiftui/focus_widget_guest_attest.pl
@@ -163,6 +170,10 @@ runtime_fingerprint() {
         printf 'guest\t%s\n' "$(hash_file "$OUT/focus_widget_guest")"
         printf 'libSwiftUI\t%s\n' "$(hash_file "$PACKAGE/libSwiftUI.dylib")"
         printf 'libOpenUIKit\t%s\n' "$(hash_file "$PACKAGE/libOpenUIKit.dylib")"
+        printf 'libFoundationEssentials\t%s\n' \
+            "$(hash_file "$PACKAGE/libFoundationEssentials.dylib")"
+        printf 'libOpenCoreGraphics\t%s\n' \
+            "$(hash_file "$PACKAGE/libOpenCoreGraphics.dylib")"
         printf 'libCombine\t%s\n' "$(hash_file "$PACKAGE/libCombine.dylib")"
         printf 'libOpenCombine\t%s\n' "$(hash_file "$PACKAGE/libOpenCombine.dylib")"
         printf 'SwiftUI-module\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"
@@ -179,6 +190,13 @@ runtime_fingerprint() {
     } | hash_stream
 }
 
+[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{commit})" = "$EXPECTED_UIKIT_COMMIT" ] || {
+    echo "focus_widget_guest: OpenUIKit revision is not pinned $EXPECTED_UIKIT_COMMIT" >&2; exit 2; }
+[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{tree})" = "$EXPECTED_UIKIT_TREE" ] || {
+    echo "focus_widget_guest: OpenUIKit tree is not pinned $EXPECTED_UIKIT_TREE" >&2; exit 2; }
+uikit_status_before=$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all)
+[ -z "$uikit_status_before" ] || {
+    echo "focus_widget_guest: OpenUIKit checkout is not clean" >&2; exit 2; }
 [ "$(git -C "$FOCUS_REPO" rev-parse HEAD)" = "$EXPECTED_FOCUS_COMMIT" ] || {
     echo "focus_widget_guest: Focus revision is not pinned $EXPECTED_FOCUS_COMMIT" >&2; exit 2; }
 focus_status_before=$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)
@@ -295,7 +313,11 @@ mkdir -p "$OUT/fonts" "$PACKAGE" "$AUDIT" "$MC" \
     "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/CHostClock" \
     "$PACKAGE/include/COpenCombineHelpers" \
-    "$PACKAGE/include/CQuartz"
+    "$PACKAGE/include/CQuartz" \
+    "$PACKAGE/include/_FoundationCShims" \
+    "$PACKAGE/modules/FoundationEssentials" \
+    "$PACKAGE/modules/Collections" \
+    "$PACKAGE/modules/os"
 cp -a "$RESOURCE_INPUT" "$OUT/Focus_Widget.bundle"
 cp "$SYSTEM_FONT" "$OUT/fonts/DejaVuSans.ttf"
 cp "$MEDIUM_FONT" "$OUT/fonts/DejaVuSans-Bold.ttf"
@@ -308,6 +330,16 @@ cp -a "$FULL/inc/CPortableIO/." "$PACKAGE/include/CPortableIO/"
 cp -a "$FULL/inc/CSTBTrueType/." "$PACKAGE/include/CSTBTrueType/"
 cp -a "$W/full/hostclock/include/." "$PACKAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$PACKAGE/include/CQuartz/"
+cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
+    "$PACKAGE/include/_FoundationCShims/"
+for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+    cp "$FE_OUT/FoundationEssentials.$extension" \
+        "$PACKAGE/modules/FoundationEssentials/"
+    cp "$FE_OS/os.$extension" "$PACKAGE/modules/os/"
+    for module in InternalCollectionsUtilities OrderedCollections _RopeModule; do
+        cp "$FE_COLLECTIONS/$module.$extension" "$PACKAGE/modules/Collections/"
+    done
+done
 cp "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
     "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$PACKAGE/"
 cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
@@ -318,11 +350,11 @@ cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
 require_hash "$OUT/fonts/DejaVuSans.ttf" "$EXPECTED_SYSTEM_FONT_SHA" staged-DejaVuSans.ttf
 require_hash "$OUT/fonts/DejaVuSans-Bold.ttf" "$EXPECTED_MEDIUM_FONT_SHA" staged-DejaVuSans-Bold.ttf
 
-SWIFTC=(swiftc -target arm64-apple-macos13.0 -sdk "$SYS" -module-cache-path "$MC"
+SWIFTC=(swiftc -target arm64-apple-macos15.0 -sdk "$SYS" -module-cache-path "$MC"
         -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0
+LD=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 CINC=(-Xcc -I"$FULL/inc/CPortableIO" -Xcc -I"$FULL/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
@@ -332,10 +364,35 @@ PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
               -Xcc -I"$PACKAGE/include/CHostClock"
               -Xcc -I"$PACKAGE/include/COpenCombineHelpers"
               -Xcc -I"$PACKAGE/include/CQuartz")
+FE_FLAGS=(-I "$PACKAGE/modules/FoundationEssentials"
+          -I "$PACKAGE/modules/Collections" -I "$PACKAGE/modules/os"
+          -Xcc -fmodule-map-file="$PACKAGE/include/_FoundationCShims/module.modulemap"
+          -Xcc -I"$PACKAGE/include/_FoundationCShims")
+FE_OBJECTS=(
+    "$FE_OUT/FoundationEssentials.o"
+    "$FE_COLLECTIONS/InternalCollectionsUtilities.o"
+    "$FE_COLLECTIONS/OrderedCollections.o"
+    "$FE_COLLECTIONS/_RopeModule.o"
+    "$FE_OS/os.o"
+    "$FE_CSHIMS/platform_shims.o"
+    "$FE_CSHIMS/string_shims.o"
+    "$FE_CSHIMS/uuid.o"
+    "$FE_OUT/fm_unimplemented.o"
+    "$FE_OUT/uuid_compat.o"
+)
 
-# Repeat build_full's Foundation-invisibility gate at the SwiftUI boundary.
-"${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name SwiftUINoFoundation \
-    "$FULL/guard_no_foundation.swift"
+# Repeat build_full's exact visibility contract at the SwiftUI boundary:
+# Foundation stays hidden while the canonical FoundationEssentials module is
+# present.  The checked-in guard replaced the obsolete generated output in
+# d830e8e and is part of the complete resume inventory below.
+"${SWIFTC[@]}" "${CINC[@]}" "${FE_FLAGS[@]}" -typecheck \
+    -module-name SwiftUIFoundationVisibility \
+    "$W/full/foundation/foundationessentials_import_guard.swift"
+
+# A cold cache must build the SDK's textual Swift module before recursively
+# importing the pinned binary OpenCombine module's _Concurrency dependency.
+swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
+    -module-cache-path "$MC" -parse-stdlib -typecheck -e 'import Swift'
 
 echo "== package source-built OpenCombine core as a sibling dylib"
 cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" \
@@ -346,7 +403,7 @@ patch --batch --forward --fuzz=0 "$OUT/COpenCombineHelpers.cpp" \
     "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch"
 require_hash "$OUT/COpenCombineHelpers.cpp" \
     "$EXPECTED_OPENCOMBINE_PATCHED_HELPER_SHA" patched-COpenCombineHelpers.cpp
-clang++-18 -target arm64-apple-macos13.0 -isysroot "$SYS" \
+clang++-18 -target arm64-apple-macos15.0 -isysroot "$SYS" \
     -stdlib=libc++ -std=c++17 -O2 -I "$PACKAGE/include/COpenCombineHelpers" \
     -c "$OUT/COpenCombineHelpers.cpp" -o "$OUT/copencombinehelpers.o"
 "${LD[@]}" -dylib -install_name @rpath/libOpenCombine.dylib \
@@ -361,7 +418,8 @@ clang++-18 -target arm64-apple-macos13.0 -isysroot "$SYS" \
     "$SYS/usr/lib/libobjc.tbd"
 
 echo "== package literal Combine re-export shim as a sibling dylib"
-"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" \
     -module-name Combine -emit-module -emit-module-path "$PACKAGE/Combine.swiftmodule" \
     -emit-object -o "$OUT/combine.o" \
     "$W/full/oracle-opencombine/Combine.swift"
@@ -373,13 +431,15 @@ echo "== package literal Combine re-export shim as a sibling dylib"
     "$SYS/usr/lib/swift/libswiftCore.tbd" "$SYS/usr/lib/libSystem.tbd"
 
 echo "== SwiftUI (complete authoritative sources; Foundation hidden)"
-"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" \
     -module-name SwiftUI -emit-module -emit-module-path "$PACKAGE/SwiftUI.swiftmodule" \
     -emit-object -o "$OUT/swiftui.o" \
     "${SWIFTUI_SOURCES[@]}"
 
 echo "== FocusWidget (two pinned app sources direct from clean checkout)"
-"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" -I "$OUT" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" -I "$OUT" \
     -module-name FocusWidget \
     -emit-module -emit-module-path "$OUT/FocusWidget.swiftmodule" \
     -emit-object -o "$OUT/focuswidget.o" \
@@ -388,24 +448,44 @@ echo "== FocusWidget (two pinned app sources direct from clean checkout)"
     "$W/full/swiftui/FocusWidgetBundle.generated.swift"
 
 echo "== guest harness (project-owned, separate from Focus sources)"
-"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" -I "$PACKAGE" -I "$OUT" \
+"${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
+    -I "$PACKAGE" -I "$OUT" \
     -module-name FocusWidgetGuest -emit-object -o "$OUT/guest-main.o" \
     "$W/full/swiftui/FocusWidgetGuestMain.swift"
 
+echo "== package FoundationEssentials and OpenCoreGraphics dependencies"
+"${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
+    -L"$MRROOT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libFoundationEssentials.link-map" \
+    -o "$PACKAGE/libFoundationEssentials.dylib" \
+    "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
+"${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libOpenCoreGraphics.dylib -rpath @loader_path \
+    -L"$MRROOT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    -map "$AUDIT/libOpenCoreGraphics.link-map" \
+    -o "$PACKAGE/libOpenCoreGraphics.dylib" "$FULL/opencoregraphics.o"
+
 echo "== package OpenUIKit as SwiftUI's UI framework dependency"
 "${LD[@]}" -dylib -install_name @rpath/libOpenUIKit.dylib -rpath @loader_path \
+    -L"$PACKAGE" -lFoundationEssentials -lOpenCoreGraphics \
     -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     -map "$AUDIT/libOpenUIKit.link-map" -o "$PACKAGE/libOpenUIKit.dylib" \
-    "$FULL/openuikit.o" "$FULL/opencoregraphics.o" \
+    "$FULL/openuikit.o" \
     "$FULL/cportableio.o" "$FULL/cstbtruetype.o" "$FULL/hostclock.o" \
     "$FULL/swiftcorepatch.o"
 
 echo "== package reusable libSwiftUI.dylib"
 "${LD[@]}" -dylib -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
-    -L"$PACKAGE" -lOpenUIKit -lCombine -lOpenCombine \
+    -L"$PACKAGE" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
@@ -416,7 +496,8 @@ echo "== package reusable libSwiftUI.dylib"
 echo "== link arm64 Mach-O against packaged dylibs (no framework objects)"
 "${LD[@]}" -exported_symbol __mh_execute_header \
     -rpath @loader_path/package \
-    -L"$PACKAGE" -lSwiftUI -lOpenUIKit \
+    -L"$PACKAGE" -lSwiftUI -lOpenUIKit -lFoundationEssentials \
+    -lOpenCoreGraphics \
     -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
@@ -427,6 +508,12 @@ echo "== link arm64 Mach-O against packaged dylibs (no framework objects)"
 llvm-otool-18 -hv "$PACKAGE/libOpenUIKit.dylib" | \
     grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
     echo "focus_widget_guest: libOpenUIKit is not an arm64 Mach-O dylib" >&2; exit 2; }
+llvm-otool-18 -hv "$PACKAGE/libFoundationEssentials.dylib" | \
+    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
+    echo "focus_widget_guest: libFoundationEssentials is not an arm64 Mach-O dylib" >&2; exit 2; }
+llvm-otool-18 -hv "$PACKAGE/libOpenCoreGraphics.dylib" | \
+    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
+    echo "focus_widget_guest: libOpenCoreGraphics is not an arm64 Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libSwiftUI.dylib" | \
     grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
     echo "focus_widget_guest: libSwiftUI is not an arm64 Mach-O dylib" >&2; exit 2; }
@@ -505,15 +592,75 @@ expected_package_names=$(printf '%s\n' \
     SwiftUI.swiftmodule \
     SwiftUI.swiftsourceinfo \
     libCombine.dylib \
+    libFoundationEssentials.dylib \
     libOpenCombine.dylib \
+    libOpenCoreGraphics.dylib \
     libOpenUIKit.dylib \
     libSwiftUI.dylib)
 actual_package_names=$(find "$PACKAGE" -maxdepth 1 -type f -exec basename {} \; | LC_ALL=C sort)
 assert_exact_text "package top-level inventory" "$actual_package_names" "$expected_package_names"
+expected_package_directories=$(printf '%s\n' \
+    include \
+    include/CHostClock \
+    include/COpenCombineHelpers \
+    include/CPortableIO \
+    include/CQuartz \
+    include/CQuartz/quartz \
+    include/CSTBTrueType \
+    include/_FoundationCShims \
+    modules \
+    modules/Collections \
+    modules/FoundationEssentials \
+    modules/os)
+actual_package_directories=$(find "$PACKAGE" -mindepth 1 -type d | \
+    sed "s#^$PACKAGE/##" | LC_ALL=C sort)
+assert_exact_text "package directory inventory" \
+    "$actual_package_directories" "$expected_package_directories"
+expected_fe_module_files=$(printf '%s\n' \
+    Collections/InternalCollectionsUtilities.abi.json \
+    Collections/InternalCollectionsUtilities.swiftdoc \
+    Collections/InternalCollectionsUtilities.swiftmodule \
+    Collections/InternalCollectionsUtilities.swiftsourceinfo \
+    Collections/OrderedCollections.abi.json \
+    Collections/OrderedCollections.swiftdoc \
+    Collections/OrderedCollections.swiftmodule \
+    Collections/OrderedCollections.swiftsourceinfo \
+    Collections/_RopeModule.abi.json \
+    Collections/_RopeModule.swiftdoc \
+    Collections/_RopeModule.swiftmodule \
+    Collections/_RopeModule.swiftsourceinfo \
+    FoundationEssentials/FoundationEssentials.abi.json \
+    FoundationEssentials/FoundationEssentials.swiftdoc \
+    FoundationEssentials/FoundationEssentials.swiftmodule \
+    FoundationEssentials/FoundationEssentials.swiftsourceinfo \
+    os/os.abi.json \
+    os/os.swiftdoc \
+    os/os.swiftmodule \
+    os/os.swiftsourceinfo)
+actual_fe_module_files=$(find "$PACKAGE/modules" -type f | \
+    sed "s#^$PACKAGE/modules/##" | LC_ALL=C sort)
+assert_exact_text "FoundationEssentials module inventory" \
+    "$actual_fe_module_files" "$expected_fe_module_files"
 for module in OpenUIKit OpenCoreGraphics; do
     for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
         cmp -s "$FULL/$module.$extension" "$PACKAGE/$module.$extension" || {
             echo "focus_widget_guest: packaged $module.$extension differs from build_full" >&2
+            exit 2
+        }
+    done
+done
+for extension in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+    cmp -s "$FE_OUT/FoundationEssentials.$extension" \
+        "$PACKAGE/modules/FoundationEssentials/FoundationEssentials.$extension" || {
+        echo "focus_widget_guest: packaged FoundationEssentials.$extension drifted" >&2
+        exit 2
+    }
+    cmp -s "$FE_OS/os.$extension" "$PACKAGE/modules/os/os.$extension" || {
+        echo "focus_widget_guest: packaged os.$extension drifted" >&2; exit 2; }
+    for module in InternalCollectionsUtilities OrderedCollections _RopeModule; do
+        cmp -s "$FE_COLLECTIONS/$module.$extension" \
+            "$PACKAGE/modules/Collections/$module.$extension" || {
+            echo "focus_widget_guest: packaged $module.$extension drifted" >&2
             exit 2
         }
     done
@@ -530,6 +677,9 @@ done
 [ "$(tree_digest "$PACKAGE/include/CQuartz")" = \
     "$(tree_digest "$UIKIT/Sources/CQuartz/include")" ] || {
     echo "focus_widget_guest: packaged CQuartz headers drifted" >&2; exit 2; }
+[ "$(tree_digest "$PACKAGE/include/_FoundationCShims")" = \
+    "$(tree_digest "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include")" ] || {
+    echo "focus_widget_guest: packaged Foundation C shim headers drifted" >&2; exit 2; }
 [ "$(tree_digest "$PACKAGE/include/COpenCombineHelpers")" = \
     "$(tree_digest "$OPENCOMBINE_HELPERS/include")" ] || {
     echo "focus_widget_guest: packaged COpenCombineHelpers headers drifted" >&2; exit 2; }
@@ -550,11 +700,23 @@ assert_exact_text "libCombine LC_ID_DYLIB" \
 assert_exact_text "libOpenUIKit LC_ID_DYLIB" \
     "$(llvm-otool-18 -D "$PACKAGE/libOpenUIKit.dylib" | tail -n 1)" \
     '@rpath/libOpenUIKit.dylib'
+assert_exact_text "libFoundationEssentials LC_ID_DYLIB" \
+    "$(llvm-otool-18 -D "$PACKAGE/libFoundationEssentials.dylib" | tail -n 1)" \
+    '@rpath/libFoundationEssentials.dylib'
+assert_exact_text "libOpenCoreGraphics LC_ID_DYLIB" \
+    "$(llvm-otool-18 -D "$PACKAGE/libOpenCoreGraphics.dylib" | tail -n 1)" \
+    '@rpath/libOpenCoreGraphics.dylib'
 assert_exact_text "libSwiftUI LC_ID_DYLIB" \
     "$(llvm-otool-18 -D "$PACKAGE/libSwiftUI.dylib" | tail -n 1)" \
     '@rpath/libSwiftUI.dylib'
 assert_exact_text "libOpenUIKit LC_RPATH set" \
     "$(rpaths "$PACKAGE/libOpenUIKit.dylib")" \
+    "$(printf '%s\n' /usr/lib/swift @loader_path)"
+assert_exact_text "libFoundationEssentials LC_RPATH set" \
+    "$(rpaths "$PACKAGE/libFoundationEssentials.dylib")" \
+    "$(printf '%s\n' /usr/lib/swift @loader_path)"
+assert_exact_text "libOpenCoreGraphics LC_RPATH set" \
+    "$(rpaths "$PACKAGE/libOpenCoreGraphics.dylib")" \
     "$(printf '%s\n' /usr/lib/swift @loader_path)"
 assert_exact_text "libSwiftUI LC_RPATH set" \
     "$(rpaths "$PACKAGE/libSwiftUI.dylib")" \
@@ -571,16 +733,37 @@ assert_exact_text "guest LC_RPATH set" \
 
 expected_openuikit_loads=$(printf '%s\n' \
     @rpath/libOpenUIKit.dylib \
+    @rpath/libFoundationEssentials.dylib \
+    @rpath/libOpenCoreGraphics.dylib \
     /usr/lib/swift/libswiftCore.dylib \
     /usr/lib/libswiftcompat.dylib \
     /usr/lib/libSystem.B.dylib \
     /usr/lib/libobjc.A.dylib \
     /usr/lib/libquartz.dylib \
     /usr/lib/swift/libswift_Concurrency.dylib \
-    /usr/lib/swift/libswiftObjectiveC.dylib)
+    /usr/lib/swift/libswiftObjectiveC.dylib \
+    /usr/lib/swift/libswift_errno.dylib)
+expected_foundationessentials_loads=$(printf '%s\n' \
+    @rpath/libFoundationEssentials.dylib \
+    /usr/lib/swift/libswiftCore.dylib \
+    /usr/lib/libswiftcompat.dylib \
+    /usr/lib/libSystem.B.dylib \
+    /usr/lib/swift/libswiftDarwin.dylib \
+    /usr/lib/swift/libswift_StringProcessing.dylib \
+    /usr/lib/swift/libswiftSynchronization.dylib \
+    /usr/lib/libobjc.A.dylib \
+    /usr/lib/swift/libswift_errno.dylib)
+expected_opencoregraphics_loads=$(printf '%s\n' \
+    @rpath/libOpenCoreGraphics.dylib \
+    /usr/lib/swift/libswiftCore.dylib \
+    /usr/lib/libswiftcompat.dylib \
+    /usr/lib/libSystem.B.dylib \
+    /usr/lib/libquartz.dylib \
+    /usr/lib/libobjc.A.dylib)
 expected_swiftui_loads=$(printf '%s\n' \
     @rpath/libSwiftUI.dylib \
     @rpath/libOpenUIKit.dylib \
+    @rpath/libOpenCoreGraphics.dylib \
     @rpath/libCombine.dylib \
     @rpath/libOpenCombine.dylib \
     /usr/lib/swift/libswiftCore.dylib \
@@ -607,6 +790,8 @@ expected_combine_loads=$(printf '%s\n' \
 expected_guest_loads=$(printf '%s\n' \
     @rpath/libSwiftUI.dylib \
     @rpath/libOpenUIKit.dylib \
+    @rpath/libFoundationEssentials.dylib \
+    @rpath/libOpenCoreGraphics.dylib \
     /usr/lib/swift/libswiftCore.dylib \
     /usr/lib/libswiftcompat.dylib \
     /usr/lib/libSystem.B.dylib \
@@ -615,6 +800,12 @@ expected_guest_loads=$(printf '%s\n' \
     /usr/lib/swift/libswiftObjectiveC.dylib)
 assert_exact_text "libOpenUIKit dylib loads" \
     "$(load_paths "$PACKAGE/libOpenUIKit.dylib")" "$expected_openuikit_loads"
+assert_exact_text "libFoundationEssentials dylib loads" \
+    "$(load_paths "$PACKAGE/libFoundationEssentials.dylib")" \
+    "$expected_foundationessentials_loads"
+assert_exact_text "libOpenCoreGraphics dylib loads" \
+    "$(load_paths "$PACKAGE/libOpenCoreGraphics.dylib")" \
+    "$expected_opencoregraphics_loads"
 assert_exact_text "libSwiftUI dylib loads" \
     "$(load_paths "$PACKAGE/libSwiftUI.dylib")" "$expected_swiftui_loads"
 assert_exact_text "libOpenCombine dylib loads" \
@@ -627,6 +818,8 @@ assert_exact_text "guest dylib loads" \
 for binary in \
     "$PACKAGE/libOpenCombine.dylib" \
     "$PACKAGE/libCombine.dylib" \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$PACKAGE/libOpenUIKit.dylib" \
     "$PACKAGE/libSwiftUI.dylib" \
     "$OUT/focus_widget_guest"; do
@@ -640,18 +833,24 @@ done
 
 llvm-nm-18 -gj --defined-only "$PACKAGE/libOpenUIKit.dylib" \
     > "$AUDIT/libOpenUIKit.defined"
+llvm-nm-18 -gj --defined-only "$PACKAGE/libOpenCoreGraphics.dylib" \
+    > "$AUDIT/libOpenCoreGraphics.defined"
 llvm-nm-18 -gj --defined-only "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.defined"
 llvm-nm-18 -gj --defined-only "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.defined"
 llvm-nm-18 -u "$PACKAGE/libOpenUIKit.dylib" \
     > "$AUDIT/libOpenUIKit.undefined"
+llvm-nm-18 -u "$PACKAGE/libOpenCoreGraphics.dylib" \
+    > "$AUDIT/libOpenCoreGraphics.undefined"
 llvm-nm-18 -u "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.undefined"
 llvm-nm-18 -u "$OUT/focus_widget_guest" \
     > "$AUDIT/focus_widget_guest.undefined"
 llvm-objdump-18 --macho --bind "$PACKAGE/libOpenUIKit.dylib" \
     > "$AUDIT/libOpenUIKit.bind"
+llvm-objdump-18 --macho --bind "$PACKAGE/libOpenCoreGraphics.dylib" \
+    > "$AUDIT/libOpenCoreGraphics.bind"
 llvm-objdump-18 --macho --bind "$PACKAGE/libSwiftUI.dylib" \
     > "$AUDIT/libSwiftUI.bind"
 llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
@@ -666,6 +865,7 @@ llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
 perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
     --demangle swift-demangle \
     --openuikit "$PACKAGE/libOpenUIKit.dylib" \
+    --opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib" \
     --swiftui "$PACKAGE/libSwiftUI.dylib" \
     --combine "$PACKAGE/libCombine.dylib" \
     --opencombine "$PACKAGE/libOpenCombine.dylib" \
@@ -686,6 +886,22 @@ grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t_$s10ObjectiveC8SelectorV9OpenU
     echo "focus_widget_guest: non-prefix OpenUIKit extension definition escaped ownership audit" >&2
     exit 2
 }
+grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t_OBJC_CLASS_$__TtC9OpenUIKit11UITextRange' \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: canonical Swift ObjC class escaped ownership audit" >&2
+    exit 2
+}
+foreign_extension='_$s16OpenCoreGraphics6CGRectV0A5UIKitE5inset2byAcD12UIEdgeInsetsV_tF'
+grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t'"$foreign_extension" \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: foreign-type extension escaped definition ownership audit" >&2
+    exit 2
+}
+grep -Fqx $'import\tlibSwiftUI\tOpenUIKit\tlibOpenUIKit\t'"$foreign_extension" \
+    "$AUDIT/framework-providers.tsv" || {
+    echo "focus_widget_guest: foreign-type extension escaped provider audit" >&2
+    exit 2
+}
 # Swift 6 lowers CALayer's MainActor-isolated deinit through
 # `pthread_main_np`. The deliberately narrow sysroot TBD does not advertise
 # that compatibility entry point; the project-owned libSystem umbrella does,
@@ -693,26 +909,57 @@ grep -Fqx $'definition\tlibOpenUIKit\tOpenUIKit\t_$s10ObjectiveC8SelectorV9OpenU
 # Keep the physical provider explicit in the link-input allowlist.
 expected_openuikit_inputs=$(printf '%s\n' \
     'linker synthesized' \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
     "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$FULL/openuikit.o" \
-    "$FULL/opencoregraphics.o" \
     "$FULL/cportableio.o" \
     "$FULL/cstbtruetype.o" \
     "$FULL/hostclock.o" \
     "$FULL/swiftcorepatch.o" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
     "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+expected_foundationessentials_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
+    "$FE_OUT/FoundationEssentials.o" \
+    "$FE_COLLECTIONS/InternalCollectionsUtilities.o" \
+    "$FE_COLLECTIONS/OrderedCollections.o" \
+    "$FE_COLLECTIONS/_RopeModule.o" \
+    "$FE_OS/os.o" \
+    "$FE_CSHIMS/platform_shims.o" \
+    "$FE_CSHIMS/string_shims.o" \
+    "$FE_CSHIMS/uuid.o" \
+    "$FE_OUT/fm_unimplemented.o" \
+    "$FE_OUT/uuid_compat.o" \
+    "$FULL/swiftcorepatch.o" \
+    "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
+    "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
+    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$SYS/usr/lib/libobjc.tbd")
+expected_opencoregraphics_inputs=$(printf '%s\n' \
+    'linker synthesized' \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$SYS/usr/lib/libSystem.tbd" \
+    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
+    "$FULL/opencoregraphics.o" \
+    "$SYS/usr/lib/libobjc.tbd")
 expected_swiftui_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$PACKAGE/libCombine.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$OUT/swiftui.o" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
     "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
@@ -724,7 +971,6 @@ expected_opencombine_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$MRROOT/darwin/usr/lib/libc++abi.dylib" \
     "$SYS/usr/lib/libSystem.tbd" \
-    "$MRROOT/darwin/usr/lib/libSystem.real.dylib" \
     "$SYS/usr/lib/libobjc.tbd")
 expected_combine_inputs=$(printf '%s\n' \
     'linker synthesized' \
@@ -734,14 +980,23 @@ expected_guest_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$PACKAGE/libSwiftUI.dylib" \
     "$PACKAGE/libOpenUIKit.dylib" \
+    "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$OUT/guest-main.o" \
     "$OUT/focuswidget.o" \
     "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
 assert_exact_text "libOpenUIKit linker inputs" \
     "$(link_map_inputs "$AUDIT/libOpenUIKit.link-map")" "$expected_openuikit_inputs"
+assert_exact_text "libFoundationEssentials linker inputs" \
+    "$(link_map_inputs "$AUDIT/libFoundationEssentials.link-map")" \
+    "$expected_foundationessentials_inputs"
+assert_exact_text "libOpenCoreGraphics linker inputs" \
+    "$(link_map_inputs "$AUDIT/libOpenCoreGraphics.link-map")" \
+    "$expected_opencoregraphics_inputs"
 assert_exact_text "libSwiftUI linker inputs" \
     "$(link_map_inputs "$AUDIT/libSwiftUI.link-map")" "$expected_swiftui_inputs"
 assert_exact_text "libOpenCombine linker inputs" \
@@ -750,10 +1005,22 @@ assert_exact_text "libCombine linker inputs" \
     "$(link_map_inputs "$AUDIT/libCombine.link-map")" "$expected_combine_inputs"
 assert_exact_text "guest linker inputs" \
     "$(link_map_inputs "$AUDIT/focus_widget_guest.link-map")" "$expected_guest_inputs"
-for input in openuikit.o opencoregraphics.o cportableio.o cstbtruetype.o \
+for input in openuikit.o cportableio.o cstbtruetype.o \
     hostclock.o swiftcorepatch.o; do
     grep -Fq "$input" "$AUDIT/libOpenUIKit.link-map" || {
         echo "focus_widget_guest: libOpenUIKit link map omitted $input" >&2; exit 2; }
+done
+grep -Fq 'opencoregraphics.o' "$AUDIT/libOpenCoreGraphics.link-map" || {
+    echo "focus_widget_guest: libOpenCoreGraphics link map omitted opencoregraphics.o" >&2
+    exit 2
+}
+for input in FoundationEssentials.o InternalCollectionsUtilities.o \
+    OrderedCollections.o _RopeModule.o os.o platform_shims.o string_shims.o \
+    uuid.o fm_unimplemented.o uuid_compat.o; do
+    grep -Fq "$input" "$AUDIT/libFoundationEssentials.link-map" || {
+        echo "focus_widget_guest: libFoundationEssentials link map omitted $input" >&2
+        exit 2
+    }
 done
 grep -Fq 'swiftui.o' "$AUDIT/libSwiftUI.link-map" || {
     echo "focus_widget_guest: libSwiftUI link map omitted swiftui.o" >&2; exit 2; }
@@ -844,7 +1111,8 @@ missing_control=$OUT/missing-swiftui-control
 mkdir -p "$missing_control/package"
 cp "$OUT/focus_widget_guest" "$missing_control/focus_widget_guest"
 cp "$PACKAGE/libOpenUIKit.dylib" "$PACKAGE/libCombine.dylib" \
-    "$PACKAGE/libOpenCombine.dylib" "$missing_control/package/"
+    "$PACKAGE/libOpenCombine.dylib" "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" "$missing_control/package/"
 set +e
 (
     cd "$missing_control"
@@ -875,7 +1143,8 @@ missing_openuikit=$OUT/missing-openuikit-control
 mkdir -p "$missing_openuikit/package"
 cp "$OUT/focus_widget_guest" "$missing_openuikit/focus_widget_guest"
 cp "$PACKAGE/libSwiftUI.dylib" "$PACKAGE/libCombine.dylib" \
-    "$PACKAGE/libOpenCombine.dylib" "$missing_openuikit/package/"
+    "$PACKAGE/libOpenCombine.dylib" "$PACKAGE/libFoundationEssentials.dylib" \
+    "$PACKAGE/libOpenCoreGraphics.dylib" "$missing_openuikit/package/"
 set +e
 (
     cd "$missing_openuikit"
@@ -945,10 +1214,12 @@ run_missing_observation_control() {
 # package, with the recursive requester identifying the expected edge.
 run_missing_observation_control combine libCombine.dylib \
     './package/libSwiftUI.dylib' \
-    libSwiftUI.dylib libOpenUIKit.dylib libOpenCombine.dylib
+    libSwiftUI.dylib libOpenUIKit.dylib libOpenCombine.dylib \
+    libFoundationEssentials.dylib libOpenCoreGraphics.dylib
 run_missing_observation_control opencombine libOpenCombine.dylib \
     './package/libCombine.dylib' \
-    libSwiftUI.dylib libOpenUIKit.dylib libCombine.dylib
+    libSwiftUI.dylib libOpenUIKit.dylib libCombine.dylib \
+    libFoundationEssentials.dylib libOpenCoreGraphics.dylib
 
 assert_build_input_inventory
 assert_runtime_closure
@@ -974,6 +1245,12 @@ current_full_subject_after=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$
     echo "focus_widget_guest: authoritative OpenUIKit sources changed during execution" >&2
     exit 2
 }
+[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{commit})" = "$EXPECTED_UIKIT_COMMIT" ] && \
+    [ "$(git -C "$UIKIT" rev-parse --verify HEAD^{tree})" = "$EXPECTED_UIKIT_TREE" ] && \
+    [ -z "$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all)" ] || {
+    echo "focus_widget_guest: pinned OpenUIKit checkout changed during execution" >&2
+    exit 2
+}
 assert_build_input_inventory
 assert_runtime_closure
 [ -z "$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)" ] || {
@@ -982,13 +1259,20 @@ require_hash "$FOCUS_WIDGET/Assets.swift" "$EXPECTED_ASSETS_SHA" Assets.swift
 require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchWidgetView.swift
 
 {
+    printf 'uikit_commit\t%s\n' "$EXPECTED_UIKIT_COMMIT"
+    printf 'uikit_tree\t%s\n' "$EXPECTED_UIKIT_TREE"
     printf 'focus_commit\t%s\n' "$EXPECTED_FOCUS_COMMIT"
     printf 'Assets.swift\t%s\n' "$EXPECTED_ASSETS_SHA"
     printf 'SearchWidgetView.swift\t%s\n' "$EXPECTED_VIEW_SHA"
     printf 'Focus_Widget.bundle/tree\t%s\n' "$EXPECTED_RESOURCE_TREE_SHA"
+    printf 'FocusWidgetBundle.generated.swift\t%s\n' \
+        "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     printf 'SwiftUI-build-support-subject\t%s\n' "$support_before"
     printf 'OpenUIKit-full-subject\t%s\n' "$recorded_full_subject"
-    printf 'complete-build-inputs/manifest\t%s\n' "$build_input_manifest_sha"
+    # These derived-input/package hashes deliberately bracket this run. Some
+    # compiler-produced .swiftsourceinfo files encode the absolute checkout
+    # root, so they are not cross-directory reproducibility claims.
+    printf 'complete-build-inputs/per-run-manifest\t%s\n' "$build_input_manifest_sha"
     printf 'complete-build-inputs/nodes\t%s\n' "$build_input_node_count"
     printf 'recursive-runtime-closure/manifest\t%s\n' "$runtime_closure_manifest_sha"
     printf 'recursive-runtime-closure/files\t%s\n' "$runtime_closure_file_count"
@@ -998,15 +1282,19 @@ require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchW
     printf 'DejaVuSans-Bold.ttf\t%s\n' "$EXPECTED_MEDIUM_FONT_SHA"
     printf 'SwiftUI.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftmodule")"
     printf 'SwiftUI.swiftdoc\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftdoc")"
-    printf 'SwiftUI.swiftsourceinfo\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftsourceinfo")"
+    printf 'SwiftUI.swiftsourceinfo/per-run\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.swiftsourceinfo")"
     printf 'SwiftUI.abi.json\t%s\n' "$(hash_file "$PACKAGE/SwiftUI.abi.json")"
     printf 'Combine.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/Combine.swiftmodule")"
     printf 'OpenCombine.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/OpenCombine.swiftmodule")"
     printf 'OpenUIKit.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/OpenUIKit.swiftmodule")"
     printf 'OpenCoreGraphics.swiftmodule\t%s\n' "$(hash_file "$PACKAGE/OpenCoreGraphics.swiftmodule")"
-    printf 'SwiftUI-package/tree\t%s\n' "$package_tree_before"
+    printf 'SwiftUI-package/per-run-tree\t%s\n' "$package_tree_before"
     printf 'libSwiftUI.dylib\t%s\n' "$(hash_file "$PACKAGE/libSwiftUI.dylib")"
     printf 'libOpenUIKit.dylib\t%s\n' "$(hash_file "$PACKAGE/libOpenUIKit.dylib")"
+    printf 'libFoundationEssentials.dylib\t%s\n' \
+        "$(hash_file "$PACKAGE/libFoundationEssentials.dylib")"
+    printf 'libOpenCoreGraphics.dylib\t%s\n' \
+        "$(hash_file "$PACKAGE/libOpenCoreGraphics.dylib")"
     printf 'libCombine.dylib\t%s\n' "$(hash_file "$PACKAGE/libCombine.dylib")"
     printf 'libOpenCombine.dylib\t%s\n' "$(hash_file "$PACKAGE/libOpenCombine.dylib")"
     printf 'focus_widget_guest\t%s\n' "$(hash_file "$OUT/focus_widget_guest")"
