@@ -19,6 +19,7 @@ EXPECTED = [
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/URLLoading.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
     "full/foundation/NSNumber.swift",
@@ -46,7 +47,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 17', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 18', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -77,6 +78,24 @@ class FoundationGuestServicesTests(unittest.TestCase):
         self.assertIn("case data(Data)", source)
         self.assertIn("case date(Date)", source)
         self.assertNotIn("static var storage", source)
+
+    def test_url_loading_boundary_is_metadata_only_and_case_insensitive(self) -> None:
+        source = (ROOT / "full/foundation/URLLoading.swift").read_text()
+        for token in (
+            "public struct URLRequest: Hashable",
+            "public var cachePolicy: CachePolicy",
+            "public func value(forHTTPHeaderField field: String)",
+            "public mutating func setValue",
+            "open class URLResponse: NSObject",
+            "open var suggestedFilename: String?",
+            "Neither type sends",
+        ):
+            self.assertIn(token, source)
+        for false_claim in ("URLSession", "URLProtocol", "send(request", "fetch("):
+            if false_claim == "URLSession":
+                self.assertEqual(source.count(false_claim), 1)  # documentation only
+            else:
+                self.assertNotIn(false_claim, source)
 
     def test_host_gate_is_cross_process_and_mutation_sensitive(self) -> None:
         source = (

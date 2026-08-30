@@ -7,6 +7,7 @@ full/foundation/CharacterSet.swift
 full/foundation/String+CharacterSet.swift
 full/foundation/String+FoundationCompatibility.swift
 full/foundation/Bundle+Localization.swift
+full/foundation/URLLoading.swift
 full/foundation/Scanner.swift
 full/foundation/NSError.swift
 full/foundation/NSNumber.swift
