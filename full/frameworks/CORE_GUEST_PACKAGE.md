@@ -64,6 +64,12 @@ and requires one load command for each in `libFoundation.dylib`. The facade
 object has no direct RegexParser symbol; that dylib remains StringProcessing's
 transitive runtime dependency rather than a guessed direct link.
 
+The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
+uses MainActor metadata and executor functions from `libswift_Concurrency`, so
+the builder names exactly that one manual SwiftUI runtime link. It requires the
+SDK TBD and staged dylib, verifies the dylib install name, and requires exactly
+one `/usr/lib/swift/libswift_Concurrency.dylib` load in `libSwiftUI.dylib`.
+
 ## Output contract
 
 The package is self-contained under these directories:

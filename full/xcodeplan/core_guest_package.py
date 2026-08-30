@@ -462,6 +462,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             "OpenUIKit",
             "OpenCombine",
             "Combine",
+            "SwiftUI",
             "Foundation",
             "UIKit",
         )
@@ -474,6 +475,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             "OpenUIKit",
             "OpenCombine",
             "Combine",
+            "SwiftUI",
             "Foundation",
             "UIKit",
         )

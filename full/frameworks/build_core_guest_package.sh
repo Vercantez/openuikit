@@ -499,6 +499,18 @@ for index in 0 1; do
     [ "$actual_id" = "$install_name" ] \
         || die "Foundation staged runtime ID $actual_id, expected $install_name"
 done
+SWIFTUI_RUNTIME_BASENAME=libswift_Concurrency
+SWIFTUI_RUNTIME_LINK_FLAG=-lswift_Concurrency
+SWIFTUI_RUNTIME_INSTALL_NAME=/usr/lib/swift/libswift_Concurrency.dylib
+swiftui_runtime_link_input=$STAGE/sdk/usr/lib/swift/$SWIFTUI_RUNTIME_BASENAME.tbd
+swiftui_runtime_input=$RUNTIME/darwin$SWIFTUI_RUNTIME_INSTALL_NAME
+[ -f "$swiftui_runtime_link_input" ] && [ ! -L "$swiftui_runtime_link_input" ] \
+    || die "SwiftUI runtime link input is missing: $swiftui_runtime_link_input"
+[ -f "$swiftui_runtime_input" ] && [ ! -L "$swiftui_runtime_input" ] \
+    || die "SwiftUI staged runtime dylib is missing: $swiftui_runtime_input"
+swiftui_runtime_actual_id=$(llvm-otool-18 -D "$swiftui_runtime_input" | tail -n 1)
+[ "$swiftui_runtime_actual_id" = "$SWIFTUI_RUNTIME_INSTALL_NAME" ] \
+    || die "SwiftUI staged runtime ID $swiftui_runtime_actual_id, expected $SWIFTUI_RUNTIME_INSTALL_NAME"
 
 FE_OBJECTS=(
     "$FULL/foundation/essentials/FoundationEssentials.o"
@@ -624,7 +636,13 @@ done
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
-    "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+swiftui_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
+    | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$swiftui_runtime_load_count" -eq 1 ] \
+    || die "libSwiftUI runtime load count $swiftui_runtime_load_count for $SWIFTUI_RUNTIME_INSTALL_NAME, expected 1"
 UIKIT_UNDEFINED_FLAGS=()
 [ "$PREVIEW_ENABLED" -eq 0 ] || UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \

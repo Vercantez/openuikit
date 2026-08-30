@@ -53,6 +53,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "OpenUIKit",
                 "OpenCombine",
                 "Combine",
+                "SwiftUI",
                 "Foundation",
                 "UIKit",
                 "DeveloperToolsSupport",
@@ -66,6 +67,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "OpenUIKit",
                 "OpenCombine",
                 "Combine",
+                "SwiftUI",
                 "Foundation",
                 "UIKit",
             )
@@ -178,6 +180,29 @@ class CoreGuestPackageTests(unittest.TestCase):
         os.symlink(self.root / "real-modules", self.root / "modules")
         with self.assertRaisesRegex(core_guest_package.CorePackageError, "symlink"):
             core_guest_package.validate(self.root)
+
+    def test_refuses_a_package_without_real_swiftui_module_or_dylib(self) -> None:
+        for relative in (
+            "modules/SwiftUI.swiftmodule",
+            "lib/libSwiftUI.dylib",
+        ):
+            with self.subTest(relative=relative):
+                changed = copy.deepcopy(self.manifest)
+                changed["artifacts"] = [
+                    artifact
+                    for artifact in changed["artifacts"]
+                    if artifact["path"] != relative
+                ]
+                target = self.root / relative
+                target.unlink()
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    "required artifact",
+                ):
+                    core_guest_package.validate(self.root)
+                target.write_bytes((relative + "\n").encode("utf-8"))
+                self.write_manifest(self.manifest)
 
     def test_sdk_tree_ledger_accepts_a_safe_internal_symlink(self) -> None:
         target = self.root / "sdk/usr/lib/target.tbd"

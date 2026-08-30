@@ -36,6 +36,10 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
         "/usr/lib/swift/libswiftSynchronization.dylib",
     ),
 )
+SWIFTUI_RUNTIME_LINK_CONTRACT = (
+    "-lswift_Concurrency",
+    "/usr/lib/swift/libswift_Concurrency.dylib",
+)
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
@@ -142,6 +146,17 @@ def validate_foundation_runtime_links(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"Foundation runtime-link contract drifted: {missing}")
+
+
+def validate_swiftui_runtime_link(source: str) -> None:
+    missing = [
+        token for token in SWIFTUI_RUNTIME_LINK_CONTRACT
+        if source.count(token) != 1
+    ]
+    if missing:
+        raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 1:
+        raise AssertionError("SwiftUI runtime-link scope drifted")
 
 
 class FoundationManifestTests(unittest.TestCase):
@@ -702,6 +717,47 @@ class ShellContractTests(unittest.TestCase):
             "Foundation staged runtime dylib is missing",
             "Foundation staged runtime ID",
             "libFoundation runtime load count",
+        ):
+            self.assertIn(spelling, source)
+
+    def test_swiftui_runtime_link_is_exact_and_deletion_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_swiftui_runtime_link(source)
+        self.assertEqual(
+            source.count(
+                '-emit-module-path "$STAGE/modules/SwiftUI.swiftmodule"'
+            ),
+            1,
+        )
+        self.assertEqual(
+            source.count("-install_name @rpath/libSwiftUI.dylib"),
+            1,
+        )
+        self.assertEqual(
+            source.count("Combine SwiftUI Foundation UIKit; do"),
+            2,
+        )
+        self.assertIn(
+            'record_artifact framework "$framework" dylib '
+            '"lib/lib$framework.dylib"',
+            source,
+        )
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        self.assertIn("import SwiftUI", probe)
+        self.assertIn('_ = Text("core-package")', probe)
+        for token in SWIFTUI_RUNTIME_LINK_CONTRACT:
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "runtime-link"):
+                    validate_swiftui_runtime_link(source.replace(token, "", 1))
+        with self.assertRaisesRegex(AssertionError, "runtime-link scope"):
+            validate_swiftui_runtime_link(
+                source.replace('"$SWIFTUI_RUNTIME_LINK_FLAG"', "", 1)
+            )
+        for spelling in (
+            "SwiftUI runtime link input is missing",
+            "SwiftUI staged runtime dylib is missing",
+            "SwiftUI staged runtime ID",
+            "libSwiftUI runtime load count",
         ):
             self.assertIn(spelling, source)
 
