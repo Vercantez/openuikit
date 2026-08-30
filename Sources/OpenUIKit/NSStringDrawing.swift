@@ -1,9 +1,12 @@
-// NSString drawing conveniences supplied by UIKit/Foundation on Apple
-// platforms but absent from corelibs Foundation.  Keep this Linux-only so it
-// cannot compete with the platform declaration on Darwin.
+// NSString drawing conveniences supplied by UIKit/Foundation when the full
+// Foundation umbrella is present. Native Linux and Foundation-hidden Mach-O
+// framework builds both need OpenUIKit's implementation; the latter is still
+// an Apple target, so an `os(Linux)` test alone is insufficient.
 
-#if os(Linux)
+#if os(Linux) || !canImport(Foundation)
+#if canImport(Foundation)
 import Foundation
+#endif
 
 public struct NSStringDrawingOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt

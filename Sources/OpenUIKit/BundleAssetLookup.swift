@@ -1,10 +1,9 @@
 // Bundle resource-root extraction shared by UIImage and UIColor named assets.
 //
-// The Foundation-hidden Mach-O build still compiles this file: that build has
-// OpenUIKit's identity-only Bundle stand-in, so it cannot discover a bundle's
-// filesystem location. Hosts use imageSearchPaths as the explicit resource
-// roots there. A Foundation-capable app build uses the selected Bundle's own
-// resource path and never leaks an explicit bundle lookup into global paths.
+// Foundation-capable builds use the selected Bundle's own resource path.
+// FoundationEssentials-only Mach-O builds use OpenUIKit's portable Bundle.
+// Fully Foundation-free renderer builds retain imageSearchPaths as their
+// explicit resource-root contract.
 
 #if canImport(Foundation)
 import class Foundation.Bundle
@@ -40,6 +39,12 @@ enum BundleAssetLookup {
         // must never fall through from Contents/Resources to its package root.
         let bundlePath = selected.bundlePath
         return bundlePath.isEmpty ? [] : [bundlePath]
+#elseif canImport(FoundationEssentials)
+        let selected = bundle ?? Bundle.main
+        if let resourcePath = selected.resourcePath, !resourcePath.isEmpty {
+            return [resourcePath]
+        }
+        return selected.bundlePath.isEmpty ? [] : [selected.bundlePath]
 #else
         _ = bundle
         return OpenUIKitRuntime.imageSearchPaths
