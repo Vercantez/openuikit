@@ -187,7 +187,10 @@ let package = Package(
         .executableTarget(name: "objcparity",
                           dependencies: ["OpenUIKit", "OpenUIKitC", "CPortableIO"],
                           linkerSettings: [.linkedLibrary("m", .when(platforms: [.linux]))]),
-        .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit"]),
+        // UIKit is included so source-compatibility tests can use the exact
+        // unchanged app import (`import UIKit`) rather than testing only the
+        // implementation module's spelling.
+        .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit", "UIKit"]),
         .testTarget(
             name: "SwiftUITests",
             dependencies: [

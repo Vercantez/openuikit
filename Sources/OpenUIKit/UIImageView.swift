@@ -34,6 +34,42 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+/// Shared pre-allocation conversion for renderer, layer, image-view, and
+/// procedural-image paths. Keeping the limit neutral avoids making generic
+/// renderers depend semantically on UIImageView while ensuring every route
+/// checks the same finite/range/overflow invariants before creating a Bitmap.
+enum _UIBitmapAllocation {
+    static func checkedPixelSize(
+        for rect: CGRect,
+        scale: CGFloat,
+        maximumScale: CGFloat = 4,
+        maximumDimension: CGFloat = 8192,
+        maximumPixels: Int = 16_000_000
+    ) -> (width: Int, height: Int)? {
+        guard maximumDimension.isFinite, maximumDimension > 0,
+              maximumPixels > 0,
+              rect.origin.x.isFinite, rect.origin.y.isFinite,
+              rect.width.isFinite, rect.height.isFinite,
+              rect.width > 0, rect.height > 0,
+              maximumScale.isFinite, maximumScale > 0,
+              scale.isFinite, scale > 0,
+              scale <= maximumScale else { return nil }
+        let rawWidth = rect.width * scale
+        let rawHeight = rect.height * scale
+        guard rawWidth.isFinite, rawHeight.isFinite,
+              rawWidth > 0, rawHeight > 0,
+              rawWidth <= maximumDimension,
+              rawHeight <= maximumDimension else { return nil }
+        let width = Int(rawWidth.rounded())
+        let height = Int(rawHeight.rounded())
+        guard width > 0, height > 0,
+              width <= Int(maximumDimension),
+              height <= Int(maximumDimension),
+              width <= maximumPixels / height else { return nil }
+        return (width, height)
+    }
+}
+
 @preconcurrency @MainActor
 open class UIImageView: UIView {
     open var image: UIImage? {
@@ -116,15 +152,20 @@ open class UIImageView: UIView {
         guard let image, image.bitmap.width > 0, image.bitmap.height > 0 else { return }
         let rect = UIImageView.contentRect(imageSize: image.size, bounds: bounds,
                                            mode: contentMode)
-        guard rect.width > 0, rect.height > 0 else { return }
+        guard let destination = _UIBitmapAllocation.checkedPixelSize(
+            for: rect,
+            scale: canvas.scale
+        ) else { return }
+        let drawable = image._usesTemplateTint
+            ? image._withTintColor(tintColor, renderingMode: .alwaysOriginal,
+                                   traits: traitCollection)
+            : image
         // Pre-resample to the destination's device pixel size with the
         // CG-compatible warped-weight filter (see UIImage.resampledBitmap).
         // For integer-aligned destinations Canvas.draw then degenerates to a
         // 1:1 blit, so the exact CG scaling profile reaches the surface.
-        let dw = Int((rect.width * canvas.scale).rounded())
-        let dh = Int((rect.height * canvas.scale).rounded())
-        guard dw > 0, dh > 0 else { return }
-        canvas.draw(image.resampledBitmap(width: dw, height: dh), in: rect,
+        canvas.draw(drawable.resampledBitmap(width: destination.width,
+                                             height: destination.height), in: rect,
                     interpolate: true)
     }
 }

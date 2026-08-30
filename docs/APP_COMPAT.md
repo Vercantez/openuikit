@@ -23,6 +23,60 @@ current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
 Everything else is the record of how the number got there, and the superseded
 sections are marked as such.
 
+## Reminder system-image source slice (2026-08-30)
+
+The unchanged 22-file Reminder app at upstream revision
+`2edfc88c386b8dec1683339f58e05054c5e9ce1f` exercises ten
+`UIImage(systemName:)` expressions and one `UIImage.SymbolConfiguration`
+weight-inference cascade. A pinned whole-source typecheck now reports **45 →
+34 diagnostics** against the exact pre-slice base versus this implementation:
+all **11 system-image diagnostics disappear**, no diagnostic is added, and the
+remaining 34-error multiset is otherwise identical. The source subject is
+tree `66474f2d47cc80ee551da990d748ddcc1b32aa1b`, SHA-256
+`3a29a577f6290d27c09206798ab6446335eeb18a06502bfaa4d2f835850858d4`;
+the app repository stays clean. `Tools/remindersystemimageprobe` owns the
+external entry-point shim and reproducible census, so no app or vendor source
+is patched.
+
+This is a deliberately bounded portable provider, not a redistribution or
+reimplementation of Apple's SF Symbols library. It recognizes exactly the six
+case-sensitive names Reminder uses: `calendar`, `clock`, `multiply`,
+`plus.circle.fill`, `circlebadge`, and `checkmark.circle.fill`. Project-authored
+procedural paths render them without fonts, bundles, asset catalogs, or host
+framework resources; unsupported and malformed names fail closed. The public
+iOS 13 surface includes `UIImage.Configuration`, `SymbolConfiguration`, all ten
+`SymbolWeight` raw values, both system-name initializers, and `isSymbolImage`.
+Configuration construction, external subclassing, distinct value-copy,
+secure archive, and dynamic-subclass-preserving copy behavior are covered by
+literal external-module gates and compared with UIKit 26.1. One pure-Swift
+class-factory limitation remains: OpenUIKit must route inherited subclass
+construction and copy through the subclass's required coder initializer,
+whereas Objective-C UIKit bypasses it. A subclass coder that rejects the
+internal keyed seed can therefore fail a nonfailable factory. Reminder neither
+subclasses nor archives configurations, so this has no effect on its source or
+runtime path; the exact boundary is recorded in `KNOWN_GAPS.md`.
+
+Native metadata and pixel oracles also pin the six default 1x/2x alignment
+bounds and Reminder's 56-point regular plus size. System images retain
+automatic template intent through tint/render-mode copies; an `UIImageView`
+resolves ambient dynamic tint in its own traits, while ordinary automatic
+rasters remain original. The layer-content cache fingerprints the resolved
+template tint. Both renderer backends have closed procedural pixel hashes. The
+candidate-owned image/configuration/root-frame/image-content/stable-composite
+allocation paths added or changed by this slice reject non-finite or oversized
+inputs before integer conversion or allocation. This is not a claim that
+arbitrary hostile descendant style/transform values are sanitized; that
+pre-existing renderer boundary remains in `KNOWN_GAPS.md`.
+`Tools/systemimagehiddenprobe` carries the literal-UIKit, Foundation-hidden
+six-symbol/hash/tint/safety closure. Its arm64 Mach-O probe builds and launches
+unchanged on Linux through `machorun` against support commit
+`777e7c083a90452841009f56eec959c098761113`. The next unchanged Reminder
+blockers are `UIDatePicker`, `#Preview`, trait registration, text optionality,
+`Notification` ambiguity, modal transition style, table-row movement, and
+Objective-C selector exposure. A full unchanged Reminder launch therefore
+remains later integration work; this slice does not depend on the rejected
+support experiment.
+
 ## Visual-effect source compatibility slice (2026-08-29)
 
 The 20-app ladder corpus uses `UIVisualEffectView` in 17 repositories and

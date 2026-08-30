@@ -106,8 +106,16 @@ public enum UIRenderer {
     /// The hand-written render-pass traversal (always available; the
     /// fallback compositor).
     public static func renderPassRender(_ root: UIView, scale: CGFloat) -> Bitmap {
-        let w = Int((root.bounds.width * scale).rounded())
-        let h = Int((root.bounds.height * scale).rounded())
+        // Keep the fallback path under the same finite/range/allocation guard
+        // as LayerBridge. UIRenderer selects this path for the Swift backend
+        // even when callers requested the layers compositor, so guarding only
+        // LayerBridge would leave a public hostile-geometry trap.
+        guard let rootPixels = _UIBitmapAllocation.checkedPixelSize(
+            for: root.bounds,
+            scale: scale
+        ) else { return Bitmap(width: 0, height: 0) }
+        let w = rootPixels.width
+        let h = rootPixels.height
         let bitmap = Bitmap(width: w, height: h)
         let canvas = Canvas(bitmap: bitmap, scale: scale)
         // Note: like CALayer.render(in:), the root's OWN transform is not

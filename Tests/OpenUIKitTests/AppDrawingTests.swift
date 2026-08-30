@@ -204,7 +204,7 @@ final class AppDrawingTests: XCTestCase {
         XCTAssertTrue(img.withRenderingMode(.alwaysTemplate).bitmap === img.bitmap)
 
         let tinted = img.withTintColor(UIColor(red: 1, green: 0, blue: 0, alpha: 1))
-        XCTAssertEqual(tinted.renderingMode, .alwaysOriginal)
+        XCTAssertEqual(tinted.renderingMode, .automatic)
         XCTAssertEqual(Array(tinted.bitmap.pixels), [255, 0, 0, 255, 255, 0, 0, 128],
                        "tint replaces color, keeps per-pixel alpha")
         XCTAssertEqual(tinted.scale, img.scale)

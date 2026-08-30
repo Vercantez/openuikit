@@ -1,0 +1,23 @@
+weights	0,1,2,3,4,5,6,7,8,9
+calendar	21.0x17.5	automatic	symbol
+clock	20.0x19.0	automatic	symbol
+multiply	15.5x13.5	automatic	symbol
+plus.circle.fill	20.0x19.0	automatic	symbol
+circlebadge	16.0x15.0	automatic	symbol
+checkmark.circle.fill	20.0x19.0	automatic	symbol
+plus.circle.fill@56.regular	66.0x64.0	automatic	symbol
+configuration	distinct-copy-equal	distinct-secure-archive-equal
+subclass	factory-coder=0	copy-coder=0	archive-coder=1
+copies	automatic-tint	symbol-marker-preserved	raster-not-symbol
+copy-chains	template=2	original=1	reset=0,0
+visual.system-auto	0,0,255,255
+visual.system-tinted-auto	0,0,255,255
+visual.system-tinted-template	0,0,255,255
+visual.raster-auto	0,0,0,255
+visual.raster-tinted-auto	255,0,0,255
+visual.raster-template-tinted	0,0,255,255
+visual.system-original-tinted	255,0,0,255
+visual.raster-explicit-then-auto	255,0,0,255
+visual.system-explicit-then-auto	0,0,255,255
+unknowns	nil
+SYSTEM_IMAGE_NATIVE_ORACLE_OK

@@ -86,11 +86,31 @@ public final class UIImage {
                height: CGFloat(bitmap.height) / scale)
     }
 
-    /// UIKit's renderingMode. `.automatic` behaves as `.alwaysOriginal`
-    /// here: OpenUIKit has no asset catalog to carry a template flag, so
-    /// template treatment must be requested explicitly with
-    /// `withRenderingMode(.alwaysTemplate)`.
+    /// UIKit's renderingMode. Ordinary raster images in `.automatic` remain
+    /// original pixels. Images made by `init(systemName:)` carry an internal
+    /// system-symbol marker, so their automatic mode is template-rendered by
+    /// UIImageView just like UIKit.
     public private(set) var renderingMode: UIImageRenderingMode = .automatic
+
+    /// System symbols default to template rendering while ordinary decoded,
+    /// named, literal, and bitmap-backed images do not. This is metadata, not
+    /// a heuristic over pixels or names, and it survives immutable copies.
+    private var _isSystemSymbol = false
+
+    /// Whether this image was created from the supported system-symbol
+    /// provider. The flag is semantic metadata and is preserved by UIImage's
+    /// immutable rendering-mode and tint copies.
+    @available(iOS 13.0, *)
+    public var isSymbolImage: Bool { _isSystemSymbol }
+
+    var _usesTemplateTint: Bool {
+        renderingMode == .alwaysTemplate
+            || (renderingMode == .automatic && _isSystemSymbol)
+    }
+
+    func _markAsSystemSymbol() {
+        _isSystemSymbol = true
+    }
 
     public init(bitmap: Bitmap, scale: CGFloat = 1) {
         self.bitmap = bitmap
@@ -104,10 +124,13 @@ public final class UIImage {
         self.init(bitmap: Bitmap(width: 0, height: 0), scale: 1)
     }
 
-    private init(bitmap: Bitmap, scale: CGFloat, renderingMode: UIImageRenderingMode) {
+    private init(bitmap: Bitmap, scale: CGFloat,
+                 renderingMode: UIImageRenderingMode,
+                 isSystemSymbol: Bool) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
         self.renderingMode = renderingMode
+        self._isSystemSymbol = isSystemSymbol
     }
 
     // MARK: Rendering mode / tinting
@@ -115,20 +138,37 @@ public final class UIImage {
     /// A copy of this image with the given rendering mode. Shares the
     /// backing store (UIKit does the same — images are immutable).
     public func withRenderingMode(_ mode: UIImageRenderingMode) -> UIImage {
-        UIImage(bitmap: bitmap, scale: scale, renderingMode: mode)
+        UIImage(bitmap: bitmap, scale: scale, renderingMode: mode,
+                isSystemSymbol: _isSystemSymbol)
     }
 
     /// A copy whose pixels are recolored with `color`, keeping the original
     /// per-pixel alpha (CG `.sourceIn` of a flat color over the silhouette —
     /// what UIKit does for a template image). The result is
-    /// `.alwaysOriginal`, like UIKit's `withTintColor(_:)`.
+    /// the receiver's rendering mode, like UIKit's one-argument
+    /// `withTintColor(_:)`. The returned pixels contain the requested color.
+    /// A system-symbol copy remains a symbol, so UIImageView's ambient tint
+    /// still wins while the public mode is automatic; an ordinary automatic
+    /// raster keeps the baked color. Explicit template/original modes likewise
+    /// survive the immutable copy. These branches match the native iOS 26.1
+    /// metadata and visual oracle.
     public func withTintColor(_ color: UIColor) -> UIImage {
-        withTintColor(color, renderingMode: .alwaysOriginal)
+        withTintColor(color, renderingMode: renderingMode)
     }
 
     public func withTintColor(_ color: UIColor,
                               renderingMode mode: UIImageRenderingMode) -> UIImage {
-        let c = color.resolvedCGColor(with: UITraitCollection.current)
+        _withTintColor(color, renderingMode: mode,
+                       traits: UITraitCollection.current)
+    }
+
+    /// Trait-explicit tinting seam used by UIImageView. UIKit resolves a
+    /// dynamic tint color in the destination view's trait environment, not
+    /// process-global UITraitCollection.current.
+    func _withTintColor(_ color: UIColor,
+                        renderingMode mode: UIImageRenderingMode,
+                        traits: UITraitCollection) -> UIImage {
+        let c = color.resolvedCGColor(with: traits)
         let out = Bitmap(width: bitmap.width, height: bitmap.height)
         let r = UInt8(Swift.max(0, Swift.min(255, (c.red * 255).rounded())))
         let g = UInt8(Swift.max(0, Swift.min(255, (c.green * 255).rounded())))
@@ -143,7 +183,8 @@ public final class UIImage {
                 }
             }
         }
-        return UIImage(bitmap: out, scale: scale, renderingMode: mode)
+        return UIImage(bitmap: out, scale: scale, renderingMode: mode,
+                       isSystemSymbol: _isSystemSymbol)
     }
 
     // MARK: Loading (PNG / JPEG via ImageCodec)

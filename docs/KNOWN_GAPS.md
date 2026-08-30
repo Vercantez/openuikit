@@ -1760,9 +1760,42 @@ What shipped (all oracle-backed): PNG/JPEG decode+encode and
   2 pt outside the bounds is clipped. UIKit clips `draw(_:)` to the view
   too, but its layer shadows are not clipped.
 - `UIImage.withTintColor` recolors pixels immediately (CG `.sourceIn` of a
-  flat color over the silhouette). `renderingMode` is stored and honored by
-  that call, but `.automatic` behaves as `.alwaysOriginal` — there is no
-  asset catalog to carry a template flag.
+  flat color over the silhouette), and the one-argument overload preserves
+  the receiver's rendering mode. Ordinary `.automatic` rasters remain
+  original; an image produced by the bounded system-image provider retains a
+  symbol marker and uses ambient `UIImageView.tintColor` while automatic.
+  Explicit `.alwaysTemplate` and `.alwaysOriginal` copies behave accordingly,
+  including mixed tint/render-mode copy chains measured on UIKit 26.1.
+- `UIImage(systemName:)` is **not SF Symbols support in general**. The portable
+  provider contains project-authored procedural geometry for exactly six
+  Reminder names: `calendar`, `clock`, `multiply`, `plus.circle.fill`,
+  `circlebadge`, and `checkmark.circle.fill`. It ships no Apple symbol font,
+  proprietary outline, asset lookup, textual fallback, or fuzzy mapping.
+  Known native names outside the allowlist (for example `magnifyingglass`),
+  malformed names, and noncanonical casing return nil. Geometry is recognizable
+  and deterministic, but its pixels intentionally do not claim Apple-outline
+  fidelity.
+- `UIImage.SymbolConfiguration` currently implements only finite point size
+  (maximum 512) and weight. System-image and public hierarchy-render scales
+  are capped at 4; symbol images are capped at 4096 pixels per dimension and
+  4 million pixels total (hierarchy frames use 8192/16 million). Multicolor, palette,
+  hierarchical, text-style, scale, and configuration-composition APIs remain
+  absent. Foundation-visible builds expose the public subclass/copy/secure-
+  coding surface, but Swift cannot reproduce Objective-C's initializer
+  factory dispatch exactly: native inherited point-size construction and copy
+  allocate an external subclass without calling its required coder initializer;
+  OpenUIKit must call that initializer with a private keyed seed to preserve
+  source inheritance and dynamic type. Typical `super.init(coder:)` subclasses
+  work, but coder side effects occur early and a subclass that returns nil can
+  trap the nonfailable factory. Reminder does not subclass configurations, so
+  its measured impact is zero. The Foundation-hidden guest branch necessarily
+  omits Foundation object, copying, and archiving protocols.
+- The new finite/range checks are scoped to image, configuration, root-frame,
+  image-content, and stable-composite allocation inputs. They do not close all
+  hostile descendant drawing inputs: at an otherwise ordinary renderer scale,
+  `greatestFiniteMagnitude` shadow radius/offset or transform values can still
+  reach pre-existing OpenCoreGraphics integer conversions and trap. That is a
+  general renderer-hardening milestone, not part of the six-symbol provider.
 
 
 ## Interactive sheets (M11, 2026-08-25): what shipped and what did not

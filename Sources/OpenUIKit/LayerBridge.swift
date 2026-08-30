@@ -94,11 +94,17 @@ public enum LayerBridge {
     /// Render a laid-out view hierarchy into a fresh bitmap via the QZLayer
     /// compositor. Bit-compatible contract with UIRenderer.render.
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
-        let w = Int((root.bounds.width * scale).rounded())
-        let h = Int((root.bounds.height * scale).rounded())
+        // Validate before CGFloat-to-Int conversion and before Bitmap's
+        // width*height*4 allocation. Hostile root geometry must yield an
+        // empty frame, not a conversion trap or unbounded allocation.
+        guard let rootPixels = _UIBitmapAllocation.checkedPixelSize(
+            for: root.bounds,
+            scale: scale
+        ) else { return Bitmap(width: 0, height: 0) }
+        let w = rootPixels.width
+        let h = rootPixels.height
         let bitmap = Bitmap(width: w, height: h)
-        guard w > 0, h > 0,
-              let ctx = QZBitmapContextCreate(nil, w, h, 8, w * 4, 1)
+        guard let ctx = QZBitmapContextCreate(nil, w, h, 8, w * 4, 1)
         else { return bitmap }
         defer { QZContextRelease(ctx) }
 
@@ -415,7 +421,17 @@ public enum LayerBridge {
             h.combine(label.adjustsFontSizeToFitWidth)
             h.combine(label.minimumScaleFactor)
         case let iv as UIImageView:
-            if let img = iv.image { h.combine(ObjectIdentifier(img)) }
+            if let img = iv.image {
+                h.combine(ObjectIdentifier(img))
+                // Automatic system symbols and explicit template rasters are
+                // recolored by UIImageView. tintColor does not replace the
+                // UIImage identity, so it must participate in both content
+                // and subtree cache invalidation. Resolve dynamic colors in
+                // the destination view's traits, matching drawContent.
+                if img._usesTemplateTint {
+                    combine(&h, iv.tintColor.resolvedCGColor(with: traits))
+                }
+            }
             h.combine(iv.contentMode)
         case let sw as UISwitch:
             h.combine(sw.isOn)
@@ -679,10 +695,17 @@ public enum LayerBridge {
         if v.alpha < 1, v.layer.shadowOpacity > 0, !v.clipsToBounds { return nil }
 
         let ext = info.extent
-        let pw = Int((ext.width * scale).rounded())
-        let ph = Int((ext.height * scale).rounded())
-        guard pw > 0, ph > 0, pw * ph >= 4096, pw * ph <= 8_000_000
-        else { return nil }
+        guard let compositePixels = _UIBitmapAllocation.checkedPixelSize(
+            for: ext,
+            scale: scale
+        ) else { return nil }
+        let pw = compositePixels.width
+        let ph = compositePixels.height
+        // Division-first upper bound proves the product cannot overflow and
+        // retains this cache's existing stricter eight-million-pixel policy.
+        guard pw <= 8_000_000 / ph else { return nil }
+        let pixelCount = pw * ph
+        guard pixelCount >= 4096 else { return nil }
 
         // Cache lookup / build (thrash guard: only flatten after the
         // fingerprint has survived one full frame unchanged).
@@ -996,7 +1019,9 @@ public enum LayerBridge {
                   image.bitmap.height > 0 else { return nil }
             raw = UIImageView.contentRect(imageSize: image.size, bounds: b,
                                           mode: iv.contentMode)
-            guard raw.width > 0, raw.height > 0 else { return nil }
+            guard _UIBitmapAllocation.checkedPixelSize(for: raw,
+                                                        scale: scale) != nil
+            else { return nil }
         } else {
             // Glyph ink / control chrome can spill a hair past bounds
             // (side bearings, AA) — pad so the offscreen never clips what
@@ -1024,9 +1049,11 @@ public enum LayerBridge {
                              arena: inout Arena) -> QZLayerRef? {
         guard let extent = contentExtent(of: v, bounds: bounds, scale: scale)
         else { return nil }
-        let pw = Int((extent.width * scale).rounded())
-        let ph = Int((extent.height * scale).rounded())
-        guard pw > 0, ph > 0 else { return nil }
+        guard let pixels = _UIBitmapAllocation.checkedPixelSize(for: extent,
+                                                                scale: scale)
+        else { return nil }
+        let pw = pixels.width
+        let ph = pixels.height
 
         let state = cacheState(of: v)
         var key: UInt64 = 0
