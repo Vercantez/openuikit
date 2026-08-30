@@ -295,7 +295,10 @@ open class UICollectionView: UIScrollView {
     public func register(_ cellClass: UICollectionViewCell.Type,
                          forCellWithReuseIdentifier identifier: String) {
         cellRegistry.register(identifier: identifier) { id in
-            let cell = cellClass.init(frame: .zero)
+            let constructor = unsafeBitCast(
+                cellClass,
+                to: _UICollectionViewCellDynamicConstructor.Type.self)
+            let cell = constructor.init(frame: .zero)
             cell.reuseIdentifier = id
             return cell
         }
@@ -305,7 +308,10 @@ open class UICollectionView: UIScrollView {
                          forSupplementaryViewOfKind elementKind: String,
                          withReuseIdentifier identifier: String) {
         supplementaryRegistry(elementKind).register(identifier: identifier) { id in
-            let view = viewClass.init(frame: .zero)
+            let constructor = unsafeBitCast(
+                viewClass,
+                to: _UICollectionReusableViewDynamicConstructor.Type.self)
+            let view = constructor.init(frame: .zero)
             view.reuseIdentifier = id
             view.elementKind = elementKind
             return view

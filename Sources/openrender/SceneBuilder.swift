@@ -754,7 +754,7 @@ var sceneCollectionDrivers: [SceneCollectionDriver] = []
 /// label filling it (identical to the oracle's SceneCollectionCell).
 final class SceneCollectionCell: UICollectionViewCell {
     let label = UILabel()
-    required init(frame: CGRect = .zero) {
+    override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 17)
@@ -772,7 +772,7 @@ final class SceneCollectionCell: UICollectionViewCell {
 /// the height (so it centers vertically).
 final class SceneCollectionSupplementary: UICollectionReusableView {
     let label = UILabel()
-    required init(frame: CGRect = .zero) {
+    override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         label.font = .systemFont(ofSize: 13, weight: .semibold)
         label.textColor = .secondaryLabel

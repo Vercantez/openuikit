@@ -952,15 +952,16 @@ What is NOT there:
   is that an app CANNOT distinguish "not implemented" from "implemented and
   returned the layout's value" — harmless here, but the same portability
   limit documented in docs/OBJC_RUNTIME.md.
-- **A cell subclass that declares its own `init(frame:)` must spell it
-  `required`.** `register(_:forCellWithReuseIdentifier:)` takes a metatype and
-  instantiates it, and Swift only allows that through a `required`
-  initializer — so `UICollectionReusableView.init(frame:)` is `required` and
-  UIKit's usual `override init(frame: CGRect)` becomes
-  `required init(frame: CGRect)`. Same shape as
-  `UITableViewCell.init(style:reuseIdentifier:)`, and the same kind of
-  source-level cost as the selector `ActionTable` (docs/OBJC_RUNTIME.md): a
-  subclass that adds no custom initializer needs no change at all.
+- **Registered reusable-view subclasses accept UIKit's ordinary
+  `override init(frame:)` spelling.** The public
+  `UICollectionReusableView.init(frame:)` is not `required`, matching UIKit.
+  Registration uses a separate SPI sibling class to reach the shared
+  initializer-vtable slot without adding any inherited requirement to
+  application subclasses. The registered metatype is preserved, so ordinary
+  overrides and inherited leaf classes still initialize dynamically. This is
+  pure Swift and works in FoundationEssentials-only Mach-O guests where the
+  portable `CGRect` is not Objective-C representable. Normally imported
+  downstream subclasses gate both the runtime dispatch and source surface.
 - **Frame-only collection-view construction is an intentional compatibility
   extension.** UIKit classifies `init(frame:)` as convenience but raises at
   runtime when no layout is supplied. OpenUIKit's `UICollectionView()` and

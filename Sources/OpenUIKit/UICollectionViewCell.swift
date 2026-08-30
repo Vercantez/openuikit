@@ -66,7 +66,7 @@ open class UICollectionReusableView: UIView, ReusableView {
     /// identifier).
     var elementKind: String?
 
-    public required override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
     }
 
@@ -128,7 +128,7 @@ open class UICollectionViewCell: UICollectionReusableView {
     /// The collection view currently displaying this cell (set while bound).
     weak var collectionView: UICollectionView?
 
-    public required init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         configureContentView()
     }
@@ -177,5 +177,43 @@ open class UICollectionViewCell: UICollectionReusableView {
 
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         isHighlighted = false
+    }
+}
+
+// Swift only permits a dynamic metatype call through a required initializer,
+// unlike Objective-C's selector dispatch. These open SPI sibling classes turn
+// that source-language restriction into the initializer-vtable lookup UIKit's
+// registration path needs: UICollectionView casts only the one-word class
+// metatype, then invokes the required override below. The override occupies
+// UICollectionReusableView.init(frame:)'s vtable slot, so the allocator keeps
+// the original registered metatype and dispatches to its most-derived ordinary
+// frame override. UICollectionViewCell's override therefore still configures
+// contentView exactly once when the registered class is a cell.
+//
+// These classes must remain open. That prevents whole-module optimization from
+// devirtualizing the constructor call which deliberately carries another
+// class's metatype. It is SPI so application subclasses inherit no
+// OpenUIKit-only required initializer.
+@_spi(OpenUIKitInternals)
+@preconcurrency @MainActor
+open class _UICollectionReusableViewDynamicConstructor: UICollectionReusableView {
+    public required override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}
+
+@_spi(OpenUIKitInternals)
+@preconcurrency @MainActor
+open class _UICollectionViewCellDynamicConstructor: UICollectionViewCell {
+    public required override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }

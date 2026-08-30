@@ -459,6 +459,13 @@ machinery moved out of `UITableView` into `Sources/OpenUIKit/UIReuse.swift`
 and both containers now drive one implementation, with every `tableview_*`
 fixture and table test unchanged as the regression bar.
 
+Registered cell and supplementary-view subclasses use UIKit's ordinary
+`override init(frame:)` spelling. OpenUIKit keeps that public initializer
+non-required and routes its internal class-metatype construction through a
+separate SPI sibling's initializer-vtable slot. Application subclasses never
+inherit the bridge, while registered overrides and inherited leaf classes are
+still constructed dynamically in FoundationEssentials-only Mach-O guests.
+
 Still open inside the cluster: `UICollectionViewCompositionalLayout`,
 `NSCollectionLayoutSection` and `UICollectionViewDiffableDataSource`, plus
 animated batch updates.

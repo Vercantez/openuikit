@@ -490,7 +490,7 @@ final class FlowLayoutMeasuredTests: XCTestCase {
 @MainActor
 private final class CountingItemCell: UICollectionViewCell {
     static var created = 0
-    required init(frame: CGRect = .zero) {
+    override init(frame: CGRect = .zero) {
         CountingItemCell.created += 1
         super.init(frame: frame)
     }
@@ -615,13 +615,13 @@ final class CollectionViewReuseTests: XCTestCase {
 
 @MainActor
 private final class HeaderView: UICollectionReusableView {
-    required init(frame: CGRect = .zero) { super.init(frame: frame) }
+    override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 }
 @MainActor
 private final class FooterView: UICollectionReusableView {
-    required init(frame: CGRect = .zero) { super.init(frame: frame) }
+    override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 }
