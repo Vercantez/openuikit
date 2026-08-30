@@ -16,6 +16,27 @@ SUBJECT_TOOL = Path(__file__).with_name("focus_subject.py")
 
 
 class BuildCensusTests(unittest.TestCase):
+    def test_exact_main_driver_is_fresh_pinned_and_not_the_broad_row(self) -> None:
+        driver = (SCRIPT.parent / "build_exact_main_census.sh").read_text()
+        build = SCRIPT.read_text()
+        self.assertIn("CENSUS_SOURCE_MODE=exact-main", driver)
+        self.assertIn("--expected-support-commit", driver)
+        self.assertIn("--expected-uikit-commit", driver)
+        self.assertIn("[ ! -e \"$OUTPUT\" ]", driver)
+        self.assertIn('CENSUS_SOURCE_MODE=${CENSUS_SOURCE_MODE:-broad}', build)
+        self.assertIn('TARGET=arm64-apple-macos15.0', build)
+        self.assertIn('exact-main target must be arm64-apple-macos15.0', build)
+        self.assertIn('"$HERE/focus_main_sources.py"', build)
+        self.assertIn('"${#files[@]}" -eq 129', build)
+        self.assertIn('"$OUT/logs/exact-main.log"', build)
+        self.assertIn('"$OUT/exact-main-primary.tsv"', build)
+        self.assertIn('diagnostics\\traw-log-sha256', build)
+        self.assertIn("printf 'target\\t%s\\n' \"$TARGET\"", build)
+        self.assertIn('"$OUT/exact-main-delta.tsv"', build)
+        self.assertIn('"$HERE/diagnostics.py" delta', build)
+        self.assertIn('git clone -q --no-hardlinks', build)
+        self.assertIn('format\\tfocus-exact-main-census-v1', build)
+
     def test_bundle_accessor_is_narrow_generated_build_support(self) -> None:
         text = SCRIPT.read_text()
         self.assertIn("DesignSystem|Widget|Licenses|Onboarding", text)

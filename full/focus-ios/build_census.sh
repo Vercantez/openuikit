@@ -33,9 +33,57 @@ SML=$(cd "$HERE/../.." && pwd)
 APP=${APP:-$SML/scratch/ladder-corpus/focus-ios/focus-ios}
 SNAPKIT=${SNAPKIT:-$SML/scratch/xcodeplan-deps/SnapKit}
 OUT=${1:-/tmp/focus-ios-census}
-TARGET=${TARGET:-arm64-apple-macos13.0}
+REQUESTED_TARGET=${TARGET:-}
 UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
 FOCUS_EXPECTED_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
+FOCUS_EXPECTED_TREE=065d8e374c9caa3be2915165ba7cbbe4b1d61d7e
+SNAPKIT_EXPECTED_COMMIT=e74fe2a978d1216c3602b129447c7301573cc2d8
+SNAPKIT_EXPECTED_TREE=2100f3f3429a309151bc49021a0495ebde575b3f
+CENSUS_SOURCE_MODE=${CENSUS_SOURCE_MODE:-broad}
+EXPECTED_SUPPORT_COMMIT=${EXPECTED_SUPPORT_COMMIT:-}
+EXPECTED_SUPPORT_TREE=${EXPECTED_SUPPORT_TREE:-}
+EXPECTED_UIKIT_COMMIT=${EXPECTED_UIKIT_COMMIT:-}
+EXPECTED_UIKIT_TREE=${EXPECTED_UIKIT_TREE:-}
+BASELINE_PRIMARY=${BASELINE_PRIMARY:-}
+
+case "$CENSUS_SOURCE_MODE" in
+    broad|exact-main) ;;
+    *) printf 'REFUSED: unknown CENSUS_SOURCE_MODE: %s\n' "$CENSUS_SOURCE_MODE" >&2; exit 2 ;;
+esac
+
+if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
+    [ -z "$REQUESTED_TARGET" ] || \
+        [ "$REQUESTED_TARGET" = arm64-apple-macos15.0 ] || {
+            printf 'REFUSED: exact-main target must be arm64-apple-macos15.0, got %s\n' \
+                "$REQUESTED_TARGET" >&2
+            exit 2
+        }
+    TARGET=arm64-apple-macos15.0
+else
+    TARGET=${REQUESTED_TARGET:-arm64-apple-macos13.0}
+fi
+
+assert_clean_identity() {
+    local repository=$1 expected_commit=$2 expected_tree=$3 label=$4
+    local actual_commit actual_tree status
+    actual_commit=$(git -C "$repository" rev-parse --verify HEAD^{commit}) || exit 2
+    actual_tree=$(git -C "$repository" rev-parse --verify HEAD^{tree}) || exit 2
+    status=$(git -C "$repository" status --porcelain=v1 --untracked-files=all) || exit 2
+    [ "$actual_commit" = "$expected_commit" ] || {
+        printf 'REFUSED: %s commit %s, expected %s\n' \
+            "$label" "$actual_commit" "$expected_commit" >&2
+        exit 2
+    }
+    [ "$actual_tree" = "$expected_tree" ] || {
+        printf 'REFUSED: %s tree %s, expected %s\n' \
+            "$label" "$actual_tree" "$expected_tree" >&2
+        exit 2
+    }
+    [ -z "$status" ] || {
+        printf 'REFUSED: %s checkout is dirty: %s\n' "$label" "$status" >&2
+        exit 2
+    }
+}
 
 # Reusing a directory can retain an old module or log and manufacture a green
 # stage. The census is defined over a fresh output root, so enforce that at the
@@ -78,6 +126,27 @@ write_bundle_accessor() {
 
 # --- 0. pins, by COMMIT ------------------------------------------------------
 hr "0. pins"
+if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
+    [ -n "$EXPECTED_SUPPORT_COMMIT" ] && [ -n "$EXPECTED_SUPPORT_TREE" ] \
+        && [ -n "$EXPECTED_UIKIT_COMMIT" ] && [ -n "$EXPECTED_UIKIT_TREE" ] || {
+            say "  REFUSED: exact-main requires expected support/UIKit commit and tree"
+            exit 2
+        }
+    assert_clean_identity "$SML" "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" support
+    assert_clean_identity "$APP" "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE" Focus
+    assert_clean_identity "$SNAPKIT" "$SNAPKIT_EXPECTED_COMMIT" \
+        "$SNAPKIT_EXPECTED_TREE" SnapKit
+    assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    BASELINE_PRIMARY_SHA_BEFORE=''
+    if [ -n "$BASELINE_PRIMARY" ]; then
+        case "$BASELINE_PRIMARY" in /*) ;; *) say '  REFUSED: baseline primary path must be absolute'; exit 2 ;; esac
+        [ -f "$BASELINE_PRIMARY" ] && [ ! -L "$BASELINE_PRIMARY" ] || {
+            say "  REFUSED: baseline primary input is not a regular non-symlink file"
+            exit 2
+        }
+        BASELINE_PRIMARY_SHA_BEFORE=$(shasum -a 256 "$BASELINE_PRIMARY" | awk '{print $1}')
+    fi
+fi
 python3 -B "$HERE/focus_subject.py" "$APP" "$FOCUS_EXPECTED_COMMIT" \
     "$OUT/focus-subject-before.json" || exit 4
 say "  focus-ios  $(git -C "$APP" rev-parse HEAD 2>/dev/null)"
@@ -88,7 +157,7 @@ say "  OpenUIKit  $(git -C "$UIKIT_SRC" rev-parse HEAD 2>/dev/null)"
 hr "1. OpenUIKit (fresh clone; ~/uikit is read-only and is never written)"
 UIKIT_CLONE=$OUT/uikit
 if [ ! -d "$UIKIT_CLONE" ]; then
-    git clone -q --shared "$UIKIT_SRC" "$UIKIT_CLONE" || { say "  clone failed"; exit 2; }
+    git clone -q --no-hardlinks "$UIKIT_SRC" "$UIKIT_CLONE" || { say "  clone failed"; exit 2; }
 fi
 ( cd "$UIKIT_CLONE" && swift build -c release --product OpenUIKit ) \
     > "$OUT/logs/openuikit.log" 2>&1
@@ -245,21 +314,55 @@ for t in "${name_only_targets[@]}"; do
 done
 say "  emitted $(ls "$OUT/empty"/*.swiftmodule 2>/dev/null | wc -l | tr -d ' ') name-only modules"
 
-hr "6. THE BROAD SATURATED CENSUS -- all non-test sources, one module, -wmo"
-find "$APP" -name '*.swift' \
-  | grep -v '/focus-ios-tests/' \
-  | grep -v '/Tests/' \
-  | grep -v '/ContentBlockerGen/' \
-  | grep -v '/Package.swift$' \
-  | grep -v 'get_supported_locales.swift' \
-  > "$OUT/appfiles.txt"
-say "  broad source files: $(wc -l < "$OUT/appfiles.txt" | tr -d ' ')"
-files=()
-while IFS= read -r l; do files+=("$l"); done < "$OUT/appfiles.txt"
-swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
-    "${INC[@]}" -I "$OUT/modules" -I "$OUT/empty" "${files[@]}" \
-    > "$OUT/logs/app.log" 2>&1
-say "  primary diagnostics: $(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
+if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
+    hr "6. EXACT BLOCKZILLA TARGET CENSUS -- pinned 129 present sources, -wmo"
+    EXACT_POLICY=$HERE/focus-main-sources.json
+    EXACT_MANIFEST_BEFORE=$OUT/exact-main-sources-before.nul
+    EXACT_AUDIT_BEFORE=$OUT/exact-main-subject-before.json
+    EXACT_MANIFEST_AFTER=$OUT/exact-main-sources-after.nul
+    EXACT_AUDIT_AFTER=$OUT/exact-main-subject-after.json
+    python3 -B "$HERE/focus_main_sources.py" "$APP" "$EXACT_POLICY" \
+        "$EXACT_MANIFEST_BEFORE" "$EXACT_AUDIT_BEFORE" || exit 4
+    files=()
+    while IFS= read -r -d '' path; do files+=("$path"); done < "$EXACT_MANIFEST_BEFORE"
+    [ "${#files[@]}" -eq 129 ] || {
+        say "  REFUSED: exact source manifest count ${#files[@]}, expected 129"
+        exit 4
+    }
+    swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
+        "${INC[@]}" -I "$OUT/modules" -I "$OUT/empty" "${files[@]}" \
+        > "$OUT/logs/exact-main.log" 2>&1
+    exact_rc=$?
+    python3 -B "$HERE/diagnostics.py" normalize \
+        "$OUT/logs/exact-main.log" "$OUT/exact-main-primary.tsv" \
+        --root "focus=$APP" --root "output=$OUT" \
+        --root "uikit=$UIKIT_CLONE" --root "snapkit=$SNAPKIT" \
+        --root "support=$SML" || exit 4
+    exact_count=$(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/exact-main.log")
+    normalized_count=$(wc -l < "$OUT/exact-main-primary.tsv" | tr -d '[:space:]')
+    [ "$exact_count" = "$normalized_count" ] || {
+        say "  REFUSED: normalized diagnostic count $normalized_count, expected $exact_count"
+        exit 4
+    }
+    say "  exact present sources: ${#files[@]} (plus 2 generated-missing, not synthesized)"
+    say "  primary diagnostics: $exact_count (swiftc rc=$exact_rc)"
+else
+    hr "6. THE BROAD SATURATED CENSUS -- all non-test sources, one module, -wmo"
+    find "$APP" -name '*.swift' \
+      | grep -v '/focus-ios-tests/' \
+      | grep -v '/Tests/' \
+      | grep -v '/ContentBlockerGen/' \
+      | grep -v '/Package.swift$' \
+      | grep -v 'get_supported_locales.swift' \
+      > "$OUT/appfiles.txt"
+    say "  broad source files: $(wc -l < "$OUT/appfiles.txt" | tr -d ' ')"
+    files=()
+    while IFS= read -r l; do files+=("$l"); done < "$OUT/appfiles.txt"
+    swiftc -typecheck -wmo -target "$TARGET" -module-name Blockzilla \
+        "${INC[@]}" -I "$OUT/modules" -I "$OUT/empty" "${files[@]}" \
+        > "$OUT/logs/app.log" 2>&1
+    say "  primary diagnostics: $(python3 -B "$HERE/diagnostics.py" count "$OUT/logs/app.log")"
+fi
 
 # Re-attest every Focus Swift byte after all compiler processes return. This
 # catches edited, untracked, ignored, assume-unchanged, and skip-worktree Swift
@@ -272,6 +375,58 @@ if ! cmp -s "$OUT/focus-subject-before.json" "$OUT/focus-subject-after.json"; th
     exit 4
 fi
 say "  Focus source bracket: unchanged before/after all census compilers"
+
+if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
+    python3 -B "$HERE/focus_main_sources.py" "$APP" "$EXACT_POLICY" \
+        "$EXACT_MANIFEST_AFTER" "$EXACT_AUDIT_AFTER" || exit 4
+    cmp -s "$EXACT_MANIFEST_BEFORE" "$EXACT_MANIFEST_AFTER" || {
+        say "  REFUSED: exact target source manifest changed during census"
+        exit 4
+    }
+    cmp -s "$EXACT_AUDIT_BEFORE" "$EXACT_AUDIT_AFTER" || {
+        say "  REFUSED: exact target source audit changed during census"
+        exit 4
+    }
+    assert_clean_identity "$SML" "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" support
+    assert_clean_identity "$APP" "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE" Focus
+    assert_clean_identity "$SNAPKIT" "$SNAPKIT_EXPECTED_COMMIT" \
+        "$SNAPKIT_EXPECTED_TREE" SnapKit
+    assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    normalized_sha=$(shasum -a 256 "$OUT/exact-main-primary.tsv" | awk '{print $1}')
+    raw_log_sha=$(shasum -a 256 "$OUT/logs/exact-main.log" | awk '{print $1}')
+    delta_sha=''
+    if [ -n "$BASELINE_PRIMARY" ]; then
+        BASELINE_PRIMARY_SHA_AFTER=$(shasum -a 256 "$BASELINE_PRIMARY" | awk '{print $1}')
+        [ "$BASELINE_PRIMARY_SHA_AFTER" = "$BASELINE_PRIMARY_SHA_BEFORE" ] || {
+            say '  REFUSED: baseline normalized diagnostics changed during census'
+            exit 4
+        }
+        python3 -B "$HERE/diagnostics.py" delta "$BASELINE_PRIMARY" \
+            "$OUT/exact-main-primary.tsv" "$OUT/exact-main-delta.tsv" || exit 4
+        delta_sha=$(shasum -a 256 "$OUT/exact-main-delta.tsv" | awk '{print $1}')
+    fi
+    {
+        printf 'format\tfocus-exact-main-census-v1\n'
+        printf 'support\t%s\t%s\n' "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE"
+        printf 'focus\t%s\t%s\n' "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE"
+        printf 'uikit\t%s\t%s\n' "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"
+        printf 'snapkit\t%s\t%s\n' "$SNAPKIT_EXPECTED_COMMIT" "$SNAPKIT_EXPECTED_TREE"
+        printf 'sources\tpresent\t129\n'
+        printf 'sources\tgenerated-missing\t2\n'
+        printf 'target\t%s\n' "$TARGET"
+        printf 'diagnostics\tprimary\t%s\n' "$exact_count"
+        printf 'diagnostics\traw-log-sha256\t%s\n' "$raw_log_sha"
+        printf 'diagnostics\tnormalized-sha256\t%s\n' "$normalized_sha"
+        if [ -n "$BASELINE_PRIMARY" ]; then
+            printf 'diagnostics\tbaseline-sha256\t%s\n' "$BASELINE_PRIMARY_SHA_BEFORE"
+            printf 'diagnostics\tdelta-sha256\t%s\n' "$delta_sha"
+        fi
+        printf 'swiftc-exit\t%s\n' "$exact_rc"
+    } > "$OUT/exact-main-result.tsv"
+    hr "7. EXACT TARGET RESULT"
+    cat "$OUT/exact-main-result.tsv"
+    exit 0
+fi
 
 # --- 7. the census -----------------------------------------------------------
 hr "7. CENSUS"

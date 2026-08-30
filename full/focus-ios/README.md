@@ -1,6 +1,35 @@
 # focus-ios port census — exact sources, real SnapKit, and OpenUIKit #94
 
-**Reproduce:** `full/focus-ios/build_census.sh [OUTDIR]`
+**Reproduce broad saturation:** `full/focus-ios/build_census.sh [OUTDIR]`
+
+**Reproduce the exact Xcode main-target row:**
+`full/focus-ios/build_exact_main_census.sh --output-root NEW_ABSOLUTE_PATH
+--expected-support-commit COMMIT --expected-support-tree TREE
+--expected-uikit-commit COMMIT --expected-uikit-tree TREE
+[--baseline-primary PREVIOUS_EXACT_MAIN_PRIMARY_TSV]`
+
+The exact driver consumes the checked-in `focus-main-sources.json` contract:
+131 target references = 129 byte-attested physical Swift inputs plus the two
+reported generated-missing contracts. It does not synthesize those two files
+and does not substitute the older 182-source saturation inventory. Its target
+is fixed and attested as `arm64-apple-macos15.0`, the FoundationEssentials and
+guest-packaging deployment floor; a caller-supplied lower target is refused.
+The legacy broad instrument retains its historical macOS 13 default. Every run
+uses a nonexistent output root, a no-hardlink UIKit clone, fresh SwiftPM/module
+caches, clean commit/tree pins for support, Focus, SnapKit, and UIKit, and
+before/after source attestations. `exact-main-primary.tsv` is a sorted,
+fresh-root-independent primary-diagnostic stream for bytewise subsystem deltas;
+`exact-main-result.tsv` records its count, normalized SHA-256, and raw compiler
+log SHA-256. With `--baseline-primary`, `exact-main-delta.tsv` is a sorted
+multiset report: it records added/removed primary rows and preserves duplicates
+rather than collapsing repeated diagnostics into a set.
+
+This host census compiles against the native macOS Foundation selected by the
+SwiftPM UIKit build. It therefore measures UIKit and adjunct-framework compile
+walls; it is not runtime evidence for the standalone Foundation guest facade.
+Foundation behavior and the one-identity UIKit/Foundation boundary are proven
+separately by the fresh cross-target Apple differential and service gates under
+`full/foundation/tests/`.
 **Pins (by commit):** focus-ios `a2832521` · SnapKit 5.7.0 `e74fe2a9` · OpenUIKit `5ce928c`
 (built fresh from a clone; `~/uikit` is read-only and is never written).
 
