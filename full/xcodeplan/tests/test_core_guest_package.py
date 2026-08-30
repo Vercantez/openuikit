@@ -56,6 +56,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftUI",
                 "Foundation",
                 "UIKit",
+                "Intents",
+                "IntentsUI",
                 "DeveloperToolsSupport",
             )
         )
@@ -70,6 +72,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftUI",
                 "Foundation",
                 "UIKit",
+                "Intents",
+                "IntentsUI",
             )
         )
         for relative in required_files:
@@ -79,6 +83,24 @@ class CoreGuestPackageTests(unittest.TestCase):
         self.sdk_tree.write_bytes(
             b"format\tcore-tree-v1\ndirectory\tsdk\tempty=yes\n"
         )
+        manifest_names = (
+            "artifact-ledger",
+            "input-provenance",
+            "source-sets",
+            "foundation-sources",
+            "intents-sources",
+            "sdk-dangling-symlinks",
+            "sdk-dangling-exclusions",
+            "include-tree",
+            "guest-root-tree",
+            "openuikit-resources-tree",
+            "runtime-closure",
+        )
+        self.manifest_files = {}
+        for name in manifest_names:
+            path = self.root / f"attestation/{name}.tsv"
+            path.write_bytes(f"format\t{name}-v1\n".encode("utf-8"))
+            self.manifest_files[name.replace("-", "_")] = path
         artifacts = []
         for relative in required_files:
             if relative.startswith("guest-root/"):
@@ -100,9 +122,26 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-rpath",
                 "@executable_path/../Frameworks",
                 "-Llib",
+                "-lFoundationEssentials",
+                "-lOpenCoreGraphics",
+                "-lOpenUIKit",
+                "-lOpenCombine",
+                "-lCombine",
+                "-lSwiftUI",
+                "-lFoundation",
+                "-lUIKit",
+                "-lIntents",
+                "-lIntentsUI",
             ],
             "format_version": 1,
             "manifests": {
+                **{
+                    name: {
+                        "path": path.relative_to(self.root).as_posix(),
+                        "sha256": sha256(path),
+                    }
+                    for name, path in self.manifest_files.items()
+                },
                 "sdk_tree": {
                     "path": "attestation/sdk-tree.tsv",
                     "sha256": sha256(self.sdk_tree),
@@ -203,6 +242,49 @@ class CoreGuestPackageTests(unittest.TestCase):
                     core_guest_package.validate(self.root)
                 target.write_bytes((relative + "\n").encode("utf-8"))
                 self.write_manifest(self.manifest)
+
+    def test_refuses_missing_first_party_module_dylib_or_link_argument(self) -> None:
+        for framework in ("Intents", "IntentsUI"):
+            for relative in (
+                f"modules/{framework}.swiftmodule",
+                f"lib/lib{framework}.dylib",
+            ):
+                with self.subTest(framework=framework, relative=relative):
+                    changed = copy.deepcopy(self.manifest)
+                    changed["artifacts"] = [
+                        artifact
+                        for artifact in changed["artifacts"]
+                        if artifact["path"] != relative
+                    ]
+                    target = self.root / relative
+                    target.unlink()
+                    self.write_manifest(changed)
+                    with self.assertRaisesRegex(
+                        core_guest_package.CorePackageError, "required artifact"
+                    ):
+                        core_guest_package.validate(self.root)
+                    target.write_bytes((relative + "\n").encode("utf-8"))
+                    self.write_manifest(self.manifest)
+
+            changed = copy.deepcopy(self.manifest)
+            changed["executable_link_arguments"].remove(f"-l{framework}")
+            self.write_manifest(changed)
+            with self.assertRaisesRegex(
+                core_guest_package.CorePackageError,
+                "required framework exactly once",
+            ):
+                core_guest_package.validate(self.root)
+            self.write_manifest(self.manifest)
+
+    def test_refuses_missing_intents_source_manifest(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        del changed["manifests"]["intents_sources"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "omits required manifests: intents_sources",
+        ):
+            core_guest_package.validate(self.root)
 
     def test_sdk_tree_ledger_accepts_a_safe_internal_symlink(self) -> None:
         target = self.root / "sdk/usr/lib/target.tbd"

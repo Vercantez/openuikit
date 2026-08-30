@@ -36,6 +36,20 @@ PATHS = {
     "guest_root": "guest-root",
 }
 REQUIRED_DIRECTORIES = tuple(PATHS.values()) + ("probe", "attestation")
+REQUIRED_MANIFESTS = {
+    "artifact_ledger",
+    "input_provenance",
+    "source_sets",
+    "foundation_sources",
+    "intents_sources",
+    "sdk_tree",
+    "sdk_dangling_symlinks",
+    "sdk_dangling_exclusions",
+    "include_tree",
+    "guest_root_tree",
+    "openuikit_resources_tree",
+    "runtime_closure",
+}
 FRAMEWORKS = (
     "FoundationEssentials",
     "OpenCoreGraphics",
@@ -45,7 +59,10 @@ FRAMEWORKS = (
     "SwiftUI",
     "Foundation",
     "UIKit",
+    "Intents",
+    "IntentsUI",
 )
+REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
     "InternalCollectionsUtilities",
     "OrderedCollections",
@@ -672,6 +689,9 @@ def validate_document(
     manifests = document.get("manifests")
     if not isinstance(manifests, dict):
         refuse("core package manifests are missing")
+    missing_manifests = sorted(REQUIRED_MANIFESTS - set(manifests))
+    if missing_manifests:
+        refuse("core package omits required manifests: " + ", ".join(missing_manifests))
     for value in manifests.values():
         if not isinstance(value, dict):
             refuse("core package manifest record is malformed")
@@ -731,6 +751,11 @@ def validate_document(
         refuse("JSON Swift compile arguments differ from the NUL response file")
     if document["executable_link_arguments"] != link_tokens:
         refuse("JSON executable link arguments differ from the NUL response file")
+    if link_tokens.count("-Llib") != 1:
+        refuse("link inputs must contain -Llib exactly once")
+    for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
+        if link_tokens.count(required) != 1:
+            refuse(f"link inputs must contain required token exactly once: {required}")
 
     preview = document.get("preview", "missing")
     if preview == "missing":
@@ -858,9 +883,11 @@ def write_command(args: argparse.Namespace) -> None:
     for required in ("-sdk", "sdk", "-I", "modules"):
         if required not in compile_tokens:
             refuse(f"compile flags omit required token: {required}")
-    for required in ("-Llib", "-lUIKit", "-lFoundation", "-lSwiftUI"):
-        if required not in link_tokens:
-            refuse(f"link inputs omit required token: {required}")
+    if link_tokens.count("-Llib") != 1:
+        refuse("link inputs must contain -Llib exactly once")
+    for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
+        if link_tokens.count(required) != 1:
+            refuse(f"link inputs must contain required token exactly once: {required}")
     preview = preview_json(
         package,
         artifacts,
@@ -906,6 +933,7 @@ def write_command(args: argparse.Namespace) -> None:
             "input_provenance": checked_manifest(package, args.input_provenance, "input provenance"),
             "source_sets": checked_manifest(package, args.source_sets, "source sets"),
             "foundation_sources": checked_manifest(package, args.foundation_sources, "Foundation sources"),
+            "intents_sources": checked_manifest(package, args.intents_sources, "Intents sources"),
             "sdk_tree": checked_manifest(package, args.sdk_inventory, "SDK inventory"),
             "sdk_dangling_symlinks": checked_manifest(
                 package, args.sdk_dangling_symlinks, "SDK dangling symlinks"
@@ -995,6 +1023,7 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--input-provenance", required=True)
     write.add_argument("--source-sets", required=True)
     write.add_argument("--foundation-sources", required=True)
+    write.add_argument("--intents-sources", required=True)
     write.add_argument("--sdk-inventory", required=True)
     write.add_argument("--sdk-dangling-symlinks", required=True)
     write.add_argument("--sdk-dangling-exclusions", required=True)

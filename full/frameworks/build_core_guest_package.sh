@@ -24,6 +24,8 @@ OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
+INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
 OUTPUT_ROOT=''
 EXPECTED_SUPPORT_COMMIT=''
@@ -41,6 +43,8 @@ EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=7
 EXPECTED_CQUARTZ_CPP_COUNT=37
 EXPECTED_FOUNDATION_SOURCE_COUNT=8
+EXPECTED_INTENTS_SOURCE_COUNT=1
+EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_FOUNDATION_TREE=4651798679b98e27383ca3626434fb128f191486
 EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
@@ -312,6 +316,36 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.pre.tsv"
 [ "$(grep -c '^source' "$WORK/foundation-sources.pre.tsv")" -eq \
     "$EXPECTED_FOUNDATION_SOURCE_COUNT" ] || die 'Foundation source count drifted'
+
+mapfile -t INTENTS_SOURCES < "$INTENTS_SOURCES_MANIFEST"
+mapfile -t INTENTSUI_SOURCES < "$INTENTSUI_SOURCES_MANIFEST"
+[ "${#INTENTS_SOURCES[@]}" -eq "$EXPECTED_INTENTS_SOURCE_COUNT" ] \
+    || die 'Intents source count drifted'
+[ "${#INTENTSUI_SOURCES[@]}" -eq "$EXPECTED_INTENTSUI_SOURCE_COUNT" ] \
+    || die 'IntentsUI source count drifted'
+[ "${INTENTS_SOURCES[0]}" = full/intents/Intents.swift ] \
+    || die 'Intents ordered source manifest drifted'
+[ "${INTENTSUI_SOURCES[0]}" = full/intentsui/IntentsUI.swift ] \
+    || die 'IntentsUI ordered source manifest drifted'
+for relative in "${INTENTS_SOURCES[@]}" "${INTENTSUI_SOURCES[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "framework source is not a regular file: $relative"
+    git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+        || die "framework source is not tracked: $relative"
+done
+{
+    printf 'format\tframework-guest-sources-v1\n'
+    printf 'manifest\tIntents\t%s\tcount=%s\n' \
+        "$(hash_file "$INTENTS_SOURCES_MANIFEST")" "${#INTENTS_SOURCES[@]}"
+    for relative in "${INTENTS_SOURCES[@]}"; do
+        printf 'source\tIntents\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
+    done
+    printf 'manifest\tIntentsUI\t%s\tcount=%s\n' \
+        "$(hash_file "$INTENTSUI_SOURCES_MANIFEST")" "${#INTENTSUI_SOURCES[@]}"
+    for relative in "${INTENTSUI_SOURCES[@]}"; do
+        printf 'source\tIntentsUI\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
+    done
+} > "$WORK/intents-sources.pre.tsv"
 
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
@@ -605,6 +639,24 @@ echo '== compile final Foundation-visible UIKit (optional Preview plugin explici
     -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
     -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
 
+echo '== compile production Intents and IntentsUI modules'
+INTENTS_SOURCE_PATHS=()
+for relative in "${INTENTS_SOURCES[@]}"; do
+    INTENTS_SOURCE_PATHS+=("$W/$relative")
+done
+INTENTSUI_SOURCE_PATHS=()
+for relative in "${INTENTSUI_SOURCES[@]}"; do
+    INTENTSUI_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name Intents -emit-module \
+    -emit-module-path "$STAGE/modules/Intents.swiftmodule" \
+    -emit-object -o "$WORK/intents.o" "${INTENTS_SOURCE_PATHS[@]}"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IntentsUI -emit-module \
+    -emit-module-path "$STAGE/modules/IntentsUI.swiftmodule" \
+    -emit-object -o "$WORK/intentsui.o" "${INTENTSUI_SOURCE_PATHS[@]}"
+
 echo '== final Foundation/UIKit notification identity proof'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CorePackageNotificationIdentityProbe \
@@ -613,7 +665,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link eight reusable core framework dylibs'
+echo '== link ten reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -669,6 +721,21 @@ UIKIT_UNDEFINED_FLAGS=()
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
     -lOpenUIKit -lOpenCoreGraphics
 
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libIntents.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libIntents.dylib" "$WORK/intents.o" \
+    "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
+    -lOpenUIKit -lCombine -lOpenCombine -lswiftSynchronization
+intents_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libIntents.dylib" \
+    | awk '$1 == "/usr/lib/swift/libswiftSynchronization.dylib" { count++ } END { print count + 0 }')
+[ "$intents_runtime_load_count" -eq 1 ] \
+    || die "libIntents Synchronization runtime load count $intents_runtime_load_count, expected 1"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libIntentsUI.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libIntentsUI.dylib" "$WORK/intentsui.o" \
+    "${COMMON_LINK[@]}" -lIntents -lUIKit -lFoundation \
+    -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics
+
 uikit_preview_import_count=$(nm_symbol_count --undefined-only \
     "$STAGE/lib/libUIKit.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
 uikit_dts_import_count=$(nm_developer_tools_support_count --undefined-only \
@@ -706,11 +773,11 @@ fi
     "${PROBE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
-    -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
+    -lIntentsUI -lIntents -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit; do
+    Combine SwiftUI Foundation UIKit Intents IntentsUI; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
         || die "lib$dylib is not an ARM64 Mach-O dylib"
@@ -757,7 +824,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -783,7 +850,7 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -830,6 +897,7 @@ cmp "$WORK/openuikit-resources.pre.tsv" \
     || die 'staged OpenUIKit resource tree differs from source before fonts'
 
 cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv"
+cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
 cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
 {
     printf 'format\tcore-input-provenance-v1\n'
@@ -882,7 +950,7 @@ record_module_family() {
     done
 }
 for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit; do
+    Combine SwiftUI Foundation UIKit Intents IntentsUI; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
@@ -913,6 +981,8 @@ record_artifact attestation contracts link-rsp link-inputs.rsp
 record_artifact attestation source-sets manifest attestation/source-sets.tsv
 record_artifact attestation foundation-sources manifest \
     attestation/foundation-sources.tsv
+record_artifact attestation intents-sources manifest \
+    attestation/intents-sources.tsv
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
@@ -948,6 +1018,21 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.post.tsv"
 cmp "$WORK/foundation-sources.pre.tsv" "$WORK/foundation-sources.post.tsv" \
     || die 'Foundation source manifest/files changed during build'
+{
+    printf 'format\tframework-guest-sources-v1\n'
+    printf 'manifest\tIntents\t%s\tcount=%s\n' \
+        "$(hash_file "$INTENTS_SOURCES_MANIFEST")" "${#INTENTS_SOURCES[@]}"
+    for relative in "${INTENTS_SOURCES[@]}"; do
+        printf 'source\tIntents\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
+    done
+    printf 'manifest\tIntentsUI\t%s\tcount=%s\n' \
+        "$(hash_file "$INTENTSUI_SOURCES_MANIFEST")" "${#INTENTSUI_SOURCES[@]}"
+    for relative in "${INTENTSUI_SOURCES[@]}"; do
+        printf 'source\tIntentsUI\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
+    done
+} > "$WORK/intents-sources.post.tsv"
+cmp "$WORK/intents-sources.pre.tsv" "$WORK/intents-sources.post.tsv" \
+    || die 'Intents/IntentsUI source manifests/files changed during build'
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
     --logical-root resources/OpenUIKit --reject-symlinks \
@@ -980,6 +1065,7 @@ WRITE_ARGS=(
     --input-provenance attestation/input-provenance.tsv
     --source-sets attestation/source-sets.tsv
     --foundation-sources attestation/foundation-sources.tsv
+    --intents-sources attestation/intents-sources.tsv
     --sdk-inventory attestation/sdk-tree.tsv
     --sdk-dangling-symlinks attestation/sdk-dangling-symlinks.tsv
     --sdk-dangling-exclusions attestation/sdk-dangling-symlink-exclusions.tsv

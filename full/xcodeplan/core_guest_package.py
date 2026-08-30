@@ -46,6 +46,35 @@ _CONTROLLED_COMPILE_OPTIONS = {
 _CONTROLLED_LINK_OPTIONS = {"-o"}
 _ALLOWED_ABSOLUTE_ARGUMENTS = {"/usr/lib", "/usr/lib/swift"}
 _PREVIEW_DIAGNOSTIC_ARGUMENTS = ["-Xfrontend", "-dump-macro-expansions"]
+_REQUIRED_FRAMEWORKS = (
+    "FoundationEssentials",
+    "OpenCoreGraphics",
+    "OpenUIKit",
+    "OpenCombine",
+    "Combine",
+    "SwiftUI",
+    "Foundation",
+    "UIKit",
+    "Intents",
+    "IntentsUI",
+)
+_REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
+    f"-l{name}" for name in _REQUIRED_FRAMEWORKS
+)
+_REQUIRED_MANIFESTS = {
+    "artifact_ledger",
+    "input_provenance",
+    "source_sets",
+    "foundation_sources",
+    "intents_sources",
+    "sdk_tree",
+    "sdk_dangling_symlinks",
+    "sdk_dangling_exclusions",
+    "include_tree",
+    "guest_root_tree",
+    "openuikit_resources_tree",
+    "runtime_closure",
+}
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
@@ -311,6 +340,11 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     raw_manifests = _mapping(manifest.get("manifests"), "manifests")
     if not raw_manifests:
         raise CorePackageError("manifests must not be empty")
+    missing_manifests = sorted(_REQUIRED_MANIFESTS - set(raw_manifests))
+    if missing_manifests:
+        raise CorePackageError(
+            "core package omits required manifests: " + ", ".join(missing_manifests)
+        )
     verified_manifests: dict[str, dict[str, str]] = {}
     seen_manifest_paths: set[str] = set()
     manifest_files: dict[str, Path] = {}
@@ -375,6 +409,14 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         "executable_link_arguments",
         _CONTROLLED_LINK_OPTIONS,
     )
+    if manifest["executable_link_arguments"].count("-Llib") != 1:
+        raise CorePackageError("executable_link_arguments must contain -Llib exactly once")
+    for required in _REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
+        if manifest["executable_link_arguments"].count(required) != 1:
+            raise CorePackageError(
+                "executable_link_arguments must contain required framework exactly once: "
+                + required
+            )
 
     artifacts = _array(manifest.get("artifacts"), "artifacts")
     if not artifacts:
@@ -456,29 +498,11 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
 
     required_artifacts = {
         f"{paths['modules']}/{module}.swiftmodule"
-        for module in (
-            "FoundationEssentials",
-            "OpenCoreGraphics",
-            "OpenUIKit",
-            "OpenCombine",
-            "Combine",
-            "SwiftUI",
-            "Foundation",
-            "UIKit",
-        )
+        for module in _REQUIRED_FRAMEWORKS
     }
     required_artifacts.update(
         f"{paths['libraries']}/lib{module}.dylib"
-        for module in (
-            "FoundationEssentials",
-            "OpenCoreGraphics",
-            "OpenUIKit",
-            "OpenCombine",
-            "Combine",
-            "SwiftUI",
-            "Foundation",
-            "UIKit",
-        )
+        for module in _REQUIRED_FRAMEWORKS
     )
     if preview is not None:
         required_artifacts.add(

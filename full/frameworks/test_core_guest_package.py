@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import os
@@ -34,10 +35,12 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
     (
         "-lswift_StringProcessing",
         "/usr/lib/swift/libswift_StringProcessing.dylib",
+        1,
     ),
     (
         "-lswiftSynchronization",
         "/usr/lib/swift/libswiftSynchronization.dylib",
+        2,
     ),
 )
 SWIFTUI_RUNTIME_LINK_CONTRACT = (
@@ -74,6 +77,8 @@ FRAMEWORKS = (
     "SwiftUI",
     "Foundation",
     "UIKit",
+    "Intents",
+    "IntentsUI",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -144,9 +149,9 @@ def validate_core_writable_overlays(source: str) -> None:
 def validate_foundation_runtime_links(source: str) -> None:
     missing = [
         token
-        for contract in FOUNDATION_RUNTIME_LINK_CONTRACT
-        for token in contract
-        if source.count(token) != 1
+        for flag, install_name, expected_count in FOUNDATION_RUNTIME_LINK_CONTRACT
+        for token in (flag, install_name)
+        if source.count(token) != expected_count
     ]
     if missing:
         raise AssertionError(f"Foundation runtime-link contract drifted: {missing}")
@@ -367,6 +372,7 @@ class PackageFixture:
             "input-provenance.tsv",
             "source-sets.tsv",
             "foundation-sources.tsv",
+            "intents-sources.tsv",
             "sdk-dangling-symlinks.tsv",
             "sdk-dangling-symlink-exclusions.tsv",
             "include-tree.tsv",
@@ -399,7 +405,14 @@ class PackageFixture:
             "-Llib",
             "-lUIKit",
             "-lFoundation",
+            "-lFoundationEssentials",
             "-lSwiftUI",
+            "-lIntentsUI",
+            "-lIntents",
+            "-lOpenUIKit",
+            "-lOpenCoreGraphics",
+            "-lCombine",
+            "-lOpenCombine",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -519,6 +532,8 @@ class PackageFixture:
             "attestation/source-sets.tsv",
             "--foundation-sources",
             "attestation/foundation-sources.tsv",
+            "--intents-sources",
+            "attestation/intents-sources.tsv",
             "--sdk-inventory",
             "attestation/sdk-tree.tsv",
             "--sdk-dangling-symlinks",
@@ -625,6 +640,46 @@ class PackageContractTests(unittest.TestCase):
         write_file(fixture.root / "lib/libStale.dylib", "stale")
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("artifact coverage drifted under lib", refusal.stderr)
+
+    def test_every_framework_dylib_is_in_the_reusable_link_contract(self) -> None:
+        fixture = self.fixture(False)
+        manifest_path = fixture.root / "attestation/core-package.json"
+        original_document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for framework in FRAMEWORKS:
+            with self.subTest(framework=framework):
+                document = copy.deepcopy(original_document)
+                token = f"-l{framework}"
+                document["executable_link_arguments"].remove(token)
+                manifest_path.write_text(
+                    json.dumps(document, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
+                (fixture.root / "link-inputs.rsp").write_bytes(
+                    b"".join(
+                        value.encode("utf-8") + b"\0"
+                        for value in document["executable_link_arguments"]
+                    )
+                )
+                refusal = run_tool(
+                    "verify", "--package-root", str(fixture.root), expected=2
+                )
+                self.assertIn("required token exactly once", refusal.stderr)
+        manifest_path.write_text(
+            json.dumps(original_document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+    def test_intents_source_attestation_is_mandatory(self) -> None:
+        fixture = self.fixture(False)
+        manifest_path = fixture.root / "attestation/core-package.json"
+        document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del document["manifests"]["intents_sources"]
+        manifest_path.write_text(
+            json.dumps(document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("omits required manifests: intents_sources", refusal.stderr)
 
     def test_preview_plugin_hash_is_optionally_revalidated(self) -> None:
         fixture = self.fixture(True)
@@ -763,8 +818,8 @@ class ShellContractTests(unittest.TestCase):
         source = BUILDER.read_text(encoding="utf-8")
         validate_foundation_runtime_links(source)
         self.assertNotIn("-lswift_RegexParser", source)
-        for contract in FOUNDATION_RUNTIME_LINK_CONTRACT:
-            for token in contract:
+        for flag, install_name, _expected_count in FOUNDATION_RUNTIME_LINK_CONTRACT:
+            for token in (flag, install_name):
                 with self.subTest(deleted=token):
                     with self.assertRaisesRegex(AssertionError, "runtime-link"):
                         validate_foundation_runtime_links(source.replace(token, "", 1))
@@ -790,7 +845,7 @@ class ShellContractTests(unittest.TestCase):
             1,
         )
         self.assertEqual(
-            source.count("Combine SwiftUI Foundation UIKit; do"),
+            source.count("Combine SwiftUI Foundation UIKit Intents IntentsUI; do"),
             2,
         )
         self.assertIn(

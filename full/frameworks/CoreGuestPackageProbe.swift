@@ -6,6 +6,10 @@ import Foundation
 import UIKit
 import SwiftUI
 import Combine
+@_spi(OpenIntentsHost) import Intents
+import IntentsUI
+
+private final class CoreProbeIntent: INIntent, @unchecked Sendable {}
 
 #if canImport(DeveloperToolsSupport)
 @_spi(OpenUIKitPreview) import DeveloperToolsSupport
@@ -80,6 +84,31 @@ struct CoreGuestPackageProbe {
         precondition(bold.pointSize == 17)
         _ = label
 
+        INVoiceShortcutCenter.shared.removeAll()
+        let intent = CoreProbeIntent()
+        intent.suggestedInvocationPhrase = "Core package"
+        let shortcut = INShortcut(intent: intent)
+        let installed = INVoiceShortcutCenter.shared.install(
+            shortcut,
+            invocationPhrase: "Core package"
+        )
+        var shortcuts: [INVoiceShortcut] = []
+        INVoiceShortcutCenter.shared.getAllVoiceShortcuts { values, error in
+            precondition(error == nil)
+            shortcuts = values ?? []
+        }
+        precondition(shortcuts.count == 1)
+        precondition(shortcuts[0] === installed)
+        let interaction = INInteraction(intent: intent, response: nil)
+        interaction.donate()
+        precondition(INInteraction.donatedInteractions.count == 1)
+        INInteraction.deleteAll()
+        precondition(INInteraction.donatedInteractions.isEmpty)
+        let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
+        precondition(
+            type(of: addController).presentationCapability == .hostDriven
+        )
+
         #if canImport(DeveloperToolsSupport)
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
             let value = try! CorePreviewRegistry.makePreview()
@@ -95,7 +124,8 @@ struct CoreGuestPackageProbe {
         print(
             "CORE_GUEST_PACKAGE_MACHO_OK "
                 + "notification=shared combine=delivered resources=loaded "
-                + "fonts=system,bold preview=\(preview)"
+                + "fonts=system,bold intents=donated shortcuts=stored "
+                + "intentsui=host-driven preview=\(preview)"
         )
     }
 }

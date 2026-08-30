@@ -8,10 +8,12 @@ logic.
 
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
-OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, and final
-Foundation-visible UIKit. It also contains C module headers, CQuartz, the SDK,
-the attested machorun guest-root closure, OpenUIKit's complete resource tree,
-and the two pinned DejaVu fonts used by the proven Linux path.
+OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
+Foundation-visible UIKit, Intents, and IntentsUI. These are reusable ARM64
+Mach-O framework binaries, including a real `libSwiftUI.dylib`; they are not
+application-side source overlays. The package also contains C module headers,
+CQuartz, the SDK, the attested machorun guest-root closure, OpenUIKit's complete
+resource tree, and the two pinned DejaVu fonts used by the proven Linux path.
 
 ## Container entry point
 
@@ -48,8 +50,10 @@ The semantic build order is deliberate:
 4. Compile the ordered app-facing Foundation facade.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
-6. Link the reusable dylibs and run the package's Mach-O closure/resource/font
-   probe through the packaged machorun root.
+6. Compile the reusable Intents and IntentsUI modules, backed by real shortcut,
+   donation, resolution, and host-driven controller state.
+7. Link all ten reusable dylibs and run the package's Mach-O
+   closure/resource/font/framework probe through the packaged machorun root.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent
@@ -80,6 +84,14 @@ uses MainActor metadata and executor functions from `libswift_Concurrency`, so
 the builder names exactly that one manual SwiftUI runtime link. It requires the
 SDK TBD and staged dylib, verifies the dylib install name, and requires exactly
 one `/usr/lib/swift/libswift_Concurrency.dylib` load in `libSwiftUI.dylib`.
+
+The Intents and IntentsUI source lists are exact, tracked package inputs. Their
+paths, manifests, and content hashes are bracketed before and after every cold
+build and published in `attestation/intents-sources.tsv`. Intents names its
+Synchronization runtime dependency explicitly; IntentsUI links the production
+UIKit and Intents dylibs. The guest probe donates and deletes a real
+interaction, installs and reads back a stable voice shortcut, and constructs a
+host-driven IntentsUI controller before the package is published.
 
 ## Output contract
 

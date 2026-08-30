@@ -1,0 +1,85 @@
+# Open Intents and `.intentdefinition` builds
+
+This directory owns two separate pieces of the Linux-hosted iOS platform:
+
+1. `Intents.swift` is the source of the reusable `Intents.swiftmodule` and
+   ARM64 Mach-O `libIntents.dylib`.
+2. `intentdefinition_compiler.py` is an independent compiler for the public
+   plist schema stored in Xcode `.intentdefinition` build inputs. It emits
+   derived Swift outside the application repository, so application and
+   vendor sources remain untouched.
+
+`full/intentsui/IntentsUI.swift` is the corresponding controller/delegate
+runtime and is packaged as `IntentsUI.swiftmodule` plus
+`libIntentsUI.dylib`.
+
+## Generator contract
+
+Generate into a path which does not yet exist:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -B \
+  full/intents/intentdefinition_compiler.py generate \
+  --input App/Base.lproj/Intents.intentdefinition \
+  --output-root build/derived-sources/intents \
+  --module-name App
+```
+
+The output contains one Swift file per custom enum, object, or intent, a
+normalized declaration inventory, and `intentdefinition-manifest.json`.
+`verify` rehashes the complete directory and rejects missing, changed,
+symlinked, or extra files. Generation refuses existing output roots instead
+of accidentally mixing old and new derived sources.
+
+The current compiler accepts model version 1.2 and covers every unique schema
+shape in the pinned 20-app corpus: custom enums and class-name overrides,
+custom objects, String/Integer/Decimal/Boolean/Object parameters, scalar and
+array cardinality, dynamic/search option providers, resolution methods,
+response values, custom response codes, and custom response factories.
+System intents are not regenerated: the manifest explicitly records them as
+owned by the reusable Intents runtime.
+
+The emitted protocols use pure Swift defaults to represent Objective-C
+optional requirements. A real application implementation overrides the same
+method spelling without needing Objective-C optional dispatch, while an
+unimplemented service produces a `.failure`, `.ready`, `.needsValue`, or
+empty-options result rather than fabricated success.
+
+## Runtime behavior
+
+The first production runtime slice has real, process-safe state for:
+
+- intent phrases and response user activities;
+- interaction donation, enumeration for a host, and deletion;
+- typed resolution outcomes and retained values;
+- intent objects, speakable strings, object collections, people, images, and
+  basic media identities;
+- shortcut suggestions and stable voice-shortcut install/update/delete;
+- restricted/unavailable Focus-status authorization rather than a false
+  account-level success.
+
+`NSUserActivity` Siri overlay properties are stored on the portable guest
+path by Intents, while OpenUIKit retains the canonical class identity. This
+keeps Foundation → UIKit → Intents dependencies acyclic.
+
+Run the fast generator gate with:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=full/intents \
+  python3 -B -m unittest -v full.intents.test_intentdefinition_compiler
+```
+
+The core-package gate additionally compiles both modules, links the dylibs,
+checks their install names and dependency closure, compiles generated Focus
+sources against `Intents.swiftmodule`, and executes the runtime probe as an
+ARM64 Mach-O guest.
+
+## Deliberate boundary
+
+Siri speech recognition, Apple-account synchronization, and Apple's Siri
+sheet are proprietary OS services. The open runtime does not claim those
+services exist. IntentsUI exposes explicit host-driven finish/cancel/delete
+actions so a Linux host can supply UI and still drive the real shortcut
+store. Expanding that host UI and the standardized messaging/call/media
+intent families is the next runtime layer; it does not require changing app
+source or generated custom-intent source.
