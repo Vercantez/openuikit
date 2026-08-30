@@ -1,0 +1,78 @@
+{
+  "classification": "portable-first-party-webkit-guest-v1",
+  "focus": {
+    "application_subdirectory": "focus-ios",
+    "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "main_source_manifest": {
+      "path": "full/focus-ios/focus-main-sources.json",
+      "sha256": "1a870fe23b50fac9f05bfa8db73902625be433cec96db83f6a8f8752a929ad02"
+    },
+    "sources": [
+      {
+        "path": "Blockzilla/Modules/WebView/WebViewController.swift",
+        "sha256": "1d8aa958b5a9fe5da4c0f32ca2a3c3d2f005f8abbba4b59055a576c2fda0242d"
+      },
+      {
+        "path": "Blockzilla/Settings/Controller/SettingsContentViewController.swift",
+        "sha256": "752ce92ffca807a1d2bb650527ec4940f3840026b9dbf4fa4a0892a6fb409df6"
+      },
+      {
+        "path": "Blockzilla/Utilities/AdsTelemetryHelper.swift",
+        "sha256": "2f731855095bc4a3702dacd9309fa5179f9734ef6a0e3ef98546df3802f4306d"
+      },
+      {
+        "path": "Blockzilla/Utilities/LocalContentBlocker.swift",
+        "sha256": "ac07a22b23e52ba46a111665b508f86a643ebf62e9917edd7200da51e1427e3c"
+      },
+      {
+        "path": "Blockzilla/Utilities/SearchInContentTelemetry.swift",
+        "sha256": "26831ff621e67a4d5de938da3498ea3ea169b2d5526d88c0638158b5b072ff1f"
+      },
+      {
+        "path": "Blockzilla/Utilities/WebCacheUtils.swift",
+        "sha256": "470797af4da54da1034784606bca2ae3a026534952054b772c1b7ce08467d13d"
+      }
+    ],
+    "tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e"
+  },
+  "native_oracle": {
+    "golden": {
+      "path": "full/webkit/tests/webkit-native-xcode-26.1-ios-26.1.txt",
+      "sha256": "8beef3754f63989fb10e3ca41fa5ae6a3674ad83cd255c860645b90ec8d7eef0"
+    },
+    "ios_simulator_sdk_build": "23B77",
+    "signature_source": {
+      "path": "full/webkit/tests/WebKitNativeOracle.swift",
+      "sha256": "f79bb5da9f272a9b2df9c5a24736a8b2f7adf22f7ab0a9db061bf60172c78058"
+    },
+    "xcode_build": "17B55",
+    "xcode_version": "26.1"
+  },
+  "schema": 1,
+  "source_manifest": {
+    "path": "full/webkit/webkit_guest_sources.txt",
+    "sha256": "5f65374d541b5502465c3829489a1845bc18fcf962adb1aeca09819cae4e1a17"
+  },
+  "sources": [
+    {
+      "path": "full/webkit/WebKitError.swift",
+      "sha256": "46950326014fcdcd45ddd53c98e7bf16fae392d79997ebc6d783478a7f49c788"
+    },
+    {
+      "path": "full/webkit/WebKitConfiguration.swift",
+      "sha256": "a95180bae3fb5444816603394685c2fe4d9aca6d28d95a0c33254b48e36ecaa7"
+    },
+    {
+      "path": "full/webkit/WebKitContent.swift",
+      "sha256": "19325ea881821fc1cd73cf0f4330e7fffa48796cbd83d16201cf90469150da23"
+    },
+    {
+      "path": "full/webkit/WebKitNavigation.swift",
+      "sha256": "b1348171eb57777e5da059bb0f5ea94754d191147e9a338395e22f1ad519c671"
+    },
+    {
+      "path": "full/webkit/WebKitWebView.swift",
+      "sha256": "5861f39ff157deb97aa3b7ad5e8912a13d28b2b1987488e762c44058a9011853"
+    }
+  ]
+}
