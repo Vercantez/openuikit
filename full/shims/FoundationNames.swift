@@ -1,5 +1,6 @@
-// FoundationNames.swift -- the Foundation value names OpenUIKit needs when
-// Foundation itself is deliberately invisible to the Mach-O library build.
+// FoundationNames.swift -- the remaining Foundation value names OpenUIKit
+// needs while the Foundation umbrella is deliberately invisible to the
+// Mach-O library build.
 //
 // PROVENANCE: the NSRange, IndexPath, and TimeInterval declarations below are
 // OpenUIKit's OWN code, lifted verbatim from the commit that deleted them.
@@ -36,6 +37,11 @@
 // bridging, NSIndexSet, coding, and Foundation's range-view API remain outside
 // this Foundation-free layer. Native builds that can import Foundation still
 // use Foundation.IndexSet through OpenUIKit/FoundationTypes.swift instead.
+//
+// IndexPath is now different: the production full build deliberately makes
+// FoundationEssentials visible, so OpenUIKit aliases its canonical type and
+// this historical declaration is excluded. The fallback remains available to
+// genuinely freestanding configurations that do not stage that module.
 
 // MARK: - NSRange
 
@@ -62,6 +68,8 @@ public func NSMakeRange(_ loc: Int, _ len: Int) -> NSRange {
 
 // MARK: - IndexPath
 
+#if !canImport(FoundationEssentials)
+
 public struct IndexPath: Hashable, Comparable, Sendable {
     public var section: Int
     public var row: Int
@@ -85,6 +93,8 @@ public extension IndexPath {
         set { row = newValue }
     }
 }
+
+#endif
 
 // MARK: - IndexSet
 

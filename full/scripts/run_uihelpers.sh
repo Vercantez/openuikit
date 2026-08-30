@@ -44,6 +44,14 @@ guest_fingerprint() {
     echo "run_uihelpers: no built renderer at $RENDERER; run full/scripts/build_full.sh first" >&2
     exit 2
 }
+[ -x "$ROOT/build/full/indexpath_identity_probe" ] || {
+    echo "run_uihelpers: no built literal-UIKit identity probe; rebuild first" >&2
+    exit 2
+}
+[ -f "$ROOT/build/full/foundation/essentials/FoundationEssentials.o" ] || {
+    echo "run_uihelpers: no built FoundationEssentials object; rebuild first" >&2
+    exit 2
+}
 [ -f "$UIKIT/Sources/OpenUIKit/Resources/font_metrics.json" ] || {
     echo "run_uihelpers: UIKIT=$UIKIT has no OpenUIKit resource tree" >&2
     exit 2
@@ -72,20 +80,27 @@ if [ "$recorded_subject" != "$current_subject" ]; then
 fi
 artifact_lines=$(wc -l < "$ARTIFACT_FILE" | tr -d '[:space:]')
 expected_renderer=$(awk '$1 == "render_full" {print $2}' "$ARTIFACT_FILE")
+expected_indexpath=$(awk '$1 == "indexpath_identity_probe" {print $2}' "$ARTIFACT_FILE")
+expected_fe=$(awk '$1 == "FoundationEssentials.o" {print $2}' "$ARTIFACT_FILE")
 expected_quartz=$(awk '$1 == "libquartz.dylib" {print $2}' "$ARTIFACT_FILE")
 expected_system=$(awk '$1 == "libSystem.B.dylib" {print $2}' "$ARTIFACT_FILE")
 expected_cxx=$(awk '$1 == "libc++.1.dylib" {print $2}' "$ARTIFACT_FILE")
-if [ "$artifact_lines" != 4 ] || [ -z "$expected_renderer" ] || \
+if [ "$artifact_lines" != 6 ] || [ -z "$expected_renderer" ] || \
+   [ -z "$expected_indexpath" ] || [ -z "$expected_fe" ] || \
    [ -z "$expected_quartz" ] || [ -z "$expected_system" ] || \
    [ -z "$expected_cxx" ]; then
     echo "run_uihelpers: malformed artifact digest at $ARTIFACT_FILE" >&2
     exit 2
 fi
 current_renderer=$(hash_file "$RENDERER")
+current_indexpath=$(hash_file "$ROOT/build/full/indexpath_identity_probe")
+current_fe=$(hash_file "$ROOT/build/full/foundation/essentials/FoundationEssentials.o")
 current_quartz=$(hash_file "$ROOT/scratch/mrroot_full/darwin/usr/lib/libquartz.dylib")
 current_system=$(hash_file "$ROOT/scratch/mrroot_full/darwin/usr/lib/libSystem.B.dylib")
 current_cxx=$(hash_file "$ROOT/scratch/mrroot_full/darwin/usr/lib/libc++.1.dylib")
 if [ "$expected_renderer" != "$current_renderer" ] || \
+   [ "$expected_indexpath" != "$current_indexpath" ] || \
+   [ "$expected_fe" != "$current_fe" ] || \
    [ "$expected_quartz" != "$current_quartz" ] || \
    [ "$expected_system" != "$current_system" ] || \
    [ "$expected_cxx" != "$current_cxx" ]; then

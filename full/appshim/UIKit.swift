@@ -1,26 +1,14 @@
-// A module named `UIKit` that re-exports OpenUIKit -- and NOTHING else.
+// Legacy diagnostic UIKit shim.
 //
-// ~/uikit's own UIKitShim is `@_exported import Foundation` + `@_exported
-// import OpenUIKit`, because real UIKit's swiftinterface re-exports Foundation
-// and the vendored app files rely on that to name NSCoder.
-//
-// MEASURED, and it is the central result of the app-path scoping:
-//
-//  * The four UNMODIFIED vendored app files need exactly ONE Foundation name,
-//    NSCoder, for the `required init?(coder:)` UIKit forces on every UIView
-//    subclass. Nothing else. OptionAction.swift even writes `import
-//    Foundation` and uses nothing from it.
-//  * But introducing a module NAMED Foundation, however small, flips
-//    OpenUIKit's 33 `#if canImport(Foundation)` guards AND OpenCoreGraphics'
-//    to their Foundation branches, which then demand Foundation's own
-//    IndexPath, IndexSet, NSRange, NSRangePointer, TimeInterval, CGFloat,
-//    CGPoint, CGSize and CGRect. There is no "small Foundation" for this stack: a
-//    nearly-empty one is WORSE than none, because it switches the library onto
-//    a path it cannot satisfy.
-//
-// So the cheap configuration is this one: no Foundation module at all, and
-// NSCoder supplied by OpenUIKit alongside its Foundation-free value names. The
-// library stays on its freestanding branch -- the same branch that renders
-// 108/108 -- and the app source still compiles unmodified.
+// The production full build compiles ~/uikit/Sources/UIKitShim/UIKit.swift
+// verbatim. Keep this older app_probe input on the same re-export contract so
+// a diagnostic cannot reintroduce the rival-IndexPath configuration that the
+// production path rejects: use the complete Foundation umbrella when it is
+// actually available, otherwise use FoundationEssentials' canonical value
+// types, then export OpenUIKit's UIKit surface.
+#if canImport(Foundation)
 @_exported import Foundation
+#elseif canImport(FoundationEssentials)
+@_exported import FoundationEssentials
+#endif
 @_exported import OpenUIKit

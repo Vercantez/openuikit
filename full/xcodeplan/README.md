@@ -139,7 +139,10 @@ MACHORUN_CHECKOUT=/path/to/machorun \
 
 The script regenerates the exclusive bootstrap, records input hashes and the
 2/22 boundary, runs the existing `full/scripts/build_full.sh` substrate, emits
-a Linux-produced arm64 Mach-O, and executes it under `machorun`. A successful
-bounded proof records markers for unchanged `willConnect`, one active window,
-and the requested number of clocked host-loop turns under
+a Linux-produced arm64 Mach-O, and executes it under `machorun`. The composed
+path targets macOS 15 and links the exact pinned FoundationEssentials,
+swift-collections, local `os`, and C-shim object closure used by literal UIKit;
+the upstream compile-input digest is part of the full-build subject. A
+successful bounded proof records markers for unchanged `willConnect`, one
+active window, and the requested number of clocked host-loop turns under
 `build/full/scene-guest/`.

@@ -28,11 +28,25 @@ SF=${SF:-$W/scratch/swift-foundation}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
 OUT=${OUT:-$W/scratch/fe4_cshims}
 TARGET=${TARGET:-arm64-apple-macos15.0}
+PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
+[ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
 mkdir -p "$OUT"
-for c in platform_shims string_shims uuid; do
+CSHIM_SOURCES=()
+SOURCE_LIST=$(perl "$PINNED_INPUTS_TOOL" list \
+    --repository swift-foundation --repo "$SF" --group foundation-c-sources)
+while IFS= read -r source; do
+    [ -n "$source" ] && CSHIM_SOURCES+=("$source")
+done <<<"$SOURCE_LIST"
+[ "${#CSHIM_SOURCES[@]}" -eq 3 ] || {
+    echo "build_cshims: pinned C-shim manifest is not exactly 3 files" >&2
+    exit 2
+}
+for source in "${CSHIM_SOURCES[@]}"; do
+    c=$(basename "$source" .c)
+    [[ "$c" =~ ^[A-Za-z0-9_]+$ ]] || { echo "unsafe C-shim basename: $c" >&2; exit 2; }
     clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
         -I "$SF/Sources/_FoundationCShims/include" \
-        -c -o "$OUT/$c.o" "$SF/Sources/_FoundationCShims/$c.c"
+        -c -o "$OUT/$c.o" "$source"
 done
 echo "== _FoundationCShims: $(ls "$OUT"/*.o | wc -l | tr -d ' ') objects"
 ls -l "$OUT"

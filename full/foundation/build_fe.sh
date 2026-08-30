@@ -31,8 +31,10 @@ set -euo pipefail
 W=${W:-/w}
 SF=${SF:-$W/scratch/swift-foundation}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
+PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
 [ -d "$SF/Sources/FoundationEssentials" ] || { echo "no $SF" >&2; exit 1; }
 [ -d "$SYS/usr/include" ] || { echo "no sysroot $SYS -- run stage_fe_sysroot.sh on macOS" >&2; exit 1; }
+[ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
 
 # ALL 202 FILES.  The old recipe filtered out five by name --
 # URL_Bridge / URL_ObjC / URL_Swift / URLComponents_ObjC / String+Bridging --
@@ -56,12 +58,19 @@ SYS=${SYS:-$W/scratch/sysroot_fe4}
 # different names -- and the wrong name is what made the filter look right.
 #
 # Space-safe: several upstream files have spaces in their names
-# ("AttributedString/Collection Extensions.swift"), and an unquoted $(find)
-# splits them into two nonexistent paths -- exactly 2 errors that read as a
-# port problem.
+# ("AttributedString/Collection Extensions.swift"). The input list comes from
+# the exact pinned Git tree, never an unrestricted filesystem walk; the tool
+# also rejects ignored/untracked sources before returning any paths.
 SRCS=()
-while IFS= read -r f; do SRCS+=("$f"); done < <(
-    find "$SF/Sources/FoundationEssentials" -name '*.swift' | sort)
+SOURCE_LIST=$(perl "$PINNED_INPUTS_TOOL" list \
+    --repository swift-foundation --repo "$SF" --group foundation-swift)
+while IFS= read -r f; do
+    [ -n "$f" ] && SRCS+=("$f")
+done <<<"$SOURCE_LIST"
+[ "${#SRCS[@]}" -eq 202 ] || {
+    echo "build_fe: pinned FoundationEssentials manifest is not exactly 202 files" >&2
+    exit 2
+}
 # THE TARGET TRAVELS WITH THE ARTIFACT, not just with a commit message.  This
 # module raises the deployment floor of everything that links it: macos15.0,
 # because Package.swift:92 declares `.macOS("15")` and `Mutex` is

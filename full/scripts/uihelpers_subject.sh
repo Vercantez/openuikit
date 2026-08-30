@@ -6,6 +6,11 @@ set -euo pipefail
 
 ROOT=${1:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root>}
 UIKIT=${2:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root>}
+PINNED_INPUTS_TOOL=$ROOT/full/foundation/pinned_inputs.pl
+PINNED_UPSTREAM_STATE=$(perl "$PINNED_INPUTS_TOOL" verify \
+    --swift-foundation "$ROOT/scratch/swift-foundation" \
+    --swift-collections "$ROOT/scratch/swift-collections" \
+    --digest-only)
 
 hash_file() {
     if command -v sha256sum >/dev/null 2>&1; then
@@ -24,11 +29,14 @@ hash_stream() {
 }
 
 {
+    printf 'upstream/pinned-compile-inputs\t%s\n' "$PINNED_UPSTREAM_STATE"
+
     find "$UIKIT/Sources/OpenUIKit" \
          "$UIKIT/Sources/OpenCoreGraphics" \
          "$UIKIT/Sources/CQuartz" \
          "$UIKIT/Sources/CPortableIO" \
          "$UIKIT/Sources/CSTBTrueType" \
+         "$UIKIT/Sources/UIKitShim" \
          -type f | LC_ALL=C sort | while IFS= read -r file; do
         rel=${file#"$UIKIT"/}
         printf 'uikit/%s\t%s\n' "$rel" "$(hash_file "$file")"
@@ -45,7 +53,7 @@ hash_stream() {
         done
 
     find "$ROOT/full/driver" "$ROOT/full/shims" "$ROOT/full/appshim" \
-         "$ROOT/full/hostclock" \
+         "$ROOT/full/hostclock" "$ROOT/full/foundation" \
          -type f | LC_ALL=C sort | while IFS= read -r file; do
         rel=${file#"$ROOT"/}
         printf 'spike/%s\t%s\n' "$rel" "$(hash_file "$file")"

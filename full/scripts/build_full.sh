@@ -1,13 +1,16 @@
 #!/bin/bash
 # build_full.sh -- build the FULL OpenUIKit module (not the vendored slice) as
-# arm64-apple-macos Mach-O on Linux, plus a Foundation-free scene renderer.
+# arm64-apple-macos Mach-O on Linux, plus a Foundation-umbrella-free scene
+# renderer. FoundationEssentials is a real production dependency: it owns the
+# app-facing IndexPath identity exported by literal UIKit.
 #
 # ~/uikit IS NEVER EDITED AND NEVER COPIED. It is bind-mounted read-only at
 # /uikit and compiled in place. The project-owned inputs are explicit:
-#   full/shims/FoundationNames.swift  OpenUIKit's own pre-M15 declarations of
-#                                     IndexPath/NSRange/TimeInterval, plus the
-#                                     Foundation-free IndexSet used by table
-#                                     section APIs (provenance in its header)
+#   full/shims/FoundationNames.swift  OpenUIKit's remaining pre-M15
+#                                     NSRange/TimeInterval fallbacks plus the
+#                                     Foundation-free IndexSet. Its historical
+#                                     IndexPath is excluded when the canonical
+#                                     FoundationEssentials type is available.
 #   full/driver/*.swift               replaces openrender's two Foundation-using
 #                                     files and supplies run-loop/app/bundle/value
 #                                     self-tests; SceneBuilder.swift and RealApp.swift
@@ -24,40 +27,57 @@
 set -euo pipefail
 W=/w
 UIKIT=/uikit
-SYS=$W/scratch/sysroot_full            # private sysroot copy, quartz removed
+TARGET=arm64-apple-macos15.0           # FoundationEssentials' declared floor
+MINOS=15.0
+SYS=$W/scratch/sysroot_fe4             # Darwin + FE compile sysroot
 OUT=$W/build/full
 ROOTDIR=$W/scratch/mrroot_full         # guest root for this renderer
 MC=$W/scratch/modcache_full
-mkdir -p "$OUT" "$MC"
+SF=$W/scratch/swift-foundation
+SC=$W/scratch/swift-collections
+FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe}
+FE_BUILD=$OUT/foundation
+FE_OUT=$FE_BUILD/essentials
+FE_COLLECTIONS=$FE_BUILD/collections
+FE_OS=$FE_BUILD/os
+FE_CSHIMS=$FE_BUILD/cshims
+PINNED_INPUTS_TOOL=$W/full/foundation/pinned_inputs.pl
+
+# ---- pinned upstream compile inputs ---------------------------------------
+# This preflight happens before outputs or success markers are touched. The
+# exact Git trees own the compiler manifests; ordinary `git status` is not
+# enough because ignored .build* directories can contain Swift files that an
+# unrestricted recursive walk would consume.
+[ -d "$SYS/usr/include" ] || {
+    echo "build_full: no FE sysroot at $SYS; run full/foundation/stage_fe_sysroot.sh" >&2
+    exit 2
+}
+[ -f "$PINNED_INPUTS_TOOL" ] || {
+    echo "build_full: no pinned-input tool at $PINNED_INPUTS_TOOL" >&2
+    exit 2
+}
+echo "== verifying exact pinned upstream compile inputs"
+PINNED_SOURCE_STATE_BEFORE=$(perl "$PINNED_INPUTS_TOOL" verify \
+    --swift-foundation "$SF" --swift-collections "$SC" --digest-only)
+echo "   -> $PINNED_SOURCE_STATE_BEFORE"
 
 # Bracket the complete source/resource subject used by the focused UIHelpers
 # guest proof. The runner re-computes this exact content digest; a leftover
 # render_full from another checkout or commit cannot pass on timestamps alone.
+# uihelpers_subject includes the verified upstream digest above.
 UIHELPERS_SUBJECT_BEFORE=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
+mkdir -p "$OUT" "$MC" "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
 # These files are commit markers for a completely successful build. Remove
 # them before mutating any output, so a failed or interrupted rebuild can never
 # leave yesterday's attestation blessing today's partial binary.
 rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256"
 
-# ---- private sysroot -------------------------------------------------------
-# The shared sysroot carries machorun's OLD quartz headers under
-# usr/include/quartz with a modulemap naming the module `Quartz`. Both the
-# headers and the module name are wrong for this build, and a second modulemap
-# over the same headers would be ambiguous to clang -- so the private copy
-# simply drops them and the CQuartz module comes from ~/uikit's own
-# Sources/CQuartz/include/module.modulemap, unmodified.
-if [ ! -d "$SYS" ]; then
-    echo "== staging private sysroot (machorun's old quartz removed)"
-    cp -a "$W/scratch/sysroot" "$SYS"
-    rm -rf "$SYS/usr/include/quartz"
-fi
-
-SWIFTC=(swiftc -target arm64-apple-macos13.0 -sdk "$SYS" -module-cache-path "$MC"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -module-cache-path "$MC"
         -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$SYS" -rpath /usr/lib/swift)
-CC=(clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O2)
+LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$SYS" -rpath /usr/lib/swift)
+CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
 
 # ---- guest root ------------------------------------------------------------
 # MACHORUN=/machorun is a read-only bind mount of ~/machorun, so the guest root
@@ -142,6 +162,36 @@ for d in "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib; do
 done
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
+# FoundationEssentials pulls this nine-dylib Swift overlay closure. The source
+# root is staged on macOS by full/foundation/stage_swift_overlays.sh; this
+# Linux build copies only the closure additions, never that root's loader,
+# libSystem, libswiftCore, or libswift_Concurrency. Those remain owned by the
+# current full-root staging above.
+FE_OVERLAYS=(
+    libswiftDarwin.dylib
+    libswiftSynchronization.dylib
+    libswift_Builtin_float.dylib
+    libswift_DarwinFoundation1.dylib
+    libswift_DarwinFoundation2.dylib
+    libswift_DarwinFoundation3.dylib
+    libswift_RegexParser.dylib
+    libswift_StringProcessing.dylib
+    libswift_errno.dylib
+)
+echo "== staging FoundationEssentials Swift runtime closure"
+for name in "${FE_OVERLAYS[@]}"; do
+    source="$FE_RUNTIME_SOURCE/darwin/usr/lib/swift/$name"
+    target="$ROOTDIR/darwin/usr/lib/swift/$name"
+    [ -f "$source" ] && [ ! -L "$source" ] || {
+        echo "build_full: missing regular FE runtime overlay: $source" >&2
+        exit 2
+    }
+    if ! cmp -s "$source" "$target"; then
+        cp "$source" "$target"
+        echo "   staged $name"
+    fi
+done
+
 # Keep the extensionless Foundation/CoreFoundation loud-abort stubs in step
 # independently of loader freshness too.  They are real transitive load
 # inputs of the staged Swift runtime, but the old root manifest only enumerated
@@ -210,18 +260,18 @@ done
 
     "${CC[@]}" -O1 -c -o "$OUT/syspatch.o"  "$W/spike/syspatch.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
-    clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O1 -std=c++17 \
+    clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/cxxpatch.o" "$W/spike/cxxpatch.cpp"
-    clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" -O1 -std=c++17 \
+    clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -fno-rtti -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/conccxx.o" "$W/full/shims/conccxx.cpp"
 
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
         -o "$LIB/libc++.1.dylib" "$OUT/cxxpatch.o" "$OUT/conccxx.o" \
         "$LIB/libSystem.B.dylib" -reexport_library "$LIB/libc++.real.dylib"
@@ -230,7 +280,7 @@ done
     # rather than installed. See that file's header: it is a FAILED experiment,
     # retained so the next person does not repeat it.
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
-    ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0 -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
@@ -294,6 +344,11 @@ echo "== manifest ($ROOTDIR/.manifest)"
             printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
         fi
     done
+    for n in "${FE_OVERLAYS[@]}"; do
+        source="$FE_RUNTIME_SOURCE/darwin/usr/lib/swift/$n"
+        source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
+        printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
+    done
     for framework in Foundation CoreFoundation; do
         source="$W/scratch/mrroot/darwin/System/Library/Frameworks/$framework.framework/$framework"
         source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
@@ -330,13 +385,13 @@ QCXX=(-std=gnu++17 -fno-exceptions -fno-rtti -fPIC -Os -g0 -DNDEBUG
 QOBJS=()
 for f in "$UIKIT"/Sources/CQuartz/*.cpp; do
     o="$QOBJ/$(basename "$f" .cpp).o"
-    clang-18 -target arm64-apple-macos13.0 -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$f" -o "$o"
+    clang-18 -target "$TARGET" -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$f" -o "$o"
     QOBJS+=("$o")
 done
 # -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
 # LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
 # resolve those install names to files.
-ld64.lld-18 -dylib -arch arm64 -platform_version macos 13.0 13.0 \
+ld64.lld-18 -dylib -arch arm64 -platform_version macos "$MINOS" "$MINOS" \
     -syslibroot "$ROOTDIR/darwin" \
     -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
     -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \
@@ -385,39 +440,75 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
 
-# ---- the library path must not see Foundation ------------------------------
-# The 108-scene result depends on OpenUIKit's FREESTANDING #else branches being
-# what compiles. That was true only because scratch/sysroot_full happens to
-# contain no Foundation module of any kind -- an accident, and a fragile one:
-# machorun's staged SDK DOES ship
-# System/Library/Frameworks/Foundation.framework/Modules, so canImport(Foundation)
-# is TRUE against it with no -I at all, satisfied by a CLANG MODULEMAP rather
-# than a Swift module. Re-stage the sysroot from there and this build would
-# silently flip 33 guards onto a path it cannot satisfy.
-#
-# THE LEVER IS WHICH SDK A TARGET COMPILES AGAINST, NOT WHICH -I IT GETS.
-# So the property is now checked rather than assumed -- and the check is proved
-# able to fail, because a guard that cannot fail is worse than none.
-echo "== guard: Foundation must be invisible on the library path"
-cat >"$OUT/guard_no_foundation.swift" <<'EOF'
-#if canImport(Foundation)
-#error("Foundation is VISIBLE to the library compile. OpenUIKit's freestanding #else branches are no longer what builds. Check scratch/sysroot_full for System/Library/Frameworks/Foundation.framework/Modules -- the fix is the SDK this target uses, not an include path.")
-#endif
-EOF
+# ---- FoundationEssentials: built here, not borrowed as a stale object -------
+# This is the production full path. Every invocation rebuilds the exact pinned
+# upstream sources, stages their modules beside OpenUIKit, and later links all
+# dependency objects into both executables. There is no swift-system checkout
+# in this graph; the local os-module source is part of the project subject.
+echo "== FoundationEssentials production inputs ($TARGET)"
+rm -rf "$FE_BUILD"
+mkdir -p "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
+W="$W" SC="$SC" SYS="$SYS" OUT="$FE_COLLECTIONS" TARGET="$TARGET" \
+    PINNED_INPUTS_TOOL="$PINNED_INPUTS_TOOL" \
+    bash "$W/full/foundation/build_collections.sh"
+W="$W" SYS="$SYS" OUT="$FE_OS" TARGET="$TARGET" \
+    bash "$W/full/foundation/build_os_module.sh"
+W="$W" SF="$SF" SYS="$SYS" OUT="$FE_CSHIMS" TARGET="$TARGET" \
+    PINNED_INPUTS_TOOL="$PINNED_INPUTS_TOOL" \
+    bash "$W/full/foundation/build_cshims.sh"
+W="$W" SF="$SF" SYS="$SYS" OSMOD="$FE_OS" COLLECTIONS="$FE_COLLECTIONS" \
+    TARGET="$TARGET" PINNED_INPUTS_TOOL="$PINNED_INPUTS_TOOL" \
+    bash "$W/full/foundation/build_fe.sh" \
+    -parse-as-library \
+    -emit-module -emit-module-path "$FE_OUT/FoundationEssentials.swiftmodule" \
+    -c -o "$FE_OUT/FoundationEssentials.o"
+clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -nostdinc \
+    -c "$W/full/foundation/fm_unimplemented.c" -o "$FE_OUT/fm_unimplemented.o"
+
+FEMODULES=(
+    -I "$FE_OUT" -I "$FE_COLLECTIONS" -I "$FE_OS"
+    -Xcc -fmodule-map-file="$SF/Sources/_FoundationCShims/include/module.modulemap"
+    -Xcc -I"$SF/Sources/_FoundationCShims/include"
+)
+FE_OBJECTS=(
+    "$FE_OUT/FoundationEssentials.o"
+    "$FE_COLLECTIONS/InternalCollectionsUtilities.o"
+    "$FE_COLLECTIONS/OrderedCollections.o"
+    "$FE_COLLECTIONS/_RopeModule.o"
+    "$FE_OS/os.o"
+    "$FE_CSHIMS/platform_shims.o"
+    "$FE_CSHIMS/string_shims.o"
+    "$FE_CSHIMS/uuid.o"
+    "$FE_OUT/fm_unimplemented.o"
+)
+
+# ---- module-visibility contract -------------------------------------------
+# Foundation must remain absent (the tiny app-only shim is not a real
+# umbrella), while FoundationEssentials must be present. Prove both the desired
+# compile and the adversarial absence: a missing -I must not silently fall back
+# to full/shims/FoundationNames.swift's historical rival IndexPath.
+echo "== guard: Foundation hidden, FoundationEssentials required"
+if "${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name GuardMissingFoundationEssentials \
+    "$W/full/foundation/foundationessentials_import_guard.swift" >/dev/null 2>&1; then
+    echo "   FATAL: FE guard passed without the staged FoundationEssentials module path" >&2
+    exit 1
+fi
 cat >"$OUT/guard_teeth.swift" <<'EOF'
 // The same mechanism aimed at a module that IS visible. This compile MUST
-// fail; if it succeeds, #error is not being evaluated and the guard above is
+// fail; if it succeeds, #error is not being evaluated and the checked-in guard is
 // decoration.
 #if canImport(Swift)
 #error("TEETH_OK")
 #endif
 EOF
-"${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name GuardNoFoundation "$OUT/guard_no_foundation.swift"
+"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" -typecheck \
+    -module-name GuardFoundationEssentials \
+    "$W/full/foundation/foundationessentials_import_guard.swift"
 if "${SWIFTC[@]}" "${CINC[@]}" -typecheck -module-name GuardTeeth "$OUT/guard_teeth.swift" >/dev/null 2>&1; then
     echo "   FATAL: the guard cannot fail -- #error is not being evaluated" >&2
     exit 1
 fi
-echo "   -> not visible, and the guard is verified able to fail"
+echo "   -> exact visibility holds, missing-FE fallback refused, #error has teeth"
 
 # ---- OpenCoreGraphics ------------------------------------------------------
 echo "== OpenCoreGraphics ($(ls "$UIKIT"/Sources/OpenCoreGraphics/*.swift | wc -l) files, verbatim)"
@@ -425,48 +516,66 @@ echo "== OpenCoreGraphics ($(ls "$UIKIT"/Sources/OpenCoreGraphics/*.swift | wc -
     -emit-object -emit-module -emit-module-path "$OUT/OpenCoreGraphics.swiftmodule" \
     -o "$OUT/opencoregraphics.o" "$UIKIT"/Sources/OpenCoreGraphics/*.swift
 
-# ---- OpenUIKit (+ the restored Foundation names) ---------------------------
+# ---- OpenUIKit (canonical FE IndexPath + remaining fallback names) ----------
 UIKIT_SRCS=()
 while IFS= read -r f; do UIKIT_SRCS+=("$f"); done < <(find "$UIKIT/Sources/OpenUIKit" -name '*.swift' | sort)
 echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + FoundationNames.swift)"
-"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -module-name OpenUIKit \
+"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" -module-name OpenUIKit \
     -emit-object -emit-module -emit-module-path "$OUT/OpenUIKit.swiftmodule" \
     -o "$OUT/openuikit.o" \
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
 # Keep this focused probe honest even though the combined renderer below must
 # see APPINC for RealAppProbe. A separate typecheck before APPINC exists proves
-# UIHelpersTest itself needs only the Foundation-invisible OpenUIKit module.
-echo "== UIHelpers surface probe (Foundation invisible)"
-"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -module-name UIHelpersSurfaceGuard \
+# UIHelpersTest itself needs only the Foundation-umbrella-invisible OpenUIKit
+# module (FoundationEssentials remains an explicit transitive dependency).
+echo "== UIHelpers surface probe (Foundation umbrella invisible)"
+"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
+    -module-name UIHelpersSurfaceGuard \
     -typecheck "$W/full/driver/UIHelpersTest.swift"
 
-# ---- the renderer: ~/uikit's SceneBuilder verbatim + our main ---------------
-# ---- the app path -----------------------------------------------------------
-# NO Foundation module: see full/appshim/UIKit.swift for why a small one is
-# worse than none. NSCoder rides in OpenUIKit instead.
-# APPINC is deliberately a DIFFERENT directory from OUT: the Foundation probe
-# must be visible to the app modules and invisible to the library, or
-# OpenUIKit/OpenCoreGraphics switch to their Foundation branches and demand the
-# full Darwin geometry contract. See full/appshim/Foundation.swift.
-APPINC=$OUT/appinc; mkdir -p "$APPINC"
-echo "== app path (Foundation probe + UIKit shim + RealAppProbe: UNMODIFIED app source)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -module-name Foundation \
-    -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
+# ---- literal UIKit + app path ----------------------------------------------
+# UIKit gets its own include directory and is compiled BEFORE the intentionally
+# tiny app-only Foundation module exists. That is a semantic boundary, not
+# ordering trivia: Sources/UIKitShim/UIKit.swift must select its
+# FoundationEssentials re-export branch. A stale Foundation.swiftmodule can
+# never flip it because APPINC is not on this invocation's search path.
+UIKITINC=$OUT/uikitinc
+APPINC=$OUT/appinc
+rm -rf "$UIKITINC" "$APPINC"
+mkdir -p "$UIKITINC" "$APPINC"
+echo "== literal UIKit shim (FoundationEssentials branch, actual /uikit source)"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
+    -module-name UIKit -emit-module -emit-module-path "$UIKITINC/UIKit.swiftmodule" \
+    -emit-object -o "$OUT/uikitshim.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
+
+# Compile the app-shaped proof while no Foundation module is visible. Its only
+# import is UIKit; qualified FE/OpenUIKit conversions prove re-export and exact
+# identity rather than merely checking that an unqualified spelling exists.
+echo "== literal UIKit IndexPath compile proof"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$UIKITINC" -module-name LiteralUIKitIndexPathProbe \
+    -emit-object -o "$OUT/literal_uikit_indexpath_probe.o" \
+    "$W/full/foundation/literal_uikit_indexpath_probe.swift"
+
+# The vendored corpus also contains an explicit `import Foundation` for
+# NSCoder. Keep that measured one-name module app-only; it is compiled after
+# UIKit and never enters OpenUIKit's module search path.
+echo "== app-only Foundation NSCoder shim + RealAppProbe (UNMODIFIED app source)"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
+    -module-name Foundation -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
     -emit-object -o "$OUT/foundation.o" "$W/full/appshim/Foundation.swift"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name UIKit \
-    -emit-module \
-    -emit-module-path "$APPINC/UIKit.swiftmodule" \
-    -emit-object -o "$OUT/uikitshim.o" "$W/full/appshim/UIKit.swift"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" -I "$OUT" -I "$APPINC" -default-isolation MainActor \
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -default-isolation MainActor \
     -module-name RealAppProbe -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \
     -emit-object -o "$OUT/realappprobe.o" \
     "$UIKIT"/Sources/RealAppProbe/*.swift "$UIKIT"/Sources/RealAppProbe/Vendored/*.swift
 
-# The renderer sees APPINC too: RealApp.swift imports RealAppProbe, whose
-# interface transitively names UIKit and Foundation.
+# The renderer sees both app include roots: RealApp.swift imports RealAppProbe,
+# whose interface transitively names UIKit, Foundation, and FoundationEssentials.
 echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
-"${SWIFTC[@]}" "${CINC[@]}" -I "$OUT" -I "$APPINC" -module-name render_full \
+"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
     "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
@@ -485,15 +594,28 @@ echo "== link"
 # /usr/lib/libSystem.real.dylib resolves. The umbrella is linked directly
 # (rather than via -lSystem) because the SDK .tbd does not advertise
 # pthread_main_np, which the APP path needs and the render path does not.
-"${LD[@]}" -exported_symbol __mh_execute_header -rpath @loader_path \
+COMMON_LINK_OBJECTS=(
+    "$OUT/uikitshim.o" "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
+    "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
+    "$OUT/swiftcorepatch.o"
+    "${FE_OBJECTS[@]}"
+)
+"${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
     -L"$ROOTDIR/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
     "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
     -o "$OUT/render_full" \
-    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/uikitshim.o" "$OUT/foundation.o" \
-    "$OUT/openuikit.o" "$OUT/opencoregraphics.o" \
-    "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o" "$OUT/swiftcorepatch.o"
+    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation.o" \
+    "${COMMON_LINK_OBJECTS[@]}"
+
+"${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
+    -L"$ROOTDIR/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
+    -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
+    "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
+    -o "$OUT/indexpath_identity_probe" \
+    "$OUT/literal_uikit_indexpath_probe.o" "${COMMON_LINK_OBJECTS[@]}"
 
 # ---- bundle fixtures -------------------------------------------------------
 # Built here rather than committed, so they cannot drift from what the test
@@ -538,8 +660,18 @@ if [ "$UIHELPERS_SUBJECT_BEFORE" != "$UIHELPERS_SUBJECT_AFTER" ]; then
     echo "  after:  $UIHELPERS_SUBJECT_AFTER" >&2
     exit 2
 fi
+PINNED_SOURCE_STATE_AFTER=$(perl "$PINNED_INPUTS_TOOL" verify \
+    --swift-foundation "$SF" --swift-collections "$SC" --digest-only)
+if [ "$PINNED_SOURCE_STATE_BEFORE" != "$PINNED_SOURCE_STATE_AFTER" ]; then
+    echo "build_full: REFUSING -- pinned upstream compile inputs changed during build" >&2
+    exit 2
+fi
 {
     printf 'render_full\t%s\n' "$(sha256sum "$OUT/render_full" | awk '{print $1}')"
+    printf 'indexpath_identity_probe\t%s\n' \
+        "$(sha256sum "$OUT/indexpath_identity_probe" | awk '{print $1}')"
+    printf 'FoundationEssentials.o\t%s\n' \
+        "$(sha256sum "$FE_OUT/FoundationEssentials.o" | awk '{print $1}')"
     printf 'libquartz.dylib\t%s\n' \
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | awk '{print $1}')"
     printf 'libSystem.B.dylib\t%s\n' \
@@ -553,4 +685,4 @@ printf '%s\n' "$UIHELPERS_SUBJECT_AFTER" > "$OUT/uihelpers-subject.sha256.tmp"
 mv "$OUT/uihelpers-artifacts.sha256.tmp" "$OUT/uihelpers-artifacts.sha256"
 mv "$OUT/uihelpers-subject.sha256.tmp" "$OUT/uihelpers-subject.sha256"
 
-echo "== done"; ls -l "$OUT/render_full"
+echo "== done"; ls -l "$OUT/render_full" "$OUT/indexpath_identity_probe"

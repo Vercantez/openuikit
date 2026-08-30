@@ -15,6 +15,27 @@ each one are named beside it.**
 | `os` | `full/foundation/os-module/` — ours, three declarations, not Apple's overlay |
 | file surface | 36 symbols stubbed by `fm_unimplemented.c`: 3 implemented, 1 delegated to upstream's own fallback, 32 loud-abort. **URL never reaches them; a stub firing during a run is itself a finding.** |
 
+## Production source identity
+
+`full/scripts/build_full.sh` does not discover upstream compiler inputs with a
+filesystem walk. `pinned_inputs.pl` derives 202 FoundationEssentials Swift
+files, 3 C-shim sources, 13 C-shim module/header inputs, and 155
+swift-collections Swift files from the exact commits and Git trees above. It
+verifies every selected worktree blob and mode, rejects tracked, untracked, or
+ignored drift, and brackets one normalized SHA-256 before and after the build.
+That digest is also part of the runnable UIHelpers/IndexPath subject.
+
+The regression deliberately adds
+`Sources/FoundationEssentials/.build-review/Injected.swift`, which the
+upstream `**/.build*` rule hides from ordinary Git status, and requires refusal:
+
+```sh
+bash full/foundation/tests/test_pinned_inputs_guard.sh
+```
+
+There is no swift-system checkout in this production graph. The small local
+`os` module is project source and is covered by the project-source bracket.
+
 ## Compile — `build_fe.sh`
 
 **202 files, 0 errors.** `FoundationEssentials.o`: Mach-O 64-bit arm64,

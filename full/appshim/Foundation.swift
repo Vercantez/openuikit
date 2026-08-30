@@ -15,9 +15,10 @@
 //    a path it cannot satisfy.
 //
 // So this module lives in an include directory the APP modules see and the
-// LIBRARY does not. That is not a trick -- it is the real configuration: the
-// library is built freestanding (the branch that renders 108/108) while the
-// app is built against Foundation, exactly as a real app would be.
+// LIBRARY does not. The library now sees FoundationEssentials deliberately,
+// which supplies the canonical IndexPath identity, but it still must not see
+// this incomplete Foundation umbrella: doing so would switch unrelated APIs
+// such as NSRange and geometry onto contracts this measuring shim cannot meet.
 //
 // A MEASURING INSTRUMENT, NOT A PROPOSAL. Shipping this would be the worst
 // kind of stub: every `import Foundation` would keep compiling while the first
@@ -25,8 +26,8 @@
 
 // This import is deliberately not exported. It gives the app-facing spelling
 // the exact same type identity as UIView's required initializer without
-// exposing a second NSCoder declaration or changing the Foundation-invisible
-// OpenUIKit build.
+// exposing a second NSCoder declaration or changing the Foundation-umbrella-
+// invisible OpenUIKit build.
 import OpenUIKit
 
 /// The one name the app source needs. OpenUIKit's Foundation-free fallback is

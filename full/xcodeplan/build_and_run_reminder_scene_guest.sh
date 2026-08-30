@@ -118,7 +118,7 @@ build_inside() {
     bash "$W/full/scripts/build_full.sh"
 
     local full="$W/build/full"
-    local sys="$W/scratch/sysroot_full"
+    local sys="$W/scratch/sysroot_fe4"
     local rootdir="$W/scratch/mrroot_full"
     local module turns expected_subject actual_subject
     [ -s "$full/uihelpers-subject.sha256" ] || die "build_full success marker is missing"
@@ -143,18 +143,23 @@ build_inside() {
 
     local mc="$SCENE_OUT/module-cache"
     mkdir -p "$mc"
-    local -a swiftc_flags c_flags link_flags
-    swiftc_flags=(swiftc -target arm64-apple-macos13.0 -sdk "$sys"
+    local -a swiftc_flags c_flags fe_flags link_flags
+    swiftc_flags=(swiftc -target arm64-apple-macos15.0 -sdk "$sys"
         -module-cache-path "$mc" -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
     c_flags=(-Xcc -I"$full/inc/CPortableIO" -Xcc -I"$full/inc/CSTBTrueType"
         -Xcc -I"$W/full/hostclock/include" -Xcc -I"/uikit/Sources/CQuartz/include")
-    link_flags=(ld64.lld-18 -arch arm64 -platform_version macos 13.0 13.0
+    fe_flags=(-I "$full/foundation/essentials"
+        -I "$full/foundation/collections" -I "$full/foundation/os"
+        -Xcc -fmodule-map-file="$W/scratch/swift-foundation/Sources/_FoundationCShims/include/module.modulemap"
+        -Xcc -I"$W/scratch/swift-foundation/Sources/_FoundationCShims/include")
+    link_flags=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
         -syslibroot "$sys" -rpath /usr/lib/swift)
 
-    echo "== unchanged Reminder scene slice (2 app sources; generated entry point; production host loop)"
-    "${swiftc_flags[@]}" "${c_flags[@]}" -I "$full" -I "$full/appinc" \
+    echo "== unchanged Reminder scene slice (2 app sources; generated entry point; FE-backed production host loop)"
+    "${swiftc_flags[@]}" "${c_flags[@]}" "${fe_flags[@]}" \
+        -I "$full" -I "$full/uikitinc" -I "$full/appinc" \
         -default-isolation MainActor -module-name "$module" \
         -emit-object -o "$SCENE_OUT/reminder-scene-guest.o" \
         "${app_sources[@]}" \
@@ -163,7 +168,7 @@ build_inside() {
         "$W/full/xcodeplan/PortableUIKitApplicationHost.swift" \
         "$W/full/driver/RunLoop.swift"
 
-    "${link_flags[@]}" -exported_symbol __mh_execute_header -rpath @loader_path \
+    "${link_flags[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
         -L"$rootdir/darwin/usr/lib" \
         -L/usr/lib/swift -lswiftCore "$rootdir/darwin/usr/lib/libswiftcompat.dylib" \
         -L/usr/lib -lSystem -lobjc "$rootdir/darwin/usr/lib/libquartz.dylib" \
@@ -172,7 +177,16 @@ build_inside() {
         "$SCENE_OUT/reminder-scene-guest.o" \
         "$full/uikitshim.o" "$full/foundation.o" "$full/openuikit.o" \
         "$full/opencoregraphics.o" "$full/cportableio.o" "$full/cstbtruetype.o" \
-        "$full/hostclock.o" "$full/swiftcorepatch.o"
+        "$full/hostclock.o" "$full/swiftcorepatch.o" \
+        "$full/foundation/essentials/FoundationEssentials.o" \
+        "$full/foundation/collections/InternalCollectionsUtilities.o" \
+        "$full/foundation/collections/OrderedCollections.o" \
+        "$full/foundation/collections/_RopeModule.o" \
+        "$full/foundation/os/os.o" \
+        "$full/foundation/cshims/platform_shims.o" \
+        "$full/foundation/cshims/string_shims.o" \
+        "$full/foundation/cshims/uuid.o" \
+        "$full/foundation/essentials/fm_unimplemented.o"
 
     (
         cd "$SCENE_OUT"
