@@ -144,7 +144,12 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
         )
         for option, value, diagnostic in cases:
             with self.subTest(option=option):
-                command = [sys.executable, os.fspath(tool), os.fspath(MODERN_PROJECT)]
+                command = [
+                    sys.executable,
+                    "-B",
+                    os.fspath(tool),
+                    os.fspath(MODERN_PROJECT),
+                ]
                 if option == "--configuration":
                     command.extend(("--target", "ModernApp"))
                 command.extend((option, value))
@@ -1952,6 +1957,7 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
 
         command = [
             sys.executable,
+            "-B",
             os.fspath(TOOL_DIR / "project_inventory.py"),
             os.fspath(MODERN_PROJECT),
             "--scheme",
