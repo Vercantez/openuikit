@@ -223,6 +223,11 @@ public protocol UIApplicationDelegate: AnyObject {
     func applicationDidEnterBackground(_ application: UIApplication)
     func applicationWillEnterForeground(_ application: UIApplication)
     func applicationWillTerminate(_ application: UIApplication)
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration
+    func application(_ application: UIApplication,
+                     didDiscardSceneSessions sceneSessions: Set<UISceneSession>)
 }
 
 extension UIApplicationDelegate {
@@ -262,6 +267,13 @@ extension UIApplicationDelegate {
     public func applicationDidEnterBackground(_ application: UIApplication) {}
     public func applicationWillEnterForeground(_ application: UIApplication) {}
     public func applicationWillTerminate(_ application: UIApplication) {}
+    public func application(_ application: UIApplication,
+                            configurationForConnecting connectingSceneSession: UISceneSession,
+                            options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+    }
+    public func application(_ application: UIApplication,
+                            didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
 }
 
 // MARK: - UIApplication
@@ -330,6 +342,8 @@ open class UIApplication: UIResponder {
     // MARK: Scenes
 
     private var _connectedScenes: Set<UIScene> = []
+    private var _usesSceneLifecycle = false
+    private var _retainedSceneDelegates: [ObjectIdentifier: UISceneDelegate] = [:]
 
     /// The scenes currently connected. OpenUIKit never creates one for you:
     /// the host boots a plain UIWindow (the pre-scene shape), so this is
@@ -341,7 +355,12 @@ open class UIApplication: UIResponder {
     /// Attach a scene (host/app hook — UIKit does this from its scene
     /// session machinery, which OpenUIKit does not have).
     public func _connect(scene: UIScene) {
+        _usesSceneLifecycle = true
         _connectedScenes.insert(scene)
+        if let sceneDelegate = scene.delegate {
+            _retainedSceneDelegates[ObjectIdentifier(scene)] = sceneDelegate
+        }
+        scene.session.scene = scene
         scene.activationState = applicationState == .active
             ? .foregroundActive : .foregroundInactive
     }
@@ -349,6 +368,54 @@ open class UIApplication: UIResponder {
     public func _disconnect(scene: UIScene) {
         _connectedScenes.remove(scene)
         scene.activationState = .unattached
+        scene.delegate?.sceneDidDisconnect(scene)
+        _retainedSceneDelegates.removeValue(forKey: ObjectIdentifier(scene))
+        if scene.session.scene === scene { scene.session.scene = nil }
+    }
+
+    /// Create and connect the ordinary single-window scene selected by an
+    /// Xcode application template. Portable build tooling emits the concrete
+    /// delegate construction; OpenUIKit owns session/configuration semantics.
+    @discardableResult
+    public func _hostConnectWindowScene(delegate sceneDelegate: UIWindowSceneDelegate)
+        -> UIWindowScene {
+        _hostConnectWindowScene(delegate: sceneDelegate,
+                                session: UISceneSession(),
+                                options: UIScene.ConnectionOptions())
+    }
+
+    /// Fully specified variant for hosts restoring a known scene session.
+    @discardableResult
+    public func _hostConnectWindowScene(delegate sceneDelegate: UIWindowSceneDelegate,
+                                        session: UISceneSession,
+                                        options: UIScene.ConnectionOptions)
+        -> UIWindowScene {
+        guard let appDelegate = delegate else {
+            preconditionFailure("UIApplication must be launched before connecting a scene")
+        }
+        let configuration = appDelegate.application(
+            self,
+            configurationForConnecting: session,
+            options: options
+        )
+        precondition(configuration.role == session.role,
+                     "scene configuration role must match its session")
+        if let sceneClass = configuration.sceneClass {
+            precondition(ObjectIdentifier(sceneClass) == ObjectIdentifier(UIWindowScene.self),
+                         "custom scene classes are not supported by this host slice")
+        }
+        if let delegateClass = configuration.delegateClass {
+            precondition(ObjectIdentifier(delegateClass) ==
+                         ObjectIdentifier(type(of: sceneDelegate)),
+                         "generated scene delegate does not match the configuration")
+        }
+        session.configuration = configuration
+
+        let scene = UIWindowScene(session: session)
+        scene.delegate = sceneDelegate
+        _connect(scene: scene)
+        sceneDelegate.scene(scene, willConnectTo: session, options: options)
+        return scene
     }
 
     // MARK: Responder chain
@@ -444,6 +511,8 @@ open class UIApplication: UIResponder {
                             launchOptions: [LaunchOptionsKey: Any]? = nil) -> Bool {
         _retainedDelegate = delegate
         self.delegate = delegate
+        _usesSceneLifecycle = false
+        _retainedSceneDelegates.removeAll()
         isTerminating = false
         applicationState = .inactive
         _ = delegate.application(self, willFinishLaunchingWithOptions: launchOptions)
@@ -466,16 +535,22 @@ open class UIApplication: UIResponder {
         guard applicationState != .active else { return }
         applicationState = .active
         for s in _connectedScenes { s.activationState = .foregroundActive }
-        delegate?.applicationDidBecomeActive(self)
-        for s in _connectedScenes { s.delegate?.sceneDidBecomeActive(s) }
+        if !_usesSceneLifecycle {
+            delegate?.applicationDidBecomeActive(self)
+        } else {
+            for s in _connectedScenes { s.delegate?.sceneDidBecomeActive(s) }
+        }
         _post(UIApplication.didBecomeActiveNotification)
     }
 
     /// The app is losing input focus but is still on screen.
     public func _hostWillResignActive() {
         guard applicationState == .active else { return }
-        for s in _connectedScenes { s.delegate?.sceneWillResignActive(s) }
-        delegate?.applicationWillResignActive(self)
+        if !_usesSceneLifecycle {
+            delegate?.applicationWillResignActive(self)
+        } else {
+            for s in _connectedScenes { s.delegate?.sceneWillResignActive(s) }
+        }
         applicationState = .inactive
         for s in _connectedScenes { s.activationState = .foregroundInactive }
         _post(UIApplication.willResignActiveNotification)
@@ -488,8 +563,11 @@ open class UIApplication: UIResponder {
         guard applicationState != .background else { return }
         applicationState = .background
         for s in _connectedScenes { s.activationState = .background }
-        delegate?.applicationDidEnterBackground(self)
-        for s in _connectedScenes { s.delegate?.sceneDidEnterBackground(s) }
+        if !_usesSceneLifecycle {
+            delegate?.applicationDidEnterBackground(self)
+        } else {
+            for s in _connectedScenes { s.delegate?.sceneDidEnterBackground(s) }
+        }
         _post(UIApplication.didEnterBackgroundNotification)
     }
 
@@ -499,8 +577,11 @@ open class UIApplication: UIResponder {
         guard applicationState == .background else { return }
         applicationState = .inactive
         for s in _connectedScenes { s.activationState = .foregroundInactive }
-        delegate?.applicationWillEnterForeground(self)
-        for s in _connectedScenes { s.delegate?.sceneWillEnterForeground(s) }
+        if !_usesSceneLifecycle {
+            delegate?.applicationWillEnterForeground(self)
+        } else {
+            for s in _connectedScenes { s.delegate?.sceneWillEnterForeground(s) }
+        }
         _post(UIApplication.willEnterForegroundNotification)
     }
 
@@ -550,12 +631,43 @@ public final class UISceneSession {
     }
     public let persistentIdentifier: String
     public let role: Role
+    public internal(set) weak var scene: UIScene?
+    public internal(set) var configuration: UISceneConfiguration
     public var userInfo: [String: Any]?
 
     public init(persistentIdentifier: String = "default",
                 role: Role = .windowApplication) {
         self.persistentIdentifier = persistentIdentifier
         self.role = role
+        self.configuration = UISceneConfiguration(name: nil, sessionRole: role)
+    }
+}
+
+// UIKit sessions inherit NSObject's identity equality and hashing. Distinct
+// live sessions remain distinct even when they carry the same identifier.
+extension UISceneSession: Hashable {
+    nonisolated public static func == (a: UISceneSession, b: UISceneSession) -> Bool {
+        a === b
+    }
+    nonisolated public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+/// Scene metadata selected by the application delegate. UIKit exposes this as
+/// a subclassable class and accepts any class object in `sceneClass`; the
+/// portable single-window host validates its narrower runtime support only
+/// when it consumes a configuration.
+@preconcurrency @MainActor
+open class UISceneConfiguration {
+    public let name: String?
+    public let role: UISceneSession.Role
+    public var sceneClass: AnyClass?
+    public var delegateClass: AnyClass?
+
+    public init(name: String?, sessionRole: UISceneSession.Role) {
+        self.name = name
+        self.role = sessionRole
     }
 }
 
@@ -589,7 +701,32 @@ extension UISceneDelegate {
 
 @preconcurrency @MainActor
 public protocol UIWindowSceneDelegate: UISceneDelegate {
-    var window: UIWindow? { get set }
+    /// ObjC-optional on UIKit: the outer optional represents whether the
+    /// delegate implements the property and the inner optional its value.
+    var window: UIWindow?? { get set }
+}
+
+extension UIWindowSceneDelegate {
+    public var window: UIWindow?? {
+        get {
+            var mirror: Mirror? = Mirror(reflecting: self)
+            while let current = mirror {
+                if let value = current.children.first(where: { $0.label == "window" })?.value {
+                    let optional = Mirror(reflecting: value)
+                    if optional.displayStyle == .optional {
+                        guard let wrapped = optional.children.first?.value else {
+                            return .some(nil)
+                        }
+                        return .some(wrapped as? UIWindow)
+                    }
+                    return .some(value as? UIWindow)
+                }
+                mirror = current.superclassMirror
+            }
+            return nil
+        }
+        set { _ = newValue }
+    }
 }
 
 /// A scene. Minimal by design: OpenUIKit's hosts boot a plain UIWindow, and
@@ -597,7 +734,14 @@ public protocol UIWindowSceneDelegate: UISceneDelegate {
 /// UIWindowSceneDelegate`) compiles and receives its callbacks.
 @preconcurrency @MainActor
 open class UIScene: UIResponder {
+    /// Canonical Swift spelling imported by UIKit from
+    /// `UISceneConnectionOptions`.
+    public typealias ConnectionOptions = UISceneConnectionOptions
+
     public let session: UISceneSession
+    /// UIKit's public delegate property is weak. The application host retains
+    /// a delegate supplied through `_hostConnectWindowScene` until disconnect,
+    /// mirroring the private scene-management ownership in UIKit itself.
     public weak var delegate: UISceneDelegate?
     public internal(set) var activationState: UISceneActivationState = .unattached
     public var title: String?

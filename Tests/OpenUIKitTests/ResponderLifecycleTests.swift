@@ -444,6 +444,115 @@ final class ApplicationLifecycleTests: XCTestCase {
         XCTAssertTrue(protocolValue === delegate)
     }
 
+    func testXcodeTemplateSceneSurfaceAndHostBootstrap() {
+        final class AppDelegate: UIResponder, UIApplicationDelegate {
+            var log: [String] = []
+
+            func application(
+                _ application: UIApplication,
+                configurationForConnecting connectingSceneSession: UISceneSession,
+                options: UIScene.ConnectionOptions
+            ) -> UISceneConfiguration {
+                log.append("configuration:\(connectingSceneSession.role.rawValue)")
+                return UISceneConfiguration(
+                    name: "Default Configuration",
+                    sessionRole: connectingSceneSession.role
+                )
+            }
+
+            func application(
+                _ application: UIApplication,
+                didDiscardSceneSessions sceneSessions: Set<UISceneSession>
+            ) {
+                log.append("discard:\(sceneSessions.count)")
+            }
+        }
+
+        final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+            var window: UIWindow?
+            var log: [String] = []
+
+            func scene(
+                _ scene: UIScene,
+                willConnectTo session: UISceneSession,
+                options connectionOptions: UIScene.ConnectionOptions
+            ) {
+                log.append("connect:\(session.configuration.name ?? "nil")")
+                guard let windowScene = scene as? UIWindowScene else { return }
+                let window = UIWindow(windowScene: windowScene)
+                self.window = window
+                window.makeKeyAndVisible()
+            }
+
+            func sceneDidDisconnect(_ scene: UIScene) {
+                log.append("disconnect")
+            }
+        }
+
+        let app = UIApplication.shared
+        let oldDelegate = app.delegate
+        defer { app.delegate = oldDelegate }
+
+        let appDelegate = AppDelegate()
+        UIApplicationMain(delegate: appDelegate)
+        let sceneDelegate = SceneDelegate()
+        let scene = app._hostConnectWindowScene(delegate: sceneDelegate)
+        defer { if app.connectedScenes.contains(scene) { app._disconnect(scene: scene) } }
+
+        XCTAssertEqual(appDelegate.log, [
+            "configuration:UIWindowSceneSessionRoleApplication",
+        ])
+        XCTAssertEqual(scene.session.configuration.name, "Default Configuration")
+        XCTAssertTrue(scene.session.scene === scene)
+        XCTAssertTrue(scene.delegate === sceneDelegate)
+        XCTAssertTrue(sceneDelegate.window?.windowScene === scene)
+        XCTAssertTrue(app.connectedScenes.contains(scene))
+
+        app._disconnect(scene: scene)
+        XCTAssertNil(scene.session.scene)
+        XCTAssertEqual(sceneDelegate.log, ["connect:Default Configuration", "disconnect"])
+
+        appDelegate.application(app, didDiscardSceneSessions: [scene.session])
+        XCTAssertEqual(appDelegate.log.last, "discard:1")
+    }
+
+    func testSceneSessionIdentityAndConfigurationNativeClassSurface() {
+        let a = UISceneSession(persistentIdentifier: "same")
+        let b = UISceneSession(persistentIdentifier: "same")
+        XCTAssertNotEqual(a, b)
+        XCTAssertEqual(Set([a, a, b]).count, 2)
+
+        class DerivedConfiguration: UISceneConfiguration {}
+        let configuration = DerivedConfiguration(
+            name: "Default Configuration",
+            sessionRole: .windowApplication
+        )
+        configuration.sceneClass = UIResponder.self
+        configuration.delegateClass = ImplicitInitializerApplicationDelegate.self
+        let classSlot: AnyClass? = configuration.sceneClass
+        XCTAssertTrue(classSlot === UIResponder.self)
+        XCTAssertEqual(configuration.name, "Default Configuration")
+        XCTAssertEqual(configuration.role, .windowApplication)
+    }
+
+    func testWindowSceneDelegateWindowRequirementIsOptional() {
+        final class WindowlessSceneDelegate: UIResponder, UIWindowSceneDelegate {}
+        let windowless: any UIWindowSceneDelegate = WindowlessSceneDelegate()
+        XCTAssertNil(windowless.window as Any?)
+        windowless.window = .some(UIWindow())
+        XCTAssertNil(windowless.window as Any?)
+
+        final class StoredWindowSceneDelegate: UIResponder, UIWindowSceneDelegate {
+            var window: UIWindow?
+        }
+        let concrete = StoredWindowSceneDelegate()
+        let stored: any UIWindowSceneDelegate = concrete
+        XCTAssertNotNil(stored.window as Any?)
+        XCTAssertNil(stored.window!)
+        concrete.window = UIWindow()
+        XCTAssertTrue(stored.window! === concrete.window)
+    }
+
     /// Launch -> active -> resign -> background -> foreground -> active ->
     /// terminate, in UIKit's order, with the state observable from inside
     /// every callback.
@@ -537,6 +646,38 @@ final class ApplicationLifecycleTests: XCTestCase {
 
         XCTAssertEqual(sceneDelegate.log, ["active", "resign", "background", "foreground"])
         app._hostWillTerminate()
+        XCTAssertEqual(appDelegate.log, [
+            "willFinishLaunching",
+            "didFinishLaunching(state=inactive)",
+            "willTerminate",
+        ], "UIScene adoption suppresses the four legacy app lifecycle callbacks")
+    }
+
+    /// Scene adoption is a lifecycle mode, not a proxy for the current number
+    /// of connected scenes. Disconnecting the last scene must not revive the
+    /// application-delegate callbacks UIKit suppresses for scene-based apps.
+    func testSceneLifecycleRemainsAdoptedAfterLastSceneDisconnects() {
+        let app = UIApplication.shared
+        let appDelegate = RecordingApplicationDelegate()
+        let previous = app.delegate
+        defer { app.delegate = previous }
+        UIApplicationMain(delegate: appDelegate)
+
+        let scene = UIWindowScene()
+        app._connect(scene: scene)
+        app._hostDidBecomeActive()
+        app._disconnect(scene: scene)
+        app._hostWillResignActive()
+        app._hostDidEnterBackground()
+        app._hostWillEnterForeground()
+        app._hostDidBecomeActive()
+        app._hostWillTerminate()
+
+        XCTAssertEqual(appDelegate.log, [
+            "willFinishLaunching",
+            "didFinishLaunching(state=inactive)",
+            "willTerminate",
+        ])
     }
 
     /// Windows register themselves and makeKey picks the key window.
