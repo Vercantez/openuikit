@@ -1,5 +1,32 @@
 # Known gaps (living document — fixers: read this)
 
+## Reminder UIKit `#Preview` successor (2026-08-30)
+
+This bounded slice removes unchanged Reminder's sole remaining front-end
+diagnostic, moving the exact all-22-source multiset from **1 -> 0** with no
+addition and no app/vendor edit. A native host macro plugin emits target-side
+`DeveloperToolsSupport.PreviewRegistry` metadata whose real body retains the
+unchanged `CreateViewController(initialDate: Date())` expression. The plugin
+is host code even for a Linux-hosted ARM64 Mach-O target; SwiftSyntax is not a
+target dependency. Exact app/framework/source/provenance pins, all 26 prior
+call-site lines plus the exact three-line Preview, a closed candidate path
+boundary, executable modes, residue
+checks, and tamper negatives live in `Tools/reminderpreviewprobe`. The design,
+MIT provenance, and native iOS 26.1 expansion boundary are in
+`docs/PREVIEW.md`.
+
+This is not full Xcode Previews. Only an unnamed single-expression UIKit view
+or controller body is supported. Names, traits, additional closures,
+multi-expression/control-flow builders, SwiftUI content, discovery, canvas UI,
+hot reload, and host lifecycle remain absent and fail closed where applicable.
+Apple-hosted XCTest graphs that already load the SDK DeveloperToolsSupport
+module also cannot simultaneously load OpenUIKit's portable module with that
+same name; this slice proves the UIKit-only app topology instead.
+The stored body is functional and SPI-testable, but no live host consumes it
+yet. A zero-diagnostic source compile is also not by itself an app launch:
+resources, packaging, entry-point handoff, and the runtime event/render loop
+remain separate integration gates.
+
 ## Reminder Notification identity / Objective-C bridge successor (2026-08-30)
 
 This bounded slice advances unchanged Reminder's exact whole-source diagnostic

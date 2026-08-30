@@ -1,4 +1,5 @@
 // swift-tools-version:5.9
+import CompilerPluginSupport
 import PackageDescription
 
 // Manifest conditionals describe the machine evaluating Package.swift, not a
@@ -10,6 +11,14 @@ let platformCombinePackages: [Package.Dependency] = [
     .package(
         url: "https://github.com/OpenCombine/OpenCombine.git",
         revision: "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b"
+    ),
+]
+let previewMacroPackages: [Package.Dependency] = [
+    // Swift 6.2's matching SwiftSyntax release. Pin the immutable revision,
+    // not only the movable tag, because this code executes in the compiler.
+    .package(
+        url: "https://github.com/swiftlang/swift-syntax.git",
+        revision: "4799286537280063c85a32f09884cfbca301b1a1"
     ),
 ]
 let platformCombineTargets: [Target] = [
@@ -56,6 +65,8 @@ let package = Package(
         // existed for in-package probes; publishing it also lets external
         // source-preservation probes keep `import UIKit` byte-for-byte.
         .library(name: "UIKit", targets: ["UIKit"]),
+        // Target-side metadata emitted by #Preview declaration expansions.
+        .library(name: "DeveloperToolsSupport", targets: ["DeveloperToolsSupport"]),
         // Source-compatible first SwiftUI slice.  The public module name is
         // intentionally literal: unchanged app source keeps `import SwiftUI`.
         // Its renderer is backed by OpenUIKit rather than an Apple framework.
@@ -68,7 +79,7 @@ let package = Package(
         // libobjc2/gnustep-base, outside SPM, and links this .so.
         .library(name: "OpenUIKitC", type: .dynamic, targets: ["OpenUIKitC"]),
     ],
-    dependencies: platformCombinePackages,
+    dependencies: platformCombinePackages + previewMacroPackages,
     targets: [
         // Vendored stb_truetype (single-header C library, public domain).
         .target(name: "CSTBTrueType"),
@@ -105,6 +116,18 @@ let package = Package(
         .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
         // The UIKit reimplementation. Same rule as above.
         .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+        // The declaration macro executes on the build host even when UIKit is
+        // being emitted for a different target triple.
+        .macro(
+            name: "OpenUIKitPreviewMacros",
+            dependencies: [
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            ]
+        ),
+        .target(name: "DeveloperToolsSupport"),
         // S1/S1.5 plus the first S2 observation/state slice. Keep this a
         // separate module so UIKit-only users do not acquire SwiftUI or
         // Combine symbols.
@@ -124,10 +147,19 @@ let package = Package(
         // without a compiler flag. The Linux build of this target still
         // imports nothing but OpenUIKit.
         .target(name: "DemoApp", dependencies: ["OpenUIKit"]),
-        // A module named `UIKit` that does nothing but `@_exported import
-        // OpenUIKit`, so vendored real-app source can keep its `import UIKit`
-        // line verbatim. See Sources/UIKitShim/UIKit.swift.
-        .target(name: "UIKit", dependencies: ["OpenUIKit"], path: "Sources/UIKitShim"),
+        // A module named `UIKit` that re-exports OpenUIKit and owns narrowly
+        // scoped compatibility overlays (identity aliases and #Preview), so
+        // real-app source keeps its `import UIKit` line verbatim. See
+        // Sources/UIKitShim/UIKit.swift.
+        .target(
+            name: "UIKit",
+            dependencies: [
+                "OpenUIKit",
+                "DeveloperToolsSupport",
+                "OpenUIKitPreviewMacros",
+            ],
+            path: "Sources/UIKitShim"
+        ),
         // M14 real-app harness: UNMODIFIED source files lifted out of a
         // shipping open-source iOS app (Automattic/pocket-casts-ios), compiled
         // against OpenUIKit to measure how much of a real screen survives.

@@ -54,6 +54,12 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
      center. A Foundation-hidden Objective-C guest uses OpenUIKit's bridged
      value and custom center; its later app-facing Foundation shim must alias
      those exact declarations. None of the branches reads time or locale.
+   * Preview macros are a build-host capability, not a renderer dependency.
+     `OpenUIKitPreviewMacros` links pinned SwiftSyntax and executes beside the
+     compiler. Its expansion emits only target-side DeveloperToolsSupport and
+     UIKit code. Application objects and processes do not link SwiftSyntax;
+     the retained preview body crosses to a future host through a narrow SPI.
+     See `docs/PREVIEW.md`.
 2. Real UIKit behavior wins every argument. `golden/system_colors.json`,
    `golden/font_metrics.json`, and `golden/*.png|.layout.json` are ground truth.
 3. Do not change files another module owns (see map below). The Canvas API in

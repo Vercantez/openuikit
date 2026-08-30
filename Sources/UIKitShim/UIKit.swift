@@ -12,8 +12,9 @@
 // no UIKit at all on Linux, so this target is the only `UIKit` in scope.
 //
 // This target is a shim by definition and is labelled as such in the report.
-// It re-exports framework API and declares only the local identity aliases
-// below, which make unqualified lookup select the canonical family.
+// It re-exports framework API and owns only bounded compatibility overlays:
+// the local identity aliases that control unqualified lookup and the UIKit
+// #Preview declarations whose implementation lives in host/target modules.
 //
 // M15: it re-exports Foundation as well, because REAL UIKit does
 // (`@_exported import Foundation` is in UIKit's own swiftinterface). That is
@@ -34,7 +35,50 @@
 #if canImport(ObjectiveC)
 @_exported import ObjectiveC
 #endif
+@_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 @_exported import OpenUIKit
+
+// UIKit's first bounded #Preview slice stores an unchanged UIView or
+// UIViewController body in target-side DeveloperToolsSupport metadata. There
+// is no preview renderer/host yet; the SPI is deliberately only a handoff for
+// tests and a future host, not application API.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
+extension DeveloperToolsSupport.Preview {
+    @MainActor
+    public init(body: @escaping @MainActor () -> UIView) {
+        self.init(_openUIKitBody: { body() })
+    }
+
+    @MainActor
+    public init(body: @escaping @MainActor () -> UIViewController) {
+        self.init(_openUIKitBody: { body() })
+    }
+}
+
+/// Creates target-side preview metadata for one UIKit view expression.
+///
+/// Named previews, traits, and a live preview host are intentionally outside
+/// this first source-compatibility slice and fail closed.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
+@freestanding(declaration)
+public macro Preview(
+    @DeveloperToolsSupport.PreviewMacroBodyBuilder<UIView>
+    body: @escaping @MainActor () -> UIView
+) = #externalMacro(
+    module: "OpenUIKitPreviewMacros",
+    type: "UIKitPreviewMacro"
+)
+
+/// Creates target-side preview metadata for one UIKit controller expression.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
+@freestanding(declaration)
+public macro Preview(
+    @DeveloperToolsSupport.PreviewMacroBodyBuilder<UIViewController>
+    body: @escaping @MainActor () -> UIViewController
+) = #externalMacro(
+    module: "OpenUIKitPreviewMacros",
+    type: "UIKitPreviewMacro"
+)
 
 // These local aliases deliberately win unqualified lookup through the
 // re-exporting UIKit module. On Foundation-visible builds OpenUIKit's

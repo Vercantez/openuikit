@@ -20,6 +20,37 @@ below removes the former OpenUIKit runtime/table cost for responder controls;
 the historical real-app ledger has not been redefined to omit its Linux build.
 See docs/REAL_APP_TEST.md for that distinction.
 
+## Reminder UIKit `#Preview` source slice (2026-08-30)
+
+Starting from exact Notification/bridge base
+`83fbcbe2204eb836968d4e73ecfecec7b20c68ef`, the unchanged Reminder revision
+`2edfc88c386b8dec1683339f58e05054c5e9ce1f` now advances from its sole
+remaining front-end error to **zero diagnostics** across all 22 Swift sources.
+The removed error is exactly `no macro named 'Preview'`; no error is added and
+no app or vendor byte changes. `Tools/reminderpreviewprobe` pins the app tree,
+whole-source SHA-256, all 26 established direct call-site lines plus the exact
+three-line Preview, complete
+diagnostic multisets, framework boundary, dependency/provenance identities,
+fresh no-hardlink inputs, output hygiene, and tamper negatives.
+
+This is a functional macro slice rather than a source-erasing workaround.
+The native host plugin generates a unique `DeveloperToolsSupport.PreviewRegistry`
+with file/line/column metadata and a main-actor `makePreview()` whose stored
+body constructs Reminder's real `CreateViewController`. Literal UIKit clients
+prove identical stored `UIView` and `UIViewController` instances. The host
+plugin remains native to the build machine while the metadata and app objects
+are emitted for their requested target, including the Linux-hosted ARM64
+Mach-O path. SwiftSyntax is pinned compiler tooling, not an application
+runtime dependency.
+
+Zero front-end diagnostics does not imply a preview canvas or an app launch.
+The bounded public surface accepts unnamed, single-expression UIView and
+UIViewController previews. Named/trait previews, richer builders, SwiftUI
+preview content, registry discovery, interactive preview hosting, hot reload,
+and launch/package resource closure remain independent work. Exact behavior,
+proof boundaries, native oracle facts, and OpenSwiftUI MIT attribution are in
+`docs/PREVIEW.md`.
+
 The file is written newest-last within each topic; if you want only the
 current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
 **"Missing MEMBERS of types we already export"**, then docs/REAL_APP_TEST.md.

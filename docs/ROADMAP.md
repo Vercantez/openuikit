@@ -109,6 +109,17 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   32-path/unchanged-app gate leaves only `#Preview`, so no launch is claimed.
   The separately owned production FoundationGuest module must still add the
   four exact identity aliases before the hidden path is end-to-end complete.
+- **Reminder UIKit `#Preview` successor (2026-08-30)** — exact unchanged
+  Reminder advances **1 -> 0 front-end diagnostics** across all 22 sources.
+  A pinned native host SwiftSyntax plugin emits target-side
+  `DeveloperToolsSupport.PreviewRegistry` metadata with source coordinates
+  and a functional main-actor body for the original controller expression.
+  Literal UIKit runtime identity, missing-plugin/named/SPI failures, native
+  iOS 26.1 expansion shape, native Linux host execution, and a Linux-hosted
+  ARM64 Mach-O all-source path are the bounded gates. This milestone supports
+  only unnamed single-expression UIView/UIViewController bodies. Traits,
+  richer builders, SwiftUI preview content, discovery, live canvas hosting,
+  hot reload, packaging/resources, and app launch remain roadmap work.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding

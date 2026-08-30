@@ -8,6 +8,24 @@ Reproduce any time with `scripts/linux_verify.sh` (renderer),
 `scripts/linux_realapp_verify.sh` (a REAL app's screen — M14) and
 `scripts/objc_facade_verify.sh` (an Objective-C app — M15). All need Docker.
 
+## UIKit `#Preview` host/target split (2026-08-30)
+
+The declaration macro is deliberately two artifacts:
+
+| artifact | execution environment | dependencies |
+|---|---|---|
+| `OpenUIKitPreviewMacros` executable | build host | SwiftCompilerPlugin and the pinned SwiftSyntax products |
+| DeveloperToolsSupport registry/body | application target | Swift stdlib plus UIKit target modules; no SwiftSyntax |
+
+`Tools/previewprobe/run.sh` checks the native plugin format and an explicit
+target object independently. `Tools/reminderpreviewprobe/guest.sh` builds the
+plugin as a Linux-native executable, then hands it to the Swift compiler while
+emitting the exact unchanged 22-source Reminder application path as ARM64
+Mach-O after the Foundation-hidden OpenUIKit and app-facing Foundation facade.
+This proves compiler-host separation and source compatibility; it does not
+claim a Linux-native ELF compiler can accept Apple-only Objective-C syntax,
+nor does it provide an Xcode preview canvas or target-side SwiftSyntax.
+
 ## Notification identity / bridge substrate matrix (2026-08-30)
 
 Notification deliberately chooses identity by capability rather than by OS:

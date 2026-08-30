@@ -1,0 +1,5 @@
+preview.viewRetained=true
+preview.viewIdentity=true
+preview.controllerRetained=true
+preview.controllerIdentity=true
+PREVIEW_RUNTIME_OK
