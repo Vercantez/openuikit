@@ -262,6 +262,7 @@ full/xcodeplan/build_portable_application_guest.sh \
   --platform-package /artifacts/open-uikit-core \
   --container-image sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7 \
   --preview-plugin /artifacts/OpenUIKitPreviewMacros-tool \
+  --preview-evidence-source-list /pins/App.preview-sources.nul \
   --output-root /new/App-linux-build
 ```
 
@@ -272,7 +273,14 @@ creates the bundle resource skeleton. The image identity and platform are
 recorded in `host-inputs.tsv`; mutable image tags are refused. That container
 then compiles every NUL-delimited
 unchanged Swift source together with only the generated entry point and
-platform host loop as one explicit `-wmo` module/object. When the package
+platform host loop in one ordinary multi-source module invocation. An exact
+output-file map assigns one ARM64 Mach-O object to every source; the driver
+rejects missing, extra, reordered, symlinked, non-ARM64, or reused outputs,
+hashes the exhaustive mapping/object ledger, measures real cross-file symbol
+edges, and links every object exactly once in deterministic source order. WMO,
+explicit batch scheduling, production macro dumping, and caller-owned output
+maps are refused because they would change this measured compiler contract.
+When the package
 declares DeveloperToolsSupport, it loads the exact host macro executable,
 links the package's framework closure, copies
 its dylibs into `Contents/Frameworks`, recursively proves the Mach-O runtime
@@ -281,16 +289,37 @@ requires one active UIWindow and three paced production loop turns. Source,
 support, plugin, and package brackets are rechecked after execution; partial
 outputs remain visibly unusable and can never be passed as a fresh output.
 Preview-enabled packages also publish the exact bounded macro diagnostic
-arguments. The driver captures `-dump-macro-expansions` separately as
-`app-macro-expansions.stderr`, rejects a successful compiler process that
-nevertheless printed a source error, and attests that the target-side
+arguments and require a NUL-delimited `--preview-evidence-source-list`. That
+list must be a normalized, target-ordered, nonempty proper subset of the frozen
+application sources, contain a literal `#Preview`, and type-check successfully
+as the application module. Only this caller-supplied dependency-closed subset
+receives `-dump-macro-expansions`; dumping the full application module is
+forbidden. The driver captures the bounded proof as
+`app-macro-expansions.stderr`, records its exact source/argument hashes, and
+rejects `Internal Error:`, unlocated fatal/error diagnostics, or ordinary
+source errors even when swiftc returns zero. Production compilation has a
+separate `application-compile.stderr` and never receives the dump flags. The
+driver also attests that the target-side
 DeveloperToolsSupport object appears exactly once in the executable link. It
 also matches UIKit's sole measured DTS import to the object's definition and
 exports only that exact Preview initializer from the application executable;
-post-link symbol counts must be one in Preview mode and zero otherwise.
-The executor refuses a multi-source single-object compile unless the effective
-argument list contains exactly one canonical `-wmo` flag, and records the
-source and flag counts in `application-compile-audit.tsv`.
+post-link symbol counts must be one in Preview mode and zero otherwise. A
+post-link symbol audit additionally proves that none of the measured
+application-internal references remain undefined. The compile mode, exact
+output-map count, zero WMO/dump/disable-batch counts, object count, and evidence
+hashes are recorded in `application-compile-audit.tsv`.
+
+Compiler-input providers have one deliberate insertion boundary. After the
+application plan is frozen and verified, but before the final output-file map
+is created, a provider may populate a brand-new output-owned
+`derived-sources/` root. It must publish an ordered NUL manifest and canonical
+attestation that bind the provider/tool identity, every frozen non-Swift input
+hash, and every regular non-symlink generated Swift path/hash/size. The driver
+order is always unchanged application sources, then attested derived sources,
+then the generated scene/bootstrap host sources. Output-map, ARM64 object,
+cross-file, deterministic link, and final hash audits apply to the combined
+list. The current driver leaves this array empty; an `.intentdefinition`
+provider can fill the seam without changing application or vendor bytes.
 
 ## Tests
 

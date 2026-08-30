@@ -7,6 +7,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 SUPPORT_ROOT=$(cd -- "$SCRIPT_DIR/../.." && pwd)
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC'
+source "$SCRIPT_DIR/swift_compiler_diagnostics.sh"
 
 die() {
     echo "portable-application-guest: $*" >&2
@@ -21,6 +22,7 @@ usage: build_portable_application_guest.sh \
   --platform-package CORE_GUEST_PACKAGE \
   --container-image SHA256_IMAGE_ID \
   [--preview-plugin OPENUIKIT_PREVIEW_MACROS_TOOL] \
+  [--preview-evidence-source-list NUL_TERMINATED_RELATIVE_PATHS] \
   --output-root ABSOLUTE_NONEXISTENT_DIRECTORY
 EOF
     exit 2
@@ -49,7 +51,7 @@ nm_developer_tools_support_count() {
 }
 
 canonical_existing() {
-    python3 - "$1" <<'PY'
+    python3 -B - "$1" <<'PY'
 from pathlib import Path
 import sys
 print(Path(sys.argv[1]).resolve(strict=True))
@@ -57,7 +59,8 @@ PY
 }
 
 prepare_host() {
-    local inventory= source_root= platform= container_image= plugin= output=
+    local inventory= source_root= platform= container_image= plugin=
+    local preview_source_list= output=
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --inventory) [ "$#" -ge 2 ] || usage; inventory=$2; shift 2 ;;
@@ -65,6 +68,11 @@ prepare_host() {
             --platform-package) [ "$#" -ge 2 ] || usage; platform=$2; shift 2 ;;
             --container-image) [ "$#" -ge 2 ] || usage; container_image=$2; shift 2 ;;
             --preview-plugin) [ "$#" -ge 2 ] || usage; plugin=$2; shift 2 ;;
+            --preview-evidence-source-list)
+                [ "$#" -ge 2 ] || usage
+                preview_source_list=$2
+                shift 2
+                ;;
             --output-root) [ "$#" -ge 2 ] || usage; output=$2; shift 2 ;;
             *) usage ;;
         esac
@@ -101,10 +109,14 @@ prepare_host() {
     source_root=$(canonical_existing "$source_root")
     platform=$(canonical_existing "$platform")
     [ -z "$plugin" ] || plugin=$(canonical_existing "$plugin")
+    [ -z "$preview_source_list" ] \
+        || preview_source_list=$(canonical_existing "$preview_source_list")
     require_regular "$inventory" "inventory"
     require_directory "$source_root" "application source root"
     require_directory "$platform" "core guest package"
     [ -z "$plugin" ] || require_regular "$plugin" "Preview macro plugin"
+    [ -z "$preview_source_list" ] \
+        || require_regular "$preview_source_list" "Preview evidence source list"
     case "$output" in /*) ;; *) die "output root must be absolute" ;; esac
     [ ! -e "$output" ] && [ ! -L "$output" ] \
         || die "output root already exists: $output"
@@ -115,10 +127,11 @@ prepare_host() {
     output_parent=$(canonical_existing "$output_parent")
     output=$output_parent/$output_name
 
-    python3 "$SCRIPT_DIR/core_guest_package.py" "$platform" --emit-summary
+    python3 -B "$SCRIPT_DIR/core_guest_package.py" "$platform" --emit-summary
     local preview_required expected_plugin_sha actual_plugin_sha
+    local preview_source_list_sha=
     read -r preview_required expected_plugin_sha < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" <<'PY'
+        PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
 import core_guest_package
 import sys
@@ -129,21 +142,37 @@ PY
     )
     if [ "$preview_required" = yes ]; then
         [ -n "$plugin" ] || die "core package requires --preview-plugin"
+        [ -n "$preview_source_list" ] \
+            || die "core package requires --preview-evidence-source-list"
         [ -x "$plugin" ] || die "Preview macro plugin is not executable: $plugin"
         actual_plugin_sha=$(shasum -a 256 "$plugin" | awk '{print $1}')
         [ "$actual_plugin_sha" = "$expected_plugin_sha" ] \
             || die "Preview macro plugin hash differs from core package"
+        preview_source_list_sha=$(shasum -a 256 "$preview_source_list" | awk '{print $1}')
     elif [ -n "$plugin" ]; then
         die "--preview-plugin supplied but core package has no Preview contract"
+    elif [ -n "$preview_source_list" ]; then
+        die "--preview-evidence-source-list supplied without a Preview contract"
     fi
 
-    python3 "$SCRIPT_DIR/application_build_plan.py" "$inventory" \
+    python3 -B "$SCRIPT_DIR/application_build_plan.py" "$inventory" \
         --source-root "$source_root" --output-dir "$output"
-    python3 "$SCRIPT_DIR/application_build_plan.py" \
+    python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$source_root" --verify
+    if [ "$preview_required" = yes ]; then
+        [ ! -e "$output/preview-evidence-sources.nul" ] \
+            && [ ! -L "$output/preview-evidence-sources.nul" ] \
+            || die "Preview evidence source-list destination already exists"
+        cp "$preview_source_list" "$output/preview-evidence-sources.nul"
+        require_regular "$output/preview-evidence-sources.nul" \
+            "copied Preview evidence source list"
+        [ "$(shasum -a 256 "$output/preview-evidence-sources.nul" | awk '{print $1}')" \
+            = "$preview_source_list_sha" ] \
+            || die "copied Preview evidence source list differs"
+    fi
 
     local product platform_resources output_app
-    product=$(python3 - "$output/application-build-plan.json" <<'PY'
+    product=$(python3 -B - "$output/application-build-plan.json" <<'PY'
 import json
 from pathlib import Path
 import sys
@@ -154,7 +183,7 @@ print(value)
 PY
     )
     platform_resources=$(
-        PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" <<'PY'
+        PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
 import core_guest_package
 import sys
@@ -163,7 +192,7 @@ print(root / manifest["paths"]["resources"])
 PY
     )
     output_app=$output/$product.app
-    python3 "$SCRIPT_DIR/materialize_application_bundle.py" \
+    python3 -B "$SCRIPT_DIR/materialize_application_bundle.py" \
         "$output/application-build-plan.json" --source-root "$source_root" \
         --platform-resources "$platform_resources" --output-app "$output_app" \
         --attestation "$output/bundle-materialization.json"
@@ -178,6 +207,8 @@ PY
             "$container_image" "$image_platform"
         if [ -n "$plugin" ]; then
             printf 'preview_plugin_sha256\t%s\n' "$expected_plugin_sha"
+            printf 'preview_evidence_source_list_sha256\t%s\n' \
+                "$preview_source_list_sha"
         fi
     } >"$output/host-inputs.tsv"
 
@@ -202,13 +233,21 @@ PY
     "${docker_command[@]}" 2>&1 | tee "$output/driver.log"
     local -a statuses=("${PIPESTATUS[@]}")
     set -e
-    python3 "$SCRIPT_DIR/application_build_plan.py" \
+    python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$source_root" --verify
     [ "$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{commit})" = "$support_commit" ] \
         && [ "$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{tree})" = "$support_tree" ] \
         || die "support checkout identity changed during build"
     support_status=$(git -C "$SUPPORT_ROOT" status --porcelain=v1 --untracked-files=all)
     [ -z "$support_status" ] || die "support checkout changed during build: $support_status"
+    if [ "$preview_required" = yes ]; then
+        [ "$(shasum -a 256 "$preview_source_list" | awk '{print $1}')" \
+            = "$preview_source_list_sha" ] \
+            || die "Preview evidence source list changed during build"
+        [ "$(shasum -a 256 "$output/preview-evidence-sources.nul" | awk '{print $1}')" \
+            = "$preview_source_list_sha" ] \
+            || die "copied Preview evidence source list changed during build"
+    fi
     [ "${statuses[0]}" -eq 0 ] && [ "${statuses[1]}" -eq 0 ] \
         || die "container/tee failed: docker=${statuses[0]} tee=${statuses[1]}"
     grep -Fx 'PORTABLE_APPLICATION_GUEST_OK' "$output/driver.log" >/dev/null \
@@ -225,15 +264,15 @@ build_inside() {
     for tool in python3 swiftc ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
-    PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
+    PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
         "$platform" --emit-summary
-    python3 "$SCRIPT_DIR/application_build_plan.py" \
+    python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$app_root" --verify
 
     local module product preview_required expected_plugin_sha plugin_module dts_object
     local -a metadata
     mapfile -d '' -t metadata < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" \
             "$output/application-build-plan.json" <<'PY'
 import json
 from pathlib import Path
@@ -279,15 +318,15 @@ PY
 
     local -a swift_arguments link_arguments diagnostic_arguments relative_sources app_sources
     mapfile -d '' -t swift_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
             "$platform" --emit-swift-arguments
     )
     mapfile -d '' -t link_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
             "$platform" --emit-link-arguments
     )
     mapfile -d '' -t diagnostic_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
             "$platform" --emit-app-diagnostic-arguments
     )
     mapfile -d '' -t relative_sources <"$output/app-sources.nul"
@@ -300,10 +339,20 @@ PY
         app_sources+=("$source")
     done
 
-    local module_cache=$output/module-cache object=$output/application.o
+    local module_cache preview_module_cache object_root output_map object_audit
+    module_cache=$output/module-cache
+    preview_module_cache=$output/preview-evidence-module-cache
+    object_root=$output/application-objects
+    output_map=$output/application-output-file-map.json
+    object_audit=$output/application-object-audit.json
     [ ! -e "$module_cache" ] && [ ! -L "$module_cache" ] \
         || die "module cache already exists"
-    [ ! -e "$object" ] && [ ! -L "$object" ] || die "application object already exists"
+    [ ! -e "$object_root" ] && [ ! -L "$object_root" ] \
+        || die "application object root already exists"
+    [ ! -e "$output_map" ] && [ ! -L "$output_map" ] \
+        || die "application output-file map already exists"
+    [ ! -e "$object_audit" ] && [ ! -L "$object_audit" ] \
+        || die "application object audit already exists"
     mkdir "$module_cache"
     local -a plugin_arguments=()
     if [ "$preview_required" = yes ]; then
@@ -315,57 +364,221 @@ PY
         "$SCRIPT_DIR/PortableUIKitApplicationHost.swift"
         "$SUPPORT_ROOT/full/driver/RunLoop.swift"
     )
-    local -a compile_sources=("${app_sources[@]}" "${platform_sources[@]}")
-    local -a application_codegen_arguments=(-wmo)
-    local argument effective_wmo_count=0
-    for argument in "${swift_arguments[@]}" \
-        "${application_codegen_arguments[@]}"; do
-        case "$argument" in
-            -wmo) effective_wmo_count=$((effective_wmo_count + 1)) ;;
-            -whole-module-optimization)
-                die "application whole-module flag must use canonical -wmo" ;;
-        esac
-    done
+    # Attested compiler-input providers insert output-owned generated Swift
+    # files here, after untouched application sources and before platform host
+    # sources. An empty array preserves today's all-Swift behavior while the
+    # output-map/object/link audits already cover every future derived source.
+    local -a derived_sources=()
+    local -a compile_sources=(
+        "${app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"
+    )
     [ "${#compile_sources[@]}" -gt 1 ] \
         || die "application compile unexpectedly has fewer than two sources"
-    [ "$effective_wmo_count" -eq 1 ] \
-        || die "application effective -wmo count $effective_wmo_count, expected 1"
-    {
-        printf 'format\tportable-application-compile-audit-v1\n'
-        printf 'source-count\t%s\n' "${#compile_sources[@]}"
-        printf 'whole-module-flag\t-wmo\tcount=%s\n' "$effective_wmo_count"
-        printf 'output\tapplication.o\n'
-    } >"$output/application-compile-audit.tsv"
 
-    local compile_stderr=$output/app-macro-expansions.stderr compile_status
+    local argument
+    for argument in "${swift_arguments[@]}"; do
+        case "$argument" in
+            -wmo|-whole-module-optimization)
+                die "application compile arguments must not enable whole-module optimization" ;;
+            -disable-batch-mode)
+                die "application compile arguments must not disable default driver scheduling" ;;
+            -enable-batch-mode)
+                die "application compile arguments must not override default driver scheduling" ;;
+            -dump-macro-expansions)
+                die "application production compile must not dump full-module macro expansions" ;;
+            -output-file-map|-primary-file)
+                die "application compile arguments contain a driver-owned scheduling option: $argument" ;;
+        esac
+    done
+    if [ "$preview_required" = yes ]; then
+        [ "${#diagnostic_arguments[@]}" -eq 2 ] \
+            && [ "${diagnostic_arguments[0]}" = -Xfrontend ] \
+            && [ "${diagnostic_arguments[1]}" = -dump-macro-expansions ] \
+            || die "Preview diagnostic arguments drifted"
+        require_regular "$output/preview-evidence-sources.nul" \
+            "copied Preview evidence source list"
+        [ ! -e "$preview_module_cache" ] && [ ! -L "$preview_module_cache" ] \
+            || die "Preview evidence module cache already exists"
+        mkdir "$preview_module_cache"
+        local -a preview_sources preview_command
+        mapfile -d '' -t preview_sources < <(
+            python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+                validate-preview-sources \
+                --source-root "$app_root" \
+                --application-source-list "$output/app-sources.nul" \
+                --preview-source-list "$output/preview-evidence-sources.nul" \
+                --audit "$output/preview-evidence-source-audit.json"
+        )
+        [ "${#preview_sources[@]}" -gt 0 ] \
+            && [ "${#preview_sources[@]}" -lt "${#app_sources[@]}" ] \
+            || die "Preview evidence must use a nonempty proper source subset"
+        preview_command=(swiftc "${swift_arguments[@]}"
+            -module-cache-path "$preview_module_cache"
+            -default-isolation MainActor -module-name "$module"
+            "${plugin_arguments[@]}" "${diagnostic_arguments[@]}"
+            -typecheck "${preview_sources[@]}")
+        printf '%s\0' "${preview_command[@]}" \
+            >"$output/preview-evidence-compile-arguments.nul"
+        local preview_stdout preview_stderr preview_status
+        preview_stdout=$output/app-macro-expansions.stdout
+        preview_stderr=$output/app-macro-expansions.stderr
+        [ ! -e "$preview_stdout" ] && [ ! -L "$preview_stdout" ] \
+            && [ ! -e "$preview_stderr" ] && [ ! -L "$preview_stderr" ] \
+            || die "Preview evidence compiler output already exists"
+        echo "== prove bounded Preview expansion"
+        set +e
+        (
+            cd "$platform"
+            "${preview_command[@]}"
+        ) >"$preview_stdout" 2>"$preview_stderr"
+        preview_status=$?
+        set -e
+        cat "$preview_stderr" >&2
+        [ "$preview_status" -eq 0 ] \
+            || die "Preview evidence compiler exited $preview_status"
+        [ ! -s "$preview_stdout" ] \
+            || die "Preview evidence compiler emitted unexpected stdout"
+        if swift_compiler_output_has_failure_diagnostic "$preview_stderr"; then
+            grep -En "$SWIFT_COMPILER_FAILURE_DIAGNOSTIC_PATTERN" \
+                "$preview_stderr" >&2 || true
+            die "Preview evidence compiler emitted a failure diagnostic despite success"
+        fi
+        {
+            printf 'format\tportable-preview-evidence-audit-v1\n'
+            printf 'application-source-count\t%s\n' "${#app_sources[@]}"
+            printf 'bounded-source-count\t%s\n' "${#preview_sources[@]}"
+            printf 'module-name\t%s\n' "$module"
+            printf 'whole-module-flag-count\t0\n'
+            printf 'disable-batch-mode-count\t0\n'
+            printf 'dump-macro-expansions-count\t1\n'
+            printf 'source-audit-sha256\t%s\n' \
+                "$(sha256sum "$output/preview-evidence-source-audit.json" | awk '{print $1}')"
+            printf 'arguments-sha256\t%s\n' \
+                "$(sha256sum "$output/preview-evidence-compile-arguments.nul" | awk '{print $1}')"
+            printf 'stderr-sha256\t%s\n' \
+                "$(sha256sum "$preview_stderr" | awk '{print $1}')"
+        } >"$output/preview-evidence-audit.tsv"
+    else
+        [ "${#diagnostic_arguments[@]}" -eq 0 ] \
+            || die "non-Preview package published diagnostic arguments"
+        [ ! -e "$output/preview-evidence-sources.nul" ] \
+            && [ ! -L "$output/preview-evidence-sources.nul" ] \
+            || die "non-Preview build carries a Preview evidence source list"
+    fi
+
+    python3 -B "$SCRIPT_DIR/application_object_contract.py" create-output-map \
+        --output-map "$output_map" --object-root "$object_root" \
+        "${compile_sources[@]}"
+    local -a compile_command
+    compile_command=(swiftc "${swift_arguments[@]}"
+        -module-cache-path "$module_cache"
+        -default-isolation MainActor -module-name "$module"
+        "${plugin_arguments[@]}" -emit-object
+        -output-file-map "$output_map" "${compile_sources[@]}")
+    local effective_output_map_count=0
+    local effective_wmo_count=0
+    local effective_disable_batch_count=0
+    local effective_dump_count=0
+    for argument in "${compile_command[@]}"; do
+        case "$argument" in
+            -output-file-map)
+                effective_output_map_count=$((effective_output_map_count + 1)) ;;
+            -wmo|-whole-module-optimization)
+                effective_wmo_count=$((effective_wmo_count + 1)) ;;
+            -disable-batch-mode)
+                effective_disable_batch_count=$((effective_disable_batch_count + 1)) ;;
+            -dump-macro-expansions)
+                effective_dump_count=$((effective_dump_count + 1)) ;;
+        esac
+    done
+    [ "$effective_output_map_count" -eq 1 ] \
+        || die "application effective output-file-map count $effective_output_map_count, expected 1"
+    [ "$effective_wmo_count" -eq 0 ] \
+        || die "application effective whole-module flag count is not zero"
+    [ "$effective_disable_batch_count" -eq 0 ] \
+        || die "application effective disable-batch-mode count is not zero"
+    [ "$effective_dump_count" -eq 0 ] \
+        || die "application production compile includes macro dumping"
+    printf '%s\0' "${compile_command[@]}" \
+        >"$output/application-compile-arguments.nul"
+
+    local compile_stdout compile_stderr compile_status
+    compile_stdout=$output/application-compile.stdout
+    compile_stderr=$output/application-compile.stderr
     [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
-        || die "application compiler diagnostic output already exists"
+        && [ ! -e "$compile_stdout" ] && [ ! -L "$compile_stdout" ] \
+        || die "application compiler output already exists"
     echo "== compile every untouched application source"
     set +e
     (
         cd "$platform"
-        swiftc "${swift_arguments[@]}" -module-cache-path "$module_cache" \
-            "${application_codegen_arguments[@]}" \
-            -default-isolation MainActor -module-name "$module" \
-            "${plugin_arguments[@]}" "${diagnostic_arguments[@]}" \
-            -emit-object -o "$object" \
-            "${compile_sources[@]}"
-    ) 2>"$compile_stderr"
+        "${compile_command[@]}"
+    ) >"$compile_stdout" 2>"$compile_stderr"
     compile_status=$?
     set -e
     cat "$compile_stderr" >&2
     [ "$compile_status" -eq 0 ] \
         || die "application compiler exited $compile_status"
-    if grep -Eq ':[0-9]+:[0-9]+: error:' "$compile_stderr"; then
-        die "application compiler emitted an error diagnostic despite success"
+    [ ! -s "$compile_stdout" ] \
+        || die "application compiler emitted unexpected stdout"
+    if swift_compiler_output_has_failure_diagnostic "$compile_stderr"; then
+        grep -En "$SWIFT_COMPILER_FAILURE_DIAGNOSTIC_PATTERN" \
+            "$compile_stderr" >&2 || true
+        die "application compiler emitted a failure diagnostic despite success"
     fi
+    local -a application_objects
+    mapfile -d '' -t application_objects < <(
+        python3 -B "$SCRIPT_DIR/application_object_contract.py" verify-objects \
+            --output-map "$output_map" --object-root "$object_root" \
+            --audit "$object_audit" "${compile_sources[@]}"
+    )
+    [ "${#application_objects[@]}" -eq "${#compile_sources[@]}" ] \
+        || die "verified application object count drifted"
+    local object_index object_path
+    : >"$output/application-object-formats.txt"
+    for object_index in "${!application_objects[@]}"; do
+        object_path=${application_objects[$object_index]}
+        file "$object_path" \
+            | tee -a "$output/application-object-formats.txt" \
+            | grep -F 'Mach-O 64-bit arm64 object' >/dev/null \
+            || die "application object is not ARM64 Mach-O: $object_path"
+        llvm-otool-18 -hv "$object_path" | grep -Eq \
+            'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]OBJECT' \
+            || die "application object header drifted: $object_path"
+    done
+    python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+        audit-cross-file-symbols --nm "$(command -v llvm-nm-18)" \
+        --audit "$output/application-cross-file-symbols.json" \
+        "${application_objects[@]}"
+    {
+        printf 'format\tportable-application-compile-audit-v2\n'
+        printf 'mode\tdefault-driver-output-file-map\n'
+        printf 'source-count\t%s\n' "${#compile_sources[@]}"
+        printf 'object-count\t%s\n' "${#application_objects[@]}"
+        printf 'output-file-map-count\t%s\n' "$effective_output_map_count"
+        printf 'whole-module-flag-count\t%s\n' "$effective_wmo_count"
+        printf 'disable-batch-mode-count\t%s\n' "$effective_disable_batch_count"
+        printf 'production-macro-dump-count\t%s\n' "$effective_dump_count"
+        printf 'output-file-map-sha256\t%s\n' \
+            "$(sha256sum "$output_map" | awk '{print $1}')"
+        printf 'object-audit-sha256\t%s\n' \
+            "$(sha256sum "$object_audit" | awk '{print $1}')"
+        printf 'cross-file-audit-sha256\t%s\n' \
+            "$(sha256sum "$output/application-cross-file-symbols.json" | awk '{print $1}')"
+        printf 'arguments-sha256\t%s\n' \
+            "$(sha256sum "$output/application-compile-arguments.nul" | awk '{print $1}')"
+        printf 'stderr-sha256\t%s\n' \
+            "$(sha256sum "$compile_stderr" | awk '{print $1}')"
+    } >"$output/application-compile-audit.tsv"
 
-    local app=$output/$product.app frameworks=$app/Contents/Frameworks
-    local executable=$app/Contents/MacOS/$product libraries
+    local app frameworks executable libraries
+    app=$output/$product.app
+    frameworks=$app/Contents/Frameworks
+    executable=$app/Contents/MacOS/$product
     require_directory "$frameworks" "application Frameworks directory"
     [ ! -e "$executable" ] && [ ! -L "$executable" ] \
         || die "application executable already exists"
-    libraries=$(PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" <<'PY'
+    libraries=$(PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
 import core_guest_package
 import sys
@@ -411,7 +624,13 @@ PY
             || die "non-Preview libUIKit imports DeveloperToolsSupport"
     fi
     {
-        printf 'app_object\t%s\t%s\n' "$(sha256sum "$object" | awk '{print $1}')" "$object"
+        for object_index in "${!application_objects[@]}"; do
+            object_path=${application_objects[$object_index]}
+            printf 'app_object\t%06d\t%s\t%s\n' \
+                "$object_index" \
+                "$(sha256sum "$object_path" | awk '{print $1}')" \
+                "$object_path"
+        done
         if [ "$preview_required" = yes ]; then
             [ "${#extra_objects[@]}" -eq 1 ] \
                 || die "DeveloperToolsSupport object link count is not one"
@@ -426,19 +645,43 @@ PY
             -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
         )
     fi
+    local -a link_command
+    link_command=(ld64.lld-18 "${link_arguments[@]}" -dead_strip
+        "${executable_export_arguments[@]}"
+        -rpath @executable_path/../Frameworks
+        -o "$executable" "${application_objects[@]}" "${extra_objects[@]}")
+    local linked_app_object_count=0
+    local command_argument
+    for object_path in "${application_objects[@]}"; do
+        local per_object_link_count=0
+        for command_argument in "${link_command[@]}"; do
+            [ "$command_argument" != "$object_path" ] \
+                || per_object_link_count=$((per_object_link_count + 1))
+        done
+        [ "$per_object_link_count" -eq 1 ] \
+            || die "application object link count is not one: $object_path"
+        linked_app_object_count=$((linked_app_object_count + per_object_link_count))
+    done
+    [ "$linked_app_object_count" -eq "${#application_objects[@]}" ] \
+        || die "application link object count drifted"
+    printf '%s\0' "${link_command[@]}" \
+        >"$output/application-link-arguments.nul"
     echo "== link relocatable application executable"
     (
         cd "$platform"
-        ld64.lld-18 "${link_arguments[@]}" -dead_strip \
-            "${executable_export_arguments[@]}" \
-            -rpath @executable_path/../Frameworks \
-            -o "$executable" "$object" "${extra_objects[@]}"
+        "${link_command[@]}"
     )
     chmod 0755 "$executable"
     file "$executable" | tee "$output/executable-file.txt"
     llvm-otool-18 -hv "$executable" | grep -Eq \
         'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "linked application is not an ARM64 Mach-O executable"
+    python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+        audit-linked-executable --nm "$(command -v llvm-nm-18)" \
+        --executable "$executable" \
+        --cross-file-audit "$output/application-cross-file-symbols.json" \
+        --audit "$output/application-linked-symbols.json" \
+        "${application_objects[@]}"
     local executable_preview_export_count executable_dts_export_count expected_export_count
     executable_preview_export_count=$(nm_symbol_count --defined-only \
         "$executable" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
@@ -451,6 +694,7 @@ PY
     [ "$executable_dts_export_count" -eq "$expected_export_count" ] \
         || die "application DeveloperToolsSupport export count $executable_dts_export_count, expected $expected_export_count"
     {
+        printf 'linked_app_object_count\t%s\n' "$linked_app_object_count"
         printf 'libUIKit_preview_initializer_import_count\t%s\n' \
             "$uikit_preview_import_count"
         printf 'executable_preview_initializer_export_count\t%s\n' \
@@ -458,7 +702,7 @@ PY
     } >>"$output/application-link-objects.tsv"
 
     local guest_root
-    guest_root=$(PYTHONPATH="$SCRIPT_DIR" python3 - "$platform" <<'PY'
+    guest_root=$(PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
 import core_guest_package
 import sys
@@ -482,20 +726,49 @@ PY
     grep -Fx 'PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true' "$output/runtime.log" >/dev/null \
         || die "application did not complete three production host-loop turns"
 
-    python3 "$SCRIPT_DIR/application_build_plan.py" \
+    python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$app_root" --verify
     if [ "$preview_required" = yes ]; then
         [ "$(sha256sum "$plugin" | awk '{print $1}')" = "$expected_plugin_sha" ] \
             || die "Preview macro plugin changed during build"
     fi
+    python3 -B "$SCRIPT_DIR/application_object_contract.py" reverify-objects \
+        --output-map "$output_map" --object-root "$object_root" \
+        --audit "$object_audit" "${compile_sources[@]}"
+    local -a build_artifacts=(
+        application-compile.stderr
+        application-compile.stdout
+        application-compile-arguments.nul
+        application-compile-audit.tsv
+        application-cross-file-symbols.json
+        application-link-arguments.nul
+        application-link-objects.tsv
+        application-linked-symbols.json
+        application-object-audit.json
+        application-object-formats.txt
+        application-output-file-map.json
+        runtime-closure.manifest
+        runtime.log
+    )
+    if [ "$preview_required" = yes ]; then
+        build_artifacts+=(
+            app-macro-expansions.stderr
+            app-macro-expansions.stdout
+            preview-evidence-audit.tsv
+            preview-evidence-compile-arguments.nul
+            preview-evidence-source-audit.json
+            preview-evidence-sources.nul
+        )
+    fi
     (
         cd "$output"
         find "$product.app" -type f -print0 | sort -z | xargs -0 sha256sum \
             >application-files.sha256
-        sha256sum application.o app-macro-expansions.stderr \
-            application-compile-audit.tsv application-link-objects.tsv \
-            runtime-closure.manifest runtime.log \
+        sha256sum "${build_artifacts[@]}" \
             >application-build-artifacts.sha256
+        find application-objects -maxdepth 1 -type f -name '*.o' -print0 \
+            | sort -z | xargs -0 sha256sum \
+            >>application-build-artifacts.sha256
     )
     echo 'PORTABLE_APPLICATION_GUEST_OK'
 }

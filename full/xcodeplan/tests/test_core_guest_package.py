@@ -364,6 +364,24 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(core_guest_package.CorePackageError, "driver-owned"):
             core_guest_package.validate(self.root)
 
+        for option in (
+            "-wmo",
+            "-whole-module-optimization",
+            "-disable-batch-mode",
+            "-enable-batch-mode",
+            "-dump-macro-expansions",
+            "-output-file-map",
+            "-primary-file",
+        ):
+            with self.subTest(driver_owned=option):
+                changed = copy.deepcopy(self.manifest)
+                changed["swift_compile_arguments"].append(option)
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError, "driver-owned"
+                ):
+                    core_guest_package.validate(self.root)
+
     def test_preview_contract_is_atomic_and_object_stays_in_objects(self) -> None:
         changed = copy.deepcopy(self.manifest)
         changed["preview"]["plugin_module"] = "WrongMacros"

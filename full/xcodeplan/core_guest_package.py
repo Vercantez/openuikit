@@ -38,10 +38,17 @@ _CONTROLLED_COMPILE_OPTIONS = {
     "-emit-object",
     "-emit-module",
     "-emit-module-path",
+    "-disable-batch-mode",
+    "-dump-macro-expansions",
+    "-enable-batch-mode",
     "-load-plugin-executable",
     "-module-cache-path",
     "-module-name",
     "-o",
+    "-output-file-map",
+    "-primary-file",
+    "-whole-module-optimization",
+    "-wmo",
 }
 _CONTROLLED_LINK_OPTIONS = {"-o"}
 _ALLOWED_ABSOLUTE_ARGUMENTS = {"/usr/lib", "/usr/lib/swift"}
