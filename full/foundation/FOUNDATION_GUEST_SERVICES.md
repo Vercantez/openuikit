@@ -21,7 +21,9 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
   rows byte-for-byte with Apple Foundation.
 - `UserDefaults`, with process-wide registration values, named suites, typed
   getters/setters, volatile domains, nested property-list values, and atomic
-  persistence. Its storage envelope is JSON under
+  persistence. Publication uses a uniquely named, fsynced same-directory file
+  followed by `rename`, avoiding FoundationEssentials' unavailable `mktemp`
+  path on the guest. Its storage envelope is JSON under
   `/tmp/open-foundation-userdefaults-<sanitized-domain>.json`; `Data` values
   round-trip unchanged, so Codable application models persist across guest
   processes. The host gate performs the write and cold read in separate

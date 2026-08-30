@@ -10,6 +10,34 @@ import Foundation
 import FoundationEssentials
 #endif
 import Synchronization
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
+
+private func _userDefaultsRename(
+    _ from: UnsafePointer<CChar>,
+    _ to: UnsafePointer<CChar>
+) -> Int32 {
+#if canImport(Darwin)
+    return Darwin.rename(from, to)
+#elseif canImport(Glibc)
+    return Glibc.rename(from, to)
+#else
+    return -1
+#endif
+}
+
+private func _userDefaultsUnlink(_ path: UnsafePointer<CChar>) -> Int32 {
+#if canImport(Darwin)
+    return Darwin.unlink(path)
+#elseif canImport(Glibc)
+    return Glibc.unlink(path)
+#else
+    return -1
+#endif
+}
 
 open class UserDefaults {
     private static let _domains = Mutex<[String: [String: _UDStored]]>([:])
@@ -296,12 +324,32 @@ open class UserDefaults {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         guard let data = try? encoder.encode(values) else { return false }
+        return _atomicWrite(data, to: _fileURL(domain: domain))
+    }
+
+    private static func _atomicWrite(_ data: Data, to destination: URL) -> Bool {
+        let destinationPath = destination.path
+        let temporaryPath = destinationPath + "." + UUID().uuidString + ".tmp"
+        let temporaryURL = URL(fileURLWithPath: temporaryPath)
+
         do {
-            try data.write(to: _fileURL(domain: domain), options: .atomic)
-            return true
+            // A non-atomic Data write fsyncs this uniquely named file. Publish
+            // it atomically with same-directory rename, avoiding the upstream
+            // Data.atomic mktemp dependency absent from machorun's libSystem.
+            try data.write(to: temporaryURL)
         } catch {
+            temporaryPath.withCString { _ = _userDefaultsUnlink($0) }
             return false
         }
+
+        let renamed = temporaryPath.withCString { source in
+            destinationPath.withCString { target in
+                _userDefaultsRename(source, target)
+            }
+        }
+        if renamed == 0 { return true }
+        temporaryPath.withCString { _ = _userDefaultsUnlink($0) }
+        return false
     }
 
     private static func _fileURL(domain: String) -> URL {
