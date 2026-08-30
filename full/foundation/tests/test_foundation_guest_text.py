@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""Lightweight structural teeth for the Foundation text/error facade."""
+
+from __future__ import annotations
+
+import hashlib
+from pathlib import Path
+import re
+import subprocess
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[3]
+FOUNDATION = ROOT / "full/foundation"
+TESTS = FOUNDATION / "tests"
+HOST_GATE = TESTS / "test_foundation_guest_text_host.sh"
+GOLDEN = TESTS / "foundation-guest-text-apple-2026-08-30.txt"
+PRODUCTION = (
+    FOUNDATION / "CharacterSet.swift",
+    FOUNDATION / "String+CharacterSet.swift",
+    FOUNDATION / "Scanner.swift",
+    FOUNDATION / "Error+LocalizedDescription.swift",
+)
+ATTESTED = PRODUCTION + (
+    TESTS / "FoundationGuestTextTestRoot.swift",
+    TESTS / "FoundationGuestTextUIKit.swift",
+    TESTS / "FoundationGuestTextUIKitClient.swift",
+    TESTS / "FoundationGuestTextOracle.swift",
+    TESTS / "FoundationGuestTextRuntime.swift",
+    TESTS / "FoundationGuestTextMissingScanner.swift",
+    GOLDEN,
+)
+
+
+def source_digest() -> str:
+    outer = hashlib.sha256()
+    for source in ATTESTED:
+        relative = source.relative_to(ROOT).as_posix()
+        inner = hashlib.sha256(source.read_bytes()).hexdigest()
+        outer.update(f"{relative}\t{inner}\n".encode())
+    return outer.hexdigest()
+
+
+class FoundationGuestTextTests(unittest.TestCase):
+    def test_host_gate_has_valid_shell_syntax(self) -> None:
+        subprocess.run(["bash", "-n", str(HOST_GATE)], check=True)
+
+    def test_source_manifest_is_exact_and_hash_attested(self) -> None:
+        gate = HOST_GATE.read_text()
+        expected = re.search(
+            r"^EXPECTED_SOURCE_DIGEST=([0-9a-f]{64})$", gate, re.MULTILINE
+        )
+        self.assertIsNotNone(expected)
+        self.assertEqual(source_digest(), expected.group(1))
+        self.assertEqual(
+            hashlib.sha256(GOLDEN.read_bytes()).hexdigest(),
+            "da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980",
+        )
+        self.assertEqual(len(GOLDEN.read_text().splitlines()), 51)
+
+    def test_character_set_inventory_is_exact_and_not_app_specific(self) -> None:
+        source = PRODUCTION[0].read_text()
+        inventory = re.search(
+            r"scalarValues: \[\n(.*?)\n        \]", source, re.DOTALL
+        )
+        self.assertIsNotNone(inventory)
+        values = re.findall(r"0x[0-9A-F]{4}", inventory.group(1))
+        self.assertEqual(len(values), 26)
+        self.assertEqual(len(set(values)), 26)
+        self.assertIn("0x200B", values)
+        self.assertIn("init(charactersIn aString: String)", source)
+        self.assertIn("contains(_ member: Unicode.Scalar)", source)
+        for app_token in ("Reminder", "ABCDEF", "C0FFEE"):
+            self.assertNotIn(app_token, source)
+
+    def test_trimming_keeps_upstream_attribution_and_scalar_algorithm(self) -> None:
+        source = PRODUCTION[1].read_text()
+        self.assertIn(
+            "c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc", source
+        )
+        self.assertIn("Licensed under Apache License v2.0", source)
+        self.assertIn("let scalars = unicodeScalars", source)
+        self.assertIn("set.contains(scalars[lower])", source)
+        self.assertIn("set.contains(scalars[upper])", source)
+
+    def test_scanner_is_cursor_based_and_saturating(self) -> None:
+        source = PRODUCTION[2].read_text()
+        for token in (
+            "public var currentIndex: String.Index",
+            "public var charactersToBeSkipped: CharacterSet?",
+            "scanHexInt64(_ result: UnsafeMutablePointer<UInt64>?)",
+            "multipliedReportingOverflow(by: 16)",
+            "UInt64.max",
+            "currentIndex = original",
+            "result?.pointee = value",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("pureString", source)
+        self.assertNotIn("count == 6", source)
+
+    def test_error_bridge_is_explicit_about_the_nserror_boundary(self) -> None:
+        source = PRODUCTION[3].read_text()
+        self.assertIn("self as? any LocalizedError", source)
+        self.assertIn("localized.errorDescription", source)
+        self.assertIn("localized.failureReason", source)
+        self.assertIn("String(describing: self)", source)
+        self.assertNotIn("as NSError", source)
+
+    def test_gate_rebuilds_and_has_adversarial_teeth(self) -> None:
+        gate = HOST_GATE.read_text()
+        for token in (
+            "mktemp -d",
+            "pinned_inputs.pl",
+            "-module-cache-path",
+            "Apple oracle drifted from golden",
+            "portable output differs from Apple golden",
+            "missing-Scanner adversarial compile unexpectedly succeeded",
+            "U+200B mutation did not perturb the oracle",
+            "Foundation|CoreFoundation",
+            "FOUNDATION_GUEST_TEXT_HOST_OK",
+        ):
+            self.assertIn(token, gate)
+        self.assertNotIn("/w/build/full", gate)
+        self.assertNotIn("scratch/fe4_out", gate)
+
+    def test_candidate_contains_no_build_residue(self) -> None:
+        forbidden = {".build", "Package.resolved", "__pycache__"}
+        tracked = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files"],
+            check=True,
+            text=True,
+            capture_output=True,
+        ).stdout.splitlines()
+        for path in tracked:
+            self.assertFalse(forbidden.intersection(Path(path).parts), path)
+
+
+if __name__ == "__main__":
+    unittest.main()
