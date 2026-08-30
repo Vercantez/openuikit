@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -100,6 +101,30 @@ class ApplicationBuildPlanTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.temporary.cleanup()
 
+    def add_intentdefinition(self) -> list[str]:
+        inputs = [
+            "App/Base.lproj/Intents.intentdefinition",
+            "App/fr.lproj/Intents.strings",
+            "App/de.lproj/Intents.strings",
+        ]
+        contents = (
+            b"intent-definition-v1\n",
+            b'"intent.title" = "Bloquer";\n',
+            b'"intent.title" = "Blockieren";\n',
+        )
+        for relative, payload in zip(inputs, contents, strict=True):
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        self.inventory["sources"].insert(
+            1,
+            {
+                "path": "App/Intents.intentdefinition",
+                "variant_paths": inputs,
+            },
+        )
+        return inputs
+
     def test_freezes_complete_ordered_source_and_resource_graph(self) -> None:
         generated, plan = application_build_plan.plan(self.inventory, self.root)
         self.assertIn(b"extension AppDelegate", generated)
@@ -114,7 +139,18 @@ class ApplicationBuildPlanTests(unittest.TestCase):
                 "App/Model.swift",
             ],
         )
-        self.assertEqual(plan["summary"], {"resource_files": 3, "resource_inputs": 2, "swift_sources": 3})
+        self.assertEqual(
+            plan["summary"],
+            {
+                "compiler_input_files": 0,
+                "compiler_inputs": 0,
+                "resource_files": 3,
+                "resource_inputs": 2,
+                "swift_sources": 3,
+            },
+        )
+        self.assertEqual(plan["compiler_inputs"], [])
+        self.assertEqual(plan["format_version"], 2)
         catalog = plan["resources"][0]
         self.assertEqual(catalog["kind"], "directory")
         self.assertEqual(catalog["bundle_destination"], "Assets.xcassets")
@@ -153,6 +189,22 @@ class ApplicationBuildPlanTests(unittest.TestCase):
                 b"App/SceneDelegate.swift",
                 b"App/Model.swift",
             ],
+        )
+        self.assertEqual((output / "compiler-inputs.nul").read_bytes(), b"")
+        prepared = json.loads(
+            (output / "prepared-inputs.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            set(prepared),
+            {
+                "GeneratedSceneBootstrap.swift",
+                "app-sources.nul",
+                "application-build-plan.json",
+                "compiler-inputs.nul",
+            },
+        )
+        self.assertEqual(
+            prepared["compiler-inputs.nul"], hashlib.sha256(b"").hexdigest()
         )
         self.assertEqual(
             application_build_plan.main(
@@ -201,6 +253,180 @@ class ApplicationBuildPlanTests(unittest.TestCase):
         plist.write_bytes(original_plist + b"\n")
         with self.assertRaisesRegex(application_build_plan.BuildPlanError, "Info.plist changed"):
             application_build_plan.verify(plan, self.root)
+
+    def test_classifies_and_attests_localized_intentdefinition_inputs(self) -> None:
+        inputs = self.add_intentdefinition()
+        generated, plan = application_build_plan.plan(self.inventory, self.root)
+        self.assertEqual(
+            [entry["path"] for entry in plan["sources"]],
+            [
+                "App/AppDelegate.swift",
+                "App/SceneDelegate.swift",
+                "App/Model.swift",
+            ],
+        )
+        self.assertEqual(len(plan["compiler_inputs"]), 1)
+        compiler_input = plan["compiler_inputs"][0]
+        self.assertEqual(
+            {key: compiler_input[key] for key in ("provider", "logical_path", "primary_path")},
+            {
+                "provider": "open-intentdefinition",
+                "logical_path": "App/Intents.intentdefinition",
+                "primary_path": "App/Base.lproj/Intents.intentdefinition",
+            },
+        )
+        self.assertEqual(
+            [entry["path"] for entry in compiler_input["input_files"]], inputs
+        )
+        for record in compiler_input["input_files"]:
+            payload = (self.root / record["path"]).read_bytes()
+            self.assertEqual(record["sha256"], hashlib.sha256(payload).hexdigest())
+            self.assertEqual(record["size"], len(payload))
+        self.assertEqual(plan["summary"]["compiler_inputs"], 1)
+        self.assertEqual(plan["summary"]["compiler_input_files"], 3)
+        application_build_plan.verify(plan, self.root)
+
+        output = self.parent / "intent-output"
+        application_build_plan._write_new_directory(
+            output, generated, plan, self.root
+        )
+        self.assertEqual(
+            (output / "compiler-inputs.nul").read_bytes(),
+            b"".join(relative.encode("utf-8") + b"\0" for relative in inputs),
+        )
+        prepared = json.loads(
+            (output / "prepared-inputs.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            prepared["compiler-inputs.nul"],
+            hashlib.sha256((output / "compiler-inputs.nul").read_bytes()).hexdigest(),
+        )
+
+    def test_direct_intentdefinition_input_is_one_compiler_record(self) -> None:
+        path = self.root / "App/Direct.intentdefinition"
+        path.write_bytes(b"direct-intent\n")
+        self.inventory["sources"].append({"path": "App/Direct.intentdefinition"})
+        _generated, plan = application_build_plan.plan(self.inventory, self.root)
+        compiler_input = plan["compiler_inputs"][0]
+        self.assertEqual(compiler_input["logical_path"], "App/Direct.intentdefinition")
+        self.assertEqual(compiler_input["primary_path"], "App/Direct.intentdefinition")
+        self.assertEqual(
+            [record["path"] for record in compiler_input["input_files"]],
+            ["App/Direct.intentdefinition"],
+        )
+        application_build_plan.verify(plan, self.root)
+
+    def test_verifier_detects_every_compiler_input_byte_and_schema_change(self) -> None:
+        inputs = self.add_intentdefinition()
+        _generated, plan = application_build_plan.plan(self.inventory, self.root)
+
+        for relative in inputs:
+            with self.subTest(mutated=relative):
+                path = self.root / relative
+                original = path.read_bytes()
+                path.write_bytes(original + b"mutation")
+                with self.assertRaisesRegex(
+                    application_build_plan.BuildPlanError,
+                    "compiler input changed",
+                ):
+                    application_build_plan.verify(plan, self.root)
+                path.write_bytes(original)
+
+        mutations = {
+            "provider": lambda value: value["compiler_inputs"][0].__setitem__(
+                "provider", "unknown"
+            ),
+            "logical": lambda value: value["compiler_inputs"][0].__setitem__(
+                "logical_path", "App/Other.intentdefinition"
+            ),
+            "primary": lambda value: value["compiler_inputs"][0].__setitem__(
+                "primary_path", inputs[1]
+            ),
+            "order": lambda value: value["compiler_inputs"][0]["input_files"].reverse(),
+            "hash": lambda value: value["compiler_inputs"][0]["input_files"][0].__setitem__(
+                "sha256", "0" * 64
+            ),
+            "extra": lambda value: value["compiler_inputs"][0].__setitem__(
+                "unexpected", True
+            ),
+        }
+        for name, mutate in mutations.items():
+            with self.subTest(schema=name):
+                changed = copy.deepcopy(plan)
+                mutate(changed)
+                with self.assertRaises(application_build_plan.BuildPlanError):
+                    application_build_plan.verify(changed, self.root)
+
+        changed = copy.deepcopy(plan)
+        del changed["compiler_inputs"]
+        with self.assertRaisesRegex(
+            application_build_plan.BuildPlanError, "compiler_inputs"
+        ):
+            application_build_plan.verify(changed, self.root)
+
+        changed = copy.deepcopy(plan)
+        changed["compiler_inputs"] = []
+        with self.assertRaisesRegex(
+            application_build_plan.BuildPlanError, "summary"
+        ):
+            application_build_plan.verify(changed, self.root)
+
+        changed = copy.deepcopy(plan)
+        changed["compiler_inputs"].append(
+            copy.deepcopy(changed["compiler_inputs"][0])
+        )
+        with self.assertRaisesRegex(
+            application_build_plan.BuildPlanError, "repeats compiler input"
+        ):
+            application_build_plan.verify(changed, self.root)
+
+        changed = copy.deepcopy(plan)
+        changed["summary"]["compiler_input_files"] += 1
+        with self.assertRaisesRegex(
+            application_build_plan.BuildPlanError, "summary"
+        ):
+            application_build_plan.verify(changed, self.root)
+
+    def test_refuses_unsupported_intentdefinition_variant_topologies(self) -> None:
+        inputs = self.add_intentdefinition()
+        base_entry = copy.deepcopy(self.inventory["sources"][1])
+        cases = {
+            "empty": [],
+            "no-primary": inputs[1:],
+            "multiple-primary": [inputs[0], "App/fr.lproj/Intents.intentdefinition"],
+            "primary-not-first": [inputs[1], inputs[0]],
+            "wrong-type": [inputs[0], "App/fr.lproj/Intents.json"],
+            "wrong-stem": [inputs[0], "App/fr.lproj/Other.strings"],
+            "not-localized": ["App/Intents.intentdefinition", inputs[1]],
+            "duplicate": [inputs[0], inputs[1], inputs[1]],
+            "aliased-locale": [inputs[0], inputs[1], "App/FR.lproj/Intents.strings"],
+        }
+        for name, variants in cases.items():
+            with self.subTest(name=name):
+                changed = copy.deepcopy(self.inventory)
+                changed["sources"][1] = copy.deepcopy(base_entry)
+                changed["sources"][1]["variant_paths"] = variants
+                for relative in variants:
+                    path = self.root / relative
+                    if path.exists():
+                        continue
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"unsupported topology fixture\n")
+                with self.assertRaises(application_build_plan.BuildPlanError):
+                    application_build_plan.plan(changed, self.root)
+
+        linked = self.root / "App/es.lproj/Intents.strings"
+        linked.parent.mkdir(parents=True, exist_ok=True)
+        linked.symlink_to(self.root / inputs[1])
+        changed = copy.deepcopy(self.inventory)
+        changed["sources"][1]["variant_paths"] = [
+            inputs[0],
+            "App/es.lproj/Intents.strings",
+        ]
+        with self.assertRaisesRegex(
+            application_build_plan.BuildPlanError, "symlink"
+        ):
+            application_build_plan.plan(changed, self.root)
 
     def test_refuses_non_swift_sources_and_resource_symlinks(self) -> None:
         changed = copy.deepcopy(self.inventory)

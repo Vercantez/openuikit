@@ -4,7 +4,8 @@
 This is the bridge between project discovery and a Linux-hosted compiler.  It
 does not edit the application tree.  It verifies and records the complete
 ordered Swift source set, recursively records every resource byte, and emits
-the generated single-scene entry point into a new output directory.
+the generated single-scene entry point into a new output directory.  Supported
+non-Swift compiler inputs remain a separate, provider-owned graph.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ import os
 from pathlib import Path, PurePosixPath
 import stat
 import sys
+import unicodedata
 from typing import Any
 
 import scene_bootstrap
@@ -23,6 +25,9 @@ import scene_bootstrap
 
 class BuildPlanError(RuntimeError):
     """The inventory cannot become an exact portable application build."""
+
+
+_INTENTDEFINITION_PROVIDER = "open-intentdefinition"
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
@@ -61,6 +66,13 @@ def _relative(value: str, label: str) -> PurePosixPath:
         part in ("", ".", "..") for part in relative.parts
     ):
         raise BuildPlanError(f"{label} is not a safe relative path: {value!r}")
+    return relative
+
+
+def _normalized_relative(value: str, label: str) -> PurePosixPath:
+    relative = _relative(value, label)
+    if relative.as_posix() != value:
+        raise BuildPlanError(f"{label} is not a normalized relative path: {value!r}")
     return relative
 
 
@@ -137,23 +149,149 @@ def _resource_record(root: Path, value: str, label: str) -> dict[str, Any]:
     }
 
 
-def _source_records(inventory: dict[str, Any], root: Path) -> list[dict[str, Any]]:
+def _intentdefinition_record(
+    root: Path, logical_value: str, physical_values: list[str], label: str
+) -> dict[str, Any]:
+    logical = _normalized_relative(logical_value, f"{label}.logical_path")
+    if logical.suffix != ".intentdefinition":
+        raise BuildPlanError(
+            f"{label}.logical_path is not an .intentdefinition: {logical_value}"
+        )
+    if not physical_values:
+        raise BuildPlanError(f"{label} has no physical input files")
+
+    paths = [
+        _normalized_relative(value, f"{label}.input_files[{index}].path")
+        for index, value in enumerate(physical_values)
+    ]
+    portable_paths = [
+        unicodedata.normalize("NFC", path.as_posix().casefold()) for path in paths
+    ]
+    if len(set(portable_paths)) != len(portable_paths):
+        raise BuildPlanError(f"{label} contains duplicate or aliased physical paths")
+
+    direct = len(paths) == 1 and paths[0] == logical
+    if direct:
+        primary = paths[0]
+    else:
+        primary_candidates = [
+            path for path in paths if path.suffix == ".intentdefinition"
+        ]
+        if len(primary_candidates) != 1:
+            raise BuildPlanError(
+                f"{label} must contain exactly one physical .intentdefinition"
+            )
+        primary = primary_candidates[0]
+        if paths[0] != primary:
+            raise BuildPlanError(
+                f"{label} physical .intentdefinition must be the first variant"
+            )
+        expected_strings_name = f"{logical.stem}.strings"
+        seen_localizations: set[str] = set()
+        for index, path in enumerate(paths):
+            if len(path.parts) < 2 or path.parent.parent != logical.parent:
+                raise BuildPlanError(
+                    f"{label}.input_files[{index}] is not an immediate localized sibling"
+                )
+            localization = path.parent.name
+            if not localization.endswith(".lproj") or localization == ".lproj":
+                raise BuildPlanError(
+                    f"{label}.input_files[{index}] is not inside an .lproj directory"
+                )
+            localization_key = unicodedata.normalize("NFC", localization.casefold())
+            if localization_key in seen_localizations:
+                raise BuildPlanError(
+                    f"{label} repeats localization directory {localization!r}"
+                )
+            seen_localizations.add(localization_key)
+            expected_name = logical.name if index == 0 else expected_strings_name
+            if path.name != expected_name:
+                raise BuildPlanError(
+                    f"{label}.input_files[{index}] has unsupported localized name: "
+                    f"{path.name!r}, expected {expected_name!r}"
+                )
+            if index > 0 and path.suffix != ".strings":
+                raise BuildPlanError(
+                    f"{label}.input_files[{index}] is not an ordered .strings input"
+                )
+
+    input_files = [
+        _file_record(root, path.as_posix(), f"{label}.input_files[{index}].path")
+        for index, path in enumerate(paths)
+    ]
+    return {
+        "provider": _INTENTDEFINITION_PROVIDER,
+        "logical_path": logical.as_posix(),
+        "primary_path": primary.as_posix(),
+        "input_files": input_files,
+    }
+
+
+def _compiler_input_record(
+    entry: dict[str, Any], index: int, root: Path
+) -> dict[str, Any]:
+    label = f"sources[{index}]"
+    logical_value = _string(entry.get("path"), f"{label}.path")
+    logical = _normalized_relative(logical_value, f"{label}.path")
+    if logical.suffix != ".intentdefinition":
+        raise BuildPlanError(
+            f"non-Swift application source needs a compiler provider: {logical_value}"
+        )
+    raw_variants = entry.get("variant_paths")
+    if raw_variants is None:
+        physical_values = [logical.as_posix()]
+    else:
+        physical_values = [
+            _string(raw, f"{label}.variant_paths[{variant_index}]")
+            for variant_index, raw in enumerate(
+                _list(raw_variants, f"{label}.variant_paths")
+            )
+        ]
+        if not physical_values:
+            raise BuildPlanError(f"{label}.variant_paths must not be empty")
+    return _intentdefinition_record(root, logical.as_posix(), physical_values, label)
+
+
+def _source_records(
+    inventory: dict[str, Any], root: Path
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     records: list[dict[str, Any]] = []
+    compiler_inputs: list[dict[str, Any]] = []
     seen: set[str] = set()
+    seen_portable: set[str] = set()
+    seen_compiler_files: set[str] = set()
     for index, raw in enumerate(_list(inventory.get("sources"), "sources")):
         entry = _mapping(raw, f"sources[{index}]")
         value = _string(entry.get("path"), f"sources[{index}].path")
         if value in seen:
             raise BuildPlanError(f"duplicate source path: {value}")
         seen.add(value)
-        if not value.lower().endswith(".swift"):
-            raise BuildPlanError(
-                f"non-Swift application source needs a compiler provider: {value}"
-            )
-        records.append(_file_record(root, value, f"sources[{index}].path"))
+        portable_value = unicodedata.normalize("NFC", value.casefold())
+        if portable_value in seen_portable:
+            raise BuildPlanError(f"duplicate or aliased source path: {value}")
+        seen_portable.add(portable_value)
+        if value.lower().endswith(".swift"):
+            if "variant_paths" in entry:
+                raise BuildPlanError(
+                    f"Swift application source cannot be a variant group: {value}"
+                )
+            records.append(_file_record(root, value, f"sources[{index}].path"))
+        else:
+            compiler_input = _compiler_input_record(entry, index, root)
+            for input_file in compiler_input["input_files"]:
+                portable_file = unicodedata.normalize(
+                    "NFC", input_file["path"].casefold()
+                )
+                if portable_file in seen_compiler_files:
+                    raise BuildPlanError(
+                        "compiler inputs repeat one physical file: "
+                        f"{input_file['path']}"
+                    )
+                seen_compiler_files.add(portable_file)
+            compiler_inputs.append(compiler_input)
     if not records:
         raise BuildPlanError("inventory contains no Swift sources")
-    return records
+    return records, compiler_inputs
 
 
 def _resource_records(inventory: dict[str, Any], root: Path) -> list[dict[str, Any]]:
@@ -244,19 +382,24 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
     except scene_bootstrap.BootstrapError as exc:
         raise BuildPlanError(str(exc)) from exc
 
-    sources = _source_records(inventory, root)
+    sources, compiler_inputs = _source_records(inventory, root)
     resources = _resource_records(inventory, root)
     target = _mapping(inventory.get("target"), "target")
     result = {
         "bootstrap": bootstrap,
         "bundle_identifier": _bundle_identifier(inventory),
         "classification": "portable-application-build-plan",
-        "format_version": 1,
+        "compiler_inputs": compiler_inputs,
+        "format_version": 2,
         "module": bootstrap["module"],
         "product_name": _string(target.get("product_name"), "target.product_name"),
         "resources": resources,
         "sources": sources,
         "summary": {
+            "compiler_input_files": sum(
+                len(item["input_files"]) for item in compiler_inputs
+            ),
+            "compiler_inputs": len(compiler_inputs),
             "resource_inputs": len(resources),
             "resource_files": sum(
                 1 if item["kind"] == "file" else len(item["files"])
@@ -271,7 +414,7 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
 def verify(build_plan: dict[str, Any], source_root: Path) -> None:
     if build_plan.get("classification") != "portable-application-build-plan":
         raise BuildPlanError("input is not a portable application build plan")
-    if build_plan.get("format_version") != 1:
+    if build_plan.get("format_version") != 2:
         raise BuildPlanError("unsupported application build-plan format_version")
     try:
         root = scene_bootstrap._strict_root(source_root)
@@ -285,6 +428,65 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
         actual = _file_record(root, value, f"build plan sources[{index}].path")
         if actual != expected:
             raise BuildPlanError(f"application source changed after planning: {value}")
+
+    compiler_inputs = _list(
+        build_plan.get("compiler_inputs"), "build plan compiler_inputs"
+    )
+    seen_compiler_logical: set[str] = set()
+    seen_compiler_files: set[str] = set()
+    for index, raw in enumerate(compiler_inputs):
+        expected = _mapping(raw, f"build plan compiler_inputs[{index}]")
+        provider = _string(
+            expected.get("provider"),
+            f"build plan compiler_inputs[{index}].provider",
+        )
+        if provider != _INTENTDEFINITION_PROVIDER:
+            raise BuildPlanError(
+                f"build plan compiler_inputs[{index}] has unsupported provider: "
+                f"{provider}"
+            )
+        logical = _string(
+            expected.get("logical_path"),
+            f"build plan compiler_inputs[{index}].logical_path",
+        )
+        portable_logical = unicodedata.normalize("NFC", logical.casefold())
+        if portable_logical in seen_compiler_logical:
+            raise BuildPlanError(
+                f"build plan repeats compiler input logical path: {logical}"
+            )
+        seen_compiler_logical.add(portable_logical)
+        raw_files = _list(
+            expected.get("input_files"),
+            f"build plan compiler_inputs[{index}].input_files",
+        )
+        physical_values = [
+            _string(
+                _mapping(
+                    raw_file,
+                    f"build plan compiler_inputs[{index}].input_files[{file_index}]",
+                ).get("path"),
+                f"build plan compiler_inputs[{index}].input_files[{file_index}].path",
+            )
+            for file_index, raw_file in enumerate(raw_files)
+        ]
+        for physical in physical_values:
+            portable_file = unicodedata.normalize("NFC", physical.casefold())
+            if portable_file in seen_compiler_files:
+                raise BuildPlanError(
+                    f"build plan repeats physical compiler input: {physical}"
+                )
+            seen_compiler_files.add(portable_file)
+        actual = _intentdefinition_record(
+            root,
+            logical,
+            physical_values,
+            f"build plan compiler_inputs[{index}]",
+        )
+        if actual != expected:
+            raise BuildPlanError(
+                "application compiler input changed after planning: "
+                f"{expected.get('primary_path', logical)}"
+            )
 
     resources = _list(build_plan.get("resources"), "build plan resources")
     for index, raw in enumerate(resources):
@@ -300,6 +502,25 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
         ).as_posix()
         if actual != expected:
             raise BuildPlanError(f"application resource changed after planning: {value}")
+
+    summary = _mapping(build_plan.get("summary"), "build plan summary")
+    actual_summary = {
+        "compiler_input_files": sum(
+            len(_list(item.get("input_files"), "compiler input files"))
+            for item in compiler_inputs
+        ),
+        "compiler_inputs": len(compiler_inputs),
+        "resource_inputs": len(resources),
+        "resource_files": sum(
+            1
+            if item.get("kind") == "file"
+            else len(_list(item.get("files"), "resource files"))
+            for item in resources
+        ),
+        "swift_sources": len(sources),
+    }
+    if summary != actual_summary:
+        raise BuildPlanError("application build-plan summary changed or is inconsistent")
 
     bootstrap = _mapping(build_plan.get("bootstrap"), "build plan bootstrap")
     info_plist = _mapping(bootstrap.get("info_plist"), "build plan bootstrap.info_plist")
@@ -329,12 +550,22 @@ def _write_new_directory(
         (output / "app-sources.nul").write_bytes(
             b"".join(item["path"].encode("utf-8") + b"\0" for item in build_plan["sources"])
         )
+        (output / "compiler-inputs.nul").write_bytes(
+            b"".join(
+                input_file["path"].encode("utf-8") + b"\0"
+                for compiler_input in build_plan["compiler_inputs"]
+                for input_file in compiler_input["input_files"]
+            )
+        )
         (output / "prepared-inputs.json").write_bytes(
             _canonical_json(
                 {
                     "GeneratedSceneBootstrap.swift": _sha256(generated),
                     "application-build-plan.json": _sha256(plan_bytes),
                     "app-sources.nul": _sha256((output / "app-sources.nul").read_bytes()),
+                    "compiler-inputs.nul": _sha256(
+                        (output / "compiler-inputs.nul").read_bytes()
+                    ),
                 }
             )
         )
@@ -369,6 +600,7 @@ def main(argv: list[str] | None = None) -> int:
             verify(raw, arguments.source_root)
             print(
                 f"APPLICATION_BUILD_INPUTS_OK sources={len(raw['sources'])} "
+                f"compiler_inputs={len(raw['compiler_inputs'])} "
                 f"resources={len(raw['resources'])}"
             )
             return 0
@@ -381,6 +613,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(
             f"APPLICATION_BUILD_PLAN_OK sources={build_plan['summary']['swift_sources']} "
+            f"compiler_inputs={build_plan['summary']['compiler_inputs']} "
             f"resource_files={build_plan['summary']['resource_files']} "
             f"sha256={_sha256(_canonical_json(build_plan))}"
         )

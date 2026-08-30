@@ -207,12 +207,14 @@ unresolved Xcode variables all fail closed.
 `application_build_plan.py` turns a successful project inventory into the
 immutable input boundary for an application build. It reads every ordered
 Swift source, every resource descendant, and the selected Info.plist from the
-untouched source tree; refuses non-Swift compiler inputs until a provider
-exists; generates the single-scene entry point; and writes all outputs into a
-brand-new directory outside that source tree. Source lists are also emitted as
-NUL-delimited paths, so whitespace in an Xcode group never becomes shell
-syntax. `--verify` rehashes the complete source/resource boundary before and
-after compilation:
+untouched source tree; classifies the supported `.intentdefinition` compiler
+input separately from Swift sources; generates the single-scene entry point;
+and writes all outputs into a brand-new directory outside that source tree.
+Other non-Swift compiler types still refuse. Source and physical compiler-input
+lists are emitted separately as NUL-delimited paths, so whitespace in an Xcode
+group never becomes shell syntax. `prepared-inputs.json` hashes both manifests.
+`--verify` rehashes the complete source/compiler-input/resource boundary before
+and after compilation:
 
 ```sh
 python3 full/xcodeplan/application_build_plan.py app-inventory.json \
@@ -221,6 +223,18 @@ python3 full/xcodeplan/application_build_plan.py \
   /new/build-plan/application-build-plan.json \
   --source-root /read/only/AppProject --verify
 ```
+
+Application build-plan format 2 publishes `compiler_inputs` in source-phase
+order. Each `open-intentdefinition` record contains its virtual
+`logical_path`, one physical `primary_path`, and ordered
+`input_files[{path,sha256,size}]`. A direct file is a one-file record. A
+localized PBX variant group must resolve to exactly one first
+`*.intentdefinition`, followed only by same-stem `*.strings` files under
+distinct immediate `*.lproj` siblings; every byte and the declared order are
+attested. Unsupported extensions, reordered/multiple definitions, malformed
+localization topology, aliases, symlinks, and post-plan mutation fail closed.
+`compiler-inputs.nul` flattens those physical input files in record order while
+`app-sources.nul` remains Swift-only.
 
 The plan records each resource's bundle destination. Current
 filesystem-synchronised applications preserve the hierarchy beneath their
@@ -318,8 +332,9 @@ hash, and every regular non-symlink generated Swift path/hash/size. The driver
 order is always unchanged application sources, then attested derived sources,
 then the generated scene/bootstrap host sources. Output-map, ARM64 object,
 cross-file, deterministic link, and final hash audits apply to the combined
-list. The current driver leaves this array empty; an `.intentdefinition`
-provider can fill the seam without changing application or vendor bytes.
+list. The planner's `open-intentdefinition` record is the input contract for an
+`.intentdefinition` provider to fill this seam without changing application or
+vendor bytes.
 
 ## Tests
 
