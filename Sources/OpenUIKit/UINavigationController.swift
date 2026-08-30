@@ -112,6 +112,50 @@ open class UINavigationController: UIViewController {
     /// UIKit; shown by `setToolbarHidden(false, animated:)` and filled from
     /// the top controller's `toolbarItems`.
     public let toolbar = UIToolbar()
+    /// Whether the navigation bar is removed from the container's layout.
+    /// Hidden bars give the top controller the full height above any toolbar.
+    open var isNavigationBarHidden: Bool = false {
+        didSet {
+            guard isNavigationBarHidden != oldValue,
+                  !_isAnimatingNavigationBarVisibility else { return }
+            navigationBar.isHidden = isNavigationBarHidden
+            navigationBar.alpha = 1
+            updateContainerLayout()
+        }
+    }
+    private var _isAnimatingNavigationBarVisibility = false
+
+    open func setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
+        guard hidden != isNavigationBarHidden else { return }
+        guard animated, isViewLoaded else {
+            isNavigationBarHidden = hidden
+            return
+        }
+
+        let oldContentFrame = contentView.frame
+        let oldBarFrame = navigationBar.frame
+        _isAnimatingNavigationBarVisibility = true
+        isNavigationBarHidden = hidden
+        _isAnimatingNavigationBarVisibility = false
+        navigationBar.isHidden = false
+        updateContainerLayout()
+        let targetContentFrame = contentView.frame
+        let targetBarFrame = navigationBar.frame
+        contentView.frame = oldContentFrame
+        navigationBar.frame = oldBarFrame
+        navigationBar.alpha = hidden ? 1 : 0
+        UIView.animate(withDuration: UINavigationController.transitionDuration,
+                       delay: 0, options: [.beginFromCurrentState, .allowUserInteraction],
+                       animations: {
+            self.contentView.frame = targetContentFrame
+            self.navigationBar.frame = targetBarFrame
+            self.navigationBar.alpha = hidden ? 0 : 1
+        }, completion: { [weak self] _ in
+            guard let self else { return }
+            self.navigationBar.isHidden = self.isNavigationBarHidden
+            self.navigationBar.alpha = 1
+        })
+    }
     public var isToolbarHidden: Bool = true {
         didSet {
             guard isToolbarHidden != oldValue else { return }
@@ -197,7 +241,12 @@ open class UINavigationController: UIViewController {
     func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
-        if navigationBar.prefersLargeTitles {
+        if isNavigationBarHidden {
+            contentView.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
+                                       height: v.bounds.height - toolbarHeight)
+            navigationBar.frame = CGRect(x: 0, y: 0, width: v.bounds.width,
+                                         height: UINavigationBar.barHeight)
+        } else if navigationBar.prefersLargeTitles {
             contentView.frame = v.bounds
             navigationBar.frame = CGRect(
                 x: 0, y: 0, width: v.bounds.width,

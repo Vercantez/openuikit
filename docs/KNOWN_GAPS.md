@@ -1,5 +1,47 @@
 # Known gaps (living document — fixers: read this)
 
+## Focus launch-core successor (2026-08-30)
+
+The unchanged Focus main-target census uses the exact 129-source manifest at
+revision `a2832521c1daa0c23419c73705ae043ed60c9791`. Against OpenUIKit base
+`0c9afae9f3348b542cce2c1b517a8a6fece242da`, its primary diagnostics move
+**286 -> 218** under the real Linux-hosted `arm64-apple-macos15.0` guest
+target: 68 old rows are removed, zero are added, and none of the requested
+launch-core API rows remains. No Focus or dependency source is changed. The
+superseded macOS-13 control reports 219 because it newly reaches one
+macOS-14-only app initializer. Focused OpenUIKit tests and
+`Tools/focuslaunchcoreprobe` pin the portable behavior and the native iOS
+26.1 comparison.
+
+The supported boundary is intentionally finite:
+
+- `NSDiffableDataSourceSnapshot` is ordered and rejects duplicate section or
+  item identifiers. `UITableViewDiffableDataSource` owns its applied snapshot,
+  calls its cell provider, preserves eligible table-cell identities through
+  the existing update engine, and honors explicit reload markers with a
+  coherent full table reload. Collection-view diffable/compositional APIs,
+  section snapshots, reconfiguration, and UIKit's complete animated-diff
+  choreography remain absent.
+- Scroll-view zoom covers clamped programmatic scale, delegate-selected zoom
+  view transforms, callbacks, and animated host-clock state. There is no
+  pinch-driven zoom input, zoom centering/content-size model, or UIKit rubber
+  band behavior.
+- `UIViewPropertyAnimator` owns queued animation blocks, is retained while an
+  active host-clock transaction is pending, and delivers completion exactly
+  once. Pause/continue, fraction scrubbing, reversal, delay/factor control,
+  interruption positions, and custom timing curves are not implemented.
+- View snapshots are static raster captures. View transitions replace the
+  hierarchy and honor duration/completion/interaction policy, but the named
+  transition styles do not yet produce distinct visual effects. Controller
+  `show` pushes through an ancestor navigation controller or presents; it has
+  no adaptive split-view routing.
+- `UIImpactFeedbackGenerator` emits a deterministic synchronous event through
+  the host hook. There is no hardware backend, intensity model, selection
+  generator, or notification generator.
+- Several remaining Focus diagnostics are Objective-C representability work,
+  not part of this batch: selectors whose parameters are `UIGestureRecognizer`,
+  its concrete subclasses, or `UIKeyCommand` remain a separate tranche.
+
 ## Reminder UIKit `#Preview` successor (2026-08-30)
 
 This bounded slice removes unchanged Reminder's sole remaining front-end
@@ -922,8 +964,9 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 | ~~**Three types SHADOW Foundation's**~~ **NARROWED again by the Notification successor** — `NSAttributedString` and `Timer`/`RunLoop` remain distinct; Notification values are Foundation's whenever visible and the center is Foundation's when Objective-C is also visible | native Foundation+UIKit needs no Notification disambiguation; native ELF still qualifies the custom center, and a Foundation attributed string still cannot reach a `UILabel` | Linux Foundation has no selector-form observer and the scripted Timer cannot use a wall clock; the hidden guest uses a bridged custom family | "Foundation coexistence (M15)" plus the top section |
 | **Accessibility is storage only** | properties round-trip and nothing consults them | there is no accessibility tree and no assistive technology, hence no oracle | "Real-app harness (M14)" |
 
-Not on this list because they are **open work, not accepted**: compositional
-layout / diffable data sources / animated batch updates ("UICollectionView"),
+Not on this list because they are **open work, not accepted**: collection-view
+compositional layout / diffable data sources / animated batch updates
+("UICollectionView"),
 the picker wheel's spin and the refresh control's pull threshold (both
 blocked on a Simulator drag), `UIWindow.makeKeyAndVisible()`'s missing
 appearance transition (a small fix, first item on the M14 report's list).
@@ -1380,11 +1423,12 @@ NOT modelled: failure requirements — `require(toFail:)` does not exist and
 - **`textFieldShouldEndEditing` is asked twice on a focus transfer** (once by
   `canResignFirstResponder`, once inside `resignFirstResponder`). UIKit asks
   once; the predicate is expected to be pure.
-- Declared-but-never-called, for source compatibility: the zooming members of
-  `UIScrollViewDelegate` (no `zoomScale` exists), `scrollViewShouldScrollToTop`
-  (no status-bar tap), `sheetPresentationControllerDidChangeSelectedDetentIdentifier`
+- Declared-but-never-called, for source compatibility:
+  `scrollViewShouldScrollToTop` (no status-bar tap),
+  `sheetPresentationControllerDidChangeSelectedDetentIdentifier`
   (one detent), and `UITabBarControllerDelegate`'s animation-controller
-  members (tab switches are not animated).
+  members (tab switches are not animated). Zoom callbacks are now delivered
+  for programmatic `setZoomScale`; pinch-driven zoom remains absent.
 
 ## Two cuts of San Francisco (2026-08-25): the fixture suite has two oracles
 

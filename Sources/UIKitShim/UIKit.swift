@@ -92,3 +92,14 @@ public typealias NSNotification = OpenUIKit.NSNotification
 #endif
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
 public typealias OperationQueue = OpenUIKit.OperationQueue
+
+// Foundation/AppKit also ships an NSDiffableDataSourceSnapshot declaration.
+// UIKit applications must resolve the snapshot paired with this shim's
+// UITableViewDiffableDataSource, so publish a local alias that wins through
+// the re-export boundary just as the Notification aliases above do.
+public typealias NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>
+    = OpenUIKit.NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>
+    where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable
+public typealias UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
+    = OpenUIKit.UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
+    where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable

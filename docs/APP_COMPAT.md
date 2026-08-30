@@ -7,6 +7,38 @@ real open-source UIKit apps, counts every UIKit symbol they reference, and
 diffs against what OpenUIKit exports — so the roadmap is ordered by what apps
 actually use, not by UIKit's alphabet.
 
+## Focus launch-core successor (2026-08-30)
+
+Against OpenUIKit base `0c9afae9f3348b542cce2c1b517a8a6fece242da`,
+the exact unchanged 129-source Focus main-target census at revision
+`a2832521c1daa0c23419c73705ae043ed60c9791` advances from **286 to
+218 primary diagnostics** for the Linux-hosted guest's real
+`arm64-apple-macos15.0` target. Exactly 68 old rows disappear, no row is
+added, and no requested launch-core API remains in the candidate log. The
+app, its 36-source SnapKit dependency, and the pinned source manifest are not
+edited. A legacy macOS-13 control reaches 219 because one downstream macOS-14
+availability error becomes visible; it is not the shipping target result.
+
+This slice is behavioral rather than a declaration census. It adds custom
+`UITableViewCell.accessoryView` layout; ordered, uniqueness-enforcing table
+diffable snapshots and a cell-provider data source that drives the existing
+table identity/update engine; view insertion, raster snapshots and hierarchy
+transitions; navigation show/bar visibility; programmatic scroll-view zoom;
+property animators and spring timing routed through the existing host clock;
+and a host-observable impact-feedback event. Focused tests cover ordering,
+cross-section moves, duplicate rejection, apply/delete/reload identity,
+active-animator lifetime, and exact-once completion. `Tools/focuslaunchcoreprobe`
+records the corresponding native iOS 26.1 surface and behavior.
+
+The boundary is deliberately narrower than complete UIKit. Table diffable
+reload markers currently rebuild the visible table, and collection-view
+diffable data sources remain absent. Zoom is programmatic; pinch-driven zoom
+is not implemented. Property animators support queued animations, start, and
+completion but not pause/scrubbing/reversal. `show` does not model split-view
+routing. Snapshot views are static portable rasters. Impact feedback emits a
+deterministic host event and has no hardware backend; selection and
+notification feedback generators remain open.
+
 **Where this stands (updated 2026-08-30):** **97.1% effective
 coverage** of what four real apps reference, 474 uses (2.9%) of
 genuinely-missing types left, and a *screen* from a shipping app rendering
@@ -784,7 +816,7 @@ orderings are given, since they disagree sharply at the top now.
 |---|---|---|---|---|
 | 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. The oldest open divergence in the project and **the single largest source of remaining pixel error**: every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — is a flat colour fitted over a neutral base. Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a saturated one. The deterministic backdrop-filter primitive now exists; closing this row means routing effect descriptors and framework chrome through it, not adding more declarations. |
 | 2 | **Home-screen shortcuts** | 31 | 3 | `UIApplicationShortcutItem` 18, `UIApplicationShortcutIcon` 8, `UIMutableApplicationShortcutItem` 5. Pure value types plus one `UIApplication` property; no pixels, no oracle needed. The cheapest three-app entry on the list. |
-| 3 | **Haptics** | 30 | 3 | `UIImpactFeedbackGenerator` 15, `UINotificationFeedbackGenerator` 8, `UISelectionFeedbackGenerator` 7. No portable hardware to drive, so the honest shape is a no-op that records calls (and is therefore testable). Compile-blocker removal, nothing more. |
+| 3 | **Haptics** | 30 | 3 | `UIImpactFeedbackGenerator` 15 is now a deterministic, host-observable event with no hardware backend. `UINotificationFeedbackGenerator` 8 and `UISelectionFeedbackGenerator` 7 remain open. |
 | 4 | **TextKit attachments** | 17 | 3 | `NSTextAttachment` 13, plus one-off `NSTextContainer` / `NSLayoutManager` / `NSTextStorage`. The first one is real work — an inline image box the data-driven text engine must lay out and the run painter must draw. The other three are TextKit-1 plumbing we deliberately do not have. |
 | 5 | **Transition coordinator + interactive transitions** | 13 | 3 | `UIViewControllerTransitionCoordinator` 7, `UIPercentDrivenInteractiveTransition` 3, `UIViewControllerInteractiveTransitioning` 3. Sits directly on M12's presentation/transitioning API and M7.5's interactive back-swipe, both of which already exist; this is the public handle onto them. |
 
@@ -804,7 +836,8 @@ One-app clusters, in demand order: **cell content configuration** (26 —
 shipped collection-view cluster), **search controller** (11 —
 `UISearchController` 8, on top of the `UISearchBar` controls2 already
 shipped), `UIPinchGestureRecognizer` (9), `UIViewPropertyAnimator` (7, 2
-apps), `UISceneConfiguration` (5), `UIImageAsset` (5).
+apps, now shipped in the bounded Focus launch-core slice above),
+`UISceneConfiguration` (5), `UIImageAsset` (5).
 
 The unclustered tail is **24 types / 29 uses**, and every one of them appears
 in exactly one app: five types at 2 references

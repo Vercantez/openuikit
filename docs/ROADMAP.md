@@ -34,6 +34,18 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 - **M3 Controls** — DONE: UIButton, UIImageView, UIProgressView,
   UIStackView, UISwitch + oracle v2 (real-window drawHierarchy).
   Full suite 23/23 on both backends.
+- **Focus launch-core successor (2026-08-30)** — exact unchanged Focus
+  main-target diagnostics advance **286 -> 218** across its pinned 129-source
+  manifest for the real `arm64-apple-macos15.0` guest target: 68 old rows
+  disappear, zero are added, and no requested launch-core API row remains.
+  The superseded macOS-13 control is 286 -> 219 because it exposes one app
+  availability row. Shipped behavior covers custom table-cell accessories, ordered
+  table diffable snapshots/data sources, view hierarchy snapshots/transitions,
+  navigation show/bar visibility, programmatic zoom, host-clock property
+  animators/spring timing, and host-observable impact feedback. Focused tests
+  and a native iOS 26.1 oracle pin the boundary. Collection diffable, pinch
+  zoom, animator scrubbing/interruption, split-view show routing, distinct
+  visual transition styles, and hardware haptics remain roadmap work.
 - **Reminder UIDatePicker slice (2026-08-30)** — bounded functional support
   for the unchanged app's 320 x 320 inline-date and 160 x 160 wheel-time
   paths. The exact whole-source census is 34 -> 12 diagnostics: 25 old errors
@@ -870,7 +882,8 @@ missing types / 474 uses that are left, **apps first then uses**:
    framework integration.
 2. **Home-screen shortcuts** (31, 3) — value types plus one `UIApplication`
    property. No pixels, no oracle. The cheapest three-app entry left.
-3. **Haptics** (30, 3) — a recording no-op; compile-blocker removal.
+3. **Haptics** (30, 3) — impact feedback now emits a host-observable event;
+   selection/notification feedback and a hardware backend remain open.
 4. **TextKit attachments** (17, 3) — `NSTextAttachment` is real work (an
    inline box the text engine must lay out and paint); the rest is TextKit-1
    plumbing we deliberately do not have.
@@ -878,9 +891,10 @@ missing types / 474 uses that are left, **apps first then uses**:
    presentation/transitioning API M12 already shipped.
 
 By USES instead, the two-app entries outrank 2–5: drag & drop (62),
-pointer/hover (33), `UIPasteboard` (32), table extras (31 — swipe actions +
-diffable), system pickers (25), `NSItemProvider` (18). Inside shipped
-clusters: compositional layout + diffable data sources, animated batch
+pointer/hover (33), `UIPasteboard` (32), table extras (swipe actions remain;
+table diffable is now shipped), system pickers (25), `NSItemProvider` (18).
+Inside shipped clusters: collection compositional layout + collection
+diffable data sources, animated batch
 updates, and broader `UIDatePicker` fidelity beyond the bounded Reminder slice
 (locale/calendar presentation, overlays, wheel motion, and accessibility).
 

@@ -634,6 +634,30 @@ open class UIView: UIResponder, CALayerDelegate {
         _insertSubviewWithoutAdmissionCheck(view, at: index)
     }
 
+    /// Insert `view` immediately below an existing child. UIKit requires the
+    /// sibling to belong to this receiver; fail at the call site rather than
+    /// silently inventing an ordering for an unrelated view.
+    public func insertSubview(_ view: UIView, belowSubview siblingSubview: UIView) {
+        guard siblingSubview.superview === self else {
+            preconditionFailure("belowSubview must be a subview of the receiver")
+        }
+        guard view !== siblingSubview else { return }
+        view.removeFromSuperview()
+        let index = subviews.firstIndex(where: { $0 === siblingSubview })!
+        insertSubview(view, at: index)
+    }
+
+    /// Insert `view` immediately above an existing child.
+    public func insertSubview(_ view: UIView, aboveSubview siblingSubview: UIView) {
+        guard siblingSubview.superview === self else {
+            preconditionFailure("aboveSubview must be a subview of the receiver")
+        }
+        guard view !== siblingSubview else { return }
+        view.removeFromSuperview()
+        let index = subviews.firstIndex(where: { $0 === siblingSubview })!
+        insertSubview(view, at: index + 1)
+    }
+
     /// Internal twin of `_addSubviewWithoutAdmissionCheck(_:)` for ordered
     /// implementation children.
     func _insertSubviewWithoutAdmissionCheck(_ view: UIView, at index: Int) {
@@ -700,6 +724,21 @@ open class UIView: UIResponder, CALayerDelegate {
         guard let i = subviews.firstIndex(where: { $0 === view }) else { return }
         subviews.remove(at: i)
         subviews.insert(view, at: 0)
+    }
+
+    /// Capture the receiver's current laid-out presentation as a static image
+    /// view. The portable renderer has no private live snapshot layer, so the
+    /// returned view intentionally remains unchanged when the source changes.
+    public func snapshotView(afterScreenUpdates afterUpdates: Bool) -> UIView? {
+        _ = afterUpdates
+        guard bounds.width > 0, bounds.height > 0 else { return nil }
+        layoutIfNeeded()
+        let scale = max(1, window?.windowScene?.screen.scale ?? UIScreen.main.scale)
+        let bitmap = UIRenderer.render(self, scale: scale)
+        guard bitmap.width > 0, bitmap.height > 0 else { return nil }
+        let snapshot = UIImageView(image: UIImage(bitmap: bitmap, scale: scale))
+        snapshot.frame = CGRect(origin: .zero, size: bounds.size)
+        return snapshot
     }
 
     // MARK: Traits
@@ -996,6 +1035,8 @@ open class UIView: UIResponder, CALayerDelegate {
     /// tested front-to-back (reverse array order).
     open func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, alpha >= 0.01 else { return nil }
+        guard !_hasInteractionBlockingAnimation(at: OpenUIKitRuntime.animationTime)
+        else { return nil }
         guard self.point(inside: point, with: event) else { return nil }
         for sub in subviews.reversed() {
             if let hit = sub.hitTest(sub.convert(point, from: self), with: event) {

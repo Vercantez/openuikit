@@ -548,4 +548,15 @@ open class UIViewController: UIResponder, UIContentContainer {
         }
         return nil
     }
+
+    /// Display a controller using the receiver's containing navigation stack
+    /// when one exists, otherwise use the ordinary modal presentation path.
+    open func show(_ vc: UIViewController, sender: Any?) {
+        _ = sender
+        if let nav = self as? UINavigationController ?? navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            present(vc, animated: true)
+        }
+    }
 }

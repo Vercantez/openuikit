@@ -105,9 +105,8 @@ public protocol UIScrollViewDelegate: AnyObject {
     /// (docs/KNOWN_GAPS.md).
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool
     func scrollViewDidScrollToTop(_ scrollView: UIScrollView)
-    /// Zooming is not implemented (no `zoomScale` on this UIScrollView), so
-    /// these three are declarations only — an app that conforms compiles and
-    /// is never called back.
+    /// Zoom callbacks. Programmatic animated zoom uses the same host-driven
+    /// UIView animation clock as scrolling and property animations.
     func viewForZooming(in scrollView: UIScrollView) -> UIView?
     func scrollViewDidZoom(_ scrollView: UIScrollView)
     func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?)
@@ -339,6 +338,32 @@ open class UIScrollView: UIView {
     /// Per-millisecond deceleration factor (UIKit .normal).
     public var decelerationRate: CGFloat = UIScrollPhysics.decelerationRateNormal
 
+    /// Bounds for programmatic zoom. OpenUIKit currently provides the
+    /// delegate-selected zoom view and programmatic scaling path; pinch input
+    /// is a separate gesture surface.
+    public var minimumZoomScale: CGFloat = 1 {
+        didSet {
+            if minimumZoomScale > maximumZoomScale {
+                maximumZoomScale = minimumZoomScale
+            }
+            if _zoomScale < minimumZoomScale { setZoomScale(minimumZoomScale, animated: false) }
+        }
+    }
+    public var maximumZoomScale: CGFloat = 1 {
+        didSet {
+            if maximumZoomScale < minimumZoomScale {
+                minimumZoomScale = maximumZoomScale
+            }
+            if _zoomScale > maximumZoomScale { setZoomScale(maximumZoomScale, animated: false) }
+        }
+    }
+    private var _zoomScale: CGFloat = 1
+    public var zoomScale: CGFloat {
+        get { _zoomScale }
+        set { setZoomScale(newValue, animated: false) }
+    }
+    public private(set) var isZooming = false
+
     public weak var delegate: UIScrollViewDelegate?
 
     /// The content-touch delay (UIKit's is ~150 ms). Static + tunable for
@@ -388,6 +413,39 @@ open class UIScrollView: UIView {
             self.handlePan(p)
         }
         addGestureRecognizer(pan)
+    }
+
+    /// Scale the delegate's zoom view. Animated changes are genuine UIView
+    /// transform animations and therefore advance on `UIWindow.tick`.
+    public func setZoomScale(_ scale: CGFloat, animated: Bool) {
+        let lower = min(minimumZoomScale, maximumZoomScale)
+        let upper = max(minimumZoomScale, maximumZoomScale)
+        let target = min(upper, max(lower, scale))
+        guard target != _zoomScale else { return }
+        let zoomView = delegate?.viewForZooming(in: self)
+        _zoomScale = target
+
+        let apply = {
+            zoomView?.transform = CGAffineTransform(scaleX: target, y: target)
+            self.delegate?.scrollViewDidZoom(self)
+        }
+        guard animated else {
+            apply()
+            return
+        }
+
+        zoomView?.removeAllAnimations()
+        isZooming = true
+        delegate?.scrollViewWillBeginZooming(self, with: zoomView)
+        UIView.animate(withDuration: 0.25, delay: 0,
+                       options: [.beginFromCurrentState, .allowUserInteraction],
+                       animations: apply,
+                       completion: { [weak self, weak zoomView] _ in
+            guard let self else { return }
+            self.isZooming = false
+            self.delegate?.scrollViewDidEndZooming(self, with: zoomView,
+                                                   atScale: self._zoomScale)
+        })
     }
 
     // MARK: Scrollable range

@@ -222,9 +222,23 @@ open class UITableViewCell: UIView, ReusableView {
     public var accessoryType: AccessoryType = .none {
         didSet {
             if accessoryType != oldValue {
-                accessoryView.accessoryType = accessoryType
+                _accessoryGlyphView.accessoryType = accessoryType
                 setNeedsLayout()
             }
+        }
+    }
+
+    /// A custom trailing view for the cell. As in UIKit, a custom accessory
+    /// takes visual precedence over `accessoryType`; removing it restores the
+    /// configured stock glyph.
+    public var accessoryView: UIView? {
+        didSet {
+            guard accessoryView !== oldValue else { return }
+            oldValue?.removeFromSuperview()
+            if let accessoryView {
+                addSubview(accessoryView)
+            }
+            setNeedsLayout()
         }
     }
 
@@ -238,7 +252,9 @@ open class UITableViewCell: UIView, ReusableView {
     weak var tableView: UITableView?
     /// Managed by the table's tiling pass.
     let separatorView = UIView()
-    let accessoryView = UITableCellAccessoryView()
+    /// The portable vector backing for `accessoryType`. Keep it separate from
+    /// UIKit's public `accessoryView`, which is application-owned content.
+    let _accessoryGlyphView = UITableCellAccessoryView()
     public var selectedBackgroundView: UIView? {
         didSet {
             guard selectedBackgroundView !== oldValue else { return }
@@ -306,8 +322,8 @@ open class UITableViewCell: UIView, ReusableView {
             detailTextLabel = d
         }
 
-        accessoryView.accessoryType = accessoryType
-        addSubview(accessoryView)
+        _accessoryGlyphView.accessoryType = accessoryType
+        addSubview(_accessoryGlyphView)
 
         separatorView.backgroundColor = .separator
         separatorView.isUserInteractionEnabled = false
@@ -400,6 +416,11 @@ open class UITableViewCell: UIView, ReusableView {
 
     /// Width of the content region for the current accessory.
     var contentWidth: CGFloat {
+        if let accessoryView {
+            return max(0, bounds.width - UITableViewCell.trailingMargin
+                       - accessoryView.frame.width
+                       - UITableViewCell.detailAccessoryGap)
+        }
         switch accessoryType {
         case .none:
             return bounds.width
@@ -426,24 +447,33 @@ open class UITableViewCell: UIView, ReusableView {
         selectedBackgroundView?.frame = bounds
         contentView.frame = CGRect(x: 0, y: 0, width: contentWidth, height: h)
 
-        // Accessory.
-        switch accessoryType {
-        case .none:
-            accessoryView.isHidden = true
-        case .disclosureIndicator:
-            accessoryView.isHidden = false
-            let s = UITableViewCell.disclosureSize
-            accessoryView.frame = CGRect(
-                x: w - UITableViewCell.trailingMargin - s.width,
-                y: UITableViewCell.ceilHalf((h - s.height) / 2),
-                width: s.width, height: s.height)
-        case .checkmark:
-            accessoryView.isHidden = false
-            let s = UITableViewCell.checkmarkSize
-            accessoryView.frame = CGRect(
-                x: w - UITableViewCell.checkmarkTrailingMargin - s.width,
-                y: UITableViewCell.ceilHalf((h - s.height) / 2),
-                width: s.width, height: s.height)
+        // Accessory. A custom view owns its size and replaces the stock glyph.
+        if let custom = accessoryView {
+            _accessoryGlyphView.isHidden = true
+            let size = custom.frame.size
+            custom.frame = CGRect(
+                x: w - UITableViewCell.trailingMargin - size.width,
+                y: UITableViewCell.ceilHalf((h - size.height) / 2),
+                width: size.width, height: size.height)
+        } else {
+            switch accessoryType {
+            case .none:
+                _accessoryGlyphView.isHidden = true
+            case .disclosureIndicator:
+                _accessoryGlyphView.isHidden = false
+                let s = UITableViewCell.disclosureSize
+                _accessoryGlyphView.frame = CGRect(
+                    x: w - UITableViewCell.trailingMargin - s.width,
+                    y: UITableViewCell.ceilHalf((h - s.height) / 2),
+                    width: s.width, height: s.height)
+            case .checkmark:
+                _accessoryGlyphView.isHidden = false
+                let s = UITableViewCell.checkmarkSize
+                _accessoryGlyphView.frame = CGRect(
+                    x: w - UITableViewCell.checkmarkTrailingMargin - s.width,
+                    y: UITableViewCell.ceilHalf((h - s.height) / 2),
+                    width: s.width, height: s.height)
+            }
         }
 
         // Labels.
@@ -480,7 +510,7 @@ open class UITableViewCell: UIView, ReusableView {
                                  width: min(s.width, max(0, maxTextW)),
                                  height: s.height)
             default: // value1 / value2: right-aligned detail
-                let right = accessoryType == .none
+                let right = accessoryView == nil && accessoryType == .none
                     ? bounds.width - UITableViewCell.trailingMargin
                     : contentWidth - UITableViewCell.detailAccessoryGap
                 d.frame = CGRect(x: right - s.width,

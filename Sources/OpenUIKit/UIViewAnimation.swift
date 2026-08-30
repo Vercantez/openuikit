@@ -85,6 +85,9 @@ struct UIViewAnimation {
     let delay: Double
     let duration: Double
     let timing: Timing
+    /// UIKit suppresses hit testing through a view whose property animation
+    /// does not opt into `.allowUserInteraction`.
+    var allowsUserInteraction: Bool = false
     /// Animation-block transaction that owns this property animation. Zero
     /// denotes a manually constructed/test animation with no completion.
     var transactionID: Int = 0
@@ -100,6 +103,7 @@ enum UIViewAnimationContext {
         var delay: Double
         var timing: UIViewAnimation.Timing
         var beginsFromCurrentState: Bool = false
+        var allowsUserInteraction: Bool = false
         var transactionID: Int = 0
     }
     static var current: Params?
@@ -210,6 +214,10 @@ extension UIView {
         /// presentation value instead of jumping back to the old model.
         public static let beginFromCurrentState = AnimationOptions(rawValue: 1 << 2)
 
+        /// Keep animated views in the hit-test tree while their presentation
+        /// values are changing.
+        public static let allowUserInteraction = AnimationOptions(rawValue: 1 << 1)
+
         /// UIKit's cross-dissolve transition selector. OpenUIKit preserves
         /// transition duration/completion and all property animations in the
         /// block; content snapshot blending is not yet represented by the
@@ -233,7 +241,8 @@ extension UIView {
                                completion: ((Bool) -> Void)? = nil) {
         runAnimationBlock(UIViewAnimationContext.Params(
             duration: duration, delay: delay, timing: options.timingCurve,
-            beginsFromCurrentState: options.contains(.beginFromCurrentState)),
+            beginsFromCurrentState: options.contains(.beginFromCurrentState),
+            allowsUserInteraction: options.contains(.allowUserInteraction)),
             animations: animations, completion: completion)
     }
 
@@ -254,7 +263,8 @@ extension UIView {
         runAnimationBlock(UIViewAnimationContext.Params(
             duration: duration, delay: delay,
             timing: .spring(dampingRatio: dampingRatio, initialVelocity: velocity),
-            beginsFromCurrentState: options.contains(.beginFromCurrentState)),
+            beginsFromCurrentState: options.contains(.beginFromCurrentState),
+            allowsUserInteraction: options.contains(.allowUserInteraction)),
             animations: animations, completion: completion)
     }
 
@@ -358,6 +368,7 @@ extension UIView {
         let anim = UIViewAnimation(property: property, from: actualFrom, to: to,
                                    begin: now, delay: ctx.delay,
                                    duration: ctx.duration, timing: ctx.timing,
+                                   allowsUserInteraction: ctx.allowsUserInteraction,
                                    transactionID: ctx.transactionID)
         // Host redraw hint: frames keep changing until this animation ends.
         OpenUIKitRuntime.noteAnimationWork(until: anim.begin + anim.delay
@@ -407,6 +418,16 @@ extension UIView {
 
     /// Drop all recorded animations (the presentation snaps to the model).
     public func removeAllAnimations() { animations.removeAll() }
+
+    /// Whether an active property animation currently suppresses hit testing.
+    /// Delayed animations count as active, matching UIKit's transaction-wide
+    /// interaction policy.
+    func _hasInteractionBlockingAnimation(at time: Double) -> Bool {
+        animations.contains {
+            !$0.allowsUserInteraction
+                && time < $0.begin + $0.delay + $0.duration
+        }
+    }
 
     /// Drop only the animations that have already ENDED at `time`.
     ///
