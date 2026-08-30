@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Static regression teeth for the source-unchanged guest proof boundary."""
 
+import os
 from pathlib import Path
 import subprocess
+import tempfile
 import unittest
 
 
@@ -298,6 +300,114 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         build_full = BUILD_FULL.read_text()
         self.assertIn("restaging $framework loud-abort stub", build_full)
         self.assertIn("staged\\tdarwin/System/Library/Frameworks/%s.framework/%s", build_full)
+
+    def test_nested_guest_root_has_canonical_labels_and_tamper_teeth(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="nested-guest-root-closure.") as temporary:
+            package = Path(temporary) / "package"
+            guest_root = package / "guest-root"
+            executable = package / "probe/CoreGuestPackageProbe"
+            runtime = guest_root / "darwin/usr/lib/swift/libRuntime.dylib"
+            foundation = (
+                guest_root
+                / "darwin/System/Library/Frameworks/Foundation.framework/Foundation"
+            )
+            core_foundation = (
+                guest_root
+                / "darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+            )
+            loader = guest_root / "machorun"
+            root_manifest = guest_root / ".manifest"
+            for fixture in (
+                executable,
+                runtime,
+                foundation,
+                core_foundation,
+                loader,
+                root_manifest,
+            ):
+                fixture.parent.mkdir(parents=True, exist_ok=True)
+                fixture.write_text(f"{fixture.name}\n", encoding="utf-8")
+
+            fake_otool = Path(temporary) / "fake-otool"
+            fake_otool.write_text(
+                """#!/usr/bin/env python3
+from pathlib import Path
+import sys
+
+dependencies = {
+    "CoreGuestPackageProbe": ["/usr/lib/swift/libRuntime.dylib"],
+    "libRuntime.dylib": [
+        "/System/Library/Frameworks/Foundation.framework/Foundation",
+        "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+    ],
+}
+for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
+    print("Load command 0")
+    print("      cmd LC_LOAD_DYLIB")
+    print(f"     name {dependency} (offset 24)")
+""",
+                encoding="utf-8",
+            )
+            fake_otool.chmod(0o755)
+
+            command = [
+                "perl",
+                str(ATTEST),
+                "closure",
+                "--otool",
+                str(fake_otool),
+                "--executable",
+                str(executable),
+                "--package",
+                str(package),
+                "--guest-root",
+                str(guest_root),
+            ]
+            accepted = subprocess.run(
+                command, check=True, capture_output=True, text=True
+            )
+            self.assertIn(
+                "file\tguest-root/darwin/usr/lib/swift/libRuntime.dylib\t",
+                accepted.stdout,
+            )
+            self.assertIn(
+                "file\tguest-root/darwin/System/Library/Frameworks/"
+                "Foundation.framework/Foundation\t",
+                accepted.stdout,
+            )
+            self.assertIn(
+                "edge\texecutable/CoreGuestPackageProbe\tLC_LOAD_DYLIB\t"
+                "/usr/lib/swift/libRuntime.dylib\t"
+                "guest-root/darwin/usr/lib/swift/libRuntime.dylib",
+                accepted.stdout,
+            )
+            self.assertIn(
+                "edge\tguest-root/darwin/usr/lib/swift/libRuntime.dylib\t"
+                "LC_LOAD_DYLIB\t"
+                "/System/Library/Frameworks/Foundation.framework/Foundation\t"
+                "guest-root/darwin/System/Library/Frameworks/"
+                "Foundation.framework/Foundation",
+                accepted.stdout,
+            )
+            self.assertNotIn("package/guest-root/", accepted.stdout)
+
+            foundation.unlink()
+            os.symlink(
+                "../CoreFoundation.framework/CoreFoundation",
+                foundation,
+            )
+            symlinked = subprocess.run(
+                command, check=False, capture_output=True, text=True
+            )
+            self.assertNotEqual(symlinked.returncode, 0)
+            self.assertIn("path component is a symlink", symlinked.stderr)
+
+            foundation.unlink()
+            missing = subprocess.run(
+                command, check=False, capture_output=True, text=True
+            )
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertIn("cannot resolve LC_LOAD_DYLIB", missing.stderr)
 
     def test_provider_gate_is_universal_and_rejects_reverse_ownership(self) -> None:
         helper = ATTEST.read_text()

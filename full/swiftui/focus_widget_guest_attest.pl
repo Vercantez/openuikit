@@ -259,13 +259,13 @@ sub expand_runtime_token {
 sub runtime_label {
     my ($path, $executable, $package, $guest_root) = @_;
     return 'executable/' . basename($executable) if $path eq $executable;
-    if (beneath($path, $package)) {
-        my $rel = substr($path, length($package)); $rel =~ s{^/}{};
-        return "package/$rel";
-    }
     if (beneath($path, $guest_root)) {
         my $rel = substr($path, length($guest_root)); $rel =~ s{^/}{};
         return "guest-root/$rel";
+    }
+    if (beneath($path, $package)) {
+        my $rel = substr($path, length($package)); $rel =~ s{^/}{};
+        return "package/$rel";
     }
     fail("resolved runtime image is outside executable/package/root: $path");
 }
@@ -282,10 +282,10 @@ sub require_runtime_image {
     my ($path, $executable, $package, $guest_root, $what) = @_;
     if ($path eq $executable) {
         require_regular_beneath_no_links($path, dirname($executable), $what);
-    } elsif (beneath($path, $package)) {
-        require_regular_beneath_no_links($path, $package, $what);
     } elsif (beneath($path, $guest_root)) {
         require_regular_beneath_no_links($path, $guest_root, $what);
+    } elsif (beneath($path, $package)) {
+        require_regular_beneath_no_links($path, $package, $what);
     } else {
         fail("$what is outside executable/package/root: $path");
     }
