@@ -202,6 +202,44 @@ dependencies, unexpected source trees, repository-escaping paths, unapproved
 copy settings, unknown shell variables, shell command substitution, and
 unresolved Xcode variables all fail closed.
 
+## Complete portable application inputs and bundle resources
+
+`application_build_plan.py` turns a successful project inventory into the
+immutable input boundary for an application build. It reads every ordered
+Swift source, every resource descendant, and the selected Info.plist from the
+untouched source tree; refuses non-Swift compiler inputs until a provider
+exists; generates the single-scene entry point; and writes all outputs into a
+brand-new directory outside that source tree. Source lists are also emitted as
+NUL-delimited paths, so whitespace in an Xcode group never becomes shell
+syntax. `--verify` rehashes the complete source/resource boundary before and
+after compilation:
+
+```sh
+python3 full/xcodeplan/application_build_plan.py app-inventory.json \
+  --source-root /read/only/AppProject --output-dir /new/build-plan
+python3 full/xcodeplan/application_build_plan.py \
+  /new/build-plan/application-build-plan.json \
+  --source-root /read/only/AppProject --verify
+```
+
+The plan records each resource's bundle destination. Current
+filesystem-synchronised applications preserve the hierarchy beneath their
+top-level `Resources` directory; localised `.lproj` descendants remain
+localised; traditional entries default to their basename. Case-folded
+destination collisions and unsafe paths refuse instead of overwriting one
+resource with another.
+
+`materialize_application_bundle.py` consumes that frozen plan and creates a
+relocatable `<Product>.app/Contents/{MacOS,Frameworks,Resources}` skeleton.
+It copies the unchanged Info.plist and complete application resource graph,
+then installs the complete attested OpenUIKit data/font resource tree beneath
+`Contents/Resources/OpenUIKit`. Every copied byte is re-read and recorded in a
+canonical materialisation manifest. Source or platform symlinks, a reused
+output, a missing semantic-colour/font input, and an application collision
+with the reserved platform resource directory all refuse. The executable host
+binds `OpenUIKitRuntime` to these bundle-relative resources before the first
+window tick, removing checkout/build-container paths from the runtime contract.
+
 ## Tests
 
 The self-contained fixture covers all eight phase classes plus localized file,
@@ -226,8 +264,9 @@ FOCUS_IOS_CHECKOUT="$PWD/scratch/ladder-corpus/focus-ios/focus-ios" \
 ## Boundary
 
 This does not run Xcode, interpret arbitrary projects, execute shell phases,
-compile asset catalogs or intent definitions, evaluate `.xcconfig` inheritance,
-or derive Swift compiler/linker flags. Shell bodies remain opaque, pinned
+compile proprietary asset catalogs or intent definitions, evaluate `.xcconfig`
+inheritance, or derive a general Swift compiler/linker graph. Source-form
+`.xcassets` directories are preserved for OpenUIKit's measured reader. Shell bodies remain opaque, pinned
 inputs represented by a digest plus their validated variable surface; parsing
 shell semantics would be a separate frontend. The tool also selects only the
 scheme's runnable `Blockzilla` target, not its test action or transitive target

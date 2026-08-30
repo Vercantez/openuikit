@@ -157,6 +157,25 @@ build_inside() {
     link_flags=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
         -syslibroot "$sys" -rpath /usr/lib/swift)
 
+    # PortableUIKitApplicationHost now enforces the same relocatable resource
+    # contract as complete application bundles. Keep this older 2/22 proof
+    # honest by staging its semantic data and fonts beside the standalone
+    # executable; Bundle.main resolves to SCENE_OUT for a non-bundled image.
+    if find /uikit/Sources/OpenUIKit/Resources -type l -print -quit | grep -q .; then
+        die "OpenUIKit runtime resources contain a symlink"
+    fi
+    mkdir -p "$SCENE_OUT/OpenUIKit/fonts"
+    cp -R "/uikit/Sources/OpenUIKit/Resources/." "$SCENE_OUT/OpenUIKit/"
+    install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
+        "$SCENE_OUT/OpenUIKit/fonts/DejaVuSans.ttf"
+    install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf \
+        "$SCENE_OUT/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
+    (
+        cd "$SCENE_OUT"
+        find OpenUIKit -type f -print0 | sort -z | xargs -0 sha256sum \
+            >open-uikit-runtime-resources.sha256
+    )
+
     echo "== unchanged Reminder scene slice (2 app sources; generated entry point; FE-backed production host loop)"
     "${swiftc_flags[@]}" "${c_flags[@]}" "${fe_flags[@]}" \
         -I "$full" -I "$full/uikitinc" -I "$full/appinc" \

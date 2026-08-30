@@ -15,6 +15,39 @@ import UIKit
 
 @MainActor
 enum PortableUIKitApplicationHost {
+    /// Bind OpenUIKit to resources packaged beside the executable.  A Linux
+    /// application build must be relocatable: no source-checkout path or
+    /// build-container path is allowed to leak into the runtime contract.
+    private static func configurePackagedResources() {
+        guard let resources = Bundle.main.resourcePath, !resources.isEmpty else {
+            preconditionFailure("portable application bundle has no resource directory")
+        }
+
+        let openUIKit = resources + "/OpenUIKit"
+        requireReadableFile(openUIKit + "/system_colors.json")
+        requireReadableFile(openUIKit + "/font_metrics.json")
+        requireReadableFile(openUIKit + "/fonts/DejaVuSans.ttf")
+        requireReadableFile(openUIKit + "/fonts/DejaVuSans-Bold.ttf")
+
+        OpenUIKitRuntime.resourceRoot = openUIKit
+        OpenUIKitRuntime.imageSearchPaths = [resources]
+        OpenUIKitRuntime.imageScreenScale = 2
+        OpenUIKitRuntime.fontPaths["system"] = openUIKit + "/fonts/DejaVuSans.ttf"
+        for weight in ["medium", "semibold", "bold", "heavy", "black"] {
+            OpenUIKitRuntime.fontPaths[weight] = openUIKit + "/fonts/DejaVuSans-Bold.ttf"
+        }
+        UIImage.clearNamedCache()
+    }
+
+    private static func requireReadableFile(_ path: String) {
+        var size = 0
+        let bytes = path.withCString { cpio_read_file($0, &size) }
+        guard let bytes, size > 0 else {
+            preconditionFailure("required portable application resource is missing: \(path)")
+        }
+        cpio_free(bytes)
+    }
+
     private static func boundedTurnCount() -> Int? {
         guard let value = cpio_getenv("OPENUIKIT_HOST_TURNS") else { return nil }
         guard let count = Int(String(cString: value)), count > 0 else {
@@ -24,6 +57,7 @@ enum PortableUIKitApplicationHost {
     }
 
     static func run(application: UIApplication, scene: UIWindowScene) {
+        configurePackagedResources()
         precondition(scene.activationState == .foregroundActive,
                      "generated bootstrap must activate its scene before entering the host loop")
         guard let window = scene.keyWindow ?? scene.windows.first else {
