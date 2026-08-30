@@ -138,8 +138,8 @@ the saturation denominator (and is not the Xcode target inventory; see below).
 ```text
 STAGE                PRIMARY DIAGNOSTICS   what it means
 stub-Glean                     0   \
-stub-FocusAppServices          0    |  six stub modules, all compile clean
-stub-WebKit                    0    |  against OpenUIKit
+stub-FocusAppServices          0    |  five remaining census-only modules
+webkit                         0    |  reusable five-source production module
 stub-Sentry                    0    |
 stub-Fuzi                      0    |
 stub-MobileCoreServices        0   /
@@ -162,7 +162,7 @@ TOTAL                        654
 |---|---|---|
 | **Glean** | **no-op** | Measured: 48 call paths, all `record`/`add`/`set`, **not one reads a value back**. Write-only telemetry can be silent without any screen or state differing. |
 | **FocusAppServices** (Nimbus) | **mirrors the app's own defaults**, rest dies loudly | NOT a no-op, because the app *branches* on what it returns. The values come from `focus-ios/nimbus.fml.yaml` — `bold-tip-title: default: true` — which is also what real Nimbus returns with no server reached. Offline, these ARE the real answers. `getAvailableExperiments`/`optIn`/`optOut` trap: returning `[]` would assert the user is enrolled in nothing, which this build cannot know. |
-| **WebKit** | **8 inert-but-real + 20 die-loudly** | The launch path constructs a `WKWebView` (traced) but hides its container until URL submission. So the first screen needs a web view that *exists*, not one that *works*. `load()` is inert rather than fake-successful — a silent success would put the URL bar into browsing mode over a blank page. |
+| **WebKit** | **production module + independent guest dylib** | The former Focus-only placeholder is gone. [`../webkit/webkit_guest_sources.txt`](../webkit/webkit_guest_sources.txt) names the reusable five-source framework surface. Configuration, controllers, rules, stores, request/response metadata and policy callbacks retain real state. With no engine linked, allowed navigation fails provisionally with `WKPortableError.engineUnavailable`; it never fabricates fetch, JavaScript, history, commit, finish, or rendering success. The core package emits this as `libWebKit.dylib`. |
 | **Sentry** | no-op, **except `crash()`** | Write-only, like Glean. `crash()` is a deliberate crash trigger behind a debug button; a no-op would make that button lie. |
 | **Fuzi** | **all die loudly** | Its entire job is to *return parsed content*. An empty document would hand the app a search engine with no name and no URL template that it would treat as valid. |
 | **MobileCoreServices** | UTI constants | iOS-only, absent from the macOS SDK. A measurement enabler, stated as such. |

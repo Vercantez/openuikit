@@ -78,6 +78,26 @@ class BuildCensusTests(unittest.TestCase):
         ):
             self.assertIn(framework, text)
 
+    def test_webkit_is_the_attested_production_module_not_a_focus_stub(self) -> None:
+        text = SCRIPT.read_text()
+        webkit = SCRIPT.parents[1] / "webkit"
+        self.assertFalse((SCRIPT.parent / "stubs/WebKit/WebKit.swift").exists())
+        self.assertEqual(
+            (webkit / "webkit_guest_sources.txt").read_text().splitlines(),
+            [
+                "full/webkit/WebKitError.swift",
+                "full/webkit/WebKitConfiguration.swift",
+                "full/webkit/WebKitContent.swift",
+                "full/webkit/WebKitNavigation.swift",
+                "full/webkit/WebKitWebView.swift",
+            ],
+        )
+        self.assertIn("build_mod_list WebKit webkit", text)
+        self.assertEqual(text.count('"$WEBKIT_PROVENANCE" production'), 2)
+        self.assertEqual(text.count('"$WEBKIT_PROVENANCE" focus'), 2)
+        self.assertIn('cmp -s "$OUT/webkit-sources-before.tsv"', text)
+        self.assertIn('cmp -s "$OUT/focus-webkit-before.tsv"', text)
+
     def test_focus_subject_is_attested_before_and_after_all_compilers(self) -> None:
         text = SCRIPT.read_text()
         before = text.index('"$OUT/focus-subject-before.json"')

@@ -9,8 +9,9 @@
 # behaviour that produced phase 1's "4 errors" false green.
 #
 #   1. OpenUIKit          built FRESH from a clone of ~/uikit (never written to)
-#   2. stub modules       Glean, FocusAppServices, WebKit, Sentry, Fuzi,
-#                         MobileCoreServices -- measured surfaces, see stubs/
+#   2. support modules    production WebKit plus the remaining measured Glean,
+#                         FocusAppServices, Sentry, Fuzi and MobileCoreServices
+#                         census-only modules
 #   3. SnapKit            THE REAL SOURCE at Focus's workspace-lock revision,
 #                         recompiled. Not reimplemented: recompile-from-source
 #                         is the whole point of the project, and SnapKit is MIT
@@ -46,6 +47,9 @@ EXPECTED_SUPPORT_TREE=${EXPECTED_SUPPORT_TREE:-}
 EXPECTED_UIKIT_COMMIT=${EXPECTED_UIKIT_COMMIT:-}
 EXPECTED_UIKIT_TREE=${EXPECTED_UIKIT_TREE:-}
 BASELINE_PRIMARY=${BASELINE_PRIMARY:-}
+WEBKIT_MANIFEST=$SML/full/webkit/webkit_guest_sources.txt
+WEBKIT_POLICY=$SML/full/webkit/webkit-provenance.json
+WEBKIT_PROVENANCE=$SML/full/webkit/webkit_provenance.py
 
 case "$CENSUS_SOURCE_MODE" in
     broad|exact-main) ;;
@@ -150,6 +154,11 @@ if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
 fi
 python3 -B "$HERE/focus_subject.py" "$APP" "$FOCUS_EXPECTED_COMMIT" \
     "$OUT/focus-subject-before.json" || exit 4
+FOCUS_REPO=$(git -C "$APP" rev-parse --show-toplevel) || exit 4
+python3 -B "$WEBKIT_PROVENANCE" focus \
+    --support-root "$SML" --focus-root "$FOCUS_REPO" \
+    --policy "$WEBKIT_POLICY" --output "$OUT/focus-webkit-before.tsv" \
+    || exit 4
 say "  focus-ios  $(git -C "$APP" rev-parse HEAD 2>/dev/null)"
 say "  SnapKit    $(git -C "$SNAPKIT" rev-parse HEAD 2>/dev/null)"
 say "  OpenUIKit  $(git -C "$UIKIT_SRC" rev-parse HEAD 2>/dev/null)"
@@ -221,11 +230,31 @@ build_mod_list() {
     compile_mod "$name" "$log" "${srcs[@]}"
 }
 
-# --- 2. stub modules ---------------------------------------------------------
-hr "2. stub modules (measured surfaces -- see stubs/*/*.swift for what and why)"
-for s in Glean FocusAppServices WebKit Sentry Fuzi MobileCoreServices; do
+# --- 2. support modules ------------------------------------------------------
+hr "2. production WebKit + remaining measured census-only modules"
+for s in Glean FocusAppServices Sentry Fuzi MobileCoreServices; do
     build_mod "$s" "stub-$s" "$HERE/stubs/$s"
 done
+
+# WebKit is always the reusable production framework source set, not an
+# app-specific census stub. Attest the exact ordered sources and native-oracle
+# provenance on both sides of swiftc.
+python3 -B "$WEBKIT_PROVENANCE" production \
+    --support-root "$SML" --policy "$WEBKIT_POLICY" \
+    --output "$OUT/webkit-sources-before.tsv" || exit 4
+WEBKIT_FILES=$OUT/webkit-files.txt
+while IFS= read -r relative; do
+    [ -n "$relative" ] && printf '%s/%s\n' "$SML" "$relative"
+done < "$WEBKIT_MANIFEST" > "$WEBKIT_FILES"
+build_mod_list WebKit webkit "$WEBKIT_FILES"
+python3 -B "$WEBKIT_PROVENANCE" production \
+    --support-root "$SML" --policy "$WEBKIT_POLICY" \
+    --output "$OUT/webkit-sources-after.tsv" || exit 4
+if ! cmp -s "$OUT/webkit-sources-before.tsv" "$OUT/webkit-sources-after.tsv"; then
+    say "  REFUSED: WebKit production subject changed while swiftc was running"
+    exit 4
+fi
+say "  WebKit source bracket: unchanged production module (5 sources)"
 
 # An opt-in exact-attribution mode shadows only these seven SDK framework
 # modules with their production portable sources. The control run omits the
@@ -408,8 +437,16 @@ fi
 # like the SnapKit vendoring gate above.
 python3 -B "$HERE/focus_subject.py" "$APP" "$FOCUS_EXPECTED_COMMIT" \
     "$OUT/focus-subject-after.json" || exit 4
+python3 -B "$WEBKIT_PROVENANCE" focus \
+    --support-root "$SML" --focus-root "$FOCUS_REPO" \
+    --policy "$WEBKIT_POLICY" --output "$OUT/focus-webkit-after.tsv" \
+    || exit 4
 if ! cmp -s "$OUT/focus-subject-before.json" "$OUT/focus-subject-after.json"; then
     say "  REFUSED: Focus Swift source subject changed while swiftc was running"
+    exit 4
+fi
+if ! cmp -s "$OUT/focus-webkit-before.tsv" "$OUT/focus-webkit-after.tsv"; then
+    say "  REFUSED: Focus WebKit usage subject changed during the census"
     exit 4
 fi
 say "  Focus source bracket: unchanged before/after all census compilers"

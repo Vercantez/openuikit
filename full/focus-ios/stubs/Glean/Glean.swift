@@ -15,7 +15,8 @@
 // THE ONE PLACE THAT WOULD NOT BE SAFE, and it does not exist here: a metric
 // whose value the app reads back and branches on. If such a call ever appears,
 // it must NOT get a plausible default from this file — it belongs in the
-// die-loudly class, like the WebKit browsing surface next door.
+// die-loudly class; the production WebKit guest now reports engine absence
+// through typed completion/delegate failures instead of living in stubs/.
 //
 // SURFACE THIS FILE COVERS (all measured, none invented):
 //   Glean.shared.initialize / setUploadEnabled / handleCustomUrl
