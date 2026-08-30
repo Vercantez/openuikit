@@ -478,8 +478,56 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(mount, source)
         self.assertIn("git clone --no-hardlinks --no-local", source)
+        self.assertIn("--container-image SHA256_IMAGE_ID", source)
+        self.assertIn("container image must be an exact sha256 content ID", source)
+        self.assertIn("docker image inspect --format '{{.Id}}'", source)
+        self.assertIn("expected linux/arm64", source)
+        self.assertIn('"$CONTAINER_IMAGE"', source)
+        self.assertNotIn("IMAGE=${IMAGE:-", source)
         self.assertIn("core_guest_package.py /w/build/core-package --emit-summary", source)
         self.assertIn(".INVALID-DO-NOT-USE", source)
+
+    def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fake_docker = Path(temporary) / "docker"
+            write_file(fake_docker, "#!/bin/sh\nexit 91\n")
+            fake_docker.chmod(0o755)
+            environment = os.environ.copy()
+            environment["PATH"] = f"{temporary}:{environment['PATH']}"
+            zero = "0" * 40
+            result = subprocess.run(
+                [
+                    "/bin/bash",
+                    str(HOST_WRAPPER),
+                    "--container-image",
+                    "swift-macho-spike:noble",
+                    "--support-checkout",
+                    "/support",
+                    "--expected-support-commit",
+                    zero,
+                    "--expected-support-tree",
+                    zero,
+                    "--staged-input-root",
+                    "/inputs",
+                    "--uikit-checkout",
+                    "/uikit",
+                    "--expected-uikit-commit",
+                    zero,
+                    "--expected-uikit-tree",
+                    zero,
+                    "--machorun-checkout",
+                    "/machorun",
+                    "--output-root",
+                    "/new-output",
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=environment,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("exact sha256 content ID", result.stderr)
 
 
 if __name__ == "__main__":

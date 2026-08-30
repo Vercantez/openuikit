@@ -130,7 +130,8 @@ compiler problem, and it does not touch the interop or rasterisation result.
 ```
 # once: build machorun and the image
 (cd ~/machorun && scripts/build.sh everything)          # build/machorun, darwin/*.dylib, libquartz
-docker build -t swift-macho-spike:noble harness/         # now includes libc++-18-dev
+harness/build_image.sh --tag swift-macho-spike:noble \
+  --attestation-root /new/swift-macho-image-attestation  # libc++, Python, exact image ID
 
 # macOS: stage the SDK interfaces + ObjectiveC module (as in the SPIKE)
 scripts/stage_darwin_swift.sh

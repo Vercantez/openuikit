@@ -142,8 +142,9 @@ not a macro-expansion proof.
 ## Fresh host replay
 
 `run_core_guest_package_docker.sh` is the host-side cold wrapper. It requires
-exact support and UIKit commit/tree pins, a machorun checkout, a new output
-path, and a staged-input root containing:
+an exact lowercase SHA-256 Linux/ARM64 container image ID, exact support and
+UIKit commit/tree pins, a machorun checkout, a new output path, and a
+staged-input root containing:
 
 ```text
 sysroot_fe4/  mrroot/  mrroot_fe/  swift-foundation/
@@ -154,6 +155,7 @@ Example shape (the output must not exist):
 
 ```sh
 bash full/frameworks/run_core_guest_package_docker.sh \
+  --container-image sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7 \
   --support-checkout /path/to/clean/support \
   --expected-support-commit 40_HEX \
   --expected-support-tree 40_HEX \
@@ -165,8 +167,10 @@ bash full/frameworks/run_core_guest_package_docker.sh \
   --output-root /path/to/new/core-package
 ```
 
-The wrapper makes a fresh no-hardlink support clone. That clone and every
-source/staged input are mounted read-only. Only unique empty build,
+Mutable image tags and defaults are refused; the exact image ID and verified
+Linux/ARM64 platform are recorded in the host evidence. The wrapper makes a
+fresh no-hardlink support clone. That clone and every source/staged input are
+mounted read-only. Only unique empty build,
 `modcache_full`, and `mrroot_full` directories are mounted writable. It runs
 both package validators before atomically publishing the output, preserves a
 host/container log with commit/tree and inode preamble, and renames every

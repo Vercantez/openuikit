@@ -136,8 +136,8 @@ variant-group file references, and preserves Xcode's build-phase and build-file
 ordering.
 
 It uses only the Python 3.10+ standard library and the `git` command. The
-current `swift-macho-spike:noble` image does not preinstall Python; install the
-distribution's `python3` package before invoking this frontend there.
+repository's `harness/Dockerfile` installs the distribution's `python3`
+package alongside the cross-compilation tools needed by the guest drivers.
 
 The accepted subject is focus-ios commit
 `a2832521c1daa0c23419c73705ae043ed60c9791`, scheme `Focus`, launch
@@ -257,13 +257,17 @@ full/xcodeplan/build_portable_application_guest.sh \
   --inventory /pins/App.project-inventory.json \
   --source-root /read/only/AppProject \
   --platform-package /artifacts/open-uikit-core \
+  --container-image sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7 \
   --preview-plugin /artifacts/OpenUIKitPreviewMacros-tool \
   --output-root /new/App-linux-build
 ```
 
-The host requires an absent output root, validates and hashes the platform and
-optional macro plugin, freezes all application inputs, and creates the bundle
-resource skeleton. A Linux/ARM64 container then compiles every NUL-delimited
+The host requires an absent output root and an exact lowercase SHA-256 Docker
+image content ID, validates that the image is Linux/ARM64, validates and hashes
+the platform and optional macro plugin, freezes all application inputs, and
+creates the bundle resource skeleton. The image identity and platform are
+recorded in `host-inputs.tsv`; mutable image tags are refused. That container
+then compiles every NUL-delimited
 unchanged Swift source together with only the generated entry point and
 platform host loop, loads the exact host macro executable when the package
 declares DeveloperToolsSupport, links the package's framework closure, copies

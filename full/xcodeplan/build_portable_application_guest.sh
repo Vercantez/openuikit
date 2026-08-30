@@ -18,6 +18,7 @@ usage: build_portable_application_guest.sh \
   --inventory INVENTORY_JSON \
   --source-root APPLICATION_PROJECT_ROOT \
   --platform-package CORE_GUEST_PACKAGE \
+  --container-image SHA256_IMAGE_ID \
   [--preview-plugin OPENUIKIT_PREVIEW_MACROS_TOOL] \
   --output-root ABSOLUTE_NONEXISTENT_DIRECTORY
 EOF
@@ -43,22 +44,40 @@ PY
 }
 
 prepare_host() {
-    local inventory= source_root= platform= plugin= output=
+    local inventory= source_root= platform= container_image= plugin= output=
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --inventory) [ "$#" -ge 2 ] || usage; inventory=$2; shift 2 ;;
             --source-root) [ "$#" -ge 2 ] || usage; source_root=$2; shift 2 ;;
             --platform-package) [ "$#" -ge 2 ] || usage; platform=$2; shift 2 ;;
+            --container-image) [ "$#" -ge 2 ] || usage; container_image=$2; shift 2 ;;
             --preview-plugin) [ "$#" -ge 2 ] || usage; plugin=$2; shift 2 ;;
             --output-root) [ "$#" -ge 2 ] || usage; output=$2; shift 2 ;;
             *) usage ;;
         esac
     done
     [ -n "$inventory" ] && [ -n "$source_root" ] && [ -n "$platform" ] \
-        && [ -n "$output" ] || usage
+        && [ -n "$container_image" ] && [ -n "$output" ] || usage
     command -v python3 >/dev/null || die "python3 is required"
     command -v docker >/dev/null || die "docker is required"
     command -v git >/dev/null || die "git is required"
+    [ "${#container_image}" -eq 71 ] \
+        || die "container image must be an exact sha256 content ID"
+    case "$container_image" in
+        sha256:*[!0-9a-f]*|*[!0-9a-f])
+            die "container image must be an exact lowercase sha256 content ID" ;;
+        sha256:*) ;;
+        *) die "container image must be an exact sha256 content ID" ;;
+    esac
+    local actual_image_id image_platform
+    actual_image_id=$(docker image inspect --format '{{.Id}}' "$container_image" 2>/dev/null) \
+        || die "container image is unavailable: $container_image"
+    [ "$actual_image_id" = "$container_image" ] \
+        || die "container image identity differs: $actual_image_id"
+    image_platform=$(docker image inspect --format '{{.Os}}/{{.Architecture}}' \
+        "$container_image")
+    [ "$image_platform" = linux/arm64 ] \
+        || die "container image platform is $image_platform, expected linux/arm64"
     local support_commit support_tree support_status
     support_commit=$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{commit})
     support_tree=$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{tree})
@@ -142,6 +161,8 @@ PY
         printf 'inventory_sha256\t%s\n' "$(shasum -a 256 "$inventory" | awk '{print $1}')"
         printf 'core_manifest_sha256\t%s\n' \
             "$(shasum -a 256 "$platform/attestation/core-package.json" | awk '{print $1}')"
+        printf 'container_image\t%s\tplatform=%s\n' \
+            "$container_image" "$image_platform"
         if [ -n "$plugin" ]; then
             printf 'preview_plugin_sha256\t%s\n' "$expected_plugin_sha"
         fi
@@ -157,7 +178,7 @@ PY
     if [ -n "$plugin" ]; then
         docker_command+=(-v "$plugin:/preview-plugin:ro")
     fi
-    docker_command+=(swift-macho-spike:noble
+    docker_command+=("$container_image"
         bash /support/full/xcodeplan/build_portable_application_guest.sh
         --inside /app /output /platform)
     if [ -n "$plugin" ]; then

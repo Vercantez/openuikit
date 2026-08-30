@@ -5,7 +5,6 @@
 
 set -euo pipefail
 
-IMAGE=${IMAGE:-swift-macho-spike:noble}
 SUPPORT_CHECKOUT=''
 EXPECTED_SUPPORT_COMMIT=''
 EXPECTED_SUPPORT_TREE=''
@@ -18,10 +17,12 @@ OUTPUT_ROOT=''
 DEVELOPER_TOOLS_SUPPORT_MODULE=''
 DEVELOPER_TOOLS_SUPPORT_OBJECT=''
 PREVIEW_MACRO_PLUGIN=''
+CONTAINER_IMAGE=''
 
 usage() {
     cat <<'EOF'
 usage: run_core_guest_package_docker.sh \
+  --container-image SHA256_IMAGE_ID \
   --support-checkout PATH --expected-support-commit HASH \
   --expected-support-tree HASH --staged-input-root PATH \
   --uikit-checkout PATH --expected-uikit-commit HASH \
@@ -52,6 +53,7 @@ die() {
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --support-checkout) SUPPORT_CHECKOUT=${2-}; shift 2 ;;
+        --container-image) CONTAINER_IMAGE=${2-}; shift 2 ;;
         --expected-support-commit) EXPECTED_SUPPORT_COMMIT=${2-}; shift 2 ;;
         --expected-support-tree) EXPECTED_SUPPORT_TREE=${2-}; shift 2 ;;
         --staged-input-root) STAGED_INPUT_ROOT=${2-}; shift 2 ;;
@@ -71,6 +73,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 for assignment in \
+    "container image:$CONTAINER_IMAGE" \
     "support checkout:$SUPPORT_CHECKOUT" \
     "expected support commit:$EXPECTED_SUPPORT_COMMIT" \
     "expected support tree:$EXPECTED_SUPPORT_TREE" \
@@ -98,6 +101,23 @@ done
 for tool in docker git mktemp python3 tee ls awk shasum; do
     command -v "$tool" >/dev/null || die "required host tool is missing: $tool"
 done
+[ "${#CONTAINER_IMAGE}" -eq 71 ] \
+    || die "container image must be an exact sha256 content ID"
+case "$CONTAINER_IMAGE" in
+    sha256:*[!0-9a-f]*|*[!0-9a-f])
+        die "container image must be an exact lowercase sha256 content ID" ;;
+    sha256:*) ;;
+    *) die "container image must be an exact sha256 content ID" ;;
+esac
+ACTUAL_IMAGE_ID=$(docker image inspect --format '{{.Id}}' \
+    "$CONTAINER_IMAGE" 2>/dev/null) \
+    || die "container image is unavailable: $CONTAINER_IMAGE"
+[ "$ACTUAL_IMAGE_ID" = "$CONTAINER_IMAGE" ] \
+    || die "container image identity differs: $ACTUAL_IMAGE_ID"
+IMAGE_PLATFORM=$(docker image inspect --format '{{.Os}}/{{.Architecture}}' \
+    "$CONTAINER_IMAGE")
+[ "$IMAGE_PLATFORM" = linux/arm64 ] \
+    || die "container image platform is $IMAGE_PLATFORM, expected linux/arm64"
 for checkout in "$SUPPORT_CHECKOUT" "$UIKIT_CHECKOUT" "$MACHORUN_CHECKOUT"; do
     [ -d "$checkout" ] && [ ! -L "$checkout" ] \
         || die "checkout is not a real directory: $checkout"
@@ -191,7 +211,7 @@ mkdir -p "$RUN_ROOT/w/scratch" \
         "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE"
     printf 'OpenUIKit\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"
-    printf 'image\t%s\n' "$IMAGE"
+    printf 'image\t%s\tplatform=%s\n' "$CONTAINER_IMAGE" "$IMAGE_PLATFORM"
     printf 'fresh-build-inode\t%s\n' "$(ls -di "$RUN_ROOT/build" | awk '{print $1}')"
     printf 'fresh-modcache-inode\t%s\n' "$(ls -di "$RUN_ROOT/modcache_full" | awk '{print $1}')"
     printf 'fresh-guest-root-inode\t%s\n' "$(ls -di "$RUN_ROOT/mrroot_full" | awk '{print $1}')"
@@ -236,7 +256,7 @@ if [ "$preview_count" -eq 3 ]; then
     )
 fi
 
-docker "${DOCKER_ARGS[@]}" -w /w "$IMAGE" \
+docker "${DOCKER_ARGS[@]}" -w /w "$CONTAINER_IMAGE" \
     bash -lc 'set -euo pipefail; pwd -P; test -d /w -a -d /w/build; "$@"; python3 full/xcodeplan/core_guest_package.py /w/build/core-package --emit-summary' \
     core-package-build "${BUILD_ARGS[@]}" 2>&1 | tee "$RUN_ROOT/docker.log"
 
