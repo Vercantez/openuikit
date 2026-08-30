@@ -310,6 +310,33 @@ PY
         plugin_arguments=(-load-plugin-executable "$plugin#$plugin_module")
     fi
 
+    local -a platform_sources=(
+        "$output/GeneratedSceneBootstrap.swift"
+        "$SCRIPT_DIR/PortableUIKitApplicationHost.swift"
+        "$SUPPORT_ROOT/full/driver/RunLoop.swift"
+    )
+    local -a compile_sources=("${app_sources[@]}" "${platform_sources[@]}")
+    local -a application_codegen_arguments=(-wmo)
+    local argument effective_wmo_count=0
+    for argument in "${swift_arguments[@]}" \
+        "${application_codegen_arguments[@]}"; do
+        case "$argument" in
+            -wmo) effective_wmo_count=$((effective_wmo_count + 1)) ;;
+            -whole-module-optimization)
+                die "application whole-module flag must use canonical -wmo" ;;
+        esac
+    done
+    [ "${#compile_sources[@]}" -gt 1 ] \
+        || die "application compile unexpectedly has fewer than two sources"
+    [ "$effective_wmo_count" -eq 1 ] \
+        || die "application effective -wmo count $effective_wmo_count, expected 1"
+    {
+        printf 'format\tportable-application-compile-audit-v1\n'
+        printf 'source-count\t%s\n' "${#compile_sources[@]}"
+        printf 'whole-module-flag\t-wmo\tcount=%s\n' "$effective_wmo_count"
+        printf 'output\tapplication.o\n'
+    } >"$output/application-compile-audit.tsv"
+
     local compile_stderr=$output/app-macro-expansions.stderr compile_status
     [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
         || die "application compiler diagnostic output already exists"
@@ -318,13 +345,11 @@ PY
     (
         cd "$platform"
         swiftc "${swift_arguments[@]}" -module-cache-path "$module_cache" \
+            "${application_codegen_arguments[@]}" \
             -default-isolation MainActor -module-name "$module" \
             "${plugin_arguments[@]}" "${diagnostic_arguments[@]}" \
             -emit-object -o "$object" \
-            "${app_sources[@]}" \
-            "$output/GeneratedSceneBootstrap.swift" \
-            "$SCRIPT_DIR/PortableUIKitApplicationHost.swift" \
-            "$SUPPORT_ROOT/full/driver/RunLoop.swift"
+            "${compile_sources[@]}"
     ) 2>"$compile_stderr"
     compile_status=$?
     set -e
@@ -468,7 +493,8 @@ PY
         find "$product.app" -type f -print0 | sort -z | xargs -0 sha256sum \
             >application-files.sha256
         sha256sum application.o app-macro-expansions.stderr \
-            application-link-objects.tsv runtime-closure.manifest runtime.log \
+            application-compile-audit.tsv application-link-objects.tsv \
+            runtime-closure.manifest runtime.log \
             >application-build-artifacts.sha256
     )
     echo 'PORTABLE_APPLICATION_GUEST_OK'

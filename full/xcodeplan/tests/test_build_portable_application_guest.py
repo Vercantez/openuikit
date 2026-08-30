@@ -40,6 +40,30 @@ def validate_preview_executable_export_contract(source: str) -> None:
         raise AssertionError("portable-app Preview export must remain one exact symbol")
 
 
+def validate_multi_source_single_object_contract(source: str) -> None:
+    required_once = (
+        "application_codegen_arguments=(-wmo)",
+        'local -a compile_sources=("${app_sources[@]}" "${platform_sources[@]}")',
+        '"${#compile_sources[@]}" -gt 1',
+        '"$effective_wmo_count" -eq 1',
+        "application effective -wmo count",
+        'printf \'whole-module-flag\\t-wmo\\tcount=%s\\n\'',
+        '"${compile_sources[@]}"',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(
+            f"multi-source single-object compile contract drifted: {drifted}"
+        )
+    if source.count('"${application_codegen_arguments[@]}"') != 2:
+        raise AssertionError(
+            "multi-source single-object compile contract drifted: "
+            "code-generation argument count/check wiring"
+        )
+    if source.count("-whole-module-optimization") != 1:
+        raise AssertionError("noncanonical whole-module refusal drifted")
+
+
 class PortableApplicationGuestDriverTests(unittest.TestCase):
     def test_host_binds_and_probes_resources_before_font_file_fallback(self) -> None:
         source = (XCODEPLAN / "PortableUIKitApplicationHost.swift").read_text(
@@ -114,6 +138,32 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                 source.replace(
                     PREVIEW_EXECUTABLE_EXPORT_SYMBOL,
                     PREVIEW_EXECUTABLE_EXPORT_SYMBOL + "_MUTATED",
+                    1,
+                )
+            )
+
+    def test_multi_source_single_object_requires_exactly_one_wmo(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_multi_source_single_object_contract(source)
+        for token in (
+            "application_codegen_arguments=(-wmo)",
+            '"${application_codegen_arguments[@]}"',
+            '"${#compile_sources[@]}" -gt 1',
+            '"$effective_wmo_count" -eq 1',
+            '"${compile_sources[@]}"',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "compile contract"):
+                    validate_multi_source_single_object_contract(
+                        source.replace(token, "", 1)
+                    )
+        with self.assertRaisesRegex(AssertionError, "compile contract"):
+            validate_multi_source_single_object_contract(
+                source.replace(
+                    "application_codegen_arguments=(-wmo)",
+                    "application_codegen_arguments=(-wmo -wmo)",
                     1,
                 )
             )

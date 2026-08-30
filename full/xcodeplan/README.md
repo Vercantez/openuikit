@@ -272,8 +272,9 @@ creates the bundle resource skeleton. The image identity and platform are
 recorded in `host-inputs.tsv`; mutable image tags are refused. That container
 then compiles every NUL-delimited
 unchanged Swift source together with only the generated entry point and
-platform host loop, loads the exact host macro executable when the package
-declares DeveloperToolsSupport, links the package's framework closure, copies
+platform host loop as one explicit `-wmo` module/object. When the package
+declares DeveloperToolsSupport, it loads the exact host macro executable,
+links the package's framework closure, copies
 its dylibs into `Contents/Frameworks`, recursively proves the Mach-O runtime
 closure, and cold-launches the packaged executable under machorun. Success
 requires one active UIWindow and three paced production loop turns. Source,
@@ -287,6 +288,9 @@ DeveloperToolsSupport object appears exactly once in the executable link. It
 also matches UIKit's sole measured DTS import to the object's definition and
 exports only that exact Preview initializer from the application executable;
 post-link symbol counts must be one in Preview mode and zero otherwise.
+The executor refuses a multi-source single-object compile unless the effective
+argument list contains exactly one canonical `-wmo` flag, and records the
+source and flag counts in `application-compile-audit.tsv`.
 
 ## Tests
 
