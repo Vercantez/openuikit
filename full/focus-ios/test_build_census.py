@@ -58,6 +58,26 @@ class BuildCensusTests(unittest.TestCase):
         self.assertIn("-wmo -target", text)
         self.assertIn("swiftc -typecheck -wmo", text)
 
+    def test_first_party_attribution_is_opt_in_and_provenance_gated(self) -> None:
+        text = SCRIPT.read_text()
+        self.assertIn("FIRST_PARTY_FRAMEWORKS_SRC=${FIRST_PARTY_FRAMEWORKS_SRC:-}", text)
+        self.assertIn('if [ -n "$FIRST_PARTY_FRAMEWORKS_SRC" ]; then', text)
+        provenance = text.index('python3 -B "$FIRST_PARTY_TOOL" production')
+        compiler = text.index(
+            'build_mod_list "$framework" "first-party-$framework" "$resolved"'
+        )
+        self.assertLess(provenance, compiler)
+        for framework in (
+            "LocalAuthentication",
+            "SafariServices",
+            "Network",
+            "StoreKit",
+            "AudioToolbox",
+            "CoreHaptics",
+            "PassKit",
+        ):
+            self.assertIn(framework, text)
+
     def test_focus_subject_is_attested_before_and_after_all_compilers(self) -> None:
         text = SCRIPT.read_text()
         before = text.index('"$OUT/focus-subject-before.json"')

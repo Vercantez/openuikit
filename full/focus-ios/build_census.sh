@@ -35,6 +35,7 @@ SNAPKIT=${SNAPKIT:-$SML/scratch/xcodeplan-deps/SnapKit}
 OUT=${1:-/tmp/focus-ios-census}
 REQUESTED_TARGET=${TARGET:-}
 UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
+FIRST_PARTY_FRAMEWORKS_SRC=${FIRST_PARTY_FRAMEWORKS_SRC:-}
 FOCUS_EXPECTED_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
 FOCUS_EXPECTED_TREE=065d8e374c9caa3be2915165ba7cbbe4b1d61d7e
 SNAPKIT_EXPECTED_COMMIT=e74fe2a978d1216c3602b129447c7301573cc2d8
@@ -225,6 +226,43 @@ hr "2. stub modules (measured surfaces -- see stubs/*/*.swift for what and why)"
 for s in Glean FocusAppServices WebKit Sentry Fuzi MobileCoreServices; do
     build_mod "$s" "stub-$s" "$HERE/stubs/$s"
 done
+
+# An opt-in exact-attribution mode shadows only these seven SDK framework
+# modules with their production portable sources. The control run omits the
+# variable and therefore resolves the same imports from the pinned Apple SDK;
+# every other compiler input and flag is identical.
+if [ -n "$FIRST_PARTY_FRAMEWORKS_SRC" ]; then
+    hr "2b. production first-party framework modules (exact attribution mode)"
+    case "$FIRST_PARTY_FRAMEWORKS_SRC" in /*) ;; *)
+        say "  REFUSED: FIRST_PARTY_FRAMEWORKS_SRC must be absolute"; exit 4 ;;
+    esac
+    FIRST_PARTY_POLICY=$FIRST_PARTY_FRAMEWORKS_SRC/full/first-party-frameworks/first-party-provenance.json
+    FIRST_PARTY_TOOL=$FIRST_PARTY_FRAMEWORKS_SRC/full/first-party-frameworks/first_party_provenance.py
+    python3 -B "$FIRST_PARTY_TOOL" production \
+        --support-root "$FIRST_PARTY_FRAMEWORKS_SRC" \
+        --policy "$FIRST_PARTY_POLICY" \
+        --output "$OUT/first-party-source-provenance.tsv" || exit 4
+    first_party_frameworks=(
+        LocalAuthentication SafariServices Network StoreKit
+        AudioToolbox CoreHaptics PassKit
+    )
+    first_party_directories=(
+        localauthentication safariservices network storekit
+        audiotoolbox corehaptics passkit
+    )
+    for index in "${!first_party_frameworks[@]}"; do
+        framework=${first_party_frameworks[$index]}
+        directory=${first_party_directories[$index]}
+        manifest=$FIRST_PARTY_FRAMEWORKS_SRC/full/$directory/${directory}_guest_sources.txt
+        resolved=$OUT/first-party-$directory-sources.txt
+        : > "$resolved"
+        while IFS= read -r relative; do
+            [ -n "$relative" ] && printf '%s/%s\n' \
+                "$FIRST_PARTY_FRAMEWORKS_SRC" "$relative" >> "$resolved"
+        done < "$manifest"
+        build_mod_list "$framework" "first-party-$framework" "$resolved"
+    done
+fi
 
 # --- 3. SnapKit, the REAL source --------------------------------------------
 hr "3. SnapKit -- real upstream source, one explicit vendoring exclusion"

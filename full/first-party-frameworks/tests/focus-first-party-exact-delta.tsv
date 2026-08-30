@@ -1,0 +1,8 @@
+format	focus-first-party-delta-v1
+target	arm64-apple-macos15.0
+baseline-count	234
+candidate-count	232
+removed-count	2
+added-count	0
+removed	1	Blockzilla/BrowserViewController.swift	873	55	argument passed to call that takes no arguments
+removed	1	Blockzilla/Modules/WebView/WebViewController.swift	502	43	cannot find 'PKAddPassesViewController' in scope

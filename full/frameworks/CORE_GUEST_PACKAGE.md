@@ -9,11 +9,13 @@ logic.
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
-Foundation-visible UIKit, Intents, and IntentsUI. These are reusable ARM64
-Mach-O framework binaries, including a real `libSwiftUI.dylib`; they are not
-application-side source overlays. The package also contains C module headers,
-CQuartz, the SDK, the attested machorun guest-root closure, OpenUIKit's complete
-resource tree, and the two pinned DejaVu fonts used by the proven Linux path.
+Foundation-visible UIKit, Intents, IntentsUI, LocalAuthentication,
+SafariServices, Network, StoreKit, AudioToolbox, CoreHaptics, and PassKit.
+These are seventeen reusable ARM64 Mach-O framework binaries, including a real
+`libSwiftUI.dylib`; they are not application-side source overlays. The package
+also contains C module headers, CQuartz, the SDK, the attested machorun
+guest-root closure, OpenUIKit's complete resource tree, and the two pinned
+DejaVu fonts used by the proven Linux path.
 
 ## Container entry point
 
@@ -52,8 +54,12 @@ The semantic build order is deliberate:
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the reusable Intents and IntentsUI modules, backed by real shortcut,
    donation, resolution, and host-driven controller state.
-7. Link all ten reusable dylibs and run the package's Mach-O
-   closure/resource/font/framework probe through the packaged machorun root.
+7. Compile and link seven app-facing first-party modules as independent ARM64
+   Mach-O dylibs. Their Apple-service boundaries are fail-closed, and each
+   install ID/dependency/self-load contract is audited.
+8. Link all seventeen reusable dylibs and run the package's Mach-O
+   closure/resource/font and framework-behavior probe through the packaged
+   machorun root.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent
@@ -143,9 +149,11 @@ python3 -B full/frameworks/core_package_manifest.py verify \
 ```
 
 The source SDK currently contains exactly nine dangling Swift overlay aliases
-for Apple frameworks that are not present in this port: CloudKit, CreateML,
-IdentityLookup, Network, PencilKit, ShazamKit, SoundAnalysis,
-SoundAnalysis_Private, and Virtualization. Their paths and raw `readlink`
+whose Apple framework binaries are absent from the sanitized SDK: CloudKit,
+CreateML, IdentityLookup, Network, PencilKit, ShazamKit, SoundAnalysis,
+SoundAnalysis_Private, and Virtualization. The project-built `Network` module and
+dylib are supplied independently of that stale Apple overlay alias. The aliases'
+paths and raw `readlink`
 payloads (including the two byte-significant SoundAnalysis `../../..//System`
 targets) are pinned in
 `full/frameworks/sdk_dangling_symlink_exclusions.tsv`. The builder first

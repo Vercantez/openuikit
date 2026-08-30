@@ -26,6 +26,8 @@ MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
+FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
+FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
 OUTPUT_ROOT=''
 EXPECTED_SUPPORT_COMMIT=''
@@ -36,6 +38,25 @@ EXPECTED_UIKIT_TREE=''
 DEVELOPER_TOOLS_SUPPORT_MODULE=''
 DEVELOPER_TOOLS_SUPPORT_OBJECT=''
 PREVIEW_MACRO_PLUGIN=''
+
+FIRST_PARTY_FRAMEWORKS=(
+    LocalAuthentication
+    SafariServices
+    Network
+    StoreKit
+    AudioToolbox
+    CoreHaptics
+    PassKit
+)
+FIRST_PARTY_SOURCE_DIRS=(
+    localauthentication
+    safariservices
+    network
+    storekit
+    audiotoolbox
+    corehaptics
+    passkit
+)
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
 EXPECTED_UIKIT_SWIFT_COUNT=105
@@ -188,6 +209,10 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
+[ -x "$FIRST_PARTY_PROVENANCE_TOOL" ] \
+    || die "first-party provenance tool is missing or not executable: $FIRST_PARTY_PROVENANCE_TOOL"
+[ -f "$FIRST_PARTY_PROVENANCE_POLICY" ] && [ ! -L "$FIRST_PARTY_PROVENANCE_POLICY" ] \
+    || die "first-party provenance policy is missing or linked: $FIRST_PARTY_PROVENANCE_POLICY"
 [ -x "$MACHORUN/build/machorun" ] || die 'current machorun input is missing'
 [ -d "$SYS/usr/include" ] || die "SDK is missing: $SYS"
 [ -d "$W/build" ] && [ ! -L "$W/build" ] || die '/w/build must be a real directory'
@@ -349,6 +374,12 @@ done
         printf 'source\tIntentsUI\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
     done
 } > "$WORK/intents-sources.pre.tsv"
+
+python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
+    --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
+    --output "$WORK/first-party-sources.pre.tsv"
+[ "$(grep -c '^source' "$WORK/first-party-sources.pre.tsv")" -eq 7 ] \
+    || die 'first-party production source count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
@@ -684,6 +715,25 @@ done
     -emit-module-path "$STAGE/modules/IntentsUI.swiftmodule" \
     -emit-object -o "$WORK/intentsui.o" "${INTENTSUI_SOURCE_PATHS[@]}"
 
+echo '== compile seven independent first-party framework modules'
+for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
+    framework=${FIRST_PARTY_FRAMEWORKS[$index]}
+    source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
+    source_manifest=$W/full/$source_dir/${source_dir}_guest_sources.txt
+    mapfile -t framework_sources < "$source_manifest"
+    [ "${#framework_sources[@]}" -eq 1 ] \
+        || die "$framework source manifest cardinality drifted"
+    framework_source_paths=()
+    for relative in "${framework_sources[@]}"; do
+        framework_source_paths+=("$W/$relative")
+    done
+    "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+        -module-name "$framework" -emit-module \
+        -emit-module-path "$STAGE/modules/$framework.swiftmodule" \
+        -emit-object -o "$WORK/$source_dir.o" \
+        "${framework_source_paths[@]}"
+done
+
 echo '== final Foundation/UIKit notification identity proof'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CorePackageNotificationIdentityProbe \
@@ -692,7 +742,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link ten reusable core framework dylibs'
+echo '== link seventeen reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -772,6 +822,55 @@ uikit_dts_import_count=$(nm_developer_tools_support_count --undefined-only \
 [ "$uikit_dts_import_count" -eq "$PREVIEW_ENABLED" ] \
     || die "Preview libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected $PREVIEW_ENABLED"
 
+FIRST_PARTY_LOAD_AUDIT=$STAGE/attestation/first-party-dylib-loads.tsv
+printf 'format\tfirst-party-dylib-loads-v1\n' > "$FIRST_PARTY_LOAD_AUDIT"
+for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
+    framework=${FIRST_PARTY_FRAMEWORKS[$index]}
+    source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
+    framework_link_dependencies=(
+        -lFoundation
+        -lFoundationEssentials
+        "$SWIFTUI_RUNTIME_LINK_FLAG"
+    )
+    expected_uikit_load=0
+    case "$framework" in
+        SafariServices|StoreKit|PassKit)
+            expected_uikit_load=1
+            framework_link_dependencies+=(
+                -lUIKit
+                -lOpenUIKit
+                -lOpenCoreGraphics
+            )
+            ;;
+    esac
+    "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+        -install_name "@rpath/lib$framework.dylib" -rpath @loader_path \
+        -o "$STAGE/lib/lib$framework.dylib" "$WORK/$source_dir.o" \
+        "${COMMON_LINK[@]}" "${framework_link_dependencies[@]}"
+    foundation_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libFoundation.dylib" { count++ } END { print count + 0 }')
+    uikit_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libUIKit.dylib" { count++ } END { print count + 0 }')
+    concurrency_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$foundation_load_count" -eq 1 ] \
+        || die "lib$framework Foundation load count $foundation_load_count, expected 1"
+    [ "$uikit_load_count" -eq "$expected_uikit_load" ] \
+        || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
+    [ "$concurrency_load_count" -eq 1 ] \
+        || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
+    if llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
+        | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
+        die "lib$framework loads the Apple $framework framework"
+    fi
+    printf '%s\tfoundation=%s\tuikit=%s\tconcurrency=%s\tapple-self-load=0\n' \
+        "$framework" "$foundation_load_count" "$uikit_load_count" \
+        "$concurrency_load_count" >> "$FIRST_PARTY_LOAD_AUDIT"
+done
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CoreGuestPackageProbe \
@@ -801,10 +900,13 @@ fi
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
     -lIntentsUI -lIntents -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
+    -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
+    -lAudioToolbox -lCoreHaptics -lPassKit "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI; do
+    Combine SwiftUI Foundation UIKit Intents IntentsUI \
+    "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
         || die "lib$dylib is not an ARM64 Mach-O dylib"
@@ -851,7 +953,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven first-party=fail-closed-7 preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -878,6 +980,8 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
+    -lAudioToolbox -lCoreHaptics -lPassKit
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -927,6 +1031,8 @@ cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
+cp "$WORK/first-party-sources.pre.tsv" \
+    "$STAGE/attestation/first-party-sources.tsv"
 cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
 {
     printf 'format\tcore-input-provenance-v1\n'
@@ -951,6 +1057,8 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_BOLD_FONT"
     printf 'sdk-dangling-exclusions\t%s\tcount=9\n' \
         "$(hash_file "$SDK_DANGLING_EXCLUSIONS")"
+    printf 'first-party-policy\t%s\tframeworks=7\tsources=7\n' \
+        "$(hash_file "$FIRST_PARTY_PROVENANCE_POLICY")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -979,7 +1087,8 @@ record_module_family() {
     done
 }
 for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI; do
+    Combine SwiftUI Foundation UIKit Intents IntentsUI \
+    "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
@@ -1014,6 +1123,10 @@ record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
 record_artifact attestation foundation-undefined-symbols undefined-symbols \
     attestation/foundation-undefined-symbols.txt
+record_artifact attestation first-party-sources manifest \
+    attestation/first-party-sources.tsv
+record_artifact attestation first-party-dylib-loads manifest \
+    attestation/first-party-dylib-loads.tsv
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
@@ -1064,6 +1177,12 @@ cmp "$WORK/foundation-sources.pre.tsv" "$WORK/foundation-sources.post.tsv" \
 } > "$WORK/intents-sources.post.tsv"
 cmp "$WORK/intents-sources.pre.tsv" "$WORK/intents-sources.post.tsv" \
     || die 'Intents/IntentsUI source manifests/files changed during build'
+
+python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
+    --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
+    --output "$WORK/first-party-sources.post.tsv"
+cmp "$WORK/first-party-sources.pre.tsv" "$WORK/first-party-sources.post.tsv" \
+    || die 'first-party source manifests/files changed during build'
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
     --logical-root resources/OpenUIKit --reject-symlinks \
@@ -1097,6 +1216,8 @@ WRITE_ARGS=(
     --source-sets attestation/source-sets.tsv
     --foundation-sources attestation/foundation-sources.tsv
     --intents-sources attestation/intents-sources.tsv
+    --first-party-sources attestation/first-party-sources.tsv
+    --first-party-dylib-loads attestation/first-party-dylib-loads.tsv
     --sdk-inventory attestation/sdk-tree.tsv
     --sdk-dangling-symlinks attestation/sdk-dangling-symlinks.tsv
     --sdk-dangling-exclusions attestation/sdk-dangling-symlink-exclusions.tsv

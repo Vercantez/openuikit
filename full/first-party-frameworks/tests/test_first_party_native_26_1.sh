@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+
+HERE=$(cd "$(dirname "$0")" && pwd)
+EXPECTED_XCODE='Xcode 26.1|Build version 17B55'
+EXPECTED_PLATFORM=26.1
+EXPECTED_SDK_BUILD=23B77
+DEVICE=${FIRST_PARTY_ORACLE_DEVICE:-15E0B30F-6F1B-4F98-AD63-19D5AAFEDCDD}
+
+[ "$(xcodebuild -version | paste -sd '|')" = "$EXPECTED_XCODE" ] || {
+    printf 'refusing unpinned Xcode (expected %s)\n' "$EXPECTED_XCODE" >&2
+    exit 2
+}
+[ "$(xcrun --sdk iphonesimulator --show-sdk-platform-version)" = "$EXPECTED_PLATFORM" ]
+[ "$(xcrun --sdk iphonesimulator --show-sdk-build-version)" = "$EXPECTED_SDK_BUILD" ]
+xcrun simctl list devices | grep -F "$DEVICE" | grep -F '(Booted)' >/dev/null || {
+    printf 'pinned simulator is not booted: %s\n' "$DEVICE" >&2
+    exit 2
+}
+
+OUT=$(mktemp -d /tmp/first-party-native-oracle.XXXXXX)
+cleanup() {
+    case "$OUT" in
+        /tmp/first-party-native-oracle.*|/private/tmp/first-party-native-oracle.*)
+            rm -rf -- "$OUT" ;;
+        *) printf 'refusing unsafe cleanup path: %s\n' "$OUT" >&2 ;;
+    esac
+}
+trap cleanup EXIT
+
+SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
+xcrun swiftc -parse-as-library -sdk "$SDK" \
+    -target arm64-apple-ios26.1-simulator \
+    "$HERE/FirstPartyNativeOracle.swift" -o "$OUT/FirstPartyNativeOracle"
+xcrun simctl spawn "$DEVICE" "$OUT/FirstPartyNativeOracle" > "$OUT/actual.txt"
+
+if ! cmp "$HERE/first-party-native-xcode-26.1-ios-26.1.txt" "$OUT/actual.txt"; then
+    diff -u "$HERE/first-party-native-xcode-26.1-ios-26.1.txt" \
+        "$OUT/actual.txt" || true
+    printf 'native first-party framework oracle drifted\n' >&2
+    exit 3
+fi
+printf 'FIRST_PARTY_FRAMEWORKS_NATIVE_26_1_OK sdk-build=%s\n' "$EXPECTED_SDK_BUILD"

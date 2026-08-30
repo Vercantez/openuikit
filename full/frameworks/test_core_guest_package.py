@@ -94,6 +94,13 @@ FRAMEWORKS = (
     "UIKit",
     "Intents",
     "IntentsUI",
+    "LocalAuthentication",
+    "SafariServices",
+    "Network",
+    "StoreKit",
+    "AudioToolbox",
+    "CoreHaptics",
+    "PassKit",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -179,7 +186,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 1:
+    # One direct SwiftUI link, one reusable dependency token in each of the
+    # seven first-party links, and one executable probe link.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 3:
         raise AssertionError("SwiftUI runtime-link scope drifted")
 
 
@@ -403,6 +412,8 @@ class PackageFixture:
             "source-sets.tsv",
             "foundation-sources.tsv",
             "intents-sources.tsv",
+            "first-party-sources.tsv",
+            "first-party-dylib-loads.tsv",
             "sdk-dangling-symlinks.tsv",
             "sdk-dangling-symlink-exclusions.tsv",
             "include-tree.tsv",
@@ -443,6 +454,13 @@ class PackageFixture:
             "-lOpenCoreGraphics",
             "-lCombine",
             "-lOpenCombine",
+            "-lLocalAuthentication",
+            "-lSafariServices",
+            "-lNetwork",
+            "-lStoreKit",
+            "-lAudioToolbox",
+            "-lCoreHaptics",
+            "-lPassKit",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -564,6 +582,10 @@ class PackageFixture:
             "attestation/foundation-sources.tsv",
             "--intents-sources",
             "attestation/intents-sources.tsv",
+            "--first-party-sources",
+            "attestation/first-party-sources.tsv",
+            "--first-party-dylib-loads",
+            "attestation/first-party-dylib-loads.tsv",
             "--sdk-inventory",
             "attestation/sdk-tree.tsv",
             "--sdk-dangling-symlinks",
@@ -875,7 +897,14 @@ class ShellContractTests(unittest.TestCase):
             1,
         )
         self.assertEqual(
-            source.count("Combine SwiftUI Foundation UIKit Intents IntentsUI; do"),
+            source.count(
+                "\n".join(
+                    (
+                        "Combine SwiftUI Foundation UIKit Intents IntentsUI \\",
+                        '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
+                    )
+                )
+            ),
             2,
         )
         self.assertIn(
@@ -918,6 +947,41 @@ class ShellContractTests(unittest.TestCase):
                     validate_foundation_runtime_undefineds(
                         source.replace(predicate, "deleted-predicate", 1)
                     )
+
+    def test_seven_first_party_frameworks_are_real_core_products(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        manifest_source = TOOL.read_text(encoding="utf-8")
+        canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        first_party = (
+            "LocalAuthentication",
+            "SafariServices",
+            "Network",
+            "StoreKit",
+            "AudioToolbox",
+            "CoreHaptics",
+            "PassKit",
+        )
+        self.assertEqual(FRAMEWORKS[-7:], first_party)
+        self.assertEqual(
+            source.count(
+                'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
+            ),
+            2,
+        )
+        self.assertIn(
+            '-install_name "@rpath/lib$framework.dylib"', source
+        )
+        self.assertIn("first-party-dylib-loads-v1", source)
+        self.assertIn("apple-self-load=0", source)
+        self.assertIn("first-party=fail-closed-7", probe)
+        for framework in first_party:
+            with self.subTest(framework=framework):
+                self.assertIn(framework, source)
+                self.assertIn(framework, manifest_source)
+                self.assertIn(framework, canonical_source)
+                self.assertIn(f"import {framework}", probe)
+                self.assertIn(f"-l{framework}", source)
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

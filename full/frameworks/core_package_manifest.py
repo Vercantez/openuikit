@@ -51,6 +51,8 @@ REQUIRED_MANIFESTS = {
     "source_sets",
     "foundation_sources",
     "intents_sources",
+    "first_party_sources",
+    "first_party_dylib_loads",
     "sdk_tree",
     "sdk_dangling_symlinks",
     "sdk_dangling_exclusions",
@@ -70,6 +72,13 @@ FRAMEWORKS = (
     "UIKit",
     "Intents",
     "IntentsUI",
+    "LocalAuthentication",
+    "SafariServices",
+    "Network",
+    "StoreKit",
+    "AudioToolbox",
+    "CoreHaptics",
+    "PassKit",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
@@ -943,6 +952,12 @@ def write_command(args: argparse.Namespace) -> None:
             "source_sets": checked_manifest(package, args.source_sets, "source sets"),
             "foundation_sources": checked_manifest(package, args.foundation_sources, "Foundation sources"),
             "intents_sources": checked_manifest(package, args.intents_sources, "Intents sources"),
+            "first_party_sources": checked_manifest(
+                package, args.first_party_sources, "first-party sources"
+            ),
+            "first_party_dylib_loads": checked_manifest(
+                package, args.first_party_dylib_loads, "first-party dylib loads"
+            ),
             "sdk_tree": checked_manifest(package, args.sdk_inventory, "SDK inventory"),
             "sdk_dangling_symlinks": checked_manifest(
                 package, args.sdk_dangling_symlinks, "SDK dangling symlinks"
@@ -1033,6 +1048,8 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--source-sets", required=True)
     write.add_argument("--foundation-sources", required=True)
     write.add_argument("--intents-sources", required=True)
+    write.add_argument("--first-party-sources", required=True)
+    write.add_argument("--first-party-dylib-loads", required=True)
     write.add_argument("--sdk-inventory", required=True)
     write.add_argument("--sdk-dangling-symlinks", required=True)
     write.add_argument("--sdk-dangling-exclusions", required=True)

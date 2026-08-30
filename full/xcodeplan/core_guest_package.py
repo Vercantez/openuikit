@@ -64,6 +64,13 @@ _REQUIRED_FRAMEWORKS = (
     "UIKit",
     "Intents",
     "IntentsUI",
+    "LocalAuthentication",
+    "SafariServices",
+    "Network",
+    "StoreKit",
+    "AudioToolbox",
+    "CoreHaptics",
+    "PassKit",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
@@ -74,6 +81,8 @@ _REQUIRED_MANIFESTS = {
     "source_sets",
     "foundation_sources",
     "intents_sources",
+    "first_party_sources",
+    "first_party_dylib_loads",
     "sdk_tree",
     "sdk_dangling_symlinks",
     "sdk_dangling_exclusions",

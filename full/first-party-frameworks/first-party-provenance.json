@@ -1,0 +1,273 @@
+{
+  "bases": {
+    "support": {
+      "commit": "4a8e67fd76dc1bfce8c5c677d66015959f9e05e9",
+      "tree": "da14988204b748bf041e17957f2fcfffda67df0f"
+    },
+    "uikit": {
+      "commit": "62dea0d97a3b9074e5c016820492bd0656b9a35a",
+      "tree": "3dfd6024557632949c9a5036522871a36d4a0cf0"
+    }
+  },
+  "classification": "portable-first-party-frameworks-seven-v1",
+  "corpus": {
+    "app_count": 20,
+    "census_sha256": "da94bef4f3730314b5f52a6db29ce587c47a364ed41fe4a3aa32b87fa3627821",
+    "census_tool": {
+      "path": "full/first-party-frameworks/framework_surface_census.py",
+      "sha256": "b607dd91247c5ade2b39170f29546f14bbc3f9bab9f47268ca6a01cb8ba4e891"
+    },
+    "focus_commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "focus_tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e",
+    "frameworks": [
+      {
+        "focus_files": [
+          {
+            "bytes": 10614,
+            "path": "focus-ios/focus-ios/Blockzilla/Pro Tips/TipManager.swift",
+            "sha256": "b96849675f7d6a37dcc40b8686358992ffddf9586b6108e55eb519792428a1ce"
+          },
+          {
+            "bytes": 2016,
+            "path": "focus-ios/focus-ios/Blockzilla/Utilities/AuthenticationManager.swift",
+            "sha256": "4b7d51de6e9e3ae1cb320fdc48125b049eb1af55597e084c6c51fea45fc98a25"
+          }
+        ],
+        "import_file_count": 46,
+        "importing_app_count": 11,
+        "name": "LocalAuthentication",
+        "ordered_file_inventory_sha256": "b854dd5e4908cc217b839f43a9272f89d21c85e756bb06fcacb997852beb0eaa"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 856,
+            "path": "focus-ios/focus-ios/Blockzilla/Settings/Helpers/BlockerEnabledDetector.swift",
+            "sha256": "f5db734e48a9e5a54001770d9ce7ebc22796f27bb11de3db97e642eb618a1f08"
+          },
+          {
+            "bytes": 1084,
+            "path": "focus-ios/focus-ios/Shared/Utils.swift",
+            "sha256": "05d3a611e8efbffe3928b695d561db1c160c5f4d65a3220ad47bac182a0c4230"
+          }
+        ],
+        "import_file_count": 132,
+        "importing_app_count": 17,
+        "name": "SafariServices",
+        "ordered_file_inventory_sha256": "057986143ed72ff815c3ce33bf37845a862f9647f6e4efa7b0ea57cc82d75f0c"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 17321,
+            "path": "focus-ios/focus-ios/Blockzilla/Extensions/URLExtensions.swift",
+            "sha256": "86216594832b71da0c91cd61e1b29966a461eeb27ee94aa00fe641abcf140f0d"
+          }
+        ],
+        "import_file_count": 31,
+        "importing_app_count": 10,
+        "name": "Network",
+        "ordered_file_inventory_sha256": "106c0b7fa6ba5f145e91d3dcd9b8ae59b860308fff930042f2481a132207b238"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 89345,
+            "path": "focus-ios/focus-ios/Blockzilla/BrowserViewController.swift",
+            "sha256": "e5593a1879452d4a34ede38148481e52201fee6c556eaa441a74250d1a90fc1f"
+          }
+        ],
+        "import_file_count": 48,
+        "importing_app_count": 14,
+        "name": "StoreKit",
+        "ordered_file_inventory_sha256": "8e4ea512c09169399b6dee0afdaabc96848d8ae12a5cacf4819182aa70c7dbc6"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 2098,
+            "path": "focus-ios/focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift",
+            "sha256": "1f35a002aa3f02be8c99f0423b02f1314c3ad48428630be64d30f0edfdb02b06"
+          }
+        ],
+        "import_file_count": 29,
+        "importing_app_count": 7,
+        "name": "AudioToolbox",
+        "ordered_file_inventory_sha256": "98f1cc9f8208c9e853123071f3e2895242779974ef243c423ff5bc6073087ecc"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 2098,
+            "path": "focus-ios/focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift",
+            "sha256": "1f35a002aa3f02be8c99f0423b02f1314c3ad48428630be64d30f0edfdb02b06"
+          }
+        ],
+        "import_file_count": 6,
+        "importing_app_count": 4,
+        "name": "CoreHaptics",
+        "ordered_file_inventory_sha256": "82b2dd9b767c560d0f687eb4f401a7115a79b5d0807ea5e5642eeac8c59a9ec1"
+      },
+      {
+        "focus_files": [
+          {
+            "bytes": 25618,
+            "path": "focus-ios/focus-ios/Blockzilla/Modules/WebView/WebViewController.swift",
+            "sha256": "1d8aa958b5a9fe5da4c0f32ca2a3c3d2f005f8abbba4b59055a576c2fda0242d"
+          }
+        ],
+        "import_file_count": 58,
+        "importing_app_count": 8,
+        "name": "PassKit",
+        "ordered_file_inventory_sha256": "fe69948a5ebd9d2a0bf7eeb1afe3328b76aeef7ececf48ea58dc0bba29e4b211"
+      }
+    ],
+    "ordered_file_inventory_sha256": "04901af26af0ace9b065b095c9e180c6637e2d73d7e61d68260d9a5b08b22b78",
+    "pins_manifest": {
+      "path": "full/ladder/corpus-pins-2026-08-27.tsv",
+      "sha256": "7b11f26fe4d48ba33c9b1afb261b65e32e215fa2962d2d8e6be8c2c445214daa"
+    }
+  },
+  "frameworks": [
+    {
+      "directory": "full/localauthentication",
+      "manifest": {
+        "path": "full/localauthentication/localauthentication_guest_sources.txt",
+        "sha256": "7b284f82fca63d8ad2ed635d0acc47da789cce2184037f8dab280d0966011fe1"
+      },
+      "name": "LocalAuthentication",
+      "sources": [
+        {
+          "path": "full/localauthentication/LocalAuthentication.swift",
+          "sha256": "9c9ee62d162612f5e7c926fdba195a1bbe8db0eba21be66a6b95290f2b977a3e"
+        }
+      ],
+      "uses_uikit": false
+    },
+    {
+      "directory": "full/safariservices",
+      "manifest": {
+        "path": "full/safariservices/safariservices_guest_sources.txt",
+        "sha256": "06efd85324a008833006f7f82c2c3181bc35c8bf1518ebf720917228596859cd"
+      },
+      "name": "SafariServices",
+      "sources": [
+        {
+          "path": "full/safariservices/SafariServices.swift",
+          "sha256": "e39e2877f184baf65b3b568bd423a35fe14ebaa1335dfe1a948e275f29b88f2d"
+        }
+      ],
+      "uses_uikit": true
+    },
+    {
+      "directory": "full/network",
+      "manifest": {
+        "path": "full/network/network_guest_sources.txt",
+        "sha256": "6a573af6db8f0a09e2ce4cba9a420746af6c6e83e5d8d61e8cc75fc3d9d36fcb"
+      },
+      "name": "Network",
+      "sources": [
+        {
+          "path": "full/network/Network.swift",
+          "sha256": "d39c06d85ddc6be17848096aacfe62429694ebac7c893a90a75cdd5814b431de"
+        }
+      ],
+      "uses_uikit": false
+    },
+    {
+      "directory": "full/storekit",
+      "manifest": {
+        "path": "full/storekit/storekit_guest_sources.txt",
+        "sha256": "2595bfa7768546f144223df5fc5d7261375925bae3d9a4ace17fa71a0c55bd19"
+      },
+      "name": "StoreKit",
+      "sources": [
+        {
+          "path": "full/storekit/StoreKit.swift",
+          "sha256": "2252b1906cac98eda714c246b0490e18d3718478226745c70b089bf1be16ec43"
+        }
+      ],
+      "uses_uikit": true
+    },
+    {
+      "directory": "full/audiotoolbox",
+      "manifest": {
+        "path": "full/audiotoolbox/audiotoolbox_guest_sources.txt",
+        "sha256": "a9794ac6db4165017ff1d72d96b683f0f054a13333bc82e14a15cfa0458ba113"
+      },
+      "name": "AudioToolbox",
+      "sources": [
+        {
+          "path": "full/audiotoolbox/AudioToolbox.swift",
+          "sha256": "a1c4a045708af4ccdca24f7f57baacb8e9da59b380a421a853b424c3b40ae202"
+        }
+      ],
+      "uses_uikit": false
+    },
+    {
+      "directory": "full/corehaptics",
+      "manifest": {
+        "path": "full/corehaptics/corehaptics_guest_sources.txt",
+        "sha256": "6480af02a1a8bc4750e6096d3231817d9cfb82f76ba4736f3d9e8640af38365d"
+      },
+      "name": "CoreHaptics",
+      "sources": [
+        {
+          "path": "full/corehaptics/CoreHaptics.swift",
+          "sha256": "b2e80983609f8f71adccf382f64c9775ff9e52c58d6f2b224aea0127f8b4c409"
+        }
+      ],
+      "uses_uikit": false
+    },
+    {
+      "directory": "full/passkit",
+      "manifest": {
+        "path": "full/passkit/passkit_guest_sources.txt",
+        "sha256": "2007426fee9a4506bd421aec67873fd132c986ec351eea35d4228dd5b751277e"
+      },
+      "name": "PassKit",
+      "sources": [
+        {
+          "path": "full/passkit/PassKit.swift",
+          "sha256": "25ee4570979334d7660f822036fea7096120c4de386b1092c107e0c99cb54a1c"
+        }
+      ],
+      "uses_uikit": true
+    }
+  ],
+  "schema": 1,
+  "test_inputs": [
+    {
+      "path": "full/first-party-frameworks/tests/HostPackage.swift",
+      "sha256": "aeee7b0b9d95535f92e48be10f04da9b493f167914f8d4774a4e8c7f8a37e635"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/FirstPartyHostRuntime.swift",
+      "sha256": "43af8327a4fe28402a6f93bae65f561228ef4f416fd32b012632af7bd82b0276"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/test_first_party_host.sh",
+      "sha256": "e4892962ab6ed40570d584326ae73a8dba5cad4403caf803ef7635c97510ee1e"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/FirstPartyNativeOracle.swift",
+      "sha256": "3983e6876a1d76d2ef958e52b6fc6afa83fe57d2e20a47ddb3f442e4986f467d"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/first-party-native-xcode-26.1-ios-26.1.txt",
+      "sha256": "69faf3aa4e80c8794a0472f77476a881deb90cdca628e4ca8002936b2c32ec55"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/test_first_party_native_26_1.sh",
+      "sha256": "62f6c39ce8c9e5aad1cdf761cc7b2580fcea689dd632d69fe7674a00806a8da2"
+    },
+    {
+      "path": "full/first-party-frameworks/tests/test_first_party_provenance.py",
+      "sha256": "765043ee337429c85103dc2bedf1140fce32c4a7635ecddbdca66f4f41efc957"
+    }
+  ],
+  "top_source_manifest": {
+    "path": "full/first-party-frameworks/first_party_guest_sources.txt",
+    "sha256": "0cf31dda961a42a9e3ee665776e541b57f343dea3d4a534d6b96bf33ad7c1380"
+  }
+}

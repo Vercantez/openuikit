@@ -58,6 +58,13 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UIKit",
                 "Intents",
                 "IntentsUI",
+                "LocalAuthentication",
+                "SafariServices",
+                "Network",
+                "StoreKit",
+                "AudioToolbox",
+                "CoreHaptics",
+                "PassKit",
                 "DeveloperToolsSupport",
             )
         )
@@ -74,6 +81,13 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UIKit",
                 "Intents",
                 "IntentsUI",
+                "LocalAuthentication",
+                "SafariServices",
+                "Network",
+                "StoreKit",
+                "AudioToolbox",
+                "CoreHaptics",
+                "PassKit",
             )
         )
         for relative in required_files:
@@ -89,6 +103,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "source-sets",
             "foundation-sources",
             "intents-sources",
+            "first-party-sources",
+            "first-party-dylib-loads",
             "sdk-dangling-symlinks",
             "sdk-dangling-exclusions",
             "include-tree",
@@ -132,6 +148,13 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lUIKit",
                 "-lIntents",
                 "-lIntentsUI",
+                "-lLocalAuthentication",
+                "-lSafariServices",
+                "-lNetwork",
+                "-lStoreKit",
+                "-lAudioToolbox",
+                "-lCoreHaptics",
+                "-lPassKit",
             ],
             "format_version": 1,
             "manifests": {
