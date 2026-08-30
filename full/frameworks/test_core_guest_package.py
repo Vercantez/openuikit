@@ -643,6 +643,11 @@ class PackageContractTests(unittest.TestCase):
 
 
 class ShellContractTests(unittest.TestCase):
+    def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
+        self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
+
     def test_builder_requires_exact_uikit_pin_and_fresh_output(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         for token in (

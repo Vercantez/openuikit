@@ -51,6 +51,11 @@ The semantic build order is deliberate:
 6. Link the reusable dylibs and run the package's Mach-O closure/resource/font
    probe through the packaged machorun root.
 
+The current production OpenUIKit source-set contract is 105 Swift files. The
+increase from 102 is the canonical Focus launch-core tranche's independent
+feedback-generator, table-diffable-data-source, and property-animator files;
+the cold builder refuses either a missing file or an unexpected extra source.
+
 FoundationEssentials' dylib includes both the upstream cshim `uuid.o` and the
 project compatibility `uuid_compat.o`; the latter must not be dropped merely
 because a small dead-stripped probe happens not to reference it.
