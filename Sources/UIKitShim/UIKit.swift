@@ -35,8 +35,10 @@
 #if canImport(ObjectiveC)
 @_exported import ObjectiveC
 #endif
-@_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 @_exported import OpenUIKit
+
+#if canImport(DeveloperToolsSupport)
+@_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 
 // UIKit's first bounded #Preview slice stores an unchanged UIView or
 // UIViewController body in target-side DeveloperToolsSupport metadata. There
@@ -79,6 +81,7 @@ public macro Preview(
     module: "OpenUIKitPreviewMacros",
     type: "UIKitPreviewMacro"
 )
+#endif
 
 // These local aliases deliberately win unqualified lookup through the
 // re-exporting UIKit module. On Foundation-visible builds OpenUIKit's
