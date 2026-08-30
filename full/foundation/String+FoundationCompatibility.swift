@@ -8,11 +8,6 @@
 import FoundationEssentials
 import _StringProcessing
 
-/// The measured guest surface uses NSString only for its path conveniences,
-/// comparison-option namespace, and casts of plist strings. A Swift String is
-/// the single value identity at that boundary; Objective-C message dispatch is
-/// outside this standalone facade.
-public typealias NSString = String
 public typealias NSLocale = Locale
 
 public extension String {
@@ -282,7 +277,7 @@ private func _foundationGuestHex(_ byte: UInt8) -> UInt8? {
     }
 }
 
-private func _foundationGuestFormat(_ format: String, arguments: [Any]) -> String {
+internal func _foundationGuestFormat(_ format: String, arguments: [Any]) -> String {
     let characters = Array(format)
     var result = ""
     var cursor = 0

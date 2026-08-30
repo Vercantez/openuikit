@@ -80,7 +80,7 @@ Because the facade link disables linker auto-linking, this builder applies the
 same measured runtime contract as the reusable core-package path: exactly one
 direct load each for `libswift_StringProcessing` and
 `libswiftSynchronization`, with their SDK TBDs, staged dylibs, and install IDs
-validated before linking. The sixteen-source object is required to expose the
+validated before linking. The seventeen-source object is required to expose the
 measured 19/2/0 direct undefined-symbol counts for StringProcessing,
 Synchronization, and RegexParser respectively; RegexParser remains a
 transitive StringProcessing dependency rather than a direct Foundation load.

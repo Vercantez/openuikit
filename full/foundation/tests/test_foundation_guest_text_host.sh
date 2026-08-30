@@ -17,12 +17,15 @@ PINNED=$ROOT/full/foundation/pinned_inputs.pl
 GOLDEN=$ROOT/full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
 COMPAT_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
 STRUCTURED_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
+NSSTRING_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
 EXPECTED_GOLDEN_SHA=da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980
 EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
 EXPECTED_STRUCTURED_GOLDEN_SHA=5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e
-EXPECTED_SOURCE_DIGEST=3847eb3bbda3ab15731de53349db5599f98a4faa20db8ce8ce717106b6e36810
+EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
+EXPECTED_SOURCE_DIGEST=7f23cc696b46544eeeba9d4a7f374567591418e70ae754299368c9ff3df869ed
 
 FOUNDATION_SOURCES=(
+    "$ROOT/full/foundation/NSString.swift"
     "$ROOT/full/foundation/CharacterSet.swift"
     "$ROOT/full/foundation/String+CharacterSet.swift"
     "$ROOT/full/foundation/String+FoundationCompatibility.swift"
@@ -36,6 +39,7 @@ ATTESTED_SOURCES=(
     full/foundation/Bundle+Localization.swift
     full/foundation/Scanner.swift
     full/foundation/Error+LocalizedDescription.swift
+    full/foundation/NSString.swift
     full/foundation/NSError.swift
     full/foundation/NSNumber.swift
     full/foundation/JSONSerialization.swift
@@ -54,9 +58,12 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestServiceIdentityProbe.swift
     full/foundation/tests/FoundationGuestStructuredDataOracle.swift
     full/foundation/tests/FoundationGuestStructuredDataNegative.swift
+    full/foundation/tests/FoundationGuestNSStringOracle.swift
+    full/foundation/tests/FoundationGuestNSStringNegative.swift
     full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
+    full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
 )
 
 die() {
@@ -102,6 +109,8 @@ initial_source_digest=$(source_digest)
     "$EXPECTED_COMPAT_GOLDEN_SHA" ] || die "Apple compatibility golden digest changed"
 [ "$(shasum -a 256 "$STRUCTURED_GOLDEN" | awk '{print $1}')" = \
     "$EXPECTED_STRUCTURED_GOLDEN_SHA" ] || die "Apple structured-data golden digest changed"
+[ "$(shasum -a 256 "$NSSTRING_GOLDEN" | awk '{print $1}')" = \
+    "$EXPECTED_NSSTRING_GOLDEN_SHA" ] || die "Apple NSString golden digest changed"
 
 require_repo \
     "$SF" \
@@ -227,14 +236,27 @@ LINK_OBJECTS=(
     "$FE/uuid.o"
 )
 
+"${SWIFTC[@]}" -parse-as-library -module-name OpenUIKit \
+    -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -emit-module -emit-module-path "$SERVICES/OpenUIKit.swiftmodule" \
+    -emit-object -o "$SERVICES/OpenUIKit.o" \
+    "$ROOT/full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift"
+
+FOUNDATION_LINK_OBJECTS=(
+    "$SERVICES/OpenUIKit.o"
+    "${LINK_OBJECTS[@]}"
+)
+
 build_foundation() {
     local destination=$1 character_set_source=$2
     shift 2
     "${SWIFTC[@]}" -parse-as-library -module-name Foundation \
-        -I "$FE" "${CSHIM_FLAGS[@]}" \
+        -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
         -emit-module -emit-module-path "$destination/Foundation.swiftmodule" \
         -emit-object -o "$destination/Foundation.o" \
         "$ROOT/full/foundation/tests/FoundationGuestTextTestRoot.swift" \
+        "$ROOT/full/appshim/FoundationOpenUIKitValueAliases.swift" \
+        "$ROOT/full/foundation/NSString.swift" \
         "$character_set_source" \
         "$ROOT/full/foundation/String+CharacterSet.swift" \
         "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
@@ -268,18 +290,18 @@ cmp "$COMPAT_GOLDEN" "$OUT/apple-compat-output.txt" \
 
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/port-module-cache" \
-    -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$FOUNDATION" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextOracle.swift" \
-    "$FOUNDATION/Foundation.o" "${LINK_OBJECTS[@]}" \
+    "$FOUNDATION/Foundation.o" "${FOUNDATION_LINK_OBJECTS[@]}" \
     -o "$OUT/port-oracle"
 "$OUT/port-oracle" > "$OUT/port-output.txt"
 cmp "$GOLDEN" "$OUT/port-output.txt" || die "portable output differs from Apple golden"
 
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/port-compat-module-cache" \
-    -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$FOUNDATION" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestCompatibilityOracle.swift" \
-    "$FOUNDATION/Foundation.o" "${LINK_OBJECTS[@]}" \
+    "$FOUNDATION/Foundation.o" "${FOUNDATION_LINK_OBJECTS[@]}" \
     -o "$OUT/port-compat-oracle"
 "$OUT/port-compat-oracle" > "$OUT/port-compat-output.txt"
 cmp "$COMPAT_GOLDEN" "$OUT/port-compat-output.txt" \
@@ -287,20 +309,15 @@ cmp "$COMPAT_GOLDEN" "$OUT/port-compat-output.txt" \
 
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/runtime-module-cache" \
-    -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$FOUNDATION" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextRuntime.swift" \
-    "$FOUNDATION/Foundation.o" "${LINK_OBJECTS[@]}" \
+    "$FOUNDATION/Foundation.o" "${FOUNDATION_LINK_OBJECTS[@]}" \
     -o "$OUT/runtime"
 runtime_output=$("$OUT/runtime")
 [ "$runtime_output" = \
     'FOUNDATION_GUEST_TEXT_RUNTIME_OK characters=26 trimming=unicode scanner=hex error=descriptive compatibility=focus' \
 ] || die "unexpected runtime marker: $runtime_output"
 
-"${SWIFTC[@]}" -parse-as-library -module-name OpenUIKit \
-    -I "$FE" "${CSHIM_FLAGS[@]}" \
-    -emit-module -emit-module-path "$SERVICES/OpenUIKit.swiftmodule" \
-    -emit-object -o "$SERVICES/OpenUIKit.o" \
-    "$ROOT/full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift"
 "${SWIFTC[@]}" -parse-as-library -module-name Foundation \
     -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     -emit-module -emit-module-path "$SERVICES/Foundation.swiftmodule" \
@@ -341,6 +358,7 @@ service_output=$("$OUT/service-runtime" "$OUT/service-fixture")
     "$ROOT/full/foundation/tests/FoundationGuestTextTestRoot.swift" \
     "$ROOT/full/appshim/FoundationOpenUIKitServiceAliases.swift" \
     "$ROOT/full/appshim/FoundationOpenUIKitValueAliases.swift" \
+    "$ROOT/full/foundation/NSString.swift" \
     "$ROOT/full/foundation/CharacterSet.swift" \
     "$ROOT/full/foundation/String+CharacterSet.swift" \
     "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
@@ -390,6 +408,37 @@ structured_negative_output=$("$OUT/port-structured-negative")
     'FOUNDATION_GUEST_STRUCTURED_NEGATIVE_OK regex-options=3 json-nonfinite=1' \
 ] || die "unexpected structured negative marker: $structured_negative_output"
 
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/apple-nsstring-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSStringOracle.swift" \
+    -o "$OUT/apple-nsstring-oracle"
+"$OUT/apple-nsstring-oracle" > "$OUT/apple-nsstring-output.txt"
+cmp "$NSSTRING_GOLDEN" "$OUT/apple-nsstring-output.txt" \
+    || die "Apple NSString oracle drifted from golden"
+otool -L "$OUT/apple-nsstring-oracle" | \
+    grep -q '/System/Library/Frameworks/Foundation.framework/' || {
+        die "Apple NSString oracle did not load Apple Foundation"
+    }
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/port-nsstring-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSStringOracle.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-nsstring-oracle"
+"$OUT/port-nsstring-oracle" > "$OUT/port-nsstring-output.txt"
+cmp "$NSSTRING_GOLDEN" "$OUT/port-nsstring-output.txt" \
+    || die "portable NSString output differs from Apple golden"
+
+xcrun swiftc -target "$TARGET" -parse-as-library \
+    -module-cache-path "$OUT/port-nsstring-negative-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSStringNegative.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-nsstring-negative"
+nsstring_negative_output=$("$OUT/port-nsstring-negative")
+[ "$nsstring_negative_output" = \
+    'FOUNDATION_GUEST_NSSTRING_NEGATIVE_OK unsupported=1 missing=1 malformed=1' \
+] || die "unexpected NSString negative marker: $nsstring_negative_output"
+
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/apple-service-module-cache" \
     "$ROOT/full/foundation/tests/FoundationGuestBundleRuntime.swift" \
@@ -401,15 +450,15 @@ apple_service_output=$("$OUT/apple-service-runtime" "$OUT/apple-service-fixture"
 ] || die "unexpected Apple bundle marker: $apple_service_output"
 
 "${SWIFTC[@]}" -parse-as-library -module-name UIKit \
-    -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$FOUNDATION" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     -emit-module -emit-module-path "$UIKIT/UIKit.swiftmodule" \
     -emit-object -o "$UIKIT/UIKit.o" \
     "$ROOT/full/foundation/tests/FoundationGuestTextUIKit.swift"
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/uikit-client-module-cache" \
-    -I "$UIKIT" -I "$FOUNDATION" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$UIKIT" -I "$FOUNDATION" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextUIKitClient.swift" \
-    "$UIKIT/UIKit.o" "$FOUNDATION/Foundation.o" "${LINK_OBJECTS[@]}" \
+    "$UIKIT/UIKit.o" "$FOUNDATION/Foundation.o" "${FOUNDATION_LINK_OBJECTS[@]}" \
     -o "$OUT/uikit-client"
 uikit_output=$("$OUT/uikit-client")
 [ "$uikit_output" = 'FOUNDATION_GUEST_TEXT_UIKIT_REEXPORT_OK' ] || {
@@ -418,7 +467,8 @@ uikit_output=$("$OUT/uikit-client")
 
 for binary in "$OUT/port-oracle" "$OUT/port-compat-oracle" "$OUT/runtime" \
     "$OUT/uikit-client" "$OUT/service-runtime" "$OUT/port-structured-oracle" \
-    "$OUT/port-structured-negative"; do
+    "$OUT/port-structured-negative" "$OUT/port-nsstring-oracle" \
+    "$OUT/port-nsstring-negative"; do
     if otool -L "$binary" | grep -Eq \
         '/System/Library/Frameworks/(Foundation|CoreFoundation)\.framework/'; then
         die "portable binary loads Apple Foundation/CoreFoundation: $binary"
@@ -428,6 +478,11 @@ done
 xcrun nm -gU "$STRUCTURED/Foundation.o" | \
     xcrun swift-demangle > "$OUT/structured-foundation-symbols.txt"
 for symbol in \
+    'Foundation.NSString.init(string:' \
+    'Foundation.NSString.character(at:' \
+    'Foundation.NSString.substring(with:' \
+    'Foundation.NSString.copy(with:' \
+    'Swift.String._bridgeToObjectiveC()' \
     'Foundation.NSError.init(domain:' \
     'Foundation._convertErrorToNSError' \
     'Foundation.NSNumber.__allocating_init<A where A: Swift.BinaryInteger>(value:' \
@@ -464,7 +519,7 @@ build_foundation \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 if xcrun swiftc -target "$TARGET" -typecheck \
     -module-cache-path "$OUT/missing-module-cache" \
-    -I "$MISSING" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$MISSING" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextMissingScanner.swift" \
     > "$OUT/missing.stdout" 2> "$OUT/missing.stderr"; then
     die "missing-Scanner adversarial compile unexpectedly succeeded"
@@ -484,9 +539,9 @@ build_foundation \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift"
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/mutated-module-cache" \
-    -I "$MUTATED" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    -I "$MUTATED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
     "$ROOT/full/foundation/tests/FoundationGuestTextOracle.swift" \
-    "$MUTATED/Foundation.o" "${LINK_OBJECTS[@]}" \
+    "$MUTATED/Foundation.o" "${FOUNDATION_LINK_OBJECTS[@]}" \
     -o "$MUTATED/oracle"
 "$MUTATED/oracle" > "$MUTATED/output.txt"
 if cmp -s "$GOLDEN" "$MUTATED/output.txt"; then
@@ -500,7 +555,7 @@ final_source_digest=$(source_digest)
 
 printf '%s\n' \
     "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
-"runtime=2 identity=8 structured=77 structured-negatives=4 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
+"runtime=2 identity=8 structured=77 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi

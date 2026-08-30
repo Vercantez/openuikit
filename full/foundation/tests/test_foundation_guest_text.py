@@ -17,6 +17,8 @@ HOST_GATE = TESTS / "test_foundation_guest_text_host.sh"
 GOLDEN = TESTS / "foundation-guest-text-apple-2026-08-30.txt"
 COMPAT_GOLDEN = TESTS / "foundation-guest-compatibility-apple-2026-08-30.txt"
 STRUCTURED_GOLDEN = TESTS / "foundation-guest-structured-data-apple-2026-08-30.txt"
+NSSTRING_GOLDEN = TESTS / "foundation-guest-nsstring-apple-2026-08-30.txt"
+NSSTRING = FOUNDATION / "NSString.swift"
 PRODUCTION = (
     FOUNDATION / "CharacterSet.swift",
     FOUNDATION / "String+CharacterSet.swift",
@@ -32,7 +34,7 @@ STRUCTURED_PRODUCTION = (
     FOUNDATION / "NSRegularExpression.swift",
     ROOT / "full/appshim/FoundationOpenUIKitValueAliases.swift",
 )
-ATTESTED = PRODUCTION + STRUCTURED_PRODUCTION + (
+ATTESTED = PRODUCTION + (NSSTRING,) + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestTextTestRoot.swift",
     TESTS / "FoundationGuestTextUIKit.swift",
     TESTS / "FoundationGuestTextUIKitClient.swift",
@@ -46,9 +48,12 @@ ATTESTED = PRODUCTION + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestServiceIdentityProbe.swift",
     TESTS / "FoundationGuestStructuredDataOracle.swift",
     TESTS / "FoundationGuestStructuredDataNegative.swift",
+    TESTS / "FoundationGuestNSStringOracle.swift",
+    TESTS / "FoundationGuestNSStringNegative.swift",
     GOLDEN,
     COMPAT_GOLDEN,
     STRUCTURED_GOLDEN,
+    NSSTRING_GOLDEN,
 )
 
 
@@ -87,6 +92,11 @@ class FoundationGuestTextTests(unittest.TestCase):
             "5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e",
         )
         self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 77)
+        self.assertEqual(
+            hashlib.sha256(NSSTRING_GOLDEN.read_bytes()).hexdigest(),
+            "472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486",
+        )
+        self.assertEqual(len(NSSTRING_GOLDEN.read_text().splitlines()), 46)
 
     def test_character_set_inventory_is_exact_and_not_app_specific(self) -> None:
         source = PRODUCTION[0].read_text()
@@ -130,9 +140,9 @@ class FoundationGuestTextTests(unittest.TestCase):
             "replacingOccurrences",
             "init(format: String, _ arguments: Any...)",
             "match.range.lowerBound != match.range.upperBound",
-            "public typealias NSString = String",
         ):
             self.assertIn(token, source)
+        self.assertNotIn("public typealias NSString = String", source)
         oracle = (TESTS / "FoundationGuestCompatibilityOracle.swift").read_text()
         self.assertIn("CharacterSet.urlUserAllowed", oracle)
         self.assertIn("%C3%28", oracle)
@@ -185,6 +195,31 @@ class FoundationGuestTextTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
         self.assertNotRegex(source, r"return\s+error\s+as\s+NSError")
+
+    def test_nsstring_is_a_real_immutable_reference_bridge(self) -> None:
+        source = NSSTRING.read_text()
+        for token in (
+            "open class NSString: NSObject, NSCopying",
+            "public init(string aString: String)",
+            "public required convenience init(stringLiteral value: String)",
+            "open var length: Int",
+            "open func character(at index: Int) -> unichar",
+            "open func substring(from index: Int) -> String",
+            "open func substring(to index: Int) -> String",
+            "open func substring(with range: NSRange) -> String",
+            "open func compare(_ string: String) -> ComparisonResult",
+            "open override func isEqual(_ object: Any?) -> Bool",
+            "open override var hash: Int",
+            "open var utf8String: UnsafePointer<CChar>?",
+            "open func copy(with zone: NSZone? = nil) -> Any",
+            "extension String: _ObjectiveCBridgeable",
+            "public typealias _ObjectiveCType = NSString",
+            "encoding == String.Encoding.utf8.rawValue",
+        ):
+            self.assertIn(token, source)
+        self.assertIn("return nil", source)
+        self.assertNotIn("fatalError", source)
+        self.assertNotIn("public typealias NSString = String", source)
 
     def test_nsnumber_is_a_real_reference_bridge_for_scalar_values(self) -> None:
         source = STRUCTURED_PRODUCTION[1].read_text()
@@ -283,7 +318,10 @@ class FoundationGuestTextTests(unittest.TestCase):
             "malformed-entity=rejected",
             "FoundationGuestServiceIdentityProbe.swift",
             "foundation-guest-structured-data-apple-2026-08-30.txt",
+            "foundation-guest-nsstring-apple-2026-08-30.txt",
             "portable structured-data output differs from Apple golden",
+            "portable NSString output differs from Apple golden",
+            "FOUNDATION_GUEST_NSSTRING_NEGATIVE_OK",
             "FOUNDATION_GUEST_STRUCTURED_NEGATIVE_OK",
             "Foundation|CoreFoundation",
             "FOUNDATION_GUEST_TEXT_HOST_OK",

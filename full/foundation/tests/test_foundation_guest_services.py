@@ -14,6 +14,7 @@ EXPECTED = [
     "full/appshim/FoundationOpenUIKitAliases.swift",
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
+    "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
@@ -45,7 +46,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 16', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 17', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)

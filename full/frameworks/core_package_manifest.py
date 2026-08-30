@@ -21,6 +21,7 @@ FOUNDATION_SOURCES = (
     "full/appshim/FoundationOpenUIKitAliases.swift",
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
+    "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",

@@ -6,8 +6,6 @@ import FoundationEssentials
 import ObjectiveC
 import _StringProcessing
 
-public let NSNotFound = Int.max
-
 open class NSTextCheckingResult: NSObject, @unchecked Sendable {
     public struct CheckingType: OptionSet, Sendable {
         public let rawValue: UInt64

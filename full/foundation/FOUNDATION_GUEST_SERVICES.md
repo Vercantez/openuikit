@@ -9,7 +9,7 @@ file rather than maintaining a second list.
 
 The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
-`TimeZone`, and `IndexPath` identities. The sixteen-source facade adds:
+`TimeZone`, and `IndexPath` identities. The seventeen-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   its mutable bridge, scalar-boundary trimming/search, percent coding, legacy
@@ -42,6 +42,10 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
   `JSONSerialization`, and UTF-16 `NSRegularExpression` surface. Its exact
   behavior and bounded exclusions are documented in
   `FOUNDATION_GUEST_STRUCTURED_DATA.md`.
+- A real immutable, NSObject-backed `NSString` reference plus Swift `String`
+  bridging, UTF-16 indexing/substrings, comparison/equality/hash, UTF-8, path,
+  and NSCopying-style behavior. Its Apple differential and UTF-8-only boundary
+  are documented in `FOUNDATION_GUEST_NSSTRING.md`.
 
 ## Reproduce the host gates
 

@@ -126,8 +126,8 @@ done
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 16 ] \
-    || die "Foundation guest source manifest must contain exactly 16 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 17 ] \
+    || die "Foundation guest source manifest must contain exactly 17 lines"
 FOUNDATION_GUEST_SOURCES=()
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     case "$relative" in

@@ -58,6 +58,7 @@ FOUNDATION_SOURCES = (
     "full/appshim/FoundationOpenUIKitAliases.swift",
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
+    "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
@@ -247,14 +248,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 16)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 17)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 16-path contract", refusal.stderr)
+        self.assertIn("exact ordered 17-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]

@@ -36,7 +36,7 @@ no application source or schema is embedded in it.
   they are never accepted as no-ops.
 
 The ordered production manifest is
-`full/foundation/foundation_guest_sources.txt`. Its 16 entries place the shared
+`full/foundation/foundation_guest_sources.txt`. Its 17 entries place the shared
 OpenUIKit value aliases before these concrete types and are consumed by both
 the Focus onboarding builder and the reusable core package builder.
 
@@ -57,7 +57,7 @@ regex modes and non-finite JSON data refuse rather than report success.
 The fresh host gate ends with:
 
 ```text
-FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 runtime=2 identity=8 structured=77 structured-negatives=4 uikit-reexport=1 adversarial=4
+FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 runtime=2 identity=8 structured=77 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4
 ```
 
 The same freshly built facade object's names-only undefined inventory is
@@ -90,7 +90,7 @@ fresh literal-module compile/oracle prove this batch now; an exact guest-module
 Focus delta remains part of the serialized ARM64 core-package replay.
 
 This slice does not implement archives/coders, networking, data detectors,
-ICU's complete regex option matrix, Objective-C mutable collection identity,
-or `NSString`. The immediate Foundation successor needs real `NSString`
-identity/value bridging because Apple-generated dynamic String Intents expose
-`INObjectCollection<NSString>`; no placeholder alias is supplied here.
+ICU's complete regex option matrix, or Objective-C mutable collection identity.
+The immediate successor now supplies real immutable `NSString` identity/value
+bridging for generated Intents; its exact scope is documented separately in
+`FOUNDATION_GUEST_NSSTRING.md`.
