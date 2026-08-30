@@ -114,10 +114,396 @@ final class FoundationCoexistenceTests: XCTestCase {
     /// `Timer`'s own clock is `UIWindow.tick(timestamp:)`, which is why
     /// OpenUIKit keeps its own Timer instead of Foundation's (Timer.swift).
     private static let banned = [
-        "Date(", "NSDate", "DateFormatter", "Calendar(", "Locale(",
+        "NSDate", "DateFormatter",
         "gettimeofday", "clock_gettime", "mach_absolute_time",
         "CFAbsoluteTimeGetCurrent", "arc4random", "UUID(",
     ]
+
+    private static let ambientPatterns = [
+        "Date.now", "Date.init(timeIntervalSinceNow:",
+        "Calendar.current", "Calendar.autoupdatingCurrent",
+        "Locale.current", "Locale.autoupdatingCurrent",
+        "TimeZone.current", "TimeZone.autoupdatingCurrent",
+        "DispatchTime.now", "ProcessInfo.processInfo.systemUptime",
+    ]
+
+    /// The only Foundation constructors admitted in the render/layout source
+    /// are the explicit deterministic environment in UIDatePicker. Counts are
+    /// exact: deleting, duplicating, or changing any call fails the scan.
+    /// A control-delimited token cannot occur in compilable Swift source. It
+    /// therefore cannot be forged by naming a variable after the scanner's
+    /// replacement for a deterministic string literal.
+    private static let stringLiteralSentinel = "\u{1F}STRING_LITERAL\u{1F}"
+
+    private static let datePickerConstructorAllowlist: [String: Int] = [
+        "Date.init(timeIntervalSinceReferenceDate:hostTime)": 2,
+        "Calendar(identifier:.gregorian)": 1,
+        "Calendar(identifier:input.identifier)": 1,
+        "Locale(identifier:\(stringLiteralSentinel))": 2,
+        "Locale(identifier:input.identifier)": 1,
+        "TimeZone(secondsFromGMT:0)!": 2,
+        "TimeZone(identifier:input.identifier)": 1,
+    ]
+
+    /// The content-preserving spelling of the same allowlist is used for the
+    /// conservative constructor scan. The code-only lexer above proves that
+    /// a string/comment cannot satisfy an exact count; this second view makes
+    /// executable string interpolation visible and rejects constructor-shaped
+    /// decoys rather than trying to interpret all of Swift's string grammar.
+    private static let datePickerPreservedConstructorAllowlist: [String: Int] = [
+        "Date.init(timeIntervalSinceReferenceDate:hostTime)": 2,
+        "Calendar(identifier:.gregorian)": 1,
+        "Calendar(identifier:input.identifier)": 1,
+        "Locale(identifier:\"en_US_POSIX\")": 2,
+        "Locale(identifier:input.identifier)": 1,
+        "TimeZone(secondsFromGMT:0)!": 2,
+        "TimeZone(identifier:input.identifier)": 1,
+    ]
+
+    static func sourceWithoutComments(
+        _ source: String,
+        preservingStringContents: Bool = true
+    ) -> String {
+        // This deliberately small lexer distinguishes Swift string delimiters
+        // from comments. A regex makes `"/*"` or `"//"` capable of erasing
+        // executable source that follows it, which would turn the determinism
+        // check itself into an evasion surface. Nested block comments and raw
+        // or multiline strings are handled because framework source uses all
+        // of those forms.
+        let characters = Array(source)
+        var output: [Character] = []
+        var index = 0
+        var blockDepth = 0
+        var inLineComment = false
+        var stringHashes: Int?
+        var multilineString = false
+
+        func matches(_ spelling: [Character], at offset: Int) -> Bool {
+            guard offset >= 0, offset + spelling.count <= characters.count else {
+                return false
+            }
+            for item in spelling.indices
+                where characters[offset + item] != spelling[item] {
+                return false
+            }
+            return true
+        }
+
+        func closingHashesMatch(after offset: Int, count: Int) -> Bool {
+            guard offset + count <= characters.count else { return false }
+            for item in 0..<count where characters[offset + item] != "#" {
+                return false
+            }
+            return true
+        }
+
+        while index < characters.count {
+            if inLineComment {
+                if characters[index] == "\n" {
+                    inLineComment = false
+                    output.append("\n")
+                }
+                index += 1
+                continue
+            }
+
+            if blockDepth > 0 {
+                if matches(["/", "*"], at: index) {
+                    blockDepth += 1
+                    index += 2
+                } else if matches(["*", "/"], at: index) {
+                    blockDepth -= 1
+                    index += 2
+                } else {
+                    index += 1
+                }
+                continue
+            }
+
+            if let hashes = stringHashes {
+                // Ordinary string escapes consume the following character;
+                // raw strings close only at a quote plus their exact hashes.
+                if hashes == 0, characters[index] == "\\" {
+                    if preservingStringContents {
+                        output.append(characters[index])
+                    }
+                    index += 1
+                    if index < characters.count {
+                        if preservingStringContents {
+                            output.append(characters[index])
+                        }
+                        index += 1
+                    }
+                    continue
+                }
+                let quotes = multilineString ? [Character]("\"\"\"") : ["\""]
+                if matches(quotes, at: index),
+                   closingHashesMatch(after: index + quotes.count,
+                                      count: hashes) {
+                    if preservingStringContents {
+                        output.append(contentsOf: quotes)
+                        output.append(contentsOf: repeatElement("#", count: hashes))
+                    }
+                    index += quotes.count + hashes
+                    stringHashes = nil
+                    multilineString = false
+                    continue
+                }
+                if preservingStringContents {
+                    output.append(characters[index])
+                }
+                index += 1
+                continue
+            }
+
+            if matches(["/", "/"], at: index) {
+                inLineComment = true
+                index += 2
+                continue
+            }
+            if matches(["/", "*"], at: index) {
+                blockDepth = 1
+                index += 2
+                continue
+            }
+
+            var hashCount = 0
+            var quoteOffset = index
+            while quoteOffset < characters.count,
+                  characters[quoteOffset] == "#" {
+                hashCount += 1
+                quoteOffset += 1
+            }
+            if quoteOffset < characters.count,
+               characters[quoteOffset] == "\"" {
+                let triple = matches(["\"", "\"", "\""], at: quoteOffset)
+                let delimiterEnd = quoteOffset + (triple ? 3 : 1)
+                if preservingStringContents {
+                    output.append(contentsOf: characters[index..<delimiterEnd])
+                } else {
+                    // Keep surrounding executable tokens separate without
+                    // retaining a constructor-shaped decoy from the literal.
+                    output.append(contentsOf: stringLiteralSentinel)
+                }
+                index = delimiterEnd
+                stringHashes = hashCount
+                multilineString = triple
+                continue
+            }
+
+            output.append(characters[index])
+            index += 1
+        }
+        return String(output)
+    }
+
+    private static func compactExecutableSource(_ source: String) -> String {
+        sourceWithoutComments(source).filter { !$0.isWhitespace }
+    }
+
+    private static func compactExecutableTokens(_ source: String) -> String {
+        sourceWithoutComments(source, preservingStringContents: false)
+            .filter { !$0.isWhitespace }
+    }
+
+    private static func removingApprovedConstructors(
+        _ source: String,
+        relativePath: String,
+        allowlist: [String: Int]
+    ) -> String {
+        guard relativePath == "UIDatePicker.swift" else { return source }
+        var remainder = source
+        for (spelling, maximumCount) in allowlist {
+            for _ in 0..<maximumCount {
+                guard let range = remainder.range(of: spelling) else { break }
+                remainder.removeSubrange(range)
+            }
+        }
+        return remainder
+    }
+
+    private static func occurrenceCount(of spelling: String,
+                                        in source: String) -> Int {
+        guard !spelling.isEmpty else { return 0 }
+        var count = 0
+        var start = source.startIndex
+        while let range = source.range(of: spelling,
+                                       range: start..<source.endIndex) {
+            count += 1
+            start = range.upperBound
+        }
+        return count
+    }
+
+    /// Finds a constructor spelling without mistaking ordinary APIs such as
+    /// `setDate(` or `layoutInlineCalendar(` for Foundation constructors.
+    private static func containsStandaloneCall(_ type: String,
+                                               in text: String) -> Bool {
+        var searchStart = text.startIndex
+        let needle = "\(type)("
+        while let range = text.range(of: needle,
+                                     range: searchStart..<text.endIndex) {
+            if range.lowerBound == text.startIndex { return true }
+            let prior = text[text.index(before: range.lowerBound)]
+            if !(prior.isLetter || prior.isNumber || prior == "_") { return true }
+            searchStart = range.upperBound
+        }
+        return false
+    }
+
+    private static func containsStandaloneTypeMember(
+        _ type: String,
+        member: String,
+        in text: String
+    ) -> Bool {
+        var searchStart = text.startIndex
+        let needle = "\(type).\(member)"
+        while let range = text.range(of: needle,
+                                     range: searchStart..<text.endIndex) {
+            let hasIdentifierPrefix: Bool
+            if range.lowerBound == text.startIndex {
+                hasIdentifierPrefix = false
+            } else {
+                let prior = text[text.index(before: range.lowerBound)]
+                hasIdentifierPrefix = prior.isLetter || prior.isNumber || prior == "_"
+            }
+            let hasIdentifierSuffix: Bool
+            if range.upperBound == text.endIndex {
+                hasIdentifierSuffix = false
+            } else {
+                let next = text[range.upperBound]
+                hasIdentifierSuffix = next.isLetter || next.isNumber || next == "_"
+            }
+            if !hasIdentifierPrefix, !hasIdentifierSuffix { return true }
+            searchStart = range.upperBound
+        }
+        return false
+    }
+
+    private static func deterministicViolations(in source: String,
+                                                relativePath: String) -> [String] {
+        let compact = compactExecutableSource(source)
+        let executable = compactExecutableTokens(source)
+        // UIDatePicker gets a deliberately conservative second pass over
+        // string contents. This catches executable interpolation that the
+        // code-only exact-count view replaces with a sentinel. Other modules
+        // retain the established code-only policy.
+        let unapproved = relativePath == "UIDatePicker.swift"
+            ? removingApprovedConstructors(
+                compact,
+                relativePath: relativePath,
+                allowlist: datePickerPreservedConstructorAllowlist
+            )
+            : executable
+        var violations = ambientPatterns.filter { compact.contains($0) }
+        let aliasPattern = #"typealias\s+`?[A-Za-z_][A-Za-z0-9_]*`?\s*=\s*(?:\(\s*)*(?:(?:Foundation|FoundationEssentials|FoundationInternationalization)\s*\.\s*)?(?:Date|Calendar|Locale|TimeZone)\b(?:\s*\))*"#
+        if sourceWithoutComments(source).range(
+            of: aliasPattern, options: .regularExpression
+        ) != nil {
+            violations.append("Foundation clock/environment typealias")
+        }
+        if relativePath == "UIDatePicker.swift" {
+            for (spelling, expectedCount) in datePickerConstructorAllowlist {
+                let actualCount = occurrenceCount(of: spelling, in: executable)
+                if actualCount != expectedCount {
+                    violations.append(
+                        "\(spelling): expected \(expectedCount), found \(actualCount)"
+                    )
+                }
+            }
+        }
+        for type in ["Date", "Calendar", "Locale", "TimeZone"] {
+            if containsStandaloneCall(type, in: unapproved) {
+                violations.append("\(type)(")
+            }
+            if containsStandaloneTypeMember(type, member: "self", in: unapproved) {
+                violations.append("\(type).self")
+            }
+            if containsStandaloneTypeMember(type, member: "init", in: unapproved) {
+                violations.append("\(type).init")
+            }
+        }
+        return violations
+    }
+
+    func testDeterminismScannerRejectsAmbientAndSpellingEvasions() {
+        let hostile = [
+            "let value = Date()",
+            "let value = Foundation . Date . now",
+            "let value = Calendar /* disguise */ . current",
+            "let value = Calendar\n.autoupdatingCurrent",
+            "let value = Foundation.Locale . current",
+            "let value = TimeZone /* disguise */ . autoupdatingCurrent",
+            "let opener = \"/*\"; let value = Calendar.current; let closer = \"*/\"",
+            "let marker = \"//\"; let value = TimeZone.autoupdatingCurrent",
+            "let value = Foundation . Calendar (identifier: .gregorian)",
+            "let value = Date . init (timeIntervalSinceReferenceDate: 0)",
+            "typealias ClockDate = Date; let value = ClockDate()",
+            "typealias AmbientCalendar = Foundation.Calendar; let value = AmbientCalendar.current",
+            "typealias HiddenDate = FoundationEssentials.Date; let value = HiddenDate()",
+            "typealias HiddenCalendar = FoundationInternationalization.Calendar; let value = HiddenCalendar.current",
+            "typealias HiddenLocale = FoundationInternationalization.Locale; let value = HiddenLocale.autoupdatingCurrent",
+            "typealias WrappedClock = (Date); let value = WrappedClock()",
+            "typealias DeepWrappedCalendar = ((FoundationEssentials.Calendar)); let value = DeepWrappedCalendar.current",
+            "let Clock = Date.self; let value = Clock.init()",
+            "let Clock = FoundationEssentials.Date.self; let value = Clock.init()",
+            "let CalendarFactory = Calendar.init",
+            "let value = DispatchTime.now()",
+            "let value = ProcessInfo.processInfo.systemUptime",
+        ]
+        for source in hostile {
+            XCTAssertFalse(Self.deterministicViolations(
+                in: source, relativePath: "Hostile.swift"
+            ).isEmpty, source)
+        }
+
+        XCTAssertEqual(Self.deterministicViolations(
+            in: "picker.setDate(value, animated: false)\nlayoutInlineCalendar()\nlet metadata = UserDate.self\nlet factory = CalendarFactory.initialValue\nlet note = \"Date.self Calendar.init\"",
+            relativePath: "Benign.swift"
+        ), [])
+
+        let allowed = Self.datePickerPreservedConstructorAllowlist
+            .flatMap { spelling, count in Array(repeating: spelling, count: count) }
+            .joined(separator: ";")
+        XCTAssertEqual(Self.deterministicViolations(
+            in: allowed, relativePath: "UIDatePicker.swift"
+        ), [])
+        let oneSpelling = "Calendar(identifier:.gregorian)"
+        XCTAssertFalse(Self.deterministicViolations(
+            in: allowed + ";" + oneSpelling,
+            relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+        XCTAssertFalse(Self.deterministicViolations(
+            in: allowed.replacingOccurrences(of: oneSpelling, with: "", options: [],
+                                             range: allowed.range(of: oneSpelling)),
+            relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+        let literalDecoy = allowed.replacingOccurrences(
+            of: oneSpelling, with: "\"\(oneSpelling)\"", options: [],
+            range: allowed.range(of: oneSpelling)
+        )
+        XCTAssertFalse(Self.deterministicViolations(
+            in: literalDecoy, relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+        let commentDecoy = allowed.replacingOccurrences(
+            of: oneSpelling, with: "/* \(oneSpelling) */", options: [],
+            range: allowed.range(of: oneSpelling)
+        )
+        XCTAssertFalse(Self.deterministicViolations(
+            in: commentDecoy, relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+        let interpolationDecoy = allowed.replacingOccurrences(
+            of: oneSpelling, with: "\"\\(\(oneSpelling))\"", options: [],
+            range: allowed.range(of: oneSpelling)
+        )
+        XCTAssertFalse(Self.deterministicViolations(
+            in: interpolationDecoy, relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+        XCTAssertFalse(Self.deterministicViolations(
+            in: #"let value = "\(Date(timeIntervalSinceReferenceDate: 0))""#,
+            relativePath: "UIDatePicker.swift"
+        ).isEmpty)
+    }
 
     func testRenderPathReadsNoWallClockLocaleOrRandomSource() throws {
         let fm = FileManager.default
@@ -130,6 +516,11 @@ final class FoundationCoexistenceTests: XCTestCase {
             for case let rel as String in e where rel.hasSuffix(".swift") {
                 let path = dir.appendingPathComponent(rel)
                 let text = try String(contentsOf: path, encoding: .utf8)
+                for violation in Self.deterministicViolations(
+                    in: text, relativePath: rel
+                ) {
+                    offenders.append("\(module)/\(rel): \(violation)")
+                }
                 for (n, rawLine) in text.split(separator: "\n", omittingEmptySubsequences: false).enumerated() {
                     let line = rawLine.trimmingCharacters(in: .whitespaces)
                     // Comments are where these names get DISCUSSED; the rule

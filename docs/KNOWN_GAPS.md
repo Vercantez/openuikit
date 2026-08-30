@@ -1,5 +1,79 @@
 # Known gaps (living document — fixers: read this)
 
+## UIDatePicker Reminder slice (2026-08-30)
+
+OpenUIKit now exports the picker-specific public surface exercised by
+Reminder, with UIKit's measured raw values, open subclassing points,
+initializer topology, and granular availability. Inline `.date` and wheel
+`.time` are functional at Reminder's 320 x 320 and 160 x 160 crops; all five
+modes and four styles have bounded model/layout paths. This is not a claim of
+complete UIDatePicker fidelity. The exact boundary is:
+
+- UIKit defaults through the user's current locale, calendar, and time zone.
+  OpenUIKit deliberately defaults and nil-resets to a snapshotted Gregorian,
+  `en_US_POSIX`, UTC, Sunday-first calendar. Explicit inputs are copied by
+  identifier so an autoupdating provider cannot change a later render. The
+  initial date is the exact finite `Timer.currentTime` in Foundation's
+  reference-date domain; entering countdown uses that same host clock to
+  derive current-day start. It never reads `Date.now`, `Calendar.current`, or
+  another ambient provider. If the host supplies a countdown-transition time
+  outside the supported range, OpenUIKit retains the prior valid date instead
+  of asking Foundation Calendar to interpret it.
+  Full-Foundation builds expose the requested `en_US_POSIX` identifier. The
+  pinned FoundationEssentials-only ARM64 Mach-O provider does not yet stage
+  FoundationInternationalization; swift-foundation's `_LocaleUnlocalized`
+  therefore exposes every requested identifier as `en_001`. The hidden guest
+  asserts direct `Locale(identifier: "en_US_POSIX")` normalization and the
+  picker calendar result separately. Gregorian identity, UTC, week rules, and
+  deterministic date calculations remain checked, but this is not locale
+  fidelity.
+- Public date, minimum, and maximum assignments are admitted only for finite
+  reference times in `-63_000_000_000...63_000_000_000`. Rejected values do
+  not change state or emit actions. A hostile but finite construction clock is
+  preserved exactly as the initial `date`, because that is the explicit host
+  contract, but calendar-derived presentation stays inert until a supported
+  value is assigned. Month/day ranges are capped at 13/42 and wheel indices
+  are validated before indexing or arithmetic. Exotic calendars render a
+  bounded fallback; their month names, eras, leap-month rules, and component
+  ordering are not faithful.
+- Picker presentation bounds must be finite and positive; each origin
+  magnitude and dimension is capped at 16,384 points. Unsupported bounds (or
+  frame sizes that create them) zero the candidate-owned presentation frames
+  and make picker touch handling inert before the internal wheel converts row
+  geometry to integers. This fail-closed ceiling is an OpenUIKit safety
+  policy, not a claim about UIKit's maximum view size or general hostile
+  `UIPickerView` behavior.
+- Labels are fixed English and time is always 24-hour. Inline layout is a
+  functional seven-by-six grid, not UIKit typography/material. Wheel rows use
+  the existing measured geometry but jump instead of spinning and omit
+  perspective text/fades. Compact style is a static label and has no overlay.
+  Accessibility calendar semantics, locale-specific ordering, right-to-left
+  arrangement, and native private hierarchy are not modeled.
+- Rounding, non-grid-aligned bounds, countdown normalization and transitions,
+  direct/method date updates, and programmatic-event silence are pinned to an
+  iOS 26.1 runtime oracle. Component changes clamp an invalid retained day
+  (January 31 to February, or leap day to a non-leap year). Invalid
+  `minuteInterval` assignments leave the old value; Objective-C UIKit raises
+  an exception. Unsupported countdown/year-month style pairs terminate via a
+  Swift precondition, the portable fatal analogue of UIKit's exception.
+- `init(frame:)`, `init()`, and the required coder path are source-compatible
+  and externally subclassed in a literal `import UIKit` gate. This slice does
+  not make `UIDatePicker` (or its current portable `UIView` superclass)
+  conform to Foundation `NSCoding`; generic constraints and casts requiring
+  that conformance remain a framework-wide inherited substrate gap. The coder
+  initializer is source-compatible construction topology, not a claim of
+  byte-compatible archives, UIKit's private decoded hierarchy, or Objective-C
+  runtime representability. Reminder's
+  `#selector`/`@objc` errors remain visible in the pinned 12-diagnostic
+  after-multiset.
+- Renderer hashes prove stability and visible content across both OpenUIKit
+  routes, not pixel identity with Apple's private UIDatePicker. No native
+  bitmap golden is claimed. Full-Foundation macOS and FoundationEssentials-only
+  ARM64 Mach-O/Linux providers intentionally have separate pinned hashes. The
+  hidden guest renders each crop twice per process and is launched twice with
+  byte-identical stdout; it does not mutate picker pixels to match the host
+  provider.
+
 ## Visual-effect object and view semantics (2026-08-29)
 
 OpenUIKit now exports `UIVisualEffect`, `UIBlurEffect`,
@@ -832,9 +906,9 @@ heights. Derivation and the full probe table:
 - **The wheel does not spin.** `selectRow(_:inComponent:animated:)` jumps;
   there is no pan, no deceleration and no snap. Same Simulator-drag blocker
   as the refresh control's threshold.
-- `UIDatePicker` was DEFERRED and nothing was built. It is a formatter and a
-  calendar on top of this wheel, and both are Foundation; the wheel it would
-  sit on is now measured and available.
+- `UIDatePicker` was deferred in the historical controls2 pass. Its later
+  bounded Reminder slice now sits on this wheel; the limits above supersede
+  that historical status without changing the wheel's visual gaps.
 
 ## App compatibility (M12, 2026-08-25): what a real app still cannot do
 

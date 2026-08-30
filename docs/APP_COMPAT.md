@@ -70,12 +70,89 @@ pre-existing renderer boundary remains in `KNOWN_GAPS.md`.
 `Tools/systemimagehiddenprobe` carries the literal-UIKit, Foundation-hidden
 six-symbol/hash/tint/safety closure. Its arm64 Mach-O probe builds and launches
 unchanged on Linux through `machorun` against support commit
-`777e7c083a90452841009f56eec959c098761113`. The next unchanged Reminder
-blockers are `UIDatePicker`, `#Preview`, trait registration, text optionality,
-`Notification` ambiguity, modal transition style, table-row movement, and
-Objective-C selector exposure. A full unchanged Reminder launch therefore
-remains later integration work; this slice does not depend on the rejected
-support experiment.
+`777e7c083a90452841009f56eec959c098761113`. At that landed boundary,
+`UIDatePicker` was the next Reminder UIKit blocker; the successor slice below
+measures it independently. A full unchanged Reminder launch remains later
+integration work; this slice does not depend on the rejected support
+experiment.
+
+## Reminder UIDatePicker source and runtime slice (2026-08-30)
+
+The same unchanged Reminder revision, tree, 22-source subject, and SHA-256
+listed above exercise two direct picker paths: a 320 x 320 inline `.date`
+picker and a 160 x 160 wheel `.time` picker. The pinned whole-source census
+against system-image base `8f98af2e53af566923de6616f3629bec0661aa8c`
+now reports **34 -> 12 diagnostics**. Exactly **25 old diagnostics are
+removed**, **3 deeper diagnostics are exposed**, and **9 remain unchanged**.
+The three exposed errors are the pre-existing popover `backgroundColor`
+member and two Objective-C selector/representability boundaries that could
+not be diagnosed while `UIDatePicker` itself was missing. This is not a
+claim that the app compiles: the exact twelve-error multiset remains pinned.
+`Tools/reminderdatepickerprobe` rebuilds the base and candidate from clean
+clones, verifies every direct call-site line and the whole source hash, uses
+only an external process-entry shim, and rejects app/vendor or unexpected
+candidate paths. Reminder source is never edited.
+
+The public slice contains the open iOS 2 `UIDatePicker`, all five mode raw
+values, all four iOS 13.4 style raw values, the native open model members and
+frame/coder/zero-initializer topology, and the measured introductions for
+`.inline` (iOS 14), `roundsToMinuteInterval` (iOS 15), and `.yearAndMonth`
+(iOS 17.4). A literal external `import UIKit` subclass gate covers every
+picker-specific open member. The committed iOS 26.1 oracle pins defaults,
+rounding toggles, interval changes, non-grid-aligned bounds, countdown entry
+and duration transitions, direct and method date updates, and zero
+programmatic events. A source-level gate pins each granular introduction to
+the corresponding UIKit 26.1 symbol-graph declaration.
+
+Portable date evaluation is deliberately deterministic. Default construction
+uses the exact finite host-supplied `Timer.currentTime` in Foundation's
+reference-date domain. The nil-calendar/default environment is a snapshotted
+Gregorian calendar with `en_US_POSIX`, UTC, Sunday first, and one minimum day
+in the first week; it never reads process current or autoupdating providers.
+Entering countdown derives current-day start from that same explicit host
+clock. Non-finite and excessively distant public dates fail closed before a
+Calendar call. These choices and their native-current-environment divergence
+are explicit in `KNOWN_GAPS.md`.
+
+Both Reminder-sized presentations render visible deterministic content under
+the Quartz/layer and Swift/render-pass routes. Closed hashes cover 320 x 320
+inline date and 160 x 160 wheel time crops. Public UIWindow touch routing
+selects an inline day or wheel row with exactly one `.valueChanged`; clamped
+touches and every programmatic setter emit zero. This is a bounded functional
+picker, not an iOS pixel reproduction: English/24-hour labels,
+non-Gregorian fidelity, compact overlays, wheel physics, accessibility, and
+host localization remain outside this slice.
+Picker-owned presentation viewports must have finite positive bounds, with
+origin magnitude and dimensions no larger than 16,384 points. Unsupported
+frame/bounds inputs collapse the private presentation frames to zero and make
+picker touch handling inert before wheel row-count arithmetic; this is a
+portable hostile-input limit, not a measured UIKit size policy.
+
+`Tools/datepickerhiddenprobe` closes the corresponding Foundation-hidden
+compile/link/runtime gate without weakening the historical system-image proof.
+It pins clean support commit
+`3aea5dfa7858ec607183f4233fbb678babb9fb1e` (tree
+`89b8640036f1982f47b07d5d8da9b9fb339ee244`, sole parent `777e7c...`), the
+Swift 6.2.4 ARM64 Docker toolchain, the surviving FoundationEssentials
+modules/objects, and exact 12/102 OpenCoreGraphics/OpenUIKit source censuses.
+The gate freshly compiles every framework source plus the literal `import
+UIKit` predecessor and DatePicker guests, links direct pinned
+FoundationEssentials objects with fresh C compatibility objects, rejects a
+direct Foundation/CoreFoundation load, and launches through Linux `machorun`.
+The predecessor runs once; DatePicker runs twice with byte-identical expected
+stdout and empty stderr. Its transcript covers the explicit host clock,
+calendar reset, non-grid bounds, rounding toggle, countdown setters, translated
+public wheel touches, zero programmatic events, and repeat-identical 320 x 320
+inline/160 x 160 wheel pixels.
+
+That hidden provider has one measured substrate boundary: without
+FoundationInternationalization, pinned FoundationEssentials uses its
+unlocalized locale implementation and exposes a requested `en_US_POSIX` as
+`en_001`. The guest asserts both the exact request and the exact exposed value;
+full-Foundation macOS tests continue to require `en_US_POSIX`. The two
+providers also retain separate closed render hashes instead of rewriting
+pixels to make unlike locale/Foundation stacks appear identical. This runtime
+proof is the bounded picker path, not a complete unchanged Reminder launch.
 
 ## Visual-effect source compatibility slice (2026-08-29)
 
@@ -595,9 +672,9 @@ numbers, and each is written up in docs/KNOWN_GAPS.md with the probe route
 that would close it (the windowed oracle, which needs an active display
 session, or a Simulator drag).
 
-`UIDatePicker` was deferred and nothing was built: it is a formatter and a
-calendar on top of the picker wheel, and both are Foundation. The wheel it
-would sit on is now measured exactly.
+`UIDatePicker` was deferred in this historical controls2 pass. The bounded
+Reminder implementation described at the top of this file now builds on that
+measured picker wheel; the historical deferral is no longer current status.
 
 Three of the newly declared types SHADOW Foundation's — `NotificationCenter`,
 `Notification` and `Timer`, exactly like `NSAttributedString` before them.

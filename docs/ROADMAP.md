@@ -34,6 +34,21 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
 - **M3 Controls** — DONE: UIButton, UIImageView, UIProgressView,
   UIStackView, UISwitch + oracle v2 (real-window drawHierarchy).
   Full suite 23/23 on both backends.
+- **Reminder UIDatePicker slice (2026-08-30)** — bounded functional support
+  for the unchanged app's 320 x 320 inline-date and 160 x 160 wheel-time
+  paths. The exact whole-source census is 34 -> 12 diagnostics: 25 old errors
+  removed, 3 deeper errors exposed, 9 unchanged, and zero app/vendor edits.
+  Public availability/open-inheritance shape, native state transitions,
+  deterministic host-clock/calendar policy, hostile-date admission, public
+  touch events, bounded hostile picker viewports, and both renderer routes are
+  gated. A separate exact ARM64 Mach-O gate compiles all 102 OpenUIKit sources
+  with Foundation hidden, reruns the inherited system-image guest, and launches
+  a literal-UIKit DatePicker guest twice on Linux with pinned state/touch/render
+  output. Its FoundationEssentials-only locale provider exposes a requested
+  `en_US_POSIX` as `en_001`; FoundationInternationalization and locale/24-hour fidelity,
+  compact overlays, wheel physics, accessibility, and native pixels remain
+  roadmap work; this milestone does not claim complete UIDatePicker or an
+  unchanged Reminder launch.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding
@@ -694,8 +709,8 @@ Two fixtures, and the cluster's own 50 new unit tests, all green.
   1e-6 pt over thirteen configurations from a cylinder law fitted this pass
   (`tableHeight = H + 75`, `N = ceil(2·tableHeight/rowHeight)`,
   `R = 0.334225372·tableHeight`).
-- `UIDatePicker` DEFERRED, nothing built: it is a formatter and a calendar on
-  top of the picker wheel, and both are Foundation.
+- `UIDatePicker` was deferred in this historical controls2 milestone. The
+  later bounded Reminder slice above now supplies its measured app path.
 
 Every divergence, and the probe route that would close it, is in
 docs/KNOWN_GAPS.md ("App-compat cluster controls2").
@@ -794,8 +809,8 @@ By USES instead, the two-app entries outrank 2–5: drag & drop (62),
 pointer/hover (33), `UIPasteboard` (32), table extras (31 — swipe actions +
 diffable), system pickers (25), `NSItemProvider` (18). Inside shipped
 clusters: compositional layout + diffable data sources, animated batch
-updates, and `UIDatePicker` (deferred — it is a formatter and a calendar, and
-the picker wheel underneath it is already measured exactly).
+updates, and broader `UIDatePicker` fidelity beyond the bounded Reminder slice
+(locale/calendar presentation, overlays, wheel motion, and accessibility).
 
 **But the type census has nearly run out of things to say, and the wrap-up's
 own re-measurement says where to go instead.** Two findings outrank every
