@@ -205,6 +205,7 @@ build_inside() {
         "$full/foundation/cshims/platform_shims.o" \
         "$full/foundation/cshims/string_shims.o" \
         "$full/foundation/cshims/uuid.o" \
+        "$full/foundation/essentials/uuid_compat.o" \
         "$full/foundation/essentials/fm_unimplemented.o"
 
     (

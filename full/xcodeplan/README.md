@@ -240,6 +240,39 @@ with the reserved platform resource directory all refuse. The executable host
 binds `OpenUIKitRuntime` to these bundle-relative resources before the first
 window tick, removing checkout/build-container paths from the runtime contract.
 
+`core_guest_package.py` validates the other half of the boundary: one
+relocatable, Linux-built ARM64 platform package. Its canonical manifest names
+the SDK, target modules, headers, Mach-O dylibs, link objects, UIKit resources,
+and machorun guest root; publishes compiler/linker arguments relative to the
+package root; and pins every module, dylib, Preview object, resource, and font
+by size and SHA-256. Absolute host paths, output/module/plugin flags owned by
+the application driver, missing framework families, symlinked libraries or
+resources, and a partial Preview tuple all refuse.
+
+`build_portable_application_guest.sh` composes those boundaries into the
+complete application build:
+
+```sh
+full/xcodeplan/build_portable_application_guest.sh \
+  --inventory /pins/App.project-inventory.json \
+  --source-root /read/only/AppProject \
+  --platform-package /artifacts/open-uikit-core \
+  --preview-plugin /artifacts/OpenUIKitPreviewMacros-tool \
+  --output-root /new/App-linux-build
+```
+
+The host requires an absent output root, validates and hashes the platform and
+optional macro plugin, freezes all application inputs, and creates the bundle
+resource skeleton. A Linux/ARM64 container then compiles every NUL-delimited
+unchanged Swift source together with only the generated entry point and
+platform host loop, loads the exact host macro executable when the package
+declares DeveloperToolsSupport, links the package's framework closure, copies
+its dylibs into `Contents/Frameworks`, recursively proves the Mach-O runtime
+closure, and cold-launches the packaged executable under machorun. Success
+requires one active UIWindow and three paced production loop turns. Source,
+support, plugin, and package brackets are rechecked after execution; partial
+outputs remain visibly unusable and can never be passed as a fresh output.
+
 ## Tests
 
 The self-contained fixture covers all eight phase classes plus localized file,
