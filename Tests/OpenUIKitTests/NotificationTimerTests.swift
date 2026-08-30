@@ -1,37 +1,48 @@
 // NotificationCenter + Timer tests. Owner: app-compat cluster (controls2).
 //
-// Both types SHADOW Foundation's, so this file disambiguates them at file
-// scope exactly the way an app that imports both would have to — that is the
-// documented migration and it is worth exercising here.
+// `Notification` now has Foundation identity whenever Foundation is visible.
+// Apple builds also use Foundation's canonical center; native ELF retains
+// OpenUIKit's strict selector-registry center. Timer still shadows Foundation's
+// host-clock-independent implementation.
 
 import XCTest
 @testable import OpenUIKit
 
-private typealias Notification = OpenUIKit.Notification
 private typealias NotificationCenter = OpenUIKit.NotificationCenter
 private typealias Timer = OpenUIKit.Timer
 
 private let testName = Notification.Name("OpenUIKitTestNotification")
 private let otherName = Notification.Name("OpenUIKitOtherNotification")
 
+/// Foundation's block observer is `@Sendable`, while Notification and its
+/// NSObjectProtocol token intentionally are not. Tests execute synchronously
+/// on the main actor; this box makes that ownership explicit without noisy
+/// capture diagnostics obscuring the semantic assertions.
+private final class NotificationTestBox<Value>: @unchecked Sendable {
+    var value: Value
+    init(_ value: Value) { self.value = value }
+}
+
 @MainActor
 final class NotificationCenterTests: XCTestCase {
 
     func testBlockObserverReceivesPostsAndUserInfo() {
         let center = NotificationCenter()
-        var seen: [Notification] = []
+        let seen = NotificationTestBox<[Notification]>([])
         let token = center.addObserver(forName: testName, object: nil, queue: nil) {
-            seen.append($0)
+            seen.value.append($0)
         }
         center.post(name: testName, object: nil, userInfo: ["k": 42])
         center.post(name: otherName, object: nil)
-        XCTAssertEqual(seen.count, 1)
-        XCTAssertEqual(seen.first?.name, testName)
-        XCTAssertEqual(seen.first?.userInfo?["k"] as? Int, 42)
+        XCTAssertEqual(seen.value.count, 1)
+        XCTAssertEqual(seen.value.first?.name, testName)
+        XCTAssertEqual(seen.value.first?.userInfo?["k"] as? Int, 42)
         center.removeObserver(token)
         center.post(name: testName, object: nil)
-        XCTAssertEqual(seen.count, 1, "a removed observer hears nothing")
+        XCTAssertEqual(seen.value.count, 1, "a removed observer hears nothing")
+#if !canImport(Foundation) || !canImport(ObjectiveC)
         XCTAssertEqual(center._observerCount, 0)
+#endif
     }
 
     func testNilNameObservesEverything() {
@@ -57,6 +68,52 @@ final class NotificationCenterTests: XCTestCase {
         XCTAssertEqual(count, 1, "a nil sender does not match a filtered observer")
     }
 
+    func testNotificationPreservesObjectAndUserInfoReferenceIdentity() {
+        let center = NotificationCenter()
+        let object = UIView()
+        let payload = UIView()
+        var receivedObject: AnyObject?
+        var receivedPayload: AnyObject?
+        let token = center.addObserver(
+            forName: testName, object: nil, queue: OperationQueue.main
+        ) { note in
+            receivedObject = note.object as AnyObject?
+            receivedPayload = note.userInfo?["payload"] as AnyObject?
+        }
+
+        center.post(name: testName, object: object, userInfo: ["payload": payload])
+
+        XCTAssertTrue(receivedObject === object)
+        XCTAssertTrue(receivedPayload === payload)
+        center.removeObserver(token)
+    }
+
+    func testObjectFilterIsWeakAndDeadFilterIsReaped() {
+        let center = NotificationCenter()
+        var deliveries = 0
+        weak var weakFilter: UIView?
+        var token: NotificationToken?
+        do {
+            let filter = UIView()
+            weakFilter = filter
+            token = center.addObserver(forName: testName, object: filter, queue: nil) {
+                _ in deliveries += 1
+            }
+            XCTAssertNotNil(weakFilter)
+#if !canImport(Foundation) || !canImport(ObjectiveC)
+            XCTAssertEqual(center._observerCount, 1)
+#endif
+        }
+        XCTAssertNil(weakFilter, "the center must not retain an object filter")
+        center.post(name: testName, object: nil)
+        XCTAssertEqual(deliveries, 0)
+#if !canImport(Foundation) || !canImport(ObjectiveC)
+        XCTAssertEqual(center._observerCount, 0)
+#endif
+        withExtendedLifetime(token) {}
+    }
+
+#if !canImport(Foundation) || !canImport(ObjectiveC)
     /// The selector form goes through the same portable dispatch
     /// `UIControl.addTarget(_:action:for:)` uses (docs/OBJC_RUNTIME.md).
     func testSelectorObserver() {
@@ -98,23 +155,105 @@ final class NotificationCenterTests: XCTestCase {
         XCTAssertEqual(center._observerCount, 0)
     }
 
-    /// Foundation snapshots the observer list before delivering; so do we,
-    /// so an observer that unregisters mid-post does not perturb the pass.
+    func testDuplicateSelectorRegistrationsAndExactRemoval() {
+        @MainActor
+        final class Watcher: SelectorDispatching {
+            var hits = 0
+            func perform(_ name: String, with sender: Any?) -> Bool {
+                guard name == "note:" else { return false }
+                guard sender is Notification else { return false }
+                hits += 1
+                return true
+            }
+        }
+
+        let center = NotificationCenter()
+        let watcher = Watcher()
+        let filter = UIView()
+        let otherFilter = UIView()
+        center.addObserver(watcher, selector: .named("note:"),
+                           name: testName, object: filter)
+        center.addObserver(watcher, selector: .named("note:"),
+                           name: testName, object: filter)
+        center.post(name: testName, object: filter)
+        XCTAssertEqual(watcher.hits, 2, "duplicate registrations each deliver")
+
+        center.removeObserver(watcher, name: testName, object: otherFilter)
+        center.post(name: testName, object: filter)
+        XCTAssertEqual(watcher.hits, 4, "a nonidentical filter removes nothing")
+
+        center.removeObserver(watcher, name: testName, object: filter)
+        center.post(name: testName, object: filter)
+        XCTAssertEqual(watcher.hits, 4)
+        XCTAssertEqual(center._observerCount, 0)
+    }
+
+    func testSelectorMissReportsExactlyOnceThroughCentralDispatch() {
+        @MainActor
+        final class Watcher: SelectorDispatching {
+            func perform(_ name: String, with sender: Any?) -> Bool { false }
+        }
+
+        let center = NotificationCenter()
+        let watcher = Watcher()
+        var misses: [String] = []
+        let prior = SelectorDispatch.onUnresolved
+        SelectorDispatch.onUnresolved = { _, name in misses.append(name) }
+        defer { SelectorDispatch.onUnresolved = prior }
+
+        center.addObserver(watcher, selector: .named("missing:"),
+                           name: testName, object: nil)
+        center.post(name: testName, object: nil)
+        XCTAssertEqual(misses, ["missing:"])
+    }
+#endif
+
+    /// The portable center snapshots before delivery. Foundation's native
+    /// center instead suppresses an entry removed earlier in the same post;
+    /// Apple builds intentionally inherit that authoritative behavior.
     func testReentrantRemovalDuringPost() {
         let center = NotificationCenter()
         var order: [Int] = []
-        var second: NotificationToken?
+        let second = NotificationTestBox<NotificationToken?>(nil)
         _ = center.addObserver(forName: testName, object: nil, queue: nil) { _ in
             order.append(1)
-            if let s = second { center.removeObserver(s) }
+            if let token = second.value { center.removeObserver(token) }
         }
-        second = center.addObserver(forName: testName, object: nil, queue: nil) { _ in
+        second.value = center.addObserver(forName: testName, object: nil, queue: nil) { _ in
             order.append(2)
         }
         center.post(name: testName, object: nil)
+#if canImport(Foundation) && canImport(ObjectiveC)
+        XCTAssertEqual(order, [1], "Foundation suppresses the removed in-flight entry")
+        center.post(name: testName, object: nil)
+        XCTAssertEqual(order, [1, 1])
+#else
         XCTAssertEqual(order, [1, 2], "the in-flight post still reaches observer 2")
         center.post(name: testName, object: nil)
         XCTAssertEqual(order, [1, 2, 1], "and observer 2 is gone next time")
+#endif
+    }
+
+    func testReentrantAdditionWaitsUntilTheNextPost() {
+        let center = NotificationCenter()
+        var order: [String] = []
+        let second = NotificationTestBox<NotificationToken?>(nil)
+        let first = center.addObserver(forName: testName, object: nil, queue: nil) {
+            _ in
+            order.append("first")
+            if second.value == nil {
+                second.value = center.addObserver(
+                    forName: testName, object: nil, queue: nil
+                ) { _ in order.append("second") }
+            }
+        }
+
+        center.post(name: testName, object: nil)
+        XCTAssertEqual(order, ["first"])
+        center.post(name: testName, object: nil)
+        XCTAssertEqual(order, ["first", "first", "second"])
+        center.removeObserver(first)
+        if let token = second.value { center.removeObserver(token) }
     }
 
     /// The app lifecycle POSTS the UIKit notifications, which is the whole

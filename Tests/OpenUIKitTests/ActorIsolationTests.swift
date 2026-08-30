@@ -17,6 +17,7 @@ private typealias CGFloat = OpenUIKit.CGFloat
 private typealias CGPoint = OpenUIKit.CGPoint
 private typealias CGSize = OpenUIKit.CGSize
 private typealias CGRect = OpenUIKit.CGRect
+private typealias NotificationCenter = OpenUIKit.NotificationCenter
 
 // MARK: - A model type shaped exactly like a real app's
 
@@ -117,9 +118,10 @@ final class ActorIsolationTests: XCTestCase {
         XCTAssertTrue(paintOffMainActor(), "glyph run drew nothing")
     }
 
-    /// `MainActor.assumeIsolated` is the ONLY boundary crossing in the
-    /// library (Timer / NotificationCenter delivery). Prove the two paths it
-    /// guards actually deliver.
+    /// `MainActor.assumeIsolated` guards Timer delivery everywhere and custom
+    /// NotificationCenter selector delivery on portable targets. Native Apple
+    /// builds alias Foundation's center, so there is no OpenUIKit notification
+    /// boundary to exercise there.
     func testAssumeIsolatedDeliveryPaths() {
         final class Observer: SelectorDispatching {
             var hits: [String] = []
@@ -141,6 +143,7 @@ final class ActorIsolationTests: XCTestCase {
                           userInfo: nil, repeats: false)
         timer.fire()
 
+#if !canImport(Foundation) || !canImport(ObjectiveC)
         let name = OpenUIKit.Notification.Name(rawValue: "OpenUIKitActorIsolationProbe")
         NotificationCenter.default.addObserver(observer,
                                                selector: Selector.named("noteFired:"),
@@ -149,11 +152,14 @@ final class ActorIsolationTests: XCTestCase {
         NotificationCenter.default.removeObserver(observer, name: name, object: nil)
 
         XCTAssertEqual(observer.hits, ["timer", "note"])
+#else
+        XCTAssertEqual(observer.hits, ["timer"])
+#endif
     }
 }
 
-/// OpenUIKit has no `NSObject`, and a delegate conformer does not need one --
-/// this empty base only exists so the nested `Delegate` above reads like app
-/// source (`class Delegate: NSObject, UIScrollViewDelegate`).
+/// A delegate conformer does not require NSObject. This portable empty base
+/// keeps the nested declaration shaped like app source without making that
+/// unrelated test depend on Foundation/ObjectiveC availability.
 @MainActor
 class NSObjectLike {}

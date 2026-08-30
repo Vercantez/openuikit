@@ -12,7 +12,8 @@
 // no UIKit at all on Linux, so this target is the only `UIKit` in scope.
 //
 // This target is a shim by definition and is labelled as such in the report.
-// It contains no API of its own — framework re-exports only.
+// It re-exports framework API and declares only the local identity aliases
+// below, which make unqualified lookup select the canonical family.
 //
 // M15: it re-exports Foundation as well, because REAL UIKit does
 // (`@_exported import Foundation` is in UIKit's own swiftinterface). That is
@@ -34,3 +35,16 @@
 @_exported import ObjectiveC
 #endif
 @_exported import OpenUIKit
+
+// These local aliases deliberately win unqualified lookup through the
+// re-exporting UIKit module. On Foundation-visible builds OpenUIKit's
+// Notification, NSNotification and OperationQueue aliases already have
+// Foundation identity, and Foundation+Objective-C also aliases the center;
+// importing UIKit plus Foundation therefore names one declaration. Portable
+// builds retain OpenUIKit's selector-capable center behind the same spelling.
+public typealias Notification = OpenUIKit.Notification
+#if canImport(Foundation) || canImport(ObjectiveC)
+public typealias NSNotification = OpenUIKit.NSNotification
+#endif
+public typealias NotificationCenter = OpenUIKit.NotificationCenter
+public typealias OperationQueue = OpenUIKit.OperationQueue

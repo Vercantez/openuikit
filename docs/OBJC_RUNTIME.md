@@ -65,9 +65,10 @@ Counted over the census corpus (eidolon, DuckDuckGo iOS, ios-oss):
 | ios-oss | 163 | 165 | 35 | 0 |
 
 ~360 `#selector` uses — comparable to the alerts cluster (332). Real, but not
-dominant. Notification registration is a separate high-volume family:
-OpenUIKit's block form is portable, while its selector form and distinct
-Notification identity remain registry-only pending the next slice.
+dominant. Notification registration is a separate high-volume family. Its
+identity/bridge successor now uses Foundation's native center when Foundation
+and Objective-C are visible, the central runtime path in a Foundation-hidden
+Objective-C guest, and the registry on native ELF.
 
 ---
 
@@ -196,9 +197,11 @@ The boundary is intentionally narrower than all of UIKit. `UIGestureRecognizer`
 and `UIEvent` are still plain Swift classes in this slice, as are several
 non-responder sender families. An exposed action receiving one of those must
 use an Objective-C-representable spelling such as `AnyObject` (or use the
-portable registry). Timer and OpenUIKit Notification selector delivery still
-call `SelectorDispatching` directly and are registry-only; Notification type
-identity/bridging is the next independent slice.
+portable registry). Timer selector delivery still calls
+`SelectorDispatching` directly and is registry-only. Notification is now a
+separate capability seam: native Foundation invokes its own zero/one-argument
+selectors, while the Foundation-hidden custom center calls `SelectorDispatch`
+and therefore tries NSObject runtime metadata before its registry.
 
 **On native ELF Linux.**
 
@@ -223,10 +226,32 @@ common responder-target/responder-sender shape on Objective-C-capable builds,
 and the registry route on native ELF. Gesture call sites use the same central
 dispatcher, but a typed recognizer parameter remains outside Objective-C
 representability. Bar/menu consumers that use `SelectorDispatch` inherit its
-runtime path subject to the same target/sender rule. OpenUIKit Notification
-and Timer selector forms remain registry-only, and `UIAppearance`/KVO remain
-separate gaps. On native ELF, no literal `@objc` / `#selector` site compiles as
+runtime path subject to the same target/sender rule. Notification uses native
+Foundation on ordinary Apple builds and central runtime-before-registry in the
+Foundation-hidden guest; only its conventional zero/one-argument selector
+shapes are measured, not a two-argument form. Timer remains registry-only, and
+`UIAppearance`/KVO remain separate gaps. On native ELF, no literal `@objc` / `#selector` site compiles as
 written; it still needs the mechanical selector spelling and a registry.
+
+### Notification selector carrier
+
+When Foundation is hidden but Objective-C is available, OpenUIKit's
+Notification value conforms publicly to `_ObjectiveCBridgeable`. Its public
+NSObject box is also the bounded NSNotification spelling and exposes nested
+Name, read-only name/object/userInfo, and the labeled initializer. The custom
+center creates one box per post before selector delivery. Every one-argument
+thunk is invoked from that box: NSNotification-typed handlers observe shared
+carrier identity, while Notification-typed methods unbridge it automatically.
+Zero-argument methods are supported separately. A target that also conforms to
+`SelectorDispatching` reaches runtime metadata first; a nonresponding selector
+falls back to the registry with the same box, which can bridge back to the
+value.
+
+This is not a general Foundation class-cluster implementation: NSCopying,
+NSCoding, KVC, NSNotificationQueue, two-argument NotificationCenter selector
+semantics, and preservation of an app-supplied box through a value round trip
+are outside the slice. Native Foundation+Objective-C bypasses this custom path
+entirely and remains the behavior oracle.
 
 ---
 

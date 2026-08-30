@@ -54,6 +54,14 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+#if canImport(Foundation)
+// `Notification.Name` is a nested typealias on Foundation.Notification. The
+// defining module must be visible where the public static notification name
+// is emitted, including on Darwin where the scoped CoreGraphics branch above
+// deliberately avoids an umbrella Foundation import.
+import struct Foundation.Notification
+#endif
+
 
 public enum UITextFieldBorderStyle: Sendable {
     case none, line, bezel, roundedRect

@@ -319,6 +319,59 @@ on Linux, rejects a Foundation umbrella load, and runs the guest twice through
 `machorun`. It covers typed UIDatePicker delivery, runtime precedence,
 registry fallback, `endEditing:`'s measured `false`, and dead weak targets.
 
+## Reminder Notification identity and bridge slice (2026-08-30)
+
+Starting from exact framework base
+`b8531df000f35a4580a9f239bb0348d04552053f`, this successor removes only
+unchanged Reminder's Foundation/OpenUIKit `Notification` ambiguity. Its exact
+whole-source diagnostic multiset advances **2 -> 1** with zero additions and
+zero app/vendor edits; the byte-for-byte remaining diagnostic is `#Preview`.
+`Tools/remindernotificationprobe` pins the Reminder commit/tree, all 22 source
+files, source hash, 26 direct call sites, complete multisets, the exact
+32-path candidate boundary, fresh no-hardlink clones, and ten tamper
+negatives. This still is not an unchanged app build or launch.
+
+The public identity follows target capability:
+
+- With Foundation and Objective-C visible, `Notification`, `NSNotification`,
+  `NotificationCenter`, and `OperationQueue` are aliases of Foundation's
+  declarations. Literal `import Foundation` plus `import UIKit` therefore has
+  one unqualified center/value family. OpenUIKit lifecycle posts and app
+  observers meet on Foundation's real default center, including its queue,
+  threading, ownership, and reentrant-removal behavior.
+- Native ELF shares Foundation's notification value, Objective-C carrier, and
+  queue identities, but keeps OpenUIKit's custom center. Corelibs Foundation
+  has no selector-observer API because Swift Objective-C interop is disabled;
+  a file that imports both modules qualifies `UIKit.NotificationCenter`, and
+  portable selectors use `Selector.named` plus the registry. Its custom token
+  subclasses Foundation.NSObject and therefore still assigns to
+  `any Foundation.NSObjectProtocol`. The custom and corelibs Foundation
+  centers are distinct and do not cross-deliver registrations or posts.
+- A Foundation-hidden Objective-C guest keeps OpenUIKit's value, queue, and
+  center. Its block token is an ObjectiveC.NSObject and assigns to
+  `any NSObjectProtocol`. The value has a public
+  `_ObjectiveCBridgeable` conformance backed by
+  an NSObject carrier also exposed as the bounded `NSNotification` surface
+  (`Name`, `name`, `object`, `userInfo`, and labeled initializer). The custom
+  center supports measured zero-argument observers and prebridges once per
+  post so all one-argument runtime thunks are invoked from one carrier:
+  NSNotification handlers observe shared identity, while Notification
+  handlers receive unbridged values. Runtime metadata wins before the
+  registry.
+  The guest's app-facing Foundation module must alias these exact OpenUIKit
+  identities. This candidate proves that companion shape but does not edit the
+  separately owned support checkout; landing the support alias is a required
+  end-to-end follow-up.
+
+Only the custom center promises registration-order snapshot delivery and
+inline block delivery with an ignored queue. The native alias deliberately
+inherits Foundation: the iOS 26.1 oracle shows that removing a later observer
+during a post suppresses it in that same post. The bounded hidden
+`NSNotification` is not a Foundation class cluster and does not claim
+NSCopying, NSCoding, KVC, `NSNotificationQueue`, or preservation of an
+original preboxed carrier through a value round trip. Timer remains the
+host-clock implementation and its selector form remains registry-only.
+
 ## Visual-effect source compatibility slice (2026-08-29)
 
 The 20-app ladder corpus uses `UIVisualEffectView` in 17 repositories and
@@ -489,7 +542,7 @@ Precisely how much of the ~360 that covers:
 | `UIControl.addTarget(_:action:for:)` | the large majority | **registry on native ELF; unchanged runtime dispatch for responder targets/senders on ObjC-capable builds** |
 | `UIGestureRecognizer(target:action:)` / `addTarget(_:action:)` | second largest | **dispatch works; the recognizer sender itself is still not ObjC-representable** |
 | `UIBarButtonItem(…target:action:)` | — | implemented through central dispatch; its non-responder sender still bounds typed ObjC actions |
-| `NotificationCenter.addObserver(_:selector:name:)` | — | implemented but **registry-only** pending Notification identity/bridge work |
+| `NotificationCenter.addObserver(_:selector:name:)` | — | **native Foundation runtime on Foundation+Objective-C; central runtime-before-registry in the hidden guest; registry on native ELF** |
 | `Timer.scheduledTimer(…selector:)` | — | implemented on the host clock but **registry-only** |
 | `UIAppearance`, KVO | — | process-wide `UINavigationBar.appearance()` subset works; `UITableView` and scoped/containment appearance proxies plus KVO remain missing (portable design in docs/OBJC_RUNTIME.md) |
 
@@ -842,10 +895,10 @@ session, or a Simulator drag).
 Reminder implementation described at the top of this file now builds on that
 measured picker wheel; the historical deferral is no longer current status.
 
-Three of the newly declared types SHADOW Foundation's — `NotificationCenter`,
-`Notification` and `Timer`, exactly like `NSAttributedString` before them.
-An app importing both needs a one-line file-scope `typealias`;
-docs/KNOWN_GAPS.md states the full tradeoff.
+At this historical controls2 boundary `NotificationCenter`, `Notification`,
+and `Timer` shadowed Foundation. The Notification identity/bridge successor at
+the top of this file supersedes the first two on Foundation+Objective-C and
+the value on native ELF; Timer remains a distinct host-clock type.
 
 ## The punch list as it stood at M12 — HISTORICAL
 
@@ -1081,12 +1134,13 @@ threading of the renderer: all of `OpenCoreGraphics`, the glyph-run painter
 (`UILabel.drawGlyphLine`/`drawGlyph`, spelled `nonisolated static`), the
 Cassowary solver, the font engine, `UIColor`/`UIImage`/`UIFont`/
 `UIBezierPath`/`UIGraphicsImageRenderer`, and the Foundation shapes
-(`NSAttributedString`, `Timer`, `NotificationCenter`, …).
+(`NSAttributedString`, `Timer`, and the custom NotificationCenter branches).
 
-Two boundaries are crossed on purpose, both with `MainActor.assumeIsolated`
+Three boundary families are crossed on purpose with `MainActor.assumeIsolated`
 (a *checked* assertion that traps off-main) and never `nonisolated(unsafe)`:
-timer/notification delivery to a `SelectorDispatching` target, and the
-top-level code in each tool's `main.swift`. Full reasoning, the
+Timer delivery plus **custom-center** notification delivery to a
+`SelectorDispatching` target, the top-level code in each tool's `main.swift`,
+and the `oukMain` wrapper around Objective-C C-ABI entry points. Full reasoning, the
 strict-concurrency numbers and the measured zero perf cost are in
 docs/KNOWN_GAPS.md "Actor isolation".
 
@@ -1122,7 +1176,7 @@ Ranking rule: **can an app's source compile at all**, then corpus reach.
 
 | # | blocker | corpus reach | status |
 |---|---|---|---|
-| 1 | **`@objc` / `#selector` on native ELF** | `#selector` 1,138 / 360 files; `@objc` 1,189 / 395 | The native-ELF Swift compiler still emits *"Objective-C interoperability is disabled"* before a library can help, so the cross-platform real-app harness retains its 4-line adaptation and registry table. **The earlier Objective-C-capable half is closed for responder controls:** UIViewController targets and UIButton/UISwitch/UIDatePicker senders now dispatch unchanged 0/1/2-argument source through NSObject metadata. Recognizer/event senders and Notification/Timer delivery remain bounded as documented. Objective-C app source remains a separate libobjc2 facade path (docs/OBJC_FACADE.md). |
+| 1 | **`@objc` / `#selector` on native ELF** | `#selector` 1,138 / 360 files; `@objc` 1,189 / 395 | The native-ELF Swift compiler still emits *"Objective-C interoperability is disabled"* before a library can help, so the cross-platform real-app harness retains its 4-line adaptation and registry table. Objective-C-capable responder controls dispatch unchanged 0/1/2-argument target/action; Notification observers now dispatch measured zero/one-argument methods through native Foundation or the hidden guest's central runtime. Recognizer/event senders and Timer remain bounded. Objective-C app source remains a separate libobjc2 facade path (docs/OBJC_FACADE.md). |
 | 2 | **No asset catalog** | `UIImage(named:)` 438 / 161 | `.xcassets` is unread; only loose `@2x`/`@3x` files resolve, and the template-rendering-intent flag that app tinting depends on lives in the catalog. Self-contained project, no oracle needed. |
 | 3 | **Localization** | `L10n.` 3,400 / 540 | Not UIKit, but unavoidable in a whole-app attempt: three of four corpus apps route every user-visible string through a generated enum over `NSLocalizedString`/`Bundle`. Now *more* tractable than at M14, because Foundation is importable. |
 | 4 | **`UIWindow` runs no appearance transition** | `viewDidAppear` 119 / 105 | `makeKeyAndVisible()` does not drive `viewWillAppear`/`viewDidAppear`, so app code that starts work there never runs. Small fix; the harness works around it with an explicit call. |

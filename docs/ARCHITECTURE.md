@@ -47,6 +47,13 @@ Mac Catalyst oracle in `Tools/oracle`). Ground truth lives in `golden/`.
      which is why the narrower rule is safe to state.
    * The guarantee has never covered the **tools** (`openrender`, `openhost`,
      `Tools/`) — they may use Foundation freely, and always could.
+   * Notification is a capability seam, not a render dependency. Ordinary
+     Foundation+Objective-C builds use Foundation's Notification,
+     NSNotification, NotificationCenter, and OperationQueue identities. Native
+     ELF keeps the Foundation values but uses OpenUIKit's selector-registry
+     center. A Foundation-hidden Objective-C guest uses OpenUIKit's bridged
+     value and custom center; its later app-facing Foundation shim must alias
+     those exact declarations. None of the branches reads time or locale.
 2. Real UIKit behavior wins every argument. `golden/system_colors.json`,
    `golden/font_metrics.json`, and `golden/*.png|.layout.json` are ground truth.
 3. Do not change files another module owns (see map below). The Canvas API in
@@ -245,7 +252,7 @@ API — synthetic sequences are fully deterministic (EventSystemTests).
 | `Sources/OpenUIKit/AutoLayout/` (Cassowary, NSLayoutConstraint, Anchors, LayoutEngine) | **autolayout** | done (M9) |
 | `Sources/OpenUIKit/AutoLayout/UILayoutGuide.swift` | **autolayout** | done (controls2: `UILayoutGuide` in the solver + the measured safe-area / layout-margins / readable-content model; fixture `constraints_safearea`) |
 | `Sources/OpenUIKit/UIRefreshControl.swift`, `UISearchBar.swift`, `UIStepper.swift`, `UIPickerView.swift` | **controls** | done (controls2; only `UIRefreshControl` could be goldened — the others' chrome does not composite offscreen, see docs/KNOWN_GAPS.md). `UISearchBar.swift` is SHARED with the menus cluster, which owns its delegate contract — see the note under this table. |
-| `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2: portable, Foundation-shadowing; `Timer` fires from `UIWindow.tick(timestamp:)`). M15 KEPT both — measured reasons in `FoundationTypes.swift` |
+| `Sources/OpenUIKit/NotificationCenter.swift`, `Timer.swift` | **lifecycle** | done (controls2 + 2026-08-30 identity successor). Foundation+Objective-C aliases the native notification family; native ELF and Foundation-hidden guests retain the custom center, with an NSObject bridge in the latter. `Timer` remains distinct and fires from `UIWindow.tick(timestamp:)`; measured seams are in `FoundationTypes.swift` and `docs/KNOWN_GAPS.md`. |
 | `Sources/OpenUIKit/FoundationTypes.swift` | **app-compat** | done (M15: `IndexPath`, `NSRange`, `TimeInterval` are Foundation's own, with UIKit's conveniences as extensions — docs/PORTABILITY.md) |
 | `Sources/RealAppProbe/` | **app-compat** | vendored real-app source (docs/REAL_APP_TEST.md). **Built with `-default-isolation MainActor`** (Package.swift) — deliberately, because that is the module-wide default an Xcode 26 / Swift 6.2 app target carries. The probe measures how much *app source* survives, so it must reproduce the app's **build configuration** too; without it, upstream's un-annotated `class OptionsPicker` would need an `@MainActor` written in and would count as a changed line that no real app pays. This flag is scoped to this one target and does not touch the library. |
 | `Sources/OpenUIKit/UIPresentationController.swift`, `UIViewControllerTransitioning.swift`, `UIPresentation.swift` | **viewcontroller** | done (M12: every modal presentation and animated push/pop runs through a presentation controller + animator; the built-in ones are `UISheetPresentationController`/`_UIPageSheetAnimator` and `_UINavigationSlideAnimator`) |

@@ -21,11 +21,11 @@
 //     scene never ticks, so its timers never fire — which is why no golden
 //     can be perturbed by adding one.
 //
-// This SHADOWS Foundation's `Timer` and `RunLoop` exactly the way
-// `NSAttributedString` and `NotificationCenter` shadow theirs: an app that
-// imports both needs a file-scope `private typealias Timer =
-// OpenUIKit.Timer`. See Sources/OpenUIKit/NotificationCenter.swift for the
-// full statement of that tradeoff.
+// This still SHADOWS Foundation's `Timer` and `RunLoop`, like OpenUIKit's
+// `NSAttributedString`. Notification no longer supplies the analogy:
+// Foundation-visible builds share its value identity, and Apple builds share
+// Foundation's center too. An app that imports both still needs a file-scope
+// `private typealias Timer = OpenUIKit.Timer`.
 //
 // DIVERGENCES from Foundation, all of them consequences of the above:
 //   * `fireDate` is a `TimeInterval` on the host clock, not a `Date`

@@ -1,5 +1,56 @@
 # Known gaps (living document — fixers: read this)
 
+## Reminder Notification identity / Objective-C bridge successor (2026-08-30)
+
+This bounded slice advances unchanged Reminder's exact whole-source diagnostic
+multiset from **2 -> 1**, removing only the Foundation/OpenUIKit
+`Notification` ambiguity with zero additions and zero app/vendor edits. The
+sole byte-for-byte remaining error is `#Preview`. Exact app commit/tree,
+22-source SHA-256, 26 call sites, framework base
+`b8531df000f35a4580a9f239bb0348d04552053f`, 32-path candidate boundary,
+fresh no-hardlink clones, and ten tamper negatives are fail-closed in
+`Tools/remindernotificationprobe`. The app still does not build or launch.
+
+- Foundation+Objective-C builds alias `Notification`, `NSNotification`,
+  `NotificationCenter`, and `OperationQueue` to Foundation. A file importing
+  Foundation and UIKit sees one family, Foundation-only `Notification.Name`
+  extensions are visible to UIKit-only files, UIKit lifecycle posts meet app
+  observers on the native default center, queues are honored, and native
+  ownership/reentrancy behavior is preserved rather than reimplemented.
+- Native ELF aliases Foundation's value, Objective-C carrier, and queue but
+  retains OpenUIKit's custom center. Corelibs Foundation has no selector-form
+  observer API; a file importing both modules qualifies
+  `UIKit.NotificationCenter`. Literal `@objc` / `#selector` remains a compiler
+  error there, so portable source uses `Selector.named` and the registry. Its
+  custom token subclasses Foundation.NSObject, assigns to
+  `any Foundation.NSObjectProtocol`, and retains removal-by-token identity.
+  This center and corelibs Foundation's center are distinct: registrations
+  and posts on their respective `.default` instances do not cross-deliver.
+- A Foundation-hidden Objective-C guest uses OpenUIKit's custom value, queue,
+  token, and center. Its token subclasses NSObject and assigns unchanged to
+  `any NSObjectProtocol`. `Notification` has a public `_ObjectiveCBridgeable`
+  conformance whose public NSObject box is also the bounded `NSNotification`
+  surface: nested `Name`, read-only `name`/`object`/`userInfo`, and
+  `init(name:object:userInfo:)`. The custom center supports measured
+  zero-argument observers and prebridges once per post. All one-argument
+  runtime thunks are invoked from that carrier: NSNotification handlers can
+  observe its shared identity, while Notification handlers receive unbridged
+  values. Runtime metadata wins before the portable registry. Two-argument
+  NotificationCenter selectors are not a supported contract.
+- The hidden app-facing Foundation module must alias Notification,
+  NSNotification, NotificationCenter, and OperationQueue back to OpenUIKit.
+  The committed gate proves that exact synthetic module after compiling
+  OpenUIKit and UIKit with Foundation hidden. The separately owned production
+  `FoundationGuest.swift` still needs the same aliases before this works end
+  to end in the full guest build; that support update is an explicit follow-up.
+- Only the custom center promises synchronous registration-order snapshots,
+  weak selector/filter references, and inline block delivery while ignoring
+  `queue:`. The native center follows Foundation; iOS 26.1 suppresses an
+  observer removed earlier in the same in-flight post. The hidden
+  NSNotification carrier does not claim NSCopying, NSCoding, KVC,
+  NSNotificationQueue, Foundation class-cluster behavior, or preservation of
+  an originally supplied box through a Notification value round trip.
+
 ## Reminder responder-root / Objective-C selector successor (2026-08-30)
 
 This bounded slice closes exactly the two remaining UIDatePicker Objective-C
@@ -23,12 +74,12 @@ not yet an unchanged app build or launch.
   weak target lifetime. OpenUIKit reports a live missing selector nonfatally;
   UIKit's iOS 26.1 behavior is an exception. OpenUIKit silently prunes dead
   weak targets; broader UIKit nil-target responder routing is not modeled.
-- This slice does **not** make every OpenUIKit reference type Objective-C-
+- At this predecessor slice's frozen boundary, OpenUIKit did **not** make every OpenUIKit reference type Objective-C-
   representable. `UIGestureRecognizer` and `UIEvent` remain plain Swift, so an
   exposed action receiving either must use an ObjC-representable parameter
-  such as `AnyObject`. OpenUIKit Notification and Timer selector forms remain
-  registry-only. Notification identity/bridging is intentionally the next
-  independent slice.
+  such as `AnyObject`. Notification and Timer selector forms were
+  registry-only; the successor above closes Notification's measured 0/1-arity
+  paths while Timer remains registry-only.
 - Responder inheritance exposed NSObject's archive replacement hook.
   `UIVisualEffectView` now supplies a real `replacementObject(for:)` override;
   its existing base-view surrogate behavior remains deliberately narrower
@@ -745,7 +796,7 @@ All three are `MainActor.assumeIsolated`. `assumeIsolated` is a **checked**
 assertion — it traps if the assumption is ever violated — where
 `nonisolated(unsafe)` only silences the compiler.
 
-1. **`Timer._fire`** and **`NotificationCenter.post`** deliver to a
+1. **`Timer._fire`** and the **custom** `NotificationCenter.post` branch deliver to a
    `SelectorDispatching` target, which is `@MainActor` because every
    UIKit-shaped conformer is a view or a view controller. The two *carriers*
    stay nonisolated because Foundation's are. OpenUIKit has no threads and no
@@ -804,7 +855,8 @@ would take most of it out; that is its own piece of work.
 The genuinely NEW diagnostics this milestone introduces are **4 sites**
 (24 emissions), all `#SendingRisksDataRace`, and all of them are the
 `assumeIsolated` boundaries above: `Timer.swift` sending `target` and `self`,
-`NotificationCenter.swift` sending `observer` and `notification` into the
+`NotificationCenter.swift` custom branch sending `observer` and its selector
+carrier into the
 main-actor closure. They are unavoidable while the carriers stay nonisolated
 Foundation shapes, and they are safe for the reason stated at each site.
 
@@ -840,16 +892,14 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 | **No fixture for the menu platter, `UISearchBar`, `UIStepper`, `UIPickerView`** | four surfaces are locked in by unit tests replaying real UIKit's numbers instead of by pixels | each is a property of the ORACLE, not a shortcut: iOS 26 draws menus in the render server; a private material draws as nothing; a SwiftUI hosting view draws nothing; a `CAGradientLayer` washes the capture out. Each section names the probe route that would close it | "controls2", "Menus" |
 | **A non-large sheet detent is edge-to-edge; iOS 26 draws a floating card** | right HEIGHT, wrong SHAPE (iOS insets 8 pt per side and scales 377/393) | the measured numbers do not decompose into inset + height without modelling the transform | "Real-app harness (M14)" |
 | **Dynamic Type is exact only at probed base values** | the 19 probed bases are exact table hits at all 12 categories; between them we interpolate linearly where UIKit's curve is piecewise with 1/3-pt quantization — worst observed ~2/3 pt at accessibility sizes | widening `baseValues` in `dyntypeprobe` closes it mechanically; nothing is hand-fitted | "Real-app harness (M14)" |
-| ~~**Three types SHADOW Foundation's**~~ **NARROWED at M15** — the geometry types, `IndexPath`, `NSRange` and `TimeInterval` are now Foundation's own; what still shadows is `NSAttributedString`, `Notification`/`NotificationCenter`, `Timer`/`RunLoop` | an app importing both needs a one-line file-scope `typealias` for those three families only; a Foundation attributed string still cannot reach a `UILabel` | each survivor now has a MEASURED reason, not a blanket rule: Linux Foundation traps on UIKit's attribute values, has no portable selector-form observer, and has no scripted clock | "Foundation coexistence (M15)" |
+| ~~**Three types SHADOW Foundation's**~~ **NARROWED again by the Notification successor** — `NSAttributedString` and `Timer`/`RunLoop` remain distinct; Notification values are Foundation's whenever visible and the center is Foundation's when Objective-C is also visible | native Foundation+UIKit needs no Notification disambiguation; native ELF still qualifies the custom center, and a Foundation attributed string still cannot reach a `UILabel` | Linux Foundation has no selector-form observer and the scripted Timer cannot use a wall clock; the hidden guest uses a bridged custom family | "Foundation coexistence (M15)" plus the top section |
 | **Accessibility is storage only** | properties round-trip and nothing consults them | there is no accessibility tree and no assistive technology, hence no oracle | "Real-app harness (M14)" |
 
 Not on this list because they are **open work, not accepted**: compositional
 layout / diffable data sources / animated batch updates ("UICollectionView"),
 the picker wheel's spin and the refresh control's pull threshold (both
 blocked on a Simulator drag), `UIWindow.makeKeyAndVisible()`'s missing
-appearance transition (a small fix, first item on the M14 report's list), and
-`import Foundation` alongside OpenUIKit (the largest structural obstacle in
-the project — docs/REAL_APP_TEST.md).
+appearance transition (a small fix, first item on the M14 report's list).
 
 ## M13 integration note (2026-08-25)
 
@@ -882,34 +932,20 @@ Scope: the remaining controls plus the compile-blockers that are not types —
 `safeAreaLayoutGuide`. Two new fixtures:
 `constraints_safearea` (100.0 %) and `control_refresh` (99.4 %).
 
-### The three types that SHADOW Foundation, and why they had to
+### Notification and Timer portability seams (current successor state)
 
-`NotificationCenter` / `Notification` / `Notification.Name` / `OperationQueue`
-and `Timer` / `RunLoop` are declared **in OpenUIKit**. At this historical
-controls2 boundary the library imported no Foundation. That blanket rule was
-retired at M15, but the distinct types remain because Notification selector
-delivery still needs the portable registry and Timer uses the scripted host
-clock; a UIKit that cannot post
-`UIApplication.didBecomeActiveNotification` is not much of a UIKit — the
-census counted ~90 uses of the notification-name group, the largest missing
-member group after app-local noise. Consequences a caller must know:
+At controls2's historical boundary both families were declared only in
+OpenUIKit. Current Notification behavior is target-dependent: native
+Foundation+Objective-C aliases the complete family and returns Foundation's
+`any NSObjectProtocol` token; native ELF shares the value/queue, keeps the
+custom center, and gives its custom token Foundation.NSObjectProtocol source
+compatibility; the Foundation-hidden guest uses the bridged custom family.
+Only custom-center `queue:` is ignored and delivered inline. See the top
+section for the precise identity and bridge limits.
 
-- An app or test importing BOTH sees `'Notification' is ambiguous for type
-  lookup in this context`. The fix is a file-scope
-  `private typealias Notification = OpenUIKit.Notification`, the same pattern
-  the repo already uses for `CGRect` and `NSAttributedString`.
-  `Tests/OpenUIKitTests/NotificationTimerTests.swift` is the worked example.
-- There is **no bridging** in either direction. An observer registered on
-  OpenUIKit's `NotificationCenter.default` never hears Foundation's, and a
-  Foundation `Timer` never fires on the host clock.
-- `addObserver(forName:object:queue:using:)` returns a `NotificationToken`,
-  not `any NSObjectProtocol`. OpenUIKit responders now inherit NSObject, but
-  this separately designed value token has not changed identity or bridged to
-  Foundation's observer protocol. Porting means changing the declared type of
-  the stored observer and nothing else.
-- **`queue:` is accepted and IGNORED.** There is no run loop and no threads;
-  every notification is delivered inline on the poster's stack.
-  `OperationQueue` exists only so `.main` compiles.
+`Timer` / `RunLoop` remain distinct everywhere because Timer uses the scripted
+host clock. A Foundation Timer never fires on that clock, and a caller that
+imports both families still qualifies or typealiases OpenUIKit.Timer.
 - **`Timer` runs on the HOST CLOCK**, the timestamp passed to
   `UIWindow.tick(timestamp:)` — the same clock that drives scroll
   deceleration, transitions and animation completions. `openhost` ticks every
@@ -1447,13 +1483,14 @@ why:
   forbids. The ORDER and the `applicationState` an app observes are UIKit's;
   only the trigger differs.
 - ~~**No notifications.**~~ **FIXED (controls2):** all five transitions post
-  their UIKit notification on OpenUIKit's own portable
-  `NotificationCenter.default`, with `UIApplication.shared` as the object,
-  right after the delegate method returns. The center SHADOWS Foundation's —
-  see the controls2 section at the top of this file.
-- **`sendAction` takes a closure, not a `Selector`.** Portable Swift has no
-  selectors. The nil-target chain walk — the part that actually matters — is
-  faithful; the spelling is not.
+  through the active NotificationCenter identity, with `UIApplication.shared`
+  as the object, right after the delegate method returns. That is Foundation's
+  native default center on Foundation+Objective-C and the custom center on
+  native ELF / Foundation-hidden guests.
+- **`sendAction` takes a closure, not a `Selector`.** Native ELF Swift cannot
+  compile Objective-C selector syntax; Objective-C-capable builds do have the
+  central runtime selector path. The nil-target chain walk remains faithful;
+  this closure overload is still a narrower spelling.
 - **`open(_:)`/`canOpenURL` take a `String`, not a `URL`,** for the same
   Foundation reason, and do nothing unless a host installs
   `UIApplication.urlOpenHandler`.
@@ -1490,9 +1527,10 @@ Evidence it worked: 151 `private typealias` lines deleted from 40 test files,
 `Tests/OpenUIKitTests/FoundationCoexistenceTests.swift` green, and Linux still
 162/162 byte-identical.
 
-Three families still shadow Foundation's, each for a measured reason rather
-than a blanket rule — `NSAttributedString` (below), `Notification` /
-`NotificationCenter`, and `Timer` / `RunLoop`. One residual name clash exists
+Two families still shadow Foundation's everywhere for measured reasons:
+`NSAttributedString` (below) and `Timer` / `RunLoop`. Notification is now a
+capability seam: values are Foundation's when visible, Apple builds also use
+Foundation's center, and native ELF qualifies the custom center. One residual name clash exists
 only on Darwin: `CGAffineTransform`, because Foundation re-exports
 CoreGraphics' there and OpenUIKit must keep its own to hold the render
 byte-identical. On Linux there is nothing to disambiguate.
@@ -1869,8 +1907,9 @@ exercised and OpenUIKit does not fully honour.
   Foundation's own, so there is one declaration rather than two rivals.
   `NSCoder` and `required init?(coder:)` (344 of the corpus's 5,099 files)
   resolve, and the real-app harness compiles them verbatim. Residue is
-  narrowed and listed above: `NSAttributedString`, `Notification`/
-  `NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's.
+  narrowed and listed above: `NSAttributedString` and `Timer`/`RunLoop`
+  remain universal shadows; native ELF alone retains a distinct custom
+  NotificationCenter.
 - **`UIView.init(coder:)` preserves UIKit's initializer contract, not archive
   support.** `UIView` exposes the exact required `init?(coder: NSCoder)`
   designated initializer and a distinct zero-argument convenience

@@ -44,13 +44,14 @@
 //     attribute value (UIFont, UIColor, CGFloat, NSParagraphStyle) is a plain
 //     Swift value. Foundation's attributed string cannot hold UIKit's
 //     attributes on the target platform.
-//   * `Notification` / `NotificationCenter` — its selector form has to
-//     dispatch through OpenUIKit's portable `SelectorDispatching`
-//     (docs/OBJC_RUNTIME.md): Swift ObjC interop does not exist on Linux, so
-//     corelibs-Foundation has no `addObserver(_:selector:name:object:)` at
-//     all, and that spelling is the one real apps use most. Foundation's
-//     block form also measurably diverges on Linux (an observer registered
-//     with a non-NSObject `object:` filter never fires).
+//   * The Notification family has a capability split rather than one blanket
+//     choice. Foundation-visible builds alias `Notification`,
+//     `NSNotification`, and `OperationQueue`. When Objective-C is also
+//     available, `NotificationCenter` is Foundation's too. Native ELF keeps
+//     OpenUIKit's selector-registry center because corelibs Foundation has no
+//     selector form and its object-filter behavior differs. A Foundation-
+//     hidden Objective-C guest keeps the custom value/center and bridges the
+//     value through one NSObject-backed NSNotification carrier.
 //   * `Timer` / `RunLoop` — they run on the SCRIPTED host clock
 //     (`UIWindow.tick(timestamp:)`), not a wall clock. Foundation's run on
 //     `Date`, which would put wall-clock time into the frame loop and end

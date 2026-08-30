@@ -91,11 +91,24 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   UIDatePicker source, runtime precedence/fallback, weak lifetime,
   `UIVisualEffectView` archive replacement, native ELF NSObject identity, an
   iOS 26.1 oracle, and a twice-run Linux-hosted ARM64 Mach-O guest are gated.
-  Native ELF still cannot compile literal Swift `@objc` / `#selector`;
-  `UIGestureRecognizer` and `UIEvent` remain non-responder senders; Notification
-  and Timer selector delivery remains registry-only. `#Preview` and
-  Notification ambiguity are the exact two Reminder diagnostics left for
-  independent successor slices, so this is not yet an unchanged app launch.
+  At this frozen predecessor boundary native ELF still could not compile
+  literal Swift `@objc` / `#selector`; `UIGestureRecognizer` and `UIEvent`
+  remained non-responder senders; Notification and Timer selector delivery was
+  registry-only. `#Preview` and Notification ambiguity were the exact two
+  Reminder diagnostics left for independent successor slices.
+- **Reminder Notification identity / bridge successor (2026-08-30)** — exact
+  unchanged Reminder advances **2 -> 1 diagnostics**, removing only the
+  Foundation/OpenUIKit Notification ambiguity with zero additions and zero
+  app/vendor edits. Foundation+Objective-C aliases the native Notification,
+  NSNotification, NotificationCenter, and OperationQueue identities; native
+  ELF shares the values but keeps the custom registry center; a Foundation-
+  hidden Objective-C guest uses a public NSObject bridge and central 0/1
+  runtime-before-registry delivery. The custom center prebridges once per post
+  for shared one-argument carrier identity. Native iOS 26.1, native ELF, and a
+  twice-run Linux-hosted ARM64 Mach-O guest pin the branches. The exact
+  32-path/unchanged-app gate leaves only `#Preview`, so no launch is claimed.
+  The separately owned production FoundationGuest module must still add the
+  four exact identity aliases before the hidden path is end-to-end complete.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding
@@ -663,10 +676,10 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     painter (`nonisolated static`), the Cassowary solver, the font engine,
     and `UIColor`/`UIImage`/`UIFont`/`UIBezierPath`/`UIGraphicsImageRenderer`
     — legal off the main actor in real UIKit too.
-  - Exactly two boundary crossings, both `MainActor.assumeIsolated` (checked,
-    traps off-main) with the reasoning at the site — timer/notification
-    delivery to a `SelectorDispatching` target, and each tool's top-level
-    `main.swift`. No `nonisolated(unsafe)` anywhere.
+  - At this historical boundary the Timer and custom Notification deliveries
+    both crossed with `MainActor.assumeIsolated`; the Notification successor
+    keeps that only in its custom native-ELF/Foundation-hidden center, while
+    Foundation+Objective-C uses the native center.
   - **Real-app ledger 14 changed lines → 10, 97.7 % → 98.3 %**: the
     `@MainActor` category is gone from it entirely. *(This is this entry's own
     contribution; combined with the Foundation and harness rows the M15 tip is
@@ -724,13 +737,12 @@ fixture must not put bar items over a saturated backdrop.
 Two fixtures, and the cluster's own 50 new unit tests, all green.
 
 - **`NotificationCenter`, `Notification`, `Notification.Name`,
-  `OperationQueue`** — portable, declared in OpenUIKit because the library
-  imports no Foundation, and SHADOWING Foundation's exactly like
-  `NSAttributedString`. Both registration forms (closure and selector, the
-  latter through M12's portable dispatch), object filtering by identity,
-  re-entrant-safe delivery. The five **app-lifecycle transitions now POST**
-  their UIKit notifications with `UIApplication.shared` as the object; the
-  keyboard / device names are declared and nothing posts them.
+  `OperationQueue`** — at this historical controls2 boundary these were
+  portable OpenUIKit declarations shadowing Foundation. The current successor
+  aliases the Foundation family on Foundation+Objective-C, shares its values
+  on native ELF, and retains the bridged custom family only where required.
+  The five **app-lifecycle transitions POST** with `UIApplication.shared` as
+  the object; keyboard/device names remain declarations only.
 - **`Timer` + `RunLoop`** on the HOST CLOCK — `UIWindow.tick(timestamp:)` is
   the run-loop turn, so a scripted capture stays reproducible and a static
   scene's timers never fire. Closure and selector forms, late-repeat

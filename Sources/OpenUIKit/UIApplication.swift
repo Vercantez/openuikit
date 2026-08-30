@@ -30,9 +30,10 @@
 // (`UIApplication.didBecomeActiveNotification` and friends) on
 // `NotificationCenter.default` with `UIApplication.shared` as the object, so
 // an app that observes instead of implementing the delegate is heard. The
-// center is OpenUIKit's own portable one and SHADOWS Foundation's — see
-// Sources/OpenUIKit/NotificationCenter.swift for the full tradeoff. The
-// delegate method runs first, then the observers.
+// center is Foundation's canonical center when Foundation+Objective-C are
+// visible, and OpenUIKit's custom center on native ELF or a Foundation-hidden
+// guest. See Sources/OpenUIKit/NotificationCenter.swift for the exact seam.
+// The delegate method runs first, then the observers.
 
 #if canImport(Foundation)
 import protocol Foundation.NSSecureCoding

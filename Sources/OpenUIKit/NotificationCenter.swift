@@ -1,51 +1,73 @@
-// A portable NotificationCenter. Owner: app-compat cluster (controls2).
+// A portable NotificationCenter with Foundation-compatible notification
+// identity. Owner: app-compat cluster (controls2 + Reminder bridge slice).
 //
-// WHY THIS TYPE IS HERE AND NOT IMPORTED
-// --------------------------------------
-// `NotificationCenter`, `Notification` and `Notification.Name` are Foundation
-// types. `Sources/OpenUIKit` imports no Foundation at all — that is the
-// property that makes the library build and behave identically on Linux
-// (docs/PORTABILITY.md) — so a UIKit reimplementation that wants to post
-// `UIApplication.didBecomeActiveNotification` has to declare the whole family
-// itself. It does, and it SHADOWS Foundation's types EXACTLY the way
-// `NSAttributedString` already does (docs/KNOWN_GAPS.md, "Attributed text"):
+// TYPE IDENTITY
+// -------------
+// On a normal package build, Foundation's `Notification` and `OperationQueue`
+// are the canonical values and OpenUIKit aliases them. An extension declared
+// in a Foundation-only model file is therefore visible to a UIKit-only view
+// controller, and there is no second `Notification` for name lookup to find.
 //
-//   * An app or test that imports BOTH OpenUIKit and Foundation sees two
-//     types named `NotificationCenter` / `Notification` and the compiler
-//     reports `'Notification' is ambiguous for type lookup in this context`.
-//     The fix is a file-scope disambiguation,
-//     `private typealias Notification = OpenUIKit.Notification`, the same
-//     pattern the repo uses for `CGRect` and `NSAttributedString`.
-//   * There is NO bridging. A Foundation `Notification` cannot be posted to
-//     this center and an observer registered here never hears Foundation's
-//     `NotificationCenter.default`. Adding a bridge would require the library
-//     to import Foundation.
-//   * `object` and `userInfo` values are `Any`, like Foundation's.
+// A Foundation-hidden Apple guest still needs the same source/API surface.
+// That branch retains the small value below and gives it a real
+// `_ObjectiveCBridgeable` conformance backed by an NSObject box, so an
+// unchanged `@objc func receive(_ note: Notification)` crosses
+// `NSObject.perform` with its name, object identity and userInfo intact.
+// Native ELF never enables Objective-C interop and uses the value directly.
+//
+// When Foundation and Objective-C are both visible, `NotificationCenter` is
+// Foundation's canonical center too: that is UIKit's native implementation,
+// removes the last direct Foundation/UIKit name collision, and gives Apple
+// builds the authoritative threading/queue behavior. Native ELF retains the
+// strict custom center below because corelibs Foundation has no selector
+// registration API and its non-NSObject object filtering differs from UIKit.
+// A Foundation-hidden Objective-C guest also uses the custom center, whose
+// selector delivery reaches the real runtime through `SelectorDispatch`.
 //
 // DELIVERY MODEL
 // --------------
-// Posting is SYNCHRONOUS and re-entrant-safe: `post` snapshots the observer
-// list first, so an observer that adds or removes observers does not perturb
-// the notification in flight (Foundation guarantees the same). Observers are
-// invoked in registration order.
+// The custom portable center posts SYNCHRONOUSLY and is re-entrant-safe:
+// `post` snapshots the observer list first, so an observer that adds or
+// removes observers does not perturb the notification in flight. Its
+// observers are invoked in registration order. Foundation+Objective-C builds
+// use Foundation's center and therefore inherit Foundation's delivery model.
 //
 // There is no run loop and there are no threads in the portable core, so the
-// `queue:` argument of `addObserver(forName:object:queue:using:)` is ACCEPTED
-// AND IGNORED — the block runs inline on the poster's stack. `OperationQueue`
-// below exists only so that argument compiles; it is not an execution
-// context. This is the same "no run loop" limitation that makes the app
+// custom center ACCEPTS AND IGNORES the `queue:` argument of
+// `addObserver(forName:object:queue:using:)`; its block runs inline on the
+// poster's stack. Foundation's native center honors its queue argument. The
+// custom behavior is the same "no run loop" limitation that makes the app
 // lifecycle host-driven (docs/KNOWN_GAPS.md).
 //
-// Observers are held WEAKLY for the selector form (UIKit's
+// The custom center holds observers WEAKLY for the selector form (UIKit's
 // `addObserver(_:selector:name:object:)` holds an unsafe-unretained
 // reference; a weak one is strictly safer and never resurrects a dead
 // object) and STRONGLY for the block form, whose block Foundation also
-// retains until the returned token is removed.
+// retains until the returned token is removed. Foundation+Objective-C builds
+// use Foundation's ownership behavior directly.
+
+#if canImport(Foundation)
+import Foundation
+#endif
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
 
 // MARK: - Notification
 
-/// A posted notification. Foundation's `Notification` is a struct with the
-/// same three members and the same semantics.
+#if canImport(Foundation)
+
+/// Foundation's canonical posted-notification value. Keeping the alias in
+/// OpenUIKit's namespace makes Foundation-only extensions and UIKit-facing
+/// APIs share one declaration rather than two lookalikes.
+public typealias Notification = Foundation.Notification
+
+/// Foundation's canonical Objective-C notification carrier.
+public typealias NSNotification = Foundation.NSNotification
+
+#else
+
+/// Foundation-hidden posted-notification value.
 public struct Notification {
     /// A notification's identity. Two names are equal iff their raw strings
     /// are.
@@ -72,12 +94,84 @@ public struct Notification {
     }
 }
 
+#if canImport(ObjectiveC)
+
+/// Objective-C carrier for the Foundation-hidden notification value.
+///
+/// The whole Swift value is retained by the box, so nested strings, the
+/// sender reference and userInfo values keep their Swift semantics while the
+/// outer value crosses an Objective-C method boundary.
+public final class _OpenUIKitNotificationBox: NSObject {
+    public typealias Name = Notification.Name
+
+    fileprivate let value: Notification
+
+    public var name: Notification.Name { value.name }
+    public var object: Any? { value.object }
+    public var userInfo: [AnyHashable: Any]? { value.userInfo }
+
+    fileprivate init(_ value: Notification) {
+        self.value = value
+        super.init()
+    }
+
+    public convenience init(name: Notification.Name, object: Any?,
+                            userInfo: [AnyHashable: Any]? = nil) {
+        self.init(Notification(name: name, object: object, userInfo: userInfo))
+    }
+}
+
+/// Foundation-hidden counterpart of Foundation.NSNotification. It is the
+/// same NSObject box used by Notification's Objective-C bridge:
+/// NSNotification handlers share one box, while Notification-typed thunks
+/// unbridge that same box to a value.
+public typealias NSNotification = _OpenUIKitNotificationBox
+
+extension Notification: _ObjectiveCBridgeable {
+    public typealias _ObjectiveCType = NSNotification
+
+    public func _bridgeToObjectiveC() -> _OpenUIKitNotificationBox {
+        _OpenUIKitNotificationBox(self)
+    }
+
+    public static func _forceBridgeFromObjectiveC(
+        _ source: _OpenUIKitNotificationBox,
+        result: inout Notification?
+    ) {
+        result = source.value
+    }
+
+    public static func _conditionallyBridgeFromObjectiveC(
+        _ source: _OpenUIKitNotificationBox,
+        result: inout Notification?
+    ) -> Bool {
+        result = source.value
+        return true
+    }
+
+    public static func _unconditionallyBridgeFromObjectiveC(
+        _ source: _OpenUIKitNotificationBox?
+    ) -> Notification {
+        source?.value ?? Notification(name: .init(""))
+    }
+}
+
+#endif
+#endif
+
 // MARK: - OperationQueue (argument-compatibility shim)
 
-/// Present ONLY so `addObserver(forName:object:queue:using:)` compiles with
-/// app source that passes `.main`. It schedules nothing: the portable core
-/// has no run loop and no threads, and every notification is delivered
-/// inline. See the file header.
+#if canImport(Foundation)
+
+/// Foundation's canonical queue identity. The native Foundation center honors
+/// it; OpenUIKit's native-ELF center accepts it but deliberately delivers
+/// inline.
+public typealias OperationQueue = Foundation.OperationQueue
+
+#else
+
+/// Foundation-hidden argument-compatibility shim. It schedules nothing: the
+/// portable core has no run loop and every notification is delivered inline.
 public final class OperationQueue {
     public static let main = OperationQueue(name: "main")
     public static var current: OperationQueue? { main }
@@ -85,21 +179,51 @@ public final class OperationQueue {
     public init(name: String? = nil) { self.name = name }
 }
 
-/// The opaque token `addObserver(forName:object:queue:using:)` returns.
-///
-/// Foundation types that return value `any NSObjectProtocol`. Portable Swift
-/// has no `NSObject` and no ObjC protocol to conform to, and NAMING a class
-/// `NSObjectProtocol` would collide with the real protocol on Darwin (where
-/// `import ObjectiveC` already vends it) — so the token is its own type.
-/// A caller porting from Foundation changes the declared type of the stored
-/// observer from `NSObjectProtocol?` to `NotificationToken?` and nothing
-/// else. Keep the token: dropping it does NOT unregister the block.
+#endif
+
+#if canImport(Foundation) && canImport(ObjectiveC)
+
+/// Native Foundation's block-observer token identity.
+public typealias NotificationToken = any ObjectiveC.NSObjectProtocol
+
+#elseif canImport(Foundation)
+
+/// Native-ELF block-observer token. Corelibs Foundation has no selector-form
+/// center API, so OpenUIKit retains its custom token identity; NSObject
+/// inheritance still lets unchanged storage spell `any NSObjectProtocol`.
+public final class NotificationToken: Foundation.NSObject {
+    fileprivate override init() { super.init() }
+}
+
+#elseif canImport(ObjectiveC)
+
+/// Foundation-hidden block-observer token. NSObject inheritance preserves
+/// Foundation's source shape: the returned value assigns to
+/// `any NSObjectProtocol` even though the custom center owns its identity.
+public final class NotificationToken: NSObject {
+    fileprivate override init() { super.init() }
+}
+
+#else
+
+/// Opaque token for the rare build with neither an NSObject provider nor
+/// Objective-C. Keep it: dropping the value does not unregister the block.
 public final class NotificationToken {
     fileprivate init() {}
 }
 
+#endif
+
 // MARK: - NotificationCenter
 
+#if canImport(Foundation) && canImport(ObjectiveC)
+
+/// Foundation's canonical notification center on native Apple builds.
+public typealias NotificationCenter = Foundation.NotificationCenter
+
+#else
+
+/// Strict portable center for native ELF and Foundation-hidden guests.
 public final class NotificationCenter {
     /// The process-wide center. UIKit posts every notification it owns here.
     public static let `default` = NotificationCenter()
@@ -147,12 +271,12 @@ public final class NotificationCenter {
         return token
     }
 
-    /// Foundation's selector form, dispatched through OpenUIKit's portable
-    /// selector mechanism (docs/OBJC_RUNTIME.md): `observer` must conform to
-    /// ``SelectorDispatching`` and answer to `selector`'s name, exactly as
-    /// for `UIControl.addTarget(_:action:for:)`. The selector takes one
-    /// argument — the ``Notification`` — so its name ends in a colon
-    /// (`Selector.named("keyboardWillShow:")`).
+    /// Foundation's selector form, dispatched through OpenUIKit's central
+    /// selector mechanism (docs/OBJC_RUNTIME.md). On Objective-C-capable
+    /// targets a matching NSObject method is invoked from runtime metadata;
+    /// native ELF and non-NSObject targets use the same portable registry
+    /// fallback as `UIControl.addTarget(_:action:for:)`. The conventional
+    /// selector takes one ``Notification`` argument and ends in a colon.
     ///
     /// The observer is held weakly; a deallocated one is skipped and its
     /// registration reaped on the next post.
@@ -197,6 +321,15 @@ public final class NotificationCenter {
     public func post(_ notification: Notification) {
         // Snapshot first: an observer may add or remove observers.
         let snapshot = registrations
+#if !canImport(Foundation) && canImport(ObjectiveC)
+        // Bridge once per post. Native Foundation gives every selector
+        // observer the same NSNotification carrier; one shared box preserves
+        // that identity for both Notification- and NSNotification-typed
+        // Objective-C thunks. Block observers still receive the Swift value.
+        let selectorSender: Any = notification._bridgeToObjectiveC()
+#else
+        let selectorSender: Any = notification
+#endif
         var reap = false
         for reg in snapshot {
             if let n = reg.name, n != notification.name { continue }
@@ -217,13 +350,11 @@ public final class NotificationCenter {
                 // thread; `assumeIsolated` asserts that (traps off-main)
                 // instead of hiding it behind `nonisolated(unsafe)`.
                 MainActor.assumeIsolated {
-                    guard let dispatcher = observer as? SelectorDispatching else {
-                        SelectorDispatch.onUnresolved?(observer, selectorName)
-                        return
-                    }
-                    if !dispatcher.perform(selectorName, with: notification) {
-                        SelectorDispatch.onUnresolved?(observer, selectorName)
-                    }
+                    _ = SelectorDispatch.send(
+                        Selector.named(selectorName),
+                        to: observer,
+                        sender: selectorSender
+                    )
                 }
             }
         }
@@ -242,6 +373,8 @@ public final class NotificationCenter {
     /// leak checks use it.
     public var _observerCount: Int { registrations.count }
 }
+
+#endif
 
 // MARK: - The notification names UIKit declares
 

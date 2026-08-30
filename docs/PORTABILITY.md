@@ -8,6 +8,35 @@ Reproduce any time with `scripts/linux_verify.sh` (renderer),
 `scripts/linux_realapp_verify.sh` (a REAL app's screen — M14) and
 `scripts/objc_facade_verify.sh` (an Objective-C app — M15). All need Docker.
 
+## Notification identity / bridge substrate matrix (2026-08-30)
+
+Notification deliberately chooses identity by capability rather than by OS:
+
+| build | value / ObjC carrier / queue | center and selector route |
+|---|---|---|
+| Foundation + Objective-C | aliases Foundation `Notification`, `NSNotification`, `OperationQueue` | aliases Foundation `NotificationCenter`; native zero/one-argument selector behavior and queue semantics |
+| native ELF, Foundation visible | aliases Foundation values/carrier/queue; custom token subclasses Foundation.NSObject and assigns to Foundation.NSObjectProtocol | custom OpenUIKit center; `Selector.named` + registry because corelibs has no selector observer API |
+| Linux-hosted Mach-O, Foundation hidden | custom value + public `_ObjectiveCBridgeable` NSObject carrier exposed as bounded `NSNotification`; custom queue | custom center; real Objective-C 0/1 metadata first, registry fallback second |
+
+The hidden custom center prebridges once for selector delivery, preserving one
+carrier identity across multiple NSNotification-typed observers while a
+Notification-typed thunk unbridges the same box. Block observers still receive
+the Swift value. Object filters use reference identity; name/object wildcards,
+duplicates, weak selector/filter lifetime, token removal, and reentrant
+snapshots stay in the portable center. Its queue is accepted and ignored.
+Foundation+Objective-C builds do not inherit those custom promises: they use
+Foundation's actual queue, ownership, and reentrant-removal behavior.
+
+`Tools/notificationbridgeprobe/guest.sh` pins both non-Darwin routes. It builds
+the candidate as a native-ELF external package client and runs it twice, then
+compiles OpenUIKit and UIKit with Foundation hidden before assembling a tiny
+app-facing Foundation module whose aliases match production's required shape.
+Foundation-only, UIKit-only, and direct Foundation+UIKit sources are compiled
+together; the Mach-O guest runs twice through pinned machorun, and its load
+commands must contain no Foundation umbrella. The production support checkout
+is separately owned and still needs those four FoundationGuest aliases before
+the hidden route is end-to-end complete.
+
 ## Responder NSObject and selector dispatch substrate matrix (2026-08-30)
 
 The responder hierarchy now has one semantic root across three distinct
@@ -38,10 +67,10 @@ two-argument action whose event is identity-equal to the same touch event seen
 by a closure. It also pins runtime precedence, registry fallback, the
 `endEditing:` built-in, and weak target release.
 
-This does not broaden every sender family. `UIGestureRecognizer` and `UIEvent`
-remain plain Swift classes. OpenUIKit NotificationCenter and Timer also bypass
-the central runtime path and remain registry-only; Notification identity and
-bridging are a separate successor. A live unresolved explicit target remains
+At this responder slice's frozen boundary, `UIGestureRecognizer` and `UIEvent`
+remained plain Swift classes and NotificationCenter/Timer were registry-only.
+The Notification successor above now uses native Foundation or central 0/1
+runtime dispatch; Timer remains registry-only. A live unresolved explicit target remains
 nonfatal through `SelectorDispatch.onUnresolved`, unlike UIKit's exception,
 and broader UIKit nil-target responder-chain routing is not claimed.
 
@@ -160,8 +189,8 @@ The M13 clusters were each verified on their own branch too, but the merge is
 the run that matters: `UICollectionView`, the bar-item platters, the menu
 machinery and `NotificationCenter`/`Timer` had never been compiled together
 off Darwin before this. The portability risks they each carried —
-`NotificationCenter` and `Timer` SHADOW Foundation types (the library still
-imports no Foundation, so they are declarations, not re-exports), and the
+`NotificationCenter` and `Timer` shadowed Foundation types at that historical
+merge boundary, and the
 menu/bar clusters lean on the M12 selector dispatch that already had a Linux
 path — all held.
 
@@ -302,13 +331,12 @@ Each of these was measured, not assumed. Full statement in
   `UIColor`, `CGFloat`, `NSParagraphStyle`) is a plain Swift value, so
   Foundation's attributed string cannot hold UIKit's attributes on the target
   platform at all.
-- **`Notification` / `NotificationCenter` / `OperationQueue`.** The selector
-  form — `addObserver(_:selector:name:object:)`, the spelling real apps use
-  most — has to dispatch through OpenUIKit's portable `SelectorDispatching`
-  (docs/OBJC_RUNTIME.md), and corelibs-Foundation has no such method at all
-  because Swift ObjC interop does not exist on Linux. Foundation's block form
-  also measurably diverges there: an observer registered with a
-  non-`NSObject` `object:` filter never fires.
+- **`Notification` / `NSNotification` / `NotificationCenter` /
+  `OperationQueue`.** Values/carrier/queue alias Foundation whenever it is
+  visible, and Foundation+Objective-C aliases its center too. Native ELF keeps
+  the custom center because corelibs has no selector method and its block
+  object-filter behavior diverges. A Foundation-hidden Objective-C build uses
+  the custom bridged family described in the matrix above.
 - **`Timer` / `RunLoop`.** They run on the SCRIPTED host clock
   (`UIWindow.tick(timestamp:)`). Foundation's run on `Date`, which would put
   wall-clock time in the frame loop and end byte-identical rendering.
@@ -359,12 +387,11 @@ unscoped `import CoreGraphics` breaks 8 files by dragging CoreGraphics'
   `NSParagraphStyle` are OpenUIKit's own types, not Foundation's, precisely
   so the attributed path stays Foundation-free off Darwin. The cost is name
   shadowing for apps that import both — docs/KNOWN_GAPS.md.
-- The controls2 cluster (2026-08-25) extended the same tradeoff to three more
-  families, and for the same reason: **`NotificationCenter` / `Notification`
-  / `Notification.Name` / `OperationQueue`** and **`Timer` / `RunLoop`** are
-  declared in OpenUIKit. Two portability consequences beyond the shadowing:
-  the notification `queue:` argument is accepted and IGNORED (there is no run
-  loop and no threads in the core), and `Timer` fires from
+- The controls2 cluster (2026-08-25) originally extended the same tradeoff to
+  Notification and Timer. The Notification successor now uses the capability
+  matrix above: only the custom native-ELF/Foundation-hidden centers ignore
+  `queue:`; Foundation+Objective-C honors it. **`Timer` / `RunLoop`** remain
+  declared in OpenUIKit, and Timer fires from
   `UIWindow.tick(timestamp:)` rather than from a wall clock — the same
   host-clock discipline that already drives scroll physics, transitions and
   animation completions, and the reason a timer can never make a golden

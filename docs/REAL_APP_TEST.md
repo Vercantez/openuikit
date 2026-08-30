@@ -39,7 +39,15 @@ interesting than what it did.
 > UIViewController targets and responder controls including `UISwitch` and
 > `UIDatePicker` are Objective-C-representable, and 0/1/2-argument actions use
 > real runtime metadata without a `SelectorDispatching` table. Recognizer/event
-> senders and Notification/Timer delivery retain narrower limits below.
+> senders and Timer delivery retain narrower limits below.
+>
+> **Notification successor update (2026-08-30).** Foundation+Objective-C now
+> uses Foundation's canonical Notification/NSNotification/NotificationCenter/
+> OperationQueue family, so a direct `import Foundation` + `import UIKit` file
+> has no center ambiguity and zero/one-argument notification selectors use the
+> native runtime. Native ELF keeps the registry center. The Foundation-hidden
+> guest has a bounded NSObject bridge and central 0/1 dispatch, but production's
+> separately owned FoundationGuest shim still needs its four exact aliases.
 
 ---
 
@@ -302,8 +310,8 @@ of the census.
 
 | # | blocker | corpus reach | what it costs today |
 |---|---|---|---|
-| 1 | **`@objc` / `#selector` on native ELF, plus its dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Measured here at 4 changed lines + a 23-line table for one class — **the entire cross-platform harness ledger**. Reverting them makes native ELF emit "Objective-C interoperability is disabled". The two former macOS failures are closed for responder controls: `UISwitch` is now an ObjC-representable NSObject descendant and UIViewController target metadata dispatches directly. A macro could generate the native-ELF table but cannot change the compiler syntax. Non-responder gesture/event senders and registry-only Notification/Timer forms remain bounded. Objective-C app source uses the separate libobjc2 facade (M15, docs/OBJC_FACADE.md). |
-| ~~2~~ | ~~**Foundation cannot be imported alongside OpenUIKit**~~ — **FIXED at M15** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | Was "the single biggest structural obstacle to compiling an app *as a whole*". Closed by the first option listed here: OpenUIKit `typealias`-es its CG types (plus `IndexPath`, `NSRange`, `TimeInterval`) to Foundation's, so there is one declaration rather than two. Cost: 151 disambiguation typealiases deleted from the test suite, Linux still 162/162 byte-identical, and five of this ledger's lines came back. Residue, all measured and documented in docs/PORTABILITY.md: `NSAttributedString`, `Notification`/`NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's, and `CGAffineTransform` still clashes on Darwin only. |
+| 1 | **`@objc` / `#selector` on native ELF, plus its dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Measured here at 4 changed lines + a 23-line table for one class — **the entire cross-platform harness ledger**. Reverting them makes native ELF emit "Objective-C interoperability is disabled". Responder target/action and measured zero/one-argument Notification selectors now use runtime metadata on Objective-C-capable builds; native ELF still needs the registry. Non-responder gesture/event senders and Timer remain bounded. Objective-C app source uses the separate libobjc2 facade (M15, docs/OBJC_FACADE.md). |
+| ~~2~~ | ~~**Foundation cannot be imported alongside OpenUIKit**~~ — **FIXED at M15** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | Was "the single biggest structural obstacle to compiling an app *as a whole*". Closed by Foundation aliases; the Notification successor now also canonicalizes Notification/NSNotification/OperationQueue whenever Foundation is visible and NotificationCenter on Foundation+Objective-C. Residue: `NSAttributedString` and `Timer`/`RunLoop` remain shadows everywhere, native ELF qualifies its custom center, and `CGAffineTransform` still clashes on Darwin only. |
 | ~~3~~ | ~~**No `@MainActor` isolation on OpenUIKit's classes**~~ — **SHIPPED (M15)** | `@MainActor` **641 uses / 270 files** | **Was** 4 of this sample's 14 changed lines; now 0. UIResponder and every subclass, UIControl, UIGestureRecognizer, UIScreen, UIDevice, the touch/event types, the presentation and transitioning types, the bar-item types, the Auto Layout types and every delegate/data-source protocol are `@MainActor`, matching the iOS SDK. The rendering core (OpenCoreGraphics), the text engine's glyph entry points, the Cassowary solver and the value-ish types (`UIColor`, `UIImage`, `UIFont`, `UIBezierPath`) are deliberately **not** isolated — they are legal off the main actor in real UIKit too. See docs/KNOWN_GAPS.md for the two `MainActor.assumeIsolated` boundaries this leaves. |
 | 4 | **No asset catalog** | `UIImage(named:)` **438 / 161** | `UIImage(named:)` resolves loose `@2x`/`@3x` files only. Real apps ship `.xcassets`, which also carry the template-rendering-intent flag the app's tinting depends on. The harness copies three PNGs into `fixtures/realapp/assets/` and renames one (`small-tick` is stored as `tick@2x.png` inside its imageset). A `.xcassets` reader is a small, self-contained project. |
 | 5 | **`UIWindow` runs no appearance transition** | `viewDidAppear` **119 / 105** | `makeKeyAndVisible()` does not call `viewWillAppear`/`viewDidAppear` on the root controller, so app code that starts work there never runs. The harness works around it with an explicit `presentPickerNow()`; both `openrender` and `openhost` had to do it. This is a small fix and should be one. |
