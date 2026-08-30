@@ -13,6 +13,7 @@ FOUNDATION_PROBE = (
 )
 UIKIT_PROBE = ROOT / "full/foundation/notification_uikit_consumer_probe.swift"
 DIRECT_PROBE = ROOT / "full/foundation/notification_direct_import_probe.swift"
+FOUNDATION_MANIFEST = ROOT / "full/foundation/foundation_guest_sources.txt"
 
 EXPECTED_ALIASES = {
     "Notification": "OpenUIKit.Notification",
@@ -142,9 +143,6 @@ class NotificationGuestAliasTests(unittest.TestCase):
 
     def test_every_foundation_shim_invocation_includes_shared_aliases(self) -> None:
         expected = {
-            "FoundationGuest.swift": {
-                "full/swiftui/build_focus_onboarding_guest.sh"
-            },
             "Foundation.swift": {
                 "full/scripts/app_probe2.sh",
                 "full/scripts/build_full.sh",
@@ -168,6 +166,18 @@ class NotificationGuestAliasTests(unittest.TestCase):
                     )
 
         self.assertEqual(observed, expected)
+
+        manifest = FOUNDATION_MANIFEST.read_text().splitlines()
+        self.assertEqual(manifest[0], "full/appshim/FoundationGuest.swift")
+        self.assertEqual(
+            manifest[1], "full/appshim/FoundationOpenUIKitAliases.swift"
+        )
+        self.assertEqual(len(manifest), len(set(manifest)))
+        onboarding = (
+            ROOT / "full/swiftui/build_focus_onboarding_guest.sh"
+        ).read_text()
+        self.assertIn("foundation_guest_sources.txt", onboarding)
+        self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', onboarding)
 
     def test_full_build_enforces_early_identity_probe_order(self) -> None:
         build = (ROOT / "full/scripts/build_full.sh").read_text()

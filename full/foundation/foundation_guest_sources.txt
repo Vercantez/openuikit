@@ -1,0 +1,8 @@
+full/appshim/FoundationGuest.swift
+full/appshim/FoundationOpenUIKitAliases.swift
+full/foundation/CharacterSet.swift
+full/foundation/String+CharacterSet.swift
+full/foundation/Scanner.swift
+full/foundation/Error+LocalizedDescription.swift
+full/foundation/DateFormatter.swift
+full/foundation/UserDefaults.swift

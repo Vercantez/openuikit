@@ -51,6 +51,10 @@ exercised here.
 
 The literal `Foundation` guest module re-exports the pinned
 `FoundationEssentials` value types and the pinned literal `Combine` module.
+Its exact ordered production inputs come from
+`full/foundation/foundation_guest_sources.txt`; see
+`full/foundation/FOUNDATION_GUEST_SERVICES.md` for the bounded text,
+date-formatting, and persistent-defaults contracts.
 It does not declare replacement `URL`, `Data`, `PropertyListDecoder`,
 `Published`, `Bundle`, or `NSCoder` identities. `Bundle` and `NSCoder` remain
 type aliases to the exact OpenUIKit identities against which OpenUIKit was

@@ -68,7 +68,9 @@ through it and requires a direct same-bundle `UIImage` lookup to be non-nil.
 The Widget target receives the same explicit treatment for its adjacent
 `Focus_Widget.bundle`, unchanged named-gradient declarations, and logo image;
 neither target relies on the process-global image-search fallback.
-`FoundationGuest.swift`,
+The ordered production Foundation source set is owned by
+`full/foundation/foundation_guest_sources.txt`; the build validates and
+consumes that manifest rather than duplicating its entries. `FoundationGuest.swift`,
 `FocusOnboardingGuestMain.swift`, and `FocusOnboardingUUIDProbe.c` are port and
 test code, not application source. Normalized resource bundles are supplied by
 the existing pinned Focus resource proof and are checked for exact topology and

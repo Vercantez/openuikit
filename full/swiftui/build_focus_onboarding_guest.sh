@@ -26,6 +26,7 @@ OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-2026082
 OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
+FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
 EXPECTED_UIKIT_COMMIT=83fbcbe2204eb836968d4e73ecfecec7b20c68ef
@@ -115,6 +116,33 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
 done
 [ -x "$MRROOT/machorun" ] || die "built machorun root is missing: $MRROOT"
 [ -d "$SYS/usr/include" ] || die "FoundationEssentials sysroot is missing: $SYS"
+
+# One fail-closed manifest owns the production Foundation facade source set.
+# Keep build order explicit: the umbrella/re-exports precede the concrete
+# surfaces, and probes/tests are never compiler inputs here.
+[ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
+    || die "missing regular Foundation guest source manifest"
+mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 8 ] \
+    || die "Foundation guest source manifest must contain exactly 8 lines"
+FOUNDATION_GUEST_SOURCES=()
+for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
+    case "$relative" in
+        ''|/*|./*|../*|*/../*|*/./*|*//*|*[^A-Za-z0-9._+/-]*)
+            die "invalid Foundation guest source path: $relative" ;;
+    esac
+    case "$relative" in
+        full/appshim/*.swift|full/foundation/*.swift) ;;
+        *) die "Foundation guest manifest escaped production source roots: $relative" ;;
+    esac
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "Foundation guest source is not a regular file: $relative"
+    for prior in "${FOUNDATION_GUEST_SOURCES[@]}"; do
+        [ "$prior" != "$W/$relative" ] \
+            || die "duplicate Foundation guest source: $relative"
+    done
+    FOUNDATION_GUEST_SOURCES+=("$W/$relative")
+done
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
 assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" OpenUIKit \
@@ -299,8 +327,7 @@ echo '== compile the bounded Foundation umbrella after SwiftUI'
     -I "$PACKAGE" -module-name Foundation \
     -emit-module -emit-module-path "$PACKAGE/Foundation.swiftmodule" \
     -emit-object -o "$OUT/foundation.o" \
-    "$W/full/appshim/FoundationGuest.swift" \
-    "$W/full/appshim/FoundationOpenUIKitAliases.swift"
+    "${FOUNDATION_GUEST_SOURCES[@]}"
 
 # build_full emitted a deliberately early literal UIKit identity-probe module
 # before either app-facing Foundation module existed.  Pair that exact module
