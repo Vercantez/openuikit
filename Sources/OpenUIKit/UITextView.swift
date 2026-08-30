@@ -127,8 +127,13 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     open var returnKeyType: UIReturnKeyType = .default
     open var enablesReturnKeyAutomatically = false
 
-    public var text: String = "" {
+    /// UIKit imports its `null_resettable` NSString property as `String!`:
+    /// callers may use optional binding, while assigning nil resets to an
+    /// empty string. The normalization is the first observer operation so
+    /// every subsequent text-layout path continues to see non-nil content.
+    open var text: String! = "" {
         didSet {
+            if text == nil { text = "" }
             _attributed = nil
             if caretOffset > UITextCaretMath.scalarCount(text) {
                 caretOffset = UITextCaretMath.scalarCount(text)

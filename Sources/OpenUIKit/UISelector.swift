@@ -4,11 +4,12 @@
 // UIKit dispatches target-action through `objc_msgSend`: `#selector(foo)`
 // produces a `SEL`, and the runtime looks the method up by name at call time.
 // OpenUIKit has no ObjC runtime, and its classes are not NSObject subclasses,
-// so name -> method has to come from somewhere else. It comes from a registry
-// the target itself supplies: `SelectorDispatching`.
+// so name -> method has to come from somewhere else. App-defined actions come
+// from a registry the target itself supplies: `SelectorDispatching`. A tiny
+// framework-owned built-in table handles UIKit methods such as
+// `UIView.endEditing(_:)` that unchanged source can legally use as actions.
 //
-// The *type* of a selector is the one thing that differs per platform, and it
-// is the only conditional compilation in this library:
+// The *type* of a selector is this subsystem's platform-dependent type seam:
 //
 //   Darwin   `Selector` IS the platform's real ObjC selector. `#selector(...)`
 //            compiles, produces one, and `sel_getName` recovers the name. App
@@ -76,7 +77,9 @@ extension Selector {
 ///
 /// UIKit gets this from `objc_msgSend`; we get it from the target. Implement
 /// `perform(_:with:)` -- usually by forwarding to an ``ActionTable`` -- and
-/// `addTarget(self, action:for:)` works exactly as it does in UIKit.
+/// `addTarget(self, action:for:)` works exactly as it does in UIKit. UIKit's
+/// own supported action methods are framework built-ins and do not require
+/// this conformance.
 ///
 ///     final class MyViewController: UIViewController, SelectorDispatching {
 ///         static let actions: ActionTable<MyViewController> = [
@@ -197,6 +200,19 @@ public enum SelectorDispatch {
     @discardableResult
     public static func trySend(_ action: Selector, to target: AnyObject?,
                                sender: Any?, event: UIEvent? = nil) -> Bool {
+        guard let target else { return false }
+
+        // UIKit's own UIView method is reachable without asking unchanged app
+        // code to adopt OpenUIKit's portable SelectorDispatching registry.
+        // A native iOS 26.1 target/action probe of
+        // `#selector(UIView.endEditing)` observes the one-argument sender ABI
+        // invoke `endEditing(_:)` exactly once with `force == false`.
+        if action.actionName == "endEditing:", action.actionArity == 1,
+           let view = target as? UIView {
+            _ = view.endEditing(false)
+            return true
+        }
+
         guard let dispatcher = target as? SelectorDispatching else { return false }
         return dispatcher.perform(action.actionName, with: sender, event: event)
     }

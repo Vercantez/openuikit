@@ -1,5 +1,53 @@
 # Known gaps (living document — fixers: read this)
 
+## Reminder trait/text/framework-selector successor slice (2026-08-30)
+
+This bounded slice closes exactly three diagnostics in unchanged Reminder,
+moving the complete multiset from **7 -> 4** with zero additions and zero
+app/vendor edits. Its source compatibility is deliberately narrower than the
+first-party systems whose spellings now compile:
+
+- `UIViewController.registerForTraitChanges(_:handler:)` and unregister are
+  the iOS/tvOS 17 handler path only (watchOS unavailable). Registrations are
+  retained by the controller, do not load its view or deliver initially,
+  survive root replacement, filter the five modeled trait axes, and can be
+  unregistered. OpenUIKit does not yet expose `UITraitChangeObservable`, its
+  selector overloads/protocol-return topology, `traitOverrides`,
+  `UIMutableTraits`, custom trait values, or `updateTraitsIfNeeded`.
+- Trait delivery remains host-driven. A host must call the root view's
+  `_traitsDidChange(previous:)` with that root's complete effective prior
+  collection after changing the environment. The method reconstructs each
+  child's prior effective style before filtering fixed overrides. Unknown
+  custom definitions fire conservatively because the bounded trait
+  collection has no value slot to compare. There is no Settings observer,
+  automatic window-resize delivery, or automatic override-setter delivery.
+  Modern-before-legacy order is a deterministic OpenUIKit policy. iOS 26.1
+  independently confirms it only for the probed attached light-to-dark direct
+  style override; unrelated legacy delivery is not globally filtered or
+  promised exactly once.
+- `UITextView.text` has UIKit's `String!` import shape and nil-reset behavior,
+  but nil is never persistent content: assigning it becomes `""`, clears the
+  attributed representation, clamps the caret, and invalidates layout.
+- Conditional Objective-C exposure makes `#selector(UIView.endEditing)`
+  compile on Objective-C-capable builds. Portable selector dispatch has one
+  exact framework built-in, `endEditing:`, invoked with the iOS 26.1 measured
+  `false` argument. The method is considered resolved independently of its
+  Bool result. Other framework methods still need explicit built-ins, and
+  app-defined methods still require `SelectorDispatching` on the portable
+  path. Native ELF Linux still cannot compile `@objc` or `#selector` in Swift
+  source; Linux-hosted Mach-O Apple targets are Objective-C-capable.
+
+The native oracle measures only UIKit's text reset, selector/runtime and
+target/action behavior, matching/same/unrelated trait callbacks, bounded
+direct-style handler/legacy order, unregister, and observable-owned token
+lifetime. Portable tests own the host seam,
+effective-child propagation, root-replacement, and deterministic callback
+order contracts. The successor Reminder probe pins all 22 sources, 26 direct
+call-site lines, exact source hash, full before/after diagnostic multisets,
+and the exact 21-path boundary. The two `UIDatePicker` Objective-C errors,
+`#Preview`, and `Notification` ambiguity remain, so unchanged Reminder still
+does not compile or launch.
+
 ## Reminder presentation/table successor slice (2026-08-30)
 
 This slice closes five diagnostics in the unchanged Reminder whole-source

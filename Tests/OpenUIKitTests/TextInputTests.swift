@@ -631,6 +631,21 @@ final class TextViewEditingTests: XCTestCase {
         w.layoutIfNeeded()
     }
 
+    func testTextNilAssignmentResetsContentAndCaretToEmpty() {
+        tv.text = "abcdef"
+        tv.caretOffset = 6
+        tv.attributedText = NSAttributedString(string: "styled")
+        XCTAssertNotNil(tv._attributed)
+
+        tv.text = nil
+
+        XCTAssertEqual(tv.text, "")
+        XCTAssertNil(tv._attributed)
+        XCTAssertEqual(tv.caretOffset, 0)
+        w.layoutIfNeeded()
+        XCTAssertEqual(tv.contentSize.height, 16 + 20)
+    }
+
     func testTypingAndNewlines() {
         tv.becomeFirstResponder()
         w.sendText("Hello")

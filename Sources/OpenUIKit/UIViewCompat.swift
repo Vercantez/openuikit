@@ -183,11 +183,40 @@ public enum UITraitHorizontalSizeClass: UITraitDefinition {
 /// The opaque token UIKit hands back so a registration can be dropped.
 @preconcurrency @MainActor
 public final class UITraitChangeRegistration {
-    let traits: [String]
+    // Metatype identity is the trait's key. A third-party definition may use
+    // the same human-readable `name` as a built-in without becoming that
+    // built-in trait.
+    let traits: [ObjectIdentifier]
     let fire: (UITraitCollection) -> Void
-    init(traits: [String], fire: @escaping (UITraitCollection) -> Void) {
+    init(traits: [ObjectIdentifier], fire: @escaping (UITraitCollection) -> Void) {
         self.traits = traits
         self.fire = fire
+    }
+
+    /// Whether at least one requested trait changed between the host's two
+    /// environments. Unknown custom definitions are conservatively delivered:
+    /// OpenUIKit's bounded collection has no value slot with which to compare
+    /// them, but an explicit host event may still represent their change.
+    func shouldFire(previous: UITraitCollection,
+                    current: UITraitCollection) -> Bool {
+        guard !traits.isEmpty else { return false }
+        for trait in traits {
+            if trait == ObjectIdentifier(UITraitPreferredContentSizeCategory.self) {
+                if previous.preferredContentSizeCategory
+                    != current.preferredContentSizeCategory { return true }
+            } else if trait == ObjectIdentifier(UITraitUserInterfaceStyle.self) {
+                if previous.userInterfaceStyle != current.userInterfaceStyle { return true }
+            } else if trait == ObjectIdentifier(UITraitDisplayScale.self) {
+                if previous.displayScale != current.displayScale { return true }
+            } else if trait == ObjectIdentifier(UITraitVerticalSizeClass.self) {
+                if previous.verticalSizeClass != current.verticalSizeClass { return true }
+            } else if trait == ObjectIdentifier(UITraitHorizontalSizeClass.self) {
+                if previous.horizontalSizeClass != current.horizontalSizeClass { return true }
+            } else {
+                return true
+            }
+        }
+        return false
     }
 }
 
@@ -197,8 +226,8 @@ extension UIView {
         _ traits: [any UITraitDefinition.Type],
         handler: @escaping (Target, UITraitCollection) -> Void
     ) -> UITraitChangeRegistration {
-        let names = traits.map { $0.name }
-        let reg = UITraitChangeRegistration(traits: names) { [weak self] previous in
+        let identifiers = traits.map(ObjectIdentifier.init)
+        let reg = UITraitChangeRegistration(traits: identifiers) { [weak self] previous in
             guard let target = self as? Target else { return }
             handler(target, previous)
         }
@@ -210,17 +239,74 @@ extension UIView {
         _traitRegistrations.removeAll { $0 === registration }
     }
 
-    /// Fire every registration on this view and, recursively, its subviews.
+    /// Fire matching registrations on this view and, recursively, its subviews.
     /// Hosts call this after changing `UITraitCollection.current`.
+    /// `previous` must be this receiver/root's complete effective prior
+    /// collection, not unresolved raw process traits, because filtering uses it.
     public func _traitsDidChange(previous: UITraitCollection) {
+        let current = traitCollection
         // UIViewController's legacy callback is attached to its root view in
         // UIKit. Deliver it once at that boundary; child-controller roots are
         // reached naturally by the subtree walk below.
         if let controller = _managingViewController,
            controller.viewIfLoaded === self {
+            // OpenUIKit deterministically delivers modern handlers before
+            // its existing legacy callback in the same synchronous,
+            // host-driven change. Controller registrations live on the
+            // controller, so replacing its root view does not lose them.
+            controller._deliverRegisteredTraitChanges(previous: previous,
+                                                       current: current)
             controller.traitCollectionDidChange(previous)
         }
-        for r in _traitRegistrations { r.fire(previous) }
-        for s in subviews { s._traitsDidChange(previous: previous) }
+        for r in _traitRegistrations where r.shouldFire(previous: previous,
+                                                        current: current) {
+            r.fire(previous)
+        }
+        for subview in subviews {
+            // `previous` is effective for this view. A child's fixed local
+            // style was effective before and after an inherited host change,
+            // so rebuild that child's previous environment before filtering.
+            var childPrevious = previous
+            if subview.overrideUserInterfaceStyle != .unspecified {
+                childPrevious.userInterfaceStyle = subview.overrideUserInterfaceStyle
+            }
+            subview._traitsDidChange(previous: childPrevious)
+        }
+    }
+}
+
+extension UIViewController {
+    /// Bounded handler-form compatibility for iOS 17 trait observation.
+    /// OpenUIKit does not yet model the full `UITraitChangeObservable`
+    /// protocol, selector overloads, or `traitOverrides`; hosts explicitly
+    /// drive delivery through the loaded root view's `_traitsDidChange` hook.
+    @available(iOS 17.0, tvOS 17.0, *)
+    @available(watchOS, unavailable)
+    @discardableResult
+    public func registerForTraitChanges<Target: UIViewController>(
+        _ traits: [any UITraitDefinition.Type],
+        handler: @escaping (Target, UITraitCollection) -> Void
+    ) -> UITraitChangeRegistration {
+        let identifiers = traits.map(ObjectIdentifier.init)
+        let registration = UITraitChangeRegistration(traits: identifiers) { [weak self] previous in
+            guard let target = self as? Target else { return }
+            handler(target, previous)
+        }
+        _traitRegistrations.append(registration)
+        return registration
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @available(watchOS, unavailable)
+    public func unregisterForTraitChanges(_ registration: UITraitChangeRegistration) {
+        _traitRegistrations.removeAll { $0 === registration }
+    }
+
+    func _deliverRegisteredTraitChanges(previous: UITraitCollection,
+                                         current: UITraitCollection) {
+        for registration in _traitRegistrations
+        where registration.shouldFire(previous: previous, current: current) {
+            registration.fire(previous)
+        }
     }
 }

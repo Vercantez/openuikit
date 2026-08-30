@@ -204,6 +204,71 @@ selector/representability errors, trait registration, text optionality,
 `#Preview`, `Notification` ambiguity, and the `endEditing` selector boundary;
 this is not yet a claim that unchanged Reminder compiles or launches.
 
+## Reminder trait, text, and framework-selector slice (2026-08-30)
+
+The next exact successor starts at presentation/table commit
+`99c0e9a65bcfbab9041b76782b0d390c435b2725` and advances unchanged Reminder's
+complete diagnostic multiset from **7 -> 4**. Only three errors disappear:
+the missing controller `registerForTraitChanges` handler overload,
+`UITextView.text` being non-optional at an optional-binding call site, and
+`#selector(UIView.endEditing)` lacking Objective-C exposure. No diagnostic is
+added and no app or vendor source is edited. The gate retains the exact
+Reminder commit/tree/22-source hash, pins the prior 23 call-site lines plus
+the three new lines (`call_sites=26`), and requires the exact 21-path candidate
+boundary. The four byte-for-byte remaining errors are the two
+`UIDatePicker` Objective-C representability errors, `#Preview`, and the
+Foundation/OpenUIKit `Notification` ambiguity. Unchanged Reminder therefore
+still does not compile or launch.
+
+The trait addition is intentionally a bounded handler-form surface, not a
+claim that the iOS 17 trait system is complete. A `UIViewController` owns its
+registrations without loading its view; dropping the caller's token does not
+unregister it, explicit unregister suppresses later delivery, and replacing
+the root view does not lose the registration. Known modeled axes are filtered
+by metatype identity and their previous/current values; an unknown custom
+trait is delivered conservatively on an explicit event. Delivery is
+synchronous only when a host calls
+`UIView._traitsDidChange(previous:)` with the root's complete effective prior
+collection. OpenUIKit does not yet export the full `UITraitChangeObservable`
+protocol topology, selector overloads, `traitOverrides`, `UIMutableTraits`,
+or automatic system/window/override-setter delivery. Within that portable
+host seam, modern controller handlers run before OpenUIKit's existing legacy
+callback as a deterministic local policy. A separate iOS 26.1 check confirms
+that order for one immediate attached light-to-dark direct trait override;
+it does not claim legacy callbacks are globally filtered or exactly once.
+
+`UITextView.text` is now externally overridable with UIKit's imported
+`String!` shape. It accepts optional binding and both `String!` and `String?`
+downstream override spellings. A nil assignment normalizes immediately to a
+non-nil empty string while clearing attributed content, clamping the caret,
+and invalidating text layout. This is the native header's
+`null_resettable` contract rather than a nullable stored-content claim.
+
+On Objective-C-capable targets `UIView.endEditing(_:)` exports the exact
+`endEditing:` selector. Native ELF Linux retains the same pure-Swift method
+without an Objective-C attribute; a Linux-hosted Mach-O Apple target remains
+Objective-C-capable and uses the attributed branch. `SelectorDispatch` has
+one framework-owned built-in for that exact one-argument selector, so an
+unchanged tap recognizer can reach the view without making the app conform to
+`SelectorDispatching`.
+iOS 26.1 passes `false` for this target/action spelling; OpenUIKit does the
+same and treats the selector as resolved even when `endEditing(false)` returns
+false because a text delegate refuses. This is not a general Objective-C
+dispatcher or a solution for app-defined `@objc` methods and Objective-C-
+unrepresentable OpenUIKit class parameters.
+
+`Tools/traittextselectorprobe` is the committed iOS 26.1 native boundary for
+the text null reset, exact selector name/direct method, rejecting-responder
+semantics, target/action's measured `false` argument, matching/same/unrelated
+trait delivery, bounded direct-style handler/legacy order, unregister, and
+observable-owned token lifetime. Literal
+`import UIKit` and portable runtime tests separately pin no initial controller
+delivery, no registration-time view load, root replacement, child effective-
+trait filtering, optional override topology, actual recognized-tap delivery,
+and unresolved-selector reporting. `Tools/remindertraittextselectorprobe`
+then checks the full exact **7 -> 4** app diagnostic multisets; neither probe
+claims full trait topology, general Objective-C interop, or app launch.
+
 ## Visual-effect source compatibility slice (2026-08-29)
 
 The 20-app ladder corpus uses `UIVisualEffectView` in 17 repositories and

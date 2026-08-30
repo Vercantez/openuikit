@@ -19,6 +19,15 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+// A scoped Foundation declaration makes a conditional `@objc` member legal
+// in ordinary Darwin builds without importing the umbrella (and its colliding
+// geometry declarations) into this file. Foundation-hidden Mach-O cross
+// builds instead use the production
+// `-disable-objc-attr-requires-foundation-module` frontend setting.
+#if canImport(ObjectiveC) && canImport(Foundation)
+import struct Foundation.Data
+#endif
+
 
 public struct UIRectEdge: OptionSet, Sendable {
     public let rawValue: UInt
@@ -660,6 +669,9 @@ open class UIView: UIResponder, CALayerDelegate {
     /// no did-end callback. An active responder outside the receiver's
     /// subtree returns false for either force value. With no active responder,
     /// the operation is already satisfied and returns true.
+#if canImport(ObjectiveC)
+    @objc(endEditing:)
+#endif
     @discardableResult
     open func endEditing(_ force: Bool) -> Bool {
         guard let window else { return true }

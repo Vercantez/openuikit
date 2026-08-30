@@ -55,6 +55,12 @@ open class UIViewController: UIResponder, UIContentContainer {
     private let _nibBundle: Bundle
     private let _hasExplicitNibRequest: Bool
 
+    /// Handler-form trait registrations are owned by the observable, as in
+    /// UIKit. Keeping them here (rather than on the root view) makes a token
+    /// survive lazy view loading and root-view replacement without forcing a
+    /// view load at registration time.
+    var _traitRegistrations: [UITraitChangeRegistration] = []
+
     /// UIKit's plain initializer is the nil/nil nib initializer. Keep it as a
     /// designated initializer in the portable core so existing programmatic
     /// subclasses can continue to call `super.init()` without coder churn.

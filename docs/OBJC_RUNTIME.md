@@ -61,7 +61,7 @@ dominant. Most `NSNotificationCenter` observer registrations (ios-oss has
 `Sources/OpenUIKit/UISelector.swift` (+ the new API on `UIControl` and
 `UIGestureRecognizer`). Three pieces:
 
-### 1. `Selector` — a per-platform type, and the library's only conditional
+### 1. `Selector` — a per-platform type seam
 
 ```swift
 #if canImport(ObjectiveC)
@@ -82,8 +82,8 @@ compiler warns "no method declared with Objective-C selector" on a string
 literal, since it cannot see a table it does not own; `named` launders the
 string through a variable.)
 
-This `#if canImport` is the only conditional compilation in `OpenUIKit`, and
-it is deliberate: the *type* is the seam, everything above it is shared.
+This `#if canImport` is the selector subsystem's platform-dependent type seam:
+the *type* varies by platform while the dispatch model above it is shared.
 
 ### 2. `SelectorDispatching` — name → method, supplied by the target
 

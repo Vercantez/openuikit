@@ -135,6 +135,67 @@ final class SelectorDispatchDeliveryTests: XCTestCase {
                                              sender: nil))
         XCTAssertEqual(reported, [])
     }
+
+    func testUIViewEndEditingBuiltinUsesMeasuredFalseArgument() {
+        final class EndEditingProbe: UIView {
+            var arguments: [Bool] = []
+            override func endEditing(_ force: Bool) -> Bool {
+                arguments.append(force)
+                return false
+            }
+        }
+
+        let view = EndEditingProbe()
+        var unresolved = 0
+        SelectorDispatch.onUnresolved = { _, _ in unresolved += 1 }
+        XCTAssertTrue(SelectorDispatch.send(Selector.named("endEditing:"),
+                                            to: view, sender: UITapGestureRecognizer()))
+        XCTAssertEqual(view.arguments, [false])
+        XCTAssertEqual(unresolved, 0,
+                       "method resolution is independent of endEditing's result")
+    }
+
+    func testUIViewEndEditingBuiltinActuallyResignsSubtreeResponder() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 120))
+        let container = UIView(frame: window.bounds)
+        let field = UITextField(frame: CGRect(x: 10, y: 10, width: 200, height: 34))
+        window.addSubview(container)
+        container.addSubview(field)
+        XCTAssertTrue(field.becomeFirstResponder())
+
+        XCTAssertTrue(SelectorDispatch.send(Selector.named("endEditing:"),
+                                            to: container,
+                                            sender: UITapGestureRecognizer()))
+        XCTAssertFalse(field.isFirstResponder)
+    }
+
+    func testRefusedEndEditingIsStillResolvedWithoutReportingAMiss() {
+        final class RefusingDelegate: UITextFieldDelegate {
+            var shouldEndCalls = 0
+            func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+                shouldEndCalls += 1
+                return false
+            }
+        }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 120))
+        let container = UIView(frame: window.bounds)
+        let field = UITextField(frame: CGRect(x: 10, y: 10, width: 200, height: 34))
+        let delegate = RefusingDelegate()
+        field.delegate = delegate
+        window.addSubview(container)
+        container.addSubview(field)
+        XCTAssertTrue(field.becomeFirstResponder())
+        var unresolved = 0
+        SelectorDispatch.onUnresolved = { _, _ in unresolved += 1 }
+
+        XCTAssertTrue(SelectorDispatch.send(Selector.named("endEditing:"),
+                                            to: container,
+                                            sender: UITapGestureRecognizer()))
+        XCTAssertTrue(field.isFirstResponder)
+        XCTAssertEqual(delegate.shouldEndCalls, 1)
+        XCTAssertEqual(unresolved, 0)
+    }
 }
 
 // MARK: - UIControl
@@ -271,6 +332,24 @@ final class ControlSelectorTargetTests: XCTestCase {
 
 @MainActor
 final class GestureSelectorTargetTests: XCTestCase {
+    func testRecognizedTapDispatchesFrameworkEndEditingActionWithoutRegistry() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 120))
+        let container = UIView(frame: window.bounds)
+        let field = UITextField(frame: CGRect(x: 10, y: 10, width: 200, height: 34))
+        window.addSubview(container)
+        container.addSubview(field)
+        container.addGestureRecognizer(
+            UITapGestureRecognizer(target: container,
+                                   action: Selector.named("endEditing:"))
+        )
+        XCTAssertTrue(field.becomeFirstResponder())
+
+        window.sendTouch(.began, at: CGPoint(x: 260, y: 80), timestamp: 0)
+        window.sendTouch(.ended, at: CGPoint(x: 260, y: 80), timestamp: 0.05)
+
+        XCTAssertFalse(field.isFirstResponder)
+    }
+
     func testTapRecognizerInitTargetActionFires() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))

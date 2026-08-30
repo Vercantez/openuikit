@@ -18,11 +18,12 @@
 //   UITapGestureRecognizer { r in ... }                       // closures
 //   UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
 //
-// The selector form is real UIKit's; it reaches the method through the
-// target's `SelectorDispatching` table (UISelector.swift), not objc_msgSend,
-// and holds the target weakly, as UIKit does. The action's sender is the
-// recognizer: a 1-argument selector ("handleTap:") receives it, a
-// 0-argument one ("handleTap") does not.
+// The selector form is real UIKit's. App-defined methods are reached through
+// the target's `SelectorDispatching` table (UISelector.swift), not
+// objc_msgSend; a bounded framework table handles built-in UIKit actions such
+// as `UIView.endEditing(_:)`. Targets are weak, as in UIKit. The action's
+// sender is the recognizer: a 1-argument selector ("handleTap:") receives it,
+// while a 0-argument one ("handleTap") does not.
 //
 // All timing is event-timestamp based — no wall clock (deterministic).
 
@@ -151,8 +152,9 @@ open class UIGestureRecognizer {
         actions.removeAll { $0.token == token }
     }
 
-    /// UIKit's `addTarget(_:action:)`. `target` is held weakly and must
-    /// conform to ``SelectorDispatching``.
+    /// UIKit's `addTarget(_:action:)`. `target` is held weakly. App-defined
+    /// actions require ``SelectorDispatching``; supported framework-owned
+    /// UIKit actions such as `UIView.endEditing(_:)` are built in.
     public func addTarget(_ target: AnyObject, action: Selector) {
         nextToken += 1
         actions.append(Action(token: nextToken, handler: nil,

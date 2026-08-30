@@ -63,6 +63,23 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   oracle pins only that state/identity/frame/order/selection boundary; the
   successor Reminder gate pins all 22 sources, 23 call-site lines, complete
   diagnostic multisets, and the exact one-commit changed-path allowlist.
+- **Reminder trait/text/framework-selector successor slice (2026-08-30)** —
+  the exact unchanged whole-source census advances **7 -> 4 diagnostics**,
+  removing only controller handler-form trait registration, native
+  null-resettable `UITextView.text` optionality, and the framework-owned
+  `UIView.endEditing:` selector boundary, with zero additions and zero
+  app/vendor edits. Controller registrations are owner-retained, noninitial,
+  no-view-load, filtered, unregisterable, and root-replacement safe under the
+  explicit host-driven trait seam. Text nil resets to empty while clearing
+  attributed content, clamping the caret, and invalidating text layout; actual
+  tap recognition reaches the exact built-in selector with iOS 26.1's measured
+  `false` argument. The committed native
+  and unchanged-Reminder probes pin this bounded behavior, all 22 sources,
+  26 call-site lines, complete multisets, and the exact 21-path candidate.
+  Full `UITraitChangeObservable`/`traitOverrides` topology, app-defined Swift
+  Objective-C dispatch, `#Preview`, Foundation/OpenUIKit `Notification`
+  bridging, and the picker class-parameter Objective-C boundary remain. This
+  milestone does not claim an unchanged Reminder build or launch.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding

@@ -328,7 +328,9 @@ final class ViewCompatTests: XCTestCase {
         v.registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) {
             (_: UIView, _) in fired += 1
         }
-        v._traitsDidChange(previous: UITraitCollection.current)
+        var previous = v.traitCollection
+        previous.preferredContentSizeCategory = .extraLarge
+        v._traitsDidChange(previous: previous)
         XCTAssertEqual(fired, 1)
     }
 }

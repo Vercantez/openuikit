@@ -11,6 +11,22 @@ private final class SizeClassChangeProbeController: UIViewController {
     }
 }
 
+@MainActor
+private final class RegisteredTraitProbeController: UIViewController {
+    var log: [String] = []
+    var handlerPrevious: UITraitCollection?
+    var handlerCurrent: UITraitCollection?
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        log.append("legacy")
+        super.traitCollectionDidChange(previousTraitCollection)
+    }
+}
+
+private enum CustomTraitReusingStyleName: UITraitDefinition {
+    static var name: String { UITraitUserInterfaceStyle.name }
+}
+
 /// Size-class initializer results and merge precedence were measured against
 /// UIKit 26.1 under Mac Catalyst before implementing this portable subset.
 @MainActor
@@ -226,5 +242,190 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(controller.previousTraits?.verticalSizeClass, .regular)
         XCTAssertEqual(controller.traitCollection.horizontalSizeClass, .regular)
         XCTAssertEqual(controller.traitCollection.verticalSizeClass, .regular)
+    }
+
+    func testControllerRegistrationDoesNotLoadViewAndOwnerRetainsToken() {
+        var controller: RegisteredTraitProbeController? = RegisteredTraitProbeController()
+        var registration: UITraitChangeRegistration? = controller?.registerForTraitChanges(
+            [UITraitUserInterfaceStyle.self]
+        ) { (_: RegisteredTraitProbeController, _: UITraitCollection) in }
+        weak var weakRegistration = registration
+
+        XCTAssertFalse(controller!.isViewLoaded)
+        XCTAssertNotNil(weakRegistration)
+        registration = nil
+        XCTAssertNotNil(weakRegistration,
+                        "the observable, not the caller, owns its registration")
+
+        controller = nil
+        XCTAssertNil(weakRegistration,
+                     "controller teardown releases registrations without a cycle")
+    }
+
+    func testControllerHostDeliveryFiltersTraitsAndRunsModernBeforeLegacy() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        let previous = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .regular
+        )
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .dark,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .regular
+        )
+
+        let controller = RegisteredTraitProbeController()
+        controller.registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            (target: RegisteredTraitProbeController, prior: UITraitCollection) in
+            target.log.append("handler")
+            target.handlerPrevious = prior
+            target.handlerCurrent = target.traitCollection
+        }
+        controller.registerForTraitChanges([UITraitHorizontalSizeClass.self]) {
+            (target: RegisteredTraitProbeController, _: UITraitCollection) in
+            target.log.append("unrelated")
+        }
+        controller.registerForTraitChanges([]) {
+            (target: RegisteredTraitProbeController, _: UITraitCollection) in
+            target.log.append("empty")
+        }
+
+        XCTAssertEqual(controller.log, [], "registration has no initial delivery")
+        controller.loadViewIfNeeded()
+        controller.view._traitsDidChange(previous: previous)
+
+        XCTAssertEqual(controller.log, ["handler", "legacy"])
+        XCTAssertEqual(controller.handlerPrevious?.userInterfaceStyle, .light)
+        XCTAssertEqual(controller.handlerCurrent?.userInterfaceStyle, .dark)
+    }
+
+    func testControllerRegistrationSurvivesRootReplacementAndUnregisters() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        let previous = UITraitCollection(userInterfaceStyle: .light)
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark)
+
+        let controller = RegisteredTraitProbeController()
+        var fireCount = 0
+        var registration: UITraitChangeRegistration? = controller.registerForTraitChanges(
+            [UITraitUserInterfaceStyle.self]
+        ) { (_: RegisteredTraitProbeController, _: UITraitCollection) in
+            fireCount += 1
+        }
+        weak var weakRegistration = registration
+
+        let oldRoot = UIView()
+        controller.view = oldRoot
+        let replacementRoot = UIView()
+        controller.view = replacementRoot
+
+        oldRoot._traitsDidChange(previous: previous)
+        XCTAssertEqual(fireCount, 0,
+                       "a replaced root must not deliver controller registrations")
+        replacementRoot._traitsDidChange(previous: previous)
+        XCTAssertEqual(fireCount, 1)
+
+        controller.unregisterForTraitChanges(registration!)
+        registration = nil
+        XCTAssertNil(weakRegistration)
+        replacementRoot._traitsDidChange(previous: previous)
+        XCTAssertEqual(fireCount, 1)
+    }
+
+    func testFixedChildStyleDoesNotSpuriouslyFireOnInheritedStyleChange() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        let previous = UITraitCollection(userInterfaceStyle: .light)
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark)
+
+        let parent = UIView()
+        let child = UIView()
+        child.overrideUserInterfaceStyle = .dark
+        parent.addSubview(child)
+        var parentCount = 0
+        var childCount = 0
+        parent.registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            (_: UIView, _: UITraitCollection) in parentCount += 1
+        }
+        child.registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            (_: UIView, _: UITraitCollection) in childCount += 1
+        }
+
+        parent._traitsDidChange(previous: previous)
+
+        XCTAssertEqual(parentCount, 1)
+        XCTAssertEqual(childCount, 0,
+                       "the child was dark both before and after inheritance changed")
+    }
+
+    func testViewRegistrationsSuppressSameAndUnrelatedTraitEvents() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .dark,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .regular
+        )
+        let view = UIView()
+        var styleCount = 0
+        var horizontalCount = 0
+        view.registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            (_: UIView, _: UITraitCollection) in styleCount += 1
+        }
+        view.registerForTraitChanges([UITraitHorizontalSizeClass.self]) {
+            (_: UIView, _: UITraitCollection) in horizontalCount += 1
+        }
+
+        view._traitsDidChange(previous: view.traitCollection)
+        XCTAssertEqual(styleCount, 0)
+        XCTAssertEqual(horizontalCount, 0)
+
+        var previous = view.traitCollection
+        previous.userInterfaceStyle = .light
+        view._traitsDidChange(previous: previous)
+        XCTAssertEqual(styleCount, 1)
+        XCTAssertEqual(horizontalCount, 0)
+    }
+
+    func testFixedChildControllerRootUsesItsOwnPreviousEffectiveStyle() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        let previous = UITraitCollection(userInterfaceStyle: .light)
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark)
+
+        let parent = UIViewController()
+        let child = UIViewController()
+        parent.addChild(child)
+        child.view.overrideUserInterfaceStyle = .dark
+        parent.view.addSubview(child.view)
+        child.didMove(toParent: parent)
+        var handlerCount = 0
+        child.registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            (_: UIViewController, _: UITraitCollection) in handlerCount += 1
+        }
+
+        parent.view._traitsDidChange(previous: previous)
+
+        XCTAssertEqual(handlerCount, 0)
+    }
+
+    func testCustomTraitCannotMasqueradeAsBuiltinByReusingItsName() {
+        let controller = UIViewController()
+        controller.loadViewIfNeeded()
+        var handlerCount = 0
+        controller.registerForTraitChanges([CustomTraitReusingStyleName.self]) {
+            (_: UIViewController, _: UITraitCollection) in handlerCount += 1
+        }
+
+        let unchanged = controller.traitCollection
+        controller.view._traitsDidChange(previous: unchanged)
+
+        XCTAssertEqual(handlerCount, 1,
+                       "unknown custom traits conservatively fire on explicit host events")
     }
 }
