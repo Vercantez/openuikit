@@ -9,9 +9,9 @@ logic.
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
-Foundation-visible UIKit, Intents, IntentsUI, LocalAuthentication,
+Foundation-visible UIKit, Intents, IntentsUI, WebKit, LocalAuthentication,
 SafariServices, Network, StoreKit, AudioToolbox, CoreHaptics, and PassKit.
-These are seventeen reusable ARM64 Mach-O framework binaries, including a real
+These are eighteen reusable ARM64 Mach-O framework binaries, including real
 `libSwiftUI.dylib`; they are not application-side source overlays. The package
 also contains C module headers, CQuartz, the SDK, the attested machorun
 guest-root closure, OpenUIKit's complete resource tree, and the two pinned
@@ -37,7 +37,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its seventeen LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its eighteen LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -54,12 +54,24 @@ The semantic build order is deliberate:
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the reusable Intents and IntentsUI modules, backed by real shortcut,
    donation, resolution, and host-driven controller state.
-7. Compile and link seven app-facing first-party modules as independent ARM64
+7. Compile production WebKit from its five-source attested manifest after both
+   Foundation and UIKit exist.
+8. Compile and link seven app-facing first-party modules as independent ARM64
    Mach-O dylibs. Their Apple-service boundaries are fail-closed, and each
    install ID/dependency/self-load contract is audited.
-8. Link all seventeen reusable dylibs and run the package's Mach-O
+9. Link all eighteen reusable dylibs and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
+
+`libWebKit.dylib` has install ID `@rpath/libWebKit.dylib` and required direct
+loads of the packaged `libUIKit.dylib` and `libFoundation.dylib`, each exactly
+once. The builder rejects any load of Apple's `WebKit.framework`. Its runtime
+probe preserves web-view configuration and data-store identity, honors
+navigation policy, and observes a typed engine-unavailable provisional failure
+with zero commits, finishes, history entries, JavaScript results, network
+responses, or rendering claims. Exact sources, native Xcode 26.1 evidence,
+install/load audit, and pre/post source brackets are packaged under
+`attestation/` alongside the seven-framework provenance and load audits.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent
@@ -86,7 +98,7 @@ and requires one load command for each in `libFoundation.dylib`. The facade
 object has no direct RegexParser symbol; that dylib remains StringProcessing's
 transitive runtime dependency rather than a guessed direct link.
 
-The seventeen-source facade's names-only undefined-symbol inventory is also a
+The eighteen-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
 `12_RegexParser` records. The build refuses drift in any count before linking;
@@ -288,7 +300,8 @@ bash -n full/frameworks/run_core_guest_package_docker.sh
 bash -n full/scripts/build_full.sh
 ```
 
-The tests exercise exact Foundation ordering, path/symlink refusal, relocation
-to a path containing spaces, Preview placeholder/external-plugin behavior,
-DTS ownership, resource/library tamper detection, and the early/final UIKit
-ordering hooks.
+The tests exercise exact Foundation and WebKit ordering, all eight added
+first-party framework products, WebKit deletion/mutation/load refusal,
+path/symlink refusal, relocation to a path containing spaces, Preview
+placeholder/external-plugin behavior, DTS ownership, resource/library tamper
+detection, and the early/final UIKit ordering hooks.

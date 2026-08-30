@@ -15,6 +15,55 @@ import StoreKit
 import AudioToolbox
 import CoreHaptics
 import PassKit
+import WebKit
+
+@MainActor
+private final class CoreWebKitDelegate: WKNavigationDelegate {
+    var policies = 0
+    var starts = 0
+    var provisionalFailures = 0
+    var commits = 0
+    var finishes = 0
+    var error: WKPortableError?
+
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        preferences: WKWebpagePreferences,
+        decisionHandler: @escaping (
+            WKNavigationActionPolicy, WKWebpagePreferences
+        ) -> Void
+    ) {
+        policies += 1
+        preferences.preferredContentMode = .desktop
+        decisionHandler(.allow, preferences)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        didStartProvisionalNavigation navigation: WKNavigation?
+    ) {
+        starts += 1
+        precondition(navigation?.effectiveContentMode == .desktop)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        didFailProvisionalNavigation navigation: WKNavigation?,
+        withError error: Error
+    ) {
+        provisionalFailures += 1
+        self.error = error as? WKPortableError
+    }
+
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation?) {
+        commits += 1
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
+        finishes += 1
+    }
+}
 
 private final class CoreProbeIntent: INIntent, @unchecked Sendable {}
 
@@ -105,6 +154,43 @@ struct CoreGuestPackageProbe {
         subject.send(7)
         withExtendedLifetime(cancellable) {}
         precondition(values == [7])
+
+        var request = URLRequest(
+            url: URL(string: "https://core-webkit.invalid/")!
+        )
+        request.setValue("guest", forHTTPHeaderField: "X-Portable-WebKit")
+        precondition(
+            request.value(forHTTPHeaderField: "x-portable-webkit") == "guest"
+        )
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.websiteDataStore = .nonPersistent()
+        let webView = WKWebView(
+            frame: CGRect(x: 0, y: 0, width: 320, height: 480),
+            configuration: webConfiguration
+        )
+        precondition(webView.configuration !== webConfiguration)
+        precondition(
+            webView.configuration.websiteDataStore ===
+                webConfiguration.websiteDataStore
+        )
+        let webDelegate = CoreWebKitDelegate()
+        webView.navigationDelegate = webDelegate
+        let navigation = webView.load(request)
+        precondition(navigation?.effectiveContentMode == .desktop)
+        precondition(webDelegate.policies == 1 && webDelegate.starts == 1)
+        precondition(webDelegate.provisionalFailures == 1)
+        precondition(webDelegate.commits == 0 && webDelegate.finishes == 0)
+        precondition(webDelegate.error?.code == .engineUnavailable)
+        precondition(webView.lastPortableError?.code == .engineUnavailable)
+        precondition(!webView.isLoading)
+        precondition(webView.backForwardList.currentItem == nil)
+        var javaScriptFailures = 0
+        webView.evaluateJavaScript("document.title") { value, error in
+            precondition(value == nil)
+            precondition((error as? WKPortableError)?.code == .engineUnavailable)
+            javaScriptFailures += 1
+        }
+        precondition(javaScriptFailures == 1)
 
         let auth = LAContext()
         var authError: LAError?
@@ -247,7 +333,7 @@ struct CoreGuestPackageProbe {
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "intentsui=host-driven first-party=fail-closed-7 "
-                + "preview=\(preview)"
+                + "webkit=engine-unavailable preview=\(preview)"
         )
     }
 }

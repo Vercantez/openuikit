@@ -26,6 +26,9 @@ MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
+WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
+WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
+WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -63,9 +66,10 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=7
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=17
+EXPECTED_FOUNDATION_SOURCE_COUNT=18
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
+EXPECTED_WEBKIT_SOURCE_COUNT=5
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -209,6 +213,10 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
+[ -x "$WEBKIT_PROVENANCE_TOOL" ] \
+    || die "WebKit provenance tool is missing or not executable: $WEBKIT_PROVENANCE_TOOL"
+[ -f "$WEBKIT_PROVENANCE_POLICY" ] && [ ! -L "$WEBKIT_PROVENANCE_POLICY" ] \
+    || die "WebKit provenance policy is missing or linked: $WEBKIT_PROVENANCE_POLICY"
 [ -x "$FIRST_PARTY_PROVENANCE_TOOL" ] \
     || die "first-party provenance tool is missing or not executable: $FIRST_PARTY_PROVENANCE_TOOL"
 [ -f "$FIRST_PARTY_PROVENANCE_POLICY" ] && [ ! -L "$FIRST_PARTY_PROVENANCE_POLICY" ] \
@@ -344,6 +352,11 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.pre.tsv"
 [ "$(grep -c '^source' "$WORK/foundation-sources.pre.tsv")" -eq \
     "$EXPECTED_FOUNDATION_SOURCE_COUNT" ] || die 'Foundation source count drifted'
+python3 -B "$WEBKIT_PROVENANCE_TOOL" production \
+    --support-root "$W" --policy "$WEBKIT_PROVENANCE_POLICY" \
+    --output "$WORK/webkit-sources.pre.tsv"
+[ "$(grep -c '^source' "$WORK/webkit-sources.pre.tsv")" -eq \
+    "$EXPECTED_WEBKIT_SOURCE_COUNT" ] || die 'WebKit source count drifted'
 
 mapfile -t INTENTS_SOURCES < "$INTENTS_SOURCES_MANIFEST"
 mapfile -t INTENTSUI_SOURCES < "$INTENTSUI_SOURCES_MANIFEST"
@@ -715,6 +728,19 @@ done
     -emit-module-path "$STAGE/modules/IntentsUI.swiftmodule" \
     -emit-object -o "$WORK/intentsui.o" "${INTENTSUI_SOURCE_PATHS[@]}"
 
+echo '== compile the production first-party WebKit module'
+mapfile -t WEBKIT_SOURCES < "$WEBKIT_SOURCES_MANIFEST"
+[ "${#WEBKIT_SOURCES[@]}" -eq "$EXPECTED_WEBKIT_SOURCE_COUNT" ] \
+    || die 'WebKit source array count changed'
+WEBKIT_SOURCE_PATHS=()
+for relative in "${WEBKIT_SOURCES[@]}"; do
+    WEBKIT_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name WebKit -emit-module \
+    -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
+    -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
+
 echo '== compile seven independent first-party framework modules'
 for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework=${FIRST_PARTY_FRAMEWORKS[$index]}
@@ -742,7 +768,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link seventeen reusable core framework dylibs'
+echo '== link eighteen reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -812,6 +838,36 @@ intents_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libIntents.dylib" \
     -o "$STAGE/lib/libIntentsUI.dylib" "$WORK/intentsui.o" \
     "${COMMON_LINK[@]}" -lIntents -lUIKit -lFoundation \
     -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libWebKit.dylib -rpath @loader_path \
+    -needed_library "$STAGE/lib/libUIKit.dylib" \
+    -needed_library "$STAGE/lib/libFoundation.dylib" \
+    -o "$STAGE/lib/libWebKit.dylib" "$WORK/webkit.o" \
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics
+
+WEBKIT_REQUIRED_LOADS=(
+    @rpath/libUIKit.dylib
+    @rpath/libFoundation.dylib
+)
+for install_name in "${WEBKIT_REQUIRED_LOADS[@]}"; do
+    load_count=$(llvm-otool-18 -L "$STAGE/lib/libWebKit.dylib" \
+        | awk -v expected="$install_name" '$1 == expected { count++ } END { print count + 0 }')
+    [ "$load_count" -eq 1 ] \
+        || die "libWebKit load count $load_count for $install_name, expected 1"
+done
+if llvm-otool-18 -L "$STAGE/lib/libWebKit.dylib" \
+    | grep -Fq '/System/Library/Frameworks/WebKit.framework/'; then
+    die 'portable libWebKit must not load Apple WebKit.framework'
+fi
+{
+    printf 'format\twebkit-dylib-loads-v1\n'
+    printf 'install-id\t@rpath/libWebKit.dylib\n'
+    printf 'required-load\t@rpath/libUIKit.dylib\tcount=1\n'
+    printf 'required-load\t@rpath/libFoundation.dylib\tcount=1\n'
+    printf 'apple-webkit-framework-load-count\t0\n'
+    printf 'rendering-engine\tabsent\n'
+} > "$STAGE/attestation/webkit-dylib-loads.tsv"
 
 uikit_preview_import_count=$(nm_symbol_count --undefined-only \
     "$STAGE/lib/libUIKit.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
@@ -899,13 +955,13 @@ fi
     "${PROBE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
-    -lIntentsUI -lIntents -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
+    -lWebKit -lIntentsUI -lIntents -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI \
+    Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -953,7 +1009,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven first-party=fail-closed-7 preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven first-party=fail-closed-7 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -978,7 +1034,7 @@ LINK_ARGUMENTS=(
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
-    -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
+    -lWebKit -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit
@@ -1029,6 +1085,7 @@ cmp "$WORK/openuikit-resources.pre.tsv" \
 
 cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv"
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
+cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
 cp "$WORK/first-party-sources.pre.tsv" \
@@ -1087,7 +1144,7 @@ record_module_family() {
     done
 }
 for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI \
+    Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
@@ -1121,6 +1178,10 @@ record_artifact attestation foundation-sources manifest \
     attestation/foundation-sources.tsv
 record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
+record_artifact attestation webkit-sources manifest \
+    attestation/webkit-sources.tsv
+record_artifact attestation webkit-dylib-loads manifest \
+    attestation/webkit-dylib-loads.tsv
 record_artifact attestation foundation-undefined-symbols undefined-symbols \
     attestation/foundation-undefined-symbols.txt
 record_artifact attestation first-party-sources manifest \
@@ -1162,6 +1223,11 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.post.tsv"
 cmp "$WORK/foundation-sources.pre.tsv" "$WORK/foundation-sources.post.tsv" \
     || die 'Foundation source manifest/files changed during build'
+python3 -B "$WEBKIT_PROVENANCE_TOOL" production \
+    --support-root "$W" --policy "$WEBKIT_PROVENANCE_POLICY" \
+    --output "$WORK/webkit-sources.post.tsv"
+cmp "$WORK/webkit-sources.pre.tsv" "$WORK/webkit-sources.post.tsv" \
+    || die 'WebKit source manifest/files changed during build'
 {
     printf 'format\tframework-guest-sources-v1\n'
     printf 'manifest\tIntents\t%s\tcount=%s\n' \
@@ -1216,6 +1282,7 @@ WRITE_ARGS=(
     --source-sets attestation/source-sets.tsv
     --foundation-sources attestation/foundation-sources.tsv
     --intents-sources attestation/intents-sources.tsv
+    --webkit-sources attestation/webkit-sources.tsv
     --first-party-sources attestation/first-party-sources.tsv
     --first-party-dylib-loads attestation/first-party-dylib-loads.tsv
     --sdk-inventory attestation/sdk-tree.tsv

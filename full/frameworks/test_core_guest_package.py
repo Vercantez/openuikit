@@ -63,6 +63,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/URLLoading.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
     "full/foundation/NSNumber.swift",
@@ -94,6 +95,7 @@ FRAMEWORKS = (
     "UIKit",
     "Intents",
     "IntentsUI",
+    "WebKit",
     "LocalAuthentication",
     "SafariServices",
     "Network",
@@ -257,14 +259,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 17)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 18)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 17-path contract", refusal.stderr)
+        self.assertIn("exact ordered 18-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -414,6 +416,8 @@ class PackageFixture:
             "intents-sources.tsv",
             "first-party-sources.tsv",
             "first-party-dylib-loads.tsv",
+            "webkit-sources.tsv",
+            "webkit-dylib-loads.tsv",
             "sdk-dangling-symlinks.tsv",
             "sdk-dangling-symlink-exclusions.tsv",
             "include-tree.tsv",
@@ -450,6 +454,7 @@ class PackageFixture:
             "-lSwiftUI",
             "-lIntentsUI",
             "-lIntents",
+            "-lWebKit",
             "-lOpenUIKit",
             "-lOpenCoreGraphics",
             "-lCombine",
@@ -586,6 +591,8 @@ class PackageFixture:
             "attestation/first-party-sources.tsv",
             "--first-party-dylib-loads",
             "attestation/first-party-dylib-loads.tsv",
+            "--webkit-sources",
+            "attestation/webkit-sources.tsv",
             "--sdk-inventory",
             "attestation/sdk-tree.tsv",
             "--sdk-dangling-symlinks",
@@ -733,6 +740,30 @@ class PackageContractTests(unittest.TestCase):
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("omits required manifests: intents_sources", refusal.stderr)
 
+    def test_webkit_source_attestation_is_mandatory(self) -> None:
+        fixture = self.fixture(False)
+        manifest_path = fixture.root / "attestation/core-package.json"
+        document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del document["manifests"]["webkit_sources"]
+        manifest_path.write_text(
+            json.dumps(document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("omits required manifests: webkit_sources", refusal.stderr)
+
+    def test_webkit_framework_deletion_is_refused_by_both_validators(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            fixture.write_manifest()
+            (fixture.root / "lib/libWebKit.dylib").unlink()
+            refusal = run_tool(
+                "verify", "--package-root", str(fixture.root), expected=2
+            )
+            self.assertIn("missing", refusal.stderr)
+            canonical = run_canonical(fixture.root, expected=1)
+            self.assertIn("WebKit", canonical.stderr)
+
     def test_preview_plugin_hash_is_optionally_revalidated(self) -> None:
         fixture = self.fixture(True)
         assert fixture.plugin is not None
@@ -778,6 +809,26 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("probe_dts_count", source)
         self.assertIn("UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)", source)
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
+
+    def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        for token in (
+            "-module-name WebKit -emit-module",
+            "-install_name @rpath/libWebKit.dylib",
+            '-needed_library "$STAGE/lib/libUIKit.dylib"',
+            '-needed_library "$STAGE/lib/libFoundation.dylib"',
+            "/System/Library/Frameworks/WebKit.framework/",
+            "webkit-dylib-loads.tsv",
+            "rendering-engine\\tabsent",
+            "-lWebKit -lUIKit",
+            "Intents IntentsUI WebKit",
+        ):
+            self.assertIn(token, source)
+        self.assertIn("import WebKit", probe)
+        self.assertIn("WKPortableError", probe)
+        self.assertIn("webDelegate.commits == 0", probe)
+        self.assertIn("webkit=engine-unavailable", probe)
 
     def test_preview_core_export_is_exact_and_mutation_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -900,7 +951,7 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine SwiftUI Foundation UIKit Intents IntentsUI \\",
+                        "Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )

@@ -58,6 +58,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UIKit",
                 "Intents",
                 "IntentsUI",
+                "WebKit",
                 "LocalAuthentication",
                 "SafariServices",
                 "Network",
@@ -81,6 +82,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UIKit",
                 "Intents",
                 "IntentsUI",
+                "WebKit",
                 "LocalAuthentication",
                 "SafariServices",
                 "Network",
@@ -105,6 +107,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "intents-sources",
             "first-party-sources",
             "first-party-dylib-loads",
+            "webkit-sources",
             "sdk-dangling-symlinks",
             "sdk-dangling-exclusions",
             "include-tree",
@@ -148,6 +151,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lUIKit",
                 "-lIntents",
                 "-lIntentsUI",
+                "-lWebKit",
                 "-lLocalAuthentication",
                 "-lSafariServices",
                 "-lNetwork",
@@ -267,7 +271,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 self.write_manifest(self.manifest)
 
     def test_refuses_missing_first_party_module_dylib_or_link_argument(self) -> None:
-        for framework in ("Intents", "IntentsUI"):
+        for framework in ("Intents", "IntentsUI", "WebKit"):
             for relative in (
                 f"modules/{framework}.swiftmodule",
                 f"lib/lib{framework}.dylib",
@@ -306,6 +310,16 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "omits required manifests: intents_sources",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_webkit_source_manifest(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        del changed["manifests"]["webkit_sources"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "omits required manifests: webkit_sources",
         ):
             core_guest_package.validate(self.root)
 

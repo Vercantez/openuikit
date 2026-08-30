@@ -26,6 +26,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/URLLoading.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
     "full/foundation/NSNumber.swift",
@@ -53,6 +54,7 @@ REQUIRED_MANIFESTS = {
     "intents_sources",
     "first_party_sources",
     "first_party_dylib_loads",
+    "webkit_sources",
     "sdk_tree",
     "sdk_dangling_symlinks",
     "sdk_dangling_exclusions",
@@ -72,6 +74,7 @@ FRAMEWORKS = (
     "UIKit",
     "Intents",
     "IntentsUI",
+    "WebKit",
     "LocalAuthentication",
     "SafariServices",
     "Network",
@@ -958,6 +961,9 @@ def write_command(args: argparse.Namespace) -> None:
             "first_party_dylib_loads": checked_manifest(
                 package, args.first_party_dylib_loads, "first-party dylib loads"
             ),
+            "webkit_sources": checked_manifest(
+                package, args.webkit_sources, "WebKit sources"
+            ),
             "sdk_tree": checked_manifest(package, args.sdk_inventory, "SDK inventory"),
             "sdk_dangling_symlinks": checked_manifest(
                 package, args.sdk_dangling_symlinks, "SDK dangling symlinks"
@@ -1050,6 +1056,7 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--intents-sources", required=True)
     write.add_argument("--first-party-sources", required=True)
     write.add_argument("--first-party-dylib-loads", required=True)
+    write.add_argument("--webkit-sources", required=True)
     write.add_argument("--sdk-inventory", required=True)
     write.add_argument("--sdk-dangling-symlinks", required=True)
     write.add_argument("--sdk-dangling-exclusions", required=True)
