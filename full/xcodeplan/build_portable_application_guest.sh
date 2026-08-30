@@ -364,11 +364,33 @@ PY
         "$SCRIPT_DIR/PortableUIKitApplicationHost.swift"
         "$SUPPORT_ROOT/full/driver/RunLoop.swift"
     )
-    # Attested compiler-input providers insert output-owned generated Swift
-    # files here, after untouched application sources and before platform host
-    # sources. An empty array preserves today's all-Swift behavior while the
-    # output-map/object/link audits already cover every future derived source.
+    # Compiler providers consume only build-plan-attested non-Swift inputs and
+    # publish a fresh, independently verifiable output root. Generated Swift is
+    # ordered after untouched app sources and before platform host sources.
     local -a derived_sources=()
+    local derived_root derived_relative derived_source
+    derived_root=$output/derived-sources
+    [ ! -e "$derived_root" ] && [ ! -L "$derived_root" ] \
+        || die "derived-source output root already exists"
+    echo "== generate attested compiler-provider Swift inputs"
+    python3 -B "$SCRIPT_DIR/compiler_input_providers.py" generate \
+        --build-plan "$output/application-build-plan.json" \
+        --source-root "$app_root" --output-root "$derived_root"
+    python3 -B "$SCRIPT_DIR/compiler_input_providers.py" verify \
+        --build-plan "$output/application-build-plan.json" \
+        --source-root "$app_root" --output-root "$derived_root"
+    local -a derived_relative_sources=()
+    mapfile -d '' -t derived_relative_sources \
+        <"$derived_root/derived-sources.nul"
+    for derived_relative in "${derived_relative_sources[@]}"; do
+        case "$derived_relative" in
+            /*|*../*|../*|*/..)
+                die "unsafe derived Swift source path: $derived_relative" ;;
+        esac
+        derived_source=$derived_root/$derived_relative
+        require_regular "$derived_source" "attested derived Swift source"
+        derived_sources+=("$derived_source")
+    done
     local -a compile_sources=(
         "${app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"
     )
@@ -508,7 +530,7 @@ PY
     [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
         && [ ! -e "$compile_stdout" ] && [ ! -L "$compile_stdout" ] \
         || die "application compiler output already exists"
-    echo "== compile every untouched application source"
+    echo "== compile every untouched application and attested derived source"
     set +e
     (
         cd "$platform"
@@ -554,6 +576,9 @@ PY
         printf 'format\tportable-application-compile-audit-v2\n'
         printf 'mode\tdefault-driver-output-file-map\n'
         printf 'source-count\t%s\n' "${#compile_sources[@]}"
+        printf 'application-source-count\t%s\n' "${#app_sources[@]}"
+        printf 'derived-source-count\t%s\n' "${#derived_sources[@]}"
+        printf 'platform-source-count\t%s\n' "${#platform_sources[@]}"
         printf 'object-count\t%s\n' "${#application_objects[@]}"
         printf 'output-file-map-count\t%s\n' "$effective_output_map_count"
         printf 'whole-module-flag-count\t%s\n' "$effective_wmo_count"
@@ -569,6 +594,8 @@ PY
             "$(sha256sum "$output/application-compile-arguments.nul" | awk '{print $1}')"
         printf 'stderr-sha256\t%s\n' \
             "$(sha256sum "$compile_stderr" | awk '{print $1}')"
+        printf 'derived-source-attestation-sha256\t%s\n' \
+            "$(sha256sum "$derived_root/derived-sources-attestation.json" | awk '{print $1}')"
     } >"$output/application-compile-audit.tsv"
 
     local app frameworks executable libraries
@@ -728,6 +755,9 @@ PY
 
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$app_root" --verify
+    python3 -B "$SCRIPT_DIR/compiler_input_providers.py" verify \
+        --build-plan "$output/application-build-plan.json" \
+        --source-root "$app_root" --output-root "$derived_root"
     if [ "$preview_required" = yes ]; then
         [ "$(sha256sum "$plugin" | awk '{print $1}')" = "$expected_plugin_sha" ] \
             || die "Preview macro plugin changed during build"
@@ -768,6 +798,8 @@ PY
             >application-build-artifacts.sha256
         find application-objects -maxdepth 1 -type f -name '*.o' -print0 \
             | sort -z | xargs -0 sha256sum \
+            >>application-build-artifacts.sha256
+        find derived-sources -type f -print0 | sort -z | xargs -0 sha256sum \
             >>application-build-artifacts.sha256
     )
     echo 'PORTABLE_APPLICATION_GUEST_OK'

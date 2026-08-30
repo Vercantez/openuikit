@@ -325,16 +325,21 @@ hashes are recorded in `application-compile-audit.tsv`.
 
 Compiler-input providers have one deliberate insertion boundary. After the
 application plan is frozen and verified, but before the final output-file map
-is created, a provider may populate a brand-new output-owned
-`derived-sources/` root. It must publish an ordered NUL manifest and canonical
-attestation that bind the provider/tool identity, every frozen non-Swift input
-hash, and every regular non-symlink generated Swift path/hash/size. The driver
-order is always unchanged application sources, then attested derived sources,
-then the generated scene/bootstrap host sources. Output-map, ARM64 object,
-cross-file, deterministic link, and final hash audits apply to the combined
-list. The planner's `open-intentdefinition` record is the input contract for an
-`.intentdefinition` provider to fill this seam without changing application or
-vendor bytes.
+is created, `compiler_input_providers.py` populates a brand-new output-owned
+`derived-sources/` root. Its first production provider consumes the planner's
+exact `open-intentdefinition` records and invokes the independent open
+`.intentdefinition` compiler. The provider publishes an ordered NUL manifest
+and canonical attestation binding the provider/tool identity, exact tool hash,
+every frozen model/localization input hash, and every regular non-symlink
+generated Swift path/hash/size. It verifies that complete contract immediately
+after generation and again after cold launch.
+
+The driver order is always unchanged application sources, then attested
+derived sources, then the generated scene/bootstrap host sources. Output-map,
+ARM64 object, cross-file, deterministic link, and final hash audits apply to
+the combined list. A target with no compiler inputs still publishes an
+explicit empty provider attestation; unsupported non-Swift inputs fail closed
+instead of being silently dropped or copied into application source.
 
 ## Tests
 

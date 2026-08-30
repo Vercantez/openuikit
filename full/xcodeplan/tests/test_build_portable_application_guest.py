@@ -86,6 +86,26 @@ def validate_multi_source_object_map_contract(source: str) -> None:
             raise AssertionError(f"multi-source object-map refusal drifted: {refusal}")
 
 
+def validate_derived_source_provider_contract(source: str) -> None:
+    required_once = (
+        'compiler_input_providers.py" generate',
+        'derived_root=$output/derived-sources',
+        '<"$derived_root/derived-sources.nul"',
+        'derived_sources+=("$derived_source")',
+        'derived-source-attestation-sha256\\t%s\\n',
+        'find derived-sources -type f -print0',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"derived-source provider contract drifted: {drifted}")
+    if source.count('compiler_input_providers.py" verify') != 2:
+        raise AssertionError("derived-source provider verification bracket drifted")
+    app = source.index('"${app_sources[@]}" "${derived_sources[@]}"')
+    platform = source.index('"${platform_sources[@]}"', app)
+    if app >= platform:
+        raise AssertionError("derived-source compile ordering drifted")
+
+
 def validate_nounset_dependent_path_contract(source: str) -> None:
     required = (
         "local app frameworks executable libraries",
@@ -251,6 +271,24 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                     1,
                 )
             )
+
+    def test_derived_source_provider_is_generated_and_reverified(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_derived_source_provider_contract(source)
+        for token in (
+            'compiler_input_providers.py" generate',
+            'compiler_input_providers.py" verify',
+            '<"$derived_root/derived-sources.nul"',
+            'derived_sources+=("$derived_source")',
+            'find derived-sources -type f -print0',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "derived-source"):
+                    validate_derived_source_provider_contract(
+                        source.replace(token, "", 1)
+                    )
 
     def test_dependent_application_paths_are_nounset_safe(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
