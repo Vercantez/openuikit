@@ -40,8 +40,9 @@ The staged input root must contain these immutable prepared inputs:
 
 The wrapper never reuses a build product. It makes a fresh run directory next
 to OUTPUT_ROOT, mounts the support clone read-only at /w, overlays only new
-/w/build, /w/scratch/modcache_full, and /w/scratch/mrroot_full directories,
-and publishes OUTPUT_ROOT only after both manifest validators pass.
+/w/build, /w/scratch/modcache_full, /w/scratch/modcache_fe4, and
+/w/scratch/mrroot_full directories, and publishes OUTPUT_ROOT only after both
+manifest validators pass.
 EOF
 }
 
@@ -195,13 +196,15 @@ trap 'exit 143' TERM
 git clone --no-hardlinks --no-local --quiet "$SUPPORT_CHECKOUT" "$RUN_ROOT/w"
 assert_checkout "$RUN_ROOT/w" "$EXPECTED_SUPPORT_COMMIT" \
     "$EXPECTED_SUPPORT_TREE" cloned-support
-mkdir -p "$RUN_ROOT/build" "$RUN_ROOT/modcache_full" "$RUN_ROOT/mrroot_full"
+mkdir -p "$RUN_ROOT/build" "$RUN_ROOT/modcache_full" \
+    "$RUN_ROOT/modcache_fe4" "$RUN_ROOT/mrroot_full"
 mkdir -p "$RUN_ROOT/w/scratch" \
     "$RUN_ROOT/w/scratch/sysroot_fe4" "$RUN_ROOT/w/scratch/mrroot" \
     "$RUN_ROOT/w/scratch/mrroot_fe" "$RUN_ROOT/w/scratch/swift-foundation" \
     "$RUN_ROOT/w/scratch/swift-collections" \
     "$RUN_ROOT/w/scratch/opencombine-core-durable-20260828-r2" \
-    "$RUN_ROOT/w/scratch/modcache_full" "$RUN_ROOT/w/scratch/mrroot_full" \
+    "$RUN_ROOT/w/scratch/modcache_full" "$RUN_ROOT/w/scratch/modcache_fe4" \
+    "$RUN_ROOT/w/scratch/mrroot_full" \
     "$RUN_ROOT/w/build"
 
 {
@@ -214,6 +217,8 @@ mkdir -p "$RUN_ROOT/w/scratch" \
     printf 'image\t%s\tplatform=%s\n' "$CONTAINER_IMAGE" "$IMAGE_PLATFORM"
     printf 'fresh-build-inode\t%s\n' "$(ls -di "$RUN_ROOT/build" | awk '{print $1}')"
     printf 'fresh-modcache-inode\t%s\n' "$(ls -di "$RUN_ROOT/modcache_full" | awk '{print $1}')"
+    printf 'fresh-modcache-fe4-inode\t%s\n' \
+        "$(ls -di "$RUN_ROOT/modcache_fe4" | awk '{print $1}')"
     printf 'fresh-guest-root-inode\t%s\n' "$(ls -di "$RUN_ROOT/mrroot_full" | awk '{print $1}')"
     printf 'preview\t%s\n' "$([ "$preview_count" -eq 3 ] && printf enabled || printf disabled)"
 } > "$RUN_ROOT/host-inputs.tsv"
@@ -224,6 +229,7 @@ DOCKER_ARGS=(
     -v "$RUN_ROOT/w:/w:ro"
     -v "$RUN_ROOT/build:/w/build:rw"
     -v "$RUN_ROOT/modcache_full:/w/scratch/modcache_full:rw"
+    -v "$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"
     -v "$RUN_ROOT/mrroot_full:/w/scratch/mrroot_full:rw"
     -v "$STAGED_INPUT_ROOT/sysroot_fe4:/w/scratch/sysroot_fe4:ro"
     -v "$STAGED_INPUT_ROOT/mrroot:/w/scratch/mrroot:ro"

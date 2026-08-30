@@ -20,6 +20,12 @@ BUILDER = HERE / "build_core_guest_package.sh"
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
 CANONICAL_VALIDATOR = REPO / "full/xcodeplan/core_guest_package.py"
+CORE_WRITABLE_OVERLAYS = (
+    '"$RUN_ROOT/build:/w/build:rw"',
+    '"$RUN_ROOT/modcache_full:/w/scratch/modcache_full:rw"',
+    '"$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"',
+    '"$RUN_ROOT/mrroot_full:/w/scratch/mrroot_full:rw"',
+)
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",
     "full/appshim/FoundationOpenUIKitAliases.swift",
@@ -109,6 +115,12 @@ def write_file(path: Path, payload: bytes | str = b"fixture") -> None:
         path.write_text(payload, encoding="utf-8", newline="\n")
     else:
         path.write_bytes(payload)
+
+
+def validate_core_writable_overlays(source: str) -> None:
+    missing = [mount for mount in CORE_WRITABLE_OVERLAYS if source.count(mount) != 1]
+    if missing:
+        raise AssertionError(f"core writable-overlay contract drifted: {missing}")
 
 
 class FoundationManifestTests(unittest.TestCase):
@@ -600,6 +612,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_host_wrapper_mounts_inputs_read_only_and_outputs_fresh(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
+        validate_core_writable_overlays(source)
         for mount in (
             '"$RUN_ROOT/w:/w:ro"',
             '"$STAGED_INPUT_ROOT/sysroot_fe4:/w/scratch/sysroot_fe4:ro"',
@@ -612,12 +625,47 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("container image must be an exact sha256 content ID", source)
         self.assertIn("docker image inspect --format '{{.Id}}'", source)
         self.assertIn("expected linux/arm64", source)
+        self.assertIn("fresh-modcache-fe4-inode", source)
         self.assertIn('"$CONTAINER_IMAGE"', source)
         self.assertNotIn("IMAGE=${IMAGE:-", source)
         self.assertIn("core_guest_package.py /w/build/core-package --emit-summary", source)
         self.assertIn(".INVALID-DO-NOT-USE", source)
+        self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4', BUILDER.read_text(encoding="utf-8"))
+        self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
+
+    def test_read_only_control_refuses_a_missing_foundation_cache_overlay(self) -> None:
+        source = HOST_WRAPPER.read_text(encoding="utf-8")
+        without_fe_cache = source.replace(
+            '    -v "$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"\n',
+            "",
+        )
+        with self.assertRaisesRegex(AssertionError, "modcache_fe4"):
+            validate_core_writable_overlays(without_fe_cache)
+
+    def test_build_full_write_target_census_is_fully_overlaid(self) -> None:
+        build_full = BUILD_FULL.read_text(encoding="utf-8")
+        for helper in (
+            "build_collections.sh",
+            "build_os_module.sh",
+            "build_cshims.sh",
+            "build_fe.sh",
+        ):
+            self.assertIn(helper, build_full)
+        for helper in (
+            REPO / "full/foundation/build_collections.sh",
+            REPO / "full/foundation/build_os_module.sh",
+            REPO / "full/foundation/build_fe.sh",
+        ):
+            self.assertIn(
+                '-module-cache-path "$W/scratch/modcache_fe4"',
+                helper.read_text(encoding="utf-8"),
+            )
+        builder = BUILDER.read_text(encoding="utf-8")
+        for cache in ("BUILD_FULL_CACHE", "BUILD_FE_CACHE"):
+            self.assertIn(f'"${cache}"', builder)
+            self.assertIn(f'touch "${cache}/.INVALID-DO-NOT-USE"', builder)
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

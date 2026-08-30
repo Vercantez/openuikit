@@ -191,10 +191,28 @@ Mutable image tags and defaults are refused; the exact image ID and verified
 Linux/ARM64 platform are recorded in the host evidence. The wrapper makes a
 fresh no-hardlink support clone. That clone and every source/staged input are
 mounted read-only. Only unique empty build,
-`modcache_full`, and `mrroot_full` directories are mounted writable. It runs
+`modcache_full`, Foundation helper `modcache_fe4`, and `mrroot_full`
+directories are mounted writable. Both module caches are required empty and
+their fresh host inodes are attested; a failed build marks both invalid. It runs
 both package validators before atomically publishing the output, preserves a
 host/container log with commit/tree and inode preamble, and renames every
 failed run or partially published output with `.INVALID-DO-NOT-USE`.
+
+The complete persistent write-target census for the composed core call graph
+is deliberately small:
+
+| Target | Writers | Fresh host overlay |
+| --- | --- | --- |
+| `/w/build` | Core staging plus all `build_full.sh` products; every Foundation helper receives its `OUT` below this root | `build/` |
+| `/w/scratch/mrroot_full` | `build_full.sh` guest-root and umbrella staging | `mrroot_full/` |
+| `/w/scratch/modcache_full` | Ordinary `build_full.sh` Swift compiles | `modcache_full/` |
+| `/w/scratch/modcache_fe4` | `build_collections.sh`, `build_os_module.sh`, and `build_fe.sh` FoundationEssentials compiles | `modcache_fe4/` |
+
+`build_cshims.sh` writes only to its caller-supplied `/w/build/full` output.
+The SDK, base guest roots, Foundation and Collections checkouts, OpenCombine,
+UIKit, machorun, and the no-hardlink support clone remain read-only. No other
+persistent path in `build_core_guest_package.sh` → `build_full.sh` → the four
+Foundation helper scripts is a write target.
 
 Neither script edits UIKit, application, vendored, machorun, or upstream
 Foundation/OpenCombine sources. A package is not complete unless its runtime

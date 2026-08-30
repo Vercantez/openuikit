@@ -15,6 +15,7 @@ FULL=$W/build/full
 WORK=$W/build/core-guest-work
 MRROOT=$W/scratch/mrroot_full
 BUILD_FULL_CACHE=$W/scratch/modcache_full
+BUILD_FE_CACHE=$W/scratch/modcache_fe4
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 SWIFT_COLLECTIONS=$W/scratch/swift-collections
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
@@ -184,7 +185,7 @@ done
 [ -d "$W/build" ] && [ ! -L "$W/build" ] || die '/w/build must be a real directory'
 [ ! -e "$FULL" ] && [ ! -L "$FULL" ] || die "stale build_full output exists: $FULL"
 [ ! -e "$WORK" ] && [ ! -L "$WORK" ] || die "stale core work root exists: $WORK"
-for fresh in "$MRROOT" "$BUILD_FULL_CACHE"; do
+for fresh in "$MRROOT" "$BUILD_FULL_CACHE" "$BUILD_FE_CACHE"; do
     if [ -e "$fresh" ] || [ -L "$fresh" ]; then
         [ -d "$fresh" ] && [ ! -L "$fresh" ] || die "fresh root is not a real directory: $fresh"
         [ -z "$(find "$fresh" -mindepth 1 -maxdepth 1 -print -quit)" ] \
@@ -213,6 +214,7 @@ quarantine_on_exit() {
         fi
         [ ! -d "$MRROOT" ] || touch "$MRROOT/.INVALID-DO-NOT-USE"
         [ ! -d "$BUILD_FULL_CACHE" ] || touch "$BUILD_FULL_CACHE/.INVALID-DO-NOT-USE"
+        [ ! -d "$BUILD_FE_CACHE" ] || touch "$BUILD_FE_CACHE/.INVALID-DO-NOT-USE"
     fi
     exit "$status"
 }
