@@ -15,6 +15,18 @@ import UIKit
 
 @MainActor
 enum PortableUIKitApplicationHost {
+    /// Prepare process-wide UIKit resources before application code runs.
+    ///
+    /// Generated entry points call this before constructing the app delegate:
+    /// OpenUIKit's font/color tables are lazy, process-wide, and intentionally
+    /// loaded only once.  Binding the packaged root after `viewDidLoad` is too
+    /// late because an app can measure a label from an initializer.  Repeating
+    /// this method is safe and deliberately restores the host-owned paths, so
+    /// `run` can enforce the same contract at its boundary.
+    static func prepare() {
+        configurePackagedResources()
+    }
+
     /// Bind OpenUIKit to resources packaged beside the executable.  A Linux
     /// application build must be relocatable: no source-checkout path or
     /// build-container path is allowed to leak into the runtime contract.
@@ -32,6 +44,21 @@ enum PortableUIKitApplicationHost {
         OpenUIKitRuntime.resourceRoot = openUIKit
         OpenUIKitRuntime.imageSearchPaths = [resources]
         OpenUIKitRuntime.imageScreenScale = 2
+
+        // This call must remain after resourceRoot and before fontPaths.  Its
+        // non-zero table advance proves FontEngine's once-only tables saw the
+        // packaged JSON; a missing/late table cannot be hidden by the TTF
+        // rasterizer fallback installed below.
+        let metricsProbe = FontEngine.advance(
+            of: "M",
+            font: UIFont.systemFont(ofSize: 17)
+        )
+        guard metricsProbe > 0 else {
+            preconditionFailure(
+                "packaged OpenUIKit font metrics were unavailable before application launch"
+            )
+        }
+
         OpenUIKitRuntime.fontPaths["system"] = openUIKit + "/fonts/DejaVuSans.ttf"
         for weight in ["medium", "semibold", "bold", "heavy", "black"] {
             OpenUIKitRuntime.fontPaths[weight] = openUIKit + "/fonts/DejaVuSans-Bold.ttf"
@@ -57,7 +84,7 @@ enum PortableUIKitApplicationHost {
     }
 
     static func run(application: UIApplication, scene: UIWindowScene) {
-        configurePackagedResources()
+        prepare()
         precondition(scene.activationState == .foregroundActive,
                      "generated bootstrap must activate its scene before entering the host loop")
         guard let window = scene.keyWindow ?? scene.windows.first else {

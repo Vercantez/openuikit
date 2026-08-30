@@ -328,11 +328,16 @@ the tool rejects the inventory before writing output. This deliberately narrow
 rule proves both generated zero-argument constructions instead of hoping the
 compiler finds them later.
 
-The generated `static main()` launches the unchanged app delegate, asks it for
-the scene configuration, connects the unchanged scene delegate, transitions
-that scene active, and enters `PortableUIKitApplicationHost`. Production entry
-points stay in the real monotonic, sleeping `UIKitRunLoop`; the proof runner
-sets `OPENUIKIT_HOST_TURNS` only to bound that same loop for automation.
+The generated `static main()` first asks `PortableUIKitApplicationHost` to
+validate and bind the resources packaged beside the executable. This happens
+before even constructing the unchanged app delegate: OpenUIKit's process-wide
+font and color tables are lazy and may otherwise be initialized permanently
+from an obsolete working-directory path during an initializer or
+`viewDidLoad`. The host repeats the same idempotent preparation at its run-loop
+boundary. It then launches the unchanged app delegate, asks it for the scene
+configuration, connects the unchanged scene delegate, transitions that scene
+active, and enters the real monotonic, sleeping `UIKitRunLoop`; the proof
+runner sets `OPENUIKIT_HOST_TURNS` only to bound that same loop for automation.
 
 The current executable proof is intentionally smaller than the Reminder app:
 it compiles exactly the two unchanged delegate files out of the inventory's 22

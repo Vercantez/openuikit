@@ -114,6 +114,7 @@ import UIKit
 extension AppDelegate {
     @MainActor
     static func main() {
+        PortableUIKitApplicationHost.prepare()
         let appDelegate = AppDelegate()
         let application = UIApplicationMain(delegate: appDelegate)
         let scene = application._hostConnectWindowScene(delegate: SceneDelegate())
@@ -131,6 +132,15 @@ extension AppDelegate {
         self.assertEqual(record["generated_size"], len(generated))
         self.assertEqual(
             record["generated_sha256"], scene_bootstrap._sha256(generated)
+        )
+        text = generated.decode("utf-8")
+        self.assertLess(
+            text.index("PortableUIKitApplicationHost.prepare()"),
+            text.index("let appDelegate = AppDelegate()"),
+        )
+        self.assertLess(
+            text.index("PortableUIKitApplicationHost.prepare()"),
+            text.index("UIApplicationMain(delegate:"),
         )
 
     def test_comments_and_all_swift_string_forms_cannot_inject_main(self) -> None:

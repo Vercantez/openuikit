@@ -13,6 +13,23 @@ REPOSITORY = XCODEPLAN.parent.parent
 
 
 class PortableApplicationGuestDriverTests(unittest.TestCase):
+    def test_host_binds_and_probes_resources_before_font_file_fallback(self) -> None:
+        source = (XCODEPLAN / "PortableUIKitApplicationHost.swift").read_text(
+            encoding="utf-8"
+        )
+        resource_binding = source.index("OpenUIKitRuntime.resourceRoot = openUIKit")
+        table_probe = source.index("let metricsProbe = FontEngine.advance(")
+        fallback_binding = source.index(
+            'OpenUIKitRuntime.fontPaths["system"] = openUIKit'
+        )
+        self.assertLess(resource_binding, table_probe)
+        self.assertLess(table_probe, fallback_binding)
+        self.assertIn("guard metricsProbe > 0", source)
+
+        run_body = source[source.index("static func run(") :]
+        self.assertIn("prepare()", run_body)
+        self.assertNotIn("configurePackagedResources()", run_body)
+
     def test_driver_owns_complete_generic_compile_package_launch_path(self) -> None:
         script = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
             encoding="utf-8"

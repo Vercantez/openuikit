@@ -456,6 +456,7 @@ def generate(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[
         f"extension {app_name} {{\n"
         "    @MainActor\n"
         "    static func main() {\n"
+        "        PortableUIKitApplicationHost.prepare()\n"
         f"        let appDelegate = {app_name}()\n"
         "        let application = UIApplicationMain(delegate: appDelegate)\n"
         f"        let scene = application._hostConnectWindowScene(delegate: {scene_name}())\n"
