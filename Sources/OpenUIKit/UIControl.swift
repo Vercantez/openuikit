@@ -11,9 +11,10 @@
 //   addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
 //
 // The closure form returns a token for removal and is the better Swift API.
-// The selector form is real UIKit's, and reaches the method through the
-// target's `SelectorDispatching` table (see UISelector.swift) rather than
-// through `objc_msgSend`. Targets are held **weakly**, as in UIKit.
+// On Objective-C-capable builds the selector form reaches @objc methods on
+// NSObject targets through the runtime; on native ELF it uses the target's
+// `SelectorDispatching` table (see UISelector.swift). Targets are held
+// **weakly**, as in UIKit.
 //
 // `sendActions(for:)` invokes every registration whose event set intersects
 // the sent events (UIKit semantics).
@@ -166,9 +167,9 @@ open class UIControl: UIView {
 
     // MARK: Target-action (selector based -- UIKit's own signatures)
 
-    /// UIKit's `addTarget(_:action:for:)`. `target` is held weakly and must
-    /// conform to ``SelectorDispatching``; `action` is a selector whose name
-    /// that conformance knows.
+    /// UIKit's `addTarget(_:action:for:)`. `target` is held weakly. Matching
+    /// @objc methods dispatch directly on Objective-C-capable NSObject
+    /// targets; ``SelectorDispatching`` supplies the native-ELF/fallback path.
     ///
     ///     button.addTarget(self, action: #selector(buttonTapped),
     ///                      for: .touchUpInside)

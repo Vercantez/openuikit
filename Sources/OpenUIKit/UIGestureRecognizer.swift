@@ -18,12 +18,14 @@
 //   UITapGestureRecognizer { r in ... }                       // closures
 //   UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
 //
-// The selector form is real UIKit's. App-defined methods are reached through
-// the target's `SelectorDispatching` table (UISelector.swift), not
-// objc_msgSend; a bounded framework table handles built-in UIKit actions such
-// as `UIView.endEditing(_:)`. Targets are weak, as in UIKit. The action's
-// sender is the recognizer: a 1-argument selector ("handleTap:") receives it,
-// while a 0-argument one ("handleTap") does not.
+// The selector form is real UIKit's. Objective-C-capable NSObject targets use
+// runtime dispatch; native ELF and non-exposed targets use
+// `SelectorDispatching`. A bounded framework table runs first for UIKit
+// actions such as `UIView.endEditing(_:)`. Targets are weak, as in UIKit. The
+// action's sender is the recognizer: a 1-argument selector ("handleTap:")
+// receives it, while a 0-argument one ("handleTap") does not. This slice does
+// not move UIGestureRecognizer itself under NSObject, so an @objc action must
+// still type that sender as AnyObject on Objective-C-capable OpenUIKit builds.
 //
 // All timing is event-timestamp based — no wall clock (deterministic).
 
@@ -152,9 +154,10 @@ open class UIGestureRecognizer {
         actions.removeAll { $0.token == token }
     }
 
-    /// UIKit's `addTarget(_:action:)`. `target` is held weakly. App-defined
-    /// actions require ``SelectorDispatching``; supported framework-owned
-    /// UIKit actions such as `UIView.endEditing(_:)` are built in.
+    /// UIKit's `addTarget(_:action:)`. `target` is held weakly. Matching @objc
+    /// methods dispatch through NSObject metadata where available;
+    /// ``SelectorDispatching`` is the native-ELF/fallback route. Supported
+    /// framework-owned actions such as `UIView.endEditing(_:)` are built in.
     public func addTarget(_ target: AnyObject, action: Selector) {
         nextToken += 1
         actions.append(Action(token: nextToken, handler: nil,

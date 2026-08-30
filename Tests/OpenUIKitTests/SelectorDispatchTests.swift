@@ -493,6 +493,48 @@ final class GenuineObjCSelectorTests: XCTestCase {
         }
     }
 
+    /// Deliberately has no SelectorDispatching conformance. This is the shape
+    /// of an unchanged UIKit controller: UIResponder's NSObject root and its
+    /// @objc methods are the complete dispatch table.
+    @MainActor
+    final class RuntimeTarget: UIViewController {
+        var log: [String] = []
+        weak var picker: UIDatePicker?
+        weak var sender: AnyObject?
+        weak var event: AnyObject?
+
+        @objc func noArguments() { log.append("runtime-0") }
+
+        @objc func dateChanged(_ sender: UIDatePicker) {
+            log.append("runtime-1")
+            picker = sender
+        }
+
+        @objc func controlAction(_ sender: AnyObject, event: AnyObject?) {
+            log.append("runtime-2")
+            self.sender = sender
+            self.event = event
+        }
+    }
+
+    /// A runtime method wins when a target also supplies the portable table.
+    /// The table remains the fallback for selectors absent from ObjC metadata.
+    @MainActor
+    final class DualPathTarget: UIViewController, SelectorDispatching {
+        var log: [String] = []
+
+        @objc func runtimeAction() { log.append("runtime") }
+
+        func perform(_ name: String, with sender: Any?) -> Bool {
+            _ = sender
+            guard name == "portableAction" || name == "runtimeAction" else {
+                return false
+            }
+            log.append("registry:\(name)")
+            return true
+        }
+    }
+
     func testSelectorExpressionsProduceObjCNames() {
         XCTAssertEqual(#selector(Target.buttonTapped).actionName, "buttonTapped")
         XCTAssertEqual(#selector(Target.valueChanged(_:)).actionName,
@@ -534,6 +576,44 @@ final class GenuineObjCSelectorTests: XCTestCase {
         window.sendTouch(.began, at: CGPoint(x: 50, y: 50), timestamp: 0)
         window.sendTouch(.ended, at: CGPoint(x: 50, y: 50), timestamp: 0.05)
         XCTAssertEqual(target.log, ["valueChanged"])
+    }
+
+    func testNSObjectRuntimeDispatchesZeroOneAndTwoArgumentActions() {
+        let target = RuntimeTarget()
+        let picker = UIDatePicker()
+        let event = UIEvent(timestamp: 17)
+
+        picker.addTarget(target, action: #selector(RuntimeTarget.noArguments),
+                         for: .touchDown)
+        picker.addTarget(target, action: #selector(RuntimeTarget.dateChanged(_:)),
+                         for: .valueChanged)
+        picker.addTarget(
+            target,
+            action: #selector(RuntimeTarget.controlAction(_:event:)),
+            for: .touchUpInside
+        )
+
+        picker.sendActions(for: .touchDown)
+        picker.sendActions(for: .valueChanged)
+        picker.sendActions(for: .touchUpInside, with: event)
+
+        XCTAssertEqual(target.log, ["runtime-0", "runtime-1", "runtime-2"])
+        XCTAssertTrue(target.picker === picker)
+        XCTAssertTrue(target.sender === picker)
+        XCTAssertTrue(target.event === event)
+    }
+
+    func testRuntimePrecedesRegistryAndRegistryRemainsFallback() {
+        let target = DualPathTarget()
+        XCTAssertTrue(SelectorDispatch.send(
+            #selector(DualPathTarget.runtimeAction), to: target, sender: nil
+        ))
+        XCTAssertEqual(target.log, ["runtime"])
+
+        XCTAssertTrue(SelectorDispatch.send(
+            .named("portableAction"), to: target, sender: nil
+        ))
+        XCTAssertEqual(target.log, ["runtime", "registry:portableAction"])
     }
 }
 #endif

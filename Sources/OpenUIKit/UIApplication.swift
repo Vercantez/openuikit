@@ -45,6 +45,13 @@ import class Foundation.NSObject
 #endif
 #endif
 
+#if canImport(ObjectiveC)
+// UIScene inherits NSObject's Hashable conformance through UIResponder. The
+// conformance's defining module must be visible in this file when it appears
+// inside Set<UIScene>, including the Foundation-hidden Mach-O guest.
+import ObjectiveC
+#endif
+
 #if canImport(Foundation) && !canImport(Darwin)
 /// Corelibs Foundation does not provide `NSUserActivity`.  Keep the UIKit
 /// restoration contract source-compatible on Linux with the identity and
@@ -440,9 +447,10 @@ open class UIApplication: UIResponder {
 
     /// Selector-free analog of UIKit's
     /// `sendAction(_:to:from:for:)`. UIKit identifies the action with a
-    /// `Selector` and looks for the first responder that implements it;
-    /// portable Swift has no selectors, so the action is a CLOSURE that
-    /// returns whether it handled the responder it was given.
+    /// `Selector` and looks for the first responder that implements it. This
+    /// compatibility overload predates the real-selector path; it remains a
+    /// closure so native ELF callers can express responder-chain dispatch
+    /// without Objective-C syntax.
     ///
     /// With a `target`, the action is sent straight to it. With `target`
     /// nil, the action walks the responder chain starting at the key
@@ -762,15 +770,6 @@ open class UIScene: UIResponder {
 
     /// A scene's next responder is the application (UIKit).
     open override var next: UIResponder? { UIApplication.shared }
-}
-
-// `nonisolated`: identity only, and Hashable is a nonisolated protocol
-// (see the note in UIViewCompat.swift).
-extension UIScene: Hashable {
-    nonisolated public static func == (a: UIScene, b: UIScene) -> Bool { a === b }
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
 }
 
 @preconcurrency @MainActor

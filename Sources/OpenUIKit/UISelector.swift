@@ -1,25 +1,27 @@
-// Selector target-action without an Objective-C runtime. Owner: controls/event
-// module (M12 app-compat).
+// Selector target-action across Objective-C and portable runtimes. Owner:
+// controls/event module (M12 app-compat; ObjC runtime path added for Reminder).
 //
 // UIKit dispatches target-action through `objc_msgSend`: `#selector(foo)`
 // produces a `SEL`, and the runtime looks the method up by name at call time.
-// OpenUIKit has no ObjC runtime, and its classes are not NSObject subclasses,
-// so name -> method has to come from somewhere else. App-defined actions come
-// from a registry the target itself supplies: `SelectorDispatching`. A tiny
-// framework-owned built-in table handles UIKit methods such as
-// `UIView.endEditing(_:)` that unchanged source can legally use as actions.
+// On Objective-C-capable builds, UIResponder and its descendants inherit
+// NSObject and their @objc methods dispatch through that real metadata. On
+// native ELF builds there is no ObjC runtime, so app-defined actions come from
+// a registry the target supplies: `SelectorDispatching`. The same registry is
+// also the fallback for a non-NSObject or non-exposed target on an ObjC build.
+// A tiny framework-owned built-in table runs first for UIKit methods such as
+// `UIView.endEditing(_:)` whose target-action ABI is not literal sender
+// forwarding.
 //
 // The *type* of a selector is this subsystem's platform-dependent type seam:
 //
-//   Darwin   `Selector` IS the platform's real ObjC selector. `#selector(...)`
-//            compiles, produces one, and `sel_getName` recovers the name. App
-//            source is verbatim UIKit.
-//   elsewhere `Selector` is a name-carrying struct of our own. `#selector` and
-//            `@objc` do not compile off Darwin at all (see docs/OBJC_RUNTIME.md
-//            -- enabling ObjC interop there emits class metadata the shipped
-//            libswiftCore cannot read), so the portable spelling of the same
-//            thing is `Selector("buttonTapped")`, which also compiles on
-//            Darwin. One source, both platforms.
+//   ObjC-capable `Selector` IS the platform's real ObjC selector.
+//            `#selector(...)` compiles, produces one, and `sel_getName`
+//            recovers the name. App source is verbatim UIKit.
+//   without ObjectiveC, `Selector` is a name-carrying struct of our own.
+//            `#selector` and `@objc` do not compile on native ELF at all (see
+//            docs/OBJC_RUNTIME.md), so the portable spelling of the same thing
+//            is `Selector("buttonTapped")`, which also compiles on an
+//            ObjC-capable target. One source, both paths.
 //
 // Either way `action.actionName` is the ObjC selector name -- "buttonTapped",
 // "valueChanged:", "handlePan:event:" -- and the trailing-colon count is the
@@ -41,7 +43,7 @@ extension Selector {
 /// Stand-in for Objective-C's `SEL` on platforms with no ObjC runtime: it
 /// carries the selector *name*, which is all a source-level dispatch scheme
 /// needs. `Selector("buttonTapped")` is the portable spelling of
-/// `#selector(buttonTapped)` and compiles on Darwin too.
+/// `#selector(buttonTapped)` and compiles on Objective-C-capable targets too.
 public struct Selector: Hashable, ExpressibleByStringLiteral,
                         CustomStringConvertible, Sendable {
     /// The Objective-C selector name ("buttonTapped", "valueChanged:").
@@ -61,12 +63,12 @@ extension Selector {
 
     /// The portable spelling of `#selector(...)`: `Selector.named("tapped")`.
     ///
-    /// `Selector("tapped")` means the same thing, but on Darwin the compiler
+    /// `Selector("tapped")` means the same thing, but on an ObjC-capable target the compiler
     /// warns "no method declared with Objective-C selector" for a string
     /// literal, since it cannot see a table it does not own. This spelling
     /// says the same thing without the warning, and compiles everywhere.
     public static func named(_ name: String) -> Selector {
-        let indirect = name          // not a literal: no Darwin literal check
+        let indirect = name          // not a literal: no ObjC literal check
         return Selector(indirect)
     }
 }
@@ -75,11 +77,12 @@ extension Selector {
 
 /// A target that can be reached by selector name.
 ///
-/// UIKit gets this from `objc_msgSend`; we get it from the target. Implement
-/// `perform(_:with:)` -- usually by forwarding to an ``ActionTable`` -- and
-/// `addTarget(self, action:for:)` works exactly as it does in UIKit. UIKit's
-/// own supported action methods are framework built-ins and do not require
-/// this conformance.
+/// ObjC-capable NSObject targets already get by-name dispatch from their
+/// runtime metadata and do not need this protocol. On native ELF, or for a
+/// target without matching ObjC metadata, implement `perform(_:with:)` --
+/// usually by forwarding to an ``ActionTable`` -- and
+/// `addTarget(self, action:for:)` reaches the same method. UIKit's supported
+/// semantic built-ins do not require this conformance.
 ///
 ///     final class MyViewController: UIViewController, SelectorDispatching {
 ///         static let actions: ActionTable<MyViewController> = [
@@ -174,10 +177,10 @@ public struct ActionTable<Owner: AnyObject>: ExpressibleByArrayLiteral {
 
 /// Sends a selector to a target, and reports the ones that go nowhere.
 ///
-/// UIKit throws `unrecognized selector sent to instance` at runtime; we have
-/// no runtime to throw it from, so a miss is silent by default (matching
-/// UIKit's behaviour for a nil target) and observable through
-/// ``onUnresolved`` -- which the test suite and `openhost` install.
+/// A miss is nonfatal and observable through ``onUnresolved`` -- which the
+/// test suite and `openhost` install. This is deliberately safer than UIKit
+/// for an explicit live ObjC target: UIKit raises an unrecognized-selector
+/// exception there. Nil/deallocated targets remain silent.
 @preconcurrency @MainActor
 public enum SelectorDispatch {
     /// Called with (target, selector name) whenever a send finds no method.
@@ -212,6 +215,31 @@ public enum SelectorDispatch {
             _ = view.endEditing(false)
             return true
         }
+
+#if canImport(ObjectiveC)
+        // On Objective-C-capable targets, unchanged UIKit source already
+        // carries the authoritative dispatch table in class metadata. Ask the
+        // runtime after framework-owned semantic built-ins (whose UIKit ABI
+        // is not always a literal Swift argument forwarding) and before the
+        // portable registry fallback. NSObject.perform supports UIKit's
+        // complete target-action convention: zero arguments, sender, or
+        // sender plus event.
+        if action.actionArity <= 2,
+           let object = target as? NSObject,
+           object.responds(to: action) {
+            switch action.actionArity {
+            case 0:
+                _ = object.perform(action)
+            case 1:
+                _ = object.perform(action, with: sender)
+            case 2:
+                _ = object.perform(action, with: sender, with: event)
+            default:
+                break
+            }
+            return true
+        }
+#endif
 
         guard let dispatcher = target as? SelectorDispatching else { return false }
         return dispatcher.perform(action.actionName, with: sender, event: event)

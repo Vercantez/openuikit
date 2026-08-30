@@ -9,23 +9,9 @@
 
 // MARK: - Identity comparison
 //
-// Real UIKit's views are NSObjects, so `viewA != viewB` is pointer identity
-// and app code writes it freely (`if previousView != label { ... }`).
-// OpenUIKit's UIView is a plain class, so `!=` did not exist at all.
-
-// `nonisolated`: both are pure IDENTITY comparisons that read no isolated
-// state, and Hashable/Equatable are nonisolated protocols. Without it the
-// conformance of a `@MainActor` class "crosses into main-actor-isolated
-// code" -- a warning today and an error in Swift 6 language mode.
-extension UIView: Equatable {
-    nonisolated public static func == (lhs: UIView, rhs: UIView) -> Bool { lhs === rhs }
-}
-
-extension UIView: Hashable {
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
-}
+// UIView inherits NSObject through UIResponder, like UIKit. NSObject supplies
+// identity Equatable/Hashable behavior on both Foundation and ObjectiveC
+// substrate branches, so no duplicate conformance belongs here.
 
 // MARK: - Accessibility
 //

@@ -5,9 +5,19 @@ Real UIKit leans on the ObjC runtime for target-action (`#selector`), KVO,
 This file records what we measured when asking whether OpenUIKit should adopt
 one, and what shipped instead.
 
-**Status (2026-08-25, M12; Task B verdict added).** Selector target-action is
-implemented, and the API works on macOS *and* Linux. The question of whether
-Linux could have the *real* thing instead is now closed, with measurements:
+**Status (updated 2026-08-30).** Selector target-action is implemented on all
+supported substrates. Native ELF Linux uses the portable name-to-method
+registry because its Swift compiler rejects `@objc` and `#selector`.
+Objective-C-capable builds now use the real runtime when both the target and
+the selector are exposed there: `UIResponder` is an `NSObject`, so the entire
+`UIView` -> `UIControl` responder branch (including `UISwitch` and
+`UIDatePicker`) has UIKit's object identity and is an Objective-C-representable
+target/action sender. Runtime dispatch supports the zero-, one-, and
+two-argument UIKit action ABIs, after semantic framework built-ins and before
+the portable registry fallback.
+
+The earlier question of whether *native ELF* Linux could have the real thing
+instead is still closed, with measurements:
 see "[Task B: a custom Linux stdlib with `SWIFT_OBJC_INTEROP=1`](#task-b-a-custom-linux-stdlib-with-swift_objc_interop1)".
 The short answer is that it configures, would build in tens of minutes, and
 would then have nothing to link against — an interop stdlib needs an
@@ -21,8 +31,10 @@ compiled against libobjc2 + gnustep-base. An ObjC app that subclasses `UIView`,
 overrides `layoutSubviews` and `drawRect:`, and wires `@selector`
 target-action renders a screen **byte-identical** to the Swift equivalent.
 Design, ownership rule, limits and cost-to-finish: **docs/OBJC_FACADE.md**.
-Nothing in *this* file changes — Swift-side `@objc` is still impossible off
-Darwin, and the facade never uses it.
+That facade is separate from the Swift runtime path described here. Swift-side
+`@objc` remains impossible on native ELF, while a Linux-hosted Mach-O Apple
+target with the staged Objective-C runtime is Objective-C-capable and takes
+the same metadata path as Darwin.
 
 ```swift
 // macOS: verbatim UIKit.
@@ -34,11 +46,13 @@ view.addGestureRecognizer(
 button.addTarget(self, action: .named("buttonTapped"), for: .touchUpInside)
 ```
 
-There is no ObjC runtime under it and no compiler flag on top of it. `#selector`
-itself still does not compile off Darwin — that is a Swift limitation, measured
-below, not one we can lift. What an app author must do differently from real
-UIKit is in "[What an app author must change](#what-an-app-author-must-change)"
-— read that section, it is the number that matters.
+On native ELF there is no ObjC runtime under the portable spelling and no
+compiler flag on top of it. `#selector` still does not compile there — that is
+a Swift limitation, measured below, not one a library can lift. On an
+Objective-C-capable target, literal `@objc` / `#selector` source and the
+portable spelling both reach runtime metadata when possible. What an app
+author must do differently is substrate- and sender-dependent; the exact
+boundary is below.
 
 ## How much do real apps depend on it?
 
@@ -51,8 +65,9 @@ Counted over the census corpus (eidolon, DuckDuckGo iOS, ios-oss):
 | ios-oss | 163 | 165 | 35 | 0 |
 
 ~360 `#selector` uses — comparable to the alerts cluster (332). Real, but not
-dominant. Most `NSNotificationCenter` observer registrations (ios-oss has
-~780) need no ObjC runtime; corelibs-foundation covers them on Linux.
+dominant. Notification registration is a separate high-volume family:
+OpenUIKit's block form is portable, while its selector form and distinct
+Notification identity remain registry-only pending the next slice.
 
 ---
 
@@ -71,9 +86,10 @@ public struct Selector: Hashable, ExpressibleByStringLiteral { … }
 #endif
 ```
 
-On Darwin `Selector` **is** the ObjC selector, so `#selector(...)` produces
-one and `sel_getName` recovers its name. Off Darwin it is a name-carrying
-struct. Both expose `actionName` ("buttonTapped", "valueChanged:") and
+On an Objective-C-capable build `Selector` **is** the ObjC selector, so
+`#selector(...)` produces one and `sel_getName` recovers its name. Without the
+ObjectiveC module it is a name-carrying struct. Both expose `actionName`
+("buttonTapped", "valueChanged:") and
 `actionArity` (the trailing-colon count, ObjC's rule).
 
 `Selector.named("buttonTapped")` is the **portable spelling** and compiles on
@@ -85,11 +101,19 @@ string through a variable.)
 This `#if canImport` is the selector subsystem's platform-dependent type seam:
 the *type* varies by platform while the dispatch model above it is shared.
 
-### 2. `SelectorDispatching` — name → method, supplied by the target
+### 2. Runtime metadata first, portable table as fallback
 
-Swift has no by-name method dispatch, and OpenUIKit's classes are not
-`NSObject` subclasses, so `perform(_:)` does not exist even on Darwin. The
-target supplies the table:
+`UIResponder` now inherits an `NSObject` provider on every supported build:
+Foundation's class on ordinary native builds, including native ELF, and
+ObjectiveC's class when the Foundation umbrella is hidden from the staged
+Mach-O guest. Where `canImport(ObjectiveC)` is true, an NSObject target that
+responds to a selector is invoked with `perform` using its exact arity: no
+arguments, sender, or sender plus event. Framework semantic built-ins (for
+example `UIView.endEditing:` with UIKit's measured `false` argument) run first.
+
+Native ELF has NSObject identity but no Objective-C metadata dispatch. It, and
+any ObjC-capable target without a matching exposed method, uses the target's
+portable table:
 
 ```swift
 final class MyViewController: UIViewController, SelectorDispatching {
@@ -108,9 +132,13 @@ final class MyViewController: UIViewController, SelectorDispatching {
 reference*, so each binding is one line and type-checked. A `(sender)` entry
 whose sender is the wrong class is a no-op, as in UIKit.
 
-A send that finds no method is not a crash (we have no runtime to raise
-`unrecognized selector` from). It is silent, and reported through
-`SelectorDispatch.onUnresolved` — which the tests install.
+A send that finds no built-in, runtime method, or registry entry is nonfatal
+and reported through `SelectorDispatch.onUnresolved`, which the tests install.
+This intentionally differs from UIKit for an explicit live Objective-C target:
+the iOS 26.1 oracle confirms UIKit raises an unrecognized-selector exception.
+OpenUIKit prunes a deallocated weak target silently. The probed UIKit context
+also produced no action after release, but UIKit's nil-target responder-chain
+routing is broader and is not claimed equivalent here.
 
 ### 3. The UIKit API
 
@@ -129,12 +157,18 @@ so a dead target is silent rather than a diagnostic.
 
 ### Proof
 
-- `Tests/OpenUIKitTests/SelectorDispatchTests.swift` — 27 tests (23 of them
-  portable, 4 Darwin-only): the name
-  layer, the table, weak-target semantics, `removeTarget` bit arithmetic,
-  real touches through `UIWindow` into buttons / switches / tap recognizers,
-  and (Darwin only) that genuine `@objc` + `#selector` source drives all of it
-  and that `#selector(Target.valueChanged(_:)) == Selector.named("valueChanged:")`.
+- `Tests/OpenUIKitTests/SelectorDispatchTests.swift` covers the name layer,
+  tables, weak-target semantics, removal bit arithmetic, real touches, and
+  literal `@objc` / `#selector`. Its Objective-C-capable tests use a
+  `UIViewController` with no registry and prove zero/one/two-argument runtime
+  sends, a typed `UIDatePicker` sender, sender/event identity, runtime
+  precedence, and registry fallback.
+- `Tools/objcselectordispatchprobe` compares the public iOS 26.1 topology and
+  action ABI, checks the native-ELF NSObject substrate, then freshly compiles
+  all OpenUIKit sources plus a literal-UIKit guest for
+  `arm64-apple-macos15.0` on a Linux host with Foundation hidden. The guest
+  runs twice through `machorun` and pins responder NSObject identity, runtime
+  0/1/2 dispatch, precedence/fallback, built-in semantics, and weak lifetime.
 - `Sources/DemoApp/SelectorApp.swift` — a screen wired **entirely** with
   selectors, no closures: two buttons, a switch on `.valueChanged`, a tap
   recognizer and a long-press recognizer. `openhost --app selectors`.
@@ -147,35 +181,26 @@ so a dead target is silent rather than a diagnostic.
 
 ## What an app author must change
 
-This is the honest cost. Everything below is a *source* difference from a real
-UIKit app; there are no runtime behaviour differences in what is implemented.
+This is the honest source cost. Runtime differences that remain inside the
+implemented surface — notably unresolved live selectors and broader nil-target
+responder routing — are stated separately above.
 
-**On macOS — three changes.**
+**On an Objective-C-capable build.** A responder target such as
+`UIViewController`, and a responder control sender such as `UIButton`,
+`UISwitch`, or `UIDatePicker`, need no dispatch table or parameter retyping.
+Literal UIKit `@objc` / `#selector` source dispatches through runtime metadata.
+This closes both macOS failures previously measured in the real-app UISwitch
+sample and both UIDatePicker failures in unchanged Reminder.
 
-1. **The dispatch table.** The `SelectorDispatching` conformance above: two
-   lines plus one line per action. Real UIKit needs none of it. This is the
-   irreducible cost of not having `objc_msgSend`, and it applies on macOS too
-   because OpenUIKit's classes are not `NSObject` subclasses.
-2. **`@objc` needs the Foundation module loaded.** A *scoped* import —
-   `import struct Foundation.Data` — satisfies the compiler without pulling
-   CoreGraphics' `CGSize`/`CGRect` in to collide with OpenUIKit's. A plain
-   `import Foundation` **does** collide, so a real app ported as-is will hit
-   ambiguity errors on `CGRect(x:y:width:height:)` and friends. (That
-   collision is a general app-compat problem, not a selector one — `Selector`
-   itself is fine either way, since OpenUIKit's is a typealias to the very
-   type Foundation re-exports. Measured.)
-3. **A 1-argument action's sender must be typed `AnyObject`.** `@objc`
-   requires ObjC-representable parameters, and OpenUIKit's controls are pure
-   Swift classes. So real UIKit's
-   `@objc func tapped(_ sender: UIButton)` must be written
-   `@objc func tapped(_ sender: AnyObject)` and downcast. Zero-argument
-   actions — the common case — are verbatim.
+The boundary is intentionally narrower than all of UIKit. `UIGestureRecognizer`
+and `UIEvent` are still plain Swift classes in this slice, as are several
+non-responder sender families. An exposed action receiving one of those must
+use an Objective-C-representable spelling such as `AnyObject` (or use the
+portable registry). Timer and OpenUIKit Notification selector delivery still
+call `SelectorDispatching` directly and are registry-only; Notification type
+identity/bridging is the next independent slice.
 
-So on macOS `#selector(buttonTapped)` and `@objc func buttonTapped()` are
-**literally UIKit source**, and the 1-argument form needs its parameter
-retyped.
-
-**On Linux — one more, and it is the big one.**
+**On native ELF Linux.**
 
 `@objc` and `#selector` do not compile at all:
 
@@ -184,7 +209,7 @@ error: Objective-C interoperability is disabled
 error: '#selector' can only be used with the Objective-C runtime
 ```
 
-So off Darwin the same selectors are spelled `Selector.named("buttonTapped")`
+So on native ELF the same selectors are spelled `Selector.named("buttonTapped")`
 and the `@objc` attributes are dropped. `Selector.named` also compiles on
 Darwin, so **an app that wants one source for both platforms writes the string
 form everywhere and never writes `@objc`** — the API shape stays UIKit's, only
@@ -193,18 +218,15 @@ the selector literal changes. `SelectorApp.swift` shows both: genuine
 the same call sites either way.
 
 **Coverage against the census.** Of the ~360 `#selector` uses in the corpus,
-the *call-site* API (`addTarget(_:action:for:)`, `init(target:action:)`,
-`addTarget(_:action:)`, `removeTarget`) now exists and works on both
-platforms — that is the whole `UIControl`/`UIGestureRecognizer` share of them,
-which is where the large majority sit. What is **not** covered:
-`#selector` uses that feed `NotificationCenter.addObserver(_:selector:name:)`,
-`UIBarButtonItem(title:style:target:action:)`, `Timer.scheduledTimer(…
-selector:)`, and `UIAppearance`/KVO — the first two because those types are
-not implemented yet (see docs/APP_COMPAT.md's "Bars & appearance" and "App
-lifecycle" clusters), the last two for the reasons at the bottom of this file.
-And on Linux, none of those ~360 sites compile *as written*; they compile
-after the mechanical `#selector(x)` → `Selector.named("x")` rewrite plus the
-dispatch table.
+the `UIControl` call-site API now supports unchanged runtime dispatch for the
+common responder-target/responder-sender shape on Objective-C-capable builds,
+and the registry route on native ELF. Gesture call sites use the same central
+dispatcher, but a typed recognizer parameter remains outside Objective-C
+representability. Bar/menu consumers that use `SelectorDispatch` inherit its
+runtime path subject to the same target/sender rule. OpenUIKit Notification
+and Timer selector forms remain registry-only, and `UIAppearance`/KVO remain
+separate gaps. On native ELF, no literal `@objc` / `#selector` site compiles as
+written; it still needs the mechanical selector spelling and a registry.
 
 ---
 
@@ -291,7 +313,7 @@ Also ruled out, unchanged:
 ### Macro shadowing: also dead
 
 An obvious escape is to define user macros named `selector` and `objc` so the
-UIKit spelling compiles off Darwin. **Declaring** them is accepted, but the
+UIKit spelling compiles on native ELF. **Declaring** them is accepted, but the
 builtins win at every *use* site:
 
 ```
@@ -474,12 +496,12 @@ a research project, explicitly out of scope here.
 ### 5. What this settles
 
 `Selector.named("...")` plus a registry the target owns is **not a workaround
-for a missing feature**. It is the only viable design on Linux, and that is now
+for a missing feature**. It is the viable native-ELF design, and that is now
 measured rather than assumed:
 
 | escape route | status |
 |---|---|
-| `#selector` / `@objc` off Darwin | compiler refuses; not a library choice |
+| `#selector` / `@objc` on native ELF | compiler refuses; not a library choice |
 | user macros named `selector` / `objc` | builtins win at every use site (below) |
 | `-enable-objc-interop` on stock Linux | compiles, then segfaults: metadata layout vs shipped libswiftCore |
 | GNUstep libobjc2 | wrong class ABI; Swift has no GNUstep support at all |
@@ -542,11 +564,14 @@ package but refuses a dependency that uses them). **It is not required.**
 `Package.swift` needs no `swiftSettings`, no `linkerSettings`, and no
 `.when(platforms:)` for this feature:
 
-- macOS gets `Selector` from `import ObjectiveC`, which costs nothing.
-- Linux gets OpenUIKit's own `Selector`; the library never emits ObjC interop
-  code, so no `-lobjc`, no shim target, no frontend flags.
-- An app that wants literal `@objc` on Darwin adds a scoped
-  `import struct Foundation.Data` — a source change in the app, not a build
+- Objective-C-capable targets get `Selector` from `import ObjectiveC` and
+  responder actions emit ordinary ObjC metadata. Native Darwin supplies that
+  normally; the pinned Linux-hosted Mach-O gate supplies its staged runtime and
+  compiler configuration outside this package.
+- Native ELF gets OpenUIKit's own `Selector`; the package never enables ObjC
+  interop there, so no `-lobjc`, shim target, or frontend flag is required.
+- The UIKit shim re-exports the Foundation/Objective-C surface available to
+  the target, so ordinary Apple app source needs no selector-specific package
   setting.
 
 So the feature is on by default on both platforms and the package remains

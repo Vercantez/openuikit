@@ -25,12 +25,21 @@ interesting than what it did.
 >   `class OptionsPicker` again, with no `@MainActor` written into it.
 >
 > Blockers #2, #3 and the harness row are **closed**. The ledger is 4 lines
-> / 99.3 %, and **all 4 are the single `#selector`/`@objc` row** — which the
-> measurement below shows is closed *by the compiler*, not by anything
-> OpenUIKit can add. **Three of the four vendored files are now unmodified
+> / 99.3 %, and **all 4 are the single `#selector`/`@objc` row** — required by
+> this experiment's native-ELF build, whose compiler rejects both spellings
+> before OpenUIKit is consulted. **Three of the four vendored files are now unmodified
 > app code end to end.** Nothing else about the experiment changed: the
 > renders are byte-identical to the previous commit's (checked against a
 > worktree build of it, 3/3), and the Linux gate still reports 13/13.
+
+> **Responder-root update (2026-08-30).** The same four adaptations remain in
+> this cross-platform harness because one source must compile on native ELF;
+> this historical 605-line ledger has not been redefined. The former macOS
+> half of the failure is now closed: `UIResponder` inherits NSObject, so
+> UIViewController targets and responder controls including `UISwitch` and
+> `UIDatePicker` are Objective-C-representable, and 0/1/2-argument actions use
+> real runtime metadata without a `SelectorDispatching` table. Recognizer/event
+> senders and Notification/Timer delivery retain narrower limits below.
 
 ---
 
@@ -146,7 +155,7 @@ reason.
 |---|---|---|
 | ~~**`NSCoder` / Foundation collision**~~ | ~~5~~ **0** | **CLOSED at M15; exact initializer contract completed 2026-08-28.** `import Foundation` and the `required init?(coder: NSCoder)` are back, verbatim. What made it possible: OpenUIKit's `CGRect`/`CGSize`/`CGFloat`/`IndexPath` are now Foundation's own types rather than rivals, and `Sources/UIKitShim/UIKit.swift` re-exports Foundation the way real UIKit's swiftinterface does — so a file whose only import line is `import UIKit` can name `NSCoder`. `UIView` now exposes UIKit's exact required `init?(coder: NSCoder)` designated initializer and its distinct zero-argument convenience initializer. Foundation-visible builds alias OpenUIKit's spelling to `Foundation.NSCoder`; the Foundation-hidden Mach-O boundary aliases its shim spelling back to OpenUIKit's fallback identity, so app and framework declarations remain one signature. The app's unavailable coder initializer is therefore a real required override, and a code-based subclass that implements both designated paths inherits `init()` normally. It compiles; it does not *archive*: the coder token is ignored and no nib/storyboard state is decoded. |
 | ~~**`@MainActor` isolation**~~ | ~~4~~ **0** | **CLOSED at M15.** `OptionAction`'s `action` and `submenu` closure types and its two initializers are declared `@MainActor` upstream; they used to be deleted, and they are now compiled as written. OpenUIKit annotates `UIView`/`UIViewController`/`UIControl` and the delegate protocols `@MainActor`, exactly as real UIKit does. |
-| **`#selector` / `@objc`** | **4** | Two `#selector(…)` call sites rewritten to `Selector.named(…)`; two `@objc private func` declarations lost their `@objc` and their `private`, and the 1-argument action's sender retyped `UISwitch` → `AnyObject`. Exactly the cost docs/OBJC_RUNTIME.md predicted. **This is now the whole ledger.** |
+| **`#selector` / `@objc`** | **4** | To keep this one source native-ELF-compatible, two `#selector(…)` call sites are `Selector.named(…)`; two action declarations omit `@objc`/`private`, and the one-argument sender is erased. Objective-C-capable responder controls no longer require these adaptations, but the Linux half still does. **This remains the whole cross-platform harness ledger.** |
 | ~~**harness plumbing**~~ | ~~1~~ **0** | **CLOSED at M15.** See below — the boundary moved instead of the source. |
 
 Notice what is **not** in that table: no missing method, no renamed property,
@@ -155,7 +164,7 @@ no restructured layout, no removed feature. Every one of the 4 lines is a
 different and better failure mode than the census's "missing type" counting
 suggests — but see "the code that was written *around* it", below.
 
-### Why the `#selector`/`@objc` row cannot be closed — measured, not assumed
+### Why the row remains on native ELF — measured, not assumed
 
 The four remaining lines were reverted to pristine upstream text and
 recompiled, so the diagnostics below are what the toolchains actually say
@@ -177,8 +186,8 @@ compiler diagnostic**, so this row is closed by the language, not by
 OpenUIKit's surface. It is the same wall docs/OBJC_RUNTIME.md documents for
 Swift ObjC interop generally, reached from the app-source side.
 
-**Two of the four fail on *macOS* too**, which is the more interesting half —
-ObjC interop is fully on there:
+**The former two macOS failures are now closed.** Before the responder-root
+slice, the measured diagnostics were:
 
 ```
 error: method cannot be marked '@objc' because the type of the parameter
@@ -188,18 +197,17 @@ error: argument of '#selector' refers to instance method 'switchToggled'
        that is not exposed to Objective-C
 ```
 
-OpenUIKit's `UISwitch` is a native Swift class, not an `NSObject`, so it is
-not an ObjC-representable *parameter* type. The zero-argument pair
-(`@objc private func actionTapped()` / `#selector(actionTapped)`) **does**
-compile on macOS — Swift registers native classes with the ObjC runtime there
-— and fails only on Linux. So the row splits 2/2: two lines are blocked on
-both platforms, two on Linux alone. Either way all four must change, because
-one source text has to compile on both.
+At that boundary OpenUIKit's `UISwitch` was a plain Swift class. It now inherits
+NSObject through `UIResponder` -> `UIView` -> `UIControl`, so the original
+typed action and selector compile on Objective-C-capable builds. A responder
+controller's exposed 0/1/2-argument actions dispatch through runtime metadata;
+no hand-written table is required there. This exact transition is also pinned
+by unchanged Reminder's UIDatePicker diagnostics, which move 4 -> 2.
 
-The only lever left is the one already named in blocker #1: a macro that
-generates the `SelectorDispatching` table. That would delete
-`SelectorTables.swift`, which is the larger cost — but it cannot make
-`#selector` or `@objc` compile, so it would not move this number.
+All four harness lines still need their portable spelling because one source
+text must compile on native ELF. A macro could generate its
+`SelectorDispatching` table, but it cannot make that compiler accept `@objc`
+or `#selector`; it would reduce scaffolding rather than this line count.
 
 ### The line that came off by moving the boundary, not the source
 
@@ -294,7 +302,7 @@ of the census.
 
 | # | blocker | corpus reach | what it costs today |
 |---|---|---|---|
-| 1 | **`@objc` / `#selector` and the dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Known and documented (docs/OBJC_RUNTIME.md). Measured here at 4 changed lines + a 23-line table for one class — **this row is now the ENTIRE ledger: all 4 remaining changed lines are here.** Confirmed by reverting them: on Linux `@objc` is the hard compiler error "Objective-C interoperability is disabled" and `Selector` is absent from corelibs-Foundation; 2 of the 4 fail on macOS too because OpenUIKit's `UISwitch` is not an ObjC-representable parameter type (see "Why the `#selector`/`@objc` row cannot be closed" above). Nothing can close it for *Swift* app source without an ObjC runtime; what *could* shrink it is a macro that generates `SelectorDispatching` from `@objc`-looking declarations. Note that it does not exist at all for *Objective-C* app source: an ObjC app writes `@selector(tapped:)` and the ObjC runtime does the dispatch (M15, docs/OBJC_FACADE.md). |
+| 1 | **`@objc` / `#selector` on native ELF, plus its dispatch table** | `#selector` **1,138 uses / 360 files**; `@objc` **1,189 / 395** | Measured here at 4 changed lines + a 23-line table for one class — **the entire cross-platform harness ledger**. Reverting them makes native ELF emit "Objective-C interoperability is disabled". The two former macOS failures are closed for responder controls: `UISwitch` is now an ObjC-representable NSObject descendant and UIViewController target metadata dispatches directly. A macro could generate the native-ELF table but cannot change the compiler syntax. Non-responder gesture/event senders and registry-only Notification/Timer forms remain bounded. Objective-C app source uses the separate libobjc2 facade (M15, docs/OBJC_FACADE.md). |
 | ~~2~~ | ~~**Foundation cannot be imported alongside OpenUIKit**~~ — **FIXED at M15** | `NSCoder` **379 / 344**; and every app file that says `import Foundation` at all | Was "the single biggest structural obstacle to compiling an app *as a whole*". Closed by the first option listed here: OpenUIKit `typealias`-es its CG types (plus `IndexPath`, `NSRange`, `TimeInterval`) to Foundation's, so there is one declaration rather than two. Cost: 151 disambiguation typealiases deleted from the test suite, Linux still 162/162 byte-identical, and five of this ledger's lines came back. Residue, all measured and documented in docs/PORTABILITY.md: `NSAttributedString`, `Notification`/`NotificationCenter` and `Timer`/`RunLoop` still shadow Foundation's, and `CGAffineTransform` still clashes on Darwin only. |
 | ~~3~~ | ~~**No `@MainActor` isolation on OpenUIKit's classes**~~ — **SHIPPED (M15)** | `@MainActor` **641 uses / 270 files** | **Was** 4 of this sample's 14 changed lines; now 0. UIResponder and every subclass, UIControl, UIGestureRecognizer, UIScreen, UIDevice, the touch/event types, the presentation and transitioning types, the bar-item types, the Auto Layout types and every delegate/data-source protocol are `@MainActor`, matching the iOS SDK. The rendering core (OpenCoreGraphics), the text engine's glyph entry points, the Cassowary solver and the value-ish types (`UIColor`, `UIImage`, `UIFont`, `UIBezierPath`) are deliberately **not** isolated — they are legal off the main actor in real UIKit too. See docs/KNOWN_GAPS.md for the two `MainActor.assumeIsolated` boundaries this leaves. |
 | 4 | **No asset catalog** | `UIImage(named:)` **438 / 161** | `UIImage(named:)` resolves loose `@2x`/`@3x` files only. Real apps ship `.xcassets`, which also carry the template-rendering-intent flag the app's tinting depends on. The harness copies three PNGs into `fixtures/realapp/assets/` and renames one (`small-tick` is stored as `tick@2x.png` inside its imageset). A `.xcassets` reader is a small, self-contained project. |
@@ -344,15 +352,15 @@ the biggest structural obstacles — Foundation interoperability and
 `@MainActor` — are both closed, and closing them is what took this ledger from
 14 lines to 4.
 
-What is left, in descending order of impact: selector dispatch (item 1),
-asset catalogs (item 4), localization (item 6) and xibs (item 13). **Only the
-first is a hard wall**, and it is a wall in the *language*, not in OpenUIKit's
-API surface: `@objc` does not compile off Darwin and no library can change
-that. The honest framing is that Swift app source will always pay a
-per-action-method cost on Linux, and the useful work is to make that cost
-mechanical — a macro that generates `SelectorDispatching` — rather than to
-try to remove it. Objective-C app source pays nothing here, because the ObjC
-runtime does the dispatch (docs/OBJC_FACADE.md).
+What is left, in descending order of impact: native-ELF selector syntax and
+its registry (item 1), asset catalogs (item 4), localization (item 6) and xibs
+(item 13). The first remains a language wall only for native ELF Swift:
+`@objc` does not compile there and no library can change that diagnostic.
+Objective-C-capable responder targets now use real metadata with unchanged
+source. The honest cross-platform framing is still a per-action-method cost on
+native ELF, where a macro could generate `SelectorDispatching`. Objective-C app
+source pays nothing here because its separate facade uses libobjc2
+(docs/OBJC_FACADE.md).
 
 A useful next milestone is therefore not "more UIKit types" and no longer
 "Foundation" either. It is **the scaffolding**: an `.xcassets` reader and the

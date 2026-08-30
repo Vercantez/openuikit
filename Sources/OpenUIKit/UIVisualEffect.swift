@@ -700,16 +700,14 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
     }
 
 #if canImport(Foundation) && canImport(ObjectiveC)
-    /// OpenUIKit's portable UIView root intentionally predates Foundation's
-    /// NSObject hierarchy. Darwin NSKeyedArchiver asks every root for this
-    /// Objective-C replacement hook before it invokes NSCoding. The surrogate
+    /// Darwin NSKeyedArchiver asks every NSObject root for this replacement
+    /// hook before it invokes NSCoding. The surrogate
     /// deliberately represents only a base UIVisualEffectView snapshot:
     /// effect, frame, and bounds origin. It is not UIView graph serialization;
     /// see docs/KNOWN_GAPS.md for the subclass/content-state boundary.
-    @objc(replacementObjectForKeyedArchiver:)
-    func _replacementObject(
+    open override func replacementObject(
         for archiver: NSKeyedArchiver
-    ) -> Any {
+    ) -> Any? {
         _ = archiver
         return _UIVisualEffectViewArchiveProxy(view: self)
     }

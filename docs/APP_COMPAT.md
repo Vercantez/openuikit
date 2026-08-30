@@ -7,15 +7,18 @@ real open-source UIKit apps, counts every UIKit symbol they reference, and
 diffs against what OpenUIKit exports — so the roadmap is ordered by what apps
 actually use, not by UIKit's alphabet.
 
-**Where this stands at the M15 tip (2026-08-25):** **97.1% effective
+**Where this stands (updated 2026-08-30):** **97.1% effective
 coverage** of what four real apps reference, 474 uses (2.9%) of
 genuinely-missing types left, and a *screen* from a shipping app rendering
 with **99.3%** of its source unmodified — 4 changed lines out of 605, down
 from 14 at M13. M15 retired ten of those fourteen in three passes: Foundation
 coexistence (5 lines), `@MainActor` isolation (4), and the harness
 access-level line (1). **All 4 survivors are the single `#selector`/`@objc`
-row**, which is closed by the Swift compiler rather than by anything OpenUIKit
-can add — see docs/REAL_APP_TEST.md for the diagnostics.
+row in the native-ELF harness**, where the Swift compiler still rejects both
+spellings. On Objective-C-capable targets, the responder-root selector slice
+below removes the former OpenUIKit runtime/table cost for responder controls;
+the historical real-app ledger has not been redefined to omit its Linux build.
+See docs/REAL_APP_TEST.md for that distinction.
 
 The file is written newest-last within each topic; if you want only the
 current picture, read **"The punch list, re-ranked at the M15 tip"** (below),
@@ -253,9 +256,11 @@ unchanged tap recognizer can reach the view without making the app conform to
 `SelectorDispatching`.
 iOS 26.1 passes `false` for this target/action spelling; OpenUIKit does the
 same and treats the selector as resolved even when `endEditing(false)` returns
-false because a text delegate refuses. This is not a general Objective-C
-dispatcher or a solution for app-defined `@objc` methods and Objective-C-
-unrepresentable OpenUIKit class parameters.
+false because a text delegate refuses. At this predecessor slice boundary it
+was not a general Objective-C dispatcher or a solution for app-defined
+`@objc` methods and Objective-C-unrepresentable OpenUIKit class parameters.
+The responder-root successor below supersedes the first limitation for its
+measured target/sender family.
 
 `Tools/traittextselectorprobe` is the committed iOS 26.1 native boundary for
 the text null reset, exact selector name/direct method, rejecting-responder
@@ -268,6 +273,51 @@ trait filtering, optional override topology, actual recognized-tap delivery,
 and unresolved-selector reporting. `Tools/remindertraittextselectorprobe`
 then checks the full exact **7 -> 4** app diagnostic multisets; neither probe
 claims full trait topology, general Objective-C interop, or app launch.
+
+## Reminder responder-root and Objective-C selector slice (2026-08-30)
+
+Starting from exact framework base
+`09130c91084627d6bda68a2a757cc729b17e9c8b`, the unchanged Reminder revision
+`2edfc88c386b8dec1683339f58e05054c5e9ce1f` now advances from **4 -> 2**
+whole-source diagnostics. Exactly the `#selector(DatePickerViewController.dateChanged(_:))`
+and `@objc func dateChanged(_ sender: UIDatePicker)` errors disappear; no
+diagnostic is added. `#Preview` and the Foundation/OpenUIKit `Notification`
+ambiguity remain byte-for-byte. The app stays unedited and does not yet build
+or launch. `Tools/reminderobjcselectorprobe` pins its tree, all 22 sources,
+source SHA-256 `3a29a577f6290d27c09206798ab6446335eeb18a06502bfaa4d2f835850858d4`,
+26 direct call-site lines, complete diagnostic multisets, a 26-path candidate
+boundary, fresh no-hardlink clones, and ten tamper negatives.
+
+`UIResponder` now inherits `NSObject`: Foundation supplies it on ordinary
+native builds (including native ELF), while the Foundation-hidden
+Linux-hosted Mach-O Apple target imports the staged ObjectiveC root directly.
+The inherited chain makes `UIView`, `UIControl`, and `UIDatePicker`
+Objective-C-representable wherever Objective-C interop exists, while preserving
+NSObject identity `Equatable`/`Hashable` behavior on native ELF. Redundant
+`UIView` and `UIScene` conformances were removed rather than competing with
+NSObject. The responder-root exposure uncovered one real archive override:
+`UIVisualEffectView.replacementObject(for:)` now overrides NSObject's hook and
+retains the existing base-snapshot surrogate contract.
+
+After framework semantic built-ins, `SelectorDispatch` now asks an
+Objective-C-capable NSObject target whether it responds and performs exact
+zero-, one-, or two-argument delivery. The portable `SelectorDispatching`
+registry remains the fallback and the only native-ELF route. Runtime metadata
+wins when a target supplies both. Targets remain weak. A live unresolved
+explicit selector is still reported nonfatally through `onUnresolved`, unlike
+UIKit's measured exception; OpenUIKit prunes dead weak targets, while broader
+UIKit nil-target responder routing is not claimed. This slice does not move
+`UIGestureRecognizer` or `UIEvent` under NSObject, and OpenUIKit Notification
+and Timer selector delivery remains registry-only. Notification identity and
+selector delivery are intentionally isolated to the next slice.
+
+The native iOS 26.1 oracle pins responder NSObject topology, selector names,
+0/1/2 delivery, exact sender identity, order, and weak lifetime. The separate
+Foundation-hidden ARM64 Mach-O gate freshly compiles all 12 OpenCoreGraphics
+and 102 OpenUIKit sources plus a literal `import UIKit` guest with Swift 6.2.4
+on Linux, rejects a Foundation umbrella load, and runs the guest twice through
+`machorun`. It covers typed UIDatePicker delivery, runtime precedence,
+registry fallback, `endEditing:`'s measured `false`, and dead weak targets.
 
 ## Visual-effect source compatibility slice (2026-08-29)
 
@@ -423,44 +473,43 @@ why the recommendation is to generate it. Full report: **docs/OBJC_FACADE.md**.
 ## Selector target-action: shipped (M12)
 
 The census counted **~360 `#selector` uses** across the corpus and the earlier
-verdict was that none of them were addressable off Darwin. That changed:
+verdict was that none of them were addressable on native ELF. The portable API
+changed that at M12; the 2026-08-30 responder-root slice then added real
+runtime dispatch on Objective-C-capable targets:
 `UIControl.addTarget(_:action:for:)`, `removeTarget(_:action:for:)`,
 `UIGestureRecognizer.init(target:action:)` and `addTarget(_:action:)` now
-exist and work on **both** macOS and Linux, with no ObjC runtime and no
-compiler flags. Full design, measurements and limits: docs/OBJC_RUNTIME.md.
+exist and work on **both** macOS and Linux. Native ELF uses the registry;
+Objective-C-capable NSObject targets use metadata first. Full design,
+measurements and limits: docs/OBJC_RUNTIME.md.
 
 Precisely how much of the ~360 that covers:
 
 | where the selector goes | corpus share (approx.) | status |
 |---|---|---|
-| `UIControl.addTarget(_:action:for:)` | the large majority | **works, both platforms** |
-| `UIGestureRecognizer(target:action:)` / `addTarget(_:action:)` | second largest | **works, both platforms** |
-| `UIBarButtonItem(…target:action:)` | — | blocked on the type ("Bars & appearance", 181 uses) |
-| `NotificationCenter.addObserver(_:selector:name:)` | — | blocked on the type ("App lifecycle", 543 uses) |
-| `Timer.scheduledTimer(…selector:)` | — | not implemented |
+| `UIControl.addTarget(_:action:for:)` | the large majority | **registry on native ELF; unchanged runtime dispatch for responder targets/senders on ObjC-capable builds** |
+| `UIGestureRecognizer(target:action:)` / `addTarget(_:action:)` | second largest | **dispatch works; the recognizer sender itself is still not ObjC-representable** |
+| `UIBarButtonItem(…target:action:)` | — | implemented through central dispatch; its non-responder sender still bounds typed ObjC actions |
+| `NotificationCenter.addObserver(_:selector:name:)` | — | implemented but **registry-only** pending Notification identity/bridge work |
+| `Timer.scheduledTimer(…selector:)` | — | implemented on the host clock but **registry-only** |
 | `UIAppearance`, KVO | — | process-wide `UINavigationBar.appearance()` subset works; `UITableView` and scoped/containment appearance proxies plus KVO remain missing (portable design in docs/OBJC_RUNTIME.md) |
 
-So the *dispatch mechanism* is no longer the blocker for any of them — the
-remaining ones are blocked on their host types, and each becomes a one-line
-addition once that type lands.
+Two source-level costs remain, and they are substrate-dependent:
 
-Two source-level costs remain, and they are the honest number:
-
-1. **Every selector target writes a name → method table** (`ActionTable` +
-   a two-line `SelectorDispatching` conformance, one line per action). Real
-   UIKit needs none of it; without `objc_msgSend` nothing else can supply it,
-   and this applies on macOS too because OpenUIKit's classes are not
-   `NSObject` subclasses.
-2. **On Linux `@objc` and `#selector` do not compile at all** (a Swift
+1. **Every native-ELF selector target writes a name -> method table**
+   (`ActionTable` + a `SelectorDispatching` conformance). Objective-C-capable
+   responder targets with exposed methods no longer pay this cost.
+2. **On native ELF Linux `@objc` and `#selector` do not compile at all** (a Swift
    compiler/stdlib limitation, measured in docs/OBJC_RUNTIME.md). The
    portable spelling is `Selector.named("buttonTapped")`, which also compiles
    on Darwin — so one source can serve both platforms, at the cost of a
    mechanical `#selector(x)` → `Selector.named("x")` rewrite of those ~360
    sites and dropping `@objc`.
 
-On macOS alone, `@objc func buttonTapped()` + `#selector(buttonTapped)` is
-verbatim UIKit source; only a 1-argument action's sender must be retyped from
-`UIButton` to `AnyObject`.
+On Objective-C-capable builds, a responder controller action receiving a
+responder control such as `UIButton`, `UISwitch`, or `UIDatePicker` is now
+verbatim UIKit source. A sender outside the responder NSObject branch, such as
+`UIGestureRecognizer` or `UIEvent`, must still be typed as `AnyObject` or use
+the registry.
 
 ## Current measurement — after M12 (2026-08-25)
 
@@ -533,10 +582,12 @@ because they change what an app sees:
   the sheet grabber, the tab-bar platter and the `UIPageControl` background
   are measured FLAT equivalents fitted over neutral bases. Correct on a flat
   backdrop (residual < 1.5 counts), wrong in hue over a saturated one.
-- **`NSAttributedString` and friends SHADOW Foundation's types.** They are
-  declared in OpenUIKit because the library imports no Foundation. An app that
-  imports both needs a one-line file-scope `typealias` to disambiguate, and a
-  Foundation attributed string cannot be handed to a `UILabel`.
+- **`NSAttributedString` and friends SHADOW Foundation's types.** They were
+  introduced while OpenUIKit imported no Foundation. M15 retired that blanket
+  rule, but the distinct type remains because corelibs Foundation measurably
+  traps on repeated plain-Swift UIKit attribute values. An app that imports
+  both still needs a file-scope `typealias`, and a Foundation attributed string
+  cannot be handed to a `UILabel`.
 - ~~**No notifications.**~~ **CLOSED by the controls2 cluster** (see the next
   section): OpenUIKit declares a portable `NotificationCenter` and posts the
   app-lifecycle notifications. The keyboard names are declared but nothing
@@ -948,8 +999,8 @@ library imports Foundation, and there is exactly one `CGRect`".
 `Sources/OpenUIKit/FoundationTypes.swift`): `NSAttributedString`
 (corelibs-Foundation *traps* when a plain Swift value is stored as an
 attribute twice, and every UIKit attribute value is one), `NotificationCenter`
-(no portable selector-form observer exists off Darwin, and that is the
-spelling apps use most), `Timer`/`RunLoop` (they run on the scripted host
+(the native-ELF selector form remains registry-only, and that is the spelling
+apps use most), `Timer`/`RunLoop` (they run on the scripted host
 clock; Foundation's run on `Date`, which would end byte-identical rendering),
 and `CGAffineTransform` (Linux Foundation has none, so keeping ours costs
 nothing there — it clashes only on Darwin).
@@ -1071,7 +1122,7 @@ Ranking rule: **can an app's source compile at all**, then corpus reach.
 
 | # | blocker | corpus reach | status |
 |---|---|---|---|
-| 1 | **`@objc` / `#selector`** | `#selector` 1,138 / 360 files; `@objc` 1,189 / 395 | **Hard wall, and now provably so.** On Linux `@objc` is the compiler error *"Objective-C interoperability is disabled"*, and `Selector` is not in corelibs-Foundation at all. A library cannot shim a diagnostic. This is the *entire* remaining real-app ledger (4 of 4 lines). **Not a wall for Objective-C app source** — an ObjC app writes `@selector(tapped:)` and libobjc2 dispatches it (docs/OBJC_FACADE.md). Best available mitigation: a macro that generates `SelectorDispatching`, which would delete the 23-line hand-written table (the bigger cost) without moving the line count. |
+| 1 | **`@objc` / `#selector` on native ELF** | `#selector` 1,138 / 360 files; `@objc` 1,189 / 395 | The native-ELF Swift compiler still emits *"Objective-C interoperability is disabled"* before a library can help, so the cross-platform real-app harness retains its 4-line adaptation and registry table. **The earlier Objective-C-capable half is closed for responder controls:** UIViewController targets and UIButton/UISwitch/UIDatePicker senders now dispatch unchanged 0/1/2-argument source through NSObject metadata. Recognizer/event senders and Notification/Timer delivery remain bounded as documented. Objective-C app source remains a separate libobjc2 facade path (docs/OBJC_FACADE.md). |
 | 2 | **No asset catalog** | `UIImage(named:)` 438 / 161 | `.xcassets` is unread; only loose `@2x`/`@3x` files resolve, and the template-rendering-intent flag that app tinting depends on lives in the catalog. Self-contained project, no oracle needed. |
 | 3 | **Localization** | `L10n.` 3,400 / 540 | Not UIKit, but unavoidable in a whole-app attempt: three of four corpus apps route every user-visible string through a generated enum over `NSLocalizedString`/`Bundle`. Now *more* tractable than at M14, because Foundation is importable. |
 | 4 | **`UIWindow` runs no appearance transition** | `viewDidAppear` 119 / 105 | `makeKeyAndVisible()` does not drive `viewWillAppear`/`viewDidAppear`, so app code that starts work there never runs. Small fix; the harness works around it with an explicit call. |
@@ -1079,8 +1130,9 @@ Ranking rule: **can an app's source compile at all**, then corpus reach.
 | 6 | **xibs / storyboards** | `@IBOutlet` 1,678 / 323 files | **Out of scope by choice**, restated because it is why 323 of 5,099 files are unreachable by construction. |
 
 The shape of the list has changed qualitatively. At M14 the top blockers were
-things OpenUIKit was missing. At M15 the top blocker is a **language**
-restriction that no amount of API surface will fix, and everything below it is
+things OpenUIKit was missing. The top cross-platform blocker is now a
+**native-ELF language** restriction that no amount of API surface will fix;
+Objective-C-capable responder controls dispatch unchanged source. Everything below it is
 either tooling (asset catalogs, localization) or a known pixel divergence. The
 useful next work is scaffolding reduction, not type count — see the "code
 written around it" section of docs/REAL_APP_TEST.md, where 256 lines of

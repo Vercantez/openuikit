@@ -76,10 +76,26 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
   `false` argument. The committed native
   and unchanged-Reminder probes pin this bounded behavior, all 22 sources,
   26 call-site lines, complete multisets, and the exact 21-path candidate.
-  Full `UITraitChangeObservable`/`traitOverrides` topology, app-defined Swift
+  At that predecessor boundary, full `UITraitChangeObservable`/`traitOverrides` topology, app-defined Swift
   Objective-C dispatch, `#Preview`, Foundation/OpenUIKit `Notification`
   bridging, and the picker class-parameter Objective-C boundary remain. This
   milestone does not claim an unchanged Reminder build or launch.
+- **Reminder responder-root / Objective-C selector successor (2026-08-30)** —
+  exact unchanged Reminder advances **4 -> 2 diagnostics**, removing only its
+  UIDatePicker `@objc` / `#selector` pair with zero additions and zero
+  app/vendor edits. `UIResponder` now inherits NSObject from Foundation on
+  ordinary builds and from ObjectiveC on the Foundation-hidden Mach-O guest;
+  inherited identity replaces redundant UIView/UIScene conformances. After
+  semantic built-ins, `SelectorDispatch` performs responding NSObject methods
+  with exact 0/1/2 arity before the portable registry fallback. Literal
+  UIDatePicker source, runtime precedence/fallback, weak lifetime,
+  `UIVisualEffectView` archive replacement, native ELF NSObject identity, an
+  iOS 26.1 oracle, and a twice-run Linux-hosted ARM64 Mach-O guest are gated.
+  Native ELF still cannot compile literal Swift `@objc` / `#selector`;
+  `UIGestureRecognizer` and `UIEvent` remain non-responder senders; Notification
+  and Timer selector delivery remains registry-only. `#Preview` and
+  Notification ambiguity are the exact two Reminder diagnostics left for
+  independent successor slices, so this is not yet an unchanged app launch.
 - **M4.5 Effects + coverage** — DONE: shadows + gradients (scene spec v2),
   19 hardening scenes incl. realistic demo_settings; suite 42/42 on quartz,
   window-server glyph-ink variants, non-ASCII advances, alpha-encoding
@@ -615,12 +631,14 @@ fallback backend behind the same Canvas API (`OPENUIKIT_BACKEND=swift`).
     `RealAppProbe` is now compiled with `-default-isolation MainActor`, the
     setting an Xcode 26 app target carries. Mirroring the app's build
     configuration rather than editing its source.
-  - **`#selector`/`@objc` row (4 lines) confirmed permanently open**, with
+  - **`#selector`/`@objc` row (4 lines) remains open on native ELF**, with
     diagnostics rather than inference: on Linux `@objc` is the compiler error
     *"Objective-C interoperability is disabled"* and `Selector` is not in
-    corelibs-Foundation; 2 of the 4 fail on macOS too because OpenUIKit's
-    `UISwitch` is not an ObjC-representable parameter type. A library cannot
-    shim a compiler diagnostic. This is now the **entire** ledger.
+    corelibs-Foundation. The later responder-root slice closes the former two
+    macOS failures: `UISwitch` is now an ObjC-representable NSObject descendant
+    and responder target metadata dispatches without a registry. A library
+    still cannot shim native ELF's compiler diagnostic, so this remains the
+    **entire cross-platform harness** ledger.
   - **The informative number has moved.** At 4 changed lines the adaptation
     ratio is saturated; the real remaining cost is the **256 lines of
     scaffolding** the harness writes around the app (theme system, selector
@@ -856,8 +874,9 @@ cluster above:
   shipping app's screen renders with **99.3%** of its source unmodified
   (97.7% before M15) and **none of the changed lines a missing UIKit member**
   — every one was a language or runtime incompatibility. After M15 the ranked
-  reasons a whole app still does not compile are selector dispatch (the only
-  hard wall, and a *language* one), asset catalogs, localization and xibs;
+  reasons a whole app still does not compile are native-ELF selector syntax
+  (the remaining language wall; Objective-C-capable responder dispatch now
+  works), asset catalogs, localization and xibs;
   ~~Foundation interoperability~~ and ~~`@MainActor`~~ are both closed
   (docs/REAL_APP_TEST.md, docs/APP_COMPAT.md "M15 punch list").
 

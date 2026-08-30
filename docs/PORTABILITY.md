@@ -8,6 +8,43 @@ Reproduce any time with `scripts/linux_verify.sh` (renderer),
 `scripts/linux_realapp_verify.sh` (a REAL app's screen — M14) and
 `scripts/objc_facade_verify.sh` (an Objective-C app — M15). All need Docker.
 
+## Responder NSObject and selector dispatch substrate matrix (2026-08-30)
+
+The responder hierarchy now has one semantic root across three distinct
+substrates, without pretending they have the same compiler capabilities:
+
+| build | NSObject provider | literal Swift `@objc` / `#selector` | action delivery |
+|---|---|---|---|
+| native Darwin | Foundation | yes | semantic built-ins, then NSObject runtime 0/1/2, then registry fallback |
+| native ELF Linux | corelibs Foundation | no | `Selector.named` + `SelectorDispatching` registry |
+| Linux-hosted `arm64-apple-macos15.0` guest, Foundation hidden | ObjectiveC | yes | semantic built-ins, then NSObject runtime 0/1/2, then registry fallback |
+
+`UIResponder` selects Foundation's NSObject first, ObjectiveC's only when the
+Foundation umbrella is unavailable, and fails compilation if neither exists.
+`UIView` and `UIScene` no longer redeclare NSObject's inherited identity
+`Equatable`/`Hashable` behavior. This makes responder controls such as
+`UIDatePicker` Objective-C-representable on both ObjC-capable rows while
+retaining ordinary NSObject identity on native ELF.
+
+`Tools/objcselectordispatchprobe/guest.sh` is the cross-substrate gate. It
+first compiles a native-ELF NSObject micro-oracle with `canImport(ObjectiveC)`
+forbidden. It then freshly compiles all 12 OpenCoreGraphics and 102 OpenUIKit
+sources plus the UIKit shim and a literal `import UIKit` guest with the pinned
+Linux Swift 6.2.4 toolchain, while Foundation is hidden. Load commands must not
+contain the Foundation umbrella. The linked ARM64 Mach-O guest runs twice via
+the pinned `machorun` root with identical output and checks NSObject identity,
+zero/one/two-argument actions, a typed UIDatePicker sender, and a typed UIButton
+two-argument action whose event is identity-equal to the same touch event seen
+by a closure. It also pins runtime precedence, registry fallback, the
+`endEditing:` built-in, and weak target release.
+
+This does not broaden every sender family. `UIGestureRecognizer` and `UIEvent`
+remain plain Swift classes. OpenUIKit NotificationCenter and Timer also bypass
+the central runtime path and remain registry-only; Notification identity and
+bridging are a separate successor. A live unresolved explicit target remains
+nonfatal through `SelectorDispatch.onUnresolved`, unlike UIKit's exception,
+and broader UIKit nil-target responder-chain routing is not claimed.
+
 ## M15 integrated: the three pieces hold together
 
 M15 landed as three independent branches — Foundation coexistence,
@@ -143,6 +180,10 @@ libraries is the strongest form of the claim: the renderer is deterministic
 and carries no host dependency.
 
 ## Selector target-action, verified on Linux (M12)
+
+This section records the original portable M12 result. The responder-root
+matrix above is the current Objective-C-capable behavior; the native-ELF
+registry and frame-replay result below remain unchanged.
 
 `scripts/linux_selector_verify.sh` proves the app-facing API of
 docs/OBJC_RUNTIME.md is portable, not just the renderer. Inside the same
@@ -298,11 +339,13 @@ unscoped `import CoreGraphics` breaks 8 files by dragging CoreGraphics'
   **Superseded at M15 — see the section above.** Through M14 the rule read:
   the library targets (`OpenUIKit`, `OpenCoreGraphics`) import **no**
   Foundation and no Apple framework — a rule enforced since day one. The
-  audit finds zero violations and zero `#if os(...)` conditionals. There is
-  now exactly **one** `#if canImport(ObjectiveC)`, in `UISelector.swift`: on
-  Darwin `Selector` is the platform's real ObjC selector, elsewhere it is
-  OpenUIKit's own name-carrying struct. That conditional is the seam the
-  whole selector feature rests on, and nothing above it is conditional.
+  audit found zero violations and zero `#if os(...)` conditionals. The current
+  substrate seams use `#if canImport(ObjectiveC)` in `UISelector.swift` for
+  the selector type/runtime path and a Foundation-then-ObjectiveC provider
+  choice in `UIResponder.swift` for NSObject. These are capability checks, not
+  OS-name branches; native ELF takes Foundation identity plus the portable
+  selector registry, while the Foundation-hidden Apple guest takes the staged
+  Objective-C runtime.
 - `CQuartz` (the vendored Quartz 2D + CoreAnimation implementation) is
   portable C++17 and compiled unmodified on Linux.
 - Text **metrics** come from a vendored data table (`font_metrics.json` —

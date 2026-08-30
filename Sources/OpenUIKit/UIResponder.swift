@@ -41,6 +41,21 @@
 // table cells and the scroll pipeline all override without calling super,
 // so their behavior is untouched.
 
+// UIKit's responder graph is an Objective-C object graph.  Use Foundation's
+// NSObject on ordinary native builds (including native ELF Linux, where
+// corelibs Foundation supplies its Swift implementation), and the ObjectiveC
+// module's root class on the FoundationEssentials-only Mach-O guest path.
+// Every supported production build has one of these two providers; failing
+// closed keeps a new substrate from silently reverting responders to plain
+// Swift classes and breaking `@objc` parameter representability.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
 // MARK: - Presses (hardware keys / remote)
 
 /// A single hardware-key press. Minimal shape: OpenUIKit has no keyboard
@@ -92,8 +107,8 @@ public final class UIPressesEvent {
 // MARK: - UIResponder
 
 @preconcurrency @MainActor
-open class UIResponder {
-    public init() {}
+open class UIResponder: NSObject {
+    public override init() { super.init() }
 
     /// Accessibility attributes (storage only — see UIViewCompat.swift for
     /// the accessors and for why nothing consults them).

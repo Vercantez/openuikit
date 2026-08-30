@@ -109,9 +109,9 @@ private final class SourceEffectView: UIVisualEffectView {
     }
 }
 
-/// OpenUIKit's UIView root is not NSObject, so Darwin root archives use an
-/// internal base-view snapshot. This external subclass deliberately proves
-/// what that snapshot does not claim to preserve.
+/// UIView now inherits NSObject, whose keyed-archiver replacement hook routes
+/// through OpenUIKit's internal base-view snapshot. This external subclass
+/// deliberately proves what that snapshot does not claim to preserve.
 @MainActor
 private final class SourceArchivedEffectView: UIVisualEffectView {
     static var encodeCallCount = 0

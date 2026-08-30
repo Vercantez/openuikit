@@ -428,9 +428,9 @@ extension UIView {
 // Nothing in OpenUIKit conforms to it and nothing vends one, so no app can
 // obtain an instance and no behaviour is fabricated — a missing conformance
 // is a compile error at the point of misuse, which is the loud failure this
-// deserves. `AnyObject`, not UIKit's `NSObjectProtocol`, because OpenUIKit
-// has no NSObject (UISelector.swift); the class constraint is what matters,
-// and it is what SnapKit's `target: AnyObject?` needs.
+// deserves. It retains the historical `AnyObject` constraint rather than
+// retroactively requiring NSObject from every external conformer; that is the
+// class-only property SnapKit's `target: AnyObject?` needs.
 @preconcurrency @MainActor
 public protocol UILayoutSupport: AnyObject {
     var length: CGFloat { get }

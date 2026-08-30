@@ -28,8 +28,9 @@
 final class UILayoutContainerView: UIView {}
 
 /// The container contract UIViewController adopts on UIKit. The Objective-C
-/// protocol inherits NSObjectProtocol; OpenUIKit has no NSObject facade in
-/// its Swift core, so `AnyObject` preserves the class-only part of that shape.
+/// protocol inherits NSObjectProtocol. OpenUIKit's responder classes now do
+/// inherit NSObject; this protocol retains its historical `AnyObject`
+/// constraint so non-responder portable containers are not source-broken.
 @preconcurrency @MainActor
 public protocol UIContentContainer: AnyObject {
     var preferredContentSize: CGSize { get }
