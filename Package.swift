@@ -71,6 +71,10 @@ let package = Package(
         // intentionally literal: unchanged app source keeps `import SwiftUI`.
         // Its renderer is backed by OpenUIKit rather than an Apple framework.
         .library(name: "SwiftUI", targets: ["SwiftUI"]),
+        // SF Symbols effect values are a separate first-party framework on
+        // Apple platforms. Keep that literal module boundary so unchanged
+        // source can continue to `import Symbols`.
+        .library(name: "Symbols", targets: ["Symbols"]),
         .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
         .executable(name: "openrender", targets: ["openrender"]),
         .executable(name: "openhost", targets: ["openhost"]),
@@ -128,12 +132,20 @@ let package = Package(
             ]
         ),
         .target(name: "DeveloperToolsSupport"),
+        // Build the replacement resiliently on Darwin too. AppKit's prebuilt
+        // module references Apple's resilient Symbols ABI; matching that
+        // convention prevents the compiler from trying to deserialize two
+        // incompatible return conventions while host-testing this module.
+        .target(
+            name: "Symbols",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
         // S1/S1.5 plus the first S2 observation/state slice. Keep this a
         // separate module so UIKit-only users do not acquire SwiftUI or
         // Combine symbols.
         .target(
             name: "SwiftUI",
-            dependencies: ["OpenUIKit"] + swiftUICombineDependencies
+            dependencies: ["OpenUIKit", "Symbols"] + swiftUICombineDependencies
         ),
         // M7.5 demo app: a multi-screen Settings-style app written against
         // OpenUIKit exactly like a normal UIKit app (UIViewController
@@ -228,6 +240,7 @@ let package = Package(
             dependencies: [
                 "SwiftUI",
                 "OpenUIKit",
+                "Symbols",
             ] + swiftUICombineDependencies
         ),
         .testTarget(name: "OpenUIKitCTests",
