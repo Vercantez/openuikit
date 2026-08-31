@@ -94,3 +94,36 @@ public extension NSRange {
         )
     }
 }
+
+// MARK: - Objective-C runtime name conversion
+
+// The Foundation overlay owns these string/name conversion APIs on Apple
+// platforms.  The guest Foundation module replaces that overlay, but it runs
+// on the genuine Objective-C runtime shipped in the staged Darwin closure.
+// Ask that runtime directly so dynamically registered framework classes (for
+// example QuartzCore filters) remain discoverable without an app-specific
+// registry or source rewrite.
+public func NSClassFromString(_ aClassName: String) -> AnyClass? {
+    if let runtimeClass = aClassName.withCString({ objc_getClass($0) })
+        as? AnyClass {
+        return runtimeClass
+    }
+
+    // Swift classes that deliberately do not expose Objective-C metadata are
+    // still classes.  Preserve Foundation's useful qualified-name behavior
+    // through the Swift runtime, while leaving structures and enums rejected.
+    guard let resolved = _typeByName(aClassName) else { return nil }
+    return resolved as? AnyClass
+}
+
+public func NSStringFromClass(_ aClass: AnyClass) -> String {
+    String(cString: class_getName(aClass))
+}
+
+public func NSSelectorFromString(_ aSelectorName: String) -> Selector {
+    Selector(aSelectorName)
+}
+
+public func NSStringFromSelector(_ aSelector: Selector) -> String {
+    String(_sel: aSelector)
+}

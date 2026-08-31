@@ -4,6 +4,9 @@
 
 import FoundationEssentials
 import ObjectiveC
+#if canImport(OpenCoreGraphics)
+import OpenCoreGraphics
+#endif
 
 open class NSNumber: NSObject, CustomStringConvertible,
     ExpressibleByBooleanLiteral, ExpressibleByIntegerLiteral,
@@ -405,6 +408,45 @@ extension Double: _ObjectiveCBridgeable {
     public static func _conditionallyBridgeFromObjectiveC(_ x: NSNumber, result: inout Double?) -> Bool { result = Double(exactly: x); return result != nil }
     public static func _unconditionallyBridgeFromObjectiveC(_ source: NSNumber?) -> Double { source?.doubleValue ?? 0 }
 }
+
+// CGFloat is a distinct CoreFoundation value type even on 64-bit Darwin; it
+// is not a typealias for Double.  Apple's Foundation overlay supplies this
+// bridge.  The guest overlay must do the same so unchanged UIKit and
+// QuartzCore clients can use ordinary `value as NSNumber` coercions.
+#if canImport(OpenCoreGraphics)
+extension CGFloat: _ObjectiveCBridgeable {
+    public typealias _ObjectiveCType = NSNumber
+    @available(swift, deprecated: 4, renamed: "init(truncating:)")
+    public init(_ number: NSNumber) { self.init(truncating: number) }
+    public init(truncating number: NSNumber) { self.init(number.doubleValue) }
+    public init?(exactly number: NSNumber) {
+        guard let value = number._foundationGuestExactFloating(Self.self) else {
+            return nil
+        }
+        self = value
+    }
+    @_semantics("convertToObjectiveC")
+    public func _bridgeToObjectiveC() -> NSNumber { NSNumber(value: self) }
+    public static func _forceBridgeFromObjectiveC(
+        _ x: NSNumber,
+        result: inout CGFloat?
+    ) {
+        result = CGFloat(exactly: x)!
+    }
+    public static func _conditionallyBridgeFromObjectiveC(
+        _ x: NSNumber,
+        result: inout CGFloat?
+    ) -> Bool {
+        result = CGFloat(exactly: x)
+        return result != nil
+    }
+    public static func _unconditionallyBridgeFromObjectiveC(
+        _ source: NSNumber?
+    ) -> CGFloat {
+        CGFloat(source?.doubleValue ?? 0)
+    }
+}
+#endif
 
 extension Bool: _ObjectiveCBridgeable {
     public typealias _ObjectiveCType = NSNumber

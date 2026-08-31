@@ -135,6 +135,14 @@ key. The package's Foundation-only runtime probe checks range boundary,
 intersection, union, raw-value, attribute-name, write, and read-back behavior;
 these are framework APIs, not application source rewrites.
 
+It also restores Foundation's genuine Objective-C name-conversion boundary
+(`NSClassFromString`, `NSStringFromClass`, `NSSelectorFromString`, and
+`NSStringFromSelector`) by querying the staged objc4 runtime, plus CGFloat's
+distinct `NSNumber` bridge. The cold Foundation-only probe registers a real
+Objective-C class, resolves it by name, round-trips a selector, and boxes and
+unboxes CGFloat; it has no special-case knowledge of any application or
+framework class name.
+
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so
 the builder names exactly that one manual SwiftUI runtime link. It requires the

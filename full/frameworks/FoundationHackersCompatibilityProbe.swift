@@ -3,11 +3,31 @@
 // CGFloat/os visibility independently of UIKit and the other probe imports.
 import Foundation
 
+@objc(CoreFoundationRuntimeLookupProbe)
+private final class CoreFoundationRuntimeLookupProbe: NSObject {}
+
 @inline(never)
 func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
     let scalar: CGFloat = 1.25
     precondition(scalar + 0.75 == 2)
     precondition(Int(ceil(CGFloat(11) / 10)) == 2)
+    let boxedScalar = scalar as NSNumber
+    precondition(boxedScalar.doubleValue == 1.25)
+    precondition((boxedScalar as? CGFloat) == scalar)
+
+    let runtimeClass: AnyClass? = NSClassFromString(
+        "CoreFoundationRuntimeLookupProbe"
+    )
+    precondition(
+        runtimeClass.map(ObjectIdentifier.init) ==
+            ObjectIdentifier(CoreFoundationRuntimeLookupProbe.self)
+    )
+    precondition(
+        NSStringFromClass(CoreFoundationRuntimeLookupProbe.self) ==
+            "CoreFoundationRuntimeLookupProbe"
+    )
+    let runtimeSelector = NSSelectorFromString("filterWithType:")
+    precondition(NSStringFromSelector(runtimeSelector) == "filterWithType:")
 
     var unfairLock = os_unfair_lock()
     precondition(os_unfair_lock_trylock(&unfairLock))
@@ -124,5 +144,5 @@ func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
     ) as URL?
     precondition(rejectedCFURL == nil)
 
-    return "locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
+    return "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
 }

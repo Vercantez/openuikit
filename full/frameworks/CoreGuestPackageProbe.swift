@@ -145,7 +145,7 @@ struct CoreGuestPackageProbe {
         )
         precondition(
             foundationCompatibility ==
-                "locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
+                "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
         )
 
         let gradient = CIFilter.linearGradient()

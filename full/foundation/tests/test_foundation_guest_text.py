@@ -237,6 +237,7 @@ class FoundationGuestTextTests(unittest.TestCase):
             "extension Bool: _ObjectiveCBridgeable",
             "extension Int: _ObjectiveCBridgeable",
             "extension Double: _ObjectiveCBridgeable",
+            "extension CGFloat: _ObjectiveCBridgeable",
         ):
             self.assertIn(token, source)
         bridge_types = re.findall(r"^extension (\w+): _ObjectiveCBridgeable", source, re.MULTILINE)
@@ -244,9 +245,26 @@ class FoundationGuestTextTests(unittest.TestCase):
             bridge_types,
             [
                 "Int8", "UInt8", "Int16", "UInt16", "Int32", "UInt32",
-                "Int64", "UInt64", "Int", "UInt", "Float", "Double", "Bool",
+                "Int64", "UInt64", "Int", "UInt", "Float", "Double",
+                "CGFloat", "Bool",
             ],
         )
+
+    def test_objc_runtime_name_conversion_uses_the_real_runtime(self) -> None:
+        source = STRUCTURED_PRODUCTION[4].read_text()
+        for token in (
+            "public func NSClassFromString(_ aClassName: String) -> AnyClass?",
+            "aClassName.withCString({ objc_getClass($0) })",
+            "as? AnyClass",
+            "public func NSStringFromClass(_ aClass: AnyClass) -> String",
+            "String(cString: class_getName(aClass))",
+            "public func NSSelectorFromString(_ aSelectorName: String) -> Selector",
+            "public func NSStringFromSelector(_ aSelector: Selector) -> String",
+            "Selector(aSelectorName)",
+            "String(_sel: aSelector)",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn('aClassName == "CAFilter"', source)
 
     def test_json_serialization_has_mutability_options_and_fails_with_nserror(self) -> None:
         source = STRUCTURED_PRODUCTION[2].read_text()

@@ -993,6 +993,11 @@ class ShellContractTests(unittest.TestCase):
             "replacingCharacters(",
             'cString(using: .utf8)',
             "NSRange(2..<7)",
+            "scalar as NSNumber",
+            "NSClassFromString(",
+            'NSSelectorFromString("filterWithType:")',
+            "NSStringFromClass(CoreFoundationRuntimeLookupProbe.self)",
+            "NSStringFromSelector(runtimeSelector)",
             "trimmingCharacters(in: .whitespaces)",
             "FileHandle(forReadingAtPath:",
             "readDataToEndOfFile()",
@@ -1008,7 +1013,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("FoundationHackersCompatibilityProbe.swift", builder)
         self.assertIn("runFoundationHackersCompatibilityProbe(", core_probe)
         marker = (
-            "foundation=locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
+            "foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
         )
         self.assertIn(marker, builder)
         self.assertIn("foundation=\\(foundationCompatibility)", core_probe)
