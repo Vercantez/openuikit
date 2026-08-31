@@ -185,6 +185,12 @@ first-party systems whose spellings now compile:
   independently confirms it only for the probed attached light-to-dark direct
   style override; unrelated legacy delivery is not globally filtered or
   promised exactly once.
+- The same traversal delivers UIView's legacy
+  `traitCollectionDidChange(_:)` after that view's modern registrations when
+  its effective bounded collection changed. View hierarchy operations also
+  deliver `willMove`/`didMove` superview callbacks and propagate genuine
+  window changes through the complete moved subtree. Reparenting inside one
+  window does not synthesize a detach/attach window pair.
 - `UITextView.text` has UIKit's `String!` import shape and nil-reset behavior,
   but nil is never persistent content: assigning it becomes `""`, clears the
   attributed representation, clamps the caret, and invalidates layout.
@@ -713,6 +719,15 @@ private backing-layer tree:
   which matches Focus's `insertSublayer(gradient, at: 0)` use. An app that
   appends a layer expecting it to appear above an already-added UIView child
   will still see it below that child.
+- `filters`, `isOpaque`, and `contentsScale` retain their canonical state on
+  OpenUIKit's CALayer identity, which the portable QuartzCore module
+  re-exports instead of wrapping. A bounded key/value store supports the
+  private `scale` and `filters.gaussianBlur.inputRadius` accesses used by the
+  untouched VariableBlur package. `UIVisualEffectView` publishes one
+  name-bearing `gaussianBlur` compatibility filter layer, and its backdrop
+  view exposes the same initial filter name. This is real mutable layer state,
+  but the software compositors do not yet execute arbitrary objects in
+  `CALayer.filters`; built-in UIVisualEffect rendering remains the pixel path.
 - Layout is synchronous and caller-driven. There is no `CALayoutManager`,
   display transaction, run-loop commit, or window-server scheduling; an app
   that expects Core Animation to perform a later implicit pass must call the

@@ -67,6 +67,7 @@ indirect enum _OpenViewNodeKind {
         setSelection: @MainActor (AnyHashable) -> Void,
         indexDisplayMode: PageTabViewStyle.IndexDisplayMode?
     )
+    case view(UIView)
     case viewController(UIViewController)
     case form(rows: [_OpenViewNode])
     case list(rows: [_OpenViewNode])

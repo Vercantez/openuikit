@@ -23,6 +23,17 @@ private final class RegisteredTraitProbeController: UIViewController {
     }
 }
 
+@MainActor
+private final class LegacyViewTraitProbe: UIView {
+    var log: [String] = []
+    var previousTraits: UITraitCollection?
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        log.append("legacy")
+        previousTraits = previousTraitCollection
+    }
+}
+
 private enum CustomTraitReusingStyleName: UITraitDefinition {
     static var name: String { UITraitUserInterfaceStyle.name }
 }
@@ -31,6 +42,32 @@ private enum CustomTraitReusingStyleName: UITraitDefinition {
 /// UIKit 26.1 under Mac Catalyst before implementing this portable subset.
 @MainActor
 final class TraitCollectionTests: XCTestCase {
+    func testUIViewLegacyTraitCallbackFollowsModernRegistration() {
+        let savedCurrent = UITraitCollection.current
+        defer { UITraitCollection.current = savedCurrent }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2
+        )
+        let view = LegacyViewTraitProbe()
+        let previous = view.traitCollection
+        view.registerForTraitChanges(
+            [UITraitUserInterfaceStyle.self]
+        ) { (target: LegacyViewTraitProbe, _) in
+            target.log.append("modern")
+        }
+
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .dark,
+            displayScale: 2
+        )
+        view._traitsDidChange(previous: previous)
+
+        XCTAssertEqual(view.log, ["modern", "legacy"])
+        XCTAssertEqual(view.previousTraits, previous)
+        XCTAssertEqual(view.traitCollection.userInterfaceStyle, .dark)
+    }
+
     func testSizeClassRawValuesAndEmptyCollectionMatchUIKit() {
         XCTAssertEqual(UIUserInterfaceSizeClass.unspecified.rawValue, 0)
         XCTAssertEqual(UIUserInterfaceSizeClass.compact.rawValue, 1)

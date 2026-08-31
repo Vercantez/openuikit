@@ -184,6 +184,83 @@ private struct RepresentableLifecycleFixture: View {
     }
 }
 
+@MainActor
+private final class RepresentedViewCoordinator {
+    let state: RepresentedViewState
+
+    init(state: RepresentedViewState) {
+        self.state = state
+    }
+}
+
+@MainActor
+private final class RepresentedViewState {
+    var makeCoordinatorCount = 0
+    var makeViewCount = 0
+    var dismantleCount = 0
+    weak var view: RepresentedView?
+}
+
+@MainActor
+private final class RepresentedView: UIView {
+    var updateValues: [Int] = []
+    var windowEvents: [Bool] = []
+
+    override func didMoveToWindow() {
+        windowEvents.append(window != nil)
+    }
+}
+
+private struct ViewRepresentableFixture: UIViewRepresentable {
+    let value: Int
+    let state: RepresentedViewState
+
+    func makeCoordinator() -> RepresentedViewCoordinator {
+        state.makeCoordinatorCount += 1
+        return RepresentedViewCoordinator(state: state)
+    }
+
+    func makeUIView(context: Context) -> RepresentedView {
+        precondition(context.coordinator.state === state)
+        state.makeViewCount += 1
+        let view = RepresentedView()
+        state.view = view
+        return view
+    }
+
+    func updateUIView(_ uiView: RepresentedView, context: Context) {
+        precondition(context.coordinator.state === state)
+        uiView.updateValues.append(value)
+    }
+
+    static func dismantleUIView(
+        _ uiView: RepresentedView,
+        coordinator: RepresentedViewCoordinator
+    ) {
+        _ = uiView
+        coordinator.state.dismantleCount += 1
+    }
+}
+
+private final class RepresentedViewModel: Combine.ObservableObject {
+    @Combine.Published var value = 0
+    @Combine.Published var isVisible = true
+}
+
+private struct ViewRepresentableLifecycleFixture: View {
+    @ObservedObject var model: RepresentedViewModel
+    let state: RepresentedViewState
+
+    var body: some View {
+        if model.isVisible {
+            ViewRepresentableFixture(value: model.value, state: state)
+                .frame(width: 90, height: 70)
+        } else {
+            Text("removed")
+        }
+    }
+}
+
 private struct StableAppearanceFixture: View {
     @ObservedObject var model: RuntimeModel
     let appeared: @MainActor () -> Void
@@ -447,6 +524,56 @@ final class SwiftUIOnboardingTests: XCTestCase {
             ["will-appear", "did-appear", "will-disappear", "did-disappear"]
         )
         XCTAssertEqual(controller._openGraphRepresentedControllerCount, 0)
+    }
+
+    func testUIViewRepresentableRetainsViewCoordinatorAndRealWindowLifecycle() async throws {
+        let model = RepresentedViewModel()
+        let state = RepresentedViewState()
+        let controller = UIHostingController(
+            rootView: ViewRepresentableLifecycleFixture(model: model, state: state)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 90, height: 70)
+        host.layoutIfNeeded()
+        let represented = try XCTUnwrap(state.view)
+
+        XCTAssertEqual(state.makeCoordinatorCount, 1)
+        XCTAssertEqual(state.makeViewCount, 1)
+        XCTAssertEqual(represented.updateValues, [0])
+        XCTAssertEqual(represented.windowEvents, [])
+        XCTAssertEqual(controller._openGraphRepresentedViewCount, 1)
+        XCTAssertTrue(
+            descendant(host, identifier: "SwiftUI.UIViewRepresentable") === represented
+        )
+
+        let window = UIWindow(frame: host.bounds)
+        window.rootViewController = controller
+        XCTAssertTrue(represented.window === window)
+        XCTAssertEqual(represented.windowEvents, [true])
+
+        // A structural re-layout may rebuild SwiftUI wrapper views, but the
+        // represented UIView stays mounted in the same UIWindow.
+        host.setNeedsLayout()
+        host.layoutIfNeeded()
+        XCTAssertEqual(represented.windowEvents, [true])
+
+        model.value = 7
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(state.makeCoordinatorCount, 1)
+        XCTAssertEqual(state.makeViewCount, 1)
+        XCTAssertEqual(represented.updateValues, [0, 7])
+        XCTAssertEqual(represented.windowEvents, [true])
+        XCTAssertTrue(state.view === represented)
+
+        model.isVisible = false
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(state.dismantleCount, 1)
+        XCTAssertNil(represented.superview)
+        XCTAssertNil(represented.window)
+        XCTAssertEqual(represented.windowEvents, [true, false])
+        XCTAssertEqual(controller._openGraphRepresentedViewCount, 0)
     }
 
     func testOnAppearTracksHostAppearanceAndStableGraphIdentity() async throws {

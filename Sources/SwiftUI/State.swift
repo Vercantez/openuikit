@@ -434,6 +434,42 @@ private struct _OpenRepresentedControllerKey: Hashable {
     let controllerType: ObjectIdentifier
 }
 
+private struct _OpenRepresentedViewKey: Hashable {
+    let viewPath: [_OpenGraphPathComponent]
+    let viewType: ObjectIdentifier
+}
+
+@MainActor
+private protocol _OpenAnyRepresentedViewEntry: AnyObject {
+    var view: UIView { get }
+    func dismantle()
+}
+
+@MainActor
+private final class _OpenRepresentedViewEntry<ViewType: UIView, Coordinator>:
+    _OpenAnyRepresentedViewEntry
+{
+    let typedView: ViewType
+    let coordinator: Coordinator
+    private let dismantleAction: @MainActor (ViewType, Coordinator) -> Void
+
+    init(
+        view: ViewType,
+        coordinator: Coordinator,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) {
+        typedView = view
+        self.coordinator = coordinator
+        dismantleAction = dismantle
+    }
+
+    var view: UIView { typedView }
+
+    func dismantle() {
+        dismantleAction(typedView, coordinator)
+    }
+}
+
 private enum _OpenEffectKind: Hashable {
     case change
     case subscription
@@ -476,11 +512,13 @@ final class _OpenGraphHost {
     private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
     private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
     private var representedControllers: [_OpenRepresentedControllerKey: UIViewController] = [:]
+    private var representedViews: [_OpenRepresentedViewKey: any _OpenAnyRepresentedViewEntry] = [:]
     private var changeValues: [_OpenEffectKey: any _OpenAnyChangeStorage] = [:]
     private var subscriptions: [_OpenEffectKey: _OpenSubscriptionEntry] = [:]
     private var activeStateKeys: Set<_OpenStateKey> = []
     private var activeObservationKeys: Set<ObjectIdentifier> = []
     private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
+    private var activeRepresentedViewKeys: Set<_OpenRepresentedViewKey> = []
     private var activeChangeKeys: Set<_OpenEffectKey> = []
     private var activeSubscriptionKeys: Set<_OpenEffectKey> = []
     private var postEvaluationActions: [@MainActor () -> Void] = []
@@ -491,9 +529,16 @@ final class _OpenGraphHost {
     private(set) var renderCount = 0
     private(set) var invalidationCount = 0
 
+    isolated deinit {
+        for entry in representedViews.values {
+            entry.dismantle()
+        }
+    }
+
     var stateCount: Int { state.count }
     var observationCount: Int { observations.count }
     var representedControllerCount: Int { representedControllers.count }
+    var representedViewCount: Int { representedViews.count }
     var changeCount: Int { changeValues.count }
     var subscriptionCount: Int { subscriptions.count }
 
@@ -508,6 +553,7 @@ final class _OpenGraphHost {
         activeStateKeys.removeAll(keepingCapacity: true)
         activeObservationKeys.removeAll(keepingCapacity: true)
         activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
+        activeRepresentedViewKeys.removeAll(keepingCapacity: true)
         activeChangeKeys.removeAll(keepingCapacity: true)
         activeSubscriptionKeys.removeAll(keepingCapacity: true)
         postEvaluationActions.removeAll(keepingCapacity: true)
@@ -535,6 +581,13 @@ final class _OpenGraphHost {
         }
         for key in staleControllerKeys {
             representedControllers.removeValue(forKey: key)
+        }
+        let staleViewKeys = representedViews.keys.filter {
+            !activeRepresentedViewKeys.contains($0)
+        }
+        for key in staleViewKeys {
+            let entry = representedViews.removeValue(forKey: key)
+            entry?.dismantle()
         }
         let staleChangeKeys = changeValues.keys.filter {
             !activeChangeKeys.contains($0)
@@ -1017,6 +1070,40 @@ final class _OpenGraphHost {
         return controller
     }
 
+    fileprivate func representedView<ViewType: UIView, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> ViewType,
+        update: (ViewType, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) -> ViewType {
+        let key = _OpenRepresentedViewKey(
+            viewPath: path,
+            viewType: ObjectIdentifier(ViewType.self)
+        )
+        activeRepresentedViewKeys.insert(key)
+
+        let entry: _OpenRepresentedViewEntry<ViewType, Coordinator>
+        if let existing = representedViews[key] {
+            guard let typed = existing as? _OpenRepresentedViewEntry<ViewType, Coordinator> else {
+                preconditionFailure(
+                    "UIViewRepresentable type changed at a stable structural location"
+                )
+            }
+            entry = typed
+        } else {
+            let coordinator = makeCoordinator()
+            let view = make(coordinator)
+            entry = _OpenRepresentedViewEntry(
+                view: view,
+                coordinator: coordinator,
+                dismantle: dismantle
+            )
+            representedViews[key] = entry
+        }
+        update(entry.typedView, entry.coordinator)
+        return entry.typedView
+    }
+
     fileprivate func scheduleInvalidation() {
         guard pendingInvalidationToken == nil else { return }
         let token = _OpenGraphInvalidationToken()
@@ -1071,6 +1158,26 @@ enum _OpenGraphContext {
             return controller
         }
         return currentHost.representedController(make: make, update: update)
+    }
+
+    static func representedView<ViewType: UIView, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> ViewType,
+        update: (ViewType, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) -> ViewType {
+        guard let currentHost else {
+            let coordinator = makeCoordinator()
+            let view = make(coordinator)
+            update(view, coordinator)
+            return view
+        }
+        return currentHost.representedView(
+            makeCoordinator: makeCoordinator,
+            make: make,
+            update: update,
+            dismantle: dismantle
+        )
     }
 
     static func trackChange<Value: Equatable>(

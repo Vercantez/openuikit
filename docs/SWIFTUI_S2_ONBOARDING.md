@@ -53,6 +53,12 @@ app source or overlay.
   identity, calls update on every rebuild, and reconciles
   `addChild`/`didMove`/removal containment. Hosting-controller appearance
   transitions are forwarded to represented children.
+- `UIViewRepresentable` retains one UIView and one coordinator per stable
+  graph identity, calls update with that coordinator on every rebuild, calls
+  `dismantleUIView` on graph removal/destruction, and mounts the represented
+  identity into the rendered hierarchy. Structural wrapper rebuilds park the
+  view inside the same window, so `didMoveToWindow` reflects real attachment
+  and removal rather than every layout pass.
 - `onAppear` is driven by the hosting controller's appearance lifecycle. Its
   structural identity survives observation-driven body rebuilds, while a real
   disappearance and reappearance delivers it again.
@@ -73,8 +79,9 @@ runtime claim for those UIKit controller files.
 
 The SwiftUI/OpenUIKit paths above do execute natively and are covered by
 focused behavior tests on the local host. Page swiping, animated transitions,
-general gesture arbitration, controller coordinators, SwiftUI environment
-diffing, and arbitrary tab styles remain outside this slice.
+general gesture arbitration, `UIViewControllerRepresentable` coordinators,
+the transaction/environment portions of representable contexts, SwiftUI
+environment diffing, and arbitrary tab styles remain outside this slice.
 
 For the Foundation-hidden Mach-O packaging path, observation invalidation is
 deferred to the next host-supplied `UIWindow.tick(timestamp:)` turn. This keeps

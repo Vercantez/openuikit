@@ -192,6 +192,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     var _openGraphStateCount: Int { graph.stateCount }
     var _openGraphObservationCount: Int { graph.observationCount }
     var _openGraphRepresentedControllerCount: Int { graph.representedControllerCount }
+    var _openGraphRepresentedViewCount: Int { graph.representedViewCount }
     var _openGraphChangeCount: Int { graph.changeCount }
     var _openGraphSubscriptionCount: Int { graph.subscriptionCount }
 }
@@ -216,6 +217,8 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
 
     func visit(_ node: _OpenViewNode) {
         switch node.kind {
+        case .view:
+            break
         case .viewController(let controller):
             if identities.insert(ObjectIdentifier(controller)).inserted {
                 result.append(controller)
@@ -252,6 +255,57 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             }
         case .empty, .text, .image, .color, .roundedRectangle, .spacer,
              .textField, .gradient:
+            break
+        }
+    }
+
+    visit(root)
+    return result
+}
+
+@MainActor
+private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
+    var result: [UIView] = []
+    var identities: Set<ObjectIdentifier> = []
+
+    func visit(_ node: _OpenViewNode) {
+        switch node.kind {
+        case .view(let view):
+            if identities.insert(ObjectIdentifier(view)).inserted {
+                result.append(view)
+            }
+        case .group(let children), .hStack(let children, _, _),
+             .vStack(let children, _, _), .zStack(let children, _),
+             .form(let children), .list(let children):
+            children.forEach(visit)
+        case .section(let header, let footer, let rows):
+            if let header { visit(header) }
+            if let footer { visit(footer) }
+            rows.forEach(visit)
+        case .button(let label, _), .scroll(let label),
+             .navigationLink(let label, _), .toggle(let label, _, _):
+            visit(label)
+        case .picker(let label, let options, _, _):
+            visit(label)
+            options.forEach { visit($0.content) }
+        case .tabView(let pages, let selection, _, _):
+            if let selected = _openSelectedTabPage(pages: pages, selection: selection) {
+                visit(selected.page.content)
+            }
+        case .navigation(let content, let configuration):
+            visit(content)
+            if let toolbar = configuration.toolbar { visit(toolbar) }
+        case .modified(let content, let modification):
+            visit(content)
+            switch modification {
+            case .background(let auxiliary, _), .overlay(let auxiliary, _),
+                 .toolbar(let auxiliary):
+                visit(auxiliary)
+            default:
+                break
+            }
+        case .empty, .text, .image, .color, .roundedRectangle, .spacer,
+             .textField, .viewController, .gradient:
             break
         }
     }
@@ -304,7 +358,7 @@ private func _openAppearanceActions(
                 break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .spacer,
-             .textField, .viewController, .gradient:
+             .textField, .view, .viewController, .gradient:
             break
         }
     }
@@ -333,7 +387,18 @@ private final class _SwiftUIHostingView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        for child in subviews {
+        // Park retained represented views on the host before rebuilding the
+        // lightweight structural wrappers. Reparenting within one window does
+        // not synthesize didMoveToWindow(nil/current) pairs, so a stable
+        // UIViewRepresentable receives one real mount callback rather than a
+        // callback on every SwiftUI layout pass.
+        let representedViews = _openContainedViews(in: node)
+        let representedIdentities = Set(representedViews.map(ObjectIdentifier.init))
+        for representedView in representedViews where representedView.superview !== self {
+            addSubview(representedView)
+        }
+        for child in subviews
+        where !representedIdentities.contains(ObjectIdentifier(child)) {
             child.removeFromSuperview()
         }
         clipsToBounds = false
@@ -464,6 +529,8 @@ private enum _ViewRenderer {
                 environment: environment
             )
             return CGSize(width: child.width, height: child.height + indicatorHeight)
+        case .view(let view):
+            return view.sizeThatFits(_bounded(proposed))
         case .viewController(let controller):
             controller.loadViewIfNeeded()
             return controller.view.sizeThatFits(_bounded(proposed))
@@ -791,6 +858,11 @@ private enum _ViewRenderer {
                 setSelection(tag)
             }
             surface.addSubview(pageControl)
+        case .view(let hosted):
+            hosted.frame = rect
+            hosted.accessibilityIdentifier = hosted.accessibilityIdentifier
+                ?? "SwiftUI.UIViewRepresentable"
+            surface.addSubview(hosted)
         case .viewController(let controller):
             controller.loadViewIfNeeded()
             guard let hosted = controller.view else { return }

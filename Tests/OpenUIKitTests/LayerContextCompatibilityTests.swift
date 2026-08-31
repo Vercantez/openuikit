@@ -70,6 +70,50 @@ final class LayerContextCompatibilityTests: XCTestCase {
         return Array(bitmap.pixels[offset..<(offset + 4)])
     }
 
+    func testFilterStorageOpacityAndBoundedKeyValueCompatibility() throws {
+        struct FilterToken: CustomStringConvertible {
+            let description: String
+        }
+
+        let layer = PortableLayer()
+        let gaussian = FilterToken(description: "gaussianBlur")
+        layer.filters = [gaussian]
+        layer.isOpaque = false
+        layer.contentsScale = 3
+        layer.setValue(CGFloat(2.5), forKey: "scale")
+        layer.setValue(
+            NSNumber(value: 18.25),
+            forKeyPath: "filters.gaussianBlur.inputRadius"
+        )
+
+        XCTAssertEqual(layer.filters?.count, 1)
+        XCTAssertEqual("\(try XCTUnwrap(layer.filters?.first))", "gaussianBlur")
+        XCTAssertFalse(layer.isOpaque)
+        XCTAssertEqual(layer.value(forKey: "contentsScale") as? CGFloat, 3)
+        XCTAssertEqual(layer.value(forKey: "scale") as? CGFloat, 2.5)
+        XCTAssertEqual(
+            layer.value(forKeyPath: "filters.gaussianBlur.inputRadius") as? CGFloat,
+            18.25
+        )
+
+        layer.setValue(nil, forKeyPath: "filters.gaussianBlur.inputRadius")
+        XCTAssertNil(layer.value(forKeyPath: "filters.gaussianBlur.inputRadius"))
+    }
+
+    func testBlurEffectPublishesCanonicalGaussianFilterLayer() throws {
+        let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        effectView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+
+        let filterLayer = try XCTUnwrap(effectView.layer.sublayers?.first)
+        let filter = try XCTUnwrap(filterLayer.filters?.first)
+        XCTAssertEqual("\(filter)", "gaussianBlur")
+        XCTAssertFalse(filterLayer.isOpaque)
+        XCTAssertEqual(filterLayer.frame, effectView.bounds)
+
+        let backdrop = try XCTUnwrap(effectView.subviews.first)
+        XCTAssertEqual("\(try XCTUnwrap(backdrop.layer.filters?.first))", "gaussianBlur")
+    }
+
     func testStandaloneLayerLayoutDelegateRunsOnlyWhenInvalidated() {
         let root = PortableLayer()
         let child = PortableLayer()

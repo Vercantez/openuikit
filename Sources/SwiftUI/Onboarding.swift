@@ -189,6 +189,71 @@ public struct _OpenUIViewControllerRepresentableContext<Representable> {
     public init() {}
 }
 
+/// Context retained for one stable UIViewRepresentable graph location. The
+/// coordinator is created once with the represented view and reused for every
+/// subsequent update, matching SwiftUI's identity contract.
+public struct _OpenUIViewRepresentableContext<Representable>
+    where Representable: _OpenUIViewRepresentable
+{
+    public let coordinator: Representable.Coordinator
+
+    init(coordinator: Representable.Coordinator) {
+        self.coordinator = coordinator
+    }
+}
+
+@MainActor
+public protocol _OpenUIViewRepresentable: _OpenView where Body == Never {
+    associatedtype UIViewType: UIView
+    associatedtype Coordinator = Void
+
+    func makeUIView(
+        context: _OpenUIViewRepresentableContext<Self>
+    ) -> UIViewType
+    func updateUIView(
+        _ uiView: UIViewType,
+        context: _OpenUIViewRepresentableContext<Self>
+    )
+    func makeCoordinator() -> Coordinator
+    static func dismantleUIView(_ uiView: UIViewType, coordinator: Coordinator)
+}
+
+public extension _OpenUIViewRepresentable {
+    typealias Context = _OpenUIViewRepresentableContext<Self>
+
+    static func dismantleUIView(_ uiView: UIViewType, coordinator: Coordinator) {
+        _ = uiView
+        _ = coordinator
+    }
+
+    func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withView(self) { preparedView in
+            let view = _OpenGraphContext.representedView(
+                makeCoordinator: { preparedView.makeCoordinator() },
+                make: { coordinator in
+                    preparedView.makeUIView(
+                        context: Context(coordinator: coordinator)
+                    )
+                },
+                update: { view, coordinator in
+                    preparedView.updateUIView(
+                        view,
+                        context: Context(coordinator: coordinator)
+                    )
+                },
+                dismantle: { view, coordinator in
+                    Self.dismantleUIView(view, coordinator: coordinator)
+                }
+            )
+            return _OpenViewNode(.view(view))
+        }
+    }
+}
+
+public extension _OpenUIViewRepresentable where Coordinator == Void {
+    func makeCoordinator() {}
+}
+
 @MainActor
 public protocol _OpenUIViewControllerRepresentable: _OpenView where Body == Never {
     associatedtype UIViewControllerType: UIViewController
@@ -290,3 +355,7 @@ public typealias TabView<SelectionValue, Content> = _OpenTabView<SelectionValue,
 public typealias UIViewControllerRepresentableContext<Representable> =
     _OpenUIViewControllerRepresentableContext<Representable>
 public typealias UIViewControllerRepresentable = _OpenUIViewControllerRepresentable
+public typealias UIViewRepresentableContext<Representable> =
+    _OpenUIViewRepresentableContext<Representable>
+    where Representable: _OpenUIViewRepresentable
+public typealias UIViewRepresentable = _OpenUIViewRepresentable

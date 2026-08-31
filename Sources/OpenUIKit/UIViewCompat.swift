@@ -248,6 +248,9 @@ extension UIView {
                                                         current: current) {
             r.fire(previous)
         }
+        if previous != current {
+            traitCollectionDidChange(previous)
+        }
         for subview in subviews {
             // `previous` is effective for this view. A child's fixed local
             // style was effective before and after an inherited host change,

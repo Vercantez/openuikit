@@ -89,6 +89,7 @@ open class CALayer {
     private var storedHidden = false
     private var storedMask: CALayer?
     private weak var maskOwner: CALayer?
+    private var storedCompatibilityValues: [String: Any] = [:]
     private var _needsLayout = true
     private var _isLayingOut = false
     /// Core Animation records live in `CoreAnimation.swift`. They are kept on
@@ -260,6 +261,18 @@ open class CALayer {
     public var borderWidth: CGFloat = 0
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
+    /// Core Animation's opaque-content optimization hint. It does not alter
+    /// composited pixels by itself; renderers may use it to skip alpha work
+    /// once they can prove the layer's contents are opaque.
+    public var isOpaque: Bool = false
+    /// Scale of the layer's backing contents. OpenUIKit's UIView renderer
+    /// derives its raster scale from the host surface, but this public state
+    /// is retained because app and framework code configures it directly.
+    public var contentsScale: CGFloat = 1
+    /// Filters attached to this exact layer identity. QuartzCore's portable
+    /// module re-exports CALayer rather than wrapping it, so assignments made
+    /// through either module spelling reach this single storage location.
+    public var filters: [Any]?
     /// An alpha mask is retained by the receiving layer but is not a
     /// sublayer. The CQuartz compositor renders its full layer tree into an
     /// alpha surface, matching Core Animation's ownership and paint model.
@@ -301,6 +314,47 @@ open class CALayer {
         for record in _explicitAnimations {
             CATransaction._removeAnimation(workID: record.workID)
         }
+    }
+
+    // MARK: Bounded key-value compatibility
+
+    /// Retain dynamically addressed Core Animation properties used by
+    /// open-source visual-effect implementations. This is deliberately a
+    /// CALayer-owned compatibility surface rather than a pretend NSObject
+    /// runtime: known public properties remain strongly typed above, while
+    /// private filter inputs retain their exact values under their keys.
+    open func setValue(_ value: Any?, forKey key: String) {
+        switch key {
+        case "isOpaque":
+            if let value = value as? Bool { isOpaque = value }
+        case "contentsScale":
+            if let value = value as? CGFloat { contentsScale = value }
+        default:
+            if let value {
+                storedCompatibilityValues[key] = value
+            } else {
+                storedCompatibilityValues.removeValue(forKey: key)
+            }
+        }
+    }
+
+    open func value(forKey key: String) -> Any? {
+        switch key {
+        case "isOpaque": return isOpaque
+        case "contentsScale": return contentsScale
+        default: return storedCompatibilityValues[key]
+        }
+    }
+
+    /// Key-path variants preserve the complete path. They cover private
+    /// paths such as `filters.gaussianBlur.inputRadius` without claiming a
+    /// general Objective-C KVC implementation on non-Objective-C platforms.
+    open func setValue(_ value: Any?, forKeyPath keyPath: String) {
+        setValue(value, forKey: keyPath)
+    }
+
+    open func value(forKeyPath keyPath: String) -> Any? {
+        value(forKey: keyPath)
     }
 
     /// Marks this layer's delegate/layout pass dirty.
@@ -570,6 +624,22 @@ open class UIView: UIResponder, CALayerDelegate {
     /// Called after ``layoutMargins`` changes.
     open func layoutMarginsDidChange() {}
 
+    /// Hierarchy lifecycle override points. OpenUIKit delivers window changes
+    /// to the complete moved subtree, with `window` already reflecting the
+    /// new hierarchy when `didMoveToWindow()` runs. Moving between two
+    /// superviews in the same window does not manufacture a window change.
+    open func willMove(toSuperview newSuperview: UIView?) {}
+    open func didMoveToSuperview() {}
+    open func willMove(toWindow newWindow: UIWindow?) {}
+    open func didMoveToWindow() {}
+
+    /// Legacy trait callback retained by UIKit for source compatibility.
+    /// Host-driven trait changes call this once per view after matching modern
+    /// registrations have fired. Subclasses may intentionally omit `super`.
+    open func traitCollectionDidChange(
+        _ previousTraitCollection: UITraitCollection?
+    ) {}
+
     /// Baseline offsets for firstBaseline/lastBaseline constraint attributes:
     /// (first baseline from the view's top, last baseline from its bottom).
     /// nil (plain views): both baselines alias the bottom edge, like UIKit.
@@ -619,7 +689,18 @@ open class UIView: UIResponder, CALayerDelegate {
     /// path to install their own implementation views. It intentionally is
     /// not public: app calls still pass through the admission check above.
     func _addSubviewWithoutAdmissionCheck(_ view: UIView) {
-        view.removeFromSuperview()
+        guard view !== self else { return }
+        if view.superview === self {
+            bringSubviewToFront(view)
+            return
+        }
+        let oldWindow = view.window
+        let newWindow = window
+        view.willMove(toSuperview: self)
+        if oldWindow !== newWindow {
+            view._willMoveSubtree(toWindow: newWindow)
+        }
+        view._detachFromSuperviewWithoutCallbacks()
         view.superview = self
         subviews.append(view)
         // A newly attached view starts with a pending constraints update.
@@ -627,6 +708,10 @@ open class UIView: UIResponder, CALayerDelegate {
         // that pending work to this hierarchy's root.
         view.setNeedsUpdateConstraints()
         setNeedsLayout()
+        view.didMoveToSuperview()
+        if oldWindow !== newWindow {
+            view._didMoveSubtreeToWindow()
+        }
     }
 
     public func insertSubview(_ view: UIView, at index: Int) {
@@ -642,7 +727,6 @@ open class UIView: UIResponder, CALayerDelegate {
             preconditionFailure("belowSubview must be a subview of the receiver")
         }
         guard view !== siblingSubview else { return }
-        view.removeFromSuperview()
         let index = subviews.firstIndex(where: { $0 === siblingSubview })!
         insertSubview(view, at: index)
     }
@@ -653,7 +737,6 @@ open class UIView: UIResponder, CALayerDelegate {
             preconditionFailure("aboveSubview must be a subview of the receiver")
         }
         guard view !== siblingSubview else { return }
-        view.removeFromSuperview()
         let index = subviews.firstIndex(where: { $0 === siblingSubview })!
         insertSubview(view, at: index + 1)
     }
@@ -661,16 +744,61 @@ open class UIView: UIResponder, CALayerDelegate {
     /// Internal twin of `_addSubviewWithoutAdmissionCheck(_:)` for ordered
     /// implementation children.
     func _insertSubviewWithoutAdmissionCheck(_ view: UIView, at index: Int) {
-        view.removeFromSuperview()
+        guard view !== self else { return }
+        if view.superview === self {
+            guard let oldIndex = subviews.firstIndex(where: { $0 === view }) else { return }
+            subviews.remove(at: oldIndex)
+            let adjustedIndex = oldIndex < index ? index - 1 : index
+            subviews.insert(view, at: Swift.max(0, Swift.min(adjustedIndex, subviews.count)))
+            setNeedsLayout()
+            return
+        }
+        let oldWindow = view.window
+        let newWindow = window
+        view.willMove(toSuperview: self)
+        if oldWindow !== newWindow {
+            view._willMoveSubtree(toWindow: newWindow)
+        }
+        view._detachFromSuperviewWithoutCallbacks()
         view.superview = self
-        subviews.insert(view, at: index)
+        subviews.insert(view, at: Swift.max(0, Swift.min(index, subviews.count)))
         view.setNeedsUpdateConstraints()
         setNeedsLayout()
+        view.didMoveToSuperview()
+        if oldWindow !== newWindow {
+            view._didMoveSubtreeToWindow()
+        }
     }
     public func removeFromSuperview() {
-        guard let sv = superview else { return }
-        sv.subviews.removeAll { $0 === self }
+        guard superview != nil else { return }
+        let oldWindow = window
+        willMove(toSuperview: nil)
+        if oldWindow != nil { _willMoveSubtree(toWindow: nil) }
+        let formerSuperview = superview
+        _detachFromSuperviewWithoutCallbacks()
+        formerSuperview?.setNeedsLayout()
+        didMoveToSuperview()
+        if oldWindow != nil { _didMoveSubtreeToWindow() }
+    }
+
+    private func _detachFromSuperviewWithoutCallbacks() {
+        guard let currentSuperview = superview else { return }
+        currentSuperview.subviews.removeAll { $0 === self }
         superview = nil
+    }
+
+    private func _willMoveSubtree(toWindow newWindow: UIWindow?) {
+        willMove(toWindow: newWindow)
+        for subview in subviews {
+            subview._willMoveSubtree(toWindow: newWindow)
+        }
+    }
+
+    private func _didMoveSubtreeToWindow() {
+        didMoveToWindow()
+        for subview in subviews {
+            subview._didMoveSubtreeToWindow()
+        }
     }
 
     /// Whether the receiver is the supplied view or lies below it in the

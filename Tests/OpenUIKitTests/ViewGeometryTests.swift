@@ -8,7 +8,64 @@ import Foundation
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
 @MainActor
+private final class ViewHierarchyLifecycleProbe: UIView {
+    var events: [String] = []
+
+    override func willMove(toSuperview newSuperview: UIView?) {
+        events.append("will-super:\(newSuperview != nil)")
+    }
+
+    override func didMoveToSuperview() {
+        events.append("did-super:\(superview != nil)")
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        events.append("will-window:\(newWindow != nil)")
+    }
+
+    override func didMoveToWindow() {
+        events.append("did-window:\(window != nil)")
+    }
+}
+
+@MainActor
 final class ViewGeometryTests: XCTestCase {
+
+    func testHierarchyCallbacksDeliverRealWindowTransitionsToWholeSubtree() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        let left = UIView()
+        let right = UIView()
+        window.addSubview(left)
+        window.addSubview(right)
+
+        let parent = ViewHierarchyLifecycleProbe()
+        let child = ViewHierarchyLifecycleProbe()
+        parent.addSubview(child)
+        parent.events.removeAll()
+        child.events.removeAll()
+
+        left.addSubview(parent)
+        XCTAssertEqual(parent.events, [
+            "will-super:true", "will-window:true",
+            "did-super:true", "did-window:true",
+        ])
+        XCTAssertEqual(child.events, ["will-window:true", "did-window:true"])
+
+        parent.events.removeAll()
+        child.events.removeAll()
+        right.addSubview(parent)
+        XCTAssertEqual(parent.events, ["will-super:true", "did-super:true"])
+        XCTAssertEqual(child.events, [], "same-window reparenting is not a window transition")
+
+        parent.events.removeAll()
+        child.events.removeAll()
+        parent.removeFromSuperview()
+        XCTAssertEqual(parent.events, [
+            "will-super:false", "will-window:false",
+            "did-super:false", "did-window:false",
+        ])
+        XCTAssertEqual(child.events, ["will-window:false", "did-window:false"])
+    }
 
     // MARK: identity frame math
 

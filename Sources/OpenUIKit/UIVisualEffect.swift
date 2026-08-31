@@ -441,12 +441,24 @@ final class _UIVisualEffectBackdropView: UIView {
     }
 }
 
+/// Name-bearing compatibility token for the standard backdrop filter. Public
+/// code only inspects these values through CALayer.filters and string
+/// interpolation; the actual blur remains renderer-owned UIVisualEffect state.
+private final class _OpenVisualEffectFilterToken: CustomStringConvertible {
+    let description: String
+
+    init(_ description: String) {
+        self.description = description
+    }
+}
+
 @available(iOS 8.0, *)
 @available(watchOS, unavailable)
 @preconcurrency @MainActor
 open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
     private var storedContentView: UIView?
     private var backdropView: _UIVisualEffectBackdropView?
+    private var compatibilityFilterLayer: CALayer?
 
     open override var bounds: CGRect {
         didSet {
@@ -466,6 +478,7 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
                     backdropView.frame = backdropFrame
                 }
             }
+            compatibilityFilterLayer?.frame = bounds
         }
     }
 
@@ -663,9 +676,24 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
                 backdropView = backdrop
                 _insertSubviewWithoutAdmissionCheck(backdrop, at: 0)
             }
+            if compatibilityFilterLayer == nil {
+                let filterLayer = CALayer()
+                filterLayer.frame = bounds
+                filterLayer.isOpaque = false
+                filterLayer.filters = [_OpenVisualEffectFilterToken("gaussianBlur")]
+                compatibilityFilterLayer = filterLayer
+                layer.insertSublayer(filterLayer, at: 0)
+            }
+            if backdropView?.layer.filters == nil {
+                backdropView?.layer.filters = [
+                    _OpenVisualEffectFilterToken("gaussianBlur")
+                ]
+            }
         } else {
             backdropView?.removeFromSuperview()
             backdropView = nil
+            compatibilityFilterLayer?.removeFromSuperlayer()
+            compatibilityFilterLayer = nil
         }
 
         // A semantically different assignment is an immediate native geometry
