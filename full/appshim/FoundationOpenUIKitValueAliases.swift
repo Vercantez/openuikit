@@ -13,3 +13,13 @@ public typealias NSRangePointer = OpenUIKit.NSRangePointer
 public func NSMakeRange(_ location: Int, _ length: Int) -> NSRange {
     NSRange(location: location, length: length)
 }
+
+public extension NSRange {
+    /// Creates an NSRange from an integer half-open range.
+    init(_ range: Range<Int>) {
+        self.init(
+            location: range.lowerBound,
+            length: range.upperBound - range.lowerBound
+        )
+    }
+}

@@ -19,6 +19,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 TOOL = HERE / "core_package_manifest.py"
 BUILDER = HERE / "build_core_guest_package.sh"
+FOUNDATION_COMPATIBILITY_PROBE = HERE / "FoundationHackersCompatibilityProbe.swift"
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
 APP_DRIVER = REPO / "full/xcodeplan/build_portable_application_guest.sh"
@@ -60,6 +61,10 @@ FOUNDATION_SOURCES = (
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
     "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
+    "full/foundation/NSLock.swift",
+    "full/foundation/FileHandle.swift",
+    "full/foundation/Data+Searching.swift",
+    "full/foundation/CoreFoundationCompatibility.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
@@ -259,14 +264,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 18)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 22)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 18-path contract", refusal.stderr)
+        self.assertIn("exact ordered 22-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -781,8 +786,57 @@ class PackageContractTests(unittest.TestCase):
 
 
 class ShellContractTests(unittest.TestCase):
+    def test_foundation_hackers_frontier_is_foundation_only_and_runs(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        core_probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
+            encoding="utf-8"
+        )
+        compatibility_probe = FOUNDATION_COMPATIBILITY_PROBE.read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(
+            re.findall(r"(?m)^import ([A-Za-z0-9_]+)$", compatibility_probe),
+            ["Foundation"],
+        )
+        for token in (
+            "let scalar: CGFloat",
+            "Int(ceil(CGFloat(11) / 10)) == 2",
+            "os_unfair_lock_trylock",
+            "let lock = NSLock()",
+            "CharacterSet.uppercaseLetters",
+            "CharacterSet.lowercaseLetters",
+            "CharacterSet.letters",
+            "CharacterSet.alphanumerics",
+            "CharacterSet.symbols",
+            "CharacterSet.decimalDigits",
+            "precomposedStringWithCanonicalMapping",
+            'caseInsensitiveCompare("focus")',
+            "replacingCharacters(",
+            'cString(using: .utf8)',
+            "NSRange(2..<7)",
+            "trimmingCharacters(in: .whitespaces)",
+            "FileHandle(forReadingAtPath:",
+            "readDataToEndOfFile()",
+            "handle.read(upToCount: 1)",
+            "handle.readToEnd()",
+            "try! handle.close()",
+            "bytes.range(of: needle)",
+            "options: .backwards",
+            "CFURLCreateWithString(",
+            '"https://example.invalid/a b" as CFString',
+        ):
+            self.assertIn(token, compatibility_probe)
+        self.assertIn("FoundationHackersCompatibilityProbe.swift", builder)
+        self.assertIn("runFoundationHackersCompatibilityProbe(", core_probe)
+        marker = (
+            "foundation=locks,filehandle,characters,strings,data-search,cfurl,reexports"
+        )
+        self.assertIn(marker, builder)
+        self.assertIn("foundation=\\(foundationCompatibility)", core_probe)
+
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=22"), 1)
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
         self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)

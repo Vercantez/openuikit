@@ -9,13 +9,19 @@ file rather than maintaining a second list.
 
 The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
-`TimeZone`, and `IndexPath` identities. The eighteen-source facade adds:
+`TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
+the guest `os` module, so a source file importing only Foundation sees the
+platform `CGFloat` and `os_unfair_lock` APIs. The twenty-two-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
-  its mutable bridge, scalar-boundary trimming/search, percent coding, legacy
-  String search/replacement/comparison/path/format APIs, `Scanner` hexadecimal
-  scanning, and `Error.localizedDescription`. The text gate contains 86 Apple
-  differential rows: the original 51 plus a 35-row URL/text/format oracle.
+  Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
+  and decimal-digit sets, its mutable bridge, scalar-boundary trimming/search,
+  percent coding, legacy String search/replacement/comparison/path/format APIs,
+  `Scanner` hexadecimal scanning, and `Error.localizedDescription`. The text
+  gate contains 86 Apple differential rows: the original 51 plus a 35-row
+  URL/text/format oracle. Named sets intentionally follow the Unicode tables in
+  the pinned Swift runtime; this includes newly assigned letters and marks that
+  an older Apple SDK's frozen CharacterSet tables may not yet contain.
 - Single OpenUIKit identities for attributed strings and paragraph styles,
   `Timer`, `RunLoop`, and `NSUserActivity`. Compile-time metatype assignments
   make a facade lookalike fail at the framework boundary.
@@ -26,6 +32,21 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
   XML entity to fail closed in the portable parser.
 - Stateful `URLRequest` request metadata used by first-party networking
   boundaries, including case-insensitive HTTP header replacement and lookup.
+- `NSLocking` and an NSObject-backed `NSLock` implemented by the guest
+  `os_unfair_lock` substrate, including nonblocking acquisition, bounded
+  date-based acquisition, names, and throwing `withLock` critical sections.
+- A descriptor-backed synchronous `FileHandle` that performs real libSystem
+  open/read/write/seek/truncate/fsync/close operations, exposes standard and
+  null-device handles, and reports modern throwing write/seek failures instead
+  of turning them into successful no-ops.
+- `Data.range(of:options:in:)` over the real FoundationEssentials `Data`
+  storage, including forward, backward, anchored, and bounded byte searches.
+  Empty needles fail to match, consistent with Darwin Foundation.
+- The narrow CoreFoundation spellings used by SwiftSoup:
+  `CFString`, `CFURL`, and `CFURLCreateWithString`. They bridge directly to the
+  FoundationEssentials `String` and `URL` values, preserve valid percent
+  escapes, encode CFURL-compatible query brackets, and reject other invalid
+  input instead of inventing a URL or loading Apple's CoreFoundation.
 - `DateFormatter`, backed by FoundationEssentials `Calendar` and `TimeZone`.
   It implements Gregorian `G y Y M L d D E e c H k K h m s S a Z X x z`
   pattern fields, quoted literals, English and French month/weekday names, and
@@ -73,4 +94,9 @@ silently discarded. `UserDefaults` does not claim `cfprefsd`, managed-domain,
 NSGlobalDomain, Objective-C KVO, or Apple binary-plist storage compatibility;
 its persistence path and encoding are intentionally project-owned. The public
 value behavior exercised here is useful without pretending those system
-services exist.
+services exist. `FileHandle` is intentionally synchronous and descriptor
+backed; asynchronous readability/writeability handlers and Objective-C
+exception behavior remain outside this slice. The lock slice does not yet
+claim `NSRecursiveLock`, `NSCondition`, or `NSConditionLock`. The CoreFoundation
+surface supports only the nil/default allocator and the URL creation spelling
+above; it is not a general CoreFoundation object model.

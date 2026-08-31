@@ -69,6 +69,74 @@ public struct CharacterSet: Hashable, Sendable {
         ]
     )
 
+    private struct NamedCategorySets {
+        var uppercase = Set<UInt32>()
+        var lowercase = Set<UInt32>()
+        var letters = Set<UInt32>()
+        var alphanumerics = Set<UInt32>()
+        var symbols = Set<UInt32>()
+        var decimalDigits = Set<UInt32>()
+    }
+
+    private static let namedCategorySets: NamedCategorySets = {
+        var result = NamedCategorySets()
+        for value in UInt32(0)...0x10FFFF {
+            guard let scalar = Unicode.Scalar(value) else { continue }
+            switch scalar.properties.generalCategory {
+            case .uppercaseLetter:
+                result.uppercase.insert(value)
+                result.letters.insert(value)
+                result.alphanumerics.insert(value)
+            case .titlecaseLetter:
+                result.uppercase.insert(value)
+                result.letters.insert(value)
+                result.alphanumerics.insert(value)
+            case .lowercaseLetter:
+                result.lowercase.insert(value)
+                result.letters.insert(value)
+                result.alphanumerics.insert(value)
+            case .modifierLetter, .otherLetter,
+                 .nonspacingMark, .spacingMark, .enclosingMark:
+                result.letters.insert(value)
+                result.alphanumerics.insert(value)
+            case .decimalNumber:
+                result.decimalDigits.insert(value)
+                result.alphanumerics.insert(value)
+            case .letterNumber, .otherNumber:
+                result.alphanumerics.insert(value)
+            case .mathSymbol, .currencySymbol, .modifierSymbol, .otherSymbol:
+                result.symbols.insert(value)
+            default:
+                break
+            }
+        }
+        return result
+    }()
+
+    public static var uppercaseLetters: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.uppercase)
+    }
+
+    public static var lowercaseLetters: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.lowercase)
+    }
+
+    public static var letters: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.letters)
+    }
+
+    public static var alphanumerics: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.alphanumerics)
+    }
+
+    public static var symbols: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.symbols)
+    }
+
+    public static var decimalDigits: CharacterSet {
+        CharacterSet(scalarValues: namedCategorySets.decimalDigits)
+    }
+
     // These inventories are the RFC 3986 character groups used by Darwin
     // Foundation's URL component sets. They are intentionally explicit: the
     // encoder below operates on Unicode scalars and must not inherit a host

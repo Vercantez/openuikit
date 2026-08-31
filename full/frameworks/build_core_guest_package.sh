@@ -66,7 +66,7 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=8
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=18
+EXPECTED_FOUNDATION_SOURCE_COUNT=22
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
@@ -935,7 +935,8 @@ echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
-    "$W/full/frameworks/CoreGuestPackageProbe.swift"
+    "$W/full/frameworks/CoreGuestPackageProbe.swift" \
+    "$W/full/frameworks/FoundationHackersCompatibilityProbe.swift"
 PROBE_LINK_EXTRA=()
 [ "$PREVIEW_ENABLED" -eq 0 ] \
     || PROBE_LINK_EXTRA+=("$STAGE/objects/developertoolsupport.o")
@@ -1013,7 +1014,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,data-search,cfurl,reexports intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'

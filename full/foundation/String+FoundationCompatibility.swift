@@ -15,6 +15,15 @@ public extension String {
         self = aString
     }
 
+    /// Returns the Unicode NFC representation used by Foundation's legacy
+    /// NSString overlay.  The Swift runtime already owns the normalization
+    /// tables; using its NFC code-unit view keeps this implementation complete
+    /// across Unicode versions instead of baking a partial composition table
+    /// into the guest facade.
+    var precomposedStringWithCanonicalMapping: String {
+        String(decoding: _nfcCodeUnits, as: UTF8.self)
+    }
+
     var lastPathComponent: String {
         URL(fileURLWithPath: self).lastPathComponent
     }
@@ -138,6 +147,21 @@ public extension String {
         return transformedLeft < transformedRight ? .orderedAscending : .orderedDescending
     }
 
+    /// Compares two strings without case distinctions.
+    func caseInsensitiveCompare(_ aString: String) -> ComparisonResult {
+        compare(aString, options: .caseInsensitive)
+    }
+
+    /// Replaces one range expressed in native String indices.
+    func replacingCharacters(
+        in range: Range<Index>,
+        with replacement: String
+    ) -> String {
+        var result = self
+        result.replaceSubrange(range, with: replacement)
+        return result
+    }
+
     /// Returns a copy with all non-overlapping matches replaced.
     func replacingOccurrences(
         of target: String,
@@ -235,6 +259,16 @@ public extension String {
         return String(validating: output, as: UTF8.self)
     }
 
+    /// Encodes the receiver and appends the terminating NUL expected by C
+    /// APIs. FoundationEssentials supplies the actual encoding conversion;
+    /// this facade only restores Foundation's array-shaped convenience.
+    func cString(using encoding: String.Encoding) -> [CChar]? {
+        guard let encoded = data(using: encoding) else { return nil }
+        var result = encoded.map { CChar(bitPattern: $0) }
+        result.append(0)
+        return result
+    }
+
     /// Foundation's formatting initializer. The guest accepts `Any` arguments
     /// because the standalone Swift standard library does not give `String` a
     /// `CVarArg` conformance. This preserves unchanged Swift call sites and
@@ -242,6 +276,15 @@ public extension String {
     /// and unsigned integer, hexadecimal, and floating-point conversions.
     init(format: String, _ arguments: Any...) {
         self = _foundationGuestFormat(format, arguments: arguments)
+    }
+}
+
+public extension Substring {
+    /// Foundation's trimming convenience is available on string slices at
+    /// unchanged call sites. The returned value is an owning String, matching
+    /// Darwin Foundation.
+    func trimmingCharacters(in set: CharacterSet) -> String {
+        String(self).trimmingCharacters(in: set)
     }
 }
 

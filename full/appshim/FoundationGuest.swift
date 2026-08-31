@@ -5,6 +5,8 @@
 // umbrella remains future work.
 @_exported import FoundationEssentials
 @_exported import Combine
+@_exported import OpenCoreGraphics
+@_exported import os
 import OpenUIKit
 
 public typealias NSCoder = OpenUIKit.NSCoder

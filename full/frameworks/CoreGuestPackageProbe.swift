@@ -138,6 +138,13 @@ struct CoreGuestPackageProbe {
             "system": CommandLine.arguments[2],
             "bold": CommandLine.arguments[3],
         ]
+        let foundationCompatibility = runFoundationHackersCompatibilityProbe(
+            resourceRoot: CommandLine.arguments[1]
+        )
+        precondition(
+            foundationCompatibility ==
+                "locks,filehandle,characters,strings,data-search,cfurl,reexports"
+        )
 
         let foundationNotification: Foundation.Notification.Type =
             Foundation.Notification.self
@@ -351,6 +358,7 @@ struct CoreGuestPackageProbe {
             "CORE_GUEST_PACKAGE_MACHO_OK "
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
+                + "foundation=\(foundationCompatibility) "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=fail-closed-7 "
                 + "webkit=engine-unavailable preview=\(preview)"

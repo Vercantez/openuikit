@@ -16,6 +16,10 @@ EXPECTED = [
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
     "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
+    "full/foundation/NSLock.swift",
+    "full/foundation/FileHandle.swift",
+    "full/foundation/Data+Searching.swift",
+    "full/foundation/CoreFoundationCompatibility.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
@@ -47,7 +51,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 18', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 22', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -78,6 +82,66 @@ class FoundationGuestServicesTests(unittest.TestCase):
         self.assertIn("case data(Data)", source)
         self.assertIn("case date(Date)", source)
         self.assertNotIn("static var storage", source)
+
+    def test_hackers_frontier_uses_real_lock_file_and_reexport_surfaces(self) -> None:
+        umbrella = (ROOT / "full/appshim/FoundationGuest.swift").read_text()
+        lock = (ROOT / "full/foundation/NSLock.swift").read_text()
+        file_handle = (ROOT / "full/foundation/FileHandle.swift").read_text()
+        data_search = (ROOT / "full/foundation/Data+Searching.swift").read_text()
+        core_foundation = (
+            ROOT / "full/foundation/CoreFoundationCompatibility.swift"
+        ).read_text()
+        character_set = (ROOT / "full/foundation/CharacterSet.swift").read_text()
+        self.assertIn("@_exported import OpenCoreGraphics", umbrella)
+        self.assertIn("@_exported import os", umbrella)
+        for token in (
+            "public protocol NSLocking",
+            "public final class NSLock",
+            "os_unfair_lock_lock(&storage)",
+            "os_unfair_lock_trylock(&storage)",
+            "func withLock<Result>",
+        ):
+            self.assertIn(token, lock)
+        for token in (
+            "public final class FileHandle",
+            "Darwin.open",
+            "Darwin.read",
+            "Darwin.write",
+            "Darwin.lseek",
+            "Darwin.fsync",
+            "Darwin.close",
+        ):
+            self.assertIn(token, file_handle)
+        for name in (
+            "uppercaseLetters",
+            "lowercaseLetters",
+            "letters",
+            "alphanumerics",
+            "symbols",
+            "decimalDigits",
+        ):
+            self.assertIn(f"public static var {name}", character_set)
+        for token in (
+            "public extension Data",
+            "public extension Data.SearchOptions",
+            "static let backwards",
+            "static let anchored",
+            "options: Data.SearchOptions = []",
+            "func range(",
+            "elementsEqual(dataToFind)",
+            "guard !dataToFind.isEmpty",
+        ):
+            self.assertIn(token, data_search)
+        for token in (
+            "public typealias CFString = String",
+            "public typealias CFURL = URL",
+            "public func CFURLCreateWithString(",
+            "encodingInvalidCharacters: false",
+            "return URL(string: normalized, relativeTo: baseURL)",
+            "else { return nil }",
+        ):
+            self.assertIn(token, core_foundation)
+        self.assertNotIn("import CoreFoundation", core_foundation)
 
     def test_url_loading_boundary_is_metadata_only_and_case_insensitive(self) -> None:
         source = (ROOT / "full/foundation/URLLoading.swift").read_text()
