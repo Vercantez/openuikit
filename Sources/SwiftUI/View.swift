@@ -186,6 +186,7 @@ fileprivate enum _OpenViewModifier {
     case disabled(Bool)
     case accessibilityHidden(Bool)
     case onChange(@MainActor () -> Void)
+    case animation(@MainActor () -> Void)
     case onReceive(@MainActor () -> Void)
     case task(@MainActor () -> Void)
 
@@ -247,6 +248,9 @@ fileprivate enum _OpenViewModifier {
         case .accessibilityHidden(let hidden): return .accessibilityHidden(hidden)
         case .onChange(let install):
             _OpenGraphContext.withStructuralScope(.onChange) { install() }
+            return .effect
+        case .animation(let install):
+            _OpenGraphContext.withStructuralScope(.animation) { install() }
             return .effect
         case .onReceive(let install):
             _OpenGraphContext.withStructuralScope(.onReceive) { install() }
@@ -462,6 +466,78 @@ public struct _OpenGroup<Content: _OpenView>: _OpenView {
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenGraphContext.withStructuralScope(.groupContent) {
             content._makeOpenUIKitNode()
+        }
+    }
+}
+
+/// A value-keyed environment scope. It is transparent to layout while the
+/// graph prepares every DynamicProperty below it from the scoped value copy.
+public struct _OpenEnvironmentValueContent<Content: _OpenView, Value>: _OpenView {
+    public typealias Body = Never
+    let content: Content
+    let keyPath: WritableKeyPath<EnvironmentValues, Value>
+    let value: Value
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withStructuralScope(.environmentContent) {
+            _OpenGraphContext.withEnvironment(keyPath, value: value) {
+                content._makeOpenUIKitNode()
+            }
+        }
+    }
+}
+
+/// Type-keyed environment injection used by Observation-backed application
+/// services. Nested scopes restore the exact parent object table on exit.
+public struct _OpenEnvironmentObjectContent<Content: _OpenView, Object: AnyObject>:
+    _OpenView
+{
+    public typealias Body = Never
+    let content: Content
+    let object: Object
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withStructuralScope(.environmentObjectContent) {
+            _OpenGraphContext.withEnvironmentObject(object) {
+                content._makeOpenUIKitNode()
+            }
+        }
+    }
+}
+
+public struct _OpenDisabledContent<Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    let content: Content
+    let disabled: Bool
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withStructuralScope(.disabledContent) {
+            let parentIsEnabled = _OpenGraphContext.environmentValue(\.isEnabled)
+            let node = _OpenGraphContext.withEnvironment(
+                \EnvironmentValues.isEnabled,
+                value: parentIsEnabled && !disabled
+            ) {
+                content._makeOpenUIKitNode()
+            }
+            return _OpenViewNode(.modified(node, .disabled(disabled)))
+        }
+    }
+}
+
+public struct _OpenColorSchemeContent<Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    let content: Content
+    let colorScheme: ColorScheme
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withStructuralScope(.colorSchemeContent) {
+            let node = _OpenGraphContext.withEnvironment(
+                \EnvironmentValues.colorScheme,
+                value: colorScheme
+            ) {
+                content._makeOpenUIKitNode()
+            }
+            return _OpenViewNode(.modified(node, .colorScheme(colorScheme)))
         }
     }
 }
@@ -862,6 +938,21 @@ public struct _OpenModifiedContent<Content: _OpenView>: _OpenView {
 }
 
 public extension _OpenView {
+    func environment<Value>(
+        _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
+        _ value: Value
+    ) -> some _OpenView {
+        _OpenEnvironmentValueContent(
+            content: self,
+            keyPath: keyPath,
+            value: value
+        )
+    }
+
+    func environment<Object: AnyObject>(_ object: Object) -> some _OpenView {
+        _OpenEnvironmentObjectContent(content: self, object: object)
+    }
+
     func font(_ font: Font?) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .font(font))
     }
@@ -989,7 +1080,7 @@ public extension _OpenView {
     }
 
     func colorScheme(_ colorScheme: ColorScheme) -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .colorScheme(colorScheme))
+        _OpenColorSchemeContent(content: self, colorScheme: colorScheme)
     }
 
     func ignoresSafeArea() -> some _OpenView {
@@ -1041,7 +1132,7 @@ public extension _OpenView {
     }
 
     func disabled(_ disabled: Bool) -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .disabled(disabled))
+        _OpenDisabledContent(content: self, disabled: disabled)
     }
 
     func accessibilityHidden(_ hidden: Bool) -> some _OpenView {
@@ -1059,6 +1150,18 @@ public extension _OpenView {
             content: self,
             modification: .onChange {
                 _OpenGraphContext.trackChange(value, action: action)
+            }
+        )
+    }
+
+    func animation<Value: Equatable>(
+        _ animation: Animation?,
+        value: Value
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .animation {
+                _OpenGraphContext.trackAnimation(animation, value: value)
             }
         )
     }

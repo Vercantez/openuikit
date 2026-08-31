@@ -324,10 +324,106 @@ public extension _OpenUIViewControllerRepresentable where Coordinator == Void {
     func makeCoordinator() {}
 }
 
+/// A portable SwiftUI animation transaction.  The value is intentionally
+/// independent of Core Animation: the OpenUIKit host translates it into the
+/// same deterministic UIView animation clock used by UIKit transitions.
+public struct _OpenAnimation: Hashable, Sendable {
+    enum Storage: Hashable, Sendable {
+        case cubic(
+            c1x: Double,
+            c1y: Double,
+            c2x: Double,
+            c2y: Double,
+            duration: Double
+        )
+        case spring(response: Double, dampingFraction: Double, blendDuration: Double)
+    }
+
+    let storage: Storage
+
+    private init(storage: Storage) {
+        self.storage = storage
+    }
+
+    public static let `default` = easeInOut(duration: 0.35)
+    public static let linear = linear(duration: 0.35)
+    public static let easeIn = easeIn(duration: 0.35)
+    public static let easeOut = easeOut(duration: 0.35)
+    public static let easeInOut = easeInOut(duration: 0.35)
+
+    public static func linear(duration: Double) -> _OpenAnimation {
+        timingCurve(0, 0, 1, 1, duration: duration)
+    }
+
+    public static func easeIn(duration: Double) -> _OpenAnimation {
+        timingCurve(0.42, 0, 1, 1, duration: duration)
+    }
+
+    public static func easeOut(duration: Double) -> _OpenAnimation {
+        timingCurve(0, 0, 0.58, 1, duration: duration)
+    }
+
+    public static func easeInOut(duration: Double) -> _OpenAnimation {
+        timingCurve(0.42, 0, 0.58, 1, duration: duration)
+    }
+
+    public static func timingCurve(
+        _ c1x: Double,
+        _ c1y: Double,
+        _ c2x: Double,
+        _ c2y: Double,
+        duration: Double = 0.35
+    ) -> _OpenAnimation {
+        _OpenAnimation(
+            storage: .cubic(
+                c1x: c1x,
+                c1y: c1y,
+                c2x: c2x,
+                c2y: c2y,
+                duration: max(0, duration)
+            )
+        )
+    }
+
+    public static func spring(
+        response: Double = 0.55,
+        dampingFraction: Double = 0.825,
+        blendDuration: Double = 0
+    ) -> _OpenAnimation {
+        _OpenAnimation(
+            storage: .spring(
+                response: max(0, response),
+                dampingFraction: min(max(0, dampingFraction), 1),
+                blendDuration: max(0, blendDuration)
+            )
+        )
+    }
+}
+
+public typealias Animation = _OpenAnimation
+
+@MainActor
+enum _OpenAnimationContext {
+    static var current: Animation?
+
+    static func withAnimation<Result>(
+        _ animation: Animation?,
+        operation: () throws -> Result
+    ) rethrows -> Result {
+        let previous = current
+        current = animation
+        defer { current = previous }
+        return try operation()
+    }
+}
+
 @MainActor
 @discardableResult
-public func withAnimation<Result>(_ body: () throws -> Result) rethrows -> Result {
-    try body()
+public func withAnimation<Result>(
+    _ animation: Animation? = .default,
+    _ body: () throws -> Result
+) rethrows -> Result {
+    try _OpenAnimationContext.withAnimation(animation, operation: body)
 }
 
 @MainActor

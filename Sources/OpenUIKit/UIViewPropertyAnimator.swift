@@ -17,6 +17,26 @@ public enum UIViewAnimatingState: Int, Sendable {
 public protocol UITimingCurveProvider: AnyObject {}
 
 @preconcurrency @MainActor
+public final class UICubicTimingParameters: UITimingCurveProvider {
+    public let controlPoint1: CGPoint
+    public let controlPoint2: CGPoint
+
+    public init(controlPoint1: CGPoint, controlPoint2: CGPoint) {
+        self.controlPoint1 = controlPoint1
+        self.controlPoint2 = controlPoint2
+    }
+
+    var _openUIKitTiming: UIViewAnimation.Timing {
+        .curve(
+            c1x: controlPoint1.x,
+            c1y: controlPoint1.y,
+            c2x: controlPoint2.x,
+            c2y: controlPoint2.y
+        )
+    }
+}
+
+@preconcurrency @MainActor
 public final class UISpringTimingParameters: UITimingCurveProvider {
     public let dampingRatio: CGFloat
     public let initialVelocity: CGVector
@@ -62,8 +82,13 @@ open class UIViewPropertyAnimator {
 
     public init(duration: TimeInterval, timingParameters parameters: UITimingCurveProvider) {
         self.duration = max(0, duration)
-        timing = (parameters as? UISpringTimingParameters)?._openUIKitTiming
-            ?? .curve(c1x: 0.42, c1y: 0, c2x: 0.58, c2y: 1)
+        if let spring = parameters as? UISpringTimingParameters {
+            timing = spring._openUIKitTiming
+        } else if let cubic = parameters as? UICubicTimingParameters {
+            timing = cubic._openUIKitTiming
+        } else {
+            timing = .curve(c1x: 0.42, c1y: 0, c2x: 0.58, c2y: 1)
+        }
     }
 
     /// Queue work for the transaction. Blocks added before start execute

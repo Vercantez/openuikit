@@ -7,6 +7,11 @@
 
 @_exported import Combine
 import OpenUIKit
+#if canImport(Foundation)
+import struct Foundation.URL
+#elseif canImport(FoundationEssentials)
+import struct FoundationEssentials.URL
+#endif
 
 /// Owns one host-clock delivery without retaining its Timer. The timer clears
 /// its schedule before entering this object, and `take()` clears the action
@@ -268,6 +273,329 @@ public struct _OpenObservedObject<ObjectType>: _OpenDynamicProperty, _OpenGraphP
 public typealias ObservedObject<ObjectType> = _OpenObservedObject<ObjectType>
     where ObjectType: Combine.ObservableObject
 
+/// A graph-owned observable object. Its initializer is evaluated once for the
+/// source value, while the first object mounted at a stable structural and
+/// property path becomes authoritative until that location leaves the graph.
+@propertyWrapper
+public struct _OpenStateObject<ObjectType>: _OpenDynamicProperty, _OpenGraphProperty
+    where ObjectType: Combine.ObservableObject
+{
+    private let seed: _OpenStateSeed<ObjectType>
+    private var graphStorage: _OpenStateStorage<ObjectType>?
+
+    public init(wrappedValue thunk: @autoclosure @escaping () -> ObjectType) {
+        seed = _OpenStateSeed(thunk())
+        graphStorage = nil
+    }
+
+    public init(initialValue thunk: @autoclosure @escaping () -> ObjectType) {
+        seed = _OpenStateSeed(thunk())
+        graphStorage = nil
+    }
+
+    public var wrappedValue: ObjectType {
+        graphStorage?.value ?? seed.localStorage.value
+    }
+
+    public var projectedValue: _OpenObservedObject<ObjectType>.Wrapper {
+        _OpenObservedObject<ObjectType>.Wrapper(wrappedValue)
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        let storage = graph.stateStorage(
+            propertyPath: propertyPath,
+            initialValue: seed.initialValue
+        )
+        graphStorage = storage
+        graph.observe(storage.value)
+    }
+}
+
+public typealias StateObject<ObjectType> = _OpenStateObject<ObjectType>
+    where ObjectType: Combine.ObservableObject
+
+/// Bindable reference projection for Observation-backed application models.
+/// Observation invalidation is a separate runtime boundary; this wrapper owns
+/// the source-compatible writable bindings without copying the model.
+@dynamicMemberLookup
+@propertyWrapper
+public struct _OpenBindable<ObjectType: AnyObject>: _OpenDynamicProperty {
+    @dynamicMemberLookup
+    public struct Wrapper {
+        private let object: ObjectType
+
+        fileprivate init(_ object: ObjectType) {
+            self.object = object
+        }
+
+        public subscript<Subject>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, Subject>
+        ) -> _OpenBinding<Subject> {
+            _OpenBinding(
+                get: { object[keyPath: keyPath] },
+                set: { object[keyPath: keyPath] = $0 }
+            )
+        }
+    }
+
+    private let object: ObjectType
+
+    public init(wrappedValue: ObjectType) {
+        object = wrappedValue
+    }
+
+    public var wrappedValue: ObjectType { object }
+    public var projectedValue: Wrapper { Wrapper(object) }
+
+    public subscript<Subject>(
+        dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, Subject>
+    ) -> Subject {
+        get { object[keyPath: keyPath] }
+        nonmutating set { object[keyPath: keyPath] = newValue }
+    }
+}
+
+public typealias Bindable<ObjectType> = _OpenBindable<ObjectType>
+    where ObjectType: AnyObject
+
+/// Graph-stable storage selected by an application preference key. The value
+/// participates in SwiftUI invalidation immediately; the platform Foundation
+/// facade can later bind the same key to durable UserDefaults without changing
+/// the source-facing wrapper or graph identity.
+@propertyWrapper
+public struct _OpenAppStorage<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    private let seed: _OpenStateSeed<Value>
+    private var graphStorage: _OpenStateStorage<Value>?
+    public let key: String
+
+    public init(wrappedValue: Value, _ key: String) {
+        seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
+        self.key = key
+    }
+
+    public var wrappedValue: Value {
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
+    }
+
+    public var projectedValue: Binding<Value> {
+        let storage = storage
+        return Binding(
+            get: { storage.value },
+            set: { storage.set($0) }
+        )
+    }
+
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        _ = propertyPath
+        graphStorage = graph.appStorageStorage(
+            key: key,
+            initialValue: seed.initialValue
+        )
+    }
+}
+
+public typealias AppStorage<Value> = _OpenAppStorage<Value>
+
+public protocol _OpenEnvironmentKey {
+    associatedtype Value
+    static var defaultValue: Value { get }
+}
+
+public typealias EnvironmentKey = _OpenEnvironmentKey
+
+public struct _OpenDismissAction: Sendable {
+    private let action: @MainActor @Sendable () -> Void
+
+    public init(_ action: @escaping @MainActor @Sendable () -> Void = {}) {
+        self.action = action
+    }
+
+    @MainActor
+    public func callAsFunction() {
+        action()
+    }
+}
+
+public typealias DismissAction = _OpenDismissAction
+
+public struct _OpenOpenURLAction: Sendable {
+    public enum Result: Sendable {
+        case handled
+        case discarded
+        case systemAction
+    }
+
+    private let handler: @MainActor @Sendable (URL) -> Result
+
+    public init(handler: @escaping @MainActor @Sendable (URL) -> Result) {
+        self.handler = handler
+    }
+
+    @MainActor
+    @discardableResult
+    public func callAsFunction(_ url: URL) -> Result {
+        handler(url)
+    }
+}
+
+public typealias OpenURLAction = _OpenOpenURLAction
+
+private enum _OpenColorSchemeEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = ColorScheme.light
+}
+
+private enum _OpenEnabledEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = true
+}
+
+private enum _OpenReduceMotionEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = false
+}
+
+private enum _OpenDisplayScaleEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue: CGFloat = 1
+}
+
+private enum _OpenDismissEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = DismissAction()
+}
+
+private enum _OpenOpenURLEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = OpenURLAction(handler: { _ in .systemAction })
+}
+
+/// Type-erased environment storage with SwiftUI's public custom-key contract.
+/// Copies form nested value scopes; reference-typed environment objects retain
+/// their identity in a separate type-indexed table.
+public struct _OpenEnvironmentValues {
+    private var keyedValues: [ObjectIdentifier: Any] = [:]
+    private var typedObjects: [ObjectIdentifier: AnyObject] = [:]
+
+    public init() {}
+
+    public subscript<Key: EnvironmentKey>(_ key: Key.Type) -> Key.Value {
+        get {
+            keyedValues[ObjectIdentifier(key)] as? Key.Value ?? key.defaultValue
+        }
+        set {
+            keyedValues[ObjectIdentifier(key)] = newValue
+        }
+    }
+
+    public var colorScheme: ColorScheme {
+        get { self[_OpenColorSchemeEnvironmentKey.self] }
+        set { self[_OpenColorSchemeEnvironmentKey.self] = newValue }
+    }
+
+    public var isEnabled: Bool {
+        get { self[_OpenEnabledEnvironmentKey.self] }
+        set { self[_OpenEnabledEnvironmentKey.self] = newValue }
+    }
+
+    public var accessibilityReduceMotion: Bool {
+        get { self[_OpenReduceMotionEnvironmentKey.self] }
+        set { self[_OpenReduceMotionEnvironmentKey.self] = newValue }
+    }
+
+    public var displayScale: CGFloat {
+        get { self[_OpenDisplayScaleEnvironmentKey.self] }
+        set { self[_OpenDisplayScaleEnvironmentKey.self] = newValue }
+    }
+
+    public var dismiss: DismissAction {
+        get { self[_OpenDismissEnvironmentKey.self] }
+        set { self[_OpenDismissEnvironmentKey.self] = newValue }
+    }
+
+    public var openURL: OpenURLAction {
+        get { self[_OpenOpenURLEnvironmentKey.self] }
+        set { self[_OpenOpenURLEnvironmentKey.self] = newValue }
+    }
+
+    fileprivate mutating func setObject<Object: AnyObject>(_ object: Object) {
+        typedObjects[ObjectIdentifier(Object.self)] = object
+    }
+
+    fileprivate func object<Object: AnyObject>(ofType type: Object.Type) -> Object? {
+        typedObjects[ObjectIdentifier(type)] as? Object
+    }
+}
+
+public typealias EnvironmentValues = _OpenEnvironmentValues
+
+private enum _OpenEnvironmentResolution<Value> {
+    case unresolved
+    case resolved(Value)
+}
+
+@propertyWrapper
+public struct _OpenEnvironment<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    private enum Source {
+        case keyPath(KeyPath<EnvironmentValues, Value>)
+        case object((EnvironmentValues) -> Value?)
+    }
+
+    private let source: Source
+    private var resolution: _OpenEnvironmentResolution<Value>
+
+    public init(_ keyPath: KeyPath<EnvironmentValues, Value>) {
+        source = .keyPath(keyPath)
+        resolution = .resolved(EnvironmentValues()[keyPath: keyPath])
+    }
+
+    public init(_ objectType: Value.Type) where Value: AnyObject {
+        source = .object { values in
+            values.object(ofType: objectType)
+        }
+        resolution = .unresolved
+    }
+
+    public var wrappedValue: Value {
+        switch resolution {
+        case .resolved(let value): return value
+        case .unresolved:
+            preconditionFailure(
+                "No observable object of type \(Value.self) was found in the SwiftUI environment"
+            )
+        }
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        _ = propertyPath
+        switch source {
+        case .keyPath(let keyPath):
+            resolution = .resolved(graph.environmentValues[keyPath: keyPath])
+        case .object(let resolve):
+            guard let object = resolve(graph.environmentValues) else {
+                preconditionFailure(
+                    "No observable object of type \(Value.self) was found in the SwiftUI environment"
+                )
+            }
+            resolution = .resolved(object)
+        }
+    }
+}
+
+public typealias Environment<Value> = _OpenEnvironment<Value>
+
 @MainActor
 private final class _OpenObservationEntry {
     let cancellation: AnyCancellable
@@ -287,6 +615,10 @@ enum _OpenGraphStructuralScope: Hashable {
     case conditionalFalse
     case arrayElement(Int)
     case groupContent
+    case environmentContent
+    case environmentObjectContent
+    case disabledContent
+    case colorSchemeContent
     case hStackContent
     case vStackContent
     case zStackContent
@@ -311,6 +643,7 @@ enum _OpenGraphStructuralScope: Hashable {
     case toolbar
     case onAppear
     case onChange
+    case animation
     case onReceive
     case task
 }
@@ -323,6 +656,11 @@ private enum _OpenGraphPathComponent: Hashable {
 private struct _OpenStateKey: Hashable {
     let viewPath: [_OpenGraphPathComponent]
     let propertyPath: [_OpenPropertyPathComponent]
+    let valueType: ObjectIdentifier
+}
+
+private struct _OpenAppStorageKey: Hashable {
+    let key: String
     let valueType: ObjectIdentifier
 }
 
@@ -506,6 +844,7 @@ private final class _OpenRepresentedViewEntry<ViewType: UIView, Coordinator>:
 
 private enum _OpenEffectKind: Hashable {
     case change
+    case animation
     case subscription
     case task
 }
@@ -570,7 +909,9 @@ private final class _OpenGraphInvalidationToken {}
 @MainActor
 final class _OpenGraphHost {
     private var path: [_OpenGraphPathComponent] = []
+    fileprivate var environmentValues = EnvironmentValues()
     private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
+    private var appStorage: [_OpenAppStorageKey: any _OpenAnyStateStorage] = [:]
     private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
     private var representedControllers: [
         _OpenRepresentedControllerKey: any _OpenAnyRepresentedControllerEntry
@@ -589,8 +930,10 @@ final class _OpenGraphHost {
     private var postEvaluationActions: [@MainActor () -> Void] = []
     private var isEvaluating = false
     private var pendingInvalidationToken: _OpenGraphInvalidationToken?
+    private var pendingAnimation: Animation?
+    private(set) var evaluationAnimation: Animation?
 
-    var invalidate: (@MainActor () -> Void)?
+    var invalidate: (@MainActor (Animation?) -> Void)?
     private(set) var renderCount = 0
     private(set) var invalidationCount = 0
 
@@ -622,6 +965,7 @@ final class _OpenGraphHost {
         // again, the new graph receives a distinct next-turn token which the
         // already-enqueued callback cannot steal.
         pendingInvalidationToken = nil
+        pendingAnimation = nil
         activeStateKeys.removeAll(keepingCapacity: true)
         activeObservationKeys.removeAll(keepingCapacity: true)
         activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
@@ -631,6 +975,8 @@ final class _OpenGraphHost {
         activeTaskKeys.removeAll(keepingCapacity: true)
         postEvaluationActions.removeAll(keepingCapacity: true)
         path.removeAll(keepingCapacity: true)
+        environmentValues = EnvironmentValues()
+        evaluationAnimation = nil
         renderCount += 1
 
         let node = _OpenGraphContext.withHost(self) {
@@ -708,6 +1054,27 @@ final class _OpenGraphHost {
         operation: () -> Result
     ) -> Result {
         withPath(.structural(scope), operation: operation)
+    }
+
+    func withEnvironment<Value, Result>(
+        _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
+        value: Value,
+        operation: () -> Result
+    ) -> Result {
+        let previous = environmentValues
+        environmentValues[keyPath: keyPath] = value
+        defer { environmentValues = previous }
+        return operation()
+    }
+
+    func withEnvironmentObject<Object: AnyObject, Result>(
+        _ object: Object,
+        operation: () -> Result
+    ) -> Result {
+        let previous = environmentValues
+        environmentValues.setObject(object)
+        defer { environmentValues = previous }
+        return operation()
     }
 
     func currentIdentity() -> _OpenGraphIdentity {
@@ -1042,10 +1409,33 @@ final class _OpenGraphHost {
         return storage
     }
 
+    fileprivate func appStorageStorage<Value>(
+        key: String,
+        initialValue: Value
+    ) -> _OpenStateStorage<Value> {
+        let storageKey = _OpenAppStorageKey(
+            key: key,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        if let existing = appStorage[storageKey] {
+            guard let typed = existing as? _OpenStateStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI AppStorage value type changed for key \(key)"
+                )
+            }
+            attach(typed)
+            return typed
+        }
+        let storage = _OpenStateStorage(value: initialValue)
+        attach(storage)
+        appStorage[storageKey] = storage
+        return storage
+    }
+
     private func attach<Value>(_ storage: _OpenStateStorage<Value>) {
         storage.invalidateMountedGraph = { [weak self] in
             MainActor.assumeIsolated {
-                self?.scheduleInvalidation()
+                self?.scheduleInvalidation(animation: _OpenAnimationContext.current)
             }
         }
     }
@@ -1062,7 +1452,7 @@ final class _OpenGraphHost {
             // Like OpenUIKit target/action, this is an asserted boundary: an
             // off-main publication traps instead of racing the mounted tree.
             MainActor.assumeIsolated {
-                self?.scheduleInvalidation()
+                self?.scheduleInvalidation(animation: _OpenAnimationContext.current)
             }
         }
         observations[key] = _OpenObservationEntry(cancellation)
@@ -1087,6 +1477,30 @@ final class _OpenGraphHost {
             guard storage.value != value else { return }
             storage.value = value
             enqueueEffect { action(value) }
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
+    fileprivate func trackAnimation<Value: Equatable>(
+        _ animation: Animation?,
+        value: Value
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .animation,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI animation value type changed at a stable structural location"
+                )
+            }
+            guard storage.value != value else { return }
+            storage.value = value
+            evaluationAnimation = animation
         } else {
             changeValues[key] = _OpenChangeStorage(value)
         }
@@ -1216,15 +1630,23 @@ final class _OpenGraphHost {
         return entry.typedView
     }
 
-    fileprivate func scheduleInvalidation() {
+    fileprivate func scheduleInvalidation(animation: Animation? = nil) {
+        // Coalesced writes keep the most recent explicit animation rather than
+        // losing it merely because a non-animated write queued the UI turn
+        // first.  The transaction is consumed exactly once with that turn.
+        if let animation {
+            pendingAnimation = animation
+        }
         guard pendingInvalidationToken == nil else { return }
         let token = _OpenGraphInvalidationToken()
         pendingInvalidationToken = token
         _OpenInvalidationScheduler.enqueue { [weak self] in
             guard let self, self.pendingInvalidationToken === token else { return }
             self.pendingInvalidationToken = nil
+            let animation = self.pendingAnimation
+            self.pendingAnimation = nil
             self.invalidationCount += 1
-            self.invalidate?()
+            self.invalidate?(animation)
         }
     }
 }
@@ -1256,8 +1678,43 @@ enum _OpenGraphContext {
         return currentHost.withStructuralScope(scope, operation: operation)
     }
 
+    static func withEnvironment<Value, Result>(
+        _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
+        value: Value,
+        operation: () -> Result
+    ) -> Result {
+        guard let currentHost else { return operation() }
+        return currentHost.withEnvironment(
+            keyPath,
+            value: value,
+            operation: operation
+        )
+    }
+
+    static func withEnvironmentObject<Object: AnyObject, Result>(
+        _ object: Object,
+        operation: () -> Result
+    ) -> Result {
+        guard let currentHost else { return operation() }
+        return currentHost.withEnvironmentObject(object, operation: operation)
+    }
+
+    static func environmentValue<Value>(
+        _ keyPath: KeyPath<EnvironmentValues, Value>
+    ) -> Value {
+        currentHost?.environmentValues[keyPath: keyPath]
+            ?? EnvironmentValues()[keyPath: keyPath]
+    }
+
     static func currentIdentity() -> _OpenGraphIdentity? {
         currentHost?.currentIdentity()
+    }
+
+    static func trackAnimation<Value: Equatable>(
+        _ animation: Animation?,
+        value: Value
+    ) {
+        currentHost?.trackAnimation(animation, value: value)
     }
 
     static func representedController<Controller: UIViewController, Coordinator>(

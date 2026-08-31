@@ -462,6 +462,18 @@ final class SwiftUIOnboardingTests: XCTestCase {
         }
         XCTAssertEqual(animationResult, 7)
         XCTAssertEqual(returned, 11)
+
+        let outer = Animation.easeInOut(duration: 0.2)
+        let inner = Animation.spring(response: 0.4, dampingFraction: 0.8)
+        withAnimation(outer) {
+            XCTAssertEqual(_OpenAnimationContext.current, outer)
+            withAnimation(inner) {
+                XCTAssertEqual(_OpenAnimationContext.current, inner)
+            }
+            XCTAssertEqual(_OpenAnimationContext.current, outer)
+        }
+        XCTAssertNil(_OpenAnimationContext.current)
+        XCTAssertNotEqual(outer, inner)
     }
 
     func testScrollViewUsesContentGeometryAndLongBuilderOrder() throws {

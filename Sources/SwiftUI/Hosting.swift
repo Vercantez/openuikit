@@ -3,6 +3,34 @@ import Foundation
 #endif
 import OpenUIKit
 
+@MainActor
+private extension Animation {
+    func performOpenUIKitTransaction(_ updates: @escaping () -> Void) {
+        switch storage {
+        case .cubic(let c1x, let c1y, let c2x, let c2y, let duration):
+            let timing = UICubicTimingParameters(
+                controlPoint1: CGPoint(x: CGFloat(c1x), y: CGFloat(c1y)),
+                controlPoint2: CGPoint(x: CGFloat(c2x), y: CGFloat(c2y))
+            )
+            let animator = UIViewPropertyAnimator(
+                duration: duration,
+                timingParameters: timing
+            )
+            animator.addAnimations(updates)
+            animator.startAnimation()
+        case .spring(let response, let dampingFraction, _):
+            UIView.animate(
+                withDuration: response,
+                delay: 0,
+                usingSpringWithDamping: CGFloat(dampingFraction),
+                initialSpringVelocity: 0,
+                options: [.beginFromCurrentState, .allowUserInteraction],
+                animations: updates
+            )
+        }
+    }
+}
+
 private enum _OpenAppearanceIdentity: Hashable {
     case graph(_OpenGraphIdentity)
     case ephemeral(ObjectIdentifier)
@@ -43,21 +71,27 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     private var hostIsVisible = false
     private var appliedRootNavigationTitle: String?
     private var appliedRootBackButtonHidden = false
+    private var lastAppliedAnimation: Animation?
 
     public var rootView: Content {
         didSet {
             guard viewIfLoaded is _SwiftUIHostingView else { return }
-            install(evaluateRoot())
+            let node = evaluateRoot()
+            install(node, animation: graph.evaluationAnimation)
         }
     }
 
     public init(rootView: Content) {
         self.rootView = rootView
         super.init()
-        graph.invalidate = { [weak self] in
+        graph.invalidate = { [weak self] animation in
             guard let self,
                   self.viewIfLoaded is _SwiftUIHostingView else { return }
-            self.install(self.evaluateRoot())
+            let node = self.evaluateRoot()
+            self.install(
+                node,
+                animation: animation ?? self.graph.evaluationAnimation
+            )
         }
     }
 
@@ -68,7 +102,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
             self?.completeRepresentedControllerMounts()
         }
         view = host
-        install(node)
+        install(node, animation: nil)
     }
 
     private func evaluateRoot() -> _OpenViewNode {
@@ -128,7 +162,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
         deliveredAppearActions.removeAll(keepingCapacity: true)
     }
 
-    private func install(_ node: _OpenViewNode) {
+    private func install(_ node: _OpenViewNode, animation: Animation?) {
         guard let host = viewIfLoaded as? _SwiftUIHostingView else { return }
         let controllers = _openContainedControllers(in: node)
         let nextIdentities = Set(controllers.map(ObjectIdentifier.init))
@@ -157,7 +191,21 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
 
         activeAppearActions = _openAppearanceActions(in: node)
         deliveredAppearActions.formIntersection(activeAppearActions.keys)
-        host.node = node
+        lastAppliedAnimation = animation
+        guard let animation else {
+            host.node = node
+            return
+        }
+
+        // Commit the rebuilt graph through OpenUIKit's deterministic
+        // presentation clock. Existing represented views/controllers retain
+        // identity, and structural layout changes participate in the same
+        // UIView transaction as native UIKit transitions.
+        host.layoutIfNeeded()
+        animation.performOpenUIKitTransaction {
+            host.node = node
+            host.layoutIfNeeded()
+        }
     }
 
     private func completeRepresentedControllerMounts() {
@@ -196,6 +244,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     var _openGraphChangeCount: Int { graph.changeCount }
     var _openGraphSubscriptionCount: Int { graph.subscriptionCount }
     var _openGraphTaskCount: Int { graph.taskCount }
+    var _openGraphLastAppliedAnimation: Animation? { lastAppliedAnimation }
 }
 
 public typealias UIHostingController<Content> = _OpenUIHostingController<Content>

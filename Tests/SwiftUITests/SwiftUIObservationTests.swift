@@ -69,6 +69,107 @@ private struct StateFixture: View {
     }
 }
 
+private struct AnimatedStateFixture: View {
+    @State private var count = 0
+    let animation: Animation
+    let capture: @MainActor (Binding<Int>) -> Void
+
+    var body: some View {
+        capture($count)
+        return Text("animated=\(count)")
+            .animation(animation, value: count)
+    }
+}
+
+private enum TestEnvironmentKey: EnvironmentKey {
+    static let defaultValue = "default"
+}
+
+private extension EnvironmentValues {
+    var testValue: String {
+        get { self[TestEnvironmentKey.self] }
+        set { self[TestEnvironmentKey.self] = newValue }
+    }
+}
+
+private final class EnvironmentService {
+    let identifier: Int
+
+    init(_ identifier: Int) {
+        self.identifier = identifier
+    }
+}
+
+private struct EnvironmentLeaf: View {
+    @Environment(\.testValue) private var value
+    @Environment(EnvironmentService.self) private var service
+    let capture: @MainActor (String, EnvironmentService) -> Void
+
+    var body: some View {
+        capture(value, service)
+        return Text("\(value)=\(service.identifier)")
+    }
+}
+
+private struct EnvironmentFixture: View {
+    let service: EnvironmentService
+    let capture: @MainActor (String, EnvironmentService) -> Void
+
+    var body: some View {
+        VStack {
+            EnvironmentLeaf(capture: capture)
+            EnvironmentLeaf(capture: capture)
+                .environment(\.testValue, "inner")
+        }
+        .environment(\.testValue, "outer")
+        .environment(service)
+    }
+}
+
+private struct BuiltInEnvironmentLeaf: View {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.colorScheme) private var colorScheme
+    let capture: @MainActor (Bool, ColorScheme) -> Void
+
+    var body: some View {
+        capture(isEnabled, colorScheme)
+        return Text("enabled=\(isEnabled),scheme=\(colorScheme)")
+    }
+}
+
+private struct StateObjectFixture: View {
+    @StateObject private var model: ObservationModel
+    let capture: @MainActor (ObservationModel, Binding<Int>) -> Void
+
+    init(
+        model: ObservationModel,
+        capture: @escaping @MainActor (ObservationModel, Binding<Int>) -> Void
+    ) {
+        _model = StateObject(wrappedValue: model)
+        self.capture = capture
+    }
+
+    var body: some View {
+        capture(model, $model.value)
+        return Text("stateObject=\(model.value)")
+    }
+}
+
+private struct AppStorageFixture: View {
+    @AppStorage("shared-test-value") private var first = 1
+    @AppStorage("shared-test-value") private var second = 2
+    let capture: @MainActor (Binding<Int>, Binding<Int>) -> Void
+
+    init(capture: @escaping @MainActor (Binding<Int>, Binding<Int>) -> Void) {
+        self.capture = capture
+    }
+
+    var body: some View {
+        capture($first, $second)
+        return Text("appStorage=\(first)/\(second)")
+    }
+}
+
 private struct StatefulLeaf: View {
     @State private var value: Int
     let name: String
@@ -1278,6 +1379,178 @@ final class SwiftUIObservationTests: XCTestCase {
         // teardown without touching a dead graph.
         newModel.value = 21
         await drainMainActor()
+    }
+
+    func testEnvironmentKeysObjectsAndNestedScopesReachPreparedBodies() throws {
+        let service = EnvironmentService(41)
+        var captured: [(String, EnvironmentService)] = []
+        let controller = UIHostingController(
+            rootView: EnvironmentFixture(service: service) {
+                captured.append(($0, $1))
+            }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 240, height: 80)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(captured.map(\.0), ["outer", "inner"])
+        XCTAssertTrue(captured.allSatisfy { $0.1 === service })
+        XCTAssertEqual(texts(in: host), ["outer=41", "inner=41"])
+
+        let replacement = EnvironmentService(99)
+        captured.removeAll()
+        controller.rootView = EnvironmentFixture(service: replacement) {
+            captured.append(($0, $1))
+        }
+        host.layoutIfNeeded()
+        XCTAssertEqual(captured.map(\.0), ["outer", "inner"])
+        XCTAssertTrue(captured.allSatisfy { $0.1 === replacement })
+        XCTAssertEqual(texts(in: host), ["outer=99", "inner=99"])
+    }
+
+    func testStateObjectRetainsStableIdentityObservesAndProjectsBindings() async throws {
+        let original = ObservationModel(3)
+        let replacementSeed = ObservationModel(90)
+        var capturedModels: [ObservationModel] = []
+        var binding: Binding<Int>?
+        let capture: @MainActor (ObservationModel, Binding<Int>) -> Void = {
+            capturedModels.append($0)
+            binding = $1
+        }
+        let controller = UIHostingController(
+            rootView: StateObjectFixture(model: original, capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 240, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertTrue(capturedModels.last === original)
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+        XCTAssertEqual(texts(in: host), ["stateObject=3"])
+
+        controller.rootView = StateObjectFixture(
+            model: replacementSeed,
+            capture: capture
+        )
+        host.layoutIfNeeded()
+        XCTAssertTrue(capturedModels.last === original)
+        XCTAssertEqual(texts(in: host), ["stateObject=3"])
+
+        binding?.wrappedValue = 7
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertTrue(capturedModels.last === original)
+        XCTAssertEqual(texts(in: host), ["stateObject=7"])
+        XCTAssertEqual(controller._openGraphObservationCount, 1)
+    }
+
+    func testBindableProjectionMutatesTheOriginalReference() {
+        let model = ObservationModel(5)
+        let bindable = Bindable(wrappedValue: model)
+        let value = bindable.projectedValue.value
+        value.wrappedValue = 12
+        XCTAssertEqual(model.value, 12)
+        XCTAssertTrue(bindable.wrappedValue === model)
+    }
+
+    func testBuiltInEnvironmentActionsAndDefaultsAreCallable() throws {
+        let values = EnvironmentValues()
+        XCTAssertEqual(values.colorScheme, .light)
+        XCTAssertTrue(values.isEnabled)
+        XCTAssertFalse(values.accessibilityReduceMotion)
+        XCTAssertEqual(values.displayScale, 1)
+
+        var opened: URL?
+        let action = OpenURLAction { url in
+            opened = url
+            return .handled
+        }
+        let url = try XCTUnwrap(URL(string: "https://example.invalid/path"))
+        if case .handled = action(url) {} else {
+            XCTFail("OpenURLAction did not return its handler result")
+        }
+        XCTAssertEqual(opened, url)
+
+        var dismissed = false
+        DismissAction { dismissed = true }()
+        XCTAssertTrue(dismissed)
+    }
+
+    func testDisabledAndColorSchemeModifiersScopeDynamicEnvironment() throws {
+        var captured: [(Bool, ColorScheme)] = []
+        let controller = UIHostingController(
+            rootView: Group {
+                BuiltInEnvironmentLeaf {
+                    captured.append(($0, $1))
+                }
+                .disabled(false)
+            }
+            .disabled(true)
+            .colorScheme(.dark)
+        )
+        _ = try XCTUnwrap(controller.view)
+        XCTAssertEqual(captured.count, 1)
+        XCTAssertFalse(captured[0].0)
+        XCTAssertEqual(captured[0].1, .dark)
+    }
+
+    func testAppStorageSharesAKeyAndSurvivesRootRecomputation() async throws {
+        var first: Binding<Int>?
+        var second: Binding<Int>?
+        let capture: @MainActor (Binding<Int>, Binding<Int>) -> Void = {
+            first = $0
+            second = $1
+        }
+        let controller = UIHostingController(
+            rootView: AppStorageFixture(capture: capture)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 240, height: 44)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["appStorage=1/1"])
+
+        second?.wrappedValue = 8
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(first?.wrappedValue, 8)
+        XCTAssertEqual(texts(in: host), ["appStorage=8/8"])
+
+        controller.rootView = AppStorageFixture(capture: capture)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["appStorage=8/8"])
+    }
+
+    func testAnimationTransactionsReachTheMountedOpenUIKitGraph() async throws {
+        var state: Binding<Int>?
+        let explicit = Animation.spring(
+            response: 0.4,
+            dampingFraction: 0.8
+        )
+        let controller = UIHostingController(
+            rootView: StateFixture(initialValue: 0) { state = $0 }
+        )
+        _ = try XCTUnwrap(controller.view)
+
+        withAnimation(explicit) {
+            state?.wrappedValue = 1
+        }
+        await drainMainActor()
+        XCTAssertEqual(controller._openGraphLastAppliedAnimation, explicit)
+
+        var animatedState: Binding<Int>?
+        let implicit = Animation.easeInOut(duration: 0.2)
+        let implicitController = UIHostingController(
+            rootView: AnimatedStateFixture(animation: implicit) {
+                animatedState = $0
+            }
+        )
+        _ = try XCTUnwrap(implicitController.view)
+        animatedState?.wrappedValue = 1
+        await drainMainActor()
+        XCTAssertEqual(
+            implicitController._openGraphLastAppliedAnimation,
+            implicit
+        )
     }
 
     private func drainMainActor() async {

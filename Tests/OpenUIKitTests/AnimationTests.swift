@@ -49,6 +49,31 @@ final class AnimationTests: XCTestCase {
         XCTAssertEqual(fromAlpha, 1)
     }
 
+    func testCubicTimingParametersDrivePropertyAnimatorExactly() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        let timing = UICubicTimingParameters(
+            controlPoint1: CGPoint(x: 0.22, y: 1),
+            controlPoint2: CGPoint(x: 0.36, y: 1)
+        )
+        let animator = UIViewPropertyAnimator(
+            duration: 0.45,
+            timingParameters: timing
+        )
+        animator.addAnimations { view.alpha = 0 }
+        animator.startAnimation()
+
+        XCTAssertEqual(view.animations.count, 1)
+        XCTAssertEqual(view.animations[0].duration, 0.45)
+        guard case .curve(let c1x, let c1y, let c2x, let c2y) =
+            view.animations[0].timing else {
+            return XCTFail("property animator did not preserve cubic timing")
+        }
+        XCTAssertEqual(c1x, 0.22, accuracy: 0.0001)
+        XCTAssertEqual(c1y, 1, accuracy: 0.0001)
+        XCTAssertEqual(c2x, 0.36, accuracy: 0.0001)
+        XCTAssertEqual(c2y, 1, accuracy: 0.0001)
+    }
+
     func testFrameChangeRecordsPositionAndBounds() {
         let v = UIView(frame: CGRect(x: 20, y: 20, width: 40, height: 40))
         UIView.animate(withDuration: 0.6, delay: 0, options: [.curveEaseOut]) {
