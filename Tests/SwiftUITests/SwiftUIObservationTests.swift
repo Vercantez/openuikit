@@ -100,6 +100,35 @@ private final class EnvironmentService {
     }
 }
 
+@available(macOS 14.0, *)
+@Observable
+private final class EnvironmentObservationService {
+    var value: Int
+
+    init(_ value: Int) {
+        self.value = value
+    }
+}
+
+@available(macOS 14.0, *)
+private struct EnvironmentObservationLeaf: View {
+    @Environment(EnvironmentObservationService.self) private var service
+
+    var body: some View {
+        Text("environmentObservation=\(service.value)")
+    }
+}
+
+@available(macOS 14.0, *)
+private struct EnvironmentObservationFixture: View {
+    let service: EnvironmentObservationService
+
+    var body: some View {
+        EnvironmentObservationLeaf()
+            .environment(service)
+    }
+}
+
 private struct EnvironmentLeaf: View {
     @Environment(\.testValue) private var value
     @Environment(EnvironmentService.self) private var service
@@ -1406,6 +1435,84 @@ final class SwiftUIObservationTests: XCTestCase {
         XCTAssertEqual(captured.map(\.0), ["outer", "inner"])
         XCTAssertTrue(captured.allSatisfy { $0.1 === replacement })
         XCTAssertEqual(texts(in: host), ["outer=99", "inner=99"])
+    }
+
+    @available(macOS 14.0, *)
+    func testObservableEnvironmentReadsInvalidateCoalesceAndResubscribe() throws {
+        OpenUIKit.Timer._reset()
+        _OpenInvalidationScheduler.forceHostClockForTesting = true
+        defer {
+            _OpenInvalidationScheduler.forceHostClockForTesting = false
+            OpenUIKit.Timer._reset()
+        }
+
+        let service = EnvironmentObservationService(1)
+        let controller = UIHostingController(
+            rootView: EnvironmentObservationFixture(service: service)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 260, height: 44)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(texts(in: host), ["environmentObservation=1"])
+        XCTAssertEqual(controller._openGraphRenderCount, 1)
+
+        service.value = 2
+        service.value = 3
+        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 0)
+
+        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["environmentObservation=3"])
+        XCTAssertEqual(controller._openGraphRenderCount, 2)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 1)
+
+        // withObservationTracking is one-shot. The rebuilt graph must install
+        // a fresh access list so a second mutation still reaches the host.
+        service.value = 4
+        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["environmentObservation=4"])
+        XCTAssertEqual(controller._openGraphRenderCount, 3)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 2)
+    }
+
+    @available(macOS 14.0, *)
+    func testRetiredObservableEnvironmentCannotInvalidateReplacementTree() throws {
+        OpenUIKit.Timer._reset()
+        _OpenInvalidationScheduler.forceHostClockForTesting = true
+        defer {
+            _OpenInvalidationScheduler.forceHostClockForTesting = false
+            OpenUIKit.Timer._reset()
+        }
+
+        let retired = EnvironmentObservationService(1)
+        let current = EnvironmentObservationService(10)
+        let controller = UIHostingController(
+            rootView: EnvironmentObservationFixture(service: retired)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 260, height: 44)
+        host.layoutIfNeeded()
+
+        controller.rootView = EnvironmentObservationFixture(service: current)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["environmentObservation=10"])
+        XCTAssertEqual(controller._openGraphRenderCount, 2)
+
+        retired.value = 2
+        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 0)
+
+        current.value = 11
+        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        host.layoutIfNeeded()
+        XCTAssertEqual(texts(in: host), ["environmentObservation=11"])
+        XCTAssertEqual(controller._openGraphRenderCount, 3)
+        XCTAssertEqual(controller._openGraphInvalidationCount, 1)
     }
 
     func testStateObjectRetainsStableIdentityObservesAndProjectsBindings() async throws {

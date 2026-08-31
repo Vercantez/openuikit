@@ -933,6 +933,11 @@ final class _OpenGraphHost {
     private var pendingInvalidationToken: _OpenGraphInvalidationToken?
     private var pendingAnimation: Animation?
     private(set) var evaluationAnimation: Animation?
+    // Observation's tracking callback is deliberately one-shot and has no
+    // cancellation handle. A root replacement therefore advances a generation
+    // so a later mutation of an object read only by the retired tree cannot
+    // invalidate the current host.
+    private var observationTrackingGeneration: UInt64 = 0
 
     var invalidate: (@MainActor (Animation?) -> Void)?
     private(set) var renderCount = 0
@@ -979,9 +984,32 @@ final class _OpenGraphHost {
         environmentValues = EnvironmentValues()
         evaluationAnimation = nil
         renderCount += 1
+        observationTrackingGeneration &+= 1
+        let trackingGeneration = observationTrackingGeneration
 
-        let node = _OpenGraphContext.withHost(self) {
-            content._makeOpenUIKitNode()
+        let node: _OpenViewNode
+        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+            node = withObservationTracking {
+                _OpenGraphContext.withHost(self) {
+                    content._makeOpenUIKitNode()
+                }
+            } onChange: { [weak self] in
+                // View-body reads belong to the mounted UI graph. Match the
+                // existing ObservableObject boundary: mutation must arrive on
+                // the UI actor instead of racing retained UIKit state.
+                MainActor.assumeIsolated {
+                    guard let self,
+                          self.observationTrackingGeneration == trackingGeneration
+                    else { return }
+                    self.scheduleInvalidation(
+                        animation: _OpenAnimationContext.current
+                    )
+                }
+            }
+        } else {
+            node = _OpenGraphContext.withHost(self) {
+                content._makeOpenUIKitNode()
+            }
         }
 
         precondition(path.isEmpty, "unbalanced SwiftUI structural graph scopes")
