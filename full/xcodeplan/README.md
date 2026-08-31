@@ -273,8 +273,12 @@ also embeds the fail-closed graph documented in
 [`docs/LOCAL_SWIFT_PACKAGE_GRAPH.md`](../../docs/LOCAL_SWIFT_PACKAGE_GRAPH.md).
 It publishes separately hashed `local-package-graph.json` and
 `local-package-targets.nul` inputs and reconstructs every manifest, pin, edge,
-and source hash during normal verification. A frozen graph with unresolved
-remote source remains valid provenance but is explicitly not buildable.
+source hash, and package-resource hash during normal verification. Static
+`.copy`/`.process` rules become isolated, deterministic SwiftPM resource
+bundles, and a generated `Bundle.module` accessor is compiled from the fresh
+build directory rather than patched into vendor source. A frozen graph with
+unresolved remote source remains valid provenance but is explicitly not
+buildable.
 
 Application build-plan format 2 publishes `compiler_inputs` in source-phase
 order. Each `open-intentdefinition` record contains its virtual
@@ -297,9 +301,11 @@ resource with another.
 
 `materialize_application_bundle.py` consumes that frozen plan and creates a
 relocatable `<Product>.app/Contents/{MacOS,Frameworks,Resources}` skeleton.
-It copies the unchanged Info.plist and complete application resource graph,
-then installs the complete attested OpenUIKit data/font resource tree beneath
-`Contents/Resources/OpenUIKit`. Every selected source-form `.xcassets` input is
+It copies the unchanged Info.plist, complete application resource graph, and
+every reachable local or exact-remote SwiftPM resource bundle, then installs
+the complete attested OpenUIKit data/font resource tree beneath
+`Contents/Resources/OpenUIKit`. Every selected source-form `.xcassets` input,
+including a catalog owned by a package target, is
 also compiled, in target resource-build-phase order, into the measured
 Foundation-free OpenUIKit index at
 `Contents/Resources/OpenUIKit/AssetCatalogs`: one deterministic JSON variant

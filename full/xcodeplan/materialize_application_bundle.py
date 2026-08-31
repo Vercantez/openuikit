@@ -212,6 +212,145 @@ def _copy_application_resources(
             )
 
 
+def _copy_package_resources(
+    plan: dict[str, Any],
+    source_root: Path,
+    remote_cache_root: Path | None,
+    resources_root: Path,
+    bundle_root: Path,
+    records: list[dict[str, Any]],
+) -> list[str]:
+    graph_value = plan.get("local_package_graph")
+    if graph_value is None:
+        return []
+    graph = application_build_plan._mapping(
+        graph_value, "local_package_graph"
+    )
+    remote_roots: dict[str, Path] = {}
+    if graph.get("format_version") == 2:
+        if remote_cache_root is None:
+            raise BundleMaterializationError(
+                "materialized package resources require a remote package cache root"
+            )
+        try:
+            import remote_package_materializer
+
+            materializations = application_build_plan._mapping(
+                graph.get("remote_materializations"),
+                "local_package_graph.remote_materializations",
+            )
+            for raw in application_build_plan._list(
+                materializations.get("packages"), "remote materialization packages"
+            ):
+                materialization = application_build_plan._mapping(
+                    raw, "remote materialization package"
+                )
+                identity = application_build_plan._string(
+                    materialization.get("identity"), "remote materialization identity"
+                )
+                remote_roots[identity] = remote_package_materializer.repository_for(
+                    remote_cache_root, materialization
+                )
+        except (OSError, remote_package_materializer.MaterializationError) as exc:
+            raise BundleMaterializationError(
+                f"cannot resolve remote package resources: {exc}"
+            ) from exc
+
+    bundle_names: list[str] = []
+    claimed_bundles: set[str] = set()
+    for target_index, raw_target in enumerate(
+        application_build_plan._list(graph.get("targets"), "package graph targets")
+    ):
+        target = application_build_plan._mapping(
+            raw_target, f"package graph targets[{target_index}]"
+        )
+        raw_resources = target.get("resources", [])
+        package_resources = application_build_plan._list(
+            raw_resources, f"package graph targets[{target_index}].resources"
+        )
+        if not package_resources:
+            if target.get("resource_bundle") is not None:
+                raise BundleMaterializationError(
+                    "package target names a resource bundle without resources"
+                )
+            continue
+        bundle_name = application_build_plan._string(
+            target.get("resource_bundle"),
+            f"package graph targets[{target_index}].resource_bundle",
+        )
+        bundle_relative = _safe_relative(
+            bundle_name, f"package graph targets[{target_index}].resource_bundle"
+        )
+        if len(bundle_relative.parts) != 1 or not bundle_name.endswith(".bundle"):
+            raise BundleMaterializationError(
+                f"unsafe SwiftPM resource bundle name: {bundle_name!r}"
+            )
+        folded_bundle = bundle_name.casefold()
+        if folded_bundle in claimed_bundles:
+            raise BundleMaterializationError(
+                f"duplicate SwiftPM resource bundle: {bundle_name}"
+            )
+        claimed_bundles.add(folded_bundle)
+        package_bundle = resources_root / bundle_relative
+        if package_bundle.exists() or package_bundle.is_symlink():
+            raise BundleMaterializationError(
+                f"SwiftPM resource bundle collides with an application resource: {bundle_name}"
+            )
+        package_bundle.mkdir(mode=0o755)
+        bundle_names.append(bundle_name)
+        claimed_paths: set[str] = set()
+        target_id = application_build_plan._string(
+            target.get("target_id"), f"package graph targets[{target_index}].target_id"
+        )
+        for resource_index, raw_resource in enumerate(package_resources):
+            label = (
+                f"package graph targets[{target_index}].resources[{resource_index}]"
+            )
+            resource = application_build_plan._mapping(raw_resource, label)
+            source_relative = _safe_relative(
+                application_build_plan._string(resource.get("path"), f"{label}.path"),
+                f"{label}.path",
+            )
+            destination_relative = _safe_relative(
+                application_build_plan._string(
+                    resource.get("bundle_path"), f"{label}.bundle_path"
+                ),
+                f"{label}.bundle_path",
+            )
+            folded_path = destination_relative.as_posix().casefold()
+            if folded_path in claimed_paths:
+                raise BundleMaterializationError(
+                    f"duplicate resource path in {bundle_name}: {destination_relative}"
+                )
+            claimed_paths.add(folded_path)
+            origin = resource.get("source_origin", "application")
+            if origin == "application":
+                physical = source_root / source_relative
+            elif isinstance(origin, str) and origin.startswith("remote:"):
+                identity = origin.split(":", 1)[1]
+                remote_root = remote_roots.get(identity)
+                if remote_root is None:
+                    raise BundleMaterializationError(
+                        f"package resource names missing remote package {identity!r}"
+                    )
+                physical = remote_root / source_relative
+            else:
+                raise BundleMaterializationError(
+                    f"unsupported package resource origin {origin!r}"
+                )
+            _copy_bytes(
+                physical,
+                package_bundle / destination_relative,
+                application_build_plan._string(
+                    resource.get("sha256"), f"{label}.sha256"
+                ),
+                records,
+                bundle_root,
+                f"SwiftPM-resource:{target_id}",
+            )
+    return bundle_names
+
+
 def _copy_platform_resources(
     source_root: Path,
     destination_root: Path,
@@ -266,7 +405,7 @@ def _copy_platform_resources(
 
 
 def _ordered_asset_catalogs(
-    plan: dict[str, Any], resources_root: Path
+    plan: dict[str, Any], resources_root: Path, package_bundles: list[str]
 ) -> list[Path]:
     """Return materialized catalogs in target build-phase order.
 
@@ -305,6 +444,8 @@ def _ordered_asset_catalogs(
             f"resources[{index}].bundle_destination",
         )
         visit(resources_root / destination)
+    for bundle_name in package_bundles:
+        visit(resources_root / bundle_name)
     return catalogs
 
 
@@ -412,6 +553,14 @@ def materialize(
     _copy_application_resources(
         plan, source_root, resources, output_app, records, empty_directories
     )
+    package_bundles = _copy_package_resources(
+        plan,
+        source_root,
+        remote_cache_root,
+        resources,
+        output_app,
+        records,
+    )
     _copy_platform_resources(
         platform_resources,
         resources / "OpenUIKit",
@@ -420,7 +569,7 @@ def materialize(
         empty_directories,
     )
 
-    catalogs = _ordered_asset_catalogs(plan, resources)
+    catalogs = _ordered_asset_catalogs(plan, resources, package_bundles)
     asset_index: dict[str, Any] | None = None
     if catalogs:
         generated_assets = resources / "OpenUIKit" / "AssetCatalogs"
@@ -467,6 +616,11 @@ def materialize(
             "platform_files": sum(
                 item["source_class"] == "OpenUIKit-platform" for item in records
             ),
+            "swiftpm_resource_bundles": len(package_bundles),
+            "swiftpm_resource_files": sum(
+                item["source_class"].startswith("SwiftPM-resource:")
+                for item in records
+            ),
         },
     }
     attestation.write_bytes(_canonical_json(result))
@@ -503,6 +657,8 @@ def main(argv: list[str] | None = None) -> int:
             f"files={result['summary']['files']} "
             f"application={result['summary']['application_files']} "
             f"platform={result['summary']['platform_files']} "
+            f"swiftpm-bundles={result['summary']['swiftpm_resource_bundles']} "
+            f"swiftpm-files={result['summary']['swiftpm_resource_files']} "
             f"asset-catalogs={result['summary']['asset_catalogs']} "
             f"asset-records={result['summary']['asset_catalog_assets']}"
         )

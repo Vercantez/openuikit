@@ -252,6 +252,282 @@ def _tokenize(text: str, label: str) -> list[_Token]:
     return result
 
 
+def _evaluate_manifest_condition(expression: str, label: str) -> bool:
+    value = expression.strip()
+    platform = re.fullmatch(r"os\((Windows|Linux|macOS)\)", value)
+    if platform is not None:
+        # The portable graph models Xcode's Apple-target manifest profile even
+        # when its compiler jobs later execute on a Linux host.
+        return platform.group(1) == "macOS"
+    swift = re.fullmatch(
+        r"swift\(>=(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\)", value
+    )
+    if swift is not None:
+        requested = (int(swift.group(1)), int(swift.group(2)))
+        return (6, 2) >= requested
+    raise PackageGraphError(
+        f"{label} uses unsupported conditional compilation expression {value!r}"
+    )
+
+
+def _preprocess_manifest_conditions(text: str, label: str) -> str:
+    result: list[str] = []
+    # parent-active, branch-condition, else-seen
+    stack: list[tuple[bool, bool, bool]] = []
+    active = True
+    for line_number, line in enumerate(text.splitlines(keepends=True), 1):
+        stripped = line.strip()
+        if stripped.startswith("#if "):
+            condition = _evaluate_manifest_condition(
+                stripped[4:], f"{label}:{line_number}"
+            )
+            stack.append((active, condition, False))
+            active = active and condition
+            result.append("\n" if line.endswith("\n") else "")
+            continue
+        if stripped == "#else":
+            if not stack:
+                raise PackageGraphError(f"{label}:{line_number} has unmatched #else")
+            parent, condition, seen_else = stack[-1]
+            if seen_else:
+                raise PackageGraphError(f"{label}:{line_number} repeats #else")
+            stack[-1] = (parent, condition, True)
+            active = parent and not condition
+            result.append("\n" if line.endswith("\n") else "")
+            continue
+        if stripped == "#endif":
+            if not stack:
+                raise PackageGraphError(f"{label}:{line_number} has unmatched #endif")
+            parent, _, _ = stack.pop()
+            active = parent
+            result.append("\n" if line.endswith("\n") else "")
+            continue
+        if stripped.startswith("#elseif"):
+            raise PackageGraphError(f"{label}:{line_number} uses unsupported #elseif")
+        result.append(line if active else ("\n" if line.endswith("\n") else ""))
+    if stack:
+        raise PackageGraphError(f"{label} has an unterminated #if")
+    return "".join(result)
+
+
+def _matching_delimiter(tokens: list[_Token], start: int, label: str) -> int:
+    pairs = {"(": ")", "[": "]", "{": "}"}
+    opening = tokens[start].value
+    closing = pairs.get(opening)
+    if closing is None:
+        raise PackageGraphError(f"{label} does not begin with a delimiter")
+    stack = [opening]
+    reverse = {value: key for key, value in pairs.items()}
+    for index in range(start + 1, len(tokens)):
+        value = tokens[index].value
+        if value in pairs:
+            stack.append(value)
+        elif value in reverse:
+            if not stack or stack.pop() != reverse[value]:
+                raise PackageGraphError(f"{label} has unbalanced delimiters")
+            if not stack:
+                return index
+    raise PackageGraphError(f"{label} has an unterminated delimiter")
+
+
+def _environment_string_ternary(
+    tokens: list[_Token], label: str
+) -> list[_Token] | None:
+    question = next(
+        (index for index, token in enumerate(tokens) if token.value == "?"), -1
+    )
+    if question < 0:
+        return None
+    colon = next(
+        (
+            index
+            for index, token in enumerate(tokens[question + 1 :], question + 1)
+            if token.value == ":"
+        ),
+        -1,
+    )
+    if (
+        colon < 0
+        or len(tokens[question + 1 : colon]) != 1
+        or len(tokens[colon + 1 :]) != 1
+        or tokens[question + 1].kind != "string"
+        or tokens[colon + 1].kind != "string"
+    ):
+        return None
+    condition = [token.value for token in tokens[:question]]
+    if (
+        "environment" not in condition
+        or "[" not in condition
+        or "]" not in condition
+        or condition[-3:] != ["=", "=", "nil"]
+    ):
+        return None
+    key_tokens = [token for token in tokens[:question] if token.kind == "string"]
+    if len(key_tokens) != 1:
+        raise PackageGraphError(f"{label} environment condition has no unique key")
+    _decode_swift_string(key_tokens[0], f"{label} environment key")
+    # The manifest profile is deliberately hermetic: no caller-provided
+    # environment enters dependency or compiler-setting selection.
+    return [tokens[question + 1]]
+
+
+def _static_manifest_bindings(
+    tokens: list[_Token],
+    stop: int,
+    label: str,
+    manifest_root: Path | None = None,
+) -> dict[str, list[_Token]]:
+    bindings: dict[str, list[_Token]] = {}
+    index = 0
+    depth = 0
+    while index < stop:
+        token = tokens[index]
+        if token.value in "([{":
+            depth += 1
+            index += 1
+            continue
+        if token.value in ")]}" and depth:
+            depth -= 1
+            index += 1
+            continue
+        if (
+            depth != 0
+            or token.value not in {"let", "var"}
+            or index + 1 >= stop
+            or tokens[index + 1].kind != "identifier"
+        ):
+            index += 1
+            continue
+        name = tokens[index + 1].value
+        cursor = index + 2
+        local_depth = 0
+        assignment = -1
+        while cursor < stop:
+            value = tokens[cursor].value
+            if value in "([{":
+                local_depth += 1
+            elif value in ")]}" and local_depth:
+                local_depth -= 1
+            elif value == "=" and local_depth == 0:
+                assignment = cursor
+                break
+            elif value in {"let", "var"} and local_depth == 0:
+                break
+            cursor += 1
+        if assignment < 0 or assignment + 1 >= stop:
+            index += 2
+            continue
+        start = assignment + 1
+        first = tokens[start].value
+        end = -1
+        if first == "[":
+            end = _matching_delimiter(tokens, start, f"{label} binding {name!r}")
+        elif first == "{":
+            closure_end = _matching_delimiter(
+                tokens, start, f"{label} binding {name!r}"
+            )
+            closure = tokens[start : closure_end + 1]
+            values = [item.value for item in closure]
+            strings = {
+                _decode_swift_string(item, f"{label} binding {name!r}")
+                for item in closure
+                if item.kind == "string"
+            }
+            required = {
+                "CI.xcconfig",
+                "Local.xcconfig",
+                "TUIST_SWIFT_CONDITIONS",
+            }
+            define_count = sum(
+                values[offset : offset + 2] == [".", "define"]
+                for offset in range(max(0, len(values) - 1))
+            )
+            if (
+                manifest_root is not None
+                and required <= strings
+                and define_count == 1
+                and not (manifest_root / "CI.xcconfig").exists()
+                and not (manifest_root / "CI.xcconfig").is_symlink()
+                and not (manifest_root / "Local.xcconfig").exists()
+                and not (manifest_root / "Local.xcconfig").is_symlink()
+                and "environment" in values
+                and "map" in values
+            ):
+                # Under the hermetic manifest profile, both optional files and
+                # the process environment are absent, so this exact
+                # file/environment-to-.define closure is provably empty.
+                bindings[name] = [
+                    _Token("punctuation", "[", tokens[start].offset),
+                    _Token("punctuation", "]", tokens[start].offset),
+                ]
+                index = closure_end + 1
+                continue
+        elif first == "." and start + 2 < stop and tokens[start + 2].value == "(":
+            end = _matching_delimiter(
+                tokens, start + 2, f"{label} binding {name!r}"
+            )
+        elif tokens[start].kind == "string":
+            end = start
+        if end >= 0 and end < stop:
+            bindings[name] = tokens[start : end + 1]
+            index = end + 1
+            continue
+
+        next_declaration = stop
+        scan = start
+        scan_depth = 0
+        while scan < stop:
+            value = tokens[scan].value
+            if value in "([{":
+                scan_depth += 1
+            elif value in ")]}" and scan_depth:
+                scan_depth -= 1
+            elif value in {"let", "var"} and scan_depth == 0 and scan > start:
+                next_declaration = scan
+                break
+            scan += 1
+        ternary = _environment_string_ternary(
+            tokens[start:next_declaration], f"{label} binding {name!r}"
+        )
+        if ternary is not None:
+            bindings[name] = ternary
+        index = max(index + 2, next_declaration)
+    return bindings
+
+
+def _expand_manifest_bindings(
+    tokens: list[_Token],
+    bindings: Mapping[str, list[_Token]],
+    label: str,
+    stack: tuple[str, ...] = (),
+) -> list[_Token]:
+    result: list[_Token] = []
+    for index, token in enumerate(tokens):
+        previous = tokens[index - 1].value if index else None
+        following = tokens[index + 1].value if index + 1 < len(tokens) else None
+        if (
+            token.kind == "identifier"
+            and token.value in bindings
+            and previous != "."
+            and following not in {":", "(", "."}
+        ):
+            if token.value in stack:
+                raise PackageGraphError(
+                    f"{label} has cyclic static binding {token.value!r}"
+                )
+            result.extend(
+                _expand_manifest_bindings(
+                    list(bindings[token.value]),
+                    bindings,
+                    label,
+                    (*stack, token.value),
+                )
+            )
+        else:
+            result.append(token)
+    return result
+
+
 def _decode_swift_string(token: _Token, label: str) -> str:
     if token.kind != "string":
         raise PackageGraphError(f"{label} must be a static string literal")
@@ -387,6 +663,12 @@ def _call(tokens: list[_Token], label: str) -> tuple[str, dict[str, list[_Token]
 
 
 def _array(tokens: list[_Token], label: str) -> list[list[_Token]]:
+    concatenated = _split(tokens, "+", label)
+    if len(concatenated) > 1:
+        result: list[list[_Token]] = []
+        for index, item in enumerate(concatenated):
+            result.extend(_array(item, f"{label} concatenation[{index}]"))
+        return result
     if len(tokens) < 2 or tokens[0].value != "[" or tokens[-1].value != "]":
         raise PackageGraphError(f"{label} must be a static array literal")
     if len(tokens) == 2:
@@ -463,7 +745,7 @@ def _parse_product(tokens: list[_Token], label: str) -> dict[str, Any]:
         if len(raw) != 2 or raw[0].value != "." or raw[1].kind != "identifier":
             raise PackageGraphError(f"{label}.type is not a static member")
         library_type = raw[1].value
-        if library_type not in {"automatic", "static"}:
+        if library_type not in {"automatic", "static", "dynamic"}:
             raise PackageGraphError(
                 f"{label} uses unsupported library type {library_type!r}"
             )
@@ -498,9 +780,41 @@ def _parse_package_dependency(tokens: list[_Token], label: str) -> dict[str, Any
     if len(requirement_keys) != 1 or set(arguments) - {
         "name",
         "url",
+        "traits",
         *requirement_keys,
     }:
         raise PackageGraphError(f"{label} needs one supported remote requirement")
+    if "traits" in arguments:
+        for index, item in enumerate(
+            _array(arguments["traits"], f"{label}.traits")
+        ):
+            trait_kind, trait_arguments = _call(item, f"{label}.traits[{index}]")
+            if trait_kind != "trait" or set(trait_arguments) != {
+                "name",
+                "condition",
+            }:
+                raise PackageGraphError(
+                    f"{label}.traits[{index}] is not a static trait propagation"
+                )
+            name_value = _literal(
+                trait_arguments["name"], f"{label}.traits[{index}].name"
+            )
+            condition_kind, condition_arguments = _call(
+                trait_arguments["condition"],
+                f"{label}.traits[{index}].condition",
+            )
+            if (
+                condition_kind != "when"
+                or set(condition_arguments) != {"traits"}
+                or _literal_array(
+                    condition_arguments["traits"],
+                    f"{label}.traits[{index}].condition.traits",
+                )
+                != [name_value]
+            ):
+                raise PackageGraphError(
+                    f"{label}.traits[{index}] has unsupported propagation semantics"
+                )
     requirement = requirement_keys[0]
     return {
         "kind": "remote",
@@ -515,7 +829,80 @@ def _parse_package_dependency(tokens: list[_Token], label: str) -> dict[str, Any
     }
 
 
-def _parse_target_dependency(tokens: list[_Token], label: str) -> dict[str, Any]:
+def _appended_remote_dependencies(
+    tokens: list[_Token],
+    start: int,
+    bindings: Mapping[str, list[_Token]],
+    label: str,
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    index = start
+    marker = ["package", ".", "dependencies", "+", "="]
+    while index + len(marker) < len(tokens):
+        if [item.value for item in tokens[index : index + len(marker)]] != marker:
+            index += 1
+            continue
+        array_start = index + len(marker)
+        if tokens[array_start].value != "[":
+            raise PackageGraphError(
+                f"{label} mutates package.dependencies with a non-array expression"
+            )
+        array_end = _matching_delimiter(
+            tokens, array_start, f"{label} package.dependencies append"
+        )
+        expression = _expand_manifest_bindings(
+            tokens[array_start : array_end + 1],
+            bindings,
+            f"{label} package.dependencies append",
+        )
+        for dependency_index, item in enumerate(
+            _array(expression, f"{label} package.dependencies append")
+        ):
+            dependency = _parse_package_dependency(
+                item,
+                f"{label} package.dependencies append[{dependency_index}]",
+            )
+            # The hermetic profile has no SWIFTCI_USE_LOCAL_DEPS-style
+            # environment. A local alternative therefore remains inactive;
+            # if a selected target still names it, resolution fails closed.
+            if dependency["kind"] == "remote":
+                result.append(dependency)
+        index = array_end + 1
+    return result
+
+
+def _static_member_array(tokens: list[_Token], label: str) -> list[str]:
+    result: list[str] = []
+    for index, item in enumerate(_array(tokens, label)):
+        if (
+            len(item) != 2
+            or item[0].value != "."
+            or item[1].kind != "identifier"
+        ):
+            raise PackageGraphError(f"{label}[{index}] is not a static member")
+        result.append(item[1].value)
+    return result
+
+
+def _target_dependency_condition_active(tokens: list[_Token], label: str) -> bool:
+    kind, arguments = _call(tokens, label)
+    if kind != "when" or not arguments or set(arguments) - {"platforms", "traits"}:
+        raise PackageGraphError(f"{label} uses an unsupported target condition")
+    active = True
+    if "platforms" in arguments:
+        active = "macOS" in _static_member_array(
+            arguments["platforms"], f"{label}.platforms"
+        )
+    if "traits" in arguments:
+        # The hermetic Xcode profile enables no caller-selected package traits.
+        _literal_array(arguments["traits"], f"{label}.traits")
+        active = False
+    return active
+
+
+def _parse_target_dependency(
+    tokens: list[_Token], label: str
+) -> dict[str, Any] | None:
     if len(tokens) == 1 and tokens[0].kind == "string":
         return {"kind": "by_name", "name": _decode_swift_string(tokens[0], label)}
     kind, arguments = _call(tokens, label)
@@ -529,23 +916,30 @@ def _parse_target_dependency(tokens: list[_Token], label: str) -> dict[str, Any]
             "name": _literal(arguments["name"], f"{label}.name"),
         }
     if kind in {"product", "productItem"}:
-        expected = (
-            {"name", "package"}
-            if kind == "product"
-            else {"name", "package", "condition"}
-        )
-        if set(arguments) != expected:
-            raise PackageGraphError(
-                f"{label} uses unsupported conditional product dependency"
-            )
-        if kind == "productItem" and not (
-            len(arguments["condition"]) == 1
-            and arguments["condition"][0].kind == "identifier"
-            and arguments["condition"][0].value == "nil"
+        fields = set(arguments)
+        if kind == "product" and fields not in (
+            {"name", "package"},
+            {"name", "package", "condition"},
         ):
             raise PackageGraphError(
                 f"{label} uses unsupported conditional product dependency"
             )
+        if kind == "productItem" and fields != {"name", "package", "condition"}:
+            raise PackageGraphError(
+                f"{label} uses unsupported conditional product dependency"
+            )
+        if "condition" in arguments:
+            condition = arguments["condition"]
+            if (
+                len(condition) == 1
+                and condition[0].kind == "identifier"
+                and condition[0].value == "nil"
+            ):
+                pass
+            elif not _target_dependency_condition_active(
+                condition, f"{label}.condition"
+            ):
+                return None
         return {
             "kind": "product",
             "name": _literal(arguments["name"], f"{label}.name"),
@@ -554,7 +948,24 @@ def _parse_target_dependency(tokens: list[_Token], label: str) -> dict[str, Any]
     raise PackageGraphError(f"{label} uses unsupported dependency expression .{kind}")
 
 
-def _parse_swift_setting(tokens: list[_Token], label: str) -> dict[str, str]:
+def _conditional_platform(tokens: list[_Token]) -> str | None:
+    values = [token.value for token in tokens]
+    marker = [".", "when", "(", "platforms", ":", "[", "."]
+    for index in range(len(values) - len(marker) - 2):
+        if values[index : index + len(marker)] == marker:
+            platform = tokens[index + len(marker)]
+            if (
+                platform.kind == "identifier"
+                and values[index + len(marker) + 1 : index + len(marker) + 3]
+                == ["]", ")"]
+            ):
+                return platform.value
+    return None
+
+
+def _parse_swift_setting(
+    tokens: list[_Token], label: str
+) -> dict[str, str] | None:
     values = [token.value for token in tokens]
     if (
         len(tokens) == 6
@@ -582,14 +993,85 @@ def _parse_swift_setting(tokens: list[_Token], label: str) -> dict[str, str]:
         ")",
     ]:
         return {"kind": "default_isolation", "value": "MainActor"}
+    if (
+        len(tokens) == 5
+        and values[:3] == [".", "enableExperimentalFeature", "("]
+        and values[-1] == ")"
+        and tokens[3].kind == "string"
+    ):
+        feature = _decode_swift_string(tokens[3], label)
+        if feature == "StrictConcurrency":
+            return {"kind": "experimental_feature", "value": feature}
+    if values[:3] == [".", "unsafeFlags", "("]:
+        platform = _conditional_platform(tokens)
+        if platform == "windows":
+            return None
+    if values[:3] == [".", "define", "("]:
+        platform = _conditional_platform(tokens)
+        if platform is not None and platform != "macOS":
+            return None
+        if (
+            len(tokens) == 5
+            and tokens[3].kind == "string"
+            and values[4] == ")"
+        ):
+            return {
+                "kind": "define",
+                "value": _decode_swift_string(tokens[3], label),
+            }
     raise PackageGraphError(f"{label} uses an unsupported Swift setting")
+
+
+def _parse_c_setting(
+    tokens: list[_Token], label: str
+) -> dict[str, str] | None:
+    values = [token.value for token in tokens]
+    if len(tokens) < 5 or values[:3] != [".", "define", "("] or values[-1] != ")":
+        raise PackageGraphError(f"{label} uses an unsupported C setting")
+    items = _split(tokens[3:-1], ",", label)
+    if len(items) not in {1, 2} or len(items[0]) != 1 or items[0][0].kind != "string":
+        raise PackageGraphError(f"{label} uses an unsupported C define")
+    name = _decode_swift_string(items[0][0], f"{label}.name")
+    if len(items) == 2:
+        condition = items[1]
+        if (
+            len(condition) >= 3
+            and condition[0].kind == "identifier"
+            and condition[0].value == "condition"
+            and condition[1].value == ":"
+        ):
+            condition = condition[2:]
+        if not _target_dependency_condition_active(
+            condition, f"{label}.condition"
+        ):
+            return None
+    return {"kind": "define", "value": name}
+
+
+def _parse_resource(tokens: list[_Token], label: str) -> dict[str, str]:
+    values = [token.value for token in tokens]
+    if (
+        len(tokens) != 5
+        or values[0] != "."
+        or tokens[1].kind != "identifier"
+        or values[1] not in {"copy", "process"}
+        or values[2] != "("
+        or values[4] != ")"
+        or tokens[3].kind != "string"
+    ):
+        raise PackageGraphError(f"{label} uses an unsupported resource expression")
+    return {
+        "kind": values[1],
+        "path": _decode_swift_string(tokens[3], f"{label}.path"),
+    }
 
 
 def _swift_setting_arguments(
     raw_settings: Any, label: str
 ) -> list[str]:
     arguments: list[str] = []
-    seen: set[str] = set()
+    seen: set[tuple[str, str]] = set()
+    singleton_kinds: set[str] = set()
     for index, raw in enumerate(_list(raw_settings, label)):
         setting = _mapping(raw, f"{label}[{index}]")
         if set(setting) != {"kind", "value"}:
@@ -598,13 +1080,24 @@ def _swift_setting_arguments(
             )
         kind = _string(setting.get("kind"), f"{label}[{index}].kind")
         value = _string(setting.get("value"), f"{label}[{index}].value")
-        if kind in seen:
-            raise PackageGraphError(f"{label} repeats {kind!r}")
-        seen.add(kind)
+        identity = (kind, value)
+        if identity in seen:
+            raise PackageGraphError(f"{label} repeats {kind!r} value {value!r}")
+        seen.add(identity)
         if kind == "swift_language_mode" and value in {"4", "4.2", "5", "6"}:
+            if kind in singleton_kinds:
+                raise PackageGraphError(f"{label} repeats {kind!r}")
+            singleton_kinds.add(kind)
             arguments.extend(["-swift-version", value])
         elif kind == "default_isolation" and value == "MainActor":
+            if kind in singleton_kinds:
+                raise PackageGraphError(f"{label} repeats {kind!r}")
+            singleton_kinds.add(kind)
             arguments.extend(["-default-isolation", "MainActor"])
+        elif kind == "experimental_feature" and value == "StrictConcurrency":
+            arguments.extend(["-enable-experimental-feature", value])
+        elif kind == "define" and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value):
+            arguments.extend(["-D", value])
         else:
             raise PackageGraphError(
                 f"{label}[{index}] has unsupported {kind!r} value {value!r}"
@@ -626,39 +1119,54 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
         "exclude",
         "sources",
         "swiftSettings",
+        "resources",
+        "cSettings",
     }
     unknown = set(arguments) - allowed
     if unknown:
         raise PackageGraphError(
             f"{label} target {name!r} uses unsupported arguments: {sorted(unknown)}"
         )
-    dependencies = [
-        _parse_target_dependency(item, f"{label}.dependencies[{index}]")
-        for index, item in enumerate(
-            _array(
-                arguments.get(
-                    "dependencies",
-                    [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
-                ),
-                f"{label}.dependencies",
-            )
+    dependencies = []
+    for index, item in enumerate(
+        _array(
+            arguments.get(
+                "dependencies",
+                [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
+            ),
+            f"{label}.dependencies",
         )
-    ]
-    swift_settings = [
-        _parse_swift_setting(item, f"{label}.swiftSettings[{index}]")
-        for index, item in enumerate(
-            _array(
-                arguments.get(
-                    "swiftSettings",
-                    [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
-                ),
-                f"{label}.swiftSettings",
-            )
+    ):
+        dependency = _parse_target_dependency(
+            item, f"{label}.dependencies[{index}]"
         )
-    ]
+        if dependency is not None:
+            dependencies.append(dependency)
+    swift_settings = []
+    for index, item in enumerate(
+        _array(
+            arguments.get(
+                "swiftSettings",
+                [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
+            ),
+            f"{label}.swiftSettings",
+        )
+    ):
+        setting = _parse_swift_setting(item, f"{label}.swiftSettings[{index}]")
+        if setting is not None:
+            swift_settings.append(setting)
     _swift_setting_arguments(swift_settings, f"{label}.swiftSettings")
+    c_settings = []
+    if "cSettings" in arguments:
+        for index, item in enumerate(
+            _array(arguments["cSettings"], f"{label}.cSettings")
+        ):
+            setting = _parse_c_setting(item, f"{label}.cSettings[{index}]")
+            if setting is not None:
+                c_settings.append(setting)
     return {
         "dependencies": dependencies,
+        "c_settings": c_settings,
         "exclude": (
             _literal_array(arguments["exclude"], f"{label}.exclude")
             if "exclude" in arguments
@@ -667,6 +1175,21 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
         "kind": "target",
         "name": name,
         "path": _optional_literal(arguments, "path", label),
+        "resources": [
+            _parse_resource(item, f"{label}.resources[{index}]")
+            for index, item in enumerate(
+                _array(
+                    arguments.get(
+                        "resources",
+                        [
+                            _Token("punctuation", "[", 0),
+                            _Token("punctuation", "]", 0),
+                        ],
+                    ),
+                    f"{label}.resources",
+                )
+            )
+        ],
         "sources": (
             _literal_array(arguments["sources"], f"{label}.sources")
             if "sources" in arguments
@@ -676,14 +1199,15 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
     }
 
 
-def _parse_manifest(data: bytes, label: str) -> dict[str, Any]:
+def _parse_manifest(
+    data: bytes, label: str, manifest_root: Path | None = None
+) -> dict[str, Any]:
     try:
         text = data.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise PackageGraphError(f"{label} is not UTF-8: {exc}") from exc
+    text = _preprocess_manifest_conditions(text, label)
     tokens = _tokenize(text, label)
-    if any(token.value == "#" for token in tokens):
-        raise PackageGraphError(f"{label} uses unsupported conditional or macro syntax")
     candidates: list[int] = []
     delimiter_depth = 0
     for index in range(len(tokens) - 4):
@@ -719,7 +1243,17 @@ def _parse_manifest(data: bytes, label: str) -> dict[str, Any]:
                 break
     if end < 0:
         raise PackageGraphError(f"{label} Package call is unbalanced")
-    _, arguments = _call(tokens[start : end + 1], f"{label} Package")
+    bindings = _static_manifest_bindings(
+        tokens, candidates[0], label, manifest_root
+    )
+    package_tokens = _expand_manifest_bindings(
+        tokens[start : end + 1], bindings, f"{label} Package"
+    )
+    if any(token.value == "#" for token in package_tokens):
+        raise PackageGraphError(
+            f"{label} Package expression uses unsupported macro syntax"
+        )
+    _, arguments = _call(package_tokens, f"{label} Package")
     name = _literal(arguments.get("name", []), f"{label} Package.name")
     products = [
         _parse_product(item, f"{label} products[{index}]")
@@ -745,6 +1279,9 @@ def _parse_manifest(data: bytes, label: str) -> dict[str, Any]:
             )
         )
     ]
+    dependencies.extend(
+        _appended_remote_dependencies(tokens, end + 1, bindings, label)
+    )
     targets = [
         _parse_target(item, f"{label} targets[{index}]")
         for index, item in enumerate(
@@ -883,6 +1420,7 @@ class _Planner:
         parsed = _parse_manifest(
             (filesystem_root / manifest_relative).read_bytes(),
             f"{label} {manifest_relative}",
+            filesystem_root,
         )
         targets = {item["name"]: item for item in parsed["targets"]}
         products = {
@@ -1012,11 +1550,25 @@ class _Planner:
             raise PackageGraphError(
                 f"package path cannot form a stable target identity: {package_path!r}"
             )
-        if not name.isascii() or _IDENTIFIER.fullmatch(name) is None:
+        if (
+            not name.isascii()
+            or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.-]*", name) is None
+        ):
             raise PackageGraphError(
-                f"reachable target is not a portable Swift module name: {name!r}"
+                f"reachable target has a nonportable name: {name!r}"
             )
         return f"{package_path}#{name}"
+
+    @staticmethod
+    def _module_name(target_name: str) -> str:
+        module = re.sub(r"[^A-Za-z0-9_]", "_", target_name)
+        if module and module[0].isdigit():
+            module = "_" + module
+        if not module or _IDENTIFIER.fullmatch(module) is None:
+            raise PackageGraphError(
+                f"target name has no portable C99 module identity: {target_name!r}"
+            )
+        return module
 
     def _product_targets(
         self, package: Mapping[str, Any], product_name: str, label: str
@@ -1201,7 +1753,7 @@ class _Planner:
                     )
         self.reachable[target_id] = {
             "dependencies": edges,
-            "module": target_name,
+            "module": self._module_name(target_name),
             "package": package,
             "target": target,
             "target_id": target_id,
@@ -1380,6 +1932,142 @@ class _Planner:
                     else f"remote:{package['materialization']['identity']}"
                 )
             records.append(record)
+        return records
+
+    def _target_resources(self, model: Mapping[str, Any]) -> list[dict[str, Any]]:
+        """Freeze every byte selected by a SwiftPM resource rule.
+
+        SwiftPM resolves resource paths relative to the target source root, but
+        permits a declaration such as ``../Sources/PrivacyInfo.xcprivacy`` as
+        long as it remains inside the package.  Store paths relative to the
+        application or exact remote repository so the graph stays relocatable.
+        ``copy`` preserves a selected directory wrapper; ``process`` exposes
+        the directory's children at the resource-bundle root.  Asset catalogs
+        intentionally remain source-form inputs for OpenUIKit's deterministic
+        asset indexer.
+        """
+
+        package = model["package"]
+        target = model["target"]
+        if not target["resources"]:
+            return []
+        filesystem_root = package["filesystem_root"]
+        raw_target_path = target["path"] or f"Sources/{target['name']}"
+        target_relative = _lexical_dependency_path(
+            raw_target_path, f"target {model['target_id']} path"
+        )
+        if ".." in target_relative.parts:
+            raise PackageGraphError(
+                f"target {model['target_id']} path escapes its package"
+            )
+        source_prefix = PurePosixPath(package["source_prefix"])
+        package_floor = len(source_prefix.parts)
+        base_relative = source_prefix / target_relative
+        records: list[dict[str, Any]] = []
+        destinations: dict[str, str] = {}
+
+        def resolve(value: str, label: str) -> PurePosixPath:
+            raw = _lexical_dependency_path(value, label)
+            stack = list(base_relative.parts)
+            for component in raw.parts:
+                if component == "..":
+                    if len(stack) <= package_floor:
+                        raise PackageGraphError(
+                            f"{label} escapes target package {package['name']!r}"
+                        )
+                    stack.pop()
+                else:
+                    stack.append(component)
+            relative = PurePosixPath(*stack)
+            _ordinary(filesystem_root, relative, label)
+            return relative
+
+        def add_file(
+            input_relative: PurePosixPath,
+            bundle_relative: PurePosixPath,
+            rule: str,
+            label: str,
+        ) -> None:
+            if not bundle_relative.parts or any(
+                part in {"", ".", ".."} for part in bundle_relative.parts
+            ):
+                raise PackageGraphError(
+                    f"{label} has an unsafe resource-bundle destination"
+                )
+            destination = bundle_relative.as_posix()
+            key = _portable(destination)
+            previous = destinations.get(key)
+            if previous is not None:
+                raise PackageGraphError(
+                    f"target {model['target_id']} resource destination {destination!r} "
+                    f"collides with {previous!r}"
+                )
+            destinations[key] = destination
+            record = _file_record(filesystem_root, input_relative.as_posix(), label)
+            record.update({"bundle_path": destination, "rule": rule})
+            if self.source_external_graph is not None:
+                record["source_origin"] = (
+                    "application"
+                    if package["origin"] == "local"
+                    else f"remote:{package['materialization']['identity']}"
+                )
+            records.append(record)
+
+        for index, declaration in enumerate(target["resources"]):
+            label = f"target {model['target_id']} resources[{index}]"
+            input_relative = resolve(declaration["path"], label)
+            physical = _ordinary(filesystem_root, input_relative, label)
+            metadata = physical.lstat()
+            rule = declaration["kind"]
+            if stat.S_ISLNK(metadata.st_mode):
+                raise PackageGraphError(f"{label} traverses a symlink: {physical}")
+            if stat.S_ISREG(metadata.st_mode):
+                add_file(input_relative, PurePosixPath(physical.name), rule, label)
+                continue
+            if not stat.S_ISDIR(metadata.st_mode):
+                raise PackageGraphError(
+                    f"{label} is not a regular file or ordinary directory"
+                )
+
+            destination_root = (
+                PurePosixPath(physical.name)
+                if rule == "copy" or physical.name.endswith(".xcassets")
+                else PurePosixPath()
+            )
+            found_file = False
+
+            def visit(directory: Path, relative: PurePosixPath) -> None:
+                nonlocal found_file
+                for entry in sorted(
+                    os.scandir(directory), key=lambda item: item.name.encode("utf-8")
+                ):
+                    child_relative = relative / entry.name
+                    child = Path(entry.path)
+                    child_metadata = child.lstat()
+                    if stat.S_ISLNK(child_metadata.st_mode):
+                        raise PackageGraphError(
+                            f"{label} contains symlink {child_relative}"
+                        )
+                    if stat.S_ISDIR(child_metadata.st_mode):
+                        visit(child, child_relative)
+                    elif stat.S_ISREG(child_metadata.st_mode):
+                        found_file = True
+                        add_file(
+                            input_relative / child_relative,
+                            destination_root / child_relative,
+                            rule,
+                            label,
+                        )
+                    else:
+                        raise PackageGraphError(
+                            f"{label} contains unsupported node {child_relative}"
+                        )
+
+            visit(physical, PurePosixPath())
+            if not found_file:
+                raise PackageGraphError(f"{label} selects an empty directory")
+
+        records.sort(key=lambda item: item["bundle_path"].encode("utf-8"))
         return records
 
     def _resolution_path(self) -> str | None:
@@ -1651,6 +2339,7 @@ class _Planner:
         module_names: dict[str, str] = {}
         filesystem_paths: dict[str, tuple[str, tuple[int, int]]] = {}
         targets: list[dict[str, Any]] = []
+        resource_bundles: dict[str, str] = {}
         for order, target_id in enumerate(ordered_ids):
             model = self.reachable[target_id]
             module = model["module"]
@@ -1662,6 +2351,7 @@ class _Planner:
                 )
             module_names[module_key] = target_id
             sources = self._target_sources(model)
+            resources = self._target_resources(model)
             for record in sources:
                 path = record["path"]
                 source_origin = record.get("source_origin", "application")
@@ -1705,6 +2395,21 @@ class _Planner:
             }
             if model["target"]["swift_settings"]:
                 target_record["swift_settings"] = model["target"]["swift_settings"]
+            if resources:
+                bundle_stem = (
+                    f"{self._module_name(model['package']['name'])}_{module}"
+                )
+                bundle_name = f"{bundle_stem}.bundle"
+                bundle_key = _portable(bundle_name)
+                previous_bundle = resource_bundles.get(bundle_key)
+                if previous_bundle is not None:
+                    raise PackageGraphError(
+                        f"reachable targets {previous_bundle} and {target_id} emit "
+                        f"duplicate resource bundle {bundle_name!r}"
+                    )
+                resource_bundles[bundle_key] = target_id
+                target_record["resource_bundle"] = bundle_name
+                target_record["resources"] = resources
             targets.append(target_record)
 
         reachable_package_paths = sorted(
@@ -1892,6 +2597,12 @@ class _Planner:
                 ),
                 "resolution_pins": len(pins),
                 "selected_products": len(selected),
+                "resource_bundles": sum(
+                    "resource_bundle" in target for target in targets
+                ),
+                "resource_files": sum(
+                    len(target.get("resources", [])) for target in targets
+                ),
                 "swift_sources": sum(len(target["sources"]) for target in targets),
                 "target_dependency_edges": len(target_edges),
             },
@@ -2077,6 +2788,29 @@ def require_buildable(graph: dict[str, Any]) -> None:
         raise PackageGraphError("local package graph is not marked buildable")
 
 
+def _resource_bundle_accessor(bundle_name: str) -> bytes:
+    if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*\.bundle", bundle_name) is None:
+        raise PackageGraphError(
+            f"package resource bundle has an unsafe name: {bundle_name!r}"
+        )
+    return (
+        "import Foundation\n\n"
+        "extension Foundation.Bundle {\n"
+        "    static let module: Bundle = {\n"
+        "        guard let resourceURL = Bundle.main.resourceURL else {\n"
+        "            fatalError(\"main bundle has no resource URL\")\n"
+        "        }\n"
+        "        let bundlePath = resourceURL\n"
+        f'            .appendingPathComponent("{bundle_name}").path\n'
+        "        guard let bundle = Bundle(path: bundlePath) else {\n"
+        f'            fatalError("unable to load SwiftPM resource bundle {bundle_name}")\n'
+        "        }\n"
+        "        return bundle\n"
+        "    }()\n"
+        "}\n"
+    ).encode("utf-8")
+
+
 def _build_contract(
     graph: dict[str, Any],
     source_root: Path,
@@ -2163,6 +2897,14 @@ def _build_contract(
                 sources.append(os.fspath(remote_root / path))
             else:
                 raise PackageGraphError(f"unsupported target source origin {origin!r}")
+        resource_bundle = target.get("resource_bundle")
+        if resource_bundle is not None:
+            bundle_name = _string(
+                resource_bundle, f"graph targets[{index}].resource_bundle"
+            )
+            accessor_relative = f"{directory}/resource_bundle_accessor.swift"
+            files[accessor_relative] = _resource_bundle_accessor(bundle_name)
+            sources.append(os.fspath(output_root / accessor_relative))
         objects = [
             f"{directory}/objects/{source_index:06d}.o"
             for source_index in range(len(sources))
@@ -2174,22 +2916,23 @@ def _build_contract(
             for source, object_relative in zip(sources, objects, strict=True)
         }
         files[output_map_relative] = canonical_json(output_map)
-        records.append(
-            {
-                "module": module,
-                "module_output": module_relative,
-                "objects": objects,
-                "output_file_map": output_map_relative,
-                "sources": sources,
-                "swift_arguments": _swift_setting_arguments(
-                    target.get("swift_settings", []),
-                    f"graph targets[{index}].swift_settings",
-                ),
-                "target_id": _string(
-                    target.get("target_id"), f"graph targets[{index}].target_id"
-                ),
-            }
-        )
+        record = {
+            "module": module,
+            "module_output": module_relative,
+            "objects": objects,
+            "output_file_map": output_map_relative,
+            "sources": sources,
+            "swift_arguments": _swift_setting_arguments(
+                target.get("swift_settings", []),
+                f"graph targets[{index}].swift_settings",
+            ),
+            "target_id": _string(
+                target.get("target_id"), f"graph targets[{index}].target_id"
+            ),
+        }
+        if resource_bundle is not None:
+            record["resource_bundle"] = bundle_name
+        records.append(record)
     contract = {
         "classification": "portable-local-package-build-contract",
         "format_version": 2,

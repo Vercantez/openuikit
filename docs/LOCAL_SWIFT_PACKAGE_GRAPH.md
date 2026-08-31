@@ -15,20 +15,26 @@ in that case the package planner requires the product name to occur in exactly
 one inventoried manifest. It never picks the first match.
 
 `local_package_graph.py` does not execute a manifest, invoke SwiftPM, contact a
-registry, or resolve a URL. Its static parser accepts ordinary `.library`
-products, `.target` library targets, local `.package(path:)` dependencies,
-immutable workspace pins, and the three dependency forms used by normal
-library targets. It also preserves the static per-target settings used by
-modern Swift packages: `.swiftLanguageMode(.v4/.v4_2/.v5/.v6)` and
-`.defaultIsolation(MainActor.self)`. They become an exact, allowlisted
-option/value vector in each target's build contract; every other reachable
-setting or conditional form still refuses. Unsupported reachable target kinds,
-conditions, dynamic expressions, mixed-language sources, or product types
-refuse. Remote dependency requirements accept static semantic-version strings
-and the equivalent `Version(major, minor, patch)` constructor. The legacy
-unconditional `.productItem(..., condition: nil)` spelling is normalized to
-the same product edge as `.product(...)`; an actual condition still refuses.
-Unreachable test targets may remain declared because they are not part of the
+registry, or resolve a URL. Its static parser evaluates a deliberately fixed
+Apple-target manifest profile: `os(macOS)` and Swift 6.2 are active, Linux and
+Windows branches are inactive, no ambient environment variables or caller
+traits are present, and unknown conditional expressions refuse. Static
+top-level bindings, array concatenation, hermetic dependency appends, ordinary
+`.library` products, `.target` library targets, local `.package(path:)`
+dependencies, immutable workspace pins, and conditional target/product edges
+are understood within that profile. This is deterministic manifest
+interpretation, not arbitrary Swift execution.
+
+Static per-target `.swiftLanguageMode`, `defaultIsolation(MainActor.self)`,
+`StrictConcurrency`, and identifier compilation conditions become exact,
+allowlisted option/value vectors in the target build contract. Package
+resource `.copy` and `.process` rules are frozen as hashed files; processing
+keeps source-form asset catalog wrappers for OpenUIKit's asset indexer.
+Unsupported reachable target kinds, dynamic expressions, settings, source
+nodes, or product types refuse. Remote requirements accept static semantic
+versions and `Version(major, minor, patch)`. The unconditional
+`.productItem(..., condition: nil)` spelling is normalized to `.product(...)`.
+Unreachable test targets may remain declared because they are outside the
 selected application build.
 
 Every package root, target root, source, manifest, and workspace resolution
@@ -47,6 +53,8 @@ The canonical `portable-local-swift-package-graph` contains:
 - a dependency-first topological target list;
 - each target-to-target and target-to-external-product edge;
 - every ordered Swift source with size and SHA-256;
+- every reachable package resource byte, bundle-relative destination, rule,
+  source origin, and deterministic `<Package>_<Target>.bundle` identity;
 - the workspace `Package.resolved` hash and complete pin set;
 - each used remote declaration, exact pin, consumer, and an explicit null
   materialization.
@@ -79,9 +87,11 @@ For a graph with all source materialized,
 dependency-first order. Each target gets a distinct `-module-name`,
 `-emit-module-path`, output-file map, and exhaustive object directory. Later
 targets and the application receive only the frozen package module directory
-as an additional import path. Frozen Swift language-mode and default-isolation
-arguments are applied target by target, matching their manifests instead of
-silently inheriting the application target's defaults. Every package object is
+as an additional import path. Frozen language mode, default isolation,
+strict-concurrency feature, and compilation conditions are applied target by
+target. A resource-bearing target receives an attested generated
+`Bundle.module` accessor in its private build directory; application and
+vendor source remain untouched. Every package object is
 checked as ARM64 Mach-O, recorded in the link ledger, and linked exactly once
 beside the application objects. The build contract and output maps are
 reconstructed after compilation. Both host and guest rerun the

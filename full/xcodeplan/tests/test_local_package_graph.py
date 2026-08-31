@@ -226,6 +226,8 @@ class LocalPackageGraphTests(unittest.TestCase):
                 "local_products": 3,
                 "local_targets": 3,
                 "resolution_pins": 1,
+                "resource_bundles": 0,
+                "resource_files": 0,
                 "selected_products": 1,
                 "swift_sources": 3,
                 "target_dependency_edges": 3,
@@ -515,15 +517,40 @@ class LocalPackageGraphTests(unittest.TestCase):
         manifest.write_text(
             "// swift-tools-version: 6.4\n"
             "import PackageDescription\n"
-            "#if os(macOS)\n"
+            "#if canImport(DynamicThing)\n"
             'let package = Package(name: "Feature", targets: [])\n'
             "#endif\n",
             encoding="utf-8",
         )
         with self.assertRaisesRegex(
-            local_package_graph.PackageGraphError, "conditional or macro"
+            local_package_graph.PackageGraphError,
+            "unsupported conditional compilation expression",
         ):
             self.graph()
+
+    def test_manifest_profile_selects_static_apple_and_swift_branches(self) -> None:
+        self.make_local_only()
+        self.write_package(
+            "Feature",
+            """
+            #if os(Linux)
+            let featureTargets: [Target] = [.executableTarget(name: "Wrong")]
+            #else
+            let featureTargets: [Target] = [.target(name: "Feature")]
+            #endif
+            let package = Package(
+                name: "Feature",
+                products: [.library(name: "Feature", targets: ["Feature"])],
+                targets: featureTargets
+            )
+            #if swift(>=5.6)
+            package.dependencies += []
+            #endif
+            """,
+        )
+        graph = self.graph()
+        self.assertIn("Feature#Feature", [item["target_id"] for item in graph["targets"]])
+        local_package_graph.verify(graph, self.root)
 
     def test_remote_pin_constraint_mismatch_is_refused(self) -> None:
         resolution = (
@@ -600,8 +627,21 @@ class LocalPackageGraphTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
+        graph = self.graph()
+        feature = next(
+            target for target in graph["targets"] if target["target_id"] == "Feature#Feature"
+        )
+        self.assertNotIn("Remote", [item.get("product") for item in feature["dependencies"]])
+
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                "condition: .when(platforms: [.iOS])",
+                "condition: .when(configuration: .debug)",
+            ),
+            encoding="utf-8",
+        )
         with self.assertRaisesRegex(
-            local_package_graph.PackageGraphError, "conditional product dependency"
+            local_package_graph.PackageGraphError, "unsupported target condition"
         ):
             self.graph()
 
@@ -720,7 +760,7 @@ class LocalPackageGraphTests(unittest.TestCase):
                 targets: [
                     .target(
                         name: "Core",
-                        swiftSettings: [.define("UNMODELED")]
+                        swiftSettings: [.unsafeFlags(["-unmodeled"])]
                     )
                 ]
             )
@@ -729,6 +769,101 @@ class LocalPackageGraphTests(unittest.TestCase):
         with self.assertRaisesRegex(
             local_package_graph.PackageGraphError,
             "unsupported Swift setting",
+        ):
+            self.graph()
+
+    def test_resources_are_frozen_bundled_and_get_a_generated_accessor(self) -> None:
+        self.make_local_only()
+        core = self.root / "Core"
+        (core / "PrivacyInfo.xcprivacy").write_text("privacy\n", encoding="utf-8")
+        static = core / "Sources/Core/Static"
+        static.mkdir()
+        (static / "icon.dat").write_bytes(b"icon")
+        shared = core / "Sources/Shared"
+        shared.mkdir()
+        (shared / "configuration.json").write_text("{}\n", encoding="utf-8")
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core-Utilities",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [
+                    .target(
+                        name: "Core",
+                        resources: [
+                            .copy("../../PrivacyInfo.xcprivacy"),
+                            .copy("Static"),
+                            .process("../Shared")
+                        ]
+                    )
+                ]
+            )
+            """,
+        )
+        graph = self.graph()
+        target = graph["targets"][0]
+        self.assertEqual(target["resource_bundle"], "Core_Utilities_Core.bundle")
+        self.assertEqual(
+            [item["bundle_path"] for item in target["resources"]],
+            ["PrivacyInfo.xcprivacy", "Static/icon.dat", "configuration.json"],
+        )
+        self.assertEqual(graph["summary"]["resource_bundles"], 1)
+        self.assertEqual(graph["summary"]["resource_files"], 3)
+        output = Path(self.temporary.name) / "resource-build"
+        contract = local_package_graph.prepare_build(graph, self.root, output)
+        core_contract = contract["targets"][0]
+        self.assertEqual(core_contract["resource_bundle"], "Core_Utilities_Core.bundle")
+        accessor = output / "targets/000000-Core/resource_bundle_accessor.swift"
+        self.assertIn(
+            'appendingPathComponent("Core_Utilities_Core.bundle")',
+            accessor.read_text(encoding="utf-8"),
+        )
+        self.assertIn(os.fspath(accessor), core_contract["sources"])
+        local_package_graph.verify_build_contract(graph, self.root, output)
+
+        (core / "Sources/Shared/configuration.json").write_text(
+            '{"changed":true}\n', encoding="utf-8"
+        )
+        with self.assertRaises(local_package_graph.PackageGraphError):
+            local_package_graph.verify(graph, self.root)
+
+    def test_resource_destination_collision_and_package_escape_are_refused(self) -> None:
+        self.make_local_only()
+        core = self.root / "Core"
+        left = core / "Sources/Core/Left"
+        right = core / "Sources/Core/Right"
+        left.mkdir()
+        right.mkdir()
+        (left / "same.txt").write_text("left\n", encoding="utf-8")
+        (right / "same.txt").write_text("right\n", encoding="utf-8")
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [.target(name: "Core", resources: [
+                    .process("Left/same.txt"), .process("Right/same.txt")
+                ])]
+            )
+            """,
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError, "resource destination.*collides"
+        ):
+            self.graph()
+
+        manifest = core / "Package.swift"
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                '.process("Left/same.txt"), .process("Right/same.txt")',
+                '.copy("../../../outside.txt")',
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError, "escapes target package"
         ):
             self.graph()
 

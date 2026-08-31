@@ -520,6 +520,12 @@ PY
                     -default-isolation)
                         [ "${package_swift_arguments[package_cursor + 1]}" = MainActor ] \
                             || die "local package default isolation is invalid: $package_module" ;;
+                    -enable-experimental-feature)
+                        [ "${package_swift_arguments[package_cursor + 1]}" = StrictConcurrency ] \
+                            || die "local package experimental feature is invalid: $package_module" ;;
+                    -D)
+                        [[ "${package_swift_arguments[package_cursor + 1]}" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] \
+                            || die "local package compilation condition is invalid: $package_module" ;;
                     *)
                         die "local package compiler argument is outside the allowlist: ${package_swift_arguments[package_cursor]}" ;;
                 esac

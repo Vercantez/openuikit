@@ -195,6 +195,8 @@ def validate_local_package_module_object_boundary(source: str) -> None:
         '-emit-module -emit-module-path "$package_module_output"',
         'package_objects+=("$package_object")',
         '"${package_objects[@]}" "${extra_objects[@]}")',
+        "local package experimental feature is invalid",
+        "local package compilation condition is invalid",
         "local package object link count is not one",
         "local linked_package_object_count=0",
     )

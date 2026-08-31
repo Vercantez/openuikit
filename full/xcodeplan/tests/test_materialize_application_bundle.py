@@ -248,6 +248,74 @@ class MaterializeApplicationBundleTests(unittest.TestCase):
                 self.parent / "reserved.json",
             )
 
+    def test_materializes_swiftpm_resource_bundles_and_indexes_their_assets(self) -> None:
+        package = self.source / "Package"
+        package_sources = package / "Sources/Pack"
+        package_catalog = package_sources / "PackAssets.xcassets/PackColor.colorset"
+        package_catalog.mkdir(parents=True)
+        (package / "Package.swift").write_text(
+            "// swift-tools-version: 6.2\n"
+            "import PackageDescription\n"
+            "let package = Package(name: \"PackageResources\", "
+            "products: [.library(name: \"Pack\", targets: [\"Pack\"])], "
+            "targets: [.target(name: \"Pack\", resources: ["
+            ".copy(\"payload.json\"), .process(\"PackAssets.xcassets\")])])\n",
+            encoding="utf-8",
+        )
+        (package_sources / "Pack.swift").write_text(
+            "public struct Pack { public init() {} }\n", encoding="utf-8"
+        )
+        (package_sources / "payload.json").write_text(
+            '{"portable":true}\n', encoding="utf-8"
+        )
+        (package_sources / "PackAssets.xcassets/Contents.json").write_text(
+            '{"info":{"author":"xcode","version":1}}\n', encoding="utf-8"
+        )
+        (package_catalog / "Contents.json").write_text(
+            '{"colors":[{"idiom":"universal","color":{'
+            '"color-space":"srgb","components":{"red":"1.000",'
+            '"green":"0.000","blue":"0.000","alpha":"1.000"}}}],'
+            '"info":{"author":"xcode","version":1}}\n',
+            encoding="utf-8",
+        )
+        inventory = json.loads(json.dumps(self.inventory))
+        inventory["local_package_references"] = [{"relative_path": "Package"}]
+        inventory["package_products"] = [
+            {"name": "Pack", "origin": "local", "relative_path": "Package"}
+        ]
+        _generated, plan = application_build_plan.plan(inventory, self.source)
+
+        output = self.parent / "PackageResources.app"
+        attestation = self.parent / "package-resources.json"
+        result = materialize_application_bundle.materialize(
+            plan, self.source, self.platform, output, attestation
+        )
+        resource_bundle = (
+            output
+            / "Contents/Resources/PackageResources_Pack.bundle"
+        )
+        self.assertEqual(
+            (resource_bundle / "payload.json").read_bytes(), b'{"portable":true}\n'
+        )
+        self.assertTrue(
+            (resource_bundle / "PackAssets.xcassets/Contents.json").is_file()
+        )
+        self.assertEqual(result["summary"]["swiftpm_resource_bundles"], 1)
+        self.assertEqual(result["summary"]["swiftpm_resource_files"], 3)
+        asset_index = json.loads(
+            (
+                output / "Contents/Resources/OpenUIKit/AssetCatalogs/index.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(len(asset_index["catalogs"]), 2)
+        self.assertIn("PackColor", asset_index["assets"])
+
+        (package_sources / "payload.json").write_text(
+            '{"portable":false}\n', encoding="utf-8"
+        )
+        with self.assertRaises(application_build_plan.BuildPlanError):
+            application_build_plan.verify(plan, self.source)
+
 
 if __name__ == "__main__":
     unittest.main()
