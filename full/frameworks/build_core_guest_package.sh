@@ -2084,7 +2084,7 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
@@ -2126,7 +2126,7 @@ llvm-otool-18 -hv "$STAGE/probe/FoundationURLSessionRuntime" \
     server_port=$(tr -d '[:space:]' < "$server_port_file")
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/FoundationURLSessionRuntime \
         "http://127.0.0.1:$server_port"

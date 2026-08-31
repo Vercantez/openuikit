@@ -1300,7 +1300,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertEqual(
             builder.count(
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
-                '$URL_TRANSPORT_HOST'
+                '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
             3,
         )
