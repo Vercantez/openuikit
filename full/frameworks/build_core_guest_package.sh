@@ -128,6 +128,10 @@ SYSTEM_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 BOLD_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 EXPECTED_SYSTEM_FONT=ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280
 EXPECTED_BOLD_FONT=5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895
+HOST_DISPATCH_SOURCE=/usr/lib/swift/linux/libdispatch.so
+HOST_BLOCKS_RUNTIME_SOURCE=/usr/lib/swift/linux/libBlocksRuntime.so
+EXPECTED_HOST_DISPATCH_SHA256=39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
+EXPECTED_HOST_BLOCKS_RUNTIME_SHA256=47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
 
 usage() {
     cat <<'EOF'
@@ -633,13 +637,14 @@ cp -a "$FULL/inc/CPortableIO" "$STAGE/include/"
 cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
 mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
-    "$STAGE/include/COpenRelativeTime" \
+    "$STAGE/include/COpenRelativeTime" "$STAGE/include/COpenDispatch" \
     "$STAGE/include/_FoundationCShims" "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
 cp -a "$OPENCOMBINE_HELPERS/include/." "$STAGE/include/COpenCombineHelpers/"
 cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
 cp -a "$W/full/relativetime/include/." "$STAGE/include/COpenRelativeTime/"
+cp -a "$W/full/dispatch/include/." "$STAGE/include/COpenDispatch/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
 cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
@@ -688,7 +693,9 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -fmodule-map-file="$STAGE/include/COpenURLTransport/module.modulemap"
     -Xcc -I"$STAGE/include/COpenURLTransport"
     -Xcc -fmodule-map-file="$STAGE/include/COpenRelativeTime/module.modulemap"
-    -Xcc -I"$STAGE/include/COpenRelativeTime")
+    -Xcc -I"$STAGE/include/COpenRelativeTime"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenDispatch/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenDispatch")
 FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
@@ -951,6 +958,103 @@ ldd "$RELATIVE_TIME_HOST" \
         "$(hash_file "$RELATIVE_TIME_HOST")"
 } >> "$RUNTIME/.manifest"
 
+echo '== build and pin the Linux libdispatch scheduling boundary'
+for host_runtime_input in "$HOST_DISPATCH_SOURCE" "$HOST_BLOCKS_RUNTIME_SOURCE"; do
+    [ -f "$host_runtime_input" ] && [ ! -L "$host_runtime_input" ] \
+        || die "host Dispatch runtime input is not a regular file: $host_runtime_input"
+done
+require_hash "$HOST_DISPATCH_SOURCE" "$EXPECTED_HOST_DISPATCH_SHA256" \
+    host-libdispatch
+require_hash "$HOST_BLOCKS_RUNTIME_SOURCE" \
+    "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256" host-BlocksRuntime
+cp "$HOST_DISPATCH_SOURCE" "$RUNTIME/host/libdispatch.so"
+cp "$HOST_BLOCKS_RUNTIME_SOURCE" "$RUNTIME/host/libBlocksRuntime.so"
+
+DISPATCH_HOST=$RUNTIME/host/libOpenDispatchHost.so
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/dispatch/include" -I /usr/lib/swift -shared \
+    "$W/full/dispatch/OpenDispatchHost.c" \
+    -L "$RUNTIME/host" -Wl,-rpath,'$ORIGIN' \
+    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
+    -o "$DISPATCH_HOST"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$W/full/dispatch/include" -I /usr/lib/swift \
+    "$W/full/dispatch/OpenDispatchHost.c" \
+    "$W/full/dispatch/OpenDispatchHostTests.c" \
+    -L "$RUNTIME/host" -Wl,-rpath,"$RUNTIME/host" \
+    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
+    -o "$WORK/open-dispatch-host-tests"
+LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
+    > "$WORK/open-dispatch-host-test.log" 2>&1
+grep -Fx \
+    'OPEN_DISPATCH_HOST_OK global=minted async=worker after=timer main-token=contained glibc>=2.38' \
+    "$WORK/open-dispatch-host-test.log" >/dev/null \
+    || die 'native Dispatch host semantic marker is missing'
+
+DISPATCH_HOST_EXPECTED_EXPORTS=$WORK/open-dispatch-host-expected-exports.txt
+{
+    printf '%s\n' \
+        openui_dispatch_host_v1_after \
+        openui_dispatch_host_v1_async \
+        openui_dispatch_host_v1_get_global_queue \
+        openui_dispatch_host_v1_main \
+        openui_dispatch_host_v1_monotonic_nanoseconds \
+        openui_dispatch_host_v1_runtime_check
+} > "$DISPATCH_HOST_EXPECTED_EXPORTS"
+readelf --wide --syms "$DISPATCH_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-exports.txt"
+cmp "$DISPATCH_HOST_EXPECTED_EXPORTS" "$WORK/open-dispatch-host-exports.txt" \
+    || die 'Linux Dispatch helper exports drifted'
+
+dispatch_glibc_max=$(readelf --version-info "$RUNTIME/host/libdispatch.so" \
+    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
+blocks_glibc_max=$(readelf --version-info "$RUNTIME/host/libBlocksRuntime.so" \
+    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
+[ "$dispatch_glibc_max" = GLIBC_2.38 ] \
+    || die "staged libdispatch maximum glibc requirement is $dispatch_glibc_max, expected GLIBC_2.38"
+[ "$blocks_glibc_max" = GLIBC_2.17 ] \
+    || die "staged BlocksRuntime maximum glibc requirement is $blocks_glibc_max, expected GLIBC_2.17"
+readelf --wide --dynamic "$DISPATCH_HOST" \
+    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
+    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-sonames.txt"
+for required_soname in libdispatch.so libBlocksRuntime.so; do
+    grep -Fx "$required_soname" "$WORK/open-dispatch-host-sonames.txt" >/dev/null \
+        || die "Linux Dispatch helper does not pin $required_soname"
+done
+{
+    printf 'format\topen-dispatch-host-v1\n'
+    printf 'host-abi\tELF64-AArch64\n'
+    printf 'glibc-minimum\t2.38\tsource=staged-libdispatch-version-needs\n'
+    printf 'runtime\tlibdispatch.so\t%s\tmax-version=%s\n' \
+        "$(hash_file "$RUNTIME/host/libdispatch.so")" "$dispatch_glibc_max"
+    printf 'runtime\tlibBlocksRuntime.so\t%s\tmax-version=%s\n' \
+        "$(hash_file "$RUNTIME/host/libBlocksRuntime.so")" "$blocks_glibc_max"
+    printf 'helper\tlibOpenDispatchHost.so\t%s\trpath=$ORIGIN\n' \
+        "$(hash_file "$DISPATCH_HOST")"
+    while IFS= read -r soname; do
+        printf 'direct-soname\t%s\n' "$soname"
+    done < "$WORK/open-dispatch-host-sonames.txt"
+    printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\n'
+    printf 'job-policy\tguest-callback=opaque\thost-dispatch=dispatch_async_f\n'
+} > "$STAGE/attestation/open-dispatch-host.tsv"
+cp "$WORK/open-dispatch-host-test.log" \
+    "$STAGE/attestation/open-dispatch-host-test.log"
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenDispatch" \
+    -c "$W/full/dispatch/OpenDispatchBridge.c" \
+    -o "$WORK/open-dispatch-bridge.o"
+{
+    printf 'local\thost/libdispatch.so\t%s\tpinned Swift 6.2.4 Linux libdispatch\n' \
+        "$(hash_file "$RUNTIME/host/libdispatch.so")"
+    printf 'local\thost/libBlocksRuntime.so\t%s\tpinned Swift 6.2.4 BlocksRuntime\n' \
+        "$(hash_file "$RUNTIME/host/libBlocksRuntime.so")"
+    printf 'local\thost/libOpenDispatchHost.so\t%s\tbuilt from full/dispatch/OpenDispatchHost.c\n' \
+        "$(hash_file "$DISPATCH_HOST")"
+} >> "$RUNTIME/.manifest"
+
 FE_OBJECTS=(
     "$FULL/foundation/essentials/FoundationEssentials.o"
     "$FULL/foundation/collections/InternalCollectionsUtilities.o"
@@ -967,6 +1071,12 @@ FE_OBJECTS=(
 echo '== prewarm a new core-package Darwin module cache'
 swiftc -target "$TARGET" -sdk "$STAGE/sdk" \
     -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck -e 'import Swift'
+
+echo '== build the portable Dispatch Swift module'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" \
+    -module-name Dispatch -module-link-name Dispatch -emit-module \
+    -emit-module-path "$STAGE/modules/Dispatch.swiftmodule" \
+    -emit-object -o "$WORK/dispatch.o" "$W/full/dispatch/Dispatch.swift"
 
 echo '== build pinned OpenCombine and literal Combine'
 cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$WORK/COpenCombineHelpers.cpp"
@@ -1138,7 +1248,12 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link twenty-five reusable core framework dylibs'
+echo '== link twenty-six reusable core framework dylibs'
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
+    -install_name @rpath/libDispatch.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libDispatch.dylib" \
+    "$WORK/dispatch.o" "$WORK/open-dispatch-bridge.o" \
+    "${COMMON_LINK[@]}" "$STAGE/sdk/usr/lib/swift/libswift_Concurrency.tbd"
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -1379,7 +1494,7 @@ fi
     "${PROBE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
-    -lWebKit -lIntentsUI -lIntents -lCoreImage -lQuartzCore \
+    -lWebKit -lIntentsUI -lIntents -lCoreImage -lQuartzCore -lDispatch \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
@@ -1388,6 +1503,7 @@ fi
     "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
+    Dispatch \
     Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
@@ -1430,7 +1546,8 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$STAGE/attestation/runtime-closure.tsv"
 (
     cd "$STAGE"
-    LD_PRELOAD="$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreGuestPackageProbe \
         "$STAGE/resources/OpenUIKit" \
@@ -1439,6 +1556,75 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
 ) | tee "$STAGE/attestation/runtime.log"
 grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
+
+echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name DispatchMachORuntime -emit-object \
+    -o "$WORK/dispatch-macho-runtime.o" \
+    "$W/full/dispatch/tests/DispatchMachORuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/DispatchMachORuntime" \
+    "$WORK/dispatch-macho-runtime.o" "${COMMON_LINK[@]}" \
+    -lDispatch -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'Dispatch runtime gate is not an ARM64 Mach-O executable'
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/DispatchMachORuntime
+) | tee "$STAGE/attestation/dispatch-runtime.log"
+grep -Fx \
+    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 vouchers=null' \
+    "$STAGE/attestation/dispatch-runtime.log" >/dev/null \
+    || die 'real Dispatch/Swift-concurrency Mach-O runtime marker is missing'
+
+echo '== compile/link/run the full async Foundation URLSession cold gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name FoundationURLSessionRuntime -emit-object \
+    -o "$WORK/foundation-urlsession-runtime.o" \
+    "$W/full/foundation/tests/FoundationURLSessionRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/FoundationURLSessionRuntime" \
+    "$WORK/foundation-urlsession-runtime.o" "${COMMON_LINK[@]}" \
+    -lDispatch -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/FoundationURLSessionRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'Foundation URLSession runtime gate is not an ARM64 Mach-O executable'
+(
+    set -e
+    server_port_file=$WORK/foundation-urlsession-runtime.port
+    server_log=$WORK/foundation-urlsession-server.log
+    python3 -B "$W/full/foundation/tests/url_session_test_server.py" \
+        --port-file "$server_port_file" >"$server_log" 2>&1 &
+    server_pid=$!
+    trap 'kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true' EXIT
+    for _ in $(seq 1 200); do
+        [ ! -s "$server_port_file" ] || break
+        sleep 0.01
+    done
+    [ -s "$server_port_file" ] \
+        || die 'Foundation URLSession test server did not publish its port'
+    server_port=$(tr -d '[:space:]' < "$server_port_file")
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/FoundationURLSessionRuntime \
+        "http://127.0.0.1:$server_port"
+) | tee "$STAGE/attestation/foundation-urlsession-runtime.log"
+grep -Fx \
+    'FOUNDATION_URLSESSION_MACHO_OK delegate=retained configuration=isolated cookies=host-domain-path-expiry-delete redirect=set-cookie-post-get status500=response final-url=preserved concurrency=parallel input-stream=bounded urlprotocol=intercepted-cache-hit-redirect-refused timeouts=configuration-request https=not-requested' \
+    "$STAGE/attestation/foundation-urlsession-runtime.log" >/dev/null \
+    || die 'full async Foundation URLSession Mach-O runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
@@ -1457,6 +1643,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenURLTransport
     -Xcc -fmodule-map-file=include/COpenRelativeTime/module.modulemap
     -Xcc -Iinclude/COpenRelativeTime
+    -Xcc -fmodule-map-file=include/COpenDispatch/module.modulemap
+    -Xcc -Iinclude/COpenDispatch
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
     -Xcc -Iinclude/_FoundationCShims
 )
@@ -1468,7 +1656,7 @@ LINK_ARGUMENTS=(
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
-    -lWebKit -lCoreImage -lQuartzCore -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
+    -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
@@ -1564,6 +1752,17 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeHost.c")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeHostTests.c")"
+    printf 'dispatch\theader=%s\tmodule-map=%s\tbridge=%s\thost=%s\thost-tests=%s\tswift=%s\truntime-gate=%s\n' \
+        "$(hash_file "$W/full/dispatch/include/OpenDispatchABI.h")" \
+        "$(hash_file "$W/full/dispatch/include/module.modulemap")" \
+        "$(hash_file "$W/full/dispatch/OpenDispatchBridge.c")" \
+        "$(hash_file "$W/full/dispatch/OpenDispatchHost.c")" \
+        "$(hash_file "$W/full/dispatch/OpenDispatchHostTests.c")" \
+        "$(hash_file "$W/full/dispatch/Dispatch.swift")" \
+        "$(hash_file "$W/full/dispatch/tests/DispatchMachORuntime.swift")"
+    printf 'dispatch-host-runtime\tlibdispatch=%s\tlibBlocksRuntime=%s\tglibc-minimum=2.38\n' \
+        "$EXPECTED_HOST_DISPATCH_SHA256" \
+        "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -1592,6 +1791,7 @@ record_module_family() {
     done
 }
 for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
+    Dispatch \
     Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
@@ -1601,6 +1801,10 @@ record_artifact include CoreImage umbrella-header include/CoreImage/CoreImage.h
 record_artifact include CoreImage submodule-header \
     include/CoreImage/CIFilterBuiltins.h
 record_artifact include CoreImage module-map include/CoreImage/module.modulemap
+record_artifact include COpenDispatch abi-header \
+    include/COpenDispatch/OpenDispatchABI.h
+record_artifact include COpenDispatch module-map \
+    include/COpenDispatch/module.modulemap
 for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
     record_module_family module-dependency "$dependency"
 done
@@ -1619,6 +1823,12 @@ record_artifact runtime OpenRelativeTime darwin-bridge \
     guest-root/darwin/usr/lib/libOpenRelativeTime.dylib
 record_artifact runtime OpenRelativeTime linux-helper \
     guest-root/host/libOpenRelativeTimeHost.so
+record_artifact runtime OpenDispatch linux-helper \
+    guest-root/host/libOpenDispatchHost.so
+record_artifact runtime OpenDispatch linux-libdispatch \
+    guest-root/host/libdispatch.so
+record_artifact runtime OpenDispatch linux-blocks-runtime \
+    guest-root/host/libBlocksRuntime.so
 record_artifact runtime machorun executable guest-root/machorun
 record_artifact resource OpenUIKit system-font \
     resources/OpenUIKit/fonts/DejaVuSans.ttf
@@ -1630,7 +1840,19 @@ while IFS= read -r resource; do
     record_artifact resource OpenUIKit runtime-resource "$relative"
 done < <(find "$STAGE/resources/OpenUIKit" -type f | LC_ALL=C sort)
 record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackageProbe
+record_artifact probe DispatchMachORuntime executable \
+    probe/DispatchMachORuntime
+record_artifact probe FoundationURLSessionRuntime executable \
+    probe/FoundationURLSessionRuntime
 record_artifact attestation runtime runtime-log attestation/runtime.log
+record_artifact attestation dispatch host \
+    attestation/open-dispatch-host.tsv
+record_artifact attestation dispatch host-test-log \
+    attestation/open-dispatch-host-test.log
+record_artifact attestation dispatch runtime-log \
+    attestation/dispatch-runtime.log
+record_artifact attestation foundation-urlsession runtime-log \
+    attestation/foundation-urlsession-runtime.log
 record_artifact attestation contracts compile-rsp compile-flags.rsp
 record_artifact attestation contracts link-rsp link-inputs.rsp
 record_artifact attestation source-sets manifest attestation/source-sets.tsv

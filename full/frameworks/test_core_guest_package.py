@@ -124,6 +124,7 @@ FRAMEWORKS = (
     "OpenCoreGraphics",
     "OpenUIKit",
     "OpenCombine",
+    "Dispatch",
     "Combine",
     "SwiftUI",
     "Foundation",
@@ -574,6 +575,7 @@ class PackageFixture:
             "-lOpenCoreGraphics",
             "-lCombine",
             "-lOpenCombine",
+            "-lDispatch",
             "-lLocalAuthentication",
             "-lSafariServices",
             "-lNetwork",
@@ -1108,11 +1110,11 @@ class ShellContractTests(unittest.TestCase):
             "curl-config --ssl-backends",
             "curl-config --ca",
             "url-transport-transitive-sonames.txt",
-            'LD_PRELOAD="$URL_TRANSPORT_HOST',
+            'LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST',
         ):
             self.assertIn(token, builder)
         self.assertIn("host/libOpenURLTransportHost.so", driver)
-        self.assertIn('LD_PRELOAD="$url_transport_host', driver)
+        self.assertIn('LD_PRELOAD="$dispatch_host:$url_transport_host', driver)
         for token in (
             "CURLOPT_SSL_VERIFYPEER, 1L",
             "CURLOPT_SSL_VERIFYHOST, 2L",
@@ -1191,6 +1193,32 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, oracle)
 
+    def test_dispatch_is_a_portable_module_and_real_host_scheduler(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        driver = APP_DRIVER.read_text(encoding="utf-8")
+        for token in (
+            "-module-name Dispatch -module-link-name Dispatch",
+            "libDispatch.dylib",
+            "libOpenDispatchHost.so",
+            "host/libdispatch.so",
+            "host/libBlocksRuntime.so",
+            "EXPECTED_HOST_DISPATCH_SHA256",
+            "GLIBC_2.38",
+            "OPEN_DISPATCH_MACHO_OK async-main=drained",
+            "FOUNDATION_URLSESSION_MACHO_OK",
+            "attestation/dispatch-runtime.log",
+            "attestation/foundation-urlsession-runtime.log",
+        ):
+            self.assertIn(token, builder)
+        for token in (
+            "host/libOpenDispatchHost.so",
+            "host/libdispatch.so",
+            "host/libBlocksRuntime.so",
+            'LD_LIBRARY_PATH="$guest_root/host',
+            'LD_PRELOAD="$dispatch_host:$url_transport_host',
+        ):
+            self.assertIn(token, driver)
+
     def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
@@ -1225,8 +1253,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 25)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 12)
+        self.assertEqual(len(FRAMEWORKS), 26)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 13)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",

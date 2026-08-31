@@ -8,12 +8,13 @@ logic.
 
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
-OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
+OpenCombine, Dispatch, Combine, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI, and
-MobileCoreServices. These are twenty-five reusable ARM64 Mach-O framework
-binaries, including real `libSwiftUI.dylib`, `libCoreImage.dylib`, and
+MobileCoreServices. These are twenty-six reusable ARM64 Mach-O framework
+binaries, including real `libDispatch.dylib`, `libSwiftUI.dylib`,
+`libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
 overlays. The package also contains C module headers, CQuartz, the SDK, the attested machorun
 guest-root closure, OpenUIKit's complete resource tree, and the two pinned
@@ -50,7 +51,7 @@ The semantic build order is deliberate:
    Foundation umbrella hidden.
 2. Exercise the literal early UIKit/identity production gate; this is not the
    final app-facing UIKit module.
-3. Build OpenCombine, Combine, and dependency-light SwiftUI.
+3. Build the portable Dispatch module, OpenCombine, Combine, and dependency-light SwiftUI.
 4. Compile the ordered app-facing Foundation facade.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
@@ -66,9 +67,23 @@ The semantic build order is deliberate:
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all twenty-five reusable dylibs and run the package's Mach-O
+10. Link all twenty-six reusable dylibs and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
+11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
+    detached jobs, global/main queues, continuations, and delayed work, then
+    run the full loopback URLSession async/continuation/TaskGroup gate.
+
+The portable `Dispatch.swiftmodule` is built with the package compiler and
+shadows the version-incompatible Apple SDK binary module for unchanged
+`import Dispatch` and reexports. Its ARM64 Mach-O `libDispatch.dylib` uses a
+fixed-width bridge into a uniquely named ELF helper. That helper schedules
+with real Linux libdispatch `dispatch_async_f`, `dispatch_after_f`, and
+`dispatch_main`; it never invokes guest callbacks synchronously. The guest
+main queue is an identity token only, while global queue pointers must have
+been minted by the helper. The package pins and hashes the exact Linux
+`libdispatch.so` and `libBlocksRuntime.so` closure and records libdispatch's
+`GLIBC_2.38` requirement instead of relying on ambient host libraries.
 
 CoreImage's tracked ordinary Clang module map owns an explicit
 `CoreImage.CIFilterBuiltins` child module; the Swift overlay is built with
@@ -408,6 +423,7 @@ probe, closure attestation, JSON verifier, canonical consumer validator, and
 
 ```sh
 python3 -B full/frameworks/test_core_guest_package.py
+python3 -B full/dispatch/tests/test_dispatch_boundary.py
 python3 -B full/frameworks/test_physical_replay.py
 bash -n full/frameworks/build_core_guest_package.sh
 bash -n full/frameworks/run_core_guest_package_docker.sh
