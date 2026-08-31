@@ -30,6 +30,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "modules",
             "lib",
             "include",
+            "include/CoreImage",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root",
@@ -44,6 +45,9 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/machorun",
             "guest-root/.manifest",
             "objects/DeveloperToolsSupport.o",
+            "include/CoreImage/CoreImage.h",
+            "include/CoreImage/CIFilterBuiltins.h",
+            "include/CoreImage/module.modulemap",
         ]
         required_files.extend(
             f"modules/{module}.swiftmodule"
@@ -56,6 +60,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftUI",
                 "Foundation",
                 "UIKit",
+                "CoreImage",
+                "QuartzCore",
                 "Intents",
                 "IntentsUI",
                 "WebKit",
@@ -80,6 +86,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftUI",
                 "Foundation",
                 "UIKit",
+                "CoreImage",
+                "QuartzCore",
                 "Intents",
                 "IntentsUI",
                 "WebKit",
@@ -105,6 +113,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "source-sets",
             "foundation-sources",
             "intents-sources",
+            "graphics-sources",
             "first-party-sources",
             "first-party-dylib-loads",
             "webkit-sources",
@@ -149,6 +158,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lSwiftUI",
                 "-lFoundation",
                 "-lUIKit",
+                "-lCoreImage",
+                "-lQuartzCore",
                 "-lIntents",
                 "-lIntentsUI",
                 "-lWebKit",
@@ -201,6 +212,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "modules",
                 "-Xcc",
                 "-Iinclude/CPortableIO",
+                "-Xcc",
+                "-fmodule-map-file=include/CoreImage/module.modulemap",
+                "-Xcc",
+                "-Iinclude/CoreImage",
             ],
             "target": {"triple": "arm64-apple-macos15.0"},
         }
@@ -310,6 +325,26 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "omits required manifests: intents_sources",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_graphics_source_manifest(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        del changed["manifests"]["graphics_sources"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "omits required manifests: graphics_sources",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_coreimage_compile_contract(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        changed["swift_compile_arguments"] = changed["swift_compile_arguments"][:-2]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "CoreImage underlying-module pair",
         ):
             core_guest_package.validate(self.root)
 

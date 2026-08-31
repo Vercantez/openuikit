@@ -62,6 +62,8 @@ _REQUIRED_FRAMEWORKS = (
     "SwiftUI",
     "Foundation",
     "UIKit",
+    "CoreImage",
+    "QuartzCore",
     "Intents",
     "IntentsUI",
     "WebKit",
@@ -82,6 +84,7 @@ _REQUIRED_MANIFESTS = {
     "source_sets",
     "foundation_sources",
     "intents_sources",
+    "graphics_sources",
     "first_party_sources",
     "first_party_dylib_loads",
     "webkit_sources",
@@ -192,6 +195,22 @@ def _arguments(value: Any, label: str, controlled: set[str]) -> list[str]:
         if token.startswith("/") and token not in _ALLOWED_ABSOLUTE_ARGUMENTS:
             raise CorePackageError(f"{label} leaks an absolute host path: {token}")
     return result
+
+
+def _require_coreimage_compile_contract(arguments: list[str]) -> None:
+    for argument in (
+        "-fmodule-map-file=include/CoreImage/module.modulemap",
+        "-Iinclude/CoreImage",
+    ):
+        count = sum(
+            arguments[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(arguments) - 1)
+        )
+        if count != 1:
+            raise CorePackageError(
+                "swift_compile_arguments must contain the CoreImage "
+                "underlying-module pair exactly once: -Xcc " + argument
+            )
 
 
 def _sdk_symlink_target(
@@ -422,6 +441,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         "swift_compile_arguments",
         _CONTROLLED_COMPILE_OPTIONS,
     )
+    _require_coreimage_compile_contract(manifest["swift_compile_arguments"])
     manifest["executable_link_arguments"] = _arguments(
         manifest.get("executable_link_arguments"),
         "executable_link_arguments",
@@ -521,6 +541,13 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     required_artifacts.update(
         f"{paths['libraries']}/lib{module}.dylib"
         for module in _REQUIRED_FRAMEWORKS
+    )
+    required_artifacts.update(
+        {
+            f"{paths['includes']}/CoreImage/CoreImage.h",
+            f"{paths['includes']}/CoreImage/CIFilterBuiltins.h",
+            f"{paths['includes']}/CoreImage/module.modulemap",
+        }
     )
     if preview is not None:
         required_artifacts.add(

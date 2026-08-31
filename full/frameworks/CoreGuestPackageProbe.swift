@@ -4,6 +4,8 @@
 // survive outside the build directories that produced them.
 import Foundation
 import UIKit
+import CoreImage.CIFilterBuiltins
+import QuartzCore
 import SwiftUI
 import Combine
 @_spi(OpenIntentsHost) import Intents
@@ -144,6 +146,24 @@ struct CoreGuestPackageProbe {
         precondition(
             foundationCompatibility ==
                 "locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
+        )
+
+        let gradient = CIFilter.linearGradient()
+        gradient.color0 = .black
+        gradient.color1 = .clear
+        gradient.point0 = CGPoint(x: 0, y: 2)
+        gradient.point1 = CGPoint(x: 0, y: 0)
+        let gradientImage: CGImage = CIContext().createCGImage(
+            gradient.outputImage!,
+            from: CGRect(x: 0, y: 0, width: 2, height: 2)
+        )!
+        precondition(gradientImage.width == 2 && gradientImage.height == 2)
+        precondition(gradientImage.pixels.count == 16)
+        precondition(gradientImage.pixels[3] < gradientImage.pixels[11])
+        let layerOwner = UIView()
+        precondition(
+            _openUIKitQuartzCoreLayerIdentity(layerOwner.layer) ==
+                ObjectIdentifier(layerOwner.layer)
         )
 
         let foundationNotification: Foundation.Notification.Type =
@@ -359,6 +379,7 @@ struct CoreGuestPackageProbe {
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "foundation=\(foundationCompatibility) "
+                + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=fail-closed-7 "
                 + "webkit=engine-unavailable preview=\(preview)"

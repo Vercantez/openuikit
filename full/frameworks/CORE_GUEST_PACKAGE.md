@@ -9,11 +9,12 @@ logic.
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
-Foundation-visible UIKit, Intents, IntentsUI, WebKit, LocalAuthentication,
-SafariServices, Network, StoreKit, AudioToolbox, CoreHaptics, and PassKit.
-These are eighteen reusable ARM64 Mach-O framework binaries, including a real
-`libSwiftUI.dylib`; they are not application-side source overlays. The package
-also contains C module headers, CQuartz, the SDK, the attested machorun
+Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
+LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
+CoreHaptics, and PassKit. These are twenty reusable ARM64 Mach-O framework
+binaries, including real `libSwiftUI.dylib`, `libCoreImage.dylib`, and
+`libQuartzCore.dylib` boundaries; they are not application-side source
+overlays. The package also contains C module headers, CQuartz, the SDK, the attested machorun
 guest-root closure, OpenUIKit's complete resource tree, and the two pinned
 DejaVu fonts used by the proven Linux path.
 
@@ -52,16 +53,29 @@ The semantic build order is deliberate:
 4. Compile the ordered app-facing Foundation facade.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
-6. Compile the reusable Intents and IntentsUI modules, backed by real shortcut,
+6. Compile the CoreImage Swift overlay over its explicit Clang
+   `CIFilterBuiltins` child module and the identity-preserving QuartzCore
+   facade. Render a deterministic gradient and pass an exact UIKit-owned
+   layer through QuartzCore in the package probe.
+7. Compile the reusable Intents and IntentsUI modules, backed by real shortcut,
    donation, resolution, and host-driven controller state.
-7. Compile production WebKit from its five-source attested manifest after both
+8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-8. Compile and link seven app-facing first-party modules as independent ARM64
+9. Compile and link seven app-facing first-party modules as independent ARM64
    Mach-O dylibs. Their Apple-service boundaries are fail-closed, and each
    install ID/dependency/self-load contract is audited.
-9. Link all eighteen reusable dylibs and run the package's Mach-O
+10. Link all twenty reusable dylibs and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
+
+CoreImage's tracked ordinary Clang module map owns an explicit
+`CoreImage.CIFilterBuiltins` child module; the Swift overlay is built with
+`-import-underlying-module`. This is required for unchanged dotted imports—a
+pure Swift module cannot model that import spelling. The relocatable compile
+contract carries both the module-map and header search arguments, and all
+three underlying-module files are package artifacts. QuartzCore publishes
+curated aliases to OpenUIKit's canonical Core Animation types, so importing
+UIKit and QuartzCore does not create a second `CALayer` identity.
 
 `libWebKit.dylib` has install ID `@rpath/libWebKit.dylib` and required direct
 loads of the packaged `libUIKit.dylib` and `libFoundation.dylib`, each exactly

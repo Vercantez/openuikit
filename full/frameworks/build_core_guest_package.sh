@@ -27,6 +27,8 @@ FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
+COREIMAGE_SOURCES_MANIFEST=$W/full/coreimage/coreimage_guest_sources.txt
+QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
@@ -70,6 +72,8 @@ EXPECTED_FOUNDATION_SOURCE_COUNT=22
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
+EXPECTED_COREIMAGE_SOURCE_COUNT=1
+EXPECTED_QUARTZCORE_SOURCE_COUNT=1
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -389,6 +393,64 @@ done
     done
 } > "$WORK/intents-sources.pre.tsv"
 
+mapfile -t COREIMAGE_SOURCES < "$COREIMAGE_SOURCES_MANIFEST"
+mapfile -t QUARTZCORE_SOURCES < "$QUARTZCORE_SOURCES_MANIFEST"
+[ "${#COREIMAGE_SOURCES[@]}" -eq "$EXPECTED_COREIMAGE_SOURCE_COUNT" ] \
+    || die 'CoreImage source count drifted'
+[ "${#QUARTZCORE_SOURCES[@]}" -eq "$EXPECTED_QUARTZCORE_SOURCE_COUNT" ] \
+    || die 'QuartzCore source count drifted'
+[ "${COREIMAGE_SOURCES[0]}" = full/coreimage/CoreImage.swift ] \
+    || die 'CoreImage ordered source manifest drifted'
+[ "${QUARTZCORE_SOURCES[0]}" = full/quartzcore/QuartzCore.swift ] \
+    || die 'QuartzCore ordered source manifest drifted'
+for relative in "${COREIMAGE_SOURCES[@]}" "${QUARTZCORE_SOURCES[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "graphics framework source is not a regular file: $relative"
+    git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+        || die "graphics framework source is not tracked: $relative"
+done
+for coreimage_input in \
+    "$COREIMAGE_SOURCES_MANIFEST" \
+    "$W/full/coreimage/include/CoreImage.h" \
+    "$W/full/coreimage/include/CIFilterBuiltins.h" \
+    "$W/full/coreimage/include/module.modulemap" \
+    "$QUARTZCORE_SOURCES_MANIFEST"; do
+    [ -f "$coreimage_input" ] && [ ! -L "$coreimage_input" ] \
+        || die "graphics framework input is not a regular file: $coreimage_input"
+    git -C "$W" ls-files --error-unmatch "${coreimage_input#"$W"/}" >/dev/null \
+        || die "graphics framework input is not tracked: $coreimage_input"
+done
+write_graphics_sources_attestation() {
+    local output=$1 relative
+    {
+        printf 'format\tgraphics-framework-guest-sources-v1\n'
+        printf 'manifest\tCoreImage\t%s\tcount=%s\n' \
+            "$(hash_file "$COREIMAGE_SOURCES_MANIFEST")" \
+            "${#COREIMAGE_SOURCES[@]}"
+        for relative in "${COREIMAGE_SOURCES[@]}"; do
+            printf 'source\tCoreImage\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+        printf 'underlying\tCoreImage\t%s\t%s\n' \
+            full/coreimage/include/CoreImage.h \
+            "$(hash_file "$W/full/coreimage/include/CoreImage.h")"
+        printf 'underlying\tCoreImage.CIFilterBuiltins\t%s\t%s\n' \
+            full/coreimage/include/CIFilterBuiltins.h \
+            "$(hash_file "$W/full/coreimage/include/CIFilterBuiltins.h")"
+        printf 'modulemap\tCoreImage\t%s\t%s\n' \
+            full/coreimage/include/module.modulemap \
+            "$(hash_file "$W/full/coreimage/include/module.modulemap")"
+        printf 'manifest\tQuartzCore\t%s\tcount=%s\n' \
+            "$(hash_file "$QUARTZCORE_SOURCES_MANIFEST")" \
+            "${#QUARTZCORE_SOURCES[@]}"
+        for relative in "${QUARTZCORE_SOURCES[@]}"; do
+            printf 'source\tQuartzCore\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+    } > "$output"
+}
+write_graphics_sources_attestation "$WORK/graphics-sources.pre.tsv"
+
 python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
     --output "$WORK/first-party-sources.pre.tsv"
@@ -519,6 +581,7 @@ cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
 cp -a "$OPENCOMBINE_HELPERS/include/." "$STAGE/include/COpenCombineHelpers/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
+cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
 
 copy_module_family() {
     local source_dir=$1 name=$2 suffix source
@@ -558,7 +621,9 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/CSTBTrueType"
     -Xcc -I"$STAGE/include/CHostClock"
     -Xcc -I"$STAGE/include/COpenCombineHelpers"
-    -Xcc -I"$STAGE/include/CQuartz")
+    -Xcc -I"$STAGE/include/CQuartz"
+    -Xcc -fmodule-map-file="$STAGE/include/CoreImage/module.modulemap"
+    -Xcc -I"$STAGE/include/CoreImage")
 FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
@@ -721,6 +786,24 @@ echo '== compile final Foundation-visible UIKit (optional Preview plugin explici
     -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
     -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
 
+echo '== compile CoreImage overlay and identity-preserving QuartzCore facade'
+COREIMAGE_SOURCE_PATHS=()
+for relative in "${COREIMAGE_SOURCES[@]}"; do
+    COREIMAGE_SOURCE_PATHS+=("$W/$relative")
+done
+QUARTZCORE_SOURCE_PATHS=()
+for relative in "${QUARTZCORE_SOURCES[@]}"; do
+    QUARTZCORE_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreImage -import-underlying-module -emit-module \
+    -emit-module-path "$STAGE/modules/CoreImage.swiftmodule" \
+    -emit-object -o "$WORK/coreimage.o" "${COREIMAGE_SOURCE_PATHS[@]}"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name QuartzCore -emit-module \
+    -emit-module-path "$STAGE/modules/QuartzCore.swiftmodule" \
+    -emit-object -o "$WORK/quartzcore.o" "${QUARTZCORE_SOURCE_PATHS[@]}"
+
 echo '== compile production Intents and IntentsUI modules'
 INTENTS_SOURCE_PATHS=()
 for relative in "${INTENTS_SOURCES[@]}"; do
@@ -783,7 +866,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link eighteen reusable core framework dylibs'
+echo '== link twenty reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -838,6 +921,31 @@ UIKIT_UNDEFINED_FLAGS=()
     -o "$STAGE/lib/libUIKit.dylib" "$WORK/uikit.o" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
     -lOpenUIKit -lOpenCoreGraphics
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libCoreImage.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libCoreImage.dylib" "$WORK/coreimage.o" \
+    "${COMMON_LINK[@]}" -lOpenCoreGraphics
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libQuartzCore.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libQuartzCore.dylib" "$WORK/quartzcore.o" \
+    "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics
+coreimage_graphics_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libCoreImage.dylib" \
+    | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
+quartzcore_uikit_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libQuartzCore.dylib" \
+    | awk '$1 == "@rpath/libOpenUIKit.dylib" { count++ } END { print count + 0 }')
+[ "$coreimage_graphics_load_count" -eq 1 ] \
+    || die "libCoreImage OpenCoreGraphics load count $coreimage_graphics_load_count, expected 1"
+[ "$quartzcore_uikit_load_count" -eq 1 ] \
+    || die "libQuartzCore OpenUIKit load count $quartzcore_uikit_load_count, expected 1"
+for framework in CoreImage QuartzCore; do
+    if llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
+        | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
+        die "lib$framework loads the Apple $framework framework"
+    fi
+done
 
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libIntents.dylib -rpath @loader_path \
@@ -971,13 +1079,14 @@ fi
     "${PROBE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
-    -lWebKit -lIntentsUI -lIntents -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
+    -lWebKit -lIntentsUI -lIntents -lCoreImage -lQuartzCore \
+    -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \
+    Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -1025,7 +1134,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -1039,6 +1148,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/CHostClock
     -Xcc -Iinclude/COpenCombineHelpers
     -Xcc -Iinclude/CQuartz
+    -Xcc -fmodule-map-file=include/CoreImage/module.modulemap
+    -Xcc -Iinclude/CoreImage
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
     -Xcc -Iinclude/_FoundationCShims
 )
@@ -1050,7 +1161,7 @@ LINK_ARGUMENTS=(
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
-    -lWebKit -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
+    -lWebKit -lCoreImage -lQuartzCore -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit
@@ -1102,6 +1213,7 @@ cmp "$WORK/openuikit-resources.pre.tsv" \
 
 cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv"
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
+cp "$WORK/graphics-sources.pre.tsv" "$STAGE/attestation/graphics-sources.tsv"
 cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
@@ -1161,11 +1273,15 @@ record_module_family() {
     done
 }
 for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \
+    Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
+record_artifact include CoreImage umbrella-header include/CoreImage/CoreImage.h
+record_artifact include CoreImage submodule-header \
+    include/CoreImage/CIFilterBuiltins.h
+record_artifact include CoreImage module-map include/CoreImage/module.modulemap
 for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
     record_module_family module-dependency "$dependency"
 done
@@ -1195,6 +1311,8 @@ record_artifact attestation foundation-sources manifest \
     attestation/foundation-sources.tsv
 record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
+record_artifact attestation graphics-sources manifest \
+    attestation/graphics-sources.tsv
 record_artifact attestation webkit-sources manifest \
     attestation/webkit-sources.tsv
 record_artifact attestation webkit-dylib-loads manifest \
@@ -1261,6 +1379,10 @@ cmp "$WORK/webkit-sources.pre.tsv" "$WORK/webkit-sources.post.tsv" \
 cmp "$WORK/intents-sources.pre.tsv" "$WORK/intents-sources.post.tsv" \
     || die 'Intents/IntentsUI source manifests/files changed during build'
 
+write_graphics_sources_attestation "$WORK/graphics-sources.post.tsv"
+cmp "$WORK/graphics-sources.pre.tsv" "$WORK/graphics-sources.post.tsv" \
+    || die 'CoreImage/QuartzCore source manifests/files changed during build'
+
 python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
     --output "$WORK/first-party-sources.post.tsv"
@@ -1299,6 +1421,7 @@ WRITE_ARGS=(
     --source-sets attestation/source-sets.tsv
     --foundation-sources attestation/foundation-sources.tsv
     --intents-sources attestation/intents-sources.tsv
+    --graphics-sources attestation/graphics-sources.tsv
     --webkit-sources attestation/webkit-sources.tsv
     --first-party-sources attestation/first-party-sources.tsv
     --first-party-dylib-loads attestation/first-party-dylib-loads.tsv

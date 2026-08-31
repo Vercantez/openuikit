@@ -56,6 +56,7 @@ REQUIRED_MANIFESTS = {
     "source_sets",
     "foundation_sources",
     "intents_sources",
+    "graphics_sources",
     "first_party_sources",
     "first_party_dylib_loads",
     "webkit_sources",
@@ -76,6 +77,8 @@ FRAMEWORKS = (
     "SwiftUI",
     "Foundation",
     "UIKit",
+    "CoreImage",
+    "QuartzCore",
     "Intents",
     "IntentsUI",
     "WebKit",
@@ -530,6 +533,40 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             for item in artifacts
         ):
             refuse(f"OpenUIKit {role} artifact is absent")
+    required_coreimage_includes = {
+        ("umbrella-header", "include/CoreImage/CoreImage.h"),
+        ("submodule-header", "include/CoreImage/CIFilterBuiltins.h"),
+        ("module-map", "include/CoreImage/module.modulemap"),
+    }
+    actual_coreimage_includes = {
+        (str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "include" and item["name"] == "CoreImage"
+    }
+    missing_coreimage_includes = sorted(
+        required_coreimage_includes - actual_coreimage_includes
+    )
+    if missing_coreimage_includes:
+        refuse(
+            "CoreImage underlying-module artifacts are absent: "
+            + ", ".join(path for _role, path in missing_coreimage_includes)
+        )
+
+
+def require_coreimage_compile_contract(tokens: list[str]) -> None:
+    for argument in (
+        "-fmodule-map-file=include/CoreImage/module.modulemap",
+        "-Iinclude/CoreImage",
+    ):
+        count = sum(
+            tokens[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(tokens) - 1)
+        )
+        if count != 1:
+            refuse(
+                "compile flags must contain CoreImage underlying-module pair "
+                f"exactly once: -Xcc {argument}"
+            )
 
 
 def require_exhaustive_artifact_tree(
@@ -784,6 +821,7 @@ def validate_document(
         refuse("JSON executable link arguments differ from the NUL response file")
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
+    require_coreimage_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
             refuse(f"link inputs must contain required token exactly once: {required}")
@@ -918,6 +956,7 @@ def write_command(args: argparse.Namespace) -> None:
     for required in ("-sdk", "sdk", "-I", "modules"):
         if required not in compile_tokens:
             refuse(f"compile flags omit required token: {required}")
+    require_coreimage_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
@@ -969,6 +1008,9 @@ def write_command(args: argparse.Namespace) -> None:
             "source_sets": checked_manifest(package, args.source_sets, "source sets"),
             "foundation_sources": checked_manifest(package, args.foundation_sources, "Foundation sources"),
             "intents_sources": checked_manifest(package, args.intents_sources, "Intents sources"),
+            "graphics_sources": checked_manifest(
+                package, args.graphics_sources, "CoreImage/QuartzCore sources"
+            ),
             "first_party_sources": checked_manifest(
                 package, args.first_party_sources, "first-party sources"
             ),
@@ -1068,6 +1110,7 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--source-sets", required=True)
     write.add_argument("--foundation-sources", required=True)
     write.add_argument("--intents-sources", required=True)
+    write.add_argument("--graphics-sources", required=True)
     write.add_argument("--first-party-sources", required=True)
     write.add_argument("--first-party-dylib-loads", required=True)
     write.add_argument("--webkit-sources", required=True)

@@ -104,6 +104,8 @@ FRAMEWORKS = (
     "SwiftUI",
     "Foundation",
     "UIKit",
+    "CoreImage",
+    "QuartzCore",
     "Intents",
     "IntentsUI",
     "WebKit",
@@ -438,6 +440,7 @@ class PackageFixture:
             "modules",
             "lib",
             "include",
+            "include/CoreImage",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
@@ -450,6 +453,11 @@ class PackageFixture:
             write_file(root / f"lib/lib{framework}.dylib", f"dylib:{framework}")
         for dependency in DEPENDENCIES:
             write_file(root / f"modules/{dependency}.swiftmodule", dependency)
+        write_file(root / "include/CoreImage/CoreImage.h", "umbrella")
+        write_file(
+            root / "include/CoreImage/CIFilterBuiltins.h", "generated filters"
+        )
+        write_file(root / "include/CoreImage/module.modulemap", "module CoreImage {}")
         write_file(root / "guest-root/darwin/usr/lib/libquartz.dylib", "quartz")
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
@@ -463,6 +471,7 @@ class PackageFixture:
             "source-sets.tsv",
             "foundation-sources.tsv",
             "intents-sources.tsv",
+            "graphics-sources.tsv",
             "first-party-sources.tsv",
             "first-party-dylib-loads.tsv",
             "webkit-sources.tsv",
@@ -486,6 +495,10 @@ class PackageFixture:
             "sdk",
             "-I",
             "modules",
+            "-Xcc",
+            "-fmodule-map-file=include/CoreImage/module.modulemap",
+            "-Xcc",
+            "-Iinclude/CoreImage",
         ]
         self.link_arguments = [
             "-arch",
@@ -498,6 +511,8 @@ class PackageFixture:
             "sdk",
             "-Llib",
             "-lUIKit",
+            "-lCoreImage",
+            "-lQuartzCore",
             "-lFoundation",
             "-lFoundationEssentials",
             "-lSwiftUI",
@@ -584,6 +599,28 @@ class PackageFixture:
                     f"modules/{dependency}.swiftmodule",
                 )
             )
+        records.extend(
+            (
+                self._artifact(
+                    "include",
+                    "CoreImage",
+                    "umbrella-header",
+                    "include/CoreImage/CoreImage.h",
+                ),
+                self._artifact(
+                    "include",
+                    "CoreImage",
+                    "submodule-header",
+                    "include/CoreImage/CIFilterBuiltins.h",
+                ),
+                self._artifact(
+                    "include",
+                    "CoreImage",
+                    "module-map",
+                    "include/CoreImage/module.modulemap",
+                ),
+            )
+        )
         records.append(
             self._artifact(
                 "runtime", "CQuartz", "dylib", "guest-root/darwin/usr/lib/libquartz.dylib"
@@ -639,6 +676,8 @@ class PackageFixture:
             "attestation/foundation-sources.tsv",
             "--intents-sources",
             "attestation/intents-sources.tsv",
+            "--graphics-sources",
+            "attestation/graphics-sources.tsv",
             "--first-party-sources",
             "attestation/first-party-sources.tsv",
             "--first-party-dylib-loads",
@@ -840,6 +879,44 @@ class PackageContractTests(unittest.TestCase):
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("omits required manifests: intents_sources", refusal.stderr)
 
+    def test_graphics_source_attestation_is_mandatory(self) -> None:
+        fixture = self.fixture(False)
+        manifest_path = fixture.root / "attestation/core-package.json"
+        document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del document["manifests"]["graphics_sources"]
+        manifest_path.write_text(
+            json.dumps(document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("omits required manifests: graphics_sources", refusal.stderr)
+
+    def test_coreimage_underlying_module_inputs_are_mandatory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            ledger.write_text(
+                "\n".join(
+                    line
+                    for line in ledger.read_text(encoding="utf-8").splitlines()
+                    if "include/CoreImage/module.modulemap" not in line
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("CoreImage underlying-module artifacts are absent", refusal.stderr)
+
+    def test_coreimage_compile_pairs_are_mandatory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            fixture.compile_arguments = fixture.compile_arguments[:-2]
+            (fixture.root / "compile-flags.rsp").write_bytes(
+                b"".join(token.encode() + b"\0" for token in fixture.compile_arguments)
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("CoreImage underlying-module pair", refusal.stderr)
+
     def test_webkit_source_attestation_is_mandatory(self) -> None:
         fixture = self.fixture(False)
         manifest_path = fixture.root / "attestation/core-package.json"
@@ -971,7 +1048,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 18)
+        self.assertEqual(len(FRAMEWORKS), 20)
         self.assertEqual(FRAMEWORKS[-8], "WebKit")
         for token in (
             "-module-name WebKit -emit-module",
@@ -981,7 +1058,7 @@ class ShellContractTests(unittest.TestCase):
             "/System/Library/Frameworks/WebKit.framework/",
             "webkit-dylib-loads.tsv",
             "rendering-engine\\tabsent",
-            "-lWebKit -lUIKit",
+            "-lWebKit -lCoreImage",
             "Intents IntentsUI WebKit",
         ):
             self.assertIn(token, source)
@@ -1128,7 +1205,7 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine SwiftUI Foundation UIKit Intents IntentsUI WebKit \\",
+                        "Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )
@@ -1158,6 +1235,33 @@ class ShellContractTests(unittest.TestCase):
             "libSwiftUI runtime load count",
         ):
             self.assertIn(spelling, source)
+
+    def test_coreimage_dotted_submodule_and_quartzcore_are_real_boundaries(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        manifest_source = TOOL.read_text(encoding="utf-8")
+        canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        module_map = (REPO / "full/coreimage/include/module.modulemap").read_text(
+            encoding="utf-8"
+        )
+        quartzcore = (REPO / "full/quartzcore/QuartzCore.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("explicit module CIFilterBuiltins", module_map)
+        self.assertIn("import CoreImage.CIFilterBuiltins", probe)
+        self.assertIn("import QuartzCore", probe)
+        self.assertIn("-module-name CoreImage -import-underlying-module", source)
+        self.assertIn("-install_name @rpath/libCoreImage.dylib", source)
+        self.assertIn("-install_name @rpath/libQuartzCore.dylib", source)
+        self.assertIn("-lCoreImage -lQuartzCore", source)
+        self.assertNotIn("libCIFilterBuiltins.dylib", source)
+        self.assertIn("public typealias CALayer = OpenUIKit.CALayer", quartzcore)
+        for token in (
+            "-fmodule-map-file=include/CoreImage/module.modulemap",
+            "-Iinclude/CoreImage",
+            "graphics_sources",
+        ):
+            self.assertIn(token, manifest_source + canonical_source + source)
 
     def test_foundation_runtime_undefineds_are_exact_and_mutation_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
