@@ -597,6 +597,8 @@ PY
                 die "application compile arguments must not disable default driver scheduling" ;;
             -enable-batch-mode)
                 die "application compile arguments must not override default driver scheduling" ;;
+            -j|-j*)
+                die "application compile arguments must not override the pinned driver job count" ;;
             -dump-macro-expansions)
                 die "application production compile must not dump full-module macro expansions" ;;
             -output-file-map|-primary-file)
@@ -683,17 +685,23 @@ PY
     python3 -B "$SCRIPT_DIR/application_object_contract.py" create-output-map \
         --output-map "$output_map" --object-root "$object_root" \
         "${compile_sources[@]}"
+    # Swift 6.2.4 can corrupt the executable-macro JSON channel when multiple
+    # driver jobs tear down plugin processes concurrently. Keep the driver's
+    # batch/output-map compilation, but serialize its job scheduler. This does
+    # not merge objects or enable WMO: every source still has its own map entry.
+    local serial_job_argument=-j1
     local -a compile_command
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"
         "${package_import_arguments[@]}"
         -default-isolation MainActor -module-name "$module"
-        "${plugin_arguments[@]}" -emit-object
+        "${plugin_arguments[@]}" "$serial_job_argument" -emit-object
         -output-file-map "$output_map" "${compile_sources[@]}")
     local effective_output_map_count=0
     local effective_wmo_count=0
     local effective_disable_batch_count=0
     local effective_dump_count=0
+    local effective_serial_job_count=0
     for argument in "${compile_command[@]}"; do
         case "$argument" in
             -output-file-map)
@@ -704,6 +712,10 @@ PY
                 effective_disable_batch_count=$((effective_disable_batch_count + 1)) ;;
             -dump-macro-expansions)
                 effective_dump_count=$((effective_dump_count + 1)) ;;
+            "$serial_job_argument")
+                effective_serial_job_count=$((effective_serial_job_count + 1)) ;;
+            -j|-j*)
+                die "application compile has an unpinned driver job argument: $argument" ;;
         esac
     done
     [ "$effective_output_map_count" -eq 1 ] \
@@ -714,6 +726,8 @@ PY
         || die "application effective disable-batch-mode count is not zero"
     [ "$effective_dump_count" -eq 0 ] \
         || die "application production compile includes macro dumping"
+    [ "$effective_serial_job_count" -eq 1 ] \
+        || die "application effective serialized driver job count is not one"
     printf '%s\0' "${compile_command[@]}" \
         >"$output/application-compile-arguments.nul"
 
@@ -766,7 +780,7 @@ PY
         --audit "$output/application-cross-file-symbols.json" \
         "${application_objects[@]}"
     {
-        printf 'format\tportable-application-compile-audit-v2\n'
+        printf 'format\tportable-application-compile-audit-v3\n'
         printf 'mode\tdefault-driver-output-file-map\n'
         printf 'source-count\t%s\n' "${#compile_sources[@]}"
         printf 'application-source-count\t%s\n' "${#app_sources[@]}"
@@ -779,6 +793,8 @@ PY
         printf 'whole-module-flag-count\t%s\n' "$effective_wmo_count"
         printf 'disable-batch-mode-count\t%s\n' "$effective_disable_batch_count"
         printf 'production-macro-dump-count\t%s\n' "$effective_dump_count"
+        printf 'driver-job-flag-count\t%s\n' "$effective_serial_job_count"
+        printf 'driver-job-count\t1\n'
         printf 'output-file-map-sha256\t%s\n' \
             "$(sha256sum "$output_map" | awk '{print $1}')"
         printf 'object-audit-sha256\t%s\n' \

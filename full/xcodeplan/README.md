@@ -355,15 +355,19 @@ forbidden. The driver captures the bounded proof as
 rejects `Internal Error:`, unlocated fatal/error diagnostics, or ordinary
 source errors even when swiftc returns zero. Production compilation has a
 separate `application-compile.stderr` and never receives the dump flags. The
-driver also attests that the target-side
+Swift 6.2.4 executable-macro channel is serialized with exactly `-j1`: the
+default driver still uses its output-file map and emits one object per source,
+but it cannot race concurrent plugin-process teardown. Any inherited or
+additional `-j` option is refused, and `Internal Error:` remains fatal even
+when swiftc exits zero. The driver also attests that the target-side
 DeveloperToolsSupport object appears exactly once in the executable link. It
 also matches UIKit's sole measured DTS import to the object's definition and
 exports only that exact Preview initializer from the application executable;
 post-link symbol counts must be one in Preview mode and zero otherwise. A
 post-link symbol audit additionally proves that none of the measured
 application-internal references remain undefined. The compile mode, exact
-output-map count, zero WMO/dump/disable-batch counts, object count, and evidence
-hashes are recorded in `application-compile-audit.tsv`.
+output-map count, zero WMO/dump/disable-batch counts, exact one-job pin, object
+count, and evidence hashes are recorded in `application-compile-audit.tsv`.
 
 Compiler-input providers have one deliberate insertion boundary. After the
 application plan is frozen and verified, but before the final output-file map

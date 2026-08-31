@@ -53,7 +53,14 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         '"$effective_wmo_count" -eq 0',
         '"$effective_disable_batch_count" -eq 0',
         '"$effective_dump_count" -eq 0',
-        "object_audit=$output/application-object-audit.json",
+        "local serial_job_argument=-j1",
+        '"${plugin_arguments[@]}" "$serial_job_argument" -emit-object',
+        '"$effective_serial_job_count" -eq 1',
+        "application compile arguments must not override the pinned driver job count",
+        "application compile has an unpinned driver job argument",
+        "driver-job-flag-count\\t%s\\n",
+        "driver-job-count\\t1\\n",
+        'object_audit=$output/application-object-audit.json',
         '--audit "$output/application-cross-file-symbols.json"',
         '--cross-file-audit "$output/application-cross-file-symbols.json"',
         '--audit "$output/application-linked-symbols.json"',
@@ -68,6 +75,10 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         raise AssertionError(
             "multi-source object-map compile contract drifted: "
             "compile-command capture/invocation wiring"
+        )
+    if source.count("-j1") != 1:
+        raise AssertionError(
+            "multi-source object-map compile contract drifted: serial job pin"
         )
     forbidden_legacy = (
         "application_codegen_arguments",
@@ -314,6 +325,8 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             '"$effective_wmo_count" -eq 0',
             '"$effective_disable_batch_count" -eq 0',
             '"$effective_dump_count" -eq 0',
+            "local serial_job_argument=-j1",
+            '"$effective_serial_job_count" -eq 1',
             '"${package_objects[@]}" "${extra_objects[@]}")',
         ):
             with self.subTest(deleted=token):
@@ -329,6 +342,11 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                     '-output-file-map "$output_map" "${compile_sources[@]}"',
                     1,
                 )
+            )
+        with self.assertRaisesRegex(AssertionError, "compile contract"):
+            validate_multi_source_object_map_contract(
+                source.replace("local serial_job_argument=-j1",
+                               "local serial_job_argument=-j2", 1)
             )
 
     def test_local_packages_are_separate_topological_module_object_boundaries(
