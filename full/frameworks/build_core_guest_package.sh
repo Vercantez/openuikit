@@ -1319,8 +1319,16 @@ done
 clang-18 -D_DEFAULT_SOURCE=1 -std=c11 -O2 -Wall -Wextra -Werror \
     "$GROUP_SOURCE" -o "$WORK/group-lookup-native"
 "$WORK/group-lookup-native" > "$WORK/group-lookup-native.log"
-cmp "$GROUP_GOLDEN" "$WORK/group-lookup-native.log" \
-    || die 'native Linux group lookup differs from the pinned Darwin-neutral contract'
+# Darwin's non-reentrant getgrgid/getgrnam pair shares one static record;
+# glibc uses distinct records. That storage-identity difference is contractual,
+# while every _r layout/buffer/errno/not-found line is common and compared.
+grep -Fx '  static storage reused 0' "$WORK/group-lookup-native.log" >/dev/null \
+    || die 'native Linux group static-storage contract drifted'
+awk '$0 == "  static storage reused 0" { $0 = "  static storage reused 1" }
+     { print }' "$WORK/group-lookup-native.log" \
+    > "$WORK/group-lookup-native.normalized.log"
+cmp "$GROUP_GOLDEN" "$WORK/group-lookup-native.normalized.log" \
+    || die 'native Linux group reentrant/layout contract differs from Darwin'
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
 LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \

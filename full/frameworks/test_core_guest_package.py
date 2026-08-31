@@ -1745,6 +1745,8 @@ class ShellContractTests(unittest.TestCase):
             "group-lookup-macho.log",
             "xattr-macho.log",
             "libsystem-compat-macho.log",
+            "native Linux group static-storage contract drifted",
+            "group-lookup-native.normalized.log",
         ):
             self.assertIn(token, builder)
         for symbol in (

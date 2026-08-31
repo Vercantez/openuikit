@@ -141,6 +141,11 @@ staged real libSystem implementation exactly once. The same shadow audit
 uncovered and removed obsolete `quotactl` and `uname` traps; their pinned
 Mach-O fixtures now grade Darwin's `ENOTSUP` quota contract and the translated
 1,280-byte `utsname` layout before either import is allowed into the package.
+The group comparison records the one intentional native difference rather
+than hiding it: Darwin reuses one static record across non-reentrant name/GID
+lookups, while glibc uses distinct records; only that line is normalized before
+the otherwise byte-exact native comparison, and the Mach-O fixture must match
+the unmodified Darwin golden.
 
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
