@@ -140,6 +140,12 @@ uses MainActor metadata and executor functions from `libswift_Concurrency`, so
 the builder names exactly that one manual SwiftUI runtime link. It requires the
 SDK TBD and staged dylib, verifies the dylib install name, and requires exactly
 one `/usr/lib/swift/libswift_Concurrency.dylib` load in `libSwiftUI.dylib`.
+Swift 6.2 also emits the OS-or-variant-version availability thunk for the
+MainActor-isolated graph-host lifetime. The staged Apple `libswiftCore` TBD
+advertises that symbol while its dylib does not define it, so SwiftUI links the
+same exact `swiftcorepatch.o` compatibility thunk already used by
+FoundationEssentials and OpenUIKit. The package test scopes that object to the
+SwiftUI dylib link and refuses its deletion.
 
 The Intents and IntentsUI source lists are exact, tracked package inputs. Their
 paths, manifests, and content hashes are bracketed before and after every cold

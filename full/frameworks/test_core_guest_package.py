@@ -205,6 +205,13 @@ def validate_swiftui_runtime_link(source: str) -> None:
     # seven first-party links, and one executable probe link.
     if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 3:
         raise AssertionError("SwiftUI runtime-link scope drifted")
+    swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
+    swiftui_link_end = source.index(
+        "swiftui_runtime_load_count=", swiftui_link_start
+    )
+    swiftui_link = source[swiftui_link_start:swiftui_link_end]
+    if swiftui_link.count('"$FULL/swiftcorepatch.o"') != 1:
+        raise AssertionError("SwiftUI runtime-compatibility thunk scope drifted")
 
 
 def validate_core_preview_export_contract(source: str) -> None:
@@ -1228,6 +1235,20 @@ class ShellContractTests(unittest.TestCase):
             validate_swiftui_runtime_link(
                 source.replace('"$SWIFTUI_RUNTIME_LINK_FLAG"', "", 1)
             )
+        swiftui_link_start = source.index(
+            "-install_name @rpath/libSwiftUI.dylib"
+        )
+        swiftui_patch_offset = source.index(
+            '"$FULL/swiftcorepatch.o"', swiftui_link_start
+        )
+        without_swiftui_patch = (
+            source[:swiftui_patch_offset]
+            + source[swiftui_patch_offset + len('"$FULL/swiftcorepatch.o"'):]
+        )
+        with self.assertRaisesRegex(
+            AssertionError, "runtime-compatibility thunk scope"
+        ):
+            validate_swiftui_runtime_link(without_swiftui_patch)
         for spelling in (
             "SwiftUI runtime link input is missing",
             "SwiftUI staged runtime dylib is missing",

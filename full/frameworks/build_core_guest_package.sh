@@ -907,7 +907,7 @@ done
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
     "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
-    "$SWIFTUI_RUNTIME_LINK_FLAG"
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "$FULL/swiftcorepatch.o"
 swiftui_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
     | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
         '$1 == expected { count++ } END { print count + 0 }')
