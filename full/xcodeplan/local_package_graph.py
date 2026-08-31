@@ -2624,7 +2624,9 @@ class _Planner:
 
         ordered_ids = self._topological_ids()
         module_names: dict[str, str] = {}
-        filesystem_paths: dict[str, tuple[str, tuple[int, int]]] = {}
+        filesystem_paths: dict[
+            tuple[str, str], tuple[str, tuple[int, int]]
+        ] = {}
         targets: list[dict[str, Any]] = []
         resource_bundles: dict[str, str] = {}
         for order, target_id in enumerate(ordered_ids):
@@ -2666,17 +2668,22 @@ class _Planner:
                 metadata = actual.stat()
                 identity = (metadata.st_dev, metadata.st_ino)
                 portable_path = _portable(path)
-                previous_record = filesystem_paths.get(portable_path)
+                logical_identity = (source_origin, portable_path)
+                previous_record = filesystem_paths.get(logical_identity)
                 if previous_record is not None:
                     raise PackageGraphError(
-                        f"reachable targets repeat or alias frozen input {path!r}"
+                        "reachable targets repeat or alias frozen input "
+                        f"{source_origin}:{path!r}"
                     )
                 for previous_path, previous_identity in filesystem_paths.values():
                     if previous_identity == identity:
                         raise PackageGraphError(
                             f"reachable targets inventory hard-linked inputs {previous_path!r} and {path!r}"
                         )
-                filesystem_paths[portable_path] = (path, identity)
+                filesystem_paths[logical_identity] = (
+                    f"{source_origin}:{path}",
+                    identity,
+                )
             target_record = {
                 "dependencies": model["dependencies"],
                 "module": module,

@@ -323,6 +323,136 @@ class LocalPackageGraphTests(unittest.TestCase):
         ):
             local_package_graph.verify(graph, self.root, cache)
 
+    def test_remote_relative_source_paths_are_namespaced_by_origin(self) -> None:
+        origins: dict[str, Path] = {}
+        revisions: dict[str, str] = {}
+        urls = {
+            "First": "https://example.invalid/First.git",
+            "Second": "https://example.invalid/Second.git",
+        }
+        for name, url in urls.items():
+            origin = Path(self.temporary.name) / f"{name}Origin"
+            origin.mkdir()
+            self.git(origin, "init", "--initial-branch=main")
+            self.git(origin, "config", "user.name", "Graph Test")
+            self.git(origin, "config", "user.email", "graph@example.invalid")
+            (origin / "Package.swift").write_text(
+                "// swift-tools-version: 6.0\n"
+                "import PackageDescription\n"
+                f'let package = Package(name: "{name}", products: ['
+                f'.library(name: "{name}", targets: ["{name}"])], '
+                f'targets: [.target(name: "{name}", path: "Sources/Shared")])\n',
+                encoding="utf-8",
+            )
+            source = origin / "Sources/Shared/Shared.swift"
+            source.parent.mkdir(parents=True)
+            source.write_text(f"public struct {name} {{}}\n", encoding="utf-8")
+            self.git(origin, "add", "--all")
+            self.git(origin, "commit", "-m", name)
+            origins[name.lower()] = origin
+            revisions[name.lower()] = self.git(origin, "rev-parse", "HEAD").strip()
+
+        self.write_package(
+            "Feature",
+            """
+            let package = Package(
+                name: "Feature",
+                products: [.library(name: "Feature", targets: ["Feature"])],
+                dependencies: [
+                    .package(url: "https://example.invalid/First.git", exact: "1.0.0"),
+                    .package(url: "https://example.invalid/Second.git", exact: "1.0.0")
+                ],
+                targets: [.target(name: "Feature", dependencies: [
+                    .product(name: "First", package: "First"),
+                    .product(name: "Second", package: "Second")
+                ])]
+            )
+            """,
+        )
+        resolution = (
+            self.root
+            / "Probe.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        )
+        resolution.write_text(
+            json.dumps(
+                {
+                    "version": 3,
+                    "pins": [
+                        {
+                            "identity": name.lower(),
+                            "kind": "remoteSourceControl",
+                            "location": urls[name],
+                            "state": {
+                                "revision": revisions[name.lower()],
+                                "version": "1.0.0",
+                            },
+                        }
+                        for name in ("First", "Second")
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        baseline = self.graph()
+        cache = Path(self.temporary.name) / "remote-cache-two"
+        records = []
+        for descriptor in remote_package_materializer._graph_descriptors(
+            baseline, False
+        ):
+            digest = remote_package_materializer.descriptor_digest(descriptor)
+            entry = cache / f"objects/sha256/{digest[:2]}/{digest}"
+            repository = entry / "repository"
+            entry.mkdir(parents=True)
+            subprocess.run(
+                [
+                    "git",
+                    "clone",
+                    "--no-tags",
+                    os.fspath(origins[descriptor["identity"]]),
+                    os.fspath(repository),
+                ],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            self.git(repository, "checkout", "--detach", descriptor["revision"])
+            self.git(repository, "remote", "set-url", "origin", descriptor["url"])
+            record = remote_package_materializer._attestation(
+                descriptor,
+                repository,
+                f"objects/sha256/{digest[:2]}/{digest}/repository",
+            )
+            (entry / "attestation.json").write_bytes(
+                remote_package_materializer.canonical_json(record)
+            )
+            records.append(record)
+        materializations = {
+            "classification": "exact-remote-swift-package-materialization-set",
+            "format_version": 1,
+            "packages": records,
+            "source_graph_sha256": local_package_graph._sha256(
+                local_package_graph.canonical_json(baseline)
+            ),
+        }
+        graph = local_package_graph.plan(
+            self.inventory, self.root, materializations, cache
+        )
+        self.assertIsNotNone(graph)
+        assert graph is not None
+        remote_targets = [
+            target for target in graph["targets"] if target["target_id"].startswith("@remote/")
+        ]
+        self.assertEqual(len(remote_targets), 2)
+        self.assertEqual(
+            {target["sources"][0]["path"] for target in remote_targets},
+            {"Sources/Shared/Shared.swift"},
+        )
+        self.assertEqual(
+            {target["sources"][0]["source_origin"] for target in remote_targets},
+            {"remote:first", "remote:second"},
+        )
+        local_package_graph.verify(graph, self.root, cache)
+
     def test_top_level_xcode_remote_product_can_be_frozen_then_materialized(self) -> None:
         materializations, cache = self.materialized_remote()
         inventory = {
