@@ -31,11 +31,20 @@ void QZPDFContextFillPath(QZContextRef ctx);
 void QZPDFContextStrokePath(QZContextRef ctx);
 
 QZPDFDocumentRef QZPDFDocumentCreateWithFile(const char *path);
+QZPDFDocumentRef QZPDFDocumentCreateWithBytes(const uint8_t *bytes, size_t length);
 void QZPDFDocumentRelease(QZPDFDocumentRef doc);
 size_t QZPDFDocumentGetNumberOfPages(QZPDFDocumentRef doc);
 QZPDFPageRef QZPDFDocumentGetPage(QZPDFDocumentRef doc, size_t index); /* 1-based */
 QZRect QZPDFPageGetBoxRect(QZPDFPageRef page);
 void QZContextDrawPDFPage(QZContextRef ctx, QZPDFPageRef page);
+
+/* Rasterise one PDF page into straight-alpha RGBA8.  This is the bounded,
+ * dependency-free entry point used by OpenUIKit's asset-catalog loader.
+ * `scale` is pixels per PDF point.  The returned buffer is
+ * width*height*4 bytes and is released with QZImageFreeRGBA.  Unsupported or
+ * malformed PDF constructs fail closed and return NULL. */
+uint8_t *QZPDFPageRasterizeRGBA(QZPDFPageRef page, QZFloat scale,
+                                int *out_width, int *out_height);
 
 #ifdef __cplusplus
 }

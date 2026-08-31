@@ -13,10 +13,13 @@ without depending on Apple's private asset-catalog runtime.
 
 - A Linux application packager may materialize source `.xcassets` as
   `OpenUIKit/AssetCatalogs/index.json` plus content-addressed resources. Named
-  images resolve indexed PNG/JPG/JPEG image sets by exact idiom then
+  images resolve indexed PNG/JPG/JPEG or single-page PDF image sets by exact idiom then
   `universal`, exact appearance then `any`, and exact scale then largest below,
   smallest above, and finally scaleless. Template/original rendering intent is
-  retained. `OpenUIKitRuntime.assetCatalogIdiom` defaults to `.phone` and is
+  retained. PDF members are rasterized at the selected explicit scale, or at
+  the requested display scale when the member is scaleless, so the resulting
+  `UIImage.size` remains the PDF page size in points.
+  `OpenUIKitRuntime.assetCatalogIdiom` defaults to `.phone` and is
   host-configurable without an actor hop through `UIDevice.current`.
 - Indexed colors preserve light/dark behavior. sRGB and extended-sRGB use
   native components, Display-P3 uses the indexer's measured sRGB conversion,
@@ -39,8 +42,16 @@ without depending on Apple's private asset-catalog runtime.
 
 ## Deliberate limitations
 
-OpenUIKit does not decode compiled `Assets.car`, vector PDF/SVG, app-icon,
-symbol, or data-set payloads. Indexed image resizing, screen-width,
+OpenUIKit does not decode compiled `Assets.car`, SVG, app-icon, symbol, or
+data-set payloads. Its PDF path is a bounded asset renderer rather than a
+general document viewer: it accepts traditional xref tables (including
+incremental `/Prev` chains), one page, uncompressed or Flate streams, RGB/gray
+paths, clipping/stroking, Form and raw RGB/gray Image XObjects, image and
+transparency soft masks, and the axial/radial Type-4 calculator gradients
+measured in Focus. Encryption, object/xref streams, text, inline images,
+non-Flate filters, arbitrary calculator programs, rotated/non-unit pages, and
+unsupported color/compositing features return `nil` rather than a partial
+render. Indexed image resizing, screen-width,
 language-direction, and height-class qualifiers remain fail-closed until their
 runtime semantics exist. System-color references, tinted-only colors, malformed
 indexes, missing/mismatched payloads, and unsafe paths return `nil`; they never
@@ -65,9 +76,12 @@ resource. Vanilla SwiftPM therefore neither synthesizes `Bundle.module` nor
 copies the catalogs. A Linux Xcode-project builder must add those pinned
 resource inputs explicitly; this API does not manufacture a resource bundle.
 
-Its `Assets.xcassets` image members still do **not** fit the runtime subset: at
-the pinned revision the 24 names force-unwrapped by `UIImage+AppImages.swift`
-map to image sets whose 44 payload files are PDF (42) or SVG (2). Those force
-unwraps fail until the build pipeline rasterizes vector members or OpenUIKit
-gains a vector decoder. A green DesignSystem module therefore is not evidence
-that Focus's images can render yet.
+At the pinned revision the 24 names force-unwrapped by
+`UIImage+AppImages.swift` map to image sets whose 44 payload files are PDF
+(42) or SVG (2). The PDF members now fit the measured renderer. Across the
+complete pinned Focus tree, all 106 `.imageset` PDFs parse and rasterize in the
+corpus gate, including the Flate, image-XObject, gradient, alpha-mask and
+luminosity-mask cases. The two SVG members remain fail-closed, so packaging
+must materialize or separately rasterize those two names before every Focus
+force unwrap can succeed. A green module alone is still not evidence that its
+resources were copied into the generated bundle.

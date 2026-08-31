@@ -115,16 +115,22 @@ extension BundleAssetLookup {
                   _AssetCatalogStore.hasSupportedImageQualifiers(variant),
                   let payload = _AssetCatalogStore.payload(from: variant),
                   payload.ext == ".png" || payload.ext == ".jpg"
-                    || payload.ext == ".jpeg",
+                    || payload.ext == ".jpeg" || payload.ext == ".pdf",
                   let bytes = ResourceIO.readFile(
                     located.indexRoot + "/Resources/" + payload.file
                   ),
-                  bytes.count == payload.bytes,
-                  let bitmap = ImageCodec.decode(bytes)
+                  bytes.count == payload.bytes
             else { return .blocked }
 
             let encodedScale = _AssetCatalogStore.scale(in: variant)
             let imageScale = CGFloat(encodedScale ?? scale)
+            let bitmap: Bitmap?
+            if payload.ext == ".pdf" {
+                bitmap = ImageCodec.decodePDF(bytes, scale: imageScale)
+            } else {
+                bitmap = ImageCodec.decode(bytes)
+            }
+            guard let bitmap else { return .blocked }
             var image = UIImage(bitmap: bitmap, scale: imageScale)
             switch record.templateRenderingIntent {
             case "template":

@@ -1986,10 +1986,14 @@ exercised and OpenUIKit does not fully honour.
   explicit call. This is a small fix and is the first item to take from the
   report's blocked list.
 - **Named assets consume materialized source catalogs, not `Assets.car`.** The
-  application packager's `OpenUIKit/AssetCatalogs/index.json` drives raster
+  application packager's `OpenUIKit/AssetCatalogs/index.json` drives raster and
+  bounded single-page PDF
   image and color lookup, including measured idiom/appearance/scale ordering
-  and template rendering intent. Compiled catalogs, vector payloads, resizing,
-  and uncommon image qualifiers remain fail-closed; see `NAMED_ASSETS.md`.
+  and template rendering intent. The measured PDF subset covers all 106 asset
+  PDFs in pinned Focus, including Flate, Form/image XObjects, Type-4 gradients,
+  and alpha/luminosity masks. Compiled catalogs, SVG and unsupported/general
+  PDF features, resizing, and uncommon image qualifiers remain fail-closed;
+  see `NAMED_ASSETS.md`.
 - ~~**A target that links OpenUIKit still cannot `import Foundation`.**~~
   *(M15: CLOSED — see "Foundation coexistence (M15)" above.)* The geometry
   types, `IndexPath`, `NSRange` and `TimeInterval` are now `typealias`-es to

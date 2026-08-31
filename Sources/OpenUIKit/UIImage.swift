@@ -187,7 +187,7 @@ public final class UIImage {
                        isSystemSymbol: _isSystemSymbol)
     }
 
-    // MARK: Loading (PNG / JPEG via ImageCodec)
+    // MARK: Loading (PNG / JPEG plus indexed vector PDF via ImageCodec)
 
     /// Decode PNG or JPEG bytes. `scale` defaults to 1, like
     /// `UIImage(data:)`.
@@ -247,9 +247,9 @@ public final class UIImage {
 
     /// Decode a loose PNG/JPEG resource from one of `searchPaths`.
     ///
-    /// This deliberately does not claim to read Apple's compiled `Assets.car`
-    /// files or vector PDF/SVG image-set members. A Linux app builder must
-    /// materialize supported raster files into the bundle resource directory.
+    /// Materialized indexes may point at PNG, JPEG, or supported vector PDF
+    /// image-set members. Loose fallback remains raster-only so a malformed or
+    /// unsupported indexed vector cannot be bypassed by a stale source file.
     private static func loadNamed(_ name: String,
                                   searchPaths: [String],
                                   preferredScale: CGFloat,
@@ -313,7 +313,8 @@ public final class UIImage {
     ///
     /// Materialized asset-catalog raster variants are resolved using idiom,
     /// appearance and display scale before the loose PNG/JPEG fallback.
-    /// Apple's compiled `Assets.car`, vector PDFs and SVGs are not decoded.
+    /// Apple's compiled `Assets.car` and SVGs are not decoded. Supported PDF
+    /// vectors are rasterized at the selected trait/display scale.
     ///
     /// In a Foundation-hidden guest build Bundle has no filesystem metadata,
     /// so the host-configured `OpenUIKitRuntime.imageSearchPaths` are used.

@@ -1,4 +1,4 @@
-// PNG/JPEG decode + encode. Owner: image module.
+// PNG/JPEG/PDF decode + raster and PNG/JPEG encode. Owner: image module.
 //
 // The decoder is stb_image, ALREADY vendored inside the quartz package
 // (Sources/CQuartz/pkg_image_io.cpp). This file is only the C-interop
@@ -28,6 +28,37 @@ public enum ImageCodec {
         let count = width * height * 4
         bitmap.pixels.withUnsafeMutableBufferPointer { dst in
             for i in 0..<count { dst[i] = px[i] }
+        }
+        return bitmap
+    }
+
+    /// Rasterize the first page of a bounded PDF at `scale` pixels per PDF
+    /// point. CQuartz parses the real xref/page/resource graph and rejects
+    /// unsupported constructs before returning any partial bitmap.
+    static func decodePDF(_ data: [UInt8], scale: CGFloat) -> Bitmap? {
+        guard !data.isEmpty, scale.isFinite, scale > 0 else { return nil }
+        let document = data.withUnsafeBufferPointer { bytes in
+            QZPDFDocumentCreateWithBytes(bytes.baseAddress, bytes.count)
+        }
+        guard let document else { return nil }
+        defer { QZPDFDocumentRelease(document) }
+        guard QZPDFDocumentGetNumberOfPages(document) == 1,
+              let page = QZPDFDocumentGetPage(document, 1) else { return nil }
+        var width: Int32 = 0
+        var height: Int32 = 0
+        guard let pixels = QZPDFPageRasterizeRGBA(
+            page, QZFloat(scale), &width, &height
+        ) else { return nil }
+        defer { QZImageFreeRGBA(pixels) }
+        let w = Int(width)
+        let h = Int(height)
+        guard w > 0, h > 0,
+              w <= Int.max / h / 4 else { return nil }
+        let bitmap = Bitmap(width: w, height: h)
+        bitmap.pixels.withUnsafeMutableBufferPointer { destination in
+            for index in 0..<destination.count {
+                destination[index] = pixels[index]
+            }
         }
         return bitmap
     }

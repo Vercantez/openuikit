@@ -172,3 +172,32 @@ discarded by OpenUIKit before the bridge reaches QZ.
 Upstream fix: adopt the field, setter, and path plumbing together. Keeping
 the setter without routing all five shape consumers would make background,
 clipping, borders, gradients, and shadows disagree with one another.
+
+## 008-pdf-asset-raster.patch
+
+`src/pkg_pdf.cpp`, `include/quartz/pdf.h` — replaces the old heuristic PDF
+reader (which paired every MediaBox with every stream) with a bounded,
+dependency-free asset renderer. It follows traditional xref and incremental
+`/Prev` graphs, binds declared stream lengths, walks the Catalog/Pages tree,
+and adds byte-backed document creation plus straight-RGBA page rasterization.
+Flate decoding reuses quartz's existing stb zlib implementation rather than a
+host library. The checked replay covers the measured Focus path/color/clip
+operators, Form and raw RGB/gray Image XObjects, ICCBased-RGB fallback,
+axial/radial shading patterns with a bounded Type-4 calculator interpreter,
+and image/alpha/luminosity soft masks. Parser, object, recursion, stack,
+decoded-byte and output-pixel limits are explicit; encryption, xref/object
+streams, unmeasured filters/operators and unsupported visual qualifiers fail
+closed without returning a partial bitmap.
+
+OpenUIKit's materialized asset index is the first consumer. The pinned Focus
+gate rasterizes all 106 `.imageset` PDFs, while focused adversarial fixtures
+pin page/stream association, bottom-left PDF orientation, non-zero page boxes,
+Flate, image alpha, soft-mask transfer functions, gradients, malformed xrefs,
+unsupported filters/operators, recursive Forms and the one-page UIImage
+contract.
+
+Upstream fix: adopt the parser/raster API and implementation together. Keeping
+the old page discovery with only the replay changes would again mistake ICC,
+mask or metadata streams for page content; exposing the memory API without the
+checked renderer would make malformed asset payloads indistinguishable from
+valid transparent artwork.

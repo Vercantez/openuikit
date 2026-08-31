@@ -100,6 +100,94 @@ final class NamedAssetLoadingTests: XCTestCase {
         ]
     }
 
+    private func indexedPayload(
+        at resourceRoot: String,
+        id: Character,
+        bytes: [UInt8],
+        ext: String
+    ) -> [String: Any] {
+        let sha = String(repeating: String(id), count: 64)
+        let directory = resourceRoot + "/OpenUIKit/AssetCatalogs/Resources/"
+            + String(sha.prefix(2))
+        try! FileManager.default.createDirectory(
+            atPath: directory, withIntermediateDirectories: true
+        )
+        try! Data(bytes).write(
+            to: URL(fileURLWithPath: directory + "/" + sha + ext)
+        )
+        return [
+            "sha256": sha,
+            "bytes": bytes.count,
+            "ext": ext,
+            "filename": "fixture-\(id)\(ext)",
+            "file": String(sha.prefix(2)) + "/" + sha + ext,
+        ]
+    }
+
+    private func pdfStream(
+        _ bytes: [UInt8], dictionary: String = ""
+    ) -> [UInt8] {
+        var result = Array("<< /Length \(bytes.count)".utf8)
+        if !dictionary.isEmpty {
+            result.append(contentsOf: Array(" \(dictionary)".utf8))
+        }
+        result.append(contentsOf: Array(" >>\nstream\n".utf8))
+        result.append(contentsOf: bytes)
+        result.append(contentsOf: Array("\nendstream".utf8))
+        return result
+    }
+
+    /// Build a traditional-xref PDF without relying on a host PDF framework.
+    /// Object array element zero becomes object 1, and so on.
+    private func makePDF(_ objects: [[UInt8]], root: Int = 1) -> [UInt8] {
+        var bytes = Array("%PDF-1.7\n".utf8)
+        var offsets = [0]
+        for (index, object) in objects.enumerated() {
+            offsets.append(bytes.count)
+            bytes.append(contentsOf: Array("\(index + 1) 0 obj\n".utf8))
+            bytes.append(contentsOf: object)
+            bytes.append(contentsOf: Array("\nendobj\n".utf8))
+        }
+        let xrefOffset = bytes.count
+        bytes.append(contentsOf: Array("xref\n0 \(objects.count + 1)\n".utf8))
+        bytes.append(contentsOf: Array("0000000000 65535 f \n".utf8))
+        for offset in offsets.dropFirst() {
+            let digits = String(offset)
+            let field = String(repeating: "0", count: 10 - digits.count) + digits
+            bytes.append(contentsOf: Array("\(field) 00000 n \n".utf8))
+        }
+        bytes.append(contentsOf: Array(
+            "trailer\n<< /Size \(objects.count + 1) /Root \(root) 0 R >>\n"
+                .utf8
+        ))
+        bytes.append(contentsOf: Array(
+            "startxref\n\(xrefOffset)\n%%EOF\n".utf8
+        ))
+        return bytes
+    }
+
+    private func singlePagePDF(
+        mediaBox: String,
+        resources: String = "<< >>",
+        content: [UInt8],
+        contentDictionary: String = "",
+        extraObjects: [[UInt8]] = []
+    ) -> [UInt8] {
+        makePDF([
+            Array("<< /Type /Catalog /Pages 2 0 R >>".utf8),
+            Array("<< /Type /Pages /Kids [3 0 R] /Count 1 >>".utf8),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox "
+                + mediaBox + " /Resources " + resources
+                + " /Contents 4 0 R >>").utf8),
+            pdfStream(content, dictionary: contentDictionary),
+        ] + extraObjects)
+    }
+
+    private func rgba(_ bitmap: Bitmap, x: Int, y: Int) -> [UInt8] {
+        let offset = (y * bitmap.width + x) * 4
+        return Array(bitmap.pixels[offset..<(offset + 4)])
+    }
+
     private func imageVariant(
         _ payload: [String: Any],
         idiom: String = "universal",
@@ -282,7 +370,7 @@ final class NamedAssetLoadingTests: XCTestCase {
         }
     }
 
-    func testBundleNamedImageDoesNotPretendToDecodeAssetsCarOrVectors() {
+    func testBundleNamedImageDoesNotPretendToDecodeAssetsCarOrLooseVectors() {
         withTempDirectory { root in
             let bundle = makeBundle(at: root + "/Compiled.bundle")
             FileManager.default.createFile(atPath: bundle.bundlePath + "/Assets.car",
@@ -567,6 +655,254 @@ final class NamedAssetLoadingTests: XCTestCase {
             XCTAssertEqual(UIImage(named: "JPEG", in: bundle,
                                    compatibleWith: light2)?.bitmap.pixels.first, 99)
         }
+    }
+
+    func testIndexedPDFRasterizesAtTraitScaleWithPDFOrientationAndMetadata() {
+        withTempDirectory { root in
+            let bundle = makeBundle(at: root + "/PDF.bundle")
+            let lightContent = Array(#"""
+            /DeviceRGB cs
+            1 0 0 scn 10 20 2 1 re f
+            0 1 0 scn 10 21 1 1 re f
+            0 0 1 scn 12 21 1 1 re f
+            """#.utf8)
+            let darkContent = Array(
+                "/DeviceRGB cs 1 0 1 scn 10 20 3 2 re f\n".utf8
+            )
+            let lightPDF = singlePagePDF(
+                mediaBox: "[10 20 13 22]", content: lightContent
+            )
+            let darkPDF = singlePagePDF(
+                mediaBox: "[10 20 13 22]", content: darkContent
+            )
+            let light = indexedPayload(
+                at: bundle.bundlePath, id: "a", bytes: lightPDF, ext: ".pdf"
+            )
+            let dark = indexedPayload(
+                at: bundle.bundlePath, id: "b", bytes: darkPDF, ext: ".pdf"
+            )
+            writeIndex(at: bundle.bundlePath, assets: [
+                "Vector": imageRecord([
+                    imageVariant(light, appearance: "any"),
+                    imageVariant(dark, appearance: "dark"),
+                ], intent: "template"),
+            ])
+
+            let lightTraits = UITraitCollection(
+                userInterfaceStyle: .light, displayScale: 2
+            )
+            let image = UIImage(
+                named: "Vector", in: bundle, compatibleWith: lightTraits
+            )
+            XCTAssertEqual(image?.scale, 2)
+            XCTAssertEqual(image?.size, CGSize(width: 3, height: 2))
+            XCTAssertEqual(image?.bitmap.width, 6)
+            XCTAssertEqual(image?.bitmap.height, 4)
+            XCTAssertEqual(image?.renderingMode, .alwaysTemplate)
+            if let bitmap = image?.bitmap {
+                XCTAssertEqual(rgba(bitmap, x: 0, y: 0), [0, 255, 0, 255],
+                               "PDF top-left must map to bitmap row zero")
+                XCTAssertEqual(rgba(bitmap, x: 3, y: 0), [0, 0, 0, 0])
+                XCTAssertEqual(rgba(bitmap, x: 5, y: 0), [0, 0, 255, 255])
+                XCTAssertEqual(rgba(bitmap, x: 0, y: 3), [255, 0, 0, 255],
+                               "PDF bottom-left must map to the last row")
+                XCTAssertEqual(rgba(bitmap, x: 5, y: 3), [0, 0, 0, 0])
+            }
+
+            let darkTraits = UITraitCollection(
+                userInterfaceStyle: .dark, displayScale: 3
+            )
+            let darkImage = UIImage(
+                named: "Vector", in: bundle, compatibleWith: darkTraits
+            )
+            XCTAssertEqual(darkImage?.scale, 3,
+                           "a scaleless vector rasterizes at requested scale")
+            XCTAssertEqual(darkImage?.bitmap.width, 9)
+            XCTAssertEqual(darkImage?.bitmap.pixels.prefix(4), [255, 0, 255, 255])
+            XCTAssertEqual(darkImage?.renderingMode, .alwaysTemplate)
+        }
+    }
+
+    func testPDFFlateContentUsesThePageStreamRatherThanUnrelatedObjects() {
+        // zlib-compressed `/DeviceRGB ...` content. Keeping the bytes fixed
+        // makes the runtime test independent of Foundation or host libz.
+        let flate: [UInt8] = [
+            120, 218, 211, 119, 73, 45, 203, 76, 78, 13, 114, 119, 82,
+            72, 46, 86, 48, 80, 48, 4, 226, 226, 228, 60, 5, 67, 3, 5,
+            35, 16, 207, 80, 161, 40, 85, 33, 141, 11, 0, 214, 56, 9, 210,
+        ]
+        let pdf = singlePagePDF(
+            mediaBox: "[10 20 12 21]", content: flate,
+            contentDictionary: "/Filter /FlateDecode",
+            extraObjects: [
+                pdfStream(Array("unsupported-op\n".utf8),
+                          dictionary: "/Filter /LZWDecode"),
+            ]
+        )
+        let bitmap = ImageCodec.decodePDF(pdf, scale: 1)
+        XCTAssertEqual(bitmap?.width, 2)
+        XCTAssertEqual(bitmap?.height, 1)
+        if let bitmap {
+            XCTAssertEqual(rgba(bitmap, x: 0, y: 0), [0, 255, 0, 255])
+            XCTAssertEqual(rgba(bitmap, x: 1, y: 0), [0, 0, 0, 0])
+        }
+    }
+
+    func testPDFRasterImageXObjectFlateAndImageSoftMask() {
+        let imageFlate: [UInt8] = [
+            120, 218, 251, 207, 192, 192, 240, 159, 1, 0, 7, 254, 1, 255,
+        ]
+        let alphaFlate: [UInt8] = [
+            120, 218, 251, 239, 0, 0, 2, 64, 1, 64,
+        ]
+        let pdf = singlePagePDF(
+            mediaBox: "[0 0 2 1]",
+            resources: "<< /XObject << /Im 5 0 R >> >>",
+            content: Array("q 2 0 0 1 0 0 cm /Im Do Q\n".utf8),
+            extraObjects: [
+                pdfStream(imageFlate, dictionary:
+                    "/Type /XObject /Subtype /Image /Width 2 /Height 1 "
+                    + "/BitsPerComponent 8 /ColorSpace /DeviceRGB "
+                    + "/Filter /FlateDecode /SMask 6 0 R"),
+                pdfStream(alphaFlate, dictionary:
+                    "/Type /XObject /Subtype /Image /Width 2 /Height 1 "
+                    + "/BitsPerComponent 8 /ColorSpace /DeviceGray "
+                    + "/Filter /FlateDecode"),
+            ]
+        )
+        let bitmap = ImageCodec.decodePDF(pdf, scale: 1)
+        if let bitmap {
+            XCTAssertEqual(rgba(bitmap, x: 0, y: 0), [255, 0, 0, 255])
+            let second = rgba(bitmap, x: 1, y: 0)
+            XCTAssertEqual(Array(second.prefix(3)), [0, 255, 0])
+            XCTAssertEqual(second[3], 64)
+        } else {
+            XCTFail("bounded Flate image XObject should render")
+        }
+    }
+
+    func testPDFLuminosityAndAlphaSoftMasksIncludingTransferFunction() {
+        let luminosity = makePDF([
+            Array("<< /Type /Catalog /Pages 2 0 R >>".utf8),
+            Array("<< /Type /Pages /Kids [3 0 R] /Count 1 >>".utf8),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 2 1] "
+                + "/Resources << /ExtGState << /E1 << /SMask "
+                + "<< /Type /Mask /S /Luminosity /G 5 0 R >> >> >> >> "
+                + "/Contents 4 0 R >>").utf8),
+            pdfStream(Array("/E1 gs 1 0 0 rg 0 0 2 1 re f\n".utf8)),
+            pdfStream(Array(
+                "0.5 g 0 0 1 1 re f 1 g 1 0 1 1 re f\n".utf8
+            ), dictionary:
+                "/Type /XObject /Subtype /Form /BBox [0 0 2 1] "
+                + "/Resources << >> /Group << /Type /Group "
+                + "/S /Transparency /CS /DeviceGray >>"),
+        ])
+        if let bitmap = ImageCodec.decodePDF(luminosity, scale: 1) {
+            let left = rgba(bitmap, x: 0, y: 0)
+            XCTAssertEqual(Array(left.prefix(3)), [255, 0, 0])
+            XCTAssertEqual(left[3], 128, accuracy: 2)
+            XCTAssertEqual(rgba(bitmap, x: 1, y: 0), [255, 0, 0, 255])
+        } else {
+            XCTFail("luminosity soft-mask group should render")
+        }
+
+        let alphaTransfer = makePDF([
+            Array("<< /Type /Catalog /Pages 2 0 R >>".utf8),
+            Array("<< /Type /Pages /Kids [3 0 R] /Count 1 >>".utf8),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 2 1] "
+                + "/Resources << /ExtGState << /E1 << /SMask "
+                + "<< /Type /Mask /S /Alpha /G 5 0 R /TR 6 0 R >> >> >> >> "
+                + "/Contents 4 0 R >>").utf8),
+            pdfStream(Array("/E1 gs 0 0 1 rg 0 0 2 1 re f\n".utf8)),
+            pdfStream(Array("1 g 0 0 1 1 re f\n".utf8), dictionary:
+                "/Type /XObject /Subtype /Form /BBox [0 0 2 1] "
+                + "/Resources << >> /Group << /Type /Group "
+                + "/S /Transparency /CS /DeviceGray >>"),
+            pdfStream(Array("{ 0 gt { 0.25 } { 0 } ifelse }".utf8),
+                      dictionary:
+                "/FunctionType 4 /Domain [0 1] /Range [0 1]"),
+        ])
+        if let bitmap = ImageCodec.decodePDF(alphaTransfer, scale: 1) {
+            let left = rgba(bitmap, x: 0, y: 0)
+            XCTAssertEqual(Array(left.prefix(3)), [0, 0, 255])
+            XCTAssertEqual(left[3], 64, accuracy: 2)
+            XCTAssertEqual(rgba(bitmap, x: 1, y: 0), [0, 0, 0, 0])
+        } else {
+            XCTFail("alpha soft-mask transfer function should render")
+        }
+    }
+
+    func testPDFAxialPatternRunsBoundedType4CalculatorFunction() {
+        let resources = #"""
+        << /Pattern << /P1 << /Type /Pattern /PatternType 2
+          /Shading << /ShadingType 2 /ColorSpace /DeviceRGB
+            /Coords [0 0 2 0] /Function 5 0 R /Domain [0 1]
+            /Extend [true true] >> >> >> >>
+        """#
+        let pdf = singlePagePDF(
+            mediaBox: "[0 0 2 1]", resources: resources,
+            content: Array("/Pattern cs /P1 scn 0 0 2 1 re f\n".utf8),
+            extraObjects: [
+                pdfStream(Array("{ dup 0 mul 0 }".utf8), dictionary:
+                    "/FunctionType 4 /Domain [0 1] "
+                    + "/Range [0 1 0 1 0 1]"),
+            ]
+        )
+        if let bitmap = ImageCodec.decodePDF(pdf, scale: 2) {
+            let left = rgba(bitmap, x: 0, y: 0)
+            let right = rgba(bitmap, x: bitmap.width - 1, y: 0)
+            XCTAssertGreaterThan(right[0], left[0])
+            XCTAssertEqual(left[1], 0)
+            XCTAssertEqual(left[2], 0)
+            XCTAssertEqual(right[3], 255)
+        } else {
+            XCTFail("measured axial-pattern calculator subset should render")
+        }
+    }
+
+    func testPDFMalformedUnsupportedAndRecursiveInputsFailClosed() {
+        let unknownOperator = singlePagePDF(
+            mediaBox: "[0 0 1 1]", content: Array("BT\n".utf8)
+        )
+        XCTAssertNil(ImageCodec.decodePDF(unknownOperator, scale: 1))
+
+        let unsupportedFilter = singlePagePDF(
+            mediaBox: "[0 0 1 1]", content: [0, 1, 2, 3],
+            contentDictionary: "/Filter /LZWDecode"
+        )
+        XCTAssertNil(ImageCodec.decodePDF(unsupportedFilter, scale: 1))
+
+        let valid = singlePagePDF(
+            mediaBox: "[0 0 1 1]", content: Array("0 0 1 rg 0 0 1 1 re f\n".utf8)
+        )
+        XCTAssertNil(ImageCodec.decodePDF(Array(valid.dropLast(24)), scale: 1),
+                     "truncated xref/trailer must not be scanned heuristically")
+
+        let recursive = makePDF([
+            Array("<< /Type /Catalog /Pages 2 0 R >>".utf8),
+            Array("<< /Type /Pages /Kids [3 0 R] /Count 1 >>".utf8),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1 1] "
+                + "/Resources << /XObject << /Loop 5 0 R >> >> "
+                + "/Contents 4 0 R >>").utf8),
+            pdfStream(Array("/Loop Do\n".utf8)),
+            pdfStream(Array("/Loop Do\n".utf8), dictionary:
+                "/Type /XObject /Subtype /Form /BBox [0 0 1 1] "
+                + "/Resources << /XObject << /Loop 5 0 R >> >>"),
+        ])
+        XCTAssertNil(ImageCodec.decodePDF(recursive, scale: 1))
+
+        let multiplePages = makePDF([
+            Array("<< /Type /Catalog /Pages 2 0 R >>".utf8),
+            Array("<< /Type /Pages /Kids [3 0 R 5 0 R] /Count 2 >>".utf8),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1 1] "
+                + "/Resources << >> /Contents 4 0 R >>").utf8),
+            pdfStream(Array("0 0 1 rg 0 0 1 1 re f\n".utf8)),
+            Array(("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 1 1] "
+                + "/Resources << >> /Contents 6 0 R >>").utf8),
+            pdfStream(Array("1 0 0 rg 0 0 1 1 re f\n".utf8)),
+        ])
+        XCTAssertNil(ImageCodec.decodePDF(multiplePages, scale: 1),
+                     "UIImage's vector payload contract is exactly one page")
     }
 
     func testIndexedImageNamedCacheSeparatesAppearanceAndClearsIndexState() {
