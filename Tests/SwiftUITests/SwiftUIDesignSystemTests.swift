@@ -330,6 +330,87 @@ private struct CommentsDragFixture: View {
     }
 }
 
+private struct WhatsNewFixtureItem: Identifiable {
+    let id: Int
+    let title: String
+}
+
+private struct WhatsNewSurfaceFixture: View {
+    let dismiss: @MainActor () -> Void
+    let items = [
+        WhatsNewFixtureItem(
+            id: 7,
+            title: "A deliberately long release note that must wrap onto multiple lines."
+        ),
+    ]
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVStack {
+                    ForEach(items) { item in
+                        Text(item.title)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(width: 90, height: 20)
+                    }
+                }
+            }
+            .navigationTitle("")
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Close", action: dismiss)
+                }
+            }
+        }
+    }
+}
+
+private struct FeedSurfaceFixture: View {
+    let searchText: Binding<String>
+    let selected: @MainActor () -> Void
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 6) {
+                Menu {
+                    Button("Popular", action: selected)
+                    Button("Recent") {}
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .menuIndicator(.hidden)
+
+                HStack {
+                    ProgressView("Searching...")
+                        .tint(nil)
+                    Circle()
+                        .fill(.white.opacity(0.22))
+                        .frame(width: 18, height: 18)
+                }
+
+                List {
+                    Text("Pinned")
+                        .listRowBackground(Color.red)
+                        .listRowSeparator(.hidden)
+                    Text("Story")
+                }
+                .listStyle(.sidebar)
+            }
+            .font(.headline.weight(.semibold))
+            .background(.bar)
+            .toolbar {
+                ToolbarSpacer(.flexible, placement: .bottomBar)
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            }
+        }
+        .searchable(text: searchText, placement: .toolbar, prompt: "Search Hacker News")
+        .searchToolbarBehavior(.minimize)
+    }
+}
+
 @MainActor
 final class SwiftUIDesignSystemTests: XCTestCase {
     private var savedResourceRoot = ""
@@ -829,6 +910,104 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(ended.startLocation.y, 30, accuracy: 0.001)
         XCTAssertEqual(ended.translation.width, 40, accuracy: 0.001)
         XCTAssertEqual(ended.translation.height, 20, accuracy: 0.001)
+    }
+
+    func testWhatsNewIdentifiableRowsFixedHeightAndTopToolbarAreSemantic() throws {
+        var dismissCount = 0
+        let controller = UIHostingController(
+            rootView: WhatsNewSurfaceFixture { dismissCount += 1 }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 220, height: 180)
+        host.layoutIfNeeded()
+
+        let note = try XCTUnwrap(
+            descendants(host).compactMap { $0 as? UILabel }
+                .first { $0.text?.hasPrefix("A deliberately long") == true }
+        )
+        XCTAssertGreaterThan(note.frame.height, 20)
+        let close = try XCTUnwrap(
+            descendants(host).first {
+                $0.accessibilityIdentifier == "SwiftUI.Button"
+                    && descendants($0).compactMap { ($0 as? UILabel)?.text }.contains("Close")
+            } as? UIControl
+        )
+        close.sendActions(for: .touchUpInside)
+        XCTAssertEqual(dismissCount, 1)
+    }
+
+    func testFeedSearchMenuListStyleShapeFontProgressAndMaterialAreLive() throws {
+        var query = "initial"
+        var selectionCount = 0
+        let controller = UIHostingController(
+            rootView: FeedSurfaceFixture(
+                searchText: Binding(
+                    get: { query },
+                    set: { query = $0 }
+                ),
+                selected: { selectionCount += 1 }
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 280, height: 360)
+        host.layoutIfNeeded()
+
+        let search = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.Searchable") as? UISearchBar
+        )
+        XCTAssertEqual(search.text, "initial")
+        XCTAssertEqual(search.placeholder, "Search Hacker News")
+        search.searchTextField.text = "linux"
+        search.searchTextField.sendActions(for: .editingChanged)
+        XCTAssertEqual(query, "linux")
+
+        let menu = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.Menu") as? UIButton
+        )
+        XCTAssertTrue(menu.showsMenuAsPrimaryAction)
+        XCTAssertNil(descendant(menu, identifier: "SwiftUI.Menu.indicator"))
+        let firstAction = try XCTUnwrap(menu.menu?.children.first as? UIAction)
+        XCTAssertEqual(firstAction.title, "Popular")
+        firstAction.performWithSender(menu, target: nil)
+        XCTAssertEqual(selectionCount, 1)
+
+        let progress = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.ProgressView")
+                as? UIActivityIndicatorView
+        )
+        XCTAssertTrue(progress.isAnimating)
+        XCTAssertNotNil(
+            descendants(host).compactMap { $0 as? UILabel }
+                .first { $0.text == "Searching..." }
+        )
+        XCTAssertEqual(
+            Font.headline.weight(.semibold).resolve(weight: nil).weight,
+            .semibold
+        )
+
+        let list = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.List") as? UIScrollView
+        )
+        XCTAssertEqual(list.accessibilityValue, "style=sidebar")
+        XCTAssertTrue(
+            descendants(list).filter {
+                $0.accessibilityIdentifier?.hasPrefix("SwiftUI.List.separator") == true
+            }.isEmpty,
+            "the first row's all-edge hidden preference removes its bottom boundary"
+        )
+        let rowBackground = try XCTUnwrap(
+            descendant(list, identifier: "SwiftUI.ListRowBackground")
+        )
+        XCTAssertNotNil(descendants(rowBackground).first { $0.backgroundColor == .red })
+
+        let circle = try XCTUnwrap(
+            descendants(host).first {
+                $0.accessibilityIdentifier == "SwiftUI.Capsule.fill"
+                    && $0.frame.size == CGSize(width: 18, height: 18)
+            }
+        )
+        XCTAssertEqual(circle.layer.cornerRadius, 9, accuracy: 0.001)
+        XCTAssertNotNil(descendant(host, identifier: "SwiftUI.Material.bar") as? UIVisualEffectView)
     }
 
     private func descendant(_ root: UIView, identifier: String) -> UIView? {

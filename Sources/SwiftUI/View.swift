@@ -101,6 +101,11 @@ indirect enum _OpenViewNodeKind {
         role: ButtonRole?,
         action: @MainActor () -> Void
     )
+    case menu(
+        label: _OpenViewNode,
+        pressedLabel: _OpenViewNode?,
+        content: _OpenViewNode
+    )
     case geometry(_OpenGeometryNode)
     case scroll(content: _OpenViewNode)
     case scrollReader(content: _OpenViewNode, storage: _OpenScrollProxyStorage)
@@ -170,6 +175,13 @@ struct _OpenAlertConfiguration {
     let message: _OpenViewNode
 }
 
+struct _OpenSearchConfiguration {
+    let getText: @MainActor () -> String
+    let setText: @MainActor (String) -> Void
+    let prompt: String
+    let placement: SearchFieldPlacement
+}
+
 struct _OpenPreferenceRecord {
     let key: ObjectIdentifier
     let value: Any
@@ -210,6 +222,7 @@ enum _OpenViewModification {
     case lineLimitRange(ClosedRange<Int>)
     case truncationMode(TextTruncationMode)
     case layoutPriority(Double)
+    case fixedSize(horizontal: Bool, vertical: Bool)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
     case flexibleFrame(
         minWidth: CGFloat?,
@@ -281,6 +294,12 @@ enum _OpenViewModification {
     case swipeActions(edge: Edge, allowsFullSwipe: Bool, actions: _OpenViewNode)
     case contextMenu(_OpenViewNode)
     case matchedGeometry(id: AnyHashable, namespace: Namespace.ID, isSource: Bool)
+    case listStyle(ListStyle)
+    case listRowBackground(_OpenViewNode)
+    case listRowSeparator(Visibility, VerticalEdge.Set)
+    case searchable(_OpenSearchConfiguration)
+    case searchToolbarBehavior(SearchToolbarBehavior)
+    case menuIndicator(Visibility)
     case effect
 }
 
@@ -300,6 +319,7 @@ fileprivate enum _OpenViewModifier {
     case lineLimitRange(ClosedRange<Int>)
     case truncationMode(TextTruncationMode)
     case layoutPriority(Double)
+    case fixedSize(horizontal: Bool, vertical: Bool)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
     case flexibleFrame(
         minWidth: CGFloat?,
@@ -385,6 +405,12 @@ fileprivate enum _OpenViewModifier {
     )
     case contextMenu(@MainActor () -> _OpenViewNode)
     case matchedGeometry(id: AnyHashable, namespace: Namespace.ID, isSource: Bool)
+    case listStyle(ListStyle)
+    case listRowBackground(@MainActor () -> _OpenViewNode)
+    case listRowSeparator(Visibility, VerticalEdge.Set)
+    case searchable(_OpenSearchConfiguration)
+    case searchToolbarBehavior(SearchToolbarBehavior)
+    case menuIndicator(Visibility)
     case effect
     case onChange(@MainActor () -> Void)
     case animation(@MainActor () -> Void)
@@ -405,6 +431,8 @@ fileprivate enum _OpenViewModifier {
         case .lineLimitRange(let value): return .lineLimitRange(value)
         case .truncationMode(let value): return .truncationMode(value)
         case .layoutPriority(let value): return .layoutPriority(value)
+        case .fixedSize(let horizontal, let vertical):
+            return .fixedSize(horizontal: horizontal, vertical: vertical)
         case .frame(let width, let height, let alignment):
             return .frame(width: width, height: height, alignment: alignment)
         case .flexibleFrame(let minWidth, let maxWidth, let minHeight, let maxHeight, let alignment):
@@ -539,6 +567,20 @@ fileprivate enum _OpenViewModifier {
             )
         case .matchedGeometry(let id, let namespace, let isSource):
             return .matchedGeometry(id: id, namespace: namespace, isSource: isSource)
+        case .listStyle(let style): return .listStyle(style)
+        case .listRowBackground(let makeBackground):
+            return .listRowBackground(
+                _OpenGraphContext.withStructuralScope(
+                    .background,
+                    operation: makeBackground
+                )
+            )
+        case .listRowSeparator(let visibility, let edges):
+            return .listRowSeparator(visibility, edges)
+        case .searchable(let configuration): return .searchable(configuration)
+        case .searchToolbarBehavior(let behavior):
+            return .searchToolbarBehavior(behavior)
+        case .menuIndicator(let visibility): return .menuIndicator(visibility)
         case .effect: return .effect
         case .onChange(let install):
             _OpenGraphContext.withStructuralScope(.onChange) { install() }
@@ -1109,6 +1151,53 @@ extension _OpenCapsule: _OpenView {
     }
 }
 
+extension _OpenCircle: _OpenView {
+    public typealias Body = Never
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.capsule(.fill(nil)))
+    }
+
+    public func fill(_ color: Color) -> some _OpenView {
+        _OpenFilledCapsule(color: color)
+    }
+
+    public func stroke(_ color: Color, lineWidth: CGFloat = 1) -> some _OpenView {
+        _OpenStrokedCapsule(color: color, lineWidth: lineWidth)
+    }
+}
+
+/// System materials are live blur-backed OpenUIKit views. Keeping material as
+/// a primitive View lets contextual spellings such as `.background(.bar)`
+/// resolve without flattening the effect into an opaque color.
+public struct _OpenMaterial: _OpenView, Sendable {
+    public typealias Body = Never
+
+    enum Style: Sendable { case bar, regular, thin, thick }
+    let style: Style
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let blurStyle: UIBlurEffect.Style
+        switch style {
+        case .bar, .regular: blurStyle = .systemMaterial
+        case .thin: blurStyle = .systemThinMaterial
+        case .thick: blurStyle = .systemThickMaterial
+        }
+        let view = UIVisualEffectView(effect: UIBlurEffect(style: blurStyle))
+        view.accessibilityIdentifier = "SwiftUI.Material.\(style)"
+        return _OpenViewNode(.view(view))
+    }
+}
+
+public extension _OpenView where Self == _OpenMaterial {
+    static var bar: _OpenMaterial { _OpenMaterial(style: .bar) }
+    static var regularMaterial: _OpenMaterial { _OpenMaterial(style: .regular) }
+    static var thinMaterial: _OpenMaterial { _OpenMaterial(style: .thin) }
+    static var thickMaterial: _OpenMaterial { _OpenMaterial(style: .thick) }
+}
+
+public typealias Material = _OpenMaterial
+
 public struct _OpenFilledCapsule: _OpenView {
     public typealias Body = Never
     public let color: Color
@@ -1291,6 +1380,15 @@ where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView {
     }
 }
 
+public extension _OpenForEach where Data.Element: Identifiable, ID == Data.Element.ID {
+    init(
+        _ data: Data,
+        @_OpenViewBuilder content: @escaping @MainActor (Data.Element) -> Content
+    ) {
+        self.init(data, id: \.id, content: content)
+    }
+}
+
 public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
     public typealias Body = Never
     public let content: Content
@@ -1393,6 +1491,27 @@ public extension _OpenButtonStyleProtocol where Self == _OpenPlainButtonStyle {
     static var plain: _OpenPlainButtonStyle { _OpenPlainButtonStyle() }
 }
 
+public struct _OpenBorderedButtonStyle: _OpenButtonStyleProtocol, Sendable {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some _OpenView {
+        configuration.label
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Color(uiColor: configuration.isPressed
+                    ? .tertiarySystemFill
+                    : .secondarySystemFill)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .opacity(configuration.isPressed ? 0.78 : 1)
+    }
+}
+
+public extension _OpenButtonStyleProtocol where Self == _OpenBorderedButtonStyle {
+    static var bordered: _OpenBorderedButtonStyle { _OpenBorderedButtonStyle() }
+}
+
 /// Portable rendering for the system glass button styles introduced by the
 /// newest SDK.  The normal and pressed configurations remain distinct nodes,
 /// so OpenUIKit's button control switches the real blur-backed surface while
@@ -1457,6 +1576,24 @@ private func _openApplyingButtonStyle<Style: _OpenButtonStyleProtocol>(
         return _OpenViewNode(
             .button(label: normal, pressedLabel: pressed, role: role, action: action)
         )
+    case .menu(let label, _, let content):
+        let normal = style.makeBody(
+            configuration: .init(
+                label: _OpenButtonStyleLabel(node: label),
+                isPressed: false,
+                role: nil
+            )
+        )._makeOpenUIKitNode()
+        let pressed = style.makeBody(
+            configuration: .init(
+                label: _OpenButtonStyleLabel(node: label),
+                isPressed: true,
+                role: nil
+            )
+        )._makeOpenUIKitNode()
+        return _OpenViewNode(
+            .menu(label: normal, pressedLabel: pressed, content: content)
+        )
     case .group(let children):
         return _OpenViewNode(.group(children.map { _openApplyingButtonStyle($0, style: style) }))
     case .hStack(let children, let alignment, let spacing):
@@ -1493,6 +1630,7 @@ private func _openApplyingButtonStyle<Style: _OpenButtonStyleProtocol>(
 
 public typealias ButtonStyle = _OpenButtonStyleProtocol
 public typealias PlainButtonStyle = _OpenPlainButtonStyle
+public typealias BorderedButtonStyle = _OpenBorderedButtonStyle
 public typealias GlassButtonStyle = _OpenGlassButtonStyle
 
 public struct _OpenLabel<Title: _OpenView, Icon: _OpenView>: _OpenView {
@@ -1719,6 +1857,20 @@ public extension _OpenView {
 
     func layoutPriority(_ value: Double) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .layoutPriority(value))
+    }
+
+    /// Requests the child's ideal extent on the selected axes while retaining
+    /// the parent's concrete proposal on the others. This is the important
+    /// behavior behind vertically fixed multiline labels: width still wraps,
+    /// but a short row proposal no longer truncates their intrinsic height.
+    func fixedSize(
+        horizontal: Bool = true,
+        vertical: Bool = true
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .fixedSize(horizontal: horizontal, vertical: vertical)
+        )
     }
 
     func foregroundStyle<Style: ShapeStyle>(_ style: Style) -> some _OpenView {
@@ -2121,6 +2273,10 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .controlSize(size))
     }
 
+    func menuIndicator(_ visibility: Visibility) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .menuIndicator(visibility))
+    }
+
     func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .symbolRenderingMode(mode))
     }
@@ -2384,7 +2540,7 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationBarHidden(hidden))
     }
 
-    func navigationBarBackButtonHidden(_ hidden: Bool) -> some _OpenView {
+    func navigationBarBackButtonHidden(_ hidden: Bool = true) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .navigationBackButtonHidden(hidden))
     }
 
@@ -2404,6 +2560,33 @@ public extension _OpenView {
         return _OpenModifiedContent(
             content: self,
             modification: .toolbar { toolbarContent._makeOpenUIKitNode() }
+        )
+    }
+
+    func searchable(
+        text: Binding<String>,
+        placement: SearchFieldPlacement = .automatic,
+        prompt: String = "Search"
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .searchable(
+                _OpenSearchConfiguration(
+                    getText: { text.wrappedValue },
+                    setText: { text.wrappedValue = $0 },
+                    prompt: prompt,
+                    placement: placement
+                )
+            )
+        )
+    }
+
+    func searchToolbarBehavior(
+        _ behavior: SearchToolbarBehavior
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .searchToolbarBehavior(behavior)
         )
     }
 
@@ -2541,9 +2724,29 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .effect)
     }
 
-    func listRowSeparator(_ visibility: Visibility) -> some _OpenView {
-        _ = visibility
-        return _OpenModifiedContent(content: self, modification: .effect)
+    func listStyle(_ style: ListStyle) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .listStyle(style))
+    }
+
+    func listRowBackground<Background: _OpenView>(
+        _ background: Background
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .listRowBackground {
+                background._makeOpenUIKitNode()
+            }
+        )
+    }
+
+    func listRowSeparator(
+        _ visibility: Visibility,
+        edges: VerticalEdge.Set = .all
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .listRowSeparator(visibility, edges)
+        )
     }
 
     func listRowInsets(_ insets: EdgeInsets?) -> some _OpenView {

@@ -724,6 +724,7 @@ enum _OpenGraphStructuralScope: Hashable {
     case vStackContent
     case zStackContent
     case buttonLabel
+    case menuContent
     case scrollContent
     case tabViewContent
     case formContent

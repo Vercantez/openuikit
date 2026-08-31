@@ -150,15 +150,27 @@ public struct _OpenSecureField: _OpenView {
     }
 }
 
-/// Determinate progress is intentionally deferred; the no-argument spinner
-/// is the dominant app surface and maps to OpenUIKit's real activity view.
+/// Indeterminate progress maps to OpenUIKit's real activity view. A string
+/// label is retained as adjacent SwiftUI text, matching the accessibility and
+/// layout contract of `ProgressView("…")` without inventing a second control.
 public struct _OpenProgressView: _OpenView {
     public typealias Body = Never
+    public let title: String?
 
-    public init() {}
+    public init() { title = nil }
+
+    public init(_ title: String) { self.title = title }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.progress)
+        let progress = _OpenViewNode(.progress)
+        guard let title else { return progress }
+        return _OpenViewNode(
+            .hStack(
+                children: [progress, _OpenViewNode(.text(title))],
+                alignment: .center,
+                spacing: 8
+            )
+        )
     }
 }
 

@@ -56,9 +56,56 @@ public struct _OpenToolbarItemPlacement: Hashable, Sendable {
     public static let principal = _OpenToolbarItemPlacement(1)
     public static let navigationBarLeading = _OpenToolbarItemPlacement(2)
     public static let navigationBarTrailing = _OpenToolbarItemPlacement(3)
+    public static let topBarLeading = navigationBarLeading
+    public static let topBarTrailing = navigationBarTrailing
     public static let bottomBar = _OpenToolbarItemPlacement(4)
     public static let cancellationAction = _OpenToolbarItemPlacement(5)
     public static let confirmationAction = _OpenToolbarItemPlacement(6)
+}
+
+public enum _OpenToolbarSpacerSizing: Hashable, Sendable {
+    case fixed
+    case flexible
+}
+
+public enum _OpenDefaultToolbarItemKind: Hashable, Sendable {
+    case search
+}
+
+public struct _OpenSearchFieldPlacement: Hashable, Sendable {
+    private let rawValue: UInt8
+    private init(_ rawValue: UInt8) { self.rawValue = rawValue }
+
+    public static let automatic = _OpenSearchFieldPlacement(0)
+    public static let toolbar = _OpenSearchFieldPlacement(1)
+    public static let navigationBarDrawer = _OpenSearchFieldPlacement(2)
+}
+
+public enum _OpenSearchToolbarBehavior: Hashable, Sendable {
+    case automatic
+    case minimize
+}
+
+/// Retained list presentation choice. The concrete value rather than a
+/// marker protocol keeps style dispatch Foundation-free and lets the host
+/// renderer apply the choice at the list boundary.
+public struct _OpenListStyle: Hashable, Sendable {
+    enum Storage: Hashable, Sendable {
+        case automatic
+        case plain
+        case grouped
+        case insetGrouped
+        case sidebar
+    }
+
+    let storage: Storage
+    private init(_ storage: Storage) { self.storage = storage }
+
+    public static let automatic = _OpenListStyle(.automatic)
+    public static let plain = _OpenListStyle(.plain)
+    public static let grouped = _OpenListStyle(.grouped)
+    public static let insetGrouped = _OpenListStyle(.insetGrouped)
+    public static let sidebar = _OpenListStyle(.sidebar)
 }
 
 public struct _OpenGeometryProxy: Sendable {
@@ -706,6 +753,81 @@ public struct _OpenToolbarItem<Content: _OpenView>: _OpenView {
     }
 }
 
+/// Newer SwiftUI toolbars use semantic spacers instead of empty fixed-width
+/// views. The retained spacer keeps its placement so future toolbar layout
+/// can partition each bar; today the same node participates in the existing
+/// stack expansion rules.
+public struct _OpenToolbarSpacer: _OpenView {
+    public typealias Body = Never
+    public let sizing: ToolbarSpacerSizing
+    public let placement: ToolbarItemPlacement
+
+    public init(
+        _ sizing: ToolbarSpacerSizing = .fixed,
+        placement: ToolbarItemPlacement = .automatic
+    ) {
+        self.sizing = sizing
+        self.placement = placement
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.spacer(minLength: sizing == .flexible ? nil : 0))
+    }
+}
+
+/// System-supplied toolbar affordances remain semantic nodes. Search is
+/// rendered by the enclosing `searchable` configuration; the toolbar item is
+/// its discoverable magnifying-glass affordance.
+public struct _OpenDefaultToolbarItem: _OpenView {
+    public typealias Body = Never
+    public let kind: DefaultToolbarItemKind
+    public let placement: ToolbarItemPlacement
+
+    public init(
+        kind: DefaultToolbarItemKind,
+        placement: ToolbarItemPlacement = .automatic
+    ) {
+        self.kind = kind
+        self.placement = placement
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        switch kind {
+        case .search:
+            return _OpenImage(systemName: "magnifyingglass")._makeOpenUIKitNode()
+        }
+    }
+}
+
+/// A menu is a real primary-action UIButton at render time. Its label stays
+/// in the SwiftUI node graph (so styles, symbols, and accessibility compose)
+/// while its content is converted to OpenUIKit's UIMenu/UIAction tree.
+public struct _OpenMenu<Label: _OpenView, Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    public let content: Content
+    public let label: Label
+
+    public init(
+        @_OpenViewBuilder content: () -> Content,
+        @_OpenViewBuilder label: () -> Label
+    ) {
+        self.content = content()
+        self.label = label()
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let labelNode = _OpenGraphContext.withStructuralScope(.buttonLabel) {
+            label._makeOpenUIKitNode()
+        }
+        let contentNode = _OpenGraphContext.withStructuralScope(.menuContent) {
+            content._makeOpenUIKitNode()
+        }
+        return _OpenViewNode(
+            .menu(label: labelNode, pressedLabel: nil, content: contentNode)
+        )
+    }
+}
+
 public struct _OpenTabView<SelectionValue: Hashable, Content: _OpenView>: _OpenView {
     public typealias Body = Never
     public let selection: Binding<SelectionValue>
@@ -1042,6 +1164,11 @@ public typealias ScrollDismissesKeyboardMode = _OpenScrollDismissesKeyboardMode
 public typealias ControlSize = _OpenControlSize
 public typealias SymbolRenderingMode = _OpenSymbolRenderingMode
 public typealias ToolbarItemPlacement = _OpenToolbarItemPlacement
+public typealias ToolbarSpacerSizing = _OpenToolbarSpacerSizing
+public typealias DefaultToolbarItemKind = _OpenDefaultToolbarItemKind
+public typealias SearchFieldPlacement = _OpenSearchFieldPlacement
+public typealias SearchToolbarBehavior = _OpenSearchToolbarBehavior
+public typealias ListStyle = _OpenListStyle
 public typealias GeometryProxy = _OpenGeometryProxy
 public typealias CoordinateSpace = _OpenCoordinateSpace
 public typealias PageTabViewStyle = _OpenPageTabViewStyle
@@ -1067,6 +1194,10 @@ public typealias ScrollViewReader<Content> = _OpenScrollViewReader<Content> wher
 public typealias LazyVStack<Content> = _OpenLazyVStack<Content> where Content: _OpenView
 public typealias GeometryReader<Content> = _OpenGeometryReader<Content> where Content: _OpenView
 public typealias ToolbarItem<Content> = _OpenToolbarItem<Content> where Content: _OpenView
+public typealias ToolbarSpacer = _OpenToolbarSpacer
+public typealias DefaultToolbarItem = _OpenDefaultToolbarItem
+public typealias Menu<Label, Content> = _OpenMenu<Label, Content>
+    where Label: _OpenView, Content: _OpenView
 public typealias TabView<SelectionValue, Content> = _OpenTabView<SelectionValue, Content>
     where SelectionValue: Hashable, Content: _OpenView
 public typealias UIViewControllerRepresentableContext<Representable> =

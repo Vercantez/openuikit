@@ -89,6 +89,14 @@ public struct _OpenFont: Equatable, Sendable {
     }
 
     public func bold() -> _OpenFont {
+        weight(.bold)
+    }
+
+    /// Returns the same semantic text style or concrete font descriptor with
+    /// a different weight. Unlike the view-level `fontWeight`, this value
+    /// transformation composes before the font reaches the render
+    /// environment (`.font(.headline.weight(.semibold))`).
+    public func weight(_ weight: Weight) -> _OpenFont {
         switch storage {
         case .textStyle(let style):
             let pointSize: CGFloat
@@ -105,11 +113,19 @@ public struct _OpenFont: Equatable, Sendable {
             case .caption2: pointSize = 11
             }
             return _OpenFont(
-                storage: .uiFont(pointSize: pointSize, weight: .bold, design: .default)
+                storage: .uiFont(
+                    pointSize: pointSize,
+                    weight: weight.value,
+                    design: .default
+                )
             )
         case .uiFont(let pointSize, _, let design):
             return _OpenFont(
-                storage: .uiFont(pointSize: pointSize, weight: .bold, design: design)
+                storage: .uiFont(
+                    pointSize: pointSize,
+                    weight: weight.value,
+                    design: design
+                )
             )
         }
     }
@@ -400,6 +416,25 @@ public enum _OpenEdge: Int, Hashable, Sendable {
     }
 }
 
+/// The vertical-only edge domain used by row-separator configuration. It is
+/// intentionally distinct from `Edge.Set`: this keeps contextual `.top` and
+/// `.bottom` inference identical to SwiftUI and prevents meaningless leading
+/// or trailing separator requests from entering the retained graph.
+public enum _OpenVerticalEdge: UInt8, Hashable, Sendable {
+    case top
+    case bottom
+
+    public struct Set: OptionSet, Hashable, Sendable {
+        public let rawValue: UInt8
+
+        public init(rawValue: UInt8) { self.rawValue = rawValue }
+
+        public static let top = Set(rawValue: 1 << 0)
+        public static let bottom = Set(rawValue: 1 << 1)
+        public static let all: Set = [.top, .bottom]
+    }
+}
+
 public enum _OpenContentMode: Sendable {
     case fit
     case fill
@@ -658,6 +693,7 @@ public typealias HorizontalAlignment = _OpenHorizontalAlignment
 public typealias VerticalAlignment = _OpenVerticalAlignment
 public typealias Alignment = _OpenAlignment
 public typealias Edge = _OpenEdge
+public typealias VerticalEdge = _OpenVerticalEdge
 public typealias ContentMode = _OpenContentMode
 public typealias ButtonRole = _OpenButtonRole
 public typealias Axis = _OpenAxis

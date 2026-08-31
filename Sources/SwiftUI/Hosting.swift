@@ -83,6 +83,67 @@ private final class _SwiftUIButtonControl: UIControl {
 }
 
 @MainActor
+private final class _SwiftUIMenuControl: UIButton {
+    let normalHost = _SwiftUIPassthroughView()
+    let pressedHost = _SwiftUIPassthroughView()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        showsMenuAsPrimaryAction = true
+        addSubview(normalHost)
+        addSubview(pressedHost)
+        updateAppearance()
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        normalHost.frame = bounds
+        pressedHost.frame = bounds
+    }
+
+    override func stateDidChange() {
+        super.stateDidChange()
+        updateAppearance()
+    }
+
+    func refreshAppearance() { updateAppearance() }
+
+    private func updateAppearance() {
+        normalHost.isHidden = isHighlighted && !pressedHost.subviews.isEmpty
+        pressedHost.isHidden = !isHighlighted || pressedHost.subviews.isEmpty
+    }
+}
+
+@MainActor
+private final class _SwiftUISearchBar: UISearchBar, UISearchBarDelegate {
+    var setText: (@MainActor (String) -> Void)?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        delegate = self
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        _ = searchBar
+        setText?(searchText)
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        setText?("")
+        _ = searchBar.resignFirstResponder()
+    }
+}
+
+@MainActor
 private final class _SwiftUITextField: UITextField {
     var getFocus: (@MainActor () -> Bool)?
     var setFocus: (@MainActor (Bool) -> Void)?
@@ -662,6 +723,10 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
         case .button(let label, let pressedLabel, _, _):
             visit(label)
             if let pressedLabel { visit(pressedLabel) }
+        case .menu(let label, let pressedLabel, let content):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+            visit(content)
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
@@ -683,7 +748,7 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
                  .mask(let auxiliary, _), .toolbar(let auxiliary),
                  .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
-                 .swipeActions(_, _, let auxiliary):
+                 .swipeActions(_, _, let auxiliary), .listRowBackground(let auxiliary):
                 visit(auxiliary)
             case .alert(let configuration):
                 visit(configuration.actions)
@@ -724,6 +789,10 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
         case .button(let label, let pressedLabel, _, _):
             visit(label)
             if let pressedLabel { visit(pressedLabel) }
+        case .menu(let label, let pressedLabel, let content):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+            visit(content)
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
@@ -745,7 +814,7 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
                  .mask(let auxiliary, _), .toolbar(let auxiliary),
                  .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
-                 .swipeActions(_, _, let auxiliary):
+                 .swipeActions(_, _, let auxiliary), .listRowBackground(let auxiliary):
                 visit(auxiliary)
             case .alert(let configuration):
                 visit(configuration.actions)
@@ -783,6 +852,10 @@ private func _openAppearanceActions(
         case .button(let label, let pressedLabel, _, _):
             visit(label)
             if let pressedLabel { visit(pressedLabel) }
+        case .menu(let label, let pressedLabel, let content):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+            visit(content)
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
@@ -809,7 +882,7 @@ private func _openAppearanceActions(
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
                  .mask(let auxiliary, _), .toolbar(let auxiliary),
                  .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
-                 .swipeActions(_, _, let auxiliary):
+                 .swipeActions(_, _, let auxiliary), .listRowBackground(let auxiliary):
                 visit(auxiliary)
             case .alert(let configuration):
                 visit(configuration.actions)
@@ -907,6 +980,8 @@ private struct _RenderEnvironment {
     var scrollGeometryObservers: [_OpenScrollGeometryObserver] = []
     var refreshAction: (@MainActor () async -> Void)?
     var scrollIndicatorVisibility: Visibility = .automatic
+    var listStyle: ListStyle = .automatic
+    var menuIndicatorVisibility: Visibility = .automatic
 
     static let `default` = _RenderEnvironment()
 }
@@ -978,6 +1053,10 @@ private func _openReducedPreference(
         case .button(let label, let pressed, _, _):
             visit(label)
             if let pressed { visit(pressed) }
+        case .menu(let label, let pressed, let content):
+            visit(label)
+            if let pressed { visit(pressed) }
+            visit(content)
         case .geometry(let geometry):
             visit(geometry.resolve(proposed))
         case .scroll(let content), .scrollReader(let content, _),
@@ -999,7 +1078,7 @@ private func _openReducedPreference(
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
                  .mask(let auxiliary, _), .toolbar(let auxiliary),
                  .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
-                 .swipeActions(_, _, let auxiliary):
+                 .swipeActions(_, _, let auxiliary), .listRowBackground(let auxiliary):
                 visit(auxiliary)
             case .alert(let configuration):
                 visit(configuration.actions)
@@ -1087,6 +1166,8 @@ private enum _ViewRenderer {
                 result.height = max(result.height, size.height)
             }
         case .button(let label, _, _, _):
+            return measure(label, proposed: proposed, environment: environment)
+        case .menu(let label, _, _):
             return measure(label, proposed: proposed, environment: environment)
         case .geometry(let geometry):
             let viewport = _bounded(proposed)
@@ -1259,6 +1340,15 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: next)
             case .truncationMode:
                 return measure(content, proposed: proposed, environment: environment)
+            case .fixedSize(let horizontal, let vertical):
+                return measure(
+                    content,
+                    proposed: CGSize(
+                        width: horizontal ? 10_000 : proposed.width,
+                        height: vertical ? 10_000 : proposed.height
+                    ),
+                    environment: environment
+                )
             case .focus(let get, let set):
                 var next = environment
                 next.focus = (get, set)
@@ -1286,6 +1376,10 @@ private enum _ViewRenderer {
             case .controlSize(let size):
                 var next = environment
                 next.controlSize = size
+                return measure(content, proposed: proposed, environment: next)
+            case .menuIndicator(let visibility):
+                var next = environment
+                next.menuIndicatorVisibility = visibility
                 return measure(content, proposed: proposed, environment: next)
             case .symbolRenderingMode(let mode):
                 var next = environment
@@ -1357,6 +1451,8 @@ private enum _ViewRenderer {
                 return CGSize(width: size.width + horizontal, height: size.height + vertical)
             case .background:
                 return measure(content, proposed: proposed, environment: environment)
+            case .listRowBackground:
+                return measure(content, proposed: proposed, environment: environment)
             case .overlay:
                 return measure(content, proposed: proposed, environment: environment)
             case .mask:
@@ -1376,7 +1472,16 @@ private enum _ViewRenderer {
                  .identifier, .preference, .preferenceListener,
                  .scrollVisibility, .scrollGeometry, .geometryObserver,
                  .refreshable, .scrollIndicators, .toolbarVisibility,
-                 .toolbarBackgroundVisibility, .swipeActions:
+                 .toolbarBackgroundVisibility, .swipeActions,
+                 .listRowSeparator, .searchToolbarBehavior:
+                return measure(content, proposed: proposed, environment: environment)
+            case .listStyle(let style):
+                var next = environment
+                next.listStyle = style
+                return measure(content, proposed: proposed, environment: next)
+            case .searchable:
+                // The search field occupies the content's existing viewport;
+                // placement reserves its height during rendering.
                 return measure(content, proposed: proposed, environment: environment)
             case .safeAreaInset(let edge, let spacing, let insetContent):
                 let body = measure(content, proposed: proposed, environment: environment)
@@ -1594,6 +1699,42 @@ private enum _ViewRenderer {
                     on: control.pressedHost,
                     environment: environment
                 )
+            }
+            control.refreshAppearance()
+        case .menu(let label, let pressedLabel, let content):
+            let control = _SwiftUIMenuControl(frame: rect)
+            control.isOpaque = false
+            control.backgroundColor = .clear
+            control.accessibilityIdentifier = "SwiftUI.Menu"
+            control.accessibilityTraits = [.button]
+            control.accessibilityLabel = _openMenuTitle(in: label)
+            control.isEnabled = environment.isEnabled
+            control.menu = UIMenu(children: _openMenuElements(in: content))
+            surface.addSubview(control)
+            place(
+                label,
+                in: control.normalHost.bounds,
+                on: control.normalHost,
+                environment: environment
+            )
+            if let pressedLabel {
+                place(
+                    pressedLabel,
+                    in: control.pressedHost.bounds,
+                    on: control.pressedHost,
+                    environment: environment
+                )
+            }
+            if environment.menuIndicatorVisibility != .hidden {
+                let indicator = _SystemSymbolView(name: "chevron.down")
+                indicator.frame = CGRect(
+                    x: max(0, control.bounds.width - 12),
+                    y: max(0, (control.bounds.height - 8) / 2),
+                    width: 8,
+                    height: 8
+                )
+                indicator.accessibilityIdentifier = "SwiftUI.Menu.indicator"
+                control.addSubview(indicator)
             }
             control.refreshAppearance()
         case .geometry(let geometry):
@@ -2012,6 +2153,10 @@ private enum _ViewRenderer {
                 var next = environment
                 next.controlSize = size
                 place(content, in: rect, on: surface, environment: next)
+            case .menuIndicator(let visibility):
+                var next = environment
+                next.menuIndicatorVisibility = visibility
+                place(content, in: rect, on: surface, environment: next)
             case .symbolRenderingMode(let mode):
                 var next = environment
                 next.symbolRenderingMode = mode
@@ -2084,6 +2229,12 @@ private enum _ViewRenderer {
             case .background(let background, _):
                 place(background, in: rect, on: surface, environment: environment)
                 place(content, in: rect, on: surface, environment: environment)
+            case .listRowBackground(let background):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.ListRowBackground"
+                surface.addSubview(host)
+                place(background, in: host.bounds, on: host, environment: environment)
+                place(content, in: host.bounds, on: host, environment: environment)
             case .overlay(let overlay, _):
                 place(content, in: rect, on: surface, environment: environment)
                 place(overlay, in: rect, on: surface, environment: environment)
@@ -2130,6 +2281,25 @@ private enum _ViewRenderer {
                 // Stack placement reads priority from the structural node;
                 // outside a stack it is intentionally layout-transparent.
                 place(content, in: rect, on: surface, environment: environment)
+            case .fixedSize(let horizontal, let vertical):
+                let ideal = measure(
+                    content,
+                    proposed: CGSize(
+                        width: horizontal ? 10_000 : rect.width,
+                        height: vertical ? 10_000 : rect.height
+                    ),
+                    environment: environment
+                )
+                let size = CGSize(
+                    width: horizontal ? ideal.width : rect.width,
+                    height: vertical ? ideal.height : rect.height
+                )
+                place(
+                    content,
+                    in: alignedRect(size: size, in: rect, alignment: .center),
+                    on: surface,
+                    environment: environment
+                )
             case .tapAction(let action):
                 let control = UIControl(frame: rect)
                 control.isOpaque = false
@@ -2390,6 +2560,47 @@ private enum _ViewRenderer {
                 var next = environment
                 next.scrollIndicatorVisibility = visibility
                 place(content, in: rect, on: surface, environment: next)
+            case .listStyle(let style):
+                var next = environment
+                next.listStyle = style
+                place(content, in: rect, on: surface, environment: next)
+            case .listRowSeparator:
+                // Consumed by `placeList` when it creates the physical row
+                // boundary. Outside a list it is layout-transparent.
+                place(content, in: rect, on: surface, environment: environment)
+            case .searchable(let configuration):
+                let searchHeight = min(UISearchBar.standardHeight, max(0, rect.height))
+                let search = _SwiftUISearchBar(
+                    frame: CGRect(
+                        x: rect.minX,
+                        y: rect.minY,
+                        width: rect.width,
+                        height: searchHeight
+                    )
+                )
+                search.text = configuration.getText()
+                search.placeholder = configuration.prompt
+                search.setText = configuration.setText
+                search.accessibilityIdentifier = "SwiftUI.Searchable"
+                search.searchBarStyle = configuration.placement == .toolbar
+                    ? .minimal : .default
+                surface.addSubview(search)
+                place(
+                    content,
+                    in: CGRect(
+                        x: rect.minX,
+                        y: rect.minY + searchHeight,
+                        width: rect.width,
+                        height: max(0, rect.height - searchHeight)
+                    ),
+                    on: surface,
+                    environment: environment
+                )
+            case .searchToolbarBehavior:
+                // The behavior controls collapse policy during navigation;
+                // the retained search bar remains fully functional when the
+                // portable host has no scrolling navigation-bar chrome.
+                place(content, in: rect, on: surface, environment: environment)
             case .safeAreaInset(let edge, let spacing, let insetContent):
                 let insetSize = measure(
                     insetContent,
@@ -2638,15 +2849,28 @@ private enum _ViewRenderer {
         environment: _RenderEnvironment
     ) {
         let list = UIScrollView(frame: rect)
-        list.backgroundColor = .systemBackground
+        switch environment.listStyle.storage {
+        case .grouped, .insetGrouped:
+            list.backgroundColor = .systemGroupedBackground
+        case .sidebar:
+            list.backgroundColor = .secondarySystemBackground
+        case .automatic, .plain:
+            list.backgroundColor = .systemBackground
+        }
         list.clipsToBounds = true
         list.accessibilityIdentifier = "SwiftUI.List"
+        list.accessibilityValue = "style=\(environment.listStyle.storage)"
         surface.addSubview(list)
 
         var rowLayouts: [(node: _OpenViewNode, height: CGFloat)] = []
         var contentHeight: CGFloat = 0
+        let horizontalInset: CGFloat
+        switch environment.listStyle.storage {
+        case .insetGrouped, .sidebar: horizontalInset = 12
+        case .automatic, .plain, .grouped: horizontalInset = 0
+        }
         let proposal = CGSize(
-            width: max(0, list.bounds.width - 32),
+            width: max(0, list.bounds.width - 32 - horizontalInset * 2),
             height: defaultFormRowHeight
         )
         for row in rows {
@@ -2663,9 +2887,9 @@ private enum _ViewRenderer {
         var y: CGFloat = 0
         for (index, layout) in rowLayouts.enumerated() {
             let rowFrame = CGRect(
-                x: 0,
+                x: horizontalInset,
                 y: y,
-                width: list.bounds.width,
+                width: max(0, list.bounds.width - horizontalInset * 2),
                 height: layout.height
             )
             place(
@@ -2674,12 +2898,16 @@ private enum _ViewRenderer {
                 on: list,
                 environment: environment
             )
-            if index + 1 < rowLayouts.count {
+            let separatorVisibility = _listRowSeparatorVisibility(
+                in: layout.node,
+                edge: .bottom
+            )
+            if index + 1 < rowLayouts.count && separatorVisibility != .hidden {
                 let separator = UIView(
                     frame: CGRect(
-                        x: 16,
+                        x: rowFrame.minX + 16,
                         y: rowFrame.maxY - 0.5,
-                        width: max(0, list.bounds.width - 16),
+                        width: max(0, rowFrame.width - 16),
                         height: 0.5
                     )
                 )
@@ -2690,6 +2918,20 @@ private enum _ViewRenderer {
             }
             y += layout.height
         }
+    }
+
+    private static func _listRowSeparatorVisibility(
+        in node: _OpenViewNode,
+        edge: VerticalEdge.Set
+    ) -> Visibility {
+        guard case .modified(let content, let modification) = node.kind else {
+            return .automatic
+        }
+        if case .listRowSeparator(let visibility, let edges) = modification,
+           !edges.intersection(edge).isEmpty {
+            return visibility
+        }
+        return _listRowSeparatorVisibility(in: content, edge: edge)
     }
 
     private static func placeNavigation(

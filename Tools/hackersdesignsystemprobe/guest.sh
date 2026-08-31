@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Quarantined Swift 6.2.4 compile probe for the untouched Hackers
-# DesignSystem target.  The caller mounts every input read-only and provides
+# Quarantined Swift 6.2.4 compile probe for untouched Hackers UI targets.
+# DesignSystem is always compiled first; HACKERS_PROBE_SCOPE optionally adds
+# Comments, WhatsNew, or Feed. The caller mounts every input read-only and provides
 # a new, empty /out directory.  This intentionally rebuilds the changed
 # OpenUIKit/UIKit/SwiftUI modules before application type checking, so an old
 # package binary cannot hide a source or ABI failure.
@@ -105,12 +106,22 @@ mapfile -d '' -t COMMENTS_SOURCES < <(
     find /app/Features/Comments/Sources/Comments -type f -name '*.swift' -print0 \
         | LC_ALL=C sort -z
 )
+mapfile -d '' -t WHATSNEW_SOURCES < <(
+    find /app/Features/WhatsNew/Sources/WhatsNew -type f -name '*.swift' -print0 \
+        | LC_ALL=C sort -z
+)
+mapfile -d '' -t FEED_SOURCES < <(
+    find /app/Features/Feed/Sources/Feed -type f -name '*.swift' -print0 \
+        | LC_ALL=C sort -z
+)
 
 [ "${#OPENUIKIT_SOURCES[@]}" -eq 105 ]
 [ "${#OPENCOREGRAPHICS_SOURCES[@]}" -eq 12 ]
 [ "${#SWIFTUI_SOURCES[@]}" -eq 8 ]
 [ "${#DESIGNSYSTEM_SOURCES[@]}" -eq 13 ]
 [ "${#COMMENTS_SOURCES[@]}" -eq 7 ]
+[ "${#WHATSNEW_SOURCES[@]}" -eq 6 ]
+[ "${#FEED_SOURCES[@]}" -eq 4 ]
 
 echo '== Foundation-hidden OpenCoreGraphics WMO compile'
 "${SWIFTC[@]}" "${C_FLAGS[@]}" -I /out/base-modules \
@@ -178,6 +189,7 @@ PLUGIN=/pkg/host-tools/swift/host/plugins/libObservationMacros.so
 
 echo '== exact untouched 13-source Hackers DesignSystem WMO compile'
 "${SWIFTC[@]}" "${C_FLAGS[@]}" \
+    -default-isolation MainActor \
     -I /out/modules -I /foundation/modules -I /graph-modules \
     -I /out/base-modules -I /dispatch/modules -I /pkg/modules \
     -load-plugin-library "$PLUGIN" \
@@ -190,6 +202,7 @@ echo '== exact untouched 13-source Hackers DesignSystem WMO compile'
 if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = comments ]; then
     echo '== exact untouched 7-source Hackers Comments WMO compile'
     "${SWIFTC[@]}" "${C_FLAGS[@]}" \
+        -default-isolation MainActor \
         -I /out/modules -I /foundation/modules -I /graph-modules \
         -I /out/base-modules -I /dispatch/modules -I /pkg/modules \
         -load-plugin-library "$PLUGIN" \
@@ -200,11 +213,50 @@ if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = comments ]; then
         2>&1 | tee /out/logs/comments.log
 fi
 
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = whatsnew ]; then
+    echo '== exact untouched 6-source Hackers WhatsNew WMO compile'
+    "${SWIFTC[@]}" "${C_FLAGS[@]}" \
+        -default-isolation MainActor \
+        -I /out/modules -I /foundation/modules -I /graph-modules \
+        -I /out/base-modules -I /dispatch/modules -I /pkg/modules \
+        -load-plugin-library "$PLUGIN" \
+        -parse-as-library -module-name WhatsNew \
+        -emit-module -emit-module-path /out/modules/WhatsNew.swiftmodule \
+        -emit-object -o /out/objects/WhatsNew.o \
+        "${WHATSNEW_SOURCES[@]}" \
+        2>&1 | tee /out/logs/whatsnew.log
+fi
+
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = feed ]; then
+    echo '== exact untouched 4-source Hackers Feed WMO compile'
+    "${SWIFTC[@]}" "${C_FLAGS[@]}" \
+        -default-isolation MainActor \
+        -I /out/modules -I /foundation/modules -I /graph-modules \
+        -I /out/base-modules -I /dispatch/modules -I /pkg/modules \
+        -load-plugin-library "$PLUGIN" \
+        -parse-as-library -module-name Feed \
+        -emit-module -emit-module-path /out/modules/Feed.swiftmodule \
+        -emit-object -o /out/objects/Feed.o \
+        "${FEED_SOURCES[@]}" \
+        2>&1 | tee /out/logs/feed.log
+fi
+
 sha256sum /out/modules/OpenUIKit.swiftmodule /out/modules/UIKit.swiftmodule \
     /out/modules/OpenCoreGraphics.swiftmodule /out/modules/SwiftUI.swiftmodule \
     /out/modules/DesignSystem.swiftmodule /out/objects/OpenCoreGraphics.o \
     /out/objects/OpenUIKit.o /out/objects/SwiftUI.o \
     > /out/artifact-sha256.txt
+
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = whatsnew ]; then
+    sha256sum /out/modules/WhatsNew.swiftmodule /out/objects/WhatsNew.o \
+        >> /out/artifact-sha256.txt
+fi
+
+
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = feed ]; then
+    sha256sum /out/modules/Feed.swiftmodule /out/objects/Feed.o \
+        >> /out/artifact-sha256.txt
+fi
 
 printf '%s\n' \
     'HACKERS_DESIGNSYSTEM_EXACT_COMPILE_OK sources=13 framework_wmo=foundation-hidden app=untouched' \
@@ -213,5 +265,18 @@ printf '%s\n' \
 if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = comments ]; then
     printf '%s\n' \
         'HACKERS_COMMENTS_EXACT_COMPILE_OK sources=7 dependencies=untouched framework_wmo=foundation-hidden app=untouched' \
+        | tee -a /out/result.txt
+fi
+
+
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = whatsnew ]; then
+    printf '%s\n' \
+        'HACKERS_WHATSNEW_EXACT_COMPILE_OK sources=6 dependencies=untouched framework_wmo=foundation-hidden app=untouched' \
+        | tee -a /out/result.txt
+fi
+
+if [ "${HACKERS_PROBE_SCOPE:-designsystem}" = feed ]; then
+    printf '%s\n' \
+        'HACKERS_FEED_EXACT_COMPILE_OK sources=4 dependencies=untouched framework_wmo=foundation-hidden app=untouched' \
         | tee -a /out/result.txt
 fi
