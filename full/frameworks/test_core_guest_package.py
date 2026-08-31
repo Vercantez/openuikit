@@ -2016,6 +2016,14 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
+        self.assertIn("frontier-frameworks\\tframeworks=9\\tsources=9", source)
+        self.assertIn(
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 9",
+            source,
+        )
+        self.assertIn(
+            "compile sixteen independent first-party framework modules", source
+        )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
         network_source = (REPO / "full/network/Network.swift").read_text(
