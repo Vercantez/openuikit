@@ -80,7 +80,7 @@ done <<<"$SOURCE_LIST"
 # Patch a derived copy only: the pinned upstream checkout remains byte-for-byte
 # unchanged and is still bracketed by the package builder's input attestation.
 FOUNDATION_URL_SOURCE=$SF/Sources/FoundationEssentials/URL/URL.swift
-PATCHED_SOURCE_DIR=$W/scratch/foundationessentials-port-sources
+PATCHED_SOURCE_DIR=$W/build/foundationessentials-port-sources
 PATCHED_URL_SOURCE=$PATCHED_SOURCE_DIR/URL.swift
 rm -rf -- "$PATCHED_SOURCE_DIR"
 mkdir -p "$PATCHED_SOURCE_DIR"

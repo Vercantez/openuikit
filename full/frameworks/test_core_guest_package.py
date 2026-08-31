@@ -1391,7 +1391,7 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, resource_key_patch)
         for token in (
-            'PATCHED_SOURCE_DIR=$W/scratch/foundationessentials-port-sources',
+            'PATCHED_SOURCE_DIR=$W/build/foundationessentials-port-sources',
             'patch -s -o "$PATCHED_URL_SOURCE"',
             'SRCS[$source_index]=$PATCHED_URL_SOURCE',
             'patched_url_count" -eq 1',
