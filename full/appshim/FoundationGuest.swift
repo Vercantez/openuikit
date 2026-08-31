@@ -9,6 +9,13 @@
 @_exported import os
 import OpenUIKit
 
+/// `isiOSAppOnMac` reports the Apple compatibility environment where an iOS
+/// binary is hosted by macOS. Linux-hosted Mach-O guests are neither Catalyst
+/// nor iOS-on-Mac, so the platform answer is deterministically false.
+public extension ProcessInfo {
+    var isiOSAppOnMac: Bool { false }
+}
+
 public typealias NSCoder = OpenUIKit.NSCoder
 public typealias Bundle = OpenUIKit.Bundle
 

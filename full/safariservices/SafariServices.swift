@@ -1,8 +1,8 @@
-import Foundation
+@_exported import Foundation
 #if canImport(UIKit)
-import UIKit
+@_exported import UIKit
 #elseif canImport(OpenUIKit)
-import OpenUIKit
+@_exported import OpenUIKit
 #else
 #error("SafariServices requires UIKit or OpenUIKit")
 #endif
