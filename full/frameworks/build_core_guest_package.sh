@@ -1294,6 +1294,12 @@ cmp "$WORK/open-dispatch-mach-expected-imports.txt" \
 } >> "$RUNTIME/.manifest"
 
 echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
+LIBSYSTEM_REAL=$RUNTIME/darwin/usr/lib/libSystem.real.dylib
+[ -f "$LIBSYSTEM_REAL" ] && [ ! -L "$LIBSYSTEM_REAL" ] \
+    || die 'staged libSystem.real implementation image is missing'
+[ "$(llvm-otool-18 -D "$LIBSYSTEM_REAL" | tail -n 1)" = \
+    /usr/lib/libSystem.real.dylib ] \
+    || die 'staged libSystem.real install name drifted'
 GROUP_FIXTURE=$MACHORUN/tests/bin/grp
 GROUP_GOLDEN=$MACHORUN/tests/expected/grp.stdout
 GROUP_SOURCE=$MACHORUN/tests/src/grp.c
@@ -1305,7 +1311,7 @@ require_hash "$GROUP_SOURCE" "$EXPECTED_MACHORUN_GROUP_SOURCE_SHA" \
     machorun-group-source
 for symbol in _getgrgid _getgrgid_r _getgrnam _getgrnam_r; do
     definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        "$LIBSYSTEM_REAL" \
         | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
     [ "$definition_count" -eq 1 ] \
         || die "staged libSystem $symbol definition count $definition_count, expected 1"
@@ -1338,7 +1344,7 @@ require_hash "$XATTR_SOURCE" "$EXPECTED_MACHORUN_XATTR_SOURCE_SHA" \
     machorun-xattr-source
 for symbol in _fgetxattr _fsetxattr _getxattr _listxattr _setxattr; do
     definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        "$LIBSYSTEM_REAL" \
         | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
     [ "$definition_count" -eq 1 ] \
         || die "staged libSystem $symbol definition count $definition_count, expected 1"
@@ -1379,7 +1385,7 @@ for fixture in quota uname; do
     require_hash "$fixture_golden" "$golden_sha" "machorun-$fixture-golden"
     require_hash "$fixture_source" "$source_sha" "machorun-$fixture-source"
     definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        "$LIBSYSTEM_REAL" \
         | awk -v expected="$adapter_symbol" \
             '$0 == expected { count++ } END { print count + 0 }')
     [ "$definition_count" -eq 1 ] \
