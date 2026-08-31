@@ -461,6 +461,22 @@ extension CGFloat {
     }
 }
 
+// Darwin's CoreGraphics overlay supplies mixed integer/CGFloat tgmath
+// overloads in addition to Swift's homogeneous generic `min`.  The generic
+// solver normally converts an integer literal, but loses that context through
+// implicit shape members such as `.rect(cornerRadius: min(16, radius))`.
+// Keep the measured mixed overloads Foundation-hidden so Foundation-visible
+// builds continue using the platform overlay's declarations.
+@_transparent
+public func min(_ lhs: Int, _ rhs: CGFloat) -> CGFloat {
+    Swift.min(CGFloat(lhs), rhs)
+}
+
+@_transparent
+public func min(_ lhs: CGFloat, _ rhs: Int) -> CGFloat {
+    Swift.min(lhs, CGFloat(rhs))
+}
+
 @available(*, unavailable, renamed: "CGFloat.leastNormalMagnitude")
 public var CGFLOAT_MIN: CGFloat {
     fatalError("unavailable")

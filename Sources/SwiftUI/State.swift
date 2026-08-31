@@ -222,6 +222,106 @@ public struct _OpenState<Value>: _OpenDynamicProperty, _OpenGraphProperty {
 
 public typealias State<Value> = _OpenState<Value>
 
+/// A graph-backed focus value. The projected binding is deliberately a
+/// distinct type from ordinary Binding so `.focused` can install two-way
+/// responder synchronization while normal value bindings remain unchanged.
+@propertyWrapper
+public struct _OpenFocusState<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    @dynamicMemberLookup
+    public struct Binding {
+        private let getter: () -> Value
+        private let setter: (Value) -> Void
+
+        fileprivate init(get: @escaping () -> Value, set: @escaping (Value) -> Void) {
+            getter = get
+            setter = set
+        }
+
+        public var wrappedValue: Value {
+            get { getter() }
+            nonmutating set { setter(newValue) }
+        }
+
+        public subscript<Subject>(
+            dynamicMember keyPath: WritableKeyPath<Value, Subject>
+        ) -> _OpenBinding<Subject> {
+            _OpenBinding(
+                get: { getter()[keyPath: keyPath] },
+                set: { value in
+                    var root = getter()
+                    root[keyPath: keyPath] = value
+                    setter(root)
+                }
+            )
+        }
+    }
+
+    private let seed: _OpenStateSeed<Value>
+    private var graphStorage: _OpenStateStorage<Value>?
+
+    public init() where Value == Bool {
+        seed = _OpenStateSeed(false)
+        graphStorage = nil
+    }
+
+    public init() where Value: ExpressibleByNilLiteral {
+        seed = _OpenStateSeed(nil)
+        graphStorage = nil
+    }
+
+    public init(wrappedValue: Value) {
+        seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
+    }
+
+    public var wrappedValue: Value {
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
+    }
+
+    public var projectedValue: Binding {
+        let storage = storage
+        return Binding(get: { storage.value }, set: { storage.set($0) })
+    }
+
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        graphStorage = graph.stateStorage(
+            propertyPath: propertyPath,
+            initialValue: seed.initialValue
+        )
+    }
+}
+
+public typealias FocusState<Value> = _OpenFocusState<Value>
+
+/// Namespace identity is reference-seeded so copies of a View retain the
+/// same ID until the view value itself is replaced. ObjectIdentifier gives us
+/// Foundation-free uniqueness on every supported host and guest runtime.
+@propertyWrapper
+public struct _OpenNamespace: _OpenDynamicProperty {
+    public struct ID: Hashable, @unchecked Sendable {
+        let rawValue: ObjectIdentifier
+    }
+
+    private final class Seed: @unchecked Sendable {}
+    private let seed = Seed()
+
+    public init() {}
+
+    public var wrappedValue: ID { ID(rawValue: ObjectIdentifier(seed)) }
+    public var projectedValue: ID { wrappedValue }
+}
+
+public typealias Namespace = _OpenNamespace
+
 @propertyWrapper
 public struct _OpenObservedObject<ObjectType>: _OpenDynamicProperty, _OpenGraphProperty
     where ObjectType: Combine.ObservableObject
@@ -1511,6 +1611,31 @@ final class _OpenGraphHost {
         }
     }
 
+    fileprivate func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value, Value) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .change,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI onChange value type changed at a stable structural location"
+                )
+            }
+            let previous = storage.value
+            guard previous != value else { return }
+            storage.value = value
+            enqueueEffect { action(previous, value) }
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
     fileprivate func trackAnimation<Value: Equatable>(
         _ animation: Animation?,
         value: Value
@@ -1789,6 +1914,13 @@ enum _OpenGraphContext {
     static func trackChange<Value: Equatable>(
         _ value: Value,
         action: @escaping @MainActor (Value) -> Void
+    ) {
+        currentHost?.trackChange(value, action: action)
+    }
+
+    static func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value, Value) -> Void
     ) {
         currentHost?.trackChange(value, action: action)
     }

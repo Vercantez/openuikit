@@ -100,6 +100,37 @@ public struct _OpenTextField: _OpenView {
     public typealias Body = Never
     public let title: String
     public let text: Binding<String>
+    public let axis: Axis
+
+    public init(_ title: String, text: Binding<String>) {
+        self.title = title
+        self.text = text
+        axis = .horizontal
+    }
+
+    public init(_ title: String, text: Binding<String>, axis: Axis) {
+        self.title = title
+        self.text = text
+        self.axis = axis
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .textField(
+                title: title,
+                text: text.wrappedValue,
+                isSecure: false,
+                axis: axis,
+                setText: { text.wrappedValue = $0 }
+            )
+        )
+    }
+}
+
+public struct _OpenSecureField: _OpenView {
+    public typealias Body = Never
+    public let title: String
+    public let text: Binding<String>
 
     public init(_ title: String, text: Binding<String>) {
         self.title = title
@@ -111,9 +142,23 @@ public struct _OpenTextField: _OpenView {
             .textField(
                 title: title,
                 text: text.wrappedValue,
+                isSecure: true,
+                axis: .horizontal,
                 setText: { text.wrappedValue = $0 }
             )
         )
+    }
+}
+
+/// Determinate progress is intentionally deferred; the no-argument spinner
+/// is the dominant app surface and maps to OpenUIKit's real activity view.
+public struct _OpenProgressView: _OpenView {
+    public typealias Body = Never
+
+    public init() {}
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.progress)
     }
 }
 
@@ -178,6 +223,8 @@ public typealias Section<Parent, Content, Footer> =
     where Parent: _OpenView, Content: _OpenView, Footer: _OpenView
 public typealias Toggle<Label> = _OpenToggle<Label> where Label: _OpenView
 public typealias TextField = _OpenTextField
+public typealias SecureField = _OpenSecureField
+public typealias ProgressView = _OpenProgressView
 public typealias Picker<SelectionValue, Label, Content> =
     _OpenPicker<SelectionValue, Label, Content>
     where SelectionValue: Hashable, Label: _OpenView, Content: _OpenView

@@ -235,6 +235,19 @@ final class TextFieldEditingTests: XCTestCase {
         tf.addTarget(for: .editingDidEnd) { [self] _, _ in events.append("didEnd") }
     }
 
+    func testSecureEntryPreservesModelAndMasksRenderedLabel() {
+        tf.text = "s3cr\u{00E9}t"
+        tf.isSecureTextEntry = true
+        tf.layoutIfNeeded()
+
+        XCTAssertEqual(tf.text, "s3cr\u{00E9}t")
+        XCTAssertEqual(tf.textLabel.text, "\u{2022}\u{2022}\u{2022}\u{2022}\u{2022}\u{2022}")
+        XCTAssertFalse(tf.textLabel.text?.contains("s3cr") == true)
+
+        tf.isSecureTextEntry = false
+        XCTAssertEqual(tf.textLabel.text, "s3cr\u{00E9}t")
+    }
+
     func testTypingInsertsAtCaret() {
         tf.becomeFirstResponder()
         w.sendText("Hi")

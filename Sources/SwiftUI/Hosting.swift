@@ -40,10 +40,387 @@ private enum _OpenAppearanceIdentity: Hashable {
 /// They still expose interactive descendants (notably nested Buttons), while
 /// their otherwise-transparent surface falls through to the enclosing view.
 @MainActor
-private final class _SwiftUIPassthroughView: UIView {
+private class _SwiftUIPassthroughView: UIView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hit = super.hitTest(point, with: event)
         return hit === self ? nil : hit
+    }
+}
+
+@MainActor
+private final class _SwiftUIButtonControl: UIControl {
+    let normalHost = _SwiftUIPassthroughView()
+    let pressedHost = _SwiftUIPassthroughView()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        addSubview(normalHost)
+        addSubview(pressedHost)
+        updateAppearance()
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        normalHost.frame = bounds
+        pressedHost.frame = bounds
+    }
+
+    override func stateDidChange() {
+        super.stateDidChange()
+        updateAppearance()
+    }
+
+    func refreshAppearance() { updateAppearance() }
+
+    private func updateAppearance() {
+        normalHost.isHidden = isHighlighted && !pressedHost.subviews.isEmpty
+        pressedHost.isHidden = !isHighlighted || pressedHost.subviews.isEmpty
+    }
+}
+
+@MainActor
+private final class _SwiftUITextField: UITextField {
+    var getFocus: (@MainActor () -> Bool)?
+    var setFocus: (@MainActor (Bool) -> Void)?
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil, getFocus?() == true {
+            _ = becomeFirstResponder()
+        }
+    }
+}
+
+@MainActor
+private final class _SwiftUITextView: UITextView, UITextViewDelegate {
+    var getFocus: (@MainActor () -> Bool)?
+    var setFocus: (@MainActor (Bool) -> Void)?
+    var setText: (@MainActor (String) -> Void)?
+    var submit: (@MainActor () -> Void)?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        textViewDelegate = self
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil, getFocus?() == true { _ = becomeFirstResponder() }
+    }
+
+    func textViewDidBeginEditing(_ textView: UITextView) { setFocus?(true) }
+    func textViewDidEndEditing(_ textView: UITextView) { setFocus?(false) }
+    func textViewDidChange(_ textView: UITextView) { setText?(textView.text ?? "") }
+
+    func textView(
+        _ textView: UITextView,
+        shouldChangeTextIn range: NSRange,
+        replacementText text: String
+    ) -> Bool {
+        _ = textView
+        _ = range
+        guard text == "\n", let submit else { return true }
+        submit()
+        return false
+    }
+}
+
+@MainActor
+private final class _SwiftUIScrollView: UIScrollView {
+    var retainedCoordinator: _SwiftUIScrollCoordinator?
+}
+
+@MainActor
+private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
+    let storage: _OpenScrollProxyStorage
+    let geometryObservers: [_OpenScrollGeometryObserver]
+    let visibilityObservers: [_OpenScrollVisibilityObserver]
+    private var previousGeometryValues: [Any] = []
+
+    init(
+        storage: _OpenScrollProxyStorage,
+        geometryObservers: [_OpenScrollGeometryObserver],
+        visibilityObservers: [_OpenScrollVisibilityObserver]
+    ) {
+        self.storage = storage
+        self.geometryObservers = geometryObservers
+        self.visibilityObservers = visibilityObservers
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) { notify(scrollView) }
+
+    func notify(_ scrollView: UIScrollView) {
+        let geometry = ScrollGeometry(scrollView: scrollView)
+        let newValues = geometryObservers.map { $0.read(geometry) }
+        let isInitialDelivery = previousGeometryValues.isEmpty
+        if isInitialDelivery { previousGeometryValues = newValues }
+        for index in geometryObservers.indices {
+            let old = index < previousGeometryValues.count
+                ? previousGeometryValues[index]
+                : newValues[index]
+            if isInitialDelivery || !geometryObservers[index].equals(old, newValues[index]) {
+                geometryObservers[index].deliver(old, newValues[index])
+            }
+        }
+        previousGeometryValues = newValues
+
+        let viewport = CGRect(origin: scrollView.contentOffset, size: scrollView.bounds.size)
+        for observer in visibilityObservers {
+            let visible = storage.targetRects
+                .filter { _, rect in
+                    let intersection = rect.intersection(viewport)
+                    guard !intersection.isNull, rect.width > 0, rect.height > 0 else {
+                        return false
+                    }
+                    let fraction = intersection.width * intersection.height
+                        / (rect.width * rect.height)
+                    return fraction >= observer.threshold
+                }
+                .sorted { lhs, rhs in
+                    if lhs.value.minY == rhs.value.minY {
+                        return lhs.value.minX < rhs.value.minX
+                    }
+                    return lhs.value.minY < rhs.value.minY
+                }
+                .map(\.key)
+            observer.deliver(visible)
+        }
+    }
+}
+
+@MainActor
+private final class _SwiftUIContextMenuHost: _SwiftUIPassthroughView,
+    UIContextMenuInteractionDelegate
+{
+    var menu: UIMenu?
+
+    func installInteraction() {
+        addInteraction(UIContextMenuInteraction(delegate: self))
+    }
+
+    func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        configurationForMenuAtLocation location: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        _ = interaction
+        _ = location
+        guard let menu else { return nil }
+        return UIContextMenuConfiguration(actionProvider: { _ in menu })
+    }
+}
+
+@MainActor
+private final class _SwiftUIAlertPresentationHost: UIView {
+    let configuration: _OpenAlertConfiguration
+
+    init(configuration: _OpenAlertConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        isHidden = true
+        isUserInteractionEnabled = false
+        accessibilityIdentifier = "SwiftUI.AlertPresentationHost"
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        synchronizePresentation()
+    }
+
+    private func synchronizePresentation() {
+        guard window != nil,
+              let presenter = _enclosingViewController(for: self) else { return }
+        if !configuration.getIsPresented() {
+            if let alert = presenter.presentedViewController as? UIAlertController,
+               alert.title == configuration.title {
+                alert.dismiss(animated: true)
+            }
+            return
+        }
+        guard presenter.presentedViewController == nil else { return }
+        let alert = UIAlertController(
+            title: configuration.title,
+            message: _openMenuTitle(in: configuration.message),
+            preferredStyle: .alert
+        )
+        let actions = _openAlertActions(
+            in: configuration.actions,
+            configuration: configuration
+        )
+        if actions.isEmpty {
+            alert.addAction(
+                UIAlertAction(title: "OK", style: .cancel) { _ in
+                    self.configuration.setIsPresented(false)
+                }
+            )
+        } else {
+            actions.forEach(alert.addAction)
+        }
+        presenter.present(alert, animated: true)
+    }
+}
+
+@MainActor
+private func _openAccessibilityHost(frame: CGRect, identifier: String) -> UIView {
+    let host = _SwiftUIPassthroughView(frame: frame)
+    host.backgroundColor = .clear
+    host.isOpaque = false
+    host.isAccessibilityElement = true
+    host.accessibilityElementsHidden = true
+    host.accessibilityIdentifier = "SwiftUI.Accessibility\(identifier)"
+    return host
+}
+
+@MainActor
+private func _openMergeAccessibility(from descendants: UIView, into host: UIView) {
+    func visit(_ view: UIView) {
+        if host.accessibilityLabel == nil { host.accessibilityLabel = view.accessibilityLabel }
+        if host.accessibilityHint == nil { host.accessibilityHint = view.accessibilityHint }
+        if host.accessibilityValue == nil { host.accessibilityValue = view.accessibilityValue }
+        host.accessibilityTraits.formUnion(view.accessibilityTraits)
+        view.subviews.forEach(visit)
+    }
+    descendants.subviews.forEach(visit)
+}
+
+private func _openUIKitTraits(_ traits: AccessibilityTraits) -> UIAccessibilityTraits {
+    var result: UIAccessibilityTraits = []
+    if traits.contains(.isButton) { result.insert(.button) }
+    if traits.contains(.isLink) { result.insert(.link) }
+    if traits.contains(.isHeader) { result.insert(.header) }
+    if traits.contains(.isImage) { result.insert(.image) }
+    if traits.contains(.isSelected) { result.insert(.selected) }
+    return result
+}
+
+@MainActor
+private func _openMenuElements(
+    in node: _OpenViewNode,
+    enabled: Bool = true
+) -> [UIMenuElement] {
+    var sections: [[UIMenuElement]] = [[]]
+    for token in _openMenuTokens(in: node, enabled: enabled) {
+        switch token {
+        case .divider:
+            if !(sections.last?.isEmpty ?? true) { sections.append([]) }
+        case .element(let element):
+            sections[sections.count - 1].append(element)
+        }
+    }
+    return sections.enumerated().flatMap { index, elements in
+        guard !elements.isEmpty else { return [UIMenuElement]() }
+        if index == 0 { return elements }
+        return [UIMenu(options: .displayInline, children: elements)]
+    }
+}
+
+@MainActor
+private enum _OpenMenuToken {
+    case divider
+    case element(UIMenuElement)
+}
+
+@MainActor
+private func _openMenuTokens(
+    in node: _OpenViewNode,
+    enabled: Bool
+) -> [_OpenMenuToken] {
+    switch node.kind {
+    case .group(let children):
+        return children.flatMap { _openMenuTokens(in: $0, enabled: enabled) }
+    case .divider:
+        return [.divider]
+    case .button(let label, _, let role, let action):
+        let title = _openMenuTitle(in: label) ?? "Action"
+        let attributes: UIMenuElement.Attributes = !enabled
+            ? .disabled
+            : (role == .destructive ? .destructive : [])
+        return [
+            .element(UIAction(
+                title: title,
+                image: _openMenuImage(in: label),
+                attributes: attributes
+            ) { _ in action() })
+        ]
+    case .modified(let content, let modification):
+        if case .disabled(let disabled) = modification {
+            return _openMenuTokens(in: content, enabled: enabled && !disabled)
+        }
+        return _openMenuTokens(in: content, enabled: enabled)
+    default:
+        return []
+    }
+}
+
+@MainActor
+private func _openMenuTitle(in node: _OpenViewNode) -> String? {
+    switch node.kind {
+    case .text(let title): return title
+    case .group(let children), .hStack(let children, _, _),
+         .vStack(let children, _, _), .zStack(let children, _):
+        return children.lazy.compactMap(_openMenuTitle).first
+    case .modified(let content, _): return _openMenuTitle(in: content)
+    default: return nil
+    }
+}
+
+@MainActor
+private func _openMenuImage(in node: _OpenViewNode) -> UIImage? {
+    switch node.kind {
+    case .image(.system(let name)): return UIImage(systemName: name)
+    case .group(let children), .hStack(let children, _, _),
+         .vStack(let children, _, _), .zStack(let children, _):
+        return children.lazy.compactMap(_openMenuImage).first
+    case .modified(let content, _): return _openMenuImage(in: content)
+    default: return nil
+    }
+}
+
+@MainActor
+private func _openAlertActions(
+    in node: _OpenViewNode,
+    configuration: _OpenAlertConfiguration,
+    enabled: Bool = true
+) -> [UIAlertAction] {
+    switch node.kind {
+    case .button(let label, _, let role, let action):
+        guard let title = _openMenuTitle(in: label) else { return [] }
+        let style: UIAlertAction.Style
+        switch role {
+        case .cancel: style = .cancel
+        case .destructive: style = .destructive
+        case .none: style = .default
+        }
+        let result = UIAlertAction(title: title, style: style) { _ in
+            configuration.setIsPresented(false)
+            action()
+        }
+        result.isEnabled = enabled
+        return [result]
+    case .group(let children), .hStack(let children, _, _),
+         .vStack(let children, _, _), .zStack(let children, _):
+        return children.flatMap {
+            _openAlertActions(in: $0, configuration: configuration, enabled: enabled)
+        }
+    case .modified(let content, .disabled(let disabled)):
+        return _openAlertActions(
+            in: content,
+            configuration: configuration,
+            enabled: enabled && !disabled
+        )
+    case .modified(let content, _):
+        return _openAlertActions(in: content, configuration: configuration, enabled: enabled)
+    default:
+        return []
     }
 }
 
@@ -275,13 +652,19 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             }
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children), .list(let children):
+             .form(let children), .list(let children),
+             .customLayout(_, let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
             if let footer { visit(footer) }
             rows.forEach(visit)
-        case .button(let label, _), .scroll(let label),
+        case .button(let label, let pressedLabel, _, _):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+        case .geometry(let geometry):
+            visit(geometry.resolve(CGSize(width: 390, height: 844)))
+        case .scroll(let label), .scrollReader(let label, _),
              .navigationLink(let label, _), .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
@@ -298,13 +681,18 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
             visit(content)
             switch modification {
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
-                 .toolbar(let auxiliary):
+                 .mask(let auxiliary, _), .toolbar(let auxiliary),
+                 .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
+                 .swipeActions(_, _, let auxiliary):
                 visit(auxiliary)
+            case .alert(let configuration):
+                visit(configuration.actions)
+                visit(configuration.message)
             default:
                 break
             }
-        case .empty, .text, .image, .color, .roundedRectangle, .spacer,
-             .textField, .gradient:
+        case .empty, .text, .image, .color, .roundedRectangle, .capsule,
+             .divider, .progress, .spacer, .textField, .gradient:
             break
         }
     }
@@ -326,13 +714,19 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
             }
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children), .list(let children):
+             .form(let children), .list(let children),
+             .customLayout(_, let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
             if let footer { visit(footer) }
             rows.forEach(visit)
-        case .button(let label, _), .scroll(let label),
+        case .button(let label, let pressedLabel, _, _):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+        case .geometry(let geometry):
+            visit(geometry.resolve(CGSize(width: 390, height: 844)))
+        case .scroll(let label), .scrollReader(let label, _),
              .navigationLink(let label, _), .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
@@ -349,13 +743,18 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
             visit(content)
             switch modification {
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
-                 .toolbar(let auxiliary):
+                 .mask(let auxiliary, _), .toolbar(let auxiliary),
+                 .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
+                 .swipeActions(_, _, let auxiliary):
                 visit(auxiliary)
+            case .alert(let configuration):
+                visit(configuration.actions)
+                visit(configuration.message)
             default:
                 break
             }
-        case .empty, .text, .image, .color, .roundedRectangle, .spacer,
-             .textField, .viewController, .gradient:
+        case .empty, .text, .image, .color, .roundedRectangle, .capsule,
+             .divider, .progress, .spacer, .textField, .viewController, .gradient:
             break
         }
     }
@@ -374,13 +773,19 @@ private func _openAppearanceActions(
         switch node.kind {
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children), .list(let children):
+             .form(let children), .list(let children),
+             .customLayout(_, let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
             if let footer { visit(footer) }
             rows.forEach(visit)
-        case .button(let label, _), .scroll(let label),
+        case .button(let label, let pressedLabel, _, _):
+            visit(label)
+            if let pressedLabel { visit(pressedLabel) }
+        case .geometry(let geometry):
+            visit(geometry.resolve(CGSize(width: 390, height: 844)))
+        case .scroll(let label), .scrollReader(let label, _),
              .navigationLink(let label, _), .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
@@ -402,13 +807,18 @@ private func _openAppearanceActions(
             visit(content)
             switch modification {
             case .background(let auxiliary, _), .overlay(let auxiliary, _),
-                 .toolbar(let auxiliary):
+                 .mask(let auxiliary, _), .toolbar(let auxiliary),
+                 .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
+                 .swipeActions(_, _, let auxiliary):
                 visit(auxiliary)
+            case .alert(let configuration):
+                visit(configuration.actions)
+                visit(configuration.message)
             default:
                 break
             }
-        case .empty, .text, .image, .color, .roundedRectangle, .spacer,
-             .textField, .view, .viewController, .gradient:
+        case .empty, .text, .image, .color, .roundedRectangle, .capsule,
+             .divider, .progress, .spacer, .textField, .view, .viewController, .gradient:
             break
         }
     }
@@ -471,14 +881,140 @@ private struct _RenderEnvironment {
     var weight: _OpenFont.Weight?
     var minimumScaleFactor: CGFloat = 0
     var foregroundColor: _OpenColor?
+    var tintColor: _OpenColor?
     var textAlignment: _OpenTextAlignment = .leading
+    var lineLimit: Int?
+    var lineLimitRange: ClosedRange<Int>?
     var imageResizable = false
     var imageContentMode: _OpenContentMode = .fit
     var measuresUnboundedVerticalScroll = false
     var simultaneousTapActions: [@MainActor () -> Void] = []
     var isEnabled = true
+    var focus: (
+        get: @MainActor () -> Bool,
+        set: @MainActor (Bool) -> Void
+    )?
+    var textContentType: UITextContentType?
+    var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    var autocorrectionDisabled = false
+    var submitAction: (@MainActor () -> Void)?
+    var submitLabel: SubmitLabel = .return
+    var keyboardDismissMode: ScrollDismissesKeyboardMode = .automatic
+    var controlSize: ControlSize = .regular
+    var symbolRenderingMode: SymbolRenderingMode?
+    var scrollStorage: _OpenScrollProxyStorage?
+    var scrollVisibilityObservers: [_OpenScrollVisibilityObserver] = []
+    var scrollGeometryObservers: [_OpenScrollGeometryObserver] = []
+    var refreshAction: (@MainActor () async -> Void)?
+    var scrollIndicatorVisibility: Visibility = .automatic
 
     static let `default` = _RenderEnvironment()
+}
+
+@MainActor
+private func _openInstallGesture(_ gesture: _OpenGestureNode, on host: UIView) {
+    switch gesture.kind {
+    case .tap(let action):
+        host.addGestureRecognizer(
+            UITapGestureRecognizer { recognizer in
+                if recognizer.state == .ended { action() }
+            }
+        )
+    case .longPress(let minimumDuration, let action):
+        let recognizer = UILongPressGestureRecognizer { recognizer in
+            if recognizer.state == .began { action(true) }
+        }
+        recognizer.minimumPressDuration = minimumDuration
+        host.addGestureRecognizer(recognizer)
+    case .drag(let minimumDistance, let coordinateSpace, let changed, let ended):
+        var start = CGPoint.zero
+        let recognizer = UIPanGestureRecognizer { recognizer in
+            guard let pan = recognizer as? UIPanGestureRecognizer else { return }
+            let coordinateView: UIView? = coordinateSpace == .global ? nil : host
+            let location = pan.location(in: coordinateView)
+            if pan.state == .began {
+                let translation = pan.translation(in: coordinateView)
+                start = CGPoint(
+                    x: location.x - translation.x,
+                    y: location.y - translation.y
+                )
+            }
+            let velocityPoint = pan.velocity(in: coordinateView)
+            let value = DragGesture.Value(
+                location: location,
+                startLocation: start,
+                velocity: CGSize(width: velocityPoint.x, height: velocityPoint.y)
+            )
+            switch pan.state {
+            case .began, .changed: changed(value)
+            case .ended: ended(value)
+            default: break
+            }
+        }
+        recognizer.activationDistance = max(0, minimumDistance)
+        host.addGestureRecognizer(recognizer)
+    }
+}
+
+@MainActor
+private func _openReducedPreference(
+    in root: _OpenViewNode,
+    listener: _OpenPreferenceListener,
+    proposed: CGSize
+) -> Any {
+    var result = listener.defaultValue
+
+    func visit(_ node: _OpenViewNode) {
+        switch node.kind {
+        case .group(let children), .hStack(let children, _, _),
+             .vStack(let children, _, _), .zStack(let children, _),
+             .form(let children), .list(let children),
+             .customLayout(_, let children):
+            children.forEach(visit)
+        case .section(let header, let footer, let rows):
+            if let header { visit(header) }
+            rows.forEach(visit)
+            if let footer { visit(footer) }
+        case .button(let label, let pressed, _, _):
+            visit(label)
+            if let pressed { visit(pressed) }
+        case .geometry(let geometry):
+            visit(geometry.resolve(proposed))
+        case .scroll(let content), .scrollReader(let content, _),
+             .navigationLink(let content, _), .toggle(let content, _, _):
+            visit(content)
+        case .tabView(let pages, _, _, _):
+            pages.forEach { visit($0.content) }
+        case .picker(let label, let options, _, _):
+            visit(label)
+            options.forEach { visit($0.content) }
+        case .navigation(let content, let configuration):
+            visit(content)
+            if let toolbar = configuration.toolbar { visit(toolbar) }
+        case .modified(let content, let modification):
+            visit(content)
+            switch modification {
+            case .preference(let record) where record.key == listener.key:
+                listener.reduce(&result, record.value)
+            case .background(let auxiliary, _), .overlay(let auxiliary, _),
+                 .mask(let auxiliary, _), .toolbar(let auxiliary),
+                 .contextMenu(let auxiliary), .safeAreaInset(_, _, let auxiliary),
+                 .swipeActions(_, _, let auxiliary):
+                visit(auxiliary)
+            case .alert(let configuration):
+                visit(configuration.actions)
+                visit(configuration.message)
+            default: break
+            }
+        case .empty, .text, .image, .color, .roundedRectangle, .capsule,
+             .divider, .progress, .spacer, .view, .viewController, .textField,
+             .gradient:
+            break
+        }
+    }
+
+    visit(root)
+    return result
 }
 
 @MainActor
@@ -507,8 +1043,13 @@ private enum _ViewRenderer {
             return label.sizeThatFits(_bounded(proposed))
         case .image(let source):
             return measureImage(source, proposed: proposed, environment: environment)
-        case .color, .roundedRectangle:
+        case .color, .roundedRectangle, .capsule:
             return _bounded(proposed)
+        case .divider:
+            return CGSize(width: _bounded(proposed).width, height: 1)
+        case .progress:
+            let extent = _controlExtent(environment.controlSize)
+            return CGSize(width: extent, height: extent)
         case .spacer(let minLength):
             let value = max(0, minLength ?? 0)
             return CGSize(width: value, height: value)
@@ -545,8 +1086,16 @@ private enum _ViewRenderer {
                 result.width = max(result.width, size.width)
                 result.height = max(result.height, size.height)
             }
-        case .button(let label, _):
+        case .button(let label, _, _, _):
             return measure(label, proposed: proposed, environment: environment)
+        case .geometry(let geometry):
+            let viewport = _bounded(proposed)
+            _ = measure(
+                geometry.resolve(viewport),
+                proposed: viewport,
+                environment: environment
+            )
+            return viewport
         case .scroll(let content):
             let viewport = _bounded(proposed)
             var next = environment
@@ -559,6 +1108,15 @@ private enum _ViewRenderer {
             return CGSize(
                 width: max(viewport.width, min(contentSize.width, 10_000)),
                 height: viewport.height
+            )
+        case .scrollReader(let content, _):
+            return measure(content, proposed: proposed, environment: environment)
+        case .customLayout(let layout, let children):
+            var cache: () = ()
+            return layout.sizeThatFits(
+                proposal: ProposedViewSize(width: proposed.width, height: proposed.height),
+                subviews: makeLayoutSubviews(children, environment: environment),
+                cache: &cache
             )
         case .tabView(let pages, let selection, _, let indexDisplayMode):
             guard let selected = _openSelectedTabPage(
@@ -617,8 +1175,19 @@ private enum _ViewRenderer {
                 width: min(_bounded(proposed).width, labelSize.width + 75),
                 height: max(defaultFormRowHeight, labelSize.height, toggleSize.height)
             )
-        case .textField:
-            return CGSize(width: _bounded(proposed).width, height: 34)
+        case .textField(_, _, _, let axis, _):
+            guard axis == .vertical else {
+                return CGSize(width: _bounded(proposed).width, height: 34)
+            }
+            let lines = max(1, environment.lineLimitRange?.lowerBound ?? 1)
+            let maximum = max(lines, environment.lineLimitRange?.upperBound
+                ?? environment.lineLimit ?? lines)
+            let desired = min(maximum, lines)
+            let font = (environment.font ?? .body).resolve(weight: environment.weight)
+            return CGSize(
+                width: _bounded(proposed).width,
+                height: max(34, font.lineHeight * CGFloat(desired) + 16)
+            )
         case .picker(let label, let options, let selection, _):
             let labelSize = measure(label, proposed: proposed, environment: environment)
             let selectedSize = options.first(where: { $0.tag == selection }).map {
@@ -674,6 +1243,54 @@ private enum _ViewRenderer {
                 var next = environment
                 next.foregroundColor = color
                 return measure(content, proposed: proposed, environment: next)
+            case .tint(let color):
+                var next = environment
+                next.tintColor = color
+                return measure(content, proposed: proposed, environment: next)
+            case .lineLimit(let limit):
+                var next = environment
+                next.lineLimit = limit
+                next.lineLimitRange = nil
+                return measure(content, proposed: proposed, environment: next)
+            case .lineLimitRange(let range):
+                var next = environment
+                next.lineLimit = max(0, range.upperBound)
+                next.lineLimitRange = range
+                return measure(content, proposed: proposed, environment: next)
+            case .truncationMode:
+                return measure(content, proposed: proposed, environment: environment)
+            case .focus(let get, let set):
+                var next = environment
+                next.focus = (get, set)
+                return measure(content, proposed: proposed, environment: next)
+            case .textContentType(let type):
+                var next = environment
+                next.textContentType = type
+                return measure(content, proposed: proposed, environment: next)
+            case .autocapitalization(let type):
+                var next = environment
+                next.autocapitalizationType = type
+                return measure(content, proposed: proposed, environment: next)
+            case .autocorrectionDisabled(let disabled):
+                var next = environment
+                next.autocorrectionDisabled = disabled
+                return measure(content, proposed: proposed, environment: next)
+            case .submit(let action):
+                var next = environment
+                next.submitAction = action
+                return measure(content, proposed: proposed, environment: next)
+            case .scrollDismissesKeyboard(let mode):
+                var next = environment
+                next.keyboardDismissMode = mode
+                return measure(content, proposed: proposed, environment: next)
+            case .controlSize(let size):
+                var next = environment
+                next.controlSize = size
+                return measure(content, proposed: proposed, environment: next)
+            case .symbolRenderingMode(let mode):
+                var next = environment
+                next.symbolRenderingMode = mode
+                return measure(content, proposed: proposed, environment: next)
             case .resizable:
                 var next = environment
                 next.imageResizable = true
@@ -689,7 +1306,13 @@ private enum _ViewRenderer {
                 )
                 let child = measure(content, proposed: childProposal, environment: environment)
                 return CGSize(width: width ?? child.width, height: height ?? child.height)
-            case .flexibleFrame(let maxWidth, let maxHeight, _):
+            case .flexibleFrame(
+                let minWidth,
+                let maxWidth,
+                let minHeight,
+                let maxHeight,
+                _
+            ):
                 let proposedWidth = _flexibleProposal(proposed.width, maximum: maxWidth)
                 let proposedHeight = _flexibleProposal(proposed.height, maximum: maxHeight)
                 let child = measure(
@@ -698,8 +1321,18 @@ private enum _ViewRenderer {
                     environment: environment
                 )
                 return CGSize(
-                    width: _flexibleExtent(child.width, proposed: proposed.width, maximum: maxWidth),
-                    height: _flexibleExtent(child.height, proposed: proposed.height, maximum: maxHeight)
+                    width: _flexibleExtent(
+                        child.width,
+                        proposed: proposed.width,
+                        minimum: minWidth,
+                        maximum: maxWidth
+                    ),
+                    height: _flexibleExtent(
+                        child.height,
+                        proposed: proposed.height,
+                        minimum: minHeight,
+                        maximum: maxHeight
+                    )
                 )
             case .padding(let edges, let length):
                 let amount = max(0, length ?? 16)
@@ -726,13 +1359,43 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: environment)
             case .overlay:
                 return measure(content, proposed: proposed, environment: environment)
+            case .mask:
+                return measure(content, proposed: proposed, environment: environment)
             case .multilineTextAlignment(let alignment):
                 var next = environment
                 next.textAlignment = alignment
                 return measure(content, proposed: proposed, environment: next)
-            case .tapAction, .simultaneousTapAction, .onAppear,
-                 .shadow, .colorScheme, .safeAreaIgnored:
+            case .tapAction, .simultaneousTapAction, .gesture, .onAppear,
+                 .shadow, .colorScheme, .safeAreaIgnored, .opacity,
+                 .scaleEffect, .layoutPriority, .accessibilityElement,
+                 .accessibilityLabel, .accessibilityHint, .accessibilityValue,
+                 .accessibilityTraits, .allowsHitTesting, .zIndex,
+                 .glassEffect, .contextMenu, .matchedGeometry,
+                 .accessibilityIdentifier, .alert, .clipped, .hidden,
+                 .submitLabel, .buttonBorderShape, .accessibilityAction,
+                 .identifier, .preference, .preferenceListener,
+                 .scrollVisibility, .scrollGeometry, .geometryObserver,
+                 .refreshable, .scrollIndicators, .toolbarVisibility,
+                 .toolbarBackgroundVisibility, .swipeActions:
                 return measure(content, proposed: proposed, environment: environment)
+            case .safeAreaInset(let edge, let spacing, let insetContent):
+                let body = measure(content, proposed: proposed, environment: environment)
+                let inset = measure(
+                    insetContent,
+                    proposed: proposed,
+                    environment: environment
+                )
+                let gap = max(0, spacing ?? 0)
+                if edge == .top || edge == .bottom {
+                    return CGSize(
+                        width: max(body.width, inset.width),
+                        height: body.height + inset.height + gap
+                    )
+                }
+                return CGSize(
+                    width: body.width + inset.width + gap,
+                    height: max(body.height, inset.height)
+                )
             case .previewLayout:
                 return measure(content, proposed: proposed, environment: environment)
             case .clipRoundedRectangle:
@@ -749,6 +1412,25 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: environment)
             }
         }
+    }
+
+    private static func makeLayoutSubviews(
+        _ children: [_OpenViewNode],
+        environment: _RenderEnvironment
+    ) -> LayoutSubviews {
+        LayoutSubviews(children.enumerated().map { index, child in
+            let placement = _OpenLayoutPlacement()
+            return LayoutSubview(
+                id: AnyHashable(index),
+                measure: { proposal in
+                    let size = proposal.replacingUnspecifiedDimensions(
+                        by: CGSize(width: 10_000, height: 10_000)
+                    )
+                    return measure(child, proposed: size, environment: environment)
+                },
+                placement: placement
+            )
+        })
     }
 
     static func place(
@@ -792,12 +1474,53 @@ private enum _ViewRenderer {
                 view.accessibilityIdentifier = "SwiftUI.RoundedRectangle.stroke"
             }
             surface.addSubview(view)
+        case .capsule(let style):
+            let view = UIView(frame: rect)
+            view.isUserInteractionEnabled = false
+            view.layer.cornerRadius = max(0, min(rect.width, rect.height) / 2)
+            switch style {
+            case .fill(let color):
+                view.backgroundColor = (color ?? environment.foregroundColor ?? .black).resolve()
+                view.accessibilityIdentifier = "SwiftUI.Capsule.fill"
+            case .stroke(let color, let lineWidth):
+                view.backgroundColor = .clear
+                view.layer.borderWidth = max(0, lineWidth)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.accessibilityIdentifier = "SwiftUI.Capsule.stroke"
+            }
+            surface.addSubview(view)
+        case .divider:
+            let view = UIView(frame: CGRect(
+                x: rect.minX,
+                y: rect.midY - 0.5,
+                width: rect.width,
+                height: 1
+            ))
+            view.backgroundColor = .separator
+            view.isUserInteractionEnabled = false
+            view.accessibilityIdentifier = "SwiftUI.Divider"
+            surface.addSubview(view)
+        case .progress:
+            let extent = _controlExtent(environment.controlSize)
+            let indicator = UIActivityIndicatorView(style: .medium)
+            indicator.frame = CGRect(
+                x: rect.midX - extent / 2,
+                y: rect.midY - extent / 2,
+                width: extent,
+                height: extent
+            )
+            indicator.color = (environment.tintColor ?? environment.foregroundColor)?.resolve()
+                ?? UIActivityIndicatorView.defaultColor
+            indicator.accessibilityIdentifier = "SwiftUI.ProgressView"
+            indicator.startAnimating()
+            surface.addSubview(indicator)
         case .spacer:
             return
         case .gradient(let gradient, let start, let end):
             let view = UIGradientView(frame: rect)
             view.isUserInteractionEnabled = false
             view.colors = gradient.colors.map { $0.resolve() }
+            view.locations = gradient.stops.map(\.location)
             view.startPoint = CGPoint(x: start.x, y: start.y)
             view.endPoint = CGPoint(x: end.x, y: end.y)
             view.accessibilityIdentifier = "SwiftUI.LinearGradient"
@@ -821,7 +1544,13 @@ private enum _ViewRenderer {
                 environment: environment
             )
         case .zStack(let children, let alignment):
-            for child in children {
+            let orderedChildren = children.enumerated().sorted { lhs, rhs in
+                let lhsIndex = _zIndex(lhs.element)
+                let rhsIndex = _zIndex(rhs.element)
+                if lhsIndex == rhsIndex { return lhs.offset < rhs.offset }
+                return lhsIndex < rhsIndex
+            }.map(\.element)
+            for child in orderedChildren {
                 let size = measure(child, proposed: rect.size, environment: environment)
                 place(
                     child,
@@ -837,24 +1566,100 @@ private enum _ViewRenderer {
                     environment: environment
                 )
             }
-        case .button(let label, let action):
-            let control = UIControl(frame: rect)
+        case .button(let label, let pressedLabel, let role, let action):
+            let control = _SwiftUIButtonControl(frame: rect)
             control.isOpaque = false
             control.backgroundColor = .clear
             control.accessibilityIdentifier = "SwiftUI.Button"
+            control.accessibilityTraits = [.button]
+            if role == .destructive {
+                control.accessibilityHint = "Destructive action"
+            }
             control.isEnabled = environment.isEnabled
             control.addTarget(for: .touchUpInside) { _, _ in action() }
             for simultaneousAction in environment.simultaneousTapActions {
                 control.addTarget(for: .touchUpInside) { _, _ in simultaneousAction() }
             }
             surface.addSubview(control)
-            place(label, in: control.bounds, on: control, environment: environment)
+            place(
+                label,
+                in: control.normalHost.bounds,
+                on: control.normalHost,
+                environment: environment
+            )
+            if let pressedLabel {
+                place(
+                    pressedLabel,
+                    in: control.pressedHost.bounds,
+                    on: control.pressedHost,
+                    environment: environment
+                )
+            }
+            control.refreshAppearance()
+        case .geometry(let geometry):
+            place(
+                geometry.resolve(rect.size),
+                in: rect,
+                on: surface,
+                environment: environment
+            )
+        case .scrollReader(let content, let storage):
+            var next = environment
+            next.scrollStorage = storage
+            place(content, in: rect, on: surface, environment: next)
+        case .customLayout(let layout, let children):
+            let subviews = makeLayoutSubviews(children, environment: environment)
+            var cache: () = ()
+            layout.placeSubviews(
+                in: rect,
+                proposal: ProposedViewSize(width: rect.width, height: rect.height),
+                subviews: subviews,
+                cache: &cache
+            )
+            for (index, child) in children.enumerated() {
+                let subview = subviews[index]
+                let proposal = subview.placement.proposal
+                let proposed = proposal.replacingUnspecifiedDimensions(by: rect.size)
+                let measured = measure(child, proposed: proposed, environment: environment)
+                let size = CGSize(
+                    width: proposal.width ?? measured.width,
+                    height: proposal.height ?? measured.height
+                )
+                let point = subview.placement.point ?? rect.origin
+                let anchor = subview.placement.anchor
+                place(
+                    child,
+                    in: CGRect(
+                        x: point.x - size.width * anchor.x,
+                        y: point.y - size.height * anchor.y,
+                        width: size.width,
+                        height: size.height
+                    ),
+                    on: surface,
+                    environment: environment
+                )
+            }
         case .scroll(let content):
-            let scrollView = UIScrollView(frame: rect)
+            let scrollView = _SwiftUIScrollView(frame: rect)
             scrollView.accessibilityIdentifier = "SwiftUI.ScrollView"
+            switch environment.keyboardDismissMode {
+            case .immediately:
+                scrollView.keyboardDismissMode = .onDrag
+            case .interactively:
+                scrollView.keyboardDismissMode = .interactive
+            case .automatic, .never:
+                scrollView.keyboardDismissMode = .none
+            }
+            let showsIndicators = environment.scrollIndicatorVisibility != .hidden
+            scrollView.showsVerticalScrollIndicator = showsIndicators
+            scrollView.showsHorizontalScrollIndicator = showsIndicators
             surface.addSubview(scrollView)
+            let storage = environment.scrollStorage ?? _OpenScrollProxyStorage()
+            storage.scrollView = scrollView
+            storage.targetRects.removeAll(keepingCapacity: true)
             var measurementEnvironment = environment
             measurementEnvironment.measuresUnboundedVerticalScroll = true
+            measurementEnvironment.scrollStorage = storage
             let measured = measure(
                 content,
                 proposed: scrollView.bounds.size,
@@ -869,8 +1674,33 @@ private enum _ViewRenderer {
                 content,
                 in: CGRect(origin: .zero, size: contentSize),
                 on: scrollView,
-                environment: environment
+                environment: measurementEnvironment
             )
+            if let refreshAction = environment.refreshAction {
+                let refresh = UIRefreshControl()
+                refresh.accessibilityIdentifier = "SwiftUI.RefreshControl"
+                refresh.addTarget(for: .valueChanged) { control, _ in
+                    guard let refresh = control as? UIRefreshControl else { return }
+                    Task { @MainActor in
+                        await refreshAction()
+                        refresh.endRefreshing()
+                    }
+                }
+                scrollView.refreshControl = refresh
+            }
+            let coordinator = _SwiftUIScrollCoordinator(
+                storage: storage,
+                geometryObservers: environment.scrollGeometryObservers,
+                visibilityObservers: environment.scrollVisibilityObservers
+            )
+            scrollView.retainedCoordinator = coordinator
+            scrollView.delegate = coordinator
+            storage.coordinator = coordinator
+            storage.notifyAfterScroll = { [weak scrollView, weak coordinator] in
+                guard let scrollView, let coordinator else { return }
+                coordinator.notify(scrollView)
+            }
+            coordinator.notify(scrollView)
         case .tabView(let pages, let selection, let setSelection, let indexDisplayMode):
             guard let selected = _openSelectedTabPage(
                 pages: pages,
@@ -960,16 +1790,65 @@ private enum _ViewRenderer {
                 on: surface,
                 environment: environment
             )
-        case .textField(let title, let text, let setText):
-            let field = UITextField(frame: rect)
+        case .textField(let title, let text, let isSecure, let axis, let setText):
+            if axis == .vertical && !isSecure {
+                let editor = _SwiftUITextView(frame: rect)
+                editor.text = text
+                editor.font = (environment.font ?? .body).resolve(weight: environment.weight)
+                editor.textColor = environment.foregroundColor?.resolve() ?? .label
+                editor.backgroundColor = .clear
+                editor.isOpaque = false
+                editor.textContainerInset = UIEdgeInsets(
+                    top: 8,
+                    left: 0,
+                    bottom: 8,
+                    right: 0
+                )
+                editor.textContentType = environment.textContentType
+                editor.autocapitalizationType = environment.autocapitalizationType
+                editor.autocorrectionType = environment.autocorrectionDisabled ? .no : .default
+                editor.returnKeyType = _openReturnKeyType(environment.submitLabel)
+                editor.isEditable = environment.isEnabled
+                editor.accessibilityIdentifier = "SwiftUI.TextField.Multiline"
+                editor.accessibilityLabel = title
+                editor.getFocus = environment.focus?.get
+                editor.setFocus = environment.focus?.set
+                editor.setText = setText
+                editor.submit = environment.submitAction
+                surface.addSubview(editor)
+                return
+            }
+            let field = _SwiftUITextField(frame: rect)
             field.borderStyle = .roundedRect
             field.placeholder = title
             field.text = text
+            field.isSecureTextEntry = isSecure
+            field.textContentType = environment.textContentType
+            field.autocapitalizationType = environment.autocapitalizationType
+            field.autocorrectionType = environment.autocorrectionDisabled ? .no : .default
+            field.returnKeyType = _openReturnKeyType(environment.submitLabel)
             field.isEnabled = environment.isEnabled
-            field.accessibilityIdentifier = "SwiftUI.TextField"
+            field.accessibilityIdentifier = isSecure
+                ? "SwiftUI.SecureField"
+                : "SwiftUI.TextField"
+            field.getFocus = environment.focus?.get
+            field.setFocus = environment.focus?.set
             field.addTarget(for: .editingChanged) { control, _ in
                 guard let field = control as? UITextField else { return }
                 setText(field.text ?? "")
+            }
+            field.addTarget(for: .editingDidBegin) { control, _ in
+                guard let field = control as? _SwiftUITextField else { return }
+                field.setFocus?(true)
+            }
+            field.addTarget(for: .editingDidEnd) { control, _ in
+                guard let field = control as? _SwiftUITextField else { return }
+                field.setFocus?(false)
+            }
+            if let submitAction = environment.submitAction {
+                field.addTarget(for: .primaryActionTriggered) { _, _ in
+                    submitAction()
+                }
             }
             surface.addSubview(field)
         case .picker(let label, let options, let selection, let setSelection):
@@ -1085,6 +1964,58 @@ private enum _ViewRenderer {
                 var next = environment
                 next.foregroundColor = color
                 place(content, in: rect, on: surface, environment: next)
+            case .tint(let color):
+                var next = environment
+                next.tintColor = color
+                place(content, in: rect, on: surface, environment: next)
+            case .lineLimit(let limit):
+                var next = environment
+                next.lineLimit = limit
+                next.lineLimitRange = nil
+                place(content, in: rect, on: surface, environment: next)
+            case .lineLimitRange(let range):
+                var next = environment
+                next.lineLimit = max(0, range.upperBound)
+                next.lineLimitRange = range
+                place(content, in: rect, on: surface, environment: next)
+            case .truncationMode:
+                place(content, in: rect, on: surface, environment: environment)
+            case .focus(let get, let set):
+                var next = environment
+                next.focus = (get, set)
+                place(content, in: rect, on: surface, environment: next)
+            case .textContentType(let type):
+                var next = environment
+                next.textContentType = type
+                place(content, in: rect, on: surface, environment: next)
+            case .autocapitalization(let type):
+                var next = environment
+                next.autocapitalizationType = type
+                place(content, in: rect, on: surface, environment: next)
+            case .autocorrectionDisabled(let disabled):
+                var next = environment
+                next.autocorrectionDisabled = disabled
+                place(content, in: rect, on: surface, environment: next)
+            case .submit(let action):
+                var next = environment
+                next.submitAction = action
+                place(content, in: rect, on: surface, environment: next)
+            case .submitLabel(let label):
+                var next = environment
+                next.submitLabel = label
+                place(content, in: rect, on: surface, environment: next)
+            case .scrollDismissesKeyboard(let mode):
+                var next = environment
+                next.keyboardDismissMode = mode
+                place(content, in: rect, on: surface, environment: next)
+            case .controlSize(let size):
+                var next = environment
+                next.controlSize = size
+                place(content, in: rect, on: surface, environment: next)
+            case .symbolRenderingMode(let mode):
+                var next = environment
+                next.symbolRenderingMode = mode
+                place(content, in: rect, on: surface, environment: next)
             case .resizable:
                 var next = environment
                 next.imageResizable = true
@@ -1099,11 +2030,27 @@ private enum _ViewRenderer {
                                   height: height ?? min(rect.height, measured.height))
                 let childRect = alignedRect(size: size, in: rect, alignment: alignment)
                 place(content, in: childRect, on: surface, environment: environment)
-            case .flexibleFrame(let maxWidth, let maxHeight, let alignment):
+            case .flexibleFrame(
+                let minWidth,
+                let maxWidth,
+                let minHeight,
+                let maxHeight,
+                let alignment
+            ):
                 let measured = measure(content, proposed: rect.size, environment: environment)
                 let size = CGSize(
-                    width: _flexibleExtent(measured.width, proposed: rect.width, maximum: maxWidth),
-                    height: _flexibleExtent(measured.height, proposed: rect.height, maximum: maxHeight)
+                    width: _flexibleExtent(
+                        measured.width,
+                        proposed: rect.width,
+                        minimum: minWidth,
+                        maximum: maxWidth
+                    ),
+                    height: _flexibleExtent(
+                        measured.height,
+                        proposed: rect.height,
+                        minimum: minHeight,
+                        maximum: maxHeight
+                    )
                 )
                 place(
                     content,
@@ -1140,10 +2087,49 @@ private enum _ViewRenderer {
             case .overlay(let overlay, _):
                 place(content, in: rect, on: surface, environment: environment)
                 place(overlay, in: rect, on: surface, environment: environment)
+            case .mask(let maskNode, let alignment):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.Mask"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                let maskSize = measure(
+                    maskNode,
+                    proposed: host.bounds.size,
+                    environment: environment
+                )
+                let maskRect = alignedRect(
+                    size: CGSize(
+                        width: min(host.bounds.width, maskSize.width),
+                        height: min(host.bounds.height, maskSize.height)
+                    ),
+                    in: host.bounds,
+                    alignment: alignment
+                )
+                let layer = CALayer()
+                layer.bounds = CGRect(origin: .zero, size: maskRect.size)
+                layer.position = CGPoint(x: maskRect.midX, y: maskRect.midY)
+                layer.backgroundColor = UIColor.white.cgColor
+                host.layer.mask = layer
             case .multilineTextAlignment(let alignment):
                 var next = environment
                 next.textAlignment = alignment
                 place(content, in: rect, on: surface, environment: next)
+            case .opacity(let opacity):
+                let opacityHost = _SwiftUIPassthroughView(frame: rect)
+                opacityHost.alpha = opacity
+                opacityHost.accessibilityIdentifier = "SwiftUI.Opacity"
+                surface.addSubview(opacityHost)
+                place(content, in: opacityHost.bounds, on: opacityHost, environment: environment)
+            case .scaleEffect(let scale):
+                let scaleHost = _SwiftUIPassthroughView(frame: rect)
+                scaleHost.transform = CGAffineTransform(scaleX: scale, y: scale)
+                scaleHost.accessibilityIdentifier = "SwiftUI.ScaleEffect"
+                surface.addSubview(scaleHost)
+                place(content, in: scaleHost.bounds, on: scaleHost, environment: environment)
+            case .layoutPriority:
+                // Stack placement reads priority from the structural node;
+                // outside a stack it is intentionally layout-transparent.
+                place(content, in: rect, on: surface, environment: environment)
             case .tapAction(let action):
                 let control = UIControl(frame: rect)
                 control.isOpaque = false
@@ -1168,6 +2154,14 @@ private enum _ViewRenderer {
                     surface.addSubview(control)
                     place(content, in: control.bounds, on: control, environment: environment)
                 }
+            case .gesture(let gesture):
+                let host = UIView(frame: rect)
+                host.backgroundColor = .clear
+                host.isOpaque = false
+                host.accessibilityIdentifier = "SwiftUI.Gesture"
+                surface.addSubview(host)
+                _openInstallGesture(gesture, on: host)
+                place(content, in: host.bounds, on: host, environment: environment)
             case .onAppear:
                 place(content, in: rect, on: surface, environment: environment)
             case .shadow(let radius):
@@ -1214,6 +2208,23 @@ private enum _ViewRenderer {
                         environment: environment
                     )
                 }
+            case .clipped:
+                let clippingView = _SwiftUIPassthroughView(frame: rect)
+                clippingView.clipsToBounds = true
+                clippingView.accessibilityIdentifier = "SwiftUI.Clipped"
+                surface.addSubview(clippingView)
+                place(
+                    content,
+                    in: clippingView.bounds,
+                    on: clippingView,
+                    environment: environment
+                )
+            case .hidden:
+                let hiddenHost = _SwiftUIPassthroughView(frame: rect)
+                hiddenHost.isHidden = true
+                hiddenHost.accessibilityIdentifier = "SwiftUI.Hidden"
+                surface.addSubview(hiddenHost)
+                place(content, in: hiddenHost.bounds, on: hiddenHost, environment: environment)
             case .disabled(let disabled):
                 var next = environment
                 next.isEnabled = environment.isEnabled && !disabled
@@ -1231,7 +2242,233 @@ private enum _ViewRenderer {
                     on: accessibilityHost,
                     environment: environment
                 )
-            case .effect, .navigationTitle, .navigationBarHidden,
+            case .accessibilityElement(let children):
+                let accessibilityHost = _SwiftUIPassthroughView(frame: rect)
+                accessibilityHost.backgroundColor = .clear
+                accessibilityHost.isOpaque = false
+                accessibilityHost.isAccessibilityElement = children != .contain
+                accessibilityHost.accessibilityElementsHidden = children != .contain
+                accessibilityHost.accessibilityIdentifier = "SwiftUI.AccessibilityElement"
+                surface.addSubview(accessibilityHost)
+                place(content, in: accessibilityHost.bounds, on: accessibilityHost,
+                      environment: environment)
+                if children == .combine {
+                    _openMergeAccessibility(from: accessibilityHost, into: accessibilityHost)
+                }
+            case .accessibilityLabel(let label):
+                let host = _openAccessibilityHost(frame: rect, identifier: "Label")
+                host.accessibilityLabel = label
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                _openMergeAccessibility(from: host, into: host)
+            case .accessibilityHint(let hint):
+                let host = _openAccessibilityHost(frame: rect, identifier: "Hint")
+                host.accessibilityHint = hint
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                _openMergeAccessibility(from: host, into: host)
+            case .accessibilityValue(let value):
+                let host = _openAccessibilityHost(frame: rect, identifier: "Value")
+                host.accessibilityValue = value
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                _openMergeAccessibility(from: host, into: host)
+            case .accessibilityTraits(let traits):
+                let host = _openAccessibilityHost(frame: rect, identifier: "Traits")
+                host.accessibilityTraits.formUnion(_openUIKitTraits(traits))
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                _openMergeAccessibility(from: host, into: host)
+            case .accessibilityAction(let name, let action):
+                let host = UIControl(frame: rect)
+                host.backgroundColor = .clear
+                host.isOpaque = false
+                host.isAccessibilityElement = true
+                host.accessibilityIdentifier = name.map { "SwiftUI.AccessibilityAction.\($0)" }
+                    ?? "SwiftUI.AccessibilityAction.default"
+                host.accessibilityHint = name
+                host.addTarget(for: .primaryActionTriggered) { _, _ in action() }
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+                _openMergeAccessibility(from: host, into: host)
+            case .allowsHitTesting(let enabled):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.isUserInteractionEnabled = enabled
+                host.accessibilityIdentifier = "SwiftUI.AllowsHitTesting"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .zIndex(let value):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.ZIndex.\(value)"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .glassEffect:
+                let effectView = UIVisualEffectView(
+                    effect: UIBlurEffect(style: .systemMaterial)
+                )
+                effectView.frame = rect
+                effectView.accessibilityIdentifier = "SwiftUI.GlassEffect"
+                surface.addSubview(effectView)
+                effectView.layoutIfNeeded()
+                place(
+                    content,
+                    in: effectView.contentView.bounds,
+                    on: effectView.contentView,
+                    environment: environment
+                )
+            case .buttonBorderShape(let shape):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                switch shape.storage {
+                case .automatic:
+                    host.layer.cornerRadius = min(rect.height / 3, 12)
+                case .capsule, .circle:
+                    host.layer.cornerRadius = min(rect.width, rect.height) / 2
+                case .roundedRectangle(let radius):
+                    host.layer.cornerRadius = max(0, radius)
+                }
+                host.clipsToBounds = host.layer.cornerRadius > 0
+                host.accessibilityIdentifier = "SwiftUI.ButtonBorderShape"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .contextMenu(let menuNode):
+                let host = _SwiftUIContextMenuHost(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.ContextMenu"
+                host.menu = UIMenu(children: _openMenuElements(in: menuNode))
+                host.installInteraction()
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .matchedGeometry(let id, let namespace, let isSource):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.MatchedGeometry.\(namespace.rawValue).\(id).\(isSource)"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .accessibilityIdentifier(let identifier):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = identifier
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .alert(let configuration):
+                place(content, in: rect, on: surface, environment: environment)
+                surface.addSubview(
+                    _SwiftUIAlertPresentationHost(configuration: configuration)
+                )
+            case .identifier(let identifier):
+                environment.scrollStorage?.targetRects[identifier] = rect
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host.accessibilityIdentifier = "SwiftUI.ID.\(identifier)"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .preference:
+                place(content, in: rect, on: surface, environment: environment)
+            case .preferenceListener(let listener):
+                place(content, in: rect, on: surface, environment: environment)
+                listener.action(
+                    _openReducedPreference(
+                        in: content,
+                        listener: listener,
+                        proposed: rect.size
+                    )
+                )
+            case .scrollVisibility(let observer):
+                var next = environment
+                next.scrollVisibilityObservers.append(observer)
+                place(content, in: rect, on: surface, environment: next)
+            case .scrollGeometry(let observer):
+                var next = environment
+                next.scrollGeometryObservers.append(observer)
+                place(content, in: rect, on: surface, environment: next)
+            case .geometryObserver(let observer):
+                place(content, in: rect, on: surface, environment: environment)
+                observer.deliver(
+                    observer.read(GeometryProxy(size: rect.size))
+                )
+            case .refreshable(let action):
+                var next = environment
+                next.refreshAction = action
+                place(content, in: rect, on: surface, environment: next)
+            case .scrollIndicators(let visibility):
+                var next = environment
+                next.scrollIndicatorVisibility = visibility
+                place(content, in: rect, on: surface, environment: next)
+            case .safeAreaInset(let edge, let spacing, let insetContent):
+                let insetSize = measure(
+                    insetContent,
+                    proposed: rect.size,
+                    environment: environment
+                )
+                let gap = max(0, spacing ?? 0)
+                switch edge {
+                case .top:
+                    place(insetContent, in: CGRect(x: rect.minX, y: rect.minY,
+                          width: rect.width, height: insetSize.height),
+                          on: surface, environment: environment)
+                    place(content, in: CGRect(x: rect.minX,
+                          y: rect.minY + insetSize.height + gap,
+                          width: rect.width,
+                          height: max(0, rect.height - insetSize.height - gap)),
+                          on: surface, environment: environment)
+                case .bottom:
+                    place(content, in: CGRect(x: rect.minX, y: rect.minY,
+                          width: rect.width,
+                          height: max(0, rect.height - insetSize.height - gap)),
+                          on: surface, environment: environment)
+                    place(insetContent, in: CGRect(x: rect.minX,
+                          y: rect.maxY - insetSize.height,
+                          width: rect.width, height: insetSize.height),
+                          on: surface, environment: environment)
+                case .leading:
+                    place(insetContent, in: CGRect(x: rect.minX, y: rect.minY,
+                          width: insetSize.width, height: rect.height),
+                          on: surface, environment: environment)
+                    place(content, in: CGRect(x: rect.minX + insetSize.width + gap,
+                          y: rect.minY,
+                          width: max(0, rect.width - insetSize.width - gap),
+                          height: rect.height), on: surface, environment: environment)
+                case .trailing:
+                    place(content, in: CGRect(x: rect.minX, y: rect.minY,
+                          width: max(0, rect.width - insetSize.width - gap),
+                          height: rect.height), on: surface, environment: environment)
+                    place(insetContent, in: CGRect(x: rect.maxX - insetSize.width,
+                          y: rect.minY, width: insetSize.width, height: rect.height),
+                          on: surface, environment: environment)
+                }
+            case .swipeActions(_, _, let actions):
+                let host = UIView(frame: rect)
+                host.clipsToBounds = true
+                host.accessibilityIdentifier = "SwiftUI.SwipeActions"
+                surface.addSubview(host)
+                let contentHost = _SwiftUIPassthroughView(frame: host.bounds)
+                host.addSubview(contentHost)
+                place(content, in: contentHost.bounds, on: contentHost, environment: environment)
+                let actionWidth = min(96, max(44, host.bounds.width * 0.25))
+                let actionHost = UIView(frame: CGRect(
+                    x: host.bounds.width - actionWidth,
+                    y: 0,
+                    width: actionWidth,
+                    height: host.bounds.height
+                ))
+                actionHost.backgroundColor = .systemOrange
+                actionHost.accessibilityIdentifier = "SwiftUI.SwipeActions.actions"
+                host.insertSubview(actionHost, belowSubview: contentHost)
+                place(actions, in: actionHost.bounds, on: actionHost, environment: environment)
+                let pan = UIPanGestureRecognizer { recognizer in
+                    guard let pan = recognizer as? UIPanGestureRecognizer else { return }
+                    let translation = pan.translation(in: host)
+                    let x = min(0, max(-actionWidth, translation.x))
+                    contentHost.transform = CGAffineTransform(translationX: x, y: 0)
+                    if pan.state == .ended || pan.state == .cancelled {
+                        let target = x < -actionWidth / 2 ? -actionWidth : 0
+                        UIView.animate(withDuration: 0.2) {
+                            contentHost.transform = CGAffineTransform(
+                                translationX: target,
+                                y: 0
+                            )
+                        }
+                    }
+                }
+                host.addGestureRecognizer(pan)
+            case .effect, .toolbarVisibility, .toolbarBackgroundVisibility,
+                 .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .toolbar, .tag, .pageTabViewStyle:
                 // NavigationView consumes this metadata while building its
@@ -1538,10 +2775,18 @@ private enum _ViewRenderer {
         }
         let gaps = spacing * CGFloat(max(0, children.count - 1))
         var overflow = max(0, fixedWidth + gaps - rect.width)
+        let compressionOrder = children.indices.sorted { lhs, rhs in
+            let lhsPriority = _layoutPriority(children[lhs])
+            let rhsPriority = _layoutPriority(children[rhs])
+            if lhsPriority == rhsPriority { return lhs < rhs }
+            return lhsPriority < rhsPriority
+        }
         // Text is SwiftUI's compressible participant in Focus's title / spacer
         // / icon row.  Give it the short width and let UILabel honor the
-        // minimumScaleFactor before sacrificing the trailing icon.
-        for index in children.indices where overflow > 0 && _containsText(children[index]) {
+        // minimumScaleFactor before sacrificing the trailing icon. Explicit
+        // layout priority protects higher-priority title/content groups until
+        // every lower-priority peer has yielded its available width.
+        for index in compressionOrder where overflow > 0 && _containsText(children[index]) {
             let reduction = min(widths[index], overflow)
             widths[index] -= reduction
             overflow -= reduction
@@ -1549,7 +2794,7 @@ private enum _ViewRenderer {
         // A malformed or extremely small proposal can still over-constrain
         // non-text leaves.  Clamp them in source order rather than emitting
         // negative frames or placing later children beyond the padded edge.
-        for index in children.indices where overflow > 0 && !spacerIndices.contains(index) {
+        for index in compressionOrder where overflow > 0 && !spacerIndices.contains(index) {
             let reduction = min(widths[index], overflow)
             widths[index] -= reduction
             overflow -= reduction
@@ -1639,8 +2884,10 @@ private enum _ViewRenderer {
         }
         label.adjustsFontSizeToFitWidth = environment.minimumScaleFactor > 0
         label.minimumScaleFactor = environment.minimumScaleFactor
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = max(0, environment.lineLimit ?? 0)
+        label.lineBreakMode = environment.lineLimit == 1
+            ? .byTruncatingTail
+            : .byWordWrapping
         return label
     }
 
@@ -1679,6 +2926,7 @@ private enum _ViewRenderer {
         case .system(let name):
             let symbol = _SystemSymbolView(name: name)
             symbol.strokeColor = environment.foregroundColor?.resolve() ?? .label
+            symbol.renderingMode = environment.symbolRenderingMode
             symbol.frame = rect
             symbol.accessibilityIdentifier = "SwiftUI.Image.systemName.\(name)"
             surface.addSubview(symbol)
@@ -1752,6 +3000,28 @@ private enum _ViewRenderer {
         }
     }
 
+    private static func _layoutPriority(_ node: _OpenViewNode) -> Double {
+        switch node.kind {
+        case .modified(_, .layoutPriority(let value)):
+            return value
+        case .modified(let content, _):
+            return _layoutPriority(content)
+        default:
+            return 0
+        }
+    }
+
+    private static func _zIndex(_ node: _OpenViewNode) -> Double {
+        switch node.kind {
+        case .modified(_, .zIndex(let value)):
+            return value
+        case .modified(let content, _):
+            return _zIndex(content)
+        default:
+            return 0
+        }
+    }
+
     private static func _containsButton(_ node: _OpenViewNode) -> Bool {
         switch node.kind {
         case .button:
@@ -1807,6 +3077,30 @@ private enum _ViewRenderer {
         )
     }
 
+    private static func _controlExtent(_ size: ControlSize) -> CGFloat {
+        switch size {
+        case .mini: return 12
+        case .small: return 16
+        case .regular: return 20
+        case .large: return 28
+        case .extraLarge: return 36
+        }
+    }
+
+    private static func _openReturnKeyType(_ label: SubmitLabel) -> UIReturnKeyType {
+        switch label {
+        case .done: return .done
+        case .go: return .go
+        case .send: return .send
+        case .join: return .join
+        case .route: return .route
+        case .search: return .search
+        case .return: return .default
+        case .next: return .next
+        case .continue: return .continue
+        }
+    }
+
     private static func _flexibleProposal(_ proposed: CGFloat, maximum: CGFloat?) -> CGFloat {
         guard let maximum else { return proposed }
         if maximum.isInfinite { return proposed }
@@ -1816,11 +3110,16 @@ private enum _ViewRenderer {
     private static func _flexibleExtent(
         _ measured: CGFloat,
         proposed: CGFloat,
+        minimum: CGFloat?,
         maximum: CGFloat?
     ) -> CGFloat {
-        guard let maximum else { return min(measured, proposed) }
-        if maximum.isInfinite { return max(0, proposed) }
-        return min(max(0, measured), min(max(0, maximum), max(0, proposed)))
+        let lower = max(0, minimum ?? 0)
+        guard let maximum else { return max(lower, min(measured, proposed)) }
+        if maximum.isInfinite { return max(lower, max(0, proposed)) }
+        return max(
+            lower,
+            min(max(0, measured), min(max(0, maximum), max(0, proposed)))
+        )
     }
 }
 
@@ -1828,6 +3127,7 @@ private enum _ViewRenderer {
 private final class _SystemSymbolView: UIView {
     let name: String
     var strokeColor: UIColor = .label
+    var renderingMode: SymbolRenderingMode?
 
     init(name: String) {
         self.name = name

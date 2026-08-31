@@ -126,6 +126,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     open var keyboardAppearance: UIKeyboardAppearance = .default
     open var returnKeyType: UIReturnKeyType = .default
     open var enablesReturnKeyAutomatically = false
+    /// Semantic purpose retained for password managers and host keyboards,
+    /// matching the same trait on UITextField.
+    open var textContentType: UITextContentType?
 
     /// UIKit imports its `null_resettable` NSString property as `String!`:
     /// callers may use optional binding, while assigning nil resets to an

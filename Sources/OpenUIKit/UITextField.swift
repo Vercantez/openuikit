@@ -195,10 +195,24 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     // software keyboard. A host can inspect them when choosing an input UI.
     open var autocapitalizationType: UITextAutocapitalizationType = .sentences
     open var autocorrectionType: UITextAutocorrectionType = .default
+    /// The semantic credential/contact purpose is retained for the embedding
+    /// keyboard or password-manager service.  OpenUIKit does not inspect or
+    /// persist the entered value itself.
+    open var textContentType: UITextContentType?
     open var keyboardType: UIKeyboardType = .default
     open var keyboardAppearance: UIKeyboardAppearance = .default
     open var returnKeyType: UIReturnKeyType = .default
     open var enablesReturnKeyAutomatically = false
+    /// Secure entry keeps the model text unchanged while rendering one bullet
+    /// per composed character. This mirrors UIKit's privacy boundary: bindings
+    /// and delegates receive the real value, but neither static nor editing
+    /// snapshots expose it.
+    open var isSecureTextEntry = false {
+        didSet {
+            guard isSecureTextEntry != oldValue else { return }
+            refreshContent()
+        }
+    }
 
     open var text: String? {
         get { _text.isEmpty ? (_hasText ? _text : nil) : _text }
@@ -730,7 +744,9 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     func refreshContent() {
         textLabel.font = font
         textLabel.textColor = textColor
-        if let a = _attributed {
+        if isSecureTextEntry {
+            textLabel.text = secureDisplayText
+        } else if let a = _attributed {
             textLabel.attributedText = a
         } else {
             textLabel.text = _text
@@ -741,6 +757,14 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         textLabel.isHidden = _text.isEmpty
         placeholderLabel.isHidden = !_text.isEmpty || (_placeholder ?? "").isEmpty
         setNeedsLayout()
+    }
+
+    private var secureDisplayText: String {
+        String(repeating: "\u{2022}", count: _text.count)
+    }
+
+    private var renderedText: String {
+        isSecureTextEntry ? secureDisplayText : _text
     }
 
     // MARK: Geometry (measured)
@@ -824,13 +848,13 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     open override var intrinsicContentSize: CGSize {
         let scale = textLabel.layoutScale
         let base: CGFloat
-        if _attributed != nil, !_text.isEmpty {
+        if !isSecureTextEntry, _attributed != nil, !_text.isEmpty {
             // Attributed: measured with the field's single `font` (see the
             // attributedText setter), ceiled to the pixel grid.
             base = Swift.max(FontEngine.ceilToPixel(FontEngine.measure(_text, font: font),
                                                     scale: scale), 5)
         } else if !_text.isEmpty {
-            base = Swift.max(FontEngine.measure(_text, font: font).rounded(.up), 5)
+            base = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up), 5)
         } else if let p = placeholder, !p.isEmpty {
             base = FontEngine.ceilToPixel(FontEngine.measure(p, font: font), scale: scale)
         } else {
@@ -892,7 +916,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                                         width: tr.width, height: lineH)
         if isEditing {
             // Full text width, shifted by the scroll offset; no truncation.
-            let w = Swift.max(FontEngine.measure(_text, font: font).rounded(.up) + 2,
+            let w = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up) + 2,
                               tr.width)
             textLabel.lineBreakMode = .byClipping
             textLabel.frame = CGRect(x: -textScrollOffset,
@@ -1108,8 +1132,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         let geometryOffset = characterBoundaries.last(where: {
             $0 <= clampedOffset(offset)
         }) ?? 0
+        let modelPrefix = prefix(toUTF16Offset: geometryOffset)
+        let displayPrefix = isSecureTextEntry
+            ? String(repeating: "\u{2022}", count: modelPrefix.count)
+            : modelPrefix
         return FontEngine.roundToPixel(
-            FontEngine.measure(prefix(toUTF16Offset: geometryOffset), font: font),
+            FontEngine.measure(displayPrefix, font: font),
             scale: scale)
     }
 
@@ -1156,7 +1184,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         // Keep the caret visible: adjust the horizontal scroll first.
         let cx = caretTextX
         let visibleW = tr.width - 2   // caret bar width stays inside
-        let textW = FontEngine.measure(_text, font: font)
+        let textW = FontEngine.measure(renderedText, font: font)
         var scroll = textScrollOffset
         let maxScroll = Swift.max(0, textW + 2 - tr.width)
         if cx - scroll > visibleW { scroll = cx - visibleW }
@@ -1166,7 +1194,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             textScrollOffset = scroll
             // Re-place the text label with the new offset.
             let labelY = ((bounds.height - lineHeight) / 2 + 0.5).rounded(.down) - tr.minY
-            let w = Swift.max(FontEngine.measure(_text, font: font).rounded(.up) + 2,
+            let w = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up) + 2,
                               tr.width)
             textLabel.frame = CGRect(x: -textScrollOffset,
                                      y: labelY, width: w, height: lineHeight)

@@ -8,11 +8,13 @@
 
 #if canImport(Foundation)
 @_exported import Foundation
+#elseif canImport(FoundationEssentials)
+@_exported import FoundationEssentials
 #endif
 import Combine
 @_exported import OpenUIKit
 
-@MainActor
+@preconcurrency @MainActor
 public protocol _OpenView {
     associatedtype Body: _OpenView
 
@@ -24,6 +26,14 @@ public protocol _OpenView {
 }
 
 public extension _OpenView {
+    func modifier<Modifier: ViewModifier>(_ modifier: Modifier) -> some _OpenView {
+        _OpenAppliedViewModifier(source: self, modifier: modifier)
+    }
+
+    func buttonStyle<Style: ButtonStyle>(_ style: Style) -> some _OpenView {
+        _OpenButtonStyleContent(source: self, style: style)
+    }
+
     func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenGraphContext.withView(self) { preparedView in
             preparedView.body._makeOpenUIKitNode()
@@ -48,6 +58,29 @@ public final class _OpenViewNode {
     }
 }
 
+@MainActor
+final class _OpenGeometryNode {
+    private let builder: @MainActor (CGSize) -> _OpenViewNode
+    private var cachedSize: CGSize?
+    private var cachedNode: _OpenViewNode?
+
+    init(builder: @escaping @MainActor (CGSize) -> _OpenViewNode) {
+        self.builder = builder
+    }
+
+    func resolve(_ size: CGSize) -> _OpenViewNode {
+        let bounded = CGSize(
+            width: size.width.isFinite ? max(0, size.width) : 10_000,
+            height: size.height.isFinite ? max(0, size.height) : 10_000
+        )
+        if cachedSize == bounded, let cachedNode { return cachedNode }
+        let node = builder(bounded)
+        cachedSize = bounded
+        cachedNode = node
+        return node
+    }
+}
+
 indirect enum _OpenViewNodeKind {
     case empty
     case group([_OpenViewNode])
@@ -55,12 +88,23 @@ indirect enum _OpenViewNodeKind {
     case image(_OpenImageSource)
     case color(Color)
     case roundedRectangle(cornerRadius: CGFloat, style: _OpenRoundedRectangleStyle)
+    case capsule(_OpenRoundedRectangleStyle)
+    case divider
+    case progress
     case spacer(minLength: CGFloat?)
     case hStack(children: [_OpenViewNode], alignment: VerticalAlignment, spacing: CGFloat?)
     case vStack(children: [_OpenViewNode], alignment: HorizontalAlignment, spacing: CGFloat?)
     case zStack(children: [_OpenViewNode], alignment: Alignment)
-    case button(label: _OpenViewNode, action: @MainActor () -> Void)
+    case button(
+        label: _OpenViewNode,
+        pressedLabel: _OpenViewNode?,
+        role: ButtonRole?,
+        action: @MainActor () -> Void
+    )
+    case geometry(_OpenGeometryNode)
     case scroll(content: _OpenViewNode)
+    case scrollReader(content: _OpenViewNode, storage: _OpenScrollProxyStorage)
+    case customLayout(layout: any Layout, children: [_OpenViewNode])
     case tabView(
         pages: [_OpenTabPage],
         selection: AnyHashable,
@@ -84,6 +128,8 @@ indirect enum _OpenViewNodeKind {
     case textField(
         title: String,
         text: String,
+        isSecure: Bool,
+        axis: Axis,
         setText: @MainActor (String) -> Void
     )
     case picker(
@@ -116,28 +162,81 @@ struct _OpenPickerOption {
     let tag: AnyHashable
 }
 
+struct _OpenAlertConfiguration {
+    let title: String
+    let getIsPresented: @MainActor () -> Bool
+    let setIsPresented: @MainActor (Bool) -> Void
+    let actions: _OpenViewNode
+    let message: _OpenViewNode
+}
+
+struct _OpenPreferenceRecord {
+    let key: ObjectIdentifier
+    let value: Any
+}
+
+struct _OpenPreferenceListener {
+    let key: ObjectIdentifier
+    let defaultValue: Any
+    let reduce: (inout Any, Any) -> Void
+    let action: @MainActor (Any) -> Void
+}
+
+struct _OpenScrollVisibilityObserver {
+    let threshold: CGFloat
+    let deliver: @MainActor ([AnyHashable]) -> Void
+}
+
+struct _OpenScrollGeometryObserver {
+    let read: @MainActor (ScrollGeometry) -> Any
+    let equals: (Any, Any) -> Bool
+    let deliver: @MainActor (Any, Any) -> Void
+}
+
+struct _OpenGeometryObserver {
+    let read: @MainActor (GeometryProxy) -> Any
+    let deliver: @MainActor (Any) -> Void
+}
+
 enum _OpenViewModification {
     case font(Font?)
     case fontWeight(Font.Weight?)
     case minimumScaleFactor(CGFloat)
     case foregroundColor(Color?)
+    case tint(Color?)
+    case opacity(CGFloat)
+    case scaleEffect(CGFloat)
+    case lineLimit(Int?)
+    case lineLimitRange(ClosedRange<Int>)
+    case truncationMode(TextTruncationMode)
+    case layoutPriority(Double)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
-    case flexibleFrame(maxWidth: CGFloat?, maxHeight: CGFloat?, alignment: Alignment)
+    case flexibleFrame(
+        minWidth: CGFloat?,
+        maxWidth: CGFloat?,
+        minHeight: CGFloat?,
+        maxHeight: CGFloat?,
+        alignment: Alignment
+    )
     case padding(Edge.Set, CGFloat?)
     case edgeInsetsPadding(EdgeInsets)
     case background(_OpenViewNode, alignment: Alignment)
     case overlay(_OpenViewNode, alignment: Alignment)
+    case mask(_OpenViewNode, alignment: Alignment)
     case resizable
     case aspectRatio(ContentMode)
     case multilineTextAlignment(TextAlignment)
     case tapAction(@MainActor () -> Void)
     case simultaneousTapAction(@MainActor () -> Void)
+    case gesture(_OpenGestureNode)
     case onAppear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
     case shadow(radius: CGFloat)
     case colorScheme(ColorScheme)
-    case safeAreaIgnored
+    case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
     case clipRoundedRectangle(CGFloat)
+    case clipped
+    case hidden
     case navigationTitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
@@ -147,6 +246,41 @@ enum _OpenViewModification {
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
     case disabled(Bool)
     case accessibilityHidden(Bool)
+    case accessibilityElement(AccessibilityChildBehavior)
+    case accessibilityLabel(String)
+    case accessibilityHint(String)
+    case accessibilityValue(String)
+    case accessibilityTraits(AccessibilityTraits)
+    case allowsHitTesting(Bool)
+    case zIndex(Double)
+    case focus(get: @MainActor () -> Bool, set: @MainActor (Bool) -> Void)
+    case textContentType(UITextContentType?)
+    case autocapitalization(UITextAutocapitalizationType)
+    case autocorrectionDisabled(Bool)
+    case submit(@MainActor () -> Void)
+    case submitLabel(SubmitLabel)
+    case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
+    case controlSize(ControlSize)
+    case symbolRenderingMode(SymbolRenderingMode?)
+    case accessibilityIdentifier(String)
+    case alert(_OpenAlertConfiguration)
+    case glassEffect
+    case buttonBorderShape(ButtonBorderShape)
+    case accessibilityAction(name: String?, action: @MainActor () -> Void)
+    case identifier(AnyHashable)
+    case preference(_OpenPreferenceRecord)
+    case preferenceListener(_OpenPreferenceListener)
+    case scrollVisibility(_OpenScrollVisibilityObserver)
+    case scrollGeometry(_OpenScrollGeometryObserver)
+    case geometryObserver(_OpenGeometryObserver)
+    case refreshable(@MainActor () async -> Void)
+    case safeAreaInset(edge: Edge, spacing: CGFloat?, content: _OpenViewNode)
+    case scrollIndicators(Visibility)
+    case toolbarVisibility(Visibility, ToolbarPlacement)
+    case toolbarBackgroundVisibility(Visibility, ToolbarPlacement)
+    case swipeActions(edge: Edge, allowsFullSwipe: Bool, actions: _OpenViewNode)
+    case contextMenu(_OpenViewNode)
+    case matchedGeometry(id: AnyHashable, namespace: Namespace.ID, isSource: Bool)
     case effect
 }
 
@@ -159,23 +293,40 @@ fileprivate enum _OpenViewModifier {
     case fontWeight(Font.Weight?)
     case minimumScaleFactor(CGFloat)
     case foregroundColor(Color?)
+    case tint(Color?)
+    case opacity(CGFloat)
+    case scaleEffect(CGFloat)
+    case lineLimit(Int?)
+    case lineLimitRange(ClosedRange<Int>)
+    case truncationMode(TextTruncationMode)
+    case layoutPriority(Double)
     case frame(width: CGFloat?, height: CGFloat?, alignment: Alignment)
-    case flexibleFrame(maxWidth: CGFloat?, maxHeight: CGFloat?, alignment: Alignment)
+    case flexibleFrame(
+        minWidth: CGFloat?,
+        maxWidth: CGFloat?,
+        minHeight: CGFloat?,
+        maxHeight: CGFloat?,
+        alignment: Alignment
+    )
     case padding(Edge.Set, CGFloat?)
     case edgeInsetsPadding(EdgeInsets)
     case background(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case overlay(@MainActor () -> _OpenViewNode, alignment: Alignment)
+    case mask(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case resizable
     case aspectRatio(ContentMode)
     case multilineTextAlignment(TextAlignment)
     case tapAction(@MainActor () -> Void)
     case simultaneousTapAction(@MainActor () -> Void)
+    case gesture(_OpenGestureNode)
     case onAppear(@MainActor () -> Void)
     case shadow(radius: CGFloat)
     case colorScheme(ColorScheme)
-    case safeAreaIgnored
+    case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
     case clipRoundedRectangle(CGFloat)
+    case clipped
+    case hidden
     case navigationTitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
@@ -185,6 +336,56 @@ fileprivate enum _OpenViewModifier {
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
     case disabled(Bool)
     case accessibilityHidden(Bool)
+    case accessibilityElement(AccessibilityChildBehavior)
+    case accessibilityLabel(String)
+    case accessibilityHint(String)
+    case accessibilityValue(String)
+    case accessibilityTraits(AccessibilityTraits)
+    case allowsHitTesting(Bool)
+    case zIndex(Double)
+    case focus(get: @MainActor () -> Bool, set: @MainActor (Bool) -> Void)
+    case textContentType(UITextContentType?)
+    case autocapitalization(UITextAutocapitalizationType)
+    case autocorrectionDisabled(Bool)
+    case submit(@MainActor () -> Void)
+    case submitLabel(SubmitLabel)
+    case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
+    case controlSize(ControlSize)
+    case symbolRenderingMode(SymbolRenderingMode?)
+    case accessibilityIdentifier(String)
+    case alert(
+        title: String,
+        getIsPresented: @MainActor () -> Bool,
+        setIsPresented: @MainActor (Bool) -> Void,
+        actions: @MainActor () -> _OpenViewNode,
+        message: @MainActor () -> _OpenViewNode
+    )
+    case glassEffect
+    case buttonBorderShape(ButtonBorderShape)
+    case accessibilityAction(name: String?, action: @MainActor () -> Void)
+    case identifier(AnyHashable)
+    case preference(_OpenPreferenceRecord)
+    case preferenceListener(_OpenPreferenceListener)
+    case scrollVisibility(_OpenScrollVisibilityObserver)
+    case scrollGeometry(_OpenScrollGeometryObserver)
+    case geometryObserver(_OpenGeometryObserver)
+    case refreshable(@MainActor () async -> Void)
+    case safeAreaInset(
+        edge: Edge,
+        spacing: CGFloat?,
+        content: @MainActor () -> _OpenViewNode
+    )
+    case scrollIndicators(Visibility)
+    case toolbarVisibility(Visibility, ToolbarPlacement)
+    case toolbarBackgroundVisibility(Visibility, ToolbarPlacement)
+    case swipeActions(
+        edge: Edge,
+        allowsFullSwipe: Bool,
+        actions: @MainActor () -> _OpenViewNode
+    )
+    case contextMenu(@MainActor () -> _OpenViewNode)
+    case matchedGeometry(id: AnyHashable, namespace: Namespace.ID, isSource: Bool)
+    case effect
     case onChange(@MainActor () -> Void)
     case animation(@MainActor () -> Void)
     case onReceive(@MainActor () -> Void)
@@ -197,11 +398,20 @@ fileprivate enum _OpenViewModifier {
         case .fontWeight(let value): return .fontWeight(value)
         case .minimumScaleFactor(let value): return .minimumScaleFactor(value)
         case .foregroundColor(let value): return .foregroundColor(value)
+        case .tint(let value): return .tint(value)
+        case .opacity(let value): return .opacity(value)
+        case .scaleEffect(let value): return .scaleEffect(value)
+        case .lineLimit(let value): return .lineLimit(value)
+        case .lineLimitRange(let value): return .lineLimitRange(value)
+        case .truncationMode(let value): return .truncationMode(value)
+        case .layoutPriority(let value): return .layoutPriority(value)
         case .frame(let width, let height, let alignment):
             return .frame(width: width, height: height, alignment: alignment)
-        case .flexibleFrame(let maxWidth, let maxHeight, let alignment):
+        case .flexibleFrame(let minWidth, let maxWidth, let minHeight, let maxHeight, let alignment):
             return .flexibleFrame(
+                minWidth: minWidth,
                 maxWidth: maxWidth,
+                minHeight: minHeight,
                 maxHeight: maxHeight,
                 alignment: alignment
             )
@@ -217,21 +427,29 @@ fileprivate enum _OpenViewModifier {
                 _OpenGraphContext.withStructuralScope(.overlay, operation: makeNode),
                 alignment: alignment
             )
+        case .mask(let makeNode, let alignment):
+            return .mask(
+                _OpenGraphContext.withStructuralScope(.overlay, operation: makeNode),
+                alignment: alignment
+            )
         case .resizable: return .resizable
         case .aspectRatio(let value): return .aspectRatio(value)
         case .multilineTextAlignment(let alignment):
             return .multilineTextAlignment(alignment)
         case .tapAction(let action): return .tapAction(action)
         case .simultaneousTapAction(let action): return .simultaneousTapAction(action)
+        case .gesture(let gesture): return .gesture(gesture)
         case .onAppear(let action):
             return _OpenGraphContext.withStructuralScope(.onAppear) {
                 .onAppear(identity: _OpenGraphContext.currentIdentity(), action: action)
             }
         case .shadow(let radius): return .shadow(radius: radius)
         case .colorScheme(let scheme): return .colorScheme(scheme)
-        case .safeAreaIgnored: return .safeAreaIgnored
+        case .safeAreaIgnored(let edges): return .safeAreaIgnored(edges)
         case .previewLayout(let value): return .previewLayout(value)
         case .clipRoundedRectangle(let radius): return .clipRoundedRectangle(radius)
+        case .clipped: return .clipped
+        case .hidden: return .hidden
         case .navigationTitle(let title): return .navigationTitle(title)
         case .navigationBarHidden(let hidden): return .navigationBarHidden(hidden)
         case .navigationBackButtonHidden(let hidden):
@@ -246,6 +464,82 @@ fileprivate enum _OpenViewModifier {
         case .pageTabViewStyle(let mode): return .pageTabViewStyle(mode)
         case .disabled(let disabled): return .disabled(disabled)
         case .accessibilityHidden(let hidden): return .accessibilityHidden(hidden)
+        case .accessibilityElement(let children): return .accessibilityElement(children)
+        case .accessibilityLabel(let label): return .accessibilityLabel(label)
+        case .accessibilityHint(let hint): return .accessibilityHint(hint)
+        case .accessibilityValue(let value): return .accessibilityValue(value)
+        case .accessibilityTraits(let traits): return .accessibilityTraits(traits)
+        case .allowsHitTesting(let enabled): return .allowsHitTesting(enabled)
+        case .zIndex(let value): return .zIndex(value)
+        case .focus(let get, let set): return .focus(get: get, set: set)
+        case .textContentType(let value): return .textContentType(value)
+        case .autocapitalization(let value): return .autocapitalization(value)
+        case .autocorrectionDisabled(let value): return .autocorrectionDisabled(value)
+        case .submit(let action): return .submit(action)
+        case .submitLabel(let label): return .submitLabel(label)
+        case .scrollDismissesKeyboard(let mode): return .scrollDismissesKeyboard(mode)
+        case .controlSize(let size): return .controlSize(size)
+        case .symbolRenderingMode(let mode): return .symbolRenderingMode(mode)
+        case .accessibilityIdentifier(let identifier):
+            return .accessibilityIdentifier(identifier)
+        case .alert(let title, let getIsPresented, let setIsPresented,
+                    let makeActions, let makeMessage):
+            return .alert(
+                _OpenAlertConfiguration(
+                    title: title,
+                    getIsPresented: getIsPresented,
+                    setIsPresented: setIsPresented,
+                    actions: _OpenGraphContext.withStructuralScope(
+                        .overlay,
+                        operation: makeActions
+                    ),
+                    message: _OpenGraphContext.withStructuralScope(
+                        .background,
+                        operation: makeMessage
+                    )
+                )
+            )
+        case .glassEffect: return .glassEffect
+        case .buttonBorderShape(let shape): return .buttonBorderShape(shape)
+        case .accessibilityAction(let name, let action):
+            return .accessibilityAction(name: name, action: action)
+        case .identifier(let value): return .identifier(value)
+        case .preference(let record): return .preference(record)
+        case .preferenceListener(let listener): return .preferenceListener(listener)
+        case .scrollVisibility(let observer): return .scrollVisibility(observer)
+        case .scrollGeometry(let observer): return .scrollGeometry(observer)
+        case .geometryObserver(let observer): return .geometryObserver(observer)
+        case .refreshable(let action): return .refreshable(action)
+        case .safeAreaInset(let edge, let spacing, let makeContent):
+            return .safeAreaInset(
+                edge: edge,
+                spacing: spacing,
+                content: _OpenGraphContext.withStructuralScope(
+                    .overlay,
+                    operation: makeContent
+                )
+            )
+        case .scrollIndicators(let visibility): return .scrollIndicators(visibility)
+        case .toolbarVisibility(let visibility, let placement):
+            return .toolbarVisibility(visibility, placement)
+        case .toolbarBackgroundVisibility(let visibility, let placement):
+            return .toolbarBackgroundVisibility(visibility, placement)
+        case .swipeActions(let edge, let allowsFullSwipe, let makeActions):
+            return .swipeActions(
+                edge: edge,
+                allowsFullSwipe: allowsFullSwipe,
+                actions: _OpenGraphContext.withStructuralScope(
+                    .overlay,
+                    operation: makeActions
+                )
+            )
+        case .contextMenu(let makeNode):
+            return .contextMenu(
+                _OpenGraphContext.withStructuralScope(.overlay, operation: makeNode)
+            )
+        case .matchedGeometry(let id, let namespace, let isSource):
+            return .matchedGeometry(id: id, namespace: namespace, isSource: isSource)
+        case .effect: return .effect
         case .onChange(let install):
             _OpenGraphContext.withStructuralScope(.onChange) { install() }
             return .effect
@@ -274,7 +568,6 @@ extension Never: _OpenView {
     }
 }
 
-@MainActor
 @resultBuilder
 public enum _OpenViewBuilder {
     public static func buildExpression<Content: _OpenView>(_ content: Content) -> Content {
@@ -340,20 +633,15 @@ public enum _OpenViewBuilder {
     public static func buildPartialBlock<Accumulated: _OpenView, Next: _OpenView>(
         accumulated: Accumulated,
         next: Next
-    ) -> _OpenTupleView<(Accumulated, Next)> {
-        _OpenTupleView(
-            (accumulated, next),
-            nodes: {
-                [
-                    _OpenGraphContext.withStructuralScope(.tupleElement(0)) {
-                        accumulated._makeOpenUIKitNode()
-                    },
-                    _OpenGraphContext.withStructuralScope(.tupleElement(1)) {
-                        next._makeOpenUIKitNode()
-                    },
-                ]
-            }
-        )
+    ) -> _OpenSiblingList {
+        _OpenSiblingList(accumulated, next)
+    }
+
+    public static func buildPartialBlock<Next: _OpenView>(
+        accumulated: _OpenSiblingList,
+        next: Next
+    ) -> _OpenSiblingList {
+        accumulated.appending(next)
     }
 
     public static func buildOptional<Content: _OpenView>(_ component: Content?) -> Content? {
@@ -384,7 +672,7 @@ public enum _OpenViewBuilder {
 public struct _OpenEmptyView: _OpenView {
     public typealias Body = Never
 
-    public init() {}
+    nonisolated public init() {}
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(.empty)
@@ -403,6 +691,47 @@ public struct _OpenTupleView<T>: _OpenView {
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(.group(nodeBuilder()))
+    }
+}
+
+/// Flat result-builder accumulation for blocks with more than one sibling.
+///
+/// A recursively nested generic tuple makes the constraint solver revisit the
+/// entire accumulated type for every additional statement. Real application
+/// bodies routinely contain dozens of conditional siblings and modifiers;
+/// flattening only the *builder carrier* keeps their source compile time
+/// bounded while retaining an explicit structural index for every child.
+/// Single-expression blocks still preserve their concrete type through the
+/// `buildPartialBlock(first:)` overload above.
+public struct _OpenSiblingList: _OpenView {
+    public typealias Body = Never
+    private let nodeBuilders: [@MainActor () -> _OpenViewNode]
+
+    init<First: _OpenView, Second: _OpenView>(_ first: First, _ second: Second) {
+        nodeBuilders = [
+            { first._makeOpenUIKitNode() },
+            { second._makeOpenUIKitNode() },
+        ]
+    }
+
+    private init(nodeBuilders: [@MainActor () -> _OpenViewNode]) {
+        self.nodeBuilders = nodeBuilders
+    }
+
+    func appending<Next: _OpenView>(_ next: Next) -> _OpenSiblingList {
+        _OpenSiblingList(nodeBuilders: nodeBuilders + [{ next._makeOpenUIKitNode() }])
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .group(
+                nodeBuilders.enumerated().map { index, buildNode in
+                    _OpenGraphContext.withStructuralScope(.tupleElement(index)) {
+                        buildNode()
+                    }
+                }
+            )
+        )
     }
 }
 
@@ -560,12 +889,17 @@ public struct _OpenText: _OpenView {
     public typealias Body = Never
     public let content: String
 
-    public init(_ content: String) {
+    nonisolated public init(_ content: String) {
         self.content = content
     }
 
-    public init(verbatim content: String) {
+    nonisolated public init(verbatim content: String) {
         self.content = content
+    }
+
+    @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+    nonisolated public init(_ content: AttributedString) {
+        self.content = String(content.characters)
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
@@ -588,7 +922,7 @@ public struct _OpenImage: _OpenView {
         case left
     }
 
-    public init(systemName: String) {
+    nonisolated public init(systemName: String) {
         source = .system(name: systemName)
     }
 
@@ -707,6 +1041,28 @@ extension _OpenRoundedRectangle: _OpenView {
             lineWidth: lineWidth
         )
     }
+
+    public func strokeBorder(_ color: Color, lineWidth: CGFloat = 1) -> some _OpenView {
+        _OpenRoundedRectangleStroke(
+            cornerRadius: cornerRadius,
+            color: color,
+            lineWidth: lineWidth
+        )
+    }
+
+    public func fill(_ color: Color) -> some _OpenView {
+        _OpenFilledRoundedRectangle(cornerRadius: cornerRadius, color: color)
+    }
+}
+
+public struct _OpenFilledRoundedRectangle: _OpenView {
+    public typealias Body = Never
+    public let cornerRadius: CGFloat
+    public let color: Color
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.roundedRectangle(cornerRadius: cornerRadius, style: .fill(color)))
+    }
 }
 
 public struct _OpenRoundedRectangleStroke: _OpenView {
@@ -722,6 +1078,71 @@ public struct _OpenRoundedRectangleStroke: _OpenView {
                 style: .stroke(color, lineWidth: max(0, lineWidth))
             )
         )
+    }
+}
+
+extension _OpenRectangle: _OpenView {
+    public typealias Body = Never
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.roundedRectangle(cornerRadius: 0, style: .fill(nil)))
+    }
+
+    public func fill(_ color: Color) -> some _OpenView {
+        _OpenFilledRoundedRectangle(cornerRadius: 0, color: color)
+    }
+}
+
+extension _OpenCapsule: _OpenView {
+    public typealias Body = Never
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.capsule(.fill(nil)))
+    }
+
+    public func fill(_ color: Color) -> some _OpenView {
+        _OpenFilledCapsule(color: color)
+    }
+
+    public func stroke(_ color: Color, lineWidth: CGFloat = 1) -> some _OpenView {
+        _OpenStrokedCapsule(color: color, lineWidth: lineWidth)
+    }
+}
+
+public struct _OpenFilledCapsule: _OpenView {
+    public typealias Body = Never
+    public let color: Color
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.capsule(.fill(color)))
+    }
+}
+
+public struct _OpenStrokedCapsule: _OpenView {
+    public typealias Body = Never
+    public let color: Color
+    public let lineWidth: CGFloat
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.capsule(.stroke(color, lineWidth: max(0, lineWidth))))
+    }
+}
+
+public extension _OpenShape where Self == _OpenRoundedRectangle {
+    static func rect(
+        cornerRadius: CGFloat,
+        style: RoundedCornerStyle = .circular
+    ) -> _OpenRoundedRectangle {
+        _OpenRoundedRectangle(cornerRadius: cornerRadius, style: style)
+    }
+}
+
+public struct _OpenDivider: _OpenView {
+    public typealias Body = Never
+    public init() {}
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(.divider)
     }
 }
 
@@ -889,14 +1310,278 @@ public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
     }
 }
 
+/// The source-facing ViewModifier protocol evaluates its body against a
+/// retained node rather than flattening the modifier at declaration time.
+/// That preserves dynamic-property and structural identity across graph
+/// reevaluations just like the built-in modifier pipeline.
+@preconcurrency @MainActor
+public protocol _OpenViewModifierProtocol {
+    associatedtype Body: _OpenView
+    typealias Content = _OpenViewModifierContent<Self>
+
+    @_OpenViewBuilder func body(content: Content) -> Body
+}
+
+public struct _OpenViewModifierContent<Modifier: _OpenViewModifierProtocol>: _OpenView {
+    public typealias Body = Never
+    private let node: _OpenViewNode
+
+    fileprivate init(node: _OpenViewNode) {
+        self.node = node
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode { node }
+}
+
+public struct _OpenAppliedViewModifier<Source: _OpenView, Modifier: _OpenViewModifierProtocol>:
+    _OpenView
+{
+    public typealias Body = Never
+    let source: Source
+    let modifier: Modifier
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let sourceNode = _OpenGraphContext.withStructuralScope(.modifiedContent) {
+            source._makeOpenUIKitNode()
+        }
+        return modifier.body(
+            content: _OpenViewModifierContent<Modifier>(node: sourceNode)
+        )._makeOpenUIKitNode()
+    }
+}
+
+public typealias ViewModifier = _OpenViewModifierProtocol
+
+/// Type-erased button label supplied to ButtonStyle.Configuration.
+public struct _OpenButtonStyleLabel: _OpenView {
+    public typealias Body = Never
+    private let node: _OpenViewNode
+
+    fileprivate init(node: _OpenViewNode) { self.node = node }
+    public func _makeOpenUIKitNode() -> _OpenViewNode { node }
+}
+
+public struct _OpenButtonStyleConfiguration {
+    public typealias Label = _OpenButtonStyleLabel
+    public let label: Label
+    public let isPressed: Bool
+    public let role: ButtonRole?
+
+    fileprivate init(label: Label, isPressed: Bool, role: ButtonRole?) {
+        self.label = label
+        self.isPressed = isPressed
+        self.role = role
+    }
+}
+
+@preconcurrency @MainActor
+public protocol _OpenButtonStyleProtocol {
+    associatedtype Body: _OpenView
+    typealias Configuration = _OpenButtonStyleConfiguration
+
+    @_OpenViewBuilder func makeBody(configuration: Configuration) -> Body
+}
+
+public struct _OpenPlainButtonStyle: _OpenButtonStyleProtocol, Sendable {
+    public init() {}
+    public func makeBody(configuration: Configuration) -> some _OpenView {
+        configuration.label
+    }
+}
+
+public extension _OpenButtonStyleProtocol where Self == _OpenPlainButtonStyle {
+    static var plain: _OpenPlainButtonStyle { _OpenPlainButtonStyle() }
+}
+
+/// Portable rendering for the system glass button styles introduced by the
+/// newest SDK.  The normal and pressed configurations remain distinct nodes,
+/// so OpenUIKit's button control switches the real blur-backed surface while
+/// tracking highlight state rather than merely accepting the source syntax.
+public struct _OpenGlassButtonStyle: _OpenButtonStyleProtocol, Sendable {
+    let isProminent: Bool
+
+    public init(isProminent: Bool = false) { self.isProminent = isProminent }
+
+    public func makeBody(configuration: Configuration) -> some _OpenView {
+        configuration.label
+            .padding(8)
+            .background(isProminent ? Color(uiColor: .systemBlue).opacity(0.72) : Color.clear)
+            .glassEffect()
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+    }
+}
+
+public extension _OpenButtonStyleProtocol where Self == _OpenGlassButtonStyle {
+    static var glass: _OpenGlassButtonStyle { _OpenGlassButtonStyle() }
+    static var glassProminent: _OpenGlassButtonStyle {
+        _OpenGlassButtonStyle(isProminent: true)
+    }
+}
+
+public struct _OpenButtonStyleContent<Source: _OpenView, Style: _OpenButtonStyleProtocol>:
+    _OpenView
+{
+    public typealias Body = Never
+    let source: Source
+    let style: Style
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let node = _OpenGraphContext.withStructuralScope(.modifiedContent) {
+            source._makeOpenUIKitNode()
+        }
+        return _openApplyingButtonStyle(node, style: style)
+    }
+}
+
+@MainActor
+private func _openApplyingButtonStyle<Style: _OpenButtonStyleProtocol>(
+    _ node: _OpenViewNode,
+    style: Style
+) -> _OpenViewNode {
+    switch node.kind {
+    case .button(let label, _, let role, let action):
+        let normal = style.makeBody(
+            configuration: .init(
+                label: _OpenButtonStyleLabel(node: label),
+                isPressed: false,
+                role: role
+            )
+        )._makeOpenUIKitNode()
+        let pressed = style.makeBody(
+            configuration: .init(
+                label: _OpenButtonStyleLabel(node: label),
+                isPressed: true,
+                role: role
+            )
+        )._makeOpenUIKitNode()
+        return _OpenViewNode(
+            .button(label: normal, pressedLabel: pressed, role: role, action: action)
+        )
+    case .group(let children):
+        return _OpenViewNode(.group(children.map { _openApplyingButtonStyle($0, style: style) }))
+    case .hStack(let children, let alignment, let spacing):
+        return _OpenViewNode(
+            .hStack(
+                children: children.map { _openApplyingButtonStyle($0, style: style) },
+                alignment: alignment,
+                spacing: spacing
+            )
+        )
+    case .vStack(let children, let alignment, let spacing):
+        return _OpenViewNode(
+            .vStack(
+                children: children.map { _openApplyingButtonStyle($0, style: style) },
+                alignment: alignment,
+                spacing: spacing
+            )
+        )
+    case .zStack(let children, let alignment):
+        return _OpenViewNode(
+            .zStack(
+                children: children.map { _openApplyingButtonStyle($0, style: style) },
+                alignment: alignment
+            )
+        )
+    case .modified(let content, let modification):
+        return _OpenViewNode(
+            .modified(_openApplyingButtonStyle(content, style: style), modification)
+        )
+    default:
+        return node
+    }
+}
+
+public typealias ButtonStyle = _OpenButtonStyleProtocol
+public typealias PlainButtonStyle = _OpenPlainButtonStyle
+public typealias GlassButtonStyle = _OpenGlassButtonStyle
+
+public struct _OpenLabel<Title: _OpenView, Icon: _OpenView>: _OpenView {
+    public typealias Body = Never
+    public let title: Title
+    public let icon: Icon
+
+    public init(
+        @_OpenViewBuilder title: () -> Title,
+        @_OpenViewBuilder icon: () -> Icon
+    ) {
+        self.title = title()
+        self.icon = icon()
+    }
+
+    nonisolated public init(_ title: String, systemImage: String)
+        where Title == _OpenText, Icon == _OpenImage
+    {
+        self.title = _OpenText(title)
+        icon = _OpenImage(systemName: systemImage)
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .hStack(
+                children: [
+                    _OpenGraphContext.withStructuralScope(.tupleElement(0)) {
+                        icon._makeOpenUIKitNode()
+                    },
+                    _OpenGraphContext.withStructuralScope(.tupleElement(1)) {
+                        title._makeOpenUIKitNode()
+                    },
+                ],
+                alignment: .center,
+                spacing: 6
+            )
+        )
+    }
+}
+
+public struct _OpenIconOnlyLabelStyle: Sendable {
+    public init() {}
+    public static let iconOnly = _OpenIconOnlyLabelStyle()
+}
+
+public struct _OpenIconOnlyLabelStyleContent<Source: _OpenView>: _OpenView {
+    public typealias Body = Never
+    let source: Source
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _openApplyingIconOnlyLabelStyle(source._makeOpenUIKitNode())
+    }
+}
+
+@MainActor
+private func _openApplyingIconOnlyLabelStyle(_ node: _OpenViewNode) -> _OpenViewNode {
+    switch node.kind {
+    case .hStack(let children, _, let spacing) where children.count == 2 && spacing == 6:
+        // _OpenLabel's structural spelling is exactly icon + title with a
+        // six-point gap.  Keep the actual icon node (including its modifiers)
+        // so tint, symbol mode and accessibility still reach the host.
+        return children[0]
+    case .modified(let content, let modification):
+        return _OpenViewNode(
+            .modified(_openApplyingIconOnlyLabelStyle(content), modification)
+        )
+    default:
+        return node
+    }
+}
+
 public struct _OpenLinearGradient: _OpenView {
     public typealias Body = Never
     public let gradient: Gradient
     public let startPoint: UnitPoint
     public let endPoint: UnitPoint
 
-    public init(gradient: Gradient, startPoint: UnitPoint, endPoint: UnitPoint) {
+    nonisolated public init(gradient: Gradient, startPoint: UnitPoint, endPoint: UnitPoint) {
         self.gradient = gradient
+        self.startPoint = startPoint
+        self.endPoint = endPoint
+    }
+
+    nonisolated public init(
+        stops: [Gradient.Stop],
+        startPoint: UnitPoint,
+        endPoint: UnitPoint
+    ) {
+        gradient = Gradient(stops: stops)
         self.startPoint = startPoint
         self.endPoint = endPoint
     }
@@ -937,6 +1622,34 @@ public struct _OpenModifiedContent<Content: _OpenView>: _OpenView {
     }
 }
 
+/// A type-bounded modifier carrier for effect chains.
+///
+/// Effect modifiers do not participate in layout's generic structure: their
+/// work is installed while the retained graph node is materialized. Keeping
+/// that carrier non-generic prevents long `.onChange`/`.animation` chains
+/// from growing a recursive constraint type, while the nested node closures
+/// still retain every effect and structural scope in source order.
+public struct _OpenEffectContent: _OpenView {
+    public typealias Body = Never
+    private let contentBuilder: @MainActor () -> _OpenViewNode
+    private let modifier: _OpenViewModifier
+
+    fileprivate init<Content: _OpenView>(
+        content: Content,
+        modification: _OpenViewModifier
+    ) {
+        contentBuilder = { content._makeOpenUIKitNode() }
+        modifier = modification
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let contentNode = _OpenGraphContext.withStructuralScope(.modifiedContent) {
+            contentBuilder()
+        }
+        return _OpenViewNode(.modified(contentNode, modifier.resolve()))
+    }
+}
+
 public extension _OpenView {
     func environment<Value>(
         _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
@@ -969,6 +1682,45 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .foregroundColor(color))
     }
 
+    func tint(_ color: Color?) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .tint(color))
+    }
+
+    func opacity(_ opacity: Double) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .opacity(CGFloat(min(max(opacity, 0), 1)))
+        )
+    }
+
+    @_disfavoredOverload
+    func opacity(_ opacity: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .opacity(min(max(opacity, 0), 1))
+        )
+    }
+
+    func scaleEffect(_ scale: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .scaleEffect(scale))
+    }
+
+    func lineLimit(_ number: Int?) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .lineLimit(number))
+    }
+
+    func lineLimit(_ range: ClosedRange<Int>) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .lineLimitRange(range))
+    }
+
+    func truncationMode(_ mode: TextTruncationMode) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .truncationMode(mode))
+    }
+
+    func layoutPriority(_ value: Double) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .layoutPriority(value))
+    }
+
     func foregroundStyle<Style: ShapeStyle>(_ style: Style) -> some _OpenView {
         foregroundColor(style._openResolvedForegroundColor())
     }
@@ -993,14 +1745,22 @@ public extension _OpenView {
     }
 
     func frame(
+        minWidth: CGFloat? = nil,
+        idealWidth: CGFloat? = nil,
         maxWidth: CGFloat? = nil,
+        minHeight: CGFloat? = nil,
+        idealHeight: CGFloat? = nil,
         maxHeight: CGFloat? = nil,
         alignment: Alignment = .center
     ) -> some _OpenView {
-        _OpenModifiedContent(
+        _ = idealWidth
+        _ = idealHeight
+        return _OpenModifiedContent(
             content: self,
             modification: .flexibleFrame(
+                minWidth: minWidth,
                 maxWidth: maxWidth,
+                minHeight: minHeight,
                 maxHeight: maxHeight,
                 alignment: alignment
             )
@@ -1032,11 +1792,53 @@ public extension _OpenView {
         )
     }
 
+    func background<Background: _OpenView>(
+        alignment: Alignment = .center,
+        @_OpenViewBuilder content: () -> Background
+    ) -> some _OpenView {
+        let background = content()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .background(
+                { background._makeOpenUIKitNode() },
+                alignment: alignment
+            )
+        )
+    }
+
     func overlay<Overlay: _OpenView>(
         _ overlay: Overlay,
         alignment: Alignment = .center
     ) -> some _OpenView {
         _OpenModifiedContent(
+            content: self,
+            modification: .overlay(
+                { overlay._makeOpenUIKitNode() },
+                alignment: alignment
+            )
+        )
+    }
+
+    func mask<Mask: _OpenView>(
+        alignment: Alignment = .center,
+        @_OpenViewBuilder _ mask: () -> Mask
+    ) -> some _OpenView {
+        let maskContent = mask()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .mask(
+                { maskContent._makeOpenUIKitNode() },
+                alignment: alignment
+            )
+        )
+    }
+
+    func overlay<Overlay: _OpenView>(
+        alignment: Alignment = .center,
+        @_OpenViewBuilder content: () -> Overlay
+    ) -> some _OpenView {
+        let overlay = content()
+        return _OpenModifiedContent(
             content: self,
             modification: .overlay(
                 { overlay._makeOpenUIKitNode() },
@@ -1083,13 +1885,12 @@ public extension _OpenView {
         _OpenColorSchemeContent(content: self, colorScheme: colorScheme)
     }
 
-    func ignoresSafeArea() -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .safeAreaIgnored)
+    func ignoresSafeArea(edges: Edge.Set = .all) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .safeAreaIgnored(edges))
     }
 
     func edgesIgnoringSafeArea(_ edges: Edge.Set) -> some _OpenView {
-        _ = edges
-        return _OpenModifiedContent(content: self, modification: .safeAreaIgnored)
+        _OpenModifiedContent(content: self, modification: .safeAreaIgnored(edges))
     }
 
     func onAppear(perform action: @escaping @MainActor () -> Void) -> some _OpenView {
@@ -1107,6 +1908,30 @@ public extension _OpenView {
         )
     }
 
+    func simultaneousGesture<G: Gesture>(_ gesture: G) -> some _OpenView {
+        guard let provider = gesture as? any _OpenGestureNodeProviding else {
+            return _OpenModifiedContent(content: self, modification: .effect)
+        }
+        return _OpenModifiedContent(
+            content: self,
+            modification: .gesture(provider._openGestureNode)
+        )
+    }
+
+    func gesture<G: Gesture>(_ gesture: G) -> some _OpenView {
+        simultaneousGesture(gesture)
+    }
+
+    func onLongPressGesture(
+        minimumDuration: Double = 0.5,
+        perform action: @escaping @MainActor () -> Void
+    ) -> some _OpenView {
+        simultaneousGesture(
+            LongPressGesture(minimumDuration: minimumDuration)
+                .onEnded { recognized in if recognized { action() } }
+        )
+    }
+
     func previewLayout(_ value: PreviewLayout) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .previewLayout(value))
     }
@@ -1117,6 +1942,28 @@ public extension _OpenView {
             content: self,
             modification: .clipRoundedRectangle(radius)
         )
+    }
+
+    func contentShape<S: Shape>(_ shape: S) -> some _OpenView {
+        _ = shape
+        return _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func contentShape<S: Shape>(
+        _ kinds: ContentShapeKinds,
+        _ shape: S
+    ) -> some _OpenView {
+        _ = kinds
+        return contentShape(shape)
+    }
+
+    func clipped(antialiased: Bool = false) -> some _OpenView {
+        _ = antialiased
+        return _OpenModifiedContent(content: self, modification: .clipped)
+    }
+
+    func hidden() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .hidden)
     }
 
     func navigationTitle(_ title: String) -> some _OpenView {
@@ -1142,11 +1989,328 @@ public extension _OpenView {
         )
     }
 
+    func accessibilityElement(
+        children: AccessibilityChildBehavior = .ignore
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .accessibilityElement(children)
+        )
+    }
+
+    func accessibilityLabel(_ label: String) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .accessibilityLabel(label))
+    }
+
+    func accessibilityLabel(_ label: Text) -> some _OpenView {
+        accessibilityLabel(label.content)
+    }
+
+    func accessibilityHint(_ hint: String) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .accessibilityHint(hint))
+    }
+
+    func accessibilityValue(_ value: String) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .accessibilityValue(value))
+    }
+
+    func accessibilityAddTraits(_ traits: AccessibilityTraits) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .accessibilityTraits(traits))
+    }
+
+    func accessibilityAction(
+        _ kind: AccessibilityActionKind = .default,
+        _ handler: @escaping @MainActor () -> Void
+    ) -> some _OpenView {
+        _ = kind
+        return _OpenModifiedContent(
+            content: self,
+            modification: .accessibilityAction(name: nil, action: handler)
+        )
+    }
+
+    func accessibilityAction(
+        named name: Text,
+        _ handler: @escaping @MainActor () -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .accessibilityAction(name: name.content, action: handler)
+        )
+    }
+
+    func allowsHitTesting(_ enabled: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .allowsHitTesting(enabled))
+    }
+
+    func zIndex(_ value: Double) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .zIndex(value))
+    }
+
+    func focused(_ binding: FocusState<Bool>.Binding) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .focus(
+                get: { binding.wrappedValue },
+                set: {
+                    guard binding.wrappedValue != $0 else { return }
+                    binding.wrappedValue = $0
+                }
+            )
+        )
+    }
+
+    func focused<Value: Hashable>(
+        _ binding: FocusState<Value?>.Binding,
+        equals value: Value
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .focus(
+                get: { binding.wrappedValue == value },
+                set: { focused in
+                    let next: Value? = focused ? value : nil
+                    guard binding.wrappedValue != next else { return }
+                    binding.wrappedValue = next
+                }
+            )
+        )
+    }
+
+    func textContentType(_ textContentType: UITextContentType?) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .textContentType(textContentType)
+        )
+    }
+
+    func autocapitalization(
+        _ style: UITextAutocapitalizationType
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .autocapitalization(style)
+        )
+    }
+
+    func disableAutocorrection(_ disable: Bool?) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .autocorrectionDisabled(disable ?? false)
+        )
+    }
+
+    func onSubmit(_ action: @escaping @MainActor () -> Void) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .submit(action))
+    }
+
+    func submitLabel(_ label: SubmitLabel) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .submitLabel(label))
+    }
+
+    func scrollDismissesKeyboard(
+        _ mode: ScrollDismissesKeyboardMode
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .scrollDismissesKeyboard(mode)
+        )
+    }
+
+    func controlSize(_ size: ControlSize) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .controlSize(size))
+    }
+
+    func symbolRenderingMode(_ mode: SymbolRenderingMode?) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .symbolRenderingMode(mode))
+    }
+
+    func accessibilityIdentifier(_ identifier: String) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .accessibilityIdentifier(identifier)
+        )
+    }
+
+    func labelStyle(
+        _ style: _OpenIconOnlyLabelStyle
+    ) -> some _OpenView {
+        _ = style
+        return _OpenIconOnlyLabelStyleContent(source: self)
+    }
+
+    func alert<Actions: _OpenView, Message: _OpenView>(
+        _ title: String,
+        isPresented: Binding<Bool>,
+        @_OpenViewBuilder actions: () -> Actions,
+        @_OpenViewBuilder message: () -> Message
+    ) -> some _OpenView {
+        let alertActions = actions()
+        let alertMessage = message()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .alert(
+                title: title,
+                getIsPresented: { isPresented.wrappedValue },
+                setIsPresented: { isPresented.wrappedValue = $0 },
+                actions: { alertActions._makeOpenUIKitNode() },
+                message: { alertMessage._makeOpenUIKitNode() }
+            )
+        )
+    }
+
+    func alert<Data, Actions: _OpenView, Message: _OpenView>(
+        _ title: String,
+        isPresented: Binding<Bool>,
+        presenting data: Data?,
+        @_OpenViewBuilder actions: (Data) -> Actions,
+        @_OpenViewBuilder message: (Data) -> Message
+    ) -> some _OpenView {
+        let alertActions = data.map(actions)
+        let alertMessage = data.map(message)
+        return _OpenModifiedContent(
+            content: self,
+            modification: .alert(
+                title: title,
+                getIsPresented: { isPresented.wrappedValue && data != nil },
+                setIsPresented: { isPresented.wrappedValue = $0 },
+                actions: { alertActions?._makeOpenUIKitNode() ?? _OpenViewNode(.empty) },
+                message: { alertMessage?._makeOpenUIKitNode() ?? _OpenViewNode(.empty) }
+            )
+        )
+    }
+
+    func glassEffect() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .glassEffect)
+    }
+
+    func glassEffect<S: Shape>(
+        _ glass: Glass,
+        in shape: S
+    ) -> some _OpenView {
+        _ = glass
+        let radius: CGFloat
+        if let rounded = shape as? RoundedRectangle {
+            radius = rounded.cornerRadius
+        } else if shape is Capsule || shape is Circle {
+            radius = 10_000
+        } else {
+            radius = 0
+        }
+        return _OpenModifiedContent(
+            content: self,
+            modification: .clipRoundedRectangle(radius)
+        ).glassEffect()
+    }
+
+    func glassEffectTransition(_ transition: GlassEffectTransition) -> some _OpenView {
+        _ = transition
+        return _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func buttonBorderShape(_ shape: ButtonBorderShape) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .buttonBorderShape(shape))
+    }
+
+    func contextMenu<MenuItems: _OpenView>(
+        @_OpenViewBuilder menuItems: () -> MenuItems
+    ) -> some _OpenView {
+        let menuItems = menuItems()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .contextMenu { menuItems._makeOpenUIKitNode() }
+        )
+    }
+
+    func contextMenu<MenuItems: _OpenView, Preview: _OpenView>(
+        @_OpenViewBuilder menuItems: () -> MenuItems,
+        @_OpenViewBuilder preview: () -> Preview
+    ) -> some _OpenView {
+        _ = preview()
+        return contextMenu(menuItems: menuItems)
+    }
+
+    func id<ID: Hashable>(_ id: ID) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .identifier(AnyHashable(id)))
+    }
+
+    func preference<Key: PreferenceKey>(
+        key: Key.Type = Key.self,
+        value: Key.Value
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .preference(
+                _OpenPreferenceRecord(key: ObjectIdentifier(key), value: value)
+            )
+        )
+    }
+
+    func onPreferenceChange<Key: PreferenceKey>(
+        _ key: Key.Type = Key.self,
+        perform action: @escaping @MainActor (Key.Value) -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .preferenceListener(
+                _OpenPreferenceListener(
+                    key: ObjectIdentifier(key),
+                    defaultValue: Key.defaultValue,
+                    reduce: { aggregate, next in
+                        guard var typed = aggregate as? Key.Value,
+                              let typedNext = next as? Key.Value else { return }
+                        Key.reduce(value: &typed, nextValue: { typedNext })
+                        aggregate = typed
+                    },
+                    action: { value in
+                        guard let typed = value as? Key.Value else { return }
+                        action(typed)
+                    }
+                )
+            )
+        )
+    }
+
+    func transaction(_ transform: (inout Transaction) -> Void) -> some _OpenView {
+        var transaction = Transaction(animation: _OpenAnimationContext.current)
+        transform(&transaction)
+        return _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func transition(_ transition: AnyTransition) -> _OpenEffectContent {
+        _ = transition
+        return _OpenEffectContent(content: self, modification: .effect)
+    }
+
+    func contentTransition(_ transition: ContentTransition) -> _OpenEffectContent {
+        _ = transition
+        return _OpenEffectContent(content: self, modification: .effect)
+    }
+
+    func matchedGeometryEffect<ID: Hashable>(
+        id: ID,
+        in namespace: Namespace.ID,
+        properties: _OpenMatchedGeometryProperties = .frame,
+        anchor: UnitPoint = .center,
+        isSource: Bool = true
+    ) -> some _OpenView {
+        _ = properties
+        _ = anchor
+        return _OpenModifiedContent(
+            content: self,
+            modification: .matchedGeometry(
+                id: AnyHashable(id),
+                namespace: namespace,
+                isSource: isSource
+            )
+        )
+    }
+
     func onChange<Value: Equatable>(
         of value: Value,
         perform action: @escaping @MainActor (Value) -> Void
-    ) -> some _OpenView {
-        _OpenModifiedContent(
+    ) -> _OpenEffectContent {
+        _OpenEffectContent(
             content: self,
             modification: .onChange {
                 _OpenGraphContext.trackChange(value, action: action)
@@ -1154,11 +2318,25 @@ public extension _OpenView {
         )
     }
 
+    func onChange<Value: Equatable>(
+        of value: Value,
+        _ action: @escaping @MainActor (Value, Value) -> Void
+    ) -> _OpenEffectContent {
+        _OpenEffectContent(
+            content: self,
+            modification: .onChange {
+                _OpenGraphContext.trackChange(value) { oldValue, newValue in
+                    action(oldValue, newValue)
+                }
+            }
+        )
+    }
+
     func animation<Value: Equatable>(
         _ animation: Animation?,
         value: Value
-    ) -> some _OpenView {
-        _OpenModifiedContent(
+    ) -> _OpenEffectContent {
+        _OpenEffectContent(
             content: self,
             modification: .animation {
                 _OpenGraphContext.trackAnimation(animation, value: value)
@@ -1169,8 +2347,8 @@ public extension _OpenView {
     func onReceive<PublisherType: Combine.Publisher>(
         _ publisher: PublisherType,
         perform action: @escaping @MainActor (PublisherType.Output) -> Void
-    ) -> some _OpenView {
-        _OpenModifiedContent(
+    ) -> _OpenEffectContent {
+        _OpenEffectContent(
             content: self,
             modification: .onReceive {
                 _OpenGraphContext.subscribe(publisher, action: action)
@@ -1227,6 +2405,152 @@ public extension _OpenView {
             content: self,
             modification: .toolbar { toolbarContent._makeOpenUIKitNode() }
         )
+    }
+
+    func toolbar(
+        _ visibility: Visibility,
+        for placement: ToolbarPlacement
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .toolbarVisibility(visibility, placement)
+        )
+    }
+
+    func toolbarBackground(
+        _ visibility: Visibility,
+        for placement: ToolbarPlacement
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .toolbarBackgroundVisibility(visibility, placement)
+        )
+    }
+
+    func refreshable(
+        action: @escaping @MainActor @Sendable () async -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .refreshable(action))
+    }
+
+    func safeAreaInset<Content: _OpenView>(
+        edge: Edge,
+        alignment: HorizontalAlignment = .center,
+        spacing: CGFloat? = nil,
+        @_OpenViewBuilder content: () -> Content
+    ) -> some _OpenView {
+        _ = alignment
+        let insetContent = content()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .safeAreaInset(
+                edge: edge,
+                spacing: spacing,
+                content: { insetContent._makeOpenUIKitNode() }
+            )
+        )
+    }
+
+    func scrollIndicators(_ visibility: Visibility) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .scrollIndicators(visibility))
+    }
+
+    func scrollTargetLayout() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func onScrollTargetVisibilityChange<ID: Hashable>(
+        idType: ID.Type,
+        threshold: CGFloat = 0.5,
+        _ action: @escaping @MainActor ([ID]) -> Void
+    ) -> some _OpenView {
+        _ = idType
+        return _OpenModifiedContent(
+            content: self,
+            modification: .scrollVisibility(
+                _OpenScrollVisibilityObserver(
+                    threshold: min(max(threshold, 0), 1),
+                    deliver: { values in action(values.compactMap { $0.base as? ID }) }
+                )
+            )
+        )
+    }
+
+    func onScrollGeometryChange<Value: Equatable>(
+        for type: Value.Type,
+        of transform: @escaping @MainActor (ScrollGeometry) -> Value,
+        action: @escaping @MainActor (Value, Value) -> Void
+    ) -> some _OpenView {
+        _ = type
+        return _OpenModifiedContent(
+            content: self,
+            modification: .scrollGeometry(
+                _OpenScrollGeometryObserver(
+                    read: { transform($0) },
+                    equals: { lhs, rhs in
+                        guard let lhs = lhs as? Value,
+                              let rhs = rhs as? Value else { return false }
+                        return lhs == rhs
+                    },
+                    deliver: { old, new in
+                        guard let old = old as? Value, let new = new as? Value else { return }
+                        action(old, new)
+                    }
+                )
+            )
+        )
+    }
+
+    func onGeometryChange<Value: Equatable>(
+        for type: Value.Type,
+        of transform: @escaping @MainActor (GeometryProxy) -> Value,
+        action: @escaping @MainActor (Value) -> Void
+    ) -> some _OpenView {
+        _ = type
+        return _OpenModifiedContent(
+            content: self,
+            modification: .geometryObserver(
+                _OpenGeometryObserver(
+                    read: { transform($0) },
+                    deliver: { value in
+                        guard let value = value as? Value else { return }
+                        action(value)
+                    }
+                )
+            )
+        )
+    }
+
+    func swipeActions<Actions: _OpenView>(
+        edge: Edge = .trailing,
+        allowsFullSwipe: Bool = true,
+        @_OpenViewBuilder content: () -> Actions
+    ) -> some _OpenView {
+        let actions = content()
+        return _OpenModifiedContent(
+            content: self,
+            modification: .swipeActions(
+                edge: edge,
+                allowsFullSwipe: allowsFullSwipe,
+                actions: { actions._makeOpenUIKitNode() }
+            )
+        )
+    }
+
+    func swipeActionsContainer() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func listRowSeparator(_ visibility: Visibility) -> some _OpenView {
+        _ = visibility
+        return _OpenModifiedContent(content: self, modification: .effect)
+    }
+
+    func listRowInsets(_ insets: EdgeInsets?) -> some _OpenView {
+        guard let insets else {
+            return _OpenModifiedContent(content: self, modification: .effect)
+        }
+        return _OpenModifiedContent(content: self, modification: .edgeInsetsPadding(insets))
     }
 
     func tag<Value: Hashable>(_ tag: Value) -> some _OpenView {
@@ -1362,11 +2686,16 @@ public typealias _ConditionalContent<TrueContent, FalseContent> =
 public typealias Text = _OpenText
 public typealias Image = _OpenImage
 public typealias Spacer = _OpenSpacer
+public typealias Divider = _OpenDivider
+public typealias Label<Title, Icon> = _OpenLabel<Title, Icon>
+    where Title: _OpenView, Icon: _OpenView
+public typealias IconOnlyLabelStyle = _OpenIconOnlyLabelStyle
 public typealias HStack<Content> = _OpenHStack<Content> where Content: _OpenView
 public typealias VStack<Content> = _OpenVStack<Content> where Content: _OpenView
 public typealias Form<Content> = _OpenForm<Content> where Content: _OpenView
 public typealias ForEach<Data, ID, Content> = _OpenForEach<Data, ID, Content>
     where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView
 public typealias NavigationView<Content> = _OpenNavigationView<Content> where Content: _OpenView
+public typealias NavigationStack<Content> = _OpenNavigationView<Content> where Content: _OpenView
 public typealias LinearGradient = _OpenLinearGradient
 public typealias PreviewProvider = _OpenPreviewProvider

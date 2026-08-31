@@ -9,7 +9,7 @@
 
 import XCTest
 @testable import SwiftUI
-import OpenUIKit
+@testable import OpenUIKit
 
 private enum DesignSystemRow: String, CaseIterable {
     case first
@@ -97,6 +97,235 @@ private struct GradientForegroundFixture: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
+            )
+    }
+}
+
+private struct HackersSecureFieldFixture: View {
+    @State private var text = "private value"
+    @FocusState private var isFocused: Bool
+
+    init(startFocused: Bool) {
+        _isFocused = FocusState(wrappedValue: startFocused)
+    }
+
+    var body: some View {
+        SecureField("Password", text: $text)
+            .focused($isFocused)
+            .lineLimit(1)
+    }
+}
+
+private struct PressOpacityStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.opacity(configuration.isPressed ? 0.35 : 1)
+    }
+}
+
+private struct HackersControlsFixture: View {
+    let action: () -> Void
+
+    var body: some View {
+        VStack(spacing: 8) {
+            ProgressView()
+                .tint(.red)
+                .scaleEffect(0.6)
+            Capsule()
+                .fill(.blue)
+                .frame(width: 80, height: 24)
+            Button("Vote", action: action)
+                .buttonStyle(PressOpacityStyle())
+        }
+        .glassEffect()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Voting controls")
+        .accessibilityHint("Double tap to vote")
+        .accessibilityValue("Ready")
+        .accessibilityAddTraits(.isButton)
+    }
+}
+
+private struct HackersContextMenuFixture: View {
+    let vote: () -> Void
+    let share: () -> Void
+
+    var body: some View {
+        Text("Post")
+            .contextMenu {
+                Button(action: vote) {
+                    Label("Upvote", systemImage: "arrow.up")
+                }
+                Divider()
+                Button(role: .destructive, action: share) {
+                    Label("Remove", systemImage: "trash")
+                }
+            }
+    }
+}
+
+private struct GradientStopsFixture: View {
+    var body: some View {
+        LinearGradient(
+            stops: [
+                .init(color: .red, location: 0),
+                .init(color: .green, location: 0.25),
+                .init(color: .blue, location: 1),
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+}
+
+private enum AuthenticationField: Hashable {
+    case username
+    case password
+}
+
+private struct AuthenticationSurfaceFixture: View {
+    @State private var username = "alice"
+    @State private var password = "secret"
+    @FocusState private var focusedField: AuthenticationField?
+    let didSubmit: () -> Void
+
+    init(didSubmit: @escaping () -> Void) {
+        self.didSubmit = didSubmit
+        _focusedField = FocusState(wrappedValue: .username)
+    }
+
+    var body: some View {
+        NavigationStack {
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack {
+                        Text("\(Int(geometry.size.width))x\(Int(geometry.size.height))")
+                        TextField("Username", text: $username)
+                            .textContentType(.username)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .focused($focusedField, equals: .username)
+                            .accessibilityIdentifier("login.username")
+                            .onSubmit(didSubmit)
+                        SecureField("Password", text: $password)
+                            .textContentType(.password)
+                            .focused($focusedField, equals: .password)
+                        ProgressView()
+                            .controlSize(.small)
+                    }
+                }
+                .scrollDismissesKeyboard(.interactively)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {} label: {
+                        Label("Close", systemImage: "xmark")
+                            .labelStyle(.iconOnly)
+                    }
+                    .accessibilityLabel("Close")
+                }
+            }
+        }
+    }
+}
+
+private struct AuthenticationAlertFixture: View {
+    @State private var showAlert = true
+    let acknowledged: () -> Void
+
+    var body: some View {
+        Text("Login")
+            .alert("Login Failed", isPresented: $showAlert) {
+                Button("OK", role: .cancel, action: acknowledged)
+            } message: {
+                Text("Please check your credentials.")
+            }
+    }
+}
+
+private struct CommentsComposerFixture: View {
+    let text: Binding<String>
+    let didSubmit: @MainActor () -> Void
+
+    var body: some View {
+        TextField("Write a comment", text: text, axis: .vertical)
+            .lineLimit(2...6)
+            .textContentType(.name)
+            .autocapitalization(.sentences)
+            .disableAutocorrection(true)
+            .submitLabel(.send)
+            .onSubmit(didSubmit)
+    }
+}
+
+private struct CommentsScrollFixture: View {
+    let captureProxy: @MainActor (ScrollViewProxy) -> Void
+    let geometryChanged: @MainActor (CGFloat, CGFloat) -> Void
+    let visibilityChanged: @MainActor ([Int]) -> Void
+    let refresh: @MainActor @Sendable () async -> Void
+
+    var body: some View {
+        ScrollViewReader { proxy in makeContent(proxy) }
+    }
+
+    @MainActor
+    private func makeContent(_ proxy: ScrollViewProxy) -> some View {
+        captureProxy(proxy)
+        return ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(0..<10, id: \.self) { index in
+                    Text("Comment \(index)")
+                        .frame(height: 40)
+                        .id(index)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollIndicators(.hidden)
+        .onScrollGeometryChange(
+            for: CGFloat.self,
+            of: { $0.contentOffset.y },
+            action: geometryChanged
+        )
+        .onScrollTargetVisibilityChange(
+            idType: Int.self,
+            threshold: 0.5,
+            visibilityChanged
+        )
+        .refreshable(action: refresh)
+    }
+}
+
+private enum CommentsHeightPreference: PreferenceKey {
+    static let defaultValue = 0
+
+    static func reduce(value: inout Int, nextValue: () -> Int) {
+        value += nextValue()
+    }
+}
+
+private struct CommentsPreferenceFixture: View {
+    let changed: @MainActor (Int) -> Void
+
+    var body: some View {
+        VStack {
+            Text("One").preference(key: CommentsHeightPreference.self, value: 2)
+            Text("Two").preference(key: CommentsHeightPreference.self, value: 3)
+        }
+        .onPreferenceChange(CommentsHeightPreference.self, perform: changed)
+    }
+}
+
+private struct CommentsDragFixture: View {
+    let changed: @MainActor (DragGesture.Value) -> Void
+    let ended: @MainActor (DragGesture.Value) -> Void
+
+    var body: some View {
+        Color.clear
+            .frame(width: 100, height: 80)
+            .gesture(
+                DragGesture(minimumDistance: 5)
+                    .onChanged(changed)
+                    .onEnded(ended)
             )
     }
 }
@@ -290,6 +519,316 @@ final class SwiftUIDesignSystemTests: XCTestCase {
             oriented.bitmap.pixels,
             [255, 0, 0, 255, 0, 0, 255, 255]
         )
+    }
+
+    func testSecureFieldMountsMaskedAndTakesInitialGraphFocus() throws {
+        let controller = UIHostingController(
+            rootView: HackersSecureFieldFixture(startFocused: true)
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 240, height: 60))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.frame = window.bounds
+        controller.view.layoutIfNeeded()
+
+        let field = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.SecureField") as? UITextField
+        )
+        XCTAssertTrue(field.isSecureTextEntry)
+        XCTAssertEqual(field.text, "private value")
+        XCTAssertTrue(field.isFirstResponder)
+        XCTAssertEqual(field.textLabel.text, String(repeating: "\u{2022}", count: 13))
+
+        XCTAssertTrue(field.resignFirstResponder())
+        XCTAssertFalse(field.isFirstResponder)
+    }
+
+    func testHackersControlsRenderRealProgressCapsuleGlassAccessibilityAndPressedStyle() throws {
+        var actionCount = 0
+        let controller = UIHostingController(
+            rootView: HackersControlsFixture { actionCount += 1 }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 180, height: 140)
+        host.layoutIfNeeded()
+
+        let effect = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.GlassEffect") as? UIVisualEffectView
+        )
+        XCTAssertTrue(effect.effect is UIBlurEffect)
+        let progress = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.ProgressView") as? UIActivityIndicatorView
+        )
+        XCTAssertTrue(progress.isAnimating)
+        XCTAssertEqual(progress.color, .red)
+        let capsule = try XCTUnwrap(descendant(host, identifier: "SwiftUI.Capsule.fill"))
+        XCTAssertEqual(capsule.layer.cornerRadius, 12, accuracy: 0.001)
+        XCTAssertEqual(capsule.backgroundColor, .blue)
+
+        let button = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.Button") as? UIControl
+        )
+        let opacityHosts = descendants(button).filter {
+            $0.accessibilityIdentifier == "SwiftUI.Opacity"
+        }
+        XCTAssertEqual(opacityHosts.map(\.alpha).sorted(), [0.35, 1])
+        button.sendActions(for: .touchUpInside)
+        XCTAssertEqual(actionCount, 1)
+
+        let accessibility = try XCTUnwrap(
+            descendants(host).first { $0.accessibilityLabel == "Voting controls" }
+        )
+        XCTAssertEqual(accessibility.accessibilityHint, "Double tap to vote")
+        XCTAssertEqual(accessibility.accessibilityValue, "Ready")
+        XCTAssertTrue(accessibility.accessibilityTraits.contains(.button))
+    }
+
+    func testContextMenuBuildsLabelActionsSectionsAndDispatches() throws {
+        var votes = 0
+        var removals = 0
+        let controller = UIHostingController(
+            rootView: HackersContextMenuFixture(
+                vote: { votes += 1 },
+                share: { removals += 1 }
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 160, height: 44)
+        host.layoutIfNeeded()
+
+        let contextHost = try XCTUnwrap(descendant(host, identifier: "SwiftUI.ContextMenu"))
+        let interaction = try XCTUnwrap(contextHost.interactions.first as? UIContextMenuInteraction)
+        let configuration = try XCTUnwrap(
+            interaction.delegate?.contextMenuInteraction(
+                interaction,
+                configurationForMenuAtLocation: .zero
+            )
+        )
+        let menu = try XCTUnwrap(configuration.resolvedMenu())
+        XCTAssertEqual(menu.children.count, 2)
+        let upvote = try XCTUnwrap(menu.children.first as? UIAction)
+        XCTAssertEqual(upvote.title, "Upvote")
+        upvote.performWithSender(contextHost, target: nil)
+        XCTAssertEqual(votes, 1)
+
+        let section = try XCTUnwrap(menu.children.last as? UIMenu)
+        let remove = try XCTUnwrap(section.children.first as? UIAction)
+        XCTAssertTrue(remove.attributes.contains(.destructive))
+        remove.performWithSender(contextHost, target: nil)
+        XCTAssertEqual(removals, 1)
+    }
+
+    func testGradientStopsCarryExactLocationsIntoOpenUIKitLayer() throws {
+        let controller = UIHostingController(rootView: GradientStopsFixture())
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 40, height: 100)
+        host.layoutIfNeeded()
+        let gradient = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.LinearGradient") as? UIGradientView
+        )
+        XCTAssertEqual(gradient.locations ?? [], [0, 0.25, 1])
+        XCTAssertEqual(gradient.startPoint, CGPoint(x: 0.5, y: 0))
+        XCTAssertEqual(gradient.endPoint, CGPoint(x: 0.5, y: 1))
+    }
+
+    func testAuthenticationInputTraitsGeometryToolbarFocusAndSubmitAreLive() throws {
+        var submitCount = 0
+        let controller = UIHostingController(
+            rootView: AuthenticationSurfaceFixture { submitCount += 1 }
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 240, height: 360))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.frame = window.bounds
+        controller.view.layoutIfNeeded()
+
+        let scroll = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.ScrollView") as? UIScrollView
+        )
+        XCTAssertEqual(scroll.keyboardDismissMode, .interactive)
+        let geometryLabel = try XCTUnwrap(
+            descendants(controller.view).compactMap { $0 as? UILabel }
+                .first { $0.text == "240x308" }
+        )
+        XCTAssertEqual(geometryLabel.text, "240x308")
+
+        let identifierHost = try XCTUnwrap(
+            descendant(controller.view, identifier: "login.username")
+        )
+        let username = try XCTUnwrap(
+            descendants(identifierHost).first { $0 is UITextField } as? UITextField
+        )
+        XCTAssertEqual(username.textContentType, .username)
+        XCTAssertEqual(username.autocapitalizationType, .none)
+        XCTAssertEqual(username.autocorrectionType, .no)
+        XCTAssertTrue(username.isFirstResponder)
+        username.sendActions(for: .primaryActionTriggered)
+        XCTAssertEqual(submitCount, 1)
+
+        let password = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.SecureField") as? UITextField
+        )
+        XCTAssertEqual(password.textContentType, .password)
+        XCTAssertTrue(password.isSecureTextEntry)
+
+        let progress = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.ProgressView")
+                as? UIActivityIndicatorView
+        )
+        XCTAssertEqual(progress.frame.size, CGSize(width: 16, height: 16))
+
+        let navigation = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.NavigationView")
+        )
+        let closeButton = try XCTUnwrap(
+            descendants(navigation).first { $0.accessibilityLabel == "Close" }
+        )
+        XCTAssertNotNil(
+            descendants(closeButton).first {
+                $0.accessibilityIdentifier == "SwiftUI.Image.systemName.xmark"
+            }
+        )
+        XCTAssertFalse(
+            descendants(closeButton).compactMap { ($0 as? UILabel)?.text }.contains("Close")
+        )
+    }
+
+    func testAuthenticationAlertPresentsNativeControllerAndDispatchesCancel() throws {
+        var acknowledgements = 0
+        let controller = UIHostingController(
+            rootView: AuthenticationAlertFixture { acknowledgements += 1 }
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 240, height: 360))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.frame = window.bounds
+        controller.view.layoutIfNeeded()
+
+        let alert = try XCTUnwrap(controller.presentedViewController as? UIAlertController)
+        XCTAssertEqual(alert.title, "Login Failed")
+        XCTAssertEqual(alert.message, "Please check your credentials.")
+        XCTAssertEqual(alert.actions.count, 1)
+        XCTAssertEqual(alert.actions[0].title, "OK")
+        XCTAssertEqual(alert.actions[0].style, .cancel)
+        alert.actions[0]._fire()
+        XCTAssertEqual(acknowledgements, 1)
+    }
+
+    func testCommentsMultilineComposerUsesUITextViewTraitsBindingAndSubmit() throws {
+        var value = "Draft"
+        var submitCount = 0
+        let binding = Binding<String>(
+            get: { value },
+            set: { value = $0 }
+        )
+        let controller = UIHostingController(
+            rootView: CommentsComposerFixture(
+                text: binding,
+                didSubmit: { submitCount += 1 }
+            )
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 240, height: 72))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.frame = window.bounds
+        controller.view.layoutIfNeeded()
+
+        let editor = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.TextField.Multiline")
+                as? UITextView
+        )
+        XCTAssertEqual(editor.text, "Draft")
+        XCTAssertEqual(editor.accessibilityLabel, "Write a comment")
+        XCTAssertEqual(editor.textContentType, .name)
+        XCTAssertEqual(editor.autocapitalizationType, .sentences)
+        XCTAssertEqual(editor.autocorrectionType, .no)
+        XCTAssertEqual(editor.returnKeyType, .send)
+        XCTAssertEqual(editor.backgroundColor, .clear)
+        XCTAssertTrue(editor.becomeFirstResponder())
+
+        editor.insertText("!")
+        XCTAssertEqual(value, "Draft!")
+        editor.insertText("\n")
+        XCTAssertEqual(value, "Draft!", "a configured submit consumes the newline")
+        XCTAssertEqual(submitCount, 1)
+    }
+
+    func testCommentsScrollReaderTargetsVisibilityGeometryAndRefreshSurface() throws {
+        var proxy: ScrollViewProxy?
+        var geometryChanges: [(CGFloat, CGFloat)] = []
+        var visibility: [Int] = []
+        let controller = UIHostingController(
+            rootView: CommentsScrollFixture(
+                captureProxy: { proxy = $0 },
+                geometryChanged: { geometryChanges.append(($0, $1)) },
+                visibilityChanged: { visibility = $0 },
+                refresh: {}
+            )
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 200, height: 120)
+        host.layoutIfNeeded()
+
+        let scroll = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.ScrollView") as? UIScrollView
+        )
+        XCTAssertEqual(scroll.contentSize.height, 400, accuracy: 0.001)
+        XCTAssertFalse(scroll.showsVerticalScrollIndicator)
+        XCTAssertFalse(scroll.showsHorizontalScrollIndicator)
+        XCTAssertNotNil(scroll.refreshControl)
+        XCTAssertEqual(visibility, [0, 1, 2])
+        var geometry = try XCTUnwrap(geometryChanges.last)
+        XCTAssertEqual(geometry.0, 0, accuracy: 0.001)
+        XCTAssertEqual(geometry.1, 0, accuracy: 0.001)
+
+        try XCTUnwrap(proxy).scrollTo(9, anchor: .bottom)
+        XCTAssertEqual(scroll.contentOffset.y, 280, accuracy: 0.001)
+        XCTAssertEqual(visibility, [7, 8, 9])
+        geometry = try XCTUnwrap(geometryChanges.last)
+        XCTAssertEqual(geometry.0, 0, accuracy: 0.001)
+        XCTAssertEqual(geometry.1, 280, accuracy: 0.001)
+    }
+
+    func testCommentsPreferencesReduceAcrossSiblings() throws {
+        var values: [Int] = []
+        let controller = UIHostingController(
+            rootView: CommentsPreferenceFixture { values.append($0) }
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 120, height: 80)
+        host.layoutIfNeeded()
+        XCTAssertEqual(values.last, 5)
+    }
+
+    func testCommentsDragGestureReceivesRealWindowTouches() throws {
+        var changedValues: [DragGesture.Value] = []
+        var endedValues: [DragGesture.Value] = []
+        let controller = UIHostingController(
+            rootView: CommentsDragFixture(
+                changed: { changedValues.append($0) },
+                ended: { endedValues.append($0) }
+            )
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 120, height: 100))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.frame = window.bounds
+        controller.view.layoutIfNeeded()
+
+        let host = try XCTUnwrap(
+            descendant(controller.view, identifier: "SwiftUI.Gesture")
+        )
+        XCTAssertTrue(host.gestureRecognizers?.first is UIPanGestureRecognizer)
+        window.sendTouch(.began, at: CGPoint(x: 30, y: 30), timestamp: 0)
+        window.sendTouch(.moved, at: CGPoint(x: 60, y: 45), timestamp: 0.05)
+        window.sendTouch(.ended, at: CGPoint(x: 70, y: 50), timestamp: 0.1)
+
+        XCTAssertFalse(changedValues.isEmpty)
+        let ended = try XCTUnwrap(endedValues.last)
+        XCTAssertEqual(ended.startLocation.x, 30, accuracy: 0.001)
+        XCTAssertEqual(ended.startLocation.y, 30, accuracy: 0.001)
+        XCTAssertEqual(ended.translation.width, 40, accuracy: 0.001)
+        XCTAssertEqual(ended.translation.height, 20, accuracy: 0.001)
     }
 
     private func descendant(_ root: UIView, identifier: String) -> UIView? {

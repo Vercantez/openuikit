@@ -76,6 +76,25 @@ public enum UITextAutocorrectionType: Int, Sendable {
     case yes = 2
 }
 
+/// Semantic purpose supplied to the platform input service.  UIKit models
+/// these values as extensible string constants rather than a closed enum;
+/// keeping the raw value preserves unknown future values for embedding hosts.
+public struct UITextContentType: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let username = UITextContentType(rawValue: "username")
+    public static let password = UITextContentType(rawValue: "password")
+    public static let newPassword = UITextContentType(rawValue: "newPassword")
+    public static let emailAddress = UITextContentType(rawValue: "emailAddress")
+    public static let name = UITextContentType(rawValue: "name")
+    public static let telephoneNumber = UITextContentType(rawValue: "telephoneNumber")
+    public static let oneTimeCode = UITextContentType(rawValue: "oneTimeCode")
+}
+
 /// Label/action requested for the keyboard's return key.
 public enum UIReturnKeyType: Int, Sendable {
     case `default` = 0
