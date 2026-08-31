@@ -1570,9 +1570,16 @@ foundation_relative_time_load_count=$(llvm-otool-18 -L \
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
-    "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
     "$FULL/swiftcorepatch.o"
+swiftui_foundation_essentials_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libSwiftUI.dylib" \
+    | awk '$1 == "@rpath/libFoundationEssentials.dylib" { count++ } \
+        END { print count + 0 }')
+[ "$swiftui_foundation_essentials_load_count" -eq 1 ] \
+    || die "libSwiftUI FoundationEssentials load count $swiftui_foundation_essentials_load_count, expected 1"
 swiftui_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
     | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
         '$1 == expected { count++ } END { print count + 0 }')

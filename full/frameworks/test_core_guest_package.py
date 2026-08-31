@@ -281,6 +281,22 @@ def validate_observation_platform_contract(source: str) -> None:
         raise AssertionError("Observation Linux plugin closure drifted")
 
 
+def validate_swiftui_foundation_essentials_link(source: str) -> None:
+    start = source.index("-install_name @rpath/libSwiftUI.dylib")
+    end = source.index("swiftui_runtime_load_count=", start)
+    link_slice = source[start:end]
+    required = (
+        '"${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit',
+        "swiftui_foundation_essentials_load_count=",
+        '"@rpath/libFoundationEssentials.dylib"',
+    )
+    missing = [token for token in required if token not in link_slice]
+    if missing:
+        raise AssertionError(
+            f"SwiftUI FoundationEssentials link contract drifted: {missing}"
+        )
+
+
 def validate_core_preview_export_contract(source: str) -> None:
     assignment = (
         "PREVIEW_EXECUTABLE_EXPORT_SYMBOL="
@@ -1514,22 +1530,6 @@ class ShellContractTests(unittest.TestCase):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "runtime-link"):
                     validate_swiftui_runtime_link(source.replace(token, "", 1))
-
-    def test_observation_platform_is_complete_and_deletion_is_refused(self) -> None:
-        source = BUILDER.read_text(encoding="utf-8")
-        validate_observation_platform_contract(source)
-        for token in (
-            "EXPECTED_OBSERVATION_UPSTREAM_COMMIT=",
-            "-module-name Observation -module-link-name swiftObservation",
-            "-load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so",
-            '"$W/full/observation/tests/ObservationGuestRuntimeProbe.swift"',
-            "observation=macro,reexport,registrar,tracking,ignored,one-shot",
-        ):
-            with self.subTest(deleted=token):
-                with self.assertRaisesRegex(AssertionError, "Observation platform"):
-                    validate_observation_platform_contract(
-                        source.replace(token, "", 1)
-                    )
         with self.assertRaisesRegex(AssertionError, "runtime-link scope"):
             validate_swiftui_runtime_link(
                 source.replace('"$SWIFTUI_RUNTIME_LINK_FLAG"', "", 1)
@@ -1555,6 +1555,44 @@ class ShellContractTests(unittest.TestCase):
             "libSwiftUI runtime load count",
         ):
             self.assertIn(spelling, source)
+
+    def test_observation_platform_is_complete_and_deletion_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_observation_platform_contract(source)
+        for token in (
+            "EXPECTED_OBSERVATION_UPSTREAM_COMMIT=",
+            "-module-name Observation -module-link-name swiftObservation",
+            "-load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so",
+            '"$W/full/observation/tests/ObservationGuestRuntimeProbe.swift"',
+            "observation=macro,reexport,registrar,tracking,ignored,one-shot",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "Observation platform"):
+                    validate_observation_platform_contract(
+                        source.replace(token, "", 1)
+                    )
+
+    def test_swiftui_links_foundation_essentials_directly(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_swiftui_foundation_essentials_link(source)
+        for token in (
+            '"${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit',
+            "swiftui_foundation_essentials_load_count=",
+            '"@rpath/libFoundationEssentials.dylib"',
+        ):
+            with self.subTest(deleted=token):
+                swiftui_start = source.index(
+                    "-install_name @rpath/libSwiftUI.dylib"
+                )
+                token_offset = source.index(token, swiftui_start)
+                mutated = (
+                    source[:token_offset]
+                    + source[token_offset + len(token):]
+                )
+                with self.assertRaisesRegex(
+                    AssertionError, "SwiftUI FoundationEssentials link"
+                ):
+                    validate_swiftui_foundation_essentials_link(mutated)
 
     def test_coreimage_dotted_submodule_and_quartzcore_are_real_boundaries(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
