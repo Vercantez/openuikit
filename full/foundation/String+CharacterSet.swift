@@ -18,6 +18,33 @@
 import FoundationEssentials
 
 public extension String {
+    /// Returns substrings divided at every Unicode scalar contained in `set`.
+    ///
+    /// Foundation treats each matching scalar as one separator and preserves
+    /// empty components at the beginning, end, and between adjacent matches.
+    /// Walking the scalar view is required here: `CharacterSet` membership is
+    /// scalar-based, while Swift `Character` iteration is grapheme-based.
+    func components(separatedBy set: CharacterSet) -> [String] {
+        let scalars = unicodeScalars
+        var result: [String] = []
+        var componentStart = scalars.startIndex
+        var cursor = scalars.startIndex
+
+        while cursor < scalars.endIndex {
+            guard set.contains(scalars[cursor]) else {
+                scalars.formIndex(after: &cursor)
+                continue
+            }
+
+            result.append(String(self[componentStart..<cursor]))
+            scalars.formIndex(after: &cursor)
+            componentStart = cursor
+        }
+
+        result.append(String(self[componentStart..<scalars.endIndex]))
+        return result
+    }
+
     /// Returns a new string made by removing scalars in `set` from both ends.
     func trimmingCharacters(in set: CharacterSet) -> String {
         let scalars = unicodeScalars

@@ -79,9 +79,9 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertEqual(source_digest(), expected.group(1))
         self.assertEqual(
             hashlib.sha256(GOLDEN.read_bytes()).hexdigest(),
-            "da4a06b171c7474c8f3eec6febec9f217dffe47c28feaa42bb8346ddaab5f980",
+            "d238c2ea2e2b252a433a56660e1e7c2a23b2851a665874db7d432b4e573c40e0",
         )
-        self.assertEqual(len(GOLDEN.read_text().splitlines()), 51)
+        self.assertEqual(len(GOLDEN.read_text().splitlines()), 61)
         self.assertEqual(
             hashlib.sha256(COMPAT_GOLDEN.read_bytes()).hexdigest(),
             "07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac",
@@ -130,6 +130,22 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertIn("let scalars = unicodeScalars", source)
         self.assertIn("set.contains(scalars[lower])", source)
         self.assertIn("set.contains(scalars[upper])", source)
+
+    def test_character_set_components_are_scalar_based_and_preserve_empties(self) -> None:
+        source = PRODUCTION[1].read_text()
+        self.assertIn(
+            "func components(separatedBy set: CharacterSet) -> [String]", source
+        )
+        self.assertIn("let scalars = unicodeScalars", source)
+        self.assertIn("set.contains(scalars[cursor])", source)
+        self.assertIn("result.append(String(self[componentStart..<cursor]))", source)
+        self.assertIn(
+            "result.append(String(self[componentStart..<scalars.endIndex]))", source
+        )
+        oracle = (TESTS / "FoundationGuestTextOracle.swift").read_text()
+        self.assertIn('(\"a  b\", \" \")', oracle)
+        self.assertIn('(\"e\\u{301}x\\u{301}\", \"\\u{301}\")', oracle)
+        self.assertIn('(\"a💥b💥\", \"💥\")', oracle)
 
     def test_search_percent_and_format_are_native_differentially_pinned(self) -> None:
         source = PRODUCTION[2].read_text()

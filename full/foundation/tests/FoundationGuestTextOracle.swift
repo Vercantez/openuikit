@@ -63,6 +63,33 @@ private func trimmingRows() {
     }
 }
 
+private func componentsRows() {
+    let cases: [(String, String)] = [
+        ("", ""),
+        ("", " "),
+        ("plain", ""),
+        ("plain", " "),
+        (" alpha ", " "),
+        ("a  b", " "),
+        ("a\t b", " \t"),
+        ("e\u{301}x\u{301}", "\u{301}"),
+        ("a💥b💥", "💥"),
+        ("\r\n", "\r\n"),
+    ]
+    for (input, separators) in cases {
+        let components = input.components(
+            separatedBy: CharacterSet(charactersIn: separators)
+        )
+        row(
+            "components-set",
+            scalarKey(input),
+            scalarKey(separators),
+            components.count,
+            components.map(scalarKey).joined(separator: "|")
+        )
+    }
+}
+
 private func scannerRow(_ input: String, skip: CharacterSet? = .whitespacesAndNewlines) {
     let scanner = Scanner(string: input)
     scanner.charactersToBeSkipped = skip
@@ -131,5 +158,6 @@ private func errorRows() {
 
 characterSetRows()
 trimmingRows()
+componentsRows()
 scannerRows()
 errorRows()
