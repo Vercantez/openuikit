@@ -399,7 +399,7 @@ PY
     local -a swift_arguments link_arguments diagnostic_arguments relative_sources app_sources
     mapfile -d '' -t swift_arguments < <(
         PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
-            "$platform" --emit-swift-arguments
+            "$platform" --emit-swift-arguments --absolute-package-paths
     )
     mapfile -d '' -t link_arguments < <(
         PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
@@ -410,6 +410,22 @@ PY
             "$platform" --emit-app-diagnostic-arguments
     )
     mapfile -d '' -t relative_sources <"$output/app-sources.nul"
+    local swift_sdk_root= swift_sdk_argument_count=0 swift_argument_index
+    for swift_argument_index in "${!swift_arguments[@]}"; do
+        if [ "${swift_arguments[swift_argument_index]}" = -sdk ]; then
+            [ "$((swift_argument_index + 1))" -lt "${#swift_arguments[@]}" ] \
+                || die "platform Swift arguments end after -sdk"
+            swift_sdk_root=${swift_arguments[swift_argument_index + 1]}
+            swift_sdk_argument_count=$((swift_sdk_argument_count + 1))
+        fi
+    done
+    [ "$swift_sdk_argument_count" -eq 1 ] \
+        || die "platform Swift arguments must contain exactly one SDK"
+    case "$swift_sdk_root" in
+        "$platform"/*) ;;
+        *) die "platform Swift SDK is not rooted at the mounted package: $swift_sdk_root" ;;
+    esac
+    require_directory "$swift_sdk_root" "rooted platform Swift SDK"
     [ "${#relative_sources[@]}" -gt 0 ] || die "application source list is empty"
     local relative source
     for relative in "${relative_sources[@]}"; do
@@ -684,7 +700,7 @@ PY
                             *) die "local Clang package target has unsupported source language: $package_language" ;;
                         esac
                         package_command=("$package_compiler"
-                            -target arm64-apple-macos15.0 -isysroot sdk
+                            -target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"
                             -fmodules -fmodules-cache-path="$package_clang_module_cache"
                             -fmodule-name="$package_module"
                             "${package_compiler_arguments[@]}")

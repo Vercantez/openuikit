@@ -30,6 +30,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "modules",
             "lib",
             "include",
+            "include/CPortableIO",
             "include/CoreImage",
             "objects",
             "resources/OpenUIKit/fonts",
@@ -249,6 +250,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "arm64-apple-macos15.0",
                 "-sdk",
                 "sdk",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libObservationMacros.so",
                 "-I",
                 "modules",
                 "-Xcc",
@@ -288,6 +291,38 @@ class CoreGuestPackageTests(unittest.TestCase):
         )
         self.assertEqual(
             core_guest_package.main([os.fspath(self.root), "--emit-summary"]), 0
+        )
+
+    def test_roots_every_package_compile_path_for_pcm_identity(self) -> None:
+        root, manifest = core_guest_package.validate(self.root)
+        arguments = core_guest_package.rooted_swift_compile_arguments(
+            root, manifest["swift_compile_arguments"]
+        )
+        self.assertEqual(
+            arguments[arguments.index("-sdk") + 1], os.fspath(root / "sdk")
+        )
+        self.assertEqual(
+            arguments[arguments.index("-I") + 1], os.fspath(root / "modules")
+        )
+        self.assertEqual(
+            arguments[arguments.index("-load-plugin-library") + 1],
+            os.fspath(
+                root / "host-tools/swift/host/plugins/libObservationMacros.so"
+            ),
+        )
+        self.assertIn(f"-I{root}/include/CPortableIO", arguments)
+        self.assertIn(
+            f"-fmodule-map-file={root}/include/CoreImage/module.modulemap",
+            arguments,
+        )
+        self.assertIn(f"-I{root}/include/CoreImage", arguments)
+        self.assertNotIn("sdk", arguments)
+        self.assertNotIn("modules", arguments)
+        self.assertFalse(
+            any(
+                argument.startswith(("-Iinclude/", "-fmodule-map-file=include/"))
+                for argument in arguments
+            )
         )
 
     def test_refuses_unattested_host_tool(self) -> None:

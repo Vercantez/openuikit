@@ -219,13 +219,18 @@ def validate_local_package_module_object_boundary(source: str) -> None:
 def validate_c_family_package_boundary(source: str) -> None:
     required_once = (
         "for tool in python3 swiftc clang-18 clang++-18",
+        '"$platform" --emit-swift-arguments --absolute-package-paths',
+        "local swift_sdk_root= swift_sdk_argument_count=0 swift_argument_index",
+        'swift_sdk_root=${swift_arguments[swift_argument_index + 1]}',
+        '"$swift_sdk_argument_count" -eq 1',
+        'require_directory "$swift_sdk_root" "rooted platform Swift SDK"',
         '<"$package_build_root/clang-import-arguments.nul"',
         '<"$package_build_root/clang-link-arguments.nul"',
         'package_import_arguments+=("${package_clang_import_arguments[@]}")',
         'package_clang_module_cache=$package_build_root/clang-module-cache',
         'mkdir "$package_clang_module_cache"',
         'require_regular "$package_module_output" "local package Clang module map"',
-        "-target arm64-apple-macos15.0 -isysroot sdk",
+        '-target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"',
         '-fmodules -fmodules-cache-path="$package_clang_module_cache"',
         '-fmodule-name="$package_module"',
         'package_compiler=clang-18',
@@ -498,9 +503,11 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         validate_c_family_package_boundary(source)
         for token in (
             "for tool in python3 swiftc clang-18 clang++-18",
+            '"$platform" --emit-swift-arguments --absolute-package-paths',
+            '"$swift_sdk_argument_count" -eq 1',
             '<"$package_build_root/clang-import-arguments.nul"',
             'require_regular "$package_module_output" "local package Clang module map"',
-            "-target arm64-apple-macos15.0 -isysroot sdk",
+            '-target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"',
             'package_command+=(-c "${package_sources[package_source_index]}"',
             '"${package_link_arguments[@]}"',
         ):

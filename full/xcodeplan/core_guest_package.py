@@ -54,6 +54,23 @@ _CONTROLLED_COMPILE_OPTIONS = {
 _CONTROLLED_LINK_OPTIONS = {"-o"}
 _ALLOWED_ABSOLUTE_ARGUMENTS = {"/usr/lib", "/usr/lib/swift"}
 _PREVIEW_DIAGNOSTIC_ARGUMENTS = ["-Xfrontend", "-dump-macro-expansions"]
+_SWIFT_PACKAGE_PATH_OPTIONS = {
+    "-F",
+    "-I",
+    "-L",
+    "-load-plugin-library",
+    "-sdk",
+    "-vfsoverlay",
+}
+_SWIFT_ATTACHED_PACKAGE_PATH_OPTIONS = (
+    "-fmodule-map-file=",
+    "-isystem",
+    "-iquote",
+    "-ivfsoverlay",
+    "-F",
+    "-I",
+    "-L",
+)
 _REQUIRED_FRAMEWORKS = (
     "FoundationEssentials",
     "OpenCoreGraphics",
@@ -208,6 +225,83 @@ def _arguments(value: Any, label: str, controlled: set[str]) -> list[str]:
         if token.startswith("/") and token not in _ALLOWED_ABSOLUTE_ARGUMENTS:
             raise CorePackageError(f"{label} leaks an absolute host path: {token}")
     return result
+
+
+def _root_package_argument(root: Path, value: str, label: str) -> str:
+    """Give a package-relative compiler path one stable physical identity.
+
+    Swift serializes Clang module provenance into prebuilt `.swiftmodule` files.
+    Running from the package root is therefore not equivalent to spelling the
+    package path absolutely: Clang rejects a PCM first seen as `/platform/sdk`
+    when a downstream compile later presents the same directory as `sdk`.
+    """
+    if value.startswith("/"):
+        if value not in _ALLOWED_ABSOLUTE_ARGUMENTS:
+            raise CorePackageError(
+                f"{label} contains an absolute path outside the allowlist: {value}"
+            )
+        return value
+    relative = _relative(value, label)
+    return os.fspath(_materialized(root, relative, label))
+
+
+def _root_attached_package_argument(root: Path, value: str, label: str) -> str:
+    for prefix in _SWIFT_ATTACHED_PACKAGE_PATH_OPTIONS:
+        if value.startswith(prefix) and len(value) > len(prefix):
+            path = value[len(prefix) :]
+            return prefix + _root_package_argument(root, path, label)
+    return value
+
+
+def rooted_swift_compile_arguments(root: Path, arguments: list[str]) -> list[str]:
+    """Root every path-bearing package compiler argument at ``root``.
+
+    The input remains the relocatable manifest array. This derived array is
+    for an actual compiler invocation at the package's mounted location.
+    """
+    rooted: list[str] = []
+    cursor = 0
+    while cursor < len(arguments):
+        token = arguments[cursor]
+        if token in _SWIFT_PACKAGE_PATH_OPTIONS:
+            if cursor + 1 >= len(arguments):
+                raise CorePackageError(
+                    f"swift_compile_arguments ends after path option: {token}"
+                )
+            rooted.extend(
+                (
+                    token,
+                    _root_package_argument(
+                        root,
+                        arguments[cursor + 1],
+                        f"swift_compile_arguments[{cursor + 1}]",
+                    ),
+                )
+            )
+            cursor += 2
+            continue
+        if token == "-Xcc":
+            if cursor + 1 >= len(arguments):
+                raise CorePackageError("swift_compile_arguments ends after -Xcc")
+            rooted.extend(
+                (
+                    token,
+                    _root_attached_package_argument(
+                        root,
+                        arguments[cursor + 1],
+                        f"swift_compile_arguments[{cursor + 1}]",
+                    ),
+                )
+            )
+            cursor += 2
+            continue
+        rooted.append(
+            _root_attached_package_argument(
+                root, token, f"swift_compile_arguments[{cursor}]"
+            )
+        )
+        cursor += 1
+    return rooted
 
 
 def _require_coreimage_compile_contract(arguments: list[str]) -> None:
@@ -597,16 +691,27 @@ def _parser() -> argparse.ArgumentParser:
     group.add_argument("--emit-link-arguments", action="store_true")
     group.add_argument("--emit-app-diagnostic-arguments", action="store_true")
     group.add_argument("--emit-summary", action="store_true")
+    parser.add_argument(
+        "--absolute-package-paths",
+        action="store_true",
+        help="root path-bearing Swift arguments at the validated package root",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = _parser().parse_args(argv)
+    parser = _parser()
+    arguments = parser.parse_args(argv)
+    if arguments.absolute_package_paths and not arguments.emit_swift_arguments:
+        parser.error("--absolute-package-paths requires --emit-swift-arguments")
     try:
         root, manifest = validate(arguments.package_root)
         if arguments.emit_swift_arguments:
+            values = manifest["swift_compile_arguments"]
+            if arguments.absolute_package_paths:
+                values = rooted_swift_compile_arguments(root, values)
             sys.stdout.buffer.write(
-                b"".join(token.encode("utf-8") + b"\0" for token in manifest["swift_compile_arguments"])
+                b"".join(token.encode("utf-8") + b"\0" for token in values)
             )
         elif arguments.emit_link_arguments:
             sys.stdout.buffer.write(
