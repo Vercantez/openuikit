@@ -1,0 +1,4 @@
+module COpenDispatch {
+    header "OpenDispatchABI.h"
+    export *
+}
