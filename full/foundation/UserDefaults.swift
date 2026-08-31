@@ -279,6 +279,22 @@ open class UserDefaults {
         Self._persist(Self._domainValues(_domain), domain: _domain)
     }
 
+    /// Reloads this suite's durable file without publishing a write. This is
+    /// intentionally internal: NSUbiquitousKeyValueStore uses it to distinguish
+    /// a local mutation from a change made by another guest process.
+    internal func _reloadExternalChanges() -> (success: Bool, changedKeys: [String]) {
+        guard let loaded = Self._loadVerified(domain: _domain) else {
+            return (false, [])
+        }
+        return Self._domains.withLock { domains in
+            let previous = domains[_domain] ?? [:]
+            let keys = Set(previous.keys).union(loaded.keys)
+            let changed = keys.filter { previous[$0] != loaded[$0] }.sorted()
+            domains[_domain] = loaded
+            return (true, changed)
+        }
+    }
+
     open func objectIsForced(forKey key: String) -> Bool { false }
     open func objectIsForced(forKey key: String, inDomain domain: String) -> Bool { false }
 
@@ -323,8 +339,18 @@ open class UserDefaults {
     }
 
     private static func _load(domain: String) -> [String: _UDStored] {
-        guard let data = try? Data(contentsOf: _fileURL(domain: domain)) else { return [:] }
-        return (try? JSONDecoder().decode([String: _UDStored].self, from: data)) ?? [:]
+        _loadVerified(domain: domain) ?? [:]
+    }
+
+    private static func _loadVerified(domain: String) -> [String: _UDStored]? {
+        let fileURL = _fileURL(domain: domain)
+        guard let data = try? Data(contentsOf: fileURL) else {
+            let missing = fileURL.path.withCString { path in
+                Darwin.access(path, F_OK) != 0 && errno == ENOENT
+            }
+            return missing ? [:] : nil
+        }
+        return try? JSONDecoder().decode([String: _UDStored].self, from: data)
     }
 
     private static func _persist(_ values: [String: _UDStored], domain: String) -> Bool {
@@ -397,7 +423,7 @@ open class UserDefaults {
     }
 }
 
-private indirect enum _UDStored: Codable, Sendable {
+private indirect enum _UDStored: Codable, Sendable, Equatable {
     case string(String)
     case bool(Bool)
     case int(Int64)

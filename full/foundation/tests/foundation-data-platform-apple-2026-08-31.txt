@@ -1,0 +1,94 @@
+interval.0.-31556952	1 year ago
+interval.0.-2629746	4 weeks ago
+interval.0.-604800	1 week ago
+interval.0.-86400	1 day ago
+interval.0.-3600	1 hour ago
+interval.0.-61	1 minute ago
+interval.0.-60	1 minute ago
+interval.0.-59	59 seconds ago
+interval.0.-1	1 second ago
+interval.0.0	in 0 seconds
+interval.0.1	in 1 second
+interval.0.59	in 59 seconds
+interval.0.60	in 1 minute
+interval.0.61	in 1 minute
+interval.0.3600	in 1 hour
+interval.0.86400	in 1 day
+interval.0.604800	in 1 week
+interval.0.2629746	in 1 month
+interval.0.31556952	in 1 year
+interval.1.-31556952	one year ago
+interval.1.-2629746	four weeks ago
+interval.1.-604800	one week ago
+interval.1.-86400	one day ago
+interval.1.-3600	one hour ago
+interval.1.-61	one minute ago
+interval.1.-60	one minute ago
+interval.1.-59	fifty-nine seconds ago
+interval.1.-1	one second ago
+interval.1.0	in zero seconds
+interval.1.1	in one second
+interval.1.59	in fifty-nine seconds
+interval.1.60	in one minute
+interval.1.61	in one minute
+interval.1.3600	in one hour
+interval.1.86400	in one day
+interval.1.604800	in one week
+interval.1.2629746	in one month
+interval.1.31556952	in one year
+interval.2.-31556952	1 yr. ago
+interval.2.-2629746	4 wk. ago
+interval.2.-604800	1 wk. ago
+interval.2.-86400	1 day ago
+interval.2.-3600	1 hr. ago
+interval.2.-61	1 min. ago
+interval.2.-60	1 min. ago
+interval.2.-59	59 sec. ago
+interval.2.-1	1 sec. ago
+interval.2.0	in 0 sec.
+interval.2.1	in 1 sec.
+interval.2.59	in 59 sec.
+interval.2.60	in 1 min.
+interval.2.61	in 1 min.
+interval.2.3600	in 1 hr.
+interval.2.86400	in 1 day
+interval.2.604800	in 1 wk.
+interval.2.2629746	in 1 mo.
+interval.2.31556952	in 1 yr.
+interval.3.-31556952	1y ago
+interval.3.-2629746	4w ago
+interval.3.-604800	1w ago
+interval.3.-86400	1d ago
+interval.3.-3600	1h ago
+interval.3.-61	1m ago
+interval.3.-60	1m ago
+interval.3.-59	59s ago
+interval.3.-1	1s ago
+interval.3.0	in 0s
+interval.3.1	in 1s
+interval.3.59	in 59s
+interval.3.60	in 1m
+interval.3.61	in 1m
+interval.3.3600	in 1h
+interval.3.86400	in 1d
+interval.3.604800	in 1w
+interval.3.2629746	in 1mo
+interval.3.31556952	in 1y
+named.day.-2	2 days ago
+named.day.-1	yesterday
+named.day.0	today
+named.day.1	tomorrow
+named.day.2	in 2 days
+components.mixed	next year
+date.-90000	1 day ago
+date.-3661	1 hour ago
+date.-61	1 minute ago
+date.61	in 1 minute
+date.3661	in 1 hour
+date.90000	in 1 day
+lock.shared-state	1,2
+lock.try	2
+ubiquitous.default-identity	true
+filesystem.enumeration	Example.bundle,Nested,Nested/inside,visible.bin
+filesystem.regular	true
+filesystem.allocated-present	true

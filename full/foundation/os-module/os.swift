@@ -5,7 +5,7 @@
 // Written in this repository, named `os` only because upstream's source
 // imports that name, and it implements THREE declarations out of a module
 // that has dozens.  **Its silence about everything else -- `os_signpost`,
-// `os_activity`, `OSAllocatedUnfairLock`, `OSLogPrivacy`'s mask and format
+// `os_activity`, `OSLogPrivacy`'s mask and format
 // options, the whole `os_workgroup` family -- is a SCOPE STATEMENT, not an
 // implementation choice.**  If something fails to compile against this module,
 // the conclusion is almost always "that part of `os` was never provided here",
@@ -33,11 +33,13 @@
 //                           These have real fallback branches.
 //   #if FOUNDATION_FRAMEWORK  the other 7 -- never compiled here.
 //
-// So the surface actually demanded by the 197-file build is THREE things:
+// So the original 197-file FoundationEssentials build demanded THREE things:
 // `os_unfair_lock` and its lock/unlock (LockedState.Primitive), and
 // `Logger(subsystem:category:).error(_:)` with `\(x, privacy: .public)`
 // interpolation (Calendar_Gregorian, URL).  That is all.  Nothing here is
-// speculative surface.
+// speculative surface. The app-facing layer now additionally provides the
+// real allocated unfair lock below because unchanged first-party application
+// packages use it for mutable Sendable state.
 //
 // WHY NOT APPLE'S `os` OVERLAY.  Tried and measured first.  Apple's
 // os.swiftmodule does `@_exported import os.log` / `os.signpost` /
@@ -68,6 +70,117 @@
 // DOES stage) and are re-exported by the line above.  libSystem.B.tbd exports
 // _os_unfair_lock_lock/_unlock/_trylock/_assert_owner and the recursive
 // variants, so this is a real implementation, not a declaration.
+
+/// A heap-allocated unfair lock whose copies share both lock identity and
+/// protected state, matching Apple's value-semantic wrapper.  The underlying
+/// primitive is the real libSystem unfair lock already used by NSLock.
+public struct OSAllocatedUnfairLock<State>: @unchecked Sendable {
+    private let storage: ManagedBuffer<State, os_unfair_lock>
+
+    public init(uncheckedState initialState: State) {
+        storage = .create(minimumCapacity: 1) { buffer in
+            buffer.withUnsafeMutablePointerToElements { lock in
+                lock.initialize(to: os_unfair_lock())
+            }
+            return initialState
+        }
+    }
+
+    public func withLockUnchecked<Result>(
+        _ body: (inout State) throws -> Result
+    ) rethrows -> Result {
+        try storage.withUnsafeMutablePointers { state, lock in
+            os_unfair_lock_lock(lock)
+            defer { os_unfair_lock_unlock(lock) }
+            return try body(&state.pointee)
+        }
+    }
+
+    public func withLock<Result: Sendable>(
+        _ body: @Sendable (inout State) throws -> Result
+    ) rethrows -> Result {
+        try withLockUnchecked(body)
+    }
+
+    public func withLockIfAvailableUnchecked<Result>(
+        _ body: (inout State) throws -> Result
+    ) rethrows -> Result? {
+        try storage.withUnsafeMutablePointers { state, lock in
+            guard os_unfair_lock_trylock(lock) else { return nil }
+            defer { os_unfair_lock_unlock(lock) }
+            return try body(&state.pointee)
+        }
+    }
+
+    public func withLockIfAvailable<Result: Sendable>(
+        _ body: @Sendable (inout State) throws -> Result
+    ) rethrows -> Result? {
+        try withLockIfAvailableUnchecked(body)
+    }
+
+    public enum Ownership: Sendable, Hashable {
+        case owner
+        case notOwner
+    }
+
+    public func precondition(_ condition: Ownership) {
+        storage.withUnsafeMutablePointerToElements { lock in
+            switch condition {
+            case .owner: os_unfair_lock_assert_owner(lock)
+            case .notOwner: os_unfair_lock_assert_not_owner(lock)
+            }
+        }
+    }
+}
+
+public extension OSAllocatedUnfairLock where State: Sendable {
+    init(initialState: State) {
+        self.init(uncheckedState: initialState)
+    }
+}
+
+public extension OSAllocatedUnfairLock where State == () {
+    init() {
+        self.init(uncheckedState: ())
+    }
+
+    func withLockUnchecked<Result>(_ body: () throws -> Result) rethrows -> Result {
+        try withLockUnchecked { _ in try body() }
+    }
+
+    func withLock<Result: Sendable>(
+        _ body: @Sendable () throws -> Result
+    ) rethrows -> Result {
+        try withLock { _ in try body() }
+    }
+
+    func withLockIfAvailableUnchecked<Result>(
+        _ body: () throws -> Result
+    ) rethrows -> Result? {
+        try withLockIfAvailableUnchecked { _ in try body() }
+    }
+
+    func withLockIfAvailable<Result: Sendable>(
+        _ body: @Sendable () throws -> Result
+    ) rethrows -> Result? {
+        try withLockIfAvailable { _ in try body() }
+    }
+
+    @available(*, noasync, message: "Use withLock for scoped locking")
+    func lock() {
+        storage.withUnsafeMutablePointerToElements { os_unfair_lock_lock($0) }
+    }
+
+    @available(*, noasync, message: "Use withLock for scoped locking")
+    func unlock() {
+        storage.withUnsafeMutablePointerToElements { os_unfair_lock_unlock($0) }
+    }
+
+    @available(*, noasync, message: "Use withLockIfAvailable for scoped locking")
+    func lockIfAvailable() -> Bool {
+        storage.withUnsafeMutablePointerToElements { os_unfair_lock_trylock($0) }
+    }
+}
 
 public struct OSLogPrivacy: Sendable, Equatable {
     let rawValue: UInt8

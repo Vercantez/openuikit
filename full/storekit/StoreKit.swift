@@ -32,6 +32,22 @@ public struct StoreKitPortableError: Error, Equatable, Sendable,
     }
 }
 
+/// Errors published by StoreKit 2.
+///
+/// The portable store remains deliberately fail-closed when no App Store
+/// service is connected, but applications must still be able to distinguish
+/// user cancellation and transport/system failures using Apple's public error
+/// surface.
+public enum StoreKitError: Error, Sendable {
+    case unknown
+    case userCancelled
+    case networkError(URLError)
+    case systemError(any Error)
+    case notAvailableInStorefront
+    case notEntitled
+    case unsupported
+}
+
 @MainActor
 public enum SKStoreReviewController {
     public private(set) static var portableRequestCount = 0
@@ -346,6 +362,7 @@ public struct Product: Identifiable, Sendable {
     public let displayName: String
     public let description: String
     public let price: Decimal
+    public let displayPrice: String
     public let subscription: SubscriptionInfo?
 
     public init(
@@ -353,12 +370,18 @@ public struct Product: Identifiable, Sendable {
         displayName: String = "",
         description: String = "",
         price: Decimal = 0,
+        displayPrice: String? = nil,
         subscription: SubscriptionInfo? = nil
     ) {
         self.id = id
         self.displayName = displayName
         self.description = description
         self.price = price
+        // Real StoreKit products carry a storefront-localized string. The
+        // portable initializer accepts that authoritative value; a manually
+        // constructed test product falls back to the locale-independent
+        // Decimal spelling rather than inventing a currency.
+        self.displayPrice = displayPrice ?? price.description
         self.subscription = subscription
     }
 
@@ -377,11 +400,21 @@ public struct Transaction: Identifiable, Sendable {
     public let id: UInt64
     public let productID: String
     public let purchaseDate: Date
+    public let expirationDate: Date?
+    public let revocationDate: Date?
 
-    public init(id: UInt64, productID: String, purchaseDate: Date) {
+    public init(
+        id: UInt64,
+        productID: String,
+        purchaseDate: Date,
+        expirationDate: Date? = nil,
+        revocationDate: Date? = nil
+    ) {
         self.id = id
         self.productID = productID
         self.purchaseDate = purchaseDate
+        self.expirationDate = expirationDate
+        self.revocationDate = revocationDate
     }
 
     public static func latest(
