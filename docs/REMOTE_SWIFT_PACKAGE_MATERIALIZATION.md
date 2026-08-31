@@ -1,15 +1,17 @@
 # Exact remote Swift-package materialization
 
-This layer turns the immutable remote-package pins in a frozen local package
-graph into verified build inputs. It does not run dependency resolution, use a
-branch or tag as authority, execute `Package.swift`, or write into the
-application/vendor tree.
+This layer turns the complete immutable remote-package resolution closure in a
+frozen local package graph into verified build inputs. It does not run
+dependency resolution, use a branch or tag as authority, execute
+`Package.swift`, or write into the application/vendor tree.
 
 ## Acquisition and cache identity
 
 `remote_package_materializer.py` accepts only canonical HTTPS URLs in
 production and exact 40- or 64-hex revision IDs already bound to a workspace
-`Package.resolved`. The cache address is the SHA-256 of the canonical package
+`Package.resolved`. It materializes every pin in that frozen resolution file up
+front, so transitive manifests cannot trigger a second, ambient resolution
+wave. The cache address is the SHA-256 of the canonical package
 identity, exact URL, and exact revision. A checkout is created in a private
 staging directory and published atomically under:
 
@@ -24,10 +26,16 @@ Before publication and on every reuse, the verifier proves:
 - `origin` is byte-for-byte the pinned URL;
 - `HEAD^{commit}` is the pinned revision and `HEAD^{tree}` is recorded;
 - the Git object format and strict object connectivity are valid;
-- every tracked node is an ordinary `100644` or `100755` blob;
+- every tracked regular file is an ordinary `100644` or `100755` blob;
+- a `160000` gitlink is retained only as an exact path/commit pair and its
+  checkout path must be absent or an ordinary empty directory; submodule
+  source is never fetched, executed, or treated as package content;
 - every worktree file hashes to its tree blob and the worktree has no drift or
   untracked files;
-- there are no symlinks or submodules;
+- every tracked symlink is an exact Git blob, remains a physical symlink, has
+  a portable relative target that stays inside the repository, and is recorded
+  by path, target, and blob identity;
+- there are no materialized submodules;
 - `Package.swift`, the complete tree listing, and the path inventory have
   stable hashes;
 - the stored attestation equals a fresh reconstruction.

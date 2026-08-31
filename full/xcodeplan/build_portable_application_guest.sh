@@ -472,9 +472,9 @@ PY
         [ "${#package_target_indices[@]}" -gt 0 ] \
             || die "local Swift-package graph has no build targets"
         local package_index package_module package_module_output package_output_map
-        local package_source_count package_object_count package_cursor
+        local package_source_count package_swift_argument_count package_object_count package_cursor
         local package_stdout package_stderr package_status package_object
-        local -a package_record package_sources package_expected_objects package_command
+        local -a package_record package_sources package_swift_arguments package_expected_objects package_command
         for package_index in "${package_target_indices[@]}"; do
             package_record=()
             mapfile -d '' -t package_record < <(
@@ -482,7 +482,7 @@ PY
                     "$package_build_root/build-contract.json" \
                     --index "$((10#$package_index))"
             )
-            [ "${#package_record[@]}" -ge 5 ] \
+            [ "${#package_record[@]}" -ge 6 ] \
                 || die "local package target record is truncated: $package_index"
             package_module=${package_record[0]}
             package_module_output=$package_build_root/${package_record[1]}
@@ -499,20 +499,46 @@ PY
                 fi
                 require_regular "${package_sources[-1]}" "local package Swift source"
             done
-            package_object_count=${package_record[4 + package_source_count]}
+            package_swift_argument_count=${package_record[4 + package_source_count]}
+            [[ "$package_swift_argument_count" =~ ^[0-9]+$ ]] \
+                || die "local package Swift argument count is invalid: $package_index"
+            [ "$((package_swift_argument_count % 2))" -eq 0 ] \
+                || die "local package Swift arguments are not option/value pairs: $package_module"
+            package_swift_arguments=()
+            for ((package_cursor = 0; package_cursor < package_swift_argument_count; package_cursor++)); do
+                package_swift_arguments+=(
+                    "${package_record[5 + package_source_count + package_cursor]}"
+                )
+            done
+            for ((package_cursor = 0; package_cursor < package_swift_argument_count; package_cursor += 2)); do
+                case "${package_swift_arguments[package_cursor]}" in
+                    -swift-version)
+                        case "${package_swift_arguments[package_cursor + 1]}" in
+                            4|4.2|5|6) ;;
+                            *) die "local package Swift language mode is invalid: $package_module" ;;
+                        esac ;;
+                    -default-isolation)
+                        [ "${package_swift_arguments[package_cursor + 1]}" = MainActor ] \
+                            || die "local package default isolation is invalid: $package_module" ;;
+                    *)
+                        die "local package compiler argument is outside the allowlist: ${package_swift_arguments[package_cursor]}" ;;
+                esac
+            done
+            package_object_count=${package_record[5 + package_source_count + package_swift_argument_count]}
             [[ "$package_object_count" =~ ^[0-9]+$ ]] \
                 || die "local package object count is invalid: $package_index"
             [ "$package_object_count" -eq "$package_source_count" ] \
                 || die "local package source/object count differs: $package_module"
-            [ "${#package_record[@]}" -eq "$((5 + package_source_count + package_object_count))" ] \
+            [ "${#package_record[@]}" -eq "$((6 + package_source_count + package_swift_argument_count + package_object_count))" ] \
                 || die "local package target record has trailing fields: $package_index"
             package_expected_objects=()
             for ((package_cursor = 0; package_cursor < package_object_count; package_cursor++)); do
                 package_expected_objects+=(
-                    "$package_build_root/${package_record[5 + package_source_count + package_cursor]}"
+                    "$package_build_root/${package_record[6 + package_source_count + package_swift_argument_count + package_cursor]}"
                 )
             done
             package_command=(swiftc "${swift_arguments[@]}"
+                "${package_swift_arguments[@]}"
                 -module-cache-path "$module_cache"
                 "${package_import_arguments[@]}" -parse-as-library
                 -module-name "$package_module"

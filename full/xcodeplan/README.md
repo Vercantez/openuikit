@@ -18,7 +18,14 @@ target/project build settings, evaluates only
 the documented product-name subset, and enumerates package products, local
 package roots/manifests, target
 dependencies, phases, sources, headers, and resources. It also supports the
-simple `PBXFileSystemSynchronizedRootGroup` shape emitted by current Xcode
+Xcode 14-era local-package representation: a main-group `PBXFileReference`
+whose exact file type is `wrapper` and whose referenced directory contains a
+regular `Package.swift`. These explicit wrapper edges join modern
+`XCLocalSwiftPackageReference` entries in `local_package_references`, allowing
+package-less `XCSwiftPackageProductDependency` records to resolve by unique
+product ownership without searching unrelated repository directories. The
+inventory also supports the simple `PBXFileSystemSynchronizedRootGroup` shape
+emitted by current Xcode
 templates: filesystem membership is bytewise sorted, target-specific
 `membershipExceptions` are applied, and opaque inputs remain single graph
 items. Core ML (`.mlmodel`, `.mlkitmodel`, `.mlpackage`) and Core Data
@@ -111,19 +118,28 @@ one filesystem object twice, regardless of the host filesystem's behavior.
 Synchronized paths whose membership cannot be inferred from an
 extension are reported explicitly under `unclassified` and make
 `unsupported_features` non-empty rather than disappearing from the graph.
+Entitlement files are the narrow exception because Xcode consumes them only
+through the selected configuration's `CODE_SIGN_ENTITLEMENTS` build setting:
+the selected file is recorded as `code_sign_entitlements`, while other
+configuration-specific files remain visible as
+`inactive_code_sign_entitlements` and are not invented as build-phase inputs.
 Shell phases record an empty `files` array; nonempty shell-phase
 `PBXBuildFile` inputs are resolved and rejected rather than escaping the
 target-global identity checks.
 Explicit empty scheme, target, and configuration selectors are errors; they
 never downgrade to an unselected/default mode. Likewise, a present-empty PBX
 presentation field is invalid rather than being treated as absent.
-Every path rooted at `BUILT_PRODUCTS_DIR` or `SDKROOT` must also be a canonical
-relative POSIX path. Absolute paths, parent/current-directory components,
-repeated separators, backslash/drive spellings, unresolved variables, and
-control or Unicode format characters are rejected. This check covers the
-selected application product as well as framework and copy-phase inputs, so a
-successful inventory never asks a downstream join to recover containment from
-an unsafe external-tree spelling.
+Every path rooted at `BUILT_PRODUCTS_DIR`, `DEVELOPER_DIR`, or `SDKROOT` must
+also be a canonical relative POSIX path. `DEVELOPER_DIR` is retained for the
+older Xcode spelling that records an SDK framework below
+`Platforms/<platform>/Developer/SDKs/...`; it remains an external framework
+identity and is never resolved against the inventory host's Xcode install.
+Absolute paths, parent/current-directory components, repeated separators,
+backslash/drive spellings, unresolved variables, and control or Unicode format
+characters are rejected. This check covers the selected application product
+as well as framework and copy-phase inputs, so a successful inventory never
+asks a downstream join to recover containment from an unsafe external-tree
+spelling.
 For ordinary file references using `<group>`, Xcode's parent components are
 resolved against the containing PBX group before repository containment is
 checked. This admits real layouts such as `Resources/../Images.xcassets`

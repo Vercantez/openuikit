@@ -271,7 +271,13 @@ def _git_environment() -> dict[str, str]:
     return environment
 
 
-def _git(repository: Path | None, arguments: list[str], label: str) -> bytes:
+def _git(
+    repository: Path | None,
+    arguments: list[str],
+    label: str,
+    *,
+    input_data: bytes | None = None,
+) -> bytes:
     command = [
         "git",
         "-c",
@@ -287,6 +293,7 @@ def _git(repository: Path | None, arguments: list[str], label: str) -> bytes:
     completed = subprocess.run(
         command,
         env=_git_environment(),
+        input=input_data,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         check=False,
@@ -309,12 +316,71 @@ def _single_line(data: bytes, label: str) -> str:
     return value
 
 
-def _tracked_tree(repository: Path) -> tuple[str, int, str]:
+def _blob_object_id(data: bytes, expected_length: int) -> str:
+    if expected_length == 40:
+        digest = hashlib.sha1()
+    elif expected_length == 64:
+        digest = hashlib.sha256()
+    else:
+        raise MaterializationError("tracked blob uses an unsupported object format")
+    digest.update(f"blob {len(data)}\0".encode("ascii"))
+    digest.update(data)
+    return digest.hexdigest()
+
+
+def _symlink_target_within_repository(path: str, target: bytes) -> str:
+    try:
+        value = target.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise MaterializationError(
+            f"tracked symlink {path!r} target is not UTF-8"
+        ) from exc
+    if (
+        not value
+        or PurePosixPath(value).is_absolute()
+        or "\\" in value
+        or any(character in value for character in "\0\r\n")
+    ):
+        raise MaterializationError(
+            f"tracked symlink {path!r} target is not a portable relative path"
+        )
+
+    resolved = list(PurePosixPath(path).parent.parts)
+    for component in PurePosixPath(value).parts:
+        if component in ("", "."):
+            continue
+        if component == "..":
+            if not resolved:
+                raise MaterializationError(
+                    f"tracked symlink {path!r} escapes the repository"
+                )
+            resolved.pop()
+        else:
+            resolved.append(component)
+    if resolved and resolved[0] == ".git":
+        raise MaterializationError(
+            f"tracked symlink {path!r} targets repository metadata"
+        )
+    return value
+
+
+def _tracked_tree(
+    repository: Path,
+) -> tuple[
+    str,
+    int,
+    str,
+    list[dict[str, str]],
+    list[dict[str, str]],
+]:
     raw = _git(repository, ["ls-tree", "-r", "-z", "HEAD"], "tracked-tree inventory")
     entries = raw.split(b"\0")
     if entries and not entries[-1]:
         entries.pop()
     count = 0
+    gitlinks: list[dict[str, str]] = []
+    regular_files: list[tuple[str, str]] = []
+    symlinks: list[dict[str, str]] = []
     portable_paths: set[str] = set()
     for index, record in enumerate(entries):
         try:
@@ -325,11 +391,7 @@ def _tracked_tree(repository: Path) -> tuple[str, int, str]:
             raise MaterializationError(
                 f"tracked-tree entry {index} is malformed"
             ) from exc
-        if (
-            mode not in {"100644", "100755"}
-            or kind != "blob"
-            or _OBJECT_ID.fullmatch(object_id) is None
-        ):
+        if _OBJECT_ID.fullmatch(object_id) is None:
             raise MaterializationError(
                 f"tracked-tree entry {path!r} has unsupported mode or kind {mode} {kind}"
             )
@@ -339,20 +401,97 @@ def _tracked_tree(repository: Path) -> tuple[str, int, str]:
                 f"tracked-tree repeats or portably aliases path {path!r}"
             )
         portable_paths.add(portable_path)
-        physical = _ordinary_file(repository, path, f"tracked file {path!r}")
-        actual_object = _single_line(
-            _git(
-                repository,
-                ["hash-object", "--no-filters", "--", os.fspath(physical)],
-                f"hash tracked file {path!r}",
-            ),
-            f"tracked file {path!r} object ID",
-        )
-        if actual_object != object_id:
-            raise MaterializationError(
-                f"tracked file content differs from HEAD: {path}"
+        if mode == "160000" and kind == "commit":
+            physical = repository / path
+            if physical.exists() or physical.is_symlink():
+                try:
+                    metadata = physical.lstat()
+                except OSError as exc:
+                    raise MaterializationError(
+                        f"cannot inspect unmaterialized gitlink {path!r}: {exc}"
+                    ) from exc
+                if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
+                    raise MaterializationError(
+                        f"unmaterialized gitlink is not an ordinary directory: {path}"
+                    )
+                try:
+                    physical.resolve(strict=True).relative_to(repository)
+                except ValueError as exc:
+                    raise MaterializationError(
+                        f"unmaterialized gitlink escapes the repository: {path}"
+                    ) from exc
+                try:
+                    with os.scandir(physical) as children:
+                        if next(children, None) is not None:
+                            raise MaterializationError(
+                                f"unmaterialized gitlink contains worktree content: {path}"
+                            )
+                except OSError as exc:
+                    raise MaterializationError(
+                        f"cannot scan unmaterialized gitlink {path!r}: {exc}"
+                    ) from exc
+            gitlinks.append({"commit": object_id, "path": path})
+            continue
+        if mode == "120000" and kind == "blob":
+            physical = repository / path
+            try:
+                metadata = physical.lstat()
+            except OSError as exc:
+                raise MaterializationError(
+                    f"cannot inspect tracked symlink {path!r}: {exc}"
+                ) from exc
+            if not stat.S_ISLNK(metadata.st_mode):
+                raise MaterializationError(
+                    f"tracked symlink is not a physical symlink: {path}"
+                )
+            try:
+                actual_target = os.readlink(os.fsencode(physical))
+            except OSError as exc:
+                raise MaterializationError(
+                    f"cannot read tracked symlink {path!r}: {exc}"
+                ) from exc
+            if _blob_object_id(actual_target, len(object_id)) != object_id:
+                raise MaterializationError(
+                    f"tracked symlink target differs from HEAD: {path}"
+                )
+            target = _symlink_target_within_repository(path, actual_target)
+            symlinks.append(
+                {"blob": object_id, "path": path, "target": target}
             )
+            continue
+        if mode not in {"100644", "100755"} or kind != "blob":
+            raise MaterializationError(
+                f"tracked-tree entry {path!r} has unsupported mode or kind {mode} {kind}"
+            )
+        physical = _ordinary_file(repository, path, f"tracked file {path!r}")
+        regular_files.append((path, object_id))
         count += 1
+    if regular_files:
+        actual_objects = _git(
+            repository,
+            ["hash-object", "--no-filters", "--stdin-paths"],
+            "hash tracked regular files",
+            input_data=b"".join(
+                path.encode("utf-8") + b"\n" for path, _ in regular_files
+            ),
+        ).splitlines()
+        if len(actual_objects) != len(regular_files):
+            raise MaterializationError(
+                "tracked-file hashing returned an inconsistent result count"
+            )
+        for (path, expected), actual in zip(
+            regular_files, actual_objects, strict=True
+        ):
+            try:
+                actual_object = actual.decode("ascii")
+            except UnicodeDecodeError as exc:
+                raise MaterializationError(
+                    f"tracked file {path!r} object ID is not ASCII"
+                ) from exc
+            if actual_object != expected:
+                raise MaterializationError(
+                    f"tracked file content differs from HEAD: {path}"
+                )
     return (
         _sha256(raw),
         count,
@@ -360,6 +499,8 @@ def _tracked_tree(repository: Path) -> tuple[str, int, str]:
             b"\0".join(sorted(record.split(b"\t", 1)[1] for record in entries))
             + (b"\0" if entries else b"")
         ),
+        gitlinks,
+        symlinks,
     )
 
 
@@ -471,14 +612,22 @@ def _attestation(
         ["fsck", "--strict", "--no-reflogs", descriptor["revision"]],
         "verify repository object connectivity",
     )
-    listing_sha256, tracked_file_count, tracked_paths_sha256 = _tracked_tree(repository)
+    (
+        listing_sha256,
+        tracked_file_count,
+        tracked_paths_sha256,
+        gitlinks,
+        symlinks,
+    ) = _tracked_tree(repository)
     manifest = _ordinary_file(repository, "Package.swift", "remote Package.swift")
     manifest_data = manifest.read_bytes()
     return {
         "cache_key": f"sha256:{descriptor_digest(descriptor)}",
         "classification": "exact-remote-swift-package-materialization",
         "commit": head,
-        "format_version": 1,
+        "format_version": 3,
+        "gitlink_count": len(gitlinks),
+        "gitlinks": gitlinks,
         "identity": descriptor["identity"],
         "manifest": {
             "path": "Package.swift",
@@ -488,6 +637,8 @@ def _attestation(
         "object_format": object_format,
         "origin": origin,
         "repository_path": repository_relative,
+        "symlink_count": len(symlinks),
+        "symlinks": symlinks,
         "tracked_file_count": tracked_file_count,
         "tracked_paths_sha256": tracked_paths_sha256,
         "tracked_tree_listing_sha256": listing_sha256,
@@ -586,6 +737,8 @@ def materialize_entry(
             "core.autocrlf=false",
             "--config",
             "core.eol=lf",
+            "--config",
+            "core.symlinks=true",
             "--",
             descriptor["url"],
             os.fspath(repository),
@@ -627,20 +780,60 @@ def materialize_entry(
         raise
 
 
-def _external_descriptors(
+def _graph_descriptors(
     graph: Mapping[str, Any], allow_file_url: bool
 ) -> list[dict[str, str]]:
     external = _list(graph.get("external_packages"), "graph external_packages")
-    result = [
+    direct = [
         descriptor_for(
             _mapping(raw, f"graph external_packages[{index}]"),
             allow_file_url=allow_file_url,
         )
         for index, raw in enumerate(external)
     ]
-    result.sort(key=lambda item: (item["identity"].encode(), item["url"].encode()))
-    if len({descriptor_digest(item) for item in result}) != len(result):
+    if len({descriptor_digest(item) for item in direct}) != len(direct):
         raise MaterializationError("graph repeats an exact remote package descriptor")
+
+    pins = _list(graph.get("resolution_pins", []), "graph resolution_pins")
+    closure: list[dict[str, str]] = []
+    for index, raw in enumerate(pins):
+        pin = _mapping(raw, f"graph resolution_pins[{index}]")
+        if pin.get("kind") != "remoteSourceControl":
+            raise MaterializationError(
+                f"graph resolution_pins[{index}] is not remote source control"
+            )
+        closure.append(
+            descriptor_for(
+                {
+                    "identity": pin.get("identity"),
+                    "url": pin.get("location"),
+                    "pin": {
+                        "location": pin.get("location"),
+                        "revision": pin.get("revision"),
+                    },
+                },
+                allow_file_url=allow_file_url,
+            )
+        )
+
+    by_identity: dict[str, dict[str, str]] = {}
+    by_url: dict[str, str] = {}
+    for descriptor in [*direct, *closure]:
+        identity = descriptor["identity"]
+        previous = by_identity.get(identity)
+        if previous is not None and previous != descriptor:
+            raise MaterializationError(
+                f"graph binds remote package identity {identity!r} more than once"
+            )
+        previous_identity = by_url.get(descriptor["url"])
+        if previous_identity is not None and previous_identity != identity:
+            raise MaterializationError(
+                f"graph aliases one remote package URL as {previous_identity!r} and {identity!r}"
+            )
+        by_identity[identity] = descriptor
+        by_url[descriptor["url"]] = identity
+    result = list(by_identity.values())
+    result.sort(key=lambda item: (item["identity"].encode(), item["url"].encode()))
     return result
 
 
@@ -653,7 +846,7 @@ def materialize_graph(
     graph_bytes = canonical_json(graph)
     packages = [
         materialize_entry(cache_root, descriptor, allow_file_url=allow_file_url)
-        for descriptor in _external_descriptors(graph, allow_file_url)
+        for descriptor in _graph_descriptors(graph, allow_file_url)
     ]
     result = {
         "classification": "exact-remote-swift-package-materialization-set",
@@ -684,7 +877,7 @@ def verify_set(
         raise MaterializationError(
             "remote materialization set belongs to a different source graph"
         )
-    expected_descriptors = _external_descriptors(graph, allow_file_url)
+    expected_descriptors = _graph_descriptors(graph, allow_file_url)
     packages = _list(materializations.get("packages"), "materialization packages")
     if len(packages) != len(expected_descriptors):
         raise MaterializationError(

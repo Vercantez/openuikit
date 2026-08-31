@@ -760,7 +760,7 @@ class ProjectPlanner:
             elif source_tree in {"SOURCE_ROOT", "PROJECT_DIR"}:
                 repo_path = self._expand_path(component, f"file reference {ref_id}")
                 external_tree = None
-            elif source_tree in {"BUILT_PRODUCTS_DIR", "SDKROOT"}:
+            elif source_tree in {"BUILT_PRODUCTS_DIR", "DEVELOPER_DIR", "SDKROOT"}:
                 repo_path = None
                 external_tree = source_tree
             else:

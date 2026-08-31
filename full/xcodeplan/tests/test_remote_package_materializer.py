@@ -161,7 +161,7 @@ class RemotePackageMaterializerTests(unittest.TestCase):
             self.materialize()
         self.assertEqual(list(outside.iterdir()), [])
 
-    def test_symlinked_tracked_content_is_refused(self) -> None:
+    def test_internal_tracked_symlink_is_attested_and_reverified(self) -> None:
         linked = self.origin / "linked"
         linked.symlink_to("Package.swift")
         self.git(self.origin, "add", "linked")
@@ -170,12 +170,100 @@ class RemotePackageMaterializerTests(unittest.TestCase):
             **self.descriptor,
             "revision": self.git(self.origin, "rev-parse", "HEAD").strip(),
         }
+        cache = self.root / "symlink-cache"
+        record = materializer.materialize_entry(
+            cache, descriptor, allow_file_url=True
+        )
+        self.assertEqual(record["format_version"], 3)
+        self.assertEqual(record["symlink_count"], 1)
+        self.assertEqual(
+            record["symlinks"],
+            [
+                {
+                    "blob": self.git(
+                        self.origin, "rev-parse", "HEAD:linked"
+                    ).strip(),
+                    "path": "linked",
+                    "target": "Package.swift",
+                }
+            ],
+        )
+        checkout = cache / record["repository_path"] / "linked"
+        self.assertTrue(checkout.is_symlink())
+        self.assertEqual(os.readlink(checkout), "Package.swift")
+        self.assertEqual(
+            materializer.verify_entry(cache, descriptor, allow_file_url=True),
+            record,
+        )
+        checkout.unlink()
+        checkout.symlink_to("Sources/Remote/Remote.swift")
         with self.assertRaisesRegex(
-            materializer.MaterializationError, "unsupported mode or kind"
+            materializer.MaterializationError, "stale or corrupt cache entry"
+        ):
+            materializer.verify_entry(cache, descriptor, allow_file_url=True)
+
+    def test_tracked_symlink_that_escapes_repository_is_refused(self) -> None:
+        linked = self.origin / "outside"
+        linked.symlink_to("../outside")
+        self.git(self.origin, "add", "outside")
+        self.git(self.origin, "commit", "-m", "escaping symlink")
+        descriptor = {
+            **self.descriptor,
+            "revision": self.git(self.origin, "rev-parse", "HEAD").strip(),
+        }
+        with self.assertRaisesRegex(
+            materializer.MaterializationError, "escapes the repository"
         ):
             materializer.materialize_entry(
-                self.root / "symlink-cache", descriptor, allow_file_url=True
+                self.root / "escaping-symlink-cache",
+                descriptor,
+                allow_file_url=True,
             )
+
+    def test_unmaterialized_gitlink_is_attested_but_never_cloned(self) -> None:
+        submodule = self.root / "documentation-origin"
+        submodule.mkdir()
+        self.git(submodule, "init", "--initial-branch=main")
+        self.git(submodule, "config", "user.name", "Package Test")
+        self.git(submodule, "config", "user.email", "package@example.invalid")
+        (submodule / "README.md").write_text("documentation\n", encoding="utf-8")
+        self.git(submodule, "add", "--all")
+        self.git(submodule, "commit", "-m", "documentation")
+        gitlink_commit = self.git(submodule, "rev-parse", "HEAD").strip()
+
+        self.git(
+            self.origin,
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "add",
+            submodule.as_uri(),
+            "Documentation",
+        )
+        self.git(self.origin, "commit", "-m", "add documentation gitlink")
+        descriptor = {
+            **self.descriptor,
+            "revision": self.git(self.origin, "rev-parse", "HEAD").strip(),
+        }
+        cache = self.root / "gitlink-cache"
+        record = materializer.materialize_entry(
+            cache, descriptor, allow_file_url=True
+        )
+        self.assertEqual(record["format_version"], 3)
+        self.assertEqual(record["gitlink_count"], 1)
+        self.assertEqual(
+            record["gitlinks"],
+            [{"commit": gitlink_commit, "path": "Documentation"}],
+        )
+        checkout = cache / record["repository_path"] / "Documentation"
+        self.assertTrue(not checkout.exists() or list(checkout.iterdir()) == [])
+        self.assertFalse((checkout / "README.md").exists())
+        self.assertEqual(
+            materializer.verify_entry(
+                cache, descriptor, allow_file_url=True
+            ),
+            record,
+        )
 
     def test_url_and_descriptor_spoofing_are_refused(self) -> None:
         invalid = (
@@ -242,6 +330,65 @@ class RemotePackageMaterializerTests(unittest.TestCase):
             materializer.verify_set(
                 result, changed_graph, self.cache, allow_file_url=True
             )
+
+    def test_complete_frozen_resolution_closure_is_materialized(self) -> None:
+        other = self.root / "other-origin"
+        other.mkdir()
+        self.git(other, "init", "--initial-branch=main")
+        self.git(other, "config", "user.name", "Package Test")
+        self.git(other, "config", "user.email", "package@example.invalid")
+        (other / "Package.swift").write_text(
+            "// swift-tools-version: 6.0\n"
+            "import PackageDescription\n"
+            'let package = Package(name: "Other", targets: ['
+            '.target(name: "Other")])\n',
+            encoding="utf-8",
+        )
+        source = other / "Sources/Other/Other.swift"
+        source.parent.mkdir(parents=True)
+        source.write_text("public struct Other {}\n", encoding="utf-8")
+        self.git(other, "add", "--all")
+        self.git(other, "commit", "-m", "other pinned source")
+        other_revision = self.git(other, "rev-parse", "HEAD").strip()
+        other_url = other.as_uri()
+
+        package = {
+            "identity": "remote",
+            "url": self.url,
+            "pin": {"location": self.url, "revision": self.revision},
+        }
+        graph = {
+            "external_packages": [package],
+            "resolution_pins": [
+                {
+                    "identity": "remote",
+                    "kind": "remoteSourceControl",
+                    "location": self.url,
+                    "revision": self.revision,
+                },
+                {
+                    "identity": "other",
+                    "kind": "remoteSourceControl",
+                    "location": other_url,
+                    "revision": other_revision,
+                },
+            ],
+        }
+        result = materializer.materialize_graph(
+            graph, self.cache, allow_file_url=True
+        )
+        self.assertEqual(
+            [record["identity"] for record in result["packages"]],
+            ["other", "remote"],
+        )
+        self.assertEqual(
+            set(
+                materializer.verify_set(
+                    result, graph, self.cache, allow_file_url=True
+                )
+            ),
+            {"other", "remote"},
+        )
 
 
 if __name__ == "__main__":

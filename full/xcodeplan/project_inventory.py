@@ -833,7 +833,14 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
         return result
 
     def _local_package_references(self) -> list[dict[str, Any]]:
-        """Inventory every project-declared local package root without evaluation."""
+        """Inventory every project-declared local package root without evaluation.
+
+        Current Xcode projects use XCLocalSwiftPackageReference. Xcode 14-era
+        projects also place a PBXFileReference with file type ``wrapper`` in
+        the main group and omit the package id from product dependencies. Both
+        are explicit project graph edges; neither requires a repository-wide
+        package search.
+        """
         result: list[dict[str, Any]] = []
         seen_ids: set[str] = set()
         seen_paths: set[str] = set()
@@ -885,6 +892,82 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                     "relative_path": relative,
                 }
             )
+
+        main_group_id = xcodeplan.require_string(
+            self.project.get("mainGroup"), "PBXProject.mainGroup"
+        )
+
+        def is_in_main_group(ref_id: str) -> bool:
+            current = ref_id
+            ancestors: set[str] = set()
+            while current != main_group_id:
+                if current in ancestors:
+                    raise PlanError(
+                        f"cycle while resolving package wrapper reference {ref_id}"
+                    )
+                ancestors.add(current)
+                parent = self.parents.get(current)
+                if parent is None:
+                    return False
+                current = parent
+            return True
+
+        wrappers: list[dict[str, Any]] = []
+        for raw_id, raw_object in self.objects.items():
+            if not isinstance(raw_object, dict) or raw_object.get("isa") != "PBXFileReference":
+                continue
+            declared_types = {
+                xcodeplan.require_string(
+                    raw_object[key], f"file reference {raw_id}.{key}"
+                )
+                for key in ("explicitFileType", "lastKnownFileType")
+                if key in raw_object
+            }
+            if declared_types != {"wrapper"} or not is_in_main_group(raw_id):
+                continue
+            resolved = self.resolve_file(raw_id)
+            if resolved.get("external_tree"):
+                continue
+            relative = self._normalize_relative(
+                xcodeplan.require_string(
+                    resolved.get("path"), f"package wrapper {raw_id}.path"
+                ),
+                f"package wrapper {raw_id}.path",
+            )
+            package_root = self._validate_existing_path(
+                relative, f"package wrapper {raw_id}"
+            )
+            if not package_root.is_dir():
+                continue
+            manifest_relative = f"{relative}/Package.swift"
+            manifest = self._validate_existing_path_prefix(
+                manifest_relative, f"package wrapper {raw_id} manifest"
+            )
+            if manifest is None or not manifest.is_file():
+                continue
+            wrappers.append(
+                {
+                    "file_ref_id": raw_id,
+                    "manifest_path": manifest_relative,
+                    "manifest_sha256": xcodeplan.sha256_file(manifest),
+                    "relative_path": relative,
+                }
+            )
+
+        for wrapper in sorted(
+            wrappers,
+            key=lambda entry: xcodeplan.require_string(
+                entry.get("relative_path"), "package wrapper relative_path"
+            ).encode("utf-8"),
+        ):
+            relative = xcodeplan.require_string(
+                wrapper.get("relative_path"), "package wrapper relative_path"
+            )
+            portable = unicodedata.normalize("NFC", relative.casefold())
+            if portable in seen_paths:
+                continue
+            seen_paths.add(portable)
+            result.append(wrapper)
         return result
 
     def _package_products(self, target: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -2606,6 +2689,24 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                 )
             if entitlement_matches:
                 entitlement_matches[0]["role"] = "code_sign_entitlements"
+        # Filesystem-synchronized groups contain project metadata as well as
+        # inferred build-phase inputs. An entitlement is consumed only through
+        # CODE_SIGN_ENTITLEMENTS; other configuration-specific entitlement
+        # files in the same group are intentionally inactive for this plan.
+        # Retain their identity instead of pretending they are resources, but
+        # do not make an otherwise complete application graph unsupported.
+        for entry in unclassified:
+            if (
+                entry.get("role") is None
+                and not entry.get("directory_input")
+                and Path(
+                    xcodeplan.require_string(
+                        entry.get("path"), "unclassified synchronized input path"
+                    )
+                ).suffix.lower()
+                == ".entitlements"
+            ):
+                entry["role"] = "inactive_code_sign_entitlements"
         phase_kinds = {phase["kind"] for phase in phases}
         if any(group["items"]["sources"] for group in synchronized_groups) and "sources" not in phase_kinds:
             raise PlanError("filesystem-synchronized sources have no PBXSourcesBuildPhase")

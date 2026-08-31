@@ -317,6 +317,102 @@ class LocalPackageGraphTests(unittest.TestCase):
         ):
             local_package_graph.verify(graph, self.root, cache)
 
+    def test_top_level_xcode_remote_product_can_be_frozen_then_materialized(self) -> None:
+        materializations, cache = self.materialized_remote()
+        inventory = {
+            "project": {"path": "Probe.xcodeproj/project.pbxproj"},
+            "local_package_references": [],
+            "package_products": [
+                {
+                    "name": "Remote",
+                    "origin": "remote",
+                    "repository_url": "https://example.invalid/Remote.git",
+                    "requirement": {
+                        "kind": "exactVersion",
+                        "version": "1.2.3",
+                    },
+                }
+            ],
+        }
+        baseline = local_package_graph.plan(inventory, self.root)
+        self.assertIsNotNone(baseline)
+        assert baseline is not None
+        self.assertEqual(baseline["buildability"]["status"], "blocked")
+        self.assertEqual(
+            baseline["selected_products"],
+            [
+                {
+                    "name": "Remote",
+                    "origin": "remote",
+                    "package_identity": "remote",
+                    "repository_url": "https://example.invalid/Remote.git",
+                    "requirement": {"kind": "exact", "value": "1.2.3"},
+                    "target_ids": [],
+                }
+            ],
+        )
+        self.assertEqual(
+            baseline["external_packages"][0]["consumers"],
+            [{"consumer_target": "@application", "product": "Remote"}],
+        )
+        local_package_graph.verify(baseline, self.root)
+
+        rebound = copy.deepcopy(materializations)
+        rebound["source_graph_sha256"] = local_package_graph._sha256(
+            local_package_graph.canonical_json(baseline)
+        )
+        expanded = local_package_graph.plan(inventory, self.root, rebound, cache)
+        self.assertIsNotNone(expanded)
+        assert expanded is not None
+        self.assertEqual(expanded["buildability"], {"reason": None, "status": "buildable"})
+        self.assertEqual(expanded["external_packages"], [])
+        self.assertEqual(len(expanded["targets"]), 1)
+        self.assertTrue(expanded["targets"][0]["target_id"].endswith("#Remote"))
+        self.assertEqual(
+            expanded["selected_products"][0]["target_ids"],
+            [expanded["targets"][0]["target_id"]],
+        )
+        local_package_graph.verify(expanded, self.root, cache)
+
+    def test_top_level_revision_requirement_survives_canonical_verification(self) -> None:
+        materializations, _ = self.materialized_remote()
+        revision = materializations["packages"][0]["commit"]
+        inventory = {
+            "project": {"path": "Probe.xcodeproj/project.pbxproj"},
+            "local_package_references": [],
+            "package_products": [
+                {
+                    "name": "Remote",
+                    "origin": "remote",
+                    "repository_url": "https://example.invalid/Remote.git",
+                    "requirement": {
+                        "kind": "revision",
+                        "revision": revision,
+                    },
+                }
+            ],
+        }
+        graph = local_package_graph.plan(inventory, self.root)
+        self.assertIsNotNone(graph)
+        assert graph is not None
+        self.assertEqual(
+            graph["selected_products"][0]["requirement"],
+            {"kind": "revision", "value": revision},
+        )
+        local_package_graph.verify(graph, self.root)
+        self.assertEqual(
+            local_package_graph._inventory_remote_requirement(
+                {"kind": "branch", "branch": "release"}, "requirement"
+            ),
+            {"kind": "branch", "value": "release"},
+        )
+        self.assertEqual(
+            local_package_graph._inventory_remote_requirement(
+                {"kind": "branch", "value": "release"}, "requirement"
+            ),
+            {"kind": "branch", "value": "release"},
+        )
+
     def test_cycle_is_refused(self) -> None:
         self.write_package(
             "Core",
@@ -442,6 +538,73 @@ class LocalPackageGraphTests(unittest.TestCase):
         ):
             self.graph()
 
+    def test_static_version_constructor_requirement_is_frozen(self) -> None:
+        manifest = self.root / "Feature/Package.swift"
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                'exact: "1.2.3"', "from: Version(1, 2, 3)"
+            ),
+            encoding="utf-8",
+        )
+        graph = self.graph()
+        self.assertEqual(
+            graph["external_packages"][0]["requirements"],
+            [
+                {
+                    "kind": "from",
+                    "package_path": "Feature",
+                    "value": "1.2.3",
+                }
+            ],
+        )
+        local_package_graph.verify(graph, self.root)
+
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                "Version(1, 2, 3)", "Version(major, 2, 3)"
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError, "integer literals"
+        ):
+            self.graph()
+
+    def test_unconditional_product_item_dependency_is_normalized(self) -> None:
+        manifest = self.root / "Feature/Package.swift"
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                '.product(name: "Remote", package: "Remote")',
+                '.productItem(name: "Remote", package: "Remote", condition: nil)',
+            ),
+            encoding="utf-8",
+        )
+        graph = self.graph()
+        feature = next(
+            target for target in graph["targets"] if target["target_id"] == "Feature#Feature"
+        )
+        self.assertIn(
+            {
+                "kind": "external_product",
+                "package_identity": "remote",
+                "product": "Remote",
+                "url": "https://example.invalid/Remote.git",
+            },
+            feature["dependencies"],
+        )
+        local_package_graph.verify(graph, self.root)
+
+        manifest.write_text(
+            manifest.read_text(encoding="utf-8").replace(
+                "condition: nil", "condition: .when(platforms: [.iOS])"
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError, "conditional product dependency"
+        ):
+            self.graph()
+
     def test_symlinked_workspace_resolution_is_refused(self) -> None:
         resolution = (
             self.root
@@ -501,6 +664,73 @@ class LocalPackageGraphTests(unittest.TestCase):
         map_path.write_text("{}\n", encoding="utf-8")
         with self.assertRaisesRegex(local_package_graph.PackageGraphError, "changed"):
             local_package_graph.verify_build_contract(graph, self.root, output)
+
+    def test_static_swift_settings_reach_the_exact_target_build_record(self) -> None:
+        self.make_local_only()
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [
+                    .target(
+                        name: "Core",
+                        swiftSettings: [
+                            .swiftLanguageMode(.v6),
+                            .defaultIsolation(MainActor.self)
+                        ]
+                    )
+                ]
+            )
+            """,
+        )
+        graph = self.graph()
+        core = graph["targets"][0]
+        self.assertEqual(
+            core["swift_settings"],
+            [
+                {"kind": "swift_language_mode", "value": "6"},
+                {"kind": "default_isolation", "value": "MainActor"},
+            ],
+        )
+        output = Path(self.temporary.name) / "swift-settings-build"
+        contract = local_package_graph.prepare_build(graph, self.root, output)
+        self.assertEqual(contract["format_version"], 2)
+        self.assertEqual(
+            contract["targets"][0]["swift_arguments"],
+            ["-swift-version", "6", "-default-isolation", "MainActor"],
+        )
+        record = local_package_graph.emit_target_record(contract, 0).split(b"\0")[:-1]
+        source_count = int(record[3])
+        argument_count_index = 4 + source_count
+        self.assertEqual(record[argument_count_index], b"4")
+        self.assertEqual(
+            record[argument_count_index + 1 : argument_count_index + 5],
+            [b"-swift-version", b"6", b"-default-isolation", b"MainActor"],
+        )
+        local_package_graph.verify_build_contract(graph, self.root, output)
+
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [
+                    .target(
+                        name: "Core",
+                        swiftSettings: [.define("UNMODELED")]
+                    )
+                ]
+            )
+            """,
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError,
+            "unsupported Swift setting",
+        ):
+            self.graph()
 
 
 if __name__ == "__main__":

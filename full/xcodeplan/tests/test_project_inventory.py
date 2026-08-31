@@ -276,6 +276,96 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                 ],
             )
 
+    def test_legacy_package_wrapper_reference_resolves_implicit_product(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            package = root / "LegacyKit"
+            package.mkdir()
+            manifest = package / "Package.swift"
+            manifest.write_text(
+                "// swift-tools-version: 6.4\n"
+                "import PackageDescription\n"
+                "let package = Package(name: \"LegacyKit\")\n",
+                encoding="utf-8",
+            )
+            ignored_wrapper = root / "Documentation"
+            ignored_wrapper.mkdir()
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            group_children = (
+                "\t\t\tchildren = (\n"
+                "\t\t\t\t000000000000000000000003,\n"
+                "\t\t\t\t000000000000000000000004,\n"
+                "\t\t\t);"
+            )
+            self.assertIn(group_children, contents)
+            contents = contents.replace(
+                group_children,
+                "\t\t\tchildren = (\n"
+                "\t\t\t\t000000000000000000000003,\n"
+                "\t\t\t\t000000000000000000000004,\n"
+                "\t\t\t\tCCCCCCCCCCCCCCCCCCCCCCCC,\n"
+                "\t\t\t\tEEEEEEEEEEEEEEEEEEEEEEEE,\n"
+                "\t\t\t);",
+                1,
+            )
+            object_marker = "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {"
+            self.assertIn(object_marker, contents)
+            contents = contents.replace(
+                object_marker,
+                "\t\tCCCCCCCCCCCCCCCCCCCCCCCC = {\n"
+                "\t\t\tisa = PBXFileReference;\n"
+                "\t\t\tlastKnownFileType = wrapper;\n"
+                "\t\t\tpath = LegacyKit;\n"
+                "\t\t\tsourceTree = \"<group>\";\n"
+                "\t\t};\n"
+                "\t\tEEEEEEEEEEEEEEEEEEEEEEEE = {\n"
+                "\t\t\tisa = PBXFileReference;\n"
+                "\t\t\tlastKnownFileType = wrapper;\n"
+                "\t\t\tpath = Documentation;\n"
+                "\t\t\tsourceTree = \"<group>\";\n"
+                "\t\t};\n"
+                "\t\tDDDDDDDDDDDDDDDDDDDDDDDD = {\n"
+                "\t\t\tisa = XCSwiftPackageProductDependency;\n"
+                "\t\t\tproductName = LegacyKit;\n"
+                "\t\t};\n"
+                + object_marker,
+                1,
+            )
+            contents = contents.replace(
+                "\t\t\tpackageProductDependencies = ();",
+                "\t\t\tpackageProductDependencies = (DDDDDDDDDDDDDDDDDDDDDDDD,);",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            self.assertEqual(
+                inventory["local_package_references"],
+                [
+                    {
+                        "file_ref_id": "CCCCCCCCCCCCCCCCCCCCCCCC",
+                        "manifest_path": "LegacyKit/Package.swift",
+                        "manifest_sha256": project_inventory.xcodeplan.sha256_file(
+                            manifest
+                        ),
+                        "relative_path": "LegacyKit",
+                    }
+                ],
+            )
+            self.assertEqual(
+                inventory["package_products"],
+                [
+                    {
+                        "name": "LegacyKit",
+                        "origin": "local",
+                        "product_ref_id": "DDDDDDDDDDDDDDDDDDDDDDDD",
+                    }
+                ],
+            )
+
     def test_core_data_version_group_preserves_order_and_current_version(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root, project = self.copied_modern_fixture(directory)
@@ -800,6 +890,10 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
             root, project = self.copied_modern_fixture(directory)
             entitlements = root / "App/Modern.entitlements"
             entitlements.write_text("<?xml version=\"1.0\"?><plist/>", encoding="utf-8")
+            inactive_entitlements = root / "App/Modern-Debug.entitlements"
+            inactive_entitlements.write_text(
+                "<?xml version=\"1.0\"?><plist/>", encoding="utf-8"
+            )
             self.add_selected_build_setting(
                 project,
                 "target",
@@ -815,7 +909,13 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                     (entry["path"], entry.get("role"))
                     for entry in inventory["unclassified"]
                 ],
-                [("App/Modern.entitlements", "code_sign_entitlements")],
+                [
+                    (
+                        "App/Modern-Debug.entitlements",
+                        "inactive_code_sign_entitlements",
+                    ),
+                    ("App/Modern.entitlements", "code_sign_entitlements"),
+                ],
             )
 
     def test_explicit_empty_selectors_never_downgrade_to_defaults(self) -> None:
@@ -1188,6 +1288,110 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 project_inventory.PlanError,
                 "unsafe.*path rooted at SDKROOT",
+            ):
+                project_inventory.build_project_inventory(
+                    project,
+                    scheme_name="Focus",
+                )
+
+    def test_developer_dir_sdk_framework_is_retained_as_an_external_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mini"
+            shutil.copytree(MINI_FIXTURE, root)
+            project = root / "Blockzilla.xcodeproj"
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            object_marker = "\t\t100000000000000000000001 = {"
+            build_marker = "\t\t200000000000000000000001 = {"
+            phase_marker = "\t\t\tfiles = (200000000000000000000004, );"
+            for marker in (object_marker, build_marker, phase_marker):
+                self.assertIn(marker, contents)
+            framework_path = (
+                "Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.2.sdk/"
+                "System/Library/Frameworks/QuickLook.framework"
+            )
+            contents = contents.replace(
+                object_marker,
+                "\t\t100000000000000000000008 = {\n"
+                "\t\t\tlastKnownFileType = wrapper.framework;\n"
+                "\t\t\tisa = PBXFileReference;\n"
+                f"\t\t\tpath = {framework_path};\n"
+                "\t\t\tsourceTree = DEVELOPER_DIR;\n"
+                "\t\t};\n"
+                + object_marker,
+                1,
+            ).replace(
+                build_marker,
+                "\t\t200000000000000000000007 = {isa = PBXBuildFile; "
+                "fileRef = 100000000000000000000008; };\n"
+                + build_marker,
+                1,
+            ).replace(
+                phase_marker,
+                "\t\t\tfiles = (\n"
+                "\t\t\t\t200000000000000000000004,\n"
+                "\t\t\t\t200000000000000000000007,\n"
+                "\t\t\t);",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+
+            inventory = project_inventory.build_project_inventory(
+                project,
+                scheme_name="Focus",
+            )
+            framework_phase = next(
+                phase
+                for phase in inventory["build_phases"]
+                if phase["kind"] == "frameworks"
+            )
+            quick_look = next(
+                item
+                for item in framework_phase["items"]
+                if item.get("file_ref_id") == "100000000000000000000008"
+            )
+            self.assertEqual(quick_look["external_tree"], "DEVELOPER_DIR")
+            self.assertEqual(quick_look["source_tree"], "DEVELOPER_DIR")
+            self.assertEqual(quick_look["path"], framework_path)
+            self.assertEqual(quick_look["name"], "QuickLook.framework")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mini"
+            shutil.copytree(MINI_FIXTURE, root)
+            project = root / "Blockzilla.xcodeproj"
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            object_marker = "\t\t100000000000000000000001 = {"
+            build_marker = "\t\t200000000000000000000001 = {"
+            phase_marker = "\t\t\tfiles = (200000000000000000000004, );"
+            contents = contents.replace(
+                object_marker,
+                "\t\t100000000000000000000008 = {\n"
+                "\t\t\texplicitFileType = wrapper.framework;\n"
+                "\t\t\tisa = PBXFileReference;\n"
+                "\t\t\tpath = ../Platforms/QuickLook.framework;\n"
+                "\t\t\tsourceTree = DEVELOPER_DIR;\n"
+                "\t\t};\n"
+                + object_marker,
+                1,
+            ).replace(
+                build_marker,
+                "\t\t200000000000000000000007 = {isa = PBXBuildFile; "
+                "fileRef = 100000000000000000000008; };\n"
+                + build_marker,
+                1,
+            ).replace(
+                phase_marker,
+                "\t\t\tfiles = (\n"
+                "\t\t\t\t200000000000000000000004,\n"
+                "\t\t\t\t200000000000000000000007,\n"
+                "\t\t\t);",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+            with self.assertRaisesRegex(
+                project_inventory.PlanError,
+                "unsafe.*path rooted at DEVELOPER_DIR",
             ):
                 project_inventory.build_project_inventory(
                     project,

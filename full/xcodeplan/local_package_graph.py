@@ -240,6 +240,13 @@ def _tokenize(text: str, label: str) -> list[_Token]:
                 index += 1
             result.append(_Token("identifier", text[start:index], start))
             continue
+        if character.isascii() and character.isdigit():
+            start = index
+            index += 1
+            while index < size and text[index].isascii() and text[index].isdigit():
+                index += 1
+            result.append(_Token("number", text[start:index], start))
+            continue
         result.append(_Token("punctuation", character, index))
         index += 1
     return result
@@ -393,6 +400,34 @@ def _literal(tokens: list[_Token], label: str) -> str:
     return _decode_swift_string(tokens[0], label)
 
 
+def _version_literal(tokens: list[_Token], label: str) -> str:
+    if len(tokens) == 1:
+        return _literal(tokens, label)
+    if (
+        len(tokens) < 7
+        or tokens[0].kind != "identifier"
+        or tokens[0].value != "Version"
+        or tokens[1].value != "("
+        or tokens[-1].value != ")"
+    ):
+        raise PackageGraphError(
+            f"{label} must be a static string or Version integer literal"
+        )
+    parts = _split(tokens[2:-1], ",", label)
+    if (
+        len(parts) != 3
+        or any(len(part) != 1 or part[0].kind != "number" for part in parts)
+        or any(
+            len(part[0].value) > 1 and part[0].value.startswith("0")
+            for part in parts
+        )
+    ):
+        raise PackageGraphError(
+            f"{label} must be Version(major, minor, patch) integer literals"
+        )
+    return ".".join(part[0].value for part in parts)
+
+
 def _literal_array(tokens: list[_Token], label: str) -> list[str]:
     return [
         _literal(item, f"{label}[{index}]")
@@ -472,7 +507,9 @@ def _parse_package_dependency(tokens: list[_Token], label: str) -> dict[str, Any
         "name": name,
         "requirement": {
             "kind": requirement,
-            "value": _literal(arguments[requirement], f"{label}.{requirement}"),
+            "value": _version_literal(
+                arguments[requirement], f"{label}.{requirement}"
+            ),
         },
         "url": _literal(arguments["url"], f"{label}.url"),
     }
@@ -491,8 +528,21 @@ def _parse_target_dependency(tokens: list[_Token], label: str) -> dict[str, Any]
             "kind": "by_name" if kind == "byName" else "target",
             "name": _literal(arguments["name"], f"{label}.name"),
         }
-    if kind == "product":
-        if set(arguments) != {"name", "package"}:
+    if kind in {"product", "productItem"}:
+        expected = (
+            {"name", "package"}
+            if kind == "product"
+            else {"name", "package", "condition"}
+        )
+        if set(arguments) != expected:
+            raise PackageGraphError(
+                f"{label} uses unsupported conditional product dependency"
+            )
+        if kind == "productItem" and not (
+            len(arguments["condition"]) == 1
+            and arguments["condition"][0].kind == "identifier"
+            and arguments["condition"][0].value == "nil"
+        ):
             raise PackageGraphError(
                 f"{label} uses unsupported conditional product dependency"
             )
@@ -504,6 +554,64 @@ def _parse_target_dependency(tokens: list[_Token], label: str) -> dict[str, Any]
     raise PackageGraphError(f"{label} uses unsupported dependency expression .{kind}")
 
 
+def _parse_swift_setting(tokens: list[_Token], label: str) -> dict[str, str]:
+    values = [token.value for token in tokens]
+    if (
+        len(tokens) == 6
+        and values[0] == "."
+        and values[1] == "swiftLanguageMode"
+        and values[2] == "("
+        and values[3] == "."
+        and values[5] == ")"
+        and tokens[4].kind == "identifier"
+    ):
+        modes = {"v4": "4", "v4_2": "4.2", "v5": "5", "v6": "6"}
+        mode = modes.get(values[4])
+        if mode is None:
+            raise PackageGraphError(
+                f"{label} uses unsupported Swift language mode {values[4]!r}"
+            )
+        return {"kind": "swift_language_mode", "value": mode}
+    if values == [
+        ".",
+        "defaultIsolation",
+        "(",
+        "MainActor",
+        ".",
+        "self",
+        ")",
+    ]:
+        return {"kind": "default_isolation", "value": "MainActor"}
+    raise PackageGraphError(f"{label} uses an unsupported Swift setting")
+
+
+def _swift_setting_arguments(
+    raw_settings: Any, label: str
+) -> list[str]:
+    arguments: list[str] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(_list(raw_settings, label)):
+        setting = _mapping(raw, f"{label}[{index}]")
+        if set(setting) != {"kind", "value"}:
+            raise PackageGraphError(
+                f"{label}[{index}] has unsupported fields"
+            )
+        kind = _string(setting.get("kind"), f"{label}[{index}].kind")
+        value = _string(setting.get("value"), f"{label}[{index}].value")
+        if kind in seen:
+            raise PackageGraphError(f"{label} repeats {kind!r}")
+        seen.add(kind)
+        if kind == "swift_language_mode" and value in {"4", "4.2", "5", "6"}:
+            arguments.extend(["-swift-version", value])
+        elif kind == "default_isolation" and value == "MainActor":
+            arguments.extend(["-default-isolation", "MainActor"])
+        else:
+            raise PackageGraphError(
+                f"{label}[{index}] has unsupported {kind!r} value {value!r}"
+            )
+    return arguments
+
+
 def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
     kind, arguments = _call(tokens, label)
     name = _optional_literal(arguments, "name", label)
@@ -511,7 +619,14 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
         raise PackageGraphError(f"{label} has no static name")
     if kind != "target":
         return {"kind": kind, "name": name}
-    allowed = {"name", "dependencies", "path", "exclude", "sources"}
+    allowed = {
+        "name",
+        "dependencies",
+        "path",
+        "exclude",
+        "sources",
+        "swiftSettings",
+    }
     unknown = set(arguments) - allowed
     if unknown:
         raise PackageGraphError(
@@ -529,6 +644,19 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
             )
         )
     ]
+    swift_settings = [
+        _parse_swift_setting(item, f"{label}.swiftSettings[{index}]")
+        for index, item in enumerate(
+            _array(
+                arguments.get(
+                    "swiftSettings",
+                    [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
+                ),
+                f"{label}.swiftSettings",
+            )
+        )
+    ]
+    _swift_setting_arguments(swift_settings, f"{label}.swiftSettings")
     return {
         "dependencies": dependencies,
         "exclude": (
@@ -544,6 +672,7 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
             if "sources" in arguments
             else None
         ),
+        "swift_settings": swift_settings,
     }
 
 
@@ -654,6 +783,45 @@ def _package_identity(dependency: Mapping[str, Any]) -> str:
     return _portable(basename)
 
 
+def _inventory_remote_requirement(raw: Any, label: str) -> dict[str, str]:
+    requirement = _mapping(raw, label)
+    kind = _string(requirement.get("kind"), f"{label}.kind")
+    if kind in {"revision", "branch"}:
+        native_fields = {"kind", kind}
+        canonical_fields = {"kind", "value"}
+        fields = set(requirement)
+        if fields == native_fields:
+            value_key = kind
+        elif fields == canonical_fields:
+            value_key = "value"
+        else:
+            raise PackageGraphError(f"{label} has unsupported requirement fields")
+        return {
+            "kind": kind,
+            "value": _string(requirement.get(value_key), f"{label}.{value_key}"),
+        }
+    shapes = {
+        "upToNextMajorVersion": ("minimumVersion", "from"),
+        "exactVersion": ("version", "exact"),
+        # Canonical graph verification reconstructs this already-normalized
+        # spelling instead of inventing an Xcode object shape.
+        "from": ("value", "from"),
+        "exact": ("value", "exact"),
+    }
+    shape = shapes.get(kind)
+    if shape is None:
+        raise PackageGraphError(
+            f"{label} uses unsupported Xcode package requirement {kind!r}"
+        )
+    value_key, normalized_kind = shape
+    if set(requirement) != {"kind", value_key}:
+        raise PackageGraphError(f"{label} has unsupported requirement fields")
+    return {
+        "kind": normalized_kind,
+        "value": _string(requirement.get(value_key), f"{label}.{value_key}"),
+    }
+
+
 def _dependency_matches(dependency: Mapping[str, Any], value: str) -> bool:
     names = []
     if dependency.get("name"):
@@ -693,6 +861,7 @@ class _Planner:
         self.remote_materialization_set = remote_materialization_set
         self.remote_cache_root = remote_cache_root
         self.remote_packages: dict[str, dict[str, Any]] = {}
+        self.top_level_remote_declarations: list[tuple[str, dict[str, Any], str]] = []
         self.source_external_graph = source_external_graph
 
     def _register_package(
@@ -712,7 +881,8 @@ class _Planner:
             filesystem_root, manifest_relative, f"{label} manifest"
         )
         parsed = _parse_manifest(
-            (filesystem_root / manifest_relative).read_bytes(), manifest_relative
+            (filesystem_root / manifest_relative).read_bytes(),
+            f"{label} {manifest_relative}",
         )
         targets = {item["name"]: item for item in parsed["targets"]}
         products = {
@@ -827,10 +997,12 @@ class _Planner:
                         f"remote package {identity!r} declares unsupported local-path dependency"
                     )
                 dependency["identity"] = _package_identity(dependency)
-        if _portable(model["name"]) != _portable(identity):
-            raise PackageGraphError(
-                f"remote package identity {identity!r} does not match manifest name {model['name']!r}"
-            )
+        # SwiftPM identity is derived from the package location (or an explicit
+        # dependency alias), not from Package.name. Real packages such as
+        # purchases-ios-spm legitimately publish a different manifest name.
+        # URL, identity, revision, and tree are already bound by the verified
+        # materialization descriptor, so requiring name equality would reject
+        # valid source without strengthening the trust boundary.
         self.remote_packages[identity] = model
         return model
 
@@ -1372,13 +1544,69 @@ class _Planner:
                 )
             selected_keys.add(key)
             origin = product.get("origin", "local")
-            if origin != "local":
-                if self.source_external_graph is None:
-                    raise PackageGraphError(
-                        f"selected remote package product {name!r} has no materialized source graph"
+            if origin == "remote":
+                url = _string(
+                    product.get("repository_url"),
+                    f"package_products[{index}].repository_url",
+                )
+                requirement = _inventory_remote_requirement(
+                    product.get("requirement"),
+                    f"package_products[{index}].requirement",
+                )
+                identity = _package_identity({"url": url})
+                selected_record = {
+                    "name": name,
+                    "origin": "remote",
+                    "package_identity": identity,
+                    "repository_url": url,
+                    "requirement": requirement,
+                }
+                materialized = self.remote_packages.get(identity)
+                if materialized is None:
+                    if self.source_external_graph is not None:
+                        raise PackageGraphError(
+                            f"selected remote product {name!r} has no verified materialization"
+                        )
+                    declaration = {
+                        "identity": identity,
+                        "name": None,
+                        "requirement": requirement,
+                        "url": url,
+                    }
+                    self.top_level_remote_declarations.append(
+                        ("@application", declaration, identity)
                     )
+                    self.external_consumers.append(
+                        {
+                            "consumer_target": "@application",
+                            "package_identity": identity,
+                            "product": name,
+                            "url": url,
+                        }
+                    )
+                    selected_record["target_ids"] = []
+                else:
+                    target_names = self._product_targets(
+                        materialized,
+                        name,
+                        f"selected remote product {name!r}",
+                    )
+                    selected_record.update(
+                        {
+                            "package_path": materialized["path"],
+                            "target_ids": [
+                                self._target_id(materialized, target_name)
+                                for target_name in target_names
+                            ],
+                        }
+                    )
+                    for target_name in target_names:
+                        self.resolve_target(materialized, target_name)
+                selected.append(selected_record)
+                continue
+            if origin != "local":
                 raise PackageGraphError(
-                    f"top-level remote product selection is not bound to an Xcode package reference: {name!r}"
+                    f"package_products[{index}] has unsupported origin {origin!r}"
                 )
             relative = product.get("relative_path")
             candidates: list[dict[str, Any]]
@@ -1467,16 +1695,17 @@ class _Planner:
                             f"reachable targets inventory hard-linked Swift sources {previous_path!r} and {path!r}"
                         )
                 filesystem_paths[portable_path] = (path, identity)
-            targets.append(
-                {
-                    "dependencies": model["dependencies"],
-                    "module": module,
-                    "order": order,
-                    "package_path": model["package"]["path"],
-                    "sources": sources,
-                    "target_id": target_id,
-                }
-            )
+            target_record = {
+                "dependencies": model["dependencies"],
+                "module": module,
+                "order": order,
+                "package_path": model["package"]["path"],
+                "sources": sources,
+                "target_id": target_id,
+            }
+            if model["target"]["swift_settings"]:
+                target_record["swift_settings"] = model["target"]["swift_settings"]
+            targets.append(target_record)
 
         reachable_package_paths = sorted(
             {model["package"]["path"] for model in self.reachable.values()},
@@ -1484,7 +1713,9 @@ class _Planner:
         )
         package_records: list[dict[str, Any]] = []
         product_edges: list[dict[str, Any]] = []
-        remote_declarations: list[tuple[str, dict[str, Any], str]] = []
+        remote_declarations: list[tuple[str, dict[str, Any], str]] = list(
+            self.top_level_remote_declarations
+        )
         for path in reachable_package_paths:
             package = self.packages[path]
             local_dependencies = []
@@ -1729,21 +1960,37 @@ def _inventory_from_graph(graph: dict[str, Any]) -> dict[str, Any]:
             for item in packages
             if _mapping(item, "graph package").get("origin", "local") == "local"
         ],
-        "package_products": [
-            {
-                "name": _string(
-                    _mapping(item, "graph selected product").get("name"),
-                    "graph selected product.name",
-                ),
-                "origin": "local",
-                "relative_path": _string(
-                    _mapping(item, "graph selected product").get("package_path"),
-                    "graph selected product.package_path",
-                ),
-            }
-            for item in selected
-        ],
+        "package_products": [],
     }
+    for index, raw in enumerate(selected):
+        item = _mapping(raw, f"graph selected_products[{index}]")
+        name = _string(item.get("name"), f"graph selected_products[{index}].name")
+        if item.get("origin", "local") == "remote":
+            inventory["package_products"].append(
+                {
+                    "name": name,
+                    "origin": "remote",
+                    "repository_url": _string(
+                        item.get("repository_url"),
+                        f"graph selected_products[{index}].repository_url",
+                    ),
+                    "requirement": _mapping(
+                        item.get("requirement"),
+                        f"graph selected_products[{index}].requirement",
+                    ),
+                }
+            )
+        else:
+            inventory["package_products"].append(
+                {
+                    "name": name,
+                    "origin": "local",
+                    "relative_path": _string(
+                        item.get("package_path"),
+                        f"graph selected_products[{index}].package_path",
+                    ),
+                }
+            )
     resolution = graph.get("package_resolution")
     if resolution is not None:
         inventory["package_resolution"] = {
@@ -1934,6 +2181,10 @@ def _build_contract(
                 "objects": objects,
                 "output_file_map": output_map_relative,
                 "sources": sources,
+                "swift_arguments": _swift_setting_arguments(
+                    target.get("swift_settings", []),
+                    f"graph targets[{index}].swift_settings",
+                ),
                 "target_id": _string(
                     target.get("target_id"), f"graph targets[{index}].target_id"
                 ),
@@ -1941,7 +2192,7 @@ def _build_contract(
         )
     contract = {
         "classification": "portable-local-package-build-contract",
-        "format_version": 1,
+        "format_version": 2,
         "graph_sha256": _sha256(canonical_json(graph)),
         "targets": records,
     }
@@ -2013,6 +2264,11 @@ def emit_target_record(contract: dict[str, Any], index: int) -> bytes:
         _string(target.get("output_file_map"), "target build output_file_map"),
         str(len(_list(target.get("sources"), "target build sources"))),
         *[_string(item, "target build source") for item in target["sources"]],
+        str(len(_list(target.get("swift_arguments"), "target build swift arguments"))),
+        *[
+            _string(item, "target build Swift argument")
+            for item in target["swift_arguments"]
+        ],
         str(len(_list(target.get("objects"), "target build objects"))),
         *[_string(item, "target build object") for item in target["objects"]],
     ]

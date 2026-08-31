@@ -18,8 +18,16 @@ one inventoried manifest. It never picks the first match.
 registry, or resolve a URL. Its static parser accepts ordinary `.library`
 products, `.target` library targets, local `.package(path:)` dependencies,
 immutable workspace pins, and the three dependency forms used by normal
-library targets. Unsupported reachable target kinds, settings, conditions,
-dynamic expressions, mixed-language sources, or product types refuse.
+library targets. It also preserves the static per-target settings used by
+modern Swift packages: `.swiftLanguageMode(.v4/.v4_2/.v5/.v6)` and
+`.defaultIsolation(MainActor.self)`. They become an exact, allowlisted
+option/value vector in each target's build contract; every other reachable
+setting or conditional form still refuses. Unsupported reachable target kinds,
+conditions, dynamic expressions, mixed-language sources, or product types
+refuse. Remote dependency requirements accept static semantic-version strings
+and the equivalent `Version(major, minor, patch)` constructor. The legacy
+unconditional `.productItem(..., condition: nil)` spelling is normalized to
+the same product edge as `.product(...)`; an actual condition still refuses.
 Unreachable test targets may remain declared because they are not part of the
 selected application build.
 
@@ -71,10 +79,13 @@ For a graph with all source materialized,
 dependency-first order. Each target gets a distinct `-module-name`,
 `-emit-module-path`, output-file map, and exhaustive object directory. Later
 targets and the application receive only the frozen package module directory
-as an additional import path. Every package object is checked as ARM64 Mach-O,
-recorded in the link ledger, and linked exactly once beside the application
-objects. The build contract and output maps are reconstructed after
-compilation. Both host and guest rerun the remote-materialization gate.
+as an additional import path. Frozen Swift language-mode and default-isolation
+arguments are applied target by target, matching their manifests instead of
+silently inheriting the application target's defaults. Every package object is
+checked as ARM64 Mach-O, recorded in the link ledger, and linked exactly once
+beside the application objects. The build contract and output maps are
+reconstructed after compilation. Both host and guest rerun the
+remote-materialization gate.
 
 ## Untouched Hackers proof (2026-08-31)
 
