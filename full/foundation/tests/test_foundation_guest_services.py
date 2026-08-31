@@ -85,6 +85,9 @@ class FoundationGuestServicesTests(unittest.TestCase):
 
     def test_hackers_frontier_uses_real_lock_file_and_reexport_surfaces(self) -> None:
         umbrella = (ROOT / "full/appshim/FoundationGuest.swift").read_text()
+        value_compatibility = (
+            ROOT / "full/appshim/FoundationOpenUIKitValueAliases.swift"
+        ).read_text()
         lock = (ROOT / "full/foundation/NSLock.swift").read_text()
         file_handle = (ROOT / "full/foundation/FileHandle.swift").read_text()
         data_search = (ROOT / "full/foundation/Data+Searching.swift").read_text()
@@ -94,6 +97,21 @@ class FoundationGuestServicesTests(unittest.TestCase):
         character_set = (ROOT / "full/foundation/CharacterSet.swift").read_text()
         self.assertIn("@_exported import OpenCoreGraphics", umbrella)
         self.assertIn("@_exported import os", umbrella)
+        for token in (
+            "public func NSMaxRange(",
+            "public func NSLocationInRange(",
+            "public func NSEqualRanges(",
+            "public func NSUnionRange(",
+            "public func NSIntersectionRange(",
+            "public struct InlinePresentationIntent: OptionSet",
+            "public static let emphasized = Self(rawValue: 1 << 0)",
+            "public static let stronglyEmphasized = Self(rawValue: 1 << 1)",
+            "public static let code = Self(rawValue: 1 << 2)",
+            "enum InlinePresentationIntentAttribute: CodableAttributedStringKey",
+            'public static let name = "NSInlinePresentationIntent"',
+            "var inlinePresentationIntent: InlinePresentationIntentAttribute",
+        ):
+            self.assertIn(token, value_compatibility)
         for token in (
             "public protocol NSLocking",
             "public final class NSLock",

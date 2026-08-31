@@ -114,6 +114,13 @@ direct link list even though the runtime closure still reaches it through
 StringProcessing, while Darwin is deliberately present for the measured
 `FileHandle` calls.
 
+The same facade restores two Apple-only Foundation overlay surfaces omitted by
+swift-foundation's non-framework configuration: the public `NSRange`
+arithmetic functions and markdown `InlinePresentationIntent` attributed-string
+key. The package's Foundation-only runtime probe checks range boundary,
+intersection, union, raw-value, attribute-name, write, and read-back behavior;
+these are framework APIs, not application source rewrites.
+
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so
 the builder names exactly that one manual SwiftUI runtime link. It requires the

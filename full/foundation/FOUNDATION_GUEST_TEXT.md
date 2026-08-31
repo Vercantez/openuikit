@@ -32,6 +32,20 @@ The dependency-light production inputs are explicit:
    - `LocalizedError.errorDescription` and `failureReason` customization;
    - the canonical NSError domain/code/userInfo bridge documented in
      `FOUNDATION_GUEST_STRUCTURED_DATA.md`.
+6. `FoundationOpenUIKitValueAliases.swift`
+   - the complete `NSRange` arithmetic family (`NSMaxRange`, membership,
+     equality, union, and intersection) over the canonical OpenUIKit-owned
+     range identity;
+   - Foundation's markdown `InlinePresentationIntent` option set and
+     `AttributedString` dynamic-member key, which upstream swift-foundation
+     intentionally places behind its Apple-only `FOUNDATION_FRAMEWORK` build.
+
+The inline-presentation raw values and `NSInlinePresentationIntent` attribute
+name are measured against Apple Foundation. Empty range intersections are
+canonicalized to `{0, 0}`, matching Darwin rather than retaining either input
+location. This slice supports semantic emphasis, strong emphasis, inline code,
+strikethrough, soft and hard line breaks, and inline HTML; it does not claim
+Foundation's full markdown parser or `PresentationIntent` block hierarchy.
 
 `Bundle+Localization.swift` is the companion filesystem service documented in
 `FOUNDATION_GUEST_SERVICES.md`; OpenUIKit owns its identity. APIs outside these

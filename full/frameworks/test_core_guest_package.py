@@ -924,7 +924,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("FoundationHackersCompatibilityProbe.swift", builder)
         self.assertIn("runFoundationHackersCompatibilityProbe(", core_probe)
         marker = (
-            "foundation=locks,filehandle,characters,strings,data-search,cfurl,reexports"
+            "foundation=locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
         )
         self.assertIn(marker, builder)
         self.assertIn("foundation=\\(foundationCompatibility)", core_probe)

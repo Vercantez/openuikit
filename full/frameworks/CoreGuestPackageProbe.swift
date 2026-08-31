@@ -143,7 +143,7 @@ struct CoreGuestPackageProbe {
         )
         precondition(
             foundationCompatibility ==
-                "locks,filehandle,characters,strings,data-search,cfurl,reexports"
+                "locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
         )
 
         let foundationNotification: Foundation.Notification.Type =

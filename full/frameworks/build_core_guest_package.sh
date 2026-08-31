@@ -1025,7 +1025,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,data-search,cfurl,reexports intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'

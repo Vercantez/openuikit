@@ -58,6 +58,28 @@ func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
     )
     precondition("é".cString(using: .ascii) == nil)
     precondition(NSRange(2..<7) == NSRange(location: 2, length: 5))
+    let firstRange = NSRange(location: 2, length: 5)
+    let secondRange = NSRange(location: 5, length: 4)
+    precondition(NSMaxRange(firstRange) == 7)
+    precondition(NSLocationInRange(6, firstRange))
+    precondition(!NSLocationInRange(7, firstRange))
+    precondition(NSEqualRanges(firstRange, NSRange(location: 2, length: 5)))
+    precondition(NSUnionRange(firstRange, secondRange) == NSRange(location: 2, length: 7))
+    precondition(
+        NSIntersectionRange(firstRange, secondRange) == NSRange(location: 5, length: 2)
+    )
+    precondition(
+        NSIntersectionRange(firstRange, NSRange(location: 7, length: 1))
+            == NSRange(location: 0, length: 0)
+    )
+    var attributed = AttributedString("portable")
+    attributed.inlinePresentationIntent = [.emphasized, .code]
+    precondition(attributed.inlinePresentationIntent == [.emphasized, .code])
+    precondition(InlinePresentationIntent.stronglyEmphasized.rawValue == 2)
+    precondition(
+        AttributeScopes.FoundationAttributes.InlinePresentationIntentAttribute.name
+            == "NSInlinePresentationIntent"
+    )
     precondition("  x  "[...].trimmingCharacters(in: .whitespaces) == "x")
 
     let colorsPath = resourceRoot + "/system_colors.json"
@@ -102,5 +124,5 @@ func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
     ) as URL?
     precondition(rejectedCFURL == nil)
 
-    return "locks,filehandle,characters,strings,data-search,cfurl,reexports"
+    return "locks,filehandle,characters,strings,ranges,attributed,data-search,cfurl,reexports"
 }
