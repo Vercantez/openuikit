@@ -4,7 +4,8 @@
 The planner deliberately does not execute ``Package.swift``.  It accepts a
 small, explicit PackageDescription surface, follows only source-root-contained
 local dependencies, and records remote dependencies as unresolved materialized
-inputs.  Every manifest, lock file, and reachable Swift source is hashed.
+inputs.  Every manifest, lock file, reachable source, and C-family textual
+input is hashed.
 """
 
 from __future__ import annotations
@@ -35,7 +36,23 @@ class _Token:
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 _SEMVER = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\Z")
-_CODE_EXTENSIONS = frozenset({".c", ".cc", ".cpp", ".cxx", ".m", ".mm", ".s", ".S"})
+_C_SOURCE_LANGUAGES = {
+    ".c": "c",
+    ".cc": "cxx",
+    ".cpp": "cxx",
+    ".cxx": "cxx",
+    ".m": "objective-c",
+    ".mm": "objective-cxx",
+    ".s": "assembler",
+    ".S": "assembler-with-cpp",
+}
+_CODE_EXTENSIONS = frozenset(_C_SOURCE_LANGUAGES)
+# C-family compilation can consume textual inclusions as directly as ordinary
+# headers.  Freezing only ``*.h`` would leave a mutation hole for projects such
+# as swift-cmark, whose generated entity tables are checked in as ``*.inc``.
+_C_HEADER_EXTENSIONS = frozenset(
+    {".h", ".hh", ".hpp", ".hxx", ".inc", ".def"}
+)
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
@@ -1022,30 +1039,109 @@ def _parse_swift_setting(
     raise PackageGraphError(f"{label} uses an unsupported Swift setting")
 
 
-def _parse_c_setting(
+def _parse_c_family_setting(
     tokens: list[_Token], label: str
-) -> dict[str, str] | None:
+) -> dict[str, Any] | None:
     values = [token.value for token in tokens]
+    if (
+        len(tokens) == 5
+        and values[:3] == [".", "headerSearchPath", "("]
+        and values[-1] == ")"
+        and tokens[3].kind == "string"
+    ):
+        return {
+            "kind": "header_search_path",
+            "path": _decode_swift_string(tokens[3], f"{label}.path"),
+        }
     if len(tokens) < 5 or values[:3] != [".", "define", "("] or values[-1] != ")":
-        raise PackageGraphError(f"{label} uses an unsupported C setting")
-    items = _split(tokens[3:-1], ",", label)
-    if len(items) not in {1, 2} or len(items[0]) != 1 or items[0][0].kind != "string":
-        raise PackageGraphError(f"{label} uses an unsupported C define")
-    name = _decode_swift_string(items[0][0], f"{label}.name")
-    if len(items) == 2:
-        condition = items[1]
+        raise PackageGraphError(f"{label} uses an unsupported C-family setting")
+    arguments = _split(tokens[3:-1], ",", label)
+    if not arguments or len(arguments[0]) != 1:
+        raise PackageGraphError(f"{label} uses an unsupported C-family define")
+    name = _decode_swift_string(arguments[0][0], f"{label}.name")
+    if _IDENTIFIER.fullmatch(name) is None or not name.isascii():
+        raise PackageGraphError(f"{label}.name is not a portable C identifier")
+    value: str | None = None
+    condition: list[_Token] | None = None
+    for argument in arguments[1:]:
         if (
-            len(condition) >= 3
-            and condition[0].kind == "identifier"
-            and condition[0].value == "condition"
-            and condition[1].value == ":"
+            len(argument) < 3
+            or argument[0].kind != "identifier"
+            or argument[1].value != ":"
         ):
-            condition = condition[2:]
-        if not _target_dependency_condition_active(
-            condition, f"{label}.condition"
-        ):
-            return None
-    return {"kind": "define", "value": name}
+            raise PackageGraphError(f"{label} uses an unsupported C-family define")
+        if argument[0].value == "to" and len(argument) == 3:
+            if value is not None:
+                raise PackageGraphError(f"{label} repeats C define value")
+            value = _decode_swift_string(argument[2], f"{label}.value")
+            if any(character in value for character in "\0\r\n"):
+                raise PackageGraphError(f"{label}.value contains a control character")
+        elif argument[0].value == "condition":
+            if condition is not None:
+                raise PackageGraphError(f"{label} repeats C define condition")
+            condition = argument[2:]
+        else:
+            raise PackageGraphError(f"{label} uses an unsupported C-family define")
+    if condition is not None and not _target_dependency_condition_active(
+        condition, f"{label}.condition"
+    ):
+        return None
+    return {"kind": "define", "name": name, "value": value}
+
+
+def _c_family_setting_arguments(
+    raw_settings: Any,
+    label: str,
+    *,
+    staged_target_root: Path | None = None,
+) -> list[str]:
+    arguments: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for index, raw in enumerate(_list(raw_settings, label)):
+        setting = _mapping(raw, f"{label}[{index}]")
+        kind = _string(setting.get("kind"), f"{label}[{index}].kind")
+        if kind == "define":
+            if set(setting) != {"kind", "name", "value"}:
+                raise PackageGraphError(f"{label}[{index}] has unsupported fields")
+            name = _string(setting.get("name"), f"{label}[{index}].name")
+            if _IDENTIFIER.fullmatch(name) is None or not name.isascii():
+                raise PackageGraphError(
+                    f"{label}[{index}].name is not a portable C identifier"
+                )
+            value = setting.get("value")
+            if value is not None:
+                if not isinstance(value, str) or any(
+                    character in value for character in "\0\r\n"
+                ):
+                    raise PackageGraphError(
+                        f"{label}[{index}].value is not a safe C define value"
+                    )
+            identity = (kind, name)
+            if identity in seen:
+                raise PackageGraphError(f"{label} repeats C define {name!r}")
+            seen.add(identity)
+            arguments.append(f"-D{name}" if value is None else f"-D{name}={value}")
+            continue
+        if kind == "header_search_path":
+            if set(setting) != {"kind", "path"}:
+                raise PackageGraphError(f"{label}[{index}] has unsupported fields")
+            relative = _safe_stored_relative(
+                _string(setting.get("path"), f"{label}[{index}].path"),
+                f"{label}[{index}].path",
+            )
+            identity = (kind, _portable(relative.as_posix()))
+            if identity in seen:
+                raise PackageGraphError(
+                    f"{label} repeats header search path {relative.as_posix()!r}"
+                )
+            seen.add(identity)
+            if staged_target_root is not None:
+                arguments.append(
+                    "-I" + os.fspath(staged_target_root / "headers" / relative)
+                )
+            continue
+        raise PackageGraphError(f"{label}[{index}] has unsupported kind {kind!r}")
+    return arguments
 
 
 def _parse_resource(tokens: list[_Token], label: str) -> dict[str, str]:
@@ -1121,6 +1217,8 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
         "swiftSettings",
         "resources",
         "cSettings",
+        "cxxSettings",
+        "publicHeadersPath",
     }
     unknown = set(arguments) - allowed
     if unknown:
@@ -1157,16 +1255,37 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
             swift_settings.append(setting)
     _swift_setting_arguments(swift_settings, f"{label}.swiftSettings")
     c_settings = []
-    if "cSettings" in arguments:
-        for index, item in enumerate(
-            _array(arguments["cSettings"], f"{label}.cSettings")
-        ):
-            setting = _parse_c_setting(item, f"{label}.cSettings[{index}]")
-            if setting is not None:
-                c_settings.append(setting)
+    for index, item in enumerate(
+        _array(
+            arguments.get(
+                "cSettings",
+                [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
+            ),
+            f"{label}.cSettings",
+        )
+    ):
+        setting = _parse_c_family_setting(item, f"{label}.cSettings[{index}]")
+        if setting is not None:
+            c_settings.append(setting)
+    cxx_settings = []
+    for index, item in enumerate(
+        _array(
+            arguments.get(
+                "cxxSettings",
+                [_Token("punctuation", "[", 0), _Token("punctuation", "]", 0)],
+            ),
+            f"{label}.cxxSettings",
+        )
+    ):
+        setting = _parse_c_family_setting(item, f"{label}.cxxSettings[{index}]")
+        if setting is not None:
+            cxx_settings.append(setting)
+    _c_family_setting_arguments(c_settings, f"{label}.cSettings")
+    _c_family_setting_arguments(cxx_settings, f"{label}.cxxSettings")
     return {
-        "dependencies": dependencies,
         "c_settings": c_settings,
+        "cxx_settings": cxx_settings,
+        "dependencies": dependencies,
         "exclude": (
             _literal_array(arguments["exclude"], f"{label}.exclude")
             if "exclude" in arguments
@@ -1190,6 +1309,9 @@ def _parse_target(tokens: list[_Token], label: str) -> dict[str, Any]:
                 )
             )
         ],
+        "public_headers_path": _optional_literal(
+            arguments, "publicHeadersPath", label
+        ),
         "sources": (
             _literal_array(arguments["sources"], f"{label}.sources")
             if "sources" in arguments
@@ -1561,6 +1683,8 @@ class _Planner:
 
     @staticmethod
     def _module_name(target_name: str) -> str:
+        # SwiftPM exposes Clang targets through a C99 identifier derived by
+        # replacing punctuation (notably cmark-gfm's hyphen) with underscores.
         module = re.sub(r"[^A-Za-z0-9_]", "_", target_name)
         if module and module[0].isdigit():
             module = "_" + module
@@ -1801,7 +1925,16 @@ class _Planner:
             )
         return ordered
 
-    def _target_sources(self, model: Mapping[str, Any]) -> list[dict[str, Any]]:
+    @staticmethod
+    def _generated_module_map(module: str) -> bytes:
+        return (
+            f"module {module} {{\n"
+            '    umbrella "."\n'
+            "    export *\n"
+            "}\n"
+        ).encode("utf-8")
+
+    def _target_files(self, model: Mapping[str, Any]) -> dict[str, Any]:
         package = model["package"]
         target = model["target"]
         filesystem_root = package["filesystem_root"]
@@ -1869,9 +2002,9 @@ class _Planner:
                 )
                 selected.append(relative)
 
-        paths: list[PurePosixPath] = []
+        source_paths: list[PurePosixPath] = []
 
-        def visit(path: Path, relative: PurePosixPath) -> None:
+        def visit_sources(path: Path, relative: PurePosixPath) -> None:
             if relative != PurePosixPath(".") and is_excluded(relative):
                 return
             metadata = path.lstat()
@@ -1881,11 +2014,9 @@ class _Planner:
                 )
             if stat.S_ISREG(metadata.st_mode):
                 if path.suffix == ".swift":
-                    paths.append(relative)
+                    source_paths.append(relative)
                 elif path.suffix in _CODE_EXTENSIONS:
-                    raise PackageGraphError(
-                        f"target {model['target_id']} mixes unsupported source {relative}"
-                    )
+                    source_paths.append(relative)
                 return
             if not stat.S_ISDIR(metadata.st_mode):
                 raise PackageGraphError(
@@ -1899,25 +2030,45 @@ class _Planner:
                     if relative == PurePosixPath(".")
                     else relative / entry.name
                 )
-                visit(Path(entry.path), child)
+                visit_sources(Path(entry.path), child)
 
         for selection in selected:
-            visit(
+            visit_sources(
                 base if selection == PurePosixPath(".") else base / selection, selection
             )
-        paths.sort(key=lambda item: item.as_posix().encode("utf-8"))
-        if not paths:
+        source_paths.sort(key=lambda item: item.as_posix().encode("utf-8"))
+        if not source_paths:
             raise PackageGraphError(
-                f"reachable target {model['target_id']} has no Swift sources"
+                f"reachable target {model['target_id']} has no Swift or C-family sources"
             )
-        records: list[dict[str, Any]] = []
+        has_swift = any(path.suffix == ".swift" for path in source_paths)
+        has_c_family = any(path.suffix in _CODE_EXTENSIONS for path in source_paths)
+        if has_swift and has_c_family:
+            raise PackageGraphError(
+                f"reachable target {model['target_id']} mixes Swift and C-family sources"
+            )
+        target_type = "swift" if has_swift else "clang"
+        if target_type == "swift" and (
+            target["c_settings"]
+            or target["cxx_settings"]
+            or target["public_headers_path"] is not None
+        ):
+            raise PackageGraphError(
+                f"Swift target {model['target_id']} declares C-family-only settings"
+            )
+        if target_type == "clang" and target["swift_settings"]:
+            raise PackageGraphError(
+                f"C-family target {model['target_id']} declares Swift-only settings"
+            )
+
+        source_records: list[dict[str, Any]] = []
         seen_paths: set[str] = set()
-        for relative in paths:
+        for relative in source_paths:
             stored = (base_relative / relative).as_posix()
             key = _portable(stored)
             if key in seen_paths:
                 raise PackageGraphError(
-                    f"target {model['target_id']} repeats or aliases Swift source {stored!r}"
+                    f"target {model['target_id']} repeats or aliases source {stored!r}"
                 )
             seen_paths.add(key)
             record = _file_record(
@@ -1931,8 +2082,134 @@ class _Planner:
                     if package["origin"] == "local"
                     else f"remote:{package['materialization']['identity']}"
                 )
-            records.append(record)
-        return records
+            if target_type == "clang":
+                record["language"] = _C_SOURCE_LANGUAGES[relative.suffix]
+            source_records.append(record)
+
+        if target_type == "swift":
+            return {
+                "headers": [],
+                "module_map": None,
+                "public_headers_path": None,
+                "sources": source_records,
+                "target_type": target_type,
+            }
+
+        public_relative = _lexical_dependency_path(
+            target["public_headers_path"] or "include",
+            f"target {model['target_id']} publicHeadersPath",
+        )
+        if ".." in public_relative.parts:
+            raise PackageGraphError(
+                f"target {model['target_id']} publicHeadersPath escapes its target"
+            )
+        public_directory = _ordinary(
+            filesystem_root,
+            base_relative / public_relative,
+            f"target {model['target_id']} public headers",
+        )
+        if not public_directory.is_dir():
+            raise PackageGraphError(
+                f"target {model['target_id']} public headers path is not a directory"
+            )
+        for setting_index, setting in enumerate(
+            [*target["c_settings"], *target["cxx_settings"]]
+        ):
+            if setting["kind"] != "header_search_path":
+                continue
+            relative = _safe_stored_relative(
+                setting["path"],
+                f"target {model['target_id']} header search path[{setting_index}]",
+            )
+            directory = _ordinary(
+                filesystem_root,
+                base_relative / relative,
+                f"target {model['target_id']} header search path[{setting_index}]",
+            )
+            if not directory.is_dir():
+                raise PackageGraphError(
+                    f"target {model['target_id']} header search path is not a directory: {relative.as_posix()}"
+                )
+
+        header_paths: list[PurePosixPath] = []
+
+        def visit_headers(path: Path, relative: PurePosixPath) -> None:
+            if relative != PurePosixPath(".") and is_excluded(relative):
+                return
+            metadata = path.lstat()
+            if stat.S_ISLNK(metadata.st_mode):
+                raise PackageGraphError(
+                    f"target {model['target_id']} contains symlink {relative}"
+                )
+            if stat.S_ISREG(metadata.st_mode):
+                if path.suffix in _C_HEADER_EXTENSIONS:
+                    header_paths.append(relative)
+                return
+            if not stat.S_ISDIR(metadata.st_mode):
+                raise PackageGraphError(
+                    f"target {model['target_id']} contains unsupported node {relative}"
+                )
+            for entry in sorted(
+                os.scandir(path), key=lambda item: item.name.encode("utf-8")
+            ):
+                child = (
+                    PurePosixPath(entry.name)
+                    if relative == PurePosixPath(".")
+                    else relative / entry.name
+                )
+                visit_headers(Path(entry.path), child)
+
+        visit_headers(base, PurePosixPath("."))
+        header_paths.sort(key=lambda item: item.as_posix().encode("utf-8"))
+        header_records: list[dict[str, Any]] = []
+        for relative in header_paths:
+            stored = (base_relative / relative).as_posix()
+            record = _file_record(
+                filesystem_root,
+                stored,
+                f"target {model['target_id']} C-family header",
+            )
+            record["target_relative_path"] = relative.as_posix()
+            if self.source_external_graph is not None:
+                record["source_origin"] = (
+                    "application"
+                    if package["origin"] == "local"
+                    else f"remote:{package['materialization']['identity']}"
+                )
+            header_records.append(record)
+
+        module_map_relative = public_relative / "module.modulemap"
+        module_map_path = base / module_map_relative
+        if (
+            not is_excluded(module_map_relative)
+            and (module_map_path.exists() or module_map_path.is_symlink())
+        ):
+            module_map = _file_record(
+                filesystem_root,
+                (base_relative / module_map_relative).as_posix(),
+                f"target {model['target_id']} module map",
+            )
+            module_map["kind"] = "source"
+            if self.source_external_graph is not None:
+                module_map["source_origin"] = (
+                    "application"
+                    if package["origin"] == "local"
+                    else f"remote:{package['materialization']['identity']}"
+                )
+        else:
+            generated = self._generated_module_map(model["module"])
+            module_map = {
+                "kind": "generated",
+                "sha256": _sha256(generated),
+                "size": len(generated),
+            }
+        return {
+            "headers": header_records,
+            "module_map": module_map,
+            "public_headers_path": public_relative.as_posix(),
+            "sources": source_records,
+            "target_type": target_type,
+        }
 
     def _target_resources(self, model: Mapping[str, Any]) -> list[dict[str, Any]]:
         """Freeze every byte selected by a SwiftPM resource rule.
@@ -2350,9 +2627,14 @@ class _Planner:
                     f"reachable targets {previous} and {target_id} emit duplicate module {module!r}"
                 )
             module_names[module_key] = target_id
-            sources = self._target_sources(model)
             resources = self._target_resources(model)
-            for record in sources:
+            target_files = self._target_files(model)
+            sources = target_files["sources"]
+            frozen_inputs = [*sources, *target_files["headers"], *resources]
+            module_map = target_files["module_map"]
+            if module_map is not None and module_map["kind"] == "source":
+                frozen_inputs.append(module_map)
+            for record in frozen_inputs:
                 path = record["path"]
                 source_origin = record.get("source_origin", "application")
                 if source_origin == "application":
@@ -2377,12 +2659,12 @@ class _Planner:
                 previous_record = filesystem_paths.get(portable_path)
                 if previous_record is not None:
                     raise PackageGraphError(
-                        f"reachable targets repeat or alias Swift source {path!r}"
+                        f"reachable targets repeat or alias frozen input {path!r}"
                     )
                 for previous_path, previous_identity in filesystem_paths.values():
                     if previous_identity == identity:
                         raise PackageGraphError(
-                            f"reachable targets inventory hard-linked Swift sources {previous_path!r} and {path!r}"
+                            f"reachable targets inventory hard-linked inputs {previous_path!r} and {path!r}"
                         )
                 filesystem_paths[portable_path] = (path, identity)
             target_record = {
@@ -2391,9 +2673,10 @@ class _Planner:
                 "order": order,
                 "package_path": model["package"]["path"],
                 "sources": sources,
+                "target_type": target_files["target_type"],
                 "target_id": target_id,
             }
-            if model["target"]["swift_settings"]:
+            if target_files["target_type"] == "swift" and model["target"]["swift_settings"]:
                 target_record["swift_settings"] = model["target"]["swift_settings"]
             if resources:
                 bundle_stem = (
@@ -2410,6 +2693,18 @@ class _Planner:
                 resource_bundles[bundle_key] = target_id
                 target_record["resource_bundle"] = bundle_name
                 target_record["resources"] = resources
+            if target_files["target_type"] == "clang":
+                target_record.update(
+                    {
+                        "c_settings": model["target"]["c_settings"],
+                        "cxx_settings": model["target"]["cxx_settings"],
+                        "headers": target_files["headers"],
+                        "module_map": target_files["module_map"],
+                        "public_headers_path": target_files[
+                            "public_headers_path"
+                        ],
+                    }
+                )
             targets.append(target_record)
 
         reachable_package_paths = sorted(
@@ -2603,7 +2898,25 @@ class _Planner:
                 "resource_files": sum(
                     len(target.get("resources", [])) for target in targets
                 ),
-                "swift_sources": sum(len(target["sources"]) for target in targets),
+                "c_family_headers": sum(
+                    len(target.get("headers", [])) for target in targets
+                ),
+                "c_family_sources": sum(
+                    len(target["sources"])
+                    for target in targets
+                    if target["target_type"] == "clang"
+                ),
+                "clang_targets": sum(
+                    target["target_type"] == "clang" for target in targets
+                ),
+                "swift_sources": sum(
+                    len(target["sources"])
+                    for target in targets
+                    if target["target_type"] == "swift"
+                ),
+                "swift_targets": sum(
+                    target["target_type"] == "swift" for target in targets
+                ),
                 "target_dependency_edges": len(target_edges),
             },
             "target_dependency_edges": target_edges,
@@ -2857,89 +3170,304 @@ def _build_contract(
             raise PackageGraphError(
                 f"cannot resolve remote package sources: {exc}"
             ) from exc
-    records: list[dict[str, Any]] = []
-    files: dict[str, bytes] = {}
-    for index, raw in enumerate(targets):
-        target = _mapping(raw, f"graph targets[{index}]")
+    target_models = [
+        _mapping(raw, f"graph targets[{index}]")
+        for index, raw in enumerate(targets)
+    ]
+    target_by_id = {
+        _string(target.get("target_id"), f"graph targets[{index}].target_id"): target
+        for index, target in enumerate(target_models)
+    }
+    directories: dict[str, str] = {}
+    for index, target in enumerate(target_models):
         if target.get("order") != index:
             raise PackageGraphError("graph target order is not contiguous")
         module = _string(target.get("module"), f"graph targets[{index}].module")
         if not _IDENTIFIER.fullmatch(module) or not module.isascii():
             raise PackageGraphError(
-                f"package module is not a portable Swift identifier: {module!r}"
+                f"package module is not a portable Swift or Clang identifier: {module!r}"
             )
-        directory = f"targets/{index:06d}-{module}"
+        directories[
+            _string(target.get("target_id"), f"graph targets[{index}].target_id")
+        ] = f"targets/{index:06d}-{module}"
+
+    def physical_record(record: Mapping[str, Any], label: str) -> Path:
+        path = _string(record.get("path"), f"{label}.path")
+        origin = record.get("source_origin", "application")
+        if graph.get("format_version") == 1:
+            physical = root / path
+        elif origin == "application":
+            physical = root / path
+        elif isinstance(origin, str) and origin.startswith("remote:"):
+            identity = origin.split(":", 1)[1]
+            remote_root = remote_roots.get(identity)
+            if remote_root is None:
+                raise PackageGraphError(
+                    f"{label} names missing remote materialization {identity!r}"
+                )
+            physical = remote_root / path
+        else:
+            raise PackageGraphError(f"unsupported {label} origin {origin!r}")
+        data = physical.read_bytes()
+        if len(data) != record.get("size") or _sha256(data) != record.get("sha256"):
+            raise PackageGraphError(f"{label} changed after graph verification: {path}")
+        return physical
+
+    records: list[dict[str, Any]] = []
+    files: dict[str, bytes] = {}
+    clang_import_arguments: list[str] = []
+    requires_cxx_runtime = False
+    for index, target in enumerate(target_models):
+        module = _string(target.get("module"), f"graph targets[{index}].module")
+        target_id = _string(
+            target.get("target_id"), f"graph targets[{index}].target_id"
+        )
+        directory = directories[target_id]
+        target_type = _string(
+            target.get("target_type"), f"graph targets[{index}].target_type"
+        )
+        if target_type not in {"swift", "clang"}:
+            raise PackageGraphError(
+                f"graph targets[{index}].target_type is unsupported: {target_type!r}"
+            )
         output_map_relative = f"{directory}/output-file-map.json"
-        module_relative = f"modules/{module}.swiftmodule"
+        module_relative = (
+            f"modules/{module}.swiftmodule"
+            if target_type == "swift"
+            else f"{directory}/headers/{_string(target.get('public_headers_path'), f'graph targets[{index}].public_headers_path')}/module.modulemap"
+        )
         sources: list[str] = []
+        source_languages: list[str] = []
         for source_index, raw_source in enumerate(
             _list(target.get("sources"), f"graph targets[{index}].sources")
         ):
             source = _mapping(
                 raw_source, f"graph targets[{index}].sources[{source_index}]"
             )
-            path = _string(
-                source.get("path"),
-                f"graph targets[{index}].sources[{source_index}].path",
-            )
-            origin = source.get("source_origin", "application")
+            source_label = f"graph targets[{index}].sources[{source_index}]"
+            physical = physical_record(source, source_label)
             if graph.get("format_version") == 1:
-                sources.append(path)
-            elif origin == "application":
-                sources.append(os.fspath(root / path))
-            elif isinstance(origin, str) and origin.startswith("remote:"):
-                identity = origin.split(":", 1)[1]
-                remote_root = remote_roots.get(identity)
-                if remote_root is None:
-                    raise PackageGraphError(
-                        f"target source names missing remote materialization {identity!r}"
-                    )
-                sources.append(os.fspath(remote_root / path))
+                sources.append(
+                    _string(source.get("path"), f"{source_label}.path")
+                )
             else:
-                raise PackageGraphError(f"unsupported target source origin {origin!r}")
+                sources.append(os.fspath(physical))
+            language = source.get("language", "swift")
+            if target_type == "swift" and language != "swift":
+                raise PackageGraphError(f"{source_label} has non-Swift language")
+            if target_type == "clang" and language not in set(
+                _C_SOURCE_LANGUAGES.values()
+            ):
+                raise PackageGraphError(
+                    f"{source_label} has unsupported C-family language {language!r}"
+                )
+            source_languages.append(language)
         resource_bundle = target.get("resource_bundle")
         if resource_bundle is not None:
+            if target_type != "swift":
+                raise PackageGraphError(
+                    f"graph targets[{index}] assigns resources to a C-family target"
+                )
             bundle_name = _string(
                 resource_bundle, f"graph targets[{index}].resource_bundle"
             )
             accessor_relative = f"{directory}/resource_bundle_accessor.swift"
             files[accessor_relative] = _resource_bundle_accessor(bundle_name)
             sources.append(os.fspath(output_root / accessor_relative))
+            source_languages.append("swift")
         objects = [
             f"{directory}/objects/{source_index:06d}.o"
             for source_index in range(len(sources))
         ]
-        output_map = {
-            (source if Path(source).is_absolute() else os.fspath(root / source)): {
-                "object": os.fspath(output_root / object_relative)
+        if target_type == "swift":
+            output_map = {
+                (source if Path(source).is_absolute() else os.fspath(root / source)): {
+                    "object": os.fspath(output_root / object_relative)
+                }
+                for source, object_relative in zip(sources, objects, strict=True)
             }
-            for source, object_relative in zip(sources, objects, strict=True)
-        }
-        files[output_map_relative] = canonical_json(output_map)
+            files[output_map_relative] = canonical_json(output_map)
+            compiler_arguments = _swift_setting_arguments(
+                target.get("swift_settings", []),
+                f"graph targets[{index}].swift_settings",
+            )
+            cxx_arguments: list[str] = []
+            header_directories: list[str] = []
+            header_records: list[dict[str, str]] = []
+        else:
+            staged_target_root = output_root / directory
+            public_headers_path = _safe_stored_relative(
+                _string(
+                    target.get("public_headers_path"),
+                    f"graph targets[{index}].public_headers_path",
+                ),
+                f"graph targets[{index}].public_headers_path",
+            )
+            public_headers = staged_target_root / "headers" / public_headers_path
+            header_directories = [
+                f"{directory}/headers/{public_headers_path.as_posix()}"
+            ]
+            header_records = []
+            for header_index, raw_header in enumerate(
+                _list(target.get("headers"), f"graph targets[{index}].headers")
+            ):
+                header = _mapping(
+                    raw_header, f"graph targets[{index}].headers[{header_index}]"
+                )
+                header_label = f"graph targets[{index}].headers[{header_index}]"
+                physical = physical_record(header, header_label)
+                target_relative = _safe_stored_relative(
+                    _string(
+                        header.get("target_relative_path"),
+                        f"{header_label}.target_relative_path",
+                    ),
+                    f"{header_label}.target_relative_path",
+                )
+                staged = f"{directory}/headers/{target_relative.as_posix()}"
+                if staged in files:
+                    raise PackageGraphError(
+                        f"C-family target repeats staged header {target_relative.as_posix()!r}"
+                    )
+                data = physical.read_bytes()
+                files[staged] = data
+                header_records.append(
+                    {
+                        "path": staged,
+                        "sha256": _sha256(data),
+                        "size": len(data),
+                    }
+                )
+            raw_module_map = _mapping(
+                target.get("module_map"), f"graph targets[{index}].module_map"
+            )
+            module_map_kind = _string(
+                raw_module_map.get("kind"),
+                f"graph targets[{index}].module_map.kind",
+            )
+            if module_map_kind == "source":
+                module_map_data = physical_record(
+                    raw_module_map, f"graph targets[{index}].module_map"
+                ).read_bytes()
+            elif module_map_kind == "generated":
+                if set(raw_module_map) != {"kind", "sha256", "size"}:
+                    raise PackageGraphError(
+                        f"graph targets[{index}].module_map generated fields differ"
+                    )
+                module_map_data = _Planner._generated_module_map(module)
+                if (
+                    len(module_map_data) != raw_module_map.get("size")
+                    or _sha256(module_map_data) != raw_module_map.get("sha256")
+                ):
+                    raise PackageGraphError(
+                        f"graph targets[{index}] generated module map changed"
+                    )
+            else:
+                raise PackageGraphError(
+                    f"graph targets[{index}] has unsupported module map kind"
+                )
+            files[module_relative] = module_map_data
+            own_include = "-I" + os.fspath(public_headers)
+            compiler_arguments = [own_include]
+            for edge_index, raw_edge in enumerate(
+                _list(target.get("dependencies"), f"graph targets[{index}].dependencies")
+            ):
+                edge = _mapping(
+                    raw_edge,
+                    f"graph targets[{index}].dependencies[{edge_index}]",
+                )
+                dependency_id = edge.get("target_id")
+                if dependency_id is None:
+                    continue
+                dependency = target_by_id.get(dependency_id)
+                if dependency is None:
+                    raise PackageGraphError(
+                        f"graph targets[{index}] names missing dependency {dependency_id!r}"
+                    )
+                if dependency.get("target_type") != "clang":
+                    continue
+                dependency_public = _safe_stored_relative(
+                    _string(
+                        dependency.get("public_headers_path"),
+                        f"dependency {dependency_id} public_headers_path",
+                    ),
+                    f"dependency {dependency_id} public_headers_path",
+                )
+                compiler_arguments.append(
+                    "-I"
+                    + os.fspath(
+                        output_root
+                        / directories[dependency_id]
+                        / "headers"
+                        / dependency_public
+                    )
+                )
+            compiler_arguments.extend(
+                _c_family_setting_arguments(
+                    target.get("c_settings", []),
+                    f"graph targets[{index}].c_settings",
+                    staged_target_root=staged_target_root,
+                )
+            )
+            cxx_arguments = _c_family_setting_arguments(
+                target.get("cxx_settings", []),
+                f"graph targets[{index}].cxx_settings",
+                staged_target_root=staged_target_root,
+            )
+            for setting in [
+                *target.get("c_settings", []),
+                *target.get("cxx_settings", []),
+            ]:
+                if setting.get("kind") == "header_search_path":
+                    header_directories.append(
+                        f"{directory}/headers/{setting['path']}"
+                    )
+            clang_import_arguments.extend(
+                [
+                    "-Xcc",
+                    "-fmodule-map-file=" + os.fspath(output_root / module_relative),
+                    "-Xcc",
+                    own_include,
+                ]
+            )
+            if any(
+                language in {"cxx", "objective-cxx"}
+                for language in source_languages
+            ):
+                requires_cxx_runtime = True
         record = {
+            "compiler_arguments": compiler_arguments,
+            "cxx_arguments": cxx_arguments,
+            "header_directories": header_directories,
+            "headers": header_records,
             "module": module,
             "module_output": module_relative,
             "objects": objects,
-            "output_file_map": output_map_relative,
+            "output_file_map": (
+                output_map_relative if target_type == "swift" else None
+            ),
             "sources": sources,
-            "swift_arguments": _swift_setting_arguments(
-                target.get("swift_settings", []),
-                f"graph targets[{index}].swift_settings",
-            ),
-            "target_id": _string(
-                target.get("target_id"), f"graph targets[{index}].target_id"
-            ),
+            "source_languages": source_languages,
+            "target_id": target_id,
+            "target_type": target_type,
         }
         if resource_bundle is not None:
             record["resource_bundle"] = bundle_name
         records.append(record)
     contract = {
         "classification": "portable-local-package-build-contract",
-        "format_version": 2,
+        "clang_import_arguments": clang_import_arguments,
+        "format_version": 3,
         "graph_sha256": _sha256(canonical_json(graph)),
+        "requires_cxx_runtime": requires_cxx_runtime,
         "targets": records,
     }
     files["build-contract.json"] = canonical_json(contract)
+    files["clang-import-arguments.nul"] = b"".join(
+        argument.encode("utf-8") + b"\0" for argument in clang_import_arguments
+    )
+    files["clang-link-arguments.nul"] = (
+        b"-lc++\0" if requires_cxx_runtime else b""
+    )
     files["targets.nul"] = b"".join(
         f"{index:06d}".encode("ascii") + b"\0" for index in range(len(records))
     )
@@ -2961,11 +3489,35 @@ def prepare_build(
         )
     output_root.mkdir(mode=0o755)
     (output_root / "modules").mkdir(mode=0o755)
+    for index, raw_target in enumerate(contract["targets"]):
+        target = _mapping(raw_target, f"build contract targets[{index}]")
+        objects = _list(target.get("objects"), f"build contract targets[{index}].objects")
+        if not objects:
+            raise PackageGraphError(f"build contract targets[{index}] has no objects")
+        object_parent = _safe_stored_relative(
+            _string(objects[0], f"build contract targets[{index}].objects[0]"),
+            f"build contract targets[{index}].objects[0]",
+        ).parent
+        (output_root / object_parent).mkdir(mode=0o755, parents=True)
+        for directory_index, raw_directory in enumerate(
+            _list(
+                target.get("header_directories"),
+                f"build contract targets[{index}].header_directories",
+            )
+        ):
+            relative = _safe_stored_relative(
+                _string(
+                    raw_directory,
+                    f"build contract targets[{index}].header_directories[{directory_index}]",
+                ),
+                f"build contract targets[{index}].header_directories[{directory_index}]",
+            )
+            (output_root / relative).mkdir(mode=0o755, parents=True, exist_ok=True)
     for relative, data in files.items():
         path = output_root / relative
         path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
         if relative.endswith("output-file-map.json"):
-            (path.parent / "objects").mkdir(mode=0o755)
+            (path.parent / "objects").mkdir(mode=0o755, exist_ok=True)
         path.write_bytes(data)
     return contract
 
@@ -2991,6 +3543,26 @@ def verify_build_contract(
         path = output_root / relative
         if not path.is_file() or path.is_symlink() or path.read_bytes() != expected:
             raise PackageGraphError(f"local package build contract changed: {relative}")
+    for index, raw_target in enumerate(contract["targets"]):
+        target = _mapping(raw_target, f"build contract targets[{index}]")
+        for directory_index, raw_directory in enumerate(
+            _list(
+                target.get("header_directories"),
+                f"build contract targets[{index}].header_directories",
+            )
+        ):
+            relative = _safe_stored_relative(
+                _string(
+                    raw_directory,
+                    f"build contract targets[{index}].header_directories[{directory_index}]",
+                ),
+                f"build contract targets[{index}].header_directories[{directory_index}]",
+            )
+            path = output_root / relative
+            if not path.is_dir() or path.is_symlink():
+                raise PackageGraphError(
+                    f"local package build contract changed: {relative.as_posix()}"
+                )
     return contract
 
 
@@ -3001,16 +3573,53 @@ def emit_target_record(contract: dict[str, Any], index: int) -> bytes:
     if index < 0 or index >= len(targets):
         raise PackageGraphError(f"target build index is out of range: {index}")
     target = _mapping(targets[index], f"build contract targets[{index}]")
+    if contract.get("format_version") != 3:
+        raise PackageGraphError("input is not a version 3 local package build contract")
+    output_file_map = target.get("output_file_map")
+    if output_file_map is not None:
+        output_file_map = _string(output_file_map, "target build output_file_map")
     values = [
+        _string(target.get("target_type"), "target build target_type"),
         _string(target.get("module"), "target build module"),
         _string(target.get("module_output"), "target build module_output"),
-        _string(target.get("output_file_map"), "target build output_file_map"),
+        output_file_map or "-",
         str(len(_list(target.get("sources"), "target build sources"))),
         *[_string(item, "target build source") for item in target["sources"]],
-        str(len(_list(target.get("swift_arguments"), "target build swift arguments"))),
+        str(
+            len(
+                _list(
+                    target.get("source_languages"),
+                    "target build source languages",
+                )
+            )
+        ),
         *[
-            _string(item, "target build Swift argument")
-            for item in target["swift_arguments"]
+            _string(item, "target build source language")
+            for item in target["source_languages"]
+        ],
+        str(
+            len(
+                _list(
+                    target.get("compiler_arguments"),
+                    "target build compiler arguments",
+                )
+            )
+        ),
+        *[
+            _string(item, "target build compiler argument")
+            for item in target["compiler_arguments"]
+        ],
+        str(
+            len(
+                _list(
+                    target.get("cxx_arguments"),
+                    "target build C++ arguments",
+                )
+            )
+        ),
+        *[
+            _string(item, "target build C++ argument")
+            for item in target["cxx_arguments"]
         ],
         str(len(_list(target.get("objects"), "target build objects"))),
         *[_string(item, "target build object") for item in target["objects"]],
@@ -3089,7 +3698,7 @@ def main(argv: list[str] | None = None) -> int:
                 "LOCAL_PACKAGE_GRAPH_OK "
                 f"packages={len(graph['packages'])} "
                 f"targets={len(graph['targets'])} "
-                f"sources={graph['summary']['swift_sources']} "
+                f"sources={graph['summary']['swift_sources'] + graph['summary']['c_family_sources']} "
                 f"external={graph['summary']['external_packages']} "
                 f"sha256={_sha256(canonical_json(graph))}"
             )

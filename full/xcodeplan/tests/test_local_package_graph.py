@@ -229,7 +229,11 @@ class LocalPackageGraphTests(unittest.TestCase):
                 "resource_bundles": 0,
                 "resource_files": 0,
                 "selected_products": 1,
+                "c_family_headers": 0,
+                "c_family_sources": 0,
+                "clang_targets": 0,
                 "swift_sources": 3,
+                "swift_targets": 3,
                 "target_dependency_edges": 3,
             },
         )
@@ -693,8 +697,9 @@ class LocalPackageGraphTests(unittest.TestCase):
             b"000000\0" b"000001\0" b"000002\0",
         )
         record = local_package_graph.emit_target_record(contract, 0).split(b"\0")[:-1]
-        self.assertEqual(record[0], b"Core")
-        self.assertEqual(record[3], b"1")
+        self.assertEqual(record[0], b"swift")
+        self.assertEqual(record[1], b"Core")
+        self.assertEqual(record[4], b"1")
         local_package_graph.verify_build_contract(graph, self.root, output)
         with self.assertRaisesRegex(
             local_package_graph.PackageGraphError, "already exists"
@@ -736,14 +741,16 @@ class LocalPackageGraphTests(unittest.TestCase):
         )
         output = Path(self.temporary.name) / "swift-settings-build"
         contract = local_package_graph.prepare_build(graph, self.root, output)
-        self.assertEqual(contract["format_version"], 2)
+        self.assertEqual(contract["format_version"], 3)
         self.assertEqual(
-            contract["targets"][0]["swift_arguments"],
+            contract["targets"][0]["compiler_arguments"],
             ["-swift-version", "6", "-default-isolation", "MainActor"],
         )
         record = local_package_graph.emit_target_record(contract, 0).split(b"\0")[:-1]
-        source_count = int(record[3])
-        argument_count_index = 4 + source_count
+        source_count = int(record[4])
+        language_count_index = 5 + source_count
+        language_count = int(record[language_count_index])
+        argument_count_index = language_count_index + 1 + language_count
         self.assertEqual(record[argument_count_index], b"4")
         self.assertEqual(
             record[argument_count_index + 1 : argument_count_index + 5],
@@ -866,6 +873,110 @@ class LocalPackageGraphTests(unittest.TestCase):
             local_package_graph.PackageGraphError, "escapes target package"
         ):
             self.graph()
+
+    def test_c_family_targets_freeze_stage_and_emit_clang_modules(self) -> None:
+        native = self.root / "Native"
+        (native / "Sources/c-core/include").mkdir(parents=True)
+        (native / "Sources/c-core/private").mkdir()
+        (native / "Sources/CXX/include").mkdir(parents=True)
+        (native / "Sources/Consumer").mkdir(parents=True)
+        (native / "Package.swift").write_text(
+            "// swift-tools-version: 6.2\n"
+            "import PackageDescription\n"
+            "let package = Package(\n"
+            '  name: "Native",\n'
+            '  products: [.library(name: "Native", targets: ["Consumer"])],\n'
+            "  targets: [\n"
+            '    .target(name: "c-core", cSettings: [\n'
+            '      .define("CORE_MODE", to: "7"),\n'
+            '      .headerSearchPath("private")\n'
+            "    ]),\n"
+            '    .target(name: "CXX", cxxSettings: [.define("CXX_MODE")]),\n'
+            '    .target(name: "Consumer", dependencies: ["c-core", "CXX"])\n'
+            "  ]\n"
+            ")\n",
+            encoding="utf-8",
+        )
+        (native / "Sources/c-core/core.c").write_text(
+            '#include "c-core.h"\n#include "detail.inc"\nint core(void) { return CORE_MODE + DETAIL; }\n',
+            encoding="utf-8",
+        )
+        (native / "Sources/c-core/include/c-core.h").write_text(
+            "int core(void);\n", encoding="utf-8"
+        )
+        (native / "Sources/c-core/include/module.modulemap").write_text(
+            'module c_core { header "c-core.h" export * }\n', encoding="utf-8"
+        )
+        (native / "Sources/c-core/private/detail.inc").write_text(
+            "#define DETAIL 2\n", encoding="utf-8"
+        )
+        (native / "Sources/CXX/value.cpp").write_text(
+            '#include "CXX.h"\nint cxx(void) { return 3; }\n', encoding="utf-8"
+        )
+        (native / "Sources/CXX/include/CXX.h").write_text(
+            "int cxx(void);\n", encoding="utf-8"
+        )
+        (native / "Sources/Consumer/Consumer.swift").write_text(
+            "import c_core\nimport CXX\npublic let nativeValue = core() + cxx()\n",
+            encoding="utf-8",
+        )
+        inventory = {
+            "local_package_references": [{"relative_path": "Native"}],
+            "package_products": [
+                {"name": "Native", "origin": "local", "relative_path": "Native"}
+            ],
+        }
+        graph = local_package_graph.plan(inventory, self.root)
+        self.assertIsNotNone(graph)
+        assert graph is not None
+        self.assertEqual(
+            [(item["module"], item["target_type"]) for item in graph["targets"]],
+            [("CXX", "clang"), ("c_core", "clang"), ("Consumer", "swift")],
+        )
+        c_core = graph["targets"][1]
+        self.assertEqual(c_core["sources"][0]["language"], "c")
+        self.assertEqual(
+            [item["target_relative_path"] for item in c_core["headers"]],
+            ["include/c-core.h", "private/detail.inc"],
+        )
+        self.assertEqual(c_core["module_map"]["kind"], "source")
+        self.assertEqual(graph["targets"][0]["module_map"]["kind"], "generated")
+        self.assertEqual(graph["summary"]["c_family_sources"], 2)
+        self.assertEqual(graph["summary"]["c_family_headers"], 3)
+        local_package_graph.verify(graph, self.root)
+
+        include = native / "Sources/c-core/private/detail.inc"
+        original = include.read_bytes()
+        include.write_bytes(b"#define DETAIL 9\n")
+        with self.assertRaises(local_package_graph.PackageGraphError):
+            local_package_graph.verify(graph, self.root)
+        include.write_bytes(original)
+
+        output = Path(self.temporary.name) / "native-build"
+        contract = local_package_graph.prepare_build(graph, self.root, output)
+        self.assertEqual(contract["format_version"], 3)
+        self.assertTrue(contract["requires_cxx_runtime"])
+        self.assertEqual((output / "clang-link-arguments.nul").read_bytes(), b"-lc++\0")
+        self.assertIn(
+            "-Xcc", contract["clang_import_arguments"]
+        )
+        staged_map = output / contract["targets"][1]["module_output"]
+        self.assertEqual(
+            staged_map.read_text(encoding="utf-8"),
+            'module c_core { header "c-core.h" export * }\n',
+        )
+        generated_map = output / contract["targets"][0]["module_output"]
+        self.assertEqual(
+            generated_map.read_text(encoding="utf-8"),
+            'module CXX {\n    umbrella "."\n    export *\n}\n',
+        )
+        c_record = local_package_graph.emit_target_record(contract, 1).split(b"\0")[:-1]
+        self.assertEqual(c_record[:5], [b"clang", b"c_core", str(contract["targets"][1]["module_output"]).encode(), b"-", b"1"])
+        local_package_graph.verify_build_contract(graph, self.root, output)
+        staged_header = output / contract["targets"][1]["headers"][0]["path"]
+        staged_header.write_text("changed\n", encoding="utf-8")
+        with self.assertRaisesRegex(local_package_graph.PackageGraphError, "changed"):
+            local_package_graph.verify_build_contract(graph, self.root, output)
 
 
 if __name__ == "__main__":
