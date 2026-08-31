@@ -50,6 +50,7 @@ Running the probes answered that. See `../census/` for the demand side.
 | `darwin_probe_behaviour.swift` | type round-trips, the coercion grid, absent-key answers, `set(URL)` storage form, `register(defaults:)` layering, `removeObject` fallback, suite isolation, the on-disk format and path. Three phases; **phase 2 is a separate process**, which is the only honest persistence test. |
 | `darwin_probe_coercion.swift` | the string→`integer`/`double`/`bool` rules, printed **beside** the `NSString.integerValue`/`.boolValue` answers corelibs uses, so a divergence is a diff and not a claim |
 | `darwin_probe_domains.swift` | what `dictionaryRepresentation()` actually contains versus `persistentDomain(forName:)`, and the volatile-domain names |
+| `darwin_probe_notifications.swift` | exact `didChangeNotification` name, synchronous sender identity, and the mutation APIs that do and do not post |
 
 Captured output is committed beside each (`darwin-*-2026-08-27.txt`) with the
 host OS, build and toolchain in the header, because a behavioural answer

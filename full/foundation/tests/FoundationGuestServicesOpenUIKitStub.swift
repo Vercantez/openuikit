@@ -51,6 +51,29 @@ public final class Bundle: @unchecked Sendable {
     }
 }
 
+/// The production OpenUIKit module owns these identities. UserDefaults now
+/// posts its Darwin-measured mutation notification through that boundary, so
+/// the Foundation-hidden service fixture must expose the same minimal shape
+/// instead of accidentally resolving Darwin Foundation's declarations.
+public struct Notification {
+    public struct Name: Hashable, Sendable {
+        public let rawValue: String
+
+        public init(_ rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+}
+
+public final class NotificationCenter: @unchecked Sendable {
+    public static let `default` = NotificationCenter()
+
+    public func post(name: Notification.Name, object: Any?) {
+        _ = name
+        _ = object
+    }
+}
+
 open class NSAttributedString {}
 open class NSMutableAttributedString: NSAttributedString {}
 open class NSParagraphStyle {}

@@ -1,3 +1,6 @@
+import OpenCombine
+import Synchronization
+
 private typealias _OpenDispatchCallback = @convention(c) (UnsafeMutableRawPointer?) -> Void
 
 @_silgen_name("openui_dispatch_v1_get_global_queue")
@@ -187,4 +190,296 @@ public final class DispatchQueue: @unchecked Sendable {
             _openuiDispatchSwiftInvoke
         )
     }
+}
+
+// MARK: - OpenCombine scheduler identity
+
+extension DispatchQueue: OpenCombine.Scheduler {
+    public struct SchedulerTimeType: Strideable, Hashable, Sendable {
+        public var dispatchTime: DispatchTime
+
+        public init(_ dispatchTime: DispatchTime) {
+            self.dispatchTime = dispatchTime
+        }
+
+        public func distance(to other: SchedulerTimeType) -> Stride {
+            let start = dispatchTime.uptimeNanoseconds
+            let end = other.dispatchTime.uptimeNanoseconds
+            if end >= start {
+                return Stride(nanoseconds: _openDispatchClampedSigned(end - start))
+            }
+            let distance = start - end
+            if distance >= UInt64(Int64.max) + 1 {
+                return Stride(nanoseconds: .min)
+            }
+            return Stride(nanoseconds: -Int64(distance))
+        }
+
+        public func advanced(by stride: Stride) -> SchedulerTimeType {
+            let current = dispatchTime.uptimeNanoseconds
+            if stride.nanoseconds >= 0 {
+                let delta = UInt64(stride.nanoseconds)
+                let result = current.addingReportingOverflow(delta)
+                return .init(
+                    DispatchTime(
+                        uptimeNanoseconds: result.overflow
+                            ? .max
+                            : result.partialValue
+                    )
+                )
+            }
+            let delta = stride.nanoseconds == .min
+                ? UInt64(Int64.max) + 1
+                : UInt64(-stride.nanoseconds)
+            return .init(
+                DispatchTime(
+                    uptimeNanoseconds: delta > current ? 0 : current - delta
+                )
+            )
+        }
+
+        public struct Stride:
+            OpenCombine.SchedulerTimeIntervalConvertible,
+            Comparable,
+            SignedNumeric,
+            Hashable,
+            Sendable {
+            public typealias IntegerLiteralType = Int
+            public typealias Magnitude = UInt64
+
+            fileprivate var nanoseconds: Int64
+
+            fileprivate init(nanoseconds: Int64) {
+                self.nanoseconds = nanoseconds
+            }
+
+            public init(integerLiteral value: Int) {
+                self = .seconds(value)
+            }
+
+            public init?<Source: BinaryInteger>(exactly source: Source) {
+                guard let seconds = Int64(exactly: source) else { return nil }
+                self.init(
+                    nanoseconds: _openDispatchClampedProduct(
+                        seconds,
+                        1_000_000_000
+                    )
+                )
+            }
+
+            public var magnitude: UInt64 {
+                nanoseconds == .min
+                    ? UInt64(Int64.max) + 1
+                    : UInt64(Swift.abs(nanoseconds))
+            }
+
+            public static prefix func - (operand: Stride) -> Stride {
+                operand.nanoseconds == .min
+                    ? Stride(nanoseconds: .max)
+                    : Stride(nanoseconds: -operand.nanoseconds)
+            }
+
+            public static func + (lhs: Stride, rhs: Stride) -> Stride {
+                .init(
+                    nanoseconds: _openDispatchClampedAdd(
+                        lhs.nanoseconds,
+                        rhs.nanoseconds
+                    )
+                )
+            }
+
+            public static func - (lhs: Stride, rhs: Stride) -> Stride {
+                lhs + (-rhs)
+            }
+
+            public static func * (lhs: Stride, rhs: Stride) -> Stride {
+                .init(
+                    nanoseconds: _openDispatchClampedProduct(
+                        lhs.nanoseconds,
+                        rhs.nanoseconds
+                    )
+                )
+            }
+
+            public static func += (lhs: inout Stride, rhs: Stride) {
+                lhs = lhs + rhs
+            }
+
+            public static func -= (lhs: inout Stride, rhs: Stride) {
+                lhs = lhs - rhs
+            }
+
+            public static func *= (lhs: inout Stride, rhs: Stride) {
+                lhs = lhs * rhs
+            }
+
+            public static func < (lhs: Stride, rhs: Stride) -> Bool {
+                lhs.nanoseconds < rhs.nanoseconds
+            }
+
+            public static func seconds(_ value: Int) -> Stride {
+                .init(
+                    nanoseconds: _openDispatchClampedProduct(
+                        Int64(clamping: value),
+                        1_000_000_000
+                    )
+                )
+            }
+
+            public static func seconds(_ value: Double) -> Stride {
+                guard value.isFinite else {
+                    return .init(nanoseconds: value.sign == .minus ? .min : .max)
+                }
+                let nanoseconds = value * 1_000_000_000
+                if nanoseconds >= Double(Int64.max) {
+                    return .init(nanoseconds: .max)
+                }
+                if nanoseconds <= Double(Int64.min) {
+                    return .init(nanoseconds: .min)
+                }
+                return .init(nanoseconds: Int64(nanoseconds))
+            }
+
+            public static func milliseconds(_ value: Int) -> Stride {
+                .init(
+                    nanoseconds: _openDispatchClampedProduct(
+                        Int64(clamping: value),
+                        1_000_000
+                    )
+                )
+            }
+
+            public static func microseconds(_ value: Int) -> Stride {
+                .init(
+                    nanoseconds: _openDispatchClampedProduct(
+                        Int64(clamping: value),
+                        1_000
+                    )
+                )
+            }
+
+            public static func nanoseconds(_ value: Int) -> Stride {
+                .init(nanoseconds: Int64(clamping: value))
+            }
+        }
+    }
+
+    public struct SchedulerOptions: Sendable, Hashable {
+        public var qos: DispatchQoS
+        public var flags: DispatchWorkItemFlags
+
+        public init(
+            qos: DispatchQoS = .unspecified,
+            flags: DispatchWorkItemFlags = []
+        ) {
+            self.qos = qos
+            self.flags = flags
+        }
+    }
+
+    public var now: SchedulerTimeType { .init(.now()) }
+    public var minimumTolerance: SchedulerTimeType.Stride { .nanoseconds(0) }
+
+    public func schedule(
+        options: SchedulerOptions?,
+        _ action: @escaping () -> Void
+    ) {
+        _ = options
+        let action = _OpenDispatchSchedulerAction(action)
+        async { action.invoke() }
+    }
+
+    public func schedule(
+        after date: SchedulerTimeType,
+        tolerance: SchedulerTimeType.Stride,
+        options: SchedulerOptions?,
+        _ action: @escaping () -> Void
+    ) {
+        _ = tolerance
+        _ = options
+        let action = _OpenDispatchSchedulerAction(action)
+        asyncAfter(deadline: date.dispatchTime) { action.invoke() }
+    }
+
+    public func schedule(
+        after date: SchedulerTimeType,
+        interval: SchedulerTimeType.Stride,
+        tolerance: SchedulerTimeType.Stride,
+        options: SchedulerOptions?,
+        _ action: @escaping () -> Void
+    ) -> any OpenCombine.Cancellable {
+        _ = tolerance
+        _ = options
+        let schedule = _OpenDispatchRepeatingSchedule(
+            queue: self,
+            intervalNanoseconds: max(1, interval.nanoseconds),
+            action: action
+        )
+        schedule.start(at: date.dispatchTime)
+        return schedule
+    }
+}
+
+private final class _OpenDispatchSchedulerAction: @unchecked Sendable {
+    private let body: () -> Void
+
+    init(_ body: @escaping () -> Void) {
+        self.body = body
+    }
+
+    func invoke() { body() }
+}
+
+private final class _OpenDispatchRepeatingSchedule:
+    OpenCombine.Cancellable,
+    @unchecked Sendable {
+    private let queue: DispatchQueue
+    private let intervalNanoseconds: Int64
+    private let action: _OpenDispatchSchedulerAction
+    private let cancelled = Mutex<Bool>(false)
+
+    init(
+        queue: DispatchQueue,
+        intervalNanoseconds: Int64,
+        action: @escaping () -> Void
+    ) {
+        self.queue = queue
+        self.intervalNanoseconds = intervalNanoseconds
+        self.action = _OpenDispatchSchedulerAction(action)
+    }
+
+    func start(at date: DispatchTime) {
+        queue.asyncAfter(deadline: date) { [self] in fire() }
+    }
+
+    func cancel() {
+        cancelled.withLock { $0 = true }
+    }
+
+    private func fire() {
+        guard !cancelled.withLock({ $0 }) else { return }
+        action.invoke()
+        guard !cancelled.withLock({ $0 }) else { return }
+        queue.asyncAfter(
+            deadline: .now() + .nanoseconds(Int(clamping: intervalNanoseconds))
+        ) { [self] in
+            fire()
+        }
+    }
+}
+
+private func _openDispatchClampedSigned(_ value: UInt64) -> Int64 {
+    value > UInt64(Int64.max) ? .max : Int64(value)
+}
+
+private func _openDispatchClampedAdd(_ lhs: Int64, _ rhs: Int64) -> Int64 {
+    let result = lhs.addingReportingOverflow(rhs)
+    guard result.overflow else { return result.partialValue }
+    return lhs >= 0 && rhs >= 0 ? .max : .min
+}
+
+private func _openDispatchClampedProduct(_ lhs: Int64, _ rhs: Int64) -> Int64 {
+    let result = lhs.multipliedReportingOverflow(by: rhs)
+    guard result.overflow else { return result.partialValue }
+    return (lhs < 0) == (rhs < 0) ? .max : .min
 }

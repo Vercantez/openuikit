@@ -97,6 +97,30 @@ private final class CoreStoreObserver: SKPaymentTransactionObserver {
     }
 }
 
+private final class CoreNotificationDemandSubscriber: Subscriber {
+    typealias Input = Notification
+    typealias Failure = Never
+
+    private(set) var subscription: (any Subscription)?
+    private(set) var values: [Notification] = []
+
+    func receive(subscription: any Subscription) {
+        self.subscription = subscription
+        subscription.request(.max(1))
+    }
+
+    func receive(_ input: Notification) -> Subscribers.Demand {
+        values.append(input)
+        return .none
+    }
+
+    func receive(completion: Subscribers.Completion<Never>) {
+        preconditionFailure("NotificationCenter publisher never completes")
+    }
+}
+
+private final class CoreNotificationObject {}
+
 @MainActor
 private final class CoreMailDelegate: NSObject, MFMailComposeViewControllerDelegate {
     var result: MFMailComposeResult?
@@ -229,6 +253,66 @@ struct CoreGuestPackageProbe {
         center.post(name: name, object: nil)
         center.removeObserver(token)
         precondition(deliveries == 1)
+
+        let postingObject = CoreNotificationObject()
+        let otherObject = CoreNotificationObject()
+        let publisher = center.publisher(for: name, object: postingObject)
+        let samePublisher = NotificationCenter.Publisher(
+            center: center,
+            name: name,
+            object: postingObject
+        )
+        precondition(publisher == samePublisher)
+        precondition(
+            publisher != center.publisher(for: name, object: otherObject)
+        )
+        let demandSubscriber = CoreNotificationDemandSubscriber()
+        publisher.receive(subscriber: demandSubscriber)
+        precondition(center._observerCount == 1)
+        center.post(name: name, object: otherObject)
+        center.post(name: name, object: postingObject)
+        center.post(name: name, object: postingObject)
+        precondition(demandSubscriber.values.count == 1)
+        precondition(
+            demandSubscriber.values.first?.object as AnyObject? ===
+                postingObject
+        )
+        demandSubscriber.subscription?.request(.max(1))
+        center.post(name: name, object: postingObject)
+        precondition(demandSubscriber.values.count == 2)
+        demandSubscriber.subscription?.cancel()
+        precondition(center._observerCount == 0)
+        center.post(name: name, object: postingObject)
+        precondition(demandSubscriber.values.count == 2)
+
+        let defaultsSuite = "OpenUIKit.CoreGuestPackageProbe"
+        let defaults = UserDefaults(suiteName: defaultsSuite)!
+        defaults.removePersistentDomain(forName: defaultsSuite)
+        var defaultsDeliveries = 0
+        let defaultsCancellable = NotificationCenter.default
+            .publisher(
+                for: UserDefaults.didChangeNotification,
+                object: defaults
+            )
+            .sink { notification in
+                precondition(
+                    notification.object as AnyObject? === defaults
+                )
+                defaultsDeliveries += 1
+            }
+        defaults.set(1, forKey: "notification")
+        defaults.set(1, forKey: "notification")
+        defaults.removeObject(forKey: "notification")
+        defaults.removeObject(forKey: "notification")
+        precondition(defaultsDeliveries == 4)
+        precondition(
+            UserDefaults.didChangeNotification.rawValue ==
+                "NSUserDefaultsDidChangeNotification"
+        )
+        defaultsCancellable.cancel()
+        defaults.set(2, forKey: "notification")
+        precondition(defaultsDeliveries == 4)
+        defaults.removePersistentDomain(forName: defaultsSuite)
 
         let allocatedLock = OSAllocatedUnfairLock<[Int]>(initialState: [])
         let allocatedLockCopy = allocatedLock
@@ -692,7 +776,8 @@ struct CoreGuestPackageProbe {
         #endif
         print(
             "CORE_GUEST_PACKAGE_MACHO_OK "
-                + "notification=shared combine=delivered resources=loaded "
+                + "notification=shared,publisher,userdefaults "
+                + "combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "appintents=process-local "
                 + "foundation=\(foundationCompatibility) "

@@ -23,6 +23,29 @@ let defaults = FoundationGuestServices.UserDefaults(suiteName: suite)!
 switch mode {
 case "semantics":
     defaults.removePersistentDomain(forName: suite)
+    var notificationCount = 0
+    let notificationToken = NotificationCenter.default.addObserver(
+        forName: FoundationGuestServices.UserDefaults.didChangeNotification,
+        object: defaults,
+        queue: nil
+    ) { notification in
+        require(
+            (notification.object as AnyObject?) === defaults,
+            "did-change notification object identity"
+        )
+        notificationCount += 1
+    }
+    defaults.set(1, forKey: "notification")
+    defaults.set(1, forKey: "notification")
+    defaults.removeObject(forKey: "notification")
+    defaults.removeObject(forKey: "notification")
+    require(notificationCount == 4, "did-change notification per mutation")
+    require(
+        FoundationGuestServices.UserDefaults.didChangeNotification.rawValue ==
+            "NSUserDefaultsDidChangeNotification",
+        "did-change notification name"
+    )
+    NotificationCenter.default.removeObserver(notificationToken)
     defaults.register(defaults: ["fallback": "registered", "registeredInt": 7])
     require(defaults.object(forKey: "missing") == nil, "absent object")
     require(defaults.integer(forKey: "missing") == 0, "absent integer")

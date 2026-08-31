@@ -1,5 +1,11 @@
+import Combine
 import Dispatch
 import Foundation
+import Synchronization
+
+private final class CancellableBox: @unchecked Sendable {
+    var value: AnyCancellable?
+}
 
 private func require(_ condition: @autoclosure () -> Bool, _ message: String) {
     if !condition() { fatalError("DispatchMachORuntime: \(message)") }
@@ -45,6 +51,59 @@ private enum DispatchMachORuntime {
         require(timerValue == 29, "portable Dispatch delayed callback")
         require(DispatchTime.now().uptimeNanoseconds >= timerStarted, "monotonic time")
 
-        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 vouchers=null")
+        let scheduler = DispatchQueue.global(qos: .utility)
+        let scheduledValue = await withCheckedContinuation { continuation in
+            scheduler.schedule {
+                continuation.resume(returning: 31)
+            }
+        }
+        require(scheduledValue == 31, "OpenCombine immediate scheduler callback")
+
+        let delayedValue = await withCheckedContinuation { continuation in
+            scheduler.schedule(
+                after: scheduler.now.advanced(by: .milliseconds(2)),
+                tolerance: .nanoseconds(0),
+                options: nil
+            ) {
+                continuation.resume(returning: 37)
+            }
+        }
+        require(delayedValue == 37, "OpenCombine delayed scheduler callback")
+
+        let cancelledTimerFired = Mutex(false)
+        let repeating = scheduler.schedule(
+            after: scheduler.now.advanced(by: .milliseconds(10)),
+            interval: .milliseconds(1),
+            tolerance: .nanoseconds(0),
+            options: nil
+        ) {
+            cancelledTimerFired.withLock { $0 = true }
+        }
+        repeating.cancel()
+        repeating.cancel()
+        await withCheckedContinuation { continuation in
+            scheduler.asyncAfter(deadline: .now() + .milliseconds(20)) {
+                continuation.resume()
+            }
+        }
+        require(
+            !cancelledTimerFired.withLock { $0 },
+            "cancelled repeating scheduler callback"
+        )
+
+        let subject = PassthroughSubject<Int, Never>()
+        let cancellable = CancellableBox()
+        let receivedValue = await withCheckedContinuation { continuation in
+            cancellable.value = subject
+                .receive(on: scheduler)
+                .sink { value in
+                    continuation.resume(returning: value)
+                }
+            subject.send(41)
+        }
+        require(receivedValue == 41, "OpenCombine receive(on:) delivery")
+        cancellable.value?.cancel()
+
+        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null")
     }
 }

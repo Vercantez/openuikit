@@ -8,6 +8,7 @@
 import Foundation
 #else
 import FoundationEssentials
+import OpenUIKit
 #endif
 import Synchronization
 #if canImport(Darwin)
@@ -49,6 +50,12 @@ open class UserDefaults {
     private let _volatile = Mutex<[String: [String: _UDStored]]>([:])
 
     open class var standard: UserDefaults { _standard }
+
+    /// Posted synchronously after an in-process mutation changes or replaces
+    /// this defaults object's domains. The notification object is the
+    /// receiving UserDefaults instance, matching Foundation.
+    public static let didChangeNotification =
+        Notification.Name("NSUserDefaultsDidChangeNotification")
 
     open class func resetStandardUserDefaults() {
         _domains.withLock { _ = $0.removeValue(forKey: _applicationDomain) }
@@ -96,10 +103,12 @@ open class UserDefaults {
             )
         }
         Self._mutate(domain: _domain) { $0[defaultName] = stored }
+        _postDidChange()
     }
 
     open func removeObject(forKey defaultName: String) {
         Self._mutate(domain: _domain) { _ = $0.removeValue(forKey: defaultName) }
+        _postDidChange()
     }
 
     open func string(forKey defaultName: String) -> String? {
@@ -200,6 +209,7 @@ open class UserDefaults {
         Self._registered.withLock { state in
             for (key, value) in converted { state[key] = value }
         }
+        _postDidChange()
     }
 
     open func addSuite(named suiteName: String) {
@@ -239,10 +249,12 @@ open class UserDefaults {
             converted[key] = stored
         }
         Self._replace(domain: domainName, with: converted)
+        _postDidChange()
     }
 
     open func removePersistentDomain(forName domainName: String) {
         Self._replace(domain: domainName, with: [:])
+        _postDidChange()
     }
 
     open var volatileDomainNames: [String] {
@@ -268,10 +280,12 @@ open class UserDefaults {
             converted[key] = stored
         }
         _volatile.withLock { $0[domainName] = converted }
+        _postDidChange()
     }
 
     open func removeVolatileDomain(forName domainName: String) {
         _volatile.withLock { _ = $0.removeValue(forKey: domainName) }
+        _postDidChange()
     }
 
     @discardableResult
@@ -297,6 +311,13 @@ open class UserDefaults {
 
     open func objectIsForced(forKey key: String) -> Bool { false }
     open func objectIsForced(forKey key: String, inDomain domain: String) -> Bool { false }
+
+    private func _postDidChange() {
+        NotificationCenter.default.post(
+            name: Self.didChangeNotification,
+            object: self
+        )
+    }
 
     public static let globalDomain = "NSGlobalDomain"
     public static let argumentDomain = "NSArgumentDomain"

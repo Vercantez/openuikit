@@ -24,6 +24,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
+    "full/foundation/NotificationCenter+Combine.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",

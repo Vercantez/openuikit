@@ -1,0 +1,25 @@
+# Captured on macOS 26.5.2 (25F84), Apple Swift 6.2.1, real Foundation.
+# Regenerate: swift darwin_probe_notifications.swift
+
+constant=NSUserDefaultsDidChangeNotification
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step set-new delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step set-same delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step remove-existing delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step remove-missing delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step register delta=1
+step add-suite delta=0
+step remove-suite delta=0
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step set-persistent delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step remove-persistent delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step set-volatile delta=1
+event objectNil=false objectIsDefaults=true name=NSUserDefaultsDidChangeNotification
+step remove-volatile delta=1
+step synchronize delta=0

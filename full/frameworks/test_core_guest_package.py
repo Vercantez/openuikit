@@ -92,6 +92,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
+    "full/foundation/NotificationCenter+Combine.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",
@@ -298,7 +299,9 @@ def validate_swiftui_foundation_essentials_link(source: str) -> None:
     end = source.index("swiftui_runtime_load_count=", start)
     link_slice = source[start:end]
     required = (
-        '"${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit',
+        '"${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit',
+        "swiftui_foundation_load_count=",
+        '"@rpath/libFoundation.dylib"',
         "swiftui_foundation_essentials_load_count=",
         '"@rpath/libFoundationEssentials.dylib"',
     )
@@ -412,14 +415,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 27)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 28)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 27-path contract", refusal.stderr)
+        self.assertIn("exact ordered 28-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -1209,7 +1212,11 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=27"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=28"), 1)
+        self.assertIn(
+            "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
+            source,
+        )
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
         self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)
@@ -1345,7 +1352,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            3,
+            4,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1437,6 +1444,7 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_HOST_DISPATCH_SHA256",
             "GLIBC_2.38",
             "OPEN_DISPATCH_MACHO_OK async-main=drained",
+            "scheduler=immediate,delayed,cancelled,receive-on",
             "FOUNDATION_URLSESSION_MACHO_OK",
             "attestation/dispatch-runtime.log",
             "attestation/foundation-urlsession-runtime.log",
@@ -1945,11 +1953,42 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(token, "", 1)
                     )
 
-    def test_swiftui_links_foundation_essentials_directly(self) -> None:
+    def test_swiftui_links_foundation_facades_directly(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         validate_swiftui_foundation_essentials_link(source)
+        self.assertLess(
+            source.index("compile the ordered app-facing Foundation facade manifest"),
+            source.index("compile SwiftUI against the app-facing Foundation facade"),
+        )
+        self.assertIn(
+            '"$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"',
+            source,
+        )
+        reexport_probe = (
+            HERE / "SwiftUIFoundationReexportProbe.swift"
+        ).read_text(encoding="utf-8")
+        self.assertIn("import SwiftUI", reexport_probe)
+        self.assertNotIn("import Foundation", reexport_probe)
+        self.assertNotIn("import Combine", reexport_probe)
+        self.assertNotIn("import Dispatch", reexport_probe)
         for token in (
-            '"${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit',
+            "NotificationCenter.Publisher",
+            "UserDefaults.didChangeNotification",
+            "AnyCancellable",
+            "DispatchQueue.main",
+        ):
+            self.assertIn(token, reexport_probe)
+        for token in (
+            "probe/SwiftUIFoundationReexportProbe",
+            "attestation/swiftui-foundation-reexport-runtime.log",
+            "SWIFTUI_FOUNDATION_REEXPORT_MACHO_OK import=swiftui-only",
+            "SwiftUI Foundation/Combine/Dispatch reexport marker is missing",
+        ):
+            self.assertIn(token, source)
+        for token in (
+            '"${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit',
+            "swiftui_foundation_load_count=",
+            '"@rpath/libFoundation.dylib"',
             "swiftui_foundation_essentials_load_count=",
             '"@rpath/libFoundationEssentials.dylib"',
         ):

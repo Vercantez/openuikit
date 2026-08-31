@@ -42,6 +42,16 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("Unmanaged.passRetained", source)
         self.assertNotIn("work()", source)
 
+    def test_portable_queue_is_the_opencombine_scheduler(self) -> None:
+        source = (ROOT / "full/dispatch/Dispatch.swift").read_text(encoding="utf-8")
+        self.assertIn("import OpenCombine", source)
+        self.assertIn("extension DispatchQueue: OpenCombine.Scheduler", source)
+        self.assertIn("public struct SchedulerTimeType", source)
+        self.assertIn("OpenCombine.SchedulerTimeIntervalConvertible", source)
+        self.assertIn("private let cancelled = Mutex<Bool>(false)", source)
+        self.assertIn("asyncAfter(deadline: date.dispatchTime)", source)
+        self.assertNotIn("typealias Scheduler =", source)
+
 
 if __name__ == "__main__":
     unittest.main()

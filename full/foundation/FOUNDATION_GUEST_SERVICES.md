@@ -11,7 +11,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The twenty-seven-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The twenty-eight-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -64,8 +64,15 @@ platform `CGFloat` and `os_unfair_lock` APIs. The twenty-seven-source facade add
   path on the guest. Its storage envelope is JSON under
   `/tmp/open-foundation-userdefaults-<sanitized-domain>.json`; `Data` values
   round-trip unchanged, so Codable application models persist across guest
-  processes. The host gate performs the write and cold read in separate
-  processes.
+  processes. `didChangeNotification` uses Apple's exact raw name, is posted
+  synchronously with the mutated defaults instance as its object, and covers
+  the Apple-measured set/remove/register/persistent/volatile mutation classes.
+  The host gate performs the write and cold read in separate processes.
+- `NotificationCenter.Publisher` on the same canonical center and notification
+  identities exported by OpenUIKit. It conforms directly to OpenCombine's
+  `Publisher` protocol, filters posting objects by identity, honors bounded
+  demand, serializes concurrent downstream calls while permitting recursive
+  posts, and removes its observer immediately on idempotent cancellation.
 - A shared `NSNumber`/`NSError`/`NSNull` value and error bridge,
   `JSONSerialization`, and UTF-16 `NSRegularExpression` surface. Its exact
   behavior and bounded exclusions are documented in
@@ -96,7 +103,8 @@ does not yet use FoundationInternationalization/ICU, so localized symbol
 tables beyond English and French and date parsing are outside this slice.
 Unsupported Unicode pattern letters are rendered literally instead of being
 silently discarded. `UserDefaults` does not claim `cfprefsd`, managed-domain,
-NSGlobalDomain, Objective-C KVO, or Apple binary-plist storage compatibility;
+NSGlobalDomain, Objective-C KVO, cross-process Darwin notification delivery,
+or Apple binary-plist storage compatibility;
 its persistence path and encoding are intentionally project-owned. The public
 value behavior exercised here is useful without pretending those system
 services exist. `FileHandle` is intentionally synchronous and descriptor

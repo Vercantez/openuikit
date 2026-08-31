@@ -73,7 +73,7 @@ The ordered production Foundation source set is owned by
 consumes that manifest rather than duplicating its entries. Because this legacy
 Focus-only harness cannot modify its shared read-only machorun root, it
 explicitly excludes the production `URLSession.swift` transport source; the
-relocatable core-package builder consumes all twenty-seven entries.
+relocatable core-package builder consumes all twenty-eight entries.
 `FoundationGuest.swift`,
 `FocusOnboardingGuestMain.swift`, and `FocusOnboardingUUIDProbe.c` are port and
 test code, not application source. Normalized resource bundles are supplied by

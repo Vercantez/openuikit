@@ -17,6 +17,7 @@ EXPECTED = [
     "full/foundation/NSString.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
+    "full/foundation/NotificationCenter+Combine.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",
@@ -56,7 +57,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 27', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 28', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -88,6 +89,53 @@ class FoundationGuestServicesTests(unittest.TestCase):
         self.assertIn("case date(Date)", source)
         self.assertNotIn("static var storage", source)
 
+    def test_notification_publisher_uses_the_canonical_opencombine_identity(self) -> None:
+        source = (
+            ROOT / "full/foundation/NotificationCenter+Combine.swift"
+        ).read_text()
+        defaults = (ROOT / "full/foundation/UserDefaults.swift").read_text()
+        for token in (
+            "import OpenCombine",
+            "import OpenUIKit",
+            "struct Publisher: OpenCombine.Publisher",
+            "OpenCombine.Subscription",
+            "OpenCombine.Subscribers.Demand",
+            "center.addObserver(",
+            "center.removeObserver(observation)",
+            "private let downstreamLock = _FoundationRecursiveLock()",
+            "PTHREAD_MUTEX_RECURSIVE",
+            '"name": name',
+            "lhs.center === rhs.center",
+            "lhs.object === rhs.object",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("PassthroughSubject", source)
+        self.assertIn(
+            'Notification.Name("NSUserDefaultsDidChangeNotification")',
+            defaults,
+        )
+        self.assertIn("object: self", defaults)
+
+        oracle = (
+            ROOT
+            / "full/oracle-userdefaults/darwin-notifications-2026-08-31.txt"
+        ).read_text()
+        self.assertIn("constant=NSUserDefaultsDidChangeNotification", oracle)
+        for mutation in (
+            "set-new",
+            "set-same",
+            "remove-existing",
+            "remove-missing",
+            "register",
+            "set-persistent",
+            "remove-persistent",
+            "set-volatile",
+            "remove-volatile",
+        ):
+            self.assertIn(f"step {mutation} delta=1", oracle)
+        for nonmutation in ("add-suite", "remove-suite", "synchronize"):
+            self.assertIn(f"step {nonmutation} delta=0", oracle)
+
     def test_hackers_frontier_uses_real_lock_file_and_reexport_surfaces(self) -> None:
         umbrella = (ROOT / "full/appshim/FoundationGuest.swift").read_text()
         value_compatibility = (
@@ -101,6 +149,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         ).read_text()
         character_set = (ROOT / "full/foundation/CharacterSet.swift").read_text()
         self.assertIn("@_exported import OpenCoreGraphics", umbrella)
+        self.assertIn("@_exported import Dispatch", umbrella)
         self.assertIn("@_exported import os", umbrella)
         for token in (
             "public func NSMaxRange(",

@@ -120,7 +120,7 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=8
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=27
+EXPECTED_FOUNDATION_SOURCE_COUNT=28
 EXPECTED_OBSERVATION_SOURCE_COUNT=6
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
@@ -1516,6 +1516,7 @@ swiftc -target "$TARGET" -sdk "$STAGE/sdk" \
 
 echo '== build the portable Dispatch Swift module'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" \
+    -I "$STAGE/modules" \
     -module-name Dispatch -module-link-name Dispatch -emit-module \
     -emit-module-path "$STAGE/modules/Dispatch.swiftmodule" \
     -emit-object -o "$WORK/dispatch.o" "$W/full/dispatch/Dispatch.swift"
@@ -1600,19 +1601,6 @@ clang++-18 -target "$TARGET" -isysroot "$STAGE/sdk" -stdlib=libc++ \
     -o "$STAGE/lib/libCombine.dylib" "$WORK/combine.o" \
     "$STAGE/sdk/usr/lib/swift/libswiftCore.tbd" "$STAGE/sdk/usr/lib/libSystem.tbd"
 
-echo '== compile SwiftUI while Foundation is hidden'
-mapfile -d '' -t SWIFTUI_SOURCES < <(
-    find "$UIKIT/Sources/SwiftUI" -maxdepth 1 -type f -name '*.swift' \
-        -print0 | LC_ALL=C sort -z
-)
-[ "${#SWIFTUI_SOURCES[@]}" -eq "$EXPECTED_SWIFTUI_SWIFT_COUNT" ] \
-    || die 'SwiftUI source count changed before compile'
-"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
-    "${OBSERVATION_PLUGIN_FLAGS[@]}" \
-    -module-name SwiftUI -emit-module \
-    -emit-module-path "$STAGE/modules/SwiftUI.swiftmodule" \
-    -emit-object -o "$WORK/swiftui.o" "${SWIFTUI_SOURCES[@]}"
-
 echo '== compile the ordered app-facing Foundation facade manifest'
 mapfile -t FOUNDATION_SOURCES < "$FOUNDATION_SOURCES_MANIFEST"
 [ "${#FOUNDATION_SOURCES[@]}" -eq "$EXPECTED_FOUNDATION_SOURCE_COUNT" ] \
@@ -1656,6 +1644,19 @@ printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization
     "$foundation_synchronization_undefineds" \
     "$foundation_regex_parser_undefineds" \
     "$foundation_darwin_undefineds"
+
+echo '== compile SwiftUI against the app-facing Foundation facade'
+mapfile -d '' -t SWIFTUI_SOURCES < <(
+    find "$UIKIT/Sources/SwiftUI" -maxdepth 1 -type f -name '*.swift' \
+        -print0 | LC_ALL=C sort -z
+)
+[ "${#SWIFTUI_SOURCES[@]}" -eq "$EXPECTED_SWIFTUI_SWIFT_COUNT" ] \
+    || die 'SwiftUI source count changed before compile'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${OBSERVATION_PLUGIN_FLAGS[@]}" \
+    -module-name SwiftUI -emit-module \
+    -emit-module-path "$STAGE/modules/SwiftUI.swiftmodule" \
+    -emit-object -o "$WORK/swiftui.o" "${SWIFTUI_SOURCES[@]}"
 
 echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -1753,12 +1754,19 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
+echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name SwiftUIFoundationReexportProbe -typecheck \
+    "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
+
 echo '== link thirty-four reusable platform dylibs (thirty-three frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
     "$WORK/dispatch.o" "$DISPATCH_DARWIN" \
-    "${COMMON_LINK[@]}" "$STAGE/sdk/usr/lib/swift/libswift_Concurrency.tbd"
+    "${COMMON_LINK[@]}" -lOpenCombine \
+    "$STAGE/sdk/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$STAGE/sdk/usr/lib/swift/libswift_Concurrency.tbd"
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libOpenCoreGraphics.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -1781,7 +1789,7 @@ echo '== link thirty-four reusable platform dylibs (thirty-three frameworks plus
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
     "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN" \
     "$RELATIVE_TIME_DARWIN" \
     -reexport_library "$STAGE/lib/libFoundationInternationalization.dylib"
@@ -1836,10 +1844,16 @@ foundation_internationalization_reexport_count=$(llvm-otool-18 -l \
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
-    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
+    "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
     "$FULL/swiftcorepatch.o"
+swiftui_foundation_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libSwiftUI.dylib" \
+    | awk '$1 == "@rpath/libFoundation.dylib" { count++ } \
+        END { print count + 0 }')
+[ "$swiftui_foundation_load_count" -eq 1 ] \
+    || die "libSwiftUI Foundation load count $swiftui_foundation_load_count, expected 1"
 swiftui_foundation_essentials_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libSwiftUI.dylib" \
     | awk '$1 == "@rpath/libFoundationEssentials.dylib" { count++ } \
@@ -2210,7 +2224,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2237,9 +2251,36 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
 grep -Fx \
-    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 vouchers=null' \
+    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
     "$STAGE/attestation/dispatch-runtime.log" >/dev/null \
     || die 'real Dispatch/Swift-concurrency Mach-O runtime marker is missing'
+
+echo '== compile/link/run the SwiftUI-only Foundation/Combine/Dispatch reexport gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name SwiftUIFoundationReexportProbe -emit-object \
+    -o "$WORK/swiftui-foundation-reexport-probe.o" \
+    "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/SwiftUIFoundationReexportProbe" \
+    "$WORK/swiftui-foundation-reexport-probe.o" "${COMMON_LINK[@]}" \
+    -lSwiftUI -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    -lCombine -lOpenCombine "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/SwiftUIFoundationReexportProbe" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'SwiftUI Foundation reexport gate is not an ARM64 Mach-O executable'
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/SwiftUIFoundationReexportProbe
+) | tee "$STAGE/attestation/swiftui-foundation-reexport-runtime.log"
+grep -Fx \
+    'SWIFTUI_FOUNDATION_REEXPORT_MACHO_OK import=swiftui-only notification=publisher dispatch=scheduler' \
+    "$STAGE/attestation/swiftui-foundation-reexport-runtime.log" >/dev/null \
+    || die 'SwiftUI Foundation/Combine/Dispatch reexport marker is missing'
 
 echo '== compile/link/run the full async Foundation URLSession cold gate'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -2583,6 +2624,8 @@ record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackagePro
 record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
+record_artifact probe SwiftUIFoundationReexportProbe executable \
+    probe/SwiftUIFoundationReexportProbe
 record_artifact probe FoundationURLSessionRuntime executable \
     probe/FoundationURLSessionRuntime
 record_artifact attestation runtime runtime-log attestation/runtime.log
@@ -2595,6 +2638,8 @@ record_artifact attestation dispatch host-test-log \
     attestation/open-dispatch-host-test.log
 record_artifact attestation dispatch runtime-log \
     attestation/dispatch-runtime.log
+record_artifact attestation SwiftUI reexport-runtime-log \
+    attestation/swiftui-foundation-reexport-runtime.log
 record_artifact attestation foundation-urlsession runtime-log \
     attestation/foundation-urlsession-runtime.log
 record_artifact attestation contracts compile-rsp compile-flags.rsp

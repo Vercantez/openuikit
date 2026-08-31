@@ -42,7 +42,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its twenty-seven LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its twenty-eight LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -53,8 +53,10 @@ The semantic build order is deliberate:
    Foundation umbrella hidden.
 2. Exercise the literal early UIKit/identity production gate; this is not the
    final app-facing UIKit module.
-3. Build the portable Dispatch module, OpenCombine, Combine, and dependency-light SwiftUI.
-4. Compile the ordered app-facing Foundation facade.
+3. Build the portable Dispatch module, OpenCombine, and Combine.
+4. Compile the ordered app-facing Foundation facade, then compile SwiftUI
+   against that facade so SwiftUI publicly re-exports its overlays and
+   portable Dispatch identity.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the CoreImage Swift overlay over its explicit Clang
@@ -69,7 +71,8 @@ The semantic build order is deliberate:
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all thirty-three reusable framework dylibs and run the package's Mach-O
+10. Link all thirty-four reusable dylibs (thirty-three frameworks plus ICU)
+   and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
@@ -89,6 +92,10 @@ main queue is an identity token only, while global queue pointers must have
 been minted by the helper. The package pins and hashes the exact Linux
 `libdispatch.so` and `libBlocksRuntime.so` closure and records libdispatch's
 `GLIBC_2.38` requirement instead of relying on ambient host libraries.
+The same queue identity conforms directly to OpenCombine's `Scheduler`, with
+monotonic time/stride arithmetic, immediate and delayed work, cancellable
+repeating schedules, and real `receive(on:)` delivery. The direct Mach-O gate
+executes each route rather than accepting a compile-only conformance.
 
 CoreImage's tracked ordinary Clang module map owns an explicit
 `CoreImage.CIFilterBuiltins` child module; the Swift overlay is built with
@@ -186,7 +193,7 @@ reexported library's ordinal. The facade object has no direct RegexParser symbol
 dylib remains StringProcessing's transitive runtime dependency rather than a
 guessed direct link.
 
-The twenty-seven-source facade's names-only undefined-symbol inventory is also a
+The twenty-eight-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
 `12_RegexParser` records, plus exactly two `6Darwin` records. The build refuses
@@ -223,6 +230,13 @@ Because the guest's distinct CGFloat metadata is canonically owned by
 OpenCoreGraphics, `libFoundation.dylib` declares exactly one direct
 `@rpath/libOpenCoreGraphics.dylib` load. The builder verifies that edge after
 linking instead of relying on UIKit's transitive graphics dependency.
+
+SwiftUI is compiled after the app-facing Foundation facade so its public
+Foundation re-export includes Foundation's overlays and its portable Dispatch
+re-export, matching the surface seen by a source file that imports only
+SwiftUI. `libSwiftUI.dylib` therefore names both `libFoundation.dylib` and the
+underlying `libFoundationEssentials.dylib` as direct dependencies; the builder
+audits each edge rather than depending on link order or an application shim.
 
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so
