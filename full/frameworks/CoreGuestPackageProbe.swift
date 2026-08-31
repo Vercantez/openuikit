@@ -170,6 +170,11 @@ struct CoreGuestPackageProbe {
             foundationCompatibility ==
                 "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
         )
+        let observationPlatform = runObservationGuestRuntimeProbe()
+        precondition(
+            observationPlatform ==
+                "macro,reexport,registrar,tracking,ignored,one-shot"
+        )
 
         let gradient = CIFilter.linearGradient()
         gradient.color0 = .black
@@ -563,6 +568,7 @@ struct CoreGuestPackageProbe {
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "foundation=\(foundationCompatibility) "
                 + "data-platform=\(dataPlatform) "
+                + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-12 "

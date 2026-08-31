@@ -25,6 +25,7 @@ OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+OBSERVATION_SOURCES_MANIFEST=$W/full/observation/observation_guest_sources.txt
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
@@ -94,6 +95,7 @@ EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=8
 EXPECTED_CQUARTZ_CPP_COUNT=37
 EXPECTED_FOUNDATION_SOURCE_COUNT=27
+EXPECTED_OBSERVATION_SOURCE_COUNT=6
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
@@ -113,6 +115,52 @@ EXPECTED_MACHORUN_COMMIT=e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5
 EXPECTED_MACHORUN_TREE=1b41ede32d9a3ba2a5ec2d37685dc64b4eee9b43
 EXPECTED_PREVIEW_SWIFTSYNTAX_REVISION=4799286537280063c85a32f09884cfbca301b1a1
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC'
+EXPECTED_OBSERVATION_UPSTREAM_COMMIT=ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b
+OBSERVATION_MACRO_PLUGIN=/usr/lib/swift/host/plugins/libObservationMacros.so
+EXPECTED_OBSERVATION_PLUGIN_SHA=ea6510afdd0a9e4808229c52441e9a67ca24e8ce186fccfd082547a5ee1c1229
+
+OBSERVATION_SOURCE_HASHES=(
+    a679f8ccd75265030d6cd28b81cb49e810bc97e8d9c42c78626cce7c3ea66b2d
+    6668a4dc827c6b7019fd650383999ffe113f0f40807e7bfa0093d25eb4e64406
+    bf533652129e87ad16918ba05c27a63ef4ceb3c84ca5f69ccc2d6745811e389b
+    20b28faff988b6195598f90990d0ca9b5f6a38054f9ea213d266d11c3d3ba898
+    e14626b87d2b1c305333e916f998f5a9d587789336bf7d98235e94b29f4baea4
+    f597674fe55b4ddc3d22a6cab27e25baffb06c7fbe403cd686af74be615a5757
+)
+OBSERVATION_PLUGIN_HOST_LIBS=(
+    libSwiftSyntaxMacros.so
+    libSwiftSyntaxBuilder.so
+    libSwiftParserDiagnostics.so
+    libSwiftBasicFormat.so
+    libSwiftParser.so
+    libSwiftDiagnostics.so
+    libSwiftSyntax.so
+)
+OBSERVATION_PLUGIN_HOST_HASHES=(
+    bd32b50e01ae49aefbb8a4cb73c0f53284f6e38d8f5b5e9cf5704ea928de4435
+    06a02fa8a9af26796c6238396ba73412bbb08f799238a7ea144a5d68c2eda971
+    3109239e809fa5e81bd2c9d5e216948bb31f655b8ea05d32dc319f0da30bc077
+    c652ba5f52686d740452389a8f5ab13dca808d898aea83927351ef00548eab0d
+    ddbadfc8edb5a94fd2edc23cf3d560b97ad2ced6cbcefec8fcdf3add1dad8390
+    f350546755ba25a725e89f8e993d1ca2edb83629de2a2a4b5268f83b5d0485b6
+    d4aee0018bfb7103e09c281d3e3c5eead335f4a01581fb62063b3994e51ac440
+)
+OBSERVATION_PLUGIN_LINUX_LIBS=(
+    libswiftCore.so
+    libswift_Concurrency.so
+    libswiftGlibc.so
+    libdispatch.so
+    libswift_Builtin_float.so
+    libBlocksRuntime.so
+)
+OBSERVATION_PLUGIN_LINUX_HASHES=(
+    8fdbbfbf6cda36870e97fe46af2bf21eff39253d97e878aaae003f5be0127f92
+    42a70f4bef727842b6a949feceb260996adb1c6ee3b7c2d424dfa0419f4b949e
+    003f47955f3744ba1277704add2431f1c58b82ab07b9d91b5809bec1b877857e
+    39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
+    62e2a42b1a98c56af695b154cbd01892d5c64acda3ee376950d960057d7c68af
+    47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
+)
 
 EXPECTED_OPENCOMBINE_RESULT=c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104
 EXPECTED_OPENCOMBINE_OBJECT=96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914
@@ -387,6 +435,63 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.pre.tsv"
 [ "$(grep -c '^source' "$WORK/foundation-sources.pre.tsv")" -eq \
     "$EXPECTED_FOUNDATION_SOURCE_COUNT" ] || die 'Foundation source count drifted'
+
+mapfile -t OBSERVATION_SOURCES < "$OBSERVATION_SOURCES_MANIFEST"
+[ "${#OBSERVATION_SOURCES[@]}" -eq "$EXPECTED_OBSERVATION_SOURCE_COUNT" ] \
+    || die 'Observation source count drifted'
+[ "${#OBSERVATION_SOURCE_HASHES[@]}" -eq "$EXPECTED_OBSERVATION_SOURCE_COUNT" ] \
+    || die 'Observation source hash cardinality drifted'
+observation_physical=$WORK/observation-physical.txt
+find "$W/full/observation/Sources/Observation" -maxdepth 1 -type f \
+    -name '*.swift' -print \
+    | sed "s#^$W/##" | LC_ALL=C sort > "$observation_physical"
+printf '%s\n' "${OBSERVATION_SOURCES[@]}" | LC_ALL=C sort \
+    > "$WORK/observation-manifest-sorted.txt"
+cmp "$observation_physical" "$WORK/observation-manifest-sorted.txt" \
+    || die 'Observation physical Swift set differs from its manifest'
+for index in "${!OBSERVATION_SOURCES[@]}"; do
+    relative=${OBSERVATION_SOURCES[$index]}
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "Observation source is not a regular file: $relative"
+    git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+        || die "Observation source is not tracked: $relative"
+    require_hash "$W/$relative" "${OBSERVATION_SOURCE_HASHES[$index]}" \
+        "Observation-source-$index"
+done
+for relative in \
+    full/observation/ObservationRuntimeBridge.c \
+    full/observation/UPSTREAM.md \
+    full/observation/observation_guest_sources.txt \
+    full/observation/tests/ObservationGuestRuntimeProbe.swift \
+    full/observation/tests/ObservationGuestRuntimeMain.swift; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "Observation platform input is not a regular file: $relative"
+    git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+        || die "Observation platform input is not tracked: $relative"
+done
+write_observation_sources_attestation() {
+    local output=$1 index relative
+    {
+        printf 'format\tobservation-guest-sources-v1\n'
+        printf 'upstream\tswiftlang/swift\tcommit=%s\ttag=swift-6.2.4-RELEASE\n' \
+            "$EXPECTED_OBSERVATION_UPSTREAM_COMMIT"
+        printf 'manifest\t%s\tcount=%s\n' \
+            "$(hash_file "$OBSERVATION_SOURCES_MANIFEST")" \
+            "$EXPECTED_OBSERVATION_SOURCE_COUNT"
+        for index in "${!OBSERVATION_SOURCES[@]}"; do
+            relative=${OBSERVATION_SOURCES[$index]}
+            printf 'source\t%s\t%s\n' "$relative" "$(hash_file "$W/$relative")"
+        done
+        for relative in \
+            full/observation/ObservationRuntimeBridge.c \
+            full/observation/tests/ObservationGuestRuntimeProbe.swift \
+            full/observation/tests/ObservationGuestRuntimeMain.swift; do
+            printf 'platform\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+    } > "$output"
+}
+write_observation_sources_attestation "$WORK/observation-sources.pre.tsv"
 python3 -B "$WEBKIT_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$WEBKIT_PROVENANCE_POLICY" \
     --output "$WORK/webkit-sources.pre.tsv"
@@ -543,6 +648,35 @@ require_hash "$W/full/oracle-opencombine/Combine.swift" "$EXPECTED_COMBINE_SHIM"
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" bold-font
 
+[ "${#OBSERVATION_PLUGIN_HOST_LIBS[@]}" -eq \
+    "${#OBSERVATION_PLUGIN_HOST_HASHES[@]}" ] \
+    || die 'Observation host plugin closure cardinality drifted'
+[ "${#OBSERVATION_PLUGIN_LINUX_LIBS[@]}" -eq \
+    "${#OBSERVATION_PLUGIN_LINUX_HASHES[@]}" ] \
+    || die 'Observation Linux plugin closure cardinality drifted'
+require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
+    Observation-macro-plugin
+file "$OBSERVATION_MACRO_PLUGIN" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
+    || die 'Observation macro plugin is not native ELF64/aarch64'
+readelf -h "$OBSERVATION_MACRO_PLUGIN" \
+    | grep -Eq 'Machine:[[:space:]]+AArch64' \
+    || die 'Observation macro plugin ELF machine is not AArch64'
+for index in "${!OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+    library=${OBSERVATION_PLUGIN_HOST_LIBS[$index]}
+    require_hash "/usr/lib/swift/host/$library" \
+        "${OBSERVATION_PLUGIN_HOST_HASHES[$index]}" \
+        "Observation-plugin-host-$library"
+done
+for index in "${!OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+    library=${OBSERVATION_PLUGIN_LINUX_LIBS[$index]}
+    require_hash "/usr/lib/swift/linux/$library" \
+        "${OBSERVATION_PLUGIN_LINUX_HASHES[$index]}" \
+        "Observation-plugin-linux-$library"
+done
+OBSERVATION_TOOLCHAIN=$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')
+printf '%s\n' "$OBSERVATION_TOOLCHAIN" | grep -Fq 'Swift version 6.2.4' \
+    || die "Observation consumer toolchain is not Swift 6.2.4: $OBSERVATION_TOOLCHAIN"
+
 PREVIEW_MODULE_SHA=''
 PREVIEW_OBJECT_SHA=''
 PREVIEW_PLUGIN_SHA=''
@@ -617,7 +751,9 @@ fi
 
 mkdir -p "$STAGE/sdk" "$STAGE/modules" "$STAGE/lib" "$STAGE/include" \
     "$STAGE/objects" "$STAGE/resources/OpenUIKit/fonts" \
-    "$STAGE/guest-root" "$STAGE/probe" "$STAGE/attestation"
+    "$STAGE/guest-root" "$STAGE/probe" "$STAGE/attestation" \
+    "$STAGE/host-tools/swift/host/plugins" \
+    "$STAGE/host-tools/swift/linux"
 cp -a "$SYS/." "$STAGE/sdk/"
 cp "$SDK_DANGLING_EXCLUSIONS" \
     "$STAGE/attestation/sdk-dangling-symlink-exclusions.tsv"
@@ -632,6 +768,43 @@ cp -a "$MRROOT/." "$STAGE/guest-root/"
 cp -a "$UIKIT/Sources/OpenUIKit/Resources/." "$STAGE/resources/OpenUIKit/"
 cp "$SYSTEM_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf"
 cp "$BOLD_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
+
+cp "$OBSERVATION_MACRO_PLUGIN" \
+    "$STAGE/host-tools/swift/host/plugins/libObservationMacros.so"
+for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+    cp "/usr/lib/swift/host/$library" "$STAGE/host-tools/swift/host/$library"
+done
+for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+    cp "/usr/lib/swift/linux/$library" "$STAGE/host-tools/swift/linux/$library"
+done
+STAGED_OBSERVATION_PLUGIN=$STAGE/host-tools/swift/host/plugins/libObservationMacros.so
+OBSERVATION_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_OBSERVATION_PLUGIN")
+if ldd "$STAGED_OBSERVATION_PLUGIN" | grep -Fq 'not found'; then
+    die 'packaged Observation macro plugin closure is incomplete'
+fi
+{
+    printf 'format\tobservation-macro-plugin-v1\n'
+    printf 'toolchain\t%s\n' "$OBSERVATION_TOOLCHAIN"
+    printf 'plugin\thost-tools/swift/host/plugins/libObservationMacros.so\t%s\n' \
+        "$(hash_file "$STAGED_OBSERVATION_PLUGIN")"
+    for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+        printf 'closure\thost-tools/swift/host/%s\t%s\n' \
+            "$library" \
+            "$(hash_file "$STAGE/host-tools/swift/host/$library")"
+    done
+    for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+        printf 'closure\thost-tools/swift/linux/%s\t%s\n' \
+            "$library" \
+            "$(hash_file "$STAGE/host-tools/swift/linux/$library")"
+    done
+    while IFS=$'\t' read -r soname resolved; do
+        resolved=${resolved#"$STAGE/"}
+        printf 'resolved\t%s\t%s\n' "$soname" "$resolved"
+    done < <(ldd "$STAGED_OBSERVATION_PLUGIN" \
+        | awk '/=>/ { print $1 "\t" $3; next } \
+            /^[[:space:]]*\// { print $1 "\t" $1 }' \
+        | LC_ALL=C sort -u)
+} > "$STAGE/attestation/observation-macro-plugin.tsv"
 
 cp -a "$FULL/inc/CPortableIO" "$STAGE/include/"
 cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
@@ -1113,6 +1286,58 @@ echo '== build the portable Dispatch Swift module'
     -emit-module-path "$STAGE/modules/Dispatch.swiftmodule" \
     -emit-object -o "$WORK/dispatch.o" "$W/full/dispatch/Dispatch.swift"
 
+echo '== build the official Observation runtime and portable helper boundary'
+OBSERVATION_SOURCE_PATHS=()
+for relative in "${OBSERVATION_SOURCES[@]}"; do
+    OBSERVATION_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library -suppress-warnings \
+    -module-name Observation -module-link-name swiftObservation \
+    -enable-library-evolution -enable-experimental-feature Macros \
+    -enable-experimental-feature ExtensionMacros \
+    -emit-module -emit-module-path "$STAGE/modules/Observation.swiftmodule" \
+    -emit-module-interface-path "$STAGE/modules/Observation.swiftinterface" \
+    -emit-object -o "$WORK/observation.o" "${OBSERVATION_SOURCE_PATHS[@]}"
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -c "$W/full/observation/ObservationRuntimeBridge.c" \
+    -o "$WORK/observation-runtime-bridge.o"
+OBSERVATION_DYLIB=$RUNTIME/darwin/usr/lib/swift/libswiftObservation.dylib
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/swift/libswiftObservation.dylib \
+    -o "$OBSERVATION_DYLIB" \
+    "$WORK/observation.o" "$WORK/observation-runtime-bridge.o" \
+    "$FULL/swiftcorepatch.o" \
+    -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
+    -lswiftCore -lswiftObjectiveC "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib" \
+    -L"$STAGE/sdk/usr/lib" -lSystem -lobjc \
+    "$RUNTIME/darwin/usr/lib/libSystem.B.dylib"
+[ "$(llvm-otool-18 -D "$OBSERVATION_DYLIB" | tail -n 1)" = \
+    /usr/lib/swift/libswiftObservation.dylib ] \
+    || die 'Observation runtime install name drifted'
+llvm-otool-18 -hv "$OBSERVATION_DYLIB" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'Observation runtime is not an ARM64 Mach-O dylib'
+if llvm-nm-18 --undefined-only --just-symbol-name "$OBSERVATION_DYLIB" \
+    | grep -Eq '^__swift_observation_(lock|tls)_'; then
+    die 'Observation runtime retained an unresolved lock/TLS primitive'
+fi
+observation_protocol_exports=$(llvm-nm-18 --defined-only --extern-only \
+    --just-symbol-name "$OBSERVATION_DYLIB" \
+    | awk 'index($0, "$s11Observation10ObservableMp") { count++ } \
+        END { print count + 0 }')
+observation_registrar_exports=$(llvm-nm-18 --defined-only --extern-only \
+    --just-symbol-name "$OBSERVATION_DYLIB" \
+    | awk 'index($0, "$s11Observation0A9RegistrarV") { count++ } \
+        END { print count + 0 }')
+[ "$observation_protocol_exports" -eq 1 ] \
+    || die "Observation protocol export count $observation_protocol_exports, expected 1"
+[ "$observation_registrar_exports" -ge 12 ] \
+    || die "Observation registrar export count $observation_registrar_exports, expected at least 12"
+printf 'local\tdarwin/usr/lib/swift/libswiftObservation.dylib\t%s\tbuilt from official Swift 6.2.4 Observation sources\n' \
+    "$(hash_file "$OBSERVATION_DYLIB")" >> "$RUNTIME/.manifest"
+
 echo '== build pinned OpenCombine and literal Combine'
 cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$WORK/COpenCombineHelpers.cpp"
 patch --batch --forward --fuzz=0 "$WORK/COpenCombineHelpers.cpp" \
@@ -1149,6 +1374,7 @@ mapfile -d '' -t SWIFTUI_SOURCES < <(
 [ "${#SWIFTUI_SOURCES[@]}" -eq "$EXPECTED_SWIFTUI_SWIFT_COUNT" ] \
     || die 'SwiftUI source count changed before compile'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${OBSERVATION_PLUGIN_FLAGS[@]}" \
     -module-name SwiftUI -emit-module \
     -emit-module-path "$STAGE/modules/SwiftUI.swiftmodule" \
     -emit-object -o "$WORK/swiftui.o" "${SWIFTUI_SOURCES[@]}"
@@ -1345,12 +1571,18 @@ foundation_relative_time_load_count=$(llvm-otool-18 -L \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
     "${COMMON_LINK[@]}" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
-    "$SWIFTUI_RUNTIME_LINK_FLAG" "$FULL/swiftcorepatch.o"
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
+    "$FULL/swiftcorepatch.o"
 swiftui_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
     | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
         '$1 == expected { count++ } END { print count + 0 }')
 [ "$swiftui_runtime_load_count" -eq 1 ] \
     || die "libSwiftUI runtime load count $swiftui_runtime_load_count for $SWIFTUI_RUNTIME_INSTALL_NAME, expected 1"
+swiftui_observation_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
+    | awk '$1 == "/usr/lib/swift/libswiftObservation.dylib" { count++ } \
+        END { print count + 0 }')
+[ "$swiftui_observation_load_count" -eq 1 ] \
+    || die "libSwiftUI Observation load count $swiftui_observation_load_count, expected 1"
 UIKIT_UNDEFINED_FLAGS=()
 [ "$PREVIEW_ENABLED" -eq 0 ] || UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
@@ -1502,10 +1734,12 @@ done
 
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
-    "${PREVIEW_FLAGS[@]}" -module-name CoreGuestPackageProbe \
+    "${OBSERVATION_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
+    -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
     "$W/full/frameworks/CoreGuestPackageProbe.swift" \
-    "$W/full/frameworks/FoundationHackersCompatibilityProbe.swift"
+    "$W/full/frameworks/FoundationHackersCompatibilityProbe.swift" \
+    "$W/full/observation/tests/ObservationGuestRuntimeProbe.swift"
 PROBE_LINK_EXTRA=()
 [ "$PREVIEW_ENABLED" -eq 0 ] \
     || PROBE_LINK_EXTRA+=("$STAGE/objects/developertoolsupport.o")
@@ -1535,7 +1769,8 @@ fi
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices \
-    "$SWIFTUI_RUNTIME_LINK_FLAG"
+    "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "$OBSERVATION_DYLIB"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
     Dispatch \
@@ -1574,6 +1809,12 @@ probe_dts_export_count=$(nm_developer_tools_support_count --defined-only \
 llvm-otool-18 -hv "$STAGE/probe/CoreGuestPackageProbe" \
     | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
     || die 'core package probe is not an ARM64 Mach-O executable'
+probe_observation_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/CoreGuestPackageProbe" \
+    | awk '$1 == "/usr/lib/swift/libswiftObservation.dylib" { count++ } \
+        END { print count + 0 }')
+[ "$probe_observation_load_count" -eq 1 ] \
+    || die "core probe Observation load count $probe_observation_load_count, expected 1"
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$STAGE/probe/CoreGuestPackageProbe" \
@@ -1589,7 +1830,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -1666,6 +1907,7 @@ COMPILE_ARGUMENTS=(
     -target "$TARGET" -sdk sdk -runtime-compatibility-version none
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
+    -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so
     -I modules
     -Xcc -Iinclude/CPortableIO
     -Xcc -Iinclude/CSTBTrueType
@@ -1687,6 +1929,7 @@ LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
     -lswiftCore -lswiftObjectiveC "${SWIFTUI_RUNTIME_LINK_FLAG}"
+    guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
     guest-root/darwin/usr/lib/libswiftcompat.dylib
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
@@ -1743,6 +1986,8 @@ cmp "$WORK/openuikit-resources.pre.tsv" \
     || die 'staged OpenUIKit resource tree differs from source before fonts'
 
 cp "$WORK/foundation-sources.pre.tsv" "$STAGE/attestation/foundation-sources.tsv"
+cp "$WORK/observation-sources.pre.tsv" \
+    "$STAGE/attestation/observation-sources.tsv"
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
 cp "$WORK/graphics-sources.pre.tsv" "$STAGE/attestation/graphics-sources.tsv"
 cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
@@ -1765,6 +2010,10 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_COLLECTIONS_COMMIT" "$EXPECTED_COLLECTIONS_TREE"
     printf 'OpenCombine\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_OPENCOMBINE_COMMIT" "$EXPECTED_OPENCOMBINE_TREE"
+    printf 'Observation\tupstream=%s\tsources=%s\tplugin=%s\ttoolchain=%s\n' \
+        "$EXPECTED_OBSERVATION_UPSTREAM_COMMIT" \
+        "$(hash_file "$OBSERVATION_SOURCES_MANIFEST")" \
+        "$EXPECTED_OBSERVATION_PLUGIN_SHA" "$OBSERVATION_TOOLCHAIN"
     printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
         "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
@@ -1832,6 +2081,19 @@ for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
+record_module_family framework Observation
+record_artifact runtime Observation dylib \
+    guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
+record_artifact host-tool ObservationMacros plugin \
+    host-tools/swift/host/plugins/libObservationMacros.so
+for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+    record_artifact host-tool ObservationMacros dependency \
+        "host-tools/swift/host/$library"
+done
+for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+    record_artifact host-tool ObservationMacros dependency \
+        "host-tools/swift/linux/$library"
+done
 record_artifact include CoreImage umbrella-header include/CoreImage/CoreImage.h
 record_artifact include CoreImage submodule-header \
     include/CoreImage/CIFilterBuiltins.h
@@ -1895,6 +2157,10 @@ record_artifact attestation contracts link-rsp link-inputs.rsp
 record_artifact attestation source-sets manifest attestation/source-sets.tsv
 record_artifact attestation foundation-sources manifest \
     attestation/foundation-sources.tsv
+record_artifact attestation observation-sources manifest \
+    attestation/observation-sources.tsv
+record_artifact attestation observation-macro-plugin closure \
+    attestation/observation-macro-plugin.tsv
 record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
 record_artifact attestation graphics-sources manifest \
@@ -1952,6 +2218,9 @@ python3 "$MANIFEST_TOOL" foundation-sources \
     --output "$WORK/foundation-sources.post.tsv"
 cmp "$WORK/foundation-sources.pre.tsv" "$WORK/foundation-sources.post.tsv" \
     || die 'Foundation source manifest/files changed during build'
+write_observation_sources_attestation "$WORK/observation-sources.post.tsv"
+cmp "$WORK/observation-sources.pre.tsv" "$WORK/observation-sources.post.tsv" \
+    || die 'Observation source manifest/files changed during build'
 python3 -B "$WEBKIT_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$WEBKIT_PROVENANCE_POLICY" \
     --output "$WORK/webkit-sources.post.tsv"
@@ -2002,6 +2271,20 @@ cmp "$WORK/sdk-dangling.pre.tsv" "$WORK/sdk-dangling.post.tsv" \
     || die 'SDK dangling-symlink input changed during build'
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" post-system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" post-bold-font
+require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
+    post-Observation-macro-plugin
+for index in "${!OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+    library=${OBSERVATION_PLUGIN_HOST_LIBS[$index]}
+    require_hash "/usr/lib/swift/host/$library" \
+        "${OBSERVATION_PLUGIN_HOST_HASHES[$index]}" \
+        "post-Observation-plugin-host-$library"
+done
+for index in "${!OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+    library=${OBSERVATION_PLUGIN_LINUX_LIBS[$index]}
+    require_hash "/usr/lib/swift/linux/$library" \
+        "${OBSERVATION_PLUGIN_LINUX_HASHES[$index]}" \
+        "post-Observation-plugin-linux-$library"
+done
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
     require_hash "$DEVELOPER_TOOLS_SUPPORT_MODULE" "$PREVIEW_MODULE_SHA" post-DTS-module
     require_hash "$DEVELOPER_TOOLS_SUPPORT_OBJECT" "$PREVIEW_OBJECT_SHA" post-DTS-object

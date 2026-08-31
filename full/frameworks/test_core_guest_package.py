@@ -245,10 +245,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # One direct SwiftUI link, one reusable dependency token in each of the
-    # Twelve first-party links share one loop token, plus one direct SwiftUI
-    # link and one executable probe link.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 3:
+    # Observation and SwiftUI each link Concurrency, while the reusable
+    # first-party link loop and executable probe each carry the same token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 4:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -257,6 +256,29 @@ def validate_swiftui_runtime_link(source: str) -> None:
     swiftui_link = source[swiftui_link_start:swiftui_link_end]
     if swiftui_link.count('"$FULL/swiftcorepatch.o"') != 1:
         raise AssertionError("SwiftUI runtime-compatibility thunk scope drifted")
+
+
+def validate_observation_platform_contract(source: str) -> None:
+    required = (
+        "EXPECTED_OBSERVATION_UPSTREAM_COMMIT=ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b",
+        "EXPECTED_OBSERVATION_SOURCE_COUNT=6",
+        "EXPECTED_OBSERVATION_PLUGIN_SHA=ea6510afdd0a9e4808229c52441e9a67ca24e8ce186fccfd082547a5ee1c1229",
+        "-module-name Observation -module-link-name swiftObservation",
+        "-install_name /usr/lib/swift/libswiftObservation.dylib",
+        "-load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so",
+        "guest-root/darwin/usr/lib/swift/libswiftObservation.dylib",
+        '"$W/full/observation/tests/ObservationGuestRuntimeProbe.swift"',
+        "observation=macro,reexport,registrar,tracking,ignored,one-shot",
+        "attestation/observation-sources.tsv",
+        "attestation/observation-macro-plugin.tsv",
+    )
+    missing = [token for token in required if token not in source]
+    if missing:
+        raise AssertionError(f"Observation platform contract drifted: {missing}")
+    if source.count("OBSERVATION_PLUGIN_HOST_LIBS=(") != 1:
+        raise AssertionError("Observation host plugin closure drifted")
+    if source.count("OBSERVATION_PLUGIN_LINUX_LIBS=(") != 1:
+        raise AssertionError("Observation Linux plugin closure drifted")
 
 
 def validate_core_preview_export_contract(source: str) -> None:
@@ -1492,6 +1514,22 @@ class ShellContractTests(unittest.TestCase):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "runtime-link"):
                     validate_swiftui_runtime_link(source.replace(token, "", 1))
+
+    def test_observation_platform_is_complete_and_deletion_is_refused(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_observation_platform_contract(source)
+        for token in (
+            "EXPECTED_OBSERVATION_UPSTREAM_COMMIT=",
+            "-module-name Observation -module-link-name swiftObservation",
+            "-load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so",
+            '"$W/full/observation/tests/ObservationGuestRuntimeProbe.swift"',
+            "observation=macro,reexport,registrar,tracking,ignored,one-shot",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "Observation platform"):
+                    validate_observation_platform_contract(
+                        source.replace(token, "", 1)
+                    )
         with self.assertRaisesRegex(AssertionError, "runtime-link scope"):
             validate_swiftui_runtime_link(
                 source.replace('"$SWIFTUI_RUNTIME_LINK_FLAG"', "", 1)
