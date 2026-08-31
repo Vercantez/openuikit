@@ -520,6 +520,22 @@ W="$W" SF="$SF" SYS="$SYS" OSMOD="$FE_OS" COLLECTIONS="$FE_COLLECTIONS" \
 clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -nostdinc \
     -DOPEN_FOUNDATION_UUID_COMPAT=1 \
     -c "$W/full/foundation/fm_unimplemented.c" -o "$FE_OUT/fm_unimplemented.o"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$W/full/foundation" \
+    "$W/full/foundation/removefile_compat.c" \
+    "$W/full/foundation/removefile_compat_tests.c" \
+    -o "$FE_OUT/removefile_compat_tests"
+"$FE_OUT/removefile_compat_tests" \
+    | tee "$FE_OUT/removefile-compat-tests.log"
+grep -Fxq 'OPEN_FOUNDATION_REMOVEFILE_OK recursive=depth-first symlink=no-follow keep-parent=yes callbacks=confirm,error,status cancellation=honored secure=refused' \
+    "$FE_OUT/removefile-compat-tests.log" || {
+        echo 'build_full: removefile semantic proof marker is missing' >&2
+        exit 2
+    }
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -Wall -Wextra -Werror -I "$W/full/foundation" \
+    -c "$W/full/foundation/removefile_compat.c" \
+    -o "$FE_OUT/removefile_compat.o"
 clang-18 -target "$TARGET" -isysroot "$SYS" -O1 \
     -c "$W/full/foundation/uuid_compat.c" -o "$FE_OUT/uuid_compat.o"
 
@@ -538,6 +554,7 @@ FE_OBJECTS=(
     "$FE_CSHIMS/string_shims.o"
     "$FE_CSHIMS/uuid.o"
     "$FE_OUT/fm_unimplemented.o"
+    "$FE_OUT/removefile_compat.o"
     "$FE_OUT/uuid_compat.o"
 )
 
@@ -768,6 +785,10 @@ fi
         "$(sha256sum "$OUT/indexpath_identity_probe" | awk '{print $1}')"
     printf 'FoundationEssentials.o\t%s\n' \
         "$(sha256sum "$FE_OUT/FoundationEssentials.o" | awk '{print $1}')"
+    printf 'removefile_compat.o\t%s\n' \
+        "$(sha256sum "$FE_OUT/removefile_compat.o" | awk '{print $1}')"
+    printf 'removefile-compat-tests.log\t%s\n' \
+        "$(sha256sum "$FE_OUT/removefile-compat-tests.log" | awk '{print $1}')"
     printf 'libquartz.dylib\t%s\n' \
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libquartz.dylib" | awk '{print $1}')"
     printf 'libSystem.B.dylib\t%s\n' \

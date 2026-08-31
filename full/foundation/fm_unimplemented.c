@@ -1,4 +1,4 @@
-/* fm_unimplemented.c -- the 36 symbols standing between the ported
+/* fm_unimplemented.c -- the remaining symbols standing between the ported
  * FoundationEssentials and a Mach-O that machorun can load.
  *
  * MEASUREMENT SCAFFOLD, NOT A FIX.  Every symbol here is genuinely absent from
@@ -90,29 +90,15 @@ MR_STUB(confstr)
 MR_STUB(copyfile)
 MR_STUB(fchmod)
 MR_STUB(fcopyfile)
-MR_STUB(fgetxattr)
-MR_STUB(fsetxattr)
 MR_STUB(fts_close)
 MR_STUB(fts_open)
 MR_STUB(fts_read)
 MR_STUB(fts_set)
 MR_STUB(getattrlist)
-MR_STUB(getgrgid_r)
-MR_STUB(getgrnam_r)
-MR_STUB(getxattr)
 MR_STUB(link)
-MR_STUB(listxattr)
 MR_STUB(mktemp)
-MR_STUB(quotactl)
-MR_STUB(removefile)
-MR_STUB(removefile_state_alloc)
-MR_STUB(removefile_state_free)
-MR_STUB(removefile_state_get)
-MR_STUB(removefile_state_set)
-MR_STUB(setxattr)
 MR_STUB(statfs)
 MR_STUB(sysctlbyname)
-MR_STUB(uname)
 MR_STUB(utimes)
 #ifndef OPEN_FOUNDATION_UUID_COMPAT
 MR_STUB(uuid_generate_random)

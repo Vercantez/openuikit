@@ -125,7 +125,22 @@ launch path.
 
 FoundationEssentials' dylib includes both the upstream cshim `uuid.o` and the
 project compatibility `uuid_compat.o`; the latter must not be dropped merely
-because a small dead-stripped probe happens not to reference it.
+because a small dead-stripped probe happens not to reference it. It also owns
+a real Darwin `removefile` state and operation implementation: physical,
+depth-first recursive deletion; no symlink traversal; keep-parent and
+cross-mount policy; confirm/error/status callbacks; cancellation; and an
+explicit `ENOTSUP` refusal for secure-erasure modes. A native semantic fixture
+and an exact seven-symbol Mach-O export audit are mandatory build gates.
+The compatibility object no longer shadows machorun's real Darwin group and
+extended-attribute adapters. The build pins and runs the canonical Mach-O
+group fixture against the same result as a native build (including the
+32-byte `group` layout, errno-return convention, and not-found contract), and
+runs the full xattr name/flag/errno/list-repacking fixture from `/tmp`. It then
+requires FoundationEssentials' `_r` group and xattr imports to bind to the
+staged real libSystem implementation exactly once. The same shadow audit
+uncovered and removed obsolete `quotactl` and `uname` traps; their pinned
+Mach-O fixtures now grade Darwin's `ENOTSUP` quota contract and the translated
+1,280-byte `utsname` layout before either import is allowed into the package.
 
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
@@ -134,9 +149,14 @@ search/regex compatibility surface) and
 `libswiftSynchronization` (used by `UserDefaults`), `libswiftDarwin`
 (used by the descriptor-backed `FileHandle` for Darwin's `open` and `errno`
 overlays), and `libswift_Concurrency` (used by the asynchronous URLSession
-surface). The builder requires all four SDK TBD inputs and staged runtime
+surface), plus `libswift_errno` (the concrete owner of Darwin's lazy `errno`
+getter). The builder requires all five SDK TBD inputs and staged runtime
 dylibs, verifies their install names, and requires one load command for each in
-`libFoundation.dylib`. The facade object has no direct RegexParser symbol; that
+`libFoundation.dylib`. It links the full direct closure before the final
+FoundationInternationalization reexport, then audits that
+`ObjectIdentifier.Hashable` binds to `libswiftCore` and Darwin `errno` binds to
+`libswift_errno`, rather than accidentally binding either through the
+reexported library's ordinal. The facade object has no direct RegexParser symbol; that
 dylib remains StringProcessing's transitive runtime dependency rather than a
 guessed direct link.
 

@@ -68,6 +68,11 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
         "/usr/lib/swift/libswift_Concurrency.dylib",
         1,
     ),
+    (
+        "-lswift_errno",
+        "/usr/lib/swift/libswift_errno.dylib",
+        1,
+    ),
 )
 SWIFTUI_RUNTIME_LINK_CONTRACT = (
     "-lswift_Concurrency",
@@ -1596,6 +1601,167 @@ class ShellContractTests(unittest.TestCase):
             self.assertIn(f'"${cache}"', builder)
             self.assertIn(f'touch "${cache}/.INVALID-DO-NOT-USE"', builder)
 
+    def test_foundation_removefile_is_real_tested_and_exported(self) -> None:
+        implementation_path = REPO / "full/foundation/removefile_compat.c"
+        tests_path = REPO / "full/foundation/removefile_compat_tests.c"
+        header_path = REPO / "full/foundation/removefile_compat.h"
+        implementation = implementation_path.read_text(encoding="utf-8")
+        tests = tests_path.read_text(encoding="utf-8")
+        header = header_path.read_text(encoding="utf-8")
+        stubs = (REPO / "full/foundation/fm_unimplemented.c").read_text(
+            encoding="utf-8"
+        )
+        builder = BUILDER.read_text(encoding="utf-8")
+        build_full = BUILD_FULL.read_text(encoding="utf-8")
+        focus = (
+            REPO / "full/swiftui/build_focus_onboarding_guest.sh"
+        ).read_text(encoding="utf-8")
+
+        for symbol in (
+            "removefile",
+            "removefileat",
+            "removefile_cancel",
+            "removefile_state_alloc",
+            "removefile_state_free",
+            "removefile_state_get",
+            "removefile_state_set",
+        ):
+            self.assertIn(f"{symbol}(", implementation)
+            self.assertIn(f"_{symbol}", builder)
+        for removed_stub in (
+            "MR_STUB(removefile)",
+            "MR_STUB(removefile_state_alloc)",
+            "MR_STUB(removefile_state_free)",
+            "MR_STUB(removefile_state_get)",
+            "MR_STUB(removefile_state_set)",
+        ):
+            self.assertNotIn(removed_stub, stubs)
+        for semantic in (
+            "lstat(path, &attributes)",
+            "opendir(path)",
+            "readdir(directory)",
+            "unlink(path)",
+            "rmdir(path)",
+            "REMOVEFILE_KEEP_PARENT",
+            "REMOVEFILE_CROSS_MOUNT",
+            "ECANCELED",
+            "ENOTSUP",
+        ):
+            self.assertIn(semantic, implementation)
+        for state_key in (
+            "REMOVEFILE_STATE_CONFIRM_CALLBACK",
+            "REMOVEFILE_STATE_ERROR_CALLBACK",
+            "REMOVEFILE_STATE_STATUS_CALLBACK",
+            "REMOVEFILE_STATE_ERRNO",
+            "REMOVEFILE_STATE_FTSENT",
+        ):
+            self.assertIn(state_key, header)
+        marker = (
+            "OPEN_FOUNDATION_REMOVEFILE_OK recursive=depth-first "
+            "symlink=no-follow keep-parent=yes callbacks=confirm,error,status "
+            "cancellation=honored secure=refused"
+        )
+        self.assertIn("OPEN_FOUNDATION_REMOVEFILE_OK", tests)
+        self.assertIn(marker, build_full)
+        self.assertIn('"$FE_OUT/removefile_compat.o"', build_full)
+        self.assertIn('"$FULL/foundation/essentials/removefile_compat.o"', builder)
+        self.assertIn('"$FE_OUT/removefile_compat.o"', focus)
+        self.assertIn("removefile-compat-tests.log", builder)
+        self.assertIn("FoundationEssentials-removefile", builder)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            executable = Path(temporary) / "removefile-compat-tests"
+            compile_result = subprocess.run(
+                [
+                    os.environ.get("CC", "cc"),
+                    "-std=c11",
+                    "-O2",
+                    "-Wall",
+                    "-Wextra",
+                    "-Werror",
+                    "-I",
+                    str(header_path.parent),
+                    str(implementation_path),
+                    str(tests_path),
+                    "-o",
+                    str(executable),
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(compile_result.returncode, 0, compile_result.stderr)
+            result = subprocess.run(
+                [str(executable)],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), marker)
+
+    def test_foundation_uses_proven_libsystem_group_and_xattr_adapters(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        stubs = (REPO / "full/foundation/fm_unimplemented.c").read_text(
+            encoding="utf-8"
+        )
+        for removed_stub in (
+            "MR_STUB(getgrgid_r)",
+            "MR_STUB(getgrnam_r)",
+            "MR_STUB(fgetxattr)",
+            "MR_STUB(fsetxattr)",
+            "MR_STUB(getxattr)",
+            "MR_STUB(listxattr)",
+            "MR_STUB(setxattr)",
+            "MR_STUB(quotactl)",
+            "MR_STUB(uname)",
+        ):
+            self.assertNotIn(removed_stub, stubs)
+        for token in (
+            "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_XATTR_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_XATTR_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_XATTR_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_UNAME_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_UNAME_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_UNAME_SOURCE_SHA=",
+            "tests/bin/grp",
+            "tests/expected/grp.stdout",
+            "tests/src/grp.c",
+            "tests/bin/xattr",
+            "tests/expected/xattr.stdout",
+            "tests/src/xattr.c",
+            "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
+            "OPEN_FOUNDATION_XATTR_OK",
+            "OPEN_FOUNDATION_LIBSYSTEM_COMPAT_OK",
+            '$(NF - 1) == "libSystem.real"',
+            "group-lookup-macho.log",
+            "xattr-macho.log",
+            "libsystem-compat-macho.log",
+        ):
+            self.assertIn(token, builder)
+        for symbol in (
+            "_getgrgid",
+            "_getgrgid_r",
+            "_getgrnam",
+            "_getgrnam_r",
+            "_fgetxattr",
+            "_fsetxattr",
+            "_getxattr",
+            "_listxattr",
+            "_setxattr",
+            "_quotactl",
+            "_uname",
+        ):
+            self.assertIn(symbol, builder)
+
     def test_foundation_runtime_links_are_exact_and_deletion_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         validate_foundation_runtime_links(source)
@@ -1612,6 +1778,22 @@ class ShellContractTests(unittest.TestCase):
             "libFoundation runtime load count",
         ):
             self.assertIn(spelling, source)
+        foundation_start = source.index(
+            "-install_name @rpath/libFoundation.dylib"
+        )
+        foundation_link = source[
+            foundation_start : source.index(
+                "foundation_graphics_load_count=", foundation_start
+            )
+        ]
+        self.assertLess(
+            foundation_link.index('"${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"'),
+            foundation_link.index("-reexport_library"),
+        )
+        self.assertIn("foundation_object_identifier_core_bind_count=", source)
+        self.assertIn("foundation_errno_runtime_bind_count=", source)
+        self.assertIn('$(NF - 1) == "libswiftCore"', source)
+        self.assertIn('$(NF - 1) == "libswift_errno"', source)
 
     def test_swiftui_runtime_link_is_exact_and_deletion_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

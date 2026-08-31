@@ -291,6 +291,7 @@ FE_OBJECTS=(
     "$FE_CSHIMS/string_shims.o"
     "$FE_CSHIMS/uuid.o"
     "$FE_OUT/fm_unimplemented.o"
+    "$FE_OUT/removefile_compat.o"
     "$FE_OUT/uuid_compat.o"
 )
 FOUNDATION_RUNTIME_BASENAMES=(

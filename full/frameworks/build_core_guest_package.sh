@@ -124,6 +124,18 @@ EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
 EXPECTED_MACHORUN_COMMIT=e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5
 EXPECTED_MACHORUN_TREE=1b41ede32d9a3ba2a5ec2d37685dc64b4eee9b43
+EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
+EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
+EXPECTED_MACHORUN_GROUP_SOURCE_SHA=940c48317d4d782aaf61193f54b1a1ac216a7fa2ef718b0f3957f55889c661c3
+EXPECTED_MACHORUN_XATTR_FIXTURE_SHA=08505e9ba4da6dc21a6eea360a8583b3fa2460020e6ed881a7ffefe6f8527ed7
+EXPECTED_MACHORUN_XATTR_GOLDEN_SHA=5e9d15742e594d5cf2b8bb767629a6e0a5acaae33bdb0fa591c9b535dd3f734f
+EXPECTED_MACHORUN_XATTR_SOURCE_SHA=9603c5296d343769fbe3b0889623511d69a59498700483d3bc523404919f5c00
+EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=79b88f72fa2f1a844aaeae05564f2da7e305080b97422ef602a040d04f57f166
+EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=13ee8b893730f6f8e9bff25be80562359006648b167d0c94c6bb9eb6ee7d2a18
+EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=5b091a2842a95283bb575f01d8b6a0eaa180158b1107f61c8d4036e036848f6f
+EXPECTED_MACHORUN_UNAME_FIXTURE_SHA=a5f6ea4ca57c74ac1cbcf1205f36ea82eeada909b903bb66ffbf547e6281357b
+EXPECTED_MACHORUN_UNAME_GOLDEN_SHA=45a2dc5584efcb12c0f28d3ebbdd080f233453302b91177208e014a5b21163a4
+EXPECTED_MACHORUN_UNAME_SOURCE_SHA=e552d0b9959a639c09501fecfab90d70a568f8672d930481a44dcf51cafe5578
 EXPECTED_PREVIEW_SWIFTSYNTAX_REVISION=4799286537280063c85a32f09884cfbca301b1a1
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC'
 EXPECTED_OBSERVATION_UPSTREAM_COMMIT=ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b
@@ -902,22 +914,25 @@ FOUNDATION_RUNTIME_BASENAMES=(
     libswiftSynchronization
     libswiftDarwin
     "${SWIFTUI_RUNTIME_BASENAME}"
+    libswift_errno
 )
 FOUNDATION_RUNTIME_LINK_FLAGS=(
     -lswift_StringProcessing
     -lswiftSynchronization
     -lswiftDarwin
     "${SWIFTUI_RUNTIME_LINK_FLAG}"
+    -lswift_errno
 )
 FOUNDATION_RUNTIME_INSTALL_NAMES=(
     /usr/lib/swift/libswift_StringProcessing.dylib
     /usr/lib/swift/libswiftSynchronization.dylib
     /usr/lib/swift/libswiftDarwin.dylib
     "${SWIFTUI_RUNTIME_INSTALL_NAME}"
+    /usr/lib/swift/libswift_errno.dylib
 )
-[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 4 ] \
-    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 4 ] \
-    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 4 ] \
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 5 ] \
+    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 5 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 5 ] \
     || die 'Foundation runtime closure cardinality drifted'
 for index in "${!FOUNDATION_RUNTIME_BASENAMES[@]}"; do
     library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
@@ -1278,6 +1293,111 @@ cmp "$WORK/open-dispatch-mach-expected-imports.txt" \
         "$(hash_file "$DISPATCH_HOST")"
 } >> "$RUNTIME/.manifest"
 
+echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
+GROUP_FIXTURE=$MACHORUN/tests/bin/grp
+GROUP_GOLDEN=$MACHORUN/tests/expected/grp.stdout
+GROUP_SOURCE=$MACHORUN/tests/src/grp.c
+require_hash "$GROUP_FIXTURE" "$EXPECTED_MACHORUN_GROUP_FIXTURE_SHA" \
+    machorun-group-fixture
+require_hash "$GROUP_GOLDEN" "$EXPECTED_MACHORUN_GROUP_GOLDEN_SHA" \
+    machorun-group-golden
+require_hash "$GROUP_SOURCE" "$EXPECTED_MACHORUN_GROUP_SOURCE_SHA" \
+    machorun-group-source
+for symbol in _getgrgid _getgrgid_r _getgrnam _getgrnam_r; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
+clang-18 -D_DEFAULT_SOURCE=1 -std=c11 -O2 -Wall -Wextra -Werror \
+    "$GROUP_SOURCE" -o "$WORK/group-lookup-native"
+"$WORK/group-lookup-native" > "$WORK/group-lookup-native.log"
+cmp "$GROUP_GOLDEN" "$WORK/group-lookup-native.log" \
+    || die 'native Linux group lookup differs from the pinned Darwin-neutral contract'
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$GROUP_FIXTURE" \
+    > "$WORK/group-lookup-macho.log"
+cmp "$GROUP_GOLDEN" "$WORK/group-lookup-macho.log" \
+    || die 'Mach-O Darwin group lookup differs from the pinned native contract'
+printf '%s\n' \
+    'OPEN_FOUNDATION_GROUP_LOOKUP_OK layout=32,0,8,16,24 reentrant=gid,name,erange,not-found static=gid,name' \
+    >> "$WORK/group-lookup-macho.log"
+
+echo '== prove pinned Darwin extended-attribute translation'
+XATTR_FIXTURE=$MACHORUN/tests/bin/xattr
+XATTR_GOLDEN=$MACHORUN/tests/expected/xattr.stdout
+XATTR_SOURCE=$MACHORUN/tests/src/xattr.c
+require_hash "$XATTR_FIXTURE" "$EXPECTED_MACHORUN_XATTR_FIXTURE_SHA" \
+    machorun-xattr-fixture
+require_hash "$XATTR_GOLDEN" "$EXPECTED_MACHORUN_XATTR_GOLDEN_SHA" \
+    machorun-xattr-golden
+require_hash "$XATTR_SOURCE" "$EXPECTED_MACHORUN_XATTR_SOURCE_SHA" \
+    machorun-xattr-source
+for symbol in _fgetxattr _fsetxattr _getxattr _listxattr _setxattr; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$XATTR_FIXTURE" \
+    > "$WORK/xattr-macho.log"
+cmp "$XATTR_GOLDEN" "$WORK/xattr-macho.log" \
+    || die 'Mach-O Darwin xattr translation differs from its pinned contract'
+printf '%s\n' \
+    'OPEN_FOUNDATION_XATTR_OK names=darwin-mapped flags=create,replace,nofollow errno=translated list=repacked' \
+    >> "$WORK/xattr-macho.log"
+
+echo '== remove stale shadows over pinned quota and uname translations'
+: > "$WORK/libsystem-compat-macho.log"
+for fixture in quota uname; do
+    case "$fixture" in
+        quota)
+            fixture_sha=$EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA
+            golden_sha=$EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA
+            source_sha=$EXPECTED_MACHORUN_QUOTA_SOURCE_SHA
+            adapter_symbol=_quotactl
+            ;;
+        uname)
+            fixture_sha=$EXPECTED_MACHORUN_UNAME_FIXTURE_SHA
+            golden_sha=$EXPECTED_MACHORUN_UNAME_GOLDEN_SHA
+            source_sha=$EXPECTED_MACHORUN_UNAME_SOURCE_SHA
+            adapter_symbol=_uname
+            ;;
+        *) die "unknown libSystem compatibility fixture: $fixture" ;;
+    esac
+    fixture_binary=$MACHORUN/tests/bin/$fixture
+    fixture_golden=$MACHORUN/tests/expected/$fixture.stdout
+    fixture_source=$MACHORUN/tests/src/$fixture.c
+    require_hash "$fixture_binary" "$fixture_sha" "machorun-$fixture-fixture"
+    require_hash "$fixture_golden" "$golden_sha" "machorun-$fixture-golden"
+    require_hash "$fixture_source" "$source_sha" "machorun-$fixture-source"
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        | awk -v expected="$adapter_symbol" \
+            '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $adapter_symbol definition count $definition_count, expected 1"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" "$fixture_binary" \
+        > "$WORK/$fixture-macho.actual"
+    cmp "$fixture_golden" "$WORK/$fixture-macho.actual" \
+        || die "Mach-O $fixture adapter differs from its pinned contract"
+    printf 'fixture\t%s\t%s\n' "$fixture" "$(hash_file "$WORK/$fixture-macho.actual")" \
+        >> "$WORK/libsystem-compat-macho.log"
+done
+printf '%s\n' \
+    'OPEN_FOUNDATION_LIBSYSTEM_COMPAT_OK quota=darwin-enotsup uname=layout-translated' \
+    >> "$WORK/libsystem-compat-macho.log"
+
 FE_OBJECTS=(
     "$FULL/foundation/essentials/FoundationEssentials.o"
     "$FULL/foundation/collections/InternalCollectionsUtilities.o"
@@ -1288,6 +1408,7 @@ FE_OBJECTS=(
     "$FULL/foundation/cshims/string_shims.o"
     "$FULL/foundation/cshims/uuid.o"
     "$FULL/foundation/essentials/fm_unimplemented.o"
+    "$FULL/foundation/essentials/removefile_compat.o"
     "$FULL/foundation/essentials/uuid_compat.o"
 )
 
@@ -1299,6 +1420,29 @@ echo '== link FoundationEssentials before its full internationalization layer'
     -L"$STAGE/sdk/usr/lib" -lSystem "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
     -o "$STAGE/lib/libFoundationEssentials.dylib" \
     "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
+{
+    llvm-objdump-18 --macho --bind \
+        "$STAGE/lib/libFoundationEssentials.dylib"
+    llvm-objdump-18 --macho --lazy-bind \
+        "$STAGE/lib/libFoundationEssentials.dylib"
+} > "$WORK/foundation-essentials-bindings.txt"
+for symbol in _getgrgid_r _getgrnam_r _fgetxattr _fsetxattr \
+    _getxattr _listxattr _setxattr _quotactl _uname; do
+    binding_count=$(awk -v expected="$symbol" \
+        '$NF == expected && $(NF - 1) == "libSystem.real" { count++ }
+         END { print count + 0 }' "$WORK/foundation-essentials-bindings.txt")
+    [ "$binding_count" -eq 1 ] \
+        || die "FoundationEssentials $symbol libSystem.real bind count $binding_count, expected 1"
+done
+for symbol in _removefile _removefileat _removefile_cancel \
+    _removefile_state_alloc _removefile_state_free \
+    _removefile_state_get _removefile_state_set; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$STAGE/lib/libFoundationEssentials.dylib" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "FoundationEssentials $symbol definition count $definition_count, expected 1"
+done
 
 echo '== build full pinned FoundationInternationalization and 474-TU ICU'
 env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
@@ -1574,12 +1718,26 @@ echo '== link twenty-nine reusable platform dylibs (twenty-eight frameworks plus
     "$FULL/swiftcorepatch.o"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
-    -reexport_library "$STAGE/lib/libFoundationInternationalization.dylib" \
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
     "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN" \
-    "$RELATIVE_TIME_DARWIN"
+    "$RELATIVE_TIME_DARWIN" \
+    -reexport_library "$STAGE/lib/libFoundationInternationalization.dylib"
+{
+    llvm-objdump-18 --macho --bind "$STAGE/lib/libFoundation.dylib"
+    llvm-objdump-18 --macho --lazy-bind "$STAGE/lib/libFoundation.dylib"
+} > "$WORK/foundation-bindings.txt"
+foundation_object_identifier_core_bind_count=$(awk \
+    '$NF == "_$sSOSHsWP" && $(NF - 1) == "libswiftCore" { count++ }
+     END { print count + 0 }' "$WORK/foundation-bindings.txt")
+[ "$foundation_object_identifier_core_bind_count" -eq 1 ] \
+    || die "libFoundation ObjectIdentifier.Hashable libswiftCore bind count $foundation_object_identifier_core_bind_count, expected 1"
+foundation_errno_runtime_bind_count=$(awk \
+    '$NF == "_$s6Darwin5errnos5Int32Vvg" && $(NF - 1) == "libswift_errno" { count++ }
+     END { print count + 0 }' "$WORK/foundation-bindings.txt")
+[ "$foundation_errno_runtime_bind_count" -eq 1 ] \
+    || die "libFoundation Darwin.errno libswift_errno bind count $foundation_errno_runtime_bind_count, expected 1"
 foundation_graphics_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libFoundation.dylib" \
     | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
@@ -2058,6 +2216,16 @@ cp "$WORK/graphics-sources.pre.tsv" "$STAGE/attestation/graphics-sources.tsv"
 cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
+cp "$WORK/foundation-bindings.txt" \
+    "$STAGE/attestation/foundation-bindings.txt"
+cp "$FULL/foundation/essentials/removefile-compat-tests.log" \
+    "$STAGE/attestation/removefile-compat-tests.log"
+cp "$WORK/group-lookup-macho.log" \
+    "$STAGE/attestation/group-lookup-macho.log"
+cp "$WORK/xattr-macho.log" \
+    "$STAGE/attestation/xattr-macho.log"
+cp "$WORK/libsystem-compat-macho.log" \
+    "$STAGE/attestation/libsystem-compat-macho.log"
 cp "$WORK/first-party-sources.pre.tsv" \
     "$STAGE/attestation/first-party-sources.tsv"
 cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
@@ -2081,6 +2249,27 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/foundationinternationalization/OpenFoundationInternationalizationBridge.c")" \
         "$(hash_file "$W/full/foundationinternationalization/OpenFoundationInternationalizationHost.c")" \
         "$(hash_file "$W/full/foundationinternationalization/FoundationICUCXXThreading.cpp")"
+    printf 'FoundationEssentials-removefile\theader=%s\timplementation=%s\ttests=%s\n' \
+        "$(hash_file "$W/full/foundation/removefile_compat.h")" \
+        "$(hash_file "$W/full/foundation/removefile_compat.c")" \
+        "$(hash_file "$W/full/foundation/removefile_compat_tests.c")"
+    printf 'FoundationEssentials-group-lookup\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tnative-source=%s\n' \
+        "$(hash_file "$MACHORUN/darwin/src/posix.c")" \
+        "$EXPECTED_MACHORUN_GROUP_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_GROUP_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_GROUP_SOURCE_SHA"
+    printf 'FoundationEssentials-xattr\tlibSystem-source=%s\tfixture=%s\tgolden=%s\ttest-source=%s\n' \
+        "$(hash_file "$MACHORUN/darwin/src/posix.c")" \
+        "$EXPECTED_MACHORUN_XATTR_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_XATTR_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_XATTR_SOURCE_SHA"
+    printf 'FoundationEssentials-libSystem-compat\tquota=%s,%s,%s\tuname=%s,%s,%s\n' \
+        "$EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_QUOTA_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_UNAME_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_UNAME_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_UNAME_SOURCE_SHA"
     printf 'swift-collections\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_COLLECTIONS_COMMIT" "$EXPECTED_COLLECTIONS_TREE"
     printf 'OpenCombine\tcommit=%s\ttree=%s\n' \
@@ -2254,6 +2443,16 @@ record_artifact attestation webkit-dylib-loads manifest \
     attestation/webkit-dylib-loads.tsv
 record_artifact attestation foundation-undefined-symbols undefined-symbols \
     attestation/foundation-undefined-symbols.txt
+record_artifact attestation foundation-bindings dyld-bind-audit \
+    attestation/foundation-bindings.txt
+record_artifact attestation FoundationEssentials removefile-semantics \
+    attestation/removefile-compat-tests.log
+record_artifact attestation FoundationEssentials group-lookup-semantics \
+    attestation/group-lookup-macho.log
+record_artifact attestation FoundationEssentials xattr-semantics \
+    attestation/xattr-macho.log
+record_artifact attestation FoundationEssentials libSystem-compat-semantics \
+    attestation/libsystem-compat-macho.log
 record_artifact attestation first-party-sources manifest \
     attestation/first-party-sources.tsv
 record_artifact attestation first-party-dylib-loads manifest \
