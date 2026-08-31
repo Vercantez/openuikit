@@ -1199,6 +1199,7 @@ class ShellContractTests(unittest.TestCase):
         for token in (
             "-module-name Dispatch -module-link-name Dispatch",
             "libDispatch.dylib",
+            "libOpenDispatch.dylib",
             "libOpenDispatchHost.so",
             "host/libdispatch.so",
             "host/libBlocksRuntime.so",

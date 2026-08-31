@@ -53,21 +53,24 @@ OPENUI_DISPATCH_EXPORT OPENUI_DISPATCH_NORETURN
 void openui_dispatch_host_v1_main(void);
 
 /* Mach-O ABI consumed by the portable Swift Dispatch module. */
-void *openui_dispatch_v1_get_global_queue(int64_t identifier, uint64_t flags);
-void openui_dispatch_v1_async(
+OPENUI_DISPATCH_EXPORT void *openui_dispatch_v1_get_global_queue(
+    int64_t identifier,
+    uint64_t flags
+);
+OPENUI_DISPATCH_EXPORT void openui_dispatch_v1_async(
     uint32_t queue_kind,
     void *queue,
     void *context,
     openui_dispatch_callback_v1 callback
 );
-void openui_dispatch_v1_after(
+OPENUI_DISPATCH_EXPORT void openui_dispatch_v1_after(
     uint32_t queue_kind,
     void *queue,
     uint64_t delay_nanoseconds,
     void *context,
     openui_dispatch_callback_v1 callback
 );
-uint64_t openui_dispatch_v1_monotonic_nanoseconds(void);
+OPENUI_DISPATCH_EXPORT uint64_t openui_dispatch_v1_monotonic_nanoseconds(void);
 
 #ifdef __cplusplus
 }

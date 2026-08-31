@@ -77,7 +77,10 @@ The semantic build order is deliberate:
 The portable `Dispatch.swiftmodule` is built with the package compiler and
 shadows the version-incompatible Apple SDK binary module for unchanged
 `import Dispatch` and reexports. Its ARM64 Mach-O `libDispatch.dylib` uses a
-fixed-width bridge into a uniquely named ELF helper. That helper schedules
+fixed-width `/usr/lib/libOpenDispatch.dylib` runtime bridge into a uniquely
+named ELF helper. Keeping the host imports in that runtime image is what makes
+machorun's audited `_glibc_` boundary available without exposing host symbols
+to ordinary app framework images. The helper schedules
 with real Linux libdispatch `dispatch_async_f`, `dispatch_after_f`, and
 `dispatch_main`; it never invokes guest callbacks synchronously. The guest
 main queue is an identity token only, while global queue pointers must have

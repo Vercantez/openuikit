@@ -23,6 +23,13 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("unminted global queue pointer crossed the ELF boundary", source)
         self.assertIn("dispatch_async_f(checked_queue", source)
         self.assertIn("dispatch_main();", source)
+        header = (ROOT / "full/dispatch/include/OpenDispatchABI.h").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "OPENUI_DISPATCH_EXPORT void *openui_dispatch_v1_get_global_queue",
+            header,
+        )
 
     def test_portable_module_is_real_asynchronous_surface(self) -> None:
         source = (ROOT / "full/dispatch/Dispatch.swift").read_text(encoding="utf-8")

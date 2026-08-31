@@ -1046,7 +1046,42 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -I "$STAGE/include/COpenDispatch" \
     -c "$W/full/dispatch/OpenDispatchBridge.c" \
     -o "$WORK/open-dispatch-bridge.o"
+DISPATCH_DARWIN=$RUNTIME/darwin/usr/lib/libOpenDispatch.dylib
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenDispatch.dylib \
+    -o "$DISPATCH_DARWIN" "$WORK/open-dispatch-bridge.o"
 {
+    printf '%s\n' \
+        _openui_dispatch_v1_after \
+        _openui_dispatch_v1_async \
+        _openui_dispatch_v1_get_global_queue \
+        _openui_dispatch_v1_monotonic_nanoseconds
+} > "$WORK/open-dispatch-mach-expected-exports.txt"
+{
+    printf '%s\n' \
+        _glibc_openui_dispatch_host_v1_after \
+        _glibc_openui_dispatch_host_v1_async \
+        _glibc_openui_dispatch_host_v1_get_global_queue \
+        _glibc_openui_dispatch_host_v1_monotonic_nanoseconds
+} > "$WORK/open-dispatch-mach-expected-imports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$DISPATCH_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/open-dispatch-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$DISPATCH_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/open-dispatch-mach-imports.txt"
+cmp "$WORK/open-dispatch-mach-expected-exports.txt" \
+    "$WORK/open-dispatch-mach-exports.txt" \
+    || die 'Mach-O Dispatch bridge exports drifted'
+cmp "$WORK/open-dispatch-mach-expected-imports.txt" \
+    "$WORK/open-dispatch-mach-imports.txt" \
+    || die 'Mach-O Dispatch bridge host imports drifted'
+[ "$(llvm-otool-18 -D "$DISPATCH_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenDispatch.dylib ] \
+    || die 'Mach-O Dispatch bridge install name drifted'
+{
+    printf 'local\tdarwin/usr/lib/libOpenDispatch.dylib\t%s\tbuilt from full/dispatch/OpenDispatchBridge.c\n' \
+        "$(hash_file "$DISPATCH_DARWIN")"
     printf 'local\thost/libdispatch.so\t%s\tpinned Swift 6.2.4 Linux libdispatch\n' \
         "$(hash_file "$RUNTIME/host/libdispatch.so")"
     printf 'local\thost/libBlocksRuntime.so\t%s\tpinned Swift 6.2.4 BlocksRuntime\n' \
@@ -1252,7 +1287,7 @@ echo '== link twenty-six reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
-    "$WORK/dispatch.o" "$WORK/open-dispatch-bridge.o" \
+    "$WORK/dispatch.o" "$DISPATCH_DARWIN" \
     "${COMMON_LINK[@]}" "$STAGE/sdk/usr/lib/swift/libswift_Concurrency.tbd"
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
@@ -1825,6 +1860,8 @@ record_artifact runtime OpenRelativeTime linux-helper \
     guest-root/host/libOpenRelativeTimeHost.so
 record_artifact runtime OpenDispatch linux-helper \
     guest-root/host/libOpenDispatchHost.so
+record_artifact runtime OpenDispatch darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenDispatch.dylib
 record_artifact runtime OpenDispatch linux-libdispatch \
     guest-root/host/libdispatch.so
 record_artifact runtime OpenDispatch linux-blocks-runtime \
