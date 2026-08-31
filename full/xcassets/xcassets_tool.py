@@ -35,7 +35,7 @@ layers away -- the `succeeds-and-does-nothing` failure this project has already
 paid for more than once.  `--strict` additionally turns the recorded-not-
 resolved types into refusals, for a caller that wants all-or-nothing.
 """
-import argparse, hashlib, json, os, re, shutil, sys
+import argparse, hashlib, json, os, re, shutil, stat, sys
 from collections import Counter, defaultdict
 
 # ---------------------------------------------------------------------------
@@ -696,35 +696,75 @@ def resolve(asset, scale=2, appearance="light", idiom="universal"):
 
 
 # ---------------------------------------------------------------------------
-def cmd_index(args):
-    reader = Reader(strict=args.strict)
-    app = os.path.abspath(args.app)
-    catalogs = []
-    # Accept EITHER an app tree or a single `.xcassets`.  Pointing the tool at
-    # one catalog and having it walk for `.xcassets` CHILDREN finds none and
-    # indexes nothing -- a silent empty index, which is how the first spot
-    # oracle run scored 0 of 89 without anything having gone wrong in the
-    # reader at all.
-    if app.endswith(".xcassets") and os.path.isdir(app):
-        catalogs = [app]
-        app = os.path.dirname(app)
-    for dirpath, dirnames, _ in (os.walk(app) if not catalogs else []):
-        if ".git" in dirnames:
-            dirnames.remove(".git")
-        for d in list(dirnames):
-            if d.endswith(".xcassets"):
-                catalogs.append(os.path.join(dirpath, d))
-                dirnames.remove(d)
-    catalogs.sort()
-    for c in catalogs:
-        reader.read_catalog(c)
+def index_catalogs(catalogs, app, out, strict=False):
+    """Index an explicit, ordered set of source-form catalogs.
 
-    if not reader.catalogs:
+    Application builders already know exactly which resource build-phase
+    inputs belong to a target.  Letting the indexer rediscover catalogs by
+    walking an entire checkout would silently admit catalogs from unrelated
+    targets and would lose the build-phase order that decides name collisions.
+    This entry point therefore preserves the caller's order and refuses output
+    reuse.  ``cmd_index`` below remains the convenient recursive CLI frontend.
+    """
+    app = os.path.abspath(app)
+    out = os.path.abspath(out)
+    if os.path.lexists(out):
+        refuse(out, "output already exists -- refusing stale asset index reuse")
+    if not catalogs:
         refuse(app, "no .xcassets found -- refusing to write an empty index")
 
-    out = os.path.abspath(args.out)
+    normalized = []
+    seen = set()
+    for raw in catalogs:
+        catalog = os.path.abspath(raw)
+        try:
+            metadata = os.lstat(catalog)
+        except OSError as error:
+            refuse(catalog, "cannot inspect catalog: %s" % error)
+        if (not catalog.endswith(".xcassets") or
+                not stat.S_ISDIR(metadata.st_mode)):
+            refuse(catalog, "catalog is not an ordinary .xcassets directory")
+        real_catalog = os.path.realpath(catalog)
+        try:
+            contained = os.path.commonpath(
+                [os.path.realpath(app), real_catalog]
+            ) == os.path.realpath(app)
+        except ValueError:
+            contained = False
+        if not contained:
+            refuse(catalog, "catalog escapes the indexed application root")
+        if real_catalog in seen:
+            refuse(catalog, "catalog occurs more than once in the ordered input")
+        seen.add(real_catalog)
+
+        # Source planners and bundle materializers refuse links before this
+        # point, but the public CLI must carry the same invariant on its own.
+        # Following a payload symlink would put bytes outside the frozen target
+        # graph into a seemingly content-addressed build product.
+        for directory, directory_names, file_names in os.walk(catalog):
+            for name in directory_names:
+                child = os.path.join(directory, name)
+                child_metadata = os.lstat(child)
+                if stat.S_ISLNK(child_metadata.st_mode):
+                    refuse(child, "catalog contains a symlink")
+                if not stat.S_ISDIR(child_metadata.st_mode):
+                    refuse(child, "catalog contains an unsupported filesystem node")
+            for name in file_names:
+                child = os.path.join(directory, name)
+                child_metadata = os.lstat(child)
+                if stat.S_ISLNK(child_metadata.st_mode):
+                    refuse(child, "catalog contains a symlink")
+                if not stat.S_ISREG(child_metadata.st_mode):
+                    refuse(child, "catalog contains an unsupported filesystem node")
+        normalized.append(catalog)
+
+    reader = Reader(strict=strict)
+    for catalog in normalized:
+        reader.read_catalog(catalog)
+
+    os.makedirs(out)
     res = os.path.join(out, "Resources")
-    os.makedirs(res, exist_ok=True)
+    os.makedirs(res)
     copied = 0
     for h, (src, size) in reader.payloads.items():
         ext = os.path.splitext(src)[1].lower()
@@ -771,6 +811,28 @@ def cmd_index(args):
           % (index["app"], len(reader.catalogs), len(reader.assets),
              len(reader.unresolved), s["unique_payloads"], copied))
     return index
+
+
+def cmd_index(args):
+    app = os.path.abspath(args.app)
+    catalogs = []
+    # Accept EITHER an app tree or a single `.xcassets`.  Pointing the tool at
+    # one catalog and having it walk for `.xcassets` CHILDREN finds none and
+    # indexes nothing -- a silent empty index, which is how the first spot
+    # oracle run scored 0 of 89 without anything having gone wrong in the
+    # reader at all.
+    if app.endswith(".xcassets") and os.path.isdir(app):
+        catalogs = [app]
+        app = os.path.dirname(app)
+    for dirpath, dirnames, _ in (os.walk(app) if not catalogs else []):
+        if ".git" in dirnames:
+            dirnames.remove(".git")
+        for d in list(dirnames):
+            if d.endswith(".xcassets"):
+                catalogs.append(os.path.join(dirpath, d))
+                dirnames.remove(d)
+    catalogs.sort()
+    return index_catalogs(catalogs, app, args.out, strict=args.strict)
 
 
 def cmd_resolve(args):

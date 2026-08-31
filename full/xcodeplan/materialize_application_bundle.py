@@ -22,6 +22,11 @@ from typing import Any
 
 import application_build_plan
 
+XCASSETS_DIR = Path(__file__).resolve().parents[1] / "xcassets"
+if os.fspath(XCASSETS_DIR) not in sys.path:
+    sys.path.insert(0, os.fspath(XCASSETS_DIR))
+import xcassets_tool  # noqa: E402
+
 
 class BundleMaterializationError(RuntimeError):
     """A frozen resource graph cannot be represented as an app bundle."""
@@ -260,6 +265,94 @@ def _copy_platform_resources(
         )
 
 
+def _ordered_asset_catalogs(
+    plan: dict[str, Any], resources_root: Path
+) -> list[Path]:
+    """Return materialized catalogs in target build-phase order.
+
+    Most Xcode inventories publish each ``.xcassets`` wrapper as one resource.
+    Folder references and SwiftPM resource directories can instead contain one
+    or more catalogs, so descend those inputs deterministically but never walk
+    inside a catalog.  The resource planner has already rejected overlapping
+    destinations and symlinks before this runs.
+    """
+
+    catalogs: list[Path] = []
+
+    def visit(directory: Path) -> None:
+        if directory.name.endswith(".xcassets"):
+            catalogs.append(directory)
+            return
+        for entry in sorted(
+            os.scandir(directory), key=lambda item: item.name.encode("utf-8")
+        ):
+            if entry.is_symlink():
+                raise BundleMaterializationError(
+                    f"materialized application resource contains a symlink: {entry.path}"
+                )
+            if entry.is_dir(follow_symlinks=False):
+                visit(Path(entry.path))
+
+    for index, raw in enumerate(plan["resources"]):
+        resource = application_build_plan._mapping(raw, f"resources[{index}]")
+        if resource.get("kind") != "directory":
+            continue
+        destination = _safe_relative(
+            application_build_plan._string(
+                resource.get("bundle_destination"),
+                f"resources[{index}].bundle_destination",
+            ),
+            f"resources[{index}].bundle_destination",
+        )
+        visit(resources_root / destination)
+    return catalogs
+
+
+def _record_generated_asset_index(
+    generated_root: Path,
+    bundle_root: Path,
+    records: list[dict[str, Any]],
+) -> None:
+    """Attest every generated index byte and normalize its filesystem modes."""
+
+    for directory, directory_names, file_names in os.walk(generated_root):
+        directory_names.sort(key=lambda value: value.encode("utf-8"))
+        file_names.sort(key=lambda value: value.encode("utf-8"))
+        current = Path(directory)
+        current.chmod(0o755)
+        for name in directory_names:
+            child = current / name
+            if child.is_symlink():
+                raise BundleMaterializationError(
+                    f"generated asset index contains a symlink: {child}"
+                )
+        for name in file_names:
+            child = current / name
+            metadata = child.lstat()
+            if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+                raise BundleMaterializationError(
+                    f"generated asset index contains an unsupported node: {child}"
+                )
+            data = child.read_bytes()
+            digest = _sha256(data)
+            child.chmod(0o644)
+            relative = child.relative_to(generated_root)
+            if len(relative.parts) == 3 and relative.parts[0] == "Resources":
+                shard, filename = relative.parts[1:]
+                if shard != digest[:2] or not filename.startswith(digest + "."):
+                    raise BundleMaterializationError(
+                        f"generated asset payload is not content-addressed: {child}"
+                    )
+            records.append(
+                {
+                    "bundle_path": child.relative_to(bundle_root).as_posix(),
+                    "sha256": digest,
+                    "size": len(data),
+                    "source_class": "OpenUIKit-generated-xcassets",
+                }
+            )
+
+
 def materialize(
     plan: dict[str, Any],
     source_root: Path,
@@ -327,6 +420,22 @@ def materialize(
         empty_directories,
     )
 
+    catalogs = _ordered_asset_catalogs(plan, resources)
+    asset_index: dict[str, Any] | None = None
+    if catalogs:
+        generated_assets = resources / "OpenUIKit" / "AssetCatalogs"
+        try:
+            asset_index = xcassets_tool.index_catalogs(
+                [os.fspath(path) for path in catalogs],
+                os.fspath(output_app),
+                os.fspath(generated_assets),
+            )
+        except (OSError, xcassets_tool.Refusal) as exc:
+            raise BundleMaterializationError(
+                f"cannot compile source-form asset catalogs: {exc}"
+            ) from exc
+        _record_generated_asset_index(generated_assets, output_app, records)
+
     records.sort(key=lambda item: item["bundle_path"].encode("utf-8"))
     empty_directories.sort(key=lambda item: item.encode("utf-8"))
     result = {
@@ -340,6 +449,19 @@ def materialize(
             "application_files": sum(
                 item["source_class"].startswith("application") for item in records
             ),
+            "asset_catalog_assets": len(asset_index["assets"])
+            if asset_index is not None
+            else 0,
+            "asset_catalog_files": sum(
+                item["source_class"] == "OpenUIKit-generated-xcassets"
+                for item in records
+            ),
+            "asset_catalogs": len(asset_index["catalogs"])
+            if asset_index is not None
+            else 0,
+            "asset_catalog_unresolved": len(asset_index["unresolved"])
+            if asset_index is not None
+            else 0,
             "empty_directories": len(empty_directories),
             "files": len(records),
             "platform_files": sum(
@@ -380,7 +502,9 @@ def main(argv: list[str] | None = None) -> int:
             "APPLICATION_BUNDLE_RESOURCES_OK "
             f"files={result['summary']['files']} "
             f"application={result['summary']['application_files']} "
-            f"platform={result['summary']['platform_files']}"
+            f"platform={result['summary']['platform_files']} "
+            f"asset-catalogs={result['summary']['asset_catalogs']} "
+            f"asset-records={result['summary']['asset_catalog_assets']}"
         )
     except (
         BundleMaterializationError,

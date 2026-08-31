@@ -127,3 +127,33 @@ public func NSSelectorFromString(_ aSelectorName: String) -> Selector {
 public func NSStringFromSelector(_ aSelector: Selector) -> String {
     String(_sel: aSelector)
 }
+
+// MARK: - Objective-C key-value coding
+
+// ObjectiveC.NSObject provides the genuine Darwin message-send substrate in
+// the guest, but Apple's Foundation overlay is what normally publishes these
+// Swift spellings. This Foundation facade must restore them here: app code
+// should be able to use KVC against any Objective-C-compatible object, not a
+// platform-maintained registry or a CAFilter-specific escape hatch.
+//
+// Keep the wrappers themselves out of the Objective-C method table. They
+// deliberately dispatch the canonical selectors to the receiver, where the
+// concrete class owns validation and storage exactly as it does on Apple
+// platforms. An unsupported key therefore remains an Objective-C runtime
+// failure instead of being silently ignored by the facade.
+public extension ObjectiveC.NSObject {
+    func setValue(_ value: Any?, forKey key: String) {
+        _ = perform(
+            Selector("setValue:forKey:"),
+            with: value as AnyObject?,
+            with: key as AnyObject
+        )
+    }
+
+    func value(forKey key: String) -> Any? {
+        perform(
+            Selector("valueForKey:"),
+            with: key as AnyObject
+        )?.takeUnretainedValue()
+    }
+}

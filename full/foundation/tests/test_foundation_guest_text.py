@@ -262,6 +262,10 @@ class FoundationGuestTextTests(unittest.TestCase):
             "public func NSStringFromSelector(_ aSelector: Selector) -> String",
             "Selector(aSelectorName)",
             "String(_sel: aSelector)",
+            "func setValue(_ value: Any?, forKey key: String)",
+            "func value(forKey key: String) -> Any?",
+            'Selector("setValue:forKey:")',
+            'Selector("valueForKey:")',
         ):
             self.assertIn(token, source)
         self.assertNotIn('aClassName == "CAFilter"', source)

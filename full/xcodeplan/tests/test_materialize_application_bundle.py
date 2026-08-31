@@ -26,6 +26,7 @@ class MaterializeApplicationBundleTests(unittest.TestCase):
         (self.source / "Resources/Assets.xcassets/AccentColor.colorset").mkdir(
             parents=True
         )
+        (self.source / "Resources/Assets.xcassets/Logo.imageset").mkdir()
         (self.source / "Resources/Base.lproj").mkdir(parents=True)
         (self.source / "App/AppDelegate.swift").write_text(
             "import UIKit\n@main class AppDelegate: UIResponder, UIApplicationDelegate {}\n",
@@ -42,8 +43,18 @@ class MaterializeApplicationBundleTests(unittest.TestCase):
             self.source
             / "Resources/Assets.xcassets/AccentColor.colorset/Contents.json"
         ).write_text(
-            '{"colors":[],"info":{"author":"xcode","version":1}}\n',
+            '{"colors":[{"idiom":"universal","color":{"color-space":"srgb",'
+            '"components":{"red":"0x33","green":"0x66","blue":"0x99",'
+            '"alpha":"1.000"}}}],"info":{"author":"xcode","version":1}}\n',
             encoding="utf-8",
+        )
+        (self.source / "Resources/Assets.xcassets/Logo.imageset/Contents.json").write_text(
+            '{"images":[{"idiom":"universal","filename":"logo@2x.png",'
+            '"scale":"2x"}],"info":{"author":"xcode","version":1}}\n',
+            encoding="utf-8",
+        )
+        (self.source / "Resources/Assets.xcassets/Logo.imageset/logo@2x.png").write_bytes(
+            b"\x89PNG\r\n\x1a\nportable-logo-payload"
         )
         (self.source / "Resources/Base.lproj/Launch.storyboard").write_text(
             "<document/>\n", encoding="utf-8"
@@ -135,8 +146,40 @@ class MaterializeApplicationBundleTests(unittest.TestCase):
             (output / "Contents/Resources/OpenUIKit/system_colors.json").read_bytes(),
             b"system_colors.json\n",
         )
-        self.assertEqual(result["summary"]["application_files"], 4)
+        asset_root = output / "Contents/Resources/OpenUIKit/AssetCatalogs"
+        asset_index = json.loads((asset_root / "index.json").read_text())
+        self.assertEqual(asset_index["format"], "openuikit-xcassets-index")
+        self.assertEqual(asset_index["app"], "Probe.app")
+        self.assertEqual(
+            asset_index["catalogs"],
+            ["Contents/Resources/Assets.xcassets"],
+        )
+        self.assertEqual(set(asset_index["assets"]), {"AccentColor", "Logo"})
+        self.assertEqual(
+            asset_index["assets"]["AccentColor"]["variants"][0]["srgb"],
+            [0.2, 0.4, 0.6, 1.0],
+        )
+        logo = asset_index["assets"]["Logo"]["variants"][0]["payload"]
+        self.assertEqual(logo["filename"], "logo@2x.png")
+        self.assertEqual(
+            (asset_root / "Resources" / logo["file"]).read_bytes(),
+            b"\x89PNG\r\n\x1a\nportable-logo-payload",
+        )
+        self.assertEqual(result["summary"]["application_files"], 6)
         self.assertEqual(result["summary"]["platform_files"], 5)
+        self.assertEqual(result["summary"]["asset_catalogs"], 1)
+        self.assertEqual(result["summary"]["asset_catalog_assets"], 2)
+        self.assertEqual(result["summary"]["asset_catalog_files"], 2)
+        self.assertEqual(result["summary"]["asset_catalog_unresolved"], 0)
+        generated = [
+            record
+            for record in result["files"]
+            if record["source_class"] == "OpenUIKit-generated-xcassets"
+        ]
+        self.assertEqual(len(generated), 2)
+        self.assertTrue(
+            any(record["bundle_path"].endswith("/index.json") for record in generated)
+        )
         self.assertEqual(json.loads(attestation.read_text()), result)
 
         with self.assertRaisesRegex(
