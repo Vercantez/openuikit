@@ -1027,6 +1027,12 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
+        self.assertIn("network_string_processing_undefineds", source)
+        self.assertIn("direct StringProcessing undefineds, expected 0", source)
+        network_source = (REPO / "full/network/Network.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn(".ranges(of:", network_source)
         self.assertIn("first-party=fail-closed-7", probe)
         for framework in first_party:
             with self.subTest(framework=framework):

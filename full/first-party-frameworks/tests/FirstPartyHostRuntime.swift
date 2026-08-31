@@ -117,6 +117,9 @@ private struct FirstPartyHostRuntime {
         precondition(IPv4Address("127.0.0.1")?.rawValue == Data([127, 0, 0, 1]))
         precondition(IPv4Address("999.0.0.1") == nil)
         precondition(IPv6Address("fe80::1")?.rawValue.prefix(2) == Data([0xfe, 0x80]))
+        precondition(IPv6Address("2001:db8::192.0.2.1") != nil)
+        precondition(IPv6Address("1::2::3") == nil)
+        precondition(IPv6Address("1:::3") == nil)
         precondition(IPv6Address("not-an-address") == nil)
         var paths: [NWPath.Status] = []
         monitor.pathUpdateHandler = { paths.append($0.status) }

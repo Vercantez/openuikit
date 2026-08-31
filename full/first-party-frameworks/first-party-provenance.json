@@ -169,7 +169,7 @@
       "sources": [
         {
           "path": "full/network/Network.swift",
-          "sha256": "d39c06d85ddc6be17848096aacfe62429694ebac7c893a90a75cdd5814b431de"
+          "sha256": "e87d5db8af2c723004637b5d889884e30ea13f6745a46b2bea19aea38a668406"
         }
       ],
       "uses_uikit": false
@@ -243,7 +243,7 @@
     },
     {
       "path": "full/first-party-frameworks/tests/FirstPartyHostRuntime.swift",
-      "sha256": "43af8327a4fe28402a6f93bae65f561228ef4f416fd32b012632af7bd82b0276"
+      "sha256": "1da95df51bf5f1c734208f360805d1e60e191d06c3d3e8eb530479fc063e9f43"
     },
     {
       "path": "full/first-party-frameworks/tests/test_first_party_host.sh",

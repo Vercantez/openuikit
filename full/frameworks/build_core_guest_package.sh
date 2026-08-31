@@ -759,6 +759,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         -emit-object -o "$WORK/$source_dir.o" \
         "${framework_source_paths[@]}"
 done
+network_string_processing_undefineds=$(llvm-nm-18 -u -j "$WORK/network.o" \
+    | awk 'index($0, "_StringProcessing") { count++ } END { print count + 0 }')
+[ "$network_string_processing_undefineds" -eq 0 ] \
+    || die "Network has $network_string_processing_undefineds direct StringProcessing undefineds, expected 0"
 
 echo '== final Foundation/UIKit notification identity proof'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \

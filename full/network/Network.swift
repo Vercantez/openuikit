@@ -100,8 +100,26 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable,
 
     private static func parseWords(_ string: String) -> [UInt16]? {
         guard !string.isEmpty, !string.contains("%") else { return nil }
-        let compressionRanges = string.ranges(of: "::")
-        guard compressionRanges.count <= 1 else { return nil }
+        // Keep the Network shim independent of the compiler's
+        // _StringProcessing overlay.  The standard substring-ranges API looks
+        // harmless convenience here, but it leaves a direct runtime symbol in
+        // libNetwork.  Walk Character indices instead so the framework keeps
+        // the small Foundation/Concurrency closure promised by the package.
+        var compressionRange: Range<String.Index>?
+        var scan = string.startIndex
+        while scan < string.endIndex {
+            let next = string.index(after: scan)
+            if string[scan] == ":", next < string.endIndex,
+               string[next] == ":"
+            {
+                guard compressionRange == nil else { return nil }
+                let upperBound = string.index(after: next)
+                compressionRange = scan..<upperBound
+                scan = upperBound
+            } else {
+                scan = next
+            }
+        }
 
         func parseSide(_ text: Substring) -> [UInt16]? {
             guard !text.isEmpty else { return [] }
@@ -125,7 +143,7 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable,
             return words
         }
 
-        if let compression = compressionRanges.first {
+        if let compression = compressionRange {
             guard let left = parseSide(string[..<compression.lowerBound]),
                   let right = parseSide(string[compression.upperBound...])
             else { return nil }
