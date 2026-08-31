@@ -330,7 +330,29 @@ public func os_signpost(
         name: name,
         signpostID: signpostID,
         format: format,
-        arguments: arguments
+        arguments: arguments.map { String(describing: $0) }
+    )
+}
+
+/// The exact single-message form used by Nuke. SwiftCore's portable Darwin
+/// target does not vend the host SDK's retroactive `String: CVarArg`
+/// conformance, so keeping this overload generic preserves the source-level
+/// API without inventing unsafe C vararg storage.
+public func os_signpost<Message>(
+    _ type: OSSignpostType,
+    log: OSLog,
+    name: StaticString,
+    signpostID: OSSignpostID = .exclusive,
+    _ format: StaticString,
+    _ argument: Message
+) {
+    _emitSignpost(
+        type,
+        log: log,
+        name: name,
+        signpostID: signpostID,
+        format: format,
+        arguments: [String(describing: argument)]
     )
 }
 
@@ -340,7 +362,7 @@ private func _emitSignpost(
     name: StaticString,
     signpostID: OSSignpostID,
     format: StaticString?,
-    arguments: [CVarArg]
+    arguments: [String]
 ) {
     guard os_signpost_enabled(log) else { return }
     var line = "[" + String(describing: type.label) + "] "
@@ -353,7 +375,7 @@ private func _emitSignpost(
         line += " format=" + String(describing: format)
         if !arguments.isEmpty {
             line += " args=["
-            line += arguments.map { String(describing: $0) }.joined(separator: ", ")
+            line += arguments.joined(separator: ", ")
             line += "]"
         }
     }
