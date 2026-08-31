@@ -3,11 +3,6 @@
 public typealias OSStatus = Int32
 
 public let errSecSuccess: OSStatus = 0
-#if OPENUIKIT_PORTABLE_FOUNDATION
-// Darwin exposes this historical spelling through its C overlays.  The
-// portable Foundation does not, but unchanged keychain clients still use it.
-public let noErr: OSStatus = errSecSuccess
-#endif
 public let errSecUnimplemented: OSStatus = -4
 public let errSecIO: OSStatus = -36
 public let errSecParam: OSStatus = -50
