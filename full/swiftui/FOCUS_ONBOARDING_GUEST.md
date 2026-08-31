@@ -70,7 +70,11 @@ The Widget target receives the same explicit treatment for its adjacent
 neither target relies on the process-global image-search fallback.
 The ordered production Foundation source set is owned by
 `full/foundation/foundation_guest_sources.txt`; the build validates and
-consumes that manifest rather than duplicating its entries. `FoundationGuest.swift`,
+consumes that manifest rather than duplicating its entries. Because this legacy
+Focus-only harness cannot modify its shared read-only machorun root, it
+explicitly excludes the production `URLSession.swift` transport source; the
+relocatable core-package builder consumes all twenty-four entries.
+`FoundationGuest.swift`,
 `FocusOnboardingGuestMain.swift`, and `FocusOnboardingUUIDProbe.c` are port and
 test code, not application source. Normalized resource bundles are supplied by
 the existing pinned Focus resource proof and are checked for exact topology and
@@ -80,7 +84,7 @@ Because the facade link disables linker auto-linking, this builder applies the
 same measured runtime contract as the reusable core-package path: exactly one
 direct load each for `libswift_StringProcessing` and
 `libswiftSynchronization`, with their SDK TBDs, staged dylibs, and install IDs
-validated before linking. The twenty-two-source object is required to expose the
+validated before linking. The bounded twenty-three-source object is required to expose the
 measured 19/2/0 direct undefined-symbol counts for StringProcessing,
 Synchronization, and RegexParser respectively; RegexParser remains a
 transitive StringProcessing dependency rather than a direct Foundation load.

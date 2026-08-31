@@ -23,7 +23,9 @@ EXPECTED = [
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/Stream.swift",
     "full/foundation/URLLoading.swift",
+    "full/foundation/URLSession.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
     "full/foundation/NSNumber.swift",
@@ -51,7 +53,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 22', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 24', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -161,23 +163,30 @@ class FoundationGuestServicesTests(unittest.TestCase):
             self.assertIn(token, core_foundation)
         self.assertNotIn("import CoreFoundation", core_foundation)
 
-    def test_url_loading_boundary_is_metadata_only_and_case_insensitive(self) -> None:
+    def test_url_loading_values_and_transport_are_separate_production_sources(self) -> None:
         source = (ROOT / "full/foundation/URLLoading.swift").read_text()
+        session = (ROOT / "full/foundation/URLSession.swift").read_text()
         for token in (
             "public struct URLRequest: Hashable",
             "public var cachePolicy: CachePolicy",
+            "public var httpBodyStream: InputStream?",
             "public func value(forHTTPHeaderField field: String)",
             "public mutating func setValue",
             "open class URLResponse: NSObject",
             "open var suggestedFilename: String?",
-            "Neither type sends",
         ):
             self.assertIn(token, source)
-        for false_claim in ("URLSession", "URLProtocol", "send(request", "fetch("):
-            if false_claim == "URLSession":
-                self.assertEqual(source.count(false_claim), 1)  # documentation only
-            else:
-                self.assertNotIn(false_claim, source)
+        self.assertNotIn("open class URLSession", source)
+        for token in (
+            "open class URLSession: NSObject",
+            "open class HTTPURLResponse: URLResponse",
+            "open class HTTPCookieStorage: NSObject",
+            "open class URLCache: NSObject",
+            "open class URLProtocol: NSObject",
+            "openui_url_transport_v1_perform",
+            "withTaskCancellationHandler",
+        ):
+            self.assertIn(token, session)
 
     def test_host_gate_is_cross_process_and_mutation_sensitive(self) -> None:
         source = (

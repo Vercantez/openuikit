@@ -38,7 +38,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its twenty-two LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its twenty-four LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -111,15 +111,16 @@ The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
 `libswift_StringProcessing` (used by `DateFormatter` and the bounded string
 search/regex compatibility surface) and
-`libswiftSynchronization` (used by `UserDefaults`), plus `libswiftDarwin`
+`libswiftSynchronization` (used by `UserDefaults`), `libswiftDarwin`
 (used by the descriptor-backed `FileHandle` for Darwin's `open` and `errno`
-overlays). The builder requires all three SDK TBD inputs and staged runtime
+overlays), and `libswift_Concurrency` (used by the asynchronous URLSession
+surface). The builder requires all four SDK TBD inputs and staged runtime
 dylibs, verifies their install names, and requires one load command for each in
 `libFoundation.dylib`. The facade object has no direct RegexParser symbol; that
 dylib remains StringProcessing's transitive runtime dependency rather than a
 guessed direct link.
 
-The twenty-two-source facade's names-only undefined-symbol inventory is also a
+The twenty-four-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
 `12_RegexParser` records, plus exactly two `6Darwin` records. The build refuses
@@ -127,6 +128,15 @@ drift in any count before linking; this is why RegexParser is absent from the
 direct link list even though the runtime closure still reaches it through
 StringProcessing, while Darwin is deliberately present for the measured
 `FileHandle` calls.
+
+The same facade contains a real asynchronous `URLSession` route. A narrow
+fixed-width C ABI crosses from the Darwin-ABI Mach-O bridge to a Linux libcurl
+helper loaded by machorun. The helper enables peer and host TLS verification,
+uses the pinned container CA bundle, disables host redirects so cookie and
+POST-to-GET redirect semantics stay guest-owned, enforces hard request and
+response byte limits, and makes cancellation/destroy ownership explicit. The
+package records exact Mach-O imports, ELF exports, libcurl features, CA hash,
+and direct/transitive SONAMEs under `attestation/`.
 
 The same facade restores two Apple-only Foundation overlay surfaces omitted by
 swift-foundation's non-framework configuration: the public `NSRange`

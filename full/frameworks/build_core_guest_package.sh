@@ -69,7 +69,7 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=8
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=22
+EXPECTED_FOUNDATION_SOURCE_COUNT=24
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
@@ -215,7 +215,8 @@ PREVIEW_ENABLED=0
 [ "$preview_count" -eq 3 ] && PREVIEW_ENABLED=1
 
 for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
-    llvm-nm-18 perl python3 patch sha256sum cmp file readelf find sort; do
+    llvm-nm-18 perl python3 patch sha256sum cmp file readelf ldd curl-config \
+    find sort; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
@@ -576,10 +577,12 @@ cp "$BOLD_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 cp -a "$FULL/inc/CPortableIO" "$STAGE/include/"
 cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
 mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
-    "$STAGE/include/COpenCombineHelpers" "$STAGE/include/_FoundationCShims"
+    "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
+    "$STAGE/include/_FoundationCShims" "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
 cp -a "$OPENCOMBINE_HELPERS/include/." "$STAGE/include/COpenCombineHelpers/"
+cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
 cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
@@ -624,7 +627,9 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/COpenCombineHelpers"
     -Xcc -I"$STAGE/include/CQuartz"
     -Xcc -fmodule-map-file="$STAGE/include/CoreImage/module.modulemap"
-    -Xcc -I"$STAGE/include/CoreImage")
+    -Xcc -I"$STAGE/include/CoreImage"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenURLTransport/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenURLTransport")
 FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
@@ -635,24 +640,30 @@ COMMON_LINK=(-rpath @loader_path -L"$STAGE/lib"
     -L"$STAGE/sdk/usr/lib" -lSystem -lobjc
     "$RUNTIME/darwin/usr/lib/libquartz.dylib"
     "$RUNTIME/darwin/usr/lib/libSystem.B.dylib")
+SWIFTUI_RUNTIME_BASENAME=libswift_Concurrency
+SWIFTUI_RUNTIME_LINK_FLAG=-lswift_Concurrency
+SWIFTUI_RUNTIME_INSTALL_NAME=/usr/lib/swift/libswift_Concurrency.dylib
 FOUNDATION_RUNTIME_BASENAMES=(
     libswift_StringProcessing
     libswiftSynchronization
     libswiftDarwin
+    "${SWIFTUI_RUNTIME_BASENAME}"
 )
 FOUNDATION_RUNTIME_LINK_FLAGS=(
     -lswift_StringProcessing
     -lswiftSynchronization
     -lswiftDarwin
+    "${SWIFTUI_RUNTIME_LINK_FLAG}"
 )
 FOUNDATION_RUNTIME_INSTALL_NAMES=(
     /usr/lib/swift/libswift_StringProcessing.dylib
     /usr/lib/swift/libswiftSynchronization.dylib
     /usr/lib/swift/libswiftDarwin.dylib
+    "${SWIFTUI_RUNTIME_INSTALL_NAME}"
 )
-[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 3 ] \
-    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 3 ] \
-    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 3 ] \
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 4 ] \
+    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 4 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 4 ] \
     || die 'Foundation runtime closure cardinality drifted'
 for index in "${!FOUNDATION_RUNTIME_BASENAMES[@]}"; do
     library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
@@ -667,9 +678,6 @@ for index in "${!FOUNDATION_RUNTIME_BASENAMES[@]}"; do
     [ "$actual_id" = "$install_name" ] \
         || die "Foundation staged runtime ID $actual_id, expected $install_name"
 done
-SWIFTUI_RUNTIME_BASENAME=libswift_Concurrency
-SWIFTUI_RUNTIME_LINK_FLAG=-lswift_Concurrency
-SWIFTUI_RUNTIME_INSTALL_NAME=/usr/lib/swift/libswift_Concurrency.dylib
 swiftui_runtime_link_input=$STAGE/sdk/usr/lib/swift/$SWIFTUI_RUNTIME_BASENAME.tbd
 swiftui_runtime_input=$RUNTIME/darwin$SWIFTUI_RUNTIME_INSTALL_NAME
 [ -f "$swiftui_runtime_link_input" ] && [ ! -L "$swiftui_runtime_link_input" ] \
@@ -679,6 +687,125 @@ swiftui_runtime_input=$RUNTIME/darwin$SWIFTUI_RUNTIME_INSTALL_NAME
 swiftui_runtime_actual_id=$(llvm-otool-18 -D "$swiftui_runtime_input" | tail -n 1)
 [ "$swiftui_runtime_actual_id" = "$SWIFTUI_RUNTIME_INSTALL_NAME" ] \
     || die "SwiftUI staged runtime ID $swiftui_runtime_actual_id, expected $SWIFTUI_RUNTIME_INSTALL_NAME"
+
+echo '== build and audit the fixed-ABI Linux URL transport boundary'
+URL_TRANSPORT_DARWIN=$RUNTIME/darwin/usr/lib/libOpenURLTransport.dylib
+URL_TRANSPORT_HOST=$RUNTIME/host/libOpenURLTransportHost.so
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenURLTransport" \
+    -c "$W/full/urltransport/OpenURLTransportBridge.c" \
+    -o "$WORK/open-url-transport-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenURLTransport.dylib \
+    -o "$URL_TRANSPORT_DARWIN" "$WORK/open-url-transport-bridge.o"
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenURLTransport" -shared \
+    "$W/full/urltransport/OpenURLTransportHost.c" \
+    -o "$URL_TRANSPORT_HOST" -lcurl -pthread
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenURLTransport" \
+    "$W/full/urltransport/OpenURLTransportHost.c" \
+    "$W/full/urltransport/OpenURLTransportHostTests.c" \
+    -o "$WORK/open-url-transport-host-tests" -lcurl -pthread
+
+(
+    set -e
+    server_port_file=$WORK/url-transport-server.port
+    server_log=$WORK/url-transport-server.log
+    python3 -B "$W/full/foundation/tests/url_session_test_server.py" \
+        --port-file "$server_port_file" >"$server_log" 2>&1 &
+    server_pid=$!
+    trap 'kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true' EXIT
+    for _ in $(seq 1 200); do
+        [ ! -s "$server_port_file" ] || break
+        sleep 0.01
+    done
+    [ -s "$server_port_file" ] || die 'URL transport test server did not publish its port'
+    server_port=$(tr -d '[:space:]' < "$server_port_file")
+    "$WORK/open-url-transport-host-tests" "http://127.0.0.1:$server_port" \
+        > "$WORK/url-transport-host-test.log"
+)
+grep -Fx \
+    'OPEN_URL_TRANSPORT_HOST_OK bounds=hard,response method=token headers=validated cancel-destroy=race-safe' \
+    "$WORK/url-transport-host-test.log" >/dev/null \
+    || die 'native URL transport semantic marker is missing'
+
+URL_TRANSPORT_SYMBOLS=(cancel create destroy perform release_response)
+URL_TRANSPORT_EXPECTED_ELF=$WORK/url-transport-expected-elf.txt
+URL_TRANSPORT_EXPECTED_MACH_EXPORTS=$WORK/url-transport-expected-mach-exports.txt
+URL_TRANSPORT_EXPECTED_MACH_IMPORTS=$WORK/url-transport-expected-mach-imports.txt
+: > "$URL_TRANSPORT_EXPECTED_ELF"
+: > "$URL_TRANSPORT_EXPECTED_MACH_EXPORTS"
+: > "$URL_TRANSPORT_EXPECTED_MACH_IMPORTS"
+for symbol in "${URL_TRANSPORT_SYMBOLS[@]}"; do
+    printf 'openui_url_transport_v1_%s\n' "$symbol" \
+        >> "$URL_TRANSPORT_EXPECTED_ELF"
+    printf '_openui_url_transport_v1_%s\n' "$symbol" \
+        >> "$URL_TRANSPORT_EXPECTED_MACH_EXPORTS"
+    printf '_glibc_openui_url_transport_v1_%s\n' "$symbol" \
+        >> "$URL_TRANSPORT_EXPECTED_MACH_IMPORTS"
+done
+readelf --wide --syms "$URL_TRANSPORT_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_url_transport_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$WORK/url-transport-elf-exports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$URL_TRANSPORT_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/url-transport-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$URL_TRANSPORT_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/url-transport-mach-imports.txt"
+cmp "$URL_TRANSPORT_EXPECTED_ELF" "$WORK/url-transport-elf-exports.txt" \
+    || die 'Linux URL transport helper exports drifted'
+cmp "$URL_TRANSPORT_EXPECTED_MACH_EXPORTS" "$WORK/url-transport-mach-exports.txt" \
+    || die 'Mach-O URL transport bridge exports drifted'
+cmp "$URL_TRANSPORT_EXPECTED_MACH_IMPORTS" "$WORK/url-transport-mach-imports.txt" \
+    || die 'Mach-O URL transport host imports drifted'
+[ "$(llvm-otool-18 -D "$URL_TRANSPORT_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenURLTransport.dylib ] \
+    || die 'Mach-O URL transport install name drifted'
+{
+    printf 'format\topen-url-transport-abi-v1\n'
+    printf 'request-layout\tsize=104\tpointers=64-bit\n'
+    printf 'response-layout\tsize=88\tpointers=64-bit\n'
+    for symbol in "${URL_TRANSPORT_SYMBOLS[@]}"; do
+        printf 'symbol\topenui_url_transport_v1_%s\tguest-export=_openui_url_transport_v1_%s\tguest-host-import=_glibc_openui_url_transport_v1_%s\thost-export=openui_url_transport_v1_%s\n' \
+            "$symbol" "$symbol" "$symbol" "$symbol"
+    done
+} > "$STAGE/attestation/url-transport-abi.tsv"
+
+curl_ca=$(curl-config --ca)
+[ -f "$curl_ca" ] && [ ! -L "$curl_ca" ] \
+    || die "libcurl CA bundle is not a regular file: $curl_ca"
+readelf --wide --dynamic "$URL_TRANSPORT_HOST" \
+    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
+    | LC_ALL=C sort -u > "$WORK/url-transport-direct-sonames.txt"
+ldd "$URL_TRANSPORT_HOST" \
+    | awk '/=>/ { print $1; next } /^[[:space:]]*\// { count=split($1, part, "/"); print part[count] }' \
+    | LC_ALL=C sort -u > "$WORK/url-transport-transitive-sonames.txt"
+{
+    printf 'format\topen-url-transport-host-v1\n'
+    printf 'libcurl-version\t%s\n' "$(curl-config --version)"
+    printf 'tls-backend\t%s\n' "$(curl-config --ssl-backends)"
+    printf 'tls-verification\tpeer=required\thost=required\n'
+    printf 'redirects\thost-disabled\tguest-owned\n'
+    printf 'ca-bundle\t%s\t%s\n' "$curl_ca" "$(hash_file "$curl_ca")"
+    while IFS= read -r feature; do
+        printf 'feature\t%s\n' "$feature"
+    done < <(curl-config --features)
+    while IFS= read -r soname; do
+        printf 'direct-soname\t%s\n' "$soname"
+    done < "$WORK/url-transport-direct-sonames.txt"
+    while IFS= read -r soname; do
+        printf 'transitive-soname\t%s\n' "$soname"
+    done < "$WORK/url-transport-transitive-sonames.txt"
+} > "$STAGE/attestation/url-transport-host.tsv"
+{
+    printf 'local\tdarwin/usr/lib/libOpenURLTransport.dylib\t%s\tbuilt from full/urltransport/OpenURLTransportBridge.c\n' \
+        "$(hash_file "$URL_TRANSPORT_DARWIN")"
+    printf 'local\thost/libOpenURLTransportHost.so\t%s\tbuilt from full/urltransport/OpenURLTransportHost.c\n' \
+        "$(hash_file "$URL_TRANSPORT_HOST")"
+} >> "$RUNTIME/.manifest"
 
 FE_OBJECTS=(
     "$FULL/foundation/essentials/FoundationEssentials.o"
@@ -898,7 +1025,7 @@ echo '== link twenty reusable core framework dylibs'
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
     "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
-    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN"
 foundation_graphics_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libFoundation.dylib" \
     | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
@@ -910,6 +1037,10 @@ for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
     [ "$load_count" -eq 1 ] \
         || die "libFoundation runtime load count $load_count for $install_name, expected 1"
 done
+foundation_transport_load_count=$(llvm-otool-18 -L "$STAGE/lib/libFoundation.dylib" \
+    | awk '$1 == "/usr/lib/libOpenURLTransport.dylib" { count++ } END { print count + 0 }')
+[ "$foundation_transport_load_count" -eq 1 ] \
+    || die "libFoundation URL transport load count $foundation_transport_load_count, expected 1"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
@@ -1135,7 +1266,8 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$STAGE/attestation/runtime-closure.tsv"
 (
     cd "$STAGE"
-    MACHORUN_ROOT="$STAGE/guest-root" \
+    LD_PRELOAD="$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreGuestPackageProbe \
         "$STAGE/resources/OpenUIKit" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
@@ -1157,13 +1289,15 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/CQuartz
     -Xcc -fmodule-map-file=include/CoreImage/module.modulemap
     -Xcc -Iinclude/CoreImage
+    -Xcc -fmodule-map-file=include/COpenURLTransport/module.modulemap
+    -Xcc -Iinclude/COpenURLTransport
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
     -Xcc -Iinclude/_FoundationCShims
 )
 LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
-    -lswiftCore -lswiftObjectiveC
+    -lswiftCore -lswiftObjectiveC "${SWIFTUI_RUNTIME_LINK_FLAG}"
     guest-root/darwin/usr/lib/libswiftcompat.dylib
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
@@ -1252,6 +1386,11 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$SDK_DANGLING_EXCLUSIONS")"
     printf 'first-party-policy\t%s\tframeworks=7\tsources=7\n' \
         "$(hash_file "$FIRST_PARTY_PROVENANCE_POLICY")"
+    printf 'url-transport\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
+        "$(hash_file "$W/full/urltransport/include/OpenURLTransportABI.h")" \
+        "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
+        "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
+        "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -1299,6 +1438,10 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
         objects/developertoolsupport.o
 fi
 record_artifact runtime CQuartz dylib guest-root/darwin/usr/lib/libquartz.dylib
+record_artifact runtime OpenURLTransport darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenURLTransport.dylib
+record_artifact runtime OpenURLTransport linux-helper \
+    guest-root/host/libOpenURLTransportHost.so
 record_artifact runtime machorun executable guest-root/machorun
 record_artifact resource OpenUIKit system-font \
     resources/OpenUIKit/fonts/DejaVuSans.ttf
@@ -1332,6 +1475,10 @@ record_artifact attestation first-party-dylib-loads manifest \
     attestation/first-party-dylib-loads.tsv
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
+record_artifact attestation url-transport abi \
+    attestation/url-transport-abi.tsv
+record_artifact attestation url-transport host \
+    attestation/url-transport-host.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
 record_artifact attestation sdk-dangling-symlinks manifest \
     attestation/sdk-dangling-symlinks.tsv

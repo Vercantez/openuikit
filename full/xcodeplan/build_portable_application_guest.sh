@@ -1079,6 +1079,9 @@ root, manifest = core_guest_package.validate(Path(sys.argv[1]))
 print(root / manifest["paths"]["guest_root"])
 PY
     )
+    local url_transport_host
+    url_transport_host=$guest_root/host/libOpenURLTransportHost.so
+    require_regular "$url_transport_host" "Linux URL transport helper"
     perl "$SUPPORT_ROOT/full/swiftui/focus_widget_guest_attest.pl" closure \
         --otool llvm-otool-18 --executable "$executable" \
         --package "$frameworks" --guest-root "$guest_root" \
@@ -1087,7 +1090,8 @@ PY
     echo "== cold-launch packaged application under machorun"
     (
         cd "$output"
-        MACHORUN_ROOT="$guest_root" OPENUIKIT_HOST_TURNS=3 \
+        LD_PRELOAD="$url_transport_host${LD_PRELOAD:+:$LD_PRELOAD}" \
+            MACHORUN_ROOT="$guest_root" OPENUIKIT_HOST_TURNS=3 \
             "$guest_root/machorun" "$executable"
     ) | tee "$output/runtime.log"
     grep -Fx 'PORTABLE_UIKIT_HOST_ACTIVE windows=1' "$output/runtime.log" >/dev/null \

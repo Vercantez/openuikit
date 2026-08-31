@@ -57,6 +57,11 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
         "/usr/lib/swift/libswiftDarwin.dylib",
         1,
     ),
+    (
+        "-lswift_Concurrency",
+        "/usr/lib/swift/libswift_Concurrency.dylib",
+        1,
+    ),
 )
 SWIFTUI_RUNTIME_LINK_CONTRACT = (
     "-lswift_Concurrency",
@@ -82,7 +87,9 @@ FOUNDATION_SOURCES = (
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/Stream.swift",
     "full/foundation/URLLoading.swift",
+    "full/foundation/URLSession.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
     "full/foundation/NSNumber.swift",
@@ -339,14 +346,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 22)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 24)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 22-path contract", refusal.stderr)
+        self.assertIn("exact ordered 24-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -1042,7 +1049,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=22"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=24"), 1)
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
         self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)
@@ -1065,6 +1072,36 @@ class ShellContractTests(unittest.TestCase):
             "libFoundation OpenCoreGraphics load count",
             foundation_link,
         )
+
+    def test_url_transport_bridge_and_linux_helper_are_packaged_fail_closed(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        driver = APP_DRIVER.read_text(encoding="utf-8")
+        host = (REPO / "full/urltransport/OpenURLTransportHost.c").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "libOpenURLTransport.dylib",
+            "libOpenURLTransportHost.so",
+            "url-transport-abi.tsv",
+            "url-transport-host.tsv",
+            "url-transport-expected-mach-imports.txt",
+            "curl-config --ssl-backends",
+            "curl-config --ca",
+            "url-transport-transitive-sonames.txt",
+            'LD_PRELOAD="$URL_TRANSPORT_HOST',
+        ):
+            self.assertIn(token, builder)
+        self.assertIn("host/libOpenURLTransportHost.so", driver)
+        self.assertIn('LD_PRELOAD="$url_transport_host', driver)
+        for token in (
+            "CURLOPT_SSL_VERIFYPEER, 1L",
+            "CURLOPT_SSL_VERIFYHOST, 2L",
+            "CURLOPT_FOLLOWLOCATION, 0L",
+            "OPENUI_URL_TRANSPORT_MAX_RESPONSE_HEADER_BYTES",
+            "OPENUI_URL_TRANSPORT_MAX_RESPONSE_BODY_BYTES",
+        ):
+            self.assertIn(token, host)
+        self.assertNotIn("CURLOPT_FOLLOWLOCATION, 1L", host)
 
     def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

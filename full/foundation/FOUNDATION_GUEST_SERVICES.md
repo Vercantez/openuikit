@@ -11,7 +11,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The twenty-two-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The twenty-four-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -30,8 +30,13 @@ platform `CGFloat` and `os_unfair_lock` APIs. The twenty-two-source facade adds:
   URLs, and `NSLocalizedString`. A fresh fixture runs against Apple and the
   portable implementation; a separate adversarial fixture requires an unknown
   XML entity to fail closed in the portable parser.
-- Stateful `URLRequest` request metadata used by first-party networking
-  boundaries, including case-insensitive HTTP header replacement and lookup.
+- Stateful `URLRequest` request metadata and bounded `InputStream` request
+  bodies, including case-insensitive HTTP header replacement and lookup.
+- A real asynchronous `URLSession` transport with HTTP response metadata,
+  guest-owned redirects, cookie domain/path/expiry handling, memory caching,
+  custom `URLProtocol` interception, deterministic cancellation/error mapping,
+  and a fixed-width Mach-O-to-Linux libcurl boundary. TLS peer/host verification
+  remains enabled and request/response sizes are hard bounded.
 - `NSLocking` and an NSObject-backed `NSLock` implemented by the guest
   `os_unfair_lock` substrate, including nonblocking acquisition, bounded
   date-based acquisition, names, and throwing `withLock` critical sections.
