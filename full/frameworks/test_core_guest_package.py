@@ -813,6 +813,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        self.assertEqual(len(FRAMEWORKS), 18)
+        self.assertEqual(FRAMEWORKS[-8], "WebKit")
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",

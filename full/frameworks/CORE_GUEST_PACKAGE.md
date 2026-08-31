@@ -11,7 +11,7 @@ modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, Intents, IntentsUI, WebKit, LocalAuthentication,
 SafariServices, Network, StoreKit, AudioToolbox, CoreHaptics, and PassKit.
-These are eighteen reusable ARM64 Mach-O framework binaries, including real
+These are eighteen reusable ARM64 Mach-O framework binaries, including a real
 `libSwiftUI.dylib`; they are not application-side source overlays. The package
 also contains C module headers, CQuartz, the SDK, the attested machorun
 guest-root closure, OpenUIKit's complete resource tree, and the two pinned
