@@ -417,7 +417,7 @@ PACKAGE=$REPLAY_ROOT/w/build/core-package
 # assertion. A real build must leave the staged loader and all three linked
 # root products in the one bind after Docker exits. It specifically prevents a
 # nested-mount regression from reaching package validation or publication.
-GUEST_ROOT=$REPLAY_ROOT/w/scratch/mrroot_full
+GUEST_ROOT=$PACKAGE/guest-root
 GUEST_ROOT_PRODUCTS=(
     machorun
     .manifest

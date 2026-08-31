@@ -1533,6 +1533,7 @@ class ShellContractTests(unittest.TestCase):
             "input-manifest.post.jsonl",
             "content-manifest-pre-post",
             "guest-root-post-build.tsv",
+            'GUEST_ROOT=$PACKAGE/guest-root',
             "durable guest-root product is missing after Docker",
             "libquartz.dylib",
             "remove-tree",
