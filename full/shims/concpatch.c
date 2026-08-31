@@ -68,10 +68,20 @@ STUB(dispatch_source_set_timer)
 __attribute__((noreturn)) void conc_dispatch_assert_queue_v2(void) __asm__("_dispatch_assert_queue$V2");
 __attribute__((noreturn)) void conc_dispatch_assert_queue_v2(void) { conc_abort("dispatch_assert_queue$V2"); }
 
-/* ---- signposts ---------------------------------------------------------- */
-STUB(os_signpost_id_make_with_pointer)
-
 /* ---- REAL implementations ----------------------------------------------- */
+
+/* syspatch implements the platform's signpost state as disabled:
+ * os_signpost_enabled() is false, os_signpost_id_generate() is
+ * OS_SIGNPOST_ID_NULL, and emit is inert. Apple's signpost contract requires
+ * make_with_pointer() to return OS_SIGNPOST_ID_NULL in exactly that disabled
+ * state, regardless of log/pointer identity. */
+uint64_t os_signpost_id_make_with_pointer(void *log, const void *pointer);
+uint64_t os_signpost_id_make_with_pointer(void *log, const void *pointer)
+{
+    (void)log;
+    (void)pointer;
+    return 0;
+}
 
 /* Swift's Darwin runtime and Linux runtime deliberately have different
  * DispatchClassMetadata layouts. Darwin has Objective-C interop padding and

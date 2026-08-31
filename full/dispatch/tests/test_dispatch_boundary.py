@@ -16,6 +16,8 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("if (voucher != NULL) conc_abort", source)
         self.assertIn("void *voucher_copy(void) { return NULL; }", source)
         self.assertIn("if (object != NULL) conc_abort", source)
+        self.assertIn("uint64_t os_signpost_id_make_with_pointer", source)
+        self.assertIn("return 0;", source)
 
     def test_host_boundary_rejects_guest_queue_structs(self) -> None:
         source = (ROOT / "full/dispatch/OpenDispatchHost.c").read_text(encoding="utf-8")
