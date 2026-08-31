@@ -883,12 +883,15 @@ class LocalPackageGraphTests(unittest.TestCase):
         (native / "Package.swift").write_text(
             "// swift-tools-version: 6.2\n"
             "import PackageDescription\n"
+            "let applePlatforms: [PackageDescription.Platform] = [.iOS, .macOS]\n"
             "let package = Package(\n"
             '  name: "Native",\n'
             '  products: [.library(name: "Native", targets: ["Consumer"])],\n'
             "  targets: [\n"
             '    .target(name: "c-core", cSettings: [\n'
             '      .define("CORE_MODE", to: "7"),\n'
+            '      .define("APPLE_MODE", .when(platforms: applePlatforms)),\n'
+            '      .define("INACTIVE", .when(platforms: applePlatforms, traits: ["Off"])),\n'
             '      .headerSearchPath("private")\n'
             "    ]),\n"
             '    .target(name: "CXX", cxxSettings: [.define("CXX_MODE")]),\n'
@@ -940,6 +943,14 @@ class LocalPackageGraphTests(unittest.TestCase):
             ["include/c-core.h", "private/detail.inc"],
         )
         self.assertEqual(c_core["module_map"]["kind"], "source")
+        self.assertEqual(
+            c_core["c_settings"],
+            [
+                {"kind": "define", "name": "CORE_MODE", "value": "7"},
+                {"kind": "define", "name": "APPLE_MODE", "value": None},
+                {"kind": "header_search_path", "path": "private"},
+            ],
+        )
         self.assertEqual(graph["targets"][0]["module_map"]["kind"], "generated")
         self.assertEqual(graph["summary"]["c_family_sources"], 2)
         self.assertEqual(graph["summary"]["c_family_headers"], 3)

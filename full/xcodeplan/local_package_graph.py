@@ -1065,6 +1065,16 @@ def _parse_c_family_setting(
     condition: list[_Token] | None = None
     for argument in arguments[1:]:
         if (
+            len(argument) >= 4
+            and argument[0].value == "."
+            and argument[1].kind == "identifier"
+            and argument[1].value == "when"
+        ):
+            if condition is not None:
+                raise PackageGraphError(f"{label} repeats C define condition")
+            condition = argument
+            continue
+        if (
             len(argument) < 3
             or argument[0].kind != "identifier"
             or argument[1].value != ":"
