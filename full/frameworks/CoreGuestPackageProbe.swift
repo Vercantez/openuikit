@@ -323,6 +323,9 @@ struct CoreGuestPackageProbe {
             .fileAllocatedSizeKey,
             .totalFileAllocatedSizeKey,
         ]
+        let canonicalResourceKey: FoundationEssentials.URLResourceKey =
+            .isRegularFileKey
+        precondition(canonicalResourceKey.rawValue == "NSURLIsRegularFileKey")
         let enumerator = fileManager.enumerator(
             at: enumerationRoot,
             includingPropertiesForKeys: Array(fileKeys),

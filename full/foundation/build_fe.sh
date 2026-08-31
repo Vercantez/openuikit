@@ -32,9 +32,11 @@ W=${W:-/w}
 SF=${SF:-$W/scratch/swift-foundation}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
 PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
+URL_RESOURCE_KEY_PATCH=${URL_RESOURCE_KEY_PATCH:-$W/full/foundation/patches/FoundationEssentials-URLResourceKey.patch}
 [ -d "$SF/Sources/FoundationEssentials" ] || { echo "no $SF" >&2; exit 1; }
 [ -d "$SYS/usr/include" ] || { echo "no sysroot $SYS -- run stage_fe_sysroot.sh on macOS" >&2; exit 1; }
 [ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
+[ -f "$URL_RESOURCE_KEY_PATCH" ] || { echo "no URLResourceKey patch $URL_RESOURCE_KEY_PATCH" >&2; exit 1; }
 
 # ALL 202 FILES.  The old recipe filtered out five by name --
 # URL_Bridge / URL_ObjC / URL_Swift / URLComponents_ObjC / String+Bridging --
@@ -71,6 +73,35 @@ done <<<"$SOURCE_LIST"
     echo "build_fe: pinned FoundationEssentials manifest is not exactly 202 files" >&2
     exit 2
 }
+
+# Foundation.framework and standalone FoundationEssentials intentionally use
+# different halves of upstream URL.swift.  We need the framework's real
+# URLResourceKey value identity while retaining the standalone URL engine.
+# Patch a derived copy only: the pinned upstream checkout remains byte-for-byte
+# unchanged and is still bracketed by the package builder's input attestation.
+FOUNDATION_URL_SOURCE=$SF/Sources/FoundationEssentials/URL/URL.swift
+PATCHED_SOURCE_DIR=$W/scratch/foundationessentials-port-sources
+PATCHED_URL_SOURCE=$PATCHED_SOURCE_DIR/URL.swift
+rm -rf -- "$PATCHED_SOURCE_DIR"
+mkdir -p "$PATCHED_SOURCE_DIR"
+patch -s -o "$PATCHED_URL_SOURCE" \
+    "$FOUNDATION_URL_SOURCE" "$URL_RESOURCE_KEY_PATCH"
+patched_url_count=0
+for source_index in "${!SRCS[@]}"; do
+    if [ "${SRCS[$source_index]}" = "$FOUNDATION_URL_SOURCE" ]; then
+        SRCS[$source_index]=$PATCHED_URL_SOURCE
+        patched_url_count=$((patched_url_count + 1))
+    fi
+done
+[ "$patched_url_count" -eq 1 ] || {
+    echo "build_fe: URL.swift replacement count $patched_url_count, expected 1" >&2
+    exit 2
+}
+grep -F 'public struct URLResourceKey: RawRepresentable, Hashable, Sendable' \
+    "$PATCHED_URL_SOURCE" >/dev/null || {
+        echo "build_fe: derived URLResourceKey source is incomplete" >&2
+        exit 2
+    }
 # THE TARGET TRAVELS WITH THE ARTIFACT, not just with a commit message.  This
 # module raises the deployment floor of everything that links it: macos15.0,
 # because Package.swift:92 declares `.macOS("15")` and `Mutex` is

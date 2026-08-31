@@ -1360,6 +1360,13 @@ class ShellContractTests(unittest.TestCase):
         filesystem = (
             REPO / "full/foundation/FileManager+Enumeration.swift"
         ).read_text(encoding="utf-8")
+        resource_key_patch = (
+            REPO
+            / "full/foundation/patches/FoundationEssentials-URLResourceKey.patch"
+        ).read_text(encoding="utf-8")
+        foundation_builder = (
+            REPO / "full/foundation/build_fe.sh"
+        ).read_text(encoding="utf-8")
         storekit = (REPO / "full/storekit/StoreKit.swift").read_text(
             encoding="utf-8"
         )
@@ -1375,8 +1382,27 @@ class ShellContractTests(unittest.TestCase):
             ".skipsPackageDescendants",
             "func resourceValues(",
             "totalFileAllocatedSize",
+            "public extension URLResourceKey",
         ):
             self.assertIn(token, filesystem)
+        for token in (
+            "public struct URLResourceKey: RawRepresentable, Hashable, Sendable",
+            "public let rawValue: String",
+        ):
+            self.assertIn(token, resource_key_patch)
+        for token in (
+            'PATCHED_SOURCE_DIR=$W/scratch/foundationessentials-port-sources',
+            'patch -s -o "$PATCHED_URL_SOURCE"',
+            'SRCS[$source_index]=$PATCHED_URL_SOURCE',
+            'patched_url_count" -eq 1',
+        ):
+            self.assertIn(token, foundation_builder)
+        self.assertIn(
+            "FoundationEssentials.URLResourceKey",
+            (REPO / "full/frameworks/CoreGuestPackageProbe.swift").read_text(
+                encoding="utf-8"
+            ),
+        )
         for token in (
             "public enum StoreKitError: Error, Sendable",
             "case userCancelled",

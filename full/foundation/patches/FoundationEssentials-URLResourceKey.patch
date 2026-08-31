@@ -1,0 +1,23 @@
+--- URL.swift
++++ URL.swift
+@@ -10,7 +10,19 @@
+ //
+ //===----------------------------------------------------------------------===//
+ #if !FOUNDATION_FRAMEWORK
+-public struct URLResourceKey {}
++// The standalone FoundationEssentials build normally leaves this as an empty
++// forward declaration because Foundation.framework owns the Darwin value type.
++// Our portable Foundation is also a real framework, but it is assembled over
++// the standalone open-source build.  Put the storage and value semantics on
++// the canonical FoundationEssentials declaration so re-exporting that module
++// cannot expose a second, ambiguous URLResourceKey identity to applications.
++public struct URLResourceKey: RawRepresentable, Hashable, Sendable {
++    public let rawValue: String
++
++    public init(rawValue: String) {
++        self.rawValue = rawValue
++    }
++}
+ #endif
+ 
+ #if FOUNDATION_FRAMEWORK

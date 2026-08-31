@@ -21,6 +21,7 @@ import Darwin
 import Glibc
 #endif
 
+#if FOUNDATION_GUEST_SERVICES_HOST
 public struct URLResourceKey: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
@@ -44,6 +45,25 @@ public struct URLResourceKey: RawRepresentable, Hashable, Sendable {
     public static let totalFileAllocatedSizeKey =
         Self("NSURLTotalFileAllocatedSizeKey")
 }
+#else
+public extension URLResourceKey {
+    init(_ rawValue: String) {
+        self.init(rawValue: rawValue)
+    }
+
+    static let nameKey = Self("NSURLNameKey")
+    static let isRegularFileKey = Self("NSURLIsRegularFileKey")
+    static let isDirectoryKey = Self("NSURLIsDirectoryKey")
+    static let isSymbolicLinkKey = Self("NSURLIsSymbolicLinkKey")
+    static let isPackageKey = Self("NSURLIsPackageKey")
+    static let isHiddenKey = Self("NSURLIsHiddenKey")
+    static let fileSizeKey = Self("NSURLFileSizeKey")
+    static let fileAllocatedSizeKey = Self("NSURLFileAllocatedSizeKey")
+    static let totalFileSizeKey = Self("NSURLTotalFileSizeKey")
+    static let totalFileAllocatedSizeKey =
+        Self("NSURLTotalFileAllocatedSizeKey")
+}
+#endif
 
 public struct URLResourceValues: Sendable {
     public internal(set) var name: String?
