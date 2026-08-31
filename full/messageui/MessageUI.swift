@@ -3,7 +3,6 @@
 // configured iOS Mail service, capability reporting is explicitly false.
 
 import Foundation
-@_exported import Dispatch
 @_exported import UIKit
 
 public enum MFMailComposeResult: Int, Sendable {
