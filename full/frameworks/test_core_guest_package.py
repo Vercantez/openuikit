@@ -2086,6 +2086,8 @@ class ShellContractTests(unittest.TestCase):
             source,
         )
         self.assertIn("os-runtime-reexport=%s", source)
+        self.assertIn("foundation-essentials=%s", source)
+        self.assertIn("expected_foundation_load=0", source)
 
     def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
