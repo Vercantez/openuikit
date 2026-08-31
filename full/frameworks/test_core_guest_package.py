@@ -121,6 +121,7 @@ SDK_DANGLING_EXCLUSIONS = (
 )
 FRAMEWORKS = (
     "FoundationEssentials",
+    "FoundationInternationalization",
     "OpenCoreGraphics",
     "OpenUIKit",
     "OpenCombine",
@@ -532,9 +533,11 @@ class PackageFixture:
             "lib",
             "include",
             "include/CoreImage",
+            "include/FoundationICU/_foundation_unicode",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
+            "guest-root/host",
             "probe",
             "attestation",
         ):
@@ -549,7 +552,21 @@ class PackageFixture:
             root / "include/CoreImage/CIFilterBuiltins.h", "generated filters"
         )
         write_file(root / "include/CoreImage/module.modulemap", "module CoreImage {}")
+        write_file(
+            root / "include/FoundationICU/_foundation_unicode/module.modulemap",
+            "module _FoundationICU { export * }",
+        )
+        write_file(root / "lib/lib_FoundationICU.dylib", "full pinned ICU")
         write_file(root / "guest-root/darwin/usr/lib/libquartz.dylib", "quartz")
+        write_file(
+            root
+            / "guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib",
+            "intl bridge",
+        )
+        write_file(
+            root / "guest-root/host/libOpenFoundationInternationalizationHost.so",
+            "intl host",
+        )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
         write_file(root / "probe/CoreGuestPackageProbe", "probe")
@@ -605,6 +622,7 @@ class PackageFixture:
             "-lCoreImage",
             "-lQuartzCore",
             "-lFoundation",
+            "-lFoundationInternationalization",
             "-lFoundationEssentials",
             "-lSwiftUI",
             "-lIntentsUI",
@@ -697,6 +715,22 @@ class PackageFixture:
                     f"modules/{dependency}.swiftmodule",
                 )
             )
+        records.append(
+            self._artifact(
+                "module-dependency",
+                "_FoundationICU",
+                "dylib",
+                "lib/lib_FoundationICU.dylib",
+            )
+        )
+        records.append(
+            self._artifact(
+                "module-dependency",
+                "_FoundationICU",
+                "module-map",
+                "include/FoundationICU/_foundation_unicode/module.modulemap",
+            )
+        )
         records.extend(
             (
                 self._artifact(
@@ -722,6 +756,22 @@ class PackageFixture:
         records.append(
             self._artifact(
                 "runtime", "CQuartz", "dylib", "guest-root/darwin/usr/lib/libquartz.dylib"
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "OpenFoundationInternationalization",
+                "darwin-bridge",
+                "guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "OpenFoundationInternationalization",
+                "linux-helper",
+                "guest-root/host/libOpenFoundationInternationalizationHost.so",
             )
         )
         records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
@@ -1150,11 +1200,14 @@ class ShellContractTests(unittest.TestCase):
             "curl-config --ssl-backends",
             "curl-config --ca",
             "url-transport-transitive-sonames.txt",
-            'LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST',
+            'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST',
         ):
             self.assertIn(token, builder)
         self.assertIn("host/libOpenURLTransportHost.so", driver)
-        self.assertIn('LD_PRELOAD="$dispatch_host:$url_transport_host', driver)
+        self.assertIn(
+            'LD_PRELOAD="$dispatch_host:$foundation_intl_host:$url_transport_host',
+            driver,
+        )
         for token in (
             "CURLOPT_SSL_VERIFYPEER, 1L",
             "CURLOPT_SSL_VERIFYHOST, 2L",
@@ -1194,6 +1247,70 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, host)
         self.assertIn("data-platform=\\(dataPlatform)", probe)
+
+    def test_full_foundation_internationalization_is_pinned_and_reexported(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        wrapper = HOST_WRAPPER.read_text(encoding="utf-8")
+        driver = APP_DRIVER.read_text(encoding="utf-8")
+        foundation = (REPO / "full/appshim/FoundationGuest.swift").read_text(
+            encoding="utf-8"
+        )
+        intl_builder = (
+            REPO
+            / "full/foundationinternationalization/build_foundation_internationalization.sh"
+        ).read_text(encoding="utf-8")
+        threading = (
+            REPO / "full/foundationinternationalization/FoundationICUCXXThreading.cpp"
+        ).read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        for token in (
+            "87dbab99780e277b6a4c2a397ab1a894f877b39a",
+            "823a4a2a13f60a0fd2715db85a754dda11d5fd39",
+            "EXPECTED_FOUNDATION_INTL_SWIFT_COUNT=61",
+            "EXPECTED_FOUNDATION_ICU_CPP_COUNT=474",
+            "EXPECTED_FOUNDATION_ICU_HEADER_COUNT=205",
+            "stubdata=excluded",
+            "lib_FoundationICU.dylib",
+            "libFoundationInternationalization.dylib",
+            "libOpenFoundationInternationalization.dylib",
+            "libOpenFoundationInternationalizationHost.so",
+            "-DUSE_PACKAGE_DATA=1",
+            "-DAPPLE_ICU_CHANGES=1",
+            "FoundationInternationalization Swift count",
+            "Foundation ICU object count",
+        ):
+            self.assertIn(token, intl_builder)
+        self.assertIn("@_exported import FoundationInternationalization", foundation)
+        self.assertIn("-reexport_library", builder)
+        self.assertIn(
+            "include/FoundationICU/_foundation_unicode/module.modulemap", builder
+        )
+        self.assertNotIn('-Xcc -I"$STAGE/include")', builder)
+        self.assertIn("foundation_internationalization_load_count", builder)
+        self.assertIn("foundation_internationalization_reexport_count", builder)
+        self.assertIn('command == "LC_LOAD_DYLIB"', builder)
+        self.assertIn('command == "LC_REEXPORT_DYLIB"', builder)
+        self.assertIn("swift-foundation-icu", wrapper)
+        self.assertIn("foundation_intl_host", driver)
+        self.assertEqual(
+            builder.count(
+                'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
+                '$URL_TRANSPORT_HOST'
+            ),
+            3,
+        )
+        self.assertIn("__libcpp_mutex_lock", threading)
+        self.assertIn("__libcpp_condvar_wait", threading)
+        self.assertIn("__call_once", threading)
+        for token in (
+            'Locale(identifier: "en_US_POSIX")',
+            'Locale(identifier: "fr_FR")',
+            '"12 345,67"',
+            '"dans 1 jour"',
+            '"https://xn--bcher-kva.example/"',
+            "internationalization=icu-fr,number,idna",
+        ):
+            self.assertIn(token, probe)
 
     def test_data_platform_models_and_filesystem_are_semantic(self) -> None:
         filesystem = (
@@ -1256,7 +1373,7 @@ class ShellContractTests(unittest.TestCase):
             "host/libdispatch.so",
             "host/libBlocksRuntime.so",
             'LD_LIBRARY_PATH="$guest_root/host',
-            'LD_PRELOAD="$dispatch_host:$url_transport_host',
+            'LD_PRELOAD="$dispatch_host:$foundation_intl_host:$url_transport_host',
         ):
             self.assertIn(token, driver)
 
@@ -1294,8 +1411,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 27)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 13)
+        self.assertEqual(len(FRAMEWORKS), 28)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 14)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",

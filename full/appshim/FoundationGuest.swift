@@ -4,6 +4,7 @@
 // identities it was compiled against while the complete swift-foundation
 // umbrella remains future work.
 @_exported import FoundationEssentials
+@_exported import FoundationInternationalization
 @_exported import Combine
 @_exported import OpenCoreGraphics
 @_exported import os

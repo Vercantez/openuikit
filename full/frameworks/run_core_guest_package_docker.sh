@@ -45,7 +45,7 @@ Preview is all-or-none:
   --preview-macro-plugin PATH
 
 The staged input root must contain these immutable prepared inputs:
-  sysroot_fe4/  mrroot/  mrroot_fe/  swift-foundation/
+  sysroot_fe4/  mrroot/  mrroot_fe/  swift-foundation/  swift-foundation-icu/
   swift-collections/  opencombine-core-durable-20260828-r2/
 
 The wrapper never reuses a build product. It creates fresh physical copies of
@@ -195,6 +195,7 @@ STAGED_INPUTS=(
     mrroot
     mrroot_fe
     swift-foundation
+    swift-foundation-icu
     swift-collections
     opencombine-core-durable-20260828-r2
 )
@@ -350,6 +351,8 @@ record_git_identity() {
     record_git_identity "$REPLAY_ROOT/uikit" OpenUIKit
     record_git_identity "$REPLAY_ROOT/machorun" machorun
     record_git_identity "$REPLAY_ROOT/w/scratch/swift-foundation" swift-foundation
+    record_git_identity "$REPLAY_ROOT/w/scratch/swift-foundation-icu" \
+        swift-foundation-icu
     record_git_identity "$REPLAY_ROOT/w/scratch/swift-collections" swift-collections
     record_git_identity \
         "$REPLAY_ROOT/w/scratch/opencombine-core-durable-20260828-r2/source" \
@@ -423,6 +426,8 @@ GUEST_ROOT_PRODUCTS=(
     darwin/usr/lib/libc++.real.dylib
     darwin/usr/lib/libc++.1.dylib
     darwin/usr/lib/libquartz.dylib
+    darwin/usr/lib/libOpenFoundationInternationalization.dylib
+    host/libOpenFoundationInternationalizationHost.so
 )
 {
     printf 'format\tcore-guest-durable-root-v1\n'

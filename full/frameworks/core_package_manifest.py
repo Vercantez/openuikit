@@ -75,6 +75,7 @@ REQUIRED_MANIFESTS = {
 }
 FRAMEWORKS = (
     "FoundationEssentials",
+    "FoundationInternationalization",
     "OpenCoreGraphics",
     "OpenUIKit",
     "OpenCombine",
@@ -530,6 +531,35 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             for item in artifacts
         ):
             refuse(f"module dependency {module} has no swiftmodule artifact")
+    required_icu = {
+        ("dylib", "lib/lib_FoundationICU.dylib"),
+        (
+            "module-map",
+            "include/FoundationICU/_foundation_unicode/module.modulemap",
+        ),
+    }
+    actual_icu = {
+        (str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "module-dependency"
+        and item["name"] == "_FoundationICU"
+    }
+    if not required_icu.issubset(actual_icu):
+        refuse("full _FoundationICU module/dylib dependency is absent")
+    required_internationalization_runtime = {
+        ("darwin-bridge", "guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib"),
+        ("linux-helper", "guest-root/host/libOpenFoundationInternationalizationHost.so"),
+    }
+    actual_internationalization_runtime = {
+        (str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "runtime"
+        and item["name"] == "OpenFoundationInternationalization"
+    }
+    if not required_internationalization_runtime.issubset(
+        actual_internationalization_runtime
+    ):
+        refuse("FoundationInternationalization runtime bridge/helper is absent")
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"

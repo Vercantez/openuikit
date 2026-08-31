@@ -255,6 +255,25 @@ struct CoreGuestPackageProbe {
             ) == "dans 1 jour"
         )
 
+        let posixLocale = Locale(identifier: "en_US_POSIX")
+        let frenchLocale = Locale(identifier: "fr_FR")
+        precondition(posixLocale.identifier == "en_US_POSIX")
+        precondition(frenchLocale.identifier == "fr_FR")
+        precondition(
+            12_345.67.formatted(
+                .number.precision(.fractionLength(2)).locale(frenchLocale)
+            ) == "12 345,67"
+        )
+        precondition(
+            Date.now.addingTimeInterval(86_400).formatted(
+                .relative(presentation: .numeric).locale(frenchLocale)
+            ) == "dans 1 jour"
+        )
+        precondition(
+            URL(string: "https://bücher.example/")?.absoluteString ==
+                "https://xn--bcher-kva.example/"
+        )
+
         let fileManager = FileManager.default
         let enumerationRoot = URL(
             fileURLWithPath: "/tmp/open-foundation-core-enumerator",
@@ -602,6 +621,7 @@ struct CoreGuestPackageProbe {
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "foundation=\(foundationCompatibility) "
+                + "internationalization=icu-fr,number,idna "
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "

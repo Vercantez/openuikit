@@ -18,6 +18,7 @@ MRROOT=$W/scratch/mrroot_full
 BUILD_FULL_CACHE=$W/scratch/modcache_full
 BUILD_FE_CACHE=$W/scratch/modcache_fe4
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
+SWIFT_FOUNDATION_ICU=$W/scratch/swift-foundation-icu
 SWIFT_COLLECTIONS=$W/scratch/swift-collections
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
@@ -26,6 +27,7 @@ OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 OBSERVATION_SOURCES_MANIFEST=$W/full/observation/observation_guest_sources.txt
+FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
@@ -111,6 +113,11 @@ EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
 EXPECTED_FOUNDATION_DARWIN_UNDEFINEDS=2
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_FOUNDATION_TREE=4651798679b98e27383ca3626434fb128f191486
+EXPECTED_FOUNDATION_ICU_COMMIT=87dbab99780e277b6a4c2a397ab1a894f877b39a
+EXPECTED_FOUNDATION_ICU_TREE=823a4a2a13f60a0fd2715db85a754dda11d5fd39
+EXPECTED_FOUNDATION_INTL_SWIFT_COUNT=61
+EXPECTED_FOUNDATION_ICU_CPP_COUNT=474
+EXPECTED_FOUNDATION_ICU_HEADER_COUNT=205
 EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
@@ -416,6 +423,8 @@ git -C "$W" merge-base --is-ancestor "$EXPECTED_SUPPORT_BASE" "$SUPPORT_COMMIT" 
 assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE" swift-foundation
+assert_clean_commit "$SWIFT_FOUNDATION_ICU" "$EXPECTED_FOUNDATION_ICU_COMMIT" \
+    "$EXPECTED_FOUNDATION_ICU_TREE" swift-foundation-icu
 assert_clean_commit "$SWIFT_COLLECTIONS" "$EXPECTED_COLLECTIONS_COMMIT" "$EXPECTED_COLLECTIONS_TREE" swift-collections
 assert_clean_commit "$OPENCOMBINE_SOURCE" "$EXPECTED_OPENCOMBINE_COMMIT" "$EXPECTED_OPENCOMBINE_TREE" OpenCombine
 
@@ -872,7 +881,9 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -fmodule-map-file="$STAGE/include/COpenRelativeTime/module.modulemap"
     -Xcc -I"$STAGE/include/COpenRelativeTime"
     -Xcc -fmodule-map-file="$STAGE/include/COpenDispatch/module.modulemap"
-    -Xcc -I"$STAGE/include/COpenDispatch")
+    -Xcc -I"$STAGE/include/COpenDispatch"
+    -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
+    -Xcc -I"$STAGE/include/FoundationICU")
 FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
@@ -1280,6 +1291,25 @@ FE_OBJECTS=(
     "$FULL/foundation/essentials/uuid_compat.o"
 )
 
+echo '== link FoundationEssentials before its full internationalization layer'
+"${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
+    -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
+    -lswiftCore "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib" \
+    -L"$STAGE/sdk/usr/lib" -lSystem "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+    -o "$STAGE/lib/libFoundationEssentials.dylib" \
+    "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
+
+echo '== build full pinned FoundationInternationalization and 474-TU ICU'
+env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
+    SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$STAGE" \
+    WORK="$WORK" TARGET="$TARGET" MIN_OS="$MIN_OS" \
+    FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
+    bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
+FOUNDATION_INTL_HOST=$RUNTIME/host/libOpenFoundationInternationalizationHost.so
+[ -f "$FOUNDATION_INTL_HOST" ] && [ ! -L "$FOUNDATION_INTL_HOST" ] \
+    || die 'FoundationInternationalization Linux helper is missing after build'
+
 echo '== prewarm a new core-package Darwin module cache'
 swiftc -target "$TARGET" -sdk "$STAGE/sdk" \
     -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck -e 'import Swift'
@@ -1518,19 +1548,12 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link twenty-seven reusable core framework dylibs'
+echo '== link twenty-nine reusable platform dylibs (twenty-eight frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
     "$WORK/dispatch.o" "$DISPATCH_DARWIN" \
     "${COMMON_LINK[@]}" "$STAGE/sdk/usr/lib/swift/libswift_Concurrency.tbd"
-"${LD[@]}" -dylib -dead_strip \
-    -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
-    -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
-    -lswiftCore "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib" \
-    -L"$STAGE/sdk/usr/lib" -lSystem "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
-    -o "$STAGE/lib/libFoundationEssentials.dylib" \
-    "${FE_OBJECTS[@]}" "$FULL/swiftcorepatch.o"
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libOpenCoreGraphics.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -1551,6 +1574,7 @@ echo '== link twenty-seven reusable core framework dylibs'
     "$FULL/swiftcorepatch.o"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
+    -reexport_library "$STAGE/lib/libFoundationInternationalization.dylib" \
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
     "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
@@ -1576,6 +1600,20 @@ foundation_relative_time_load_count=$(llvm-otool-18 -L \
     | awk '$1 == "/usr/lib/libOpenRelativeTime.dylib" { count++ } END { print count + 0 }')
 [ "$foundation_relative_time_load_count" -eq 1 ] \
     || die "libFoundation relative-time load count $foundation_relative_time_load_count, expected 1"
+foundation_internationalization_load_count=$(llvm-otool-18 -l \
+    "$STAGE/lib/libFoundation.dylib" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "@rpath/libFoundationInternationalization.dylib" && command == "LC_LOAD_DYLIB" { count++ }
+        END { print count + 0 }')
+foundation_internationalization_reexport_count=$(llvm-otool-18 -l \
+    "$STAGE/lib/libFoundation.dylib" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "@rpath/libFoundationInternationalization.dylib" && command == "LC_REEXPORT_DYLIB" { count++ }
+        END { print count + 0 }')
+[ "$foundation_internationalization_load_count" -eq 1 ] \
+    || die "libFoundation FoundationInternationalization load command count $foundation_internationalization_load_count, expected 1"
+[ "$foundation_internationalization_reexport_count" -eq 1 ] \
+    || die "libFoundation FoundationInternationalization reexport command count $foundation_internationalization_reexport_count, expected 1"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
@@ -1780,7 +1818,8 @@ fi
     -o "$STAGE/probe/CoreGuestPackageProbe" "$WORK/core-probe.o" \
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
     -lWebKit -lIntentsUI -lIntents -lCoreImage -lQuartzCore -lDispatch \
-    -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
+    -lUIKit -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
@@ -1788,8 +1827,8 @@ fi
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
-for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Dispatch \
+for dylib in FoundationEssentials FoundationInternationalization \
+    OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
     Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
@@ -1799,6 +1838,11 @@ for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
     [ "$actual_id" = "@rpath/lib$dylib.dylib" ] \
         || die "lib$dylib install name changed: $actual_id"
 done
+llvm-otool-18 -hv "$STAGE/lib/lib_FoundationICU.dylib" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'lib_FoundationICU is not an ARM64 Mach-O dylib'
+[ "$(llvm-otool-18 -D "$STAGE/lib/lib_FoundationICU.dylib" | tail -n 1)" = \
+    @rpath/lib_FoundationICU.dylib ] || die 'lib_FoundationICU install name drifted'
 if llvm-otool-18 -L "$STAGE/lib/libUIKit.dylib" \
     | grep -Fq DeveloperToolsSupport; then
     die 'libUIKit must not load a DeveloperToolsSupport dylib'
@@ -1839,14 +1883,14 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreGuestPackageProbe \
         "$STAGE/resources/OpenUIKit" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-13 security=keychain,random webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-13 security=keychain,random webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -1858,7 +1902,8 @@ echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
     -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
     -o "$STAGE/probe/DispatchMachORuntime" \
     "$WORK/dispatch-macho-runtime.o" "${COMMON_LINK[@]}" \
-    -lDispatch -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
@@ -1867,7 +1912,7 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
@@ -1885,7 +1930,8 @@ echo '== compile/link/run the full async Foundation URLSession cold gate'
     -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
     -o "$STAGE/probe/FoundationURLSessionRuntime" \
     "$WORK/foundation-urlsession-runtime.o" "${COMMON_LINK[@]}" \
-    -lDispatch -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 llvm-otool-18 -hv "$STAGE/probe/FoundationURLSessionRuntime" \
@@ -1908,7 +1954,7 @@ llvm-otool-18 -hv "$STAGE/probe/FoundationURLSessionRuntime" \
     server_port=$(tr -d '[:space:]' < "$server_port_file")
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/FoundationURLSessionRuntime \
         "http://127.0.0.1:$server_port"
@@ -1938,6 +1984,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenRelativeTime
     -Xcc -fmodule-map-file=include/COpenDispatch/module.modulemap
     -Xcc -Iinclude/COpenDispatch
+    -Xcc -fmodule-map-file=include/FoundationICU/_foundation_unicode/module.modulemap
+    -Xcc -Iinclude/FoundationICU
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
     -Xcc -Iinclude/_FoundationCShims
 )
@@ -1950,7 +1998,8 @@ LINK_ARGUMENTS=(
     -Lsdk/usr/lib -lSystem -lobjc
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
-    -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
+    -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation
+    -lFoundationInternationalization -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
@@ -2022,6 +2071,16 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_SWIFTUI_SWIFT_COUNT" "$EXPECTED_CQUARTZ_CPP_COUNT"
     printf 'swift-foundation\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE"
+    printf 'swift-foundation-icu\tcommit=%s\ttree=%s\tcpp=%s\theaders=%s\n' \
+        "$EXPECTED_FOUNDATION_ICU_COMMIT" "$EXPECTED_FOUNDATION_ICU_TREE" \
+        "$EXPECTED_FOUNDATION_ICU_CPP_COUNT" \
+        "$EXPECTED_FOUNDATION_ICU_HEADER_COUNT"
+    printf 'FoundationInternationalization\tswift=%s\tbuild=%s\tbridge=%s\thost=%s\tthreading=%s\n' \
+        "$EXPECTED_FOUNDATION_INTL_SWIFT_COUNT" \
+        "$(hash_file "$FOUNDATION_INTERNATIONALIZATION_BUILDER")" \
+        "$(hash_file "$W/full/foundationinternationalization/OpenFoundationInternationalizationBridge.c")" \
+        "$(hash_file "$W/full/foundationinternationalization/OpenFoundationInternationalizationHost.c")" \
+        "$(hash_file "$W/full/foundationinternationalization/FoundationICUCXXThreading.cpp")"
     printf 'swift-collections\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_COLLECTIONS_COMMIT" "$EXPECTED_COLLECTIONS_TREE"
     printf 'OpenCombine\tcommit=%s\ttree=%s\n' \
@@ -2090,8 +2149,8 @@ record_module_family() {
         record_artifact "$category" "$name" "$role" "modules/$(basename "$file")"
     done
 }
-for framework in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
-    Dispatch \
+for framework in FoundationEssentials FoundationInternationalization \
+    OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
     Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
@@ -2110,6 +2169,10 @@ for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
     record_artifact host-tool ObservationMacros dependency \
         "host-tools/swift/linux/$library"
 done
+record_artifact module-dependency _FoundationICU dylib \
+    lib/lib_FoundationICU.dylib
+record_artifact module-dependency _FoundationICU module-map \
+    include/FoundationICU/_foundation_unicode/module.modulemap
 record_artifact include CoreImage umbrella-header include/CoreImage/CoreImage.h
 record_artifact include CoreImage submodule-header \
     include/CoreImage/CIFilterBuiltins.h
@@ -2144,6 +2207,10 @@ record_artifact runtime OpenDispatch linux-libdispatch \
     guest-root/host/libdispatch.so
 record_artifact runtime OpenDispatch linux-blocks-runtime \
     guest-root/host/libBlocksRuntime.so
+record_artifact runtime OpenFoundationInternationalization darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
+record_artifact runtime OpenFoundationInternationalization linux-helper \
+    guest-root/host/libOpenFoundationInternationalizationHost.so
 record_artifact runtime machorun executable guest-root/machorun
 record_artifact resource OpenUIKit system-font \
     resources/OpenUIKit/fonts/DejaVuSans.ttf
@@ -2201,6 +2268,12 @@ record_artifact attestation relative-time abi \
     attestation/relative-time-abi.tsv
 record_artifact attestation relative-time host \
     attestation/relative-time-host.tsv
+record_artifact attestation FoundationInternationalization sources \
+    attestation/foundation-internationalization-sources.tsv
+record_artifact attestation FoundationInternationalization abi \
+    attestation/foundation-internationalization-abi.tsv
+record_artifact attestation FoundationInternationalization host \
+    attestation/foundation-internationalization-host.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
 record_artifact attestation sdk-dangling-symlinks manifest \
     attestation/sdk-dangling-symlinks.tsv
@@ -2223,6 +2296,8 @@ echo '== post-build input bracket'
 assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" post-OpenUIKit
 assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" post-machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE" post-swift-foundation
+assert_clean_commit "$SWIFT_FOUNDATION_ICU" "$EXPECTED_FOUNDATION_ICU_COMMIT" \
+    "$EXPECTED_FOUNDATION_ICU_TREE" post-swift-foundation-icu
 assert_clean_commit "$SWIFT_COLLECTIONS" "$EXPECTED_COLLECTIONS_COMMIT" "$EXPECTED_COLLECTIONS_TREE" post-swift-collections
 assert_clean_commit "$OPENCOMBINE_SOURCE" "$EXPECTED_OPENCOMBINE_COMMIT" "$EXPECTED_OPENCOMBINE_TREE" post-OpenCombine
 [ "$SUPPORT_COMMIT" = "$(git -C "$W" rev-parse HEAD)" ] \
