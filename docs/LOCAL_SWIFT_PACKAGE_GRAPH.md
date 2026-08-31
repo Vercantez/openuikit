@@ -98,5 +98,6 @@ remote package materialization required before compilation: swiftsoup@ead56133a6
 ```
 
 SwiftSoup is pinned to version `2.13.6`; VariableBlur is pinned to `1.3.0`.
-Neither repository was downloaded or stubbed in this slice. No application or
-vendor source was changed, and no Docker build was used for this proof.
+The follow-on exact materialization and expanded graph are described in
+[`REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
+No application or vendor source was changed.

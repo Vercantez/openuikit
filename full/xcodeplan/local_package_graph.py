@@ -673,7 +673,15 @@ def _dependency_matches(dependency: Mapping[str, Any], value: str) -> bool:
 
 
 class _Planner:
-    def __init__(self, inventory: dict[str, Any], source_root: Path):
+    def __init__(
+        self,
+        inventory: dict[str, Any],
+        source_root: Path,
+        remote_materializations: Mapping[str, dict[str, Any]] | None = None,
+        remote_materialization_set: dict[str, Any] | None = None,
+        remote_cache_root: Path | None = None,
+        source_external_graph: dict[str, Any] | None = None,
+    ):
         self.inventory = inventory
         self.root = _strict_root(source_root)
         self.packages: dict[str, dict[str, Any]] = {}
@@ -681,22 +689,30 @@ class _Planner:
         self.target_state: dict[str, int] = {}
         self.reachable: dict[str, dict[str, Any]] = {}
         self.external_consumers: list[dict[str, Any]] = []
+        self.remote_materializations = dict(remote_materializations or {})
+        self.remote_materialization_set = remote_materialization_set
+        self.remote_cache_root = remote_cache_root
+        self.remote_packages: dict[str, dict[str, Any]] = {}
+        self.source_external_graph = source_external_graph
 
-    def load_package(self, relative_value: str, label: str) -> dict[str, Any]:
-        relative = _safe_stored_relative(relative_value, label).as_posix()
-        if relative in self.packages:
-            return self.packages[relative]
-        directory = _ordinary(self.root, PurePosixPath(relative), label)
-        if not directory.is_dir():
-            raise PackageGraphError(
-                f"{label} is not an ordinary directory: {directory}"
-            )
-        manifest_relative = f"{relative}/Package.swift"
+    def _register_package(
+        self,
+        *,
+        graph_path: str,
+        filesystem_root: Path,
+        manifest_relative: str,
+        origin: str,
+        source_prefix: str,
+        materialization: dict[str, Any] | None,
+        label: str,
+    ) -> dict[str, Any]:
+        if graph_path in self.packages:
+            return self.packages[graph_path]
         manifest_record = _file_record(
-            self.root, manifest_relative, f"{label} manifest"
+            filesystem_root, manifest_relative, f"{label} manifest"
         )
         parsed = _parse_manifest(
-            (self.root / manifest_relative).read_bytes(), manifest_relative
+            (filesystem_root / manifest_relative).read_bytes(), manifest_relative
         )
         targets = {item["name"]: item for item in parsed["targets"]}
         products = {
@@ -712,20 +728,45 @@ class _Planner:
                     )
         package_key = _portable(parsed["name"])
         previous = self.package_names.get(package_key)
-        if previous is not None and previous != relative:
+        if previous is not None and previous != graph_path:
             raise PackageGraphError(
-                f"duplicate package name {parsed['name']!r} at {previous!r} and {relative!r}"
+                f"duplicate package name {parsed['name']!r} at {previous!r} and {graph_path!r}"
             )
-        self.package_names[package_key] = relative
+        self.package_names[package_key] = graph_path
         model = {
             "dependencies": parsed["dependencies"],
+            "filesystem_root": filesystem_root,
             "manifest": manifest_record,
+            "materialization": materialization,
             "name": parsed["name"],
-            "path": relative,
+            "origin": origin,
+            "path": graph_path,
             "products": products,
+            "source_prefix": source_prefix,
             "targets": targets,
         }
-        self.packages[relative] = model
+        self.packages[graph_path] = model
+        return model
+
+    def load_package(self, relative_value: str, label: str) -> dict[str, Any]:
+        relative = _safe_stored_relative(relative_value, label).as_posix()
+        if relative in self.packages:
+            return self.packages[relative]
+        directory = _ordinary(self.root, PurePosixPath(relative), label)
+        if not directory.is_dir():
+            raise PackageGraphError(
+                f"{label} is not an ordinary directory: {directory}"
+            )
+        manifest_relative = f"{relative}/Package.swift"
+        model = self._register_package(
+            graph_path=relative,
+            filesystem_root=self.root,
+            manifest_relative=manifest_relative,
+            origin="local",
+            source_prefix=relative,
+            materialization=None,
+            label=label,
+        )
         dependency_identities: set[tuple[str, str]] = set()
         for index, dependency in enumerate(model["dependencies"]):
             if dependency["kind"] != "local":
@@ -749,6 +790,48 @@ class _Planner:
                     f"{manifest_relative} repeats package dependency {identity[1]!r}"
                 )
             dependency_identities.add(identity)
+        return model
+
+    def load_remote_package(
+        self, identity: str, materialization: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self.remote_cache_root is None:
+            raise PackageGraphError("remote package cache root was not supplied")
+        try:
+            import remote_package_materializer
+
+            repository = remote_package_materializer.repository_for(
+                self.remote_cache_root, materialization
+            )
+        except (OSError, remote_package_materializer.MaterializationError) as exc:
+            raise PackageGraphError(
+                f"cannot bind remote package {identity!r}: {exc}"
+            ) from exc
+        revision = _string(
+            materialization.get("commit"), "remote materialization commit"
+        )
+        graph_path = f"@remote/{identity}/{revision}"
+        model = self._register_package(
+            graph_path=graph_path,
+            filesystem_root=repository,
+            manifest_relative="Package.swift",
+            origin="remote",
+            source_prefix="",
+            materialization=materialization,
+            label=f"remote package {identity!r}",
+        )
+        if model["dependencies"]:
+            for dependency in model["dependencies"]:
+                if dependency["kind"] == "local":
+                    raise PackageGraphError(
+                        f"remote package {identity!r} declares unsupported local-path dependency"
+                    )
+                dependency["identity"] = _package_identity(dependency)
+        if _portable(model["name"]) != _portable(identity):
+            raise PackageGraphError(
+                f"remote package identity {identity!r} does not match manifest name {model['name']!r}"
+            )
+        self.remote_packages[identity] = model
         return model
 
     def _target_id(self, package: Mapping[str, Any], name: str) -> str:
@@ -819,6 +902,18 @@ class _Planner:
                     f"{label} package identity must resolve exactly once"
                 )
             if remote:
+                materialized = self.remote_packages.get(remote[0]["identity"])
+                if materialized is not None:
+                    return [
+                        {
+                            "kind": "product_target",
+                            "product": dependency["name"],
+                            "target_id": self._target_id(materialized, name),
+                        }
+                        for name in self._product_targets(
+                            materialized, dependency["name"], label
+                        )
+                    ]
                 return [
                     {
                         "kind": "external_product",
@@ -860,6 +955,18 @@ class _Planner:
             )
         if remote_matches:
             remote = remote_matches[0]
+            materialized = self.remote_packages.get(remote["identity"])
+            if materialized is not None:
+                return [
+                    {
+                        "kind": "product_target",
+                        "product": dependency["name"],
+                        "target_id": self._target_id(materialized, name),
+                    }
+                    for name in self._product_targets(
+                        materialized, dependency["name"], label
+                    )
+                ]
             return [
                 {
                     "kind": "external_product",
@@ -973,6 +1080,7 @@ class _Planner:
     def _target_sources(self, model: Mapping[str, Any]) -> list[dict[str, Any]]:
         package = model["package"]
         target = model["target"]
+        filesystem_root = package["filesystem_root"]
         raw_path = target["path"] or f"Sources/{target['name']}"
         target_relative = _lexical_dependency_path(
             raw_path, f"target {model['target_id']} path"
@@ -981,9 +1089,16 @@ class _Planner:
             raise PackageGraphError(
                 f"target {model['target_id']} path escapes its package"
             )
-        base_relative = PurePosixPath(package["path"]) / target_relative
+        source_prefix = package["source_prefix"]
+        base_relative = (
+            PurePosixPath(source_prefix) / target_relative
+            if source_prefix
+            else target_relative
+        )
         base = _ordinary(
-            self.root, base_relative, f"target {model['target_id']} source root"
+            filesystem_root,
+            base_relative,
+            f"target {model['target_id']} source root",
         )
         if not base.is_dir():
             raise PackageGraphError(
@@ -996,7 +1111,7 @@ class _Planner:
                 value, f"target {model['target_id']} exclude[{index}]"
             )
             _ordinary(
-                self.root,
+                filesystem_root,
                 base_relative / excluded,
                 f"target {model['target_id']} exclude[{index}]",
             )
@@ -1024,7 +1139,7 @@ class _Planner:
                     )
                 seen_selection.add(key)
                 _ordinary(
-                    self.root,
+                    filesystem_root,
                     base_relative / relative,
                     f"target {model['target_id']} sources[{index}]",
                 )
@@ -1081,9 +1196,18 @@ class _Planner:
                     f"target {model['target_id']} repeats or aliases Swift source {stored!r}"
                 )
             seen_paths.add(key)
-            records.append(
-                _file_record(self.root, stored, f"target {model['target_id']} source")
+            record = _file_record(
+                filesystem_root,
+                stored,
+                f"target {model['target_id']} source",
             )
+            if self.source_external_graph is not None:
+                record["source_origin"] = (
+                    "application"
+                    if package["origin"] == "local"
+                    else f"remote:{package['materialization']['identity']}"
+                )
+            records.append(record)
         return records
 
     def _resolution_path(self) -> str | None:
@@ -1231,6 +1355,11 @@ class _Planner:
                 ),
                 f"local package reference[{index}]",
             )
+        for identity, materialization in sorted(
+            self.remote_materializations.items(),
+            key=lambda item: item[0].encode("utf-8"),
+        ):
+            self.load_remote_package(identity, materialization)
         selected: list[dict[str, Any]] = []
         selected_keys: set[str] = set()
         for index, raw in enumerate(products):
@@ -1244,8 +1373,12 @@ class _Planner:
             selected_keys.add(key)
             origin = product.get("origin", "local")
             if origin != "local":
+                if self.source_external_graph is None:
+                    raise PackageGraphError(
+                        f"selected remote package product {name!r} has no materialized source graph"
+                    )
                 raise PackageGraphError(
-                    f"selected remote package product {name!r} has no materialized source graph"
+                    f"top-level remote product selection is not bound to an Xcode package reference: {name!r}"
                 )
             relative = product.get("relative_path")
             candidates: list[dict[str, Any]]
@@ -1303,7 +1436,23 @@ class _Planner:
             sources = self._target_sources(model)
             for record in sources:
                 path = record["path"]
-                actual = self.root / path
+                source_origin = record.get("source_origin", "application")
+                if source_origin == "application":
+                    actual = self.root / path
+                elif isinstance(source_origin, str) and source_origin.startswith(
+                    "remote:"
+                ):
+                    identity = source_origin.split(":", 1)[1]
+                    remote = self.remote_packages.get(identity)
+                    if remote is None:
+                        raise PackageGraphError(
+                            f"source names missing remote package {identity!r}"
+                        )
+                    actual = remote["filesystem_root"] / path
+                else:
+                    raise PackageGraphError(
+                        f"unsupported source origin {source_origin!r}"
+                    )
                 metadata = actual.stat()
                 identity = (metadata.st_dev, metadata.st_ino)
                 portable_path = _portable(path)
@@ -1359,30 +1508,33 @@ class _Planner:
                     remote_declarations.append(
                         (path, dependency, dependency["identity"])
                     )
-            package_records.append(
-                {
-                    "local_dependencies": local_dependencies,
-                    "manifest": package["manifest"],
-                    "name": package["name"],
-                    "path": path,
-                    "remote_dependencies": remote_dependencies,
-                }
-            )
+            package_record = {
+                "local_dependencies": local_dependencies,
+                "manifest": package["manifest"],
+                "name": package["name"],
+                "path": path,
+                "remote_dependencies": remote_dependencies,
+            }
+            if self.source_external_graph is not None:
+                package_record["origin"] = package["origin"]
+                package_record["materialization"] = package["materialization"]
+            package_records.append(package_record)
             for name, product in sorted(
                 package["products"].items(), key=lambda item: item[0].encode("utf-8")
             ):
                 if product["kind"] == "library":
-                    product_edges.append(
-                        {
-                            "library_type": product["library_type"],
-                            "name": name,
-                            "package_path": path,
-                            "target_ids": [
-                                self._target_id(package, target)
-                                for target in product["targets"]
-                            ],
-                        }
-                    )
+                    product_edge = {
+                        "library_type": product["library_type"],
+                        "name": name,
+                        "package_path": path,
+                        "target_ids": [
+                            self._target_id(package, target)
+                            for target in product["targets"]
+                        ],
+                    }
+                    if self.source_external_graph is not None:
+                        product_edge["origin"] = package["origin"]
+                    product_edges.append(product_edge)
 
         used_external = {
             (item["package_identity"], item["url"]) for item in self.external_consumers
@@ -1454,7 +1606,7 @@ class _Planner:
             for target in targets
             for edge in target["dependencies"]
         ]
-        return {
+        result = {
             "buildability": {
                 "reason": (
                     "remote-package-materialization-required" if external else None
@@ -1463,7 +1615,7 @@ class _Planner:
             },
             "classification": "portable-local-swift-package-graph",
             "external_packages": external,
-            "format_version": 1,
+            "format_version": 2 if self.source_external_graph is not None else 1,
             "package_resolution": resolution,
             "packages": package_records,
             "product_edges": product_edges,
@@ -1471,9 +1623,42 @@ class _Planner:
             "selected_products": selected,
             "summary": {
                 "external_packages": len(external),
-                "local_packages": len(package_records),
-                "local_products": len(product_edges),
-                "local_targets": len(targets),
+                "local_packages": sum(
+                    1
+                    for package in package_records
+                    if package.get("origin", "local") == "local"
+                ),
+                "local_products": sum(
+                    1
+                    for product in product_edges
+                    if product.get("origin", "local") == "local"
+                ),
+                "local_targets": sum(
+                    1
+                    for target in targets
+                    if not target["target_id"].startswith("@remote/")
+                ),
+                **(
+                    {
+                        "remote_packages": sum(
+                            1
+                            for package in package_records
+                            if package.get("origin") == "remote"
+                        ),
+                        "remote_targets": sum(
+                            1
+                            for target in targets
+                            if target["target_id"].startswith("@remote/")
+                        ),
+                        "remote_products": sum(
+                            1
+                            for product in product_edges
+                            if product.get("origin") == "remote"
+                        ),
+                    }
+                    if self.source_external_graph is not None
+                    else {}
+                ),
                 "resolution_pins": len(pins),
                 "selected_products": len(selected),
                 "swift_sources": sum(len(target["sources"]) for target in targets),
@@ -1482,10 +1667,53 @@ class _Planner:
             "target_dependency_edges": target_edges,
             "targets": targets,
         }
+        if self.source_external_graph is not None:
+            result["remote_materializations"] = self.remote_materialization_set
+            result["source_external_graph_sha256"] = _sha256(
+                canonical_json(self.source_external_graph)
+            )
+        return result
 
 
-def plan(inventory: dict[str, Any], source_root: Path) -> dict[str, Any] | None:
-    return _Planner(inventory, source_root).build()
+def plan(
+    inventory: dict[str, Any],
+    source_root: Path,
+    remote_materializations: dict[str, Any] | None = None,
+    remote_cache_root: Path | None = None,
+) -> dict[str, Any] | None:
+    baseline = _Planner(inventory, source_root).build()
+    if remote_materializations is None:
+        if remote_cache_root is not None:
+            raise PackageGraphError(
+                "remote package cache root was supplied without materializations"
+            )
+        return baseline
+    if baseline is None:
+        raise PackageGraphError(
+            "remote materializations were supplied for an empty package graph"
+        )
+    if remote_cache_root is None:
+        raise PackageGraphError(
+            "remote materializations require a remote package cache root"
+        )
+    try:
+        import remote_package_materializer
+
+        verified = remote_package_materializer.verify_set(
+            remote_materializations, baseline, remote_cache_root
+        )
+    except (OSError, remote_package_materializer.MaterializationError) as exc:
+        raise PackageGraphError(
+            f"remote materialization verification failed: {exc}"
+        ) from exc
+    return _Planner(
+        inventory,
+        source_root,
+        remote_materializations=verified,
+        remote_materialization_set=remote_materializations,
+        remote_cache_root=remote_cache_root,
+        source_external_graph=baseline,
+    ).build()
 
 
 def _inventory_from_graph(graph: dict[str, Any]) -> dict[str, Any]:
@@ -1499,6 +1727,7 @@ def _inventory_from_graph(graph: dict[str, Any]) -> dict[str, Any]:
                 )
             }
             for item in packages
+            if _mapping(item, "graph package").get("origin", "local") == "local"
         ],
         "package_products": [
             {
@@ -1526,13 +1755,26 @@ def _inventory_from_graph(graph: dict[str, Any]) -> dict[str, Any]:
     return inventory
 
 
-def verify(graph: dict[str, Any], source_root: Path) -> None:
-    if (
-        graph.get("classification") != "portable-local-swift-package-graph"
-        or graph.get("format_version") != 1
-    ):
+def verify(
+    graph: dict[str, Any],
+    source_root: Path,
+    remote_cache_root: Path | None = None,
+) -> None:
+    if graph.get("classification") != "portable-local-swift-package-graph" or graph.get(
+        "format_version"
+    ) not in {1, 2}:
         raise PackageGraphError("input is not a supported local Swift-package graph")
-    actual = plan(_inventory_from_graph(graph), source_root)
+    materializations = None
+    if graph.get("format_version") == 2:
+        materializations = _mapping(
+            graph.get("remote_materializations"), "graph remote_materializations"
+        )
+    actual = plan(
+        _inventory_from_graph(graph),
+        source_root,
+        materializations,
+        remote_cache_root,
+    )
     if actual is None or canonical_json(actual) != canonical_json(graph):
         raise PackageGraphError("local Swift-package graph changed or is inconsistent")
 
@@ -1542,6 +1784,7 @@ def verify_plan_binding(
     application_plan: dict[str, Any],
     target_list: bytes,
     source_root: Path,
+    remote_cache_root: Path | None = None,
 ) -> None:
     embedded = _mapping(
         application_plan.get("local_package_graph"),
@@ -1563,7 +1806,7 @@ def verify_plan_binding(
         raise PackageGraphError(
             "local package target list differs from the frozen graph"
         )
-    verify(graph, source_root)
+    verify(graph, source_root, remote_cache_root)
 
 
 def require_buildable(graph: dict[str, Any]) -> None:
@@ -1588,9 +1831,12 @@ def require_buildable(graph: dict[str, Any]) -> None:
 
 
 def _build_contract(
-    graph: dict[str, Any], source_root: Path, output_root: Path
+    graph: dict[str, Any],
+    source_root: Path,
+    output_root: Path,
+    remote_cache_root: Path | None = None,
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
-    verify(graph, source_root)
+    verify(graph, source_root, remote_cache_root)
     require_buildable(graph)
     root = _strict_root(source_root)
     if not output_root.is_absolute():
@@ -1604,6 +1850,32 @@ def _build_contract(
             "local package build root must be outside the source root"
         )
     targets = _list(graph.get("targets"), "graph targets")
+    remote_roots: dict[str, Path] = {}
+    if graph.get("format_version") == 2:
+        if remote_cache_root is None:
+            raise PackageGraphError(
+                "materialized package graph requires a remote package cache root"
+            )
+        try:
+            import remote_package_materializer
+
+            materialization_set = _mapping(
+                graph.get("remote_materializations"), "graph remote_materializations"
+            )
+            for raw in _list(
+                materialization_set.get("packages"), "remote materialization packages"
+            ):
+                materialization = _mapping(raw, "remote materialization package")
+                identity = _string(
+                    materialization.get("identity"), "remote materialization identity"
+                )
+                remote_roots[identity] = remote_package_materializer.repository_for(
+                    remote_cache_root, materialization
+                )
+        except (OSError, remote_package_materializer.MaterializationError) as exc:
+            raise PackageGraphError(
+                f"cannot resolve remote package sources: {exc}"
+            ) from exc
     records: list[dict[str, Any]] = []
     files: dict[str, bytes] = {}
     for index, raw in enumerate(targets):
@@ -1618,19 +1890,38 @@ def _build_contract(
         directory = f"targets/{index:06d}-{module}"
         output_map_relative = f"{directory}/output-file-map.json"
         module_relative = f"modules/{module}.swiftmodule"
-        sources = [
-            _string(
-                _mapping(item, f"graph targets[{index}].sources").get("path"),
-                f"graph targets[{index}].source.path",
+        sources: list[str] = []
+        for source_index, raw_source in enumerate(
+            _list(target.get("sources"), f"graph targets[{index}].sources")
+        ):
+            source = _mapping(
+                raw_source, f"graph targets[{index}].sources[{source_index}]"
             )
-            for item in _list(target.get("sources"), f"graph targets[{index}].sources")
-        ]
+            path = _string(
+                source.get("path"),
+                f"graph targets[{index}].sources[{source_index}].path",
+            )
+            origin = source.get("source_origin", "application")
+            if graph.get("format_version") == 1:
+                sources.append(path)
+            elif origin == "application":
+                sources.append(os.fspath(root / path))
+            elif isinstance(origin, str) and origin.startswith("remote:"):
+                identity = origin.split(":", 1)[1]
+                remote_root = remote_roots.get(identity)
+                if remote_root is None:
+                    raise PackageGraphError(
+                        f"target source names missing remote materialization {identity!r}"
+                    )
+                sources.append(os.fspath(remote_root / path))
+            else:
+                raise PackageGraphError(f"unsupported target source origin {origin!r}")
         objects = [
             f"{directory}/objects/{source_index:06d}.o"
             for source_index in range(len(sources))
         ]
         output_map = {
-            os.fspath(root / source): {
+            (source if Path(source).is_absolute() else os.fspath(root / source)): {
                 "object": os.fspath(output_root / object_relative)
             }
             for source, object_relative in zip(sources, objects, strict=True)
@@ -1662,9 +1953,14 @@ def _build_contract(
 
 
 def prepare_build(
-    graph: dict[str, Any], source_root: Path, output_root: Path
+    graph: dict[str, Any],
+    source_root: Path,
+    output_root: Path,
+    remote_cache_root: Path | None = None,
 ) -> dict[str, Any]:
-    contract, files = _build_contract(graph, source_root, output_root)
+    contract, files = _build_contract(
+        graph, source_root, output_root, remote_cache_root
+    )
     if output_root.exists() or output_root.is_symlink():
         raise PackageGraphError(
             f"local package build root already exists: {output_root}"
@@ -1681,7 +1977,10 @@ def prepare_build(
 
 
 def verify_build_contract(
-    graph: dict[str, Any], source_root: Path, output_root: Path
+    graph: dict[str, Any],
+    source_root: Path,
+    output_root: Path,
+    remote_cache_root: Path | None = None,
 ) -> dict[str, Any]:
     if (
         not output_root.is_absolute()
@@ -1691,7 +1990,9 @@ def verify_build_contract(
         raise PackageGraphError(
             "local package build root is not an ordinary absolute directory"
         )
-    contract, files = _build_contract(graph, source_root, output_root)
+    contract, files = _build_contract(
+        graph, source_root, output_root, remote_cache_root
+    )
     for relative, expected in files.items():
         path = output_root / relative
         if not path.is_file() or path.is_symlink() or path.read_bytes() != expected:
@@ -1725,25 +2026,32 @@ def _parser() -> argparse.ArgumentParser:
     create.add_argument("inventory", type=Path)
     create.add_argument("--source-root", required=True, type=Path)
     create.add_argument("--output", required=True, type=Path)
+    create.add_argument("--remote-materializations", type=Path)
+    create.add_argument("--remote-cache-root", type=Path)
     check = commands.add_parser("verify")
     check.add_argument("graph", type=Path)
     check.add_argument("--source-root", required=True, type=Path)
+    check.add_argument("--remote-cache-root", type=Path)
     buildable = commands.add_parser("require-buildable")
     buildable.add_argument("graph", type=Path)
     buildable.add_argument("--source-root", required=True, type=Path)
+    buildable.add_argument("--remote-cache-root", type=Path)
     binding = commands.add_parser("verify-plan-binding")
     binding.add_argument("graph", type=Path)
     binding.add_argument("--application-plan", required=True, type=Path)
     binding.add_argument("--target-list", required=True, type=Path)
     binding.add_argument("--source-root", required=True, type=Path)
+    binding.add_argument("--remote-cache-root", type=Path)
     prepare = commands.add_parser("prepare-build")
     prepare.add_argument("graph", type=Path)
     prepare.add_argument("--source-root", required=True, type=Path)
     prepare.add_argument("--output-root", required=True, type=Path)
+    prepare.add_argument("--remote-cache-root", type=Path)
     verify_build = commands.add_parser("verify-build-contract")
     verify_build.add_argument("graph", type=Path)
     verify_build.add_argument("--source-root", required=True, type=Path)
     verify_build.add_argument("--output-root", required=True, type=Path)
+    verify_build.add_argument("--remote-cache-root", type=Path)
     emit = commands.add_parser("emit-target-record")
     emit.add_argument("contract", type=Path)
     emit.add_argument("--index", required=True, type=int)
@@ -1758,7 +2066,21 @@ def main(argv: list[str] | None = None) -> int:
                 _json_no_duplicates(arguments.inventory.read_bytes(), "inventory"),
                 "inventory",
             )
-            graph = plan(inventory, arguments.source_root)
+            materializations = None
+            if arguments.remote_materializations is not None:
+                materializations = _mapping(
+                    _json_no_duplicates(
+                        arguments.remote_materializations.read_bytes(),
+                        "remote materializations",
+                    ),
+                    "remote materializations",
+                )
+            graph = plan(
+                inventory,
+                arguments.source_root,
+                materializations,
+                arguments.remote_cache_root,
+            )
             if graph is None:
                 raise PackageGraphError("inventory selects no package products")
             if arguments.output.exists() or arguments.output.is_symlink():
@@ -1766,8 +2088,8 @@ def main(argv: list[str] | None = None) -> int:
             arguments.output.write_bytes(canonical_json(graph))
             print(
                 "LOCAL_PACKAGE_GRAPH_OK "
-                f"packages={graph['summary']['local_packages']} "
-                f"targets={graph['summary']['local_targets']} "
+                f"packages={len(graph['packages'])} "
+                f"targets={len(graph['targets'])} "
                 f"sources={graph['summary']['swift_sources']} "
                 f"external={graph['summary']['external_packages']} "
                 f"sha256={_sha256(canonical_json(graph))}"
@@ -1781,7 +2103,7 @@ def main(argv: list[str] | None = None) -> int:
                 _json_no_duplicates(arguments.graph.read_bytes(), "package graph"),
                 "package graph",
             )
-            verify(graph, arguments.source_root)
+            verify(graph, arguments.source_root, arguments.remote_cache_root)
             if arguments.command == "verify-plan-binding":
                 application_plan = _mapping(
                     _json_no_duplicates(
@@ -1794,6 +2116,7 @@ def main(argv: list[str] | None = None) -> int:
                     application_plan,
                     arguments.target_list.read_bytes(),
                     arguments.source_root,
+                    arguments.remote_cache_root,
                 )
                 print("LOCAL_PACKAGE_GRAPH_PLAN_BINDING_VERIFIED")
             elif arguments.command == "require-buildable":
@@ -1802,7 +2125,7 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(
                     "LOCAL_PACKAGE_GRAPH_VERIFIED "
-                    f"targets={graph['summary']['local_targets']} "
+                    f"targets={len(graph['targets'])} "
                     f"external={graph['summary']['external_packages']}"
                 )
         elif arguments.command in {"prepare-build", "verify-build-contract"}:
@@ -1812,14 +2135,20 @@ def main(argv: list[str] | None = None) -> int:
             )
             if arguments.command == "prepare-build":
                 contract = prepare_build(
-                    graph, arguments.source_root, arguments.output_root
+                    graph,
+                    arguments.source_root,
+                    arguments.output_root,
+                    arguments.remote_cache_root,
                 )
                 print(
                     f"LOCAL_PACKAGE_BUILD_PREPARED targets={len(contract['targets'])}"
                 )
             else:
                 contract = verify_build_contract(
-                    graph, arguments.source_root, arguments.output_root
+                    graph,
+                    arguments.source_root,
+                    arguments.output_root,
+                    arguments.remote_cache_root,
                 )
                 print(
                     f"LOCAL_PACKAGE_BUILD_CONTRACT_VERIFIED targets={len(contract['targets'])}"

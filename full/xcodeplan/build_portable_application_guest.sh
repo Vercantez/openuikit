@@ -21,6 +21,8 @@ usage: build_portable_application_guest.sh \
   --source-root APPLICATION_PROJECT_ROOT \
   --platform-package CORE_GUEST_PACKAGE \
   --container-image SHA256_IMAGE_ID \
+  [--remote-package-materializations EXACT_MATERIALIZATION_SET_JSON] \
+  [--remote-package-cache CONTENT_ADDRESSED_CACHE_ROOT] \
   [--preview-plugin OPENUIKIT_PREVIEW_MACROS_TOOL] \
   [--preview-evidence-source-list NUL_TERMINATED_RELATIVE_PATHS] \
   --output-root ABSOLUTE_NONEXISTENT_DIRECTORY
@@ -60,7 +62,7 @@ PY
 
 prepare_host() {
     local inventory= source_root= platform= container_image= plugin=
-    local preview_source_list= output=
+    local preview_source_list= remote_materializations= remote_cache= output=
     while [ "$#" -gt 0 ]; do
         case "$1" in
             --inventory) [ "$#" -ge 2 ] || usage; inventory=$2; shift 2 ;;
@@ -68,6 +70,16 @@ prepare_host() {
             --platform-package) [ "$#" -ge 2 ] || usage; platform=$2; shift 2 ;;
             --container-image) [ "$#" -ge 2 ] || usage; container_image=$2; shift 2 ;;
             --preview-plugin) [ "$#" -ge 2 ] || usage; plugin=$2; shift 2 ;;
+            --remote-package-materializations)
+                [ "$#" -ge 2 ] || usage
+                remote_materializations=$2
+                shift 2
+                ;;
+            --remote-package-cache)
+                [ "$#" -ge 2 ] || usage
+                remote_cache=$2
+                shift 2
+                ;;
             --preview-evidence-source-list)
                 [ "$#" -ge 2 ] || usage
                 preview_source_list=$2
@@ -79,6 +91,10 @@ prepare_host() {
     done
     [ -n "$inventory" ] && [ -n "$source_root" ] && [ -n "$platform" ] \
         && [ -n "$container_image" ] && [ -n "$output" ] || usage
+    if [ -n "$remote_materializations" ] || [ -n "$remote_cache" ]; then
+        [ -n "$remote_materializations" ] && [ -n "$remote_cache" ] \
+            || die "remote materializations and cache must be supplied together"
+    fi
     command -v python3 >/dev/null || die "python3 is required"
     command -v docker >/dev/null || die "docker is required"
     command -v git >/dev/null || die "git is required"
@@ -111,12 +127,19 @@ prepare_host() {
     [ -z "$plugin" ] || plugin=$(canonical_existing "$plugin")
     [ -z "$preview_source_list" ] \
         || preview_source_list=$(canonical_existing "$preview_source_list")
+    [ -z "$remote_materializations" ] \
+        || remote_materializations=$(canonical_existing "$remote_materializations")
+    [ -z "$remote_cache" ] || remote_cache=$(canonical_existing "$remote_cache")
     require_regular "$inventory" "inventory"
     require_directory "$source_root" "application source root"
     require_directory "$platform" "core guest package"
     [ -z "$plugin" ] || require_regular "$plugin" "Preview macro plugin"
     [ -z "$preview_source_list" ] \
         || require_regular "$preview_source_list" "Preview evidence source list"
+    [ -z "$remote_materializations" ] \
+        || require_regular "$remote_materializations" "remote package materialization set"
+    [ -z "$remote_cache" ] \
+        || require_directory "$remote_cache" "remote package cache"
     case "$output" in /*) ;; *) die "output root must be absolute" ;; esac
     [ ! -e "$output" ] && [ ! -L "$output" ] \
         || die "output root already exists: $output"
@@ -155,10 +178,18 @@ PY
         die "--preview-evidence-source-list supplied without a Preview contract"
     fi
 
+    local -a remote_plan_arguments=() remote_cache_arguments=()
+    if [ -n "$remote_cache" ]; then
+        remote_plan_arguments=(--remote-materializations "$remote_materializations"
+            --remote-cache-root "$remote_cache")
+        remote_cache_arguments=(--remote-cache-root "$remote_cache")
+    fi
     python3 -B "$SCRIPT_DIR/application_build_plan.py" "$inventory" \
-        --source-root "$source_root" --output-dir "$output"
+        --source-root "$source_root" --output-dir "$output" \
+        "${remote_plan_arguments[@]}"
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
-        "$output/application-build-plan.json" --source-root "$source_root" --verify
+        "$output/application-build-plan.json" --source-root "$source_root" \
+        "${remote_cache_arguments[@]}" --verify
     if [ -f "$output/local-package-graph.json" ] \
         && [ ! -L "$output/local-package-graph.json" ]; then
         require_regular "$output/local-package-targets.nul" \
@@ -167,9 +198,10 @@ PY
             "$output/local-package-graph.json" \
             --application-plan "$output/application-build-plan.json" \
             --target-list "$output/local-package-targets.nul" \
-            --source-root "$source_root"
+            --source-root "$source_root" "${remote_cache_arguments[@]}"
         python3 -B "$SCRIPT_DIR/local_package_graph.py" require-buildable \
-            "$output/local-package-graph.json" --source-root "$source_root"
+            "$output/local-package-graph.json" --source-root "$source_root" \
+            "${remote_cache_arguments[@]}"
     fi
     if [ "$preview_required" = yes ]; then
         [ ! -e "$output/preview-evidence-sources.nul" ] \
@@ -207,7 +239,8 @@ PY
     python3 -B "$SCRIPT_DIR/materialize_application_bundle.py" \
         "$output/application-build-plan.json" --source-root "$source_root" \
         --platform-resources "$platform_resources" --output-app "$output_app" \
-        --attestation "$output/bundle-materialization.json"
+        --attestation "$output/bundle-materialization.json" \
+        "${remote_cache_arguments[@]}"
 
     {
         printf 'support_commit\t%s\n' "$support_commit"
@@ -222,6 +255,10 @@ PY
             printf 'preview_evidence_source_list_sha256\t%s\n' \
                 "$preview_source_list_sha"
         fi
+        if [ -n "$remote_cache" ]; then
+            printf 'remote_materializations_sha256\t%s\n' \
+                "$(shasum -a 256 "$remote_materializations" | awk '{print $1}')"
+        fi
     } >"$output/host-inputs.tsv"
 
     local -a docker_command
@@ -234,11 +271,17 @@ PY
     if [ -n "$plugin" ]; then
         docker_command+=(-v "$plugin:/preview-plugin:ro")
     fi
+    if [ -n "$remote_cache" ]; then
+        docker_command+=(-v "$remote_cache:/remote-packages:ro")
+    fi
     docker_command+=("$container_image"
         bash /support/full/xcodeplan/build_portable_application_guest.sh
         --inside /app /output /platform)
     if [ -n "$plugin" ]; then
-        docker_command+=(/preview-plugin)
+        docker_command+=(--preview-plugin-inside /preview-plugin)
+    fi
+    if [ -n "$remote_cache" ]; then
+        docker_command+=(--remote-package-cache-inside /remote-packages)
     fi
 
     set +e
@@ -246,7 +289,8 @@ PY
     local -a statuses=("${PIPESTATUS[@]}")
     set -e
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
-        "$output/application-build-plan.json" --source-root "$source_root" --verify
+        "$output/application-build-plan.json" --source-root "$source_root" \
+        "${remote_cache_arguments[@]}" --verify
     [ "$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{commit})" = "$support_commit" ] \
         && [ "$(git -C "$SUPPORT_ROOT" rev-parse --verify HEAD^{tree})" = "$support_tree" ] \
         || die "support checkout identity changed during build"
@@ -268,18 +312,40 @@ PY
 }
 
 build_inside() {
-    [ "$#" -eq 3 ] || [ "$#" -eq 4 ] || die "invalid internal invocation"
-    local app_root=$1 output=$2 platform=$3 plugin=${4:-}
+    [ "$#" -ge 3 ] || die "invalid internal invocation"
+    local app_root=$1 output=$2 platform=$3 plugin= remote_cache=
+    shift 3
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --preview-plugin-inside)
+                [ "$#" -ge 2 ] || die "truncated internal Preview plugin argument"
+                plugin=$2
+                shift 2
+                ;;
+            --remote-package-cache-inside)
+                [ "$#" -ge 2 ] || die "truncated internal remote cache argument"
+                remote_cache=$2
+                shift 2
+                ;;
+            *) die "invalid internal invocation" ;;
+        esac
+    done
     require_directory "$app_root" "mounted application source root"
     require_directory "$output" "mounted output root"
     require_directory "$platform" "mounted platform package"
+    [ -z "$remote_cache" ] \
+        || require_directory "$remote_cache" "mounted remote package cache"
     for tool in python3 swiftc ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
     PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
         "$platform" --emit-summary
+    local -a remote_cache_arguments=()
+    [ -z "$remote_cache" ] \
+        || remote_cache_arguments=(--remote-cache-root "$remote_cache")
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
-        "$output/application-build-plan.json" --source-root "$app_root" --verify
+        "$output/application-build-plan.json" --source-root "$app_root" \
+        "${remote_cache_arguments[@]}" --verify
 
     local module product preview_required expected_plugin_sha plugin_module dts_object
     local -a metadata
@@ -387,12 +453,13 @@ PY
             "$package_graph" \
             --application-plan "$output/application-build-plan.json" \
             --target-list "$output/local-package-targets.nul" \
-            --source-root "$app_root"
+            --source-root "$app_root" "${remote_cache_arguments[@]}"
         python3 -B "$SCRIPT_DIR/local_package_graph.py" require-buildable \
-            "$package_graph" --source-root "$app_root"
+            "$package_graph" --source-root "$app_root" \
+            "${remote_cache_arguments[@]}"
         python3 -B "$SCRIPT_DIR/local_package_graph.py" prepare-build \
             "$package_graph" --source-root "$app_root" \
-            --output-root "$package_build_root"
+            --output-root "$package_build_root" "${remote_cache_arguments[@]}"
         package_import_arguments=(-I "$package_module_root")
         mapfile -d '' -t package_target_indices \
             <"$package_build_root/targets.nul"
@@ -419,7 +486,11 @@ PY
                 || die "local package source count is invalid: $package_index"
             package_sources=()
             for ((package_cursor = 0; package_cursor < package_source_count; package_cursor++)); do
-                package_sources+=("$app_root/${package_record[4 + package_cursor]}")
+                if [[ "${package_record[4 + package_cursor]}" = /* ]]; then
+                    package_sources+=("${package_record[4 + package_cursor]}")
+                else
+                    package_sources+=("$app_root/${package_record[4 + package_cursor]}")
+                fi
                 require_regular "${package_sources[-1]}" "local package Swift source"
             done
             package_object_count=${package_record[4 + package_source_count]}
@@ -472,7 +543,7 @@ PY
         done
         python3 -B "$SCRIPT_DIR/local_package_graph.py" verify-build-contract \
             "$package_graph" --source-root "$app_root" \
-            --output-root "$package_build_root"
+            --output-root "$package_build_root" "${remote_cache_arguments[@]}"
     else
         [ ! -e "$output/local-package-targets.nul" ] \
             && [ ! -L "$output/local-package-targets.nul" ] \
@@ -900,7 +971,8 @@ PY
         || die "application did not complete three production host-loop turns"
 
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
-        "$output/application-build-plan.json" --source-root "$app_root" --verify
+        "$output/application-build-plan.json" --source-root "$app_root" \
+        "${remote_cache_arguments[@]}" --verify
     python3 -B "$SCRIPT_DIR/compiler_input_providers.py" verify \
         --build-plan "$output/application-build-plan.json" \
         --source-root "$app_root" --output-root "$derived_root"

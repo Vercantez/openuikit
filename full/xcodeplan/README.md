@@ -311,6 +311,8 @@ full/xcodeplan/build_portable_application_guest.sh \
   --source-root /read/only/AppProject \
   --platform-package /artifacts/open-uikit-core \
   --container-image sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7 \
+  --remote-package-materializations /pins/exact-materializations.json \
+  --remote-package-cache /read/only/content-addressed-cache \
   --preview-plugin /artifacts/OpenUIKitPreviewMacros-tool \
   --preview-evidence-source-list /pins/App.preview-sources.nul \
   --output-root /new/App-linux-build
@@ -320,9 +322,11 @@ The host requires an absent output root and an exact lowercase SHA-256 Docker
 image content ID, validates that the image is Linux/ARM64, validates and hashes
 the platform and optional macro plugin, freezes all application inputs, and
 creates the bundle resource skeleton. The image identity and platform are
-recorded in `host-inputs.tsv`; mutable image tags are refused. That container
-then compiles every reachable, fully materialized local-package target as its
-own topologically ordered Swift module and object set. Those objects enter the
+recorded in `host-inputs.tsv`; mutable image tags are refused. Exact remote
+package inputs are revalidated on both sides of a read-only cache mount as
+described in [`../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
+That container then compiles every reachable local or remote package target as
+its own topologically ordered Swift module and object set. Those objects enter the
 executable link exactly once. It then compiles every NUL-delimited unchanged
 application Swift source together with only the generated entry point and
 platform host loop in one ordinary multi-source module invocation. An exact

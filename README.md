@@ -14,6 +14,12 @@ does not exist as a file on either operating system.
 **Read [`docs/SPIKE.md`](docs/SPIKE.md)** — the ladder, what is staged, the two
 loud failures found on the way, and the recommendation.
 
+The production Xcode-project path is documented in
+[`docs/LOCAL_SWIFT_PACKAGE_GRAPH.md`](docs/LOCAL_SWIFT_PACKAGE_GRAPH.md) and
+[`docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
+It freezes local and exact remote Swift-package targets into real module/object
+boundaries without changing application or vendor source.
+
 Everything under `scratch/` and `build/` is generated and gitignored;
 `scripts/stage_darwin_swift.sh` and `scripts/stage_objc_module.sh` rebuild the
 one Apple dependency (15 MB, almost all of it textual `.swiftinterface`).

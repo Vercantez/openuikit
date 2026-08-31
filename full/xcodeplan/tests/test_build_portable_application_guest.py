@@ -18,8 +18,7 @@ PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
 
 def validate_preview_executable_export_contract(source: str) -> None:
     assignment = (
-        "PREVIEW_EXECUTABLE_EXPORT_SYMBOL="
-        f"'{PREVIEW_EXECUTABLE_EXPORT_SYMBOL}'"
+        "PREVIEW_EXECUTABLE_EXPORT_SYMBOL=" f"'{PREVIEW_EXECUTABLE_EXPORT_SYMBOL}'"
     )
     required_once = (
         assignment,
@@ -54,7 +53,7 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         '"$effective_wmo_count" -eq 0',
         '"$effective_disable_batch_count" -eq 0',
         '"$effective_dump_count" -eq 0',
-        'object_audit=$output/application-object-audit.json',
+        "object_audit=$output/application-object-audit.json",
         '--audit "$output/application-cross-file-symbols.json"',
         '--cross-file-audit "$output/application-cross-file-symbols.json"',
         '--audit "$output/application-linked-symbols.json"',
@@ -89,11 +88,11 @@ def validate_multi_source_object_map_contract(source: str) -> None:
 def validate_derived_source_provider_contract(source: str) -> None:
     required_once = (
         'compiler_input_providers.py" generate',
-        'derived_root=$output/derived-sources',
+        "derived_root=$output/derived-sources",
         '<"$derived_root/derived-sources.nul"',
         'derived_sources+=("$derived_source")',
-        'derived-source-attestation-sha256\\t%s\\n',
-        'find derived-sources -type f -print0',
+        "derived-source-attestation-sha256\\t%s\\n",
+        "find derived-sources -type f -print0",
     )
     drifted = [token for token in required_once if source.count(token) != 1]
     if drifted:
@@ -116,8 +115,8 @@ def validate_local_package_module_object_boundary(source: str) -> None:
         '-emit-module -emit-module-path "$package_module_output"',
         'package_objects+=("$package_object")',
         '"${package_objects[@]}" "${extra_objects[@]}")',
-        'local package object link count is not one',
-        'local linked_package_object_count=0',
+        "local package object link count is not one",
+        "local linked_package_object_count=0",
     )
     drifted = [token for token in required_once if source.count(token) != 1]
     if source.count('local_package_graph.py" require-buildable') != 2:
@@ -131,6 +130,36 @@ def validate_local_package_module_object_boundary(source: str) -> None:
     application_compile = source.index("== compile every untouched application")
     if not preflight < compile_target < application_compile:
         raise AssertionError("local package build order drifted")
+
+
+def validate_remote_package_cache_boundary(source: str) -> None:
+    required_once = (
+        "[--remote-package-materializations EXACT_MATERIALIZATION_SET_JSON]",
+        "[--remote-package-cache CONTENT_ADDRESSED_CACHE_ROOT]",
+        'remote_plan_arguments=(--remote-materializations "$remote_materializations"',
+        'docker_command+=(-v "$remote_cache:/remote-packages:ro")',
+        "--remote-package-cache-inside /remote-packages",
+        "remote_materializations_sha256\\t%s\\n",
+        'if [[ "${package_record[4 + package_cursor]}" = /* ]]; then',
+        'package_sources+=("${package_record[4 + package_cursor]}")',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"remote package cache boundary drifted: {drifted}")
+    if (
+        source.count('remote_cache_arguments=(--remote-cache-root "$remote_cache")')
+        != 2
+    ):
+        raise AssertionError("remote package cache host/guest binding drifted")
+    if source.count('"${remote_cache_arguments[@]}"') < 8:
+        raise AssertionError("remote package cache re-verification bracket drifted")
+    forbidden = (
+        'cp "$remote_cache"',
+        'docker_command+=(-v "$remote_cache:/remote-packages")',
+        "chmod -R",
+    )
+    if any(token in source for token in forbidden):
+        raise AssertionError("remote package cache lost its read-only boundary")
 
 
 def validate_nounset_dependent_path_contract(source: str) -> None:
@@ -165,7 +194,9 @@ def validate_no_chained_local_assignments(source: str) -> None:
         for match in assignment.finditer(line):
             name, value = match.groups()
             for earlier in seen:
-                reference = re.compile(rf"\$(?:{re.escape(earlier)}\b|\{{{re.escape(earlier)}\}})")
+                reference = re.compile(
+                    rf"\$(?:{re.escape(earlier)}\b|\{{{re.escape(earlier)}\}})"
+                )
                 if reference.search(value):
                     failures.append(f"line {number}: {name} depends on {earlier}")
             seen.append(name)
@@ -189,7 +220,9 @@ def validate_python_invocations_are_bytecode_free(source: str) -> None:
 
 
 class PortableApplicationGuestDriverTests(unittest.TestCase):
-    def test_host_delegates_resource_binding_to_the_shared_runtime_contract(self) -> None:
+    def test_host_delegates_resource_binding_to_the_shared_runtime_contract(
+        self,
+    ) -> None:
         source = (XCODEPLAN / "PortableUIKitApplicationHost.swift").read_text(
             encoding="utf-8"
         )
@@ -298,7 +331,9 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                 )
             )
 
-    def test_local_packages_are_separate_topological_module_object_boundaries(self) -> None:
+    def test_local_packages_are_separate_topological_module_object_boundaries(
+        self,
+    ) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
             encoding="utf-8"
         )
@@ -316,6 +351,23 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                         source.replace(token, "", 1)
                     )
 
+    def test_remote_packages_use_the_same_module_boundary_from_a_read_only_cache(
+        self,
+    ) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_remote_package_cache_boundary(source)
+        for token in (
+            'docker_command+=(-v "$remote_cache:/remote-packages:ro")',
+            "--remote-package-cache-inside /remote-packages",
+            'remote_cache_arguments=(--remote-cache-root "$remote_cache")',
+            'if [[ "${package_record[4 + package_cursor]}" = /* ]]; then',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "remote package cache"):
+                    validate_remote_package_cache_boundary(source.replace(token, "", 1))
+
     def test_derived_source_provider_is_generated_and_reverified(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
             encoding="utf-8"
@@ -326,7 +378,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             'compiler_input_providers.py" verify',
             '<"$derived_root/derived-sources.nul"',
             'derived_sources+=("$derived_source")',
-            'find derived-sources -type f -print0',
+            "find derived-sources -type f -print0",
         ):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "derived-source"):
@@ -414,9 +466,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         self.assertIn('"$full/foundation/essentials/uuid_compat.o"', script)
 
     def test_harness_installs_python_for_generic_guest_drivers(self) -> None:
-        dockerfile = (REPOSITORY / "harness" / "Dockerfile").read_text(
-            encoding="utf-8"
-        )
+        dockerfile = (REPOSITORY / "harness" / "Dockerfile").read_text(encoding="utf-8")
         builder = (REPOSITORY / "harness" / "build_image.sh").read_text(
             encoding="utf-8"
         )

@@ -64,8 +64,10 @@ def _canonical_json(value: Any) -> bytes:
 
 def _relative(value: str, label: str) -> PurePosixPath:
     relative = PurePosixPath(value)
-    if relative.is_absolute() or not relative.parts or any(
-        part in ("", ".", "..") for part in relative.parts
+    if (
+        relative.is_absolute()
+        or not relative.parts
+        or any(part in ("", ".", "..") for part in relative.parts)
     ):
         raise BuildPlanError(f"{label} is not a safe relative path: {value!r}")
     return relative
@@ -119,7 +121,9 @@ def _resource_record(root: Path, value: str, label: str) -> dict[str, Any]:
     directories: list[str] = []
 
     def visit(directory: Path, relative: PurePosixPath) -> None:
-        entries = sorted(os.scandir(directory), key=lambda item: item.name.encode("utf-8"))
+        entries = sorted(
+            os.scandir(directory), key=lambda item: item.name.encode("utf-8")
+        )
         if not entries:
             directories.append(relative.as_posix())
         for entry in entries:
@@ -307,7 +311,9 @@ def _resource_records(inventory: dict[str, Any], root: Path) -> list[dict[str, A
             raise BuildPlanError(f"duplicate resource path: {value}")
         seen.add(value)
         destination = _resource_destination(entry, index)
-        components = tuple(component.casefold() for component in PurePosixPath(destination).parts)
+        components = tuple(
+            component.casefold() for component in PurePosixPath(destination).parts
+        )
         for previous_components, previous in destinations:
             shared = min(len(components), len(previous_components))
             if components[:shared] == previous_components[:shared]:
@@ -377,7 +383,12 @@ def _bundle_identifier(inventory: dict[str, Any]) -> str | None:
     return _string(raw, "PRODUCT_BUNDLE_IDENTIFIER")
 
 
-def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str, Any]]:
+def plan(
+    inventory: dict[str, Any],
+    source_root: Path,
+    remote_materializations: dict[str, Any] | None = None,
+    remote_cache_root: Path | None = None,
+) -> tuple[bytes, dict[str, Any]]:
     try:
         root = scene_bootstrap._strict_root(source_root)
         generated, bootstrap = scene_bootstrap.generate(inventory, root)
@@ -387,7 +398,9 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
     sources, compiler_inputs = _source_records(inventory, root)
     resources = _resource_records(inventory, root)
     try:
-        package_graph = local_package_graph.plan(inventory, root)
+        package_graph = local_package_graph.plan(
+            inventory, root, remote_materializations, remote_cache_root
+        )
     except local_package_graph.PackageGraphError as exc:
         raise BuildPlanError(str(exc)) from exc
     target = _mapping(inventory.get("target"), "target")
@@ -436,9 +449,7 @@ def _verify_bootstrap(
         # only the new SwiftUI branch requires an explicit discriminator.
         entry_point = "uikit-scene-bootstrap"
     else:
-        entry_point = _string(
-            raw_entry_point, "build plan bootstrap.entry_point"
-        )
+        entry_point = _string(raw_entry_point, "build plan bootstrap.entry_point")
     if entry_point not in {"uikit-scene-bootstrap", "swiftui-app-default-main"}:
         raise BuildPlanError(f"unsupported application entry point: {entry_point}")
 
@@ -473,7 +484,9 @@ def _verify_bootstrap(
         try:
             masked = scene_bootstrap._mask_swift_noncode(data.decode("utf-8"))
         except (UnicodeDecodeError, scene_bootstrap.BootstrapError) as exc:
-            raise BuildPlanError(f"cannot reparse application source: {relative}: {exc}") from exc
+            raise BuildPlanError(
+                f"cannot reparse application source: {relative}: {exc}"
+            ) from exc
         source_data[relative] = data
         parsed_sources.append((relative, path, data, masked))
 
@@ -486,7 +499,9 @@ def _verify_bootstrap(
     if actual_entry != entry_point:
         raise BuildPlanError("application entry point changed after planning")
 
-    def verify_source_record(raw: Any, label: str, name: str, path: str, data: bytes) -> None:
+    def verify_source_record(
+        raw: Any, label: str, name: str, path: str, data: bytes
+    ) -> None:
         record = _mapping(raw, label)
         if set(record) != {"path", "sha256", "type"}:
             raise BuildPlanError(f"{label} schema changed or is inconsistent")
@@ -494,13 +509,17 @@ def _verify_bootstrap(
         if record != expected or source_data.get(path) != data:
             raise BuildPlanError(f"{label} changed after planning")
 
-    info_plist = _mapping(bootstrap.get("info_plist"), "build plan bootstrap.info_plist")
+    info_plist = _mapping(
+        bootstrap.get("info_plist"), "build plan bootstrap.info_plist"
+    )
     if set(info_plist) != {"path", "sha256"}:
         raise BuildPlanError("build plan bootstrap.info_plist schema changed")
     info_path = _string(info_plist.get("path"), "build plan bootstrap.info_plist.path")
     info_record = _file_record(root, info_path, "build plan bootstrap.info_plist.path")
     if info_record["sha256"] != info_plist.get("sha256"):
-        raise BuildPlanError(f"application Info.plist changed after planning: {info_path}")
+        raise BuildPlanError(
+            f"application Info.plist changed after planning: {info_path}"
+        )
     try:
         plist = _mapping(
             plistlib.loads((root / info_path).read_bytes()),
@@ -547,10 +566,16 @@ def _verify_bootstrap(
     if bootstrap.get("generated_size") != len(generated) or bootstrap.get(
         "generated_sha256"
     ) != _sha256(generated):
-        raise BuildPlanError("generated bootstrap provenance changed or is inconsistent")
+        raise BuildPlanError(
+            "generated bootstrap provenance changed or is inconsistent"
+        )
 
 
-def verify(build_plan: dict[str, Any], source_root: Path) -> None:
+def verify(
+    build_plan: dict[str, Any],
+    source_root: Path,
+    remote_cache_root: Path | None = None,
+) -> None:
     if build_plan.get("classification") != "portable-application-build-plan":
         raise BuildPlanError("input is not a portable application build plan")
     if build_plan.get("format_version") != 2:
@@ -640,7 +665,9 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
             f"build plan resources[{index}].bundle_destination",
         ).as_posix()
         if actual != expected:
-            raise BuildPlanError(f"application resource changed after planning: {value}")
+            raise BuildPlanError(
+                f"application resource changed after planning: {value}"
+            )
 
     summary = _mapping(build_plan.get("summary"), "build plan summary")
     actual_summary = {
@@ -651,15 +678,19 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
         "compiler_inputs": len(compiler_inputs),
         "resource_inputs": len(resources),
         "resource_files": sum(
-            1
-            if item.get("kind") == "file"
-            else len(_list(item.get("files"), "resource files"))
+            (
+                1
+                if item.get("kind") == "file"
+                else len(_list(item.get("files"), "resource files"))
+            )
             for item in resources
         ),
         "swift_sources": len(sources),
     }
     if summary != actual_summary:
-        raise BuildPlanError("application build-plan summary changed or is inconsistent")
+        raise BuildPlanError(
+            "application build-plan summary changed or is inconsistent"
+        )
 
     bootstrap = _mapping(build_plan.get("bootstrap"), "build plan bootstrap")
     _verify_bootstrap(bootstrap, build_plan, sources, root)
@@ -667,7 +698,9 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
     if package_graph is not None:
         try:
             local_package_graph.verify(
-                _mapping(package_graph, "build plan local_package_graph"), root
+                _mapping(package_graph, "build plan local_package_graph"),
+                root,
+                remote_cache_root,
             )
         except local_package_graph.PackageGraphError as exc:
             raise BuildPlanError(str(exc)) from exc
@@ -682,7 +715,9 @@ def _write_new_directory(
     except ValueError:
         pass
     else:
-        raise BuildPlanError("build-plan output must be outside application source root")
+        raise BuildPlanError(
+            "build-plan output must be outside application source root"
+        )
     if output.exists() or output.is_symlink():
         raise BuildPlanError(f"output directory already exists: {output}")
     try:
@@ -691,7 +726,9 @@ def _write_new_directory(
         plan_bytes = _canonical_json(build_plan)
         (output / "application-build-plan.json").write_bytes(plan_bytes)
         (output / "app-sources.nul").write_bytes(
-            b"".join(item["path"].encode("utf-8") + b"\0" for item in build_plan["sources"])
+            b"".join(
+                item["path"].encode("utf-8") + b"\0" for item in build_plan["sources"]
+            )
         )
         (output / "compiler-inputs.nul").write_bytes(
             b"".join(
@@ -719,7 +756,9 @@ def _write_new_directory(
                 {
                     "GeneratedSceneBootstrap.swift": _sha256(generated),
                     "application-build-plan.json": _sha256(plan_bytes),
-                    "app-sources.nul": _sha256((output / "app-sources.nul").read_bytes()),
+                    "app-sources.nul": _sha256(
+                        (output / "app-sources.nul").read_bytes()
+                    ),
                     "compiler-inputs.nul": _sha256(
                         (output / "compiler-inputs.nul").read_bytes()
                     ),
@@ -738,6 +777,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("inventory", type=Path)
     parser.add_argument("--source-root", required=True, type=Path)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--remote-materializations", type=Path)
+    parser.add_argument("--remote-cache-root", type=Path)
     parser.add_argument(
         "--verify",
         action="store_true",
@@ -755,7 +796,11 @@ def main(argv: list[str] | None = None) -> int:
         if arguments.verify:
             if arguments.output_dir is not None:
                 raise BuildPlanError("--verify and --output-dir are mutually exclusive")
-            verify(raw, arguments.source_root)
+            if arguments.remote_materializations is not None:
+                raise BuildPlanError(
+                    "--remote-materializations is only valid when creating a build plan"
+                )
+            verify(raw, arguments.source_root, arguments.remote_cache_root)
             print(
                 f"APPLICATION_BUILD_INPUTS_OK sources={len(raw['sources'])} "
                 f"compiler_inputs={len(raw['compiler_inputs'])} "
@@ -765,7 +810,21 @@ def main(argv: list[str] | None = None) -> int:
         if arguments.output_dir is None:
             raise BuildPlanError("--output-dir is required when creating a build plan")
         inventory = raw
-        generated, build_plan = plan(inventory, arguments.source_root)
+        materializations = None
+        if arguments.remote_materializations is not None:
+            materializations = _mapping(
+                local_package_graph._json_no_duplicates(
+                    arguments.remote_materializations.read_bytes(),
+                    "remote materializations",
+                ),
+                "remote materializations",
+            )
+        generated, build_plan = plan(
+            inventory,
+            arguments.source_root,
+            materializations,
+            arguments.remote_cache_root,
+        )
         _write_new_directory(
             arguments.output_dir, generated, build_plan, arguments.source_root
         )
@@ -775,7 +834,12 @@ def main(argv: list[str] | None = None) -> int:
             f"resource_files={build_plan['summary']['resource_files']} "
             f"sha256={_sha256(_canonical_json(build_plan))}"
         )
-    except (BuildPlanError, OSError, json.JSONDecodeError) as exc:
+    except (
+        BuildPlanError,
+        OSError,
+        json.JSONDecodeError,
+        local_package_graph.PackageGraphError,
+    ) as exc:
         print(f"application-build-plan: {exc}", file=sys.stderr)
         return 1
     return 0

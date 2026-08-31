@@ -4,6 +4,7 @@ import copy
 import json
 import os
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 
@@ -15,6 +16,7 @@ import sys
 sys.path.insert(0, os.fspath(TOOL_DIR))
 
 import local_package_graph  # noqa: E402
+import remote_package_materializer  # noqa: E402
 
 
 class LocalPackageGraphTests(unittest.TestCase):
@@ -134,6 +136,82 @@ class LocalPackageGraphTests(unittest.TestCase):
             """,
         )
 
+    @staticmethod
+    def git(repository: Path, *arguments: str) -> str:
+        return subprocess.run(
+            ["git", "-C", os.fspath(repository), *arguments],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        ).stdout
+
+    def materialized_remote(self) -> tuple[dict, Path]:
+        origin = Path(self.temporary.name) / "RemoteOrigin"
+        origin.mkdir()
+        self.git(origin, "init", "--initial-branch=main")
+        self.git(origin, "config", "user.name", "Graph Test")
+        self.git(origin, "config", "user.email", "graph@example.invalid")
+        (origin / "Package.swift").write_text(
+            "// swift-tools-version: 6.0\n"
+            "import PackageDescription\n"
+            'let package = Package(name: "Remote", products: ['
+            '.library(name: "Remote", targets: ["Remote"])], '
+            'targets: [.target(name: "Remote")])\n',
+            encoding="utf-8",
+        )
+        source = origin / "Sources/Remote/Remote.swift"
+        source.parent.mkdir(parents=True)
+        source.write_text("public struct Remote {}\n", encoding="utf-8")
+        self.git(origin, "add", "--all")
+        self.git(origin, "commit", "-m", "remote")
+        revision = self.git(origin, "rev-parse", "HEAD").strip()
+        resolution = (
+            self.root
+            / "Probe.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        )
+        value = json.loads(resolution.read_text(encoding="utf-8"))
+        value["pins"][0]["state"]["revision"] = revision
+        resolution.write_text(json.dumps(value), encoding="utf-8")
+        baseline = self.graph()
+        descriptor = remote_package_materializer.descriptor_for(
+            baseline["external_packages"][0]
+        )
+        digest = remote_package_materializer.descriptor_digest(descriptor)
+        cache = Path(self.temporary.name) / "remote-cache"
+        entry = cache / f"objects/sha256/{digest[:2]}/{digest}"
+        repository = entry / "repository"
+        entry.mkdir(parents=True)
+        subprocess.run(
+            ["git", "clone", "--no-tags", os.fspath(origin), os.fspath(repository)],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.git(repository, "checkout", "--detach", revision)
+        self.git(
+            repository,
+            "remote",
+            "set-url",
+            "origin",
+            "https://example.invalid/Remote.git",
+        )
+        record = remote_package_materializer._attestation(
+            descriptor, repository, f"objects/sha256/{digest[:2]}/{digest}/repository"
+        )
+        (entry / "attestation.json").write_bytes(
+            remote_package_materializer.canonical_json(record)
+        )
+        materializations = {
+            "classification": "exact-remote-swift-package-materialization-set",
+            "format_version": 1,
+            "packages": [record],
+            "source_graph_sha256": local_package_graph._sha256(
+                local_package_graph.canonical_json(baseline)
+            ),
+        }
+        return materializations, cache
+
     def test_freezes_topology_edges_hashes_and_exact_remote_pin(self) -> None:
         graph = self.graph()
         self.assertEqual(
@@ -196,6 +274,48 @@ class LocalPackageGraphTests(unittest.TestCase):
                 with self.assertRaises(local_package_graph.PackageGraphError):
                     local_package_graph.verify(graph, self.root)
                 path.write_text(original, encoding="utf-8")
+
+    def test_materialized_remote_targets_are_in_the_build_graph_and_contract(
+        self,
+    ) -> None:
+        materializations, cache = self.materialized_remote()
+        graph = local_package_graph.plan(
+            self.inventory, self.root, materializations, cache
+        )
+        self.assertIsNotNone(graph)
+        assert graph is not None
+        self.assertEqual(graph["format_version"], 2)
+        self.assertEqual(graph["buildability"], {"reason": None, "status": "buildable"})
+        self.assertEqual(
+            [target["target_id"] for target in graph["targets"]],
+            [
+                f"@remote/remote/{materializations['packages'][0]['commit']}#Remote",
+                "Core#Core",
+                "Util#Util",
+                "Feature#Feature",
+            ],
+        )
+        self.assertEqual(graph["summary"]["remote_packages"], 1)
+        self.assertEqual(graph["summary"]["remote_targets"], 1)
+        self.assertEqual(graph["summary"]["swift_sources"], 4)
+        self.assertEqual(graph["external_packages"], [])
+        local_package_graph.require_buildable(graph)
+        local_package_graph.verify(graph, self.root, cache)
+        output = Path(self.temporary.name) / "expanded-build"
+        contract = local_package_graph.prepare_build(graph, self.root, output, cache)
+        self.assertTrue(Path(contract["targets"][0]["sources"][0]).is_absolute())
+        self.assertTrue(Path(contract["targets"][-1]["sources"][0]).is_absolute())
+        local_package_graph.verify_build_contract(graph, self.root, output, cache)
+        remote_source = (
+            cache
+            / materializations["packages"][0]["repository_path"]
+            / "Sources/Remote/Remote.swift"
+        )
+        remote_source.write_text("public struct Changed {}\n", encoding="utf-8")
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError, "stale or corrupt"
+        ):
+            local_package_graph.verify(graph, self.root, cache)
 
     def test_cycle_is_refused(self) -> None:
         self.write_package(

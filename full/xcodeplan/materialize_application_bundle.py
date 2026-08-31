@@ -48,9 +48,13 @@ def _strict_directory(path: Path, label: str) -> Path:
     try:
         metadata = path.lstat()
     except OSError as exc:
-        raise BundleMaterializationError(f"cannot inspect {label}: {path}: {exc}") from exc
+        raise BundleMaterializationError(
+            f"cannot inspect {label}: {path}: {exc}"
+        ) from exc
     if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
-        raise BundleMaterializationError(f"{label} is not an ordinary directory: {path}")
+        raise BundleMaterializationError(
+            f"{label} is not an ordinary directory: {path}"
+        )
     return path.resolve(strict=True)
 
 
@@ -59,7 +63,9 @@ def _outside_source(output: Path, source_root: Path) -> None:
         output.resolve(strict=False).relative_to(source_root)
     except ValueError:
         return
-    raise BundleMaterializationError("application bundle output must be outside source root")
+    raise BundleMaterializationError(
+        "application bundle output must be outside source root"
+    )
 
 
 def _copy_bytes(
@@ -71,7 +77,9 @@ def _copy_bytes(
     source_class: str,
 ) -> None:
     if destination.exists() or destination.is_symlink():
-        raise BundleMaterializationError(f"bundle destination already exists: {destination}")
+        raise BundleMaterializationError(
+            f"bundle destination already exists: {destination}"
+        )
     destination.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
     data = source.read_bytes()
     digest = _sha256(data)
@@ -81,7 +89,9 @@ def _copy_bytes(
     destination.chmod(0o644)
     copied = destination.read_bytes()
     if copied != data:
-        raise BundleMaterializationError(f"copied resource differs from input: {destination}")
+        raise BundleMaterializationError(
+            f"copied resource differs from input: {destination}"
+        )
     records.append(
         {
             "bundle_path": destination.relative_to(bundle_root).as_posix(),
@@ -141,7 +151,9 @@ def _copy_application_resources(
             )
             continue
         if kind != "directory":
-            raise BundleMaterializationError(f"unsupported resource record kind: {kind!r}")
+            raise BundleMaterializationError(
+                f"unsupported resource record kind: {kind!r}"
+            )
         destination.mkdir(mode=0o755, parents=True, exist_ok=False)
         for raw_empty in application_build_plan._list(
             resource.get("empty_directories"), f"resources[{index}].empty_directories"
@@ -254,6 +266,7 @@ def materialize(
     platform_resources: Path,
     output_app: Path,
     attestation: Path,
+    remote_cache_root: Path | None = None,
 ) -> dict[str, Any]:
     source_root = _strict_directory(source_root, "application source root")
     platform_resources = _strict_directory(
@@ -263,14 +276,20 @@ def materialize(
     if output_app.suffix != ".app":
         raise BundleMaterializationError("application bundle output must end in .app")
     if output_app.exists() or output_app.is_symlink():
-        raise BundleMaterializationError(f"application bundle already exists: {output_app}")
+        raise BundleMaterializationError(
+            f"application bundle already exists: {output_app}"
+        )
     if attestation.exists() or attestation.is_symlink():
-        raise BundleMaterializationError(f"attestation output already exists: {attestation}")
+        raise BundleMaterializationError(
+            f"attestation output already exists: {attestation}"
+        )
     if not output_app.parent.is_dir() or not attestation.parent.is_dir():
-        raise BundleMaterializationError("bundle and attestation parents must already exist")
+        raise BundleMaterializationError(
+            "bundle and attestation parents must already exist"
+        )
 
     try:
-        application_build_plan.verify(plan, source_root)
+        application_build_plan.verify(plan, source_root, remote_cache_root)
     except application_build_plan.BuildPlanError as exc:
         raise BundleMaterializationError(str(exc)) from exc
 
@@ -339,6 +358,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--platform-resources", required=True, type=Path)
     parser.add_argument("--output-app", required=True, type=Path)
     parser.add_argument("--attestation", required=True, type=Path)
+    parser.add_argument("--remote-cache-root", type=Path)
     return parser
 
 
@@ -354,6 +374,7 @@ def main(argv: list[str] | None = None) -> int:
             arguments.platform_resources,
             arguments.output_app,
             arguments.attestation,
+            arguments.remote_cache_root,
         )
         print(
             "APPLICATION_BUNDLE_RESOURCES_OK "
