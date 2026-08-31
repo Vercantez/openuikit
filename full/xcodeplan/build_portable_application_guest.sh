@@ -436,6 +436,10 @@ PY
     if [ "$preview_required" = yes ]; then
         plugin_arguments=(-load-plugin-executable "$plugin#$plugin_module")
     fi
+    # Every invocation that loads the SwiftSyntax executable plugin must use
+    # one driver job. Swift 6.2.4 can otherwise race the framed termination
+    # message against plugin teardown and report Corrupted JSON after success.
+    local serial_job_argument=-j1
 
     # Compile the frozen local Swift-package graph as one module/object boundary
     # per reachable target.  A remote product is never guessed or stubbed: the
@@ -631,8 +635,20 @@ PY
             -module-cache-path "$preview_module_cache"
             "${package_import_arguments[@]}"
             -default-isolation MainActor -module-name "$module"
-            "${plugin_arguments[@]}" "${diagnostic_arguments[@]}"
+            "${plugin_arguments[@]}" "$serial_job_argument"
+            "${diagnostic_arguments[@]}"
             -typecheck "${preview_sources[@]}")
+        local preview_effective_serial_job_count=0
+        for argument in "${preview_command[@]}"; do
+            case "$argument" in
+                "$serial_job_argument")
+                    preview_effective_serial_job_count=$((preview_effective_serial_job_count + 1)) ;;
+                -j|-j*)
+                    die "Preview evidence compile has an unpinned driver job argument: $argument" ;;
+            esac
+        done
+        [ "$preview_effective_serial_job_count" -eq 1 ] \
+            || die "Preview evidence effective serialized driver job count is not one"
         printf '%s\0' "${preview_command[@]}" \
             >"$output/preview-evidence-compile-arguments.nul"
         local preview_stdout preview_stderr preview_status
@@ -660,13 +676,16 @@ PY
             die "Preview evidence compiler emitted a failure diagnostic despite success"
         fi
         {
-            printf 'format\tportable-preview-evidence-audit-v1\n'
+            printf 'format\tportable-preview-evidence-audit-v2\n'
             printf 'application-source-count\t%s\n' "${#app_sources[@]}"
             printf 'bounded-source-count\t%s\n' "${#preview_sources[@]}"
             printf 'module-name\t%s\n' "$module"
             printf 'whole-module-flag-count\t0\n'
             printf 'disable-batch-mode-count\t0\n'
             printf 'dump-macro-expansions-count\t1\n'
+            printf 'driver-job-flag-count\t%s\n' \
+                "$preview_effective_serial_job_count"
+            printf 'driver-job-count\t1\n'
             printf 'source-audit-sha256\t%s\n' \
                 "$(sha256sum "$output/preview-evidence-source-audit.json" | awk '{print $1}')"
             printf 'arguments-sha256\t%s\n' \
@@ -685,11 +704,9 @@ PY
     python3 -B "$SCRIPT_DIR/application_object_contract.py" create-output-map \
         --output-map "$output_map" --object-root "$object_root" \
         "${compile_sources[@]}"
-    # Swift 6.2.4 can corrupt the executable-macro JSON channel when multiple
-    # driver jobs tear down plugin processes concurrently. Keep the driver's
-    # batch/output-map compilation, but serialize its job scheduler. This does
-    # not merge objects or enable WMO: every source still has its own map entry.
-    local serial_job_argument=-j1
+    # Keep the driver's batch/output-map compilation, but serialize its job
+    # scheduler. This does not merge objects or enable WMO: every source still
+    # has its own map entry.
     local -a compile_command
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"

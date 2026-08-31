@@ -575,7 +575,7 @@ def preview_json(
         return None
     safe_relative(preview_relative, "preview attestation path")
     preview_path = require_regular_beneath(package, preview_relative, "preview attestation")
-    values = parse_key_value(preview_path, "core-preview-input-v1")
+    values = parse_key_value(preview_path, "core-preview-input-v2")
     required = {
         "module-name",
         "module-path",
@@ -590,6 +590,7 @@ def preview_json(
         "plugin-swiftsyntax-revision",
         "plugin-registration",
         "plugin-load-flags",
+        "plugin-driver-job-count",
     }
     if set(values) != required:
         refuse(f"preview attestation keys drifted: {sorted(set(values) ^ required)}")
@@ -601,6 +602,8 @@ def preview_json(
         refuse("preview plugin registration name drifted")
     if values["plugin-swiftsyntax-revision"] != PREVIEW_SWIFTSYNTAX_REVISION:
         refuse("preview SwiftSyntax revision drifted")
+    if values["plugin-driver-job-count"] != "1":
+        refuse("preview plugin driver job count is not one")
     if values["plugin-elf-class"] != "ELF64" or values["plugin-elf-machine"] != "AArch64":
         refuse("preview plugin is not native ELF64/AArch64")
     module = next(
@@ -629,6 +632,7 @@ def preview_json(
     if load_tokens != [
         "-load-plugin-executable",
         "${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros",
+        "-j1",
     ]:
         refuse("preview plugin load flags have the wrong token contract")
     if external_plugin is not None:
@@ -646,6 +650,7 @@ def preview_json(
         "plugin_elf_machine": values["plugin-elf-machine"],
         "plugin_toolchain": values["plugin-toolchain"],
         "plugin_swiftsyntax_revision": values["plugin-swiftsyntax-revision"],
+        "plugin_driver_job_count": 1,
         "developer_tools_support_module": {
             "path": values["module-path"],
             "sha256": values["module-sha256"],
@@ -656,6 +661,7 @@ def preview_json(
         "load_arguments": [
             "-load-plugin-executable",
             "${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros",
+            "-j1",
         ],
         "app_compile_diagnostic_arguments": [
             "-Xfrontend",
@@ -809,6 +815,7 @@ def validate_document(
             "plugin_elf_machine",
             "plugin_toolchain",
             "plugin_swiftsyntax_revision",
+            "plugin_driver_job_count",
             "developer_tools_support_module",
             "developer_tools_support_object",
             "developer_tools_support_object_sha256",
@@ -820,9 +827,12 @@ def validate_document(
             refuse("core package preview keys drifted")
         if preview["plugin_module"] != "OpenUIKitPreviewMacros":
             refuse("core package preview plugin module drifted")
+        if preview["plugin_driver_job_count"] != 1:
+            refuse("core package preview plugin driver job count drifted")
         if preview["load_arguments"] != [
             "-load-plugin-executable",
             "${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros",
+            "-j1",
         ]:
             refuse("core package preview load arguments drifted")
         if read_nul_tokens(

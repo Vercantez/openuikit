@@ -215,8 +215,21 @@ three hashes. It also records and enforces SwiftSyntax revision
 `4799286537280063c85a32f09884cfbca301b1a1`. The host plugin is never
 target-linked or copied into the
 package. Its package response file contains the literal relocatable token
-`${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros`; the actual external plugin path is
-used only while building or when explicitly passed to manifest verification.
+`${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros` followed by exactly `-j1`; the
+actual external plugin path is used only while building or when explicitly
+passed to manifest verification. Every compiler invocation that loads this
+SwiftSyntax executable plugin is serialized the same way. This preserves the
+ordinary driver mode while preventing Swift 6.2.4 from concurrently tearing
+down framed plugin channels; inherited or additional driver-job flags remain
+outside the contract.
+
+The pinned SwiftSyntax revision predates upstream commit
+`f537808000a69e5acfa0b42c5de1ae5793e2c0c5`, which recognizes a zero-length
+framed message as plugin termination. Without that check, teardown can pass an
+empty payload to the JSON decoder and emit the observed `Internal Error:`,
+`Corrupted JSON`, and `unexpected end of file` diagnostics despite a successful
+compiler exit. The one-job contract is the tested workaround while this exact
+SwiftSyntax revision stays pinned.
 
 The target DTS module is added to UIKit/app compile visibility. Its object is
 kept separate under `objects/` and named only by

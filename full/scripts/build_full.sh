@@ -124,6 +124,7 @@ if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
         -I "$(dirname "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE")"
         -load-plugin-executable \
         "$BUILD_FULL_PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros"
+        -j1
     )
     PREVIEW_LINK_OBJECTS=("$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT")
     PREVIEW_INPUT_STATE_BEFORE=$(

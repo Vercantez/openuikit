@@ -227,6 +227,44 @@ def validate_core_preview_export_contract(source: str) -> None:
         raise AssertionError("core Preview export must remain one exact symbol")
 
 
+def validate_preview_plugin_single_job_contract(
+    builder: str, build_full: str
+) -> None:
+    builder_counts = {
+        "-load-plugin-executable": 2,
+        "-j1": 2,
+        '"${PREVIEW_FLAGS[@]}"': 3,
+        "core-preview-input-v2": 1,
+        "plugin-driver-job-count\\t1": 1,
+    }
+    build_full_counts = {
+        "-load-plugin-executable": 1,
+        "-j1": 1,
+        '"${PREVIEW_SWIFT_FLAGS[@]}"': 5,
+    }
+    drifted = [
+        f"builder:{token}"
+        for token, count in builder_counts.items()
+        if builder.count(token) != count
+    ]
+    drifted.extend(
+        f"build-full:{token}"
+        for token, count in build_full_counts.items()
+        if build_full.count(token) != count
+    )
+    if drifted:
+        raise AssertionError(
+            f"Preview plugin single-job compiler census drifted: {drifted}"
+        )
+    if (
+        '"$PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros" -j1)' not in builder
+        or "'${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros' -j1" not in builder
+        or '"$BUILD_FULL_PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros"\n'
+        "        -j1" not in build_full
+    ):
+        raise AssertionError("Preview plugin single-job flag ordering drifted")
+
+
 def validate_foundation_runtime_undefineds(source: str) -> None:
     for assignment, expected, predicate in FOUNDATION_RUNTIME_UNDEFINED_CONTRACT:
         match = re.search(rf"(?m)^{re.escape(assignment)}=([0-9]+)$", source)
@@ -493,13 +531,13 @@ class PackageFixture:
             self.plugin.chmod(0o755)
             (root / "preview-plugin-load-flag.rsp").write_bytes(
                 b"-load-plugin-executable\0"
-                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0"
+                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0-j1\0"
             )
             write_file(
                 root / "attestation/preview-input.tsv",
                 "\n".join(
                     (
-                        "format\tcore-preview-input-v1",
+                        "format\tcore-preview-input-v2",
                         "module-name\tDeveloperToolsSupport",
                         "module-path\tmodules/DeveloperToolsSupport.swiftmodule",
                         f"module-sha256\t{sha256(root / 'modules/DeveloperToolsSupport.swiftmodule')}",
@@ -513,6 +551,7 @@ class PackageFixture:
                         "plugin-swiftsyntax-revision\t4799286537280063c85a32f09884cfbca301b1a1",
                         "plugin-registration\tOpenUIKitPreviewMacros",
                         "plugin-load-flags\tpreview-plugin-load-flag.rsp",
+                        "plugin-driver-job-count\t1",
                     )
                 )
                 + "\n",
@@ -581,7 +620,9 @@ class PackageFixture:
             )
         write_file(self.root / "attestation/artifacts.tsv", "\n".join(records) + "\n")
 
-    def write_manifest(self) -> None:
+    def write_manifest(
+        self, expected: int = 0
+    ) -> subprocess.CompletedProcess[str]:
         arguments = [
             "write",
             "--package-root",
@@ -633,7 +674,7 @@ class PackageFixture:
                     str(self.plugin),
                 )
             )
-        run_tool(*arguments)
+        return run_tool(*arguments, expected=expected)
 
 
 class PackageContractTests(unittest.TestCase):
@@ -669,6 +710,15 @@ class PackageContractTests(unittest.TestCase):
         document = json.loads((fixture.root / "attestation/core-package.json").read_text())
         preview = document["preview"]
         self.assertEqual(preview["plugin_module"], "OpenUIKitPreviewMacros")
+        self.assertEqual(preview["plugin_driver_job_count"], 1)
+        self.assertEqual(
+            preview["load_arguments"],
+            [
+                "-load-plugin-executable",
+                "${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros",
+                "-j1",
+            ],
+        )
         self.assertEqual(
             preview["developer_tools_support_object"],
             "objects/developertoolsupport.o",
@@ -680,7 +730,8 @@ class PackageContractTests(unittest.TestCase):
         self.assertNotIn("objects/developertoolsupport.o", document["executable_link_arguments"])
         self.assertEqual(
             (fixture.root / "preview-plugin-load-flag.rsp").read_bytes(),
-            b"-load-plugin-executable\0${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0",
+            b"-load-plugin-executable\0"
+            b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0-j1\0",
         )
         self.assertFalse((fixture.root / "OpenUIKitPreviewMacros-tool").exists())
         self.assertNotIn(str(fixture.plugin), json.dumps(document))
@@ -698,6 +749,44 @@ class PackageContractTests(unittest.TestCase):
         shutil.copytree(fixture.root, relocated)
         run_tool("verify", "--package-root", str(relocated))
         self.assertIn("preview=yes", run_canonical(relocated).stdout)
+
+    def test_preview_single_job_manifest_mutations_are_refused(self) -> None:
+        cases = (
+            (
+                b"-load-plugin-executable\0"
+                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0",
+                "wrong token contract",
+            ),
+            (
+                b"-load-plugin-executable\0"
+                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0-j2\0",
+                "wrong token contract",
+            ),
+            (
+                b"-load-plugin-executable\0"
+                b"${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros\0-j1\0-j1\0",
+                "wrong token contract",
+            ),
+        )
+        for index, (payload, diagnostic) in enumerate(cases):
+            with self.subTest(payload=payload):
+                fixture = PackageFixture(self.base / f"job-mutation-{index}", True)
+                (fixture.root / "preview-plugin-load-flag.rsp").write_bytes(payload)
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn(diagnostic, refusal.stderr)
+
+        fixture = PackageFixture(self.base / "job-count-mutation", True)
+        attestation = fixture.root / "attestation/preview-input.tsv"
+        attestation.write_text(
+            attestation.read_text(encoding="utf-8").replace(
+                "plugin-driver-job-count\t1\n",
+                "plugin-driver-job-count\t2\n",
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        refusal = fixture.write_manifest(expected=2)
+        self.assertIn("driver job count is not one", refusal.stderr)
 
     def test_changed_resource_is_refused(self) -> None:
         fixture = self.fixture(False)
@@ -930,6 +1019,23 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("${PREVIEW_SWIFT_FLAGS[@]}", source)
         self.assertIn("${PREVIEW_LINK_OBJECTS[@]}", source)
         self.assertLess(source.index("literal UIKit shim"), source.index("app-only Foundation identity shim"))
+
+    def test_every_preview_plugin_compile_is_single_job_and_mutation_refuses(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        build_full = BUILD_FULL.read_text(encoding="utf-8")
+        validate_preview_plugin_single_job_contract(builder, build_full)
+        mutations = (
+            (builder.replace("-j1", "-j2", 1), build_full),
+            (builder.replace('"${PREVIEW_FLAGS[@]}"', "", 1), build_full),
+            (builder, build_full.replace("-j1", "-j2", 1)),
+            (builder, build_full.replace('"${PREVIEW_SWIFT_FLAGS[@]}"', "", 1)),
+        )
+        for mutated_builder, mutated_build_full in mutations:
+            with self.subTest():
+                with self.assertRaisesRegex(AssertionError, "single-job"):
+                    validate_preview_plugin_single_job_contract(
+                        mutated_builder, mutated_build_full
+                    )
 
     def test_host_wrapper_mounts_inputs_read_only_and_outputs_fresh(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")

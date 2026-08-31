@@ -54,12 +54,18 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         '"$effective_disable_batch_count" -eq 0',
         '"$effective_dump_count" -eq 0',
         "local serial_job_argument=-j1",
+        '"${plugin_arguments[@]}" "$serial_job_argument"\n'
+        '            "${diagnostic_arguments[@]}"',
         '"${plugin_arguments[@]}" "$serial_job_argument" -emit-object',
         '"$effective_serial_job_count" -eq 1',
         "application compile arguments must not override the pinned driver job count",
         "application compile has an unpinned driver job argument",
-        "driver-job-flag-count\\t%s\\n",
-        "driver-job-count\\t1\\n",
+        "local preview_effective_serial_job_count=0",
+        'for argument in "${preview_command[@]}"; do',
+        '"$preview_effective_serial_job_count" -eq 1',
+        "Preview evidence compile has an unpinned driver job argument",
+        "Preview evidence effective serialized driver job count is not one",
+        "portable-preview-evidence-audit-v2",
         'object_audit=$output/application-object-audit.json',
         '--audit "$output/application-cross-file-symbols.json"',
         '--cross-file-audit "$output/application-cross-file-symbols.json"',
@@ -80,6 +86,23 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         raise AssertionError(
             "multi-source object-map compile contract drifted: serial job pin"
         )
+    if source.count("driver-job-count\\t1\\n") != 2:
+        raise AssertionError(
+            "multi-source object-map compile contract drifted: "
+            "plugin invocation job audits"
+        )
+    if source.count("driver-job-flag-count\\t%s\\n") != 2:
+        raise AssertionError(
+            "multi-source object-map compile contract drifted: "
+            "plugin invocation job-flag audits"
+        )
+    for stream in ("$preview_stderr", "$compile_stderr"):
+        token = f'swift_compiler_output_has_failure_diagnostic "{stream}"'
+        if source.count(token) != 1:
+            raise AssertionError(
+                "multi-source object-map compile contract drifted: "
+                f"fatal compiler diagnostic guard for {stream}"
+            )
     forbidden_legacy = (
         "application_codegen_arguments",
         '-emit-object -o "$object"',
@@ -326,6 +349,11 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             '"$effective_disable_batch_count" -eq 0',
             '"$effective_dump_count" -eq 0',
             "local serial_job_argument=-j1",
+            '"${plugin_arguments[@]}" "$serial_job_argument"\n'
+            '            "${diagnostic_arguments[@]}"',
+            "local preview_effective_serial_job_count=0",
+            '"$preview_effective_serial_job_count" -eq 1',
+            'swift_compiler_output_has_failure_diagnostic "$preview_stderr"',
             '"$effective_serial_job_count" -eq 1',
             '"${package_objects[@]}" "${extra_objects[@]}")',
         ):

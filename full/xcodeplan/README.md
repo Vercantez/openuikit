@@ -354,10 +354,11 @@ forbidden. The driver captures the bounded proof as
 `app-macro-expansions.stderr`, records its exact source/argument hashes, and
 rejects `Internal Error:`, unlocated fatal/error diagnostics, or ordinary
 source errors even when swiftc returns zero. Production compilation has a
-separate `application-compile.stderr` and never receives the dump flags. The
-Swift 6.2.4 executable-macro channel is serialized with exactly `-j1`: the
-default driver still uses its output-file map and emits one object per source,
-but it cannot race concurrent plugin-process teardown. Any inherited or
+separate `application-compile.stderr` and never receives the dump flags. Both
+the bounded evidence typecheck and production compilation serialize the Swift
+6.2.4 executable-macro channel with exactly `-j1`: the production driver still
+uses its output-file map and emits one object per source, but neither compiler
+invocation can race concurrent plugin-process teardown. Any inherited or
 additional `-j` option is refused, and `Internal Error:` remains fatal even
 when swiftc exits zero. The driver also attests that the target-side
 DeveloperToolsSupport object appears exactly once in the executable link. It

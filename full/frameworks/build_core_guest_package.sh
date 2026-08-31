@@ -456,7 +456,7 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
     PREVIEW_OBJECT_SHA=$(hash_file "$DEVELOPER_TOOLS_SUPPORT_OBJECT")
     PREVIEW_PLUGIN_SHA=$(hash_file "$PREVIEW_MACRO_PLUGIN")
     PREVIEW_FLAGS=(-load-plugin-executable \
-        "$PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros")
+        "$PREVIEW_MACRO_PLUGIN#OpenUIKitPreviewMacros" -j1)
 fi
 
 echo '== rebuild the proven FoundationEssentials/OpenUIKit substrate from cold roots'
@@ -1060,10 +1060,10 @@ printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
 
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
     printf '%s\0' -load-plugin-executable \
-        '${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros' \
+        '${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros' -j1 \
         > "$STAGE/preview-plugin-load-flag.rsp"
     {
-        printf 'format\tcore-preview-input-v1\n'
+        printf 'format\tcore-preview-input-v2\n'
         printf 'module-name\tDeveloperToolsSupport\n'
         printf 'module-path\tmodules/DeveloperToolsSupport.swiftmodule\n'
         printf 'module-sha256\t%s\n' "$PREVIEW_MODULE_SHA"
@@ -1078,6 +1078,7 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
             "$EXPECTED_PREVIEW_SWIFTSYNTAX_REVISION"
         printf 'plugin-registration\tOpenUIKitPreviewMacros\n'
         printf 'plugin-load-flags\tpreview-plugin-load-flag.rsp\n'
+        printf 'plugin-driver-job-count\t1\n'
     } > "$STAGE/attestation/preview-input.tsv"
 fi
 
