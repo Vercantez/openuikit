@@ -11,9 +11,11 @@ modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Dispatch, Combine, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
-CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI, and
-MobileCoreServices, and Security. These are twenty-seven reusable ARM64 Mach-O
-framework binaries, including real `libDispatch.dylib`, `libSwiftUI.dylib`,
+CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
+MobileCoreServices, Security, CryptoKit, CommonCrypto, and AppIntents. These are
+thirty-one reusable
+ARM64 Mach-O framework binaries, including real `libDispatch.dylib`,
+`libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
 overlays. The package also contains C module headers, CQuartz, the SDK, the attested machorun

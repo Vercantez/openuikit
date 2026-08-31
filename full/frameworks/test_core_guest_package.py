@@ -155,6 +155,7 @@ FRAMEWORKS = (
     "Security",
     "CryptoKit",
     "CommonCrypto",
+    "AppIntents",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -665,6 +666,7 @@ class PackageFixture:
             "-lSecurity",
             "-lCryptoKit",
             "-lCommonCrypto",
+            "-lAppIntents",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1453,7 +1455,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 30)
+        self.assertEqual(len(FRAMEWORKS), 31)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 14)
         for token in (
             "-module-name WebKit -emit-module",
@@ -1979,7 +1981,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_fifteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_sixteen_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2000,8 +2002,9 @@ class ShellContractTests(unittest.TestCase):
             "Security",
             "CryptoKit",
             "CommonCrypto",
+            "AppIntents",
         )
-        self.assertEqual(FRAMEWORKS[-15:], first_party)
+        self.assertEqual(FRAMEWORKS[-16:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2019,7 +2022,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-15", probe)
+        self.assertIn("first-party=portable-16", probe)
         self.assertIn("security=keychain,random", probe)
         for framework in first_party:
             with self.subTest(framework=framework):

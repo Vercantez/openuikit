@@ -25,6 +25,7 @@ import MobileCoreServices
 import Security
 import CryptoKit
 import CommonCrypto
+import AppIntents
 import WebKit
 
 @MainActor
@@ -76,6 +77,12 @@ private final class CoreWebKitDelegate: WKNavigationDelegate {
 }
 
 private final class CoreProbeIntent: INIntent, @unchecked Sendable {}
+
+private struct CoreModernIntent: AppIntent {
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        .result(dialog: "core-package")
+    }
+}
 
 private final class CoreStoreObserver: SKPaymentTransactionObserver {
     var states: [SKPaymentTransactionState] = []
@@ -631,6 +638,14 @@ struct CoreGuestPackageProbe {
         precondition(INInteraction.donatedInteractions.count == 1)
         INInteraction.deleteAll()
         precondition(INInteraction.donatedInteractions.isEmpty)
+        let modernIntent: any AppIntent = CoreModernIntent()
+        withExtendedLifetime(modernIntent) {}
+        precondition(!AppIntentsPortable.supportsSystemRegistration)
+        let modernImage = DisplayRepresentation.Image(
+            systemName: "square.and.pencil",
+            isTemplate: nil
+        )
+        precondition(modernImage.systemName == "square.and.pencil")
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -652,13 +667,14 @@ struct CoreGuestPackageProbe {
             "CORE_GUEST_PACKAGE_MACHO_OK "
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
+                + "appintents=process-local "
                 + "foundation=\(foundationCompatibility) "
                 + "internationalization=icu-fr,number,idna "
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-15 security=keychain,random "
+                + "first-party=portable-16 security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
                 + "webkit=engine-unavailable preview=\(preview)"

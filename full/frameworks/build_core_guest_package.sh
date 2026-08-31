@@ -64,6 +64,7 @@ FIRST_PARTY_FRAMEWORKS=(
     Security
     CryptoKit
     CommonCrypto
+    AppIntents
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -81,6 +82,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     security
     cryptokit
     commoncrypto
+    appintents
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -91,6 +93,7 @@ FRONTIER_FRAMEWORKS=(
     Security
     CryptoKit
     CommonCrypto
+    AppIntents
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -101,6 +104,7 @@ FRONTIER_SOURCE_DIRS=(
     security
     cryptokit
     commoncrypto
+    appintents
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -669,7 +673,7 @@ append_frontier_sources() {
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 8 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 9 ] \
     || die 'frontier framework source count drifted'
 [ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 3 ] \
     || die 'frontier underlying input count drifted'
@@ -1700,7 +1704,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile fifteen independent first-party framework modules'
+echo '== compile sixteen independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -1741,7 +1745,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link thirty-one reusable platform dylibs (thirty frameworks plus ICU)'
+echo '== link thirty-two reusable platform dylibs (thirty-one frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -1944,7 +1948,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     )
     expected_uikit_load=0
     case "$framework" in
-        SafariServices|StoreKit|PassKit|MessageUI)
+        SafariServices|StoreKit|PassKit|MessageUI|AppIntents)
             expected_uikit_load=1
             framework_link_dependencies+=(
                 -lUIKit
@@ -2035,7 +2039,7 @@ fi
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
-    -lCommonCrypto \
+    -lCommonCrypto -lAppIntents \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -2102,7 +2106,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-15 security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-16 security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2218,7 +2222,7 @@ LINK_ARGUMENTS=(
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
-    -lCommonCrypto
+    -lCommonCrypto -lAppIntents
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2351,7 +2355,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
-    printf 'frontier-frameworks\tframeworks=8\tsources=8\n'
+    printf 'frontier-frameworks\tframeworks=9\tsources=9\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \

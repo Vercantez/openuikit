@@ -85,6 +85,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Security",
                 "CryptoKit",
                 "CommonCrypto",
+                "AppIntents",
                 "DeveloperToolsSupport",
             )
         )
@@ -120,6 +121,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Security",
                 "CryptoKit",
                 "CommonCrypto",
+                "AppIntents",
             )
         )
         for relative in required_files:
@@ -201,6 +203,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lSecurity",
                 "-lCryptoKit",
                 "-lCommonCrypto",
+                "-lAppIntents",
             ],
             "format_version": 1,
             "manifests": {

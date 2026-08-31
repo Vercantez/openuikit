@@ -84,6 +84,7 @@ _REQUIRED_FRAMEWORKS = (
     "Security",
     "CryptoKit",
     "CommonCrypto",
+    "AppIntents",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
