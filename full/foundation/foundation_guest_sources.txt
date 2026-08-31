@@ -11,7 +11,9 @@ full/foundation/CoreFoundationCompatibility.swift
 full/foundation/String+CharacterSet.swift
 full/foundation/String+FoundationCompatibility.swift
 full/foundation/Bundle+Localization.swift
+full/foundation/Stream.swift
 full/foundation/URLLoading.swift
+full/foundation/URLSession.swift
 full/foundation/Scanner.swift
 full/foundation/NSError.swift
 full/foundation/NSNumber.swift

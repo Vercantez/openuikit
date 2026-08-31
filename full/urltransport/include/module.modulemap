@@ -1,0 +1,4 @@
+module COpenURLTransport {
+    header "OpenURLTransportABI.h"
+    export *
+}

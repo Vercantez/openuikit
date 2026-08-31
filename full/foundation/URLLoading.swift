@@ -1,10 +1,9 @@
 // The Foundation URL-loading value types required at the framework boundary.
 //
-// This is deliberately not URLSession.  URLRequest is a value describing a
-// request, and URLResponse is immutable response metadata.  Neither type sends
-// bytes, resolves a host, owns a cache, or claims that a transport exists.
-// Keeping that line explicit lets first-party modules such as WebKit exchange
-// honest request/response state before a Linux networking stack is connected.
+// URLRequest and URLResponse are the value boundary used by the concrete
+// URLSession transport in URLSession.swift. They stay separate so WebKit and
+// other first-party frameworks can exchange request metadata without owning
+// the transport state machine.
 
 import FoundationEssentials
 
@@ -26,10 +25,19 @@ public struct URLRequest: Hashable, @unchecked Sendable {
 
     public var url: URL?
     public var cachePolicy: CachePolicy
-    public var timeoutInterval: TimeInterval
+    private var storedTimeoutInterval: TimeInterval
+    internal private(set) var timeoutIntervalWasSet: Bool
+    public var timeoutInterval: TimeInterval {
+        get { storedTimeoutInterval }
+        set {
+            storedTimeoutInterval = newValue
+            timeoutIntervalWasSet = true
+        }
+    }
     public var mainDocumentURL: URL?
     public var httpMethod: String?
     public var httpBody: Data?
+    public var httpBodyStream: InputStream?
     public var httpShouldHandleCookies: Bool
     public var httpShouldUsePipelining: Bool
     public var allowsCellularAccess: Bool
@@ -43,10 +51,12 @@ public struct URLRequest: Hashable, @unchecked Sendable {
     ) {
         self.url = url
         self.cachePolicy = cachePolicy
-        self.timeoutInterval = timeoutInterval
+        self.storedTimeoutInterval = timeoutInterval
+        self.timeoutIntervalWasSet = false
         self.mainDocumentURL = nil
         self.httpMethod = "GET"
         self.httpBody = nil
+        self.httpBodyStream = nil
         self.httpShouldHandleCookies = true
         self.httpShouldUsePipelining = false
         self.allowsCellularAccess = true
@@ -88,6 +98,7 @@ public struct URLRequest: Hashable, @unchecked Sendable {
             && lhs.mainDocumentURL == rhs.mainDocumentURL
             && lhs.httpMethod == rhs.httpMethod
             && lhs.httpBody == rhs.httpBody
+            && lhs.httpBodyStream === rhs.httpBodyStream
             && lhs.httpShouldHandleCookies == rhs.httpShouldHandleCookies
             && lhs.httpShouldUsePipelining == rhs.httpShouldUsePipelining
             && lhs.allowsCellularAccess == rhs.allowsCellularAccess
@@ -101,6 +112,9 @@ public struct URLRequest: Hashable, @unchecked Sendable {
         hasher.combine(mainDocumentURL)
         hasher.combine(httpMethod)
         hasher.combine(httpBody)
+        if let httpBodyStream {
+            hasher.combine(ObjectIdentifier(httpBodyStream))
+        }
         hasher.combine(httpShouldHandleCookies)
         hasher.combine(httpShouldUsePipelining)
         hasher.combine(allowsCellularAccess)
