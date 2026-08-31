@@ -126,8 +126,8 @@ done
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 24 ] \
-    || die "Foundation guest source manifest must contain exactly 24 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 27 ] \
+    || die "Foundation guest source manifest must contain exactly 27 lines"
 FOUNDATION_GUEST_SOURCES=()
 FOUNDATION_GUEST_EXCLUDED_URLSESSION=0
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do

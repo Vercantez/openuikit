@@ -154,7 +154,7 @@
       "sources": [
         {
           "path": "full/safariservices/SafariServices.swift",
-          "sha256": "e39e2877f184baf65b3b568bd423a35fe14ebaa1335dfe1a948e275f29b88f2d"
+          "sha256": "dbf58a47ab63dcc3f63b519fa1df337cbfd0bd0310dad51f97a0d89682b94a6f"
         }
       ],
       "uses_uikit": true

@@ -34,6 +34,9 @@ EXPECTED = [
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
     "full/foundation/UserDefaults.swift",
+    "full/foundation/UbiquitousKeyValueStore.swift",
+    "full/foundation/RelativeDateTimeFormatter.swift",
+    "full/foundation/FileManager+Enumeration.swift",
 ]
 
 
@@ -53,7 +56,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 24', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 27', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
