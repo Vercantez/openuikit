@@ -131,6 +131,11 @@ FRAMEWORKS = (
     "AudioToolbox",
     "CoreHaptics",
     "PassKit",
+    "CoreGraphics",
+    "ImageIO",
+    "LinkPresentation",
+    "MessageUI",
+    "MobileCoreServices",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -231,7 +236,8 @@ def validate_swiftui_runtime_link(source: str) -> None:
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     # One direct SwiftUI link, one reusable dependency token in each of the
-    # seven first-party links, and one executable probe link.
+    # Twelve first-party links share one loop token, plus one direct SwiftUI
+    # link and one executable probe link.
     if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 3:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
@@ -566,6 +572,11 @@ class PackageFixture:
             "-lAudioToolbox",
             "-lCoreHaptics",
             "-lPassKit",
+            "-lCoreGraphics",
+            "-lImageIO",
+            "-lLinkPresentation",
+            "-lMessageUI",
+            "-lMobileCoreServices",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1137,8 +1148,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 20)
-        self.assertEqual(FRAMEWORKS[-8], "WebKit")
+        self.assertEqual(len(FRAMEWORKS), 25)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 12)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",
@@ -1445,7 +1456,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_seven_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_twelve_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -1458,8 +1469,13 @@ class ShellContractTests(unittest.TestCase):
             "AudioToolbox",
             "CoreHaptics",
             "PassKit",
+            "CoreGraphics",
+            "ImageIO",
+            "LinkPresentation",
+            "MessageUI",
+            "MobileCoreServices",
         )
-        self.assertEqual(FRAMEWORKS[-7:], first_party)
+        self.assertEqual(FRAMEWORKS[-12:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -1477,7 +1493,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=fail-closed-7", probe)
+        self.assertIn("first-party=portable-12", probe)
         for framework in first_party:
             with self.subTest(framework=framework):
                 self.assertIn(framework, source)

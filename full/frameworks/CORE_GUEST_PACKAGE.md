@@ -11,7 +11,8 @@ modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Combine, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
-CoreHaptics, and PassKit. These are twenty reusable ARM64 Mach-O framework
+CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI, and
+MobileCoreServices. These are twenty-five reusable ARM64 Mach-O framework
 binaries, including real `libSwiftUI.dylib`, `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
 overlays. The package also contains C module headers, CQuartz, the SDK, the attested machorun
@@ -61,10 +62,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link seven app-facing first-party modules as independent ARM64
-   Mach-O dylibs. Their Apple-service boundaries are fail-closed, and each
-   install ID/dependency/self-load contract is audited.
-10. Link all twenty reusable dylibs and run the package's Mach-O
+9. Compile and link twelve app-facing first-party modules as independent ARM64
+   Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
+   image decoding, graphics, and composition state work locally. Every install
+   ID/dependency/self-load contract is audited.
+10. Link all twenty-five reusable dylibs and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 

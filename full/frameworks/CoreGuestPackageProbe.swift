@@ -17,6 +17,11 @@ import StoreKit
 import AudioToolbox
 import CoreHaptics
 import PassKit
+import CoreGraphics
+import ImageIO
+import LinkPresentation
+import MessageUI
+import MobileCoreServices
 import WebKit
 
 @MainActor
@@ -77,6 +82,24 @@ private final class CoreStoreObserver: SKPaymentTransactionObserver {
         updatedTransactions transactions: [SKPaymentTransaction]
     ) {
         states.append(contentsOf: transactions.map(\.transactionState))
+    }
+}
+
+@MainActor
+private final class CoreMailDelegate: NSObject, MFMailComposeViewControllerDelegate {
+    var result: MFMailComposeResult?
+    var receivedServiceUnavailable = false
+
+    nonisolated func mailComposeController(
+        _ controller: MFMailComposeViewController,
+        didFinishWith result: MFMailComposeResult,
+        error: Error?
+    ) {
+        MainActor.assumeIsolated {
+            self.result = result
+            self.receivedServiceUnavailable =
+                error as? MFMailComposeError == .serviceUnavailable
+        }
     }
 }
 
@@ -153,7 +176,7 @@ struct CoreGuestPackageProbe {
         gradient.color1 = .clear
         gradient.point0 = CGPoint(x: 0, y: 2)
         gradient.point1 = CGPoint(x: 0, y: 0)
-        let gradientImage: CGImage = CIContext().createCGImage(
+        let gradientImage: CoreImage.CGImage = CIContext().createCGImage(
             gradient.outputImage!,
             from: CGRect(x: 0, y: 0, width: 2, height: 2)
         )!
@@ -325,6 +348,38 @@ struct CoreGuestPackageProbe {
         }
         precondition(!PKPaymentAuthorizationController.canMakePayments())
 
+        let bitmap = CoreGraphics.CGImage(width: 2, height: 1)
+        bitmap.pixels = [255, 0, 0, 255, 0, 128, 255, 192]
+        let encoded = Data(bitmap.pngData())
+        let imageSource = CGImageSourceCreateWithData(encoded as CFData, nil)!
+        precondition(CGImageSourceGetCount(imageSource) == 1)
+        precondition(CGImageSourceGetType(imageSource) == "public.png")
+        let decoded = CGImageSourceCreateImageAtIndex(imageSource, 0, nil)!
+        precondition(decoded.width == 2 && decoded.height == 1)
+        precondition(decoded.pixels == bitmap.pixels)
+        precondition(CGImageSourceCreateImageAtIndex(imageSource, 1, nil) == nil)
+
+        let metadata = LPLinkMetadata()
+        metadata.title = "Core package"
+        metadata.url = URL(string: "https://core.invalid/share")
+        metadata.originalURL = metadata.url
+        precondition(metadata.title == "Core package")
+        precondition(metadata.originalURL == metadata.url)
+
+        precondition(!MFMailComposeViewController.canSendMail())
+        let mailController = MFMailComposeViewController()
+        mailController.setToRecipients(["portable@example.invalid"])
+        mailController.setSubject("Core package")
+        mailController.setMessageBody("Linux", isHTML: false)
+        precondition(mailController.portableToRecipients == ["portable@example.invalid"])
+        precondition(mailController.portableSubject == "Core package")
+        let mailDelegate = CoreMailDelegate()
+        mailController.mailComposeDelegate = mailDelegate
+        mailController.reportPortableServiceUnavailable()
+        precondition(mailDelegate.result == .failed)
+        precondition(mailDelegate.receivedServiceUnavailable)
+        precondition(kUTTypeURL == "public.url" && kUTTypePNG == "public.png")
+
         _ = Text("core-package")
         let lifecycleApplication = CoreLifecycleApplication()
         _ = lifecycleApplication.body
@@ -381,7 +436,7 @@ struct CoreGuestPackageProbe {
                 + "foundation=\(foundationCompatibility) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=fail-closed-7 "
+                + "first-party=portable-12 "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

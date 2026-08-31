@@ -53,6 +53,11 @@ FIRST_PARTY_FRAMEWORKS=(
     AudioToolbox
     CoreHaptics
     PassKit
+    CoreGraphics
+    ImageIO
+    LinkPresentation
+    MessageUI
+    MobileCoreServices
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -62,6 +67,25 @@ FIRST_PARTY_SOURCE_DIRS=(
     audiotoolbox
     corehaptics
     passkit
+    coregraphics
+    imageio
+    linkpresentation
+    messageui
+    mobilecoreservices
+)
+FRONTIER_FRAMEWORKS=(
+    CoreGraphics
+    ImageIO
+    LinkPresentation
+    MessageUI
+    MobileCoreServices
+)
+FRONTIER_SOURCE_DIRS=(
+    coregraphics
+    imageio
+    linkpresentation
+    messageui
+    mobilecoreservices
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -458,6 +482,37 @@ python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --output "$WORK/first-party-sources.pre.tsv"
 [ "$(grep -c '^source' "$WORK/first-party-sources.pre.tsv")" -eq 7 ] \
     || die 'first-party production source count drifted'
+append_frontier_sources() {
+    local output=$1 index framework source_dir source_manifest relative
+    local -a frontier_sources
+    for index in "${!FRONTIER_FRAMEWORKS[@]}"; do
+        framework=${FRONTIER_FRAMEWORKS[$index]}
+        source_dir=${FRONTIER_SOURCE_DIRS[$index]}
+        source_manifest=$W/full/$source_dir/${source_dir}_guest_sources.txt
+        [ -f "$source_manifest" ] && [ ! -L "$source_manifest" ] \
+            || die "$framework frontier source manifest is missing or linked"
+        mapfile -t frontier_sources < "$source_manifest"
+        [ "${#frontier_sources[@]}" -eq 1 ] \
+            || die "$framework frontier source manifest cardinality drifted"
+        relative=${frontier_sources[0]}
+        [ "$relative" = "full/$source_dir/$framework.swift" ] \
+            || die "$framework frontier source path drifted: $relative"
+        [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+            || die "$framework frontier source is missing or linked"
+        git -C "$W" ls-files --error-unmatch \
+            "${source_manifest#"$W"/}" "$relative" >/dev/null \
+            || die "$framework frontier inputs are not tracked"
+        printf 'frontier-source\t%s\t%s\t%s\t%s\n' \
+            "$((index + 1))" "$framework" "$relative" \
+            "$(hash_file "$W/$relative")" >> "$output"
+        printf 'frontier-manifest\t%s\t%s\t%s\t%s\n' \
+            "$((index + 1))" "$framework" "${source_manifest#"$W"/}" \
+            "$(hash_file "$source_manifest")" >> "$output"
+    done
+}
+append_frontier_sources "$WORK/first-party-sources.pre.tsv"
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 5 ] \
+    || die 'frontier framework source count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
@@ -963,7 +1018,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile seven independent first-party framework modules'
+echo '== compile twelve independent first-party framework modules'
 for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework=${FIRST_PARTY_FRAMEWORKS[$index]}
     source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
@@ -994,7 +1049,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link twenty reusable core framework dylibs'
+echo '== link twenty-five reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip \
     -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
@@ -1151,12 +1206,24 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     )
     expected_uikit_load=0
     case "$framework" in
-        SafariServices|StoreKit|PassKit)
+        SafariServices|StoreKit|PassKit|MessageUI)
             expected_uikit_load=1
             framework_link_dependencies+=(
                 -lUIKit
                 -lOpenUIKit
                 -lOpenCoreGraphics
+            )
+            ;;
+        CoreGraphics)
+            framework_link_dependencies+=(
+                -lOpenCoreGraphics
+            )
+            ;;
+        ImageIO)
+            framework_link_dependencies+=(
+                -lCoreGraphics
+                -lOpenCoreGraphics
+                "$RUNTIME/darwin/usr/lib/libquartz.dylib"
             )
             ;;
     esac
@@ -1221,7 +1288,9 @@ fi
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
-    -lAudioToolbox -lCoreHaptics -lPassKit "$SWIFTUI_RUNTIME_LINK_FLAG"
+    -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
+    -lLinkPresentation -lMessageUI -lMobileCoreServices \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit OpenCombine \
     Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
@@ -1273,7 +1342,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=fail-closed-7 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -1305,7 +1374,8 @@ LINK_ARGUMENTS=(
     -lWebKit -lCoreImage -lQuartzCore -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
-    -lAudioToolbox -lCoreHaptics -lPassKit
+    -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
+    -lLinkPresentation -lMessageUI -lMobileCoreServices
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -1391,6 +1461,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
+    printf 'frontier-frameworks\tframeworks=5\tsources=5\n'
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -1540,6 +1611,7 @@ cmp "$WORK/graphics-sources.pre.tsv" "$WORK/graphics-sources.post.tsv" \
 python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
     --output "$WORK/first-party-sources.post.tsv"
+append_frontier_sources "$WORK/first-party-sources.post.tsv"
 cmp "$WORK/first-party-sources.pre.tsv" "$WORK/first-party-sources.post.tsv" \
     || die 'first-party source manifests/files changed during build'
 python3 "$MANIFEST_TOOL" inventory-tree \

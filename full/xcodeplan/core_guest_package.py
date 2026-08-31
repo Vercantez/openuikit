@@ -74,6 +74,11 @@ _REQUIRED_FRAMEWORKS = (
     "AudioToolbox",
     "CoreHaptics",
     "PassKit",
+    "CoreGraphics",
+    "ImageIO",
+    "LinkPresentation",
+    "MessageUI",
+    "MobileCoreServices",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS

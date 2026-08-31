@@ -91,6 +91,11 @@ FRAMEWORKS = (
     "AudioToolbox",
     "CoreHaptics",
     "PassKit",
+    "CoreGraphics",
+    "ImageIO",
+    "LinkPresentation",
+    "MessageUI",
+    "MobileCoreServices",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

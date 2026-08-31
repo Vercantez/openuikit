@@ -72,6 +72,11 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AudioToolbox",
                 "CoreHaptics",
                 "PassKit",
+                "CoreGraphics",
+                "ImageIO",
+                "LinkPresentation",
+                "MessageUI",
+                "MobileCoreServices",
                 "DeveloperToolsSupport",
             )
         )
@@ -98,6 +103,11 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AudioToolbox",
                 "CoreHaptics",
                 "PassKit",
+                "CoreGraphics",
+                "ImageIO",
+                "LinkPresentation",
+                "MessageUI",
+                "MobileCoreServices",
             )
         )
         for relative in required_files:
@@ -170,6 +180,11 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lAudioToolbox",
                 "-lCoreHaptics",
                 "-lPassKit",
+                "-lCoreGraphics",
+                "-lImageIO",
+                "-lLinkPresentation",
+                "-lMessageUI",
+                "-lMobileCoreServices",
             ],
             "format_version": 1,
             "manifests": {
