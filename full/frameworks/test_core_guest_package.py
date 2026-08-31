@@ -1026,6 +1026,24 @@ class ShellContractTests(unittest.TestCase):
         self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)
         self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=7", source)
 
+    def test_foundation_links_the_cgfloat_owner_directly(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        foundation_link = source[source.index(
+            "-install_name @rpath/libFoundation.dylib"
+        ):source.index(
+            "-install_name @rpath/libSwiftUI.dylib"
+        )]
+        self.assertIn("-lOpenCoreGraphics", foundation_link)
+        self.assertIn("foundation_graphics_load_count", foundation_link)
+        self.assertIn(
+            '"@rpath/libOpenCoreGraphics.dylib"',
+            foundation_link,
+        )
+        self.assertIn(
+            "libFoundation OpenCoreGraphics load count",
+            foundation_link,
+        )
+
     def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")

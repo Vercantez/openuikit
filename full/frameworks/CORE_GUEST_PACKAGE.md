@@ -143,6 +143,11 @@ Objective-C class, resolves it by name, round-trips a selector, and boxes and
 unboxes CGFloat; it has no special-case knowledge of any application or
 framework class name.
 
+Because the guest's distinct CGFloat metadata is canonically owned by
+OpenCoreGraphics, `libFoundation.dylib` declares exactly one direct
+`@rpath/libOpenCoreGraphics.dylib` load. The builder verifies that edge after
+linking instead of relying on UIKit's transitive graphics dependency.
+
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so
 the builder names exactly that one manual SwiftUI runtime link. It requires the

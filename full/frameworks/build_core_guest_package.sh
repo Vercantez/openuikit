@@ -895,8 +895,14 @@ echo '== link twenty reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libFoundation.dylib -rpath @loader_path \
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
-    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lCombine -lOpenCombine \
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+foundation_graphics_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libFoundation.dylib" \
+    | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
+[ "$foundation_graphics_load_count" -eq 1 ] \
+    || die "libFoundation OpenCoreGraphics load count $foundation_graphics_load_count, expected 1"
 for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
     load_count=$(llvm-otool-18 -L "$STAGE/lib/libFoundation.dylib" \
         | awk -v expected="$install_name" '$1 == expected { count++ } END { print count + 0 }')
