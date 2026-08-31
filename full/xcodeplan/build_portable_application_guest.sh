@@ -335,6 +335,8 @@ build_inside() {
     require_directory "$platform" "mounted platform package"
     [ -z "$remote_cache" ] \
         || require_directory "$remote_cache" "mounted remote package cache"
+    [ -z "${ADDITIONAL_SWIFT_DRIVER_FLAGS+x}" ] \
+        || die "ADDITIONAL_SWIFT_DRIVER_FLAGS must be absent for an attested compile plan"
     for tool in python3 swiftc ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
@@ -513,7 +515,7 @@ PY
             package_command=(swiftc "${swift_arguments[@]}"
                 -module-cache-path "$module_cache"
                 "${package_import_arguments[@]}" -parse-as-library
-                -module-name "$package_module" "${plugin_arguments[@]}"
+                -module-name "$package_module"
                 -emit-module -emit-module-path "$package_module_output"
                 -emit-object -output-file-map "$package_output_map"
                 "${package_sources[@]}")
@@ -586,12 +588,6 @@ PY
         require_regular "$derived_source" "attested derived Swift source"
         derived_sources+=("$derived_source")
     done
-    local -a compile_sources=(
-        "${app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"
-    )
-    [ "${#compile_sources[@]}" -gt 1 ] \
-        || die "application compile unexpectedly has fewer than two sources"
-
     local argument
     for argument in "${swift_arguments[@]}"; do
         case "$argument" in
@@ -676,7 +672,7 @@ PY
             die "Preview evidence compiler emitted a failure diagnostic despite success"
         fi
         {
-            printf 'format\tportable-preview-evidence-audit-v2\n'
+            printf 'format\tportable-preview-evidence-audit-v3\n'
             printf 'application-source-count\t%s\n' "${#app_sources[@]}"
             printf 'bounded-source-count\t%s\n' "${#preview_sources[@]}"
             printf 'module-name\t%s\n' "$module"
@@ -685,7 +681,8 @@ PY
             printf 'dump-macro-expansions-count\t1\n'
             printf 'driver-job-flag-count\t%s\n' \
                 "$preview_effective_serial_job_count"
-            printf 'driver-job-count\t1\n'
+            printf 'driver-max-parallel-job-count\t1\n'
+            printf 'planned-frontend-job-count\t1\n'
             printf 'source-audit-sha256\t%s\n' \
                 "$(sha256sum "$output/preview-evidence-source-audit.json" | awk '{print $1}')"
             printf 'arguments-sha256\t%s\n' \
@@ -701,24 +698,85 @@ PY
             || die "non-Preview build carries a Preview evidence source list"
     fi
 
+    local materialized_root materialized_source_list materialization_audit
+    materialized_root=$output/preview-materialized-sources
+    materialized_source_list=$output/preview-materialized-app-sources.nul
+    materialization_audit=$output/preview-materialization-audit.json
+    local -a production_app_sources=("${app_sources[@]}")
+    local preview_original_source= preview_materialized_source=
+    if [ "$preview_required" = yes ]; then
+        echo "== materialize the attested Preview expansion into an output-owned source"
+        python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+            materialize-preview-expansion \
+            --source-root "$app_root" \
+            --application-source-list "$output/app-sources.nul" \
+            --preview-source-audit "$output/preview-evidence-source-audit.json" \
+            --expansion-stderr "$preview_stderr" \
+            --output-root "$materialized_root" \
+            --compile-source-list "$materialized_source_list" \
+            --audit "$materialization_audit" --module-name "$module"
+        python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+            verify-preview-materialization \
+            --source-root "$app_root" \
+            --application-source-list "$output/app-sources.nul" \
+            --preview-source-audit "$output/preview-evidence-source-audit.json" \
+            --expansion-stderr "$preview_stderr" \
+            --output-root "$materialized_root" \
+            --compile-source-list "$materialized_source_list" \
+            --audit "$materialization_audit" --module-name "$module"
+        mapfile -d '' -t production_app_sources <"$materialized_source_list"
+        [ "${#production_app_sources[@]}" -eq "${#app_sources[@]}" ] \
+            || die "materialized application source count drifted"
+        local source_index materialized_difference_count=0
+        for source_index in "${!app_sources[@]}"; do
+            if [ "${app_sources[$source_index]}" != "${production_app_sources[$source_index]}" ]; then
+                materialized_difference_count=$((materialized_difference_count + 1))
+                preview_original_source=${app_sources[$source_index]}
+                preview_materialized_source=${production_app_sources[$source_index]}
+            fi
+        done
+        [ "$materialized_difference_count" -eq 1 ] \
+            || die "materialized application source list must replace exactly one source"
+        case "$preview_materialized_source" in
+            "$materialized_root"/*) ;;
+            *) die "materialized Preview source escaped its output root" ;;
+        esac
+    else
+        [ ! -e "$materialized_root" ] && [ ! -L "$materialized_root" ] \
+            && [ ! -e "$materialized_source_list" ] \
+            && [ ! -L "$materialized_source_list" ] \
+            && [ ! -e "$materialization_audit" ] \
+            && [ ! -L "$materialization_audit" ] \
+            || die "non-Preview build carries Preview materialization artifacts"
+    fi
+    local -a compile_sources=(
+        "${production_app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"
+    )
+    [ "${#compile_sources[@]}" -gt 1 ] \
+        || die "application compile unexpectedly has fewer than two sources"
+
     python3 -B "$SCRIPT_DIR/application_object_contract.py" create-output-map \
         --output-map "$output_map" --object-root "$object_root" \
         "${compile_sources[@]}"
-    # Keep the driver's batch/output-map compilation, but serialize its job
-    # scheduler. This does not merge objects or enable WMO: every source still
-    # has its own map entry.
+    # The executable plugin is confined to the bounded evidence invocation.
+    # Production consumes the freshly attested expansion as ordinary Swift;
+    # every logical app source still has one ordered output-map entry.
     local -a compile_command
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"
         "${package_import_arguments[@]}"
         -default-isolation MainActor -module-name "$module"
-        "${plugin_arguments[@]}" "$serial_job_argument" -emit-object
+        "$serial_job_argument" -emit-object
         -output-file-map "$output_map" "${compile_sources[@]}")
     local effective_output_map_count=0
     local effective_wmo_count=0
     local effective_disable_batch_count=0
     local effective_dump_count=0
     local effective_serial_job_count=0
+    local effective_plugin_load_count=0
+    local effective_plugin_path_count=0
+    local effective_original_preview_source_count=0
+    local effective_materialized_preview_source_count=0
     for argument in "${compile_command[@]}"; do
         case "$argument" in
             -output-file-map)
@@ -729,11 +787,19 @@ PY
                 effective_disable_batch_count=$((effective_disable_batch_count + 1)) ;;
             -dump-macro-expansions)
                 effective_dump_count=$((effective_dump_count + 1)) ;;
+            -load-plugin-executable)
+                effective_plugin_load_count=$((effective_plugin_load_count + 1)) ;;
             "$serial_job_argument")
                 effective_serial_job_count=$((effective_serial_job_count + 1)) ;;
             -j|-j*)
                 die "application compile has an unpinned driver job argument: $argument" ;;
         esac
+        [ -z "$plugin" ] || [ "$argument" != "$plugin#$plugin_module" ] \
+            || effective_plugin_path_count=$((effective_plugin_path_count + 1))
+        [ -z "$preview_original_source" ] || [ "$argument" != "$preview_original_source" ] \
+            || effective_original_preview_source_count=$((effective_original_preview_source_count + 1))
+        [ -z "$preview_materialized_source" ] || [ "$argument" != "$preview_materialized_source" ] \
+            || effective_materialized_preview_source_count=$((effective_materialized_preview_source_count + 1))
     done
     [ "$effective_output_map_count" -eq 1 ] \
         || die "application effective output-file-map count $effective_output_map_count, expected 1"
@@ -745,6 +811,18 @@ PY
         || die "application production compile includes macro dumping"
     [ "$effective_serial_job_count" -eq 1 ] \
         || die "application effective serialized driver job count is not one"
+    [ "$effective_plugin_load_count" -eq 0 ] \
+        && [ "$effective_plugin_path_count" -eq 0 ] \
+        || die "application production compile retains a Preview plugin argument"
+    [ "$effective_original_preview_source_count" -eq 0 ] \
+        || die "application production compile retains the original #Preview source"
+    if [ "$preview_required" = yes ]; then
+        [ "$effective_materialized_preview_source_count" -eq 1 ] \
+            || die "application production compile does not contain one materialized Preview source"
+    else
+        [ "$effective_materialized_preview_source_count" -eq 0 ] \
+            || die "non-Preview compile contains a materialized Preview source"
+    fi
     printf '%s\0' "${compile_command[@]}" \
         >"$output/application-compile-arguments.nul"
 
@@ -754,7 +832,7 @@ PY
     [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
         && [ ! -e "$compile_stdout" ] && [ ! -L "$compile_stdout" ] \
         || die "application compiler output already exists"
-    echo "== compile every untouched application and attested derived source"
+    echo "== compile ordered application sources with attested Preview materialization"
     set +e
     (
         cd "$platform"
@@ -797,10 +875,14 @@ PY
         --audit "$output/application-cross-file-symbols.json" \
         "${application_objects[@]}"
     {
-        printf 'format\tportable-application-compile-audit-v3\n'
-        printf 'mode\tdefault-driver-output-file-map\n'
+        printf 'format\tportable-application-compile-audit-v4\n'
+        printf 'mode\tstandard-driver-output-file-map\n'
         printf 'source-count\t%s\n' "${#compile_sources[@]}"
         printf 'application-source-count\t%s\n' "${#app_sources[@]}"
+        printf 'original-application-source-count\t%s\n' \
+            "$(( ${#app_sources[@]} - effective_materialized_preview_source_count ))"
+        printf 'materialized-application-source-count\t%s\n' \
+            "$effective_materialized_preview_source_count"
         printf 'derived-source-count\t%s\n' "${#derived_sources[@]}"
         printf 'platform-source-count\t%s\n' "${#platform_sources[@]}"
         printf 'package-target-count\t%s\n' "${#package_target_indices[@]}"
@@ -810,8 +892,14 @@ PY
         printf 'whole-module-flag-count\t%s\n' "$effective_wmo_count"
         printf 'disable-batch-mode-count\t%s\n' "$effective_disable_batch_count"
         printf 'production-macro-dump-count\t%s\n' "$effective_dump_count"
+        printf 'production-plugin-load-count\t%s\n' "$effective_plugin_load_count"
+        printf 'production-plugin-path-count\t%s\n' "$effective_plugin_path_count"
+        printf 'original-preview-source-count\t%s\n' \
+            "$effective_original_preview_source_count"
         printf 'driver-job-flag-count\t%s\n' "$effective_serial_job_count"
-        printf 'driver-job-count\t1\n'
+        printf 'driver-max-parallel-job-count\t1\n'
+        printf 'planned-frontend-job-count\t%s\n' "${#compile_sources[@]}"
+        printf 'additional-swift-driver-flags-set\t0\n'
         printf 'output-file-map-sha256\t%s\n' \
             "$(sha256sum "$output_map" | awk '{print $1}')"
         printf 'object-audit-sha256\t%s\n' \
@@ -824,6 +912,10 @@ PY
             "$(sha256sum "$compile_stderr" | awk '{print $1}')"
         printf 'derived-source-attestation-sha256\t%s\n' \
             "$(sha256sum "$derived_root/derived-sources-attestation.json" | awk '{print $1}')"
+        if [ "$preview_required" = yes ]; then
+            printf 'preview-materialization-audit-sha256\t%s\n' \
+                "$(sha256sum "$materialization_audit" | awk '{print $1}')"
+        fi
     } >"$output/application-compile-audit.tsv"
 
     local app frameworks executable libraries
@@ -1012,6 +1104,15 @@ PY
     if [ "$preview_required" = yes ]; then
         [ "$(sha256sum "$plugin" | awk '{print $1}')" = "$expected_plugin_sha" ] \
             || die "Preview macro plugin changed during build"
+        python3 -B "$SCRIPT_DIR/application_object_contract.py" \
+            verify-preview-materialization \
+            --source-root "$app_root" \
+            --application-source-list "$output/app-sources.nul" \
+            --preview-source-audit "$output/preview-evidence-source-audit.json" \
+            --expansion-stderr "$preview_stderr" \
+            --output-root "$materialized_root" \
+            --compile-source-list "$materialized_source_list" \
+            --audit "$materialization_audit" --module-name "$module"
     fi
     python3 -B "$SCRIPT_DIR/application_object_contract.py" reverify-objects \
         --output-map "$output_map" --object-root "$object_root" \
@@ -1039,6 +1140,8 @@ PY
             preview-evidence-compile-arguments.nul
             preview-evidence-source-audit.json
             preview-evidence-sources.nul
+            preview-materialization-audit.json
+            preview-materialized-app-sources.nul
         )
     fi
     (
@@ -1054,6 +1157,11 @@ PY
             >>application-build-artifacts.sha256
         if [ -d local-package-build ]; then
             find local-package-build -type f -print0 | sort -z | xargs -0 sha256sum \
+                >>application-build-artifacts.sha256
+        fi
+        if [ "$preview_required" = yes ]; then
+            find preview-materialized-sources -type f -print0 \
+                | sort -z | xargs -0 sha256sum \
                 >>application-build-artifacts.sha256
         fi
     )

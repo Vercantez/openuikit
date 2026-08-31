@@ -43,7 +43,7 @@ def validate_preview_executable_export_contract(source: str) -> None:
 def validate_multi_source_object_map_contract(source: str) -> None:
     required_once = (
         "local -a derived_sources=()",
-        '"${app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"',
+        '"${production_app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"',
         '"${#compile_sources[@]}" -gt 1',
         'application_object_contract.py" create-output-map',
         'application_object_contract.py" verify-objects',
@@ -56,7 +56,7 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         "local serial_job_argument=-j1",
         '"${plugin_arguments[@]}" "$serial_job_argument"\n'
         '            "${diagnostic_arguments[@]}"',
-        '"${plugin_arguments[@]}" "$serial_job_argument" -emit-object',
+        '"$serial_job_argument" -emit-object',
         '"$effective_serial_job_count" -eq 1',
         "application compile arguments must not override the pinned driver job count",
         "application compile has an unpinned driver job argument",
@@ -65,7 +65,7 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         '"$preview_effective_serial_job_count" -eq 1',
         "Preview evidence compile has an unpinned driver job argument",
         "Preview evidence effective serialized driver job count is not one",
-        "portable-preview-evidence-audit-v2",
+        "portable-preview-evidence-audit-v3",
         'object_audit=$output/application-object-audit.json',
         '--audit "$output/application-cross-file-symbols.json"',
         '--cross-file-audit "$output/application-cross-file-symbols.json"',
@@ -86,7 +86,7 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         raise AssertionError(
             "multi-source object-map compile contract drifted: serial job pin"
         )
-    if source.count("driver-job-count\\t1\\n") != 2:
+    if source.count("driver-max-parallel-job-count\\t1\\n") != 2:
         raise AssertionError(
             "multi-source object-map compile contract drifted: "
             "plugin invocation job audits"
@@ -119,6 +119,52 @@ def validate_multi_source_object_map_contract(source: str) -> None:
             raise AssertionError(f"multi-source object-map refusal drifted: {refusal}")
 
 
+def validate_preview_materialization_contract(source: str) -> None:
+    required_once = (
+        'materialize-preview-expansion \\\n',
+        'materialized_root=$output/preview-materialized-sources',
+        'materialized_source_list=$output/preview-materialized-app-sources.nul',
+        'materialization_audit=$output/preview-materialization-audit.json',
+        'local -a production_app_sources=("${app_sources[@]}")',
+        'mapfile -d \'\' -t production_app_sources <"$materialized_source_list"',
+        '"$materialized_difference_count" -eq 1',
+        'preview_original_source=${app_sources[$source_index]}',
+        'preview_materialized_source=${production_app_sources[$source_index]}',
+        'effective_plugin_load_count=0',
+        'effective_plugin_path_count=0',
+        'effective_original_preview_source_count=0',
+        'effective_materialized_preview_source_count=0',
+        'application production compile retains a Preview plugin argument',
+        'application production compile retains the original #Preview source',
+        'application production compile does not contain one materialized Preview source',
+        'portable-application-compile-audit-v4',
+        'production-plugin-load-count\\t%s\\n',
+        'production-plugin-path-count\\t%s\\n',
+        'original-preview-source-count\\t%s\\n',
+        'materialized-application-source-count\\t%s\\n',
+        'additional-swift-driver-flags-set\\t0\\n',
+        'ADDITIONAL_SWIFT_DRIVER_FLAGS must be absent for an attested compile plan',
+        'find preview-materialized-sources -type f -print0',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"Preview materialization contract drifted: {drifted}")
+    if source.count('verify-preview-materialization \\\n') != 2:
+        raise AssertionError("Preview materialization verification bracket drifted")
+    production_start = source.index("    compile_command=(swiftc")
+    production = source[production_start : source.index(
+        "    local effective_output_map_count", production_start
+    )]
+    if '"${plugin_arguments[@]}"' in production or "-load-plugin-executable" in production:
+        raise AssertionError("production compile regained a Preview plugin argument")
+    package_start = source.index("            package_command=(swiftc")
+    package = source[package_start : source.index(
+        "            package_stdout=", package_start
+    )]
+    if '"${plugin_arguments[@]}"' in package or "-load-plugin-executable" in package:
+        raise AssertionError("package compile regained a Preview plugin argument")
+
+
 def validate_derived_source_provider_contract(source: str) -> None:
     required_once = (
         'compiler_input_providers.py" generate',
@@ -133,7 +179,7 @@ def validate_derived_source_provider_contract(source: str) -> None:
         raise AssertionError(f"derived-source provider contract drifted: {drifted}")
     if source.count('compiler_input_providers.py" verify') != 2:
         raise AssertionError("derived-source provider verification bracket drifted")
-    app = source.index('"${app_sources[@]}" "${derived_sources[@]}"')
+    app = source.index('"${production_app_sources[@]}" "${derived_sources[@]}"')
     platform = source.index('"${platform_sources[@]}"', app)
     if app >= platform:
         raise AssertionError("derived-source compile ordering drifted")
@@ -145,7 +191,7 @@ def validate_local_package_module_object_boundary(source: str) -> None:
         'local_package_graph.py" emit-target-record',
         'local_package_graph.py" verify-build-contract',
         'package_import_arguments=(-I "$package_module_root")',
-        '-module-name "$package_module" "${plugin_arguments[@]}"',
+        '-module-name "$package_module"',
         '-emit-module -emit-module-path "$package_module_output"',
         'package_objects+=("$package_object")',
         '"${package_objects[@]}" "${extra_objects[@]}")',
@@ -161,7 +207,9 @@ def validate_local_package_module_object_boundary(source: str) -> None:
         raise AssertionError(f"local package module/object boundary drifted: {drifted}")
     preflight = source.rindex('local_package_graph.py" require-buildable')
     compile_target = source.index("== compile local Swift-package target")
-    application_compile = source.index("== compile every untouched application")
+    application_compile = source.index(
+        "== compile ordered application sources with attested Preview materialization"
+    )
     if not preflight < compile_target < application_compile:
         raise AssertionError("local package build order drifted")
 
@@ -413,6 +461,47 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "remote package cache"):
                     validate_remote_package_cache_boundary(source.replace(token, "", 1))
+
+    def test_preview_is_materialized_once_and_plugin_is_evidence_only(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_preview_materialization_contract(source)
+        for token in (
+            'materialize-preview-expansion \\\n',
+            'verify-preview-materialization \\\n',
+            'mapfile -d \'\' -t production_app_sources <"$materialized_source_list"',
+            '"$materialized_difference_count" -eq 1',
+            'preview_original_source=${app_sources[$source_index]}',
+            'preview_materialized_source=${production_app_sources[$source_index]}',
+            'application production compile retains a Preview plugin argument',
+            'application production compile retains the original #Preview source',
+            'production-plugin-load-count\\t%s\\n',
+            'original-preview-source-count\\t%s\\n',
+            'ADDITIONAL_SWIFT_DRIVER_FLAGS must be absent for an attested compile plan',
+            'find preview-materialized-sources -type f -print0',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "materialization"):
+                    validate_preview_materialization_contract(
+                        source.replace(token, "", 1)
+                    )
+        with self.assertRaisesRegex(AssertionError, "production compile"):
+            validate_preview_materialization_contract(
+                source.replace(
+                    '"$serial_job_argument" -emit-object',
+                    '"${plugin_arguments[@]}" "$serial_job_argument" -emit-object',
+                    1,
+                )
+            )
+        with self.assertRaisesRegex(AssertionError, "package compile"):
+            validate_preview_materialization_contract(
+                source.replace(
+                    '-module-name "$package_module"',
+                    '-module-name "$package_module" "${plugin_arguments[@]}"',
+                    1,
+                )
+            )
 
     def test_derived_source_provider_is_generated_and_reverified(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(

@@ -35,6 +35,38 @@ def nul_paths(*paths: str) -> bytes:
     return b"".join(path.encode("utf-8") + b"\0" for path in paths)
 
 
+def preview_expansion(
+    *, file_id: str = "Demo/A.swift", line: int = 3, column: int = 1,
+    body: str = "DependencyView()",
+) -> bytes:
+    declaration = (
+        "@available(iOS 17.0, macOS 14.0, tvOS 17.0, visionOS 1.0, watchOS 10.0, *)\n"
+        "struct $sFixturePreviewRegistry: DeveloperToolsSupport.PreviewRegistry {\n"
+        "    static var fileID: String {\n"
+        f'        "{file_id}"\n'
+        "    }\n"
+        "    static var line: Int {\n"
+        f"        {line}\n"
+        "    }\n"
+        "    static var column: Int {\n"
+        f"        {column}\n"
+        "    }\n"
+        "    static func makePreview() throws -> DeveloperToolsSupport.Preview {\n"
+        "        DeveloperToolsSupport.Preview {\n"
+        f"            {body}\n"
+        "        }\n"
+        "    }\n"
+        "}\n"
+    ).encode("utf-8")
+    return (
+        b"warning: Could not read SDKSettings.json for SDK at: sdk\n"
+        b"@__swiftmacro_4Demo1A33_ABC7PreviewfMf_.swift\n"
+        b"------------------------------\n"
+        + declaration
+        + b"------------------------------\n"
+    )
+
+
 class ApplicationObjectContractTests(unittest.TestCase):
     def make_sources(self, root: Path, count: int = 3) -> list[str]:
         sources: list[str] = []
@@ -248,6 +280,197 @@ class ApplicationObjectContractTests(unittest.TestCase):
                             candidate,
                             root / f"{name}-audit.json",
                         )
+
+    def test_preview_expansion_is_materialized_without_changing_the_source(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="preview-materialization.") as raw:
+            root = Path(raw).resolve()
+            source_root = root / "source"
+            source_root.mkdir()
+            original = b"struct DependencyView {}\n\n#Preview {\n    DependencyView()\n}\n"
+            (source_root / "A.swift").write_bytes(original)
+            (source_root / "B.swift").write_text("struct B {}\n", encoding="utf-8")
+            (source_root / "C.swift").write_text("struct C {}\n", encoding="utf-8")
+            application_list = root / "application.nul"
+            preview_list = root / "preview.nul"
+            preview_audit = root / "preview-audit.json"
+            expansion = root / "expansion.stderr"
+            materialized_root = root / "materialized"
+            compile_list = root / "materialized-sources.nul"
+            audit = root / "materialization.json"
+            application_list.write_bytes(nul_paths("A.swift", "B.swift", "C.swift"))
+            preview_list.write_bytes(nul_paths("A.swift", "B.swift"))
+            application_object_contract.validate_preview_sources(
+                source_root, application_list, preview_list, preview_audit
+            )
+            expansion.write_bytes(preview_expansion())
+            application_object_contract.materialize_preview_expansion(
+                source_root,
+                application_list,
+                preview_audit,
+                expansion,
+                materialized_root,
+                compile_list,
+                audit,
+                "Demo",
+            )
+            derived = materialized_root / "A.swift"
+            self.assertEqual((source_root / "A.swift").read_bytes(), original)
+            self.assertNotIn(b"#Preview", derived.read_bytes())
+            self.assertEqual(
+                derived.read_bytes().count(b"DeveloperToolsSupport.PreviewRegistry"),
+                1,
+            )
+            self.assertEqual(
+                compile_list.read_bytes(),
+                nul_paths(
+                    os.fspath(derived),
+                    os.fspath(source_root / "B.swift"),
+                    os.fspath(source_root / "C.swift"),
+                ),
+            )
+            document = json.loads(audit.read_text(encoding="utf-8"))
+            self.assertEqual(document["original_source_count"], 2)
+            self.assertEqual(document["materialized_source_count"], 1)
+            self.assertEqual(document["source"]["path"], "A.swift")
+            self.assertEqual(document["source"]["line"], 3)
+            self.assertEqual(document["source"]["column"], 1)
+            substitution = document["expansion"]["identifier_substitution"]
+            self.assertEqual(substitution["count"], 1)
+            self.assertTrue(substitution["generated_identifier"].startswith("$"))
+            self.assertTrue(
+                substitution["materialized_identifier"].startswith(
+                    "__OpenUIKitMaterializedPreviewRegistry_"
+                )
+            )
+            self.assertNotIn(
+                b"$sFixturePreviewRegistry", derived.read_bytes()
+            )
+            application_object_contract.verify_preview_materialization(
+                source_root,
+                application_list,
+                preview_audit,
+                expansion,
+                materialized_root,
+                compile_list,
+                audit,
+                "Demo",
+            )
+            (materialized_root / "extra.swift").write_text("// stale\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                application_object_contract.ObjectContractError, "unexpected file set"
+            ):
+                application_object_contract.verify_preview_materialization(
+                    source_root,
+                    application_list,
+                    preview_audit,
+                    expansion,
+                    materialized_root,
+                    compile_list,
+                    audit,
+                    "Demo",
+                )
+            (materialized_root / "extra.swift").unlink()
+            (materialized_root / "stale-empty").mkdir()
+            with self.assertRaisesRegex(
+                application_object_contract.ObjectContractError,
+                "unexpected directory set",
+            ):
+                application_object_contract.verify_preview_materialization(
+                    source_root,
+                    application_list,
+                    preview_audit,
+                    expansion,
+                    materialized_root,
+                    compile_list,
+                    audit,
+                    "Demo",
+                )
+
+    def test_preview_materialization_refuses_adversarial_drift(self) -> None:
+        cases = (
+            "second-preview",
+            "nonterminal-preview",
+            "source-audit",
+            "file-id",
+            "line",
+            "body",
+            "second-registry",
+            "internal-error",
+            "reused-root",
+            "inside-source",
+        )
+        for case in cases:
+            with self.subTest(case=case), tempfile.TemporaryDirectory(
+                prefix=f"preview-materialization-{case}."
+            ) as raw:
+                root = Path(raw).resolve()
+                source_root = root / "source"
+                source_root.mkdir()
+                source = b"struct DependencyView {}\n\n#Preview {\n    DependencyView()\n}\n"
+                (source_root / "A.swift").write_bytes(source)
+                (source_root / "B.swift").write_text("struct B {}\n", encoding="utf-8")
+                (source_root / "C.swift").write_text("struct C {}\n", encoding="utf-8")
+                application_list = root / "application.nul"
+                preview_list = root / "preview.nul"
+                preview_audit = root / "preview-audit.json"
+                expansion = root / "expansion.stderr"
+                materialized_root = root / "materialized"
+                compile_list = root / "compile.nul"
+                audit = root / "audit.json"
+                application_list.write_bytes(nul_paths("A.swift", "B.swift", "C.swift"))
+                preview_list.write_bytes(nul_paths("A.swift", "B.swift"))
+                application_object_contract.validate_preview_sources(
+                    source_root, application_list, preview_list, preview_audit
+                )
+                expansion.write_bytes(preview_expansion())
+                if case == "second-preview":
+                    (source_root / "C.swift").write_text(
+                        "#Preview { DependencyView() }\n", encoding="utf-8"
+                    )
+                elif case == "nonterminal-preview":
+                    (source_root / "A.swift").write_bytes(source + b"struct Late {}\n")
+                elif case == "source-audit":
+                    document = json.loads(preview_audit.read_text(encoding="utf-8"))
+                    for record in document["sources"]:
+                        if record["path"] == "A.swift":
+                            record["sha256"] = "0" * 64
+                    preview_audit.write_text(
+                        json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n",
+                        encoding="utf-8",
+                    )
+                elif case == "file-id":
+                    expansion.write_bytes(preview_expansion(file_id="Other/A.swift"))
+                elif case == "line":
+                    expansion.write_bytes(preview_expansion(line=4))
+                elif case == "body":
+                    expansion.write_bytes(preview_expansion(body="OtherView()"))
+                elif case == "second-registry":
+                    expansion.write_bytes(
+                        expansion.read_bytes().replace(
+                            b"DeveloperToolsSupport.PreviewRegistry",
+                            b"DeveloperToolsSupport.PreviewRegistry & DeveloperToolsSupport.PreviewRegistry",
+                            1,
+                        )
+                    )
+                elif case == "internal-error":
+                    expansion.write_bytes(
+                        expansion.read_bytes() + b"Internal Error: Corrupted JSON\n"
+                    )
+                elif case == "reused-root":
+                    materialized_root.mkdir()
+                elif case == "inside-source":
+                    materialized_root = source_root / "generated"
+                with self.assertRaises(application_object_contract.ObjectContractError):
+                    application_object_contract.materialize_preview_expansion(
+                        source_root,
+                        application_list,
+                        preview_audit,
+                        expansion,
+                        materialized_root,
+                        compile_list,
+                        audit,
+                        "Demo",
+                    )
 
     def test_cross_file_edge_and_post_link_resolution_are_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory(prefix="cross-file-symbol-contract.") as raw:

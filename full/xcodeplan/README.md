@@ -324,21 +324,26 @@ the platform and optional macro plugin, freezes all application inputs, and
 creates the bundle resource skeleton. The image identity and platform are
 recorded in `host-inputs.tsv`; mutable image tags are refused. Exact remote
 package inputs are revalidated on both sides of a read-only cache mount as
-described in [`../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
-That container then compiles every reachable local or remote package target as
-its own topologically ordered Swift module and object set. Those objects enter the
-executable link exactly once. It then compiles every NUL-delimited unchanged
-application Swift source together with only the generated entry point and
-platform host loop in one ordinary multi-source module invocation. An exact
+described in
+[`../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
+That container compiles every reachable local or remote package target as its
+own topologically ordered Swift module and object set; package compilers never
+load the application Preview plugin, and those objects enter the executable
+link exactly once. It then compiles every NUL-delimited application source
+together with only the generated entry point and platform host loop in one
+ordinary multi-source module invocation. Application trees remain read-only.
+A Preview target may substitute one output-owned, byte-attested macro-expanded
+view for the one source that contains `#Preview`; every other source remains
+the mounted original. An exact
 output-file map assigns one ARM64 Mach-O object to every source; the driver
 rejects missing, extra, reordered, symlinked, non-ARM64, or reused outputs,
 hashes the exhaustive mapping/object ledger, measures real cross-file symbol
 edges, and links every object exactly once in deterministic source order. WMO,
 explicit batch scheduling, production macro dumping, and caller-owned output
 maps are refused because they would change this measured compiler contract.
-When the package
-declares DeveloperToolsSupport, it loads the exact host macro executable,
-links the package's framework closure, copies
+When the package declares DeveloperToolsSupport, the bounded evidence compile
+loads the exact host macro executable. Production compilation never loads the
+plugin; it links the package's framework closure, copies
 its dylibs into `Contents/Frameworks`, recursively proves the Mach-O runtime
 closure, and cold-launches the packaged executable under machorun. Success
 requires one active UIWindow and three paced production loop turns. Source,
@@ -347,28 +352,38 @@ outputs remain visibly unusable and can never be passed as a fresh output.
 Preview-enabled packages also publish the exact bounded macro diagnostic
 arguments and require a NUL-delimited `--preview-evidence-source-list`. That
 list must be a normalized, target-ordered, nonempty proper subset of the frozen
-application sources, contain a literal `#Preview`, and type-check successfully
+application sources, contain exactly one literal `#Preview`, and type-check successfully
 as the application module. Only this caller-supplied dependency-closed subset
 receives `-dump-macro-expansions`; dumping the full application module is
 forbidden. The driver captures the bounded proof as
 `app-macro-expansions.stderr`, records its exact source/argument hashes, and
 rejects `Internal Error:`, unlocated fatal/error diagnostics, or ordinary
-source errors even when swiftc returns zero. Production compilation has a
-separate `application-compile.stderr` and never receives the dump flags. Both
-the bounded evidence typecheck and production compilation serialize the Swift
-6.2.4 executable-macro channel with exactly `-j1`: the production driver still
-uses its output-file map and emits one object per source, but neither compiler
-invocation can race concurrent plugin-process teardown. Any inherited or
-additional `-j` option is refused, and `Internal Error:` remains fatal even
-when swiftc exits zero. The driver also attests that the target-side
+source errors even when swiftc returns zero. The diagnostic must contain one
+framed expansion, one registry, the exact source location, and the original
+trailing-closure body. Because the compiler dump prints its synthesized
+registry with a source-reserved `$` identifier, the materializer replaces that
+one identifier with a deterministic legal name and refuses any second `$`
+identifier or collision. The driver then replaces the exact terminal macro
+span in a fresh output-owned copy, records the original/span/context/raw and
+materialized expansion/identifier/derived hashes, and verifies that contract
+before compilation and after cold
+launch. Production compilation has a separate `application-compile.stderr`,
+never receives dump flags, contains neither the original macro-bearing path nor
+any plugin argument, and receives exactly one materialized replacement path.
+Both invocations retain exactly `-j1`, but only the bounded evidence typecheck
+opens Swift 6.2.4's executable-macro channel. `ADDITIONAL_SWIFT_DRIVER_FLAGS`
+must be absent so the standard 25-primary-file plan cannot be changed behind
+the recorded argv. Any inherited or additional `-j` option is refused, and
+`Internal Error:` remains fatal even when swiftc exits zero. The driver also attests that the target-side
 DeveloperToolsSupport object appears exactly once in the executable link. It
 also matches UIKit's sole measured DTS import to the object's definition and
 exports only that exact Preview initializer from the application executable;
 post-link symbol counts must be one in Preview mode and zero otherwise. A
 post-link symbol audit additionally proves that none of the measured
 application-internal references remain undefined. The compile mode, exact
-output-map count, zero WMO/dump/disable-batch counts, exact one-job pin, object
-count, and evidence hashes are recorded in `application-compile-audit.tsv`.
+output-map count, zero WMO/dump/disable-batch/plugin counts, exact one-job
+parallelism pin, planned frontend count, object count, and evidence/materialization
+hashes are recorded in `application-compile-audit.tsv`.
 
 Compiler-input providers have one deliberate insertion boundary. After the
 application plan is frozen and verified, but before the final output-file map
@@ -381,8 +396,9 @@ every frozen model/localization input hash, and every regular non-symlink
 generated Swift path/hash/size. It verifies that complete contract immediately
 after generation and again after cold launch.
 
-The driver order is always unchanged application sources, then attested
-derived sources, then the generated scene/bootstrap host sources. Output-map,
+The driver order is always application sources (with the one attested Preview
+substitution when needed), then compiler-provider derived sources, then the
+generated scene/bootstrap host sources. Output-map,
 ARM64 object, cross-file, deterministic link, and final hash audits apply to
 the combined list. A target with no compiler inputs still publishes an
 explicit empty provider attestation; unsupported non-Swift inputs fail closed
