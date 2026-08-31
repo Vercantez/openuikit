@@ -22,6 +22,7 @@ import ImageIO
 import LinkPresentation
 import MessageUI
 import MobileCoreServices
+import Security
 import WebKit
 
 @MainActor
@@ -513,6 +514,40 @@ struct CoreGuestPackageProbe {
         precondition(mailDelegate.receivedServiceUnavailable)
         precondition(kUTTypeURL == "public.url" && kUTTypePNG == "public.png")
 
+        let securityQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: "core-package",
+            kSecAttrService as String: "portable-security",
+        ]
+        _ = SecItemDelete(securityQuery as Foundation.CFDictionary)
+        var securityItem = securityQuery
+        securityItem[kSecValueData as String] = Data("secret".utf8)
+        precondition(
+            SecItemAdd(securityItem as Foundation.CFDictionary, nil)
+                == errSecSuccess
+        )
+        var securityResult: Foundation.CFTypeRef?
+        var securityRead = securityQuery
+        securityRead[kSecReturnData as String] = true
+        securityRead[kSecMatchLimit as String] = kSecMatchLimitOne
+        precondition(
+            SecItemCopyMatching(
+                securityRead as Foundation.CFDictionary,
+                &securityResult
+            ) == errSecSuccess
+        )
+        precondition(securityResult as? Data == Data("secret".utf8))
+        var securityRandom = [UInt8](repeating: 0, count: 32)
+        let randomStatus = securityRandom.withUnsafeMutableBytes {
+            SecRandomCopyBytes(kSecRandomDefault, $0.count, $0.baseAddress!)
+        }
+        precondition(randomStatus == errSecSuccess)
+        precondition(securityRandom.contains(where: { $0 != 0 }))
+        precondition(
+            SecItemDelete(securityQuery as Foundation.CFDictionary)
+                == errSecSuccess
+        )
+
         _ = Text("core-package")
         let lifecycleApplication = CoreLifecycleApplication()
         _ = lifecycleApplication.body
@@ -571,7 +606,7 @@ struct CoreGuestPackageProbe {
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-12 "
+                + "first-party=portable-13 security=keychain,random "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

@@ -11,6 +11,10 @@ public enum CFAllocator: Sendable {}
 
 public typealias CFString = String
 public typealias CFURL = URL
+public typealias CFDictionary = [CFString: Any]
+public typealias CFTypeRef = AnyObject
+public let kCFBooleanTrue = true
+public let kCFBooleanFalse = false
 
 /// Creates a real URL while preserving valid percent escapes. CFURL accepts
 /// square brackets outside an IPv6 authority by encoding just those brackets,

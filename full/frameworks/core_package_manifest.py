@@ -100,6 +100,7 @@ FRAMEWORKS = (
     "LinkPresentation",
     "MessageUI",
     "MobileCoreServices",
+    "Security",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

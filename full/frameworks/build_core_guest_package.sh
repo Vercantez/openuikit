@@ -59,6 +59,7 @@ FIRST_PARTY_FRAMEWORKS=(
     LinkPresentation
     MessageUI
     MobileCoreServices
+    Security
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -73,6 +74,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     linkpresentation
     messageui
     mobilecoreservices
+    security
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -80,6 +82,7 @@ FRONTIER_FRAMEWORKS=(
     LinkPresentation
     MessageUI
     MobileCoreServices
+    Security
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -87,6 +90,7 @@ FRONTIER_SOURCE_DIRS=(
     linkpresentation
     messageui
     mobilecoreservices
+    security
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -620,7 +624,7 @@ append_frontier_sources() {
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 5 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 6 ] \
     || die 'frontier framework source count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1478,7 +1482,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile twelve independent first-party framework modules'
+echo '== compile thirteen independent first-party framework modules'
 for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework=${FIRST_PARTY_FRAMEWORKS[$index]}
     source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
@@ -1490,7 +1494,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     for relative in "${framework_sources[@]}"; do
         framework_source_paths+=("$W/$relative")
     done
+    framework_compile_flags=()
+    if [ "$framework" = Security ]; then
+        framework_compile_flags+=(-D OPENUIKIT_PORTABLE_FOUNDATION)
+    fi
     "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+        "${framework_compile_flags[@]}" \
         -module-name "$framework" -emit-module \
         -emit-module-path "$STAGE/modules/$framework.swiftmodule" \
         -emit-object -o "$WORK/$source_dir.o" \
@@ -1509,7 +1518,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link twenty-six reusable core framework dylibs'
+echo '== link twenty-seven reusable core framework dylibs'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -1775,7 +1784,7 @@ fi
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
-    -lLinkPresentation -lMessageUI -lMobileCoreServices \
+    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -1837,7 +1846,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-13 security=keychain,random webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -1945,7 +1954,7 @@ LINK_ARGUMENTS=(
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
-    -lLinkPresentation -lMessageUI -lMobileCoreServices
+    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"

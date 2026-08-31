@@ -146,6 +146,7 @@ FRAMEWORKS = (
     "LinkPresentation",
     "MessageUI",
     "MobileCoreServices",
+    "Security",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -626,6 +627,7 @@ class PackageFixture:
             "-lLinkPresentation",
             "-lMessageUI",
             "-lMobileCoreServices",
+            "-lSecurity",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1292,7 +1294,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 26)
+        self.assertEqual(len(FRAMEWORKS), 27)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 13)
         for token in (
             "-module-name WebKit -emit-module",
@@ -1638,7 +1640,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_twelve_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_thirteen_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -1656,8 +1658,9 @@ class ShellContractTests(unittest.TestCase):
             "LinkPresentation",
             "MessageUI",
             "MobileCoreServices",
+            "Security",
         )
-        self.assertEqual(FRAMEWORKS[-12:], first_party)
+        self.assertEqual(FRAMEWORKS[-13:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -1675,7 +1678,8 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-12", probe)
+        self.assertIn("first-party=portable-13", probe)
+        self.assertIn("security=keychain,random", probe)
         for framework in first_party:
             with self.subTest(framework=framework):
                 self.assertIn(framework, source)
@@ -1683,6 +1687,27 @@ class ShellContractTests(unittest.TestCase):
                 self.assertIn(framework, canonical_source)
                 self.assertIn(f"import {framework}", probe)
                 self.assertIn(f"-l{framework}", source)
+
+    def test_security_is_a_real_keychain_and_randomness_boundary(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        security = (REPO / "full/security/Security.swift").read_text(
+            encoding="utf-8"
+        )
+        host_gate = (
+            REPO / "full/security/tests/test_security_host.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("-D OPENUIKIT_PORTABLE_FOUNDATION", source)
+        self.assertIn("-lMobileCoreServices -lSecurity", source)
+        self.assertIn("SecItemAdd", security)
+        self.assertIn("SecItemCopyMatching", security)
+        self.assertIn("SystemRandomNumberGenerator", security)
+        self.assertIn("return errSecNotAvailable", security)
+        self.assertIn("import Security", probe)
+        self.assertIn("SecItemCopyMatching", probe)
+        self.assertIn("SecRandomCopyBytes", probe)
+        self.assertIn("/System/Library/Frameworks/Security.framework/", host_gate)
+        self.assertIn("SECURITY_HOST_OK", host_gate)
 
     def test_host_wrapper_refuses_a_mutable_image_tag_before_docker(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

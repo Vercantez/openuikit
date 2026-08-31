@@ -80,6 +80,7 @@ _REQUIRED_FRAMEWORKS = (
     "LinkPresentation",
     "MessageUI",
     "MobileCoreServices",
+    "Security",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS

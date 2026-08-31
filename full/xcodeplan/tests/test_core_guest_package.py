@@ -78,6 +78,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "LinkPresentation",
                 "MessageUI",
                 "MobileCoreServices",
+                "Security",
                 "DeveloperToolsSupport",
             )
         )
@@ -110,6 +111,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "LinkPresentation",
                 "MessageUI",
                 "MobileCoreServices",
+                "Security",
             )
         )
         for relative in required_files:
@@ -188,6 +190,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lLinkPresentation",
                 "-lMessageUI",
                 "-lMobileCoreServices",
+                "-lSecurity",
             ],
             "format_version": 1,
             "manifests": {
