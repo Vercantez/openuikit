@@ -5,16 +5,22 @@ import XCTest
 final class NamedAssetLoadingTests: XCTestCase {
     private var savedImageSearchPaths: [String] = []
     private var savedImageScale: CGFloat = 2
+    private var savedAssetIdiom: UIUserInterfaceIdiom = .phone
+    private var savedTraits = UITraitCollection.current
 
     override func setUp() {
         super.setUp()
         savedImageSearchPaths = OpenUIKitRuntime.imageSearchPaths
         savedImageScale = OpenUIKitRuntime.imageScreenScale
+        savedAssetIdiom = OpenUIKitRuntime.assetCatalogIdiom
+        savedTraits = UITraitCollection.current
     }
 
     override func tearDown() {
         OpenUIKitRuntime.imageSearchPaths = savedImageSearchPaths
         OpenUIKitRuntime.imageScreenScale = savedImageScale
+        OpenUIKitRuntime.assetCatalogIdiom = savedAssetIdiom
+        UITraitCollection.current = savedTraits
         UIImage.clearNamedCache()
         super.tearDown()
     }
@@ -62,6 +68,115 @@ final class NamedAssetLoadingTests: XCTestCase {
         }
         let data = ImageCodec.encodePNG(bitmap)!
         FileManager.default.createFile(atPath: path, contents: Data(data))
+    }
+
+    private func indexedPayload(
+        at resourceRoot: String,
+        id: Character,
+        red: UInt8,
+        ext: String = ".png"
+    ) -> [String: Any] {
+        let sha = String(repeating: String(id), count: 64)
+        let directory = resourceRoot + "/OpenUIKit/AssetCatalogs/Resources/"
+            + String(sha.prefix(2))
+        try! FileManager.default.createDirectory(
+            atPath: directory, withIntermediateDirectories: true
+        )
+        let bitmap = Bitmap(width: 4, height: 4)
+        for offset in stride(from: 0, to: bitmap.pixels.count, by: 4) {
+            bitmap.pixels[offset] = red
+            bitmap.pixels[offset + 3] = 255
+        }
+        let bytes = ImageCodec.encodePNG(bitmap)!
+        try! Data(bytes).write(
+            to: URL(fileURLWithPath: directory + "/" + sha + ext)
+        )
+        return [
+            "sha256": sha,
+            "bytes": bytes.count,
+            "ext": ext,
+            "filename": "fixture-\(id)\(ext)",
+            "file": String(sha.prefix(2)) + "/" + sha + ext,
+        ]
+    }
+
+    private func imageVariant(
+        _ payload: [String: Any],
+        idiom: String = "universal",
+        appearance: String = "any",
+        scale: Int? = nil,
+        resizing: Any = NSNull(),
+        screenWidth: Any = NSNull()
+    ) -> [String: Any] {
+        [
+            "payload": payload,
+            "idiom": idiom,
+            "appearance": appearance,
+            "scale": scale as Any? ?? NSNull(),
+            "screen_width": screenWidth,
+            "language_direction": NSNull(),
+            "height_class": NSNull(),
+            "resizing": resizing,
+        ]
+    }
+
+    private func imageRecord(
+        _ variants: [[String: Any]],
+        type: String = "imageset",
+        intent: String? = nil
+    ) -> [String: Any] {
+        var properties: [String: Any] = [:]
+        if let intent { properties["template-rendering-intent"] = intent }
+        return ["type": type, "properties": properties,
+                "variants": variants]
+    }
+
+    private func colorVariant(
+        idiom: String = "universal",
+        appearance: String = "any",
+        native: [Double],
+        srgb: [Double],
+        space: String,
+        platform: Any = NSNull()
+    ) -> [String: Any] {
+        [
+            "idiom": idiom,
+            "appearance": appearance,
+            "native": native,
+            "srgb": srgb,
+            "color_space": space,
+            "conversion": "test",
+            "encodings": [:],
+            "platform": platform,
+        ]
+    }
+
+    private func writeIndex(
+        at resourceRoot: String,
+        assets: [String: Any],
+        unresolved: [String: Any] = [:],
+        collisions: [String: Any] = [:]
+    ) {
+        let directory = resourceRoot + "/OpenUIKit/AssetCatalogs"
+        try! FileManager.default.createDirectory(
+            atPath: directory, withIntermediateDirectories: true
+        )
+        let index: [String: Any] = [
+            "format": "openuikit-xcassets-index",
+            "version": 1,
+            "app": "OpenUIKitTests",
+            "catalogs": ["Assets.xcassets"],
+            "resources_dir": "Resources",
+            "assets": assets,
+            "unresolved": unresolved,
+            "collisions": collisions,
+            "folder_orphans": [],
+            "stats": [:],
+        ]
+        let data = try! JSONSerialization.data(
+            withJSONObject: index, options: [.sortedKeys]
+        )
+        try! data.write(to: URL(fileURLWithPath: directory + "/index.json"))
     }
 
     func testBundleNamedImageUsesOnlyTheSelectedBundleAndTraitScale() {
@@ -359,6 +474,312 @@ final class NamedAssetLoadingTests: XCTestCase {
             XCTAssertEqual(color?.green ?? -1, 1, accuracy: 0.0001)
             XCTAssertNil(UIColor(named: "OnlyGamut", in: bundle,
                                  compatibleWith: nil))
+        }
+    }
+
+    func testMaterializedIndexMatchesMeasuredImageResolutionAndMetadata() {
+        withTempDirectory { root in
+            let bundle = makeBundle(at: root + "/Indexed.bundle")
+            let resources = bundle.bundlePath
+            let phone1 = indexedPayload(at: resources, id: "1", red: 11)
+            let universal2 = indexedPayload(at: resources, id: "2", red: 22)
+            let phone3 = indexedPayload(at: resources, id: "3", red: 33)
+            let phoneAny2 = indexedPayload(at: resources, id: "4", red: 44)
+            let scaleless = indexedPayload(at: resources, id: "5", red: 55)
+            let collision = indexedPayload(at: resources, id: "6", red: 66)
+            let above3 = indexedPayload(at: resources, id: "7", red: 73)
+            let jpg = indexedPayload(at: resources, id: "8", red: 88,
+                                     ext: ".jpg")
+            let jpeg = indexedPayload(at: resources, id: "9", red: 99,
+                                      ext: ".jpeg")
+
+            let ranked = imageRecord([
+                imageVariant(universal2, idiom: "universal",
+                             appearance: "light", scale: 2),
+                imageVariant(phone3, idiom: "iphone",
+                             appearance: "light", scale: 3),
+                imageVariant(scaleless, idiom: "iphone",
+                             appearance: "light"),
+                imageVariant(phone1, idiom: "iphone",
+                             appearance: "light", scale: 1),
+                imageVariant(phoneAny2, idiom: "iphone",
+                             appearance: "any", scale: 2),
+            ], intent: "template")
+            let losing = imageRecord([
+                imageVariant(collision, idiom: "universal",
+                             appearance: "any", scale: 2),
+            ])
+            writeIndex(
+                at: resources,
+                assets: [
+                    "Ranked": ranked,
+                    "Above": imageRecord([
+                        imageVariant(above3, idiom: "iphone",
+                                     appearance: "light", scale: 3),
+                    ]),
+                    "ScaleLess": imageRecord([
+                        imageVariant(scaleless, idiom: "universal",
+                                     appearance: "any"),
+                    ]),
+                    "JPG": imageRecord([imageVariant(jpg, scale: 2)],
+                                       intent: "original"),
+                    "JPEG": imageRecord([imageVariant(jpeg, scale: 2)]),
+                ],
+                collisions: [
+                    "Ranked": [[
+                        "contents": "Other.xcassets/Ranked.imageset/Contents.json",
+                        "record": losing,
+                    ]],
+                ]
+            )
+
+            let light2 = UITraitCollection(userInterfaceStyle: .light,
+                                           displayScale: 2)
+            let light3 = UITraitCollection(userInterfaceStyle: .light,
+                                           displayScale: 3)
+            let dark2 = UITraitCollection(userInterfaceStyle: .dark,
+                                          displayScale: 2)
+            OpenUIKitRuntime.assetCatalogIdiom = .phone
+
+            let below = UIImage(named: "Ranked", in: bundle,
+                                compatibleWith: light2)
+            XCTAssertEqual(below?.bitmap.pixels.first, 11,
+                           "largest scale below must beat 3x and scaleless")
+            XCTAssertEqual(below?.scale, 1)
+            XCTAssertEqual(below?.renderingMode, .alwaysTemplate)
+            XCTAssertEqual(UIImage(named: "Ranked", in: bundle,
+                                   compatibleWith: light3)?.bitmap.pixels.first, 33)
+            XCTAssertEqual(UIImage(named: "Ranked", in: bundle,
+                                   compatibleWith: dark2)?.bitmap.pixels.first, 44,
+                           "appearance any is the fallback, never light")
+            XCTAssertEqual(UIImage(named: "Above", in: bundle,
+                                   compatibleWith: light2)?.bitmap.pixels.first, 73)
+
+            OpenUIKitRuntime.assetCatalogIdiom = .pad
+            XCTAssertEqual(UIImage(named: "Ranked", in: bundle,
+                                   compatibleWith: light2)?.bitmap.pixels.first, 22,
+                           "universal is used only after exact idiom misses")
+            XCTAssertEqual(UIImage(named: "ScaleLess", in: bundle,
+                                   compatibleWith: light2)?.scale, 2)
+            XCTAssertEqual(UIImage(named: "JPG", in: bundle,
+                                   compatibleWith: light2)?.renderingMode,
+                           .alwaysOriginal)
+            XCTAssertEqual(UIImage(named: "JPEG", in: bundle,
+                                   compatibleWith: light2)?.bitmap.pixels.first, 99)
+        }
+    }
+
+    func testIndexedImageNamedCacheSeparatesAppearanceAndClearsIndexState() {
+        withTempDirectory { root in
+            let light = indexedPayload(at: root, id: "a", red: 10)
+            let dark = indexedPayload(at: root, id: "b", red: 20)
+            writeIndex(at: root, assets: [
+                "Themed": imageRecord([
+                    imageVariant(light, appearance: "any", scale: 2),
+                    imageVariant(dark, appearance: "dark", scale: 2),
+                ], intent: "template"),
+            ])
+            OpenUIKitRuntime.imageSearchPaths = [root]
+            OpenUIKitRuntime.imageScreenScale = 2
+            OpenUIKitRuntime.assetCatalogIdiom = .phone
+            UITraitCollection.current = UITraitCollection(
+                userInterfaceStyle: .light, displayScale: 2
+            )
+            XCTAssertEqual(UIImage.named("Themed")?.bitmap.pixels.first, 10)
+            XCTAssertEqual(UIImage(named: "Themed")?.renderingMode,
+                           .alwaysTemplate)
+
+            // Appearance is part of the UIImage cache key.
+            UITraitCollection.current = UITraitCollection(
+                userInterfaceStyle: .dark, displayScale: 2
+            )
+            XCTAssertEqual(UIImage.named("Themed")?.bitmap.pixels.first, 20)
+
+            let replacement = indexedPayload(at: root, id: "c", red: 30)
+            writeIndex(at: root, assets: [
+                "Themed": imageRecord([
+                    imageVariant(replacement, appearance: "dark", scale: 2),
+                ]),
+            ])
+            XCTAssertEqual(UIImage.named("Themed")?.bitmap.pixels.first, 20)
+            UIImage.clearNamedCache()
+            XCTAssertEqual(UIImage.named("Themed")?.bitmap.pixels.first, 30,
+                           "clearing named images must also clear parsed indexes")
+        }
+    }
+
+    func testIndexedColorsPreserveDynamicAppearanceSpaceAndPlatformRules() {
+        withTempDirectory { root in
+            let bundle = makeBundle(at: root + "/Colors.bundle")
+            let reference: [String: Any] = [
+                "idiom": "universal", "appearance": "any",
+                "srgb": NSNull(), "reference": "labelColor",
+                "platform": NSNull(),
+            ]
+            writeIndex(at: bundle.bundlePath, assets: [
+                "Dynamic": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [
+                        colorVariant(native: [0.1, 0.2, 0.3, 0.4],
+                                     srgb: [0.9, 0.9, 0.9, 0.9],
+                                     space: "srgb"),
+                        colorVariant(appearance: "dark",
+                                     native: [0.8, 0.7, 0.6, 0.5],
+                                     srgb: [0.2, 0.3, 0.4, 0.5],
+                                     space: "display-p3", platform: "ios"),
+                    ],
+                ],
+                "Extended": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [colorVariant(
+                        native: [1.2, -0.1, 0.5, 0.75],
+                        srgb: [1, 0, 0.5, 0.75], space: "extended-srgb"
+                    )],
+                ],
+                "Gray": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [colorVariant(
+                        native: [0.9, 0.4],
+                        srgb: [0.902873, 0.902873, 0.902873, 0.4],
+                        space: "gray-gamma-22"
+                    )],
+                ],
+                "Platform": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [
+                        colorVariant(native: [1, 0, 0, 1],
+                                     srgb: [1, 0, 0, 1], space: "srgb"),
+                        colorVariant(native: [0, 1, 0, 1],
+                                     srgb: [0, 1, 0, 1], space: "srgb",
+                                     platform: "ios"),
+                    ],
+                ],
+                "MacOnly": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [colorVariant(
+                        native: [1, 0, 0, 1], srgb: [1, 0, 0, 1],
+                        space: "srgb", platform: "osx"
+                    )],
+                ],
+                "Reference": [
+                    "type": "colorset", "properties": [:],
+                    "variants": [reference],
+                ],
+            ])
+
+            let lightTraits = UITraitCollection(userInterfaceStyle: .light)
+            let darkTraits = UITraitCollection(userInterfaceStyle: .dark)
+            let dynamic = UIColor(named: "Dynamic", in: bundle,
+                                  compatibleWith: lightTraits)
+            let light = dynamic?.resolvedCGColor(with: lightTraits)
+            let dark = dynamic?.resolvedCGColor(with: darkTraits)
+            XCTAssertEqual(light?.red ?? -1, 0.1, accuracy: 0.000001)
+            XCTAssertEqual(light?.alpha ?? -1, 0.4, accuracy: 0.000001)
+            XCTAssertEqual(dark?.red ?? -1, 0.2, accuracy: 0.000001,
+                           "Display-P3 reports the indexed sRGB conversion")
+            XCTAssertEqual(dark?.green ?? -1, 0.3, accuracy: 0.000001)
+
+            let extended = UIColor(named: "Extended", in: bundle,
+                                   compatibleWith: lightTraits)?.cgColor
+            XCTAssertEqual(extended?.red ?? -1, 1.2, accuracy: 0.000001)
+            XCTAssertEqual(extended?.green ?? 1, -0.1, accuracy: 0.000001)
+            let gray = UIColor(named: "Gray", in: bundle,
+                               compatibleWith: lightTraits)?.cgColor
+            XCTAssertEqual(gray?.red ?? -1, 0.9, accuracy: 0.000001)
+            XCTAssertEqual(gray?.green ?? -1, 0.9, accuracy: 0.000001)
+            XCTAssertEqual(gray?.blue ?? -1, 0.9, accuracy: 0.000001)
+            XCTAssertEqual(gray?.alpha ?? -1, 0.4, accuracy: 0.000001)
+            let platform = UIColor(named: "Platform", in: bundle,
+                                   compatibleWith: lightTraits)?.cgColor
+            XCTAssertEqual(platform?.green ?? -1, 1, accuracy: 0.000001)
+            XCTAssertNil(UIColor(named: "MacOnly", in: bundle,
+                                 compatibleWith: lightTraits))
+            XCTAssertNil(UIColor(named: "Reference", in: bundle,
+                                 compatibleWith: lightTraits))
+        }
+    }
+
+    func testIndexRefusesUnsupportedUnresolvedMalformedAndUnsafeAssets() {
+        withTempDirectory { root in
+            let bundle = makeBundle(at: root + "/Refusal.bundle")
+            let resources = bundle.bundlePath
+            let vector = indexedPayload(at: resources, id: "d", red: 40,
+                                        ext: ".pdf")
+            let raster = indexedPayload(at: resources, id: "e", red: 50)
+            let unresolvedPayload = indexedPayload(at: resources, id: "f", red: 60)
+            writeImage(width: 3, height: 3, red: 200,
+                       to: resources + "/Vector.png")
+            writeImage(width: 3, height: 3, red: 201,
+                       to: resources + "/AppIcon.png")
+            writeImage(width: 3, height: 3, red: 202,
+                       to: resources + "/Resizable.png")
+            writeImage(width: 3, height: 3, red: 203,
+                       to: resources + "/Qualified.png")
+            writeImage(width: 3, height: 3, red: 204,
+                       to: resources + "/Unresolved.png")
+            writeImage(width: 3, height: 3, red: 205,
+                       to: resources + "/Loose.png")
+            writeIndex(at: resources, assets: [
+                "Vector": imageRecord([imageVariant(vector, scale: 2)]),
+                "AppIcon": imageRecord([imageVariant(raster, scale: 2)],
+                                       type: "appiconset"),
+                "Resizable": imageRecord([imageVariant(
+                    raster, scale: 2, resizing: ["mode": "9-part"]
+                )]),
+                "Qualified": imageRecord([imageVariant(
+                    raster, scale: 2, screenWidth: "4-inch"
+                )]),
+            ], unresolved: [
+                "Unresolved": [
+                    "type": ".brandassets",
+                    "reason": "asset type outside the covered set",
+                    "files": [unresolvedPayload],
+                ],
+            ])
+
+            for blocked in [
+                "Vector", "AppIcon", "Resizable", "Qualified", "Unresolved",
+            ] {
+                XCTAssertNil(UIImage(named: blocked, in: bundle,
+                                     compatibleWith: nil), blocked)
+            }
+            XCTAssertEqual(UIImage(named: "Loose", in: bundle,
+                                   compatibleWith: nil)?.bitmap.pixels.first, 205,
+                           "a valid index with no such name permits legacy fallback")
+
+            let malformed = makeBundle(at: root + "/Malformed.bundle")
+            writeImage(width: 2, height: 2, red: 210,
+                       to: malformed.bundlePath + "/Loose.png")
+            let indexDirectory = malformed.bundlePath
+                + "/OpenUIKit/AssetCatalogs"
+            try! FileManager.default.createDirectory(
+                atPath: indexDirectory, withIntermediateDirectories: true
+            )
+            try! Data("{ malformed".utf8).write(
+                to: URL(fileURLWithPath: indexDirectory + "/index.json")
+            )
+            UIImage.clearNamedCache()
+            XCTAssertNil(UIImage(named: "Loose", in: malformed,
+                                 compatibleWith: nil))
+
+            // Replacing a cached malformed index has no effect until the
+            // application-resource cache boundary is cleared.
+            writeIndex(at: malformed.bundlePath, assets: [:])
+            XCTAssertNil(UIImage(named: "Loose", in: malformed,
+                                 compatibleWith: nil))
+            UIImage.clearNamedCache()
+            XCTAssertEqual(UIImage(named: "Loose", in: malformed,
+                                   compatibleWith: nil)?.bitmap.pixels.first, 210)
+
+            var unsafe = raster
+            unsafe["file"] = "../outside.png"
+            writeIndex(at: malformed.bundlePath, assets: [
+                "Unsafe": imageRecord([imageVariant(unsafe, scale: 2)]),
+            ])
+            UIImage.clearNamedCache()
+            XCTAssertNil(UIImage(named: "Loose", in: malformed,
+                                 compatibleWith: nil),
+                         "one unsafe record invalidates the complete index")
         }
     }
 }

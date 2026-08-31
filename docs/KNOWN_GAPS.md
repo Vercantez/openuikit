@@ -1985,10 +1985,11 @@ exercised and OpenUIKit does not fully honour.
   `openrender realapp` and `openhost --app pocketcasts` work around it with an
   explicit call. This is a small fix and is the first item to take from the
   report's blocked list.
-- **`UIImage(named:)` reads loose files, not asset catalogs.** No `.xcassets`
-  or `.car` reader, and therefore no template-rendering-intent flag from the
-  catalog — an app that relies on the catalog to mark an icon as a template
-  gets an untinted image unless it tints explicitly.
+- **Named assets consume materialized source catalogs, not `Assets.car`.** The
+  application packager's `OpenUIKit/AssetCatalogs/index.json` drives raster
+  image and color lookup, including measured idiom/appearance/scale ordering
+  and template rendering intent. Compiled catalogs, vector payloads, resizing,
+  and uncommon image qualifiers remain fail-closed; see `NAMED_ASSETS.md`.
 - ~~**A target that links OpenUIKit still cannot `import Foundation`.**~~
   *(M15: CLOSED — see "Foundation coexistence (M15)" above.)* The geometry
   types, `IndexPath`, `NSRange` and `TimeInterval` are now `typealias`-es to

@@ -7,14 +7,24 @@ UIImage(named: name, in: bundle, compatibleWith: traits)
 UIColor(named: name, in: bundle, compatibleWith: traits)
 ```
 
-without claiming Apple's private asset-catalog runtime.
+without depending on Apple's private asset-catalog runtime.
 
 ## Supported subset
 
-- `UIImage` searches the selected bundle's resource root for loose PNG/JPEG
-  files. It honors `@2x`/`@3x` suffixes and uses
-  `traitCollection.displayScale` to choose the preferred scale.
-- `UIColor` reads raw, uncompiled `<name>.colorset/Contents.json` files at the
+- A Linux application packager may materialize source `.xcassets` as
+  `OpenUIKit/AssetCatalogs/index.json` plus content-addressed resources. Named
+  images resolve indexed PNG/JPG/JPEG image sets by exact idiom then
+  `universal`, exact appearance then `any`, and exact scale then largest below,
+  smallest above, and finally scaleless. Template/original rendering intent is
+  retained. `OpenUIKitRuntime.assetCatalogIdiom` defaults to `.phone` and is
+  host-configurable without an actor hop through `UIDevice.current`.
+- Indexed colors preserve light/dark behavior. sRGB and extended-sRGB use
+  native components, Display-P3 uses the indexer's measured sRGB conversion,
+  and gray-gamma-22 replicates native white into RGB. Explicit iOS platform
+  entries beat unqualified entries; other platforms are refused.
+- Only when a name is absent from every valid index does `UIImage` search for
+  loose PNG/JPEG files, honoring `@2x`/`@3x`, or `UIColor` read a raw,
+  uncompiled `<name>.colorset/Contents.json` file at the
   resource root or inside `Colors.xcassets`, `Assets.xcassets`, or
   `Media.xcassets`. Universal sRGB components may be decimal strings, JSON
   numbers, or Xcode's `0xNN` strings. Default and luminosity light/dark entries
@@ -29,12 +39,15 @@ without claiming Apple's private asset-catalog runtime.
 
 ## Deliberate limitations
 
-OpenUIKit does not currently decode compiled `Assets.car` files. Named images
-also do not decode vector PDF or SVG files and do not select appearance, idiom,
-gamut, localization, or rendering-intent variants. Named colors reject
-Display-P3 data instead of treating it as sRGB; high-contrast, idiom, and gamut
-variants are not selected. The catalog search is intentionally bounded to the
-four layouts above rather than recursively walking arbitrary bundle contents.
+OpenUIKit does not decode compiled `Assets.car`, vector PDF/SVG, app-icon,
+symbol, or data-set payloads. Indexed image resizing, screen-width,
+language-direction, and height-class qualifiers remain fail-closed until their
+runtime semantics exist. System-color references, tinted-only colors, malformed
+indexes, missing/mismatched payloads, and unsafe paths return `nil`; they never
+silently pick a loose or raw resource with the same name. High-contrast,
+localization, and display-gamut selection are not modeled. Legacy raw-catalog
+search is intentionally bounded to the four layouts above rather than
+recursively walking arbitrary bundle contents.
 
 These limitations are observable: unsupported or missing resources make the
 failable initializer return `nil`.
@@ -52,10 +65,9 @@ resource. Vanilla SwiftPM therefore neither synthesizes `Bundle.module` nor
 copies the catalogs. A Linux Xcode-project builder must add those pinned
 resource inputs explicitly; this API does not manufacture a resource bundle.
 
-Its `Assets.xcassets` image members do **not** fit the image subset: at the
-pinned revision the 24 names force-unwrapped by `UIImage+AppImages.swift` map to
-image sets whose 44 payload files are PDF (42) or SVG (2). Adding the overload
-removes the source/type-check boundary, but those force unwraps will still fail
-at runtime until the build pipeline rasterizes the vector catalog members or
-OpenUIKit gains a vector/compiled-catalog decoder. A green DesignSystem module
-therefore is not evidence that Focus's images can render yet.
+Its `Assets.xcassets` image members still do **not** fit the runtime subset: at
+the pinned revision the 24 names force-unwrapped by `UIImage+AppImages.swift`
+map to image sets whose 44 payload files are PDF (42) or SVG (2). Those force
+unwraps fail until the build pipeline rasterizes vector members or OpenUIKit
+gains a vector decoder. A green DesignSystem module therefore is not evidence
+that Focus's images can render yet.

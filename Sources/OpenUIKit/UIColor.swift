@@ -171,32 +171,59 @@ public class UIColor: Equatable {
 
     /// UIKit's bundle-selecting named-color initializer.
     ///
-    /// OpenUIKit reads uncompiled sRGB `.colorset/Contents.json` resources.
-    /// Default and luminosity light/dark entries become a dynamic UIColor.
-    /// Apple's compiled `Assets.car`, Display-P3 conversion, high-contrast,
-    /// idiom and gamut variants are intentionally outside this subset.
+    /// OpenUIKit first reads the packager's materialized asset-catalog index.
+    /// Indexed sRGB, extended-sRGB, Display-P3 and gray-gamma-22 colors use
+    /// the component reporting measured from UIKit. Only when a name is
+    /// genuinely absent from every valid index does lookup fall back to an
+    /// uncompiled sRGB `.colorset/Contents.json` resource.
     /// `traitCollection` is accepted for source compatibility; luminosity is
     /// selected when the returned color is resolved, just like other dynamic
     /// OpenUIKit colors.
     public convenience init?(named name: String,
                              in bundle: Bundle?,
                              compatibleWith traitCollection: UITraitCollection?) {
-        guard let asset = _NamedColorAsset.load(
-            name: name,
-            resourceRoots: BundleAssetLookup.resourceRoots(in: bundle)
-        ) else { return nil }
+        let roots = BundleAssetLookup.resourceRoots(in: bundle)
+        let initialTraits = traitCollection ?? UITraitCollection.current
+        switch BundleAssetLookup.indexedColor(
+            named: name, resourceRoots: roots
+        ) {
+        case .blocked:
+            return nil
+        case .value(let indexed):
+            guard let initial = indexed.resolvedColor(for: initialTraits) else {
+                return nil
+            }
+            if indexed.hasAppearanceVariants {
+                self.init(.dynamic { traits in
+                    indexed.resolvedColor(for: traits)
+                        ?? CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+                })
+            } else {
+                self.init(red: initial.red, green: initial.green,
+                          blue: initial.blue, alpha: initial.alpha)
+            }
+        case .absent:
+            guard let asset = _NamedColorAsset.load(
+                name: name, resourceRoots: roots
+            ) else { return nil }
 
-        if asset.hasAppearanceVariants {
-            self.init(dynamicProvider: { traits in
-                let color = asset.resolvedColor(for: traits)
-                return UIColor(red: color.red, green: color.green,
-                               blue: color.blue, alpha: color.alpha)
-            })
-        } else {
-            let color = asset.resolvedColor(for: traitCollection ?? .current)
-            self.init(red: color.red, green: color.green,
-                      blue: color.blue, alpha: color.alpha)
+            if asset.hasAppearanceVariants {
+                self.init(dynamicProvider: { traits in
+                    let color = asset.resolvedColor(for: traits)
+                    return UIColor(red: color.red, green: color.green,
+                                   blue: color.blue, alpha: color.alpha)
+                })
+            } else {
+                let color = asset.resolvedColor(for: initialTraits)
+                self.init(red: color.red, green: color.green,
+                          blue: color.blue, alpha: color.alpha)
+            }
         }
+    }
+
+    /// UIKit's main-bundle shorthand.
+    public convenience init?(named name: String) {
+        self.init(named: name, in: nil, compatibleWith: nil)
     }
 
     /// Resolve to concrete sRGB components for the given traits.

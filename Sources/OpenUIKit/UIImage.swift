@@ -217,18 +217,31 @@ public final class UIImage {
     /// `OpenUIKitRuntime.imageSearchPaths` (empty by default — the library
     /// hardcodes no host paths). `name` may carry an extension; when it
     /// does not, `png`, `jpg` and `jpeg` are tried in that order. For each
-    /// candidate the search prefers the `@Nx` variant for
+    /// candidate the search first resolves a materialized asset-catalog
+    /// index, then (only when the name is absent from every valid index)
+    /// prefers the loose `@Nx` variant for
     /// `OpenUIKitRuntime.imageScreenScale`, then lower scales, then the
-    /// unsuffixed file — the same precedence real UIKit applies to a bundle.
-    /// Results are cached by name (UIKit caches `named:` lookups too).
+    /// unsuffixed file. Results are cached by the complete lookup environment
+    /// (UIKit caches `named:` lookups too).
     public static func named(_ name: String) -> UIImage? {
-        if let hit = _namedCache[name] { return hit }
+        let traits = UITraitCollection.current
+        let key = _NamedCacheKey(
+            name: name,
+            searchPaths: OpenUIKitRuntime.imageSearchPaths,
+            scale: BundleAssetLookup.assetScale(
+                OpenUIKitRuntime.imageScreenScale
+            ),
+            appearance: BundleAssetLookup.assetAppearance(for: traits),
+            idiom: BundleAssetLookup.assetIdiom()
+        )
+        if let hit = _namedCache[key] { return hit }
         guard let img = loadNamed(name,
                                   searchPaths: OpenUIKitRuntime.imageSearchPaths,
-                                  preferredScale: OpenUIKitRuntime.imageScreenScale) else {
+                                  preferredScale: OpenUIKitRuntime.imageScreenScale,
+                                  traits: traits) else {
             return nil
         }
-        _namedCache[name] = img
+        _namedCache[key] = img
         return img
     }
 
@@ -239,10 +252,25 @@ public final class UIImage {
     /// materialize supported raster files into the bundle resource directory.
     private static func loadNamed(_ name: String,
                                   searchPaths: [String],
-                                  preferredScale: CGFloat) -> UIImage? {
+                                  preferredScale: CGFloat,
+                                  traits: UITraitCollection) -> UIImage? {
         guard let name = BundleAssetLookup.relativeResourceName(name) else {
             return nil
         }
+        switch BundleAssetLookup.indexedImage(
+            named: name,
+            resourceRoots: searchPaths,
+            preferredScale: preferredScale,
+            traits: traits
+        ) {
+        case .value(let image):
+            return image
+        case .blocked:
+            return nil
+        case .absent:
+            break
+        }
+
         let (base, ext) = splitExtension(name)
         let exts = ext.map { [$0] } ?? ["png", "jpg", "jpeg"]
         var scales: [Int] = []
@@ -276,15 +304,16 @@ public final class UIImage {
     /// simply forwards to `named(_:)`.
     public convenience init?(named name: String) {
         guard let img = UIImage.named(name) else { return nil }
-        self.init(bitmap: img.bitmap, scale: img.scale)
+        self.init(bitmap: img.bitmap, scale: img.scale,
+                  renderingMode: img.renderingMode,
+                  isSystemSymbol: img._isSystemSymbol)
     }
 
     /// UIKit's bundle-selecting named-image initializer.
     ///
-    /// The supported portable subset is loose PNG/JPEG resources plus their
-    /// `@2x`/`@3x` variants. `traitCollection.displayScale` chooses the
-    /// preferred variant; appearance, idiom and gamut variants, compiled
-    /// asset catalogs, vector PDFs and SVGs are not decoded here.
+    /// Materialized asset-catalog raster variants are resolved using idiom,
+    /// appearance and display scale before the loose PNG/JPEG fallback.
+    /// Apple's compiled `Assets.car`, vector PDFs and SVGs are not decoded.
     ///
     /// In a Foundation-hidden guest build Bundle has no filesystem metadata,
     /// so the host-configured `OpenUIKitRuntime.imageSearchPaths` are used.
@@ -293,18 +322,33 @@ public final class UIImage {
                              compatibleWith traitCollection: UITraitCollection?) {
         let preferredScale = traitCollection?.displayScale
             ?? OpenUIKitRuntime.imageScreenScale
+        let traits = traitCollection ?? UITraitCollection.current
         guard let img = UIImage.loadNamed(
             name,
             searchPaths: BundleAssetLookup.resourceRoots(in: bundle),
-            preferredScale: preferredScale
+            preferredScale: preferredScale,
+            traits: traits
         ) else { return nil }
-        self.init(bitmap: img.bitmap, scale: img.scale)
+        self.init(bitmap: img.bitmap, scale: img.scale,
+                  renderingMode: img.renderingMode,
+                  isSystemSymbol: img._isSystemSymbol)
     }
 
     /// Drop every cached `named:` lookup (hosts call this after changing
     /// `imageSearchPaths`).
-    public static func clearNamedCache() { _namedCache.removeAll() }
-    private static var _namedCache: [String: UIImage] = [:]
+    public static func clearNamedCache() {
+        _namedCache.removeAll()
+        BundleAssetLookup.clearAssetCatalogCache()
+    }
+
+    private struct _NamedCacheKey: Hashable {
+        let name: String
+        let searchPaths: [String]
+        let scale: Int
+        let appearance: String
+        let idiom: String
+    }
+    private static var _namedCache: [_NamedCacheKey: UIImage] = [:]
 
     /// Compiler entry point used by `#imageLiteral(resourceName:)` in
     /// unchanged UIKit application sources. Image literals follow the same
@@ -315,7 +359,9 @@ public final class UIImage {
         guard let image = UIImage.named(name) else {
             preconditionFailure("UIImage image literal resource not found: \(name)")
         }
-        self.init(bitmap: image.bitmap, scale: image.scale)
+        self.init(bitmap: image.bitmap, scale: image.scale,
+                  renderingMode: image.renderingMode,
+                  isSystemSymbol: image._isSystemSymbol)
     }
 
     /// "…@2x.png" → 2, "…@3x" → 3, anything else → 1.

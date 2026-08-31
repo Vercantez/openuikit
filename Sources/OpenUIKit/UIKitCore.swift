@@ -20,6 +20,14 @@ public enum OpenUIKitRuntime {
     /// (the analogue of `UIScreen.main.scale`; 2 = retina, matching the
     /// scene suite's default render scale).
     public static var imageScreenScale: CGFloat = 2
+    /// Device idiom used by the Foundation-free asset-catalog resolver.
+    ///
+    /// `UIDevice.current` is MainActor-isolated while UIImage/UIColor named
+    /// lookup is a synchronous, nonisolated framework API. Keep that boundary
+    /// explicit and host-configurable instead of smuggling an actor hop into
+    /// resource loading. The documented portable device is an iPhone, so the
+    /// default matches `UIDevice.current.userInterfaceIdiom`.
+    public static var assetCatalogIdiom: UIUserInterfaceIdiom = .phone
     /// Optional explicit font file paths (system, bold-face variants, mono, italic).
     /// When empty, the font engine falls back to platform-known locations
     /// (e.g. /System/Library/Fonts/SFNS.ttf on macOS).
