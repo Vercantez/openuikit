@@ -1,12 +1,12 @@
 // UIVisualEffect, blur/vibrancy effects, and UIVisualEffectView.
 //
-// The built-in effect objects are immutable descriptions. A later view-render
-// integration stage can translate `_UIVisualEffectDescriptor` into the
-// existing Canvas backdrop-filter primitive. This file deliberately does not
-// paint a flat translucent stand-in and call it blur. The view hierarchy and
-// object semantics are nevertheless real: built-in effects copy/archive like
-// UIKit, contentView has stable identity and fill geometry, and recognized
-// blur effects own an inert backdrop host behind that content.
+// The built-in effect objects are immutable descriptions. Recognized blur
+// views install a real destination-sampling Canvas backdrop operation; the
+// private CAFilter boundary below also executes VariableBlur's spatial mask.
+// This file deliberately does not paint a flat translucent stand-in and call
+// it blur. Object/archive semantics and the view hierarchy remain independent
+// of rendering: built-in effects copy/archive like UIKit and contentView has
+// stable identity and fill geometry.
 
 // UIKit's effect objects are NSObject subclasses and its archive/copy
 // protocols are Foundation contracts.  Keep those imports scoped on Darwin
@@ -441,14 +441,198 @@ final class _UIVisualEffectBackdropView: UIView {
     }
 }
 
+/// Convert dynamically supplied Core Animation inputs without depending on
+/// Foundation's NSNumber declaration. Objective-C numeric boxes conditionally
+/// cast through Swift's bridge when it is present; the concrete scalar cases
+/// also cover Foundation-hidden framework builds and direct Swift callers.
+private func _openFilterCGFloat(_ value: Any?) -> CGFloat? {
+    switch value {
+    case let value as CGFloat: return value
+    case let value as Double: return CGFloat(value)
+    case let value as Float: return CGFloat(value)
+    case let value as Int: return CGFloat(value)
+    case let value as Int32: return CGFloat(value)
+    case let value as UInt: return CGFloat(value)
+    default: return nil
+    }
+}
+
+private func _openFilterBool(_ value: Any?) -> Bool? {
+    switch value {
+    case let value as Bool: return value
+    case let value as Int: return value != 0
+    case let value as Int32: return value != 0
+    default: return nil
+    }
+}
+
+/// Normalize an Objective-C object argument at the private CAFilter boundary.
+///
+/// Foundation-hidden guest builds cannot name `NSString` in this module: the
+/// public Foundation overlay is intentionally compiled later in the platform
+/// graph. An Objective-C `id` carrying NSString still dynamically bridges to
+/// Swift.String, however, which lets the implementation remain strict (only
+/// real string objects are accepted) instead of trusting arbitrary object
+/// descriptions as filter names or KVC keys.
+private func _openFilterString(_ value: Any?) -> String? {
+    value as? String
+}
+
+/// Core Image and CGImage masks use a bottom-left image coordinate system,
+/// while UIView and Canvas use top-left coordinates. Copy the alpha plane at
+/// the private Core Animation boundary so the generic Canvas mask primitive
+/// keeps its natural top-left contract and an asymmetric app mask is not
+/// silently applied upside down.
+private func _openCAFilterMask(_ bitmap: Bitmap) -> CanvasBackdropFilterMask? {
+    guard let source = CanvasBackdropFilterMask(bitmap) else { return nil }
+    var flipped = [UInt8](repeating: 0, count: source.alpha.count)
+    for y in 0..<source.height {
+        let sourceStart = y * source.width
+        let destinationStart = (source.height - y - 1) * source.width
+        flipped.replaceSubrange(
+            destinationStart..<(destinationStart + source.width),
+            with: source.alpha[sourceStart..<(sourceStart + source.width)])
+    }
+    return CanvasBackdropFilterMask(
+        width: source.width, height: source.height, alpha: flipped)
+}
+
+/// Concrete private Core Animation filter used by unchanged applications.
+/// Native Objective-C registration is load-bearing: `NSClassFromString`
+/// resolves the exact runtime name `CAFilter`, and NSObject's ordinary
+/// `perform(_:with:)` dispatch reaches the exact class selector
+/// `filterWithType:`. Only the implemented variable blur type is admitted;
+/// every unknown filter name returns nil and therefore fails closed.
+#if canImport(ObjectiveC)
+@objc(CAFilter)
+#endif
+@preconcurrency @MainActor
+final class _OpenCAFilter: NSObject {
+    nonisolated let filterType: String
+    private var inputRadiusValue: Any?
+    private var inputMaskImageValue: Any?
+    private var inputNormalizeEdgesValue: Any?
+    private var resolvedMaskValue: CanvasBackdropFilterMask?
+
+    private init(filterType: String) {
+        self.filterType = filterType
+        super.init()
+    }
+
+#if canImport(Foundation)
+#if canImport(ObjectiveC)
+    @objc(filterWithType:)
+#endif
+    class func filter(withType type: String) -> _OpenCAFilter? {
+        _filter(withType: type)
+    }
+#else
+    /// Foundation-hidden Objective-C imports cannot represent Swift.String in
+    /// an @objc signature. Use Objective-C `id` at the ABI boundary and bridge
+    /// its boxed NSString payload immediately, preserving `filterWithType:`.
+#if canImport(ObjectiveC)
+    @objc(filterWithType:)
+#endif
+    class func filter(withType rawType: Any?) -> _OpenCAFilter? {
+        guard let type = _openFilterString(rawType) else { return nil }
+        return _filter(withType: type)
+    }
+#endif
+
+    private class func _filter(withType type: String) -> _OpenCAFilter? {
+        guard type == "variableBlur" else { return nil }
+        return _OpenCAFilter(filterType: type)
+    }
+
+#if canImport(Foundation)
+    override func setValue(_ value: Any?, forKey key: String) {
+        _setRetainedValue(value, forKey: key)
+    }
+#else
+    @objc(setValue:forKey:)
+    func setValue(_ value: Any?, forKey rawKey: Any?) {
+        guard let key = _openFilterString(rawKey) else { return }
+        _setRetainedValue(value, forKey: key)
+    }
+#endif
+
+    private func _setRetainedValue(_ value: Any?, forKey key: String) {
+        switch key {
+        case "inputRadius":
+            inputRadiusValue = value
+        case "inputMaskImage":
+            inputMaskImageValue = value
+            resolvedMaskValue = (value as? Bitmap).flatMap(_openCAFilterMask)
+        case "inputNormalizeEdges":
+            inputNormalizeEdgesValue = value
+        default:
+            // Private filters are not an unbounded KVC dictionary. Silently
+            // ignore unsupported inputs so a typo cannot acquire behavior.
+            break
+        }
+    }
+
+#if canImport(Foundation)
+    override func value(forKey key: String) -> Any? {
+        _retainedValue(forKey: key)
+    }
+#else
+    @objc(valueForKey:)
+    func value(forKey rawKey: Any?) -> Any? {
+        guard let key = _openFilterString(rawKey) else { return nil }
+        return _retainedValue(forKey: key)
+    }
+#endif
+
+    private func _retainedValue(forKey key: String) -> Any? {
+        switch key {
+        case "inputRadius": return inputRadiusValue
+        case "inputMaskImage": return inputMaskImageValue
+        case "inputNormalizeEdges": return inputNormalizeEdgesValue
+        default: return nil
+        }
+    }
+
+    var _canvasConfiguration: CanvasBackdropFilterConfiguration? {
+        guard filterType == "variableBlur",
+              let radius = _openFilterCGFloat(inputRadiusValue),
+              radius.isFinite, radius > 0,
+              let mask = resolvedMaskValue
+        else { return nil }
+        return CanvasBackdropFilterConfiguration(
+            blurRadius: radius,
+            blurMask: mask,
+            normalizesMaskEdges: _openFilterBool(
+                inputNormalizeEdgesValue) ?? false)
+    }
+
+#if canImport(Foundation)
+    nonisolated override var description: String { filterType }
+#else
+    /// ObjectiveC.NSObject has no Foundation description requirement in the
+    /// guest graph, but keeping this concrete member is useful to statically
+    /// typed framework diagnostics without inventing a superclass override.
+    nonisolated var description: String { filterType }
+#endif
+}
+
+#if !canImport(Foundation)
+// ObjectiveC.NSObject alone contributes no CustomStringConvertible witness.
+// Declare it explicitly so String(describing:) and CALayer filter inspection
+// use the stable private filter name in the Foundation-hidden guest graph.
+extension _OpenCAFilter: CustomStringConvertible {}
+#endif
+
 /// Name-bearing compatibility token for the standard backdrop filter. Public
-/// code only inspects these values through CALayer.filters and string
-/// interpolation; the actual blur remains renderer-owned UIVisualEffect state.
+/// code inspects these values through CALayer.filters and string interpolation;
+/// the renderer resolves the retained semantic radius below.
 private final class _OpenVisualEffectFilterToken: CustomStringConvertible {
     let description: String
+    let blurRadius: CGFloat
 
-    init(_ description: String) {
+    init(_ description: String, blurRadius: CGFloat = 20) {
         self.description = description
+        self.blurRadius = blurRadius
     }
 }
 
@@ -615,6 +799,38 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
     /// effect is retained but intentionally inert.
     var _visualEffectDescriptor: _UIVisualEffectDescriptor? {
         effect?._descriptor
+    }
+
+    /// Resolve the one backdrop operation the current private layer graph
+    /// requests. The UIView-backed backdrop is authoritative: replacing its
+    /// standard gaussian token with a concrete CAFilter replaces, rather than
+    /// stacks with, the built-in effect. The standalone compatibility layer
+    /// retains the gaussian radius KVC path used by BackgroundBlur but never
+    /// paints a second copy of the filter.
+    func _canvasBackdropConfiguration(
+        for backdrop: _UIVisualEffectBackdropView
+    ) -> CanvasBackdropFilterConfiguration? {
+        guard backdrop === backdropView,
+              let filters = backdrop.layer.filters,
+              !filters.isEmpty
+        else { return nil }
+
+        for filter in filters {
+            if let variable = filter as? _OpenCAFilter {
+                // A recognized-but-incomplete variable filter stays inert;
+                // it must never silently turn into a uniform gaussian.
+                return variable._canvasConfiguration
+            }
+        }
+
+        guard let gaussian = filters.first(where: {
+            ($0 as? _OpenVisualEffectFilterToken)?.description == "gaussianBlur"
+        }) as? _OpenVisualEffectFilterToken else { return nil }
+        let retainedRadius = compatibilityFilterLayer?.value(
+            forKeyPath: "filters.gaussianBlur.inputRadius")
+        let radius = _openFilterCGFloat(retainedRadius) ?? gaussian.blurRadius
+        guard radius.isFinite, radius > 0 else { return nil }
+        return CanvasBackdropFilterConfiguration(blurRadius: radius)
     }
 
     @discardableResult

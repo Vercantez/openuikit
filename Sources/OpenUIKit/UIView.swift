@@ -679,6 +679,32 @@ open class UIView: UIResponder, CALayerDelegate {
         self.frame = .zero
     }
 
+    /// UIKit's NSObject description is a live diagnostic of the concrete
+    /// view identity and geometry. Keeping the dynamic class name first is
+    /// important to unchanged code which distinguishes private visual-effect
+    /// hierarchy nodes by their description. UIView is main-thread-only; the
+    /// inherited NSObject requirement is nonisolated, so make that existing
+    /// contract explicit at this single synchronous boundary.
+    nonisolated private var _openDescription: String {
+        let className = String(describing: type(of: self))
+        let identity = Unmanaged.passUnretained(self).toOpaque()
+        return MainActor.assumeIsolated {
+            "<\(className): \(identity); frame = \(frame); bounds = \(bounds)>"
+        }
+    }
+
+#if canImport(Foundation)
+    /// Foundation's NSObject declares `description`, so the Darwin/host
+    /// surface is a genuine override.
+    nonisolated open override var description: String { _openDescription }
+#else
+    /// The guest ObjectiveC NSObject deliberately has no Foundation
+    /// description property. Keep UIView's UIKit surface without claiming a
+    /// nonexistent override; statically typed UIView callers (including
+    /// unchanged applications) see the same public member.
+    nonisolated open var description: String { _openDescription }
+#endif
+
     // MARK: Hierarchy
     public func addSubview(_ view: UIView) {
         (self as? _UIViewSubviewAdmission)?.validateSubviewInsertion(view)

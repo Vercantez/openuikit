@@ -30,24 +30,89 @@ import Foundation
 /// `intensity` linearly mixes the complete filtered result with the original
 /// backdrop; it is useful for effect transitions and group opacity.
 ///
+/// An optional ``CanvasBackdropFilterMask`` makes the Gaussian sigma vary
+/// spatially.  Transparent mask pixels select zero blur and opaque pixels
+/// select `blurRadius`; intermediate alpha values select an intermediate
+/// radius.  The mask is sampled bilinearly over the destination rectangle.
+/// This is radius modulation, not an opacity blend between one fully blurred
+/// image and the original backdrop, so fine detail disappears progressively
+/// as mask alpha rises just as it does for Core Animation's `variableBlur`.
+///
 /// Both Canvas backends run the same filter kernel for identical input bytes,
 /// but their pre-filter compositors may differ by one byte count. Saturation
 /// above `1` can amplify and clamp that difference, so a post-filter channel
 /// can legitimately differ anywhere across the full `0...255` byte range.
+public struct CanvasBackdropFilterMask: Equatable, Sendable {
+    public let width: Int
+    public let height: Int
+    public let alpha: [UInt8]
+
+    /// Copy one immutable alpha plane from an RGBA8 bitmap. Invalid or empty
+    /// images fail closed rather than installing a filter with invented data.
+    public init?(_ bitmap: Bitmap) {
+        guard bitmap.width > 0, bitmap.height > 0,
+              bitmap.width <= Int.max / bitmap.height,
+              bitmap.width * bitmap.height <= bitmap.pixels.count / 4
+        else { return nil }
+        width = bitmap.width
+        height = bitmap.height
+        var plane = [UInt8]()
+        plane.reserveCapacity(width * height)
+        for offset in stride(from: 3, to: width * height * 4, by: 4) {
+            plane.append(bitmap.pixels[offset])
+        }
+        alpha = plane
+    }
+
+    /// Explicit alpha-plane construction for generated masks and tests.
+    public init?(width: Int, height: Int, alpha: [UInt8]) {
+        guard width > 0, height > 0,
+              width <= Int.max / height,
+              alpha.count == width * height
+        else { return nil }
+        self.width = width
+        self.height = height
+        self.alpha = alpha
+    }
+
+    fileprivate func sample(u: CGFloat, v: CGFloat) -> UInt8 {
+        let x = Swift.min(Swift.max(u, 0), 1) * CGFloat(width - 1)
+        let y = Swift.min(Swift.max(v, 0), 1) * CGFloat(height - 1)
+        let x0 = Int(x.rounded(.down))
+        let y0 = Int(y.rounded(.down))
+        let x1 = Swift.min(x0 + 1, width - 1)
+        let y1 = Swift.min(y0 + 1, height - 1)
+        let fx = x - CGFloat(x0)
+        let fy = y - CGFloat(y0)
+        let top = CGFloat(alpha[y0 * width + x0]) * (1 - fx)
+            + CGFloat(alpha[y0 * width + x1]) * fx
+        let bottom = CGFloat(alpha[y1 * width + x0]) * (1 - fx)
+            + CGFloat(alpha[y1 * width + x1]) * fx
+        return UInt8(Swift.min(255, Swift.max(
+            0, (top * (1 - fy) + bottom * fy).rounded())))
+    }
+}
+
 public struct CanvasBackdropFilterConfiguration: Equatable, Sendable {
     public var blurRadius: CGFloat
     public var saturation: CGFloat
     public var tintColor: CGColor?
     public var intensity: CGFloat
+    public var blurMask: CanvasBackdropFilterMask?
+    public var normalizesMaskEdges: Bool
 
     public init(blurRadius: CGFloat = 0,
                 saturation: CGFloat = 1,
                 tintColor: CGColor? = nil,
-                intensity: CGFloat = 1) {
+                intensity: CGFloat = 1,
+                blurMask: CanvasBackdropFilterMask? = nil,
+                normalizesMaskEdges: Bool = true) {
         self.blurRadius = blurRadius
         self.saturation = saturation
         self.tintColor = tintColor
         self.intensity = intensity
+        self.blurMask = blurMask
+        self.normalizesMaskEdges = normalizesMaskEdges
     }
 }
 
@@ -119,12 +184,67 @@ extension Canvas {
         let sigma = requestedSigma.isFinite
             ? Swift.min(requestedSigma, maximumSigma)
             : maximumSigma
+        let boxRadii = _BackdropFilterCPU.boxRadii(forSigma: sigma)
+        let deviceMask = configuration.blurMask.flatMap {
+            _deviceBackdropMask(
+                $0,
+                in: rect,
+                transform: t,
+                bounds: bounds,
+                support: boxRadii.reduce(0, +),
+                normalizeEdges: configuration.normalizesMaskEdges)
+        }
         let resolved = _CanvasBackdropFilter(
-            boxRadii: _BackdropFilterCPU.boxRadii(forSigma: sigma),
+            boxRadii: boxRadii,
+            maximumSigma: sigma,
+            blurMask: deviceMask,
             saturation: Double(saturation),
             tint: tint,
             intensity: Double(intensity))
         backend.applyBackdropFilter(resolved, coverage: coverage, bounds: bounds)
+    }
+
+    /// Sample a normalized image mask into the Canvas device grid. Only the
+    /// blur's finite read support is touched, although the returned plane uses
+    /// the destination's indexing so both Canvas backends consume one exact
+    /// representation. A fully opaque sampled plane collapses back to the
+    /// established uniform fast path.
+    private func _deviceBackdropMask(
+        _ mask: CanvasBackdropFilterMask,
+        in rect: CGRect,
+        transform: CGAffineTransform,
+        bounds: _CanvasDeviceBounds,
+        support: Int,
+        normalizeEdges: Bool
+    ) -> [UInt8]? {
+        let standardized = rect.standardized
+        guard standardized.width > 0, standardized.height > 0 else { return nil }
+        let determinant = transform.a * transform.d - transform.b * transform.c
+        guard determinant.isFinite, determinant != 0 else { return nil }
+        let inverse = transform.inverted()
+        let source = bounds.expanded(
+            by: support, width: bitmap.width, height: bitmap.height)
+        var sampled = [UInt8](repeating: 0, count: bitmap.width * bitmap.height)
+        var allOpaque = true
+        for y in source.y0..<source.y1 {
+            for x in source.x0..<source.x1 {
+                let point = CGPoint(x: CGFloat(x) + 0.5,
+                                    y: CGFloat(y) + 0.5).applying(inverse)
+                var u = (point.x - standardized.minX) / standardized.width
+                var v = (point.y - standardized.minY) / standardized.height
+                if normalizeEdges {
+                    u = Swift.min(Swift.max(u, 0), 1)
+                    v = Swift.min(Swift.max(v, 0), 1)
+                } else if u < 0 || u > 1 || v < 0 || v > 1 {
+                    allOpaque = false
+                    continue
+                }
+                let value = mask.sample(u: u, v: v)
+                sampled[y * bitmap.width + x] = value
+                if value != 255 { allOpaque = false }
+            }
+        }
+        return allOpaque ? nil : sampled
     }
 
     private static func _finiteClamped(_ value: CGFloat, lower: CGFloat,
@@ -1250,6 +1370,10 @@ struct _CanvasDeviceBounds {
 
 struct _CanvasBackdropFilter {
     let boxRadii: [Int]
+    let maximumSigma: Double
+    /// Device-space mask plane using the destination Canvas' row stride.
+    /// nil selects the byte-identical historical uniform kernel.
+    let blurMask: [UInt8]?
     let saturation: Double
     let tint: CGColor?
     let intensity: Double
@@ -1351,7 +1475,8 @@ enum _BackdropFilterCPU {
         }
 
         filterWork(&work, width: workWidth, height: workHeight,
-                   boxRadii: filter.boxRadii)
+                   canvasWidth: width, sourceBounds: sourceBounds,
+                   filter: filter)
         writeFiltered(work, canvasWidth: width, workWidth: workWidth,
                       sourceBounds: sourceBounds,
                       targetBounds: bounds, coverage: coverage, filter: filter,
@@ -1413,7 +1538,8 @@ enum _BackdropFilterCPU {
         }
 
         filterWork(&work, width: workWidth, height: workHeight,
-                   boxRadii: filter.boxRadii)
+                   canvasWidth: width, sourceBounds: sourceBounds,
+                   filter: filter)
         writeFiltered(work, canvasWidth: width, workWidth: workWidth,
                       sourceBounds: sourceBounds,
                       targetBounds: bounds, coverage: coverage, filter: filter,
@@ -1431,11 +1557,32 @@ enum _BackdropFilterCPU {
                       })
     }
 
-    private static func filterWork(_ pixels: inout [UInt8], width: Int,
-                                   height: Int, boxRadii: [Int]) {
-        for radius in boxRadii where radius > 0 {
-            boxBlur(&pixels, width: width, height: height, radius: radius)
+    private static func filterWork(
+        _ pixels: inout [UInt8],
+        width: Int,
+        height: Int,
+        canvasWidth: Int,
+        sourceBounds: _CanvasDeviceBounds,
+        filter: _CanvasBackdropFilter
+    ) {
+        guard let canvasMask = filter.blurMask else {
+            for radius in filter.boxRadii where radius > 0 {
+                boxBlur(&pixels, width: width, height: height, radius: radius)
+            }
+            return
         }
+
+        var workMask = [UInt8](repeating: 0, count: width * height)
+        for y in 0..<height {
+            let sourceRow = (sourceBounds.y0 + y) * canvasWidth
+            let destinationRow = y * width
+            for x in 0..<width {
+                workMask[destinationRow + x] =
+                    canvasMask[sourceRow + sourceBounds.x0 + x]
+            }
+        }
+        variableBoxBlur(&pixels, width: width, height: height,
+                        mask: workMask, maximumSigma: filter.maximumSigma)
     }
 
     private static func writeFiltered(
@@ -1505,6 +1652,116 @@ enum _BackdropFilterCPU {
 
     private static func byte(_ value: Double) -> UInt8 {
         UInt8(Swift.min(255, Swift.max(0, value.rounded())))
+    }
+
+    /// Three spatially varying separable boxes approximate a Gaussian whose
+    /// sigma is selected independently by every mask pixel. Prefix sums keep
+    /// work linear in surface area regardless of the maximum radius. A zero
+    /// mask value has radius zero in every pass and therefore preserves that
+    /// exact source pixel; an all-opaque mask uses the uniform fast path before
+    /// reaching this function.
+    private static func variableBoxBlur(
+        _ pixels: inout [UInt8],
+        width: Int,
+        height: Int,
+        mask: [UInt8],
+        maximumSigma: Double
+    ) {
+        guard maximumSigma > 0.01, maximumSigma.isFinite,
+              width > 0, height > 0, mask.count == width * height,
+              mask.contains(where: { $0 != 0 })
+        else { return }
+
+        let radiiByMask: [[Int]] = (0...255).map { value in
+            let radii = boxRadii(
+                forSigma: maximumSigma * Double(value) / 255.0)
+            if radii.count == 3 { return radii }
+            return [0, 0, 0]
+        }
+        var temporary = [UInt8](repeating: 0, count: pixels.count)
+
+        for pass in 0..<3 {
+            let largestRadius = radiiByMask[255][pass]
+            guard largestRadius > 0 else { continue }
+
+            pixels.withUnsafeBufferPointer { source in
+                temporary.withUnsafeMutableBufferPointer { destination in
+                    var prefix = [Int64](repeating: 0, count: width + 1)
+                    for y in 0..<height {
+                        let row = y * width
+                        for channel in 0..<4 {
+                            prefix[0] = 0
+                            for x in 0..<width {
+                                prefix[x + 1] = prefix[x]
+                                    + Int64(source[(row + x) * 4 + channel])
+                            }
+                            for x in 0..<width {
+                                let radius = radiiByMask[Int(mask[row + x])][pass]
+                                if radius == 0 {
+                                    destination[(row + x) * 4 + channel] =
+                                        source[(row + x) * 4 + channel]
+                                    continue
+                                }
+                                let low = Swift.max(0, x - radius)
+                                let high = Swift.min(width - 1, x + radius)
+                                var sum = prefix[high + 1] - prefix[low]
+                                if x < radius {
+                                    sum += Int64(radius - x)
+                                        * Int64(source[row * 4 + channel])
+                                }
+                                let rightOverflow = x + radius - (width - 1)
+                                if rightOverflow > 0 {
+                                    sum += Int64(rightOverflow) * Int64(
+                                        source[(row + width - 1) * 4 + channel])
+                                }
+                                let span = Int64(radius * 2 + 1)
+                                destination[(row + x) * 4 + channel] = UInt8(
+                                    (sum + span / 2) / span)
+                            }
+                        }
+                    }
+                }
+            }
+
+            temporary.withUnsafeBufferPointer { source in
+                pixels.withUnsafeMutableBufferPointer { destination in
+                    var prefix = [Int64](repeating: 0, count: height + 1)
+                    for x in 0..<width {
+                        for channel in 0..<4 {
+                            prefix[0] = 0
+                            for y in 0..<height {
+                                prefix[y + 1] = prefix[y]
+                                    + Int64(source[(y * width + x) * 4 + channel])
+                            }
+                            for y in 0..<height {
+                                let index = y * width + x
+                                let radius = radiiByMask[Int(mask[index])][pass]
+                                if radius == 0 {
+                                    destination[index * 4 + channel] =
+                                        source[index * 4 + channel]
+                                    continue
+                                }
+                                let low = Swift.max(0, y - radius)
+                                let high = Swift.min(height - 1, y + radius)
+                                var sum = prefix[high + 1] - prefix[low]
+                                if y < radius {
+                                    sum += Int64(radius - y)
+                                        * Int64(source[x * 4 + channel])
+                                }
+                                let bottomOverflow = y + radius - (height - 1)
+                                if bottomOverflow > 0 {
+                                    sum += Int64(bottomOverflow) * Int64(
+                                        source[((height - 1) * width + x) * 4 + channel])
+                                }
+                                let span = Int64(radius * 2 + 1)
+                                destination[index * 4 + channel] = UInt8(
+                                    (sum + span / 2) / span)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /// One separable, edge-clamped box blur over all premultiplied channels.

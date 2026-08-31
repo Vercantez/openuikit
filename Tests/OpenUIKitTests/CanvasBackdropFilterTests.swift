@@ -78,6 +78,64 @@ final class CanvasBackdropFilterTests: XCTestCase {
         }
     }
 
+    func testVariableMaskSelectsSpatialRadiusRatherThanFilterOpacity() throws {
+        forEachBackend { backend in
+            let bitmap = Bitmap(width: 31, height: 1)
+            for x in 0..<31 {
+                let value: UInt8 = x.isMultiple(of: 2) ? 0 : 255
+                setPixel(bitmap, x: x, y: 0, (value, value, value, 255))
+            }
+            let original = bitmap.pixels
+            // A long zero plateau proves those pixels stay byte-identical;
+            // the ramp then selects progressively larger convolution radii.
+            let mask = try! XCTUnwrap(CanvasBackdropFilterMask(
+                width: 5, height: 1, alpha: [0, 0, 64, 160, 255]))
+            Canvas(bitmap: bitmap, scale: 1).applyBackdropFilter(
+                CanvasBackdropFilterConfiguration(
+                    blurRadius: 4,
+                    blurMask: mask,
+                    normalizesMaskEdges: true),
+                in: CGRect(x: 0, y: 0, width: 31, height: 1))
+
+            XCTAssertEqual(Array(bitmap.pixels[0..<(6 * 4)]),
+                           Array(original[0..<(6 * 4)]), "\(backend)")
+            let blurredTail = (24..<31).map { pixel(bitmap, x: $0, y: 0).r }
+            XCTAssertTrue(blurredTail.allSatisfy { $0 > 0 && $0 < 255 },
+                          "opaque mask edge must select a real blur (\(backend))")
+            XCTAssertNotEqual(pixel(bitmap, x: 16, y: 0),
+                              pixel(bitmap, x: 24, y: 0),
+                              "different alpha values must select different radii (\(backend))")
+        }
+    }
+
+    func testOpaqueVariableMaskIsExactlyUniformFastPath() throws {
+        forEachBackend { backend in
+            @MainActor func fixture() -> Bitmap {
+                let bitmap = Bitmap(width: 17, height: 7)
+                for y in 0..<7 { for x in 0..<17 {
+                    setPixel(bitmap, x: x, y: y,
+                             (UInt8((x * 53 + y * 11) % 256),
+                              UInt8((x * 7 + y * 67) % 256),
+                              UInt8((x * 31 + y * 29) % 256), 255))
+                } }
+                return bitmap
+            }
+            let expected = fixture()
+            Canvas(bitmap: expected, scale: 1).applyBackdropFilter(
+                CanvasBackdropFilterConfiguration(blurRadius: 3),
+                in: CGRect(x: 2, y: 1, width: 13, height: 5))
+
+            let actual = fixture()
+            let opaque = try! XCTUnwrap(CanvasBackdropFilterMask(
+                width: 2, height: 2, alpha: [255, 255, 255, 255]))
+            Canvas(bitmap: actual, scale: 1).applyBackdropFilter(
+                CanvasBackdropFilterConfiguration(
+                    blurRadius: 3, blurMask: opaque),
+                in: CGRect(x: 2, y: 1, width: 13, height: 5))
+            XCTAssertEqual(actual.pixels, expected.pixels, "\(backend)")
+        }
+    }
+
     func testBlurReadsExpandedBackdropAndWritesOnlyRequestedRegion() {
         forEachBackend { backend in
             let bitmap = Bitmap(width: 5, height: 1)

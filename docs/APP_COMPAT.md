@@ -467,15 +467,14 @@ invariant failure on Linux. Unknown effect subclasses remain valid but
 inert. On Darwin, a base effect view also supports the deliberately narrow
 geometry/effect snapshot documented in
 `KNOWN_GAPS.md`; it is not a subclass or content-hierarchy archive. The
-renderer-facing descriptor is internal and backend neutral so a later
-view-render integration slice can route it into the existing deterministic
-software/Quartz Canvas backdrop-filter primitive without changing app source
-or making the public effects mutable. No corpus source was edited for this
-slice.
+renderer-facing descriptor is internal and backend neutral. Recognized blur
+views now route their private backdrop node into the deterministic
+software/Quartz Canvas filter, including the runtime-discovered `CAFilter`
+`variableBlur` mask used by unchanged packages. No corpus source was edited.
 
-This does not close the material-rendering row: app and framework effect
-views remain visually transparent, and existing framework platters retain
-their measured flat fallbacks. Public raw construction preserves measured
+This does not close the material-rendering row: Gaussian and variable radius
+are real, while per-style tint/saturation, vibrancy, and existing framework
+platters retain their measured flat fallbacks. Public raw construction preserves measured
 unnamed blur tags 3 and 21, while arbitrary extensible-enum integers remain a
 documented pure-Swift limitation. Archive portability, private-hierarchy
 differences, bar declaration metadata, and Foundation-hidden behavior are
@@ -694,10 +693,11 @@ Details per cluster are in docs/ROADMAP.md (M12) and the scope/divergence
 notes in docs/KNOWN_GAPS.md. Three divergences are worth surfacing here
 because they change what an app sees:
 
-- **`UIVisualEffectView` exists, but nothing blurs yet.** Alert cards, button pills,
-  the sheet grabber, the tab-bar platter and the `UIPageControl` background
-  are measured FLAT equivalents fitted over neutral bases. Correct on a flat
-  backdrop (residual < 1.5 counts), wrong in hue over a saturated one.
+- **App-created Gaussian and masked-variable effect views now blur.** Alert
+  cards, button pills, the sheet grabber, tab-bar platter and `UIPageControl`
+  background still use measured FLAT equivalents fitted over neutral bases.
+  Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a
+  saturated one.
 - **`NSAttributedString` and friends SHADOW Foundation's types.** They were
   introduced while OpenUIKit imported no Foundation. M15 retired that blanket
   rule, but the distinct type remains because corelibs Foundation measurably
@@ -814,7 +814,7 @@ orderings are given, since they disagree sharply at the top now.
 
 | # | cluster | uses | apps | notes |
 |---|---|---|---|---|
-| 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. The oldest open divergence in the project and **the single largest source of remaining pixel error**: every platter in the framework — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — is a flat colour fitted over a neutral base. Correct on a flat backdrop (residual < 1.5 counts), wrong in hue over a saturated one. The deterministic backdrop-filter primitive now exists; closing this row means routing effect descriptors and framework chrome through it, not adding more declarations. |
+| 1 | **Materials / blur (glass)** | 37 | 3 | `UIVisualEffectView` 20, `UIBlurEffect` 12, `UIGlassEffect` 3, `UIVisualEffect` 1, `UIVibrancyEffect` 1. App-created Gaussian blur and masked `CAFilter` variable blur now render. The largest remaining pixel divergence is framework chrome — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background — plus per-style tint/saturation and vibrancy. Closing this row means routing that chrome through the working backdrop operation and calibrating styles. |
 | 2 | **Home-screen shortcuts** | 31 | 3 | `UIApplicationShortcutItem` 18, `UIApplicationShortcutIcon` 8, `UIMutableApplicationShortcutItem` 5. Pure value types plus one `UIApplication` property; no pixels, no oracle needed. The cheapest three-app entry on the list. |
 | 3 | **Haptics** | 30 | 3 | `UIImpactFeedbackGenerator` 15 is now a deterministic, host-observable event with no hardware backend. `UINotificationFeedbackGenerator` 8 and `UISelectionFeedbackGenerator` 7 remain open. |
 | 4 | **TextKit attachments** | 17 | 3 | `NSTextAttachment` 13, plus one-off `NSTextContainer` / `NSLayoutManager` / `NSTextStorage`. The first one is real work — an inline image box the data-driven text engine must lay out and the run painter must draw. The other three are TextKit-1 plumbing we deliberately do not have. |

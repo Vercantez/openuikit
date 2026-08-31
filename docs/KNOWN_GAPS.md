@@ -383,16 +383,17 @@ For a hostile custom effect, iOS 26.1 sends exactly one copy both from
 then stores the returned object. OpenUIKit does the same when Foundation is
 visible; immutable built-in effects return identity from that copy.
 
-This is the real object/view-semantics slice, not a claim that blur rendering
-is finished. The deliberate boundaries are:
+The object/view-semantics slice now also has its first production render
+route. The deliberate boundaries are:
 
-- The deterministic software/Quartz Canvas backdrop-filter primitive exists,
-  but no view-render path consumes the internal backend-neutral effect
-  descriptor yet. Blur and vibrancy therefore do not sample, blur,
-  desaturate, tint, or amplify pixels. A recognized blur owns a transparent,
-  noninteractive backdrop host behind `contentView`; vibrancy, the base
-  effect, and unknown subclasses are inert. Existing fitted flat framework
-  materials remain unchanged.
+- A recognized `UIBlurEffect` now samples and Gaussian-blurs the pixels behind
+  its noninteractive backdrop host through both software and Quartz Canvas.
+  The concrete Objective-C runtime class `CAFilter` executes `variableBlur`
+  with an RGBA mask's alpha selecting a spatially varying radius; unsupported
+  filter types and incomplete inputs fail closed. The current style mapping is
+  deliberately only Gaussian radius: UIKit's per-style saturation, tint and
+  luminance curves, vibrancy, base/unknown effects, and the fitted framework
+  chrome materials remain open.
 - UIKit lazily creates parts of its private hierarchy and some blur styles
   add private tint/filter views. OpenUIKit reproduces the public content
   host's measured lazy/eager access-order boundary, but only models the
@@ -725,9 +726,10 @@ private backing-layer tree:
   private `scale` and `filters.gaussianBlur.inputRadius` accesses used by the
   untouched VariableBlur package. `UIVisualEffectView` publishes one
   name-bearing `gaussianBlur` compatibility filter layer, and its backdrop
-  view exposes the same initial filter name. This is real mutable layer state,
-  but the software compositors do not yet execute arbitrary objects in
-  `CALayer.filters`; built-in UIVisualEffect rendering remains the pixel path.
+  view exposes the same initial filter name. The renderer executes that
+  bounded Gaussian path and the concrete runtime-registered `CAFilter`
+  `variableBlur` path. Arbitrary objects and unknown filter names remain
+  inert; `CALayer.filters` is not an unbounded plugin interface.
 - Layout is synchronous and caller-driven. There is no `CALayoutManager`,
   display transaction, run-loop commit, or window-server scheduling; an app
   that expects Core Animation to perform a later implicit pass must call the
@@ -969,7 +971,7 @@ referenced below are the wrap-up re-ranking in docs/APP_COMPAT.md.
 
 | divergence | what it costs | why accepted | section |
 |---|---|---|---|
-| **Visual-effect APIs are not wired to the backdrop backend** | app-created effect views now have real object, hierarchy, geometry and mutation semantics plus a narrow base-view archive snapshot, but every framework platter — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background, button pills — remains a flat colour FITTED over a neutral base. Residual < 1.5 counts on a flat backdrop; **wrong in hue over a saturated one** | deterministic backdrop sampling exists at the Canvas layer; the remaining work is translating effect descriptors into that primitive and integrating framework chrome | "Visual-effect object and view semantics", "Alerts", "Bars & appearance" |
+| **Visual-effect rendering is only partially wired to the backdrop backend** | app-created `UIBlurEffect` views and `CAFilter` variable blurs now execute real destination-sampling Gaussian kernels, but per-style material tint/saturation/vibrancy and every fitted framework platter — alert card, sheet grabber, tab-bar platter, bar-button capsules, `UIPageControl` background, button pills — remain incomplete | the remaining work is style calibration plus routing framework chrome through the working backdrop operation | "Visual-effect object and view semantics", "Alerts", "Bars & appearance" |
 | **`UIPickerView` rows are not perspective-projected** | each row's RECTANGLE is exact (1e-6 pt); its TEXT is drawn flat — exact at the selected row, ~0.5 pt at \|d\|=1, ~4 pt at \|d\|=2 | shearing a glyph run needs a second rasterizer; the text engine draws harvested masks on an axis-aligned baseline | "UIPickerView" |
 | **`UIActivityViewController` shares nothing** | presents as the measured action-sheet shape and reports "unavailable"; no share targets exist | there is no system share service to call, on any platform we target | "Menus, actions & delegate protocols" |
 | **No SF Symbols** | of the bar system items only `.edit` and `.save` are text (exact); `.done` is the prominent checkmark; every other is a hand-fitted vector of the MEASURED size, and no golden gates those vectors | the symbol font is not redistributable and not portable | "Bars & appearance" |
@@ -1212,11 +1214,11 @@ half without redefining this cross-platform harness ledger
   `UIViewController.additionalSafeAreaInsets` all exist and are measured.
   What is still missing is that OpenUIKit's OWN nav/tab chrome does not use
   `additionalSafeAreaInsets` yet.
-- **`UIVisualEffectView` exists, but nothing in the framework blurs yet** — see the
-  alerts section below for the fitted flat model and exactly where it is
-  wrong. This is now a cross-cutting divergence, not an alert detail: it
-  covers the alert card and pills, the sheet grabber, the tab-bar platter,
-  the `UIPageControl` background, the M13 **menu platter** and every M13
+- **App-created `UIBlurEffect` and masked `variableBlur` views now really blur,
+  but framework chrome still uses fitted materials** — see the alerts section
+  below for the flat model and exactly where it is wrong. Remaining routing
+  covers the alert card and pills, the sheet grabber, tab-bar platter,
+  `UIPageControl` background, M13 **menu platter**, and every M13
   **bar-button platter** in a navigation bar or toolbar.
 - **No SF Symbols.** `UIBarButtonItem(barButtonSystemItem:)` draws one for
   most of its cases on iOS 26; OpenUIKit substitutes hand-fitted vectors of

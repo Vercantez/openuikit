@@ -97,10 +97,26 @@ public enum UIRenderer {
     /// path stays pure Swift.
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
         if OpenUIKitRuntime.compositor == .layers,
-           OpenUIKitRuntime.renderBackend == .quartz {
+           OpenUIKitRuntime.renderBackend == .quartz,
+           !containsActiveBackdropFilter(root) {
             return LayerBridge.render(root, scale: scale)
         }
         return renderPassRender(root, scale: scale)
+    }
+
+    /// CQuartz's retained layer compositor does not yet expose a destination-
+    /// sampling filter node. A hierarchy containing one therefore takes the
+    /// established Canvas backdrop-filter route even when `.layers` is the
+    /// global default. This is a semantic fallback, not a source-level fake:
+    /// every other hierarchy still uses QZLayer, and the selected path runs
+    /// the same backend-neutral filter kernel for Swift and Quartz Canvases.
+    static func containsActiveBackdropFilter(_ view: UIView) -> Bool {
+        if let backdrop = view as? _UIVisualEffectBackdropView,
+           let effectView = backdrop.superview as? UIVisualEffectView,
+           effectView._canvasBackdropConfiguration(for: backdrop) != nil {
+            return true
+        }
+        return view.subviews.contains(where: containsActiveBackdropFilter)
     }
 
     /// The hand-written render-pass traversal (always available; the
@@ -186,6 +202,18 @@ public enum UIRenderer {
         if v.clipsToBounds {
             c.clip(to: layerRoundedRect(bounds, cornerRadius: radius,
                                         maskedCorners: corners))
+        }
+
+        // A backdrop view changes pixels already present beneath its bounds;
+        // it deliberately runs before this view's background/content and
+        // before its content-host sibling. The filter rect is in the current
+        // local coordinate system, so Canvas applies the accumulated UIView
+        // transform and current clip to both sampling and replacement.
+        if let backdrop = v as? _UIVisualEffectBackdropView,
+           let effectView = backdrop.superview as? UIVisualEffectView,
+           let configuration = effectView._canvasBackdropConfiguration(
+                for: backdrop) {
+            c.applyBackdropFilter(configuration, in: bounds)
         }
 
         // Layer shadow (spec v2), non-grouped case: CoreAnimation derives

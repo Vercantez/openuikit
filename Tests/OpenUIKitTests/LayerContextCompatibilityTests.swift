@@ -114,6 +114,180 @@ final class LayerContextCompatibilityTests: XCTestCase {
         XCTAssertEqual("\(try XCTUnwrap(backdrop.layer.filters?.first))", "gaussianBlur")
     }
 
+    func testUIViewDescriptionCarriesDynamicClassIdentityAndGeometry() {
+        let view = LayerLayoutViewProbe(
+            frame: CGRect(x: 3, y: 4, width: 50, height: 20))
+        XCTAssertTrue(view.description.hasPrefix("<LayerLayoutViewProbe:"))
+        XCTAssertTrue(view.description.contains("frame ="))
+        XCTAssertTrue(view.description.contains("bounds ="))
+        XCTAssertTrue(view.description.contains("0x"))
+    }
+
+    func testCAFilterRuntimeMetadataAndBoundedInputsFailClosed() throws {
+        XCTAssertEqual(NSStringFromClass(_OpenCAFilter.self), "CAFilter")
+        XCTAssertTrue(_OpenCAFilter.responds(
+            to: NSSelectorFromString("filterWithType:")))
+        XCTAssertNil(_OpenCAFilter.filter(withType: "unknownFilter"))
+
+        let filter = try XCTUnwrap(
+            _OpenCAFilter.filter(withType: "variableBlur"))
+        XCTAssertEqual(filter.description, "variableBlur")
+        let mask = Bitmap(width: 2, height: 1)
+        mask.pixels = [0, 0, 0, 0, 0, 0, 0, 255]
+        filter.setValue(CGFloat(12), forKey: "inputRadius")
+        filter.setValue(mask, forKey: "inputMaskImage")
+        filter.setValue(true, forKey: "inputNormalizeEdges")
+        filter.setValue("must-not-be-retained", forKey: "unknownInput")
+
+        let configuration = try XCTUnwrap(filter._canvasConfiguration)
+        XCTAssertEqual(configuration.blurRadius, 12)
+        XCTAssertEqual(configuration.blurMask?.alpha, [0, 255])
+        XCTAssertTrue(configuration.normalizesMaskEdges)
+        XCTAssertNil(filter.value(forKey: "unknownInput"))
+    }
+
+    func testVariableCAFilterRunsThroughBackdropRendererInBothBackends() throws {
+        for backend in [RenderBackend.swift, .quartz] {
+            CanvasBackendSelection.current = backend
+            OpenUIKitRuntime.compositor = .layers
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 31, height: 5))
+            for x in 0..<31 {
+                let stripe = UIView(frame: CGRect(x: CGFloat(x), y: 0,
+                                                  width: 1, height: 5))
+                stripe.backgroundColor = x.isMultiple(of: 2) ? .black : .white
+                root.addSubview(stripe)
+            }
+
+            let effect = UIVisualEffectView(
+                effect: UIBlurEffect(style: .regular))
+            effect.frame = root.bounds
+            root.addSubview(effect)
+            root.layoutIfNeeded()
+            let backdrop = try XCTUnwrap(
+                effect.subviews.first as? _UIVisualEffectBackdropView)
+            let filter = try XCTUnwrap(
+                _OpenCAFilter.filter(withType: "variableBlur"))
+            let mask = Bitmap(width: 5, height: 1)
+            mask.pixels = [
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 64,
+                0, 0, 0, 160,
+                0, 0, 0, 255,
+            ]
+            filter.setValue(CGFloat(4), forKey: "inputRadius")
+            filter.setValue(mask, forKey: "inputMaskImage")
+            filter.setValue(true, forKey: "inputNormalizeEdges")
+            backdrop.layer.filters = [filter]
+
+            let rendered = UIRenderer.render(root, scale: 1)
+            for x in 0..<6 {
+                let expected: UInt8 = x.isMultiple(of: 2) ? 0 : 255
+                XCTAssertEqual(pixel(rendered, x: x, y: 2),
+                               [expected, expected, expected, 255],
+                               "zero-radius edge changed for \(backend) at \(x)")
+            }
+            for x in 25..<31 {
+                let value = pixel(rendered, x: x, y: 2)[0]
+                XCTAssertTrue(value > 0 && value < 255,
+                              "opaque-radius edge did not blur for \(backend) at \(x)")
+            }
+        }
+    }
+
+    func testVariableCAFilterMapsBothCoreImageDirectionsIntoOffsetViewSpace() throws {
+        // These are the exact asymmetric alpha progressions produced by the
+        // untouched package's two VariableBlurDirection cases. CI/CGImage
+        // rows are bottom-to-top; UIView rows are top-to-bottom. A 3x5 mask
+        // and an offset 9x31 effect catch both a superficial reversal and an
+        // implementation accidentally sampling in root rather than view space.
+        let directions: [(name: String, ciRows: [UInt8], blurredTop: Bool)] = [
+            ("blurredTopClearBottom", [0, 0, 64, 160, 255], true),
+            ("blurredBottomClearTop", [255, 160, 64, 0, 0], false),
+        ]
+        for backend in [RenderBackend.swift, .quartz] {
+            for direction in directions {
+                CanvasBackendSelection.current = backend
+                OpenUIKitRuntime.compositor = .layers
+                let root = UIView(
+                    frame: CGRect(x: 0, y: 0, width: 17, height: 39))
+                for y in 0..<39 {
+                    let stripe = UIView(frame: CGRect(
+                        x: 0, y: CGFloat(y), width: 17, height: 1))
+                    stripe.backgroundColor = y.isMultiple(of: 2) ? .black : .white
+                    root.addSubview(stripe)
+                }
+
+                let effect = UIVisualEffectView(
+                    effect: UIBlurEffect(style: .regular))
+                effect.frame = CGRect(x: 4, y: 3, width: 9, height: 31)
+                root.addSubview(effect)
+                let backdrop = try XCTUnwrap(
+                    effect.subviews.first as? _UIVisualEffectBackdropView)
+                let filter = try XCTUnwrap(
+                    _OpenCAFilter.filter(withType: "variableBlur"))
+                let mask = Bitmap(width: 3, height: 5)
+                mask.pixels = direction.ciRows.flatMap { alpha in
+                    Array(repeating: [UInt8(0), 0, 0, alpha], count: 3)
+                        .flatMap { $0 }
+                }
+                filter.setValue(CGFloat(4), forKey: "inputRadius")
+                filter.setValue(mask, forKey: "inputMaskImage")
+                filter.setValue(true, forKey: "inputNormalizeEdges")
+                backdrop.layer.filters = [filter]
+
+                let rendered = UIRenderer.render(root, scale: 1)
+                let topY = 5
+                let bottomY = 31
+                let top = pixel(rendered, x: 8, y: topY)[0]
+                let bottom = pixel(rendered, x: 8, y: bottomY)[0]
+                let originalTop: UInt8 = topY.isMultiple(of: 2) ? 0 : 255
+                let originalBottom: UInt8 = bottomY.isMultiple(of: 2) ? 0 : 255
+                if direction.blurredTop {
+                    XCTAssertTrue(top > 0 && top < 255,
+                                  "top did not blur: \(backend)/\(direction.name)")
+                    XCTAssertEqual(bottom, originalBottom,
+                                   "bottom changed: \(backend)/\(direction.name)")
+                } else {
+                    XCTAssertEqual(top, originalTop,
+                                   "top changed: \(backend)/\(direction.name)")
+                    XCTAssertTrue(bottom > 0 && bottom < 255,
+                                  "bottom did not blur: \(backend)/\(direction.name)")
+                }
+            }
+        }
+    }
+
+    func testGaussianCompatibilityRadiusRunsThroughBackdropRenderer() throws {
+        for backend in [RenderBackend.swift, .quartz] {
+            CanvasBackendSelection.current = backend
+            OpenUIKitRuntime.compositor = .layers
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 3))
+            for x in 0..<15 {
+                let stripe = UIView(frame: CGRect(x: CGFloat(x), y: 0,
+                                                  width: 1, height: 3))
+                stripe.backgroundColor = x.isMultiple(of: 2) ? .black : .white
+                root.addSubview(stripe)
+            }
+
+            let effect = UIVisualEffectView(
+                effect: UIBlurEffect(style: .regular))
+            effect.frame = root.bounds
+            root.addSubview(effect)
+            let filterLayer = try XCTUnwrap(effect.layer.sublayers?.first)
+            filterLayer.setValue(
+                NSNumber(value: 3),
+                forKeyPath: "filters.gaussianBlur.inputRadius")
+
+            let rendered = UIRenderer.render(root, scale: 1)
+            for x in 2..<13 {
+                let value = pixel(rendered, x: x, y: 1)[0]
+                XCTAssertTrue(value > 0 && value < 255,
+                              "KVC radius did not blur for \(backend) at \(x)")
+            }
+        }
+    }
+
     func testStandaloneLayerLayoutDelegateRunsOnlyWhenInvalidated() {
         let root = PortableLayer()
         let child = PortableLayer()
