@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import xcodeplan
+import xcconfig
 
 
 PlanError = xcodeplan.PlanError
@@ -907,6 +908,120 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                 "path": path,
             }
         return result
+
+    def _expand_effective_setting(
+        self,
+        key: str,
+        value: Any,
+        settings: Mapping[str, Any],
+        builtins: Mapping[str, str],
+        active: frozenset[str] = frozenset(),
+    ) -> Any:
+        """Expand a setting when every dependency is destination-independent.
+
+        Unknown platform defaults intentionally leave the original expression
+        in the inventory.  Identity-sensitive consumers subsequently validate
+        their values as literals, so an unresolved variable can never become a
+        guessed product name or path.
+        """
+
+        if not isinstance(value, str):
+            return value
+        if key in active:
+            raise PlanError(f"cycle while expanding build setting {key}")
+
+        unresolved = False
+
+        def replace(match: re.Match[str]) -> str:
+            nonlocal unresolved
+            name = match.group(1) or match.group(2)
+            if name in builtins:
+                return builtins[name]
+            dependency = settings.get(name)
+            if isinstance(dependency, str):
+                try:
+                    expanded = self._expand_effective_setting(
+                        name,
+                        dependency,
+                        settings,
+                        builtins,
+                        active | {key},
+                    )
+                except PlanError:
+                    unresolved = True
+                    return match.group(0)
+                if isinstance(expanded, str) and "$" not in expanded:
+                    return expanded
+            unresolved = True
+            return match.group(0)
+
+        expanded = _PBX_VARIABLE.sub(replace, value)
+        if unresolved or "$" in expanded:
+            return value
+        return expanded
+
+    def _materialize_configuration_settings(
+        self,
+        configuration: dict[str, Any],
+        inherited: Mapping[str, Any],
+        *,
+        owner: str,
+        target_name: str,
+    ) -> dict[str, Any]:
+        """Evaluate xcconfig then PBX settings as one Xcode precedence layer."""
+
+        declared = xcodeplan.require_dict(
+            configuration.get("build_settings"),
+            f"{owner} configuration build settings",
+        )
+        state: dict[str, Any] = dict(inherited)
+        assigned: dict[str, Any] = {}
+        base = configuration.get("base_configuration")
+        if base is not None:
+            base_record = xcodeplan.require_dict(
+                base, f"{owner} configuration base_configuration"
+            )
+            entry_path = xcodeplan.require_string(
+                base_record.get("path"),
+                f"{owner} configuration base_configuration.path",
+            )
+            evaluation = xcconfig.evaluate(self.repo, entry_path, state)
+            state.update(evaluation.settings)
+            assigned.update(evaluation.settings)
+            base_record["path"] = evaluation.entry_path
+            base_record["files"] = [dict(item) for item in evaluation.files]
+            base_record["includes"] = [dict(item) for item in evaluation.includes]
+            base_record["assignment_count"] = evaluation.assignment_count
+
+        # PBX buildSettings is one dictionary layer.  References to the same
+        # setting or $(inherited) bind to the value below this layer; references
+        # to other settings remain lazy until the complete map is available.
+        lower = dict(state)
+        for raw_key, value in declared.items():
+            key = xcodeplan.require_string(raw_key, f"{owner} build setting name")
+            if isinstance(value, str):
+                value = xcconfig.replace_inherited(value, key, lower.get(key))
+            state[key] = value
+            assigned[key] = value
+
+        builtins = {
+            "CONFIGURATION": xcodeplan.require_string(
+                configuration.get("name"), f"{owner} configuration name"
+            ),
+            "PROJECT": self.project_name,
+            "PROJECT_NAME": self.project_name,
+            "TARGET_NAME": target_name,
+        }
+        effective = {
+            key: self._expand_effective_setting(
+                key, value, state, builtins
+            )
+            for key, value in assigned.items()
+        }
+        configuration["build_settings"] = effective
+        combined = dict(inherited)
+        combined.update(effective)
+        return combined
 
     def _synchronized_root_directory(self, group_id: str) -> str:
         group = self.object(group_id, "PBXFileSystemSynchronizedRootGroup")
@@ -1828,15 +1943,6 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             ("project", project_settings),
             ("target", target_settings),
         )
-        for owner, configuration in (
-            ("project", project_configuration),
-            ("target", target_configuration),
-        ):
-            if configuration is not None and "base_configuration" in configuration:
-                raise PlanError(
-                    f"cannot determine product identity through the selected {owner} "
-                    "base configuration"
-                )
         self._validate_product_identity_setting_keys(settings_by_owner)
         target_product_setting_text = (
             xcodeplan.require_string(
@@ -1931,6 +2037,25 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             self._configuration_record(self.project, selected_configuration, "project")
             if "buildConfigurationList" in self.project
             else None
+        )
+        target_name = xcodeplan.require_string(
+            target.get("name"), "selected target.name"
+        )
+        project_effective_settings = (
+            self._materialize_configuration_settings(
+                project_configuration,
+                {},
+                owner="project",
+                target_name=target_name,
+            )
+            if project_configuration is not None
+            else {}
+        )
+        self._materialize_configuration_settings(
+            target_configuration,
+            project_effective_settings,
+            owner="target",
+            target_name=target_name,
         )
         product_ref_id = xcodeplan.require_string(
             target.get("productReference"), "selected target.productReference"

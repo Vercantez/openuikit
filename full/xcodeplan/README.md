@@ -72,10 +72,19 @@ letters/marks/numbers, spaces, dots, underscores, hyphens, or plus signs. This
 keeps real names such as `Firefox Focus` and `Café Notes` while excluding path,
 option, glob, quote, and shell-operator spellings. Every present project and
 target `PRODUCT_NAME` is validated even when overridden, so unsafe values are
-never silently emitted for later reuse. Selected project or target base
-`.xcconfig` files are path-pinned first and then rejected for product inventory:
-any native identity setting could be supplied there through includes or
-conditions. Parsing full `.xcconfig` inheritance remains a future slice.
+never silently emitted for later reuse. Selected project and target base
+`.xcconfig` files are evaluated before their corresponding PBX `buildSettings`
+layer. Required quoted includes run at their textual position; `=`, `+=`, and
+`?=` assignments, comments, quoting, continuation, `$(inherited)`, same-setting
+references, and recursively resolvable build-setting variables are modeled.
+Each root and included file must be a regular, non-symlink source-root input and
+is recorded in deterministic evaluation order with its SHA-256. Includes are
+canonicalized to the unique tracked spelling (including the case-only spelling
+drift found in Simplenote), while missing/ambiguous inputs, cycles, escapes,
+optional or unknown directives, malformed assignments, and destination-
+conditional settings fail closed. Variables that depend on an unmodeled
+platform default remain visibly unresolved and cannot pass the literal product-
+identity validators.
 
 Safety checks pin a real, non-symlink source-root directory and reject `.`/`..`
 scheme identities, explicit scheme paths without the `.xcscheme` extension,
@@ -117,16 +126,16 @@ Nonempty `projectRoot` and other `projectDirPath` values are rejected rather
 than scanning the project-parent directory while Xcode silently rebases
 `SRCROOT`; safely honoring nontrivial rebasing is a future inventory slice.
 
-This first reusable slice deliberately rejects synchronized
+This reusable slice deliberately rejects synchronized
 `explicitFolders`, build-phase membership exception sets, custom build rules,
 and target exception metadata such as per-file compiler flags, platform
-filters, and header visibility. General `.xcconfig` inheritance, conditional
-build-setting expansion, shell execution, resource compilation, target
-transitivity, compilation, linking, signing, and launching remain downstream
-stages. Thus a successful inventory means “the selected graph was understood
-within this boundary,” not “the app is buildable.” Non-application native
-targets require a later product-identity mapping before this generic frontend
-will accept them.
+filters, and header visibility. Destination-conditional `.xcconfig` selection,
+shell execution, resource compilation, local-package
+source expansion, target transitivity, compilation, linking, signing, and
+launching remain downstream stages. Thus a successful inventory means “the
+selected graph was understood within this boundary,” not “the app is
+buildable.” Non-application native targets require a later product-identity
+mapping before this generic frontend will accept them.
 
 `xcodeplan.py` turns one specifically attested Xcode scheme/target into stable
 JSON that Linux-side build work can consume. It is a parser, not a filename
@@ -365,8 +374,8 @@ FOCUS_IOS_CHECKOUT="$PWD/scratch/ladder-corpus/focus-ios/focus-ios" \
 ## Boundary
 
 This does not run Xcode, interpret arbitrary projects, execute shell phases,
-compile proprietary asset catalogs or intent definitions, evaluate `.xcconfig`
-inheritance, or derive a general Swift compiler/linker graph. Source-form
+compile proprietary asset catalogs or intent definitions, select destination-
+conditional `.xcconfig` assignments, or derive a general Swift compiler/linker graph. Source-form
 `.xcassets` directories are preserved for OpenUIKit's measured reader. Shell bodies remain opaque, pinned
 inputs represented by a digest plus their validated variable surface; parsing
 shell semantics would be a separate frontend. The tool also selects only the

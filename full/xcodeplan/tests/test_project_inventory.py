@@ -914,9 +914,7 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
     def test_empty_unresolved_and_conditional_identity_settings_fail_closed(self) -> None:
         cases = (
             ("WRAPPER_EXTENSION", '""'),
-            ("WRAPPER_NAME", '"$(PRODUCT_NAME).app"'),
             ("FULL_PRODUCT_NAME", '"$(WRAPPER_NAME)"'),
-            ("EXECUTABLE_NAME", '"$(PRODUCT_NAME)"'),
             ("EXECUTABLE_PREFIX", '"$(inherited)"'),
             ("EXECUTABLE_SUFFIX", '".bin"'),
             ("EXECUTABLE_VARIANT_SUFFIX", '"-variant"'),
@@ -933,6 +931,21 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                     project_inventory.build_project_inventory(
                         project, scheme_name="ModernApp"
                     )
+
+        with tempfile.TemporaryDirectory() as directory:
+            _, project = self.copied_modern_fixture(directory)
+            self.add_selected_build_setting(
+                project, "target", "WRAPPER_NAME", '"$(PRODUCT_NAME).app"'
+            )
+            self.add_selected_build_setting(
+                project, "target", "EXECUTABLE_NAME", '"$(PRODUCT_NAME)"'
+            )
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            target_settings = inventory["configuration"]["target"]["build_settings"]
+            self.assertEqual(target_settings["WRAPPER_NAME"], "ModernApp.app")
+            self.assertEqual(target_settings["EXECUTABLE_NAME"], "ModernApp")
 
         conditional_keys = (
             "WRAPPER_EXTENSION",
@@ -1076,7 +1089,7 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                                 project, **arguments
                             )
 
-    def test_selected_base_configurations_cannot_hide_product_identity_settings(self) -> None:
+    def test_base_configuration_identity_settings_are_evaluated_and_validated(self) -> None:
         modes = (
             {"scheme_name": "ModernApp"},
             {"target_selector": "ModernApp", "configuration_name": "Debug"},
@@ -1126,9 +1139,87 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                 for arguments in modes:
                     with self.subTest(owner=owner, arguments=arguments), self.assertRaisesRegex(
                         project_inventory.PlanError,
-                        rf"selected {owner} base configuration",
+                        rf"{owner} build setting WRAPPER_NAME",
                     ):
                         project_inventory.build_project_inventory(project, **arguments)
+
+    def test_base_configuration_includes_expand_product_identity_with_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            child_marker = "\t\t\t\t000000000000000000000003,"
+            object_marker = "\t\t000000000000000000000004 = {"
+            configuration_marker = (
+                "\t\t400000000000000000000002 = {\n"
+                "\t\t\tisa = XCBuildConfiguration;"
+            )
+            target_product = '\t\t\t\tPRODUCT_NAME = "$(TARGET_NAME)";'
+            target_bundle = (
+                "\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = example.ModernApp;"
+            )
+            for marker in (
+                child_marker,
+                object_marker,
+                configuration_marker,
+                target_product,
+                target_bundle,
+            ):
+                self.assertIn(marker, contents)
+            contents = contents.replace(
+                child_marker,
+                child_marker + "\n\t\t\t\t100000000000000000000003,",
+                1,
+            ).replace(
+                object_marker,
+                "\t\t100000000000000000000003 = {\n"
+                "\t\t\tisa = PBXFileReference;\n"
+                "\t\t\tlastKnownFileType = text.xcconfig;\n"
+                "\t\t\tpath = Base.xcconfig;\n"
+                "\t\t\tsourceTree = \"<group>\";\n"
+                "\t\t};\n"
+                + object_marker,
+                1,
+            ).replace(
+                configuration_marker,
+                configuration_marker
+                + "\n\t\t\tbaseConfigurationReference = "
+                "100000000000000000000003;",
+                1,
+            ).replace(target_product + "\n", "", 1).replace(
+                target_bundle + "\n", "", 1
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+            (root / "Base.xcconfig").write_text(
+                '#include "Names.xcconfig"\n'
+                "PRODUCT_NAME = $(APP_NAME)\n"
+                "PRODUCT_BUNDLE_IDENTIFIER = example.$(APP_NAME)\n",
+                encoding="utf-8",
+            )
+            (root / "Names.xcconfig").write_text(
+                "APP_NAME = ModernApp\n", encoding="utf-8"
+            )
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+
+            self.assertEqual(inventory["target"]["product_name_origin"], "project")
+            project_configuration = inventory["configuration"]["project"]
+            self.assertEqual(
+                project_configuration["build_settings"]["PRODUCT_NAME"], "ModernApp"
+            )
+            self.assertEqual(
+                project_configuration["build_settings"]["PRODUCT_BUNDLE_IDENTIFIER"],
+                "example.ModernApp",
+            )
+            base = project_configuration["base_configuration"]
+            self.assertEqual(
+                [item["path"] for item in base["files"]],
+                ["Base.xcconfig", "Names.xcconfig"],
+            )
+            self.assertTrue(all(len(item["sha256"]) == 64 for item in base["files"]))
+            self.assertEqual(base["assignment_count"], 3)
 
     def test_present_bundle_identifiers_use_a_safe_literal_grammar(self) -> None:
         invalid = (
@@ -2273,15 +2364,14 @@ class ProjectInventoryPathSafetyTests(unittest.TestCase):
             )
             pbxproj.write_text(contents, encoding="utf-8")
             config = root / "App" / "Config.xcconfig"
-            config.write_text("PRODUCT_NAME = Configured\n", encoding="utf-8")
-            with self.assertRaisesRegex(
-                project_inventory.PlanError,
-                "cannot determine product identity through.*base configuration",
-            ):
-                project_inventory.build_project_inventory(
-                    project,
-                    scheme_name="Focus",
-                )
+            config.write_text("PRODUCT_NAME = Focus\n", encoding="utf-8")
+            inventory = project_inventory.build_project_inventory(
+                project,
+                scheme_name="Focus",
+            )
+            base = inventory["configuration"]["target"]["base_configuration"]
+            self.assertEqual(base["files"][0]["path"], "App/Config.xcconfig")
+            self.assertEqual(len(base["files"][0]["sha256"]), 64)
             config.unlink()
             outside = Path(directory) / "Config.xcconfig"
             outside.write_text("SETTING = outside\n", encoding="utf-8")
@@ -2292,7 +2382,7 @@ class ProjectInventoryPathSafetyTests(unittest.TestCase):
                     scheme_name="Focus",
                 )
 
-    def test_selected_base_configuration_is_pinned_then_rejected_for_identity(self) -> None:
+    def test_synchronized_base_configuration_is_evaluated_then_symlink_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root, project = self.copied_modern_fixture(directory)
             pbxproj = project / "project.pbxproj"
@@ -2337,12 +2427,13 @@ class ProjectInventoryPathSafetyTests(unittest.TestCase):
             configs.mkdir()
             config = configs / "Base.xcconfig"
             config.write_text("SETTING = inside\n", encoding="utf-8")
-            with self.assertRaisesRegex(
-                project_inventory.PlanError,
-                "cannot determine product identity through the selected target "
-                "base configuration",
-            ):
-                self.inventory(project)
+            inventory = self.inventory(project)
+            target_configuration = inventory["configuration"]["target"]
+            self.assertEqual(target_configuration["build_settings"]["SETTING"], "inside")
+            self.assertEqual(
+                target_configuration["base_configuration"]["files"][0]["path"],
+                "Configs/Base.xcconfig",
+            )
 
             outside = Path(directory) / "Outside.xcconfig"
             config.rename(outside)
