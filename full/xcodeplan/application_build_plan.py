@@ -23,6 +23,7 @@ from typing import Any
 
 import scene_bootstrap
 import local_package_graph
+import project_inventory
 
 
 class BuildPlanError(RuntimeError):
@@ -780,6 +781,14 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--remote-materializations", type=Path)
     parser.add_argument("--remote-cache-root", type=Path)
     parser.add_argument(
+        "--require-canonical-project-inventory",
+        action="store_true",
+        help=(
+            "regenerate INVENTORY from its selected Xcode target and reject "
+            "hand-narrowed application/package inputs"
+        ),
+    )
+    parser.add_argument(
         "--verify",
         action="store_true",
         help="treat INVENTORY as an existing application-build-plan JSON and rehash its source tree",
@@ -796,6 +805,11 @@ def main(argv: list[str] | None = None) -> int:
         if arguments.verify:
             if arguments.output_dir is not None:
                 raise BuildPlanError("--verify and --output-dir are mutually exclusive")
+            if arguments.require_canonical_project_inventory:
+                raise BuildPlanError(
+                    "--verify and --require-canonical-project-inventory are "
+                    "mutually exclusive"
+                )
             if arguments.remote_materializations is not None:
                 raise BuildPlanError(
                     "--remote-materializations is only valid when creating a build plan"
@@ -810,6 +824,10 @@ def main(argv: list[str] | None = None) -> int:
         if arguments.output_dir is None:
             raise BuildPlanError("--output-dir is required when creating a build plan")
         inventory = raw
+        if arguments.require_canonical_project_inventory:
+            project_inventory.verify_project_inventory(
+                inventory, arguments.source_root
+            )
         materializations = None
         if arguments.remote_materializations is not None:
             materializations = _mapping(
@@ -839,6 +857,7 @@ def main(argv: list[str] | None = None) -> int:
         OSError,
         json.JSONDecodeError,
         local_package_graph.PackageGraphError,
+        project_inventory.PlanError,
     ) as exc:
         print(f"application-build-plan: {exc}", file=sys.stderr)
         return 1

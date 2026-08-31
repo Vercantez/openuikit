@@ -396,6 +396,10 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         self.assertNotIn("docker_command+=(swift-macho-spike:noble", script)
         self.assertIn("core_guest_package.py", script)
         self.assertIn("materialize_application_bundle.py", script)
+        self.assertEqual(
+            script.count("--require-canonical-project-inventory"),
+            1,
+        )
         self.assertIn("-load-plugin-executable", script)
         self.assertIn("--emit-app-diagnostic-arguments", script)
         self.assertIn("app-macro-expansions.stderr", script)

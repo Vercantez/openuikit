@@ -2886,6 +2886,110 @@ def build_project_inventory(
     return planner.build_inventory(project_path, configuration_name, scheme)
 
 
+def verify_project_inventory(
+    inventory: Mapping[str, Any], source_root: Path
+) -> dict[str, Any]:
+    """Regenerate and compare one inventory against its Xcode project.
+
+    A package-only frontier probe may deliberately select fewer product roots,
+    but that focused graph is not a truthful input to a whole-application
+    compile.  The project path, selected target, configuration, and optional
+    scheme already carried by a real inventory are sufficient to regenerate
+    the canonical target inventory without guessing.
+    """
+
+    root = source_root.absolute()
+    try:
+        root_metadata = root.lstat()
+        if stat.S_ISLNK(root_metadata.st_mode) or not stat.S_ISDIR(
+            root_metadata.st_mode
+        ):
+            raise PlanError(
+                f"inventory source root must be a non-symlink directory: {root}"
+            )
+        root = root.resolve(strict=True)
+    except PlanError:
+        raise
+    except OSError as exc:
+        raise PlanError(f"cannot inspect inventory source root {root}: {exc}") from exc
+
+    project = xcodeplan.require_dict(inventory.get("project"), "inventory project")
+    project_path_value = xcodeplan.require_string(
+        project.get("path"), "inventory project.path"
+    )
+    if (
+        posixpath.isabs(project_path_value)
+        or posixpath.normpath(project_path_value) != project_path_value
+        or any(part in ("", ".", "..") for part in project_path_value.split("/"))
+        or not project_path_value.endswith(".xcodeproj/project.pbxproj")
+    ):
+        raise PlanError(
+            "inventory project.path must name a normalized project.pbxproj "
+            f"inside an .xcodeproj: {project_path_value!r}"
+        )
+    project_bundle = root / Path(project_path_value).parent
+
+    target = xcodeplan.require_dict(inventory.get("target"), "inventory target")
+    target_id = xcodeplan.require_string(
+        target.get("target_id"), "inventory target.target_id"
+    )
+    configuration = xcodeplan.require_dict(
+        inventory.get("configuration"), "inventory configuration"
+    )
+    configuration_name = xcodeplan.require_string(
+        configuration.get("name"), "inventory configuration.name"
+    )
+
+    scheme = inventory.get("scheme")
+    if scheme is None:
+        regenerated = build_project_inventory(
+            project_bundle,
+            target_selector=target_id,
+            configuration_name=configuration_name,
+        )
+    else:
+        scheme_record = xcodeplan.require_dict(scheme, "inventory scheme")
+        scheme_path_value = xcodeplan.require_string(
+            scheme_record.get("path"), "inventory scheme.path"
+        )
+        if (
+            posixpath.isabs(scheme_path_value)
+            or posixpath.normpath(scheme_path_value) != scheme_path_value
+            or any(part in ("", ".", "..") for part in scheme_path_value.split("/"))
+            or not scheme_path_value.endswith(".xcscheme")
+        ):
+            raise PlanError(
+                "inventory scheme.path must be a normalized relative .xcscheme "
+                f"path: {scheme_path_value!r}"
+            )
+        regenerated = build_project_inventory(
+            project_bundle,
+            scheme_name=os.fspath(root / scheme_path_value),
+        )
+
+    supplied = dict(inventory)
+    if canonical_json(regenerated) == canonical_json(supplied):
+        return regenerated
+
+    def product_names(value: Mapping[str, Any]) -> list[str]:
+        raw = value.get("package_products")
+        if not isinstance(raw, list):
+            return []
+        return [
+            item.get("name", "<invalid>") if isinstance(item, dict) else "<invalid>"
+            for item in raw
+        ]
+
+    canonical_products = product_names(regenerated)
+    supplied_products = product_names(supplied)
+    if canonical_products != supplied_products:
+        raise PlanError(
+            "inventory package product roots differ from the canonical Xcode "
+            f"target: expected {canonical_products!r}, got {supplied_products!r}"
+        )
+    raise PlanError("inventory differs from the canonical Xcode target inventory")
+
+
 def canonical_json(value: Mapping[str, Any]) -> bytes:
     return (json.dumps(value, sort_keys=True, indent=2, ensure_ascii=False) + "\n").encode(
         "utf-8"

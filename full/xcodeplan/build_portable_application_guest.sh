@@ -186,6 +186,7 @@ PY
     fi
     python3 -B "$SCRIPT_DIR/application_build_plan.py" "$inventory" \
         --source-root "$source_root" --output-dir "$output" \
+        --require-canonical-project-inventory \
         "${remote_plan_arguments[@]}"
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$source_root" \

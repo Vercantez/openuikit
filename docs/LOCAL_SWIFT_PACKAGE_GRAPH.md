@@ -80,6 +80,14 @@ normal verifier reconstructs the graph from the untouched tree, so source,
 manifest, dependency, pin, product selection, or ordering drift invalidates
 the entire application plan.
 
+The whole-application driver additionally regenerates the inventory from its
+recorded `.xcodeproj`, target, configuration, and optional scheme before it
+creates a build plan. A hand-narrowed package frontier cannot therefore be
+paired with the target's complete application source list: missing or added
+Xcode product roots fail before Docker or compilation. Deliberately focused
+package work remains valid through `local_package_graph.py`; it is a package
+probe, not an application build.
+
 ## Compiler and linker boundary
 
 For a graph with all source materialized,

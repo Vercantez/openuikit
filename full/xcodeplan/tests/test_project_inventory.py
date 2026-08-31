@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import os
 import shutil
 import subprocess
@@ -275,6 +276,17 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                     }
                 ],
             )
+            project_inventory.verify_project_inventory(inventory, root)
+
+            for field in ("package_products", "local_package_references"):
+                with self.subTest(hand_narrowed=field):
+                    narrowed = copy.deepcopy(inventory)
+                    narrowed[field] = []
+                    with self.assertRaisesRegex(
+                        project_inventory.PlanError,
+                        "canonical Xcode target",
+                    ):
+                        project_inventory.verify_project_inventory(narrowed, root)
 
     def test_legacy_package_wrapper_reference_resolves_implicit_product(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
