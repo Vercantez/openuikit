@@ -118,7 +118,8 @@ FRONTIER_SOURCE_DIRS=(
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
 EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
-EXPECTED_SWIFTUI_SWIFT_COUNT=8
+EXPECTED_SYMBOLS_SWIFT_COUNT=1
+EXPECTED_SWIFTUI_SWIFT_COUNT=9
 EXPECTED_CQUARTZ_CPP_COUNT=37
 EXPECTED_FOUNDATION_SOURCE_COUNT=28
 EXPECTED_OBSERVATION_SOURCE_COUNT=6
@@ -467,6 +468,8 @@ SOURCE_SET_ATTEST=$WORK/source-sets.pre.tsv
         "$EXPECTED_UIKIT_SWIFT_COUNT" OpenUIKit openuikit
     assert_exact_swift_set "$UIKIT" Sources/OpenCoreGraphics \
         "$EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT" OpenCoreGraphics opencoregraphics
+    assert_exact_swift_set "$UIKIT" Sources/Symbols \
+        "$EXPECTED_SYMBOLS_SWIFT_COUNT" Symbols symbols
     assert_exact_swift_set "$UIKIT" Sources/SwiftUI \
         "$EXPECTED_SWIFTUI_SWIFT_COUNT" SwiftUI swiftui
 } > "$SOURCE_SET_ATTEST"
@@ -1601,6 +1604,19 @@ clang++-18 -target "$TARGET" -isysroot "$STAGE/sdk" -stdlib=libc++ \
     -o "$STAGE/lib/libCombine.dylib" "$WORK/combine.o" \
     "$STAGE/sdk/usr/lib/swift/libswiftCore.tbd" "$STAGE/sdk/usr/lib/libSystem.tbd"
 
+echo '== compile the first-party Symbols value model while Foundation is hidden'
+mapfile -d '' -t SYMBOLS_SOURCES < <(
+    find "$UIKIT/Sources/Symbols" -maxdepth 1 -type f -name '*.swift' \
+        -print0 | LC_ALL=C sort -z
+)
+[ "${#SYMBOLS_SOURCES[@]}" -eq "$EXPECTED_SYMBOLS_SWIFT_COUNT" ] \
+    || die 'Symbols source count changed before compile'
+"${SWIFTC[@]}" -parse-as-library \
+    -module-name Symbols -module-link-name Symbols \
+    -enable-library-evolution \
+    -emit-module -emit-module-path "$STAGE/modules/Symbols.swiftmodule" \
+    -emit-module-interface-path "$STAGE/modules/Symbols.swiftinterface" \
+    -emit-object -o "$WORK/symbols.o" "${SYMBOLS_SOURCES[@]}"
 echo '== compile the ordered app-facing Foundation facade manifest'
 mapfile -t FOUNDATION_SOURCES < "$FOUNDATION_SOURCES_MANIFEST"
 [ "${#FOUNDATION_SOURCES[@]}" -eq "$EXPECTED_FOUNDATION_SOURCE_COUNT" ] \
@@ -1842,10 +1858,21 @@ foundation_internationalization_reexport_count=$(llvm-otool-18 -l \
 [ "$foundation_internationalization_reexport_count" -eq 1 ] \
     || die "libFoundation FoundationInternationalization reexport command count $foundation_internationalization_reexport_count, expected 1"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libSymbols.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libSymbols.dylib" "$WORK/symbols.o" \
+    -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift" \
+    -lswiftCore "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib" \
+    -L"$STAGE/sdk/usr/lib" -lSystem
+symbols_apple_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSymbols.dylib" \
+    | awk '$1 ~ /^\/System\/Library\/Frameworks\/Symbols\.framework\// { count++ } \
+        END { print count + 0 }')
+[ "$symbols_apple_load_count" -eq 0 ] \
+    || die "libSymbols Apple Symbols load count $symbols_apple_load_count, expected 0"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
     "$FULL/swiftcorepatch.o"
 swiftui_foundation_load_count=$(llvm-otool-18 -L \
@@ -1870,6 +1897,10 @@ swiftui_observation_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" 
         END { print count + 0 }')
 [ "$swiftui_observation_load_count" -eq 1 ] \
     || die "libSwiftUI Observation load count $swiftui_observation_load_count, expected 1"
+swiftui_symbols_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
+    | awk '$1 == "@rpath/libSymbols.dylib" { count++ } END { print count + 0 }')
+[ "$swiftui_symbols_load_count" -eq 1 ] \
+    || die "libSwiftUI Symbols load count $swiftui_symbols_load_count, expected 1"
 UIKIT_UNDEFINED_FLAGS=()
 [ "$PREVIEW_ENABLED" -eq 0 ] || UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
@@ -2152,7 +2183,7 @@ fi
     "${PROBE_LINK_EXTRA[@]}" "${COMMON_LINK[@]}" \
     -lWebKit -lIntentsUI -lIntents -lCoreImage -lQuartzCore -lDispatch \
     -lUIKit -lFoundation -lFoundationInternationalization \
-    -lFoundationEssentials -lSwiftUI \
+    -lFoundationEssentials -lSwiftUI -lSymbols \
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
@@ -2163,7 +2194,7 @@ fi
 
 for dylib in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -2224,7 +2255,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2362,7 +2393,7 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libquartz.dylib
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation
-    -lFoundationInternationalization -lFoundationEssentials -lSwiftUI
+    -lFoundationInternationalization -lFoundationEssentials -lSwiftUI -lSymbols
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
@@ -2439,10 +2470,11 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'format\tcore-input-provenance-v1\n'
     printf 'support\tcommit=%s\ttree=%s\tbase=%s\n' \
         "$SUPPORT_COMMIT" "$SUPPORT_TREE" "$EXPECTED_SUPPORT_BASE"
-    printf 'OpenUIKit\tcommit=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSwiftUI=%s\tCQuartzCPP=%s\n' \
+    printf 'OpenUIKit\tcommit=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSymbols=%s\tSwiftUI=%s\tCQuartzCPP=%s\n' \
         "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" \
         "$EXPECTED_UIKIT_SWIFT_COUNT" "$EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT" \
-        "$EXPECTED_SWIFTUI_SWIFT_COUNT" "$EXPECTED_CQUARTZ_CPP_COUNT"
+        "$EXPECTED_SYMBOLS_SWIFT_COUNT" "$EXPECTED_SWIFTUI_SWIFT_COUNT" \
+        "$EXPECTED_CQUARTZ_CPP_COUNT"
     printf 'swift-foundation\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE"
     printf 'swift-foundation-icu\tcommit=%s\ttree=%s\tcpp=%s\theaders=%s\n' \
@@ -2546,7 +2578,7 @@ record_module_family() {
 }
 for framework in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"

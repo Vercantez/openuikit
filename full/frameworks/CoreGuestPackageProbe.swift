@@ -6,6 +6,7 @@ import Foundation
 import UIKit
 import CoreImage.CIFilterBuiltins
 import QuartzCore
+import Symbols
 import SwiftUI
 import Combine
 @_spi(OpenIntentsHost) import Intents
@@ -29,6 +30,31 @@ import AppIntents
 import OSLog
 import UniformTypeIdentifiers
 import WebKit
+
+private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
+where Effect: SymbolEffect & IndefiniteSymbolEffect {}
+
+private func coreRequireDiscreteSymbolEffect<Effect>(_: Effect)
+where Effect: SymbolEffect & DiscreteSymbolEffect {}
+
+@MainActor
+private func coreDescendant(
+    _ root: UIView,
+    accessibilityIdentifier: String
+) -> UIView? {
+    for child in root.subviews {
+        if child.accessibilityIdentifier == accessibilityIdentifier {
+            return child
+        }
+        if let match = coreDescendant(
+            child,
+            accessibilityIdentifier: accessibilityIdentifier
+        ) {
+            return match
+        }
+    }
+    return nil
+}
 
 @MainActor
 private final class CoreWebKitDelegate: WKNavigationDelegate {
@@ -696,6 +722,27 @@ struct CoreGuestPackageProbe {
         precondition(Data(commonCryptoDigest) == Data(SHA256.hash(data: cryptoInput)))
 
         _ = Text("core-package")
+        precondition(PulseSymbolEffect.pulse != .pulse.byLayer)
+        precondition(BounceSymbolEffect.bounce.up != .bounce.down)
+        precondition(
+            SymbolEffectOptions.speed(0.5).repeat(.periodic(3, delay: 0.2))
+                != SymbolEffectOptions.speed(0.5).repeat(.continuous)
+        )
+        coreRequireIndefiniteSymbolEffect(DrawOnSymbolEffect.drawOn)
+        coreRequireDiscreteSymbolEffect(BounceSymbolEffect.bounce)
+        let symbolController = UIHostingController(
+            rootView: Image(systemName: "arrow.clockwise")
+                .symbolEffect(.pulse, isActive: true)
+        )
+        let symbolRoot = symbolController.view!
+        symbolRoot.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+        symbolRoot.layoutIfNeeded()
+        precondition(
+            coreDescendant(
+                symbolRoot,
+                accessibilityIdentifier: "SwiftUI.SymbolEffect.pulse"
+            ) != nil
+        )
         let lifecycleApplication = CoreLifecycleApplication()
         _ = lifecycleApplication.body
         let lifecycleMain: @MainActor () -> Void = CoreLifecycleApplication.main
@@ -785,6 +832,7 @@ struct CoreGuestPackageProbe {
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
+                + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-18 oslog=standard-error,signposts "
                 + "security=keychain,random "

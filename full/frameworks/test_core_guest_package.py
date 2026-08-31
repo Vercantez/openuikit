@@ -133,6 +133,7 @@ FRAMEWORKS = (
     "OpenCombine",
     "Dispatch",
     "Combine",
+    "Symbols",
     "SwiftUI",
     "Foundation",
     "UIKit",
@@ -310,6 +311,28 @@ def validate_swiftui_foundation_essentials_link(source: str) -> None:
         raise AssertionError(
             f"SwiftUI FoundationEssentials link contract drifted: {missing}"
         )
+
+
+def validate_symbols_platform_contract(source: str) -> None:
+    required = (
+        "EXPECTED_SYMBOLS_SWIFT_COUNT=1",
+        'assert_exact_swift_set "$UIKIT" Sources/Symbols',
+        "-module-name Symbols -module-link-name Symbols",
+        '-emit-module-path "$STAGE/modules/Symbols.swiftmodule"',
+        '-emit-module-interface-path "$STAGE/modules/Symbols.swiftinterface"',
+        "-install_name @rpath/libSymbols.dylib",
+        "libSymbols Apple Symbols load count",
+        '"@rpath/libSymbols.dylib"',
+        "libSwiftUI Symbols load count",
+        "symbols=values,markers,swiftui-render",
+    )
+    missing = [token for token in required if token not in source]
+    if missing:
+        raise AssertionError(f"Symbols platform contract drifted: {missing}")
+    swiftui_start = source.index("-install_name @rpath/libSwiftUI.dylib")
+    swiftui_end = source.index("swiftui_symbols_load_count=", swiftui_start)
+    if "-lSymbols" not in source[swiftui_start:swiftui_end]:
+        raise AssertionError("Symbols platform SwiftUI link drifted")
 
 
 def validate_core_preview_export_contract(source: str) -> None:
@@ -647,6 +670,7 @@ class PackageFixture:
             "-lFoundation",
             "-lFoundationInternationalization",
             "-lFoundationEssentials",
+            "-lSymbols",
             "-lSwiftUI",
             "-lIntentsUI",
             "-lIntents",
@@ -1219,8 +1243,9 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
-        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)
-        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=7", source)
+        self.assertEqual(source.count("EXPECTED_SYMBOLS_SWIFT_COUNT=1"), 1)
+        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=9"), 1)
+        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=8", source)
 
     def test_foundation_links_the_cgfloat_owner_directly(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -1462,11 +1487,32 @@ class ShellContractTests(unittest.TestCase):
     def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertIn("EXPECTED_SWIFTUI_SWIFT_COUNT=8", source)
+        self.assertIn("EXPECTED_SWIFTUI_SWIFT_COUNT=9", source)
         self.assertIn("@UIApplicationDelegateAdaptor", probe)
         self.assertIn("WindowGroup", probe)
         self.assertIn("CoreLifecycleApplication.main", probe)
         self.assertIn("swiftui-app=constructed", probe)
+
+    def test_symbols_is_a_real_module_dylib_and_swiftui_dependency(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        validate_symbols_platform_contract(source)
+        self.assertIn("import Symbols", probe)
+        self.assertIn("PulseSymbolEffect.pulse != .pulse.byLayer", probe)
+        self.assertIn("coreRequireIndefiniteSymbolEffect", probe)
+        self.assertIn("coreRequireDiscreteSymbolEffect", probe)
+        self.assertIn("SwiftUI.SymbolEffect.pulse", probe)
+        for token in (
+            "-module-name Symbols -module-link-name Symbols",
+            "-install_name @rpath/libSymbols.dylib",
+            "libSwiftUI Symbols load count",
+            "symbols=values,markers,swiftui-render",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "Symbols platform"):
+                    validate_symbols_platform_contract(
+                        source.replace(token, "", 1)
+                    )
 
     def test_builder_requires_exact_uikit_pin_and_fresh_output(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -1493,8 +1539,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 33)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 14)
+        self.assertEqual(len(FRAMEWORKS), 34)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 15)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",
@@ -1892,7 +1938,7 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
+                        "Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )

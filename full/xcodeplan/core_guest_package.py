@@ -78,6 +78,7 @@ _REQUIRED_FRAMEWORKS = (
     "OpenCombine",
     "Dispatch",
     "Combine",
+    "Symbols",
     "SwiftUI",
     "Foundation",
     "UIKit",

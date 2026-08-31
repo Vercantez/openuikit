@@ -8,14 +8,14 @@ logic.
 
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
-OpenCombine, Dispatch, Combine, SwiftUI, the app-facing Foundation facade, final
+OpenCombine, Dispatch, Combine, Symbols, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog, and
-UniformTypeIdentifiers. These are thirty-three reusable
-ARM64 Mach-O framework binaries, including real `libDispatch.dylib`,
-`libSwiftUI.dylib`,
+UniformTypeIdentifiers. These are thirty-four reusable ARM64 Mach-O platform
+binaries (thirty-three frameworks plus ICU), including real
+`libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
 overlays. The package also contains C module headers, CQuartz, the SDK, the attested machorun
@@ -53,10 +53,11 @@ The semantic build order is deliberate:
    Foundation umbrella hidden.
 2. Exercise the literal early UIKit/identity production gate; this is not the
    final app-facing UIKit module.
-3. Build the portable Dispatch module, OpenCombine, and Combine.
+3. Build the portable Dispatch module, OpenCombine, Combine, and the
+   first-party Symbols value model while Foundation is hidden.
 4. Compile the ordered app-facing Foundation facade, then compile SwiftUI
    against that facade so SwiftUI publicly re-exports its overlays and
-   portable Dispatch identity.
+   portable Dispatch identity while consuming Symbols.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the CoreImage Swift overlay over its explicit Clang
@@ -140,14 +141,24 @@ increase from 102 is the canonical Focus launch-core tranche's independent
 feedback-generator, table-diffable-data-source, and property-animator files;
 the cold builder refuses either a missing file or an unexpected extra source.
 
-The production SwiftUI source-set contract is eight Swift files. The seventh
+The production Symbols source-set contract is one Swift file. It owns immutable
+effect/configuration values, the exact marker-protocol families used for
+overload selection, and composable effect options. It is emitted as the literal
+`Symbols` module and `libSymbols.dylib`; the builder rejects any load of Apple's
+Symbols framework.
+
+The production SwiftUI source-set contract is nine Swift files. The seventh
 is the settings runtime used by Focus's untouched internal-settings screens:
 sections, toggles, text fields, pickers, disabled propagation, and retained
 change/publisher effects. It is compiled into the same real
 `libSwiftUI.dylib`; it is not an application-side overlay. The eighth owns the
 modern application lifecycle: `App`'s default main, `Scene`/`SceneBuilder`,
 real `WindowGroup` hosting, and `UIApplicationDelegateAdaptor`. The package
-probe constructs that app/scene surface from the dylib, while OpenUIKit's host
+probe constructs that app/scene surface from the dylib. The ninth lowers both
+indefinite and value-triggered symbol-effect overloads into concrete OpenUIKit
+opacity/transform render nodes while preserving effect identity. The package
+probe exercises the Symbols values, protocol constraints, SwiftUI lowering,
+and the exact `libSwiftUI` to `libSymbols` load edge, while OpenUIKit's host
 tests cover the concrete application, scene, window, and hosting-controller
 launch path.
 
