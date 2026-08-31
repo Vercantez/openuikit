@@ -2088,6 +2088,18 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("os-runtime-reexport=%s", source)
         self.assertIn("foundation-essentials=%s", source)
         self.assertIn("expected_foundation_load=0", source)
+        for token in (
+            "standalone OSLog re-export gate",
+            "-o \"$STAGE/probe/OSLogGuestRuntime\"",
+            '"${COMMON_LINK[@]}" -lOSLog',
+            "direct-Foundation-load-count\\t%s",
+            "direct-FoundationEssentials-load-count\\t%s",
+            "os-runtime-resolution\\tLC_REEXPORT_DYLIB",
+            "OSLOG_GUEST_MACHO_OK",
+            "attestation/oslog-runtime.log",
+            "attestation/oslog-standalone-link.tsv",
+        ):
+            self.assertIn(token, source)
 
     def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

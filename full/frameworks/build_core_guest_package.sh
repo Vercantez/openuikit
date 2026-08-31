@@ -2035,6 +2035,59 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
 
+echo '== compile/link/run standalone OSLog re-export gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name OSLogGuestRuntime -emit-object \
+    -o "$WORK/oslog-guest-runtime.o" \
+    "$W/full/oslog/tests/OSLogGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/OSLogGuestRuntime" \
+    "$WORK/oslog-guest-runtime.o" "${COMMON_LINK[@]}" -lOSLog
+oslog_gate_oslog_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/OSLogGuestRuntime" \
+    | awk '$1 == "@rpath/libOSLog.dylib" { count++ } END { print count + 0 }')
+oslog_gate_foundation_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/OSLogGuestRuntime" \
+    | awk '$1 == "@rpath/libFoundation.dylib" { count++ } END { print count + 0 }')
+oslog_gate_foundation_essentials_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/OSLogGuestRuntime" \
+    | awk '$1 == "@rpath/libFoundationEssentials.dylib" { count++ } END { print count + 0 }')
+[ "$oslog_gate_oslog_load_count" -eq 1 ] \
+    || die "standalone OSLog gate load count $oslog_gate_oslog_load_count, expected 1"
+[ "$oslog_gate_foundation_load_count" -eq 0 ] \
+    || die "standalone OSLog gate direct Foundation load count $oslog_gate_foundation_load_count, expected 0"
+[ "$oslog_gate_foundation_essentials_load_count" -eq 0 ] \
+    || die "standalone OSLog gate direct FoundationEssentials load count $oslog_gate_foundation_essentials_load_count, expected 0"
+{
+    printf 'format\toslog-standalone-link-audit-v1\n'
+    printf 'libOSLog-load-count\t%s\n' "$oslog_gate_oslog_load_count"
+    printf 'direct-Foundation-load-count\t%s\n' \
+        "$oslog_gate_foundation_load_count"
+    printf 'direct-FoundationEssentials-load-count\t%s\n' \
+        "$oslog_gate_foundation_essentials_load_count"
+    printf 'os-runtime-resolution\tLC_REEXPORT_DYLIB\n'
+} > "$STAGE/attestation/oslog-standalone-link.tsv"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/OSLogGuestRuntime
+) 2>&1 | tee "$STAGE/attestation/oslog-runtime.log"
+grep -Fq \
+    'OSLOG_GUEST_MACHO_OK backend=standard-error signposts=visible reexport=os' \
+    "$STAGE/attestation/oslog-runtime.log" \
+    || die 'standalone OSLog runtime marker is missing'
+grep -Fq \
+    '[info] OpenUIKit.OSLogGuestRuntime:Standalone standalone OSLog diagnostic' \
+    "$STAGE/attestation/oslog-runtime.log" \
+    || die 'standalone OSLog Logger diagnostic is missing'
+grep -Fq \
+    '[signpost-event] OpenUIKit.OSLogGuestRuntime:Standalone StandaloneBoundary' \
+    "$STAGE/attestation/oslog-runtime.log" \
+    || die 'standalone OSLog signpost diagnostic is missing'
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
@@ -2510,11 +2563,15 @@ while IFS= read -r resource; do
     record_artifact resource OpenUIKit runtime-resource "$relative"
 done < <(find "$STAGE/resources/OpenUIKit" -type f | LC_ALL=C sort)
 record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackageProbe
+record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe FoundationURLSessionRuntime executable \
     probe/FoundationURLSessionRuntime
 record_artifact attestation runtime runtime-log attestation/runtime.log
+record_artifact attestation OSLog runtime-log attestation/oslog-runtime.log
+record_artifact attestation OSLog link-audit \
+    attestation/oslog-standalone-link.tsv
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \
