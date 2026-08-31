@@ -87,6 +87,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CommonCrypto",
                 "AppIntents",
                 "OSLog",
+                "UniformTypeIdentifiers",
                 "DeveloperToolsSupport",
             )
         )
@@ -124,6 +125,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CommonCrypto",
                 "AppIntents",
                 "OSLog",
+                "UniformTypeIdentifiers",
             )
         )
         for relative in required_files:
@@ -207,6 +209,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lCommonCrypto",
                 "-lAppIntents",
                 "-lOSLog",
+                "-lUniformTypeIdentifiers",
             ],
             "format_version": 1,
             "manifests": {

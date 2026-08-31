@@ -12,8 +12,8 @@ OpenCombine, Dispatch, Combine, SwiftUI, the app-facing Foundation facade, final
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
-MobileCoreServices, Security, CryptoKit, CommonCrypto, and AppIntents. These are
-thirty-one reusable
+MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog, and
+UniformTypeIdentifiers. These are thirty-three reusable
 ARM64 Mach-O framework binaries, including real `libDispatch.dylib`,
 `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
@@ -65,11 +65,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link sixteen app-facing first-party modules as independent ARM64
+9. Compile and link eighteen app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all twenty-seven reusable dylibs and run the package's Mach-O
+10. Link all thirty-three reusable framework dylibs and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
@@ -108,6 +108,22 @@ with zero commits, finishes, history entries, JavaScript results, network
 responses, or rendering claims. Exact sources, native Xcode 26.1 evidence,
 install/load audit, and pre/post source brackets are packaged under
 `attestation/` alongside the seven-framework provenance and load audits.
+
+`libUniformTypeIdentifiers.dylib` owns the canonical `UTType` and
+`UTTagClass` value identities. Its registry covers the system item, content,
+text, source, document, image, audiovisual, archive, executable, bundle,
+certificate, and 3D families used by the corpus. Tag lookup is
+case-insensitive, conformance and `supertypes` traverse the complete type
+graph, unknown identifiers fail closed, and custom exported/imported types
+retain their declared conformance without pretending to be OS-registered.
+
+`libOSLog.dylib` reexports the package's single `os.Logger` identity and adds
+process-local signpost IDs and event/begin/end signpost APIs. Logger and
+signpost diagnostics are visible on standard error; the platform explicitly
+reports that Apple's unified-log persistence service is unavailable. A
+standalone ARM64 Mach-O gate links only `-lOSLog`, rejects direct
+Foundation/FoundationEssentials loads, and executes both surfaces through the
+packaged Linux runtime.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent

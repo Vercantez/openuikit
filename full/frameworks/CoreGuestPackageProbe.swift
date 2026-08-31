@@ -27,6 +27,7 @@ import CryptoKit
 import CommonCrypto
 import AppIntents
 import OSLog
+import UniformTypeIdentifiers
 import WebKit
 
 @MainActor
@@ -667,6 +668,11 @@ struct CoreGuestPackageProbe {
             "%{public}s",
             "ready"
         )
+        precondition(UTType(filenameExtension: "JPG") == .jpeg)
+        precondition(UTType.jpeg.preferredMIMEType == "image/jpeg")
+        precondition(UTType.jpeg.supertypes.contains(.image))
+        precondition(UTType.jpeg.conforms(to: .content))
+        precondition(UTType.usdz.conforms(to: .threeDContent))
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -695,10 +701,11 @@ struct CoreGuestPackageProbe {
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-17 oslog=standard-error,signposts "
+                + "first-party=portable-18 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
+                + "uniform-types=tags,conformance "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

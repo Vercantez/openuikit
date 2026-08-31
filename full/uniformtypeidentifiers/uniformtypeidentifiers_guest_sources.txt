@@ -1,0 +1,1 @@
+full/uniformtypeidentifiers/UniformTypeIdentifiers.swift

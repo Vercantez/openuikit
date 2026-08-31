@@ -1,0 +1,47 @@
+import Foundation
+import UniformTypeIdentifiers
+
+precondition(UTType.png.identifier == "public.png")
+precondition(UTType.png.preferredFilenameExtension == "png")
+precondition(UTType.jpeg.preferredFilenameExtension == "jpeg")
+precondition(UTType.jpeg.preferredMIMEType == "image/jpeg")
+precondition(UTType("public.jpeg-2000")?.preferredFilenameExtension == "jp2")
+precondition(UTType("public.jpeg-xl")?.preferredMIMEType == "image/jxl")
+precondition(UTType("not.registered") == nil)
+precondition(UTType.gif.conforms(to: .image))
+precondition(!UTType.heic.conforms(to: .movie))
+precondition(UTType.mpeg4Movie.conforms(to: .movie))
+precondition(!UTType.mpeg4Movie.conforms(to: .image))
+precondition(UTType.jpeg.supertypes == [.image, .data, .content, .item])
+precondition(UTType.image.isSupertype(of: .jpeg))
+precondition(UTType.jpeg.isSubtype(of: .image))
+precondition(!UTType.jpeg.isSubtype(of: .jpeg))
+precondition(UTType.jpeg.isPublic)
+precondition(UTType(filenameExtension: "JPG") == .jpeg)
+precondition(UTType(mimeType: "IMAGE/GIF") == .gif)
+precondition(
+    UTType.types(tag: "jpeg", tagClass: .filenameExtension).contains(.jpeg)
+)
+
+let custom = UTType(exportedAs: "com.example.portable", conformingTo: .image)
+precondition(custom.identifier == "com.example.portable")
+precondition(custom.conforms(to: .image))
+precondition(custom.conforms(to: .content))
+precondition(!custom.isDeclared)
+precondition(!custom.isPublic)
+
+precondition(UTType.jpegxl.identifier == "public.jpeg-xl")
+precondition(UTType.applicationBundle.preferredFilenameExtension == "app")
+precondition(UTType.geoJSON.preferredMIMEType == "application/geo+json")
+precondition(UTType.gzip.preferredMIMEType == "application/x-gzip")
+precondition(UTType.wav.preferredMIMEType == "audio/vnd.wave")
+precondition(UTType.yaml.preferredFilenameExtension == "yml")
+precondition(UTType.usdz.conforms(to: .threeDContent))
+precondition(UTType.vCard.conforms(to: .contact))
+
+let encoded = try! JSONEncoder().encode(UTType.jpeg)
+let decoded = try! JSONDecoder().decode(UTType.self, from: encoded)
+precondition(decoded == .jpeg)
+precondition(UTTagClass.filenameExtension.description == "public.filename-extension")
+
+print("UNIFORMTYPEIDENTIFIERS_HOST_OK registry=types,tags,conformance custom=exported")

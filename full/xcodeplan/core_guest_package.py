@@ -86,6 +86,7 @@ _REQUIRED_FRAMEWORKS = (
     "CommonCrypto",
     "AppIntents",
     "OSLog",
+    "UniformTypeIdentifiers",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
