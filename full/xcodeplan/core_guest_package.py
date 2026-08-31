@@ -33,6 +33,7 @@ _PATH_KEYS = {
     "objects",
     "resources",
     "guest_root",
+    "host_tools",
 }
 _CONTROLLED_COMPILE_OPTIONS = {
     "-emit-object",
@@ -561,7 +562,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['modules']}/DeveloperToolsSupport.swiftmodule"
         )
         required_artifacts.add(preview["developer_tools_support_object"])
-    for directory_key in ("libraries", "resources"):
+    for directory_key in ("libraries", "resources", "host_tools"):
         directory = physical_paths[directory_key]
         for candidate in directory.rglob("*"):
             if candidate.is_symlink():

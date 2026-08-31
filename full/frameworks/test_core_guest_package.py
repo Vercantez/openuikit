@@ -543,6 +543,8 @@ class PackageFixture:
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
             "guest-root/host",
+            "host-tools/swift/host/plugins",
+            "host-tools/swift/linux",
             "probe",
             "attestation",
         ):
@@ -574,6 +576,14 @@ class PackageFixture:
         )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
+        write_file(
+            root / "host-tools/swift/host/plugins/libObservationMacros.so",
+            "observation macros",
+        )
+        write_file(
+            root / "host-tools/swift/linux/libswiftCore.so",
+            "host Swift runtime",
+        )
         write_file(root / "probe/CoreGuestPackageProbe", "probe")
         write_file(root / "resources/OpenUIKit/system_colors.json", "{}\n")
         write_file(root / "resources/OpenUIKit/font_metrics.json", "{}\n")
@@ -780,6 +790,22 @@ class PackageFixture:
             )
         )
         records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
+        records.append(
+            self._artifact(
+                "host-tool",
+                "ObservationMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libObservationMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
+                "ObservationMacros",
+                "dependency",
+                "host-tools/swift/linux/libswiftCore.so",
+            )
+        )
         for relative in sorted(
             path.relative_to(self.root).as_posix()
             for path in (self.root / "resources/OpenUIKit").rglob("*")
@@ -889,6 +915,7 @@ class PackageContractTests(unittest.TestCase):
         self.assertEqual(document["format_version"], 1)
         self.assertEqual(document["target"]["triple"], "arm64-apple-macos15.0")
         self.assertEqual(document["paths"]["resources"], "resources/OpenUIKit")
+        self.assertEqual(document["paths"]["host_tools"], "host-tools")
         self.assertIsNone(document["preview"])
         self.assertNotIn(str(self.base), json.dumps(document))
         relocated = self.base / "relocated package with spaces"
@@ -991,6 +1018,12 @@ class PackageContractTests(unittest.TestCase):
         write_file(fixture.root / "lib/libStale.dylib", "stale")
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("artifact coverage drifted under lib", refusal.stderr)
+
+    def test_unattested_host_tool_is_refused(self) -> None:
+        fixture = self.fixture(False)
+        write_file(fixture.root / "host-tools/swift/host/libStale.so", "stale")
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("artifact coverage drifted under host-tools", refusal.stderr)
 
     def test_every_framework_dylib_is_in_the_reusable_link_contract(self) -> None:
         fixture = self.fixture(False)

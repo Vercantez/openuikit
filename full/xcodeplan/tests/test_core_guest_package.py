@@ -34,6 +34,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root",
+            "host-tools/swift/host/plugins",
+            "host-tools/swift/linux",
             "attestation",
         ):
             (self.root / relative).mkdir(parents=True, exist_ok=True)
@@ -48,6 +50,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/CoreImage/CoreImage.h",
             "include/CoreImage/CIFilterBuiltins.h",
             "include/CoreImage/module.modulemap",
+            "host-tools/swift/host/plugins/libObservationMacros.so",
+            "host-tools/swift/linux/libswiftCore.so",
         ]
         required_files.extend(
             f"modules/{module}.swiftmodule"
@@ -208,6 +212,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             },
             "paths": {
                 "guest_root": "guest-root",
+                "host_tools": "host-tools",
                 "includes": "include",
                 "libraries": "lib",
                 "modules": "modules",
@@ -269,6 +274,15 @@ class CoreGuestPackageTests(unittest.TestCase):
         self.assertEqual(
             core_guest_package.main([os.fspath(self.root), "--emit-summary"]), 0
         )
+
+    def test_refuses_unattested_host_tool(self) -> None:
+        stale = self.root / "host-tools/swift/host/libStale.so"
+        stale.write_bytes(b"stale\n")
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "does not attest every required artifact: host-tools/swift/host/libStale.so",
+        ):
+            core_guest_package.validate(self.root)
 
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:
         (self.root / "lib/libUIKit.dylib").write_text("changed\n", encoding="utf-8")

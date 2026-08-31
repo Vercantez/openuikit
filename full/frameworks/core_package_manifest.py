@@ -53,6 +53,7 @@ PATHS = {
     "objects": "objects",
     "resources": "resources/OpenUIKit",
     "guest_root": "guest-root",
+    "host_tools": "host-tools",
 }
 REQUIRED_DIRECTORIES = tuple(PATHS.values()) + ("probe", "attestation")
 REQUIRED_MANIFESTS = {
@@ -116,6 +117,7 @@ ARTIFACT_CATEGORIES = {
     "include",
     "object",
     "runtime",
+    "host-tool",
     "resource",
     "probe",
     "attestation",
@@ -796,6 +798,7 @@ def validate_document(
             refuse(f"JSON artifact size drifted: {relative}")
     require_exhaustive_artifact_tree(package, artifacts, "lib")
     require_exhaustive_artifact_tree(package, artifacts, "resources/OpenUIKit")
+    require_exhaustive_artifact_tree(package, artifacts, "host-tools")
     manifests = document.get("manifests")
     if not isinstance(manifests, dict):
         refuse("core package manifests are missing")
