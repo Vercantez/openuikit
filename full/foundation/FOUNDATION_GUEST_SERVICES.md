@@ -9,7 +9,7 @@ file rather than maintaining a second list.
 
 The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
-`TimeZone`, and `IndexPath` identities. The seventeen-source facade adds:
+`TimeZone`, and `IndexPath` identities. The eighteen-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   its mutable bridge, scalar-boundary trimming/search, percent coding, legacy
@@ -24,6 +24,8 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
   URLs, and `NSLocalizedString`. A fresh fixture runs against Apple and the
   portable implementation; a separate adversarial fixture requires an unknown
   XML entity to fail closed in the portable parser.
+- Stateful `URLRequest` request metadata used by first-party networking
+  boundaries, including case-insensitive HTTP header replacement and lookup.
 - `DateFormatter`, backed by FoundationEssentials `Calendar` and `TimeZone`.
   It implements Gregorian `G y Y M L d D E e c H k K h m s S a Z X x z`
   pattern fields, quoted literals, English and French month/weekday names, and
