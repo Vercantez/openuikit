@@ -22,6 +22,7 @@ import unicodedata
 from typing import Any
 
 import scene_bootstrap
+import local_package_graph
 
 
 class BuildPlanError(RuntimeError):
@@ -385,6 +386,10 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
 
     sources, compiler_inputs = _source_records(inventory, root)
     resources = _resource_records(inventory, root)
+    try:
+        package_graph = local_package_graph.plan(inventory, root)
+    except local_package_graph.PackageGraphError as exc:
+        raise BuildPlanError(str(exc)) from exc
     target = _mapping(inventory.get("target"), "target")
     result = {
         "bootstrap": bootstrap,
@@ -393,6 +398,7 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
         "compiler_inputs": compiler_inputs,
         "format_version": 2,
         "module": bootstrap["module"],
+        "local_package_graph": package_graph,
         "product_name": _string(target.get("product_name"), "target.product_name"),
         "resources": resources,
         "sources": sources,
@@ -657,6 +663,14 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
 
     bootstrap = _mapping(build_plan.get("bootstrap"), "build plan bootstrap")
     _verify_bootstrap(bootstrap, build_plan, sources, root)
+    package_graph = build_plan.get("local_package_graph")
+    if package_graph is not None:
+        try:
+            local_package_graph.verify(
+                _mapping(package_graph, "build plan local_package_graph"), root
+            )
+        except local_package_graph.PackageGraphError as exc:
+            raise BuildPlanError(str(exc)) from exc
 
 
 def _write_new_directory(
@@ -686,6 +700,20 @@ def _write_new_directory(
                 for input_file in compiler_input["input_files"]
             )
         )
+        package_prepared: dict[str, str] = {}
+        package_graph = build_plan.get("local_package_graph")
+        if package_graph is not None:
+            graph_bytes = local_package_graph.canonical_json(package_graph)
+            (output / "local-package-graph.json").write_bytes(graph_bytes)
+            target_bytes = b"".join(
+                item["target_id"].encode("utf-8") + b"\0"
+                for item in package_graph["targets"]
+            )
+            (output / "local-package-targets.nul").write_bytes(target_bytes)
+            package_prepared = {
+                "local-package-graph.json": _sha256(graph_bytes),
+                "local-package-targets.nul": _sha256(target_bytes),
+            }
         (output / "prepared-inputs.json").write_bytes(
             _canonical_json(
                 {
@@ -695,6 +723,7 @@ def _write_new_directory(
                     "compiler-inputs.nul": _sha256(
                         (output / "compiler-inputs.nul").read_bytes()
                     ),
+                    **package_prepared,
                 }
             )
         )

@@ -14,7 +14,8 @@ python3 full/xcodeplan/project_inventory.py \
 
 The inventory preserves classic `PBXBuildFile` order, resolves groups and
 localized variant groups, records target/project build settings, evaluates only
-the documented product-name subset, and enumerates package products, target
+the documented product-name subset, and enumerates package products, local
+package roots/manifests, target
 dependencies, phases, sources, headers, and resources. It also supports the
 simple `PBXFileSystemSynchronizedRootGroup` shape emitted by current Xcode
 templates: filesystem membership is bytewise sorted, target-specific
@@ -233,6 +234,14 @@ python3 full/xcodeplan/application_build_plan.py \
   --source-root /read/only/AppProject --verify
 ```
 
+When the target selects local Swift-package products, the application plan
+also embeds the fail-closed graph documented in
+[`docs/LOCAL_SWIFT_PACKAGE_GRAPH.md`](../../docs/LOCAL_SWIFT_PACKAGE_GRAPH.md).
+It publishes separately hashed `local-package-graph.json` and
+`local-package-targets.nul` inputs and reconstructs every manifest, pin, edge,
+and source hash during normal verification. A frozen graph with unresolved
+remote source remains valid provenance but is explicitly not buildable.
+
 Application build-plan format 2 publishes `compiler_inputs` in source-phase
 order. Each `open-intentdefinition` record contains its virtual
 `logical_path`, one physical `primary_path`, and ordered
@@ -294,8 +303,10 @@ image content ID, validates that the image is Linux/ARM64, validates and hashes
 the platform and optional macro plugin, freezes all application inputs, and
 creates the bundle resource skeleton. The image identity and platform are
 recorded in `host-inputs.tsv`; mutable image tags are refused. That container
-then compiles every NUL-delimited
-unchanged Swift source together with only the generated entry point and
+then compiles every reachable, fully materialized local-package target as its
+own topologically ordered Swift module and object set. Those objects enter the
+executable link exactly once. It then compiles every NUL-delimited unchanged
+application Swift source together with only the generated entry point and
 platform host loop in one ordinary multi-source module invocation. An exact
 output-file map assigns one ARM64 Mach-O object to every source; the driver
 rejects missing, extra, reordered, symlinked, non-ARM64, or reused outputs,
@@ -375,7 +386,9 @@ FOCUS_IOS_CHECKOUT="$PWD/scratch/ladder-corpus/focus-ios/focus-ios" \
 
 This does not run Xcode, interpret arbitrary projects, execute shell phases,
 compile proprietary asset catalogs or intent definitions, select destination-
-conditional `.xcconfig` assignments, or derive a general Swift compiler/linker graph. Source-form
+conditional `.xcconfig` assignments, execute arbitrary `Package.swift`, or
+materialize remote Swift packages. It derives only the documented ordinary
+local-library SwiftPM graph, not a general Swift compiler/linker graph. Source-form
 `.xcassets` directories are preserved for OpenUIKit's measured reader. Shell bodies remain opaque, pinned
 inputs represented by a digest plus their validated variable surface; parsing
 shell semantics would be a separate frontend. The tool also selects only the

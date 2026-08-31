@@ -237,6 +237,56 @@ class ApplicationBuildPlanTests(unittest.TestCase):
                 with self.assertRaises(application_build_plan.BuildPlanError):
                     application_build_plan.verify(changed, self.root)
 
+    def test_local_package_graph_is_embedded_verified_and_materialized(self) -> None:
+        package = self.root / "LocalKit"
+        (package / "Sources/LocalKit").mkdir(parents=True)
+        (package / "Package.swift").write_text(
+            "// swift-tools-version: 6.4\n"
+            "import PackageDescription\n"
+            "let package = Package(\n"
+            "  name: \"LocalKit\",\n"
+            "  products: [.library(name: \"LocalKit\", targets: [\"LocalKit\"])],\n"
+            "  targets: [.target(name: \"LocalKit\")]\n"
+            ")\n",
+            encoding="utf-8",
+        )
+        source = package / "Sources/LocalKit/LocalKit.swift"
+        source.write_text("public struct LocalKit {}\n", encoding="utf-8")
+        self.inventory["local_package_references"] = [
+            {"relative_path": "LocalKit"}
+        ]
+        self.inventory["package_products"] = [
+            {
+                "name": "LocalKit",
+                "origin": "local",
+                "relative_path": "LocalKit",
+            }
+        ]
+
+        generated, plan = application_build_plan.plan(self.inventory, self.root)
+        graph = plan["local_package_graph"]
+        self.assertEqual(graph["summary"]["local_targets"], 1)
+        self.assertEqual(graph["targets"][0]["target_id"], "LocalKit#LocalKit")
+        application_build_plan.verify(plan, self.root)
+
+        output = self.parent / "package-output"
+        application_build_plan._write_new_directory(
+            output, generated, plan, self.root
+        )
+        self.assertEqual(
+            (output / "local-package-targets.nul").read_bytes(),
+            b"LocalKit#LocalKit\0",
+        )
+        prepared = json.loads(
+            (output / "prepared-inputs.json").read_text(encoding="utf-8")
+        )
+        self.assertIn("local-package-graph.json", prepared)
+        self.assertIn("local-package-targets.nul", prepared)
+
+        source.write_text("public struct Changed {}\n", encoding="utf-8")
+        with self.assertRaises(application_build_plan.BuildPlanError):
+            application_build_plan.verify(plan, self.root)
+
     def test_cli_output_is_exclusive_and_contains_nul_source_manifest(self) -> None:
         inventory_path = self.parent / "inventory.json"
         inventory_path.write_text(json.dumps(self.inventory), encoding="utf-8")

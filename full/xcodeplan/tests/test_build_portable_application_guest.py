@@ -58,7 +58,7 @@ def validate_multi_source_object_map_contract(source: str) -> None:
         '--audit "$output/application-cross-file-symbols.json"',
         '--cross-file-audit "$output/application-cross-file-symbols.json"',
         '--audit "$output/application-linked-symbols.json"',
-        '-o "$executable" "${application_objects[@]}" "${extra_objects[@]}")',
+        '"${package_objects[@]}" "${extra_objects[@]}")',
     )
     drifted = [token for token in required_once if source.count(token) != 1]
     if drifted:
@@ -104,6 +104,33 @@ def validate_derived_source_provider_contract(source: str) -> None:
     platform = source.index('"${platform_sources[@]}"', app)
     if app >= platform:
         raise AssertionError("derived-source compile ordering drifted")
+
+
+def validate_local_package_module_object_boundary(source: str) -> None:
+    required_once = (
+        'local_package_graph.py" prepare-build',
+        'local_package_graph.py" emit-target-record',
+        'local_package_graph.py" verify-build-contract',
+        'package_import_arguments=(-I "$package_module_root")',
+        '-module-name "$package_module" "${plugin_arguments[@]}"',
+        '-emit-module -emit-module-path "$package_module_output"',
+        'package_objects+=("$package_object")',
+        '"${package_objects[@]}" "${extra_objects[@]}")',
+        'local package object link count is not one',
+        'local linked_package_object_count=0',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if source.count('local_package_graph.py" require-buildable') != 2:
+        drifted.append('local_package_graph.py" require-buildable (host+guest)')
+    if source.count('local_package_graph.py" verify-plan-binding') != 2:
+        drifted.append('local_package_graph.py" verify-plan-binding (host+guest)')
+    if drifted:
+        raise AssertionError(f"local package module/object boundary drifted: {drifted}")
+    preflight = source.rindex('local_package_graph.py" require-buildable')
+    compile_target = source.index("== compile local Swift-package target")
+    application_compile = source.index("== compile every untouched application")
+    if not preflight < compile_target < application_compile:
+        raise AssertionError("local package build order drifted")
 
 
 def validate_nounset_dependent_path_contract(source: str) -> None:
@@ -254,7 +281,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             '"$effective_wmo_count" -eq 0',
             '"$effective_disable_batch_count" -eq 0',
             '"$effective_dump_count" -eq 0',
-            '-o "$executable" "${application_objects[@]}" "${extra_objects[@]}")',
+            '"${package_objects[@]}" "${extra_objects[@]}")',
         ):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "compile contract"):
@@ -270,6 +297,24 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                     1,
                 )
             )
+
+    def test_local_packages_are_separate_topological_module_object_boundaries(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_local_package_module_object_boundary(source)
+        for token in (
+            'local_package_graph.py" prepare-build',
+            'local_package_graph.py" emit-target-record',
+            '-emit-module -emit-module-path "$package_module_output"',
+            'package_objects+=("$package_object")',
+            '"${package_objects[@]}" "${extra_objects[@]}")',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "module/object boundary"):
+                    validate_local_package_module_object_boundary(
+                        source.replace(token, "", 1)
+                    )
 
     def test_derived_source_provider_is_generated_and_reverified(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(

@@ -159,6 +159,18 @@ PY
         --source-root "$source_root" --output-dir "$output"
     python3 -B "$SCRIPT_DIR/application_build_plan.py" \
         "$output/application-build-plan.json" --source-root "$source_root" --verify
+    if [ -f "$output/local-package-graph.json" ] \
+        && [ ! -L "$output/local-package-graph.json" ]; then
+        require_regular "$output/local-package-targets.nul" \
+            "local Swift-package target list"
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" verify-plan-binding \
+            "$output/local-package-graph.json" \
+            --application-plan "$output/application-build-plan.json" \
+            --target-list "$output/local-package-targets.nul" \
+            --source-root "$source_root"
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" require-buildable \
+            "$output/local-package-graph.json" --source-root "$source_root"
+    fi
     if [ "$preview_required" = yes ]; then
         [ ! -e "$output/preview-evidence-sources.nul" ] \
             && [ ! -L "$output/preview-evidence-sources.nul" ] \
@@ -359,6 +371,114 @@ PY
         plugin_arguments=(-load-plugin-executable "$plugin#$plugin_module")
     fi
 
+    # Compile the frozen local Swift-package graph as one module/object boundary
+    # per reachable target.  A remote product is never guessed or stubbed: the
+    # graph preflight stops here until its exact pinned source is materialized.
+    local package_graph package_build_root package_module_root
+    local -a package_import_arguments=() package_objects=() package_target_indices=()
+    package_graph=$output/local-package-graph.json
+    package_build_root=$output/local-package-build
+    package_module_root=$package_build_root/modules
+    if [ -e "$package_graph" ] || [ -L "$package_graph" ]; then
+        require_regular "$package_graph" "local Swift-package graph"
+        require_regular "$output/local-package-targets.nul" \
+            "local Swift-package target list"
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" verify-plan-binding \
+            "$package_graph" \
+            --application-plan "$output/application-build-plan.json" \
+            --target-list "$output/local-package-targets.nul" \
+            --source-root "$app_root"
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" require-buildable \
+            "$package_graph" --source-root "$app_root"
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" prepare-build \
+            "$package_graph" --source-root "$app_root" \
+            --output-root "$package_build_root"
+        package_import_arguments=(-I "$package_module_root")
+        mapfile -d '' -t package_target_indices \
+            <"$package_build_root/targets.nul"
+        [ "${#package_target_indices[@]}" -gt 0 ] \
+            || die "local Swift-package graph has no build targets"
+        local package_index package_module package_module_output package_output_map
+        local package_source_count package_object_count package_cursor
+        local package_stdout package_stderr package_status package_object
+        local -a package_record package_sources package_expected_objects package_command
+        for package_index in "${package_target_indices[@]}"; do
+            package_record=()
+            mapfile -d '' -t package_record < <(
+                python3 -B "$SCRIPT_DIR/local_package_graph.py" emit-target-record \
+                    "$package_build_root/build-contract.json" \
+                    --index "$((10#$package_index))"
+            )
+            [ "${#package_record[@]}" -ge 5 ] \
+                || die "local package target record is truncated: $package_index"
+            package_module=${package_record[0]}
+            package_module_output=$package_build_root/${package_record[1]}
+            package_output_map=$package_build_root/${package_record[2]}
+            package_source_count=${package_record[3]}
+            [[ "$package_source_count" =~ ^[0-9]+$ ]] \
+                || die "local package source count is invalid: $package_index"
+            package_sources=()
+            for ((package_cursor = 0; package_cursor < package_source_count; package_cursor++)); do
+                package_sources+=("$app_root/${package_record[4 + package_cursor]}")
+                require_regular "${package_sources[-1]}" "local package Swift source"
+            done
+            package_object_count=${package_record[4 + package_source_count]}
+            [[ "$package_object_count" =~ ^[0-9]+$ ]] \
+                || die "local package object count is invalid: $package_index"
+            [ "$package_object_count" -eq "$package_source_count" ] \
+                || die "local package source/object count differs: $package_module"
+            [ "${#package_record[@]}" -eq "$((5 + package_source_count + package_object_count))" ] \
+                || die "local package target record has trailing fields: $package_index"
+            package_expected_objects=()
+            for ((package_cursor = 0; package_cursor < package_object_count; package_cursor++)); do
+                package_expected_objects+=(
+                    "$package_build_root/${package_record[5 + package_source_count + package_cursor]}"
+                )
+            done
+            package_command=(swiftc "${swift_arguments[@]}"
+                -module-cache-path "$module_cache"
+                "${package_import_arguments[@]}" -parse-as-library
+                -module-name "$package_module" "${plugin_arguments[@]}"
+                -emit-module -emit-module-path "$package_module_output"
+                -emit-object -output-file-map "$package_output_map"
+                "${package_sources[@]}")
+            package_stdout=$package_build_root/targets/$package_index-$package_module/compile.stdout
+            package_stderr=$package_build_root/targets/$package_index-$package_module/compile.stderr
+            printf '%s\0' "${package_command[@]}" \
+                >"$package_build_root/targets/$package_index-$package_module/compile-arguments.nul"
+            echo "== compile local Swift-package target $package_module"
+            set +e
+            (
+                cd "$platform"
+                "${package_command[@]}"
+            ) >"$package_stdout" 2>"$package_stderr"
+            package_status=$?
+            set -e
+            cat "$package_stderr" >&2
+            [ "$package_status" -eq 0 ] \
+                || die "local package target $package_module compiler exited $package_status"
+            [ ! -s "$package_stdout" ] \
+                || die "local package target $package_module emitted unexpected stdout"
+            if swift_compiler_output_has_failure_diagnostic "$package_stderr"; then
+                die "local package target $package_module emitted a failure diagnostic despite success"
+            fi
+            require_regular "$package_module_output" "local package Swift module"
+            for package_object in "${package_expected_objects[@]}"; do
+                require_regular "$package_object" "local package target object"
+                file "$package_object" | grep -F 'Mach-O 64-bit arm64 object' >/dev/null \
+                    || die "local package object is not ARM64 Mach-O: $package_object"
+                package_objects+=("$package_object")
+            done
+        done
+        python3 -B "$SCRIPT_DIR/local_package_graph.py" verify-build-contract \
+            "$package_graph" --source-root "$app_root" \
+            --output-root "$package_build_root"
+    else
+        [ ! -e "$output/local-package-targets.nul" ] \
+            && [ ! -L "$output/local-package-targets.nul" ] \
+            || die "local package target list exists without its graph"
+    fi
+
     local -a platform_sources=(
         "$output/GeneratedSceneBootstrap.swift"
         "$SCRIPT_DIR/PortableUIKitApplicationHost.swift"
@@ -436,6 +556,7 @@ PY
             || die "Preview evidence must use a nonempty proper source subset"
         preview_command=(swiftc "${swift_arguments[@]}"
             -module-cache-path "$preview_module_cache"
+            "${package_import_arguments[@]}"
             -default-isolation MainActor -module-name "$module"
             "${plugin_arguments[@]}" "${diagnostic_arguments[@]}"
             -typecheck "${preview_sources[@]}")
@@ -494,6 +615,7 @@ PY
     local -a compile_command
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"
+        "${package_import_arguments[@]}"
         -default-isolation MainActor -module-name "$module"
         "${plugin_arguments[@]}" -emit-object
         -output-file-map "$output_map" "${compile_sources[@]}")
@@ -579,6 +701,8 @@ PY
         printf 'application-source-count\t%s\n' "${#app_sources[@]}"
         printf 'derived-source-count\t%s\n' "${#derived_sources[@]}"
         printf 'platform-source-count\t%s\n' "${#platform_sources[@]}"
+        printf 'package-target-count\t%s\n' "${#package_target_indices[@]}"
+        printf 'package-object-count\t%s\n' "${#package_objects[@]}"
         printf 'object-count\t%s\n' "${#application_objects[@]}"
         printf 'output-file-map-count\t%s\n' "$effective_output_map_count"
         printf 'whole-module-flag-count\t%s\n' "$effective_wmo_count"
@@ -658,6 +782,13 @@ PY
                 "$(sha256sum "$object_path" | awk '{print $1}')" \
                 "$object_path"
         done
+        for object_index in "${!package_objects[@]}"; do
+            object_path=${package_objects[$object_index]}
+            printf 'package_object\t%06d\t%s\t%s\n' \
+                "$object_index" \
+                "$(sha256sum "$object_path" | awk '{print $1}')" \
+                "$object_path"
+        done
         if [ "$preview_required" = yes ]; then
             [ "${#extra_objects[@]}" -eq 1 ] \
                 || die "DeveloperToolsSupport object link count is not one"
@@ -676,7 +807,8 @@ PY
     link_command=(ld64.lld-18 "${link_arguments[@]}" -dead_strip
         "${executable_export_arguments[@]}"
         -rpath @executable_path/../Frameworks
-        -o "$executable" "${application_objects[@]}" "${extra_objects[@]}")
+        -o "$executable" "${application_objects[@]}" \
+        "${package_objects[@]}" "${extra_objects[@]}")
     local linked_app_object_count=0
     local command_argument
     for object_path in "${application_objects[@]}"; do
@@ -691,6 +823,19 @@ PY
     done
     [ "$linked_app_object_count" -eq "${#application_objects[@]}" ] \
         || die "application link object count drifted"
+    local linked_package_object_count=0
+    for object_path in "${package_objects[@]}"; do
+        local per_package_object_link_count=0
+        for command_argument in "${link_command[@]}"; do
+            [ "$command_argument" != "$object_path" ] \
+                || per_package_object_link_count=$((per_package_object_link_count + 1))
+        done
+        [ "$per_package_object_link_count" -eq 1 ] \
+            || die "local package object link count is not one: $object_path"
+        linked_package_object_count=$((linked_package_object_count + per_package_object_link_count))
+    done
+    [ "$linked_package_object_count" -eq "${#package_objects[@]}" ] \
+        || die "local package link object count drifted"
     printf '%s\0' "${link_command[@]}" \
         >"$output/application-link-arguments.nul"
     echo "== link relocatable application executable"
@@ -722,6 +867,7 @@ PY
         || die "application DeveloperToolsSupport export count $executable_dts_export_count, expected $expected_export_count"
     {
         printf 'linked_app_object_count\t%s\n' "$linked_app_object_count"
+        printf 'linked_package_object_count\t%s\n' "$linked_package_object_count"
         printf 'libUIKit_preview_initializer_import_count\t%s\n' \
             "$uikit_preview_import_count"
         printf 'executable_preview_initializer_export_count\t%s\n' \
@@ -801,6 +947,10 @@ PY
             >>application-build-artifacts.sha256
         find derived-sources -type f -print0 | sort -z | xargs -0 sha256sum \
             >>application-build-artifacts.sha256
+        if [ -d local-package-build ]; then
+            find local-package-build -type f -print0 | sort -z | xargs -0 sha256sum \
+                >>application-build-artifacts.sha256
+        fi
     )
     echo 'PORTABLE_APPLICATION_GUEST_OK'
 }

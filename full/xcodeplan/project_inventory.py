@@ -720,6 +720,129 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
         self.project_name = project_name
         super().__init__(root, source_root, spec)
 
+    def _local_package_references(self) -> list[dict[str, Any]]:
+        """Inventory every project-declared local package root without evaluation."""
+        result: list[dict[str, Any]] = []
+        seen_ids: set[str] = set()
+        seen_paths: set[str] = set()
+        for index, raw_id in enumerate(
+            xcodeplan.require_list(
+                self.project.get("packageReferences", []), "PBXProject.packageReferences"
+            )
+        ):
+            reference_id = xcodeplan.require_string(
+                raw_id, f"PBXProject.packageReferences[{index}]"
+            )
+            reference = self.object(reference_id)
+            if reference.get("isa") != "XCLocalSwiftPackageReference":
+                continue
+            relative = self._normalize_relative(
+                xcodeplan.require_string(
+                    reference.get("relativePath"),
+                    f"local package reference {reference_id}.relativePath",
+                ),
+                f"local package reference {reference_id}.relativePath",
+            )
+            portable = unicodedata.normalize("NFC", relative.casefold())
+            if reference_id in seen_ids or portable in seen_paths:
+                raise PlanError(
+                    f"project repeats or aliases local package reference {relative!r}"
+                )
+            seen_ids.add(reference_id)
+            seen_paths.add(portable)
+            package_root = self._validate_existing_path(
+                relative, f"local package reference {reference_id}"
+            )
+            if not package_root.is_dir():
+                raise PlanError(
+                    f"local package reference {relative!r} is not a directory"
+                )
+            manifest_relative = f"{relative}/Package.swift"
+            manifest = self._validate_existing_path(
+                manifest_relative, f"local package reference {reference_id} manifest"
+            )
+            if not manifest.is_file():
+                raise PlanError(
+                    f"local package reference {relative!r} has no regular Package.swift"
+                )
+            result.append(
+                {
+                    "manifest_path": manifest_relative,
+                    "manifest_sha256": xcodeplan.sha256_file(manifest),
+                    "package_ref_id": reference_id,
+                    "relative_path": relative,
+                }
+            )
+        return result
+
+    def _package_products(self, target: Mapping[str, Any]) -> list[dict[str, Any]]:
+        """Preserve both explicit local references and Xcode's implicit products."""
+        result: list[dict[str, Any]] = []
+        for index, raw_id in enumerate(
+            xcodeplan.require_list(
+                target.get("packageProductDependencies"),
+                "target.packageProductDependencies",
+            )
+        ):
+            product_id = xcodeplan.require_string(
+                raw_id, f"target.packageProductDependencies[{index}]"
+            )
+            product = self.object(product_id, "XCSwiftPackageProductDependency")
+            item: dict[str, Any] = {
+                "product_ref_id": product_id,
+                "name": xcodeplan.require_string(
+                    product.get("productName"), f"product {product_id}.productName"
+                ),
+            }
+            package_id = product.get("package")
+            if package_id is None:
+                # Xcode 16/26 can omit the package reference when a product name
+                # resolves uniquely.  The package graph planner proves that
+                # uniqueness against all inventoried manifests.
+                item["origin"] = "local"
+            else:
+                package_id = xcodeplan.require_string(
+                    package_id, f"product {product_id}.package"
+                )
+                package = self.object(package_id)
+                isa = package.get("isa")
+                if isa == "XCLocalSwiftPackageReference":
+                    relative = self._normalize_relative(
+                        xcodeplan.require_string(
+                            package.get("relativePath"),
+                            f"local package {package_id}.relativePath",
+                        ),
+                        f"local package {package_id}.relativePath",
+                    )
+                    item.update(
+                        {
+                            "origin": "local",
+                            "package_ref_id": package_id,
+                            "relative_path": relative,
+                        }
+                    )
+                elif isa == "XCRemoteSwiftPackageReference":
+                    item.update(
+                        {
+                            "origin": "remote",
+                            "package_ref_id": package_id,
+                            "repository_url": xcodeplan.require_string(
+                                package.get("repositoryURL"),
+                                f"remote package {package_id}.repositoryURL",
+                            ),
+                            "requirement": xcodeplan.require_dict(
+                                package.get("requirement"),
+                                f"remote package {package_id}.requirement",
+                            ),
+                        }
+                    )
+                else:
+                    raise PlanError(
+                        f"product {product_id} references unsupported package object {isa!r}"
+                    )
+            result.append(item)
+        return result
+
     @staticmethod
     def _safe_external_tree_path(value: str, source_tree: str, context: str) -> str:
         """Return a canonical path proven to remain beneath an external root."""
@@ -2158,6 +2281,29 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             resources.extend(group["items"]["resources"])
             headers.extend(group["items"]["headers"])
             unclassified.extend(group["items"]["unclassified"])
+        target_settings = xcodeplan.require_dict(
+            target_configuration.get("build_settings"),
+            "target configuration build settings",
+        )
+        entitlements_value = target_settings.get("CODE_SIGN_ENTITLEMENTS")
+        if entitlements_value is not None:
+            entitlements_path = self._normalize_relative(
+                xcodeplan.require_string(
+                    entitlements_value, "target CODE_SIGN_ENTITLEMENTS"
+                ),
+                "target CODE_SIGN_ENTITLEMENTS",
+            )
+            entitlement_matches = [
+                entry
+                for entry in unclassified
+                if entry.get("path") == entitlements_path
+            ]
+            if len(entitlement_matches) > 1:
+                raise PlanError(
+                    "target CODE_SIGN_ENTITLEMENTS matches more than one synchronized input"
+                )
+            if entitlement_matches:
+                entitlement_matches[0]["role"] = "code_sign_entitlements"
         phase_kinds = {phase["kind"] for phase in phases}
         if any(group["items"]["sources"] for group in synchronized_groups) and "sources" not in phase_kinds:
             raise PlanError("filesystem-synchronized sources have no PBXSourcesBuildPhase")
@@ -2197,13 +2343,17 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                                 f"({previous[0]} and {category})"
                             )
                         category_by_object[object_identity] = (category, path)
-        if unclassified:
+        unsupported_unclassified = [
+            entry for entry in unclassified if entry.get("role") is None
+        ]
+        if unsupported_unclassified:
             unsupported.append(
-                f"{len(unclassified)} filesystem-synchronized path(s) have unknown build membership"
+                f"{len(unsupported_unclassified)} filesystem-synchronized path(s) have unknown build membership"
             )
 
         dependencies = self._target_dependencies(target)
         package_products = self._package_products(target)
+        local_package_references = self._local_package_references()
         relative_project = project_path.relative_to(self.repo).as_posix()
         result: dict[str, Any] = {
             "format_version": 1,
@@ -2237,6 +2387,7 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             "unclassified": unclassified,
             "target_dependencies": dependencies,
             "package_products": package_products,
+            "local_package_references": local_package_references,
             "missing_inputs": missing_inputs,
             "unsupported_features": unsupported,
             "summary": {
@@ -2254,6 +2405,24 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                 "missing_input_count": len(missing_inputs),
             },
         }
+        resolution = (
+            project_path.parent
+            / "project.xcworkspace"
+            / "xcshareddata"
+            / "swiftpm"
+            / "Package.resolved"
+        )
+        if resolution.exists() or resolution.is_symlink():
+            relative_resolution = resolution.relative_to(self.repo).as_posix()
+            checked_resolution = self._validate_existing_path(
+                relative_resolution, "workspace package resolution"
+            )
+            if not checked_resolution.is_file():
+                raise PlanError("workspace Package.resolved is not a regular file")
+            result["package_resolution"] = {
+                "path": relative_resolution,
+                "sha256": xcodeplan.sha256_file(checked_resolution),
+            }
         if scheme is not None:
             result["scheme"] = dict(scheme)
         return result

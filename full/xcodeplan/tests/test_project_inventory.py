@@ -116,6 +116,99 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                 target_selector="Helper",
             )
 
+    def test_local_package_references_and_explicit_product_roots_are_frozen(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            package = root / "LocalKit"
+            package.mkdir()
+            manifest = package / "Package.swift"
+            manifest.write_text(
+                "// swift-tools-version: 6.4\n"
+                "import PackageDescription\n"
+                "let package = Package(name: \"LocalKit\")\n",
+                encoding="utf-8",
+            )
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            contents = contents.replace(
+                "\t\t\tmainGroup = 000000000000000000000002;",
+                "\t\t\tmainGroup = 000000000000000000000002;\n"
+                "\t\t\tpackageReferences = (CCCCCCCCCCCCCCCCCCCCCCCC,);",
+                1,
+            )
+            contents = contents.replace(
+                "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                "\t\tCCCCCCCCCCCCCCCCCCCCCCCC = {\n"
+                "\t\t\tisa = XCLocalSwiftPackageReference;\n"
+                "\t\t\trelativePath = LocalKit;\n"
+                "\t\t};\n"
+                "\t\tDDDDDDDDDDDDDDDDDDDDDDDD = {\n"
+                "\t\t\tisa = XCSwiftPackageProductDependency;\n"
+                "\t\t\tpackage = CCCCCCCCCCCCCCCCCCCCCCCC;\n"
+                "\t\t\tproductName = LocalKit;\n"
+                "\t\t};\n"
+                "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                1,
+            )
+            contents = contents.replace(
+                "\t\t\tpackageProductDependencies = ();",
+                "\t\t\tpackageProductDependencies = (DDDDDDDDDDDDDDDDDDDDDDDD,);",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            self.assertEqual(
+                inventory["local_package_references"],
+                [
+                    {
+                        "manifest_path": "LocalKit/Package.swift",
+                        "manifest_sha256": project_inventory.xcodeplan.sha256_file(
+                            manifest
+                        ),
+                        "package_ref_id": "CCCCCCCCCCCCCCCCCCCCCCCC",
+                        "relative_path": "LocalKit",
+                    }
+                ],
+            )
+            self.assertEqual(
+                inventory["package_products"],
+                [
+                    {
+                        "name": "LocalKit",
+                        "origin": "local",
+                        "package_ref_id": "CCCCCCCCCCCCCCCCCCCCCCCC",
+                        "product_ref_id": "DDDDDDDDDDDDDDDDDDDDDDDD",
+                        "relative_path": "LocalKit",
+                    }
+                ],
+            )
+
+    def test_code_sign_entitlements_are_classified_without_becoming_build_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            entitlements = root / "App/Modern.entitlements"
+            entitlements.write_text("<?xml version=\"1.0\"?><plist/>", encoding="utf-8")
+            self.add_selected_build_setting(
+                project,
+                "target",
+                "CODE_SIGN_ENTITLEMENTS",
+                '"App/Modern.entitlements"',
+            )
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            self.assertEqual(inventory["unsupported_features"], [])
+            self.assertEqual(
+                [
+                    (entry["path"], entry.get("role"))
+                    for entry in inventory["unclassified"]
+                ],
+                [("App/Modern.entitlements", "code_sign_entitlements")],
+            )
+
     def test_explicit_empty_selectors_never_downgrade_to_defaults(self) -> None:
         cases = (
             ({"scheme_name": ""}, "--scheme selector must not be empty"),
