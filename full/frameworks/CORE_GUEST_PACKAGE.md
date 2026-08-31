@@ -97,18 +97,22 @@ The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
 `libswift_StringProcessing` (used by `DateFormatter` and the bounded string
 search/regex compatibility surface) and
-`libswiftSynchronization` (used by `UserDefaults`). The builder requires both
-SDK TBD inputs and both staged runtime dylibs, verifies their install names,
-and requires one load command for each in `libFoundation.dylib`. The facade
-object has no direct RegexParser symbol; that dylib remains StringProcessing's
-transitive runtime dependency rather than a guessed direct link.
+`libswiftSynchronization` (used by `UserDefaults`), plus `libswiftDarwin`
+(used by the descriptor-backed `FileHandle` for Darwin's `open` and `errno`
+overlays). The builder requires all three SDK TBD inputs and staged runtime
+dylibs, verifies their install names, and requires one load command for each in
+`libFoundation.dylib`. The facade object has no direct RegexParser symbol; that
+dylib remains StringProcessing's transitive runtime dependency rather than a
+guessed direct link.
 
 The twenty-two-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
-`12_RegexParser` records. The build refuses drift in any count before linking;
-this is why RegexParser is absent from the direct link list even though the
-runtime closure still reaches it through StringProcessing.
+`12_RegexParser` records, plus exactly two `6Darwin` records. The build refuses
+drift in any count before linking; this is why RegexParser is absent from the
+direct link list even though the runtime closure still reaches it through
+StringProcessing, while Darwin is deliberately present for the measured
+`FileHandle` calls.
 
 The SwiftUI facade also keeps linker auto-linking disabled. Its object directly
 uses MainActor metadata and executor functions from `libswift_Concurrency`, so

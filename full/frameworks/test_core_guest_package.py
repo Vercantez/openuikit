@@ -44,6 +44,11 @@ FOUNDATION_RUNTIME_LINK_CONTRACT = (
         "/usr/lib/swift/libswiftSynchronization.dylib",
         2,
     ),
+    (
+        "-lswiftDarwin",
+        "/usr/lib/swift/libswiftDarwin.dylib",
+        1,
+    ),
 )
 SWIFTUI_RUNTIME_LINK_CONTRACT = (
     "-lswift_Concurrency",
@@ -53,6 +58,7 @@ FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
     ("EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS", 19, "17_StringProcessing"),
     ("EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS", 2, "15Synchronization"),
     ("EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS", 0, "12_RegexParser"),
+    ("EXPECTED_FOUNDATION_DARWIN_UNDEFINEDS", 2, "6Darwin"),
 )
 FOUNDATION_SOURCES = (
     "full/appshim/FoundationGuest.swift",

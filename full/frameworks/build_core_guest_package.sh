@@ -73,6 +73,7 @@ EXPECTED_WEBKIT_SOURCE_COUNT=5
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
+EXPECTED_FOUNDATION_DARWIN_UNDEFINEDS=2
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_FOUNDATION_TREE=4651798679b98e27383ca3626434fb128f191486
 EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
@@ -571,20 +572,23 @@ COMMON_LINK=(-rpath @loader_path -L"$STAGE/lib"
 FOUNDATION_RUNTIME_BASENAMES=(
     libswift_StringProcessing
     libswiftSynchronization
+    libswiftDarwin
 )
 FOUNDATION_RUNTIME_LINK_FLAGS=(
     -lswift_StringProcessing
     -lswiftSynchronization
+    -lswiftDarwin
 )
 FOUNDATION_RUNTIME_INSTALL_NAMES=(
     /usr/lib/swift/libswift_StringProcessing.dylib
     /usr/lib/swift/libswiftSynchronization.dylib
+    /usr/lib/swift/libswiftDarwin.dylib
 )
-[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 2 ] \
-    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 2 ] \
-    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 2 ] \
+[ "${#FOUNDATION_RUNTIME_BASENAMES[@]}" -eq 3 ] \
+    && [ "${#FOUNDATION_RUNTIME_LINK_FLAGS[@]}" -eq 3 ] \
+    && [ "${#FOUNDATION_RUNTIME_INSTALL_NAMES[@]}" -eq 3 ] \
     || die 'Foundation runtime closure cardinality drifted'
-for index in 0 1; do
+for index in "${!FOUNDATION_RUNTIME_BASENAMES[@]}"; do
     library=${FOUNDATION_RUNTIME_BASENAMES[$index]}
     install_name=${FOUNDATION_RUNTIME_INSTALL_NAMES[$index]}
     link_input=$STAGE/sdk/usr/lib/swift/$library.tbd
@@ -690,6 +694,9 @@ foundation_synchronization_undefineds=$(awk \
 foundation_regex_parser_undefineds=$(awk \
     'index($0, "12_RegexParser") { count++ } END { print count + 0 }' \
     "$WORK/foundation-undefined-symbols.txt")
+foundation_darwin_undefineds=$(awk \
+    'index($0, "6Darwin") { count++ } END { print count + 0 }' \
+    "$WORK/foundation-undefined-symbols.txt")
 [ "$foundation_string_processing_undefineds" -eq \
     "$EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS" ] \
     || die "Foundation StringProcessing undefined count $foundation_string_processing_undefineds, expected $EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS"
@@ -699,10 +706,14 @@ foundation_regex_parser_undefineds=$(awk \
 [ "$foundation_regex_parser_undefineds" -eq \
     "$EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS" ] \
     || die "Foundation RegexParser undefined count $foundation_regex_parser_undefineds, expected $EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS"
-printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization=%s RegexParser=%s\n' \
+[ "$foundation_darwin_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_DARWIN_UNDEFINEDS" ] \
+    || die "Foundation Darwin undefined count $foundation_darwin_undefineds, expected $EXPECTED_FOUNDATION_DARWIN_UNDEFINEDS"
+printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization=%s RegexParser=%s Darwin=%s\n' \
     "$foundation_string_processing_undefineds" \
     "$foundation_synchronization_undefineds" \
-    "$foundation_regex_parser_undefineds"
+    "$foundation_regex_parser_undefineds" \
+    "$foundation_darwin_undefineds"
 
 echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
