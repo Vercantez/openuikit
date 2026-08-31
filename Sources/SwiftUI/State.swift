@@ -6,6 +6,7 @@
 // implementations here.
 
 @_exported import Combine
+@_exported import Observation
 import OpenUIKit
 #if canImport(Foundation)
 import struct Foundation.URL
