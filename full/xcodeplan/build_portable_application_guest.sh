@@ -446,12 +446,13 @@ PY
     # Compile the frozen Swift-package graph as one Swift/Clang module and
     # object boundary per reachable target. A remote product is never guessed
     # or stubbed: preflight stops until its exact pinned source is materialized.
-    local package_graph package_build_root package_module_root
+    local package_graph package_build_root package_module_root package_clang_module_cache
     local -a package_import_arguments=() package_link_arguments=()
     local -a package_objects=() package_target_indices=()
     package_graph=$output/local-package-graph.json
     package_build_root=$output/local-package-build
     package_module_root=$package_build_root/modules
+    package_clang_module_cache=$package_build_root/clang-module-cache
     if [ -e "$package_graph" ] || [ -L "$package_graph" ]; then
         require_regular "$package_graph" "local Swift-package graph"
         require_regular "$output/local-package-targets.nul" \
@@ -467,6 +468,10 @@ PY
         python3 -B "$SCRIPT_DIR/local_package_graph.py" prepare-build \
             "$package_graph" --source-root "$app_root" \
             --output-root "$package_build_root" "${remote_cache_arguments[@]}"
+        [ ! -e "$package_clang_module_cache" ] \
+            && [ ! -L "$package_clang_module_cache" ] \
+            || die "local package Clang module cache already exists"
+        mkdir "$package_clang_module_cache"
         package_import_arguments=(-I "$package_module_root")
         local -a package_clang_import_arguments=()
         require_regular "$package_build_root/clang-import-arguments.nul" \
@@ -680,7 +685,7 @@ PY
                         esac
                         package_command=("$package_compiler"
                             -target arm64-apple-macos15.0 -isysroot sdk
-                            -fmodules -fmodules-cache-path="$module_cache"
+                            -fmodules -fmodules-cache-path="$package_clang_module_cache"
                             -fmodule-name="$package_module"
                             "${package_compiler_arguments[@]}")
                         if [ "$package_compiler" = clang++-18 ]; then

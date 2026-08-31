@@ -222,9 +222,11 @@ def validate_c_family_package_boundary(source: str) -> None:
         '<"$package_build_root/clang-import-arguments.nul"',
         '<"$package_build_root/clang-link-arguments.nul"',
         'package_import_arguments+=("${package_clang_import_arguments[@]}")',
+        'package_clang_module_cache=$package_build_root/clang-module-cache',
+        'mkdir "$package_clang_module_cache"',
         'require_regular "$package_module_output" "local package Clang module map"',
         "-target arm64-apple-macos15.0 -isysroot sdk",
-        '-fmodules -fmodules-cache-path="$module_cache"',
+        '-fmodules -fmodules-cache-path="$package_clang_module_cache"',
         '-fmodule-name="$package_module"',
         'package_compiler=clang-18',
         'package_compiler=clang++-18',
@@ -235,7 +237,21 @@ def validate_c_family_package_boundary(source: str) -> None:
     if drifted:
         raise AssertionError(f"local package C-family boundary drifted: {drifted}")
     target_case = source.index('case "$package_target_type" in')
+    swift_case = source.index("                swift)", target_case)
     clang_case = source.index("                clang)", target_case)
+    swift_block = source[swift_case:clang_case]
+    clang_block = source[
+        clang_case : source.index(
+            '                *) die "local package target has unsupported compiler family',
+            clang_case,
+        )
+    ]
+    if '-module-cache-path "$module_cache"' not in swift_block:
+        raise AssertionError("package Swift import cache boundary drifted")
+    if '-fmodules-cache-path="$package_clang_module_cache"' not in clang_block:
+        raise AssertionError("package Clang cache boundary drifted")
+    if '-fmodules-cache-path="$module_cache"' in clang_block:
+        raise AssertionError("package Clang contaminated the Swift import cache")
     package_object = source.index('package_objects+=("$package_object")', clang_case)
     application_compile = source.index(
         "== compile ordered application sources with attested Preview materialization"
