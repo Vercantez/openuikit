@@ -62,6 +62,8 @@ FIRST_PARTY_FRAMEWORKS=(
     MessageUI
     MobileCoreServices
     Security
+    CryptoKit
+    CommonCrypto
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -77,6 +79,8 @@ FIRST_PARTY_SOURCE_DIRS=(
     messageui
     mobilecoreservices
     security
+    cryptokit
+    commoncrypto
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -85,6 +89,8 @@ FRONTIER_FRAMEWORKS=(
     MessageUI
     MobileCoreServices
     Security
+    CryptoKit
+    CommonCrypto
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -93,6 +99,8 @@ FRONTIER_SOURCE_DIRS=(
     messageui
     mobilecoreservices
     security
+    cryptokit
+    commoncrypto
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -618,7 +626,7 @@ python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     || die 'first-party production source count drifted'
 append_frontier_sources() {
     local output=$1 index framework source_dir source_manifest relative
-    local -a frontier_sources
+    local -a frontier_sources frontier_inputs
     for index in "${!FRONTIER_FRAMEWORKS[@]}"; do
         framework=${FRONTIER_FRAMEWORKS[$index]}
         source_dir=${FRONTIER_SOURCE_DIRS[$index]}
@@ -642,11 +650,29 @@ append_frontier_sources() {
         printf 'frontier-manifest\t%s\t%s\t%s\t%s\n' \
             "$((index + 1))" "$framework" "${source_manifest#"$W"/}" \
             "$(hash_file "$source_manifest")" >> "$output"
+        if [ "$framework" = CommonCrypto ]; then
+            frontier_inputs=(
+                full/commoncrypto/CommonDigest.c
+                full/commoncrypto/include/CommonDigest.h
+                full/commoncrypto/include/module.modulemap
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "CommonCrypto underlying input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "CommonCrypto underlying input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 6 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 8 ] \
     || die 'frontier framework source count drifted'
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 3 ] \
+    || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
     --root "$UIKIT/Sources/OpenUIKit/Resources" \
@@ -836,13 +862,15 @@ cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
 mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
     "$STAGE/include/COpenRelativeTime" "$STAGE/include/COpenDispatch" \
-    "$STAGE/include/_FoundationCShims" "$STAGE/guest-root/host"
+    "$STAGE/include/CCommonCrypto" "$STAGE/include/_FoundationCShims" \
+    "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
 cp -a "$OPENCOMBINE_HELPERS/include/." "$STAGE/include/COpenCombineHelpers/"
 cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
 cp -a "$W/full/relativetime/include/." "$STAGE/include/COpenRelativeTime/"
 cp -a "$W/full/dispatch/include/." "$STAGE/include/COpenDispatch/"
+cp -a "$W/full/commoncrypto/include/." "$STAGE/include/CCommonCrypto/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
 cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
@@ -894,6 +922,8 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/COpenRelativeTime"
     -Xcc -fmodule-map-file="$STAGE/include/COpenDispatch/module.modulemap"
     -Xcc -I"$STAGE/include/COpenDispatch"
+    -Xcc -fmodule-map-file="$STAGE/include/CCommonCrypto/module.modulemap"
+    -Xcc -I"$STAGE/include/CCommonCrypto"
     -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
     -Xcc -I"$STAGE/include/FoundationICU")
 FE_FLAGS=(-I "$STAGE/modules"
@@ -1670,7 +1700,12 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile thirteen independent first-party framework modules'
+echo '== compile fifteen independent first-party framework modules'
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/CCommonCrypto" \
+    -c "$W/full/commoncrypto/CommonDigest.c" \
+    -o "$WORK/commoncrypto-c.o"
 for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework=${FIRST_PARTY_FRAMEWORKS[$index]}
     source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
@@ -1706,7 +1741,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link twenty-nine reusable platform dylibs (twenty-eight frameworks plus ICU)'
+echo '== link thirty-one reusable platform dylibs (thirty frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -1930,9 +1965,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             )
             ;;
     esac
+    framework_objects=("$WORK/$source_dir.o")
+    if [ "$framework" = CommonCrypto ]; then
+        framework_objects+=("$WORK/commoncrypto-c.o")
+    fi
     "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
         -install_name "@rpath/lib$framework.dylib" -rpath @loader_path \
-        -o "$STAGE/lib/lib$framework.dylib" "$WORK/$source_dir.o" \
+        -o "$STAGE/lib/lib$framework.dylib" "${framework_objects[@]}" \
         "${COMMON_LINK[@]}" "${framework_link_dependencies[@]}"
     foundation_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
@@ -1995,7 +2034,8 @@ fi
     -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
-    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity \
+    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
+    -lCommonCrypto \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -2062,7 +2102,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-13 security=keychain,random webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-15 security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2156,6 +2196,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenRelativeTime
     -Xcc -fmodule-map-file=include/COpenDispatch/module.modulemap
     -Xcc -Iinclude/COpenDispatch
+    -Xcc -fmodule-map-file=include/CCommonCrypto/module.modulemap
+    -Xcc -Iinclude/CCommonCrypto
     -Xcc -fmodule-map-file=include/FoundationICU/_foundation_unicode/module.modulemap
     -Xcc -Iinclude/FoundationICU
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
@@ -2175,7 +2217,8 @@ LINK_ARGUMENTS=(
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
-    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity
+    -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
+    -lCommonCrypto
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2308,7 +2351,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
-    printf 'frontier-frameworks\tframeworks=5\tsources=5\n'
+    printf 'frontier-frameworks\tframeworks=8\tsources=8\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
@@ -2384,6 +2427,10 @@ record_artifact include COpenDispatch abi-header \
     include/COpenDispatch/OpenDispatchABI.h
 record_artifact include COpenDispatch module-map \
     include/COpenDispatch/module.modulemap
+record_artifact include CCommonCrypto abi-header \
+    include/CCommonCrypto/CommonDigest.h
+record_artifact include CCommonCrypto module-map \
+    include/CCommonCrypto/module.modulemap
 for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
     record_module_family module-dependency "$dependency"
 done

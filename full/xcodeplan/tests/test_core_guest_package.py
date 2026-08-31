@@ -83,6 +83,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "MessageUI",
                 "MobileCoreServices",
                 "Security",
+                "CryptoKit",
+                "CommonCrypto",
                 "DeveloperToolsSupport",
             )
         )
@@ -116,6 +118,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "MessageUI",
                 "MobileCoreServices",
                 "Security",
+                "CryptoKit",
+                "CommonCrypto",
             )
         )
         for relative in required_files:
@@ -195,6 +199,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lMessageUI",
                 "-lMobileCoreServices",
                 "-lSecurity",
+                "-lCryptoKit",
+                "-lCommonCrypto",
             ],
             "format_version": 1,
             "manifests": {

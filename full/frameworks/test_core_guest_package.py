@@ -153,6 +153,8 @@ FRAMEWORKS = (
     "MessageUI",
     "MobileCoreServices",
     "Security",
+    "CryptoKit",
+    "CommonCrypto",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -661,6 +663,8 @@ class PackageFixture:
             "-lMessageUI",
             "-lMobileCoreServices",
             "-lSecurity",
+            "-lCryptoKit",
+            "-lCommonCrypto",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1449,7 +1453,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 28)
+        self.assertEqual(len(FRAMEWORKS), 30)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 14)
         for token in (
             "-module-name WebKit -emit-module",
@@ -1975,7 +1979,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_thirteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_fifteen_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -1994,8 +1998,10 @@ class ShellContractTests(unittest.TestCase):
             "MessageUI",
             "MobileCoreServices",
             "Security",
+            "CryptoKit",
+            "CommonCrypto",
         )
-        self.assertEqual(FRAMEWORKS[-13:], first_party)
+        self.assertEqual(FRAMEWORKS[-15:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2013,7 +2019,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-13", probe)
+        self.assertIn("first-party=portable-15", probe)
         self.assertIn("security=keychain,random", probe)
         for framework in first_party:
             with self.subTest(framework=framework):
@@ -2022,6 +2028,52 @@ class ShellContractTests(unittest.TestCase):
                 self.assertIn(framework, canonical_source)
                 self.assertIn(f"import {framework}", probe)
                 self.assertIn(f"-l{framework}", source)
+
+    def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        crypto = (REPO / "full/cryptokit/CryptoKit.swift").read_text(
+            encoding="utf-8"
+        )
+        host_gate = (
+            REPO / "full/cryptokit/tests/CryptoKitHostTests.swift"
+        ).read_text(encoding="utf-8")
+        for token in ("_md5", "_sha1", "_sha256", "_sha512"):
+            self.assertIn(token, crypto)
+        self.assertIn("SystemRandomNumberGenerator", crypto)
+        self.assertIn("return signature.count == 64 && false", crypto)
+        self.assertIn("import CryptoKit", probe)
+        self.assertIn("SHA256.hash", probe)
+        self.assertIn("-lCryptoKit", source)
+        self.assertIn("CRYPTOKIT_HOST_OK", host_gate)
+
+    def test_commoncrypto_is_a_real_c_sha256_boundary(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        implementation = (
+            REPO / "full/commoncrypto/CommonDigest.c"
+        ).read_text(encoding="utf-8")
+        header = (
+            REPO / "full/commoncrypto/include/CommonDigest.h"
+        ).read_text(encoding="utf-8")
+        host_gate = (
+            REPO / "full/commoncrypto/tests/CommonCryptoHostTests.c"
+        ).read_text(encoding="utf-8")
+        for token in ("CC_SHA256_Init", "CC_SHA256_Update", "CC_SHA256_Final"):
+            self.assertIn(token, implementation)
+            self.assertIn(token, header)
+        self.assertIn("CCommonCrypto/module.modulemap", source)
+        self.assertIn("commoncrypto-c.o", source)
+        self.assertIn("frontier underlying input count drifted", source)
+        for relative in (
+            "full/commoncrypto/CommonDigest.c",
+            "full/commoncrypto/include/CommonDigest.h",
+            "full/commoncrypto/include/module.modulemap",
+        ):
+            self.assertIn(relative, source)
+        self.assertIn("import CommonCrypto", probe)
+        self.assertIn("CC_SHA256", probe)
+        self.assertIn("COMMONCRYPTO_HOST_OK", host_gate)
 
     def test_security_is_a_real_keychain_and_randomness_boundary(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

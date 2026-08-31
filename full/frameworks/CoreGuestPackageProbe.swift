@@ -23,6 +23,8 @@ import LinkPresentation
 import MessageUI
 import MobileCoreServices
 import Security
+import CryptoKit
+import CommonCrypto
 import WebKit
 
 @MainActor
@@ -567,6 +569,36 @@ struct CoreGuestPackageProbe {
                 == errSecSuccess
         )
 
+        let cryptoInput = Data("abc".utf8)
+        precondition(
+            SHA256.hash(data: cryptoInput).description ==
+                "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+        )
+        precondition(
+            Insecure.MD5.hash(data: cryptoInput).description ==
+                "900150983cd24fb0d6963f7d28e17f72"
+        )
+        let cryptoNonce = ChaChaPoly.Nonce()
+        precondition(cryptoNonce.count == 12)
+        let signingKey = try! Curve25519.Signing.PublicKey(
+            rawRepresentation: Data(count: 32)
+        )
+        precondition(
+            !signingKey.isValidSignature(Data(count: 64), for: cryptoInput)
+        )
+        var commonCryptoDigest = [UInt8](
+            repeating: 0,
+            count: Int(CC_SHA256_DIGEST_LENGTH)
+        )
+        cryptoInput.withUnsafeBytes {
+            _ = CC_SHA256(
+                $0.baseAddress,
+                CC_LONG(cryptoInput.count),
+                &commonCryptoDigest
+            )
+        }
+        precondition(Data(commonCryptoDigest) == Data(SHA256.hash(data: cryptoInput)))
+
         _ = Text("core-package")
         let lifecycleApplication = CoreLifecycleApplication()
         _ = lifecycleApplication.body
@@ -626,7 +658,9 @@ struct CoreGuestPackageProbe {
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-13 security=keychain,random "
+                + "first-party=portable-15 security=keychain,random "
+                + "cryptokit=hashes,nonce,ed25519-fail-closed "
+                + "commoncrypto=sha256 "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

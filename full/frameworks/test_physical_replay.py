@@ -349,6 +349,9 @@ class PhysicalReplayTests(unittest.TestCase):
             (staged / relative).mkdir(parents=True)
             (staged / relative / "input").write_text(relative, encoding="utf-8")
         self.make_git_repository(staged / "swift-foundation", "foundation")
+        self.make_git_repository(
+            staged / "swift-foundation-icu", "foundation-icu"
+        )
         self.make_git_repository(staged / "swift-collections", "collections")
         opencombine = staged / "opencombine-core-durable-20260828-r2"
         self.make_git_repository(opencombine / "source", "opencombine")

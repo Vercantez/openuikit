@@ -103,6 +103,8 @@ FRAMEWORKS = (
     "MessageUI",
     "MobileCoreServices",
     "Security",
+    "CryptoKit",
+    "CommonCrypto",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
