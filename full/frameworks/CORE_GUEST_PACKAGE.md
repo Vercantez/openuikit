@@ -123,7 +123,10 @@ signpost diagnostics are visible on standard error; the platform explicitly
 reports that Apple's unified-log persistence service is unavailable. A
 standalone ARM64 Mach-O gate links only `-lOSLog`, rejects direct
 Foundation/FoundationEssentials loads, and executes both surfaces through the
-packaged Linux runtime.
+packaged Linux runtime. The pinned `ld64.lld-18` represents that framework
+reexport with one ordinary FoundationEssentials load and one
+`LC_REEXPORT_DYLIB` command for the same install name. The package audits the
+two command kinds independently and still requires exactly one reexport.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent

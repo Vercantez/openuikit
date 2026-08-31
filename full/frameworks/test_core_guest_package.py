@@ -2091,7 +2091,17 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("os-runtime-reexport=%s", source)
         self.assertIn("foundation-essentials=%s", source)
+        self.assertIn("foundation-essentials-ordinary=%s", source)
         self.assertIn("expected_foundation_load=0", source)
+        self.assertIn("expected_foundation_essentials_load=2", source)
+        self.assertIn(
+            "foundation_essentials_load_count - os_runtime_reexport_count",
+            source,
+        )
+        self.assertIn(
+            "ordinary FoundationEssentials load count",
+            source,
+        )
         for token in (
             "standalone OSLog re-export gate",
             "-o \"$STAGE/probe/OSLogGuestRuntime\"",

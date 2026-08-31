@@ -1955,6 +1955,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$SWIFTUI_RUNTIME_LINK_FLAG"
     )
     expected_foundation_load=1
+    expected_foundation_essentials_load=1
     expected_uikit_load=0
     expected_os_runtime_reexport=0
     case "$framework" in
@@ -1982,7 +1983,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             # The public OSLog module re-exports the existing `os` identities.
             # Their implementation lives in FoundationEssentials, so make that
             # relationship a real Mach-O re-export instead of duplicating Logger.
+            # Pinned ld64.lld-18 encodes an explicit re-export as one ordinary
+            # load plus one LC_REEXPORT_DYLIB for the same install name. Audit
+            # both commands independently instead of mistaking the pair for
+            # two runtime implementations.
             expected_foundation_load=0
+            expected_foundation_essentials_load=2
             expected_os_runtime_reexport=1
             unset 'framework_link_dependencies[0]'
             unset 'framework_link_dependencies[1]'
@@ -2018,10 +2024,16 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 if ($2 == "@rpath/libFoundationEssentials.dylib") count++; \
                 reexport = 0 \
             } END { print count + 0 }')
+    foundation_essentials_ordinary_load_count=$((
+        foundation_essentials_load_count - os_runtime_reexport_count
+    ))
     [ "$foundation_load_count" -eq "$expected_foundation_load" ] \
         || die "lib$framework Foundation load count $foundation_load_count, expected $expected_foundation_load"
-    [ "$foundation_essentials_load_count" -eq 1 ] \
-        || die "lib$framework FoundationEssentials load count $foundation_essentials_load_count, expected 1"
+    [ "$foundation_essentials_load_count" -eq \
+        "$expected_foundation_essentials_load" ] \
+        || die "lib$framework FoundationEssentials load count $foundation_essentials_load_count, expected $expected_foundation_essentials_load"
+    [ "$foundation_essentials_ordinary_load_count" -eq 1 ] \
+        || die "lib$framework ordinary FoundationEssentials load count $foundation_essentials_ordinary_load_count, expected 1"
     [ "$uikit_load_count" -eq "$expected_uikit_load" ] \
         || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
     [ "$concurrency_load_count" -eq 1 ] \
@@ -2032,9 +2044,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tfoundation=%s\tfoundation-essentials=%s\tuikit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$foundation_load_count" \
-        "$foundation_essentials_load_count" "$uikit_load_count" \
+        "$foundation_essentials_load_count" \
+        "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
         "$concurrency_load_count" "$os_runtime_reexport_count" \
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
