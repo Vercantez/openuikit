@@ -22,16 +22,23 @@ BUILDER = HERE / "build_core_guest_package.sh"
 FOUNDATION_COMPATIBILITY_PROBE = HERE / "FoundationHackersCompatibilityProbe.swift"
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
+PHYSICAL_REPLAY_TOOL = HERE / "physical_replay.py"
 APP_DRIVER = REPO / "full/xcodeplan/build_portable_application_guest.sh"
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
     "_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC"
 )
 CANONICAL_VALIDATOR = REPO / "full/xcodeplan/core_guest_package.py"
-CORE_WRITABLE_OVERLAYS = (
-    '"$RUN_ROOT/build:/w/build:rw"',
-    '"$RUN_ROOT/modcache_full:/w/scratch/modcache_full:rw"',
-    '"$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"',
-    '"$RUN_ROOT/mrroot_full:/w/scratch/mrroot_full:rw"',
+CORE_FRESH_PATHS = (
+    "w/build",
+    "w/scratch/modcache_full",
+    "w/scratch/modcache_fe4",
+    "w/scratch/mrroot_full",
+)
+CORE_TMPFS_PATHS = (
+    "/tmp:rw,exec,nosuid,nodev,mode=1777",
+    "/replay/w/scratch/modcache_full:rw,exec,nosuid,nodev,mode=0777",
+    "/replay/w/scratch/modcache_fe4:rw,exec,nosuid,nodev,mode=0777",
+    "/replay/w/scratch/mrroot_full:rw,exec,nosuid,nodev,mode=0777",
 )
 FOUNDATION_RUNTIME_LINK_CONTRACT = (
     (
@@ -177,10 +184,18 @@ def write_file(path: Path, payload: bytes | str = b"fixture") -> None:
         path.write_bytes(payload)
 
 
-def validate_core_writable_overlays(source: str) -> None:
-    missing = [mount for mount in CORE_WRITABLE_OVERLAYS if source.count(mount) != 1]
+def validate_core_single_bind_contract(source: str) -> None:
+    missing = [path for path in CORE_FRESH_PATHS if source.count(path) < 2]
     if missing:
-        raise AssertionError(f"core writable-overlay contract drifted: {missing}")
+        raise AssertionError(f"core fresh-path contract drifted: {missing}")
+    missing_tmpfs = [path for path in CORE_TMPFS_PATHS if source.count(path) != 1]
+    if missing_tmpfs:
+        raise AssertionError(f"core tmpfs contract drifted: {missing_tmpfs}")
+    if source.count('-v "$REPLAY_ROOT:/replay:rw"') != 1:
+        raise AssertionError("core single-bind contract drifted")
+    docker_arguments = source[source.index("DOCKER_ARGS=(") : source.index("BUILD_ARGS=(")]
+    if docker_arguments.count("\n    -v ") != 1:
+        raise AssertionError("core single-bind count drifted")
 
 
 def validate_foundation_runtime_links(source: str) -> None:
@@ -1144,39 +1159,72 @@ class ShellContractTests(unittest.TestCase):
                         mutated_builder, mutated_build_full
                     )
 
-    def test_host_wrapper_mounts_inputs_read_only_and_outputs_fresh(self) -> None:
+    def test_host_wrapper_physically_stages_one_content_verified_bind(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
-        validate_core_writable_overlays(source)
-        for mount in (
-            '"$RUN_ROOT/w:/w:ro"',
-            '"$STAGED_INPUT_ROOT/sysroot_fe4:/w/scratch/sysroot_fe4:ro"',
-            '"$UIKIT_CHECKOUT:/uikit:ro"',
-            '"$MACHORUN_CHECKOUT:/machorun:ro"',
+        helper = PHYSICAL_REPLAY_TOOL.read_text(encoding="utf-8")
+        validate_core_single_bind_contract(source)
+        for token in (
+            "--network none",
+            "--read-only",
+            '-v "$REPLAY_ROOT:/replay:rw"',
+            'git clone --no-hardlinks --no-local --quiet "$SUPPORT_CHECKOUT"',
+            'git clone --no-hardlinks --no-local --quiet "$UIKIT_CHECKOUT"',
+            'git clone --no-hardlinks --no-local --quiet "$MACHORUN_CHECKOUT"',
+            '--source "$MACHORUN_LOADER"',
+            '--source "$MACHORUN_RUNTIME"',
+            '--source "$STAGED_INPUT_ROOT/$relative"',
+            "input-manifest.pre.jsonl",
+            "input-manifest.post.jsonl",
+            "content-manifest-pre-post",
+            "remove-tree",
         ):
-            self.assertIn(mount, source)
-        self.assertIn("git clone --no-hardlinks --no-local", source)
+            self.assertIn(token, source)
+        self.assertNotIn('"$STAGED_INPUT_ROOT/sysroot_fe4:/w/', source)
+        self.assertNotIn('"$UIKIT_CHECKOUT:/uikit:', source)
+        self.assertNotIn('"$MACHORUN_CHECKOUT:/machorun:', source)
         self.assertIn("--container-image SHA256_IMAGE_ID", source)
         self.assertIn("container image must be an exact sha256 content ID", source)
         self.assertIn("docker image inspect --format '{{.Id}}'", source)
         self.assertIn("expected linux/arm64", source)
-        self.assertIn("fresh-modcache-fe4-inode", source)
+        self.assertIn("expected-machorun-loader-sha256", source)
+        self.assertIn("COPIED_MACHORUN_LOADER_SHA256", source)
+        for preview_report in (
+            "copy-preview-module.json",
+            "copy-preview-object.json",
+            "copy-preview-plugin.json",
+        ):
+            self.assertEqual(source.count(preview_report), 1)
         self.assertIn('"$CONTAINER_IMAGE"', source)
         self.assertNotIn("IMAGE=${IMAGE:-", source)
-        self.assertIn("core_guest_package.py /w/build/core-package --emit-summary", source)
+        self.assertIn(
+            'core_guest_package.py "$W/build/core-package" --emit-summary', source
+        )
         self.assertIn(".INVALID-DO-NOT-USE", source)
+        self.assertLess(
+            source.index('--before "$EVIDENCE/input-manifest.pre.jsonl"'),
+            source.index('--source "$PACKAGE" --destination "$OUTPUT_ROOT"'),
+        )
+        for semantic in (
+            '"mode": mode_string(metadata)',
+            '"target": os.readlink(path)',
+            '"sha256": hash_file(path)',
+            '"type": "file"',
+            '"type": "symlink"',
+        ):
+            self.assertIn(semantic, helper)
         self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4', BUILDER.read_text(encoding="utf-8"))
         self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
 
-    def test_read_only_control_refuses_a_missing_foundation_cache_overlay(self) -> None:
+    def test_single_bind_control_refuses_a_missing_foundation_cache_tmpfs(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
         without_fe_cache = source.replace(
-            '    -v "$RUN_ROOT/modcache_fe4:/w/scratch/modcache_fe4:rw"\n',
+            "    --tmpfs /replay/w/scratch/modcache_fe4:rw,exec,nosuid,nodev,mode=0777\n",
             "",
         )
-        with self.assertRaisesRegex(AssertionError, "modcache_fe4"):
-            validate_core_writable_overlays(without_fe_cache)
+        with self.assertRaisesRegex(AssertionError, "tmpfs.*modcache_fe4"):
+            validate_core_single_bind_contract(without_fe_cache)
 
     def test_build_full_write_target_census_is_fully_overlaid(self) -> None:
         build_full = BUILD_FULL.read_text(encoding="utf-8")
@@ -1395,6 +1443,12 @@ class ShellContractTests(unittest.TestCase):
                     zero,
                     "--machorun-checkout",
                     "/machorun",
+                    "--expected-machorun-commit",
+                    zero,
+                    "--expected-machorun-tree",
+                    zero,
+                    "--expected-machorun-loader-sha256",
+                    "0" * 64,
                     "--output-root",
                     "/new-output",
                 ],

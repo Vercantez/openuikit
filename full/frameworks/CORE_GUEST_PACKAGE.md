@@ -295,10 +295,10 @@ not a macro-expansion proof.
 
 ## Fresh host replay
 
-`run_core_guest_package_docker.sh` is the host-side cold wrapper. It requires
-an exact lowercase SHA-256 Linux/ARM64 container image ID, exact support and
-UIKit commit/tree pins, a machorun checkout, a new output path, and a
-staged-input root containing:
+`run_core_guest_package_docker.sh` is the production host-side cold wrapper.
+It requires an exact lowercase SHA-256 Linux/ARM64 container image ID, exact
+support, UIKit, and machorun commit/tree pins, an exact SHA-256 for machorun's
+ignored prebuilt loader, a new output path, and a staged-input root containing:
 
 ```text
 sysroot_fe4/  mrroot/  mrroot_fe/  swift-foundation/
@@ -318,35 +318,65 @@ bash full/frameworks/run_core_guest_package_docker.sh \
   --expected-uikit-commit 40_HEX \
   --expected-uikit-tree 40_HEX \
   --machorun-checkout /path/to/clean/machorun \
+  --expected-machorun-commit 40_HEX \
+  --expected-machorun-tree 40_HEX \
+  --expected-machorun-loader-sha256 64_HEX \
   --output-root /path/to/new/core-package
 ```
 
 Mutable image tags and defaults are refused; the exact image ID and verified
-Linux/ARM64 platform are recorded in the host evidence. The wrapper makes a
-fresh no-hardlink support clone. That clone and every source/staged input are
-mounted read-only. Only unique empty build,
-`modcache_full`, Foundation helper `modcache_fe4`, and `mrroot_full`
-directories are mounted writable. Both module caches are required empty and
-their fresh host inodes are attested; a failed build marks both invalid. It runs
-both package validators before atomically publishing the output, preserves a
-host/container log with commit/tree and inode preamble, and renames every
-failed run or partially published output with `.INVALID-DO-NOT-USE`.
+Linux/ARM64 platform are recorded in host evidence. The wrapper creates fresh
+`--no-local --no-hardlinks` clones for support, UIKit, and machorun. It then
+byte-copies the ignored machorun loader and `darwin/usr` runtime closure, every
+prepared staged-input tree, and the optional Preview trio. The copier opens a
+new destination file for every regular file, proves that it shares no source
+inode, preserves directories, modes, and symlink targets, and rejects sockets,
+FIFOs, and device nodes. Ignored build outputs from the three source checkouts
+are therefore never inherited; only machorun's explicitly required ignored
+runtime inputs enter the replay.
+
+Docker receives exactly one host bind, the fresh replay root at `/replay:rw`.
+The bind must be writable because `/replay/w/build` carries the validated
+package back to the host. This is not claimed to make copied inputs
+kernel-read-only. Instead, before Docker starts the wrapper records a canonical
+JSON-lines manifest of every input entry—relative path, file type, permission
+mode, regular-file size and SHA-256, or symlink target. It records the same
+manifest after the container and host validators finish and refuses publication
+unless the files are byte-identical. Only the four explicitly enumerated fresh
+write targets below and their descendants are excluded. Git optional locks and
+Python bytecode writes are disabled so source metadata cannot drift silently.
+
+The container itself runs with `--network none` and `--read-only`. `/tmp`, both
+module caches, and the working machorun root are new container tmpfs mounts for
+every invocation. `HOME`, `TMPDIR`, and `XDG_CACHE_HOME` point into `/tmp`.
+No dependency fetch or prior compiler cache can affect a replay.
 
 The complete persistent write-target census for the composed core call graph
 is deliberately small:
 
-| Target | Writers | Fresh host overlay |
+| Target | Writers | Fresh storage |
 | --- | --- | --- |
-| `/w/build` | Core staging plus all `build_full.sh` products; every Foundation helper receives its `OUT` below this root | `build/` |
-| `/w/scratch/mrroot_full` | `build_full.sh` guest-root and umbrella staging | `mrroot_full/` |
-| `/w/scratch/modcache_full` | Ordinary `build_full.sh` Swift compiles | `modcache_full/` |
-| `/w/scratch/modcache_fe4` | `build_collections.sh`, `build_os_module.sh`, and `build_fe.sh` FoundationEssentials compiles | `modcache_fe4/` |
+| `/replay/w/build` | Core staging plus all `build_full.sh` products; every Foundation helper receives its `OUT` below this root | Empty directory in the one host bind; excluded as `w/build` |
+| `/replay/w/scratch/mrroot_full` | `build_full.sh` guest-root and umbrella staging | Fresh tmpfs; excluded as `w/scratch/mrroot_full` |
+| `/replay/w/scratch/modcache_full` | Ordinary `build_full.sh` Swift compiles | Fresh tmpfs; excluded as `w/scratch/modcache_full` |
+| `/replay/w/scratch/modcache_fe4` | `build_collections.sh`, `build_os_module.sh`, and `build_fe.sh` FoundationEssentials compiles | Fresh tmpfs; excluded as `w/scratch/modcache_fe4` |
 
-`build_cshims.sh` writes only to its caller-supplied `/w/build/full` output.
-The SDK, base guest roots, Foundation and Collections checkouts, OpenCombine,
-UIKit, machorun, and the no-hardlink support clone remain read-only. No other
-persistent path in `build_core_guest_package.sh` → `build_full.sh` → the four
-Foundation helper scripts is a write target.
+`build_cshims.sh` writes only to its caller-supplied build output. The SDK,
+base guest roots, Foundation and Collections checkouts, OpenCombine, UIKit,
+machorun, and support clone are all covered by the pre/post content manifest.
+Any unexpected write anywhere outside the four fresh paths quarantines the run.
+No other persistent path in `build_core_guest_package.sh` → `build_full.sh` →
+the four Foundation helper scripts is a permitted write target.
+
+The evidence directory records the exact image ID/platform, commit and tree for
+support, UIKit, machorun, Foundation, Collections, and OpenCombine, the pinned
+machorun-loader hash, a hash for every physical-copy report, both full input
+manifests, Docker output, and host-validator output. Both package validators
+run before the manifest comparison. Publication is a same-filesystem atomic
+rename into the still-nonexistent output path. On success the large physical
+replay tree is deleted and only the package plus compact evidence remain. On
+any failure, the complete run and any partially published package are renamed
+with `.INVALID-DO-NOT-USE`; a later invocation never reuses either one.
 
 Neither script edits UIKit, application, vendored, machorun, or upstream
 Foundation/OpenCombine sources. A package is not complete unless its runtime
@@ -357,6 +387,7 @@ probe, closure attestation, JSON verifier, canonical consumer validator, and
 
 ```sh
 python3 -B full/frameworks/test_core_guest_package.py
+python3 -B full/frameworks/test_physical_replay.py
 bash -n full/frameworks/build_core_guest_package.sh
 bash -n full/frameworks/run_core_guest_package_docker.sh
 bash -n full/scripts/build_full.sh

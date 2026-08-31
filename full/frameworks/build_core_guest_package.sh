@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Build a cold, relocatable ARM64 Mach-O core-framework package for unchanged
 # application sources. Run inside the pinned Linux/arm64 production image with
-# /w writable only at fresh build/cache/root mounts and all source inputs RO.
+# fresh build/cache/root paths. The production host wrapper gates publication
+# on exact pre/post content manifests for every other replay input.
 
 set -euo pipefail
 export GIT_OPTIONAL_LOCKS=0
