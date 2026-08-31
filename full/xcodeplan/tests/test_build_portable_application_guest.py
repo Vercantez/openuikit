@@ -216,6 +216,33 @@ def validate_local_package_module_object_boundary(source: str) -> None:
         raise AssertionError("local package build order drifted")
 
 
+def validate_c_family_package_boundary(source: str) -> None:
+    required_once = (
+        "for tool in python3 swiftc clang-18 clang++-18",
+        '<"$package_build_root/clang-import-arguments.nul"',
+        '<"$package_build_root/clang-link-arguments.nul"',
+        'package_import_arguments+=("${package_clang_import_arguments[@]}")',
+        'require_regular "$package_module_output" "local package Clang module map"',
+        "-target arm64-apple-macos15.0 -isysroot sdk",
+        '-fmodules -fmodules-cache-path="$module_cache"',
+        'package_compiler=clang-18',
+        'package_compiler=clang++-18',
+        'package_command+=(-c "${package_sources[package_source_index]}"',
+        '"${package_link_arguments[@]}"',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"local package C-family boundary drifted: {drifted}")
+    target_case = source.index('case "$package_target_type" in')
+    clang_case = source.index("                clang)", target_case)
+    package_object = source.index('package_objects+=("$package_object")', clang_case)
+    application_compile = source.index(
+        "== compile ordered application sources with attested Preview materialization"
+    )
+    if not target_case < clang_case < package_object < application_compile:
+        raise AssertionError("local package C-family build ordering drifted")
+
+
 def validate_remote_package_cache_boundary(source: str) -> None:
     required_once = (
         "[--remote-package-materializations EXACT_MATERIALIZATION_SET_JSON]",
@@ -224,8 +251,8 @@ def validate_remote_package_cache_boundary(source: str) -> None:
         'docker_command+=(-v "$remote_cache:/remote-packages:ro")',
         "--remote-package-cache-inside /remote-packages",
         "remote_materializations_sha256\\t%s\\n",
-        'if [[ "${package_record[4 + package_cursor]}" = /* ]]; then',
-        'package_sources+=("${package_record[4 + package_cursor]}")',
+        'if [[ "${package_record[5 + package_cursor]}" = /* ]]; then',
+        'package_sources+=("${package_record[5 + package_cursor]}")',
     )
     drifted = [token for token in required_once if source.count(token) != 1]
     if drifted:
@@ -447,6 +474,23 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                         source.replace(token, "", 1)
                     )
 
+    def test_c_family_packages_are_clang_modules_and_exact_link_objects(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_c_family_package_boundary(source)
+        for token in (
+            "for tool in python3 swiftc clang-18 clang++-18",
+            '<"$package_build_root/clang-import-arguments.nul"',
+            'require_regular "$package_module_output" "local package Clang module map"',
+            "-target arm64-apple-macos15.0 -isysroot sdk",
+            'package_command+=(-c "${package_sources[package_source_index]}"',
+            '"${package_link_arguments[@]}"',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "C-family"):
+                    validate_c_family_package_boundary(source.replace(token, "", 1))
+
     def test_remote_packages_use_the_same_module_boundary_from_a_read_only_cache(
         self,
     ) -> None:
@@ -458,7 +502,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             'docker_command+=(-v "$remote_cache:/remote-packages:ro")',
             "--remote-package-cache-inside /remote-packages",
             'remote_cache_arguments=(--remote-cache-root "$remote_cache")',
-            'if [[ "${package_record[4 + package_cursor]}" = /* ]]; then',
+            'if [[ "${package_record[5 + package_cursor]}" = /* ]]; then',
         ):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "remote package cache"):

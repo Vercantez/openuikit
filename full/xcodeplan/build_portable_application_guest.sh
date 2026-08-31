@@ -337,7 +337,7 @@ build_inside() {
         || require_directory "$remote_cache" "mounted remote package cache"
     [ -z "${ADDITIONAL_SWIFT_DRIVER_FLAGS+x}" ] \
         || die "ADDITIONAL_SWIFT_DRIVER_FLAGS must be absent for an attested compile plan"
-    for tool in python3 swiftc ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
+    for tool in python3 swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
     PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
@@ -443,11 +443,12 @@ PY
     # message against plugin teardown and report Corrupted JSON after success.
     local serial_job_argument=-j1
 
-    # Compile the frozen local Swift-package graph as one module/object boundary
-    # per reachable target.  A remote product is never guessed or stubbed: the
-    # graph preflight stops here until its exact pinned source is materialized.
+    # Compile the frozen Swift-package graph as one Swift/Clang module and
+    # object boundary per reachable target. A remote product is never guessed
+    # or stubbed: preflight stops until its exact pinned source is materialized.
     local package_graph package_build_root package_module_root
-    local -a package_import_arguments=() package_objects=() package_target_indices=()
+    local -a package_import_arguments=() package_link_arguments=()
+    local -a package_objects=() package_target_indices=()
     package_graph=$output/local-package-graph.json
     package_build_root=$output/local-package-build
     package_module_root=$package_build_root/modules
@@ -467,14 +468,50 @@ PY
             "$package_graph" --source-root "$app_root" \
             --output-root "$package_build_root" "${remote_cache_arguments[@]}"
         package_import_arguments=(-I "$package_module_root")
+        local -a package_clang_import_arguments=()
+        require_regular "$package_build_root/clang-import-arguments.nul" \
+            "local package Clang import argument record"
+        mapfile -d '' -t package_clang_import_arguments \
+            <"$package_build_root/clang-import-arguments.nul"
+        [ "$(( ${#package_clang_import_arguments[@]} % 2 ))" -eq 0 ] \
+            || die "local package Clang import arguments are truncated"
+        local package_import_cursor package_import_value
+        for ((package_import_cursor = 0; package_import_cursor < ${#package_clang_import_arguments[@]}; package_import_cursor += 2)); do
+            [ "${package_clang_import_arguments[package_import_cursor]}" = -Xcc ] \
+                || die "local package Clang import argument is not wrapped by -Xcc"
+            package_import_value=${package_clang_import_arguments[package_import_cursor + 1]}
+            case "$package_import_value" in
+                -fmodule-map-file="$package_build_root"/*)
+                    require_regular "${package_import_value#-fmodule-map-file=}" \
+                        "local package Clang module map" ;;
+                -I"$package_build_root"/*)
+                    require_directory "${package_import_value#-I}" \
+                        "local package public header directory" ;;
+                *) die "local package Clang import argument escaped its build root: $package_import_value" ;;
+            esac
+        done
+        package_import_arguments+=("${package_clang_import_arguments[@]}")
+        require_regular "$package_build_root/clang-link-arguments.nul" \
+            "local package Clang link argument record"
+        mapfile -d '' -t package_link_arguments \
+            <"$package_build_root/clang-link-arguments.nul"
+        if [ "${#package_link_arguments[@]}" -gt 0 ]; then
+            [ "${#package_link_arguments[@]}" -eq 1 ] \
+                && [ "${package_link_arguments[0]}" = -lc++ ] \
+                || die "local package C++ link arguments drifted"
+        fi
         mapfile -d '' -t package_target_indices \
             <"$package_build_root/targets.nul"
         [ "${#package_target_indices[@]}" -gt 0 ] \
             || die "local Swift-package graph has no build targets"
-        local package_index package_module package_module_output package_output_map
-        local package_source_count package_swift_argument_count package_object_count package_cursor
-        local package_stdout package_stderr package_status package_object
-        local -a package_record package_sources package_swift_arguments package_expected_objects package_command
+        local package_index package_target_type package_module package_module_output package_output_map
+        local package_source_count package_language_count package_compiler_argument_count
+        local package_cxx_argument_count package_object_count package_cursor package_offset
+        local package_stdout package_stderr package_status package_object package_language
+        local package_source_index package_compiler package_compile_directory
+        local -a package_record package_sources package_source_languages
+        local -a package_compiler_arguments package_cxx_arguments
+        local -a package_expected_objects package_command
         for package_index in "${package_target_indices[@]}"; do
             package_record=()
             mapfile -d '' -t package_record < <(
@@ -482,96 +519,194 @@ PY
                     "$package_build_root/build-contract.json" \
                     --index "$((10#$package_index))"
             )
-            [ "${#package_record[@]}" -ge 6 ] \
+            [ "${#package_record[@]}" -ge 10 ] \
                 || die "local package target record is truncated: $package_index"
-            package_module=${package_record[0]}
-            package_module_output=$package_build_root/${package_record[1]}
-            package_output_map=$package_build_root/${package_record[2]}
-            package_source_count=${package_record[3]}
+            package_target_type=${package_record[0]}
+            package_module=${package_record[1]}
+            package_module_output=$package_build_root/${package_record[2]}
+            package_output_map=${package_record[3]}
+            package_source_count=${package_record[4]}
             [[ "$package_source_count" =~ ^[0-9]+$ ]] \
                 || die "local package source count is invalid: $package_index"
+            [ "$package_source_count" -gt 0 ] \
+                || die "local package target has no sources: $package_module"
             package_sources=()
             for ((package_cursor = 0; package_cursor < package_source_count; package_cursor++)); do
-                if [[ "${package_record[4 + package_cursor]}" = /* ]]; then
-                    package_sources+=("${package_record[4 + package_cursor]}")
+                if [[ "${package_record[5 + package_cursor]}" = /* ]]; then
+                    package_sources+=("${package_record[5 + package_cursor]}")
                 else
-                    package_sources+=("$app_root/${package_record[4 + package_cursor]}")
+                    package_sources+=("$app_root/${package_record[5 + package_cursor]}")
                 fi
-                require_regular "${package_sources[-1]}" "local package Swift source"
+                require_regular "${package_sources[-1]}" "local package source"
             done
-            package_swift_argument_count=${package_record[4 + package_source_count]}
-            [[ "$package_swift_argument_count" =~ ^[0-9]+$ ]] \
-                || die "local package Swift argument count is invalid: $package_index"
-            [ "$((package_swift_argument_count % 2))" -eq 0 ] \
-                || die "local package Swift arguments are not option/value pairs: $package_module"
-            package_swift_arguments=()
-            for ((package_cursor = 0; package_cursor < package_swift_argument_count; package_cursor++)); do
-                package_swift_arguments+=(
-                    "${package_record[5 + package_source_count + package_cursor]}"
-                )
+            package_offset=$((5 + package_source_count))
+            package_language_count=${package_record[package_offset]}
+            [[ "$package_language_count" =~ ^[0-9]+$ ]] \
+                && [ "$package_language_count" -eq "$package_source_count" ] \
+                || die "local package source language count is invalid: $package_module"
+            package_offset=$((package_offset + 1))
+            package_source_languages=()
+            for ((package_cursor = 0; package_cursor < package_language_count; package_cursor++)); do
+                package_source_languages+=("${package_record[package_offset + package_cursor]}")
             done
-            for ((package_cursor = 0; package_cursor < package_swift_argument_count; package_cursor += 2)); do
-                case "${package_swift_arguments[package_cursor]}" in
-                    -swift-version)
-                        case "${package_swift_arguments[package_cursor + 1]}" in
-                            4|4.2|5|6) ;;
-                            *) die "local package Swift language mode is invalid: $package_module" ;;
-                        esac ;;
-                    -default-isolation)
-                        [ "${package_swift_arguments[package_cursor + 1]}" = MainActor ] \
-                            || die "local package default isolation is invalid: $package_module" ;;
-                    -enable-experimental-feature)
-                        [ "${package_swift_arguments[package_cursor + 1]}" = StrictConcurrency ] \
-                            || die "local package experimental feature is invalid: $package_module" ;;
-                    -D)
-                        [[ "${package_swift_arguments[package_cursor + 1]}" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] \
-                            || die "local package compilation condition is invalid: $package_module" ;;
-                    *)
-                        die "local package compiler argument is outside the allowlist: ${package_swift_arguments[package_cursor]}" ;;
-                esac
+            package_offset=$((package_offset + package_language_count))
+            package_compiler_argument_count=${package_record[package_offset]}
+            [[ "$package_compiler_argument_count" =~ ^[0-9]+$ ]] \
+                || die "local package compiler argument count is invalid: $package_index"
+            package_offset=$((package_offset + 1))
+            package_compiler_arguments=()
+            for ((package_cursor = 0; package_cursor < package_compiler_argument_count; package_cursor++)); do
+                package_compiler_arguments+=("${package_record[package_offset + package_cursor]}")
             done
-            package_object_count=${package_record[5 + package_source_count + package_swift_argument_count]}
+            package_offset=$((package_offset + package_compiler_argument_count))
+            package_cxx_argument_count=${package_record[package_offset]}
+            [[ "$package_cxx_argument_count" =~ ^[0-9]+$ ]] \
+                || die "local package C++ argument count is invalid: $package_index"
+            package_offset=$((package_offset + 1))
+            package_cxx_arguments=()
+            for ((package_cursor = 0; package_cursor < package_cxx_argument_count; package_cursor++)); do
+                package_cxx_arguments+=("${package_record[package_offset + package_cursor]}")
+            done
+            package_offset=$((package_offset + package_cxx_argument_count))
+            package_object_count=${package_record[package_offset]}
             [[ "$package_object_count" =~ ^[0-9]+$ ]] \
                 || die "local package object count is invalid: $package_index"
             [ "$package_object_count" -eq "$package_source_count" ] \
                 || die "local package source/object count differs: $package_module"
-            [ "${#package_record[@]}" -eq "$((6 + package_source_count + package_swift_argument_count + package_object_count))" ] \
-                || die "local package target record has trailing fields: $package_index"
+            package_offset=$((package_offset + 1))
             package_expected_objects=()
             for ((package_cursor = 0; package_cursor < package_object_count; package_cursor++)); do
                 package_expected_objects+=(
-                    "$package_build_root/${package_record[6 + package_source_count + package_swift_argument_count + package_cursor]}"
+                    "$package_build_root/${package_record[package_offset + package_cursor]}"
                 )
             done
-            package_command=(swiftc "${swift_arguments[@]}"
-                "${package_swift_arguments[@]}"
-                -module-cache-path "$module_cache"
-                "${package_import_arguments[@]}" -parse-as-library
-                -module-name "$package_module"
-                -emit-module -emit-module-path "$package_module_output"
-                -emit-object -output-file-map "$package_output_map"
-                "${package_sources[@]}")
-            package_stdout=$package_build_root/targets/$package_index-$package_module/compile.stdout
-            package_stderr=$package_build_root/targets/$package_index-$package_module/compile.stderr
-            printf '%s\0' "${package_command[@]}" \
-                >"$package_build_root/targets/$package_index-$package_module/compile-arguments.nul"
-            echo "== compile local Swift-package target $package_module"
-            set +e
-            (
-                cd "$platform"
-                "${package_command[@]}"
-            ) >"$package_stdout" 2>"$package_stderr"
-            package_status=$?
-            set -e
-            cat "$package_stderr" >&2
-            [ "$package_status" -eq 0 ] \
-                || die "local package target $package_module compiler exited $package_status"
-            [ ! -s "$package_stdout" ] \
-                || die "local package target $package_module emitted unexpected stdout"
-            if swift_compiler_output_has_failure_diagnostic "$package_stderr"; then
-                die "local package target $package_module emitted a failure diagnostic despite success"
-            fi
-            require_regular "$package_module_output" "local package Swift module"
+            package_offset=$((package_offset + package_object_count))
+            [ "${#package_record[@]}" -eq "$package_offset" ] \
+                || die "local package target record has trailing fields: $package_index"
+            package_compile_directory=$package_build_root/targets/$package_index-$package_module
+            case "$package_target_type" in
+                swift)
+                    [ "$package_output_map" != - ] \
+                        || die "local Swift package target has no output-file map: $package_module"
+                    package_output_map=$package_build_root/$package_output_map
+                    [ "$package_cxx_argument_count" -eq 0 ] \
+                        || die "local Swift package target carries C++ arguments: $package_module"
+                    [ "$((package_compiler_argument_count % 2))" -eq 0 ] \
+                        || die "local package Swift arguments are not option/value pairs: $package_module"
+                    for package_language in "${package_source_languages[@]}"; do
+                        [ "$package_language" = swift ] \
+                            || die "local Swift package target has a non-Swift source: $package_module"
+                    done
+                    for ((package_cursor = 0; package_cursor < package_compiler_argument_count; package_cursor += 2)); do
+                        case "${package_compiler_arguments[package_cursor]}" in
+                            -swift-version)
+                                case "${package_compiler_arguments[package_cursor + 1]}" in
+                                    4|4.2|5|6) ;;
+                                    *) die "local package Swift language mode is invalid: $package_module" ;;
+                                esac ;;
+                            -default-isolation)
+                                [ "${package_compiler_arguments[package_cursor + 1]}" = MainActor ] \
+                                    || die "local package default isolation is invalid: $package_module" ;;
+                            -enable-experimental-feature)
+                                [ "${package_compiler_arguments[package_cursor + 1]}" = StrictConcurrency ] \
+                                    || die "local package experimental feature is invalid: $package_module" ;;
+                            -D)
+                                [[ "${package_compiler_arguments[package_cursor + 1]}" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] \
+                                    || die "local package compilation condition is invalid: $package_module" ;;
+                            *) die "local package Swift compiler argument is outside the allowlist: ${package_compiler_arguments[package_cursor]}" ;;
+                        esac
+                    done
+                    package_command=(swiftc "${swift_arguments[@]}"
+                        "${package_compiler_arguments[@]}"
+                        -module-cache-path "$module_cache"
+                        "${package_import_arguments[@]}" -parse-as-library
+                        -module-name "$package_module"
+                        -emit-module -emit-module-path "$package_module_output"
+                        -emit-object -output-file-map "$package_output_map"
+                        "${package_sources[@]}")
+                    package_stdout=$package_compile_directory/compile.stdout
+                    package_stderr=$package_compile_directory/compile.stderr
+                    printf '%s\0' "${package_command[@]}" \
+                        >"$package_compile_directory/compile-arguments.nul"
+                    echo "== compile local Swift-package target $package_module"
+                    set +e
+                    (
+                        cd "$platform"
+                        "${package_command[@]}"
+                    ) >"$package_stdout" 2>"$package_stderr"
+                    package_status=$?
+                    set -e
+                    cat "$package_stderr" >&2
+                    [ "$package_status" -eq 0 ] \
+                        || die "local package target $package_module compiler exited $package_status"
+                    [ ! -s "$package_stdout" ] \
+                        || die "local package target $package_module emitted unexpected stdout"
+                    if swift_compiler_output_has_failure_diagnostic "$package_stderr"; then
+                        die "local package target $package_module emitted a failure diagnostic despite success"
+                    fi
+                    require_regular "$package_module_output" "local package Swift module" ;;
+                clang)
+                    [ "$package_output_map" = - ] \
+                        || die "local Clang package target unexpectedly has an output-file map: $package_module"
+                    require_regular "$package_module_output" "local package Clang module map"
+                    for package_cursor in "${!package_compiler_arguments[@]}"; do
+                        case "${package_compiler_arguments[package_cursor]}" in
+                            -I"$package_build_root"/*)
+                                require_directory "${package_compiler_arguments[package_cursor]#-I}" \
+                                    "local package C header search path" ;;
+                            *)
+                                [[ "${package_compiler_arguments[package_cursor]}" =~ ^-D[A-Za-z_][A-Za-z0-9_]*(=.*)?$ ]] \
+                                    || die "local package C compiler argument is outside the allowlist: ${package_compiler_arguments[package_cursor]}" ;;
+                        esac
+                    done
+                    for package_cursor in "${!package_cxx_arguments[@]}"; do
+                        case "${package_cxx_arguments[package_cursor]}" in
+                            -I"$package_build_root"/*)
+                                require_directory "${package_cxx_arguments[package_cursor]#-I}" \
+                                    "local package C++ header search path" ;;
+                            *)
+                                [[ "${package_cxx_arguments[package_cursor]}" =~ ^-D[A-Za-z_][A-Za-z0-9_]*(=.*)?$ ]] \
+                                    || die "local package C++ compiler argument is outside the allowlist: ${package_cxx_arguments[package_cursor]}" ;;
+                        esac
+                    done
+                    for package_source_index in "${!package_sources[@]}"; do
+                        package_language=${package_source_languages[package_source_index]}
+                        case "$package_language" in
+                            c|objective-c|assembler|assembler-with-cpp)
+                                package_compiler=clang-18 ;;
+                            cxx|objective-cxx)
+                                package_compiler=clang++-18 ;;
+                            *) die "local Clang package target has unsupported source language: $package_language" ;;
+                        esac
+                        package_command=("$package_compiler"
+                            -target arm64-apple-macos15.0 -isysroot sdk
+                            -fmodules -fmodules-cache-path="$module_cache"
+                            "${package_compiler_arguments[@]}")
+                        if [ "$package_compiler" = clang++-18 ]; then
+                            package_command+=(-stdlib=libc++ "${package_cxx_arguments[@]}")
+                        fi
+                        package_command+=(-c "${package_sources[package_source_index]}"
+                            -o "${package_expected_objects[package_source_index]}")
+                        package_stdout=$package_compile_directory/compile-$package_source_index.stdout
+                        package_stderr=$package_compile_directory/compile-$package_source_index.stderr
+                        printf '%s\0' "${package_command[@]}" \
+                            >"$package_compile_directory/compile-$package_source_index-arguments.nul"
+                        echo "== compile local C-family package target $package_module [$package_source_index/$package_source_count]"
+                        set +e
+                        (
+                            cd "$platform"
+                            "${package_command[@]}"
+                        ) >"$package_stdout" 2>"$package_stderr"
+                        package_status=$?
+                        set -e
+                        cat "$package_stderr" >&2
+                        [ "$package_status" -eq 0 ] \
+                            || die "local package target $package_module C-family compiler exited $package_status"
+                        [ ! -s "$package_stdout" ] \
+                            || die "local package target $package_module emitted unexpected C-family compiler stdout"
+                    done ;;
+                *) die "local package target has unsupported compiler family: $package_target_type" ;;
+            esac
             for package_object in "${package_expected_objects[@]}"; do
                 require_regular "$package_object" "local package target object"
                 file "$package_object" | grep -F 'Mach-O 64-bit arm64 object' >/dev/null \
@@ -1033,6 +1168,7 @@ PY
     fi
     local -a link_command
     link_command=(ld64.lld-18 "${link_arguments[@]}" -dead_strip
+        "${package_link_arguments[@]}"
         "${executable_export_arguments[@]}"
         -rpath @executable_path/../Frameworks
         -o "$executable" "${application_objects[@]}" \
