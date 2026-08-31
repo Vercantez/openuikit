@@ -346,9 +346,15 @@ unless the files are byte-identical. Only the four explicitly enumerated fresh
 write targets below and their descendants are excluded. Git optional locks and
 Python bytecode writes are disabled so source metadata cannot drift silently.
 
-The container itself runs with `--network none` and `--read-only`. `/tmp`, both
-module caches, and the working machorun root are new container tmpfs mounts for
-every invocation. `HOME`, `TMPDIR`, and `XDG_CACHE_HOME` point into `/tmp`.
+The container itself runs with `--network none` and `--read-only`. `/tmp` is its
+only tmpfs mount; `HOME`, `TMPDIR`, and `XDG_CACHE_HOME` point into it. Build,
+both module caches, and the working machorun root are new empty directories in
+the one physical replay bind. In particular, there are no tmpfs or bind mounts
+nested below `/replay`: Docker Desktop was measured dropping such nested
+mounts during a long build, after the guest-root umbrellas had been linked.
+That produced transient missing libraries and erased the failed root before it
+could be diagnosed. A fresh physical directory is equally cold, remains
+host-visible throughout the run, and is removed with the replay on success.
 No dependency fetch or prior compiler cache can affect a replay.
 
 The complete persistent write-target census for the composed core call graph
@@ -357,9 +363,9 @@ is deliberately small:
 | Target | Writers | Fresh storage |
 | --- | --- | --- |
 | `/replay/w/build` | Core staging plus all `build_full.sh` products; every Foundation helper receives its `OUT` below this root | Empty directory in the one host bind; excluded as `w/build` |
-| `/replay/w/scratch/mrroot_full` | `build_full.sh` guest-root and umbrella staging | Fresh tmpfs; excluded as `w/scratch/mrroot_full` |
-| `/replay/w/scratch/modcache_full` | Ordinary `build_full.sh` Swift compiles | Fresh tmpfs; excluded as `w/scratch/modcache_full` |
-| `/replay/w/scratch/modcache_fe4` | `build_collections.sh`, `build_os_module.sh`, and `build_fe.sh` FoundationEssentials compiles | Fresh tmpfs; excluded as `w/scratch/modcache_fe4` |
+| `/replay/w/scratch/mrroot_full` | `build_full.sh` guest-root and umbrella staging | Empty directory in the one host bind; excluded as `w/scratch/mrroot_full` |
+| `/replay/w/scratch/modcache_full` | Ordinary `build_full.sh` Swift compiles | Empty directory in the one host bind; excluded as `w/scratch/modcache_full` |
+| `/replay/w/scratch/modcache_fe4` | `build_collections.sh`, `build_os_module.sh`, and `build_fe.sh` FoundationEssentials compiles | Empty directory in the one host bind; excluded as `w/scratch/modcache_fe4` |
 
 `build_cshims.sh` writes only to its caller-supplied build output. The SDK,
 base guest roots, Foundation and Collections checkouts, OpenCombine, UIKit,
@@ -371,8 +377,11 @@ the four Foundation helper scripts is a permitted write target.
 The evidence directory records the exact image ID/platform, commit and tree for
 support, UIKit, machorun, Foundation, Collections, and OpenCombine, the pinned
 machorun-loader hash, a hash for every physical-copy report, both full input
-manifests, Docker output, and host-validator output. Both package validators
-run before the manifest comparison. Publication is a same-filesystem atomic
+manifests, Docker output, and host-validator output. A post-container durability
+gate also hashes the host-visible staged loader, manifest, renamed real
+libraries, libSystem/libc++ umbrellas, and linked libquartz before host
+validation. Both package validators run before the manifest comparison.
+Publication is a same-filesystem atomic
 rename into the still-nonexistent output path. On success the large physical
 replay tree is deleted and only the package plus compact evidence remain. On
 any failure, the complete run and any partially published package are renamed
@@ -391,6 +400,8 @@ python3 -B full/frameworks/test_physical_replay.py
 bash -n full/frameworks/build_core_guest_package.sh
 bash -n full/frameworks/run_core_guest_package_docker.sh
 bash -n full/scripts/build_full.sh
+bash full/frameworks/test_single_bind_guest_root_docker.sh \
+  --container-image sha256:64_LOWERCASE_HEX
 ```
 
 The tests exercise exact Foundation and WebKit ordering, all eight added
@@ -398,3 +409,10 @@ first-party framework products, WebKit deletion/mutation/load refusal,
 path/symlink refusal, relocation to a path containing spaces, Preview
 placeholder/external-plugin behavior, DTS ownership, resource/library tamper
 detection, and the early/final UIKit ordering hooks.
+
+The final focused Docker smoke is intentionally separate from the static suite.
+It uses the same one-bind/read-only-root/no-network layout, links minimal ARM64
+Mach-O libSystem, libc++, and libquartz products around 48 independent compiler
+invocations, then verifies those files again on the host after the container
+has exited. It refuses mutable image tags and cleans its physical replay on
+success while quarantining the complete fixture on failure.

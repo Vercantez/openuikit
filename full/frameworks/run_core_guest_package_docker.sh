@@ -50,11 +50,12 @@ The staged input root must contain these immutable prepared inputs:
 
 The wrapper never reuses a build product. It creates fresh physical copies of
 every input beneath one replay root, gives Docker only that one RW host bind,
-and uses container tmpfs mounts for temporary data, module caches, and the
-working guest root. The container has no network and a read-only root
-filesystem. Copied inputs are content-verified rather than mount-enforced
-read-only: an exact type/mode/symlink/content manifest is compared after all
-validation and before the package is atomically published.
+and keeps build, module caches, and the working guest root in fresh directories
+inside it. Only /tmp is tmpfs; no mount is nested below /replay. The container
+has no network and a read-only root filesystem. Copied inputs are
+content-verified rather than mount-enforced read-only: an exact
+type/mode/symlink/content manifest is compared after all validation and before
+the package is atomically published.
 EOF
 }
 
@@ -311,8 +312,9 @@ if [ "$preview_count" -eq 3 ]; then
 fi
 
 # These four exact paths are the only replay paths excluded from the immutable
-# input manifest. build persists into the one bind so its package can be
-# published; the other three are over-mounted with fresh container tmpfs.
+# input manifest. They are new empty physical directories in the one replay
+# bind. Do not over-mount them: Docker Desktop has been observed losing nested
+# tmpfs mounts mid-container, including a populated working guest root.
 FRESH_PATHS=(
     w/build
     w/scratch/modcache_full
@@ -362,6 +364,10 @@ record_git_identity() {
     printf 'input-immutability\tcontent-manifest-pre-post\n'
     printf 'container-root\tread-only\n'
     printf 'network\tnone\n'
+    printf 'tmpfs\t/tmp\n'
+    for relative in "${FRESH_PATHS[@]}"; do
+        printf 'fresh-bind-path\t%s\n' "$relative"
+    done
     printf 'preview\t%s\n' "$([ "$preview_count" -eq 3 ] && printf enabled || printf disabled)"
 } > "$EVIDENCE/host-inputs.tsv"
 
@@ -377,9 +383,6 @@ DOCKER_ARGS=(
     -e W=/replay/w
     -e MACHORUN=/replay/machorun
     --tmpfs /tmp:rw,exec,nosuid,nodev,mode=1777
-    --tmpfs /replay/w/scratch/modcache_full:rw,exec,nosuid,nodev,mode=0777
-    --tmpfs /replay/w/scratch/modcache_fe4:rw,exec,nosuid,nodev,mode=0777
-    --tmpfs /replay/w/scratch/mrroot_full:rw,exec,nosuid,nodev,mode=0777
     -v "$REPLAY_ROOT:/replay:rw"
 )
 BUILD_ARGS=(
@@ -406,6 +409,31 @@ docker "${DOCKER_ARGS[@]}" -w /replay/w "$CONTAINER_IMAGE" \
 PACKAGE=$REPLAY_ROOT/w/build/core-package
 [ -d "$PACKAGE" ] && [ ! -L "$PACKAGE" ] \
     || die 'container returned success without a core package'
+
+# This is a host-visible durability gate, not merely a container-local build
+# assertion. A real build must leave the staged loader and all three linked
+# root products in the one bind after Docker exits. It specifically prevents a
+# nested-mount regression from reaching package validation or publication.
+GUEST_ROOT=$REPLAY_ROOT/w/scratch/mrroot_full
+GUEST_ROOT_PRODUCTS=(
+    machorun
+    .manifest
+    darwin/usr/lib/libSystem.real.dylib
+    darwin/usr/lib/libSystem.B.dylib
+    darwin/usr/lib/libc++.real.dylib
+    darwin/usr/lib/libc++.1.dylib
+    darwin/usr/lib/libquartz.dylib
+)
+{
+    printf 'format\tcore-guest-durable-root-v1\n'
+    for relative in "${GUEST_ROOT_PRODUCTS[@]}"; do
+        product=$GUEST_ROOT/$relative
+        [ -f "$product" ] && [ ! -L "$product" ] \
+            || die "durable guest-root product is missing after Docker: $relative"
+        printf 'product\t%s\tsha256=%s\n' "$relative" \
+            "$(shasum -a 256 "$product" | awk '{print $1}')"
+    done
+} > "$EVIDENCE/guest-root-post-build.tsv"
 python3 -B "$REPLAY_ROOT/w/full/xcodeplan/core_guest_package.py" \
     "$PACKAGE" --emit-summary | tee "$RUN_ROOT/host-validator.log"
 

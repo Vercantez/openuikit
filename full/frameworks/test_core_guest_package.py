@@ -23,6 +23,7 @@ FOUNDATION_COMPATIBILITY_PROBE = HERE / "FoundationHackersCompatibilityProbe.swi
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
 PHYSICAL_REPLAY_TOOL = HERE / "physical_replay.py"
+SINGLE_BIND_GUEST_ROOT_SMOKE = HERE / "test_single_bind_guest_root_docker.sh"
 APP_DRIVER = REPO / "full/xcodeplan/build_portable_application_guest.sh"
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
     "_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC"
@@ -36,10 +37,10 @@ CORE_FRESH_PATHS = (
 )
 CORE_TMPFS_PATHS = (
     "/tmp:rw,exec,nosuid,nodev,mode=1777",
-    "/replay/w/scratch/modcache_full:rw,exec,nosuid,nodev,mode=0777",
-    "/replay/w/scratch/modcache_fe4:rw,exec,nosuid,nodev,mode=0777",
-    "/replay/w/scratch/mrroot_full:rw,exec,nosuid,nodev,mode=0777",
 )
+CORE_FRESH_PATH_BLOCK = "FRESH_PATHS=(\n" + "".join(
+    f"    {path}\n" for path in CORE_FRESH_PATHS
+) + ")"
 FOUNDATION_RUNTIME_LINK_CONTRACT = (
     (
         "-lswift_StringProcessing",
@@ -188,6 +189,8 @@ def validate_core_single_bind_contract(source: str) -> None:
     missing = [path for path in CORE_FRESH_PATHS if source.count(path) < 2]
     if missing:
         raise AssertionError(f"core fresh-path contract drifted: {missing}")
+    if source.count(CORE_FRESH_PATH_BLOCK) != 1:
+        raise AssertionError("core exact fresh-path contract drifted")
     missing_tmpfs = [path for path in CORE_TMPFS_PATHS if source.count(path) != 1]
     if missing_tmpfs:
         raise AssertionError(f"core tmpfs contract drifted: {missing_tmpfs}")
@@ -196,6 +199,10 @@ def validate_core_single_bind_contract(source: str) -> None:
     docker_arguments = source[source.index("DOCKER_ARGS=(") : source.index("BUILD_ARGS=(")]
     if docker_arguments.count("\n    -v ") != 1:
         raise AssertionError("core single-bind count drifted")
+    if docker_arguments.count("\n    --tmpfs ") != 1:
+        raise AssertionError("core single-tmpfs contract drifted")
+    if "--tmpfs /replay/" in docker_arguments:
+        raise AssertionError("core nested-tmpfs contract drifted")
 
 
 def validate_foundation_runtime_links(source: str) -> None:
@@ -1176,6 +1183,9 @@ class ShellContractTests(unittest.TestCase):
             "input-manifest.pre.jsonl",
             "input-manifest.post.jsonl",
             "content-manifest-pre-post",
+            "guest-root-post-build.tsv",
+            "durable guest-root product is missing after Docker",
+            "libquartz.dylib",
             "remove-tree",
         ):
             self.assertIn(token, source)
@@ -1217,14 +1227,40 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
 
-    def test_single_bind_control_refuses_a_missing_foundation_cache_tmpfs(self) -> None:
+    def test_single_bind_control_refuses_nested_tmpfs_and_missing_fresh_path(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
-        without_fe_cache = source.replace(
-            "    --tmpfs /replay/w/scratch/modcache_fe4:rw,exec,nosuid,nodev,mode=0777\n",
-            "",
+        nested_tmpfs = source.replace(
+            '    -v "$REPLAY_ROOT:/replay:rw"\n',
+            "    --tmpfs /replay/w/scratch/mrroot_full:rw,exec,mode=0777\n"
+            '    -v "$REPLAY_ROOT:/replay:rw"\n',
+            1,
         )
-        with self.assertRaisesRegex(AssertionError, "tmpfs.*modcache_fe4"):
+        with self.assertRaisesRegex(AssertionError, "single-tmpfs|nested-tmpfs"):
+            validate_core_single_bind_contract(nested_tmpfs)
+
+        without_fe_cache = source.replace(
+            "    w/scratch/modcache_fe4\n",
+            "",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "fresh-path"):
             validate_core_single_bind_contract(without_fe_cache)
+
+    def test_live_single_bind_smoke_links_and_rechecks_the_guest_root(self) -> None:
+        source = SINGLE_BIND_GUEST_ROOT_SMOKE.read_text(encoding="utf-8")
+        self.assertEqual(source.count('-v "$REPLAY_ROOT:/replay:rw"'), 1)
+        self.assertEqual(source.count("--tmpfs /tmp:"), 1)
+        self.assertNotIn("--tmpfs /replay/", source)
+        for product in (
+            "libSystem.B.dylib",
+            "libc++.1.dylib",
+            "libquartz.dylib",
+        ):
+            self.assertIn(product, source)
+        self.assertEqual(source.count("ld64.lld-18 -arch arm64"), 3)
+        self.assertIn("for number in $(seq 1 48)", source)
+        self.assertIn("host cannot see durable product after Docker", source)
+        self.assertIn("SINGLE_BIND_GUEST_ROOT_OK", source)
 
     def test_build_full_write_target_census_is_fully_overlaid(self) -> None:
         build_full = BUILD_FULL.read_text(encoding="utf-8")

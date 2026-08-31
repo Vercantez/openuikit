@@ -450,7 +450,13 @@ class PhysicalReplayTests(unittest.TestCase):
         self.assertIn("--network", arguments)
         self.assertEqual(arguments[arguments.index("--network") + 1], "none")
         self.assertIn("--read-only", arguments)
-        self.assertEqual(arguments.count("--tmpfs"), 4)
+        self.assertEqual(arguments.count("--tmpfs"), 1)
+        tmpfs_values = [
+            arguments[index + 1]
+            for index, argument in enumerate(arguments)
+            if argument == "--tmpfs"
+        ]
+        self.assertFalse(any(value.startswith("/replay/") for value in tmpfs_values))
         for original in (support, uikit, machorun, staged):
             self.assertFalse(any(str(original) in argument for argument in arguments))
         self.assertIn(
