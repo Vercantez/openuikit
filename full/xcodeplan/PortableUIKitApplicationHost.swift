@@ -34,45 +34,7 @@ enum PortableUIKitApplicationHost {
         guard let resources = Bundle.main.resourcePath, !resources.isEmpty else {
             preconditionFailure("portable application bundle has no resource directory")
         }
-
-        let openUIKit = resources + "/OpenUIKit"
-        requireReadableFile(openUIKit + "/system_colors.json")
-        requireReadableFile(openUIKit + "/font_metrics.json")
-        requireReadableFile(openUIKit + "/fonts/DejaVuSans.ttf")
-        requireReadableFile(openUIKit + "/fonts/DejaVuSans-Bold.ttf")
-
-        OpenUIKitRuntime.resourceRoot = openUIKit
-        OpenUIKitRuntime.imageSearchPaths = [resources]
-        OpenUIKitRuntime.imageScreenScale = 2
-
-        // This call must remain after resourceRoot and before fontPaths.  Its
-        // non-zero table advance proves FontEngine's once-only tables saw the
-        // packaged JSON; a missing/late table cannot be hidden by the TTF
-        // rasterizer fallback installed below.
-        let metricsProbe = FontEngine.advance(
-            of: "M",
-            font: UIFont.systemFont(ofSize: 17)
-        )
-        guard metricsProbe > 0 else {
-            preconditionFailure(
-                "packaged OpenUIKit font metrics were unavailable before application launch"
-            )
-        }
-
-        OpenUIKitRuntime.fontPaths["system"] = openUIKit + "/fonts/DejaVuSans.ttf"
-        for weight in ["medium", "semibold", "bold", "heavy", "black"] {
-            OpenUIKitRuntime.fontPaths[weight] = openUIKit + "/fonts/DejaVuSans-Bold.ttf"
-        }
-        UIImage.clearNamedCache()
-    }
-
-    private static func requireReadableFile(_ path: String) {
-        var size = 0
-        let bytes = path.withCString { cpio_read_file($0, &size) }
-        guard let bytes, size > 0 else {
-            preconditionFailure("required portable application resource is missing: \(path)")
-        }
-        cpio_free(bytes)
+        OpenUIKitRuntime.configureApplicationBundleResources(at: resources)
     }
 
     private static func boundedTurnCount() -> Int? {

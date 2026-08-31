@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Generate the portable UIKit scene entry point for a strict Xcode slice.
+"""Classify and prepare the portable application entry point for an Xcode slice.
 
 The generated Swift file is a build input, never an edit to application
-source.  This first slice intentionally accepts only the ordinary single
-``UIWindowScene`` template: one ``@main`` AppDelegate, one Info.plist scene
-delegate, no missing inventory inputs, and no unresolved inventory features.
+source. UIKit delegate applications receive the ordinary strict single-scene
+bootstrap. A top-level ``@main struct`` directly conforming to ``SwiftUI.App``
+already inherits its entry point from the framework, so its generated input is
+deliberately comment-only: emitting another ``main`` would be a collision.
 Everything else fails closed.
 """
 
@@ -191,10 +192,15 @@ def _is_top_level(masked: str, offset: int) -> bool:
     return prefix.count("{") == prefix.count("}")
 
 
-def _inherits(inheritance: str | None, protocol: str) -> bool:
+def _inherits(
+    inheritance: str | None, protocol: str, *, module: str = "UIKit"
+) -> bool:
     if inheritance is None:
         return False
-    pattern = rf"(?<![A-Za-z0-9_])(?:UIKit\.)?{protocol}(?![A-Za-z0-9_])"
+    pattern = (
+        rf"(?<![A-Za-z0-9_.])(?:{re.escape(module)}\.)?"
+        rf"{protocol}(?![A-Za-z0-9_])"
+    )
     return re.search(pattern, inheritance) is not None
 
 
@@ -271,7 +277,9 @@ def _read_swift_sources(
     return result
 
 
-def _find_app_delegate(sources: Iterable[tuple[str, Path, bytes, str]]) -> tuple[str, str, bytes]:
+def _find_application_entry_point(
+    sources: Iterable[tuple[str, Path, bytes, str]],
+) -> tuple[str, str, str, bytes]:
     declarations: list[tuple[str, re.Match[str], bytes, str]] = []
     for relative, _path, data, masked in sources:
         declarations.extend(
@@ -284,14 +292,23 @@ def _find_app_delegate(sources: Iterable[tuple[str, Path, bytes, str]]) -> tuple
             f"expected exactly one top-level @main declaration, found {len(declarations)}"
         )
     relative, match, data, masked = declarations[0]
-    if match.group("kind") != "class" or not _inherits(
-        match.group("inheritance"), "UIApplicationDelegate"
+    declaration_kind = match.group("kind")
+    inheritance = match.group("inheritance")
+    if declaration_kind == "class" and _inherits(
+        inheritance, "UIApplicationDelegate"
     ):
-        raise BootstrapError(
-            "@main type is not a class directly conforming to UIApplicationDelegate"
+        _require_generated_reference_contract(
+            masked, match, "@main application delegate"
         )
-    _require_generated_reference_contract(masked, match, "@main application delegate")
-    return match.group("name"), relative, data
+        return "uikit-scene-bootstrap", match.group("name"), relative, data
+    if declaration_kind == "struct" and _inherits(
+        inheritance, "App", module="SwiftUI"
+    ):
+        return "swiftui-app-default-main", match.group("name"), relative, data
+    raise BootstrapError(
+        "@main type is neither a class directly conforming to "
+        "UIApplicationDelegate nor a struct directly conforming to SwiftUI.App"
+    )
 
 
 def _build_settings(inventory: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -433,23 +450,8 @@ def _validate_inventory(inventory: dict[str, Any]) -> None:
         raise BootstrapError("inventory has missing inputs")
 
 
-def generate(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str, Any]]:
-    _validate_inventory(inventory)
-    root = _strict_root(source_root)
-    sources = _read_swift_sources(inventory, root)
-    app_name, app_path, app_data = _find_app_delegate(sources)
-    project_settings, target_settings = _build_settings(inventory)
-    module_name = _product_module_name(inventory, project_settings, target_settings)
-    plist_path = _info_plist_path(root, project_settings, target_settings)
-    plist_data = plist_path.read_bytes()
-    try:
-        plist = _mapping(plistlib.loads(plist_data), "Info.plist")
-    except (plistlib.InvalidFileException, ValueError) as exc:
-        raise BootstrapError(f"cannot parse Info.plist: {exc}") from exc
-    scene_name = _scene_delegate_name(plist, module_name)
-    scene_path, scene_data = _find_scene_delegate(sources, scene_name)
-
-    generated = (
+def _uikit_generated_source(app_name: str, scene_name: str) -> bytes:
+    return (
         "import UIKit\n"
         "\n"
         "// Generated build input: portable UIKit supplies this method on Linux.\n"
@@ -465,13 +467,59 @@ def generate(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[
         "    }\n"
         "}\n"
     ).encode("utf-8")
+
+
+def _swiftui_generated_source(app_name: str) -> bytes:
+    return (
+        f"// Generated build input: {app_name} inherits SwiftUI.App's default main; "
+        "no competing entry point is emitted.\n"
+    ).encode("utf-8")
+
+
+def generate(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str, Any]]:
+    _validate_inventory(inventory)
+    root = _strict_root(source_root)
+    sources = _read_swift_sources(inventory, root)
+    entry_point, app_name, app_path, app_data = _find_application_entry_point(
+        sources
+    )
+    project_settings, target_settings = _build_settings(inventory)
+    module_name = _product_module_name(inventory, project_settings, target_settings)
+    plist_path = _info_plist_path(root, project_settings, target_settings)
+    plist_data = plist_path.read_bytes()
+    try:
+        plist = _mapping(plistlib.loads(plist_data), "Info.plist")
+    except (plistlib.InvalidFileException, ValueError) as exc:
+        raise BootstrapError(f"cannot parse Info.plist: {exc}") from exc
+    if entry_point == "uikit-scene-bootstrap":
+        scene_name = _scene_delegate_name(plist, module_name)
+        scene_path, scene_data = _find_scene_delegate(sources, scene_name)
+        generated = _uikit_generated_source(app_name, scene_name)
+        application_record = {
+            "app_delegate": {
+                "path": app_path,
+                "sha256": _sha256(app_data),
+                "type": app_name,
+            },
+            "scene_delegate": {
+                "path": scene_path,
+                "sha256": _sha256(scene_data),
+                "type": scene_name,
+            },
+        }
+    else:
+        generated = _swiftui_generated_source(app_name)
+        application_record = {
+            "swiftui_app": {
+                "path": app_path,
+                "sha256": _sha256(app_data),
+                "type": app_name,
+            }
+        }
+
     record = {
-        "app_delegate": {
-            "path": app_path,
-            "sha256": _sha256(app_data),
-            "type": app_name,
-        },
         "classification": "generated-build-input",
+        "entry_point": entry_point,
         "generated_sha256": _sha256(generated),
         "generated_size": len(generated),
         "info_plist": {
@@ -480,11 +528,7 @@ def generate(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[
         },
         "inventory_swift_source_count": len(sources),
         "module": module_name,
-        "scene_delegate": {
-            "path": scene_path,
-            "sha256": _sha256(scene_data),
-            "type": scene_name,
-        },
+        **application_record,
     }
     return generated, record
 

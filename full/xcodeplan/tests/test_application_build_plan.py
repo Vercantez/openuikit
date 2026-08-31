@@ -125,6 +125,26 @@ class ApplicationBuildPlanTests(unittest.TestCase):
         )
         return inputs
 
+    def use_swiftui_app(self) -> None:
+        (self.root / "App/AppDelegate.swift").write_text(
+            "import UIKit\n"
+            "final class AppDelegate: NSObject, UIApplicationDelegate {}\n",
+            encoding="utf-8",
+        )
+        (self.root / "App/ProbeApp.swift").write_text(
+            "import SwiftUI\n"
+            "import UIKit\n"
+            "@main struct ProbeApp: App {\n"
+            "    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate\n"
+            "    var body: some Scene { WindowGroup { Text(\"Probe\") } }\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        self.inventory["sources"].append({"path": "App/ProbeApp.swift"})
+        (self.root / "Resources/Info.plist").write_bytes(
+            plistlib.dumps({"CFBundleName": "Probe"}, sort_keys=True)
+        )
+
     def test_freezes_complete_ordered_source_and_resource_graph(self) -> None:
         generated, plan = application_build_plan.plan(self.inventory, self.root)
         self.assertIn(b"extension AppDelegate", generated)
@@ -165,6 +185,57 @@ class ApplicationBuildPlanTests(unittest.TestCase):
                 "Resources/Assets.xcassets/Contents.json",
             ],
         )
+
+        legacy = copy.deepcopy(plan)
+        del legacy["bootstrap"]["entry_point"]
+        application_build_plan.verify(legacy, self.root)
+
+    def test_swiftui_app_plan_freezes_default_main_without_scene_requirements(self) -> None:
+        self.use_swiftui_app()
+        generated, plan = application_build_plan.plan(self.inventory, self.root)
+
+        self.assertEqual(
+            generated,
+            b"// Generated build input: ProbeApp inherits SwiftUI.App's default main; "
+            b"no competing entry point is emitted.\n",
+        )
+        self.assertNotIn(b"static func main", generated)
+        self.assertEqual(
+            plan["bootstrap"]["entry_point"], "swiftui-app-default-main"
+        )
+        self.assertEqual(
+            plan["bootstrap"]["swiftui_app"],
+            {
+                "path": "App/ProbeApp.swift",
+                "sha256": hashlib.sha256(
+                    (self.root / "App/ProbeApp.swift").read_bytes()
+                ).hexdigest(),
+                "type": "ProbeApp",
+            },
+        )
+        self.assertNotIn("scene_delegate", plan["bootstrap"])
+        self.assertEqual(plan["summary"]["swift_sources"], 4)
+        application_build_plan.verify(plan, self.root)
+
+        for name, mutate in {
+            "entry": lambda value: value["bootstrap"].__setitem__(
+                "entry_point", "uikit-scene-bootstrap"
+            ),
+            "type": lambda value: value["bootstrap"]["swiftui_app"].__setitem__(
+                "type", "OtherApp"
+            ),
+            "generated": lambda value: value["bootstrap"].__setitem__(
+                "generated_sha256", "0" * 64
+            ),
+            "schema": lambda value: value["bootstrap"].__setitem__(
+                "unexpected", True
+            ),
+        }.items():
+            with self.subTest(mutation=name):
+                changed = copy.deepcopy(plan)
+                mutate(changed)
+                with self.assertRaises(application_build_plan.BuildPlanError):
+                    application_build_plan.verify(changed, self.root)
 
     def test_cli_output_is_exclusive_and_contains_nul_source_manifest(self) -> None:
         inventory_path = self.parent / "inventory.json"

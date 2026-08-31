@@ -162,18 +162,17 @@ def validate_python_invocations_are_bytecode_free(source: str) -> None:
 
 
 class PortableApplicationGuestDriverTests(unittest.TestCase):
-    def test_host_binds_and_probes_resources_before_font_file_fallback(self) -> None:
+    def test_host_delegates_resource_binding_to_the_shared_runtime_contract(self) -> None:
         source = (XCODEPLAN / "PortableUIKitApplicationHost.swift").read_text(
             encoding="utf-8"
         )
-        resource_binding = source.index("OpenUIKitRuntime.resourceRoot = openUIKit")
-        table_probe = source.index("let metricsProbe = FontEngine.advance(")
-        fallback_binding = source.index(
-            'OpenUIKitRuntime.fontPaths["system"] = openUIKit'
+        self.assertIn(
+            "OpenUIKitRuntime.configureApplicationBundleResources(at: resources)",
+            source,
         )
-        self.assertLess(resource_binding, table_probe)
-        self.assertLess(table_probe, fallback_binding)
-        self.assertIn("guard metricsProbe > 0", source)
+        self.assertNotIn("OpenUIKitRuntime.resourceRoot =", source)
+        self.assertNotIn("FontEngine.advance", source)
+        self.assertNotIn("DejaVuSans.ttf", source)
 
         run_body = source[source.index("static func run(") :]
         self.assertIn("prepare()", run_body)

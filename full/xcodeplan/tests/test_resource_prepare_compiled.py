@@ -62,6 +62,36 @@ public enum OpenUIKitRuntime {
     public static var imageSearchPaths: [String] = []
     public static var imageScreenScale = 0
     public static var fontPaths: [String: String] = [:]
+
+    @MainActor
+    public static func configureApplicationBundleResources(at resources: String) {
+        let openUIKit = resources + "/OpenUIKit"
+        for relative in [
+            "system_colors.json",
+            "font_metrics.json",
+            "fonts/DejaVuSans.ttf",
+            "fonts/DejaVuSans-Bold.ttf",
+        ] {
+            precondition(
+                FileManager.default.contents(atPath: openUIKit + "/" + relative)?.isEmpty
+                    == false
+            )
+        }
+        resourceRoot = openUIKit
+        imageSearchPaths = [resources]
+        imageScreenScale = 2
+        precondition(FontEngine.advance(of: "M", font: .systemFont(ofSize: 17)) > 0)
+        let bold = openUIKit + "/fonts/DejaVuSans-Bold.ttf"
+        fontPaths = [
+            "system": openUIKit + "/fonts/DejaVuSans.ttf",
+            "medium": bold,
+            "semibold": bold,
+            "bold": bold,
+            "heavy": bold,
+            "black": bold,
+        ]
+        UIImage.clearNamedCache()
+    }
 }
 
 public struct UIFont {

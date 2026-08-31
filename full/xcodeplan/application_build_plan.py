@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
+import plistlib
 import stat
 import sys
 import unicodedata
@@ -411,6 +412,138 @@ def plan(inventory: dict[str, Any], source_root: Path) -> tuple[bytes, dict[str,
     return generated, result
 
 
+def _verify_bootstrap(
+    bootstrap: dict[str, Any],
+    build_plan: dict[str, Any],
+    sources: list[dict[str, Any]],
+    root: Path,
+) -> None:
+    if bootstrap.get("classification") != "generated-build-input":
+        raise BuildPlanError("build plan bootstrap has an invalid classification")
+    raw_entry_point = bootstrap.get("entry_point")
+    if raw_entry_point is None and {
+        "app_delegate",
+        "scene_delegate",
+    }.issubset(bootstrap):
+        # Format-2 UIKit plans created before entry-point classification are
+        # still valid. Reparse and verify them under the same strict branch;
+        # only the new SwiftUI branch requires an explicit discriminator.
+        entry_point = "uikit-scene-bootstrap"
+    else:
+        entry_point = _string(
+            raw_entry_point, "build plan bootstrap.entry_point"
+        )
+    if entry_point not in {"uikit-scene-bootstrap", "swiftui-app-default-main"}:
+        raise BuildPlanError(f"unsupported application entry point: {entry_point}")
+
+    common_keys = {
+        "classification",
+        "generated_sha256",
+        "generated_size",
+        "info_plist",
+        "inventory_swift_source_count",
+        "module",
+    }
+    if raw_entry_point is not None:
+        common_keys.add("entry_point")
+    expected_keys = common_keys | (
+        {"app_delegate", "scene_delegate"}
+        if entry_point == "uikit-scene-bootstrap"
+        else {"swiftui_app"}
+    )
+    if set(bootstrap) != expected_keys:
+        raise BuildPlanError("build plan bootstrap schema changed or is inconsistent")
+    if bootstrap.get("module") != build_plan.get("module"):
+        raise BuildPlanError("build plan bootstrap module is inconsistent")
+    if bootstrap.get("inventory_swift_source_count") != len(sources):
+        raise BuildPlanError("build plan bootstrap source count is inconsistent")
+
+    source_data: dict[str, bytes] = {}
+    parsed_sources: list[tuple[str, Path, bytes, str]] = []
+    for index, record in enumerate(sources):
+        relative = _string(record.get("path"), f"build plan sources[{index}].path")
+        path = _materialized(root, relative, f"build plan sources[{index}].path")
+        data = path.read_bytes()
+        try:
+            masked = scene_bootstrap._mask_swift_noncode(data.decode("utf-8"))
+        except (UnicodeDecodeError, scene_bootstrap.BootstrapError) as exc:
+            raise BuildPlanError(f"cannot reparse application source: {relative}: {exc}") from exc
+        source_data[relative] = data
+        parsed_sources.append((relative, path, data, masked))
+
+    try:
+        actual_entry, app_name, app_path, app_data = (
+            scene_bootstrap._find_application_entry_point(parsed_sources)
+        )
+    except scene_bootstrap.BootstrapError as exc:
+        raise BuildPlanError(str(exc)) from exc
+    if actual_entry != entry_point:
+        raise BuildPlanError("application entry point changed after planning")
+
+    def verify_source_record(raw: Any, label: str, name: str, path: str, data: bytes) -> None:
+        record = _mapping(raw, label)
+        if set(record) != {"path", "sha256", "type"}:
+            raise BuildPlanError(f"{label} schema changed or is inconsistent")
+        expected = {"path": path, "sha256": _sha256(data), "type": name}
+        if record != expected or source_data.get(path) != data:
+            raise BuildPlanError(f"{label} changed after planning")
+
+    info_plist = _mapping(bootstrap.get("info_plist"), "build plan bootstrap.info_plist")
+    if set(info_plist) != {"path", "sha256"}:
+        raise BuildPlanError("build plan bootstrap.info_plist schema changed")
+    info_path = _string(info_plist.get("path"), "build plan bootstrap.info_plist.path")
+    info_record = _file_record(root, info_path, "build plan bootstrap.info_plist.path")
+    if info_record["sha256"] != info_plist.get("sha256"):
+        raise BuildPlanError(f"application Info.plist changed after planning: {info_path}")
+    try:
+        plist = _mapping(
+            plistlib.loads((root / info_path).read_bytes()),
+            "build plan bootstrap Info.plist",
+        )
+    except (plistlib.InvalidFileException, ValueError) as exc:
+        raise BuildPlanError(f"cannot parse build plan Info.plist: {exc}") from exc
+
+    if entry_point == "uikit-scene-bootstrap":
+        verify_source_record(
+            bootstrap.get("app_delegate"),
+            "build plan bootstrap.app_delegate",
+            app_name,
+            app_path,
+            app_data,
+        )
+        try:
+            scene_name = scene_bootstrap._scene_delegate_name(
+                plist, _string(bootstrap.get("module"), "build plan bootstrap.module")
+            )
+            scene_path, scene_data = scene_bootstrap._find_scene_delegate(
+                parsed_sources, scene_name
+            )
+        except scene_bootstrap.BootstrapError as exc:
+            raise BuildPlanError(str(exc)) from exc
+        verify_source_record(
+            bootstrap.get("scene_delegate"),
+            "build plan bootstrap.scene_delegate",
+            scene_name,
+            scene_path,
+            scene_data,
+        )
+        generated = scene_bootstrap._uikit_generated_source(app_name, scene_name)
+    else:
+        verify_source_record(
+            bootstrap.get("swiftui_app"),
+            "build plan bootstrap.swiftui_app",
+            app_name,
+            app_path,
+            app_data,
+        )
+        generated = scene_bootstrap._swiftui_generated_source(app_name)
+
+    if bootstrap.get("generated_size") != len(generated) or bootstrap.get(
+        "generated_sha256"
+    ) != _sha256(generated):
+        raise BuildPlanError("generated bootstrap provenance changed or is inconsistent")
+
+
 def verify(build_plan: dict[str, Any], source_root: Path) -> None:
     if build_plan.get("classification") != "portable-application-build-plan":
         raise BuildPlanError("input is not a portable application build plan")
@@ -523,11 +656,7 @@ def verify(build_plan: dict[str, Any], source_root: Path) -> None:
         raise BuildPlanError("application build-plan summary changed or is inconsistent")
 
     bootstrap = _mapping(build_plan.get("bootstrap"), "build plan bootstrap")
-    info_plist = _mapping(bootstrap.get("info_plist"), "build plan bootstrap.info_plist")
-    info_path = _string(info_plist.get("path"), "build plan bootstrap.info_plist.path")
-    info_record = _file_record(root, info_path, "build plan bootstrap.info_plist.path")
-    if info_record["sha256"] != info_plist.get("sha256"):
-        raise BuildPlanError(f"application Info.plist changed after planning: {info_path}")
+    _verify_bootstrap(bootstrap, build_plan, sources, root)
 
 
 def _write_new_directory(

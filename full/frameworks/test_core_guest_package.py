@@ -785,8 +785,17 @@ class ShellContractTests(unittest.TestCase):
         source = BUILDER.read_text(encoding="utf-8")
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
-        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=7"), 1)
-        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=6", source)
+        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=8"), 1)
+        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=7", source)
+
+    def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        self.assertIn("EXPECTED_SWIFTUI_SWIFT_COUNT=8", source)
+        self.assertIn("@UIApplicationDelegateAdaptor", probe)
+        self.assertIn("WindowGroup", probe)
+        self.assertIn("CoreLifecycleApplication.main", probe)
+        self.assertIn("swiftui-app=constructed", probe)
 
     def test_builder_requires_exact_uikit_pin_and_fresh_output(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

@@ -34,6 +34,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 """
 
+SWIFTUI_APP_SOURCE = b"""\
+import SwiftUI
+import UIKit
+
+final class AppDelegate: NSObject, UIApplicationDelegate {}
+
+@main
+struct ProbeApp: SwiftUI.App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
+    var body: some Scene {
+        WindowGroup { Text("Probe") }
+    }
+}
+"""
+
 
 class SceneBootstrapTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -103,6 +119,12 @@ class SceneBootstrapTests(unittest.TestCase):
     def generate(self, inventory: dict | None = None):
         return scene_bootstrap.generate(inventory or self.inventory, self.root)
 
+    def use_swiftui_app(self) -> None:
+        (self.root / "App/AppDelegate.swift").write_bytes(SWIFTUI_APP_SOURCE)
+        (self.root / "Resources/Info.plist").write_bytes(
+            plistlib.dumps({"CFBundleName": "Probe"}, sort_keys=True)
+        )
+
     def test_generates_exact_build_input_and_provenance(self) -> None:
         generated, record = self.generate()
         self.assertEqual(
@@ -125,6 +147,7 @@ extension AppDelegate {
 """,
         )
         self.assertEqual(record["classification"], "generated-build-input")
+        self.assertEqual(record["entry_point"], "uikit-scene-bootstrap")
         self.assertEqual(record["module"], "Probe")
         self.assertEqual(record["inventory_swift_source_count"], 2)
         self.assertEqual(record["app_delegate"]["path"], "App/AppDelegate.swift")
@@ -141,6 +164,36 @@ extension AppDelegate {
         self.assertLess(
             text.index("PortableUIKitApplicationHost.prepare()"),
             text.index("UIApplicationMain(delegate:"),
+        )
+
+    def test_swiftui_app_uses_default_main_without_generated_collision(self) -> None:
+        self.use_swiftui_app()
+        generated, record = self.generate()
+
+        self.assertEqual(
+            generated,
+            b"// Generated build input: ProbeApp inherits SwiftUI.App's default main; "
+            b"no competing entry point is emitted.\n",
+        )
+        text = generated.decode("utf-8")
+        self.assertNotIn("static func main", text)
+        self.assertNotIn("extension ProbeApp", text)
+        self.assertNotIn("import SwiftUI", text)
+        self.assertEqual(record["entry_point"], "swiftui-app-default-main")
+        self.assertEqual(record["swiftui_app"]["path"], "App/AppDelegate.swift")
+        self.assertEqual(record["swiftui_app"]["type"], "ProbeApp")
+        self.assertNotIn("app_delegate", record)
+        self.assertNotIn("scene_delegate", record)
+        self.assertEqual(record["inventory_swift_source_count"], 2)
+
+        # The unqualified spelling emitted by ordinary `import SwiftUI`
+        # application sources is the same direct conformance.
+        source = SWIFTUI_APP_SOURCE.replace(b"SwiftUI.App", b"App")
+        (self.root / "App/AppDelegate.swift").write_bytes(source)
+        unqualified, unqualified_record = self.generate()
+        self.assertEqual(unqualified, generated)
+        self.assertEqual(
+            unqualified_record["entry_point"], "swiftui-app-default-main"
         )
 
     def test_comments_and_all_swift_string_forms_cannot_inject_main(self) -> None:
@@ -167,7 +220,7 @@ let raw = #"@main class RawFake: UIApplicationDelegate {}"#
             "@main\nstruct PortableApp {}\n", encoding="utf-8"
         )
         with self.assertRaisesRegex(
-            scene_bootstrap.BootstrapError, "not a class directly conforming"
+            scene_bootstrap.BootstrapError, "neither a class directly conforming"
         ):
             self.generate()
 
@@ -181,6 +234,23 @@ let raw = #"@main class RawFake: UIApplicationDelegate {}"#
         changed["sources"].append({"path": "App/Other.swift"})
         with self.assertRaisesRegex(scene_bootstrap.BootstrapError, "found 2"):
             self.generate(changed)
+
+    def test_rejects_nearby_but_nonconforming_main_shapes(self) -> None:
+        for declaration in (
+            "@main class Wrong: SwiftUI.App {}\n",
+            "@main struct Wrong: UIApplicationDelegate {}\n",
+            "@main enum Wrong: SwiftUI.App {}\n",
+            "@main struct Wrong: Other.App {}\n",
+        ):
+            with self.subTest(declaration=declaration):
+                (self.root / "App/AppDelegate.swift").write_text(
+                    declaration, encoding="utf-8"
+                )
+                with self.assertRaisesRegex(
+                    scene_bootstrap.BootstrapError,
+                    "nor a struct directly conforming to SwiftUI.App",
+                ):
+                    self.generate()
 
     def test_scene_delegate_must_match_plist_and_shipping_source(self) -> None:
         self.write_plist(delegate="Probe.MissingDelegate")

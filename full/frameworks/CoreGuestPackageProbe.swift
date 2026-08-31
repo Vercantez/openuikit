@@ -79,6 +79,21 @@ private final class CoreStoreObserver: SKPaymentTransactionObserver {
 }
 
 @MainActor
+private final class CoreLifecycleDelegate: NSObject, UIApplicationDelegate {}
+
+@MainActor
+private struct CoreLifecycleApplication: App {
+    @UIApplicationDelegateAdaptor(CoreLifecycleDelegate.self)
+    private var delegate
+
+    var body: some Scene {
+        WindowGroup("Core package") {
+            Text("SwiftUI lifecycle")
+        }
+    }
+}
+
+@MainActor
 private final class CoreSafariDelegate: SFSafariViewControllerDelegate {
     var loads: [Bool] = []
 
@@ -284,6 +299,10 @@ struct CoreGuestPackageProbe {
         precondition(!PKPaymentAuthorizationController.canMakePayments())
 
         _ = Text("core-package")
+        let lifecycleApplication = CoreLifecycleApplication()
+        _ = lifecycleApplication.body
+        let lifecycleMain: @MainActor () -> Void = CoreLifecycleApplication.main
+        withExtendedLifetime(lifecycleMain) {}
         let label = UIColor.label
         let system = UIFont.systemFont(ofSize: 17)
         let bold = UIFont.boldSystemFont(ofSize: 17)
@@ -332,7 +351,8 @@ struct CoreGuestPackageProbe {
             "CORE_GUEST_PACKAGE_MACHO_OK "
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
-                + "intentsui=host-driven first-party=fail-closed-7 "
+                + "intentsui=host-driven swiftui-app=constructed "
+                + "first-party=fail-closed-7 "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }
