@@ -11,7 +11,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The twenty-nine-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The thirty-one-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -37,6 +37,13 @@ platform `CGFloat` and `os_unfair_lock` APIs. The twenty-nine-source facade adds
   custom `URLProtocol` interception, deterministic cancellation/error mapping,
   and a fixed-width Mach-O-to-Linux libcurl boundary. TLS peer/host verification
   remains enabled and request/response sizes are hard bounded.
+- A real NSObject-backed `NSURL` reference bridge for `URL`, preserving
+  relative/base state, equality, hashing, component access, and two-way Swift
+  bridging without an application wrapper.
+- A lock-protected, equality-keyed `NSCache` with lookup recency, count and
+  cost limits, immediate trimming, strong key/value ownership, a weak
+  delegate, and Apple-measured eviction callback ordering. Its full native
+  differential is documented in `FOUNDATION_GUEST_CACHE.md`.
 - `NSLocking` and an NSObject-backed `NSLock` implemented by the guest
   `os_unfair_lock` substrate, including nonblocking acquisition, bounded
   date-based acquisition, names, and throwing `withLock` critical sections.

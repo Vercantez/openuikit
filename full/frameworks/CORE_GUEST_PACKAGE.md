@@ -42,7 +42,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its twenty-nine LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its thirty-one LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -79,6 +79,9 @@ The semantic build order is deliberate:
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
     detached jobs, global/main queues, continuations, and delayed work, then
     run the full loopback URLSession async/continuation/TaskGroup gate.
+12. Compile the native Apple Foundation URL/cache oracle unchanged against the
+    project-owned module, run it in a new Linux guest process, and require its
+    43-line output to match the checked-in Apple transcript byte-for-byte.
 
 The portable `Dispatch.swiftmodule` is built with the package compiler and
 shadows the version-incompatible Apple SDK binary module for unchanged
@@ -204,7 +207,7 @@ reexported library's ordinal. The facade object has no direct RegexParser symbol
 dylib remains StringProcessing's transitive runtime dependency rather than a
 guessed direct link.
 
-The twenty-nine-source facade's names-only undefined-symbol inventory is also a
+The thirty-one-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
 `12_RegexParser` records, plus exactly two `6Darwin` records. The build refuses

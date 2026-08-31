@@ -144,5 +144,18 @@ func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
     ) as URL?
     precondition(rejectedCFURL == nil)
 
-    return "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
+    let valueURL = URL(string: "https://example.invalid/cache/item")!
+    let referenceURL = valueURL as NSURL
+    precondition((referenceURL as URL) == valueURL)
+    precondition(referenceURL.absoluteString == valueURL.absoluteString)
+    precondition(referenceURL.isEqual(valueURL as NSURL))
+    let cache = NSCache<NSURL, CoreFoundationRuntimeLookupProbe>()
+    cache.countLimit = 1
+    let cachedObject = CoreFoundationRuntimeLookupProbe()
+    cache.setObject(cachedObject, forKey: referenceURL)
+    precondition(cache.object(forKey: valueURL as NSURL) === cachedObject)
+    cache.removeObject(forKey: valueURL as NSURL)
+    precondition(cache.object(forKey: referenceURL) == nil)
+
+    return "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports"
 }

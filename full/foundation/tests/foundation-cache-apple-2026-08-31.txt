@@ -1,0 +1,43 @@
+url.absolute	https://example.com/a%20b?q=1#fragment
+url.relative	https://example.com/a%20b?q=1#fragment
+url.round-trip	true
+url.equal-separate	true
+url.hash-separate	true
+url.scheme	https
+url.host	example.com
+url.path	/a b
+url.query	q=1
+url.fragment	fragment
+url.relative-base	child
+url.base	https://example.com/base/
+url.resolved	https://example.com/base/child
+url.relative-round-trip	true
+cache.default-name	<empty>
+cache.default-count-limit	0
+cache.default-cost-limit	0
+cache.default-discards	true
+cache.equal-key-hit	1
+cache.replace	2
+cache.replace-delegate	[2, 3]
+cache.explicit-remove-delegate	[2, 3, 4]
+cache.delegate-same-identity	true
+cache.count-evicted	[10]
+cache.count-first-present	false
+cache.count-second-present	true
+cache.cost-evicted	[20]
+cache.cost-first-present	false
+cache.cost-second-present	true
+cache.remove-all-delegate	[20, 21]
+cache.remove-all-empty	true
+cache.late-count-evicted	[30]
+cache.late-count-present	[31]
+cache.negative-cost-after-first	[40]
+cache.negative-cost-evicted	[40]
+cache.negative-cost-present	[41]
+cache.access-recency-evicted	[51]
+cache.access-recency-present	[50, 52]
+cache.retains-key	true
+cache.retains-value	true
+cache.releases-key	true
+cache.releases-value	true
+cache.delegate-is-weak	true

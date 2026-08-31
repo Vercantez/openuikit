@@ -26,6 +26,8 @@ OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+FOUNDATION_CACHE_ORACLE=$W/full/foundation/tests/FoundationCacheOracle.swift
+FOUNDATION_CACHE_GOLDEN=$W/full/foundation/tests/foundation-cache-apple-2026-08-31.txt
 OBSERVATION_SOURCES_MANIFEST=$W/full/observation/observation_guest_sources.txt
 FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
@@ -121,7 +123,7 @@ EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SYMBOLS_SWIFT_COUNT=1
 EXPECTED_SWIFTUI_SWIFT_COUNT=9
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=29
+EXPECTED_FOUNDATION_SOURCE_COUNT=31
 EXPECTED_OBSERVATION_SOURCE_COUNT=6
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
@@ -224,6 +226,8 @@ HOST_DISPATCH_SOURCE=/usr/lib/swift/linux/libdispatch.so
 HOST_BLOCKS_RUNTIME_SOURCE=/usr/lib/swift/linux/libBlocksRuntime.so
 EXPECTED_HOST_DISPATCH_SHA256=39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
 EXPECTED_HOST_BLOCKS_RUNTIME_SHA256=47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
+EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256=9a3479d559d4ba6c979868e6f34254547b13158c087319d78b72f177f88749a3
+EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256=0dd1fab4b09c76dfe6ab6fc07ac93d9350cf3bb19d31c7d8524c2df8e59e441c
 
 usage() {
     cat <<'EOF'
@@ -711,6 +715,14 @@ require_hash "$OPENCOMBINE_HELPERS/include/module.modulemap" "$EXPECTED_OPENCOMB
 require_hash "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch" \
     "$EXPECTED_OPENCOMBINE_PATCH" OpenCombine-patch
 require_hash "$W/full/oracle-opencombine/Combine.swift" "$EXPECTED_COMBINE_SHIM" Combine-shim
+require_hash "$FOUNDATION_CACHE_ORACLE" \
+    "$EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256" Foundation-cache-oracle
+require_hash "$FOUNDATION_CACHE_GOLDEN" \
+    "$EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256" Foundation-cache-Apple-golden
+for cache_input in "$FOUNDATION_CACHE_ORACLE" "$FOUNDATION_CACHE_GOLDEN"; do
+    git -C "$W" ls-files --error-unmatch "${cache_input#"$W"/}" >/dev/null \
+        || die "Foundation cache oracle input is not tracked: $cache_input"
+done
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" bold-font
 
@@ -2255,7 +2267,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2355,6 +2367,40 @@ grep -Fx \
     'FOUNDATION_URLSESSION_MACHO_OK delegate=retained configuration=isolated cookies=host-domain-path-expiry-delete redirect=set-cookie-post-get status500=response final-url=preserved concurrency=parallel input-stream=bounded urlprotocol=intercepted-cache-hit-redirect-refused timeouts=configuration-request https=not-requested' \
     "$STAGE/attestation/foundation-urlsession-runtime.log" >/dev/null \
     || die 'full async Foundation URLSession Mach-O runtime marker is missing'
+
+echo '== compile/link/run the Apple-differential NSURL and NSCache cold gate'
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name FoundationCacheRuntime -emit-object \
+    -o "$WORK/foundation-cache-runtime.o" \
+    "$FOUNDATION_CACHE_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/FoundationCacheRuntime" \
+    "$WORK/foundation-cache-runtime.o" "${COMMON_LINK[@]}" \
+    -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/FoundationCacheRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'Foundation cache runtime gate is not an ARM64 Mach-O executable'
+cp "$FOUNDATION_CACHE_GOLDEN" \
+    "$STAGE/attestation/foundation-cache-apple.txt"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/FoundationCacheRuntime
+) | tee "$STAGE/attestation/foundation-cache-runtime.log"
+cmp "$STAGE/attestation/foundation-cache-runtime.log" \
+    "$STAGE/attestation/foundation-cache-apple.txt" \
+    || die 'Foundation NSURL/NSCache guest output differs from Apple'
+foundation_cache_rows=$(wc -l \
+    < "$STAGE/attestation/foundation-cache-runtime.log" \
+    | tr -d '[:space:]')
+[ "$foundation_cache_rows" -eq 43 ] \
+    || die "Foundation cache runtime row count $foundation_cache_rows, expected 43"
+echo 'FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact'
 
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
@@ -2532,6 +2578,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
+    printf 'foundation-cache\toracle=%s\tapple-golden=%s\trows=43\n' \
+        "$(hash_file "$FOUNDATION_CACHE_ORACLE")" \
+        "$(hash_file "$FOUNDATION_CACHE_GOLDEN")"
     printf 'frontier-frameworks\tframeworks=11\tsources=11\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
@@ -2660,6 +2709,8 @@ record_artifact probe SwiftUIFoundationReexportProbe executable \
     probe/SwiftUIFoundationReexportProbe
 record_artifact probe FoundationURLSessionRuntime executable \
     probe/FoundationURLSessionRuntime
+record_artifact probe FoundationCacheRuntime executable \
+    probe/FoundationCacheRuntime
 record_artifact attestation runtime runtime-log attestation/runtime.log
 record_artifact attestation OSLog runtime-log attestation/oslog-runtime.log
 record_artifact attestation OSLog link-audit \
@@ -2674,6 +2725,10 @@ record_artifact attestation SwiftUI reexport-runtime-log \
     attestation/swiftui-foundation-reexport-runtime.log
 record_artifact attestation foundation-urlsession runtime-log \
     attestation/foundation-urlsession-runtime.log
+record_artifact attestation foundation-cache apple-golden \
+    attestation/foundation-cache-apple.txt
+record_artifact attestation foundation-cache runtime-log \
+    attestation/foundation-cache-runtime.log
 record_artifact attestation contracts compile-rsp compile-flags.rsp
 record_artifact attestation contracts link-rsp link-inputs.rsp
 record_artifact attestation source-sets manifest attestation/source-sets.tsv
@@ -2811,6 +2866,10 @@ cmp "$WORK/sdk-dangling.pre.tsv" "$WORK/sdk-dangling.post.tsv" \
     || die 'SDK dangling-symlink input changed during build'
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" post-system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" post-bold-font
+require_hash "$FOUNDATION_CACHE_ORACLE" \
+    "$EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256" post-Foundation-cache-oracle
+require_hash "$FOUNDATION_CACHE_GOLDEN" \
+    "$EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256" post-Foundation-cache-Apple-golden
 require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
     post-Observation-macro-plugin
 for index in "${!OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do

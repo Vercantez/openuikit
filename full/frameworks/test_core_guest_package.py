@@ -93,9 +93,11 @@ FOUNDATION_SOURCES = (
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
     "full/foundation/NotificationCenter+Combine.swift",
+    "full/foundation/NSCache.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",
+    "full/foundation/NSURL.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
@@ -438,14 +440,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 28)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 30)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 28-path contract", refusal.stderr)
+        self.assertIn("exact ordered 30-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -1224,19 +1226,22 @@ class ShellContractTests(unittest.TestCase):
             "options: .backwards",
             "CFURLCreateWithString(",
             '"https://example.invalid/a b" as CFString',
+            'let referenceURL = valueURL as NSURL',
+            'let cache = NSCache<NSURL, CoreFoundationRuntimeLookupProbe>()',
+            'cache.object(forKey: valueURL as NSURL) === cachedObject',
         ):
             self.assertIn(token, compatibility_probe)
         self.assertIn("FoundationHackersCompatibilityProbe.swift", builder)
         self.assertIn("runFoundationHackersCompatibilityProbe(", core_probe)
         marker = (
-            "foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
+            "foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports"
         )
         self.assertIn(marker, builder)
         self.assertIn("foundation=\\(foundationCompatibility)", core_probe)
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=29"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=31"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,
@@ -1471,8 +1476,14 @@ class ShellContractTests(unittest.TestCase):
             "OPEN_DISPATCH_MACHO_OK async-main=drained",
             "scheduler=immediate,delayed,cancelled,receive-on",
             "FOUNDATION_URLSESSION_MACHO_OK",
+            "FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact",
             "attestation/dispatch-runtime.log",
             "attestation/foundation-urlsession-runtime.log",
+            "FoundationCacheOracle.swift",
+            "foundation-cache-apple-2026-08-31.txt",
+            "probe/FoundationCacheRuntime",
+            "attestation/foundation-cache-runtime.log",
+            "attestation/foundation-cache-apple.txt",
         ):
             self.assertIn(token, builder)
         for token in (

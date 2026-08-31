@@ -19,9 +19,11 @@ EXPECTED = [
     "full/foundation/NSLock.swift",
     "full/foundation/NotificationCenter+Combine.swift",
     "full/foundation/Progress.swift",
+    "full/foundation/NSCache.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",
+    "full/foundation/NSURL.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
@@ -58,7 +60,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 29', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 31', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -257,6 +259,19 @@ class FoundationGuestServicesTests(unittest.TestCase):
             "withTaskCancellationHandler",
         ):
             self.assertIn(token, session)
+
+    def test_nsurl_bridge_and_nscache_are_production_sources(self) -> None:
+        url = (ROOT / "full/foundation/NSURL.swift").read_text()
+        cache = (ROOT / "full/foundation/NSCache.swift").read_text()
+        self.assertIn("open class NSURL: ObjectiveC.NSObject", url)
+        self.assertIn("extension URL: @retroactive ReferenceConvertible", url)
+        self.assertIn("@retroactive _ObjectiveCBridgeable", url)
+        self.assertIn(
+            "open class NSCache<KeyType: AnyObject, ObjectType: AnyObject>",
+            cache,
+        )
+        self.assertIn("private let _lock = NSLock()", cache)
+        self.assertIn("open weak var delegate", cache)
 
     def test_host_gate_is_cross_process_and_mutation_sensitive(self) -> None:
         source = (

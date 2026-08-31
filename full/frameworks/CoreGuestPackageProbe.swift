@@ -230,7 +230,7 @@ struct CoreGuestPackageProbe {
         )
         precondition(
             foundationCompatibility ==
-                "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports"
+                "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports"
         )
         let observationPlatform = runObservationGuestRuntimeProbe()
         precondition(
