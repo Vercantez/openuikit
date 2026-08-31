@@ -93,7 +93,7 @@ EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SWIFTUI_SWIFT_COUNT=8
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=24
+EXPECTED_FOUNDATION_SOURCE_COUNT=27
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
@@ -240,7 +240,7 @@ PREVIEW_ENABLED=0
 
 for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
     llvm-nm-18 perl python3 patch sha256sum cmp file readelf ldd curl-config \
-    find sort; do
+    pkg-config find sort; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
@@ -633,11 +633,13 @@ cp -a "$FULL/inc/CPortableIO" "$STAGE/include/"
 cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
 mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
+    "$STAGE/include/COpenRelativeTime" \
     "$STAGE/include/_FoundationCShims" "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
 cp -a "$OPENCOMBINE_HELPERS/include/." "$STAGE/include/COpenCombineHelpers/"
 cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
+cp -a "$W/full/relativetime/include/." "$STAGE/include/COpenRelativeTime/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
 cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
@@ -684,7 +686,9 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -fmodule-map-file="$STAGE/include/CoreImage/module.modulemap"
     -Xcc -I"$STAGE/include/CoreImage"
     -Xcc -fmodule-map-file="$STAGE/include/COpenURLTransport/module.modulemap"
-    -Xcc -I"$STAGE/include/COpenURLTransport")
+    -Xcc -I"$STAGE/include/COpenURLTransport"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenRelativeTime/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenRelativeTime")
 FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
@@ -860,6 +864,91 @@ ldd "$URL_TRANSPORT_HOST" \
         "$(hash_file "$URL_TRANSPORT_DARWIN")"
     printf 'local\thost/libOpenURLTransportHost.so\t%s\tbuilt from full/urltransport/OpenURLTransportHost.c\n' \
         "$(hash_file "$URL_TRANSPORT_HOST")"
+} >> "$RUNTIME/.manifest"
+
+echo '== build and audit the fixed-ABI ICU relative-time boundary'
+RELATIVE_TIME_DARWIN=$RUNTIME/darwin/usr/lib/libOpenRelativeTime.dylib
+RELATIVE_TIME_HOST=$RUNTIME/host/libOpenRelativeTimeHost.so
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenRelativeTime" \
+    -c "$W/full/relativetime/OpenRelativeTimeBridge.c" \
+    -o "$WORK/open-relative-time-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenRelativeTime.dylib \
+    -o "$RELATIVE_TIME_DARWIN" "$WORK/open-relative-time-bridge.o"
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenRelativeTime" -shared \
+    "$W/full/relativetime/OpenRelativeTimeHost.c" \
+    -o "$RELATIVE_TIME_HOST" -licui18n -licuuc -lm
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenRelativeTime" \
+    "$W/full/relativetime/OpenRelativeTimeHost.c" \
+    "$W/full/relativetime/OpenRelativeTimeHostTests.c" \
+    -o "$WORK/open-relative-time-host-tests" -licui18n -licuuc -lm
+"$WORK/open-relative-time-host-tests" \
+    > "$WORK/open-relative-time-host-test.log"
+grep -Fx \
+    'OPEN_RELATIVE_TIME_HOST_OK icu=real locale=en,fr,de,ja styles=4 bounds=hard' \
+    "$WORK/open-relative-time-host-test.log" >/dev/null \
+    || die 'native relative-time semantic marker is missing'
+
+printf 'openui_relative_time_v1_format\n' \
+    > "$WORK/relative-time-expected-elf.txt"
+printf '_openui_relative_time_v1_format\n' \
+    > "$WORK/relative-time-expected-mach-exports.txt"
+printf '_glibc_openui_relative_time_v1_format\n' \
+    > "$WORK/relative-time-expected-mach-imports.txt"
+readelf --wide --syms "$RELATIVE_TIME_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_relative_time_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$WORK/relative-time-elf-exports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/relative-time-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/relative-time-mach-imports.txt"
+cmp "$WORK/relative-time-expected-elf.txt" \
+    "$WORK/relative-time-elf-exports.txt" \
+    || die 'Linux relative-time helper exports drifted'
+cmp "$WORK/relative-time-expected-mach-exports.txt" \
+    "$WORK/relative-time-mach-exports.txt" \
+    || die 'Mach-O relative-time bridge exports drifted'
+cmp "$WORK/relative-time-expected-mach-imports.txt" \
+    "$WORK/relative-time-mach-imports.txt" \
+    || die 'Mach-O relative-time host imports drifted'
+[ "$(llvm-otool-18 -D "$RELATIVE_TIME_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenRelativeTime.dylib ] \
+    || die 'Mach-O relative-time install name drifted'
+
+readelf --wide --dynamic "$RELATIVE_TIME_HOST" \
+    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
+    | LC_ALL=C sort -u > "$WORK/relative-time-direct-sonames.txt"
+ldd "$RELATIVE_TIME_HOST" \
+    | awk '/=>/ { print $1; next } /^[[:space:]]*\// { count=split($1, part, "/"); print part[count] }' \
+    | LC_ALL=C sort -u > "$WORK/relative-time-transitive-sonames.txt"
+{
+    printf 'format\topen-relative-time-abi-v1\n'
+    printf 'symbol\topenui_relative_time_v1_format\tguest-export=_openui_relative_time_v1_format\tguest-host-import=_glibc_openui_relative_time_v1_format\thost-export=openui_relative_time_v1_format\n'
+    printf 'limits\tlocale-bytes=256\toutput-bytes=4096\n'
+} > "$STAGE/attestation/relative-time-abi.tsv"
+{
+    printf 'format\topen-relative-time-host-v1\n'
+    printf 'icu-version\t%s\n' "$(pkg-config --modversion icu-i18n)"
+    printf 'locales\ticu-data-driven\n'
+    printf 'styles\tfull,spell-out,short,abbreviated\n'
+    while IFS= read -r soname; do
+        printf 'direct-soname\t%s\n' "$soname"
+    done < "$WORK/relative-time-direct-sonames.txt"
+    while IFS= read -r soname; do
+        printf 'transitive-soname\t%s\n' "$soname"
+    done < "$WORK/relative-time-transitive-sonames.txt"
+} > "$STAGE/attestation/relative-time-host.tsv"
+{
+    printf 'local\tdarwin/usr/lib/libOpenRelativeTime.dylib\t%s\tbuilt from full/relativetime/OpenRelativeTimeBridge.c\n' \
+        "$(hash_file "$RELATIVE_TIME_DARWIN")"
+    printf 'local\thost/libOpenRelativeTimeHost.so\t%s\tbuilt from full/relativetime/OpenRelativeTimeHost.c\n' \
+        "$(hash_file "$RELATIVE_TIME_HOST")"
 } >> "$RUNTIME/.manifest"
 
 FE_OBJECTS=(
@@ -1080,7 +1169,8 @@ echo '== link twenty-five reusable core framework dylibs'
     -o "$STAGE/lib/libFoundation.dylib" "$WORK/foundation.o" \
     "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine \
-    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN"
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN" \
+    "$RELATIVE_TIME_DARWIN"
 foundation_graphics_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libFoundation.dylib" \
     | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
@@ -1096,6 +1186,11 @@ foundation_transport_load_count=$(llvm-otool-18 -L "$STAGE/lib/libFoundation.dyl
     | awk '$1 == "/usr/lib/libOpenURLTransport.dylib" { count++ } END { print count + 0 }')
 [ "$foundation_transport_load_count" -eq 1 ] \
     || die "libFoundation URL transport load count $foundation_transport_load_count, expected 1"
+foundation_relative_time_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libFoundation.dylib" \
+    | awk '$1 == "/usr/lib/libOpenRelativeTime.dylib" { count++ } END { print count + 0 }')
+[ "$foundation_relative_time_load_count" -eq 1 ] \
+    || die "libFoundation relative-time load count $foundation_relative_time_load_count, expected 1"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
@@ -1335,14 +1430,14 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$STAGE/attestation/runtime-closure.tsv"
 (
     cd "$STAGE"
-    LD_PRELOAD="$URL_TRANSPORT_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreGuestPackageProbe \
         "$STAGE/resources/OpenUIKit" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-12 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== write relocatable compile/link contracts'
@@ -1360,6 +1455,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/CoreImage
     -Xcc -fmodule-map-file=include/COpenURLTransport/module.modulemap
     -Xcc -Iinclude/COpenURLTransport
+    -Xcc -fmodule-map-file=include/COpenRelativeTime/module.modulemap
+    -Xcc -Iinclude/COpenRelativeTime
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
     -Xcc -Iinclude/_FoundationCShims
 )
@@ -1462,6 +1559,11 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
     printf 'frontier-frameworks\tframeworks=5\tsources=5\n'
+    printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
+        "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
+        "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
+        "$(hash_file "$W/full/relativetime/OpenRelativeTimeHost.c")" \
+        "$(hash_file "$W/full/relativetime/OpenRelativeTimeHostTests.c")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -1513,6 +1615,10 @@ record_artifact runtime OpenURLTransport darwin-bridge \
     guest-root/darwin/usr/lib/libOpenURLTransport.dylib
 record_artifact runtime OpenURLTransport linux-helper \
     guest-root/host/libOpenURLTransportHost.so
+record_artifact runtime OpenRelativeTime darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenRelativeTime.dylib
+record_artifact runtime OpenRelativeTime linux-helper \
+    guest-root/host/libOpenRelativeTimeHost.so
 record_artifact runtime machorun executable guest-root/machorun
 record_artifact resource OpenUIKit system-font \
     resources/OpenUIKit/fonts/DejaVuSans.ttf
@@ -1550,6 +1656,10 @@ record_artifact attestation url-transport abi \
     attestation/url-transport-abi.tsv
 record_artifact attestation url-transport host \
     attestation/url-transport-host.tsv
+record_artifact attestation relative-time abi \
+    attestation/relative-time-abi.tsv
+record_artifact attestation relative-time host \
+    attestation/relative-time-host.tsv
 record_artifact attestation sdk-tree manifest attestation/sdk-tree.tsv
 record_artifact attestation sdk-dangling-symlinks manifest \
     attestation/sdk-dangling-symlinks.tsv

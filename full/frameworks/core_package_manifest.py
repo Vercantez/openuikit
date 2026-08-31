@@ -41,6 +41,9 @@ FOUNDATION_SOURCES = (
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
     "full/foundation/UserDefaults.swift",
+    "full/foundation/UbiquitousKeyValueStore.swift",
+    "full/foundation/RelativeDateTimeFormatter.swift",
+    "full/foundation/FileManager+Enumeration.swift",
 )
 PATHS = {
     "sdk": "sdk",

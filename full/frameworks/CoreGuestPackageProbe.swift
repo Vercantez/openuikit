@@ -213,6 +213,134 @@ struct CoreGuestPackageProbe {
         center.removeObserver(token)
         precondition(deliveries == 1)
 
+        let allocatedLock = OSAllocatedUnfairLock<[Int]>(initialState: [])
+        let allocatedLockCopy = allocatedLock
+        allocatedLock.withLock { $0.append(1) }
+        allocatedLockCopy.withLock { $0.append(2) }
+        precondition(allocatedLock.withLock { $0 } == [1, 2])
+
+        let ubiquitous = NSUbiquitousKeyValueStore.default
+        precondition(ubiquitous === NSUbiquitousKeyValueStore.default)
+        let ubiquitousKey = "CoreGuestPackageProbe.data-platform"
+        ubiquitous.removeObject(forKey: ubiquitousKey)
+        ubiquitous.set(Data([1, 2, 3]), forKey: ubiquitousKey)
+        precondition(ubiquitous.synchronize())
+        precondition(ubiquitous.data(forKey: ubiquitousKey) == Data([1, 2, 3]))
+        ubiquitous.removeObject(forKey: ubiquitousKey)
+
+        let relative = RelativeDateTimeFormatter()
+        relative.locale = Locale(identifier: "en_US_POSIX")
+        var relativeCalendar = Calendar(identifier: .gregorian)
+        relativeCalendar.locale = relative.locale
+        relativeCalendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        relative.calendar = relativeCalendar
+        let relativeReference = Date(timeIntervalSince1970: 1_700_000_000)
+        precondition(
+            relative.localizedString(
+                for: relativeReference.addingTimeInterval(-7_200),
+                relativeTo: relativeReference
+            ) == "2 hours ago"
+        )
+        relative.locale = Locale(identifier: "fr_FR")
+        precondition(
+            relative.localizedString(
+                for: relativeReference.addingTimeInterval(86_400),
+                relativeTo: relativeReference
+            ) == "dans 1 jour"
+        )
+
+        let fileManager = FileManager.default
+        let enumerationRoot = URL(
+            fileURLWithPath: "/tmp/open-foundation-core-enumerator",
+            isDirectory: true
+        )
+        try? fileManager.removeItem(at: enumerationRoot)
+        defer { try? fileManager.removeItem(at: enumerationRoot) }
+        try! fileManager.createDirectory(
+            at: enumerationRoot.appendingPathComponent(
+                "Nested",
+                isDirectory: true
+            ),
+            withIntermediateDirectories: true
+        )
+        try! fileManager.createDirectory(
+            at: enumerationRoot.appendingPathComponent(
+                "Example.bundle",
+                isDirectory: true
+            ),
+            withIntermediateDirectories: true
+        )
+        try! Data([1, 2, 3]).write(
+            to: enumerationRoot.appendingPathComponent("visible.bin")
+        )
+        try! Data([4]).write(
+            to: enumerationRoot.appendingPathComponent(".hidden")
+        )
+        try! Data([5]).write(
+            to: enumerationRoot.appendingPathComponent("Nested/inside")
+        )
+        try! Data([6]).write(
+            to: enumerationRoot.appendingPathComponent(
+                "Example.bundle/inside"
+            )
+        )
+        let fileKeys: Set<URLResourceKey> = [
+            .isRegularFileKey,
+            .fileAllocatedSizeKey,
+            .totalFileAllocatedSizeKey,
+        ]
+        let enumerator = fileManager.enumerator(
+            at: enumerationRoot,
+            includingPropertiesForKeys: Array(fileKeys),
+            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+        )!
+        let enumerated = enumerator.compactMap { value -> String? in
+            guard let url = value as? URL,
+                  let rootIndex = url.pathComponents.lastIndex(
+                    of: enumerationRoot.lastPathComponent
+                  ) else { return nil }
+            return url.pathComponents.dropFirst(rootIndex + 1)
+                .joined(separator: "/")
+        }.sorted()
+        precondition(enumerated == [
+            "Example.bundle",
+            "Nested",
+            "Nested/inside",
+            "visible.bin",
+        ])
+        let visibleValues = try! enumerationRoot
+            .appendingPathComponent("visible.bin")
+            .resourceValues(forKeys: fileKeys)
+        precondition(visibleValues.isRegularFile == true)
+        precondition(
+            (visibleValues.totalFileAllocatedSize ??
+                visibleValues.fileAllocatedSize ?? 0) >= 3
+        )
+
+        let portableProduct = Product(
+            id: "core.product",
+            displayName: "Core Product",
+            description: "Portable StoreKit model",
+            price: Decimal(string: "1.99")!,
+            displayPrice: "USD 1.99"
+        )
+        precondition(portableProduct.displayPrice == "USD 1.99")
+        let portableTransaction = Transaction(
+            id: 1,
+            productID: portableProduct.id,
+            purchaseDate: relativeReference,
+            expirationDate: relativeReference.addingTimeInterval(60),
+            revocationDate: nil
+        )
+        precondition(portableTransaction.expirationDate != nil)
+        precondition(portableTransaction.revocationDate == nil)
+        switch StoreKitError.userCancelled {
+        case .userCancelled: break
+        default: preconditionFailure("StoreKit cancellation identity drifted")
+        }
+        let dataPlatform =
+            "lock,kvs,relative-time-icu,filesystem,storekit-model"
+
         let subject = PassthroughSubject<Int, Never>()
         var values: [Int] = []
         let cancellable = subject.sink { values.append($0) }
@@ -434,6 +562,7 @@ struct CoreGuestPackageProbe {
                 + "notification=shared combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "foundation=\(foundationCompatibility) "
+                + "data-platform=\(dataPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-12 "
