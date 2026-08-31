@@ -171,6 +171,44 @@ private final class RuntimeModel: Combine.ObservableObject {
     @Combine.Published var showsController = true
 }
 
+@MainActor
+private final class TaskLifecycleState {
+    var started: [Int] = []
+    var cancelled: [Int] = []
+}
+
+private struct TaskValueFixture: View {
+    let value: Int
+    let state: TaskLifecycleState
+
+    var body: some View {
+        Text("task \(value)")
+            .task(id: value) {
+                state.started.append(value)
+                do {
+                    try await Task<Never, Never>.sleep(
+                        nanoseconds: 60_000_000_000
+                    )
+                } catch {
+                    state.cancelled.append(value)
+                }
+            }
+    }
+}
+
+private struct TaskLifecycleFixture: View {
+    @ObservedObject var model: RuntimeModel
+    let state: TaskLifecycleState
+
+    var body: some View {
+        if model.showsController {
+            TaskValueFixture(value: model.value, state: state)
+        } else {
+            Text("removed")
+        }
+    }
+}
+
 private struct RepresentableLifecycleFixture: View {
     @ObservedObject var model: RuntimeModel
     let make: @MainActor () -> RepresentedController
@@ -178,6 +216,72 @@ private struct RepresentableLifecycleFixture: View {
     var body: some View {
         if model.showsController {
             ControllerFixture(value: model.value, make: make)
+        } else {
+            Text("removed")
+        }
+    }
+}
+
+@MainActor
+private final class RepresentedControllerCoordinatorState {
+    var makeCoordinatorCount = 0
+    var makeControllerCount = 0
+    var dismantleCount = 0
+    var coordinatorUpdates: [Int] = []
+    weak var controller: RepresentedController?
+}
+
+@MainActor
+private final class RepresentedControllerCoordinator {
+    let state: RepresentedControllerCoordinatorState
+
+    init(state: RepresentedControllerCoordinatorState) {
+        self.state = state
+    }
+}
+
+private struct CoordinatedControllerFixture: UIViewControllerRepresentable {
+    let value: Int
+    let state: RepresentedControllerCoordinatorState
+
+    func makeCoordinator() -> RepresentedControllerCoordinator {
+        state.makeCoordinatorCount += 1
+        return RepresentedControllerCoordinator(state: state)
+    }
+
+    func makeUIViewController(context: Context) -> RepresentedController {
+        precondition(context.coordinator.state === state)
+        state.makeControllerCount += 1
+        let controller = RepresentedController()
+        state.controller = controller
+        return controller
+    }
+
+    func updateUIViewController(
+        _ uiViewController: RepresentedController,
+        context: Context
+    ) {
+        precondition(context.coordinator.state === state)
+        precondition(uiViewController === state.controller)
+        context.coordinator.state.coordinatorUpdates.append(value)
+    }
+
+    static func dismantleUIViewController(
+        _ uiViewController: RepresentedController,
+        coordinator: RepresentedControllerCoordinator
+    ) {
+        precondition(uiViewController === coordinator.state.controller)
+        coordinator.state.dismantleCount += 1
+    }
+}
+
+private struct CoordinatedControllerLifecycleFixture: View {
+    @ObservedObject var model: RuntimeModel
+    let state: RepresentedControllerCoordinatorState
+
+    var body: some View {
+        if model.showsController {
+            CoordinatedControllerFixture(value: model.value, state: state)
         } else {
             Text("removed")
         }
@@ -526,6 +630,35 @@ final class SwiftUIOnboardingTests: XCTestCase {
         XCTAssertEqual(controller._openGraphRepresentedControllerCount, 0)
     }
 
+    func testUIViewControllerRepresentableRetainsCoordinatorAndDismantlesExactlyOnce() async throws {
+        let model = RuntimeModel()
+        let state = RepresentedControllerCoordinatorState()
+        let controller = UIHostingController(
+            rootView: CoordinatedControllerLifecycleFixture(model: model, state: state)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 90, height: 70)
+        host.layoutIfNeeded()
+
+        XCTAssertEqual(state.makeCoordinatorCount, 1)
+        XCTAssertEqual(state.makeControllerCount, 1)
+        XCTAssertEqual(state.coordinatorUpdates, [0])
+        XCTAssertEqual(state.dismantleCount, 0)
+
+        model.value = 9
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(state.makeCoordinatorCount, 1)
+        XCTAssertEqual(state.makeControllerCount, 1)
+        XCTAssertEqual(state.coordinatorUpdates, [0, 9])
+
+        model.showsController = false
+        await drainMainActor()
+        host.layoutIfNeeded()
+        XCTAssertEqual(state.dismantleCount, 1)
+        XCTAssertEqual(controller._openGraphRepresentedControllerCount, 0)
+    }
+
     func testUIViewRepresentableRetainsViewCoordinatorAndRealWindowLifecycle() async throws {
         let model = RepresentedViewModel()
         let state = RepresentedViewState()
@@ -574,6 +707,37 @@ final class SwiftUIOnboardingTests: XCTestCase {
         XCTAssertNil(represented.window)
         XCTAssertEqual(represented.windowEvents, [true, false])
         XCTAssertEqual(controller._openGraphRepresentedViewCount, 0)
+    }
+
+    func testTaskIDRestartsAndLeavingGraphCancelsStructuredWork() async throws {
+        let model = RuntimeModel()
+        let state = TaskLifecycleState()
+        let controller = UIHostingController(
+            rootView: TaskLifecycleFixture(model: model, state: state)
+        )
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 100, height: 44)
+        host.layoutIfNeeded()
+        await drainMainActor()
+
+        XCTAssertEqual(state.started, [0])
+        XCTAssertEqual(state.cancelled, [])
+        XCTAssertEqual(controller._openGraphTaskCount, 1)
+
+        model.value = 1
+        await drainMainActor()
+        host.layoutIfNeeded()
+        await drainMainActor()
+        XCTAssertEqual(state.started, [0, 1])
+        XCTAssertEqual(state.cancelled, [0])
+        XCTAssertEqual(controller._openGraphTaskCount, 1)
+
+        model.showsController = false
+        await drainMainActor()
+        host.layoutIfNeeded()
+        await drainMainActor()
+        XCTAssertEqual(state.cancelled, [0, 1])
+        XCTAssertEqual(controller._openGraphTaskCount, 0)
     }
 
     func testOnAppearTracksHostAppearanceAndStableGraphIdentity() async throws {

@@ -49,6 +49,10 @@ extension UIResponder {
         get { _accessibility.isElement }
         set { _accessibility.isElement = newValue }
     }
+    public var accessibilityElementsHidden: Bool {
+        get { _accessibility.elementsHidden }
+        set { _accessibility.elementsHidden = newValue }
+    }
     public var accessibilityLabel: String? {
         get { _accessibility.label }
         set { _accessibility.label = newValue }
@@ -73,6 +77,7 @@ extension UIResponder {
 
 struct AccessibilityState {
     var isElement = false
+    var elementsHidden = false
     var label: String?
     var value: String?
     var hint: String?

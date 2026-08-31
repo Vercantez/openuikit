@@ -195,6 +195,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     var _openGraphRepresentedViewCount: Int { graph.representedViewCount }
     var _openGraphChangeCount: Int { graph.changeCount }
     var _openGraphSubscriptionCount: Int { graph.subscriptionCount }
+    var _openGraphTaskCount: Int { graph.taskCount }
 }
 
 public typealias UIHostingController<Content> = _OpenUIHostingController<Content>
@@ -691,6 +692,8 @@ private enum _ViewRenderer {
                 var next = environment
                 next.isEnabled = environment.isEnabled && !disabled
                 return measure(content, proposed: proposed, environment: next)
+            case .accessibilityHidden:
+                return measure(content, proposed: proposed, environment: environment)
             case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .toolbar, .tag, .pageTabViewStyle:
@@ -1166,6 +1169,19 @@ private enum _ViewRenderer {
                 var next = environment
                 next.isEnabled = environment.isEnabled && !disabled
                 place(content, in: rect, on: surface, environment: next)
+            case .accessibilityHidden(let hidden):
+                let accessibilityHost = _SwiftUIPassthroughView(frame: rect)
+                accessibilityHost.backgroundColor = .clear
+                accessibilityHost.isOpaque = false
+                accessibilityHost.accessibilityElementsHidden = hidden
+                accessibilityHost.accessibilityIdentifier = "SwiftUI.AccessibilityHidden"
+                surface.addSubview(accessibilityHost)
+                place(
+                    content,
+                    in: accessibilityHost.bounds,
+                    on: accessibilityHost,
+                    environment: environment
+                )
             case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .toolbar, .tag, .pageTabViewStyle:

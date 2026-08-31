@@ -5,9 +5,16 @@ import OpenUIKit
 
 public struct _OpenFont: Equatable, Sendable {
     public enum TextStyle: Equatable, Sendable {
+        case largeTitle
+        case title
+        case title2
         case headline
         case body
+        case callout
+        case subheadline
+        case footnote
         case caption
+        case caption2
         case title3
     }
 
@@ -46,9 +53,16 @@ public struct _OpenFont: Equatable, Sendable {
         )
     }
 
+    public static let largeTitle = _OpenFont(.largeTitle)
+    public static let title = _OpenFont(.title)
+    public static let title2 = _OpenFont(.title2)
     public static let headline = _OpenFont(.headline)
     public static let body = _OpenFont(.body)
+    public static let callout = _OpenFont(.callout)
+    public static let subheadline = _OpenFont(.subheadline)
+    public static let footnote = _OpenFont(.footnote)
     public static let caption = _OpenFont(.caption)
+    public static let caption2 = _OpenFont(.caption2)
     public static let title3 = _OpenFont(.title3)
 
     public static func system(size: CGFloat) -> _OpenFont {
@@ -62,9 +76,16 @@ public struct _OpenFont: Equatable, Sendable {
         case .textStyle(let style):
             let pointSize: CGFloat
             switch style {
-            case .headline, .body: pointSize = 17
-            case .caption: pointSize = 12
+            case .largeTitle: pointSize = 34
+            case .title: pointSize = 28
+            case .title2: pointSize = 22
             case .title3: pointSize = 20
+            case .headline, .body: pointSize = 17
+            case .callout: pointSize = 16
+            case .subheadline: pointSize = 15
+            case .footnote: pointSize = 13
+            case .caption: pointSize = 12
+            case .caption2: pointSize = 11
             }
             return _OpenFont(
                 storage: .uiFont(pointSize: pointSize, weight: .bold, design: .default)
@@ -85,8 +106,15 @@ public struct _OpenFont: Equatable, Sendable {
         case .textStyle(let style):
             let size: CGFloat
             switch style {
+            case .largeTitle: size = 34
+            case .title: size = 28
+            case .title2: size = 22
             case .title3: size = 20
+            case .callout: size = 16
+            case .subheadline: size = 15
+            case .footnote: size = 13
             case .caption: size = 12
+            case .caption2: size = 11
             case .headline, .body: size = 17
             }
             let weight: UIFont.Weight = override?.value
@@ -136,6 +164,8 @@ public struct _OpenColor {
     public static let green = _OpenColor(uiColor: .green)
     public static let blue = _OpenColor(uiColor: .blue)
     public static let gray = _OpenColor(uiColor: .gray)
+    public static let primary = _OpenColor(uiColor: .label)
+    public static let secondary = _OpenColor(uiColor: .secondaryLabel)
 
     public func opacity(_ opacity: CGFloat) -> _OpenColor {
         _OpenColor(storage: .opacity(storage, min(max(opacity, 0), 1)))
@@ -156,6 +186,53 @@ public struct _OpenColor {
             let base = _OpenColor(storage: storage).resolve()
             return base.withAlphaComponent(base.cgColor.alpha * opacity)
         }
+    }
+}
+
+/// The app-facing shape-style protocol used by foregroundStyle. The portable
+/// renderer resolves a style to a deterministic foreground color today; the
+/// protocol boundary leaves room for true masked gradient rendering without
+/// changing application source or ABI.
+@MainActor
+public protocol _OpenShapeStyle {
+    func _openResolvedForegroundColor() -> _OpenColor
+}
+
+extension _OpenColor: _OpenShapeStyle {
+    public func _openResolvedForegroundColor() -> _OpenColor { self }
+}
+
+public struct _OpenHierarchicalShapeStyle: _OpenShapeStyle, Sendable {
+    enum Level: Sendable { case primary, secondary, tertiary, quaternary }
+    let level: Level
+
+    public func _openResolvedForegroundColor() -> _OpenColor {
+        switch level {
+        case .primary: return .primary
+        case .secondary: return .secondary
+        case .tertiary:
+            return _OpenColor(uiColor: .tertiaryLabel)
+        case .quaternary:
+            return _OpenColor(uiColor: .quaternaryLabel)
+        }
+    }
+}
+
+public extension _OpenShapeStyle where Self == _OpenHierarchicalShapeStyle {
+    static var primary: _OpenHierarchicalShapeStyle {
+        _OpenHierarchicalShapeStyle(level: .primary)
+    }
+
+    static var secondary: _OpenHierarchicalShapeStyle {
+        _OpenHierarchicalShapeStyle(level: .secondary)
+    }
+
+    static var tertiary: _OpenHierarchicalShapeStyle {
+        _OpenHierarchicalShapeStyle(level: .tertiary)
+    }
+
+    static var quaternary: _OpenHierarchicalShapeStyle {
+        _OpenHierarchicalShapeStyle(level: .quaternary)
     }
 }
 
@@ -279,4 +356,5 @@ public typealias Edge = _OpenEdge
 public typealias ContentMode = _OpenContentMode
 public typealias PreviewLayout = _OpenPreviewLayout
 public typealias Shape = _OpenShape
+public typealias ShapeStyle = _OpenShapeStyle
 public typealias RoundedRectangle = _OpenRoundedRectangle

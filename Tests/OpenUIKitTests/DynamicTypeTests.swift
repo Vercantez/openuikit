@@ -292,9 +292,11 @@ final class ViewCompatTests: XCTestCase {
         v.isAccessibilityElement = true
         v.accessibilityLabel = "Play"
         v.accessibilityTraits = [.button]
+        v.accessibilityElementsHidden = true
         XCTAssertTrue(v.isAccessibilityElement)
         XCTAssertEqual(v.accessibilityLabel, "Play")
         XCTAssertTrue(v.accessibilityTraits.contains(.button))
+        XCTAssertTrue(v.accessibilityElementsHidden)
     }
 
     func testSystemLayoutSizeFittingRespectsRequiredAxis() {

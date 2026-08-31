@@ -286,6 +286,7 @@ enum _OpenGraphStructuralScope: Hashable {
     case conditionalTrue
     case conditionalFalse
     case arrayElement(Int)
+    case groupContent
     case hStackContent
     case vStackContent
     case zStackContent
@@ -311,6 +312,7 @@ enum _OpenGraphStructuralScope: Hashable {
     case onAppear
     case onChange
     case onReceive
+    case task
 }
 
 private enum _OpenGraphPathComponent: Hashable {
@@ -440,6 +442,38 @@ private struct _OpenRepresentedViewKey: Hashable {
 }
 
 @MainActor
+private protocol _OpenAnyRepresentedControllerEntry: AnyObject {
+    var controller: UIViewController { get }
+    func dismantle()
+}
+
+@MainActor
+private final class _OpenRepresentedControllerEntry<
+    Controller: UIViewController,
+    Coordinator
+>: _OpenAnyRepresentedControllerEntry {
+    let typedController: Controller
+    let coordinator: Coordinator
+    private let dismantleAction: @MainActor (Controller, Coordinator) -> Void
+
+    init(
+        controller: Controller,
+        coordinator: Coordinator,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
+    ) {
+        typedController = controller
+        self.coordinator = coordinator
+        dismantleAction = dismantle
+    }
+
+    var controller: UIViewController { typedController }
+
+    func dismantle() {
+        dismantleAction(typedController, coordinator)
+    }
+}
+
+@MainActor
 private protocol _OpenAnyRepresentedViewEntry: AnyObject {
     var view: UIView { get }
     func dismantle()
@@ -473,6 +507,7 @@ private final class _OpenRepresentedViewEntry<ViewType: UIView, Coordinator>:
 private enum _OpenEffectKind: Hashable {
     case change
     case subscription
+    case task
 }
 
 private struct _OpenEffectKey: Hashable {
@@ -499,6 +534,32 @@ private final class _OpenSubscriptionEntry {
     }
 }
 
+@MainActor
+private protocol _OpenAnyTaskEntry: AnyObject {
+    func cancel()
+}
+
+@MainActor
+private final class _OpenTaskEntry<ID: Equatable>: _OpenAnyTaskEntry {
+    let id: ID
+    private let task: Task<Void, Never>
+
+    init(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        self.id = id
+        task = Task(priority: priority) { @MainActor in
+            await action()
+        }
+    }
+
+    func cancel() {
+        task.cancel()
+    }
+}
+
 /// Identity, rather than a wrapping integer, owns one deferred graph pass.
 /// A direct evaluation retires the current token; a later publication creates
 /// a distinct token which an already-queued callback can never consume.
@@ -511,16 +572,20 @@ final class _OpenGraphHost {
     private var path: [_OpenGraphPathComponent] = []
     private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
     private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
-    private var representedControllers: [_OpenRepresentedControllerKey: UIViewController] = [:]
+    private var representedControllers: [
+        _OpenRepresentedControllerKey: any _OpenAnyRepresentedControllerEntry
+    ] = [:]
     private var representedViews: [_OpenRepresentedViewKey: any _OpenAnyRepresentedViewEntry] = [:]
     private var changeValues: [_OpenEffectKey: any _OpenAnyChangeStorage] = [:]
     private var subscriptions: [_OpenEffectKey: _OpenSubscriptionEntry] = [:]
+    private var tasks: [_OpenEffectKey: any _OpenAnyTaskEntry] = [:]
     private var activeStateKeys: Set<_OpenStateKey> = []
     private var activeObservationKeys: Set<ObjectIdentifier> = []
     private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
     private var activeRepresentedViewKeys: Set<_OpenRepresentedViewKey> = []
     private var activeChangeKeys: Set<_OpenEffectKey> = []
     private var activeSubscriptionKeys: Set<_OpenEffectKey> = []
+    private var activeTaskKeys: Set<_OpenEffectKey> = []
     private var postEvaluationActions: [@MainActor () -> Void] = []
     private var isEvaluating = false
     private var pendingInvalidationToken: _OpenGraphInvalidationToken?
@@ -530,8 +595,14 @@ final class _OpenGraphHost {
     private(set) var invalidationCount = 0
 
     isolated deinit {
+        for entry in representedControllers.values {
+            entry.dismantle()
+        }
         for entry in representedViews.values {
             entry.dismantle()
+        }
+        for entry in tasks.values {
+            entry.cancel()
         }
     }
 
@@ -541,6 +612,7 @@ final class _OpenGraphHost {
     var representedViewCount: Int { representedViews.count }
     var changeCount: Int { changeValues.count }
     var subscriptionCount: Int { subscriptions.count }
+    var taskCount: Int { tasks.count }
 
     func evaluate<Content: _OpenView>(_ content: Content) -> _OpenViewNode {
         precondition(!isEvaluating, "recursive SwiftUI graph evaluation")
@@ -556,6 +628,7 @@ final class _OpenGraphHost {
         activeRepresentedViewKeys.removeAll(keepingCapacity: true)
         activeChangeKeys.removeAll(keepingCapacity: true)
         activeSubscriptionKeys.removeAll(keepingCapacity: true)
+        activeTaskKeys.removeAll(keepingCapacity: true)
         postEvaluationActions.removeAll(keepingCapacity: true)
         path.removeAll(keepingCapacity: true)
         renderCount += 1
@@ -580,7 +653,8 @@ final class _OpenGraphHost {
             !activeRepresentedControllerKeys.contains($0)
         }
         for key in staleControllerKeys {
-            representedControllers.removeValue(forKey: key)
+            let entry = representedControllers.removeValue(forKey: key)
+            entry?.dismantle()
         }
         let staleViewKeys = representedViews.keys.filter {
             !activeRepresentedViewKeys.contains($0)
@@ -600,6 +674,10 @@ final class _OpenGraphHost {
         }
         for key in staleSubscriptionKeys {
             subscriptions.removeValue(forKey: key)?.cancellation.cancel()
+        }
+        let staleTaskKeys = tasks.keys.filter { !activeTaskKeys.contains($0) }
+        for key in staleTaskKeys {
+            tasks.removeValue(forKey: key)?.cancel()
         }
         isEvaluating = false
         let actions = postEvaluationActions
@@ -1036,6 +1114,29 @@ final class _OpenGraphHost {
         subscriptions[key] = _OpenSubscriptionEntry(cancellation)
     }
 
+    fileprivate func installTask<ID: Equatable>(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .task,
+            valueType: ObjectIdentifier(ID.self)
+        )
+        activeTaskKeys.insert(key)
+        if let existing = tasks[key] {
+            guard let typed = existing as? _OpenTaskEntry<ID> else {
+                preconditionFailure(
+                    "SwiftUI task ID type changed at a stable structural location"
+                )
+            }
+            guard typed.id != id else { return }
+            tasks.removeValue(forKey: key)?.cancel()
+        }
+        tasks[key] = _OpenTaskEntry(id: id, priority: priority, action: action)
+    }
+
     private func enqueueEffect(_ action: @escaping @MainActor () -> Void) {
         if isEvaluating {
             postEvaluationActions.append(action)
@@ -1044,9 +1145,11 @@ final class _OpenGraphHost {
         }
     }
 
-    fileprivate func representedController<Controller: UIViewController>(
-        make: () -> Controller,
-        update: (Controller) -> Void
+    fileprivate func representedController<Controller: UIViewController, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> Controller,
+        update: (Controller, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
     ) -> Controller {
         let key = _OpenRepresentedControllerKey(
             viewPath: path,
@@ -1054,20 +1157,29 @@ final class _OpenGraphHost {
         )
         activeRepresentedControllerKeys.insert(key)
 
-        let controller: Controller
+        let entry: _OpenRepresentedControllerEntry<Controller, Coordinator>
         if let existing = representedControllers[key] {
-            guard let typed = existing as? Controller else {
+            guard let typed = existing as? _OpenRepresentedControllerEntry<
+                Controller,
+                Coordinator
+            > else {
                 preconditionFailure(
                     "UIViewControllerRepresentable type changed at a stable structural location"
                 )
             }
-            controller = typed
+            entry = typed
         } else {
-            controller = make()
-            representedControllers[key] = controller
+            let coordinator = makeCoordinator()
+            let controller = make(coordinator)
+            entry = _OpenRepresentedControllerEntry(
+                controller: controller,
+                coordinator: coordinator,
+                dismantle: dismantle
+            )
+            representedControllers[key] = entry
         }
-        update(controller)
-        return controller
+        update(entry.typedController, entry.coordinator)
+        return entry.typedController
     }
 
     fileprivate func representedView<ViewType: UIView, Coordinator>(
@@ -1148,16 +1260,24 @@ enum _OpenGraphContext {
         currentHost?.currentIdentity()
     }
 
-    static func representedController<Controller: UIViewController>(
-        make: () -> Controller,
-        update: (Controller) -> Void
+    static func representedController<Controller: UIViewController, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> Controller,
+        update: (Controller, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
     ) -> Controller {
         guard let currentHost else {
-            let controller = make()
-            update(controller)
+            let coordinator = makeCoordinator()
+            let controller = make(coordinator)
+            update(controller, coordinator)
             return controller
         }
-        return currentHost.representedController(make: make, update: update)
+        return currentHost.representedController(
+            makeCoordinator: makeCoordinator,
+            make: make,
+            update: update,
+            dismantle: dismantle
+        )
     }
 
     static func representedView<ViewType: UIView, Coordinator>(
@@ -1192,5 +1312,13 @@ enum _OpenGraphContext {
         action: @escaping @MainActor (PublisherType.Output) -> Void
     ) {
         currentHost?.subscribe(publisher, action: action)
+    }
+
+    static func installTask<ID: Equatable>(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        currentHost?.installTask(id: id, priority: priority, action: action)
     }
 }

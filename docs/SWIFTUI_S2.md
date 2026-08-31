@@ -51,6 +51,7 @@ The implemented structural path distinguishes:
 
 - tuple positions, optional presence, and conditional branches;
 - positional builder arrays;
+- explicit `Group` containers;
 - `HStack`, `VStack`, `Form`, navigation, and modified content;
 - deferred background and overlay content; and
 - `ForEach` elements by the actual `Hashable` value supplied through `id:`.
@@ -60,6 +61,25 @@ down that location and detaches old bindings; reinserting it starts from the
 new initial value. Positional builder arrays intentionally remain positional.
 Same-typed conditional branches do not share state, and removing an earlier
 optional does not renumber a later stack sibling.
+
+`UIViewRepresentable` and `UIViewControllerRepresentable` each retain one
+coordinator beside the represented object at a stable graph location. Updates
+receive that same coordinator, and the corresponding dismantle hook runs once
+when the location leaves the graph or its host is destroyed.
+
+The task effect owns one structured `Task` per stable graph location and ID.
+Reevaluation with an equal ID preserves it, changing the ID cancels and starts
+new work, and removing the view cancels outstanding work. Task cancellation is
+cooperative, matching Swift concurrency. Mach-O guest execution additionally
+requires the platform's Dispatch/main-executor boundary; source compatibility
+does not substitute a synchronous callback.
+
+The current view surface also includes all standard dynamic text styles,
+hierarchical foreground styles, color and linear-gradient foreground-style
+inputs, `Group`, `accessibilityHidden`, and bitmap-backed decorative Images
+with all eight CGImage orientations. A foreground gradient currently resolves
+to its leading color for text and symbols; masked gradient glyph rendering is
+a separately measurable renderer extension.
 
 `ObservedObject` subscribes once per object identity in the active graph.
 Publication schedules one coalesced render on a later main-actor turn. Native
@@ -117,8 +137,8 @@ value remains usable from nonisolated code.
 ## Not claimed
 
 S2 does not yet provide `StateObject`, environment values/objects, focus,
-preferences, gestures, transactions, animations, SwiftUI's general diffing
-engine, or the complete APIs of the four supported wrappers. `ForEach` still
+preferences, transactions, animations, SwiftUI's general diffing engine, or
+the complete APIs of the four supported wrappers. `ForEach` still
 eagerly expands the implemented OpenUIKit node tree and does not animate
 insertions or moves. The renderer and layout vocabulary remain the bounded S1
 and S1.5 surfaces plus later explicitly documented slices; this observation

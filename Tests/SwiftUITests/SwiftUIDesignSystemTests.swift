@@ -76,6 +76,31 @@ private struct RoundedOverlayFixture: View {
     }
 }
 
+private struct HackersThumbnailSurfaceFixture: View {
+    var body: some View {
+        Group {
+            Image(systemName: "safari")
+                .font(.title2)
+                .foregroundStyle(.secondary)
+                .frame(width: 28, height: 28)
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+private struct GradientForegroundFixture: View {
+    var body: some View {
+        Text("gradient style")
+            .foregroundStyle(
+                LinearGradient(
+                    gradient: Gradient(colors: [.red, .blue]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+    }
+}
+
 @MainActor
 final class SwiftUIDesignSystemTests: XCTestCase {
     private var savedResourceRoot = ""
@@ -203,6 +228,68 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(rgba(first, x: 22, y: 30), [255, 0, 0, 255])
         XCTAssertEqual(alpha(first, x: 59, y: 59), 0)
         XCTAssertGreaterThan(alpha(first, x: 1, y: 30), 0)
+    }
+
+    func testGroupHierarchicalForegroundAndAccessibilityComposeLikeHackersThumbnail() throws {
+        let controller = UIHostingController(rootView: HackersThumbnailSurfaceFixture())
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        host.layoutIfNeeded()
+
+        let accessibilityHost = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.AccessibilityHidden")
+        )
+        let symbol = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.Image.systemName.safari")
+        )
+        XCTAssertTrue(accessibilityHost.accessibilityElementsHidden)
+        XCTAssertEqual(symbol.frame.size, CGSize(width: 28, height: 28))
+        XCTAssertEqual(
+            Font.title2.resolve(weight: nil).pointSize,
+            22,
+            accuracy: 0.001
+        )
+    }
+
+    func testStandardTextStylesExposeUIKitMetricsUsedByUntouchedHackers() {
+        let styles: [Font] = [
+            .largeTitle, .title, .title2, .title3, .headline, .body,
+            .callout, .subheadline, .footnote, .caption, .caption2,
+        ]
+        XCTAssertEqual(
+            styles.map { $0.resolve(weight: nil).pointSize },
+            [34, 28, 22, 20, 17, 17, 16, 15, 13, 12, 11]
+        )
+    }
+
+    func testGradientForegroundResolvesDeterministicallyToLeadingStyleColor() throws {
+        let controller = UIHostingController(rootView: GradientForegroundFixture())
+        let host = try XCTUnwrap(controller.view)
+        host.frame = CGRect(x: 0, y: 0, width: 160, height: 44)
+        host.layoutIfNeeded()
+        let label = try XCTUnwrap(
+            descendant(host, identifier: "SwiftUI.Text") as? UILabel
+        )
+        XCTAssertEqual(label.textColor, .red)
+    }
+
+    func testDecorativeBitmapImageAppliesCGImageOrientationAndScale() throws {
+        let bitmap = Bitmap(width: 2, height: 1)
+        bitmap.pixels = [
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+        ]
+        let image = Image(decorative: bitmap, scale: 2, orientation: .right)
+        guard case .uiImage(let oriented) = image.source else {
+            return XCTFail("decorative CGImage must produce a UIImage-backed source")
+        }
+        XCTAssertEqual(oriented.scale, 2)
+        XCTAssertEqual(oriented.bitmap.width, 1)
+        XCTAssertEqual(oriented.bitmap.height, 2)
+        XCTAssertEqual(
+            oriented.bitmap.pixels,
+            [255, 0, 0, 255, 0, 0, 255, 255]
+        )
     }
 
     private func descendant(_ root: UIView, identifier: String) -> UIView? {

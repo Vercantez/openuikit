@@ -146,6 +146,7 @@ enum _OpenViewModification {
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
     case disabled(Bool)
+    case accessibilityHidden(Bool)
     case effect
 }
 
@@ -183,8 +184,10 @@ fileprivate enum _OpenViewModifier {
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
     case disabled(Bool)
+    case accessibilityHidden(Bool)
     case onChange(@MainActor () -> Void)
     case onReceive(@MainActor () -> Void)
+    case task(@MainActor () -> Void)
 
     @MainActor
     func resolve() -> _OpenViewModification {
@@ -241,11 +244,15 @@ fileprivate enum _OpenViewModifier {
         case .tag(let value): return .tag(value)
         case .pageTabViewStyle(let mode): return .pageTabViewStyle(mode)
         case .disabled(let disabled): return .disabled(disabled)
+        case .accessibilityHidden(let hidden): return .accessibilityHidden(hidden)
         case .onChange(let install):
             _OpenGraphContext.withStructuralScope(.onChange) { install() }
             return .effect
         case .onReceive(let install):
             _OpenGraphContext.withStructuralScope(.onReceive) { install() }
+            return .effect
+        case .task(let install):
+            _OpenGraphContext.withStructuralScope(.task) { install() }
             return .effect
         }
     }
@@ -441,6 +448,24 @@ public struct _OpenViewArray<Content: _OpenView>: _OpenView {
     }
 }
 
+/// A semantic, layout-transparent container. Unlike returning builder content
+/// directly, Group owns a stable structural scope so dynamic state in a Group
+/// cannot alias an adjacent sibling during graph reevaluation.
+public struct _OpenGroup<Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    public let content: Content
+
+    public init(@_OpenViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenGraphContext.withStructuralScope(.groupContent) {
+            content._makeOpenUIKitNode()
+        }
+    }
+}
+
 extension Optional: _OpenView where Wrapped: _OpenView {
     public typealias Body = Never
 
@@ -476,6 +501,17 @@ public struct _OpenImage: _OpenView {
     public typealias Body = Never
     let source: _OpenImageSource
 
+    public enum Orientation: UInt8, Sendable {
+        case up
+        case upMirrored
+        case down
+        case downMirrored
+        case leftMirrored
+        case right
+        case rightMirrored
+        case left
+    }
+
     public init(systemName: String) {
         source = .system(name: systemName)
     }
@@ -488,6 +524,19 @@ public struct _OpenImage: _OpenView {
         source = .uiImage(uiImage)
     }
 
+    public init(
+        decorative image: Bitmap,
+        scale: CGFloat,
+        orientation: Orientation
+    ) {
+        source = .uiImage(
+            UIImage(
+                bitmap: _openOrientedBitmap(image, orientation: orientation),
+                scale: scale
+            )
+        )
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(.image(source))
     }
@@ -495,6 +544,63 @@ public struct _OpenImage: _OpenView {
     public func resizable() -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .resizable)
     }
+}
+
+private func _openOrientedBitmap(
+    _ source: Bitmap,
+    orientation: _OpenImage.Orientation
+) -> Bitmap {
+    guard orientation != .up, source.width > 0, source.height > 0 else {
+        return source
+    }
+    let swapsAxes: Bool
+    switch orientation {
+    case .leftMirrored, .right, .rightMirrored, .left: swapsAxes = true
+    case .up, .upMirrored, .down, .downMirrored: swapsAxes = false
+    }
+    let output = Bitmap(
+        width: swapsAxes ? source.height : source.width,
+        height: swapsAxes ? source.width : source.height
+    )
+    for y in 0..<output.height {
+        for x in 0..<output.width {
+            let sourceX: Int
+            let sourceY: Int
+            switch orientation {
+            case .up:
+                sourceX = x
+                sourceY = y
+            case .upMirrored:
+                sourceX = source.width - 1 - x
+                sourceY = y
+            case .down:
+                sourceX = source.width - 1 - x
+                sourceY = source.height - 1 - y
+            case .downMirrored:
+                sourceX = x
+                sourceY = source.height - 1 - y
+            case .leftMirrored:
+                sourceX = y
+                sourceY = x
+            case .right:
+                sourceX = y
+                sourceY = source.height - 1 - x
+            case .rightMirrored:
+                sourceX = source.width - 1 - y
+                sourceY = source.height - 1 - x
+            case .left:
+                sourceX = source.width - 1 - y
+                sourceY = x
+            }
+            let sourceIndex = (sourceY * source.width + sourceX) * 4
+            let outputIndex = (y * output.width + x) * 4
+            output.pixels[outputIndex] = source.pixels[sourceIndex]
+            output.pixels[outputIndex + 1] = source.pixels[sourceIndex + 1]
+            output.pixels[outputIndex + 2] = source.pixels[sourceIndex + 2]
+            output.pixels[outputIndex + 3] = source.pixels[sourceIndex + 3]
+        }
+    }
+    return output
 }
 
 enum _OpenImageSource {
@@ -724,6 +830,12 @@ public struct _OpenLinearGradient: _OpenView {
     }
 }
 
+extension _OpenLinearGradient: _OpenShapeStyle {
+    public func _openResolvedForegroundColor() -> _OpenColor {
+        gradient.colors.first ?? .clear
+    }
+}
+
 public struct _OpenModifiedContent<Content: _OpenView>: _OpenView {
     public typealias Body = Never
     let content: Content
@@ -764,6 +876,18 @@ public extension _OpenView {
 
     func foregroundColor(_ color: Color?) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .foregroundColor(color))
+    }
+
+    func foregroundStyle<Style: ShapeStyle>(_ style: Style) -> some _OpenView {
+        foregroundColor(style._openResolvedForegroundColor())
+    }
+
+    func foregroundStyle<Primary: ShapeStyle, Secondary: ShapeStyle>(
+        _ primary: Primary,
+        _ secondary: Secondary
+    ) -> some _OpenView {
+        _ = secondary
+        return foregroundColor(primary._openResolvedForegroundColor())
     }
 
     func frame(
@@ -920,6 +1044,13 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .disabled(disabled))
     }
 
+    func accessibilityHidden(_ hidden: Bool) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .accessibilityHidden(hidden)
+        )
+    }
+
     func onChange<Value: Equatable>(
         of value: Value,
         perform action: @escaping @MainActor (Value) -> Void
@@ -940,6 +1071,30 @@ public extension _OpenView {
             content: self,
             modification: .onReceive {
                 _OpenGraphContext.subscribe(publisher, action: action)
+            }
+        )
+    }
+
+    func task(
+        priority: TaskPriority? = nil,
+        _ action: @escaping @MainActor () async -> Void
+    ) -> some _OpenView {
+        task(id: _OpenDefaultTaskIdentity.value, priority: priority, action)
+    }
+
+    func task<ID: Equatable>(
+        id value: ID,
+        priority: TaskPriority? = nil,
+        _ action: @escaping @MainActor () async -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .task {
+                _OpenGraphContext.installTask(
+                    id: value,
+                    priority: priority,
+                    action: action
+                )
             }
         )
     }
@@ -981,6 +1136,10 @@ public extension _OpenView {
             modification: .pageTabViewStyle(style.indexDisplayMode)
         )
     }
+}
+
+private enum _OpenDefaultTaskIdentity: Equatable {
+    case value
 }
 
 @MainActor
@@ -1093,6 +1252,7 @@ public typealias View = _OpenView
 public typealias ViewBuilder = _OpenViewBuilder
 public typealias EmptyView = _OpenEmptyView
 public typealias TupleView<T> = _OpenTupleView<T>
+public typealias Group<Content> = _OpenGroup<Content> where Content: _OpenView
 public typealias _ConditionalContent<TrueContent, FalseContent> =
     _OpenConditionalContent<TrueContent, FalseContent>
     where TrueContent: _OpenView, FalseContent: _OpenView

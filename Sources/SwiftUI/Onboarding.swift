@@ -185,8 +185,17 @@ public struct _OpenTabView<SelectionValue: Hashable, Content: _OpenView>: _OpenV
     }
 }
 
-public struct _OpenUIViewControllerRepresentableContext<Representable> {
-    public init() {}
+/// Context retained for one stable UIViewControllerRepresentable graph
+/// location. Coordinators are created with their controller and survive body
+/// reevaluation until that structural location leaves the graph.
+public struct _OpenUIViewControllerRepresentableContext<Representable>
+    where Representable: _OpenUIViewControllerRepresentable
+{
+    public let coordinator: Representable.Coordinator
+
+    init(coordinator: Representable.Coordinator) {
+        self.coordinator = coordinator
+    }
 }
 
 /// Context retained for one stable UIViewRepresentable graph location. The
@@ -257,6 +266,7 @@ public extension _OpenUIViewRepresentable where Coordinator == Void {
 @MainActor
 public protocol _OpenUIViewControllerRepresentable: _OpenView where Body == Never {
     associatedtype UIViewControllerType: UIViewController
+    associatedtype Coordinator = Void
 
     func makeUIViewController(
         context: _OpenUIViewControllerRepresentableContext<Self>
@@ -265,21 +275,53 @@ public protocol _OpenUIViewControllerRepresentable: _OpenView where Body == Neve
         _ uiViewController: UIViewControllerType,
         context: _OpenUIViewControllerRepresentableContext<Self>
     )
+    func makeCoordinator() -> Coordinator
+    static func dismantleUIViewController(
+        _ uiViewController: UIViewControllerType,
+        coordinator: Coordinator
+    )
 }
 
 public extension _OpenUIViewControllerRepresentable {
     typealias Context = _OpenUIViewControllerRepresentableContext<Self>
 
+    static func dismantleUIViewController(
+        _ uiViewController: UIViewControllerType,
+        coordinator: Coordinator
+    ) {
+        _ = uiViewController
+        _ = coordinator
+    }
+
     func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenGraphContext.withView(self) { preparedView in
-            let context = Context()
             let controller = _OpenGraphContext.representedController(
-                make: { preparedView.makeUIViewController(context: context) },
-                update: { preparedView.updateUIViewController($0, context: context) }
+                makeCoordinator: { preparedView.makeCoordinator() },
+                make: { coordinator in
+                    preparedView.makeUIViewController(
+                        context: Context(coordinator: coordinator)
+                    )
+                },
+                update: { controller, coordinator in
+                    preparedView.updateUIViewController(
+                        controller,
+                        context: Context(coordinator: coordinator)
+                    )
+                },
+                dismantle: { controller, coordinator in
+                    Self.dismantleUIViewController(
+                        controller,
+                        coordinator: coordinator
+                    )
+                }
             )
             return _OpenViewNode(.viewController(controller))
         }
     }
+}
+
+public extension _OpenUIViewControllerRepresentable where Coordinator == Void {
+    func makeCoordinator() {}
 }
 
 @MainActor
@@ -354,6 +396,7 @@ public typealias TabView<SelectionValue, Content> = _OpenTabView<SelectionValue,
     where SelectionValue: Hashable, Content: _OpenView
 public typealias UIViewControllerRepresentableContext<Representable> =
     _OpenUIViewControllerRepresentableContext<Representable>
+    where Representable: _OpenUIViewControllerRepresentable
 public typealias UIViewControllerRepresentable = _OpenUIViewControllerRepresentable
 public typealias UIViewRepresentableContext<Representable> =
     _OpenUIViewRepresentableContext<Representable>
