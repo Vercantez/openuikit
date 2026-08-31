@@ -78,6 +78,46 @@ final class ViewControllerLifecycleTests: XCTestCase {
         XCTAssertTrue(nav.viewControllers[0].navigationController === nav)
     }
 
+    func testVisibleViewControllerTracksThePublishedStack() {
+        let empty = UINavigationController()
+        XCTAssertNil(empty.topViewController)
+        XCTAssertNil(empty.visibleViewController)
+
+        let root = UIViewController()
+        let nav = UINavigationController(rootViewController: root)
+        XCTAssertTrue(nav.visibleViewController === root)
+
+        let pushed = UIViewController()
+        nav.pushViewController(pushed, animated: false)
+        XCTAssertTrue(nav.topViewController === pushed)
+        XCTAssertTrue(nav.visibleViewController === pushed)
+
+        XCTAssertTrue(nav.popViewController(animated: false) === pushed)
+        XCTAssertTrue(nav.visibleViewController === root)
+    }
+
+    func testVisibleViewControllerTracksContainerAndTopChildPresentations() {
+        let root = UIViewController()
+        let nav = makeNav(root)
+
+        let containerModal = UIViewController()
+        nav.present(containerModal, animated: false)
+        XCTAssertTrue(nav.presentedViewController === containerModal)
+        XCTAssertTrue(nav.visibleViewController === containerModal)
+        nav.dismiss(animated: false)
+        XCTAssertTrue(nav.visibleViewController === root)
+
+        // UIKit makes the navigation controller the presentation context.
+        // OpenUIKit also accepts a direct present call on the top child, so
+        // the visibility API must not lose that equivalent ownership shape.
+        let childModal = UIViewController()
+        root.present(childModal, animated: false)
+        XCTAssertTrue(root.presentedViewController === childModal)
+        XCTAssertTrue(nav.visibleViewController === childModal)
+        root.dismiss(animated: false)
+        XCTAssertTrue(nav.visibleViewController === root)
+    }
+
     func testPushLifecycleOrderNonAnimated() {
         let log = Log()
         let a = LifecycleVC(name: "A", log: log)

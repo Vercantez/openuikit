@@ -107,6 +107,16 @@ open class UINavigationController: UIViewController {
     public private(set) var viewControllers: [UIViewController] = []
     public var topViewController: UIViewController? { viewControllers.last }
 
+    /// The controller whose view is currently in front of the navigation
+    /// interface. This is normally the stack's top controller, but a modal
+    /// presented over the navigation controller (or, on the portable path,
+    /// directly by its top child) is the visible controller until dismissal.
+    public var visibleViewController: UIViewController? {
+        if let presentedViewController { return presentedViewController }
+        guard let topViewController else { return nil }
+        return topViewController.presentedViewController ?? topViewController
+    }
+
     public let navigationBar = UINavigationBar()
     /// The controller's toolbar (M13). Hidden by default, exactly like
     /// UIKit; shown by `setToolbarHidden(false, animated:)` and filled from
