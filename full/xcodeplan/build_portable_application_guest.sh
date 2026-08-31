@@ -681,6 +681,7 @@ PY
                         package_command=("$package_compiler"
                             -target arm64-apple-macos15.0 -isysroot sdk
                             -fmodules -fmodules-cache-path="$module_cache"
+                            -fmodule-name="$package_module"
                             "${package_compiler_arguments[@]}")
                         if [ "$package_compiler" = clang++-18 ]; then
                             package_command+=(-stdlib=libc++ "${package_cxx_arguments[@]}")

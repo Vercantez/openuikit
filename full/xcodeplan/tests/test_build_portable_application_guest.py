@@ -225,6 +225,7 @@ def validate_c_family_package_boundary(source: str) -> None:
         'require_regular "$package_module_output" "local package Clang module map"',
         "-target arm64-apple-macos15.0 -isysroot sdk",
         '-fmodules -fmodules-cache-path="$module_cache"',
+        '-fmodule-name="$package_module"',
         'package_compiler=clang-18',
         'package_compiler=clang++-18',
         'package_command+=(-c "${package_sources[package_source_index]}"',
