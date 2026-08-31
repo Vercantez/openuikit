@@ -184,7 +184,7 @@
       "sources": [
         {
           "path": "full/storekit/StoreKit.swift",
-          "sha256": "2252b1906cac98eda714c246b0490e18d3718478226745c70b089bf1be16ec43"
+          "sha256": "fac88fd8f3ad205605410c119e732eb73f70ec393341a1e7ba56d9b073ed2bda"
         }
       ],
       "uses_uikit": true
