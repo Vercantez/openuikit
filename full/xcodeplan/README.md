@@ -12,8 +12,9 @@ python3 full/xcodeplan/project_inventory.py \
   path/to/App.xcodeproj --scheme App --output /tmp/app-inventory.json
 ```
 
-The inventory preserves classic `PBXBuildFile` order, resolves groups and
-localized variant groups, records target/project build settings, evaluates only
+The inventory preserves classic `PBXBuildFile` order, resolves groups,
+localized variant groups, and Core Data `XCVersionGroup` wrappers, records
+target/project build settings, evaluates only
 the documented product-name subset, and enumerates package products, local
 package roots/manifests, target
 dependencies, phases, sources, headers, and resources. It also supports the
@@ -30,6 +31,13 @@ than by broad `sourcecode.*`/`audio.*`/`image.*`/`text.*`/`video.*` or
 mismatched explicit types are rejected. Unknown inferred extensions and dotted
 directories remain one `unclassified` input instead of being flattened into
 apparently ordinary files.
+An `XCVersionGroup` stays one ordered compiler input while its exact child
+references, selected `currentVersion`, modern `contents` versus legacy
+`elements`/`layout` storage, and optional `.xccurrentversion` plist/hash are
+frozen. The PBX and plist current versions must agree. Missing, repeated,
+escaping, aliased, symlinked, or unlisted model versions fail closed.
+Version groups are accepted only in a sources phase, matching Xcode's model
+compiler boundary.
 The same Focus and synchronized-project inputs produce byte-identical output on
 macOS and arm64 Linux.
 
@@ -116,10 +124,20 @@ control or Unicode format characters are rejected. This check covers the
 selected application product as well as framework and copy-phase inputs, so a
 successful inventory never asks a downstream join to recover containment from
 an unsafe external-tree spelling.
+For ordinary file references using `<group>`, Xcode's parent components are
+resolved against the containing PBX group before repository containment is
+checked. This admits real layouts such as `Resources/../Images.xcassets`
+without ever admitting a path above the source root. A localized variant
+group's own `path` similarly rebases its physical children while its `name`
+remains the logical build input.
 Classic build-phase references whose final path is not materialized are kept in
 the graph, listed under `missing_inputs`, and also make
 `unsupported_features` non-empty. The frontend does not guess whether a shell
 phase will generate them.
+Native target dependencies remain explicit graph edges. Aggregate target
+dependencies are also frozen with their configuration list, ordered build
+phases, and nested dependency references, but are reported as provider gaps
+because the frontend does not execute their shell phases.
 
 This initial source-root model accepts absent/empty values for both project
 directory fields and the legacy `.` spelling for `PBXProject.projectDirPath`.

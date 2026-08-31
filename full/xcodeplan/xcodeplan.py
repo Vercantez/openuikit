@@ -19,6 +19,7 @@ import re
 import stat
 import subprocess
 import sys
+import unicodedata
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
@@ -556,7 +557,11 @@ class ProjectPlanner:
 
     def _index_group_parents(self) -> None:
         for parent_id, raw in self.objects.items():
-            if not isinstance(raw, dict) or raw.get("isa") not in {"PBXGroup", "PBXVariantGroup"}:
+            if not isinstance(raw, dict) or raw.get("isa") not in {
+                "PBXGroup",
+                "PBXVariantGroup",
+                "XCVersionGroup",
+            }:
                 continue
             for child in require_list(raw.get("children", []), f"{parent_id}.children"):
                 child_id = require_string(child, f"child of {parent_id}")
@@ -644,33 +649,124 @@ class ProjectPlanner:
             raise PlanError(f"file reference {ref_id} is detached from mainGroup")
         parent = self.object(parent_id)
         if parent["isa"] == "PBXVariantGroup":
-            parent_id = self.parents.get(parent_id, "")
-            if not parent_id:
-                raise PlanError(f"variant group containing {ref_id} is detached")
+            return self._variant_group_directory(parent_id)
+        elif parent["isa"] == "XCVersionGroup":
+            component = parent.get("path")
+            if not component:
+                raise PlanError(
+                    f"version group containing {ref_id} requires a nonempty path"
+                )
+            source_tree = parent.get("sourceTree", "<group>")
+            if source_tree == "<group>":
+                grandparent_id = self.parents.get(parent_id)
+                if grandparent_id is None:
+                    raise PlanError(f"version group containing {ref_id} is detached")
+                grandparent = self.object(grandparent_id)
+                if grandparent["isa"] != "PBXGroup":
+                    raise PlanError(
+                        f"version group {parent_id} is nested under non-directory "
+                        f"{grandparent_id}"
+                    )
+                base = self._group_directory(grandparent_id)
+                component = require_string(component, f"version group {parent_id}.path")
+                return self._expand_path(
+                    posixpath.join(base, component),
+                    f"version group {parent_id}.path",
+                )
+            if source_tree in {"SOURCE_ROOT", "PROJECT_DIR"}:
+                return self._expand_path(
+                    require_string(component, f"version group {parent_id}.path"),
+                    f"version group {parent_id}.path",
+                )
+            raise PlanError(
+                f"version group {parent_id} has unresolved sourceTree {source_tree!r}"
+            )
         return self._group_directory(parent_id)
 
-    def resolve_file(self, ref_id: str) -> dict[str, Any]:
-        obj = self.object(ref_id, ("PBXFileReference", "PBXVariantGroup"))
-        isa = obj["isa"]
-        component = obj.get("path") or obj.get("name")
-        if not component:
-            raise PlanError(f"file reference {ref_id} has neither path nor name")
-        source_tree = obj.get("sourceTree", "<group>")
+    def _variant_group_directory(self, group_id: str) -> str:
+        group = self.object(group_id, "PBXVariantGroup")
+        source_tree = group.get("sourceTree", "<group>")
+        raw_component = group.get("path", "")
+        component = (
+            require_string(raw_component, f"variant group {group_id}.path")
+            if raw_component
+            else ""
+        )
         if source_tree == "<group>":
+            parent_id = self.parents.get(group_id)
+            if parent_id is None:
+                raise PlanError(f"variant group {group_id} is detached")
+            parent = self.object(parent_id)
+            if parent["isa"] != "PBXGroup":
+                raise PlanError(
+                    f"variant group {group_id} is nested under non-directory {parent_id}"
+                )
+            return self._expand_path(
+                posixpath.join(self._group_directory(parent_id), component),
+                f"variant group {group_id}.path",
+            )
+        if source_tree in {"SOURCE_ROOT", "PROJECT_DIR"}:
+            return self._expand_path(component, f"variant group {group_id}.path")
+        raise PlanError(
+            f"variant group {group_id} has unresolved sourceTree {source_tree!r}"
+        )
+
+    def resolve_file(
+        self, ref_id: str, *, _version_group_owner: str | None = None
+    ) -> dict[str, Any]:
+        obj = self.object(
+            ref_id, ("PBXFileReference", "PBXVariantGroup", "XCVersionGroup")
+        )
+        isa = obj["isa"]
+        parent_id = self.parents.get(ref_id)
+        if parent_id is not None:
+            parent = self.object(parent_id)
+            if parent["isa"] == "XCVersionGroup" and _version_group_owner != parent_id:
+                raise PlanError(
+                    f"version group child {ref_id} must be consumed through its parent "
+                    f"{parent_id}"
+                )
+        source_tree = obj.get("sourceTree", "<group>")
+        if isa == "PBXVariantGroup":
+            name = require_string(obj.get("name"), f"variant group {ref_id}.name")
+            if not name or name in {".", ".."} or posixpath.basename(name) != name:
+                raise PlanError(
+                    f"variant group {ref_id} has unsafe logical name {name!r}"
+                )
+            component = name
             repo_path = self._join(
-                self._containing_directory(ref_id),
-                self._expand_path(component, f"file reference {ref_id}"),
-                f"file reference {ref_id}",
+                self._variant_group_directory(ref_id),
+                name,
+                f"variant group {ref_id}.name",
             )
             external_tree = None
-        elif source_tree in {"SOURCE_ROOT", "PROJECT_DIR"}:
-            repo_path = self._expand_path(component, f"file reference {ref_id}")
-            external_tree = None
-        elif source_tree in {"BUILT_PRODUCTS_DIR", "SDKROOT"}:
-            repo_path = None
-            external_tree = source_tree
         else:
-            raise PlanError(f"file reference {ref_id} has unresolved sourceTree {source_tree!r}")
+            component = (
+                obj.get("path")
+                if isa == "XCVersionGroup"
+                else obj.get("path") or obj.get("name")
+            )
+            if not component:
+                if isa == "XCVersionGroup":
+                    raise PlanError(f"version group {ref_id} requires a nonempty path")
+                raise PlanError(f"file reference {ref_id} has neither path nor name")
+            if source_tree == "<group>":
+                component = require_string(component, f"file reference {ref_id}.path")
+                repo_path = self._expand_path(
+                    posixpath.join(self._containing_directory(ref_id), component),
+                    f"file reference {ref_id}",
+                )
+                external_tree = None
+            elif source_tree in {"SOURCE_ROOT", "PROJECT_DIR"}:
+                repo_path = self._expand_path(component, f"file reference {ref_id}")
+                external_tree = None
+            elif source_tree in {"BUILT_PRODUCTS_DIR", "SDKROOT"}:
+                repo_path = None
+                external_tree = source_tree
+            else:
+                raise PlanError(
+                    f"file reference {ref_id} has unresolved sourceTree {source_tree!r}"
+                )
         result: dict[str, Any] = {
             "file_ref_id": ref_id,
             "name": obj.get("name") or posixpath.basename(component),
@@ -694,6 +790,115 @@ class ProjectPlanner:
             if not variants:
                 raise PlanError(f"variant group {ref_id} is empty")
             result["variant_paths"] = variants
+        elif isa == "XCVersionGroup":
+            if result.get("external_tree"):
+                raise PlanError(
+                    f"version group {ref_id} does not resolve inside the repository"
+                )
+            if not result["path"].endswith(".xcdatamodeld"):
+                raise PlanError(
+                    f"version group {ref_id} path must end in '.xcdatamodeld': "
+                    f"{result['path']!r}"
+                )
+            group_type = require_string(
+                obj.get("versionGroupType"), f"version group {ref_id}.versionGroupType"
+            )
+            if group_type != "wrapper.xcdatamodel":
+                raise PlanError(
+                    f"version group {ref_id} has unsupported versionGroupType "
+                    f"{group_type!r}"
+                )
+            declared_group_types = {
+                require_string(obj[key], f"version group {ref_id}.{key}")
+                for key in ("explicitFileType", "lastKnownFileType")
+                if key in obj
+            }
+            if declared_group_types and declared_group_types != {"wrapper.xcdatamodel"}:
+                raise PlanError(
+                    f"version group {ref_id} has unsupported file types "
+                    f"{sorted(declared_group_types)!r}"
+                )
+            raw_children = require_list(
+                obj.get("children"), f"version group {ref_id}.children"
+            )
+            if not raw_children:
+                raise PlanError(f"version group {ref_id} is empty")
+            child_ids: list[str] = []
+            version_paths: set[str] = set()
+            portable_version_paths: set[str] = set()
+            versions: list[dict[str, Any]] = []
+            for index, raw_child_id in enumerate(raw_children):
+                child_id = require_string(
+                    raw_child_id, f"version group {ref_id}.children[{index}]"
+                )
+                if child_id in child_ids:
+                    raise PlanError(f"version group {ref_id} repeats child {child_id}")
+                child_ids.append(child_id)
+                child = self.object(child_id, "PBXFileReference")
+                if child.get("sourceTree", "<group>") != "<group>":
+                    raise PlanError(
+                        f"version group {ref_id} child {child_id} must use '<group>' "
+                        "sourceTree"
+                    )
+                version = self.resolve_file(child_id, _version_group_owner=ref_id)
+                version_path = require_string(
+                    version.get("path"), f"version group {ref_id} child {child_id}.path"
+                )
+                if posixpath.dirname(version_path) != result["path"]:
+                    raise PlanError(
+                        f"version group {ref_id} child {child_id} escapes or is not a "
+                        f"direct version: {version_path!r}"
+                    )
+                if not version_path.endswith(".xcdatamodel"):
+                    raise PlanError(
+                        f"version group {ref_id} child {child_id} path must end in "
+                        f"'.xcdatamodel': {version_path!r}"
+                    )
+                if version_path in version_paths:
+                    raise PlanError(
+                        f"version group {ref_id} repeats model path {version_path!r}"
+                    )
+                version_paths.add(version_path)
+                portable_version_path = unicodedata.normalize(
+                    "NFC", version_path.casefold()
+                )
+                if portable_version_path in portable_version_paths:
+                    raise PlanError(
+                        f"version group {ref_id} has aliased model path "
+                        f"{version_path!r}"
+                    )
+                portable_version_paths.add(portable_version_path)
+                declared_child_types = {
+                    require_string(
+                        child[key], f"version group {ref_id} child {child_id}.{key}"
+                    )
+                    for key in ("explicitFileType", "lastKnownFileType")
+                    if key in child
+                }
+                if declared_child_types and declared_child_types != {
+                    "wrapper.xcdatamodel"
+                }:
+                    raise PlanError(
+                        f"version group {ref_id} child {child_id} has unsupported file "
+                        f"types {sorted(declared_child_types)!r}"
+                    )
+                versions.append(version)
+            current_id = require_string(
+                obj.get("currentVersion"), f"version group {ref_id}.currentVersion"
+            )
+            if child_ids.count(current_id) != 1:
+                raise PlanError(
+                    f"version group {ref_id} currentVersion {current_id!r} must name "
+                    "exactly one child"
+                )
+            current_index = child_ids.index(current_id)
+            result["version_group"] = {
+                "current_version_index": current_index,
+                "current_version_path": versions[current_index]["path"],
+                "current_version_ref_id": current_id,
+                "type": group_type,
+                "versions": versions,
+            }
         return result
 
     def _build_file(self, build_file_id: str) -> tuple[dict[str, Any], dict[str, Any]]:

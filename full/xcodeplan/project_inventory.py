@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import plistlib
 import posixpath
 import re
 import stat
@@ -720,6 +721,117 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
         self.project_name = project_name
         super().__init__(root, source_root, spec)
 
+    def _target_dependencies(self, target: Mapping[str, Any]) -> list[dict[str, Any]]:
+        """Inventory native and aggregate dependencies without changing strict plans."""
+        result: list[dict[str, Any]] = []
+        project_target_ids = [
+            xcodeplan.require_string(item, "PBXProject.targets entry")
+            for item in xcodeplan.require_list(
+                self.project.get("targets"), "PBXProject.targets"
+            )
+        ]
+        for raw_id in xcodeplan.require_list(
+            target.get("dependencies"), "target.dependencies"
+        ):
+            dependency_id = xcodeplan.require_string(
+                raw_id, "target dependency reference"
+            )
+            dependency = self.object(dependency_id, "PBXTargetDependency")
+            raw_target_id = dependency.get("target")
+            if not raw_target_id:
+                raise PlanError(
+                    f"target dependency {dependency_id} uses an unresolved proxy instead "
+                    "of target"
+                )
+            target_id = xcodeplan.require_string(
+                raw_target_id, f"target dependency {dependency_id}.target"
+            )
+            if project_target_ids.count(target_id) != 1:
+                raise PlanError(
+                    f"target dependency {dependency_id} target {target_id} must occur "
+                    "exactly once in PBXProject.targets"
+                )
+            target_object = self.object(
+                target_id, ("PBXNativeTarget", "PBXAggregateTarget")
+            )
+            if "targetProxy" in dependency:
+                proxy_id = xcodeplan.require_string(
+                    dependency["targetProxy"],
+                    f"target dependency {dependency_id}.targetProxy",
+                )
+                proxy = self.object(proxy_id, "PBXContainerItemProxy")
+                remote_id = xcodeplan.require_string(
+                    proxy.get("remoteGlobalIDString"),
+                    f"target proxy {proxy_id}.remoteGlobalIDString",
+                )
+                if remote_id != target_id:
+                    raise PlanError(
+                        f"target dependency {dependency_id} proxy points to {remote_id}, "
+                        f"not {target_id}"
+                    )
+            record: dict[str, Any] = {
+                "dependency_id": dependency_id,
+                "target_id": target_id,
+                "name": xcodeplan.require_string(
+                    target_object.get("name"), f"target {target_id}.name"
+                ),
+            }
+            if target_object["isa"] == "PBXAggregateTarget":
+                configuration_list_id = xcodeplan.require_string(
+                    target_object.get("buildConfigurationList"),
+                    f"aggregate target {target_id}.buildConfigurationList",
+                )
+                self.object(configuration_list_id, "XCConfigurationList")
+                build_phase_ids = [
+                    xcodeplan.require_string(
+                        item, f"aggregate target {target_id}.buildPhases[{index}]"
+                    )
+                    for index, item in enumerate(
+                        xcodeplan.require_list(
+                            target_object.get("buildPhases"),
+                            f"aggregate target {target_id}.buildPhases",
+                        )
+                    )
+                ]
+                if len(build_phase_ids) != len(set(build_phase_ids)):
+                    raise PlanError(
+                        f"aggregate target {target_id} repeats a build phase"
+                    )
+                for phase_id in build_phase_ids:
+                    phase = self.object(phase_id)
+                    if phase["isa"] not in PHASE_KINDS:
+                        raise PlanError(
+                            f"aggregate target {target_id} has unsupported build phase "
+                            f"{phase_id} ({phase['isa']})"
+                        )
+                nested_dependency_ids = [
+                    xcodeplan.require_string(
+                        item, f"aggregate target {target_id}.dependencies[{index}]"
+                    )
+                    for index, item in enumerate(
+                        xcodeplan.require_list(
+                            target_object.get("dependencies", []),
+                            f"aggregate target {target_id}.dependencies",
+                        )
+                    )
+                ]
+                if len(nested_dependency_ids) != len(set(nested_dependency_ids)):
+                    raise PlanError(
+                        f"aggregate target {target_id} repeats a target dependency"
+                    )
+                for nested_dependency_id in nested_dependency_ids:
+                    self.object(nested_dependency_id, "PBXTargetDependency")
+                record.update(
+                    {
+                        "build_configuration_list_id": configuration_list_id,
+                        "build_phase_ids": build_phase_ids,
+                        "dependency_ids": nested_dependency_ids,
+                        "target_type": "aggregate",
+                    }
+                )
+            result.append(record)
+        return result
+
     def _local_package_references(self) -> list[dict[str, Any]]:
         """Inventory every project-declared local package root without evaluation."""
         result: list[dict[str, Any]] = []
@@ -881,8 +993,12 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             )
         return normalized
 
-    def resolve_file(self, ref_id: str) -> dict[str, Any]:
-        resolved = super().resolve_file(ref_id)
+    def resolve_file(
+        self, ref_id: str, *, _version_group_owner: str | None = None
+    ) -> dict[str, Any]:
+        resolved = super().resolve_file(
+            ref_id, _version_group_owner=_version_group_owner
+        )
         external_tree = resolved.get("external_tree")
         if external_tree:
             external_tree = xcodeplan.require_string(
@@ -902,6 +1018,7 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             if not isinstance(raw, dict) or raw.get("isa") not in {
                 "PBXGroup",
                 "PBXVariantGroup",
+                "XCVersionGroup",
             }:
                 continue
             for child in xcodeplan.require_list(raw.get("children", []), f"{parent_id}.children"):
@@ -1650,11 +1767,21 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
         }
 
     def _explicit_phase_files(
-        self, phase_id: str, phase: Mapping[str, Any], *, allow_external: bool
+        self,
+        phase_id: str,
+        phase: Mapping[str, Any],
+        *,
+        allow_external: bool,
+        phase_kind: str,
     ) -> list[dict[str, Any]]:
         result = self._file_phase(phase_id, phase, require_internal=not allow_external)
         for entry in result:
             entry["origin"] = "explicit"
+            if entry.get("version_group") is not None and phase_kind != "sources":
+                raise PlanError(
+                    f"Core Data version group {entry['file_ref_id']} is unsupported in "
+                    f"{phase_kind} phase {phase_id}; expected a sources phase"
+                )
             if entry.get("external_tree"):
                 continue
             relative_paths = entry.get("variant_paths") or [entry["path"]]
@@ -1676,6 +1803,176 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                     )
             if missing_paths:
                 entry["missing_paths"] = missing_paths
+            version_group = entry.get("version_group")
+            if version_group is not None:
+                group_record = xcodeplan.require_dict(
+                    version_group,
+                    f"version group phase input {entry['build_file_id']}",
+                )
+                listed_versions: set[str] = set()
+                for version_index, raw_version in enumerate(
+                    xcodeplan.require_list(
+                        group_record.get("versions"),
+                        f"version group phase input {entry['build_file_id']}.versions",
+                    )
+                ):
+                    version = xcodeplan.require_dict(
+                        raw_version,
+                        f"version group phase input {entry['build_file_id']} "
+                        f"version {version_index}",
+                    )
+                    version_path = xcodeplan.require_string(
+                        version.get("path"),
+                        f"version group phase input {entry['build_file_id']} "
+                        f"version {version_index}.path",
+                    )
+                    version_candidate = self._validate_existing_path(
+                        version_path,
+                        f"version group phase input {entry['build_file_id']}",
+                    )
+                    if not version_candidate.is_dir():
+                        raise PlanError(
+                            f"Core Data model version is not a directory: {version_path}"
+                        )
+                    try:
+                        with os.scandir(version_candidate) as iterator:
+                            model_entries = sorted(iterator, key=lambda item: item.name)
+                    except OSError as exc:
+                        raise PlanError(
+                            f"cannot scan Core Data model version {version_path}: {exc}"
+                        ) from exc
+                    if any(item.is_symlink() for item in model_entries):
+                        raise PlanError(
+                            f"Core Data model version contains a symlink: {version_path}"
+                        )
+                    regular_names = {
+                        item.name
+                        for item in model_entries
+                        if item.is_file(follow_symlinks=False)
+                    }
+                    if len(regular_names) != len(model_entries):
+                        raise PlanError(
+                            f"Core Data model version contains an unsupported filesystem "
+                            f"object: {version_path}"
+                        )
+                    if regular_names == {"contents"}:
+                        version["storage_format"] = "contents"
+                    elif regular_names == {"elements", "layout"}:
+                        version["storage_format"] = "legacy-elements-layout"
+                    else:
+                        raise PlanError(
+                            f"Core Data model version has unsupported contents: "
+                            f"{version_path}"
+                        )
+                    listed_versions.add(version_path)
+                wrapper = self._validate_existing_path(
+                    xcodeplan.require_string(
+                        entry.get("path"),
+                        f"version group phase input {entry['build_file_id']}.path",
+                    ),
+                    f"version group phase input {entry['build_file_id']}",
+                )
+                try:
+                    with os.scandir(wrapper) as iterator:
+                        wrapper_entries = sorted(iterator, key=lambda item: item.name)
+                except OSError as exc:
+                    raise PlanError(
+                        f"cannot scan Core Data model wrapper {entry['path']}: {exc}"
+                    ) from exc
+                actual_versions: set[str] = set()
+                actual_portable_versions: set[str] = set()
+                for wrapper_entry in wrapper_entries:
+                    wrapper_entry_path = (
+                        Path(wrapper_entry.path).relative_to(self.repo).as_posix()
+                    )
+                    if wrapper_entry.is_symlink():
+                        raise PlanError(
+                            f"Core Data model wrapper contains a symlink: "
+                            f"{wrapper_entry_path}"
+                        )
+                    if wrapper_entry.name == ".xccurrentversion":
+                        if not wrapper_entry.is_file(follow_symlinks=False):
+                            raise PlanError(
+                                "Core Data current-version metadata is not a regular file: "
+                                f"{wrapper_entry_path}"
+                            )
+                        continue
+                    if not wrapper_entry.name.endswith(".xcdatamodel"):
+                        raise PlanError(
+                            f"Core Data model wrapper contains an unsupported entry: "
+                            f"{wrapper_entry_path}"
+                        )
+                    if not wrapper_entry.is_dir(follow_symlinks=False):
+                        raise PlanError(
+                            f"Core Data model version is not a directory: "
+                            f"{wrapper_entry_path}"
+                        )
+                    portable_wrapper_entry = unicodedata.normalize(
+                        "NFC", wrapper_entry_path.casefold()
+                    )
+                    if portable_wrapper_entry in actual_portable_versions:
+                        raise PlanError(
+                            f"Core Data model wrapper contains aliased versions: "
+                            f"{wrapper_entry_path}"
+                        )
+                    actual_portable_versions.add(portable_wrapper_entry)
+                    actual_versions.add(wrapper_entry_path)
+                if actual_versions != listed_versions:
+                    raise PlanError(
+                        f"version group phase input {entry['build_file_id']} children do "
+                        "not exactly match its model versions"
+                    )
+                current_version_file = wrapper / ".xccurrentversion"
+                if os.path.lexists(current_version_file):
+                    current_relative = current_version_file.relative_to(
+                        self.repo
+                    ).as_posix()
+                    current_candidate = self._validate_existing_path(
+                        current_relative,
+                        f"version group phase input {entry['build_file_id']} current version",
+                    )
+                    if not current_candidate.is_file():
+                        raise PlanError(
+                            f"version group current-version metadata is not a regular file: "
+                            f"{current_relative}"
+                        )
+                    try:
+                        current_document = plistlib.loads(
+                            current_candidate.read_bytes()
+                        )
+                    except (OSError, plistlib.InvalidFileException) as exc:
+                        raise PlanError(
+                            f"cannot parse version group current-version metadata "
+                            f"{current_relative}: {exc}"
+                        ) from exc
+                    if not isinstance(current_document, dict) or set(
+                        current_document
+                    ) != {"_XCCurrentVersionName"}:
+                        raise PlanError(
+                            f"version group current-version metadata has an unsupported "
+                            f"shape: {current_relative}"
+                        )
+                    current_name = xcodeplan.require_string(
+                        current_document.get("_XCCurrentVersionName"),
+                        f"version group current-version metadata {current_relative}",
+                    )
+                    expected_name = posixpath.basename(
+                        xcodeplan.require_string(
+                            group_record.get("current_version_path"),
+                            f"version group phase input {entry['build_file_id']} "
+                            "current_version_path",
+                        )
+                    )
+                    if current_name != expected_name:
+                        raise PlanError(
+                            f"version group current-version metadata names "
+                            f"{current_name!r}, expected {expected_name!r}"
+                        )
+                    group_record["current_version_file"] = {
+                        "name": current_name,
+                        "path": current_relative,
+                        "sha256": xcodeplan.sha256_file(current_candidate),
+                    }
         self._validate_unique_phase_items(phase_id, result)
         return result
 
@@ -1696,6 +1993,11 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                 }
             else:
                 resolved = self.resolve_file(reference["id"])
+                if resolved.get("version_group") is not None:
+                    raise PlanError(
+                        f"Core Data version group {reference['id']} is unsupported in "
+                        f"frameworks phase {phase_id}; expected a sources phase"
+                    )
                 if not resolved.get("external_tree"):
                     relative = xcodeplan.require_string(
                         resolved.get("path"), f"framework reference {reference['id']}.path"
@@ -1749,7 +2051,7 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             }
             if kind in {"sources", "resources", "headers"}:
                 files = self._explicit_phase_files(
-                    phase_id, phase, allow_external=False
+                    phase_id, phase, allow_external=False, phase_kind=kind
                 )
                 record["files"] = files
                 if kind == "sources":
@@ -1762,7 +2064,7 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                 record["items"] = self._framework_items(phase_id, phase)
             elif kind == "copy_files":
                 record["files"] = self._explicit_phase_files(
-                    phase_id, phase, allow_external=True
+                    phase_id, phase, allow_external=True, phase_kind=kind
                 )
                 record["destination_subfolder_spec"] = xcodeplan.require_string(
                     phase.get("dstSubfolderSpec", "0"), f"copy phase {phase_id}.dstSubfolderSpec"
@@ -1776,7 +2078,7 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                     phase.get("files", []), f"shell phase {phase_id}.files"
                 )
                 shell_files = self._explicit_phase_files(
-                    phase_id, shell_phase, allow_external=True
+                    phase_id, shell_phase, allow_external=True, phase_kind=kind
                 )
                 record["files"] = shell_files
                 if shell_files:
@@ -2352,6 +2654,12 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             )
 
         dependencies = self._target_dependencies(target)
+        for dependency in dependencies:
+            if dependency.get("target_type") == "aggregate":
+                unsupported.append(
+                    f"target dependency {dependency['dependency_id']} is aggregate target "
+                    f"{dependency['name']!r}; its build phases require a provider"
+                )
         package_products = self._package_products(target)
         local_package_references = self._local_package_references()
         relative_project = project_path.relative_to(self.repo).as_posix()

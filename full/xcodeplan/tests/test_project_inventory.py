@@ -42,6 +42,96 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
         shutil.copytree(MODERN_FIXTURE, root)
         return root, root / "ModernSync.xcodeproj"
 
+    def add_core_data_version_group(self, root: Path, project: Path) -> Path:
+        wrapper = root / "Models" / "Versioned.xcdatamodeld"
+        modern = wrapper / "V2.xcdatamodel"
+        modern.mkdir(parents=True)
+        (modern / "contents").write_text("v2", encoding="utf-8")
+        legacy = wrapper / "V1.xcdatamodel"
+        legacy.mkdir()
+        (legacy / "elements").write_text("v1-elements", encoding="utf-8")
+        (legacy / "layout").write_text("v1-layout", encoding="utf-8")
+        (wrapper / ".xccurrentversion").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<plist version="1.0"><dict><key>_XCCurrentVersionName</key>'
+            "<string>V2.xcdatamodel</string></dict></plist>\n",
+            encoding="utf-8",
+        )
+
+        pbxproj = project / "project.pbxproj"
+        contents = pbxproj.read_text(encoding="utf-8")
+        main_children = (
+            "\t\t\tchildren = (\n"
+            "\t\t\t\t000000000000000000000003,\n"
+            "\t\t\t\t000000000000000000000004,\n"
+            "\t\t\t);"
+        )
+        self.assertIn(main_children, contents)
+        contents = contents.replace(
+            main_children,
+            "\t\t\tchildren = (\n"
+            "\t\t\t\t000000000000000000000003,\n"
+            "\t\t\t\t000000000000000000000004,\n"
+            "\t\t\t\t600000000000000000000001,\n"
+            "\t\t\t);",
+            1,
+        )
+        source_files = (
+            "\t\t300000000000000000000001 = {\n"
+            "\t\t\tisa = PBXSourcesBuildPhase;\n"
+            "\t\t\tbuildActionMask = 2147483647;\n"
+            "\t\t\tfiles = ();"
+        )
+        self.assertIn(source_files, contents)
+        contents = contents.replace(
+            source_files,
+            source_files.replace("files = ();", "files = (600000000000000000000005,);"),
+            1,
+        )
+        target_marker = "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {"
+        self.assertIn(target_marker, contents)
+        version_objects = (
+            "\t\t600000000000000000000001 = {\n"
+            "\t\t\tisa = PBXGroup;\n"
+            "\t\t\tchildren = (600000000000000000000002,);\n"
+            "\t\t\tpath = Models/Resources;\n"
+            '\t\t\tsourceTree = "<group>";\n'
+            "\t\t};\n"
+            "\t\t600000000000000000000002 = {\n"
+            "\t\t\tisa = XCVersionGroup;\n"
+            "\t\t\tchildren = (\n"
+            "\t\t\t\t600000000000000000000003,\n"
+            "\t\t\t\t600000000000000000000004,\n"
+            "\t\t\t);\n"
+            "\t\t\tcurrentVersion = 600000000000000000000003;\n"
+            "\t\t\tname = Versioned.xcdatamodeld;\n"
+            "\t\t\tpath = ../Versioned.xcdatamodeld;\n"
+            '\t\t\tsourceTree = "<group>";\n'
+            "\t\t\tversionGroupType = wrapper.xcdatamodel;\n"
+            "\t\t};\n"
+            "\t\t600000000000000000000003 = {\n"
+            "\t\t\tisa = PBXFileReference;\n"
+            "\t\t\tlastKnownFileType = wrapper.xcdatamodel;\n"
+            "\t\t\tpath = V2.xcdatamodel;\n"
+            '\t\t\tsourceTree = "<group>";\n'
+            "\t\t};\n"
+            "\t\t600000000000000000000004 = {\n"
+            "\t\t\tisa = PBXFileReference;\n"
+            "\t\t\tlastKnownFileType = wrapper.xcdatamodel;\n"
+            "\t\t\tpath = V1.xcdatamodel;\n"
+            '\t\t\tsourceTree = "<group>";\n'
+            "\t\t};\n"
+            "\t\t600000000000000000000005 = {\n"
+            "\t\t\tisa = PBXBuildFile;\n"
+            "\t\t\tfileRef = 600000000000000000000002;\n"
+            "\t\t};\n"
+        )
+        pbxproj.write_text(
+            contents.replace(target_marker, version_objects + target_marker, 1),
+            encoding="utf-8",
+        )
+        return wrapper
+
     def add_selected_build_setting(
         self,
         project: Path,
@@ -185,6 +275,525 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                     }
                 ],
             )
+
+    def test_core_data_version_group_preserves_order_and_current_version(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            self.add_core_data_version_group(root, project)
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            group = next(
+                entry
+                for entry in inventory["sources"]
+                if entry["path"] == "Models/Versioned.xcdatamodeld"
+            )
+            self.assertEqual(group["origin"], "explicit")
+            self.assertEqual(
+                group["version_group"],
+                {
+                    "current_version_file": {
+                        "name": "V2.xcdatamodel",
+                        "path": ("Models/Versioned.xcdatamodeld/.xccurrentversion"),
+                        "sha256": project_inventory.xcodeplan.sha256_file(
+                            root
+                            / "Models"
+                            / "Versioned.xcdatamodeld"
+                            / ".xccurrentversion"
+                        ),
+                    },
+                    "current_version_index": 0,
+                    "current_version_path": (
+                        "Models/Versioned.xcdatamodeld/V2.xcdatamodel"
+                    ),
+                    "current_version_ref_id": "600000000000000000000003",
+                    "type": "wrapper.xcdatamodel",
+                    "versions": [
+                        {
+                            "file_ref_id": "600000000000000000000003",
+                            "file_type": "wrapper.xcdatamodel",
+                            "name": "V2.xcdatamodel",
+                            "path": "Models/Versioned.xcdatamodeld/V2.xcdatamodel",
+                            "source_tree": "<group>",
+                            "storage_format": "contents",
+                        },
+                        {
+                            "file_ref_id": "600000000000000000000004",
+                            "file_type": "wrapper.xcdatamodel",
+                            "name": "V1.xcdatamodel",
+                            "path": "Models/Versioned.xcdatamodeld/V1.xcdatamodel",
+                            "source_tree": "<group>",
+                            "storage_format": "legacy-elements-layout",
+                        },
+                    ],
+                },
+            )
+
+    def test_core_data_version_group_metadata_and_tree_fail_closed(self) -> None:
+        mutations = (
+            (
+                "currentVersion = 600000000000000000000003;",
+                "currentVersion = 6FFFFFFFFFFFFFFFFFFFFFFF;",
+                "currentVersion.*must name exactly one child",
+                None,
+            ),
+            (
+                "\t\t\t\t600000000000000000000004,\n\t\t\t);",
+                "\t\t\t\t600000000000000000000003,\n\t\t\t);",
+                "repeats child",
+                None,
+            ),
+            (
+                "versionGroupType = wrapper.xcdatamodel;",
+                "versionGroupType = wrapper.xcmappingmodel;",
+                "unsupported versionGroupType",
+                None,
+            ),
+            (
+                "\t\t\tpath = ../Versioned.xcdatamodeld;\n",
+                "",
+                "requires a nonempty path",
+                None,
+            ),
+            (
+                "fileRef = 600000000000000000000002;",
+                "fileRef = 600000000000000000000003;",
+                "must be consumed through its parent",
+                None,
+            ),
+            (
+                "versionGroupType = wrapper.xcdatamodel;",
+                "explicitFileType = text.json;\n"
+                "\t\t\tversionGroupType = wrapper.xcdatamodel;",
+                "unsupported file types",
+                None,
+            ),
+            (
+                "path = V1.xcdatamodel;",
+                "path = ../V1.xcdatamodel;",
+                "escapes the repository|escapes or is not a direct version",
+                None,
+            ),
+            (
+                'path = V1.xcdatamodel;\n\t\t\tsourceTree = "<group>";',
+                "path = V1.xcdatamodel;\n\t\t\tsourceTree = SOURCE_ROOT;",
+                "must use '<group>' sourceTree",
+                None,
+            ),
+            (
+                "lastKnownFileType = wrapper.xcdatamodel;\n\t\t\tpath = V1.xcdatamodel;",
+                "lastKnownFileType = text.json;\n\t\t\tpath = V1.xcdatamodel;",
+                "unsupported file types",
+                None,
+            ),
+            (
+                "lastKnownFileType = wrapper.xcdatamodel;\n\t\t\tpath = V1.xcdatamodel;",
+                "lastKnownFileType = wrapper.xcdatamodel;\n"
+                "\t\t\texplicitFileType = text.json;\n"
+                "\t\t\tpath = V1.xcdatamodel;",
+                "unsupported file types",
+                None,
+            ),
+            (
+                "path = V1.xcdatamodel;",
+                "path = v2.xcdatamodel;",
+                "aliased model path",
+                None,
+            ),
+            (
+                "children = (600000000000000000000002,);",
+                "children = ();",
+                "version group containing.*detached|file reference.*detached",
+                None,
+            ),
+            (
+                "",
+                "",
+                "children do not exactly match its model versions",
+                "extra",
+            ),
+            (
+                "",
+                "",
+                "model version is not a directory",
+                "regular_version",
+            ),
+            (
+                "",
+                "",
+                "contains a symlink|traverses a symlink",
+                "symlink",
+            ),
+            (
+                "",
+                "",
+                "has multiple parents",
+                "second_parent",
+            ),
+            (
+                "",
+                "",
+                "current-version metadata names.*expected",
+                "current_mismatch",
+            ),
+        )
+        for old, new, diagnostic, filesystem_mutation in mutations:
+            with (
+                self.subTest(diagnostic=diagnostic),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root, project = self.copied_modern_fixture(directory)
+                wrapper = self.add_core_data_version_group(root, project)
+                if filesystem_mutation == "extra":
+                    extra = wrapper / "Unlisted.xcdatamodel"
+                    extra.mkdir()
+                    (extra / "contents").write_text("extra", encoding="utf-8")
+                elif filesystem_mutation == "regular_version":
+                    (wrapper / "Unlisted.xcdatamodel").write_text(
+                        "not a model directory", encoding="utf-8"
+                    )
+                elif filesystem_mutation == "symlink":
+                    contents_file = wrapper / "V2.xcdatamodel" / "contents"
+                    contents_file.unlink()
+                    outside = root / "outside-model-contents"
+                    outside.write_text("outside", encoding="utf-8")
+                    contents_file.symlink_to(outside)
+                elif filesystem_mutation == "second_parent":
+                    pbxproj = project / "project.pbxproj"
+                    contents = pbxproj.read_text(encoding="utf-8")
+                    marker = (
+                        "\t\t\t\t100000000000000000000001,\n"
+                        "\t\t\t\t100000000000000000000002,"
+                    )
+                    self.assertIn(marker, contents)
+                    pbxproj.write_text(
+                        contents.replace(
+                            marker,
+                            marker + "\n\t\t\t\t600000000000000000000002,",
+                            1,
+                        ),
+                        encoding="utf-8",
+                    )
+                elif filesystem_mutation == "current_mismatch":
+                    current = wrapper / ".xccurrentversion"
+                    current.write_text(
+                        current.read_text(encoding="utf-8").replace(
+                            "V2.xcdatamodel", "V1.xcdatamodel"
+                        ),
+                        encoding="utf-8",
+                    )
+                else:
+                    pbxproj = project / "project.pbxproj"
+                    contents = pbxproj.read_text(encoding="utf-8")
+                    self.assertIn(old, contents)
+                    pbxproj.write_text(contents.replace(old, new, 1), encoding="utf-8")
+                with self.assertRaisesRegex(project_inventory.PlanError, diagnostic):
+                    project_inventory.build_project_inventory(
+                        project, scheme_name="ModernApp"
+                    )
+
+    def test_core_data_version_group_is_only_accepted_in_sources_phase(self) -> None:
+        phase_types = {
+            "PBXResourcesBuildPhase": "resources",
+            "PBXHeadersBuildPhase": "headers",
+            "PBXFrameworksBuildPhase": "frameworks",
+            "PBXCopyFilesBuildPhase": "copy_files",
+            "PBXShellScriptBuildPhase": "shell_script",
+        }
+        marker = (
+            "\t\t300000000000000000000001 = {\n" "\t\t\tisa = PBXSourcesBuildPhase;"
+        )
+        for phase_isa, phase_kind in phase_types.items():
+            with (
+                self.subTest(phase_isa=phase_isa),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root, project = self.copied_modern_fixture(directory)
+                self.add_core_data_version_group(root, project)
+                pbxproj = project / "project.pbxproj"
+                contents = pbxproj.read_text(encoding="utf-8")
+                self.assertIn(marker, contents)
+                pbxproj.write_text(
+                    contents.replace(
+                        marker,
+                        marker.replace("PBXSourcesBuildPhase", phase_isa),
+                        1,
+                    ),
+                    encoding="utf-8",
+                )
+                with self.assertRaisesRegex(
+                    project_inventory.PlanError,
+                    rf"unsupported in {phase_kind} phase.*expected a sources phase",
+                ):
+                    project_inventory.build_project_inventory(
+                        project, scheme_name="ModernApp"
+                    )
+
+    def test_group_relative_parent_path_is_contained_after_resolution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            (root / "Shared.json").write_text("{}\n", encoding="utf-8")
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            contents = (
+                contents.replace(
+                    "\t\t\t\t000000000000000000000004,\n\t\t\t);",
+                    "\t\t\t\t000000000000000000000004,\n"
+                    "\t\t\t\t610000000000000000000001,\n\t\t\t);",
+                    1,
+                )
+                .replace(
+                    "\t\t300000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXResourcesBuildPhase;\n"
+                    "\t\t\tbuildActionMask = 2147483647;\n"
+                    "\t\t\tfiles = ();",
+                    "\t\t300000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXResourcesBuildPhase;\n"
+                    "\t\t\tbuildActionMask = 2147483647;\n"
+                    "\t\t\tfiles = (610000000000000000000003,);",
+                    1,
+                )
+                .replace(
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    "\t\t610000000000000000000001 = {\n"
+                    "\t\t\tisa = PBXGroup;\n"
+                    "\t\t\tchildren = (610000000000000000000002,);\n"
+                    "\t\t\tpath = Nested;\n"
+                    '\t\t\tsourceTree = "<group>";\n'
+                    "\t\t};\n"
+                    "\t\t610000000000000000000002 = {\n"
+                    "\t\t\tisa = PBXFileReference;\n"
+                    "\t\t\tlastKnownFileType = text.json;\n"
+                    "\t\t\tpath = ../Shared.json;\n"
+                    '\t\t\tsourceTree = "<group>";\n'
+                    "\t\t};\n"
+                    "\t\t610000000000000000000003 = {isa = PBXBuildFile; "
+                    "fileRef = 610000000000000000000002; };\n"
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    1,
+                )
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            resource = next(
+                entry
+                for entry in inventory["resources"]
+                if entry["path"] == "Shared.json"
+            )
+            self.assertEqual(resource["origin"], "explicit")
+
+            pbxproj.write_text(
+                contents.replace(
+                    "path = ../Shared.json;", "path = ../../Shared.json;", 1
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                project_inventory.PlanError, "escapes the repository"
+            ):
+                project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
+
+    def test_variant_group_path_rebases_children_but_preserves_logical_name(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            localized = root / "Localized" / "en.lproj" / "Localizable.strings"
+            localized.parent.mkdir(parents=True)
+            localized.write_text('"key" = "value";\n', encoding="utf-8")
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            contents = (
+                contents.replace(
+                    "\t\t\t\t000000000000000000000004,\n\t\t\t);",
+                    "\t\t\t\t000000000000000000000004,\n"
+                    "\t\t\t\t630000000000000000000001,\n"
+                    "\t\t\t);",
+                    1,
+                )
+                .replace(
+                    "\t\t300000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXResourcesBuildPhase;\n"
+                    "\t\t\tbuildActionMask = 2147483647;\n"
+                    "\t\t\tfiles = ();",
+                    "\t\t300000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXResourcesBuildPhase;\n"
+                    "\t\t\tbuildActionMask = 2147483647;\n"
+                    "\t\t\tfiles = (630000000000000000000004,);",
+                    1,
+                )
+                .replace(
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    "\t\t630000000000000000000001 = {\n"
+                    "\t\t\tisa = PBXGroup;\n"
+                    "\t\t\tchildren = (630000000000000000000002,);\n"
+                    "\t\t\tpath = Localized/Resources;\n"
+                    '\t\t\tsourceTree = "<group>";\n'
+                    "\t\t};\n"
+                    "\t\t630000000000000000000002 = {\n"
+                    "\t\t\tisa = PBXVariantGroup;\n"
+                    "\t\t\tchildren = (630000000000000000000003,);\n"
+                    "\t\t\tname = Localizable.strings;\n"
+                    "\t\t\tpath = ..;\n"
+                    '\t\t\tsourceTree = "<group>";\n'
+                    "\t\t};\n"
+                    "\t\t630000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXFileReference;\n"
+                    "\t\t\tlastKnownFileType = text.plist.strings;\n"
+                    "\t\t\tpath = en.lproj/Localizable.strings;\n"
+                    '\t\t\tsourceTree = "<group>";\n'
+                    "\t\t};\n"
+                    "\t\t630000000000000000000004 = {isa = PBXBuildFile; "
+                    "fileRef = 630000000000000000000002; };\n"
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    1,
+                )
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            resource = next(
+                entry
+                for entry in inventory["resources"]
+                if entry.get("file_ref_id") == "630000000000000000000002"
+            )
+            self.assertEqual(resource["path"], "Localized/Localizable.strings")
+            self.assertEqual(
+                resource["variant_paths"],
+                ["Localized/en.lproj/Localizable.strings"],
+            )
+
+            empty_name = contents.replace(
+                "name = Localizable.strings;", 'name = "";', 1
+            )
+            pbxproj.write_text(empty_name, encoding="utf-8")
+            with self.assertRaisesRegex(
+                project_inventory.PlanError, "unsafe logical name"
+            ):
+                project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
+
+            escaping = contents.replace("path = ..;", "path = ../../..;", 1)
+            pbxproj.write_text(escaping, encoding="utf-8")
+            with self.assertRaisesRegex(
+                project_inventory.PlanError, "escapes the repository"
+            ):
+                project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
+
+    def test_aggregate_target_dependency_is_frozen_as_an_explicit_provider_gap(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            _, project = self.copied_modern_fixture(directory)
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            contents = (
+                contents.replace(
+                    "\t\t\t\tBBBBBBBBBBBBBBBBBBBBBBBB,\n\t\t\t);",
+                    "\t\t\t\tBBBBBBBBBBBBBBBBBBBBBBBB,\n"
+                    "\t\t\t\t620000000000000000000001,\n\t\t\t);",
+                    1,
+                )
+                .replace(
+                    "\t\t\tdependencies = ();",
+                    "\t\t\tdependencies = (620000000000000000000002,);",
+                    1,
+                )
+                .replace(
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    "\t\t620000000000000000000001 = {\n"
+                    "\t\t\tisa = PBXAggregateTarget;\n"
+                    "\t\t\tbuildConfigurationList = 400000000000000000000007;\n"
+                    "\t\t\tbuildPhases = ();\n"
+                    "\t\t\tdependencies = ();\n"
+                    "\t\t\tname = Secrets;\n"
+                    "\t\t\tproductName = Secrets;\n"
+                    "\t\t};\n"
+                    "\t\t620000000000000000000002 = {\n"
+                    "\t\t\tisa = PBXTargetDependency;\n"
+                    "\t\t\ttarget = 620000000000000000000001;\n"
+                    "\t\t\ttargetProxy = 620000000000000000000003;\n"
+                    "\t\t};\n"
+                    "\t\t620000000000000000000003 = {\n"
+                    "\t\t\tisa = PBXContainerItemProxy;\n"
+                    "\t\t\tremoteGlobalIDString = 620000000000000000000001;\n"
+                    "\t\t};\n"
+                    "\t\tAAAAAAAAAAAAAAAAAAAAAAAA = {",
+                    1,
+                )
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+            self.assertEqual(
+                inventory["target_dependencies"],
+                [
+                    {
+                        "build_configuration_list_id": "400000000000000000000007",
+                        "build_phase_ids": [],
+                        "dependency_ids": [],
+                        "dependency_id": "620000000000000000000002",
+                        "name": "Secrets",
+                        "target_id": "620000000000000000000001",
+                        "target_type": "aggregate",
+                    }
+                ],
+            )
+            self.assertEqual(
+                inventory["unsupported_features"],
+                [
+                    "target dependency 620000000000000000000002 is aggregate target "
+                    "'Secrets'; its build phases require a provider"
+                ],
+            )
+
+            invalid_object_mutations = (
+                (
+                    "buildConfigurationList = 400000000000000000000007;",
+                    "buildConfigurationList = 6FFFFFFFFFFFFFFFFFFFFFF1;",
+                ),
+                (
+                    "buildPhases = ();\n\t\t\tdependencies = ();",
+                    "buildPhases = (6FFFFFFFFFFFFFFFFFFFFFF2,);\n"
+                    "\t\t\tdependencies = ();",
+                ),
+                (
+                    "buildPhases = ();\n\t\t\tdependencies = ();",
+                    "buildPhases = ();\n"
+                    "\t\t\tdependencies = (6FFFFFFFFFFFFFFFFFFFFFF3,);",
+                ),
+            )
+            for old, new in invalid_object_mutations:
+                with self.subTest(invalid_object=new):
+                    self.assertIn(old, contents)
+                    pbxproj.write_text(contents.replace(old, new, 1), encoding="utf-8")
+                    with self.assertRaisesRegex(
+                        project_inventory.PlanError, "unresolved PBX object"
+                    ):
+                        project_inventory.build_project_inventory(
+                            project, scheme_name="ModernApp"
+                        )
+
+            pbxproj.write_text(
+                contents.replace("\t\t\t\t620000000000000000000001,\n", "", 1),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                project_inventory.PlanError,
+                "must occur exactly once in PBXProject.targets",
+            ):
+                project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
 
     def test_code_sign_entitlements_are_classified_without_becoming_build_inputs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
