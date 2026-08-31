@@ -156,6 +156,7 @@ FRAMEWORKS = (
     "CryptoKit",
     "CommonCrypto",
     "AppIntents",
+    "OSLog",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -667,6 +668,7 @@ class PackageFixture:
             "-lCryptoKit",
             "-lCommonCrypto",
             "-lAppIntents",
+            "-lOSLog",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1481,7 +1483,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 31)
+        self.assertEqual(len(FRAMEWORKS), 32)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 14)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2007,7 +2009,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_sixteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_seventeen_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2029,8 +2031,9 @@ class ShellContractTests(unittest.TestCase):
             "CryptoKit",
             "CommonCrypto",
             "AppIntents",
+            "OSLog",
         )
-        self.assertEqual(FRAMEWORKS[-16:], first_party)
+        self.assertEqual(FRAMEWORKS[-17:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2042,13 +2045,13 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=9\\tsources=9", source)
+        self.assertIn("frontier-frameworks\\tframeworks=10\\tsources=10", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 9",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 10",
             source,
         )
         self.assertIn(
-            "compile sixteen independent first-party framework modules", source
+            "compile seventeen independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2056,7 +2059,8 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-16", probe)
+        self.assertIn("first-party=portable-17", probe)
+        self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("security=keychain,random", probe)
         for framework in first_party:
             with self.subTest(framework=framework):
@@ -2065,6 +2069,23 @@ class ShellContractTests(unittest.TestCase):
                 self.assertIn(framework, canonical_source)
                 self.assertIn(f"import {framework}", probe)
                 self.assertIn(f"-l{framework}", source)
+
+        oslog_source = (REPO / "full/oslog/OSLog.swift").read_text(
+            encoding="utf-8"
+        )
+        os_source = (REPO / "full/foundation/os-module/os.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("@_exported import os", oslog_source)
+        self.assertNotIn("struct Logger", oslog_source)
+        self.assertIn("public struct OSSignpostType", os_source)
+        self.assertIn("public struct OSSignpostID", os_source)
+        self.assertIn("public func os_signpost(", os_source)
+        self.assertIn(
+            '-reexport_library "$STAGE/lib/libFoundationEssentials.dylib"',
+            source,
+        )
+        self.assertIn("os-runtime-reexport=%s", source)
 
     def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

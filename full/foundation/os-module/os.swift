@@ -3,9 +3,9 @@
 // ### THIS IS OURS.  IT IS NOT APPLE'S `os` OVERLAY. ###
 //
 // Written in this repository, named `os` only because upstream's source
-// imports that name, and it implements THREE declarations out of a module
-// that has dozens.  **Its silence about everything else -- `os_signpost`,
-// `os_activity`, `OSLogPrivacy`'s mask and format
+// imports that name, and it implements the measured logging, signpost, and
+// locking declarations below out of a module that has dozens.  **Its silence
+// about everything else -- `os_activity`, `OSLogPrivacy`'s mask and format
 // options, the whole `os_workgroup` family -- is a SCOPE STATEMENT, not an
 // implementation choice.**  If something fails to compile against this module,
 // the conclusion is almost always "that part of `os` was never provided here",
@@ -39,7 +39,11 @@
 // interpolation (Calendar_Gregorian, URL).  That is all.  Nothing here is
 // speculative surface. The app-facing layer now additionally provides the
 // real allocated unfair lock below because unchanged first-party application
-// packages use it for mutable Sendable state.
+// packages use it for mutable Sendable state.  The signpost layer is the exact
+// surface used by pinned Nuke's untouched Internal/Log.swift: event/begin/end,
+// generated and object-derived IDs, and format arguments.  Those boundaries
+// are written visibly to fd 2 instead of pretending a unified-log backend is
+// present.
 //
 // WHY NOT APPLE'S `os` OVERLAY.  Tried and measured first.  Apple's
 // os.swiftmodule does `@_exported import os.log` / `os.signpost` /
@@ -246,6 +250,129 @@ public struct OSLog: @unchecked Sendable {
     public static let disabled = OSLog(subsystem: "", category: "__disabled")
 }
 
+/// The three interval states consumed by the public signpost API.
+public struct OSSignpostType: RawRepresentable, Sendable, Hashable {
+    public let rawValue: UInt8
+    public init(rawValue: UInt8) { self.rawValue = rawValue }
+
+    public static let event = OSSignpostType(rawValue: 0)
+    public static let begin = OSSignpostType(rawValue: 1)
+    public static let end = OSSignpostType(rawValue: 2)
+
+    fileprivate var label: StaticString {
+        switch rawValue {
+        case Self.begin.rawValue: return "signpost-begin"
+        case Self.end.rawValue: return "signpost-end"
+        default: return "signpost-event"
+        }
+    }
+}
+
+private let _nextSignpostID = OSAllocatedUnfairLock(initialState: UInt64(1))
+
+/// A process-local signpost identity. Generated IDs are monotonically unique
+/// for the lifetime of this process; object IDs remain stable for the lifetime
+/// of the referenced object. Neither property is claimed across processes.
+public struct OSSignpostID: RawRepresentable, Sendable, Hashable {
+    public let rawValue: UInt64
+    public init(rawValue: UInt64) { self.rawValue = rawValue }
+
+    public static let invalid = OSSignpostID(rawValue: 0)
+    public static let exclusive = OSSignpostID(rawValue: UInt64.max)
+
+    public init(log: OSLog) {
+        self.rawValue = _nextSignpostID.withLock { next in
+            let value = next
+            next &+= 1
+            if next == Self.invalid.rawValue || next == Self.exclusive.rawValue {
+                next = 1
+            }
+            return value
+        }
+    }
+
+    public init(log: OSLog, object: AnyObject) {
+        var value = UInt64(UInt(bitPattern: ObjectIdentifier(object)))
+        // Reserve Apple's two sentinel values while preserving stable identity.
+        if value == Self.invalid.rawValue || value == Self.exclusive.rawValue {
+            value ^= 0x9e3779b97f4a7c15
+        }
+        self.rawValue = value
+    }
+}
+
+/// There is no native unified-log filter on this platform. Every non-disabled
+/// signpost has a real, visible stderr diagnostic sink.
+public func os_signpost_enabled(_ log: OSLog) -> Bool {
+    log.category != "__disabled"
+}
+
+public func os_signpost(
+    _ type: OSSignpostType,
+    log: OSLog,
+    name: StaticString,
+    signpostID: OSSignpostID = .exclusive
+) {
+    _emitSignpost(type, log: log, name: name, signpostID: signpostID, format: nil, arguments: [])
+}
+
+public func os_signpost(
+    _ type: OSSignpostType,
+    log: OSLog,
+    name: StaticString,
+    signpostID: OSSignpostID = .exclusive,
+    _ format: StaticString,
+    _ arguments: CVarArg...
+) {
+    _emitSignpost(
+        type,
+        log: log,
+        name: name,
+        signpostID: signpostID,
+        format: format,
+        arguments: arguments
+    )
+}
+
+private func _emitSignpost(
+    _ type: OSSignpostType,
+    log: OSLog,
+    name: StaticString,
+    signpostID: OSSignpostID,
+    format: StaticString?,
+    arguments: [CVarArg]
+) {
+    guard os_signpost_enabled(log) else { return }
+    var line = "[" + String(describing: type.label) + "] "
+    if !log.subsystem.isEmpty {
+        line += log.subsystem + ":" + log.category + " "
+    }
+    line += String(describing: name)
+    line += " id=" + String(signpostID.rawValue)
+    if let format {
+        line += " format=" + String(describing: format)
+        if !arguments.isEmpty {
+            line += " args=["
+            line += arguments.map { String(describing: $0) }.joined(separator: ", ")
+            line += "]"
+        }
+    }
+    _writeDiagnostic(line + "\n")
+}
+
+private func _writeDiagnostic(_ line: String) {
+    let bytes = Array(line.utf8)
+    bytes.withUnsafeBufferPointer { buf in
+        guard let baseAddress = buf.baseAddress else { return }
+        var offset = 0
+        while offset < buf.count {
+            let written = Darwin.write(2, baseAddress + offset, buf.count - offset)
+            if written <= 0 { break }
+            offset += written
+        }
+    }
+}
+
 public struct Logger: Sendable {
     let subsystem: String
     let category: String
@@ -275,14 +402,6 @@ public struct Logger: Sendable {
         if !subsystem.isEmpty { line += subsystem + ":" + category + " " }
         line += message.text
         line += "\n"
-        let bytes = Array(line.utf8)
-        bytes.withUnsafeBufferPointer { buf in
-            var off = 0
-            while off < buf.count {
-                let n = Darwin.write(2, buf.baseAddress! + off, buf.count - off)
-                if n <= 0 { break }
-                off += n
-            }
-        }
+        _writeDiagnostic(line)
     }
 }

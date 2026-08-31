@@ -65,6 +65,7 @@ FIRST_PARTY_FRAMEWORKS=(
     CryptoKit
     CommonCrypto
     AppIntents
+    OSLog
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -83,6 +84,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     cryptokit
     commoncrypto
     appintents
+    oslog
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -94,6 +96,7 @@ FRONTIER_FRAMEWORKS=(
     CryptoKit
     CommonCrypto
     AppIntents
+    OSLog
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -105,6 +108,7 @@ FRONTIER_SOURCE_DIRS=(
     cryptokit
     commoncrypto
     appintents
+    oslog
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -673,7 +677,7 @@ append_frontier_sources() {
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 9 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 10 ] \
     || die 'frontier framework source count drifted'
 [ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 3 ] \
     || die 'frontier underlying input count drifted'
@@ -1704,7 +1708,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile sixteen independent first-party framework modules'
+echo '== compile seventeen independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -1745,7 +1749,7 @@ echo '== final Foundation/UIKit notification identity proof'
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
 
-echo '== link thirty-two reusable platform dylibs (thirty-one frameworks plus ICU)'
+echo '== link thirty-three reusable platform dylibs (thirty-two frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -1947,6 +1951,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$SWIFTUI_RUNTIME_LINK_FLAG"
     )
     expected_uikit_load=0
+    expected_os_runtime_reexport=0
     case "$framework" in
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents)
             expected_uikit_load=1
@@ -1968,6 +1973,16 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 "$RUNTIME/darwin/usr/lib/libquartz.dylib"
             )
             ;;
+        OSLog)
+            # The public OSLog module re-exports the existing `os` identities.
+            # Their implementation lives in FoundationEssentials, so make that
+            # relationship a real Mach-O re-export instead of duplicating Logger.
+            expected_os_runtime_reexport=1
+            unset 'framework_link_dependencies[1]'
+            framework_link_dependencies+=(
+                -reexport_library "$STAGE/lib/libFoundationEssentials.dylib"
+            )
+            ;;
     esac
     framework_objects=("$WORK/$source_dir.o")
     if [ "$framework" = CommonCrypto ]; then
@@ -1986,19 +2001,29 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$STAGE/lib/lib$framework.dylib" \
         | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
             '$1 == expected { count++ } END { print count + 0 }')
+    os_runtime_reexport_count=$(llvm-otool-18 -l \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "cmd" && $2 == "LC_REEXPORT_DYLIB" { reexport = 1; next } \
+            reexport && $1 == "name" { \
+                if ($2 == "@rpath/libFoundationEssentials.dylib") count++; \
+                reexport = 0 \
+            } END { print count + 0 }')
     [ "$foundation_load_count" -eq 1 ] \
         || die "lib$framework Foundation load count $foundation_load_count, expected 1"
     [ "$uikit_load_count" -eq "$expected_uikit_load" ] \
         || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
     [ "$concurrency_load_count" -eq 1 ] \
         || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
+    [ "$os_runtime_reexport_count" -eq "$expected_os_runtime_reexport" ] \
+        || die "lib$framework os runtime re-export count $os_runtime_reexport_count, expected $expected_os_runtime_reexport"
     if llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tfoundation=%s\tuikit=%s\tconcurrency=%s\tapple-self-load=0\n' \
+    printf '%s\tfoundation=%s\tuikit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$foundation_load_count" "$uikit_load_count" \
-        "$concurrency_load_count" >> "$FIRST_PARTY_LOAD_AUDIT"
+        "$concurrency_load_count" "$os_runtime_reexport_count" \
+        >> "$FIRST_PARTY_LOAD_AUDIT"
 done
 
 echo '== compile/link/run the core package probe'
@@ -2039,7 +2064,7 @@ fi
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
-    -lCommonCrypto -lAppIntents \
+    -lCommonCrypto -lAppIntents -lOSLog \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -2106,7 +2131,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-16 security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore intentsui=host-driven swiftui-app=constructed first-party=portable-17 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2222,7 +2247,7 @@ LINK_ARGUMENTS=(
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
-    -lCommonCrypto -lAppIntents
+    -lCommonCrypto -lAppIntents -lOSLog
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2355,7 +2380,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/urltransport/OpenURLTransportBridge.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHost.c")" \
         "$(hash_file "$W/full/urltransport/OpenURLTransportHostTests.c")"
-    printf 'frontier-frameworks\tframeworks=9\tsources=9\n'
+    printf 'frontier-frameworks\tframeworks=10\tsources=10\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \

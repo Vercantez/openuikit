@@ -26,6 +26,7 @@ import Security
 import CryptoKit
 import CommonCrypto
 import AppIntents
+import OSLog
 import WebKit
 
 @MainActor
@@ -649,6 +650,23 @@ struct CoreGuestPackageProbe {
             isTemplate: nil
         )
         precondition(modernImage.systemName == "square.and.pencil")
+        precondition(OSLogPortable.backend == .standardError)
+        precondition(!OSLogPortable.supportsUnifiedLogging)
+        precondition(OSLogPortable.supportsSignposts)
+        let portableLog = OSLog(
+            subsystem: "OpenUIKit.CoreGuestPackageProbe",
+            category: "Runtime"
+        )
+        let portableSignpost = OSSignpostID(log: portableLog)
+        Logger(portableLog).info("portable OSLog runtime is visible")
+        os_signpost(
+            .event,
+            log: portableLog,
+            name: "CoreGuestPackageProbe",
+            signpostID: portableSignpost,
+            "%{public}s",
+            "ready"
+        )
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -677,7 +695,8 @@ struct CoreGuestPackageProbe {
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-16 security=keychain,random "
+                + "first-party=portable-17 oslog=standard-error,signposts "
+                + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
                 + "webkit=engine-unavailable preview=\(preview)"
