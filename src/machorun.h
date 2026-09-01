@@ -14,7 +14,6 @@
 #define MR_MAX_SEGMENTS 16
 #define MR_MAX_DEPS     64
 #define MR_MAX_RPATHS   16
-#define MR_MAX_IMAGES   64
 
 /* Two page sizes live in this program and conflating them is the easiest bug
  * in the project (PLAN §I.4). The Mach-O one is a property of the fixup
@@ -114,8 +113,12 @@ struct mr_image {
 
 /* ---------------------------------------------------------------- state */
 typedef struct mr_state {
-    mr_image *images[MR_MAX_IMAGES];
+    /* The table owns pointers, not mr_image objects. Growing it may relocate
+     * this pointer array, but dlopen handles and every dependency edge remain
+     * stable because each mr_image is allocated separately. */
+    mr_image **images;
     int       nimages;
+    size_t    image_capacity;
     mr_image *main_image;
     char     *exec_dir;
     char     *darwin_root;      /* $MACHORUN_ROOT/darwin, or the first that exists */
@@ -135,6 +138,8 @@ void  mr_unimplemented(const char *what, const char *fmt, ...)
         __attribute__((noreturn, format(printf, 2, 3)));
 void  mr_log(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 void *mr_xmalloc(size_t n);
+void *mr_grow_array(void *storage, size_t *capacity, size_t required,
+                    size_t element_size, const char *what);
 char *mr_xstrdup(const char *s);
 char *mr_join(const char *a, const char *b);
 char *mr_dirname(const char *path);
@@ -155,6 +160,7 @@ int64_t  mr_sleb(const uint8_t **p, const uint8_t *end);
 
 /* --------------------------------------------------------------- images */
 mr_image *mr_image_load(const char *path, mr_image *loader, int weak, int is_main);
+void      mr_image_append(mr_image *im);
 mr_image *mr_image_find_loaded(const char *install_name);
 int       mr_image_is_loaded(const char *install_name_or_path);
 int       mr_addr_in_image(const void *p);

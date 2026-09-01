@@ -171,7 +171,8 @@ struct mr_block {
 
 /* The batch we last handed to `mapped`, so an index can be turned back into an
  * image. dyld indexes by position in the infos[] array. */
-static mr_image *batch[MR_MAX_IMAGES];
+static mr_image **batch;
+static size_t     batch_capacity;
 static unsigned  batch_n;
 
 static void mark_image_mutable(void *blk, uint32_t index)
@@ -211,8 +212,19 @@ static struct mr_block make_mutable_block = {
  * delivery's infos[], not into MR.images. */
 static void deliver_mapped_from(int from)
 {
-    struct objc_mapped_info infos[MR_MAX_IMAGES];
+    struct objc_mapped_info *infos;
+    size_t available;
+    size_t infos_capacity = 0;
     unsigned n = 0;
+
+    if (from < 0 || from > MR.nimages)
+        mr_die("objc mapped-batch start %d is outside the %d-image table",
+               from, MR.nimages);
+    available = (size_t)(MR.nimages - from);
+    infos = mr_grow_array(NULL, &infos_capacity, available,
+                          sizeof(*infos), "Objective-C mapped-image metadata");
+    batch = mr_grow_array(batch, &batch_capacity, available,
+                          sizeof(*batch), "Objective-C mapped-image batch");
 
     for (int i = from; i < MR.nimages; i++) {
         mr_image *im = MR.images[i];
@@ -231,6 +243,7 @@ static void deliver_mapped_from(int from)
 
     mr_log("objc: delivering map_images for %u image(s)", n);
     if (n && CB.mapped) CB.mapped(n, infos, &make_mutable_block);
+    free(infos);
 }
 
 static void deliver_mapped(void) { deliver_mapped_from(0); }

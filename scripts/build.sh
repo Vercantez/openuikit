@@ -83,6 +83,7 @@ build_loader() {
     # shellcheck disable=SC2086
     $CC $CFLAGS -o "$BUILD/machorun" \
         "$ROOT"/src/util.c \
+        "$ROOT"/src/image_table.c \
         "$ROOT"/src/image.c \
         "$ROOT"/src/map.c \
         "$ROOT"/src/trie.c \

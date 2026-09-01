@@ -192,6 +192,16 @@ reached via `@rpath` and via an absolute path is one image.
 `LC_LOAD_WEAK_DYLIB` (measured present in a plain `-lgreet` link): a missing one
 is not an error; its binds resolve to `NULL`.
 
+The process image registry has no preallocated image ceiling. Its pointer
+vector grows geometrically, with checked multiplication before allocation;
+the `mr_image` objects themselves are separately allocated and never move, so
+dependency edges and `dlopen` handles remain valid when the vector grows.
+Objective-C mapped-image batches and TLV template storage grow by the same
+checked primitive. `dlclose` still does not unload an image (and says so), so
+there is no index compaction or handle invalidation to hide behind. The focused
+capacity gate loads and calls through a 130-dylib chain, comfortably beyond the
+64-image assumption the first full framework platform exposed.
+
 ### I.6 Applying fixups
 
 Two interpreters over one shared "write a pointer at address `p`" primitive.

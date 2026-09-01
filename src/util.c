@@ -61,6 +61,44 @@ void *mr_xmalloc(size_t n)
     return p;
 }
 
+/* Grow a loader-owned vector geometrically.  Every caller keeps pointers to
+ * the objects IN the vector rather than into this storage, so relocating the
+ * vector itself is safe.  Arithmetic is checked before realloc: an impossible
+ * request must be a named loader failure, never a wrapped allocation followed
+ * by an out-of-bounds write. */
+void *mr_grow_array(void *storage, size_t *capacity, size_t required,
+                    size_t element_size, const char *what)
+{
+    size_t next, old_bytes, new_bytes;
+    void *grown;
+
+    if (!capacity || !what || element_size == 0)
+        mr_die("invalid dynamic-array request for %s", what ? what : "(unnamed)");
+    if (required <= *capacity) return storage;
+    if (required > SIZE_MAX / element_size)
+        mr_die("%s capacity overflow: %zu element(s) of %zu bytes",
+               what, required, element_size);
+
+    next = *capacity ? *capacity : 16;
+    while (next < required) {
+        if (next > SIZE_MAX / 2) { next = required; break; }
+        next *= 2;
+    }
+    if (next > SIZE_MAX / element_size)
+        mr_die("%s capacity overflow: %zu element(s) of %zu bytes",
+               what, next, element_size);
+
+    old_bytes = *capacity * element_size;
+    new_bytes = next * element_size;
+    grown = realloc(storage, new_bytes);
+    if (!grown)
+        mr_die("out of memory growing %s from %zu to %zu element(s)",
+               what, *capacity, next);
+    memset((unsigned char *)grown + old_bytes, 0, new_bytes - old_bytes);
+    *capacity = next;
+    return grown;
+}
+
 char *mr_xstrdup(const char *s)
 {
     char *p = strdup(s ? s : "");

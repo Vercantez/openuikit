@@ -380,8 +380,6 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
 
     if ((im = mr_image_find_loaded(path)) != NULL) { free(path); return im; }
 
-    if (MR.nimages >= MR_MAX_IMAGES) mr_die("more than %d images loaded", MR_MAX_IMAGES);
-
     im = mr_xmalloc(sizeof(*im));
     im->path = path;
     im->dir = mr_dirname(path);
@@ -447,7 +445,7 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
     parse_load_commands(im);
 
     /* Registered before dependencies so a cycle terminates. */
-    MR.images[MR.nimages++] = im;
+    mr_image_append(im);
     if (is_main) MR.main_image = im;
 
     mr_map_image(im);

@@ -25,8 +25,9 @@ typedef struct {
     const char    *image;
 } tlv_template;
 
-static tlv_template templates[MR_MAX_IMAGES];
-static int          ntemplates;
+static tlv_template *templates;
+static size_t        ntemplates;
+static size_t        template_capacity;
 
 void *mr_tlv_get_addr_c(struct tlv_descriptor *desc);   /* called from tlv_asm.S */
 void *mr_tlv_get_addr(struct tlv_descriptor *desc);     /* the asm entry point */
@@ -36,7 +37,7 @@ void *mr_tlv_get_addr_c(struct tlv_descriptor *desc)
     uint8_t *block = pthread_getspecific((pthread_key_t)desc->key);
     if (!block) {
         tlv_template *t = NULL;
-        for (int i = 0; i < ntemplates; i++)
+        for (size_t i = 0; i < ntemplates; i++)
             if (templates[i].key == (pthread_key_t)desc->key) { t = &templates[i]; break; }
         if (!t)
             mr_die("TLV descriptor at %p names pthread key %lu, which no image registered",
@@ -89,10 +90,11 @@ void mr_tlv_setup(mr_image *im)
     }
     if (block_lo == UINT64_MAX) { block_lo = 0; block_hi = 0; }
 
-    if (ntemplates >= MR_MAX_IMAGES) mr_die("too many images with TLV");
     if (pthread_key_create(&key, tlv_free) != 0)
         mr_die("%s: pthread_key_create for TLV failed", im->path);
 
+    templates = mr_grow_array(templates, &template_capacity, ntemplates + 1,
+                              sizeof(*templates), "TLV image template table");
     t = &templates[ntemplates++];
     t->key = key;
     t->image = im->path;
