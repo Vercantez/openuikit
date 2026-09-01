@@ -5,7 +5,7 @@ import UIKit
 
 func require(_ condition: Bool, _ message: String) {
     if !condition {
-        fputs("SOCIAL_PLATFORM_IDENTITY_FAIL: \(message)\n", stderr)
+        fputs("SOCIAL_UNIT_FIXTURE_LOOKALIKE_FAIL: \(message)\n", stderr)
         exit(1)
     }
 }
@@ -75,5 +75,6 @@ await MainActor.run {
     require(request.account === account, "account is Accounts.ACAccount")
     require(request.preparedURLRequest() == nil, "account without OAuth signer fails closed")
 
-    print("SOCIAL_PLATFORM_IDENTITY_OK")
+    print("SOCIAL_UNIT_FIXTURE_LOOKALIKE_CONSUMER_OK")
+    print("SOCIAL_UNIT_FIXTURE_LOOKALIKE_NOT_PLATFORM_IDENTITY")
 }

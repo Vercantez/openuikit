@@ -1,5 +1,7 @@
 import Foundation
 
+// Unit-fixture lookalike only. Not platform OpenUIKit identity.
+
 @MainActor
 public protocol UITextViewDelegate: AnyObject {
     func textViewDidChange(_ textView: UITextView)

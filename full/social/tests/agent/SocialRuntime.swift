@@ -1,6 +1,10 @@
 @_spi(OpenUIKitHost) import Social
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 @MainActor
 final class AgentShareSheet: SLComposeServiceViewController {
     var configurationLoadCount = 0
@@ -40,7 +44,16 @@ func require(_ condition: Bool, _ message: String) {
 }
 
 await MainActor.run {
-    print("SOCIAL_AGENT_RUNTIME_STANDALONE_ONLY")
+#if SOCIAL_STANDALONE_TEST_FIXTURES
+    require(
+        SocialStandaloneUnitFixture.marker == "standalone-unit-fixture-only",
+        "fixture marker"
+    )
+    print("SOCIAL_DYLIB_KIND=standalone-unit-fixture-only")
+    print("SOCIAL_STANDALONE_UNIT_FIXTURE_ONLY")
+#else
+    print("SOCIAL_DYLIB_KIND=production")
+#endif
 
     require(!SLServiceTypeTwitter.isEmpty, "twitter constant nonempty")
     require(!SLServiceTypeFacebook.isEmpty, "facebook constant nonempty")
