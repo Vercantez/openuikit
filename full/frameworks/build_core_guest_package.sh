@@ -2380,11 +2380,13 @@ intents_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libIntents.dylib" \
     -needed_library "$STAGE/lib/libUIKit.dylib" \
     -needed_library "$STAGE/lib/libFoundation.dylib" \
     -o "$STAGE/lib/libWebKit.dylib" "$WORK/webkit.o" \
-    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 WEBKIT_REQUIRED_LOADS=(
     @rpath/libUIKit.dylib
     @rpath/libFoundation.dylib
+    "$SWIFTUI_RUNTIME_INSTALL_NAME"
 )
 for install_name in "${WEBKIT_REQUIRED_LOADS[@]}"; do
     load_count=$(llvm-otool-18 -L "$STAGE/lib/libWebKit.dylib" \
@@ -2401,6 +2403,7 @@ fi
     printf 'install-id\t@rpath/libWebKit.dylib\n'
     printf 'required-load\t@rpath/libUIKit.dylib\tcount=1\n'
     printf 'required-load\t@rpath/libFoundation.dylib\tcount=1\n'
+    printf 'required-load\t%s\tcount=1\n' "$SWIFTUI_RUNTIME_INSTALL_NAME"
     printf 'apple-webkit-framework-load-count\t0\n'
     printf 'rendering-engine\tabsent\n'
 } > "$STAGE/attestation/webkit-dylib-loads.tsv"

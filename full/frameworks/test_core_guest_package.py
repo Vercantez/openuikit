@@ -273,10 +273,10 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation, SwiftUI, the QuickLook overlay, AVFoundation, Charts,
+    # Observation, SwiftUI, the QuickLook overlay, WebKit, AVFoundation, Charts,
     # CoreTransferable and Photos runtime gates, the reusable first-party link
     # loop, executable probe, and SwiftData gate carry the same concurrency token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 10:
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 11:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -2015,6 +2015,8 @@ class ShellContractTests(unittest.TestCase):
             "-install_name @rpath/libWebKit.dylib",
             '-needed_library "$STAGE/lib/libUIKit.dylib"',
             '-needed_library "$STAGE/lib/libFoundation.dylib"',
+            '"$SWIFTUI_RUNTIME_LINK_FLAG"',
+            '"$SWIFTUI_RUNTIME_INSTALL_NAME"',
             "/System/Library/Frameworks/WebKit.framework/",
             "webkit-dylib-loads.tsv",
             "strict Swift 6 Hackers WebKit/KVO source-surface gate",
