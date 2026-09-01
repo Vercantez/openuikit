@@ -34,6 +34,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "Combine",
             "Symbols",
             "SwiftUI",
+            "FoundationModels",
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
@@ -88,11 +89,12 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('LINK_PLATFORM="$PLATFORM"', self.builder)
         self.assertIn('DYLIB_INSTALL_PREFIX=/usr/lib', self.builder)
 
-    def test_platform_publishes_five_relocatable_compiler_plugins(self) -> None:
+    def test_platform_publishes_six_relocatable_compiler_plugins(self) -> None:
         for module in (
             "ObservationMacros",
             "FoundationMacros",
             "SwiftDataMacros",
+            "FoundationModelsMacros",
             "OpenUIKitPreviewMacros",
             "OpenSwiftUIMacros",
         ):
@@ -107,6 +109,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         for module in (
             "SwiftUI",
             "UIKit",
+            "FoundationModels",
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
@@ -147,6 +150,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)
         self.assertIn('import UIKit', self.probe)
+        self.assertIn('import FoundationModels', self.probe)
         self.assertIn('import NaturalLanguage', self.probe)
         self.assertIn('import AuthenticationServices', self.probe)
         self.assertIn('import Accelerate', self.probe)
@@ -161,6 +165,8 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn(marker, self.builder)
         self.assertIn("let cfErrorAsError: any Error = cfError", self.probe)
         self.assertIn("recognizer.dominantLanguage", self.probe)
+        self.assertIn("SystemLanguageModel.default", self.probe)
+        self.assertIn('"portable".generatedContent.jsonString', self.probe)
         self.assertIn("EnvironmentValues().webAuthenticationSession", self.probe)
         self.assertIn("vImageBoxConvolve_ARGB8888", self.probe)
         self.assertIn("InputFilter<Data>(.decompress", self.probe)
@@ -168,6 +174,23 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
         )
+
+    def test_foundationmodels_and_naturallanguage_frontier_is_cold_and_exact(self) -> None:
+        for evidence in (
+            "foundationmodels-icecubes-probe",
+            "naturallanguage-generalization-probe",
+            "foundationmodels-macro-expansions.log",
+            "foundationmodels-runtime-exports.txt",
+            "foundationmodels-naturallanguage-sources.tsv",
+            "foundationmodels-apple-26.1.txt",
+            "naturallanguage-generalization-apple-26.1.txt",
+            "FOUNDATIONMODELS_GUEST_MACHO_OK",
+            "NaturalLanguage 29-row generalization",
+        ):
+            self.assertIn(evidence, self.builder)
+        self.assertIn("libFoundationModelsMacros.so", self.builder)
+        self.assertIn("true-ios-foundationmodels-natural-auth-loads-v2", self.builder)
+        self.assertIn("cmp \"$AUDIT/naturallanguage-generalization-runtime.log\"", self.builder)
 
 
 if __name__ == "__main__":

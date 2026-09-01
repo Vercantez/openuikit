@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import Foundation
+import FoundationModels
 import NaturalLanguage
 import AuthenticationServices
 import Accelerate
@@ -208,6 +209,11 @@ private enum TrueIOSSwiftUIDylibProbe {
             (recognizer.languageHypotheses(withMaximum: 1)[.english] ?? 0)
                 >= 0.85
         )
+        let model = SystemLanguageModel.default
+        precondition(!model.isAvailable)
+        precondition(model.availability == .unavailable(.deviceNotEligible))
+        precondition(!model.supportsLocale())
+        precondition("portable".generatedContent.jsonString == "\"portable\"")
         precondition(!AuthenticationServicesPortable.isHostConfigured)
         let session: WebAuthenticationSession =
             EnvironmentValues().webAuthenticationSession
@@ -220,6 +226,7 @@ private enum TrueIOSSwiftUIDylibProbe {
         print(
             "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK " +
             "descendants=\(descendants.count) text=rendered button=rendered " +
+            "foundationmodels=generated-content,fail-closed " +
             "naturallanguage=en authenticationservices=fail-closed " +
             "accelerate=vimage compression=brotli coretext=font-registration"
         )

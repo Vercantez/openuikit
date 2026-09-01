@@ -11,6 +11,7 @@ import unittest
 
 HERE = Path(__file__).resolve().parent
 TOOL_DIR = HERE.parent
+PROJECT_ROOT = HERE.parents[2]
 sys.path.insert(0, os.fspath(TOOL_DIR))
 
 import true_ios_platform_package as platform_package  # noqa: E402
@@ -29,6 +30,7 @@ MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "FoundationModels",
     "NaturalLanguage",
     "AuthenticationServices",
     "_AuthenticationServices_SwiftUI",
@@ -269,6 +271,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "ObservationMacros",
             "FoundationMacros",
             "SwiftDataMacros",
+            "FoundationModelsMacros",
             "OpenUIKitPreviewMacros",
             "OpenSwiftUIMacros",
         )
@@ -329,6 +332,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             loads=(
                 "/usr/lib/libSwiftUI.dylib",
                 "/usr/lib/libUIKit.dylib",
+                "/usr/lib/libFoundationModels.dylib",
                 "/usr/lib/libNaturalLanguage.dylib",
                 "/usr/lib/libAuthenticationServices.dylib",
                 "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
@@ -338,6 +342,19 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             ),
         )
         (self.root / "true-ios-swiftui-dylib-probe").write_bytes(probe)
+        for relative, required_load in (
+            (
+                "foundationmodels-icecubes-probe",
+                "/usr/lib/libFoundationModels.dylib",
+            ),
+            (
+                "naturallanguage-generalization-probe",
+                "/usr/lib/libNaturalLanguage.dylib",
+            ),
+        ):
+            frontier_probe = self.root / relative
+            frontier_probe.write_bytes(macho(filetype=2, loads=(required_load,)))
+            frontier_probe.chmod(0o755)
 
         (self.root / "sdk-provenance/SDK_COMPLETE").write_text(
             "TRUE_IOS_FULL_SDK_COMPLETE target=arm64-apple-ios18.0-simulator "
@@ -355,8 +372,65 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         (self.root / "attestation/source-subject.after.sha256").write_text(
             self.source_subject + "\n", encoding="ascii"
         )
+        provenance = (
+            "format\ttrue-ios-foundationmodels-naturallanguage-sources-v1\n"
+            + "".join(
+                f"source\t{path}\t{digest}\n"
+                for path, digest in sorted(
+                    platform_package._FRONTIER_SOURCE_HASHES.items()
+                )
+            )
+        )
+        (
+            self.root
+            / "attestation/foundationmodels-naturallanguage-sources.tsv"
+        ).write_text(provenance, encoding="ascii")
+        foundationmodels_exports = sorted(
+            platform_package._REQUIRED_FOUNDATIONMODELS_EXPORTS
+        )
+        (
+            self.root / "attestation/foundationmodels-runtime-exports.txt"
+        ).write_text("\n".join(foundationmodels_exports) + "\n", encoding="ascii")
+        (
+            self.root / "attestation/foundationmodels-macro-expansions.log"
+        ).write_text(
+            "static var generationSchema\n"
+            "var generatedContent\n"
+            "struct PartiallyGenerated\n"
+            "extension Tags: FoundationModels.Generable\n"
+            "guides: [.count(5)]\n",
+            encoding="utf-8",
+        )
+        foundationmodels_apple = (
+            PROJECT_ROOT
+            / "full/foundationmodels/tests/foundationmodels-apple-26.1.txt"
+        ).read_bytes()
+        (
+            self.root / "attestation/foundationmodels-apple-26.1.txt"
+        ).write_bytes(foundationmodels_apple)
+        (
+            self.root / "attestation/foundationmodels-runtime.log"
+        ).write_bytes(
+            foundationmodels_apple
+            + platform_package._FOUNDATIONMODELS_RUNTIME_MARKER.encode("ascii")
+            + b"\n"
+        )
+        natural_language_apple = (
+            PROJECT_ROOT
+            / "full/naturallanguage/tests/"
+            "naturallanguage-generalization-apple-26.1.txt"
+        ).read_bytes()
+        (
+            self.root
+            / "attestation/naturallanguage-generalization-apple-26.1.txt"
+        ).write_bytes(natural_language_apple)
+        (
+            self.root
+            / "attestation/naturallanguage-generalization-runtime.log"
+        ).write_bytes(natural_language_apple)
         (self.root / "attestation/runtime.log").write_text(
-            "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=3 text=rendered button=rendered\n",
+            "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=3 text=rendered "
+            "button=rendered foundationmodels=generated-content,fail-closed\n",
             encoding="utf-8",
         )
         module_log = "".join(
@@ -368,6 +442,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "OpenUIKit",
                 "Combine",
                 "OpenCombine",
+                "FoundationModels",
                 "NaturalLanguage",
                 "AuthenticationServices",
                 "_AuthenticationServices_SwiftUI",
@@ -386,8 +461,11 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         (
             self.root / "attestation/naturallanguage-authenticationservices-loads.tsv"
         ).write_text(
-            "format\ttrue-ios-natural-auth-loads-v1\n"
-            "probe\tnaturallanguage=1\tauthenticationservices=1\toverlay=1\n"
+            "format\ttrue-ios-foundationmodels-natural-auth-loads-v2\n"
+            "probe\tfoundationmodels=1\tnaturallanguage=1\t"
+            "authenticationservices=1\toverlay=1\n"
+            "foundationmodels\tconsumer=1\texports=4\tapple-self-load=0\n"
+            "naturallanguage\tgeneralization=1\tapple-self-load=0\n"
             "overlay\tbase=1\tswiftui=1\tapple-self-load=0\n",
             encoding="ascii",
         )
@@ -520,7 +598,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=20 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=21 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",
@@ -558,9 +636,21 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 f"-fmodule-map-file={root / f'platform-include/{module}/module.modulemap'}",
                 rooted,
             )
-        for framework in ("Accelerate", "Compression", "CoreText"):
+        for framework in (
+            "FoundationModels",
+            "Accelerate",
+            "Compression",
+            "CoreText",
+        ):
             index = metadata["executable_link_arguments"].index(framework)
             self.assertEqual(metadata["executable_link_arguments"][index - 1], "-framework")
+        self.assertIn(
+            os.fspath(
+                root
+                / "host-tools/swift/host/plugins/libFoundationModelsMacros.so"
+            ),
+            rooted,
+        )
 
     def test_changed_artifact_is_rejected(self) -> None:
         (self.root / "products/libSwiftUI.dylib").write_bytes(b"changed")
@@ -611,6 +701,104 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             platform_package.TrueIOSPlatformError,
             "frozen Apple transcript differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_foundationmodels_macro_mutation_is_rejected(self) -> None:
+        macro_log = (
+            self.root / "attestation/foundationmodels-macro-expansions.log"
+        )
+        macro_log.write_text("forged expansion\n", encoding="utf-8")
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "FoundationModels macro expansion is missing",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_foundationmodels_runtime_mutation_is_rejected(self) -> None:
+        runtime = self.root / "attestation/foundationmodels-runtime.log"
+        runtime.write_bytes(runtime.read_bytes().replace(b"fail-closed", b"fabricated"))
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "FoundationModels Apple differential or fail-closed runtime differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_naturallanguage_29_row_mutation_is_rejected(self) -> None:
+        runtime = (
+            self.root
+            / "attestation/naturallanguage-generalization-runtime.log"
+        )
+        runtime.write_bytes(runtime.read_bytes().replace(b"en2=en,high", b"en2=nil,low"))
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "NaturalLanguage 29-row Apple differential runtime differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_foundationmodels_export_mutation_is_rejected(self) -> None:
+        exports = self.root / "attestation/foundationmodels-runtime-exports.txt"
+        lines = exports.read_text(encoding="ascii").splitlines()
+        exports.write_text("\n".join(lines[1:]) + "\n", encoding="ascii")
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "FoundationModels runtime exports are missing",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_foundationmodels_probe_load_mutation_is_rejected(self) -> None:
+        probe = self.root / "foundationmodels-icecubes-probe"
+        probe.write_bytes(macho(filetype=2))
+        probe.chmod(0o755)
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "does not load exactly one /usr/lib/libFoundationModels.dylib",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_foundationmodels_plugin_removal_is_rejected(self) -> None:
+        plugin = (
+            self.root
+            / "host-tools/swift/host/plugins/libFoundationModelsMacros.so"
+        )
+        plugin.unlink()
+        manifest = self.root / "attestation/compiler-plugins.tsv"
+        manifest.write_text(
+            "".join(
+                line + "\n"
+                for line in manifest.read_text(encoding="utf-8").splitlines()
+                if "FoundationModelsMacros" not in line
+            ),
+            encoding="utf-8",
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "compiler plugin module set differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_frontier_source_provenance_mutation_is_rejected(self) -> None:
+        provenance = (
+            self.root
+            / "attestation/foundationmodels-naturallanguage-sources.tsv"
+        )
+        provenance.write_text(
+            provenance.read_text(encoding="ascii").replace(
+                "2ffb33957a0619b1b04903a970a4968d4704da9650e0f1118c495e397da8c14a",
+                "0" * 64,
+            ),
+            encoding="ascii",
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "source provenance differs",
         ):
             platform_package.validate(self.root)
 
