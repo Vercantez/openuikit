@@ -1,75 +1,75 @@
 precise	status	evidence	notes
-c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyDownloadLazilyAndEvictOnRemoteUpdate	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyInherited	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyDownloadLazilyAndEvictOnRemoteUpdate	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyInherited	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderCreateItemOptions@NSFileProviderCreateItemDeletionConflicted	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderCreateItemOptions@NSFileProviderCreateItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderCreateItemOptions@NSFileProviderCreateItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderDeleteItemOptions@NSFileProviderDeleteItemRecursive	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderDomainRemovalMode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderDomainRemovalMode@NSFileProviderDomainRemovalModeRemoveAll	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderDomainTestingModes@NSFileProviderDomainTestingModeAlwaysEnabled	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderDomainRemovalMode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderDomainRemovalMode@NSFileProviderDomainRemovalModeRemoveAll	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderDomainTestingModes@NSFileProviderDomainTestingModeAlwaysEnabled	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderDomainTestingModes@NSFileProviderDomainTestingModeInteractive	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorApplicationExtensionNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorCannotSynchronize	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorDeletionRejected	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorDirectoryNotEmpty	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorDomainDisabled	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorExcludedFromSync	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorFilenameCollision	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorInsufficientQuota	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorLocalVersionConflictingWithServer	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorNoSuchItem	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictable	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictableChildren	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorNotAuthenticated	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainTemporarilyUnavailable	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorServerUnreachable	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorSyncAnchorExpired	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderErrorCode@NSFileProviderErrorUnsyncedEdits	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorApplicationExtensionNotFound	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorCannotSynchronize	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDeletionRejected	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDirectoryNotEmpty	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDomainDisabled	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorExcludedFromSync	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorFilenameCollision	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorInsufficientQuota	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorLocalVersionConflictingWithServer	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNoSuchItem	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictable	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictableChildren	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNotAuthenticated	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainNotFound	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainTemporarilyUnavailable	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderNotFound	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorServerUnreachable	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorSyncAnchorExpired	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorUnsyncedEdits	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemHidden	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemPathExtensionHidden	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserExecutable	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserReadable	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserWritable	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAddingSubItems	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAll	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserReadable	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserWritable	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAddingSubItems	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAll	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsContentEnumerating	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsDeleting	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsDeleting	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsEvicting	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsReading	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsReading	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsRenaming	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsReparenting	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsTrashing	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsWriting	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsWriting	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemFields@NSFileProviderItemContentModificationDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemFields@NSFileProviderItemContents	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemContents	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemFields@NSFileProviderItemCreationDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemFields@NSFileProviderItemExtendedAttributes	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemFields@NSFileProviderItemFavoriteRank	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemFields@NSFileProviderItemFileSystemFlags	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemFields@NSFileProviderItemFilename	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemFilename	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemFields@NSFileProviderItemLastUsedDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderItemFields@NSFileProviderItemParentItemIdentifier	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderItemFields@NSFileProviderItemTagData	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemTagData	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderItemFields@NSFileProviderItemTypeAndCreator	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemFailOnConflict	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemFailOnConflict	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemIsImmediateUploadRequestByPresentingApplication	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderTestingOperationSide	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderTestingOperationSide	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderTestingOperationSide@NSFileProviderTestingOperationSideDisk	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@E@NSFileProviderTestingOperationSide@NSFileProviderTestingOperationSideFileProvider	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderTestingOperationType	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeChildrenEnumeration	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@E@NSFileProviderTestingOperationSide@NSFileProviderTestingOperationSideFileProvider	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderTestingOperationType	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeChildrenEnumeration	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeCollisionResolution	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeContentFetch	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeCreation	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -77,119 +77,119 @@ c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeDeleti
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeIngestion	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeLookup	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeModification	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@NSFileProviderDomainDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderErrorCollidingItemKey	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderErrorDomain	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderErrorItemKey	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderErrorNonExistentItemIdentifierKey	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderFavoriteRankUnranked	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderInitialPageSortedByDate	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderInitialPageSortedByName	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderMaterializedSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderPendingSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderRootContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderTrashContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderUserInfoExperimentIDKey	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@NSFileProviderWorkingSetContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@S@NSFileProviderTypeAndCreator	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@NSFileProviderDomainDidChange	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderErrorCollidingItemKey	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderErrorDomain	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderErrorItemKey	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderErrorNonExistentItemIdentifierKey	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderFavoriteRankUnranked	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderInitialPageSortedByDate	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles in the isolated Foundation-only host gate; exact Apple payload/behavior is unobserved
+c:@NSFileProviderInitialPageSortedByName	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles in the isolated Foundation-only host gate; exact Apple payload/behavior is unobserved
+c:@NSFileProviderMaterializedSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderPendingSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderRootContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderTrashContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderUserInfoExperimentIDKey	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@NSFileProviderWorkingSetContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@S@NSFileProviderTypeAndCreator	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:@S@NSFileProviderTypeAndCreator@FI@creator	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:@S@NSFileProviderTypeAndCreator@FI@type	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderDomainIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderExtensionActionIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderItem	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderItemDecorationIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderPage	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderSyncAnchor	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:@T@NSFileProviderUserInfoKey	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSError(cm)fileProviderErrorForCollisionWithItem:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSError(cm)fileProviderErrorForNonExistentItemWithIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSError(cm)fileProviderErrorForRejectedDeletionOfItem:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:pathRelativeToDocumentStorage:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:@S@NSFileProviderTypeAndCreator@FI@type	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderDomainIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderExtensionActionIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderItem	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderItemDecorationIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderPage	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderSyncAnchor	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:@T@NSFileProviderUserInfoKey	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSError(cm)fileProviderErrorForCollisionWithItem:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSError(cm)fileProviderErrorForNonExistentItemWithIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSError(cm)fileProviderErrorForRejectedDeletionOfItem:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:pathRelativeToDocumentStorage:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderDomain(py)backingStoreIdentity	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderDomain(py)displayName	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(py)identifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(py)pathRelativeToDocumentStorage	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderDomain(py)displayName	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(py)identifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(py)pathRelativeToDocumentStorage	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderDomain(py)replicated	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderDomain(py)supportsSyncingTrash	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(py)testingModes	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomain(py)userEnabled	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderDomainVersion(im)next	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(cm)placeholderURLForURL:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(cm)writePlaceholderAtURL:withMetadata:error:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(im)URLForItemWithPersistentIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderDomain(py)supportsSyncingTrash	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(py)testingModes	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomain(py)userEnabled	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderDomainVersion(im)next	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(cm)placeholderURLForURL:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(cm)writePlaceholderAtURL:withMetadata:error:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(im)URLForItemWithPersistentIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderExtension(im)createDirectoryWithName:inParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)deleteItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(im)enumeratorForContainerItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderExtension(im)enumeratorForContainerItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(im)fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderExtension(im)importDocumentAtURL:toParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(im)itemChangedAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)itemForIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)persistentIdentifierForItemAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)providePlaceholderAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderExtension(im)itemChangedAtURL:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
+c:objc(cs)NSFileProviderExtension(im)itemForIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(im)persistentIdentifierForItemAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(im)providePlaceholderAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderExtension(im)renameItemWithIdentifier:toName:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)setFavoriteRank:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)setLastUsedDate:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)setTagData:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(im)startProvidingItemAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)stopProvidingItemAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(im)supportedServiceSourcesForItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderExtension(im)startProvidingItemAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(im)stopProvidingItemAtURL:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
+c:objc(cs)NSFileProviderExtension(im)supportedServiceSourcesForItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderExtension(im)trashItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderExtension(im)untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(py)documentStorageURL	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderExtension(py)domain	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderExtension(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderItemVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderItemVersion(cpy)beforeFirstSyncComponent	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderItemVersion(im)initWithContentVersion:metadataVersion:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderItemVersion(py)contentVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderItemVersion(py)metadataVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)addDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)getDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)getIdentifierForUserVisibleFileAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)importDomain:fromDirectoryAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)managerForDomain:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)managerForDomain:::SYNTHESIZED::c:objc(cs)NSFileProviderManager	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)placeholderURLForURL:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)removeAllDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)removeDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)removeDomain:mode:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cm)writePlaceholderAtURL:withMetadata:error:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(cpy)defaultManager	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)enumeratorForMaterializedItems	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)enumeratorForPendingItems	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)evictItemWithIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)getServiceWithName:itemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)getUserVisibleURLForItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(im)globalProgressForKind:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderExtension(py)documentStorageURL	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(py)domain	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderExtension(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderItemVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderItemVersion(cpy)beforeFirstSyncComponent	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; exact Apple payload/behavior is unobserved
+c:objc(cs)NSFileProviderItemVersion(im)initWithContentVersion:metadataVersion:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderItemVersion(py)contentVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderItemVersion(py)metadataVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)addDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)getDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)getIdentifierForUserVisibleFileAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)importDomain:fromDirectoryAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)managerForDomain:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)managerForDomain:::SYNTHESIZED::c:objc(cs)NSFileProviderManager	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)placeholderURLForURL:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)removeAllDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)removeDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)removeDomain:mode:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cm)writePlaceholderAtURL:withMetadata:error:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(cpy)defaultManager	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)enumeratorForMaterializedItems	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)enumeratorForPendingItems	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)evictItemWithIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)getServiceWithName:itemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)getUserVisibleURLForItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(im)globalProgressForKind:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderManager(im)listAvailableTestingOperationsWithError:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderManager(im)registerURLSessionTask:forItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderManager(im)reimportItemsBelowItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderManager(im)requestModificationOfFields:forItemWithIdentifier:options:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(cs)NSFileProviderManager(im)runTestingOperations:error:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderManager(im)signalEnumeratorForContainerItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderManager(im)signalEnumeratorForContainerItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderManager(im)signalErrorResolved:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderManager(im)temporaryDirectoryURLWithError:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderManager(im)temporaryDirectoryURLWithError:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderManager(im)waitForChangesOnItemsBelowItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderManager(im)waitForStabilizationWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(py)documentStorageURL	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderManager(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderRequest	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderManager(im)waitForStabilizationWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(py)documentStorageURL	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderManager(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderRequest	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(cs)NSFileProviderRequest(py)domainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(cs)NSFileProviderRequest(py)isFileViewerRequest	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(cs)NSFileProviderRequest(py)isSystemRequest	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(cs)NSFileProviderRequest(py)isFileViewerRequest	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(cs)NSFileProviderRequest(py)isSystemRequest	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderChangeObserver	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderChangeObserver	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderChangeObserver(im)didDeleteItemsWithIdentifiers:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderChangeObserver(im)didUpdateItems:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingChangesUpToSyncAnchor:moreComing:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingWithError:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
+c:objc(pl)NSFileProviderChangeObserver(im)didUpdateItems:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingChangesUpToSyncAnchor:moreComing:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingWithError:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderChangeObserver(py)suggestedBatchSize	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderCustomAction	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderCustomAction(im)performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -198,47 +198,47 @@ c:objc(pl)NSFileProviderDomainState(py)domainVersion	declared	full/fileprovider/
 c:objc(pl)NSFileProviderDomainState(py)userInfo	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderEnumerating	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderEnumerating(im)enumeratorForContainerItemIdentifier:request:error:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderEnumerationObserver	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerationObserver(im)didEnumerateItems:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingUpToPage:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingWithError:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
+c:objc(pl)NSFileProviderEnumerationObserver	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerationObserver(im)didEnumerateItems:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingUpToPage:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingWithError:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderEnumerationObserver(py)suggestedPageSize	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderEnumerator	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerator(im)currentSyncAnchorWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerator(im)enumerateChangesForObserver:fromSyncAnchor:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerator(im)enumerateItemsForObserver:startingAtPage:	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderEnumerator(im)invalidate	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderEnumerator	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerator(im)currentSyncAnchorWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerator(im)enumerateChangesForObserver:fromSyncAnchor:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerator(im)enumerateItemsForObserver:startingAtPage:	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderEnumerator(im)invalidate	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderIncrementalContentFetching	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderIncrementalContentFetching(im)fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderItem(py)capabilities	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderItem(py)capabilities	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)childItemCount	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)contentModificationDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem(py)contentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem(py)contentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)contentType	deferred	full/fileprovider/README.md	Does not compile in the isolated host-gate dependency configuration
 c:objc(pl)NSFileProviderItem(py)creationDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem(py)documentSize	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem(py)documentSize	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)downloaded	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)downloading	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)downloadingError	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)extendedAttributes	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)favoriteRank	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)fileSystemFlags	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem(py)filename	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderItem(py)itemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-c:objc(pl)NSFileProviderItem(py)itemVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem(py)filename	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderItem(py)itemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+c:objc(pl)NSFileProviderItem(py)itemVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)lastUsedDate	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)mostRecentEditorNameComponents	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)mostRecentVersionDownloaded	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)ownerNameComponents	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem(py)parentItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem(py)parentItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)shared	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)sharedByCurrentUser	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)symlinkTargetPath	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)tagData	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)trashed	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)typeAndCreator	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderItem(py)typeIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderItem(py)typeIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderItem(py)uploaded	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)uploading	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItem(py)uploadingError	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -246,7 +246,7 @@ c:objc(pl)NSFileProviderItem(py)userInfo	declared	full/fileprovider/FileProvider
 c:objc(pl)NSFileProviderItem(py)versionIdentifier	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItemDecorating	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderItemDecorating(py)decorations	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-c:objc(pl)NSFileProviderPendingSetEnumerator	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+c:objc(pl)NSFileProviderPendingSetEnumerator	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 c:objc(pl)NSFileProviderPendingSetEnumerator(py)domainVersion	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderPendingSetEnumerator(py)maximumSizeReached	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderPendingSetEnumerator(py)refreshInterval	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -304,32 +304,32 @@ c:objc(pl)NSFileProviderTestingOperation	declared	full/fileprovider/FileProvider
 c:objc(pl)NSFileProviderTestingOperation(py)type	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderThumbnailing	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 c:objc(pl)NSFileProviderThumbnailing(im)fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SC23NSFileProviderErrorCodeLeV	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SC23NSFileProviderErrorCodeLeV10noSuchItemSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SC23NSFileProviderErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SC23NSFileProviderErrorCodeLeV11pageExpiredSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SC23NSFileProviderErrorCodeLeV	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SC23NSFileProviderErrorCodeLeV10noSuchItemSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SC23NSFileProviderErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SC23NSFileProviderErrorCodeLeV11pageExpiredSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SC23NSFileProviderErrorCodeLeV12nonEvictableSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV13unsyncedEditsSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV14domainDisabledSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV16deletionRejectedSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV16excludedFromSyncSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SC23NSFileProviderErrorCodeLeV16notAuthenticatedSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SC23NSFileProviderErrorCodeLeV16notAuthenticatedSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SC23NSFileProviderErrorCodeLeV16providerNotFoundSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV17cannotSynchronizeSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV17directoryNotEmptySoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SC23NSFileProviderErrorCodeLeV17filenameCollisionSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SC23NSFileProviderErrorCodeLeV17filenameCollisionSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SC23NSFileProviderErrorCodeLeV17insufficientQuotaSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV17serverUnreachableSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV17syncAnchorExpiredSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -338,20 +338,20 @@ s:SC23NSFileProviderErrorCodeLeV22providerDomainNotFoundSoAAVvpZ	declared	full/f
 s:SC23NSFileProviderErrorCodeLeV28applicationExtensionNotFoundSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV33localVersionConflictingWithServerSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SC23NSFileProviderErrorCodeLeV36providerDomainTemporarilyUnavailableSoAAVvpZ	declared	full/fileprovider/FileProviderError.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SLsE1goiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDomainRemovalMode	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -361,7 +361,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	decla
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderDomainIdentifier	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderExtensionActionIdentifier	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderItemDecorationIdentifier	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderPage	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderSyncAnchor	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderUserInfoKey	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -372,47 +372,47 @@ s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderTestin
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderDomainRemovalMode	declared	full/fileprovider/FileProviderManager.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderTestingOperationSide	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	declared	full/fileprovider/FileProviderProtocols.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So18NSFileProviderPagea8rawValueAB10Foundation4DataV_tcfc	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So18NSFileProviderPageayAB10Foundation4DataVcfc	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRange17completionHandlerySo0abhJ0a_So8_NSRangeVSgys5Error_pSgctF	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRangeySo0abhJ0a_So8_NSRangeVSgtYaKF	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So23NSFileProviderErrorCodeV11pageExpiredABvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So23NSFileProviderErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRange17completionHandlerySo0abhJ0a_So8_NSRangeVSgys5Error_pSgctF	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRangeySo0abhJ0a_So8_NSRangeVSgtYaKF	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So23NSFileProviderErrorCodeV11pageExpiredABvpZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So23NSFileProviderErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So24NSFileProviderItemFieldsV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So24NSFileProviderSyncAnchora8rawValueAB10Foundation4DataV_tcfc	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So24NSFileProviderSyncAnchorayAB10Foundation4DataVcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So24NSFileProviderSyncAnchorayAB10Foundation4DataVcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So25NSFileProviderUserInfoKeya8rawValueABSS_tcfc	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So25NSFileProviderUserInfoKeyayABSScfc	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So27NSFileProviderContentPolicyV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So27NSFileProviderDomainVersionC04FileB0E1loiySbAB_ABtFZ	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So28NSFileProviderItemIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So28NSFileProviderItemIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So28NSFileProviderTypeAndCreatorV4type7creatorABs6UInt32V_AFtcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So28NSFileProviderTypeAndCreatorVABycfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So27NSFileProviderContentPolicyV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So27NSFileProviderDomainVersionC04FileB0E1loiySbAB_ABtFZ	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So28NSFileProviderItemIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So28NSFileProviderItemIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So28NSFileProviderTypeAndCreatorV4type7creatorABs6UInt32V_AFtcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So28NSFileProviderTypeAndCreatorVABycfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So29NSFileProviderFileSystemFlagsV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So30NSFileProviderDomainIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So30NSFileProviderDomainIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So30NSFileProviderDomainIdentifierayABSScfc	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So30NSFileProviderItemCapabilitiesV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So31NSFileProviderCreateItemOptionsV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So31NSFileProviderDeleteItemOptionsV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So31NSFileProviderDomainRemovalModeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So31NSFileProviderDomainRemovalModeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So31NSFileProviderModifyItemOptionsV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:So32NSFileProviderDomainTestingModesV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So34NSFileProviderTestingOperationSideV8rawValueABSgSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:So34NSFileProviderTestingOperationTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So34NSFileProviderTestingOperationSideV8rawValueABSgSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:So34NSFileProviderTestingOperationTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So38NSFileProviderItemDecorationIdentifiera8rawValueABSS_tcfc	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So38NSFileProviderItemDecorationIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So38NSFileProviderItemDecorationIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:So39NSFileProviderExtensionActionIdentifiera8rawValueABSS_tcfc	declared	full/fileprovider/FileProviderExtension.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:So39NSFileProviderExtensionActionIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:So39NSFileProviderExtensionActionIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -420,7 +420,7 @@ s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomai
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -491,20 +491,20 @@ s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNT
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderPage	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderSyncAnchor	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderUserInfoKey	declared	full/fileprovider/FileProvider.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -513,12 +513,12 @@ s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProv
 s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -537,7 +537,7 @@ s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderModif
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
@@ -562,7 +562,7 @@ s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderItem.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exact semantics asserted by the isolated agent runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Focused runtime evidence in tests/agent/FileProviderRuntime.swift
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Compiles in the isolated Foundation-only host gate; behavior not fully asserted

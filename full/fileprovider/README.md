@@ -30,11 +30,20 @@ Linux host installs `@_spi(OpenUIKitHost) FileProviderHostAdapter` via
 Apple-compatible placeholder files. JSON sidecars live only on
 `NSFileProviderManager._writeLinuxPlaceholderJSON` (host SPI).
 
-`NSXPCListenerEndpoint` and `NSFileProviderService` are Foundation types and
-are not declared in this module. `makeListenerEndpoint()` and
-`contentType: UTType` are compiled in when UniformTypeIdentifiers is on the
-search path (future EC2 dependency run), and are deferred in the isolated
-Foundation-only configuration.
+`enumeratorForMaterializedItems()` and `enumeratorForPendingItems()` return
+enumerators that finish with `providerNotFound`; they never report a successful
+empty system set.
+
+`NSXPCListenerEndpoint` and `NSFileProviderService` are not FileProvider-owned
+in the canonical graph (no class identifier, no TBD export) and are not
+declared here. When guest Foundation vends `Foundation.NSXPCListenerEndpoint`
+and `Foundation.NSFileProviderService` (the UniformTypeIdentifiers-linked
+configuration used by the future EC2 identity run), service-source and
+`getService` signatures use those Foundation types directly.
+
+Testing helpers absent from the graph (`NSFileProviderMemoryEnumerator`,
+`NSFileProviderCollectingObserver`, `NSFileProviderEnumeratedItem`) are not
+part of this module.
 
 ## Future EC2 dependency identity
 

@@ -6,11 +6,12 @@
 /// registration and daemon APIs throw typed `NSFileProviderError` unless a
 /// Linux host installs `@_spi(OpenUIKitHost)` `FileProviderHostAdapter`.
 ///
-/// `NSXPCListenerEndpoint` and `NSFileProviderService` are Foundation types.
-/// This module never vends a local type of those names. When the guest
-/// Foundation / UniformTypeIdentifiers configuration is on the compile path,
-/// service-source and item APIs use `Foundation.NSXPCListenerEndpoint` and
-/// `UniformTypeIdentifiers.UTType` directly.
+/// `NSXPCListenerEndpoint` and `NSFileProviderService` are not FileProvider-owned
+/// in the canonical graph. This module never vends a local type of those names.
+/// When the guest Foundation / UniformTypeIdentifiers configuration is on the
+/// compile path, service-source and item APIs use
+/// `Foundation.NSXPCListenerEndpoint` and `UniformTypeIdentifiers.UTType`
+/// directly.
 #if canImport(CoreGraphics)
 import CoreGraphics
 #endif

@@ -94,7 +94,9 @@ extension NSFileProviderReplicatedExtension {
     }
 }
 
-/// Source of an NSFileProviderService / XPC listener.
+/// Source of a File Provider service / XPC listener. `NSFileProviderService` is
+/// not FileProvider-owned in the canonical graph; `makeListenerEndpoint()` uses
+/// `Foundation.NSXPCListenerEndpoint` when that dependency type is available.
 public protocol NSFileProviderServiceSource {
     var serviceName: NSFileProviderServiceName { get }
     var isRestricted: Bool { get }

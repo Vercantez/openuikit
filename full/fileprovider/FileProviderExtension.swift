@@ -191,27 +191,24 @@ open class NSFileProviderExtension: NSObject, @unchecked Sendable {
     ) -> Progress {
         _ = size
         let progress = Progress(totalUnitCount: Int64(max(itemIdentifiers.count, 1)))
-        let progressLock = NSLock()
+        let itemOnce = itemIdentifiers.map { _ in FileProviderCallback.Once() }
         let finishOnce = FileProviderCallback.Once()
-        for identifier in itemIdentifiers {
-            let itemOnce = FileProviderCallback.Once()
-            FileProviderCallback.asyncOnce(itemOnce) {
-                perThumbnailCompletionHandler(
-                    identifier,
-                    nil,
-                    FileProviderHost.unsupported()
-                )
-                progressLock.lock()
-                progress.completedUnitCount += 1
-                progressLock.unlock()
+        FileProviderCallback.queue.async {
+            for (index, identifier) in itemIdentifiers.enumerated() {
+                itemOnce[index].run {
+                    perThumbnailCompletionHandler(
+                        identifier,
+                        nil,
+                        FileProviderHost.unsupported()
+                    )
+                    progress.completedUnitCount += 1
+                }
             }
-        }
-        FileProviderCallback.asyncOnce(finishOnce) {
-            completionHandler(FileProviderHost.unsupported())
-            if itemIdentifiers.isEmpty {
-                progressLock.lock()
-                progress.completedUnitCount = progress.totalUnitCount
-                progressLock.unlock()
+            finishOnce.run {
+                completionHandler(FileProviderHost.unsupported())
+                if itemIdentifiers.isEmpty {
+                    progress.completedUnitCount = progress.totalUnitCount
+                }
             }
         }
         return progress

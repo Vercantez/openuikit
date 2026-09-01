@@ -218,6 +218,7 @@ enum FileProviderDependencyIdentity {
         let fileProviderExtension = NSFileProviderExtension()
         var thumbItems = 0
         var thumbFinish = 0
+        var thumbSawSync = false
         waitOnce { done in
             _ = fileProviderExtension.fetchThumbnails(
                 for: [existentialItem.itemIdentifier],
@@ -226,16 +227,22 @@ enum FileProviderDependencyIdentity {
                     thumbItems += 1
                     precondition(data == nil)
                     requireCode(error!, .providerNotFound)
+                    precondition(thumbFinish == 0)
                 },
                 completionHandler: { error in
                     thumbFinish += 1
                     requireCode(error!, .providerNotFound)
+                    precondition(thumbItems == 1)
                     done()
                 }
             )
+            if thumbItems != 0 || thumbFinish != 0 {
+                thumbSawSync = true
+            }
         }
         precondition(thumbItems == 1)
         precondition(thumbFinish == 1)
+        precondition(!thumbSawSync)
 
         print("FILEPROVIDER_DEPENDENCY_IDENTITY_OK")
     }

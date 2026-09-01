@@ -69,56 +69,9 @@ public protocol NSFileProviderEnumerating: NSObjectProtocol {
     ) throws -> any NSFileProviderEnumerator
 }
 
-/// In-memory enumerator used by Linux host tests. Not part of Apple's graph.
-@_spi(OpenUIKitHost)
-open class NSFileProviderMemoryEnumerator: NSObject, NSFileProviderEnumerator, @unchecked Sendable {
-    public private(set) var items: [NSFileProviderItem]
-    public var syncAnchor: NSFileProviderSyncAnchor?
-    private var invalid = false
-
-    public init(items: [NSFileProviderItem] = []) {
-        self.items = items
-        super.init()
-    }
-
-    public func invalidate() {
-        invalid = true
-    }
-
-    public func enumerateItems(
-        for observer: any NSFileProviderEnumerationObserver,
-        startingAt page: NSFileProviderPage
-    ) {
-        _ = page
-        if invalid {
-            observer.finishEnumeratingWithError(NSFileProviderError(.cannotSynchronize))
-            return
-        }
-        observer.didEnumerate(items)
-        observer.finishEnumerating(upTo: nil)
-    }
-
-    public func enumerateChanges(
-        for observer: any NSFileProviderChangeObserver,
-        from syncAnchor: NSFileProviderSyncAnchor
-    ) {
-        if invalid {
-            observer.finishEnumeratingWithError(NSFileProviderError(.cannotSynchronize))
-            return
-        }
-        let next = self.syncAnchor ?? syncAnchor
-        observer.didUpdate(items)
-        observer.finishEnumeratingChanges(upTo: next, moreComing: false)
-    }
-
-    public func currentSyncAnchor(
-        completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void
-    ) {
-        completionHandler(syncAnchor)
-    }
-}
-
-final class FileProviderEmptyEnumerator: NSObject, NSFileProviderEnumerator {
+/// Daemon materialized/pending enumerators fail closed when no host adapter exists.
+/// They never report an empty successful system set.
+final class FileProviderUnhostedEnumerator: NSObject, NSFileProviderEnumerator {
     func invalidate() {}
 
     func enumerateItems(
@@ -126,12 +79,32 @@ final class FileProviderEmptyEnumerator: NSObject, NSFileProviderEnumerator {
         startingAt page: NSFileProviderPage
     ) {
         _ = page
-        observer.didEnumerate([])
-        observer.finishEnumerating(upTo: nil)
+        FileProviderCallback.queue.async {
+            observer.finishEnumeratingWithError(FileProviderHost.unsupported())
+        }
+    }
+
+    func enumerateChanges(
+        for observer: any NSFileProviderChangeObserver,
+        from syncAnchor: NSFileProviderSyncAnchor
+    ) {
+        _ = syncAnchor
+        FileProviderCallback.queue.async {
+            observer.finishEnumeratingWithError(FileProviderHost.unsupported())
+        }
+    }
+
+    func currentSyncAnchor(
+        completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void
+    ) {
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(nil)
+        }
     }
 }
 
-final class FileProviderEmptyPendingSetEnumerator: NSObject, NSFileProviderPendingSetEnumerator {
+final class FileProviderUnhostedPendingSetEnumerator: NSObject, NSFileProviderPendingSetEnumerator {
     let domainVersion: NSFileProviderDomainVersion? = nil
     let isMaximumSizeReached = false
     let refreshInterval: TimeInterval = 1
@@ -143,46 +116,27 @@ final class FileProviderEmptyPendingSetEnumerator: NSObject, NSFileProviderPendi
         startingAt page: NSFileProviderPage
     ) {
         _ = page
-        observer.didEnumerate([])
-        observer.finishEnumerating(upTo: nil)
-    }
-}
-
-/// Collecting observer used by Linux host tests. Not part of Apple's graph.
-@_spi(OpenUIKitHost)
-public final class NSFileProviderCollectingObserver: NSObject, NSFileProviderEnumerationObserver,
-    NSFileProviderChangeObserver, @unchecked Sendable
-{
-    public private(set) var items: [NSFileProviderItem] = []
-    public private(set) var deleted: [NSFileProviderItemIdentifier] = []
-    public private(set) var finishedPage: NSFileProviderPage?
-    public private(set) var finishedAnchor: NSFileProviderSyncAnchor?
-    public private(set) var error: (any Error)?
-    public var suggestedPageSize: Int = 100
-    public var suggestedBatchSize: Int = 100
-
-    public func didEnumerate(_ updatedItems: [any NSFileProviderItemProtocol]) {
-        items.append(contentsOf: updatedItems)
+        FileProviderCallback.queue.async {
+            observer.finishEnumeratingWithError(FileProviderHost.unsupported())
+        }
     }
 
-    public func finishEnumerating(upTo nextPage: NSFileProviderPage?) {
-        finishedPage = nextPage
+    func enumerateChanges(
+        for observer: any NSFileProviderChangeObserver,
+        from syncAnchor: NSFileProviderSyncAnchor
+    ) {
+        _ = syncAnchor
+        FileProviderCallback.queue.async {
+            observer.finishEnumeratingWithError(FileProviderHost.unsupported())
+        }
     }
 
-    public func finishEnumeratingWithError(_ error: any Error) {
-        self.error = error
-    }
-
-    public func didDeleteItems(withIdentifiers deletedItemIdentifiers: [NSFileProviderItemIdentifier]) {
-        deleted.append(contentsOf: deletedItemIdentifiers)
-    }
-
-    public func didUpdate(_ updatedItems: [any NSFileProviderItemProtocol]) {
-        items.append(contentsOf: updatedItems)
-    }
-
-    public func finishEnumeratingChanges(upTo anchor: NSFileProviderSyncAnchor, moreComing: Bool) {
-        _ = moreComing
-        finishedAnchor = anchor
+    func currentSyncAnchor(
+        completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void
+    ) {
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(nil)
+        }
     }
 }

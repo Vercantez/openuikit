@@ -28,6 +28,116 @@ private func waitOnce(_ work: (@escaping () -> Void) -> Void) {
     gate.wait()
 }
 
+private final class RuntimeItem: NSObject, NSFileProviderItemProtocol {
+    let itemIdentifier: NSFileProviderItemIdentifier
+    let parentItemIdentifier: NSFileProviderItemIdentifier
+    let filename: String
+    var documentSize: NSNumber?
+    var capabilities: NSFileProviderItemCapabilities
+    var typeIdentifier: String?
+    var itemVersion: NSFileProviderItemVersion?
+    var contentPolicy: NSFileProviderContentPolicy
+
+    init(
+        itemIdentifier: NSFileProviderItemIdentifier,
+        parentItemIdentifier: NSFileProviderItemIdentifier,
+        filename: String
+    ) {
+        self.itemIdentifier = itemIdentifier
+        self.parentItemIdentifier = parentItemIdentifier
+        self.filename = filename
+        self.documentSize = nil
+        self.capabilities = .allowsReading
+        self.typeIdentifier = nil
+        self.itemVersion = nil
+        self.contentPolicy = .inherited
+    }
+}
+
+private final class RuntimeObserver: NSObject, NSFileProviderEnumerationObserver,
+    NSFileProviderChangeObserver
+{
+    var items: [any NSFileProviderItemProtocol] = []
+    var deleted: [NSFileProviderItemIdentifier] = []
+    var finishedPage: NSFileProviderPage?
+    var finishedAnchor: NSFileProviderSyncAnchor?
+    var error: (any Error)?
+    var suggestedPageSize: Int = 100
+    var suggestedBatchSize: Int = 100
+    var onFinish: (() -> Void)?
+
+    func didEnumerate(_ updatedItems: [any NSFileProviderItemProtocol]) {
+        items.append(contentsOf: updatedItems)
+    }
+
+    func finishEnumerating(upTo nextPage: NSFileProviderPage?) {
+        finishedPage = nextPage
+        onFinish?()
+    }
+
+    func finishEnumeratingWithError(_ error: any Error) {
+        self.error = error
+        onFinish?()
+    }
+
+    func didDeleteItems(withIdentifiers deletedItemIdentifiers: [NSFileProviderItemIdentifier]) {
+        deleted.append(contentsOf: deletedItemIdentifiers)
+    }
+
+    func didUpdate(_ updatedItems: [any NSFileProviderItemProtocol]) {
+        items.append(contentsOf: updatedItems)
+    }
+
+    func finishEnumeratingChanges(upTo anchor: NSFileProviderSyncAnchor, moreComing: Bool) {
+        _ = moreComing
+        finishedAnchor = anchor
+        onFinish?()
+    }
+}
+
+private final class RuntimeEnumerator: NSObject, NSFileProviderEnumerator {
+    let stored: [any NSFileProviderItemProtocol]
+    var syncAnchor: NSFileProviderSyncAnchor?
+    private var invalid = false
+
+    init(items: [any NSFileProviderItemProtocol]) {
+        self.stored = items
+    }
+
+    func invalidate() {
+        invalid = true
+    }
+
+    func enumerateItems(
+        for observer: any NSFileProviderEnumerationObserver,
+        startingAt page: NSFileProviderPage
+    ) {
+        _ = page
+        if invalid {
+            observer.finishEnumeratingWithError(NSFileProviderError(.cannotSynchronize))
+            return
+        }
+        observer.didEnumerate(stored)
+        observer.finishEnumerating(upTo: nil)
+    }
+
+    func enumerateChanges(
+        for observer: any NSFileProviderChangeObserver,
+        from syncAnchor: NSFileProviderSyncAnchor
+    ) {
+        if invalid {
+            observer.finishEnumeratingWithError(NSFileProviderError(.cannotSynchronize))
+            return
+        }
+        observer.didUpdate(stored)
+        observer.finishEnumeratingChanges(upTo: self.syncAnchor ?? syncAnchor, moreComing: false)
+    }
+
+    func currentSyncAnchor(completionHandler: @escaping (NSFileProviderSyncAnchor?) -> Void) {
+        completionHandler(syncAnchor)
+    }
+}
+
 enum FileProviderRuntime {
     static func main() async {
         NSFileProviderManager._installHostAdapter(nil)
@@ -57,6 +167,13 @@ enum FileProviderRuntime {
         precondition(NSFileProviderError.notAuthenticated == .notAuthenticated)
         precondition(NSFileProviderError.filenameCollision == .filenameCollision)
         precondition(NSFileProviderError.noSuchItem == .noSuchItem)
+        precondition(NSFileProviderErrorDomain == "NSFileProviderErrorDomain")
+        precondition(NSFileProviderErrorCollidingItemKey == "NSFileProviderErrorCollidingItemKey")
+        precondition(NSFileProviderErrorItemKey == "NSFileProviderErrorItemKey")
+        precondition(
+            NSFileProviderErrorNonExistentItemIdentifierKey
+                == "NSFileProviderErrorNonExistentItemIdentifierKey"
+        )
 
         let collision = NSFileProviderError.Code.filenameCollision
         let typedCollision = NSFileProviderError(collision, userInfo: ["path": "/tmp/a"])
@@ -97,13 +214,18 @@ enum FileProviderRuntime {
         let root = NSFileProviderItemIdentifier.rootContainer
         let trash = NSFileProviderItemIdentifier.trashContainer
         let working = NSFileProviderItemIdentifier.workingSet
+        precondition(root.rawValue == "NSFileProviderRootContainerItemIdentifier")
+        precondition(trash.rawValue == "NSFileProviderTrashContainerItemIdentifier")
+        precondition(working.rawValue == "NSFileProviderWorkingSetContainerItemIdentifier")
         precondition(root != trash)
-        precondition(working.rawValue.contains("WorkingSet"))
         precondition(NSFileProviderItemIdentifier("id").rawValue == "id")
         precondition(NSFileProviderDomainIdentifier(rawValue: "domain").rawValue == "domain")
-        _ = NSFileProviderExtensionActionIdentifier("action")
-        _ = NSFileProviderItemDecorationIdentifier("badge")
-        _ = NSFileProviderUserInfoKey.experimentID
+        precondition(NSFileProviderExtensionActionIdentifier("action").rawValue == "action")
+        precondition(NSFileProviderItemDecorationIdentifier("badge").rawValue == "badge")
+        precondition(
+            NSFileProviderUserInfoKey.experimentID.rawValue
+                == "NSFileProviderUserInfoExperimentIDKey"
+        )
         _ = NSFileProviderPage.sortedByName
         _ = NSFileProviderPage.sortedByDate
         precondition(
@@ -114,7 +236,7 @@ enum FileProviderRuntime {
         precondition(anchor.rawValue.count == 2)
 
         let typeCreator = NSFileProviderTypeAndCreator(type: 0x54455854, creator: 0)
-        precondition(typeCreator.type != 0)
+        precondition(typeCreator.type == 0x54455854)
         _ = NSFileProviderTypeAndCreator()
         let version = NSFileProviderItemVersion(
             contentVersion: Data([1]),
@@ -150,8 +272,44 @@ enum FileProviderRuntime {
             pathRelativeToDocumentStorage: "Documents/Nextcloud"
         )
         precondition(domain2.pathRelativeToDocumentStorage == "Documents/Nextcloud")
-        _ = domain.identifier
-        _ = domain.displayName
+        precondition(domain.identifier.rawValue == "nextcloud")
+        precondition(domain.displayName == "Nextcloud")
+
+        var postedDomainChange = 0
+        var postedMaterialized = 0
+        var postedPending = 0
+        let center = NotificationCenter.default
+        let domainToken = center.addObserver(
+            forName: .fileProviderDomainDidChange,
+            object: nil,
+            queue: nil
+        ) { _ in postedDomainChange += 1 }
+        let materializedToken = center.addObserver(
+            forName: .fileProviderMaterializedSetDidChange,
+            object: nil,
+            queue: nil
+        ) { _ in postedMaterialized += 1 }
+        let pendingToken = center.addObserver(
+            forName: .fileProviderPendingSetDidChange,
+            object: nil,
+            queue: nil
+        ) { _ in postedPending += 1 }
+        defer {
+            center.removeObserver(domainToken)
+            center.removeObserver(materializedToken)
+            center.removeObserver(pendingToken)
+        }
+        precondition(
+            Notification.Name.fileProviderDomainDidChange.rawValue == "NSFileProviderDomainDidChange"
+        )
+        precondition(
+            Notification.Name.fileProviderMaterializedSetDidChange.rawValue
+                == "NSFileProviderMaterializedSetDidChange"
+        )
+        precondition(
+            Notification.Name.fileProviderPendingSetDidChange.rawValue
+                == "NSFileProviderPendingSetDidChange"
+        )
 
         await requireFailClosed({
             try await NSFileProviderManager.add(domain)
@@ -165,6 +323,9 @@ enum FileProviderRuntime {
         await requireFailClosed({
             _ = try await NSFileProviderManager.remove(domain, mode: .removeAll)
         }, .providerNotFound)
+        precondition(postedDomainChange == 0)
+        precondition(postedMaterialized == 0)
+        precondition(postedPending == 0)
 
         precondition(NSFileProviderManager(for: domain2) == nil)
         precondition(NSFileProviderManager(forDomain: domain2) == nil)
@@ -173,10 +334,40 @@ enum FileProviderRuntime {
         precondition(manager.providerIdentifier == "org.openuikit.fileprovider.unhosted")
         let temp = try! manager.temporaryDirectoryURL()
         precondition(temp.path.contains("OpenUIKitFileProvider"))
-        _ = manager.documentStorageURL
-        _ = manager.globalProgress(for: .downloading)
+        precondition(manager.documentStorageURL.path.contains("OpenUIKitFileProvider"))
+        let progress = manager.globalProgress(for: .downloading)
+        precondition(progress.totalUnitCount == 0)
+        precondition(progress.completedUnitCount == 0)
+
         let materialized: any NSFileProviderEnumerator = manager.enumeratorForMaterializedItems()
         let pending: any NSFileProviderPendingSetEnumerator = manager.enumeratorForPendingItems()
+        let materializedObserver = RuntimeObserver()
+        waitOnce { done in
+            materializedObserver.onFinish = done
+            materialized.enumerateItems(for: materializedObserver, startingAt: .sortedByName)
+        }
+        requireCode(materializedObserver.error!, .providerNotFound)
+        let pendingObserver = RuntimeObserver()
+        waitOnce { done in
+            pendingObserver.onFinish = done
+            pending.enumerateItems(for: pendingObserver, startingAt: .sortedByName)
+        }
+        requireCode(pendingObserver.error!, .providerNotFound)
+        let changeObserver = RuntimeObserver()
+        waitOnce { done in
+            changeObserver.onFinish = done
+            materialized.enumerateChanges(for: changeObserver, from: anchor)
+        }
+        requireCode(changeObserver.error!, .providerNotFound)
+        var materializedAnchorCalls = 0
+        waitOnce { done in
+            materialized.currentSyncAnchor { current in
+                materializedAnchorCalls += 1
+                precondition(current == nil)
+                done()
+            }
+        }
+        precondition(materializedAnchorCalls == 1)
         materialized.invalidate()
         pending.invalidate()
 
@@ -283,7 +474,7 @@ enum FileProviderRuntime {
             try await manager.requestDownloadForItem(withIdentifier: root)
         }, .providerNotFound)
 
-        let item = NSFileProviderEnumeratedItem(
+        let item = RuntimeItem(
             itemIdentifier: NSFileProviderItemIdentifier("file-1"),
             parentItemIdentifier: root,
             filename: "Notes.txt"
@@ -295,51 +486,87 @@ enum FileProviderRuntime {
         item.contentPolicy = .downloadLazilyAndEvictOnRemoteUpdate
         let asItem: any NSFileProviderItemProtocol = item
         precondition(asItem.filename == "Notes.txt")
+        precondition(asItem.parentItemIdentifier == root)
         precondition(asItem.capabilities.contains(.allowsWriting))
         precondition(asItem.itemIdentifier.rawValue == "file-1")
+        precondition(asItem.documentSize?.intValue == 12)
+        precondition(asItem.typeIdentifier == "public.plain-text")
+        precondition(asItem.itemVersion?.contentVersion == Data([1]))
+        precondition(asItem.contentPolicy == .downloadLazilyAndEvictOnRemoteUpdate)
 
         let placeholderURL = NSFileProviderManager.placeholderURL(
             for: temp.appendingPathComponent("Notes.txt")
         )
         precondition(placeholderURL.pathExtension == "placeholder")
+        precondition(
+            NSFileProviderExtension.placeholderURL(for: temp.appendingPathComponent("Inbox.txt"))
+                .pathExtension == "placeholder"
+        )
         do {
             try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: asItem)
             fatalError("public writePlaceholder must fail closed without a host adapter")
         } catch {
             requireCode(error, .providerNotFound)
         }
+        do {
+            try NSFileProviderExtension.writePlaceholder(
+                at: placeholderURL,
+                withMetadata: [:]
+            )
+            fatalError("extension writePlaceholder must fail closed without a host adapter")
+        } catch {
+            requireCode(error, .providerNotFound)
+        }
         precondition(!FileManager.default.fileExists(atPath: placeholderURL.path))
+
+        try! NSFileProviderManager._writeLinuxPlaceholderJSON(
+            at: placeholderURL,
+            withMetadata: asItem
+        )
+        precondition(FileManager.default.fileExists(atPath: placeholderURL.path))
+        try? FileManager.default.removeItem(at: placeholderURL)
 
         let nsError = NSError.fileProviderErrorForCollision(with: asItem)
         precondition(nsError.domain == NSFileProviderErrorDomain)
         precondition(nsError.code == NSFileProviderError.Code.filenameCollision.rawValue)
+        precondition(nsError.userInfo[NSFileProviderErrorCollidingItemKey] != nil)
+        precondition(nsError.userInfo[NSFileProviderErrorItemKey] != nil)
         let missing = NSError.fileProviderErrorForNonExistentItem(
             withIdentifier: NSFileProviderItemIdentifier("missing")
         )
         precondition(missing.code == NSFileProviderError.Code.noSuchItem.rawValue)
+        precondition(
+            missing.userInfo[NSFileProviderErrorNonExistentItemIdentifierKey] as? String == "missing"
+        )
         let rejected = NSError.fileProviderErrorForRejectedDeletion(of: asItem)
         precondition(rejected.code == NSFileProviderError.Code.deletionRejected.rawValue)
+        precondition(rejected.userInfo[NSFileProviderErrorItemKey] != nil)
 
-        let enumerator = NSFileProviderMemoryEnumerator(items: [asItem])
-        enumerator.syncAnchor = anchor
-        let observer = NSFileProviderCollectingObserver()
+        let enumerator: any NSFileProviderEnumerator = RuntimeEnumerator(items: [asItem])
+        let observer = RuntimeObserver()
         enumerator.enumerateItems(for: observer, startingAt: .sortedByName)
         precondition(observer.items.count == 1)
         precondition(observer.items[0].filename == "Notes.txt")
         precondition(observer.error == nil)
-        enumerator.currentSyncAnchor { current in
-            precondition(current == anchor)
+        let runtimeEnumerator = enumerator as! RuntimeEnumerator
+        runtimeEnumerator.syncAnchor = anchor
+        var currentAnchor: NSFileProviderSyncAnchor?
+        runtimeEnumerator.currentSyncAnchor { current in
+            currentAnchor = current
         }
-        let changeObserver = NSFileProviderCollectingObserver()
-        enumerator.enumerateChanges(for: changeObserver, from: anchor)
-        precondition(changeObserver.finishedAnchor == anchor)
-        enumerator.invalidate()
-        let dead = NSFileProviderCollectingObserver()
-        enumerator.enumerateItems(for: dead, startingAt: .sortedByName)
+        precondition(currentAnchor == anchor)
+        let protocolChangeObserver = RuntimeObserver()
+        runtimeEnumerator.enumerateChanges(for: protocolChangeObserver, from: anchor)
+        precondition(protocolChangeObserver.items.count == 1)
+        precondition(protocolChangeObserver.finishedAnchor == anchor)
+        runtimeEnumerator.invalidate()
+        let dead = RuntimeObserver()
+        runtimeEnumerator.enumerateItems(for: dead, startingAt: .sortedByName)
         requireCode(dead.error!, .cannotSynchronize)
 
         let extensionInstance = NSFileProviderExtension(domain: domain2)
         precondition(extensionInstance.providerIdentifier.contains("fileprovider"))
+        precondition(extensionInstance.documentStorageURL.path.contains("Documents/Nextcloud"))
         let mapped = extensionInstance.urlForItem(withPersistentIdentifier: item.itemIdentifier)
         precondition(mapped != nil)
         precondition(
@@ -372,6 +599,7 @@ enum FileProviderRuntime {
 
         var thumbItemCount = 0
         var thumbFinishCount = 0
+        var thumbSawSync = false
         waitOnce { done in
             let thumbProgress = extensionInstance.fetchThumbnails(
                 for: [item.itemIdentifier],
@@ -380,25 +608,31 @@ enum FileProviderRuntime {
                     thumbItemCount += 1
                     precondition(data == nil)
                     requireCode(error!, .providerNotFound)
+                    precondition(thumbFinishCount == 0)
                 },
                 completionHandler: { error in
                     thumbFinishCount += 1
                     requireCode(error!, .providerNotFound)
+                    precondition(thumbItemCount == 1)
                     done()
                 }
             )
             _ = thumbProgress
+            if thumbItemCount != 0 || thumbFinishCount != 0 {
+                thumbSawSync = true
+            }
         }
         precondition(thumbItemCount == 1)
         precondition(thumbFinishCount == 1)
+        precondition(!thumbSawSync)
 
-        _ = Notification.Name.fileProviderDomainDidChange
-        _ = Notification.Name.fileProviderMaterializedSetDidChange
-        _ = Notification.Name.fileProviderPendingSetDidChange
         let request = NSFileProviderRequest(isSystemRequest: true)
         precondition(request.isSystemRequest)
         precondition(!request.isFileViewerRequest)
         _ = NSFileProviderServiceName("svc")
+        precondition(postedDomainChange == 0)
+        precondition(postedMaterialized == 0)
+        precondition(postedPending == 0)
 
         print("FILEPROVIDER_AGENT_RUNTIME_OK")
     }

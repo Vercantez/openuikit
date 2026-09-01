@@ -142,11 +142,11 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public func enumeratorForMaterializedItems() -> any NSFileProviderEnumerator {
-        FileProviderEmptyEnumerator()
+        FileProviderUnhostedEnumerator()
     }
 
     public func enumeratorForPendingItems() -> any NSFileProviderPendingSetEnumerator {
-        FileProviderEmptyPendingSetEnumerator()
+        FileProviderUnhostedPendingSetEnumerator()
     }
 
     public func evictItem(identifier itemIdentifier: NSFileProviderItemIdentifier) async throws {
