@@ -45,6 +45,7 @@ MACHO_DEPENDENCY_REWRITER=$W/full/xcodeplan/rewrite_macho_dependency.py
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
 SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
 BOLD_FONT=${BOLD_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf}
+TRUE_IOS_DIAGNOSTIC_FAILED_STAGE=${TRUE_IOS_DIAGNOSTIC_FAILED_STAGE:-}
 
 TARGET=arm64-apple-ios18.0-simulator
 TARGET_VARIANT=arm64-apple-ios-simulator
@@ -227,12 +228,28 @@ uikit_status=$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all -- \
 
 output_parent=$(dirname "$OUTPUT_ROOT")
 output_name=$(basename "$OUTPUT_ROOT")
+if [ -n "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE" ]; then
+    case "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE" in
+        /*/true-ios-failed-stage|/*/true-ios-failed-stage-[A-Za-z0-9._-]*) ;;
+        *) die 'TRUE_IOS_DIAGNOSTIC_FAILED_STAGE must be an absolute, narrowly named failed-stage path' ;;
+    esac
+    [ "$(dirname "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE")" = "$output_parent" ] \
+        || die 'diagnostic failed stage must share OUTPUT_ROOT parent'
+    [ ! -e "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE" ] \
+        || die 'diagnostic failed-stage destination already exists'
+fi
 mkdir -p "$output_parent"
 rm -rf -- "$OUTPUT_ROOT"
 stage=$(mktemp -d "$output_parent/.${output_name}.building.XXXXXX")
 cleanup() {
     if [ -n "${stage:-}" ] && [ -d "$stage" ]; then
-        rm -rf -- "$stage"
+        if [ -n "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE" ]; then
+            mv "$stage" "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE"
+            printf 'true_ios_platform: preserved failed stage at %s\n' \
+                "$TRUE_IOS_DIAGNOSTIC_FAILED_STAGE" >&2
+        else
+            rm -rf -- "$stage"
+        fi
     fi
 }
 trap cleanup EXIT HUP INT TERM
