@@ -43,14 +43,12 @@ open class GKSKNodeComponent: GKComponent {
     }
 
     public required init?(coder: NSCoder) {
-        self.node = SKNode()
-        super.init()
         return nil
     }
 }
 
 extension SKNode {
-    public weak var entity: GKEntity? {
+    public var entity: GKEntity? {
         get { _gkNodeEntities[ObjectIdentifier(self)]?.value }
         set { _gkNodeEntities[ObjectIdentifier(self)] = _GKWeakEntityBox(newValue) }
     }
@@ -91,14 +89,12 @@ open class GKSCNNodeComponent: GKComponent {
     }
 
     public required init?(coder: NSCoder) {
-        self.node = SCNNode()
-        super.init()
         return nil
     }
 }
 
 extension SCNNode {
-    public weak var entity: GKEntity? {
+    public var entity: GKEntity? {
         get { _gkNodeEntities[ObjectIdentifier(self)]?.value }
         set { _gkNodeEntities[ObjectIdentifier(self)] = _GKWeakEntityBox(newValue) }
     }

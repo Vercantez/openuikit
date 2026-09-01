@@ -15,4 +15,5 @@ c:@macro@GK_VERSION	What integer does the Xcode 26.1 GK_VERSION macro expand to?
 c:objc(cs)GKNoise(py)gradientColors	How are UIColor gradient stops mapped onto noise values?	algorithms	UIColor is not available in this isolated compile.
 c:objc(cs)GKAgent3D(py)rotation	Is GKAgent3D.rotation exactly simd.matrix_float3x3 / simd_float3x3 column-major layout?	algorithms	Property is compiled only when the simd module is imported; identity is for the EC2 probe.
 c:objc(cs)GKSKNodeComponent(py)node	How does GKSKNodeComponent bind SKNode.entity without a retain cycle?	algorithms	SpriteKit overlays are compiled only when SpriteKit is imported.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKEntity	What keyed-archive schema does Xcode 26.1 use for GKEntity/GKGraph/GKScene NSSecureCoding?	algorithms	Linux round-trips ouik.gk.linux keys; Apple archive bytes are unobserved.
 module	Must SceneKit and SpriteKit overlay symbols live in libGameplayKit.dylib whenever those modules are present at compile time?	algorithms	Isolated host compile has no SceneKit/SpriteKit; the identity probe records the future ABI requirement.

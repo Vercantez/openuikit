@@ -285,7 +285,9 @@ open class GKSphereObstacle: GKObstacle {
     }
 }
 
-open class GKPolygonObstacle: GKObstacle, NSCopying {
+open class GKPolygonObstacle: GKObstacle, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private var vertices: [SIMD2<Float>]
 
     public var vertexCount: Int { vertices.count }
@@ -296,9 +298,27 @@ open class GKPolygonObstacle: GKObstacle, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
-        vertices = []
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
+        let numbers = coder.decodeObject(of: [NSArray.self, NSNumber.self], forKey: GKLinuxArchive.verticesKey) as? [NSNumber]
+        guard let numbers, numbers.count % 2 == 0 else { return nil }
+        var points: [SIMD2<Float>] = []
+        var index = 0
+        while index < numbers.count {
+            points.append(SIMD2<Float>(numbers[index].floatValue, numbers[index + 1].floatValue))
+            index += 2
+        }
+        vertices = points
         super.init()
-        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        var numbers: [NSNumber] = []
+        for vertex in vertices {
+            numbers.append(NSNumber(value: vertex.x))
+            numbers.append(NSNumber(value: vertex.y))
+        }
+        coder.encode(numbers as NSArray, forKey: GKLinuxArchive.verticesKey)
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
