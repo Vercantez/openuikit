@@ -6,11 +6,7 @@ open class CMMotionManager: NSObject, @unchecked Sendable {
     private var _magnetometerUpdateInterval = CoreMotionHostBoundary.defaultUpdateInterval
     private var _deviceMotionUpdateInterval = CoreMotionHostBoundary.defaultUpdateInterval
     private var _showsDeviceMovementDisplay = false
-    private var _attitudeReferenceFrame = CMAttitudeReferenceFrame.xArbitraryZVertical
-    private var _accelerometerActive = false
-    private var _gyroActive = false
-    private var _magnetometerActive = false
-    private var _deviceMotionActive = false
+    private var _attitudeReferenceFrame = CMAttitudeReferenceFrame()
 
     public var isAccelerometerAvailable: Bool { false }
     public var isGyroAvailable: Bool { false }
@@ -22,21 +18,10 @@ open class CMMotionManager: NSObject, @unchecked Sendable {
     public var magnetometerData: CMMagnetometerData? { nil }
     public var deviceMotion: CMDeviceMotion? { nil }
 
-    public var isAccelerometerActive: Bool {
-        lock.withLock { _accelerometerActive }
-    }
-
-    public var isGyroActive: Bool {
-        lock.withLock { _gyroActive }
-    }
-
-    public var isMagnetometerActive: Bool {
-        lock.withLock { _magnetometerActive }
-    }
-
-    public var isDeviceMotionActive: Bool {
-        lock.withLock { _deviceMotionActive }
-    }
+    public var isAccelerometerActive: Bool { false }
+    public var isGyroActive: Bool { false }
+    public var isMagnetometerActive: Bool { false }
+    public var isDeviceMotionActive: Bool { false }
 
     public var accelerometerUpdateInterval: TimeInterval {
         get { lock.withLock { _accelerometerUpdateInterval } }
@@ -71,74 +56,50 @@ open class CMMotionManager: NSObject, @unchecked Sendable {
         []
     }
 
-    public func startAccelerometerUpdates() {
-        lock.withLock { _accelerometerActive = true }
-    }
+    public func startAccelerometerUpdates() {}
 
     public func startAccelerometerUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping CMAccelerometerHandler
     ) {
-        lock.withLock { _accelerometerActive = true }
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopAccelerometerUpdates() {
-        lock.withLock { _accelerometerActive = false }
-    }
+    public func stopAccelerometerUpdates() {}
 
-    public func startGyroUpdates() {
-        lock.withLock { _gyroActive = true }
-    }
+    public func startGyroUpdates() {}
 
     public func startGyroUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping CMGyroHandler
     ) {
-        lock.withLock { _gyroActive = true }
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopGyroUpdates() {
-        lock.withLock { _gyroActive = false }
-    }
+    public func stopGyroUpdates() {}
 
-    public func startMagnetometerUpdates() {
-        lock.withLock { _magnetometerActive = true }
-    }
+    public func startMagnetometerUpdates() {}
 
     public func startMagnetometerUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping CMMagnetometerHandler
     ) {
-        lock.withLock { _magnetometerActive = true }
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopMagnetometerUpdates() {
-        lock.withLock { _magnetometerActive = false }
-    }
+    public func stopMagnetometerUpdates() {}
 
-    public func startDeviceMotionUpdates() {
-        lock.withLock {
-            _deviceMotionActive = true
-            _attitudeReferenceFrame = .xArbitraryZVertical
-        }
-    }
+    public func startDeviceMotionUpdates() {}
 
     public func startDeviceMotionUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping CMDeviceMotionHandler
     ) {
-        startDeviceMotionUpdates()
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
     public func startDeviceMotionUpdates(using referenceFrame: CMAttitudeReferenceFrame) {
-        lock.withLock {
-            _deviceMotionActive = true
-            _attitudeReferenceFrame = referenceFrame
-        }
+        _ = referenceFrame
     }
 
     public func startDeviceMotionUpdates(
@@ -146,13 +107,11 @@ open class CMMotionManager: NSObject, @unchecked Sendable {
         to queue: OperationQueue,
         withHandler handler: @escaping CMDeviceMotionHandler
     ) {
-        startDeviceMotionUpdates(using: referenceFrame)
+        _ = referenceFrame
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopDeviceMotionUpdates() {
-        lock.withLock { _deviceMotionActive = false }
-    }
+    public func stopDeviceMotionUpdates() {}
 }
 
 open class CMAltimeter: NSObject, @unchecked Sendable {
@@ -293,10 +252,6 @@ open class CMSensorRecorder: NSObject {
 }
 
 open class CMBatchedSensorManager: NSObject, @unchecked Sendable {
-    private let lock = NSLock()
-    private var accelerometerActive = false
-    private var deviceMotionActive = false
-
     public class var isAccelerometerSupported: Bool { false }
     public class var isDeviceMotionSupported: Bool { false }
     public class var authorizationStatus: CMAuthorizationStatus {
@@ -308,41 +263,26 @@ open class CMBatchedSensorManager: NSObject, @unchecked Sendable {
     public var accelerometerBatch: [CMAccelerometerData]? { nil }
     public var deviceMotionBatch: [CMDeviceMotion]? { nil }
 
-    public var isAccelerometerActive: Bool {
-        lock.withLock { accelerometerActive }
-    }
+    public var isAccelerometerActive: Bool { false }
+    public var isDeviceMotionActive: Bool { false }
 
-    public var isDeviceMotionActive: Bool {
-        lock.withLock { deviceMotionActive }
-    }
-
-    public func startAccelerometerUpdates() {
-        lock.withLock { accelerometerActive = true }
-    }
+    public func startAccelerometerUpdates() {}
 
     public func startAccelerometerUpdates(
         handler: @escaping ([CMAccelerometerData]?, (any Error)?) -> Void
     ) {
-        lock.withLock { accelerometerActive = true }
         handler(nil, CoreMotionHostBoundary.unavailable)
     }
 
-    public func stopAccelerometerUpdates() {
-        lock.withLock { accelerometerActive = false }
-    }
+    public func stopAccelerometerUpdates() {}
 
-    public func startDeviceMotionUpdates() {
-        lock.withLock { deviceMotionActive = true }
-    }
+    public func startDeviceMotionUpdates() {}
 
     public func startDeviceMotionUpdates(
         handler: @escaping ([CMDeviceMotion]?, (any Error)?) -> Void
     ) {
-        lock.withLock { deviceMotionActive = true }
         handler(nil, CoreMotionHostBoundary.unavailable)
     }
 
-    public func stopDeviceMotionUpdates() {
-        lock.withLock { deviceMotionActive = false }
-    }
+    public func stopDeviceMotionUpdates() {}
 }

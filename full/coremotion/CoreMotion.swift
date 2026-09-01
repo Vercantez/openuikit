@@ -1,17 +1,9 @@
 @_exported import Foundation
 
-/// CoreLocation distance/speed typealiases kept local so this module depends
-/// only on Foundation. They match the Double-backed Apple overlays.
-public typealias CLLocationDistance = Double
-public typealias CLLocationAccuracy = Double
-public typealias CLLocationSpeed = Double
-public typealias CLLocationSpeedAccuracy = Double
-
 public let CMErrorDomain: String = "CMErrorDomain"
 
-/// Public `NS_ERROR_ENUM` overlay. Raw values follow the iPhoneOS 26.1
-/// `CMError.h` layout (`CMErrorNULL = 100` and sequential successors). Confirm
-/// on an Apple runtime before treating the numeric codes as ABI-stable here.
+/// Public `NS_ERROR_ENUM` overlay. Numeric `rawValue` assignments are Linux
+/// fallbacks so the named constants compile; they are not observed Apple ABI.
 public struct CMError: Error, Hashable, RawRepresentable, Sendable, BitwiseCopyable {
     public var rawValue: UInt32
 
@@ -225,9 +217,9 @@ public typealias CMStepQueryHandler = (Int, (any Error)?) -> Void
 public typealias CMStepUpdateHandler = (Int, Date, (any Error)?) -> Void
 
 enum CoreMotionHostBoundary {
-    static let defaultUpdateInterval: TimeInterval = 1.0 / 60.0
+    /// Unobserved on Apple; Linux stores whatever the caller assigns.
+    static let defaultUpdateInterval: TimeInterval = 0
     static let unavailable: Error = CMErrorNotAvailable
-    static let notAuthorized: Error = CMErrorNotAuthorized
     /// Linux has no motion-privacy prompt path; authorization is fail-closed.
     static let authorization: CMAuthorizationStatus = .denied
 
@@ -270,6 +262,8 @@ func cm_quaternionInverse(_ value: CMQuaternion) -> CMQuaternion {
     )
 }
 
+/// Linux-internal Euler extraction for host-constructed attitudes. Apple's
+/// Tait-Bryan convention is unobserved and must not be treated as parity.
 func cm_euler(from quaternion: CMQuaternion) -> (roll: Double, pitch: Double, yaw: Double) {
     let x = quaternion.x
     let y = quaternion.y
@@ -286,6 +280,7 @@ func cm_euler(from quaternion: CMQuaternion) -> (roll: Double, pitch: Double, ya
     return (roll, pitch, yaw)
 }
 
+/// Linux-internal matrix extraction. Apple's row/column convention is unobserved.
 func cm_rotationMatrix(from quaternion: CMQuaternion) -> CMRotationMatrix {
     let x = quaternion.x
     let y = quaternion.y

@@ -18,8 +18,6 @@ open class CMHeadphoneMotionManager: NSObject, @unchecked Sendable {
 
     private let lock = NSLock()
     private weak var _delegate: CMHeadphoneMotionManagerDelegate?
-    private var deviceMotionActive = false
-    private var connectionStatusActive = false
 
     public class func authorizationStatus() -> CMAuthorizationStatus {
         CoreMotionHostBoundary.authorization
@@ -33,37 +31,23 @@ open class CMHeadphoneMotionManager: NSObject, @unchecked Sendable {
         set { lock.withLock { _delegate = newValue } }
     }
 
-    public var isDeviceMotionActive: Bool {
-        lock.withLock { deviceMotionActive }
-    }
+    public var isDeviceMotionActive: Bool { false }
+    public var isConnectionStatusActive: Bool { false }
 
-    public var isConnectionStatusActive: Bool {
-        lock.withLock { connectionStatusActive }
-    }
-
-    public func startDeviceMotionUpdates() {
-        lock.withLock { deviceMotionActive = true }
-    }
+    public func startDeviceMotionUpdates() {}
 
     public func startDeviceMotionUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping DeviceMotionHandler
     ) {
-        lock.withLock { deviceMotionActive = true }
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopDeviceMotionUpdates() {
-        lock.withLock { deviceMotionActive = false }
-    }
+    public func stopDeviceMotionUpdates() {}
 
-    public func startConnectionStatusUpdates() {
-        lock.withLock { connectionStatusActive = true }
-    }
+    public func startConnectionStatusUpdates() {}
 
-    public func stopConnectionStatusUpdates() {
-        lock.withLock { connectionStatusActive = false }
-    }
+    public func stopConnectionStatusUpdates() {}
 }
 
 open class CMHeadphoneActivityManager: NSObject, @unchecked Sendable {
@@ -75,10 +59,6 @@ open class CMHeadphoneActivityManager: NSObject, @unchecked Sendable {
     public typealias ActivityHandler = (CMMotionActivity?, (any Error)?) -> Void
     public typealias StatusHandler = (CMHeadphoneActivityManager.Status, (any Error)?) -> Void
 
-    private let lock = NSLock()
-    private var activityActive = false
-    private var statusActive = false
-
     public class func authorizationStatus() -> CMAuthorizationStatus {
         CoreMotionHostBoundary.authorization
     }
@@ -86,39 +66,28 @@ open class CMHeadphoneActivityManager: NSObject, @unchecked Sendable {
     public var isActivityAvailable: Bool { false }
     public var isStatusAvailable: Bool { false }
 
-    public var isActivityActive: Bool {
-        lock.withLock { activityActive }
-    }
-
-    public var isStatusActive: Bool {
-        lock.withLock { statusActive }
-    }
+    public var isActivityActive: Bool { false }
+    public var isStatusActive: Bool { false }
 
     public func startActivityUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping ActivityHandler
     ) {
-        lock.withLock { activityActive = true }
         CoreMotionHostBoundary.deliverUnavailable(to: queue, handler: handler)
     }
 
-    public func stopActivityUpdates() {
-        lock.withLock { activityActive = false }
-    }
+    public func stopActivityUpdates() {}
 
     public func startStatusUpdates(
         to queue: OperationQueue,
         withHandler handler: @escaping StatusHandler
     ) {
-        lock.withLock { statusActive = true }
         queue.addOperation {
             handler(.disconnected, CoreMotionHostBoundary.unavailable)
         }
     }
 
-    public func stopStatusUpdates() {
-        lock.withLock { statusActive = false }
-    }
+    public func stopStatusUpdates() {}
 }
 
 public protocol CMWaterSubmersionManagerDelegate: NSObjectProtocol {
@@ -145,15 +114,6 @@ open class CMWaterSubmersionManager: NSObject, @unchecked Sendable {
 
     public var delegate: (any CMWaterSubmersionManagerDelegate)? {
         get { lock.withLock { _delegate } }
-        set {
-            let previous: (any CMWaterSubmersionManagerDelegate)?
-            lock.lock()
-            previous = _delegate
-            _delegate = newValue
-            lock.unlock()
-            if newValue != nil, previous == nil {
-                newValue?.manager(self, errorOccurred: CoreMotionHostBoundary.unavailable)
-            }
-        }
+        set { lock.withLock { _delegate = newValue } }
     }
 }

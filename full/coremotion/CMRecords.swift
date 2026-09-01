@@ -146,13 +146,13 @@ open class CMOdometerData: NSObject, NSSecureCoding, NSCopying, @unchecked Senda
 
     public private(set) var startDate: Date
     public private(set) var endDate: Date
-    public private(set) var deltaDistance: CLLocationDistance
-    public private(set) var deltaDistanceAccuracy: CLLocationAccuracy
-    public private(set) var speed: CLLocationSpeed
-    public private(set) var speedAccuracy: CLLocationSpeedAccuracy
+    public private(set) var deltaDistance: Double
+    public private(set) var deltaDistanceAccuracy: Double
+    public private(set) var speed: Double
+    public private(set) var speedAccuracy: Double
     public private(set) var gpsDate: Date
-    public private(set) var deltaAltitude: CLLocationDistance
-    public private(set) var verticalAccuracy: CLLocationAccuracy
+    public private(set) var deltaAltitude: Double
+    public private(set) var verticalAccuracy: Double
     public private(set) var originDevice: CMOdometerOriginDevice
     public private(set) var slope: Double?
     public private(set) var maxAbsSlope: Double?
@@ -160,13 +160,13 @@ open class CMOdometerData: NSObject, NSSecureCoding, NSCopying, @unchecked Senda
     init(
         startDate: Date,
         endDate: Date,
-        deltaDistance: CLLocationDistance,
-        deltaDistanceAccuracy: CLLocationAccuracy,
-        speed: CLLocationSpeed,
-        speedAccuracy: CLLocationSpeedAccuracy,
+        deltaDistance: Double,
+        deltaDistanceAccuracy: Double,
+        speed: Double,
+        speedAccuracy: Double,
         gpsDate: Date,
-        deltaAltitude: CLLocationDistance,
-        verticalAccuracy: CLLocationAccuracy,
+        deltaAltitude: Double,
+        verticalAccuracy: Double,
         originDevice: CMOdometerOriginDevice,
         slope: Double?,
         maxAbsSlope: Double?
@@ -190,13 +190,13 @@ open class CMOdometerData: NSObject, NSSecureCoding, NSCopying, @unchecked Senda
     public convenience init(
         hostStartDate startDate: Date,
         endDate: Date,
-        deltaDistance: CLLocationDistance,
-        deltaDistanceAccuracy: CLLocationAccuracy,
-        speed: CLLocationSpeed,
-        speedAccuracy: CLLocationSpeedAccuracy,
+        deltaDistance: Double,
+        deltaDistanceAccuracy: Double,
+        speed: Double,
+        speedAccuracy: Double,
         gpsDate: Date,
-        deltaAltitude: CLLocationDistance,
-        verticalAccuracy: CLLocationAccuracy,
+        deltaAltitude: Double,
+        verticalAccuracy: Double,
         originDevice: CMOdometerOriginDevice,
         slope: Double?,
         maxAbsSlope: Double?
