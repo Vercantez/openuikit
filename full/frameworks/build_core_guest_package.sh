@@ -1647,6 +1647,14 @@ LIBSYSTEM_REAL=$RUNTIME/darwin/usr/lib/libSystem.real.dylib
 [ "$(llvm-otool-18 -D "$LIBSYSTEM_REAL" | tail -n 1)" = \
     /usr/lib/libSystem.real.dylib ] \
     || die 'staged libSystem.real install name drifted'
+for symbol in _nan _remquo; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$RUNTIME/darwin/usr/lib/libSystem.B.dylib" \
+        | awk -v expected="$symbol" \
+            '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
 GROUP_FIXTURE=$MACHORUN/tests/bin/grp
 GROUP_GOLDEN=$MACHORUN/tests/expected/grp.stdout
 GROUP_SOURCE=$MACHORUN/tests/src/grp.c
@@ -3101,7 +3109,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-27 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-27 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'

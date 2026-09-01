@@ -77,7 +77,11 @@ trie reexports), adding only the missing symbols.
   `operator+(const char*, string)` (real, via explicit template instantiation
   from the same LLVM-18 headers, so it is libc++'s own code).
 
-- **`spike/syspatch.c` → `libSystem.B.dylib` umbrella (+47 symbols).** The
+- **`spike/syspatch.c` plus `full/shims/libsystem_math_compat.c` →
+  `libSystem.B.dylib` umbrella.** In addition to the original runtime closure,
+  the umbrella owns C99 `_nan` and `_remquo` with Apple-compatible NaN tag,
+  IEEE remainder, and signed low-seven-quotient-bit behavior required by the
+  portable CGFloat tgmath surface. The
   interesting ones:
   - **`_dyld_lookup_section_info` — the crux.** machorun's loader implements
     this with an *objc-only* `dyld_section_kind` enum (0 = `__objc_classlist`).
