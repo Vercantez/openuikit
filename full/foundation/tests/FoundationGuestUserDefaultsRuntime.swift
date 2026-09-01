@@ -15,6 +15,9 @@ func require(_ condition: @autoclosure () -> Bool, _ message: String) {
     }
 }
 
+func requireSendable<T: Sendable>(_ type: T.Type) {}
+requireSendable(FoundationGuestServices.UserDefaults.self)
+
 guard CommandLine.arguments.count == 3 else { exit(64) }
 let mode = CommandLine.arguments[1]
 let suite = CommandLine.arguments[2]

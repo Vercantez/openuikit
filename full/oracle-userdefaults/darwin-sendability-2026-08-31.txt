@@ -1,0 +1,29 @@
+Apple Foundation UserDefaults sendability oracle (2026-08-31)
+
+Host compiler:
+  Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)
+  Target: arm64-apple-macosx26.0
+
+Invocation:
+  xcrun swiftc -swift-version 6 -typecheck userdefaults-sendable-oracle.swift
+
+Source SHA-256:
+  b848e4c63f984758f936f0e3ab66f437c2b30df99cbc4e48290d16003e3767bf
+
+Exact source:
+  import Foundation
+
+  protocol DefaultsProtocol: Sendable {}
+  extension UserDefaults: DefaultsProtocol {}
+
+  func requireSendable<T: Sendable>(_ type: T.Type) {}
+  requireSendable(UserDefaults.self)
+
+The compiler exits 0 with empty diagnostics.
+
+Diagnostics SHA-256 (empty file):
+  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+Conclusion: UserDefaults is already Sendable in the Apple Foundation import
+surface. A portable, lock-backed UserDefaults must expose the same conformance
+so clients do not create an illegal retroactive Sendable conformance.
