@@ -1,9 +1,5 @@
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
 #if canImport(CoreMedia)
 import CoreMedia
 #endif
@@ -164,10 +160,6 @@ open class RPBroadcastHandler: NSObject, @unchecked Sendable {
     open func updateBroadcast(_ broadcastURL: URL) {
         portableBroadcastURL = broadcastURL
     }
-
-    open func beginRequest(with context: NSExtensionContext) {
-        _ = context
-    }
 }
 
 /// Deprecated MP4 clip handler. Overrides are no-ops besides recording the
@@ -198,9 +190,10 @@ open class RPBroadcastMP4ClipHandler: RPBroadcastHandler, @unchecked Sendable {
 
 /// Sample-buffer broadcast handler subclassed by upload extensions.
 ///
-/// Lifecycle methods are empty defaults. `processSampleBuffer` never claims
-/// that frames were encoded or sent. `finishBroadcastWithError` stores the
-/// error locally instead of talking to `RPDaemon`.
+/// Lifecycle methods are empty defaults. `processSampleBuffer` is compiled
+/// only against real CoreMedia and never claims that frames were encoded or
+/// sent. `finishBroadcastWithError` stores the error locally instead of
+/// talking to `RPDaemon`.
 open class RPBroadcastSampleHandler: RPBroadcastHandler, @unchecked Sendable {
     public private(set) var portableDidStart = false
     public private(set) var portableDidPause = false
@@ -208,7 +201,6 @@ open class RPBroadcastSampleHandler: RPBroadcastHandler, @unchecked Sendable {
     public private(set) var portableDidFinish = false
     public private(set) var portableLastSetupInfo: [String: NSObject]?
     public private(set) var portableLastApplicationInfo: [AnyHashable: Any] = [:]
-    public private(set) var portableProcessedBufferCount = 0
     public private(set) var portableLastSampleBufferType: RPSampleBufferType?
     public private(set) var portableFinishError: (any Error)?
 
@@ -233,14 +225,15 @@ open class RPBroadcastSampleHandler: RPBroadcastHandler, @unchecked Sendable {
         portableLastApplicationInfo = applicationInfo
     }
 
+    #if canImport(CoreMedia)
     open func processSampleBuffer(
         _ sampleBuffer: CMSampleBuffer,
         with sampleBufferType: RPSampleBufferType
     ) {
         _ = sampleBuffer
         portableLastSampleBufferType = sampleBufferType
-        portableProcessedBufferCount += 1
     }
+    #endif
 
     open func finishBroadcastWithError(_ error: any Error) {
         portableFinishError = error

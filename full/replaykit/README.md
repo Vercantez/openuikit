@@ -5,79 +5,74 @@ This directory is a clean-room Linux starting implementation of Apple's public
 not wired into the shared guest package.
 
 The isolated host gate compiles only these sources against the Swift 6.2.4
-Linux toolchain. UIKit, AVFoundation, and CoreMedia are listed dependencies
-but are not importable in that gate, so `ReplayKitLinuxSupport.swift` provides
-stand-in `UIView`, `UIViewController`, `UIImage`, `CMSampleBuffer`, and
-`NSExtensionContext` types. Those names exist so ReplayKit signatures
-type-check; they are not a UIKit or CoreMedia port. When this module is later
-compiled against real OpenUIKit, the `#if canImport` branches should take the
-imported types instead.
+Linux toolchain (Foundation). It does **not** prove integrated Linux success
+against UIKit, AVFoundation, or CoreMedia.
 
-## What is real
+UIKit, CoreMedia, and Foundation.NSExtensionContext APIs are compiled only
+when those real modules are importable. This module does not declare
+lookalike `UIView`, `UIViewController`, `UIImage`, `CMSampleBuffer`, or
+`NSExtensionContext` types.
 
-- The public Swift surface from the pinned Xcode 26.1 iPhoneOS graphs:
-  enums, error domain, recorder, preview controller, system broadcast picker,
-  broadcast controller/handlers, activity view controller, and the
-  `NSExtensionContext` broadcast-setup methods.
-- `RPRecordingErrorCode` numeric values reconstructed from public `RPError.h`
-  (`unknown = -5800` … `exportClipToURLInProgress = -5836`,
-  `codeSuccessful = 0`).
-- `RPCameraPosition.front = 1` / `.back = 2` and
-  `RPSampleBufferType.video = 1` / `.audioApp = 2` / `.audioMic = 3`.
-- In-process state that applications actually read and write:
-  singleton `RPScreenRecorder.shared()`, camera/microphone flags, camera
-  position, picker `preferredExtension` / `showsMicrophoneButton`,
-  `RPBroadcastConfiguration` NSSecureCoding, and subclassable
-  `RPBroadcastSampleHandler` lifecycle methods used by Telegram and
-  element-ios broadcast-upload extensions.
-- Typed fail-closed errors using `RPRecordingErrorCode` / `RPRecordingErrorDomain`.
+## What is real in the isolated gate
+
+- Enums and constants: `RPCameraPosition`, `RPSampleBufferType`,
+  `RPRecordingErrorCode`, `RPRecordingErrorDomain`,
+  `RPApplicationInfoBundleIdentifierKey`, `RPVideoSampleOrientationKey`,
+  `SCStreamErrorDomain`.
+- `RPScreenRecorder.shared()`, availability/recording flags, camera/mic
+  position state, fail-closed start/stop/clip/export paths that do not
+  mention UIKit or CoreMedia types.
+- `RPBroadcastController`, `RPBroadcastConfiguration` (NSSecureCoding),
+  `RPBroadcastHandler`, `RPBroadcastSampleHandler` lifecycle methods, and
+  `RPBroadcastMP4ClipHandler`.
+- Typed fail-closed errors using `RPRecordingErrorCode`.
 
 ## What is fail-closed
 
 Linux has no ReplayKit daemon, screen-capture stack, privacy prompt, camera
 preview, Control Center picker, or broadcast-upload extension host.
 
-- `RPScreenRecorder.isAvailable` and `isRecording` are always `false`.
-- `cameraPreviewView` is always `nil`. Capture handlers are never invoked
-  with sample buffers.
-- `startRecording`, `startCapture`, and `startClipBuffering` complete/throw
+- `isAvailable` and `isRecording` are always `false`.
+- `startRecording` and `startClipBuffering` complete/throw
   `failedToStartCaptureStack`.
-- `stopRecording` / `stopCapture` / `stopClipBuffering` complete/throw
-  `attemptToStopNonRecording` and never return a preview controller.
+- `stopRecording(withOutput:)`, `stopCapture`, and `stopClipBuffering`
+  complete/throw `attemptToStopNonRecording`.
 - `exportClip` completes/throws `failedToObtainURL` and does not write a
   movie.
 - `discardRecording` still runs the handler (there is nothing to discard).
-- `RPBroadcastActivityViewController.load` returns `nil` plus
-  `broadcastSetupFailed`.
 - `RPBroadcastController.startBroadcast` / `finishBroadcast` fail with
-  `broadcastSetupFailed` / `broadcastInvalidSession`. Pause/resume do not
-  invent a live session.
-- `RPSystemBroadcastPickerView` stores flags and does not present a system
-  picker.
-- `NSExtensionContext.loadBroadcastingApplicationInfo` invokes the handler
-  with empty identity values rather than inventing an app name or icon.
-- `completeRequest(withBroadcast:…)` records the URL in-process only.
+  `broadcastSetupFailed` / `broadcastInvalidSession`.
 
-## Still deferred / oracle-queued
+When UIKit/CoreMedia are present (EC2 integration), additional APIs also
+fail closed: `cameraPreviewView` is `nil`, `startCapture` does not invoke
+the sample handler with fabricated buffers, `RPBroadcastActivityViewController.load`
+returns `nil` plus `broadcastSetupFailed`, and `NSExtensionContext`
+broadcast-setup methods do not invent a broadcasting app identity.
 
-See `oracle-questions.tsv`. In particular, Darwin string payloads for
-`RPRecordingErrorDomain`, `RPApplicationInfoBundleIdentifierKey`,
-`RPVideoSampleOrientationKey`, and `SCStreamErrorDomain`; the exact error
-code Apple uses when recording is unavailable; `broadcastURL` before a
-session exists; `clipDuration` default; and whether
-`finishBroadcastWithError` notifies the host.
+## Deferred until real dependencies
 
-Private TBD classes (`RPDaemonProxy`, `RPStoreManager`, overlay buttons, and
-so on) are excluded.
+These identifiers are omitted from the isolated module and classified
+`deferred` until compiled against real UIKit / CoreMedia / Foundation:
+
+- `RPPreviewViewController`, `RPBroadcastActivityViewController`,
+  `RPSystemBroadcastPickerView`, and their delegates
+- `RPScreenRecorder.cameraPreviewView`, `stopRecording(handler:)` that
+  yields a preview controller, and preview-taking recorder delegate methods
+- `startCapture` / `processSampleBuffer` (`CoreMedia.CMSampleBuffer`)
+- `NSExtensionContext` broadcast-setup methods
+
+`tests/agent/ReplayKitDependencyIdentity.swift` is the EC2 client for those
+proofs. It is not run by `tests/acceptance/test_host.sh`.
 
 ## Tests
 
-`tests/agent/ReplayKitRuntime.swift` exercises singleton identity, enum raw
-values, fail-closed recorder/broadcast APIs, sample-handler subclassing, and
-configuration coding, then prints `REPLAYKIT_AGENT_RUNTIME_OK`.
-
-Run the gate with no `.build` / `build` / `scratch` products:
+- Isolated: `tests/agent/ReplayKitRuntime.swift` prints
+  `REPLAYKIT_AGENT_RUNTIME_OK`.
+- Future EC2: build guest UIKit, AVFoundation, and CoreMedia first, build
+  ReplayKit with their `-I`/`-L` paths, link the identity client against
+  `libReplayKit.dylib`, run with `LD_LIBRARY_PATH`, and expect
+  `REPLAYKIT_DEPENDENCY_IDENTITY_OK`.
 
 ```sh
-bash full/replaykit/tests/acceptance/test_host.sh
+bash tests/acceptance/test_host.sh
 ```

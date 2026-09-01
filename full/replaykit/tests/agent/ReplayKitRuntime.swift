@@ -3,16 +3,6 @@ import ReplayKit
 
 private final class RecorderDelegateProbe: NSObject, RPScreenRecorderDelegate {}
 private final class BroadcastDelegateProbe: NSObject, RPBroadcastControllerDelegate {}
-private final class PreviewDelegateProbe: NSObject, RPPreviewViewControllerDelegate {}
-private final class ActivityDelegateProbe: NSObject, RPBroadcastActivityViewControllerDelegate {
-    func broadcastActivityViewController(
-        _ broadcastActivityViewController: RPBroadcastActivityViewController,
-        didFinishWith broadcastController: RPBroadcastController?,
-        error: (any Error)?
-    ) {
-        _ = (broadcastActivityViewController, broadcastController, error)
-    }
-}
 
 private final class SampleHandlerProbe: RPBroadcastSampleHandler, @unchecked Sendable {
     var started = false
@@ -51,15 +41,6 @@ private func runAsync(_ body: @escaping @Sendable () async throws -> Void) -> (a
     return box.error
 }
 
-private func runOnMain<T>(_ body: @MainActor () -> T) -> T {
-    if Thread.isMainThread {
-        return MainActor.assumeIsolated(body)
-    }
-    return DispatchQueue.main.sync {
-        MainActor.assumeIsolated(body)
-    }
-}
-
 precondition(RPRecordingErrorDomain == "RPRecordingErrorDomain")
 precondition(!RPApplicationInfoBundleIdentifierKey.isEmpty)
 precondition(!RPVideoSampleOrientationKey.isEmpty)
@@ -78,26 +59,55 @@ precondition(RPSampleBufferType.audioApp.rawValue == 2)
 precondition(RPSampleBufferType.audioMic.rawValue == 3)
 precondition(RPSampleBufferType(rawValue: 2) == .audioApp)
 precondition(RPSampleBufferType.video != .audioMic)
+precondition(RPSampleBufferType.audioApp != .audioMic)
 _ = RPSampleBufferType.audioApp.hashValue
+var sampleHasher = Hasher()
+RPSampleBufferType.video.hash(into: &sampleHasher)
 
-precondition(RPRecordingErrorCode.unknown.rawValue == -5800)
-precondition(RPRecordingErrorCode.userDeclined.rawValue == -5801)
-precondition(RPRecordingErrorCode.disabled.rawValue == -5802)
-precondition(RPRecordingErrorCode.failedToStart.rawValue == -5803)
-precondition(RPRecordingErrorCode.failed.rawValue == -5804)
-precondition(RPRecordingErrorCode.insufficientStorage.rawValue == -5805)
-precondition(RPRecordingErrorCode.interrupted.rawValue == -5806)
-precondition(RPRecordingErrorCode.contentResize.rawValue == -5807)
-precondition(RPRecordingErrorCode.broadcastInvalidSession.rawValue == -5808)
-precondition(RPRecordingErrorCode.systemDormancy.rawValue == -5809)
-precondition(RPRecordingErrorCode.entitlements.rawValue == -5810)
-precondition(RPRecordingErrorCode.activePhoneCall.rawValue == -5811)
-precondition(RPRecordingErrorCode.failedToSave.rawValue == -5812)
-precondition(RPRecordingErrorCode.carPlay.rawValue == -5813)
-precondition(RPRecordingErrorCode.failedToStartCaptureStack.rawValue == -5833)
-precondition(RPRecordingErrorCode.exportClipToURLInProgress.rawValue == -5836)
-precondition(RPRecordingErrorCode.codeSuccessful.rawValue == 0)
-precondition(RPRecordingErrorCode(rawValue: -5829) == .attemptToStopNonRecording)
+let errorCodes: [(RPRecordingErrorCode, Int)] = [
+    (.unknown, -5800),
+    (.userDeclined, -5801),
+    (.disabled, -5802),
+    (.failedToStart, -5803),
+    (.failed, -5804),
+    (.insufficientStorage, -5805),
+    (.interrupted, -5806),
+    (.contentResize, -5807),
+    (.broadcastInvalidSession, -5808),
+    (.systemDormancy, -5809),
+    (.entitlements, -5810),
+    (.activePhoneCall, -5811),
+    (.failedToSave, -5812),
+    (.carPlay, -5813),
+    (.failedApplicationConnectionInvalid, -5814),
+    (.failedApplicationConnectionInterrupted, -5815),
+    (.failedNoMatchingApplicationContext, -5816),
+    (.failedMediaServicesFailure, -5817),
+    (.videoMixingFailure, -5818),
+    (.broadcastSetupFailed, -5819),
+    (.failedToObtainURL, -5820),
+    (.failedIncorrectTimeStamps, -5821),
+    (.failedToProcessFirstSample, -5822),
+    (.failedAssetWriterFailedToSave, -5823),
+    (.failedNoAssetWriter, -5824),
+    (.failedAssetWriterInWrongState, -5825),
+    (.failedAssetWriterExportFailed, -5826),
+    (.failedToRemoveFile, -5827),
+    (.failedAssetWriterExportCanceled, -5828),
+    (.attemptToStopNonRecording, -5829),
+    (.attemptToStartInRecordingState, -5830),
+    (.photoFailure, -5831),
+    (.recordingInvalidSession, -5832),
+    (.failedToStartCaptureStack, -5833),
+    (.invalidParameter, -5834),
+    (.filePermissions, -5835),
+    (.exportClipToURLInProgress, -5836),
+    (.codeSuccessful, 0),
+]
+for (code, raw) in errorCodes {
+    precondition(code.rawValue == raw)
+    precondition(RPRecordingErrorCode(rawValue: raw) == code)
+}
 precondition(RPRecordingErrorCode.failed != .unknown)
 _ = RPRecordingErrorCode.failed.hashValue
 var errorHasher = Hasher()
@@ -107,7 +117,6 @@ let recorder = RPScreenRecorder.shared()
 precondition(recorder === RPScreenRecorder.shared())
 precondition(!recorder.isAvailable)
 precondition(!recorder.isRecording)
-precondition(recorder.cameraPreviewView == nil)
 
 recorder.isMicrophoneEnabled = true
 recorder.isCameraEnabled = true
@@ -119,9 +128,10 @@ recorder.cameraPosition = .front
 precondition(recorder.cameraPosition == .front)
 
 private let recorderDelegate = RecorderDelegateProbe()
-recorder.delegate = recorderDelegate
+let recorderExistential: any RPScreenRecorderDelegate = recorderDelegate
+recorder.delegate = recorderExistential
 precondition(recorder.delegate === recorderDelegate)
-recorderDelegate.screenRecorderDidChangeAvailability(recorder)
+recorderExistential.screenRecorderDidChangeAvailability(recorder)
 
 recorder.startRecording { error in
     requireCode(error, .failedToStartCaptureStack)
@@ -132,10 +142,6 @@ recorder.startRecording(withMicrophoneEnabled: true) { error in
 precondition(recorder.isMicrophoneEnabled)
 precondition(!recorder.isRecording)
 
-recorder.stopRecording { preview, error in
-    precondition(preview == nil)
-    requireCode(error, .attemptToStopNonRecording)
-}
 recorder.stopRecording(withOutput: URL(fileURLWithPath: "/tmp/out.mp4")) { error in
     requireCode(error, .attemptToStopNonRecording)
 }
@@ -144,11 +150,6 @@ var discarded = false
 recorder.discardRecording { discarded = true }
 precondition(discarded)
 
-recorder.startCapture(handler: { _, _, _ in
-    fatalError("capture handler must not receive fabricated samples")
-}) { error in
-    requireCode(error, .failedToStartCaptureStack)
-}
 recorder.stopCapture { error in
     requireCode(error, .attemptToStopNonRecording)
 }
@@ -163,11 +164,6 @@ recorder.exportClip(to: URL(fileURLWithPath: "/tmp/replaykit-clip.mp4"), duratio
     requireCode(error, .failedToObtainURL)
 }
 
-if let error = runAsync({ try await recorder.startCapture(handler: nil) }) {
-    requireCode(error, .failedToStartCaptureStack)
-} else {
-    fatalError("startCapture must fail closed")
-}
 if let error = runAsync({
     try await recorder.stopRecording(withOutput: URL(fileURLWithPath: "/tmp/out.mp4"))
 }) {
@@ -195,8 +191,18 @@ if let error = runAsync({
 
 let controller = RPBroadcastController()
 private let broadcastDelegate = BroadcastDelegateProbe()
-controller.delegate = broadcastDelegate
+let broadcastExistential: any RPBroadcastControllerDelegate = broadcastDelegate
+controller.delegate = broadcastExistential
 precondition(controller.delegate === broadcastDelegate)
+broadcastExistential.broadcastController(controller, didFinishWithError: nil)
+broadcastExistential.broadcastController(
+    controller,
+    didUpdateBroadcast: URL(fileURLWithPath: "/")
+)
+broadcastExistential.broadcastController(
+    controller,
+    didUpdateServiceInfo: ["k": NSString(string: "v")]
+)
 precondition(!controller.isBroadcasting)
 precondition(!controller.isPaused)
 precondition(controller.broadcastExtensionBundleID == nil)
@@ -222,17 +228,12 @@ sample.broadcastFinished()
 sample.broadcastAnnotated(withApplicationInfo: [
     RPApplicationInfoBundleIdentifierKey: "org.example.app"
 ])
-sample.processSampleBuffer(CMSampleBuffer(), with: .video)
-sample.processSampleBuffer(CMSampleBuffer(), with: .audioApp)
-sample.processSampleBuffer(CMSampleBuffer(), with: .audioMic)
 sample.finishBroadcastWithError(RPRecordingErrorCode.userDeclined)
 sample.updateServiceInfo(["viewerCount": NSNumber(value: 3)])
 sample.updateBroadcast(URL(string: "https://example.invalid/live")!)
 precondition(sample.portableDidPause)
 precondition(sample.portableDidResume)
 precondition(sample.portableDidFinish)
-precondition(sample.portableProcessedBufferCount == 3)
-precondition(sample.portableLastSampleBufferType == .audioMic)
 requireCode(sample.portableFinishError, .userDeclined)
 precondition(sample.portableBroadcastURL?.absoluteString == "https://example.invalid/live")
 precondition((sample.portableServiceInfo["viewerCount"] as? NSNumber)?.intValue == 3)
@@ -267,58 +268,5 @@ do {
 } catch {
     fatalError("RPBroadcastConfiguration NSSecureCoding failed: \(error)")
 }
-
-runOnMain {
-    let preview = RPPreviewViewController()
-    let previewDelegate = PreviewDelegateProbe()
-    preview.previewControllerDelegate = previewDelegate
-    precondition(preview.previewControllerDelegate === previewDelegate)
-    previewDelegate.previewControllerDidFinish(preview)
-    previewDelegate.previewController(preview, didFinishWithActivityTypes: [])
-
-    let picker = RPSystemBroadcastPickerView()
-    picker.preferredExtension = "org.example.BroadcastUpload"
-    picker.showsMicrophoneButton = false
-    precondition(picker.preferredExtension == "org.example.BroadcastUpload")
-    precondition(!picker.showsMicrophoneButton)
-
-    let activityDelegate = ActivityDelegateProbe()
-    var loadedController: RPBroadcastActivityViewController?
-    var loadError: (any Error)?
-    RPBroadcastActivityViewController.load { controller, error in
-        loadedController = controller
-        loadError = error
-    }
-    precondition(loadedController == nil)
-    requireCode(loadError, .broadcastSetupFailed)
-    RPBroadcastActivityViewController.load(withPreferredExtension: "org.example.ext") {
-        controller, error in
-        loadedController = controller
-        loadError = error
-    }
-    precondition(loadedController == nil)
-    requireCode(loadError, .broadcastSetupFailed)
-    _ = activityDelegate
-}
-
-let extensionContext = NSExtensionContext()
-var loadedInfo: (String, String, UIImage?)?
-extensionContext.loadBroadcastingApplicationInfo { bundleID, name, icon in
-    loadedInfo = (bundleID, name, icon)
-}
-precondition(loadedInfo?.0 == "")
-precondition(loadedInfo?.1 == "")
-precondition(loadedInfo?.2 == nil)
-extensionContext.completeRequest(
-    withBroadcast: URL(string: "https://example.invalid/setup")!,
-    setupInfo: ["token": NSString(string: "none")]
-)
-precondition(extensionContext.portableDidCompleteBroadcastRequest)
-extensionContext.completeRequest(
-    withBroadcast: URL(string: "https://example.invalid/setup2")!,
-    broadcastConfiguration: config,
-    setupInfo: nil
-)
-sample.beginRequest(with: extensionContext)
 
 print("REPLAYKIT_AGENT_RUNTIME_OK")

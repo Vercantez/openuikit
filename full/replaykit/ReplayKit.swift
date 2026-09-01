@@ -4,16 +4,15 @@ import Foundation
 import UIKit
 #endif
 
-#if canImport(AVFoundation)
-import AVFoundation
-#endif
-
 /// Linux starting point for Apple's public ReplayKit module.
 ///
-/// Screen capture, microphone/camera mixing, Control Center broadcast picking,
-/// and ReplayKit daemon/extension IPC are fail-closed. In-process types used
-/// by broadcast-upload extensions (Telegram, element-ios) are real and
-/// subclassable; they never claim that a sample ever left this process.
+/// The isolated host gate compiles this module against Foundation only.
+/// UIKit, CoreMedia, and Foundation.NSExtensionContext APIs are compiled
+/// exclusively when those real modules are present. This module never
+/// declares lookalike types under those names.
+///
+/// Screen capture, microphone/camera mixing, Control Center broadcast
+/// picking, and ReplayKit daemon/extension IPC are fail-closed.
 public let RPRecordingErrorDomain = "RPRecordingErrorDomain"
 
 /// Attachment key for video sample orientation. The string equals the public
@@ -39,10 +38,12 @@ public enum RPCameraPosition: Int, Sendable, Equatable, Hashable {
     case back = 2
 }
 
-#if canImport(Darwin)
+#if canImport(UIKit)
 
 extension NSExtensionContext {
-    open func completeRequest(
+    /// Completes broadcast setup. Linux has no ReplayKit extension host, so
+    /// this is a fail-closed no-op and does not start a session.
+    public func completeRequest(
         withBroadcast broadcastURL: URL,
         broadcastConfiguration: RPBroadcastConfiguration,
         setupInfo: [String: any NSCoding & NSObjectProtocol]?
@@ -50,14 +51,19 @@ extension NSExtensionContext {
         _ = (broadcastURL, broadcastConfiguration, setupInfo)
     }
 
-    open func completeRequest(
+    /// Completes broadcast setup. Linux has no ReplayKit extension host, so
+    /// this is a fail-closed no-op and does not start a session.
+    public func completeRequest(
         withBroadcast broadcastURL: URL,
         setupInfo: [String: any NSCoding & NSObjectProtocol]?
     ) {
         _ = (broadcastURL, setupInfo)
     }
 
-    open func loadBroadcastingApplicationInfo(
+    /// Loads the broadcasting app's identity. With no extension host the
+    /// ObjC API still requires a callback, so this reports empty identity
+    /// rather than inventing a bundle ID, display name, or icon.
+    public func loadBroadcastingApplicationInfo(
         completion handler: @escaping (String, String, UIImage?) -> Void
     ) {
         handler("", "", nil)

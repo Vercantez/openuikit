@@ -9,6 +9,7 @@ import CoreMedia
 #endif
 
 public protocol RPScreenRecorderDelegate: NSObjectProtocol {
+    #if canImport(UIKit)
     func screenRecorder(
         _ screenRecorder: RPScreenRecorder,
         didStopRecordingWithError error: any Error,
@@ -20,11 +21,13 @@ public protocol RPScreenRecorderDelegate: NSObjectProtocol {
         didStopRecordingWith previewViewController: RPPreviewViewController?,
         error: (any Error)?
     )
+    #endif
 
     func screenRecorderDidChangeAvailability(_ screenRecorder: RPScreenRecorder)
 }
 
 public extension RPScreenRecorderDelegate {
+    #if canImport(UIKit)
     func screenRecorder(
         _ screenRecorder: RPScreenRecorder,
         didStopRecordingWithError error: any Error,
@@ -40,15 +43,17 @@ public extension RPScreenRecorderDelegate {
     ) {
         _ = (screenRecorder, previewViewController, error)
     }
+    #endif
 
     func screenRecorderDidChangeAvailability(_ screenRecorder: RPScreenRecorder) {
         _ = screenRecorder
     }
 }
 
-/// Shared screen recorder. Linux has no ReplayKit capture stack, privacy
-/// prompt, or camera preview, so availability stays false and every start
-/// path fails closed without emitting sample buffers or preview controllers.
+/// Shared screen recorder. Without a ReplayKit capture stack, availability
+/// stays false and every start path fails closed. Camera preview, sample
+/// capture, and preview-controller stop APIs are compiled only against real
+/// UIKit and CoreMedia types.
 open class RPScreenRecorder: NSObject, @unchecked Sendable {
     private static let sharedRecorder = RPScreenRecorder()
 
@@ -122,7 +127,9 @@ open class RPScreenRecorder: NSObject, @unchecked Sendable {
         }
     }
 
+    #if canImport(UIKit)
     open var cameraPreviewView: UIView? { nil }
+    #endif
 
     open func startRecording(handler: (((any Error)?) -> Void)? = nil) {
         handler?(replayKitUnavailableError(.failedToStartCaptureStack))
@@ -136,11 +143,13 @@ open class RPScreenRecorder: NSObject, @unchecked Sendable {
         startRecording(handler: handler)
     }
 
+    #if canImport(UIKit)
     open func stopRecording(
         handler: ((RPPreviewViewController?, (any Error)?) -> Void)? = nil
     ) {
         handler?(nil, replayKitUnavailableError(.attemptToStopNonRecording))
     }
+    #endif
 
     open func stopRecording(
         withOutput url: URL,
@@ -159,6 +168,7 @@ open class RPScreenRecorder: NSObject, @unchecked Sendable {
         handler()
     }
 
+    #if canImport(CoreMedia)
     open func startCapture(
         handler captureHandler: (
             (CMSampleBuffer, RPSampleBufferType, (any Error)?) -> Void
@@ -177,6 +187,7 @@ open class RPScreenRecorder: NSObject, @unchecked Sendable {
         _ = captureHandler
         throw replayKitUnavailableError(.failedToStartCaptureStack)
     }
+    #endif
 
     open func stopCapture(handler: (((any Error)?) -> Void)? = nil) {
         handler?(replayKitUnavailableError(.attemptToStopNonRecording))
