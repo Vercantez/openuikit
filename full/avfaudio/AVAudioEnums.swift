@@ -1,6 +1,6 @@
 import Foundation
 
-// MARK: - Top-level enumerations (Int / UInt / OSStatus raw values from public iOS 26.1 surface)
+// MARK: - Top-level enumerations (AVFAudio-owned; raw values are compile-only unless observed)
 
 public enum AVAudio3DMixingPointSourceInHeadMode: Int, Hashable, Sendable {
     case mono = 0
@@ -84,7 +84,7 @@ public enum AVAudioDynamicRangeControlConfiguration: Int, Hashable, Sendable {
     case capture = 4
 }
 
-public enum AVAudioEngineManualRenderingError: OSStatus, Error, Hashable, Sendable {
+public enum AVAudioEngineManualRenderingError: Int32, Error, Hashable, Sendable {
     case invalidMode = -80800
     case initialized = -80801
     case notRunning = -80802

@@ -1,4 +1,10 @@
 import Foundation
+#if canImport(AudioToolbox)
+import AudioToolbox
+#endif
+#if canImport(CoreMIDI)
+import CoreMIDI
+#endif
 
 public protocol AVSpeechSynthesizerDelegate: NSObjectProtocol {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance)
@@ -230,7 +236,9 @@ public final class AVSpeechSynthesizer: NSObject, @unchecked Sendable {
     public class func requestPersonalVoiceAuthorization(
         completionHandler handler: @escaping (PersonalVoiceAuthorizationStatus) -> Void
     ) {
-        handler(.unsupported)
+        AVFAudioCallbackDelivery.deliverExactlyOnce {
+            handler(.unsupported)
+        }
     }
 
     public func speak(_ utterance: AVSpeechUtterance) {
@@ -283,7 +291,7 @@ public final class AVSpeechSynthesizer: NSObject, @unchecked Sendable {
         _ = markerCallback
     }
 
-    public var _queuedUtterances: [AVSpeechUtterance] { queue }
+    var queuedUtterancesForInspection: [AVSpeechUtterance] { queue }
 }
 
 public final class AVSpeechSynthesisProviderVoice: NSObject, NSSecureCoding, @unchecked Sendable {
@@ -353,6 +361,7 @@ public typealias AVSpeechSynthesisProviderOutputBlock = (
     AVSpeechSynthesisProviderRequest
 ) -> Void
 
+#if canImport(AudioToolbox)
 open class AVSpeechSynthesisProviderAudioUnit: AUAudioUnit, @unchecked Sendable {
     public var speechVoices: [AVSpeechSynthesisProviderVoice] = []
     public var outputChannelCount: Int = 1
@@ -364,3 +373,4 @@ open class AVSpeechSynthesisProviderAudioUnit: AUAudioUnit, @unchecked Sendable 
 
     public func cancelSpeechRequest() {}
 }
+#endif

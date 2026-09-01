@@ -1,46 +1,57 @@
 import Foundation
-
-public typealias MIDIEndpointRef = UInt32
+#if canImport(AudioToolbox)
+import AudioToolbox
+#endif
+#if canImport(CoreMIDI)
+import CoreMIDI
+#endif
 
 open class AVAudioUnit: AVAudioNode, @unchecked Sendable {
     public var name: String { "AVAudioUnit" }
-    public var manufacturerName: String { AVAudioUnitManufacturerNameApple }
+    public var manufacturerName: String { "" }
     public var version: Int { 0 }
+    #if canImport(AudioToolbox)
     public var audioComponentDescription = AudioComponentDescription()
-    public var audioUnit: AudioUnit {
-        OpaquePointer(bitPattern: 1)!
-    }
-    override public var auAudioUnit: AUAudioUnit { AUAudioUnit() }
+    public var audioUnit: AudioUnit? { nil }
+    #endif
 
+    public func loadPreset(at url: URL) throws {
+        _ = url
+        throw avfaudioHostUnavailableError("Audio unit presets require AudioToolbox hosting.")
+    }
+
+    #if canImport(AudioToolbox)
     public class func instantiate(
         with audioComponentDescription: AudioComponentDescription,
         options: AudioComponentInstantiationOptions = []
     ) async throws -> AVAudioUnit {
         _ = audioComponentDescription
         _ = options
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("AUAudioUnit instantiation requires an AudioToolbox host.")
     }
-
-    public func loadPreset(at url: URL) throws {
-        _ = url
-        throw AVAudioError.notSupported
-    }
+    #endif
 }
 
 open class AVAudioUnitEffect: AVAudioUnit, @unchecked Sendable {
     public var bypass = false
+    public override init() { super.init() }
+    #if canImport(AudioToolbox)
     public init(audioComponentDescription: AudioComponentDescription) {
         super.init()
         self.audioComponentDescription = audioComponentDescription
     }
+    #endif
 }
 
 open class AVAudioUnitTimeEffect: AVAudioUnit, @unchecked Sendable {
     public var bypass = false
+    public override init() { super.init() }
+    #if canImport(AudioToolbox)
     public init(audioComponentDescription: AudioComponentDescription) {
         super.init()
         self.audioComponentDescription = audioComponentDescription
     }
+    #endif
 }
 
 open class AVAudioUnitGenerator: AVAudioUnit, AVAudioMixing, @unchecked Sendable {
@@ -61,17 +72,23 @@ open class AVAudioUnitGenerator: AVAudioUnit, AVAudioMixing, @unchecked Sendable
     public var obstruction: Float = 0
     public var occlusion: Float = 0
     public var position: AVAudio3DPoint = AVAudio3DPoint()
+    public override init() { super.init() }
+    #if canImport(AudioToolbox)
     public init(audioComponentDescription: AudioComponentDescription) {
         super.init()
         self.audioComponentDescription = audioComponentDescription
     }
+    #endif
 }
 
 open class AVAudioUnitMIDIInstrument: AVAudioUnit, @unchecked Sendable {
+    public override init() { super.init() }
+    #if canImport(AudioToolbox)
     public init(audioComponentDescription: AudioComponentDescription) {
         super.init()
         self.audioComponentDescription = audioComponentDescription
     }
+    #endif
 
     public func startNote(_ note: UInt8, withVelocity velocity: UInt8, onChannel channel: UInt8) {
         _ = (note, velocity, channel)
@@ -111,9 +128,11 @@ open class AVAudioUnitMIDIInstrument: AVAudioUnit, @unchecked Sendable {
     public func sendMIDISysExEvent(_ midiData: Data) {
         _ = midiData
     }
+    #if canImport(CoreMIDI)
     public func send(_ eventList: UnsafePointer<MIDIEventList>) {
         _ = eventList
     }
+    #endif
 }
 
 public final class AVAudioUnitDelay: AVAudioUnitEffect, @unchecked Sendable {
@@ -121,17 +140,11 @@ public final class AVAudioUnitDelay: AVAudioUnitEffect, @unchecked Sendable {
     public var feedback: Float = 50
     public var lowPassCutoff: Float = 15000
     public var wetDryMix: Float = 100
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
 }
 
 public final class AVAudioUnitDistortion: AVAudioUnitEffect, @unchecked Sendable {
     public var preGain: Float = -6
     public var wetDryMix: Float = 50
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
     public func loadFactoryPreset(_ preset: AVAudioUnitDistortionPreset) {
         _ = preset
     }
@@ -150,15 +163,12 @@ public final class AVAudioUnitEQ: AVAudioUnitEffect, @unchecked Sendable {
     public private(set) var bands: [AVAudioUnitEQFilterParameters]
     public init(numberOfBands: Int) {
         self.bands = (0..<max(numberOfBands, 1)).map { _ in AVAudioUnitEQFilterParameters() }
-        super.init(audioComponentDescription: AudioComponentDescription())
+        super.init()
     }
 }
 
 public final class AVAudioUnitReverb: AVAudioUnitEffect, @unchecked Sendable {
     public var wetDryMix: Float = 100
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
     public func loadFactoryPreset(_ preset: AVAudioUnitReverbPreset) {
         _ = preset
     }
@@ -168,25 +178,16 @@ public final class AVAudioUnitTimePitch: AVAudioUnitTimeEffect, @unchecked Senda
     public var rate: Float = 1
     public var pitch: Float = 0
     public var overlap: Float = 8
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
 }
 
 public final class AVAudioUnitVarispeed: AVAudioUnitTimeEffect, @unchecked Sendable {
     public var rate: Float = 1
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
 }
 
 public final class AVAudioUnitSampler: AVAudioUnitMIDIInstrument, @unchecked Sendable {
     public var masterGain: Float = 0
     public var globalTuning: Float = 0
     public var stereoPan: Float = 0
-    public init() {
-        super.init(audioComponentDescription: AudioComponentDescription())
-    }
     public func loadSoundBankInstrument(
         at bankURL: URL,
         program: UInt8,
@@ -194,15 +195,15 @@ public final class AVAudioUnitSampler: AVAudioUnitMIDIInstrument, @unchecked Sen
         bankLSB: UInt8
     ) throws {
         _ = (bankURL, program, bankMSB, bankLSB)
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
     public func loadInstrument(at instrumentURL: URL) throws {
         _ = instrumentURL
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
     public func loadAudioFiles(at audioFiles: [URL]) throws {
         _ = audioFiles
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
 }
 
@@ -218,17 +219,17 @@ public final class AVAudioUnitComponent: NSObject, @unchecked Sendable {
     public let hasMIDIOutput: Bool
     public let passesAUVal: Bool
     public let isSandboxSafe: Bool
-    public let audioComponentDescription: AudioComponentDescription
     public var configurationDictionary: [String: Any] { [:] }
-    public var audioComponent: AudioComponent {
-        OpaquePointer(bitPattern: 1)!
-    }
+    #if canImport(AudioToolbox)
+    public let audioComponentDescription: AudioComponentDescription
+    public var audioComponent: AudioComponent? { nil }
+    #endif
 
     public init(name: String = "", typeName: String = "") {
         self.name = name
         self.typeName = typeName
         self.localizedTypeName = typeName
-        self.manufacturerName = AVAudioUnitManufacturerNameApple
+        self.manufacturerName = ""
         self.version = 0
         self.versionString = "0"
         self.allTagNames = []
@@ -236,7 +237,9 @@ public final class AVAudioUnitComponent: NSObject, @unchecked Sendable {
         self.hasMIDIOutput = false
         self.passesAUVal = false
         self.isSandboxSafe = true
+        #if canImport(AudioToolbox)
         self.audioComponentDescription = AudioComponentDescription()
+        #endif
         super.init()
     }
 }
@@ -250,10 +253,12 @@ public final class AVAudioUnitComponentManager: NSObject, @unchecked Sendable {
     public var tagNames: [String] { [] }
     public var standardLocalizedTagNames: [String] { [] }
 
+    #if canImport(AudioToolbox)
     public func components(matching desc: AudioComponentDescription) -> [AVAudioUnitComponent] {
         _ = desc
         return []
     }
+    #endif
     public func components(matching predicate: NSPredicate) -> [AVAudioUnitComponent] {
         _ = predicate
         return []
@@ -477,7 +482,9 @@ public final class AVParameterEvent: AVMusicEvent, @unchecked Sendable {
 
 public final class AVMusicTrack: NSObject, @unchecked Sendable {
     public var destinationAudioUnit: AVAudioUnit?
-    public var destinationMIDIEndpoint: MIDIEndpointRef = 0
+    #if canImport(CoreMIDI)
+    public var destinationMIDIEndpoint: MIDIEndpointRef?
+    #endif
     public var lengthInBeats: AVMusicTimeStamp = 0
     public var lengthInSeconds: TimeInterval = 0
     public var loopRange = AVBeatRange()
@@ -591,7 +598,9 @@ public final class AVAudioSequencer: NSObject, @unchecked Sendable {
     }
     public func prepareToPlay() {}
     public func start() throws {
-        isPlaying = true
+        throw avfaudioHostUnavailableError(
+            "AVAudioSequencer.start requires an AudioToolbox MusicSequence host."
+        )
     }
     public func stop() { isPlaying = false }
     public func reverseEvents() {}
@@ -601,31 +610,54 @@ public final class AVAudioSequencer: NSObject, @unchecked Sendable {
     public func load(from data: Data, options: AVMusicSequenceLoadOptions = []) throws {
         _ = data
         _ = options
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
     public func load(from fileURL: URL, options: AVMusicSequenceLoadOptions = []) throws {
         _ = fileURL
         _ = options
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
     public func write(to fileURL: URL, smpteResolution resolution: Int, replaceExisting replace: Bool) throws {
         _ = (fileURL, resolution, replace)
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("Sampler instruments require an AudioToolbox host.")
     }
-    public func data(withSMPTEResolution SMPTEResolution: Int, error outError: NSErrorPointer) -> Data {
+    public func data(
+        withSMPTEResolution SMPTEResolution: Int,
+        error outError: UnsafeMutablePointer<NSError?>?
+    ) -> Data {
         _ = SMPTEResolution
-        outError?.pointee = avaudioNSError(AVAudioError.notSupported)
+        outError?.pointee = avfaudioHostUnavailableError(
+            "MusicSequence export requires an AudioToolbox host."
+        )
         return Data()
     }
-    public func beats(forSeconds seconds: TimeInterval) -> AVMusicTimeStamp { seconds * 2 }
-    public func seconds(forBeats beats: AVMusicTimeStamp) -> TimeInterval { beats / 2 }
-    public func beats(forHostTime inHostTime: UInt64, error outError: NSErrorPointer) -> AVMusicTimeStamp {
-        outError?.pointee = nil
-        return AVAudioTime.seconds(forHostTime: inHostTime) * 2
+    public func beats(forSeconds seconds: TimeInterval) -> AVMusicTimeStamp {
+        _ = seconds
+        return 0
     }
-    public func hostTime(forBeats inBeats: AVMusicTimeStamp, error outError: NSErrorPointer) -> UInt64 {
-        outError?.pointee = nil
-        return AVAudioTime.hostTime(forSeconds: inBeats / 2)
+    public func seconds(forBeats beats: AVMusicTimeStamp) -> TimeInterval {
+        _ = beats
+        return 0
+    }
+    public func beats(
+        forHostTime inHostTime: UInt64,
+        error outError: UnsafeMutablePointer<NSError?>?
+    ) -> AVMusicTimeStamp {
+        _ = inHostTime
+        outError?.pointee = avfaudioHostUnavailableError(
+            "Host-time mapping requires an AudioToolbox MusicSequence tempo map."
+        )
+        return 0
+    }
+    public func hostTime(
+        forBeats inBeats: AVMusicTimeStamp,
+        error outError: UnsafeMutablePointer<NSError?>?
+    ) -> UInt64 {
+        _ = inBeats
+        outError?.pointee = avfaudioHostUnavailableError(
+            "Host-time mapping requires an AudioToolbox MusicSequence tempo map."
+        )
+        return 0
     }
 }
 
@@ -638,9 +670,7 @@ public final class AVMIDIPlayer: NSObject, @unchecked Sendable {
     public init(contentsOf inURL: URL, soundBankURL bankURL: URL?) throws {
         _ = inURL
         _ = bankURL
-        self.duration = 0
-        super.init()
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("AVMIDIPlayer requires an AudioToolbox/CoreMIDI host.")
     }
     public convenience init(contentsOfURL inURL: URL, soundBankURL bankURL: URL?) throws {
         try self.init(contentsOf: inURL, soundBankURL: bankURL)
@@ -648,14 +678,15 @@ public final class AVMIDIPlayer: NSObject, @unchecked Sendable {
     public init(data: Data, soundBankURL bankURL: URL?) throws {
         _ = data
         _ = bankURL
-        self.duration = 0
-        super.init()
-        throw AVAudioError.notSupported
+        throw avfaudioHostUnavailableError("AVMIDIPlayer requires an AudioToolbox/CoreMIDI host.")
     }
     public func prepareToPlay() {}
-    public func play(_ completionHandler: (() -> Void)? = nil) {
+    public func play(_ completionHandler: AVMIDIPlayerCompletionHandler? = nil) {
         isPlaying = false
-        completionHandler?()
+        guard let completionHandler else { return }
+        AVFAudioCallbackDelivery.deliverExactlyOnce {
+            completionHandler()
+        }
     }
     public func stop() { isPlaying = false }
 }

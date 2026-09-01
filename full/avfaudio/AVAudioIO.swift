@@ -53,8 +53,7 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
         self.writable = false
         super.init()
         if !FileManager.default.fileExists(atPath: fileURL.path) {
-            throw AVAudioError(
-                .fileFormatUnsupported,
+            throw avfaudioHostUnavailableError(
                 "Audio file is missing and no Apple decoder is available."
             )
         }
@@ -76,15 +75,16 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
                 interleaved: interleaved
             )
         else {
-            throw AVAudioError.codecUnavailable
+            throw avfaudioHostUnavailableError(
+                "No Apple audio codec is installed; compressed encode/decode is fail-closed."
+            )
         }
         self.fileFormat = processing
         self.processingFormat = processing
         self.writable = false
         super.init()
         if !FileManager.default.fileExists(atPath: fileURL.path) {
-            throw AVAudioError(
-                .fileFormatUnsupported,
+            throw avfaudioHostUnavailableError(
                 "Audio file is missing and no Apple decoder is available."
             )
         }
@@ -94,7 +94,9 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
     public init(forWriting fileURL: URL, settings: [String: Any]) throws {
         self.url = fileURL
         guard let format = AVAudioFormat(settings: settings) else {
-            throw AVAudioError.codecUnavailable
+            throw avfaudioHostUnavailableError(
+                "No Apple audio codec is installed; compressed encode/decode is fail-closed."
+            )
         }
         self.fileFormat = format
         self.processingFormat = format
@@ -119,7 +121,9 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
                 interleaved: interleaved
             )
         else {
-            throw AVAudioError.codecUnavailable
+            throw avfaudioHostUnavailableError(
+                "No Apple audio codec is installed; compressed encode/decode is fail-closed."
+            )
         }
         self.fileFormat = processing
         self.processingFormat = processing
@@ -136,18 +140,20 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
     }
 
     public func read(into buffer: AVAudioPCMBuffer, frameCount frames: AVAudioFrameCount) throws {
-        guard isOpen, !writable else { throw AVAudioError.codecUnavailable }
+        guard isOpen, !writable else {
+            throw avfaudioHostUnavailableError("No Apple audio decoder is available.")
+        }
         buffer.frameLength = 0
         _ = frames
-        throw AVAudioError.codecUnavailable
+        throw avfaudioHostUnavailableError("No Apple audio decoder is available.")
     }
 
     public func write(from buffer: AVAudioPCMBuffer) throws {
-        guard isOpen, writable else { throw AVAudioError.codecUnavailable }
-        length += AVAudioFramePosition(buffer.frameLength)
-        framePosition = length
-        // Bytes are accepted into the length counter only; no Apple encoder writes a container.
-        throw AVAudioError.codecUnavailable
+        guard isOpen, writable else {
+            throw avfaudioHostUnavailableError("No Apple audio encoder is available.")
+        }
+        _ = buffer
+        throw avfaudioHostUnavailableError("No Apple audio encoder is available.")
     }
 }
 
@@ -220,7 +226,7 @@ public final class AVAudioPlayer: NSObject, @unchecked Sendable {
         super.init()
     }
 
-    public func prepareToPlay() -> Bool { data != nil || url != nil }
+    public func prepareToPlay() -> Bool { false }
 
     public func play() -> Bool {
         // Hardware output is fail-closed: the player records intent but does not emit audio.
@@ -279,7 +285,9 @@ public final class AVAudioRecorder: NSObject, @unchecked Sendable {
 
     public init(url: URL, settings: [String: Any]) throws {
         guard let format = AVAudioFormat(settings: settings) else {
-            throw AVAudioError.codecUnavailable
+            throw avfaudioHostUnavailableError(
+                "No Apple audio codec is installed; compressed encode/decode is fail-closed."
+            )
         }
         self.url = url
         self.format = format
@@ -291,7 +299,7 @@ public final class AVAudioRecorder: NSObject, @unchecked Sendable {
         try self.init(url: url, settings: settings)
     }
 
-    public func prepareToRecord() -> Bool { true }
+    public func prepareToRecord() -> Bool { false }
 
     public func record() -> Bool {
         isRecording = false
@@ -367,33 +375,24 @@ public final class AVAudioConverter: NSObject, @unchecked Sendable {
     public func reset() {}
 
     public func convert(to outputBuffer: AVAudioPCMBuffer, from inputBuffer: AVAudioPCMBuffer) throws {
-        guard inputFormat.isEqual(outputFormat),
-            inputFormat.commonFormat == .pcmFormatFloat32,
-            let inData = inputBuffer.floatChannelData,
-            let outData = outputBuffer.floatChannelData
-        else {
-            throw AVAudioError.codecUnavailable
-        }
-        let frames = min(Int(inputBuffer.frameLength), Int(outputBuffer.frameCapacity))
-        let channels = min(
-            Int(inputBuffer.format.channelCount),
-            Int(outputBuffer.format.channelCount)
+        _ = outputBuffer
+        _ = inputBuffer
+        throw avfaudioHostUnavailableError(
+            "AVAudioConverter requires an AudioToolbox codec host."
         )
-        for channel in 0..<channels {
-            outData[channel].update(from: inData[channel], count: frames * outputBuffer.stride)
-        }
-        outputBuffer.frameLength = AVAudioFrameCount(frames)
     }
 
     public func convert(
         to outputBuffer: AVAudioBuffer,
-        error outError: NSErrorPointer,
+        error outError: UnsafeMutablePointer<NSError?>?,
         withInputFrom inputBlock: @escaping AVAudioConverterInputBlock
     ) -> AVAudioConverterOutputStatus {
         var status = AVAudioConverterInputStatus.noDataNow
         _ = inputBlock(0, &status)
         _ = outputBuffer
-        outError?.pointee = avaudioNSError(AVAudioError.codecUnavailable)
+        outError?.pointee = avfaudioHostUnavailableError(
+            "AVAudioConverter requires an AudioToolbox codec host."
+        )
         return .error
     }
 }

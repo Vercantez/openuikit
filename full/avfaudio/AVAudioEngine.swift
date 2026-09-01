@@ -1,4 +1,13 @@
 import Foundation
+#if canImport(CoreAudioTypes)
+import CoreAudioTypes
+#endif
+#if canImport(AudioToolbox)
+import AudioToolbox
+#endif
+#if canImport(CoreMIDI)
+import CoreMIDI
+#endif
 
 public protocol AVAudioStereoMixing: NSObjectProtocol {
     var pan: Float { get set }
@@ -35,7 +44,6 @@ open class AVAudioNode: NSObject, @unchecked Sendable {
     public var latency: TimeInterval { 0 }
     public var outputPresentationLatency: TimeInterval { 0 }
     public var lastRenderTime: AVAudioTime?
-    public var auAudioUnit: AUAudioUnit { AUAudioUnit() }
     var storedVolume: Float = 1
     var storedPan: Float = 0
     var storedFormat: AVAudioFormat =
@@ -99,13 +107,15 @@ public final class AVAudioConnectionPoint: NSObject, @unchecked Sendable {
 }
 
 open class AVAudioIONode: AVAudioNode, @unchecked Sendable {
+    #if canImport(AudioToolbox)
     public var audioUnit: AudioUnit? { nil }
+    #endif
     public var presentationLatency: TimeInterval { 0 }
     public private(set) var isVoiceProcessingEnabled = false
 
     public func setVoiceProcessingEnabled(_ enabled: Bool) throws {
-        guard !enabled else { throw AVAudioError.notSupported }
-        isVoiceProcessingEnabled = false
+        _ = enabled
+        throw avfaudioHostUnavailableError("Voice processing requires an AVFAudio host service.")
     }
 }
 
@@ -133,14 +143,16 @@ public final class AVAudioInputNode: AVAudioIONode, AVAudioMixing, @unchecked Se
         AVAudioVoiceProcessingOtherAudioDuckingConfiguration()
     override public var numberOfInputs: Int { 0 }
 
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     public func setManualRenderingInputPCMFormat(
         _ format: AVAudioFormat,
         inputBlock block: @escaping AVAudioIONodeInputBlock
     ) -> Bool {
         _ = block
         storedFormat = format
-        return true
+        return false
     }
+    #endif
 
     public func setMutedSpeechActivityEventListener(
         _ listenerBlock: ((AVAudioVoiceProcessingSpeechActivityEvent) -> Void)?
@@ -305,6 +317,7 @@ public final class AVAudioPlayerNode: AVAudioNode, AVAudioMixing, @unchecked Sen
     }
 }
 
+#if canImport(CoreAudioTypes) || canImport(AudioToolbox)
 public final class AVAudioSourceNode: AVAudioNode, AVAudioMixing, @unchecked Sendable {
     public var volume: Float {
         get { storedVolume }
@@ -347,6 +360,8 @@ public final class AVAudioSinkNode: AVAudioNode, @unchecked Sendable {
     }
 }
 
+#endif
+
 public final class AVAudioEngine: NSObject, @unchecked Sendable {
     private let lock = NSLock()
     private var nodes: [AVAudioNode] = []
@@ -363,7 +378,9 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
     public let mainMixerNode = AVAudioMixerNode()
     public let outputNode = AVAudioOutputNode()
     public let inputNode = AVAudioInputNode()
+    #if canImport(AudioToolbox)
     public var musicSequence: MusicSequence?
+    #endif
 
     public override init() {
         super.init()
@@ -392,12 +409,14 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
     public var attachedNodes: Set<AVAudioNode> {
         avfaudioLock(lock) { Set(nodes) }
     }
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     public var manualRenderingBlock: AVAudioEngineManualRenderingBlock {
-        { [weak self] frameCount, list, status in
-            guard let self else { return .error }
-            return self.renderList(frameCount: frameCount, list: list, status: status)
+        { _, _, status in
+            status?.pointee = -1
+            return .error
         }
     }
+    #endif
 
     public func attach(_ node: AVAudioNode) {
         avfaudioLock(lock) {
@@ -495,11 +514,9 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
     }
 
     public func start() throws {
-        avfaudioLock(lock) {
-            prepared = true
-            running = true
-            paused = false
-        }
+        throw avfaudioHostUnavailableError(
+            "AVAudioEngine.start requires an available audio device and host service."
+        )
     }
 
     public func pause() {
@@ -527,13 +544,12 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
         format pcmFormat: AVAudioFormat,
         maximumFrameCount: AVAudioFrameCount
     ) throws {
-        avfaudioLock(lock) {
-            manual = true
-            manualMode = mode
-            manualFormat = pcmFormat
-            manualMaxFrames = maximumFrameCount
-            running = true
-        }
+        _ = mode
+        _ = pcmFormat
+        _ = maximumFrameCount
+        throw avfaudioHostUnavailableError(
+            "Manual rendering requires a host audio renderer that can produce valid buffers."
+        )
     }
 
     public func disableManualRenderingMode() {
@@ -544,40 +560,19 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
         _ numberOfFrames: AVAudioFrameCount,
         to buffer: AVAudioPCMBuffer
     ) throws -> AVAudioEngineManualRenderingStatus {
-        guard isInManualRenderingMode else {
-            throw AVAudioEngineManualRenderingError.invalidMode
-        }
-        guard numberOfFrames <= buffer.frameCapacity else {
-            throw AVAudioEngineManualRenderingError.invalidMode
-        }
-        buffer.frameLength = numberOfFrames
-        if let floatPlanes = buffer.floatChannelData {
-            let frames = Int(numberOfFrames)
-            let channels = Int(buffer.format.channelCount)
-            for channel in 0..<channels {
-                floatPlanes[channel].update(repeating: 0, count: frames * buffer.stride)
-            }
-            mixScheduledPlayerNodes(into: buffer)
-        }
-        avfaudioLock(lock) { manualSampleTime += AVAudioFramePosition(numberOfFrames) }
-        return .success
+        _ = numberOfFrames
+        buffer.frameLength = 0
+        throw avfaudioHostUnavailableError(
+            "Offline render refuses to report success without producing valid host buffers."
+        )
     }
 
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     public func connectMIDI(
         _ sourceNode: AVAudioNode,
         to destinationNode: AVAudioNode,
         format: AVAudioFormat?,
         block tapBlock: AUMIDIOutputEventBlock? = nil
-    ) {
-        _ = tapBlock
-        connect(sourceNode, to: destinationNode, format: format)
-    }
-
-    public func connectMIDI(
-        _ sourceNode: AVAudioNode,
-        to destinationNode: AVAudioNode,
-        format: AVAudioFormat?,
-        eventListBlock tapBlock: AUMIDIEventListBlock? = nil
     ) {
         _ = tapBlock
         connect(sourceNode, to: destinationNode, format: format)
@@ -594,6 +589,18 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
             connect(sourceNode, to: node, format: format)
         }
     }
+    #endif
+
+    #if canImport(CoreMIDI)
+    public func connectMIDI(
+        _ sourceNode: AVAudioNode,
+        to destinationNode: AVAudioNode,
+        format: AVAudioFormat?,
+        eventListBlock tapBlock: AUMIDIEventListBlock? = nil
+    ) {
+        _ = tapBlock
+        connect(sourceNode, to: destinationNode, format: format)
+    }
 
     public func connectMIDI(
         _ sourceNode: AVAudioNode,
@@ -606,6 +613,7 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
             connect(sourceNode, to: node, format: format)
         }
     }
+    #endif
 
     public func disconnectMIDI(_ sourceNode: AVAudioNode, from destinationNode: AVAudioNode) {
         avfaudioLock(lock) {
@@ -625,39 +633,6 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
 
     public func disconnectMIDIOutput(_ node: AVAudioNode) {
         disconnectNodeOutput(node)
-    }
-
-    private func mixScheduledPlayerNodes(into buffer: AVAudioPCMBuffer) {
-        let players = avfaudioLock(lock) {
-            nodes.compactMap { $0 as? AVAudioPlayerNode }
-        }
-        guard let dest = buffer.floatChannelData else { return }
-        let frames = Int(buffer.frameLength)
-        let channels = Int(buffer.format.channelCount)
-        for player in players where player.isPlaying {
-            guard let source = player.scheduled.first,
-                let src = source.floatChannelData
-            else { continue }
-            let copyFrames = min(frames, Int(source.frameLength))
-            let copyChannels = min(channels, Int(source.format.channelCount))
-            let gain = player.volume * mainMixerNode.outputVolume
-            for channel in 0..<copyChannels {
-                for frame in 0..<copyFrames {
-                    dest[channel][frame] += src[channel][frame] * gain
-                }
-            }
-        }
-    }
-
-    private func renderList(
-        frameCount: AVAudioFrameCount,
-        list: UnsafeMutablePointer<AudioBufferList>,
-        status: UnsafeMutablePointer<OSStatus>?
-    ) -> AVAudioEngineManualRenderingStatus {
-        _ = list
-        status?.pointee = noErr
-        avfaudioLock(lock) { manualSampleTime += AVAudioFramePosition(frameCount) }
-        return .success
     }
 }
 

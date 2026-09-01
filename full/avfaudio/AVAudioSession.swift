@@ -246,10 +246,10 @@ public final class AVAudioSession: NSObject, @unchecked Sendable {
     private var storedMode = Mode.default
     private var storedOptions = CategoryOptions()
     private var storedActive = false
-    private var storedSampleRate: Double = 44100
-    private var storedPreferredSampleRate: Double = 44100
-    private var storedIOBufferDuration: TimeInterval = 0.023
-    private var storedPreferredIOBufferDuration: TimeInterval = 0.023
+    private var storedSampleRate: Double = 0
+    private var storedPreferredSampleRate: Double = 0
+    private var storedIOBufferDuration: TimeInterval = 0
+    private var storedPreferredIOBufferDuration: TimeInterval = 0
     private var storedOutputMuted = false
     private var storedAllowHaptics = false
     private var storedSupportsMultichannel = false
@@ -264,7 +264,7 @@ public final class AVAudioSession: NSObject, @unchecked Sendable {
     private var storedPreferredInput: AVAudioSessionPortDescription?
     private var storedInputDataSource: AVAudioSessionDataSourceDescription?
     private var storedOutputDataSource: AVAudioSessionDataSourceDescription?
-    private var storedRoute = AVAudioSessionRouteDescription.virtualSpeaker()
+    private var storedRoute = AVAudioSessionRouteDescription.emptyRoute()
     private var storedIOType = IOType.notSpecified
 
     public class func sharedInstance() -> AVAudioSession { sharedSession }
@@ -280,16 +280,16 @@ public final class AVAudioSession: NSObject, @unchecked Sendable {
         avfaudioLock(lock) { storedPreferredIOBufferDuration }
     }
     public var isOutputMuted: Bool { avfaudioLock(lock) { storedOutputMuted } }
-    public var outputVolume: Float { 1.0 }
-    public var inputGain: Float { 1.0 }
+    public var outputVolume: Float { 0 }
+    public var inputGain: Float { 0 }
     public var isInputGainSettable: Bool { false }
     public var isInputAvailable: Bool { false }
     public var isOtherAudioPlaying: Bool { false }
     public var secondaryAudioShouldBeSilencedHint: Bool { false }
     public var inputNumberOfChannels: Int { 0 }
-    public var outputNumberOfChannels: Int { 2 }
+    public var outputNumberOfChannels: Int { 0 }
     public var maximumInputNumberOfChannels: Int { 0 }
-    public var maximumOutputNumberOfChannels: Int { 2 }
+    public var maximumOutputNumberOfChannels: Int { 0 }
     public var preferredInputNumberOfChannels: Int {
         avfaudioLock(lock) { storedPreferredInputChannels }
     }
@@ -389,97 +389,146 @@ public final class AVAudioSession: NSObject, @unchecked Sendable {
     }
 
     public func setActive(_ active: Bool, options: SetActiveOptions = []) throws {
+        _ = active
         _ = options
-        avfaudioLock(lock) { storedActive = active }
+        throw avfaudioHostUnavailableError(
+            "AVAudioSession activation requires a host audio session service."
+        )
     }
 
     public func requestRecordPermission(_ response: @escaping (Bool) -> Void) {
-        response(false)
+        AVFAudioCallbackDelivery.deliverExactlyOnce {
+            response(false)
+        }
     }
 
     public func overrideOutputAudioPort(_ portOverride: PortOverride) throws {
         _ = portOverride
-        // No hardware route exists to override.
+        throw avfaudioHostUnavailableError(
+            "Output port override requires a host audio session service."
+        )
     }
 
     public func setPreferredSampleRate(_ sampleRate: Double) throws {
-        avfaudioLock(lock) {
-            storedPreferredSampleRate = sampleRate
-            storedSampleRate = sampleRate
-        }
+        _ = sampleRate
+        throw avfaudioHostUnavailableError(
+            "Hardware sample-rate configuration requires a host audio session service."
+        )
     }
 
     public func setPreferredIOBufferDuration(_ duration: TimeInterval) throws {
-        avfaudioLock(lock) {
-            storedPreferredIOBufferDuration = duration
-            storedIOBufferDuration = duration
-        }
+        _ = duration
+        throw avfaudioHostUnavailableError(
+            "Hardware IO buffer configuration requires a host audio session service."
+        )
     }
 
     public func setPreferredInput(_ inPort: AVAudioSessionPortDescription?) throws {
-        avfaudioLock(lock) { storedPreferredInput = inPort }
+        _ = inPort
+        throw avfaudioHostUnavailableError(
+            "Preferred input selection requires a host audio session service."
+        )
     }
 
     public func setPreferredInputNumberOfChannels(_ count: Int) throws {
-        avfaudioLock(lock) { storedPreferredInputChannels = count }
+        _ = count
+        throw avfaudioHostUnavailableError(
+            "Hardware channel configuration requires a host audio session service."
+        )
     }
 
     public func setPreferredOutputNumberOfChannels(_ count: Int) throws {
-        avfaudioLock(lock) { storedPreferredOutputChannels = count }
+        _ = count
+        throw avfaudioHostUnavailableError(
+            "Hardware channel configuration requires a host audio session service."
+        )
     }
 
     public func setPreferredInputOrientation(_ orientation: StereoOrientation) throws {
-        avfaudioLock(lock) { storedPreferredInputOrientation = orientation }
+        _ = orientation
+        throw avfaudioHostUnavailableError(
+            "Input orientation configuration requires a host audio session service."
+        )
     }
 
     public func setPreferredMicrophoneInjectionMode(_ inValue: MicrophoneInjectionMode) throws {
-        guard inValue == .none else { throw AVAudioError.notSupported }
-        avfaudioLock(lock) { storedPreferredInjection = inValue }
+        _ = inValue
+        throw avfaudioHostUnavailableError(
+            "Microphone injection requires a host audio session service."
+        )
     }
 
     public func setOutputMuted(_ muted: Bool) throws {
-        avfaudioLock(lock) { storedOutputMuted = muted }
+        _ = muted
+        throw avfaudioHostUnavailableError(
+            "Output mute requires a host audio session service."
+        )
     }
 
     public func setInputGain(_ gain: Float) throws {
         _ = gain
-        throw AVAudioError.hardwareNotAvailable
+        throw avfaudioHostUnavailableError(
+            "Input gain requires a host audio session service."
+        )
     }
 
     public func setInputDataSource(_ dataSource: AVAudioSessionDataSourceDescription?) throws {
-        avfaudioLock(lock) { storedInputDataSource = dataSource }
+        _ = dataSource
+        throw avfaudioHostUnavailableError(
+            "Input data source selection requires a host audio session service."
+        )
     }
 
     public func setOutputDataSource(_ dataSource: AVAudioSessionDataSourceDescription?) throws {
-        avfaudioLock(lock) { storedOutputDataSource = dataSource }
+        _ = dataSource
+        throw avfaudioHostUnavailableError(
+            "Output data source selection requires a host audio session service."
+        )
     }
 
     public func setAggregatedIOPreference(_ inIOType: IOType) throws {
-        avfaudioLock(lock) { storedIOType = inIOType }
+        _ = inIOType
+        throw avfaudioHostUnavailableError(
+            "Aggregated IO preference requires a host audio session service."
+        )
     }
 
     public func setAllowHapticsAndSystemSoundsDuringRecording(_ inValue: Bool) throws {
-        avfaudioLock(lock) { storedAllowHaptics = inValue }
+        _ = inValue
+        throw avfaudioHostUnavailableError(
+            "Haptics-during-recording preference requires a host audio session service."
+        )
     }
 
     public func setSupportsMultichannelContent(_ inValue: Bool) throws {
-        avfaudioLock(lock) { storedSupportsMultichannel = inValue }
+        _ = inValue
+        throw avfaudioHostUnavailableError(
+            "Multichannel content preference requires a host audio session service."
+        )
     }
 
     public func setPrefersEchoCancelledInput(_ value: Bool) throws {
-        avfaudioLock(lock) { storedPrefersEchoCancelled = value }
+        _ = value
+        throw avfaudioHostUnavailableError(
+            "Echo-cancelled input preference requires a host audio session service."
+        )
     }
 
     public func setPrefersInterruptionOnRouteDisconnect(_ inValue: Bool) throws {
-        avfaudioLock(lock) { storedPrefersInterruptionOnDisconnect = inValue }
+        _ = inValue
+        throw avfaudioHostUnavailableError(
+            "Route-disconnect interruption preference requires a host audio session service."
+        )
     }
 
     public func setPrefersNoInterruptionsFromSystemAlerts(_ inValue: Bool) throws {
-        avfaudioLock(lock) { storedPrefersNoInterruptionsFromAlerts = inValue }
+        _ = inValue
+        throw avfaudioHostUnavailableError(
+            "System-alert interruption preference requires a host audio session service."
+        )
     }
 
-    public var _isActive: Bool { avfaudioLock(lock) { storedActive } }
-    public var _ioType: IOType { avfaudioLock(lock) { storedIOType } }
+    internal var isActiveForInspection: Bool { avfaudioLock(lock) { storedActive } }
 }
 
 public final class AVAudioSessionRouteDescription: NSObject, @unchecked Sendable {
@@ -498,17 +547,8 @@ public final class AVAudioSessionRouteDescription: NSObject, @unchecked Sendable
         super.init()
     }
 
-    static func virtualSpeaker() -> AVAudioSessionRouteDescription {
-        AVAudioSessionRouteDescription(
-            inputs: [],
-            outputs: [
-                AVAudioSessionPortDescription(
-                    portType: .builtInSpeaker,
-                    portName: "Virtual Speaker",
-                    uid: "linux-virtual-speaker"
-                )
-            ]
-        )
+    static func emptyRoute() -> AVAudioSessionRouteDescription {
+        AVAudioSessionRouteDescription(inputs: [], outputs: [])
     }
 }
 
@@ -532,7 +572,9 @@ public final class AVAudioSessionPortDescription: NSObject, @unchecked Sendable 
 
     public func setPreferredDataSource(_ dataSource: AVAudioSessionDataSourceDescription?) throws {
         _ = dataSource
-        throw AVAudioError.hardwareNotAvailable
+        throw avfaudioHostUnavailableError(
+            "Preferred data source requires a host audio session service."
+        )
     }
 }
 
@@ -540,13 +582,13 @@ public final class AVAudioSessionChannelDescription: NSObject, @unchecked Sendab
     public let channelName: String
     public let channelNumber: Int
     public let owningPortUID: String
-    public let channelLabel: AudioChannelLabel
+    public let channelLabel: UInt32
 
     public init(
         channelName: String,
         channelNumber: Int,
         owningPortUID: String,
-        channelLabel: AudioChannelLabel
+        channelLabel: UInt32
     ) {
         self.channelName = channelName
         self.channelNumber = channelNumber

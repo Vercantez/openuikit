@@ -1,38 +1,30 @@
 import Foundation
+#if canImport(CoreAudioTypes)
+import CoreAudioTypes
+#endif
+#if canImport(AudioToolbox)
+import AudioToolbox
+#endif
+#if canImport(CoreMedia)
+import CoreMedia
+#endif
 
 public final class AVAudioChannelLayout: NSObject, NSSecureCoding, @unchecked Sendable {
     public static var supportsSecureCoding: Bool { true }
 
-    private var storedLayout: AudioChannelLayout
-    private var layoutStorage: UnsafeMutablePointer<AudioChannelLayout>
-
-    public var layoutTag: AudioChannelLayoutTag { storedLayout.mChannelLayoutTag }
+    public let layoutTag: UInt32
     public var channelCount: AVAudioChannelCount {
-        let tag = layoutTag
-        let count = tag & 0xFFFF
+        let count = layoutTag & 0xFFFF
         return count == 0 ? 1 : count
     }
-    public var layout: UnsafePointer<AudioChannelLayout> {
-        UnsafePointer(layoutStorage)
-    }
 
-    public init(layout: UnsafePointer<AudioChannelLayout>) {
-        storedLayout = layout.pointee
-        layoutStorage = UnsafeMutablePointer<AudioChannelLayout>.allocate(capacity: 1)
-        layoutStorage.initialize(to: storedLayout)
+    public init?(layoutTag: UInt32) {
+        self.layoutTag = layoutTag
         super.init()
     }
 
-    public convenience init?(layoutTag: AudioChannelLayoutTag) {
-        var value = AudioChannelLayout(mChannelLayoutTag: layoutTag)
-        self.init(layout: &value)
-    }
-
     public required init?(coder: NSCoder) {
-        let tag = UInt32(bitPattern: coder.decodeInt32(forKey: "tag"))
-        storedLayout = AudioChannelLayout(mChannelLayoutTag: tag)
-        layoutStorage = UnsafeMutablePointer<AudioChannelLayout>.allocate(capacity: 1)
-        layoutStorage.initialize(to: storedLayout)
+        layoutTag = UInt32(bitPattern: coder.decodeInt32(forKey: "tag"))
         super.init()
     }
 
@@ -40,15 +32,38 @@ public final class AVAudioChannelLayout: NSObject, NSSecureCoding, @unchecked Se
         coder.encode(Int32(bitPattern: layoutTag), forKey: "tag")
     }
 
-    deinit {
-        layoutStorage.deinitialize(count: 1)
-        layoutStorage.deallocate()
-    }
-
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? AVAudioChannelLayout else { return false }
-        return storedLayout == other.storedLayout
+        return layoutTag == other.layoutTag
     }
+
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    private var layoutStorage: UnsafeMutablePointer<AudioChannelLayout>? = nil
+
+    public var layout: UnsafePointer<AudioChannelLayout> {
+        if let existing = layoutStorage {
+            return UnsafePointer(existing)
+        }
+        let storage = UnsafeMutablePointer<AudioChannelLayout>.allocate(capacity: 1)
+        storage.initialize(to: AudioChannelLayout())
+        storage.pointee.mChannelLayoutTag = layoutTag
+        layoutStorage = storage
+        return UnsafePointer(storage)
+    }
+
+    public init(layout: UnsafePointer<AudioChannelLayout>) {
+        self.layoutTag = layout.pointee.mChannelLayoutTag
+        let storage = UnsafeMutablePointer<AudioChannelLayout>.allocate(capacity: 1)
+        storage.initialize(to: layout.pointee)
+        self.layoutStorage = storage
+        super.init()
+    }
+
+    deinit {
+        layoutStorage?.deinitialize(count: 1)
+        layoutStorage?.deallocate()
+    }
+    #endif
 }
 
 public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable {
@@ -60,21 +75,13 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
     public let isInterleaved: Bool
     public let channelLayout: AVAudioChannelLayout?
     public var magicCookie: Data?
-    public let formatDescription: CMAudioFormatDescription = OpaquePointer(bitPattern: 1)!
-
-    private var asbdStorage: UnsafeMutablePointer<AudioStreamBasicDescription>
 
     public var isStandard: Bool {
         commonFormat == .pcmFormatFloat32 && isInterleaved == false && sampleRate > 0
     }
 
-    public var streamDescription: UnsafePointer<AudioStreamBasicDescription> {
-        UnsafePointer(asbdStorage)
-    }
-
     public var settings: [String: Any] {
         [
-            AVFormatIDKey: kAudioFormatLinearPCM,
             AVSampleRateKey: sampleRate,
             AVNumberOfChannelsKey: channelCount,
             AVLinearPCMIsFloatKey: commonFormat == .pcmFormatFloat32
@@ -84,7 +91,7 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         ]
     }
 
-    private var bitDepth: Int {
+    var bitDepth: Int {
         switch commonFormat {
         case .pcmFormatFloat64: return 64
         case .pcmFormatInt32, .pcmFormatFloat32: return 32
@@ -93,9 +100,7 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         }
     }
 
-    private var bytesPerChannel: UInt32 {
-        UInt32(max(bitDepth / 8, 0))
-    }
+    var bytesPerSample: Int { max(bitDepth / 8, 0) }
 
     public init?(
         standardFormatWithSampleRate sampleRate: Double,
@@ -107,12 +112,6 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.commonFormat = .pcmFormatFloat32
         self.isInterleaved = false
         self.channelLayout = nil
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: sampleRate,
-            channels: channels,
-            format: .pcmFormatFloat32,
-            interleaved: false
-        )
         super.init()
     }
 
@@ -122,12 +121,6 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.commonFormat = .pcmFormatFloat32
         self.isInterleaved = false
         self.channelLayout = layout
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: sampleRate,
-            channels: layout.channelCount,
-            format: .pcmFormatFloat32,
-            interleaved: false
-        )
         super.init()
     }
 
@@ -143,12 +136,6 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.commonFormat = format
         self.isInterleaved = interleaved
         self.channelLayout = nil
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: sampleRate,
-            channels: channels,
-            format: format,
-            interleaved: interleaved
-        )
         super.init()
     }
 
@@ -163,12 +150,6 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.commonFormat = format
         self.isInterleaved = interleaved
         self.channelLayout = layout
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: sampleRate,
-            channels: layout.channelCount,
-            format: format,
-            interleaved: interleaved
-        )
         super.init()
     }
 
@@ -204,13 +185,50 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.commonFormat = format
         self.isInterleaved = !nonInterleaved
         self.channelLayout = nil
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: rate,
-            channels: channels,
-            format: format,
-            interleaved: !nonInterleaved
-        )
         super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        sampleRate = coder.decodeDouble(forKey: "sampleRate")
+        channelCount = UInt32(bitPattern: coder.decodeInt32(forKey: "channels"))
+        commonFormat = AVAudioCommonFormat(rawValue: UInt(coder.decodeInt32(forKey: "format")))
+            ?? .pcmFormatFloat32
+        isInterleaved = coder.decodeBool(forKey: "interleaved")
+        channelLayout = nil
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(sampleRate, forKey: "sampleRate")
+        coder.encode(Int32(bitPattern: channelCount), forKey: "channels")
+        coder.encode(Int32(commonFormat.rawValue), forKey: "format")
+        coder.encode(isInterleaved, forKey: "interleaved")
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? AVAudioFormat else { return false }
+        return sampleRate == other.sampleRate
+            && channelCount == other.channelCount
+            && commonFormat == other.commonFormat
+            && isInterleaved == other.isInterleaved
+    }
+
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    private var asbdStorage: UnsafeMutablePointer<AudioStreamBasicDescription>? = nil
+
+    public var streamDescription: UnsafePointer<AudioStreamBasicDescription> {
+        if let existing = asbdStorage {
+            return UnsafePointer(existing)
+        }
+        let ptr = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
+        ptr.initialize(to: Self.makeASBDValue(
+            sampleRate: sampleRate,
+            channels: channelCount,
+            format: commonFormat,
+            interleaved: isInterleaved
+        ))
+        asbdStorage = ptr
+        return UnsafePointer(ptr)
     }
 
     public init?(streamDescription asbd: UnsafePointer<AudioStreamBasicDescription>) {
@@ -227,8 +245,9 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
             self.commonFormat = desc.mBitsPerChannel <= 16 ? .pcmFormatInt16 : .pcmFormatInt32
         }
         self.channelLayout = nil
-        self.asbdStorage = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
-        self.asbdStorage.initialize(to: desc)
+        let storage = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
+        storage.initialize(to: desc)
+        self.asbdStorage = storage
         super.init()
     }
 
@@ -241,100 +260,31 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         self.sampleRate = desc.mSampleRate
         self.channelCount = layout?.channelCount ?? desc.mChannelsPerFrame
         self.isInterleaved = (desc.mFormatFlags & kAudioFormatFlagIsNonInterleaved) == 0
-        self.commonFormat = .pcmFormatFloat32
+        if desc.mFormatID != kAudioFormatLinearPCM {
+            self.commonFormat = .otherFormat
+        } else if (desc.mFormatFlags & kAudioFormatFlagIsFloat) != 0 {
+            self.commonFormat = desc.mBitsPerChannel >= 64 ? .pcmFormatFloat64 : .pcmFormatFloat32
+        } else {
+            self.commonFormat = desc.mBitsPerChannel <= 16 ? .pcmFormatInt16 : .pcmFormatInt32
+        }
         self.channelLayout = layout
-        self.asbdStorage = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
-        self.asbdStorage.initialize(to: desc)
+        let storage = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
+        storage.initialize(to: desc)
+        self.asbdStorage = storage
         super.init()
-    }
-
-    public init(cmAudioFormatDescription formatDescription: CMAudioFormatDescription) {
-        _ = formatDescription
-        self.sampleRate = 44100
-        self.channelCount = 2
-        self.commonFormat = .pcmFormatFloat32
-        self.isInterleaved = false
-        self.channelLayout = nil
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: 44100,
-            channels: 2,
-            format: .pcmFormatFloat32,
-            interleaved: false
-        )
-        super.init()
-    }
-
-    public init(CMAudioFormatDescription formatDescription: CMAudioFormatDescription) {
-        _ = formatDescription
-        self.sampleRate = 44100
-        self.channelCount = 2
-        self.commonFormat = .pcmFormatFloat32
-        self.isInterleaved = false
-        self.channelLayout = nil
-        self.asbdStorage = Self.makeASBD(
-            sampleRate: 44100,
-            channels: 2,
-            format: .pcmFormatFloat32,
-            interleaved: false
-        )
-        super.init()
-    }
-
-    public required init?(coder: NSCoder) {
-        sampleRate = coder.decodeDouble(forKey: "sampleRate")
-        channelCount = UInt32(bitPattern: coder.decodeInt32(forKey: "channels"))
-        commonFormat = AVAudioCommonFormat(rawValue: UInt(coder.decodeInt32(forKey: "format")))
-            ?? .pcmFormatFloat32
-        isInterleaved = coder.decodeBool(forKey: "interleaved")
-        channelLayout = nil
-        asbdStorage = Self.makeASBD(
-            sampleRate: sampleRate,
-            channels: channelCount,
-            format: commonFormat,
-            interleaved: isInterleaved
-        )
-        super.init()
-    }
-
-    public func encode(with coder: NSCoder) {
-        coder.encode(sampleRate, forKey: "sampleRate")
-        coder.encode(Int32(bitPattern: channelCount), forKey: "channels")
-        coder.encode(Int32(commonFormat.rawValue), forKey: "format")
-        coder.encode(isInterleaved, forKey: "interleaved")
     }
 
     deinit {
-        asbdStorage.deinitialize(count: 1)
-        asbdStorage.deallocate()
+        asbdStorage?.deinitialize(count: 1)
+        asbdStorage?.deallocate()
     }
 
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let other = object as? AVAudioFormat else { return false }
-        return sampleRate == other.sampleRate
-            && channelCount == other.channelCount
-            && commonFormat == other.commonFormat
-            && isInterleaved == other.isInterleaved
-    }
-
-    var bytesPerFrame: Int {
-        let width = max(bitDepth / 8, 1)
-        if isInterleaved {
-            return width * Int(channelCount)
-        }
-        return width
-    }
-
-    var channelDataByteCount: Int {
-        // Used by PCM buffers; callers supply frame capacity.
-        bytesPerFrame
-    }
-
-    static func makeASBD(
+    static func makeASBDValue(
         sampleRate: Double,
         channels: AVAudioChannelCount,
         format: AVAudioCommonFormat,
         interleaved: Bool
-    ) -> UnsafeMutablePointer<AudioStreamBasicDescription> {
+    ) -> AudioStreamBasicDescription {
         let bits: UInt32
         var flags: AudioFormatFlags = kAudioFormatFlagIsPacked
         switch format {
@@ -359,55 +309,107 @@ public final class AVAudioFormat: NSObject, NSSecureCoding, @unchecked Sendable 
         let bytesPerChannel = bits / 8
         let channelsPerFrame: UInt32 = interleaved ? channels : 1
         let bytesPerFrame = bytesPerChannel * channelsPerFrame
-        let ptr = UnsafeMutablePointer<AudioStreamBasicDescription>.allocate(capacity: 1)
-        ptr.initialize(
-            to: AudioStreamBasicDescription(
-                mSampleRate: sampleRate,
-                mFormatID: kAudioFormatLinearPCM,
-                mFormatFlags: flags,
-                mBytesPerPacket: bytesPerFrame,
-                mFramesPerPacket: 1,
-                mBytesPerFrame: bytesPerFrame,
-                mChannelsPerFrame: channels,
-                mBitsPerChannel: bits,
-                mReserved: 0
-            )
+        return AudioStreamBasicDescription(
+            mSampleRate: sampleRate,
+            mFormatID: kAudioFormatLinearPCM,
+            mFormatFlags: flags,
+            mBytesPerPacket: bytesPerFrame,
+            mFramesPerPacket: 1,
+            mBytesPerFrame: bytesPerFrame,
+            mChannelsPerFrame: channels,
+            mBitsPerChannel: bits,
+            mReserved: 0
         )
-        return ptr
     }
-}
+    #endif
 
-open class AVAudioBuffer: NSObject, @unchecked Sendable {
-    public let format: AVAudioFormat
-    private var listStorage: UnsafeMutablePointer<AudioBufferList>
-
-    public var audioBufferList: UnsafePointer<AudioBufferList> {
-        UnsafePointer(listStorage)
-    }
-    public var mutableAudioBufferList: UnsafeMutablePointer<AudioBufferList> { listStorage }
-
-    public init(format: AVAudioFormat) {
-        self.format = format
-        self.listStorage = UnsafeMutablePointer<AudioBufferList>.allocate(capacity: 1)
-        self.listStorage.initialize(to: AudioBufferList())
+    #if canImport(CoreMedia)
+    public init(cmAudioFormatDescription formatDescription: CMAudioFormatDescription) {
+        _ = formatDescription
+        self.sampleRate = 0
+        self.channelCount = 0
+        self.commonFormat = .otherFormat
+        self.isInterleaved = false
+        self.channelLayout = nil
         super.init()
     }
 
-    deinit {
-        listStorage.deinitialize(count: 1)
-        listStorage.deallocate()
+    public init(CMAudioFormatDescription formatDescription: CMAudioFormatDescription) {
+        _ = formatDescription
+        self.sampleRate = 0
+        self.channelCount = 0
+        self.commonFormat = .otherFormat
+        self.isInterleaved = false
+        self.channelLayout = nil
+        super.init()
+    }
+    #endif
+}
+
+#if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+func avfaudioAudioBufferListByteCount(maximumBuffers: Int) -> Int {
+    let buffers = max(maximumBuffers, 1)
+    let header = MemoryLayout<AudioBufferList>.size
+    let extra = MemoryLayout<AudioBuffer>.stride * (buffers - 1)
+    return header + extra
+}
+
+func avfaudioAllocateAudioBufferList(
+    maximumBuffers: Int
+) -> UnsafeMutablePointer<AudioBufferList> {
+    let buffers = max(maximumBuffers, 1)
+    let byteCount = avfaudioAudioBufferListByteCount(maximumBuffers: buffers)
+    let alignment = max(MemoryLayout<AudioBufferList>.alignment, MemoryLayout<AudioBuffer>.alignment)
+    let raw = UnsafeMutableRawPointer.allocate(byteCount: byteCount, alignment: alignment)
+    raw.initializeMemory(as: UInt8.self, repeating: 0, count: byteCount)
+    let list = raw.bindMemory(to: AudioBufferList.self, capacity: 1)
+    list.pointee.mNumberBuffers = UInt32(buffers)
+    return list
+}
+
+func avfaudioAudioBuffers(
+    _ list: UnsafeMutablePointer<AudioBufferList>
+) -> UnsafeMutablePointer<AudioBuffer> {
+    let offset = MemoryLayout<AudioBufferList>.offset(of: \.mBuffers)
+        ?? MemoryLayout<UInt32>.stride
+    return UnsafeMutableRawPointer(list).advanced(by: offset).assumingMemoryBound(to: AudioBuffer.self)
+}
+
+func avfaudioDeallocateAudioBufferList(_ list: UnsafeMutablePointer<AudioBufferList>) {
+    UnsafeMutableRawPointer(list).deallocate()
+}
+#endif
+
+open class AVAudioBuffer: NSObject, @unchecked Sendable {
+    public let format: AVAudioFormat
+
+    public init(format: AVAudioFormat) {
+        self.format = format
+        super.init()
     }
 
-    func bindList(channels: UInt32, byteSize: UInt32, data: UnsafeMutableRawPointer?) {
-        listStorage.pointee = AudioBufferList(
-            mNumberBuffers: format.isInterleaved ? 1 : max(channels, 1),
-            mBuffers: AudioBuffer(
-                mNumberChannels: format.isInterleaved ? channels : 1,
-                mDataByteSize: byteSize,
-                mData: data
-            )
-        )
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    var ablStorage: UnsafeMutablePointer<AudioBufferList>? = nil
+
+    public var audioBufferList: UnsafePointer<AudioBufferList> {
+        UnsafePointer(mutableAudioBufferList)
     }
+
+    public var mutableAudioBufferList: UnsafeMutablePointer<AudioBufferList> {
+        if let existing = ablStorage {
+            return existing
+        }
+        let list = avfaudioAllocateAudioBufferList(maximumBuffers: 1)
+        ablStorage = list
+        return list
+    }
+
+    deinit {
+        if let ablStorage {
+            avfaudioDeallocateAudioBufferList(ablStorage)
+        }
+    }
+    #endif
 }
 
 public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
@@ -418,13 +420,19 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
         }
     }
     public let stride: Int
-    private let storage: UnsafeMutableRawPointer
-    private let byteCount: Int
     private let channelCount: Int
+    private let bytesPerSample: Int
+    private var ownedStorage: UnsafeMutableRawPointer?
+    private var ownedByteCount: Int = 0
     private var channelPointers: UnsafeMutablePointer<UnsafeMutableRawPointer>
     private var floatPointers: UnsafeMutablePointer<UnsafeMutablePointer<Float>>?
     private var int16Pointers: UnsafeMutablePointer<UnsafeMutablePointer<Int16>>?
     private var int32Pointers: UnsafeMutablePointer<UnsafeMutablePointer<Int32>>?
+    private let deallocatorOnce = AVFAudioCallbackDelivery.Once()
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    private var noCopyList: UnsafePointer<AudioBufferList>? = nil
+    private var noCopyDeallocator: ((UnsafePointer<AudioBufferList>) -> Void)? = nil
+    #endif
 
     public var floatChannelData: UnsafePointer<UnsafeMutablePointer<Float>>? {
         floatPointers.map { UnsafePointer($0) }
@@ -440,29 +448,23 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
         guard format.commonFormat != .otherFormat, frameCapacity > 0 else { return nil }
         self.frameCapacity = frameCapacity
         self.channelCount = Int(format.channelCount)
-        self.stride = format.isInterleaved ? channelCount : 1
-        let bytesPerSample: Int
-        switch format.commonFormat {
-        case .pcmFormatFloat64: bytesPerSample = 8
-        case .pcmFormatFloat32, .pcmFormatInt32: bytesPerSample = 4
-        case .pcmFormatInt16: bytesPerSample = 2
-        case .otherFormat: bytesPerSample = 0
-        }
+        self.stride = format.isInterleaved ? max(channelCount, 1) : 1
+        self.bytesPerSample = format.bytesPerSample
         let frames = Int(frameCapacity)
         let planes = format.isInterleaved ? 1 : max(channelCount, 1)
-        self.byteCount = max(bytesPerSample * frames * stride * planes, 1)
-        self.storage = UnsafeMutableRawPointer.allocate(
+        let byteCount = max(bytesPerSample * frames * stride * planes, 1)
+        let storage = UnsafeMutableRawPointer.allocate(
             byteCount: byteCount,
-            alignment: MemoryLayout<Float>.alignment
+            alignment: max(MemoryLayout<Float>.alignment, 16)
         )
-        self.storage.initializeMemory(as: UInt8.self, repeating: 0, count: byteCount)
+        storage.initializeMemory(as: UInt8.self, repeating: 0, count: byteCount)
+        self.ownedStorage = storage
+        self.ownedByteCount = byteCount
         self.channelPointers = UnsafeMutablePointer<UnsafeMutableRawPointer>.allocate(
             capacity: max(channelCount, 1)
         )
         super.init(format: format)
-        let planeBytes = format.isInterleaved
-            ? byteCount
-            : bytesPerSample * frames
+        let planeBytes = format.isInterleaved ? byteCount : max(bytesPerSample * frames, 1)
         for index in 0..<max(channelCount, 1) {
             if format.isInterleaved {
                 channelPointers[index] = storage
@@ -470,6 +472,103 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
                 channelPointers[index] = storage.advanced(by: index * planeBytes)
             }
         }
+        bindTypedChannelPointers()
+        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+        installOwnedAudioBufferList(planeBytes: planeBytes)
+        #endif
+    }
+
+    public convenience init?(
+        PCMFormat format: AVAudioFormat,
+        frameCapacity: AVAudioFrameCount
+    ) {
+        self.init(pcmFormat: format, frameCapacity: frameCapacity)
+    }
+
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    public init?(
+        pcmFormat format: AVAudioFormat,
+        bufferListNoCopy bufferList: UnsafePointer<AudioBufferList>,
+        deallocator: ((UnsafePointer<AudioBufferList>) -> Void)? = nil
+    ) {
+        let bufferCount = Int(bufferList.pointee.mNumberBuffers)
+        guard format.commonFormat != .otherFormat, bufferCount >= 1 else { return nil }
+        let buffers = avfaudioAudioBuffers(UnsafeMutablePointer(mutating: bufferList))
+        let first = buffers[0]
+        guard let data = first.mData, first.mDataByteSize > 0, format.bytesPerSample > 0 else {
+            return nil
+        }
+        let expectedBuffers = format.isInterleaved ? 1 : max(Int(format.channelCount), 1)
+        guard bufferCount == expectedBuffers else { return nil }
+        var planes: [UnsafeMutableRawPointer] = []
+        if format.isInterleaved {
+            planes = Array(repeating: data, count: max(Int(format.channelCount), 1))
+        } else {
+            planes.reserveCapacity(expectedBuffers)
+            for index in 0..<expectedBuffers {
+                guard let plane = buffers[index].mData else { return nil }
+                planes.append(plane)
+            }
+        }
+        self.frameCapacity = AVAudioFrameCount(
+            Int(first.mDataByteSize) / max(
+                format.bytesPerSample * (format.isInterleaved ? Int(format.channelCount) : 1),
+                1
+            )
+        )
+        self.channelCount = Int(format.channelCount)
+        self.stride = format.isInterleaved ? max(channelCount, 1) : 1
+        self.bytesPerSample = format.bytesPerSample
+        self.ownedStorage = nil
+        self.noCopyList = bufferList
+        self.noCopyDeallocator = deallocator
+        self.channelPointers = UnsafeMutablePointer<UnsafeMutableRawPointer>.allocate(
+            capacity: max(channelCount, 1)
+        )
+        super.init(format: format)
+        for index in 0..<max(channelCount, 1) {
+            channelPointers[index] = planes[index]
+        }
+        bindTypedChannelPointers()
+        ablStorage = UnsafeMutablePointer(mutating: bufferList)
+    }
+
+    public convenience init?(
+        PCMFormat format: AVAudioFormat,
+        bufferListNoCopy bufferList: UnsafePointer<AudioBufferList>,
+        deallocator: ((UnsafePointer<AudioBufferList>) -> Void)? = nil
+    ) {
+        self.init(
+            pcmFormat: format,
+            bufferListNoCopy: bufferList,
+            deallocator: deallocator
+        )
+    }
+
+    private func installOwnedAudioBufferList(planeBytes: Int) {
+        let buffers = format.isInterleaved ? 1 : max(channelCount, 1)
+        let list = avfaudioAllocateAudioBufferList(maximumBuffers: buffers)
+        let ablBuffers = avfaudioAudioBuffers(list)
+        if format.isInterleaved {
+            ablBuffers[0] = AudioBuffer(
+                mNumberChannels: UInt32(channelCount),
+                mDataByteSize: UInt32(planeBytes),
+                mData: ownedStorage
+            )
+        } else {
+            for index in 0..<buffers {
+                ablBuffers[index] = AudioBuffer(
+                    mNumberChannels: 1,
+                    mDataByteSize: UInt32(planeBytes),
+                    mData: channelPointers[index]
+                )
+            }
+        }
+        ablStorage = list
+    }
+    #endif
+
+    private func bindTypedChannelPointers() {
         switch format.commonFormat {
         case .pcmFormatFloat32:
             let ptrs = UnsafeMutablePointer<UnsafeMutablePointer<Float>>.allocate(
@@ -498,41 +597,6 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
         default:
             break
         }
-        bindList(
-            channels: format.channelCount,
-            byteSize: UInt32(planeBytes),
-            data: storage
-        )
-    }
-
-    public convenience init?(
-        PCMFormat format: AVAudioFormat,
-        frameCapacity: AVAudioFrameCount
-    ) {
-        self.init(pcmFormat: format, frameCapacity: frameCapacity)
-    }
-
-    public init?(
-        pcmFormat format: AVAudioFormat,
-        bufferListNoCopy bufferList: UnsafePointer<AudioBufferList>,
-        deallocator: ((UnsafePointer<AudioBufferList>) -> Void)? = nil
-    ) {
-        // Linux starting point does not adopt caller-owned AudioBufferList storage.
-        _ = bufferList
-        _ = deallocator
-        return nil
-    }
-
-    public convenience init?(
-        PCMFormat format: AVAudioFormat,
-        bufferListNoCopy bufferList: UnsafePointer<AudioBufferList>,
-        deallocator: ((UnsafePointer<AudioBufferList>) -> Void)? = nil
-    ) {
-        self.init(
-            pcmFormat: format,
-            bufferListNoCopy: bufferList,
-            deallocator: deallocator
-        )
     }
 
     deinit {
@@ -540,7 +604,18 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
         int16Pointers?.deallocate()
         int32Pointers?.deallocate()
         channelPointers.deallocate()
-        storage.deallocate()
+        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+        if let noCopyList {
+            ablStorage = nil
+            if deallocatorOnce.claim() {
+                noCopyDeallocator?(noCopyList)
+            }
+        } else if let ownedStorage {
+            ownedStorage.deallocate()
+        }
+        #else
+        ownedStorage?.deallocate()
+        #endif
     }
 }
 
@@ -551,8 +626,10 @@ public final class AVAudioCompressedBuffer: AVAudioBuffer, @unchecked Sendable {
     public var byteLength: UInt32 = 0
     public let byteCapacity: UInt32
     public let data: UnsafeMutableRawPointer
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     public var packetDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>?
     public var packetDependencies: [AudioStreamPacketDependencyDescription]?
+    #endif
 
     public init(format: AVAudioFormat, packetCapacity: AVAudioPacketCount) {
         self.packetCapacity = packetCapacity
@@ -592,15 +669,6 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
     public let isHostTimeValid: Bool
     public let isSampleTimeValid: Bool
 
-    public var audioTimeStamp: AudioTimeStamp {
-        AudioTimeStamp(
-            mSampleTime: isSampleTimeValid ? Double(sampleTime) : 0,
-            mHostTime: isHostTimeValid ? hostTime : 0,
-            mRateScalar: 1,
-            mFlags: (isHostTimeValid ? 1 : 0) | (isSampleTimeValid ? 2 : 0)
-        )
-    }
-
     public init(hostTime: UInt64) {
         self.hostTime = hostTime
         self.sampleTime = 0
@@ -628,16 +696,6 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
         super.init()
     }
 
-    public init(audioTimeStamp ts: UnsafePointer<AudioTimeStamp>, sampleRate: Double) {
-        let stamp = ts.pointee
-        self.hostTime = stamp.mHostTime
-        self.sampleTime = AVAudioFramePosition(stamp.mSampleTime)
-        self.sampleRate = sampleRate
-        self.isHostTimeValid = stamp.mHostTime != 0
-        self.isSampleTimeValid = stamp.mFlags != 0
-        super.init()
-    }
-
     public class func hostTime(forSeconds seconds: TimeInterval) -> UInt64 {
         UInt64((max(seconds, 0) * 1_000_000_000.0).rounded())
     }
@@ -661,4 +719,25 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
         }
         return AVAudioTime(sampleTime: sampleTime, atRate: sampleRate)
     }
+
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    public var audioTimeStamp: AudioTimeStamp {
+        var stamp = AudioTimeStamp()
+        stamp.mSampleTime = isSampleTimeValid ? Double(sampleTime) : 0
+        stamp.mHostTime = isHostTimeValid ? hostTime : 0
+        stamp.mRateScalar = 1
+        stamp.mFlags = (isHostTimeValid ? 1 : 0) | (isSampleTimeValid ? 2 : 0)
+        return stamp
+    }
+
+    public init(audioTimeStamp ts: UnsafePointer<AudioTimeStamp>, sampleRate: Double) {
+        let stamp = ts.pointee
+        self.hostTime = stamp.mHostTime
+        self.sampleTime = AVAudioFramePosition(stamp.mSampleTime)
+        self.sampleRate = sampleRate
+        self.isHostTimeValid = stamp.mHostTime != 0
+        self.isSampleTimeValid = stamp.mFlags != 0
+        super.init()
+    }
+    #endif
 }

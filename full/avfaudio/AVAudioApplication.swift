@@ -25,16 +25,23 @@ public final class AVAudioApplication: NSObject, @unchecked Sendable {
     public var microphoneInjectionPermission: MicrophoneInjectionPermission { .serviceDisabled }
 
     public class func requestRecordPermission(completionHandler response: @escaping (Bool) -> Void) {
-        response(false)
+        AVFAudioCallbackDelivery.deliverExactlyOnce {
+            response(false)
+        }
     }
 
     public class func requestMicrophoneInjectionPermission(
         completionHandler response: @escaping (MicrophoneInjectionPermission) -> Void
     ) {
-        response(.serviceDisabled)
+        AVFAudioCallbackDelivery.deliverExactlyOnce {
+            response(.serviceDisabled)
+        }
     }
 
     public func setInputMuted(_ muted: Bool) throws {
-        isInputMuted = muted
+        _ = muted
+        throw avfaudioHostUnavailableError(
+            "Input mute requires a host audio session service."
+        )
     }
 }
