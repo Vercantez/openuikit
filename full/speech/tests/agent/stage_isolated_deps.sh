@@ -37,10 +37,21 @@ fi
 cat > "$STAGE/bin/swiftc" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
-exec $(printf '%q' "$SWIFTC") -I $(printf '%q' "$STAGE") \\
-    $(printf '%q' "$STAGE/libCoreMedia.dylib") \\
-    $(printf '%q' "$STAGE/libAVFoundation.dylib") \\
-    "\$@"
+SWIFTC=$(printf '%q' "$SWIFTC")
+STAGE=$(printf '%q' "$STAGE")
+link_deps=0
+for arg in "\$@"; do
+    case "\$arg" in
+        *.swift|*.dylib|-emit-library|-emit-executable) link_deps=1 ;;
+    esac
+done
+if [ "\$link_deps" -eq 1 ]; then
+    exec \$SWIFTC -I \$STAGE \\
+        \$STAGE/libCoreMedia.dylib \\
+        \$STAGE/libAVFoundation.dylib \\
+        "\$@"
+fi
+exec \$SWIFTC -I \$STAGE "\$@"
 EOF
 chmod +x "$STAGE/bin/swiftc"
 
