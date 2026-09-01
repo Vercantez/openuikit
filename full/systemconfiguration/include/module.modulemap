@@ -1,0 +1,5 @@
+framework module SystemConfiguration [system] {
+    umbrella header "SystemConfiguration.h"
+    export *
+    module * { export * }
+}

@@ -1,0 +1,7 @@
+layout=flags:4,context:40
+flags=transient:1,reachable:2,required:4,traffic:8,intervention:16,demand:32,local:65536,direct:131072,wwan:262144
+signature-name=(Swift.Optional<__C.CFAllocatorRef>, Swift.UnsafePointer<Swift.Int8>) -> Swift.Optional<__C.SCNetworkReachabilityRef>
+signature-address=(Swift.Optional<__C.CFAllocatorRef>, Swift.UnsafePointer<__C.sockaddr>) -> Swift.Optional<__C.SCNetworkReachabilityRef>
+signature-flags=(__C.SCNetworkReachabilityRef, Swift.UnsafeMutablePointer<__C.SCNetworkReachabilityFlags>) -> Swift.Bool
+signature-callback=(__C.SCNetworkReachabilityRef, Swift.Optional<@convention(c) (__C.SCNetworkReachabilityRef, __C.SCNetworkReachabilityFlags, Swift.Optional<Swift.UnsafeMutableRawPointer>) -> ()>, Swift.Optional<Swift.UnsafeMutablePointer<__C.SCNetworkReachabilityContext>>) -> Swift.Bool
+signature-dispatch=(__C.SCNetworkReachabilityRef, Swift.Optional<__C.OS_dispatch_queue>) -> Swift.Bool
