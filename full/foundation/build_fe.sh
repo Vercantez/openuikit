@@ -33,10 +33,14 @@ SF=${SF:-$W/scratch/swift-foundation}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
 PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
 URL_RESOURCE_KEY_PATCH=${URL_RESOURCE_KEY_PATCH:-$W/full/foundation/patches/FoundationEssentials-URLResourceKey.patch}
+PREDICATE_KEYPATH_PATCH=${PREDICATE_KEYPATH_PATCH:-$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch}
+EXPECTED_PREDICATE_KEYPATH_SOURCE_SHA=835ca09d5d0bf757abc02af0ca4294cc58bcad3d455ef71c1026746ad7ba08f7
+EXPECTED_PREDICATE_KEYPATH_PATCH_SHA=ecf4e8045d42fb196705f37fbf723f75e11c20d9d6b2adc251210ed87e1464de
 [ -d "$SF/Sources/FoundationEssentials" ] || { echo "no $SF" >&2; exit 1; }
 [ -d "$SYS/usr/include" ] || { echo "no sysroot $SYS -- run stage_fe_sysroot.sh on macOS" >&2; exit 1; }
 [ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
 [ -f "$URL_RESOURCE_KEY_PATCH" ] || { echo "no URLResourceKey patch $URL_RESOURCE_KEY_PATCH" >&2; exit 1; }
+[ -f "$PREDICATE_KEYPATH_PATCH" ] || { echo "no Predicate key-path patch $PREDICATE_KEYPATH_PATCH" >&2; exit 1; }
 
 # ALL 202 FILES.  The old recipe filtered out five by name --
 # URL_Bridge / URL_ObjC / URL_Swift / URLComponents_ObjC / String+Bridging --
@@ -82,24 +86,52 @@ done <<<"$SOURCE_LIST"
 FOUNDATION_URL_SOURCE=$SF/Sources/FoundationEssentials/URL/URL.swift
 PATCHED_SOURCE_DIR=$W/build/foundationessentials-port-sources
 PATCHED_URL_SOURCE=$PATCHED_SOURCE_DIR/URL.swift
+FOUNDATION_PREDICATE_KEYPATH_SOURCE=$SF/Sources/FoundationEssentials/Predicate/KeyPath+Inspection.swift
+PATCHED_PREDICATE_KEYPATH_SOURCE=$PATCHED_SOURCE_DIR/KeyPath+Inspection.swift
+[ "$(sha256sum "$FOUNDATION_PREDICATE_KEYPATH_SOURCE" | awk '{print $1}')" = \
+    "$EXPECTED_PREDICATE_KEYPATH_SOURCE_SHA" ] || {
+        echo "build_fe: pinned Predicate key-path source hash drifted" >&2
+        exit 2
+    }
+[ "$(sha256sum "$PREDICATE_KEYPATH_PATCH" | awk '{print $1}')" = \
+    "$EXPECTED_PREDICATE_KEYPATH_PATCH_SHA" ] || {
+        echo "build_fe: Predicate key-path patch hash drifted" >&2
+        exit 2
+    }
 rm -rf -- "$PATCHED_SOURCE_DIR"
 mkdir -p "$PATCHED_SOURCE_DIR"
 patch -s -o "$PATCHED_URL_SOURCE" \
     "$FOUNDATION_URL_SOURCE" "$URL_RESOURCE_KEY_PATCH"
+patch --batch --forward --fuzz=0 -s -o "$PATCHED_PREDICATE_KEYPATH_SOURCE" \
+    "$FOUNDATION_PREDICATE_KEYPATH_SOURCE" "$PREDICATE_KEYPATH_PATCH"
 patched_url_count=0
+patched_predicate_keypath_count=0
 for source_index in "${!SRCS[@]}"; do
     if [ "${SRCS[$source_index]}" = "$FOUNDATION_URL_SOURCE" ]; then
         SRCS[$source_index]=$PATCHED_URL_SOURCE
         patched_url_count=$((patched_url_count + 1))
+    fi
+    if [ "${SRCS[$source_index]}" = "$FOUNDATION_PREDICATE_KEYPATH_SOURCE" ]; then
+        SRCS[$source_index]=$PATCHED_PREDICATE_KEYPATH_SOURCE
+        patched_predicate_keypath_count=$((patched_predicate_keypath_count + 1))
     fi
 done
 [ "$patched_url_count" -eq 1 ] || {
     echo "build_fe: URL.swift replacement count $patched_url_count, expected 1" >&2
     exit 2
 }
+[ "$patched_predicate_keypath_count" -eq 1 ] || {
+    echo "build_fe: predicate key-path replacement count $patched_predicate_keypath_count, expected 1" >&2
+    exit 2
+}
 grep -F 'public struct URLResourceKey: RawRepresentable, Hashable, Sendable' \
     "$PATCHED_URL_SOURCE" >/dev/null || {
         echo "build_fe: derived URLResourceKey source is incomplete" >&2
+        exit 2
+    }
+grep -F 'STORED_COMPONENT_PAYLOAD_MAXIMUM_INLINE_OFFSET' \
+    "$PATCHED_PREDICATE_KEYPATH_SOURCE" >/dev/null || {
+        echo "build_fe: derived Predicate key-path source is incomplete" >&2
         exit 2
     }
 # THE TARGET TRAVELS WITH THE ARTIFACT, not just with a commit message.  This

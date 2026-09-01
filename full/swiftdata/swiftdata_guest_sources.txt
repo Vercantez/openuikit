@@ -1,0 +1,2 @@
+full/swiftdata/SwiftData.swift
+full/swiftdata/SwiftDataSwiftUI.swift

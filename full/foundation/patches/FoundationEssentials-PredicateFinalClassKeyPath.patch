@@ -1,0 +1,25 @@
+--- KeyPath+Inspection.swift
++++ KeyPath+Inspection.swift
+@@ -21,0 +22 @@
++    private static var STORED_COMPONENT_PAYLOAD_MAXIMUM_INLINE_OFFSET: UInt32 { 0x007F_FFFC }
+@@ -32,0 +34,4 @@
++
++    fileprivate var _keyPathComponentHeader_storedIsInline: Bool {
++        _keyPathComponentHeader_payload <= Self.STORED_COMPONENT_PAYLOAD_MAXIMUM_INLINE_OFFSET
++    }
+@@ -43,4 +48,0 @@
+-private func _keyPathOffset<T>(_ root: T.Type, _ keyPath: AnyKeyPath) -> Int? {
+-    MemoryLayout<T>.offset(of: keyPath as! PartialKeyPath<T>)
+-}
+-
+@@ -60,5 +62,5 @@
+-            // Key paths to stored properties are only single-component if MemoryLayout.offset(of:) returns an offset
+-            func project<T>(_: T.Type) -> Bool {
+-                _keyPathOffset(T.self, self) == nil
+-            }
+-            if _openExistential(Self.rootType, do: project) {
++            // Final-class properties do not have a MemoryLayout offset even
++            // when their key path has exactly one encoded component.
++            let size = firstComponentHeader._keyPathComponentHeader_storedIsInline
++                ? MemoryLayout<UInt32>.size : MemoryLayout<UInt64>.size
++            if header._keyPathHeader_bufferSize > size {
