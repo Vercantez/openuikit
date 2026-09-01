@@ -2116,6 +2116,21 @@ symbols_apple_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSymbols.dylib" \
 PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=()
 [ "$PREVIEW_ENABLED" -eq 0 ] \
     || PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=(-undefined dynamic_lookup)
+PREVIEW_STANDALONE_LINK_INPUTS=()
+PREVIEW_STANDALONE_EXPORT_FLAGS=()
+if [ "$PREVIEW_ENABLED" -eq 1 ]; then
+    PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")
+    PREVIEW_STANDALONE_EXPORT_FLAGS+=(
+        -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
+    )
+fi
+preview_standalone_dts_input_count=0
+for input in "${PREVIEW_STANDALONE_LINK_INPUTS[@]}"; do
+    [ "$input" != "$STAGE/objects/developertoolsupport.o" ] \
+        || preview_standalone_dts_input_count=$((preview_standalone_dts_input_count + 1))
+done
+[ "$preview_standalone_dts_input_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "standalone SwiftUI DTS link count $preview_standalone_dts_input_count, expected $PREVIEW_ENABLED"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
@@ -2453,9 +2468,11 @@ echo '== compile/link/run the standalone SwiftData macro and persistence gate'
     -o "$WORK/swiftdata-guest-runtime.o" \
     "$W/full/swiftdata/tests/SwiftDataGuestRuntime.swift"
 "${LD[@]}" -dead_strip -ignore_auto_link \
-    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/SwiftDataGuestRuntime" \
-    "$WORK/swiftdata-guest-runtime.o" "${COMMON_LINK[@]}" \
+    "$WORK/swiftdata-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
     -lSwiftData -lSwiftUI -lFoundation -lFoundationInternationalization \
     -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
@@ -2467,6 +2484,10 @@ swiftdata_gate_load_count=$(llvm-otool-18 -L \
     | awk '$1 == "@rpath/libSwiftData.dylib" { count++ } END { print count + 0 }')
 [ "$swiftdata_gate_load_count" -eq 1 ] \
     || die "SwiftData gate load count $swiftdata_gate_load_count, expected 1"
+swiftdata_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/SwiftDataGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$swiftdata_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "SwiftData gate Preview export count $swiftdata_preview_export_count, expected $PREVIEW_ENABLED"
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
@@ -2697,15 +2718,22 @@ echo '== compile/link/run the SwiftUI-only Foundation/Combine/Dispatch reexport 
     -o "$WORK/swiftui-foundation-reexport-probe.o" \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 "${LD[@]}" -dead_strip -ignore_auto_link \
-    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/SwiftUIFoundationReexportProbe" \
-    "$WORK/swiftui-foundation-reexport-probe.o" "${COMMON_LINK[@]}" \
+    "$WORK/swiftui-foundation-reexport-probe.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
     -lSwiftUI -lDispatch -lFoundation -lFoundationInternationalization \
     -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
     -lCombine -lOpenCombine "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 llvm-otool-18 -hv "$STAGE/probe/SwiftUIFoundationReexportProbe" \
     | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
     || die 'SwiftUI Foundation reexport gate is not an ARM64 Mach-O executable'
+swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/SwiftUIFoundationReexportProbe" \
+    "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$swiftui_reexport_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "SwiftUI reexport gate Preview export count $swiftui_reexport_preview_export_count, expected $PREVIEW_ENABLED"
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
