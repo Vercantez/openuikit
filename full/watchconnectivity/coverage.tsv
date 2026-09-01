@@ -1,70 +1,70 @@
 precise	status	evidence	notes
-c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeCompanionAppNotInstalled	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeDeliveryFailed	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeDeviceNotPaired	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeFileAccessDenied	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeGenericError	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeInsufficientSpace	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeInvalidParameter	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeMessageReplyFailed	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeMessageReplyTimedOut	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeNotReachable	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodePayloadTooLarge	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodePayloadUnsupportedTypes	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeSessionInactive	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeSessionMissingDelegate	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeSessionNotActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeSessionNotSupported	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeTransferTimedOut	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeWatchAppNotInstalled	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCErrorCode@WCErrorCodeWatchOnlyApp	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCSessionActivationState@WCSessionActivationStateActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCSessionActivationState@WCSessionActivationStateInactive	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@E@WCSessionActivationState@WCSessionActivationStateNotActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:@WCErrorDomain	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSession	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeCompanionAppNotInstalled	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeDeliveryFailed	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeDeviceNotPaired	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeFileAccessDenied	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeGenericError	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeInsufficientSpace	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeInvalidParameter	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeMessageReplyFailed	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeMessageReplyTimedOut	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeNotReachable	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodePayloadTooLarge	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodePayloadUnsupportedTypes	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeSessionInactive	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeSessionMissingDelegate	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeSessionNotActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeSessionNotSupported	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeTransferTimedOut	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeWatchAppNotInstalled	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCErrorCode@WCErrorCodeWatchOnlyApp	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCSessionActivationState@WCSessionActivationStateActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCSessionActivationState@WCSessionActivationStateInactive	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@E@WCSessionActivationState@WCSessionActivationStateNotActivated	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:@WCErrorDomain	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSession	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSession(cm)isSupported	implemented	tests/agent/WatchConnectivityRuntime.swift	always false on Linux; no WatchConnectivity daemon
-c:objc(cs)WCSession(cpy)defaultSession	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSession(im)activateSession	implemented	tests/agent/WatchConnectivityRuntime.swift	stays notActivated; fail-closed sessionNotSupported to delegate
-c:objc(cs)WCSession(im)sendMessage:replyHandler:errorHandler:	implemented	tests/agent/WatchConnectivityRuntime.swift	never replies; errorHandler gets sessionNotSupported or payloadUnsupportedTypes
-c:objc(cs)WCSession(im)sendMessageData:replyHandler:errorHandler:	implemented	tests/agent/WatchConnectivityRuntime.swift	never replies; errorHandler gets sessionNotSupported
+c:objc(cs)WCSession(cpy)defaultSession	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSession(im)activateSession	implemented	tests/agent/WatchConnectivityRuntime.swift	stays notActivated; fail-closed sessionNotSupported on serial non-main delegate queue
+c:objc(cs)WCSession(im)sendMessage:replyHandler:errorHandler:	implemented	tests/agent/WatchConnectivityRuntime.swift	never replies; errorHandler is queued with sessionNotSupported or payloadUnsupportedTypes
+c:objc(cs)WCSession(im)sendMessageData:replyHandler:errorHandler:	implemented	tests/agent/WatchConnectivityRuntime.swift	never replies; errorHandler is queued with sessionNotSupported
 c:objc(cs)WCSession(im)transferCurrentComplicationUserInfo:	implemented	tests/agent/WatchConnectivityRuntime.swift	returns finished complication transfer; remaining budget is 0
 c:objc(cs)WCSession(im)transferFile:metadata:	implemented	tests/agent/WatchConnectivityRuntime.swift	never copies bytes; missing files are fileAccessDenied
-c:objc(cs)WCSession(im)transferUserInfo:	implemented	tests/agent/WatchConnectivityRuntime.swift	returns finished transfer; didFinish reports sessionNotSupported
-c:objc(cs)WCSession(im)updateApplicationContext:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	throws; does not store a fabricated context
+c:objc(cs)WCSession(im)transferUserInfo:	implemented	tests/agent/WatchConnectivityRuntime.swift	returns finished transfer; didFinish reports sessionNotSupported on the delegate queue
+c:objc(cs)WCSession(im)updateApplicationContext:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	throws; rejects NSNull and non-string keys; does not store a fabricated context
 c:objc(cs)WCSession(py)activationState	implemented	tests/agent/WatchConnectivityRuntime.swift	always notActivated
-c:objc(cs)WCSession(py)applicationContext	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSession(py)applicationContext	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSession(py)complicationEnabled	implemented	tests/agent/WatchConnectivityRuntime.swift	always false
-c:objc(cs)WCSession(py)delegate	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSession(py)delegate	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSession(py)hasContentPending	implemented	tests/agent/WatchConnectivityRuntime.swift	always false; no inbox
-c:objc(cs)WCSession(py)outstandingFileTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSession(py)outstandingUserInfoTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSession(py)outstandingFileTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSession(py)outstandingUserInfoTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSession(py)paired	implemented	tests/agent/WatchConnectivityRuntime.swift	always false
 c:objc(cs)WCSession(py)reachable	implemented	tests/agent/WatchConnectivityRuntime.swift	always false
-c:objc(cs)WCSession(py)receivedApplicationContext	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSession(py)remainingComplicationUserInfoTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSession(py)receivedApplicationContext	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSession(py)remainingComplicationUserInfoTransfers	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSession(py)watchAppInstalled	implemented	tests/agent/WatchConnectivityRuntime.swift	always false
 c:objc(cs)WCSession(py)watchDirectoryURL	implemented	tests/agent/WatchConnectivityRuntime.swift	always nil when unpaired
-c:objc(cs)WCSessionFile	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFile(py)fileURL	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFile(py)metadata	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFileTransfer	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFileTransfer(im)cancel	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFileTransfer(py)file	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFileTransfer(py)progress	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionFileTransfer(py)transferring	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSessionFile	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFile(py)fileURL	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFile(py)metadata	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFileTransfer	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFileTransfer(im)cancel	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFileTransfer(py)file	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFileTransfer(py)progress	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionFileTransfer(py)transferring	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(cs)WCSessionUserInfoTransfer	implemented	tests/agent/WatchConnectivityRuntime.swift	NSSecureCoding decode fails closed
-c:objc(cs)WCSessionUserInfoTransfer(im)cancel	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionUserInfoTransfer(py)currentComplicationInfo	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionUserInfoTransfer(py)transferring	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(cs)WCSessionUserInfoTransfer(py)userInfo	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(cs)WCSessionUserInfoTransfer(im)cancel	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionUserInfoTransfer(py)currentComplicationInfo	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionUserInfoTransfer(py)transferring	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(cs)WCSessionUserInfoTransfer(py)userInfo	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)WCSessionUserInfoTransfer	implemented	tests/agent/WatchConnectivityRuntime.swift	returns nil; archive keys are not public
-c:objc(pl)WCSessionDelegate	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(pl)WCSessionDelegate(im)session:activationDidCompleteWithState:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(pl)WCSessionDelegate(im)session:didFinishFileTransfer:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	
-c:objc(pl)WCSessionDelegate(im)session:didFinishUserInfoTransfer:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	
+c:objc(pl)WCSessionDelegate	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+c:objc(pl)WCSessionDelegate(im)session:activationDidCompleteWithState:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	delivered on the serial non-main delegate queue
+c:objc(pl)WCSessionDelegate(im)session:didFinishFileTransfer:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	fail-closed didFinish on the serial delegate queue
+c:objc(pl)WCSessionDelegate(im)session:didFinishUserInfoTransfer:error:	implemented	tests/agent/WatchConnectivityRuntime.swift	fail-closed didFinish on the serial delegate queue
 c:objc(pl)WCSessionDelegate(im)session:didReceiveApplicationContext:	declared	WatchConnectivity.swift	optional incoming callback; Linux never delivers counterpart context
 c:objc(pl)WCSessionDelegate(im)session:didReceiveFile:	declared	WatchConnectivity.swift	optional incoming callback; Linux never delivers counterpart files
 c:objc(pl)WCSessionDelegate(im)session:didReceiveMessage:	declared	WatchConnectivity.swift	optional incoming callback; Linux never delivers counterpart messages
@@ -72,49 +72,49 @@ c:objc(pl)WCSessionDelegate(im)session:didReceiveMessage:replyHandler:	declared	
 c:objc(pl)WCSessionDelegate(im)session:didReceiveMessageData:	declared	WatchConnectivity.swift	optional incoming callback; Linux never delivers counterpart message data
 c:objc(pl)WCSessionDelegate(im)session:didReceiveMessageData:replyHandler:	declared	WatchConnectivity.swift	optional incoming callback; default does not invent a reply
 c:objc(pl)WCSessionDelegate(im)session:didReceiveUserInfo:	declared	WatchConnectivity.swift	optional incoming callback; Linux never delivers counterpart userInfo
-c:objc(pl)WCSessionDelegate(im)sessionDidBecomeInactive:	implemented	tests/agent/WatchConnectivityRuntime.swift	required; Linux never inactivates an activated session
-c:objc(pl)WCSessionDelegate(im)sessionDidDeactivate:	implemented	tests/agent/WatchConnectivityRuntime.swift	required; Linux never deactivates
+c:objc(pl)WCSessionDelegate(im)sessionDidBecomeInactive:	declared	WatchConnectivity.swift	required protocol method; Linux never activates so this is never invoked
+c:objc(pl)WCSessionDelegate(im)sessionDidDeactivate:	declared	WatchConnectivity.swift	required protocol method; Linux never deactivates so this is never invoked
 c:objc(pl)WCSessionDelegate(im)sessionReachabilityDidChange:	declared	WatchConnectivity.swift	optional; isReachable stays false so this never fires
 c:objc(pl)WCSessionDelegate(im)sessionWatchStateDidChange:	declared	WatchConnectivity.swift	optional; pairing/install flags stay false so this never fires
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV12genericErrorSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV12notReachableSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV12watchOnlyAppSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV14deliveryFailedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV15deviceNotPairedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV15payloadTooLargeSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV15sessionInactiveSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV16fileAccessDeniedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV16invalidParameterSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV16transferTimedOutSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV17insufficientSpaceSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV18messageReplyFailedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV19sessionNotActivatedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV19sessionNotSupportedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV20messageReplyTimedOutSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV20watchAppNotInstalledSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV22sessionMissingDelegateSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV23payloadUnsupportedTypesSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SC11WCErrorCodeLeV24companionAppNotInstalledSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:So11WCErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:So24WCSessionActivationStateV8rawValueABSgSi_tcfc	implemented	tests/agent/WatchConnectivityRuntime.swift	
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV12genericErrorSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV12notReachableSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV12watchOnlyAppSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV14deliveryFailedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV15deviceNotPairedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV15payloadTooLargeSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV15sessionInactiveSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV16fileAccessDeniedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV16invalidParameterSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV16transferTimedOutSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV17insufficientSpaceSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV18messageReplyFailedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV19sessionNotActivatedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV19sessionNotSupportedSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV20messageReplyTimedOutSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV20watchAppNotInstalledSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV22sessionMissingDelegateSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV23payloadUnsupportedTypesSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SC11WCErrorCodeLeV24companionAppNotInstalledSoAAVvpZ	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCSessionActivationState	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:So11WCErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:So24WCSessionActivationStateV8rawValueABSgSi_tcfc	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised by tests/agent/WatchConnectivityRuntime.swift
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@WCErrorCode	implemented	tests/agent/WatchConnectivityRuntime.swift	exercised; Apple copy is not fabricated

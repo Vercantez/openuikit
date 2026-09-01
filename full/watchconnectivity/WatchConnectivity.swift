@@ -1,4 +1,5 @@
 @_exported import Foundation
+import Dispatch
 
 /// Apple's public WatchConnectivity error domain. The ObjC constant is
 /// exported as `_WCErrorDomain`; the Swift overlay exposes this string.
@@ -95,6 +96,9 @@ public enum WCSessionActivationState: Int, Hashable, Sendable {
 /// Incoming message, file, user-info, and application-context callbacks never
 /// fire on Linux: there is no counterpart device. Optional methods have empty
 /// defaults matching Apple's ObjC optional protocol requirements.
+///
+/// The public WCSession header delivers every delegate method on one serial
+/// background queue that is never the main queue.
 public protocol WCSessionDelegate: NSObjectProtocol {
     func session(
         _ session: WCSession,
@@ -285,6 +289,13 @@ open class WCSessionUserInfoTransfer: NSObject, NSSecureCoding {
 /// would be a device-service lie.
 open class WCSession: NSObject {
     private static let defaultSession = WCSession()
+
+    /// Public WCSession.h contract: every `WCSessionDelegate` method is
+    /// invoked on one serial background queue that is never the main queue.
+    private let delegateQueue = DispatchQueue(
+        label: "WatchConnectivity.WCSession.delegate",
+        qos: .utility
+    )
     private let lock = NSLock()
     private weak var sessionDelegate: (any WCSessionDelegate)?
     private var storedApplicationContext: [String: Any] = [:]
@@ -347,19 +358,21 @@ open class WCSession: NSObject {
     }
 
     /// Attempts to activate the session. Linux has no WatchConnectivity
-    /// service, so the session stays `.notActivated` and the delegate is
-    /// told so immediately. Callback queue parity with Apple is an oracle
-    /// question; this overlay delivers fail-closed on the calling thread.
+    /// service, so the session stays `.notActivated`. When a delegate is set,
+    /// it is told so on the session's serial non-main delegate queue.
     open func activate() {
         let currentDelegate = delegate
         guard let currentDelegate else {
             return
         }
-        currentDelegate.session(
-            self,
-            activationDidCompleteWith: .notActivated,
-            error: WCError(.sessionNotSupported)
-        )
+        enqueueDelegate { [weak self] in
+            guard let self else { return }
+            currentDelegate.session(
+                self,
+                activationDidCompleteWith: .notActivated,
+                error: WCError(.sessionNotSupported)
+            )
+        }
     }
 
     open func sendMessage(
@@ -369,7 +382,10 @@ open class WCSession: NSObject {
     ) {
         _ = replyHandler
         let error = sendingError(for: message)
-        errorHandler?(error)
+        guard let errorHandler else { return }
+        enqueueDelegate {
+            errorHandler(error)
+        }
     }
 
     open func sendMessageData(
@@ -378,7 +394,11 @@ open class WCSession: NSObject {
         errorHandler: ((any Error) -> Void)? = nil
     ) {
         _ = (data, replyHandler)
-        errorHandler?(sessionFailureError())
+        guard let errorHandler else { return }
+        let error = sessionFailureError()
+        enqueueDelegate {
+            errorHandler(error)
+        }
     }
 
     open func updateApplicationContext(_ applicationContext: [String: Any]) throws {
@@ -417,7 +437,10 @@ open class WCSession: NSObject {
         let progress = Progress(totalUnitCount: 1)
         progress.cancel()
         let transfer = WCSessionFileTransfer(file: payload, progress: progress)
-        delegate?.session(self, didFinish: transfer, error: error)
+        enqueueDelegate { [weak self] in
+            guard let self else { return }
+            self.delegate?.session(self, didFinish: transfer, error: error)
+        }
         return transfer
     }
 
@@ -435,7 +458,10 @@ open class WCSession: NSObject {
             userInfo: userInfo,
             isCurrentComplicationInfo: isCurrentComplicationInfo
         )
-        delegate?.session(self, didFinish: transfer, error: error)
+        enqueueDelegate { [weak self] in
+            guard let self else { return }
+            self.delegate?.session(self, didFinish: transfer, error: error)
+        }
         return transfer
     }
 
@@ -461,45 +487,52 @@ open class WCSession: NSObject {
         }
         return WCError(.sessionNotSupported)
     }
+
+    private func enqueueDelegate(_ body: @escaping () -> Void) {
+        let work = WatchConnectivityDelegateWork(body: body)
+        delegateQueue.async {
+            work.run()
+        }
+    }
 }
 
-/// Local property-list screening. Exact Apple size limits are private TBD
-/// symbols and are not enforced here.
+/// `@Sendable` box so delegate work can hop onto the serial queue under
+/// Swift 6 without claiming Apple Watch transport is Sendable.
+private struct WatchConnectivityDelegateWork: @unchecked Sendable {
+    let body: () -> Void
+    func run() { body() }
+}
+
+/// Property-list screening using Foundation's canonical identities
+/// (`NSString`, `NSNumber`, `NSDate`, `NSData`, `NSArray`, `NSDictionary`
+/// with `NSString` keys). `NSNull` is not a property-list value. Exact Apple
+/// size limits are private TBD symbols and are not enforced here.
 enum WatchConnectivityPayload {
     static func isPropertyListDictionary(_ dictionary: [String: Any]) -> Bool {
-        dictionary.values.allSatisfy(isPropertyListValue)
+        isCanonicalPropertyListValue(NSDictionary(dictionary: dictionary))
     }
 
-    static func isPropertyListValue(_ value: Any) -> Bool {
-        if value is NSNull { return true }
-        if value is String || value is NSString { return true }
-        if value is Data || value is NSData { return true }
-        if value is Date || value is NSDate { return true }
-        if value is Bool { return true }
-        if value is Int || value is Int8 || value is Int16 || value is Int32 || value is Int64 {
-            return true
+    static func isCanonicalPropertyListValue(_ value: Any) -> Bool {
+        if value is NSNull {
+            return false
         }
-        if value is UInt || value is UInt8 || value is UInt16 || value is UInt32 || value is UInt64 {
-            return true
-        }
-        if value is Float || value is Double { return true }
-        if value is NSNumber { return true }
-        if let array = value as? [Any] {
-            return array.allSatisfy(isPropertyListValue)
-        }
-        if let dictionary = value as? [String: Any] {
-            return dictionary.values.allSatisfy(isPropertyListValue)
-        }
-        if let dictionary = value as? NSDictionary {
-            for (key, element) in dictionary {
-                guard key is String || key is NSString else { return false }
-                if !isPropertyListValue(element) { return false }
-            }
+        if value is NSString || value is NSNumber || value is NSDate || value is NSData {
             return true
         }
         if let array = value as? NSArray {
             for element in array {
-                if !isPropertyListValue(element) { return false }
+                if !isCanonicalPropertyListValue(element) {
+                    return false
+                }
+            }
+            return true
+        }
+        if let dictionary = value as? NSDictionary {
+            for key in dictionary.allKeys {
+                guard key is NSString else { return false }
+                guard isCanonicalPropertyListValue(dictionary[key] as Any) else {
+                    return false
+                }
             }
             return true
         }

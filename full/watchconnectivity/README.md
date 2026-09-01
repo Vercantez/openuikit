@@ -14,20 +14,25 @@ Outstanding transfer lists stay empty.
 
 `activate()` never transitions the session. When a delegate is set, it is
 told `activationDidCompleteWith: .notActivated` plus
-`WCError.sessionNotSupported` on the calling thread. `sessionDidBecomeInactive`
-and `sessionDidDeactivate` are never invoked. Incoming message, user-info,
-file, and application-context delegate callbacks never fire: there is no
-counterpart device.
+`WCError.sessionNotSupported` on one dedicated serial non-main delegate
+queue, matching the public WCSession header contract. Callbacks are not
+inline on the caller, are never the main queue, keep FIFO order, and never
+overlap. `sessionDidBecomeInactive` and `sessionDidDeactivate` are never
+invoked. Incoming message, user-info, file, and application-context
+delegate callbacks never fire: there is no counterpart device.
 
-`sendMessage` and `sendMessageData` never invoke a reply handler. They invoke
-the error handler with `sessionNotSupported`, or `payloadUnsupportedTypes`
-when the dictionary is not property-list compatible. `updateApplicationContext`
-throws the same errors and does not store a context. `transferUserInfo`,
-`transferCurrentComplicationUserInfo`, and `transferFile` return objects whose
-`isTransferring` is `false` and immediately report failure through the
-optional `didFinish` callbacks. Missing files fail with `fileAccessDenied`;
-non-file URLs fail with `invalidParameter`. `cancel()` is inert because a
-transfer never starts. `WCSessionUserInfoTransfer.init(coder:)` returns `nil`
+`sendMessage` and `sendMessageData` never invoke a reply handler. Error
+handlers run on the same serial delegate queue with `sessionNotSupported`,
+or `payloadUnsupportedTypes` when the dictionary is not a Foundation
+property list (`NSString`, `NSNumber`, `NSDate`, `NSData`, `NSArray`, and
+`NSDictionary` with `NSString` keys). `NSNull` and non-string keys are
+rejected. `updateApplicationContext` throws the same errors synchronously
+and does not store a context. `transferUserInfo`,
+`transferCurrentComplicationUserInfo`, and `transferFile` return objects
+whose `isTransferring` is `false` and report failure through `didFinish` on
+the delegate queue. Missing files fail with `fileAccessDenied`; non-file
+URLs fail with `invalidParameter`. `cancel()` is inert because a transfer
+never starts. `WCSessionUserInfoTransfer.init(coder:)` returns `nil`
 because Apple's archive keys are not in the public graph.
 
 `WCErrorDomain` is `WCErrorDomain`. Numeric `WCError.Code` values follow the
@@ -37,5 +42,5 @@ dictionary value equality. Hashing uses only the error code.
 Private TBD types (`WCXPCManager`, `WCQueueManager`, payload size-limit
 symbols, and sandbox helpers) are explicit exclusions.
 
-Apple callback queue, exact localized strings, payload size limits, and
-activate-with-nil-delegate behavior remain oracle questions.
+Apple localized strings, payload size limits, activate-with-nil-delegate
+behavior, and the exact Apple queue QoS/label remain oracle questions.
