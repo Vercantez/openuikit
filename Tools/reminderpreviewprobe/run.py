@@ -460,7 +460,7 @@ def validate_expansion(output: str) -> None:
         "struct $s",
         ": DeveloperToolsSupport.PreviewRegistry",
         "static func makePreview() throws -> DeveloperToolsSupport.Preview",
-        "DeveloperToolsSupport.Preview {",
+        "DeveloperToolsSupport.Preview(body: {",
         "CreateViewController(initialDate: Date())",
     )
     for spelling in required:

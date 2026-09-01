@@ -1,8 +1,8 @@
 // This file adapts the registry/source-location skeleton from OpenSwiftUI's
 // MIT-licensed PreviewMacro.swift at the exact provenance recorded in
 // docs/PREVIEW.md and THIRD_PARTY_LICENSES/OpenSwiftUI.txt. It was changed for
-// UIKit values, a deliberately argument-free boundary, and Apple's measured
-// single-expression UIKit expansion shape.
+// UIKit and SwiftUI values, a bounded optional display-name boundary, and
+// Apple's measured single-expression expansion shape.
 // OpenSwiftUI portions copyright (c) 2023-2025 Kyle-Ye.
 
 import SwiftSyntax
@@ -14,11 +14,11 @@ struct UIKitPreviewMacro: DeclarationMacro {
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-        guard node.arguments.isEmpty,
+        guard node.arguments.count <= 1,
               node.additionalTrailingClosures.isEmpty,
               let body = node.trailingClosure else {
             throw MacroExpansionErrorMessage(
-                "OpenUIKit #Preview currently requires exactly one trailing closure"
+                "OpenUIKit #Preview requires an optional display name and exactly one trailing closure"
             )
         }
 
@@ -48,7 +48,7 @@ struct UIKitPreviewMacro: DeclarationMacro {
                 }
 
                 static func makePreview() throws -> DeveloperToolsSupport.Preview {
-                    DeveloperToolsSupport.Preview {
+                    DeveloperToolsSupport.Preview(body: {
                         @resultBuilder struct __B_Builder<Content> {
                             static func buildBlock(_ content: Content) -> Content {
                                 content
@@ -60,7 +60,7 @@ struct UIKitPreviewMacro: DeclarationMacro {
                             build()
                         }
                         return __b_buildContent \(body)
-                    }
+                    })
                 }
             }
             """

@@ -1,6 +1,7 @@
 import XCTest
 import OpenCoreGraphics
 import OpenUIKit
+@_spi(OpenUIKitPreview) import DeveloperToolsSupport
 @testable import SwiftUI
 
 private extension EnvironmentValues {
@@ -38,6 +39,15 @@ private struct FadingModifier: AnimatableModifier {
 }
 
 final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
+    @available(macOS 14.0, *)
+    @MainActor
+    func testSwiftUIPreviewMetadataRetainsConcreteBodyWithoutHosting() {
+        let preview = DeveloperToolsSupport.Preview(body: {
+            Text("compile-only-preview")
+        })
+        XCTAssertTrue(preview._openUIKitBody() is Text)
+    }
+
     func testLocalizedStringKeyInterpolationRendersDevelopmentValue() throws {
         let count = 3
         let key: LocalizedStringKey = "Downloaded \(count) items"

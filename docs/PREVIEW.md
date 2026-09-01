@@ -17,14 +17,20 @@ source file ID, line, column, and a `makePreview()` function. The resulting
 host do not exist yet, so this is functional registration metadata rather than
 an Xcode Previews replacement.
 
+The same host plugin now accepts SwiftUI's compile-critical forms
+`#Preview { ... }` and `#Preview("name") { ... }`. Both emit the same
+source-located target metadata and retain the concrete `View` body as `Any`.
+The optional name is intentionally ignored until a preview host exists; this
+support exists so ordinary SwiftPM targets do not need their preview blocks
+edited out to compile on Linux.
+
 ## Capability boundary
 
-This slice accepts exactly an unnamed trailing closure whose single result is
-an OpenUIKit `UIView` or `UIViewController`. It intentionally rejects named
-previews, traits, additional trailing closures, multiple body expressions,
-control-flow builders, non-UIKit content, and direct access to the retained
-body SPI. Those surfaces require additional native measurements and should
-not silently acquire invented behavior.
+The UIKit declaration accepts exactly an unnamed trailing closure whose single
+result is an OpenUIKit `UIView` or `UIViewController`. The SwiftUI declaration
+also accepts one optional display name and a single `View` expression. Traits,
+additional trailing closures, multiple body expressions, control-flow
+builders, and direct access to the retained body SPI remain unsupported.
 
 The public availability boundary is iOS 17, macOS 14, and tvOS 17. The emitted
 registry also uses the measured visionOS 1 and watchOS 10 availability shape.
@@ -49,7 +55,10 @@ object format. `Tools/reminderpreviewprobe/run.py` pins the entire unchanged
 22-source app and its one-to-zero diagnostic delta. Its companion guest gate
 uses the production Foundation-facade ordering so the host-native plugin is
 tested in the same ARM64 Mach-O application path rather than only in an
-isolated macro fixture.
+isolated macro fixture. `Tools/previewprobe/swiftui.sh` independently builds an
+ordinary SwiftPM target containing named and unnamed SwiftUI previews, proves
+the macro executable is native to the build host, and audits both emitted
+registries without starting a preview host.
 
 The guest consumes the exact external Reminder project inventory rather than
 silently regenerating it. Its SHA-256 is

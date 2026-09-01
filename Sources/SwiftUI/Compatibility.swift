@@ -1,6 +1,35 @@
-@_exported import DeveloperToolsSupport
+@_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 import OpenUIKit
 import OpenCoreGraphics
+
+// SwiftUI previews are compile-time registration metadata only. The retained
+// body deliberately crosses into DeveloperToolsSupport as Any: application
+// targets can compile their unchanged #Preview declarations without pulling
+// a renderer or SwiftSyntax into the target process.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
+extension DeveloperToolsSupport.Preview {
+    @MainActor
+    public init<Content: _OpenView>(
+        body: @escaping @MainActor () -> Content
+    ) {
+        self.init(_openUIKitBody: { body() })
+    }
+}
+
+/// Emits source-located preview metadata for an unchanged SwiftUI declaration.
+///
+/// The optional display name is accepted for source compatibility and is not
+/// interpreted until a future preview host exists. No preview UI is launched
+/// or rendered by this compile-only platform slice.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, visionOS 1.0, *)
+@freestanding(declaration)
+public macro Preview(
+    _ name: String? = nil,
+    @_OpenViewBuilder body: @escaping @MainActor () -> any _OpenView
+) = #externalMacro(
+    module: "OpenUIKitPreviewMacros",
+    type: "UIKitPreviewMacro"
+)
 
 /// The source-facing key retained by SwiftUI controls until their strings are
 /// resolved in the active bundle/locale. The portable renderer currently uses

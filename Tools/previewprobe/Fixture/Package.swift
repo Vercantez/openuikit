@@ -19,6 +19,12 @@ let package = Package(
                 .product(name: "UIKit", package: "OpenUIKitUnderTest"),
             ]
         ),
+        .target(
+            name: "SwiftUIPreviewClient",
+            dependencies: [
+                .product(name: "SwiftUI", package: "OpenUIKitUnderTest"),
+            ]
+        ),
         .executableTarget(
             name: "PreviewRuntime",
             dependencies: [

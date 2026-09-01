@@ -158,6 +158,7 @@ let package = Package(
                 "OpenUIKit",
                 "Symbols",
                 "DeveloperToolsSupport",
+                "OpenUIKitPreviewMacros",
                 "OpenSwiftUIMacros",
             ] + swiftUICombineDependencies
         ),
@@ -255,6 +256,7 @@ let package = Package(
                 "SwiftUI",
                 "OpenUIKit",
                 "Symbols",
+                "DeveloperToolsSupport",
             ] + swiftUICombineDependencies
         ),
         .testTarget(name: "OpenUIKitCTests",

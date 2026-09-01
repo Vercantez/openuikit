@@ -98,7 +98,7 @@ grep -Fq '"PreviewClient/Client.swift"' "$scratch/expansion.stderr" \
     || die "fileID metadata drifted"
 grep -Fq 'static var line: Int {' "$scratch/expansion.stderr" \
     || die "line metadata is missing"
-grep -Fq 'DeveloperToolsSupport.Preview {' "$scratch/expansion.stderr" \
+grep -Fq 'DeveloperToolsSupport.Preview(body: {' "$scratch/expansion.stderr" \
     || die "functional Preview construction is missing"
 grep -Fq 'return __b_buildContent {' "$scratch/expansion.stderr" \
     || die "single-expression body wrapper is missing"

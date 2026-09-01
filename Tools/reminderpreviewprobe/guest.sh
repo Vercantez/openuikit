@@ -263,7 +263,7 @@ required = (
     "static var column: Int {\n        1\n    }",
     ": DeveloperToolsSupport.PreviewRegistry",
     "static func makePreview() throws -> DeveloperToolsSupport.Preview",
-    "DeveloperToolsSupport.Preview {",
+    "DeveloperToolsSupport.Preview(body: {",
     "return __b_buildContent {",
     "CreateViewController(initialDate: Date())",
 )
