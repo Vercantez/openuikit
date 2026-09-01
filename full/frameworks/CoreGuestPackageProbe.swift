@@ -51,6 +51,7 @@ import NaturalLanguage
 import AuthenticationServices
 import FoundationModels
 import WebKit
+import SystemConfiguration
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
 where Effect: SymbolEffect & IndefiniteSymbolEffect {}
@@ -1252,6 +1253,41 @@ struct CoreGuestPackageProbe {
         } catch {
             preconditionFailure("unexpected AdServices error: \(error)")
         }
+        let reachabilityFlags: SCNetworkReachabilityFlags = [
+            .reachable,
+            .isDirect,
+        ]
+        let reachabilityGeneration =
+            OpenSystemConfigurationReachabilityGeneration()
+        OpenSystemConfigurationSetDefaultReachability(
+            reachabilityFlags,
+            true
+        )
+        precondition(
+            OpenSystemConfigurationReachabilityGeneration() ==
+                reachabilityGeneration + 1
+        )
+        let reachability = SCNetworkReachabilityCreateWithName(
+            nil,
+            "core-package.invalid"
+        )!
+        var currentReachabilityFlags = SCNetworkReachabilityFlags()
+        precondition(
+            SCNetworkReachabilityGetFlags(
+                reachability,
+                &currentReachabilityFlags
+            ) && currentReachabilityFlags == reachabilityFlags
+        )
+        let loopbackReachability = SCNetworkReachabilityCreateWithName(
+            nil,
+            "localhost"
+        )!
+        precondition(
+            SCNetworkReachabilityGetFlags(
+                loopbackReachability,
+                &currentReachabilityFlags
+            ) && currentReachabilityFlags.contains(.isLocalAddress)
+        )
 
         #if canImport(DeveloperToolsSupport)
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
@@ -1300,6 +1336,7 @@ struct CoreGuestPackageProbe {
                 + "photosui=transfer,binding,host-driven "
                 + "naturallanguage=deterministic,confidence-gated "
                 + "authenticationservices=host-driven,fail-closed "
+                + "systemconfiguration=reachability,host-driven,loopback "
                 + "webkit=state,kvo,engine-unavailable preview=\(preview)"
         )
     }

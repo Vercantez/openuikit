@@ -355,9 +355,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     # Observation, SwiftUI, AppKit, cross-import overlays, WebKit, first-party
     # gates, the reusable link loop, executable probes, all C/frontier
-    # executables, and AuthenticationServices' overlay/runtime gate share this
-    # one pinned runtime input.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 31:
+    # executables, AuthenticationServices' overlay/runtime gate, and the
+    # SystemConfiguration Apple-interface oracle share this pinned runtime.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 32:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -754,6 +754,8 @@ class PackageFixture:
             "frameworks/IOKit.framework/Headers",
             "frameworks/IOKit.framework/Modules",
             "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
+            "frameworks/SystemConfiguration.framework/Headers",
+            "frameworks/SystemConfiguration.framework/Modules",
             "include",
             "include/CoreImage",
             "include/COpenFoundationCore",
@@ -767,6 +769,7 @@ class PackageFixture:
             "guest-root/darwin/usr/lib",
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
+            "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework",
             "guest-root/host",
             "host-tools/swift/host/plugins",
             "host-tools/swift/linux",
@@ -913,6 +916,31 @@ class PackageFixture:
         os.symlink(
             "Versions/Current/Modules", root / "frameworks/AppKit.framework/Modules"
         )
+        for header in (
+            "OpenSystemConfiguration.h",
+            "SCNetwork.h",
+            "SCNetworkReachability.h",
+            "SystemConfiguration.h",
+        ):
+            write_file(
+                root / f"frameworks/SystemConfiguration.framework/Headers/{header}",
+                f"portable SystemConfiguration ABI: {header}\n",
+            )
+        write_file(
+            root
+            / "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+            "framework module SystemConfiguration {}\n",
+        )
+        write_file(
+            root / "frameworks/SystemConfiguration.framework/SystemConfiguration",
+            "SystemConfiguration Mach-O",
+        )
+        write_file(
+            root
+            / "guest-root/darwin/System/Library/Frameworks/"
+            "SystemConfiguration.framework/SystemConfiguration",
+            "SystemConfiguration Mach-O",
+        )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
         write_file(
@@ -1030,6 +1058,8 @@ class PackageFixture:
             "AppKit",
             "-framework",
             "IOKit",
+            "-framework",
+            "SystemConfiguration",
             "-lswiftIOKit",
             "-Llib",
             "-lUIKit",
@@ -1393,6 +1423,36 @@ class PackageFixture:
                 ),
             )
         )
+        for header in (
+            "OpenSystemConfiguration.h",
+            "SCNetwork.h",
+            "SCNetworkReachability.h",
+            "SystemConfiguration.h",
+        ):
+            records.append(
+                self._artifact(
+                    "include",
+                    "SystemConfiguration",
+                    "framework-header",
+                    f"frameworks/SystemConfiguration.framework/Headers/{header}",
+                )
+            )
+        records.append(
+            self._artifact(
+                "include",
+                "SystemConfiguration",
+                "framework-module-map",
+                "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+            )
+        )
+        records.append(
+            self._artifact(
+                "framework",
+                "SystemConfiguration",
+                "objc-dylib",
+                "frameworks/SystemConfiguration.framework/SystemConfiguration",
+            )
+        )
         records.append(
             self._artifact(
                 "runtime", "CQuartz", "dylib", "guest-root/darwin/usr/lib/libquartz.dylib"
@@ -1463,6 +1523,15 @@ class PackageFixture:
                 "SwiftIOKit",
                 "overlay-dylib",
                 "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "SystemConfiguration",
+                "framework-dylib",
+                "guest-root/darwin/System/Library/Frameworks/"
+                "SystemConfiguration.framework/SystemConfiguration",
             )
         )
         records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
@@ -2174,6 +2243,51 @@ class PackageContractTests(unittest.TestCase):
                 refusal = fixture.write_manifest(expected=2)
                 self.assertIn("AppKit framework pair", refusal.stderr)
 
+    def test_systemconfiguration_framework_boundary_is_mandatory(self) -> None:
+        paths = (
+            "frameworks/SystemConfiguration.framework/Headers/OpenSystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetwork.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetworkReachability.h",
+            "frameworks/SystemConfiguration.framework/Headers/SystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+            "frameworks/SystemConfiguration.framework/SystemConfiguration",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "SystemConfiguration.framework/SystemConfiguration",
+        )
+        for relative in paths:
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                ledger = fixture.root / "attestation/artifacts.tsv"
+                ledger.write_text(
+                    "\n".join(
+                        line
+                        for line in ledger.read_text(encoding="utf-8").splitlines()
+                        if relative not in line
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn(
+                    "SystemConfiguration framework boundary artifacts",
+                    refusal.stderr,
+                )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            pair = ["-framework", "SystemConfiguration"]
+            index = next(
+                index
+                for index in range(len(fixture.link_arguments) - 1)
+                if fixture.link_arguments[index : index + 2] == pair
+            )
+            del fixture.link_arguments[index : index + 2]
+            (fixture.root / "link-inputs.rsp").write_bytes(
+                b"".join(token.encode() + b"\0" for token in fixture.link_arguments)
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("SystemConfiguration framework pair", refusal.stderr)
+
     def test_unattested_host_tool_is_refused(self) -> None:
         fixture = self.fixture(False)
         write_file(fixture.root / "host-tools/swift/host/libStale.so", "stale")
@@ -2616,7 +2730,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 34
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 36
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -3965,15 +4079,15 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=31\\tsources=35\\tinputs=108",
+            "frontier-frameworks\\tframeworks=32\\tsources=36\\tinputs=121",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 35",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 36",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 108",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 121",
             source,
         )
         self.assertIn(

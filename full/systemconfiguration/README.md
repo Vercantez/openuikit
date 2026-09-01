@@ -15,6 +15,13 @@ Until the application host owns cross-runtime dispatch/run-loop objects,
 callbacks are delivered cooperatively and serially on the host lifecycle
 executor.
 
+The guest CoreFoundation boundary does not yet provide constant CFString
+objects or CFError construction. Accordingly, `SCCopyLastError()` and
+`kCFErrorDomainSystemConfiguration` are fail-closed (`NULL`), while `SCError()`
+and `SCErrorString()` expose the complete reachability status used by existing
+clients. This avoids embedding an invalid host or Apple CoreFoundation object
+inside the Mach-O framework.
+
 The evidence ledger pins six untouched applications. Firefox's complete
 `Reachability.swift` is independently typechecked without edits against the
 framework during the focused platform proof; the repository-owned consumer

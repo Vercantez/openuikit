@@ -32,6 +32,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "frameworks/IOKit.framework/Headers",
             "frameworks/IOKit.framework/Modules",
             "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
+            "frameworks/SystemConfiguration.framework/Headers",
+            "frameworks/SystemConfiguration.framework/Modules",
             "include",
             "include/CPortableIO",
             "include/CoreImage",
@@ -49,6 +51,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/darwin/usr/lib/swift",
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
+            "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework",
             "guest-root/host",
             "guest-root",
             "host-tools/swift/host/plugins",
@@ -88,6 +91,13 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
             "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
             "modules/IOKit.swiftmodule",
+            "frameworks/SystemConfiguration.framework/Headers/OpenSystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetwork.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetworkReachability.h",
+            "frameworks/SystemConfiguration.framework/Headers/SystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+            "frameworks/SystemConfiguration.framework/SystemConfiguration",
+            "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
             "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
@@ -397,6 +407,38 @@ class CoreGuestPackageTests(unittest.TestCase):
                 category, name, role = "framework", "AppKit", "dylib"
             elif relative.endswith("/AppKit.framework/Versions/C/AppKit"):
                 category, name, role = "runtime", "AppKit", "framework-dylib"
+            elif relative.startswith(
+                "frameworks/SystemConfiguration.framework/Headers/"
+            ):
+                category, name, role = (
+                    "include",
+                    "SystemConfiguration",
+                    "framework-header",
+                )
+            elif relative == (
+                "frameworks/SystemConfiguration.framework/Modules/module.modulemap"
+            ):
+                category, name, role = (
+                    "include",
+                    "SystemConfiguration",
+                    "framework-module-map",
+                )
+            elif relative == (
+                "frameworks/SystemConfiguration.framework/SystemConfiguration"
+            ):
+                category, name, role = (
+                    "framework",
+                    "SystemConfiguration",
+                    "objc-dylib",
+                )
+            elif relative.endswith(
+                "/SystemConfiguration.framework/SystemConfiguration"
+            ):
+                category, name, role = (
+                    "runtime",
+                    "SystemConfiguration",
+                    "framework-dylib",
+                )
             artifacts.append(
                 {
                     "category": category,
@@ -425,6 +467,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AppKit",
                 "-framework",
                 "IOKit",
+                "-framework",
+                "SystemConfiguration",
                 "-lswiftIOKit",
                 "-Llib",
                 "-lFoundationEssentials",
@@ -824,6 +868,53 @@ class CoreGuestPackageTests(unittest.TestCase):
                     core_guest_package.validate(self.root)
                 link.unlink()
                 os.symlink(expected_target, link)
+
+    def test_refuses_missing_systemconfiguration_framework_contract(self) -> None:
+        for relative in (
+            "frameworks/SystemConfiguration.framework/Headers/OpenSystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetwork.h",
+            "frameworks/SystemConfiguration.framework/Headers/SCNetworkReachability.h",
+            "frameworks/SystemConfiguration.framework/Headers/SystemConfiguration.h",
+            "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+            "frameworks/SystemConfiguration.framework/SystemConfiguration",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "SystemConfiguration.framework/SystemConfiguration",
+        ):
+            with self.subTest(relative=relative):
+                changed = copy.deepcopy(self.manifest)
+                changed["artifacts"] = [
+                    artifact
+                    for artifact in changed["artifacts"]
+                    if artifact["path"] != relative
+                ]
+                target = self.root / relative
+                payload = target.read_bytes()
+                target.unlink()
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    "required artifact",
+                ):
+                    core_guest_package.validate(self.root)
+                target.write_bytes(payload)
+                self.write_manifest(self.manifest)
+
+        changed = copy.deepcopy(self.manifest)
+        values = changed["executable_link_arguments"]
+        pair = ["-framework", "SystemConfiguration"]
+        index = next(
+            index
+            for index in range(len(values) - 1)
+            if values[index : index + 2] == pair
+        )
+        del values[index : index + 2]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "SystemConfiguration framework pair",
+        ):
+            core_guest_package.validate(self.root)
+        self.write_manifest(self.manifest)
 
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:
         (self.root / "lib/libUIKit.dylib").write_text("changed\n", encoding="utf-8")

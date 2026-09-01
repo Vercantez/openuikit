@@ -66,6 +66,10 @@ SWIFTUI_APPKIT_SOURCES_MANIFEST=$W/full/appkit/swiftui_appkit_guest_sources.txt
 APPKIT_ORACLE=$W/full/appkit/tests/AppKitInterfaceOracle.swift
 APPKIT_GOLDEN=$W/full/appkit/tests/appkit-interface-apple-xcode-26.1.txt
 APPKIT_LOAD_IDENTITIES=$W/full/appkit/tests/appkit-load-identities.txt
+SYSTEMCONFIGURATION_ORACLE=$W/full/systemconfiguration/tests/SystemConfigurationInterfaceOracle.swift
+SYSTEMCONFIGURATION_GOLDEN=$W/full/systemconfiguration/tests/systemconfiguration-interface-apple-2026-09-01.txt
+SYSTEMCONFIGURATION_RUNTIME_TEST=$W/full/systemconfiguration/tests/SystemConfigurationGuestRuntime.m
+SYSTEMCONFIGURATION_EXPORTS=$W/full/systemconfiguration/tests/systemconfiguration-expected.exports
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -1373,11 +1377,42 @@ append_frontier_sources() {
         printf 'frontier-input\t34\tIOKit\t%s\t%s\n' "$relative" \
             "$(hash_file "$W/$relative")" >> "$output"
     done
+    printf 'frontier-source\t37\tSystemConfiguration\t%s\t%s\n' \
+        full/systemconfiguration/SystemConfiguration.m \
+        "$(hash_file "$W/full/systemconfiguration/SystemConfiguration.m")" \
+        >> "$output"
+    printf 'frontier-manifest\t37\tSystemConfiguration\t%s\t%s\n' \
+        full/systemconfiguration/systemconfiguration_guest_sources.txt \
+        "$(hash_file "$W/full/systemconfiguration/systemconfiguration_guest_sources.txt")" \
+        >> "$output"
+    systemconfiguration_inputs=(
+        full/systemconfiguration/README.md
+        full/systemconfiguration/include/OpenSystemConfiguration.h
+        full/systemconfiguration/include/SCNetwork.h
+        full/systemconfiguration/include/SCNetworkReachability.h
+        full/systemconfiguration/include/SystemConfiguration.h
+        full/systemconfiguration/include/module.modulemap
+        full/systemconfiguration/tests/FirefoxReachabilityConsumer.swift
+        full/systemconfiguration/tests/SystemConfigurationGuestRuntime.m
+        full/systemconfiguration/tests/SystemConfigurationInterfaceOracle.swift
+        full/systemconfiguration/tests/systemconfiguration-corpus-2026-09-01.tsv
+        full/systemconfiguration/tests/systemconfiguration-expected.exports
+        full/systemconfiguration/tests/systemconfiguration-interface-apple-2026-09-01.txt
+        full/systemconfiguration/tests/test_systemconfiguration_host.sh
+    )
+    for relative in "${systemconfiguration_inputs[@]}"; do
+        [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+            || die "SystemConfiguration frontier input is missing or linked: $relative"
+        git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+            || die "SystemConfiguration frontier input is not tracked: $relative"
+        printf 'frontier-input\t37\tSystemConfiguration\t%s\t%s\n' \
+            "$relative" "$(hash_file "$W/$relative")" >> "$output"
+    done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 35 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 36 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 108 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 121 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -2046,6 +2081,91 @@ llvm-otool-18 -hv "$SWIFT_IOKIT_RUNTIME" \
 } > "$STAGE/attestation/swift-iokit-runtime.tsv"
 printf 'local\tdarwin%s\t%s\tbuilt from full/iokit/OpenSwiftIOKitRuntime.c\n' \
     "$SWIFT_IOKIT_INSTALL_NAME" "$(hash_file "$SWIFT_IOKIT_RUNTIME")" \
+    >> "$RUNTIME/.manifest"
+
+echo '== build and audit the host-driven SystemConfiguration framework boundary'
+SYSTEMCONFIGURATION_INSTALL_NAME=/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration
+SYSTEMCONFIGURATION_FRAMEWORK=$STAGE/frameworks/SystemConfiguration.framework
+SYSTEMCONFIGURATION_FRAMEWORK_BINARY=$SYSTEMCONFIGURATION_FRAMEWORK/SystemConfiguration
+SYSTEMCONFIGURATION_RUNTIME_FRAMEWORK=$RUNTIME/darwin/System/Library/Frameworks/SystemConfiguration.framework
+SYSTEMCONFIGURATION_RUNTIME_BINARY=$SYSTEMCONFIGURATION_RUNTIME_FRAMEWORK/SystemConfiguration
+mkdir -p "$SYSTEMCONFIGURATION_FRAMEWORK/Headers" \
+    "$SYSTEMCONFIGURATION_FRAMEWORK/Modules" \
+    "$SYSTEMCONFIGURATION_RUNTIME_FRAMEWORK"
+for header in OpenSystemConfiguration.h SCNetwork.h SCNetworkReachability.h \
+    SystemConfiguration.h; do
+    cp "$W/full/systemconfiguration/include/$header" \
+        "$SYSTEMCONFIGURATION_FRAMEWORK/Headers/$header"
+done
+cp "$W/full/systemconfiguration/include/module.modulemap" \
+    "$SYSTEMCONFIGURATION_FRAMEWORK/Modules/module.modulemap"
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
+    -fno-objc-arc -std=gnu11 -O2 -fvisibility=hidden \
+    -Wall -Wextra -Werror -I "$W/full/systemconfiguration/include" \
+    -c "$W/full/systemconfiguration/SystemConfiguration.m" \
+    -o "$WORK/systemconfiguration.o"
+"${LD[@]}" -dylib -dead_strip \
+    -install_name "$SYSTEMCONFIGURATION_INSTALL_NAME" \
+    -o "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    "$WORK/systemconfiguration.o" \
+    -L"$STAGE/sdk/usr/lib" -lSystem -lobjc
+cp "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    "$SYSTEMCONFIGURATION_RUNTIME_BINARY"
+
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/systemconfiguration-exports.txt"
+cmp "$SYSTEMCONFIGURATION_EXPORTS" \
+    "$WORK/systemconfiguration-exports.txt" \
+    || die 'SystemConfiguration framework exports drifted'
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/systemconfiguration-imports.txt"
+[ "$(grep -c '^___CFConstantStringClassReference$' \
+        "$WORK/systemconfiguration-imports.txt" || true)" -eq 0 ] \
+    || die 'SystemConfiguration embeds an unsupported CF constant string'
+llvm-otool-18 -L "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    | awk 'NR > 2 { print $1 }' | LC_ALL=C sort -u \
+    > "$WORK/systemconfiguration-loads.txt"
+printf '%s\n' /usr/lib/libSystem.B.dylib /usr/lib/libobjc.A.dylib \
+    | LC_ALL=C sort -u > "$WORK/systemconfiguration-expected-loads.txt"
+cmp "$WORK/systemconfiguration-expected-loads.txt" \
+    "$WORK/systemconfiguration-loads.txt" \
+    || die 'SystemConfiguration framework load closure drifted'
+for systemconfiguration_binary in "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    "$SYSTEMCONFIGURATION_RUNTIME_BINARY"; do
+    llvm-otool-18 -hv "$systemconfiguration_binary" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+        || die "SystemConfiguration is not an ARM64 Mach-O dylib: $systemconfiguration_binary"
+    [ "$(llvm-otool-18 -D "$systemconfiguration_binary" | tail -n 1)" = \
+        "$SYSTEMCONFIGURATION_INSTALL_NAME" ] \
+        || die "SystemConfiguration install name drifted: $systemconfiguration_binary"
+done
+cmp "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    "$SYSTEMCONFIGURATION_RUNTIME_BINARY" \
+    || die 'SystemConfiguration compile/runtime framework copies differ'
+{
+    printf 'format\tsystemconfiguration-framework-v1\n'
+    printf 'compile-framework\tframeworks/SystemConfiguration.framework/SystemConfiguration\tsha256=%s\n' \
+        "$(hash_file "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY")"
+    printf 'runtime-framework\tguest-root/darwin%s\tsha256=%s\n' \
+        "$SYSTEMCONFIGURATION_INSTALL_NAME" \
+        "$(hash_file "$SYSTEMCONFIGURATION_RUNTIME_BINARY")"
+    printf 'install-name\t%s\n' "$SYSTEMCONFIGURATION_INSTALL_NAME"
+    printf 'architecture\tarm64\n'
+    printf 'exports\tcount=16\tsha256=%s\n' \
+        "$(hash_file "$WORK/systemconfiguration-exports.txt")"
+    printf 'undefined-imports\tcount=%s\tsha256=%s\n' \
+        "$(wc -l < "$WORK/systemconfiguration-imports.txt" | tr -d '[:space:]')" \
+        "$(hash_file "$WORK/systemconfiguration-imports.txt")"
+    printf 'external-loads\tcount=2\tsha256=%s\n' \
+        "$(hash_file "$WORK/systemconfiguration-loads.txt")"
+    printf 'policy\texternal=unknown\thost-driven=yes\tloopback=reachable\tcallbacks=cooperative\tcferror=fail-closed\n'
+} > "$STAGE/attestation/systemconfiguration-framework.tsv"
+printf 'local\tdarwin%s\t%s\tbuilt from full/systemconfiguration/SystemConfiguration.m\n' \
+    "$SYSTEMCONFIGURATION_INSTALL_NAME" \
+    "$(hash_file "$SYSTEMCONFIGURATION_RUNTIME_BINARY")" \
     >> "$RUNTIME/.manifest"
 
 echo '== build and audit the fixed-ABI Linux URL transport boundary'
@@ -5045,10 +5165,39 @@ echo '== compile/link/run Accelerate, Compression, CoreText, AdServices, zlib, a
     -lFoundation -lFoundationInternationalization -lFoundationEssentials \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 
+"${APP_CONSUMER_SWIFTC[@]}" -F "$STAGE/frameworks" -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name FirefoxSystemConfigurationConsumer -typecheck \
+    "$W/full/systemconfiguration/tests/FirefoxReachabilityConsumer.swift"
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
+    -fno-objc-arc -std=gnu11 -O2 -Wall -Wextra -Werror \
+    -F "$STAGE/frameworks" -c "$SYSTEMCONFIGURATION_RUNTIME_TEST" \
+    -o "$WORK/systemconfiguration-guest-runtime.o"
+"${LD[@]}" -dead_strip -e _main -rpath @loader_path/../lib \
+    -o "$STAGE/probe/SystemConfigurationGuestRuntime" \
+    "$WORK/systemconfiguration-guest-runtime.o" \
+    "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    -L"$STAGE/sdk/usr/lib" -lSystem -lobjc
+
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name SystemConfigurationInterfaceOracle -emit-object \
+    -o "$WORK/systemconfiguration-interface-oracle.o" \
+    "$SYSTEMCONFIGURATION_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/SystemConfigurationInterfaceOracle" \
+    "$WORK/systemconfiguration-interface-oracle.o" "${COMMON_LINK[@]}" \
+    "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
 for frontier_probe in AccelerateGuestRuntime CompressionGuestRuntime \
     CoreTextGuestRuntime CoreTextFontManagerOracle AdServicesGuestRuntime \
     AdServicesInterfaceOracle ZlibGuestRuntime ZlibGzipOracle \
-    IOKitGuestRuntime IOKitInterfaceOracle; do
+    IOKitGuestRuntime IOKitInterfaceOracle \
+    SystemConfigurationGuestRuntime SystemConfigurationInterfaceOracle; do
     llvm-otool-18 -hv "$STAGE/probe/$frontier_probe" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "$frontier_probe is not an ARM64 Mach-O executable"
@@ -5067,6 +5216,8 @@ cp "$WORK/zlib-native-oracle.log" \
 cp "$IOKIT_GOLDEN" "$STAGE/attestation/iokit-interface-apple.txt"
 cp "$IOKIT_PORTABLE_GOLDEN" \
     "$STAGE/attestation/iokit-interface-portable.txt"
+cp "$SYSTEMCONFIGURATION_GOLDEN" \
+    "$STAGE/attestation/systemconfiguration-interface-apple.txt"
 
 for iokit_probe in IOKitGuestRuntime IOKitInterfaceOracle; do
     iokit_load_count=$(llvm-otool-18 -L "$STAGE/probe/$iokit_probe" \
@@ -5387,6 +5538,38 @@ grep -Fxq \
         "$(hash_file "$STAGE/attestation/SwiftUIAppKitColorRuntime.log")" \
         "$(hash_file "$STAGE/attestation/StoreKitAppKitRuntime.log")"
 } >> "$STAGE/attestation/appkit-framework.tsv"
+for systemconfiguration_probe in SystemConfigurationGuestRuntime \
+    SystemConfigurationInterfaceOracle; do
+    systemconfiguration_load_count=$(llvm-otool-18 -L \
+        "$STAGE/probe/$systemconfiguration_probe" \
+        | awk -v expected="$SYSTEMCONFIGURATION_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$systemconfiguration_load_count" -eq 1 ] \
+        || die "$systemconfiguration_probe SystemConfiguration load count $systemconfiguration_load_count, expected 1"
+done
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/SystemConfigurationGuestRuntime
+) | tee "$STAGE/attestation/systemconfiguration-runtime.log"
+grep -Fxq \
+    'SYSTEMCONFIGURATION_GUEST_OK reachability=unknown,host-driven,loopback flags=wifi,cellular,offline callbacks=dispatch,runloop,coalesced,cooperative context=balanced' \
+    "$STAGE/attestation/systemconfiguration-runtime.log" \
+    || die 'SystemConfiguration Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/SystemConfigurationInterfaceOracle
+) | tee "$STAGE/attestation/systemconfiguration-interface-runtime.log"
+cmp "$STAGE/attestation/systemconfiguration-interface-runtime.log" \
+    "$STAGE/attestation/systemconfiguration-interface-apple.txt" \
+    || die 'SystemConfiguration guest interface differs from Apple'
 
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -5438,6 +5621,7 @@ fi
     -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
     -lAccelerate -lCompression -lCoreText -lAdServices -lz \
     -lAuthenticationServices -l_AuthenticationServices_SwiftUI \
+    "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -5498,6 +5682,12 @@ probe_observation_load_count=$(llvm-otool-18 -L \
         END { print count + 0 }')
 [ "$probe_observation_load_count" -eq 1 ] \
     || die "core probe Observation load count $probe_observation_load_count, expected 1"
+probe_systemconfiguration_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/CoreGuestPackageProbe" \
+    | awk -v expected="$SYSTEMCONFIGURATION_INSTALL_NAME" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$probe_systemconfiguration_load_count" -eq 1 ] \
+    || die "core probe SystemConfiguration load count $probe_systemconfiguration_load_count, expected 1"
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$STAGE/probe/CoreGuestPackageProbe" \
@@ -5513,7 +5703,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath imageio=static,incremental,animated-gif symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-38 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed widgetkit=timelines,process-local,host-driven coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=state,kvo,engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath imageio=static,incremental,animated-gif symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-38 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed widgetkit=timelines,process-local,host-driven coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed systemconfiguration=reachability,host-driven,loopback webkit=state,kvo,engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -5732,7 +5922,8 @@ COMPILE_ARGUMENTS=(
 )
 LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
-    -F frameworks -framework AppKit -framework IOKit
+    -F frameworks -framework AppKit -framework IOKit \
+    -framework SystemConfiguration
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
     -lswiftCore -lswiftObjectiveC -lswiftIOKit "${SWIFTUI_RUNTIME_LINK_FLAG}"
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -5968,7 +6159,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=31\tsources=35\tinputs=108\n'
+    printf 'frontier-frameworks\tframeworks=32\tsources=36\tinputs=121\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -6021,6 +6212,15 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.c")" \
         "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.h")" \
         "$(hash_file "$SWIFT_IOKIT_EXPORTS")"
+    printf 'systemconfiguration\theader=%s\tmodule-map=%s\tobjc=%s\truntime-test=%s\toracle=%s\tapple-golden=%s\texports=%s\tcorpus=%s\tpolicy=host-driven,fail-closed\n' \
+        "$(hash_file "$W/full/systemconfiguration/include/SystemConfiguration.h")" \
+        "$(hash_file "$W/full/systemconfiguration/include/module.modulemap")" \
+        "$(hash_file "$W/full/systemconfiguration/SystemConfiguration.m")" \
+        "$(hash_file "$SYSTEMCONFIGURATION_RUNTIME_TEST")" \
+        "$(hash_file "$SYSTEMCONFIGURATION_ORACLE")" \
+        "$(hash_file "$SYSTEMCONFIGURATION_GOLDEN")" \
+        "$(hash_file "$SYSTEMCONFIGURATION_EXPORTS")" \
+        "$(hash_file "$W/full/systemconfiguration/tests/systemconfiguration-corpus-2026-09-01.tsv")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -6136,6 +6336,15 @@ record_artifact include IOKit framework-module-map \
     frameworks/IOKit.framework/Modules/module.modulemap
 record_artifact framework IOKit c-dylib frameworks/IOKit.framework/IOKit
 record_module_family framework IOKit
+for header in OpenSystemConfiguration.h SCNetwork.h SCNetworkReachability.h \
+    SystemConfiguration.h; do
+    record_artifact include SystemConfiguration framework-header \
+        "frameworks/SystemConfiguration.framework/Headers/$header"
+done
+record_artifact include SystemConfiguration framework-module-map \
+    frameworks/SystemConfiguration.framework/Modules/module.modulemap
+record_artifact framework SystemConfiguration objc-dylib \
+    frameworks/SystemConfiguration.framework/SystemConfiguration
 record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
@@ -6179,6 +6388,8 @@ record_artifact runtime AppKit framework-dylib \
     guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
 record_artifact runtime SwiftIOKit overlay-dylib \
     guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib
+record_artifact runtime SystemConfiguration framework-dylib \
+    guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 record_artifact runtime OpenFoundationInternationalization linux-helper \
@@ -6242,6 +6453,10 @@ record_artifact probe ZlibGzipOracle executable probe/ZlibGzipOracle
 record_artifact probe IOKitGuestRuntime executable probe/IOKitGuestRuntime
 record_artifact probe IOKitInterfaceOracle executable \
     probe/IOKitInterfaceOracle
+record_artifact probe SystemConfigurationGuestRuntime executable \
+    probe/SystemConfigurationGuestRuntime
+record_artifact probe SystemConfigurationInterfaceOracle executable \
+    probe/SystemConfigurationInterfaceOracle
 record_artifact probe NaturalLanguageGuestRuntime executable \
     probe/NaturalLanguageGuestRuntime
 record_artifact probe AuthenticationServicesGuestRuntime executable \
@@ -6354,6 +6569,14 @@ record_artifact attestation SwiftIOKit host-test-log \
 record_artifact attestation IOKit runtime-log attestation/iokit-runtime.log
 record_artifact attestation IOKit portable-interface-log \
     attestation/iokit-interface-runtime.log
+record_artifact attestation SystemConfiguration framework-contract \
+    attestation/systemconfiguration-framework.tsv
+record_artifact attestation SystemConfiguration apple-golden \
+    attestation/systemconfiguration-interface-apple.txt
+record_artifact attestation SystemConfiguration runtime-log \
+    attestation/systemconfiguration-runtime.log
+record_artifact attestation SystemConfiguration apple-differential-log \
+    attestation/systemconfiguration-interface-runtime.log
 record_artifact attestation NaturalLanguage runtime-log \
     attestation/naturallanguage-runtime.log
 record_artifact attestation AuthenticationServices runtime-log \

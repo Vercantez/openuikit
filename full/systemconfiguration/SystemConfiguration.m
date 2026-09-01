@@ -44,8 +44,7 @@ static uint64_t openReachabilityGeneration;
 static _Thread_local int openLastError;
 
 OPEN_SYSTEMCONFIGURATION_EXPORT const CFStringRef
-kCFErrorDomainSystemConfiguration =
-    CFSTR("com.apple.SystemConfiguration");
+kCFErrorDomainSystemConfiguration = NULL;
 
 static void openSetError(int status) {
     openLastError = status;

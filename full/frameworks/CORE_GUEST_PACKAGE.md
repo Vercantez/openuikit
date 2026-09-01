@@ -28,9 +28,11 @@ classifier. The app-facing `zlib` Clang module is backed by a separate
 runtime contract supplied by a separate `libswiftIOKit.dylib`. AppKit is
 published with its canonical
 versioned framework identity rather than as a flat `libAppKit.dylib`.
-Together these are sixty-two reusable ARM64 Mach-O platform binaries
-(fifty-eight Swift framework dylibs, IOKit,
-`libswiftIOKit`, ICU, and zlib), including real
+`SystemConfiguration.framework` is an independent Objective-C-compatible
+framework carrying the Apple-shaped reachability C ABI. Together these are
+sixty-three reusable ARM64 Mach-O platform binaries (fifty-eight Swift
+framework dylibs, IOKit, SystemConfiguration, `libswiftIOKit`, ICU, and zlib),
+including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -314,6 +316,29 @@ Both package validators require exactly one `-framework AppKit` link pair,
 refuse `-lAppKit`, validate the exact symlink topology, and reject any
 compile/runtime identity drift.
 
+`SystemConfiguration.framework` supplies the complete reachability boundary
+used by the pinned untouched corpus: name, address, and address-pair targets;
+the exact 32-bit flags; callback-context retain/release ownership; dispatch and
+run-loop registration; status APIs; and a stable CF-style type identity. Its
+canonical guest install name is
+`/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration`.
+The framework starts external routes unknown, resolves loopback locally, and
+accepts explicit host route updates through the package-owned
+`OpenSystemConfiguration` SPI. Host updates propagate to live targets and
+coalesce unchanged callbacks. Until the host owns cross-runtime dispatch and
+run-loop executors, delivery is cooperative and serialized. Guest
+CoreFoundation cannot yet construct valid CFString/CFError objects, so the
+error-object boundary returns `NULL`; integer status and descriptions remain
+available and no invalid host object is fabricated.
+
+The packaged framework exports exactly sixteen symbols and loads only the
+guest Objective-C and libSystem runtimes. Its four headers, module map,
+compile/runtime dylib copies, Apple interface transcript, standalone Objective-C
+Mach-O runtime gate, and untouched Firefox-compatible Swift consumer are all
+package inputs or artifacts. The compile contract carries the shared
+`-F frameworks` pair and the link contract carries exactly one
+`-framework SystemConfiguration` pair.
+
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
 and compiles the exact untouched RevenueCat 5.86.0 attribution, RCContainer,
 and `MacDevice.swift` sources from commit
@@ -566,7 +591,7 @@ The package is self-contained under these directories:
 sdk/                 copied compile sysroot
 modules/             target Swift modules
 lib/                 reusable ARM64 Mach-O dylibs
-frameworks/          IOKit C framework and versioned Swift AppKit.framework
+frameworks/          IOKit/SystemConfiguration C frameworks and versioned AppKit
 include/             C module maps and headers
 objects/             optional executable-layer objects
 resources/OpenUIKit/ exact runtime JSON/resources plus fonts/

@@ -51,6 +51,11 @@ static void releaseTarget(SCNetworkReachabilityRef target) {
 
 int main(void) {
     requireCondition(
+        kCFErrorDomainSystemConfiguration == NULL &&
+            SCCopyLastError() == NULL,
+        "unavailable guest CFError boundary must fail closed"
+    );
+    requireCondition(
         SCNetworkReachabilityGetTypeID() == (CFTypeID)0x53435243U,
         "portable type identity drifted"
     );

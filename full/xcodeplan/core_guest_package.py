@@ -461,6 +461,31 @@ def _require_appkit_framework_contract(
         )
 
 
+def _require_systemconfiguration_framework_contract(
+    compile_arguments: list[str], link_arguments: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_arguments[index : index + 2] == compile_pair
+        for index in range(len(compile_arguments) - 1)
+    )
+    if compile_count != 1:
+        raise CorePackageError(
+            "swift_compile_arguments must contain the SystemConfiguration "
+            "framework search pair exactly once: -F frameworks"
+        )
+    link_pair = ["-framework", "SystemConfiguration"]
+    link_count = sum(
+        link_arguments[index : index + 2] == link_pair
+        for index in range(len(link_arguments) - 1)
+    )
+    if link_count != 1:
+        raise CorePackageError(
+            "executable_link_arguments must contain the SystemConfiguration "
+            "framework pair exactly once: -framework SystemConfiguration"
+        )
+
+
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -716,6 +741,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         manifest["executable_link_arguments"],
     )
     _require_appkit_framework_contract(
+        manifest["swift_compile_arguments"],
+        manifest["executable_link_arguments"],
+    )
+    _require_systemconfiguration_framework_contract(
         manifest["swift_compile_arguments"],
         manifest["executable_link_arguments"],
     )
@@ -1054,6 +1083,13 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
             appkit_compile_path,
             appkit_runtime_path,
+            f"{paths['frameworks']}/SystemConfiguration.framework/Headers/OpenSystemConfiguration.h",
+            f"{paths['frameworks']}/SystemConfiguration.framework/Headers/SCNetwork.h",
+            f"{paths['frameworks']}/SystemConfiguration.framework/Headers/SCNetworkReachability.h",
+            f"{paths['frameworks']}/SystemConfiguration.framework/Headers/SystemConfiguration.h",
+            f"{paths['frameworks']}/SystemConfiguration.framework/Modules/module.modulemap",
+            f"{paths['frameworks']}/SystemConfiguration.framework/SystemConfiguration",
+            f"{paths['guest_root']}/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
         }
     )
     if preview is not None:

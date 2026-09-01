@@ -914,6 +914,52 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         refuse("AppKit compile/runtime framework identities differ")
     if any(item["path"] == "lib/libAppKit.dylib" for item in artifacts):
         refuse("AppKit must use its versioned framework identity, not libAppKit")
+    required_systemconfiguration = {
+        *(
+            (
+                "include",
+                "framework-header",
+                f"frameworks/SystemConfiguration.framework/Headers/{header}",
+            )
+            for header in (
+                "OpenSystemConfiguration.h",
+                "SCNetwork.h",
+                "SCNetworkReachability.h",
+                "SystemConfiguration.h",
+            )
+        ),
+        (
+            "include",
+            "framework-module-map",
+            "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+        ),
+        (
+            "framework",
+            "objc-dylib",
+            "frameworks/SystemConfiguration.framework/SystemConfiguration",
+        ),
+        (
+            "runtime",
+            "framework-dylib",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "SystemConfiguration.framework/SystemConfiguration",
+        ),
+    }
+    actual_systemconfiguration = {
+        (str(item["category"]), str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["name"] == "SystemConfiguration"
+    }
+    missing_systemconfiguration = sorted(
+        required_systemconfiguration - actual_systemconfiguration
+    )
+    if missing_systemconfiguration:
+        refuse(
+            "SystemConfiguration framework boundary artifacts are absent: "
+            + ", ".join(
+                path for _category, _role, path in missing_systemconfiguration
+            )
+        )
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
@@ -1114,6 +1160,31 @@ def require_appkit_framework_contract(
             )
     if "-lAppKit" in link_tokens:
         refuse("link inputs must use -framework AppKit, not -lAppKit")
+
+
+def require_systemconfiguration_framework_contract(
+    compile_tokens: list[str], link_tokens: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_tokens[index : index + 2] == compile_pair
+        for index in range(len(compile_tokens) - 1)
+    )
+    if compile_count != 1:
+        refuse(
+            "compile flags must contain the SystemConfiguration framework "
+            "search pair exactly once: -F frameworks"
+        )
+    link_pair = ["-framework", "SystemConfiguration"]
+    link_count = sum(
+        link_tokens[index : index + 2] == link_pair
+        for index in range(len(link_tokens) - 1)
+    )
+    if link_count != 1:
+        refuse(
+            "link inputs must contain the SystemConfiguration framework pair "
+            "exactly once: -framework SystemConfiguration"
+        )
 
 
 def require_cross_import_compile_contract(tokens: list[str]) -> None:
@@ -1411,6 +1482,7 @@ def validate_document(
     require_frontier_c_compile_contract(compile_tokens)
     require_iokit_framework_contract(compile_tokens, link_tokens)
     require_appkit_framework_contract(compile_tokens, link_tokens)
+    require_systemconfiguration_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
@@ -1564,6 +1636,7 @@ def write_command(args: argparse.Namespace) -> None:
     require_frontier_c_compile_contract(compile_tokens)
     require_iokit_framework_contract(compile_tokens, link_tokens)
     require_appkit_framework_contract(compile_tokens, link_tokens)
+    require_systemconfiguration_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
