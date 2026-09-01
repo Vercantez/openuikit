@@ -1,261 +1,261 @@
 precise	status	evidence	notes
-c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskDuplicated	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskInternalFailure	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskInvalidID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskMaxCount	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskPastDeadline	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@E@MXErrorCode@MXErrorLaunchTaskUnknown	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@MXErrorDomain	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-c:objc(cs)MXAnimationMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAnimationMetric(py)hitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAnimationMetric(py)scrollHitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppExitMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppExitMetric(py)backgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppExitMetric(py)foregroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppLaunchDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXAppLaunchDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXAppLaunchDiagnostic(py)launchDuration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXAppLaunchMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppLaunchMetric(py)histogrammedApplicationResumeTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppLaunchMetric(py)histogrammedExtendedLaunch	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppLaunchMetric(py)histogrammedOptimizedTimeToFirstDraw	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppLaunchMetric(py)histogrammedTimeToFirstDraw	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppResponsivenessMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppResponsivenessMetric(py)histogrammedApplicationHangTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppRunTimeMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundAudioTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundLocationTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAppRunTimeMetric(py)cumulativeForegroundTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXAverage	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXAverage(py)averageMeasurement	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXAverage(py)sampleCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXAverage(py)standardDeviation	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXBackgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeAbnormalExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeAppWatchdogExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeBackgroundTaskAssertionTimeoutExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeBadAccessExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeCPUResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryPressureExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeNormalAppExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXBackgroundExitData(py)cumulativeSuspendedWithLockedFileExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCPUExceptionDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCPUExceptionDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCPUExceptionDiagnostic(py)totalCPUTime	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCPUExceptionDiagnostic(py)totalSampledTime	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCPUMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCPUMetric(py)cumulativeCPUInstructions	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCPUMetric(py)cumulativeCPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCallStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCallStackTree(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCellularConditionMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCellularConditionMetric(py)histogrammedCellularConditionTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)exceptionCode	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)exceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)exceptionType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)signal	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)terminationReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnostic(py)virtualMemoryRegionInfo	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)arguments	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)composedMessage	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionName	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)formatString	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic(py)applicationVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic(py)metaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnostic(py)signpostData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)appLaunchDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)cpuExceptionDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)crashDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)diskWriteExceptionDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)hangDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)timeStampBegin	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiagnosticPayload(py)timeStampEnd	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiskIOMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskIOMetric(py)cumulativeLogicalWrites	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalCacheFolderSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalCloneSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceCapacity	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceUsedSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDiskWriteExceptionDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiskWriteExceptionDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDiskWriteExceptionDiagnostic(py)totalWritesCaused	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXDisplayMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXDisplayMetric(py)averagePixelLuminance	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeAbnormalExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeAppWatchdogExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeBadAccessExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXForegroundExitData(py)cumulativeNormalAppExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXGPUMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXGPUMetric(py)cumulativeGPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXHangDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXHangDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXHangDiagnostic(py)hangDuration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXHistogram	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogram(py)bucketEnumerator	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogram(py)totalBucketCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogramBucket	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogramBucket(py)bucketCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogramBucket(py)bucketEnd	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXHistogramBucket(py)bucketStart	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXLocationActivityMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyForNavigationTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeHundredMetersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeKilometerAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeNearestTenMetersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXLocationActivityMetric(py)cumulativeThreeKilometersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMemoryMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMemoryMetric(py)averageSuspendedMemory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMemoryMetric(py)peakMemoryUsage	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMetaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)applicationBuildVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)bundleIdentifier	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)deviceType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)isTestFlightApp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)lowPowerModeEnabled	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)osVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)pid	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)platformArchitecture	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetaData(py)regionFormat	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMetric(im)JSONRepresentation	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMetric(im)dictionaryRepresentation	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXMetricManager	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(cm)extendLaunchMeasurementForTaskID:error:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(cm)finishExtendedLaunchMeasurementForTaskID:error:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(cm)makeLogHandleWithCategory:	unavailable	full/metrickit/README.md	Requires OSLog; Linux Foundation has no os.log type, so the method is not declared.
-c:objc(cs)MXMetricManager(cpy)sharedManager	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(im)addSubscriber:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(im)removeSubscriber:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(py)pastDiagnosticPayloads	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricManager(py)pastPayloads	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(cs)MXMetricPayload	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(im)JSONRepresentation	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(im)dictionaryRepresentation	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)animationMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)applicationExitMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)applicationLaunchMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)applicationResponsivenessMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)applicationTimeMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)cellularConditionMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)cpuMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)diskIOMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)diskSpaceUsageMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)displayMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)gpuMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)includesMultipleApplicationVersions	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)latestApplicationVersion	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)locationActivityMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)memoryMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)metaData	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)networkTransferMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)signpostMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)timeStampBegin	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXMetricPayload(py)timeStampEnd	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(cs)MXNetworkTransferMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularDownload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularUpload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiDownload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiUpload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData(py)averageMemory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData(py)cumulativeCPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData(py)cumulativeHitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData(py)cumulativeLogicalWrites	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostIntervalData(py)histogrammedSignpostDuration	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostMetric(py)signpostCategory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostMetric(py)signpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostMetric(py)signpostName	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostMetric(py)totalCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(cs)MXSignpostRecord	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)beginTimeStamp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)category	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)duration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)endTimeStamp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)isInterval	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)name	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXSignpostRecord(py)subsystem	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(cs)MXUnitAveragePixelLuminance	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXUnitAveragePixelLuminance(cpy)apl	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXUnitSignalBars	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(cs)MXUnitSignalBars(cpy)bars	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(pl)MXMetricManagerSubscriber	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(pl)MXMetricManagerSubscriber(im)didReceiveDiagnosticPayloads:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(pl)MXMetricManagerSubscriber(im)didReceiveMetricPayloads:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXAverage	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXBackgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCallStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnosticPayload	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXForegroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogram	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogramBucket	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetricPayload	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostRecord	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:9MetricKit10mxSignpost_3dso3log4name10signpostID__ySo03os_H7_type_ta_SVSo03OS_j1_F0Cs12StaticStringV0J0010OSSignpostI0VALSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog, OSSignpostType, OSSignpostID, and _MXSignpostMetricsSnapshot.
-s:9MetricKit32mxSignpostAnimationIntervalBegin3dso3log4name10signpostID__ySV_So06OS_os_I0Cs12StaticStringV0N0010OSSignpostL0VAJSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog/OSSignpost; not declared on Linux.
-s:SC11MXErrorCodeLeV	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV11errorDomainSSvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV17launchTaskUnknownSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV18launchTaskMaxCountSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV19launchTaskInvalidIDSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV20launchTaskDuplicatedSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV22launchTaskPastDeadlineSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SC11MXErrorCodeLeV25launchTaskInternalFailureSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:So11MXErrorCodeV8rawValueABSgSi_tcfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
-s:So14MXLaunchTaskIDa8rawValueABSS_tcfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-s:So14MXLaunchTaskIDayABSScfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskDuplicated	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskInternalFailure	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskInvalidID	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskMaxCount	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskPastDeadline	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@E@MXErrorCode@MXErrorLaunchTaskUnknown	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+c:@MXErrorDomain	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXErrorDomain string matches the pinned oracle.
+c:@T@MXLaunchTaskID	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+c:objc(cs)MXAnimationMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAnimationMetric(py)hitchTimeRatio	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAnimationMetric(py)scrollHitchTimeRatio	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppExitMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppExitMetric(py)backgroundExitData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppExitMetric(py)foregroundExitData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppLaunchDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXAppLaunchDiagnostic(py)callStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXAppLaunchDiagnostic(py)launchDuration	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXAppLaunchMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedApplicationResumeTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedExtendedLaunch	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedOptimizedTimeToFirstDraw	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedTimeToFirstDraw	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppResponsivenessMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppResponsivenessMetric(py)histogrammedApplicationHangTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppRunTimeMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundAudioTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundLocationTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeForegroundTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXAverage	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXAverage(py)averageMeasurement	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXAverage(py)sampleCount	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXAverage(py)standardDeviation	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXBackgroundExitData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeAbnormalExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeAppWatchdogExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeBackgroundTaskAssertionTimeoutExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeBadAccessExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeCPUResourceLimitExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryPressureExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeNormalAppExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXBackgroundExitData(py)cumulativeSuspendedWithLockedFileExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCPUExceptionDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCPUExceptionDiagnostic(py)callStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalCPUTime	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalSampledTime	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCPUMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCPUMetric(py)cumulativeCPUInstructions	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCPUMetric(py)cumulativeCPUTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCallStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCallStackTree(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXCellularConditionMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCellularConditionMetric(py)histogrammedCellularConditionTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXCrashDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)callStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)exceptionCode	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)exceptionReason	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)exceptionType	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)signal	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)terminationReason	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnostic(py)virtualMemoryRegionInfo	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)dictionaryRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)arguments	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)composedMessage	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionName	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionType	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)formatString	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiagnostic(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXDiagnostic(im)dictionaryRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXDiagnostic(py)applicationVersion	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiagnostic(py)metaData	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiagnostic(py)signpostData	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiagnosticPayload	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(im)JSONRepresentation	declared	full/metrickit/MXPayloads.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXDiagnosticPayload(im)dictionaryRepresentation	declared	full/metrickit/MXPayloads.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXDiagnosticPayload(py)appLaunchDiagnostics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)cpuExceptionDiagnostics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)crashDiagnostics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)diskWriteExceptionDiagnostics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)hangDiagnostics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)timeStampBegin	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiagnosticPayload(py)timeStampEnd	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXDiskIOMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskIOMetric(py)cumulativeLogicalWrites	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileSize	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCacheFolderSize	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCloneSize	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileSize	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceCapacity	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceUsedSize	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDiskWriteExceptionDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)callStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)totalWritesCaused	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXDisplayMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXDisplayMetric(py)averagePixelLuminance	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeAbnormalExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeAppWatchdogExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeBadAccessExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXForegroundExitData(py)cumulativeNormalAppExitCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXGPUMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXGPUMetric(py)cumulativeGPUTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXHangDiagnostic	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXHangDiagnostic(py)callStackTree	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXHangDiagnostic(py)hangDuration	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXHistogram	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogram(py)bucketEnumerator	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogram(py)totalBucketCount	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogramBucket	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogramBucket(py)bucketCount	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogramBucket(py)bucketEnd	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXHistogramBucket(py)bucketStart	implemented	tests/agent/MetricKitRuntime.swift:testHistogramAndAverageGetters	Named getter assertions for histogram/average storage.
+c:objc(cs)MXLocationActivityMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyForNavigationTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeHundredMetersAccuracyTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeKilometerAccuracyTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeNearestTenMetersAccuracyTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeThreeKilometersAccuracyTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXMemoryMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXMemoryMetric(py)averageSuspendedMemory	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXMemoryMetric(py)peakMemoryUsage	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXMetaData	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetaData(im)dictionaryRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetaData(py)applicationBuildVersion	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)bundleIdentifier	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)deviceType	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)isTestFlightApp	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)lowPowerModeEnabled	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)osVersion	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)pid	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)platformArchitecture	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetaData(py)regionFormat	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXMetric(im)JSONRepresentation	declared	full/metrickit/MXMetrics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetric(im)dictionaryRepresentation	declared	full/metrickit/MXMetrics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetricManager	implemented	tests/agent/MetricKitRuntime.swift:testSharedManagerAndEmptyPayloads	MXMetricManager type and shared instance.
+c:objc(cs)MXMetricManager(cm)extendLaunchMeasurementForTaskID:error:	implemented	tests/agent/MetricKitRuntime.swift:testLaunchMeasurementFailClosed	Linux fail-closed launch measurement uses MXErrorDomain code 5.
+c:objc(cs)MXMetricManager(cm)finishExtendedLaunchMeasurementForTaskID:error:	implemented	tests/agent/MetricKitRuntime.swift:testLaunchMeasurementFailClosed	Linux fail-closed launch measurement uses MXErrorDomain code 5.
+c:objc(cs)MXMetricManager(cm)makeLogHandleWithCategory:	unavailable	full/metrickit/README.md	Requires OSLog; not declared on Linux. Telemetry remains unavailable.
+c:objc(cs)MXMetricManager(cpy)sharedManager	implemented	tests/agent/MetricKitRuntime.swift:testSharedManagerAndEmptyPayloads	shared singleton identity.
+c:objc(cs)MXMetricManager(im)addSubscriber:	implemented	tests/agent/MetricKitRuntime.swift:testSubscriberRetentionIdempotentRelease	Strong identity-deduplicated retention; remove releases.
+c:objc(cs)MXMetricManager(im)removeSubscriber:	implemented	tests/agent/MetricKitRuntime.swift:testSubscriberRetentionIdempotentRelease	Strong identity-deduplicated retention; remove releases.
+c:objc(cs)MXMetricManager(py)pastDiagnosticPayloads	implemented	tests/agent/MetricKitRuntime.swift:testSharedManagerAndEmptyPayloads	Linux past payloads stay empty; no fabricated telemetry.
+c:objc(cs)MXMetricManager(py)pastPayloads	implemented	tests/agent/MetricKitRuntime.swift:testSharedManagerAndEmptyPayloads	Linux past payloads stay empty; no fabricated telemetry.
+c:objc(cs)MXMetricPayload	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(im)JSONRepresentation	declared	full/metrickit/MXPayloads.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetricPayload(im)dictionaryRepresentation	declared	full/metrickit/MXPayloads.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXMetricPayload(py)animationMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)applicationExitMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)applicationLaunchMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)applicationResponsivenessMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)applicationTimeMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)cellularConditionMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)cpuMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)diskIOMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)diskSpaceUsageMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)displayMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)gpuMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)includesMultipleApplicationVersions	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)latestApplicationVersion	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)locationActivityMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)memoryMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)metaData	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)networkTransferMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)signpostMetrics	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)timeStampBegin	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXMetricPayload(py)timeStampEnd	implemented	tests/agent/MetricKitRuntime.swift:testPayloadGetters	Named getter assertions for payload storage.
+c:objc(cs)MXNetworkTransferMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularDownload	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularUpload	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiDownload	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiUpload	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData(py)averageMemory	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeCPUTime	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeHitchTimeRatio	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeLogicalWrites	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostIntervalData(py)histogrammedSignpostDuration	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostMetric	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostMetric(py)signpostCategory	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostMetric(py)signpostIntervalData	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostMetric(py)signpostName	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostMetric(py)totalCount	implemented	tests/agent/MetricKitRuntime.swift:testMetricGetters	Named getter assertions for metric storage.
+c:objc(cs)MXSignpostRecord	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXSignpostRecord(im)dictionaryRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
+c:objc(cs)MXSignpostRecord(py)beginTimeStamp	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)category	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)duration	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)endTimeStamp	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)isInterval	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)name	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXSignpostRecord(py)subsystem	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXUnitAveragePixelLuminance	implemented	tests/agent/MetricKitRuntime.swift:testUnitSymbols	Pinned oracle unit symbols apl/bars.
+c:objc(cs)MXUnitAveragePixelLuminance(cpy)apl	implemented	tests/agent/MetricKitRuntime.swift:testUnitSymbols	Pinned oracle unit symbols apl/bars.
+c:objc(cs)MXUnitSignalBars	implemented	tests/agent/MetricKitRuntime.swift:testUnitSymbols	Pinned oracle unit symbols apl/bars.
+c:objc(cs)MXUnitSignalBars(cpy)bars	implemented	tests/agent/MetricKitRuntime.swift:testUnitSymbols	Pinned oracle unit symbols apl/bars.
+c:objc(pl)MXMetricManagerSubscriber	implemented	tests/agent/MetricKitRuntime.swift:testSubscriberRetentionIdempotentRelease	Strong identity-deduplicated retention; remove releases.
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveDiagnosticPayloads:	declared	full/metrickit/MetricKit.swift	Optional empty default; Linux never delivers payloads.
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveMetricPayloads:	declared	full/metrickit/MetricKit.swift	Optional empty default; Linux never delivers payloads.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXAverage	declared	full/metrickit/MXSupport.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXBackgroundExitData	declared	full/metrickit/MXMetrics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCallStackTree	declared	full/metrickit/MXDiagnostics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	declared	full/metrickit/MXDiagnostics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnostic	declared	full/metrickit/MXDiagnostics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnosticPayload	declared	full/metrickit/MXPayloads.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXForegroundExitData	declared	full/metrickit/MXMetrics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogram	declared	full/metrickit/MXSupport.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogramBucket	declared	full/metrickit/MXSupport.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetaData	declared	full/metrickit/MXDiagnostics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetric	declared	full/metrickit/MXMetrics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetricPayload	declared	full/metrickit/MXPayloads.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostIntervalData	declared	full/metrickit/MXMetrics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostRecord	declared	full/metrickit/MXDiagnostics.swift	init(coder:)=nil is fail-closed, not an Apple archive round trip.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:9MetricKit10mxSignpost_3dso3log4name10signpostID__ySo03os_H7_type_ta_SVSo03OS_j1_F0Cs12StaticStringV0J0010OSSignpostI0VALSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog/OSSignpost and _MXSignpostMetricsSnapshot. Telemetry unavailable.
+s:9MetricKit32mxSignpostAnimationIntervalBegin3dso3log4name10signpostID__ySV_So06OS_os_I0Cs12StaticStringV0N0010OSSignpostL0VAJSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog/OSSignpost. Telemetry unavailable.
+s:SC11MXErrorCodeLeV	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:SC11MXErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:SC11MXErrorCodeLeV17launchTaskUnknownSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SC11MXErrorCodeLeV18launchTaskMaxCountSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SC11MXErrorCodeLeV19launchTaskInvalidIDSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SC11MXErrorCodeLeV20launchTaskDuplicatedSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SC11MXErrorCodeLeV22launchTaskPastDeadlineSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SC11MXErrorCodeLeV25launchTaskInternalFailureSoAAVvpZ	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:So11MXErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorCodeRawValues	Table-driven raw-value mapping from the pinned oracle.
+s:So14MXLaunchTaskIDa8rawValueABSS_tcfc	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+s:So14MXLaunchTaskIDayABSScfc	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	tests/agent/MetricKitRuntime.swift:testMXLaunchTaskID	MXLaunchTaskID equality, hashing, and inits.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	tests/agent/MetricKitRuntime.swift:testMXErrorDomainAndBridging	MXError domain, bridging, equality, and hashing.
