@@ -24,9 +24,8 @@ def validate_preview_executable_export_contract(source: str) -> None:
         assignment,
         '-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"',
         "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
-        "preview_definition_count=$(nm_symbol_count --defined-only",
         "executable_preview_export_count=$(nm_symbol_count --defined-only",
-        "non-Preview libUIKit imports the Preview initializer",
+        "provider-free libUIKit imports the Preview initializer",
         "application Preview initializer export count",
         "libUIKit_preview_initializer_import_count",
         "executable_preview_initializer_export_count",
@@ -38,6 +37,41 @@ def validate_preview_executable_export_contract(source: str) -> None:
         )
     if "-export_dynamic" in source or "-exported_symbols_list" in source:
         raise AssertionError("portable-app Preview export must remain one exact symbol")
+
+
+def validate_developer_tools_support_linkage_contract(source: str) -> None:
+    required_once = (
+        "local compiler_target bundle_layout platform_kind dts_linkage",
+        'manifest["developer_tools_support_linkage"]',
+        'application-object DeveloperToolsSupport requires a Preview contract',
+        'platform-dylib|none)',
+        'require_regular "$libraries/libDeveloperToolsSupport.dylib"',
+        'platform DeveloperToolsSupport dylib link count',
+        'DeveloperToolsSupport provider definition count',
+        'developer_tools_support_linkage\\t%s\\n',
+        'developer_tools_support_link_argument_count\\t%s\\n',
+        'developer_tools_support_provider_definition_count\\t%s\\n',
+        'libUIKit_developer_tools_support_import_count\\t%s\\n',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(
+            f"DeveloperToolsSupport linkage contract drifted: {drifted}"
+        )
+    if source.count('if [ "$dts_linkage" = application-object ]; then') != 2:
+        raise AssertionError(
+            "DeveloperToolsSupport linkage object/export brackets drifted"
+        )
+    if source.count('case "$dts_linkage" in') != 2:
+        raise AssertionError(
+            "DeveloperToolsSupport linkage validation/provider cases drifted"
+        )
+    if source.count(
+        "dts_provider_definition_count=$(nm_symbol_count --defined-only"
+    ) != 2:
+        raise AssertionError(
+            "DeveloperToolsSupport provider definition probes drifted"
+        )
 
 
 def validate_multi_source_object_map_contract(source: str) -> None:
@@ -445,7 +479,6 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         for token in (
             '-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"',
             "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
-            "preview_definition_count=$(nm_symbol_count --defined-only",
             "executable_preview_export_count=$(nm_symbol_count --defined-only",
         ):
             with self.subTest(deleted=token):
@@ -461,6 +494,23 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                     1,
                 )
             )
+
+    def test_developer_tools_support_provider_is_platform_specific(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_developer_tools_support_linkage_contract(source)
+        for token in (
+            'manifest["developer_tools_support_linkage"]',
+            'require_regular "$libraries/libDeveloperToolsSupport.dylib"',
+            'platform DeveloperToolsSupport dylib link count',
+            'DeveloperToolsSupport provider definition count',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "linkage contract"):
+                    validate_developer_tools_support_linkage_contract(
+                        source.replace(token, "", 1)
+                    )
 
     def test_multi_source_object_map_is_exact_and_forbids_bad_scheduling(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(

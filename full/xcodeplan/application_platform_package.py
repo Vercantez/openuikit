@@ -55,6 +55,12 @@ def validate(path: Path) -> tuple[Path, dict[str, Any]]:
             "contract_file": "attestation/core-package.json",
             "paths": paths,
             "preview": manifest["preview"],
+            # Legacy core packages intentionally make the application
+            # executable own the one DeveloperToolsSupport definition used
+            # by libUIKit. A plugin-free core package owns no such edge.
+            "developer_tools_support_linkage": (
+                "application-object" if manifest["preview"] else "none"
+            ),
             "swift_compile_arguments": manifest["swift_compile_arguments"],
             "executable_link_arguments": manifest["executable_link_arguments"],
             "app_compile_diagnostic_arguments": (
@@ -75,6 +81,10 @@ def validate(path: Path) -> tuple[Path, dict[str, Any]]:
         # Preview expansion is deliberately outside the production contract.
         # The packaged compiler-library plugins still serve ordinary macros.
         "preview": None,
+        # A true-iOS platform packages DeveloperToolsSupport as a normal
+        # framework/dylib. libUIKit's Preview metadata initializer therefore
+        # resolves from that dylib, never from an application-owned object.
+        "developer_tools_support_linkage": "platform-dylib",
         "swift_compile_arguments": metadata["swift_compile_arguments"],
         "executable_link_arguments": metadata["executable_link_arguments"],
         "app_compile_diagnostic_arguments": [],
@@ -135,7 +145,8 @@ def main(argv: list[str] | None = None) -> int:
             print(
                 "APPLICATION_PLATFORM_PACKAGE_OK "
                 f"kind={contract['kind']} target={contract['target_triple']} "
-                f"layout={contract['bundle_layout']} root={root}"
+                f"layout={contract['bundle_layout']} "
+                f"dts={contract['developer_tools_support_linkage']} root={root}"
             )
     except (
         ApplicationPlatformError,

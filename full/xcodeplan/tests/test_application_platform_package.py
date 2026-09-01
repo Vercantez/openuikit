@@ -56,7 +56,39 @@ class ApplicationPlatformPackageTests(unittest.TestCase):
         self.assertEqual(contract["kind"], "core")
         self.assertEqual(contract["bundle_layout"], "macos")
         self.assertEqual(contract["paths"]["runtime_root"], "guest-root")
+        self.assertEqual(contract["developer_tools_support_linkage"], "none")
         self.assertEqual(contract["app_compile_diagnostic_arguments"], [])
+
+    @mock.patch.object(application_platform_package.core_guest_package, "validate")
+    def test_core_preview_uses_application_owned_dts_object(
+        self, validate: mock.Mock
+    ) -> None:
+        (self.root / "attestation").mkdir()
+        (self.root / "attestation/core-package.json").write_text("{}")
+        validate.return_value = (
+            self.root,
+            {
+                "target": {"triple": "arm64-apple-macos15.0"},
+                "paths": {
+                    "guest_root": "guest-root",
+                    "resources": "resources",
+                    "libraries": "libraries",
+                },
+                "preview": {
+                    "developer_tools_support_object": "objects/dts.o",
+                    "app_compile_diagnostic_arguments": [
+                        "-Xfrontend",
+                        "-dump-macro-expansions",
+                    ],
+                },
+                "swift_compile_arguments": ["-target", "arm64-apple-macos15.0"],
+                "executable_link_arguments": ["-arch", "arm64"],
+            },
+        )
+        _root, contract = application_platform_package.validate(self.root)
+        self.assertEqual(
+            contract["developer_tools_support_linkage"], "application-object"
+        )
 
     @mock.patch.object(
         application_platform_package.true_ios_platform_package, "validate"
@@ -88,6 +120,9 @@ class ApplicationPlatformPackageTests(unittest.TestCase):
         self.assertEqual(contract["bundle_layout"], "ios")
         self.assertEqual(contract["contract_file"], "PLATFORM_COMPLETE")
         self.assertEqual(contract["preview"], None)
+        self.assertEqual(
+            contract["developer_tools_support_linkage"], "platform-dylib"
+        )
         self.assertEqual(contract["app_compile_diagnostic_arguments"], [])
 
     @mock.patch.object(

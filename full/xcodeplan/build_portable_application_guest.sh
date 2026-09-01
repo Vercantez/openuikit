@@ -370,7 +370,7 @@ build_inside() {
         "${remote_cache_arguments[@]}" --verify
 
     local module product preview_required expected_plugin_sha plugin_module dts_object
-    local compiler_target bundle_layout platform_kind
+    local compiler_target bundle_layout platform_kind dts_linkage
     local preview_evidence_enabled=no legacy_preview_evidence_count=0
     local -a metadata
     mapfile -d '' -t metadata < <(
@@ -394,11 +394,16 @@ if preview:
     values.extend(["yes", preview["plugin_sha256"], preview["plugin_module"], preview["developer_tools_support_object"]])
 else:
     values.extend(["no", "-", "-", "-"])
-values.extend([manifest["target_triple"], manifest["bundle_layout"], manifest["kind"]])
+values.extend([
+    manifest["target_triple"],
+    manifest["bundle_layout"],
+    manifest["kind"],
+    manifest["developer_tools_support_linkage"],
+])
 sys.stdout.buffer.write(b"".join(value.encode("utf-8") + b"\0" for value in values))
 PY
     )
-    [ "${#metadata[@]}" -eq 9 ] || die "invalid application/platform metadata"
+    [ "${#metadata[@]}" -eq 10 ] || die "invalid application/platform metadata"
     module=${metadata[0]}
     product=${metadata[1]}
     preview_required=${metadata[2]}
@@ -408,6 +413,16 @@ PY
     compiler_target=${metadata[6]}
     bundle_layout=${metadata[7]}
     platform_kind=${metadata[8]}
+    dts_linkage=${metadata[9]}
+    case "$dts_linkage" in
+        application-object)
+            [ "$preview_required" = yes ] \
+                || die "application-object DeveloperToolsSupport requires a Preview contract" ;;
+        platform-dylib|none)
+            [ "$preview_required" = no ] \
+                || die "$dts_linkage DeveloperToolsSupport conflicts with a Preview contract" ;;
+        *) die "unsupported DeveloperToolsSupport linkage: $dts_linkage" ;;
+    esac
     if [ "$preview_required" = yes ]; then
         require_regular "$platform/$dts_object" "DeveloperToolsSupport target object"
         if [ -n "$plugin" ]; then
@@ -1202,27 +1217,51 @@ PY
 
     local -a extra_objects=()
     local uikit_preview_import_count uikit_dts_import_count
+    local dts_link_argument_count=0 dts_provider_definition_count=0
+    local dts_link_argument
+    for dts_link_argument in "${link_arguments[@]}"; do
+        [ "$dts_link_argument" != -lDeveloperToolsSupport ] \
+            || dts_link_argument_count=$((dts_link_argument_count + 1))
+    done
     uikit_preview_import_count=$(nm_symbol_count --undefined-only \
         "$libraries/libUIKit.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
     uikit_dts_import_count=$(nm_developer_tools_support_count --undefined-only \
         "$libraries/libUIKit.dylib")
-    if [ "$preview_required" = yes ]; then
-        extra_objects+=("$platform/$dts_object")
-        [ "$uikit_preview_import_count" -eq 1 ] \
-            || die "Preview libUIKit initializer import count $uikit_preview_import_count, expected 1"
-        [ "$uikit_dts_import_count" -eq 1 ] \
-            || die "Preview libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected 1"
-        local preview_definition_count
-        preview_definition_count=$(nm_symbol_count --defined-only \
-            "${extra_objects[0]}" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
-        [ "$preview_definition_count" -eq 1 ] \
-            || die "Preview DTS initializer definition count $preview_definition_count, expected 1"
-    else
-        [ "$uikit_preview_import_count" -eq 0 ] \
-            || die "non-Preview libUIKit imports the Preview initializer"
-        [ "$uikit_dts_import_count" -eq 0 ] \
-            || die "non-Preview libUIKit imports DeveloperToolsSupport"
-    fi
+    case "$dts_linkage" in
+        application-object)
+            extra_objects+=("$platform/$dts_object")
+            [ "$dts_link_argument_count" -eq 0 ] \
+                || die "application-object DeveloperToolsSupport is also linked as a dylib"
+            [ "$uikit_preview_import_count" -eq 1 ] \
+                || die "application-object libUIKit initializer import count $uikit_preview_import_count, expected 1"
+            [ "$uikit_dts_import_count" -eq 1 ] \
+                || die "application-object libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected 1"
+            dts_provider_definition_count=$(nm_symbol_count --defined-only \
+                "${extra_objects[0]}" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL") ;;
+        platform-dylib)
+            require_regular "$libraries/libDeveloperToolsSupport.dylib" \
+                "platform DeveloperToolsSupport dylib"
+            [ "$dts_link_argument_count" -eq 1 ] \
+                || die "platform DeveloperToolsSupport dylib link count $dts_link_argument_count, expected 1"
+            [ "$uikit_preview_import_count" -eq 1 ] \
+                || die "platform-dylib libUIKit initializer import count $uikit_preview_import_count, expected 1"
+            [ "$uikit_dts_import_count" -eq 1 ] \
+                || die "platform-dylib libUIKit DeveloperToolsSupport import count $uikit_dts_import_count, expected 1"
+            dts_provider_definition_count=$(nm_symbol_count --defined-only \
+                "$libraries/libDeveloperToolsSupport.dylib" \
+                "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL") ;;
+        none)
+            [ "$dts_link_argument_count" -eq 0 ] \
+                || die "DeveloperToolsSupport dylib is linked without a provider contract"
+            [ "$uikit_preview_import_count" -eq 0 ] \
+                || die "provider-free libUIKit imports the Preview initializer"
+            [ "$uikit_dts_import_count" -eq 0 ] \
+                || die "provider-free libUIKit imports DeveloperToolsSupport" ;;
+    esac
+    local expected_dts_provider_definition_count=0
+    [ "$dts_linkage" = none ] || expected_dts_provider_definition_count=1
+    [ "$dts_provider_definition_count" -eq "$expected_dts_provider_definition_count" ] \
+        || die "DeveloperToolsSupport provider definition count $dts_provider_definition_count, expected $expected_dts_provider_definition_count"
     {
         for object_index in "${!application_objects[@]}"; do
             object_path=${application_objects[$object_index]}
@@ -1238,16 +1277,21 @@ PY
                 "$(sha256sum "$object_path" | awk '{print $1}')" \
                 "$object_path"
         done
-        if [ "$preview_required" = yes ]; then
+        if [ "$dts_linkage" = application-object ]; then
             [ "${#extra_objects[@]}" -eq 1 ] \
                 || die "DeveloperToolsSupport object link count is not one"
             printf 'developer_tools_support_object\t%s\t%s\n' \
                 "$(sha256sum "${extra_objects[0]}" | awk '{print $1}')" \
                 "${extra_objects[0]}"
         fi
+        printf 'developer_tools_support_linkage\t%s\n' "$dts_linkage"
+        printf 'developer_tools_support_link_argument_count\t%s\n' \
+            "$dts_link_argument_count"
+        printf 'developer_tools_support_provider_definition_count\t%s\n' \
+            "$dts_provider_definition_count"
     } >"$output/application-link-objects.tsv"
     local -a executable_export_arguments=(-exported_symbol __mh_execute_header)
-    if [ "$preview_required" = yes ]; then
+    if [ "$dts_linkage" = application-object ]; then
         executable_export_arguments+=(
             -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
         )
@@ -1316,7 +1360,7 @@ PY
     executable_dts_export_count=$(nm_developer_tools_support_count --defined-only \
         "$executable")
     expected_export_count=0
-    [ "$preview_required" != yes ] || expected_export_count=1
+    [ "$dts_linkage" != application-object ] || expected_export_count=1
     [ "$executable_preview_export_count" -eq "$expected_export_count" ] \
         || die "application Preview initializer export count $executable_preview_export_count, expected $expected_export_count"
     [ "$executable_dts_export_count" -eq "$expected_export_count" ] \
@@ -1326,6 +1370,8 @@ PY
         printf 'linked_package_object_count\t%s\n' "$linked_package_object_count"
         printf 'libUIKit_preview_initializer_import_count\t%s\n' \
             "$uikit_preview_import_count"
+        printf 'libUIKit_developer_tools_support_import_count\t%s\n' \
+            "$uikit_dts_import_count"
         printf 'executable_preview_initializer_export_count\t%s\n' \
             "$executable_preview_export_count"
     } >>"$output/application-link-objects.tsv"
