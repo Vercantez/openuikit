@@ -1,4 +1,4 @@
-@_exported import Foundation
+import Foundation
 
 /// Linux has no baseband radio, SIM, or Apple cellular-plan daemon.
 /// Query APIs return empty or unknown values. Service APIs fail closed
@@ -37,6 +37,10 @@ public struct CTError: Sendable, BitwiseCopyable {
 }
 
 // MARK: - Call state constants (CTCall.h, deprecated iOS 10)
+//
+// String payloads are provisional (identifier-equal) until an Apple-oracle
+// dump confirms the exact bytes. Clients should compare against these
+// constants, not against hardcoded literals.
 
 /// Dialing state string compared against `CTCall.callState`.
 public let CTCallStateDialing = "CTCallStateDialing"
@@ -71,11 +75,13 @@ public let CTSubscriberTokenRefreshed = "CTSubscriberTokenRefreshed"
 
 extension NSNotification.Name {
     /// Deprecated in iOS 12; renamed to `CTServiceRadioAccessTechnologyDidChange`.
+    /// Raw value is provisional until an Apple-oracle dump confirms the bytes.
     public static let CTRadioAccessTechnologyDidChange = NSNotification.Name(
         "CTRadioAccessTechnologyDidChangeNotification"
     )
 
     /// Posted when any service's radio access technology changes.
+    /// Raw value is provisional until an Apple-oracle dump confirms the bytes.
     public static let CTServiceRadioAccessTechnologyDidChange = NSNotification.Name(
         "CTServiceRadioAccessTechnologyDidChangeNotification"
     )

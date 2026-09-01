@@ -14,25 +14,34 @@ every hardware, privacy, entitlement, and Apple-service path **fail-closed**:
 - Call monitoring (`CTCall`, `CTCallCenter`) reports no active calls
   (`currentCalls == nil`) and never invokes `callEventHandler`.
 - Cellular-data restriction (`CTCellularData`) stays
-  `.restrictedStateUnknown` and does not fire the notifier.
+  `.restrictedStateUnknown`. The first non-nil
+  `cellularDataRestrictionDidUpdateNotifier` assignment asynchronously
+  invokes that handler once with `.restrictedStateUnknown`. Later
+  assignments do not fabricate restriction updates.
 - Subscriber APIs expose an empty `subscribers()` list, a stub
   `subscriber()` with `isSIMInserted == false`, `carrierToken == nil`, and
   `refreshCarrierToken() == false`. `identifier` is empty rather than a
-  fabricated ICCID.
+  fabricated ICCID. Delegate methods are callable; this module never
+  invokes them.
 - Plan provisioning reports `supportsCellularPlan() == false` and
   `supportsEmbeddedSIM == false`. `addPlan` completes with `.fail`.
   `update`, `CTCellularPlanStatus.getTokenWithCompletion`, and
   `checkValidity` complete with an error and never return a token or claim
   that a token is valid.
-- Notifications are named and can be observed, but this module does not post
-  them.
+- Notification names exist as `NSNotification.Name` members. This module
+  does not post them.
+
+Call-state, radio-access, notification, and subscriber-token string
+constants are **declared** with provisional identifier-equal values until a
+central Apple-oracle dump confirms the exact bytes. Compare against the
+constants; do not hardcode the payloads.
+
+The module imports the staged platform `Foundation` / `CoreFoundation`
+modules. It does not re-export Foundation or introduce CF/Foundation
+typealiases.
 
 ## What is real
 
-- String constants for call state and radio-access technology, using the
-  public identifier names as values (apps compare against the constants).
-- `NSNotification.Name.CTRadioAccessTechnologyDidChange` and
-  `CTServiceRadioAccessTechnologyDidChange`.
 - `CTError` and `kCTErrorDomain*` integer domains (`0`, `1`, `2`).
 - Enumerations with `RawRepresentable` / `Hashable` synthesis:
   `CTCellularDataRestrictedState`, `CTCellularPlanCapability`,
@@ -42,13 +51,14 @@ every hardware, privacy, entitlement, and Apple-service path **fail-closed**:
   Archive keys are Linux-local until an Apple keyed-archive dump exists.
 - Both completion-handler and `async` overloads for plan APIs, because Linux
   Swift does not synthesize Apple's concurrency overlay from ObjC.
+- Exactly-once asynchronous initial `CTCellularData` restriction callback.
 
 ## Still deferred / oracle
 
-See `oracle-questions.tsv`. In particular this cloud runner has not observed
-Apple's exact constant bytes, error payloads, notifier-on-set behavior,
-`CTSubscriber.identifier` with no SIM, or NSCoder key names. Those paths stay
-fail-closed until a central Apple-oracle probe records them.
+See `oracle-questions.tsv`. Exact constant bytes, Apple error payloads,
+no-SIM `identifier`, NSCoder keys, empty-vs-nil provider dictionaries, and
+whether Apple fires the restriction notifier on every assignment remain
+unobserved.
 
 The module is not wired into the shared guest package; that is a later
 central review step. Run:

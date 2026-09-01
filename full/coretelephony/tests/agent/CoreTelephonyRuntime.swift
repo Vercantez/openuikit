@@ -1,13 +1,29 @@
 import CoreTelephony
 import Foundation
 
+private final class RecordingSubscriberDelegate: NSObject, CTSubscriberDelegate {
+    var refreshed: CTSubscriber?
+
+    func subscriberTokenRefreshed(_ subscriber: CTSubscriber) {
+        refreshed = subscriber
+    }
+}
+
+private final class RecordingNetworkDelegate: NSObject, CTTelephonyNetworkInfoDelegate {
+    var changedIdentifier: String?
+
+    func dataServiceIdentifierDidChange(_ identifier: String) {
+        changedIdentifier = identifier
+    }
+}
+
 enum CoreTelephonyRuntime {
     static func main() async {
         exerciseConstants()
         exerciseErrorSurface()
         exerciseEnums()
         exerciseCallAndCarrier()
-        exerciseCellularData()
+        await exerciseCellularData()
         exerciseSubscriber()
         exerciseNetworkInfo()
         await exerciseCellularPlan()
@@ -33,22 +49,14 @@ enum CoreTelephonyRuntime {
             CTRadioAccessTechnologyNR,
         ]
         precondition(Set(radio).count == radio.count)
-        precondition(radio.allSatisfy { $0.hasPrefix("CTRadioAccessTechnology") })
-
-        precondition(CTCallStateDialing == "CTCallStateDialing")
-        precondition(CTCallStateIncoming == "CTCallStateIncoming")
-        precondition(CTCallStateConnected == "CTCallStateConnected")
-        precondition(CTCallStateDisconnected == "CTCallStateDisconnected")
-        precondition(CTSubscriberTokenRefreshed == "CTSubscriberTokenRefreshed")
-
-        precondition(
-            Notification.Name.CTRadioAccessTechnologyDidChange.rawValue
-                == "CTRadioAccessTechnologyDidChangeNotification"
-        )
-        precondition(
-            Notification.Name.CTServiceRadioAccessTechnologyDidChange.rawValue
-                == "CTServiceRadioAccessTechnologyDidChangeNotification"
-        )
+        precondition(radio.allSatisfy { !$0.isEmpty })
+        precondition(!CTCallStateDialing.isEmpty)
+        precondition(!CTCallStateIncoming.isEmpty)
+        precondition(!CTCallStateConnected.isEmpty)
+        precondition(!CTCallStateDisconnected.isEmpty)
+        precondition(!CTSubscriberTokenRefreshed.isEmpty)
+        precondition(!NSNotification.Name.CTRadioAccessTechnologyDidChange.rawValue.isEmpty)
+        precondition(!NSNotification.Name.CTServiceRadioAccessTechnologyDidChange.rawValue.isEmpty)
     }
 
     private static func exerciseErrorSurface() {
@@ -87,6 +95,10 @@ enum CoreTelephonyRuntime {
         precondition(CTCellularPlanCapability.dataAndVoice.rawValue == 1)
         precondition(CTCellularPlanCapability(rawValue: 1) == .dataAndVoice)
         precondition(CTCellularPlanCapability.dataOnly != .dataAndVoice)
+        precondition(
+            CTCellularPlanCapability.dataOnly.hashValue
+                != CTCellularPlanCapability.dataAndVoice.hashValue
+        )
         hasher = Hasher()
         CTCellularPlanCapability.dataAndVoice.hash(into: &hasher)
 
@@ -96,6 +108,10 @@ enum CoreTelephonyRuntime {
         precondition(CTCellularPlanProvisioningAddPlanResult.cancel.rawValue == 3)
         precondition(CTCellularPlanProvisioningAddPlanResult(rawValue: 2) == .success)
         precondition(CTCellularPlanProvisioningAddPlanResult.fail != .success)
+        precondition(
+            CTCellularPlanProvisioningAddPlanResult.fail.hashValue
+                != CTCellularPlanProvisioningAddPlanResult.success.hashValue
+        )
         hasher = Hasher()
         CTCellularPlanProvisioningAddPlanResult.cancel.hash(into: &hasher)
     }
@@ -120,13 +136,35 @@ enum CoreTelephonyRuntime {
         precondition(carrier.allowsVOIP == false)
     }
 
-    private static func exerciseCellularData() {
+    private static func exerciseCellularData() async {
         let data = CTCellularData()
         precondition(data.restrictedState == .restrictedStateUnknown)
-        var noted: CTCellularDataRestrictedState?
-        data.cellularDataRestrictionDidUpdateNotifier = { noted = $0 }
+
+        data.cellularDataRestrictionDidUpdateNotifier = nil
+        precondition(data.cellularDataRestrictionDidUpdateNotifier == nil)
+
+        let firstState = await withCheckedContinuation {
+            (continuation: CheckedContinuation<CTCellularDataRestrictedState, Never>) in
+            data.cellularDataRestrictionDidUpdateNotifier = { state in
+                continuation.resume(returning: state)
+            }
+        }
+        precondition(firstState == .restrictedStateUnknown)
         precondition(data.cellularDataRestrictionDidUpdateNotifier != nil)
-        precondition(noted == nil)
+
+        var laterCount = 0
+        data.cellularDataRestrictionDidUpdateNotifier = { _ in
+            laterCount += 1
+        }
+        try! await Task.sleep(nanoseconds: 80_000_000)
+        precondition(laterCount == 0)
+
+        data.cellularDataRestrictionDidUpdateNotifier = nil
+        data.cellularDataRestrictionDidUpdateNotifier = { _ in
+            laterCount += 1
+        }
+        try! await Task.sleep(nanoseconds: 80_000_000)
+        precondition(laterCount == 0)
     }
 
     private static func exerciseSubscriber() {
@@ -135,7 +173,12 @@ enum CoreTelephonyRuntime {
         precondition(subscriber.refreshCarrierToken() == false)
         precondition(subscriber.identifier.isEmpty)
         precondition(subscriber.isSIMInserted == false)
-        subscriber.delegate = nil
+
+        let delegate = RecordingSubscriberDelegate()
+        subscriber.delegate = delegate
+        precondition(subscriber.delegate === delegate)
+        delegate.subscriberTokenRefreshed(subscriber)
+        precondition(delegate.refreshed === subscriber)
 
         precondition(CTSubscriberInfo.subscribers().isEmpty)
         let legacy = CTSubscriberInfo.subscriber()
@@ -150,11 +193,25 @@ enum CoreTelephonyRuntime {
         precondition(info.subscriberCellularProvider == nil)
         precondition(info.serviceSubscriberCellularProviders == nil)
         precondition(info.dataServiceIdentifier == nil)
-        info.delegate = nil
-        info.serviceSubscriberCellularProvidersDidUpdateNotifier = { _ in }
-        info.subscriberCellularProviderDidUpdateNotifier = { _ in }
+
+        let delegate = RecordingNetworkDelegate()
+        info.delegate = delegate
+        precondition(info.delegate === delegate)
+        delegate.dataServiceIdentifierDidChange("data-service")
+        precondition(delegate.changedIdentifier == "data-service")
+
+        var serviceNotifierFired = false
+        var providerNotifierFired = false
+        info.serviceSubscriberCellularProvidersDidUpdateNotifier = { _ in
+            serviceNotifierFired = true
+        }
+        info.subscriberCellularProviderDidUpdateNotifier = { _ in
+            providerNotifierFired = true
+        }
         precondition(info.serviceSubscriberCellularProvidersDidUpdateNotifier != nil)
         precondition(info.subscriberCellularProviderDidUpdateNotifier != nil)
+        precondition(serviceNotifierFired == false)
+        precondition(providerNotifierFired == false)
     }
 
     private static func exerciseCellularPlan() async {
