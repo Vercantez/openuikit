@@ -2017,6 +2017,10 @@ class ShellContractTests(unittest.TestCase):
             '-needed_library "$STAGE/lib/libFoundation.dylib"',
             "/System/Library/Frameworks/WebKit.framework/",
             "webkit-dylib-loads.tsv",
+            "strict Swift 6 Hackers WebKit/KVO source-surface gate",
+            "full/webkit/tests/HackersWebKitSurface.swift",
+            "EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256=fa5ac0e8",
+            "Hackers-WebKit-Swift-6-surface",
             "rendering-engine\\tabsent",
             "-lWebKit -lCoreImage",
             "Intents IntentsUI WebKit",
@@ -2025,7 +2029,29 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("import WebKit", probe)
         self.assertIn("WKPortableError", probe)
         self.assertIn("webDelegate.commits == 0", probe)
-        self.assertIn("webkit=engine-unavailable", probe)
+        self.assertIn("webView.observe(", probe)
+        self.assertIn("loadingChanges.count == 5", probe)
+        self.assertIn("setAllMediaPlaybackSuspended(true)", probe)
+        self.assertIn("webkit=state,kvo,engine-unavailable", probe)
+
+    def test_hackers_webkit_swift6_surface_is_digest_pinned(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        surface = REPO / "full/webkit/tests/HackersWebKitSurface.swift"
+        digest = sha256(surface)
+        self.assertEqual(
+            digest,
+            "fa5ac0e8d8a72453d604cc5a8f24a8a8e9a771249115f569b2cd5b31422f194c",
+        )
+        self.assertIn(
+            f"EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256={digest}", builder
+        )
+        self.assertIn(
+            'require_hash "$HACKERS_WEBKIT_SURFACE"', builder
+        )
+        self.assertNotEqual(
+            hashlib.sha256(surface.read_bytes() + b"\n// mutation\n").hexdigest(),
+            digest,
+        )
 
     def test_preview_core_export_is_exact_and_mutation_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
