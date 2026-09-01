@@ -409,9 +409,10 @@ copy_module OrderedCollections "$FULL/foundation/collections"
 copy_module _RopeModule "$FULL/foundation/collections"
 copy_module os "$FULL/foundation/os"
 
+CROSS_IMPORT_FLAGS=(-Xfrontend -enable-cross-import-overlays)
 SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -I "$APPLE_SWIFT_USER_OVERLAYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
-    -Xfrontend -enable-cross-import-overlays
+    "${CROSS_IMPORT_FLAGS[@]}"
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
 CFLAGS=(-Xcc -I"$INCLUDE/CPortableIO" -Xcc -I"$INCLUDE/CSTBTrueType"
@@ -1224,6 +1225,7 @@ if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
     -F "$FRAMEWORKS" \
     -module-cache-path "$BUILD/framework-module-cache" \
     -runtime-compatibility-version none -Rmodule-loading \
+    "${CROSS_IMPORT_FLAGS[@]}" \
     -Xfrontend -disable-implicit-string-processing-module-import \
     -Xfrontend -disable-objc-attr-requires-foundation-module \
     "${PROBE_CFLAGS[@]}" "${PLUGIN_FLAGS[@]}" -parse-as-library \
