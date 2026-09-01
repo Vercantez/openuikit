@@ -11,7 +11,7 @@ open class MLPredictionOptions: NSObject {
     }
 }
 
-open class MLModelConfiguration: NSObject, NSSecureCoding {
+open class MLModelConfiguration: NSObject, NSSecureCoding, Foundation.NSCopying {
     public static var supportsSecureCoding: Bool { true }
 
     open var computeUnits: MLComputeUnits
@@ -34,15 +34,18 @@ open class MLModelConfiguration: NSObject, NSSecureCoding {
     public required init?(coder: NSCoder) { nil }
     open func encode(with coder: NSCoder) {}
 
-    open func copy(with zone: NSZone? = nil) -> Any {
-        let copy = MLModelConfiguration()
-        copy.computeUnits = computeUnits
-        copy.allowLowPrecisionAccumulationOnGPU = allowLowPrecisionAccumulationOnGPU
-        copy.functionName = functionName
-        copy.modelDisplayName = modelDisplayName
-        copy.parameters = parameters
-        copy.optimizationHints = optimizationHints
-        return copy
+    /// Exact `NSCopying` witness. `NSObject.copy()` dispatches `copyWithZone:`
+    /// through this method on Apple Foundation and swift-corelibs Foundation.
+    open func copy(with zone: NSZone?) -> Any {
+        _ = zone
+        let copied = MLModelConfiguration()
+        copied.computeUnits = computeUnits
+        copied.allowLowPrecisionAccumulationOnGPU = allowLowPrecisionAccumulationOnGPU
+        copied.functionName = functionName
+        copied.modelDisplayName = modelDisplayName
+        copied.parameters = parameters
+        copied.optimizationHints = optimizationHints
+        return copied
     }
 }
 
