@@ -1,0 +1,3 @@
+domain=com.apple.ap.adservices.attributionError
+codes=network:1,internal:2,platform:3
+signature=() throws -> String

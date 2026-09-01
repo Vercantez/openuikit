@@ -1,0 +1,3 @@
+abi=size:112,next-in:0,avail-in:8,next-out:24,state:56,reserved:104,version:1.2.12
+valid=status:1,remaining:0,bytes:77,text:RevenueCat untouched RCContainer gzip payload: portable Mach-O guest on Linux
+invalid=status:-5

@@ -1,0 +1,4 @@
+module COpenZlib {
+  header "OpenZlibABI.h"
+  export *
+}
