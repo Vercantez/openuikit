@@ -1,7 +1,14 @@
 import Foundation
 
-open class CPTravelEstimates: CarPlayCodingObject {
+#if canImport(UIKit)
+import UIKit
+#endif
 
+#if canImport(MapKit)
+import MapKit
+#endif
+
+open class CPTravelEstimates: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -31,11 +38,9 @@ open class CPTravelEstimates: CarPlayCodingObject {
             timeRemaining: time
         )
     }
-
 }
 
-open class CPRouteChoice: CarPlayCodingObject {
-
+open class CPRouteChoice: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -55,11 +60,10 @@ open class CPRouteChoice: CarPlayCodingObject {
         self.selectionSummaryVariants = selectionSummaryVariants
         super.init()
     }
-
 }
 
-open class CPTrip: CarPlayCodingObject {
-
+#if canImport(MapKit)
+open class CPTrip: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -76,11 +80,10 @@ open class CPTrip: CarPlayCodingObject {
         self.routeChoices = routeChoices
         super.init()
     }
-
 }
+#endif
 
-open class CPTripPreviewTextConfiguration: CarPlayCodingObject {
-
+open class CPTripPreviewTextConfiguration: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -99,11 +102,9 @@ open class CPTripPreviewTextConfiguration: CarPlayCodingObject {
         self.overviewButtonTitle = overviewButtonTitle
         super.init()
     }
-
 }
 
-open class CPLane: CarPlayCodingObject {
-
+open class CPLane: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -148,11 +149,9 @@ open class CPLane: CarPlayCodingObject {
         self.isPreferred = preferred
         super.init()
     }
-
 }
 
-open class CPLaneGuidance: CarPlayCodingObject {
-
+open class CPLaneGuidance: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -165,38 +164,39 @@ open class CPLaneGuidance: CarPlayCodingObject {
         self.lanes = []
         super.init()
     }
-
 }
 
-open class CPManeuver: CarPlayCodingObject {
-
+open class CPManeuver: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     public var attributedInstructionVariants: [NSAttributedString]
-    public var cardBackgroundColor: UIColor?
     public var dashboardAttributedInstructionVariants: [NSAttributedString]
     public var dashboardInstructionVariants: [String]
-    public var dashboardJunctionImage: UIImage?
-    public var dashboardSymbolImage: UIImage?
     public var highwayExitLabel: String
     public var initialTravelEstimates: CPTravelEstimates?
     public var instructionVariants: [String]
     public var junctionElementAngles: Set<Measurement<UnitAngle>>?
     public var junctionExitAngle: Measurement<UnitAngle>?
-    public var junctionImage: UIImage?
     public var junctionType: CPJunctionType
     public var linkedLaneGuidance: CPLaneGuidance
     public var maneuverType: CPManeuverType
     public var notificationAttributedInstructionVariants: [NSAttributedString]
     public var notificationInstructionVariants: [String]
-    public var notificationSymbolImage: UIImage?
     public var roadFollowingManeuverVariants: [String]?
-    public var symbolImage: UIImage?
-    public var symbolSet: CPImageSet?
     public var trafficSide: CPTrafficSide
     public var userInfo: Any?
+
+    #if canImport(UIKit)
+    public var cardBackgroundColor: UIColor?
+    public var dashboardJunctionImage: UIImage?
+    public var dashboardSymbolImage: UIImage?
+    public var junctionImage: UIImage?
+    public var notificationSymbolImage: UIImage?
+    public var symbolImage: UIImage?
+    public var symbolSet: CPImageSet?
+    #endif
 
     public override init() {
         self.attributedInstructionVariants = []
@@ -212,11 +212,9 @@ open class CPManeuver: CarPlayCodingObject {
         self.trafficSide = .right
         super.init()
     }
-
 }
 
-open class CPRouteInformation: CarPlayCodingObject {
-
+open class CPRouteInformation: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -262,12 +260,10 @@ open class CPRouteInformation: CarPlayCodingObject {
             maneuverTravelEstimates: maneuverTravelEstimates
         )
     }
-
 }
 
 @MainActor
-open class CPNavigationAlert: CarPlayCodingObject {
-
+open class CPNavigationAlert: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -280,12 +276,36 @@ open class CPNavigationAlert: CarPlayCodingObject {
 
     public private(set) var titleVariants: [String]
     public private(set) var subtitleVariants: [String]
-    public let image: UIImage?
-    public let imageSet: CPImageSet?
     public let primaryAction: CPAlertAction
     public let secondaryAction: CPAlertAction?
     public let duration: TimeInterval
 
+    #if canImport(UIKit)
+    public let image: UIImage?
+    public let imageSet: CPImageSet?
+    #endif
+
+    @_spi(OpenUIKitHost)
+    public init(
+        hostTitleVariants titleVariants: [String],
+        subtitleVariants: [String]?,
+        primaryAction: CPAlertAction,
+        secondaryAction: CPAlertAction?,
+        duration: TimeInterval
+    ) {
+        self.titleVariants = titleVariants
+        self.subtitleVariants = subtitleVariants ?? []
+        self.primaryAction = primaryAction
+        self.secondaryAction = secondaryAction
+        self.duration = duration
+        #if canImport(UIKit)
+        self.image = nil
+        self.imageSet = nil
+        #endif
+        super.init()
+    }
+
+    #if canImport(UIKit)
     public init(
         titleVariants: [String],
         subtitleVariants: [String]?,
@@ -300,7 +320,7 @@ open class CPNavigationAlert: CarPlayCodingObject {
         self.imageSet = nil
         self.primaryAction = primaryAction
         self.secondaryAction = secondaryAction
-        self.duration = max(duration, CPNavigationAlertMinimumDuration)
+        self.duration = duration
         super.init()
     }
 
@@ -318,20 +338,20 @@ open class CPNavigationAlert: CarPlayCodingObject {
         self.imageSet = imageSet
         self.primaryAction = primaryAction
         self.secondaryAction = secondaryAction
-        self.duration = max(duration, CPNavigationAlertMinimumDuration)
+        self.duration = duration
         super.init()
     }
+    #endif
 
     public func updateTitleVariants(_ newTitleVariants: [String], subtitleVariants newSubtitleVariants: [String]) {
         titleVariants = newTitleVariants
         subtitleVariants = newSubtitleVariants
     }
-
 }
 
+#if canImport(MapKit)
 @MainActor
-open class CPNavigationSession: CarPlayCodingObject {
-
+open class CPNavigationSession: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -344,7 +364,8 @@ open class CPNavigationSession: CarPlayCodingObject {
         case proceedToRoute = 4
     }
 
-    public enum PortableTripState: Equatable, Sendable {
+    @_spi(OpenUIKitHost)
+    public enum HostTripState: Equatable, Sendable {
         case navigating
         case paused(PauseReason)
         case finished
@@ -356,17 +377,22 @@ open class CPNavigationSession: CarPlayCodingObject {
     public var currentLaneGuidance: CPLaneGuidance?
     public var currentRoadNameVariants: [String]
     public var maneuverState: CPManeuverState
-    public private(set) var portableTripState: PortableTripState
     public private(set) var estimatesByManeuver: [ObjectIdentifier: CPTravelEstimates]
     public private(set) var pauseDescription: String?
+
+    @_spi(OpenUIKitHost)
+    public private(set) var hostTripState: HostTripState
+
+    #if canImport(UIKit)
     public private(set) var pauseTurnCardColor: UIColor?
+    #endif
 
     public init(trip: CPTrip) {
         self.trip = trip
         self.upcomingManeuvers = []
         self.currentRoadNameVariants = []
         self.maneuverState = .initial
-        self.portableTripState = .navigating
+        self.hostTripState = .navigating
         self.estimatesByManeuver = [:]
         super.init()
     }
@@ -382,49 +408,55 @@ open class CPNavigationSession: CarPlayCodingObject {
     }
 
     public func cancelTrip() {
-        portableTripState = .cancelled
+        hostTripState = .cancelled
         upcomingManeuvers = []
     }
 
     public func finishTrip() {
-        portableTripState = .finished
+        hostTripState = .finished
         upcomingManeuvers = []
         maneuverState = .execute
     }
 
     public func pauseTrip(for reason: PauseReason, description: String?) {
-        pauseTrip(for: reason, description: description, turnCardColor: nil)
+        hostTripState = .paused(reason)
+        pauseDescription = description
+        #if canImport(UIKit)
+        pauseTurnCardColor = nil
+        #endif
     }
 
+    #if canImport(UIKit)
     public func pauseTrip(for reason: PauseReason, description: String?, turnCardColor: UIColor?) {
-        portableTripState = .paused(reason)
+        hostTripState = .paused(reason)
         pauseDescription = description
         pauseTurnCardColor = turnCardColor
     }
+    #endif
 
     public func resumeTrip(updatedRouteInformation routeInformation: CPRouteInformation) {
-        portableTripState = .navigating
+        hostTripState = .navigating
         upcomingManeuvers = routeInformation.maneuvers
         currentLaneGuidance = routeInformation.currentLaneGuidance
         pauseDescription = nil
+        #if canImport(UIKit)
         pauseTurnCardColor = nil
+        #endif
     }
 
     public func updateEstimates(_ estimates: CPTravelEstimates, for maneuver: CPManeuver) {
         estimatesByManeuver[ObjectIdentifier(maneuver)] = estimates
         maneuver.initialTravelEstimates = estimates
     }
-
 }
 
-open class CPPointOfInterest: CarPlayCodingObject {
-
+open class CPPointOfInterest: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
-    public class var pinImageSize: CGSize { CGSize(width: 40, height: 40) }
-    public class var selectedPinImageSize: CGSize { CGSize(width: 50, height: 50) }
+    public class var pinImageSize: CGSize { .zero }
+    public class var selectedPinImageSize: CGSize { .zero }
 
     public var location: MKMapItem
     public var title: String
@@ -433,11 +465,13 @@ open class CPPointOfInterest: CarPlayCodingObject {
     public var detailTitle: String?
     public var detailSubtitle: String?
     public var detailSummary: String?
-    public var pinImage: UIImage?
-    public var selectedPinImage: UIImage?
     public var primaryButton: CPTextButton?
     public var secondaryButton: CPTextButton?
     public var userInfo: Any?
+
+    #if canImport(UIKit)
+    public var pinImage: UIImage?
+    public var selectedPinImage: UIImage?
 
     public init(
         location: MKMapItem,
@@ -484,8 +518,29 @@ open class CPPointOfInterest: CarPlayCodingObject {
             selectedPinImage: nil
         )
     }
-
+    #else
+    @_spi(OpenUIKitHost)
+    public init(
+        location: MKMapItem,
+        title: String,
+        subtitle: String?,
+        summary: String?,
+        detailTitle: String?,
+        detailSubtitle: String?,
+        detailSummary: String?
+    ) {
+        self.location = location
+        self.title = title
+        self.subtitle = subtitle
+        self.summary = summary
+        self.detailTitle = detailTitle
+        self.detailSubtitle = detailSubtitle
+        self.detailSummary = detailSummary
+        super.init()
+    }
+    #endif
 }
+#endif
 
 @MainActor
 open class CPMapTemplate: CPTemplate {
@@ -504,56 +559,44 @@ open class CPMapTemplate: CPTemplate {
 
     public var automaticallyHidesNavigationBar = true
     public var hidesButtonsWithNavigationBar = true
-    public var guidanceBackgroundColor = UIColor.black
-    public var mapButtons: [CPMapButton] = []
     public weak var mapDelegate: (any CPMapTemplateDelegate)?
     public var tripEstimateStyle: CPTripEstimateStyle = .light
     public private(set) var currentNavigationAlert: CPNavigationAlert?
     public private(set) var isPanningInterfaceVisible = false
-    public private(set) var portableTripPreviews: [CPTrip] = []
-    public private(set) var portableSelectedTrip: CPTrip?
-    public private(set) var portableTripEstimates: [ObjectIdentifier: CPTravelEstimates] = [:]
-    public private(set) var portableNavigationSession: CPNavigationSession?
+
+    #if canImport(UIKit)
+    public var guidanceBackgroundColor = UIColor.black
+    public var mapButtons: [CPMapButton] = []
+    #endif
+
+    #if canImport(MapKit)
+    @_spi(OpenUIKitHost)
+    public private(set) var hostTripPreviews: [CPTrip] = []
+    @_spi(OpenUIKitHost)
+    public private(set) var hostSelectedTrip: CPTrip?
+    @_spi(OpenUIKitHost)
+    public private(set) var hostTripEstimates: [ObjectIdentifier: CPTravelEstimates] = [:]
+    @_spi(OpenUIKitHost)
+    public private(set) var hostNavigationSession: CPNavigationSession?
+    #endif
 
     public func showPanningInterface(animated: Bool) {
+        guard CarPlayHostSessionState.isConnected else { return }
         isPanningInterfaceVisible = true
         mapDelegate?.mapTemplateDidShowPanningInterface(self)
         _ = animated
     }
 
     public func dismissPanningInterface(animated: Bool) {
+        guard CarPlayHostSessionState.isConnected else { return }
         mapDelegate?.mapTemplateWillDismissPanningInterface(self)
         isPanningInterfaceVisible = false
         mapDelegate?.mapTemplateDidDismissPanningInterface(self)
         _ = animated
     }
 
-    public func hideTripPreviews() {
-        portableTripPreviews = []
-        portableSelectedTrip = nil
-    }
-
-    public func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?) {
-        showTripPreviews(tripPreviews, selectedTrip: tripPreviews.first, textConfiguration: textConfiguration)
-    }
-
-    public func showTripPreviews(
-        _ tripPreviews: [CPTrip],
-        selectedTrip: CPTrip?,
-        textConfiguration: CPTripPreviewTextConfiguration?
-    ) {
-        portableTripPreviews = tripPreviews
-        portableSelectedTrip = selectedTrip
-        _ = textConfiguration
-    }
-
-    public func showRouteChoicesPreview(for tripPreview: CPTrip, textConfiguration: CPTripPreviewTextConfiguration?) {
-        portableTripPreviews = [tripPreview]
-        portableSelectedTrip = tripPreview
-        _ = textConfiguration
-    }
-
     public func present(navigationAlert: CPNavigationAlert, animated: Bool) {
+        guard CarPlayHostSessionState.isConnected else { return }
         mapDelegate?.mapTemplate(self, willShow: navigationAlert)
         currentNavigationAlert = navigationAlert
         mapDelegate?.mapTemplate(self, didShow: navigationAlert)
@@ -561,6 +604,7 @@ open class CPMapTemplate: CPTemplate {
     }
 
     public func dismissNavigationAlert(animated: Bool) async -> Bool {
+        guard CarPlayHostSessionState.isConnected else { return false }
         guard let alert = currentNavigationAlert else { return false }
         mapDelegate?.mapTemplate(self, willDismiss: alert, dismissalContext: .systemDismissed)
         currentNavigationAlert = nil
@@ -569,9 +613,40 @@ open class CPMapTemplate: CPTemplate {
         return true
     }
 
+    #if canImport(MapKit)
+    public func hideTripPreviews() {
+        guard CarPlayHostSessionState.isConnected else { return }
+        hostTripPreviews = []
+        hostSelectedTrip = nil
+    }
+
+    public func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?) {
+        guard CarPlayHostSessionState.isConnected else { return }
+        showTripPreviews(tripPreviews, selectedTrip: tripPreviews.first, textConfiguration: textConfiguration)
+    }
+
+    public func showTripPreviews(
+        _ tripPreviews: [CPTrip],
+        selectedTrip: CPTrip?,
+        textConfiguration: CPTripPreviewTextConfiguration?
+    ) {
+        guard CarPlayHostSessionState.isConnected else { return }
+        hostTripPreviews = tripPreviews
+        hostSelectedTrip = selectedTrip
+        _ = textConfiguration
+    }
+
+    public func showRouteChoicesPreview(for tripPreview: CPTrip, textConfiguration: CPTripPreviewTextConfiguration?) {
+        guard CarPlayHostSessionState.isConnected else { return }
+        hostTripPreviews = [tripPreview]
+        hostSelectedTrip = tripPreview
+        _ = textConfiguration
+    }
+
     public func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
         let session = CPNavigationSession(trip: trip)
-        portableNavigationSession = session
+        guard CarPlayHostSessionState.isConnected else { return session }
+        hostNavigationSession = session
         if let choice = trip.routeChoices.first {
             mapDelegate?.mapTemplate(self, startedTrip: trip, using: choice)
         }
@@ -579,7 +654,8 @@ open class CPMapTemplate: CPTemplate {
     }
 
     public func updateEstimates(_ estimates: CPTravelEstimates, for trip: CPTrip) {
-        portableTripEstimates[ObjectIdentifier(trip)] = estimates
+        guard CarPlayHostSessionState.isConnected else { return }
+        hostTripEstimates[ObjectIdentifier(trip)] = estimates
     }
 
     public func update(
@@ -587,8 +663,9 @@ open class CPMapTemplate: CPTemplate {
         for trip: CPTrip,
         with timeRemainingColor: CPTimeRemainingColor
     ) {
-        portableTripEstimates[ObjectIdentifier(trip)] = estimates
+        guard CarPlayHostSessionState.isConnected else { return }
+        hostTripEstimates[ObjectIdentifier(trip)] = estimates
         _ = timeRemainingColor
     }
-
+    #endif
 }

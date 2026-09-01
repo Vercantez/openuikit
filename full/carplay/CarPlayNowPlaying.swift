@@ -1,8 +1,11 @@
 import Foundation
 
-@MainActor
-open class CPNowPlayingButton: CarPlayCodingObject {
+#if canImport(UIKit)
+import UIKit
+#endif
 
+@MainActor
+open class CPNowPlayingButton: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -18,16 +21,15 @@ open class CPNowPlayingButton: CarPlayCodingObject {
         super.init()
     }
 
-
     @_spi(OpenUIKitHost)
-    public func portableInvoke() {
+    public func invokeHandler() {
         handler?(self)
     }
 }
 
+#if canImport(UIKit)
 @MainActor
 open class CPNowPlayingImageButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -38,12 +40,11 @@ open class CPNowPlayingImageButton: CPNowPlayingButton {
         self.image = image
         super.init(handler: handler)
     }
-
 }
+#endif
 
 @MainActor
 open class CPNowPlayingAddToLibraryButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -51,12 +52,10 @@ open class CPNowPlayingAddToLibraryButton: CPNowPlayingButton {
     public override init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init(handler: handler)
     }
-
 }
 
 @MainActor
 open class CPNowPlayingMoreButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -64,12 +63,10 @@ open class CPNowPlayingMoreButton: CPNowPlayingButton {
     public override init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init(handler: handler)
     }
-
 }
 
 @MainActor
 open class CPNowPlayingPlaybackRateButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -77,12 +74,10 @@ open class CPNowPlayingPlaybackRateButton: CPNowPlayingButton {
     public override init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init(handler: handler)
     }
-
 }
 
 @MainActor
 open class CPNowPlayingRepeatButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -90,12 +85,10 @@ open class CPNowPlayingRepeatButton: CPNowPlayingButton {
     public override init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init(handler: handler)
     }
-
 }
 
 @MainActor
 open class CPNowPlayingShuffleButton: CPNowPlayingButton {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -103,23 +96,28 @@ open class CPNowPlayingShuffleButton: CPNowPlayingButton {
     public override init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init(handler: handler)
     }
-
 }
 
 @MainActor
-open class CPNowPlayingMode: CarPlayCodingObject {
+open class CPNowPlayingMode: NSObject {
+    public override init() {
+        super.init()
+    }
+
+    public nonisolated required init?(coder: NSCoder) {
+        return nil
+    }
+
     @MainActor
     public class var `default`: CPNowPlayingMode {
         CPNowPlayingMode.defaultMode
     }
 
     private static let defaultMode = CPNowPlayingMode()
-
 }
 
 @MainActor
-open class CPNowPlayingSportsClock: CarPlayCodingObject {
-
+open class CPNowPlayingSportsClock: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -141,36 +139,39 @@ open class CPNowPlayingSportsClock: CarPlayCodingObject {
         self.timeValue = timeRemaining
         super.init()
     }
-
 }
 
 @MainActor
-open class CPNowPlayingSportsTeamLogo: CarPlayCodingObject {
-
+open class CPNowPlayingSportsTeamLogo: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     public let initials: String?
+
+    #if canImport(UIKit)
     public let logo: UIImage?
+    #endif
 
     public init(teamInitials: String) {
         self.initials = teamInitials
+        #if canImport(UIKit)
         self.logo = nil
+        #endif
         super.init()
     }
 
+    #if canImport(UIKit)
     public init(teamLogo: UIImage) {
         self.initials = nil
         self.logo = teamLogo
         super.init()
     }
-
+    #endif
 }
 
 @MainActor
-open class CPNowPlayingSportsTeam: CarPlayCodingObject {
-
+open class CPNowPlayingSportsTeam: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -179,8 +180,10 @@ open class CPNowPlayingSportsTeam: CarPlayCodingObject {
     public let logo: CPNowPlayingSportsTeamLogo
     public let teamStandings: String?
     public let eventScore: String
-    public let possessionIndicator: UIImage?
     public let isFavorite: Bool
+
+    #if canImport(UIKit)
+    public let possessionIndicator: UIImage?
 
     public init(
         name: String,
@@ -194,23 +197,40 @@ open class CPNowPlayingSportsTeam: CarPlayCodingObject {
         self.logo = logo
         self.teamStandings = teamStandings
         self.eventScore = eventScore
+        self.isFavorite = favorite
         self.possessionIndicator = possessionIndicator
+        super.init()
+    }
+    #else
+    @_spi(OpenUIKitHost)
+    public init(
+        name: String,
+        logo: CPNowPlayingSportsTeamLogo,
+        teamStandings: String?,
+        eventScore: String,
+        favorite: Bool
+    ) {
+        self.name = name
+        self.logo = logo
+        self.teamStandings = teamStandings
+        self.eventScore = eventScore
         self.isFavorite = favorite
         super.init()
     }
-
+    #endif
 }
 
 @MainActor
-open class CPNowPlayingSportsEventStatus: CarPlayCodingObject {
-
+open class CPNowPlayingSportsEventStatus: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     public let eventStatusText: [String]?
-    public let eventStatusImage: UIImage?
     public let eventClock: CPNowPlayingSportsClock?
+
+    #if canImport(UIKit)
+    public let eventStatusImage: UIImage?
 
     public init(
         eventStatusText: [String]?,
@@ -218,16 +238,25 @@ open class CPNowPlayingSportsEventStatus: CarPlayCodingObject {
         eventClock: CPNowPlayingSportsClock?
     ) {
         self.eventStatusText = eventStatusText
+        self.eventClock = eventClock
         self.eventStatusImage = eventStatusImage
+        super.init()
+    }
+    #else
+    @_spi(OpenUIKitHost)
+    public init(
+        eventStatusText: [String]?,
+        eventClock: CPNowPlayingSportsClock?
+    ) {
+        self.eventStatusText = eventStatusText
         self.eventClock = eventClock
         super.init()
     }
-
+    #endif
 }
 
 @MainActor
 open class CPNowPlayingModeSports: CPNowPlayingMode {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -235,6 +264,8 @@ open class CPNowPlayingModeSports: CPNowPlayingMode {
     public let leftTeam: CPNowPlayingSportsTeam
     public let rightTeam: CPNowPlayingSportsTeam
     public let eventStatus: CPNowPlayingSportsEventStatus?
+
+    #if canImport(UIKit)
     public let backgroundArtwork: UIImage?
 
     public init(
@@ -249,7 +280,19 @@ open class CPNowPlayingModeSports: CPNowPlayingMode {
         self.backgroundArtwork = backgroundArtwork
         super.init()
     }
-
+    #else
+    @_spi(OpenUIKitHost)
+    public init(
+        leftTeam: CPNowPlayingSportsTeam,
+        rightTeam: CPNowPlayingSportsTeam,
+        eventStatus: CPNowPlayingSportsEventStatus?
+    ) {
+        self.leftTeam = leftTeam
+        self.rightTeam = rightTeam
+        self.eventStatus = eventStatus
+        super.init()
+    }
+    #endif
 }
 
 @MainActor
@@ -266,14 +309,15 @@ open class CPNowPlayingTemplate: CPTemplate {
     public var isAlbumArtistButtonEnabled = false
     public var isUpNextButtonEnabled = false
     public var upNextTitle = ""
-    private var observers: [ObjectIdentifier: any CPNowPlayingTemplateObserver] = [:]
+    private var observers: [ObjectIdentifier: WeakNowPlayingObserver] = [:]
 
     public func updateNowPlayingButtons(_ nowPlayingButtons: [CPNowPlayingButton]) {
         self.nowPlayingButtons = nowPlayingButtons
     }
 
     public func add(_ observer: any CPNowPlayingTemplateObserver) {
-        observers[ObjectIdentifier(observer as AnyObject)] = observer
+        let object = observer as AnyObject
+        observers[ObjectIdentifier(object)] = WeakNowPlayingObserver(value: object)
     }
 
     public func remove(_ observer: any CPNowPlayingTemplateObserver) {
@@ -281,13 +325,31 @@ open class CPNowPlayingTemplate: CPTemplate {
     }
 
     @_spi(OpenUIKitHost)
-    public func portableNotifyUpNextTapped() {
-        observers.values.forEach { $0.nowPlayingTemplateUpNextButtonTapped(self) }
+    public func notifyUpNextTapped() {
+        forEachObserver { $0.nowPlayingTemplateUpNextButtonTapped(self) }
     }
 
     @_spi(OpenUIKitHost)
-    public func portableNotifyAlbumArtistTapped() {
-        observers.values.forEach { $0.nowPlayingTemplateAlbumArtistButtonTapped(self) }
+    public func notifyAlbumArtistTapped() {
+        forEachObserver { $0.nowPlayingTemplateAlbumArtistButtonTapped(self) }
     }
 
+    private func forEachObserver(_ body: (any CPNowPlayingTemplateObserver) -> Void) {
+        for (identifier, box) in observers {
+            if let observer = box.value as? any CPNowPlayingTemplateObserver {
+                body(observer)
+            } else {
+                observers.removeValue(forKey: identifier)
+            }
+        }
+    }
+}
+
+@MainActor
+private final class WeakNowPlayingObserver {
+    weak var value: AnyObject?
+
+    init(value: AnyObject) {
+        self.value = value
+    }
 }

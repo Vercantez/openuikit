@@ -1,8 +1,11 @@
 import Foundation
 
-@MainActor
-open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
+#if canImport(UIKit)
+import UIKit
+#endif
 
+@MainActor
+open class CPListItem: NSObject, CPSelectableListItem {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -19,14 +22,10 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
     }
 
     @MainActor
-    public class var maximumImageSize: CGSize {
-        CGSize(width: 90, height: 90)
-    }
+    public class var maximumImageSize: CGSize { .zero }
 
     public private(set) var text: String?
     public private(set) var detailText: String?
-    public private(set) var image: UIImage?
-    public private(set) var accessoryImage: UIImage?
     public var accessoryType: CPListItemAccessoryType
     public var isEnabled: Bool
     public var isExplicitContent: Bool
@@ -37,6 +36,11 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
     public var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)?
     public var userInfo: Any?
 
+    #if canImport(UIKit)
+    public private(set) var image: UIImage?
+    public private(set) var accessoryImage: UIImage?
+    #endif
+
     public var showsDisclosureIndicator: Bool {
         accessoryType == .disclosureIndicator
     }
@@ -44,8 +48,6 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
     public init(text: String?, detailText: String?) {
         self.text = text
         self.detailText = detailText
-        self.image = nil
-        self.accessoryImage = nil
         self.accessoryType = .none
         self.isEnabled = true
         self.isExplicitContent = false
@@ -56,6 +58,7 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
         super.init()
     }
 
+    #if canImport(UIKit)
     public convenience init(text: String?, detailText: String?, image: UIImage?) {
         self.init(text: text, detailText: detailText)
         self.image = image
@@ -85,6 +88,15 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
         self.accessoryType = showsDisclosureIndicator ? .disclosureIndicator : .none
     }
 
+    public func setImage(_ image: UIImage?) {
+        self.image = image
+    }
+
+    public func setAccessoryImage(_ accessoryImage: UIImage?) {
+        self.accessoryImage = accessoryImage
+    }
+    #endif
+
     public func setText(_ text: String) {
         self.text = text
     }
@@ -93,35 +105,56 @@ open class CPListItem: CarPlayCodingObject, CPSelectableListItem {
         self.detailText = detailText
     }
 
-    public func setImage(_ image: UIImage?) {
-        self.image = image
-    }
-
-    public func setAccessoryImage(_ accessoryImage: UIImage?) {
-        self.accessoryImage = accessoryImage
-    }
-
-
     @_spi(OpenUIKitHost)
-    public func portableSelect() {
+    public func invokeSelectionHandler() {
         handler?(self, {})
     }
 }
 
 @MainActor
-open class CPListSection: CarPlayCodingObject {
-
+open class CPListSection: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     public private(set) var items: [any CPListTemplateItem]
     public private(set) var header: String?
-    public var headerImage: UIImage?
     public private(set) var headerSubtitle: String?
-    public private(set) var headerButton: CPButton?
     public private(set) var sectionIndexTitle: String?
 
+    #if canImport(UIKit)
+    public var headerImage: UIImage?
+    public private(set) var headerButton: CPButton?
+    #endif
+
+    @_spi(OpenUIKitHost)
+    public init(items: [any CPListTemplateItem], header: String?, sectionIndexTitle: String?) {
+        self.items = items
+        self.header = header
+        self.sectionIndexTitle = sectionIndexTitle
+        super.init()
+    }
+
+    @_spi(OpenUIKitHost)
+    public convenience init(items: [CPListItem], header: String?, sectionIndexTitle: String?) {
+        self.init(
+            items: items.map { $0 as any CPListTemplateItem },
+            header: header,
+            sectionIndexTitle: sectionIndexTitle
+        )
+    }
+
+    @_spi(OpenUIKitHost)
+    public convenience init(items: [any CPListTemplateItem]) {
+        self.init(items: items, header: nil, sectionIndexTitle: nil)
+    }
+
+    @_spi(OpenUIKitHost)
+    public convenience init(items: [CPListItem]) {
+        self.init(items: items.map { $0 as any CPListTemplateItem })
+    }
+
+    #if canImport(UIKit)
     public init(
         items: [any CPListTemplateItem],
         header: String,
@@ -138,34 +171,7 @@ open class CPListSection: CarPlayCodingObject {
         self.sectionIndexTitle = sectionIndexTitle
         super.init()
     }
-
-    public convenience init(items: [any CPListTemplateItem], header: String?, sectionIndexTitle: String?) {
-        self.init(
-            items: items,
-            header: header ?? "",
-            headerSubtitle: nil,
-            headerImage: nil,
-            headerButton: nil,
-            sectionIndexTitle: sectionIndexTitle
-        )
-        self.header = header
-    }
-
-    public convenience init(items: [CPListItem], header: String?, sectionIndexTitle: String?) {
-        self.init(
-            items: items.map { $0 as any CPListTemplateItem },
-            header: header,
-            sectionIndexTitle: sectionIndexTitle
-        )
-    }
-
-    public convenience init(items: [any CPListTemplateItem]) {
-        self.init(items: items, header: nil, sectionIndexTitle: nil)
-    }
-
-    public convenience init(items: [CPListItem]) {
-        self.init(items: items.map { $0 as any CPListTemplateItem })
-    }
+    #endif
 
     public func index(of item: any CPListTemplateItem) -> Int {
         items.firstIndex { $0 === item } ?? NSNotFound
@@ -174,20 +180,17 @@ open class CPListSection: CarPlayCodingObject {
     public func item(at index: Int) -> any CPListTemplateItem {
         items[index]
     }
-
 }
 
+#if canImport(UIKit)
 @MainActor
-open class CPListImageRowItemElement: CarPlayCodingObject {
-
+open class CPListImageRowItemElement: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumImageSize: CGSize {
-        CGSize(width: 90, height: 90)
-    }
+    public class var maximumImageSize: CGSize { .zero }
 
     public var image: UIImage
     public var isEnabled: Bool
@@ -197,20 +200,16 @@ open class CPListImageRowItemElement: CarPlayCodingObject {
         self.isEnabled = true
         super.init()
     }
-
 }
 
 @MainActor
 open class CPListImageRowItemCardElement: CPListImageRowItemElement {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumFullHeightImageSize: CGSize {
-        CGSize(width: 150, height: 220)
-    }
+    public class var maximumFullHeightImageSize: CGSize { .zero }
 
     public let showsImageFullHeight: Bool
     public var title: String
@@ -230,12 +229,10 @@ open class CPListImageRowItemCardElement: CPListImageRowItemElement {
         self.tintColor = tintColor
         super.init(image: image)
     }
-
 }
 
 @MainActor
 open class CPListImageRowItemCondensedElement: CPListImageRowItemElement {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -263,12 +260,10 @@ open class CPListImageRowItemCondensedElement: CPListImageRowItemElement {
         self.accessorySymbolName = accessorySymbolName
         super.init(image: image)
     }
-
 }
 
 @MainActor
 open class CPListImageRowItemGridElement: CPListImageRowItemElement {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -276,12 +271,10 @@ open class CPListImageRowItemGridElement: CPListImageRowItemElement {
     public override init(image: UIImage) {
         super.init(image: image)
     }
-
 }
 
 @MainActor
 open class CPListImageRowItemImageGridElement: CPListImageRowItemElement {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -301,12 +294,10 @@ open class CPListImageRowItemImageGridElement: CPListImageRowItemElement {
         self.accessorySymbolName = accessorySymbolName
         super.init(image: image)
     }
-
 }
 
 @MainActor
 open class CPListImageRowItemRowElement: CPListImageRowItemElement {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -319,20 +310,16 @@ open class CPListImageRowItemRowElement: CPListImageRowItemElement {
         self.subtitle = subtitle
         super.init(image: image)
     }
-
 }
 
 @MainActor
-open class CPListImageRowItem: CarPlayCodingObject, CPSelectableListItem {
-
+open class CPListImageRowItem: NSObject, CPSelectableListItem {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumImageSize: CGSize {
-        CGSize(width: 90, height: 90)
-    }
+    public class var maximumImageSize: CGSize { .zero }
 
     public var text: String?
     public var isEnabled: Bool
@@ -425,11 +412,9 @@ open class CPListImageRowItem: CarPlayCodingObject, CPSelectableListItem {
     public func update(_ gridImages: [UIImage]) {
         self.gridImages = gridImages
     }
-
 }
 
-open class CPMessageListItemLeadingConfiguration: CarPlayCodingObject {
-
+open class CPMessageListItemLeadingConfiguration: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -444,11 +429,9 @@ open class CPMessageListItemLeadingConfiguration: CarPlayCodingObject {
         self.isUnread = unread
         super.init()
     }
-
 }
 
-open class CPMessageListItemTrailingConfiguration: CarPlayCodingObject {
-
+open class CPMessageListItemTrailingConfiguration: NSObject {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -461,12 +444,10 @@ open class CPMessageListItemTrailingConfiguration: CarPlayCodingObject {
         self.trailingImage = trailingImage
         super.init()
     }
-
 }
 
 @MainActor
-open class CPMessageListItem: CarPlayCodingObject, CPListTemplateItem {
-
+open class CPMessageListItem: NSObject, CPListTemplateItem {
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -517,5 +498,5 @@ open class CPMessageListItem: CarPlayCodingObject, CPListTemplateItem {
         self.isEnabled = true
         super.init()
     }
-
 }
+#endif

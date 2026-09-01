@@ -6,5 +6,4 @@ full/carplay/CarPlayNavigation.swift
 full/carplay/CarPlayNowPlaying.swift
 full/carplay/CarPlayProtocols.swift
 full/carplay/CarPlaySession.swift
-full/carplay/CarPlayShims.swift
 full/carplay/CarPlayTemplates.swift

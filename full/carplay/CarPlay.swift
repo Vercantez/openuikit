@@ -1,10 +1,10 @@
 //===----------------------------------------------------------------------===//
-// Portable CarPlay
+// CarPlay
 //
-// In-memory template, list, and navigation models compile and are inspectable
-// on Linux. Vehicle connection, entitlement grants, instrument-cluster windows,
-// and Apple CarPlay UI are fail-closed. A host may drive the template stack
-// through SPI; that never claims a car session accepted the templates.
+// Template, list, and navigation models compile on Linux. Vehicle presentation
+// is fail-closed until a host injects a session through @_spi(OpenUIKitHost).
+// UIKit and MapKit identities are imported when those modules are staged;
+// this module never redefines them.
 //===----------------------------------------------------------------------===//
 
 import Foundation
@@ -19,73 +19,35 @@ import MapKit
 
 // MARK: - Public constants
 //
-// Image-size and count limits below are the portable starting values taken
-// from Apple's public CarPlay programming guidance. Exact runtime point sizes
-// on a given iOS build remain an oracle question.
+// Numeric values are unattested against iPhoneOS 26.1. They exist so the
+// identifiers compile; coverage treats them as declared, not implemented.
 
-public let CPButtonMaximumImageSize = CGSize(width: 44, height: 44)
-public let CPGridTemplateMaximumItems = 8
-public let CPMaximumListSectionImageSize = CGSize(width: 64, height: 64)
-public let CPMaximumMessageItemImageSize = CGSize(width: 90, height: 90)
-public let CPMaximumMessageItemLeadingDetailTextImageSize = CGSize(width: 32, height: 32)
-public let CPMaximumNumberOfGridImages = 9
-public let CPNavigationAlertMinimumDuration: TimeInterval = 5
-public let CPNowPlayingButtonMaximumImageSize = CGSize(width: 44, height: 44)
+public let CPButtonMaximumImageSize = CGSize(width: 0, height: 0)
+public let CPGridTemplateMaximumItems = 0
+public let CPMaximumListSectionImageSize = CGSize(width: 0, height: 0)
+public let CPMaximumMessageItemImageSize = CGSize(width: 0, height: 0)
+public let CPMaximumMessageItemLeadingDetailTextImageSize = CGSize(width: 0, height: 0)
+public let CPMaximumNumberOfGridImages = 0
+public let CPNavigationAlertMinimumDuration: TimeInterval = 0
+public let CPNowPlayingButtonMaximumImageSize = CGSize(width: 0, height: 0)
 public let CarPlayErrorDomain = "CarPlayErrorDomain"
 
 public typealias CPAlertActionHandler = (CPAlertAction) -> Void
 public typealias CPBarButtonHandler = (CPBarButton) -> Void
 
-// MARK: - Portable errors
+// MARK: - Host SPI errors and vehicle session
 
-public struct CarPlayPortableError: Error, Equatable, Sendable, CustomStringConvertible {
-    public enum Code: Int, Sendable {
-        case notConnectedToVehicle = 1
-        case noPresentedTemplate = 2
-        case templateNotInStack = 3
-        case emptyTemplateStack = 4
-        case invalidTabSelection = 5
-        case entitlementUnavailable = 6
-    }
-
-    public let code: Code
-    public var description: String {
-        switch code {
-        case .notConnectedToVehicle:
-            return "No CarPlay vehicle session is available on this host"
-        case .noPresentedTemplate:
-            return "No template is currently presented"
-        case .templateNotInStack:
-            return "The requested template is not in the interface stack"
-        case .emptyTemplateStack:
-            return "The interface template stack is empty"
-        case .invalidTabSelection:
-            return "The requested tab is not part of this tab bar template"
-        case .entitlementUnavailable:
-            return "The requested CarPlay entitlement is not granted on this host"
-        }
-    }
-
-    public var localizedDescription: String { description }
-
-    public init(_ code: Code) {
-        self.code = code
-    }
+@_spi(OpenUIKitHost)
+public enum CarPlayHostError: Error, Equatable, Sendable {
+    case vehicleSessionDisconnected
+    case templateNotInStack
+    case noPresentedTemplate
+    case emptyTemplateStack
 }
 
-/// Cross-cutting portable capability. Vehicle, entitlement, and UI paths stay
-/// fail-closed unless a host injects a session through SPI.
-public enum CarPlayPortable: Sendable {
-    public static let supportsVehicleSession = false
-    public static let supportsInstrumentClusterWindow = false
-    public static let supportsDashboardWindow = false
-    public static let supportsNowPlayingSystemUI = false
-    public static let supportsMapRendering = false
-
-    public static var hasTemplateEntitlement: Bool { false }
-    public static var hasAudioEntitlement: Bool { false }
-    public static var hasMapsEntitlement: Bool { false }
-    public static var hasCommunicationEntitlement: Bool { false }
+@MainActor
+enum CarPlayHostSessionState {
+    static var isConnected = false
 }
 
 // MARK: - Option sets
@@ -125,18 +87,38 @@ public struct CPManeuverDisplayStyle: OptionSet, Hashable, Sendable {
     public static let instructionOnly = CPManeuverDisplayStyle(rawValue: 1 << 3)
 }
 
-// MARK: - NSSecureCoding helper
-
-open class CarPlayCodingObject: NSObject, NSSecureCoding {
-    public static var supportsSecureCoding: Bool { true }
-
-    public override init() {
-        super.init()
-    }
-
-    public required init?(coder: NSCoder) {
-        return nil
-    }
-
-    public func encode(with coder: NSCoder) {}
+#if canImport(UIKit)
+extension UISceneSession.Role {
+    public static let carTemplateApplication = UISceneSession.Role(
+        rawValue: "CPTemplateApplicationSceneSessionRoleApplication"
+    )
+    public static let CPTemplateApplicationDashboardSceneSessionRoleApplication =
+        UISceneSession.Role(
+            rawValue: "CPTemplateApplicationDashboardSceneSessionRoleApplication"
+        )
+    public static let CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication =
+        UISceneSession.Role(
+            rawValue: "CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication"
+        )
 }
+
+@_spi(OpenUIKitHost)
+public enum CarPlayHostFixtures {
+    public static func image() -> UIImage {
+        UIImage()
+    }
+
+    public static func color() -> UIColor {
+        .black
+    }
+}
+#endif
+
+#if canImport(MapKit)
+@_spi(OpenUIKitHost)
+public enum CarPlayHostMapFixtures {
+    public static func mapItem() -> MKMapItem {
+        MKMapItem()
+    }
+}
+#endif

@@ -1,32 +1,50 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(MapKit)
+import MapKit
+#endif
+
 @MainActor
-open class CPTemplate: CarPlayCodingObject, CPBarButtonProviding {
+open class CPTemplate: NSObject, CPBarButtonProviding {
     public var showsTabBadge = false
-    public var tabImage: UIImage?
-    public var tabSystemItem: UITabBarItem.SystemItem = .more
     public var tabTitle: String?
     public var userInfo: Any?
     public var backButton: CPBarButton?
     public var leadingNavigationBarButtons: [CPBarButton] = []
     public var trailingNavigationBarButtons: [CPBarButton] = []
+
+    #if canImport(UIKit)
+    public var tabImage: UIImage?
+    public var tabSystemItem: UITabBarItem.SystemItem = .more
+    #endif
+
+    public override init() {
+        super.init()
+    }
+
+    public nonisolated required init?(coder: NSCoder) {
+        return nil
+    }
 }
 
 @MainActor
 open class CPListTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumGridButtonImageSize: CGSize { CGSize(width: 44, height: 44) }
+    public class var maximumGridButtonImageSize: CGSize { .zero }
     @MainActor
-    public class var maximumHeaderGridButtonCount: Int { 3 }
+    public class var maximumHeaderGridButtonCount: Int { 0 }
     @MainActor
-    public class var maximumItemCount: Int { 12 }
+    public class var maximumItemCount: Int { 0 }
     @MainActor
-    public class var maximumSectionCount: Int { 12 }
+    public class var maximumSectionCount: Int { 0 }
 
     public private(set) var title: String?
     public private(set) var sections: [CPListSection]
@@ -34,8 +52,11 @@ open class CPListTemplate: CPTemplate {
     public weak var delegate: (any CPListTemplateDelegate)?
     public var emptyViewSubtitleVariants: [String]
     public var emptyViewTitleVariants: [String]
-    public var headerGridButtons: [CPGridButton]?
     public var showsSpinnerWhileEmpty: Bool
+
+    #if canImport(UIKit)
+    public var headerGridButtons: [CPGridButton]?
+    #endif
 
     public var sectionCount: Int { sections.count }
     public var itemCount: Int { sections.reduce(0) { $0 + $1.items.count } }
@@ -59,6 +80,7 @@ open class CPListTemplate: CPTemplate {
         self.assistantCellConfiguration = assistantCellConfiguration
     }
 
+    #if canImport(UIKit)
     public convenience init(
         title: String?,
         sections: [CPListSection],
@@ -72,6 +94,7 @@ open class CPListTemplate: CPTemplate {
         )
         self.headerGridButtons = headerGridButtons
     }
+    #endif
 
     public func updateSections(_ sections: [CPListSection]) {
         self.sections = sections
@@ -86,63 +109,60 @@ open class CPListTemplate: CPTemplate {
         }
         return nil
     }
-
 }
 
+#if canImport(UIKit)
 @MainActor
 open class CPGridTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumGridButtonImageSize: CGSize { CGSize(width: 44, height: 44) }
+    public class var maximumGridButtonImageSize: CGSize { .zero }
 
     public private(set) var title: String
     public private(set) var gridButtons: [CPGridButton]
 
     public init(title: String?, gridButtons: [CPGridButton]) {
         self.title = title ?? ""
-        self.gridButtons = Array(gridButtons.prefix(CPGridTemplateMaximumItems))
+        self.gridButtons = gridButtons
         super.init()
         self.tabTitle = title
     }
 
     public func updateGridButtons(_ gridButtons: [CPGridButton]) {
-        self.gridButtons = Array(gridButtons.prefix(CPGridTemplateMaximumItems))
+        self.gridButtons = gridButtons
     }
 
     public func updateTitle(_ title: String) {
         self.title = title
         self.tabTitle = title
     }
-
 }
+#endif
 
 @MainActor
 open class CPTabBarTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumTabCount: Int { 8 }
+    public class var maximumTabCount: Int { 0 }
 
     public private(set) var templates: [CPTemplate]
     public private(set) var selectedTemplate: CPTemplate?
     public weak var delegate: (any CPTabBarTemplateDelegate)?
 
     public init(templates: [CPTemplate]) {
-        let limited = Array(templates.prefix(Self.maximumTabCount))
-        self.templates = limited
-        self.selectedTemplate = limited.first
+        self.templates = templates
+        self.selectedTemplate = templates.first
         super.init()
     }
 
     public func updateTemplates(_ newTemplates: [CPTemplate]) {
-        templates = Array(newTemplates.prefix(Self.maximumTabCount))
+        templates = newTemplates
         if let selected = selectedTemplate, templates.contains(where: { $0 === selected }) {
             return
         }
@@ -159,33 +179,29 @@ open class CPTabBarTemplate: CPTemplate {
         guard templates.indices.contains(index) else { return }
         select(templates[index])
     }
-
 }
 
 @MainActor
 open class CPAlertTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
 
     @MainActor
-    public class var maximumActionCount: Int { 2 }
+    public class var maximumActionCount: Int { 0 }
 
     public let titleVariants: [String]
     public let actions: [CPAlertAction]
 
     public init(titleVariants: [String], actions: [CPAlertAction]) {
         self.titleVariants = titleVariants
-        self.actions = Array(actions.prefix(Self.maximumActionCount))
+        self.actions = actions
         super.init()
     }
-
 }
 
 @MainActor
 open class CPActionSheetTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -200,12 +216,10 @@ open class CPActionSheetTemplate: CPTemplate {
         self.actions = actions
         super.init()
     }
-
 }
 
 @MainActor
 open class CPInformationTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -228,12 +242,11 @@ open class CPInformationTemplate: CPTemplate {
         super.init()
         self.tabTitle = title
     }
-
 }
 
+#if canImport(UIKit)
 @MainActor
 open class CPContactTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -245,8 +258,8 @@ open class CPContactTemplate: CPTemplate {
         super.init()
         self.tabTitle = contact.name
     }
-
 }
+#endif
 
 @MainActor
 open class CPSearchTemplate: CPTemplate {
@@ -255,7 +268,6 @@ open class CPSearchTemplate: CPTemplate {
 
 @MainActor
 open class CPVoiceControlTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -273,12 +285,11 @@ open class CPVoiceControlTemplate: CPTemplate {
         guard voiceControlStates.contains(where: { $0.identifier == identifier }) else { return }
         activeStateIdentifier = identifier
     }
-
 }
 
+#if canImport(MapKit)
 @MainActor
 open class CPPointOfInterestTemplate: CPTemplate {
-
     public nonisolated required init?(coder: NSCoder) {
         return nil
     }
@@ -300,5 +311,5 @@ open class CPPointOfInterestTemplate: CPTemplate {
         self.pointsOfInterest = pointsOfInterest
         self.selectedIndex = selectedIndex
     }
-
 }
+#endif

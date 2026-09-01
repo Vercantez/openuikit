@@ -143,18 +143,11 @@ public enum CPTripEstimateStyle: UInt, Equatable, Hashable, Sendable {
 }
 
 public func NSStringFromCPJunctionType(_ junctionType: CPJunctionType) -> String {
-    switch junctionType {
-    case .intersection: return "CPJunctionTypeIntersection"
-    case .roundabout: return "CPJunctionTypeRoundabout"
-    }
+    String(describing: junctionType)
 }
 
 public func NSStringFromCPLaneStatus(_ laneStatus: CPLaneStatus) -> String {
-    switch laneStatus {
-    case .notGood: return "CPLaneStatusNotGood"
-    case .good: return "CPLaneStatusGood"
-    case .preferred: return "CPLaneStatusPreferred"
-    }
+    String(describing: laneStatus)
 }
 
 public func NSStringFromCPManeuverType(_ maneuverType: CPManeuverType) -> String {
@@ -162,8 +155,5 @@ public func NSStringFromCPManeuverType(_ maneuverType: CPManeuverType) -> String
 }
 
 public func NSStringFromCPTrafficSide(_ trafficSide: CPTrafficSide) -> String {
-    switch trafficSide {
-    case .right: return "CPTrafficSideRight"
-    case .left: return "CPTrafficSideLeft"
-    }
+    String(describing: trafficSide)
 }

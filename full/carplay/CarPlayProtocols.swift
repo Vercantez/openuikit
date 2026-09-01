@@ -1,5 +1,13 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(MapKit)
+import MapKit
+#endif
+
 @MainActor
 public protocol CPListTemplateItem: AnyObject {
     var isEnabled: Bool { get set }
@@ -68,6 +76,7 @@ public extension CPSearchTemplateDelegate {
     func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {}
 }
 
+#if canImport(MapKit)
 @MainActor
 public protocol CPPointOfInterestTemplateDelegate: AnyObject {
     func pointOfInterestTemplate(
@@ -87,6 +96,7 @@ public extension CPPointOfInterestTemplateDelegate {
         didSelectPointOfInterest pointOfInterest: CPPointOfInterest
     ) {}
 }
+#endif
 
 @MainActor
 public protocol CPSessionConfigurationDelegate: AnyObject {
@@ -112,6 +122,7 @@ public extension CPSessionConfigurationDelegate {
     ) {}
 }
 
+#if canImport(UIKit)
 public protocol CPApplicationDelegate: UIApplicationDelegate {
     func application(
         _ application: UIApplication,
@@ -243,6 +254,12 @@ public extension CPTemplateApplicationSceneDelegate {
         didSelect navigationAlert: CPNavigationAlert
     ) {}
 }
+#else
+public protocol CPApplicationDelegate: AnyObject {}
+public protocol CPTemplateApplicationDashboardSceneDelegate: AnyObject {}
+public protocol CPTemplateApplicationInstrumentClusterSceneDelegate: AnyObject {}
+public protocol CPTemplateApplicationSceneDelegate: AnyObject {}
+#endif
 
 public protocol CPInstrumentClusterControllerDelegate: AnyObject {
     func instrumentClusterController(
@@ -253,8 +270,10 @@ public protocol CPInstrumentClusterControllerDelegate: AnyObject {
         _ instrumentClusterController: CPInstrumentClusterController,
         didChangeSpeedLimitSetting speedLimitSetting: CPInstrumentClusterSetting
     )
+    #if canImport(UIKit)
     func instrumentClusterControllerDidConnect(_ instrumentClusterWindow: UIWindow)
     func instrumentClusterControllerDidDisconnectWindow(_ instrumentClusterWindow: UIWindow)
+    #endif
     func instrumentClusterControllerDidZoom(in instrumentClusterController: CPInstrumentClusterController)
     func instrumentClusterControllerDidZoomOut(_ instrumentClusterController: CPInstrumentClusterController)
 }
@@ -306,11 +325,14 @@ public protocol CPMapTemplateDelegate: AnyObject {
     func mapTemplate(_ mapTemplate: CPMapTemplate, pitchEndedWithCenter center: CGPoint)
     func mapTemplate(_ mapTemplate: CPMapTemplate, pitchWithCenter center: CGPoint)
     func mapTemplate(_ mapTemplate: CPMapTemplate, rotationDidEndWithVelocity velocity: CGFloat)
+    #if canImport(MapKit)
     func mapTemplate(
         _ mapTemplate: CPMapTemplate,
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     )
+    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice)
+    #endif
     func mapTemplate(_ mapTemplate: CPMapTemplate, shouldShowNotificationFor maneuver: CPManeuver) -> Bool
     func mapTemplate(
         _ mapTemplate: CPMapTemplate,
@@ -321,7 +343,6 @@ public protocol CPMapTemplateDelegate: AnyObject {
         shouldUpdateNotificationFor maneuver: CPManeuver,
         with travelEstimates: CPTravelEstimates
     ) -> Bool
-    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice)
     func mapTemplate(
         _ mapTemplate: CPMapTemplate,
         willDismiss navigationAlert: CPNavigationAlert,
@@ -375,11 +396,14 @@ public extension CPMapTemplateDelegate {
     func mapTemplate(_ mapTemplate: CPMapTemplate, pitchEndedWithCenter center: CGPoint) {}
     func mapTemplate(_ mapTemplate: CPMapTemplate, pitchWithCenter center: CGPoint) {}
     func mapTemplate(_ mapTemplate: CPMapTemplate, rotationDidEndWithVelocity velocity: CGFloat) {}
+    #if canImport(MapKit)
     func mapTemplate(
         _ mapTemplate: CPMapTemplate,
         selectedPreviewFor trip: CPTrip,
         using routeChoice: CPRouteChoice
     ) {}
+    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {}
+    #endif
     func mapTemplate(_ mapTemplate: CPMapTemplate, shouldShowNotificationFor maneuver: CPManeuver) -> Bool {
         false
     }
@@ -396,7 +420,6 @@ public extension CPMapTemplateDelegate {
     ) -> Bool {
         false
     }
-    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {}
     func mapTemplate(
         _ mapTemplate: CPMapTemplate,
         willDismiss navigationAlert: CPNavigationAlert,
