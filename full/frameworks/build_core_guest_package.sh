@@ -1600,7 +1600,7 @@ clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
 LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
     > "$WORK/open-dispatch-host-test.log" 2>&1
 grep -Fx \
-    'OPEN_DISPATCH_HOST_OK global=minted async=worker after=timer main-token=contained glibc>=2.38' \
+    'OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38' \
     "$WORK/open-dispatch-host-test.log" >/dev/null \
     || die 'native Dispatch host semantic marker is missing'
 
@@ -1609,10 +1609,14 @@ DISPATCH_HOST_EXPECTED_EXPORTS=$WORK/open-dispatch-host-expected-exports.txt
     printf '%s\n' \
         openui_dispatch_host_v1_after \
         openui_dispatch_host_v1_async \
+        openui_dispatch_host_v1_create_queue \
         openui_dispatch_host_v1_get_global_queue \
         openui_dispatch_host_v1_main \
+        openui_dispatch_host_v1_memory_pressure \
         openui_dispatch_host_v1_monotonic_nanoseconds \
-        openui_dispatch_host_v1_runtime_check
+        openui_dispatch_host_v1_release_queue \
+        openui_dispatch_host_v1_runtime_check \
+        openui_dispatch_host_v1_sync
 } > "$DISPATCH_HOST_EXPECTED_EXPORTS"
 readelf --wide --syms "$DISPATCH_HOST" \
     | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \
@@ -1649,7 +1653,9 @@ done
         printf 'direct-soname\t%s\n' "$soname"
     done < "$WORK/open-dispatch-host-sonames.txt"
     printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\n'
-    printf 'job-policy\tguest-callback=opaque\thost-dispatch=dispatch_async_f\n'
+    printf 'custom-queue-policy\thelper-minted-only\tserial=real\tconcurrent=real\tbarrier=real\n'
+    printf 'memory-pressure-policy\tcgroup-v2=preferred\tproc-meminfo=fallback\toverride=deterministic\n'
+    printf 'job-policy\tguest-callback=opaque\thost-dispatch=async,after,sync,barrier-sync\n'
 } > "$STAGE/attestation/open-dispatch-host.tsv"
 cp "$WORK/open-dispatch-host-test.log" \
     "$STAGE/attestation/open-dispatch-host-test.log"
@@ -1667,15 +1673,23 @@ DISPATCH_DARWIN=$RUNTIME/darwin/usr/lib/libOpenDispatch.dylib
     printf '%s\n' \
         _openui_dispatch_v1_after \
         _openui_dispatch_v1_async \
+        _openui_dispatch_v1_create_queue \
         _openui_dispatch_v1_get_global_queue \
-        _openui_dispatch_v1_monotonic_nanoseconds
+        _openui_dispatch_v1_memory_pressure \
+        _openui_dispatch_v1_monotonic_nanoseconds \
+        _openui_dispatch_v1_release_queue \
+        _openui_dispatch_v1_sync
 } > "$WORK/open-dispatch-mach-expected-exports.txt"
 {
     printf '%s\n' \
         _glibc_openui_dispatch_host_v1_after \
         _glibc_openui_dispatch_host_v1_async \
+        _glibc_openui_dispatch_host_v1_create_queue \
         _glibc_openui_dispatch_host_v1_get_global_queue \
-        _glibc_openui_dispatch_host_v1_monotonic_nanoseconds
+        _glibc_openui_dispatch_host_v1_memory_pressure \
+        _glibc_openui_dispatch_host_v1_monotonic_nanoseconds \
+        _glibc_openui_dispatch_host_v1_release_queue \
+        _glibc_openui_dispatch_host_v1_sync
 } > "$WORK/open-dispatch-mach-expected-imports.txt"
 llvm-nm-18 --defined-only --extern-only --just-symbol-name \
     "$DISPATCH_DARWIN" | LC_ALL=C sort -u \
@@ -3209,12 +3223,13 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    OPENUI_DISPATCH_MEMORY_PRESSURE=critical \
     LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
 grep -Fx \
-    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
+    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 custom=serial,concurrent sync=ordered,barrier,rethrows sources=memory-pressure,timer,cancelled scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
     "$STAGE/attestation/dispatch-runtime.log" >/dev/null \
     || die 'real Dispatch/Swift-concurrency Mach-O runtime marker is missing'
 

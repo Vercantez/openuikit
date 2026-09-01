@@ -5,17 +5,20 @@
 #include <gnu/libc-version.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 
 #define OPENUI_DISPATCH_QUEUE_SLOTS 32
+#define OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS 256
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MAJOR 2
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MINOR 38
 
 static pthread_mutex_t queue_lock = PTHREAD_MUTEX_INITIALIZER;
 static dispatch_queue_t global_queues[OPENUI_DISPATCH_QUEUE_SLOTS];
+static dispatch_queue_t custom_queues[OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS];
 
 __attribute__((noreturn)) static void boundary_abort(const char *message)
 {
@@ -106,6 +109,68 @@ static int is_known_global_queue(dispatch_queue_t queue)
     return found;
 }
 
+static void remember_custom_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    if (queue == NULL) boundary_abort("cannot register a NULL custom queue");
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock custom queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
+        if (custom_queues[index] == NULL) {
+            custom_queues[index] = queue;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock custom queue registry");
+    }
+    if (index == OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS) {
+        boundary_abort("custom queue registry is full");
+    }
+}
+
+static int is_known_custom_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    int found = 0;
+    if (queue == NULL) return 0;
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock custom queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
+        if (custom_queues[index] == queue) {
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock custom queue registry");
+    }
+    return found;
+}
+
+static void forget_custom_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    int found = 0;
+    if (queue == NULL) boundary_abort("cannot release a NULL custom queue");
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock custom queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
+        if (custom_queues[index] == queue) {
+            custom_queues[index] = NULL;
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock custom queue registry");
+    }
+    if (!found) boundary_abort("unminted custom queue release attempted");
+}
+
 void *openui_dispatch_host_v1_get_global_queue(
     int64_t identifier,
     uint64_t flags
@@ -131,9 +196,60 @@ static dispatch_queue_t checked_queue(uint32_t queue_kind, void *opaque)
             boundary_abort("unminted global queue pointer crossed the ELF boundary");
         }
         return (dispatch_queue_t)opaque;
+    case OPENUI_DISPATCH_QUEUE_CUSTOM_V1:
+        if (!is_known_custom_queue((dispatch_queue_t)opaque)) {
+            boundary_abort("unminted custom queue pointer crossed the ELF boundary");
+        }
+        return (dispatch_queue_t)opaque;
     default:
         boundary_abort("unknown queue kind crossed the ELF boundary");
     }
+}
+
+void *openui_dispatch_host_v1_create_queue(
+    const char *label,
+    int64_t qos_identifier,
+    uint64_t attributes,
+    uint32_t target_kind,
+    void *target_queue
+)
+{
+    dispatch_queue_attr_t attribute;
+    dispatch_queue_t queue;
+    dispatch_queue_t target = NULL;
+
+    require_runtime();
+    if (label == NULL) boundary_abort("NULL custom queue label submitted");
+    if ((attributes & ~((uint64_t)OPENUI_DISPATCH_QUEUE_CONCURRENT_V1)) != 0) {
+        boundary_abort("unsupported custom queue attributes submitted");
+    }
+    attribute = (attributes & OPENUI_DISPATCH_QUEUE_CONCURRENT_V1) != 0
+        ? DISPATCH_QUEUE_CONCURRENT : DISPATCH_QUEUE_SERIAL;
+    queue = dispatch_queue_create(label, attribute);
+    if (queue == NULL) boundary_abort("libdispatch refused a custom queue");
+
+    if (target_kind != 0) {
+        target = checked_queue(target_kind, target_queue);
+    } else if (target_queue != NULL) {
+        boundary_abort("custom queue target pointer has no queue kind");
+    } else if (qos_identifier != 0) {
+        target = dispatch_get_global_queue((intptr_t)qos_identifier, 4);
+        if (target == NULL) {
+            target = dispatch_get_global_queue((intptr_t)qos_identifier, 0);
+        }
+        if (target == NULL) boundary_abort("libdispatch refused the requested QoS");
+    }
+    if (target != NULL) dispatch_set_target_queue(queue, target);
+    remember_custom_queue(queue);
+    return queue;
+}
+
+void openui_dispatch_host_v1_release_queue(void *opaque)
+{
+    dispatch_queue_t queue = (dispatch_queue_t)opaque;
+    require_runtime();
+    forget_custom_queue(queue);
+    dispatch_release(queue);
 }
 
 void openui_dispatch_host_v1_async(
@@ -169,6 +285,28 @@ void openui_dispatch_host_v1_after(
     );
 }
 
+void openui_dispatch_host_v1_sync(
+    uint32_t queue_kind,
+    void *queue,
+    uint64_t flags,
+    void *context,
+    openui_dispatch_callback_v1 callback
+)
+{
+    dispatch_queue_t checked;
+    require_runtime();
+    if (callback == NULL) boundary_abort("NULL synchronous callback submitted");
+    if ((flags & ~((uint64_t)OPENUI_DISPATCH_WORK_BARRIER_V1)) != 0) {
+        boundary_abort("unsupported synchronous work flags submitted");
+    }
+    checked = checked_queue(queue_kind, queue);
+    if ((flags & OPENUI_DISPATCH_WORK_BARRIER_V1) != 0) {
+        dispatch_barrier_sync_f(checked, context, callback);
+    } else {
+        dispatch_sync_f(checked, context, callback);
+    }
+}
+
 uint64_t openui_dispatch_host_v1_monotonic_nanoseconds(void)
 {
     struct timespec value;
@@ -178,6 +316,95 @@ uint64_t openui_dispatch_host_v1_monotonic_nanoseconds(void)
     }
     return (uint64_t)value.tv_sec * UINT64_C(1000000000)
         + (uint64_t)value.tv_nsec;
+}
+
+static int read_unsigned_file(const char *path, uint64_t *result)
+{
+    FILE *stream;
+    char buffer[128];
+    char *end = NULL;
+    unsigned long long value;
+
+    if (path == NULL || result == NULL) return 0;
+    stream = fopen(path, "r");
+    if (stream == NULL) return 0;
+    if (fgets(buffer, sizeof(buffer), stream) == NULL) {
+        (void)fclose(stream);
+        return 0;
+    }
+    if (fclose(stream) != 0) return 0;
+    if (strncmp(buffer, "max", 3) == 0) return 0;
+    errno = 0;
+    value = strtoull(buffer, &end, 10);
+    if (errno != 0 || end == buffer) return 0;
+    while (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n') end++;
+    if (*end != '\0') return 0;
+    *result = (uint64_t)value;
+    return 1;
+}
+
+static uint64_t classify_memory_ratio(uint64_t available, uint64_t total)
+{
+    long double used_ratio;
+    if (total == 0 || available > total) {
+        return OPENUI_DISPATCH_MEMORY_PRESSURE_NORMAL_V1;
+    }
+    used_ratio = (long double)(total - available) / (long double)total;
+    if (used_ratio >= 0.95L) {
+        return OPENUI_DISPATCH_MEMORY_PRESSURE_CRITICAL_V1;
+    }
+    if (used_ratio >= 0.80L) {
+        return OPENUI_DISPATCH_MEMORY_PRESSURE_WARNING_V1;
+    }
+    return OPENUI_DISPATCH_MEMORY_PRESSURE_NORMAL_V1;
+}
+
+static uint64_t proc_memory_pressure(void)
+{
+    FILE *stream;
+    char line[256];
+    unsigned long long total_kib = 0;
+    unsigned long long available_kib = 0;
+
+    stream = fopen("/proc/meminfo", "r");
+    if (stream == NULL) return OPENUI_DISPATCH_MEMORY_PRESSURE_NORMAL_V1;
+    while (fgets(line, sizeof(line), stream) != NULL) {
+        if (sscanf(line, "MemTotal: %llu kB", &total_kib) == 1) continue;
+        if (sscanf(line, "MemAvailable: %llu kB", &available_kib) == 1) continue;
+    }
+    (void)fclose(stream);
+    return classify_memory_ratio((uint64_t)available_kib, (uint64_t)total_kib);
+}
+
+uint64_t openui_dispatch_host_v1_memory_pressure(void)
+{
+    const char *override;
+    uint64_t current = 0;
+    uint64_t maximum = 0;
+
+    require_runtime();
+    override = getenv("OPENUI_DISPATCH_MEMORY_PRESSURE");
+    if (override != NULL) {
+        if (strcmp(override, "normal") == 0) {
+            return OPENUI_DISPATCH_MEMORY_PRESSURE_NORMAL_V1;
+        }
+        if (strcmp(override, "warning") == 0) {
+            return OPENUI_DISPATCH_MEMORY_PRESSURE_WARNING_V1;
+        }
+        if (strcmp(override, "critical") == 0) {
+            return OPENUI_DISPATCH_MEMORY_PRESSURE_CRITICAL_V1;
+        }
+        boundary_abort("invalid OPENUI_DISPATCH_MEMORY_PRESSURE override");
+    }
+    if (read_unsigned_file("/sys/fs/cgroup/memory.current", &current)
+        && read_unsigned_file("/sys/fs/cgroup/memory.max", &maximum)
+        && maximum > 0) {
+        return classify_memory_ratio(
+            current >= maximum ? 0 : maximum - current,
+            maximum
+        );
+    }
+    return proc_memory_pressure();
 }
 
 void openui_dispatch_host_v1_main(void)

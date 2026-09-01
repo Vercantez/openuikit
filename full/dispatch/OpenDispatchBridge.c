@@ -7,18 +7,46 @@
  */
 extern void *host_get_global_queue(int64_t, uint64_t)
     __asm__("_glibc_openui_dispatch_host_v1_get_global_queue");
+extern void *host_create_queue(
+    const char *, int64_t, uint64_t, uint32_t, void *
+) __asm__("_glibc_openui_dispatch_host_v1_create_queue");
+extern void host_release_queue(void *)
+    __asm__("_glibc_openui_dispatch_host_v1_release_queue");
 extern void host_async(
     uint32_t, void *, void *, openui_dispatch_callback_v1
 ) __asm__("_glibc_openui_dispatch_host_v1_async");
 extern void host_after(
     uint32_t, void *, uint64_t, void *, openui_dispatch_callback_v1
 ) __asm__("_glibc_openui_dispatch_host_v1_after");
+extern void host_sync(
+    uint32_t, void *, uint64_t, void *, openui_dispatch_callback_v1
+) __asm__("_glibc_openui_dispatch_host_v1_sync");
 extern uint64_t host_monotonic_nanoseconds(void)
     __asm__("_glibc_openui_dispatch_host_v1_monotonic_nanoseconds");
+extern uint64_t host_memory_pressure(void)
+    __asm__("_glibc_openui_dispatch_host_v1_memory_pressure");
 
 void *openui_dispatch_v1_get_global_queue(int64_t identifier, uint64_t flags)
 {
     return host_get_global_queue(identifier, flags);
+}
+
+void *openui_dispatch_v1_create_queue(
+    const char *label,
+    int64_t qos_identifier,
+    uint64_t attributes,
+    uint32_t target_kind,
+    void *target_queue
+)
+{
+    return host_create_queue(
+        label, qos_identifier, attributes, target_kind, target_queue
+    );
+}
+
+void openui_dispatch_v1_release_queue(void *queue)
+{
+    host_release_queue(queue);
 }
 
 void openui_dispatch_v1_async(
@@ -42,7 +70,23 @@ void openui_dispatch_v1_after(
     host_after(queue_kind, queue, delay_nanoseconds, context, callback);
 }
 
+void openui_dispatch_v1_sync(
+    uint32_t queue_kind,
+    void *queue,
+    uint64_t flags,
+    void *context,
+    openui_dispatch_callback_v1 callback
+)
+{
+    host_sync(queue_kind, queue, flags, context, callback);
+}
+
 uint64_t openui_dispatch_v1_monotonic_nanoseconds(void)
 {
     return host_monotonic_nanoseconds();
+}
+
+uint64_t openui_dispatch_v1_memory_pressure(void)
+{
+    return host_memory_pressure();
 }

@@ -67,8 +67,11 @@ int main(void)
         .count = 0
     };
     void *queue;
+    void *serial_queue;
+    void *concurrent_queue;
     uint64_t before;
     uint64_t after;
+    unsigned index;
 
     if (openui_dispatch_host_v1_runtime_check() != 0) fail("glibc requirement failed");
     queue = openui_dispatch_host_v1_get_global_queue(0x15, 4);
@@ -91,6 +94,68 @@ int main(void)
     expect_rejection(OPENUI_DISPATCH_QUEUE_MAIN_V1, queue);
     expect_rejection(OPENUI_DISPATCH_QUEUE_GLOBAL_V1, (void *)(uintptr_t)0x1234);
 
-    puts("OPEN_DISPATCH_HOST_OK global=minted async=worker after=timer main-token=contained glibc>=2.38");
+    serial_queue = openui_dispatch_host_v1_create_queue(
+        "org.openui.tests.serial", 0x11, 0, 0, NULL
+    );
+    if (serial_queue == NULL) fail("serial custom queue unavailable");
+    openui_dispatch_host_v1_async(
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1, serial_queue, &state, increment
+    );
+    openui_dispatch_host_v1_sync(
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1, serial_queue, 0, &state, increment
+    );
+    if (state.count != 4) fail("serial custom queue did not preserve ordering");
+    openui_dispatch_host_v1_release_queue(serial_queue);
+    expect_rejection(OPENUI_DISPATCH_QUEUE_CUSTOM_V1, serial_queue);
+
+    concurrent_queue = openui_dispatch_host_v1_create_queue(
+        "org.openui.tests.concurrent", 0x15,
+        OPENUI_DISPATCH_QUEUE_CONCURRENT_V1, 0, NULL
+    );
+    if (concurrent_queue == NULL) fail("concurrent custom queue unavailable");
+    for (index = 0; index < 16; index++) {
+        openui_dispatch_host_v1_async(
+            OPENUI_DISPATCH_QUEUE_CUSTOM_V1,
+            concurrent_queue,
+            &state,
+            increment
+        );
+    }
+    openui_dispatch_host_v1_sync(
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1,
+        concurrent_queue,
+        OPENUI_DISPATCH_WORK_BARRIER_V1,
+        &state,
+        increment
+    );
+    if (state.count != 21) fail("barrier sync did not drain preceding work");
+    openui_dispatch_host_v1_release_queue(concurrent_queue);
+
+    if (setenv("OPENUI_DISPATCH_MEMORY_PRESSURE", "normal", 1) != 0) {
+        fail("setenv normal failed");
+    }
+    if (openui_dispatch_host_v1_memory_pressure()
+        != OPENUI_DISPATCH_MEMORY_PRESSURE_NORMAL_V1) {
+        fail("normal pressure override failed");
+    }
+    if (setenv("OPENUI_DISPATCH_MEMORY_PRESSURE", "warning", 1) != 0) {
+        fail("setenv warning failed");
+    }
+    if (openui_dispatch_host_v1_memory_pressure()
+        != OPENUI_DISPATCH_MEMORY_PRESSURE_WARNING_V1) {
+        fail("warning pressure override failed");
+    }
+    if (setenv("OPENUI_DISPATCH_MEMORY_PRESSURE", "critical", 1) != 0) {
+        fail("setenv critical failed");
+    }
+    if (openui_dispatch_host_v1_memory_pressure()
+        != OPENUI_DISPATCH_MEMORY_PRESSURE_CRITICAL_V1) {
+        fail("critical pressure override failed");
+    }
+    if (unsetenv("OPENUI_DISPATCH_MEMORY_PRESSURE") != 0) {
+        fail("unsetenv pressure failed");
+    }
+
+    puts("OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38");
     return 0;
 }
