@@ -343,8 +343,6 @@ full/xcodeplan/build_portable_application_guest.sh \
   --container-image sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7 \
   --remote-package-materializations /pins/exact-materializations.json \
   --remote-package-cache /read/only/content-addressed-cache \
-  --preview-plugin /artifacts/OpenUIKitPreviewMacros-tool \
-  --preview-evidence-source-list /pins/App.preview-sources.nul \
   --output-root /new/App-linux-build
 ```
 
@@ -357,33 +355,39 @@ package inputs are revalidated on both sides of a read-only cache mount as
 described in
 [`../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md`](../../docs/REMOTE_SWIFT_PACKAGE_MATERIALIZATION.md).
 That container compiles every reachable local or remote package target as its
-own topologically ordered Swift module and object set; package compilers never
-load the application Preview plugin, and those objects enter the executable
-link exactly once. It then compiles every NUL-delimited application source
+own topologically ordered Swift module and object set. Package and application
+compilers receive the package's relocatable compiler-library plugin closure;
+they never load the legacy application Preview executable. Package objects
+enter the executable link exactly once. It then compiles every NUL-delimited application source
 together with only the generated entry point and platform host loop in one
 ordinary multi-source module invocation. Application trees remain read-only.
-A Preview target may substitute one output-owned, byte-attested macro-expanded
-view for the one source that contains `#Preview`; every other source remains
-the mounted original. An exact
-output-file map assigns one ARM64 Mach-O object to every source; the driver
+The generic path therefore compiles package `#Preview` and `@Entry` uses even
+when the application target itself contains zero `#Preview` declarations. An
+exact output-file map assigns one ARM64 Mach-O object to every source; the driver
 rejects missing, extra, reordered, symlinked, non-ARM64, or reused outputs,
 hashes the exhaustive mapping/object ledger, measures real cross-file symbol
 edges, and links every object exactly once in deterministic source order. WMO,
 explicit batch scheduling, production macro dumping, and caller-owned output
 maps are refused because they would change this measured compiler contract.
-When the package declares DeveloperToolsSupport, the bounded evidence compile
-loads the exact host macro executable. Production compilation never loads the
-plugin; it links the package's framework closure, copies
+When the package declares DeveloperToolsSupport, its target object and exact
+initializer symbol are linked into the application executable regardless of
+whether a legacy evidence source is selected. Production compilation links the
+package's framework closure, copies
 its dylibs into `Contents/Frameworks`, recursively proves the Mach-O runtime
 closure, and cold-launches the packaged executable under machorun. Success
 requires one active UIWindow and three paced production loop turns. Source,
 support, plugin, and package brackets are rechecked after execution; partial
 outputs remain visibly unusable and can never be passed as a fresh output.
-Preview-enabled packages also publish the exact bounded macro diagnostic
-arguments and require a NUL-delimited `--preview-evidence-source-list`. That
-list must be a normalized, target-ordered, nonempty proper subset of the frozen
-application sources, contain exactly one literal `#Preview`, and type-check successfully
-as the application module. Only this caller-supplied dependency-closed subset
+Preview-enabled packages also publish exact bounded macro diagnostic
+arguments. A caller may opt into the legacy expansion/materialization proof by
+supplying both `--preview-plugin /artifacts/OpenUIKitPreviewMacros-tool` and a
+NUL-delimited `--preview-evidence-source-list /pins/App.preview-sources.nul`;
+supplying only one is refused. With neither option, the application and package
+targets use only the generic compiler-library transport and the compile audit
+records a legacy evidence count of zero. With both, the count is exactly one
+and the list must be a normalized, target-ordered, nonempty proper subset of
+the frozen application sources, contain exactly one literal `#Preview`, and
+type-check successfully as the application module. Only this caller-supplied dependency-closed subset
 receives `-dump-macro-expansions`; dumping the full application module is
 forbidden. The driver captures the bounded proof as
 `app-macro-expansions.stderr`, records its exact source/argument hashes, and
@@ -397,9 +401,11 @@ identifier or collision. The driver then replaces the exact terminal macro
 span in a fresh output-owned copy, records the original/span/context/raw and
 materialized expansion/identifier/derived hashes, and verifies that contract
 before compilation and after cold
-launch. Production compilation has a separate `application-compile.stderr`,
-never receives dump flags, contains neither the original macro-bearing path nor
-any plugin argument, and receives exactly one materialized replacement path.
+launch. Production compilation has a separate `application-compile.stderr`
+and never receives dump flags. In legacy evidence mode it contains neither the
+original macro-bearing path nor the legacy executable-plugin argument, and it
+receives exactly one materialized replacement path. In generic mode it compiles
+the original sources with only the relocatable compiler-library plugin closure.
 Both invocations retain exactly `-j1`, but only the bounded evidence typecheck
 opens Swift 6.2.4's executable-macro channel. `ADDITIONAL_SWIFT_DRIVER_FLAGS`
 must be absent so the standard 25-primary-file plan cannot be changed behind
