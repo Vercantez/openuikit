@@ -140,6 +140,17 @@ while IFS=$'\t' read -r record name kind relative _hash _size; do
             >> "$allowed_loads"
     fi
 done < "$PACKAGE/attestation/artifacts.tsv"
+# The completion verifier also owns the staged Swift/System runtime closure,
+# which deliberately is not duplicated in the public artifact ledger. Admit
+# only install identities physically present in these verified package roots.
+while IFS= read -r -d '' artifact; do
+    if llvm-otool-18 -hv "$artifact" 2>/dev/null \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB'; then
+        llvm-otool-18 -D "$artifact" 2>/dev/null | tail -n 1 \
+            >> "$allowed_loads"
+    fi
+done < <(find "$PACKAGE/lib" "$PACKAGE/frameworks" \
+    "$PACKAGE/guest-root/darwin" -type f -print0)
 printf '%s\n' "$REVENUECAT_ID" >> "$allowed_loads"
 LC_ALL=C sort -u "$allowed_loads" -o "$allowed_loads"
 [ -s "$allowed_loads" ] || die 'verified package produced no allowed load identities'
