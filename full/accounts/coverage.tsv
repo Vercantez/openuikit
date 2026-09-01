@@ -1,49 +1,49 @@
 precise	status	evidence	notes
-c:@ACAccountStoreDidChangeNotification	implemented	Accounts.swift;AccountsRuntime.swift	Name is defined; Linux never posts it.
-c:@ACAccountTypeIdentifierFacebook	implemented	Accounts.swift;AccountsRuntime.swift	Published com.apple.facebook identifier; no Facebook SDK session.
-c:@ACAccountTypeIdentifierSinaWeibo	implemented	Accounts.swift;AccountsRuntime.swift	Published com.apple.sinaweibo identifier; no Weibo session.
-c:@ACAccountTypeIdentifierTencentWeibo	implemented	Accounts.swift;AccountsRuntime.swift	Published com.apple.tencentweibo identifier; no Weibo session.
-c:@ACAccountTypeIdentifierTwitter	implemented	Accounts.swift;AccountsRuntime.swift	Published com.apple.twitter identifier; no Twitter session.
-c:@ACErrorDomain	implemented	Accounts.swift;AccountsRuntime.swift	com.apple.accounts; used by fail-closed NSError.
-c:@ACFacebookAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift	Option key only; requestAccess still fails closed.
-c:@ACFacebookAudienceEveryone	implemented	Accounts.swift;AccountsRuntime.swift	Option value only; requestAccess still fails closed.
-c:@ACFacebookAudienceFriends	implemented	Accounts.swift;AccountsRuntime.swift	Option value only; requestAccess still fails closed.
-c:@ACFacebookAudienceKey	implemented	Accounts.swift;AccountsRuntime.swift	Option key only; requestAccess still fails closed.
-c:@ACFacebookAudienceOnlyMe	implemented	Accounts.swift;AccountsRuntime.swift	Option value only; requestAccess still fails closed.
-c:@ACFacebookPermissionsKey	implemented	Accounts.swift;AccountsRuntime.swift	Option key only; requestAccess still fails closed.
-c:@ACTencentWeiboAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift	Option key only; requestAccess still fails closed.
+c:@ACAccountStoreDidChangeNotification	declared	Accounts.swift	Notification name compiles; Darwin raw string unobserved. Store never posts.
+c:@ACAccountTypeIdentifierFacebook	declared	Accounts.swift	Source-compatible identifier constant; Darwin payload unobserved.
+c:@ACAccountTypeIdentifierSinaWeibo	declared	Accounts.swift	Source-compatible identifier constant; Darwin payload unobserved.
+c:@ACAccountTypeIdentifierTencentWeibo	declared	Accounts.swift	Source-compatible identifier constant; Darwin payload unobserved.
+c:@ACAccountTypeIdentifierTwitter	declared	Accounts.swift	Source-compatible identifier constant; Darwin payload unobserved.
+c:@ACErrorDomain	declared	Accounts.swift	Source-compatible domain constant used by fail-closed NSError; Darwin bytes unobserved.
+c:@ACFacebookAppIdKey	declared	Accounts.swift	Source-compatible option key; Darwin payload unobserved.
+c:@ACFacebookAudienceEveryone	declared	Accounts.swift	Source-compatible audience value; Darwin payload unobserved.
+c:@ACFacebookAudienceFriends	declared	Accounts.swift	Source-compatible audience value; Darwin payload unobserved.
+c:@ACFacebookAudienceKey	declared	Accounts.swift	Source-compatible option key; Darwin payload unobserved.
+c:@ACFacebookAudienceOnlyMe	declared	Accounts.swift	Source-compatible audience value; Darwin payload unobserved.
+c:@ACFacebookPermissionsKey	declared	Accounts.swift	Source-compatible option key; Darwin payload unobserved.
+c:@ACTencentWeiboAppIdKey	declared	Accounts.swift	Source-compatible option key; Darwin payload unobserved.
 c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift	Int enum; Linux never reports renewed.
-c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultFailed	implemented	Accounts.swift;AccountsRuntime.swift	Callback path reports failed with permission-denied error.
-c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRejected	implemented	Accounts.swift;AccountsRuntime.swift	Declared; Linux renew path uses failed, not rejected.
-c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRenewed	implemented	Accounts.swift;AccountsRuntime.swift	Declared; Linux never returns renewed.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultFailed	implemented	Accounts.swift;AccountsRuntime.swift	Callback path reports failed with a fail-closed NSError.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRejected	implemented	Accounts.swift;AccountsRuntime.swift	Case is constructible; Linux renew path uses failed, not rejected.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRenewed	implemented	Accounts.swift;AccountsRuntime.swift	Case is constructible; Linux never returns renewed.
 c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift	UInt32 RawRepresentable struct matching the graph.
-c:@E@ACErrorCode@ACErrorAccessDeniedByProtectionPolicy	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccessInfoInvalid	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccountAlreadyExists	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccountAuthenticationFailed	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccountMissingRequiredProperty	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccountNotFound	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorAccountTypeInvalid	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorClientPermissionDenied	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorCoreDataSaveFailed	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorCredentialItemNotExpired	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorCredentialItemNotFound	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorCredentialNotFound	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorDeniedByPlugin	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorFailedSerializingAccountInfo	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorFetchCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorInvalidClientBundleID	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorInvalidCommand	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorMissingTransportMessageID	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorPermissionDenied	implemented	Accounts.swift;AccountsRuntime.swift	Fail-closed store NSError uses this code.
-c:@E@ACErrorCode@ACErrorRemoveCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorStoreCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorUnknown	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@E@ACErrorCode@ACErrorUpdatingNonexistentAccount	implemented	Accounts.swift;AccountsRuntime.swift	Public numeric constant; runtime checks 1...23 ordering.
-c:@T@ACAccountStoreCredentialRenewalHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias; handler values assigned in the runtime probe.
-c:@T@ACAccountStoreRemoveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias; handler values assigned in the runtime probe.
-c:@T@ACAccountStoreRequestAccessCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias; handler values assigned in the runtime probe.
-c:@T@ACAccountStoreSaveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias; handler values assigned in the runtime probe.
+c:@E@ACErrorCode@ACErrorAccessDeniedByProtectionPolicy	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccessInfoInvalid	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccountAlreadyExists	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccountAuthenticationFailed	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccountMissingRequiredProperty	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccountNotFound	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorAccountTypeInvalid	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorClientPermissionDenied	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorCoreDataSaveFailed	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorCredentialItemNotExpired	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorCredentialItemNotFound	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorCredentialNotFound	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorDeniedByPlugin	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorFailedSerializingAccountInfo	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorFetchCredentialFailed	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorInvalidClientBundleID	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorInvalidCommand	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorMissingTransportMessageID	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorPermissionDenied	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorRemoveCredentialFailed	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorStoreCredentialFailed	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorUnknown	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@E@ACErrorCode@ACErrorUpdatingNonexistentAccount	declared	Accounts.swift	Named constant compiles; Darwin numeric mapping unobserved.
+c:@T@ACAccountStoreCredentialRenewalHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias used by the exactly-once renew callback.
+c:@T@ACAccountStoreRemoveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias used by the exactly-once remove callback.
+c:@T@ACAccountStoreRequestAccessCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias used by the exactly-once requestAccess callback.
+c:@T@ACAccountStoreSaveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift	Public typealias used by the exactly-once save callback.
 c:objc(cs)ACAccount	implemented	Accounts.swift;AccountsRuntime.swift	In-memory NSObject; not persisted.
 c:objc(cs)ACAccount(im)initWithAccountType:	implemented	Accounts.swift;AccountsRuntime.swift	Local initializer; identifier stays nil.
 c:objc(cs)ACAccount(py)accountDescription	implemented	Accounts.swift;AccountsRuntime.swift	In-process get/set.
@@ -53,7 +53,7 @@ c:objc(cs)ACAccount(py)identifier	implemented	Accounts.swift;AccountsRuntime.swi
 c:objc(cs)ACAccount(py)userFullName	implemented	Accounts.swift;AccountsRuntime.swift	Always nil; no Apple account profile.
 c:objc(cs)ACAccount(py)username	implemented	Accounts.swift;AccountsRuntime.swift	In-process get/set.
 c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift	In-memory token holder only.
-c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:	implemented	Accounts.swift;AccountsRuntime.swift	Stores oauthToken locally.
+c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:	implemented	Accounts.swift;AccountsRuntime.swift	Stores oauthToken locally; takes Foundation Date.
 c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:::SYNTHESIZED::c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift	OAuth2Token label alias of oAuth2Token initializer.
 c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:	implemented	Accounts.swift;AccountsRuntime.swift	Stores oauthToken locally; secret is not re-exported.
 c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:::SYNTHESIZED::c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift	OAuthToken label alias of oAuthToken initializer.
@@ -62,22 +62,22 @@ c:objc(cs)ACAccountStore	implemented	Accounts.swift;AccountsRuntime.swift	Fail-c
 c:objc(cs)ACAccountStore(im)accountTypeWithAccountTypeIdentifier:	implemented	Accounts.swift;AccountsRuntime.swift	Returns local type with accessGranted false.
 c:objc(cs)ACAccountStore(im)accountWithIdentifier:	implemented	Accounts.swift;AccountsRuntime.swift	Always nil.
 c:objc(cs)ACAccountStore(im)accountsWithAccountType:	implemented	Accounts.swift;AccountsRuntime.swift	Always empty.
-c:objc(cs)ACAccountStore(im)removeAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift	Callback and async both fail closed with permission denied.
-c:objc(cs)ACAccountStore(im)renewCredentialsForAccount:completion:	implemented	Accounts.swift;AccountsRuntime.swift	Callback reports failed; async throws permission denied.
-c:objc(cs)ACAccountStore(im)requestAccessToAccountsWithType:options:completion:	implemented	Accounts.swift;AccountsRuntime.swift	Callback and async both fail closed with permission denied.
-c:objc(cs)ACAccountStore(im)saveAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift	Callback and async both fail closed with permission denied.
+c:objc(cs)ACAccountStore(im)removeAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift	Exactly-once async callback and async overlay; fail-closed.
+c:objc(cs)ACAccountStore(im)renewCredentialsForAccount:completion:	implemented	Accounts.swift;AccountsRuntime.swift	Exactly-once async callback reports failed; async overlay throws.
+c:objc(cs)ACAccountStore(im)requestAccessToAccountsWithType:options:completion:	implemented	Accounts.swift;AccountsRuntime.swift	Exactly-once async callback and async overlay; fail-closed.
+c:objc(cs)ACAccountStore(im)saveAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift	Exactly-once async callback and async overlay; fail-closed.
 c:objc(cs)ACAccountStore(py)accounts	implemented	Accounts.swift;AccountsRuntime.swift	Always an empty NSArray.
 c:objc(cs)ACAccountType	implemented	Accounts.swift;AccountsRuntime.swift	Local descriptor; no public Apple type catalog.
 c:objc(cs)ACAccountType(py)accessGranted	implemented	Accounts.swift;AccountsRuntime.swift	Always false.
-c:objc(cs)ACAccountType(py)accountTypeDescription	implemented	Accounts.swift;AccountsRuntime.swift	Mirrors the requested identifier.
+c:objc(cs)ACAccountType(py)accountTypeDescription	declared	Accounts.swift	Property compiles and returns a local descriptor; Darwin display string unobserved.
 c:objc(cs)ACAccountType(py)identifier	implemented	Accounts.swift;AccountsRuntime.swift	Mirrors the requested identifier.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift	Synthesized Equatable !=.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift	Synthesized Equatable !=.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift	Hashable synthesis; hashValue is the protocol default.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift	Hashable synthesis; hashValue is the protocol default.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift	Synthesized Equatable != exercised at runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift	Synthesized Equatable != exercised at runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised because it is deprecated under warnings-as-errors.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised because it is deprecated under warnings-as-errors.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift	Hashable synthesis exercised via Hasher and Set.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift	Hashable synthesis exercised via Hasher and Set.
 s:So11ACErrorCodeV8rawValueABs6UInt32V_tcfc	implemented	Accounts.swift;AccountsRuntime.swift	RawRepresentable initializer.
-s:So11ACErrorCodeV8rawValues6UInt32Vvp	implemented	Accounts.swift;AccountsRuntime.swift	Stored rawValue.
+s:So11ACErrorCodeV8rawValues6UInt32Vvp	implemented	Accounts.swift;AccountsRuntime.swift	Stored rawValue compared for fail-closed NSError.code.
 s:So11ACErrorCodeVyABs6UInt32Vcfc	implemented	Accounts.swift;AccountsRuntime.swift	Unlabeled UInt32 initializer.
 s:So30ACAccountCredentialRenewResultV8rawValueABSgSi_tcfc	implemented	Accounts.swift;AccountsRuntime.swift	Failable Int raw-value initializer.
