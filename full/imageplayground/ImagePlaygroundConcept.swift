@@ -1,14 +1,30 @@
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(ImageIO)
+import ImageIO
+#endif
+#if canImport(PencilKit)
+import PencilKit
+#endif
+import Foundation
+
 /// Concepts that describe the expected contents of a generated image.
 ///
-/// Text and extracted-text wrappers store the caller-supplied strings. They
-/// do not run Apple's on-device concept extraction. The PencilKit drawing
-/// and CoreGraphics image factories are omitted until those modules can be
-/// imported by this isolated compile.
-public struct ImagePlaygroundConcept: Sendable {
-    enum Storage: Sendable {
+/// Text factories store caller strings and do not run Apple's on-device
+/// extraction. `CGImage` and `PKDrawing` factories exist only when those
+/// modules can be imported. There is no module-local substitute for either type.
+public struct ImagePlaygroundConcept: @unchecked Sendable {
+    enum Storage: @unchecked Sendable {
         case text(String)
         case extracted(text: String, title: String?)
-        case imageFile(URL)
+        case imageURL(URL)
+        #if canImport(CoreGraphics)
+        case cgImage(CGImage)
+        #endif
+        #if canImport(PencilKit)
+        case drawing(PKDrawing)
+        #endif
     }
 
     let storage: Storage
@@ -17,25 +33,41 @@ public struct ImagePlaygroundConcept: Sendable {
         self.storage = storage
     }
 
-    /// A short text description of the image.
     public static func text(_ text: String) -> ImagePlaygroundConcept {
         ImagePlaygroundConcept(storage: .text(text))
     }
 
-    /// Long-form text plus an optional title that would guide extraction on
-    /// Apple platforms. Linux stores both strings unchanged.
     public static func extracted(from text: String, title: String? = nil) -> ImagePlaygroundConcept {
         ImagePlaygroundConcept(storage: .extracted(text: text, title: title))
     }
 
-    /// A local file URL that the caller intends as a source image.
+    /// Wraps a file URL as an image concept when ImageIO can decode it.
     ///
-    /// Returns `nil` when `url` is not a file URL or the file does not exist.
-    /// This starting point does not decode or validate image bytes (ImageIO
-    /// is not part of the isolated compile).
+    /// Without ImageIO this returns `nil` rather than guessing Apple's
+    /// file-existence or content-type rules.
     public static func image(_ url: URL) -> ImagePlaygroundConcept? {
+        #if canImport(ImageIO)
         guard url.isFileURL else { return nil }
-        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
-        return ImagePlaygroundConcept(storage: .imageFile(url))
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        let cfData = data as CFData
+        guard let source = CGImageSourceCreateWithData(cfData, nil) else { return nil }
+        guard CGImageSourceGetCount(source) > 0 else { return nil }
+        return ImagePlaygroundConcept(storage: .imageURL(url))
+        #else
+        _ = url
+        return nil
+        #endif
     }
+
+    #if canImport(CoreGraphics)
+    public static func image(_ image: CGImage) -> ImagePlaygroundConcept {
+        ImagePlaygroundConcept(storage: .cgImage(image))
+    }
+    #endif
+
+    #if canImport(PencilKit)
+    public static func drawing(_ drawing: PKDrawing) -> ImagePlaygroundConcept {
+        ImagePlaygroundConcept(storage: .drawing(drawing))
+    }
+    #endif
 }

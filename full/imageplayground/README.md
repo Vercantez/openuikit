@@ -2,52 +2,59 @@
 
 This directory is an isolated clean-room port of Apple's public
 `ImagePlayground` module from the Xcode 26.1 iPhoneOS SDK symbol graphs.
-It is not wired into the shared guest package.
+It is not wired into the shared guest package. Passing the isolated host
+gate is **not** integrated Linux success.
 
-## What is real
-
-- `ImagePlaygroundStyle` with `illustration`, `sketch`, `animation`,
-  `externalProvider`, `all`, `id`, `Hashable`, and single-value `Codable`.
-- `ImagePlaygroundConcept.text(_:)`, `.extracted(from:title:)`, and
-  `.image(_: URL)` (file-URL existence check only).
-- `ImagePlaygroundPersonalizationPolicy` as an `Int` raw-representable enum.
-- `ImageCreator.Error` as `LocalizedError` + `CustomNSError` + `CaseIterable`,
-  including all nine public cases.
-- `ImagePlaygroundViewController` as an `NSObject` configuration object with
-  `isAvailable == false`, concept/style/policy storage, `preferredContentSize`,
-  `isModalInPresentation`, and a Swift `Delegate` protocol.
-
-## Fail-closed boundaries
-
-Linux has no Image Playground / Apple Intelligence generative service.
-
-- `ImageCreator.init()` always throws `.notSupported`.
-- `ImageCreator.images(for:style:limit:)` is declared to return a sequence
-  that would throw `.notSupported`; no instance can be constructed to call it.
-- `ImagePlaygroundViewController.isAvailable` is always `false`.
-- The delegate is never invoked with a generated file URL.
-- No Apple image, entitlement, or on-device model success is fabricated.
-
-## Deferred (isolated compile)
+## What compiles in the isolated host configuration
 
 The host gate compiles this module with no extra search path. `swiftc` cannot
 import `UIKit`, `SwiftUI`, `PencilKit`, `CoreGraphics`, or `ImageIO`.
 
-Deferred until those modules can be linked:
+Real in that configuration:
 
-- `ImagePlaygroundViewController` as a `UIViewController` subclass
-- `sourceImage: UIImage?`, `modalPresentationStyle`, `supportedInterfaceOrientations`
-- `ImagePlaygroundConcept.image(_: CGImage)` and `.drawing(_: PKDrawing)`
-- `ImageCreator.CreatedImage.cgImage`
-- All SwiftUI `View` sheet/style/policy modifiers and `EnvironmentValues` keys
+- `ImagePlaygroundStyle` public identities (`illustration`, `sketch`,
+  `animation`, `externalProvider`) plus `Hashable` / `Identifiable`
+- `ImagePlaygroundConcept.text(_:)` and `.extracted(from:title:)`
+- `ImagePlaygroundPersonalizationPolicy` cases
+- `ImageCreator.Error` cases, equality, hashing, and `CaseIterable`
+- `ImageCreator.init()` throwing `.notSupported`
+
+Local `id` tokens, Codable layout, `CustomNSError` domain/codes, and
+`LocalizedError` copy are declared stand-ins, not Apple-observed values.
+
+## Dependency-bearing surface (compiled only when the module exists)
+
+There are no module-local types named `UIViewController`, `UIImage`,
+`CGImage`, `PKDrawing`, `View`, or `EnvironmentValues`.
+
+- `#if canImport(UIKit)`: `ImagePlaygroundViewController` subclasses
+  `UIKit.UIViewController`, exposes `sourceImage: UIImage?`, presentation
+  overrides, and `Delegate: NSObjectProtocol`. `isAvailable` is `false`.
+- `#if canImport(CoreGraphics)`: `CreatedImage.cgImage` and
+  `ImagePlaygroundConcept.image(_: CGImage)`
+- `#if canImport(PencilKit)`: `ImagePlaygroundConcept.drawing(_: PKDrawing)`
+- `#if canImport(ImageIO)`: URL image concepts require a decodable image
+- `#if canImport(SwiftUI)`: `View` sheet/style/policy modifiers and
+  `EnvironmentValues` keys (`supportsImagePlayground` is `false`)
+
+Host-only construction (`CreatedImage(_hostCGImage:)`, style `_hostID`,
+delegate dispatch) is `@_spi(OpenUIKitHost)`.
+
+## Fail-closed boundaries
+
+- `ImageCreator.init()` always throws `.notSupported`
+- No generated file URL is produced on production paths
+- SwiftUI sheets do not present a generation UI or call `onCompletion`
+- `isAvailable` / `supportsImagePlayground` stay `false`
 
 ## Tests
 
-`tests/agent/ImagePlaygroundRuntime.swift` exercises the implemented value
-types, fail-closed `ImageCreator` init, and view-controller storage, then
-prints `IMAGEPLAYGROUND_AGENT_RUNTIME_OK`.
-
-Run:
+- `tests/agent/ImagePlaygroundRuntime.swift` — isolated host runtime,
+  prints `IMAGEPLAYGROUND_AGENT_RUNTIME_OK`
+- `tests/agent/ImagePlaygroundDependencyIdentity.swift` — future clean EC2
+  run after guest Foundation, CoreGraphics, ImageIO, PencilKit, SwiftUI,
+  and UIKit dylibs are built and passed via `-I`/`-L`; prints
+  `IMAGEPLAYGROUND_DEPENDENCY_IDENTITY_OK`
 
 ```
 bash tests/acceptance/test_host.sh

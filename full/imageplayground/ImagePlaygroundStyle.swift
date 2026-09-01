@@ -1,8 +1,8 @@
 /// Style options that determine the appearance of generated images.
 ///
-/// Identifiers are the public case names from the Xcode 26.1 symbol graph.
-/// Apple's exact `id` strings and Codable layout are not in the pinned
-/// public inputs; see `oracle-questions.tsv`.
+/// The four public static styles are distinct identities from the Xcode 26.1
+/// graph. `id` strings and the Codable layout are local stand-ins; Apple's
+/// exact tokens are not in the pinned public inputs.
 public struct ImagePlaygroundStyle: Hashable, Codable, Identifiable, Sendable {
     public typealias ID = String
 
@@ -12,16 +12,17 @@ public struct ImagePlaygroundStyle: Hashable, Codable, Identifiable, Sendable {
         self.id = id
     }
 
-    /// Images in a 2D cartoon style.
+    @_spi(OpenUIKitHost)
+    public init(_hostID id: String) {
+        self.init(id: id)
+    }
+
     public static let illustration = ImagePlaygroundStyle(id: "illustration")
-    /// Images in the style of a hand-drawn sketch.
     public static let sketch = ImagePlaygroundStyle(id: "sketch")
-    /// Animated images.
     public static let animation = ImagePlaygroundStyle(id: "animation")
-    /// A style supplied by an external provider.
     public static let externalProvider = ImagePlaygroundStyle(id: "externalProvider")
 
-    /// Every publicly named style in this starting point.
+    /// The publicly named styles. Order is not recorded in the public graph.
     public static var all: [ImagePlaygroundStyle] {
         [.illustration, .sketch, .animation, .externalProvider]
     }

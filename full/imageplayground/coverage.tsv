@@ -1,32 +1,32 @@
 precise	status	evidence	notes
-c:@CM@ImagePlayground@objc(cs)ImagePlaygroundViewController(cpy)available	implemented	tests/agent/ImagePlaygroundRuntime.swift	Always false; Linux has no Image Playground models.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController	implemented	tests/agent/ImagePlaygroundRuntime.swift	NSObject configuration object; not a UIViewController subclass.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)init	implemented	tests/agent/ImagePlaygroundRuntime.swift	Public init stores Linux defaults.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)viewDidDisappear:	implemented	tests/agent/ImagePlaygroundRuntime.swift	No-op lifecycle hook; no UIKit presentation.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)viewDidLoad	implemented	tests/agent/ImagePlaygroundRuntime.swift	No-op lifecycle hook; no view is loaded.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)delegate	implemented	tests/agent/ImagePlaygroundRuntime.swift	Weak delegate; never invoked (no generation UI).
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)modalInPresentation	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored Bool; default false matching UIViewController.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)modalPresentationStyle	deferred		Requires UIKit.UIModalPresentationStyle, which this isolated compile cannot import.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)preferredContentSize	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored CGSize from Foundation; default .zero.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)sourceImage	deferred		Requires UIKit.UIImage, which this isolated compile cannot import.
-c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)supportedInterfaceOrientations	deferred		Requires UIKit.UIInterfaceOrientationMask, which this isolated compile cannot import.
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Witnessed by ImageCreator.Error.errorDomain.
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Witnessed by ImageCreator.Error.errorCode.
-s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Always nil; Apple help-anchor strings are not in the public graph.
-s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Matches errorDescription.
-s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	English strings derived from public graph documentation.
-s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	English recovery hints derived from public graph documentation.
+c:@CM@ImagePlayground@objc(cs)ImagePlaygroundViewController(cpy)available	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)init	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)viewDidDisappear:	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(im)viewDidLoad	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)delegate	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)modalInPresentation	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)modalPresentationStyle	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)preferredContentSize	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)sourceImage	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+c:@M@ImagePlayground@objc(cs)ImagePlaygroundViewController(py)supportedInterfaceOrientations	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	CustomNSError default; Apple errorDomain string unobserved.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	CustomNSError default; Apple numeric codes unobserved.
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	LocalizedError default; Apple help-anchor copy unobserved.
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	LocalizedError default; Apple failureReason copy unobserved.
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	LocalizedError default; Apple errorDescription copy unobserved.
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	LocalizedError default; Apple recoverySuggestion copy unobserved.
 s:15ImagePlayground0A7CreatorC	implemented	tests/agent/ImagePlaygroundRuntime.swift	final class; init always throws notSupported.
-s:15ImagePlayground0A7CreatorC07CreatedA0V	declared	full/imageplayground/ImagePlayground.swift	Public struct with no public members; Apple's cgImage needs CoreGraphics.
-s:15ImagePlayground0A7CreatorC07CreatedA0V02cgA0So10CGImageRefavp	deferred		Requires CoreGraphics.CGImage, which this isolated compile cannot import.
+s:15ImagePlayground0A7CreatorC07CreatedA0V	declared	full/imageplayground/ImagePlayground.swift	Struct compiles; cgImage omitted without CoreGraphics.
+s:15ImagePlayground0A7CreatorC07CreatedA0V02cgA0So10CGImageRefavp	deferred		Omitted unless canImport(CoreGraphics); isolated host compile does not link CoreGraphics.
 s:15ImagePlayground0A7CreatorC15availableStylesSayAA0aB5StyleVGvp	declared	full/imageplayground/ImagePlayground.swift	Stored empty before init throws; no instance can be observed.
 s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Hashable LocalizedError CustomNSError CaseIterable enum.
 s:15ImagePlayground0A7CreatorC5ErrorO016unsupportedInputA0yA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
 s:15ImagePlayground0A7CreatorC5ErrorO06faceInA8TooSmallyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
-s:15ImagePlayground0A7CreatorC5ErrorO11errorDomainSSvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	ImagePlayground.ImageCreator.Error; Apple domain string unverified.
+s:15ImagePlayground0A7CreatorC5ErrorO11errorDomainSSvpZ	declared	full/imageplayground/ImagePlayground.swift	CustomNSError default; Apple domain string unobserved.
 s:15ImagePlayground0A7CreatorC5ErrorO11unavailableyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
 s:15ImagePlayground0A7CreatorC5ErrorO12notSupportedyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Thrown by ImageCreator.init on Linux.
-s:15ImagePlayground0A7CreatorC5ErrorO13errorUserInfoSDySSypGvp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Always empty; no Apple userInfo keys in the public graph.
+s:15ImagePlayground0A7CreatorC5ErrorO13errorUserInfoSDySSypGvp	declared	full/imageplayground/ImagePlayground.swift	CustomNSError default; Apple userInfo keys unobserved.
 s:15ImagePlayground0A7CreatorC5ErrorO14creationFailedyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
 s:15ImagePlayground0A7CreatorC5ErrorO17creationCancelledyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
 s:15ImagePlayground0A7CreatorC5ErrorO19unsupportedLanguageyA2EmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Case present in allCases.
@@ -35,56 +35,56 @@ s:15ImagePlayground0A7CreatorC5ErrorO29conceptsRequirePersonIdentityyA2EmF	imple
 s:15ImagePlayground0A7CreatorC5ErrorO2eeoiySbAE_AEtFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Enum equality.
 s:15ImagePlayground0A7CreatorC5ErrorO4hash4intoys6HasherVz_tF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Exercised via Set uniqueness.
 s:15ImagePlayground0A7CreatorC5ErrorO8AllCasesa	implemented	tests/agent/ImagePlaygroundRuntime.swift	CaseIterable.AllCases typealias.
-s:15ImagePlayground0A7CreatorC5ErrorO8allCasesSayAEGvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Nine cases in symbol-graph declaration order.
+s:15ImagePlayground0A7CreatorC5ErrorO8allCasesSayAEGvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Nine public cases.
 s:15ImagePlayground0A7CreatorC5ErrorO9hashValueSivp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized Hashable.hashValue.
 s:15ImagePlayground0A7CreatorC6images3for5style5limitQrSayAA0aB7ConceptVG_AA0aB5StyleVSitF	declared	full/imageplayground/ImagePlayground.swift	Returns a sequence that throws notSupported; unreachable without a constructed ImageCreator.
 s:15ImagePlayground0A7CreatorCACyYaKcfc	implemented	tests/agent/ImagePlaygroundRuntime.swift	async throws; always notSupported on Linux.
-s:15ImagePlayground0aB14ViewControllerC21personalizationPolicyAA0ab15PersonalizationF0Ovp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored property; default automatic.
-s:15ImagePlayground0aB14ViewControllerC23allowedGenerationStylesSayAA0aB5StyleVGvp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored property; default ImagePlaygroundStyle.all.
-s:15ImagePlayground0aB14ViewControllerC23selectedGenerationStyleAA0abG0Vvp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored property; default illustration.
-s:15ImagePlayground0aB14ViewControllerC8DelegateP	implemented	tests/agent/ImagePlaygroundRuntime.swift	Swift AnyObject protocol; not @objc NSObjectProtocol.
-s:15ImagePlayground0aB14ViewControllerC8DelegateP05imagebcD0_09didCreateA2AtyAC_10Foundation3URLVtF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Required delegate method; never invoked (fail-closed UI).
-s:15ImagePlayground0aB14ViewControllerC8DelegateP05imagebcD9DidCancelyyACF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Optional via default empty implementation; never invoked.
-s:15ImagePlayground0aB14ViewControllerC8conceptsSayAA0aB7ConceptVGvp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored concept list.
-s:15ImagePlayground0aB21PersonalizationPolicyO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Int raw-representable enum.
-s:15ImagePlayground0aB21PersonalizationPolicyO7enabledyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	rawValue 1 pending Apple-oracle confirmation.
-s:15ImagePlayground0aB21PersonalizationPolicyO8RawValuea	implemented	tests/agent/ImagePlaygroundRuntime.swift	typealias RawValue = Int.
-s:15ImagePlayground0aB21PersonalizationPolicyO8disabledyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	rawValue 2 pending Apple-oracle confirmation.
-s:15ImagePlayground0aB21PersonalizationPolicyO8rawValueACSgSi_tcfc	implemented	tests/agent/ImagePlaygroundRuntime.swift	Failable Int raw-value initializer.
-s:15ImagePlayground0aB21PersonalizationPolicyO8rawValueSivp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stored raw value.
-s:15ImagePlayground0aB21PersonalizationPolicyO9automaticyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	rawValue 0 pending Apple-oracle confirmation.
+s:15ImagePlayground0aB14ViewControllerC21personalizationPolicyAA0ab15PersonalizationF0Ovp	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC23allowedGenerationStylesSayAA0aB5StyleVGvp	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC23selectedGenerationStyleAA0abG0Vvp	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC8DelegateP	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC8DelegateP05imagebcD0_09didCreateA2AtyAC_10Foundation3URLVtF	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC8DelegateP05imagebcD9DidCancelyyACF	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB14ViewControllerC8conceptsSayAA0aB7ConceptVGvp	deferred		Omitted unless canImport(UIKit); isolated host compile does not link UIKit. No NSObject substitute.
+s:15ImagePlayground0aB21PersonalizationPolicyO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Int raw-representable enum with three public cases.
+s:15ImagePlayground0aB21PersonalizationPolicyO7enabledyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct case; Apple rawValue unobserved.
+s:15ImagePlayground0aB21PersonalizationPolicyO8RawValuea	declared	full/imageplayground/ImagePlaygroundPersonalizationPolicy.swift	typealias RawValue = Int via Swift synthesis.
+s:15ImagePlayground0aB21PersonalizationPolicyO8disabledyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct case; Apple rawValue unobserved.
+s:15ImagePlayground0aB21PersonalizationPolicyO8rawValueACSgSi_tcfc	declared	full/imageplayground/ImagePlaygroundPersonalizationPolicy.swift	Synthesized failable Int initializer; Apple integers unobserved.
+s:15ImagePlayground0aB21PersonalizationPolicyO8rawValueSivp	declared	full/imageplayground/ImagePlaygroundPersonalizationPolicy.swift	Synthesized Int rawValue; Apple integers unobserved.
+s:15ImagePlayground0aB21PersonalizationPolicyO9automaticyA2CmF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct case; Apple rawValue unobserved.
 s:15ImagePlayground0aB5StyleV	implemented	tests/agent/ImagePlaygroundRuntime.swift	Hashable Codable Identifiable struct.
-s:15ImagePlayground0aB5StyleV12illustrationACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	id illustration.
-s:15ImagePlayground0aB5StyleV16externalProviderACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	id externalProvider.
+s:15ImagePlayground0aB5StyleV12illustrationACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct public style identity.
+s:15ImagePlayground0aB5StyleV16externalProviderACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct public style identity.
 s:15ImagePlayground0aB5StyleV2IDa	implemented	tests/agent/ImagePlaygroundRuntime.swift	typealias ID = String.
-s:15ImagePlayground0aB5StyleV2eeoiySbAC_ACtFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Equality by id.
-s:15ImagePlayground0aB5StyleV2idSSvp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Public id string.
-s:15ImagePlayground0aB5StyleV3allSayACGvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	illustration, sketch, animation, externalProvider.
-s:15ImagePlayground0aB5StyleV4fromACs7Decoder_p_tKcfc	implemented	tests/agent/ImagePlaygroundRuntime.swift	Single-value String decode of id; Apple layout unverified.
-s:15ImagePlayground0aB5StyleV4hash4intoys6HasherVz_tF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Hashes id.
-s:15ImagePlayground0aB5StyleV6encode2toys7Encoder_p_tKF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Single-value String encode of id; Apple layout unverified.
-s:15ImagePlayground0aB5StyleV6sketchACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	id sketch.
-s:15ImagePlayground0aB5StyleV9animationACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	id animation.
+s:15ImagePlayground0aB5StyleV2eeoiySbAC_ACtFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Equality by local id token.
+s:15ImagePlayground0aB5StyleV2idSSvp	declared	full/imageplayground/ImagePlaygroundStyle.swift	Local identity token; Apple id strings unobserved.
+s:15ImagePlayground0aB5StyleV3allSayACGvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Contains the four public static styles; Apple order unobserved.
+s:15ImagePlayground0aB5StyleV4fromACs7Decoder_p_tKcfc	declared	full/imageplayground/ImagePlaygroundStyle.swift	Local single-value String decode; Apple Codable layout unobserved.
+s:15ImagePlayground0aB5StyleV4hash4intoys6HasherVz_tF	implemented	tests/agent/ImagePlaygroundRuntime.swift	Hashes local id token.
+s:15ImagePlayground0aB5StyleV6encode2toys7Encoder_p_tKF	declared	full/imageplayground/ImagePlaygroundStyle.swift	Local single-value String encode; Apple Codable layout unobserved.
+s:15ImagePlayground0aB5StyleV6sketchACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct public style identity.
+s:15ImagePlayground0aB5StyleV9animationACvpZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Distinct public style identity.
 s:15ImagePlayground0aB5StyleV9hashValueSivp	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized Hashable.hashValue.
-s:15ImagePlayground0aB7ConceptV	implemented	tests/agent/ImagePlaygroundRuntime.swift	Sendable wrapper around text/extracted/file-URL storage.
+s:15ImagePlayground0aB7ConceptV	implemented	tests/agent/ImagePlaygroundRuntime.swift	Wrapper around text/extracted storage.
 s:15ImagePlayground0aB7ConceptV4textyACSSFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stores the caller string; no model extraction.
-s:15ImagePlayground0aB7ConceptV5imageyACSg10Foundation3URLVFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Nil for non-file or missing paths; no ImageIO decode.
-s:15ImagePlayground0aB7ConceptV5imageyACSo10CGImageRefaFZ	deferred		Requires CoreGraphics.CGImage, which this isolated compile cannot import.
-s:15ImagePlayground0aB7ConceptV7drawingyAC9PencilKit9PKDrawingVFZ	deferred		Requires PencilKit.PKDrawing, which this isolated compile cannot import.
+s:15ImagePlayground0aB7ConceptV5imageyACSg10Foundation3URLVFZ	declared	full/imageplayground/ImagePlaygroundConcept.swift	Returns nil without ImageIO rather than guessing Apple decode/nil rules.
+s:15ImagePlayground0aB7ConceptV5imageyACSo10CGImageRefaFZ	deferred		Omitted unless canImport(CoreGraphics); isolated host compile does not link CoreGraphics.
+s:15ImagePlayground0aB7ConceptV7drawingyAC9PencilKit9PKDrawingVFZ	deferred		Omitted unless canImport(PencilKit); isolated host compile does not link PencilKit.
 s:15ImagePlayground0aB7ConceptV9extracted4from5titleACSS_SSSgtFZ	implemented	tests/agent/ImagePlaygroundRuntime.swift	Stores text and title; does not run Apple concept extraction.
-s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF21PersonalizationPolicyAD0efhI0Ovp	deferred		Requires SwiftUI.EnvironmentValues, which this isolated compile cannot import.
-s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF23AllowedGenerationStylesSayAD0eF5StyleVGvp	deferred		Requires SwiftUI.EnvironmentValues, which this isolated compile cannot import.
-s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF23SelectedGenerationStyleAD0efJ0Vvp	deferred		Requires SwiftUI.EnvironmentValues, which this isolated compile cannot import.
-s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE08supportseF0Sbvp	deferred		Requires SwiftUI.EnvironmentValues, which this isolated compile cannot import.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE15GenerationStyle_2inQrAD0deH0V_SayAHGtF	deferred		Requires SwiftUI.View, which this isolated compile cannot import.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE21PersonalizationPolicyyQrAD0degH0OF	deferred		Requires SwiftUI.View, which this isolated compile cannot import.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented7concept06sourceD012onCompletion0L12CancellationQrAA7BindingVySbG_SSAA0D0VSgy10Foundation3URLVcyycSgtF	deferred		Requires SwiftUI sheet presentation and Image; isolated compile has neither.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented7concept06sourceD3URL12onCompletion0M12CancellationQrAA7BindingVySbG_SS10Foundation0L0VyAPcyycSgtF	deferred		Requires SwiftUI sheet presentation; isolated compile cannot import SwiftUI.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented8concepts06sourceD012onCompletion0L12CancellationQrAA7BindingVySbG_SayAD0dE7ConceptVGAA0D0VSgy10Foundation3URLVcyycSgtF	deferred		Requires SwiftUI sheet presentation and Image; isolated compile has neither.
-s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented8concepts06sourceD3URL12onCompletion0M12CancellationQrAA7BindingVySbG_SayAD0dE7ConceptVG10Foundation0L0VyAScyycSgtF	deferred		Requires SwiftUI sheet presentation; isolated compile cannot import SwiftUI.
+s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF21PersonalizationPolicyAD0efhI0Ovp	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF23AllowedGenerationStylesSayAD0eF5StyleVGvp	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE05imageF23SelectedGenerationStyleAD0efJ0Vvp	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI17EnvironmentValuesV15ImagePlaygroundE08supportseF0Sbvp	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE15GenerationStyle_2inQrAD0deH0V_SayAHGtF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE21PersonalizationPolicyyQrAD0degH0OF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented7concept06sourceD012onCompletion0L12CancellationQrAA7BindingVySbG_SSAA0D0VSgy10Foundation3URLVcyycSgtF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented7concept06sourceD3URL12onCompletion0M12CancellationQrAA7BindingVySbG_SS10Foundation0L0VyAPcyycSgtF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented8concepts06sourceD012onCompletion0L12CancellationQrAA7BindingVySbG_SayAD0dE7ConceptVGAA0D0VSgy10Foundation3URLVcyycSgtF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
+s:7SwiftUI4ViewP15ImagePlaygroundE05imageE5Sheet11isPresented8concepts06sourceD3URL12onCompletion0M12CancellationQrAA7BindingVySbG_SayAD0dE7ConceptVG10Foundation0L0VyAScyycSgtF	deferred		Omitted unless canImport(SwiftUI); isolated host compile does not link SwiftUI.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized Equatable.!=
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ImagePlayground0aB21PersonalizationPolicyO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized Equatable.!=
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ImagePlayground0aB5StyleV	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized Equatable.!=
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:15ImagePlayground0aB21PersonalizationPolicyO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized RawRepresentable/Hashable.hashValue.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:15ImagePlayground0aB21PersonalizationPolicyO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Synthesized RawRepresentable/Hashable.hash(into:).
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	implemented	tests/agent/ImagePlaygroundRuntime.swift	Foundation Error.localizedDescription via LocalizedError.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:15ImagePlayground0A7CreatorC5ErrorO	declared	full/imageplayground/ImagePlayground.swift	Foundation Error.localizedDescription via defaults; Apple copy unobserved.

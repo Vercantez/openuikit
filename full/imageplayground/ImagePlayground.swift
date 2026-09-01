@@ -1,11 +1,18 @@
 @_exported import Foundation
 
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+
 /// Linux starting point for Apple's public `ImagePlayground` module.
 ///
 /// Image generation is an Apple-device, Apple-model service. This module
-/// reconstructs the public value types, error surface, and view-controller
-/// configuration API from the pinned Xcode 26.1 symbol graphs, then fail-closes
-/// every path that would require those models or a system Image Playground UI.
+/// reconstructs the public value types and fail-closes every path that would
+/// require those models or a system Image Playground UI.
+///
+/// UIKit, SwiftUI, PencilKit, CoreGraphics, and ImageIO surfaces are compiled
+/// only when those modules can be imported. The isolated host gate does not
+/// link them; that is not integrated Linux success.
 
 /// Generates images programmatically from concepts and a style.
 ///
@@ -37,99 +44,42 @@ public final class ImageCreator: Sendable {
 }
 
 extension ImageCreator {
-    /// A generated image. Apple's type stores a `CGImage`; this starting
-    /// point cannot produce one without CoreGraphics and a generative
-    /// backend, and it has no public initializer.
-    public struct CreatedImage: Sendable {
-        init() {}
+    /// A generated image. Apple's public stored property is `cgImage: CGImage`.
+    /// That property is compiled only when CoreGraphics can be imported.
+    /// There is no public initializer; generation never succeeds here.
+    public struct CreatedImage: @unchecked Sendable {
+        #if canImport(CoreGraphics)
+        public let cgImage: CGImage
+
+        init(cgImage: CGImage) {
+            self.cgImage = cgImage
+        }
+
+        /// Host-test wrapper. Does not claim Apple generation produced the bitmap.
+        @_spi(OpenUIKitHost)
+        public init(_hostCGImage image: CGImage) {
+            self.init(cgImage: image)
+        }
+        #else
+        private init() {}
+        #endif
     }
 
     /// Errors that can occur during image generation.
+    ///
+    /// `CustomNSError` / `LocalizedError` use Swift protocol defaults. Apple's
+    /// `errorDomain`, numeric `errorCode` values, `errorUserInfo` keys, and
+    /// localized copy are not in the pinned public inputs.
     public enum Error: Swift.Error, LocalizedError, CustomNSError, Hashable, CaseIterable, Sendable {
-        /// The device does not support image generation.
         case notSupported
-        /// Image creation is currently unavailable.
         case unavailable
-        /// The parent task was cancelled.
         case creationCancelled
-        /// A source image contained a face that is too small to use.
         case faceInImageTooSmall
-        /// The input text uses an unsupported language.
         case unsupportedLanguage
-        /// A specified source image cannot be used.
         case unsupportedInputImage
-        /// Image creation was requested while the app is hidden or in the background.
         case backgroundCreationForbidden
-        /// A general failure occurred during image creation.
         case creationFailed
-        /// A source image containing a person's face is required to complete the request.
         case conceptsRequirePersonIdentity
-
-        public static let errorDomain = "ImagePlayground.ImageCreator.Error"
-
-        public var errorCode: Int {
-            switch self {
-            case .notSupported: return 0
-            case .unavailable: return 1
-            case .creationCancelled: return 2
-            case .faceInImageTooSmall: return 3
-            case .unsupportedLanguage: return 4
-            case .unsupportedInputImage: return 5
-            case .backgroundCreationForbidden: return 6
-            case .creationFailed: return 7
-            case .conceptsRequirePersonIdentity: return 8
-            }
-        }
-
-        public var errorUserInfo: [String: Any] { [:] }
-
-        public var errorDescription: String? {
-            switch self {
-            case .notSupported:
-                return "The device does not support image generation."
-            case .unavailable:
-                return "Image creation is currently unavailable."
-            case .creationCancelled:
-                return "Image creation was cancelled."
-            case .faceInImageTooSmall:
-                return "The face in a source image is too small to use."
-            case .unsupportedLanguage:
-                return "The input text uses an unsupported language."
-            case .unsupportedInputImage:
-                return "A specified source image cannot be used."
-            case .backgroundCreationForbidden:
-                return "Image creation is forbidden while the app is in the background."
-            case .creationFailed:
-                return "Image creation failed."
-            case .conceptsRequirePersonIdentity:
-                return "A source image containing a person's face is required."
-            }
-        }
-
-        public var failureReason: String? { errorDescription }
-
-        public var recoverySuggestion: String? {
-            switch self {
-            case .notSupported:
-                return "Use a device that supports Image Playground."
-            case .unavailable:
-                return "Retry after the on-device models have finished downloading."
-            case .creationCancelled:
-                return "Submit a new image-creation request."
-            case .faceInImageTooSmall, .unsupportedInputImage:
-                return "Provide a different source image."
-            case .unsupportedLanguage:
-                return "Retry with text in a supported language."
-            case .backgroundCreationForbidden:
-                return "Return the app to the foreground and retry."
-            case .creationFailed:
-                return "Retry the request."
-            case .conceptsRequirePersonIdentity:
-                return "Add a source image that includes a person's face."
-            }
-        }
-
-        public var helpAnchor: String? { nil }
     }
 }
 
