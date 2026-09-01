@@ -91,7 +91,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         )
 
     def test_full_foundation_precedes_final_uikit_and_swiftui(self) -> None:
-        foundation = self.builder.index("33-source public Foundation facade")
+        foundation = self.builder.index("34-source public Foundation facade")
         developer_tools = self.builder.index("post-Foundation DeveloperToolsSupport")
         swiftui = self.builder.index("-module-name SwiftUI -emit-module")
         self.assertLess(foundation, developer_tools)

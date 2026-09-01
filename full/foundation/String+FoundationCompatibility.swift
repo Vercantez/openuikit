@@ -7,6 +7,7 @@
 
 import FoundationEssentials
 import _StringProcessing
+import Darwin
 
 public typealias NSLocale = Locale
 
@@ -452,11 +453,12 @@ private func _foundationGuestRenderArgument(
         else if let float = argument as? Float { value = Double(float) }
         else { value = nil }
         guard let value else { return String(describing: argument) }
-        // Swift's stable description is locale-independent. Exact printf
-        // precision/exponent rounding beyond this bounded facade remains a
-        // named gap; integer precision and Focus's string formats are exact.
-        if let precision, precision == 0 { return String(Int(value.rounded())) }
-        return String(value)
+        return _foundationGuestRenderFloating(
+            value,
+            conversion: conversion,
+            precision: precision,
+            alternate: alternate
+        )
     case "c":
         guard let value = _foundationGuestUnsigned(argument),
               let scalar = Unicode.Scalar(UInt32(truncatingIfNeeded: value)) else {
@@ -465,6 +467,42 @@ private func _foundationGuestRenderArgument(
         return String(scalar)
     default:
         return "%" + String(conversion)
+    }
+}
+
+private func _foundationGuestRenderFloating(
+    _ value: Double,
+    conversion: Character,
+    precision: Int?,
+    alternate: Bool
+) -> String {
+    var format = "%"
+    if alternate { format += "#" }
+    if let precision { format += ".\(precision)" }
+    format.append(conversion)
+
+    let required = format.withCString { formatPointer in
+        withVaList([value]) { arguments in
+            Darwin.vsnprintf(nil, 0, formatPointer, arguments)
+        }
+    }
+    guard required >= 0 else { return String(value) }
+    var buffer = [CChar](repeating: 0, count: Int(required) + 1)
+    let written = format.withCString { formatPointer in
+        withVaList([value]) { arguments in
+            buffer.withUnsafeMutableBufferPointer { storage in
+                Darwin.vsnprintf(
+                    storage.baseAddress,
+                    storage.count,
+                    formatPointer,
+                    arguments
+                )
+            }
+        }
+    }
+    guard written == required else { return String(value) }
+    return buffer.withUnsafeBufferPointer { storage in
+        String(cString: storage.baseAddress!)
     }
 }
 

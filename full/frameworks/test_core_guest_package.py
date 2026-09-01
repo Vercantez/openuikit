@@ -106,6 +106,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/LocalizedStringResource.swift",
     "full/foundation/Stream.swift",
     "full/foundation/URLLoading.swift",
     "full/foundation/URLSession.swift",
@@ -622,14 +623,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 33)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 34)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 33-path contract", refusal.stderr)
+        self.assertIn("exact ordered 34-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -2580,7 +2581,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=33"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=34"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,
@@ -2590,6 +2591,50 @@ class ShellContractTests(unittest.TestCase):
         self.assertEqual(source.count("EXPECTED_SYMBOLS_SWIFT_COUNT=1"), 1)
         self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=11"), 1)
         self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=9", source)
+
+    def test_localized_string_resources_are_oracled_and_cold_run(self) -> None:
+        source = (
+            REPO / "full/foundation/LocalizedStringResource.swift"
+        ).read_text(encoding="utf-8")
+        oracle = (
+            REPO
+            / "full/foundation/tests/FoundationLocalizedStringResourceOracle.swift"
+        ).read_text(encoding="utf-8")
+        host_gate = (
+            REPO / "full/foundation/tests/test_foundation_guest_text_host.sh"
+        ).read_text(encoding="utf-8")
+        documentation = (
+            REPO / "full/foundation/FOUNDATION_LOCALIZED_STRING_RESOURCE.md"
+        ).read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
+            encoding="utf-8"
+        )
+        builder = BUILDER.read_text(encoding="utf-8")
+        for token in (
+            "public struct LocalizedStringResource",
+            "struct LocalizationValue",
+            "enum Placeholder",
+            "replacementArguments: options.replacements",
+            "BundleDescription",
+            "public func encode(to encoder: any Encoder)",
+        ):
+            self.assertIn(token, source)
+        for token in (
+            '"Items \\(localizedCount)"',
+            '"Ratio \\(1.5)"',
+            '"Placeholder \\(placeholder: .int)"',
+            "JSONEncoder().encode(",
+            "JSONDecoder().decode(",
+        ):
+            self.assertIn(token, probe)
+        self.assertIn("FOUNDATION_LOCALIZED_STRING_RESOURCE_OK", oracle)
+        self.assertIn("apple-localized-resource", host_gate)
+        self.assertIn("port-localized-resource", host_gate)
+        marker = "localization=literal,interpolation,placeholders,codable"
+        self.assertIn(marker, probe)
+        self.assertIn(marker, builder)
+        self.assertIn(marker, documentation)
+        self.assertIn("Deliberate remaining boundaries", documentation)
 
     def test_foundation_links_the_cgfloat_owner_directly(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

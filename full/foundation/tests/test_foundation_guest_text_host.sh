@@ -26,7 +26,7 @@ EXPECTED_STRUCTURED_GOLDEN_SHA=0c9ceb2830f41181f4b96cd90ae30a437a7d6894a1deb7c83
 EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
 EXPECTED_CFERROR_GOLDEN_SHA=d1a24df46635db706f9540b135e914f40a3ff530d2ac1f84c2322e726942c2e9
 EXPECTED_APPLE_FOUNDATION_INTERFACE_SHA=e96e22f4ee55f25fd43b421098e72f8f9872016e84d1a60d4b6daaa255612ac9
-EXPECTED_SOURCE_DIGEST=9e58c207da8371a7916afdbf567fd76f33d1ed6c27f40e3167156dc8473c6cfd
+EXPECTED_SOURCE_DIGEST=44c8afbc1ee2281299c6937ff2c1b29bd8fd5d9a2938079fde2402010b9cccc3
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/NSString.swift"
@@ -43,6 +43,7 @@ ATTESTED_SOURCES=(
     full/foundation/Bundle+Localization.swift
     full/foundation/Scanner.swift
     full/foundation/Error+LocalizedDescription.swift
+    full/foundation/LocalizedStringResource.swift
     full/foundation/NSString.swift
     full/foundation/NSError.swift
     full/foundation/CFError+Error.swift
@@ -60,6 +61,7 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestTextMissingScanner.swift
     full/foundation/tests/FoundationGuestCompatibilityOracle.swift
     full/foundation/tests/FoundationGuestBundleRuntime.swift
+    full/foundation/tests/FoundationLocalizedStringResourceOracle.swift
     full/foundation/tests/FoundationGuestServicesOpenUIKitStub.swift
     full/foundation/tests/FoundationGuestServicesTestRoot.swift
     full/foundation/tests/FoundationGuestServiceIdentityProbe.swift
@@ -341,10 +343,12 @@ runtime_output=$("$OUT/runtime")
     -emit-object -o "$SERVICES/Foundation.o" \
     "$ROOT/full/foundation/tests/FoundationGuestServicesTestRoot.swift" \
     "$ROOT/full/appshim/FoundationOpenUIKitServiceAliases.swift" \
+    "$ROOT/full/appshim/FoundationOpenUIKitValueAliases.swift" \
     "$ROOT/full/foundation/CharacterSet.swift" \
     "$ROOT/full/foundation/String+CharacterSet.swift" \
     "$ROOT/full/foundation/String+FoundationCompatibility.swift" \
-    "$ROOT/full/foundation/Bundle+Localization.swift"
+    "$ROOT/full/foundation/Bundle+Localization.swift" \
+    "$ROOT/full/foundation/LocalizedStringResource.swift"
 xcrun swiftc -target "$TARGET" -typecheck \
     -module-cache-path "$OUT/service-identity-module-cache" \
     -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
@@ -365,6 +369,21 @@ service_output=$("$OUT/service-runtime" "$OUT/service-fixture")
 [ "$service_output" = \
     'FOUNDATION_GUEST_BUNDLE_RUNTIME_OK plist=xml localization=en malformed-entity=rejected' \
 ] || die "unexpected Foundation guest service marker: $service_output"
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/apple-localized-resource-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationLocalizedStringResourceOracle.swift" \
+    -o "$OUT/apple-localized-resource"
+"$OUT/apple-localized-resource" > "$OUT/apple-localized-resource.txt"
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/port-localized-resource-module-cache" \
+    -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationLocalizedStringResourceOracle.swift" \
+    "${SERVICE_LINK_OBJECTS[@]}" -o "$OUT/port-localized-resource"
+"$OUT/port-localized-resource" > "$OUT/port-localized-resource.txt"
+cmp "$OUT/apple-localized-resource.txt" "$OUT/port-localized-resource.txt" \
+    || die "portable localized-string resource output differs from Apple"
 
 # The structured-data/error/regex facade is a distinct module build so its
 # native differential cannot be accidentally satisfied by Darwin Foundation.
@@ -517,6 +536,7 @@ uikit_output=$("$OUT/uikit-client")
 
 for binary in "$OUT/port-oracle" "$OUT/port-compat-oracle" "$OUT/runtime" \
     "$OUT/uikit-client" "$OUT/service-runtime" "$OUT/port-structured-oracle" \
+    "$OUT/port-localized-resource" \
     "$OUT/port-structured-negative" "$OUT/port-nsstring-oracle" \
     "$OUT/port-nsstring-negative" "$OUT/port-cferror-oracle"; do
     if otool -L "$binary" | grep -Eq \

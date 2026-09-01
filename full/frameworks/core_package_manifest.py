@@ -34,6 +34,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
     "full/foundation/Bundle+Localization.swift",
+    "full/foundation/LocalizedStringResource.swift",
     "full/foundation/Stream.swift",
     "full/foundation/URLLoading.swift",
     "full/foundation/URLSession.swift",

@@ -268,6 +268,36 @@ struct CoreGuestPackageProbe {
                 countStyle: .file
             ) == "1 MB"
         )
+        let localizedCount = 42
+        let localizedResource: LocalizedStringResource =
+            "Items \(localizedCount)"
+        precondition(localizedResource.key == "Items %lld")
+        precondition(String(localized: localizedResource) == "Items 42")
+        let localizedFloating: LocalizedStringResource = "Ratio \(1.5)"
+        precondition(localizedFloating.key == "Ratio %lf")
+        precondition(
+            String(localized: localizedFloating) == "Ratio 1.500000"
+        )
+        var localizationOptions = String.LocalizationOptions()
+        localizationOptions.replacements = [9]
+        let localizedPlaceholder: String.LocalizationValue =
+            "Placeholder \(placeholder: .int)"
+        precondition(
+            String(
+                localized: localizedPlaceholder,
+                options: localizationOptions,
+                locale: Locale(identifier: "en_US_POSIX")
+            ) == "Placeholder 9"
+        )
+        let encodedLocalizedResource = try! JSONEncoder().encode(
+            localizedFloating
+        )
+        precondition(
+            try! JSONDecoder().decode(
+                LocalizedStringResource.self,
+                from: encodedLocalizedResource
+            ) == localizedFloating
+        )
         let cfSourceNSError = NSError(
             domain: "Portable.Domain",
             code: 42,
@@ -1310,6 +1340,7 @@ struct CoreGuestPackageProbe {
                 + "foundation=\(foundationCompatibility),byte-count "
                 + "internationalization=icu-fr,number,idna "
                 + "data-platform=\(dataPlatform) "
+                + "localization=literal,interpolation,placeholders,codable "
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "imageio=static,incremental,animated-gif "

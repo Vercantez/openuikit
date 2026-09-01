@@ -27,6 +27,7 @@ PRODUCTION = (
     FOUNDATION / "Bundle+Localization.swift",
     FOUNDATION / "Scanner.swift",
     FOUNDATION / "Error+LocalizedDescription.swift",
+    FOUNDATION / "LocalizedStringResource.swift",
 )
 STRUCTURED_PRODUCTION = (
     FOUNDATION / "NSError.swift",
@@ -47,6 +48,7 @@ ATTESTED = PRODUCTION + (NSSTRING,) + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestTextMissingScanner.swift",
     TESTS / "FoundationGuestCompatibilityOracle.swift",
     TESTS / "FoundationGuestBundleRuntime.swift",
+    TESTS / "FoundationLocalizedStringResourceOracle.swift",
     TESTS / "FoundationGuestServicesOpenUIKitStub.swift",
     TESTS / "FoundationGuestServicesTestRoot.swift",
     TESTS / "FoundationGuestServiceIdentityProbe.swift",

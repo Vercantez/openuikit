@@ -910,7 +910,7 @@ env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
     FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
     bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
 
-echo '== portable Dispatch and 33-source public Foundation facade'
+echo '== portable Dispatch and 34-source public Foundation facade'
 "${SWIFTC[@]}" "${CFLAGS[@]}" -parse-as-library -I "$PACKAGE" \
     -module-name Dispatch -module-link-name Dispatch \
     -emit-module -emit-module-path "$PACKAGE/Dispatch.swiftmodule" \
@@ -928,8 +928,8 @@ FOUNDATION_CFLAGS=(
     -Xcc -I"$INCLUDE/FoundationICU"
 )
 mapfile -t foundation_relative_sources < "$FOUNDATION_SOURCES_MANIFEST"
-[ "${#foundation_relative_sources[@]}" -eq 33 ] \
-    || die "Foundation source denominator is ${#foundation_relative_sources[@]}, expected 33"
+[ "${#foundation_relative_sources[@]}" -eq 34 ] \
+    || die "Foundation source denominator is ${#foundation_relative_sources[@]}, expected 34"
 foundation_sources=()
 for relative in "${foundation_relative_sources[@]}"; do
     [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \

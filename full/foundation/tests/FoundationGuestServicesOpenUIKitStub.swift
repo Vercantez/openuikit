@@ -12,6 +12,11 @@ public final class Bundle: @unchecked Sendable {
 
     public let bundleURL: URL
 
+    public convenience init(for subject: AnyClass) {
+        _ = subject
+        self.init(uncheckedURL: Bundle.main.bundleURL)
+    }
+
     public convenience init?(url: URL) {
         guard url.isFileURL else { return nil }
         self.init(path: url.path)
