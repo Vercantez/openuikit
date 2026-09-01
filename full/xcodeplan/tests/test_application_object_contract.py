@@ -495,14 +495,16 @@ class ApplicationObjectContractTests(unittest.TestCase):
                 encoding="utf-8",
             )
             nm.chmod(0o755)
+            nm_entry = root / "llvm-nm-18"
+            nm_entry.symlink_to(nm.name)
             cross = application_object_contract.audit_cross_file_symbols(
-                nm, root / "cross.json", [os.fspath(first), os.fspath(second)]
+                nm_entry, root / "cross.json", [os.fspath(first), os.fspath(second)]
             )
             self.assertEqual(cross["edge_count"], 2)
             self.assertEqual(cross["edges"][0]["consumer"], 1)
             self.assertEqual(cross["edges"][0]["provider"], 0)
             linked = application_object_contract.audit_linked_executable(
-                nm,
+                nm_entry,
                 executable,
                 root / "cross.json",
                 root / "linked.json",
@@ -517,7 +519,7 @@ class ApplicationObjectContractTests(unittest.TestCase):
                 "cross-file symbol audit differs",
             ):
                 application_object_contract.audit_linked_executable(
-                    nm,
+                    nm_entry,
                     executable,
                     root / "cross.json",
                     root / "linked-cross-tamper.json",
@@ -536,10 +538,22 @@ class ApplicationObjectContractTests(unittest.TestCase):
                 application_object_contract.ObjectContractError, "app-internal"
             ):
                 application_object_contract.audit_linked_executable(
-                    nm,
+                    nm_entry,
                     executable,
                     root / "cross.json",
                     root / "linked-failure.json",
+                    [os.fspath(first), os.fspath(second)],
+                )
+
+            broken_nm = root / "broken-llvm-nm"
+            broken_nm.symlink_to("missing-llvm-nm")
+            with self.assertRaisesRegex(
+                application_object_contract.ObjectContractError,
+                "cannot resolve llvm-nm",
+            ):
+                application_object_contract.audit_cross_file_symbols(
+                    broken_nm,
+                    root / "broken-nm-audit.json",
                     [os.fspath(first), os.fspath(second)],
                 )
 

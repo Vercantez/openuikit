@@ -73,6 +73,18 @@ def _regular(path: Path, label: str) -> None:
         raise ObjectContractError(f"{label} is not a regular file: {path}")
 
 
+def _canonical_executable(value: str | Path, label: str) -> Path:
+    entry = _absolute(value, label)
+    try:
+        executable = entry.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise ObjectContractError(f"cannot resolve {label}: {entry}: {exc}") from exc
+    _regular(executable, label)
+    if not os.access(executable, os.X_OK):
+        raise ObjectContractError(f"{label} is not executable: {executable}")
+    return executable
+
+
 def _new_file(path: Path, data: bytes, label: str) -> None:
     _ordinary_directory(path.parent, f"{label} parent")
     try:
@@ -880,10 +892,7 @@ def _cross_file_document(nm: Path, objects: list[Path]) -> dict[str, Any]:
 def audit_cross_file_symbols(
     nm_value: str | Path, audit_value: str | Path, object_values: Iterable[str]
 ) -> dict[str, Any]:
-    nm = _absolute(nm_value, "llvm-nm")
-    _regular(nm, "llvm-nm")
-    if not os.access(nm, os.X_OK):
-        raise ObjectContractError(f"llvm-nm is not executable: {nm}")
+    nm = _canonical_executable(nm_value, "llvm-nm")
     audit = _absolute(audit_value, "cross-file symbol audit")
     objects = [
         _absolute(value, f"application object[{index}]")
@@ -901,10 +910,7 @@ def audit_linked_executable(
     audit_value: str | Path,
     object_values: Iterable[str],
 ) -> dict[str, Any]:
-    nm = _absolute(nm_value, "llvm-nm")
-    _regular(nm, "llvm-nm")
-    if not os.access(nm, os.X_OK):
-        raise ObjectContractError(f"llvm-nm is not executable: {nm}")
+    nm = _canonical_executable(nm_value, "llvm-nm")
     executable = _absolute(executable_value, "application executable")
     cross_file_audit = _absolute(cross_file_audit_value, "cross-file symbol audit")
     audit = _absolute(audit_value, "linked executable symbol audit")
