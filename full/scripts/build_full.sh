@@ -27,14 +27,18 @@
 set -euo pipefail
 W=${W:-/w}
 UIKIT=${UIKIT:-/uikit}
-TARGET=arm64-apple-macos15.0           # FoundationEssentials' declared floor
-MINOS=15.0
-SYS=$W/scratch/sysroot_fe4             # Darwin + FE compile sysroot
+TARGET=${TARGET:-arm64-apple-macos15.0}
+MINOS=${MINOS:-15.0}
+LINK_PLATFORM=${LINK_PLATFORM:-macos}
+LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MINOS}
+SYS=${SYS:-$W/scratch/sysroot_fe4}     # Darwin + FE compile sysroot
+APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}
 OUT=$W/build/full
 ROOTDIR=$W/scratch/mrroot_full         # guest root for this renderer
 MC=$W/scratch/modcache_full
-SF=$W/scratch/swift-foundation
-SC=$W/scratch/swift-collections
+SF=${SF:-$W/scratch/swift-foundation}
+SC=${SC:-$W/scratch/swift-collections}
+BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot}
 FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe}
 FE_BUILD=$OUT/foundation
 FE_OUT=$FE_BUILD/essentials
@@ -68,18 +72,31 @@ echo "   -> $PINNED_SOURCE_STATE_BEFORE"
 # guest proof. The runner re-computes this exact content digest; a leftover
 # render_full from another checkout or commit cannot pass on timestamps alone.
 # uihelpers_subject includes the verified upstream digest above.
-UIHELPERS_SUBJECT_BEFORE=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
+UIHELPERS_SUBJECT_BEFORE=$(bash "$W/full/scripts/uihelpers_subject.sh" \
+    "$W" "$UIKIT" "$SF" "$SC")
 mkdir -p "$OUT" "$MC" "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
 # These files are commit markers for a completely successful build. Remove
 # them before mutating any output, so a failed or interrupted rebuild can never
 # leave yesterday's attestation blessing today's partial binary.
 rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256"
 
-SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -module-cache-path "$MC"
+APPLE_SWIFT_OVERLAY_FLAGS=()
+if [ -n "$APPLE_SWIFT_USER_OVERLAYS" ]; then
+    for module_name in Darwin _DarwinFoundation1 _DarwinFoundation2 _DarwinFoundation3 ObjectiveC; do
+        module_file="$APPLE_SWIFT_USER_OVERLAYS/$module_name.swiftmodule/arm64-apple-ios-simulator.swiftinterface"
+        [ -f "$module_file" ] && [ ! -L "$module_file" ] || {
+            echo "build_full: missing regular Apple user-overlay interface: $module_file" >&2
+            exit 2
+        }
+    done
+    APPLE_SWIFT_OVERLAY_FLAGS=(-I "$APPLE_SWIFT_USER_OVERLAYS")
+fi
+
+SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" "${APPLE_SWIFT_OVERLAY_FLAGS[@]}" -module-cache-path "$MC"
         -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$SYS" -rpath /usr/lib/swift)
+LD=(ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$SYS" -rpath /usr/lib/swift)
 CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
 
 # Optional, purpose-specific Preview seam used by the cold core-package build.
@@ -184,10 +201,12 @@ if [ ! -d "$ROOTDIR" ] || [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ]
     cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
     # The Swift runtime dylibs and the Foundation/CoreFoundation loud-abort
     # stubs are NOT machorun's -- they are the spike's staged Apple simulator
-    # runtime and shims (docs/RUNTIME.md §4), so they come from scratch/mrroot.
-    [ -d "$W/scratch/mrroot/darwin/System" ] && cp -R "$W/scratch/mrroot/darwin/System" "$ROOTDIR/darwin/"
-    cp "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib "$ROOTDIR/darwin/usr/lib/swift/"
-    cp "$W/scratch/mrroot/darwin/usr/lib/libswiftcompat.dylib" "$ROOTDIR/darwin/usr/lib/"
+    # runtime and shims (docs/RUNTIME.md §4), so they come from the explicit
+    # base runtime source. Keeping this input configurable also avoids nested
+    # Docker Desktop bind mounts, which can disappear during long compiler jobs.
+    [ -d "$BASE_RUNTIME_SOURCE/darwin/System" ] && cp -R "$BASE_RUNTIME_SOURCE/darwin/System" "$ROOTDIR/darwin/"
+    cp "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib "$ROOTDIR/darwin/usr/lib/swift/"
+    cp "$BASE_RUNTIME_SOURCE/darwin/usr/lib/libswiftcompat.dylib" "$ROOTDIR/darwin/usr/lib/"
     for d in "$MACHORUN/darwin/usr/lib/"*.dylib; do
         # NOT libquartz: machorun's is an older sync of ~/quartz and is rebuilt
         # below from ~/uikit's CQuartz. Copying it here would satisfy the
@@ -207,8 +226,8 @@ fi
 # condition above; otherwise a second build rewrites the manifest with the new
 # source digest while leaving the old runtime bytes in place, and its own
 # freshness guard can never become green.
-for d in "$W/scratch/mrroot/darwin/usr/lib/swift/"*.dylib; do
-    [ -f "$d" ] || { echo "build_full: no staged Swift runtime dylibs in $W/scratch/mrroot" >&2; exit 2; }
+for d in "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib; do
+    [ -f "$d" ] || { echo "build_full: no staged Swift runtime dylibs in $BASE_RUNTIME_SOURCE" >&2; exit 2; }
     target="$ROOTDIR/darwin/usr/lib/swift/$(basename "$d")"
     if ! cmp -s "$d" "$target"; then
         echo "== restaging $(basename "$d") from scratch/mrroot"
@@ -247,15 +266,57 @@ for name in "${FE_OVERLAYS[@]}"; do
     fi
 done
 
+# The Darwin dispatch bridge deliberately crosses into a small, versioned
+# Linux host boundary. Stage that boundary into the same private guest root so
+# a cold runtime never depends on an unrelated package path or image-global
+# preload. Keep the list closed: adding a host library is an ABI decision.
+HOST_RUNTIME_FILES=(
+    libdispatch.so
+    libBlocksRuntime.so
+    libOpenDispatchHost.so
+    libOpenFoundationInternationalizationHost.so
+    libOpenURLTransportHost.so
+    libOpenRelativeTimeHost.so
+)
+echo "== staging Linux host runtime boundary"
+rm -rf -- "$ROOTDIR/host"
+mkdir -p "$ROOTDIR/host"
+for name in "${HOST_RUNTIME_FILES[@]}"; do
+    source="$BASE_RUNTIME_SOURCE/host/$name"
+    [ -f "$source" ] && [ ! -L "$source" ] || {
+        echo "build_full: missing regular host runtime input: $source" >&2
+        exit 2
+    }
+    cp "$source" "$ROOTDIR/host/$name"
+done
+
+# A true iOS-simulator build uses the same ARM64 runtime implementation through
+# machorun, but every staged copy must advertise the target platform to LLD.
+# Retarget only the fresh private guest root; immutable runtime inputs remain
+# byte-for-byte untouched.
+retarget_runtime_macho() {
+    [ "$LINK_PLATFORM" = ios-simulator ] || return 0
+    python3 -B "$W/full/scripts/retarget_macho_build_version.py" \
+        --platform 7 --minimum-os "$MINOS" --sdk "$LINK_SDK_VERSION" "$@"
+}
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    echo '== retargeting private runtime copies to iOS Simulator'
+    while IFS= read -r -d '' candidate; do
+        case "$(file -b "$candidate")" in
+            Mach-O*) retarget_runtime_macho "$candidate" ;;
+        esac
+    done < <(find "$ROOTDIR/darwin" -type f -print0)
+fi
+
 # Keep the extensionless Foundation/CoreFoundation loud-abort stubs in step
 # independently of loader freshness too.  They are real transitive load
 # inputs of the staged Swift runtime, but the old root manifest only enumerated
 # *.dylib and therefore could neither notice their absence nor their drift.
 for framework in Foundation CoreFoundation; do
-    source="$W/scratch/mrroot/darwin/System/Library/Frameworks/$framework.framework/$framework"
+    source="$BASE_RUNTIME_SOURCE/darwin/System/Library/Frameworks/$framework.framework/$framework"
     target="$ROOTDIR/darwin/System/Library/Frameworks/$framework.framework/$framework"
     [ -f "$source" ] && [ ! -L "$source" ] || {
-        echo "build_full: no regular staged $framework loud-abort stub in $W/scratch/mrroot" >&2
+        echo "build_full: no regular staged $framework loud-abort stub in $BASE_RUNTIME_SOURCE" >&2
         exit 2
     }
     mkdir -p "$(dirname "$target")"
@@ -263,6 +324,11 @@ for framework in Foundation CoreFoundation; do
         echo "== restaging $framework loud-abort stub from scratch/mrroot"
         cp "$source" "$target"
     fi
+    # The source snapshot is a macOS Mach-O.  Retarget after the freshness
+    # copy (rather than only in the earlier whole-root pass), otherwise every
+    # clean build silently puts platform 1 back into these two transitive
+    # runtime images immediately after it converted the root to platform 7.
+    retarget_runtime_macho "$target"
 done
 
 # ---- libSystem / libc++ umbrellas -----------------------------------------
@@ -312,6 +378,8 @@ done
     }
     rename_id "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" "$LIB/libSystem.real.dylib" /usr/lib/libSystem.real.dylib
     rename_id "$MACHORUN/darwin/usr/lib/libc++.1.dylib"    "$LIB/libc++.real.dylib"    /usr/lib/libc++.real.dylib
+    retarget_runtime_macho "$LIB/libSystem.real.dylib"
+    retarget_runtime_macho "$LIB/libc++.real.dylib"
 
     "${CC[@]}" -O1 -c -o "$OUT/syspatch.o"  "$W/spike/syspatch.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
@@ -322,11 +390,11 @@ done
         -fno-exceptions -fno-rtti -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/conccxx.o" "$W/full/shims/conccxx.cpp"
 
-    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
-    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
         -o "$LIB/libc++.1.dylib" "$OUT/cxxpatch.o" "$OUT/conccxx.o" \
         "$LIB/libSystem.B.dylib" -reexport_library "$LIB/libc++.real.dylib"
@@ -335,7 +403,7 @@ done
     # rather than installed. See that file's header: it is a FAILED experiment,
     # retained so the next person does not repeat it.
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
-    ld64.lld-18 -arch arm64 -platform_version macos "$MINOS" "$MINOS" -syslibroot "$ROOTDIR/darwin" \
+    ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
         -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
@@ -386,7 +454,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
         printf 'copy\tdarwin/usr/lib/%s\tdarwin/usr/lib/%s\n' "$n" "$n"
     done
     for n in libswiftCore.dylib libswiftObjectiveC.dylib libswift_Concurrency.dylib; do
-        source="$W/scratch/mrroot/darwin/usr/lib/swift/$n"
+        source="$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/$n"
         source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
         if [ "$n" = libswiftCore.dylib ]; then
             # machorun now also carries a DIFFERENT libswiftCore. This full root
@@ -405,10 +473,15 @@ echo "== manifest ($ROOTDIR/.manifest)"
         printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
     done
     for framework in Foundation CoreFoundation; do
-        source="$W/scratch/mrroot/darwin/System/Library/Frameworks/$framework.framework/$framework"
+        source="$BASE_RUNTIME_SOURCE/darwin/System/Library/Frameworks/$framework.framework/$framework"
         source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
         printf 'staged\tdarwin/System/Library/Frameworks/%s.framework/%s\t%s\t%s\n' \
             "$framework" "$framework" "$source_sha" "$source"
+    done
+    for n in "${HOST_RUNTIME_FILES[@]}"; do
+        source="$BASE_RUNTIME_SOURCE/host/$n"
+        source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
+        printf 'staged\thost/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
@@ -446,7 +519,7 @@ done
 # -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
 # LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
 # resolve those install names to files.
-ld64.lld-18 -dylib -arch arm64 -platform_version macos "$MINOS" "$MINOS" \
+ld64.lld-18 -dylib -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" \
     -syslibroot "$ROOTDIR/darwin" \
     -install_name /usr/lib/libquartz.dylib -undefined dynamic_lookup \
     -o "$ROOTDIR/darwin/usr/lib/libquartz.dylib" "${QOBJS[@]}" \
@@ -495,6 +568,24 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
 
+# DeveloperToolsSupport is a real target-side framework dependency of the
+# canonical UIKit shim. A package builder may inject an already-attested
+# module/object plus its matching host macro plugin. The standalone full build
+# still has to be complete when no plugin transport is requested, so compile
+# the exact canonical target source here and link it into both proof binaries.
+if [ "$PREVIEW_INPUT_COUNT" -eq 0 ]; then
+    DTS_OUT=$OUT/developertoolsupport
+    mkdir -p "$DTS_OUT"
+    echo "== DeveloperToolsSupport (canonical target module)"
+    "${SWIFTC[@]}" -parse-as-library \
+        -module-name DeveloperToolsSupport \
+        -emit-module -emit-module-path "$DTS_OUT/DeveloperToolsSupport.swiftmodule" \
+        -emit-object -o "$DTS_OUT/developertoolsupport.o" \
+        "$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"
+    PREVIEW_SWIFT_FLAGS=(-I "$DTS_OUT")
+    PREVIEW_LINK_OBJECTS=("$DTS_OUT/developertoolsupport.o")
+fi
+
 # ---- FoundationEssentials: built here, not borrowed as a stale object -------
 # This is the production full path. Every invocation rebuilds the exact pinned
 # upstream sources, stages their modules beside OpenUIKit, and later links all
@@ -514,6 +605,7 @@ W="$W" SF="$SF" SYS="$SYS" OUT="$FE_CSHIMS" TARGET="$TARGET" \
 W="$W" SF="$SF" SYS="$SYS" OSMOD="$FE_OS" COLLECTIONS="$FE_COLLECTIONS" \
     TARGET="$TARGET" PINNED_INPUTS_TOOL="$PINNED_INPUTS_TOOL" \
     bash "$W/full/foundation/build_fe.sh" \
+    "${APPLE_SWIFT_OVERLAY_FLAGS[@]}" \
     -parse-as-library \
     -emit-module -emit-module-path "$FE_OUT/FoundationEssentials.swiftmodule" \
     -c -o "$FE_OUT/FoundationEssentials.o"
@@ -754,7 +846,8 @@ cat >"$OUT/NoKeys.app/Info.plist" <<'PLIST'
 </plist>
 PLIST
 
-UIHELPERS_SUBJECT_AFTER=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
+UIHELPERS_SUBJECT_AFTER=$(bash "$W/full/scripts/uihelpers_subject.sh" \
+    "$W" "$UIKIT" "$SF" "$SC")
 if [ "$UIHELPERS_SUBJECT_BEFORE" != "$UIHELPERS_SUBJECT_AFTER" ]; then
     echo "build_full: REFUSING -- UIHelpers probe inputs changed during the build" >&2
     echo "  before: $UIHELPERS_SUBJECT_BEFORE" >&2

@@ -1,0 +1,23 @@
+--- FoundationEssentials/URL/URL.swift
++++ FoundationEssentials/URL/URL.swift
+@@ -1579,7 +1579,7 @@ extension URL {
+         }
+         return URL(filePath: NSHomeDirectory(), directoryHint: .isDirectory)
+         #else
+-        FileManager.default.homeDirectoryForCurrentUser
++        URL(filePath: String.homeDirectoryPath(), directoryHint: .isDirectory)
+         #endif
+     }
+ 
+@@ -1600,7 +1600,10 @@ extension URL {
+         }
+         return URL(filePath: path, directoryHint: .isDirectory)
+         #else
+-        return FileManager.default.homeDirectory(forUser: user)
++        guard let path = String.homeDirectoryPath(forUser: user) else {
++            return nil
++        }
++        return URL(filePath: path, directoryHint: .isDirectory)
+         #endif
+     }
+ 

@@ -4,12 +4,14 @@
 # so the Linux build container and the macOS runner compute the same value.
 set -euo pipefail
 
-ROOT=${1:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root>}
-UIKIT=${2:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root>}
+ROOT=${1:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root> [swift-foundation-root] [swift-collections-root]}
+UIKIT=${2:?usage: uihelpers_subject.sh <swift-macho-linux-root> <uikit-root> [swift-foundation-root] [swift-collections-root]}
+SWIFT_FOUNDATION=${3:-$ROOT/scratch/swift-foundation}
+SWIFT_COLLECTIONS=${4:-$ROOT/scratch/swift-collections}
 PINNED_INPUTS_TOOL=$ROOT/full/foundation/pinned_inputs.pl
 PINNED_UPSTREAM_STATE=$(perl "$PINNED_INPUTS_TOOL" verify \
-    --swift-foundation "$ROOT/scratch/swift-foundation" \
-    --swift-collections "$ROOT/scratch/swift-collections" \
+    --swift-foundation "$SWIFT_FOUNDATION" \
+    --swift-collections "$SWIFT_COLLECTIONS" \
     --digest-only)
 
 hash_file() {
@@ -33,6 +35,7 @@ hash_stream() {
 
     find "$UIKIT/Sources/OpenUIKit" \
          "$UIKIT/Sources/OpenCoreGraphics" \
+         "$UIKIT/Sources/DeveloperToolsSupport" \
          "$UIKIT/Sources/CQuartz" \
          "$UIKIT/Sources/CPortableIO" \
          "$UIKIT/Sources/CSTBTrueType" \
