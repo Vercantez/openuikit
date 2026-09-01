@@ -868,6 +868,8 @@ echo '== rebuild the proven FoundationEssentials/OpenUIKit substrate from cold r
 # the legacy executable remains an immutable external compatibility input.
 BUILD_FULL_ENV=(
     W="$W" UIKIT="$UIKIT" MACHORUN="$MACHORUN"
+    BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE=disabled
+    BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=core-package-post-foundation
     BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=''
     BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT=''
     BUILD_FULL_PREVIEW_MACRO_PLUGIN=''
