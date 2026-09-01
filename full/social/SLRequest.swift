@@ -286,7 +286,7 @@ open class SLRequest: NSObject {
         parts: [MultipartPart]
     ) -> String {
         let haystack = multipartHaystack(parameters: parameters, parts: parts)
-        var candidates = multipartBoundaryCandidateSource()
+        let candidates = multipartBoundaryCandidateSource()
         while let candidate = candidates.next() {
             if isCollisionFreeBoundary(candidate, haystack: haystack) {
                 return candidate

@@ -44,7 +44,7 @@ swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
     "${SOURCE_PATHS[@]}"
 test -s "$STAGE/libSocial.dylib" || die 'fixture libSocial.dylib was not produced'
 mkdir -p "$STAGE/production"
-strings "$STAGE/libSocial.dylib" | grep -Fq 'standalone-unit-fixture-only' \
+grep -aFq 'standalone-unit-fixture-only' "$STAGE/libSocial.dylib" \
     || die 'fixture dylib lacks standalone-unit-fixture-only marker'
 
 swiftc -warnings-as-errors -parse-as-library -I "$STAGE" \
