@@ -36,6 +36,8 @@ import CoreMedia
 import AVFoundation
 import AVKit
 import Charts
+import CoreTransferable
+import Photos
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -827,6 +829,15 @@ struct CoreGuestPackageProbe {
         precondition(UTType.usdz.conforms(to: .threeDContent))
         precondition(!SwiftDataPortable.supportsDurableStorage)
         precondition(!SwiftDataPortable.supportsCloudKit)
+        precondition(
+            TransferableError.exportNotSupported(contentType: "public.data")
+                == .exportNotSupported(contentType: "public.data")
+        )
+        precondition(
+            PHPhotoLibrary.authorizationStatus(for: .readWrite)
+                == .notDetermined
+        )
+        precondition(PHAsset.fetchAssets(with: .image, options: nil).count == 0)
         let notificationCenter = UNUserNotificationCenter.current()
         var notificationAuthorizationFailedClosed = false
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
@@ -936,7 +947,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-25 oslog=standard-error,signposts "
+                + "first-party=portable-27 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
@@ -946,6 +957,8 @@ struct CoreGuestPackageProbe {
                 + "quicklook=local-image,host-driven "
                 + "media=rational,state,host-driven,fail-closed "
                 + "charts=basic,fail-closed "
+                + "coretransferable=data,file,fail-closed "
+                + "photos=authorization,volatile,host-driven "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

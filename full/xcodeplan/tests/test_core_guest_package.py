@@ -102,6 +102,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AVFoundation",
                 "AVKit",
                 "Charts",
+                "CoreTransferable",
+                "Photos",
                 "DeveloperToolsSupport",
             )
         )
@@ -149,6 +151,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AVFoundation",
                 "AVKit",
                 "Charts",
+                "CoreTransferable",
+                "Photos",
             )
         )
         for relative in required_files:
@@ -326,6 +330,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lAVFoundation",
                 "-lAVKit",
                 "-lCharts",
+                "-lCoreTransferable",
+                "-lPhotos",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -511,6 +517,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "AVFoundation",
             "AVKit",
             "Charts",
+            "CoreTransferable",
+            "Photos",
         ):
             for relative in (
                 f"modules/{framework}.swiftmodule",

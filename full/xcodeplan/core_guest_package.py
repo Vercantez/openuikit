@@ -113,6 +113,8 @@ _REQUIRED_FRAMEWORKS = (
     "AVFoundation",
     "AVKit",
     "Charts",
+    "CoreTransferable",
+    "Photos",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
