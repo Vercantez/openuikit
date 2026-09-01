@@ -48,6 +48,11 @@ ACCELERATE_GOLDEN=$W/full/accelerate/tests/accelerate-box-convolve-apple-2026-09
 COMPRESSION_HOST_TEST=$W/full/compression/tests/OpenCompressionHostTests.c
 CORETEXT_ORACLE=$W/full/coretext/tests/CoreTextFontManagerOracle.swift
 CORETEXT_GOLDEN=$W/full/coretext/tests/coretext-font-manager-apple-2026-09-01.txt
+ADSERVICES_ORACLE=$W/full/adservices/tests/AdServicesInterfaceOracle.swift
+ADSERVICES_GOLDEN=$W/full/adservices/tests/adservices-interface-apple-2026-09-01.txt
+ZLIB_ORACLE=$W/full/zlib/tests/ZlibGzipOracle.swift
+ZLIB_GOLDEN=$W/full/zlib/tests/zlib-gzip-apple-2026-09-01.txt
+ZLIB_HOST_TEST=$W/full/zlib/tests/OpenZlibHostTests.c
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -93,6 +98,7 @@ FIRST_PARTY_FRAMEWORKS=(
     Accelerate
     Compression
     CoreText
+    AdServices
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -126,6 +132,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     accelerate
     compression
     coretext
+    adservices
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -152,6 +159,7 @@ FRONTIER_FRAMEWORKS=(
     Accelerate
     Compression
     CoreText
+    AdServices
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -178,6 +186,7 @@ FRONTIER_SOURCE_DIRS=(
     accelerate
     compression
     coretext
+    adservices
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -996,12 +1005,43 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = AdServices ]; then
+            frontier_inputs=(
+                full/adservices/tests/AdServicesInterfaceOracle.swift
+                full/adservices/tests/AdServicesGuestRuntime.swift
+                full/adservices/tests/RevenueCatAttributionRuntimeSupport.swift
+                full/adservices/tests/adservices-interface-apple-2026-09-01.txt
+                full/adservices/tests/revenuecat-frontier.tsv
+                full/adservices/tests/test_revenuecat_frontier_guest.sh
+                full/zlib/OpenZlibBridge.c
+                full/zlib/OpenZlibHost.c
+                full/zlib/include/COpenZlib/OpenZlibABI.h
+                full/zlib/include/COpenZlib/module.modulemap
+                full/zlib/include/zlib/zlib.h
+                full/zlib/include/zlib/module.modulemap
+                full/zlib/tests/OpenZlibHostTests.c
+                full/zlib/tests/ZlibGuestRuntime.swift
+                full/zlib/tests/ZlibGzipOracle.swift
+                full/zlib/tests/RevenueCatZlibRuntimeSupport.swift
+                full/zlib/tests/zlib-gzip-apple-2026-09-01.txt
+                full/zlib/zlib_guest_sources.txt
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "RevenueCat frontier input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "RevenueCat frontier input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 25 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 26 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 39 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 57 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1286,6 +1326,7 @@ mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenRelativeTime" "$STAGE/include/COpenDispatch" \
     "$STAGE/include/CCommonCrypto" "$STAGE/include/COpenFoundationCore" \
     "$STAGE/include/COpenAccelerate" "$STAGE/include/COpenCompression" \
+    "$STAGE/include/COpenZlib" "$STAGE/include/zlib" \
     "$STAGE/include/_FoundationCShims" \
     "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
@@ -1297,6 +1338,8 @@ cp -a "$W/full/dispatch/include/." "$STAGE/include/COpenDispatch/"
 cp -a "$W/full/commoncrypto/include/." "$STAGE/include/CCommonCrypto/"
 cp -a "$W/full/accelerate/include/." "$STAGE/include/COpenAccelerate/"
 cp -a "$W/full/compression/include/." "$STAGE/include/COpenCompression/"
+cp -a "$W/full/zlib/include/COpenZlib/." "$STAGE/include/COpenZlib/"
+cp -a "$W/full/zlib/include/zlib/." "$STAGE/include/zlib/"
 cp -a "$COPEN_FOUNDATION_CORE_INCLUDE/." \
     "$STAGE/include/COpenFoundationCore/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
@@ -1357,6 +1400,8 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/COpenAccelerate"
     -Xcc -fmodule-map-file="$STAGE/include/COpenCompression/module.modulemap"
     -Xcc -I"$STAGE/include/COpenCompression"
+    -Xcc -fmodule-map-file="$STAGE/include/zlib/module.modulemap"
+    -Xcc -I"$STAGE/include/zlib"
     -Xcc -fmodule-map-file="$STAGE/include/COpenFoundationCore/module.modulemap"
     -Xcc -I"$STAGE/include/COpenFoundationCore"
     -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
@@ -1864,7 +1909,97 @@ cp "$WORK/open-compression-host-test.log" \
 } > "$STAGE/attestation/open-compression-abi.tsv"
 printf 'local\thost/libOpenCompressionHost.so\t%s\tbuilt from full/compression/OpenCompressionHost.c\n' \
     "$(hash_file "$COMPRESSION_HOST")" >> "$RUNTIME/.manifest"
-EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
+
+echo '== build and audit the fixed-ABI zlib gzip boundary'
+ZLIB_NATIVE=$(readlink -f /lib/aarch64-linux-gnu/libz.so.1)
+[ -f "$ZLIB_NATIVE" ] && [ ! -L "$ZLIB_NATIVE" ] \
+    || die "pinned zlib runtime is not a regular file: $ZLIB_NATIVE"
+[ "$ZLIB_NATIVE" = /usr/lib/aarch64-linux-gnu/libz.so.1.3 ] \
+    || die "pinned zlib runtime resolved outside the exact closure: $ZLIB_NATIVE"
+ZLIB_HOST=$RUNTIME/host/libOpenZlibHost.so
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenZlib" -shared \
+    -Wl,-soname,libOpenZlibHost.so \
+    "$W/full/zlib/OpenZlibHost.c" -o "$ZLIB_HOST" "$ZLIB_NATIVE"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenZlib" \
+    "$W/full/zlib/OpenZlibHost.c" "$ZLIB_HOST_TEST" \
+    -o "$WORK/open-zlib-host-tests" "$ZLIB_NATIVE"
+"$WORK/open-zlib-host-tests" > "$WORK/open-zlib-host-test.log"
+grep -Eq \
+    '^OPEN_ZLIB_HOST_OK abi=v1 host=1\.[0-9.]+ gzip=exact malformed=fail-closed$' \
+    "$WORK/open-zlib-host-test.log" \
+    || die 'native zlib semantic marker is missing'
+
+printf '%s\n' open_zlib_abi_version open_zlib_host_version \
+    open_zlib_inflate open_zlib_inflate_end open_zlib_inflate_init2 \
+    > "$WORK/open-zlib-expected-elf.txt"
+readelf --wide --syms "$ZLIB_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^open_zlib_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$WORK/open-zlib-elf-exports.txt"
+cmp "$WORK/open-zlib-expected-elf.txt" "$WORK/open-zlib-elf-exports.txt" \
+    || die 'Linux zlib helper exports drifted'
+readelf --wide --file-header "$ZLIB_HOST" \
+    | grep -Fq 'Machine:                           AArch64' \
+    || die 'Linux zlib helper is not ELF AArch64'
+readelf --wide --dynamic "$ZLIB_HOST" \
+    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
+    | LC_ALL=C sort -u > "$WORK/open-zlib-direct-sonames.txt"
+grep -Fx libz.so.1 "$WORK/open-zlib-direct-sonames.txt" >/dev/null \
+    || die 'Linux zlib helper does not load libz.so.1'
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/zlib" -I "$STAGE/include/COpenZlib" \
+    -c "$W/full/zlib/OpenZlibBridge.c" -o "$WORK/open-zlib-bridge.o"
+printf '%s\n' _inflate _inflateEnd _inflateInit2_ _zlibVersion \
+    > "$WORK/open-zlib-expected-mach-exports.txt"
+printf '%s\n' _glibc_open_zlib_abi_version _glibc_open_zlib_inflate \
+    _glibc_open_zlib_inflate_end _glibc_open_zlib_inflate_init2 \
+    > "$WORK/open-zlib-expected-mach-imports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$WORK/open-zlib-bridge.o" | LC_ALL=C sort -u \
+    > "$WORK/open-zlib-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$WORK/open-zlib-bridge.o" | LC_ALL=C sort -u \
+    > "$WORK/open-zlib-mach-imports.txt"
+cmp "$WORK/open-zlib-expected-mach-exports.txt" \
+    "$WORK/open-zlib-mach-exports.txt" \
+    || die 'Mach-O zlib bridge exports drifted'
+cmp "$WORK/open-zlib-expected-mach-imports.txt" \
+    "$WORK/open-zlib-mach-imports.txt" \
+    || die 'Mach-O zlib host imports drifted'
+
+swiftc -module-cache-path "$WORK/zlib-native-module-cache" \
+    -Xcc -fmodule-map-file="$STAGE/include/zlib/module.modulemap" \
+    -Xcc -I"$STAGE/include/zlib" \
+    "$ZLIB_ORACLE" -L/usr/lib/aarch64-linux-gnu -lz \
+    -o "$WORK/zlib-native-oracle"
+"$WORK/zlib-native-oracle" > "$WORK/zlib-native-oracle.log"
+cmp "$ZLIB_GOLDEN" "$WORK/zlib-native-oracle.log" \
+    || die 'portable zlib output differs from Apple'
+{
+    printf 'format\topen-zlib-host-v1\n'
+    printf 'host-abi\tELF64-AArch64\n'
+    printf 'stream-layout\tsize=112\tpointers=64-bit\n'
+    printf 'algorithm\tgzip\tdecode=real\tmalformed=fail-closed\n'
+    printf 'native-library\t%s\t%s\n' "$ZLIB_NATIVE" "$(hash_file "$ZLIB_NATIVE")"
+    printf 'apple-transcript\t%s\n' "$(hash_file "$ZLIB_GOLDEN")"
+    while IFS= read -r soname; do
+        printf 'direct-soname\t%s\n' "$soname"
+    done < "$WORK/open-zlib-direct-sonames.txt"
+} > "$STAGE/attestation/open-zlib-host.tsv"
+cp "$WORK/open-zlib-host-test.log" \
+    "$STAGE/attestation/open-zlib-host-test.log"
+{
+    printf 'format\topen-zlib-abi-v1\n'
+    printf 'stream-layout\tsize=112\tnext-in=0\tavail-in=8\tnext-out=24\tstate=56\treserved=104\n'
+    printf 'guest-exports\tinflate,inflateEnd,inflateInit2_,zlibVersion\n'
+    printf 'host-imports\t_glibc_open_zlib_abi_version,_glibc_open_zlib_inflate,_glibc_open_zlib_inflate_end,_glibc_open_zlib_inflate_init2\n'
+} > "$STAGE/attestation/open-zlib-abi.tsv"
+printf 'local\thost/libOpenZlibHost.so\t%s\tbuilt from full/zlib/OpenZlibHost.c\n' \
+    "$(hash_file "$ZLIB_HOST")" >> "$RUNTIME/.manifest"
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST:$ZLIB_HOST
 
 echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
 LIBSYSTEM_REAL=$RUNTIME/darwin/usr/lib/libSystem.real.dylib
@@ -2048,7 +2183,7 @@ env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
 FOUNDATION_INTL_HOST=$RUNTIME/host/libOpenFoundationInternationalizationHost.so
 [ -f "$FOUNDATION_INTL_HOST" ] && [ ! -L "$FOUNDATION_INTL_HOST" ] \
     || die 'FoundationInternationalization Linux helper is missing after build'
-PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
+PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST:$ZLIB_HOST
 
 echo '== prewarm a new core-package Darwin module cache'
 swiftc -target "$TARGET" -sdk "$STAGE/sdk" \
@@ -2294,7 +2429,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile thirty-one independent first-party framework modules'
+echo '== compile thirty-two independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -2411,7 +2546,11 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link fifty reusable platform dylibs (forty-nine frameworks plus ICU)'
+echo '== link fifty-two reusable platform dylibs (fifty frameworks, ICU, and zlib)'
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name @rpath/libz.dylib -rpath @loader_path \
+    -o "$STAGE/lib/libz.dylib" "$WORK/open-zlib-bridge.o" \
+    -L"$STAGE/sdk/usr/lib" -lSystem
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -2957,6 +3096,23 @@ cmp "$WORK/open-compression-expected-mach-imports.txt" \
 if llvm-otool-18 -L "$STAGE/lib/libCompression.dylib" | grep -Fq libbrotli; then
     die 'libCompression must cross the fixed host ABI instead of loading Brotli'
 fi
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libz.dylib" \
+    | awk '$0 == "_inflate" || $0 == "_inflateEnd" || \
+        $0 == "_inflateInit2_" || $0 == "_zlibVersion" { print }' \
+    | LC_ALL=C sort -u \
+    > "$WORK/libz-c-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libz.dylib" \
+    | awk '$0 ~ /^_glibc_open_zlib_/ { print }' | LC_ALL=C sort -u \
+    > "$WORK/libz-host-imports.txt"
+cmp "$WORK/open-zlib-expected-mach-exports.txt" "$WORK/libz-c-exports.txt" \
+    || die 'libz C exports drifted'
+cmp "$WORK/open-zlib-expected-mach-imports.txt" "$WORK/libz-host-imports.txt" \
+    || die 'libz host imports drifted'
+if llvm-otool-18 -L "$STAGE/lib/libz.dylib" | grep -Fq '/usr/lib/libz'; then
+    die 'libz must cross the fixed host ABI instead of loading Apple libz'
+fi
 
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/lib_QuickLook_SwiftUI.dylib -rpath @loader_path \
@@ -3398,7 +3554,7 @@ echo '== typecheck an ordinary IceCubes PhotosUI/SwiftUI cross-import consumer'
     -module-name IceCubesPhotosUIConsumer -typecheck \
     "$W/full/photosui/tests/IceCubesPhotosUIConsumer.swift"
 
-echo '== compile/link/run Accelerate, Compression, and CoreText frontier gates'
+echo '== compile/link/run Accelerate, Compression, CoreText, AdServices, and zlib frontier gates'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name AccelerateGuestRuntime -emit-object \
     -o "$WORK/accelerate-guest-runtime.o" \
@@ -3442,8 +3598,51 @@ echo '== compile/link/run Accelerate, Compression, and CoreText frontier gates'
     -lCoreText -lFoundation -lFoundationEssentials \
     "$SWIFTUI_RUNTIME_LINK_FLAG"
 
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AdServicesGuestRuntime -emit-object \
+    -o "$WORK/adservices-guest-runtime.o" \
+    "$W/full/adservices/tests/AdServicesGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AdServicesGuestRuntime" \
+    "$WORK/adservices-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lAdServices -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AdServicesInterfaceOracle -emit-object \
+    -o "$WORK/adservices-interface-oracle.o" "$ADSERVICES_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AdServicesInterfaceOracle" \
+    "$WORK/adservices-interface-oracle.o" "${COMMON_LINK[@]}" \
+    -lAdServices -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name ZlibGuestRuntime -emit-object \
+    -o "$WORK/zlib-guest-runtime.o" \
+    "$W/full/zlib/tests/ZlibGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/ZlibGuestRuntime" \
+    "$WORK/zlib-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lz -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name ZlibGzipOracle -emit-object \
+    -o "$WORK/zlib-gzip-oracle.o" "$ZLIB_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/ZlibGzipOracle" \
+    "$WORK/zlib-gzip-oracle.o" "${COMMON_LINK[@]}" \
+    -lz -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
 for frontier_probe in AccelerateGuestRuntime CompressionGuestRuntime \
-    CoreTextGuestRuntime CoreTextFontManagerOracle; do
+    CoreTextGuestRuntime CoreTextFontManagerOracle AdServicesGuestRuntime \
+    AdServicesInterfaceOracle ZlibGuestRuntime ZlibGzipOracle; do
     llvm-otool-18 -hv "$STAGE/probe/$frontier_probe" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "$frontier_probe is not an ARM64 Mach-O executable"
@@ -3455,6 +3654,10 @@ cp "$WORK/accelerate-native-oracle.log" \
 cp "$W/full/compression/tests/compression-brotli-apple-2026-09-01.txt" \
     "$STAGE/attestation/compression-brotli-apple.txt"
 cp "$CORETEXT_GOLDEN" "$STAGE/attestation/coretext-font-manager-apple.txt"
+cp "$ADSERVICES_GOLDEN" "$STAGE/attestation/adservices-interface-apple.txt"
+cp "$ZLIB_GOLDEN" "$STAGE/attestation/zlib-gzip-apple.txt"
+cp "$WORK/zlib-native-oracle.log" \
+    "$STAGE/attestation/zlib-native-oracle.log"
 
 (
     cd "$STAGE"
@@ -3507,6 +3710,52 @@ cmp "$STAGE/attestation/coretext-font-manager-runtime.log" \
     "$STAGE/attestation/coretext-font-manager-apple.txt" \
     || die 'CoreText font-manager guest output differs from Apple'
 
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/AdServicesGuestRuntime
+) | tee "$STAGE/attestation/adservices-runtime.log"
+grep -Fxq \
+    'AD_SERVICES_GUEST_MACHO_OK token=unavailable domain=com.apple.ap.adservices.attributionError code=3 policy=fail-closed' \
+    "$STAGE/attestation/adservices-runtime.log" \
+    || die 'AdServices Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/AdServicesInterfaceOracle
+) | tee "$STAGE/attestation/adservices-interface-runtime.log"
+cmp "$STAGE/attestation/adservices-interface-runtime.log" \
+    "$STAGE/attestation/adservices-interface-apple.txt" \
+    || die 'AdServices guest interface differs from Apple'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/ZlibGuestRuntime
+) | tee "$STAGE/attestation/zlib-runtime.log"
+grep -Fxq \
+    'ZLIB_GUEST_MACHO_OK abi=112 gzip=exact bytes=77 version=1.2.12' \
+    "$STAGE/attestation/zlib-runtime.log" \
+    || die 'zlib Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/ZlibGzipOracle
+) | tee "$STAGE/attestation/zlib-gzip-runtime.log"
+cmp "$STAGE/attestation/zlib-gzip-runtime.log" \
+    "$STAGE/attestation/zlib-gzip-apple.txt" \
+    || die 'zlib gzip guest output differs from Apple'
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -3551,7 +3800,7 @@ fi
     -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
     -lCoreMedia -lAVFoundation -lAVKit -lCharts \
     -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
-    -lAccelerate -lCompression -lCoreText \
+    -lAccelerate -lCompression -lCoreText -lAdServices -lz \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -3566,6 +3815,11 @@ for dylib in FoundationEssentials FoundationInternationalization \
     [ "$actual_id" = "@rpath/lib$dylib.dylib" ] \
         || die "lib$dylib install name changed: $actual_id"
 done
+llvm-otool-18 -hv "$STAGE/lib/libz.dylib" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'libz is not an ARM64 Mach-O dylib'
+[ "$(llvm-otool-18 -D "$STAGE/lib/libz.dylib" | tail -n 1)" = \
+    @rpath/libz.dylib ] || die 'libz install name drifted'
 llvm-otool-18 -hv "$STAGE/lib/lib_FoundationICU.dylib" \
     | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
     || die 'lib_FoundationICU is not an ARM64 Mach-O dylib'
@@ -3620,7 +3874,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-31 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-32 zlib=gzip-host-v1 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -3827,6 +4081,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenAccelerate
     -Xcc -fmodule-map-file=include/COpenCompression/module.modulemap
     -Xcc -Iinclude/COpenCompression
+    -Xcc -fmodule-map-file=include/zlib/module.modulemap
+    -Xcc -Iinclude/zlib
     -Xcc -fmodule-map-file=include/COpenFoundationCore/module.modulemap
     -Xcc -Iinclude/COpenFoundationCore
     -Xcc -fmodule-map-file=include/FoundationICU/_foundation_unicode/module.modulemap
@@ -3853,6 +4109,7 @@ LINK_ARGUMENTS=(
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
     -lUserNotifications -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
     -lCoreTransferable -lPhotos -lPhotosUI -lAccelerate -lCompression -lCoreText
+    -lAdServices -lz
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -4011,7 +4268,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=24\tsources=25\tinputs=39\n'
+    printf 'frontier-frameworks\tframeworks=25\tsources=26\tinputs=57\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -4043,6 +4300,15 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/compression/tests/compression-brotli-apple-2026-09-01.txt")"
     printf 'coretext\toracle=%s\tapple-golden=%s\n' \
         "$(hash_file "$CORETEXT_ORACLE")" "$(hash_file "$CORETEXT_GOLDEN")"
+    printf 'adservices\toracle=%s\tapple-golden=%s\tpolicy=fail-closed\n' \
+        "$(hash_file "$ADSERVICES_ORACLE")" "$(hash_file "$ADSERVICES_GOLDEN")"
+    printf 'zlib\theader=%s\tmodule-map=%s\tabi-header=%s\tbridge=%s\thost=%s\tapple-golden=%s\n' \
+        "$(hash_file "$W/full/zlib/include/zlib/zlib.h")" \
+        "$(hash_file "$W/full/zlib/include/zlib/module.modulemap")" \
+        "$(hash_file "$W/full/zlib/include/COpenZlib/OpenZlibABI.h")" \
+        "$(hash_file "$W/full/zlib/OpenZlibBridge.c")" \
+        "$(hash_file "$W/full/zlib/OpenZlibHost.c")" \
+        "$(hash_file "$ZLIB_GOLDEN")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -4126,6 +4392,12 @@ record_artifact include COpenCompression abi-header \
     include/COpenCompression/OpenCompressionABI.h
 record_artifact include COpenCompression module-map \
     include/COpenCompression/module.modulemap
+record_artifact include COpenZlib abi-header \
+    include/COpenZlib/OpenZlibABI.h
+record_artifact include COpenZlib module-map \
+    include/COpenZlib/module.modulemap
+record_artifact include zlib abi-header include/zlib/zlib.h
+record_artifact include zlib module-map include/zlib/module.modulemap
 record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
@@ -4158,6 +4430,8 @@ record_artifact runtime OpenDispatch linux-blocks-runtime \
     guest-root/host/libBlocksRuntime.so
 record_artifact runtime Compression linux-helper \
     guest-root/host/libOpenCompressionHost.so
+record_artifact runtime zlib darwin-dylib lib/libz.dylib
+record_artifact runtime zlib linux-helper guest-root/host/libOpenZlibHost.so
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 record_artifact runtime OpenFoundationInternationalization linux-helper \
@@ -4200,6 +4474,12 @@ record_artifact probe CoreTextGuestRuntime executable \
     probe/CoreTextGuestRuntime
 record_artifact probe CoreTextFontManagerOracle executable \
     probe/CoreTextFontManagerOracle
+record_artifact probe AdServicesGuestRuntime executable \
+    probe/AdServicesGuestRuntime
+record_artifact probe AdServicesInterfaceOracle executable \
+    probe/AdServicesInterfaceOracle
+record_artifact probe ZlibGuestRuntime executable probe/ZlibGuestRuntime
+record_artifact probe ZlibGzipOracle executable probe/ZlibGzipOracle
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -4254,6 +4534,23 @@ record_artifact attestation CoreText runtime-log \
     attestation/coretext-runtime.log
 record_artifact attestation CoreText apple-differential-log \
     attestation/coretext-font-manager-runtime.log
+record_artifact attestation AdServices apple-golden \
+    attestation/adservices-interface-apple.txt
+record_artifact attestation AdServices runtime-log \
+    attestation/adservices-runtime.log
+record_artifact attestation AdServices apple-differential-log \
+    attestation/adservices-interface-runtime.log
+record_artifact attestation zlib apple-golden \
+    attestation/zlib-gzip-apple.txt
+record_artifact attestation zlib abi attestation/open-zlib-abi.tsv
+record_artifact attestation zlib host attestation/open-zlib-host.tsv
+record_artifact attestation zlib host-test-log \
+    attestation/open-zlib-host-test.log
+record_artifact attestation zlib native-oracle-log \
+    attestation/zlib-native-oracle.log
+record_artifact attestation zlib runtime-log attestation/zlib-runtime.log
+record_artifact attestation zlib apple-differential-log \
+    attestation/zlib-gzip-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \

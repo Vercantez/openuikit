@@ -180,6 +180,7 @@ FRAMEWORKS = (
     "Accelerate",
     "Compression",
     "CoreText",
+    "AdServices",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -280,8 +281,8 @@ def validate_swiftui_runtime_link(source: str) -> None:
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     # Observation, SwiftUI, overlays, first-party gates, the reusable link loop,
-    # executable probe, and the four new frontier executables share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 16:
+    # executable probe, and the eight frontier executables share this token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 20:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -670,6 +671,8 @@ class PackageFixture:
             "include/COpenFoundationCore",
             "include/COpenAccelerate",
             "include/COpenCompression",
+            "include/COpenZlib",
+            "include/zlib",
             "include/FoundationICU/_foundation_unicode",
             "objects",
             "resources/OpenUIKit/fonts",
@@ -717,6 +720,19 @@ class PackageFixture:
             "module COpenCompression {}\n",
         )
         write_file(
+            root / "include/COpenZlib/OpenZlibABI.h",
+            "zlib host ABI\n",
+        )
+        write_file(
+            root / "include/COpenZlib/module.modulemap",
+            "module COpenZlib {}\n",
+        )
+        write_file(root / "include/zlib/zlib.h", "z_stream\n")
+        write_file(
+            root / "include/zlib/module.modulemap",
+            "module zlib { link \"z\" }\n",
+        )
+        write_file(
             root / "include/FoundationICU/_foundation_unicode/module.modulemap",
             "module _FoundationICU { export * }",
         )
@@ -734,6 +750,11 @@ class PackageFixture:
         write_file(
             root / "guest-root/host/libOpenCompressionHost.so",
             "compression host",
+        )
+        write_file(root / "lib/libz.dylib", "zlib bridge")
+        write_file(
+            root / "guest-root/host/libOpenZlibHost.so",
+            "zlib host",
         )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
@@ -813,6 +834,10 @@ class PackageFixture:
             "-fmodule-map-file=include/COpenCompression/module.modulemap",
             "-Xcc",
             "-Iinclude/COpenCompression",
+            "-Xcc",
+            "-fmodule-map-file=include/zlib/module.modulemap",
+            "-Xcc",
+            "-Iinclude/zlib",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "-load-plugin-library",
@@ -883,6 +908,8 @@ class PackageFixture:
             "-lAccelerate",
             "-lCompression",
             "-lCoreText",
+            "-lAdServices",
+            "-lz",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1085,6 +1112,30 @@ class PackageFixture:
                     "module-map",
                     "include/COpenCompression/module.modulemap",
                 ),
+                self._artifact(
+                    "include",
+                    "COpenZlib",
+                    "abi-header",
+                    "include/COpenZlib/OpenZlibABI.h",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenZlib",
+                    "module-map",
+                    "include/COpenZlib/module.modulemap",
+                ),
+                self._artifact(
+                    "include",
+                    "zlib",
+                    "abi-header",
+                    "include/zlib/zlib.h",
+                ),
+                self._artifact(
+                    "include",
+                    "zlib",
+                    "module-map",
+                    "include/zlib/module.modulemap",
+                ),
             )
         )
         records.append(
@@ -1106,6 +1157,17 @@ class PackageFixture:
                 "Compression",
                 "linux-helper",
                 "guest-root/host/libOpenCompressionHost.so",
+            )
+        )
+        records.append(
+            self._artifact("runtime", "zlib", "darwin-dylib", "lib/libz.dylib")
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "zlib",
+                "linux-helper",
+                "guest-root/host/libOpenZlibHost.so",
             )
         )
         records.append(
@@ -1894,19 +1956,19 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("foundation_intl_host", driver)
         self.assertIn(
             "PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:"
-            "$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST",
+            "$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST:$ZLIB_HOST",
             builder,
         )
         self.assertIn(
             "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:"
-            "$RELATIVE_TIME_HOST:$COMPRESSION_HOST",
+            "$RELATIVE_TIME_HOST:$COMPRESSION_HOST:$ZLIB_HOST",
             builder,
         )
         self.assertEqual(
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 20
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 24
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2143,7 +2205,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 49)
+        self.assertEqual(len(FRAMEWORKS), 50)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 17)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2758,7 +2820,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", probe
         )
-    def test_thirty_one_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_thirty_two_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2795,8 +2857,9 @@ class ShellContractTests(unittest.TestCase):
             "Accelerate",
             "Compression",
             "CoreText",
+            "AdServices",
         )
-        self.assertEqual(FRAMEWORKS[-31:], first_party)
+        self.assertEqual(FRAMEWORKS[-32:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2823,19 +2886,19 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=24\\tsources=25\\tinputs=39",
+            "frontier-frameworks\\tframeworks=25\\tsources=26\\tinputs=57",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 25",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 26",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 39",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 57",
             source,
         )
         self.assertIn(
-            "compile thirty-one independent first-party framework modules", source
+            "compile thirty-two independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2843,7 +2906,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-31", probe)
+        self.assertIn("first-party=portable-32", probe)
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)
@@ -2935,6 +2998,65 @@ class ShellContractTests(unittest.TestCase):
             "attestation/oslog-standalone-link.tsv",
         ):
             self.assertIn(token, source)
+
+    def test_revenuecat_adservices_and_zlib_frontier_is_fail_closed_and_fixed_abi(
+        self,
+    ) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        adservices = (REPO / "full/adservices/AdServices.swift").read_text(
+            encoding="utf-8"
+        )
+        zlib_header = (REPO / "full/zlib/include/zlib/zlib.h").read_text(
+            encoding="utf-8"
+        )
+        zlib_bridge = (REPO / "full/zlib/OpenZlibBridge.c").read_text(
+            encoding="utf-8"
+        )
+        exact_guest = (
+            REPO / "full/adservices/tests/test_revenuecat_frontier_guest.sh"
+        ).read_text(encoding="utf-8")
+
+        for token in (
+            '"com.apple.ap.adservices.attributionError"',
+            "platformNotSupported = Code(rawValue: 3)",
+            "throw AAAttributionError(.platformNotSupported)",
+        ):
+            self.assertIn(token, adservices)
+        self.assertNotIn("return UUID", adservices)
+        for token in (
+            '#define ZLIB_VERSION "1.2.12"',
+            "typedef struct z_stream_s",
+            "ZEXPORT int inflateInit2_",
+            "ZEXPORT int inflateEnd",
+        ):
+            self.assertIn(token, zlib_header)
+        for token in (
+            '_Static_assert(sizeof(z_stream) == 112',
+            '__asm__("_glibc_open_zlib_abi_version")',
+            '__asm__("_glibc_open_zlib_inflate_init2")',
+            '__asm__("_glibc_open_zlib_inflate")',
+            '__asm__("_glibc_open_zlib_inflate_end")',
+        ):
+            self.assertIn(token, zlib_bridge)
+        for token in (
+            "/usr/lib/aarch64-linux-gnu/libz.so.1.3",
+            "libOpenZlibHost.so",
+            "zlib-gzip-apple-2026-09-01.txt",
+            "libz.dylib",
+            "-lAdServices -lz",
+        ):
+            self.assertIn(token, source)
+        for token in (
+            "57043e7e0173c48d64e171944ac76a34d2467fa1",
+            "72a2e1e9b6986fadca9b863d235c4a52aab38fb4",
+            "f15a4f4a4cab68e397fdfff4bc6b8b64838d19b968d278650834b2a837a3258a",
+            "b0998e607a77f25856f7cf65aa34248e910d7157d1215b3ae5ab974579b6ecec",
+            '-needed_library "$PACKAGE/lib/libAdServices.dylib"',
+            '-needed_library "$PACKAGE/lib/libCompression.dylib"',
+            '-needed_library "$PACKAGE/lib/libz.dylib"',
+            "REVENUECAT_FRONTIER_GUEST_OK",
+        ):
+            self.assertIn(token, exact_guest)
 
     def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")

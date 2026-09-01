@@ -42,6 +42,8 @@ import PhotosUI
 import Accelerate
 import Compression
 import CoreText
+import AdServices
+import zlib
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -969,6 +971,16 @@ struct CoreGuestPackageProbe {
         precondition(
             type(of: addController).presentationCapability == .hostDriven
         )
+        precondition(MemoryLayout<z_stream>.size == 112)
+        precondition(MAX_WBITS == 15 && Z_STREAM_END == 1)
+        do {
+            _ = try AAAttribution.attributionToken()
+            preconditionFailure("AdServices fabricated an attribution token")
+        } catch let error as AAAttributionError {
+            precondition(error.code == .platformNotSupported)
+        } catch {
+            preconditionFailure("unexpected AdServices error: \(error)")
+        }
 
         #if canImport(DeveloperToolsSupport)
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
@@ -995,7 +1007,8 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-31 oslog=standard-error,signposts "
+                + "first-party=portable-32 zlib=gzip-host-v1 "
+                + "oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "

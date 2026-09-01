@@ -35,6 +35,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/COpenFoundationCore",
             "include/COpenAccelerate",
             "include/COpenCompression",
+            "include/COpenZlib",
+            "include/zlib",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/host",
@@ -62,6 +64,12 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/COpenCompression/OpenCompressionABI.h",
             "include/COpenCompression/module.modulemap",
             "guest-root/host/libOpenCompressionHost.so",
+            "include/COpenZlib/OpenZlibABI.h",
+            "include/COpenZlib/module.modulemap",
+            "include/zlib/zlib.h",
+            "include/zlib/module.modulemap",
+            "lib/libz.dylib",
+            "guest-root/host/libOpenZlibHost.so",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -120,6 +128,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Accelerate",
                 "Compression",
                 "CoreText",
+                "AdServices",
                 "DeveloperToolsSupport",
             )
         )
@@ -174,6 +183,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Accelerate",
                 "Compression",
                 "CoreText",
+                "AdServices",
             )
         )
         for relative in required_files:
@@ -360,6 +370,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lAccelerate",
                 "-lCompression",
                 "-lCoreText",
+                "-lAdServices",
+                "-lz",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -432,6 +444,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-fmodule-map-file=include/COpenCompression/module.modulemap",
                 "-Xcc",
                 "-Iinclude/COpenCompression",
+                "-Xcc",
+                "-fmodule-map-file=include/zlib/module.modulemap",
+                "-Xcc",
+                "-Iinclude/zlib",
             ],
             "target": {"triple": "arm64-apple-macos15.0"},
         }

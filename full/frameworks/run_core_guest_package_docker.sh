@@ -429,6 +429,7 @@ GUEST_ROOT_PRODUCTS=(
     darwin/usr/lib/libOpenFoundationInternationalization.dylib
     host/libOpenFoundationInternationalizationHost.so
     host/libOpenCompressionHost.so
+    host/libOpenZlibHost.so
 )
 {
     printf 'format\tcore-guest-durable-root-v1\n'

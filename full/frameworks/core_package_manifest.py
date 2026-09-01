@@ -138,8 +138,11 @@ FRAMEWORKS = (
     "Accelerate",
     "Compression",
     "CoreText",
+    "AdServices",
 )
-REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
+REQUIRED_FRAMEWORK_LINK_ARGUMENTS = (
+    tuple(f"-l{name}" for name in FRAMEWORKS) + ("-lz",)
+)
 MODULE_DEPENDENCIES = (
     "InternalCollectionsUtilities",
     "OrderedCollections",
@@ -737,6 +740,17 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         for item in artifacts
     ):
         refuse("Compression Linux host helper is absent")
+    required_zlib_runtime = {
+        ("darwin-dylib", "lib/libz.dylib"),
+        ("linux-helper", "guest-root/host/libOpenZlibHost.so"),
+    }
+    actual_zlib_runtime = {
+        (str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "runtime" and item["name"] == "zlib"
+    }
+    if not required_zlib_runtime.issubset(actual_zlib_runtime):
+        refuse("zlib Mach-O bridge/Linux host helper is absent")
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
@@ -796,6 +810,14 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         "COpenCompression": {
             ("abi-header", "include/COpenCompression/OpenCompressionABI.h"),
             ("module-map", "include/COpenCompression/module.modulemap"),
+        },
+        "COpenZlib": {
+            ("abi-header", "include/COpenZlib/OpenZlibABI.h"),
+            ("module-map", "include/COpenZlib/module.modulemap"),
+        },
+        "zlib": {
+            ("abi-header", "include/zlib/zlib.h"),
+            ("module-map", "include/zlib/module.modulemap"),
         },
     }
     for module, required in required_frontier_includes.items():
@@ -859,6 +881,19 @@ def require_frontier_c_compile_contract(tokens: list[str]) -> None:
                     f"compile flags must contain {module} pair exactly once: "
                     f"-Xcc {argument}"
                 )
+    for argument in (
+        "-fmodule-map-file=include/zlib/module.modulemap",
+        "-Iinclude/zlib",
+    ):
+        count = sum(
+            tokens[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(tokens) - 1)
+        )
+        if count != 1:
+            refuse(
+                "compile flags must contain zlib pair exactly once: "
+                f"-Xcc {argument}"
+            )
 
 
 def require_cross_import_compile_contract(tokens: list[str]) -> None:

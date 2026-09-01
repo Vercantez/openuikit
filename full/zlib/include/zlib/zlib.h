@@ -73,11 +73,17 @@ typedef z_stream *z_streamp;
 
 #define MAX_WBITS 15
 
-const char *zlibVersion(void);
-int inflateInit2_(z_streamp stream, int window_bits,
-                  const char *version, int stream_size);
-int inflate(z_streamp stream, int flush);
-int inflateEnd(z_streamp stream);
+#if defined(__GNUC__) || defined(__clang__)
+#define ZEXPORT __attribute__((visibility("default")))
+#else
+#define ZEXPORT
+#endif
+
+ZEXPORT const char *zlibVersion(void);
+ZEXPORT int inflateInit2_(z_streamp stream, int window_bits,
+                          const char *version, int stream_size);
+ZEXPORT int inflate(z_streamp stream, int flush);
+ZEXPORT int inflateEnd(z_streamp stream);
 
 #ifdef __cplusplus
 }

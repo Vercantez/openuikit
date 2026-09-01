@@ -120,9 +120,10 @@ _REQUIRED_FRAMEWORKS = (
     "Accelerate",
     "Compression",
     "CoreText",
+    "AdServices",
 )
-_REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
-    f"-l{name}" for name in _REQUIRED_FRAMEWORKS
+_REQUIRED_FRAMEWORK_LINK_ARGUMENTS = (
+    tuple(f"-l{name}" for name in _REQUIRED_FRAMEWORKS) + ("-lz",)
 )
 _REQUIRED_MANIFESTS = {
     "artifact_ledger",
@@ -376,6 +377,19 @@ def _require_frontier_c_compile_contract(arguments: list[str]) -> None:
                     "swift_compile_arguments must contain the portable "
                     f"{module} Clang module pair exactly once: -Xcc {argument}"
                 )
+    for argument in (
+        "-fmodule-map-file=include/zlib/module.modulemap",
+        "-Iinclude/zlib",
+    ):
+        count = sum(
+            arguments[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(arguments) - 1)
+        )
+        if count != 1:
+            raise CorePackageError(
+                "swift_compile_arguments must contain the portable zlib "
+                "Clang module pair exactly once: -Xcc " + argument
+            )
 
 
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
@@ -909,6 +923,12 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['includes']}/COpenCompression/OpenCompressionABI.h",
             f"{paths['includes']}/COpenCompression/module.modulemap",
             f"{paths['guest_root']}/host/libOpenCompressionHost.so",
+            f"{paths['includes']}/COpenZlib/OpenZlibABI.h",
+            f"{paths['includes']}/COpenZlib/module.modulemap",
+            f"{paths['includes']}/zlib/zlib.h",
+            f"{paths['includes']}/zlib/module.modulemap",
+            f"{paths['libraries']}/libz.dylib",
+            f"{paths['guest_root']}/host/libOpenZlibHost.so",
         }
     )
     if preview is not None:

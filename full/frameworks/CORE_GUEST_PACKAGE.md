@@ -16,8 +16,10 @@ MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
-cross-import overlay, Accelerate, Compression, and CoreText. These are fifty
-reusable ARM64 Mach-O platform binaries (forty-nine frameworks plus ICU), including real
+cross-import overlay, Accelerate, Compression, CoreText, and AdServices. The
+app-facing `zlib` Clang module is backed by a separate `libz.dylib`. Together
+these are fifty-two reusable ARM64 Mach-O platform binaries (fifty frameworks,
+ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -71,12 +73,12 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link thirty-one app-facing first-party modules as independent ARM64
+9. Compile and link thirty-two app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all fifty reusable platform dylibs (forty-nine frameworks plus
-   ICU) and run the package's Mach-O
+10. Link all fifty-two reusable platform dylibs (fifty frameworks, ICU, and
+   zlib) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
@@ -209,6 +211,27 @@ single URL with the Apple-observed already-registered error, and publishes the
 URL registration API used by unchanged RevenueCat Paywalls. A native Apple
 oracle freezes the registration, duplicate-copy, invalid-file, and missing-file
 transcript used by the ARM64 Mach-O package gate.
+
+`libAdServices.dylib` publishes Apple's throwing
+`AAAttribution.attributionToken()` shape, observed error domain, and the three
+public error codes. Linux has no Apple Ads attribution daemon or App Store
+identity, so it deterministically throws `platformNotSupported`; it never
+fabricates a token. The module's interface oracle is compiled against Apple's
+framework and then replayed byte-for-byte against the portable Mach-O dylib.
+
+The packaged `zlib` Clang module preserves the 112-byte ARM64 `z_stream` ABI,
+Apple's field offsets, constants, and the `inflateInit2_`/`inflate`/`inflateEnd`
+surface used by unchanged RevenueCat RCContainer gzip decoding. `libz.dylib`
+crosses only four `_glibc_` imports into an attested
+`libOpenZlibHost.so`, which in turn pins Linux `libz.so.1.3`. Valid gzip bytes
+decode through real zlib; malformed input fails closed. Native and Mach-O
+oracles must both match the frozen Apple transcript exactly.
+
+`full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
+and compiles the exact untouched RevenueCat 5.86.0 attribution and RCContainer
+sources from commit `57043e7e0173c48d64e171944ac76a34d2467fa1`, links them to
+the published AdServices, Compression, and zlib dylibs, and cold-runs both
+executables on Linux through the packaged loader and host-helper closure.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,

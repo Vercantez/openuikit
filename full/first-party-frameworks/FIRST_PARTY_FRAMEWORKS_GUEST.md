@@ -88,6 +88,26 @@ and `d6236001336113d5f55ee839f9d354a70232f6932c4e4fa522faafcb9f685eb9`.
 The delta artifact hash is
 `3a2f4708bd58e81c2dde28f4a54a028b160b1db4f3f45e383d8ab4da64d2b677`.
 
+## RevenueCat frontier extension
+
+The production package also carries `AdServices` as its thirty-second
+first-party Swift module and `libAdServices.dylib` as one of fifty framework
+dylibs. This is intentionally separate from the original seven-framework,
+20-app provenance census above: it was derived from the exact untouched
+RevenueCat `purchases-ios` commit
+`57043e7e0173c48d64e171944ac76a34d2467fa1`. Linux has no trusted Apple Ads
+attribution service, so `AAAttribution.attributionToken()` fails closed with
+the Apple-observed `platformNotSupported` code instead of inventing a token.
+
+The same frontier adds an app-facing `zlib` Clang module and `libz.dylib`.
+Its public `z_stream` layout and four RevenueCat-used entry points match the
+Apple SDK surface; calls cross a versioned four-function guest/host ABI to the
+pinned AArch64 Linux zlib runtime. The package builder validates the 112-byte
+stream ABI, exact Mach-O imports/exports, Apple gzip transcript, valid payload,
+and malformed-input behavior. After a package succeeds,
+`full/adservices/tests/test_revenuecat_frontier_guest.sh` compiles and runs the
+five hash-pinned RevenueCat source files without modifying the vendor checkout.
+
 ## Gates
 
 From a clean support checkout:
