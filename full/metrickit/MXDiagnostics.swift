@@ -182,7 +182,15 @@ open class MXCrashDiagnosticObjectiveCExceptionReason: NSObject, NSSecureCoding,
     open var formatString: String { _formatString }
     open var arguments: [String] { _arguments }
     open var exceptionType: String { _exceptionType }
+    // Apple Foundation's NSObject exposes inherited `className`, so this
+    // MetricKit getter must `override` there. swift-corelibs-Foundation's
+    // NSObject does not have that member, so `override` is rejected on Linux.
+    // The public API and `_className` storage stay the same on both.
+#if canImport(ObjectiveC)
+    open override var className: String { _className }
+#else
     open var className: String { _className }
+#endif
     open var exceptionName: String { _exceptionName }
 
     @_spi(OpenUIKitHost)

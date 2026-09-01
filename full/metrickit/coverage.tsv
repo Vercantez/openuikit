@@ -67,7 +67,7 @@ c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	tests/agent/Met
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)JSONRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)dictionaryRepresentation	declared	full/metrickit/MXDiagnostics.swift	Linux property-dump JSON/dictionary is not Apple's schema.
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)arguments	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
-c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	implemented	tests/agent/MetricKitRuntime.swift:testMXCrashDiagnosticObjectiveCExceptionReasonClassName	Reads className through MXCrashDiagnosticObjectiveCExceptionReason; Darwin override is compile-conditional.
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)composedMessage	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionName	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.
 c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionType	implemented	tests/agent/MetricKitRuntime.swift:testDiagnosticGetters	Named getter assertions for diagnostic storage.

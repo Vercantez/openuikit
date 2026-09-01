@@ -23,6 +23,10 @@ success.
   `apl` / `bars`.
 - Host-only `@_spi(OpenUIKitHost)` initializers for getter tests. Those inits
   are not Apple API.
+- `MXCrashDiagnosticObjectiveCExceptionReason.className` keeps the public
+  `String` getter and `_className` storage. It is `override` only when
+  Objective-C Foundation is imported, because Apple `NSObject` already
+  exposes `className` and swift-corelibs-Foundation does not.
 
 `jsonRepresentation()` / `dictionaryRepresentation()` are Linux-local property
 dumps. They are **declared**, not Apple's JSON schema. `init(coder:)` returns

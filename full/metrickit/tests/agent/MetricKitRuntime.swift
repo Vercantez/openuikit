@@ -647,6 +647,33 @@ private func testPayloadGetters() {
     require(diagnostics.timeStampEnd == diagEnd, "testPayloadGetters: diag end")
 }
 
+private func testMXCrashDiagnosticObjectiveCExceptionReasonClassName() {
+    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
+        composedMessage: "boom",
+        formatString: "%@",
+        arguments: ["x"],
+        exceptionType: "NSException",
+        className: "Thing",
+        exceptionName: "Test"
+    )
+    let observed: String = reason.className
+    require(
+        observed == "Thing",
+        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: stored className"
+    )
+    // Apple Foundation exposes NSObject.className, so the MetricKit property
+    // is an override there. Reading through NSObject is a compile-time catch
+    // for a missing override when Objective-C Foundation is imported. This
+    // Linux host does not execute Apple Foundation.
+#if canImport(ObjectiveC)
+    let asObject: NSObject = reason
+    require(
+        asObject.className == "Thing",
+        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: NSObject override"
+    )
+#endif
+}
+
 testMXErrorCodeRawValues()
 testMXErrorDomainAndBridging()
 testMXLaunchTaskID()
@@ -658,5 +685,6 @@ testUnitSymbols()
 testHistogramAndAverageGetters()
 testMetricGetters()
 testDiagnosticGetters()
+testMXCrashDiagnosticObjectiveCExceptionReasonClassName()
 testPayloadGetters()
 print("METRICKIT_AGENT_RUNTIME_OK")
