@@ -15,35 +15,39 @@ public typealias JSStringRef = OpaquePointer
 public typealias JSValueProperty = AnyObject
 public typealias JSValueRef = OpaquePointer
 
-public typealias JSObjectCallAsConstructorCallback = (
+public typealias JSObjectCallAsConstructorCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, Int, UnsafePointer<JSValueRef?>?, UnsafeMutablePointer<JSValueRef?>?
 ) -> JSObjectRef?
-public typealias JSObjectCallAsFunctionCallback = (
+public typealias JSObjectCallAsFunctionCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSObjectRef?, Int, UnsafePointer<JSValueRef?>?,
     UnsafeMutablePointer<JSValueRef?>?
 ) -> JSValueRef?
-public typealias JSObjectConvertToTypeCallback = (
-    JSContextRef?, JSObjectRef?, JSType, UnsafeMutablePointer<JSValueRef?>?
+public typealias JSObjectConvertToTypeCallback = @convention(c) (
+    JSContextRef?, JSObjectRef?, UInt32, UnsafeMutablePointer<JSValueRef?>?
 ) -> JSValueRef?
-public typealias JSObjectDeletePropertyCallback = (
+public typealias JSObjectDeletePropertyCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSStringRef?, UnsafeMutablePointer<JSValueRef?>?
 ) -> Bool
-public typealias JSObjectFinalizeCallback = (JSObjectRef?) -> Void
-public typealias JSObjectGetPropertyCallback = (
+public typealias JSObjectFinalizeCallback = @convention(c) (JSObjectRef?) -> Void
+public typealias JSObjectGetPropertyCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSStringRef?, UnsafeMutablePointer<JSValueRef?>?
 ) -> JSValueRef?
-public typealias JSObjectGetPropertyNamesCallback = (
+public typealias JSObjectGetPropertyNamesCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSPropertyNameAccumulatorRef?
 ) -> Void
-public typealias JSObjectHasInstanceCallback = (
+public typealias JSObjectHasInstanceCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSValueRef?, UnsafeMutablePointer<JSValueRef?>?
 ) -> Bool
-public typealias JSObjectHasPropertyCallback = (JSContextRef?, JSObjectRef?, JSStringRef?) -> Bool
-public typealias JSObjectInitializeCallback = (JSContextRef?, JSObjectRef?) -> Void
-public typealias JSObjectSetPropertyCallback = (
+public typealias JSObjectHasPropertyCallback = @convention(c) (
+    JSContextRef?, JSObjectRef?, JSStringRef?
+) -> Bool
+public typealias JSObjectInitializeCallback = @convention(c) (JSContextRef?, JSObjectRef?) -> Void
+public typealias JSObjectSetPropertyCallback = @convention(c) (
     JSContextRef?, JSObjectRef?, JSStringRef?, JSValueRef?, UnsafeMutablePointer<JSValueRef?>?
 ) -> Bool
-public typealias JSTypedArrayBytesDeallocator = (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void
+public typealias JSTypedArrayBytesDeallocator = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafeMutableRawPointer?
+) -> Void
 
 public struct JSType: RawRepresentable, Equatable, Hashable, Sendable {
     public var rawValue: UInt32
@@ -114,10 +118,11 @@ public let JSPropertyDescriptorSetKey = "set"
 public let JSPropertyDescriptorValueKey = "value"
 public let JSPropertyDescriptorWritableKey = "writable"
 
-public var JSC_OBJC_API_ENABLED: Int32 { 1 }
+public var JSC_OBJC_API_ENABLED: Int32 { 0 }
 
 public protocol JSExport {}
 
+@frozen
 public struct JSStaticValue {
     public var name: UnsafePointer<CChar>!
     public var getProperty: JSObjectGetPropertyCallback!
@@ -144,6 +149,7 @@ public struct JSStaticValue {
     }
 }
 
+@frozen
 public struct JSStaticFunction {
     public var name: UnsafePointer<CChar>!
     public var callAsFunction: JSObjectCallAsFunctionCallback!
@@ -166,6 +172,7 @@ public struct JSStaticFunction {
     }
 }
 
+@frozen
 public struct JSClassDefinition {
     public var version: Int32
     public var attributes: JSClassAttributes

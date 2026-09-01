@@ -107,6 +107,8 @@ final class JSCObject {
     var byteOffset = 0
     var typedLength = 0
     var arrayBuffer: JSCObject?
+    var arrayBufferBox: JSCBox?
+    var didFinalize = false
     var hostObject: Any?
     var isConstructor = false
     var isPromise = false
@@ -122,6 +124,20 @@ final class JSCObject {
             } else {
                 buffer.deallocate()
             }
+        }
+    }
+
+    func finalizeClassIfNeeded(_ box: JSCBox) {
+        guard !didFinalize else { return }
+        didFinalize = true
+        var current = jsClass
+        var chain: [JSCClass] = []
+        while let cls = current {
+            chain.append(cls)
+            current = cls.parent
+        }
+        for cls in chain {
+            cls.definition.finalize?(JSCRef.unretained(box))
         }
     }
 
@@ -165,10 +181,15 @@ final class JSCBox {
     }
 
     var payload: Payload
+    var interned = false
     var protectCount = 0
 
     init(_ payload: Payload) {
         self.payload = payload
+    }
+
+    deinit {
+        object?.finalizeClassIfNeeded(self)
     }
 
     static let undefined = JSCBox(.undefined)

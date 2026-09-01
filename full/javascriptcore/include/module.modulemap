@@ -1,0 +1,4 @@
+module CJavaScriptCore {
+    umbrella header "JavaScriptCore.h"
+    export *
+}

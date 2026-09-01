@@ -33,7 +33,10 @@ public final class JSVirtualMachine: NSObject {
 
     func intern(_ box: JSCBox) -> JSCBox {
         lock.lock()
-        heap.append(box)
+        if !box.interned {
+            box.interned = true
+            heap.append(box)
+        }
         lock.unlock()
         return box
     }
@@ -380,27 +383,31 @@ public final class JSContext: NSObject {
         if name == "__proto__" { return target.object?.prototype ?? .undefined }
         var current: JSCBox? = target
         while let box = current {
-            if let object = box.object {
-                if let own = object.getOwn(name) { return own }
-                if let jsClass = object.jsClass, let callback = jsClass.definition.getProperty {
-                    var exception: JSValueRef?
-                    let ref = callback(
-                        JSCRef.unretained(self),
-                        JSCRef.unretained(box),
-                        JSCRef.unretained(virtualMachine.intern(JSCString(name))),
-                        &exception
-                    )
-                    if let exception, let thrown = JSCRef.takeUnretained(exception, as: JSCBox.self) {
-                        throw JSCJump.thrown(thrown)
-                    }
-                    if let ref, let value = JSCRef.takeUnretained(ref, as: JSCBox.self) {
+            guard let object = box.object else { break }
+            if let own = object.getOwn(name) { return own }
+            if let staticValue = staticValueEntry(object, name: name) {
+                if let getter = staticValue.getProperty {
+                    if let value = try invokeGetProperty(getter, object: box, name: name) {
                         return value
                     }
                 }
-                current = object.prototype
-            } else {
-                break
             }
+            if let staticFunction = staticFunctionEntry(object, name: name),
+               let callback = staticFunction.callAsFunction
+            {
+                let fn = JSCObject()
+                fn.function = .cFunction(callback)
+                fn.className = "Function"
+                return intern(JSCBox(.object(fn)))
+            }
+            for cls in classChain(object) {
+                if let callback = cls.definition.getProperty {
+                    if let value = try invokeGetProperty(callback, object: box, name: name) {
+                        return value
+                    }
+                }
+            }
+            current = object.prototype
         }
         return .undefined
     }
@@ -413,12 +420,52 @@ public final class JSContext: NSObject {
         guard let object = target.object else {
             throw JSCJump.thrown(makeError("TypeError", "cannot set property of non-object"))
         }
+        if let staticValue = staticValueEntry(object, name: name) {
+            if staticValue.attributes & JSPropertyAttributes(kJSPropertyAttributeReadOnly) != 0 {
+                throw JSCJump.thrown(makeError("TypeError", "property is read-only"))
+            }
+            if let setter = staticValue.setProperty {
+                var exception: JSValueRef?
+                let ok = setter(
+                    JSCRef.unretained(self),
+                    JSCRef.unretained(target),
+                    JSCRef.unretained(virtualMachine.intern(JSCString(name))),
+                    JSCRef.unretained(value),
+                    &exception
+                )
+                if let exception, let thrown = JSCRef.takeUnretained(exception, as: JSCBox.self) {
+                    throw JSCJump.thrown(thrown)
+                }
+                if !ok {
+                    throw JSCJump.thrown(makeError("TypeError", "cannot set property"))
+                }
+                return
+            }
+        }
+        for cls in classChain(object) {
+            if let setter = cls.definition.setProperty {
+                var exception: JSValueRef?
+                let ok = setter(
+                    JSCRef.unretained(self),
+                    JSCRef.unretained(target),
+                    JSCRef.unretained(virtualMachine.intern(JSCString(name))),
+                    JSCRef.unretained(value),
+                    &exception
+                )
+                if let exception, let thrown = JSCRef.takeUnretained(exception, as: JSCBox.self) {
+                    throw JSCJump.thrown(thrown)
+                }
+                if ok { return }
+            }
+        }
         let flags = object.attrs[name] ?? 0
         if flags & JSPropertyAttributes(kJSPropertyAttributeReadOnly) != 0 {
             throw JSCJump.thrown(makeError("TypeError", "property is read-only"))
         }
         object.setOwn(name, value, attributes: attributes == 0 ? nil : attributes)
-        if object.isArray, name != "length", let index = Int(name), index >= object.getOwn("length").map({ Int($0.numberValue()) }) ?? 0 {
+        if object.isArray, name != "length", let index = Int(name),
+           index >= object.getOwn("length").map({ Int($0.numberValue()) }) ?? 0
+        {
             object.setOwn("length", intern(JSCBox(.number(Double(index + 1)))))
         }
     }
@@ -804,14 +851,20 @@ public final class JSContext: NSObject {
         if construct && !object.isConstructor {
             switch object.function {
             case .none:
-                throw JSCJump.thrown(makeError("TypeError", "value is not a constructor"))
+                let hasClassConstructor = classChain(object).contains { $0.definition.callAsConstructor != nil }
+                if !hasClassConstructor {
+                    throw JSCJump.thrown(makeError("TypeError", "value is not a constructor"))
+                }
             default:
                 break
             }
         }
-        let constructed = construct ? this : this
-        if construct, constructed.object?.prototype == nil {
-            constructed.object?.prototype = try getProperty(callee, name: "prototype")
+        let constructed = this
+        if construct {
+            let proto = try getProperty(callee, name: "prototype")
+            if proto.isObject {
+                constructed.object?.prototype = proto
+            }
         }
         let previousContext = JSCThread.context
         let previousThis = JSCThread.thisValue
@@ -829,6 +882,19 @@ public final class JSContext: NSObject {
         }
         switch object.function {
         case .none:
+            if construct {
+                for cls in classChain(object) {
+                    if let callback = cls.definition.callAsConstructor {
+                        return try invokeCConstructor(callback, args: args, callee: callee)
+                    }
+                }
+            } else {
+                for cls in classChain(object) {
+                    if let callback = cls.definition.callAsFunction {
+                        return try invokeCFunction(callback, this: constructed, args: args, callee: callee)
+                    }
+                }
+            }
             throw JSCJump.thrown(makeError("TypeError", "value is not a function"))
         case .script(let params, let body, _, let environment):
             let child = JSCEnvironment(parent: environment, isFunction: true)
@@ -949,6 +1015,23 @@ public final class JSContext: NSObject {
     }
 
     func instanceOf(_ value: JSCBox, _ ctor: JSCBox) throws -> Bool {
+        if let ctorObject = ctor.object {
+            for cls in classChain(ctorObject) {
+                if let hasInstance = cls.definition.hasInstance {
+                    var exception: JSValueRef?
+                    let result = hasInstance(
+                        JSCRef.unretained(self),
+                        JSCRef.unretained(ctor),
+                        JSCRef.unretained(value),
+                        &exception
+                    )
+                    if let exception, let thrown = JSCRef.takeUnretained(exception, as: JSCBox.self) {
+                        throw JSCJump.thrown(thrown)
+                    }
+                    return result
+                }
+            }
+        }
         guard let proto = try getProperty(ctor, name: "prototype").object else { return false }
         var current = value.object?.prototype
         while let object = current?.object {
@@ -1404,6 +1487,7 @@ public final class JSContext: NSObject {
         let object = JSCObject()
         object.typedArrayType = type
         object.arrayBuffer = backing.object
+        object.arrayBufferBox = backing
         object.byteOffset = offset
         object.typedLength = length
         object.buffer = backing.object?.buffer?.advanced(by: offset)
