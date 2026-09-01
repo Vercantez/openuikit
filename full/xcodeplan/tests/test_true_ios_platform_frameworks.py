@@ -45,6 +45,12 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         inherited_search = self.builder.index('-L"$MRROOT_INPUT/darwin/usr/lib"')
         self.assertLess(runtime_search, inherited_search)
         self.assertIn("DYLIB_INSTALL_PREFIX=/usr/lib", self.builder)
+        self.assertIn(
+            "_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_"
+            "SpyxGtAA021_ObjectiveCBridgeableE0RzlF",
+            self.builder,
+        )
+        self.assertIn("_$s10Foundation26_ObjectiveCBridgeableErrorMp", self.builder)
 
         self.assertIn('TARGET=arm64-apple-ios18.0-simulator', self.builder)
         self.assertIn('PLATFORM=ios-simulator', self.builder)

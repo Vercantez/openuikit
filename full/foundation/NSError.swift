@@ -199,6 +199,26 @@ open class NSError: NSObject, Error, CustomStringConvertible,
     open var debugDescription: String { description }
 }
 
+/// A Swift error value that can be reconstructed from its Objective-C
+/// `NSError` representation.  The Swift runtime looks up this protocol and
+/// `_bridgeNSErrorToError` by their Foundation ABI names when performing a
+/// dynamic cast from `NSError` to a concrete error type.
+public protocol _ObjectiveCBridgeableError: Error {
+    init?(_bridgedNSError: NSError)
+}
+
+/// Runtime entry point for dynamically bridging an `NSError` into a concrete
+/// Swift error.  On failure `out` remains uninitialized, matching the standard
+/// Foundation overlay contract.
+public func _bridgeNSErrorToError<T: _ObjectiveCBridgeableError>(
+    _ error: NSError,
+    out: UnsafeMutablePointer<T>
+) -> Bool {
+    guard let bridged = T(_bridgedNSError: error) else { return false }
+    out.initialize(to: bridged)
+    return true
+}
+
 /// Foundation's null sentinel. Every instance compares equal and hashes alike,
 /// matching the value semantics JSON clients rely upon.
 open class NSNull: NSObject, CustomStringConvertible, @unchecked Sendable {

@@ -540,6 +540,15 @@ FOUNDATION_RUNTIME_FLAGS=(
     -reexport_library "$PRODUCTS/libFoundationInternationalization.dylib" \
     -o "$PRODUCTS/libFoundation.dylib" "$BUILD/Foundation.o" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$PRODUCTS/libFoundation.dylib" | LC_ALL=C sort -u \
+    > "$BUILD/foundation-runtime-exports.txt"
+for symbol in \
+    '_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF' \
+    '_$s10Foundation26_ObjectiveCBridgeableErrorMp'; do
+    [ "$(grep -Fxc "$symbol" "$BUILD/foundation-runtime-exports.txt")" -eq 1 ] \
+        || die "Foundation runtime bridge export is missing or duplicated: $symbol"
+done
 
 echo '== five relocatable first-party compiler-library plugins'
 PLUGIN_HOST_LIBRARIES=(
