@@ -3004,6 +3004,7 @@ echo '== compile/link/run the standalone Charts mark and interaction gate'
     -o "$WORK/charts-guest-runtime.o" \
     "$W/full/charts/tests/ChartsHostRuntime.swift"
 "${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
     "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/ChartsGuestRuntime" \
     "$WORK/charts-guest-runtime.o" \
