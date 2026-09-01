@@ -224,7 +224,7 @@ open class NCWidgetController: NSObject {
         forWidgetWithBundleIdentifier bundleID: String
     ) {
         Self.storeLock.lock()
-        contentFlags[bundleID] = flag
+        Self.contentFlags[bundleID] = flag
         Self.storeLock.unlock()
     }
 
