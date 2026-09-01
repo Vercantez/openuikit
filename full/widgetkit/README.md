@@ -1,0 +1,57 @@
+# Portable WidgetKit
+
+This directory provides a package-owned `WidgetKit.swiftmodule` and
+`libWidgetKit.dylib` for unchanged application and widget-extension sources.
+It is a real first-party framework boundary in the cold ARM64 Mach-O package,
+not an application-side source overlay.
+
+The portable runtime implements the parts that can be truthful without an
+Apple widget daemon:
+
+- legacy SiriKit and AppIntent timeline-provider protocols;
+- validated, executable AppIntent timeline and snapshot evaluation;
+- timeline ordering, duplicate-date, and reload-date fail-closed checks;
+- process-local `WidgetCenter` configuration state and ordered reload requests;
+- static and AppIntent configuration metadata, families, descriptions, and
+  content-margin/background policy;
+- one- through five-widget bundle construction, covering IceCubes' exact bundle;
+- WidgetKit SwiftUI environment values, widget URLs, accentability, accessory
+  backgrounds, and widget container-background syntax.
+
+Linux has no `chronod`, SpringBoard, extension host, or system widget gallery.
+Presentation is therefore explicitly host-driven. Reload requests are retained
+as ordered process-local work that a platform host can drain through SPI; the
+framework never reports that an Apple daemon accepted them. Current
+configurations are likewise host-installed state. This is an honest service
+boundary, not a simulated success path.
+
+## Untouched application frontier
+
+`tests/icecubes-widgetkit-frontier.tsv` pins 18 unmodified shipping files from:
+
+- IceCubesApp commit `b2db3033fbf67a97b54d25d6dac2df8a029b26b1`, tree
+  `acecd527919ebd0c868f752b0ac73a2b45fdfcf5`—14 WidgetKit extension files,
+  including the exact five-widget `@main` bundle and AppIntent providers;
+- simplenote-ios commit `9b1bb17d8ec224a709d306e0ec34cee38bc7d933`, tree
+  `ce311e62f98384abb7e73c0806b9d11001d5136a`—the main-app controller that
+  queries `WidgetInfo` and reloads all timelines, plus the exact legacy
+  SiriKit provider, configuration, and three-widget `@main` bundle.
+
+The gate rejects dirty checkouts, commit/tree drift, source hash drift,
+symlinks, and missing real call-site tokens. It compiles and runs the provider,
+timeline, reload, and metadata semantics; typechecks an ordinary IceCubes-shaped
+consumer; typechecks the exact untouched multi-widget bundle; typechecks the
+exact untouched Simplenote controller; and compares that consumer with Apple's
+iOS SDK surface.
+
+Run it on macOS with the two pinned clean app checkouts present:
+
+```sh
+bash full/widgetkit/tests/test_widgetkit_host.sh
+```
+
+The cold package additionally builds `libWidgetKit.dylib`, verifies its ARM64
+Mach-O identity and dependency graph, links an independent
+`WidgetKitGuestRuntime` executable, and executes the same semantic marker
+through the packaged Linux `machorun` root. Exact stale build directories are
+trashed before gate runs so no earlier module or dylib can satisfy a check.

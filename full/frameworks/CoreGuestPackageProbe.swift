@@ -27,6 +27,7 @@ import Security
 import CryptoKit
 import CommonCrypto
 import AppIntents
+@_spi(OpenUIKitHost) import WidgetKit
 import OSLog
 import UniformTypeIdentifiers
 import SwiftData
@@ -954,6 +955,18 @@ struct CoreGuestPackageProbe {
             isTemplate: nil
         )
         precondition(modernImage.systemName == "square.and.pencil")
+        precondition(WidgetKitPortable.presentationCapability == .hostDriven)
+        precondition(WidgetKitPortable.reloadCapability == .processLocal)
+        let widgetCenter = WidgetCenter()
+        widgetCenter.installCurrentConfigurations([
+            WidgetInfo(kind: "core-package", family: .systemSmall)
+        ])
+        widgetCenter.reloadTimelines(ofKind: "core-package")
+        widgetCenter.reloadAllTimelines()
+        let widgetReloads = widgetCenter.drainReloadRequests()
+        precondition(widgetReloads.map(\.sequence) == [1, 2])
+        precondition(widgetReloads[0].scope == .kind("core-package"))
+        precondition(widgetReloads[1].scope == .all)
         precondition(OSLogPortable.backend == .standardError)
         precondition(!OSLogPortable.supportsUnifiedLogging)
         precondition(OSLogPortable.supportsSignposts)
@@ -1206,7 +1219,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-37 zlib=gzip-host-v1 "
+                + "first-party=portable-38 zlib=gzip-host-v1 "
                 + "foundationmodels=generated-content,fail-closed "
                 + "naturallanguage=classifier,apple-29 "
                 + "oslog=standard-error,signposts "
@@ -1221,6 +1234,7 @@ struct CoreGuestPackageProbe {
                 + "quicklook=local-image,host-driven "
                 + "media=rational,state,host-driven,fail-closed "
                 + "charts=basic,fail-closed "
+                + "widgetkit=timelines,process-local,host-driven "
                 + "coretransferable=data,file,fail-closed "
                 + "photos=authorization,volatile,host-driven "
                 + "photosui=transfer,binding,host-driven "

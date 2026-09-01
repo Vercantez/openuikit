@@ -93,6 +93,7 @@ FIRST_PARTY_FRAMEWORKS=(
     CryptoKit
     CommonCrypto
     AppIntents
+    WidgetKit
     OSLog
     UniformTypeIdentifiers
     SwiftData
@@ -132,6 +133,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     cryptokit
     commoncrypto
     appintents
+    widgetkit
     oslog
     uniformtypeidentifiers
     swiftdata
@@ -164,6 +166,7 @@ FRONTIER_FRAMEWORKS=(
     CryptoKit
     CommonCrypto
     AppIntents
+    WidgetKit
     OSLog
     UniformTypeIdentifiers
     SwiftData
@@ -196,6 +199,7 @@ FRONTIER_SOURCE_DIRS=(
     cryptokit
     commoncrypto
     appintents
+    widgetkit
     oslog
     uniformtypeidentifiers
     swiftdata
@@ -244,6 +248,7 @@ EXPECTED_COREMEDIA_SOURCE_COUNT=1
 EXPECTED_AVFOUNDATION_SOURCE_COUNT=1
 EXPECTED_AVKIT_SOURCE_COUNT=1
 EXPECTED_CHARTS_SOURCE_COUNT=1
+EXPECTED_WIDGETKIT_SOURCE_COUNT=1
 EXPECTED_CORETRANSFERABLE_SOURCE_COUNT=1
 EXPECTED_PHOTOS_SOURCE_COUNT=1
 EXPECTED_PHOTOSUI_SOURCE_COUNT=1
@@ -866,6 +871,7 @@ append_frontier_sources() {
             AVFoundation) expected_count=$EXPECTED_AVFOUNDATION_SOURCE_COUNT ;;
             AVKit) expected_count=$EXPECTED_AVKIT_SOURCE_COUNT ;;
             Charts) expected_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
+            WidgetKit) expected_count=$EXPECTED_WIDGETKIT_SOURCE_COUNT ;;
             CoreTransferable) expected_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
             Photos) expected_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
             PhotosUI) expected_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
@@ -1026,6 +1032,27 @@ append_frontier_sources() {
                     || die "Charts supporting input is missing or linked: $relative"
                 git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
                     || die "Charts supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = WidgetKit ]; then
+            frontier_inputs=(
+                full/widgetkit/tests/WidgetKitHostRuntime.swift
+                full/widgetkit/tests/IceCubesWidgetKitConsumer.swift
+                full/widgetkit/tests/SimplenoteWidgetKitConsumer.swift
+                full/widgetkit/tests/IceCubesWidgetBundleSupport.swift
+                full/widgetkit/tests/SimplenoteWidgetControllerSupport.swift
+                full/widgetkit/tests/SimplenoteExactWidgetSupport.swift
+                full/widgetkit/tests/icecubes-widgetkit-frontier.tsv
+                full/widgetkit/tests/test_widgetkit_host.sh
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "WidgetKit supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "WidgetKit supporting input is not tracked: $relative"
                 printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
                     "$((index + 1))" "$framework" "$relative" \
                     "$(hash_file "$W/$relative")" >> "$output"
@@ -1245,12 +1272,12 @@ append_frontier_sources() {
             done
         fi
     done
-    printf 'frontier-source\t33\tIOKit\t%s\t%s\n' \
-        full/iokit/IOKit.c "$(hash_file "$W/full/iokit/IOKit.c")" >> "$output"
     printf 'frontier-source\t34\tIOKit\t%s\t%s\n' \
+        full/iokit/IOKit.c "$(hash_file "$W/full/iokit/IOKit.c")" >> "$output"
+    printf 'frontier-source\t35\tIOKit\t%s\t%s\n' \
         full/iokit/IOKit.swift \
         "$(hash_file "$W/full/iokit/IOKit.swift")" >> "$output"
-    printf 'frontier-source\t35\tSwiftIOKitRuntime\t%s\t%s\n' \
+    printf 'frontier-source\t36\tSwiftIOKitRuntime\t%s\t%s\n' \
         full/iokit/OpenSwiftIOKitRuntime.c \
         "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.c")" >> "$output"
     iokit_inputs=(
@@ -1271,14 +1298,14 @@ append_frontier_sources() {
             || die "IOKit frontier input is missing or linked: $relative"
         git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
             || die "IOKit frontier input is not tracked: $relative"
-        printf 'frontier-input\t33\tIOKit\t%s\t%s\n' "$relative" \
+        printf 'frontier-input\t34\tIOKit\t%s\t%s\n' "$relative" \
             "$(hash_file "$W/$relative")" >> "$output"
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 34 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 35 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 100 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 108 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -3206,7 +3233,7 @@ echo '== strict Swift 6 Hackers WebKit/KVO source-surface gate'
     -module-name HackersWebKitSurface -typecheck \
     "$HACKERS_WEBKIT_SURFACE"
 
-echo '== compile thirty-seven independent first-party framework modules'
+echo '== compile thirty-eight independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -3229,6 +3256,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         AVFoundation) expected_framework_source_count=$EXPECTED_AVFOUNDATION_SOURCE_COUNT ;;
         AVKit) expected_framework_source_count=$EXPECTED_AVKIT_SOURCE_COUNT ;;
         Charts) expected_framework_source_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
+        WidgetKit) expected_framework_source_count=$EXPECTED_WIDGETKIT_SOURCE_COUNT ;;
         CoreTransferable) expected_framework_source_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
         Photos) expected_framework_source_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
         PhotosUI) expected_framework_source_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
@@ -3250,6 +3278,11 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             -D OPENUIKIT_PORTABLE_SWIFTUI
             "${FOUNDATION_PLUGIN_FLAGS[@]}"
             "${SWIFTDATA_PLUGIN_FLAGS[@]}"
+        )
+    fi
+    if [ "$framework" = WidgetKit ]; then
+        framework_compile_flags+=(
+            -D OPENUIKIT_PORTABLE_SWIFTUI
         )
     fi
     if [ "$framework" = FoundationModels ]; then
@@ -3351,7 +3384,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link fifty-eight reusable platform dylibs (fifty-six frameworks, ICU, and zlib)'
+echo '== link fifty-nine reusable platform dylibs (fifty-seven frameworks, ICU, and zlib)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libz.dylib -rpath @loader_path \
     -o "$STAGE/lib/libz.dylib" \
@@ -3719,6 +3752,16 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lSwiftUI
+                -lOpenCoreGraphics
+            )
+            ;;
+        WidgetKit)
+            expected_swiftui_load=1
+            expected_opencoregraphics_load=1
+            framework_link_dependencies+=(
+                -lSwiftUI
+                -lAppIntents
+                -lIntents
                 -lOpenCoreGraphics
             )
             ;;
@@ -4458,6 +4501,58 @@ echo '== typecheck the exact-surface IceCubes Charts consumer'
     -module-name IceCubesChartsConsumer -typecheck \
     "$W/full/charts/tests/IceCubesChartsConsumer.swift"
 
+echo '== compile/link/run the standalone WidgetKit timeline and reload gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name WidgetKitGuestRuntime -emit-object \
+    -o "$WORK/widgetkit-guest-runtime.o" \
+    "$W/full/widgetkit/tests/WidgetKitHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/WidgetKitGuestRuntime" \
+    "$WORK/widgetkit-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -lWidgetKit -lAppIntents -lIntents -lSwiftUI -lUIKit \
+    -lFoundation -lFoundationInternationalization -lFoundationEssentials \
+    -lOpenUIKit -lOpenCoreGraphics "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/WidgetKitGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'WidgetKit runtime gate is not an ARM64 Mach-O executable'
+widgetkit_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/WidgetKitGuestRuntime" \
+    | awk '$1 == "@rpath/libWidgetKit.dylib" { count++ } END { print count + 0 }')
+[ "$widgetkit_gate_load_count" -eq 1 ] \
+    || die "WidgetKit gate load count $widgetkit_gate_load_count, expected 1"
+widgetkit_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/WidgetKitGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$widgetkit_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "WidgetKit gate Preview export count $widgetkit_preview_export_count, expected $PREVIEW_ENABLED"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/WidgetKitGuestRuntime
+) | tee "$STAGE/attestation/widgetkit-runtime.log"
+grep -Fxq \
+    'WIDGETKIT_HOST_OK timeline=validated,scheduled providers=app-intent,sirikit reload=process-local,ordered configuration=retained presentation=host-driven' \
+    "$STAGE/attestation/widgetkit-runtime.log" \
+    || die 'standalone WidgetKit runtime marker is missing'
+
+echo '== typecheck the exact-surface IceCubes WidgetKit consumer'
+"${APP_CONSUMER_SWIFTC[@]}" -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IceCubesWidgetKitConsumer -typecheck \
+    "$W/full/widgetkit/tests/IceCubesWidgetKitConsumer.swift"
+
+echo '== typecheck the exact-surface Simplenote WidgetKit consumer'
+"${APP_CONSUMER_SWIFTC[@]}" -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name SimplenoteWidgetKitConsumer -typecheck \
+    "$W/full/widgetkit/tests/SimplenoteWidgetKitConsumer.swift"
+
 echo '== compile/link/run the standalone CoreTransferable data and file gate'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name CoreTransferableGuestRuntime -emit-object \
@@ -4959,7 +5054,8 @@ fi
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
-    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
+    -lCommonCrypto -lAppIntents -lWidgetKit -lOSLog \
+    -lUniformTypeIdentifiers -lSwiftData \
     -lFoundationModels -lNaturalLanguage \
     -lUserNotifications -lBackgroundTasks -lCoreSpotlight \
     -lQuickLook -l_QuickLook_SwiftUI \
@@ -5042,7 +5138,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-37 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=state,kvo,engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-38 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed widgetkit=timelines,process-local,host-driven coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=state,kvo,engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -5277,7 +5373,8 @@ LINK_ARGUMENTS=(
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
-    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
+    -lCommonCrypto -lAppIntents -lWidgetKit -lOSLog \
+    -lUniformTypeIdentifiers -lSwiftData
     -lFoundationModels
     -lUserNotifications -lBackgroundTasks -lCoreSpotlight \
     -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
@@ -5484,7 +5581,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=30\tsources=34\tinputs=100\n'
+    printf 'frontier-frameworks\tframeworks=31\tsources=35\tinputs=108\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -5717,6 +5814,8 @@ record_artifact probe AVFoundationGuestRuntime executable \
     probe/AVFoundationGuestRuntime
 record_artifact probe ChartsGuestRuntime executable \
     probe/ChartsGuestRuntime
+record_artifact probe WidgetKitGuestRuntime executable \
+    probe/WidgetKitGuestRuntime
 record_artifact probe CoreTransferableGuestRuntime executable \
     probe/CoreTransferableGuestRuntime
 record_artifact probe PhotosGuestRuntime executable \
@@ -5784,6 +5883,8 @@ record_artifact attestation AVFoundation runtime-log \
     attestation/avfoundation-runtime.log
 record_artifact attestation Charts runtime-log \
     attestation/charts-runtime.log
+record_artifact attestation WidgetKit runtime-log \
+    attestation/widgetkit-runtime.log
 record_artifact attestation CoreTransferable runtime-log \
     attestation/coretransferable-runtime.log
 record_artifact attestation Photos runtime-log \

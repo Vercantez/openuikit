@@ -14,8 +14,9 @@ package with sibling OpenUIKit, Foundation, Combine, Widget, and Onboarding
 images plus matching compile modules; the Focus executables import framework
 symbols instead of defining static copies. The complete state/observation
 sources compile into the packaged SwiftUI image with one OpenCombine identity,
-and onboarding exercises that observation path at runtime. WidgetKit,
-installation as a system framework, runtime coverage for every Onboarding
+and onboarding exercises that observation path at runtime. A separate
+package-owned WidgetKit framework now executes timelines and reload state; its
+extension presentation host, installation as a system framework, runtime coverage for every Onboarding
 controller/preview/tooltip path, and the complete unchanged Focus app remain
 later milestones. The package proof now emits and links all 21 unchanged
 Onboarding target files; the focused interaction executable still runs the

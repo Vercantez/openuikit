@@ -107,6 +107,7 @@ _REQUIRED_FRAMEWORKS = (
     "CryptoKit",
     "CommonCrypto",
     "AppIntents",
+    "WidgetKit",
     "OSLog",
     "UniformTypeIdentifiers",
     "SwiftData",

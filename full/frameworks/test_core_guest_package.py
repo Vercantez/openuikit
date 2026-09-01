@@ -170,6 +170,7 @@ FRAMEWORKS = (
     "CryptoKit",
     "CommonCrypto",
     "AppIntents",
+    "WidgetKit",
     "OSLog",
     "UniformTypeIdentifiers",
     "SwiftData",
@@ -355,7 +356,7 @@ def validate_swiftui_runtime_link(source: str) -> None:
     # Observation, SwiftUI, cross-import overlays, WebKit, first-party gates,
     # the reusable link loop, executable probe, all C/frontier executables, and
     # AuthenticationServices' overlay/runtime gate share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 25:
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 26:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -468,10 +469,10 @@ def validate_preview_standalone_link_contract(source: str) -> None:
         raise AssertionError(
             f"standalone SwiftUI Preview link contract drifted: {missing}"
         )
-    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 7:
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 8:
         raise AssertionError("standalone SwiftUI Preview export use count drifted")
-    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 8:
-        # One use audits the source object and seven uses link executables.
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 9:
+        # One use audits the source object and eight uses link executables.
         raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
     slices = (
         (
@@ -493,6 +494,11 @@ def validate_preview_standalone_link_contract(source: str) -> None:
             "compile/link/run the standalone Charts mark and interaction gate",
             "typecheck the exact-surface IceCubes Charts consumer",
             "charts_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the standalone WidgetKit timeline and reload gate",
+            "typecheck the exact-surface IceCubes WidgetKit consumer",
+            "widgetkit_preview_export_count=$(nm_symbol_count --defined-only",
         ),
         (
             "compile/link/run the standalone Photos authorization and asset gate",
@@ -1024,6 +1030,7 @@ class PackageFixture:
             "-lCryptoKit",
             "-lCommonCrypto",
             "-lAppIntents",
+            "-lWidgetKit",
             "-lOSLog",
             "-lUniformTypeIdentifiers",
             "-lSwiftData",
@@ -2368,7 +2375,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 32
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 33
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2592,6 +2599,7 @@ class ShellContractTests(unittest.TestCase):
             "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)",
             "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
             "quicklook_preview_export_count=$(nm_symbol_count --defined-only",
+            "widgetkit_preview_export_count=$(nm_symbol_count --defined-only",
             "photos_preview_export_count=$(nm_symbol_count --defined-only",
             "photosui_preview_export_count=$(nm_symbol_count --defined-only",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
@@ -2605,7 +2613,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 56)
+        self.assertEqual(len(FRAMEWORKS), 57)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 18)
         for token in (
             "-module-name WebKit -emit-module",
@@ -3597,7 +3605,49 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn('swiftc -parse-as-library -typecheck -I "$PROOF"', host_gate)
         self.assertIn("BACKGROUND_SPOTLIGHT_HOST_GATE_OK", host_gate)
 
-    def test_thirty_seven_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_widgetkit_is_an_executable_first_party_boundary(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        widgetkit = (REPO / "full/widgetkit/WidgetKit.swift").read_text(
+            encoding="utf-8"
+        )
+        gate = (
+            REPO / "full/widgetkit/tests/test_widgetkit_host.sh"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "public protocol TimelineProvider",
+            "public protocol IntentTimelineProvider",
+            "public protocol AppIntentTimelineProvider",
+            "public actor WidgetTimelineRuntime",
+            "public final class WidgetCenter",
+            "public struct StaticConfiguration",
+            "public struct IntentConfiguration",
+            "public struct AppIntentConfiguration",
+            "case processLocal",
+            "case hostDriven",
+        ):
+            self.assertIn(token, widgetkit)
+        for token in (
+            "WidgetKit)",
+            "-D OPENUIKIT_PORTABLE_SWIFTUI",
+            "-lWidgetKit -lAppIntents -lIntents -lSwiftUI",
+            "WidgetKitGuestRuntime",
+            "WIDGETKIT_HOST_OK",
+            "SimplenoteWidgetKitConsumer.swift",
+            "record_artifact probe WidgetKitGuestRuntime",
+            "record_artifact attestation WidgetKit runtime-log",
+        ):
+            self.assertIn(token, builder)
+        for token in (
+            "EXPECTED_ICECUBES_COMMIT=b2db3033",
+            "EXPECTED_SIMPLENOTE_COMMIT=9b1bb17",
+            '"$frontier_source_count" -eq 18',
+            "SimplenoteWidgets/Providers/NoteWidgetProvider.swift",
+            "SimplenoteWidgets/Widgets/NoteWidget.swift",
+            "SimplenoteWidgets/SimplenoteWidgets.swift",
+        ):
+            self.assertIn(token, gate)
+
+    def test_thirty_eight_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -3619,6 +3669,7 @@ class ShellContractTests(unittest.TestCase):
             "CryptoKit",
             "CommonCrypto",
             "AppIntents",
+            "WidgetKit",
             "OSLog",
             "UniformTypeIdentifiers",
             "SwiftData",
@@ -3641,7 +3692,7 @@ class ShellContractTests(unittest.TestCase):
             "AuthenticationServices",
             "FoundationModels",
         )
-        self.assertEqual(FRAMEWORKS[-37:], first_party)
+        self.assertEqual(FRAMEWORKS[-38:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -3668,19 +3719,19 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=30\\tsources=34\\tinputs=100",
+            "frontier-frameworks\\tframeworks=31\\tsources=35\\tinputs=108",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 34",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 35",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 100",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 108",
             source,
         )
         self.assertIn(
-            "compile thirty-seven independent first-party framework modules", source
+            "compile thirty-eight independent first-party framework modules", source
         )
         accelerate_header = (
             REPO / "full/accelerate/include/Accelerate.h"
@@ -3705,7 +3756,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-37", probe)
+        self.assertIn("first-party=portable-38", probe)
         self.assertIn("foundationmodels=generated-content,fail-closed", probe)
         self.assertIn("FoundationModelsGuestRuntime", source)
         self.assertIn("FOUNDATIONMODELS_GUEST_MACHO_OK", source)
@@ -3751,6 +3802,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("CoreMediaGuestRuntime", source)
         self.assertIn("AVFoundationGuestRuntime", source)
         self.assertIn("ChartsGuestRuntime", source)
+        self.assertIn("WidgetKitGuestRuntime", source)
         self.assertIn("CoreTransferableGuestRuntime", source)
         self.assertIn("PhotosGuestRuntime", source)
         self.assertIn("PhotosUIGuestRuntime", source)
@@ -3758,10 +3810,12 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("AuthenticationServicesGuestRuntime", source)
         self.assertIn("AVFOUNDATION_HOST_OK", source)
         self.assertIn("CHARTS_HOST_OK", source)
+        self.assertIn("WIDGETKIT_HOST_OK", source)
         self.assertIn("CORETRANSFERABLE_HOST_OK", source)
         self.assertIn("PHOTOS_HOST_OK", source)
         self.assertIn("PHOTOSUI_HOST_OK", source)
         self.assertIn("coretransferable=data,file,fail-closed", probe)
+        self.assertIn("widgetkit=timelines,process-local,host-driven", probe)
         self.assertIn("photos=authorization,volatile,host-driven", probe)
         self.assertIn("photosui=transfer,binding,host-driven", probe)
         self.assertIn("naturallanguage=deterministic,confidence-gated", probe)

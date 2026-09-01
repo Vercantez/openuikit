@@ -12,8 +12,8 @@ OpenCombine, Dispatch, Combine, Symbols, SwiftUI, the app-facing Foundation faca
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
-MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
-UniformTypeIdentifiers, SwiftData, UserNotifications, BackgroundTasks,
+MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, WidgetKit,
+OSLog, UniformTypeIdentifiers, SwiftData, UserNotifications, BackgroundTasks,
 CoreSpotlight, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
@@ -26,7 +26,7 @@ classifier. The app-facing `zlib` Clang module is backed by a separate
 `libz.dylib`. IOKit is a package-owned Swift overlay over a package-owned
 `IOKit.framework` C module and dylib, with its complete 53-symbol Apple Swift
 runtime contract supplied by a separate `libswiftIOKit.dylib`. Together these
-are sixty reusable ARM64 Mach-O platform binaries (fifty-six Swift framework
+are sixty-one reusable ARM64 Mach-O platform binaries (fifty-seven Swift framework
 dylibs, IOKit, `libswiftIOKit`, ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
@@ -82,13 +82,13 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link thirty-seven app-facing first-party modules as independent ARM64
+9. Compile and link thirty-eight app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
 10. Build and audit the fail-closed IOKit C framework and complete
-   `libswiftIOKit` runtime boundaries, then link all sixty reusable platform
-   binaries: the fifty-eight library-directory dylibs (fifty-six Swift
+   `libswiftIOKit` runtime boundaries, then link all sixty-one reusable
+   platform binaries: the fifty-nine library-directory dylibs (fifty-seven Swift
    frameworks, ICU, and zlib) plus IOKit and `libswiftIOKit`. Run the package's
    Mach-O closure/resource/font and framework-behavior probe through the
    packaged machorun root.

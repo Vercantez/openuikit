@@ -219,6 +219,14 @@ sufficient.
 
 ### S5 — WidgetKit and extension launch
 
+Framework boundary status (2026-09-01): the package-owned `WidgetKit` module
+and `libWidgetKit.dylib` now cover executable AppIntent and legacy SiriKit
+timelines, configuration metadata, widget environment/container syntax, one-
+through five-widget bundles, and ordered process-local reload work. Pinned
+untouched IceCubes and Simplenote sources exercise both provider generations.
+The remaining S5 work is an extension launch/presentation host; the framework
+does not pretend that Linux has Apple's `chronod` or SpringBoard services.
+
 `Widgets/Widgets.swift` is a separate first-party-framework boundary. It adds
 `WidgetKit`, timeline/provider/configuration types, widget-family environment,
 deep-link URLs, preview context, and iOS 17 container backgrounds. Keep the
